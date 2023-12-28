@@ -6,7 +6,6 @@ import { TrexoMove } from 'src/app/games/trexo/TrexoMove';
 import { Coord } from 'src/app/jscaip/Coord';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
-import { TrexoTutorial } from './TrexoTutorial';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { Table3DUtils, TableUtils } from 'src/app/utils/ArrayUtils';
@@ -26,8 +25,8 @@ interface PieceOnBoard {
 
     move: MGPOptional<TrexoMove>;
 }
-type ModeType = '2D' | '3D';
 
+type ModeType = '2D' | '3D';
 
 @Component({
     selector: 'app-trexo',
@@ -79,14 +78,12 @@ export class TrexoComponent extends ParallelogramGameComponent<TrexoRules, Trexo
 
     public constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
-        this.rules = TrexoRules.get();
-        this.node = this.rules.getInitialNode();
+        this.setRulesAndNode('Trexo');
         this.availableAIs = [
             new Minimax($localize`Alignment`, this.rules, new TrexoAlignmentHeuristic(), new TrexoMoveGenerator()),
             new MCTS($localize`MCTS`, new TrexoMoveGenerator(), this.rules),
         ];
         this.encoder = TrexoMove.encoder;
-        this.tutorial = new TrexoTutorial().tutorial;
         TrexoComponent.STROKE_WIDTH = this.STROKE_WIDTH;
         this.switchToMode('3D');
     }
@@ -236,7 +233,7 @@ export class TrexoComponent extends ParallelogramGameComponent<TrexoRules, Trexo
     private async selectPiece(clicked: Coord): Promise<MGPValidation> {
         if (this.possibleMoves.some((move: TrexoMove) => move.getZero().equals(clicked))) {
             const pieceHeight: number = this.getState().getPieceAt(clicked).getHeight();
-            if (pieceHeight >= this.pieceOnBoard.length) {
+            if (this.pieceOnBoard.length <= pieceHeight) {
                 this.pieceOnBoard.push(TableUtils.create(TrexoState.SIZE,
                                                          TrexoState.SIZE,
                                                          TrexoComponent.INITIAL_PIECE_ON_BOARD));

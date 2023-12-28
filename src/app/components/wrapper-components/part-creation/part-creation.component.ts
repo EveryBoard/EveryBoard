@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { takeUntil } from 'rxjs/operators';
@@ -9,7 +9,6 @@ import { GameService } from '../../../services/GameService';
 import { ConfigRoomService } from '../../../services/ConfigRoomService';
 import { ChatService } from '../../../services/ChatService';
 import { Debug, Utils } from 'src/app/utils/utils';
-import { assert } from 'src/app/utils/assert';
 import { UserService } from 'src/app/services/UserService';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
@@ -23,8 +22,14 @@ import { CurrentGame, User, UserRoleInPart } from 'src/app/domain/User';
 import { Timestamp } from 'firebase/firestore';
 import { Subscription } from 'rxjs';
 import { CurrentGameService } from 'src/app/services/CurrentGameService';
+import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { RulesConfigurationComponent } from '../rules-configuration/rules-configuration.component';
+import { GameInfo } from '../../normal-component/pick-game/pick-game.component';
+import { GameState } from 'src/app/jscaip/GameState';
+import { RulesConfigDescription } from '../rules-configuration/RulesConfigDescription';
+import { AbstractRules } from 'src/app/jscaip/Rules';
 
-interface PartCreationViewInfo {
+type PartCreationViewInfo = {
     userIsCreator: boolean;
     showCustomTime?: boolean;
     canEditConfig?: boolean;
@@ -71,8 +76,13 @@ export class PartCreationComponent implements OnInit, OnDestroy {
 
     @Input() partId: string;
 
+    @Input() rulesConfigDescription: MGPOptional<RulesConfigDescription<RulesConfig>>;
+
     // notify that the game has started, a thing evaluated with the configRoom doc game status
     @Output() gameStartNotification: EventEmitter<ConfigRoom> = new EventEmitter<ConfigRoom>();
+
+    @ViewChild('rulesConfigurationComponent') public rulesConfigurationComponent: RulesConfigurationComponent;
+
     public gameStarted: boolean = false;
 
     public viewInfo: PartCreationViewInfo = {
@@ -103,8 +113,10 @@ export class PartCreationComponent implements OnInit, OnDestroy {
 
     public allDocDeleted: boolean = false;
 
+    protected rulesConfig: MGPOptional<RulesConfig> = MGPOptional.empty(); // Provided by RulesConfigurationComponent
+
     public constructor(public readonly router: Router,
-                       public readonly actRoute: ActivatedRoute,
+                       public readonly activatedRoute: ActivatedRoute,
                        public readonly connectedUserService: ConnectedUserService,
                        public readonly currentGameService: CurrentGameService,
                        public readonly gameService: GameService,
@@ -130,9 +142,9 @@ export class PartCreationComponent implements OnInit, OnDestroy {
     }
     private checkInputs(): void {
         const user: MGPOptional<AuthUser> = this.connectedUserService.user;
-        assert(user.isPresent(), 'PartCreationComponent should not be called without connected user');
-        assert(user.get() !== AuthUser.NOT_CONNECTED, 'PartCreationComponent should not be created with an empty userName');
-        assert(this.partId !== '', 'PartCreationComponent should not be created with an empty partId');
+        Utils.assert(user.isPresent(), 'PartCreationComponent should not be called without connected user');
+        Utils.assert(user.get() !== AuthUser.NOT_CONNECTED, 'PartCreationComponent should not be created with an empty userName');
+        Utils.assert(this.partId !== '', 'PartCreationComponent should not be created with an empty partId');
     }
     private createForms(): void {
         this.configFormGroup = this.formBuilder.group({
@@ -148,7 +160,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         const currentGame: CurrentGame = {
             id: this.partId,
             opponent: this.getOpponent(),
-            typeGame: Utils.getNonNullable(this.actRoute.snapshot.paramMap.get('compo')),
+            typeGame: this.getGameUrlName(),
             role,
         };
         return this.currentGameService.updateCurrentGame(currentGame);
@@ -313,7 +325,8 @@ export class PartCreationComponent implements OnInit, OnDestroy {
                                                     PartType.of(partType),
                                                     maxMoveDur,
                                                     FirstPlayer.of(firstPlayer),
-                                                    totalPartDuration);
+                                                    totalPartDuration,
+                                                    this.rulesConfig);
     }
     public async cancelGameCreation(): Promise<void> {
         this.allDocDeleted = true;
@@ -337,6 +350,9 @@ export class PartCreationComponent implements OnInit, OnDestroy {
             return this.onGameCanceled();
         } else {
             const configRoom: ConfigRoom = configRoomOpt.get();
+            if (this.rulesConfig.isAbsent()) {
+                this.rulesConfig = MGPOptional.of(configRoom.rulesConfig);
+            }
             if (this.chosenOpponentJustLeft(configRoom) &&
                 this.userIsCreator(configRoom))
             {
@@ -352,7 +368,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
             }
             this.currentConfigRoom = configRoom;
             if (this.allUserInterval.isAbsent()) { // Only do it once
-                assert(currentGameUpdated === false, 'Expected currentGameUpdate to be false at first call of onCurrentConfigRoomUpdate');
+                Utils.assert(currentGameUpdated === false, 'Expected currentGameUpdate to be false at first call of onCurrentConfigRoomUpdate');
                 await this.updateUserDocWithCurrentGame(this.currentConfigRoom);
                 await this.observeNeededPlayers();
             }
@@ -386,7 +402,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         await this.router.navigate(['/lobby']);
     }
     private isGameStarted(configRoom: ConfigRoom | null): boolean {
-        assert(configRoom != null, 'configRoom should not be null (isGameStarted)');
+        Utils.assert(configRoom != null, 'configRoom should not be null (isGameStarted)');
         return Utils.getNonNullable(configRoom).partStatus === PartStatus.PART_STARTED.value;
     }
     private onGameStarted(): void {
@@ -397,7 +413,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
     }
     private async observeNeededPlayers(): Promise<void> {
         const configRoom: ConfigRoom = Utils.getNonNullable(this.currentConfigRoom);
-        assert(this.allUserInterval.isAbsent(), 'Cannot observe players multiple times');
+        Utils.assert(this.allUserInterval.isAbsent(), 'Cannot observe players multiple times');
         this.allUserInterval = MGPOptional.of(window.setInterval(async() => {
             const currentTime: Timestamp = this.lastToken;
             if (this.userIsCreator(configRoom)) {
@@ -419,8 +435,8 @@ export class PartCreationComponent implements OnInit, OnDestroy {
     }
     private async destroyDocIfPartDidNotStart(): Promise<void> {
         const partStarted: boolean = this.isGameStarted(this.currentConfigRoom);
-        assert(partStarted === false, 'Should not try to cancelGameCreation when part started!');
-        assert(this.allDocDeleted === false, 'Should not delete doc twice');
+        Utils.assert(partStarted === false, 'Should not try to cancelGameCreation when part started!');
+        Utils.assert(this.allDocDeleted === false, 'Should not delete doc twice');
         await this.cancelGameCreation();
     }
     private async checkCandidatesTokensFreshness(currentTime: Timestamp): Promise<void> {
@@ -452,14 +468,14 @@ export class PartCreationComponent implements OnInit, OnDestroy {
     }
     public async startSendingPresenceTokens(): Promise<void> {
         await this.connectedUserService.sendPresenceToken();
-        assert(this.ownTokenInterval.isAbsent(), 'should not start sending presence tokens twice');
+        Utils.assert(this.ownTokenInterval.isAbsent(), 'should not start sending presence tokens twice');
         this.ownTokenInterval = MGPOptional.of(window.setInterval(() => {
             // eslint-disable-next-line @typescript-eslint/no-floating-promises
             this.connectedUserService.sendPresenceToken();
         }, PartCreationComponent.TOKEN_INTERVAL));
         const userId: string = this.connectedUserService.user.get().id;
         this.selfSubscription = this.userService.observeUserOnServer(userId, (user: MGPOptional<User>) => {
-            assert(user.isPresent(), 'connected user should exist');
+            Utils.assert(user.isPresent(), 'connected user should exist');
             this.lastToken = Utils.getNonNullable(user.get().lastUpdateTime) as Timestamp;
         });
     }
@@ -478,6 +494,24 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         // triggers the redirection that will be applied for every subscribed user
         return this.gameService.acceptConfig(this.partId, Utils.getNonNullable(this.currentConfigRoom));
     }
+
+    public saveRulesConfig(rulesConfig: MGPOptional<RulesConfig>): void {
+        this.rulesConfig = rulesConfig;
+    }
+
+    protected getGameUrlName(): string {
+        return Utils.getNonNullable(this.activatedRoute.snapshot.paramMap.get('compo'));
+    }
+
+    public getStateProvider(): MGPOptional<(config: MGPOptional<RulesConfig>) => GameState> {
+        const urlName: string = this.getGameUrlName();
+        const rules: AbstractRules = GameInfo.getByUrlName(urlName).get().rules;
+        const stateProvider: (config: MGPOptional<RulesConfig> ) => GameState = (config: MGPOptional<RulesConfig>) => {
+            return rules.getInitialState(config);
+        };
+        return MGPOptional.of(stateProvider);
+    }
+
     public async ngOnDestroy(): Promise<void> {
         // This will unsubscribe from all observables
         this.ngUnsubscribe.next();

@@ -8,4 +8,5 @@ describe('ApagosSquare', () => {
         const reason: string = 'invalid starting space';
         expect(ApagosSquare.from(1, 0, 0)).toEqual(MGPFallible.failure(reason));
     });
+
 });

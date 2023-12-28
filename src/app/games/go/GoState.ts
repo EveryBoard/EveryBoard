@@ -5,8 +5,10 @@ import { Table, TableUtils } from 'src/app/utils/ArrayUtils';
 import { ComparableObject } from 'src/app/utils/Comparable';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { assert } from 'src/app/utils/assert';
+import { GoConfig } from './GoRules';
 
 type PieceType = 'alive' | 'dead' | 'territory' | 'empty';
+
 export class GoPiece implements ComparableObject {
 
     public static DARK: GoPiece = new GoPiece(Player.ZERO, 'alive');
@@ -81,11 +83,8 @@ export enum Phase {
     ACCEPT = 'ACCEPT',
     FINISHED = 'FINISHED'
 }
+
 export class GoState extends GameStateWithTable<GoPiece> {
-
-    public static WIDTH: number = 19;
-
-    public static HEIGHT: number = 19;
 
     public readonly koCoord: MGPOptional<Coord>;
 
@@ -104,12 +103,15 @@ export class GoState extends GameStateWithTable<GoPiece> {
         this.koCoord = koCoord;
         this.phase = phase;
     }
+
     public getCapturedCopy(): [number, number] {
         return [this.captured[0], this.captured[1]];
     }
-    public static getStartingBoard(): Table<GoPiece> {
-        return TableUtils.create(GoState.WIDTH, GoState.HEIGHT, GoPiece.EMPTY);
+
+    public static getStartingBoard(config: GoConfig): GoPiece[][] {
+        return TableUtils.create(config.width, config.height, GoPiece.EMPTY);
     }
+
     public copy(): GoState {
         return new GoState(this.getCopiedBoard(),
                            this.getCapturedCopy(),
@@ -117,10 +119,13 @@ export class GoState extends GameStateWithTable<GoPiece> {
                            this.koCoord,
                            this.phase);
     }
+
     public isDead(coord: Coord): boolean {
         return this.getPieceAt(coord).isDead();
     }
+
     public isTerritory(coord: Coord): boolean {
         return this.getPieceAt(coord).isTerritory();
     }
+
 }

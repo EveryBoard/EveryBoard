@@ -3,8 +3,9 @@ import { Direction } from 'src/app/jscaip/Direction';
 import { BoardValue } from 'src/app/jscaip/BoardValue';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { EpaminondasState } from './EpaminondasState';
-import { EpaminondasNode } from './EpaminondasRules';
+import { EpaminondasConfig, EpaminondasNode } from './EpaminondasRules';
 import { EpaminondasHeuristic } from './EpaminondasHeuristic';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 export class EpaminondasAttackHeuristic extends EpaminondasHeuristic {
 
@@ -15,7 +16,7 @@ export class EpaminondasAttackHeuristic extends EpaminondasHeuristic {
     private readonly CENTER_FACTOR: number = 5;
     private readonly MOBILITY_FACTOR: number = 0.12;
 
-    public override getBoardValue(node: EpaminondasNode): BoardValue {
+    public override getBoardValue(node: EpaminondasNode, _config: MGPOptional<EpaminondasConfig>): BoardValue {
         const state: EpaminondasState = node.gameState;
         const dominance: number = this.getDominance(state);
         const defense: number = this.getDefense(state);
@@ -37,8 +38,10 @@ export class EpaminondasAttackHeuristic extends EpaminondasHeuristic {
     }
     public getDefense(state: EpaminondasState): number {
         let score: number = 0;
-        for (let x: number = 0; x < EpaminondasState.WIDTH; x++) {
-            if (state.getPieceAtXY(x, EpaminondasState.HEIGHT - 1) === Player.ZERO) {
+        const width: number = state.getWidth();
+        const height: number = state.getHeight();
+        for (let x: number = 0; x < width; x++) {
+            if (state.getPieceAtXY(x, height - 1) === Player.ZERO) {
                 score += Player.ZERO.getScoreModifier();
             }
             if (state.getPieceAtXY(x, 0) === Player.ONE) {
@@ -55,7 +58,7 @@ export class EpaminondasAttackHeuristic extends EpaminondasHeuristic {
                 for (let dx: number = -1; dx <= 1; dx++) {
                     for (let dy: number = -1; dy <= 1; dy++) {
                         const coord: Coord = coordAndContent.coord.getNext(new Coord(dx, dy), 1);
-                        if (EpaminondasState.isOnBoard(coord)) {
+                        if (state.isOnBoard(coord)) {
                             const neighbor: PlayerOrNone = state.getPieceAt(coord);
                             if (neighbor === owner) {
                                 score += 1 * owner.getScoreModifier();
@@ -72,11 +75,13 @@ export class EpaminondasAttackHeuristic extends EpaminondasHeuristic {
     }
     public getOffense(state: EpaminondasState): number {
         let score: number = 0;
-        for (let x: number = 0; x < EpaminondasState.WIDTH; x++) {
+        const width: number = state.getWidth();
+        const height: number = state.getHeight();
+        for (let x: number = 0; x < width; x++) {
             if (state.getPieceAtXY(x, 0) === Player.ZERO) {
                 score += Player.ZERO.getScoreModifier();
             }
-            if (state.getPieceAtXY(x, EpaminondasState.HEIGHT - 1) === Player.ONE) {
+            if (state.getPieceAtXY(x, height - 1) === Player.ONE) {
                 score += Player.ONE.getScoreModifier();
             }
         }
@@ -84,7 +89,8 @@ export class EpaminondasAttackHeuristic extends EpaminondasHeuristic {
     }
     public getCenter(state: EpaminondasState): number {
         let score: number = 0;
-        const cx: number = (EpaminondasState.WIDTH - 1) / 2;
+        const width: number = state.getWidth();
+        const cx: number = (width - 1) / 2;
         for (const coordAndContent of state.getCoordsAndContents()) {
             const owner: PlayerOrNone = coordAndContent.content;
             if (owner.isPlayer()) {
@@ -104,14 +110,14 @@ export class EpaminondasAttackHeuristic extends EpaminondasHeuristic {
                 for (const direction of Direction.DIRECTIONS) {
                     let movedPieces: number = 1;
                     let nextCoord: Coord = firstCoord.getNext(direction, 1);
-                    while (EpaminondasState.isOnBoard(nextCoord) &&
+                    while (state.isOnBoard(nextCoord) &&
                            state.getPieceAt(nextCoord) === owner)
                     {
                         movedPieces += 1;
                         nextCoord = nextCoord.getNext(direction, 1);
                     }
                     let stepSize: number = 1;
-                    while (EpaminondasState.isOnBoard(nextCoord) &&
+                    while (state.isOnBoard(nextCoord) &&
                            stepSize <= movedPieces &&
                            state.getPieceAt(nextCoord) === PlayerOrNone.NONE)
                     {

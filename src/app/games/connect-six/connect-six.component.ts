@@ -4,7 +4,6 @@ import { ConnectSixDrops, ConnectSixFirstMove, ConnectSixMove } from './ConnectS
 import { ConnectSixState } from './ConnectSixState';
 import { PlayerOrNone } from 'src/app/jscaip/Player';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
-import { ConnectSixTutorial } from './ConnectSixTutorial';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { Coord } from 'src/app/jscaip/Coord';
@@ -24,6 +23,7 @@ export class ConnectSixComponent extends GobanGameComponent<ConnectSixRules,
                                                             ConnectSixState,
                                                             PlayerOrNone>
 {
+
     public droppedCoord: MGPOptional<Coord> = MGPOptional.empty();
 
     public lastMoved: Coord[] = [];
@@ -32,14 +32,12 @@ export class ConnectSixComponent extends GobanGameComponent<ConnectSixRules,
 
     public constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
-        this.rules = ConnectSixRules.get();
-        this.node = this.rules.getInitialNode();
+        this.setRulesAndNode('ConnectSix');
         this.availableAIs = [
             new ConnectSixAlignmentMinimax(),
             new MCTS($localize`MCTS`, new ConnectSixMoveGenerator(), this.rules),
         ];
         this.encoder = ConnectSixMove.encoder;
-        this.tutorial = new ConnectSixTutorial().tutorial;
     }
     public async updateBoard(_triggerAnimation: boolean): Promise<void> {
         const state: ConnectSixState = this.getState();

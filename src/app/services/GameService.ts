@@ -65,7 +65,7 @@ export class GameService {
     }
     public async createPartConfigRoomAndChat(typeGame: string): Promise<string> {
         const gameId: string = await this.createUnstartedPart(typeGame);
-        await this.configRoomService.createInitialConfigRoom(gameId);
+        await this.configRoomService.createInitialConfigRoom(gameId, typeGame);
         await this.createChat(gameId);
         return gameId;
     }

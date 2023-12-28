@@ -22,7 +22,9 @@ describe('AbaloneComponent', () => {
     beforeEach(fakeAsync(async() => {
         testUtils = await ComponentTestUtils.forGame<AbaloneComponent>('Abalone');
     }));
+
     describe('First click', () => {
+
         it('should show legal directions choice when clicking piece', fakeAsync(async() => {
             // Given the initial board
 
@@ -38,12 +40,14 @@ describe('AbaloneComponent', () => {
             testUtils.expectElementNotToExist('#direction_DOWN');
             testUtils.expectElementNotToExist('#direction_DOWN_LEFT');
         }));
+
         it('should cancel move when clicking on opponent piece', fakeAsync(async() => {
             // Given the initial board
             // When clicking on an opponent piece
             // Then expect click to be a failure
             await testUtils.expectClickFailure('#piece_8_0', RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT());
         }));
+
         it('should select piece when clicking it', fakeAsync(async() => {
             // Given the initial board
             // When clicking a piece
@@ -53,7 +57,9 @@ describe('AbaloneComponent', () => {
             testUtils.expectElementToHaveClass('#piece_2_7', 'selected-stroke');
         }));
     });
+
     describe('second click', () => {
+
         it('should show translation and pushings directions when second piece is clicked', fakeAsync(async() => {
             // Given the initial board with one selected piece
             await testUtils.expectClickSuccess('#piece_2_6');
@@ -70,6 +76,7 @@ describe('AbaloneComponent', () => {
             testUtils.expectElementNotToExist('#direction_DOWN_LEFT');
             testUtils.expectElementNotToExist('#direction_DOWN');
         }));
+
         it('should unselect single piece when reclicking it', fakeAsync(async() => {
             // Given the initial board with a selected piece
             await testUtils.expectClickSuccess('#piece_2_7');
@@ -80,6 +87,7 @@ describe('AbaloneComponent', () => {
             // Then it should no longer be selected
             testUtils.expectElementNotToHaveClass('#piece_2_7', 'selected-stroke');
         }));
+
         it('should select clicked piece when not aligned with first (non dir)', fakeAsync(async() => {
             // Given the initial board with a selected piece
             await testUtils.expectClickSuccess('#piece_2_6');
@@ -91,6 +99,7 @@ describe('AbaloneComponent', () => {
             testUtils.expectElementNotToHaveClass('#piece_2_6', 'selected-stroke');
             testUtils.expectElementToHaveClass('#piece_4_7', 'selected-stroke');
         }));
+
         it('should select clicked piece when not aligned with first (non hexa dir)', fakeAsync(async() => {
             // Given the initial board with first click
             await testUtils.expectClickSuccess('#piece_2_6');
@@ -102,6 +111,7 @@ describe('AbaloneComponent', () => {
             testUtils.expectElementNotToHaveClass('#piece_2_6', 'selected-stroke');
             testUtils.expectElementToHaveClass('#piece_3_7', 'selected-stroke');
         }));
+
         it('should change first coord to clicked coord if valid extension side but hole in the extension', fakeAsync(async() => {
             // Given a board with a possible "holed line" selection and a first piece selected that could lead to it
             const board: Table<FourStatePiece> = [
@@ -126,6 +136,7 @@ describe('AbaloneComponent', () => {
             testUtils.expectElementNotToHaveClass('#piece_1_5', 'selected-stroke');
             testUtils.expectElementToHaveClass('#piece_1_7', 'selected-stroke');
         }));
+
         it('should cancel move when trying to select more than three pieces', fakeAsync(async() => {
             // Given the initial board with one piece selected
             await testUtils.expectClickSuccess('#piece_0_7');
@@ -139,6 +150,7 @@ describe('AbaloneComponent', () => {
             testUtils.expectElementNotToHaveClass('#piece_2_7', 'selected-stroke');
             testUtils.expectElementNotToHaveClass('#piece_3_7', 'selected-stroke');
         }));
+
         it('should select piece in the middle when clicking on two distant pieces', fakeAsync(async() => {
             // Given the initial board with one selected coord
             await testUtils.expectClickSuccess('#piece_2_7');
@@ -151,6 +163,7 @@ describe('AbaloneComponent', () => {
             testUtils.expectElementToHaveClass('#piece_3_7', 'selected-stroke');
             testUtils.expectElementToHaveClass('#piece_4_7', 'selected-stroke');
         }));
+
         it('should allow clicking on arrow landing coord as if it was the arrow (space)', fakeAsync(async() => {
             // Given the initial board with first space clicked
             await testUtils.expectClickSuccess('#piece_2_6');
@@ -160,6 +173,7 @@ describe('AbaloneComponent', () => {
             const move: AbaloneMove = AbaloneMove.ofSingleCoord(new Coord(2, 6), HexaDirection.LEFT);
             await testUtils.expectMoveSuccess('#space_1_6', move);
         }));
+
         it('should do move when clicking direction', fakeAsync(async() => {
             // Given the initial board with piece selected
             await testUtils.expectClickSuccess('#piece_0_7');
@@ -170,7 +184,9 @@ describe('AbaloneComponent', () => {
             await testUtils.expectMoveSuccess('#direction_UP', move);
         }));
     });
+
     describe('third click', () => {
+
         it('should deselect first piece only when reclicked, and change it', fakeAsync(async() => {
             // Given the initial board with 2 pieces selected
             await testUtils.expectClickSuccess('#piece_2_6');
@@ -183,6 +199,7 @@ describe('AbaloneComponent', () => {
             testUtils.expectElementNotToHaveClass('#piece_2_6', 'selected-stroke');
             testUtils.expectElementToHaveClass('#piece_3_6', 'selected-stroke');
         }));
+
         it('should deselect last piece selected when reclicked', fakeAsync(async() => {
             // Given the initial board with 2 pieces selected
             await testUtils.expectClickSuccess('#piece_2_6');
@@ -195,6 +212,7 @@ describe('AbaloneComponent', () => {
             testUtils.expectElementToHaveClass('#piece_2_6', 'selected-stroke');
             testUtils.expectElementNotToHaveClass('#piece_3_6', 'selected-stroke');
         }));
+
         it('should cancel move when clicking middle piece of a 3 piece column and selecting middle', fakeAsync(async() => {
             // Given the initial board with three piece selected
             await testUtils.expectClickSuccess('#piece_2_7');
@@ -208,6 +226,7 @@ describe('AbaloneComponent', () => {
             testUtils.expectElementNotToHaveClass('#piece_3_7', 'selected-stroke');
             testUtils.expectElementNotToHaveClass('#piece_4_7', 'selected-stroke');
         }));
+
         it('should cancel move then select clicked piece as first piece when it is not aligned with first piece', fakeAsync(async() => {
             // Given the initial board with a line selected
             await testUtils.expectClickSuccess('#piece_2_6');
@@ -217,6 +236,7 @@ describe('AbaloneComponent', () => {
             // Then it should fail
             await testUtils.expectClickFailure('#piece_4_7', AbaloneFailure.LINE_AND_COORD_NOT_ALIGNED());
         }));
+
         it('should cancel move then select clicked piece as first piece when it is not aligned with second piece', fakeAsync(async() => {
             // Given the initial board with a line selected
             await testUtils.expectClickSuccess('#piece_2_6');
@@ -226,6 +246,7 @@ describe('AbaloneComponent', () => {
             // Then it should fail
             await testUtils.expectClickFailure('#piece_2_7', AbaloneFailure.LINE_AND_COORD_NOT_ALIGNED());
         }));
+
         it('should recognize line extension and show new directions (1-2-3)', fakeAsync(async() => {
             // Given the initial board with an extendable two pieces line selected
             await testUtils.expectClickSuccess('#piece_2_6');
@@ -239,6 +260,7 @@ describe('AbaloneComponent', () => {
             testUtils.expectElementToHaveClass('#piece_3_6', 'selected-stroke');
             testUtils.expectElementToHaveClass('#piece_4_6', 'selected-stroke');
         }));
+
         it('should refuse too long extension', fakeAsync(async() => {
             // Given the initial board with two space selected
             await testUtils.expectClickSuccess('#piece_0_7');
@@ -248,6 +270,7 @@ describe('AbaloneComponent', () => {
             // Then move should be cancel for "too-long-line" reason
             await testUtils.expectClickFailure('#piece_3_7', AbaloneFailure.CANNOT_MOVE_MORE_THAN_THREE_PIECES());
         }));
+
         it('should allow clicking on arrow landing coord as if it was below an arrow (opponent)', fakeAsync(async() => {
             // Given a board with a possible push
             const board: Table<FourStatePiece> = [
@@ -272,6 +295,7 @@ describe('AbaloneComponent', () => {
             await testUtils.expectMoveSuccess('#piece_2_5', move);
         }));
     });
+
     it('should allow clicking on arrow landing coord as if it was the arrow (space)', fakeAsync(async() => {
         // Given the initial board with first space clicked
         await testUtils.expectClickSuccess('#piece_2_6');
@@ -281,6 +305,7 @@ describe('AbaloneComponent', () => {
         const move: AbaloneMove = AbaloneMove.ofSingleCoord(new Coord(2, 6), HexaDirection.LEFT);
         await testUtils.expectMoveSuccess('#space_1_6', move);
     }));
+
     it('should allow clicking on arrow landing coord as if it was below an arrow (opponent)', fakeAsync(async() => {
         // Given a board with a possible push
         const board: Table<FourStatePiece> = [
@@ -304,6 +329,7 @@ describe('AbaloneComponent', () => {
         const move: AbaloneMove = AbaloneMove.ofSingleCoord(new Coord(2, 7), HexaDirection.UP);
         await testUtils.expectMoveSuccess('#piece_2_5', move);
     }));
+
     it('should not do anything when clicking space that is not below a direction arrow', fakeAsync(async() => {
         // Given the initial board with first space clicked
         await testUtils.expectClickSuccess('#space_1_6');
@@ -311,7 +337,9 @@ describe('AbaloneComponent', () => {
         // When clicking on the space marked by the direction instead of its arrow
         // Then expect nothing, just want this line covered!
     }));
+
     describe('showLastMove', () => {
+
         it('should show last move moved pieces (translation)', fakeAsync(async() => {
             // Given an initial board with two aligned pieces selected
             await testUtils.expectClickSuccess('#piece_2_6');
@@ -323,6 +351,7 @@ describe('AbaloneComponent', () => {
                 AbaloneMove.ofDoubleCoord(new Coord(2, 6), new Coord(3, 6), HexaDirection.UP);
             await testUtils.expectMoveSuccess('#direction_UP', move);
         }));
+
         it('should show last move moved pieces (push)', fakeAsync(async() => {
             // Given a board with a previous move
             await testUtils.expectClickSuccess('#piece_0_7');
@@ -335,6 +364,7 @@ describe('AbaloneComponent', () => {
             testUtils.expectElementToHaveClass('#space_0_7', 'moved-fill');
             testUtils.expectElementToHaveClass('#space_0_8', 'moved-fill');
         }));
+
         it('should recognize line extension and show new directions (M-2-1-3) and move it as one', fakeAsync(async() => {
             // Given the initial board with an extendable two pieces line selected
             await testUtils.expectClickSuccess('#piece_3_6');
@@ -352,4 +382,5 @@ describe('AbaloneComponent', () => {
             testUtils.expectElementToHaveClass('#space_4_6', 'moved-fill');
         }));
     });
+
 });

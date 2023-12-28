@@ -23,6 +23,7 @@ import { UserMocks } from 'src/app/domain/UserMocks.spec';
 import { PartMocks } from 'src/app/domain/PartMocks.spec';
 import { Subscription } from 'rxjs';
 import { GameEventService } from '../GameEventService';
+import { NoConfig, RulesConfigUtils } from 'src/app/jscaip/RulesConfigUtil';
 
 describe('GameService', () => {
 
@@ -31,6 +32,8 @@ describe('GameService', () => {
     let partDAO: PartDAO;
 
     let gameEventService: GameEventService;
+
+    const rulesConfig: NoConfig = RulesConfigUtils.getGameDefaultConfig('Quarto');
 
     beforeEach(fakeAsync(async() => {
         await TestBed.configureTestingModule({
@@ -52,9 +55,11 @@ describe('GameService', () => {
         partDAO = TestBed.inject(PartDAO);
         ConnectedUserServiceMock.setUser(UserMocks.CREATOR_AUTH_USER);
     }));
+
     it('should create', () => {
         expect(gameService).toBeTruthy();
     });
+
     it('should delegate subscribeToChanges callback to partDAO', fakeAsync(async() => {
         // Given an existing part
         const part: Part = {
@@ -83,6 +88,7 @@ describe('GameService', () => {
 
         subscription.unsubscribe();
     }));
+
     it('should delegate delete to PartDAO', fakeAsync(async() => {
         // Given the service at any moment
         spyOn(partDAO, 'delete').and.resolveTo();
@@ -100,12 +106,13 @@ describe('GameService', () => {
             spyOn(partDAO, 'update').and.resolveTo();
 
             // Given a config
-            const configRoom: ConfigRoom = ConfigRoomMocks.WITH_PROPOSED_CONFIG;
+            const configRoom: ConfigRoom = ConfigRoomMocks.withProposedConfig(rulesConfig);
             // When accepting it
             await gameService.acceptConfig('partId', configRoom);
             // Then acceptConfig should be called
             expect(configRoomService.acceptConfig).toHaveBeenCalledOnceWith('partId');
         }));
+
         it('should call startGame with the accepter player as argument (Player.ZERO)', fakeAsync(async() => {
             const configRoomService: ConfigRoomService = TestBed.inject(ConfigRoomService);
             const gameEventService: GameEventService = TestBed.inject(GameEventService);
@@ -115,7 +122,7 @@ describe('GameService', () => {
 
             // Given a config that we want to accept, where we will start
             const configRoom: ConfigRoom = {
-                ...ConfigRoomMocks.WITH_PROPOSED_CONFIG,
+                ...ConfigRoomMocks.withProposedConfig(rulesConfig),
                 firstPlayer: FirstPlayer.CHOSEN_PLAYER.value,
             };
             // When accepting it
@@ -123,6 +130,7 @@ describe('GameService', () => {
             // Then startGame is called with Player.ZERO
             expect(gameEventService.startGame).toHaveBeenCalledWith('partId', Player.ZERO);
         }));
+
         it('should can startGame with the accepter player as argument (Player.ONE)', fakeAsync(async() => {
             const configRoomService: ConfigRoomService = TestBed.inject(ConfigRoomService);
             const gameEventService: GameEventService = TestBed.inject(GameEventService);
@@ -132,7 +140,7 @@ describe('GameService', () => {
 
             // Given a config that we want to accept, where creator will start
             const configRoom: ConfigRoom = {
-                ...ConfigRoomMocks.WITH_PROPOSED_CONFIG,
+                ...ConfigRoomMocks.withProposedConfig(rulesConfig),
                 firstPlayer: FirstPlayer.CREATOR.value,
             };
             // When accepting it
@@ -141,36 +149,38 @@ describe('GameService', () => {
             expect(gameEventService.startGame).toHaveBeenCalledWith('partId', Player.ONE);
         }));
     });
-    it('createPartConfigRoomAndChat should create in this order: part, configRoom, and then chat', fakeAsync(async() => {
-        const configRoomDAO: ConfigRoomDAO = TestBed.inject(ConfigRoomDAO);
-        const chatDAO: ChatDAO = TestBed.inject(ChatDAO);
-        // Install some mocks to check what we need
-        // (we can't rely on toHaveBeenCalled on a mocked method, so we model this manually)
-        let chatCreated: boolean = false;
-        let configRoomCreated: boolean = false;
-        spyOn(chatDAO, 'set').and.callFake(async(): Promise<void> => {
-            chatCreated = true;
-        });
-        spyOn(configRoomDAO, 'set').and.callFake(async(): Promise<void> => {
-            expect(chatCreated).withContext('configRoom should be created before the chat').toBeFalse();
-            configRoomCreated = true;
-        });
-        spyOn(partDAO, 'create').and.callFake(async(): Promise<string> => {
-            expect(chatCreated).withContext('part should be created before the chat').toBeFalse();
-            expect(configRoomCreated).withContext('part should be created before the configRoom').toBeFalse();
-            return 'partId';
-        });
+    describe('createPartConfigRoomAndChat', () => {
+        it('should create in this order: part, configRoom, and then chat', fakeAsync(async() => {
+            const configRoomDAO: ConfigRoomDAO = TestBed.inject(ConfigRoomDAO);
+            const chatDAO: ChatDAO = TestBed.inject(ChatDAO);
+            // Install some mocks to check what we need
+            // (we can't rely on toHaveBeenCalled on a mocked method, so we model this manually)
+            let chatCreated: boolean = false;
+            let configRoomCreated: boolean = false;
+            spyOn(chatDAO, 'set').and.callFake(async(): Promise<void> => {
+                chatCreated = true;
+            });
+            spyOn(configRoomDAO, 'set').and.callFake(async(): Promise<void> => {
+                expect(chatCreated).withContext('configRoom should be created before the chat').toBeFalse();
+                configRoomCreated = true;
+            });
+            spyOn(partDAO, 'create').and.callFake(async(): Promise<string> => {
+                expect(chatCreated).withContext('part should be created before the chat').toBeFalse();
+                expect(configRoomCreated).withContext('part should be created before the configRoom').toBeFalse();
+                return 'partId';
+            });
 
-        // When calling createPartConfigRoomAndChat
-        await gameService.createPartConfigRoomAndChat('Quarto');
-        // Then, the order of the creations must be part, configRoom, chat (as checked by the mocks)
-        // Moreover, everything needs to have been called eventually
-        const part: Part = PartMocks.INITIAL;
-        const configRoom: ConfigRoom = ConfigRoomMocks.INITIAL_RANDOM;
-        expect(partDAO.create).toHaveBeenCalledOnceWith(part);
-        expect(chatDAO.set).toHaveBeenCalledOnceWith('partId', {});
-        expect(configRoomDAO.set).toHaveBeenCalledOnceWith('partId', configRoom);
-    }));
+            // When calling createPartConfigRoomAndChat
+            await gameService.createPartConfigRoomAndChat('Quarto');
+            // Then, the order of the creations must be part, configRoom, chat (as checked by the mocks)
+            // Moreover, everything needs to have been called eventually
+            const part: Part = PartMocks.INITIAL;
+            const configRoom: ConfigRoom = ConfigRoomMocks.getInitialRandom(rulesConfig);
+            expect(partDAO.create).toHaveBeenCalledOnceWith(part);
+            expect(chatDAO.set).toHaveBeenCalledOnceWith('partId', {});
+            expect(configRoomDAO.set).toHaveBeenCalledOnceWith('partId', configRoom);
+        }));
+    });
     describe('getStartingConfig', () => {
         it('should put creator first when math.random() is below 0.5', fakeAsync(async() => {
             // Given a configRoom config asking random start
@@ -182,6 +192,7 @@ describe('GameService', () => {
                 partStatus: 3,
                 partType: PartType.BLITZ.value,
                 totalPartDuration: 25,
+                rulesConfig: {},
             };
 
             // When calling getStartingConfig
@@ -192,6 +203,7 @@ describe('GameService', () => {
             expect(startConfig.playerZero).toEqual(configRoom.creator);
             expect(startConfig.playerOne).toEqual(Utils.getNonNullable(configRoom.chosenOpponent));
         }));
+
         it('should put ChosenOpponent first when math.random() is over 0.5', fakeAsync(async() => {
             // Given a configRoom config asking random start
             const configRoom: ConfigRoom = {
@@ -202,6 +214,7 @@ describe('GameService', () => {
                 partStatus: 3,
                 partType: PartType.BLITZ.value,
                 totalPartDuration: 25,
+                rulesConfig: {},
             };
 
             // When calling getStartingConfig
@@ -220,6 +233,7 @@ describe('GameService', () => {
             configRoomService = TestBed.inject(ConfigRoomService);
             partDAO = TestBed.inject(PartDAO);
         });
+
         it('should send request when proposing a rematch', fakeAsync(async() => {
             // Given a game service
             spyOn(gameEventService, 'addRequest').and.resolveTo();
@@ -230,6 +244,7 @@ describe('GameService', () => {
             // Then it should add a request
             expect(gameEventService.addRequest).toHaveBeenCalledOnceWith('partId', Player.ZERO, 'Rematch');
         }));
+
         it('should send reply when rejecting a rematch', fakeAsync(async() => {
             // Given a game service
             spyOn(gameEventService, 'addReply').and.resolveTo();
@@ -240,11 +255,12 @@ describe('GameService', () => {
             // Then it should add a reply
             expect(gameEventService.addReply).toHaveBeenCalledOnceWith('partId', Player.ZERO, 'Reject', 'Rematch');
         }));
+
         it('should start with the other player when first player mentioned in previous game', fakeAsync(async() => {
             // Given a previous game
             const lastPart: PartDocument = new PartDocument('partId', PartMocks.FINISHED);
-            const lastGameConfigRoom: ConfigRoom = ConfigRoomMocks.WITH_ACCEPTED_CONFIG;
-            spyOn(configRoomService, 'readConfigRoomById').and.resolveTo(lastGameConfigRoom);
+            const lastConfigRoom: ConfigRoom = ConfigRoomMocks.withAcceptedConfig(rulesConfig);
+            spyOn(configRoomService, 'readConfigRoomById').and.resolveTo(lastConfigRoom);
             spyOn(partDAO, 'create').and.resolveTo('rematchId');
 
             // When calling acceptRematch
@@ -258,11 +274,12 @@ describe('GameService', () => {
             };
             expect(partDAO.create).toHaveBeenCalledOnceWith(part);
         }));
+
         it('should create elements in this order: part, configRoom, and then chat', fakeAsync(async() => {
             // Given a previous game
             const lastPart: PartDocument = new PartDocument('partId', PartMocks.FINISHED);
-            const lastGameConfigRoom: ConfigRoom = ConfigRoomMocks.WITH_ACCEPTED_CONFIG;
-            spyOn(configRoomService, 'readConfigRoomById').and.resolveTo(lastGameConfigRoom);
+            const lastConfigRoom: ConfigRoom = ConfigRoomMocks.withAcceptedConfig(rulesConfig);
+            spyOn(configRoomService, 'readConfigRoomById').and.resolveTo(lastConfigRoom);
 
             // Install some mocks to check what we need
             // (we can't rely on toHaveBeenCalled on a mocked method, so we model this manually)
@@ -293,7 +310,7 @@ describe('GameService', () => {
                 playerZero: Utils.getNonNullable(lastPart.data.playerOne),
                 playerOne: lastPart.data.playerZero,
             };
-            const configRoom: ConfigRoom = ConfigRoomMocks.WITH_ACCEPTED_CONFIG;
+            const configRoom: ConfigRoom = ConfigRoomMocks.withAcceptedConfig(rulesConfig);
             expect(partDAO.create).toHaveBeenCalledOnceWith(part);
             expect(chatDAO.set).toHaveBeenCalledOnceWith('partId', {});
             expect(configRoomDAO.set).toHaveBeenCalledOnceWith('partId', configRoom);
@@ -311,6 +328,7 @@ describe('GameService', () => {
             spyOn(partDAO, 'read').and.resolveTo(MGPOptional.of(part));
             spyOn(partDAO, 'update').and.resolveTo();
         });
+
         it('should add scores to update when scores are present', fakeAsync(async() => {
             // When updating the board with scores
             const scores: [number, number] = [5, 0];
@@ -369,6 +387,7 @@ describe('GameService', () => {
             // Then it should decrease the turn by one
             expect(partDAO.update).toHaveBeenCalledOnceWith('configRoomId', { turn: 1 });
         }));
+
         it(`should decrease turn by 2 when accepting during the opponent's turn`, fakeAsync(async() => {
             spyOn(partDAO, 'update').and.resolveTo();
             // Given a part during the opponent's turn

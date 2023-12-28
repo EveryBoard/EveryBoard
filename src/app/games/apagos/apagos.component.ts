@@ -15,7 +15,6 @@ import { ApagosMoveGenerator } from './ApagosMoveGenerator';
 import { ApagosRules } from './ApagosRules';
 import { ApagosSquare } from './ApagosSquare';
 import { ApagosState } from './ApagosState';
-import { ApagosTutorial } from './ApagosTutorial';
 
 interface PieceLocation {
 
@@ -74,15 +73,14 @@ export class ApagosComponent extends GameComponent<ApagosRules, ApagosMove, Apag
     }
     public constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
-        this.rules = ApagosRules.get();
-        this.node = this.rules.getInitialNode();
-        this.hasAsymmetricBoard = true;
+        this.setRulesAndNode('Apagos');
         this.availableAIs = [
             new Minimax($localize`Minimax`, this.rules, new ApagosHeuristic(), new ApagosMoveGenerator()),
             new MCTS($localize`MCTS`, new ApagosMoveGenerator(), this.rules),
         ];
         this.encoder = ApagosMove.encoder;
-        this.tutorial = new ApagosTutorial().tutorial;
+        this.hasAsymmetricBoard = true;
+
         this.PIECE_RADIUS = (2 * this.SPACE_SIZE) / (this.PIECES_PER_PLAYER + 0.5);
     }
     public override cancelMoveAttempt(): void {
@@ -247,10 +245,11 @@ export class ApagosComponent extends GameComponent<ApagosRules, ApagosMove, Apag
     private getPieceColor(i: number, zero: number, neutral: number): string {
         if (i < zero) {
             return 'player0-fill';
-        } else if (i >= (zero + neutral)) {
+        } else if (i < (zero + neutral)) {
+            return '';
+        } else {
             return 'player1-fill';
         }
-        return '';
 
     }
     public async onSquareClick(x: number): Promise<MGPValidation> {

@@ -3,9 +3,10 @@ import { MGPMap } from '../utils/MGPMap';
 import { Debug, Utils } from 'src/app/utils/utils';
 import { MGPOptional } from '../utils/MGPOptional';
 import { GameState } from './GameState';
-import { Rules } from './Rules';
+import { AbstractRules } from './Rules';
 import { GameStatus } from './GameStatus';
 import { Player } from './Player';
+import { RulesConfig } from './RulesConfigUtil';
 
 export class GameNodeStats {
     public static createdNodes: number = 0;
@@ -43,6 +44,7 @@ export class GameNode<M extends Move, S extends GameState> {
         this.id = GameNode.ID++;
         GameNodeStats.createdNodes++;
     }
+
     /**
      * Returns the child corresponding to applying the given move to the current state,
      * or empty if it has not yet been calculated.
@@ -50,18 +52,21 @@ export class GameNode<M extends Move, S extends GameState> {
     public getChild(move: M): MGPOptional<GameNode<M, S>> {
         return this.children.get(move);
     }
+
     /**
      * Checks whether this node has children
      */
     public hasChildren(): boolean {
         return this.getChildren().length > 0;
     }
+
     /**
      * Returns all the children of the node
      */
     public getChildren(): GameNode<M, S>[] {
         return this.children.listValues();
     }
+
     /**
      * Adds a child to this node.
      */
@@ -69,22 +74,24 @@ export class GameNode<M extends Move, S extends GameState> {
         Utils.assert(node.previousMove.isPresent(), 'GameNode: addChild expects a node with a previous move');
         this.children.set(node.previousMove.get(), node);
     }
+
     /**
      * Represents the tree starting at this node as a DOT graph.
      * You can view the DOT graph with a tool like xdot,
      * or by pasting it on a website like https://dreampuf.github.io/GraphvizOnline/
      */
-    public printDot<L>(rules: Rules<M, S, L>,
-                       labelFn?: (node: GameNode<M, S>) => string,
-                       max?: number,
-                       level: number = 0,
-                       id: number = 0)
+    public printDot(rules: AbstractRules,
+                    labelFn?: (node: GameNode<M, S>) => string,
+                    max?: number,
+                    level: number = 0,
+                    id: number = 0,
+                    config: MGPOptional<RulesConfig> = MGPOptional.empty())
     : number
     {
         if (level === 0) {
             console.log('digraph G {');
         }
-        const gameStatus: GameStatus = rules.getGameStatus(this);
+        const gameStatus: GameStatus = rules.getGameStatus(this, config);
         let color: string = 'white';
         if (gameStatus.isEndGame) {
             switch (gameStatus.winner) {
@@ -117,12 +124,14 @@ export class GameNode<M extends Move, S extends GameState> {
         }
         return nextId;
     }
+
     /**
      * Get a value from the cache, or MGPOptional if it does not exist in the cache.
      */
     public getCache<T>(key: string): MGPOptional<T> {
         return this.cache.get(key) as MGPOptional<T>;
     }
+
     /**
      * Set or replace a value from the cache.
      */
@@ -133,6 +142,7 @@ export class GameNode<M extends Move, S extends GameState> {
             this.cache.set(key, value);
         }
     }
+
 }
 
 export class AbstractNode extends GameNode<Move, GameState> {}

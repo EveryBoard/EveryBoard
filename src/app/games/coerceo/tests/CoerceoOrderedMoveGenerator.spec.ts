@@ -1,8 +1,9 @@
 /* eslint-disable max-lines-per-function */
 import { CoerceoState } from '../CoerceoState';
-import { CoerceoNode } from '../CoerceoRules';
+import { CoerceoNode, CoerceoRules } from '../CoerceoRules';
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
 import { CoerceoOrderedMoveGenerator } from '../CoerceoOrderedMoveGenerator';
+import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 const _: FourStatePiece = FourStatePiece.EMPTY;
 const N: FourStatePiece = FourStatePiece.UNREACHABLE;
@@ -12,10 +13,12 @@ const X: FourStatePiece = FourStatePiece.ONE;
 describe('CoerceoOrderedMoveGenerator', () => {
 
     let moveGenerator: CoerceoOrderedMoveGenerator;
+    const defaultConfig: NoConfig = CoerceoRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         moveGenerator = new CoerceoOrderedMoveGenerator();
     });
+
     it('should still generate all moves number of moves', () => {
         const board: FourStatePiece[][] = [
             [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
@@ -31,8 +34,9 @@ describe('CoerceoOrderedMoveGenerator', () => {
         ];
         const state: CoerceoState = new CoerceoState(board, 0, [2, 0], [0, 0]);
         const node: CoerceoNode = new CoerceoNode(state);
-        expect(moveGenerator.getListMoves(node).length).toBe(3);
+        expect(moveGenerator.getListMoves(node, defaultConfig).length).toBe(3);
     });
+
     it('should generate all moves in case of capture on the edge', () => {
         const board: FourStatePiece[][] = [
             [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
@@ -48,6 +52,7 @@ describe('CoerceoOrderedMoveGenerator', () => {
         ];
         const state: CoerceoState = new CoerceoState(board, 1, [0, 0], [18, 17]);
         const node: CoerceoNode = new CoerceoNode(state);
-        expect(moveGenerator.getListMoves(node).length).toBe(2);
+        expect(moveGenerator.getListMoves(node, defaultConfig).length).toBe(2);
     });
+
 });

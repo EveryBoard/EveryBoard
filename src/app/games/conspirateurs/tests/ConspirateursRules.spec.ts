@@ -7,6 +7,7 @@ import { ConspirateursFailure } from '../ConspirateursFailure';
 import { ConspirateursMove, ConspirateursMoveDrop, ConspirateursMoveJump, ConspirateursMoveSimple } from '../ConspirateursMove';
 import { ConspirateursNode, ConspirateursRules } from '../ConspirateursRules';
 import { ConspirateursState } from '../ConspirateursState';
+import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 describe('ConspirateursRules', () => {
     const _: PlayerOrNone = PlayerOrNone.NONE;
@@ -14,6 +15,7 @@ describe('ConspirateursRules', () => {
     const X: PlayerOrNone = PlayerOrNone.ONE;
 
     let rules: ConspirateursRules;
+    const defaultConfig: NoConfig = ConspirateursRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         rules = ConspirateursRules.get();
@@ -29,6 +31,7 @@ describe('ConspirateursRules', () => {
         return ConspirateursMoveJump.from(coords).get();
     }
     describe('drop moves', () => {
+
         it('should allow drops within the center zone', () => {
             // Given the initial state
             const state: ConspirateursState = ConspirateursRules.get().getInitialState();
@@ -54,8 +57,9 @@ describe('ConspirateursRules', () => {
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             ], 1);
-            RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+            RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         });
+
         it('should forbid drops out of the center zone', () => {
             // Given the initial state
             const state: ConspirateursState = ConspirateursRules.get().getInitialState();
@@ -63,8 +67,9 @@ describe('ConspirateursRules', () => {
             const move: ConspirateursMove = drop(new Coord(3, 2));
             // Then the move should be illegal
             const reason: string = ConspirateursFailure.MUST_DROP_IN_CENTRAL_ZONE();
-            RulesUtils.expectMoveFailure(rules, state, move, reason);
+            RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
+
         it('should forbid drops on an existing piece', () => {
             // Given a state with one piece already dropped
             const state: ConspirateursState = new ConspirateursState([
@@ -90,8 +95,9 @@ describe('ConspirateursRules', () => {
             const move: ConspirateursMove = drop(new Coord(7, 7));
             // Then the move should be illegal
             const reason: string = RulesFailure.MUST_LAND_ON_EMPTY_SPACE();
-            RulesUtils.expectMoveFailure(rules, state, move, reason);
+            RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
+
         it('should forbid drops after the drop phase', () => {
             // Given a fictitious state after turn 40
             const state: ConspirateursState = new ConspirateursState([
@@ -117,10 +123,13 @@ describe('ConspirateursRules', () => {
             const move: ConspirateursMove = drop(new Coord(8, 8));
             // Then the move should be illegal
             const reason: string = ConspirateursFailure.CANNOT_DROP_AFTER_TURN_40();
-            RulesUtils.expectMoveFailure(rules, state, move, reason);
+            RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
+
     });
+
     describe('simple moves', () => {
+
         it('should allow simple moves', () => {
             // Given a fictitious board after the drop phase, with one piece
             const state: ConspirateursState = new ConspirateursState([
@@ -164,8 +173,9 @@ describe('ConspirateursRules', () => {
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             ], 43);
-            RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+            RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         });
+
         it('should forbid simple moves from a square occupied by the opponent', () => {
             // Given a fictitious board after the drop phase, with one piece not owned by the current player
             const state: ConspirateursState = new ConspirateursState([
@@ -191,8 +201,9 @@ describe('ConspirateursRules', () => {
             const move: ConspirateursMove = simpleMove(new Coord(7, 7), new Coord(7, 6));
             // Then the move should be illegal
             const reason: string = RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT();
-            RulesUtils.expectMoveFailure(rules, state, move, reason);
+            RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
+
         it('should forbid simple moves from an empty square', () => {
             // Given a fictitious board after the drop phase
             const state: ConspirateursState = new ConspirateursState([
@@ -218,8 +229,9 @@ describe('ConspirateursRules', () => {
             const move: ConspirateursMove = simpleMove(new Coord(5, 5), new Coord(5, 6));
             // Then the move should be illegal
             const reason: string = RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY();
-            RulesUtils.expectMoveFailure(rules, state, move, reason);
+            RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
+
         it('should forbid simple moves on an occupied destination', () => {
             // Given a fictitious board after the drop phase
             const state: ConspirateursState = new ConspirateursState([
@@ -245,8 +257,9 @@ describe('ConspirateursRules', () => {
             const move: ConspirateursMove = simpleMove(new Coord(7, 7), new Coord(7, 6));
             // Then the move should be illegal
             const reason: string = RulesFailure.MUST_LAND_ON_EMPTY_SPACE();
-            RulesUtils.expectMoveFailure(rules, state, move, reason);
+            RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
+
         it('should forbid simple moves in the drop phase', () => {
             // Given a fictitious board during the drop phase
             const state: ConspirateursState = new ConspirateursState([
@@ -272,10 +285,13 @@ describe('ConspirateursRules', () => {
             const move: ConspirateursMove = simpleMove(new Coord(7, 7), new Coord(7, 6));
             // Then the move should be illegal
             const reason: string = ConspirateursFailure.CANNOT_MOVE_BEFORE_TURN_40();
-            RulesUtils.expectMoveFailure(rules, state, move, reason);
+            RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
+
     });
+
     describe('jump moves', () => {
+
         it('should allow one jump over a piece', () => {
             // Given a fictitious board after the drop phase
             const state: ConspirateursState = new ConspirateursState([
@@ -319,8 +335,9 @@ describe('ConspirateursRules', () => {
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             ], 43);
-            RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+            RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         });
+
         it('should allow multiple jumps', () => {
             // Given a fictitious board after the drop phase
             const state: ConspirateursState = new ConspirateursState([
@@ -364,8 +381,9 @@ describe('ConspirateursRules', () => {
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             ], 43);
-            RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+            RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         });
+
         it('should forbid jumps from a square occupied by the opponent', () => {
             // Given a fictitious board after the drop phase
             const state: ConspirateursState = new ConspirateursState([
@@ -391,8 +409,9 @@ describe('ConspirateursRules', () => {
             const move: ConspirateursMove = jump([new Coord(7, 6), new Coord(7, 8)]);
             // Then the move should be illegal
             const reason: string = RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT();
-            RulesUtils.expectMoveFailure(rules, state, move, reason);
+            RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
+
         it('should forbid jumps from an empty square', () => {
             // Given a fictitious board after the drop phase
             const state: ConspirateursState = new ConspirateursState([
@@ -418,8 +437,9 @@ describe('ConspirateursRules', () => {
             const move: ConspirateursMove = jump([new Coord(5, 5), new Coord(5, 7)]);
             // Then the move should be illegal
             const reason: string = RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY();
-            RulesUtils.expectMoveFailure(rules, state, move, reason);
+            RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
+
         it('should forbid jumps that jump over emptiness', () => {
             // Given a fictitious board after the drop phase
             const state: ConspirateursState = new ConspirateursState([
@@ -445,8 +465,9 @@ describe('ConspirateursRules', () => {
             const move: ConspirateursMove = jump([new Coord(7, 7), new Coord(7, 9)]);
             // Then the move should be illegal
             const reason: string = ConspirateursFailure.MUST_JUMP_OVER_PIECES();
-            RulesUtils.expectMoveFailure(rules, state, move, reason);
+            RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
+
         it('should forbid jumps that land on an occupied square', () => {
             // Given a fictitious board after the drop phase
             const state: ConspirateursState = new ConspirateursState([
@@ -472,8 +493,9 @@ describe('ConspirateursRules', () => {
             const move: ConspirateursMove = jump([new Coord(7, 7), new Coord(7, 5)]);
             // Then the move should be illegal
             const reason: string = RulesFailure.MUST_LAND_ON_EMPTY_SPACE();
-            RulesUtils.expectMoveFailure(rules, state, move, reason);
+            RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
+
         it('should forbid to jump too early in the game', () => {
             // Given a state still in the drop phase
             const state: ConspirateursState = new ConspirateursState([
@@ -499,17 +521,21 @@ describe('ConspirateursRules', () => {
             const move: ConspirateursMove = jump([new Coord(7, 7), new Coord(7, 5)]);
             // Then the move should be illegal
             const reason: string = ConspirateursFailure.CANNOT_MOVE_BEFORE_TURN_40();
-            RulesUtils.expectMoveFailure(rules, state, move, reason);
+            RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
+
     });
+
     describe('win', () => {
+
         it('should consider game ongoing as long as both players have not reached the win condition', () => {
             // Given a state with no victory
             const state: ConspirateursState = ConspirateursRules.get().getInitialState();
             const node: ConspirateursNode = new ConspirateursNode(state);
             // Then it should be considered as ongoing
-            RulesUtils.expectToBeOngoing(rules, node);
+            RulesUtils.expectToBeOngoing(rules, node, defaultConfig);
         });
+
         it('should consider game won if a player has put all its pieces in shelters (Player.ZERO)', () => {
             // Given a state where player 0 has sheltered all of its pieces
             const state: ConspirateursState = new ConspirateursState([
@@ -533,8 +559,9 @@ describe('ConspirateursRules', () => {
             ], 60);
             const node: ConspirateursNode = new ConspirateursNode(state);
             // Then the victory should be detected for player 0
-            RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO);
+            RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, defaultConfig);
         });
+
         it('should consider game won if a player has put all its pieces in shelters (Player.ONE)', () => {
             // Given a state where player 1 has sheltered all of its pieces
             const state: ConspirateursState = new ConspirateursState([
@@ -558,12 +585,15 @@ describe('ConspirateursRules', () => {
             ], 60);
             const node: ConspirateursNode = new ConspirateursNode(state);
             // Then the victory should be detected for player 1
-            RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE);
+            RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, defaultConfig);
         });
+
     });
+
     it('should not compute jumps that go out of the board', () => {
         // When computing the jumps from the side of the board
         // Then the jumps out of the board are not returned
         expect(rules.jumpTargetsFrom(new Coord(1, 0)).length).toBe(3);
     });
+
 });

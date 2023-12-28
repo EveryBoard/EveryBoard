@@ -5,14 +5,17 @@ import { Table } from 'src/app/utils/ArrayUtils';
 import { BrandhubMove } from '../brandhub/BrandhubMove';
 import { BrandhubNode, BrandhubRules } from '../brandhub/BrandhubRules';
 import { TaflMoveGenerator } from '../TaflMoveGenerator';
+import { TaflConfig } from '../TaflConfig';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { TaflState } from '../TaflState';
 
 describe('TaflMoveGenerator', () => {
 
     const _: TaflPawn = TaflPawn.UNOCCUPIED;
-    const O: TaflPawn = TaflPawn.INVADERS;
-    const X: TaflPawn = TaflPawn.DEFENDERS;
+    const O: TaflPawn = TaflPawn.PLAYER_ZERO_PAWN;
+    const X: TaflPawn = TaflPawn.PLAYER_ONE_PAWN;
     const A: TaflPawn = TaflPawn.PLAYER_ONE_KING;
+    const defaultConfig: MGPOptional<TaflConfig> = BrandhubRules.get().getDefaultRulesConfig();
 
     it('should not propose to King to go back on the throne when its forbidden', () => {
         // Given a board where king could go back on his throne but the rules forbid it
@@ -29,11 +32,12 @@ describe('TaflMoveGenerator', () => {
         const state: TaflState = new TaflState(board, 1);
         const node: BrandhubNode = new BrandhubNode(state);
 
-        // When asking the list of legal move
-        const moves: BrandhubMove[] = moveGenerator.getListMoves(node);
+        // When listing the moves
+        const moves: BrandhubMove[] = moveGenerator.getListMoves(node, defaultConfig);
 
         // Then going back on throne should not be part of it
         const kingBackOnThrone: BrandhubMove = BrandhubMove.from(new Coord(3, 2), new Coord(3, 3)).get();
         expect(moves).not.toContain(kingBackOnThrone);
     });
+
 });

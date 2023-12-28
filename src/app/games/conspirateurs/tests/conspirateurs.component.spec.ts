@@ -124,6 +124,7 @@ describe('ConspirateursComponent', () => {
             // Then the click should be rejected
             await testUtils.expectClickFailure('#click_0_0', RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY());
         }));
+
         it('should forbid selecting a piece of the opponent', fakeAsync(async() => {
             // When clicking on a piece of the opponent
             // Then the click should be rejected

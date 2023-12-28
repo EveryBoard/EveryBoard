@@ -10,7 +10,6 @@ import { PointyHexaOrientation } from 'src/app/jscaip/HexaOrientation';
 import { HexagonalGameComponent }
     from 'src/app/components/game-components/game-component/HexagonalGameComponent';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
-import { DvonnTutorial } from './DvonnTutorial';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { assert } from 'src/app/utils/assert';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
@@ -36,18 +35,16 @@ export class DvonnComponent extends HexagonalGameComponent<DvonnRules, DvonnMove
 
     public constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
-        this.rules = DvonnRules.get();
-        this.node = this.rules.getInitialNode();
+        this.setRulesAndNode('Dvonn');
         this.availableAIs = [
             new Minimax($localize`Stacks`, this.rules, new DvonnMaxStacksHeuristic(), new DvonnOrderedMoveGenerator()),
             new Minimax($localize`Score`, this.rules, new DvonnScoreHeuristic(), new DvonnOrderedMoveGenerator()),
             new MCTS($localize`MCTS`, new DvonnMoveGenerator(), this.rules),
         ];
         this.encoder = DvonnMove.encoder;
-        this.tutorial = new DvonnTutorial().tutorial;
-        this.SPACE_SIZE = 30;
-        this.canPass = false;
         this.scores = MGPOptional.of(DvonnRules.getScores(this.getState()));
+
+        this.SPACE_SIZE = 30;
         this.hexaLayout = new HexaLayout(this.SPACE_SIZE * 1.50,
                                          new Coord(-this.SPACE_SIZE, this.SPACE_SIZE * 2),
                                          PointyHexaOrientation.INSTANCE);
@@ -69,7 +66,7 @@ export class DvonnComponent extends HexagonalGameComponent<DvonnRules, DvonnMove
         this.lastMove = MGPOptional.of(move);
         const previousState: DvonnState = this.getPreviousState();
         const state: DvonnState = this.getState();
-        for (let y: number = 0; y < state.board.length; y++) {
+        for (let y: number = 0; y < state.getHeight(); y++) {
             for (let x: number = 0; x < state.board[y].length; x++) {
                 const coord: Coord = new Coord(x, y);
                 if (state.isOnBoard(coord) === true &&
@@ -132,7 +129,7 @@ export class DvonnComponent extends HexagonalGameComponent<DvonnRules, DvonnMove
             }
         } else {
             // The only way to know whether we can select the other piece is to check the move legality
-            const legality: MGPValidation = this.rules.isLegal(move.get(), state);
+            const legality: MGPValidation = this.rules.isLegal(move.get(), state, this.config);
             if (legality.isFailure() && this.rules.isMovablePiece(state, chosenDestination).isSuccess()) {
                 return this.choosePiece(x, y);
             } else {
