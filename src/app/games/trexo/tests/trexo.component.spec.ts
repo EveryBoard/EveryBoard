@@ -95,6 +95,7 @@ describe('TrexoComponent', () => {
                         // and a dropped piece for the opponent should be displayed
                         testUtils.expectElementToExist('#dropped_piece_5_5_0');
                     }));
+
                     it(`should fail when clicking on an isolated piece`, fakeAsync(async() => {
                         // Given a board on which 1 space is higher than all its neighbooring space (except its "twin")
                         const state: TrexoState = TrexoState.of([
@@ -116,6 +117,7 @@ describe('TrexoComponent', () => {
                         const reason: string = TrexoFailure.NO_WAY_TO_DROP_IT_HERE();
                         await testUtils.expectClickFailure('#space_4_4', reason);
                     }));
+
                     it('should show possible next click amongst the possible neigbhors', fakeAsync(async() => {
                         // Given any board
                         // When clicking on a possible first coord (whose neighbor are empty spaces)
@@ -126,6 +128,7 @@ describe('TrexoComponent', () => {
                         testUtils.expectElementToHaveClass('#space_5_4', 'darker');
                         testUtils.expectElementToHaveClass('#space_5_6', 'darker');
                     }));
+
                     it('should allow clicking on second level', fakeAsync(async() => {
                         // Given any board where two neighboring tiles are on the same level
                         await testUtils.expectClickSuccess('#space_0_0');
@@ -141,6 +144,7 @@ describe('TrexoComponent', () => {
                         // Then the dropped piece should appear on it
                         testUtils.expectElementToExist('#dropped_piece_0_0_1');
                     }));
+
                     it('should display darker landable pieces when possible landing are not the floor', fakeAsync(async() => {
                         // Given any board where two neighboring tiles are on the same level
                         await testUtils.expectClickSuccess('#space_0_0');
@@ -171,6 +175,7 @@ describe('TrexoComponent', () => {
                         testUtils.expectElementToExist('#half_tile_5_5_0');
                         testUtils.expectElementToExist('#half_tile_6_5_0');
                     }));
+
                     it('should allow dropping on second level', fakeAsync(async() => {
                         // Given any board where two neighboring tiles are on the same level
                         const state: TrexoState = TrexoState.of([
@@ -195,6 +200,7 @@ describe('TrexoComponent', () => {
                         // Then the move should be a success
                         await testUtils.expectMoveSuccess('#space_5_4', move);
                     }));
+
                     it(`should change the first dropped coord when clicking too far`, fakeAsync(async() => {
                         // Given any board on which a first click has been made
                         await testUtils.expectClickSuccess('#space_5_5');
@@ -216,6 +222,7 @@ describe('TrexoComponent', () => {
                         testUtils.expectElementToHaveClass('#space_6_7', 'darker');
                         testUtils.expectElementToHaveClass('#space_8_7', 'darker');
                     }));
+
                     it(`should show last move`, fakeAsync(async() => {
                         // Given any board on which a first click has been made
                         await testUtils.expectClickSuccess('#space_5_5');
@@ -228,6 +235,7 @@ describe('TrexoComponent', () => {
                         testUtils.expectElementToHaveClass('#tile_4_5_0', 'last-move-stroke');
                         testUtils.expectElementToHaveClass('#tile_5_5_0', 'last-move-stroke');
                     }));
+
                     it(`should cancel move when clicking again on the same coord`, fakeAsync(async() => {
                         // Given any board on which a first click has been made
                         await testUtils.expectClickSuccess('#space_5_5');
@@ -238,6 +246,7 @@ describe('TrexoComponent', () => {
                         // And the piece deselected
                         testUtils.expectElementNotToExist('#dropped_piece_5_5');
                     }));
+
                     it('should highlight victory', fakeAsync(async() => {
                         // Given any board on which a 4 moves have already been done, aligning piece of Player.ZERO
                         const state: TrexoState = TrexoState.of([
@@ -271,7 +280,9 @@ describe('TrexoComponent', () => {
             });
         }
     });
+
     describe(`view`, () => {
+
         it(`should provide a button to switch 2D`, fakeAsync(async() => {
             // Given a component just started
             // When clicking on the switchTo2D button
@@ -280,6 +291,7 @@ describe('TrexoComponent', () => {
             // Then switchTo3D should now be visible
             testUtils.expectElementToExist('#switchTo3D');
         }));
+
         it(`should provide a button to switch to 3D when in 2D`, fakeAsync(async() => {
             // Given a component on which we are in 2D mode
             await testUtils.clickElement('#switchTo2D');
@@ -290,6 +302,7 @@ describe('TrexoComponent', () => {
             // Then switchTo2D should now be visible again
             testUtils.expectElementToExist('#switchTo2D');
         }));
+
         it('should ask tile to display number when 2D mode', fakeAsync(async() => {
             // Given a board in 3D move with one move done already
             await testUtils.expectClickSuccess('#space_5_5');
@@ -303,6 +316,7 @@ describe('TrexoComponent', () => {
             const height: DebugElement = testUtils.findElement('#height_5_5_0');
             expect(height.nativeElement.innerHTML).toBe('0');
         }));
+
         it('should not transfer upper piece style to lower piece', fakeAsync(async() => {
             // Given one 3D display with one Stack in two color
             const O0_X2: TrexoPieceStack = TrexoPieceStack.of([
@@ -334,4 +348,5 @@ describe('TrexoComponent', () => {
             testUtils.expectElementToHaveClass('#tile_4_4_1', 'player1-fill');
         }));
     });
+
 });

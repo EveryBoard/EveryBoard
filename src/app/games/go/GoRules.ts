@@ -5,25 +5,57 @@ import { GoMove } from './GoMove';
 import { Player } from 'src/app/jscaip/Player';
 import { GoGroupDatas } from './GoGroupsDatas';
 import { Debug, Utils } from 'src/app/utils/utils';
-import { assert } from 'src/app/utils/assert';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { Rules } from 'src/app/jscaip/Rules';
+import { ConfigurableRules } from 'src/app/jscaip/Rules';
 import { Coord } from 'src/app/jscaip/Coord';
 import { GoGroupDatasFactory } from './GoGroupDatasFactory';
 import { GoFailure } from './GoFailure';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { PlayerMap } from 'src/app/jscaip/PlayerMap';
+import { GobanConfig } from 'src/app/jscaip/GobanConfig';
+import { MGPValidators } from 'src/app/utils/MGPValidator';
+import { NumberConfig, RulesConfigDescription, RulesConfigDescriptionLocalizable } from 'src/app/components/wrapper-components/rules-configuration/RulesConfigDescription';
+import { GobanUtils } from 'src/app/jscaip/GobanUtils';
 
 export type GoLegalityInformation = Coord[];
+
+export type GoConfig = GobanConfig & {
+
+    handicap: number;
+};
 
 export class GoNode extends GameNode<GoMove, GoState> {}
 
 @Debug.log
-export class GoRules extends Rules<GoMove, GoState, GoLegalityInformation> {
+export class GoRules extends ConfigurableRules<GoMove, GoState, GoConfig, GoLegalityInformation> {
 
     private static singleton: MGPOptional<GoRules> = MGPOptional.empty();
+
+    public static readonly RULES_CONFIG_DESCRIPTION: RulesConfigDescription<GoConfig> =
+        new RulesConfigDescription<GoConfig>({
+            name: (): string => $localize`19 x 19`,
+            config: {
+                width: new NumberConfig(19, RulesConfigDescriptionLocalizable.WIDTH, MGPValidators.range(1, 99)),
+                height: new NumberConfig(19, RulesConfigDescriptionLocalizable.HEIGHT, MGPValidators.range(1, 99)),
+                handicap: new NumberConfig(0, () => $localize`Handicap`, MGPValidators.range(0, 9)),
+            },
+        }, [{
+            name: (): string => $localize`13 x 13`,
+            config: {
+                width: 13,
+                height: 13,
+                handicap: 0,
+            },
+        }, {
+            name: (): string => $localize`9 x 9`,
+            config: {
+                width: 9,
+                height: 9,
+                handicap: 0,
+            },
+        }]);
 
     public static get(): GoRules {
         if (GoRules.singleton.isAbsent()) {
@@ -32,13 +64,35 @@ export class GoRules extends Rules<GoMove, GoState, GoLegalityInformation> {
         return GoRules.singleton.get();
     }
 
-    private constructor() {
-        super();
-    }
-
-    public getInitialState(): GoState {
-        const board: Table<GoPiece> = GoState.getStartingBoard();
-        return new GoState(board, PlayerMap.of(0, 0), 0, MGPOptional.empty(), Phase.PLAYING);
+    public override getInitialState(optionalConfig: MGPOptional<GoConfig>): GoState {
+        const config: GoConfig = optionalConfig.get();
+        const board: GoPiece[][] = GoState.getStartingBoard(config);
+        let turn: number = 0;
+        const left: number = GobanUtils.getHorizontalLeft(config.width);
+        const right: number = GobanUtils.getHorizontalRight(config.width);
+        const up: number = GobanUtils.getVerticalUp(config.height);
+        const down: number = GobanUtils.getVerticalDown(config.height);
+        const horizontalCenter: number = GobanUtils.getHorizontalCenter(config.width);
+        const verticalCenter: number = GobanUtils.getVerticalCenter(config.height);
+        const orderedHandicaps: Coord[] = [
+            new Coord(left, up),
+            new Coord(right, down),
+            new Coord(right, up),
+            new Coord(left, down),
+            new Coord(horizontalCenter, verticalCenter),
+            new Coord(horizontalCenter, up),
+            new Coord(horizontalCenter, down),
+            new Coord(left, verticalCenter),
+            new Coord(right, verticalCenter),
+        ];
+        if (1 <= config.handicap) {
+            turn = 1;
+        }
+        for (let i: number = 0; i < config.handicap; i++) {
+            const handicapToPut: Coord = orderedHandicaps[i];
+            board[handicapToPut.y][handicapToPut.x] = GoPiece.DARK;
+        }
+        return new GoState(board, PlayerMap.of(0, 0), turn, MGPOptional.empty(), Phase.PLAYING);
     }
 
     public static isLegal(move: GoMove, state: GoState): MGPFallible<GoLegalityInformation> {
@@ -179,7 +233,7 @@ export class GoRules extends Rules<GoMove, GoState, GoLegalityInformation> {
     public static switchAliveness(groupCoord: Coord, switchedState: GoState): GoState {
         const switchedBoard: GoPiece[][] = switchedState.getCopiedBoard();
         const switchedPiece: GoPiece = switchedBoard[groupCoord.y][groupCoord.x];
-        assert(switchedPiece.isOccupied(), `Can't switch emptyness aliveness`);
+        Utils.assert(switchedPiece.isOccupied(), `Can't switch emptyness aliveness`);
 
         const goGroupDatasFactory: GoGroupDatasFactory = new GoGroupDatasFactory();
         const group: GoGroupDatas = goGroupDatasFactory.getGroupDatas(groupCoord, switchedBoard) as GoGroupDatas;
@@ -349,7 +403,7 @@ export class GoRules extends Rules<GoMove, GoState, GoLegalityInformation> {
             resultingState = new GoState(oldBoard, oldCaptured, oldTurn + 1, MGPOptional.empty(), newPhase);
             resultingState = GoRules.markTerritoryAndCount(resultingState);
         } else {
-            assert(state.phase === Phase.PLAYING, 'Cannot pass in counting phase!');
+            Utils.assert(state.phase === Phase.PLAYING, 'Cannot pass in counting phase!');
             newPhase = Phase.PASSED;
             resultingState = new GoState(oldBoard, oldCaptured, oldTurn + 1, MGPOptional.empty(), newPhase);
         }
@@ -427,11 +481,16 @@ export class GoRules extends Rules<GoMove, GoState, GoLegalityInformation> {
         return GoRules.markTerritoryAndCount(resultingState);
     }
 
-    public isLegal(move: GoMove, state: GoState): MGPFallible<GoLegalityInformation> {
+    public override isLegal(move: GoMove, state: GoState): MGPFallible<GoLegalityInformation> {
         return GoRules.isLegal(move, state);
     }
 
-    public applyLegalMove(legalMove: GoMove, state: GoState, infos: GoLegalityInformation): GoState {
+    public override applyLegalMove(legalMove: GoMove,
+                                   state: GoState,
+                                   _config: MGPOptional<GoConfig>,
+                                   infos: GoLegalityInformation)
+    : GoState
+    {
         if (GoRules.isPass(legalMove)) {
             Debug.display('GoRules', 'applyLegalMove', 'isPass');
             return GoRules.applyPass(state);
@@ -451,8 +510,13 @@ export class GoRules extends Rules<GoMove, GoState, GoLegalityInformation> {
         return GoRules.getGameStatus(node);
     }
 
+    public override getRulesConfigDescription(): MGPOptional<RulesConfigDescription<GoConfig>> {
+        return MGPOptional.of(GoRules.RULES_CONFIG_DESCRIPTION);
+    }
+
 }
 class CaptureState {
+
     public capturedCoords: Coord[] = [];
 
     public static isCapturing(captureState: CaptureState): boolean {

@@ -16,8 +16,8 @@ import { AbaloneFailure } from './AbaloneFailure';
 import { AbaloneState } from './AbaloneState';
 import { AbaloneMove } from './AbaloneMove';
 import { AbaloneLegalityInformation, AbaloneRules } from './AbaloneRules';
-import { AbaloneTutorial } from './AbaloneTutorial';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 import { MCTS } from 'src/app/jscaip/MCTS';
 import { Minimax } from 'src/app/jscaip/Minimax';
 import { AbaloneScoreHeuristic } from './AbaloneScoreHeuristic';
@@ -42,6 +42,7 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneRules,
                                                              AbaloneMove,
                                                              AbaloneState,
                                                              FourStatePiece,
+                                                             EmptyRulesConfig,
                                                              AbaloneLegalityInformation>
 {
     public moveds: Coord[] = [];
@@ -50,17 +51,14 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneRules,
 
     public selecteds: Coord[] = [];
 
-
     public constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
-        this.rules = AbaloneRules.get();
-        this.node = this.rules.getInitialNode();
+        this.setRulesAndNode('Abalone');
         this.availableAIs = [
             new Minimax($localize`Score`, this.rules, new AbaloneScoreHeuristic(), new AbaloneMoveGenerator()),
             new MCTS($localize`MCTS`, new AbaloneMoveGenerator(), this.rules),
         ];
         this.encoder = AbaloneMove.encoder;
-        this.tutorial = new AbaloneTutorial().tutorial;
         this.scores = MGPOptional.of(PlayerMap.of(0, 0));
         this.SPACE_SIZE = 30;
         this.hexaLayout = new HexaLayout(this.SPACE_SIZE,

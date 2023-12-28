@@ -12,7 +12,6 @@ import { DiamMove, DiamMoveDrop, DiamMoveEncoder, DiamMoveShift } from './DiamMo
 import { DiamPiece } from './DiamPiece';
 import { DiamRules } from './DiamRules';
 import { DiamState } from './DiamState';
-import { DiamTutorial } from './DiamTutorial';
 import { MGPMap } from 'src/app/utils/MGPMap';
 import { MCTS } from 'src/app/jscaip/MCTS';
 import { DummyHeuristic, Minimax } from 'src/app/jscaip/Minimax';
@@ -96,14 +95,12 @@ export class DiamComponent extends GameComponent<DiamRules, DiamMove, DiamState>
     };
     public constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
-        this.rules = DiamRules.get();
-        this.node = this.rules.getInitialNode();
+        this.setRulesAndNode('Diam');
         this.availableAIs = [
             new Minimax($localize`Dummy`, this.rules, new DummyHeuristic(), new DiamMoveGenerator()),
             new MCTS($localize`MCTS`, new DiamMoveGenerator(), this.rules),
         ];
         this.encoder = DiamMoveEncoder;
-        this.tutorial = new DiamTutorial().tutorial;
     }
     public async onSpaceClick(x: number): Promise<MGPValidation> {
         const clickValidity: MGPValidation = await this.canUserPlay('#click_' + x);

@@ -1,7 +1,8 @@
 /* eslint-disable max-lines-per-function */
 import { Coord } from 'src/app/jscaip/Coord';
-import { ArrayUtils, NumberTable, TableUtils, TableWithPossibleNegativeIndices } from '../ArrayUtils';
+import { ArrayUtils, Table, TableUtils, TableWithPossibleNegativeIndices } from '../ArrayUtils';
 import { MGPOptional } from '../MGPOptional';
+import { Utils } from '../utils';
 
 describe('ArrayUtils', () => {
     describe('isPrefix', () => {
@@ -21,28 +22,39 @@ describe('ArrayUtils', () => {
             expect(ArrayUtils.isPrefix(prefix, list)).toBeTrue();
         });
     });
+
+    describe('maximumsBy', () => {
+        it('should extract the maximums', () => {
+            // Given an array and a metric
+            const array: number[] = [0, 3, 1, 2, 3];
+            const metric: (value: number) => number = Utils.identity;
+            // When extracting the maximums
+            const maximums: number[] = ArrayUtils.maximumsBy(array, metric);
+            // Then it should return all the maximum elements
+            expect(maximums).toEqual([3, 3]);
+        });
+    });
 });
 
 describe('TableUtils', () => {
     describe('compare', () => {
         it('should notice different table sizes', () => {
-            const shortBoard: NumberTable = [[1]];
-            const longBoard: NumberTable = [[1], [2]];
+            const shortBoard: Table<number> = [[1]];
+            const longBoard: Table<number> = [[1], [2]];
             expect(TableUtils.compare(shortBoard, longBoard)).toBeFalse();
         });
         it('should delegate sub-list comparaison to ArrayUtils and return false if it does', () => {
             spyOn(ArrayUtils, 'compare').and.returnValue(false);
-            const table: NumberTable = [[1], [2]];
+            const table: Table<number> = [[1], [2]];
             expect(TableUtils.compare(table, table)).toBeFalse();
         });
         it('should delegate sub-list comparaison to ArrayUtils and return true if ArrayUtils.compare always does', () => {
             spyOn(ArrayUtils, 'compare').and.returnValue(true);
-            const table: NumberTable = [[1], [2]];
+            const table: Table<number> = [[1], [2]];
             expect(TableUtils.compare(table, table)).toBeTrue();
         });
     });
 });
-
 
 describe('Table2DWithPossibleNegativeIndices', () => {
     it('should return empty when accessing a non existing element', () => {

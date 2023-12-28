@@ -5,27 +5,14 @@ import { PlayerMap } from 'src/app/jscaip/PlayerMap';
 
 export class ReversiState extends GameStateWithTable<PlayerOrNone> {
 
-    public static readonly BOARD_WIDTH: number = 8;
-
-    public static readonly BOARD_HEIGHT: number = 8; // default
-
-    public static isOnBoard(coord: Coord): boolean {
-        return coord.isInRange(ReversiState.BOARD_WIDTH, ReversiState.BOARD_HEIGHT);
-    }
-
-    public static getNeighboringPawnLike(board: PlayerOrNone[][],
-                                         searchedValue: Player,
-                                         cx: number,
-                                         cy: number)
-    : Coord[]
-    {
+    public getNeighboringPawnLike(searchedValue: Player, center: Coord): Coord[] {
         let coord: Coord;
         const result: Coord[] = [];
         for (let ny: number = -1; ny < 2; ny++) {
             for (let nx: number = -1; nx < 2; nx++) {
-                coord = new Coord(cx + nx, cy + ny);
-                if (ReversiState.isOnBoard(coord)) {
-                    if (board[coord.y][coord.x] === searchedValue) {
+                coord = new Coord(center.x + nx, center.y + ny);
+                if (this.isOnBoard(coord)) {
+                    if (this.board[coord.y][coord.x] === searchedValue) {
                         result.push(coord);
                     }
                 }
@@ -36,14 +23,13 @@ export class ReversiState extends GameStateWithTable<PlayerOrNone> {
 
     public countScore(): PlayerMap<number> {
         const scores: [number, number] = [0, 0];
-        for (let y: number = 0; y < ReversiState.BOARD_HEIGHT; y++) {
-            for (let x: number = 0; x < ReversiState.BOARD_WIDTH; x++) {
-                const spaceOwner: PlayerOrNone = this.board[y][x];
-                if (spaceOwner.isPlayer()) {
-                    scores[spaceOwner.getValue()] += 1;
-                }
+        for (const coordAndContent of this.getCoordsAndContents()) {
+            const spaceOwner: PlayerOrNone = coordAndContent.content;
+            if (spaceOwner.isPlayer()) {
+                scores[spaceOwner.getValue()] += 1;
             }
         }
         return PlayerMap.of(scores[0], scores[1]);
     }
+
 }

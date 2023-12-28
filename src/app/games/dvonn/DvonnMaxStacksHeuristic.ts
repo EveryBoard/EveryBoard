@@ -20,6 +20,9 @@ export class DvonnMaxStacksHeuristic extends PlayerMetricHeuristic<DvonnMove, Dv
             const oldScore: number = scores.get(player).get();
             scores.put(player, oldScore * playerStacks / numberOfStacks);
         }
-        return scores;
+        return [
+            scores.get(Player.ZERO).get(),
+            scores.get(Player.ONE).get(),
+        ];
     }
 }

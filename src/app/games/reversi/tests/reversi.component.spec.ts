@@ -18,9 +18,11 @@ describe('ReversiComponent', () => {
     beforeEach(fakeAsync(async() => {
         testUtils = await ComponentTestUtils.forGame<ReversiComponent>('Reversi');
     }));
+
     it('should create', () => {
         testUtils.expectToBeCreated();
     });
+
     it('should show last move and captures', fakeAsync(async() => {
         const board: Table<PlayerOrNone> = [
             [_, _, _, _, X, _, _, _],
@@ -51,6 +53,7 @@ describe('ReversiComponent', () => {
 
         expect(tablutGameComponent.getRectClasses(0, 4)).toEqual(['moved-fill']);
     }));
+
     it('should fake a click on ReversiMove.PASS.coord to pass', fakeAsync(async() => {
         // Given a fictitious board on which player can only pass
         const state: ReversiState = new ReversiState([

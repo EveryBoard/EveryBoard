@@ -5,10 +5,11 @@ import { CoerceoNode } from './CoerceoRules';
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
 import { Player } from 'src/app/jscaip/Player';
 import { MoveGenerator } from 'src/app/jscaip/AI';
+import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 export class CoerceoMoveGenerator extends MoveGenerator<CoerceoMove, CoerceoState> {
 
-    public getListMoves(node: CoerceoNode): CoerceoMove[] {
+    public override getListMoves(node: CoerceoNode, _config: NoConfig): CoerceoMove[] {
         let moves: CoerceoMove[] = this.getListExchanges(node);
         moves = moves.concat(this.getListMovement(node));
         return moves;

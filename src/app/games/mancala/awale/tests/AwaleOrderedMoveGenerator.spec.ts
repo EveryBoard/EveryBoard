@@ -1,18 +1,23 @@
 /* eslint-disable max-lines-per-function */
 import { Table } from 'src/app/utils/ArrayUtils';
 import { MancalaState } from '../../common/MancalaState';
-import { AwaleMove } from '../AwaleMove';
-import { AwaleNode } from '../AwaleRules';
 import { AwaleOrderedMoveGenerator } from '../AwaleOrderedMoveGenerator';
 import { PlayerMap } from 'src/app/jscaip/PlayerMap';
+import { MancalaDistribution, MancalaMove } from '../../common/MancalaMove';
+import { MancalaNode } from '../../common/MancalaRules';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { MancalaConfig } from '../../common/MancalaConfig';
+import { AwaleRules } from '../AwaleRules';
 
 describe('AwaleOrderedMoveGenerator', () => {
 
     let moveGenerator: AwaleOrderedMoveGenerator;
+    const defaultConfig: MGPOptional<MancalaConfig> = AwaleRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         moveGenerator = new AwaleOrderedMoveGenerator();
     });
+
     it('should order by captured houses', () => {
         // Given a state with a possible capture
         const board: Table<number> = [
@@ -20,11 +25,14 @@ describe('AwaleOrderedMoveGenerator', () => {
             [0, 0, 0, 0, 0, 2],
         ];
         const state: MancalaState = new MancalaState(board, 1, PlayerMap.of(0, 0));
-        const node: AwaleNode = new AwaleNode(state);
+        const node: MancalaNode = new MancalaNode(state);
+
         // When listing the moves
-        const moves: AwaleMove[] = moveGenerator.getListMoves(node);
+        const moves: MancalaMove[] = moveGenerator.getListMoves(node, defaultConfig);
+
         // Then the first move should be the capture
         expect(moves.length).toBe(2);
-        expect(moves[0]).toEqual(AwaleMove.FIVE);
+        expect(moves[0]).toEqual(MancalaMove.of(MancalaDistribution.of(5)));
     });
+
 });

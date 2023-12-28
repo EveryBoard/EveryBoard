@@ -13,23 +13,25 @@ import { MGPSet } from 'src/app/utils/MGPSet';
 import { MancalaFailure } from './MancalaFailure';
 import { TimeUtils } from 'src/app/utils/TimeUtils';
 import { Utils } from 'src/app/utils/utils';
+import { MancalaConfig } from './MancalaConfig';
 import { AI, AIOptions, MoveGenerator } from 'src/app/jscaip/AI';
 import { MancalaScoreMinimax } from './MancalaScoreMinimax';
 import { MCTS } from 'src/app/jscaip/MCTS';
 import { PlayerMap } from 'src/app/jscaip/PlayerMap';
 
-export abstract class MancalaComponent<R extends MancalaRules<M>, M extends MancalaMove>
-    extends RectangularGameComponent<R, M, MancalaState, number>
+export abstract class MancalaComponent<R extends MancalaRules>
+    extends RectangularGameComponent<R, MancalaMove, MancalaState, number, MancalaConfig>
 {
     public static readonly TIMEOUT_BETWEEN_SEED: number = 200;
 
-    public static readonly TIMEOUT_BETWEEN_DISTRIBUTION: number = 1000;
+    // The awaited time between two laps or distributions
+    public static readonly TIMEOUT_BETWEEN_LAPS: number = 1000;
 
     public MGPOptional: typeof MGPOptional = MGPOptional;
 
     public lastDistributedHouses: Coord[] = [];
 
-    public currentMove: MGPOptional<M> = MGPOptional.empty();
+    public currentMove: MGPOptional<MancalaMove> = MGPOptional.empty();
 
     private clickOngoing: boolean = false;
 
@@ -53,17 +55,30 @@ export abstract class MancalaComponent<R extends MancalaRules<M>, M extends Manc
         this.scores = MGPOptional.of(PlayerMap.of(0, 0));
     }
 
-    public override async showLastMove(move: M): Promise<void> {
+    public getMancalaViewBox(): string {
+        const left: number = - this.STROKE_WIDTH / 2;
+        const up: number = - this.STROKE_WIDTH / 2;
+        const width: number = this.getViewBoxWidth() + this.STROKE_WIDTH;
+        const height: number = (2 * this.SPACE_SIZE) + 50;
+        return left + ' ' + up + ' ' + width + ' ' + height;
+    }
+
+    public getViewBoxWidth(): number {
+        return 60 + ((2 + this.getState().getWidth()) * this.SPACE_SIZE);
+    }
+
+    public override async showLastMove(move: MancalaMove): Promise<void> {
         this.droppedInStore = [0, 0];
         const previousState: MancalaState = this.getPreviousState();
+        const config: MancalaConfig = this.getConfig().get();
         const distributionResult: MancalaDistributionResult =
-            this.rules.distributeMove(move, previousState);
+            this.rules.distributeMove(move, previousState, config);
         this.filledCoords = distributionResult.filledCoords;
         let captureResult: MancalaCaptureResult = this.rules.applyCapture(distributionResult);
         this.captured = captureResult.captureMap;
         const playerY: number = previousState.getCurrentPlayerY();
         this.lastDistributedHouses = move.distributions.map((d: MancalaDistribution) => new Coord(d.x, playerY));
-        const mansoonedPlayer: PlayerOrNone = this.rules.mustMansoon(captureResult.resultingState);
+        const mansoonedPlayer: PlayerOrNone = this.rules.mustMansoon(captureResult.resultingState, config);
         if (mansoonedPlayer !== PlayerOrNone.NONE) {
             captureResult = this.rules.monsoon(mansoonedPlayer as Player, captureResult);
             this.captured = captureResult.captureMap;
@@ -78,12 +93,12 @@ export abstract class MancalaComponent<R extends MancalaRules<M>, M extends Manc
             Utils.assert(this.node.parent.isPresent(), 'triggerAnimation in store should be false at first turn');
             this.changeVisibleState(this.node.parent.get().gameState);
             let indexDistribution: number = 0;
-            const move: M = this.node.previousMove.get();
+            const move: MancalaMove = this.node.previousMove.get();
             for (const distributions of move) {
                 await this.showSimpleDistribution(distributions);
                 if (indexDistribution + 1 < move.distributions.length) {
                     // This prevent to wait 1sec at the end of the animation for nothing
-                    await TimeUtils.sleep(MancalaComponent.TIMEOUT_BETWEEN_DISTRIBUTION);
+                    await TimeUtils.sleep(MancalaComponent.TIMEOUT_BETWEEN_LAPS);
                 }
                 indexDistribution++;
             }
@@ -125,7 +140,10 @@ export abstract class MancalaComponent<R extends MancalaRules<M>, M extends Manc
     protected async continueMoveConstruction(x: number): Promise<MGPValidation> {
         const distributionResult: MancalaDistributionResult =
             await this.showSimpleDistribution(MancalaDistribution.of(x));
-        if (distributionResult.endsUpInKalah) {
+        const config: MancalaConfig = this.getConfig().get();
+        if (distributionResult.endsUpInStore &&
+            config.mustContinueDistributionAfterStore)
+        {
             const player: Player = this.constructedState.getCurrentPlayer();
             if (MancalaRules.isStarving(player, distributionResult.resultingState.board)) {
                 // Player has no more seed to distribute
@@ -144,13 +162,14 @@ export abstract class MancalaComponent<R extends MancalaRules<M>, M extends Manc
         const playerY: number = state.getCurrentPlayerY();
         const coord: Coord = new Coord(distribution.x, playerY);
         this.lastDistributedHouses.push(coord);
-        await this.showSeedBySeed(coord, state);
+        const config: MancalaConfig = this.getConfig().get();
+        await this.showSeedBySeed(coord, state, config);
         const distributionResult: MancalaDistributionResult =
-            this.rules.distributeHouse(distribution.x, playerY, state);
+            this.rules.distributeHouse(distribution.x, playerY, state, config);
         return distributionResult;
     }
 
-    private async showSeedBySeed(coord: Coord, state: MancalaState): Promise<void> {
+    private async showSeedBySeed(coord: Coord, state: MancalaState, config: MancalaConfig): Promise<void> {
         const resultingBoard: number[][] = state.getCopiedBoard();
         const player: Player = state.getCurrentPlayer();
         const initial: Coord = coord; // to remember in order not to sow in the starting space if we make a full turn
@@ -162,7 +181,8 @@ export abstract class MancalaComponent<R extends MancalaRules<M>, M extends Manc
         this.changeVisibleState(new MancalaState(resultingBoard, state.turn, scores));
         await TimeUtils.sleep(MancalaComponent.TIMEOUT_BETWEEN_SEED);
         while (seedsInHand > 0) {
-            const nextCoord: MGPOptional<Coord> = this.rules.getNextCoord(coord, player, currentDropIsStore);
+            const nextCoord: MGPOptional<Coord> =
+                this.rules.getNextCoord(coord, player, currentDropIsStore, state, config);
             currentDropIsStore = nextCoord.isAbsent();
             if (currentDropIsStore) {
                 seedsInHand--;
@@ -171,7 +191,7 @@ export abstract class MancalaComponent<R extends MancalaRules<M>, M extends Manc
                 scores[player.getValue()] += 1;
             } else {
                 coord = nextCoord.get();
-                if (initial.equals(coord) === false || this.rules.config.feedOriginalHouse) {
+                if (initial.equals(coord) === false || config.feedOriginalHouse) {
                     // not to distribute on our starting space
                     resultingBoard[coord.y][coord.x] += 1;
                     this.filledCoords.push(coord);
@@ -306,7 +326,9 @@ export abstract class MancalaComponent<R extends MancalaRules<M>, M extends Manc
         this.cdr.detectChanges();
     }
 
-    protected createAIs(moveGenerator: MoveGenerator<M, MancalaState>): AI<M, MancalaState, AIOptions>[] {
+    protected createAIs(moveGenerator: MoveGenerator<MancalaMove, MancalaState, MancalaConfig>)
+    : AI<MancalaMove, MancalaState, AIOptions, MancalaConfig>[]
+    {
         return [
             new MancalaScoreMinimax(this.rules, moveGenerator),
             new MCTS($localize`MCTS`, moveGenerator, this.rules),
@@ -319,8 +341,22 @@ export abstract class MancalaComponent<R extends MancalaRules<M>, M extends Manc
      * for multiple sow it will sometime be the second sub-distribution of the move
      * @param x the X value of the distribution that has been done
      */
-    protected abstract updateOrCreateCurrentMove(x: number): void;
+    protected updateOrCreateCurrentMove(x: number): void {
+        if (this.currentMove.isAbsent()) {
+            this.hideLastMove();
+            this.currentMove = MGPOptional.of(this.generateMove(x));
+        } else {
+            const newMove: MancalaMove = this.addToMove(x);
+            this.currentMove = MGPOptional.of(newMove);
+        }
+    }
 
-    public abstract generateMove(x: number): M;
+    public generateMove(x: number): MancalaMove {
+        return MancalaMove.of(MancalaDistribution.of(x));
+    }
+
+    protected addToMove(x: number): MancalaMove {
+        return this.currentMove.get().add(MancalaDistribution.of(x));
+    }
 
 }

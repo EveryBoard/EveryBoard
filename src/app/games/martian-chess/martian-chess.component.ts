@@ -11,8 +11,8 @@ import { MartianChessMove } from './MartianChessMove';
 import { MartianChessMoveResult, MartianChessNode, MartianChessRules } from './MartianChessRules';
 import { MartianChessState } from './MartianChessState';
 import { MartianChessPiece } from './MartianChessPiece';
-import { MartianChessTutorial } from './MartianChessTutorial';
 import { Direction } from 'src/app/jscaip/Direction';
+import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 import { Utils } from 'src/app/utils/utils';
 import { MCTS } from 'src/app/jscaip/MCTS';
 import { MartianChessMoveGenerator } from './MartianChessMoveGenerator';
@@ -55,6 +55,7 @@ export class MartianChessComponent extends RectangularGameComponent<MartianChess
                                                                     MartianChessMove,
                                                                     MartianChessState,
                                                                     MartianChessPiece,
+                                                                    EmptyRulesConfig,
                                                                     MartianChessMoveResult>
 {
     public static SPACE_SIZE: number = 100;
@@ -105,10 +106,12 @@ export class MartianChessComponent extends RectangularGameComponent<MartianChess
         const coords: Coord[] = MartianChessComponent.getRegularPolygonCoords(nbSide, yOffset);
         return MartianChessComponent.mapCoordsToString(coords);
     }
+
     public static getNPointedStar(nbSide: number, degreeOffset: number): string {
         const coords: Coord[] = this.getNPointedStarCoords(nbSide, degreeOffset);
         return MartianChessComponent.mapCoordsToString(coords);
     }
+
     private static getNPointedStarCoords(nbSide: number, degreeOffset: number): Coord[] {
         const points: Coord[] = [];
         const cx: number = 0.5 * MartianChessComponent.SPACE_SIZE;
@@ -126,6 +129,7 @@ export class MartianChessComponent extends RectangularGameComponent<MartianChess
         }
         return points;
     }
+
     /**
      * coord are based on a 100 x 100 containing square, in which the shape is centered
      * yOffset describe the offset "pixel wise" (concrete offset in "svg unit")
@@ -144,6 +148,7 @@ export class MartianChessComponent extends RectangularGameComponent<MartianChess
         }
         return points;
     }
+
     public static mapCoordsToString(coords: Coord[]): string {
         let points: string = '';
         for (const coord of coords) {
@@ -151,26 +156,28 @@ export class MartianChessComponent extends RectangularGameComponent<MartianChess
         }
         return points;
     }
+
     public static getRadius(circle: number): number {
         return this.SPACE_SIZE * circle / 10;
     }
+
     public constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
-        this.hasAsymmetricBoard = true;
-        this.rules = MartianChessRules.get();
-        this.node = this.rules.getInitialNode();
+        this.setRulesAndNode('MartianChess');
         this.availableAIs = [
             new Minimax($localize`Score`, this.rules, new MartianChessScoreHeuristic(), new MartianChessMoveGenerator()),
             new MCTS($localize`MCTS`, new MartianChessMoveGenerator(), this.rules),
         ];
+        this.encoder = MartianChessMove.encoder;
+        this.hasAsymmetricBoard = true;
+        this.scores = MGPOptional.of(PlayerMap.of(0, 0));
+
         this.SPACE_SIZE = MartianChessComponent.SPACE_SIZE;
         this.configCogTransformation = this.getConfigCogTransformation();
         this.configViewTranslation = this.getConfigViewTranslation();
         this.clockNeedlesPoints = this.getClockNeedlesPoints();
-        this.encoder = MartianChessMove.encoder;
-        this.tutorial = new MartianChessTutorial().tutorial;
-        this.scores = MGPOptional.of(PlayerMap.of(0, 0));
     }
+
     public getConfigViewTranslation(): string {
         const padding: number = 0;
         const xTranslate: number = (5.25 * this.SPACE_SIZE) + padding;
@@ -178,6 +185,7 @@ export class MartianChessComponent extends RectangularGameComponent<MartianChess
         const translate: string = 'translate(' + xTranslate + ', ' + yTranslate + ')';
         return translate;
     }
+
     public getConfigCogTransformation(): string {
         const padding: number = this.STROKE_WIDTH;
         const wantedSize: number = this.SPACE_SIZE - padding;
@@ -186,6 +194,7 @@ export class MartianChessComponent extends RectangularGameComponent<MartianChess
         const translate: string = 'translate(' + (1.0 * padding) + ', ' + (1.0 * padding) + ')';
         return translate + ' ' + scale;
     }
+
     public getClockNeedlesPoints(): string {
         const c: number = 0.5 * this.SPACE_SIZE;
         const up: string = c + ' ' + (0.1 * this.SPACE_SIZE);
@@ -193,6 +202,7 @@ export class MartianChessComponent extends RectangularGameComponent<MartianChess
         const right: string = (0.75 * this.SPACE_SIZE) + ' ' + c;
         return up + ', ' + center + ', ' + right;
     }
+
     public async updateBoard(_triggerAnimation: boolean): Promise<void> {
         this.state = this.getState();
         this.board = this.state.board;
@@ -201,11 +211,13 @@ export class MartianChessComponent extends RectangularGameComponent<MartianChess
         this.countDown = this.state.countDown;
         this.scores = MGPOptional.of(PlayerMap.of(scoreZero, scoreOne));
     }
+
     public getPieceLocation(x: number, y: number): string {
         const cx: number = this.SPACE_SIZE * x;
         const cy: number = this.SPACE_SIZE * y;
         return 'translate(' + cx + ', ' + cy + ')';
     }
+
     public getPieceClasses(x: number, y: number): string[] {
         const clickedCoord: Coord = new Coord(x, y);
         const classes: string[] = [];
@@ -228,6 +240,7 @@ export class MartianChessComponent extends RectangularGameComponent<MartianChess
         }
         return classes;
     }
+
     public async onClick(x: number, y: number): Promise<MGPValidation> {
         this.displayModePanel = false;
         const clickValidity: MGPValidation = await this.canUserPlay('#click_' + x + '_' + y);
@@ -241,6 +254,7 @@ export class MartianChessComponent extends RectangularGameComponent<MartianChess
             return this.firstClick(clickedCoord);
         }
     }
+
     private async firstClick(startCoord: Coord): Promise<MGPValidation> {
         if (this.isOneOfUsersPieces(startCoord)) {
             return this.selectAsFirstPiece(startCoord);
@@ -249,6 +263,7 @@ export class MartianChessComponent extends RectangularGameComponent<MartianChess
             return MGPValidation.SUCCESS;
         }
     }
+
     private async selectAsFirstPiece(coord: Coord): Promise<MGPValidation> {
         const legalLandings: Coord[] = this.getLegalLandings(coord);
         this.selectedPieceInfo = MGPOptional.of({
@@ -257,6 +272,7 @@ export class MartianChessComponent extends RectangularGameComponent<MartianChess
         });
         return MGPValidation.SUCCESS;
     }
+
     private getLegalLandings(coord: Coord): Coord[] {
         const firstPiece: MartianChessPiece = this.state.getPieceAt(coord);
         let landingSquares: Coord[];
@@ -276,6 +292,7 @@ export class MartianChessComponent extends RectangularGameComponent<MartianChess
             }
         });
     }
+
     private getValidLinearLandingSquareUntil(coord: Coord, until: number): Coord[] {
         return Direction.DIRECTIONS.flatMap((d: Direction) => {
             const landings: Coord[] = [];
@@ -293,6 +310,7 @@ export class MartianChessComponent extends RectangularGameComponent<MartianChess
             return landings;
         });
     }
+
     private async secondClick(endCoord: Coord): Promise<MGPValidation> {
         const info: SelectedPieceInfo = this.selectedPieceInfo.get();
         if (info.selectedPiece.equals(endCoord)) {
@@ -315,14 +333,17 @@ export class MartianChessComponent extends RectangularGameComponent<MartianChess
             }
         }
     }
+
     private isOneOfUsersPieces(coord: Coord): boolean {
         return this.state.getPieceAt(coord) !== MartianChessPiece.EMPTY &&
                this.state.isInPlayerTerritory(coord);
     }
+
     public override cancelMoveAttempt(): void {
         this.selectedPieceInfo = MGPOptional.empty();
         this.callTheClock = false;
     }
+
     public async onClockClick(): Promise<MGPValidation> {
         const clickValidity: MGPValidation = await this.canUserPlay('#clockOrCountDownView');
         if (clickValidity.isFailure()) {
@@ -334,6 +355,7 @@ export class MartianChessComponent extends RectangularGameComponent<MartianChess
         }
         return MGPValidation.SUCCESS;
     }
+
     public getClockCircleClasses(): string[] {
         const classes: string[] = ['base'];
         if (this.callTheClock) {
@@ -346,6 +368,7 @@ export class MartianChessComponent extends RectangularGameComponent<MartianChess
         }
         return classes;
     }
+
     public getSquareClasses(x: number, y: number): string[] {
         const square: Coord = new Coord(x, y);
         const classes: string[] = ['base'];
@@ -371,21 +394,26 @@ export class MartianChessComponent extends RectangularGameComponent<MartianChess
         }
         return classes;
     }
+
     public onModeCogClick(): void {
         this.displayModePanel = this.displayModePanel === false;
     }
+
     public chooseStyle(n: number): void {
         this.style = this.listOfStyles[n].style;
         this.displayModePanel = false;
     }
+
     public getPieceTranslation(y: number): string {
         return 'translate(0, ' + (y <= 3 ? 0 : (2 * this.STROKE_WIDTH)) + ')';
     }
+
     public getBoardTransformation(): string {
         const translation: string = 'translate(' + this.SPACE_SIZE + ', 0)';
         const rotation: string = 'rotate(' + (this.getPointOfView().getValue() * 180) + ' ' + this.HORIZONTAL_CENTER + ' ' + this.VERTICAL_CENTER + ')';
         return translation + ' ' + rotation;
     }
+
     public getCapturesTransformation(player: Player): string {
         const scale: string = 'scale(0.5, 0.5)';
         const translationX: number = - this.SPACE_SIZE / 2;
@@ -396,4 +424,5 @@ export class MartianChessComponent extends RectangularGameComponent<MartianChess
         const translation: string = 'translate(' + translationX + ', ' + translationY + ')';
         return scale + ' ' + translation;
     }
+
 }

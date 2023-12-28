@@ -15,6 +15,7 @@ import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { MGPSet } from 'src/app/utils/MGPSet';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
+import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 export class SaharaNode extends GameNode<SaharaMove, SaharaState> {}
 
@@ -30,7 +31,7 @@ export class SaharaRules extends Rules<SaharaMove, SaharaState> {
         return SaharaRules.singleton.get();
     }
 
-    public getInitialState(): SaharaState {
+    public override getInitialState(): SaharaState {
         const N: FourStatePiece = FourStatePiece.UNREACHABLE;
         const O: FourStatePiece = FourStatePiece.ZERO;
         const X: FourStatePiece = FourStatePiece.ONE;
@@ -70,14 +71,20 @@ export class SaharaRules extends Rules<SaharaMove, SaharaState> {
         }
         return playerFreedoms.sort((a: number, b: number) => a - b);
     }
-    public applyLegalMove(move: SaharaMove, state: SaharaState, _info: void): SaharaState {
+
+    public override applyLegalMove(move: SaharaMove,
+                                   state: SaharaState,
+                                   _config: NoConfig,
+                                   _info: void)
+    : SaharaState
+    {
         const board: FourStatePiece[][] = state.getCopiedBoard();
         board[move.getEnd().y][move.getEnd().x] = board[move.getStart().y][move.getStart().x];
         board[move.getStart().y][move.getStart().x] = FourStatePiece.EMPTY;
         const resultingState: SaharaState = new SaharaState(board, state.turn + 1);
         return resultingState;
     }
-    public isLegal(move: SaharaMove, state: SaharaState): MGPValidation {
+    public override isLegal(move: SaharaMove, state: SaharaState): MGPValidation {
         const movedPawn: FourStatePiece = state.getPieceAt(move.getStart());
         if (movedPawn.is(state.getCurrentPlayer()) === false) {
             return MGPValidation.failure(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT());

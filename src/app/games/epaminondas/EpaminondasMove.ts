@@ -3,7 +3,6 @@ import { Encoder } from 'src/app/utils/Encoder';
 import { MoveCoord } from 'src/app/jscaip/MoveCoord';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Utils } from 'src/app/utils/utils';
-import { EpaminondasState } from './EpaminondasState';
 
 type EpaminondasMoveFields = [Coord, number, number, Direction];
 
@@ -22,7 +21,6 @@ export class EpaminondasMove extends MoveCoord {
                        public readonly direction: Direction)
     {
         super(x, y);
-        Utils.assert(EpaminondasState.isOnBoard(this.coord), 'Illegal coord outside of board ' + this.coord.toString() + '.');
         Utils.assert(movedPieces > 0, 'Must select minimum one piece (got ' + movedPieces + ').');
         Utils.assert(stepSize > 0, 'Step size must be minimum one (got ' + stepSize + ').');
         Utils.assert(stepSize <= movedPieces, 'Cannot move a phalanx further than its size (got step size ' + stepSize + ' for ' + movedPieces+ ' pieces).');

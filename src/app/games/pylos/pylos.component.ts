@@ -9,7 +9,6 @@ import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { PylosFailure } from './PylosFailure';
-import { PylosTutorial } from './PylosTutorial';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MCTS } from 'src/app/jscaip/MCTS';
 import { PylosOrderedMoveGenerator } from './PylosOrderedMoveGenerator';
@@ -50,15 +49,13 @@ export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosSt
 
     public constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
-        this.hasAsymmetricBoard = true;
-        this.rules = PylosRules.get();
-        this.node = this.rules.getInitialNode();
+        this.setRulesAndNode('Pylos');
         this.availableAIs = [
             new Minimax($localize`Minimax`, this.rules, new PylosHeuristic(), new PylosOrderedMoveGenerator()),
             new MCTS($localize`MCTS`, new PylosMoveGenerator(), this.rules),
         ];
         this.encoder = PylosMove.encoder;
-        this.tutorial = new PylosTutorial().tutorial;
+        this.hasAsymmetricBoard = true;
     }
     public getPiecesCyForPlayer(player: Player): number {
         if (player === Player.ONE) {

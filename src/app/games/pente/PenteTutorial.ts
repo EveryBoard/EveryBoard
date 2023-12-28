@@ -3,24 +3,27 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { PlayerOrNone } from 'src/app/jscaip/Player';
 import { PenteMove } from './PenteMove';
 import { PenteState } from './PenteState';
+import { GobanConfig } from 'src/app/jscaip/GobanConfig';
 import { PenteRules } from './PenteRules';
 import { PlayerMap } from 'src/app/jscaip/PlayerMap';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 const _: PlayerOrNone = PlayerOrNone.NONE;
 const O: PlayerOrNone = PlayerOrNone.ZERO;
 const X: PlayerOrNone = PlayerOrNone.ONE;
+const defaultConfig: MGPOptional<GobanConfig> = PenteRules.get().getDefaultRulesConfig();
 
 export class PenteTutorial extends Tutorial {
     public tutorial: TutorialStep[] = [
         TutorialStep.informational(
             $localize`Initial board and object of the game`,
             $localize`Pente is played on a 19x19 board, on which the pieces are put on the intersections of the squares. The object of the game is to align 5 of your pieces, or to capture 10 pieces of your opponent. Initially, a piece of the second player is in the center location of the board.`,
-            PenteRules.get().getInitialState(),
+            PenteRules.get().getInitialState(defaultConfig),
         ),
         TutorialStep.anyMove(
             $localize`Dropping a piece`,
             $localize`At your turn, you must drop one piece on any empty space of the board. There is no other restriction.<br/><br/>You're playing Dark, put a piece on the board.`,
-            PenteRules.get().getInitialState(),
+            PenteRules.get().getInitialState(defaultConfig),
             PenteMove.of(new Coord(9, 8)),
             $localize`Congratulations!`,
         ),

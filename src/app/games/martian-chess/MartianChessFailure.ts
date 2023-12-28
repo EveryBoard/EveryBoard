@@ -1,6 +1,5 @@
 import { Localized } from 'src/app/utils/LocaleUtils';
 
-
 export class MartianChessFailure {
 
     public static readonly MUST_CHOOSE_PIECE_FROM_YOUR_TERRITORY: Localized = () => $localize`You must pick a piece from your side of the board in order to move it.`;

@@ -2,8 +2,8 @@ import { GoMove } from 'src/app/games/go/GoMove';
 import { GoState, GoPiece, Phase } from 'src/app/games/go/GoState';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { Tutorial, TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
-import { GoRules } from './GoRules';
 import { PlayerMap } from 'src/app/jscaip/PlayerMap';
+import { GoConfig, GoRules } from './GoRules';
 
 const X: GoPiece = GoPiece.LIGHT;
 const O: GoPiece = GoPiece.DARK;
@@ -11,6 +11,8 @@ const k: GoPiece = GoPiece.DEAD_LIGHT;
 const w: GoPiece = GoPiece.LIGHT_TERRITORY;
 const b: GoPiece = GoPiece.DARK_TERRITORY;
 const _: GoPiece = GoPiece.EMPTY;
+
+const defaultConfig: MGPOptional<GoConfig> = GoRules.get().getDefaultRulesConfig();
 
 export class GoTutorial extends Tutorial {
 
@@ -21,7 +23,7 @@ export class GoTutorial extends Tutorial {
         The traditional board is made of 19x19 intersections, but on this website we have the 13x13 board.
         (For shorter parts, 9x9 and 5x5 boards exist, but are not yet available here).
         For this tutorial, we will use a smaller board for pedagogical purposes.`,
-            GoRules.get().getInitialState(),
+            GoRules.get().getInitialState(defaultConfig),
         ),
         TutorialStep.informational(
             $localize`Goal of the game`,

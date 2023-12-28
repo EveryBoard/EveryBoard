@@ -29,11 +29,13 @@ describe('YinshState', () => {
             const state: YinshState = YinshRules.get().getInitialState();
             expect(state.equals(state)).toBeTrue();
         });
+
         it('should detect when two states differ due to their turn', () => {
             const state1: YinshState = new YinshState(board, PlayerMap.of(0, 0), 0);
             const state2: YinshState = new YinshState(board, PlayerMap.of(0, 0), 1);
             expect(state1.equals(state2)).toBeFalse();
         });
+
         it('should detect when two states differ due to their side rings', () => {
             const state1: YinshState = new YinshState(board, PlayerMap.of(0, 0), 0);
             const state2: YinshState = new YinshState(board, PlayerMap.of(0, 1), 0);
@@ -41,6 +43,7 @@ describe('YinshState', () => {
             expect(state1.equals(state2)).toBeFalse();
             expect(state1.equals(state3)).toBeFalse();
         });
+
         it('should detect when two states differ due to their board', () => {
             const board2: Table<YinshPiece> = [
                 [N, N, N, N, N, N, _, _, _, _, N],
@@ -59,5 +62,7 @@ describe('YinshState', () => {
             const state2: YinshState = new YinshState(board2, PlayerMap.of(0, 0), 0);
             expect(state1.equals(state2)).toBeFalse();
         });
+
     });
+
 });

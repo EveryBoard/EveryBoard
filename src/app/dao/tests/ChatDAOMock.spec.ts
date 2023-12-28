@@ -7,8 +7,9 @@ import { Debug } from 'src/app/utils/utils';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MessageDocument } from 'src/app/domain/Message';
 
-type ChatOS = ObservableSubject<MGPOptional<ChatDocument>>
-type MessageOS = ObservableSubject<MGPOptional<MessageDocument>>
+type ChatOS = ObservableSubject<MGPOptional<ChatDocument>>;
+
+type MessageOS = ObservableSubject<MGPOptional<MessageDocument>>;
 
 @Debug.log
 export class ChatDAOMock extends FirestoreDAOMock<Chat> {

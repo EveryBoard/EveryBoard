@@ -2,25 +2,23 @@
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { LodestoneScoreHeuristic } from '../LodestoneScoreHeuristic';
 import { LodestonePiece, LodestonePieceNone, LodestonePiecePlayer } from '../LodestonePiece';
-import { LodestonePositions, LodestonePressurePlate, LodestonePressurePlates, LodestoneState } from '../LodestoneState';
+import { LodestonePositions, LodestonePressurePlates, LodestoneState } from '../LodestoneState';
 import { MGPMap } from 'src/app/utils/MGPMap';
 import { HeuristicUtils } from 'src/app/jscaip/tests/HeuristicUtils.spec';
 import { Player } from 'src/app/jscaip/Player';
+import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { LodestoneRules } from '../LodestoneRules';
 
 describe('LodestoneScoreHeuristic', () => {
 
     let heuristic: LodestoneScoreHeuristic;
+    const defaultConfig: NoConfig = LodestoneRules.get().getDefaultRulesConfig();
 
     const _: LodestonePiece = LodestonePieceNone.EMPTY;
     const O: LodestonePiece = LodestonePiecePlayer.ZERO;
     const X: LodestonePiece = LodestonePiecePlayer.ONE;
 
-    const allPressurePlates: LodestonePressurePlates = {
-        top: MGPOptional.of(LodestonePressurePlate.EMPTY_5),
-        bottom: MGPOptional.of(LodestonePressurePlate.EMPTY_5),
-        left: MGPOptional.of(LodestonePressurePlate.EMPTY_5),
-        right: MGPOptional.of(LodestonePressurePlate.EMPTY_5),
-    };
+    const allPressurePlates: LodestonePressurePlates = LodestoneState.INITIAL_PRESSURE_PLATES;
 
     const noLodestones: LodestonePositions = new MGPMap();
 
@@ -55,7 +53,9 @@ describe('LodestoneScoreHeuristic', () => {
         HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(heuristic,
                                                                weakState, MGPOptional.empty(),
                                                                strongState, MGPOptional.empty(),
-                                                               Player.ZERO);
+                                                               Player.ZERO,
+                                                               defaultConfig);
 
     });
+
 });

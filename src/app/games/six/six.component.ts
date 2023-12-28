@@ -13,10 +13,10 @@ import { HexagonalGameComponent }
     from '../../components/game-components/game-component/HexagonalGameComponent';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
-import { SixTutorial } from './SixTutorial';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { ViewBox } from 'src/app/components/game-components/GameComponentUtils';
+import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 import { MCTS } from 'src/app/jscaip/MCTS';
 import { Minimax } from 'src/app/jscaip/Minimax';
 import { SixHeuristic } from './SixHeuristic';
@@ -29,7 +29,7 @@ import { SixFilteredMoveGenerator } from './SixFilteredMoveGenerator';
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
 })
 export class SixComponent
-    extends HexagonalGameComponent<SixRules, SixMove, SixState, Player, SixLegalityInformation>
+    extends HexagonalGameComponent<SixRules, SixMove, SixState, Player, EmptyRulesConfig, SixLegalityInformation>
 {
     public state: SixState;
 
@@ -48,14 +48,12 @@ export class SixComponent
 
     public constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
-        this.rules = SixRules.get();
-        this.node = this.rules.getInitialNode();
+        this.setRulesAndNode('Six');
         this.availableAIs = [
             new Minimax($localize`Minimax`, this.rules, new SixHeuristic(), new SixFilteredMoveGenerator()),
             new MCTS($localize`MCTS`, new SixMoveGenerator(), this.rules),
         ];
         this.encoder = SixMove.encoder;
-        this.tutorial = new SixTutorial().tutorial;
         this.SPACE_SIZE = 30;
         this.hexaLayout = new HexaLayout(this.SPACE_SIZE * 1.50,
                                          new Coord(this.SPACE_SIZE * 2, 0),

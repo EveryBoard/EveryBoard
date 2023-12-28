@@ -11,7 +11,6 @@ import { CoerceoFailure } from 'src/app/games/coerceo/CoerceoFailure';
 import { Player } from 'src/app/jscaip/Player';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
-import { CoerceoTutorial } from './CoerceoTutorial';
 import { MCTS } from 'src/app/jscaip/MCTS';
 import { CoerceoCapturesAndFreedomHeuristic } from './CoerceoCapturesAndFreedomHeuristic';
 import { Minimax } from 'src/app/jscaip/Minimax';
@@ -46,9 +45,7 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
 
     public constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
-        this.scores = MGPOptional.of(PlayerMap.of(0, 0));
-        this.rules = CoerceoRules.get();
-        this.node = this.rules.getInitialNode();
+        this.setRulesAndNode('Coerceo');
         this.availableAIs = [
             new Minimax($localize`Pieces > Threats > Tiles`,
                         this.rules,
@@ -58,7 +55,7 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
             new MCTS($localize`MCTS`, new CoerceoMoveGenerator(), this.rules),
         ];
         this.encoder = CoerceoMove.encoder;
-        this.tutorial = new CoerceoTutorial().tutorial;
+        this.scores = MGPOptional.of(PlayerMap.of(0, 0));
     }
     public async updateBoard(_triggerAnimation: boolean): Promise<void> {
         this.chosenCoord = MGPOptional.empty();

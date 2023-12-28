@@ -62,7 +62,7 @@ describe('PartDAO security', () => {
         const creator: MinimalUser = await createConnectedUser(CREATOR_EMAIL, CREATOR_NAME);
         const part: Part = { ...PartMocks.INITIAL, playerZero: creator };
         const partId: string = await partDAO.create(part);
-        await configRoomDAO.set(partId, { ...ConfigRoomMocks.INITIAL, creator });
+        await configRoomDAO.set(partId, { ...ConfigRoomMocks.getInitial(MGPOptional.empty()), creator });
         await signOut();
 
         // A candidate adds themself to the candidates list
@@ -221,7 +221,7 @@ describe('PartDAO security', () => {
                 ...CurrentGameMocks.CREATOR_WITHOUT_OPPONENT,
                 id: partId,
             };
-            await configRoomDAO.set(partId, { ...ConfigRoomMocks.INITIAL, creator });
+            await configRoomDAO.set(partId, { ...ConfigRoomMocks.getInitial(MGPOptional.empty()), creator });
             const lastUpdateTime: Timestamp = new Timestamp(Math.floor(Date.now() / 1000), 0);
             await userDAO.update(creator.id, { currentGame, lastUpdateTime });
             await signOut();
@@ -243,7 +243,7 @@ describe('PartDAO security', () => {
                 ...CurrentGameMocks.CREATOR_WITHOUT_OPPONENT,
                 id: partId,
             };
-            await configRoomDAO.set(partId, { ...ConfigRoomMocks.INITIAL, creator });
+            await configRoomDAO.set(partId, { ...ConfigRoomMocks.getInitial(MGPOptional.empty()), creator });
             const lastUpdateTime: Timestamp = new Timestamp(0, 0); // creator is stuck in 1970
             await userDAO.update(creator.id, { currentGame, lastUpdateTime });
             await signOut();
@@ -265,7 +265,7 @@ describe('PartDAO security', () => {
                 ...CurrentGameMocks.CREATOR_WITHOUT_OPPONENT,
                 id: partId,
             };
-            await configRoomDAO.set(partId, { ...ConfigRoomMocks.INITIAL, creator });
+            await configRoomDAO.set(partId, { ...ConfigRoomMocks.getInitial(MGPOptional.empty()), creator });
             const lastUpdateTime: Timestamp = new Timestamp(Math.floor(Date.now() / 1000), 0);
             await userDAO.update(creator.id, { currentGame, lastUpdateTime });
             await signOut();
@@ -287,7 +287,7 @@ describe('PartDAO security', () => {
                 ...CurrentGameMocks.CREATOR_WITHOUT_OPPONENT,
                 id: partId,
             };
-            await configRoomDAO.set(partId, { ...ConfigRoomMocks.INITIAL, creator });
+            await configRoomDAO.set(partId, { ...ConfigRoomMocks.getInitial(MGPOptional.empty()), creator });
             const lastUpdateTime: Timestamp = new Timestamp(0, 0); // creator is stuck in 1970
             await userDAO.update(creator.id, { currentGame, lastUpdateTime });
             await signOut();
@@ -481,7 +481,7 @@ describe('PartDAO security', () => {
             // Given a non-started part and its owner (as defined in the configRoom)
             const creator: MinimalUser = await createConnectedUser(CREATOR_EMAIL, CREATOR_NAME);
             const partId: string = await partDAO.create({ ...PartMocks.INITIAL, playerZero: creator });
-            await configRoomDAO.set(partId, { ...ConfigRoomMocks.INITIAL, creator });
+            await configRoomDAO.set(partId, { ...ConfigRoomMocks.getInitial(MGPOptional.empty()), creator });
 
             // When deleting the part
             const result: Promise<void> = partDAO.delete(partId);
@@ -497,7 +497,7 @@ describe('PartDAO security', () => {
                 playerZero: creator,
                 beginning: serverTimestamp(),
             });
-            await configRoomDAO.set(partId, { ...ConfigRoomMocks.INITIAL, creator });
+            await configRoomDAO.set(partId, { ...ConfigRoomMocks.getInitial(MGPOptional.empty()), creator });
 
             // When deleting the part
             const result: Promise<void> = partDAO.delete(partId);

@@ -7,10 +7,11 @@ import { YinshPiece } from './YinshPiece';
 import { YinshNode, YinshRules } from './YinshRules';
 import { MoveGenerator } from 'src/app/jscaip/AI';
 import { GipfCapture, GipfProjectHelper } from 'src/app/jscaip/GipfProjectHelper';
+import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 export class YinshMoveGenerator extends MoveGenerator<YinshMove, YinshState> {
 
-    public getListMoves(node: YinshNode): YinshMove[] {
+    public override getListMoves(node: YinshNode, _config: NoConfig): YinshMove[] {
         const moves: YinshMove[] = [];
         const state: YinshState = node.gameState;
 

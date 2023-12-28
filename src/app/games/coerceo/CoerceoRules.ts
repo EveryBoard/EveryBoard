@@ -13,6 +13,7 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { PlayerMap } from 'src/app/jscaip/PlayerMap';
 import { Player } from 'src/app/jscaip/Player';
+import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 export class CoerceoNode extends GameNode<CoerceoMove, CoerceoState> {}
 
@@ -28,7 +29,7 @@ export class CoerceoRules extends Rules<CoerceoMove, CoerceoState> {
         return CoerceoRules.singleton.get();
     }
 
-    public getInitialState(): CoerceoState {
+    public override getInitialState(): CoerceoState {
         const _: FourStatePiece = FourStatePiece.EMPTY;
         const N: FourStatePiece = FourStatePiece.UNREACHABLE;
         const O: FourStatePiece = FourStatePiece.ZERO;
@@ -48,7 +49,9 @@ export class CoerceoRules extends Rules<CoerceoMove, CoerceoState> {
         return new CoerceoState(board, 0, PlayerMap.of(0, 0), PlayerMap.of(0, 0));
     }
 
-    public applyLegalMove(move: CoerceoMove, state: CoerceoState, _info: void): CoerceoState {
+    public override applyLegalMove(move: CoerceoMove, state: CoerceoState, _config: NoConfig, _info: void)
+    : CoerceoState
+    {
         if (CoerceoMove.isTileExchange(move)) {
             return this.applyLegalTileExchange(move, state);
         } else {
@@ -93,7 +96,7 @@ export class CoerceoRules extends Rules<CoerceoMove, CoerceoState> {
         return resultingState;
     }
 
-    public isLegal(move: CoerceoMove, state: CoerceoState): MGPValidation {
+    public override isLegal(move: CoerceoMove, state: CoerceoState): MGPValidation {
         if (CoerceoMove.isTileExchange(move)) {
             return this.isLegalTileExchange(move, state);
         } else {
@@ -138,10 +141,10 @@ export class CoerceoRules extends Rules<CoerceoMove, CoerceoState> {
 
     public static getGameStatus(node: CoerceoNode): GameStatus {
         const state: CoerceoState = node.gameState;
-        if (state.captures.get(Player.ZERO).get() >= 18) {
+        if (18 <= state.captures.get(Player.ZERO).get()) {
             return GameStatus.ZERO_WON;
         }
-        if (state.captures.get(Player.ONE).get() >= 18) {
+        if (18 <= state.captures.get(Player.ONE).get()) {
             return GameStatus.ONE_WON;
         }
         return GameStatus.ONGOING;

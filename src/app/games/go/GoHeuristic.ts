@@ -1,11 +1,11 @@
 import { GoState, GoPiece } from './GoState';
 import { GoMove } from './GoMove';
 import { PlayerMetricHeuristic } from 'src/app/jscaip/Minimax';
-import { GoNode, GoRules } from './GoRules';
 import { PlayerMap } from 'src/app/jscaip/PlayerMap';
 import { Player } from 'src/app/jscaip/Player';
+import { GoConfig, GoNode, GoRules } from './GoRules';
 
-export class GoHeuristic extends PlayerMetricHeuristic<GoMove, GoState> {
+export class GoHeuristic extends PlayerMetricHeuristic<GoMove, GoState, GoConfig> {
 
     public getMetrics(node: GoNode): [number, number] {
         const goState: GoState = GoRules.markTerritoryAndCount(node.gameState);
@@ -28,4 +28,5 @@ export class GoHeuristic extends PlayerMetricHeuristic<GoMove, GoState> {
         }
         return killed;
     }
+
 }

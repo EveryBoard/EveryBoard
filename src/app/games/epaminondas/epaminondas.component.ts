@@ -1,8 +1,9 @@
 import { Component } from '@angular/core';
+
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { EpaminondasMove } from 'src/app/games/epaminondas/EpaminondasMove';
 import { EpaminondasState } from 'src/app/games/epaminondas/EpaminondasState';
-import { EpaminondasLegalityInformation, EpaminondasNode, EpaminondasRules } from 'src/app/games/epaminondas/EpaminondasRules';
+import { EpaminondasConfig, EpaminondasLegalityInformation, EpaminondasNode, EpaminondasRules } from 'src/app/games/epaminondas/EpaminondasRules';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Direction } from 'src/app/jscaip/Direction';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
@@ -10,7 +11,6 @@ import { RectangularGameComponent } from '../../components/game-components/recta
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { EpaminondasFailure } from './EpaminondasFailure';
-import { EpaminondasTutorial } from './EpaminondasTutorial';
 import { Utils } from 'src/app/utils/utils';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MCTS } from 'src/app/jscaip/MCTS';
@@ -28,8 +28,10 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
                                                                    EpaminondasMove,
                                                                    EpaminondasState,
                                                                    PlayerOrNone,
+                                                                   EpaminondasConfig,
                                                                    EpaminondasLegalityInformation>
 {
+
     public NONE: PlayerOrNone = PlayerOrNone.NONE;
 
     public firstPiece: MGPOptional<Coord> = MGPOptional.empty();
@@ -50,9 +52,7 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
 
     public constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
-        this.hasAsymmetricBoard = true;
-        this.rules = EpaminondasRules.get();
-        this.node = this.rules.getInitialNode();
+        this.setRulesAndNode('Epaminondas');
         this.availableAIs = [
             new EpaminondasMinimax(),
             new EpaminondasPositionalMinimax(),
@@ -60,7 +60,7 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
             new MCTS($localize`MCTS`, new EpaminondasMoveGenerator(), this.rules),
         ];
         this.encoder = EpaminondasMove.encoder;
-        this.tutorial = new EpaminondasTutorial().tutorial;
+        this.hasAsymmetricBoard = true;
     }
     public async updateBoard(_triggerAnimation: boolean): Promise<void> {
         this.firstPiece = MGPOptional.empty();
@@ -77,7 +77,7 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
         }
         const previousNode: EpaminondasNode = this.node.parent.get();
         const previousOpponent: Player = previousNode.gameState.getCurrentOpponent();
-        while (EpaminondasState.isOnBoard(moved) &&
+        while (previousNode.gameState.isOnBoard(moved) &&
                previousNode.gameState.getPieceAt(moved) === previousOpponent)
         {
             this.capturedCoords.push(moved);
@@ -124,12 +124,12 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
             return this.getFirstPieceExtensions(PLAYER);
         }
     }
-    private getFirstPieceExtensions(PLAYER: Player): Coord[] {
+    private getFirstPieceExtensions(player: Player): Coord[] {
         const extensions: Coord[] = [];
         for (const direction of Direction.DIRECTIONS) {
             let coord: Coord = this.firstPiece.get().getNext(direction, 1);
-            while (EpaminondasState.isOnBoard(coord) &&
-                   this.board[coord.y][coord.x] === PLAYER)
+            while (this.getState().isOnBoard(coord) &&
+                   this.board[coord.y][coord.x] === player)
             {
                 extensions.push(coord);
                 coord = coord.getNext(direction, 1);
@@ -149,7 +149,7 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
     }
     private getExtensionsToward(coord: Coord, direction: Direction, PLAYER: Player): Coord[] {
         const extensions: Coord[] = [];
-        while (EpaminondasState.isOnBoard(coord) &&
+        while (this.getState().isOnBoard(coord) &&
                this.board[coord.y][coord.x] === PLAYER)
         {
             extensions.push(coord);
@@ -181,7 +181,7 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
         const neighbors: Coord[] = [];
         for (const direction of Direction.DIRECTIONS) {
             const coord: Coord = this.firstPiece.get().getNext(direction, 1);
-            if (EpaminondasState.isOnBoard(coord) &&
+            if (this.getState().isOnBoard(coord) &&
                 this.board[coord.y][coord.x] === PlayerOrNone.NONE)
             {
                 neighbors.push(coord);
@@ -193,7 +193,7 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
         const player: Player = this.getState().getCurrentPlayer();
         const opponent: Player = this.getState().getCurrentOpponent();
         const landings: Coord[] = [];
-        while (EpaminondasState.isOnBoard(landing) &&
+        while (this.getState().isOnBoard(landing) &&
                landings.length < phalanxSize &&
                this.board[landing.y][landing.x] !== player)
         {
@@ -211,7 +211,7 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
     }
     private getPhalanxLength(firstPiece: Coord, direction: Direction, owner: Player): number {
         let length: number = 0;
-        while (EpaminondasState.isOnBoard(firstPiece) &&
+        while (this.getState().isOnBoard(firstPiece) &&
                this.board[firstPiece.y][firstPiece.x] === owner)
         {
             length++;
@@ -393,7 +393,7 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
         return [];
     }
     public getHighlightedCoords(): Coord[] {
-        if (this.isInteractive === false) {
+        if (this.interactive === false) {
             return [];
         }
         if (this.firstPiece.isPresent()) {
@@ -406,8 +406,8 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
         const pieces: Coord[] = [];
         const state: EpaminondasState = this.getState();
         const player: Player = state.getCurrentPlayer();
-        for (let y: number = 0; y < this.board.length; y++) {
-            for (let x: number = 0; x < this.board[y].length; x++) {
+        for (let y: number = 0; y < this.getHeight(); y++) {
+            for (let x: number = 0; x < this.getWidth(); x++) {
                 if (this.board[y][x] === player) {
                     pieces.push(new Coord(x, y));
                 }

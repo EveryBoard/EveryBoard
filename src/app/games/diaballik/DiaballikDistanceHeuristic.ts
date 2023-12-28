@@ -14,7 +14,7 @@ export class DiaballikDistanceHeuristic extends PlayerMetricHeuristic<DiaballikM
             const piece: DiaballikPiece = coordAndContent.content;
             if (piece.holdsBall) {
                 if (piece.owner === Player.ZERO) {
-                    ballsCloseness[0] = state.board.length - 1 - coordAndContent.coord.y;
+                    ballsCloseness[0] = state.getHeight() - 1 - coordAndContent.coord.y;
                 } else {
                     ballsCloseness[1] = coordAndContent.coord.y;
                 }

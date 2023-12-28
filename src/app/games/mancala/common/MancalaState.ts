@@ -4,9 +4,10 @@ import { Table, TableUtils } from 'src/app/utils/ArrayUtils';
 
 export class MancalaState extends GameStateWithTable<number> {
 
-    public static readonly WIDTH: number = 6;
-
-    public constructor(b: Table<number>, turn: number, public readonly scores: PlayerMap<number>) {
+    public constructor(b: Table<number>,
+                       turn: number,
+                       public readonly scores: PlayerMap<number>)
+    {
         super(b, turn);
     }
 
@@ -27,4 +28,5 @@ export class MancalaState extends GameStateWithTable<number> {
     public getOpponentY(): number {
         return this.getCurrentPlayer().getValue();
     }
+
 }

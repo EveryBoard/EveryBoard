@@ -4,6 +4,8 @@ import { Move } from './Move';
 import { SCORE } from './SCORE';
 import { GameState } from './GameState';
 import { Heuristic } from './Minimax';
+import { EmptyRulesConfig, RulesConfig } from './RulesConfigUtil';
+import { BoardValue } from './BoardValue';
 
 export interface BoardInfo {
     status: SCORE,
@@ -11,8 +13,12 @@ export interface BoardInfo {
     preVictory: MGPOptional<Coord>,
     sum: number,
 }
-export abstract class AlignmentHeuristic<M extends Move, S extends GameState, V>
-    extends Heuristic<M, S>
+
+export abstract class AlignmentHeuristic<M extends Move,
+                                         S extends GameState,
+                                         V,
+                                         C extends RulesConfig = EmptyRulesConfig>
+    extends Heuristic<M, S, BoardValue, C>
 {
 
     public calculateBoardValue(move: M, state: S): BoardInfo {

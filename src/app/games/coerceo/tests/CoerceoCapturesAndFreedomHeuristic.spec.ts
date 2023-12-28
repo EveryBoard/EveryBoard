@@ -7,6 +7,8 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { Player } from 'src/app/jscaip/Player';
 import { CoerceoCapturesAndFreedomHeuristic } from '../CoerceoCapturesAndFreedomHeuristic';
 import { PlayerMap } from 'src/app/jscaip/PlayerMap';
+import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { CoerceoRules } from '../CoerceoRules';
 
 const _: FourStatePiece = FourStatePiece.EMPTY;
 const N: FourStatePiece = FourStatePiece.UNREACHABLE;
@@ -16,10 +18,12 @@ const X: FourStatePiece = FourStatePiece.ONE;
 fdescribe('CoerceoCapturesAndFreedomHeuristic', () => {
 
     let heuristic: CoerceoCapturesAndFreedomHeuristic;
+    const defaultConfig: NoConfig = CoerceoRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         heuristic = new CoerceoCapturesAndFreedomHeuristic();
     });
+
     it('should prefer a board with more freedom', () => {
         const weakBoard: Table<FourStatePiece> = [
             [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
@@ -50,6 +54,8 @@ fdescribe('CoerceoCapturesAndFreedomHeuristic', () => {
         HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(heuristic,
                                                                weakState, MGPOptional.empty(),
                                                                strongState, MGPOptional.empty(),
-                                                               Player.ONE);
+                                                               Player.ONE,
+                                                               defaultConfig);
     });
+
 });

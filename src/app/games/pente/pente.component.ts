@@ -3,7 +3,6 @@ import { PenteMove } from './PenteMove';
 import { PenteState } from './PenteState';
 import { Component } from '@angular/core';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
-import { PenteTutorial } from './PenteTutorial';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { Coord } from 'src/app/jscaip/Coord';
@@ -28,16 +27,15 @@ export class PenteComponent extends GobanGameComponent<PenteRules, PenteMove, Pe
 
     public constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
-        this.scores = MGPOptional.of(PlayerMap.of(0, 0));
-        this.rules = PenteRules.get();
-        this.node = this.rules.getInitialNode();
-        this.encoder = PenteMove.encoder;
-        this.tutorial = new PenteTutorial().tutorial;
+        this.setRulesAndNode('Pente');
         this.availableAIs = [
             new Minimax($localize`Alignment`, this.rules, new PenteAlignmentHeuristic(), new PenteMoveGenerator()),
             new MCTS($localize`MCTS`, new PenteMoveGenerator(), this.rules),
         ];
+        this.encoder = PenteMove.encoder;
+        this.scores = MGPOptional.of(PlayerMap.of(0, 0));
     }
+
     public async updateBoard(_triggerAnimation: boolean): Promise<void> {
         const state: PenteState = this.getState();
         this.board = state.board;
@@ -46,15 +44,18 @@ export class PenteComponent extends GobanGameComponent<PenteRules, PenteMove, Pe
         this.createHoshis();
         this.cancelMoveAttempt();
     }
+
     public override async showLastMove(move: PenteMove): Promise<void> {
         this.lastMoved = MGPOptional.of(move.coord);
         const opponent: Player = this.getCurrentOpponent();
         this.captured = PenteRules.get().getCaptures(move.coord, this.getPreviousState(), opponent);
     }
+
     public override cancelMoveAttempt(): void {
         this.lastMoved = MGPOptional.empty();
         this.captured = [];
     }
+
     public async onClick(x: number, y: number): Promise<MGPValidation> {
         const clickValidity: MGPValidation = await this.canUserPlay('#click_' + x + '_' + y);
         if (clickValidity.isFailure()) {
@@ -63,6 +64,7 @@ export class PenteComponent extends GobanGameComponent<PenteRules, PenteMove, Pe
         const clickedCoord: Coord = new Coord(x, y);
         return this.chooseMove(PenteMove.of(clickedCoord));
     }
+
     public getSpaceClass(x: number, y: number): string[] {
         const coord: Coord = new Coord(x, y);
         const owner: PlayerOrNone = this.getState().getPieceAt(coord);
@@ -76,4 +78,5 @@ export class PenteComponent extends GobanGameComponent<PenteRules, PenteMove, Pe
         }
         return classes;
     }
+
 }
