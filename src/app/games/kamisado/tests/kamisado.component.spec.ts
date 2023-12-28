@@ -206,10 +206,10 @@ describe('KamisadoComponent', () => {
         ];
         const state: KamisadoState =
             new KamisadoState(0, KamisadoColor.RED, MGPOptional.of(new Coord(0, 7)), false, board);
-        const lastMove: KamisadoMove = KamisadoMove.of(new Coord(0, 7), new Coord(0, 6));
+        const previousMove: KamisadoMove = KamisadoMove.of(new Coord(0, 7), new Coord(0, 6));
 
         // When displaying it
-        await testUtils.setupState(state, undefined, lastMove);
+        await testUtils.setupState(state, { previousMove });
 
         // Then it should display last move
         testUtils.expectElementToHaveClass('#last_move_start_0_7', 'last-move-stroke');

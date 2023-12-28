@@ -76,7 +76,7 @@ describe('PenteComponent', () => {
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
         ], [0, 0], 3);
-        await testUtils.setupState(state, undefined, undefined, defaultConfig);
+        await testUtils.setupState(state, { config: defaultConfig });
 
         // When doing the capture
         const move: PenteMove = PenteMove.of(new Coord(9, 6));
@@ -113,7 +113,7 @@ describe('PenteComponent', () => {
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
         ], [0, 0], 6);
         // When displaying it
-        await testUtils.setupState(state, undefined, undefined, defaultConfig);
+        await testUtils.setupState(state, { config: defaultConfig });
         // Then it should show the victory
         testUtils.expectElementToHaveClass('#piece_9_9', 'victory-stroke');
         testUtils.expectElementToHaveClass('#piece_10_9', 'victory-stroke');

@@ -11,7 +11,7 @@ import { MancalaConfig } from '../../common/MancalaConfig';
 import { MancalaNode, MancalaRules } from '../../common/MancalaRules';
 import { TestUtils } from 'src/app/utils/tests/TestUtils.spec';
 
-fdescribe('KalahRules', () => {
+describe('KalahRules', () => {
 
     const rules: MancalaRules = KalahRules.get();
     const defaultConfig: MGPOptional<MancalaConfig> = KalahRules.get().getDefaultRulesConfig();

@@ -6,12 +6,11 @@ import { ConspirateursNode, ConspirateursRules } from './ConspirateursRules';
 import { ConspirateursState } from './ConspirateursState';
 import { MGPSet } from 'src/app/utils/MGPSet';
 import { MoveGenerator } from 'src/app/jscaip/AI';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 export class ConspirateursMoveGenerator extends MoveGenerator<ConspirateursMove, ConspirateursState> {
 
-    public getListMoves(node: ConspirateursNode, _config: MGPOptional<EmptyRulesConfig>): ConspirateursMove[] {
+    public override getListMoves(node: ConspirateursNode, _config: NoConfig): ConspirateursMove[] {
         if (node.gameState.turn < 40) {
             return this.getListMovesDrop(node.gameState);
         } else {

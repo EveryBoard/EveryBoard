@@ -3,10 +3,10 @@ import { MGPMap } from '../utils/MGPMap';
 import { Debug, Utils } from 'src/app/utils/utils';
 import { MGPOptional } from '../utils/MGPOptional';
 import { GameState } from './GameState';
-import { ConfigurableRules } from './Rules';
+import { AbstractRules } from './Rules';
 import { GameStatus } from './GameStatus';
 import { Player } from './Player';
-import { EmptyRulesConfig, RulesConfig } from './RulesConfigUtil';
+import { RulesConfig } from './RulesConfigUtil';
 
 export class GameNodeStats {
     public static createdNodes: number = 0;
@@ -19,7 +19,7 @@ export class GameNodeStats {
  * As an extra, a node may contain cached values used by AIs.
  */
 @Debug.log
-export class GameNode<M extends Move, S extends GameState, C extends RulesConfig = EmptyRulesConfig> {
+export class GameNode<M extends Move, S extends GameState> {
 
     public static ID: number = 0;
 
@@ -30,7 +30,7 @@ export class GameNode<M extends Move, S extends GameState, C extends RulesConfig
      * It is a map keyed with moves, with as value the child that corresponds
      * to applying that move to the current state.
      */
-    private readonly children: MGPMap<M, GameNode<M, S, C>> = new MGPMap();
+    private readonly children: MGPMap<M, GameNode<M, S>> = new MGPMap();
 
     /**
      * A cache that AIs can use. It is up to the AIs to properly name and type the values in the cache.
@@ -38,7 +38,7 @@ export class GameNode<M extends Move, S extends GameState, C extends RulesConfig
     private readonly cache: MGPMap<string, NonNullable<unknown>> = new MGPMap();
 
     public constructor(public readonly gameState: S,
-                       public readonly parent: MGPOptional<GameNode<M, S, C>> = MGPOptional.empty(),
+                       public readonly parent: MGPOptional<GameNode<M, S>> = MGPOptional.empty(),
                        public readonly previousMove: MGPOptional<M> = MGPOptional.empty())
     {
         this.id = GameNode.ID++;
@@ -49,7 +49,7 @@ export class GameNode<M extends Move, S extends GameState, C extends RulesConfig
      * Returns the child corresponding to applying the given move to the current state,
      * or empty if it has not yet been calculated.
      */
-    public getChild(move: M): MGPOptional<GameNode<M, S, C>> {
+    public getChild(move: M): MGPOptional<GameNode<M, S>> {
         return this.children.get(move);
     }
 
@@ -63,14 +63,14 @@ export class GameNode<M extends Move, S extends GameState, C extends RulesConfig
     /**
      * Returns all the children of the node
      */
-    public getChildren(): GameNode<M, S, C>[] {
+    public getChildren(): GameNode<M, S>[] {
         return this.children.listValues();
     }
 
     /**
      * Adds a child to this node.
      */
-    public addChild(node: GameNode<M, S, C>): void {
+    public addChild(node: GameNode<M, S>): void {
         Utils.assert(node.previousMove.isPresent(), 'GameNode: addChild expects a node with a previous move');
         this.children.set(node.previousMove.get(), node);
     }
@@ -80,12 +80,12 @@ export class GameNode<M extends Move, S extends GameState, C extends RulesConfig
      * You can view the DOT graph with a tool like xdot,
      * or by pasting it on a website like https://dreampuf.github.io/GraphvizOnline/
      */
-    public printDot<L>(rules: ConfigurableRules<M, S, C, L>,
-                       labelFn?: (node: GameNode<M, S, C>) => string,
-                       max?: number,
-                       level: number = 0,
-                       id: number = 0,
-                       config: MGPOptional<C> = MGPOptional.empty())
+    public printDot(rules: AbstractRules,
+                    labelFn?: (node: GameNode<M, S>) => string,
+                    max?: number,
+                    level: number = 0,
+                    id: number = 0,
+                    config: MGPOptional<RulesConfig> = MGPOptional.empty())
     : number
     {
         if (level === 0) {
@@ -145,4 +145,4 @@ export class GameNode<M extends Move, S extends GameState, C extends RulesConfig
 
 }
 
-export class AbstractNode extends GameNode<Move, GameState, RulesConfig> {}
+export class AbstractNode extends GameNode<Move, GameState> {}

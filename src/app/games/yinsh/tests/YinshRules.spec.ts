@@ -10,7 +10,7 @@ import { YinshPiece } from '../YinshPiece';
 import { YinshNode, YinshRules } from '../YinshRules';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
-import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 describe('YinshRules', () => {
 
@@ -22,7 +22,7 @@ describe('YinshRules', () => {
     const B: YinshPiece = YinshPiece.RING_ONE;
 
     let rules: YinshRules;
-    const defaultConfig: MGPOptional<EmptyRulesConfig> = YinshRules.get().getDefaultRulesConfig();
+    const defaultConfig: NoConfig = YinshRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         rules = YinshRules.get();
@@ -51,7 +51,7 @@ describe('YinshRules', () => {
                 [N, _, _, _, _, N, N, N, N, N, N],
             ];
             const expectedState: YinshState = new YinshState(expectedBoard, [4, 5], 1);
-            RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+            RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         });
 
         it('should initially forbid placing markers', () => {
@@ -114,7 +114,7 @@ describe('YinshRules', () => {
             ];
             const expectedState: YinshState = new YinshState(expectedBoard, [0, 0], 11);
 
-            RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+            RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         });
 
         it('should forbid a move in an invalid direction', () => {
@@ -202,7 +202,7 @@ describe('YinshRules', () => {
             ];
             const expectedState: YinshState = new YinshState(expectedBoard, [0, 0], 11);
 
-            RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+            RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         });
 
         it('should allow moving above empty spaces as long as it lands after the first empty space following a marker', () => {
@@ -240,7 +240,7 @@ describe('YinshRules', () => {
             ];
             const expectedState: YinshState = new YinshState(expectedBoard, [0, 0], 11);
 
-            RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+            RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         });
 
         it('should forbid moving more than one space beyond the last marker of the group jumped', () => {
@@ -383,7 +383,7 @@ describe('YinshRules', () => {
             ];
             const expectedState: YinshState = new YinshState(expectedBoard, [1, 0], 11);
 
-            RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+            RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         });
 
         it('should support multiple captures', () => {
@@ -425,7 +425,7 @@ describe('YinshRules', () => {
             ];
             const expectedState: YinshState = new YinshState(expectedBoard, [2, 0], 11);
 
-            RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+            RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         });
 
         it('should forbid not making initial captures when it is possible', () => {

@@ -25,6 +25,7 @@ describe('GameComponent', () => {
     beforeEach(fakeAsync(async() => {
         await TestUtils.configureTestingModuleForGame(activatedRouteStub);
     }));
+
     it('should fail if pass() is called on a game that does not support it', fakeAsync(async() => {
         // Given such a game, like Abalone
         activatedRouteStub.setRoute('compo', 'Abalone');
@@ -47,6 +48,7 @@ describe('GameComponent', () => {
         expect(result.getReason()).toEqual('GameComponent: ' + errorMessage);
         expect(ErrorLoggerService.logError).toHaveBeenCalledWith('GameComponent', errorMessage, errorData);
     }));
+
     const clickableMethods: { [gameName: string]: { [methodName: string]: unknown[] } } = {
         Abalone: {
             onPieceClick: [0, 0],
@@ -95,8 +97,8 @@ describe('GameComponent', () => {
         Lodestone: {
             selectCoord: [new Coord(0, 0)],
             selectLodestone: ['push', false],
-            selectPressurePlate: ['top', 1],
-            deselectPressurePlate: ['top', 1],
+            onTemporaryPressurePlateClick: ['top', 1, 1],
+            onPressurePlateClick: ['top', 1, 1],
         },
         MartianChess: {
             onClick: [0, 0],
@@ -153,9 +155,10 @@ describe('GameComponent', () => {
         },
         Yinsh: { onClick: [0, 0] },
     };
+
     const refusal: MGPValidation = MGPValidation.failure(GameWrapperMessages.CANNOT_PLAY_AS_OBSERVER());
     for (const gameInfo of GameInfo.ALL_GAMES()) {
-        it(`clicks method should refuse when observer click (${ gameInfo.name})`, fakeAsync(async() => {
+        it(`clicks method should refuse when observer click (${ gameInfo.urlName })`, fakeAsync(async() => {
             const game: { [methodName: string]: unknown[] } | undefined = clickableMethods[gameInfo.urlName];
             if (game == null) {
                 throw new Error('Please define ' + gameInfo.urlName + ' clickable method in here to test them.');
@@ -175,10 +178,11 @@ describe('GameComponent', () => {
                     await testUtils.expectToDisplayGameMessage(refusal.getReason(), async() => {
                         return component[methodName](...game[methodName]);
                     });
-                expect(clickResult).toEqual(refusal);
+                expect(clickResult).withContext(methodName).toEqual(refusal);
             }
         }));
     }
+
     for (const gameInfo of GameInfo.ALL_GAMES()) {
         it(`should have an encoder, tutorial and AI for ${ gameInfo.name }`, fakeAsync(async() => {
             // Given a game

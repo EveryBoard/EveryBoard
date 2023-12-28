@@ -22,7 +22,7 @@ export type EpaminondasConfig = {
 
 export type EpaminondasLegalityInformation = Table<PlayerOrNone>;
 
-export class EpaminondasNode extends GameNode<EpaminondasMove, EpaminondasState, EpaminondasConfig> {}
+export class EpaminondasNode extends GameNode<EpaminondasMove, EpaminondasState> {}
 
 export class EpaminondasRules
     extends ConfigurableRules<EpaminondasMove, EpaminondasState, EpaminondasConfig, EpaminondasLegalityInformation>
@@ -176,7 +176,7 @@ export class EpaminondasRules
         return resultingState;
     }
 
-    public getGameStatus(node: EpaminondasNode): GameStatus {
+    public override getGameStatus(node: EpaminondasNode, _config: MGPOptional<EpaminondasConfig>): GameStatus {
         const state: EpaminondasState = node.gameState;
         const zerosInFirstLine: number = state.count(Player.ZERO, 0);
         const height: number = state.getHeight();

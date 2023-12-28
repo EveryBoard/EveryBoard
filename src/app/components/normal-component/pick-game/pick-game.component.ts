@@ -13,6 +13,7 @@ import { AbaloneRules } from 'src/app/games/abalone/AbaloneRules';
 
 import { BaAwaComponent } from 'src/app/games/mancala/ba-awa/ba-awa.component';
 import { BaAwaRules } from 'src/app/games/mancala/ba-awa/BaAwaRules';
+import { BaAwaTutorial } from 'src/app/games/mancala/ba-awa/BaAwaTutorial';
 import { BrandhubComponent } from 'src/app/games/tafl/brandhub/brandhub.component';
 import { BrandhubTutorial } from 'src/app/games/tafl/brandhub/BrandhubTutorial';
 import { BrandhubRules } from 'src/app/games/tafl/brandhub/BrandhubRules';
@@ -136,7 +137,7 @@ import { Tutorial } from '../../wrapper-components/tutorial-game-wrapper/Tutoria
 import { RulesConfigDescription } from '../../wrapper-components/rules-configuration/RulesConfigDescription';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
-import { BaAwaTutorial } from 'src/app/games/mancala/ba-awa/BaAwaTutorial';
+import { Utils } from 'src/app/utils/utils';
 
 class GameDescription {
 
@@ -270,6 +271,7 @@ export class GameInfo {
 
     public static getByUrlName(urlName: string): MGPOptional<GameInfo> {
         const games: GameInfo[] = GameInfo.ALL_GAMES().filter((gameInfo: GameInfo) => gameInfo.urlName === urlName);
+        Utils.assert(games.length <= 1, `There should only be one game matching $urlName!`);
         if (games.length === 0) {
             return MGPOptional.empty();
         } else {

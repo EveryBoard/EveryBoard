@@ -11,12 +11,12 @@ import { KamisadoFailure } from '../KamisadoFailure';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { Table } from 'src/app/utils/ArrayUtils';
-import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 describe('KamisadoRules', () => {
 
     let rules: KamisadoRules;
-    const defaultConfig: MGPOptional<EmptyRulesConfig> = KamisadoRules.get().getDefaultRulesConfig();
+    const defaultConfig: NoConfig = KamisadoRules.get().getDefaultRulesConfig();
 
     const _: KamisadoPiece = KamisadoPiece.EMPTY;
     const R: KamisadoPiece = KamisadoPiece.ZERO.RED;
@@ -70,7 +70,7 @@ describe('KamisadoRules', () => {
             ];
             const expectedState: KamisadoState =
                 new KamisadoState(1, KamisadoColor.PURPLE, MGPOptional.of(new Coord(2, 0)), false, expectedBoard);
-            RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+            RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         });
 
         it('should allow diagonal moves without obstacles', () => {
@@ -104,7 +104,7 @@ describe('KamisadoRules', () => {
             ];
             const expectedState: KamisadoState =
                 new KamisadoState(7, KamisadoColor.BROWN, MGPOptional.of(new Coord(1, 0)), false, expectedBoard);
-            RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+            RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         });
 
         it('should allow to pass in a stuck position', () => {
@@ -128,7 +128,7 @@ describe('KamisadoRules', () => {
             // Then the move should be legal
             const expectedState: KamisadoState =
                 new KamisadoState(7, KamisadoColor.RED, MGPOptional.of(new Coord(1, 6)), true, board);
-            RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+            RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         });
 
     });

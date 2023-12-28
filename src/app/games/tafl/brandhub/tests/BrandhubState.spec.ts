@@ -24,7 +24,7 @@ describe('TaflState', () => {
             expect(invader).toBe(PlayerOrNone.ZERO);
         });
 
-        it('should make invader Player.ONE when invaders start is false', () => {
+        it('should make invader Player.ONE when invaders does not start', () => {
             // Given an initial state with a config where invader does not starts
             const customConfig: MGPOptional<TaflConfig> = MGPOptional.of({
                 ...defaultConfig.get(),

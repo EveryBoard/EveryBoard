@@ -3,8 +3,8 @@ import { TrexoPiece, TrexoPieceStack, TrexoState } from '../TrexoState';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { HeuristicUtils } from 'src/app/jscaip/tests/HeuristicUtils.spec';
 import { TrexoAlignmentHeuristic } from '../TrexoAlignmentHeuristic';
-import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 import { TrexoRules } from '../TrexoRules';
+import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 const ______: TrexoPieceStack = TrexoPieceStack.EMPTY;
 const X1__T0: TrexoPieceStack = TrexoPieceStack.of([new TrexoPiece(Player.ONE, 0)]);
@@ -13,7 +13,7 @@ const O1__T0: TrexoPieceStack = TrexoPieceStack.of([new TrexoPiece(Player.ZERO, 
 describe('TrexoHeuristic', () => {
 
     let heuristic: TrexoAlignmentHeuristic;
-    const defaultConfig: MGPOptional<EmptyRulesConfig> = TrexoRules.get().getDefaultRulesConfig();
+    const defaultConfig: NoConfig = TrexoRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         heuristic = new TrexoAlignmentHeuristic();

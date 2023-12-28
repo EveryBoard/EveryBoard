@@ -193,7 +193,7 @@ describe('TafPieceAndInfluenceHeuristic', () => {
 
         describe('isThreatened', () => {
 
-            it('should now that empty thrones are threatening', () => {
+            it('should know that empty thrones are threatening', () => {
                 const board: Table<TaflPawn> = [
                     [_, _, _, _, _, _, _, _, _],
                     [X, _, _, _, _, _, _, _, _],

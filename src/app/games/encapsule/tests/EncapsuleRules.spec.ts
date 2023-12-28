@@ -10,12 +10,12 @@ import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { EncapsuleFailure } from '../EncapsuleFailure';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { Table } from 'src/app/utils/ArrayUtils';
-import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 describe('EncapsuleRules', () => {
 
     let rules: EncapsuleRules;
-    const defaultConfig: MGPOptional<EmptyRulesConfig> = EncapsuleRules.get().getDefaultRulesConfig();
+    const defaultConfig: NoConfig = EncapsuleRules.get().getDefaultRulesConfig();
 
     let node: EncapsuleNode;
 
@@ -36,7 +36,7 @@ describe('EncapsuleRules', () => {
 
     beforeEach(() => {
         rules = EncapsuleRules.get();
-        node = rules.getInitialNode(MGPOptional.empty());
+        node = rules.getInitialNode(defaultConfig);
     });
 
     it('should be created', () => {
@@ -104,7 +104,7 @@ describe('EncapsuleRules', () => {
             X0, X1, X2,
         ]);
 
-        RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+        RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         const node: EncapsuleNode = new EncapsuleNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
         RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, defaultConfig);
     });
@@ -132,7 +132,7 @@ describe('EncapsuleRules', () => {
             [___, ___, O__],
         ];
         const expectedState: EncapsuleState = new EncapsuleState(expectedBoard, 3, remainingPieces);
-        RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+        RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
     });
 
     it('should allow moving piece on a smaller piece', () => {
@@ -155,7 +155,7 @@ describe('EncapsuleRules', () => {
             [___, ___, XO_],
         ];
         const expectedState: EncapsuleState = new EncapsuleState(expectedBoard, 3, remainingPieces);
-        RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+        RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
     });
 
     it('should forbid dropping pieces on a piece with the same size', () => {

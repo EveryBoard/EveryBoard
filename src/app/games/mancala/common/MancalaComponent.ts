@@ -18,6 +18,13 @@ import { AI, AIOptions, MoveGenerator } from 'src/app/jscaip/AI';
 import { MancalaScoreMinimax } from './MancalaScoreMinimax';
 import { MCTS } from 'src/app/jscaip/MCTS';
 
+type SeedDropResult = {
+    houseToDistribute: Coord,
+    currentDropIsStore: boolean,
+    seedsInHand: number,
+    resultingState: MancalaState,
+};
+
 export abstract class MancalaComponent<R extends MancalaRules>
     extends RectangularGameComponent<R, MancalaMove, MancalaState, number, MancalaConfig>
 {
@@ -212,6 +219,7 @@ export abstract class MancalaComponent<R extends MancalaRules>
                                seedsInHand: number,
                                resultingState: MancalaState,
                                initial: Coord)
+    : Promise<SeedDropResult>
     {
         const nextCoord: MGPOptional<Coord> =
             this.rules.getNextCoord(houseToDistribute, player, currentDropIsStore, state, config);

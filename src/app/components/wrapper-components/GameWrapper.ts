@@ -75,10 +75,10 @@ export abstract class GameWrapper<P extends Comparable> extends BaseWrapperCompo
         const componentType: MGPOptional<Type<AbstractGameComponent>> =
             await this.getMatchingComponentAndNavigateOutIfAbsent();
         if (componentType.isPresent()) {
-            const rulesConfig: MGPOptional<RulesConfig> = await this.getConfig();
+            const config: MGPOptional<RulesConfig> = await this.getConfig();
             await this.createGameComponent(componentType.get());
-            this.gameComponent.config = rulesConfig;
-            this.gameComponent.node = this.gameComponent.rules.getInitialNode(rulesConfig);
+            this.gameComponent.config = config;
+            this.gameComponent.node = this.gameComponent.rules.getInitialNode(config);
             await this.gameComponent.updateBoard(false);
             return true;
         } else {

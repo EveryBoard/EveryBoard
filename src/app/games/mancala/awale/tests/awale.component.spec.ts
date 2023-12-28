@@ -13,7 +13,7 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 const defaultConfig: MGPOptional<MancalaConfig> = AwaleRules.get().getDefaultRulesConfig();
 
-fdescribe('AwaleComponent', () => {
+describe('AwaleComponent', () => {
 
     doMancalaComponentTests({
         component: AwaleComponent,
@@ -84,7 +84,7 @@ fdescribe('AwaleComponent', () => {
                 passByPlayerStore: true,
             });
             const state: MancalaState = AwaleRules.get().getInitialState(customConfig);
-            await testUtils.setupState(state, undefined, undefined, customConfig);
+            await testUtils.setupState(state, { config: customConfig });
 
             // When doing simple distribution ending in store
             const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(3));
@@ -101,7 +101,7 @@ fdescribe('AwaleComponent', () => {
                 mustContinueDistributionAfterStore: true,
             });
             const state: MancalaState = AwaleRules.get().getInitialState(customConfig);
-            await testUtils.setupState(state, undefined, undefined, customConfig);
+            await testUtils.setupState(state, { config: customConfig });
             await testUtils.expectClickSuccess('#click_3_1');
             tick(1400);
 

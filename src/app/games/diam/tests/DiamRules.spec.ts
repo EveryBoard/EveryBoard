@@ -8,8 +8,7 @@ import { Player } from 'src/app/jscaip/Player';
 import { DiamFailure } from '../DiamFailure';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 describe('DiamRules', () => {
 
@@ -20,7 +19,7 @@ describe('DiamRules', () => {
     const B2: DiamPiece = DiamPiece.ONE_SECOND;
 
     let rules: DiamRules;
-    const defaultConfig: MGPOptional<EmptyRulesConfig> = DiamRules.get().getDefaultRulesConfig();
+    const defaultConfig: NoConfig = DiamRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         rules = DiamRules.get();
@@ -49,7 +48,7 @@ describe('DiamRules', () => {
                 [__, __, __, __, __, __, __, __],
                 [A1, __, __, __, __, __, __, __],
             ], 1);
-            RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+            RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         });
 
         it('should forbid dropping a piece from the opponent', () => {
@@ -115,7 +114,7 @@ describe('DiamRules', () => {
                 [B1, __, __, __, __, __, __, __],
                 [A1, __, __, __, __, __, __, __],
             ], 5);
-            RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+            RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         });
 
         it('should allow moving from the middle of a stack', () => {
@@ -135,7 +134,7 @@ describe('DiamRules', () => {
                 [__, __, __, __, __, __, __, B2],
                 [B1, __, __, __, __, __, __, A2],
             ], 5);
-            RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+            RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         });
 
         it('should allow moving a full stack', () => {
@@ -155,7 +154,7 @@ describe('DiamRules', () => {
                 [__, __, __, __, __, __, __, B1],
                 [__, __, __, __, __, __, __, A1],
             ], 5);
-            RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+            RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         });
 
         it('should forbid moving a substack if its lowest piece is not owned by the player', () => {

@@ -13,7 +13,7 @@ const myMancalaConfig: MGPOptional<MancalaConfig> = MGPOptional.of({
     width: 6,
 });
 
-fdescribe('MancalaState', () => {
+describe('MancalaState', () => {
 
     it('should compare correctly', () => {
         // Given an initial state

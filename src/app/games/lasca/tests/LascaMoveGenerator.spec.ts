@@ -1,10 +1,9 @@
 /* eslint-disable max-lines-per-function */
-import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { LascaMove } from '../LascaMove';
 import { LascaMoveGenerator } from '../LascaMoveGenerator';
 import { LascaNode, LascaRules } from '../LascaRules';
 import { LascaPiece, LascaStack, LascaState } from '../LascaState';
-import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 const u: LascaStack = new LascaStack([LascaPiece.ZERO]);
 const v: LascaStack = new LascaStack([LascaPiece.ONE]);
@@ -13,7 +12,7 @@ const _: LascaStack = LascaStack.EMPTY;
 describe('LascaControlMoveGenerator', () => {
 
     let moveGenerator: LascaMoveGenerator;
-    const defaultConfig: MGPOptional<EmptyRulesConfig> = LascaRules.get().getDefaultRulesConfig();
+    const defaultConfig: NoConfig = LascaRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         moveGenerator = new LascaMoveGenerator();

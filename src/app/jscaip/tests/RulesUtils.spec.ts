@@ -2,7 +2,7 @@
 import { GameNode } from '../GameNode';
 import { Move } from '../Move';
 import { Player } from '../Player';
-import { ConfigurableRules } from '../Rules';
+import { SuperRules } from '../Rules';
 import { GameState } from '../GameState';
 import { comparableEquals, isComparableObject } from 'src/app/utils/Comparable';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
@@ -13,7 +13,7 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 export class RulesUtils {
 
-    public static expectMoveSuccess<R extends ConfigurableRules<M, S, C, L>,
+    public static expectMoveSuccess<R extends SuperRules<M, S, C, L>,
                                     M extends Move,
                                     S extends GameState,
                                     L,
@@ -21,7 +21,7 @@ export class RulesUtils {
                                                            state: S,
                                                            move: M,
                                                            expectedState: S,
-                                                           config: MGPOptional<C> = MGPOptional.empty())
+                                                           config: MGPOptional<C>)
     : void
     {
         const legality: MGPFallible<L> = rules.isLegal(move, state, config);
@@ -41,7 +41,7 @@ export class RulesUtils {
         }
     }
 
-    public static expectMoveFailure<R extends ConfigurableRules<M, S, C, L>,
+    public static expectMoveFailure<R extends SuperRules<M, S, C, L>,
                                     M extends Move,
                                     S extends GameState,
                                     L,
@@ -58,13 +58,13 @@ export class RulesUtils {
         expect(legality.getReason()).toBe(reason);
     }
 
-    public static expectToBeVictoryFor<R extends ConfigurableRules<M, S, C, L>,
+    public static expectToBeVictoryFor<R extends SuperRules<M, S, C, L>,
                                        M extends Move,
                                        S extends GameState,
                                        L,
                                        C extends RulesConfig = EmptyRulesConfig>(
         rules: R,
-        node: GameNode<M, S, C>,
+        node: GameNode<M, S>,
         player: Player,
         config: MGPOptional<C> = MGPOptional.empty())
     : void
@@ -74,26 +74,26 @@ export class RulesUtils {
             .toEqual(GameStatus.getVictory(player));
     }
 
-    public static expectToBeOngoing<R extends ConfigurableRules<M, S, C, L>,
+    public static expectToBeOngoing<R extends SuperRules<M, S, C, L>,
                                     M extends Move,
                                     S extends GameState,
                                     L,
                                     C extends RulesConfig = EmptyRulesConfig>(
         rules: R,
-        node: GameNode<M, S, C>,
+        node: GameNode<M, S>,
         config: MGPOptional<C> = MGPOptional.empty())
     : void
     {
         expect(rules.getGameStatus(node, config)).toEqual(GameStatus.ONGOING);
     }
 
-    public static expectToBeDraw<R extends ConfigurableRules<M, S, C, L>,
+    public static expectToBeDraw<R extends SuperRules<M, S, C, L>,
                                  M extends Move,
                                  S extends GameState,
                                  L,
                                  C extends RulesConfig = EmptyRulesConfig>(
         rules: R,
-        node: GameNode<M, S, C>,
+        node: GameNode<M, S>,
         config: MGPOptional<C> = MGPOptional.empty())
     : void
     {
@@ -110,7 +110,7 @@ export class RulesUtils {
     public static applyMoves<S extends GameState,
                              M extends Move,
                              L,
-                             C extends RulesConfig>(ruler: ConfigurableRules<M, S, C, L>,
+                             C extends RulesConfig>(ruler: SuperRules<M, S, C, L>,
                                                     encodedMoves: JSONValue[],
                                                     state: S,
                                                     moveDecoder: (em: JSONValue) => M,

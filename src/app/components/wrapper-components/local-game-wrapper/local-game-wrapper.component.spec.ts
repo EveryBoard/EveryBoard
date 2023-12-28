@@ -396,6 +396,20 @@ describe('LocalGameWrapperComponent (game phase)', () => {
             // Then it should fail
             await testUtils.expectClickFailure('#click_3', GameWrapperMessages.NOT_YOUR_TURN());
         }));
+
+        it('should display AI info when parameter is set to true', fakeAsync(async() => {
+            // Given a component where we want to show the AI metrics in the middle of a part
+            localStorage.setItem('displayAIInfo', 'true');
+            await testUtils.expectMoveSuccess('#click_4', P4Move.of(4));
+
+            // When displaying it
+            testUtils.detectChanges();
+
+            // Then the AI metrics are shown
+            testUtils.expectElementToExist('#AIInfo');
+            localStorage.clear();
+        }));
+
     });
     describe('winner indicator', () => {
 
@@ -508,18 +522,6 @@ describe('LocalGameWrapperComponent (game phase)', () => {
         }));
     });
 
-    it('should display AI info when parameter is set to true', fakeAsync(async() => {
-        // Given a component where we want to show the AI metrics in the middle of a part
-        localStorage.setItem('displayAIInfo', 'true');
-        await testUtils.expectMoveSuccess('#click_4', P4Move.of(4));
-
-        // When displaying it
-        testUtils.detectChanges();
-
-        // Then the AI metrics are shown
-        testUtils.expectElementToExist('#AIInfo');
-        localStorage.clear();
-    }));
     describe('Take Back', () => {
         it('should take back one turn when human move has been made', fakeAsync(async() => {
             // Given a board with a move already done

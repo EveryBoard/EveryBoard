@@ -11,7 +11,7 @@ import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { MGPSet } from 'src/app/utils/MGPSet';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
 import { ComparableObject } from 'src/app/utils/Comparable';
-import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 export class DiaballikMoveInConstruction implements ComparableObject {
 
@@ -169,7 +169,7 @@ export class DiaballikMoveGenerator extends MoveGenerator<DiaballikMove, Diaball
         super();
     }
 
-    public getListMoves(node: DiaballikNode, _config: MGPOptional<EmptyRulesConfig>): DiaballikMove[] {
+    public override getListMoves(node: DiaballikNode, config: NoConfig): DiaballikMove[] {
         const emptyMove: DiaballikMoveInConstruction =
             new DiaballikMoveInConstruction([], node.gameState, node.gameState);
         let movesInConstruction: DiaballikMoveInConstruction[] = [emptyMove];
@@ -183,10 +183,12 @@ export class DiaballikMoveGenerator extends MoveGenerator<DiaballikMove, Diaball
             }
             movesInConstruction = nextMovesInConstruction;
         }
-        return this.removeDuplicates(node.gameState, moves);
+        return this.removeDuplicates(node.gameState, moves, config);
     }
 
-    private removeDuplicates(state: DiaballikState, moves: MGPSet<DiaballikMove>): DiaballikMove[] {
+    private removeDuplicates(state: DiaballikState, moves: MGPSet<DiaballikMove>, config: NoConfig)
+    : DiaballikMove[]
+    {
         if (this.avoidDuplicates === false) {
             return moves.toList();
         }
@@ -196,7 +198,7 @@ export class DiaballikMoveGenerator extends MoveGenerator<DiaballikMove, Diaball
         for (const move of moves) {
             const legalityInfo: MGPFallible<DiaballikState> = DiaballikRules.get().isLegal(move, state);
             const stateAfterMove: DiaballikState =
-                rules.applyLegalMove(move, state, MGPOptional.empty(), legalityInfo.get());
+                rules.applyLegalMove(move, state, config, legalityInfo.get());
             if (seenStates.contains(stateAfterMove) === false) {
                 movesToKeep.push(move);
                 seenStates.add(stateAfterMove);

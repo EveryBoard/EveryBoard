@@ -23,7 +23,7 @@ import { UserMocks } from 'src/app/domain/UserMocks.spec';
 import { PartMocks } from 'src/app/domain/PartMocks.spec';
 import { Subscription } from 'rxjs';
 import { GameEventService } from '../GameEventService';
-import { EmptyRulesConfig, RulesConfigUtils } from 'src/app/jscaip/RulesConfigUtil';
+import { NoConfig, RulesConfigUtils } from 'src/app/jscaip/RulesConfigUtil';
 
 describe('GameService', () => {
 
@@ -33,7 +33,7 @@ describe('GameService', () => {
 
     let gameEventService: GameEventService;
 
-    const rulesConfig: MGPOptional<EmptyRulesConfig> = RulesConfigUtils.getGameDefaultConfig('Quarto');
+    const rulesConfig: NoConfig = RulesConfigUtils.getGameDefaultConfig('Quarto');
 
     beforeEach(fakeAsync(async() => {
         await TestBed.configureTestingModule({

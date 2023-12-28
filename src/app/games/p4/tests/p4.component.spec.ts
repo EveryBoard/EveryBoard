@@ -43,7 +43,7 @@ describe('P4Component', () => {
         const state: P4State = new P4State(board, 0);
 
         // When rendering the board
-        await testUtils.setupState(state, undefined, undefined, defaultConfig);
+        await testUtils.setupState(state, { config: defaultConfig });
 
         // Then victorious coords should be shown
         testUtils.expectElementToHaveClass('#victory_coord_3_2', 'victory-stroke');

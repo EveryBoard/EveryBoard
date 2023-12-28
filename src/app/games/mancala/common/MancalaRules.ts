@@ -18,9 +18,7 @@ import { Localized } from 'src/app/utils/LocaleUtils';
 export interface MancalaCaptureResult {
 
     captureMap: Table<number>;
-
     capturedSum: number;
-
     resultingState: MancalaState;
 }
 
@@ -48,7 +46,7 @@ export type MancalaDropResult = {
     resultingState: MancalaState;
 }
 
-export class MancalaNode extends GameNode<MancalaMove, MancalaState, MancalaConfig> {}
+export class MancalaNode extends GameNode<MancalaMove, MancalaState> {}
 
 export abstract class MancalaRules extends ConfigurableRules<MancalaMove, MancalaState, MancalaConfig> {
 

@@ -71,7 +71,7 @@ describe('ReversiComponent', () => {
         ], 1);
 
         // When displaying the board
-        await testUtils.setupState(state, undefined, undefined, defaultConfig);
+        await testUtils.setupState(state, { config: defaultConfig });
 
         // Then the player can pass
         await testUtils.expectPassSuccess(ReversiMove.PASS);

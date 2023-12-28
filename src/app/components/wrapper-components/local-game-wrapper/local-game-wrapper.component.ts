@@ -9,7 +9,7 @@ import { GameWrapper } from 'src/app/components/wrapper-components/GameWrapper';
 import { Move } from 'src/app/jscaip/Move';
 import { Debug, Utils } from 'src/app/utils/utils';
 import { GameState } from 'src/app/jscaip/GameState';
-import { ConfigurableRules } from 'src/app/jscaip/Rules';
+import { SuperRules } from 'src/app/jscaip/Rules';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
@@ -186,8 +186,8 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
     }
 
     public getStateProvider(): MGPOptional<(config: MGPOptional<RulesConfig>) => GameState> {
-        const gameName: string = this.getGameName();
-        const gameInfos: MGPOptional<GameInfo> = GameInfo.getByUrlName(gameName);
+        const urlName: string = this.getGameName();
+        const gameInfos: MGPOptional<GameInfo> = GameInfo.getByUrlName(urlName);
         if (gameInfos.isPresent()) {
             const stateProvider: (config: MGPOptional<RulesConfig>) => GameState =
                 (config: MGPOptional<RulesConfig>) => {
@@ -201,7 +201,7 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
 
     public async doAIMove(playingAI: AbstractAI, options: AIOptions): Promise<MGPValidation> {
         // called only when it's AI's Turn
-        const ruler: ConfigurableRules<Move, GameState, RulesConfig, unknown> = this.gameComponent.rules;
+        const ruler: SuperRules<Move, GameState, RulesConfig, unknown> = this.gameComponent.rules;
         const config: MGPOptional<RulesConfig> = await this.getConfig();
         const gameStatus: GameStatus = ruler.getGameStatus(this.gameComponent.node, config);
         Utils.assert(gameStatus === GameStatus.ONGOING, 'AI should not try to play when game is over!');
@@ -274,8 +274,6 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
     }
 
     public override async getConfig(): Promise<MGPOptional<RulesConfig>> {
-        // Linter seem to think that the unsubscription line can be reached before the subscription
-        // yet this is false, so this explain the weird instanciation
         let subcription: MGPOptional<Subscription> = MGPOptional.empty();
         const rulesConfigPromise: Promise<RulesConfig> =
             new Promise((resolve: (value: RulesConfig) => void) => {
@@ -288,6 +286,9 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
                 );
             });
         const rulesConfig: RulesConfig = await rulesConfigPromise;
+        // Subscription will never be empty at this point
+        // but this is needed to prevent linter from complaining that:
+        // "subscription is used before it is set"
         subcription.get().unsubscribe();
         return MGPOptional.of(rulesConfig);
     }

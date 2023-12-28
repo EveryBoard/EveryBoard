@@ -4,11 +4,11 @@ import { DvonnNode, DvonnRules } from './DvonnRules';
 import { DvonnState } from './DvonnState';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MoveGenerator } from 'src/app/jscaip/AI';
-import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 export class DvonnMoveGenerator extends MoveGenerator<DvonnMove, DvonnState> {
 
-    public getListMoves(node: DvonnNode, _config: MGPOptional<EmptyRulesConfig>): DvonnMove[] {
+    public override getListMoves(node: DvonnNode, _config: NoConfig): DvonnMove[] {
         const lastMove: MGPOptional<DvonnMove> = node.previousMove;
         const state: DvonnState = node.gameState;
         const moves: DvonnMove[] = [];

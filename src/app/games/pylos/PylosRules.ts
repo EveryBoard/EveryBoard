@@ -13,7 +13,7 @@ import { MGPSet } from 'src/app/utils/MGPSet';
 import { MGPFallible } from '../../utils/MGPFallible';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { TableUtils } from 'src/app/utils/ArrayUtils';
-import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 export class PylosNode extends GameNode<PylosMove, PylosState> {}
 
@@ -145,12 +145,7 @@ export class PylosRules extends Rules<PylosMove, PylosState> {
         }
     }
 
-    public override applyLegalMove(move: PylosMove,
-                                   state: PylosState,
-                                   _config: MGPOptional<EmptyRulesConfig>,
-                                   _info: void)
-    : PylosState
-    {
+    public override applyLegalMove(move: PylosMove, state: PylosState, _config: NoConfig, _info: void): PylosState {
         return state.applyLegalMove(move);
     }
 

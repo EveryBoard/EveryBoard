@@ -13,7 +13,7 @@ import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { CoordSet } from 'src/app/utils/OptimizedSet';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
-import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 import { Debug } from 'src/app/utils/utils';
 import { Table } from 'src/app/utils/ArrayUtils';
 
@@ -48,7 +48,7 @@ export class SixRules extends Rules<SixMove, SixState, SixLegalityInformation> {
 
     public override applyLegalMove(move: SixMove,
                                    state: SixState,
-                                   _config: MGPOptional<EmptyRulesConfig>,
+                                   _config: NoConfig,
                                    kept: SixLegalityInformation)
     : SixState
     {

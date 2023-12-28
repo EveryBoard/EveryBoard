@@ -1,10 +1,8 @@
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { NewGameMove } from '../NewGameMove';
-import { NewGameConfig, NewGameNode, NewGameRules } from '../NewGameRules';
+import { NewGameNode, NewGameRules } from '../NewGameRules';
 import { NewGameState } from '../NewGameState';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { Utils } from 'src/app/utils/utils';
-import { ConfigLine } from 'src/app/components/wrapper-components/rules-configuration/RulesConfigDescription';
+import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 /**
  * This is the test suite for the rules
@@ -12,7 +10,7 @@ import { ConfigLine } from 'src/app/components/wrapper-components/rules-configur
 describe('NewGameRules', () => {
 
     let rules: NewGameRules;
-    const defaultConfig: MGPOptional<NewGameConfig> = NewGameRules.get().getDefaultRulesConfig();
+    const defaultConfig: NoConfig = NewGameRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         // This is the rules instance that we will test
@@ -30,7 +28,7 @@ describe('NewGameRules', () => {
 
         // Then it should succeed (or fail)
         const expectedState: NewGameState = new NewGameState(1);
-        RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+        RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
     });
 
     it('should be a draw', () => {
@@ -44,13 +42,6 @@ describe('NewGameRules', () => {
         RulesUtils.expectToBeDraw(rules, node, defaultConfig);
         // Or you could use this
         // RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, defaultConfig);
-    });
-
-    it('Should have valid ConfigLine ou quoi que ce soye !', () => {
-        // For coverage
-        // eslint-disable-next-line max-len
-        const fieldUnderTest: ConfigLine = NewGameRules.RULES_CONFIG_DESCRIPTION.defaultConfigDescription.config.the_name_you_will_use_in_your_rules_and_states;
-        expect(Utils.getNonNullable(fieldUnderTest.validator)(null)).toBeTruthy();
     });
 
 });

@@ -4,17 +4,16 @@ import { QuartoMove } from '../QuartoMove';
 import { QuartoPiece } from '../QuartoPiece';
 import { EncoderTestUtils } from 'src/app/utils/tests/Encoder.spec';
 import { QuartoMoveGenerator } from '../QuartoMoveGenerator';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 describe('QuartoMove', () => {
 
-    const defaultConfig: MGPOptional<EmptyRulesConfig> = QuartoRules.get().getDefaultRulesConfig();
+    const defaultConfig: NoConfig = QuartoRules.get().getDefaultRulesConfig();
 
     it('should have a bijective encoder', () => {
         const rules: QuartoRules = QuartoRules.get();
         const moveGenerator: QuartoMoveGenerator = new QuartoMoveGenerator();
-        const node: QuartoNode = rules.getInitialNode(MGPOptional.empty());
+        const node: QuartoNode = rules.getInitialNode(defaultConfig);
         const firstTurnMoves: QuartoMove[] = moveGenerator.getListMoves(node, defaultConfig);
         for (const move of firstTurnMoves) {
             EncoderTestUtils.expectToBeBijective(QuartoMove.encoder, move);

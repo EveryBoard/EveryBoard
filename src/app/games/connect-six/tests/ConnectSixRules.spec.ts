@@ -6,7 +6,7 @@ import { ConnectSixDrops, ConnectSixFirstMove, ConnectSixMove } from '../Connect
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { Coord, CoordFailure } from 'src/app/jscaip/Coord';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { GobanConfig, defaultGobanConfig } from 'src/app/jscaip/GobanConfig';
+import { GobanConfig } from 'src/app/jscaip/GobanConfig';
 import { TestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 
@@ -33,7 +33,7 @@ describe('ConnectSixRules', () => {
 
         it('should not create move when coord is out of board', () => {
             // Given the initial state
-            const state: ConnectSixState = ConnectSixRules.get().getInitialState(defaultGobanConfig);
+            const state: ConnectSixState = ConnectSixRules.get().getInitialState(defaultConfig);
 
             // When dropping out of the board
             const move: ConnectSixMove = ConnectSixFirstMove.of(new Coord(-1, -1)) as ConnectSixMove;
@@ -45,7 +45,7 @@ describe('ConnectSixRules', () => {
 
         it('should allow the first player play only one piece', () => {
             // Given the initial state
-            const state: ConnectSixState = ConnectSixRules.get().getInitialState(defaultGobanConfig);
+            const state: ConnectSixState = ConnectSixRules.get().getInitialState(defaultConfig);
 
             // When dropping one piece
             const move: ConnectSixMove = ConnectSixFirstMove.of(new Coord(9, 9)) as ConnectSixMove;
@@ -71,19 +71,19 @@ describe('ConnectSixRules', () => {
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             ], 1);
             // Then the move should be a success
-            RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+            RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         });
 
         it('should refuse move that drop two pieces on first turn', () => {
             // Given the first turn
-            const state: ConnectSixState = ConnectSixRules.get().getInitialState(defaultGobanConfig);
+            const state: ConnectSixState = ConnectSixRules.get().getInitialState(defaultConfig);
             // When dropping two pieces
             const move: ConnectSixMove = ConnectSixDrops.of(new Coord(11, 11), new Coord(10, 10));
             // Then the attempt would have throw
             function tryDoubleDropOnFirstTurn(): void {
                 rules.isLegal(move, state);
             }
-            TestUtils.expectToThrowAndLog(tryDoubleDropOnFirstTurn, 'Instance of ConnectSixDrops should only happend after first move');
+            TestUtils.expectToThrowAndLog(tryDoubleDropOnFirstTurn, 'ConnectSixDrops should only be used after first move');
         });
 
     });
@@ -268,7 +268,7 @@ describe('ConnectSixRules', () => {
             ], 2);
 
             // Then the move should be forbidden
-            RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+            RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         });
 
         it('should refuse dropping only one piece after first turn', () => {
@@ -301,7 +301,7 @@ describe('ConnectSixRules', () => {
             function trySingleDropAfterFirstTurn(): void {
                 rules.isLegal(move, state);
             }
-            TestUtils.expectToThrowAndLog(trySingleDropAfterFirstTurn, 'Instance of ConnectSixFirstMove should only happend at first move');
+            TestUtils.expectToThrowAndLog(trySingleDropAfterFirstTurn, 'ConnectSixFirstMove should only be used at first move');
         });
 
         it('should notify victory when aligning 6 stones of your color', () => {
@@ -379,7 +379,7 @@ describe('ConnectSixRules', () => {
             ], 181);
 
             // Then the board should be a draw
-            RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+            RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
             const node: ConnectSixNode = new ConnectSixNode(expectedState);
             RulesUtils.expectToBeDraw(rules, node, defaultConfig);
         });

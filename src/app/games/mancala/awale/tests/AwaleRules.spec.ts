@@ -11,7 +11,7 @@ import { MancalaConfig } from '../../common/MancalaConfig';
 import { MancalaDistribution, MancalaMove } from '../../common/MancalaMove';
 import { MancalaNode, MancalaRules } from '../../common/MancalaRules';
 
-fdescribe('AwaleRules', () => {
+describe('AwaleRules', () => {
 
     const rules: MancalaRules = AwaleRules.get();
     const defaultConfig: MGPOptional<MancalaConfig> = rules.getDefaultRulesConfig();

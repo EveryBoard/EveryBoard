@@ -23,7 +23,7 @@ export abstract class SuperRules<M extends Move,
      * the remaining pawn that you can put on the board...
      */
 
-    public choose(node: GameNode<M, S, C>, move: M, config: MGPOptional<C>) : MGPFallible<GameNode<M, S, C>> {
+    public choose(node: GameNode<M, S>, move: M, config: MGPOptional<C>) : MGPFallible<GameNode<M, S>> {
         /**
          * used by the rules to update board
          * return true if the move was legal, and the node updated
@@ -35,7 +35,7 @@ export abstract class SuperRules<M extends Move,
             Debug.display('Rules', 'choose', 'Move is illegal: ' + legality.getReason());
             return MGPFallible.failure(legality.getReason());
         }
-        const choice: MGPOptional<GameNode<M, S, C>> = node.getChild(move);
+        const choice: MGPOptional<GameNode<M, S>> = node.getChild(move);
         if (choice.isPresent()) {
             // The node is already in the tree, let's not create it twice
             Utils.assert(legality.isSuccess(), 'Rules.choose: Move is illegal: ' + legality.getReasonOr(''));
@@ -43,9 +43,9 @@ export abstract class SuperRules<M extends Move,
             return MGPFallible.success(choice.get());
         }
         const resultingState: S = this.applyLegalMove(move, node.gameState, config, legality.get());
-        const child: GameNode<M, S, C> = new GameNode(resultingState,
-                                                      MGPOptional.of(node),
-                                                      MGPOptional.of(move));
+        const child: GameNode<M, S> = new GameNode(resultingState,
+                                                   MGPOptional.of(node),
+                                                   MGPOptional.of(move));
         return MGPFallible.success(child);
     }
 
@@ -62,7 +62,7 @@ export abstract class SuperRules<M extends Move,
 
     public abstract getInitialState(config: MGPOptional<C>): S;
 
-    public getInitialNode(config: MGPOptional<C>): GameNode<M, S, C> {
+    public getInitialNode(config: MGPOptional<C>): GameNode<M, S> {
         const initialState: S = this.getInitialState(config);
         return new GameNode(initialState);
     }
@@ -78,7 +78,7 @@ export abstract class SuperRules<M extends Move,
         }
     }
 
-    public abstract getGameStatus(node: GameNode<M, S, C>, config?: MGPOptional<C>): GameStatus;
+    public abstract getGameStatus(node: GameNode<M, S>, config?: MGPOptional<C>): GameStatus;
 }
 
 export abstract class ConfigurableRules<M extends Move,
@@ -101,5 +101,5 @@ export abstract class Rules<M extends Move,
 
 }
 
-export abstract class AbstractRules extends ConfigurableRules<Move, GameState, RulesConfig, unknown> {
+export abstract class AbstractRules extends SuperRules<Move, GameState, RulesConfig, unknown> {
 }

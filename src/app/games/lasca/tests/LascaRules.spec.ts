@@ -7,8 +7,7 @@ import { LascaMove } from '../LascaMove';
 import { LascaNode, LascaRules } from '../LascaRules';
 import { LascaFailure } from '../LascaFailure';
 import { LascaPiece, LascaStack, LascaState } from '../LascaState';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 describe('LascaRules', () => {
 
@@ -27,7 +26,7 @@ describe('LascaRules', () => {
     const ___: LascaStack = LascaStack.EMPTY;
 
     let rules: LascaRules;
-    const defaultConfig: MGPOptional<EmptyRulesConfig> = LascaRules.get().getDefaultRulesConfig();
+    const defaultConfig: NoConfig = LascaRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         rules = LascaRules.get();
@@ -108,7 +107,7 @@ describe('LascaRules', () => {
                 [___, __u, ___, __u, ___, __u, ___],
                 [__u, ___, __u, ___, __u, ___, __u],
             ], 1);
-            RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+            RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         });
 
     });
@@ -240,7 +239,7 @@ describe('LascaRules', () => {
                 [___, ___, ___, ___, ___, ___, ___],
                 [___, ___, ___, ___, ___, ___, ___],
             ], 3);
-            RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+            RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         });
 
         it('should allow to do small capture when big capture available', () => {
@@ -268,7 +267,7 @@ describe('LascaRules', () => {
                 [___, ___, ___, ___, ___, __u, ___],
                 [___, ___, ___, ___, ___, ___, ___],
             ], 2);
-            RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+            RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         });
 
         it('should allow to do big capture when small capture available', () => {
@@ -297,7 +296,7 @@ describe('LascaRules', () => {
                 [___, ___, ___, ___, ___, ___, ___],
                 [___, ___, ___, ___, ___, ___, Xoo],
             ], 2);
-            RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+            RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         });
 
         it('should allow capturing standalone opponent piece', () => {
@@ -325,7 +324,7 @@ describe('LascaRules', () => {
                 [___, ___, ___, __u, ___, __u, ___],
                 [__u, ___, ___, ___, __u, ___, __u],
             ], 2);
-            RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+            RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         });
 
         it('should allow capturing commander of an opponent stack', () => {
@@ -353,7 +352,7 @@ describe('LascaRules', () => {
                 [___, ___, ___, __u, ___, __u, ___],
                 [__u, ___, ___, ___, __u, ___, __u],
             ], 2);
-            RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+            RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         });
 
         it('should allow multiple-capture', () => {
@@ -385,7 +384,7 @@ describe('LascaRules', () => {
                 [___, ___, ___, ___, ___, ___, ___],
                 [__u, ___, ___, ___, ___, ___, ___],
             ], 2);
-            RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+            RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         });
 
     });
@@ -417,7 +416,7 @@ describe('LascaRules', () => {
                 [___, ___, ___, __u, ___, __u, ___],
                 [__u, ___, ___, ___, __u, ___, __u],
             ], 1);
-            RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+            RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         });
 
         it('should promote piece that reached last line', () => {
@@ -445,7 +444,7 @@ describe('LascaRules', () => {
                 [___, ___, ___, __u, ___, __u, ___],
                 [__u, ___, ___, ___, __u, ___, __u],
             ], 1);
-            RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+            RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         });
 
     });

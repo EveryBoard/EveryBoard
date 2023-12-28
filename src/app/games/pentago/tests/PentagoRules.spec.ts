@@ -8,12 +8,12 @@ import { PentagoState } from '../PentagoState';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 describe('PentagoRules', () => {
 
     let rules: PentagoRules;
-    const defaultConfig: MGPOptional<EmptyRulesConfig> = PentagoRules.get().getDefaultRulesConfig();
+    const defaultConfig: NoConfig = PentagoRules.get().getDefaultRulesConfig();
     const _: PlayerOrNone = PlayerOrNone.NONE;
     const O: PlayerOrNone = PlayerOrNone.ZERO;
     const X: PlayerOrNone = PlayerOrNone.ONE;
@@ -87,7 +87,7 @@ describe('PentagoRules', () => {
         ];
         const expectedState: PentagoState = new PentagoState(expectedBoard, 4);
         const move: PentagoMove = PentagoMove.rotationless(1, 1);
-        RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+        RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
     });
 
     it('it should be able to twist any block clockwise', () => {
@@ -110,7 +110,7 @@ describe('PentagoRules', () => {
         ];
         const expectedState: PentagoState = new PentagoState(expectedBoard, 5);
         const move: PentagoMove = PentagoMove.withRotation(0, 0, 0, true);
-        RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+        RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         const node: PentagoNode = new PentagoNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
         // Then it should be considered as ongoing
         RulesUtils.expectToBeOngoing(rules, node, defaultConfig);
@@ -136,7 +136,7 @@ describe('PentagoRules', () => {
         ];
         const expectedState: PentagoState = new PentagoState(expectedBoard, 5);
         const move: PentagoMove = PentagoMove.withRotation(0, 0, 0, false);
-        RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+        RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         const node: PentagoNode = new PentagoNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
         RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, defaultConfig);
     });
@@ -163,7 +163,7 @@ describe('PentagoRules', () => {
             const state: PentagoState = new PentagoState(board, 10);
             const move: PentagoMove = PentagoMove.withRotation(0, 5, 2, true);
             const expectedState: PentagoState = new PentagoState(expectedBoard, 11);
-            RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+            RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
             const node: PentagoNode = new PentagoNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, defaultConfig);
         });
@@ -188,7 +188,7 @@ describe('PentagoRules', () => {
             const state: PentagoState = new PentagoState(board, 35);
             const move: PentagoMove = PentagoMove.withRotation(4, 5, 3, false);
             const expectedState: PentagoState = new PentagoState(expectedBoard, 36);
-            RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+            RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
             const node: PentagoNode = new PentagoNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
             RulesUtils.expectToBeDraw(rules, node, defaultConfig);
         });
@@ -213,7 +213,7 @@ describe('PentagoRules', () => {
             const state: PentagoState = new PentagoState(board, 10);
             const move: PentagoMove = PentagoMove.withRotation(5, 5, 0, true);
             const expectedState: PentagoState = new PentagoState(expectedBoard, 11);
-            RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+            RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
             const node: PentagoNode = new PentagoNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
             RulesUtils.expectToBeDraw(rules, node, defaultConfig);
         });

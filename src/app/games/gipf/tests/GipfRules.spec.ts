@@ -12,7 +12,7 @@ import { Player } from 'src/app/jscaip/Player';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { GipfCapture } from 'src/app/jscaip/GipfProjectHelper';
-import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 describe('GipfRules', () => {
 
@@ -25,7 +25,7 @@ describe('GipfRules', () => {
     const P1Turn: number = P0Turn + 1;
 
     let rules: GipfRules;
-    const defaultConfig: MGPOptional<EmptyRulesConfig> = GipfRules.get().getDefaultRulesConfig();
+    const defaultConfig: NoConfig = GipfRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         rules = GipfRules.get();
@@ -84,7 +84,7 @@ describe('GipfRules', () => {
                 [B, _, _, A, N, N, N],
             ], state.turn + 1, [11, 12], state.capturedPieces);
 
-            RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+            RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         });
 
         it('should allow simple moves without captures when possible', () => {
@@ -115,7 +115,7 @@ describe('GipfRules', () => {
             ];
             const expectedState: GipfState = new GipfState(expectedBoard, P1Turn, [4, 5], [0, 0]);
 
-            RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+            RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         });
 
         it('should not allow placements on blocked lines', () => {
@@ -198,7 +198,7 @@ describe('GipfRules', () => {
                                                                P1Turn + 1,
                                                                [5, 4 + capturedSelf],
                                                                [0, capturedOpponent]);
-                RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+                RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
             }
         });
 
@@ -221,7 +221,7 @@ describe('GipfRules', () => {
             expect(firstLegality.isSuccess()).toBeTrue();
 
             const resultingState: GipfState =
-                rules.applyLegalMove(move, state, MGPOptional.empty(), firstLegality.get());
+                rules.applyLegalMove(move, state, defaultConfig, firstLegality.get());
             const placement: GipfPlacement = new GipfPlacement(new Coord(2, 6),
                                                                MGPOptional.of(HexaDirection.UP_RIGHT));
 
@@ -307,7 +307,7 @@ describe('GipfRules', () => {
             const legalityA: MGPFallible<GipfLegalityInformation> = rules.isLegal(moveA, state);
             expect(legalityA.isSuccess()).toBeTrue();
 
-            const resultingState: GipfState = rules.applyLegalMove(moveA, state, MGPOptional.empty(), legalityA.get());
+            const resultingState: GipfState = rules.applyLegalMove(moveA, state, defaultConfig, legalityA.get());
 
             const placementB: GipfPlacement = new GipfPlacement(new Coord(3, 0),
                                                                 MGPOptional.of(HexaDirection.RIGHT));
@@ -416,7 +416,7 @@ describe('GipfRules', () => {
             ];
             const expectedState: GipfState = new GipfState(expectedBoard, P1Turn, [4, 5], [0, 0]);
 
-            RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+            RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         });
 
     });

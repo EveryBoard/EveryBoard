@@ -13,9 +13,7 @@ import { MancalaDistribution, MancalaMove } from '../../common/MancalaMove';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MancalaComponent } from '../../common/MancalaComponent';
 
-const defaultConfig: MGPOptional<MancalaConfig> = BaAwaRules.get().getDefaultRulesConfig();
-
-fdescribe('BaAwaComponent', () => {
+describe('BaAwaComponent', () => {
 
     let mancalaTestUtils: MancalaComponentTestUtils<BaAwaComponent, BaAwaRules>;
     const defaultConfig: MGPOptional<MancalaConfig> = BaAwaRules.get().getDefaultRulesConfig();
@@ -120,7 +118,7 @@ fdescribe('BaAwaComponent', () => {
                 passByPlayerStore: true,
             });
             const state: MancalaState = BaAwaRules.get().getInitialState(customConfig);
-            await testUtils.setupState(state, undefined, undefined, customConfig);
+            await testUtils.setupState(state, { config: customConfig });
 
             // When doing simple distribution ending in store
             const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(3));
@@ -137,7 +135,7 @@ fdescribe('BaAwaComponent', () => {
                 mustContinueDistributionAfterStore: true,
             });
             const state: MancalaState = BaAwaRules.get().getInitialState(customConfig);
-            await testUtils.setupState(state, undefined, undefined, customConfig);
+            await testUtils.setupState(state, { config: customConfig });
             await testUtils.expectClickSuccess('#click_3_1');
             tick(1400);
 

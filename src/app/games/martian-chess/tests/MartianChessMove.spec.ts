@@ -8,12 +8,11 @@ import { MartianChessMove, MartianChessMoveFailure } from '../MartianChessMove';
 import { MartianChessNode, MartianChessRules } from '../MartianChessRules';
 import { MartianChessState } from '../MartianChessState';
 import { MartianChessMoveGenerator } from '../MartianChessMoveGenerator';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 describe('MartianChessMove', () => {
 
-    const defaultConfig: MGPOptional<EmptyRulesConfig> = MartianChessRules.get().getDefaultRulesConfig();
+    const defaultConfig: NoConfig = MartianChessRules.get().getDefaultRulesConfig();
 
     it('should be illegal to choose a coord out of the board', () => {
         const move: MGPFallible<MartianChessMove> = MartianChessMove.from(new Coord(-1, -1), new Coord(0, 0));
@@ -64,7 +63,7 @@ describe('MartianChessMove', () => {
     it('should have a bijective encoder', () => {
         const rules: MartianChessRules = MartianChessRules.get();
         const moveGenerator: MartianChessMoveGenerator = new MartianChessMoveGenerator();
-        const node: MartianChessNode = rules.getInitialNode(MGPOptional.empty());
+        const node: MartianChessNode = rules.getInitialNode(defaultConfig);
         const firstTurnMoves: MartianChessMove[] = moveGenerator.getListMoves(node, defaultConfig);
         for (const move of firstTurnMoves) {
             EncoderTestUtils.expectToBeBijective(MartianChessMove.encoder, move);

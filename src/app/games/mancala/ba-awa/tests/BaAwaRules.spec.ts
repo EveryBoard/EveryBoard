@@ -9,7 +9,7 @@ import { MancalaConfig } from '../../common/MancalaConfig';
 import { MancalaDistribution, MancalaMove } from '../../common/MancalaMove';
 import { MancalaRules } from '../../common/MancalaRules';
 
-fdescribe('BaAwaRules', () => {
+describe('BaAwaRules', () => {
 
     const rules: MancalaRules = BaAwaRules.get();
     const defaultConfig: MGPOptional<MancalaConfig> = rules.getDefaultRulesConfig();
@@ -68,7 +68,7 @@ fdescribe('BaAwaRules', () => {
 
     describe('starvation and monsoon', () => {
 
-// TODO: distinguish "when player give last piece: the end" and "if player cannot play: the end"
+        // TODO: distinguish "when player give last piece: the end" and "if player cannot play: the end"
 
         it('should monsoon for opponent when player give its last seed', () => {
             // Given a state where next player is unable to feed current player
@@ -190,7 +190,7 @@ fdescribe('BaAwaRules', () => {
             const expectedState: MancalaState = new MancalaState(expectedBoard, 3, [0, 8]);
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         });
-// TODO: should mansoon both part of the board when dropping bellow 9
+        // TODO: should mansoon both part of the board when dropping bellow 9
         it('should do multipe capture-on-the-go for player when possible', () => {
             // Given a state where a multiple capture-on-the-go is possible for active player !
             const board: Table<number> = [

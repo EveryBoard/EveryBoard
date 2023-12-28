@@ -3,12 +3,11 @@ import { QuartoMove } from './QuartoMove';
 import { QuartoPiece } from './QuartoPiece';
 import { QuartoNode } from './QuartoRules';
 import { MoveGenerator } from 'src/app/jscaip/AI';
-import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 export class QuartoMoveGenerator extends MoveGenerator<QuartoMove, QuartoState> {
 
-    public getListMoves(node: QuartoNode, _config: MGPOptional<EmptyRulesConfig>): QuartoMove[] {
+    public override getListMoves(node: QuartoNode, _config: NoConfig): QuartoMove[] {
         const listMoves: QuartoMove[] = [];
 
         const state: QuartoState = node.gameState;

@@ -5,12 +5,11 @@ import { DiamMove, DiamMoveDrop, DiamMoveShift } from './DiamMove';
 import { DiamPiece } from './DiamPiece';
 import { DiamNode, DiamRules } from './DiamRules';
 import { DiamState } from './DiamState';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 export class DiamMoveGenerator extends MoveGenerator<DiamMove, DiamState> {
 
-    public getListMoves(node: DiamNode, _config: MGPOptional<EmptyRulesConfig>): DiamMove[] {
+    public override getListMoves(node: DiamNode, _config: NoConfig): DiamMove[] {
         const state: DiamState = node.gameState;
         const drops: DiamMove[] = this.getListDrops(state);
         const shifts: DiamMove[] = this.getListShifts(state);

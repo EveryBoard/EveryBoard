@@ -77,8 +77,9 @@ describe('PentagoComponent', () => {
                 [_, _, _, _, _, _],
             ];
             const state: PentagoState = new PentagoState(board, 1);
-            const lastMove: PentagoMove = PentagoMove.withRotation(5, 5, 3, false);
-            await testUtils.setupState(state, PentagoRules.get().getInitialState(), lastMove);
+            const previousMove: PentagoMove = PentagoMove.withRotation(5, 5, 3, false);
+            const previousState: PentagoState = PentagoRules.get().getInitialState();
+            await testUtils.setupState(state, { previousState, previousMove });
             testUtils.expectElementToHaveClass('#last_rotation_3_counterclockwise', 'last-move-stroke');
 
             // When clicking on a piece (and when having to click again to finish the move)
@@ -172,8 +173,9 @@ describe('PentagoComponent', () => {
             [_, _, _, _, _, O],
         ];
         const state: PentagoState = new PentagoState(board, 1);
-        const move: PentagoMove = PentagoMove.rotationless(5, 5);
-        await testUtils.setupState(state, PentagoRules.get().getInitialState(), move);
+        const previousMove: PentagoMove = PentagoMove.rotationless(5, 5);
+        const previousState: PentagoState = PentagoRules.get().getInitialState();
+        await testUtils.setupState(state, { previousState, previousMove });
 
         // When taking it back
         await testUtils.expectInterfaceClickSuccess('#takeBack');

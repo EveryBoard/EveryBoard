@@ -24,8 +24,9 @@ describe('DemoCardComponent', () => {
 
     const defaultConfig: MGPOptional<P4Config> = P4Rules.get().getDefaultRulesConfig();
 
-    function loadNode(nodeInfo: DemoNodeInfo): void {
+    async function loadNode(nodeInfo: DemoNodeInfo): Promise<void> {
         testUtils.getComponent().demoNodeInfo = nodeInfo;
+        await testUtils.getComponent().ngOnChanges({} as SimpleChanges);
         testUtils.detectChanges();
         tick(1); // Need at least 1ms because of the setTimeout in ngAfterViewInit
     }
@@ -39,7 +40,7 @@ describe('DemoCardComponent', () => {
         const board: Table<PlayerOrNone> = P4Rules.get().getInitialState(defaultConfig).board; // dummy board
 
         // When displaying it for a given game
-        loadNode({
+        await loadNode({
             name: 'P4',
             // Current player is player 1
             node: new P4Node(new P4State(board, 1)),
@@ -51,7 +52,6 @@ describe('DemoCardComponent', () => {
         expect(game).withContext('game component should be displayed').toBeTruthy();
         // from the point of view of the current player, with interactivity off
         const gameComponent: AbstractGameComponent = testUtils.getComponent().gameComponent;
-        // TODO FOR REVIEW: on fait quoi là, le point de vue doit être zero si c'est personne mais que ferions nous proporement pour dire "inactif mais pour un?"
         expect(gameComponent.getPointOfView()).toBe(Player.ZERO);
         expect(gameComponent.isPlayerTurn()).withContext('Player should not be a player but an observer').toBeFalse();
         expect(gameComponent.isInteractive()).withContext('Interactivity should still be turned on').toBeTrue();
@@ -60,18 +60,18 @@ describe('DemoCardComponent', () => {
     it('should simulate clicks', fakeAsync(async() => {
         // Given a demo component
         // When displaying it for a game that has intermediary clicks
-        loadNode({
+        await loadNode({
             name: 'Lodestone',
             node: new LodestoneNode(LodestoneRules.get().getInitialState()),
-            click: MGPOptional.of('#lodestone_push_orthogonal'),
+            click: MGPOptional.of('#lodestone_push_orthogonal_PLAYER_ZERO'),
         });
         // Then it should have performed a click
-        testUtils.expectElementToHaveClass('#lodestone_push_orthogonal > .outside', 'selected-stroke');
+        testUtils.expectElementToHaveClass('#lodestone_push_orthogonal_PLAYER_ZERO > g > .lodestone_main_circle', 'selected-stroke');
     }));
 
     it('should not allow moves', fakeAsync(async() => {
         // Given a demo component displayed for a game
-        loadNode({
+        await loadNode({
             name: 'P4',
             node: new GameNode(P4Rules.get().getInitialState(defaultConfig)),
             click: MGPOptional.empty(),
@@ -95,13 +95,13 @@ describe('DemoCardComponent', () => {
         // Given any starting state of component
         // When passing
         const result: void = await testUtils.getComponent().onCancelMove('not even necessary');
-        // Then nothing should have happend (for coverage sake)
+        // Then nothing should have happen (for coverage sake)
         expect(result).withContext('should be null').toBe();
     }));
 
     it('should reload node when inputs are updated by parents', fakeAsync(async() => {
         // Given a component already initialized with one given set of infos
-        loadNode({
+        await loadNode({
             name: 'P4',
             node: new GameNode(P4Rules.get().getInitialState(defaultConfig)),
             click: MGPOptional.empty(),
@@ -111,7 +111,7 @@ describe('DemoCardComponent', () => {
         // When loading another component, which triggers ngOnChanges
         const boardWithPiece: Table<PlayerOrNone> = TableUtils.create(7, 6, PlayerOrNone.ZERO);
         const stateWithPieces: P4State = new P4State(boardWithPiece, 42);
-        loadNode({
+        await loadNode({
             name: 'P4',
             node: new GameNode(stateWithPieces),
             click: MGPOptional.empty(),
@@ -122,11 +122,11 @@ describe('DemoCardComponent', () => {
         testUtils.expectElementToExist('.player0-fill');
     }));
 
-    it('should ne not onLegalUserMove', fakeAsync(async() => {
+    it('should not use onLegalUserMove', fakeAsync(async() => {
         spyOn(Utils, 'assert').and.callFake(() => {});
         // Given any demo node
         // When calling onLegalUserMove
-        const reason: string = 'this should not be usefull, right ?';
+        const reason: string = 'DemoCardWrapper should not call applyLegalMove, as it does no move';
         await testUtils.getComponent().onLegalUserMove(null as unknown as P4Move);
         // Then it should throw
         expect(Utils.assert).toHaveBeenCalledOnceWith(false, reason);
@@ -139,7 +139,7 @@ describe('DemoCardComponent', () => {
             const defaultRulesConfig: MGPOptional<RulesConfig> = MGPOptional.of({
                 mais_quelles_belles_chaussettes: 42,
             });
-            loadNode({
+            await loadNode({
                 name: 'P4',
                 node: new P4Node(P4Rules.get().getInitialState(defaultConfig)),
                 click: MGPOptional.empty(),

@@ -6,7 +6,7 @@ import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { PenteMove } from '../PenteMove';
 import { PenteNode, PenteRules } from '../PenteRules';
 import { PenteState } from '../PenteState';
-import { GobanConfig, defaultGobanConfig } from 'src/app/jscaip/GobanConfig';
+import { GobanConfig } from 'src/app/jscaip/GobanConfig';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 describe('PenteRules', () => {
@@ -24,7 +24,7 @@ describe('PenteRules', () => {
 
     it('should allow a drop on an empty space', () => {
         // Given a state
-        const state: PenteState = PenteRules.get().getInitialState(defaultGobanConfig);
+        const state: PenteState = PenteRules.get().getInitialState(defaultConfig);
 
         // When doing a drop on an empty space
         const move: PenteMove = PenteMove.of(new Coord(9, 8));
@@ -51,12 +51,12 @@ describe('PenteRules', () => {
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
         ], [0, 0], 1);
-        RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+        RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
     });
 
     it('should refuse move going out of the board', () => {
         // Given any board
-        const state: PenteState = PenteRules.get().getInitialState(defaultGobanConfig);
+        const state: PenteState = PenteRules.get().getInitialState(defaultConfig);
 
         // When doing drop outside the board
         const move: PenteMove = PenteMove.of(new Coord(-1, 0));
@@ -68,7 +68,7 @@ describe('PenteRules', () => {
 
     it('should forbid a drop on an occupied space', () => {
         // Given a state
-        const state: PenteState = PenteRules.get().getInitialState(defaultGobanConfig);
+        const state: PenteState = PenteRules.get().getInitialState(defaultConfig);
 
         // When doing a drop on an occupied space
         const move: PenteMove = PenteMove.of(new Coord(9, 9));
@@ -127,7 +127,7 @@ describe('PenteRules', () => {
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
         ], [0, 2], 4);
-        RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+        RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
     });
 
     it('should support multiple captures', () => {
@@ -179,12 +179,12 @@ describe('PenteRules', () => {
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
         ], [0, 4], 4);
-        RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+        RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
     });
 
     it('should be ongoing if there are still available spaces and no victory', () => {
         // Given a state with available spaces and no victory
-        const state: PenteState = PenteRules.get().getInitialState(defaultGobanConfig);
+        const state: PenteState = PenteRules.get().getInitialState(defaultConfig);
         const node: PenteNode = new PenteNode(state);
         // Then it should be ongoing
         RulesUtils.expectToBeOngoing(rules, node, defaultConfig);

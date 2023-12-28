@@ -14,7 +14,7 @@ import { DiaballikFailure } from './DiaballikFailure';
 import { Utils } from 'src/app/utils/utils';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { CoordFailure } from '../../jscaip/Coord';
-import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 export class VictoryOrDefeatCoords {
     protected constructor(public readonly winner: Player) {}
@@ -168,7 +168,7 @@ export class DiaballikRules extends Rules<DiaballikMove, DiaballikState, Diaball
 
     public override applyLegalMove(_move: DiaballikMove,
                                    state: DiaballikState,
-                                   _config: MGPOptional<EmptyRulesConfig>, // TODO FOR REVIEW, do you prefer this or a type NoConfig = MGPOptional<EmptyRulesConfig>, for readability ?
+                                   _config: NoConfig,
                                    stateAfterSubMoves: DiaballikState)
     : DiaballikState
     {

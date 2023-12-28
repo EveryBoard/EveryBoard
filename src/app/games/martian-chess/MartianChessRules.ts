@@ -11,7 +11,7 @@ import { MartianChessPiece } from './MartianChessPiece';
 import { MartianChessFailure } from './MartianChessFailure';
 import { MGPValidation } from '../../utils/MGPValidation';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
-import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 import { Utils } from 'src/app/utils/utils';
 import { Table } from 'src/app/utils/ArrayUtils';
 
@@ -57,7 +57,7 @@ export class MartianChessRules extends Rules<MartianChessMove, MartianChessState
 
     public override applyLegalMove(move: MartianChessMove,
                                    state: MartianChessState,
-                                   _config: MGPOptional<EmptyRulesConfig>,
+                                   _config: NoConfig,
                                    info: MartianChessMoveResult)
     : MartianChessState
     {

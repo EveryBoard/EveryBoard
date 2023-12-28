@@ -8,7 +8,7 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MancalaConfig } from '../../common/MancalaConfig';
 import { AwaleRules } from '../AwaleRules';
 
-fdescribe('AwaleOrderedMoveGenerator', () => {
+describe('AwaleOrderedMoveGenerator', () => {
 
     let moveGenerator: AwaleOrderedMoveGenerator;
     const defaultConfig: MGPOptional<MancalaConfig> = AwaleRules.get().getDefaultRulesConfig();

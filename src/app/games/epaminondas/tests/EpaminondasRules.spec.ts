@@ -276,7 +276,7 @@ describe('EpaminondasRules', () => {
             [_, O, O, O, O, O, O, O, O, O, O, O, O, O],
         ];
         const expectedState: EpaminondasState = new EpaminondasState(expectedBoard, 1);
-        RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+        RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
     });
 
     it('should allow legal capture', () => {
@@ -314,7 +314,7 @@ describe('EpaminondasRules', () => {
             [_, O, O, O, O, O, O, O, O, O, O, O, O, O],
         ];
         const expectedState: EpaminondasState = new EpaminondasState(expectedBoard, 1);
-        RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+        RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
     });
 
     describe('Victories', () => {

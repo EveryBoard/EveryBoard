@@ -20,7 +20,7 @@ import { KalahRules } from '../KalahRules';
 import { KalahMoveGenerator } from '../KalahMoveGenerator';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 
-fdescribe('KalahComponent', () => {
+describe('KalahComponent', () => {
 
     let mancalaTestUtils: MancalaComponentTestUtils<KalahComponent, KalahRules>;
     const defaultConfig: MGPOptional<MancalaConfig> = KalahRules.get().getDefaultRulesConfig();
@@ -156,7 +156,7 @@ fdescribe('KalahComponent', () => {
                     [0, 1, 0, 0, 0, 0],
                     [0, 0, 13, 0, 0, 0],
                 ], 0, [0, 0]);
-                await mancalaTestUtils.testUtils.setupState(state, undefined, undefined, defaultConfig);
+                await mancalaTestUtils.testUtils.setupState(state, { config: defaultConfig });
 
                 // When distributing the house
                 mancalaTestUtils.testUtils.findElement('#click_2_1').triggerEventHandler('click', null);
@@ -238,7 +238,7 @@ fdescribe('KalahComponent', () => {
                 [6, 1, 7, 6, 1, 7],
                 [2, 1, 6, 2, 2, 5],
             ], 3, [4, 2]);
-            await mancalaTestUtils.testUtils.setupState(state, undefined, undefined, defaultConfig);
+            await mancalaTestUtils.testUtils.setupState(state, { config: defaultConfig });
 
             // When doing the complex move
             await mancalaTestUtils.expectMancalaClickSuccess(new Coord(0, 0));
@@ -256,7 +256,7 @@ fdescribe('KalahComponent', () => {
                 [5, 0, 6, 6, 0, 6],
                 [0, 5, 5, 1, 5, 5],
             ], 2, [2, 2]);
-            await mancalaTestUtils.testUtils.setupState(state, undefined, undefined, defaultConfig);
+            await mancalaTestUtils.testUtils.setupState(state, { config: defaultConfig });
 
             // When doing the complex move
             await mancalaTestUtils.expectMancalaClickSuccess(new Coord(4, 1));
@@ -280,8 +280,9 @@ fdescribe('KalahComponent', () => {
                 [0, 0, 1, 0, 0, 0],
             ];
             const state: MancalaState = new MancalaState(board, 5, [5, 0]);
-            const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(3));
-            await mancalaTestUtils.testUtils.setupState(state, previousState, move, defaultConfig);
+            const previousMove: MancalaMove = MancalaMove.of(MancalaDistribution.of(3));
+            await mancalaTestUtils.testUtils.setupState(state,
+                                                        { previousState, previousMove, config: defaultConfig });
 
             // When starting a multiple-capture move
             await mancalaTestUtils.expectMancalaClickSuccess(new Coord(2, 0));
@@ -309,7 +310,7 @@ fdescribe('KalahComponent', () => {
                 [0, 0, 0, 1, 0, 0],
                 [0, 4, 0, 0, 0, 0],
             ], 0, [0, 0]);
-            await mancalaTestUtils.testUtils.setupState(state, undefined, undefined, defaultConfig);
+            await mancalaTestUtils.testUtils.setupState(state, { config: defaultConfig });
 
             // When giving turn to AI to play and waiting for move
             await mancalaTestUtils.testUtils.selectAIPlayer(Player.ZERO);
@@ -326,7 +327,7 @@ fdescribe('KalahComponent', () => {
                 [0, 0, 1, 9, 0, 0],
                 [1, 0, 0, 0, 0, 0],
             ], 10, [13, 9]);
-            await mancalaTestUtils.testUtils.setupState(state, undefined, undefined, defaultConfig);
+            await mancalaTestUtils.testUtils.setupState(state, { config: defaultConfig });
 
             // When doing the only move possible for the remaining sub-move
             const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(0));

@@ -7,12 +7,11 @@ import { MGPSet } from 'src/app/utils/MGPSet';
 import { AbaloneMove } from './AbaloneMove';
 import { AbaloneLegalityInformation, AbaloneNode, AbaloneRules } from './AbaloneRules';
 import { AbaloneState } from './AbaloneState';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 export class AbaloneMoveGenerator extends MoveGenerator<AbaloneMove, AbaloneState> {
 
-    public getListMoves(node: AbaloneNode, _config: MGPOptional<EmptyRulesConfig>): AbaloneMove[] {
+    public override getListMoves(node: AbaloneNode, _config: NoConfig): AbaloneMove[] {
         const moves: AbaloneMove[] = [];
         const state: AbaloneState = node.gameState;
         const player: Player = state.getCurrentPlayer();
@@ -50,6 +49,7 @@ export class AbaloneMoveGenerator extends MoveGenerator<AbaloneMove, AbaloneStat
         }
         return new MGPSet(moves).toList();
     }
+
     private isAcceptablePush(move: AbaloneMove, state: AbaloneState): boolean {
         const scores: [number, number] = state.getScores();
         const status: MGPFallible<AbaloneLegalityInformation> = AbaloneRules.get().isLegal(move, state);

@@ -10,7 +10,7 @@ import { PentagoFailure } from './PentagoFailure';
 import { PentagoMove } from './PentagoMove';
 import { PentagoState } from './PentagoState';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
-import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 import { Table, TableUtils } from 'src/app/utils/ArrayUtils';
 
 export class PentagoNode extends GameNode<PentagoMove, PentagoState> {}
@@ -57,14 +57,13 @@ export class PentagoRules extends Rules<PentagoMove, PentagoState> {
         [new Coord(1, 4), new Vector(1, 0), true],
         [new Coord(1, 5), new Vector(1, 0), true],
     ];
-    public override applyLegalMove(move: PentagoMove,
-                                   state: PentagoState,
-                                   _config: MGPOptional<EmptyRulesConfig>,
-                                   _info: void)
+
+    public override applyLegalMove(move: PentagoMove, state: PentagoState, _config: NoConfig, _info: void)
     : PentagoState
     {
         return state.applyLegalMove(move);
     }
+
     public override isLegal(move: PentagoMove, state: PentagoState): MGPValidation {
         if (state.getPieceAt(move.coord).isPlayer()) {
             return MGPValidation.failure(RulesFailure.MUST_LAND_ON_EMPTY_SPACE());
@@ -84,6 +83,7 @@ export class PentagoRules extends Rules<PentagoMove, PentagoState> {
         }
         return MGPValidation.SUCCESS;
     }
+
     public getVictoryCoords(state: PentagoState): Coord[] {
         let victoryCoords: Coord[] = [];
         for (const maybeVictory of PentagoRules.VICTORY_SOURCE) {
@@ -118,6 +118,7 @@ export class PentagoRules extends Rules<PentagoMove, PentagoState> {
         }
         return victoryCoords;
     }
+
     public getGameStatus(node: PentagoNode): GameStatus {
         const state: PentagoState = node.gameState;
         const victoryCoords: Coord[] = this.getVictoryCoords(state);
@@ -141,4 +142,5 @@ export class PentagoRules extends Rules<PentagoMove, PentagoState> {
             return GameStatus.ONGOING;
         }
     }
+
 }

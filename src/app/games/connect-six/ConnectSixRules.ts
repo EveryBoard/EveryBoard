@@ -14,7 +14,7 @@ import { GobanConfig } from 'src/app/jscaip/GobanConfig';
 import { RulesConfigDescription, RulesConfigDescriptions } from 'src/app/components/wrapper-components/rules-configuration/RulesConfigDescription';
 import { Table, TableUtils } from 'src/app/utils/ArrayUtils';
 
-export class ConnectSixNode extends GameNode<ConnectSixMove, ConnectSixState, GobanConfig> {}
+export class ConnectSixNode extends GameNode<ConnectSixMove, ConnectSixState> {}
 
 export class ConnectSixRules extends ConfigurableRules<ConnectSixMove, ConnectSixState, GobanConfig> {
 
@@ -80,13 +80,13 @@ export class ConnectSixRules extends ConfigurableRules<ConnectSixMove, ConnectSi
 
     public override isLegal(move: ConnectSixMove, state: ConnectSixState): MGPValidation {
         if (move instanceof ConnectSixFirstMove) {
-            Utils.assert(state.turn === 0, 'Instance of ConnectSixFirstMove should only happend at first move');
+            Utils.assert(state.turn === 0, 'ConnectSixFirstMove should only be used at first move');
             if (state.isOnBoard(move.coord) === false) {
                 return MGPValidation.failure(CoordFailure.OUT_OF_RANGE(move.coord));
             }
             return MGPValidation.SUCCESS;
         } else {
-            Utils.assert(state.turn > 0, 'Instance of ConnectSixDrops should only happend after first move');
+            Utils.assert(state.turn > 0, 'ConnectSixDrops should only be used after first move');
             if (state.isOnBoard(move.getFirst()) === false) {
                 return MGPValidation.failure(CoordFailure.OUT_OF_RANGE(move.getFirst()));
             } else if (state.isOnBoard(move.getSecond()) === false) {

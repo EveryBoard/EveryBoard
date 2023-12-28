@@ -11,7 +11,7 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 @Debug.log
 export class GoMoveGenerator extends MoveGenerator<GoMove, GoState, GoConfig> {
 
-    public getListMoves(node: GoNode, _config: MGPOptional<GoConfig>): GoMove[] {
+    public override getListMoves(node: GoNode, _config: MGPOptional<GoConfig>): GoMove[] {
 
         const currentState: GoState = node.gameState;
         const playingMoves: GoMove[] = this.getPlayingMovesList(currentState);

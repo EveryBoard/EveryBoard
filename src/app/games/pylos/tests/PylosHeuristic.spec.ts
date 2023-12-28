@@ -6,7 +6,7 @@ import { PylosNode, PylosRules } from '../PylosRules';
 import { PlayerOrNone } from 'src/app/jscaip/Player';
 import { PylosHeuristic } from '../PylosHeuristic';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 const _: PlayerOrNone = PlayerOrNone.NONE;
 const O: PlayerOrNone = PlayerOrNone.ZERO;
@@ -15,7 +15,7 @@ const X: PlayerOrNone = PlayerOrNone.ONE;
 describe('PylosHeuristic', () => {
 
     let heuristic: PylosHeuristic;
-    const defaultConfig: MGPOptional<EmptyRulesConfig> = PylosRules.get().getDefaultRulesConfig();
+    const defaultConfig: NoConfig = PylosRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         heuristic = new PylosHeuristic();
