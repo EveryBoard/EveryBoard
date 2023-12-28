@@ -431,7 +431,7 @@ export function doMancalaComponentTests<C extends MancalaComponent<R>,
                 tick(3 * MancalaComponent.TIMEOUT_BETWEEN_SEED);
             }));
 
-            fit('should make click impossible during player distribution animation', fakeAsync(async() => {
+            it('should make click impossible during player distribution animation', fakeAsync(async() => {
                 // Given a move where a first click has been done but is not finished
                 await mancalaTestUtils.testUtils.expectClickSuccess('#click_2_1');
                 tick(MancalaComponent.TIMEOUT_BETWEEN_SEED); // so that it is started but not finished yet
