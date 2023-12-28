@@ -3,7 +3,6 @@ import { BrandhubMove } from 'src/app/games/tafl/brandhub/BrandhubMove';
 import { BrandhubRules } from './BrandhubRules';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { TaflComponent } from '../tafl.component';
-import { BrandhubTutorial } from './BrandhubTutorial';
 
 @Component({
     selector: 'app-brandhub',
@@ -14,10 +13,8 @@ export class BrandhubComponent extends TaflComponent<BrandhubRules, BrandhubMove
 
     public constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer, BrandhubMove.from);
-        this.rules = BrandhubRules.get();
-        this.node = this.rules.getInitialNode();
+        this.setRulesAndNode('Brandhub');
         this.availableAIs = this.createAIs();
         this.encoder = BrandhubMove.encoder;
-        this.tutorial = new BrandhubTutorial().tutorial;
     }
 }

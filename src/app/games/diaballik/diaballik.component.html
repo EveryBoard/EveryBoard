@@ -56,7 +56,7 @@
               (click)="onClick(coord.x, coord.y)"
               class="indicator"/>
     </g>
-    <g *ngIf="isInteractive">
+    <g *ngIf="isInteractive()">
         <g id="translationCountIndicator"
            [attr.transform]="getTranslationXY(0, HEIGHT + 0.3) + ' scale(0.5)'">
             <rect class="base"

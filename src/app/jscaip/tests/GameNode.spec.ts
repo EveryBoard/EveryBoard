@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { GameState } from '../GameState';
@@ -5,6 +6,7 @@ import { GameStatus } from '../GameStatus';
 import { GameNode } from '../GameNode';
 import { Move } from '../Move';
 import { Rules } from '../Rules';
+import { NoConfig } from '../RulesConfigUtil';
 
 class GameStateMock extends GameState {
 
@@ -34,11 +36,16 @@ class RulesMock extends Rules<MoveMock, GameStateMock> {
         super();
     }
 
-    public getInitialState(): GameStateMock {
+    public override getInitialState(): GameStateMock {
         return GameStateMock.getInitialState();
     }
 
-    public applyLegalMove(move: MoveMock, state: GameStateMock, info: void): GameStateMock {
+    public override applyLegalMove(_move: MoveMock,
+                                   _state: GameStateMock,
+                                   _config: NoConfig,
+                                   _info: void)
+    : GameStateMock
+    {
         throw new Error('RulesMock.applyLegalMove method not implemented.');
     }
 
@@ -101,6 +108,7 @@ describe('GameNode', () => {
                 consoleLogBuffer.push(line);
             });
         });
+
         it('should output a DOT representation of the node tree on standard output', () => {
             // Given a tree of game nodes
             // When printing it
@@ -121,6 +129,7 @@ describe('GameNode', () => {
             ];
             expect(consoleLogBuffer).toEqual(expectedOutput);
         });
+
         it('should print with extra label if needed', () => {
             // Given a tree of game nodes
             // When printing it with a specific label
@@ -133,6 +142,7 @@ describe('GameNode', () => {
             ];
             expect(consoleLogBuffer).toEqual(expectedOutput);
         });
+
         it('should limit print depth to the provided max level', () => {
             // Given a tree of game nodes
             // When printing it up to depth 1
@@ -149,6 +159,7 @@ describe('GameNode', () => {
             ];
             expect(consoleLogBuffer).toEqual(expectedOutput);
         });
+
         it('should color nodes based on game status (Player.ZERO)', () => {
             // Given a terminal game node where Player.ZERO wins
             getGameStatusSpy.and.callFake((node: MockNode) => {
@@ -164,6 +175,7 @@ describe('GameNode', () => {
             ];
             expect(consoleLogBuffer).toEqual(expectedOutput);
         });
+
         it('should color nodes based on game status (Player.ONE)', () => {
             // Given a terminal game node where Player.ZERO wins
             getGameStatusSpy.and.callFake((node: MockNode) => {
@@ -179,6 +191,7 @@ describe('GameNode', () => {
             ];
             expect(consoleLogBuffer).toEqual(expectedOutput);
         });
+
         it('should color nodes based on game status (draw)', () => {
             // Given a terminal game node where Player.ZERO wins
             getGameStatusSpy.and.callFake((node: MockNode) => {
@@ -194,5 +207,7 @@ describe('GameNode', () => {
             ];
             expect(consoleLogBuffer).toEqual(expectedOutput);
         });
+
     });
+
 });

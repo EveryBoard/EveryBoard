@@ -7,6 +7,7 @@ import { TrexoFailure } from '../TrexoFailure';
 import { TrexoMove } from '../TrexoMove';
 import { TrexoNode, TrexoRules } from '../TrexoRules';
 import { TrexoPiece, TrexoPieceStack, TrexoState } from '../TrexoState';
+import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 const ______: TrexoPieceStack = TrexoPieceStack.EMPTY;
 const O1__T0: TrexoPieceStack = TrexoPieceStack.of([new TrexoPiece(Player.ZERO, 0)]);
@@ -29,10 +30,12 @@ const X1__T4: TrexoPieceStack = TrexoPieceStack.of([new TrexoPiece(Player.ONE, 4
 describe('TrexoRules', () => {
 
     let rules: TrexoRules;
+    const defaultConfig: NoConfig = TrexoRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         rules = TrexoRules.get();
     });
+
     it('should accept to drop piece on the floor', () => {
         // Given any board where two spaces on the floor are free
         const state: TrexoState = TrexoRules.get().getInitialState();
@@ -53,8 +56,9 @@ describe('TrexoRules', () => {
             [______, ______, ______, ______, ______, ______, ______, ______, ______, ______],
             [______, ______, ______, ______, ______, ______, ______, ______, ______, ______],
         ], 1);
-        RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+        RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
     });
+
     it('should refuse to drop piece on top of only one other piece', () => {
         // Given a board with a piece already on it
         const state: TrexoState = TrexoState.of([
@@ -75,8 +79,9 @@ describe('TrexoRules', () => {
 
         // Then it should fail
         const reason: string = TrexoFailure.CANNOT_DROP_ON_ONLY_ONE_PIECE();
-        RulesUtils.expectMoveFailure(rules, state, move, reason);
+        RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
     });
+
     it('should accept to drop piece on two other piece', () => {
         // Given a board with two pieces that are neighbor on it
         let LEFT: TrexoPiece[] = [new TrexoPiece(Player.ZERO, 0)];
@@ -118,8 +123,9 @@ describe('TrexoRules', () => {
             [______, ______, ______, ______, ______, ______, ______, ______, ______, ______],
             [______, ______, ______, ______, ______, ______, ______, ______, ______, ______],
         ], 3);
-        RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+        RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
     });
+
     it('should refuse dropping piece when both landing square are not on the same level', () => {
         // Given a board with one piece
         const state: TrexoState = TrexoState.of([
@@ -140,8 +146,9 @@ describe('TrexoRules', () => {
 
         // Then it should fail
         const reason: string = TrexoFailure.CANNOT_DROP_PIECE_ON_UNEVEN_GROUNDS();
-        RulesUtils.expectMoveFailure(rules, state, move, reason);
+        RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
     });
+
     it('should declare as winner player who has a line of 5', () => {
         // Given a board where a player has a line of 4
         const state: TrexoState = TrexoState.of([
@@ -174,11 +181,12 @@ describe('TrexoRules', () => {
             [______, ______, ______, ______, ______, ______, ______, ______, ______, ______],
         ], 5);
         const node: TrexoNode = new TrexoNode(expectedState);
-        RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
-        RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE);
+        RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
+        RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, defaultConfig);
         const victoryCoords: Coord[] = TrexoRules.getVictoriousCoords(expectedState);
         expect(victoryCoords.length).toBe(5);
     });
+
     it('should declare loser the player who align 5 piece of the opponent', () => {
         // Given a board where a player's opponent has a line of 4
         const state: TrexoState = TrexoState.of([
@@ -211,9 +219,10 @@ describe('TrexoRules', () => {
             [______, ______, ______, ______, ______, ______, ______, ______, ______, ______],
         ], 4);
         const node: TrexoNode = new TrexoNode(expectedState);
-        RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
-        RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE);
+        RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
+        RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, defaultConfig);
     });
+
     it('should declare loser the player who align 5 piece of both players', () => {
         // Given a board where two players have 4 pieces aligned
         const state: TrexoState = TrexoState.of([
@@ -246,9 +255,10 @@ describe('TrexoRules', () => {
             [______, ______, ______, ______, ______, ______, ______, ______, ______, ______],
         ], 5);
         const node: TrexoNode = new TrexoNode(expectedState);
-        RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
-        RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE);
+        RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
+        RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, defaultConfig);
         const victoryCoords: Coord[] = TrexoRules.getVictoriousCoords(expectedState);
         expect(victoryCoords.length).toBe(5);
     });
+
 });

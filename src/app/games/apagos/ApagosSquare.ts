@@ -23,7 +23,7 @@ export class ApagosSquare {
         const nbZero: number = this.count(Player.ZERO);
         const nbOne: number = this.count(Player.ONE);
         const nbTotal: number = this.count(PlayerOrNone.NONE);
-        return (nbZero + nbOne) >= nbTotal;
+        return nbTotal <= (nbZero + nbOne);
     }
     public count(player: PlayerOrNone): number {
         return this.containing.get(player).get();

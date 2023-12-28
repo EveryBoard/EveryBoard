@@ -10,10 +10,10 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { EncapsuleFailure } from './EncapsuleFailure';
-import { EncapsuleTutorial } from './EncapsuleTutorial';
 import { Utils } from 'src/app/utils/utils';
 import { assert } from 'src/app/utils/assert';
 import { MGPMap } from 'src/app/utils/MGPMap';
+import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 import { MCTS } from 'src/app/jscaip/MCTS';
 import { DummyHeuristic, Minimax } from 'src/app/jscaip/Minimax';
 import { EncapsuleMoveGenerator } from './EncapsuleMoveGenerator';
@@ -27,6 +27,7 @@ export class EncapsuleComponent extends RectangularGameComponent<EncapsuleRules,
                                                                  EncapsuleMove,
                                                                  EncapsuleState,
                                                                  EncapsuleSpace,
+                                                                 EmptyRulesConfig,
                                                                  EncapsuleLegalityInformation>
 {
     public readonly CENTER: number = this.getPieceCenter(1);
@@ -41,14 +42,12 @@ export class EncapsuleComponent extends RectangularGameComponent<EncapsuleRules,
 
     public constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
-        this.rules = EncapsuleRules.get();
-        this.node = this.rules.getInitialNode();
+        this.setRulesAndNode('Encapsule');
         this.availableAIs = [
             new Minimax($localize`Dummy`, this.rules, new DummyHeuristic(), new EncapsuleMoveGenerator()),
             new MCTS($localize`MCTS`, new EncapsuleMoveGenerator(), this.rules),
         ];
         this.encoder = EncapsuleMove.encoder;
-        this.tutorial = new EncapsuleTutorial().tutorial;
     }
     public async updateBoard(_triggerAnimation: boolean): Promise<void> {
         const state: EncapsuleState = this.getState();

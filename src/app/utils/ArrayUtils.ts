@@ -108,8 +108,6 @@ export class ArrayUtils {
 
 export type Table<T> = ReadonlyArray<ReadonlyArray<T>>;
 
-export type NumberTable = Table<number>;
-
 export class TableUtils {
 
     public static create<T>(width: number, height: number, initValue: T): T[][] {

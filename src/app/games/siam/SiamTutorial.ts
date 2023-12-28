@@ -4,7 +4,7 @@ import { SiamState } from 'src/app/games/siam/SiamState';
 import { Orthogonal } from 'src/app/jscaip/Direction';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { Tutorial, TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
-import { SiamRules } from './SiamRules';
+import { SiamConfig, SiamRules } from './SiamRules';
 
 const _: SiamPiece = SiamPiece.EMPTY;
 const M: SiamPiece = SiamPiece.MOUNTAIN;
@@ -19,18 +19,20 @@ const l: SiamPiece = SiamPiece.DARK_LEFT;
 const r: SiamPiece = SiamPiece.DARK_RIGHT;
 const d: SiamPiece = SiamPiece.DARK_DOWN;
 
+const defaultConfig: MGPOptional<SiamConfig> = SiamRules.get().getDefaultRulesConfig();
+
 export class SiamTutorial extends Tutorial {
     public tutorial: TutorialStep[] = [
         TutorialStep.informational(
             $localize`Goal of the game`,
             $localize`The goal at Siam is to be the first to push a mountain out of the board. The initial board contains three mountains, and no pieces are initially on the board. During its turn, a player can do one of the following actions: <ol><li>Put a new piece on the board.</li><li>Change the orientation of one of its piece</li><li>Move one of its piece and optionally reorient it.</li><li>Take one of its pieces out of the board.</li></ol>`,
-            SiamRules.get().getInitialState(),
+            SiamRules.get().getInitialState(defaultConfig),
         ),
         TutorialStep.anyMove(
             $localize`Inserting a piece`,
             $localize`Each player has 5 pieces in total. As long as you have remaining pieces next to the board, you can insert new pieces. To do so:<ol><li>Click on one of your pieces from your reserve, next to board.</li><li>Click on one of the highlighted squares to select a landing for your piece.</li><li>Select an orientation for your piece by clicking on one of the arrows that appear on top of the board.</li></ol><br/>You're playing Dark, insert a piece on the board.`,
-            SiamRules.get().getInitialState(),
-            SiamMove.from(2, -1, MGPOptional.of(Orthogonal.DOWN), Orthogonal.DOWN).get(),
+            SiamRules.get().getInitialState(defaultConfig),
+            SiamMove.of(2, -1, MGPOptional.of(Orthogonal.DOWN), Orthogonal.DOWN),
             $localize`Congratulations!`,
         ),
         TutorialStep.fromMove(
@@ -43,7 +45,7 @@ export class SiamTutorial extends Tutorial {
                 [_, _, _, _, _],
                 [_, _, u, _, _],
             ], 0),
-            [SiamMove.from(2, 4, MGPOptional.of(Orthogonal.UP), Orthogonal.LEFT).get()],
+            [SiamMove.of(2, 4, MGPOptional.of(Orthogonal.UP), Orthogonal.LEFT)],
             $localize`Congratulations, you made a side-slip!`,
             $localize`Failed. Try again.`,
         ),
@@ -57,7 +59,7 @@ export class SiamTutorial extends Tutorial {
                 [_, _, _, _, _],
                 [_, _, u, _, _],
             ], 0),
-            [SiamMove.from(2, 4, MGPOptional.of(Orthogonal.DOWN), Orthogonal.DOWN).get()],
+            [SiamMove.of(2, 4, MGPOptional.of(Orthogonal.DOWN), Orthogonal.DOWN)],
             $localize`Congratulations, even if in this context it was not a useful move.`,
             $localize`Failed, the piece is still on the board.`,
         ),
@@ -71,7 +73,7 @@ export class SiamTutorial extends Tutorial {
                 [_, _, _, _, _],
                 [_, _, _, _, _],
             ], 0),
-            [SiamMove.from(2, 2, MGPOptional.of(Orthogonal.UP), Orthogonal.UP).get()],
+            [SiamMove.of(2, 2, MGPOptional.of(Orthogonal.UP), Orthogonal.UP)],
             $localize`Congratulations!`,
             $localize`Failed. Try again.`,
         ),
@@ -85,7 +87,7 @@ export class SiamTutorial extends Tutorial {
                 [_, r, R, L, M],
                 [_, _, _, _, _],
             ], 0),
-            [SiamMove.from(1, 3, MGPOptional.of(Orthogonal.RIGHT), Orthogonal.RIGHT).get()],
+            [SiamMove.of(1, 3, MGPOptional.of(Orthogonal.RIGHT), Orthogonal.RIGHT)],
             $localize`Congratulations! Note that this move made you lose the game, you will see why in the next step.`,
             $localize`Failed. Try again.`,
         ),
@@ -99,7 +101,7 @@ export class SiamTutorial extends Tutorial {
                 [_, _, _, _, D],
                 [_, _, _, _, M],
             ], 0),
-            [SiamMove.from(2, 2, MGPOptional.of(Orthogonal.LEFT), Orthogonal.LEFT).get()],
+            [SiamMove.of(2, 2, MGPOptional.of(Orthogonal.LEFT), Orthogonal.LEFT)],
             $localize`Congratulations, you won!`,
             $localize`Failed, you lost.`,
         ),

@@ -7,10 +7,11 @@ import { Player } from 'src/app/jscaip/Player';
 import { KamisadoBoard } from './KamisadoBoard';
 import { Utils } from 'src/app/utils/utils';
 import { MoveGenerator } from 'src/app/jscaip/AI';
+import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 export class KamisadoMoveGenerator extends MoveGenerator<KamisadoMove, KamisadoState> {
 
-    public getListMoves(node: KamisadoNode): KamisadoMove[] {
+    public override getListMoves(node: KamisadoNode, _config: NoConfig): KamisadoMove[] {
         const state: KamisadoState = node.gameState;
         const movablePieces: Coord[] = KamisadoRules.getMovablePieces(state);
         if (movablePieces.length === 0) {
@@ -24,6 +25,7 @@ export class KamisadoMoveGenerator extends MoveGenerator<KamisadoMove, KamisadoS
             return moves;
         }
     }
+
     private getListMovesFromNonBlockedState(state: KamisadoState, movablePieces: Coord[]): KamisadoMove[] {
         // There are moves, compute them
         const moves: KamisadoMove[] = [];

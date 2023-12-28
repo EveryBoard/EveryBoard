@@ -13,13 +13,13 @@ import { LodestoneCaptures, LodestoneMove } from './LodestoneMove';
 import { LodestoneOrientation, LodestoneDirection, LodestonePiece, LodestonePieceNone, LodestonePieceLodestone, LodestoneDescription } from './LodestonePiece';
 import { LodestoneInfos, PressurePlatePositionInformation, LodestoneRules, PressurePlateViewPosition } from './LodestoneRules';
 import { LodestonePositions, LodestonePressurePlate, LodestonePressurePlateGroup, LodestonePressurePlatePosition, LodestonePressurePlates, LodestoneState } from './LodestoneState';
-import { LodestoneTutorial } from './LodestoneTutorial';
 import { MCTS } from 'src/app/jscaip/MCTS';
 import { LodestoneMoveGenerator } from './LodestoneMoveGenerator';
 import { LodestoneScoreHeuristic } from './LodestoneScoreHeuristic';
 import { Minimax } from 'src/app/jscaip/Minimax';
 import { Utils } from 'src/app/utils/utils';
 import { ViewBox } from 'src/app/components/game-components/GameComponentUtils';
+import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 export type LodestoneInfo = {
     direction: LodestoneDirection,
@@ -81,7 +81,7 @@ type PreCaptureInfo = {
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
 })
 export class LodestoneComponent
-    extends GameComponent<LodestoneRules, LodestoneMove, LodestoneState, LodestoneInfos>
+    extends GameComponent<LodestoneRules, LodestoneMove, LodestoneState, EmptyRulesConfig, LodestoneInfos>
 {
     private static readonly PRESSURE_PLATE_EXTRA_SHIFT: number = 0.2;
 
@@ -144,17 +144,16 @@ export class LodestoneComponent
 
     public constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
-        this.rules = LodestoneRules.get();
-        this.node = this.rules.getInitialNode();
-        this.tutorial = new LodestoneTutorial().tutorial;
+        this.setRulesAndNode('Lodestone');
         this.availableAIs = [
             new Minimax($localize`Score`, this.rules, new LodestoneScoreHeuristic(), new LodestoneMoveGenerator()),
             new MCTS($localize`MCTS`, new LodestoneMoveGenerator(), this.rules),
         ];
         this.encoder = LodestoneMove.encoder;
+        this.scores = MGPOptional.of([0, 0]);
+
         this.PIECE_RADIUS = (this.SPACE_SIZE - (2 * this.STROKE_WIDTH)) * 0.5;
         this.displayedState = this.getState();
-        this.scores = MGPOptional.of([0, 0]);
     }
 
     public getViewBox(): ViewBox {

@@ -7,6 +7,7 @@ import { QuartoNode, BoardStatus, QuartoRules } from './QuartoRules';
 import { Player } from 'src/app/jscaip/Player';
 import { CoordSet } from 'src/app/utils/OptimizedSet';
 import { Utils } from 'src/app/utils/utils';
+import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 export class QuartoHeuristic extends Heuristic<QuartoMove, QuartoState> {
 
@@ -19,7 +20,8 @@ export class QuartoHeuristic extends Heuristic<QuartoMove, QuartoState> {
             return new BoardValue(player.getPreVictory());
         }
     }
-    public getBoardValue(node: QuartoNode): BoardValue {
+
+    public getBoardValue(node: QuartoNode, _config: NoConfig): BoardValue {
         const state: QuartoState = node.gameState;
         let boardStatus: BoardStatus = {
             score: SCORE.DEFAULT,
@@ -30,4 +32,5 @@ export class QuartoHeuristic extends Heuristic<QuartoMove, QuartoState> {
         }
         return this.scoreToBoardValue(boardStatus.score, state.turn);
     }
+
 }

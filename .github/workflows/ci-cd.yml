@@ -26,7 +26,7 @@ jobs:
       - name: Setup dependencies (setup node)
         uses: actions/setup-node@v1
         with:
-          node-version: 16
+          node-version: 18
       - name: Setup dependencies (install dependencies)
         run: npm ci
       - name: Setup dependencies (setup dummy Firebase secret)
@@ -54,7 +54,7 @@ jobs:
       - name: Setup dependencies (setup node)
         uses: actions/setup-node@v1
         with:
-          node-version: 16
+          node-version: 18
       - name: Setup dependencies (install dependencies)
         run: npm ci
       - name: Setup dependencies (setup dummy Firebase secret)
@@ -68,13 +68,14 @@ jobs:
           python-version: '3.10'
       - name: Install python dependencies
         run: pip install lxml pandas
-      - name: Check coverage
-        run: python ./scripts/coverage.py check
       - name: Archive code coverage results
+        if: always()
         uses: actions/upload-artifact@v3
         with:
           name: code-coverage-report
           path: coverage/
+      - name: Check coverage
+        run: python ./scripts/coverage.py check
 
   e2e:
     runs-on: ubuntu-latest
@@ -96,7 +97,7 @@ jobs:
       - name: Setup dependencies (setup node)
         uses: actions/setup-node@v1
         with:
-          node-version: 16
+          node-version: 18
       - name: Setup dependencies (install dependencies)
         run: npm ci
       - name: Setup dependencies (setup dummy Firebase secret)
@@ -130,7 +131,7 @@ jobs:
       - name: Setup dependencies (setup node)
         uses: actions/setup-node@v1
         with:
-          node-version: 16
+          node-version: 18
       - name: Setup dependencies (install dependencies)
         run: npm ci
       - name: Setup dependencies (setup dummy Firebase secret)
@@ -168,7 +169,7 @@ jobs:
       - name: Setup dependencies (setup node)
         uses: actions/setup-node@v1
         with:
-          node-version: 16
+          node-version: 18
       - name: Setup dependencies (install dependencies)
         run: npm ci
       - name: Setup dependencies (setup dummy Firebase secret)
@@ -204,7 +205,7 @@ jobs:
       - name: Setup dependencies (setup node)
         uses: actions/setup-node@v1
         with:
-          node-version: 16
+          node-version: 18
       - name: Setup dependencies (install dependencies)
         run: npm ci
       - name: Setup dependencies (setup Firebase secret, master)
@@ -264,7 +265,7 @@ jobs:
       - name: Setup dependencies (setup node)
         uses: actions/setup-node@v1
         with:
-          node-version: 16
+          node-version: 18
       - name: Setup dependencies (install dependencies)
         run: npm ci
       - name: Setup dependencies (setup Firebase secret, others)
