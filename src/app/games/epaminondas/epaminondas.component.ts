@@ -67,7 +67,17 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
         this.lastPiece = MGPOptional.empty();
         this.hideLastMove();
         this.board = this.getState().getCopiedBoard();
+        this.scores = this.getScores();
     }
+
+    private getScores(): MGPOptional<readonly [number, number]> {
+        const state: EpaminondasState = this.getState();
+        return MGPOptional.of([
+            state.count(Player.ZERO),
+            state.count(Player.ONE),
+        ]);
+    }
+
     public override async showLastMove(move: EpaminondasMove): Promise<void> {
         let moved: Coord = move.coord;
         this.moveds = [moved];
