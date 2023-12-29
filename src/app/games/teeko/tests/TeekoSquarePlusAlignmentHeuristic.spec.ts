@@ -3,7 +3,7 @@ import { PlayerOrNone } from 'src/app/jscaip/Player';
 import { TeekoConfig, TeekoNode, TeekoRules } from '../TeekoRules';
 import { TeekoState } from '../TeekoState';
 import { Table } from 'src/app/utils/ArrayUtils';
-import { TeekoSquarePlusAlignmentHeuristic } from '../TeekoHeuristic';
+import { TeekoSquarePlusAlignmentHeuristic } from '../TeekotHeuristic';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 const _: PlayerOrNone = PlayerOrNone.NONE;
