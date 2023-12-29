@@ -8,7 +8,7 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 export abstract class TeekoHeuristic extends Heuristic<TeekoMove, TeekoState, BoardValue, TeekoConfig> {}
 
-export class TeekoSquarePlusAlignmentHeuristic extends TeekoHeuristic {
+export class TeekoSquarePlusAlignmentHeuristic extends TeekoHeuristic { // TODO: rename file
 
     public getBoardValue(node: TeekoNode, _config: MGPOptional<TeekoConfig>): BoardValue {
         const alignmentPossibilities: number = TeekoRules.TEEKO_HELPER.getBoardValue(node.gameState).value[0];

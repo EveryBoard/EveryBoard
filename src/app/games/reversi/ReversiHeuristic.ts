@@ -3,9 +3,9 @@ import { ReversiMove } from './ReversiMove';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { PlayerMetricHeuristic } from 'src/app/jscaip/AI/Minimax';
 import { ReversiConfig, ReversiNode } from './ReversiRules';
-import { MGPMap } from 'src/app/utils/MGPMap';
 import { Coord } from 'src/app/jscaip/Coord';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { MGPMap } from 'src/app/utils/MGPMap';
 
 export class ReversiHeuristic extends PlayerMetricHeuristic<ReversiMove, ReversiState, ReversiConfig> {
 

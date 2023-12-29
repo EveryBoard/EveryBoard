@@ -4,8 +4,8 @@ import { BoardValue } from 'src/app/jscaip/AI/BoardValue';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { EpaminondasState } from './EpaminondasState';
 import { EpaminondasConfig, EpaminondasNode } from './EpaminondasRules';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { EpaminondasHeuristic } from './EpaminondasHeuristic';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 export class EpaminondasAttackHeuristic extends EpaminondasHeuristic {
 

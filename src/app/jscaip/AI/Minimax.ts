@@ -9,7 +9,7 @@ import { MGPFallible } from '../../utils/MGPFallible';
 import { Utils } from '../../utils/utils';
 import { ArrayUtils } from '../../utils/ArrayUtils';
 import { GameStatus } from '../GameStatus';
-import { ConfigurableRules } from '../Rules';
+import { SuperRules } from '../Rules';
 import { EmptyRulesConfig, RulesConfig } from '../RulesConfigUtil';
 import { GameNode } from './GameNode';
 import { MGPMap } from 'src/app/utils/MGPMap';
@@ -76,7 +76,7 @@ implements AI<M, S, AIDepthLimitOptions, C>
     public readonly availableOptions: AIDepthLimitOptions[] = [];
 
     public constructor(public readonly name: string,
-                       private readonly rules: ConfigurableRules<M, S, C, L>,
+                       private readonly rules: SuperRules<M, S, C, L>,
                        private readonly heuristic: Heuristic<M, S, BoardValue, C>,
                        private readonly moveGenerator: MoveGenerator<M, S, C>)
     {

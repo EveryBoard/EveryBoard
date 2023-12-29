@@ -11,7 +11,7 @@ const _: PlayerOrNone = PlayerOrNone.NONE;
 const O: PlayerOrNone = PlayerOrNone.ZERO;
 const X: PlayerOrNone = PlayerOrNone.ONE;
 
-describe('EpaminondasAttackHeuristic', () => {
+fdescribe('EpaminondasAttackHeuristic', () => {
 
     let heuristic: EpaminondasAttackHeuristic;
     const defaultConfig: MGPOptional<EpaminondasConfig> = EpaminondasRules.get().getDefaultRulesConfig();

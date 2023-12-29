@@ -104,12 +104,13 @@ describe('SiamHeuristic', () => {
             const state: SiamState = new SiamState(board, 0);
             const move: SiamMove = SiamMove.of(1, 2, MGPOptional.of(Orthogonal.RIGHT), Orthogonal.RIGHT);
             const node: SiamNode = new SiamNode(state, undefined, MGPOptional.of(move));
-            const boardValue: number = heuristic.getBoardValue(node, defaultConfig).value[0];
+            const boardValue: readonly number[] = heuristic.getBoardValue(node, defaultConfig).value;
 
             const turnOneState: SiamState = new SiamState(board, 1);
             const turnOneNode: SiamNode = new SiamNode(turnOneState, undefined, MGPOptional.of(move));
-            const turnOneBoardValue: number = heuristic.getBoardValue(turnOneNode, defaultConfig).value[0];
-            expect(turnOneBoardValue).withContext('Both board value should have same absolute value').toEqual(-1 * boardValue);
+            const turnOneBoardValue: readonly number[] = heuristic.getBoardValue(turnOneNode, defaultConfig).value;
+            expect(boardValue).withContext('Both board value should have same absolute value').toEqual([-1 * turnOneBoardValue[0]]);
+            expect(turnOneBoardValue).withContext('Both board value should have same absolute value').toEqual([-1 * boardValue[0]]);
         });
 
     });
