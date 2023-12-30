@@ -1,5 +1,5 @@
 import { Coord } from 'src/app/jscaip/Coord';
-import { Heuristic } from 'src/app/jscaip/AI/Minimax';
+import { PlayerMetricHeuristic, PlayerNumberTable } from 'src/app/jscaip/AI/Minimax';
 import { Player } from 'src/app/jscaip/Player';
 import { MGPSet } from 'src/app/utils/MGPSet';
 import { LascaMove } from './LascaMove';
@@ -7,22 +7,20 @@ import { LascaNode, LascaRules } from './LascaRules';
 import { LascaState } from './LascaState';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
-import { BoardValue } from 'src/app/jscaip/AI/BoardValue';
 
-export class LascaControlHeuristic extends Heuristic<LascaMove, LascaState> {
+export class LascaControlHeuristic extends PlayerMetricHeuristic<LascaMove, LascaState> {
 
-    public override getBoardValue(node: LascaNode, config: MGPOptional<EmptyRulesConfig>): BoardValue {
-        const controlScore: number = this.getControlScore(node, config);
-        return BoardValue.of(controlScore);
+    public override getMetrics(node: LascaNode, _config: MGPOptional<EmptyRulesConfig>): PlayerNumberTable {
+        return this.getControlScore(node);
     }
 
-    protected getControlScore(node: LascaNode, _config: MGPOptional<EmptyRulesConfig>): number {
+    protected getControlScore(node: LascaNode): PlayerNumberTable {
         const state: LascaState = node.gameState;
-        let controlScore: number = 0;
+        const controlScores: PlayerNumberTable = PlayerNumberTable.of([0], [0]);
         for (const player of Player.PLAYERS) {
-            controlScore += player.getScoreModifier() * this.getNumberOfMobileCoords(state, player);
+            controlScores.add(player, 0, this.getNumberOfMobileCoords(state, player));
         }
-        return controlScore;
+        return controlScores;
     }
 
     public getNumberOfMobileCoords(state: LascaState, player: Player): number {
@@ -37,4 +35,5 @@ export class LascaControlHeuristic extends Heuristic<LascaMove, LascaState> {
         const steps: LascaMove[] = LascaRules.get().getStepsOf(state, player);
         return captures.concat(steps);
     }
+
 }

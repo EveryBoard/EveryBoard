@@ -17,7 +17,7 @@ describe('YinshScoreHeuristic', () => {
     it('should assign higher values for the player with most rings', () => {
         const state: YinshState = new YinshState(YinshRules.get().getInitialState().board, [2, 1], 20);
         const node: YinshNode = new YinshNode(state);
-        const boardValue: number = heuristic.getBoardValue(node, defaultConfig).value[0];
+        const boardValue: number = heuristic.getBoardValue(node, defaultConfig).metrics[0];
         expect(boardValue * Player.ZERO.getScoreModifier()).toBeGreaterThan(0);
     });
 

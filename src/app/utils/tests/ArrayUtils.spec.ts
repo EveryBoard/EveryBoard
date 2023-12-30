@@ -29,25 +29,25 @@ describe('ArrayUtils', () => {
 
     });
 
-    describe('isSuperior && isInferior', () => {
+    describe('isGreaterThan && isLessThan', () => {
 
         function expectComparisonCorrectness(left: number[], status: '<' | '=' | '>', right: number[]): void {
-            const actualIsSuperior: boolean = ArrayUtils.isSuperior(left, right);
-            const actualIsInferior: boolean = ArrayUtils.isInferior(left, right);
+            const actualIsGreaterThan: boolean = ArrayUtils.isGreaterThan(left, right);
+            const actualIsLessThan: boolean = ArrayUtils.isLessThan(left, right);
             switch (status) {
                 case '<':
-                    expect(actualIsInferior).toBeTrue();
-                    expect(actualIsSuperior).toBeFalse();
+                    expect(actualIsLessThan).toBeTrue();
+                    expect(actualIsGreaterThan).toBeFalse();
                     break;
                 case '=':
-                    expect(actualIsInferior).toBeFalse();
-                    expect(actualIsSuperior).toBeFalse();
+                    expect(actualIsLessThan).toBeFalse();
+                    expect(actualIsGreaterThan).toBeFalse();
                     break;
                 default:
                     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-                    Utils.assert(status === '>', 'should be =');
-                    expect(actualIsInferior).toBeFalse();
-                    expect(actualIsSuperior).toBeTrue();
+                    Utils.assert(status === '>', 'should be >');
+                    expect(actualIsLessThan).toBeFalse();
+                    expect(actualIsGreaterThan).toBeTrue();
                     break;
 
             }
@@ -60,7 +60,7 @@ describe('ArrayUtils', () => {
             const inferior: number[] = [Number.MIN_SAFE_INTEGER];
 
             // When comparing them
-            // Then isSuperior should be true and isInferior false
+            // Then isGreaterThan should be true and isLessThan false
             expectComparisonCorrectness(superior, '>', inferior);
         });
 
@@ -71,7 +71,7 @@ describe('ArrayUtils', () => {
             const inferior: number[] = [2, 2, 1];
 
             // When comparing them
-            // Then isSuperior should be true and isInferior false
+            // Then isGreaterThan should be true and isLessThan false
             expectComparisonCorrectness(superior, '>', inferior);
         });
 
@@ -82,7 +82,7 @@ describe('ArrayUtils', () => {
             const superior: number[] = [3, 2, 1];
 
             // When comparing them
-            // Then isSuperior should be false and isInferior true
+            // Then isGreaterThan should be false and isLessThan true
             expectComparisonCorrectness(inferior, '<', superior);
         });
 
@@ -93,7 +93,7 @@ describe('ArrayUtils', () => {
             const superior: number[] = [Number.MAX_SAFE_INTEGER];
 
             // When comparing them
-            // Then isSuperior should be false and isInferior true
+            // Then isGreaterThan should be false and isLessThan true
             expectComparisonCorrectness(inferior, '<', superior);
         });
 
@@ -103,7 +103,7 @@ describe('ArrayUtils', () => {
             const right: number[] = [3, 2, 1];
 
             // When comparing them
-            // Then isSuperior should be false and isInferior false
+            // Then isGreaterThan should be false and isLessThan false
             expectComparisonCorrectness(left, '=', right);
         });
 
@@ -113,25 +113,25 @@ describe('ArrayUtils', () => {
             const right: number[] = [123456789];
 
             // When comparing them
-            // Then isSuperior should be false and isInferior false
+            // Then isGreaterThan should be false and isLessThan false
             expectComparisonCorrectness(left, '=', right);
         });
 
-        it('should throw with empty list (isSuperior)', () => {
+        it('should throw with empty list (isGreaterThan)', () => {
             // Given one empty list and one normal
             // When comparing both list
-            const reason: string = 'ArrayUtils.isInferior/isSuperior should have two non-empty list as parameter';
+            const reason: string = 'ArrayUtils.isLessThan/isGreaterThan should have two non-empty list as parameter';
             TestUtils.expectToThrowAndLog(() => {
-                ArrayUtils.isSuperior([], [1]);
+                ArrayUtils.isGreaterThan([], [1]);
             }, reason);
         });
 
-        it('should throw with empty list (isInferior)', () => {
+        it('should throw with empty list (isLessThan)', () => {
             // Given one empty list and one normal
             // When comparing both list
-            const reason: string = 'ArrayUtils.isInferior/isSuperior should have two non-empty list as parameter';
+            const reason: string = 'ArrayUtils.isLessThan/isGreaterThan should have two non-empty list as parameter';
             TestUtils.expectToThrowAndLog(() => {
-                ArrayUtils.isInferior([], [1]);
+                ArrayUtils.isLessThan([], [1]);
             }, reason);
         });
 

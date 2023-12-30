@@ -58,6 +58,7 @@ export class SaharaRules extends Rules<SaharaMove, SaharaState> {
         }
         return startingCoords;
     }
+
     public static getBoardValuesFor(board: Table<FourStatePiece>, player: Player): number[] {
         const playersPiece: Coord[] = SaharaRules.getStartingCoords(board, player);
         const playerFreedoms: number[] = [];
@@ -65,7 +66,7 @@ export class SaharaRules extends Rules<SaharaMove, SaharaState> {
             const freedoms: number =
                 TriangularGameState.getEmptyNeighbors(board, piece, FourStatePiece.EMPTY).length;
             if (freedoms === 0) {
-                return [0];
+                return [0, 0, 0, 0, 0, 0]; // Because there is 6 pieces
             }
             playerFreedoms.push(freedoms);
         }
@@ -84,6 +85,7 @@ export class SaharaRules extends Rules<SaharaMove, SaharaState> {
         const resultingState: SaharaState = new SaharaState(board, state.turn + 1);
         return resultingState;
     }
+
     public override isLegal(move: SaharaMove, state: SaharaState): MGPValidation {
         const movedPawn: FourStatePiece = state.getPieceAt(move.getStart());
         if (movedPawn.value !== state.getCurrentPlayer().value) {
@@ -105,12 +107,14 @@ export class SaharaRules extends Rules<SaharaMove, SaharaState> {
             return MGPValidation.SUCCESS;
         }
     }
+
     public getGameStatus(node: SaharaNode): GameStatus {
         const board: FourStatePiece[][] = node.gameState.getCopiedBoard();
         const zeroFreedoms: number[] = SaharaRules.getBoardValuesFor(board, Player.ZERO);
         const oneFreedoms: number[] = SaharaRules.getBoardValuesFor(board, Player.ONE);
         return SaharaRules.getGameStatusFromFreedoms(zeroFreedoms, oneFreedoms);
     }
+
     public getLandingCoords(board: Table<FourStatePiece>, coord: Coord): Coord[] {
         const isOnBoardAndEmpty: (coord: Coord) => boolean = (coord: Coord) => {
             return SaharaState.isOnBoard(coord) &&
@@ -132,6 +136,7 @@ export class SaharaRules extends Rules<SaharaMove, SaharaState> {
             return farLandings.toList();
         }
     }
+
     public static getGameStatusFromFreedoms(zeroFreedoms: number[], oneFreedoms: number[]): GameStatus {
         if (zeroFreedoms[0] === 0) {
             return GameStatus.ONE_WON;
@@ -140,4 +145,5 @@ export class SaharaRules extends Rules<SaharaMove, SaharaState> {
         }
         return GameStatus.ONGOING;
     }
+
 }

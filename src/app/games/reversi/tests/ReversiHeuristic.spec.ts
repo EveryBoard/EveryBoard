@@ -33,7 +33,7 @@ describe('ReversiHeuristic', () => {
         ];
         const state: ReversiState = new ReversiState(board, 1);
         const node: ReversiNode = new ReversiNode(state);
-        const boardValue: readonly number[] = heuristic.getBoardValue(node, defaultConfig).value;
+        const boardValue: readonly number[] = heuristic.getBoardValue(node, defaultConfig).metrics;
         expect(boardValue).toEqual([16]);
     });
 
@@ -50,7 +50,7 @@ describe('ReversiHeuristic', () => {
         ];
         const state: ReversiState = new ReversiState(board, 1);
         const node: ReversiNode = new ReversiNode(state);
-        const boardValue: readonly number[] = heuristic.getBoardValue(node, defaultConfig).value;
+        const boardValue: readonly number[] = heuristic.getBoardValue(node, defaultConfig).metrics;
         expect(boardValue).toEqual([4]);
     });
 
@@ -67,7 +67,7 @@ describe('ReversiHeuristic', () => {
         ];
         const state: ReversiState = new ReversiState(board, 1);
         const node: ReversiNode = new ReversiNode(state);
-        const boardValue: readonly number[] = heuristic.getBoardValue(node, defaultConfig).value;
+        const boardValue: readonly number[] = heuristic.getBoardValue(node, defaultConfig).metrics;
         expect(boardValue).toEqual([1]);
     });
 

@@ -39,7 +39,7 @@ describe('KamisadoHeuristic', () => {
         const node: KamisadoNode = new KamisadoNode(state);
         // When computing the board value
         // Then the score should be the advantage of zero over one
-        expect(heuristic.getBoardValue(node, defaultConfig).value).toEqual([2]);
+        expect(heuristic.getBoardValue(node, defaultConfig).metrics).toEqual([2]);
     });
 
 });

@@ -23,13 +23,13 @@ export class HeuristicUtils {
     : void
     {
         const weakNode: GameNode<M, S> = new GameNode(weakState, undefined, weakMove);
-        const weakValue: readonly number[] = heuristic.getBoardValue(weakNode, config).value;
+        const weakValue: readonly number[] = heuristic.getBoardValue(weakNode, config).metrics;
         const strongNode: GameNode<M, S> = new GameNode(strongState, undefined, strongMove);
-        const strongValue: readonly number[] = heuristic.getBoardValue(strongNode, config).value;
+        const strongValue: readonly number[] = heuristic.getBoardValue(strongNode, config).metrics;
         if (player === Player.ZERO) {
-            expect(ArrayUtils.isInferior(strongValue, weakValue)).toBeTrue();
+            expect(ArrayUtils.isLessThan(strongValue, weakValue)).toBeTrue();
         } else {
-            expect(ArrayUtils.isInferior(weakValue, strongValue)).toBeTrue();
+            expect(ArrayUtils.isLessThan(weakValue, strongValue)).toBeTrue();
         }
     }
 
@@ -43,7 +43,7 @@ export class HeuristicUtils {
     {
         for (const heuristic of heuristics) {
             const node: GameNode<M, S> = new GameNode(state, MGPOptional.empty(), MGPOptional.of(previousMove));
-            for (const boardSubValue of heuristic.getBoardValue(node, config).value) {
+            for (const boardSubValue of heuristic.getBoardValue(node, config).metrics) {
                 const expectedValue: number = player.getPreVictory();
                 expect(BoardValue.isPreVictory(boardSubValue)).toBeTrue();
                 expect(boardSubValue).toBe(expectedValue);
@@ -58,9 +58,9 @@ export class HeuristicUtils {
         config: MGPOptional<C>)
     : void {
         const leftNode: GameNode<M, S> = new GameNode(leftState);
-        const leftValue: readonly number[] = heuristic.getBoardValue(leftNode, config).value;
+        const leftValue: readonly number[] = heuristic.getBoardValue(leftNode, config).metrics;
         const rightNode: GameNode<M, S> = new GameNode(rightState);
-        const rightValue: readonly number[] = heuristic.getBoardValue(rightNode, config).value;
+        const rightValue: readonly number[] = heuristic.getBoardValue(rightNode, config).metrics;
         expect(leftValue).withContext('both value should be equal').toEqual(rightValue);
     }
 

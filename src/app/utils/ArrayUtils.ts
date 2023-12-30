@@ -105,8 +105,8 @@ export class ArrayUtils {
         return total;
     }
 
-    public static isInferior(inferior: ReadonlyArray<number>, superior: ReadonlyArray<number>): boolean {
-        Utils.assert(inferior.length > 0 && superior.length > 0, 'ArrayUtils.isInferior/isSuperior should have two non-empty list as parameter');
+    public static isLessThan(inferior: ReadonlyArray<number>, superior: ReadonlyArray<number>): boolean {
+        Utils.assert(inferior.length > 0 && superior.length > 0, 'ArrayUtils.isLessThan/isGreaterThan should have two non-empty list as parameter');
         const maximumIndex: number = Math.min(inferior.length, superior.length);
         for (let i: number = 0; i < maximumIndex; i++) {
             if (superior[i] !== inferior[i]) { // We found an inequality
@@ -116,12 +116,12 @@ export class ArrayUtils {
         return false; // They are equal
     }
 
-    public static isSuperior(superior: ReadonlyArray<number>, inferior: ReadonlyArray<number>): boolean {
-        return ArrayUtils.isInferior(inferior, superior);
+    public static isGreaterThan(superior: ReadonlyArray<number>, inferior: ReadonlyArray<number>): boolean {
+        return ArrayUtils.isLessThan(inferior, superior);
     }
 
     public static min(left: ReadonlyArray<number>, right: ReadonlyArray<number>): ReadonlyArray<number> {
-        if (ArrayUtils.isInferior(left, right)) {
+        if (ArrayUtils.isLessThan(left, right)) {
             return left;
         } else {
             return right;
@@ -129,7 +129,7 @@ export class ArrayUtils {
     }
 
     public static max(left: ReadonlyArray<number>, right: ReadonlyArray<number>): ReadonlyArray<number> {
-        if (ArrayUtils.isSuperior(left, right)) {
+        if (ArrayUtils.isGreaterThan(left, right)) {
             return left;
         } else {
             return right;

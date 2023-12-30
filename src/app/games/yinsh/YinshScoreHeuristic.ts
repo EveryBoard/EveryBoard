@@ -1,16 +1,14 @@
 import { YinshState } from './YinshState';
 import { YinshMove } from './YinshMove';
 import { YinshNode } from './YinshRules';
-import { PlayerMetricHeuristic } from 'src/app/jscaip/AI/Minimax';
-import { MGPMap } from 'src/app/utils/MGPMap';
-import { Player } from 'src/app/jscaip/Player';
+import { PlayerMetricHeuristic, PlayerNumberTable } from 'src/app/jscaip/AI/Minimax';
 
 export class YinshScoreHeuristic extends PlayerMetricHeuristic<YinshMove, YinshState> {
 
-    public getMetrics(node: YinshNode): MGPMap<Player, ReadonlyArray<number>> {
-        return new MGPMap<Player, ReadonlyArray<number>>([
-            { key: Player.ZERO, value: [node.gameState.sideRings[0]] },
-            { key: Player.ONE, value: [node.gameState.sideRings[1]] },
-        ]);
+    public getMetrics(node: YinshNode): PlayerNumberTable {
+        return PlayerNumberTable.of(
+            [node.gameState.sideRings[0]],
+            [node.gameState.sideRings[1]],
+        );
     }
 }

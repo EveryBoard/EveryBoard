@@ -12,6 +12,7 @@ import { CoerceoNode, CoerceoRules } from '../CoerceoRules';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { CoerceoPiecesThreatsTilesHeuristic } from '../CoerceoPiecesThreatsTilesHeuristic';
 import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { PlayerNumberTable } from 'src/app/jscaip/AI/Minimax';
 
 describe('CoerceoPiecesThreatTilesHeuristic', () => {
 
@@ -371,10 +372,11 @@ describe('CoerceoPiecesThreatTilesHeuristic', () => {
         const node: CoerceoNode = new CoerceoNode(state);
 
         // When evaluating its value
-        const value: readonly number[] = heuristic.getBoardValue(node, defaultConfig).value;
+        const value: PlayerNumberTable = heuristic.getMetrics(node, defaultConfig);
 
-        // Then the value should be the vone attributed to one safe piece
-        expect(value[0]).toEqual(1);
+        // Then the value should be the one attributed to one safe piece
+        expect(value.get(Player.ZERO).get()).toEqual([0, 0, 0]);
+        expect(value.get(Player.ONE).get()).toEqual([1, 0, 0]);
     });
 
     it('should count one 2 SAFE - 1 THREATENED', () => {
@@ -396,10 +398,11 @@ describe('CoerceoPiecesThreatTilesHeuristic', () => {
         const node: CoerceoNode = new CoerceoNode(state);
 
         // When evaluating its value
-        const value: readonly number[] = heuristic.getBoardValue(node, defaultConfig).value;
+        const value: PlayerNumberTable = heuristic.getMetrics(node, defaultConfig);
 
         // Then the value should be correct
-        expect(value).toEqual([3, -1, 0]);
+        expect(value.get(Player.ZERO).get()).toEqual([0, 1, 0]);
+        expect(value.get(Player.ONE).get()).toEqual([3, 0, 0]);
     });
 
     it(`should not count as threatened pieces which has a moving threat that is also a direct threat`, () => {
@@ -422,10 +425,11 @@ describe('CoerceoPiecesThreatTilesHeuristic', () => {
         const node: CoerceoNode = new CoerceoNode(state);
 
         // When evaluating its value
-        const value: readonly number[] = heuristic.getBoardValue(node, defaultConfig).value;
+        const value: PlayerNumberTable = heuristic.getMetrics(node, defaultConfig);
 
         // Then the value should be correct
-        expect(value).toEqual([3 - 2, 0, 0]);
+        expect(value.get(Player.ZERO).get()).toEqual([2, 0, 0]);
+        expect(value.get(Player.ONE).get()).toEqual([3, 0, 0]);
     });
 
     it('should count "zero freedom" as safe when tile is not removable', () => {
@@ -446,10 +450,11 @@ describe('CoerceoPiecesThreatTilesHeuristic', () => {
         const node: CoerceoNode = new CoerceoNode(state);
 
         // When evaluating its value
-        const value: readonly number[] = heuristic.getBoardValue(node, defaultConfig).value;
+        const value: PlayerNumberTable = heuristic.getMetrics(node, defaultConfig);
 
         // Then the value should be correct
-        expect(value).toEqual([4 - 3, 0, 0]);
+        expect(value.get(Player.ZERO).get()).toEqual([3, 0, 0]);
+        expect(value.get(Player.ONE).get()).toEqual([4, 0, 0]);
     });
 
     it('should count "zero freedom" as safe when tile is removable but player cannot leave it', () => {
@@ -470,10 +475,11 @@ describe('CoerceoPiecesThreatTilesHeuristic', () => {
         const node: CoerceoNode = new CoerceoNode(state);
 
         // When evaluating its value
-        const value: readonly number[] = heuristic.getBoardValue(node, defaultConfig).value;
+        const value: PlayerNumberTable = heuristic.getMetrics(node, defaultConfig);
 
         // Then the value should be correct
-        expect(value).toEqual([4 - 1, 0, 0]);
+        expect(value.get(Player.ZERO).get()).toEqual([1, 0, 0]);
+        expect(value.get(Player.ONE).get()).toEqual([4, 0, 0]);
     });
 
     it('should count "zero freedom x leavable neighbor-tile" as threat', () => {
@@ -496,10 +502,11 @@ describe('CoerceoPiecesThreatTilesHeuristic', () => {
         const node: CoerceoNode = new CoerceoNode(state);
 
         // When evaluating its value
-        const value: readonly number[] = heuristic.getBoardValue(node, defaultConfig).value;
+        const value: PlayerNumberTable = heuristic.getMetrics(node, defaultConfig);
 
         // Then the value should be correct
-        expect(value).toEqual([4, -1, 0]);
+        expect(value.get(Player.ZERO).get()).toEqual([0, 1, 0]);
+        expect(value.get(Player.ONE).get()).toEqual([4, 0, 0]);
     });
 
 });

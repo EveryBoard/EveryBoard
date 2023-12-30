@@ -1,20 +1,18 @@
 import { CoerceoMove } from './CoerceoMove';
 import { CoerceoState } from './CoerceoState';
 import { CoerceoNode } from './CoerceoRules';
-import { PlayerMetricHeuristic } from 'src/app/jscaip/AI/Minimax';
-import { MGPMap } from 'src/app/utils/MGPMap';
-import { Player } from 'src/app/jscaip/Player';
+import { PlayerMetricHeuristic, PlayerNumberTable } from 'src/app/jscaip/AI/Minimax';
 
 export class CoerceoCapturesAndFreedomHeuristic extends PlayerMetricHeuristic<CoerceoMove, CoerceoState> {
 
-    public getMetrics(node: CoerceoNode): MGPMap<Player, ReadonlyArray<number>> {
+    public getMetrics(node: CoerceoNode): PlayerNumberTable {
         const state: CoerceoState = node.gameState;
         const piecesByFreedom: number[][] = state.getPiecesByFreedom();
         const piecesScores: number[] = this.getPiecesScore(piecesByFreedom);
-        return new MGPMap<Player, ReadonlyArray<number>>([
-            { key: Player.ZERO, value: [(2 * state.captures[0]) + piecesScores[0]] },
-            { key: Player.ONE, value: [(2 * state.captures[1]) + piecesScores[1]] },
-        ]);
+        return PlayerNumberTable.of(
+            [(2 * state.captures[0]) + piecesScores[0]],
+            [(2 * state.captures[1]) + piecesScores[1]],
+        );
     }
 
     public getPiecesScore(piecesByFreedom: number[][]): number[] {

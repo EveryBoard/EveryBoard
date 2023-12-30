@@ -11,35 +11,32 @@ import { CoerceoNode } from './CoerceoRules';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { CoordSet } from 'src/app/utils/OptimizedSet';
 import { Vector } from 'src/app/jscaip/Vector';
-import { Heuristic } from 'src/app/jscaip/AI/Minimax';
-import { BoardValue } from 'src/app/jscaip/AI/BoardValue';
+import { PlayerMetricHeuristic, PlayerNumberTable } from 'src/app/jscaip/AI/Minimax';
 import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 
-export class CoerceoPiecesThreatsTilesHeuristic extends Heuristic<CoerceoMove, CoerceoState> {
+export class CoerceoPiecesThreatsTilesHeuristic extends PlayerMetricHeuristic<CoerceoMove, CoerceoState> {
 
-    public override getBoardValue(node: CoerceoNode, _config: MGPOptional<EmptyRulesConfig>): BoardValue {
+    public override getMetrics(node: CoerceoNode, _config: MGPOptional<EmptyRulesConfig>): PlayerNumberTable {
         const state: CoerceoState = node.gameState;
         const pieceMap: MGPMap<Player, MGPSet<Coord>> = this.getPiecesMap(state);
         const threatMap: MGPMap<Coord, PieceThreat> = this.getThreatMap(state, pieceMap);
         const filteredThreatMap: MGPMap<Coord, PieceThreat> = this.filterThreatMap(threatMap, state);
-        let threatenedPiece: number = 0;
-        let safePiece: number = 0;
-        let tiles: number = 0;
+        const safeIndex: number = 0;
+        const threatenedIndex: number = 1;
+        const tilesIndex: number = 2;
+        const metrics: PlayerNumberTable = PlayerNumberTable.of([0, 0, 0], [0, 0, 0]);
+
         for (const owner of Player.PLAYERS) {
             for (const coord of pieceMap.get(owner).get()) {
                 if (filteredThreatMap.get(coord).isPresent()) {
-                    threatenedPiece += owner.getScoreModifier();
+                    metrics.add(owner, threatenedIndex, 1);
                 } else {
-                    safePiece += owner.getScoreModifier();
+                    metrics.add(owner, safeIndex, 1);
                 }
             }
-            tiles += state.tiles[owner.value] * owner.getScoreModifier();
+            metrics.add(owner, tilesIndex, state.tiles[owner.value]);
         }
-        return BoardValue.multiMetric([
-            safePiece,
-            threatenedPiece,
-            tiles,
-        ]);
+        return metrics;
     }
 
     public getPiecesMap(state: CoerceoState): MGPMap<Player, MGPSet<Coord>> {

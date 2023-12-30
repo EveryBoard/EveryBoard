@@ -44,7 +44,7 @@ describe('SixHeuristic', () => {
             const boardValue: BoardValue = heuristic.getBoardValue(node, defaultConfig);
 
             // Then that value should be a pre-victory
-            expect(boardValue.value).toEqual([Player.ZERO.getPreVictory()]);
+            expect(boardValue.metrics).toEqual([Player.ZERO.getPreVictory()]);
         });
 
         it('should know that 5 pieces aligned with two empty extension mean PRE_VICTORY', () => {
@@ -162,7 +162,7 @@ describe('SixHeuristic', () => {
         ], 40);
         const move: SixMove = SixMove.ofDrop(new Coord(1, 1));
         const node: SixNode = new SixNode(state, MGPOptional.empty(), MGPOptional.of(move));
-        expect(heuristic.getBoardValue(node, defaultConfig).value).toEqual([2 * Player.ZERO.getScoreModifier()]);
+        expect(heuristic.getBoardValue(node, defaultConfig).metrics).toEqual([2 * Player.ZERO.getScoreModifier()]);
     });
 
 });

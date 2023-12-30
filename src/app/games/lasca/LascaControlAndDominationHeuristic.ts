@@ -1,26 +1,26 @@
-import { BoardValue } from 'src/app/jscaip/AI/BoardValue';
 import { Player } from 'src/app/jscaip/Player';
 import { LascaControlHeuristic } from './LascaControlHeuristic';
 import { LascaNode } from './LascaRules';
 import { LascaStack, LascaState } from './LascaState';
 import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { PlayerNumberTable } from 'src/app/jscaip/AI/Minimax';
 
 export class LascaControlPlusDominationHeuristic extends LascaControlHeuristic {
 
-    public override getBoardValue(node: LascaNode, config: NoConfig): BoardValue {
-        const controlValue: number = this.getControlScore(node, config);
-        const dominatingPiecesCount: number = this.getDominatedPieceScore(node, config);
-        return BoardValue.multiMetric([
-            controlValue,
-            dominatingPiecesCount,
-        ]);
+    public override getMetrics(node: LascaNode, _config: NoConfig): PlayerNumberTable {
+        const controlValue: PlayerNumberTable = this.getControlScore(node);
+        const dominatingPiecesCount: PlayerNumberTable = this.getDominatedPieceScore(node);
+        return controlValue.concat(dominatingPiecesCount);
     }
 
-    private getDominatedPieceScore(node: LascaNode, _config: NoConfig): number {
-        let dominatingPiecesCount: number = 0;
-        for (let y: number = 0; y < LascaState.SIZE; y++) {
-            for (let x: number = 0; x < LascaState.SIZE; x++) {
-                const square: LascaStack = node.gameState.getPieceAtXY(x, y);
+    private getDominatedPieceScore(node: LascaNode): PlayerNumberTable {
+        const dominatedPieces: PlayerNumberTable = PlayerNumberTable.of([0], [0]);
+        const state: LascaState = node.gameState;
+        const width: number = state.getWidth();
+        const height: number = state.getHeight();
+        for (let y: number = 0; y < height; y++) {
+            for (let x: number = 0; x < width; x++) {
+                const square: LascaStack = state.getPieceAtXY(x, y);
                 if (square.getStackSize() > 0) {
                     const stackSize: number = square.getStackSize();
                     let pieceIndex: number = 0;
@@ -28,11 +28,11 @@ export class LascaControlPlusDominationHeuristic extends LascaControlHeuristic {
                     while (pieceIndex < stackSize && square.get(pieceIndex).player === commander) {
                         pieceIndex++;
                     }
-                    dominatingPiecesCount += pieceIndex * commander.getScoreModifier();
+                    dominatedPieces.add(commander, 0, pieceIndex);
                 }
             }
         }
-        return dominatingPiecesCount;
+        return dominatedPieces;
     }
 
 }

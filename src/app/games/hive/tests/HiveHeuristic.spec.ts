@@ -27,7 +27,7 @@ describe('HiveHeuristic', () => {
         const node: HiveNode = new HiveNode(state);
 
         // When computing its value
-        const boardValue: readonly number[] = heuristic.getBoardValue(node, defaultConfig).value;
+        const boardValue: readonly number[] = heuristic.getBoardValue(node, defaultConfig).metrics;
 
         // Then it should be zero
         expect(boardValue).toEqual([0]);

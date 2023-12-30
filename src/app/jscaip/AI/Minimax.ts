@@ -27,15 +27,44 @@ export abstract class Heuristic<M extends Move,
     public abstract getBoardValue(node: GameNode<M, S>, config: MGPOptional<C>): B;
 }
 
+export class PlayerNumberTable extends MGPMap<Player, ReadonlyArray<number>> {
+
+    public static of(playerZero: ReadonlyArray<number>, playerOne: ReadonlyArray<number>): PlayerNumberTable {
+        return new PlayerNumberTable([
+            { key: Player.ZERO, value: playerZero },
+            { key: Player.ONE, value: playerOne },
+        ]);
+    }
+
+    public add(player: Player, index: number, value: number): MGPOptional<readonly number[]> {
+        const list: number[] = ArrayUtils.copy(this.get(player).get());
+        list[index] += value;
+        return this.put(player, list);
+    }
+
+    public concat(other: PlayerNumberTable): PlayerNumberTable {
+        const playerZeroStart: readonly number[] = this.get(Player.ZERO).get();
+        const playerOneStart: readonly number[] = this.get(Player.ONE).get();
+        const playerZeroEnd: readonly number[] = other.get(Player.ZERO).get();
+        const playerOneEnd: readonly number[] = other.get(Player.ONE).get();
+        return PlayerNumberTable.of(
+            playerZeroStart.concat(playerZeroEnd),
+            playerOneStart.concat(playerOneEnd),
+        );
+
+    }
+
+}
+
 export abstract class PlayerMetricHeuristic<M extends Move,
                                             S extends GameState,
                                             C extends RulesConfig = EmptyRulesConfig>
     extends Heuristic<M, S, BoardValue, C>
 {
-    public abstract getMetrics(node: GameNode<M, S>, config: MGPOptional<C>): MGPMap<Player, ReadonlyArray<number>>;
+    public abstract getMetrics(node: GameNode<M, S>, config: MGPOptional<C>): PlayerNumberTable;
 
     public getBoardValue(node: GameNode<M, S>, config: MGPOptional<C>): BoardValue {
-        const metrics: MGPMap<Player, ReadonlyArray<number>> = this.getMetrics(node, config);
+        const metrics: PlayerNumberTable = this.getMetrics(node, config);
         return BoardValue.ofMultiple(
             metrics.get(Player.ZERO).get(),
             metrics.get(Player.ONE).get(),
@@ -48,9 +77,9 @@ export class DummyHeuristic<M extends Move, S extends GameState, C extends Rules
     extends PlayerMetricHeuristic<M, S, C>
 {
 
-    public getMetrics(_node: GameNode<M, S>, _config?: MGPOptional<C>): MGPMap<Player, ReadonlyArray<number>> {
+    public getMetrics(_node: GameNode<M, S>, _config?: MGPOptional<C>): PlayerNumberTable {
         // This is really a dummy heuristic: boards have no value
-        return new MGPMap<Player, ReadonlyArray<number>>([
+        return new PlayerNumberTable([
             { key: Player.ZERO, value: [0] },
             { key: Player.ONE, value: [0] },
         ]);
@@ -92,7 +121,7 @@ implements AI<M, S, AIDepthLimitOptions, C>
     public chooseNextMove(node: GameNode<M, S>, options: AIDepthLimitOptions, config: MGPOptional<C>): M {
         Utils.assert(this.rules.getGameStatus(node, config).isEndGame === false,
                      'Minimax has been asked to choose a move from a finished game');
-        const size: number = this.getExtremumExpected(node, config).length;
+        const size: number = this.getExpectedExtremum(node, config).length;
         let bestDescendant: GameNode<M, S> = this.alphaBeta(node,
                                                             options.maxDepth,
                                                             ArrayUtils.create(size, Number.MIN_SAFE_INTEGER),
@@ -146,13 +175,13 @@ implements AI<M, S, AIDepthLimitOptions, C>
     {
         let bestChildren: GameNode<M, S>[] = [];
         const currentPlayer: Player = node.gameState.getCurrentPlayer();
-        let extremumExpected: ReadonlyArray<number> = this.getExtremumExpected(node, config);
+        let extremumExpected: ReadonlyArray<number> = this.getExpectedExtremum(node, config);
         const newValueIsBetter: (newValue: ReadonlyArray<number>, currentValue: ReadonlyArray<number>) => boolean =
-            currentPlayer === Player.ZERO ? ArrayUtils.isInferior : ArrayUtils.isSuperior;
+            currentPlayer === Player.ZERO ? ArrayUtils.isLessThan : ArrayUtils.isGreaterThan;
         for (const move of possibleMoves) {
             const child: GameNode<M, S> = this.getOrCreateChild(node, move, config);
             const bestChildDescendant: GameNode<M, S> = this.alphaBeta(child, depth - 1, alpha, beta, config);
-            const bestChildValue: ReadonlyArray<number> = this.getScore(bestChildDescendant, config).value;
+            const bestChildValue: ReadonlyArray<number> = this.getScore(bestChildDescendant, config).metrics;
             if (newValueIsBetter(bestChildValue, extremumExpected) || bestChildren.length === 0) {
                 extremumExpected = bestChildValue;
                 bestChildren = [bestChildDescendant];
@@ -172,8 +201,8 @@ implements AI<M, S, AIDepthLimitOptions, C>
         return bestChildren;
     }
 
-    private getExtremumExpected(node: GameNode<M, S>, config: MGPOptional<C>): ReadonlyArray<number> {
-        const childValue: ReadonlyArray<number> = this.getScore(node, config).value;
+    private getExpectedExtremum(node: GameNode<M, S>, config: MGPOptional<C>): ReadonlyArray<number> {
+        const childValue: ReadonlyArray<number> = this.getScore(node, config).metrics;
         const numberOfMetric: number = childValue.length;
         const currentPlayer: Player = node.gameState.getCurrentPlayer();
         if (currentPlayer === Player.ZERO) {
@@ -243,7 +272,7 @@ implements AI<M, S, AIDepthLimitOptions, C>
     }
 
     public getInfo(node: GameNode<M, S>, config: MGPOptional<C>): string {
-        return 'BoardValue=' + this.heuristic.getBoardValue(node, config).value;
+        return 'BoardValue=' + this.heuristic.getBoardValue(node, config).metrics;
     }
 
 }

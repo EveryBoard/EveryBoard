@@ -1,16 +1,15 @@
 import { Coord } from 'src/app/jscaip/Coord';
-import { PlayerMetricHeuristic } from 'src/app/jscaip/AI/Minimax';
+import { PlayerMetricHeuristic, PlayerNumberTable } from 'src/app/jscaip/AI/Minimax';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { ConspirateursMove } from './ConspirateursMove';
 import { ConspirateursNode } from './ConspirateursRules';
 import { ConspirateursState } from './ConspirateursState';
-import { MGPMap } from 'src/app/utils/MGPMap';
 
 export class ConspirateursHeuristic extends PlayerMetricHeuristic<ConspirateursMove, ConspirateursState> {
 
-    public getMetrics(node: ConspirateursNode): MGPMap<Player, ReadonlyArray<number>> {
+    public getMetrics(node: ConspirateursNode): PlayerNumberTable {
         const state: ConspirateursState = node.gameState;
-        const scores: MGPMap<Player, ReadonlyArray<number>> = new MGPMap<Player, ReadonlyArray<number>>([
+        const scores: PlayerNumberTable = new PlayerNumberTable([
             { key: Player.ZERO, value: [0] },
             { key: Player.ONE, value: [0] },
         ]);

@@ -30,7 +30,7 @@ describe('GoHeuristic', () => {
         ];
         const state: GoState = new GoState(board, [0, 0], 0, MGPOptional.empty(), Phase.PLAYING);
         const initialNode: GoNode = new GoNode(state);
-        const boardValue: readonly number[] = heuristic.getBoardValue(initialNode, defaultConfig).value;
+        const boardValue: readonly number[] = heuristic.getBoardValue(initialNode, defaultConfig).metrics;
         expect(boardValue).toEqual([3]);
     });
 

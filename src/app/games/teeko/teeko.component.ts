@@ -11,7 +11,7 @@ import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { MCTS } from 'src/app/jscaip/AI/MCTS';
 import { Minimax } from 'src/app/jscaip/AI/Minimax';
-import { TeekoSquarePlusAlignmentHeuristic, TeekoSquareThenAlignementHeuristic } from './TeekotHeuristic';
+import { TeekoSquarePlusAlignmentHeuristic, TeekoSquareThenAlignementHeuristic } from './TeekoSquarePlusAlignmentHeuristic';
 import { TeekoMoveGenerator } from './TeekoMoveGenerator';
 
 @Component({

@@ -49,5 +49,5 @@ export class BoardValue {
         return new BoardValue(value);
     }
 
-    private constructor(public readonly value: ReadonlyArray<number>) {}
+    private constructor(public readonly metrics: ReadonlyArray<number>) {}
 }

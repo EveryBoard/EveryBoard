@@ -81,13 +81,4 @@ export class TaflPieceAndControlHeuristic<M extends TaflMove> extends TaflPieceA
         return value;
     }
 
-    protected _getScoreByThreatenedPiece(state: TaflState): number {
-        const width: number = state.getWidth();
-        // The value of the four corners (each being "width" * "width")
-        // + the value of what remains of the four edges (each border square being worth "width")
-        // + the value of what remains of the board (each square being worth one point)
-        const reducedWidth: number = width - 2;
-        return (4 * width * width) + (4 * reducedWidth * width) + (reducedWidth * reducedWidth);
-    }
-
 }
