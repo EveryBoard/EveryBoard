@@ -665,6 +665,9 @@ describe('LodestoneComponent', () => {
             // Then the problematic should still be absent
             testUtils.expectElementNotToExist('#lodestone_1_0');
             testUtils.expectElementNotToExist('#piece_1_0');
+            // And the other crumbled lodestone should be a lodestone
+            testUtils.expectElementToExist('#lodestone_6_0');
+            testUtils.expectElementNotToExist('#piece_6_0');
         }));
 
     });

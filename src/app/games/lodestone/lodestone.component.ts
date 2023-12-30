@@ -495,11 +495,14 @@ export class LodestoneComponent
 
     private isCrumbledLodestone(coord: Coord): boolean {
         if (this.node.parent.isPresent()) {
-            const state: LodestoneState = this.node.parent.get().gameState;
-            const piece: LodestonePiece = state.getPieceAt(coord);
-            return piece.isLodestone() &&
-                   piece.owner === state.getCurrentOpponent() &&
-                   state.turn === this.getState().turn;
+            if (this.selectedLodestone.isPresent()) {
+                return false;
+            } else {
+                const state: LodestoneState = this.node.parent.get().gameState;
+                const piece: LodestonePiece = state.getPieceAt(coord);
+                return piece.isLodestone() &&
+                       piece.owner === state.getCurrentOpponent();
+            }
         } else {
             return false;
         }
