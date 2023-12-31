@@ -1,7 +1,8 @@
 import { CoerceoMove } from './CoerceoMove';
 import { CoerceoState } from './CoerceoState';
 import { CoerceoNode } from './CoerceoRules';
-import { PlayerMetricHeuristic, PlayerNumberTable } from 'src/app/jscaip/AI/Minimax';
+import { PlayerMetricHeuristic } from 'src/app/jscaip/AI/Minimax';
+import { PlayerNumberTable } from 'src/app/jscaip/PlayerNumberTable';
 import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 export class CoerceoCapturesAndFreedomHeuristic extends PlayerMetricHeuristic<CoerceoMove, CoerceoState> {

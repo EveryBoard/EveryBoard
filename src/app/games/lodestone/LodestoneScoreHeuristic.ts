@@ -1,4 +1,5 @@
-import { PlayerMetricHeuristic, PlayerNumberTable } from 'src/app/jscaip/AI/Minimax';
+import { PlayerMetricHeuristic } from 'src/app/jscaip/AI/Minimax';
+import { PlayerNumberTable } from 'src/app/jscaip/PlayerNumberTable';
 import { LodestoneMove } from './LodestoneMove';
 import { LodestoneNode } from './LodestoneRules';
 import { LodestoneState } from './LodestoneState';

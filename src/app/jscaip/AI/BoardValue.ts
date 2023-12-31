@@ -1,7 +1,28 @@
 import { Utils } from 'src/app/utils/utils';
 import { Player } from '../Player';
+import { ArrayUtils } from 'src/app/utils/ArrayUtils';
 
 export class BoardValue {
+
+    public static max(left: BoardValue, right: BoardValue): BoardValue {
+        const max: readonly number[] = ArrayUtils.max(left.metrics, right.metrics);
+        return BoardValue.multiMetric(max);
+    }
+
+    public static min(left: BoardValue, right: BoardValue): BoardValue {
+        const min: readonly number[] = ArrayUtils.min(left.metrics, right.metrics);
+        return BoardValue.multiMetric(min);
+    }
+
+    public static getMaximum(size: number): BoardValue {
+        const maximums: number[] = ArrayUtils.create(size, Number.MAX_SAFE_INTEGER);
+        return BoardValue.multiMetric(maximums);
+    }
+
+    public static getMinimum(size: number): BoardValue {
+        const minimums: number[] = ArrayUtils.create(size, Number.MAX_SAFE_INTEGER);
+        return BoardValue.multiMetric(minimums);
+    }
 
     public static VICTORIES: number[] = [Number.MIN_SAFE_INTEGER, Number.MAX_SAFE_INTEGER];
 
@@ -49,5 +70,22 @@ export class BoardValue {
         return new BoardValue(metrics);
     }
 
+    public static isLessThan(left: BoardValue, right: BoardValue): boolean {
+        return ArrayUtils.isLessThan(left.metrics, right.metrics);
+    }
+
+    public static isGreaterThan(left: BoardValue, right: BoardValue): boolean {
+        return ArrayUtils.isGreaterThan(left.metrics, right.metrics);
+    }
+
     private constructor(public readonly metrics: ReadonlyArray<number>) {}
+
+    public toMaximum(): BoardValue {
+        return BoardValue.getMaximum(this.metrics.length);
+    }
+
+    public toMinimum(): BoardValue {
+        return BoardValue.getMinimum(this.metrics.length);
+    }
+
 }

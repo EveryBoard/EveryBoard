@@ -12,7 +12,7 @@ import { GameStatus } from '../GameStatus';
 import { SuperRules } from '../Rules';
 import { EmptyRulesConfig, RulesConfig } from '../RulesConfigUtil';
 import { GameNode } from './GameNode';
-import { MGPMap } from 'src/app/utils/MGPMap';
+import { PlayerNumberTable } from '../PlayerNumberTable';
 
 /**
  * A heuristic assigns a specific value for a node.
@@ -25,35 +25,6 @@ export abstract class Heuristic<M extends Move,
                                 C extends RulesConfig = EmptyRulesConfig>
 {
     public abstract getBoardValue(node: GameNode<M, S>, config: MGPOptional<C>): B;
-}
-
-export class PlayerNumberTable extends MGPMap<Player, ReadonlyArray<number>> {
-
-    public static of(playerZero: ReadonlyArray<number>, playerOne: ReadonlyArray<number>): PlayerNumberTable {
-        return new PlayerNumberTable([
-            { key: Player.ZERO, value: playerZero },
-            { key: Player.ONE, value: playerOne },
-        ]);
-    }
-
-    public add(player: Player, index: number, value: number): MGPOptional<readonly number[]> {
-        const list: number[] = ArrayUtils.copy(this.get(player).get());
-        list[index] += value;
-        return this.put(player, list);
-    }
-
-    public concat(other: PlayerNumberTable): PlayerNumberTable {
-        const playerZeroStart: readonly number[] = this.get(Player.ZERO).get();
-        const playerOneStart: readonly number[] = this.get(Player.ONE).get();
-        const playerZeroEnd: readonly number[] = other.get(Player.ZERO).get();
-        const playerOneEnd: readonly number[] = other.get(Player.ONE).get();
-        return PlayerNumberTable.of(
-            playerZeroStart.concat(playerZeroEnd),
-            playerOneStart.concat(playerOneEnd),
-        );
-
-    }
-
 }
 
 export abstract class PlayerMetricHeuristic<M extends Move,
@@ -118,11 +89,11 @@ implements AI<M, S, AIDepthLimitOptions, C>
     public chooseNextMove(node: GameNode<M, S>, options: AIDepthLimitOptions, config: MGPOptional<C>): M {
         Utils.assert(this.rules.getGameStatus(node, config).isEndGame === false,
                      'Minimax has been asked to choose a move from a finished game');
-        const size: number = this.getExpectedExtremum(node, config).length;
+        const size: number = this.getExpectedExtremum(node, config).metrics.length;
         let bestDescendant: GameNode<M, S> = this.alphaBeta(node,
                                                             options.maxDepth,
-                                                            ArrayUtils.create(size, Number.MIN_SAFE_INTEGER),
-                                                            ArrayUtils.create(size, Number.MAX_SAFE_INTEGER),
+                                                            BoardValue.getMinimum(size),
+                                                            BoardValue.getMaximum(size),
                                                             config);
         while (bestDescendant.gameState.turn > node.gameState.turn + 1) {
             bestDescendant = bestDescendant.parent.get();
@@ -132,8 +103,8 @@ implements AI<M, S, AIDepthLimitOptions, C>
 
     public alphaBeta(node: GameNode<M, S>,
                      depth: number,
-                     alpha: ReadonlyArray<number>,
-                     beta: ReadonlyArray<number>,
+                     alpha: BoardValue,
+                     beta: BoardValue,
                      config: MGPOptional<C>)
     : GameNode<M, S>
     {
@@ -165,20 +136,20 @@ implements AI<M, S, AIDepthLimitOptions, C>
     private getBestChildren(node: GameNode<M, S>,
                             possibleMoves: MGPSet<M>,
                             depth: number,
-                            alpha: ReadonlyArray<number>,
-                            beta: ReadonlyArray<number>,
+                            alpha: BoardValue,
+                            beta: BoardValue,
                             config: MGPOptional<C>)
     : GameNode<M, S>[]
     {
         let bestChildren: GameNode<M, S>[] = [];
         const currentPlayer: Player = node.gameState.getCurrentPlayer();
-        let extremumExpected: ReadonlyArray<number> = this.getExpectedExtremum(node, config);
-        const newValueIsBetter: (newValue: ReadonlyArray<number>, currentValue: ReadonlyArray<number>) => boolean =
-            currentPlayer === Player.ZERO ? ArrayUtils.isLessThan : ArrayUtils.isGreaterThan;
+        let extremumExpected: BoardValue = this.getExpectedExtremum(node, config);
+        const newValueIsBetter: (newValue: BoardValue, currentValue: BoardValue) => boolean =
+            currentPlayer === Player.ZERO ? BoardValue.isLessThan : BoardValue.isGreaterThan;
         for (const move of possibleMoves) {
             const child: GameNode<M, S> = this.getOrCreateChild(node, move, config);
             const bestChildDescendant: GameNode<M, S> = this.alphaBeta(child, depth - 1, alpha, beta, config);
-            const bestChildValue: ReadonlyArray<number> = this.getScore(bestChildDescendant, config).metrics;
+            const bestChildValue: BoardValue = this.getScore(bestChildDescendant, config);
             if (newValueIsBetter(bestChildValue, extremumExpected) || bestChildren.length === 0) {
                 extremumExpected = bestChildValue;
                 bestChildren = [bestChildDescendant];
@@ -190,22 +161,21 @@ implements AI<M, S, AIDepthLimitOptions, C>
                 break;
             }
             if (currentPlayer === Player.ZERO) {
-                beta = ArrayUtils.min(extremumExpected, beta);
+                beta = BoardValue.min(extremumExpected, beta);
             } else {
-                alpha = ArrayUtils.max(extremumExpected, alpha);
+                alpha = BoardValue.max(extremumExpected, alpha);
             }
         }
         return bestChildren;
     }
 
-    private getExpectedExtremum(node: GameNode<M, S>, config: MGPOptional<C>): ReadonlyArray<number> {
-        const childValue: ReadonlyArray<number> = this.getScore(node, config).metrics;
-        const numberOfMetrics: number = childValue.length;
+    private getExpectedExtremum(node: GameNode<M, S>, config: MGPOptional<C>): BoardValue {
+        const childValue: BoardValue = this.getScore(node, config);
         const currentPlayer: Player = node.gameState.getCurrentPlayer();
         if (currentPlayer === Player.ZERO) {
-            return ArrayUtils.create(numberOfMetrics, Number.MAX_SAFE_INTEGER);
+            return childValue.toMaximum();
         } else {
-            return ArrayUtils.create(numberOfMetrics, Number.MIN_SAFE_INTEGER);
+            return childValue.toMinimum();
         }
     }
 

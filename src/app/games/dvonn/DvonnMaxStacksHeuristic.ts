@@ -1,5 +1,6 @@
 import { Coord } from 'src/app/jscaip/Coord';
-import { PlayerMetricHeuristic, PlayerNumberTable } from 'src/app/jscaip/AI/Minimax';
+import { PlayerMetricHeuristic } from 'src/app/jscaip/AI/Minimax';
+import { PlayerNumberTable } from 'src/app/jscaip/PlayerNumberTable';
 import { Player } from 'src/app/jscaip/Player';
 import { DvonnMove } from './DvonnMove';
 import { DvonnNode, DvonnRules } from './DvonnRules';

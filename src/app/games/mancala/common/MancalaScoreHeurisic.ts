@@ -1,5 +1,6 @@
 import { MancalaState } from '../common/MancalaState';
-import { PlayerMetricHeuristic, PlayerNumberTable } from 'src/app/jscaip/AI/Minimax';
+import { PlayerMetricHeuristic } from 'src/app/jscaip/AI/Minimax';
+import { PlayerNumberTable } from 'src/app/jscaip/PlayerNumberTable';
 import { MancalaMove } from './MancalaMove';
 import { MancalaNode } from './MancalaRules';
 import { MancalaConfig } from './MancalaConfig';

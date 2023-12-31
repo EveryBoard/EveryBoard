@@ -1,7 +1,8 @@
 import { ReversiState } from './ReversiState';
 import { ReversiMove } from './ReversiMove';
 import { PlayerOrNone } from 'src/app/jscaip/Player';
-import { PlayerMetricHeuristic, PlayerNumberTable } from 'src/app/jscaip/AI/Minimax';
+import { PlayerMetricHeuristic } from 'src/app/jscaip/AI/Minimax';
+import { PlayerNumberTable } from 'src/app/jscaip/PlayerNumberTable';
 import { ReversiConfig, ReversiNode } from './ReversiRules';
 import { Coord } from 'src/app/jscaip/Coord';
 import { MGPOptional } from 'src/app/utils/MGPOptional';

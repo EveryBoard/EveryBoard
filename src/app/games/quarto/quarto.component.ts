@@ -120,7 +120,7 @@ export class QuartoComponent extends RectangularGameComponent<QuartoRules,
     }
 
     public async deselectDroppedPiece(): Promise<MGPValidation> {
-        // So it does not throw when there is no dese chosen piece (used in clickValidity test)
+        // So it does not throw when there is no chosen piece (used in clickValidity test)
         const chosen: Coord = this.chosen.getOrElse(new Coord(404, 404));
         const droppedPieceName: string = '#droppedPiece_' + chosen.x + '_' + chosen.y;
         const clickValidity: MGPValidation = await this.canUserPlay(droppedPieceName);

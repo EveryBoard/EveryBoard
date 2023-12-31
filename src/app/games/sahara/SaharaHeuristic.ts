@@ -4,7 +4,8 @@ import { SaharaState } from './SaharaState';
 import { SaharaNode, SaharaRules } from './SaharaRules';
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
 import { Table } from 'src/app/utils/ArrayUtils';
-import { PlayerMetricHeuristic, PlayerNumberTable } from 'src/app/jscaip/AI/Minimax';
+import { PlayerMetricHeuristic } from 'src/app/jscaip/AI/Minimax';
+import { PlayerNumberTable } from 'src/app/jscaip/PlayerNumberTable';
 import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 export class SaharaHeuristic extends PlayerMetricHeuristic<SaharaMove, SaharaState> {

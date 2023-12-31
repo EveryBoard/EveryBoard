@@ -1,4 +1,5 @@
-import { PlayerMetricHeuristic, PlayerNumberTable } from 'src/app/jscaip/AI/Minimax';
+import { PlayerMetricHeuristic } from 'src/app/jscaip/AI/Minimax';
+import { PlayerNumberTable } from 'src/app/jscaip/PlayerNumberTable';
 import { AbaloneMove } from './AbaloneMove';
 import { AbaloneNode } from './AbaloneRules';
 import { AbaloneState } from './AbaloneState';

@@ -1,4 +1,5 @@
-import { PlayerMetricHeuristic, PlayerNumberTable } from 'src/app/jscaip/AI/Minimax';
+import { PlayerMetricHeuristic } from 'src/app/jscaip/AI/Minimax';
+import { PlayerNumberTable } from 'src/app/jscaip/PlayerNumberTable';
 import { PlayerOrNone } from 'src/app/jscaip/Player';
 import { ApagosMove } from './ApagosMove';
 import { ApagosNode } from './ApagosRules';

@@ -3,7 +3,7 @@ import { LascaControlHeuristic } from './LascaControlHeuristic';
 import { LascaNode } from './LascaRules';
 import { LascaStack, LascaState } from './LascaState';
 import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
-import { PlayerNumberTable } from 'src/app/jscaip/AI/Minimax';
+import { PlayerNumberTable } from 'src/app/jscaip/PlayerNumberTable';
 
 export class LascaControlPlusDominationHeuristic extends LascaControlHeuristic {
 

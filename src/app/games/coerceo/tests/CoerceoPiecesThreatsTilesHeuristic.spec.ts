@@ -12,7 +12,7 @@ import { CoerceoNode, CoerceoRules } from '../CoerceoRules';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { CoerceoPiecesThreatsTilesHeuristic } from '../CoerceoPiecesThreatsTilesHeuristic';
 import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
-import { PlayerNumberTable } from 'src/app/jscaip/AI/Minimax';
+import { PlayerNumberTable } from 'src/app/jscaip/PlayerNumberTable';
 
 describe('CoerceoPiecesThreatTilesHeuristic', () => {
 

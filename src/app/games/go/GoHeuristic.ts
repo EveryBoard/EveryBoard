@@ -1,6 +1,7 @@
 import { GoState, GoPiece } from './GoState';
 import { GoMove } from './GoMove';
-import { PlayerMetricHeuristic, PlayerNumberTable } from 'src/app/jscaip/AI/Minimax';
+import { PlayerMetricHeuristic } from 'src/app/jscaip/AI/Minimax';
+import { PlayerNumberTable } from 'src/app/jscaip/PlayerNumberTable';
 import { GoConfig, GoNode, GoRules } from './GoRules';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 

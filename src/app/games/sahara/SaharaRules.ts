@@ -66,7 +66,7 @@ export class SaharaRules extends Rules<SaharaMove, SaharaState> {
             const freedoms: number =
                 TriangularGameState.getEmptyNeighbors(board, piece, FourStatePiece.EMPTY).length;
             if (freedoms === 0) {
-                return [0, 0, 0, 0, 0, 0]; // Because there is 6 pieces
+                return [0, 0, 0, 0, 0, 0]; // Because there are 6 pieces
             }
             playerFreedoms.push(freedoms);
         }

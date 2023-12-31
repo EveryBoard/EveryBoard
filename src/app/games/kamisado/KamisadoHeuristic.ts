@@ -1,4 +1,5 @@
-import { PlayerMetricHeuristic, PlayerNumberTable } from 'src/app/jscaip/AI/Minimax';
+import { PlayerMetricHeuristic } from 'src/app/jscaip/AI/Minimax';
+import { PlayerNumberTable } from 'src/app/jscaip/PlayerNumberTable';
 import { KamisadoMove } from './KamisadoMove';
 import { KamisadoNode, KamisadoRules } from './KamisadoRules';
 import { KamisadoState } from './KamisadoState';

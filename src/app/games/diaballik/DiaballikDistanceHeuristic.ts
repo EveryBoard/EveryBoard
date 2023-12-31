@@ -1,4 +1,5 @@
-import { PlayerMetricHeuristic, PlayerNumberTable } from 'src/app/jscaip/AI/Minimax';
+import { PlayerMetricHeuristic } from 'src/app/jscaip/AI/Minimax';
+import { PlayerNumberTable } from 'src/app/jscaip/PlayerNumberTable';
 import { DiaballikNode } from './DiaballikRules';
 import { DiaballikMove } from './DiaballikMove';
 import { DiaballikPiece, DiaballikState } from './DiaballikState';
