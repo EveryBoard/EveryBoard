@@ -178,9 +178,9 @@ export class EpaminondasRules
 
     public getGameStatus(node: EpaminondasNode): GameStatus {
         const state: EpaminondasState = node.gameState;
-        const zerosInFirstLine: number = state.count(Player.ZERO, 0);
+        const zerosInFirstLine: number = state.countRow(Player.ZERO, 0);
         const height: number = state.getHeight();
-        const onesInLastLine: number = state.count(Player.ONE, height - 1);
+        const onesInLastLine: number = state.countRow(Player.ONE, height - 1);
         if (state.turn % 2 === 0) {
             if (zerosInFirstLine > onesInLastLine) {
                 return GameStatus.ZERO_WON;
