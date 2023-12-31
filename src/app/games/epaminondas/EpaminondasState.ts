@@ -3,11 +3,20 @@ import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 
 export class EpaminondasState extends GameStateWithTable<PlayerOrNone> {
 
-    public count(piece: Player, row: number): number {
+    public countRow(player: Player, row: number): number {
         let result: number = 0;
-        const width: number = this.getWidth();
-        for (let x: number = 0; x < width; x++) {
-            if (this.board[row][x] === piece) {
+        for (let x: number = 0; x < this.getWidth(); x++) {
+            if (this.board[row][x] === player) {
+                result++;
+            }
+        }
+        return result;
+    }
+
+    public count(player: Player): number {
+        let result: number = 0;
+        for (const coordAndContent of this.getCoordsAndContents()) {
+            if (coordAndContent.content === player) {
                 result++;
             }
         }
@@ -22,4 +31,5 @@ export class EpaminondasState extends GameStateWithTable<PlayerOrNone> {
         }
         return false;
     }
+
 }
