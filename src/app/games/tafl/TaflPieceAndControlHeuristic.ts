@@ -58,25 +58,24 @@ export class TaflPieceAndControlHeuristic<M extends TaflMove> extends TaflPieceA
                 }
             }
             for (const controlled of controlledSquares) {
-                const controlledValue: number =
-                    this.getControlledPieceValue(controlled.x, controlled.y, state.getWidth());
+                const controlledValue: number = this.getControlledPieceValue(controlled, state);
                 metrics.controlScore += owner.getScoreModifier() * controlledValue;
             }
         }
         return metrics;
     }
 
-    private getControlledPieceValue(x: number, y: number, width: number): number {
+    private getControlledPieceValue(coord: Coord, state: TaflState): number {
         let value: number = 1;
-        if (x === 0 || x === width - 1) {
-            value *= width;
+        if (state.isHorizontalEdge(coord)) {
+            value *= state.getWidth();
         }
-        if (y === 0 || y === width - 1) {
-            value *= width;
+        if (state.isVerticalEdge(coord)) {
+            value *= state.getWidth();
         }
         /** 1 for center
           * width for border
-          * width*width for corners
+          * width * width for corners
           */
         return value;
     }

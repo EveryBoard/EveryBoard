@@ -3,10 +3,11 @@ import { Player } from 'src/app/jscaip/Player';
 import { GipfMove } from './GipfMove';
 import { GipfNode, GipfRules } from './GipfRules';
 import { GipfState } from './GipfState';
+import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 export class GipfScoreHeuristic extends PlayerMetricHeuristic<GipfMove, GipfState> {
 
-    public getMetrics(node: GipfNode): PlayerNumberTable {
+    public override getMetrics(node: GipfNode, _config: NoConfig): PlayerNumberTable {
         const state: GipfState = node.gameState;
         return PlayerNumberTable.of(
             [GipfRules.getPlayerScore(state, Player.ZERO).get()],

@@ -27,9 +27,13 @@ export class HeuristicUtils {
         const strongNode: GameNode<M, S> = new GameNode(strongState, undefined, strongMove);
         const strongValue: readonly number[] = heuristic.getBoardValue(strongNode, config).metrics;
         if (player === Player.ZERO) {
-            expect(ArrayUtils.isLessThan(strongValue, weakValue)).toBeTrue();
+            expect(ArrayUtils.isGreaterThan(weakValue, strongValue))
+                .withContext(`First board (${ weakValue }) should be > than second board (${ strongValue })`)
+                .toBeTrue();
         } else {
-            expect(ArrayUtils.isLessThan(weakValue, strongValue)).toBeTrue();
+            expect(ArrayUtils.isLessThan(weakValue, strongValue))
+                .withContext(`First board (${ weakValue }) should be < than second board (${ strongValue })`)
+                .toBeTrue();
         }
     }
 

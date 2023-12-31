@@ -5,10 +5,11 @@ import { SaharaNode, SaharaRules } from './SaharaRules';
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { PlayerMetricHeuristic, PlayerNumberTable } from 'src/app/jscaip/AI/Minimax';
+import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 export class SaharaHeuristic extends PlayerMetricHeuristic<SaharaMove, SaharaState> {
 
-    public getMetrics(node: SaharaNode): PlayerNumberTable {
+    public override getMetrics(node: SaharaNode, _config: NoConfig): PlayerNumberTable {
         const board: Table<FourStatePiece> = node.gameState.board;
         const zeroFreedoms: number[] = SaharaRules.getBoardValuesFor(board, Player.ZERO);
         const oneFreedoms: number[] = SaharaRules.getBoardValuesFor(board, Player.ONE);

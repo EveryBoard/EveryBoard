@@ -86,13 +86,7 @@ export abstract class TaflRules<M extends TaflMove> extends ConfigurableRules<M,
     }
 
     public isExternalThrone(state: TaflState, coord: Coord): boolean {
-        const max: number = state.getSize() - 1;
-        if (coord.x === 0) {
-            return (coord.y === 0) || (coord.y === max);
-        } else if (coord.x === max) {
-            return (coord.y === 0) || (coord.y === max);
-        }
-        return false;
+        return state.isCorner(coord);
     }
 
     public tryCapture(player: Player, landingPawn: Coord, d: Orthogonal, state: TaflState, config: TaflConfig)

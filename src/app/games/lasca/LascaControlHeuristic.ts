@@ -5,12 +5,11 @@ import { MGPSet } from 'src/app/utils/MGPSet';
 import { LascaMove } from './LascaMove';
 import { LascaNode, LascaRules } from './LascaRules';
 import { LascaState } from './LascaState';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 export class LascaControlHeuristic extends PlayerMetricHeuristic<LascaMove, LascaState> {
 
-    public override getMetrics(node: LascaNode, _config: MGPOptional<EmptyRulesConfig>): PlayerNumberTable {
+    public override getMetrics(node: LascaNode, _config: NoConfig): PlayerNumberTable {
         return this.getControlScore(node);
     }
 

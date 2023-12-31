@@ -8,6 +8,7 @@ import { ConspirateursMove, ConspirateursMoveDrop, ConspirateursMoveJump, Conspi
 import { ConspirateursNode, ConspirateursRules } from '../ConspirateursRules';
 import { ConspirateursState } from '../ConspirateursState';
 import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { TestUtils } from 'src/app/utils/tests/TestUtils.spec';
 
 describe('ConspirateursRules', () => {
     const _: PlayerOrNone = PlayerOrNone.NONE;
@@ -31,6 +32,15 @@ describe('ConspirateursRules', () => {
         return ConspirateursMoveJump.from(coords).get();
     }
     describe('drop moves', () => {
+
+        it('should forbid creating a drop out of the board', () => {
+            const reason: string = 'Move out of board';
+            TestUtils.expectToThrowAndLog(() => {
+                const state: ConspirateursState = ConspirateursRules.get().getInitialState();
+                const move: ConspirateursMove = ConspirateursMoveDrop.of(new Coord(-1, -1)) as ConspirateursMove;
+                RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
+            }, reason);
+        });
 
         it('should allow drops within the center zone', () => {
             // Given the initial state
@@ -129,6 +139,26 @@ describe('ConspirateursRules', () => {
     });
 
     describe('simple moves', () => {
+
+        it('should forbid creating a simple move starting out of the board', () => {
+            const reason: string = 'Move out of board';
+            TestUtils.expectToThrowAndLog(() => {
+                const state: ConspirateursState = ConspirateursRules.get().getInitialState();
+                const move: ConspirateursMove =
+                    ConspirateursMoveSimple.from(new Coord(-1, 0), new Coord(0, 0)).get() as ConspirateursMove;
+                RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
+            }, reason);
+        });
+
+        it('should forbid creating a simple move ending out of the board', () => {
+            const reason: string = 'Move out of board';
+            TestUtils.expectToThrowAndLog(() => {
+                const state: ConspirateursState = ConspirateursRules.get().getInitialState();
+                const move: ConspirateursMove =
+                    ConspirateursMoveSimple.from(new Coord(0, 0), new Coord(-1, 0)).get() as ConspirateursMove;
+                RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
+            }, reason);
+        });
 
         it('should allow simple moves', () => {
             // Given a fictitious board after the drop phase, with one piece

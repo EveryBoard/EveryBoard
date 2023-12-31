@@ -4,10 +4,11 @@ import { Player } from 'src/app/jscaip/Player';
 import { DvonnMove } from './DvonnMove';
 import { DvonnNode, DvonnRules } from './DvonnRules';
 import { DvonnState } from './DvonnState';
+import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 export class DvonnMaxStacksHeuristic extends PlayerMetricHeuristic<DvonnMove, DvonnState> {
 
-    public getMetrics(node: DvonnNode): PlayerNumberTable {
+    public override getMetrics(node: DvonnNode, _config: NoConfig): PlayerNumberTable {
         const state: DvonnState = node.gameState;
         // The metric is percentage of the stacks controlled by the player
         const scores: [number, number] = DvonnRules.getScores(state);

@@ -3,10 +3,11 @@ import { PlayerMetricHeuristic, PlayerNumberTable } from 'src/app/jscaip/AI/Mini
 import { MancalaMove } from './MancalaMove';
 import { MancalaNode } from './MancalaRules';
 import { MancalaConfig } from './MancalaConfig';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 export class MancalaScoreHeuristic extends PlayerMetricHeuristic<MancalaMove, MancalaState, MancalaConfig> {
 
-    public getMetrics(node: MancalaNode): PlayerNumberTable {
+    public override getMetrics(node: MancalaNode, _config: MGPOptional<MancalaConfig>): PlayerNumberTable {
         const captured: number[] = node.gameState.getScoresCopy();
         return PlayerNumberTable.of(
             [captured[0]],

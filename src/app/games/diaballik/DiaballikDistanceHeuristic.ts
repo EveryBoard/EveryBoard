@@ -3,10 +3,11 @@ import { DiaballikNode } from './DiaballikRules';
 import { DiaballikMove } from './DiaballikMove';
 import { DiaballikPiece, DiaballikState } from './DiaballikState';
 import { Player } from 'src/app/jscaip/Player';
+import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 export class DiaballikDistanceHeuristic extends PlayerMetricHeuristic<DiaballikMove, DiaballikState> {
 
-    public getMetrics(node: DiaballikNode): PlayerNumberTable {
+    public override getMetrics(node: DiaballikNode, _config: NoConfig): PlayerNumberTable {
         const state: DiaballikState = node.gameState;
         // Inverse of ball distance, i.e., higher if the ball is closest to opponent line
         const ballsCloseness: PlayerNumberTable = new PlayerNumberTable();

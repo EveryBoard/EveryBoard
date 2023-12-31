@@ -2,10 +2,11 @@ import { CoerceoMove } from './CoerceoMove';
 import { CoerceoState } from './CoerceoState';
 import { CoerceoNode } from './CoerceoRules';
 import { PlayerMetricHeuristic, PlayerNumberTable } from 'src/app/jscaip/AI/Minimax';
+import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 export class CoerceoCapturesAndFreedomHeuristic extends PlayerMetricHeuristic<CoerceoMove, CoerceoState> {
 
-    public getMetrics(node: CoerceoNode): PlayerNumberTable {
+    public override getMetrics(node: CoerceoNode, _config: NoConfig): PlayerNumberTable {
         const state: CoerceoState = node.gameState;
         const piecesByFreedom: number[][] = state.getPiecesByFreedom();
         const piecesScores: number[] = this.getPiecesScore(piecesByFreedom);

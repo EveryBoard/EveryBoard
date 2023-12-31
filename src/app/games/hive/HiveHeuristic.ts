@@ -6,10 +6,11 @@ import { MGPSet } from 'src/app/utils/MGPSet';
 import { HiveMove, HiveCoordToCoordMove } from './HiveMove';
 import { HiveNode, HiveRules } from './HiveRules';
 import { HiveState } from './HiveState';
+import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 export class HiveHeuristic extends PlayerMetricHeuristic<HiveMove, HiveState> {
 
-    public getMetrics(node: HiveNode): PlayerNumberTable {
+    public override getMetrics(node: HiveNode, _config: NoConfig): PlayerNumberTable {
         // The board value is based on the number of neighbors to the queen
         const scoreZero: number = this.queenBeeMobility(node.gameState, Player.ZERO);
         const scoreOne: number = this.queenBeeMobility(node.gameState, Player.ONE);

@@ -45,8 +45,8 @@ export class BoardValue {
         return new BoardValue([value]);
     }
 
-    public static multiMetric(value: ReadonlyArray<number>): BoardValue {
-        return new BoardValue(value);
+    public static multiMetric(metrics: ReadonlyArray<number>): BoardValue {
+        return new BoardValue(metrics);
     }
 
     private constructor(public readonly metrics: ReadonlyArray<number>) {}

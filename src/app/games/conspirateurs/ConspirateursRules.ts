@@ -12,6 +12,7 @@ import { ConspirateursMove, ConspirateursMoveDrop, ConspirateursMoveJump, Conspi
 import { ConspirateursState } from './ConspirateursState';
 import { TableUtils } from 'src/app/utils/ArrayUtils';
 import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { Utils } from 'src/app/utils/utils';
 
 export class ConspirateursNode extends GameNode<ConspirateursMove, ConspirateursState> {}
 
@@ -60,7 +61,9 @@ export class ConspirateursRules extends Rules<ConspirateursMove, ConspirateursSt
             return this.jumpLegality(move, state);
         }
     }
+
     public dropLegality(move: ConspirateursMoveDrop, state: ConspirateursState): MGPValidation {
+        Utils.assert(state.isOnBoard(move.coord), 'Move out of board');
         if (40 <= state.turn) {
             return MGPValidation.failure(ConspirateursFailure.CANNOT_DROP_AFTER_TURN_40());
         }
@@ -72,7 +75,11 @@ export class ConspirateursRules extends Rules<ConspirateursMove, ConspirateursSt
         }
         return MGPValidation.SUCCESS;
     }
+
     public simpleMoveLegality(move: ConspirateursMoveSimple, state: ConspirateursState): MGPValidation {
+        const startInRange: boolean = state.isOnBoard(move.getStart());
+        const endInRange: boolean = state.isOnBoard(move.getEnd());
+        Utils.assert(startInRange && endInRange, 'Move out of board');
         if (state.turn < 40) {
             return MGPValidation.failure(ConspirateursFailure.CANNOT_MOVE_BEFORE_TURN_40());
         }
@@ -88,6 +95,7 @@ export class ConspirateursRules extends Rules<ConspirateursMove, ConspirateursSt
         }
         return MGPValidation.SUCCESS;
     }
+
     public jumpLegality(move: ConspirateursMoveJump, state: ConspirateursState): MGPValidation {
         if (state.turn < 40) {
             return MGPValidation.failure(ConspirateursFailure.CANNOT_MOVE_BEFORE_TURN_40());
@@ -111,6 +119,7 @@ export class ConspirateursRules extends Rules<ConspirateursMove, ConspirateursSt
         }
         return MGPValidation.SUCCESS;
     }
+
     public jumpTargetsFrom(start: Coord): Coord[] {
         const targets: Coord[] = [
             new Coord(start.x + 2, start.y),
@@ -131,6 +140,7 @@ export class ConspirateursRules extends Rules<ConspirateursMove, ConspirateursSt
         }
         return validTargets;
     }
+
     public nextJumps(jump: ConspirateursMoveJump, state: ConspirateursState): ConspirateursMoveJump[] {
         const ending: Coord = jump.getEndingCoord();
         const nextJumps: ConspirateursMoveJump[] = [];
@@ -142,9 +152,11 @@ export class ConspirateursRules extends Rules<ConspirateursMove, ConspirateursSt
         }
         return nextJumps;
     }
+
     public jumpHasPossibleNextTargets(jump: ConspirateursMoveJump, state: ConspirateursState): boolean {
         return this.nextJumps(jump, state).length > 0;
     }
+
     public getGameStatus(node: ConspirateursNode): GameStatus {
         const state: ConspirateursState = node.gameState;
         const protectedPawns: [number, number] = [0, 0];
@@ -159,4 +171,5 @@ export class ConspirateursRules extends Rules<ConspirateursMove, ConspirateursSt
         }
         return GameStatus.ONGOING;
     }
+
 }

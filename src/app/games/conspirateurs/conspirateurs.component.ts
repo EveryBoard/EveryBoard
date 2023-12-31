@@ -77,9 +77,9 @@ export class ConspirateursComponent extends GameComponent<ConspirateursRules, Co
         this.viewInfo.dropPhase = state.isDropPhase();
         this.viewInfo.boardInfo = [];
         this.viewInfo.lastMoveArrow = '';
-        for (let y: number = 0; y < ConspirateursState.HEIGHT; y++) {
+        for (let y: number = 0; y < state.getHeight(); y++) {
             this.viewInfo.boardInfo.push([]);
-            for (let x: number = 0; x < ConspirateursState.WIDTH; x++) {
+            for (let x: number = 0; x < state.getWidth(); x++) {
                 const coord: Coord = new Coord(x, y);
                 const piece: PlayerOrNone = state.getPieceAt(coord);
                 const squareInfo: SquareInfo = {

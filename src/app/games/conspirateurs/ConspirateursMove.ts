@@ -11,14 +11,13 @@ import { CoordSet } from 'src/app/utils/OptimizedSet';
 import { ConspirateursFailure } from './ConspirateursFailure';
 import { ConspirateursState } from './ConspirateursState';
 import { MoveWithTwoCoords } from 'src/app/jscaip/MoveWithTwoCoords';
-import { Utils } from 'src/app/utils/utils';
+import { ConspirateursRules } from './ConspirateursRules'; // KILL IMPORT
 
 export class ConspirateursMoveDrop extends MoveCoord {
 
     public static encoder: Encoder<ConspirateursMoveDrop> = MoveCoord.getEncoder(ConspirateursMoveDrop.of);
 
     public static of(coord: Coord): ConspirateursMoveDrop {
-        Utils.assert(ConspirateursState.isOnBoard(coord), 'Move out of board');
         return new ConspirateursMoveDrop(coord);
     }
     private constructor(coord: Coord) {
@@ -42,9 +41,6 @@ export class ConspirateursMoveSimple extends MoveCoordToCoord {
         MoveWithTwoCoords.getFallibleEncoder(ConspirateursMoveSimple.from);
 
     public static from(start: Coord, end: Coord): MGPFallible<ConspirateursMoveSimple> {
-        const startInRange: boolean = ConspirateursState.isOnBoard(start);
-        const endInRange: boolean = ConspirateursState.isOnBoard(end);
-        Utils.assert(startInRange && endInRange, 'Move out of board');
         if (start.isAlignedWith(end) && start.getDistance(end) === 1) {
             return MGPFallible.success(new ConspirateursMoveSimple(start, end));
         } else {
@@ -74,12 +70,14 @@ export class ConspirateursMoveJump extends Move {
         (move: ConspirateursMoveJump): [Coord[]] => [ArrayUtils.copy(move.coords)],
         (fields: [Coord[]]): ConspirateursMoveJump => ConspirateursMoveJump.from(fields[0]).get(),
     );
+
     public static from(coords: readonly Coord[]): MGPFallible<ConspirateursMoveJump> {
         if (coords.length < 2) {
             return MGPFallible.failure('ConspirateursMoveJump requires at least one jump, so two coords');
         }
+        const standardState: ConspirateursState = ConspirateursRules.get().getInitialState();
         for (const coord of coords) {
-            if (ConspirateursState.isOnBoard(coord) === false) {
+            if (standardState.isOnBoard(coord) === false) {
                 return MGPFallible.failure('Move out of board');
             }
         }

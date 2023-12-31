@@ -77,12 +77,9 @@ export class DummyHeuristic<M extends Move, S extends GameState, C extends Rules
     extends PlayerMetricHeuristic<M, S, C>
 {
 
-    public getMetrics(_node: GameNode<M, S>, _config?: MGPOptional<C>): PlayerNumberTable {
+    public override getMetrics(_node: GameNode<M, S>, _config?: MGPOptional<C>): PlayerNumberTable {
         // This is really a dummy heuristic: boards have no value
-        return new PlayerNumberTable([
-            { key: Player.ZERO, value: [0] },
-            { key: Player.ONE, value: [0] },
-        ]);
+        return PlayerNumberTable.of([0], [0]);
     }
 
 }
@@ -203,12 +200,12 @@ implements AI<M, S, AIDepthLimitOptions, C>
 
     private getExpectedExtremum(node: GameNode<M, S>, config: MGPOptional<C>): ReadonlyArray<number> {
         const childValue: ReadonlyArray<number> = this.getScore(node, config).metrics;
-        const numberOfMetric: number = childValue.length;
+        const numberOfMetrics: number = childValue.length;
         const currentPlayer: Player = node.gameState.getCurrentPlayer();
         if (currentPlayer === Player.ZERO) {
-            return ArrayUtils.create(numberOfMetric, Number.MAX_SAFE_INTEGER);
+            return ArrayUtils.create(numberOfMetrics, Number.MAX_SAFE_INTEGER);
         } else {
-            return ArrayUtils.create(numberOfMetric, Number.MIN_SAFE_INTEGER);
+            return ArrayUtils.create(numberOfMetrics, Number.MIN_SAFE_INTEGER);
         }
     }
 
