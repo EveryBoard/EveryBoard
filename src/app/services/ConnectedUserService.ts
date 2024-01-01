@@ -338,6 +338,10 @@ export class ConnectedUserService implements OnDestroy {
         assert(this.user.isPresent(), 'Should not call sendPresenceToken when not connected');
         return this.userService.updatePresenceToken(this.user.get().id);
     }
+    public getIdToken(): Promise<string> {
+        const currentUser: FireAuth.User = Utils.getNonNullable(this.auth.currentUser);
+        return currentUser.getIdToken();
+    }
     public ngOnDestroy(): void {
         this.userSubscription.unsubscribe();
         this.authSubscription.unsubscribe();

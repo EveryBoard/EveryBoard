@@ -14,6 +14,7 @@ import { MinimalUser } from '../domain/MinimalUser';
 import { ConnectedUserService } from './ConnectedUserService';
 import { FirestoreTime } from '../domain/Time';
 import { GameEventService } from './GameEventService';
+import { BackendService } from './BackendService';
 
 export interface StartingPartConfig extends Partial<Part> {
     playerZero: MinimalUser,
@@ -32,7 +33,9 @@ export class GameService {
                        private readonly gameEventService: GameEventService,
                        private readonly connectedUserService: ConnectedUserService,
                        private readonly configRoomService: ConfigRoomService,
-                       private readonly chatService: ChatService)
+                       private readonly chatService: ChatService,
+                       private readonly backendService: BackendService)
+
     {
     }
     private async update(id: string, update: Partial<Part>): Promise<void> {
@@ -41,11 +44,15 @@ export class GameService {
     public async getPartValidity(partId: string, gameType: string): Promise<MGPValidation> {
         const part: MGPOptional<Part> = await this.partDAO.read(partId);
         if (part.isAbsent()) {
+            console.log('part is absent')
             return MGPValidation.failure('NONEXISTENT_PART');
         }
         if (part.get().typeGame === gameType) {
+            console.log('success')
             return MGPValidation.SUCCESS;
         } else {
+            console.log('wrong game type')
+            console.log(part.get())
             return MGPValidation.failure('WRONG_GAME_TYPE');
         }
     }
@@ -63,11 +70,8 @@ export class GameService {
     private createChat(chatId: string): Promise<void> {
         return this.chatService.createNewChat(chatId);
     }
-    public async createPartConfigRoomAndChat(typeGame: string): Promise<string> {
-        const gameId: string = await this.createUnstartedPart(typeGame);
-        await this.configRoomService.createInitialConfigRoom(gameId, typeGame);
-        await this.createChat(gameId);
-        return gameId;
+    public createPartConfigRoomAndChat(gameName: string): Promise<string> {
+        return this.backendService.createGame(gameName);
     }
     public getStartingConfig(configRoom: ConfigRoom): StartingPartConfig {
         let whoStarts: FirstPlayer = FirstPlayer.of(configRoom.firstPlayer);
