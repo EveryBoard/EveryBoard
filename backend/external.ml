@@ -1,6 +1,7 @@
 open Utils
 (** This module contains functions that rely on the external world.
     This allows us to mock them in our test *)
+(* TODO: use the same architecture as the other mockable stuff *)
 
 let now : (unit -> float) ref = ref Unix.time
 
@@ -27,4 +28,8 @@ module Http = struct
       let* (response, body) = Cohttp_lwt_unix.Client.patch ~headers endpoint ~body:(`String body) in
       let* body_string = Cohttp_lwt.Body.to_string body in
       Lwt.return (response, body_string))
+
+  let delete : (Uri.t -> Cohttp.Header.t -> unit Lwt.t) ref = ref (fun endpoint headers ->
+      let _ = Cohttp_lwt_unix.Client.delete ~headers endpoint in
+      Lwt.return ())
 end

@@ -17,6 +17,9 @@ module type FIREBASE_OPS = sig
 
   (** Get the name of a game if the game exists *)
   val get_game_name : token -> string -> string option Lwt.t
+
+  (** Delete a game *)
+  val delete_game : token -> string -> unit Lwt.t
 end
 
 module Make (Firebase_primitives : Firebase_primitives.FIREBASE_PRIMITIVES) : FIREBASE_OPS = struct
@@ -49,6 +52,9 @@ module Make (Firebase_primitives : Firebase_primitives.FIREBASE_PRIMITIVES) : FI
       let game_name = Yojson.Safe.Util.to_string (Yojson.Safe.Util.member "typeGame" doc) in
       Lwt.return (Some game_name)
     with Error _ -> Lwt.return None
+
+  let delete_game (token : string) (game_id : string) : unit Lwt.t =
+    Firebase_primitives.delete_doc token ("parts/" ^ game_id)
 
 
 end

@@ -82,8 +82,8 @@ export class GameService {
             beginning: serverTimestamp(),
         };
     }
-    public deletePart(partId: string): Promise<void> {
-        return this.partDAO.delete(partId);
+    public deletePart(gameId: string): Promise<void> {
+        return this.backendService.deleteGame(gameId);
     }
     public async acceptConfig(partId: string, configRoom: ConfigRoom): Promise<void> {
         await this.configRoomService.acceptConfig(partId);

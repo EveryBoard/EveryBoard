@@ -1,6 +1,6 @@
 open Utils
 
-let endpoint ?(version = "v1") ?(params = []) (path : string) : Uri.t =
+let endpoint ?(version = "v1beta1") ?(params = []) (path : string) : Uri.t =
   let url = Uri.of_string (!Options.base_endpoint ^ "/" ^ version ^
                            "/projects/" ^ !Options.project_name ^
                            "/databases/" ^ !Options.database_name ^

@@ -21,13 +21,15 @@ service cloud.firestore {
             allow read: if true;
         }
         match /chats/lobby {
-            allow create: if userIsVerified();
+            allow create: if false; // Need to be created manually for new databases
             allow update, delete: if false;
             allow read: if false;
         }
         match /chats/{id} {
+            // TODO: only allow backend to do this
             allow create, delete: if userIsVerified() && partExistsAndOwnedByCurrentUser(id);
             // Anyone can delete the chat in case the creator timed out
+            // TODO: only backend should be able to do this
             allow delete: if userIsVerified() && hasTimedOut(creatorOf(id).id);
             allow update: if false;
             allow read: if false
@@ -110,6 +112,7 @@ service cloud.firestore {
             return verifiedKeptSameValue || verifiedSetToTrueAfterVerification
         }
         match /parts/{id} {
+            // TODO: only backend can do all this
             allow create: if verifiedUserCreatesPart(request.resource.data);
             allow delete: if creatorDeletesUnstartedPart(id, resource.data);
             allow delete: if verifiedUserDeletesPartAfterCreatorTimeout(id, resource.data);

@@ -44,5 +44,11 @@ module Make
       | None -> fail `Not_Found "There is no game with this id"
       | Some name -> json_response `OK (`Assoc [("gameName", `String name)])
 
-  let routes = [create; get]
+  let delete : Dream.route = Dream.delete "game/:game_id" @@ fun request ->
+    let* token = Token_refresher.get_token request in
+    let game_id = Dream.param request "game_id" in
+    let* _ = Firebase_ops.delete_game token game_id in
+    Dream.empty `OK
+
+  let routes = [create; get; delete]
 end
