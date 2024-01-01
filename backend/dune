@@ -1,0 +1,18 @@
+(library
+ (name backend)
+ (libraries dream yojson ppx_deriving_yojson.runtime mirage-crypto-pk x509 cohttp cohttp-lwt-unix)
+ (modules Utils Token_refresher Jwt Auth Google_certificates Firebase Firebase_primitives Firebase_ops Game External Server Options Cors)
+ (instrumentation (backend bisect_ppx))
+ (preprocess (pps lwt_ppx ppx_deriving_yojson)))
+
+(executable
+ (name main)
+ (modules Main)
+ (libraries backend dream))
+
+(tests
+ (names tests)
+ (modules Tests Test_utils Auth_tests Jwt_tests Google_certificates_tests Token_refresher_tests Firebase_ops_tests Firebase_primitives_tests Integration_tests Firebase_tests)
+ (libraries backend alcotest alcotest-lwt))
+
+(include_subdirs unqualified)

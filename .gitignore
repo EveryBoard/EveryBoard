@@ -45,3 +45,7 @@ Thumbs.db
 
 # Local Netlify folder
 .netlify
+
+# Backend build and coverage files
+/backend/_build/
+/backend/_coverage/
