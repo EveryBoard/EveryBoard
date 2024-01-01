@@ -41,31 +41,15 @@ export class GameService {
     private async update(id: string, update: Partial<Part>): Promise<void> {
         return this.partDAO.update(id, update);
     }
-    public async getPartValidity(partId: string, gameType: string): Promise<MGPValidation> {
-        const part: MGPOptional<Part> = await this.partDAO.read(partId);
-        if (part.isAbsent()) {
-            console.log('part is absent')
-            return MGPValidation.failure('NONEXISTENT_PART');
-        }
-        if (part.get().typeGame === gameType) {
-            console.log('success')
-            return MGPValidation.SUCCESS;
+    public async getGameValidity(gameId: string, gameName: string): Promise<MGPValidation> {
+        const realGameName: MGPOptional<string> = await this.backendService.getGameName(gameId);
+        if (realGameName.isAbsent()) {
+            return MGPValidation.failure('This game does not exist');
+        } else if (realGameName.get() !== gameName) {
+            return MGPValidation.failure('This is the wrong game type');
         } else {
-            console.log('wrong game type')
-            console.log(part.get())
-            return MGPValidation.failure('WRONG_GAME_TYPE');
+            return MGPValidation.SUCCESS;
         }
-    }
-    private createUnstartedPart(typeGame: string): Promise<string> {
-        const playerZero: MinimalUser = this.connectedUserService.user.get().toMinimalUser();
-
-        const newPart: Part = {
-            typeGame,
-            playerZero,
-            turn: -1,
-            result: MGPResult.UNACHIEVED.value,
-        };
-        return this.partDAO.create(newPart);
     }
     private createChat(chatId: string): Promise<void> {
         return this.chatService.createNewChat(chatId);

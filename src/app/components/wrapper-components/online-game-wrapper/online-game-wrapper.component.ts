@@ -106,9 +106,8 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         const gameURL: string = this.getGameName();
         const gameExists: boolean = GameInfo.ALL_GAMES().some((gameInfo: GameInfo) => gameInfo.urlName === gameURL);
         if (gameExists) {
-            const partValidity: MGPValidation =
-                await this.gameService.getPartValidity(this.currentPartId, gameURL);
-            if (partValidity.isFailure()) {
+            const gameValidity: MGPValidation = await this.gameService.getGameValidity(this.currentPartId, gameURL);
+            if (gameValidity.isFailure()) {
                 this.routerEventsSubscription.unsubscribe();
                 const message: string = OnlineGameWrapperMessages.NO_MATCHING_PART();
                 await this.router.navigate(['/notFound', message], { skipLocationChange: true } );
