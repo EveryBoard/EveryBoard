@@ -3,7 +3,7 @@ import { fakeAsync, tick } from '@angular/core/testing';
 
 import { AwaleComponent } from '../awale.component';
 import { AwaleRules } from '../AwaleRules';
-import { PlayerMap } from 'src/app/jscaip/PlayerMap';
+import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 import { MancalaState } from 'src/app/games/mancala/common/MancalaState';
 import { doMancalaComponentTests as doMancalaComponentTests } from '../../common/tests/GenericMancalaComponentTest.spec';
 import { AwaleMoveGenerator } from '../AwaleMoveGenerator';
@@ -34,7 +34,7 @@ describe('AwaleComponent', () => {
             state: new MancalaState([
                 [5, 5, 5, 5, 4, 4],
                 [0, 4, 4, 4, 4, 4],
-            ], 1, PlayerMap.of(0, 0)),
+            ], 1, PlayerNumberMap.of(0, 0)),
             move: MancalaMove.of(MancalaDistribution.of(1)),
             result: [
                 { x: 2, y: 0, content: { mainContent: ' 6 ', secondaryContent: ' +1 ' } },
@@ -48,7 +48,7 @@ describe('AwaleComponent', () => {
             state: new MancalaState([
                 [0, 0, 0, 0, 0, 1],
                 [0, 0, 0, 0, 0, 4],
-            ], 121, PlayerMap.of(0, 0)),
+            ], 121, PlayerNumberMap.of(0, 0)),
             move: MancalaMove.of(MancalaDistribution.of(5)),
             result: [{ x: 5, y: 1, content: { mainContent: ' -5 ' } }],
         },
@@ -56,7 +56,7 @@ describe('AwaleComponent', () => {
             state: new MancalaState([
                 [4, 1, 4, 4, 4, 4],
                 [2, 4, 4, 4, 4, 4],
-            ], 0, PlayerMap.of(0, 0)),
+            ], 0, PlayerNumberMap.of(0, 0)),
             move: MancalaMove.of(MancalaDistribution.of(0)),
             result: [{ x: 1, y: 0, content: { mainContent: ' -2 ' } }],
         },
@@ -64,7 +64,7 @@ describe('AwaleComponent', () => {
             state: new MancalaState([
                 [11, 4, 4, 4, 4, 0],
                 [17, 4, 4, 4, 4, 4],
-            ], 0, PlayerMap.of(0, 0)),
+            ], 0, PlayerNumberMap.of(0, 0)),
             move: MancalaMove.of(MancalaDistribution.of(0)),
             result: [{ x: 5, y: 0, content: { mainContent: ' -2 ' } }],
         },
@@ -114,7 +114,7 @@ describe('AwaleComponent', () => {
             const expectedState: MancalaState = new MancalaState([
                 [5, 5, 5, 5, 4, 4],
                 [0, 5, 5, 0, 4, 4],
-            ], 1, [2, 0]);
+            ], 1, PlayerNumberMap.of(2, 0));
             const actualState: MancalaState = testUtils.getGameComponent().getState();
             expect(actualState).toEqual(expectedState);
         }));

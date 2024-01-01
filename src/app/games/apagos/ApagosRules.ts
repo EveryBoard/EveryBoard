@@ -2,7 +2,6 @@ import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { GameNode } from 'src/app/jscaip/GameNode';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { Rules } from 'src/app/jscaip/Rules';
-import { MGPMap } from 'src/app/utils/MGPMap';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPValidation } from '../../utils/MGPValidation';
 import { ApagosCoord } from './ApagosCoord';
@@ -12,6 +11,7 @@ import { ApagosSquare } from './ApagosSquare';
 import { ApagosState } from './ApagosState';
 import { Utils } from 'src/app/utils/utils';
 import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 
 export class ApagosNode extends GameNode<ApagosMove, ApagosState> {}
 
@@ -50,9 +50,8 @@ export class ApagosRules extends Rules<ApagosMove, ApagosState> {
     }
 
     private applyLegalDrop(move: ApagosMove, state: ApagosState): ApagosState {
-        const remaining: MGPMap<Player, number> = state.getRemainingCopy();
-        const oldValue: number = remaining.get(move.piece.get()).get();
-        remaining.put(move.piece.get(), oldValue - 1);
+        const remaining: PlayerNumberMap = state.getRemainingCopy();
+        remaining.add(move.piece.get(), - 1);
         const nextTurnState: ApagosState = new ApagosState(state.turn + 1, state.board, remaining);
         const piece: Player = move.piece.get();
         const newSquare: ApagosSquare = nextTurnState.getPieceAt(move.landing).addPiece(piece);

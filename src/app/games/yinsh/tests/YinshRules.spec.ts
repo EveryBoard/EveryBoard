@@ -10,7 +10,7 @@ import { YinshPiece } from '../YinshPiece';
 import { YinshNode, YinshRules } from '../YinshRules';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
-import { PlayerMap } from 'src/app/jscaip/PlayerMap';
+import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 describe('YinshRules', () => {
@@ -51,7 +51,7 @@ describe('YinshRules', () => {
                 [_, _, _, _, _, _, _, N, N, N, N],
                 [N, _, _, _, _, N, N, N, N, N, N],
             ];
-            const expectedState: YinshState = new YinshState(expectedBoard, PlayerMap.of(4, 5), 1);
+            const expectedState: YinshState = new YinshState(expectedBoard, PlayerNumberMap.of(4, 5), 1);
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         });
 
@@ -69,7 +69,8 @@ describe('YinshRules', () => {
 
         it('should forbid placing rings without moving after turn 10', () => {
             // Given a state at turn 10
-            const state: YinshState = new YinshState(YinshRules.get().getInitialState().board, PlayerMap.of(0, 0), 10);
+            const state: YinshState =
+                new YinshState(YinshRules.get().getInitialState().board, PlayerNumberMap.of(0, 0), 10);
 
             // When trying to place a ring
             const move: YinshMove = new YinshMove([], new Coord(3, 3), MGPOptional.empty(), []);
@@ -94,7 +95,7 @@ describe('YinshRules', () => {
                 [_, _, _, _, _, _, _, N, N, N, N],
                 [N, _, _, _, _, N, N, N, N, N, N],
             ];
-            const state: YinshState = new YinshState(board, PlayerMap.of(0, 0), 10);
+            const state: YinshState = new YinshState(board, PlayerNumberMap.of(0, 0), 10);
 
             // When placing a marker and moving the ring
             const move: YinshMove = new YinshMove([], new Coord(3, 2), MGPOptional.of(new Coord(3, 3)), []);
@@ -113,7 +114,7 @@ describe('YinshRules', () => {
                 [_, _, _, _, _, _, _, N, N, N, N],
                 [N, _, _, _, _, N, N, N, N, N, N],
             ];
-            const expectedState: YinshState = new YinshState(expectedBoard, PlayerMap.of(0, 0), 11);
+            const expectedState: YinshState = new YinshState(expectedBoard, PlayerNumberMap.of(0, 0), 11);
 
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         });
@@ -133,7 +134,7 @@ describe('YinshRules', () => {
                 [_, _, _, _, _, _, _, N, N, N, N],
                 [N, _, _, _, _, N, N, N, N, N, N],
             ];
-            const state: YinshState = new YinshState(board, PlayerMap.of(0, 0), 10);
+            const state: YinshState = new YinshState(board, PlayerNumberMap.of(0, 0), 10);
 
             // When placing a marker and trying to move the ring in an invalid direction
             const move: YinshMove = new YinshMove([], new Coord(3, 2), MGPOptional.of(new Coord(5, 8)), []);
@@ -158,7 +159,7 @@ describe('YinshRules', () => {
                 [_, _, _, _, _, _, _, N, N, N, N],
                 [N, _, _, _, _, N, N, N, N, N, N],
             ];
-            const state: YinshState = new YinshState(board, PlayerMap.of(0, 0), 10);
+            const state: YinshState = new YinshState(board, PlayerNumberMap.of(0, 0), 10);
 
             // When trying to move from an invalid position
             const move: YinshMove = new YinshMove([], new Coord(5, 5), MGPOptional.of(new Coord(3, 3)), []);
@@ -183,7 +184,7 @@ describe('YinshRules', () => {
                 [_, _, _, _, _, _, _, N, N, N, N],
                 [N, _, _, _, _, N, N, N, N, N, N],
             ];
-            const state: YinshState = new YinshState(board, PlayerMap.of(0, 0), 10);
+            const state: YinshState = new YinshState(board, PlayerNumberMap.of(0, 0), 10);
             // When moving a ring over markers
             const move: YinshMove = new YinshMove([], new Coord(3, 2), MGPOptional.of(new Coord(3, 5)), []);
 
@@ -201,7 +202,7 @@ describe('YinshRules', () => {
                 [_, _, _, _, _, _, _, N, N, N, N],
                 [N, _, _, _, _, N, N, N, N, N, N],
             ];
-            const expectedState: YinshState = new YinshState(expectedBoard, PlayerMap.of(0, 0), 11);
+            const expectedState: YinshState = new YinshState(expectedBoard, PlayerNumberMap.of(0, 0), 11);
 
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         });
@@ -221,7 +222,7 @@ describe('YinshRules', () => {
                 [_, _, _, _, _, _, _, N, N, N, N],
                 [N, _, _, _, _, N, N, N, N, N, N],
             ];
-            const state: YinshState = new YinshState(board, PlayerMap.of(0, 0), 10);
+            const state: YinshState = new YinshState(board, PlayerNumberMap.of(0, 0), 10);
             // When moving the ring over the empty space and then over markers
             const move: YinshMove = new YinshMove([], new Coord(3, 2), MGPOptional.of(new Coord(3, 6)), []);
 
@@ -239,7 +240,7 @@ describe('YinshRules', () => {
                 [_, _, _, _, _, _, _, N, N, N, N],
                 [N, _, _, _, _, N, N, N, N, N, N],
             ];
-            const expectedState: YinshState = new YinshState(expectedBoard, PlayerMap.of(0, 0), 11);
+            const expectedState: YinshState = new YinshState(expectedBoard, PlayerNumberMap.of(0, 0), 11);
 
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         });
@@ -259,7 +260,7 @@ describe('YinshRules', () => {
                 [_, _, _, _, _, _, _, N, N, N, N],
                 [N, _, _, _, _, N, N, N, N, N, N],
             ];
-            const state: YinshState = new YinshState(board, PlayerMap.of(0, 0), 10);
+            const state: YinshState = new YinshState(board, PlayerNumberMap.of(0, 0), 10);
             // When trying to move further than the first empty spot avec the markers
             const move: YinshMove = new YinshMove([], new Coord(3, 2), MGPOptional.of(new Coord(3, 7)), []);
             // Then it should fail
@@ -282,7 +283,7 @@ describe('YinshRules', () => {
                 [_, _, _, _, _, _, _, N, N, N, N],
                 [N, _, _, _, _, N, N, N, N, N, N],
             ];
-            const state: YinshState = new YinshState(board, PlayerMap.of(0, 0), 10);
+            const state: YinshState = new YinshState(board, PlayerNumberMap.of(0, 0), 10);
             // When trying to move over all groups of markers
             const move: YinshMove = new YinshMove([], new Coord(3, 2), MGPOptional.of(new Coord(3, 8)), []);
             // Then it should fail
@@ -305,7 +306,7 @@ describe('YinshRules', () => {
                 [_, _, _, _, _, _, _, N, N, N, N],
                 [N, _, _, _, _, N, N, N, N, N, N],
             ];
-            const state: YinshState = new YinshState(board, PlayerMap.of(0, 0), 10);
+            const state: YinshState = new YinshState(board, PlayerNumberMap.of(0, 0), 10);
 
             // When trying to move over a ring
             const move: YinshMove = new YinshMove([], new Coord(3, 2), MGPOptional.of(new Coord(3, 6)), []);
@@ -330,7 +331,7 @@ describe('YinshRules', () => {
                 [_, _, _, _, _, _, _, N, N, N, N],
                 [N, _, _, _, _, N, N, N, N, N, N],
             ];
-            const state: YinshState = new YinshState(board, PlayerMap.of(0, 0), 10);
+            const state: YinshState = new YinshState(board, PlayerNumberMap.of(0, 0), 10);
 
             // When performing a capture but not taking a ring
             const move: YinshMove = new YinshMove([],
@@ -360,7 +361,7 @@ describe('YinshRules', () => {
                 [_, _, _, _, _, _, _, N, N, N, N],
                 [N, _, _, _, _, N, N, N, N, N, N],
             ];
-            const state: YinshState = new YinshState(board, PlayerMap.of(0, 0), 10);
+            const state: YinshState = new YinshState(board, PlayerNumberMap.of(0, 0), 10);
             // When performing a capture
             const move: YinshMove = new YinshMove([],
                                                   new Coord(3, 2),
@@ -382,7 +383,7 @@ describe('YinshRules', () => {
                 [_, _, _, _, _, _, _, N, N, N, N],
                 [N, _, _, _, _, N, N, N, N, N, N],
             ];
-            const expectedState: YinshState = new YinshState(expectedBoard, PlayerMap.of(1, 0), 11);
+            const expectedState: YinshState = new YinshState(expectedBoard, PlayerNumberMap.of(1, 0), 11);
 
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         });
@@ -402,7 +403,7 @@ describe('YinshRules', () => {
                 [_, _, _, _, _, _, _, N, N, N, N],
                 [N, _, _, _, _, N, N, N, N, N, N],
             ];
-            const state: YinshState = new YinshState(board, PlayerMap.of(0, 0), 10);
+            const state: YinshState = new YinshState(board, PlayerNumberMap.of(0, 0), 10);
             // When performing multiple captures in one move
             const move: YinshMove = new YinshMove([
                 YinshCapture.of(new Coord(3, 2), new Coord(3, 6), MGPOptional.of(new Coord(6, 2))),
@@ -424,7 +425,7 @@ describe('YinshRules', () => {
                 [_, _, _, _, _, _, _, N, N, N, N],
                 [N, _, _, _, _, N, N, N, N, N, N],
             ];
-            const expectedState: YinshState = new YinshState(expectedBoard, PlayerMap.of(2, 0), 11);
+            const expectedState: YinshState = new YinshState(expectedBoard, PlayerNumberMap.of(2, 0), 11);
 
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         });
@@ -444,7 +445,7 @@ describe('YinshRules', () => {
                 [_, _, _, _, _, _, _, N, N, N, N],
                 [N, _, _, _, _, N, N, N, N, N, N],
             ];
-            const state: YinshState = new YinshState(board, PlayerMap.of(0, 0), 10);
+            const state: YinshState = new YinshState(board, PlayerNumberMap.of(0, 0), 10);
 
             // When performing a move, but not capturing anything
             const move: YinshMove = new YinshMove([], new Coord(3, 2), MGPOptional.of(new Coord(4, 2)), []);
@@ -469,7 +470,7 @@ describe('YinshRules', () => {
                 [_, _, _, _, _, _, _, N, N, N, N],
                 [N, _, _, _, _, N, N, N, N, N, N],
             ];
-            const state: YinshState = new YinshState(board, PlayerMap.of(0, 0), 20);
+            const state: YinshState = new YinshState(board, PlayerNumberMap.of(0, 0), 20);
 
             // When performing a move that would capture something, but without capturing anything
             const move: YinshMove = new YinshMove([], new Coord(3, 2), MGPOptional.of(new Coord(3, 7)), []);
@@ -494,7 +495,7 @@ describe('YinshRules', () => {
                 [_, _, _, _, _, _, _, N, N, N, N],
                 [N, _, _, _, _, N, N, N, N, N, N],
             ];
-            const state: YinshState = new YinshState(board, PlayerMap.of(0, 0), 10);
+            const state: YinshState = new YinshState(board, PlayerNumberMap.of(0, 0), 10);
 
             // When aligning 5 of the opponent's markers and trying to capture them
             const move: YinshMove = new YinshMove([YinshCapture.of(new Coord(3, 3),
@@ -523,7 +524,7 @@ describe('YinshRules', () => {
                 [_, _, _, _, _, _, _, N, N, N, N],
                 [N, _, _, _, _, N, N, N, N, N, N],
             ];
-            const state: YinshState = new YinshState(board, PlayerMap.of(0, 0), 10);
+            const state: YinshState = new YinshState(board, PlayerNumberMap.of(0, 0), 10);
 
             // When performing a move that cannot capture anything, and yet trying to capture something
             const move: YinshMove = new YinshMove([YinshCapture.of(new Coord(3, 3),
@@ -557,7 +558,7 @@ describe('YinshRules', () => {
                 [_, _, _, _, _, _, _, N, N, N, N],
                 [N, _, _, _, _, N, N, N, N, N, N],
             ];
-            const state: YinshState = new YinshState(board, PlayerMap.of(0, 0), 10);
+            const state: YinshState = new YinshState(board, PlayerNumberMap.of(0, 0), 10);
             // When looking for possible captures
             // Then there should be none
             expect(rules.getPossibleCaptures(state)).toEqual([]);
@@ -578,7 +579,7 @@ describe('YinshRules', () => {
                 [_, _, _, _, _, _, _, N, N, N, N],
                 [N, _, _, _, _, N, N, N, N, N, N],
             ];
-            const state: YinshState = new YinshState(board, PlayerMap.of(0, 0), 10);
+            const state: YinshState = new YinshState(board, PlayerNumberMap.of(0, 0), 10);
             // When looking for possible captures
             // Then there should be none
             expect(rules.getPossibleCaptures(state)).toEqual([]);
@@ -599,7 +600,7 @@ describe('YinshRules', () => {
                 [_, _, _, _, _, _, _, N, N, N, N],
                 [N, _, _, _, _, N, N, N, N, N, N],
             ];
-            const state: YinshState = new YinshState(board, PlayerMap.of(0, 0), 10);
+            const state: YinshState = new YinshState(board, PlayerNumberMap.of(0, 0), 10);
             // When looking for possible captures
             // Then there should be none
             expect(rules.getPossibleCaptures(state)).toEqual([]);
@@ -620,7 +621,7 @@ describe('YinshRules', () => {
                 [_, _, _, _, _, _, _, N, N, N, N],
                 [N, _, _, _, _, N, N, N, N, N, N],
             ];
-            const state: YinshState = new YinshState(board, PlayerMap.of(0, 0), 10);
+            const state: YinshState = new YinshState(board, PlayerNumberMap.of(0, 0), 10);
             // When looking for possible captures
             // Then there should be exactly one capture
             const captures: YinshCapture[] = rules.getPossibleCaptures(state);
@@ -643,7 +644,7 @@ describe('YinshRules', () => {
                 [_, _, _, _, _, _, _, N, N, N, N],
                 [N, _, _, _, _, N, N, N, N, N, N],
             ];
-            const state: YinshState = new YinshState(board, PlayerMap.of(0, 0), 10);
+            const state: YinshState = new YinshState(board, PlayerNumberMap.of(0, 0), 10);
             // When looking for possible captures
             const captures: YinshCapture[] = rules.getPossibleCaptures(state);
             // Then there should be exactly 2 captures
@@ -669,7 +670,7 @@ describe('YinshRules', () => {
                 [_, _, _, _, _, _, _, N, N, N, N],
                 [N, _, _, _, _, N, N, N, N, N, N],
             ];
-            const state: YinshState = new YinshState(board, PlayerMap.of(0, 0), 10);
+            const state: YinshState = new YinshState(board, PlayerNumberMap.of(0, 0), 10);
             // When looking for possible captures
             const captures: YinshCapture[] = rules.getPossibleCaptures(state);
             // Then there should be exactly one
@@ -686,18 +687,21 @@ describe('YinshRules', () => {
         });
 
         it('should detect part after initial phase as ongoing if victory criterion is not met', () => {
-            const state: YinshState = new YinshState(YinshRules.get().getInitialState().board, PlayerMap.of(0, 0), 20);
+            const state: YinshState =
+                new YinshState(YinshRules.get().getInitialState().board, PlayerNumberMap.of(0, 0), 20);
             expect(rules.getGameStatus(new YinshNode(state))).toBe(GameStatus.ONGOING);
         });
 
         it('should detect victory for a player if it obtains more than 3 rings (Player.ZERO)', () => {
-            const state: YinshState = new YinshState(YinshRules.get().getInitialState().board, PlayerMap.of(3, 0), 20);
+            const state: YinshState =
+                new YinshState(YinshRules.get().getInitialState().board, PlayerNumberMap.of(3, 0), 20);
             const node: YinshNode = new YinshNode(state);
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, defaultConfig);
         });
 
         it('should detect victory for a player if it obtains more than 3 rings (Player.ONE)', () => {
-            const state: YinshState = new YinshState(YinshRules.get().getInitialState().board, PlayerMap.of(0, 3), 20);
+            const state: YinshState =
+                new YinshState(YinshRules.get().getInitialState().board, PlayerNumberMap.of(0, 3), 20);
             const node: YinshNode = new YinshNode(state);
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, defaultConfig);
         });

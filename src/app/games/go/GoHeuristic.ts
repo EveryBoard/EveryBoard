@@ -1,7 +1,7 @@
 import { GoState, GoPiece } from './GoState';
 import { GoMove } from './GoMove';
 import { PlayerMetricHeuristic } from 'src/app/jscaip/Minimax';
-import { PlayerMap } from 'src/app/jscaip/PlayerMap';
+import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 import { Player } from 'src/app/jscaip/Player';
 import { GoConfig, GoNode, GoRules } from './GoRules';
 
@@ -9,7 +9,7 @@ export class GoHeuristic extends PlayerMetricHeuristic<GoMove, GoState, GoConfig
 
     public getMetrics(node: GoNode): [number, number] {
         const goState: GoState = GoRules.markTerritoryAndCount(node.gameState);
-        const goScore: PlayerMap<number> = goState.getCapturedCopy();
+        const goScore: PlayerNumberMap = goState.getCapturedCopy();
         const goKilled: [number, number] = this.getDeadStones(goState);
         return [
             goScore.get(Player.ZERO).get() + (2 * goKilled[1]),

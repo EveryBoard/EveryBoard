@@ -17,7 +17,7 @@ import { GameNode } from 'src/app/jscaip/GameNode';
 import { AI, AIOptions } from 'src/app/jscaip/AI';
 import { GameInfo } from '../../normal-component/pick-game/pick-game.component';
 import { Coord } from 'src/app/jscaip/Coord';
-import { PlayerMap } from 'src/app/jscaip/PlayerMap';
+import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 
 abstract class BaseComponent {
 
@@ -100,7 +100,7 @@ export abstract class GameComponent<R extends SuperRules<M, S, C, L>,
 
     public canPass: boolean = false;
 
-    public scores: MGPOptional<PlayerMap<number>> = MGPOptional.empty();
+    public scores: MGPOptional<PlayerNumberMap> = MGPOptional.empty();
 
     public imagesLocation: string = 'assets/images/';
 

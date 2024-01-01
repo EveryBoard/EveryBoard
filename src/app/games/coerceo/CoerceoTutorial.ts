@@ -4,7 +4,7 @@ import { CoerceoState } from 'src/app/games/coerceo/CoerceoState';
 import { Coord } from 'src/app/jscaip/Coord';
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
 import { CoerceoRules } from './CoerceoRules';
-import { PlayerMap } from 'src/app/jscaip/PlayerMap';
+import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 
 const _: FourStatePiece = FourStatePiece.EMPTY;
 const N: FourStatePiece = FourStatePiece.UNREACHABLE;
@@ -55,7 +55,7 @@ export class CoerceoTutorial extends Tutorial {
                 [_, O, _, O, _, _, X, _, X, _, _, O, _, O, _],
                 [N, N, N, _, _, X, _, _, _, X, _, _, N, N, N],
                 [N, N, N, N, N, N, X, _, X, N, N, N, N, N, N],
-            ], 3, PlayerMap.of(0, 0), PlayerMap.of(0, 0)),
+            ], 3, PlayerNumberMap.of(0, 0), PlayerNumberMap.of(0, 0)),
             [
                 CoerceoRegularMove.of(new Coord(5, 2), new Coord(4, 1)),
                 CoerceoRegularMove.of(new Coord(3, 4), new Coord(4, 3)),
@@ -82,7 +82,7 @@ export class CoerceoTutorial extends Tutorial {
                 [_, _, _, _, _, _, X, _, X, _, _, O, _, O, _],
                 [N, N, N, _, _, X, _, _, _, X, _, _, N, N, N],
                 [N, N, N, N, N, N, X, _, X, N, N, N, N, N, N],
-            ], 2, PlayerMap.of(0, 0), PlayerMap.of(0, 0)),
+            ], 2, PlayerNumberMap.of(0, 0), PlayerNumberMap.of(0, 0)),
             [
                 CoerceoRegularMove.of(new Coord(2, 6), new Coord(4, 6)),
                 CoerceoRegularMove.of(new Coord(2, 6), new Coord(3, 5)),
@@ -109,7 +109,7 @@ export class CoerceoTutorial extends Tutorial {
                 [N, N, N, _, _, _, X, _, X, N, N, N, N, N, N],
                 [N, N, N, _, _, X, _, _, _, N, N, N, N, N, N],
                 [N, N, N, N, N, N, X, _, X, N, N, N, N, N, N],
-            ], 1, PlayerMap.of(0, 2), PlayerMap.of(0, 0)),
+            ], 1, PlayerNumberMap.of(0, 2), PlayerNumberMap.of(0, 0)),
             [
                 CoerceoTileExchangeMove.of(new Coord(5, 5)),
             ],
@@ -132,7 +132,7 @@ export class CoerceoTutorial extends Tutorial {
                 [N, N, N, _, X, O, _, _, _, N, N, N, N, N, N],
                 [N, N, N, _, _, X, N, N, N, N, N, N, N, N, N],
                 [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
-            ], 1, PlayerMap.of(0, 0), PlayerMap.of(0, 0)),
+            ], 1, PlayerNumberMap.of(0, 0), PlayerNumberMap.of(0, 0)),
             [
                 CoerceoRegularMove.of(new Coord(7, 6), new Coord(6, 5)),
                 CoerceoRegularMove.of(new Coord(7, 6), new Coord(8, 5)),

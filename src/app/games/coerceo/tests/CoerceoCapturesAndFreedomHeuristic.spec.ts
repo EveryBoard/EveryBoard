@@ -6,7 +6,7 @@ import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { Player } from 'src/app/jscaip/Player';
 import { CoerceoCapturesAndFreedomHeuristic } from '../CoerceoCapturesAndFreedomHeuristic';
-import { PlayerMap } from 'src/app/jscaip/PlayerMap';
+import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 import { CoerceoRules } from '../CoerceoRules';
 
@@ -15,7 +15,7 @@ const N: FourStatePiece = FourStatePiece.UNREACHABLE;
 const O: FourStatePiece = FourStatePiece.ZERO;
 const X: FourStatePiece = FourStatePiece.ONE;
 
-fdescribe('CoerceoCapturesAndFreedomHeuristic', () => {
+describe('CoerceoCapturesAndFreedomHeuristic', () => {
 
     let heuristic: CoerceoCapturesAndFreedomHeuristic;
     const defaultConfig: NoConfig = CoerceoRules.get().getDefaultRulesConfig();
@@ -37,7 +37,8 @@ fdescribe('CoerceoCapturesAndFreedomHeuristic', () => {
             [N, N, N, N, N, N, _, _, _, N, N, N, N, N, N],
             [N, N, N, N, N, N, _, X, O, N, N, N, N, N, N],
         ];
-        const weakState: CoerceoState = new CoerceoState(weakBoard, 1, PlayerMap.of(0, 0), PlayerMap.of(0, 0));
+        const weakState: CoerceoState =
+            new CoerceoState(weakBoard, 1, PlayerNumberMap.of(0, 0), PlayerNumberMap.of(0, 0));
         const strongBoard: Table<FourStatePiece> = [
             [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
             [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
@@ -50,7 +51,8 @@ fdescribe('CoerceoCapturesAndFreedomHeuristic', () => {
             [N, N, N, N, N, N, _, X, O, N, N, N, N, N, N],
             [N, N, N, N, N, N, _, _, _, N, N, N, N, N, N],
         ];
-        const strongState: CoerceoState = new CoerceoState(strongBoard, 1, PlayerMap.of(0, 0), PlayerMap.of(0, 0));
+        const strongState: CoerceoState =
+            new CoerceoState(strongBoard, 1, PlayerNumberMap.of(0, 0), PlayerNumberMap.of(0, 0));
         HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(heuristic,
                                                                weakState, MGPOptional.empty(),
                                                                strongState, MGPOptional.empty(),

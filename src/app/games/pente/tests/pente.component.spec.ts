@@ -7,7 +7,7 @@ import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { PenteComponent } from '../pente.component';
 import { PenteMove } from '../PenteMove';
 import { PenteState } from '../PenteState';
-import { PlayerMap } from 'src/app/jscaip/PlayerMap';
+import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 
 describe('PenteComponent', () => {
 
@@ -72,7 +72,7 @@ describe('PenteComponent', () => {
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-        ], PlayerMap.of(0, 0), 3);
+        ], PlayerNumberMap.of(0, 0), 3);
         await testUtils.setupState(state);
 
         // When doing the capture
@@ -108,7 +108,7 @@ describe('PenteComponent', () => {
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-        ], PlayerMap.of(0, 0), 6);
+        ], PlayerNumberMap.of(0, 0), 6);
         // When displaying it
         await testUtils.setupState(state);
         // Then it should show the victory

@@ -13,7 +13,7 @@ import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { TableUtils } from 'src/app/utils/ArrayUtils';
-import { PlayerMap } from 'src/app/jscaip/PlayerMap';
+import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 import { NumberConfig, RulesConfigDescription, RulesConfigDescriptionLocalizable } from 'src/app/components/wrapper-components/rules-configuration/RulesConfigDescription';
 import { MGPValidators } from 'src/app/utils/MGPValidator';
 
@@ -155,7 +155,7 @@ export class ReversiRules extends ConfigurableRules<ReversiMove,
         if (gameIsEnded === false) {
             return GameStatus.ONGOING;
         }
-        const scores: PlayerMap<number> = state.countScore();
+        const scores: PlayerNumberMap = state.countScore();
         const diff: number = scores.get(Player.ONE).get() - scores.get(Player.ZERO).get();
         if (diff < 0) {
             return GameStatus.ZERO_WON;

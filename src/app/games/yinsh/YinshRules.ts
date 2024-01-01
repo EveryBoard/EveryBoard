@@ -14,7 +14,7 @@ import { YinshPiece } from './YinshPiece';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { GameNode } from 'src/app/jscaip/GameNode';
-import { PlayerMap } from 'src/app/jscaip/PlayerMap';
+import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 export type YinshLegalityInformation = YinshState;
@@ -48,7 +48,7 @@ export class YinshRules extends Rules<YinshMove, YinshState, YinshLegalityInform
             [_, _, _, _, _, _, _, N, N, N, N],
             [N, _, _, _, _, N, N, N, N, N, N],
         ];
-        return new YinshState(board, PlayerMap.of(5, 5), 0);
+        return new YinshState(board, PlayerNumberMap.of(5, 5), 0);
     }
 
     public override applyLegalMove(_move: YinshMove, _state: YinshState, _config: NoConfig, info: YinshState)
@@ -72,10 +72,10 @@ export class YinshRules extends Rules<YinshMove, YinshState, YinshLegalityInform
     }
 
     public takeRing(state: YinshState, ringTaken: Coord): YinshState {
-        const player: number = state.getCurrentPlayer().getValue();
+        const player: Player = state.getCurrentPlayer();
         const board: Table<YinshPiece> = state.setAt(ringTaken, YinshPiece.EMPTY).board;
-        const sideRings: PlayerMap<number> = state.sideRings.getCopy();
-        sideRings[player] += 1;
+        const sideRings: PlayerNumberMap = state.sideRings.getCopy();
+        sideRings.add(player, 1);
         return new YinshState(board, sideRings, state.turn);
     }
 
@@ -158,8 +158,8 @@ export class YinshRules extends Rules<YinshMove, YinshState, YinshLegalityInform
             return MGPFallible.failure(RulesFailure.MUST_CLICK_ON_EMPTY_SPACE());
         }
         const player: Player = state.getCurrentPlayer();
-        const sideRings: PlayerMap<number> = state.sideRings.getCopy();
-        sideRings[player.getValue()] -= 1;
+        const sideRings: PlayerNumberMap = state.sideRings.getCopy();
+        sideRings.add(player, -1);
         const newBoard: Table<YinshPiece> = state.setAt(coord, YinshPiece.of(player, true)).board;
         const newState: YinshState = new YinshState(newBoard, sideRings, state.turn);
         return MGPFallible.success(newState);
@@ -334,10 +334,10 @@ export class YinshRules extends Rules<YinshMove, YinshState, YinshLegalityInform
         if (node.gameState.isInitialPlacementPhase()) {
             return GameStatus.ONGOING;
         }
-        if (3 <= node.gameState.sideRings[0]) {
+        if (3 <= node.gameState.sideRings.get(Player.ZERO).get()) {
             return GameStatus.ZERO_WON;
         }
-        if (3 <= node.gameState.sideRings[1]) {
+        if (3 <= node.gameState.sideRings.get(Player.ONE).get()) {
             return GameStatus.ONE_WON;
         }
         return GameStatus.ONGOING;

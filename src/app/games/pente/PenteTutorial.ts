@@ -5,7 +5,7 @@ import { PenteMove } from './PenteMove';
 import { PenteState } from './PenteState';
 import { GobanConfig } from 'src/app/jscaip/GobanConfig';
 import { PenteRules } from './PenteRules';
-import { PlayerMap } from 'src/app/jscaip/PlayerMap';
+import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 const _: PlayerOrNone = PlayerOrNone.NONE;
@@ -50,7 +50,7 @@ export class PenteTutorial extends Tutorial {
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-            ], PlayerMap.of(0, 0), 3),
+            ], PlayerNumberMap.of(0, 0), 3),
             [PenteMove.of(new Coord(9, 6))],
             $localize`Congratulations!`,
             $localize`Failed. Try again.`,
@@ -78,7 +78,7 @@ export class PenteTutorial extends Tutorial {
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-            ], PlayerMap.of(0, 0), 4),
+            ], PlayerNumberMap.of(0, 0), 4),
             [PenteMove.of(new Coord(9, 7))],
             $localize`Congratulations!`,
             $localize`Failed. Try again.`,
@@ -106,7 +106,7 @@ export class PenteTutorial extends Tutorial {
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-            ], PlayerMap.of(8, 8), 7),
+            ], PlayerNumberMap.of(8, 8), 7),
             [
                 PenteMove.of(new Coord(9, 6)),
                 PenteMove.of(new Coord(8, 9)),

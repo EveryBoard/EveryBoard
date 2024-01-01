@@ -13,7 +13,7 @@ import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
-import { PlayerMap } from 'src/app/jscaip/PlayerMap';
+import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 import { Player } from 'src/app/jscaip/Player';
 
 export type AbaloneLegalityInformation = Table<FourStatePiece>;
@@ -157,7 +157,7 @@ export class AbaloneRules extends Rules<AbaloneMove, AbaloneState, AbaloneLegali
         return MGPFallible.success(newBoard);
     }
     public getGameStatus(node: AbaloneNode): GameStatus {
-        const scores: PlayerMap<number> = node.gameState.getScores();
+        const scores: PlayerNumberMap = node.gameState.getScores();
         if (5 < scores.get(Player.ZERO).get()) {
             return GameStatus.ZERO_WON;
         } else if (5 < scores.get(Player.ONE).get()) {

@@ -18,7 +18,7 @@ import { MCTS } from 'src/app/jscaip/MCTS';
 import { MartianChessMoveGenerator } from './MartianChessMoveGenerator';
 import { MartianChessScoreHeuristic } from './MartianChessScoreHeuristic';
 import { Minimax } from 'src/app/jscaip/Minimax';
-import { PlayerMap } from 'src/app/jscaip/PlayerMap';
+import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 
 type SelectedPieceInfo = {
     selectedPiece: Coord,
@@ -170,7 +170,7 @@ export class MartianChessComponent extends RectangularGameComponent<MartianChess
         ];
         this.encoder = MartianChessMove.encoder;
         this.hasAsymmetricBoard = true;
-        this.scores = MGPOptional.of(PlayerMap.of(0, 0));
+        this.scores = MGPOptional.of(PlayerNumberMap.of(0, 0));
 
         this.SPACE_SIZE = MartianChessComponent.SPACE_SIZE;
         this.configCogTransformation = this.getConfigCogTransformation();
@@ -209,7 +209,7 @@ export class MartianChessComponent extends RectangularGameComponent<MartianChess
         const scoreZero: number = this.state.getScoreOf(Player.ZERO);
         const scoreOne: number = this.state.getScoreOf(Player.ONE);
         this.countDown = this.state.countDown;
-        this.scores = MGPOptional.of(PlayerMap.of(scoreZero, scoreOne));
+        this.scores = MGPOptional.of(PlayerNumberMap.of(scoreZero, scoreOne));
     }
 
     public getPieceLocation(x: number, y: number): string {

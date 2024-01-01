@@ -2,57 +2,57 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { CoerceoState } from '../CoerceoState';
-import { PlayerMap } from 'src/app/jscaip/PlayerMap';
+import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 
-fdescribe('CoerceoState', () => {
+describe('CoerceoState', () => {
 
     describe('isDeconnectable', () => {
         const dummyCoord: Coord = new Coord(-1, -1);
 
         it('should not deconnect tile with more than 3 neighbor (v _ _ v v v)', () => {
-            const state: CoerceoState = new CoerceoState([], 0, PlayerMap.of(0, 0), PlayerMap.of(0, 0));
+            const state: CoerceoState = new CoerceoState([], 0, PlayerNumberMap.of(0, 0), PlayerNumberMap.of(0, 0));
             spyOn(state, 'getPresentNeighborTilesRelativeIndices').and.returnValue([0, 1, 2, 3, 4, 5]);
             expect(state.isDeconnectable(dummyCoord)).toBeFalse();
         });
 
         it('should deconnect when 3 adjacent neighbor (v v v _ _ _ )', () => {
-            const state: CoerceoState = new CoerceoState([], 0, PlayerMap.of(0, 0), PlayerMap.of(0, 0));
+            const state: CoerceoState = new CoerceoState([], 0, PlayerNumberMap.of(0, 0), PlayerNumberMap.of(0, 0));
             spyOn(state, 'getPresentNeighborTilesRelativeIndices').and.returnValue([0, 1, 2]);
             expect(state.isDeconnectable(dummyCoord)).toBeTrue();
         });
 
         it('should not deconnect when 3 splitted neighbor (v v _ v _ _)', () => {
-            const state: CoerceoState = new CoerceoState([], 0, PlayerMap.of(0, 0), PlayerMap.of(0, 0));
+            const state: CoerceoState = new CoerceoState([], 0, PlayerNumberMap.of(0, 0), PlayerNumberMap.of(0, 0));
             spyOn(state, 'getPresentNeighborTilesRelativeIndices').and.returnValue([0, 1, 3]);
             expect(state.isDeconnectable(dummyCoord)).toBeFalse();
         });
 
         it('should not deconnect when 3 splitted neighbor (v _ v v _ _)', () => {
-            const state: CoerceoState = new CoerceoState([], 0, PlayerMap.of(0, 0), PlayerMap.of(0, 0));
+            const state: CoerceoState = new CoerceoState([], 0, PlayerNumberMap.of(0, 0), PlayerNumberMap.of(0, 0));
             spyOn(state, 'getPresentNeighborTilesRelativeIndices').and.returnValue([0, 2, 3]);
             expect(state.isDeconnectable(dummyCoord)).toBeFalse();
         });
 
         it('should deconnect when 2 adjacent neighbor (v v _ _ _ _)', () => {
-            const state: CoerceoState = new CoerceoState([], 0, PlayerMap.of(0, 0), PlayerMap.of(0, 0));
+            const state: CoerceoState = new CoerceoState([], 0, PlayerNumberMap.of(0, 0), PlayerNumberMap.of(0, 0));
             spyOn(state, 'getPresentNeighborTilesRelativeIndices').and.returnValue([0, 1]);
             expect(state.isDeconnectable(dummyCoord)).toBeTrue();
         });
 
         it('should deconnect when 2 adjacent neighbor (v _ _ _ _ v)', () => {
-            const state: CoerceoState = new CoerceoState([], 0, PlayerMap.of(0, 0), PlayerMap.of(0, 0));
+            const state: CoerceoState = new CoerceoState([], 0, PlayerNumberMap.of(0, 0), PlayerNumberMap.of(0, 0));
             spyOn(state, 'getPresentNeighborTilesRelativeIndices').and.returnValue([0, 5]);
             expect(state.isDeconnectable(dummyCoord)).toBeTrue();
         });
 
         it('should not deconnect when 2 non adjacent neighbor (v _ v _ _ _)', () => {
-            const state: CoerceoState = new CoerceoState([], 0, PlayerMap.of(0, 0), PlayerMap.of(0, 0));
+            const state: CoerceoState = new CoerceoState([], 0, PlayerNumberMap.of(0, 0), PlayerNumberMap.of(0, 0));
             spyOn(state, 'getPresentNeighborTilesRelativeIndices').and.returnValue([0, 2]);
             expect(state.isDeconnectable(dummyCoord)).toBeFalse();
         });
 
         it('should deconnect when only one neighbor', () => {
-            const state: CoerceoState = new CoerceoState([], 0, PlayerMap.of(0, 0), PlayerMap.of(0, 0));
+            const state: CoerceoState = new CoerceoState([], 0, PlayerNumberMap.of(0, 0), PlayerNumberMap.of(0, 0));
             spyOn(state, 'getPresentNeighborTilesRelativeIndices').and.returnValue([0]);
             expect(state.isDeconnectable(dummyCoord)).toBeTrue();
         });

@@ -2,8 +2,7 @@
 import { Table } from 'src/app/utils/ArrayUtils';
 import { MancalaState } from '../../common/MancalaState';
 import { AwaleMoveGenerator } from '../AwaleMoveGenerator';
-import { AwaleNode } from '../AwaleRules';
-import { PlayerMap } from 'src/app/jscaip/PlayerMap';
+import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 import { AwaleRules } from '../AwaleRules';
 import { MancalaConfig } from '../../common/MancalaConfig';
 import { MancalaDistribution, MancalaMove } from '../../common/MancalaMove';
@@ -26,7 +25,7 @@ describe('AwaleMoveGenerator', () => {
             [1, 0, 0, 0, 0, 1],
             [0, 0, 0, 0, 0, 0],
         ];
-        const state: MancalaState = new MancalaState(board, 1, PlayerMap.of(0, 0));
+        const state: MancalaState = new MancalaState(board, 1, PlayerNumberMap.of(0, 0));
         const node: MancalaNode = new MancalaNode(state);
 
         // When listing the moves

@@ -1,17 +1,17 @@
 import { GameStateWithTable } from 'src/app/jscaip/GameStateWithTable';
-import { PlayerMap } from 'src/app/jscaip/PlayerMap';
+import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 import { Table, TableUtils } from 'src/app/utils/ArrayUtils';
 
 export class MancalaState extends GameStateWithTable<number> {
 
     public constructor(b: Table<number>,
                        turn: number,
-                       public readonly scores: PlayerMap<number>)
+                       public readonly scores: PlayerNumberMap)
     {
         super(b, turn);
     }
 
-    public getScoresCopy(): PlayerMap<number> {
+    public getScoresCopy(): PlayerNumberMap {
         return this.scores.getCopy();
     }
 

@@ -6,7 +6,7 @@ import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { PenteMove } from '../PenteMove';
 import { PenteNode, PenteRules } from '../PenteRules';
 import { PenteState } from '../PenteState';
-import { PlayerMap } from 'src/app/jscaip/PlayerMap';
+import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 import { GobanConfig } from 'src/app/jscaip/GobanConfig';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 
@@ -51,7 +51,7 @@ describe('PenteRules', () => {
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-        ], PlayerMap.of(0, 0), 1);
+        ], PlayerNumberMap.of(0, 0), 1);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
     });
 
@@ -101,7 +101,7 @@ describe('PenteRules', () => {
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-        ], PlayerMap.of(0, 0), 3);
+        ], PlayerNumberMap.of(0, 0), 3);
 
         // When doing a drop to make a sandwich
         const move: PenteMove = PenteMove.of(new Coord(9, 6));
@@ -127,7 +127,7 @@ describe('PenteRules', () => {
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-        ], PlayerMap.of(0, 2), 4);
+        ], PlayerNumberMap.of(0, 2), 4);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
     });
 
@@ -153,7 +153,7 @@ describe('PenteRules', () => {
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-        ], PlayerMap.of(0, 0), 3);
+        ], PlayerNumberMap.of(0, 0), 3);
 
         // When doing a drop to sandwich twice
         const move: PenteMove = PenteMove.of(new Coord(9, 6));
@@ -179,7 +179,7 @@ describe('PenteRules', () => {
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-        ], PlayerMap.of(0, 4), 4);
+        ], PlayerNumberMap.of(0, 4), 4);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
     });
 
@@ -213,7 +213,7 @@ describe('PenteRules', () => {
             [X, X, X, X, O, O, O, O, X, X, X, X, O, O, O, O, X, X, X],
             [X, X, X, X, O, O, O, O, X, X, X, X, O, O, O, O, X, X, X],
             [X, X, X, X, O, O, O, O, X, X, X, X, O, O, O, O, X, X, X],
-        ], PlayerMap.of(8, 8), 1337);
+        ], PlayerNumberMap.of(8, 8), 1337);
         const node: PenteNode = new PenteNode(state);
         // Then it should be a draw
         RulesUtils.expectToBeDraw(rules, node, defaultConfig);
@@ -241,7 +241,7 @@ describe('PenteRules', () => {
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-        ], PlayerMap.of(10, 0), 3);
+        ], PlayerNumberMap.of(10, 0), 3);
         const node: PenteNode = new PenteNode(state);
         // Then it should be a victory for this player
         RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, defaultConfig);
@@ -269,7 +269,7 @@ describe('PenteRules', () => {
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-        ], PlayerMap.of(0, 0), 3);
+        ], PlayerNumberMap.of(0, 0), 3);
         const node: PenteNode = new PenteNode(state);
         // Then it should be a victory for zero
         RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, defaultConfig);

@@ -9,7 +9,7 @@ import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { ReversibleMap } from 'src/app/utils/MGPMap';
 import { GameNode } from 'src/app/jscaip/GameNode';
-import { PlayerMap } from 'src/app/jscaip/PlayerMap';
+import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 import { MancalaDistribution, MancalaMove } from './MancalaMove';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { Utils } from 'src/app/utils/utils';
@@ -66,7 +66,7 @@ export abstract class MancalaRules extends ConfigurableRules<MancalaMove, Mancal
     public static getInitialState(optionalConfig: MGPOptional<MancalaConfig>): MancalaState {
         const config: MancalaConfig = optionalConfig.get();
         const board: number[][] = TableUtils.create(config.width, 2, config.seedsByHouse);
-        return new MancalaState(board, 0, PlayerMap.of(0, 0));
+        return new MancalaState(board, 0, PlayerNumberMap.of(0, 0));
     }
 
     protected constructor() {
@@ -140,14 +140,14 @@ export abstract class MancalaRules extends ConfigurableRules<MancalaMove, Mancal
         for (const distributions of move) {
             const distributionResult: MancalaDistributionResult =
                 this.distributeHouse(distributions.x, playerY, postDistributionState, config);
-            const captures: PlayerMap<number> = postDistributionState.getScoresCopy();
-            captures.put(player, captures.get(player).get() + distributionResult.passedByStoreNTimes);
+            const captures: PlayerNumberMap = postDistributionState.getScoresCopy();
+            captures.add(player, distributionResult.passedByStoreNTimes);
             postDistributionState = distributionResult.resultingState;
             filledCoords.push(...distributionResult.filledCoords);
             passedByStoreNTimes += distributionResult.passedByStoreNTimes;
             endsUpInStore = distributionResult.endsUpInStore;
         }
-        const captured: PlayerMap<number> = postDistributionState.getScoresCopy();
+        const captured: PlayerNumberMap = postDistributionState.getScoresCopy();
         const distributedState: MancalaState = new MancalaState(postDistributionState.getCopiedBoard(),
                                                                 postDistributionState.turn,
                                                                 captured);
@@ -191,13 +191,15 @@ export abstract class MancalaRules extends ConfigurableRules<MancalaMove, Mancal
         const width: number = node.gameState.getWidth();
         const seedsByHouse: number = config.get().seedsByHouse;
         const halfOfTotalSeeds: number = width * seedsByHouse;
-        if (state.scores[0] > halfOfTotalSeeds) {
+        if (state.scores.get(Player.ZERO).get() > halfOfTotalSeeds) {
             return GameStatus.ZERO_WON;
         }
-        if (state.scores[1] > halfOfTotalSeeds) {
+        if (state.scores.get(Player.ONE).get() > halfOfTotalSeeds) {
             return GameStatus.ONE_WON;
         }
-        if (state.scores[0] === halfOfTotalSeeds && state.scores[1] === halfOfTotalSeeds) {
+        if (state.scores.get(Player.ZERO).get() === halfOfTotalSeeds &&
+            state.scores.get(Player.ONE).get() === halfOfTotalSeeds)
+        {
             return GameStatus.DRAW;
         }
         return GameStatus.ONGOING;
@@ -260,13 +262,13 @@ export abstract class MancalaRules extends ConfigurableRules<MancalaMove, Mancal
                 }
             }
         }
-        const score: PlayerMap<number> = state.getScoresCopy();
-        score.put(player, score.get(player).get() + passedByStoreNTimes);
+        const scores: PlayerNumberMap = state.getScoresCopy();
+        scores.add(player, passedByStoreNTimes);
         return {
             filledCoords: filledCoords,
             passedByStoreNTimes,
             endsUpInStore,
-            resultingState: new MancalaState(resultingBoard, state.turn, score),
+            resultingState: new MancalaState(resultingBoard, state.turn, scores),
         };
     }
 
@@ -330,7 +332,7 @@ export abstract class MancalaRules extends ConfigurableRules<MancalaMove, Mancal
     public monsoon(mansooningPlayer: Player, postCaptureResult: MancalaCaptureResult): MancalaCaptureResult {
         const state: MancalaState = postCaptureResult.resultingState;
         const resultingBoard: number[][] = state.getCopiedBoard();
-        const captured: PlayerMap<number> = state.getScoresCopy();
+        const captured: PlayerNumberMap = state.getScoresCopy();
         let capturedSum: number = 0;
         const captureMap: number[][] = TableUtils.copy(postCaptureResult.captureMap);
         let x: number = 0;
@@ -341,8 +343,7 @@ export abstract class MancalaRules extends ConfigurableRules<MancalaMove, Mancal
             resultingBoard[mansoonedY][x] = 0;
             x++;
         }
-        const oldValue: number = captured.get(mansooningPlayer).get();
-        captured.put(mansooningPlayer, oldValue + capturedSum);
+        captured.add(mansooningPlayer, capturedSum);
         return {
             capturedSum,
             captureMap,

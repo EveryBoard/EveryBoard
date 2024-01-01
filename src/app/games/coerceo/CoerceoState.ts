@@ -10,7 +10,7 @@ import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
 import { Player } from 'src/app/jscaip/Player';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPMap } from 'src/app/utils/MGPMap';
-import { PlayerMap } from 'src/app/jscaip/PlayerMap';
+import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 
 @Debug.log
 export class CoerceoState extends TriangularGameState<FourStatePiece> {
@@ -52,8 +52,8 @@ export class CoerceoState extends TriangularGameState<FourStatePiece> {
 
     public constructor(board: Table<FourStatePiece>,
                        turn: number,
-                       public readonly tiles: PlayerMap<number>,
-                       public readonly captures: PlayerMap<number>)
+                       public readonly tiles: PlayerNumberMap,
+                       public readonly captures: PlayerNumberMap)
     {
         super(board, turn);
         tiles.makeImmutable();
@@ -101,10 +101,9 @@ export class CoerceoState extends TriangularGameState<FourStatePiece> {
 
     public capture(coord: Coord): CoerceoState {
         const newBoard: FourStatePiece[][] = this.getCopiedBoard();
-        const newCaptures: PlayerMap<number> = this.captures.getCopy();
+        const newCaptures: PlayerNumberMap = this.captures.getCopy();
         newBoard[coord.y][coord.x] = FourStatePiece.EMPTY;
-        const oldCurrentPlayerCaptures: number = newCaptures.get(this.getCurrentPlayer()).get();
-        newCaptures.put(this.getCurrentPlayer(), oldCurrentPlayerCaptures + 1);
+        newCaptures.add(this.getCurrentPlayer(), 1);
         return new CoerceoState(newBoard, this.turn, this.tiles, newCaptures);
     }
 
@@ -194,9 +193,9 @@ export class CoerceoState extends TriangularGameState<FourStatePiece> {
                 newBoard[y0 + y][x0 + x] = FourStatePiece.UNREACHABLE;
             }
         }
-        const newTiles: PlayerMap<number> = this.tiles.getCopy();
+        const newTiles: PlayerNumberMap = this.tiles.getCopy();
         if (countTiles) {
-            newTiles[this.getCurrentPlayer().getValue()] += 1;
+            newTiles.add(this.getCurrentPlayer(), 1);
         }
         return new CoerceoState(newBoard, this.turn, newTiles, this.captures);
     }

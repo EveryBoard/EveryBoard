@@ -6,7 +6,7 @@ import { Player } from 'src/app/jscaip/Player';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { Timestamp } from 'firebase/firestore';
 import { getMillisecondsElapsed } from 'src/app/utils/TimeUtils';
-import { MGPMap } from 'src/app/utils/MGPMap';
+import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 
 /**
  * The time manager manages clocks of each player.
@@ -33,22 +33,13 @@ export class OGWCTimeManagerService {
     private configRoom: MGPOptional<ConfigRoom> = MGPOptional.empty();
 
     // The global time taken by each player since the beginning of the part
-    private readonly takenGlobalTime: MGPMap<Player, number> = new MGPMap([
-        { key: Player.ZERO, value: 0 },
-        { key: Player.ONE, value: 0 },
-    ]);
+    private readonly takenGlobalTime: PlayerNumberMap = PlayerNumberMap.of(0, 0);
 
     // The global time added to each player
-    private readonly extraGlobalTime: MGPMap<Player, number> = new MGPMap([
-        { key: Player.ZERO, value: 0 },
-        { key: Player.ONE, value: 0 },
-    ]);
+    private readonly extraGlobalTime: PlayerNumberMap = PlayerNumberMap.of(0, 0);
 
     // The turn time available for each player. Distinct from the clocks so it stays constant within a turn
-    private readonly availableTurnTime: MGPMap<Player, number> = new MGPMap([
-        { key: Player.ZERO, value: 0 },
-        { key: Player.ONE, value: 0 },
-    ]);
+    private readonly availableTurnTime: PlayerNumberMap = PlayerNumberMap.of(0, 0);
 
     // The time at which the current move started
     private lastMoveStartTimestamp: MGPOptional<Timestamp> = MGPOptional.empty();
@@ -108,11 +99,9 @@ export class OGWCTimeManagerService {
         const moveTimestamp: Timestamp = move.time as Timestamp;
         const takenMoveTime: number = this.getMillisecondsElapsedSinceLastMoveStart(moveTimestamp);
         this.lastMoveStartTimestamp = MGPOptional.of(moveTimestamp);
-        const newPlayerTakenGlobalTime: number = this.takenGlobalTime.get(player).get() + takenMoveTime;
-        this.takenGlobalTime.put(player, newPlayerTakenGlobalTime);
+        this.takenGlobalTime.add(player, takenMoveTime);
 
-        const oldValue: number = this.availableTurnTime.get(player).get();
-        this.availableTurnTime.put(player, oldValue - takenMoveTime);
+        this.availableTurnTime.add(player, - takenMoveTime);
 
         // Now is the time to update the other player's clock
         // They may get updated through later action such as time additions
@@ -154,23 +143,25 @@ export class OGWCTimeManagerService {
             this.resumeClocks(player);
         }
     }
+
     // Resumes the clocks of player. Public for testing purposes only.
     public resumeClocks(player: Player): void {
         this.turnClocks[player.getValue()].resume();
         this.globalClocks[player.getValue()].resume();
     }
+
     // Add turn time to the opponent of a player
     private addTurnTime(player: Player): void {
         const secondsToAdd: number = 30;
-        const oldValue: number = this.availableTurnTime.get(player.getOpponent()).get();
-        this.availableTurnTime.put(player.getOpponent(), oldValue + (secondsToAdd * 1000));
+        this.availableTurnTime.add(player.getOpponent(), secondsToAdd * 1000);
     }
+
     // Add time to the global clock of the opponent of a player
     private addGlobalTime(player: Player): void {
         const secondsToAdd: number = 5 * 60;
-        const opponentExtraGlobalTime: number = this.extraGlobalTime.get(player.getOpponent()).get();
-        this.extraGlobalTime.put(player.getOpponent(), opponentExtraGlobalTime + (secondsToAdd * 1000));
+        this.extraGlobalTime.add(player.getOpponent(), secondsToAdd * 1000);
     }
+
     // Update clocks with the available time
     private updateClocks(): void {
         for (const player of Player.PLAYERS) {

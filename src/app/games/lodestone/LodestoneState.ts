@@ -7,7 +7,7 @@ import { assert } from 'src/app/utils/assert';
 import { MGPMap } from 'src/app/utils/MGPMap';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { LodestoneCaptures } from './LodestoneMove';
-import { PlayerMap } from 'src/app/jscaip/PlayerMap';
+import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 import { Utils } from 'src/app/utils/utils';
 
 /**
@@ -212,9 +212,9 @@ export class LodestoneState extends GameStateWithTable<LodestonePiece> {
         return playerPieces;
     }
 
-    public getScores(): PlayerMap<number> {
+    public getScores(): PlayerNumberMap {
         const remainingPieces: [number, number] = this.numberOfPieces();
-        return PlayerMap.of(
+        return PlayerNumberMap.of(
             LodestoneState.NUMBER_OF_PIECES - remainingPieces[1],
             LodestoneState.NUMBER_OF_PIECES - remainingPieces[0],
         );

@@ -13,7 +13,7 @@ import { MCTS } from 'src/app/jscaip/MCTS';
 import { Minimax } from 'src/app/jscaip/Minimax';
 import { GoHeuristic } from './GoHeuristic';
 import { GoMoveGenerator } from './GoMoveGenerator';
-import { PlayerMap } from 'src/app/jscaip/PlayerMap';
+import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 
 @Component({
     selector: 'app-go',
@@ -44,7 +44,7 @@ export class GoComponent
         ];
         this.encoder = GoMove.encoder;
         this.canPass = true;
-        this.scores = MGPOptional.of(PlayerMap.of(0, 0));
+        this.scores = MGPOptional.of(PlayerNumberMap.of(0, 0));
     }
 
     public async onClick(x: number, y: number): Promise<MGPValidation> {

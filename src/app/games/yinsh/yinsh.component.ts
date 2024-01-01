@@ -19,7 +19,7 @@ import { MCTS } from 'src/app/jscaip/MCTS';
 import { Minimax } from 'src/app/jscaip/Minimax';
 import { YinshScoreHeuristic } from './YinshScoreHeuristic';
 import { YinshMoveGenerator } from './YinshMoveGenerator';
-import { PlayerMap } from 'src/app/jscaip/PlayerMap';
+import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 interface SpaceInfo {
@@ -108,7 +108,7 @@ export class YinshComponent extends HexagonalGameComponent<YinshRules,
             new MCTS($localize`MCTS`, new YinshMoveGenerator(), this.rules),
         ];
         this.encoder = YinshMove.encoder;
-        this.scores = MGPOptional.of(PlayerMap.of(0, 0));
+        this.scores = MGPOptional.of(PlayerNumberMap.of(0, 0));
 
         this.hexaLayout = new HexaLayout(YinshComponent.RING_OUTER_SIZE * 1.50,
                                          new Coord(YinshComponent.RING_OUTER_SIZE * 2, 0),
@@ -145,7 +145,7 @@ export class YinshComponent extends HexagonalGameComponent<YinshRules,
             this.setMarkerInfo(coord, piece);
         });
         for (const player of Player.PLAYERS) {
-            this.viewInfo.sideRings[player.getValue()] = this.constructedState.sideRings[player.getValue()];
+            this.viewInfo.sideRings[player.getValue()] = this.constructedState.sideRings.get(player).get();
         }
         this.showCurrentMoveCaptures();
 

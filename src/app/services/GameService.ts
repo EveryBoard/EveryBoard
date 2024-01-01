@@ -14,7 +14,7 @@ import { MinimalUser } from '../domain/MinimalUser';
 import { ConnectedUserService } from './ConnectedUserService';
 import { FirestoreTime } from '../domain/Time';
 import { GameEventService } from './GameEventService';
-import { PlayerMap } from '../jscaip/PlayerMap';
+import { PlayerNumberMap } from '../jscaip/PlayerMap';
 
 export interface StartingPartConfig extends Partial<Part> {
     playerZero: MinimalUser,
@@ -241,7 +241,7 @@ export class GameService {
     }
 
     private async preparePartUpdate(partId: string,
-                                    scores: MGPOptional<PlayerMap<number>>)
+                                    scores: MGPOptional<PlayerNumberMap>)
     : Promise<Partial<Part>>
     {
         const part: Part = (await this.partDAO.read(partId)).get();
@@ -253,13 +253,13 @@ export class GameService {
         return update;
     }
 
-    public async updatePart(partId: string, scores: MGPOptional<PlayerMap<number>>): Promise<void> {
+    public async updatePart(partId: string, scores: MGPOptional<PlayerNumberMap>): Promise<void> {
         const update: Partial<Part> = await this.preparePartUpdate(partId, scores);
         await this.update(partId, update);
     }
 
     public async drawPart(partId: string, player: Player,
-                          scores: MGPOptional<PlayerMap<number>>)
+                          scores: MGPOptional<PlayerNumberMap>)
     : Promise<void>
     {
         let update: Partial<Part> = await this.preparePartUpdate(partId, scores);
@@ -275,7 +275,7 @@ export class GameService {
                                     player: Player,
                                     winner: MinimalUser,
                                     loser: MinimalUser,
-                                    scores: MGPOptional<PlayerMap<number>>)
+                                    scores: MGPOptional<PlayerNumberMap>)
     : Promise<void>
     {
         let update: Partial<Part> = await this.preparePartUpdate(partId, scores);
@@ -293,7 +293,7 @@ export class GameService {
         await this.gameEventService.addMove(partId, player, encodedMove);
     }
 
-    private updateScore(update: Partial<Part>, scores: MGPOptional<PlayerMap<number>>): Partial<Part> {
+    private updateScore(update: Partial<Part>, scores: MGPOptional<PlayerNumberMap>): Partial<Part> {
         if (scores.isPresent()) {
             return {
                 ...update,

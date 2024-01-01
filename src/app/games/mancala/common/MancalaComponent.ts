@@ -17,7 +17,7 @@ import { MancalaConfig } from './MancalaConfig';
 import { AI, AIOptions, MoveGenerator } from 'src/app/jscaip/AI';
 import { MancalaScoreMinimax } from './MancalaScoreMinimax';
 import { MCTS } from 'src/app/jscaip/MCTS';
-import { PlayerMap } from 'src/app/jscaip/PlayerMap';
+import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 
 export abstract class MancalaComponent<R extends MancalaRules>
     extends RectangularGameComponent<R, MancalaMove, MancalaState, number, MancalaConfig>
@@ -52,7 +52,7 @@ export abstract class MancalaComponent<R extends MancalaRules>
     {
         super(messageDisplayer);
         this.hasAsymmetricBoard = true;
-        this.scores = MGPOptional.of(PlayerMap.of(0, 0));
+        this.scores = MGPOptional.of(PlayerNumberMap.of(0, 0));
     }
 
     public getMancalaViewBox(): string {
@@ -175,7 +175,7 @@ export abstract class MancalaComponent<R extends MancalaRules>
         const initial: Coord = coord; // to remember in order not to sow in the starting space if we make a full turn
         let seedsInHand: number = resultingBoard[coord.y][coord.x];
         let currentDropIsStore: boolean = false;
-        const scores: PlayerMap<number> = state.getScoresCopy();
+        const scores: PlayerNumberMap = state.getScoresCopy();
         resultingBoard[coord.y][coord.x] = 0;
         // Changing immediately the chosen house
         this.changeVisibleState(new MancalaState(resultingBoard, state.turn, scores));
@@ -188,7 +188,7 @@ export abstract class MancalaComponent<R extends MancalaRules>
                 seedsInHand--;
                 this.filledCoords.push(MancalaRules.FAKE_STORE_COORD.get(player).get());
                 this.droppedInStore[player.getValue()] += 1;
-                scores[player.getValue()] += 1;
+                scores.add(player, 1);
             } else {
                 coord = nextCoord.get();
                 if (initial.equals(coord) === false || config.feedOriginalHouse) {
@@ -285,8 +285,8 @@ export abstract class MancalaComponent<R extends MancalaRules>
     }
 
     public getStoreSecondaryContent(owner: Player): MGPOptional<string> {
-        const previousScore: number = this.getPreviousStableState().scores[owner.getValue()];
-        const currentScore: number = this.constructedState.scores[owner.getValue()];
+        const previousScore: number = this.getPreviousStableState().scores.get(owner).get();
+        const currentScore: number = this.constructedState.scores.get(owner).get();
         const difference: number = currentScore - previousScore;
         if (difference > 0) {
             return MGPOptional.of('+' + difference);

@@ -4,8 +4,7 @@ import { Player } from 'src/app/jscaip/Player';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MancalaCaptureResult, MancalaDistributionResult, MancalaRules } from '../common/MancalaRules';
 import { Utils } from 'src/app/utils/utils';
-import { GameNode } from 'src/app/jscaip/GameNode';
-import { PlayerMap } from 'src/app/jscaip/PlayerMap';
+import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 import { MancalaConfig } from '../common/MancalaConfig';
 import { MGPValidators } from 'src/app/utils/MGPValidator';
 import { BooleanConfig, NumberConfig, RulesConfigDescription, RulesConfigDescriptionLocalizable } from 'src/app/components/wrapper-components/rules-configuration/RulesConfigDescription';
@@ -84,10 +83,9 @@ export class AwaleRules extends MancalaRules {
             x += direction;
             target = resultingBoard[y][x];
         } while ((x !== limit) && ((target === 2) || (target === 3)));
-        const captured: PlayerMap<number> = state.getScoresCopy();
+        const captured: PlayerNumberMap = state.getScoresCopy();
         const currentPlayer: Player = state.getCurrentPlayer();
-        const oldValue: number = captured.get(currentPlayer).get();
-        captured.put(currentPlayer, oldValue + capturedSum);
+        captured.add(currentPlayer, capturedSum);
         return {
             capturedSum,
             captureMap,

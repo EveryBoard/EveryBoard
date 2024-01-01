@@ -2,7 +2,8 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
 import { GameStateWithTable } from 'src/app/jscaip/GameStateWithTable';
 import { AbaloneRules } from './AbaloneRules';
-import { PlayerMap } from 'src/app/jscaip/PlayerMap';
+import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
+import { Player } from 'src/app/jscaip/Player';
 
 export class AbaloneState extends GameStateWithTable<FourStatePiece> {
 
@@ -16,18 +17,15 @@ export class AbaloneState extends GameStateWithTable<FourStatePiece> {
         return piece.isPlayer();
     }
 
-    public getScores(): PlayerMap<number> {
-        const scores: [number, number] = [14, 14];
-        for (let y: number = 0; y < 9; y++) {
-            for (let x: number = 0; x < 9; x++) {
-                if (this.getPieceAtXY(x, y) === FourStatePiece.ZERO) {
-                    scores[1] = scores[1] - 1;
-                }
-                if (this.getPieceAtXY(x, y) === FourStatePiece.ONE) {
-                    scores[0] = scores[0] - 1;
-                }
+    public getScores(): PlayerNumberMap {
+        const scores: PlayerNumberMap = PlayerNumberMap.of(14, 14);
+        for (const coordAndContent of this.getCoordsAndContents()) {
+            const piece: FourStatePiece = coordAndContent.content;
+            if (piece.isPlayer()) {
+                const player: Player = piece.getPlayer() as Player;
+                scores.add(player.getOpponent(), -1);
             }
         }
-        return PlayerMap.of(scores[0], scores[1]);
+        return scores;
     }
 }

@@ -1,7 +1,7 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { GameStateWithTable } from 'src/app/jscaip/GameStateWithTable';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { PlayerMap } from 'src/app/jscaip/PlayerMap';
+import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 import { Table, TableUtils } from 'src/app/utils/ArrayUtils';
 import { ComparableObject } from 'src/app/utils/Comparable';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
@@ -22,9 +22,9 @@ export class GoPiece implements ComparableObject {
 
     public static DEAD_LIGHT: GoPiece = new GoPiece(Player.ONE, 'dead');
 
-    public static DARK_TERRITORY: GoPiece = new GoPiece(PlayerOrNone.NONE, 'territory');
+    public static DARK_TERRITORY: GoPiece = new GoPiece(Player.ZERO, 'territory');
 
-    public static LIGHT_TERRITORY: GoPiece = new GoPiece(PlayerOrNone.NONE, 'territory');
+    public static LIGHT_TERRITORY: GoPiece = new GoPiece(Player.ONE, 'territory');
 
     private constructor(readonly player: PlayerOrNone, public readonly type: PieceType) {}
 
@@ -70,11 +70,13 @@ export class GoPiece implements ComparableObject {
     }
 
     public isOccupied(): boolean {
-        return [GoPiece.DARK, GoPiece.LIGHT, GoPiece.DEAD_DARK, GoPiece.DEAD_LIGHT].includes(this);
+        return this.type === 'alive' ||
+               this.type === 'dead';
     }
 
     public isEmpty(): boolean {
-        return [GoPiece.DARK_TERRITORY, GoPiece.LIGHT_TERRITORY, GoPiece.EMPTY].includes(this);
+        return this.type === 'territory' ||
+               this.type === 'empty';
     }
 
     public isAlive(): boolean {
@@ -82,11 +84,11 @@ export class GoPiece implements ComparableObject {
     }
 
     public isDead(): boolean {
-        return [GoPiece.DEAD_DARK, GoPiece.DEAD_LIGHT].includes(this);
+        return this.type === 'dead';
     }
 
     public isTerritory(): boolean {
-        return [GoPiece.DARK_TERRITORY, GoPiece.LIGHT_TERRITORY].includes(this);
+        return this.type === 'territory';
     }
 
     public getOwner(): PlayerOrNone {
@@ -99,6 +101,7 @@ export class GoPiece implements ComparableObject {
     }
 
 }
+
 export enum Phase {
     PLAYING = 'PLAYING',
     PASSED = 'PASSED',
@@ -111,12 +114,12 @@ export class GoState extends GameStateWithTable<GoPiece> {
 
     public readonly koCoord: MGPOptional<Coord>;
 
-    public readonly captured: PlayerMap<number>;
+    public readonly captured: PlayerNumberMap;
 
     public readonly phase: Phase;
 
     public constructor(board: Table<GoPiece>,
-                       captured: PlayerMap<number>,
+                       captured: PlayerNumberMap,
                        turn: number,
                        koCoord: MGPOptional<Coord>,
                        phase: Phase)
@@ -127,8 +130,8 @@ export class GoState extends GameStateWithTable<GoPiece> {
         this.phase = phase;
     }
 
-    public getCapturedCopy(): PlayerMap<number> {
-        return PlayerMap.of(this.captured[0], this.captured[1]);
+    public getCapturedCopy(): PlayerNumberMap {
+        return this.captured.getCopy();
     }
 
     public static getStartingBoard(config: GoConfig): GoPiece[][] {

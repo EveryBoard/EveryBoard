@@ -13,7 +13,7 @@ import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { HexagonalUtils } from 'src/app/jscaip/HexagonalUtils';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { PlayerMap } from 'src/app/jscaip/PlayerMap';
+import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 import { Utils } from 'src/app/utils/utils';
 import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 
@@ -36,12 +36,14 @@ export class DvonnRules extends Rules<DvonnMove, DvonnState> {
 
     public static getGameStatus(node: DvonnNode): GameStatus {
         const state: DvonnState = node.gameState;
-        const scores: PlayerMap<number> = DvonnRules.getScores(state);
+        const scores: PlayerNumberMap = DvonnRules.getScores(state);
         if (DvonnRules.getMovablePieces(state).length === 0) {
             // This is the end of the game, boost the score to clearly indicate it
-            if (scores[0] > scores[1]) {
+            const scoresZero: number = scores.get(Player.ZERO).get();
+            const scoresOne: number = scores.get(Player.ONE).get();
+            if (scoresZero > scoresOne) {
                 return GameStatus.ZERO_WON;
-            } else if (scores[0] < scores[1]) {
+            } else if (scoresZero < scoresOne) {
                 return GameStatus.ONE_WON;
             } else {
                 return GameStatus.DRAW;
@@ -81,7 +83,7 @@ export class DvonnRules extends Rules<DvonnMove, DvonnState> {
             state.isOnBoard(c) && state.getPieceAt(c).hasPieces());
     }
 
-    public static getScores(state: DvonnState): PlayerMap<number> {
+    public static getScores(state: DvonnState): PlayerNumberMap {
         // Board value is the total number of pieces controlled by player 0 - by player 1
         let p0Score: number = 0;
         let p1Score: number = 0;
@@ -93,7 +95,7 @@ export class DvonnRules extends Rules<DvonnMove, DvonnState> {
                 p1Score += stack.getSize();
             }
         });
-        return PlayerMap.of(p0Score, p1Score);
+        return PlayerNumberMap.of(p0Score, p1Score);
     }
 
     public isMovablePiece(state: DvonnState, coord: Coord): MGPValidation {

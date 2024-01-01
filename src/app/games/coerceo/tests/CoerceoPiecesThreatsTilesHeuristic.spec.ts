@@ -11,10 +11,10 @@ import { CoerceoState } from '../CoerceoState';
 import { CoerceoNode, CoerceoRules } from '../CoerceoRules';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { CoerceoPiecesThreatsTilesHeuristic } from '../CoerceoPiecesThreatsTilesHeuristic';
-import { PlayerMap } from 'src/app/jscaip/PlayerMap';
+import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 
-fdescribe('CoerceoPiecesThreatTilesHeuristic', () => {
+describe('CoerceoPiecesThreatTilesHeuristic', () => {
 
     let heuristic: CoerceoPiecesThreatsTilesHeuristic;
     const defaultConfig: NoConfig = CoerceoRules.get().getDefaultRulesConfig();
@@ -44,7 +44,8 @@ fdescribe('CoerceoPiecesThreatTilesHeuristic', () => {
             [N, N, N, N, N, N, O, _, _, N, N, N, N, N, N],
             [N, N, N, N, N, N, _, O, _, N, N, N, N, N, N],
         ];
-        const weakState: CoerceoState = new CoerceoState(weakBoard, 1, PlayerMap.of(0, 0), PlayerMap.of(0, 0));
+        const weakState: CoerceoState =
+            new CoerceoState(weakBoard, 1, PlayerNumberMap.of(0, 0), PlayerNumberMap.of(0, 0));
         const strongBoard: Table<FourStatePiece> = [
             [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
             [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
@@ -57,7 +58,8 @@ fdescribe('CoerceoPiecesThreatTilesHeuristic', () => {
             [N, N, N, N, N, N, _, _, _, N, N, N, N, N, N],
             [N, N, N, N, N, N, _, O, _, N, N, N, N, N, N],
         ];
-        const strongState: CoerceoState = new CoerceoState(strongBoard, 1, PlayerMap.of(0, 0), PlayerMap.of(0, 1));
+        const strongState: CoerceoState =
+            new CoerceoState(strongBoard, 1, PlayerNumberMap.of(0, 0), PlayerNumberMap.of(0, 1));
         HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(heuristic,
                                                                weakState, MGPOptional.empty(),
                                                                strongState, MGPOptional.empty(),
@@ -78,7 +80,8 @@ fdescribe('CoerceoPiecesThreatTilesHeuristic', () => {
             [N, N, N, N, N, N, _, _, O, N, N, N, N, N, N],
             [N, N, N, N, N, N, _, _, _, N, N, N, N, N, N],
         ];
-        const weakState: CoerceoState = new CoerceoState(weakBoard, 1, PlayerMap.of(0, 0), PlayerMap.of(0, 0));
+        const weakState: CoerceoState =
+            new CoerceoState(weakBoard, 1, PlayerNumberMap.of(0, 0), PlayerNumberMap.of(0, 0));
         const strongBoard: Table<FourStatePiece> = [
             [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
             [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
@@ -91,7 +94,8 @@ fdescribe('CoerceoPiecesThreatTilesHeuristic', () => {
             [N, N, N, N, N, N, O, _, _, N, N, N, N, N, N],
             [N, N, N, N, N, N, _, _, _, N, N, N, N, N, N],
         ];
-        const strongState: CoerceoState = new CoerceoState(strongBoard, 1, PlayerMap.of(0, 0), PlayerMap.of(0, 0));
+        const strongState: CoerceoState =
+            new CoerceoState(strongBoard, 1, PlayerNumberMap.of(0, 0), PlayerNumberMap.of(0, 0));
         HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(heuristic,
                                                                weakState, MGPOptional.empty(),
                                                                strongState, MGPOptional.empty(),
@@ -112,7 +116,8 @@ fdescribe('CoerceoPiecesThreatTilesHeuristic', () => {
             [N, N, N, N, N, N, _, _, _, N, N, N, N, N, N],
             [N, N, N, N, N, N, _, _, _, N, N, N, N, N, N],
         ];
-        const weakState: CoerceoState = new CoerceoState(weakBoard, 1, PlayerMap.of(0, 0), PlayerMap.of(0, 0));
+        const weakState: CoerceoState =
+            new CoerceoState(weakBoard, 1, PlayerNumberMap.of(0, 0), PlayerNumberMap.of(0, 0));
         const strongBoard: Table<FourStatePiece> = [
             [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
             [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
@@ -125,7 +130,8 @@ fdescribe('CoerceoPiecesThreatTilesHeuristic', () => {
             [N, N, N, N, N, N, _, _, _, N, N, N, N, N, N],
             [N, N, N, N, N, N, _, O, _, N, N, N, N, N, N],
         ];
-        const strongState: CoerceoState = new CoerceoState(strongBoard, 1, PlayerMap.of(0, 0), PlayerMap.of(0, 0));
+        const strongState: CoerceoState =
+            new CoerceoState(strongBoard, 1, PlayerNumberMap.of(0, 0), PlayerNumberMap.of(0, 0));
         HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(heuristic,
                                                                weakState, MGPOptional.empty(),
                                                                strongState, MGPOptional.empty(),
@@ -146,7 +152,8 @@ fdescribe('CoerceoPiecesThreatTilesHeuristic', () => {
             [N, N, N, N, N, N, O, _, _, N, N, N, N, N, N],
             [N, N, N, N, N, N, _, O, _, N, N, N, N, N, N],
         ];
-        const weakState: CoerceoState = new CoerceoState(weakBoard, 1, PlayerMap.of(0, 0), PlayerMap.of(0, 0));
+        const weakState: CoerceoState =
+            new CoerceoState(weakBoard, 1, PlayerNumberMap.of(0, 0), PlayerNumberMap.of(0, 0));
         const strongBoard: Table<FourStatePiece> = [
             [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
             [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
@@ -159,7 +166,8 @@ fdescribe('CoerceoPiecesThreatTilesHeuristic', () => {
             [N, N, N, N, N, N, O, _, _, N, N, N, N, N, N],
             [N, N, N, N, N, N, _, O, _, N, N, N, N, N, N],
         ];
-        const strongState: CoerceoState = new CoerceoState(strongBoard, 1, PlayerMap.of(0, 1), PlayerMap.of(0, 0));
+        const strongState: CoerceoState =
+            new CoerceoState(strongBoard, 1, PlayerNumberMap.of(0, 1), PlayerNumberMap.of(0, 0));
         HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(heuristic,
                                                                weakState, MGPOptional.empty(),
                                                                strongState, MGPOptional.empty(),
@@ -181,7 +189,8 @@ fdescribe('CoerceoPiecesThreatTilesHeuristic', () => {
             [N, N, N, _, _, _, _, _, _, N, N, N, N, N, N],
             [N, N, N, N, N, N, _, _, X, N, N, N, N, N, N],
         ];
-        const weakState: CoerceoState = new CoerceoState(weakBoard, 0, PlayerMap.of(0, 0), PlayerMap.of(0, 0));
+        const weakState: CoerceoState =
+            new CoerceoState(weakBoard, 0, PlayerNumberMap.of(0, 0), PlayerNumberMap.of(0, 0));
         // And a strong board where current player is falsely threatened
         const strongBoard: Table<FourStatePiece> = [
             [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
@@ -195,7 +204,8 @@ fdescribe('CoerceoPiecesThreatTilesHeuristic', () => {
             [N, N, N, X, _, _, _, _, O, N, N, N, N, N, N],
             [N, N, N, N, N, N, _, _, _, N, N, N, N, N, N],
         ];
-        const strongState: CoerceoState = new CoerceoState(strongBoard, 0, PlayerMap.of(0, 0), PlayerMap.of(0, 0));
+        const strongState: CoerceoState =
+            new CoerceoState(strongBoard, 0, PlayerNumberMap.of(0, 0), PlayerNumberMap.of(0, 0));
         HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(heuristic,
                                                                weakState, MGPOptional.empty(),
                                                                strongState, MGPOptional.empty(),
@@ -217,7 +227,8 @@ fdescribe('CoerceoPiecesThreatTilesHeuristic', () => {
             [N, N, N, X, _, _, O, _, _, _, _, _, N, N, N],
             [N, N, N, N, N, N, X, _, _, N, N, N, N, N, N],
         ];
-        const weakState: CoerceoState = new CoerceoState(weakBoard, 1, PlayerMap.of(0, 0), PlayerMap.of(0, 0));
+        const weakState: CoerceoState =
+            new CoerceoState(weakBoard, 1, PlayerNumberMap.of(0, 0), PlayerNumberMap.of(0, 0));
         // And a strong board where current player is falsely threatened
         const strongBoard: Table<FourStatePiece> = [
             [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
@@ -231,7 +242,8 @@ fdescribe('CoerceoPiecesThreatTilesHeuristic', () => {
             [N, N, N, _, _, X, O, _, _, _, _, _, N, N, N],
             [N, N, N, N, N, N, X, _, _, N, N, N, N, N, N],
         ];
-        const strongState: CoerceoState = new CoerceoState(strongBoard, 1, PlayerMap.of(0, 0), PlayerMap.of(0, 0));
+        const strongState: CoerceoState =
+            new CoerceoState(strongBoard, 1, PlayerNumberMap.of(0, 0), PlayerNumberMap.of(0, 0));
         HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(heuristic,
                                                                weakState, MGPOptional.empty(),
                                                                strongState, MGPOptional.empty(),
@@ -256,7 +268,7 @@ fdescribe('CoerceoPiecesThreatTilesHeuristic', () => {
                 [N, N, N, N, N, N, N, N, N, _, _, _, N, N, N],
                 [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
             ];
-            const state: CoerceoState = new CoerceoState(board, 1, PlayerMap.of(0, 0), PlayerMap.of(0, 0));
+            const state: CoerceoState = new CoerceoState(board, 1, PlayerNumberMap.of(0, 0), PlayerNumberMap.of(0, 0));
 
             // When asking getThreat to list the threats
             const threatenedCoord: Coord = new Coord(8, 7);
@@ -283,7 +295,7 @@ fdescribe('CoerceoPiecesThreatTilesHeuristic', () => {
                 [N, N, N, N, N, N, _, _, _, N, N, N, N, N, N],
                 [N, N, N, N, N, N, _, O, _, N, N, N, N, N, N],
             ];
-            const state: CoerceoState = new CoerceoState(board, 0, PlayerMap.of(0, 0), PlayerMap.of(0, 0));
+            const state: CoerceoState = new CoerceoState(board, 0, PlayerNumberMap.of(0, 0), PlayerNumberMap.of(0, 0));
             const pieces: MGPMap<Player, MGPSet<Coord>> = heuristic.getPiecesMap(state);
             const threatMap: MGPMap<Coord, PieceThreat> = heuristic.getThreatMap(state, pieces);
             const filteredThreatMap: MGPMap<Coord, PieceThreat> = heuristic.filterThreatMap(threatMap, state);
@@ -303,7 +315,7 @@ fdescribe('CoerceoPiecesThreatTilesHeuristic', () => {
                 [N, N, N, N, N, N, _, X, _, N, N, N, N, N, N],
                 [N, N, N, N, N, N, _, _, _, N, N, N, N, N, N],
             ];
-            const state: CoerceoState = new CoerceoState(board, 0, PlayerMap.of(0, 0), PlayerMap.of(0, 0));
+            const state: CoerceoState = new CoerceoState(board, 0, PlayerNumberMap.of(0, 0), PlayerNumberMap.of(0, 0));
             const pieces: MGPMap<Player, MGPSet<Coord>> = heuristic.getPiecesMap(state);
             const threatMap: MGPMap<Coord, PieceThreat> = heuristic.getThreatMap(state, pieces);
             const filteredThreatMap: MGPMap<Coord, PieceThreat> = heuristic.filterThreatMap(threatMap, state);
@@ -328,7 +340,7 @@ fdescribe('CoerceoPiecesThreatTilesHeuristic', () => {
                 [N, N, N, N, N, N, O, _, _, N, N, N, N, N, N],
                 [N, N, N, N, N, N, _, O, _, N, N, N, N, N, N],
             ];
-            const state: CoerceoState = new CoerceoState(board, 0, PlayerMap.of(0, 0), PlayerMap.of(0, 0));
+            const state: CoerceoState = new CoerceoState(board, 0, PlayerNumberMap.of(0, 0), PlayerNumberMap.of(0, 0));
             const pieces: MGPMap<Player, MGPSet<Coord>> = heuristic.getPiecesMap(state);
             const threatMap: MGPMap<Coord, PieceThreat> = heuristic.getThreatMap(state, pieces);
             const filteredThreatMap: MGPMap<Coord, PieceThreat> = heuristic.filterThreatMap(threatMap, state);
@@ -348,7 +360,7 @@ fdescribe('CoerceoPiecesThreatTilesHeuristic', () => {
                 [N, N, N, _, _, X, _, _, _, N, N, N, N, N, N],
                 [N, N, N, N, N, N, X, _, _, N, N, N, N, N, N],
             ];
-            const state: CoerceoState = new CoerceoState(board, 0, PlayerMap.of(0, 0), PlayerMap.of(0, 0));
+            const state: CoerceoState = new CoerceoState(board, 0, PlayerNumberMap.of(0, 0), PlayerNumberMap.of(0, 0));
             const pieces: MGPMap<Player, MGPSet<Coord>> = heuristic.getPiecesMap(state);
             const threatMap: MGPMap<Coord, PieceThreat> = heuristic.getThreatMap(state, pieces);
             const filteredThreatMap: MGPMap<Coord, PieceThreat> = heuristic.filterThreatMap(threatMap, state);
@@ -371,7 +383,7 @@ fdescribe('CoerceoPiecesThreatTilesHeuristic', () => {
             [N, N, N, N, N, N, _, _, _, N, N, N, N, N, N],
             [N, N, N, N, N, N, X, _, _, N, N, N, N, N, N],
         ];
-        const state: CoerceoState = new CoerceoState(board, 0, PlayerMap.of(0, 0), PlayerMap.of(0, 0));
+        const state: CoerceoState = new CoerceoState(board, 0, PlayerNumberMap.of(0, 0), PlayerNumberMap.of(0, 0));
         const node: CoerceoNode = new CoerceoNode(state);
 
         // When evaluating its value
@@ -396,7 +408,7 @@ fdescribe('CoerceoPiecesThreatTilesHeuristic', () => {
             [N, N, N, N, N, N, O, X, _, N, N, N, N, N, N],
             [N, N, N, N, N, N, _, _, X, N, N, N, N, N, N],
         ];
-        const state: CoerceoState = new CoerceoState(board, 0, PlayerMap.of(0, 0), PlayerMap.of(0, 0));
+        const state: CoerceoState = new CoerceoState(board, 0, PlayerNumberMap.of(0, 0), PlayerNumberMap.of(0, 0));
         const node: CoerceoNode = new CoerceoNode(state);
 
         // When evaluating its value
@@ -422,7 +434,7 @@ fdescribe('CoerceoPiecesThreatTilesHeuristic', () => {
             [N, N, N, _, _, X, N, N, N, N, N, N, N, N, N],
             [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
         ];
-        const state: CoerceoState = new CoerceoState(board, 0, PlayerMap.of(0, 0), PlayerMap.of(0, 0));
+        const state: CoerceoState = new CoerceoState(board, 0, PlayerNumberMap.of(0, 0), PlayerNumberMap.of(0, 0));
         const node: CoerceoNode = new CoerceoNode(state);
 
         // When evaluating its value
@@ -446,7 +458,7 @@ fdescribe('CoerceoPiecesThreatTilesHeuristic', () => {
             [N, N, N, _, _, X, N, N, N, N, N, N, N, N, N],
             [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
         ];
-        const state: CoerceoState = new CoerceoState(board, 0, PlayerMap.of(0, 0), PlayerMap.of(0, 0));
+        const state: CoerceoState = new CoerceoState(board, 0, PlayerNumberMap.of(0, 0), PlayerNumberMap.of(0, 0));
         const node: CoerceoNode = new CoerceoNode(state);
 
         // When evaluating its value
@@ -470,7 +482,7 @@ fdescribe('CoerceoPiecesThreatTilesHeuristic', () => {
             [N, N, N, _, _, _, N, N, N, N, N, N, N, N, N],
             [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
         ];
-        const state: CoerceoState = new CoerceoState(board, 0, PlayerMap.of(0, 0), PlayerMap.of(0, 0));
+        const state: CoerceoState = new CoerceoState(board, 0, PlayerNumberMap.of(0, 0), PlayerNumberMap.of(0, 0));
         const node: CoerceoNode = new CoerceoNode(state);
 
         // When evaluating its value
@@ -496,7 +508,7 @@ fdescribe('CoerceoPiecesThreatTilesHeuristic', () => {
             [N, N, N, _, _, X, N, N, N, N, N, N, N, N, N],
             [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
         ];
-        const state: CoerceoState = new CoerceoState(board, 1, PlayerMap.of(0, 0), PlayerMap.of(0, 0));
+        const state: CoerceoState = new CoerceoState(board, 1, PlayerNumberMap.of(0, 0), PlayerNumberMap.of(0, 0));
         const node: CoerceoNode = new CoerceoNode(state);
 
         // When evaluating its value

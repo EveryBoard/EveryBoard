@@ -18,7 +18,7 @@ import { MancalaConfig } from '../../common/MancalaConfig';
 import { KalahComponent } from '../kalah.component';
 import { KalahRules } from '../KalahRules';
 import { KalahMoveGenerator } from '../KalahMoveGenerator';
-import { PlayerMap } from 'src/app/jscaip/PlayerMap';
+import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 describe('KalahComponent', () => {
@@ -44,7 +44,7 @@ describe('KalahComponent', () => {
             state: new MancalaState([
                 [5, 5, 5, 4, 4, 4],
                 [0, 4, 4, 4, 4, 4],
-            ], 1, PlayerMap.of(1, 0)),
+            ], 1, PlayerNumberMap.of(1, 0)),
             move: MancalaMove.of(MancalaDistribution.of(0)),
             result: [
                 { x: 1, y: 0, content: { mainContent: ' 6 ', secondaryContent: ' +1 ' } },
@@ -58,7 +58,7 @@ describe('KalahComponent', () => {
             state: new MancalaState([
                 [0, 0, 0, 0, 2, 0],
                 [1, 0, 0, 0, 0, 1],
-            ], 100, PlayerMap.of(0, 0)),
+            ], 100, PlayerNumberMap.of(0, 0)),
             move: MancalaMove.of(MancalaDistribution.of(5)),
             result: [
                 { x: 4, y: 0, content: { mainContent: ' -2 ' } },
@@ -70,7 +70,7 @@ describe('KalahComponent', () => {
             state: new MancalaState([
                 [0, 6, 6, 5, 5, 5],
                 [6, 0, 5, 0, 4, 4],
-            ], 2, PlayerMap.of(0, 0)),
+            ], 2, PlayerNumberMap.of(0, 0)),
             move: MancalaMove.of(MancalaDistribution.of(5)),
             result: [
                 { x: 1, y: 0, content: { mainContent: ' -6 ' } },
@@ -81,7 +81,7 @@ describe('KalahComponent', () => {
             state: new MancalaState([
                 [0, 0, 0, 0, 0, 0],
                 [8, 0, 0, 0, 0, 0],
-            ], 0, PlayerMap.of(0, 0)),
+            ], 0, PlayerNumberMap.of(0, 0)),
             move: MancalaMove.of(MancalaDistribution.of(0)),
             result: [
                 { x: 5, y: 0, content: { mainContent: ' -1 ' } },
@@ -158,7 +158,7 @@ describe('KalahComponent', () => {
                 const state: MancalaState = new MancalaState([
                     [0, 1, 0, 0, 0, 0],
                     [0, 0, 13, 0, 0, 0],
-                ], 0, PlayerMap.of(0, 0));
+                ], 0, PlayerNumberMap.of(0, 0));
                 await mancalaTestUtils.testUtils.setupState(state);
 
                 // When distributing the house
@@ -240,7 +240,7 @@ describe('KalahComponent', () => {
             const state: MancalaState = new MancalaState([
                 [6, 1, 7, 6, 1, 7],
                 [2, 1, 6, 2, 2, 5],
-            ], 3, PlayerMap.of(4, 2));
+            ], 3, PlayerNumberMap.of(4, 2));
             await mancalaTestUtils.testUtils.setupState(state);
 
             // When doing the complex move
@@ -258,7 +258,7 @@ describe('KalahComponent', () => {
             const state: MancalaState = new MancalaState([
                 [5, 0, 6, 6, 0, 6],
                 [0, 5, 5, 1, 5, 5],
-            ], 2, PlayerMap.of(2, 2));
+            ], 2, PlayerNumberMap.of(2, 2));
             await mancalaTestUtils.testUtils.setupState(state);
 
             // When doing the complex move
@@ -277,12 +277,12 @@ describe('KalahComponent', () => {
                 [4, 4, 4, 4, 4, 4],
                 [0, 0, 0, 2, 0, 0],
             ];
-            const previousState: MancalaState = new MancalaState(previousBoard, 4, PlayerMap.of(0, 0));
+            const previousState: MancalaState = new MancalaState(previousBoard, 4, PlayerNumberMap.of(0, 0));
             const board: Table<number> = [
                 [4, 0, 4, 4, 4, 4],
                 [0, 0, 1, 0, 0, 0],
             ];
-            const state: MancalaState = new MancalaState(board, 5, PlayerMap.of(5, 0));
+            const state: MancalaState = new MancalaState(board, 5, PlayerNumberMap.of(5, 0));
             const previousMove: MancalaMove = MancalaMove.of(MancalaDistribution.of(3));
             await mancalaTestUtils.testUtils.setupState(state, { previousState, previousMove });
 
@@ -311,7 +311,7 @@ describe('KalahComponent', () => {
             const state: MancalaState = new MancalaState([
                 [0, 0, 0, 1, 0, 0],
                 [0, 4, 0, 0, 0, 0],
-            ], 0, PlayerMap.of(0, 0));
+            ], 0, PlayerNumberMap.of(0, 0));
             await mancalaTestUtils.testUtils.setupState(state);
 
             // When giving turn to AI to play and waiting for move
@@ -328,7 +328,7 @@ describe('KalahComponent', () => {
             const state: MancalaState = new MancalaState([
                 [0, 0, 1, 9, 0, 0],
                 [1, 0, 0, 0, 0, 0],
-            ], 10, PlayerMap.of(13, 9));
+            ], 10, PlayerNumberMap.of(13, 9));
             await mancalaTestUtils.testUtils.setupState(state);
 
             // When doing the only move possible for the remaining sub-move

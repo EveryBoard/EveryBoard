@@ -1,9 +1,9 @@
 import { GameState } from 'src/app/jscaip/GameState';
 import { Player } from 'src/app/jscaip/Player';
 import { ArrayUtils, Table } from 'src/app/utils/ArrayUtils';
-import { MGPMap } from 'src/app/utils/MGPMap';
 import { ApagosCoord } from './ApagosCoord';
 import { ApagosSquare } from './ApagosSquare';
+import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 
 export class ApagosState extends GameState {
 
@@ -16,15 +16,13 @@ export class ApagosState extends GameState {
             const square: ApagosSquare = ApagosSquare.from(nbZero, nbOne, nbTotal).get();
             squares.push(square);
         }
-        const remaining: MGPMap<Player, number> = new MGPMap();
-        remaining.set(Player.ZERO, nbZero);
-        remaining.set(Player.ONE, nbOne);
+        const remaining: PlayerNumberMap = PlayerNumberMap.of(nbZero, nbOne);
         return new ApagosState(turn, squares, remaining);
     }
 
     public constructor(turn: number,
                        public readonly board: ReadonlyArray<ApagosSquare>,
-                       public readonly remaining: MGPMap<Player, number>)
+                       public readonly remaining: PlayerNumberMap)
     {
         super(turn);
         this.remaining.makeImmutable();
@@ -43,11 +41,11 @@ export class ApagosState extends GameState {
                 newBoard.push(this.board[x]);
             }
         }
-        const remaining: MGPMap<Player, number> = this.getRemainingCopy();
+        const remaining: PlayerNumberMap = this.getRemainingCopy();
         return new ApagosState(this.turn, newBoard, remaining);
     }
 
-    public getRemainingCopy(): MGPMap<Player, number> {
+    public getRemainingCopy(): PlayerNumberMap {
         return this.remaining.getCopy();
     }
 

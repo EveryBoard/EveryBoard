@@ -11,7 +11,7 @@ import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { Table } from 'src/app/utils/ArrayUtils';
-import { PlayerMap } from 'src/app/jscaip/PlayerMap';
+import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 import { Player } from 'src/app/jscaip/Player';
 import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 
@@ -46,7 +46,7 @@ export class CoerceoRules extends Rules<CoerceoMove, CoerceoState> {
             [N, N, N, _, _, X, _, _, _, X, _, _, N, N, N],
             [N, N, N, N, N, N, X, _, X, N, N, N, N, N, N],
         ];
-        return new CoerceoState(board, 0, PlayerMap.of(0, 0), PlayerMap.of(0, 0));
+        return new CoerceoState(board, 0, PlayerNumberMap.of(0, 0), PlayerNumberMap.of(0, 0));
     }
 
     public override applyLegalMove(move: CoerceoMove, state: CoerceoState, _config: NoConfig, _info: void)
@@ -64,12 +64,10 @@ export class CoerceoRules extends Rules<CoerceoMove, CoerceoState> {
         const captured: Coord = move.coord;
         newBoard[captured.y][captured.x] = FourStatePiece.EMPTY;
         const currentPlayer: Player = state.getCurrentPlayer();
-        const newCaptures: PlayerMap<number> = state.captures.getCopy();
-        const oldCurrentPlayerCaptures: number = newCaptures.get(currentPlayer).get();
-        newCaptures.put(currentPlayer, oldCurrentPlayerCaptures + 1);
-        const newTiles: PlayerMap<number> = state.tiles.getCopy();
-        const oldCurrentPlayerTiles: number = newTiles.get(currentPlayer).get();
-        newTiles.put(currentPlayer, oldCurrentPlayerTiles - 2);
+        const newCaptures: PlayerNumberMap = state.captures.getCopy();
+        newCaptures.add(currentPlayer, 1);
+        const newTiles: PlayerNumberMap = state.tiles.getCopy();
+        newTiles.add(currentPlayer, - 2);
         const afterCapture: CoerceoState = new CoerceoState(newBoard,
                                                             state.turn,
                                                             newTiles,
@@ -139,7 +137,7 @@ export class CoerceoRules extends Rules<CoerceoMove, CoerceoState> {
         return MGPValidation.SUCCESS;
     }
 
-    public static getGameStatus(node: CoerceoNode): GameStatus {
+    public getGameStatus(node: CoerceoNode): GameStatus {
         const state: CoerceoState = node.gameState;
         if (18 <= state.captures.get(Player.ZERO).get()) {
             return GameStatus.ZERO_WON;
@@ -148,10 +146,6 @@ export class CoerceoRules extends Rules<CoerceoMove, CoerceoState> {
             return GameStatus.ONE_WON;
         }
         return GameStatus.ONGOING;
-    } // TODO KILL
-
-    public getGameStatus(node: CoerceoNode): GameStatus {
-        return CoerceoRules.getGameStatus(node);
     }
 
 }

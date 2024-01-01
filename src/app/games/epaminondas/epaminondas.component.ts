@@ -18,6 +18,7 @@ import { EpaminondasMoveGenerator } from './EpaminondasMoveGenerator';
 import { EpaminondasAttackMinimax } from './EpaminondasAttackMinimax';
 import { EpaminondasPositionalMinimax } from './EpaminondasPositionalMinimax';
 import { EpaminondasMinimax } from './EpaminondasMinimax';
+import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 
 @Component({
     selector: 'app-epaminondas',
@@ -70,12 +71,13 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
         this.scores = this.getScores();
     }
 
-    private getScores(): MGPOptional<readonly [number, number]> {
+    private getScores(): MGPOptional<PlayerNumberMap> {
         const state: EpaminondasState = this.getState();
-        return MGPOptional.of([
+        const playerMap: PlayerNumberMap = PlayerNumberMap.of(
             state.count(Player.ZERO),
             state.count(Player.ONE),
-        ]);
+        );
+        return MGPOptional.of(playerMap);
     }
 
     public override async showLastMove(move: EpaminondasMove): Promise<void> {
