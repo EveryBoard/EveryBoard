@@ -1,10 +1,10 @@
 open Utils
 (** This module contains functions that rely on the external world.
     This allows us to mock them in our test *)
-(* TODO: use the same architecture as the other mockable stuff *)
 
 let now : (unit -> float) ref = ref Unix.time
 
+(** These are functions to perform HTTP requests *)
 module Http = struct
   let get : (Uri.t -> Cohttp.Header.t -> (Cohttp.Response.t * string) Lwt.t) ref = ref (fun endpoint headers ->
       (* Printf.printf "curl '%s' -H '%s'" (Uri.to_string endpoint) (Cohttp.Header.to_string headers); *)
@@ -17,15 +17,17 @@ module Http = struct
       let* body_string = Cohttp_lwt.Body.to_string body in
       Lwt.return (response, body_string))
 
-  let post_json : (Uri.t -> Cohttp.Header.t -> string -> (Cohttp.Response.t * string) Lwt.t) ref = ref (fun endpoint headers body ->
+  let post_json : (Uri.t -> Cohttp.Header.t -> Yojson.Safe.t -> (Cohttp.Response.t * string) Lwt.t) ref = ref (fun endpoint headers json ->
       let headers = Cohttp.Header.add headers "Content-Type" "application/json" in
-      let* (response, body) = Cohttp_lwt_unix.Client.post ~headers endpoint ~body:(`String body) in
+      let body = `String (Yojson.Safe.to_string json) in
+      let* (response, body) = Cohttp_lwt_unix.Client.post ~headers endpoint ~body in
       let* body_string = Cohttp_lwt.Body.to_string body in
       Lwt.return (response, body_string))
 
-  let patch_json : (Uri.t -> Cohttp.Header.t -> string -> (Cohttp.Response.t * string) Lwt.t) ref = ref (fun endpoint headers body ->
+  let patch_json : (Uri.t -> Cohttp.Header.t -> Yojson.Safe.t -> (Cohttp.Response.t * string) Lwt.t) ref = ref (fun endpoint headers json ->
       let headers = Cohttp.Header.add headers "Content-Type" "application/json" in
-      let* (response, body) = Cohttp_lwt_unix.Client.patch ~headers endpoint ~body:(`String body) in
+      let body = `String (Yojson.Safe.to_string json) in
+      let* (response, body) = Cohttp_lwt_unix.Client.patch ~headers endpoint ~body in
       let* body_string = Cohttp_lwt.Body.to_string body in
       Lwt.return (response, body_string))
 

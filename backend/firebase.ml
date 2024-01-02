@@ -1,10 +1,10 @@
 open Utils
 
-let endpoint ?(version = "v1beta1") ?(params = []) (path : string) : Uri.t =
+let endpoint ?(version = "v1beta1") ?(params = []) ?(last_separator = "/") (path : string) : Uri.t =
   let url = Uri.of_string (!Options.base_endpoint ^ "/" ^ version ^
                            "/projects/" ^ !Options.project_name ^
                            "/databases/" ^ !Options.database_name ^
-                           "/documents/" ^ path) in
+                           "/documents" ^ last_separator ^ path) in
   Uri.with_query' url params
 
 module Role = struct
@@ -41,51 +41,6 @@ module User = struct
 
   let to_minimal_user (uid : string) (user : t) : Minimal_user.t =
     { id = uid; name = Option.get user.username }
-end
-
-module Game = struct
-  module Game_result = struct
-    type t = int
-    [@@deriving yojson]
-
-    let hard_draw = 0
-    let resign = 1
-    let escape = 2
-    let victory = 3
-    let timeout = 4
-    let unachieved = 5
-    let agreed_draw_by_zero = 6
-    let agreed_draw_by_one = 7
-  end
-
-  type t = {
-    type_game: string [@key "typeGame"];
-    player_zero: Minimal_user.t [@key "playerZero"];
-    turn: int;
-    result: Game_result.t;
-
-    player_one: Minimal_user.t option [@key "playerOne"];
-    beginning: int option; (* TODO: can also contain a "server timestamp" to be replaced *)
-    winner: Minimal_user.t option;
-    loser: Minimal_user.t option;
-    score_player_zero: int option [@key "scorePlayerZero"];
-    score_player_one: int option [@key "scorePlayerOne"];
-  }
-  [@@deriving yojson]
-
-  let initial (game_name : string) (creator : Minimal_user.t) : t = {
-    type_game = game_name;
-    player_zero = creator;
-    turn = -1;
-    result = Game_result.unachieved;
-    player_one = None;
-    beginning = None;
-    winner = None;
-    loser = None;
-    score_player_zero = None;
-    score_player_one = None;
-  }
-
 end
 
 module Config_room = struct
@@ -140,6 +95,156 @@ module Config_room = struct
   }
 
 end
+
+module Game = struct
+  module Game_result = struct
+    type t = int
+    [@@deriving yojson]
+
+    let hard_draw = 0
+    let resign = 1
+    let escape = 2
+    let victory = 3
+    let timeout = 4
+    let unachieved = 5
+    let agreed_draw_by_zero = 6
+    let agreed_draw_by_one = 7
+  end
+
+  module Starting = struct
+    type t = {
+      player_zero: Minimal_user.t [@key "playerZero"];
+      player_one: Minimal_user.t [@key "playerOne"];
+      turn: int;
+      beginning: float option;
+    }
+    [@@deriving yojson]
+
+    let get (config_room : Config_room.t) : t =
+      let starter = match config_room.first_player with
+        | "RANDOM" -> if Random.bool () then "CREATOR" else "CHOSEN_PLAYER"
+        | first -> first in
+      let (player_zero, player_one) =
+        if starter = "CREATOR"
+        then (config_room.creator, Option.get config_room.chosen_opponent)
+        else (Option.get config_room.chosen_opponent, config_room.creator)
+      in
+      {
+        player_zero;
+        player_one;
+        turn = 0;
+        beginning = Some (!External.now ())
+      }
+  end
+
+  type t = {
+    type_game: string [@key "typeGame"];
+    player_zero: Minimal_user.t [@key "playerZero"];
+    turn: int;
+    result: Game_result.t;
+
+    player_one: Minimal_user.t option [@key "playerOne"];
+    beginning: float option;
+    winner: Minimal_user.t option;
+    loser: Minimal_user.t option;
+    score_player_zero: int option [@key "scorePlayerZero"];
+    score_player_one: int option [@key "scorePlayerOne"];
+  }
+  [@@deriving yojson]
+
+  let initial (game_name : string) (creator : Minimal_user.t) : t = {
+    type_game = game_name;
+    player_zero = creator;
+    turn = -1;
+    result = Game_result.unachieved;
+    player_one = None;
+    beginning = None;
+    winner = None;
+    loser = None;
+    score_player_zero = None;
+    score_player_one = None;
+  }
+
+  module Event = struct
+    module Request = struct
+      type t = {
+        eventType: string;
+        time: float;
+        player: int;
+        requestType: string;
+      }
+      [@@deriving yojson]
+    end
+
+    module Reply = struct
+      type t = {
+        eventType: string;
+        time: float;
+        player: int;
+        reply: string;
+        requestType: string;
+        data: Yojson.Safe.t option;
+      }
+      [@@deriving yojson]
+    end
+
+    module Action = struct
+      type t = {
+        eventType: string;
+        time: float;
+        player: int;
+        action: string;
+      }
+      [@@deriving yojson]
+
+      let add_turn_time player =
+        let time = !External.now () in
+        { eventType = "Action"; action = "AddTurnTime"; player; time }
+      let add_global_time player =
+        let time = !External.now () in
+        { eventType = "Action"; action = "AddGlobalTime"; player; time }
+      let start_game player =
+        let time = !External.now () in
+        { eventType = "Action"; action = "StartGame"; player; time }
+      let end_game player =
+        let time = !External.now () in
+        { eventType = "Action"; action = "EndGame"; player; time }
+    end
+
+    module Move = struct
+      type t = {
+        eventType: string;
+        move: Yojson.Safe.t;
+      }
+      [@@deriving yojson]
+
+      let of_move (move : Yojson.Safe.t) : t = { eventType = "Move"; move }
+    end
+
+    type t =
+      | Request of Request.t
+      | Reply of Reply.t
+      | Action of Action.t
+      | Move of Move.t
+
+    let to_yojson (event : t) : Yojson.Safe.t = match event with
+      | Request request -> Request.to_yojson request
+      | Reply reply -> Reply.to_yojson reply
+      | Action action -> Action.to_yojson action
+      | Move move -> Move.to_yojson move
+
+    let of_yojson (json : Yojson.Safe.t) : (t, string) result =
+      match Yojson.Safe.Util.(to_string (member "eventType" json)) with
+      | "Request" -> Result.map (fun x -> Request x) (Request.of_yojson json)
+      | "Reply" -> Result.map (fun x -> Reply x) (Reply.of_yojson json)
+      | "Action" -> Result.map (fun x -> Action x) (Action.of_yojson json)
+      | "Move" -> Result.map (fun x -> Move x) (Move.of_yojson json)
+      | unknown -> Error ("unknown event type: " ^ unknown)
+  end
+
+end
+
+
 
 let header (access_token : string) : string * string =
   ("Authorization", "Bearer " ^ access_token)

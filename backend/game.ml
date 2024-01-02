@@ -28,9 +28,9 @@ module Make
         let* token = Token_refresher.get_token request in
         let minimal_user = Firebase.User.to_minimal_user uid user in
         (* Create the game, then the config room, then the chat room *)
-        let* game_id = Firebase_ops.create_game token game_name minimal_user in
-        let* _ = Firebase_ops.create_config_room token game_id minimal_user in
-        let* _ = Firebase_ops.create_chat token game_id in
+        let* game_id = Firebase_ops.Game.create token game_name minimal_user in
+        let* _ = Firebase_ops.Config_room.create token game_id minimal_user in
+        let* _ = Firebase_ops.Chat.create token game_id in
         json_response `Created (`Assoc [("id", `String game_id)])
 
   let get : Dream.route = Dream.get "game/:game_id" @@ fun request ->
@@ -38,13 +38,13 @@ module Make
     let game_id = Dream.param request "game_id" in
     match Dream.query request "onlyGameName" with
     | None ->
-      let* game = Firebase_ops.get_game token game_id in
+      let* game = Firebase_ops.Game.get token game_id in
       begin match game with
         | None -> fail `Not_Found "There is no game with this id"
         | Some game_json -> json_response `OK game_json
       end
     | Some _ ->
-      let* game_name : string option = Firebase_ops.get_game_name token game_id in
+      let* game_name : string option = Firebase_ops.Game.get_name token game_id in
       match game_name with
       | None -> fail `Not_Found "There is no game with this id"
       | Some name -> json_response `OK (`Assoc [("gameName", `String name)])
@@ -52,8 +52,30 @@ module Make
   let delete : Dream.route = Dream.delete "game/:game_id" @@ fun request ->
     let* token = Token_refresher.get_token request in
     let game_id = Dream.param request "game_id" in
-    let* _ = Firebase_ops.delete_game token game_id in
+    let* _ = Firebase_ops.Game.delete token game_id in
     Dream.empty `OK
 
-  let routes = [create; get; delete]
+  let change : Dream.route = Dream.post "game/:game_id" @@ fun request ->
+    let* token = Token_refresher.get_token request in
+    let game_id = Dream.param request "game_id" in
+    match Dream.query request "action" with
+    | Some "acceptConfig" ->
+      let* config_room_doc = Firebase_ops.Config_room.get token game_id in
+      begin match Result.bind (Option.to_result ~none:"does not exist" config_room_doc) Firebase.Config_room.of_yojson with
+        | Error _ -> fail `Not_Found "Game does not exist"
+        | Ok config_room ->
+          (* TODO: do this in a transaction *)
+          Firebase_ops.transaction token @@ fun () ->
+              let* _ = Firebase_ops.Config_room.accept token game_id in
+              let starting_config = Firebase.Game.Starting.get config_room in
+              let accepter = if config_room.creator = starting_config.player_zero then 1 else 0 in
+              let* _ = Firebase_ops.Game.update token game_id (Firebase.Game.Starting.to_yojson starting_config) in
+              let event = Firebase.Game.Event.(Action (Action.start_game accepter)) in
+              let* _ = Firebase_ops.Game.add_event token game_id event in
+              Dream.empty `OK
+      end
+    | _ -> failwith "TODO"
+
+
+  let routes = [create; get; delete; change]
 end

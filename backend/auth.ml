@@ -1,9 +1,12 @@
 open Utils
 
+(** This module provides a middleware that ensures that the user making a request to the backend is authenticated. *)
 module type AUTH = sig
 
+  (** This gives access to the user that has made the request *)
   val get_user : Dream.request -> (string * Firebase.User.t)
 
+  (** The middleware that checks authentication *)
   val middleware : Dream.middleware
 
 end
@@ -25,9 +28,8 @@ module Make
     | Some user -> user
 
   let middleware : Dream.middleware = fun handler request ->
-  (* The client will make a request with a token that was generated as follows:
-        var token = await FirebaseAuth.instance.currentUser().getIdToken();
-  *)
+    (* The client should make a request with a token that was generated as follows:
+        var token = await FirebaseAuth.instance.currentUser().getIdToken(); *)
     (* Check that we received a token from the client. *)
     match Dream.header request "Authorization" with
     | None ->
@@ -44,7 +46,7 @@ module Make
           | uid ->
             Dream.log "Checking user";
             let* token = Token_refresher.get_token request in
-            let* user_doc = Firebase_ops.get_user token uid in
+            let* user_doc = Firebase_ops.User.get token uid in
             match Result.bind (Option.to_result ~none:"does not exist" user_doc) Firebase.User.of_yojson with
             | Error _ -> fail `Unauthorized "User does not exist or is broken"
             | Ok user ->

@@ -86,17 +86,7 @@ export class GameService {
         return this.backendService.deleteGame(gameId);
     }
     public async acceptConfig(partId: string, configRoom: ConfigRoom): Promise<void> {
-        await this.configRoomService.acceptConfig(partId);
-
-        const update: StartingPartConfig = this.getStartingConfig(configRoom);
-        let accepter: Player;
-        if (update.playerZero === configRoom.creator) {
-            accepter = Player.ONE;
-        } else {
-            accepter = Player.ZERO;
-        }
-        await this.partDAO.update(partId, update);
-        await this.gameEventService.startGame(partId, accepter);
+        return this.backendService.acceptConfig(partId);
     }
     public getExistingGame(gameId: string): Promise<Part> {
         return this.backendService.getGame(gameId);
