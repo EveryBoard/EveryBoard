@@ -28,8 +28,8 @@ let certificate : X509.Certificate.t testable =
   let pp ppf cert = Fmt.pf ppf "%s" (X509.Certificate.encode_pem cert |> Cstruct.to_string) in
   testable pp (=)
 
-let json : Yojson.Safe.t testable =
-  let pp ppf json = Fmt.pf ppf "%s" (Yojson.Safe.to_string json) in
+let json : JSON.t testable =
+  let pp ppf json = Fmt.pf ppf "%s" (JSON.to_string json) in
   testable pp (=)
 
 let user : Firebase.User.t testable =

@@ -23,9 +23,9 @@ module Make (Jwt : Jwt.JWT) : TOKEN_REFRESHER = struct
   }
 
   let read_service_account_from_file (file : string) : service_account =
-    let open Yojson.Basic.Util in
+    let open JSON.Util in
     let json =
-      try Yojson.Basic.from_file file
+      try JSON.from_file file
       with Sys_error e -> raise (Error e)
     in
     let private_key = json
@@ -40,7 +40,7 @@ module Make (Jwt : Jwt.JWT) : TOKEN_REFRESHER = struct
     | _ -> raise (Error "Cannot read private key from service account file")
 
   let request_token (sa : service_account) : token Lwt.t =
-    let open Yojson.Basic.Util in
+    let open JSON.Util in
     let scopes = ["https://www.googleapis.com/auth/datastore"] in
     let audience = "https://www.googleapis.com/oauth2/v4/token" in
     let jwt = Jwt.make sa.email sa.private_key scopes audience in
@@ -49,7 +49,7 @@ module Make (Jwt : Jwt.JWT) : TOKEN_REFRESHER = struct
                   ("assertion", [Jwt.to_string jwt])] in
     let now = !External.now () in
     let* (_response, body) = !External.Http.post_form endpoint params in
-    let json = Yojson.Basic.from_string body in
+    let json = JSON.from_string body in
     let access_token = json |> member "access_token" |> to_string in
     let expires_in = json |> member "expires_in" |> to_number in
     let expiration_date = now +. expires_in in

@@ -4,8 +4,8 @@ module type JWT = sig
 
   (* A JWT token *)
   type t = {
-    header: Yojson.Basic.t; (** The header of the token *)
-    payload: Yojson.Basic.t; (** The payload of the token *)
+    header: JSON.t; (** The header of the token *)
+    payload: JSON.t; (** The payload of the token *)
     signature: string; (** The signature of the header + payload *)
   }
 
@@ -21,8 +21,8 @@ end
 module Impl : JWT = struct
   (* A JWT token *)
   type t = {
-    header: Yojson.Basic.t; (** The header of the token *)
-    payload: Yojson.Basic.t; (** The payload of the token *)
+    header: JSON.t; (** The header of the token *)
+    payload: JSON.t; (** The payload of the token *)
     signature: string; (** The signature of the header + payload *)
   }
 
@@ -38,7 +38,7 @@ module Impl : JWT = struct
 
   (** Construct a JWT from an email (iss) private key (pk), a client email, a set of scopes and an audience *)
   let make (iss : string) (pk : Mirage_crypto_pk.Rsa.priv) (scopes : string list) (audience : string) : t =
-    let open Yojson.Basic in
+    let open JSON in
     let now = !External.now () in
     Printf.printf "It is now %f\n" now;
     let exp = now +. 3600. in
@@ -63,16 +63,16 @@ module Impl : JWT = struct
   (** Transform the token into its string representation *)
   let to_string (token : t) : string =
     Printf.sprintf "%s.%s.%s"
-      (Dream.to_base64url (Yojson.Basic.to_string token.header))
-      (Dream.to_base64url (Yojson.Basic.to_string token.payload))
+      (Dream.to_base64url (JSON.to_string token.header))
+      (Dream.to_base64url (JSON.to_string token.payload))
       (Dream.to_base64url token.signature)
 
   (** Parse a token from its string representation. Does NOT validate the signature. *)
   let parse (token : string) : t =
     match String.split_on_char '.' token |> List.map Dream.from_base64url  with
     | [Some header_json; Some payload_json; Some signature] ->
-      let header = Yojson.Basic.from_string header_json in
-      let payload = Yojson.Basic.from_string payload_json in
+      let header = JSON.from_string header_json in
+      let payload = JSON.from_string payload_json in
       { header; payload; signature }
     | _ -> raise (Error "Invalid token")
 
@@ -82,7 +82,7 @@ module Impl : JWT = struct
       | _ -> false in
     let pkcs1_sha256_verify m signature =
       Mirage_crypto_pk.Rsa.PKCS1.verify ~hashp:only_sha256 ~key:(certificate_key cert) ~signature:signature (`Message m) in
-    let header_and_content_b64 = (token.header |> Yojson.Basic.to_string |> b64) ^ "." ^ (token.payload |> Yojson.Basic.to_string |> b64) in
+    let header_and_content_b64 = (token.header |> JSON.to_string |> b64) ^ "." ^ (token.payload |> JSON.to_string |> b64) in
     pkcs1_sha256_verify (Cstruct.of_string header_and_content_b64) (Cstruct.of_string token.signature)
 
   (** Verify the signature of a JWT according to https://firebase.google.com/docs/auth/admin/verify-id-tokens.
@@ -93,10 +93,10 @@ module Impl : JWT = struct
       Dream.log "checking field %s" field;
       if cond () then () else raise (Error (Printf.sprintf "Token verification failed, field %s is invalid" field)) in
     let now = !External.now () in
-    let open Yojson.Basic.Util in
-    let number (json : Yojson.Basic.t) (field : string) : float = to_number (member field json) in
-    let str (json : Yojson.Basic.t) (field : string) : string = to_string (member field json) in
-    Dream.log "token is %s %s" (Yojson.Basic.to_string token.header) (Yojson.Basic.to_string token.payload);
+    let open JSON.Util in
+    let number (json : JSON.t) (field : string) : float = to_number (member field json) in
+    let str (json : JSON.t) (field : string) : string = to_string (member field json) in
+    Dream.log "token is %s %s" (JSON.to_string token.header) (JSON.to_string token.payload);
     (* algorithm must be RS256 *)
     check "alg" (fun () ->
         if !Options.emulator then

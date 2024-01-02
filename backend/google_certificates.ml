@@ -27,14 +27,14 @@ module Impl : GOOGLE_CERTIFICATES = struct
     let endpoint = Uri.of_string "https://www.googleapis.com/robot/v1/metadata/x509/securetoken@system.gserviceaccount.com" in
     let no_headers = Cohttp.Header.init () in
     let* (response, body_string) = !External.Http.get endpoint no_headers in
-    let body_content = Yojson.Basic.from_string body_string in
+    let body_content = JSON.from_string body_string in
     let max_age : float = match Cohttp.Header.get response.headers "Cache-Control" with
       | Some cache_control ->
         parse_max_age cache_control
       | None -> raise (Error "No cache-control in response") in
     let certificates = match body_content with
       | `Assoc assoc when List.length assoc > 1 ->
-        List.map (fun (id, cert) -> (id, read_certificate (Yojson.Basic.Util.to_string cert))) assoc
+        List.map (fun (id, cert) -> (id, read_certificate (JSON.Util.to_string cert))) assoc
       | _ -> raise (Error "No certificates returned") in
     Lwt.return (certificates, !External.now () +. max_age)
 

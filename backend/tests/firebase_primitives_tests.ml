@@ -8,7 +8,7 @@ module type MOCK = sig
 
   val read_docs : string list ref
 
-  val doc_to_return : Yojson.Safe.t option ref
+  val doc_to_return : JSON.t option ref
 end
 
 module Mock : MOCK = struct
@@ -36,7 +36,7 @@ let tests = [
         let no_headers = Cohttp.Header.init () in
         (* Firestore has a strange way of returning objects, let's mock that *)
         let doc = `Assoc [("foo", `String "bar")] in
-        let firestore_doc_str = Yojson.Safe.to_string (Firebase.to_firestore ~path:"collection/some-doc" doc) in
+        let firestore_doc_str = JSON.to_string (Firebase.to_firestore ~path:"collection/some-doc" doc) in
         with_mock External.Http.get (get_mock no_headers `OK firestore_doc_str) (fun _ ->
             (* When retrieving the document *)
             let* actual = Firebase_primitives.get_doc "token" "collection/some-doc" in

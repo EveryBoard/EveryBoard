@@ -7,7 +7,7 @@ let tests = [
     test "should work" (fun () ->
         (* Given a user JSON *)
         let user_str = "{\"verified\":true,\"currentGame\":null,\"username\":\"foo\", \"lastUpdateTime\": \"24 September 2023 at 11:02:56 UTC-4\"}" in
-        let user_json = Yojson.Safe.from_string user_str in
+        let user_json = JSON.from_string user_str in
         (* When converting it to a user *)
         let actual = Result.get_ok (Firebase.User.of_yojson user_json) in
         (* Then it should give the expected user *)
@@ -22,7 +22,7 @@ let tests = [
     test "should work when user has no update time" (fun () ->
         (* Given a user JSON without last update time *)
         let user_str = "{\"verified\":true,\"currentGame\":null,\"username\":\"foo\"}" in
-        let user_json = Yojson.Safe.from_string user_str in
+        let user_json = JSON.from_string user_str in
         (* When converting it to a user *)
         let actual = Result.get_ok (Firebase.User.of_yojson user_json) in
         (* Then it should give the expected user *)

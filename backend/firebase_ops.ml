@@ -3,9 +3,9 @@ open Utils
 type token = string
 
 (** A getter takes a token and an id, and returns the JSON document if found, None otherwise *)
-type getter = token -> string -> Yojson.Safe.t option Lwt.t
+type getter = token -> string -> JSON.t option Lwt.t
 (** An updater takes a token, an id, and a document update. It updates the corresponding document *)
-type updater = token -> string -> Yojson.Safe.t -> unit Lwt.t
+type updater = token -> string -> JSON.t -> unit Lwt.t
 (** A deleter takes a token and an id, and deletes the corresponding document *)
 type deleter = token -> string -> unit Lwt.t
 
@@ -73,36 +73,36 @@ module Make (Firebase_primitives : Firebase_primitives.FIREBASE_PRIMITIVES) : FI
       let* _ = Firebase_primitives.rollback token transaction_id in
       raise e
 
-  let get (token : token) (path : string) : Yojson.Safe.t option Lwt.t =
+  let get (token : token) (path : string) : JSON.t option Lwt.t =
     try
-      let* doc : Yojson.Safe.t = Firebase_primitives.get_doc token path in
+      let* doc : JSON.t = Firebase_primitives.get_doc token path in
       Lwt.return (Some doc)
     with Error _ -> Lwt.return None
 
   module User = struct
 
-    let get (token : token) (uid : string) : Yojson.Safe.t option Lwt.t =
+    let get (token : token) (uid : string) : JSON.t option Lwt.t =
       get token ("users/" ^ uid)
   end
 
   module Game = struct
 
-    let get (token : token) (game_id : string) : Yojson.Safe.t option Lwt.t =
+    let get (token : token) (game_id : string) : JSON.t option Lwt.t =
       get token ("parts/" ^ game_id)
 
     let get_name (token : token) (game_id : string) : string option Lwt.t =
       let* doc = get token ("parts/" ^ game_id ^ "?mask=typeGame") in
-      let game_name_opt = Option.map (fun json -> Yojson.Safe.Util.to_string (Yojson.Safe.Util.member "typeGame" json)) doc in
+      let game_name_opt = Option.map (fun json -> JSON.Util.to_string (JSON.Util.member "typeGame" json)) doc in
       Lwt.return game_name_opt
 
     let create (token : token) (game_name : string) (creator : Firebase.Minimal_user.t) : string Lwt.t =
-      let game_json : Yojson.Safe.t = Firebase.Game.(to_yojson (initial game_name creator)) in
+      let game_json : JSON.t = Firebase.Game.(to_yojson (initial game_name creator)) in
       Firebase_primitives.create_doc token "parts" game_json
 
     let delete (token : token) (game_id : string) : unit Lwt.t =
       Firebase_primitives.delete_doc token ("parts/" ^ game_id)
 
-    let update (token : token) (game_id : string) (update : Yojson.Safe.t) : unit Lwt.t =
+    let update (token : token) (game_id : string) (update : JSON.t) : unit Lwt.t =
       Firebase_primitives.update_doc token ("parts/" ^ game_id) update
 
     let add_event (token : token) (game_id : string) (event : Firebase.Game.Event.t) : unit Lwt.t =
@@ -113,7 +113,7 @@ module Make (Firebase_primitives : Firebase_primitives.FIREBASE_PRIMITIVES) : FI
 
   module Config_room = struct
 
-    let get (token : token) (game_id : string) : Yojson.Safe.t option Lwt.t =
+    let get (token : token) (game_id : string) : JSON.t option Lwt.t =
       get token ("config-room/" ^ game_id)
 
     let create (token : token) (id : string) (creator : Firebase.Minimal_user.t) : unit Lwt.t =

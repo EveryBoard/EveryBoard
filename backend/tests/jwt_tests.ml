@@ -14,7 +14,7 @@ module Mock : MOCK = struct
   let validate_token = ref false
 
   let verify_and_get_uid token _ _ =
-    let open Yojson.Basic.Util in
+    let open JSON.Util in
     if !validate_token
     then to_string (member "sub" token.payload)
     else raise (Error "Token verification failed")
@@ -24,8 +24,8 @@ module Jwt = Jwt.Impl
 
 let jwt : Jwt.t testable =
   let pp_jwt ppf jwt = Fmt.pf ppf "%s, %s, %s"
-      (Yojson.Basic.to_string Jwt.(jwt.header))
-      (Yojson.Basic.to_string Jwt.(jwt.payload))
+      (JSON.to_string Jwt.(jwt.header))
+      (JSON.to_string Jwt.(jwt.payload))
       (Dream.to_base64url Jwt.(jwt.signature))
   in
   testable pp_jwt (=)

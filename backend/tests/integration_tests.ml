@@ -8,14 +8,14 @@ let create_user (email : string) : unit Lwt.t =
       "email", `String email;
       "email_verified", `Bool true;
     ] in
-  let credential = Dream.to_percent_encoded (Yojson.Basic.to_string credential_json) in
+  let credential = Dream.to_percent_encoded (JSON.to_string credential_json) in
   let json = `Assoc [
       "requestUri", `String "http://localhost";
       "returnSecureToken", `Bool true;
       "postBody", `String ("&id_token=" ^ credential ^ "&providerId=google.com");
     ] in
   let no_headers = Cohttp.Header.init () in
-  let* response = !External.Http.post_json (Uri.of_string url) no_headers (Yojson.Basic.to_string json) in
+  let* response = !External.Http.post_json (Uri.of_string url) no_headers (JSON.to_string json) in
   Printf.printf "%s\n" (snd response);
   Lwt.return ()
 

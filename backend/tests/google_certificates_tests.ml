@@ -42,7 +42,7 @@ let tests = [
                                               Printf.sprintf "public, max-age=%.0f, must-revalidate, no-transform" max_age)] in
         Google_certificates.clear ();
         (* Given a google server that will answer with some certificates *)
-        let body = Yojson.Basic.to_string certificates_json in
+        let body = JSON.to_string certificates_json in
         with_mock External.now now_mock (fun _ ->
             with_mock External.Http.get (get_mock headers `OK body) (fun mock ->
                 (* When calling get *)
@@ -64,7 +64,7 @@ let tests = [
                                               Printf.sprintf "public, max-age=%.0f, must-revalidate, no-transform" max_age)] in
         Google_certificates.clear ();
         (* Given a google server that will answer with some certificates that we have already retrieved *)
-        let body = Yojson.Basic.to_string certificates_json in
+        let body = JSON.to_string certificates_json in
         with_mock External.now now_mock (fun _ ->
             with_mock External.Http.get (get_mock headers `OK body) (fun mock ->
                 let* first_requested = Google_certificates.get () in
@@ -84,7 +84,7 @@ let tests = [
                                               "public, must-revalidate, no-transform")] in
         Google_certificates.clear ();
         (* Given a google server that will answer with some certificates but no max-age in their cache-control *)
-        let body = Yojson.Basic.to_string certificates_json in
+        let body = JSON.to_string certificates_json in
         with_mock External.now now_mock (fun _ ->
             with_mock External.Http.get (get_mock headers `OK body) (fun _ ->
                 (* When getting the certificates *)
@@ -101,7 +101,7 @@ let tests = [
                                               "public, max-age=lol, must-revalidate, no-transform")] in
         Google_certificates.clear ();
         (* Given a google server that will answer with some certificates but an invalid max-age *)
-        let body = Yojson.Basic.to_string certificates_json in
+        let body = JSON.to_string certificates_json in
         with_mock External.now now_mock (fun _ ->
             with_mock External.Http.get (get_mock headers `OK body) (fun _ ->
                 (* When getting the certificates *)
@@ -117,7 +117,7 @@ let tests = [
         let headers = Cohttp.Header.init () in
         Google_certificates.clear ();
         (* Given a google server that will answer with some certificates but no cache-control *)
-        let body = Yojson.Basic.to_string certificates_json in
+        let body = JSON.to_string certificates_json in
         with_mock External.now now_mock (fun _ ->
             with_mock External.Http.get (get_mock headers `OK body) (fun _ ->
                 (* When getting the certificates *)

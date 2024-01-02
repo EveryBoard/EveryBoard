@@ -1,5 +1,11 @@
 exception Error of string
 
+module JSON = struct
+  include Yojson.Safe
+  let to_yojson (json : t) : t = json
+  let of_yojson (json : t) : (t, string) result = Ok json
+end
+
 let ( let* ) = Lwt.bind
 
 let read_certificate (pem : string) : X509.Certificate.t =
@@ -23,10 +29,10 @@ let certificate_key (cert : X509.Certificate.t) : Mirage_crypto_pk.Rsa.pub =
 
 let fail (status : Dream.status) (reason : string) : Dream.response Lwt.t =
   Dream.respond ~status
-    (Yojson.Safe.to_string (`Assoc [
+    (JSON.to_string (`Assoc [
         "reason", `String reason
       ]))
 
-let json_response (status : Dream.status) (response : Yojson.Safe.t) : Dream.response Lwt.t =
+let json_response (status : Dream.status) (response : JSON.t) : Dream.response Lwt.t =
   let headers = [("Content-Type", "application/json")] in
-  Dream.respond ~headers ~status (Yojson.Safe.to_string response)
+  Dream.respond ~headers ~status (JSON.to_string response)

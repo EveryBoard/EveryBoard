@@ -17,12 +17,12 @@ end
 
 module Token_refresher = Token_refresher.Make(Jwt.Impl)
 
-let access_token : Yojson.Basic.t = `Assoc [
+let access_token : JSON.t = `Assoc [
     ("access_token", `String "some-access-token");
     ("expires_in", `Float 42.)
   ]
 
-let access_token_str : string = Yojson.Basic.to_string access_token
+let access_token_str : string = JSON.to_string access_token
 
 let tests = [
 

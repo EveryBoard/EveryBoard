@@ -7,14 +7,14 @@ type token = string
 module type FIREBASE_PRIMITIVES = sig (* TODO: rename firebase to firestore in most places *)
 
   (** Get a document from its path and return it as a JSON *)
-  val get_doc : token -> string -> Yojson.Safe.t Lwt.t
+  val get_doc : token -> string -> JSON.t Lwt.t
 
   (** Create a document, potentially with a specific id (otherwise an id will be assigned by firestore).
       In either case, the document id is returned *)
-  val create_doc : token -> string -> ?id:string -> Yojson.Safe.t -> string Lwt.t
+  val create_doc : token -> string -> ?id:string -> JSON.t -> string Lwt.t
 
   (** Update a document from its path and a partial update in JSON *)
-  val update_doc : token -> string -> Yojson.Safe.t -> unit Lwt.t
+  val update_doc : token -> string -> JSON.t -> unit Lwt.t
 
   (** Delete a document from its path *)
   val delete_doc : token -> string -> unit Lwt.t
@@ -33,20 +33,20 @@ module Impl : FIREBASE_PRIMITIVES = struct
   let is_error (response : Cohttp.Response.t) =
     Cohttp.Code.is_error (Cohttp.Code.code_of_status response.status)
 
-  let get_doc (token : token) (path : string) : Yojson.Safe.t Lwt.t =
+  let get_doc (token : token) (path : string) : JSON.t Lwt.t =
     let headers = Cohttp.Header.of_list [Firebase.header token] in
     let* (response, body) = !External.Http.get (Firebase.endpoint path) headers in
     if is_error response
     then raise (Error ("can't retrieve doc with path " ^ path))
-    else Lwt.return (Firebase.of_firestore (Yojson.Safe.from_string body))
+    else Lwt.return (Firebase.of_firestore (JSON.from_string body))
 
-  let get_id_from_firestore_document_name (doc : Yojson.Safe.t) : string =
-    let name = Yojson.Safe.Util.to_string (Yojson.Safe.Util.member "name" doc) in
+  let get_id_from_firestore_document_name (doc : JSON.t) : string =
+    let name = JSON.Util.to_string (JSON.Util.member "name" doc) in
     let elements = String.split_on_char '/' name in
     let id = List.nth elements (List.length elements - 1) in
     id
 
-  let create_doc (token : token) (collection : string) ?(id : string option) (doc : Yojson.Safe.t) : string Lwt.t =
+  let create_doc (token : token) (collection : string) ?(id : string option) (doc : JSON.t) : string Lwt.t =
     let headers = Cohttp.Header.of_list [Firebase.header token] in
     let path = match id with
       | Some id -> collection ^ "/" ^ id
@@ -61,9 +61,9 @@ module Impl : FIREBASE_PRIMITIVES = struct
         !External.Http.post_json endpoint headers firestore_doc in
     if is_error response
     then raise (Error "can't create doc")
-    else Lwt.return (get_id_from_firestore_document_name (Yojson.Safe.from_string body))
+    else Lwt.return (get_id_from_firestore_document_name (JSON.from_string body))
 
-  let update_doc (token : token) (path : string) (update : Yojson.Safe.t) : unit Lwt.t =
+  let update_doc (token : token) (path : string) (update : JSON.t) : unit Lwt.t =
     let headers = Cohttp.Header.of_list [Firebase.header token] in
     let firestore_update = Firebase.to_firestore update in
     let endpoint = Firebase.endpoint path in
@@ -85,9 +85,9 @@ module Impl : FIREBASE_PRIMITIVES = struct
     then raise (Error "can't begin transaction")
     else
       body
-      |> Yojson.Safe.from_string
-      |> Yojson.Safe.Util.member "transaction"
-      |> Yojson.Safe.Util.to_string
+      |> JSON.from_string
+      |> JSON.Util.member "transaction"
+      |> JSON.Util.to_string
       |> Lwt.return
 
   let commit (token : token) (transaction_id : string) : unit Lwt.t =

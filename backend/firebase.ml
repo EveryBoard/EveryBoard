@@ -79,7 +79,7 @@ module Config_room = struct
     part_type: Game_type.t [@key "partType"];
     maximal_move_duration: int [@key "maximalMoveDuration"];
     total_part_duration: int [@key "totalPartDuration"];
-    rules_config: Yojson.Safe.t option [@key "rulesConfig"]; (* TODO: adapt TS code to support empty rules and use default then *)
+    rules_config: JSON.t option [@key "rulesConfig"]; (* TODO: adapt TS code to support empty rules and use default then *)
   }
   [@@deriving yojson]
 
@@ -183,7 +183,7 @@ module Game = struct
         player: int;
         reply: string;
         requestType: string;
-        data: Yojson.Safe.t option;
+        data: JSON.t option;
       }
       [@@deriving yojson]
     end
@@ -214,11 +214,11 @@ module Game = struct
     module Move = struct
       type t = {
         eventType: string;
-        move: Yojson.Safe.t;
+        move: JSON.t;
       }
       [@@deriving yojson]
 
-      let of_move (move : Yojson.Safe.t) : t = { eventType = "Move"; move }
+      let of_move (move : JSON.t) : t = { eventType = "Move"; move }
     end
 
     type t =
@@ -227,14 +227,14 @@ module Game = struct
       | Action of Action.t
       | Move of Move.t
 
-    let to_yojson (event : t) : Yojson.Safe.t = match event with
+    let to_yojson (event : t) : JSON.t = match event with
       | Request request -> Request.to_yojson request
       | Reply reply -> Reply.to_yojson reply
       | Action action -> Action.to_yojson action
       | Move move -> Move.to_yojson move
 
-    let of_yojson (json : Yojson.Safe.t) : (t, string) result =
-      match Yojson.Safe.Util.(to_string (member "eventType" json)) with
+    let of_yojson (json : JSON.t) : (t, string) result =
+      match JSON.Util.(to_string (member "eventType" json)) with
       | "Request" -> Result.map (fun x -> Request x) (Request.of_yojson json)
       | "Reply" -> Result.map (fun x -> Reply x) (Reply.of_yojson json)
       | "Action" -> Result.map (fun x -> Action x) (Action.of_yojson json)
@@ -249,18 +249,18 @@ end
 let header (access_token : string) : string * string =
   ("Authorization", "Bearer " ^ access_token)
 
-let rec of_firestore (json : Yojson.Safe.t) : Yojson.Safe.t =
-  let extract_field ((key, value) : (string * Yojson.Safe.t)) : (string * Yojson.Safe.t) = (key, match value with
+let rec of_firestore (json : JSON.t) : JSON.t =
+  let extract_field ((key, value) : (string * JSON.t)) : (string * JSON.t) = (key, match value with
     | `Assoc [("mapValue", v)] -> of_firestore v
     | `Assoc [(_, v)] -> v (* We just rely on the real type contained, not on the type name from firestore *)
-    | _-> raise (Error ("Invalid firestore JSON: unexpected value when extracting field: " ^ (Yojson.Safe.to_string value)))) in
-  match Yojson.Safe.Util.member "fields" json with
+    | _-> raise (Error ("Invalid firestore JSON: unexpected value when extracting field: " ^ (JSON.to_string value)))) in
+  match JSON.Util.member "fields" json with
   | `Assoc fields -> `Assoc (List.map extract_field fields)
-  | _ -> raise (Error ("Invalid firestore JSON: not an object: " ^ (Yojson.Safe.to_string json)))
+  | _ -> raise (Error ("Invalid firestore JSON: not an object: " ^ (JSON.to_string json)))
 
-let to_firestore ?(path : string option) (doc : Yojson.Safe.t) : Yojson.Safe.t  =
+let to_firestore ?(path : string option) (doc : JSON.t) : JSON.t  =
   (* Types of values are documented here: https://cloud.google.com/firestore/docs/reference/rest/Shared.Types/ArrayValue#Value *)
-  let rec transform_field (v : Yojson.Safe.t) : Yojson.Safe.t = match v with
+  let rec transform_field (v : JSON.t) : JSON.t = match v with
       | `String v -> `Assoc [("stringValue", `String v)]
       | `Bool v -> `Assoc [("boolValue", `Bool v)]
       | `Intlit v -> `Assoc [("integerValue", `String v)]
@@ -269,9 +269,9 @@ let to_firestore ?(path : string option) (doc : Yojson.Safe.t) : Yojson.Safe.t  
       | `List v -> `Assoc [("arrayValue", `Assoc [("values", `List (List.map transform_field v))])]
       | `Float v -> `Assoc [("doubleValue", `Float v)]
       | `Int v -> `Assoc [("integerValue", `String (string_of_int v))]
-      | _ -> raise (Error ("Invalid object for firestore: unsupported field: " ^ (Yojson.Safe.to_string v)))
-  and transform_key_and_field (key, field) : (string * Yojson.Safe.t) = (key, transform_field field) in
-  let doc_with_fields : Yojson.Safe.t = match doc with
+      | _ -> raise (Error ("Invalid object for firestore: unsupported field: " ^ (JSON.to_string v)))
+  and transform_key_and_field (key, field) : (string * JSON.t) = (key, transform_field field) in
+  let doc_with_fields : JSON.t = match doc with
     | `Assoc fields -> `Assoc (List.map transform_key_and_field fields)
     | _ -> raise (Error "Invalid object for firestore") in
   let name = match path with

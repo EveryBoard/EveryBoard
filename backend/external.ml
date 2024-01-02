@@ -17,16 +17,16 @@ module Http = struct
       let* body_string = Cohttp_lwt.Body.to_string body in
       Lwt.return (response, body_string))
 
-  let post_json : (Uri.t -> Cohttp.Header.t -> Yojson.Safe.t -> (Cohttp.Response.t * string) Lwt.t) ref = ref (fun endpoint headers json ->
+  let post_json : (Uri.t -> Cohttp.Header.t -> JSON.t -> (Cohttp.Response.t * string) Lwt.t) ref = ref (fun endpoint headers json ->
       let headers = Cohttp.Header.add headers "Content-Type" "application/json" in
-      let body = `String (Yojson.Safe.to_string json) in
+      let body = `String (JSON.to_string json) in
       let* (response, body) = Cohttp_lwt_unix.Client.post ~headers endpoint ~body in
       let* body_string = Cohttp_lwt.Body.to_string body in
       Lwt.return (response, body_string))
 
-  let patch_json : (Uri.t -> Cohttp.Header.t -> Yojson.Safe.t -> (Cohttp.Response.t * string) Lwt.t) ref = ref (fun endpoint headers json ->
+  let patch_json : (Uri.t -> Cohttp.Header.t -> JSON.t -> (Cohttp.Response.t * string) Lwt.t) ref = ref (fun endpoint headers json ->
       let headers = Cohttp.Header.add headers "Content-Type" "application/json" in
-      let body = `String (Yojson.Safe.to_string json) in
+      let body = `String (JSON.to_string json) in
       let* (response, body) = Cohttp_lwt_unix.Client.patch ~headers endpoint ~body in
       let* body_string = Cohttp_lwt.Body.to_string body in
       Lwt.return (response, body_string))
