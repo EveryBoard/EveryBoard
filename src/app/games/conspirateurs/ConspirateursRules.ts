@@ -1,4 +1,4 @@
-import { Coord } from 'src/app/jscaip/Coord';
+import { Coord, CoordFailure } from 'src/app/jscaip/Coord';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { GameNode } from 'src/app/jscaip/AI/GameNode';
 import { PlayerOrNone } from 'src/app/jscaip/Player';
@@ -97,6 +97,11 @@ export class ConspirateursRules extends Rules<ConspirateursMove, ConspirateursSt
     }
 
     public jumpLegality(move: ConspirateursMoveJump, state: ConspirateursState): MGPValidation {
+        for (const coord of move.coords) {
+            if (state.isOnBoard(coord) === false) {
+                return MGPFallible.failure(CoordFailure.OUT_OF_RANGE(coord)); // TODO TEST
+            }
+        }
         if (state.turn < 40) {
             return MGPValidation.failure(ConspirateursFailure.CANNOT_MOVE_BEFORE_TURN_40());
         }
@@ -120,7 +125,7 @@ export class ConspirateursRules extends Rules<ConspirateursMove, ConspirateursSt
         return MGPValidation.SUCCESS;
     }
 
-    public jumpTargetsFrom(start: Coord): Coord[] {
+    public jumpTargetsFrom(state: ConspirateursState, start: Coord): Coord[] {
         const targets: Coord[] = [
             new Coord(start.x + 2, start.y),
             new Coord(start.x - 2, start.y),
@@ -133,9 +138,11 @@ export class ConspirateursRules extends Rules<ConspirateursMove, ConspirateursSt
         ];
         const validTargets: Coord[] = [];
         for (const target of targets) {
-            const move: MGPFallible<ConspirateursMoveJump> = ConspirateursMoveJump.from([start, target]);
-            if (move.isSuccess()) {
-                validTargets.push(target);
+            if (state.isOnBoard(target)) {
+                const move: MGPFallible<ConspirateursMoveJump> = ConspirateursMoveJump.from([start, target]);
+                if (move.isSuccess()) {
+                    validTargets.push(target);
+                }
             }
         }
         return validTargets;
@@ -144,7 +151,7 @@ export class ConspirateursRules extends Rules<ConspirateursMove, ConspirateursSt
     public nextJumps(jump: ConspirateursMoveJump, state: ConspirateursState): ConspirateursMoveJump[] {
         const ending: Coord = jump.getEndingCoord();
         const nextJumps: ConspirateursMoveJump[] = [];
-        for (const target of this.jumpTargetsFrom(ending)) {
+        for (const target of this.jumpTargetsFrom(state, ending)) {
             const move: MGPFallible<ConspirateursMoveJump> = jump.addJump(target);
             if (move.isSuccess() && this.jumpLegality(move.get(), state).isSuccess()) {
                 nextJumps.push(move.get());

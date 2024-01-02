@@ -6,7 +6,7 @@ import { ApagosNode } from './ApagosRules';
 import { ApagosState } from './ApagosState';
 import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 
-export class ApagosInclusiveHeuristic extends PlayerMetricHeuristic<ApagosMove, ApagosState> {
+export class ApagosFullBoardHeuristic extends PlayerMetricHeuristic<ApagosMove, ApagosState> {
 
     public override getMetrics(node: ApagosNode, _config: NoConfig): PlayerNumberTable {
         const result: PlayerNumberTable = PlayerNumberTable.of(

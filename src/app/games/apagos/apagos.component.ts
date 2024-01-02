@@ -9,13 +9,13 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { ApagosCoord } from './ApagosCoord';
 import { ApagosFailure } from './ApagosFailure';
-import { ApagosHeuristic } from './ApagosHeuristic';
+import { ApagosRightmostHeuristic } from './ApagosRightMostHeuristic';
 import { ApagosMove } from './ApagosMove';
 import { ApagosMoveGenerator } from './ApagosMoveGenerator';
 import { ApagosRules } from './ApagosRules';
 import { ApagosSquare } from './ApagosSquare';
 import { ApagosState } from './ApagosState';
-import { ApagosInclusiveHeuristic } from './ApagosInclusiveHeuristic';
+import { ApagosFullBoardHeuristic } from './ApagosFullboardHeuristic';
 
 interface PieceLocation {
 
@@ -77,8 +77,8 @@ export class ApagosComponent extends GameComponent<ApagosRules, ApagosMove, Apag
         super(messageDisplayer);
         this.setRulesAndNode('Apagos');
         this.availableAIs = [
-            new Minimax($localize`Minimax`, this.rules, new ApagosHeuristic(), new ApagosMoveGenerator()),
-            new Minimax($localize`Inclusive Minimax`, this.rules, new ApagosInclusiveHeuristic(), new ApagosMoveGenerator()),
+            new Minimax($localize`Rightmost Focus`, this.rules, new ApagosRightmostHeuristic(), new ApagosMoveGenerator()),
+            new Minimax($localize`Fullboard`, this.rules, new ApagosFullBoardHeuristic(), new ApagosMoveGenerator()),
             new MCTS($localize`MCTS`, new ApagosMoveGenerator(), this.rules),
         ];
         this.encoder = ApagosMove.encoder;

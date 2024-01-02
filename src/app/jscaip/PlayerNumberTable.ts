@@ -26,7 +26,7 @@ export class PlayerNumberTable extends MGPMap<Player, ReadonlyArray<number>> {
         const playerOneEnd: readonly number[] = other.get(Player.ONE).get();
         return PlayerNumberTable.of(
             playerZeroStart.concat(playerZeroEnd),
-            playerOneStart.concat(playerOneEnd)
+            playerOneStart.concat(playerOneEnd),
         );
 
     }

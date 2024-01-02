@@ -110,10 +110,6 @@ describe('ConspirateursMove', () => {
             expect(ConspirateursMoveJump.from([new Coord(1, 1), new Coord(3, 5)]).isFailure()).toBeTrue();
         });
 
-        it('should forbid creating a jump out of the board', () => {
-            expect(ConspirateursMoveJump.from([new Coord(1, 1), new Coord(-1, 1)]).isFailure()).toBeTrue();
-        });
-
     });
 
     it('should have a bijective encoder', () => {

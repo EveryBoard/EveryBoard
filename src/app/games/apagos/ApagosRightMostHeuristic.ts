@@ -6,7 +6,7 @@ import { ApagosNode } from './ApagosRules';
 import { ApagosState } from './ApagosState';
 import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 
-export class ApagosHeuristic extends PlayerMetricHeuristic<ApagosMove, ApagosState> {
+export class ApagosRightmostHeuristic extends PlayerMetricHeuristic<ApagosMove, ApagosState> {
 
     public override getMetrics(node: ApagosNode, _config: NoConfig): PlayerNumberTable {
         const levelThreeDominant: PlayerOrNone = node.gameState.board[3].getDominatingPlayer();

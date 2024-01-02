@@ -67,7 +67,7 @@ export class ConspirateursMoveGenerator extends MoveGenerator<ConspirateursMove,
 
     private getListJumps(state: ConspirateursState, start: Coord): ConspirateursMoveJump[] {
         const moves: MGPSet<ConspirateursMoveJump> = new MGPSet();
-        for (const firstTarget of ConspirateursRules.get().jumpTargetsFrom(start)) {
+        for (const firstTarget of ConspirateursRules.get().jumpTargetsFrom(state, start)) {
             const jump: ConspirateursMoveJump = ConspirateursMoveJump.from([start, firstTarget]).get();
             if (ConspirateursRules.get().jumpLegality(jump, state).isSuccess()) {
                 moves.add(jump);

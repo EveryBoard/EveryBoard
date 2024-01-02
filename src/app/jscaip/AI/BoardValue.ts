@@ -14,16 +14,6 @@ export class BoardValue {
         return BoardValue.multiMetric(min);
     }
 
-    public static getMaximum(size: number): BoardValue {
-        const maximums: number[] = ArrayUtils.create(size, Number.MAX_SAFE_INTEGER);
-        return BoardValue.multiMetric(maximums);
-    }
-
-    public static getMinimum(size: number): BoardValue {
-        const minimums: number[] = ArrayUtils.create(size, Number.MAX_SAFE_INTEGER);
-        return BoardValue.multiMetric(minimums);
-    }
-
     public static VICTORIES: number[] = [Number.MIN_SAFE_INTEGER, Number.MAX_SAFE_INTEGER];
 
     public static isVictory(score: number): boolean {
@@ -81,11 +71,15 @@ export class BoardValue {
     private constructor(public readonly metrics: ReadonlyArray<number>) {}
 
     public toMaximum(): BoardValue {
-        return BoardValue.getMaximum(this.metrics.length);
+        const size: number = this.metrics.length;
+        const maximums: number[] = ArrayUtils.create(size, Number.MAX_SAFE_INTEGER);
+        return BoardValue.multiMetric(maximums);
     }
 
     public toMinimum(): BoardValue {
-        return BoardValue.getMinimum(this.metrics.length);
+        const size: number = this.metrics.length;
+        const minimums: number[] = ArrayUtils.create(size, Number.MIN_SAFE_INTEGER);
+        return BoardValue.multiMetric(minimums);
     }
 
 }

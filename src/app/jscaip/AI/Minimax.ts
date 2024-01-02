@@ -89,11 +89,11 @@ implements AI<M, S, AIDepthLimitOptions, C>
     public chooseNextMove(node: GameNode<M, S>, options: AIDepthLimitOptions, config: MGPOptional<C>): M {
         Utils.assert(this.rules.getGameStatus(node, config).isEndGame === false,
                      'Minimax has been asked to choose a move from a finished game');
-        const size: number = this.getExpectedExtremum(node, config).metrics.length;
+        const boardValue: BoardValue = this.getExpectedExtremum(node, config);
         let bestDescendant: GameNode<M, S> = this.alphaBeta(node,
                                                             options.maxDepth,
-                                                            BoardValue.getMinimum(size),
-                                                            BoardValue.getMaximum(size),
+                                                            boardValue.toMinimum(),
+                                                            boardValue.toMaximum(),
                                                             config);
         while (bestDescendant.gameState.turn > node.gameState.turn + 1) {
             bestDescendant = bestDescendant.parent.get();
