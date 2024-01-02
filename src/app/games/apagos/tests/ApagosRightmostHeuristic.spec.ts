@@ -1,13 +1,13 @@
 /* eslint-disable max-lines-per-function */
 import { Player } from 'src/app/jscaip/Player';
-import { HeuristicUtils } from 'src/app/jscaip/tests/HeuristicUtils.spec';
+import { HeuristicUtils } from 'src/app/jscaip/AI/tests/HeuristicUtils.spec';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { ApagosRightmostHeuristic } from '../ApagosRightMostHeuristic';
 import { ApagosState } from '../ApagosState';
 import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 import { ApagosRules } from '../ApagosRules';
 
-describe('ApagosDummyHeuristic', () => {
+describe('ApagosRightmostHeuristic', () => {
 
     let heuristic: ApagosRightmostHeuristic;
     const defaultConfig: NoConfig = ApagosRules.get().getDefaultRulesConfig();

@@ -3,7 +3,7 @@ import { QuartoPiece } from '../QuartoPiece';
 import { QuartoState } from '../QuartoState';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { QuartoMove } from '../QuartoMove';
-import { HeuristicUtils } from 'src/app/jscaip/tests/HeuristicUtils.spec';
+import { HeuristicUtils } from 'src/app/jscaip/AI/tests/HeuristicUtils.spec';
 import { Player } from 'src/app/jscaip/Player';
 import { QuartoHeuristic } from '../QuartoHeuristic';
 import { BoardValue } from 'src/app/jscaip/AI/BoardValue';

@@ -15,7 +15,7 @@ import { ApagosMoveGenerator } from './ApagosMoveGenerator';
 import { ApagosRules } from './ApagosRules';
 import { ApagosSquare } from './ApagosSquare';
 import { ApagosState } from './ApagosState';
-import { ApagosFullBoardHeuristic } from './ApagosFullboardHeuristic';
+import { ApagosFullBoardHeuristic } from './ApagosFullBoardHeuristic';
 
 interface PieceLocation {
 

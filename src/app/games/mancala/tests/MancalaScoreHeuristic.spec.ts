@@ -1,5 +1,5 @@
 /* eslint-disable max-lines-per-function */
-import { HeuristicUtils } from 'src/app/jscaip/tests/HeuristicUtils.spec';
+import { HeuristicUtils } from 'src/app/jscaip/AI/tests/HeuristicUtils.spec';
 import { MancalaScoreHeuristic } from '../common/MancalaScoreHeurisic';
 import { MancalaState } from '../common/MancalaState';
 import { MGPOptional } from 'src/app/utils/MGPOptional';

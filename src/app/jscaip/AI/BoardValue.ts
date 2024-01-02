@@ -82,4 +82,8 @@ export class BoardValue {
         return BoardValue.multiMetric(minimums);
     }
 
+    public equals(other: BoardValue): boolean {
+        return ArrayUtils.equals(this.metrics, other.metrics);
+    }
+
 }

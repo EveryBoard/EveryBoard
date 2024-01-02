@@ -4,7 +4,7 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { GoState, GoPiece, Phase } from '../GoState';
 import { GoConfig, GoNode, GoRules } from '../GoRules';
 import { GoHeuristic } from '../GoHeuristic';
-import { HeuristicUtils } from 'src/app/jscaip/tests/HeuristicUtils.spec';
+import { HeuristicUtils } from 'src/app/jscaip/AI/tests/HeuristicUtils.spec';
 import { Player } from 'src/app/jscaip/Player';
 
 const X: GoPiece = GoPiece.LIGHT;

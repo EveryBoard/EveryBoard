@@ -3,19 +3,19 @@ import { PlayerOrNone } from 'src/app/jscaip/Player';
 import { TeekoConfig, TeekoNode, TeekoRules } from '../TeekoRules';
 import { TeekoState } from '../TeekoState';
 import { Table } from 'src/app/utils/ArrayUtils';
-import { TeekoSquarePlusAlignmentHeuristic } from '../TeekoSquarePlusAlignmentHeuristic';
+import { TeekoHeuristic } from '../TeekoHeuristic';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 const _: PlayerOrNone = PlayerOrNone.NONE;
 const O: PlayerOrNone = PlayerOrNone.ZERO;
 
-describe('TeekoSquarePlusAlignmentHeuristic', () => {
+describe('TeekoHeuristic', () => {
 
-    let heuristic: TeekoSquarePlusAlignmentHeuristic;
+    let heuristic: TeekoHeuristic;
     const defaultConfig: MGPOptional<TeekoConfig> = TeekoRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
-        heuristic = new TeekoSquarePlusAlignmentHeuristic();
+        heuristic = new TeekoHeuristic();
     });
 
     it('should count the number of possible squares and lines', () => {

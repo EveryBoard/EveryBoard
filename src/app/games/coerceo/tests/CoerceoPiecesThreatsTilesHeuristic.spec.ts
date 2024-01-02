@@ -6,7 +6,7 @@ import { Player } from 'src/app/jscaip/Player';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { MGPMap } from 'src/app/utils/MGPMap';
 import { MGPSet } from 'src/app/utils/MGPSet';
-import { HeuristicUtils } from 'src/app/jscaip/tests/HeuristicUtils.spec';
+import { HeuristicUtils } from 'src/app/jscaip/AI/tests/HeuristicUtils.spec';
 import { CoerceoState } from '../CoerceoState';
 import { CoerceoNode, CoerceoRules } from '../CoerceoRules';
 import { MGPOptional } from 'src/app/utils/MGPOptional';

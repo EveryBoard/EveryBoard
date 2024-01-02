@@ -150,11 +150,16 @@ implements AI<M, S, AIDepthLimitOptions, C>
             const child: GameNode<M, S> = this.getOrCreateChild(node, move, config);
             const bestChildDescendant: GameNode<M, S> = this.alphaBeta(child, depth - 1, alpha, beta, config);
             const bestChildValue: BoardValue = this.getScore(bestChildDescendant, config);
+            console.log(JSON.stringify(bestChildValue.metrics),
+                        'vs',
+                        JSON.stringify(extremumExpected.metrics))
             if (newValueIsBetter(bestChildValue, extremumExpected) || bestChildren.length === 0) {
+                console.log('new child is better')
                 extremumExpected = bestChildValue;
                 bestChildren = [bestChildDescendant];
-            } else if (bestChildValue === extremumExpected) {
-                bestChildren.push(bestChildDescendant);
+            } else if (bestChildValue.equals(extremumExpected)) {
+                console.log('new child equals the best')
+                bestChildren.push(bestChildDescendant); // TODO: cover
             }
             if (this.prune && newValueIsBetter(extremumExpected, currentPlayer === Player.ZERO ? alpha : beta)) {
                 // cut-off, no need to explore the other children

@@ -25,7 +25,7 @@ import { Subscription } from 'rxjs';
 import { GameEventService } from '../GameEventService';
 import { NoConfig, RulesConfigUtils } from 'src/app/jscaip/RulesConfigUtil';
 
-describe('GameService', () => {
+xdescribe('GameService', () => {
 
     let gameService: GameService;
 

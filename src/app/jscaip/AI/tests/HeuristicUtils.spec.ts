@@ -1,11 +1,11 @@
-import { BoardValue } from '../AI/BoardValue';
+import { BoardValue } from '../BoardValue';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { GameState } from '../GameState';
-import { Move } from '../Move';
-import { Heuristic } from '../AI/Minimax';
-import { Player } from '../Player';
-import { EmptyRulesConfig, RulesConfig } from '../RulesConfigUtil';
-import { GameNode } from '../AI/GameNode';
+import { GameState } from '../../GameState';
+import { Move } from '../../Move';
+import { Heuristic } from '../Minimax';
+import { Player } from '../../Player';
+import { EmptyRulesConfig, RulesConfig } from '../../RulesConfigUtil';
+import { GameNode } from '../GameNode';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
 
 export class HeuristicUtils {
