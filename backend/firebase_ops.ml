@@ -2,9 +2,12 @@ open Utils
 
 type token = string
 
+type getter = token -> string -> Yojson.Safe.t option Lwt.t
+type deleter = token -> string -> unit Lwt.t
+
 module type FIREBASE_OPS = sig
   (** Retrieve an user. If the user does not exist, return None *)
-  val get_user : token -> string -> Firebase.User.t option Lwt.t
+  val get_user : getter
 
   (** Create an unstarted game of the given game type *)
   val create_game : token -> string -> Firebase.Minimal_user.t -> string Lwt.t
@@ -18,18 +21,18 @@ module type FIREBASE_OPS = sig
   (** Get the name of a game if the game exists *)
   val get_game_name : token -> string -> string option Lwt.t
 
+  (** Get the full game as a JSON document, from its id *)
+  val get_game : getter
+
   (** Delete a game *)
-  val delete_game : token -> string -> unit Lwt.t
+  val delete_game : deleter
 end
 
 module Make (Firebase_primitives : Firebase_primitives.FIREBASE_PRIMITIVES) : FIREBASE_OPS = struct
-  let get_user (token : string) (uid : string) : Firebase.User.t option Lwt.t =
+  let get_user (token : string) (uid : string) : Yojson.Safe.t option Lwt.t =
     try
       let* doc : Yojson.Safe.t = Firebase_primitives.get_doc token ("users/" ^ uid) in
-      Dream.log "%s" @@ Yojson.Safe.to_string doc;
-      match Firebase.User.of_yojson doc with
-      | Ok user -> Lwt.return (Some user)
-      | Error e -> raise (Error ("Cannot parse user from firestore: " ^ e))
+      Lwt.return (Some doc)
     with Error _ -> Lwt.return None
 
   let create_game (token : string) (game_name : string) (creator : Firebase.Minimal_user.t) : string Lwt.t =
@@ -51,6 +54,12 @@ module Make (Firebase_primitives : Firebase_primitives.FIREBASE_PRIMITIVES) : FI
       let* doc : Yojson.Safe.t = Firebase_primitives.get_doc token ("parts/" ^ game_id ^ "?mask=typeGame") in
       let game_name = Yojson.Safe.Util.to_string (Yojson.Safe.Util.member "typeGame" doc) in
       Lwt.return (Some game_name)
+    with Error _ -> Lwt.return None
+
+  let get_game (token : string) (game_id : string) : Yojson.Safe.t option Lwt.t =
+    try
+      let* doc : Yojson.Safe.t = Firebase_primitives.get_doc token ("parts/" ^ game_id) in
+      Lwt.return (Some doc)
     with Error _ -> Lwt.return None
 
   let delete_game (token : string) (game_id : string) : unit Lwt.t =

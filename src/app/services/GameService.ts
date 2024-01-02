@@ -98,8 +98,8 @@ export class GameService {
         await this.partDAO.update(partId, update);
         await this.gameEventService.startGame(partId, accepter);
     }
-    public getPart(partId: string): Promise<MGPOptional<Part>> {
-        return this.partDAO.read(partId);
+    public getExistingGame(gameId: string): Promise<Part> {
+        return this.backendService.getGame(gameId);
     }
     public subscribeToChanges(partId: string, callback: (part: MGPOptional<Part>) => void): Subscription {
         return this.partDAO.subscribeToChanges(partId, callback);

@@ -191,7 +191,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
     private async startPart(): Promise<void> {
         // Trigger the first update manually, so that we will have info on the part before receiving any moves
         // This is useful when we join a part in the middle.
-        const part: Part = (await this.gameService.getPart(this.currentPartId)).get();
+        const part: Part = await this.gameService.getExistingGame(this.currentPartId);
         this.currentPart = new PartDocument(this.currentPartId, part);
 
         // We subscribe to the part only at this point.

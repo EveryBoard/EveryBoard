@@ -4,6 +4,7 @@ import { JSONValue, Utils } from '../utils/utils';
 import { environment } from 'src/environments/environment';
 import { MGPFallible } from '../utils/MGPFallible';
 import { MGPOptional } from '../utils/MGPOptional';
+import { Part } from '../domain/Part';
 
 type HTTPMethod = 'POST' | 'GET' | 'PATCH' | 'HEAD' | 'DELETE';
 
@@ -77,14 +78,21 @@ export class BackendService {
     public async getGameName(gameId: string): Promise<MGPOptional<string>> {
         const result: MGPFallible<JSONValue> =
             await this.performRequestWithJSONResponse('GET', `game/${gameId}?onlyGameName`);
-        console.log(result)
         if (result.isSuccess()) {
             const gameName: string = Utils.getNonNullable(result.get())['gameName'] as string;
-            console.log(gameName)
             return MGPOptional.of(gameName);
         } else {
             return MGPOptional.empty();
         }
+    }
+
+    /**
+     * Get a full game description
+     */
+    public async getGame(gameId: string): Promise<Part> {
+        const result: MGPFallible<JSONValue> = await this.performRequestWithJSONResponse('GET', `game/${gameId}`);
+        this.assertSuccess(result);
+        return result.get() as Part;
     }
 
     /**

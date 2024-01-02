@@ -37,7 +37,12 @@ module Make
     let* token = Token_refresher.get_token request in
     let game_id = Dream.param request "game_id" in
     match Dream.query request "onlyGameName" with
-    | None -> failwith "TODO"
+    | None ->
+      let* game = Firebase_ops.get_game token game_id in
+      begin match game with
+        | None -> fail `Not_Found "There is no game with this id"
+        | Some game_json -> json_response `OK game_json
+      end
     | Some _ ->
       let* game_name : string option = Firebase_ops.get_game_name token game_id in
       match game_name with

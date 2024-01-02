@@ -44,20 +44,17 @@ module Make
           | uid ->
             Dream.log "Checking user";
             let* token = Token_refresher.get_token request in
-            let* user = Firebase_ops.get_user token uid in
-            Dream.log "Got user user";
-            match user with
-            | None ->
-              Dream.log "not exists ";
-              fail `Unauthorized "User does not exist"
-            | Some user when user.verified = false ->
-              Dream.log "not verified ";
-              fail `Unauthorized "User is not verified"
-            | Some user ->
-              (* The user has a verified account, so we can finally call the handler *)
-              Dream.set_field request user_field (uid, user);
-              Dream.log "Authorized!";
-              handler request
+            let* user_doc = Firebase_ops.get_user token uid in
+            match Result.bind (Option.to_result ~none:"does not exist" user_doc) Firebase.User.of_yojson with
+            | Error _ -> fail `Unauthorized "User does not exist or is broken"
+            | Ok user ->
+              if user.verified then begin
+                (* The user has a verified account, so we can finally call the handler *)
+                Dream.set_field request user_field (uid, user);
+                Dream.log "Authorized!";
+                handler request
+              end else
+                fail `Unauthorized "User is not verified"
         end
       | _ -> fail `Unauthorized "Authorization header is invalid"
 
