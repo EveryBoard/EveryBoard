@@ -3,8 +3,11 @@ open Utils
 (** This module provides a middleware that ensures that the user making a request to the backend is authenticated. *)
 module type AUTH = sig
 
-  (** This gives access to the user that has made the request *)
+  (** Return the user that has made the request *)
   val get_user : Dream.request -> (string * Firebase.User.t)
+
+  (** Return the minimal user of the user that has made the request *)
+  val get_minimal_user : Dream.request -> Firebase.Minimal_user.t
 
   (** The middleware that checks authentication *)
   val middleware : Dream.middleware
@@ -26,6 +29,10 @@ module Make
     match Dream.field request user_field with
     | None -> raise (Error "Unexpected: no user stored. Is the Auth middleware missing?")
     | Some user -> user
+
+  let get_minimal_user (request : Dream.request) : Firebase.Minimal_user.t =
+    let (uid, user) = get_user request in
+    Firebase.User.to_minimal_user uid user
 
   let middleware : Dream.middleware = fun handler request ->
     (* The client should make a request with a token that was generated as follows:

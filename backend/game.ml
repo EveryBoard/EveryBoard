@@ -58,21 +58,38 @@ module Make
   let change : Dream.route = Dream.post "game/:game_id" @@ fun request ->
     let* token = Token_refresher.get_token request in
     let game_id = Dream.param request "game_id" in
+    Firebase_ops.transaction token @@ fun () ->
     match Dream.query request "action" with
     | Some "acceptConfig" ->
       let* config_room_doc = Firebase_ops.Config_room.get token game_id in
       begin match Result.bind (Option.to_result ~none:"does not exist" config_room_doc) Firebase.Config_room.of_yojson with
-        | Error _ -> fail `Not_Found "Game does not exist"
+        | Error _ -> fail_transaction `Not_Found "Game does not exist"
         | Ok config_room ->
-          (* TODO: do this in a transaction *)
-          Firebase_ops.transaction token @@ fun () ->
-              let* _ = Firebase_ops.Config_room.accept token game_id in
-              let starting_config = Firebase.Game.Starting.get config_room in
-              let accepter = if config_room.creator = starting_config.player_zero then 1 else 0 in
-              let* _ = Firebase_ops.Game.update token game_id (Firebase.Game.Starting.to_yojson starting_config) in
-              let event = Firebase.Game.Event.(Action (Action.start_game accepter)) in
-              let* _ = Firebase_ops.Game.add_event token game_id event in
-              Dream.empty `OK
+          let* _ = Firebase_ops.Config_room.accept token game_id in
+          let starting_config = Firebase.Game.Updates.Starting.get config_room in
+          let accepter = if config_room.creator = starting_config.player_zero then 1 else 0 in
+          let* _ = Firebase_ops.Game.update token game_id (Firebase.Game.Updates.Starting.to_yojson starting_config) in
+          let event = Firebase.Game.Event.(Action (Action.start_game accepter)) in
+          let* _ = Firebase_ops.Game.add_event token game_id event in
+          let* response = Dream.empty `OK in
+          Lwt.return (Ok response)
+      end
+    | Some "resign" ->
+      let* game_doc = Firebase_ops.Game.get token game_id in
+      begin match Result.bind (Option.to_result ~none:"does not exist" game_doc) Firebase.Game.of_yojson with
+        | Error _ -> fail_transaction `Not_Found "Game not found"
+        | Ok game ->
+          let minimal_user = Auth.get_minimal_user request in
+          let player_zero = game.player_zero in
+          let player_one = Option.get game.player_one in
+          let winner = if minimal_user = game.player_zero then player_one else player_zero in
+          let update = Firebase.Game.Updates.Finishing.get winner minimal_user Firebase.Game.Game_result.resign in
+          let* _ = Firebase_ops.Game.update token game_id (Firebase.Game.Updates.Finishing.to_yojson update) in
+          let resigner_player = if minimal_user = game.player_zero then 0 else 1 in
+          let event = Firebase.Game.Event.(Action (Action.end_game resigner_player)) in
+          let* _ = Firebase_ops.Game.add_event token game_id event in
+          let* response = Dream.empty `OK in
+          Lwt.return (Ok response)
       end
     | _ -> failwith "TODO"
 

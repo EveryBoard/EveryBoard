@@ -85,8 +85,8 @@ export class GameService {
     public deletePart(gameId: string): Promise<void> {
         return this.backendService.deleteGame(gameId);
     }
-    public async acceptConfig(partId: string, configRoom: ConfigRoom): Promise<void> {
-        return this.backendService.acceptConfig(partId);
+    public async acceptConfig(gameId: string): Promise<void> {
+        return this.backendService.acceptConfig(gameId);
     }
     public getExistingGame(gameId: string): Promise<Part> {
         return this.backendService.getGame(gameId);
@@ -94,14 +94,8 @@ export class GameService {
     public subscribeToChanges(partId: string, callback: (part: MGPOptional<Part>) => void): Subscription {
         return this.partDAO.subscribeToChanges(partId, callback);
     }
-    public async resign(partId: string, player: Player, winner: MinimalUser, loser: MinimalUser): Promise<void> {
-        const update: Partial<Part> = {
-            winner,
-            loser,
-            result: MGPResult.RESIGN.value,
-        };
-        await this.partDAO.update(partId, update);
-        await this.gameEventService.addAction(partId, player, 'EndGame');
+    public async resign(gameId: string): Promise<void> {
+        return this.backendService.resign(gameId);
     }
     public async notifyTimeout(partId: string, player: Player, winner: MinimalUser, loser: MinimalUser): Promise<void> {
         const update: Partial<Part> = {

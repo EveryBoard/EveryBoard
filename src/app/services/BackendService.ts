@@ -61,9 +61,7 @@ export class BackendService {
         Utils.assert(result.isSuccess(), 'Unexpected error from backend: ' + result.getReasonOr(''));
     }
 
-    /**
-     * Create a game, its config room and chat. Return the id of the created game.
-     */
+    /** Create a game, its config room and chat. Return the id of the created game. */
     public async createGame(gameName: string): Promise<string> {
         const result: MGPFallible<JSONValue> =
             await this.performRequestWithJSONResponse('POST', `game?gameName=${gameName}`);
@@ -72,9 +70,7 @@ export class BackendService {
         return Utils.getNonNullable(result.get())['id'] as string;
     }
 
-    /**
-     * Retrieve the name of the game with the given id. If there is no corresponding game, returns an empty option.
-     */
+    /** Retrieve the name of the game with the given id. If there is no corresponding game, returns an empty option. */
     public async getGameName(gameId: string): Promise<MGPOptional<string>> {
         const result: MGPFallible<JSONValue> =
             await this.performRequestWithJSONResponse('GET', `game/${gameId}?onlyGameName`);
@@ -86,20 +82,28 @@ export class BackendService {
         }
     }
 
-    /**
-     * Get a full game description
-     */
+    /** Get a full game description */
     public async getGame(gameId: string): Promise<Part> {
         const result: MGPFallible<JSONValue> = await this.performRequestWithJSONResponse('GET', `game/${gameId}`);
         this.assertSuccess(result);
         return result.get() as Part;
     }
 
-    /**
-     * Delete a game.
-     */
+    /** Delete a game */
     public async deleteGame(gameId: string): Promise<void> {
         const result: MGPFallible<Response> = await this.performRequest('DELETE', `game/${gameId}`);
+        this.assertSuccess(result);
+    }
+
+    /** Accept a game config */
+    public async acceptConfig(gameId: string): Promise<void> {
+        const result: MGPFallible<Response> = await this.performRequest('POST', `game/${gameId}?action=acceptConfig`);
+        this.assertSuccess(result);
+    }
+
+    /** Give the current player resignation in a game */
+    public async resign(gameId: string): Promise<void> {
+        const result: MGPFallible<Response> = await this.performRequest('POST', `game/${gameId}?action=resign`);
         this.assertSuccess(result);
     }
 }

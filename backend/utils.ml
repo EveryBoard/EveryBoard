@@ -33,6 +33,10 @@ let fail (status : Dream.status) (reason : string) : Dream.response Lwt.t =
         "reason", `String reason
       ]))
 
+let fail_transaction (status : Dream.status) (reason : string) : (Dream.response, Dream.response) result Lwt.t =
+  let* response = fail status reason in
+  Lwt.return (Result.Error response)
+
 let json_response (status : Dream.status) (response : JSON.t) : Dream.response Lwt.t =
   let headers = [("Content-Type", "application/json")] in
   Dream.respond ~headers ~status (JSON.to_string response)

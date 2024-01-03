@@ -111,30 +111,43 @@ module Game = struct
     let agreed_draw_by_one = 7
   end
 
-  module Starting = struct
-    type t = {
-      player_zero: Minimal_user.t [@key "playerZero"];
-      player_one: Minimal_user.t [@key "playerOne"];
-      turn: int;
-      beginning: float option;
-    }
-    [@@deriving yojson]
-
-    let get (config_room : Config_room.t) : t =
-      let starter = match config_room.first_player with
-        | "RANDOM" -> if Random.bool () then "CREATOR" else "CHOSEN_PLAYER"
-        | first -> first in
-      let (player_zero, player_one) =
-        if starter = "CREATOR"
-        then (config_room.creator, Option.get config_room.chosen_opponent)
-        else (Option.get config_room.chosen_opponent, config_room.creator)
-      in
-      {
-        player_zero;
-        player_one;
-        turn = 0;
-        beginning = Some (!External.now ())
+  module Updates = struct
+    module Starting = struct
+      type t = {
+        player_zero: Minimal_user.t [@key "playerZero"];
+        player_one: Minimal_user.t [@key "playerOne"];
+        turn: int;
+        beginning: float option;
       }
+      [@@deriving yojson]
+
+      let get (config_room : Config_room.t) : t =
+        let starter = match config_room.first_player with
+          | "RANDOM" -> if Random.bool () then "CREATOR" else "CHOSEN_PLAYER"
+          | first -> first in
+        let (player_zero, player_one) =
+          if starter = "CREATOR"
+          then (config_room.creator, Option.get config_room.chosen_opponent)
+          else (Option.get config_room.chosen_opponent, config_room.creator)
+        in
+        {
+          player_zero;
+          player_one;
+          turn = 0;
+          beginning = Some (!External.now ())
+        }
+    end
+    module Finishing = struct
+      type t = {
+        winner: Minimal_user.t option;
+        loser: Minimal_user.t option;
+        result: Game_result.t;
+      }
+      [@@deriving yojson]
+
+      let get (winner : Minimal_user.t) (loser : Minimal_user.t) (result : Game_result.t) : t =
+        { winner = Some winner; loser = Some loser; result }
+    end
   end
 
   type t = {

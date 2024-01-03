@@ -492,7 +492,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
     public acceptConfig(): Promise<void> {
         // called by the configRoom
         // triggers the redirection that will be applied for every subscribed user
-        return this.gameService.acceptConfig(this.partId, Utils.getNonNullable(this.currentConfigRoom));
+        return this.gameService.acceptConfig(this.partId);
     }
 
     public saveRulesConfig(rulesConfig: MGPOptional<RulesConfig>): void {

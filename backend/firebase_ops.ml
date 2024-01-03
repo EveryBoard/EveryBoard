@@ -13,7 +13,7 @@ type deleter = token -> string -> unit Lwt.t
 module type FIREBASE_OPS = sig
   (** Perform a firestore transaction to bundle multiple reads and writes together.
       Firestore's doc states that all reads have to be performed before the writes. *)
-  val transaction : token -> (unit -> 'a Lwt.t) -> 'a Lwt.t
+  val transaction : token -> (unit -> ('a, 'a) result Lwt.t) -> 'a Lwt.t
 
   module User : sig
     (** Retrieve an user as a JSON document, from its id *)
@@ -63,12 +63,19 @@ end
 
 module Make (Firebase_primitives : Firebase_primitives.FIREBASE_PRIMITIVES) : FIREBASE_OPS = struct
 
-  let transaction (token : token) (body : unit -> 'a Lwt.t) : 'a Lwt.t =
+  (* This will be called in request handlers. We want to return a response even in case of failure, hence the
+     result type. We also catch any exception and rethrow it, as we need to rollback the transaction. *)
+  let transaction (token : token) (body : unit -> ('a, 'a) result Lwt.t) : 'a Lwt.t =
     let* transaction_id = Firebase_primitives.begin_transaction token in
     try
       let* result = body () in
-      let* _ = Firebase_primitives.commit token transaction_id in
-      Lwt.return result
+      match result with
+      | Ok result ->
+        let* _ = Firebase_primitives.commit token transaction_id in
+        Lwt.return result
+      | Error result ->
+        let* _ = Firebase_primitives.rollback token transaction_id in
+        Lwt.return result
     with e ->
       let* _ = Firebase_primitives.rollback token transaction_id in
       raise e

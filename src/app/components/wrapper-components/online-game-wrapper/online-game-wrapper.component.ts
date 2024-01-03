@@ -500,10 +500,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
 
     // Called by the resign button
     public async resign(): Promise<void> {
-        const player: Player = this.role as Player;
-        const resigner: MinimalUser = this.getPlayer();
-        const victoriousOpponent: MinimalUser = this.players[(this.role.value + 1) % 2].get();
-        await this.gameService.resign(this.currentPartId, player, victoriousOpponent, resigner);
+        await this.gameService.resign(this.currentPartId);
     }
 
     // Called by the clocks
