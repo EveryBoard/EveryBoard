@@ -97,7 +97,7 @@ export class GameService {
     public async resign(gameId: string): Promise<void> {
         return this.backendService.resign(gameId);
     }
-    public async notifyTimeout(gameId: string, player: Player, winner: MinimalUser, loser: MinimalUser): Promise<void> {
+    public async notifyTimeout(gameId: string, winner: MinimalUser, loser: MinimalUser): Promise<void> {
         return this.backendService.notifyTimeout(gameId, winner, loser);
     }
     public async proposeDraw(partId: string, player: Player): Promise<void> {

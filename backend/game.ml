@@ -95,6 +95,9 @@ module Make
     (* TODO: don't trust the client, we need to get winner and loser ourselves *)
     let update = Firebase.Game.Updates.Finishing.get winner loser Firebase.Game.Game_result.timeout in
     let* _ = Firebase_ops.Game.update token game_id (Firebase.Game.Updates.Finishing.to_yojson update) in
+    let requester = Auth.get_minimal_user request in (* TODO: game events should have minimal user, not player )
+    let event = Firebase.Game.Event.(Action (Action.end_game requester)) in
+    let* _ = Firebase_ops.Game.add_event token game_id event in
     let* response = Dream.empty `OK in
     Lwt.return (Ok response)
 
