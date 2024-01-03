@@ -7,6 +7,7 @@ let endpoint ?(version = "v1beta1") ?(params = []) ?(last_separator = "/") (path
                            "/documents" ^ last_separator ^ path) in
   Uri.with_query' url params
 
+(* TODO: move most of this to domain.ml *)
 module Role = struct
   type t = string
   [@@deriving yojson]

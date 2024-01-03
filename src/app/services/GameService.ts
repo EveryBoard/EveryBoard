@@ -97,14 +97,8 @@ export class GameService {
     public async resign(gameId: string): Promise<void> {
         return this.backendService.resign(gameId);
     }
-    public async notifyTimeout(partId: string, player: Player, winner: MinimalUser, loser: MinimalUser): Promise<void> {
-        const update: Partial<Part> = {
-            winner,
-            loser,
-            result: MGPResult.TIMEOUT.value,
-        };
-        await this.partDAO.update(partId, update);
-        await this.gameEventService.addAction(partId, player, 'EndGame');
+    public async notifyTimeout(gameId: string, player: Player, winner: MinimalUser, loser: MinimalUser): Promise<void> {
+        return this.backendService.notifyTimeout(gameId, winner, loser);
     }
     public async proposeDraw(partId: string, player: Player): Promise<void> {
         await this.gameEventService.addRequest(partId, player, 'Draw');
@@ -200,6 +194,7 @@ export class GameService {
         return update;
     }
     public async updatePart(partId: string, scores: MGPOptional<readonly [number, number]>): Promise<void> {
+        // TODO: this is only used to update the scores
         const update: Partial<Part> = await this.preparePartUpdate(partId, scores);
         await this.update(partId, update);
     }

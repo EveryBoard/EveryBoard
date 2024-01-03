@@ -5,6 +5,7 @@ import { environment } from 'src/environments/environment';
 import { MGPFallible } from '../utils/MGPFallible';
 import { MGPOptional } from '../utils/MGPOptional';
 import { Part } from '../domain/Part';
+import { MinimalUser } from '../domain/MinimalUser';
 
 type HTTPMethod = 'POST' | 'GET' | 'PATCH' | 'HEAD' | 'DELETE';
 
@@ -106,4 +107,14 @@ export class BackendService {
         const result: MGPFallible<Response> = await this.performRequest('POST', `game/${gameId}?action=resign`);
         this.assertSuccess(result);
     }
+
+    /** Notify the timeout of a player in a game */
+    public async notifyTimeout(gameId: string, winner: MinimalUser, loser: MinimalUser): Promise<void> {
+        const winnerURLEncoded: string = encodeURIComponent(JSON.stringify(winner));
+        const loserURLEncoded: string = encodeURIComponent(JSON.stringify(loser));
+        const endpoint: string = `game/${gameId}?action=resign&winner=${winnerURLEncoded}&loser=${loserURLEncoded}`;
+        const result: MGPFallible<Response> = await this.performRequest('POST', endpoint);
+        this.assertSuccess(result);
+    }
+
 }
