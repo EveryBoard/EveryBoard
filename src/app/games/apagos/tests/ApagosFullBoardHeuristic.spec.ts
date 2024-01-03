@@ -7,7 +7,7 @@ import { ApagosState } from '../ApagosState';
 import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 import { ApagosRules } from '../ApagosRules';
 
-describe('ApagosFullboardHeuristic', () => {
+describe('ApagosFullBoardHeuristic', () => {
 
     let heuristic: ApagosFullBoardHeuristic;
     const defaultConfig: NoConfig = ApagosRules.get().getDefaultRulesConfig();
