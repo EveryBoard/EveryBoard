@@ -2024,7 +2024,7 @@
       </trans-unit>
       <trans-unit id="7849636659728976766" datatype="html">
         <source>Piece &gt; Row Domination &gt; Alignement &gt; Row Presence</source>
-        <target>Pièce &gt; Domination de Colonne &gt; Alignement &gt; Présence en colonne</target>
+        <target>Pièce &gt; Domination de colonne &gt; Alignement &gt; Présence en colonne</target>
       </trans-unit>
       <trans-unit id="4563771339790181195" datatype="html">
         <source>Positional</source>
@@ -3293,7 +3293,7 @@
       </trans-unit>
       <trans-unit id="6180360850656792663" datatype="html">
         <source>Full Board</source>
-        <target>Plateau Complet</target>
+        <target>Plateau complet</target>
       </trans-unit>
       <trans-unit id="8400174784913655582" datatype="html">
         <source>Minimax</source>
