@@ -1,6 +1,6 @@
 /* eslint-disable max-lines-per-function */
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
-import { HeuristicUtils } from 'src/app/jscaip/tests/HeuristicUtils.spec';
+import { HeuristicUtils } from 'src/app/jscaip/AI/tests/HeuristicUtils.spec';
 import { SaharaState } from '../SaharaState';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { Player } from 'src/app/jscaip/Player';

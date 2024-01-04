@@ -10,4 +10,8 @@ export class MathUtils {
             return MathUtils.gcd(b, a % b);
         }
     }
+
+    public static sum(a: number, b: number): number {
+        return a + b;
+    }
 }

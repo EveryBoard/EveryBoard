@@ -1,7 +1,7 @@
 import { ReversiState } from './ReversiState';
 import { ReversiMove } from './ReversiMove';
+import { MoveGenerator } from 'src/app/jscaip/AI/AI';
 import { ReversiRules, ReversiNode, ReversiMoveWithSwitched, ReversiConfig } from './ReversiRules';
-import { MoveGenerator } from 'src/app/jscaip/AI';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 export class ReversiMoveGenerator extends MoveGenerator<ReversiMove, ReversiState, ReversiConfig> {

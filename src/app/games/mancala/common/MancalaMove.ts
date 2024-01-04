@@ -55,7 +55,7 @@ export class MancalaMove extends Move {
     }
 
     public override equals(other: this): boolean {
-        return ArrayUtils.compare(this.distributions, other.distributions);
+        return ArrayUtils.equals(this.distributions, other.distributions);
     }
 
     public getFirstDistribution(): MancalaDistribution {

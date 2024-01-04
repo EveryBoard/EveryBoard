@@ -6,7 +6,7 @@ import { QuartoNode, QuartoRules } from 'src/app/games/quarto/QuartoRules';
 import { QuartoState } from 'src/app/games/quarto/QuartoState';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { AITimeLimitOptions } from '../AI';
-import { Coord } from '../Coord';
+import { Coord } from '../../Coord';
 import { MCTS } from '../MCTS';
 import { MancalaNode } from 'src/app/games/mancala/common/MancalaRules';
 import { AwaleMoveGenerator } from 'src/app/games/mancala/awale/AwaleMoveGenerator';
@@ -15,7 +15,7 @@ import { MancalaState } from 'src/app/games/mancala/common/MancalaState';
 import { MancalaConfig } from 'src/app/games/mancala/common/MancalaConfig';
 import { MancalaMove } from 'src/app/games/mancala/common/MancalaMove';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { NoConfig } from '../RulesConfigUtil';
+import { NoConfig } from '../../RulesConfigUtil';
 
 describe('MCTS', () => {
 

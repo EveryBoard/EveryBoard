@@ -1,14 +1,19 @@
 import { MancalaState } from '../common/MancalaState';
-import { PlayerMetricHeuristic } from 'src/app/jscaip/Minimax';
+import { PlayerMetricHeuristic } from 'src/app/jscaip/AI/Minimax';
+import { PlayerNumberTable } from 'src/app/jscaip/PlayerNumberTable';
 import { MancalaMove } from './MancalaMove';
 import { MancalaNode } from './MancalaRules';
 import { MancalaConfig } from './MancalaConfig';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 export class MancalaScoreHeuristic extends PlayerMetricHeuristic<MancalaMove, MancalaState, MancalaConfig> {
 
-    public getMetrics(node: MancalaNode): [number, number] {
+    public override getMetrics(node: MancalaNode, _config: MGPOptional<MancalaConfig>): PlayerNumberTable {
         const captured: number[] = node.gameState.getScoresCopy();
-        return [captured[0], captured[1]];
+        return PlayerNumberTable.of(
+            [captured[0]],
+            [captured[1]],
+        );
     }
 
 }

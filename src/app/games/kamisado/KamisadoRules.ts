@@ -13,7 +13,7 @@ import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
-import { GameNode } from 'src/app/jscaip/GameNode';
+import { GameNode } from 'src/app/jscaip/AI/GameNode';
 import { Utils } from 'src/app/utils/utils';
 import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 

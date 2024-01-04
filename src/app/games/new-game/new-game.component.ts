@@ -4,8 +4,8 @@ import { NewGameMove } from './NewGameMove';
 import { NewGameState } from './NewGameState';
 import { Component } from '@angular/core';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
+import { MCTS } from 'src/app/jscaip/AI/MCTS';
 import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
-import { MCTS } from 'src/app/jscaip/MCTS';
 import { NewGameMoveGenerator } from './NewGameMoveGenerator';
 import { NewGameMinimax } from './NewGameMinimax';
 

@@ -42,7 +42,7 @@ export class AwaleTutorial extends Tutorial {
         ),
         TutorialStep.fromMove(
             $localize`Simple capture`,
-            $localize`After sowing, if the last seed falls in an opponent's house and if there is now two or three seeds in this house, the player captures these two or three seeds.<br/><br/>You're playing Dark, do a capture!`,
+            $localize`After sowing, if the last seed falls in an opponent's house and if there are now two or three seeds in this house, the player captures these two or three seeds.<br/><br/>You're playing Dark, do a capture!`,
             new MancalaState([
                 [0, 1, 0, 0, 1, 0],
                 [2, 0, 0, 0, 1, 0],

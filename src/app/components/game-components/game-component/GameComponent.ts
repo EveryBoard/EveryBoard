@@ -1,3 +1,5 @@
+import { ActivatedRoute } from '@angular/router';
+
 import { Move } from '../../../jscaip/Move';
 import { SuperRules } from '../../../jscaip/Rules';
 import { Component } from '@angular/core';
@@ -11,10 +13,9 @@ import { Debug, Utils } from 'src/app/utils/utils';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
+import { GameNode } from 'src/app/jscaip/AI/GameNode';
+import { AI, AIOptions } from 'src/app/jscaip/AI/AI';
 import { EmptyRulesConfig, RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
-import { ActivatedRoute } from '@angular/router';
-import { GameNode } from 'src/app/jscaip/GameNode';
-import { AI, AIOptions } from 'src/app/jscaip/AI';
 import { GameInfo } from '../../normal-component/pick-game/pick-game.component';
 import { Coord } from 'src/app/jscaip/Coord';
 
