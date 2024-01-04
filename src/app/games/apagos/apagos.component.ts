@@ -78,7 +78,7 @@ export class ApagosComponent extends GameComponent<ApagosRules, ApagosMove, Apag
         this.setRulesAndNode('Apagos');
         this.availableAIs = [
             new Minimax($localize`Rightmost Focus`, this.rules, new ApagosRightmostHeuristic(), new ApagosMoveGenerator()),
-            new Minimax($localize`Fullboard`, this.rules, new ApagosFullBoardHeuristic(), new ApagosMoveGenerator()),
+            new Minimax($localize`Full Board`, this.rules, new ApagosFullBoardHeuristic(), new ApagosMoveGenerator()),
             new MCTS($localize`MCTS`, new ApagosMoveGenerator(), this.rules),
         ];
         this.encoder = ApagosMove.encoder;
