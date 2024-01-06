@@ -183,14 +183,14 @@ describe('TableUtils', () => {
             // Given any list of number
             const table: number[][] = [
                 [11, 12, 13, 14, 15],
-                [16, 17, 18, 19, 20],
+                [20, 19, 18, 17, 16],
             ];
 
             // When calling TableUtils.sum
             const sum: number = TableUtils.sum(table);
 
             // Then it should be correct
-            expect(sum).toBe(175);
+            expect(sum).toBe(155);
         });
 
     });
@@ -214,7 +214,7 @@ describe('TableUtils', () => {
             const sum: Table<number> = TableUtils.add(left, right);
 
             // Then the result should be the sum of same-coorded-place
-            expect(sum).toBe([
+            expect(sum).toEqual([
                 [2, 0, 12],
                 [2, 3, 7],
                 [-6, -3, 0],
