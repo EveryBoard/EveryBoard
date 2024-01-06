@@ -20,7 +20,7 @@ export class BaAwaRules extends MancalaRules {
                 mustFeed: new BooleanConfig(false, MancalaRules.MUST_FEED),
                 passByPlayerStore: new BooleanConfig(false, MancalaRules.PASS_BY_PLAYER_STORE),
                 mustContinueDistributionAfterStore: new BooleanConfig(false, MancalaRules.MULTIPLE_SOW),
-                continueLapIfLastHouseIsFilled: new BooleanConfig(true, MancalaRules.CYCLICAL_LAP),
+                continueLapUntilCaptureOrEmptyHouse: new BooleanConfig(true, MancalaRules.CYCLICAL_LAP),
                 seedsByHouse: new NumberConfig(4, MancalaRules.SEEDS_BY_HOUSE, MGPValidators.range(1, 99)),
                 width: new NumberConfig(6, RulesConfigDescriptionLocalizable.WIDTH, MGPValidators.range(1, 99)),
             },
@@ -28,7 +28,7 @@ export class BaAwaRules extends MancalaRules {
 
     public static get(): BaAwaRules {
         if (BaAwaRules.singleton.isAbsent()) {
-            BaAwaRules.singleton = MGPOptional.of(new BaAwaRules());
+            BaAwaRules.singleton = MGPOptional.of(new BaAwaRules([4]));
         }
         return BaAwaRules.singleton.get();
     }
@@ -50,7 +50,7 @@ export class BaAwaRules extends MancalaRules {
             distributionResult.capturedSum += 4;
             captureMap[lastDrop.y][lastDrop.x] += 4;
             distributionResult.resultingState =
-                distributionResult.resultingState.capture(currentPlayer, lastDrop); // TODO: reuse this wonder too
+                distributionResult.resultingState.capture(currentPlayer, lastDrop);
         }
         return {
             capturedSum: distributionResult.capturedSum,

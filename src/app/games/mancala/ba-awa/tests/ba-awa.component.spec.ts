@@ -26,49 +26,65 @@ describe('BaAwaComponent', () => {
             state: BaAwaRules.get().getInitialState(defaultConfig),
             move: MancalaMove.of(MancalaDistribution.of(0)),
             result: [
-                { x: 0, y: 0, content: { mainContent: ' 5 ', secondaryContent: ' +1 ' } },
-                { x: 1, y: 0, content: { mainContent: ' 5 ', secondaryContent: ' +1 ' } },
-                { x: 2, y: 0, content: { mainContent: ' 5 ', secondaryContent: ' +1 ' } },
-                { x: 3, y: 0, content: { mainContent: ' 5 ', secondaryContent: ' +1 ' } },
+                { x: 0, y: 0, content: { mainContent: ' 7 ', secondaryContent: ' +3 ' } },
+                { x: 1, y: 0, content: { mainContent: ' 1 ', secondaryContent: ' -3 ' } },
+                { x: 2, y: 0, content: { mainContent: ' 6 ', secondaryContent: ' +2 ' } },
+                { x: 3, y: 0, content: { mainContent: ' 1 ', secondaryContent: ' -3 ' } },
+                { x: 4, y: 0, content: { mainContent: ' 6 ', secondaryContent: ' +2 ' } },
+                { x: 5, y: 0, content: { mainContent: ' 6 ', secondaryContent: ' +2 ' } },
+
+                { x: 1, y: 1, content: { mainContent: ' 6 ', secondaryContent: ' +2 ' } },
+                { x: 2, y: 1, content: { mainContent: ' 6 ', secondaryContent: ' +2 ' } },
+                { x: 3, y: 1, content: { mainContent: ' 1 ', secondaryContent: ' -3 ' } },
+                { x: 4, y: 1, content: { mainContent: ' 0 ', secondaryContent: ' -4 ' } },
+                { x: 5, y: 1, content: { mainContent: ' 6 ', secondaryContent: ' +2 ' } },
             ],
         },
         secondDistribution: {
             state: new MancalaState([
-                [5, 5, 5, 5, 4, 4],
-                [0, 4, 4, 4, 4, 4],
+                [7, 1, 6, 1, 6, 6],
+                [2, 6, 6, 1, 0, 6],
             ], 1, [0, 0]),
-            move: MancalaMove.of(MancalaDistribution.of(1)),
+            move: MancalaMove.of(MancalaDistribution.of(0)),
             result: [
-                { x: 2, y: 0, content: { mainContent: ' 6 ', secondaryContent: ' +1 ' } },
-                { x: 3, y: 0, content: { mainContent: ' 6 ', secondaryContent: ' +1 ' } },
-                { x: 4, y: 0, content: { mainContent: ' 5 ', secondaryContent: ' +1 ' } },
-                { x: 5, y: 0, content: { mainContent: ' 5 ', secondaryContent: ' +1 ' } },
-                { x: 5, y: 1, content: { mainContent: ' 5 ', secondaryContent: ' +1 ' } },
+                { x: 1, y: 0, content: { mainContent: ' 2 ', secondaryContent: ' +1 ' } },
+                { x: 2, y: 0, content: { mainContent: ' 7 ', secondaryContent: ' +1 ' } },
+                { x: 3, y: 0, content: { mainContent: ' 2 ', secondaryContent: ' +1 ' } },
+                { x: 4, y: 0, content: { mainContent: ' 7 ', secondaryContent: ' +1 ' } },
+                { x: 5, y: 0, content: { mainContent: ' 7 ', secondaryContent: ' +1 ' } },
+                { x: 4, y: 1, content: { mainContent: ' 1 ', secondaryContent: ' +1 ' } },
+                { x: 5, y: 1, content: { mainContent: ' 7 ', secondaryContent: ' +1 ' } },
             ],
         },
         monsoon: {
             state: new MancalaState([
                 [0, 0, 0, 0, 0, 1],
-                [0, 0, 0, 0, 0, 4],
+                [0, 0, 0, 5, 6, 0],
             ], 121, [0, 0]),
             move: MancalaMove.of(MancalaDistribution.of(5)),
-            result: [{ x: 5, y: 1, content: { mainContent: ' 0 ', secondaryContent: ' -5 ' } }],
+            result: [
+                { x: 3, y: 1, content: { mainContent: ' 0 ', secondaryContent: ' -5 ' } },
+                { x: 4, y: 1, content: { mainContent: ' 0 ', secondaryContent: ' -6 ' } },
+                { x: 5, y: 1, content: { mainContent: ' 0 ', secondaryContent: ' -1 ' } },
+            ],
         },
         capture: {
             state: new MancalaState([
-                [4, 1, 4, 4, 4, 4],
-                [2, 4, 4, 4, 4, 4],
+                [3, 1, 4, 4, 4, 4],
+                [3, 1, 4, 4, 4, 4],
             ], 0, [0, 0]),
-            move: MancalaMove.of(MancalaDistribution.of(0)),
-            result: [{ x: 1, y: 0, content: { mainContent: ' 0 ', secondaryContent: ' -2 ' } }],
+            move: MancalaMove.of(MancalaDistribution.of(1)),
+            result: [{ x: 0, y: 1, content: { mainContent: ' 0 ', secondaryContent: ' -4 ' } }],
         },
         fillThenCapture: {
             state: new MancalaState([
-                [11, 4, 4, 4, 4, 0],
-                [17, 4, 4, 4, 4, 4],
+                [7, 1, 6, 1, 6, 6],
+                [2, 6, 6, 1, 0, 6],
             ], 0, [0, 0]),
             move: MancalaMove.of(MancalaDistribution.of(0)),
-            result: [{ x: 5, y: 0, content: { mainContent: ' 0 ', secondaryContent: ' -2 ' } }],
+            result: [
+                { x: 3, y: 1, content: { mainContent: ' 0 ', secondaryContent: ' -4 ' } },
+            ],
         },
     });
 
@@ -134,20 +150,23 @@ describe('BaAwaComponent', () => {
                 passByPlayerStore: true,
                 mustContinueDistributionAfterStore: true,
             });
-            const state: MancalaState = BaAwaRules.get().getInitialState(customConfig);
+            const state: MancalaState = new MancalaState([
+                [0, 0, 8, 0, 0, 0],
+                [1, 0, 1, 1, 1, 0],
+            ], 10, [0, 0]);
             await testUtils.setupState(state, { config: customConfig });
-            await testUtils.expectClickSuccess('#click_3_1');
-            tick(1400);
+            await testUtils.expectClickSuccess('#click_0_1');
+            tick(100);
 
             // When doing the second distribution
-            const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(3), [MancalaDistribution.of(0)]);
+            const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(0), [MancalaDistribution.of(2)]);
 
             // Then this should trigger a single distribution move
-            await testUtils.expectMoveSuccess('#click_0_1', move, 1500);
+            await testUtils.expectMoveSuccess('#click_2_1', move, 100);
             const expectedState: MancalaState = new MancalaState([
-                [5, 5, 5, 5, 4, 4],
-                [0, 5, 5, 0, 4, 4],
-            ], 1, [2, 0]);
+                [0, 0, 8, 0, 0, 0],
+                [0, 1, 0, 1, 1, 0],
+            ], 11, [1, 0]);
             const actualState: MancalaState = testUtils.getGameComponent().getState();
             expect(actualState).toEqual(expectedState);
         }));

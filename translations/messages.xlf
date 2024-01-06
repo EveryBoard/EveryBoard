@@ -158,6 +158,9 @@
       <trans-unit id="8852931932150400681" datatype="html">
         <source>The most widespread of the Mancalas.</source>
       </trans-unit>
+      <trans-unit id="1675508830863089385" datatype="html">
+        <source>The most widespread multiple-lap Mancala.</source>
+      </trans-unit>
       <trans-unit id="5716165296000343717" datatype="html">
         <source>The Irish version of the Tafl game family! Invaders must capture the king, defender must make him escape!</source>
       </trans-unit>
@@ -364,6 +367,9 @@
       </trans-unit>
       <trans-unit id="809030787784855848" datatype="html">
         <source>Diaballik</source>
+      </trans-unit>
+      <trans-unit id="1493565703246564578" datatype="html">
+        <source>Ba-awa</source>
       </trans-unit>
       <trans-unit id="2218572265318708454" datatype="html">
         <source>Registering</source>
@@ -2095,9 +2101,6 @@
       <trans-unit id="1645842992024065193" datatype="html">
         <source>This is not the winning move. Try again.</source>
       </trans-unit>
-      <trans-unit id="387119594039428962" datatype="html">
-        <source><x id="PH" equiv-text="this.gameName"/> is a Mancala. Mancala is the name of a family of board games that dates back at least to the third century. Mancalas are games of distribution (sowing) and capture. Their goal is to capture the most seeds. The spaces in Mancalas are called the houses. The ones on the extreme left and right are called the stores, they contain the seeds that each player won. As you are playing Dark, the 6 houses on the bottom are yours.</source>
-      </trans-unit>
       <trans-unit id="9104781897718296194" datatype="html">
         <source>Bonus fact: Awalé is the most common of all Mancalas.</source>
       </trans-unit>
@@ -2174,6 +2177,18 @@
       <trans-unit id="4966070806582905191" datatype="html">
         <source>Also, as soon as on player cannot play, the other player captures all the seeds in its own side. Here, it was the first player&apos;s turn, and the second player has taken all the remaining seeds.</source>
       </trans-unit>
+      <trans-unit id="6179314931812970793" datatype="html">
+        <source>Bonus fact: Ba-awa, also called Adi, is played mainly in Ghana.</source>
+      </trans-unit>
+      <trans-unit id="2932513123180634807" datatype="html">
+        <source>Multiple laps sowing</source>
+      </trans-unit>
+      <trans-unit id="7401522682103634470" datatype="html">
+        <source>However, the distribution only stop when the last house contains, after you dropped your last seed, zero or four seeds. Example here</source>
+      </trans-unit>
+      <trans-unit id="1172032283461186966" datatype="html">
+        <source>So, after landing in a house with 3 seeds, a second lap has been started</source>
+      </trans-unit>
       <trans-unit id="8840015526202664476" datatype="html">
         <source>You must distribute one of your houses.</source>
       </trans-unit>
@@ -2195,8 +2210,14 @@
       <trans-unit id="8576122948092687879" datatype="html">
         <source>Must continue distribution after last seed ends in store</source>
       </trans-unit>
+      <trans-unit id="2685972626228203020" datatype="html">
+        <source>Continue new laps until capture or empty house</source>
+      </trans-unit>
       <trans-unit id="7080802734755670775" datatype="html">
         <source>Seeds by house</source>
+      </trans-unit>
+      <trans-unit id="387119594039428962" datatype="html">
+        <source><x id="PH" equiv-text="gameName"/> is a Mancala. Mancala is the name of a family of board games that dates back at least to the third century. Mancalas are games of distribution (sowing) and capture. Their goal is to capture the most seeds. The spaces in Mancalas are called the houses. The ones on the extreme left and right are called the stores, they contain the seeds that each player won. As you are playing Dark, the 6 houses on the bottom are yours.</source>
       </trans-unit>
       <trans-unit id="2949583224863920715" datatype="html">
         <source>Sowing</source>
@@ -2734,17 +2755,6 @@
       <trans-unit id="6496295523512347479" datatype="html">
         <source>Number of bonus mountains</source>
       </trans-unit>
-      <trans-unit id="3753696680821191929" datatype="html">
-        <source>The goal at Siam is to be the first to push a mountain out of the board.
-        The initial board contains three mountains, and no pieces are initially on the board.
-        During its turn, a player can do one of the following actions:
-        &lt;ol&gt;
-            &lt;li&gt;Put a new piece on the board.&lt;/li&gt;
-            &lt;li&gt;Change the orientation of one of its piece&lt;/li&gt;
-            &lt;li&gt;Move one of its piece and optionally reorient it.&lt;/li&gt;
-            &lt;li&gt;Take one of its pieces out of the board.&lt;/li&gt;
-        &lt;/ol&gt;</source>
-      </trans-unit>
       <trans-unit id="5290831626966707862" datatype="html">
         <source>Cannot rotate piece outside the board: <x id="PH" equiv-text="move.toString()"/></source>
       </trans-unit>
@@ -2754,8 +2764,8 @@
       <trans-unit id="5519545750670700019" datatype="html">
         <source>SiamMove should have moveDirection and landingOrientation matching when a piece goes out of the board: <x id="PH" equiv-text="move.toString()"/></source>
       </trans-unit>
-      <trans-unit id="1043275525655591688" datatype="html">
-        <source>The goal at Siam is to be the first to push a mountain out of the board. The initial board contains three mountains, and no pieces are initially on the board. During its turn, a player can do one of the following actions: &lt;ol&gt;&lt;li&gt;Put a new piece on the board.&lt;/li&gt;&lt;li&gt;Change the orientation of one of its piece&lt;/li&gt;&lt;li&gt;Move one of its piece and optionally reorient it.&lt;/li&gt;&lt;li&gt;Take one of its pieces out of the board.&lt;/li&gt;&lt;/ol&gt;</source>
+      <trans-unit id="8745202933853690845" datatype="html">
+        <source>The goal at Siam is to be the first to push a mountain out of the board. The initial board contains three mountains, and no pieces are initially on the board. During its turn, a player can do one of the following actions:&lt;ol&gt;&lt;li&gt;Put a new piece on the board.&lt;/li&gt;&lt;li&gt;Change the orientation of one of its piece&lt;/li&gt;&lt;li&gt;Move one of its piece and optionally reorient it.&lt;/li&gt;&lt;li&gt;Take one of its pieces out of the board.&lt;/li&gt;&lt;/ol&gt;</source>
       </trans-unit>
       <trans-unit id="4040000701091542987" datatype="html">
         <source>Inserting a piece</source>
@@ -3009,9 +3019,6 @@
       </trans-unit>
       <trans-unit id="1347435830524797455" datatype="html">
         <source>Standard Teeko</source>
-      </trans-unit>
-      <trans-unit id="5798173150884510214" datatype="html">
-        <source>Can piece teleport</source>
       </trans-unit>
       <trans-unit id="6407662856197686253" datatype="html">
         <source>Piece can teleport</source>

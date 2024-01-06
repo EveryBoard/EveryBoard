@@ -21,7 +21,7 @@ export class AwaleRules extends MancalaRules {
                 mustFeed: new BooleanConfig(true, MancalaRules.MUST_FEED),
                 passByPlayerStore: new BooleanConfig(false, MancalaRules.PASS_BY_PLAYER_STORE),
                 mustContinueDistributionAfterStore: new BooleanConfig(false, MancalaRules.MULTIPLE_SOW),
-                continueLapIfLastHouseIsFilled: new BooleanConfig(false, MancalaRules.CYCLICAL_LAP),
+                continueLapUntilCaptureOrEmptyHouse: new BooleanConfig(false, MancalaRules.CYCLICAL_LAP),
                 seedsByHouse: new NumberConfig(4, MancalaRules.SEEDS_BY_HOUSE, MGPValidators.range(1, 99)),
                 width: new NumberConfig(6, RulesConfigDescriptionLocalizable.WIDTH, MGPValidators.range(1, 99)),
             },
@@ -29,7 +29,7 @@ export class AwaleRules extends MancalaRules {
 
     public static get(): AwaleRules {
         if (AwaleRules.singleton.isAbsent()) {
-            AwaleRules.singleton = MGPOptional.of(new AwaleRules());
+            AwaleRules.singleton = MGPOptional.of(new AwaleRules([2, 3]));
         }
         return AwaleRules.singleton.get();
     }

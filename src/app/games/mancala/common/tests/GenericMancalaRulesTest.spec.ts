@@ -24,19 +24,6 @@ export function DoMancalaRulesTests(entries: MancalaRulesTestEntries): void {
 
     describe(entries.gameName + 'Rules generic tests', () => {
 
-        it('should allow simple move', () => {
-            // Given any board
-            const state: MancalaState = MancalaRules.getInitialState(defaultConfig);
-            // When doing a simple move
-            // Then the seed should be distributed
-            const expectedBoard: Table<number> = [
-                [4, 4, 4, 4, 4, 4],
-                [4, 5, 5, 5, 5, 0],
-            ];
-            const expectedState: MancalaState = new MancalaState(expectedBoard, 1, [0, 0]);
-            RulesUtils.expectMoveSuccess(rules, state, entries.simpleMove, expectedState, defaultConfig);
-        });
-
         it('should refuse distributing empty space', () => {
             // Given a board where 'simpleMove' would be illegal, distributing an empty house
             const board: number[][] = [
@@ -125,7 +112,7 @@ export function DoMancalaRulesTests(entries: MancalaRulesTestEntries): void {
                 passByPlayerStore: true,
                 mustContinueDistributionAfterStore: true,
             });
-            const state: MancalaState = MancalaRules.getInitialState(customConfig);
+            const state: MancalaState = rules.getInitialState(customConfig);
 
             // When attempting a store-ending single distribution
             const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(3));

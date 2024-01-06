@@ -306,6 +306,10 @@
         <source>The most widespread of the Mancalas.</source>
         <target>Le plus répandu des jeux de la famille Mancala.</target>
       </trans-unit>
+      <trans-unit id="1675508830863089385" datatype="html">
+        <source>The most widespread multiple-lap Mancala.</source>
+        <target>Le plus répandu des jeux de la famille Mancala à plusieurs tours!</target>
+      </trans-unit>
       <trans-unit id="7926456268600574942" datatype="html">
         <source>Align your pieces to score points, but beware, pieces can flip!</source>
         <target>Alignez vos pièces pour marquer des points, mais attention aux retournements de pièces !</target>
@@ -349,6 +353,10 @@
       <trans-unit id="8576122948092687879" datatype="html">
         <source>Must continue distribution after last seed ends in store</source>
         <target>Continuer la distribution après que la dernière graine soit tombée dans le magasin</target>
+      </trans-unit>
+      <trans-unit id="2685972626228203020" datatype="html">
+        <source>Continue new laps until capture or empty house</source>
+        <target>Continuer un nouveau tour jusqu'à une capture ou à une maison vide</target>
       </trans-unit>
       <trans-unit id="9195784792324730674" datatype="html">
         <source>Central throne is left for good</source>
@@ -524,6 +532,10 @@
       <trans-unit id="809030787784855848" datatype="html">
         <source>Diaballik</source>
         <target>Diaballik</target>
+      </trans-unit>
+      <trans-unit id="1493565703246564578" datatype="html">
+        <source>Ba-awa</source>
+        <target>Ba-awa</target>
       </trans-unit>
       <trans-unit id="1760292529513431093" datatype="html">
         <source>Trexo</source>
@@ -1369,6 +1381,22 @@
       <trans-unit id="4966070806582905191" datatype="html">
         <source>Also, as soon as on player cannot play, the other player captures all the seeds in its own side. Here, it was the first player&apos;s turn, and the second player has taken all the remaining seeds.</source>
         <target>Aussi, dès qu&apos;un joueur ne peut plus jouer, l’autre joueur capture toutes les graines dans son propre camp. Ici, c&apos;était à vous de jouer et au joueur suivant de récolter toutes les graines restantes, en mettant ainsi fin à la partie.</target>
+      </trans-unit>
+      <trans-unit id="6179314931812970793" datatype="html">
+        <source>Bonus fact: Ba-awa, also called Adi, is played mainly in Ghana.</source>
+        <target>Info bonus: Ba-awa, aussi appellé Adi, est joué principalement au Ghana.</target>
+      </trans-unit>
+      <trans-unit id="2932513123180634807" datatype="html">
+        <source>Multiple laps sowing</source>
+        <target>Distribution à plusieur tours</target>
+      </trans-unit>
+      <trans-unit id="7401522682103634470" datatype="html">
+        <source>However, the distribution only stop when the last house contains, after you dropped your last seed, zero or four seeds. Example here</source>
+        <target>Cependant, la distribution ne s'arrête que quand la dernière maison contient, après que vous ayez déposé votre dernière graine, zéro ou quatre graines. Exemple ici</target>
+      </trans-unit>
+      <trans-unit id="1172032283461186966" datatype="html">
+        <source>So, after landing in a house with 3 seeds, a second lap has been started</source>
+        <target>Donc, après atterissage dans une maison avec 3 graines, un second tour a commencé</target>
       </trans-unit>
       <trans-unit id="8840015526202664476" datatype="html">
         <source>You must distribute one of your houses.</source>
@@ -3827,25 +3855,9 @@
         <source>Number of bonus mountains</source>
         <target>Nombre de montagnes bonus</target>
       </trans-unit>
-      <trans-unit id="3753696680821191929" datatype="html">
-        <source>The goal at Siam is to be the first to push a mountain out of the board.
-        The initial board contains three mountains, and no pieces are initially on the board.
-        During its turn, a player can do one of the following actions:
-        &lt;ol&gt;
-            &lt;li&gt;Put a new piece on the board.&lt;/li&gt;
-            &lt;li&gt;Change the orientation of one of its piece&lt;/li&gt;
-            &lt;li&gt;Move one of its piece and optionally reorient it.&lt;/li&gt;
-            &lt;li&gt;Take one of its pieces out of the board.&lt;/li&gt;
-        &lt;/ol&gt;</source>
-        <target>Le but du Siam est d&apos;être le premier à pousser une montagne hors du plateau.
-        Le plateau de départ en contient trois, au centre, et aucun pion n&apos;est initialement sur le plateau.
-        Durant son tour de jeu un joueur peut effectuer l&apos;une des actions suivantes :
-        &lt;ol&gt;
-            &lt;li&gt;Faire entrer une pièce sur le plateau.&lt;/li&gt;
-            &lt;li&gt;Changer l&apos;orientation d&apos;une de ses pièces.&lt;/li&gt;
-            &lt;li&gt;Déplacer une de ses pièces et éventuellement la réorienter.&lt;/li&gt;
-            &lt;li&gt;Sortir un de ses pions du plateau.&lt;/li&gt;
-        &lt;/ol&gt;</target>
+      <trans-unit id="8745202933853690845" datatype="html">
+        <source>The goal at Siam is to be the first to push a mountain out of the board. The initial board contains three mountains, and no pieces are initially on the board. During its turn, a player can do one of the following actions:&lt;ol&gt;&lt;li&gt;Put a new piece on the board.&lt;/li&gt;&lt;li&gt;Change the orientation of one of its piece&lt;/li&gt;&lt;li&gt;Move one of its piece and optionally reorient it.&lt;/li&gt;&lt;li&gt;Take one of its pieces out of the board.&lt;/li&gt;&lt;/ol&gt;</source>
+        <target>Le but du Siam est d&apos;être le premier à pousser une montagne hors du plateau. Le plateau de départ en contient trois, au centre, et aucun pion n&apos;est initialement sur le plateau. Durant son tour de jeu un joueur peut effectuer l&apos;une des actions suivantes :&lt;ol&gt;&lt;li&gt;Faire entrer une pièce sur le plateau.&lt;/li&gt;&lt;li&gt;Changer l&apos;orientation d&apos;une de ses pièces.&lt;/li&gt;&lt;li&gt;Déplacer une de ses pièces et éventuellement la réorienter.&lt;/li&gt;&lt;li&gt;Sortir un de ses pions du plateau.&lt;/li&gt;&lt;/ol&gt;</target>
       </trans-unit>
       <trans-unit id="5290831626966707862" datatype="html">
         <source>Cannot rotate piece outside the board: <x id="PH" equiv-text="move.toString()"/></source>
@@ -3858,10 +3870,6 @@
       <trans-unit id="5519545750670700019" datatype="html">
         <source>SiamMove should have moveDirection and landingOrientation matching when a piece goes out of the board: <x id="PH" equiv-text="move.toString()"/></source>
         <target>Les SiamMove doivent avoir moveDirection et landingOrientation identique quand une pièce sort du plateau: <x id="PH" equiv-text="move.toString()"/></target>
-      </trans-unit>
-      <trans-unit id="1043275525655591688" datatype="html">
-        <source>The goal at Siam is to be the first to push a mountain out of the board. The initial board contains three mountains, and no pieces are initially on the board. During its turn, a player can do one of the following actions: &lt;ol&gt;&lt;li&gt;Put a new piece on the board.&lt;/li&gt;&lt;li&gt;Change the orientation of one of its piece&lt;/li&gt;&lt;li&gt;Move one of its piece and optionally reorient it.&lt;/li&gt;&lt;li&gt;Take one of its pieces out of the board.&lt;/li&gt;&lt;/ol&gt;</source>
-        <target>Le but du Siam est d&apos;être le premier à pousser une montagne hors du plateau. Le plateau de départ en contient trois, au centre, et aucun pion n&apos;est initialement sur le plateau. Durant son tour de jeu un joueur peut effectuer l&apos;une des actions suivantes :&lt;ol&gt;&lt;li&gt;Faire entrer une pièce sur le plateau.&lt;/li&gt;&lt;li&gt;Changer l&apos;orientation d&apos;une de ses pièces.&lt;/li&gt;&lt;li&gt;Déplacer une de ses pièces et éventuellement la réorienter.&lt;/li&gt;&lt;li&gt;Sortir un de ses pions du plateau.&lt;/li&gt;&lt;/ol&gt;</target>
       </trans-unit>
       <trans-unit id="4040000701091542987" datatype="html">
         <source>Inserting a piece</source>
@@ -4176,10 +4184,6 @@
       <trans-unit id="1347435830524797455" datatype="html">
         <source>Standard Teeko</source>
         <target>Teeko Standard</target>
-      </trans-unit>
-      <trans-unit id="5798173150884510214" datatype="html">
-        <source>Can piece teleport</source>
-        <target>Est-ce que les pièces se téléportent</target>
       </trans-unit>
       <trans-unit id="6407662856197686253" datatype="html">
         <source>Piece can teleport</source>

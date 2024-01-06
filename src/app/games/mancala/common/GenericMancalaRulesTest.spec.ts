@@ -22,22 +22,6 @@ export function DoMancalaRulesTests(entries: MancalaRulesTestEntries): void {
         const rules: MancalaRules = entries.rules;
         const defaultConfig: MGPOptional<MancalaConfig> = entries.rules.getDefaultRulesConfig();
 
-        it('should allow simple move', () => {
-            // Given any board
-            const state: MancalaState = entries.rules.getInitialState(defaultConfig);
-
-            // When doing a simple move
-            const move: MancalaMove = entries.simpleMove;
-
-            // Then the seed should be distributed
-            const expectedBoard: Table<number> = [
-                [4, 4, 4, 4, 4, 4],
-                [4, 5, 5, 5, 5, 0],
-            ];
-            const expectedState: MancalaState = new MancalaState(expectedBoard, 1, [0, 0]);
-            RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
-        });
-
         it('should refuse distributing empty space', () => {
             // Given a board where 'simpleMove' would be illegal, distributing an empty house
             const board: number[][] = [

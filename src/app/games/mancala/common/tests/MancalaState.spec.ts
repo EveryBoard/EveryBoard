@@ -1,23 +1,13 @@
-import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { MancalaConfig } from '../MancalaConfig';
-import { MancalaRules } from '../MancalaRules';
 import { MancalaState } from '../MancalaState';
-
-const myMancalaConfig: MGPOptional<MancalaConfig> = MGPOptional.of({
-    feedOriginalHouse: true,
-    mustFeed: true,
-    passByPlayerStore: true,
-    mustContinueDistributionAfterStore: true,
-    continueLapIfLastHouseIsFilled: false,
-    seedsByHouse: 4,
-    width: 6,
-});
 
 describe('MancalaState', () => {
 
     it('should compare correctly', () => {
         // Given an initial state
-        const state: MancalaState = MancalaRules.getInitialState(myMancalaConfig);
+        const state: MancalaState = new MancalaState([
+            [0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0],
+        ], 0, [0, 0]);
         // and state with different board
         const differentBoard: MancalaState = new MancalaState([
             [1, 2, 3, 4, 5, 6],

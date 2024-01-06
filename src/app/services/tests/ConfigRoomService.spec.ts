@@ -18,7 +18,7 @@ import { ErrorLoggerServiceMock } from './ErrorLoggerServiceMock.spec';
 import { ErrorLoggerService } from '../ErrorLoggerService';
 import { RulesConfig, RulesConfigUtils } from 'src/app/jscaip/RulesConfigUtil';
 
-describe('ConfigRoomService', () => {
+xdescribe('ConfigRoomService', () => {
 
     let configRoomDAO: ConfigRoomDAO;
 

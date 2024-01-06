@@ -54,7 +54,7 @@ export abstract class MancalaRules extends ConfigurableRules<MancalaMove, Mancal
     public static readonly MUST_FEED: Localized = () => $localize`Must feed`;
     public static readonly PASS_BY_PLAYER_STORE: Localized = () => $localize`Pass by player store`;
     public static readonly MULTIPLE_SOW: Localized = () => $localize`Must continue distribution after last seed ends in store`;
-    public static readonly CYCLICAL_LAP: Localized = () => $localize`Continue new laps while distribution ended in field house`;
+    public static readonly CYCLICAL_LAP: Localized = () => $localize`Continue new laps until capture or empty house`;
     public static readonly SEEDS_BY_HOUSE: Localized = () => $localize`Seeds by house`;
 
     // These are the coordinates of the store. These are fake coordinates since the stores are not on the board
@@ -85,13 +85,7 @@ export abstract class MancalaRules extends ConfigurableRules<MancalaMove, Mancal
         };
     }
 
-    public static getInitialState(optionalConfig: MGPOptional<MancalaConfig>): MancalaState {
-        const config: MancalaConfig = optionalConfig.get();
-        const board: number[][] = TableUtils.create(config.width, 2, config.seedsByHouse);
-        return new MancalaState(board, 0, [0, 0]);
-    }
-
-    protected constructor() {
+    protected constructor(private readonly capturableValues: number[]) {
         super();
     }
 
@@ -107,7 +101,6 @@ export abstract class MancalaRules extends ConfigurableRules<MancalaMove, Mancal
             if (distributionResult.isFailure()) {
                 return MGPValidation.ofFallible(distributionResult);
             } else {
-                // TODO LOL
                 const previousDistributionResult: MancalaDistributionResult =
                     MancalaRules.getEmptyDistributionResult(state);
                 state =
@@ -129,8 +122,10 @@ export abstract class MancalaRules extends ConfigurableRules<MancalaMove, Mancal
         return MGPValidation.SUCCESS;
     }
 
-    public override getInitialState(config: MGPOptional<MancalaConfig>): MancalaState {
-        return MancalaRules.getInitialState(config);
+    public override getInitialState(optionalConfig: MGPOptional<MancalaConfig>): MancalaState {
+        const config: MancalaConfig = optionalConfig.get();
+        const board: number[][] = TableUtils.create(config.width, 2, config.seedsByHouse);
+        return new MancalaState(board, 0, [0, 0]);
     }
 
     /**
@@ -144,7 +139,6 @@ export abstract class MancalaRules extends ConfigurableRules<MancalaMove, Mancal
         if (state.getPieceAtXY(distributions.x, playerY) === 0) {
             return MGPFallible.failure(MancalaFailure.MUST_CHOOSE_NON_EMPTY_HOUSE());
         }
-        // TODO LOL
         const previousDistributionResult: MancalaDistributionResult =
             MancalaRules.getEmptyDistributionResult(state);
         const distributionResult: MancalaDistributionResult =
@@ -179,16 +173,16 @@ export abstract class MancalaRules extends ConfigurableRules<MancalaMove, Mancal
                     this.distributeHouse(houseToDistribute.x, houseToDistribute.y, distributionResult, config);
                 const captures: [number, number] = distributionResult.resultingState.getScoresCopy();
                 captures[playerValue] += distributionResult.passedByStoreNTimes;
-                // distributionResult.resultingState = distributionResult.resultingState;
                 filledCoords.push(...distributionResult.filledCoords);
                 distributionResult.passedByStoreNTimes += distributionResult.passedByStoreNTimes;
-                // distributionResult.endsUpInStore = distributionResult.endsUpInStore;
                 houseToDistribute = distributionResult.filledCoords[distributionResult.filledCoords.length - 1];
-                if (distributionResult.endsUpInStore || config.continueLapIfLastHouseIsFilled === false) {
-                    mustDoOneMoreLap = false;
+                if (config.continueLapUntilCaptureOrEmptyHouse &&
+                    distributionResult.endsUpInStore === false)
+                {
+                    mustDoOneMoreLap = this.isHouseCapturableOrEmpty(houseToDistribute,
+                                                                     distributionResult.resultingState) === false;
                 } else {
-                    const lastHouseContent: number = distributionResult.resultingState.getPieceAt(houseToDistribute);
-                    mustDoOneMoreLap = lastHouseContent !== 1 && lastHouseContent !== 4;
+                    mustDoOneMoreLap = false;
                 }
             }
         }
@@ -200,6 +194,11 @@ export abstract class MancalaRules extends ConfigurableRules<MancalaMove, Mancal
             capturedSum: 0,
             captureMap: distributionResult.captureMap,
         };
+    }
+
+    public isHouseCapturableOrEmpty(coord: Coord, state: MancalaState): boolean {
+        const houseContent: number = state.getPieceAt(coord);
+        return houseContent === 1 || this.capturableValues.some((value: number) => value === houseContent);
     }
 
     /**

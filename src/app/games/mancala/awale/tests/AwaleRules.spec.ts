@@ -28,6 +28,22 @@ describe('AwaleRules', () => {
 
     describe('distribution', () => {
 
+        it('should allow simple move', () => {
+            // Given any board
+            const state: MancalaState = rules.getInitialState(defaultConfig);
+
+            // When doing a simple move
+            const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(5));
+
+            // Then the seed should be distributed
+            const expectedBoard: Table<number> = [
+                [4, 4, 4, 4, 4, 4],
+                [4, 5, 5, 5, 5, 0],
+            ];
+            const expectedState: MancalaState = new MancalaState(expectedBoard, 1, [0, 0]);
+            RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
+        });
+
         it('should not drop a piece in the starting space', () => {
             // Given a state where the player can perform a distributing move with at least 12 stones
             const board: Table<number> = [
@@ -311,6 +327,28 @@ describe('AwaleRules', () => {
                 [5, 5, 5, 5, 4, 4],
                 [0, 5, 5, 0, 4, 4],
             ], 1, [2, 0]);
+            RulesUtils.expectMoveSuccess(rules, state, move, expectedState, customConfig);
+        });
+
+        it('should stop distribution on capture', () => {
+            // Given a board with possible capture and a config with continueLapUntilCaptureOrEmptyHouse = true
+            const customConfig: MGPOptional<MancalaConfig> = MGPOptional.of({
+                ...defaultConfig.get(),
+                continueLapUntilCaptureOrEmptyHouse: true,
+            });
+            const state: MancalaState = new MancalaState([
+                [0, 2, 0, 4, 0, 0],
+                [0, 3, 0, 4, 0, 0],
+            ], 10, [0, 0]);
+
+            // When doing that capture
+            const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(1));
+
+            // Then it should end the move
+            const expectedState: MancalaState = new MancalaState([
+                [1, 0, 0, 4, 0, 0],
+                [1, 0, 0, 4, 0, 0],
+            ], 11, [3, 0]);
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState, customConfig);
         });
 

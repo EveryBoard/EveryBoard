@@ -3,7 +3,7 @@ import { DebugElement, Type } from '@angular/core';
 import { fakeAsync, tick } from '@angular/core/testing';
 import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { MancalaComponent } from '../MancalaComponent';
-import { MancalaRules } from '../MancalaRules';
+import { MancalaDropResult, MancalaRules } from '../MancalaRules';
 import { MancalaDistribution, MancalaMove } from '../MancalaMove';
 import { MancalaState } from '../MancalaState';
 import { Cell, Table } from 'src/app/utils/ArrayUtils';
@@ -27,20 +27,92 @@ export class MancalaComponentTestUtils<C extends MancalaComponent<R>,
                        public readonly moveGenerator: MoveGenerator<MancalaMove, MancalaState, MancalaConfig>) {
     }
 
-    public async expectMancalaMoveSuccess(click: string, move: MancalaMove): Promise<void> {
+    public async expectMancalaMoveSuccess(click: string, move: MancalaMove, config: MancalaConfig): Promise<void> {
         const component: C = this.testUtils.getGameComponent();
         const state: MancalaState = component.constructedState;
         const playerY: number = state.getCurrentPlayerY();
         const lastDistribution: MancalaDistribution = move.distributions[move.distributions.length - 1];
-        let lastDistributionSeedNumber: number = state.getPieceAtXY(lastDistribution.x, playerY);
-        if (lastDistributionSeedNumber > (2 * state.getWidth())) {
-            // Since we are distributing enough seed to do the whole turn
-            // it'll take TIMEOUT_BETWEEN_SEED ms to skip the initial house
-            lastDistributionSeedNumber++;
-        }
-        // The time to move the seeds
-        const moveDuration: number = (lastDistributionSeedNumber + 1) * MancalaComponent.TIMEOUT_BETWEEN_SEED;
+        const coord: Coord = new Coord(lastDistribution.x, playerY);
+        const moveDuration: number = this.showSeedBySeed(coord, state, config);
         await this.testUtils.expectMoveSuccess(click, move, moveDuration);
+    }
+
+    private showSeedBySeed(coord: Coord, state: MancalaState, config: MancalaConfig): number {
+        let resultingState: MancalaState = state;
+        const player: Player = state.getCurrentPlayer();
+        const initial: Coord = coord; // to remember in order not to sow in the starting space if we make a full turn
+        let currentDropIsStore: boolean = false;
+        let houseToDistribute: Coord = coord;
+        let mustDoOneMoreLap: boolean = true;
+        let awaitedTime: number = 0;
+        while (mustDoOneMoreLap) {
+            let seedsInHand: number = resultingState.getPieceAt(houseToDistribute);
+            resultingState = resultingState.setPieceAt(houseToDistribute, 0);
+            // Changing immediately the chosen house
+            awaitedTime += MancalaComponent.TIMEOUT_BETWEEN_SEED;
+            while (seedsInHand > 0) {
+                ({ houseToDistribute, currentDropIsStore, seedsInHand, resultingState, awaitedTime } =
+                    this.showSeedDrop(houseToDistribute,
+                                      player,
+                                      currentDropIsStore,
+                                      state,
+                                      config,
+                                      seedsInHand,
+                                      resultingState,
+                                      initial,
+                                      awaitedTime)
+                );
+            }
+            if (currentDropIsStore || config.continueLapUntilCaptureOrEmptyHouse === false) {
+                mustDoOneMoreLap = false;
+            } else {
+                const lastHouseContent: number = resultingState.getPieceAt(houseToDistribute);
+                mustDoOneMoreLap = lastHouseContent !== 1 && lastHouseContent !== 4;
+                if (mustDoOneMoreLap) {
+                    awaitedTime += MancalaComponent.TIMEOUT_BETWEEN_LAPS;
+                }
+            }
+        }
+        return awaitedTime;
+    }
+
+    private showSeedDrop(houseToDistribute: Coord,
+                         player: Player,
+                         currentDropIsStore: boolean,
+                         state: MancalaState,
+                         config: MancalaConfig,
+                         seedsInHand: number,
+                         resultingState: MancalaState,
+                         initial: Coord,
+                         awaitedTime: number)
+    : { houseToDistribute: Coord;
+        currentDropIsStore: boolean;
+        seedsInHand: number;
+        resultingState: MancalaState;
+        awaitedTime: number
+    }
+    {
+        const component: C = this.testUtils.getGameComponent();
+        const nextCoord: MGPOptional<Coord> =
+            component.rules.getNextCoord(houseToDistribute, player, currentDropIsStore, state, config);
+        currentDropIsStore = nextCoord.isAbsent();
+        if (currentDropIsStore) {
+            seedsInHand--;
+            resultingState = resultingState.feedStore(player);
+        } else {
+            houseToDistribute = nextCoord.get();
+            if (initial.equals(houseToDistribute) === false || config.feedOriginalHouse) {
+                // not to distribute on our starting space
+                const feedResult: MancalaDropResult =
+                    component.rules.getDropResult(seedsInHand, resultingState, houseToDistribute);
+                resultingState = feedResult.resultingState;
+                seedsInHand--; // drop in this space a piece we have in hand
+            }
+        }
+        if (seedsInHand > 0) {
+            awaitedTime += MancalaComponent.TIMEOUT_BETWEEN_SEED;
+        }
+        return { houseToDistribute, currentDropIsStore, seedsInHand, resultingState, awaitedTime };
     }
 
     public async expectMancalaClickSuccess(coord: Coord): Promise<void> {
@@ -70,25 +142,28 @@ export class MancalaComponentTestUtils<C extends MancalaComponent<R>,
     }
 
     public expectToBeFed(actionAndResult: MancalaActionAndResult, config: MancalaConfig): void {
-        for (const coordAndContent of MancalaRules.getInitialState(MGPOptional.of(config)).getCoordsAndContents()) {
-            const suffix: string = coordAndContent.coord.x + '_' + coordAndContent.coord.y;
-            const optionalCell: MGPOptional<MancalaHouseContents> =
-                this.getCellAt(coordAndContent.coord, actionAndResult);
-            const playerFill: string = 'player' + ((coordAndContent.coord.y + 1) % 2) + '-fill';
-            if (optionalCell.isPresent()) { // Filled house
-                const cell: MancalaHouseContents = optionalCell.get();
-                this.expectHouseToMatch(cell);
-                const classes: string[] = ['base', 'moved-stroke', playerFill];
-                this.testUtils.expectElementToHaveClasses('#circle_' + suffix, classes);
-            } else {
-                const playerY: number = actionAndResult.state.getCurrentPlayerY();
-                const startingCoord: Coord = new Coord(actionAndResult.move.getFirstDistribution().x, playerY);
-                if (startingCoord.equals(coordAndContent.coord)) { // Initial house
-                    const classes: string[] = ['base', 'last-move-stroke', playerFill];
+        for (let y: number = 0; y < 2; y++) {
+            for (let x: number = 0; x < config.width; x++) {
+                const coord: Coord = new Coord(x, y);
+                const suffix: string = x + '_' + y;
+                const optionalCell: MGPOptional<MancalaHouseContents> =
+                    this.getCellAt(coord, actionAndResult);
+                const playerFill: string = 'player' + ((coord.y + 1) % 2) + '-fill';
+                if (optionalCell.isPresent()) { // Filled house
+                    const cell: MancalaHouseContents = optionalCell.get();
+                    this.expectHouseToMatch(cell);
+                    const classes: string[] = ['base', 'moved-stroke', playerFill];
                     this.testUtils.expectElementToHaveClasses('#circle_' + suffix, classes);
-                } else { // Neutral house
-                    const classes: string[] = [playerFill, 'base'];
-                    this.testUtils.expectElementToHaveClasses('#circle_' + suffix, classes);
+                } else {
+                    const playerY: number = actionAndResult.state.getCurrentPlayerY();
+                    const startingCoord: Coord = new Coord(actionAndResult.move.getFirstDistribution().x, playerY);
+                    if (startingCoord.equals(coord)) { // Initial house
+                        const classes: string[] = ['base', 'last-move-stroke', playerFill];
+                        this.testUtils.expectElementToHaveClasses('#circle_' + suffix, classes);
+                    } else { // Neutral house
+                        const classes: string[] = [playerFill, 'base'];
+                        this.testUtils.expectElementToHaveClasses('#circle_' + suffix, classes);
+                    }
                 }
             }
         }
@@ -163,6 +238,11 @@ export function doMancalaComponentTests<C extends MancalaComponent<R>,
     const defaultConfig: MGPOptional<MancalaConfig> = RulesConfigUtils.getGameDefaultConfig(entries.gameName);
 
     describe(entries.gameName + ' component generic tests', () => {
+
+        function awaitEndOfMove(): void {
+            tick(6600); // 26 seeds drop and 4 sub-distribution for ba-awa, longest game to distribute
+        }
+
         beforeEach(fakeAsync(async() => {
             const testUtils: ComponentTestUtils<C> = await ComponentTestUtils.forGame<C>(entries.gameName);
             mancalaTestUtils = new MancalaComponentTestUtils(testUtils, entries.moveGenerator);
@@ -179,7 +259,7 @@ export function doMancalaComponentTests<C extends MancalaComponent<R>,
             // When doing single distribution move
             const move: MancalaMove = entries.distribution.move;
             const suffix: string = mancalaTestUtils.getSuffix(entries.distribution);
-            await mancalaTestUtils.expectMancalaMoveSuccess('#click_' + suffix, move);
+            await mancalaTestUtils.expectMancalaMoveSuccess('#click_' + suffix, move, defaultConfig.get());
 
             // Then it should be a success
             mancalaTestUtils.expectToBeFed(entries.distribution, defaultConfig.get());
@@ -194,7 +274,7 @@ export function doMancalaComponentTests<C extends MancalaComponent<R>,
             const suffix: string = mancalaTestUtils.getSuffix(entries.capture);
 
             // When doing single distribution capture move
-            await mancalaTestUtils.expectMancalaMoveSuccess('#click_' + suffix, move);
+            await mancalaTestUtils.expectMancalaMoveSuccess('#click_' + suffix, move, defaultConfig.get());
 
             // Then the store should contain newScore +difference
             const newState: MancalaState = mancalaTestUtils.testUtils.getGameComponent().getState();
@@ -208,14 +288,14 @@ export function doMancalaComponentTests<C extends MancalaComponent<R>,
             await mancalaTestUtils.testUtils.setupState(entries.distribution.state, { config: defaultConfig });
             let move: MancalaMove = entries.distribution.move;
             let suffix: string = mancalaTestUtils.getSuffix(entries.distribution);
-            await mancalaTestUtils.expectMancalaMoveSuccess('#click_' + suffix, move);
+            await mancalaTestUtils.expectMancalaMoveSuccess('#click_' + suffix, move, defaultConfig.get());
 
             // When doing second single distribution move
             move = entries.secondDistribution.move;
 
             // Then it should be a success too
             suffix = mancalaTestUtils.getSuffix(entries.secondDistribution);
-            await mancalaTestUtils.expectMancalaMoveSuccess('#click_' + suffix, move);
+            await mancalaTestUtils.expectMancalaMoveSuccess('#click_' + suffix, move, defaultConfig.get());
 
             // Then it should be a success
             mancalaTestUtils.expectToBeFed(entries.secondDistribution, defaultConfig.get());
@@ -226,7 +306,7 @@ export function doMancalaComponentTests<C extends MancalaComponent<R>,
 
             // When player performs a move
             const move: MancalaMove = mancalaTestUtils.testUtils.getGameComponent().generateMove(5);
-            await mancalaTestUtils.expectMancalaMoveSuccess('#click_5_1', move);
+            await mancalaTestUtils.expectMancalaMoveSuccess('#click_5_1', move, defaultConfig.get());
 
             // Then the moved spaces should be shown
             // Initial element
@@ -270,7 +350,7 @@ export function doMancalaComponentTests<C extends MancalaComponent<R>,
         it('should hide last move when taking move back', fakeAsync(async() => {
             // Given a board with a last move
             const move: MancalaMove = mancalaTestUtils.testUtils.getGameComponent().generateMove(5);
-            await mancalaTestUtils.expectMancalaMoveSuccess('#click_5_1', move);
+            await mancalaTestUtils.expectMancalaMoveSuccess('#click_5_1', move, defaultConfig.get());
 
             // When taking back
             await mancalaTestUtils.testUtils.expectInterfaceClickSuccess('#takeBack');
@@ -299,7 +379,7 @@ export function doMancalaComponentTests<C extends MancalaComponent<R>,
 
             // When doing the capturing move
             const suffix: string = mancalaTestUtils.getSuffix(entries.monsoon);
-            await mancalaTestUtils.expectMancalaMoveSuccess('#click_' + suffix, entries.monsoon.move);
+            await mancalaTestUtils.expectMancalaMoveSuccess('#click_' + suffix, entries.monsoon.move, defaultConfig.get());
 
             // Then the space in question should be marked as "captured"
             mancalaTestUtils.expectToBeCaptured(entries.monsoon.result);
@@ -311,7 +391,7 @@ export function doMancalaComponentTests<C extends MancalaComponent<R>,
 
             // When player zero clicks on a house to distribute
             const suffix: string = mancalaTestUtils.getSuffix(entries.capture);
-            await mancalaTestUtils.expectMancalaMoveSuccess('#click_' + suffix, entries.capture.move);
+            await mancalaTestUtils.expectMancalaMoveSuccess('#click_' + suffix, entries.capture.move, defaultConfig.get());
 
             // Then the moved spaces should be shown
             // Initial element
@@ -325,7 +405,7 @@ export function doMancalaComponentTests<C extends MancalaComponent<R>,
             await mancalaTestUtils.testUtils.setupState(entries.fillThenCapture.state, { config: defaultConfig });
             // When doing the capturing move
             const suffix: string = mancalaTestUtils.getSuffix(entries.fillThenCapture);
-            await mancalaTestUtils.expectMancalaMoveSuccess('#click_' + suffix, entries.fillThenCapture.move);
+            await mancalaTestUtils.expectMancalaMoveSuccess('#click_' + suffix, entries.fillThenCapture.move, defaultConfig.get());
 
             // Then the space in question should be marked as "captured"
             mancalaTestUtils.expectToBeCaptured(entries.fillThenCapture.result);
@@ -338,7 +418,9 @@ export function doMancalaComponentTests<C extends MancalaComponent<R>,
             const reason: string = MancalaFailure.MUST_DISTRIBUTE_YOUR_OWN_HOUSES();
             await mancalaTestUtils.testUtils.expectClickFailure('#store_player_0', reason);
         }));
+
         describe('Move Animation', () => {
+
             for (const actor of ['user', 'not_the_user']) {
                 let receiveMoveOrDoClick: (coord: Coord) => Promise<void>;
                 if (actor === 'user') {
@@ -355,6 +437,7 @@ export function doMancalaComponentTests<C extends MancalaComponent<R>,
                         void gameComponent.updateBoard(true); // void, so it starts but doesn't wait the animation's end
                     };
                 }
+
                 it('should show right after the first seed being drop (' + actor + ')', fakeAsync(async() => {
                     // Given any board on which several seeds have been chosen to be distributed
                     await receiveMoveOrDoClick(new Coord(5, 1));
@@ -369,8 +452,9 @@ export function doMancalaComponentTests<C extends MancalaComponent<R>,
                     mancalaTestUtils.expectHouseToContain(new Coord(3, 1), ' 4 ');
 
                     // Finish the distribution
-                    tick(4 * MancalaComponent.TIMEOUT_BETWEEN_SEED);
+                    awaitEndOfMove();
                 }));
+
                 it('should take N ms by seed to distribute + N ms (' + actor + ')', fakeAsync(async() => {
                     // Given any board
                     // When distributing a house
@@ -378,9 +462,10 @@ export function doMancalaComponentTests<C extends MancalaComponent<R>,
 
                     // Then it should take TIMEOUT_BETWEEN_SEED ms to empty the initial house
                     // then TIMEOUT_BETWEEN_SEED ms by seed to distribute it
-                    tick((4 + 1) * MancalaComponent.TIMEOUT_BETWEEN_SEED);
+                    awaitEndOfMove();
                 }));
             }
+
             it('should immediately highlight last move clicked house', fakeAsync(async() => {
                 // Given any board
                 // When clicking on a house
@@ -397,7 +482,7 @@ export function doMancalaComponentTests<C extends MancalaComponent<R>,
                 mancalaTestUtils.testUtils.expectElementToHaveClasses('#circle_5_1', ['base', 'last-move-stroke', 'player0-fill']);
 
                 // Finish the distribution
-                tick(5 * MancalaComponent.TIMEOUT_BETWEEN_SEED);
+                awaitEndOfMove();
             }));
 
             it('should make click possible when no distribution are ongoing', fakeAsync(async() => {
@@ -410,7 +495,7 @@ export function doMancalaComponentTests<C extends MancalaComponent<R>,
 
                 // Then onLegalUserClick should have been called
                 expect(mancalaTestUtils.testUtils.getGameComponent().onLegalClick).toHaveBeenCalledOnceWith(2, 1);
-                tick(5 * MancalaComponent.TIMEOUT_BETWEEN_SEED);
+                awaitEndOfMove();
             }));
 
             it('should make click impossible during opponent move animation', fakeAsync(async() => {
@@ -428,7 +513,7 @@ export function doMancalaComponentTests<C extends MancalaComponent<R>,
 
                 // Then onLegalUserClick should not have been called
                 expect(mancalaTestUtils.testUtils.getGameComponent().onLegalClick).not.toHaveBeenCalled();
-                tick(3 * MancalaComponent.TIMEOUT_BETWEEN_SEED);
+                awaitEndOfMove();
             }));
 
             it('should make click impossible during player distribution animation', fakeAsync(async() => {
@@ -443,8 +528,9 @@ export function doMancalaComponentTests<C extends MancalaComponent<R>,
 
                 // Then onLegalUserClick should not have been called
                 expect(mancalaTestUtils.testUtils.getGameComponent().onLegalClick).not.toHaveBeenCalled();
-                tick(3 * MancalaComponent.TIMEOUT_BETWEEN_SEED);
+                awaitEndOfMove();
             }));
+
         });
 
         it('should have a bijective encoder', () => {

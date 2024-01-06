@@ -85,7 +85,7 @@ export abstract class MancalaComponent<R extends MancalaRules>
         const mansoonedPlayer: PlayerOrNone = this.rules.mustMansoon(captureResult.resultingState, config);
         if (mansoonedPlayer !== PlayerOrNone.NONE) {
             captureResult = this.rules.monsoon(mansoonedPlayer as Player, captureResult);
-            this.captured = TableUtils.add(this.captured, captureResult.captureMap);
+            this.captured = captureResult.captureMap;
         }
         this.changeVisibleState(this.getState());
     }
@@ -198,8 +198,7 @@ export abstract class MancalaComponent<R extends MancalaRules>
                                             resultingState,
                                             initial));
             }
-            houseToDistribute = this.filledCoords[this.filledCoords.length - 1]; // TODO; killable I believe
-            if (currentDropIsStore || config.continueLapIfLastHouseIsFilled === false) {
+            if (currentDropIsStore || config.continueLapUntilCaptureOrEmptyHouse === false) {
                 mustDoOneMoreLap = false;
             } else {
                 const lastHouseContent: number = resultingState.getPieceAt(houseToDistribute);

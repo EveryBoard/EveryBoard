@@ -26,6 +26,22 @@ describe('BaAwaRules', () => {
 
     describe('distribution', () => {
 
+        it('should allow simple move', () => {
+            // Given any board
+            const state: MancalaState = rules.getInitialState(defaultConfig);
+
+            // When doing a simple move
+            const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(5));
+
+            // Then the seed should be distributed
+            const expectedBoard: Table<number> = [
+                [6, 6, 0, 1, 6, 6],
+                [6, 1, 6, 1, 7, 2],
+            ];
+            const expectedState: MancalaState = new MancalaState(expectedBoard, 1, [0, 0]);
+            RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
+        });
+
         it('should drop a piece in the starting space', () => {
             // Given a state where the player can perform a distributing move with at least 12 stones
             const board: Table<number> = [
@@ -67,8 +83,6 @@ describe('BaAwaRules', () => {
     });
 
     describe('starvation and monsoon', () => {
-
-        // TODO: distinguish "when player give last piece: the end" and "if player cannot play: the end"
 
         it('should monsoon for opponent when player give its last seed', () => {
             // Given a state where next player is unable to feed current player
@@ -174,7 +188,7 @@ describe('BaAwaRules', () => {
         it('should do multiple capture-on-the-go for opponent when possible', () => {
             // Given a state where a multiplie capture-on-the-go is possible for passive player !
             const board: Table<number> = [
-                [3, 3, 0, 0, 0, 8], // TODO FOR REVIEW: KEK cette version ne peut avoir de maison à 4+ que si elles n'ont jamais été distribuées !
+                [3, 3, 0, 0, 0, 8],
                 [5, 1, 0, 0, 0, 0],
             ];
             const state: MancalaState = new MancalaState(board, 2, [0, 0]);
@@ -190,7 +204,7 @@ describe('BaAwaRules', () => {
             const expectedState: MancalaState = new MancalaState(expectedBoard, 3, [0, 8]);
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         });
-        // TODO: should mansoon both part of the board when dropping bellow 9
+
         it('should do multipe capture-on-the-go for player when possible', () => {
             // Given a state where a multiple capture-on-the-go is possible for active player !
             const board: Table<number> = [
@@ -248,7 +262,29 @@ describe('BaAwaRules', () => {
     });
 
     describe('Custom Config', () => {
-        it('TODO: should count "store-dropping" as "passing bellow 8"');
+
+        it('should count "store-dropping" as "passing bellow 8"', () => {
+            // Given a board where we are about to pass by store and drop to 8 or bellow
+            const customConfig: MGPOptional<MancalaConfig> = MGPOptional.of({
+                ...defaultConfig.get(),
+                passByPlayerStore: true,
+            });
+            const state: MancalaState = new MancalaState([
+                [0, 0, 5, 0, 0, 0],
+                [2, 0, 1, 0, 0, 0],
+            ], 10, [0, 0]);
+
+            // When passing by store during move
+            const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(0));
+
+            // Then it should mansoon for end game
+            const expectedState: MancalaState = new MancalaState([
+                [0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0],
+            ], 11, [8, 0]);
+            RulesUtils.expectMoveSuccess(rules, state, move, expectedState, customConfig);
+        });
+
     });
 
 });

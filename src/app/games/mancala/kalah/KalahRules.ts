@@ -6,6 +6,7 @@ import { TableUtils } from 'src/app/utils/ArrayUtils';
 import { MancalaConfig } from '../common/MancalaConfig';
 import { BooleanConfig, NumberConfig, RulesConfigDescription, RulesConfigDescriptionLocalizable } from 'src/app/components/wrapper-components/rules-configuration/RulesConfigDescription';
 import { MGPValidators } from 'src/app/utils/MGPValidator';
+import { Player } from 'src/app/jscaip/Player';
 
 export class KalahRules extends MancalaRules {
 
@@ -19,7 +20,7 @@ export class KalahRules extends MancalaRules {
                 mustFeed: new BooleanConfig(false, MancalaRules.MUST_FEED),
                 passByPlayerStore: new BooleanConfig(true, MancalaRules.PASS_BY_PLAYER_STORE),
                 mustContinueDistributionAfterStore: new BooleanConfig(true, MancalaRules.MULTIPLE_SOW),
-                continueLapIfLastHouseIsFilled: new BooleanConfig(false, MancalaRules.CYCLICAL_LAP),
+                continueLapUntilCaptureOrEmptyHouse: new BooleanConfig(false, MancalaRules.CYCLICAL_LAP),
                 seedsByHouse: new NumberConfig(4, MancalaRules.SEEDS_BY_HOUSE, MGPValidators.range(1, 99)),
                 width: new NumberConfig(6, RulesConfigDescriptionLocalizable.WIDTH, MGPValidators.range(1, 99)),
             },
@@ -27,7 +28,7 @@ export class KalahRules extends MancalaRules {
 
     public static get(): KalahRules {
         if (KalahRules.singleton.isAbsent()) {
-            KalahRules.singleton = MGPOptional.of(new KalahRules());
+            KalahRules.singleton = MGPOptional.of(new KalahRules([]));
         }
         return KalahRules.singleton.get();
     }
@@ -58,13 +59,18 @@ export class KalahRules extends MancalaRules {
                 const captureMap: number[][] = TableUtils.create(distributedState.getWidth(), 2, 0);
                 captureMap[0][landingSpace.x] = board[0][landingSpace.x];
                 captureMap[1][landingSpace.x] = board[1][landingSpace.x];
-                board[0][landingSpace.x] = 0;
-                board[1][landingSpace.x] = 0;
-                const captured: [number, number] = distributedState.getScoresCopy();
-                captured[distributedState.getCurrentPlayer().value] += capturedSum;
-                const postCaptureState: MancalaState = new MancalaState(board,
-                                                                        distributedState.turn,
-                                                                        captured);
+                // board[0][landingSpace.x] = 0;
+                // board[1][landingSpace.x] = 0;
+                // const captured: [number, number] = distributedState.getScoresCopy();
+                // captured[distributedState.getCurrentPlayer().value] += capturedSum;
+                // const postCaptureState: MancalaState = new MancalaState(board,
+                //                                                         distributedState.turn,
+                //                                                         captured);
+                const capturer: Player = distributedState.getCurrentPlayer();
+                let postCaptureState: MancalaState = distributedState.capture(capturer, landingSpace);
+                const oppositeY: number = (landingSpace.y + 1) % 2;
+                const oppositeSpace: Coord = new Coord(landingSpace.x, oppositeY);
+                postCaptureState = postCaptureState.capture(capturer, oppositeSpace);
                 return {
                     capturedSum, captureMap, resultingState: postCaptureState,
                 };
