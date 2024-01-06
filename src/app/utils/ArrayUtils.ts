@@ -151,7 +151,7 @@ export class TableUtils {
                 sum += element;
             }
         }
-        return sum; // TODO: unit test and perhaps reuse
+        return sum;
     }
 
     public static add(left: Table<number>, right: Table<number>): number[][] {
@@ -165,7 +165,7 @@ export class TableUtils {
                 sum[y][x] = left[y][x] + right[y][x];
             }
         }
-        return sum; // TODO: unit test and make more reusable
+        return sum;
     }
 
     public static create<T>(width: number, height: number, initValue: T): T[][] {
