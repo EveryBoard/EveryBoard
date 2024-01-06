@@ -32,8 +32,10 @@ export class ArrayUtils {
         });
     }
 
-    public static compare<T extends Comparable>(t1: ReadonlyArray<T>, t2: ReadonlyArray<T>): boolean {
-        if (t1.length !== t2.length) return false;
+    public static equals<T extends Comparable>(t1: ReadonlyArray<T>, t2: ReadonlyArray<T>): boolean {
+        if (t1.length !== t2.length) {
+            return false;
+        }
         for (let i: number = 0; i < t1.length; i++) {
             if (comparableEquals(t1[i], t2[i]) === false) return false;
         }
@@ -42,7 +44,7 @@ export class ArrayUtils {
 
     public static isPrefix<T extends Comparable>(prefix: ReadonlyArray<T>, list: ReadonlyArray<T>): boolean {
         if (prefix.length > list.length) return false;
-        return ArrayUtils.compare(prefix, list.slice(0, prefix.length));
+        return ArrayUtils.equals(prefix, list.slice(0, prefix.length));
     }
 
     /**
@@ -104,6 +106,38 @@ export class ArrayUtils {
         }
         return total;
     }
+
+    public static isLessThan(inferior: ReadonlyArray<number>, superior: ReadonlyArray<number>): boolean {
+        Utils.assert(inferior.length > 0 && superior.length > 0, 'ArrayUtils.isLessThan/isGreaterThan should have two non-empty list as parameter');
+        const maximumIndex: number = Math.min(inferior.length, superior.length);
+        for (let i: number = 0; i < maximumIndex; i++) {
+            if (superior[i] !== inferior[i]) { // We found an inequality
+                return inferior[i] < superior[i];
+            }
+        }
+        return false; // They are equal
+    }
+
+    public static isGreaterThan(superior: ReadonlyArray<number>, inferior: ReadonlyArray<number>): boolean {
+        return ArrayUtils.isLessThan(inferior, superior);
+    }
+
+    public static min(left: ReadonlyArray<number>, right: ReadonlyArray<number>): ReadonlyArray<number> {
+        if (ArrayUtils.isLessThan(left, right)) {
+            return left;
+        } else {
+            return right;
+        }
+    }
+
+    public static max(left: ReadonlyArray<number>, right: ReadonlyArray<number>): ReadonlyArray<number> {
+        if (ArrayUtils.isGreaterThan(left, right)) {
+            return left;
+        } else {
+            return right;
+        }
+    }
+
 }
 
 export type Table<T> = ReadonlyArray<ReadonlyArray<T>>;
@@ -153,7 +187,7 @@ export class TableUtils {
     public static compare<T extends Comparable>(t1: Table<T>, t2: Table<T>): boolean {
         if (t1.length !== t2.length) return false;
         for (let i: number = 0; i < t1.length; i++) {
-            if (ArrayUtils.compare(t1[i], t2[i]) === false) return false;
+            if (ArrayUtils.equals(t1[i], t2[i]) === false) return false;
         }
         return true;
     }

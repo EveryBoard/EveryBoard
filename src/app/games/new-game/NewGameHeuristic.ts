@@ -1,5 +1,5 @@
-import { BoardValue } from 'src/app/jscaip/BoardValue';
-import { Heuristic } from 'src/app/jscaip/Minimax';
+import { BoardValue } from 'src/app/jscaip/AI/BoardValue';
+import { Heuristic } from 'src/app/jscaip/AI/Minimax';
 import { NewGameMove } from './NewGameMove';
 import { NewGameNode } from './NewGameRules';
 import { NewGameState } from './NewGameState';
@@ -20,7 +20,7 @@ export class NewGameHeuristic extends Heuristic<NewGameMove, NewGameState> {
      * is often what you want.
      */
     public override getBoardValue(node: NewGameNode, _config: NoConfig): BoardValue {
-        return new BoardValue(node.gameState.turn);
+        return BoardValue.of(node.gameState.turn);
     }
 
 }

@@ -6,7 +6,7 @@ import { MancalaDistribution, MancalaMove } from '../MancalaMove';
 import { MancalaFailure } from '../MancalaFailure';
 import { Player } from 'src/app/jscaip/Player';
 import { MancalaConfig } from '../MancalaConfig';
-import { GameNode } from 'src/app/jscaip/GameNode';
+import { GameNode } from 'src/app/jscaip/AI/GameNode';
 import { MancalaNode, MancalaRules } from '../MancalaRules';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { TestUtils } from 'src/app/utils/tests/TestUtils.spec';

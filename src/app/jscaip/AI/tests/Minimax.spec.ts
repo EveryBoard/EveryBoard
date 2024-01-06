@@ -10,6 +10,8 @@ import { BoardValue } from '../BoardValue';
 import { MCTS } from '../MCTS';
 import { DummyHeuristic, Minimax } from '../Minimax';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { PlayerOrNone } from '../../Player';
+import { MGPSet } from 'src/app/utils/MGPSet';
 
 const defaultConfig: MGPOptional<P4Config> = P4Rules.get().getDefaultRulesConfig();
 
@@ -85,6 +87,37 @@ describe('Minimax', () => {
         expect(ArrayUtils.getRandomElement).not.toHaveBeenCalled();
     });
 
+    it('should have getBestChildren return all children when all have the same value', () => {
+        // Given any node with equivalent moves
+        const _: PlayerOrNone = PlayerOrNone.NONE;
+        const O: PlayerOrNone = PlayerOrNone.ZERO;
+        const X: PlayerOrNone = PlayerOrNone.ONE;
+        const symetricState: P4State = new P4State([
+            [_, _, _, X, _, _, _],
+            [_, _, _, O, _, _, _],
+            [_, _, _, X, _, _, _],
+            [_, _, _, O, _, _, _],
+            [_, _, _, X, _, _, _],
+            [_, _, _, O, _, _, _],
+        ], 6);
+        const node: P4Node = new P4Node(symetricState);
+        const possibleMoves: MGPSet<P4Move> = new MGPSet([P4Move.of(0), P4Move.of(6)]);
+        const boardValue: BoardValue = BoardValue.ofSingle(0, 0);
+
+        // When calling getBestChildren on it
+        const bestChildrens: P4Node[] = minimax['getBestChildren'](
+            node,
+            possibleMoves,
+            1,
+            boardValue.toMinimum(),
+            boardValue.toMaximum(),
+            defaultConfig,
+        );
+
+        // Then all the choice should be best choices
+        expect(bestChildrens.length).toBe(2);
+    });
+
 });
 
 describe('DummyHeuristic', () => {
@@ -98,7 +131,7 @@ describe('DummyHeuristic', () => {
         const boardValue: BoardValue = heuristic.getBoardValue(node, defaultConfig);
 
         // Then it should be zero
-        expect(boardValue.value).toBe(0);
+        expect(boardValue.metrics).toEqual([0]);
     });
 
 });

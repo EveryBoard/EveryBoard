@@ -1,8 +1,8 @@
 /* eslint-disable max-lines-per-function */
 import { Player } from 'src/app/jscaip/Player';
-import { HeuristicUtils } from 'src/app/jscaip/tests/HeuristicUtils.spec';
+import { HeuristicUtils } from 'src/app/jscaip/AI/tests/HeuristicUtils.spec';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { LascaControlAndDominationHeuristic } from '../LascaControlAndDominationHeuristic';
+import { LascaControlPlusDominationHeuristic } from '../LascaControlAndDominationHeuristic';
 import { LascaPiece, LascaStack, LascaState } from '../LascaState';
 import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 import { LascaRules } from '../LascaRules';
@@ -14,10 +14,10 @@ describe('LascaControlAndDominationHeuristic', () => {
     const _: LascaStack = LascaStack.EMPTY;
     const defaultConfig: NoConfig = LascaRules.get().getDefaultRulesConfig();
 
-    let heuristic: LascaControlAndDominationHeuristic;
+    let heuristic: LascaControlPlusDominationHeuristic;
 
     beforeEach(() => {
-        heuristic = new LascaControlAndDominationHeuristic();
+        heuristic = new LascaControlPlusDominationHeuristic();
     });
 
     it('should not count the immobilized stacks', () => {

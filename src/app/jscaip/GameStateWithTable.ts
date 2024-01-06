@@ -102,6 +102,26 @@ export abstract class GameStateWithTable<P> extends GameState {
         return this.board.length;
     }
 
+    public isHorizontalEdge(coord: Coord): boolean {
+        const maxY: number = this.getHeight() - 1;
+        return coord.y === 0 || coord.y === maxY;
+    }
+
+    public isVerticalEdge(coord: Coord): boolean {
+        const maxX: number = this.getWidth() - 1;
+        return coord.x === 0 || coord.x === maxX;
+    }
+
+    public isEdge(coord: Coord): boolean {
+        return this.isHorizontalEdge(coord) ||
+               this.isVerticalEdge(coord);
+    }
+
+    public isCorner(coord: Coord): boolean {
+        return this.isHorizontalEdge(coord) &&
+               this.isVerticalEdge(coord);
+    }
+
     [Symbol.iterator](): IterableIterator<P> {
         const linedUpElements: P[] = [];
         for (const lines of this.board) {

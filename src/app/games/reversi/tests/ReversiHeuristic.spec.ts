@@ -4,7 +4,7 @@ import { ReversiState } from '../ReversiState';
 import { ReversiConfig, ReversiNode, ReversiRules } from '../ReversiRules';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { ReversiHeuristic } from '../ReversiHeuristic';
-import { HeuristicUtils } from 'src/app/jscaip/tests/HeuristicUtils.spec';
+import { HeuristicUtils } from 'src/app/jscaip/AI/tests/HeuristicUtils.spec';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 const _: PlayerOrNone = PlayerOrNone.NONE;
@@ -33,8 +33,8 @@ describe('ReversiHeuristic', () => {
         ];
         const state: ReversiState = new ReversiState(board, 1);
         const node: ReversiNode = new ReversiNode(state);
-        const boardValue: number = heuristic.getBoardValue(node, defaultConfig).value;
-        expect(boardValue).toBe(16);
+        const boardValue: readonly number[] = heuristic.getBoardValue(node, defaultConfig).metrics;
+        expect(boardValue).toEqual([16]);
     });
 
     it('should get 4 points for edges', () => {
@@ -50,8 +50,8 @@ describe('ReversiHeuristic', () => {
         ];
         const state: ReversiState = new ReversiState(board, 1);
         const node: ReversiNode = new ReversiNode(state);
-        const boardValue: number = heuristic.getBoardValue(node, defaultConfig).value;
-        expect(boardValue).toBe(4);
+        const boardValue: readonly number[] = heuristic.getBoardValue(node, defaultConfig).metrics;
+        expect(boardValue).toEqual([4]);
     });
 
     it('should get 1 points for normal square', () => {
@@ -67,8 +67,8 @@ describe('ReversiHeuristic', () => {
         ];
         const state: ReversiState = new ReversiState(board, 1);
         const node: ReversiNode = new ReversiNode(state);
-        const boardValue: number = heuristic.getBoardValue(node, defaultConfig).value;
-        expect(boardValue).toBe(1);
+        const boardValue: readonly number[] = heuristic.getBoardValue(node, defaultConfig).metrics;
+        expect(boardValue).toEqual([1]);
     });
 
     it('should prefer owning the corners', () => {

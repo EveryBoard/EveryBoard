@@ -64,7 +64,7 @@ export class MancalaState extends GameStateWithTable<number> {
 
     public equals(other: MancalaState): boolean {
         if (TableUtils.compare(this.board, other.board) === false) return false;
-        if (ArrayUtils.compare(this.scores, other.scores) === false) return false;
+        if (ArrayUtils.equals(this.scores, other.scores) === false) return false;
         return this.turn === other.turn;
     }
 

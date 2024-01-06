@@ -92,7 +92,7 @@ describe('PentagoComponent', () => {
 
     describe('second click', () => {
 
-        it('should show a "skip rotation button" when there is both neutral and non-neutral blocks', fakeAsync(async() => {
+        it('should show a "skip rotation button" when there are both neutral and non-neutral blocks', fakeAsync(async() => {
             await testUtils.expectClickSuccess('#click_0_0');
             const move: PentagoMove = PentagoMove.rotationless(0, 0);
             await testUtils.expectMoveSuccess('#skipRotation', move);

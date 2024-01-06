@@ -31,10 +31,10 @@ describe('TeekoHeuristic', () => {
         const node: TeekoNode = new TeekoNode(state);
 
         // When calculating the board value
-        const boardValue: number = heuristic.getBoardValue(node, defaultConfig).value;
+        const boardValue: readonly number[] = heuristic.getBoardValue(node, defaultConfig).metrics;
 
         // Then it should be the negative number of possible victories for Player.ZERO
-        expect(boardValue).toBe(-12);
+        expect(boardValue).toEqual([-12]);
     });
 
 });

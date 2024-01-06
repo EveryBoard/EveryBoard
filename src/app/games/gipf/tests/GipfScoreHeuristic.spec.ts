@@ -4,7 +4,7 @@ import { GipfState } from '../GipfState';
 import { GipfScoreHeuristic } from '../GipfScoreHeuristic';
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
 import { Table } from 'src/app/utils/ArrayUtils';
-import { HeuristicUtils } from 'src/app/jscaip/tests/HeuristicUtils.spec';
+import { HeuristicUtils } from 'src/app/jscaip/AI/tests/HeuristicUtils.spec';
 import { Player } from 'src/app/jscaip/Player';
 import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 import { GipfRules } from '../GipfRules';

@@ -6,8 +6,8 @@ import { SiamMove } from '../SiamMove';
 import { Orthogonal } from 'src/app/jscaip/Direction';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { Table } from 'src/app/utils/ArrayUtils';
-import { Minimax } from 'src/app/jscaip/Minimax';
-import { AIDepthLimitOptions } from 'src/app/jscaip/AI';
+import { Minimax } from 'src/app/jscaip/AI/Minimax';
+import { AIDepthLimitOptions } from 'src/app/jscaip/AI/AI';
 import { SiamMinimax } from '../SiamMinimax';
 
 const _: SiamPiece = SiamPiece.EMPTY;

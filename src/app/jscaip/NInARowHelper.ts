@@ -1,6 +1,6 @@
-import { assert } from '../utils/assert';
 import { MGPMap } from '../utils/MGPMap';
-import { BoardValue } from './BoardValue';
+import { Utils } from '../utils/utils';
+import { BoardValue } from './AI/BoardValue';
 import { Coord } from './Coord';
 import { Direction } from './Direction';
 import { GameStateWithTable } from './GameStateWithTable';
@@ -21,19 +21,19 @@ export class NInARowHelper<T> {
             if (this.getOwner(piece, state).isPlayer()) {
                 const squareScore: number = this.getSquareScore(state, coord);
                 if (BoardValue.VICTORIES.some((victory: number) => victory === squareScore)) {
-                    return new BoardValue(squareScore);
+                    return BoardValue.of(squareScore);
                 } else {
                     score += squareScore;
                 }
             }
         }
-        return new BoardValue(score);
+        return BoardValue.of(score);
     }
 
     public getSquareScore(state: GameStateWithTable<T>, coord: Coord): number {
         const piece: T = state.getPieceAt(coord);
         const ally: Player = this.getOwner(piece, state) as Player;
-        assert(ally.isPlayer(), 'getSquareScore should not be called with PlayerOrNone.NONE piece');
+        Utils.assert(ally.isPlayer(), 'getSquareScore should not be called with PlayerOrNone.NONE piece');
 
         const freeSpaceByDirs: MGPMap<Direction, number> = new MGPMap();
         const alliesByDirs: MGPMap<Direction, number> = new MGPMap();

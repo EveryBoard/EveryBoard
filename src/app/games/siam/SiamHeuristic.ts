@@ -1,5 +1,5 @@
-import { BoardValue } from 'src/app/jscaip/BoardValue';
-import { Heuristic } from 'src/app/jscaip/Minimax';
+import { BoardValue } from 'src/app/jscaip/AI/BoardValue';
+import { Heuristic } from 'src/app/jscaip/AI/Minimax';
 import { SiamMove } from './SiamMove';
 import { SiamConfig, SiamNode, SiamRules } from './SiamRules';
 import { SiamState } from './SiamState';
@@ -13,7 +13,7 @@ export class SiamHeuristic extends Heuristic<SiamMove, SiamState, BoardValue, Si
     public getBoardValue(node: SiamNode, config: MGPOptional<SiamConfig>): BoardValue {
         const boardValueInfo: { shortestZero: number, shortestOne: number, boardValue: number } =
             this.getBoardValueInfo(node.gameState, config.get());
-        return new BoardValue(boardValueInfo.boardValue);
+        return BoardValue.of(boardValueInfo.boardValue);
     }
 
     private getBoardValueInfo(state: SiamState, config: SiamConfig)
@@ -49,4 +49,5 @@ export class SiamHeuristic extends Heuristic<SiamMove, SiamState, BoardValue, Si
             SiamRules.get().getScoreFromShortestDistances(zeroShortestDistance, oneShortestDistance, currentPlayer);
         return { shortestZero: zeroShortestDistance, shortestOne: oneShortestDistance, boardValue };
     }
+
 }

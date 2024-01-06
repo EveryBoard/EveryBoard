@@ -99,7 +99,7 @@ describe('PylosComponent', () => {
         }));
 
         it('should cancel move when clicking on a supporting piece', fakeAsync(async() => {
-            // Given a board where there is supporting piece
+            // Given a board where there are supporting pieces
             const initialBoard: PlayerOrNone[][][] = [
                 [
                     [O, X, _, _],
@@ -126,7 +126,7 @@ describe('PylosComponent', () => {
         }));
 
         it('should select coord when clicking on it', fakeAsync(async() => {
-            // Given a board on which there is pieces
+            // Given a board on which there are pieces
             await testUtils.setupState(climbableState);
 
             // When clicking on a space

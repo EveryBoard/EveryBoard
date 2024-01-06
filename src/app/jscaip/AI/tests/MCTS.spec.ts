@@ -6,7 +6,7 @@ import { QuartoNode, QuartoRules } from 'src/app/games/quarto/QuartoRules';
 import { QuartoState } from 'src/app/games/quarto/QuartoState';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { AITimeLimitOptions } from '../AI';
-import { Coord } from '../Coord';
+import { Coord } from '../../Coord';
 import { MCTS } from '../MCTS';
 import { MancalaNode } from 'src/app/games/mancala/common/MancalaRules';
 import { AwaleMoveGenerator } from 'src/app/games/mancala/awale/AwaleMoveGenerator';
@@ -15,7 +15,7 @@ import { MancalaState } from 'src/app/games/mancala/common/MancalaState';
 import { MancalaConfig } from 'src/app/games/mancala/common/MancalaConfig';
 import { MancalaMove } from 'src/app/games/mancala/common/MancalaMove';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { NoConfig } from '../RulesConfigUtil';
+import { NoConfig } from '../../RulesConfigUtil';
 
 describe('MCTS', () => {
 
@@ -81,5 +81,17 @@ describe('MCTS', () => {
         // Add 10% to allow for iterations to finish
         expect(Date.now() - beforeSearch).toBeLessThan(1000 * (mctsOptions.maxSeconds + 0.1));
     });
+
+    it('should choose a move even with very little time', () => {
+        // This test is there for coverage as well, to check that having unexplored moves does not break MCTS
+        // Given 1ms allowed for MCTS
+        const noTimeOptions: AITimeLimitOptions = { name: '1ms', maxSeconds: 0.001 };
+        // When searching for a move
+        const node: QuartoNode = QuartoRules.get().getInitialNode(defaultConfig);
+        const move: QuartoMove = mcts.chooseNextMove(node, noTimeOptions, defaultConfig);
+        // Then it should have selected a move
+        expect(move).toBeTruthy();
+    });
+
 
 });

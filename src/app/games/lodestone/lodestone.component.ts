@@ -13,13 +13,13 @@ import { LodestoneCaptures, LodestoneMove } from './LodestoneMove';
 import { LodestoneOrientation, LodestoneDirection, LodestonePiece, LodestonePieceNone, LodestonePieceLodestone, LodestoneDescription } from './LodestonePiece';
 import { LodestoneInfos, PressurePlatePositionInformation, LodestoneRules, PressurePlateViewPosition } from './LodestoneRules';
 import { LodestonePositions, LodestonePressurePlate, LodestonePressurePlateGroup, LodestonePressurePlatePosition, LodestonePressurePlates, LodestoneState } from './LodestoneState';
-import { MCTS } from 'src/app/jscaip/MCTS';
+import { MCTS } from 'src/app/jscaip/AI/MCTS';
+import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 import { LodestoneMoveGenerator } from './LodestoneMoveGenerator';
 import { LodestoneScoreHeuristic } from './LodestoneScoreHeuristic';
-import { Minimax } from 'src/app/jscaip/Minimax';
+import { Minimax } from 'src/app/jscaip/AI/Minimax';
 import { Utils } from 'src/app/utils/utils';
 import { ViewBox } from 'src/app/components/game-components/GameComponentUtils';
-import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 export type LodestoneInfo = {
     direction: LodestoneDirection,
@@ -382,7 +382,7 @@ export class LodestoneComponent
             coord,
             squareClasses: [],
             isCrumbled: this.isCrumbled(coord),
-            hasPieceToDraw: false,
+            hasPieceToDraw: lodestoneInfo !== undefined,
             pieceClasses: [],
             lodestone: lodestoneInfo,
         };
@@ -443,20 +443,30 @@ export class LodestoneComponent
                 if (this.selectedCoord.equalsValue(coord)) {
                     const lodestone: LodestonePieceLodestone = this.selectedLodestone.get();
                     return this.getLodestoneInfoFromLodestone(lodestone);
-                } else if (this.wasLodestoneDroppedThenCrumbled(coord)) {
-                    return this.getLastMoveLodestoneInfo(this.node.previousMove.get());
+                } else if (this.wasLastMoveLodestone(coord)) {
+                    return this.getDroppedThenCrumbedLodestoneInfo(this.node.previousMove.get());
+                } else if (this.isCrumbledLodestone(coord)) {
+                    return this.getCrumbledLodestoneInfo(coord);
                 }
             }
         }
+        return undefined;
     }
 
-    private getLastMoveLodestoneInfo(lastMove: LodestoneMove): LodestoneInfo {
+    private getDroppedThenCrumbedLodestoneInfo(lastMove: LodestoneMove): LodestoneInfo {
         const lodestoneDescription: LodestoneDescription = {
             direction: lastMove.direction, orientation: lastMove.orientation,
         };
         const lodestone: LodestonePieceLodestone =
             LodestonePieceLodestone.of(this.getCurrentOpponent(), lodestoneDescription);
         return this.getLodestoneInfoFromLodestone(lodestone);
+    }
+
+    private getCrumbledLodestoneInfo(coord: Coord): LodestoneInfo {
+        const lodestone: LodestonePiece = this.getPreviousState().getPieceAt(coord);
+        Utils.assert(lodestone.isLodestone(),
+                     'getCrumbledLodestoneInfo should only be called with coord that contain crumbled lodestone!');
+        return this.getLodestoneInfoFromLodestone(lodestone as LodestonePieceLodestone);
     }
 
     private getLodestoneInfoFromLodestone(lodestone: LodestonePieceLodestone): LodestoneInfo {
@@ -475,9 +485,24 @@ export class LodestoneComponent
         return lodestoneInfo;
     }
 
-    private wasLodestoneDroppedThenCrumbled(coord: Coord): boolean {
+    private wasLastMoveLodestone(coord: Coord): boolean {
         if (this.node.parent.isPresent()) {
             return this.node.previousMove.get().coord.equals(coord);
+        } else {
+            return false;
+        }
+    }
+
+    private isCrumbledLodestone(coord: Coord): boolean {
+        if (this.node.parent.isPresent()) {
+            if (this.selectedLodestone.isPresent()) {
+                return false;
+            } else {
+                const state: LodestoneState = this.node.parent.get().gameState;
+                const piece: LodestonePiece = state.getPieceAt(coord);
+                return piece.isLodestone() &&
+                       piece.owner === state.getCurrentOpponent();
+            }
         } else {
             return false;
         }

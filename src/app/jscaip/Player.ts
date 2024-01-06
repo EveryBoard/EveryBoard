@@ -41,14 +41,17 @@ export class Player implements ComparableObject {
                 return Player.ONE;
         }
     }
+
     public static ofTurn(turn: number): Player {
         return turn % 2 === 0 ? Player.ZERO : Player.ONE;
     }
+
     protected constructor(public readonly value: 0 | 1) {}
 
     public isPlayer(): this is Player {
         return true;
     }
+
     public toString(): string {
         switch (this) {
             case Player.ZERO: return 'PLAYER_ZERO';
@@ -57,9 +60,11 @@ export class Player implements ComparableObject {
                 return 'PLAYER_ONE';
         }
     }
+
     public equals(other: PlayerOrNone): boolean {
         return this === other;
     }
+
     public getScoreModifier(): number {
         if (this.value === 0) {
             return -1;
@@ -67,9 +72,11 @@ export class Player implements ComparableObject {
             return 1;
         }
     }
+
     public getPreVictory(): number {
         return this.getVictoryValue() - this.getScoreModifier();
     }
+
     public getVictoryValue(): number {
         if (this === Player.ZERO) {
             return Number.MIN_SAFE_INTEGER;
@@ -77,6 +84,7 @@ export class Player implements ComparableObject {
             return Number.MAX_SAFE_INTEGER;
         }
     }
+
     public getOpponent(): Player {
         switch (this) {
             case Player.ZERO: return Player.ONE;
@@ -85,6 +93,7 @@ export class Player implements ComparableObject {
                 return Player.ZERO;
         }
     }
+
 }
 
 export type PlayerOrNone = Player | PlayerNone;

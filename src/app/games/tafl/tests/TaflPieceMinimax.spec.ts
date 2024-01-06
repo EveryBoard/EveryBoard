@@ -4,7 +4,7 @@ import { TaflPawn } from '../TaflPawn';
 import { TablutNode, TablutRules } from '../tablut/TablutRules';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { TablutMove } from '../tablut/TablutMove';
-import { Minimax } from 'src/app/jscaip/Minimax';
+import { Minimax } from 'src/app/jscaip/AI/Minimax';
 import { TaflPieceMinimax } from '../TaflPieceMinimax';
 import { TaflConfig } from '../TaflConfig';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
