@@ -23,14 +23,10 @@ export class ConspirateursState extends GameStateWithTable<PlayerOrNone> {
             new Coord(ConspirateursState.WIDTH-1, xOrY),
         ])).toList();
 
-    public static isOnBoard(coord: Coord): boolean {
-        return coord.isInRange(ConspirateursState.WIDTH, ConspirateursState.HEIGHT);
-    }
-
     public isShelter(coord: Coord): boolean {
-        if (coord.x === 0 || coord.x === ConspirateursState.WIDTH-1) {
+        if (this.isVerticalEdge(coord)) {
             return ConspirateursState.SHELTERS_INDICES.some((y: number) => coord.y === y);
-        } else if (coord.y === 0 || coord.y === ConspirateursState.HEIGHT-1) {
+        } else if (this.isHorizontalEdge(coord)) {
             return ConspirateursState.SHELTERS_INDICES.some((x: number) => coord.x === x);
         } else {
             return false;

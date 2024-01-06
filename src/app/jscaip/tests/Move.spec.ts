@@ -1,10 +1,10 @@
 import { Encoder } from 'src/app/utils/Encoder';
 import { EncoderTestUtils } from 'src/app/utils/tests/Encoder.spec';
 import { GameState } from '../GameState';
-import { GameNode } from '../GameNode';
+import { GameNode } from '../AI/GameNode';
 import { Move } from '../Move';
+import { MoveGenerator } from '../AI/AI';
 import { SuperRules } from '../Rules';
-import { MoveGenerator } from '../AI';
 import { EmptyRulesConfig, RulesConfig } from '../RulesConfigUtil';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 

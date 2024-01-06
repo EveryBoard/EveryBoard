@@ -1,5 +1,5 @@
 /* eslint-disable max-lines-per-function */
-import { Coord } from 'src/app/jscaip/Coord';
+import { Coord, CoordFailure } from 'src/app/jscaip/Coord';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
@@ -8,6 +8,7 @@ import { ConspirateursMove, ConspirateursMoveDrop, ConspirateursMoveJump, Conspi
 import { ConspirateursNode, ConspirateursRules } from '../ConspirateursRules';
 import { ConspirateursState } from '../ConspirateursState';
 import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { TestUtils } from 'src/app/utils/tests/TestUtils.spec';
 
 describe('ConspirateursRules', () => {
     const _: PlayerOrNone = PlayerOrNone.NONE;
@@ -24,13 +25,25 @@ describe('ConspirateursRules', () => {
     function drop(coord: Coord): ConspirateursMove {
         return ConspirateursMoveDrop.of(coord);
     }
+
     function simpleMove(start: Coord, end: Coord): ConspirateursMove {
         return ConspirateursMoveSimple.from(start, end).get();
     }
+
     function jump(coords: Coord[]): ConspirateursMove {
         return ConspirateursMoveJump.from(coords).get();
     }
+
     describe('drop moves', () => {
+
+        it('should forbid creating a drop out of the board', () => {
+            const reason: string = 'Move out of board';
+            TestUtils.expectToThrowAndLog(() => {
+                const state: ConspirateursState = ConspirateursRules.get().getInitialState();
+                const move: ConspirateursMove = ConspirateursMoveDrop.of(new Coord(-1, -1)) as ConspirateursMove;
+                RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
+            }, reason);
+        });
 
         it('should allow drops within the center zone', () => {
             // Given the initial state
@@ -129,6 +142,26 @@ describe('ConspirateursRules', () => {
     });
 
     describe('simple moves', () => {
+
+        it('should forbid creating a simple move starting out of the board', () => {
+            const reason: string = 'Move out of board';
+            TestUtils.expectToThrowAndLog(() => {
+                const state: ConspirateursState = ConspirateursRules.get().getInitialState();
+                const move: ConspirateursMove =
+                    ConspirateursMoveSimple.from(new Coord(-1, 0), new Coord(0, 0)).get() as ConspirateursMove;
+                RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
+            }, reason);
+        });
+
+        it('should forbid creating a simple move ending out of the board', () => {
+            const reason: string = 'Move out of board';
+            TestUtils.expectToThrowAndLog(() => {
+                const state: ConspirateursState = ConspirateursRules.get().getInitialState();
+                const move: ConspirateursMove =
+                    ConspirateursMoveSimple.from(new Coord(0, 0), new Coord(-1, 0)).get() as ConspirateursMove;
+                RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
+            }, reason);
+        });
 
         it('should allow simple moves', () => {
             // Given a fictitious board after the drop phase, with one piece
@@ -291,6 +324,22 @@ describe('ConspirateursRules', () => {
     });
 
     describe('jump moves', () => {
+
+        it('should forbid creating a jump out of the board', () => {
+            // Given any state
+            const state: ConspirateursState = rules.getInitialState();
+
+            // When trying a move jumping out of board
+            const outOfRange: Coord = new Coord(-1, 1);
+            const move: ConspirateursMove = ConspirateursMoveJump.from([
+                new Coord(1, 1),
+                outOfRange,
+            ]).get() as ConspirateursMove;
+
+            // Then it should fail
+            const reason: string = CoordFailure.OUT_OF_RANGE(outOfRange);
+            RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
+        });
 
         it('should allow one jump over a piece', () => {
             // Given a fictitious board after the drop phase
@@ -591,9 +640,15 @@ describe('ConspirateursRules', () => {
     });
 
     it('should not compute jumps that go out of the board', () => {
+        // Given any state and any coord from a corner
+        const state: ConspirateursState = rules.getInitialState();
+        const coord: Coord = new Coord(1, 0);
+
         // When computing the jumps from the side of the board
+        const validLandings: Coord[] = rules.jumpTargetsFrom(state, coord);
+
         // Then the jumps out of the board are not returned
-        expect(rules.jumpTargetsFrom(new Coord(1, 0)).length).toBe(3);
+        expect(validLandings.length).toBe(3);
     });
 
 });

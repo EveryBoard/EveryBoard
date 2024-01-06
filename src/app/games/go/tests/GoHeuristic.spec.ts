@@ -4,7 +4,7 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { GoState, GoPiece, Phase } from '../GoState';
 import { GoConfig, GoNode, GoRules } from '../GoRules';
 import { GoHeuristic } from '../GoHeuristic';
-import { HeuristicUtils } from 'src/app/jscaip/tests/HeuristicUtils.spec';
+import { HeuristicUtils } from 'src/app/jscaip/AI/tests/HeuristicUtils.spec';
 import { Player } from 'src/app/jscaip/Player';
 
 const X: GoPiece = GoPiece.LIGHT;
@@ -30,8 +30,8 @@ describe('GoHeuristic', () => {
         ];
         const state: GoState = new GoState(board, [0, 0], 0, MGPOptional.empty(), Phase.PLAYING);
         const initialNode: GoNode = new GoNode(state);
-        const boardValue: number = heuristic.getBoardValue(initialNode, defaultConfig).value;
-        expect(boardValue).toBe(3);
+        const boardValue: readonly number[] = heuristic.getBoardValue(initialNode, defaultConfig).metrics;
+        expect(boardValue).toEqual([3]);
     });
 
     it('should prefer a larger territory', () => {

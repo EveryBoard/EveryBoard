@@ -1,5 +1,5 @@
+import { GameNode } from 'src/app/jscaip/AI/GameNode';
 import { ConfigurableRules } from '../../jscaip/Rules';
-import { GameNode } from 'src/app/jscaip/GameNode';
 import { ReversiState } from './ReversiState';
 import { Coord } from '../../jscaip/Coord';
 import { Direction } from '../../jscaip/Direction';

@@ -1,5 +1,5 @@
-import { Heuristic } from 'src/app/jscaip/Minimax';
-import { BoardValue } from 'src/app/jscaip/BoardValue';
+import { Heuristic } from 'src/app/jscaip/AI/Minimax';
+import { BoardValue } from 'src/app/jscaip/AI/BoardValue';
 import { P4Move } from './P4Move';
 import { P4State } from './P4State';
 import { P4Config, P4Node, P4Rules } from './P4Rules';
@@ -19,7 +19,7 @@ export class P4Heuristic extends Heuristic<P4Move, P4State, BoardValue, P4Config
                 score += squareScore;
             }
         }
-        return new BoardValue(score);
+        return BoardValue.of(score);
     }
 
 }
