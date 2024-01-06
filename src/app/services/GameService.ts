@@ -103,18 +103,11 @@ export class GameService {
     public async proposeDraw(gameId: string): Promise<void> {
         return this.backendService.proposeDraw(gameId);
     }
-    public async acceptDraw(partId: string, player: Player): Promise<void> {
-        await this.gameEventService.addReply(partId, player, 'Accept', 'Draw');
-        const result: MGPResult = player === Player.ZERO ?
-            MGPResult.AGREED_DRAW_BY_ZERO : MGPResult.AGREED_DRAW_BY_ONE;
-        const update: Partial<Part> = {
-            result: result.value,
-        };
-        await this.partDAO.update(partId, update);
-        await this.gameEventService.addAction(partId, player, 'EndGame');
+    public async acceptDraw(gameId: string, player: Player): Promise<void> {
+        return this.backendService.acceptDraw(gameId);
     }
-    public async refuseDraw(partId: string, player: Player): Promise<void> {
-        await this.gameEventService.addReply(partId, player, 'Reject', 'Draw');
+    public async refuseDraw(gameId: string, player: Player): Promise<void> {
+        return this.backendService.refuseDraw(gameId);
     }
     public async proposeRematch(partId: string, player: Player): Promise<void> {
         await this.gameEventService.addRequest(partId, player, 'Rematch');

@@ -125,6 +125,13 @@ module Make
       let* response = Dream.empty `OK in
       Lwt.return (Ok response)
 
+  let refuse_draw (request : Dream.request) (token : token) (game_id : string) =
+    let user = Auth.get_minimal_user request in
+    let event = Firebase.Game.Event.(Reply (Reply.refuse_draw user)) in
+    let* _ = Firebase_ops.Game.add_event token game_id event in
+    let* response = Dream.empty `OK in
+    Lwt.return (Ok response)
+
   let get_json_param (request : Dream.request) (field : string) : (Yojson.Safe.t, string) result =
     match Dream.query request field with
     | None -> Error "parameter missing"
@@ -148,7 +155,7 @@ module Make
       end
     | Some "proposeDraw" -> propose_draw request token game_id
     | Some "acceptDraw" -> accept_draw request token game_id
-    | Some "refuseDraw" -> failwith "TODO"
+    | Some "refuseDraw" -> refuse_draw request token game_id
     | Some "proposeRematch" -> failwith "TODO"
     | Some "acceptRematch" -> failwith "TODO"
     | Some "rejectRematch" -> failwith "TODO"

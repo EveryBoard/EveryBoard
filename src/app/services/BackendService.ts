@@ -117,9 +117,23 @@ export class BackendService {
         this.assertSuccess(result);
     }
 
-    /** Propose a draw */
+    /** Propose a draw to the opponent */
     public async proposeDraw(gameId: string): Promise<void> {
         const endpoint: string = `game/${gameId}?action=proposeDraw`;
+        const result: MGPFallible<Response> = await this.performRequest('POST', endpoint);
+        this.assertSuccess(result);
+    }
+
+    /** Accept the draw request of the opponent */
+    public async acceptDraw(gameId: string): Promise<void> {
+        const endpoint: string = `game/${gameId}?action=acceptDraw`;
+        const result: MGPFallible<Response> = await this.performRequest('POST', endpoint);
+        this.assertSuccess(result);
+    }
+
+    /** Refuse a draw request from the opponent */
+    public async refuseDraw(gameId: string): Promise<void> {
+        const endpoint: string = `game/${gameId}?action=refuseDraw`;
         const result: MGPFallible<Response> = await this.performRequest('POST', endpoint);
         this.assertSuccess(result);
     }

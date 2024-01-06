@@ -211,9 +211,13 @@ module Game = struct
       }
       [@@deriving yojson]
 
-      let accept_draw (user : Minimal_user.t) : t =
+      let make ?(data : JSON.t option) (user : Minimal_user.t) (reply : string) (requestType : string) : t =
         let time = !External.now () in
-        { eventType = "Reply"; time; user; reply = "Accept"; requestType = "Draw"; data = None }
+        { eventType = "Reply"; time; user; reply; requestType; data }
+      let accept_draw (user : Minimal_user.t) : t =
+        make user "Accept" "Draw"
+      let refuse_draw (user : Minimal_user.t) : t =
+        make user "Reject" "Draw"
     end
 
     module Action = struct
