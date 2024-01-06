@@ -6,6 +6,7 @@ import { Player } from 'src/app/jscaip/Player';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { Timestamp } from 'firebase/firestore';
 import { getMillisecondsElapsed } from 'src/app/utils/TimeUtils';
+import { MinimalUser } from 'src/app/domain/MinimalUser';
 
 /**
  * The time manager manages clocks of each player.
@@ -30,6 +31,8 @@ export class OGWCTimeManagerService {
      * We need it to know the maximal game and move durations.
      */
     private configRoom: MGPOptional<ConfigRoom> = MGPOptional.empty();
+    // The players, as we need to map between minimal users and player values
+    private players: MGPOptional<MinimalUser>[] = [MGPOptional.empty(), MGPOptional.empty()];
     // The global time taken by each player since the beginning of the part
     private readonly takenGlobalTime: [number, number] = [0, 0];
     // The global time added to each player
@@ -47,9 +50,11 @@ export class OGWCTimeManagerService {
         this.globalClocks = globalClocks;
         this.allClocks = turnClocks.concat(globalClocks);
     }
+
     // At the beginning of a game, set up clocks and remember when the game started
-    public onGameStart(configRoom: ConfigRoom): void {
+    public onGameStart(configRoom: ConfigRoom, players: MGPOptional<MinimalUser>[]): void {
         this.configRoom = MGPOptional.of(configRoom);
+        this.players = players;
         for (const player of Player.PLAYERS) {
             // We need to initialize the service's data
             // Otherwise if we go to another page and come back, the service stays alive and the data is off
@@ -66,19 +71,22 @@ export class OGWCTimeManagerService {
             clock.pause();
         }
     }
+
     private getPartDurationInMs(): number {
         return this.configRoom.get().totalPartDuration * 1000;
     }
+
     private getMoveDurationInMs(): number {
         return this.configRoom.get().maximalMoveDuration * 1000;
     }
+
     public onReceivedAction(action: GameEventAction): void {
         switch (action.action) {
             case 'AddTurnTime':
-                this.addTurnTime(Player.of(action.player));
+                this.addTurnTime(this.playerOfMinimalUser(action.user));
                 break;
             case 'AddGlobalTime':
-                this.addGlobalTime(Player.of(action.player));
+                this.addGlobalTime(this.playerOfMinimalUser(action.user));
                 break;
             case 'StartGame':
                 this.lastMoveStartTimestamp = MGPOptional.of(action.time as Timestamp);
@@ -88,8 +96,17 @@ export class OGWCTimeManagerService {
                 break;
         }
     }
+
+    private playerOfMinimalUser(user: MinimalUser): Player {
+        if (this.players[0].equalsValue(user)) {
+            return Player.ZERO;
+        } else {
+            return Player.ONE;
+        }
+    }
+
     public onReceivedMove(move: GameEventMove): void {
-        const player: Player = Player.of(move.player);
+        const player: Player = this.playerOfMinimalUser(move.user);
 
         const moveTimestamp: Timestamp = move.time as Timestamp;
         const takenMoveTime: number = this.getMillisecondsElapsedSinceLastMoveStart(moveTimestamp);
@@ -105,9 +122,11 @@ export class OGWCTimeManagerService {
         const nextPlayerAdaptedGlobalTime: number = this.getPartDurationInMs() - this.takenGlobalTime[nextPlayer.value];
         this.globalClocks[nextPlayer.value].changeDuration(nextPlayerAdaptedGlobalTime);
     }
+
     private getMillisecondsElapsedSinceLastMoveStart(timestamp: Timestamp): number {
         return getMillisecondsElapsed(this.lastMoveStartTimestamp.get(), timestamp);
     }
+
     // Stops all clocks that are running
     public onGameEnd(): void {
         for (const clock of this.allClocks) {
@@ -118,12 +137,14 @@ export class OGWCTimeManagerService {
         // Finally, we update the clocks to make sure we show the correct time
         this.updateClocks();
     }
+
     // Pauses all clocks before handling new events
     public beforeEventsBatch(gameEnd: boolean): void {
         if (gameEnd === false) {
             this.pauseAllClocks();
         }
     }
+
     // Continue the current player clock after receiving events
     public afterEventsBatch(gameEnd: boolean, player: Player, currentTime: Timestamp): void {
         this.updateClocks();
@@ -137,21 +158,25 @@ export class OGWCTimeManagerService {
             this.resumeClocks(player);
         }
     }
+
     // Resumes the clocks of player. Public for testing purposes only.
     public resumeClocks(player: Player): void {
         this.turnClocks[player.value].resume();
         this.globalClocks[player.value].resume();
     }
+
     // Add turn time to the opponent of a player
     private addTurnTime(player: Player): void {
         const secondsToAdd: number = 30;
         this.availableTurnTime[player.getOpponent().value] += secondsToAdd * 1000;
     }
+
     // Add time to the global clock of the opponent of a player
     private addGlobalTime(player: Player): void {
         const secondsToAdd: number = 5 * 60;
         this.extraGlobalTime[player.getOpponent().value] += secondsToAdd * 1000;
     }
+
     // Update clocks with the available time
     private updateClocks(): void {
         for (const player of Player.PLAYERS) {
@@ -161,6 +186,7 @@ export class OGWCTimeManagerService {
             this.globalClocks[player.value].changeDuration(globalTime);
         }
     }
+
     // Pauses all clocks that are running
     private pauseAllClocks(): void {
         for (const clock of this.allClocks) {
