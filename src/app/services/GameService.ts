@@ -109,64 +109,23 @@ export class GameService {
     public async refuseDraw(gameId: string): Promise<void> {
         return this.backendService.refuseDraw(gameId);
     }
-    public async proposeRematch(partId: string, player: Player): Promise<void> {
-        await this.gameEventService.addRequest(partId, player, 'Rematch');
+    public async proposeRematch(gameId: string): Promise<void> {
+        return this.backendService.proposeRematch(gameId);
     }
-    public async rejectRematch(partId: string, player: Player): Promise<void> {
-        await this.gameEventService.addReply(partId, player, 'Reject', 'Rematch');
+    public async rejectRematch(gameId: string): Promise<void> {
+        return this.backendService.rejectRematch(gameId);
     }
-    public async acceptRematch(partDocument: PartDocument, player: Player): Promise<void> {
-        const part: Part = Utils.getNonNullable(partDocument.data);
-
-        const configRoom: ConfigRoom = await this.configRoomService.readConfigRoomById(partDocument.id);
-        let firstPlayer: FirstPlayer; // firstPlayer will be switched across rematches
-        // creator is the one who accepts the rematch
-        const creator: MinimalUser = this.connectedUserService.user.get().toMinimalUser();
-        let chosenOpponent: MinimalUser;
-        if (part.playerZero.id === creator.id) {
-            chosenOpponent = Utils.getNonNullable(part.playerOne);
-            firstPlayer = FirstPlayer.CHOSEN_PLAYER;
-        } else {
-            chosenOpponent = part.playerZero;
-            firstPlayer = FirstPlayer.CREATOR;
-        }
-        const newConfigRoom: ConfigRoom = {
-            ...configRoom, // unchanged attributes
-            firstPlayer: firstPlayer.value,
-            creator,
-            chosenOpponent,
-            partStatus: PartStatus.PART_STARTED.value, // game ready to start
-        };
-        const startingConfig: StartingPartConfig = this.getStartingConfig(newConfigRoom);
-        const newPart: Part = {
-            typeGame: part.typeGame,
-            result: MGPResult.UNACHIEVED.value,
-            ...startingConfig,
-        };
-
-        const rematchId: string = await this.partDAO.create(newPart);
-        await this.configRoomService.createConfigRoom(rematchId, newConfigRoom);
-        await this.createChat(rematchId);
-        await this.gameEventService.addReply(partDocument.id, player, 'Accept', 'Rematch', rematchId);
-        await this.gameEventService.startGame(rematchId, player.getOpponent());
+    public async acceptRematch(gameId: string): Promise<void> {
+        return this.backendService.acceptRematch(gameId);
     }
-    public async askTakeBack(partId: string, player: Player): Promise<void> {
-        await this.gameEventService.addRequest(partId, player, 'TakeBack');
+    public async askTakeBack(gameId: string): Promise<void> {
+        return this.backendService.askTakeBack(gameId);
     }
-    public async acceptTakeBack(partId: string, currentTurn: number, player: Player): Promise<void> {
-        let turn: number = currentTurn-1;
-        if (turn % 2 === player.value) {
-            // We need to take back a second time to let the requester take back their move
-            turn--;
-        }
-        const update: Partial<Part> = {
-            turn,
-        };
-        await this.gameEventService.addReply(partId, player, 'Accept', 'TakeBack' );
-        return await this.partDAO.update(partId, update);
+    public async acceptTakeBack(gameId: string): Promise<void> {
+        return this.backendService.acceptTakeBack(gameId);
     }
-    public async refuseTakeBack(partId: string, player: Player): Promise<void> {
-        await this.gameEventService.addReply(partId, player, 'Reject', 'TakeBack');
+    public async refuseTakeBack(gameId: string): Promise<void> {
+        return this.backendService.refuseTakeBack(gameId);
     }
     public async addGlobalTime(partId: string, player: Player): Promise<void> {
         await this.gameEventService.addAction(partId, player, 'AddGlobalTime');

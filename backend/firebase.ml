@@ -49,10 +49,10 @@ module Config_room = struct
     type t = int
     [@@deriving yojson]
 
-    let game_created: t = 0
+    let created: t = 0
     let config_proposed: t = 2
-    let game_started: t = 3
-    let game_finished: t = 4
+    let started: t = 3
+    let finished: t = 4
   end
 
   module First_player = struct
@@ -60,6 +60,8 @@ module Config_room = struct
     [@@deriving yojson]
 
     let random: t = "RANDOM"
+    let chosen_player : t = "CHOSEN_PLAYER"
+    let creator : t = "CREATOR"
   end
 
   module Game_type = struct
@@ -75,9 +77,9 @@ module Config_room = struct
   type t = {
     creator: Minimal_user.t;
     chosen_opponent: Minimal_user.t option [@key "chosenOpponent"];
-    part_status: Game_status.t [@key "partStatus"];
+    game_status: Game_status.t [@key "partStatus"];
     first_player: First_player.t [@key "firstPlayer"];
-    part_type: Game_type.t [@key "partType"];
+    game_type: Game_type.t [@key "partType"];
     maximal_move_duration: int [@key "maximalMoveDuration"];
     total_part_duration: int [@key "totalPartDuration"];
     rules_config: JSON.t option [@key "rulesConfig"]; (* TODO: adapt TS code to support empty rules and use default then *)
@@ -88,12 +90,16 @@ module Config_room = struct
     creator;
     first_player = First_player.random;
     chosen_opponent = None;
-    part_status = Game_status.game_created;
-    part_type = Game_type.standard;
+    game_status = Game_status.created;
+    game_type = Game_type.standard;
     maximal_move_duration = Game_type.standard_move_duration;
     total_part_duration = Game_type.standard_game_duration;
     rules_config = None;
   }
+
+  let rematch (config_room : t) (first_player : First_player.t) (creator : Minimal_user.t) (chosen_opponent : Minimal_user.t) : t =
+    let game_status = Game_status.started in
+    { config_room with game_status; first_player; creator; chosen_opponent = Some chosen_opponent }
 
 end
 
@@ -138,6 +144,7 @@ module Game = struct
           beginning = Some (!External.now ())
         }
     end
+
     module Finishing = struct
       type t = {
         winner: Minimal_user.t option;
@@ -148,6 +155,16 @@ module Game = struct
 
       let get ?(winner : Minimal_user.t option) ?(loser : Minimal_user.t option) (result : Game_result.t) : t =
         { winner; loser; result }
+    end
+
+    module Turn = struct
+      type t = {
+        turn: int;
+      }
+      [@@deriving yojson]
+
+      let get (turn : int) : t =
+        { turn }
     end
   end
 
@@ -178,6 +195,15 @@ module Game = struct
     score_player_zero = None;
     score_player_one = None;
   }
+
+  let rematch (game_name : string) (config_room : Config_room.t) : t =
+    let starting = Updates.Starting.get config_room in
+    let initial_game = initial game_name config_room.creator in
+    { initial_game with
+      player_zero = starting.player_zero;
+      player_one = Some starting.player_one;
+      turn = starting.turn;
+      beginning = starting.beginning }
 
   module Event = struct
     module Request = struct
@@ -275,8 +301,6 @@ module Game = struct
   end
 
 end
-
-
 
 let header (access_token : string) : string * string =
   ("Authorization", "Bearer " ^ access_token)

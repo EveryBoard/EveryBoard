@@ -30,10 +30,12 @@ module Make
       | Some _ -> Dream.respond ~status:`Bad_Request "User is already in a game"
       | None ->
         let* token = Token_refresher.get_token request in
-        let minimal_user = Firebase.User.to_minimal_user uid user in
+        let creator = Firebase.User.to_minimal_user uid user in
         (* Create the game, then the config room, then the chat room *)
-        let* game_id = Firebase_ops.Game.create token game_name minimal_user in
-        let* _ = Firebase_ops.Config_room.create token game_id minimal_user in
+        let game = Firebase.Game.initial game_name creator in
+        let* game_id = Firebase_ops.Game.create token game in
+        let config_room = Firebase.Config_room.initial creator in
+        let* _ = Firebase_ops.Config_room.create token game_id config_room in
         let* _ = Firebase_ops.Chat.create token game_id in
         json_response `Created (`Assoc [("id", `String game_id)])
 
@@ -132,6 +134,53 @@ module Make
       let* response = Dream.empty `OK in
       Lwt.return (Ok response)
 
+  let accept_rematch (request : Dream.request) (token : token) (game_id : string) =
+    let* game_doc = Firebase_ops.Game.get token game_id in
+    match Option.to_result ~none:"does not exist" game_doc >>= Firebase.Game.of_yojson with
+    | Error _ -> fail_transaction `Not_Found "Game not found"
+    | Ok game ->
+      let* config_room_doc = Firebase_ops.Game.get token game_id in
+      match Option.to_result ~none:"does not exist" config_room_doc >>= Firebase.Config_room.of_yojson with
+      | Error _ -> fail_transaction `Not_Found "Config room not found"
+      | Ok config_room ->
+        (* The user accepting the rematch becomes the creator *)
+        let creator = Auth.get_minimal_user request in
+        let (chosen_opponent, first_player) =
+          if game.player_zero = creator
+          then (Option.get game.player_one, Firebase.Config_room.First_player.chosen_player)
+          else (game.player_zero, Firebase.Config_room.First_player.creator) in
+        let rematch_config_room =
+          Firebase.Config_room.rematch config_room first_player creator chosen_opponent in
+        let rematch_game = Firebase.Game.rematch game.type_game rematch_config_room  in
+        let* rematch_id = Firebase_ops.Game.create token rematch_game in
+        let user = Auth.get_minimal_user request in
+        let* _ = Firebase_ops.Config_room.create token rematch_id config_room in
+        let* _ = Firebase_ops.Chat.create token rematch_id in
+        let accept_event = Firebase.Game.Event.(Reply (Reply.accept user "Rematch")) in
+        let* _ = Firebase_ops.Game.add_event token game_id accept_event in
+        let start_event = Firebase.Game.Event.(Action (Action.start_game user)) in
+        let* _ = Firebase_ops.Game.add_event token game_id start_event in
+        let* response = json_response `Created (`Assoc [("id", `String game_id)]) in
+        Lwt.return (Ok response)
+
+  let accept_take_back (request : Dream.request) (token : token) (game_id : string) =
+    let* game_doc = Firebase_ops.Game.get token game_id in
+    match Option.to_result ~none:"does not exist" game_doc >>= Firebase.Game.of_yojson with
+    | Error _ -> fail_transaction `Not_Found "Game not found"
+    | Ok game ->
+      let user = Auth.get_minimal_user request in
+      let player_value = if game.player_zero = user then 0 else 1 in
+      let new_turn =
+        if game.turn mod 2 == player_value
+        then game.turn - 2 (* Need to take back two turns to let the requester take back their move *)
+        else game.turn -1 in
+      let event = Firebase.Game.Event.(Reply (Reply.accept user "TakeBack")) in
+      let* _ = Firebase_ops.Game.add_event token game_id event in
+      let update = Firebase.Game.Updates.Turn.get new_turn in
+      let* _ = Firebase_ops.Game.update token game_id (Firebase.Game.Updates.Turn.to_yojson update) in
+      let* response = Dream.empty `OK in
+      Lwt.return (Ok response)
+
   let get_json_param (request : Dream.request) (field : string) : (Yojson.Safe.t, string) result =
     match Dream.query request field with
     | None -> Error "parameter missing"
@@ -157,10 +206,10 @@ module Make
     | Some "acceptDraw" -> accept_draw request token game_id
     | Some "refuseDraw" -> reject request token game_id "Draw"
     | Some "proposeRematch" -> propose request token game_id "Rematch"
-    | Some "acceptRematch" -> failwith "TODO"
+    | Some "acceptRematch" -> accept_rematch request token game_id
     | Some "rejectRematch" -> reject request token game_id "Rematch"
     | Some "askTakeBack" -> propose request token game_id "TakeBack"
-    | Some "acceptTakeBack" -> failwith "TODO"
+    | Some "acceptTakeBack" -> accept_take_back request token game_id
     | Some "refuseTakeBack" -> reject request token game_id "TakeBack"
     | Some "addGlobalTime" -> failwith "TODO"
     | Some "addTurnTime" -> failwith "TODO"

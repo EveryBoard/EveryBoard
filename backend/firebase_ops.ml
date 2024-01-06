@@ -27,8 +27,8 @@ module type FIREBASE_OPS = sig
     (** Get the name of a game if the game exists *)
     val get_name : token -> string -> string option Lwt.t
 
-    (** Create an unstarted game of the given game type *)
-    val create : token -> string -> Firebase.Minimal_user.t -> string Lwt.t
+    (** Create a game  *)
+    val create : token -> Firebase.Game.t -> string Lwt.t
 
     (** Delete a game *)
     val delete : deleter
@@ -45,8 +45,8 @@ module type FIREBASE_OPS = sig
     (** Retrieve a config room as a JSON document, from its id *)
     val get : getter
 
-    (** Create an initial config room, with the given id and creator *)
-    val create : token -> string -> Firebase.Minimal_user.t -> unit Lwt.t
+    (** Create a config room, with a given id *)
+    val create : token -> string -> Firebase.Config_room.t -> unit Lwt.t
 
     (** Accept a proposed game configuration *)
     val accept : token -> string -> unit Lwt.t
@@ -102,9 +102,9 @@ module Make (Firebase_primitives : Firebase_primitives.FIREBASE_PRIMITIVES) : FI
       let game_name_opt = Option.map (fun json -> JSON.Util.to_string (JSON.Util.member "typeGame" json)) doc in
       Lwt.return game_name_opt
 
-    let create (token : token) (game_name : string) (creator : Firebase.Minimal_user.t) : string Lwt.t =
-      let game_json : JSON.t = Firebase.Game.(to_yojson (initial game_name creator)) in
-      Firebase_primitives.create_doc token "parts" game_json
+    let create (token : token) (game : Firebase.Game.t) : string Lwt.t =
+      let json : JSON.t = Firebase.Game.to_yojson game in
+      Firebase_primitives.create_doc token "parts" json
 
     let delete (token : token) (game_id : string) : unit Lwt.t =
       Firebase_primitives.delete_doc token ("parts/" ^ game_id)
@@ -123,14 +123,14 @@ module Make (Firebase_primitives : Firebase_primitives.FIREBASE_PRIMITIVES) : FI
     let get (token : token) (game_id : string) : JSON.t option Lwt.t =
       get token ("config-room/" ^ game_id)
 
-    let create (token : token) (id : string) (creator : Firebase.Minimal_user.t) : unit Lwt.t =
-      let config_room = Firebase.Config_room.(to_yojson (initial creator)) in
-      let* _ = Firebase_primitives.create_doc token "config-room" ~id config_room in
+    let create (token : token) (id : string) (config_room : Firebase.Config_room.t) : unit Lwt.t =
+      let json = Firebase.Config_room.to_yojson config_room in
+      let* _ = Firebase_primitives.create_doc token "config-room" ~id json in
       Lwt.return ()
 
     let accept (token : token) (game_id : string) : unit Lwt.t =
       let update = `Assoc
-          [("partStatus", Firebase.Config_room.Game_status.(to_yojson game_started))] in
+          [("partStatus", Firebase.Config_room.Game_status.(to_yojson started))] in
       Firebase_primitives.update_doc token ("config-room/" ^ game_id) update
 
   end

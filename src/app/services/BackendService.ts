@@ -96,16 +96,21 @@ export class BackendService {
         this.assertSuccess(result);
     }
 
+    /** Perform a specific game action and asserts that it has succeeded */
+    private async gameAction(gameId: string, action: string): Promise<void> {
+        const endpoint: string = `game/${gameId}?action=${action}`;
+        const result: MGPFallible<Response> = await this.performRequest('POST', endpoint);
+        this.assertSuccess(result);
+    }
+
     /** Accept a game config */
     public async acceptConfig(gameId: string): Promise<void> {
-        const result: MGPFallible<Response> = await this.performRequest('POST', `game/${gameId}?action=acceptConfig`);
-        this.assertSuccess(result);
+        return this.gameAction(gameId, 'acceptConfig');
     }
 
     /** Give the current player resignation in a game */
     public async resign(gameId: string): Promise<void> {
-        const result: MGPFallible<Response> = await this.performRequest('POST', `game/${gameId}?action=resign`);
-        this.assertSuccess(result);
+        return this.gameAction(gameId, 'resign');
     }
 
     /** Notify the timeout of a player in a game */
@@ -119,22 +124,46 @@ export class BackendService {
 
     /** Propose a draw to the opponent */
     public async proposeDraw(gameId: string): Promise<void> {
-        const endpoint: string = `game/${gameId}?action=proposeDraw`;
-        const result: MGPFallible<Response> = await this.performRequest('POST', endpoint);
-        this.assertSuccess(result);
+        return this.gameAction(gameId, 'proposeDraw');
     }
 
     /** Accept the draw request of the opponent */
     public async acceptDraw(gameId: string): Promise<void> {
-        const endpoint: string = `game/${gameId}?action=acceptDraw`;
-        const result: MGPFallible<Response> = await this.performRequest('POST', endpoint);
-        this.assertSuccess(result);
+        return this.gameAction(gameId, 'acceptDraw');
     }
 
     /** Refuse a draw request from the opponent */
     public async refuseDraw(gameId: string): Promise<void> {
-        const endpoint: string = `game/${gameId}?action=refuseDraw`;
-        const result: MGPFallible<Response> = await this.performRequest('POST', endpoint);
-        this.assertSuccess(result);
+        return this.gameAction(gameId, 'refuseDraw');
+    }
+
+    /** Propose a rematch to the opponent */
+    public async proposeRematch(gameId: string): Promise<void> {
+        return this.gameAction(gameId, 'proposeRematch');
+    }
+
+    /** Accept a rematch request from the opponent */
+    public async acceptRematch(gameId: string): Promise<void> {
+        return this.gameAction(gameId, 'acceptRematch');
+    }
+
+    /** Reject a rematch request from the opponent */
+    public async rejectRematch(gameId: string): Promise<void> {
+        return this.gameAction(gameId, 'rejectRematch');
+    }
+
+    /** Ask to take back one of our moves */
+    public async askTakeBack(gameId: string): Promise<void> {
+        return this.gameAction(gameId, 'askTakeBack');
+    }
+
+    /** Accept that opponent takes back a move */
+    public async acceptTakeBack(gameId: string): Promise<void> {
+        return this.gameAction(gameId, 'acceptTakeBack');
+    }
+
+    /** Refuse that opponent takes back a move */
+    public async refuseTakeBack(gameId: string): Promise<void> {
+        return this.gameAction(gameId, 'refuseTakeBack');
     }
 }
