@@ -101,9 +101,16 @@ module Make
     let* response = Dream.empty `OK in
     Lwt.return (Ok response)
 
-  let propose_draw (request : Dream.request) (token : token) (game_id : string) =
+  let propose (request : Dream.request) (token : token) (game_id : string) (proposition : string) =
     let user = Auth.get_minimal_user request in
-    let event = Firebase.Game.Event.(Request (Request.make user "Draw")) in
+    let event = Firebase.Game.Event.(Request (Request.make user proposition)) in
+    let* _ = Firebase_ops.Game.add_event token game_id event in
+    let* response = Dream.empty `OK in
+    Lwt.return (Ok response)
+
+  let reject (request : Dream.request) (token : token) (game_id : string) (proposition : string) =
+    let user = Auth.get_minimal_user request in
+    let event = Firebase.Game.Event.(Reply (Reply.refuse user proposition)) in
     let* _ = Firebase_ops.Game.add_event token game_id event in
     let* response = Dream.empty `OK in
     Lwt.return (Ok response)
@@ -115,7 +122,7 @@ module Make
     | Error _ -> fail_transaction `Not_Found "Game not found"
     | Ok game ->
       let user = Auth.get_minimal_user request in
-      let accept = Firebase.Game.Event.(Reply (Reply.accept_draw user)) in
+      let accept = Firebase.Game.Event.(Reply (Reply.accept user "Draw")) in
       let* _ = Firebase_ops.Game.add_event token game_id accept in
       let player = if user = game.player_zero then 0 else 1 in
       let update = Firebase.Game.Updates.Finishing.get (Firebase.Game.Game_result.agreed_draw_by player) in
@@ -124,13 +131,6 @@ module Make
       let* _ = Firebase_ops.Game.add_event token game_id game_end in
       let* response = Dream.empty `OK in
       Lwt.return (Ok response)
-
-  let refuse_draw (request : Dream.request) (token : token) (game_id : string) =
-    let user = Auth.get_minimal_user request in
-    let event = Firebase.Game.Event.(Reply (Reply.refuse_draw user)) in
-    let* _ = Firebase_ops.Game.add_event token game_id event in
-    let* response = Dream.empty `OK in
-    Lwt.return (Ok response)
 
   let get_json_param (request : Dream.request) (field : string) : (Yojson.Safe.t, string) result =
     match Dream.query request field with
@@ -153,15 +153,15 @@ module Make
         | (Ok winner, Ok loser) -> notify_timeout request token game_id winner loser
         | _ -> fail_transaction `Bad_Request "Missing or invalid winner or loser parameter"
       end
-    | Some "proposeDraw" -> propose_draw request token game_id
+    | Some "proposeDraw" -> propose request token game_id "Draw"
     | Some "acceptDraw" -> accept_draw request token game_id
-    | Some "refuseDraw" -> refuse_draw request token game_id
-    | Some "proposeRematch" -> failwith "TODO"
+    | Some "refuseDraw" -> reject request token game_id "Draw"
+    | Some "proposeRematch" -> propose request token game_id "Rematch"
     | Some "acceptRematch" -> failwith "TODO"
-    | Some "rejectRematch" -> failwith "TODO"
-    | Some "askTakeBack" -> failwith "TODO"
+    | Some "rejectRematch" -> reject request token game_id "Rematch"
+    | Some "askTakeBack" -> propose request token game_id "TakeBack"
     | Some "acceptTakeBack" -> failwith "TODO"
-    | Some "refuseTakeBack" -> failwith "TODO"
+    | Some "refuseTakeBack" -> reject request token game_id "TakeBack"
     | Some "addGlobalTime" -> failwith "TODO"
     | Some "addTurnTime" -> failwith "TODO"
     | Some "updateScore" -> failwith "TODO"

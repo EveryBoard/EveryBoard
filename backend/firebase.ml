@@ -214,10 +214,10 @@ module Game = struct
       let make ?(data : JSON.t option) (user : Minimal_user.t) (reply : string) (requestType : string) : t =
         let time = !External.now () in
         { eventType = "Reply"; time; user; reply; requestType; data }
-      let accept_draw (user : Minimal_user.t) : t =
-        make user "Accept" "Draw"
-      let refuse_draw (user : Minimal_user.t) : t =
-        make user "Reject" "Draw"
+      let accept (user : Minimal_user.t) (proposition : string) : t =
+        make user "Accept" proposition
+      let refuse (user : Minimal_user.t) (proposition : string) : t =
+        make user "Reject" proposition
     end
 
     module Action = struct

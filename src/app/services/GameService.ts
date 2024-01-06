@@ -103,10 +103,10 @@ export class GameService {
     public async proposeDraw(gameId: string): Promise<void> {
         return this.backendService.proposeDraw(gameId);
     }
-    public async acceptDraw(gameId: string, player: Player): Promise<void> {
+    public async acceptDraw(gameId: string): Promise<void> {
         return this.backendService.acceptDraw(gameId);
     }
-    public async refuseDraw(gameId: string, player: Player): Promise<void> {
+    public async refuseDraw(gameId: string): Promise<void> {
         return this.backendService.refuseDraw(gameId);
     }
     public async proposeRematch(partId: string, player: Player): Promise<void> {
