@@ -524,7 +524,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
             case 'Rematch':
                 return this.gameService.proposeRematch(this.currentPartId, player);
             case 'Draw':
-                return this.gameService.proposeDraw(this.currentPartId, player);
+                return this.gameService.proposeDraw(this.currentPartId);
             default:
                 Utils.expectToBe(request, 'TakeBack');
                 return this.gameService.askTakeBack(this.currentPartId, player);

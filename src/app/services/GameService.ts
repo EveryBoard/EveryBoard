@@ -100,8 +100,8 @@ export class GameService {
     public async notifyTimeout(gameId: string, winner: MinimalUser, loser: MinimalUser): Promise<void> {
         return this.backendService.notifyTimeout(gameId, winner, loser);
     }
-    public async proposeDraw(partId: string, player: Player): Promise<void> {
-        await this.gameEventService.addRequest(partId, player, 'Draw');
+    public async proposeDraw(gameId: string): Promise<void> {
+        return this.backendService.proposeDraw(gameId);
     }
     public async acceptDraw(partId: string, player: Player): Promise<void> {
         await this.gameEventService.addReply(partId, player, 'Accept', 'Draw');

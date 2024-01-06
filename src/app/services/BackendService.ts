@@ -4,7 +4,7 @@ import { JSONValue, Utils } from '../utils/utils';
 import { environment } from 'src/environments/environment';
 import { MGPFallible } from '../utils/MGPFallible';
 import { MGPOptional } from '../utils/MGPOptional';
-import { Part } from '../domain/Part';
+import { Part, RequestType } from '../domain/Part';
 import { MinimalUser } from '../domain/MinimalUser';
 
 type HTTPMethod = 'POST' | 'GET' | 'PATCH' | 'HEAD' | 'DELETE';
@@ -117,4 +117,10 @@ export class BackendService {
         this.assertSuccess(result);
     }
 
+    /** Propose a draw */
+    public async proposeDraw(gameId: string): Promise<void> {
+        const endpoint: string = `game/${gameId}?action=proposeDraw`;
+        const result: MGPFallible<Response> = await this.performRequest('POST', endpoint);
+        this.assertSuccess(result);
+    }
 }

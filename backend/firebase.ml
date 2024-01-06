@@ -108,8 +108,8 @@ module Game = struct
     let victory = 3
     let timeout = 4
     let unachieved = 5
-    let agreed_draw_by_zero = 6
-    let agreed_draw_by_one = 7
+    let agreed_draw_by (player : int) =
+      if player = 0 then 6 else 7
   end
 
   module Updates = struct
@@ -146,8 +146,8 @@ module Game = struct
       }
       [@@deriving yojson]
 
-      let get (winner : Minimal_user.t) (loser : Minimal_user.t) (result : Game_result.t) : t =
-        { winner = Some winner; loser = Some loser; result }
+      let get ?(winner : Minimal_user.t option) ?(loser : Minimal_user.t option) (result : Game_result.t) : t =
+        { winner; loser; result }
     end
   end
 
@@ -184,45 +184,59 @@ module Game = struct
       type t = {
         eventType: string;
         time: float;
-        player: int;
+        user: Minimal_user.t;
         requestType: string;
       }
       [@@deriving yojson]
+
+      let make (user : Minimal_user.t) (requestType : string) : t =
+        let time = !External.now () in
+        { eventType = "Request"; time; user; requestType }
+      let draw (user : Minimal_user.t) : t =
+        make user "Draw"
+      let rematch (user : Minimal_user.t) : t =
+        make user "Rematch"
+      let take_back (user : Minimal_user.t) : t =
+        make user "TakeBack"
     end
 
     module Reply = struct
       type t = {
         eventType: string;
         time: float;
-        player: int;
+        user: Minimal_user.t;
         reply: string;
         requestType: string;
         data: JSON.t option;
       }
       [@@deriving yojson]
+
+      let accept_draw (user : Minimal_user.t) : t =
+        let time = !External.now () in
+        { eventType = "Reply"; time; user; reply = "Accept"; requestType = "Draw"; data = None }
     end
 
     module Action = struct
       type t = {
         eventType: string;
         time: float;
-        player: int;
+        user: Minimal_user.t;
         action: string;
       }
       [@@deriving yojson]
 
-      let add_turn_time player =
+      let add_turn_time user =
         let time = !External.now () in
-        { eventType = "Action"; action = "AddTurnTime"; player; time }
-      let add_global_time player =
+        { eventType = "Action"; action = "AddTurnTime"; user; time }
+      let add_global_time user =
         let time = !External.now () in
-        { eventType = "Action"; action = "AddGlobalTime"; player; time }
-      let start_game player =
+        { eventType = "Action"; action = "AddGlobalTime"; user; time }
+      let start_game user =
         let time = !External.now () in
-        { eventType = "Action"; action = "StartGame"; player; time }
-      let end_game player =
+        { eventType = "Action"; action = "StartGame"; user; time }
+      let end_game user =
         let time = !External.now () in
-        { eventType = "Action"; action = "EndGame"; player; time }
+        { eventType = "Action"; action = "EndGame"; user; time }
     end
 
     module Move = struct
