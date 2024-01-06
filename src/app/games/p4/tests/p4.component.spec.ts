@@ -6,13 +6,10 @@ import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { PlayerOrNone } from 'src/app/jscaip/Player';
 import { P4State } from '../P4State';
 import { Table } from 'src/app/utils/ArrayUtils';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { P4Config, P4Rules } from '../P4Rules';
 
 describe('P4Component', () => {
 
     let testUtils: ComponentTestUtils<P4Component>;
-    const defaultConfig: MGPOptional<P4Config> = P4Rules.get().getDefaultRulesConfig();
 
     const _: PlayerOrNone = PlayerOrNone.NONE;
     const O: PlayerOrNone = PlayerOrNone.ZERO;
@@ -43,7 +40,7 @@ describe('P4Component', () => {
         const state: P4State = new P4State(board, 0);
 
         // When rendering the board
-        await testUtils.setupState(state, { config: defaultConfig });
+        await testUtils.setupState(state);
 
         // Then victorious coords should be shown
         testUtils.expectElementToHaveClass('#victory_coord_3_2', 'victory-stroke');

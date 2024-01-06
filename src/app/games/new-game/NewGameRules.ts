@@ -25,12 +25,6 @@ export class NewGameLegalityInfo {
  */
 export class NewGameNode extends GameNode<NewGameMove, NewGameState> {}
 
-export type NewGameConfig = {
-
-    the_name_you_will_use_in_your_rules_and_states: number;
-
-};
-
 /**
  * This is where you define the rules of the game.
  * It should be a singleton class.

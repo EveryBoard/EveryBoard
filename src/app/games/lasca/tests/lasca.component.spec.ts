@@ -366,9 +366,12 @@ describe('LascaComponent', () => {
 
         it('should not show possible selections for opponent', fakeAsync(async() => {
             // Given a state
+            const state: LascaState = LascaRules.get().getInitialState();
+
             // When it is not interactive
             testUtils.getGameComponent().setInteractive(false);
-            await testUtils.setupState(LascaRules.get().getInitialState());
+            await testUtils.setupState(state);
+
             // Then it should not show possible selections
             testUtils.expectElementNotToExist('.selectable-fill');
         }));

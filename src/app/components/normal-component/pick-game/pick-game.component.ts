@@ -263,7 +263,8 @@ export class GameInfo {
             new GameInfo($localize`Teeko`,           'Teeko',         TeekoComponent,         new TeekoTutorial(),         TeekoRules.get(),         new Date('2023-07-30'), GameDescription.TEEKO()          ), //                             * Martin
             new GameInfo($localize`Kalah`,           'Kalah',         KalahComponent,         new KalahTutorial(),         KalahRules.get(),         new Date('2023-09-07'), GameDescription.KALAH()          ), //                             * Martin
             new GameInfo($localize`Diaballik`,       'Diaballik',     DiaballikComponent,     new DiaballikTutorial(),     DiaballikRules.get(),     new Date('2023-11-18'), GameDescription.DIABALLIK()      ), //                             * Quentin
-            new GameInfo($localize`Ba-awa`,          'BaAwa',         BaAwaComponent,         new BaAwaTutorial(),         BaAwaRules.get(),         new Date('2023-12-12'), GameDescription.BA_AWA()         ), //                             * Martin
+
+            new GameInfo($localize`Ba-awa`,          'BaAwa',         BaAwaComponent,         new BaAwaTutorial(),         BaAwaRules.get(),         new Date('2024-01-06'), GameDescription.BA_AWA()         ), //                             * Martin
         ].sort((a: GameInfo, b: GameInfo) => a.name.localeCompare(b.name));
         // After Apagos: median = 26d; average = 53d
         // 9d 10d 12d 13d 18d - 18d 20d 22d 25d 26d - (26d) - 49d 65d 71d 76d 93d - 94j 4m 4m 7m 11m

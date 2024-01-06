@@ -6,13 +6,10 @@ import { PlayerOrNone } from 'src/app/jscaip/Player';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { fakeAsync } from '@angular/core/testing';
-import { ReversiConfig, ReversiRules } from '../ReversiRules';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 describe('ReversiComponent', () => {
 
     let testUtils: ComponentTestUtils<ReversiComponent>;
-    const defaultConfig: MGPOptional<ReversiConfig> = ReversiRules.get().getDefaultRulesConfig();
 
     const _: PlayerOrNone = PlayerOrNone.NONE;
     const O: PlayerOrNone = PlayerOrNone.ZERO;
@@ -37,8 +34,8 @@ describe('ReversiComponent', () => {
             [_, _, X, _, _, _, _, _],
             [_, _, _, O, _, _, _, _],
         ];
-        const initialState: ReversiState = new ReversiState(board, 0);
-        await testUtils.setupState(initialState);
+        const state: ReversiState = new ReversiState(board, 0);
+        await testUtils.setupState(state);
 
         const move: ReversiMove = new ReversiMove(0, 4);
         await testUtils.expectMoveSuccess('#click_0_4', move);
@@ -71,7 +68,7 @@ describe('ReversiComponent', () => {
         ], 1);
 
         // When displaying the board
-        await testUtils.setupState(state, { config: defaultConfig });
+        await testUtils.setupState(state);
 
         // Then the player can pass
         await testUtils.expectPassSuccess(ReversiMove.PASS);
