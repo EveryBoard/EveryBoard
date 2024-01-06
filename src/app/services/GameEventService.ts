@@ -7,7 +7,6 @@ import { PartDAO } from '../dao/PartDAO';
 import { Action, GameEvent, Reply, RequestType } from '../domain/Part';
 import { JSONValue } from '../utils/utils';
 import { MinimalUser } from '../domain/MinimalUser';
-import { ConnectedUserService } from './ConnectedUserService';
 
 @Injectable({
     providedIn: 'root',

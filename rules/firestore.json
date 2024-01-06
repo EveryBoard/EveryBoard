@@ -155,13 +155,14 @@ service cloud.firestore {
         }
         function playerAddsEvent(part, event) {
             return userIsVerified() &&
-                   ((event.player == 0 && userIsPlayerZero(part)) ||
-                    (event.player == 1 && userIsPlayerOne(part)));
+                   (event.user.id == request.auth.uid) &&
+                   ((event.user.id == part.playerZero.id) ||
+                    (event.user.id == part.playerOne.id))
         }
         function validEvent(event) {
             return hasField(event, 'eventType') &&
                    hasField(event, 'time') &&
-                   hasField(event, 'player');
+                   hasField(event, 'user');
         }
         function validAction(part, event) {
             let gameJustStarted = part.turn == 0;
@@ -196,10 +197,11 @@ service cloud.firestore {
             // Move addition is performed before updating the part turn
             // This way, if move addition fails, the part isn't corrupt
             let part = get(/databases/$(database)/documents/parts/$(partId)).data;
-            let isPlayerTurn = part.turn % 2 == moveEvent.player;
+            let isPlayerTurn = ((part.turn % 2 == 0) && moveEvent.user.id == part.playerZero.id) ||
+                               ((part.turn % 2 == 1) && moveEvent.user.id == part.playerOne.id);
             return validEvent(moveEvent) && moveEvent.eventType == 'Move' &&
+                   moveEvent.user.id == request.auth.uid &&
                    hasField(moveEvent, 'move') &&
-                   playerAddsEvent(part, moveEvent) &&
                    isPlayerTurn;
         }
         function setsWinnerIfVictory(part, update) {

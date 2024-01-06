@@ -68,7 +68,6 @@ export class OGWCRequestManagerService {
         this.lastDeniedRequest = MGPOptional.empty();
     }
     public onReceivedRequest(request: GameEventRequest): void {
-        console.log(request)
         Utils.assert(this.requestAwaitingReply.isAbsent(), 'Should not receive two requests in a row!');
         this.requestAwaitingReply = MGPOptional.of(request);
     }
@@ -77,18 +76,15 @@ export class OGWCRequestManagerService {
      * @returns true if the request has been accepted and must be handled by the OGWC
      */
     public async onReceivedReply(reply: GameEventReply): Promise<boolean> {
-        console.log(reply)
         this.requestAwaitingReply = MGPOptional.empty();
         switch (reply.reply) {
             case 'Accept':
                 // The request has been accepted by the opponent, we give it back to OGWC
                 return true;
             case 'Reject':
-                console.log('rejection from ' + reply.user.id)
                 // When one of our requests is rejected, we cannot make this request until the next turn
                 const user: MinimalUser = this.connectedUserService.user.get().toMinimalUser();
                 if (reply.user.id !== user.id) {
-                    console.log('from opponent')
                     // Opponent denied our request
                     this.lastDeniedRequest = MGPOptional.of(reply.requestType);
                     this.forbiddenRequests.add(reply.requestType);
