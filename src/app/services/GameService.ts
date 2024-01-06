@@ -127,11 +127,11 @@ export class GameService {
     public async refuseTakeBack(gameId: string): Promise<void> {
         return this.backendService.refuseTakeBack(gameId);
     }
-    public async addGlobalTime(partId: string, player: Player): Promise<void> {
-        await this.gameEventService.addAction(partId, player, 'AddGlobalTime');
+    public async addGlobalTime(gameId: string): Promise<void> {
+        return this.backendService.addGlobalTime(gameId);
     }
-    public async addTurnTime(partId: string, player: Player): Promise<void> {
-        await this.gameEventService.addAction(partId, player, 'AddTurnTime');
+    public async addTurnTime(gameId: string): Promise<void> {
+        return this.backendService.addTurnTime(gameId);
     }
     private async preparePartUpdate(partId: string,
                                     scores: MGPOptional<readonly [number, number]>)

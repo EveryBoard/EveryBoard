@@ -255,12 +255,12 @@ module Game = struct
       }
       [@@deriving yojson]
 
-      let add_turn_time user =
+      let add_time (user : Minimal_user.t) (kind : [ `Turn | `Global ]) =
         let time = !External.now () in
-        { eventType = "Action"; action = "AddTurnTime"; user; time }
-      let add_global_time user =
-        let time = !External.now () in
-        { eventType = "Action"; action = "AddGlobalTime"; user; time }
+        let action = match kind with
+          | `Turn -> "AddTurnTime"
+          | `Global -> "AddGlobalTime" in
+        { eventType = "Action"; action; user; time }
       let start_game user =
         let time = !External.now () in
         { eventType = "Action"; action = "StartGame"; user; time }

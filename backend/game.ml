@@ -181,6 +181,13 @@ module Make
       let* response = Dream.empty `OK in
       Lwt.return (Ok response)
 
+  let add_time (request : Dream.request) (token : token) (game_id : string) (kind : [ `Turn | `Global ]) =
+    let user = Auth.get_minimal_user request in
+    let event = Firebase.Game.Event.(Action (Action.add_time user kind)) in
+    let* _ = Firebase_ops.Game.add_event token game_id event in
+    let* response = Dream.empty `OK in
+    Lwt.return (Ok response)
+
   let get_json_param (request : Dream.request) (field : string) : (Yojson.Safe.t, string) result =
     match Dream.query request field with
     | None -> Error "parameter missing"
@@ -211,8 +218,8 @@ module Make
     | Some "askTakeBack" -> propose request token game_id "TakeBack"
     | Some "acceptTakeBack" -> accept_take_back request token game_id
     | Some "refuseTakeBack" -> reject request token game_id "TakeBack"
-    | Some "addGlobalTime" -> failwith "TODO"
-    | Some "addTurnTime" -> failwith "TODO"
+    | Some "addGlobalTime" -> add_time request token game_id `Global
+    | Some "addTurnTime" -> add_time request token game_id `Turn
     | Some "updateScore" -> failwith "TODO"
     | Some "victory" -> failwith "TODO"
     | Some "draw" -> failwith "TODO"

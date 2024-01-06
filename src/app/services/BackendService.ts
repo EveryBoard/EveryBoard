@@ -166,4 +166,14 @@ export class BackendService {
     public async refuseTakeBack(gameId: string): Promise<void> {
         return this.gameAction(gameId, 'refuseTakeBack');
     }
+
+    /** Add global time to the opponent */
+    public async addGlobalTime(gameId: string): Promise<void> {
+        return this.gameAction(gameId, 'addGlobalTime');
+    }
+
+    /** Add turn time to the opponent */
+    public async addTurnTime(gameId: string): Promise<void> {
+        return this.gameAction(gameId, 'addTurnTime');
+    }
 }
