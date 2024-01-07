@@ -1,18 +1,13 @@
 import { Injectable } from '@angular/core';
 import { PartDAO } from '../dao/PartDAO';
 import { Part } from '../domain/Part';
-import { FirstPlayer, ConfigRoom } from '../domain/ConfigRoom';
 import { ConfigRoomService } from './ConfigRoomService';
-import { ChatService } from './ChatService';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
-import { Debug, JSONValue, Utils } from 'src/app/utils/utils';
+import { Debug, JSONValue } from 'src/app/utils/utils';
 import { MGPOptional } from '../utils/MGPOptional';
 import { Subscription } from 'rxjs';
-import { serverTimestamp } from 'firebase/firestore';
 import { MinimalUser } from '../domain/MinimalUser';
-import { ConnectedUserService } from './ConnectedUserService';
 import { FirestoreTime } from '../domain/Time';
-import { GameEventService } from './GameEventService';
 import { BackendService } from './BackendService';
 
 export interface StartingPartConfig extends Partial<Part> {
@@ -29,17 +24,10 @@ export interface StartingPartConfig extends Partial<Part> {
 export class GameService {
 
     public constructor(private readonly partDAO: PartDAO,
-                       private readonly gameEventService: GameEventService,
-                       private readonly connectedUserService: ConnectedUserService,
-                       private readonly configRoomService: ConfigRoomService,
-                       private readonly chatService: ChatService,
                        private readonly backendService: BackendService)
 
     {
     }
-    // private async update(id: string, update: Partial<Part>): Promise<void> {
-    //     return this.partDAO.update(id, update);
-    // }
     public async getGameValidity(gameId: string, gameName: string): Promise<MGPValidation> {
         const realGameName: MGPOptional<string> = await this.backendService.getGameName(gameId);
         if (realGameName.isAbsent()) {
@@ -56,31 +44,6 @@ export class GameService {
     public createPartConfigRoomAndChat(gameName: string): Promise<string> {
         return this.backendService.createGame(gameName);
     }
-    // public getStartingConfig(configRoom: ConfigRoom): StartingPartConfig {
-    //     let whoStarts: FirstPlayer = FirstPlayer.of(configRoom.firstPlayer);
-    //     if (whoStarts === FirstPlayer.RANDOM) {
-    //         if (Math.random() < 0.5) {
-    //             whoStarts = FirstPlayer.CREATOR;
-    //         } else {
-    //             whoStarts = FirstPlayer.CHOSEN_PLAYER;
-    //         }
-    //     }
-    //     let playerZero: MinimalUser;
-    //     let playerOne: MinimalUser;
-    //     if (whoStarts === FirstPlayer.CREATOR) {
-    //         playerZero = configRoom.creator;
-    //         playerOne = Utils.getNonNullable(configRoom.chosenOpponent);
-    //     } else {
-    //         playerZero = Utils.getNonNullable(configRoom.chosenOpponent);
-    //         playerOne = configRoom.creator;
-    //     }
-    //     return {
-    //         playerZero,
-    //         playerOne,
-    //         turn: 0,
-    //         beginning: serverTimestamp(),
-    //     };
-    // }
     public deletePart(gameId: string): Promise<void> {
         return this.backendService.deleteGame(gameId);
     }
@@ -132,31 +95,12 @@ export class GameService {
     public async addTurnTime(gameId: string): Promise<void> {
         return this.backendService.addTurnTime(gameId);
     }
-    // private async preparePartUpdate(partId: string,
-    //                                 scores: MGPOptional<readonly [number, number]>)
-    // : Promise<Partial<Part>>
-    // {
-    //     const part: Part = (await this.partDAO.read(partId)).get();
-    //     const turn: number = part.turn + 1;
-    //     let update: Partial<Part> = {
-    //         turn,
-    //     };
-    //     update = this.updateScore(update, scores);
-    //     return update;
-    // }
     public async updatePart(gameId: string, scores: MGPOptional<readonly [number, number]>): Promise<void> {
         // TODO: rename appropriately
         return this.backendService.endTurn(gameId, scores);
     }
     public async drawPart(gameId: string, scores: MGPOptional<readonly [number, number]>): Promise<void> {
         return this.backendService.draw(gameId, scores);
-    //    let update: Partial<Part> = await this.preparePartUpdate(partId, scores);
-    //    update = {
-    //        ...update,
-    //        result: MGPResult.HARD_DRAW.value,
-    //    };
-    //    await this.update(partId, update);
-    //    await this.gameEventService.addAction(partId, player, 'EndGame');
     }
     public async endPartWithVictory(gameId: string,
                                     winner: MinimalUser,
@@ -165,28 +109,8 @@ export class GameService {
     : Promise<void>
     {
         return this.backendService.victory(gameId, scores, winner, loser);
-        // let update: Partial<Part> = await this.preparePartUpdate(partId, scores);
-        // update = {
-        //     ...update,
-        //     winner,
-        //     loser,
-        //     result: MGPResult.VICTORY.value,
-        // };
-        // await this.update(partId, update);
-        // await this.gameEventService.addAction(partId, player, 'EndGame');
     }
     public async addMove(gameId: string, encodedMove: JSONValue): Promise<void> {
-        // await this.gameEventService.addMove(partId, player, encodedMove);
         return this.backendService.move(gameId, encodedMove);
     }
-    // private updateScore(update: Partial<Part>, scores: MGPOptional<readonly [number, number]>): Partial<Part> {
-    //     if (scores.isPresent()) {
-    //         return {
-    //             ...update,
-    //             scorePlayerZero: scores.get()[0],
-    //             scorePlayerOne: scores.get()[1],
-    //         };
-    //     }
-    //     return update;
-    // }
 }

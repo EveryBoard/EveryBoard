@@ -228,16 +228,16 @@ module Game = struct
   module Event = struct
     module Request = struct
       type t = {
-        eventType: string;
+        event_type: string [@key "eventType"];
         time: float;
         user: Minimal_user.t;
-        requestType: string;
+        request_type: string [@key "requestType"];
       }
       [@@deriving yojson]
 
-      let make (user : Minimal_user.t) (requestType : string) : t =
+      let make (user : Minimal_user.t) (request_type : string) : t =
         let time = !External.now () in
-        { eventType = "Request"; time; user; requestType }
+        { event_type = "Request"; time; user; request_type }
       let draw (user : Minimal_user.t) : t =
         make user "Draw"
       let rematch (user : Minimal_user.t) : t =
@@ -248,18 +248,18 @@ module Game = struct
 
     module Reply = struct
       type t = {
-        eventType: string;
+        event_type: string [@key "eventType"];
         time: float;
         user: Minimal_user.t;
         reply: string;
-        requestType: string;
+        request_type: string [@key "requestType"];
         data: JSON.t option;
       }
       [@@deriving yojson]
 
-      let make ?(data : JSON.t option) (user : Minimal_user.t) (reply : string) (requestType : string) : t =
+      let make ?(data : JSON.t option) (user : Minimal_user.t) (reply : string) (request_type : string) : t =
         let time = !External.now () in
-        { eventType = "Reply"; time; user; reply; requestType; data }
+        { event_type = "Reply"; time; user; reply; request_type; data }
       let accept (user : Minimal_user.t) (proposition : string) : t =
         make user "Accept" proposition
       let refuse (user : Minimal_user.t) (proposition : string) : t =
@@ -268,7 +268,7 @@ module Game = struct
 
     module Action = struct
       type t = {
-        eventType: string;
+        event_type: string [@key "eventType"];
         time: float;
         user: Minimal_user.t;
         action: string;
@@ -280,23 +280,24 @@ module Game = struct
         let action = match kind with
           | `Turn -> "AddTurnTime"
           | `Global -> "AddGlobalTime" in
-        { eventType = "Action"; action; user; time }
+        { event_type = "Action"; action; user; time }
       let start_game (user : Minimal_user.t) : t =
         let time = !External.now () in
-        { eventType = "Action"; action = "StartGame"; user; time }
+        { event_type = "Action"; action = "StartGame"; user; time }
       let end_game (user : Minimal_user.t) : t =
         let time = !External.now () in
-        { eventType = "Action"; action = "EndGame"; user; time }
+        { event_type = "Action"; action = "EndGame"; user; time }
     end
 
     module Move = struct
       type t = {
-        eventType: string;
+        event_type: string [@key "eventType"];
+        user: Minimal_user.t;
         move: JSON.t;
       }
       [@@deriving yojson]
 
-      let of_move (move : JSON.t) : t = { eventType = "Move"; move }
+      let of_json (user : Minimal_user.t) (move : JSON.t) : t = { event_type = "Move"; user; move }
     end
 
     type t =

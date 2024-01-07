@@ -218,6 +218,13 @@ module Make
     let* response = Dream.empty `OK in
     Lwt.return (Ok response)
 
+  let move (request : Dream.request) (token : token) (game_id : string) (move : Yojson.Safe.t) =
+    let user = Auth.get_minimal_user request in
+    let event = Firebase.Game.Event.(Move (Move.of_json user move)) in
+    let* _ = Firebase_ops.Game.add_event token game_id event in
+    let* response = Dream.empty `OK in
+    Lwt.return (Ok response)
+
   let get_json_param (request : Dream.request) (field : string) : (Yojson.Safe.t, string) result =
     match Dream.query request field with
     | None -> Error "parameter missing"
@@ -250,7 +257,7 @@ module Make
     | Some "refuseTakeBack" -> reject request token game_id "TakeBack"
     | Some "addGlobalTime" -> add_time request token game_id `Global
     | Some "addTurnTime" -> add_time request token game_id `Turn
-    | Some "endTurn" -> end_turn request token game_id
+    | Some "endTurn" -> end_turn request token game_id (* TODO: should be done with a single move request *)
     | Some "draw" -> draw request token game_id
     | Some "victory" ->
       let winner = get_json_param request "winner" >>= Firebase.Minimal_user.of_yojson in
@@ -259,7 +266,11 @@ module Make
         | (Ok winner, Ok loser) -> victory request token game_id winner loser
         | _ -> fail_transaction `Bad_Request "Missing or invalid winner or loser parameter"
       end
-    | Some "move" -> failwith "TODO"
+    | Some "move" ->
+      begin match get_json_param request "move" with
+        | Ok move_json -> move request token game_id move_json
+        | _ -> fail_transaction `Bad_Request "Missing or invalid move parameter"
+      end
     | _ -> failwith "TODO"
 
 
