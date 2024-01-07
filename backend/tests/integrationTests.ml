@@ -15,7 +15,7 @@ let create_user (email : string) : unit Lwt.t =
       "postBody", `String ("&id_token=" ^ credential ^ "&providerId=google.com");
     ] in
   let no_headers = Cohttp.Header.init () in
-  let* response = !External.Http.post_json (Uri.of_string url) no_headers (JSON.to_string json) in
+  let* response = !External.Http.post_json (Uri.of_string url) no_headers json in
   Printf.printf "%s\n" (snd response);
   Lwt.return ()
 

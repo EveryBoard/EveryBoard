@@ -12,7 +12,7 @@
 
 (tests
  (names tests)
- (modules Tests Test_utils Auth_tests Jwt_tests Google_certificates_tests Token_refresher_tests Firebase_ops_tests Firebase_primitives_tests Integration_tests Firebase_tests)
+ (modules Tests TestUtils AuthTests JwtTests GoogleCertificatesTests TokenRefresherTests FirestoreTests FirestorePrimitivesTests IntegrationTests DomainTests)
  (libraries backend alcotest alcotest-lwt))
 
 (include_subdirs unqualified)

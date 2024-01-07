@@ -1,5 +1,5 @@
 open Alcotest
-open Test_utils
+open TestUtils
 open Backend
 open Utils
 
@@ -120,7 +120,7 @@ let tests = [
 
   "Jwt.make", [
     test "should construct a token" (fun () ->
-        Mirage_crypto_rng_lwt.initialize ();
+        Mirage_crypto_rng_lwt.initialize (module Mirage_crypto_rng.Fortuna);
         let now_mock () = 1702952401. in
         with_mock External.now now_mock (fun _ ->
             let actual = Jwt.make "foo@bar.com" private_key ["scope1"; "scope2"] "audience" in

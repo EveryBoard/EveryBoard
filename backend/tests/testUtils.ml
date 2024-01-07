@@ -32,12 +32,12 @@ let json : JSON.t testable =
   let pp ppf json = Fmt.pf ppf "%s" (JSON.to_string json) in
   testable pp (=)
 
-let user : Firebase.User.t testable =
-  let pp ppf user = Fmt.pf ppf "%s" (Option.value ~default:"" Firebase.User.(user.username)) in
+let user : Domain.User.t testable =
+  let pp ppf user = Fmt.pf ppf "%s" (Option.value ~default:"" Domain.User.(user.username)) in
   testable pp (=)
 
-let minimal_user : Firebase.Minimal_user.t testable =
-  let pp (ppf : Format.formatter) (user : Firebase.Minimal_user.t) : unit =
+let minimal_user : Domain.MinimalUser.t testable =
+  let pp (ppf : Format.formatter) (user : Domain.MinimalUser.t) : unit =
     Fmt.pf ppf "%s:%s" user.id user.name in
   testable pp (=)
 
