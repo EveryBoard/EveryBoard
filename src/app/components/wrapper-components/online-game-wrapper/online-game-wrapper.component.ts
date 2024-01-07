@@ -454,7 +454,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
 
             // To adhere to security rules, we must add the move before updating the part
             const encodedMove: JSONValue = this.gameComponent.encoder.encode(move);
-            await this.gameService.addMove(this.currentPartId, this.role as Player, encodedMove);
+            await this.gameService.addMove(this.currentPartId, encodedMove);
             return this.updatePartWithStatusAndScores(gameStatus, this.gameComponent.scores);
         }
     }
@@ -464,7 +464,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
     {
         if (gameStatus.isEndGame) {
             if (gameStatus === GameStatus.DRAW) {
-                return await this.gameService.drawPart(this.currentPartId, this.role as Player, scores);
+                return await this.gameService.drawPart(this.currentPartId, scores);
             } else {
                 Utils.assert(gameStatus.winner.isPlayer(), 'Non-draw end games should have a winner');
                 const winner: Player = gameStatus.winner as Player;
@@ -477,7 +477,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
 
     private async notifyTimeoutVictory(victoriousPlayer: MinimalUser, loser: MinimalUser): Promise<void> {
         const player: Player = this.role as Player;
-        await this.gameService.notifyTimeout(this.currentPartId, player, victoriousPlayer, loser);
+        await this.gameService.notifyTimeout(this.currentPartId, victoriousPlayer, loser);
     }
 
     private async notifyVictory(winner: Player, scores: MGPOptional<readonly [number, number]>): Promise<void> {
@@ -489,10 +489,8 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         } else {
             this.currentPart = currentPart.setWinnerAndLoser(playerZero, playerOne);
         }
-        const player: Player = this.role as Player;
 
         await this.gameService.endPartWithVictory(this.currentPartId,
-                                                  player,
                                                   this.currentPart.getWinner().get(),
                                                   this.currentPart.getLoser().get(),
                                                   scores);
@@ -522,36 +520,33 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         const player: Player = this.role as Player;
         switch (request) {
             case 'Rematch':
-                return this.gameService.proposeRematch(this.currentPartId, player);
+                return this.gameService.proposeRematch(this.currentPartId);
             case 'Draw':
                 return this.gameService.proposeDraw(this.currentPartId);
             default:
                 Utils.expectToBe(request, 'TakeBack');
-                return this.gameService.askTakeBack(this.currentPartId, player);
+                return this.gameService.askTakeBack(this.currentPartId);
         }
     }
 
     // Called by the 'accept' button
     public async accept(): Promise<void> {
         Utils.assert(this.role.isPlayer(), 'cannot accept request if not player');
-        const player: Player = this.role as Player;
-        const part: PartDocument = Utils.getNonNullable(this.currentPart);
         const request: RequestType = this.requestManager.getCurrentRequest().get().requestType;
         switch (request) {
             case 'Rematch':
-                return this.gameService.acceptRematch(part.id);
+                return this.gameService.acceptRematch(this.currentPartId);
             case 'Draw':
-                return this.gameService.acceptDraw(part.id);
+                return this.gameService.acceptDraw(this.currentPartId);
             default:
                 Utils.expectToBe(request, 'TakeBack');
-                return this.gameService.acceptTakeBack(part.id, part.data.turn, player);
+                return this.gameService.acceptTakeBack(this.currentPartId);
         }
     }
 
     // Called by the 'reject' button
     public async reject(): Promise<void> {
         Utils.assert(this.role.isPlayer(), 'cannot reject request if not player');
-        const player: Player = this.role as Player;
         const request: RequestType = this.requestManager.getCurrentRequest().get().requestType;
         switch (request) {
             case 'Rematch':
@@ -560,7 +555,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
                 return this.gameService.refuseDraw(this.currentPartId);
             default:
                 Utils.expectToBe(request, 'TakeBack');
-                return this.gameService.refuseTakeBack(this.currentPartId, player);
+                return this.gameService.refuseTakeBack(this.currentPartId);
         }
     }
 
@@ -582,14 +577,12 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
 
     // Called by the 'AddGlobalTime' button
     public addGlobalTime(): Promise<void> {
-        const giver: Player = this.role as Player;
-        return this.gameService.addGlobalTime(this.currentPartId, giver);
+        return this.gameService.addGlobalTime(this.currentPartId);
     }
 
     // Called by the 'AddTurnTime' button
     public addTurnTime(): Promise<void> {
-        const giver: Player = this.role as Player;
-        return this.gameService.addTurnTime(this.currentPartId, giver);
+        return this.gameService.addTurnTime(this.currentPartId);
     }
 
     public async onCancelMove(reason?: string): Promise<void> {
