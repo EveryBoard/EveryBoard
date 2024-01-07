@@ -70,21 +70,6 @@ export class ConfigRoomService {
         return subCollection.observingWhere([], observer);
     }
 
-    public async createInitialConfigRoom(configRoomId: string, gameName: string): Promise<void> {
-        const creator: MinimalUser = this.connectedUserService.user.get().toMinimalUser();
-        const newConfigRoom: ConfigRoom = {
-            chosenOpponent: null,
-            firstPlayer: FirstPlayer.RANDOM.value,
-            partType: PartType.STANDARD.value,
-            partStatus: PartStatus.PART_CREATED.value,
-            maximalMoveDuration: PartType.NORMAL_MOVE_DURATION,
-            totalPartDuration: PartType.NORMAL_PART_DURATION,
-            creator,
-            rulesConfig: RulesConfigUtils.getGameDefaultConfig(gameName).getOrElse({}),
-        };
-        return this.configRoomDAO.set(configRoomId, newConfigRoom);
-    }
-
     public async joinGame(configRoomId: string): Promise<MGPValidation> {
         const user: MinimalUser = this.connectedUserService.user.get().toMinimalUser();
         const configRoom: MGPOptional<ConfigRoom> = await this.configRoomDAO.read(configRoomId);
@@ -166,16 +151,6 @@ export class ConfigRoomService {
             partStatus: PartStatus.PART_CREATED.value,
             chosenOpponent: null,
         });
-    }
-
-    public acceptConfig(configRoomId: string): Promise<void> {
-        return this.configRoomDAO.update(configRoomId, {
-            partStatus: PartStatus.PART_STARTED.value,
-        });
-    }
-
-    public async createConfigRoom(configRoomId: string, configRoom: ConfigRoom): Promise<void> {
-        return this.configRoomDAO.set(configRoomId, configRoom);
     }
 
     public async readConfigRoomById(configRoomId: string): Promise<ConfigRoom> {
