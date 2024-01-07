@@ -1,17 +1,35 @@
 open Utils
 
 module type STATS = sig
-  (** Record a read being done on an action by a user *)
-  val read : string -> Firebase.Minimal_user.t -> unit
+  (** Remember which action we are doing in order to track reads and writes *)
+  val set_action : Dream.request -> string -> unit
+
+  (** Remember which user is doing something in order to track reads and writes *)
+  val set_user : Dream.request -> Firebase.Minimal_user.t -> unit
+
+  (** Record a read *)
+  val read : Dream.request -> unit
 
   (** Record a write being done on an action by a user *)
-  val write : string -> Firebase.Minimal_user.t -> unit
+  val write : Dream.request -> unit
 
-  (** Provide a summary of the reads and writes as a JSON object *)
-  val summary : unit -> JSON.t
+  (** Provide a REST API to access the statistics *)
+  val routes : Dream.route list
 end
 
-module Stats : STATS = struct
+module Impl : STATS = struct
+  let action_field : string Dream.field =
+    Dream.new_field ~name:"action" ()
+
+  let set_action (request : Dream.request) (action : string) =
+    Dream.set_field request action_field action
+
+  let user_field : Firebase.Minimal_user.t Dream.field =
+    Dream.new_field ~name:"user" ()
+
+  let set_user (request : Dream.request) (user : Firebase.Minimal_user.t) =
+    Dream.set_field request user_field user
+
   type rw_info = {
     reads : int;
     writes : int;
@@ -51,16 +69,32 @@ module Stats : STATS = struct
       per_user = Hashtbl.create 100;
     }
 
-  let read (action : string) (user : Firebase.Minimal_user.t) : unit =
+  let get_action (request : Dream.request) : string =
+    match Dream.field request action_field with
+    | None -> raise (Error "Unexpected: no action stored")
+    | Some action -> action
+
+  let get_user (request : Dream.request) : Firebase.Minimal_user.t =
+    match Dream.field request user_field with
+    | None -> raise (Error "Unexpected: no action stored")
+    | Some user -> user
+
+  let read (request : Dream.request) : unit =
+    let action = get_action request in
+    let user = get_user request in
     state.total := add_read !(state.total);
     update_hashtbl state.per_action action add_read;
     update_hashtbl state.per_user user.name add_read
 
-  let write (action : string) (user : Firebase.Minimal_user.t) : unit =
+  let write (request : Dream.request) : unit =
+    let action = get_action request in
+    let user = get_user request in
     state.total := add_write !(state.total);
     update_hashtbl state.per_action action add_write;
     update_hashtbl state.per_user user.name add_write
 
-  let summary () =
-    to_yojson state
+  let summary : Dream.route = Dream.get "stats" @@ fun _ ->
+    Dream.json ~status:`OK (JSON.to_string (to_yojson state))
+
+  let routes = [summary]
 end

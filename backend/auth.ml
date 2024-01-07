@@ -16,8 +16,8 @@ end
 
 module Make
     (Firebase_ops : Firebase_ops.FIREBASE_OPS)
-    (Token_refresher : Token_refresher.TOKEN_REFRESHER)
     (Google_certificates : Google_certificates.GOOGLE_CERTIFICATES)
+    (Stats : Stats.STATS)
     (Jwt : Jwt.JWT)
     : AUTH = struct
 
@@ -52,15 +52,14 @@ module Make
             fail `Unauthorized "Authorization token is invalid"
           | uid ->
             Dream.log "Checking user";
-            let* token = Token_refresher.get_token request in
-            let* user_doc = Firebase_ops.User.get token uid in
+            let* user_doc = Firebase_ops.User.get request uid in
             match Result.bind (Option.to_result ~none:"does not exist" user_doc) Firebase.User.of_yojson with
             | Error _ -> fail `Unauthorized "User does not exist or is broken"
             | Ok user ->
               if user.verified then begin
                 (* The user has a verified account, so we can finally call the handler *)
                 Dream.set_field request user_field (uid, user);
-                Dream.log "Authorized!";
+                Stats.set_user request (Firebase.User.to_minimal_user uid user);
                 handler request
               end else
                 fail `Unauthorized "User is not verified"

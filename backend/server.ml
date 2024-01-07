@@ -1,14 +1,16 @@
 module Google_certificates = Google_certificates.Impl
 module Jwt = Jwt.Impl
 module Token_refresher = Token_refresher.Make(Jwt)
-module Firebase_ops = Firebase_ops.Make(Firebase_primitives.Impl)
-module Auth = Auth.Make(Firebase_ops)(Token_refresher)(Google_certificates)(Jwt)
-module Game = Game.Make(Auth)(Token_refresher)(Firebase_ops)
+module Firebase_ops = Firebase_ops.Make(Firebase_primitives.Make(Token_refresher)(Stats.Impl))
+module Stats = Stats.Impl
+module Auth = Auth.Make(Firebase_ops)(Google_certificates)(Stats)(Jwt)
+module Game = Game.Make(Auth)(Firebase_ops)(Stats)
 
 let api = [
     Dream.scope "/" [Token_refresher.middleware !Options.service_account_file; Auth.middleware]
     @@ List.concat [
       Game.routes;
+      Stats.routes;
     ];
   ]
 
