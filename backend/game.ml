@@ -32,14 +32,16 @@ module Make
         (* Create the game, then the config room, then the chat room *)
         let game = Firebase.Game.initial game_name creator in
         let* game_id = Firebase_ops.Game.create request game in
+        Stats.set_game_id request game_id;
         let config_room = Firebase.Config_room.initial creator in
         let* _ = Firebase_ops.Config_room.create request game_id config_room in
         let* _ = Firebase_ops.Chat.create request game_id in
         json_response `Created (`Assoc [("id", `String game_id)])
 
   let get : Dream.route = Dream.get "game/:game_id" @@ fun request ->
-    Stats.set_action request "GET game";
     let game_id = Dream.param request "game_id" in
+    Stats.set_action request "GET game";
+    Stats.set_game_id request game_id;
     match Dream.query request "onlyGameName" with
     | None ->
       let* game = Firebase_ops.Game.get request game_id in
@@ -54,8 +56,9 @@ module Make
       | Some name -> json_response `OK (`Assoc [("gameName", `String name)])
 
   let delete : Dream.route = Dream.delete "game/:game_id" @@ fun request ->
-    Stats.set_action request "DELETE game";
     let game_id = Dream.param request "game_id" in
+    Stats.set_action request "DELETE game";
+    Stats.set_game_id request game_id;
     let* _ = Firebase_ops.Game.delete request game_id in
     Dream.empty `OK
 
@@ -231,11 +234,12 @@ module Make
       with Yojson.Json_error error -> Error error
 
   let change : Dream.route = Dream.post "game/:game_id" @@ fun request ->
-    let game_id = Dream.param request "game_id" in
     match Dream.query request "action" with
     | None -> fail `Bad_Request "Missing action"
     | Some action ->
+    let game_id = Dream.param request "game_id" in
       Stats.set_action request (Printf.sprintf "POST game %s" action);
+      Stats.set_game_id request game_id;
       Firebase_ops.transaction request @@ fun () ->
       match action with
       | "acceptConfig" -> accept_config request game_id
