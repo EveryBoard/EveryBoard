@@ -110,7 +110,6 @@ module Game = struct
 
     let hard_draw = 0
     let resign = 1
-    let escape = 2
     let victory = 3
     let timeout = 4
     let unachieved = 5
@@ -119,7 +118,7 @@ module Game = struct
   end
 
   module Updates = struct
-    module Starting = struct
+    module Start = struct
       type t = {
         player_zero: Minimal_user.t [@key "playerZero"];
         player_one: Minimal_user.t [@key "playerOne"];
@@ -145,19 +144,24 @@ module Game = struct
         }
     end
 
-    module Finishing = struct
+    module End = struct
       type t = {
         winner: Minimal_user.t option;
         loser: Minimal_user.t option;
         result: Game_result.t;
+        score_player_zero: int option [@key "scorePlayerZero"];
+        score_player_one: int option [@key "scorePlayerZero"];
       }
       [@@deriving yojson]
 
-      let get ?(winner : Minimal_user.t option) ?(loser : Minimal_user.t option) (result : Game_result.t) : t =
-        { winner; loser; result }
+      let get ?(winner : Minimal_user.t option) ?(loser : Minimal_user.t option) ?(scores : (int * int) option) (result : Game_result.t) : t =
+        let (score_player_zero, score_player_one) = match scores with
+          | None -> (None, None)
+          | Some (score0, score1) -> (Some score0, Some score1) in
+        { winner; loser; result; score_player_zero; score_player_one }
     end
 
-    module Turn = struct
+    module TakeBack = struct
       type t = {
         turn: int;
       }
@@ -165,6 +169,22 @@ module Game = struct
 
       let get (turn : int) : t =
         { turn }
+    end
+
+    module EndTurn = struct
+      type t = {
+        turn: int;
+        score_player_zero: int option [@key "scorePlayerZero"];
+        score_player_one: int option [@key "scorePlayerOne"];
+      }
+      [@@deriving yojson]
+
+      let get ?(scores : (int * int) option) (turn : int) : t =
+        let new_turn = turn+1 in
+        let (score_player_zero, score_player_one) = match scores with
+        | Some (score0, score1) -> (Some score0, Some score1)
+        | None -> (None, None) in
+        { turn = new_turn; score_player_zero; score_player_one }
     end
   end
 
@@ -197,7 +217,7 @@ module Game = struct
   }
 
   let rematch (game_name : string) (config_room : Config_room.t) : t =
-    let starting = Updates.Starting.get config_room in
+    let starting = Updates.Start.get config_room in
     let initial_game = initial game_name config_room.creator in
     { initial_game with
       player_zero = starting.player_zero;
@@ -255,16 +275,16 @@ module Game = struct
       }
       [@@deriving yojson]
 
-      let add_time (user : Minimal_user.t) (kind : [ `Turn | `Global ]) =
+      let add_time (user : Minimal_user.t) (kind : [ `Turn | `Global ]) : t =
         let time = !External.now () in
         let action = match kind with
           | `Turn -> "AddTurnTime"
           | `Global -> "AddGlobalTime" in
         { eventType = "Action"; action; user; time }
-      let start_game user =
+      let start_game (user : Minimal_user.t) : t =
         let time = !External.now () in
         { eventType = "Action"; action = "StartGame"; user; time }
-      let end_game user =
+      let end_game (user : Minimal_user.t) : t =
         let time = !External.now () in
         { eventType = "Action"; action = "EndGame"; user; time }
     end

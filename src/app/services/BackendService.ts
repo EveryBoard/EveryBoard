@@ -176,4 +176,53 @@ export class BackendService {
     public async addTurnTime(gameId: string): Promise<void> {
         return this.gameAction(gameId, 'addTurnTime');
     }
+
+    /** Updates the score and increase the turn */
+    public async endTurn(gameId: string, scores: MGPOptional<readonly [number, number]>): Promise<void> {
+        let endpoint: string = `game/${gameId}?action=endTurn`;
+        if (scores.isPresent()) {
+            const score0: number = scores.get()[0];
+            const score1: number = scores.get()[1];
+            endpoint += `&score0=${score0}&score1=${score1}`;
+        }
+        const result: MGPFallible<Response> = await this.performRequest('POST', endpoint);
+        this.assertSuccess(result);
+    }
+
+    /** End the game with a draw */
+    public async draw(gameId: string, scores: MGPOptional<readonly [number, number]>): Promise<void> {
+        let endpoint: string = `game/${gameId}?action=draw`;
+        if (scores.isPresent()) {
+            const score0: number = scores.get()[0];
+            const score1: number = scores.get()[1];
+            endpoint += `&score0=${score0}&score1=${score1}`;
+        }
+        const result: MGPFallible<Response> = await this.performRequest('POST', endpoint);
+        this.assertSuccess(result);
+    }
+
+    /** End the game with a victory */
+    public async victory(gameId: string,
+                         scores: MGPOptional<readonly [number, number]>,
+                         winner: MinimalUser,
+                         loser: MinimalUser): Promise<void> {
+        const winnerURLEncoded: string = encodeURIComponent(JSON.stringify(winner));
+        const loserURLEncoded: string = encodeURIComponent(JSON.stringify(loser));
+        let endpoint: string = `game/${gameId}?action=victory&winer=${winnerURLEncoded}&loser=${loserURLEncoded}`;
+        if (scores.isPresent()) {
+            const score0: number = scores.get()[0];
+            const score1: number = scores.get()[1];
+            endpoint += `&score0=${score0}&score1=${score1}`;
+        }
+        const result: MGPFallible<Response> = await this.performRequest('POST', endpoint);
+        this.assertSuccess(result);
+    }
+
+    /** Play a move */
+    public async move(gameId: string, move: JSONValue): Promise<void> {
+        const moveURLEncoded: string = encodeURIComponent(JSON.stringify(move));
+        const endpoint: string = `game/${gameId}&move=${moveURLEncoded}`;
+        const result: MGPFallible<Response> = await this.performRequest('POST', endpoint);
+        this.assertSuccess(result);
+    }
 }

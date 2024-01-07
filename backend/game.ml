@@ -67,9 +67,9 @@ module Make
     | Error _ -> fail_transaction `Not_Found "Game does not exist"
     | Ok config_room ->
       let* _ = Firebase_ops.Config_room.accept token game_id in
-      let starting_config = Firebase.Game.Updates.Starting.get config_room in
+      let starting_config = Firebase.Game.Updates.Start.get config_room in
       let accepter = Auth.get_minimal_user request in
-      let* _ = Firebase_ops.Game.update token game_id (Firebase.Game.Updates.Starting.to_yojson starting_config) in
+      let* _ = Firebase_ops.Game.update token game_id (Firebase.Game.Updates.Start.to_yojson starting_config) in
       let event = Firebase.Game.Event.(Action (Action.start_game accepter)) in
       let* _ = Firebase_ops.Game.add_event token game_id event in
       let* response = Dream.empty `OK in
@@ -85,8 +85,8 @@ module Make
         let player_one = Option.get game.player_one in
         let winner = if minimal_user = game.player_zero then player_one else player_zero in
         let loser = minimal_user in
-        let update = Firebase.Game.Updates.Finishing.get ~winner ~loser Firebase.Game.Game_result.resign in
-        let* _ = Firebase_ops.Game.update token game_id (Firebase.Game.Updates.Finishing.to_yojson update) in
+        let update = Firebase.Game.Updates.End.get ~winner ~loser Firebase.Game.Game_result.resign in
+        let* _ = Firebase_ops.Game.update token game_id (Firebase.Game.Updates.End.to_yojson update) in
         let resigner = Auth.get_minimal_user request in
         let event = Firebase.Game.Event.(Action (Action.end_game resigner)) in
         let* _ = Firebase_ops.Game.add_event token game_id event in
@@ -95,8 +95,8 @@ module Make
 
   let notify_timeout (request : Dream.request) (token : token) (game_id : string) (winner : Firebase.Minimal_user.t) (loser : Firebase.Minimal_user.t) =
     (* TODO: don't trust the client, we need to get winner and loser ourselves *)
-    let update = Firebase.Game.Updates.Finishing.get ~winner ~loser Firebase.Game.Game_result.timeout in
-    let* _ = Firebase_ops.Game.update token game_id (Firebase.Game.Updates.Finishing.to_yojson update) in
+    let update = Firebase.Game.Updates.End.get ~winner ~loser Firebase.Game.Game_result.timeout in
+    let* _ = Firebase_ops.Game.update token game_id (Firebase.Game.Updates.End.to_yojson update) in
     let requester = Auth.get_minimal_user request in
     let event = Firebase.Game.Event.(Action (Action.end_game requester)) in
     let* _ = Firebase_ops.Game.add_event token game_id event in
@@ -127,8 +127,8 @@ module Make
       let accept = Firebase.Game.Event.(Reply (Reply.accept user "Draw")) in
       let* _ = Firebase_ops.Game.add_event token game_id accept in
       let player = if user = game.player_zero then 0 else 1 in
-      let update = Firebase.Game.Updates.Finishing.get (Firebase.Game.Game_result.agreed_draw_by player) in
-      let* _ = Firebase_ops.Game.update token game_id (Firebase.Game.Updates.Finishing.to_yojson update) in
+      let update = Firebase.Game.Updates.End.get (Firebase.Game.Game_result.agreed_draw_by player) in
+      let* _ = Firebase_ops.Game.update token game_id (Firebase.Game.Updates.End.to_yojson update) in
       let game_end = Firebase.Game.Event.(Action (Action.end_game user)) in
       let* _ = Firebase_ops.Game.add_event token game_id game_end in
       let* response = Dream.empty `OK in
@@ -176,8 +176,8 @@ module Make
         else game.turn -1 in
       let event = Firebase.Game.Event.(Reply (Reply.accept user "TakeBack")) in
       let* _ = Firebase_ops.Game.add_event token game_id event in
-      let update = Firebase.Game.Updates.Turn.get new_turn in
-      let* _ = Firebase_ops.Game.update token game_id (Firebase.Game.Updates.Turn.to_yojson update) in
+      let update = Firebase.Game.Updates.TakeBack.get new_turn in
+      let* _ = Firebase_ops.Game.update token game_id (Firebase.Game.Updates.TakeBack.to_yojson update) in
       let* response = Dream.empty `OK in
       Lwt.return (Ok response)
 
@@ -185,6 +185,36 @@ module Make
     let user = Auth.get_minimal_user request in
     let event = Firebase.Game.Event.(Action (Action.add_time user kind)) in
     let* _ = Firebase_ops.Game.add_event token game_id event in
+    let* response = Dream.empty `OK in
+    Lwt.return (Ok response)
+
+  let scores_from_request (request : Dream.request) : (int * int) option =
+    match (Dream.query request "score0", Dream.query request "score1") with
+    | (Some score0, Some score1) -> Some (int_of_string score0, int_of_string score1)
+    | _ -> None
+
+  let end_turn (request : Dream.request) (token : token) (game_id : string) =
+    let* game_doc = Firebase_ops.Game.get token game_id in
+    match Option.to_result ~none:"does not exist" game_doc >>= Firebase.Game.of_yojson with
+    | Error _ -> fail_transaction `Not_Found "Game not found"
+    | Ok game ->
+      let scores = scores_from_request request in
+      let update = Firebase.Game.Updates.EndTurn.get ?scores game.turn in
+      let* _ = Firebase_ops.Game.update token game_id (Firebase.Game.Updates.EndTurn.to_yojson update) in
+      let* response = Dream.empty `OK in
+      Lwt.return (Ok response)
+
+  let draw (request : Dream.request) (token : token) (game_id : string) =
+    let scores = scores_from_request request in
+    let update = Firebase.Game.Updates.End.get ?scores Firebase.Game.Game_result.hard_draw in
+    let* _ = Firebase_ops.Game.update token game_id (Firebase.Game.Updates.End.to_yojson update) in
+    let* response = Dream.empty `OK in
+    Lwt.return (Ok response)
+
+  let victory (request : Dream.request) (token : token) (game_id : string) (winner : Firebase.Minimal_user.t) (loser : Firebase.Minimal_user.t) =
+    let scores = scores_from_request request in
+    let update = Firebase.Game.Updates.End.get ~winner ~loser ?scores Firebase.Game.Game_result.victory in
+    let* _ = Firebase_ops.Game.update token game_id (Firebase.Game.Updates.End.to_yojson update) in
     let* response = Dream.empty `OK in
     Lwt.return (Ok response)
 
@@ -220,9 +250,16 @@ module Make
     | Some "refuseTakeBack" -> reject request token game_id "TakeBack"
     | Some "addGlobalTime" -> add_time request token game_id `Global
     | Some "addTurnTime" -> add_time request token game_id `Turn
-    | Some "updateScore" -> failwith "TODO"
-    | Some "victory" -> failwith "TODO"
-    | Some "draw" -> failwith "TODO"
+    | Some "endTurn" -> end_turn request token game_id
+    | Some "draw" -> draw request token game_id
+    | Some "victory" ->
+      let winner = get_json_param request "winner" >>= Firebase.Minimal_user.of_yojson in
+      let loser = get_json_param request "loser" >>= Firebase.Minimal_user.of_yojson in
+      begin match (winner, loser) with
+        | (Ok winner, Ok loser) -> victory request token game_id winner loser
+        | _ -> fail_transaction `Bad_Request "Missing or invalid winner or loser parameter"
+      end
+    | Some "move" -> failwith "TODO"
     | _ -> failwith "TODO"
 
 
