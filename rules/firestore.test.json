@@ -163,8 +163,7 @@ service cloud.firestore {
         function playerAddsEvent(part, event) {
             return userIsVerified() &&
                    (event.user.id == request.auth.uid) &&
-                   ((event.user.id == part.playerZero.id) ||
-                    (event.user.id == part.playerOne.id))
+                   (eventUserIsPlayerZero(event, part) || eventUserIsPlayerOne(event, part));
         }
         function validEvent(event) {
             return hasField(event, 'eventType') &&
@@ -204,8 +203,8 @@ service cloud.firestore {
             // Move addition is performed before updating the part turn
             // This way, if move addition fails, the part isn't corrupt
             let part = get(/databases/$(database)/documents/parts/$(partId)).data;
-            let isPlayerTurn = ((part.turn % 2 == 0) && moveEvent.user.id == part.playerZero.id) ||
-                               ((part.turn % 2 == 1) && moveEvent.user.id == part.playerOne.id);
+            let isPlayerTurn = ((part.turn % 2 == 0) && eventUserIsPlayerZero(moveEvent, part)) ||
+                               ((part.turn % 2 == 1) && eventUserIsPlayerOne(moveEvent, part));
             return validEvent(moveEvent) && moveEvent.eventType == 'Move' &&
                    moveEvent.user.id == request.auth.uid &&
                    hasField(moveEvent, 'move') &&
@@ -282,8 +281,14 @@ service cloud.firestore {
         function userIsPlayerZero(part) {
             return part.playerZero.id == request.auth.uid;
         }
+        function eventUserIsPlayerZero(event, part) {
+            return userIsPlayerZero(part) && event.user.id == part.playerZero.id;
+        }
         function userIsPlayerOne(part) {
             return hasField(part, 'playerOne') && part.playerOne.id == request.auth.uid;
+        }
+        function eventUserIsPlayerOne(event, part) {
+            return userIsPlayerOne(part) && event.user.id == part.playerOne.id;
         }
         function safeTurnIncrease(oldTurn, newTurn) {
             return newTurn == oldTurn + 1;

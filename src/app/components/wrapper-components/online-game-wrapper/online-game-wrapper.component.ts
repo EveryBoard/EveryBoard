@@ -276,6 +276,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         if (this.players[0].equalsValue(user)) {
             return Player.ZERO;
         } else {
+            Utils.assert(this.players[1].equalsValue(user), 'MinimalUser should match player one');
             return Player.ONE;
         }
     }

@@ -7,6 +7,7 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { Timestamp } from 'firebase/firestore';
 import { getMillisecondsElapsed } from 'src/app/utils/TimeUtils';
 import { MinimalUser } from 'src/app/domain/MinimalUser';
+import { Utils } from 'src/app/utils/utils';
 
 /**
  * The time manager manages clocks of each player.
@@ -101,6 +102,7 @@ export class OGWCTimeManagerService {
         if (this.players[0].equalsValue(user)) {
             return Player.ZERO;
         } else {
+            Utils.assert(this.players[1].equalsValue(user), 'MinimalUser should match player one');
             return Player.ONE;
         }
     }
