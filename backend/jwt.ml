@@ -1,5 +1,7 @@
 open Utils
 
+(** This module manages JSON Web Tokens (JWT), which are used to authentify
+    ourselves to the firestore server, and to authentify users to ourselves. *)
 module type JWT = sig
 
   (* A JWT token *)
@@ -9,12 +11,16 @@ module type JWT = sig
     signature: string; (** The signature of the header + payload *)
   }
 
+  (** Convert a token to its string representation that is suitable to be passed around to another service *)
   val to_string : t -> string
 
-  val make : string -> Mirage_crypto_pk.Rsa.priv -> string list -> string -> t
+  (** Create a new token from an email, a private key, a set of scopes, and an audience *)
+  val make : string -> private_key -> string list -> string -> t
 
+  (** Parse an existing token from its string representation *)
   val parse : string -> t
 
+  (** Verify that a token has been signed by one of the certificates passed along. *)
   val verify_and_get_uid : t -> string -> (string * X509.Certificate.t) list -> string
 end
 
@@ -29,15 +35,15 @@ module Impl : JWT = struct
   let b64 = Dream.to_base64url
 
   (** Sign a string with RS256 *)
-  let sign (private_key : Mirage_crypto_pk.Rsa.priv) (content : string) : string =
+  let sign (private_key : private_key) (content : string) : string =
     let pkcs1_sha256 m =  Mirage_crypto_pk.Rsa.PKCS1.sign ~hash:`SHA256 ~key:private_key (`Message m) in
     content
     |> Cstruct.of_string
     |> pkcs1_sha256
     |> Cstruct.to_string
 
-  (** Construct a JWT from an email (iss) private key (pk), a client email, a set of scopes and an audience *)
-  let make (iss : string) (pk : Mirage_crypto_pk.Rsa.priv) (scopes : string list) (audience : string) : t =
+  (** Construct a JWT from an email [iss] private key [pk], a set of scopes [scopes] and an audience [audience] *)
+  let make (iss : string) (pk : private_key) (scopes : string list) (audience : string) : t =
     let open JSON in
     let now = !External.now () in
     Printf.printf "It is now %f\n" now;

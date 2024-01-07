@@ -1,12 +1,16 @@
 open Utils
 
+(** The token refresher manages the admin token of the backend. When a request
+need to be done to firestore, the token can be passed in the header with the
+[header] helper. This may trigger a renewal of the firestore admin token if ours
+is expired. This is all handled automatically by this middleware *)
 module type TOKEN_REFRESHER = sig
 
-  val get_token : Dream.request -> string Lwt.t
-  (** Return the access token that can be used to make firebase requests. Refreshes it before if needed *)
+  (** Return the header required to pass the token along with a query *)
+  val header : Dream.request -> Cohttp.Header.t Lwt.t
 
-  val middleware : string -> Dream.middleware
   (** The middleware that has to be installed in order to use the token refresher *)
+  val middleware : string -> Dream.middleware
 
 end
 
@@ -19,7 +23,7 @@ module Make (Jwt : Jwt.JWT) : TOKEN_REFRESHER = struct
 
   type service_account = {
     email : string;
-    private_key : Mirage_crypto_pk.Rsa.priv;
+    private_key : private_key;
   }
 
   let read_service_account_from_file (file : string) : service_account =
@@ -69,6 +73,10 @@ module Make (Jwt : Jwt.JWT) : TOKEN_REFRESHER = struct
     match Dream.field request get_token_field with
     | None -> raise (Error "get_token_field not set, the middleware is probably missing")
     | Some f -> f ()
+
+  let header (request : Dream.request) : Cohttp.Header.t Lwt.t =
+    let* token = get_token request in
+    Lwt.return (Cohttp.Header.of_list [authorization_header token])
 
   let middleware (service_account_file : string) : Dream.middleware =
     let service_account = read_service_account_from_file service_account_file in

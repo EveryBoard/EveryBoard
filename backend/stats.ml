@@ -1,11 +1,12 @@
 open Utils
+open Domain
 
 module type STATS = sig
   (** Remember which action we are doing in order to track reads and writes *)
   val set_action : Dream.request -> string -> unit
 
   (** Remember which user is doing something in order to track reads and writes *)
-  val set_user : Dream.request -> Firebase.Minimal_user.t -> unit
+  val set_user : Dream.request -> MinimalUser.t -> unit
 
   (** Remember on which game we are doing the requests *)
   val set_game_id : Dream.request -> string -> unit
@@ -27,10 +28,10 @@ module Impl : STATS = struct
   let set_action (request : Dream.request) (action : string) =
     Dream.set_field request action_field action
 
-  let user_field : Firebase.Minimal_user.t Dream.field =
+  let user_field : MinimalUser.t Dream.field =
     Dream.new_field ~name:"user" ()
 
-  let set_user (request : Dream.request) (user : Firebase.Minimal_user.t) =
+  let set_user (request : Dream.request) (user : MinimalUser.t) =
     Dream.set_field request user_field user
 
   let game_id_field : string Dream.field =
@@ -85,7 +86,7 @@ module Impl : STATS = struct
     Dream.field request field
     |> Option.value ~default
 
-  let no_user : Firebase.Minimal_user.t = {
+  let no_user : MinimalUser.t = {
     id = "none";
     name = "none";
   }

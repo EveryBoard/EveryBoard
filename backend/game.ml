@@ -10,7 +10,7 @@ end
 
 module Make
     (Auth : Auth.AUTH)
-    (Firebase_ops : Firebase_ops.FIREBASE_OPS)
+    (Firestore : Firestore.FIRESTORE)
     (Stats : Stats.STATS)
     : GAME = struct
 
@@ -28,14 +28,14 @@ module Make
       match user.current_game with
       | Some _ -> Dream.respond ~status:`Bad_Request "User is already in a game"
       | None ->
-        let creator = Firebase.User.to_minimal_user uid user in
+        let creator = Domain.User.to_minimal_user uid user in
         (* Create the game, then the config room, then the chat room *)
-        let game = Firebase.Game.initial game_name creator in
-        let* game_id = Firebase_ops.Game.create request game in
+        let game = Domain.Game.initial game_name creator in
+        let* game_id = Firestore.Game.create request game in
         Stats.set_game_id request game_id;
-        let config_room = Firebase.Config_room.initial creator in
-        let* _ = Firebase_ops.Config_room.create request game_id config_room in
-        let* _ = Firebase_ops.Chat.create request game_id in
+        let config_room = Domain.ConfigRoom.initial creator in
+        let* _ = Firestore.ConfigRoom.create request game_id config_room in
+        let* _ = Firestore.Chat.create request game_id in
         json_response `Created (`Assoc [("id", `String game_id)])
 
   let get : Dream.route = Dream.get "game/:game_id" @@ fun request ->
@@ -44,13 +44,13 @@ module Make
     Stats.set_game_id request game_id;
     match Dream.query request "onlyGameName" with
     | None ->
-      let* game = Firebase_ops.Game.get request game_id in
+      let* game = Firestore.Game.get request game_id in
       begin match game with
         | None -> fail `Not_Found "There is no game with this id"
         | Some game_json -> json_response `OK game_json
       end
     | Some _ ->
-      let* game_name : string option = Firebase_ops.Game.get_name request game_id in
+      let* game_name : string option = Firestore.Game.get_name request game_id in
       match game_name with
       | None -> fail `Not_Found "There is no game with this id"
       | Some name -> json_response `OK (`Assoc [("gameName", `String name)])
@@ -59,26 +59,26 @@ module Make
     let game_id = Dream.param request "game_id" in
     Stats.set_action request "DELETE game";
     Stats.set_game_id request game_id;
-    let* _ = Firebase_ops.Game.delete request game_id in
+    let* _ = Firestore.Game.delete request game_id in
     Dream.empty `OK
 
   let accept_config (request : Dream.request) (game_id : string) =
-    let* config_room_doc = Firebase_ops.Config_room.get request game_id in
-    match Option.to_result ~none:"does not exist" config_room_doc >>= Firebase.Config_room.of_yojson with
+    let* config_room_doc = Firestore.ConfigRoom.get request game_id in
+    match Option.to_result ~none:"does not exist" config_room_doc >>= Domain.ConfigRoom.of_yojson with
     | Error _ -> fail_transaction `Not_Found "Game does not exist"
     | Ok config_room ->
-      let* _ = Firebase_ops.Config_room.accept request game_id in
-      let starting_config = Firebase.Game.Updates.Start.get config_room in
+      let* _ = Firestore.ConfigRoom.accept request game_id in
+      let starting_config = Domain.Game.Updates.Start.get config_room in
       let accepter = Auth.get_minimal_user request in
-      let* _ = Firebase_ops.Game.update request game_id (Firebase.Game.Updates.Start.to_yojson starting_config) in
-      let event = Firebase.Game.Event.(Action (Action.start_game accepter)) in
-      let* _ = Firebase_ops.Game.add_event request game_id event in
+      let* _ = Firestore.Game.update request game_id (Domain.Game.Updates.Start.to_yojson starting_config) in
+      let event = Domain.Game.Event.(Action (Action.start_game accepter)) in
+      let* _ = Firestore.Game.add_event request game_id event in
       let* response = Dream.empty `OK in
       Lwt.return (Ok response)
 
   let resign (request : Dream.request) (game_id : string) =
-      let* game_doc = Firebase_ops.Game.get request game_id in
-      match Option.to_result ~none:"does not exist" game_doc >>= Firebase.Game.of_yojson with
+      let* game_doc = Firestore.Game.get request game_id in
+      match Option.to_result ~none:"does not exist" game_doc >>= Domain.Game.of_yojson with
       | Error _ -> fail_transaction `Not_Found "Game not found"
       | Ok game ->
         let minimal_user = Auth.get_minimal_user request in
@@ -86,87 +86,87 @@ module Make
         let player_one = Option.get game.player_one in
         let winner = if minimal_user = game.player_zero then player_one else player_zero in
         let loser = minimal_user in
-        let update = Firebase.Game.Updates.End.get ~winner ~loser Firebase.Game.Game_result.resign in
-        let* _ = Firebase_ops.Game.update request game_id (Firebase.Game.Updates.End.to_yojson update) in
+        let update = Domain.Game.Updates.End.get ~winner ~loser Domain.Game.GameResult.resign in
+        let* _ = Firestore.Game.update request game_id (Domain.Game.Updates.End.to_yojson update) in
         let resigner = Auth.get_minimal_user request in
-        let event = Firebase.Game.Event.(Action (Action.end_game resigner)) in
-        let* _ = Firebase_ops.Game.add_event request game_id event in
+        let event = Domain.Game.Event.(Action (Action.end_game resigner)) in
+        let* _ = Firestore.Game.add_event request game_id event in
         let* response = Dream.empty `OK in
         Lwt.return (Ok response)
 
-  let notify_timeout (request : Dream.request) (game_id : string) (winner : Firebase.Minimal_user.t) (loser : Firebase.Minimal_user.t) =
+  let notify_timeout (request : Dream.request) (game_id : string) (winner : Domain.MinimalUser.t) (loser : Domain.MinimalUser.t) =
     (* TODO: don't trust the client, we need to get winner and loser ourselves *)
-    let update = Firebase.Game.Updates.End.get ~winner ~loser Firebase.Game.Game_result.timeout in
-    let* _ = Firebase_ops.Game.update request game_id (Firebase.Game.Updates.End.to_yojson update) in
+    let update = Domain.Game.Updates.End.get ~winner ~loser Domain.Game.GameResult.timeout in
+    let* _ = Firestore.Game.update request game_id (Domain.Game.Updates.End.to_yojson update) in
     let requester = Auth.get_minimal_user request in
-    let event = Firebase.Game.Event.(Action (Action.end_game requester)) in
-    let* _ = Firebase_ops.Game.add_event request game_id event in
+    let event = Domain.Game.Event.(Action (Action.end_game requester)) in
+    let* _ = Firestore.Game.add_event request game_id event in
     let* response = Dream.empty `OK in
     Lwt.return (Ok response)
 
   let propose (request : Dream.request) (game_id : string) (proposition : string) =
     let user = Auth.get_minimal_user request in
-    let event = Firebase.Game.Event.(Request (Request.make user proposition)) in
-    let* _ = Firebase_ops.Game.add_event request game_id event in
+    let event = Domain.Game.Event.(Request (Request.make user proposition)) in
+    let* _ = Firestore.Game.add_event request game_id event in
     let* response = Dream.empty `OK in
     Lwt.return (Ok response)
 
   let reject (request : Dream.request) (game_id : string) (proposition : string) =
     let user = Auth.get_minimal_user request in
-    let event = Firebase.Game.Event.(Reply (Reply.refuse user proposition)) in
-    let* _ = Firebase_ops.Game.add_event request game_id event in
+    let event = Domain.Game.Event.(Reply (Reply.refuse user proposition)) in
+    let* _ = Firestore.Game.add_event request game_id event in
     let* response = Dream.empty `OK in
     Lwt.return (Ok response)
 
   let accept_draw (request : Dream.request) (game_id : string) =
     (* TODO: error handling: introduce a "abort" error that gives an HTTP response and is intercepted in the main route *)
-    let* game_doc = Firebase_ops.Game.get request game_id in
-    match Option.to_result ~none:"does not exist" game_doc >>= Firebase.Game.of_yojson with
+    let* game_doc = Firestore.Game.get request game_id in
+    match Option.to_result ~none:"does not exist" game_doc >>= Domain.Game.of_yojson with
     | Error _ -> fail_transaction `Not_Found "Game not found"
     | Ok game ->
       let user = Auth.get_minimal_user request in
-      let accept = Firebase.Game.Event.(Reply (Reply.accept user "Draw")) in
-      let* _ = Firebase_ops.Game.add_event request game_id accept in
+      let accept = Domain.Game.Event.(Reply (Reply.accept user "Draw")) in
+      let* _ = Firestore.Game.add_event request game_id accept in
       let player = if user = game.player_zero then 0 else 1 in
-      let update = Firebase.Game.Updates.End.get (Firebase.Game.Game_result.agreed_draw_by player) in
-      let* _ = Firebase_ops.Game.update request game_id (Firebase.Game.Updates.End.to_yojson update) in
-      let game_end = Firebase.Game.Event.(Action (Action.end_game user)) in
-      let* _ = Firebase_ops.Game.add_event request game_id game_end in
+      let update = Domain.Game.Updates.End.get (Domain.Game.GameResult.agreed_draw_by player) in
+      let* _ = Firestore.Game.update request game_id (Domain.Game.Updates.End.to_yojson update) in
+      let game_end = Domain.Game.Event.(Action (Action.end_game user)) in
+      let* _ = Firestore.Game.add_event request game_id game_end in
       let* response = Dream.empty `OK in
       Lwt.return (Ok response)
 
   let accept_rematch (request : Dream.request) (game_id : string) =
-    let* game_doc = Firebase_ops.Game.get request game_id in
-    match Option.to_result ~none:"does not exist" game_doc >>= Firebase.Game.of_yojson with
+    let* game_doc = Firestore.Game.get request game_id in
+    match Option.to_result ~none:"does not exist" game_doc >>= Domain.Game.of_yojson with
     | Error _ -> fail_transaction `Not_Found "Game not found"
     | Ok game ->
-      let* config_room_doc = Firebase_ops.Game.get request game_id in
-      match Option.to_result ~none:"does not exist" config_room_doc >>= Firebase.Config_room.of_yojson with
+      let* config_room_doc = Firestore.Game.get request game_id in
+      match Option.to_result ~none:"does not exist" config_room_doc >>= Domain.ConfigRoom.of_yojson with
       | Error _ -> fail_transaction `Not_Found "Config room not found"
       | Ok config_room ->
         (* The user accepting the rematch becomes the creator *)
         let creator = Auth.get_minimal_user request in
         let (chosen_opponent, first_player) =
           if game.player_zero = creator
-          then (Option.get game.player_one, Firebase.Config_room.First_player.chosen_player)
-          else (game.player_zero, Firebase.Config_room.First_player.creator) in
+          then (Option.get game.player_one, Domain.ConfigRoom.FirstPlayer.chosen_player)
+          else (game.player_zero, Domain.ConfigRoom.FirstPlayer.creator) in
         let rematch_config_room =
-          Firebase.Config_room.rematch config_room first_player creator chosen_opponent in
-        let rematch_game = Firebase.Game.rematch game.type_game rematch_config_room  in
-        let* rematch_id = Firebase_ops.Game.create request rematch_game in
+          Domain.ConfigRoom.rematch config_room first_player creator chosen_opponent in
+        let rematch_game = Domain.Game.rematch game.type_game rematch_config_room  in
+        let* rematch_id = Firestore.Game.create request rematch_game in
         let user = Auth.get_minimal_user request in
-        let* _ = Firebase_ops.Config_room.create request rematch_id config_room in
-        let* _ = Firebase_ops.Chat.create request rematch_id in
-        let accept_event = Firebase.Game.Event.(Reply (Reply.accept user "Rematch")) in
-        let* _ = Firebase_ops.Game.add_event request game_id accept_event in
-        let start_event = Firebase.Game.Event.(Action (Action.start_game user)) in
-        let* _ = Firebase_ops.Game.add_event request game_id start_event in
+        let* _ = Firestore.ConfigRoom.create request rematch_id config_room in
+        let* _ = Firestore.Chat.create request rematch_id in
+        let accept_event = Domain.Game.Event.(Reply (Reply.accept user "Rematch")) in
+        let* _ = Firestore.Game.add_event request game_id accept_event in
+        let start_event = Domain.Game.Event.(Action (Action.start_game user)) in
+        let* _ = Firestore.Game.add_event request game_id start_event in
         let* response = json_response `Created (`Assoc [("id", `String game_id)]) in
         Lwt.return (Ok response)
 
   let accept_take_back (request : Dream.request) (game_id : string) =
-    let* game_doc = Firebase_ops.Game.get request game_id in
-    match Option.to_result ~none:"does not exist" game_doc >>= Firebase.Game.of_yojson with
+    let* game_doc = Firestore.Game.get request game_id in
+    match Option.to_result ~none:"does not exist" game_doc >>= Domain.Game.of_yojson with
     | Error _ -> fail_transaction `Not_Found "Game not found"
     | Ok game ->
       let user = Auth.get_minimal_user request in
@@ -175,17 +175,17 @@ module Make
         if game.turn mod 2 == player_value
         then game.turn - 2 (* Need to take back two turns to let the requester take back their move *)
         else game.turn -1 in
-      let event = Firebase.Game.Event.(Reply (Reply.accept user "TakeBack")) in
-      let* _ = Firebase_ops.Game.add_event request game_id event in
-      let update = Firebase.Game.Updates.TakeBack.get new_turn in
-      let* _ = Firebase_ops.Game.update request game_id (Firebase.Game.Updates.TakeBack.to_yojson update) in
+      let event = Domain.Game.Event.(Reply (Reply.accept user "TakeBack")) in
+      let* _ = Firestore.Game.add_event request game_id event in
+      let update = Domain.Game.Updates.TakeBack.get new_turn in
+      let* _ = Firestore.Game.update request game_id (Domain.Game.Updates.TakeBack.to_yojson update) in
       let* response = Dream.empty `OK in
       Lwt.return (Ok response)
 
   let add_time (request : Dream.request) (game_id : string) (kind : [ `Turn | `Global ]) =
     let user = Auth.get_minimal_user request in
-    let event = Firebase.Game.Event.(Action (Action.add_time user kind)) in
-    let* _ = Firebase_ops.Game.add_event request game_id event in
+    let event = Domain.Game.Event.(Action (Action.add_time user kind)) in
+    let* _ = Firestore.Game.add_event request game_id event in
     let* response = Dream.empty `OK in
     Lwt.return (Ok response)
 
@@ -195,34 +195,34 @@ module Make
     | _ -> None
 
   let end_turn (request : Dream.request) (game_id : string) =
-    let* game_doc = Firebase_ops.Game.get request game_id in
-    match Option.to_result ~none:"does not exist" game_doc >>= Firebase.Game.of_yojson with
+    let* game_doc = Firestore.Game.get request game_id in
+    match Option.to_result ~none:"does not exist" game_doc >>= Domain.Game.of_yojson with
     | Error _ -> fail_transaction `Not_Found "Game not found"
     | Ok game ->
       let scores = scores_from_request request in
-      let update = Firebase.Game.Updates.EndTurn.get ?scores game.turn in
-      let* _ = Firebase_ops.Game.update request game_id (Firebase.Game.Updates.EndTurn.to_yojson update) in
+      let update = Domain.Game.Updates.EndTurn.get ?scores game.turn in
+      let* _ = Firestore.Game.update request game_id (Domain.Game.Updates.EndTurn.to_yojson update) in
       let* response = Dream.empty `OK in
       Lwt.return (Ok response)
 
   let draw (request : Dream.request) (game_id : string) =
     let scores = scores_from_request request in
-    let update = Firebase.Game.Updates.End.get ?scores Firebase.Game.Game_result.hard_draw in
-    let* _ = Firebase_ops.Game.update request game_id (Firebase.Game.Updates.End.to_yojson update) in
+    let update = Domain.Game.Updates.End.get ?scores Domain.Game.GameResult.hard_draw in
+    let* _ = Firestore.Game.update request game_id (Domain.Game.Updates.End.to_yojson update) in
     let* response = Dream.empty `OK in
     Lwt.return (Ok response)
 
-  let victory (request : Dream.request) (game_id : string) (winner : Firebase.Minimal_user.t) (loser : Firebase.Minimal_user.t) =
+  let victory (request : Dream.request) (game_id : string) (winner : Domain.MinimalUser.t) (loser : Domain.MinimalUser.t) =
     let scores = scores_from_request request in
-    let update = Firebase.Game.Updates.End.get ~winner ~loser ?scores Firebase.Game.Game_result.victory in
-    let* _ = Firebase_ops.Game.update request game_id (Firebase.Game.Updates.End.to_yojson update) in
+    let update = Domain.Game.Updates.End.get ~winner ~loser ?scores Domain.Game.GameResult.victory in
+    let* _ = Firestore.Game.update request game_id (Domain.Game.Updates.End.to_yojson update) in
     let* response = Dream.empty `OK in
     Lwt.return (Ok response)
 
   let move (request : Dream.request) (game_id : string) (move : Yojson.Safe.t) =
     let user = Auth.get_minimal_user request in
-    let event = Firebase.Game.Event.(Move (Move.of_json user move)) in
-    let* _ = Firebase_ops.Game.add_event request game_id event in
+    let event = Domain.Game.Event.(Move (Move.of_json user move)) in
+    let* _ = Firestore.Game.add_event request game_id event in
     let* response = Dream.empty `OK in
     Lwt.return (Ok response)
 
@@ -240,13 +240,13 @@ module Make
     let game_id = Dream.param request "game_id" in
       Stats.set_action request (Printf.sprintf "POST game %s" action);
       Stats.set_game_id request game_id;
-      Firebase_ops.transaction request @@ fun () ->
+      Firestore.transaction request @@ fun () ->
       match action with
       | "acceptConfig" -> accept_config request game_id
       | "resign" -> resign request game_id
       | "notifyTimeout" ->
-        let winner = get_json_param request "winner" >>= Firebase.Minimal_user.of_yojson in
-        let loser = get_json_param request "loser" >>= Firebase.Minimal_user.of_yojson in
+        let winner = get_json_param request "winner" >>= Domain.MinimalUser.of_yojson in
+        let loser = get_json_param request "loser" >>= Domain.MinimalUser.of_yojson in
         begin match (winner, loser) with
           | (Ok winner, Ok loser) -> notify_timeout request game_id winner loser
           | _ -> fail_transaction `Bad_Request "Missing or invalid winner or loser parameter"
@@ -265,8 +265,8 @@ module Make
       | "endTurn" -> end_turn request game_id (* TODO: should be done with a single move request *)
       | "draw" -> draw request game_id
       | "victory" ->
-        let winner = get_json_param request "winner" >>= Firebase.Minimal_user.of_yojson in
-        let loser = get_json_param request "loser" >>= Firebase.Minimal_user.of_yojson in
+        let winner = get_json_param request "winner" >>= Domain.MinimalUser.of_yojson in
+        let loser = get_json_param request "loser" >>= Domain.MinimalUser.of_yojson in
         begin match (winner, loser) with
           | (Ok winner, Ok loser) -> victory request game_id winner loser
           | _ -> fail_transaction `Bad_Request "Missing or invalid winner or loser parameter"

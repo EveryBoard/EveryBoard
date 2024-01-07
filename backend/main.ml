@@ -7,8 +7,9 @@ let arguments_spec = [
   ("-address", Arg.Set_string Options.address, "Address on which to listen for connections");
   ("-port", Arg.Set_int Options.port, "Port on which to listen for connections");
   ("-emulator", Arg.Set Options.emulator, "Whether this is linked to a firebase emulator");
+  ("-frontend", Arg.Set_string Options.frontend_origin, "Where the frontend is hosted");
 ]
 
 let () =
-  Arg.parse arguments_spec (fun _ -> ()) "backend -project projectname -endpoint firebase-endpoint -service-account service-account-file.json -emulator";
+  Arg.parse arguments_spec (fun _ -> ()) "backend -project projectname -endpoint firebase-endpoint -service-account service-account-file.json -emulator -frontend http://localhost:4200";
   Server.start ()

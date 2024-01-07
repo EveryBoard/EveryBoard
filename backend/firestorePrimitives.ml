@@ -2,7 +2,7 @@ open Utils
 
 (** These are the primitive operations that we need to perform on firestore.
     It is a low-level API. *)
-module type FIREBASE_PRIMITIVES = sig (* TODO: rename firebase to firestore in most places *)
+module type FIRESTORE_PRIMITIVES = sig
 
   (** Get a document from its path and return it as a JSON *)
   val get_doc : Dream.request -> string -> JSON.t Lwt.t
@@ -28,20 +28,19 @@ module type FIREBASE_PRIMITIVES = sig (* TODO: rename firebase to firestore in m
 end
 
 module Make
-    (Token_refresher : Token_refresher.TOKEN_REFRESHER)
+    (TokenRefresher : TokenRefresher.TOKEN_REFRESHER)
     (Stats : Stats.STATS)
-  : FIREBASE_PRIMITIVES = struct
+  : FIRESTORE_PRIMITIVES = struct
   let is_error (response : Cohttp.Response.t) =
     Cohttp.Code.is_error (Cohttp.Code.code_of_status response.status)
 
   let get_doc (request : Dream.request) (path : string) : JSON.t Lwt.t =
     Stats.read request;
-    let* token = Token_refresher.get_token request in
-    let headers = Cohttp.Header.of_list [Firebase.header token] in
-    let* (response, body) = !External.Http.get (Firebase.endpoint path) headers in
+    let* headers = TokenRefresher.header request in
+    let* (response, body) = !External.Http.get (endpoint path) headers in
     if is_error response
     then raise (Error ("can't retrieve doc with path " ^ path))
-    else Lwt.return (Firebase.of_firestore (JSON.from_string body))
+    else Lwt.return (of_firestore (JSON.from_string body))
 
   let get_id_from_firestore_document_name (doc : JSON.t) : string =
     let name = JSON.Util.to_string (JSON.Util.member "name" doc) in
@@ -51,14 +50,13 @@ module Make
 
   let create_doc (request : Dream.request) (collection : string) ?(id : string option) (doc : JSON.t) : string Lwt.t =
     Stats.write request;
-    let* token = Token_refresher.get_token request in
-    let headers = Cohttp.Header.of_list [Firebase.header token] in
+    let* headers = TokenRefresher.header request in
     let path = match id with
       | Some id -> collection ^ "/" ^ id
       | None -> collection in
-    let firestore_doc = Firebase.to_firestore doc in
+    let firestore_doc = to_firestore doc in
     let params = [("mask", "_")] in (* By asking only for _, firestore will not give us the document back, which is what we want *)
-    let endpoint = Firebase.endpoint ~params path in
+    let endpoint = endpoint ~params path in
     let* (response, body) =
       if Option.is_some id then
         !External.Http.patch_json endpoint headers firestore_doc
@@ -70,10 +68,9 @@ module Make
 
   let update_doc (request : Dream.request) (path : string) (update : JSON.t) : unit Lwt.t =
     Stats.write request;
-    let* token = Token_refresher.get_token request in
-    let headers = Cohttp.Header.of_list [Firebase.header token] in
-    let firestore_update = Firebase.to_firestore update in
-    let endpoint = Firebase.endpoint path in
+    let* headers = TokenRefresher.header request in
+    let firestore_update = to_firestore update in
+    let endpoint = endpoint path in
     let* (response, _) = !External.Http.patch_json endpoint headers firestore_update in
     if is_error response
     then raise (Error "can't update doc")
@@ -81,15 +78,13 @@ module Make
 
   let delete_doc (request : Dream.request) (path : string) : unit Lwt.t =
     Stats.write request;
-    let* token = Token_refresher.get_token request in
-    let headers = Cohttp.Header.of_list [Firebase.header token] in
-    let* _ = !External.Http.delete (Firebase.endpoint path) headers in
+    let* headers = TokenRefresher.header request in
+    let* _ = !External.Http.delete (endpoint path) headers in
     Lwt.return ()
 
   let begin_transaction (request : Dream.request) : string Lwt.t =
-    let* token = Token_refresher.get_token request in
-    let headers = Cohttp.Header.of_list [Firebase.header token] in
-    let endpoint = Firebase.endpoint ~last_separator:":" "beginTransaction" in
+    let* headers = TokenRefresher.header request in
+    let endpoint = endpoint ~last_separator:":" "beginTransaction" in
     let* (response, body) = !External.Http.post_json endpoint headers (`Assoc []) in
     if is_error response
     then raise (Error "can't begin transaction")
@@ -101,9 +96,8 @@ module Make
       |> Lwt.return
 
   let commit (request : Dream.request) (transaction_id : string) : unit Lwt.t =
-    let* token = Token_refresher.get_token request in
-    let headers = Cohttp.Header.of_list [Firebase.header token] in
-    let endpoint = Firebase.endpoint ~last_separator:":" "commit" in
+    let* headers = TokenRefresher.header request in
+    let endpoint = endpoint ~last_separator:":" "commit" in
     let json = `Assoc [("transaction", `String transaction_id)] in
     let* (response, _) = !External.Http.post_json endpoint headers json in
     if is_error response
@@ -111,9 +105,8 @@ module Make
     else Lwt.return ()
 
   let rollback (request : Dream.request) (transaction_id : string) : unit Lwt.t =
-    let* token = Token_refresher.get_token request in
-    let headers = Cohttp.Header.of_list [Firebase.header token] in
-    let endpoint = Firebase.endpoint ~last_separator:":" "rollback" in
+    let* headers = TokenRefresher.header request in
+    let endpoint = endpoint ~last_separator:":" "rollback" in
     let json = `Assoc [("transaction", `String transaction_id)] in
     let* (response, _) = !External.Http.post_json endpoint headers json in
     if is_error response
