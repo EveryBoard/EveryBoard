@@ -24,7 +24,7 @@ module type JWT = sig
   val verify_and_get_uid : t -> string -> (string * X509.Certificate.t) list -> string
 end
 
-module Impl : JWT = struct
+module Make (External : External.EXTERNAL) : JWT = struct
   (* A JWT token *)
   type t = {
     header: JSON.t; (** The header of the token *)
@@ -45,7 +45,7 @@ module Impl : JWT = struct
   (** Construct a JWT from an email [iss] private key [pk], a set of scopes [scopes] and an audience [audience] *)
   let make (iss : string) (pk : private_key) (scopes : string list) (audience : string) : t =
     let open JSON in
-    let now = !External.now () in
+    let now = External.now () in
     Printf.printf "It is now %f\n" now;
     let exp = now +. 3600. in
     let header = `Assoc [
@@ -98,7 +98,7 @@ module Impl : JWT = struct
     let check (field : string) (cond : unit -> bool) : unit =
       Dream.log "checking field %s" field;
       if cond () then () else raise (Error (Printf.sprintf "Token verification failed, field %s is invalid" field)) in
-    let now = !External.now () in
+    let now = External.now () in
     let open JSON.Util in
     let number (json : JSON.t) (field : string) : float = to_number (member field json) in
     let str (json : JSON.t) (field : string) : string = to_string (member field json) in

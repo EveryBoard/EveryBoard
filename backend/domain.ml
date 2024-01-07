@@ -119,7 +119,7 @@ module Game = struct
       }
       [@@deriving yojson]
 
-      let get (config_room : ConfigRoom.t) : t =
+      let get (config_room : ConfigRoom.t) (now : float) : t =
         let starter = match config_room.first_player with
           | "RANDOM" -> if Random.bool () then "CREATOR" else "CHOSEN_PLAYER"
           | first -> first in
@@ -132,7 +132,7 @@ module Game = struct
           player_zero;
           player_one;
           turn = 0;
-          beginning = Some (!External.now ())
+          beginning = Some now
         }
     end
 
@@ -208,8 +208,8 @@ module Game = struct
     score_player_one = None;
   }
 
-  let rematch (game_name : string) (config_room : ConfigRoom.t) : t =
-    let starting = Updates.Start.get config_room in
+  let rematch (game_name : string) (config_room : ConfigRoom.t) (now : float) : t =
+    let starting = Updates.Start.get config_room now in
     let initial_game = initial game_name config_room.creator in
     { initial_game with
       player_zero = starting.player_zero;
@@ -227,15 +227,14 @@ module Game = struct
       }
       [@@deriving yojson]
 
-      let make (user : MinimalUser.t) (request_type : string) : t =
-        let time = !External.now () in
-        { event_type = "Request"; time; user; request_type }
-      let draw (user : MinimalUser.t) : t =
-        make user "Draw"
-      let rematch (user : MinimalUser.t) : t =
-        make user "Rematch"
-      let take_back (user : MinimalUser.t) : t =
-        make user "TakeBack"
+      let make (user : MinimalUser.t) (request_type : string) (now : float) : t =
+        { event_type = "Request"; time = now; user; request_type }
+      let draw (user : MinimalUser.t) (now : float) : t =
+        make user "Draw" now
+      let rematch (user : MinimalUser.t) (now : float) : t =
+        make user "Rematch" now
+      let take_back (user : MinimalUser.t) (now : float) : t =
+        make user "TakeBack" now
     end
 
     module Reply = struct
@@ -249,13 +248,12 @@ module Game = struct
       }
       [@@deriving yojson]
 
-      let make ?(data : JSON.t option) (user : MinimalUser.t) (reply : string) (request_type : string) : t =
-        let time = !External.now () in
-        { event_type = "Reply"; time; user; reply; request_type; data }
-      let accept (user : MinimalUser.t) (proposition : string) : t =
-        make user "Accept" proposition
-      let refuse (user : MinimalUser.t) (proposition : string) : t =
-        make user "Reject" proposition
+      let make ?(data : JSON.t option) (user : MinimalUser.t) (reply : string) (request_type : string) (now : float) : t =
+        { event_type = "Reply"; time = now; user; reply; request_type; data }
+      let accept (user : MinimalUser.t) (proposition : string) (now : float) : t =
+        make user "Accept" proposition now
+      let refuse (user : MinimalUser.t) (proposition : string) (now : float) : t =
+        make user "Reject" proposition now
     end
 
     module Action = struct
@@ -267,18 +265,15 @@ module Game = struct
       }
       [@@deriving yojson]
 
-      let add_time (user : MinimalUser.t) (kind : [ `Turn | `Global ]) : t =
-        let time = !External.now () in
+      let add_time (user : MinimalUser.t) (kind : [ `Turn | `Global ]) (now : float) : t =
         let action = match kind with
           | `Turn -> "AddTurnTime"
           | `Global -> "AddGlobalTime" in
-        { event_type = "Action"; action; user; time }
-      let start_game (user : MinimalUser.t) : t =
-        let time = !External.now () in
-        { event_type = "Action"; action = "StartGame"; user; time }
-      let end_game (user : MinimalUser.t) : t =
-        let time = !External.now () in
-        { event_type = "Action"; action = "EndGame"; user; time }
+        { event_type = "Action"; action; user; time = now }
+      let start_game (user : MinimalUser.t) (now : float): t =
+        { event_type = "Action"; action = "StartGame"; user; time = now }
+      let end_game (user : MinimalUser.t) (now : float) : t =
+        { event_type = "Action"; action = "EndGame"; user; time = now }
     end
 
     module Move = struct

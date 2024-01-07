@@ -14,7 +14,7 @@ module type TOKEN_REFRESHER = sig
 
 end
 
-module Make (Jwt : Jwt.JWT) : TOKEN_REFRESHER = struct
+module Make (External : External.EXTERNAL) (Jwt : Jwt.JWT) : TOKEN_REFRESHER = struct
 
   type token = {
     access_token : string;
@@ -51,8 +51,8 @@ module Make (Jwt : Jwt.JWT) : TOKEN_REFRESHER = struct
     let endpoint = Uri.of_string "https://oauth2.googleapis.com/token" in
     let params = [("grant_type", ["urn:ietf:params:oauth:grant-type:jwt-bearer"]);
                   ("assertion", [Jwt.to_string jwt])] in
-    let now = !External.now () in
-    let* (_response, body) = !External.Http.post_form endpoint params in
+    let now = External.now () in
+    let* (_response, body) = External.Http.post_form endpoint params in
     let json = JSON.from_string body in
     let access_token = json |> member "access_token" |> to_string in
     let expires_in = json |> member "expires_in" |> to_number in
@@ -60,7 +60,7 @@ module Make (Jwt : Jwt.JWT) : TOKEN_REFRESHER = struct
     Lwt.return { access_token; expiration_date }
 
   let request_token_if_outdated (sa : service_account) (token : token) : token Lwt.t =
-    let now = !External.now () in
+    let now = External.now () in
     if now > token.expiration_date then
       request_token sa
     else

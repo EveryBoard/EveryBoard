@@ -9,6 +9,7 @@ module type GAME = sig
 end
 
 module Make
+    (External : External.EXTERNAL)
     (Auth : Auth.AUTH)
     (Firestore : Firestore.FIRESTORE)
     (Stats : Stats.STATS)
@@ -68,10 +69,11 @@ module Make
     | Error _ -> fail_transaction `Not_Found "Game does not exist"
     | Ok config_room ->
       let* _ = Firestore.ConfigRoom.accept request game_id in
-      let starting_config = Domain.Game.Updates.Start.get config_room in
+      let now = External.now () in
+      let starting_config = Domain.Game.Updates.Start.get config_room now in
       let accepter = Auth.get_minimal_user request in
       let* _ = Firestore.Game.update request game_id (Domain.Game.Updates.Start.to_yojson starting_config) in
-      let event = Domain.Game.Event.(Action (Action.start_game accepter)) in
+      let event = Domain.Game.Event.(Action (Action.start_game accepter now)) in
       let* _ = Firestore.Game.add_event request game_id event in
       let* response = Dream.empty `OK in
       Lwt.return (Ok response)
@@ -89,7 +91,8 @@ module Make
         let update = Domain.Game.Updates.End.get ~winner ~loser Domain.Game.GameResult.resign in
         let* _ = Firestore.Game.update request game_id (Domain.Game.Updates.End.to_yojson update) in
         let resigner = Auth.get_minimal_user request in
-        let event = Domain.Game.Event.(Action (Action.end_game resigner)) in
+        let now = External.now () in
+        let event = Domain.Game.Event.(Action (Action.end_game resigner now)) in
         let* _ = Firestore.Game.add_event request game_id event in
         let* response = Dream.empty `OK in
         Lwt.return (Ok response)
@@ -99,21 +102,24 @@ module Make
     let update = Domain.Game.Updates.End.get ~winner ~loser Domain.Game.GameResult.timeout in
     let* _ = Firestore.Game.update request game_id (Domain.Game.Updates.End.to_yojson update) in
     let requester = Auth.get_minimal_user request in
-    let event = Domain.Game.Event.(Action (Action.end_game requester)) in
+    let now = External.now () in
+    let event = Domain.Game.Event.(Action (Action.end_game requester now)) in
     let* _ = Firestore.Game.add_event request game_id event in
     let* response = Dream.empty `OK in
     Lwt.return (Ok response)
 
   let propose (request : Dream.request) (game_id : string) (proposition : string) =
     let user = Auth.get_minimal_user request in
-    let event = Domain.Game.Event.(Request (Request.make user proposition)) in
+    let now = External.now () in
+    let event = Domain.Game.Event.(Request (Request.make user proposition now)) in
     let* _ = Firestore.Game.add_event request game_id event in
     let* response = Dream.empty `OK in
     Lwt.return (Ok response)
 
   let reject (request : Dream.request) (game_id : string) (proposition : string) =
     let user = Auth.get_minimal_user request in
-    let event = Domain.Game.Event.(Reply (Reply.refuse user proposition)) in
+    let now = External.now () in
+    let event = Domain.Game.Event.(Reply (Reply.refuse user proposition now)) in
     let* _ = Firestore.Game.add_event request game_id event in
     let* response = Dream.empty `OK in
     Lwt.return (Ok response)
@@ -125,12 +131,13 @@ module Make
     | Error _ -> fail_transaction `Not_Found "Game not found"
     | Ok game ->
       let user = Auth.get_minimal_user request in
-      let accept = Domain.Game.Event.(Reply (Reply.accept user "Draw")) in
+      let now = External.now () in
+      let accept = Domain.Game.Event.(Reply (Reply.accept user "Draw" now)) in
       let* _ = Firestore.Game.add_event request game_id accept in
       let player = if user = game.player_zero then 0 else 1 in
       let update = Domain.Game.Updates.End.get (Domain.Game.GameResult.agreed_draw_by player) in
       let* _ = Firestore.Game.update request game_id (Domain.Game.Updates.End.to_yojson update) in
-      let game_end = Domain.Game.Event.(Action (Action.end_game user)) in
+      let game_end = Domain.Game.Event.(Action (Action.end_game user now)) in
       let* _ = Firestore.Game.add_event request game_id game_end in
       let* response = Dream.empty `OK in
       Lwt.return (Ok response)
@@ -152,14 +159,15 @@ module Make
           else (game.player_zero, Domain.ConfigRoom.FirstPlayer.creator) in
         let rematch_config_room =
           Domain.ConfigRoom.rematch config_room first_player creator chosen_opponent in
-        let rematch_game = Domain.Game.rematch game.type_game rematch_config_room  in
+        let now = External.now () in
+        let rematch_game = Domain.Game.rematch game.type_game rematch_config_room now in
         let* rematch_id = Firestore.Game.create request rematch_game in
         let user = Auth.get_minimal_user request in
         let* _ = Firestore.ConfigRoom.create request rematch_id config_room in
         let* _ = Firestore.Chat.create request rematch_id in
-        let accept_event = Domain.Game.Event.(Reply (Reply.accept user "Rematch")) in
+        let accept_event = Domain.Game.Event.(Reply (Reply.accept user "Rematch" now)) in
         let* _ = Firestore.Game.add_event request game_id accept_event in
-        let start_event = Domain.Game.Event.(Action (Action.start_game user)) in
+        let start_event = Domain.Game.Event.(Action (Action.start_game user now)) in
         let* _ = Firestore.Game.add_event request game_id start_event in
         let* response = json_response `Created (`Assoc [("id", `String game_id)]) in
         Lwt.return (Ok response)
@@ -175,7 +183,8 @@ module Make
         if game.turn mod 2 == player_value
         then game.turn - 2 (* Need to take back two turns to let the requester take back their move *)
         else game.turn -1 in
-      let event = Domain.Game.Event.(Reply (Reply.accept user "TakeBack")) in
+      let now = External.now () in
+      let event = Domain.Game.Event.(Reply (Reply.accept user "TakeBack" now)) in
       let* _ = Firestore.Game.add_event request game_id event in
       let update = Domain.Game.Updates.TakeBack.get new_turn in
       let* _ = Firestore.Game.update request game_id (Domain.Game.Updates.TakeBack.to_yojson update) in
@@ -184,7 +193,8 @@ module Make
 
   let add_time (request : Dream.request) (game_id : string) (kind : [ `Turn | `Global ]) =
     let user = Auth.get_minimal_user request in
-    let event = Domain.Game.Event.(Action (Action.add_time user kind)) in
+    let now = External.now () in
+    let event = Domain.Game.Event.(Action (Action.add_time user kind now)) in
     let* _ = Firestore.Game.add_event request game_id event in
     let* response = Dream.empty `OK in
     Lwt.return (Ok response)

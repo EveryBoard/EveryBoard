@@ -1,10 +1,11 @@
-module GoogleCertificates = GoogleCertificates.Impl
-module Jwt = Jwt.Impl
-module TokenRefresher = TokenRefresher.Make(Jwt)
-module Firestore = Firestore.Make(FirestorePrimitives.Make(TokenRefresher)(Stats.Impl))
+module External = External.Impl
+module GoogleCertificates = GoogleCertificates.Make(External)
+module Jwt = Jwt.Make(External)
+module TokenRefresher = TokenRefresher.Make(External)(Jwt)
+module Firestore = Firestore.Make(FirestorePrimitives.Make(External)(TokenRefresher)(Stats.Impl))
 module Stats = Stats.Impl
 module Auth = Auth.Make(Firestore)(GoogleCertificates)(Stats)(Jwt)
-module Game = Game.Make(Auth)(Firestore)(Stats)
+module Game = Game.Make(External)(Auth)(Firestore)(Stats)
 
 let api = [
     Dream.scope "/" [TokenRefresher.middleware !Options.service_account_file; Auth.middleware]
