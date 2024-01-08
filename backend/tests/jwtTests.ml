@@ -1,7 +1,7 @@
-(*open Alcotest
-  open TestUtils *)
+open Alcotest
+open TestUtils
 open Backend
-(* open Utils *)
+open Utils
 
 module type MOCK = sig
   include Jwt.JWT
@@ -19,9 +19,10 @@ module Mock : MOCK = struct
     if !validate_token
     then to_string (member "sub" token.payload)
     else raise (Error "Token verification failed")
-end
 
-module Jwt = Jwt.Impl
+end *)
+
+module Jwt = Jwt.Make(ExternalTests.Mock)
 
 let jwt : Jwt.t testable =
   let pp_jwt ppf jwt = Fmt.pf ppf "%s, %s, %s"
@@ -121,19 +122,21 @@ let tests = [
 
   "Jwt.make", [
     test "should construct a token" (fun () ->
-        Mirage_crypto_rng_lwt.initialize (module Mirage_crypto_rng.Fortuna);
-        let now_mock () = 1702952401. in
-        with_mock External.now now_mock (fun _ ->
-            let actual = Jwt.make "foo@bar.com" private_key ["scope1"; "scope2"] "audience" in
-            let expected = signed_token in
-            check jwt "success" expected actual
-          )
+        ExternalTests.Mock.current_time := 1702952401.;
+        (* When constructing a token *)
+        let actual = Jwt.make "foo@bar.com" private_key ["scope1"; "scope2"] "audience" in
+        (* Then it should be constructed as expected *)
+        let expected = signed_token in
+        check jwt "success" expected actual
       );
   ];
 
   "Jwt.to_string", [
     test "should construct the expected string representation" (fun () ->
+        (* Given a token *)
+        (* When converting it to a string *)
         let actual = Jwt.to_string signed_token in
+        (* Then it should provide the expected representation *)
         let expected = "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJmb29AYmFyLmNvbSIsInNjb3BlIjoic2NvcGUxIHNjb3BlMiIsImF1ZCI6ImF1ZGllbmNlIiwiZXhwIjoxNzAyOTU2MDAxLjAsImlhdCI6MTcwMjk1MjQwMS4wfQ.MEeubOjPw4wEYFr_r1iKzq_Ta_mD9_0tiT7o1EfWlpzmZAfySQ37K8KmxOwcI0QxqGdascwNAPvKHx0wYLShnEoIPAVCyC2B5qaSm91A9K8nGJPDiTEcjeFqqVUhgzGhbQsPVavrRQpQIw4l8vCHtYbgdfMn23anLmceE-ur0bMYsWaACqrIdxsEybCKr1U79UxOmMxto1yYUB-Dj8GLV3hBui9RVXczmWLxzWq7C154TRFZ_bnvYa56GckNTgvn3hkAqnZ8YjkLFkKCjrd_XNIf5pn5h4-xdLGFeoMaa-T7E9FwhheLfrBr8YjoHqnxyZZc9fSyB1il28BXP8R49Q" in
         check string "success" expected actual
       );
@@ -141,14 +144,21 @@ let tests = [
 
   "Jwt.parse", [
     test "should succeed on a valid identity token" (fun () ->
+        (* Given a valid identity token string representation *)
+        (* When parsing it *)
         let actual = Jwt.parse identity_token_str in
+        (* Then it should provide the expected token *)
         let expected = identity_token in
         check jwt "success" expected actual
       );
 
     test "should fail on an invalid identity token" (fun () ->
+        (* Given an invalid idetnity token string representation *)
+        let invalid_token = "invalid token!"  in
+        (* When parsing it *)
+        (* Then it should fail *)
         check_raises "failure" (Error "Invalid token") (fun () ->
-            let _ = Jwt.parse "invalid token!" in ()
+            let _ = Jwt.parse invalid_token in ()
           )
       );
   ];
@@ -174,100 +184,114 @@ let tests = [
       );
   ]; *)
 
-  ("Jwt.verify_and_get_uid",
-   let now_mock () = 1702956000. in
-   let replace_assoc json field replacement = match json with
-     | `Assoc assoc ->
-       `Assoc ((field, replacement) :: (List.remove_assoc field assoc))
-     | _ -> failwith "replace_assoc called without an assoc" in
-   [
-     test "should succeed on a valid token" (fun () ->
-         with_mock External.now now_mock (fun _ ->
-             let actual = Jwt.verify_and_get_uid identity_token "everyboard-test" [(cert_id, cert)] in
-             let expected = "wECcuMPVQHO9VSs7bgOL5rLxmPD2" in
-             check string "success" expected actual
-           )
-       );
+  "Jwt.verify_and_get_uid",
+  begin
+    let now = 1702956000. in
+    ExternalTests.Mock.current_time := now;
+    let replace_assoc (json : JSON.t) (field : string) (replacement : JSON.t) : JSON.t = match json with
+      | `Assoc assoc ->
+        `Assoc ((field, replacement) :: (List.remove_assoc field assoc))
+      | _ -> failwith "replace_assoc called without an assoc" in
+    [
+      test "should succeed on a valid token" (fun () ->
+          (* Given a valid token *)
+          (* When verifying it and extracting the uid *)
+          let actual = Jwt.verify_and_get_uid identity_token "everyboard-test" [(cert_id, cert)] in
+          (* Then it should provide the expected uid *)
+          let expected = "wECcuMPVQHO9VSs7bgOL5rLxmPD2" in
+          check string "success" expected actual
+        );
 
-     test "should fail if alg is not RS256" (fun () ->
-         with_mock External.now now_mock (fun _ ->
-             check_raises "failure" (Error "Token verification failed, field alg is invalid") (fun () ->
-                 let token = { identity_token with header = replace_assoc identity_token.header "alg" (`String "foo") } in
-                 let _ = Jwt.verify_and_get_uid token "everyboard-test" [(cert_id, cert)] in ()
-               )
-           )
-       );
-     test "should fail if kid is not a known key" (fun () ->
-         with_mock External.now now_mock (fun _ ->
-             check_raises "failure" (Error "Token verification failed, field kid is invalid") (fun () ->
-                 let _ = Jwt.verify_and_get_uid identity_token "everyboard-test" [] (* no key! *) in ()
-               )
-           )
-       );
+      test "should fail if alg is not RS256" (fun () ->
+          (* Given an invalid token due to invalid algorithm used *)
+          let token = { identity_token with header = replace_assoc identity_token.header "alg" (`String "foo") } in
+          (* When verifying it *)
+          (* Then it should fail *)
+          check_raises "failure" (Error "Token verification failed, field alg is invalid") (fun () ->
+              let _ = Jwt.verify_and_get_uid token "everyboard-test" [(cert_id, cert)] in ()
+            )
+        );
 
-     test "should fail if token is expired" (fun () ->
-         with_mock External.now now_mock (fun _ ->
-             check_raises "failure" (Error "Token verification failed, field exp is invalid") (fun () ->
-                 let token = { identity_token with payload = replace_assoc identity_token.payload "exp" (`Float (now_mock () -. 100000.)) } in
-                 let _ = Jwt.verify_and_get_uid token "everyboard-test" [(cert_id, cert)] in ()
-               )
-           )
-       );
+      test "should fail if kid is not a known key" (fun () ->
+          (* Given no keys to use in verification *)
+          let keys = [] in
+          (* When verifying a token *)
+          (* Then it should fail *)
+          check_raises "failure" (Error "Token verification failed, field kid is invalid") (fun () ->
+              let _ = Jwt.verify_and_get_uid identity_token "everyboard-test" keys in ()
+            )
+        );
 
-     test "should fail if token is issued in the future" (fun () ->
-         with_mock External.now now_mock (fun _ ->
-             check_raises "failure" (Error "Token verification failed, field iat is invalid") (fun () ->
-                 let token = { identity_token with payload = replace_assoc identity_token.payload "iat" (`Float (now_mock () +. 1000.)) } in
-                 let _ = Jwt.verify_and_get_uid token "everyboard-test" [(cert_id, cert)] in ()
-               )
-           )
-       );
+      test "should fail if token is expired" (fun () ->
+          (* Given an expired token *)
+          let token = { identity_token with payload = replace_assoc identity_token.payload "exp" (`Float (now -. 100000.)) } in
+          (* When verifying it *)
+          (* Then it should fail *)
+          check_raises "failure" (Error "Token verification failed, field exp is invalid") (fun () ->
+              let _ = Jwt.verify_and_get_uid token "everyboard-test" [(cert_id, cert)] in ()
+            )
+        );
 
-     test "should fail if audience is not the project id" (fun () ->
-         with_mock External.now now_mock (fun _ ->
-             check_raises "failure" (Error "Token verification failed, field aud is invalid") (fun () ->
-                 let _ = Jwt.verify_and_get_uid identity_token "another-project" [(cert_id, cert)] in ()
-               )
-           )
-       );
+      test "should fail if token is issued in the future" (fun () ->
+          (* Given a token issued in the future *)
+          let token = { identity_token with payload = replace_assoc identity_token.payload "iat" (`Float (now +. 1000.)) } in
+          (* When verifying it *)
+          (* Then it should fail *)
+          check_raises "failure" (Error "Token verification failed, field iat is invalid") (fun () ->
+              let _ = Jwt.verify_and_get_uid token "everyboard-test" [(cert_id, cert)] in ()
+            )
+        );
+
+      test "should fail if audience is not the project id" (fun () ->
+          (* Given a token with an audience different from the project id *)
+          let project_id = "another-project" in
+          (* When verifying it *)
+          (* Then it should fail *)
+          check_raises "failure" (Error "Token verification failed, field aud is invalid") (fun () ->
+              let _ = Jwt.verify_and_get_uid identity_token project_id [(cert_id, cert)] in ()
+            )
+        );
 
      test "should fail if issuer is not the expected url" (fun () ->
-         with_mock External.now now_mock (fun _ ->
-             check_raises "failure" (Error "Token verification failed, field iss is invalid") (fun () ->
-                 let token = { identity_token with payload = replace_assoc identity_token.payload "iss" (`String "http://other") } in
-                 let _ = Jwt.verify_and_get_uid token "everyboard-test" [(cert_id, cert)] in ()
-               )
-           )
+          (* Given a token with a wrong issuer url *)
+          let token = { identity_token with payload = replace_assoc identity_token.payload "iss" (`String "http://other") } in
+          (* When verifying it *)
+          (* Then it should fail *)
+          check_raises "failure" (Error "Token verification failed, field iss is invalid") (fun () ->
+              let _ = Jwt.verify_and_get_uid token "everyboard-test" [(cert_id, cert)] in ()
+            )
        );
 
      test "should fail if subject is empty" (fun () ->
-         with_mock External.now now_mock (fun _ ->
-             check_raises "failure" (Error "Token verification failed, field sub is invalid") (fun () ->
-                 let token = { identity_token with payload = replace_assoc identity_token.payload "sub" (`String "") } in
-                 let _ = Jwt.verify_and_get_uid token "everyboard-test" [(cert_id, cert)] in ()
-               )
+          (* Given a token with an empty subject *)
+          let token = { identity_token with payload = replace_assoc identity_token.payload "sub" (`String "") } in
+          (* When verifying it *)
+          (* Then it should fail *)
+          check_raises "failure" (Error "Token verification failed, field sub is invalid") (fun () ->
+              let _ = Jwt.verify_and_get_uid token "everyboard-test" [(cert_id, cert)] in ()
            )
        );
 
      test "should fail if authentication time is in the future" (fun () ->
-         with_mock External.now now_mock (fun _ ->
-             check_raises "failure" (Error "Token verification failed, field auth_time is invalid") (fun () ->
-                 let token = { identity_token with payload = replace_assoc identity_token.payload "auth_time" (`Float (now_mock () +. 1000.)) } in
-                 let _ = Jwt.verify_and_get_uid token "everyboard-test" [(cert_id, cert)] in ()
-               )
-           )
+          (* Given a token with an authentication time in the future *)
+          let token = { identity_token with payload = replace_assoc identity_token.payload "auth_time" (`Float (now +. 1000.)) } in
+          (* When verifying it *)
+          (* Then it should fail *)
+          check_raises "failure" (Error "Token verification failed, field auth_time is invalid") (fun () ->
+              let _ = Jwt.verify_and_get_uid token "everyboard-test" [(cert_id, cert)] in ()
+            )
        );
 
      test "should fail if signature is invalid" (fun () ->
-         with_mock External.now now_mock (fun _ ->
-             check_raises "failure" (Error "Token verification failed, field signature is invalid") (fun () ->
-                 let token = { identity_token with signature = "foo" } in
-                 let _ = Jwt.verify_and_get_uid token "everyboard-test" [(cert_id, cert)] in ()
-               )
-           )
+          (* Given a token with an invalid signature *)
+          let token = { identity_token with signature = "foo" } in
+          (* When verifying it *)
+          (* Then it should fail *)
+          check_raises "failure" (Error "Token verification failed, field signature is invalid") (fun () ->
+              let _ = Jwt.verify_and_get_uid token "everyboard-test" [(cert_id, cert)] in ()
+            )
        );
-
-  ]);
+  ]
+  end;
 
 ]
- *)
