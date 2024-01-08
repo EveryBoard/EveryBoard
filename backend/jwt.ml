@@ -2,6 +2,7 @@ open Utils
 
 (** This module manages JSON Web Tokens (JWT), which are used to authentify
     ourselves to the firestore server, and to authentify users to ourselves. *)
+
 module type JWT = sig
 
   (* A JWT token *)
@@ -46,7 +47,6 @@ module Make (External : External.EXTERNAL) : JWT = struct
   let make (iss : string) (pk : private_key) (scopes : string list) (audience : string) : t =
     let open JSON in
     let now = External.now () in
-    Printf.printf "It is now %f\n" now;
     let exp = now +. 3600. in
     let header = `Assoc [
         ("alg", `String "RS256");

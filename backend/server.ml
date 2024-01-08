@@ -1,9 +1,9 @@
 module External = External.Impl
+module Stats = Stats.Impl
 module GoogleCertificates = GoogleCertificates.Make(External)
 module Jwt = Jwt.Make(External)
 module TokenRefresher = TokenRefresher.Make(External)(Jwt)
-module Firestore = Firestore.Make(FirestorePrimitives.Make(External)(TokenRefresher)(Stats.Impl))
-module Stats = Stats.Impl
+module Firestore = Firestore.Make(FirestorePrimitives.Make(External)(TokenRefresher)(Stats))
 module Auth = Auth.Make(Firestore)(GoogleCertificates)(Stats)(Jwt)
 module Game = Game.Make(External)(Auth)(Firestore)(Stats)
 

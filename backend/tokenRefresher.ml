@@ -1,9 +1,9 @@
 open Utils
 
 (** The token refresher manages the admin token of the backend. When a request
-need to be done to firestore, the token can be passed in the header with the
-[header] helper. This may trigger a renewal of the firestore admin token if ours
-is expired. This is all handled automatically by this middleware *)
+    need to be done to firestore, the token can be passed in the header with the
+    [header] helper. This may trigger a renewal of the firestore admin token if ours
+    is expired. This is all handled automatically by this middleware *)
 module type TOKEN_REFRESHER = sig
 
   (** Return the header required to pass the token along with a query *)
@@ -82,22 +82,17 @@ module Make (External : External.EXTERNAL) (Jwt : Jwt.JWT) : TOKEN_REFRESHER = s
     let service_account = read_service_account_from_file service_account_file in
     let token_ref = ref None in
     (fun handler request ->
-       match Dream.method_ request with
-       | `OPTIONS ->
-         (* OPTIONS requests are allowed without needing a token *)
-         handler request
-       | _ ->
-         Dream.set_field request get_token_field (fun () ->
-             if !Options.emulator then
-               (* No need to fetch a google token if we're dealing with the emulator, the string "owner" is sufficient *)
-               Lwt.return "owner"
-             else
-               let* token = match !token_ref with
-                 | Some token -> request_token_if_outdated service_account token
-                 | None -> request_token service_account in
-               token_ref := Some token;
-               Lwt.return token.access_token
-           );
-         handler request)
+       Dream.set_field request get_token_field (fun () ->
+           if !Options.emulator then
+             (* No need to fetch a google token if we're dealing with the emulator, the string "owner" is sufficient *)
+             Lwt.return "owner"
+           else
+             let* token = match !token_ref with
+               | Some token -> request_token_if_outdated service_account token
+               | None -> request_token service_account in
+             token_ref := Some token;
+             Lwt.return token.access_token
+         );
+       handler request)
 
   end
