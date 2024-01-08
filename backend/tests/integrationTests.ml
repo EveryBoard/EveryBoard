@@ -1,6 +1,8 @@
 open Backend
 open Utils
 
+module External = External.Impl
+
 let create_user (email : string) : unit Lwt.t =
   let url = "http://localhost:9099/identitytoolkit.googleapis.com/v1/accounts:signInWithIdp?key=unknown" in
   let credential_json = `Assoc [
@@ -15,7 +17,7 @@ let create_user (email : string) : unit Lwt.t =
       "postBody", `String ("&id_token=" ^ credential ^ "&providerId=google.com");
     ] in
   let no_headers = Cohttp.Header.init () in
-  let* response = !External.Http.post_json (Uri.of_string url) no_headers json in
+  let* response = External.Http.post_json (Uri.of_string url) no_headers json in
   Printf.printf "%s\n" (snd response);
   Lwt.return ()
 

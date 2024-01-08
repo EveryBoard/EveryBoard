@@ -51,11 +51,13 @@ let lwt_check_response (name : string) (expected : Dream.response) (actual : Dre
   Lwt.return ()
 
 
+(* TODO: remove  *)
 let get_mock response_headers response_status body = fun _ _ ->
   Lwt.return
     (Cohttp.Response.make ~version:(`Other "2") ~status:response_status ~headers:response_headers (),
      body)
 
+(* TODO remove *)
 let post_form_mock headers body : (Uri.t -> (string * string list) list -> (Cohttp.Response.t * string) Lwt.t) = fun _ _ ->
   Lwt.return
     (Cohttp.Response.make ~version:(`Other "2") ~status:`OK ~headers (),
@@ -65,6 +67,7 @@ type mock = {
   number_of_calls: int ref;
 }
 
+(* TODO: remove *)
 let with_mock (f : ('a -> 'b) ref) (mocked_f : 'a -> 'b) (body : mock -> 'c) : 'c =
   let old_value = !f in
   let mock = { number_of_calls = ref 0 } in
@@ -75,3 +78,6 @@ let with_mock (f : ('a -> 'b) ref) (mocked_f : 'a -> 'b) (body : mock -> 'c) : '
   let result = body mock in
   f := old_value;
   result
+
+let ok_response headers =
+  Cohttp.Response.make ~version:(`Other "2") ~status:`OK ~headers ()
