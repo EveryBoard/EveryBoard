@@ -1,6 +1,6 @@
 import { BooleanConfig, NumberConfig, RulesConfigDescription, RulesConfigDescriptionLocalizable } from 'src/app/components/wrapper-components/rules-configuration/RulesConfigDescription';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { MancalaConfig } from '../common/MancalaConfig';
+import { BaAwaConfig } from './BaAwaConfig';
 import { MancalaCaptureResult, MancalaDistributionResult, MancalaDropResult, MancalaRules } from '../common/MancalaRules';
 import { MGPValidators } from 'src/app/utils/MGPValidator';
 import { TableUtils } from 'src/app/utils/ArrayUtils';
@@ -8,12 +8,12 @@ import { MancalaState } from '../common/MancalaState';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 
-export class BaAwaRules extends MancalaRules {
+export class BaAwaRules extends MancalaRules<BaAwaConfig> {
 
     private static singleton: MGPOptional<BaAwaRules> = MGPOptional.empty();
 
-    public static readonly RULES_CONFIG_DESCRIPTION: RulesConfigDescription<MancalaConfig> =
-        new RulesConfigDescription<MancalaConfig>({
+    public static readonly RULES_CONFIG_DESCRIPTION: RulesConfigDescription<BaAwaConfig> =
+        new RulesConfigDescription<BaAwaConfig>({
             name: (): string => $localize`Ba-awa`,
             config: {
                 feedOriginalHouse: new BooleanConfig(true, MancalaRules.FEED_ORIGINAL_HOUSE),
@@ -23,8 +23,21 @@ export class BaAwaRules extends MancalaRules {
                 continueLapUntilCaptureOrEmptyHouse: new BooleanConfig(true, MancalaRules.CYCLICAL_LAP),
                 seedsByHouse: new NumberConfig(4, MancalaRules.SEEDS_BY_HOUSE, MGPValidators.range(1, 99)),
                 width: new NumberConfig(6, RulesConfigDescriptionLocalizable.WIDTH, MGPValidators.range(1, 99)),
+                splitFinalSeedsEvenly: new BooleanConfig(false, () => $localize`Split final seeds evenly`),
             },
-        });
+        }, [{
+            name: (): string => $localize`Even-Ba-Awa`,
+            config: {
+                feedOriginalHouse: true,
+                mustFeed: false,
+                passByPlayerStore: false,
+                mustContinueDistributionAfterStore: false,
+                continueLapUntilCaptureOrEmptyHouse: true,
+                seedsByHouse: 4,
+                width: 6,
+                splitFinalSeedsEvenly: true,
+            },
+        }]);
 
     public static get(): BaAwaRules {
         if (BaAwaRules.singleton.isAbsent()) {
@@ -33,7 +46,7 @@ export class BaAwaRules extends MancalaRules {
         return BaAwaRules.singleton.get();
     }
 
-    public override getRulesConfigDescription(): MGPOptional<RulesConfigDescription<MancalaConfig>> {
+    public override getRulesConfigDescription(): MGPOptional<RulesConfigDescription<BaAwaConfig>> {
         return MGPOptional.of(BaAwaRules.RULES_CONFIG_DESCRIPTION);
     }
 
@@ -75,7 +88,7 @@ export class BaAwaRules extends MancalaRules {
         }
     }
 
-    public override mustMansoon(postCaptureState: MancalaState, config: MancalaConfig): PlayerOrNone {
+    public override mustMansoon(postCaptureState: MancalaState, config: BaAwaConfig): PlayerOrNone {
         const mustMansoon: PlayerOrNone = super.mustMansoon(postCaptureState, config);
         if (mustMansoon.isPlayer()) {
             return mustMansoon;

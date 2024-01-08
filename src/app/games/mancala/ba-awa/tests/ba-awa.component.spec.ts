@@ -7,7 +7,7 @@ import { BaAwaRules } from '../BaAwaRules';
 import { MancalaState } from 'src/app/games/mancala/common/MancalaState';
 import { MancalaComponentTestUtils, doMancalaComponentTests as doMancalaComponentTests } from '../../common/tests/GenericMancalaComponentTest.spec';
 import { BaAwaMoveGenerator } from '../BaAwaMoveGenerator';
-import { MancalaConfig } from '../../common/MancalaConfig';
+import { BaAwaConfig } from '../BaAwaConfig';
 import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { MancalaDistribution, MancalaMove } from '../../common/MancalaMove';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
@@ -16,7 +16,7 @@ import { MancalaComponent } from '../../common/MancalaComponent';
 describe('BaAwaComponent', () => {
 
     let mancalaTestUtils: MancalaComponentTestUtils<BaAwaComponent, BaAwaRules>;
-    const defaultConfig: MGPOptional<MancalaConfig> = BaAwaRules.get().getDefaultRulesConfig();
+    const defaultConfig: MGPOptional<BaAwaConfig> = BaAwaRules.get().getDefaultRulesConfig();
 
     doMancalaComponentTests({
         component: BaAwaComponent,
@@ -129,7 +129,7 @@ describe('BaAwaComponent', () => {
 
         it('should not require additionnal click when ending distribution in store', fakeAsync(async() => {
             // Given a Ba-awa state with a config with passByPlayerStore set to true
-            const customConfig: MGPOptional<MancalaConfig> = MGPOptional.of({
+            const customConfig: MGPOptional<BaAwaConfig> = MGPOptional.of({
                 ...defaultConfig.get(),
                 passByPlayerStore: true,
             });
@@ -145,7 +145,7 @@ describe('BaAwaComponent', () => {
 
         it('should allow redistribution if allowed by config', fakeAsync(async() => {
             // Given a Ba-awa state with where multiple so would be possible, and the first sowing is done
-            const customConfig: MGPOptional<MancalaConfig> = MGPOptional.of({
+            const customConfig: MGPOptional<BaAwaConfig> = MGPOptional.of({
                 ...defaultConfig.get(),
                 passByPlayerStore: true,
                 mustContinueDistributionAfterStore: true,

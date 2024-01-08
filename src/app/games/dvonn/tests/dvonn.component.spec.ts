@@ -73,7 +73,8 @@ describe('DvonnComponent', () => {
             [__, __, __, __, __, __, __, __, __, __, __],
             [__, __, __, __, __, __, __, __, __, __, __],
         ];
-        await testUtils.setupState(new DvonnState(board, 0, false));
+        const state: DvonnState = new DvonnState(board, 0, false);
+        await testUtils.setupState(state);
 
         // When doing that disconnection
         await testUtils.expectClickSuccess('#click_3_1');
@@ -93,7 +94,8 @@ describe('DvonnComponent', () => {
             [__, __, __, __, __, __, __, __, __, __, __],
             [__, __, __, __, __, __, __, __, __, __, __],
         ];
-        await testUtils.setupState(new DvonnState(board, 0, false));
+        const state: DvonnState = new DvonnState(board, 0, false);
+        await testUtils.setupState(state);
 
         // When doing that disconnection
         await testUtils.expectClickSuccess('#click_3_1');
@@ -132,7 +134,8 @@ describe('DvonnComponent', () => {
             [__, __, __, __, __, __, __, __, __, __, __],
             [__, __, __, __, __, __, __, __, __, __, __],
         ];
-        await testUtils.setupState(new DvonnState(board, 0, false));
+        const state: DvonnState = new DvonnState(board, 0, false);
+        await testUtils.setupState(state);
         await testUtils.expectClickSuccess('#click_2_0');
         // When the user clicks on an invalid destination for this move, that is a valid piece for another move
         await testUtils.expectClickSuccess('#click_4_1');
@@ -150,7 +153,8 @@ describe('DvonnComponent', () => {
             [__, __, __, __, __, __, __, __, __, __, __],
             [__, __, __, __, __, __, __, __, __, __, __],
         ];
-        await testUtils.setupState(new DvonnState(board, 0, false));
+        const state: DvonnState = new DvonnState(board, 0, false);
+        await testUtils.setupState(state);
         await testUtils.expectClickSuccess('#click_2_0');
         // When the user click on a valid yet illegal destination, that is a valid for another move
         await testUtils.expectClickSuccess('#click_2_2');

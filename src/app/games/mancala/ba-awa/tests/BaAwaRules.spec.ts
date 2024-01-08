@@ -5,14 +5,14 @@ import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { Table, TableUtils } from 'src/app/utils/ArrayUtils';
 import { DoMancalaRulesTests } from '../../common/tests/GenericMancalaRulesTest.spec';
-import { MancalaConfig } from '../../common/MancalaConfig';
+
 import { MancalaDistribution, MancalaMove } from '../../common/MancalaMove';
-import { MancalaRules } from '../../common/MancalaRules';
+import { BaAwaConfig } from '../BaAwaConfig';
 
 describe('BaAwaRules', () => {
 
-    const rules: MancalaRules = BaAwaRules.get();
-    const defaultConfig: MGPOptional<MancalaConfig> = rules.getDefaultRulesConfig();
+    const rules: BaAwaRules = BaAwaRules.get();
+    const defaultConfig: MGPOptional<BaAwaConfig> = rules.getDefaultRulesConfig();
 
     describe('generic tests', () => {
 
@@ -243,7 +243,7 @@ describe('BaAwaRules', () => {
         });
 
         it(`should mansoon for player zero when total of seed drop to 8 or less (Player.ONE's turn)`, () => {
-            // Given a state in which Player.ZERO could capture and make total seed drop to zero
+            // Given a state in which Player.ONE could capture and make total seed drop to zero
             const board: Table<number> = [
                 [0, 0, 2, 3, 1, 0],
                 [0, 0, 2, 0, 3, 1],
@@ -265,7 +265,7 @@ describe('BaAwaRules', () => {
 
         it('should count "store-dropping" as "passing bellow 8"', () => {
             // Given a board where we are about to pass by store and drop to 8 or bellow
-            const customConfig: MGPOptional<MancalaConfig> = MGPOptional.of({
+            const customConfig: MGPOptional<BaAwaConfig> = MGPOptional.of({
                 ...defaultConfig.get(),
                 passByPlayerStore: true,
             });
@@ -282,6 +282,54 @@ describe('BaAwaRules', () => {
                 [0, 0, 0, 0, 0, 0],
                 [0, 0, 0, 0, 0, 0],
             ], 11, [8, 0]);
+            RulesUtils.expectMoveSuccess(rules, state, move, expectedState, customConfig);
+        });
+
+        it(`should split mansoon for when total of seed drop to 8 or less and config ask for even split`, () => {
+            // Given a state in which Player.ZERO could capture and make total seed drop to zero
+            // And a config mentionning that final seeds are split
+            const board: Table<number> = [
+                [0, 0, 2, 3, 1, 0],
+                [0, 0, 2, 0, 3, 1],
+            ];
+            const state: MancalaState = new MancalaState(board, 1, [0, 0]);
+            const customConfig: MGPOptional<BaAwaConfig> = MGPOptional.of({
+                ...defaultConfig.get(),
+                splitFinalSeedsEvenly: true,
+            });
+
+            // When the player does a would-starve move
+            const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(2));
+
+            // Then, the distribution should be done but not the capture
+            const expectedBoard: Table<number> = TableUtils.create(6, 2, 0);
+            const expectedState: MancalaState = new MancalaState(expectedBoard, 2, [8, 4]);
+            RulesUtils.expectMoveSuccess(rules, state, move, expectedState, customConfig);
+        });
+
+        it('should allow to do second distribution when multi-lap mancala ends-up in store', () => {
+            // Given any board where a move doing a first distribution ending in store, then another distribution
+            // and a config allowing to do that
+            const customConfig: MGPOptional<BaAwaConfig> = MGPOptional.of({
+                ...defaultConfig.get(),
+                passByPlayerStore: true,
+                mustContinueDistributionAfterStore: true,
+                continueLapUntilCaptureOrEmptyHouse: true,
+            });
+            const state: MancalaState = new MancalaState([
+                [0, 2, 2, 10, 2, 0],
+                [2, 0, 2, 1, 1, 0],
+            ], 10, [14, 9]);
+
+            // When applying that move
+            const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(3), [MancalaDistribution.of(4)]);
+
+            // Then it should be legal
+            const expectedState: MancalaState = new MancalaState([
+                [0, 2, 2, 10, 2, 0],
+                [3, 1, 0, 1, 0, 0],
+            ], 11, [15, 9]);
+
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState, customConfig);
         });
 

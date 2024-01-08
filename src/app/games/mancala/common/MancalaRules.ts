@@ -48,7 +48,9 @@ export type MancalaDropResult = {
 
 export class MancalaNode extends GameNode<MancalaMove, MancalaState> {}
 
-export abstract class MancalaRules extends ConfigurableRules<MancalaMove, MancalaState, MancalaConfig> {
+export abstract class MancalaRules<C extends MancalaConfig = MancalaConfig>
+    extends ConfigurableRules<MancalaMove, MancalaState, C>
+{
 
     public static readonly FEED_ORIGINAL_HOUSE: Localized = () => $localize`Feed original house`;
     public static readonly MUST_FEED: Localized = () => $localize`Must feed`;
@@ -132,19 +134,18 @@ export abstract class MancalaRules extends ConfigurableRules<MancalaMove, Mancal
      * If the distribution is illegal, returns a failure including the failure reason
      * If the distribution is legal, return a MGPFallible of a boolean that is true if user can still play
      */
-    private isLegalDistribution(distributions: MancalaDistribution, state: MancalaState, config: MancalaConfig)
+    private isLegalDistribution(distribution: MancalaDistribution, state: MancalaState, config: MancalaConfig)
     : MGPFallible<boolean>
     {
         const playerY: number = state.getCurrentPlayerY();
-        if (state.getPieceAtXY(distributions.x, playerY) === 0) {
+        if (state.getPieceAtXY(distribution.x, playerY) === 0) {
             return MGPFallible.failure(MancalaFailure.MUST_CHOOSE_NON_EMPTY_HOUSE());
         }
-        const previousDistributionResult: MancalaDistributionResult =
-            MancalaRules.getEmptyDistributionResult(state);
         const distributionResult: MancalaDistributionResult =
-            this.distributeHouse(distributions.x, playerY, previousDistributionResult, config);
+            this.distributeMove(MancalaMove.of(distribution), state, config);
         const isStarving: boolean = MancalaRules.isStarving(distributionResult.resultingState.getCurrentPlayer(),
                                                             distributionResult.resultingState.board);
+        console.log('can still move: endsUpInStore', distributionResult.endsUpInStore, ' is starving', isStarving)
         return MGPFallible.success(distributionResult.endsUpInStore && isStarving === false);
     }
 
@@ -165,17 +166,23 @@ export abstract class MancalaRules extends ConfigurableRules<MancalaMove, Mancal
             filledCoords: [],
             resultingState: state,
         };
-        for (const distributions of move) {
-            let houseToDistribute: Coord = new Coord(distributions.x, playerY);
+        console.log('doing move', move.toString())
+        for (const distribution of move) {
+            console.log('on distribue', distribution.x)
+            let houseToDistribute: Coord = new Coord(distribution.x, playerY);
             let mustDoOneMoreLap: boolean = true;
             while (mustDoOneMoreLap) {
+                console.log('let us do a lap')
                 distributionResult =
                     this.distributeHouse(houseToDistribute.x, houseToDistribute.y, distributionResult, config);
+                console.log(distributionResult.resultingState)
                 const captures: [number, number] = distributionResult.resultingState.getScoresCopy();
                 captures[playerValue] += distributionResult.passedByStoreNTimes;
                 filledCoords.push(...distributionResult.filledCoords);
                 distributionResult.passedByStoreNTimes += distributionResult.passedByStoreNTimes;
                 houseToDistribute = distributionResult.filledCoords[distributionResult.filledCoords.length - 1];
+                console.log(distributionResult.resultingState)
+                console.log(config.continueLapUntilCaptureOrEmptyHouse, '&&', distributionResult.endsUpInStore)
                 if (config.continueLapUntilCaptureOrEmptyHouse &&
                     distributionResult.endsUpInStore === false)
                 {
@@ -229,7 +236,7 @@ export abstract class MancalaRules extends ConfigurableRules<MancalaMove, Mancal
         return PlayerOrNone.NONE;
     }
 
-    public getGameStatus(node: MancalaNode, config: MGPOptional<MancalaConfig>): GameStatus {
+    public getGameStatus(node: MancalaNode, config: MGPOptional<C>): GameStatus {
         const state: MancalaState = node.gameState;
         const width: number = node.gameState.getWidth();
         const seedsByHouse: number = config.get().seedsByHouse;

@@ -366,6 +366,31 @@ describe('KalahRules', () => {
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState, customConfig);
         });
 
+        it('should allow to do second distribution when multi-lap mancala ends-up in store', () => {
+            // Given any board where a move doing a first distribution ending in store, then another distribution
+            // and a config allowing to do that
+            const customConfig: MGPOptional<MancalaConfig> = MGPOptional.of({
+                ...defaultConfig.get(),
+                passByPlayerStore: true,
+                mustContinueDistributionAfterStore: true,
+                continueLapUntilCaptureOrEmptyHouse: true,
+            });
+            const state: MancalaState = new MancalaState([
+                [0, 2, 2, 0, 2, 0],
+                [2, 0, 2, 1, 1, 0],
+            ], 10, [14, 9]);
+
+            // When applying that move
+            const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(3), [MancalaDistribution.of(4)]);
+
+            // Then it should be legal
+            const expectedState: MancalaState = new MancalaState([
+                [0, 2, 2, 0, 2, 0],
+                [3, 1, 0, 1, 0, 0],
+            ], 11, [15, 9]);
+
+            RulesUtils.expectMoveSuccess(rules, state, move, expectedState, customConfig);
+        });
     });
 
 });
