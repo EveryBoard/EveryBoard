@@ -1,7 +1,7 @@
-(* open Alcotest *)
+open Alcotest
 open Backend
 open Utils
-(* open TestUtils *)
+open TestUtils
 
 module type MOCK = sig
   include FirestorePrimitives.FIRESTORE_PRIMITIVES
@@ -36,26 +36,23 @@ module Mock : MOCK = struct
   let rollback _ _ = failwith "TODO"
 
 end
-
-(* module FirestorePrimitives = FirestorePrimitives.Impl *)
+(*
+module FirestorePrimitives = FirestorePrimitives.Make(ExternalTests.Mock)(TokenRefresherTests.Mock)(StatsTests.Mock)
 
 let tests = [
-  (* TODO
   "Firebase_primitives.get_doc", [
     lwt_test "should retrieve the document returned by firebase" (fun () ->
         (* Given a document that exists *)
-        let no_headers = Cohttp.Header.init () in
-        (* Firestore has a strange way of returning objects, let's mock that *)
         let doc = `Assoc [("foo", `String "bar")] in
-        let firestore_doc_str = JSON.to_string (Firebase.to_firestore ~path:"collection/some-doc" doc) in
-        with_mock External.Http.get (get_mock no_headers `OK firestore_doc_str) (fun _ ->
-            (* When retrieving the document *)
-            let* actual = Firebase_primitives.get_doc "token" "collection/some-doc" in
-            let expected = doc in
-            (* Then it should be the same document *)
-            check json "success" expected actual;
-            Lwt.return ()
-          )
+        let response = ok_response (Cohttp.Header.init ()) in
+        let body = JSON.to_string (to_firestore ~path:"collection/some-doc" doc) in
+        let _ = ExternalTests.Mock.Http.mock_response (response, body) in
+        (* When retrieving the document *)
+        let* actual = FirebasePrimitives.get_doc "token" "collection/some-doc" in
+        let expected = doc in
+        (* Then it should be the same document *)
+        check json "success" expected actual;
+        Lwt.return ()
       );
     lwt_test "should fail if firebase returns an error" (fun () ->
         (* Given a document that does not exist *)
@@ -70,7 +67,7 @@ let tests = [
               )
           )
       );
-  ]; *)
+  ];
 
 ]
 
@@ -93,3 +90,4 @@ let integration_tests = [
       )
   ]; *)
 ]
+ *)

@@ -17,8 +17,8 @@ module type STATS = sig
   (** Record a write being done on an action by a user *)
   val write : Dream.request -> unit
 
-  (** Provide a REST API to access the statistics *)
-  val routes : Dream.route list
+  (** Endpoint to access the statistics *)
+  val summary : Dream.handler
 end
 
 module Impl : STATS = struct
@@ -97,15 +97,14 @@ module Impl : STATS = struct
     let game_id = get_field request game_id_field "none" in
     state.total := update !(state.total);
     update_hashtbl state.per_action action update;
-    update_hashtbl state.per_user user.name update;
+    update_hashtbl state.per_user user.id update;
     update_hashtbl state.per_game game_id update
 
   let read = update add_read
 
   let write = update add_write
 
-  let summary : Dream.route = Dream.get "stats" @@ fun _ ->
+  let summary : Dream.handler = fun _ ->
     Dream.json ~status:`OK (JSON.to_string (to_yojson state))
 
-  let routes = [summary]
 end

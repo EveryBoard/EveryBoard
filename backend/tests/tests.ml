@@ -5,7 +5,7 @@ let () =
   Lwt_main.run @@ Alcotest_lwt.run "unit tests" @@ List.concat [
     (* TODO: DomainTests.tests *)
     (* TODO: ExternalTests.tests *)
-    (* TODO: StatsTests.tests *)
+    StatsTests.tests;
     GoogleCertificatesTests.tests;
     JwtTests.tests;
     TokenRefresherTests.tests;

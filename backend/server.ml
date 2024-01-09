@@ -20,4 +20,6 @@ let start () =
   Dream.run ~interface:!Options.address ~port:!Options.port
   @@ Dream.logger
   @@ Cors.middleware
-  @@ Dream.router (List.concat [Stats.routes; api])
+  @@ Dream.router (List.concat [
+      [Dream.get "/stats" Stats.summary];
+      api])
