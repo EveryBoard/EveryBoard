@@ -36,36 +36,75 @@ module Mock : MOCK = struct
   let rollback _ _ = failwith "TODO"
 
 end
-(*
+
 module FirestorePrimitives = FirestorePrimitives.Make(ExternalTests.Mock)(TokenRefresherTests.Mock)(StatsTests.Mock)
 
 let tests = [
-  "Firebase_primitives.get_doc", [
-    lwt_test "should retrieve the document returned by firebase" (fun () ->
+  "FirestorePrimitives.get_doc", [
+
+    lwt_test "should retrieve the document returned by firestore" (fun () ->
+        let request = Dream.request "/" in
         (* Given a document that exists *)
         let doc = `Assoc [("foo", `String "bar")] in
         let response = ok_response (Cohttp.Header.init ()) in
         let body = JSON.to_string (to_firestore ~path:"collection/some-doc" doc) in
         let _ = ExternalTests.Mock.Http.mock_response (response, body) in
         (* When retrieving the document *)
-        let* actual = FirebasePrimitives.get_doc "token" "collection/some-doc" in
+        let* actual = FirestorePrimitives.get_doc request "collection/some-doc" in
         let expected = doc in
         (* Then it should be the same document *)
         check json "success" expected actual;
         Lwt.return ()
       );
+
     lwt_test "should fail if firebase returns an error" (fun () ->
+        let request = Dream.request "/" in
         (* Given a document that does not exist *)
-        let no_headers = Cohttp.Header.init () in
-        (* TODO: does firebase answer with Not_found? To check. *)
-        with_mock External.Http.get (get_mock no_headers `Not_found "document not found") (fun _ ->
-            (* When retrieving the document *)
-            (* Then it should fail *)
-            lwt_check_raises "failure" (Error "can't retrieve doc") (fun () ->
-                let* _ = Firebase_primitives.get_doc "token" "some/doc" in
-                Lwt.return ()
-              )
+        let _ = ExternalTests.Mock.Http.mock_response (not_found_response, "") in
+        (* When retrieving the document *)
+        (* Then it should fail *)
+        lwt_check_raises "failure" (Error "can't retrieve doc with path some/doc") (fun () ->
+            let* _ = FirestorePrimitives.get_doc request "some/doc" in
+            Lwt.return ()
           )
+      );
+  ];
+
+  "FirestorePrimitives.create_doc", [
+
+    lwt_test "should make a POST request if we don't ask for a specific id, and return the id" (fun () ->
+        let request = Dream.request "/" in
+        (* Given a document that we want to create *)
+        let doc = `Assoc [("foo", `String "bar")] in
+        (* When we create it *)
+        let response = ok_response (Cohttp.Header.init ()) in
+        let body = JSON.to_string (`Assoc [("name", `String "collection/some-id")]) in
+        let mock = ExternalTests.Mock.Http.mock_response (response, body) in
+        (* Then it should have made a POST request and should return the document id*)
+        let* id = FirestorePrimitives.create_doc request "collection" doc in
+        check (list http_query) "query" [(`POST, endpoint ~params:[("mask", "_")] "collection")] !(mock.calls);
+        check string "document id" "some-id" id;
+        Lwt.return ()
+      );
+
+    lwt_test "should make a PATCH request if we want an id, and return the id" (fun () ->
+        let request = Dream.request "/" in
+        (* Given a document that we want to create, along with a specific id*)
+        let id = "some-id" in
+        let doc = `Assoc [("foo", `String "bar")] in
+        (* When we create it *)
+        let response = ok_response (Cohttp.Header.init ()) in
+        let body = JSON.to_string (`Assoc [("name", `String "collection/some-id")]) in
+        let mock = ExternalTests.Mock.Http.mock_response (response, body) in
+        (* Then it should have made a PATCH request and should return the document id*)
+        let* id = FirestorePrimitives.create_doc ~id request "collection" doc in
+        check (list http_query) "query" [(`PATCH, endpoint ~params:[("mask", "_")] "collection/some-id")] !(mock.calls);
+        check string "document id" "some-id" id;
+        Lwt.return ()
+      );
+
+    lwt_test "should fail if the document cannot be created" (fun () ->
+        failwith "TODO"
       );
   ];
 
@@ -90,4 +129,3 @@ let integration_tests = [
       )
   ]; *)
 ]
- *)

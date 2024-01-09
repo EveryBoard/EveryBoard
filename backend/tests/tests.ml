@@ -9,7 +9,7 @@ let () =
     GoogleCertificatesTests.tests;
     JwtTests.tests;
     TokenRefresherTests.tests;
-    (* TODO: FirestorePrimitivesTests.tests *)
+    FirestorePrimitivesTests.tests;
     (* TODO: FirestoreTests.tests *)
     (* TODO: AuthTests.tests *)
     (* TODO: GameTests.tests *)

@@ -39,12 +39,13 @@ module Make
     Stats.read request;
     let* headers = TokenRefresher.header request in
     let* (response, body) = External.Http.get (endpoint path) headers in
+    Printf.printf "%d\n" (Cohttp.Code.code_of_status (Cohttp.Response.status response));
     if is_error response
     then raise (Error ("can't retrieve doc with path " ^ path))
     else Lwt.return (of_firestore (JSON.from_string body))
 
   let get_id_from_firestore_document_name (doc : JSON.t) : string =
-    let name = JSON.Util.to_string (JSON.Util.member "name" doc) in
+    let name = JSON.Util.(doc |> member "name" |> to_string) in
     let elements = String.split_on_char '/' name in
     let id = List.nth elements (List.length elements - 1) in
     id

@@ -10,7 +10,7 @@ module type MOCK = sig
 
   module Http : sig
     include module type of Http
-    val mock_response : (Cohttp.Response.t * string) -> mock
+    val mock_response : (Cohttp.Response.t * string) -> (Dream.method_ * Uri.t) mock
   end
 end
 
@@ -21,25 +21,27 @@ module Mock : MOCK = struct
   let now () = !current_time
 
   module Http = struct
-    let mock = { number_of_calls = ref 0 }
+    let mock = { number_of_calls = ref 0; calls = ref [] }
     let response = ref (Cohttp.Response.make ~version:(`Other "2") ~status:`OK ~headers:(Cohttp.Header.init ()) (), "")
 
     let mock_response mocked_response =
       mock.number_of_calls := 0;
+      mock.calls := [];
       response := mocked_response;
       mock
 
-
-    let mocked () =
+    let mocked request endpoint () =
       mock.number_of_calls := !(mock.number_of_calls) + 1;
+      mock.calls := (request, endpoint) :: !(mock.calls);
       Lwt.return !response
-    let get _ _ = mocked ()
-    let post_form _ _ = mocked ()
-    let post_json _ _ _ = mocked ()
-    let patch_json _ _ _ =  mocked()
-    let delete _ _ =
-      let* _ = mocked () in
+    let get endpoint _ = mocked `GET endpoint ()
+    let post_form endpoint _ = mocked `POST endpoint ()
+    let post_json endpoint _ _ = mocked `POST endpoint ()
+    let patch_json endpoint _ _ =  mocked `PATCH endpoint ()
+    let delete endpoint _ =
+      let* _ = mocked `DELETE endpoint () in
       Lwt.return ()
   end
 
 end
+

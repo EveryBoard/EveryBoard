@@ -3,17 +3,23 @@ open TestUtils
 open Backend
 open Utils
 
-(* module Mock = struct
+module type MOCK = sig
+  include TokenRefresher.TOKEN_REFRESHER
 
   (* To be overriden by the tests that need it *)
+  val token_value : string ref
+end
+
+module Mock : TokenRefresher.TOKEN_REFRESHER = struct
+
   let token_value = ref "token"
 
-  let get_token (_ : Dream.request) : string Lwt.t =
-    Lwt.return !token_value
+  let header (_ : Dream.request) : Cohttp.Header.t Lwt.t =
+    Lwt.return (Cohttp.Header.of_list [authorization_header !token_value])
 
   let middleware (_ : string) : Dream.middleware =
     fun handler -> handler
-end *)
+end
 
 module TokenRefresher = TokenRefresher.Make(ExternalTests.Mock)(JwtTests.Mock)
 

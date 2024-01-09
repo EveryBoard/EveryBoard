@@ -63,21 +63,17 @@ let post_form_mock headers body : (Uri.t -> (string * string list) list -> (Coht
     (Cohttp.Response.make ~version:(`Other "2") ~status:`OK ~headers (),
      body)
 
-type mock = {
+type 'a mock = {
   number_of_calls: int ref;
+  calls : 'a list ref
 }
-
-(* TODO: remove *)
-let with_mock (f : ('a -> 'b) ref) (mocked_f : 'a -> 'b) (body : mock -> 'c) : 'c =
-  let old_value = !f in
-  let mock = { number_of_calls = ref 0 } in
-  let new_f (x : 'a) : 'b =
-    mock.number_of_calls := !(mock.number_of_calls) + 1;
-    mocked_f x in
-  f := new_f;
-  let result = body mock in
-  f := old_value;
-  result
 
 let ok_response headers =
   Cohttp.Response.make ~version:(`Other "2") ~status:`OK ~headers ()
+
+let not_found_response =
+  Cohttp.Response.make ~version:(`Other "2") ~status:`Not_found ()
+
+let http_query : (Dream.method_ * Uri.t) testable =
+  let pp ppf (method_, url) = Fmt.pf ppf "%s at %s" (Dream.method_to_string method_) (Uri.to_string url) in
+  testable pp (=)

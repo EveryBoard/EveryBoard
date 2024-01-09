@@ -3,6 +3,15 @@ open TestUtils
 open Backend
 open Utils
 
+module Mock : Stats.STATS = struct
+  let set_action _ _ = ()
+  let set_user _ _ = ()
+  let set_game_id _ _ = ()
+  let read _ = ()
+  let write _ = ()
+  let summary _ = Dream.empty `OK
+end
+
 module Stats = Stats.Impl
 
 let tests = [
