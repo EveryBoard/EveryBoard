@@ -7,9 +7,13 @@ import { LodestoneMoveGenerator } from '../LodestoneMoveGenerator';
 import { LodestonePiece, LodestonePieceLodestone, LodestonePieceNone, LodestonePiecePlayer } from '../LodestonePiece';
 import { LodestoneNode, LodestoneRules } from '../LodestoneRules';
 import { LodestonePositions, LodestonePressurePlateGroup, LodestonePressurePlates, LodestoneState } from '../LodestoneState';
+import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { LodestoneMove } from '../LodestoneMove';
 
 describe('LodestoneMoveGenerator', () => {
+
     let moveGenerator: LodestoneMoveGenerator;
+    const defaultConfig: NoConfig = LodestoneRules.get().getDefaultRulesConfig();
 
     const N: LodestonePiece = LodestonePieceNone.UNREACHABLE;
     const _: LodestonePiece = LodestonePieceNone.EMPTY;
@@ -24,12 +28,14 @@ describe('LodestoneMoveGenerator', () => {
         // Given the initial state
         const node: LodestoneNode = new LodestoneNode(LodestoneRules.get().getInitialState());
 
-        // When computing all possible moves
+        // When listing the moves
+        const moves: LodestoneMove[] = moveGenerator.getListMoves(node, defaultConfig);
+
         // Then there should be 618 possible moves
         // For each empty coord, each lodestone can be placed in 4 different position
         // For each position, we have to count the possible captures and how they can be placed
         // The total amounts to 618
-        expect(moveGenerator.getListMoves(node).length).toBeGreaterThanOrEqual(618);
+        expect(moves.length).toBeGreaterThanOrEqual(618);
     });
 
     it('should propose 8 moves on a specific minimal board', () => {
@@ -57,11 +63,13 @@ describe('LodestoneMoveGenerator', () => {
             right: LodestonePressurePlateGroup.of([5, 3]).addCaptured(Player.ONE, 8),
         };
         const state: LodestoneState = new LodestoneState(board, 0, lodestones, pressurePlates);
-
         const node: LodestoneNode = new LodestoneNode(state);
-        // When computing all possible moves
+
+        // When listing the moves
+        const moves: LodestoneMove[] = moveGenerator.getListMoves(node, defaultConfig);
+
         // Then there should be 4*2 possible moves
-        expect(moveGenerator.getListMoves(node).length).toBe(8);
+        expect(moves.length).toBe(8);
     });
 
     it('should not propose illegal moves when there is only one spot left in pressure plates', () => {
@@ -86,12 +94,14 @@ describe('LodestoneMoveGenerator', () => {
         const state: LodestoneState = new LodestoneState(board, 0, lodestones, pressurePlates);
 
         const node: LodestoneNode = new LodestoneNode(state);
-        // When computing all possible moves
-        for (const move of moveGenerator.getListMoves(node)) {
+
+        // When listing the moves
+        const moves: LodestoneMove[] = moveGenerator.getListMoves(node, defaultConfig);
+        for (const move of moves) {
+
             // Then all moves should be legal
             expect(LodestoneRules.get().isLegal(move, state).isSuccess()).toBeTrue();
         }
-
     });
 
 });

@@ -1,9 +1,8 @@
 import { Utils } from 'src/app/utils/utils';
 import { NInARowHelper } from '../NInARowHelper';
 import { PlayerOrNone } from '../Player';
-import { Coord } from '../Coord';
 import { Table } from 'src/app/utils/ArrayUtils';
-import { BoardValue } from '../BoardValue';
+import { BoardValue } from '../AI/BoardValue';
 import { GameStateWithTable } from '../GameStateWithTable';
 import { GameStatus } from '../GameStatus';
 
@@ -15,12 +14,9 @@ class AbstractState extends GameStateWithTable<PlayerOrNone> {}
 
 describe('N In A Row Helper', () => {
 
-    function isInRange(coord: Coord): boolean {
-        return coord.isInRange(4, 4);
-    }
     it('should count exactly one victory', () => {
         // Given a helper
-        const helper: NInARowHelper<PlayerOrNone> = new NInARowHelper(isInRange, Utils.identity, 4);
+        const helper: NInARowHelper<PlayerOrNone> = new NInARowHelper(Utils.identity, 4);
 
         // When asking it the board value of a board with a victory
         const board: Table<PlayerOrNone> = [

@@ -2,8 +2,6 @@ import { MoveCoord } from 'src/app/jscaip/MoveCoord';
 import { Orthogonal } from 'src/app/jscaip/Direction';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { Encoder } from 'src/app/utils/Encoder';
-import { MGPFallible } from 'src/app/utils/MGPFallible';
-import { SiamState } from './SiamState';
 
 type SiamMoveFields = [number, number, MGPOptional<Orthogonal>, Orthogonal];
 
@@ -17,7 +15,7 @@ export class SiamMove extends MoveCoord {
             Orthogonal.encoder, // orientation
         ],
         (m: SiamMove): SiamMoveFields => [m.x, m.y, m.direction, m.landingOrientation],
-        (fields: SiamMoveFields): SiamMove => SiamMove.from(fields[0], fields[1], fields[2], fields[3]).get());
+        (fields: SiamMoveFields): SiamMove => SiamMove.of(fields[0], fields[1], fields[2], fields[3]));
 
     private constructor(readonly x: number,
                         readonly y: number,
@@ -26,30 +24,13 @@ export class SiamMove extends MoveCoord {
     {
         super(x, y);
     }
-    public static from(x: number,
-                       y: number,
-                       direction: MGPOptional<Orthogonal>,
-                       landingOrientation: Orthogonal)
-    : MGPFallible<SiamMove>
+    public static of(x: number,
+                     y: number,
+                     direction: MGPOptional<Orthogonal>,
+                     landingOrientation: Orthogonal)
+    : SiamMove
     {
-        const move: SiamMove = new SiamMove(x, y, direction, landingOrientation);
-        const startedOutside: boolean = SiamState.isOnBoard(move.coord) === false;
-        if (move.isRotation()) {
-            if (startedOutside) {
-                return MGPFallible.failure('Cannot rotate piece outside the board: ' + move.toString());
-            }
-        } else {
-            const finishedOutside: boolean = SiamState.isOnBoard(move.coord.getNext(move.direction.get())) === false;
-            if (finishedOutside) {
-                if (startedOutside) {
-                    return MGPFallible.failure('SiamMove should end or start on the board: ' + move.toString());
-                }
-                if (move.direction.get() !== move.landingOrientation) {
-                    return MGPFallible.failure('SiamMove should have moveDirection and landingOrientation matching when a piece goes out of the board: ' + move.toString());
-                }
-            }
-        }
-        return MGPFallible.success(move);
+        return new SiamMove(x, y, direction, landingOrientation);
     }
     public isRotation(): boolean {
         return this.direction.isAbsent();
@@ -66,11 +47,5 @@ export class SiamMove extends MoveCoord {
                            this.coord.y + ', ' +
                            moveDirection + ', ' +
                            this.landingOrientation + ')';
-    }
-    public isInsertion(): boolean {
-        return this.coord.x === -1 ||
-               this.coord.x === +SiamState.SIZE ||
-               this.coord.y === -1 ||
-               this.coord.y === +SiamState.SIZE;
     }
 }

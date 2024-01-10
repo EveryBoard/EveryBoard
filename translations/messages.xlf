@@ -503,6 +503,9 @@
       <trans-unit id="2981217201452500939" datatype="html">
         <source>Start a new game</source>
       </trans-unit>
+      <trans-unit id="342909021169073473" datatype="html">
+        <source>Start with this config</source>
+      </trans-unit>
       <trans-unit id="5675185658977082941" datatype="html">
         <source>Player <x id="PH" equiv-text="gameStatus.winner.value + 1"/></source>
       </trans-unit>
@@ -728,6 +731,18 @@
       <trans-unit id="3852843717175527075" datatype="html">
         <source>The game has been canceled!</source>
       </trans-unit>
+      <trans-unit id="2018922024247045709" datatype="html">
+        <source>Width</source>
+      </trans-unit>
+      <trans-unit id="3033623772164647792" datatype="html">
+        <source>Height</source>
+      </trans-unit>
+      <trans-unit id="5607669932062416162" datatype="html">
+        <source>Default</source>
+      </trans-unit>
+      <trans-unit id="7536677055379713952" datatype="html">
+        <source>Configuration of your <x id="INTERPOLATION" equiv-text="{{ gameName }}"/> game</source>
+      </trans-unit>
       <trans-unit id="6594123400599013490" datatype="html">
         <source>Step finished!</source>
       </trans-unit>
@@ -865,8 +880,11 @@
       <trans-unit id="6535908388530528403" datatype="html">
         <source>Wrong choice, your opponent will win in the next turn no matter which piece is dropped!</source>
       </trans-unit>
-      <trans-unit id="8400174784913655582" datatype="html">
-        <source>Minimax</source>
+      <trans-unit id="6434791622277704389" datatype="html">
+        <source>Rightmost Focus</source>
+      </trans-unit>
+      <trans-unit id="6180360850656792663" datatype="html">
+        <source>Full Board</source>
       </trans-unit>
       <trans-unit id="6011590532570079359" datatype="html">
         <source>Your piece must land on one of the closest six triangles with the same color as the triangle on which the piece is.</source>
@@ -1329,8 +1347,17 @@
       <trans-unit id="2183903120219891237" datatype="html">
         <source>A phalanx cannot contain a piece of the opponent.</source>
       </trans-unit>
+      <trans-unit id="7849636659728976766" datatype="html">
+        <source>Piece &gt; Row Domination &gt; Alignement &gt; Row Presence</source>
+      </trans-unit>
       <trans-unit id="4563771339790181195" datatype="html">
         <source>Positional</source>
+      </trans-unit>
+      <trans-unit id="5348930337239726346" datatype="html">
+        <source>Number of empty rows</source>
+      </trans-unit>
+      <trans-unit id="7516610645583911732" datatype="html">
+        <source>Number of soldier rows</source>
       </trans-unit>
       <trans-unit id="8733936607898144583" datatype="html">
         <source>Initial board</source>
@@ -1527,6 +1554,18 @@
       <trans-unit id="3878972107071324960" datatype="html">
         <source>You cannot commit suicide.</source>
       </trans-unit>
+      <trans-unit id="2969677193390047071" datatype="html">
+        <source>19 x 19</source>
+      </trans-unit>
+      <trans-unit id="287623417167941506" datatype="html">
+        <source>Handicap</source>
+      </trans-unit>
+      <trans-unit id="6402320009813668873" datatype="html">
+        <source>13 x 13</source>
+      </trans-unit>
+      <trans-unit id="4066004856246691695" datatype="html">
+        <source>9 x 9</source>
+      </trans-unit>
       <trans-unit id="1472088308118018916" datatype="html">
         <source>Preliminary information</source>
       </trans-unit>
@@ -1637,6 +1676,9 @@
       </trans-unit>
       <trans-unit id="6217706486990855046" datatype="html">
         <source>Failed, try again.</source>
+      </trans-unit>
+      <trans-unit id="8400174784913655582" datatype="html">
+        <source>Minimax</source>
       </trans-unit>
       <trans-unit id="4791280679911297134" datatype="html">
         <source>The queen bee can only move to one of its direct neighbors.</source>
@@ -2079,8 +2121,8 @@
       <trans-unit id="498712253814253582" datatype="html">
         <source>See, the house that you sowed has not been refilled, and the sowing immediately continued to the next house (which therefore contains two seeds).</source>
       </trans-unit>
-      <trans-unit id="3385498353856500123" datatype="html">
-        <source>After sowing, if the last seed falls in an opponent&apos;s house and if there is now two or three seeds in this house, the player captures these two or three seeds.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, do a capture!</source>
+      <trans-unit id="8492785011380422172" datatype="html">
+        <source>After sowing, if the last seed falls in an opponent&apos;s house and if there are now two or three seeds in this house, the player captures these two or three seeds.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, do a capture!</source>
       </trans-unit>
       <trans-unit id="1449179615423109818" datatype="html">
         <source>Well done! This was a simple capture, now let us see how to make multiple captures.</source>
@@ -2149,6 +2191,21 @@
       </trans-unit>
       <trans-unit id="8846202449877054997" datatype="html">
         <source>You should feed but you do not.</source>
+      </trans-unit>
+      <trans-unit id="1086558575410854374" datatype="html">
+        <source>Feed original house</source>
+      </trans-unit>
+      <trans-unit id="1571603835358328677" datatype="html">
+        <source>Must feed</source>
+      </trans-unit>
+      <trans-unit id="7654623560547531779" datatype="html">
+        <source>Pass by player store</source>
+      </trans-unit>
+      <trans-unit id="8576122948092687879" datatype="html">
+        <source>Must continue distribution after last seed ends in store</source>
+      </trans-unit>
+      <trans-unit id="7080802734755670775" datatype="html">
+        <source>Seeds by house</source>
       </trans-unit>
       <trans-unit id="2949583224863920715" datatype="html">
         <source>Sowing</source>
@@ -2357,11 +2414,8 @@
       <trans-unit id="821589059503120913" datatype="html">
         <source>The goal at Pentago is to align 5 of your pieces. In the following board, Dark wins.</source>
       </trans-unit>
-      <trans-unit id="7705561938199496212" datatype="html">
-        <source>At their turn, players put a piece on the board and possibly rotate one quadrant.
-        As long as there are neutral quadrants, i.e., quadrants that would not change after being rotated, a player may skip rotating a quadrant.
-        To do this, you have to click on the crossed circle that appears at the center of the board when it is possible.&lt;br/&gt;&lt;br/&gt;
-        You&apos;re playing dark, do a simple move.</source>
+      <trans-unit id="6954191985152707764" datatype="html">
+        <source>At their turn, players put a piece on the board and possibly rotate one quadrant. As long as there are neutral quadrants, i.e., quadrants that would not change after being rotated, a player may skip rotating a quadrant. To do this, you have to click on the crossed circle that appears at the center of the board when it is possible.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, do a simple move.</source>
       </trans-unit>
       <trans-unit id="1640662905904405955" datatype="html">
         <source>You have made a move with a rotation. This tutorial step is about moves without rotations!</source>
@@ -2590,9 +2644,8 @@
       <trans-unit id="6014794960681933717" datatype="html">
         <source>Capture (2/2)</source>
       </trans-unit>
-      <trans-unit id="4872428604450835795" datatype="html">
-        <source>A move can also capture a bigger line, and more than one line at a time&lt;br/&gt;&lt;br/&gt;
-        You&apos;re playing light here. Play on the bottom left to see a capture.</source>
+      <trans-unit id="7280078972566788741" datatype="html">
+        <source>A move can also capture a bigger line, and more than one line at a time&lt;br/&gt;&lt;br/&gt;You&apos;re playing Light here. Play on the bottom left to see a capture.</source>
       </trans-unit>
       <trans-unit id="863291659187903950" datatype="html">
         <source>Lower and more to the left, please.</source>
@@ -2683,6 +2736,21 @@
       </trans-unit>
       <trans-unit id="3129880366808972802" datatype="html">
         <source>You should select the orientation of your piece by clicking on one of the arrows.</source>
+      </trans-unit>
+      <trans-unit id="4789301325429521721" datatype="html">
+        <source>Number of piece by player</source>
+      </trans-unit>
+      <trans-unit id="6496295523512347479" datatype="html">
+        <source>Number of bonus mountains</source>
+      </trans-unit>
+      <trans-unit id="5290831626966707862" datatype="html">
+        <source>Cannot rotate piece outside the board: <x id="PH" equiv-text="move.toString()"/></source>
+      </trans-unit>
+      <trans-unit id="3925814099582230333" datatype="html">
+        <source>SiamMove should end or start on the board: <x id="PH" equiv-text="move.toString()"/></source>
+      </trans-unit>
+      <trans-unit id="5519545750670700019" datatype="html">
+        <source>SiamMove should have moveDirection and landingOrientation matching when a piece goes out of the board: <x id="PH" equiv-text="move.toString()"/></source>
       </trans-unit>
       <trans-unit id="1043275525655591688" datatype="html">
         <source>The goal at Siam is to be the first to push a mountain out of the board. The initial board contains three mountains, and no pieces are initially on the board. During its turn, a player can do one of the following actions: &lt;ol&gt;&lt;li&gt;Put a new piece on the board.&lt;/li&gt;&lt;li&gt;Change the orientation of one of its piece&lt;/li&gt;&lt;li&gt;Move one of its piece and optionally reorient it.&lt;/li&gt;&lt;li&gt;Take one of its pieces out of the board.&lt;/li&gt;&lt;/ol&gt;</source>
@@ -2847,6 +2915,21 @@
       <trans-unit id="3372037160964274985" datatype="html">
         <source>Pieces</source>
       </trans-unit>
+      <trans-unit id="9195784792324730674" datatype="html">
+        <source>Central throne is left for good</source>
+      </trans-unit>
+      <trans-unit id="2524296888634788857" datatype="html">
+        <source>Edges are king&apos;s ennemy</source>
+      </trans-unit>
+      <trans-unit id="2642196868516331796" datatype="html">
+        <source>Central throne can surround king</source>
+      </trans-unit>
+      <trans-unit id="3540730147473795195" datatype="html">
+        <source>King far from home can be sandwiched</source>
+      </trans-unit>
+      <trans-unit id="3329390039243374527" datatype="html">
+        <source>Invader starts</source>
+      </trans-unit>
       <trans-unit id="3469374446011769111" datatype="html">
         <source>Brandhub is the Irish version of the Tafl, Tafl being a family of viking strategy game. The goal of the game is different for each player. The attacker plays first. Their pieces (dark) are close to the edges. Their goal is to capture the king, which is in the center of the board. The defender plays second. Their pieces (light) are in the middle. Their goal is to move the king on one of the 4 thrones in the corners. Note that the square in which the king starts, in the center of the board, is also a throne.</source>
       </trans-unit>
@@ -2921,6 +3004,15 @@
       </trans-unit>
       <trans-unit id="2541472060697733126" datatype="html">
         <source>Tablut is the lapland version of the Tafl, Tafl being a family of viking strategy game. The goal of the game is different for each player. The attacker plays first. Its pieces (dark) are close to the edges. Its goal is to capture the king, which is in the center of the board. The defender plays second. Its pieces (light) are in the middle. Its goal is to move the king on one of the 4 thrones in the corners. Note that the square in which the king starts, in the center of the board, is also a throne.</source>
+      </trans-unit>
+      <trans-unit id="1347435830524797455" datatype="html">
+        <source>Standard Teeko</source>
+      </trans-unit>
+      <trans-unit id="6407662856197686253" datatype="html">
+        <source>Piece can teleport</source>
+      </trans-unit>
+      <trans-unit id="560394398723321416" datatype="html">
+        <source>Teleport Teeko</source>
       </trans-unit>
       <trans-unit id="6388473964053708590" datatype="html">
         <source>The goal of the game is to align your 4 pieces, or to form a square with them.</source>
@@ -3173,6 +3265,15 @@
       </trans-unit>
       <trans-unit id="5968000276977717351" datatype="html">
         <source>An unexpected error was encountered. We have logged it and will try to fix its cause as soon as possible.</source>
+      </trans-unit>
+      <trans-unit id="3012694567108651369" datatype="html">
+        <source>This value is mandatory</source>
+      </trans-unit>
+      <trans-unit id="4408456168772857996" datatype="html">
+        <source><x id="PH" equiv-text="value"/> is too small, the minimum is <x id="PH_1" equiv-text="min"/></source>
+      </trans-unit>
+      <trans-unit id="701935636628882602" datatype="html">
+        <source><x id="PH" equiv-text="value"/> is too big, the maximum is <x id="PH_1" equiv-text="max"/></source>
       </trans-unit>
     </body>
   </file>

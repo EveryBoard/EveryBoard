@@ -1,8 +1,12 @@
-import { AwaleMove } from 'src/app/games/mancala/awale/AwaleMove';
 import { MancalaState } from 'src/app/games/mancala/common/MancalaState';
 import { Tutorial, TutorialStep } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { MancalaTutorial } from '../common/MancalaTutorial';
+import { MancalaConfig } from '../common/MancalaConfig';
+import { MancalaDistribution, MancalaMove } from '../common/MancalaMove';
 import { AwaleRules } from './AwaleRules';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
+
+const defaultConfig: MGPOptional<MancalaConfig> = AwaleRules.get().getDefaultRulesConfig();
 
 export class AwaleTutorial extends Tutorial {
 
@@ -12,14 +16,17 @@ export class AwaleTutorial extends Tutorial {
         TutorialStep.informational(
             this.gameName,
             $localize`${this.gameName} is a Mancala. Mancala is the name of a family of board games that dates back at least to the third century. Mancalas are games of distribution (sowing) and capture. Their goal is to capture the most seeds. The spaces in Mancalas are called the houses. The ones on the extreme left and right are called the stores, they contain the seeds that each player won. As you are playing Dark, the 6 houses on the bottom are yours.`,
-            AwaleRules.get().getInitialState(),
+            AwaleRules.get().getInitialState(defaultConfig),
         ),
         TutorialStep.informational(
             $localize`Awalé`,
             $localize`Bonus fact: Awalé is the most common of all Mancalas.`,
-            AwaleRules.get().getInitialState(),
+            AwaleRules.get().getInitialState(defaultConfig),
         ),
-        MancalaTutorial.sowing(AwaleRules.get().getInitialState(), AwaleMove.FIVE),
+        MancalaTutorial.sowing(
+            AwaleRules.get().getInitialState(defaultConfig),
+            MancalaMove.of(MancalaDistribution.of(5)),
+        ),
 
         TutorialStep.anyMove(
             $localize`Big sowing`,
@@ -30,17 +37,17 @@ export class AwaleTutorial extends Tutorial {
                 [0, 0, 0, 0, 0, 0],
                 [0, 12, 0, 0, 0, 0],
             ], 0, [0, 0]),
-            AwaleMove.ONE,
+            MancalaMove.of(MancalaDistribution.of(1)),
             $localize`See, the house that you sowed has not been refilled, and the sowing immediately continued to the next house (which therefore contains two seeds).`,
         ),
         TutorialStep.fromMove(
             $localize`Simple capture`,
-            $localize`After sowing, if the last seed falls in an opponent's house and if there is now two or three seeds in this house, the player captures these two or three seeds.<br/><br/>You're playing Dark, do a capture!`,
+            $localize`After sowing, if the last seed falls in an opponent's house and if there are now two or three seeds in this house, the player captures these two or three seeds.<br/><br/>You're playing Dark, do a capture!`,
             new MancalaState([
                 [0, 1, 0, 0, 1, 0],
                 [2, 0, 0, 0, 1, 0],
             ], 0, [0, 0]),
-            [AwaleMove.ZERO],
+            [MancalaMove.of(MancalaDistribution.of(0))],
             $localize`Well done! This was a simple capture, now let us see how to make multiple captures.`,
             $localize`Failed. Try again and sow from the leftmost house.`,
         ),
@@ -51,7 +58,7 @@ export class AwaleTutorial extends Tutorial {
                 [2, 1, 0, 0, 1, 0],
                 [2, 0, 0, 0, 1, 0],
             ], 0, [0, 0]),
-            [AwaleMove.ZERO],
+            [MancalaMove.of(MancalaDistribution.of(0))],
             $localize`Nice, you win 3 points from the first house, and 2 from the second!`,
             $localize`Failed. Try again.`,
         ),
@@ -62,7 +69,7 @@ export class AwaleTutorial extends Tutorial {
                 [1, 0, 1, 0, 0, 1],
                 [3, 0, 0, 0, 1, 0],
             ], 0, [0, 0]),
-            [AwaleMove.ZERO],
+            [MancalaMove.of(MancalaDistribution.of(0))],
             $localize`Notice that because the second house was not capturable, the capture was interrupted and you have not captured the first house.`,
             $localize`Failed. Try again.`,
         ),
@@ -73,7 +80,7 @@ export class AwaleTutorial extends Tutorial {
                 [2, 2, 0, 0, 1, 0],
                 [1, 3, 0, 0, 0, 0],
             ], 0, [0, 0]),
-            [AwaleMove.ONE],
+            [MancalaMove.of(MancalaDistribution.of(1))],
             $localize`Congratulations! Notice that the capture was interrupted when entering your territory: you cannot capture your own houses!`,
             $localize`You have only captured one house, try again!`,
         ),
@@ -84,7 +91,7 @@ export class AwaleTutorial extends Tutorial {
                 [1, 1, 1, 1, 1, 0],
                 [5, 0, 0, 1, 0, 0],
             ], 0, [0, 0]),
-            [AwaleMove.ZERO],
+            [MancalaMove.of(MancalaDistribution.of(0))],
             $localize`Sadly, you cannot capture here, otherwise the opponent could not play after you.
         When this happens, the move can be made, but no capture takes place!`,
             $localize`Failed. Try again.`,
@@ -96,7 +103,7 @@ export class AwaleTutorial extends Tutorial {
                 [0, 0, 0, 0, 0, 0],
                 [0, 1, 2, 4, 4, 5],
             ], 0, [0, 0]),
-            AwaleMove.THREE,
+            MancalaMove.of(MancalaDistribution.of(3)),
             $localize`Congratulations! Note that you can choose to give your opponent the least number of seeds if it is better for you.
         It is often a good way to have easy captures!`,
         ),
@@ -107,7 +114,7 @@ export class AwaleTutorial extends Tutorial {
                 [4, 4, 3, 2, 1, 0],
                 [1, 0, 0, 0, 0, 0],
             ], 0, [23, 10]),
-            AwaleMove.ZERO,
+            MancalaMove.of(MancalaDistribution.of(0)),
             $localize`Also, as soon as on player cannot play, the other player captures all the seeds in its own side. Here, it was the first player's turn, and the second player has taken all the remaining seeds.`,
         ),
     ];

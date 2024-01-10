@@ -4,8 +4,8 @@ import { NewGameMove } from './NewGameMove';
 import { NewGameState } from './NewGameState';
 import { Component } from '@angular/core';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
-import { NewGameTutorial } from './NewGameTutorial';
-import { MCTS } from 'src/app/jscaip/MCTS';
+import { MCTS } from 'src/app/jscaip/AI/MCTS';
+import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 import { NewGameMoveGenerator } from './NewGameMoveGenerator';
 import { NewGameMinimax } from './NewGameMinimax';
 
@@ -26,6 +26,7 @@ import { NewGameMinimax } from './NewGameMinimax';
 export class NewGameComponent extends GameComponent<NewGameRules,
                                                     NewGameMove,
                                                     NewGameState,
+                                                    RulesConfig,
                                                     NewGameLegalityInfo>
 {
     /**
@@ -35,18 +36,18 @@ export class NewGameComponent extends GameComponent<NewGameRules,
      */
     public constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
-        // If the board you draw must be rotated of 180° when you play the second player, enable the following:
-        // this.hasAsymmetricBoard = true;
-        // If your game has scores in-game, enable the following:
-        // this.scores = MGPOptional.of([0, 0]);
-        this.rules = NewGameRules.get();
-        this.node = this.rules.getInitialNode();
-        this.encoder = NewGameMove.encoder;
-        this.tutorial = new NewGameTutorial().tutorial;
+        this.setRulesAndNode('NewGame');
         this.availableAIs = [
             new NewGameMinimax(),
             new MCTS($localize`MCTS`, new NewGameMoveGenerator(), this.rules),
         ];
+        this.encoder = NewGameMove.encoder;
+
+        // If the board you draw must be rotated of 180° when you play the second player, enable the following:
+        // this.hasAsymmetricBoard = true;
+
+        // If your game has scores in-game, enable the following:
+        // this.scores = MGPOptional.of([0, 0]);
     }
     /**
      * This method updates the displayed board.
@@ -64,7 +65,6 @@ export class NewGameComponent extends GameComponent<NewGameRules,
      */
     public override cancelMoveAttempt(): void {
     }
-
 
     /**
      * In the component's HTML, you will likely set onClick elements.

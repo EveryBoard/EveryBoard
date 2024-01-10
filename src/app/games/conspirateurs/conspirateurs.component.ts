@@ -11,9 +11,8 @@ import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { ConspirateursMove, ConspirateursMoveDrop, ConspirateursMoveJump, ConspirateursMoveSimple } from './ConspirateursMove';
 import { ConspirateursRules } from './ConspirateursRules';
 import { ConspirateursState } from './ConspirateursState';
-import { ConspirateursTutorial } from './ConspirateursTutorial';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
-import { MCTS } from 'src/app/jscaip/MCTS';
+import { MCTS } from 'src/app/jscaip/AI/MCTS';
 import { ConspirateursMoveGenerator } from './ConspirateursMoveGenerator';
 import { ConspirateursJumpMinimax } from './ConspirateursJumpMinimax';
 
@@ -62,15 +61,13 @@ export class ConspirateursComponent extends GameComponent<ConspirateursRules, Co
 
     public constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
-        this.PIECE_RADIUS = (this.SPACE_SIZE / 2) - this.STROKE_WIDTH;
-        this.rules = ConspirateursRules.get();
-        this.node = this.rules.getInitialNode();
+        this.setRulesAndNode('Conspirateurs');
         this.availableAIs = [
             new ConspirateursJumpMinimax(),
             new MCTS($localize`MCTS`, new ConspirateursMoveGenerator(), this.rules),
         ];
         this.encoder = ConspirateursMove.encoder;
-        this.tutorial = new ConspirateursTutorial().tutorial;
+        this.PIECE_RADIUS = (this.SPACE_SIZE / 2) - this.STROKE_WIDTH;
     }
     public async updateBoard(_triggerAnimation: boolean): Promise<void> {
         this.updateViewInfo();
@@ -80,9 +77,9 @@ export class ConspirateursComponent extends GameComponent<ConspirateursRules, Co
         this.viewInfo.dropPhase = state.isDropPhase();
         this.viewInfo.boardInfo = [];
         this.viewInfo.lastMoveArrow = '';
-        for (let y: number = 0; y < ConspirateursState.HEIGHT; y++) {
+        for (let y: number = 0; y < state.getHeight(); y++) {
             this.viewInfo.boardInfo.push([]);
-            for (let x: number = 0; x < ConspirateursState.WIDTH; x++) {
+            for (let x: number = 0; x < state.getWidth(); x++) {
                 const coord: Coord = new Coord(x, y);
                 const piece: PlayerOrNone = state.getPieceAt(coord);
                 const squareInfo: SquareInfo = {

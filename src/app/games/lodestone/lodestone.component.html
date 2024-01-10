@@ -14,7 +14,8 @@
                       [attr.x]="0"
                       [attr.y]="0"
                       [attr.width]="SPACE_SIZE"
-                      [attr.height]="SPACE_SIZE"/>
+                      [attr.height]="SPACE_SIZE"
+                />
                 <g *ngIf="square.isCrumbled"
                    class="lodestone_crumbled_square">
                     <polygon points="0,0     42,0    17,25    67,75    42,100   0,100   0,0"
@@ -26,7 +27,7 @@
                              class="base"
                     />
                 </g>
-                <circle *ngIf="square.hasPieceToDraw"
+                <circle *ngIf="square.hasPieceToDraw && square.lodestone === undefined"
                         id="piece_{{ x }}_{{ y }}"
                         class="base"
                         [ngClass]="square.pieceClasses"

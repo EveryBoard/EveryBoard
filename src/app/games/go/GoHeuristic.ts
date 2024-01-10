@@ -1,18 +1,20 @@
 import { GoState, GoPiece } from './GoState';
 import { GoMove } from './GoMove';
-import { PlayerMetricHeuristic } from 'src/app/jscaip/Minimax';
-import { GoNode, GoRules } from './GoRules';
+import { PlayerMetricHeuristic } from 'src/app/jscaip/AI/Minimax';
+import { PlayerNumberTable } from 'src/app/jscaip/PlayerNumberTable';
+import { GoConfig, GoNode, GoRules } from './GoRules';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
 
-export class GoHeuristic extends PlayerMetricHeuristic<GoMove, GoState> {
+export class GoHeuristic extends PlayerMetricHeuristic<GoMove, GoState, GoConfig> {
 
-    public getMetrics(node: GoNode): [number, number] {
+    public override getMetrics(node: GoNode, _config: MGPOptional<GoConfig>): PlayerNumberTable {
         const goState: GoState = GoRules.markTerritoryAndCount(node.gameState);
         const goScore: number[] = goState.getCapturedCopy();
         const goKilled: number[] = this.getDeadStones(goState);
-        return [
-            goScore[0] + (2 * goKilled[1]),
-            goScore[1] + (2 * goKilled[0]),
-        ];
+        return PlayerNumberTable.of(
+            [goScore[0] + (2 * goKilled[1])],
+            [goScore[1] + (2 * goKilled[0])],
+        );
     }
 
     public getDeadStones(state: GoState): number[] {
@@ -26,4 +28,5 @@ export class GoHeuristic extends PlayerMetricHeuristic<GoMove, GoState> {
         }
         return killed;
     }
+
 }

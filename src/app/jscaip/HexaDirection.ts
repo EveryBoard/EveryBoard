@@ -3,7 +3,6 @@ import { MGPFallible } from '../utils/MGPFallible';
 import { BaseDirection, DirectionFactory } from './Direction';
 import { Encoder } from '../utils/Encoder';
 
-
 /** Hexagonal directions encoded with axial coordinates, for "flat toped" hexagons */
 export class HexaDirection extends BaseDirection {
 

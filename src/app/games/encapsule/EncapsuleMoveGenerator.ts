@@ -7,13 +7,14 @@ import { EncapsuleMove } from './EncapsuleMove';
 import { EncapsulePiece } from './EncapsulePiece';
 import { EncapsuleRules, EncapsuleNode, EncapsuleLegalityInformation } from './EncapsuleRules';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
-import { MoveGenerator } from 'src/app/jscaip/AI';
+import { MoveGenerator } from 'src/app/jscaip/AI/AI';
+import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 export class EncapsuleMoveGenerator extends MoveGenerator<EncapsuleMove, EncapsuleState> {
 
-    public getListMoves(n: EncapsuleNode): EncapsuleMove[] {
+    public override getListMoves(node: EncapsuleNode, _config: NoConfig): EncapsuleMove[] {
         const moves: EncapsuleMove[] = [];
-        const state: EncapsuleState = n.gameState;
+        const state: EncapsuleState = node.gameState;
         const board: Table<EncapsuleSpace> = state.getCopiedBoard();
         const currentPlayer: Player = state.getCurrentPlayer();
         const puttablePieces: EncapsulePiece[] = Sets.toComparableObjectSet(state.getPlayerRemainingPieces());

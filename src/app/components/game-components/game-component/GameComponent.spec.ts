@@ -64,14 +64,14 @@ describe('GameComponent', () => {
         Coerceo: { onClick: [0, 0] },
         ConnectSix: { onClick: [0, 0] },
         Conspirateurs: { onClick: [new Coord(0, 0)] },
+        Diaballik: {
+            onClick: [0, 0],
+            done: [],
+        },
         Diam: {
             onSpaceClick: [0],
             onPieceInGameClick: [0, 0],
             onRemainingPieceClick: [DiamPiece.ZERO_FIRST],
-        },
-        Diaballik: {
-            onClick: [0, 0],
-            done: [],
         },
         Dvonn: { onClick: [0, 0] },
         Encapsule: {
@@ -134,13 +134,13 @@ describe('GameComponent', () => {
         Sahara: { onClick: [0, 0] },
         Siam: {
             selectPieceForInsertion: [Player.ZERO, 0],
-            selectOrientation: [SiamMove.from(0, 0, MGPOptional.of(Orthogonal.DOWN), Orthogonal.DOWN).get()],
+            selectOrientation: [SiamMove.of(0, 0, MGPOptional.of(Orthogonal.DOWN), Orthogonal.DOWN)],
             clickSquare: [0, 0],
             clickArrow: [{
                 source: MGPOptional.empty(),
                 target: new Coord(0, 0),
                 direction: Orthogonal.DOWN,
-                move: SiamMove.from(0, 0, MGPOptional.of(Orthogonal.DOWN), Orthogonal.DOWN).get(),
+                move: SiamMove.of(0, 0, MGPOptional.of(Orthogonal.DOWN), Orthogonal.DOWN),
             }],
         },
         Six: {
@@ -157,16 +157,16 @@ describe('GameComponent', () => {
 
     const refusal: MGPValidation = MGPValidation.failure(GameWrapperMessages.CANNOT_PLAY_AS_OBSERVER());
     for (const gameInfo of GameInfo.ALL_GAMES()) {
-        it(`clicks method should refuse when observer click (${ gameInfo.urlName })`, fakeAsync(async() => {
+        it(`clicks method should refuse when observer click (${ gameInfo.urlName})`, fakeAsync(async() => {
             const game: { [methodName: string]: unknown[] } | undefined = clickableMethods[gameInfo.urlName];
             if (game == null) {
                 throw new Error('Please define ' + gameInfo.urlName + ' clickable method in here to test them.');
             }
             activatedRouteStub.setRoute('compo', gameInfo.urlName);
             const testUtils: ComponentTestUtils<AbstractGameComponent> =
-                await ComponentTestUtils.forGame(gameInfo.urlName, false);
+                await ComponentTestUtils.forGame(gameInfo.urlName);
             const component: AbstractGameComponent = testUtils.getGameComponent();
-            testUtils.getWrapper().role = PlayerOrNone.NONE;
+            await testUtils.getWrapper().setRole(PlayerOrNone.NONE);
             testUtils.detectChanges();
             tick(0);
             expect(component).toBeDefined();
@@ -181,12 +181,13 @@ describe('GameComponent', () => {
             }
         }));
     }
-    it('should have an encoder, tutorial and AI for every game', fakeAsync(async() =>{
-        for (const gameInfo of GameInfo.ALL_GAMES()) {
+
+    for (const gameInfo of GameInfo.ALL_GAMES()) {
+        it(`should have an encoder, tutorial and AI for ${ gameInfo.name }`, fakeAsync(async() => {
             // Given a game
             activatedRouteStub.setRoute('compo', gameInfo.urlName);
             const testUtils: ComponentTestUtils<AbstractGameComponent> =
-                await ComponentTestUtils.forGame(gameInfo.urlName, false);
+                await ComponentTestUtils.forGame(gameInfo.urlName);
 
             // When displaying the game
             const component: AbstractGameComponent = testUtils.getGameComponent();
@@ -198,22 +199,6 @@ describe('GameComponent', () => {
             expect(component.tutorial).withContext('tutorial missing for ' + gameInfo.urlName).toBeTruthy();
             expect(component.tutorial.length).withContext('tutorial empty for ' + gameInfo.urlName).toBeGreaterThan(0);
             expect(component.availableAIs.length).withContext('AI list empty for ' + gameInfo.urlName).toBeGreaterThan(0);
-        }
-    }));
-    it('should have an AI for every game', fakeAsync(async() => {
-        for (const gameInfo of GameInfo.ALL_GAMES()) {
-            // Given a game
-            activatedRouteStub.setRoute('compo', gameInfo.urlName);
-            const testUtils: ComponentTestUtils<AbstractGameComponent> =
-                await ComponentTestUtils.forGame(gameInfo.urlName, false);
-
-            // When displaying the game
-            const component: AbstractGameComponent = testUtils.getGameComponent();
-            testUtils.detectChanges();
-            tick(0);
-
-            // Then it should have at least one AI
-            expect(component.availableAIs.length).withContext('AI missing for ' + gameInfo.urlName).toBeGreaterThan(0);
-        }
-    }));
+        }));
+    }
 });

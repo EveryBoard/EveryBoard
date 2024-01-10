@@ -1,27 +1,37 @@
 /* eslint-disable max-lines-per-function */
-import { GameNode } from '../GameNode';
+import { GameNode } from '../AI/GameNode';
 import { Move } from '../Move';
 import { Player } from '../Player';
-import { Rules } from '../Rules';
+import { SuperRules } from '../Rules';
 import { GameState } from '../GameState';
 import { comparableEquals, isComparableObject } from 'src/app/utils/Comparable';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { GameStatus } from '../GameStatus';
 import { JSONValue, Utils } from 'src/app/utils/utils';
+import { EmptyRulesConfig, RulesConfig } from '../RulesConfigUtil';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 export class RulesUtils {
 
-    public static expectMoveSuccess<R extends Rules<M, S, L>,
+    public static expectMoveSuccess<R extends SuperRules<M, S, C, L>,
                                     M extends Move,
                                     S extends GameState,
-                                    L>(rules: R, state: S, move: M, expectedState: S)
+                                    L,
+                                    C extends RulesConfig>(rules: R,
+                                                           state: S,
+                                                           move: M,
+                                                           expectedState: S,
+                                                           config: MGPOptional<C>)
     : void
     {
-        const legality: MGPFallible<L> = rules.isLegal(move, state);
+        const legality: MGPFallible<L> = rules.isLegal(move, state, config);
         if (legality.isSuccess()) {
-            const resultingState: S = rules.applyLegalMove(move, state, legality.get());
+            const resultingState: S = rules.applyLegalMove(move, state, config, legality.get());
             if (isComparableObject(resultingState)) {
                 const equals: boolean = comparableEquals(resultingState, expectedState);
+                if (equals === false) {
+                    console.log(expectedState, resultingState);
+                }
                 expect(equals).withContext('comparable states should be equal').toBeTrue();
             } else {
                 expect(resultingState).withContext('states should be equal').toEqual(expectedState);
@@ -30,41 +40,66 @@ export class RulesUtils {
             throw new Error('expected move to be valid but it is not: ' + legality.getReason());
         }
     }
-    public static expectMoveFailure<R extends Rules<M, S, L>, M extends Move, S extends GameState, L>(
+
+    public static expectMoveFailure<R extends SuperRules<M, S, C, L>,
+                                    M extends Move,
+                                    S extends GameState,
+                                    L,
+                                    C extends RulesConfig = EmptyRulesConfig>(
         rules: R,
         state: S,
         move: M,
-        reason: string)
+        reason: string,
+        config: MGPOptional<C>)
     : void
     {
-        const legality: MGPFallible<L> = rules.isLegal(move, state);
+        const legality: MGPFallible<L> = rules.isLegal(move, state, config);
         expect(legality.isFailure()).withContext('move should have failed but it succeeded').toBeTrue();
         expect(legality.getReason()).toBe(reason);
     }
-    public static expectToBeVictoryFor<R extends Rules<M, S, L>, M extends Move, S extends GameState, L>(
+
+    public static expectToBeVictoryFor<R extends SuperRules<M, S, C, L>,
+                                       M extends Move,
+                                       S extends GameState,
+                                       L,
+                                       C extends RulesConfig = EmptyRulesConfig>(
         rules: R,
         node: GameNode<M, S>,
-        player: Player)
+        player: Player,
+        config: MGPOptional<C> = MGPOptional.empty())
     : void
     {
-        expect(rules.getGameStatus(node))
+        expect(rules.getGameStatus(node, config))
             .withContext('Rules should consider gameStatus a victory for player ' + player.value)
             .toEqual(GameStatus.getVictory(player));
     }
-    public static expectToBeOngoing<R extends Rules<M, S, L>, M extends Move, S extends GameState, L>(
+
+    public static expectToBeOngoing<R extends SuperRules<M, S, C, L>,
+                                    M extends Move,
+                                    S extends GameState,
+                                    L,
+                                    C extends RulesConfig = EmptyRulesConfig>(
         rules: R,
-        node: GameNode<M, S>)
+        node: GameNode<M, S>,
+        config: MGPOptional<C> = MGPOptional.empty())
     : void
     {
-        expect(rules.getGameStatus(node)).toEqual(GameStatus.ONGOING);
+        expect(rules.getGameStatus(node, config)).toEqual(GameStatus.ONGOING);
     }
-    public static expectToBeDraw<R extends Rules<M, S, L>, M extends Move, S extends GameState, L>(
+
+    public static expectToBeDraw<R extends SuperRules<M, S, C, L>,
+                                 M extends Move,
+                                 S extends GameState,
+                                 L,
+                                 C extends RulesConfig = EmptyRulesConfig>(
         rules: R,
-        node: GameNode<M, S>)
+        node: GameNode<M, S>,
+        config: MGPOptional<C> = MGPOptional.empty())
     : void
     {
-        expect(rules.getGameStatus(node)).toBe(GameStatus.DRAW);
+        expect(rules.getGameStatus(node, config)).toBe(GameStatus.DRAW);
     }
+
     /**
      * @param ruler the rules of the game you need to debug
      * @param encodedMoves the encoded moves that caused the bug
@@ -72,20 +107,25 @@ export class RulesUtils {
      * @param moveDecoder the move decoder
      * @returns the state creates from applying the moves, enjoy you debug !
      */
-    public static applyMoves<S extends GameState, M extends Move, L>(ruler: Rules<M, S, L>,
-                                                                     encodedMoves: JSONValue[],
-                                                                     state: S,
-                                                                     moveDecoder: (em: JSONValue) => M)
+    public static applyMoves<S extends GameState,
+                             M extends Move,
+                             L,
+                             C extends RulesConfig>(ruler: SuperRules<M, S, C, L>,
+                                                    encodedMoves: JSONValue[],
+                                                    state: S,
+                                                    moveDecoder: (em: JSONValue) => M,
+                                                    config: MGPOptional<C> = MGPOptional.empty())
     : S
     {
         let i: number = 0;
         for (const encodedMove of encodedMoves) {
             const move: M = moveDecoder(encodedMove);
-            const legality: MGPFallible<L> = ruler.isLegal(move, state);
+            const legality: MGPFallible<L> = ruler.isLegal(move, state, config);
             Utils.assert(legality.isSuccess(), `Can't create state from invalid moves (` + i + '): ' + legality.toString() + '.');
-            state = ruler.applyLegalMove(move, state, legality.get());
+            state = ruler.applyLegalMove(move, state, config, legality.get());
             i++;
         }
         return state;
     }
+
 }

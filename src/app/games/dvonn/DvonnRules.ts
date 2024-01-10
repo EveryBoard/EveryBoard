@@ -1,4 +1,4 @@
-import { GameNode } from 'src/app/jscaip/GameNode';
+import { GameNode } from 'src/app/jscaip/AI/GameNode';
 import { DvonnState } from './DvonnState';
 import { DvonnPieceStack } from './DvonnPieceStack';
 import { DvonnMove } from './DvonnMove';
@@ -10,10 +10,11 @@ import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { DvonnFailure } from './DvonnFailure';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
-import { assert } from 'src/app/utils/assert';
 import { HexagonalUtils } from 'src/app/jscaip/HexagonalUtils';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { Utils } from 'src/app/utils/utils';
+import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 export class DvonnNode extends GameNode<DvonnMove, DvonnState> {}
 
@@ -28,7 +29,7 @@ export class DvonnRules extends Rules<DvonnMove, DvonnState> {
         return DvonnRules.singleton.get();
     }
 
-    public getInitialState(): DvonnState {
+    public override getInitialState(): DvonnState {
         return new DvonnState(DvonnState.balancedBoard(), 0, false);
     }
 
@@ -89,7 +90,7 @@ export class DvonnRules extends Rules<DvonnMove, DvonnState> {
         return [p0Score, p1Score];
     }
     public isMovablePiece(state: DvonnState, coord: Coord): MGPValidation {
-        assert(state.isOnBoard(coord), 'piece is not on the board');
+        Utils.assert(state.isOnBoard(coord), 'piece is not on the board');
         const stack: DvonnPieceStack = state.getPieceAt(coord);
         if (stack.getSize() < 1) {
             return MGPValidation.failure(DvonnFailure.EMPTY_STACK());
@@ -97,7 +98,7 @@ export class DvonnRules extends Rules<DvonnMove, DvonnState> {
         if (stack.belongsTo(state.getCurrentPlayer()) === false) {
             return MGPValidation.failure(DvonnFailure.NOT_PLAYER_PIECE());
         }
-        if (state.numberOfNeighbors(coord) >= 6) {
+        if (6 <= state.numberOfNeighbors(coord)) {
             return MGPValidation.failure(DvonnFailure.TOO_MANY_NEIGHBORS());
         }
         if (DvonnRules.pieceHasTarget(state, coord) === false) {
@@ -139,7 +140,8 @@ export class DvonnRules extends Rules<DvonnMove, DvonnState> {
         });
         return newState;
     }
-    public applyLegalMove(move: DvonnMove, state: DvonnState, _info: void): DvonnState {
+
+    public override applyLegalMove(move: DvonnMove, state: DvonnState, _config: NoConfig, _info: void): DvonnState {
         if (move === DvonnMove.PASS) {
             return new DvonnState(state.board, state.turn + 1, true);
         } else {
@@ -155,7 +157,8 @@ export class DvonnRules extends Rules<DvonnMove, DvonnState> {
             return resultingState;
         }
     }
-    public isLegal(move: DvonnMove, state: DvonnState): MGPValidation {
+
+    public override isLegal(move: DvonnMove, state: DvonnState, _config: NoConfig): MGPValidation {
         if (DvonnRules.getMovablePieces(state).length === 0) {
             // If no pieces are movable, the player can pass
             // but only if the previous move was not a pass itself

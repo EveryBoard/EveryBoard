@@ -1,6 +1,6 @@
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { Orthogonal } from 'src/app/jscaip/Direction';
-import { GameNode } from 'src/app/jscaip/GameNode';
+import { GameNode } from 'src/app/jscaip/AI/GameNode';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { Rules } from 'src/app/jscaip/Rules';
 import { PylosCoord } from './PylosCoord';
@@ -13,6 +13,7 @@ import { MGPSet } from 'src/app/utils/MGPSet';
 import { MGPFallible } from '../../utils/MGPFallible';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { TableUtils } from 'src/app/utils/ArrayUtils';
+import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 export class PylosNode extends GameNode<PylosMove, PylosState> {}
 
@@ -27,7 +28,7 @@ export class PylosRules extends Rules<PylosMove, PylosState> {
         return PylosRules.singleton.get();
     }
 
-    public getInitialState(): PylosState {
+    public override getInitialState(): PylosState {
         const board0: PlayerOrNone[][] = TableUtils.create(4, 4, PlayerOrNone.NONE);
         const board1: PlayerOrNone[][] = TableUtils.create(3, 3, PlayerOrNone.NONE);
         const board2: PlayerOrNone[][] = TableUtils.create(2, 2, PlayerOrNone.NONE);
@@ -56,6 +57,7 @@ export class PylosRules extends Rules<PylosMove, PylosState> {
         }
         return { freeToMove, landable };
     }
+
     public static getClimbingMoves(stateInfo: { freeToMove: PylosCoord[], landable: PylosCoord[] }): PylosMove[] {
         const moves: PylosMove[] = [];
         for (const startingCoord of stateInfo.freeToMove) {
@@ -69,6 +71,7 @@ export class PylosRules extends Rules<PylosMove, PylosState> {
         }
         return moves;
     }
+
     public static getDropMoves(stateInfo: { freeToMove: PylosCoord[], landable: PylosCoord[] }): PylosMove[] {
         const drops: PylosMove[] = [];
         for (const landableCoord of stateInfo.landable) {
@@ -77,6 +80,7 @@ export class PylosRules extends Rules<PylosMove, PylosState> {
         }
         return drops;
     }
+
     public static canCapture(state: PylosState, landingCoord: PylosCoord): boolean {
         const currentPlayer: Player = state.getCurrentPlayer();
         for (const vertical of [Orthogonal.UP, Orthogonal.DOWN]) {
@@ -98,6 +102,7 @@ export class PylosRules extends Rules<PylosMove, PylosState> {
         }
         return false;
     }
+
     public static getPossibleCaptures(state: PylosState): MGPSet<MGPSet<PylosCoord>> {
         const possiblesCapturesSet: MGPSet<MGPSet<PylosCoord>> = new MGPSet();
 
@@ -114,9 +119,7 @@ export class PylosRules extends Rules<PylosMove, PylosState> {
         }
         return possiblesCapturesSet;
     }
-    public static applyLegalMove(move: PylosMove, state: PylosState, _info: void): PylosState {
-        return state.applyLegalMove(move);
-    }
+
     public static isValidCapture(state: PylosState, move: PylosMove, capture: PylosCoord): boolean {
         const currentPlayer: Player = state.getCurrentPlayer();
         if (capture.equals(move.landingCoord) === false &&
@@ -129,6 +132,7 @@ export class PylosRules extends Rules<PylosMove, PylosState> {
                                            coord.equals(move.firstCapture.get()) === false);
         return supportedPieces.length === 0;
     }
+
     public static getGameStatus(node: PylosNode): GameStatus {
         const state: PylosState = node.gameState;
         const ownershipMap: { [owner: number]: number } = state.getPiecesRepartition();
@@ -140,10 +144,12 @@ export class PylosRules extends Rules<PylosMove, PylosState> {
             return GameStatus.ONGOING;
         }
     }
-    public applyLegalMove(move: PylosMove, state: PylosState, status: void): PylosState {
-        return PylosRules.applyLegalMove(move, state, status);
+
+    public override applyLegalMove(move: PylosMove, state: PylosState, _config: NoConfig, _info: void): PylosState {
+        return state.applyLegalMove(move);
     }
-    public isLegal(move: PylosMove, state: PylosState): MGPValidation {
+
+    public override isLegal(move: PylosMove, state: PylosState): MGPValidation {
         const startingCoordLegality: MGPFallible<PylosState> = this.isLegalStartingCoord(move, state);
         if (startingCoordLegality.isFailure()) {
             return startingCoordLegality.toOtherFallible();

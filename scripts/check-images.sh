@@ -1,5 +1,5 @@
 #!/bin/sh
-grep "new GameInfo" src/app/components/normal-component/pick-game/pick-game.component.ts | sed "s/.*new GameInfo([^,]*, '\([^']*\)'.*/\1/" > scripts/games.txt
+grep "new GameInfo" src/app/components/normal-component/pick-game/pick-game.component.ts | sed -E "s/.*new GameInfo\([^,]+, +'([^']+)'.*/\1/" > scripts/games.txt
 FAILED=0
 for GAME in $(cat scripts/games.txt); do
     if [ ! -f src/assets/images/dark/$GAME.png ]; then

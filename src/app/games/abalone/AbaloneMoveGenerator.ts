@@ -1,4 +1,4 @@
-import { MoveGenerator } from 'src/app/jscaip/AI';
+import { MoveGenerator } from 'src/app/jscaip/AI/AI';
 import { Coord } from 'src/app/jscaip/Coord';
 import { HexaDirection } from 'src/app/jscaip/HexaDirection';
 import { Player } from 'src/app/jscaip/Player';
@@ -7,10 +7,11 @@ import { MGPSet } from 'src/app/utils/MGPSet';
 import { AbaloneMove } from './AbaloneMove';
 import { AbaloneLegalityInformation, AbaloneNode, AbaloneRules } from './AbaloneRules';
 import { AbaloneState } from './AbaloneState';
+import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 export class AbaloneMoveGenerator extends MoveGenerator<AbaloneMove, AbaloneState> {
 
-    public getListMoves(node: AbaloneNode): AbaloneMove[] {
+    public override getListMoves(node: AbaloneNode, _config: NoConfig): AbaloneMove[] {
         const moves: AbaloneMove[] = [];
         const state: AbaloneState = node.gameState;
         const player: Player = state.getCurrentPlayer();

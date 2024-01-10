@@ -1,7 +1,7 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { Direction } from 'src/app/jscaip/Direction';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
-import { GameNode } from 'src/app/jscaip/GameNode';
+import { GameNode } from 'src/app/jscaip/AI/GameNode';
 import { Player } from 'src/app/jscaip/Player';
 import { Rules } from 'src/app/jscaip/Rules';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
@@ -16,6 +16,7 @@ import { LodestoneOrientation, LodestoneDirection, LodestonePiece } from './Lode
 import { LodestonePieceLodestone, LodestonePieceNone, LodestoneDescription, LodestonePiecePlayer } from './LodestonePiece';
 import { LodestoneState, LodestonePositions, LodestonePressurePlates } from './LodestoneState';
 import { LodestonePressurePlate, LodestonePressurePlatePosition, LodestonePressurePlateGroup } from './LodestoneState';
+import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 export class LodestoneNode extends GameNode<LodestoneMove, LodestoneState> {}
 
@@ -75,7 +76,7 @@ export class LodestoneRules extends Rules<LodestoneMove, LodestoneState, Lodesto
         return LodestoneRules.singleton.get();
     }
 
-    public getInitialState(): LodestoneState {
+    public override getInitialState(): LodestoneState {
         const _: LodestonePiece = LodestonePieceNone.EMPTY;
         const O: LodestonePiece = LodestonePiecePlayer.ZERO;
         const X: LodestonePiece = LodestonePiecePlayer.ONE;
@@ -93,7 +94,9 @@ export class LodestoneRules extends Rules<LodestoneMove, LodestoneState, Lodesto
         return new LodestoneState(board, 0, new MGPMap(), plates);
     }
 
-    public applyLegalMove(move: LodestoneMove, state: LodestoneState, infos: LodestoneInfos): LodestoneState {
+    public override applyLegalMove(move: LodestoneMove, state: LodestoneState, _config: NoConfig, infos: LodestoneInfos)
+    : LodestoneState
+    {
         const currentPlayer: Player = state.getCurrentPlayer();
         const opponent: Player = currentPlayer.getOpponent();
         const board: LodestonePiece[][] = TableUtils.copy(infos.board);
@@ -167,7 +170,7 @@ export class LodestoneRules extends Rules<LodestoneMove, LodestoneState, Lodesto
         }
     }
 
-    public isLegal(move: LodestoneMove, state: LodestoneState): MGPFallible<LodestoneInfos> {
+    public override isLegal(move: LodestoneMove, state: LodestoneState): MGPFallible<LodestoneInfos> {
         const validityBeforeCaptures: MGPValidation = this.isLegalWithoutCaptures(state, move.coord, move.direction);
         if (validityBeforeCaptures.isFailure()) {
             return MGPFallible.failure(validityBeforeCaptures.getReason());

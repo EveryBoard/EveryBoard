@@ -25,10 +25,13 @@ describe('YinshComponent', () => {
     beforeEach(fakeAsync(async() => {
         testUtils = await ComponentTestUtils.forGame<YinshComponent>('Yinsh');
     }));
+
     it('should create', () => {
         testUtils.expectToBeCreated();
     });
+
     describe('Initial placement phase', () => {
+
         it('should allow placing a ring and show it highlighted', fakeAsync(async() => {
             // Given a state in the initial placement phase
             // When clicking on an empty space
@@ -37,6 +40,7 @@ describe('YinshComponent', () => {
             await testUtils.expectMoveSuccess('#click_3_2', move);
             testUtils.expectElementToHaveClasses('#space_3_2', ['base', 'moved-fill']);
         }));
+
         it('should forbid placing a ring on an occupied space', fakeAsync(async() => {
             // Given a state in placement phase with at least one occupied space
             const board: Table<YinshPiece> = [
@@ -58,6 +62,7 @@ describe('YinshComponent', () => {
             // Then it should fail
             await testUtils.expectClickFailure('#click_3_2', RulesFailure.MUST_CLICK_ON_EMPTY_SPACE());
         }));
+
         it('should decrease the number of rings shown on the side when a ring is placed', fakeAsync(async() => {
             // Given a state in placement phase, with all rings available
             testUtils.expectElementToExist('#player_0_sideRing_5');
@@ -68,6 +73,7 @@ describe('YinshComponent', () => {
             testUtils.expectElementNotToExist('#player_0_sideRing_5');
         }));
     });
+
     describe('Main phase', () => {
 
         it(`should highlight clickable rings when it is the player's turn`, fakeAsync(async() => {
@@ -652,7 +658,6 @@ describe('YinshComponent', () => {
                                                                    new Coord(3, 6),
                                                                    MGPOptional.of(new Coord(4, 2)))]);
 
-
             // Then it should succeed
             await testUtils.expectClickSuccess('#click_3_3'); // Select the ring
             await testUtils.expectClickSuccess('#click_3_7'); // Move it
@@ -721,7 +726,6 @@ describe('YinshComponent', () => {
                               [
                                   YinshCapture.of(new Coord(3, 3), new Coord(3, 7), MGPOptional.of(new Coord(4, 2))),
                               ]);
-
 
             // Then it should succeed
             await testUtils.expectClickSuccess('#click_3_3'); // Select the ring

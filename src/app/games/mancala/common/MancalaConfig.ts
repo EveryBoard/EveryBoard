@@ -1,6 +1,14 @@
-export interface MancalaConfig {
+import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+
+export type MancalaConfig = RulesConfig & {
+
+    readonly width: number;
+
+    readonly seedsByHouse: number;
 
     readonly passByPlayerStore: boolean;
+
+    readonly mustContinueDistributionAfterStore: boolean;
 
     readonly mustFeed: boolean;
 

@@ -16,12 +16,12 @@ import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
 import { Arrow } from 'src/app/jscaip/Arrow';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
-import { GipfTutorial } from './GipfTutorial';
 import { Utils } from 'src/app/utils/utils';
-import { MCTS } from 'src/app/jscaip/MCTS';
+import { MCTS } from 'src/app/jscaip/AI/MCTS';
+import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 import { GipfMoveGenerator } from './GipfMoveGenerator';
 import { GipfScoreHeuristic } from './GipfScoreHeuristic';
-import { Minimax } from 'src/app/jscaip/Minimax';
+import { Minimax } from 'src/app/jscaip/AI/Minimax';
 import { GipfCapture } from 'src/app/jscaip/GipfProjectHelper';
 
 @Component({
@@ -33,6 +33,7 @@ export class GipfComponent extends HexagonalGameComponent<GipfRules,
                                                           GipfMove,
                                                           GipfState,
                                                           FourStatePiece,
+                                                          EmptyRulesConfig,
                                                           GipfLegalityInformation>
 {
     private static readonly PHASE_INITIAL_CAPTURE: number = 0;
@@ -64,16 +65,15 @@ export class GipfComponent extends HexagonalGameComponent<GipfRules,
 
     public constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
-        this.hasAsymmetricBoard = true;
-        this.scores = MGPOptional.of([0, 0]);
-        this.rules = GipfRules.get();
-        this.node = this.rules.getInitialNode();
+        this.setRulesAndNode('Gipf');
         this.availableAIs = [
             new Minimax($localize`Score`, this.rules, new GipfScoreHeuristic(), new GipfMoveGenerator()),
             new MCTS($localize`MCTS`, new GipfMoveGenerator(), this.rules),
         ];
         this.encoder = GipfMove.encoder;
-        this.tutorial = new GipfTutorial().tutorial;
+        this.hasAsymmetricBoard = true;
+        this.scores = MGPOptional.of([0, 0]);
+
         this.SPACE_SIZE = 40;
         this.constructedState = this.getState();
         this.hexaLayout = new HexaLayout(this.SPACE_SIZE * 1.50,
@@ -300,11 +300,14 @@ export class GipfComponent extends HexagonalGameComponent<GipfRules,
         this.moveToInitialCaptureOrPlacementPhase();
     }
 
+<<<<<<< HEAD
     public override hideLastMove(): void {
         this.arrows = [];
         this.inserted = MGPOptional.empty();
     }
 
+=======
+>>>>>>> b9b581b4b1f577ed2964b5615a215eb08914707c
     public getSpaceClass(coord: Coord): string {
         if (this.captured.some((c: Coord) => c.equals(coord))) {
             return 'captured-fill';

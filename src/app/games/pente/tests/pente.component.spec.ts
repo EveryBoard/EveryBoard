@@ -19,9 +19,11 @@ describe('PenteComponent', () => {
     beforeEach(fakeAsync(async() => {
         testUtils = await ComponentTestUtils.forGame<PenteComponent>('Pente');
     }));
+
     it('should create', () => {
         testUtils.expectToBeCreated();
     });
+
     it('should do the move when clicking on an empty square', fakeAsync(async() => {
         // Given a state
         // When clicking on an empty state
@@ -29,6 +31,7 @@ describe('PenteComponent', () => {
         const move: PenteMove = PenteMove.of(new Coord(4, 2));
         await testUtils.expectMoveSuccess('#click_4_2', move);
     }));
+
     it('should forbid dropping on a piece already on the board', fakeAsync(async() => {
         // Given a state
         // When clicking on square with a piece
@@ -36,6 +39,7 @@ describe('PenteComponent', () => {
         const move: PenteMove = PenteMove.of(new Coord(9, 9));
         await testUtils.expectMoveFailure('#click_9_9', RulesFailure.MUST_CLICK_ON_EMPTY_SQUARE(), move);
     }));
+
     it('should show last move', fakeAsync(async() => {
         // Given a state
         // When doing a move
@@ -44,6 +48,7 @@ describe('PenteComponent', () => {
         // Then it should show the last move
         testUtils.expectElementToHaveClass('#piece_4_2', 'last-move-stroke');
     }));
+
     it('should show captures along with last move', fakeAsync(async() => {
         // Given a board where a capture is possible
         const state: PenteState = new PenteState([
@@ -79,6 +84,7 @@ describe('PenteComponent', () => {
         testUtils.expectElementNotToExist('#capture_9_6');
         testUtils.expectElementToHaveClass('#piece_9_6', 'last-move-stroke');
     }));
+
     it('should show victory', fakeAsync(async() => {
         // Given a victory
         const state: PenteState = new PenteState([
@@ -111,6 +117,7 @@ describe('PenteComponent', () => {
         testUtils.expectElementToHaveClass('#piece_12_9', 'victory-stroke');
         testUtils.expectElementToHaveClass('#piece_13_9', 'victory-stroke');
     }));
+
     it('should show hoshis', fakeAsync(async() => {
         // Given a state
         // When displaying it

@@ -2,7 +2,6 @@ import { assert } from 'src/app/utils/assert';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { Utils } from 'src/app/utils/utils';
 
-
 export class MartianChessPiece {
 
     public static EMPTY: MartianChessPiece = new MartianChessPiece(0);

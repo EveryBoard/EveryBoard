@@ -17,17 +17,20 @@ export class ApagosSquare {
         const validSquare: ApagosSquare = new ApagosSquare(containing);
         return MGPFallible.success(validSquare);
     }
+
     private constructor(private readonly containing: MGPMap<PlayerOrNone, number>) {}
 
     public isFull(): boolean {
         const nbZero: number = this.count(Player.ZERO);
         const nbOne: number = this.count(Player.ONE);
         const nbTotal: number = this.count(PlayerOrNone.NONE);
-        return (nbZero + nbOne) >= nbTotal;
+        return nbTotal <= (nbZero + nbOne);
     }
+
     public count(player: PlayerOrNone): number {
         return this.containing.get(player).get();
     }
+
     public addPiece(piece: Player): ApagosSquare {
         let nbZero: number = this.count(Player.ZERO);
         let nbOne: number = this.count(Player.ONE);
@@ -39,6 +42,7 @@ export class ApagosSquare {
         }
         return ApagosSquare.from(nbZero, nbOne, nbTotal).get();
     }
+
     public substractPiece(piece: Player): ApagosSquare {
         let nbZero: number = this.count(Player.ZERO);
         let nbOne: number = this.count(Player.ONE);
@@ -50,13 +54,19 @@ export class ApagosSquare {
         }
         return ApagosSquare.from(nbZero, nbOne, nbTotal).get();
     }
+
     public getDominatingPlayer(): PlayerOrNone {
         const nbZero: number = this.count(Player.ZERO);
         const nbOne: number = this.count(Player.ONE);
-        if (nbZero > nbOne) return Player.ZERO;
-        else if (nbOne > nbZero) return Player.ONE;
-        return PlayerOrNone.NONE;
+        if (nbZero > nbOne) {
+            return Player.ZERO;
+        } else if (nbOne > nbZero) {
+            return Player.ONE;
+        } else {
+            return PlayerOrNone.NONE;
+        }
     }
+
     public equals(other: ApagosSquare): boolean {
         return this.containing.equals(other.containing);
     }

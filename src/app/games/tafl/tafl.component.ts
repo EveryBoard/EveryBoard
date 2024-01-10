@@ -12,16 +12,17 @@ import { TaflMove } from './TaflMove';
 import { TaflPawn } from './TaflPawn';
 import { TaflRules } from './TaflRules';
 import { TaflState } from './TaflState';
+import { TaflConfig } from './TaflConfig';
 import { TaflMoveGenerator } from './TaflMoveGenerator';
-import { AI, AIOptions } from 'src/app/jscaip/AI';
-import { MCTS } from 'src/app/jscaip/MCTS';
+import { AI, AIOptions } from 'src/app/jscaip/AI/AI';
+import { MCTS } from 'src/app/jscaip/AI/MCTS';
 import { TaflPieceAndInfluenceMinimax } from './TaflPieceAndInfluenceMinimax';
 import { TaflPieceMinimax } from './TaflPieceMinimax';
 import { TaflPieceAndControlMinimax } from './TaflPieceAndControlMinimax';
 import { TaflEscapeThenPieceThenControlMinimax } from './TaflEscapeThenPieceThenControlMinimax';
 
 export abstract class TaflComponent<R extends TaflRules<M>, M extends TaflMove>
-    extends RectangularGameComponent<R, M, TaflState, TaflPawn>
+    extends RectangularGameComponent<R, M, TaflState, TaflPawn, TaflConfig>
 {
 
     public viewInfo: { pieceClasses: string[][][] } = { pieceClasses: [] };
@@ -49,7 +50,7 @@ export abstract class TaflComponent<R extends TaflRules<M>, M extends TaflMove>
         const opponent: Player = this.getState().getCurrentOpponent();
         for (const orthogonal of Orthogonal.ORTHOGONALS) {
             const captured: Coord = move.getEnd().getNext(orthogonal, 1);
-            if (captured.isInRange(this.rules.config.WIDTH, this.rules.config.WIDTH)) {
+            if (previousState.isOnBoard(captured)) {
                 const previousOwner: RelativePlayer = previousState.getRelativeOwner(opponent, captured);
                 const wasOpponent: boolean = previousOwner === RelativePlayer.OPPONENT;
                 const currentPiece: TaflPawn = this.getState().getPieceAt(captured);
@@ -64,9 +65,9 @@ export abstract class TaflComponent<R extends TaflRules<M>, M extends TaflMove>
     private updateViewInfo(): void {
         const pieceClasses: string[][][] = [];
         this.board = this.getState().getCopiedBoard();
-        for (let y: number = 0; y < this.board.length; y++) {
+        for (let y: number = 0; y < this.getHeight(); y++) {
             const newLine: string[][] = [];
-            for (let x: number = 0; x < this.board[0].length; x++) {
+            for (let x: number = 0; x < this.getWidth(); x++) {
                 let newSpace: string[] = [];
                 if (this.board[y][x].getOwner() === PlayerOrNone.NONE) {
                     newSpace = [''];
@@ -163,7 +164,7 @@ export abstract class TaflComponent<R extends TaflRules<M>, M extends TaflMove>
     }
     public getClickables(): Coord[] {
         const coords: Coord[] = [];
-        for (let y: number = 0; y < this.board.length; y++) {
+        for (let y: number = 0; y < this.getHeight(); y++) {
             for (let x: number = 0; x < this.board[y].length; x++) {
                 const coord: Coord = new Coord(x, y);
                 if (this.isClickable(coord)) {
@@ -175,15 +176,15 @@ export abstract class TaflComponent<R extends TaflRules<M>, M extends TaflMove>
     }
     private isClickable(coord: Coord): boolean {
         // Show if the piece can be clicked
-        return this.isInteractive && this.pieceBelongsToCurrentPlayer(coord);
+        return this.interactive && this.pieceBelongsToCurrentPlayer(coord);
     }
     public isInvader(x: number, y: number): boolean {
-        return this.board[y][x] === TaflPawn.INVADERS;
+        return this.board[y][x] === TaflPawn.PLAYER_ZERO_PAWN;
     }
     public isKing(x: number, y: number): boolean {
         return this.board[y][x].isKing();
     }
-    protected createAIs(): AI<TaflMove, TaflState, AIOptions>[] {
+    protected createAIs(): AI<TaflMove, TaflState, AIOptions, TaflConfig>[] {
         const moveGenerator: TaflMoveGenerator<M> = new TaflMoveGenerator(this.rules);
         return [
             new TaflPieceMinimax(this.rules),

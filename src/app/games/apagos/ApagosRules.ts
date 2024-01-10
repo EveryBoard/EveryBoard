@@ -1,8 +1,7 @@
 import { GameStatus } from 'src/app/jscaip/GameStatus';
-import { GameNode } from 'src/app/jscaip/GameNode';
+import { GameNode } from 'src/app/jscaip/AI/GameNode';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { Rules } from 'src/app/jscaip/Rules';
-import { assert } from 'src/app/utils/assert';
 import { MGPMap } from 'src/app/utils/MGPMap';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPValidation } from '../../utils/MGPValidation';
@@ -11,6 +10,8 @@ import { ApagosFailure } from './ApagosFailure';
 import { ApagosMove } from './ApagosMove';
 import { ApagosSquare } from './ApagosSquare';
 import { ApagosState } from './ApagosState';
+import { Utils } from 'src/app/utils/utils';
+import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 export class ApagosNode extends GameNode<ApagosMove, ApagosState> {}
 
@@ -27,7 +28,7 @@ export class ApagosRules extends Rules<ApagosMove, ApagosState> {
         return ApagosRules.singleton.get();
     }
 
-    public getInitialState(): ApagosState {
+    public override getInitialState(): ApagosState {
         return ApagosState.fromRepresentation(0, [
             [0, 0, 0, 0],
             [0, 0, 0, 0],
@@ -35,13 +36,19 @@ export class ApagosRules extends Rules<ApagosMove, ApagosState> {
         ], ApagosRules.PIECES_PER_PLAYER, ApagosRules.PIECES_PER_PLAYER);
     }
 
-    public applyLegalMove(move: ApagosMove, state: ApagosState, _info: void): ApagosState {
+    public override applyLegalMove(move: ApagosMove,
+                                   state: ApagosState,
+                                   _config: NoConfig,
+                                   _info: void)
+    : ApagosState
+    {
         if (move.isDrop()) {
             return this.applyLegalDrop(move, state);
         } else {
             return this.applyLegalTransfer(move, state);
         }
     }
+
     private applyLegalDrop(move: ApagosMove, state: ApagosState): ApagosState {
         const remaining: MGPMap<Player, number> = state.getRemainingCopy();
         const oldValue: number = remaining.get(move.piece.get()).get();
@@ -67,7 +74,7 @@ export class ApagosRules extends Rules<ApagosMove, ApagosState> {
         resultingState = resultingState.updateAt(move.landing, newLandingSquare);
         return new ApagosState(resultingState.turn + 1, resultingState.board, resultingState.remaining);
     }
-    public isLegal(move: ApagosMove, state: ApagosState): MGPValidation {
+    public override isLegal(move: ApagosMove, state: ApagosState): MGPValidation {
         if (state.getPieceAt(move.landing).isFull()) {
             return MGPValidation.failure(ApagosFailure.CANNOT_LAND_ON_A_FULL_SQUARE());
         }
@@ -99,7 +106,7 @@ export class ApagosRules extends Rules<ApagosMove, ApagosState> {
             }
         }
         const winner: PlayerOrNone = state.getPieceAt(ApagosCoord.THREE).getDominatingPlayer();
-        assert(winner.isPlayer(), 'winner can only be a player if the game is finished');
+        Utils.assert(winner.isPlayer(), 'winner can only be a player if the game is finished');
         return GameStatus.getVictory(winner as Player);
     }
 }
