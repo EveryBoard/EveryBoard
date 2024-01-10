@@ -42,9 +42,8 @@ let tests = [
         let max_age = 22745. in
         let headers = Cohttp.Header.of_list [("Cache-Control",
                                               Printf.sprintf "public, max-age=%.0f, must-revalidate, no-transform" max_age)] in
-        let response = ok_response headers in
         let body = JSON.to_string certificates_json in
-        let mock = ExternalTests.Mock.Http.mock_response (response, body) in
+        let mock = ExternalTests.Mock.Http.mock_response (response ~headers `OK, body) in
         (* When calling get *)
         let* actual = GoogleCertificates.get () in
         (* Then it returns the certificates *)
@@ -62,9 +61,8 @@ let tests = [
         let max_age = 22745. in
         let headers = Cohttp.Header.of_list [("Cache-Control",
                                               Printf.sprintf "public, max-age=%.0f, must-revalidate, no-transform" max_age)] in
-        let response = ok_response headers in
         let body = JSON.to_string certificates_json in
-        let mock = ExternalTests.Mock.Http.mock_response (response, body) in
+        let mock = ExternalTests.Mock.Http.mock_response (response ~headers `OK, body) in
         let* first_requested = GoogleCertificates.get () in
         (* When getting the certificates again *)
         let* second_requested = GoogleCertificates.get () in
@@ -80,9 +78,8 @@ let tests = [
         ExternalTests.Mock.current_time := 42.;
         let headers = Cohttp.Header.of_list [("Cache-Control",
                                               "public, must-revalidate, no-transform")] in
-        let response = ok_response headers in
         let body = JSON.to_string certificates_json in
-        let _ = ExternalTests.Mock.Http.mock_response (response, body) in
+        let _ = ExternalTests.Mock.Http.mock_response (response ~headers `OK, body) in
         (* When getting the certificates *)
         (* Then it should fail *)
         lwt_check_raises "failure" (Error "missing or invalid max-age") (fun () ->
@@ -95,9 +92,8 @@ let tests = [
         ExternalTests.Mock.current_time := 42.;
         let headers = Cohttp.Header.of_list [("Cache-Control",
                                               "public, max-age=lol, must-revalidate, no-transform")] in
-        let response = ok_response headers in
         let body = JSON.to_string certificates_json in
-        let _ = ExternalTests.Mock.Http.mock_response (response, body) in
+        let _ = ExternalTests.Mock.Http.mock_response (response ~headers `OK, body) in
         (* When getting the certificates *)
         (* Then it should fail *)
         lwt_check_raises "failure" (Error "missing or invalid max-age") (fun () ->
@@ -109,9 +105,8 @@ let tests = [
         (* Given a google server that will answer with some certificates but no cache-control *)
         ExternalTests.Mock.current_time := 42.;
         let headers = Cohttp.Header.init () in
-        let response = ok_response headers in
         let body = JSON.to_string certificates_json in
-        let _ = ExternalTests.Mock.Http.mock_response (response, body) in
+        let _ = ExternalTests.Mock.Http.mock_response (response ~headers `OK, body) in
         (* When getting the certificates *)
         (* Then it should fail *)
         lwt_check_raises "failure" (Error "No cache-control in response") (fun () ->
@@ -125,9 +120,8 @@ let tests = [
         let max_age = 22745. in
         let headers = Cohttp.Header.of_list [("Cache-Control",
                                               Printf.sprintf "public, max-age=%.0f, must-revalidate, no-transform" max_age)] in
-        let response = ok_response headers in
         let body = "{}" in
-        let _ = ExternalTests.Mock.Http.mock_response (response, body) in
+        let _ = ExternalTests.Mock.Http.mock_response (response ~headers `OK, body) in
         (* When getting the certificates *)
         (* Then it should fail *)
         lwt_check_raises "failure" (Error "No certificates returned") (fun () ->

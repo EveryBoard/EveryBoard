@@ -68,12 +68,14 @@ type 'a mock = {
   calls : 'a list ref
 }
 
-let ok_response headers =
-  Cohttp.Response.make ~version:(`Other "2") ~status:`OK ~headers ()
+let response ?(headers:Cohttp.Header.t = Cohttp.Header.init ()) status =
+  Cohttp.Response.make ~version:(`Other "2") ~status ~headers ()
 
-let not_found_response =
-  Cohttp.Response.make ~version:(`Other "2") ~status:`Not_found ()
-
-let http_query : (Dream.method_ * Uri.t) testable =
-  let pp ppf (method_, url) = Fmt.pf ppf "%s at %s" (Dream.method_to_string method_) (Uri.to_string url) in
+let http_query : (Dream.method_ * Uri.t * JSON.t option) testable =
+  let pp ppf (method_, url, body) =
+    Fmt.pf ppf "%s at %s with %s"
+      (Dream.method_to_string method_)
+      (Uri.to_string url)
+      (body |> Option.map JSON.to_string |> Option.value ~default:"nothing")
+  in
   testable pp (=)

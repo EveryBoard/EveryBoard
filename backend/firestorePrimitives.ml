@@ -81,8 +81,10 @@ module Make
   let delete_doc (request : Dream.request) (path : string) : unit Lwt.t =
     Stats.write request;
     let* headers = TokenRefresher.header request in
-    let* _ = External.Http.delete (endpoint path) headers in
-    Lwt.return ()
+    let* response = External.Http.delete (endpoint path) headers in
+    if is_error response
+    then raise (Error "can't update doc")
+    else Lwt.return ()
 
   let begin_transaction (request : Dream.request) : string Lwt.t =
     let* headers = TokenRefresher.header request in

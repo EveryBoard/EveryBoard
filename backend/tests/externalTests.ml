@@ -10,7 +10,9 @@ module type MOCK = sig
 
   module Http : sig
     include module type of Http
-    val mock_response : (Cohttp.Response.t * string) -> (Dream.method_ * Uri.t) mock
+    (* When mocking a response, a mock is created and holds the method, the endpoint called,
+       and the provided JSON body if one was provided *)
+    val mock_response : (Cohttp.Response.t * string) -> (Dream.method_ * Uri.t * JSON.t option) mock
   end
 end
 
@@ -30,17 +32,17 @@ module Mock : MOCK = struct
       response := mocked_response;
       mock
 
-    let mocked request endpoint () =
+    let mocked request endpoint body =
       mock.number_of_calls := !(mock.number_of_calls) + 1;
-      mock.calls := (request, endpoint) :: !(mock.calls);
+      mock.calls := (request, endpoint, body) :: !(mock.calls);
       Lwt.return !response
-    let get endpoint _ = mocked `GET endpoint ()
-    let post_form endpoint _ = mocked `POST endpoint ()
-    let post_json endpoint _ _ = mocked `POST endpoint ()
-    let patch_json endpoint _ _ =  mocked `PATCH endpoint ()
+    let get endpoint _ = mocked `GET endpoint None
+    let post_form endpoint _ = mocked `POST endpoint None
+    let post_json endpoint _ body = mocked `POST endpoint (Some body)
+    let patch_json endpoint _ body =  mocked `PATCH endpoint (Some body)
     let delete endpoint _ =
-      let* _ = mocked `DELETE endpoint () in
-      Lwt.return ()
+      let* (response, _) = mocked `DELETE endpoint None in
+      Lwt.return response
   end
 
 end

@@ -20,7 +20,7 @@ module type EXTERNAL = sig
     val patch_json : Uri.t -> Cohttp.Header.t -> JSON.t -> (Cohttp.Response.t * string) Lwt.t
 
     (** Perform a DELETE request *)
-    val delete : Uri.t -> Cohttp.Header.t -> unit Lwt.t
+    val delete : Uri.t -> Cohttp.Header.t -> Cohttp.Response.t Lwt.t
 
   end
 end
@@ -54,8 +54,8 @@ module Impl : EXTERNAL = struct
       let* body_string = Cohttp_lwt.Body.to_string body in
       Lwt.return (response, body_string)
 
-    let delete (endpoint : Uri.t) (headers : Cohttp.Header.t) : unit Lwt.t =
-        let _ = Cohttp_lwt_unix.Client.delete ~headers endpoint in
-        Lwt.return ()
+    let delete (endpoint : Uri.t) (headers : Cohttp.Header.t) : Cohttp.Response.t Lwt.t =
+        let* (response, _) = Cohttp_lwt_unix.Client.delete ~headers endpoint in
+        Lwt.return response
   end
 end

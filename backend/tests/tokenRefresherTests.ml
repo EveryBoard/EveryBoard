@@ -64,7 +64,7 @@ let tests = [
         Mirage_crypto_rng_lwt.initialize (module Mirage_crypto_rng.Fortuna);
         (* Given a middleware and an access token that it will retrieve *)
         let middleware : Dream.middleware = TokenRefresher.middleware "test-data/service-account.json" in
-        let response = ok_response (Cohttp.Header.init ()) in
+        let response = response `OK in
         let body = access_token_str in
         let mock = ExternalTests.Mock.Http.mock_response (response, body) in
         (* When the middleware receives a request *)
@@ -86,7 +86,7 @@ let tests = [
         (* Given a middleware where a token has already been requested but is now expired *)
         ExternalTests.Mock.current_time := 0.;
         let middleware : Dream.middleware = TokenRefresher.middleware "test-data/service-account.json" in
-        let response = ok_response (Cohttp.Header.init ()) in
+        let response = response `OK in
         let body = access_token_str in (* this token expires in 42 seconds! *)
         let mock = ExternalTests.Mock.Http.mock_response (response, body) in
         (* A first request is made to retrieve the token *)
@@ -111,7 +111,7 @@ let tests = [
         (* Given a middleware where a token has already been requested (and is not expired) *)
         ExternalTests.Mock.current_time := 0.;
         let middleware : Dream.middleware = TokenRefresher.middleware "test-data/service-account.json" in
-        let response = ok_response (Cohttp.Header.init ()) in
+        let response = response `OK in
         let body = access_token_str in (* expires in 42 seconds! *)
         let mock = ExternalTests.Mock.Http.mock_response (response, body) in
         let request = Dream.request "/" in
