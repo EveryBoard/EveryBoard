@@ -31,7 +31,7 @@ export class HivePieceComponent extends BaseGameComponent implements AfterConten
         // otherwise modifications to selected will not be properly propagated
         const coord: Coord = new Coord(this.x, this.y);
         this.pieceClass = this.getPlayerClass(this.piece.owner);
-        this.hexaPoints = this.hexaLayout.getHexaPointsAt(coord);
+        this.hexaPoints = this.hexaLayout.getHexaPoints();
         this.hexaCenter = this.hexaLayout.getCenterAt(coord);
         const isoPoints: [Coord[], Coord[], Coord[]] = this.hexaLayout.getIsoPoints(coord, this.pieceHeight);
         const isoPointsSVG: string[] = isoPoints.map((coords: Coord[]) =>

@@ -17,16 +17,17 @@
 
     <g *ngFor="let space of getAllCoords()"
        (click)="onClick(space)"
-       id="click_{{ space.x }}_{{ space.y }}">
+       id="click_{{ space.x }}_{{ space.y }}"
+       [attr.transform]="getHexaCenterTranslate(space)">
 
-        <polygon [attr.points]="getHexaPointsAt(space)"
+        <polygon [attr.points]="getHexaPoints()"
                  id="space_{{ space.x }}_{{ space.y }}"
                  [ngClass]="getSpaceClass(space)"
                  class="base"
                  stroke-linecap="round"/>
         <circle *ngIf="isPiece(space)"
-                [attr.cx]="getCenterAt(space).x"
-                [attr.cy]="getCenterAt(space).y"
+                cx="0"
+                cy="0"
                 [attr.r]="SPACE_SIZE"
                 [ngClass]="getPieceClass(space)"
                 class="base"/>
@@ -36,7 +37,8 @@
        pointer-events="fill"
        class="capturable-stroke">
         <polygon *ngFor="let space of capture.capturedSpaces"
-                 [attr.points]="getHexaPointsAt(space)"
+                 [attr.points]="getHexaPoints()"
+                 [attr.transform]="getHexaCenterTranslate(space)"
                  (click)="onClick(space)"
                  class="no-fill"
                  stroke-linecap="round"/>
@@ -47,9 +49,8 @@
           [attr.y1]="arrow.y1"
           [attr.x2]="arrow.x2"
           [attr.y2]="arrow.y2"
-          class="arrow"
-          marker-end="url(#arrowhead)"
-          (click)="onClick(arrow.destination)"/>
+          class="arrow click-delegator"
+          marker-end="url(#arrowhead)"/>
 
     <g *ngFor="let player of Player.PLAYERS">
         <g *ngFor="let p of getPlayerSidePieces(player)">
@@ -68,7 +69,7 @@
           [attr.y1]="inserted.get().y1"
           [attr.x2]="inserted.get().x2"
           [attr.y2]="inserted.get().y2"
-          class="arrow moved-stroke"
+          class="arrow moved-stroke click-delegator"
           marker-end="url(#arrowhead-moved)"
     />
 </svg>

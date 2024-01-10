@@ -20,18 +20,26 @@ export abstract class HexagonalGameComponent<R extends Rules<M, S, L>,
 
     public hexaBoard: Table<P>;
 
-    public getHexaPointsAtXY(x: number, y: number): string {
-        const coord: Coord = new Coord(x, y);
-        return this.getHexaPointsAt(coord);
+    public getHexaPoints(): string {
+        return this.hexaLayout.getHexaPoints();
     }
-    public getHexaPointsAt(coord: Coord): string {
-        return this.hexaLayout.getHexaPointsAt(coord);
-    }
+
     public getCenterAtXY(x: number, y: number): Coord {
         const coord: Coord = new Coord(x, y);
         return this.getCenterAt(coord);
     }
+
     public getCenterAt(coord: Coord): Coord {
         return this.hexaLayout.getCenterAt(coord);
     }
+
+    public getHexaCenterTranslate(coord: Coord): string {
+        return this.getHexaCenterTranslateAtXY(coord.x, coord.y);
+    }
+
+    public getHexaCenterTranslateAtXY(x: number, y: number): string {
+        const centerAtXY: Coord = this.getCenterAtXY(x, y);
+        return `translate(${ centerAtXY.x }, ${ centerAtXY.y })`;
+    }
+
 }

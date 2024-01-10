@@ -5,26 +5,27 @@
     <g *ngFor="let coord of state.allCoords()">
         <g *ngFor="let spaceContent of [state.getPieceAt(coord)]"
            id="click_{{ coord.x }}_{{ coord.y }}"
-           (click)="onClick(coord.x, coord.y)">
+           (click)="onClick(coord.x, coord.y)"
+           [attr.transform]="getHexaCenterTranslate(coord)">
             <!-- Background -->
-            <polygon [attr.points]="getHexaPointsAt(coord)"
+            <polygon [attr.points]="getHexaPoints()"
                      class="base mid-stroke"/>
             <!-- Piece -->
             <circle *ngIf="spaceContent.getSize() > 0"
                     id="piece_{{ coord.x }}_{{ coord.y }}"
-                    [attr.cx]="getCenterAt(coord).x"
-                    [attr.cy]="getCenterAt(coord).y"
+                    cx="0"
+                    cy="0"
                     [attr.r]="SPACE_SIZE"
                     [ngClass]="getPieceClasses(spaceContent)"
                     class="base mid-stroke"/>
             <polygon *ngIf="spaceContent.containsSource()"
                      class="nonplayer-light-fill"
                      points="157.055,0 90.798,196.319 164.417,196.319 88.344,400 289.571,159.509 218.405,159.509 311.656,0"
-                     [attr.transform]="spaceContent.getSize() === 1 ? ('translate(' + (getCenterAt(coord).x-18) + ' ' + (getCenterAt(coord).y-16) + ') scale(0.10)') : ('translate(' + (getCenterAt(coord).x-3) + ' ' + (getCenterAt(coord).y-12) + ') scale(0.07)')"/>
+                     [attr.transform]="spaceContent.getSize() === 1 ? 'translate(-18, -16) scale(0.10)' : 'translate(-3, -12) scale(0.07)'"/>
             <text *ngIf="spaceContent.getSize() > 1"
                   (click)="onClick(coord.x, coord.y)"
-                  [attr.x]="spaceContent.containsSource() ? getCenterAt(coord).x-7 : getCenterAt(coord).x"
-                  [attr.y]="getCenterAt(coord).y"
+                  [attr.x]="spaceContent.containsSource() ? -7 : 0"
+                  y="0"
                   class="text-center text-medium"
                   dy="13">{{ spaceContent.getSize() }}</text>
 
@@ -33,7 +34,8 @@
     <!-- Show disconnecteds -->
     <g *ngFor="let disconnected of disconnecteds"
         id="disconnected_{{ disconnected.coord.x }}_{{ disconnected.coord.y }}" >
-        <polygon [attr.points]="getHexaPointsAt(disconnected.coord)"
+        <polygon [attr.points]="getHexaPoints()"
+                 [attr.transform]="getHexaCenterTranslate(disconnected.coord)"
                  class="base mid-stroke captured-fill"/>
         <circle id="captured_{{ disconnected.coord.x }}_{{ disconnected.coord.y }}"
                 [attr.cx]="getCenterAt(disconnected.coord).x"
@@ -49,14 +51,17 @@
     </g>
     <!-- Highlight last move -->
     <ng-container *ngIf="lastMove.isPresent()">
-        <polygon [attr.points]="getHexaPointsAt(lastMove.get().getStart())"
+        <polygon [attr.points]="getHexaPoints()"
+                 [attr.transform]="getHexaCenterTranslate(lastMove.get().getStart())"
                  class="base no-fill last-move-stroke"/>
-        <polygon [attr.points]="getHexaPointsAt(lastMove.get().getEnd())"
+        <polygon [attr.points]="getHexaPoints()"
+                 [attr.transform]="getHexaCenterTranslate(lastMove.get().getEnd())"
                  class="base no-fill last-move-stroke"/>
     </ng-container>
     <!-- Highlight selected piece -->
     <polygon *ngIf="chosen.isPresent()"
              id="chosen_{{ chosen.get().x }}_{{ chosen.get().y }}"
-             [attr.points]="getHexaPointsAt(chosen.get())"
+             [attr.transform]="getHexaCenterTranslate(chosen.get())"
+             [attr.points]="getHexaPoints()"
              class="base no-fill selected-stroke"/>
 </svg>

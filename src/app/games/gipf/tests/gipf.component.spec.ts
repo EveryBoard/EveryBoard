@@ -31,13 +31,17 @@ describe('GipfComponent', () => {
         })).withContext('expected to have an arrow pointing from ' + start.toString() + ' to ' + end.toString())
             .toBeTrue();
     }
+
     beforeEach(fakeAsync(async() => {
         testUtils = await ComponentTestUtils.forGame<GipfComponent>('Gipf');
     }));
+
     it('should create', () => {
         testUtils.expectToBeCreated();
     });
+
     describe('First click', () => {
+
         it('should allow placement directly resulting in a move if there is no initial capture', fakeAsync(async() => {
             // Given a board on which some external space is empty
             // When clicking on that piece
@@ -45,12 +49,14 @@ describe('GipfComponent', () => {
             // Then the move should be legal and insert immediately the piece on that space
             await testUtils.expectMoveSuccess('#click_0_4', move);
         }));
+
         it('should not accept selecting a non-border coord for placement', fakeAsync(async() => {
             // Given any board with empty space
             // When clicking on those spaces as first click
             // Then it should be a failure
             await testUtils.expectClickFailure('#click_3_3', GipfFailure.PLACEMENT_NOT_ON_BORDER());
         }));
+
         it('should show possible directions after selecting an occupied placement coord', fakeAsync(async() => {
             // Given any board
 
@@ -63,6 +69,7 @@ describe('GipfComponent', () => {
             expectToHaveArrow(new Coord(6, 3), new Coord(6, 2));
             expectToHaveArrow(new Coord(6, 3), new Coord(5, 4));
         }));
+
         it('should not allow clicking on anything else than a capture if there is one in the initial captures', fakeAsync(async() => {
             // Given a board on which a capture is possible
             const board: Table<FourStatePiece> = [
@@ -81,6 +88,7 @@ describe('GipfComponent', () => {
             // Then it should be a failure
             await testUtils.expectClickFailure('#click_6_3', GipfFailure.MISSING_CAPTURES());
         }));
+
         it('should highlight initial captures directly', fakeAsync(async() => {
             // Given a board on which a capture is possible
             const board: Table<FourStatePiece> = [
@@ -104,6 +112,7 @@ describe('GipfComponent', () => {
             testUtils.expectElementToHaveClasses('#space_3_4', ['base', 'captured-fill']);
             testUtils.expectElementToHaveClasses('#space_3_5', ['base', 'captured-fill']);
         }));
+
         it('should make pieces disappear upon selection of a capture', fakeAsync(async() => {
             // Given a board where a capture must be done immediately
             const board: Table<FourStatePiece> = [
@@ -127,6 +136,7 @@ describe('GipfComponent', () => {
             expect(testUtils.getGameComponent().isPiece(new Coord(3, 4))).toBeFalse();
             expect(testUtils.getGameComponent().isPiece(new Coord(3, 5))).toBeFalse();
         }));
+
         it('should not allow capturing from a coord that is part of intersecting captures', fakeAsync(async() => {
             // Given a board on which two capture touch each other on one common space
             const board: Table<FourStatePiece> = [
@@ -145,6 +155,7 @@ describe('GipfComponent', () => {
             // Then it should be a failure due to ambiguity
             await testUtils.expectClickFailure('#click_2_3', GipfFailure.AMBIGUOUS_CAPTURE_COORD());
         }));
+
         it('should not allow selecting placement when no direction is valid', fakeAsync(async() => {
             // Given a board with a entry space without any possible pushing direction
             const board: Table<FourStatePiece> = [
@@ -163,7 +174,9 @@ describe('GipfComponent', () => {
             // Then it should be a failure
             await testUtils.expectClickFailure('#click_0_6', GipfFailure.NO_DIRECTIONS_AVAILABLE());
         }));
+
     });
+
     it('should accept placing after performing initial captures', fakeAsync(async() => {
         const board: Table<FourStatePiece> = [
             [N, N, N, _, _, _, _],
@@ -184,6 +197,7 @@ describe('GipfComponent', () => {
                                             ])], []);
         await testUtils.expectMoveSuccess('#click_0_4', move);
     }));
+
     it('should not allow clicking on anything else than a capture if there is one in the final captures', fakeAsync(async() => {
         const board: Table<FourStatePiece> = [
             [N, N, N, _, _, _, _],
@@ -202,6 +216,7 @@ describe('GipfComponent', () => {
         await testUtils.expectClickSuccess('#click_1_3');
         await testUtils.expectClickFailure('#click_3_3', GipfFailure.MISSING_CAPTURES());
     }));
+
     it('should perform move after final captures has been done', fakeAsync(async() => {
         const board: Table<FourStatePiece> = [
             [N, N, N, _, _, _, _],
@@ -226,6 +241,7 @@ describe('GipfComponent', () => {
 
         await testUtils.expectMoveSuccess('#click_2_3', move);
     }));
+
     it('should highlight moved pieces only', fakeAsync(async() => {
         const board: Table<FourStatePiece> = [
             [N, N, N, _, _, _, _],
@@ -248,6 +264,7 @@ describe('GipfComponent', () => {
         expect(testUtils.getGameComponent().getSpaceClass(new Coord(2, 5))).toEqual('moved-fill');
         expect(testUtils.getGameComponent().getSpaceClass(new Coord(3, 4))).not.toEqual('moved-fill');
     }));
+
     it('should highlight capturable pieces', fakeAsync(async() => {
         const board: Table<FourStatePiece> = [
             [N, N, N, _, _, _, _],
@@ -268,6 +285,7 @@ describe('GipfComponent', () => {
             new Coord(3, 5),
         ]));
     }));
+
     it('should highlight captured pieces positions', fakeAsync(async() => {
         const board: Table<FourStatePiece> = [
             [N, N, N, _, _, _, _],
@@ -294,6 +312,7 @@ describe('GipfComponent', () => {
         testUtils.expectElementToHaveClasses('#space_3_4', ['base', 'captured-fill']);
         testUtils.expectElementToHaveClasses('#space_3_5', ['base', 'captured-fill']);
     }));
+
     it('should update the number of pieces available', fakeAsync(async() => {
         const board: Table<FourStatePiece> = [
             [N, N, N, _, _, _, _],
@@ -318,6 +337,7 @@ describe('GipfComponent', () => {
         expect(testUtils.getGameComponent().getPlayerSidePieces(Player.ZERO).length).toBe(8);
         expect(testUtils.getGameComponent().getPlayerSidePieces(Player.ONE).length).toBe(5);
     }));
+
     it('should not accept placement on a complete line', fakeAsync(async() => {
         const board: Table<FourStatePiece> = [
             [N, N, N, _, _, _, _],
@@ -335,6 +355,7 @@ describe('GipfComponent', () => {
         expect(testUtils.getGameComponent().arrows.length).toBe(1);
         await testUtils.expectClickFailure('#click_2_5', GipfFailure.PLACEMENT_ON_COMPLETE_LINE());
     }));
+
     it('should accept moves with two initial captures', fakeAsync(async() => {
         const board: Table<FourStatePiece> = [
             [N, N, N, _, _, _, _],
@@ -365,6 +386,7 @@ describe('GipfComponent', () => {
         await testUtils.expectClickSuccess('#click_2_4');
         await testUtils.expectMoveSuccess('#click_6_3', move);
     }));
+
     it('should accept moves with two final captures', fakeAsync(async() => {
         const board: Table<FourStatePiece> = [
             [N, N, N, _, _, _, _],
@@ -397,6 +419,7 @@ describe('GipfComponent', () => {
         await testUtils.expectClickSuccess('#click_4_4'); // select first capture
         await testUtils.expectMoveSuccess('#click_2_4', move); // select second capture
     }));
+
     it('should remove highlights and arrows upon move cancelation', fakeAsync(async() => {
         const board: Table<FourStatePiece> = [
             [N, N, N, _, _, _, _],
@@ -419,6 +442,7 @@ describe('GipfComponent', () => {
         testUtils.expectElementToHaveClasses('#space_3_3', ['base']);
         expect(testUtils.getGameComponent().arrows.length).toBe(0);
     }));
+
     it('should recompute captures upon intersecting captures', fakeAsync(async() => {
         const board: Table<FourStatePiece> = [
             [N, N, N, A, _, _, A],
@@ -463,6 +487,7 @@ describe('GipfComponent', () => {
         await testUtils.expectClickSuccess('#click_0_5'); // Final capture 1
         await testUtils.expectMoveSuccess('#click_3_0', move); // Final capture 2
     }));
+
     it('should select clicked coord when clicking on another piece to push', fakeAsync(async() => {
         // Given any board where a insertion coord has been chosen
         await testUtils.expectClickSuccess('#click_6_3');
@@ -476,6 +501,7 @@ describe('GipfComponent', () => {
         expectToHaveArrow(new Coord(3, 6), new Coord(3, 5));
         expectToHaveArrow(new Coord(3, 6), new Coord(4, 5));
     }));
+
     it('should deselect selected coord when clicking on it again', fakeAsync(async() => {
         // Given any board on which one piece is selected for push
         await testUtils.expectClickSuccess('#click_6_3');
@@ -486,4 +512,5 @@ describe('GipfComponent', () => {
         // Then it should no longer be selected
         expect(testUtils.getGameComponent().arrows.length).toBe(0);
     }));
+
 });

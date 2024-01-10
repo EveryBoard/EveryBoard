@@ -4,7 +4,7 @@
      preserveAspectRatio="xMidYMid meet">
     <g *ngFor="let groundInfo of ground">
         <polygon id="space_{{ groundInfo.x }}_{{ groundInfo.y }}"
-                 [attr.points]="getHexaPointsAtXY(groundInfo.x, groundInfo.y)"
+                 [attr.points]="getHexaPoints()"
                  class="base mid-stroke"
                  [ngClass]="groundInfo.content.spaceClasses"
                  (click)="selectSpace(groundInfo.x, groundInfo.y)"/>
@@ -14,7 +14,7 @@
     <g *ngFor="let groundInfo of ground">
         <polygon *ngIf="groundInfo.content.strokeClasses.length > 0"
                  id="stroke_{{ groundInfo.x }}_{{ groundInfo.y }}"
-                 [attr.points]="getHexaPointsAtXY(groundInfo.x, groundInfo.y)"
+                 [attr.points]="getHexaPoints()"
                  class="base no-fill small-stroke"
                  [ngClass]="groundInfo.content.strokeClasses"
                  (click)="selectSpace(groundInfo.x, groundInfo.y)"/>
@@ -22,7 +22,7 @@
     <g *ngFor="let groundInfo of ground">
         <polygon *ngIf="groundInfo.content.selected"
                  id="stroke_{{ groundInfo.x }}_{{ groundInfo.y }}"
-                 [attr.points]="getHexaPointsAtXY(groundInfo.x, groundInfo.y)"
+                 [attr.points]="getHexaPoints()"
                  class="base no-fill small-stroke"
                  ngClass="selected-stroke"
                  (click)="selectSpace(groundInfo.x, groundInfo.y)"/>
@@ -44,7 +44,7 @@
             <polygon *ngIf="pieceInfo.content.strokeClasses.length > 0"
                      id="stroke_{{ pieceInfo.x }}_{{ pieceInfo.y }}"
                      [attr.transform]="'translate(0 ' + -(z+1) * PIECE_HEIGHT + ')'"
-                     [attr.points]="getHexaPointsAtXY(pieceInfo.x, pieceInfo.y)"
+                     [attr.points]="getHexaPoints()"
                      class="base no-fill small-stroke"
                      [ngClass]="pieceInfo.content.strokeClasses"
                      (click)="selectStack(pieceInfo.x, pieceInfo.y)"/>
@@ -67,7 +67,7 @@
     <polygon *ngIf="selectedRemaining.isPresent()"
              id="remaining_highlight"
              [attr.transform]="getRemainingPieceHighlightTransform(selectedRemaining.get())"
-             [attr.points]="getHexaPointsAt(ORIGIN)"
+             [attr.points]="getHexaPoints()"
              class="base no-fill small-stroke selected-stroke" />
     <g *ngIf="inspectedStack.isPresent()">
       <g *ngFor="let piece of inspectedStack.get().pieces.slice().reverse(); index as z"
