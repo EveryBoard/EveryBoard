@@ -359,7 +359,8 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
 
     public getRequestAwaitingReplyFromUs(): MGPOptional<RequestType> {
         Utils.assert(this.role.isPlayer(), 'User should be playing');
-        return this.requestManager.getUnrespondedRequestFrom(Utils.getNonNullable(this.opponent));
+        return this.opponent != null &&
+               this.requestManager.getUnrespondedRequestFrom(Utils.getNonNullable(this.opponent));
     }
 
     public getRequestAwaitingReplyFromOpponent(): MGPOptional<RequestType> {
