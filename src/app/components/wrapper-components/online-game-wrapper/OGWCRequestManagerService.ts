@@ -99,7 +99,7 @@ export class OGWCRequestManagerService {
         if (this.forbiddenRequests.contains(request)) return false;
         return true;
     }
-    public getRequestFromUserAwaitingReply(user: MinimalUser): MGPOptional<RequestType> {
+    public getUnrespondedRequestFrom(user: MinimalUser): MGPOptional<RequestType> {
         // Different from canMakeRequest, as we can play if our requests have not been answered for example.
         if (this.requestAwaitingReply.isPresent() && this.requestAwaitingReply.get().user.id === user.id) {
             return MGPOptional.of(this.requestAwaitingReply.get().requestType);

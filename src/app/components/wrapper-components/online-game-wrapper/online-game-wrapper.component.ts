@@ -258,7 +258,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
     private async handleReply(reply: GameEventReply): Promise<void> {
         switch (reply.requestType) {
             case 'TakeBack':
-                const accepter: Player = this.playerOfMinimalUser(reply.user);
+                const accepter: Player = this.timeManager.playerOfMinimalUser(reply.user);
                 await this.takeBackToPreviousPlayerTurn(accepter.getOpponent());
                 break;
             case 'Rematch':
@@ -269,15 +269,6 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
             case 'Draw':
                 // Nothing to do as the part will be updated with the draw
                 break;
-        }
-    }
-
-    private playerOfMinimalUser(user: MinimalUser): Player {
-        if (this.players[0].equalsValue(user)) {
-            return Player.ZERO;
-        } else {
-            Utils.assert(this.players[1].equalsValue(user), 'MinimalUser should match player one');
-            return Player.ONE;
         }
     }
 
@@ -363,17 +354,17 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
     }
 
     public mustReply(): boolean {
-        return this.requestAwaitingReplyFromUs().isPresent();
+        return this.getRequestAwaitingReplyFromUs().isPresent();
     }
 
-    public requestAwaitingReplyFromUs(): MGPOptional<RequestType> {
+    public getRequestAwaitingReplyFromUs(): MGPOptional<RequestType> {
         Utils.assert(this.role.isPlayer(), 'User should be playing');
-        return this.requestManager.getRequestFromUserAwaitingReply(Utils.getNonNullable(this.opponent));
+        return this.requestManager.getUnrespondedRequestFrom(Utils.getNonNullable(this.opponent));
     }
 
-    public requestAwaitingReplyFromOpponent(): MGPOptional<RequestType> {
+    public getRequestAwaitingReplyFromOpponent(): MGPOptional<RequestType> {
         Utils.assert(this.role.isPlayer(), 'User should be playing');
-        return this.requestManager.getRequestFromUserAwaitingReply(Utils.getNonNullable(this.currentUser));
+        return this.requestManager.getUnrespondedRequestFrom(Utils.getNonNullable(this.currentUser));
     }
 
     public deniedRequest(): MGPOptional<RequestType> {

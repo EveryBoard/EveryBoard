@@ -98,7 +98,7 @@ export class OGWCTimeManagerService {
         }
     }
 
-    private playerOfMinimalUser(user: MinimalUser): Player {
+    public playerOfMinimalUser(user: MinimalUser): Player {
         if (this.players[0].equalsValue(user)) {
             return Player.ZERO;
         } else {
