@@ -63,7 +63,6 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
 
     private routerEventsSubscription!: Subscription; // Initialized in ngOnInit
     private userSubscription!: Subscription; // Initialized in ngOnInit
-    private opponentSubscription: Subscription = new Subscription();
     private partSubscription: Subscription = new Subscription();
     private gameEventsSubscription: Subscription = new Subscription();
     private currentGameSubscription: Subscription = new Subscription();
@@ -359,12 +358,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
 
     public getRequestAwaitingReplyFromUs(): MGPOptional<RequestType> {
         Utils.assert(this.role.isPlayer(), 'User should be playing');
-        if (this.opponent == null) {
-            // No opponent yet, so we can't be awaiting anything
-            return MGPOptional.empty();
-        } else {
-            return this.requestManager.getUnrespondedRequestFrom(Utils.getNonNullable(this.opponent));
-        }
+        return this.requestManager.getUnrespondedRequestFrom(Utils.getNonNullable(this.opponent));
     }
 
     public getRequestAwaitingReplyFromOpponent(): MGPOptional<RequestType> {
@@ -410,24 +404,17 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         ];
         Utils.assert(part.data.playerOne != null, 'should not initializePlayersDatas when players data is not received');
         this.setCurrentPlayerAccordingToCurrentTurn();
-        const opponent: MGPOptional<MinimalUser> = await this.setRealObserverRole();
-        if (opponent.isPresent()) {
-            const callback: (user: MGPOptional<User>) => void = (user: MGPOptional<User>) => {
-                Utils.assert(user.isPresent(), 'opponent was deleted, what sorcery is this');
-                this.opponent = opponent.get();
-            };
-            this.opponentSubscription = this.userService.observeUserOnServer(opponent.get().id, callback);
-        }
+        await this.setRealObserverRole();
     }
 
-    private async setRealObserverRole(): Promise<MGPOptional<MinimalUser>> {
+    private async setRealObserverRole(): Promise<void> {
         let opponent: MGPOptional<MinimalUser> = MGPOptional.empty();
         if (this.players[0].equalsValue(this.getPlayer())) {
             await this.setRole(Player.ZERO);
-            opponent = this.players[1];
+            this.opponent = this.players[1].get();
         } else if (this.players[1].equalsValue(this.getPlayer())) {
             await this.setRole(Player.ONE);
-            opponent = this.players[0];
+            this.opponent = this.players[0].get();
         } else {
             await this.setRole(PlayerOrNone.NONE);
         }
@@ -435,7 +422,6 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
             ...this.currentGame.get(),
             role: this.role === PlayerOrNone.NONE ? 'Observer' : 'Player',
         });
-        return opponent;
     }
 
     public async onLegalUserMove(move: Move): Promise<void> {
@@ -608,7 +594,6 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
             await this.currentGameService.removeCurrentGame();
         }
         if (this.gameStarted === true) {
-            this.opponentSubscription.unsubscribe();
             this.partSubscription.unsubscribe();
             this.gameEventsSubscription.unsubscribe();
         }
