@@ -59,13 +59,6 @@ export class KalahRules extends MancalaRules {
                 const captureMap: number[][] = TableUtils.create(distributedState.getWidth(), 2, 0);
                 captureMap[0][landingSpace.x] = board[0][landingSpace.x];
                 captureMap[1][landingSpace.x] = board[1][landingSpace.x];
-                // board[0][landingSpace.x] = 0;
-                // board[1][landingSpace.x] = 0;
-                // const captured: [number, number] = distributedState.getScoresCopy();
-                // captured[distributedState.getCurrentPlayer().value] += capturedSum;
-                // const postCaptureState: MancalaState = new MancalaState(board,
-                //                                                         distributedState.turn,
-                //                                                         captured);
                 const capturer: Player = distributedState.getCurrentPlayer();
                 let postCaptureState: MancalaState = distributedState.capture(capturer, landingSpace);
                 const oppositeY: number = (landingSpace.y + 1) % 2;

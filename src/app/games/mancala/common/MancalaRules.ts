@@ -1,7 +1,7 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { MancalaConfig } from './MancalaConfig';
 import { MancalaState } from './MancalaState';
-import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
+import { Player } from 'src/app/jscaip/Player';
 import { Table, TableUtils } from 'src/app/utils/ArrayUtils';
 import { ConfigurableRules } from 'src/app/jscaip/Rules';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
@@ -56,7 +56,7 @@ export abstract class MancalaRules<C extends MancalaConfig = MancalaConfig>
     public static readonly MUST_FEED: Localized = () => $localize`Must feed`;
     public static readonly PASS_BY_PLAYER_STORE: Localized = () => $localize`Pass by player store`;
     public static readonly MULTIPLE_SOW: Localized = () => $localize`Must continue distribution after last seed ends in store`;
-    public static readonly CYCLICAL_LAP: Localized = () => $localize`Continue new laps until capture or empty house`;
+    public static readonly CYCLICAL_LAP: Localized = () => $localize`Continue distribution until capture or empty house`;
     public static readonly SEEDS_BY_HOUSE: Localized = () => $localize`Seeds by house`;
 
     // These are the coordinates of the store. These are fake coordinates since the stores are not on the board
@@ -145,7 +145,6 @@ export abstract class MancalaRules<C extends MancalaConfig = MancalaConfig>
             this.distributeMove(MancalaMove.of(distribution), state, config);
         const isStarving: boolean = MancalaRules.isStarving(distributionResult.resultingState.getCurrentPlayer(),
                                                             distributionResult.resultingState.board);
-        console.log('can still move: endsUpInStore', distributionResult.endsUpInStore, ' is starving', isStarving)
         return MGPFallible.success(distributionResult.endsUpInStore && isStarving === false);
     }
 
@@ -166,23 +165,17 @@ export abstract class MancalaRules<C extends MancalaConfig = MancalaConfig>
             filledCoords: [],
             resultingState: state,
         };
-        console.log('doing move', move.toString())
         for (const distribution of move) {
-            console.log('on distribue', distribution.x)
             let houseToDistribute: Coord = new Coord(distribution.x, playerY);
             let mustDoOneMoreLap: boolean = true;
             while (mustDoOneMoreLap) {
-                console.log('let us do a lap')
                 distributionResult =
                     this.distributeHouse(houseToDistribute.x, houseToDistribute.y, distributionResult, config);
-                console.log(distributionResult.resultingState)
                 const captures: [number, number] = distributionResult.resultingState.getScoresCopy();
                 captures[playerValue] += distributionResult.passedByStoreNTimes;
                 filledCoords.push(...distributionResult.filledCoords);
                 distributionResult.passedByStoreNTimes += distributionResult.passedByStoreNTimes;
                 houseToDistribute = distributionResult.filledCoords[distributionResult.filledCoords.length - 1];
-                console.log(distributionResult.resultingState)
-                console.log(config.continueLapUntilCaptureOrEmptyHouse, '&&', distributionResult.endsUpInStore)
                 if (config.continueLapUntilCaptureOrEmptyHouse &&
                     distributionResult.endsUpInStore === false)
                 {
@@ -215,7 +208,7 @@ export abstract class MancalaRules<C extends MancalaConfig = MancalaConfig>
     public abstract applyCapture(distributionResult: MancalaDistributionResult, config: MancalaConfig)
     : MancalaCaptureResult;
 
-    public mustMansoon(postCaptureState: MancalaState, config: MancalaConfig): PlayerOrNone {
+    public mustMansoon(postCaptureState: MancalaState, config: MancalaConfig): Player[] {
         const postCaptureBoard: Table<number> = postCaptureState.getCopiedBoard();
         const opponent: Player = postCaptureState.getCurrentOpponent();
         const player: Player = postCaptureState.getCurrentPlayer();
@@ -224,16 +217,16 @@ export abstract class MancalaRules<C extends MancalaConfig = MancalaConfig>
                 this.canDistribute(opponent, postCaptureState, config) === false)
             {
                 // Opponent takes all their last piece for themselves
-                return opponent;
+                return [opponent];
             }
         } else {
             if (MancalaRules.isStarving(opponent, postCaptureBoard)) {
-                return player;
+                return [player];
             } else if (MancalaRules.isStarving(player, postCaptureBoard)) {
-                return opponent;
+                return [opponent];
             }
         }
-        return PlayerOrNone.NONE;
+        return [];
     }
 
     public getGameStatus(node: MancalaNode, config: MGPOptional<C>): GameStatus {
@@ -259,10 +252,14 @@ export abstract class MancalaRules<C extends MancalaConfig = MancalaConfig>
         const distributionsResult: MancalaDistributionResult = this.distributeMove(move, state, config.get());
         const captureResult: MancalaCaptureResult = this.applyCapture(distributionsResult, config.get());
         let resultingState: MancalaState = captureResult.resultingState;
-        const playerToMansoon: PlayerOrNone = this.mustMansoon(resultingState, config.get());
-        if (playerToMansoon.isPlayer()) {
+        const playerToMansoon: Player[] = this.mustMansoon(resultingState, config.get());
+        if (playerToMansoon.length === 1) {
             // if the player distributed their last seeds and the opponent could not give them seeds
-            const mansoonResult: MancalaCaptureResult = this.monsoon(playerToMansoon, captureResult);
+            const mansoonResult: MancalaCaptureResult = this.monsoon(playerToMansoon[0], captureResult);
+            resultingState = mansoonResult.resultingState;
+        } else if (playerToMansoon.length === 2) {
+            // if the player distributed their last seeds and the opponent could not give them seeds
+            const mansoonResult: MancalaCaptureResult = this.sharedMonsoon(captureResult);
             resultingState = mansoonResult.resultingState;
         }
         return new MancalaState(resultingState.board,
@@ -271,7 +268,7 @@ export abstract class MancalaRules<C extends MancalaConfig = MancalaConfig>
     }
 
     /**
-     * Simply distribute then group of stone in (x, y)
+     * Simply distribute the group of seeds in (x, y)
      * Does not make the capture nor verify the legality of the move
      * Returns the coords of the filled houses
      */
@@ -326,8 +323,8 @@ export abstract class MancalaRules<C extends MancalaConfig = MancalaConfig>
 
     /**
      * @param config the config of the game
-     * @param _seedsInHand the number of seed in hand at the drop moment (get decremented after)
-     * @param state the board on which a seed is gonna be dropped
+     * @param _seedsInHand the number of seed in hand at the drop moment
+     * @param state the board on which a seed is going to be dropped
      * @param coord the coord to feed
      * @returns the result of the drop (updated)
      */
@@ -406,6 +403,21 @@ export abstract class MancalaRules<C extends MancalaConfig = MancalaConfig>
         const capturedSum: number = state.getTotalRemainingSeeds();
         const captureMap: number[][] = TableUtils.add(postCaptureResult.captureMap, state.board);
         captured[mansooningPlayer.value] += capturedSum;
+        return {
+            capturedSum,
+            captureMap,
+            resultingState: new MancalaState(resultingBoard, state.turn, captured),
+        };
+    }
+
+    public sharedMonsoon(postCaptureResult: MancalaCaptureResult): MancalaCaptureResult {
+        const state: MancalaState = postCaptureResult.resultingState;
+        const resultingBoard: number[][] = TableUtils.create(state.getWidth(), 2, 0);
+        const captured: [number, number] = state.getScoresCopy();
+        const capturedSum: number = state.getTotalRemainingSeeds();
+        const captureMap: number[][] = TableUtils.add(postCaptureResult.captureMap, state.board);
+        captured[Player.ZERO.value] += capturedSum / 2; // TODO FOR REVIEW: on fait des demi-captures :p ?
+        captured[Player.ONE.value] += capturedSum / 2;
         return {
             capturedSum,
             captureMap,

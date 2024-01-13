@@ -2,7 +2,7 @@
 import { DebugElement, Type } from '@angular/core';
 import { fakeAsync, tick } from '@angular/core/testing';
 import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
-import { MancalaComponent } from '../MancalaComponent';
+import { MancalaComponent, SeedDropResult } from '../MancalaComponent';
 import { MancalaDropResult, MancalaRules } from '../MancalaRules';
 import { MancalaDistribution, MancalaMove } from '../MancalaMove';
 import { MancalaState } from '../MancalaState';
@@ -38,35 +38,35 @@ export class MancalaComponentTestUtils<C extends MancalaComponent<R>,
     }
 
     private showSeedBySeed(coord: Coord, state: MancalaState, config: MancalaConfig): number {
-        let resultingState: MancalaState = state;
-        const player: Player = state.getCurrentPlayer();
         const initial: Coord = coord; // to remember in order not to sow in the starting space if we make a full turn
-        let currentDropIsStore: boolean = false;
-        let houseToDistribute: Coord = coord;
+        let seedDropResult: SeedDropResult = {
+            currentDropIsStore: false,
+            houseToDistribute: coord,
+            seedsInHand: 0,
+            resultingState: state,
+        };
         let mustDoOneMoreLap: boolean = true;
         let awaitedTime: number = 0;
         while (mustDoOneMoreLap) {
-            let seedsInHand: number = resultingState.getPieceAt(houseToDistribute);
-            resultingState = resultingState.setPieceAt(houseToDistribute, 0);
+            seedDropResult.seedsInHand =
+                seedDropResult.resultingState.getPieceAt(seedDropResult.houseToDistribute);
+            seedDropResult.resultingState =
+                seedDropResult.resultingState.setPieceAt(seedDropResult.houseToDistribute, 0);
             // Changing immediately the chosen house
-            awaitedTime += MancalaComponent.TIMEOUT_BETWEEN_SEED;
-            while (seedsInHand > 0) {
-                ({ houseToDistribute, currentDropIsStore, seedsInHand, resultingState, awaitedTime } =
-                    this.showSeedDrop(houseToDistribute,
-                                      player,
-                                      currentDropIsStore,
-                                      state,
+            awaitedTime += MancalaComponent.TIMEOUT_BETWEEN_SEEDS;
+            while (seedDropResult.seedsInHand > 0) {
+                ({ seedDropResult, awaitedTime } =
+                    this.showSeedDrop(seedDropResult,
                                       config,
-                                      seedsInHand,
-                                      resultingState,
                                       initial,
                                       awaitedTime)
                 );
             }
-            if (currentDropIsStore || config.continueLapUntilCaptureOrEmptyHouse === false) {
+            if (seedDropResult.currentDropIsStore || config.continueLapUntilCaptureOrEmptyHouse === false) {
                 mustDoOneMoreLap = false;
             } else {
-                const lastHouseContent: number = resultingState.getPieceAt(houseToDistribute);
+                const lastHouseContent: number =
+                    seedDropResult.resultingState.getPieceAt(seedDropResult.houseToDistribute);
                 mustDoOneMoreLap = lastHouseContent !== 1 && lastHouseContent !== 4;
                 if (mustDoOneMoreLap) {
                     awaitedTime += MancalaComponent.TIMEOUT_BETWEEN_LAPS;
@@ -76,48 +76,47 @@ export class MancalaComponentTestUtils<C extends MancalaComponent<R>,
         return awaitedTime;
     }
 
-    private showSeedDrop(houseToDistribute: Coord,
-                         player: Player,
-                         currentDropIsStore: boolean,
-                         state: MancalaState,
+    private showSeedDrop(seedDropResult: SeedDropResult,
                          config: MancalaConfig,
-                         seedsInHand: number,
-                         resultingState: MancalaState,
                          initial: Coord,
                          awaitedTime: number)
-    : { houseToDistribute: Coord;
-        currentDropIsStore: boolean;
-        seedsInHand: number;
-        resultingState: MancalaState;
-        awaitedTime: number
-    }
+    : { seedDropResult: SeedDropResult, awaitedTime: number }
     {
         const component: C = this.testUtils.getGameComponent();
-        const nextCoord: MGPOptional<Coord> =
-            component.rules.getNextCoord(houseToDistribute, player, currentDropIsStore, state, config);
-        currentDropIsStore = nextCoord.isAbsent();
-        if (currentDropIsStore) {
-            seedsInHand--;
-            resultingState = resultingState.feedStore(player);
+        const player: Player = seedDropResult.resultingState.getCurrentPlayer();
+        const nextCoord: MGPOptional<Coord> = component.rules.getNextCoord(seedDropResult.houseToDistribute,
+                                                                           player,
+                                                                           seedDropResult.currentDropIsStore,
+                                                                           seedDropResult.resultingState,
+                                                                           config);
+        const nextSeedDropResult: SeedDropResult = {
+            ...seedDropResult,
+            currentDropIsStore: nextCoord.isAbsent(),
+        };
+        if (nextSeedDropResult.currentDropIsStore) {
+            nextSeedDropResult.seedsInHand--;
+            nextSeedDropResult.resultingState = nextSeedDropResult.resultingState.feedStore(player);
         } else {
-            houseToDistribute = nextCoord.get();
-            if (initial.equals(houseToDistribute) === false || config.feedOriginalHouse) {
+            nextSeedDropResult.houseToDistribute = nextCoord.get();
+            if (initial.equals(nextSeedDropResult.houseToDistribute) === false || config.feedOriginalHouse) {
                 // not to distribute on our starting space
                 const feedResult: MancalaDropResult =
-                    component.rules.getDropResult(seedsInHand, resultingState, houseToDistribute);
-                resultingState = feedResult.resultingState;
-                seedsInHand--; // drop in this space a piece we have in hand
+                    component.rules.getDropResult(nextSeedDropResult.seedsInHand,
+                                                  nextSeedDropResult.resultingState,
+                                                  nextSeedDropResult.houseToDistribute);
+                nextSeedDropResult.resultingState = feedResult.resultingState;
+                nextSeedDropResult.seedsInHand--; // drop in this space a piece we have in hand
             }
         }
-        if (seedsInHand > 0) {
-            awaitedTime += MancalaComponent.TIMEOUT_BETWEEN_SEED;
+        if (nextSeedDropResult.seedsInHand > 0) {
+            awaitedTime += MancalaComponent.TIMEOUT_BETWEEN_SEEDS;
         }
-        return { houseToDistribute, currentDropIsStore, seedsInHand, resultingState, awaitedTime };
+        return { seedDropResult: nextSeedDropResult, awaitedTime };
     }
 
     public async expectMancalaClickSuccess(coord: Coord): Promise<void> {
         const pieceInHouse: number = this.testUtils.getGameComponent().constructedState.getPieceAt(coord);
-        const timeToWait: number = (pieceInHouse + 1) * MancalaComponent.TIMEOUT_BETWEEN_SEED;
+        const timeToWait: number = (pieceInHouse + 1) * MancalaComponent.TIMEOUT_BETWEEN_SEEDS;
         const click: string = '#click_' + coord.x + '_' + coord.y;
         await this.testUtils.expectClickSuccess(click);
         tick(timeToWait);
@@ -443,7 +442,7 @@ export function doMancalaComponentTests<C extends MancalaComponent<R>,
                     await receiveMoveOrDoClick(new Coord(5, 1));
 
                     // When waiting MancalaComponent.TIMEOUT_BETWEEN_SEED ms
-                    tick(MancalaComponent.TIMEOUT_BETWEEN_SEED);
+                    tick(MancalaComponent.TIMEOUT_BETWEEN_SEEDS);
 
                     // Then only the first seed should be distributed
                     mancalaTestUtils.expectHouseToContain(new Coord(4, 1), ' 5 ', ' +1 ');
@@ -504,12 +503,12 @@ export function doMancalaComponentTests<C extends MancalaComponent<R>,
                 const move: MancalaMove = gameComponent.generateMove(2);
                 await gameComponent.chooseMove(move);
                 void gameComponent.updateBoard(true); // void, so it starts but doesn't wait the animation's end
-                tick(MancalaComponent.TIMEOUT_BETWEEN_SEED); // so that it is started but bot finished yet
+                tick(MancalaComponent.TIMEOUT_BETWEEN_SEEDS); // so that it is started but bot finished yet
                 spyOn(mancalaTestUtils.testUtils.getGameComponent() as MancalaComponent<R>, 'onLegalClick').and.callThrough();
 
                 // When clicking again
                 await mancalaTestUtils.testUtils.expectClickSuccess('#click_3_1');
-                tick(MancalaComponent.TIMEOUT_BETWEEN_SEED);
+                tick(MancalaComponent.TIMEOUT_BETWEEN_SEEDS);
 
                 // Then onLegalUserClick should not have been called
                 expect(mancalaTestUtils.testUtils.getGameComponent().onLegalClick).not.toHaveBeenCalled();
@@ -519,12 +518,12 @@ export function doMancalaComponentTests<C extends MancalaComponent<R>,
             it('should make click impossible during player distribution animation', fakeAsync(async() => {
                 // Given a move where a first click has been done but is not finished
                 await mancalaTestUtils.testUtils.expectClickSuccess('#click_2_1');
-                tick(MancalaComponent.TIMEOUT_BETWEEN_SEED); // so that it is started but not finished yet
+                tick(MancalaComponent.TIMEOUT_BETWEEN_SEEDS); // so that it is started but not finished yet
                 spyOn(mancalaTestUtils.testUtils.getGameComponent() as MancalaComponent<R>, 'onLegalClick').and.callThrough();
 
                 // When clicking again
                 await mancalaTestUtils.testUtils.expectClickSuccess('#click_3_1');
-                tick(MancalaComponent.TIMEOUT_BETWEEN_SEED);
+                tick(MancalaComponent.TIMEOUT_BETWEEN_SEEDS);
 
                 // Then onLegalUserClick should not have been called
                 expect(mancalaTestUtils.testUtils.getGameComponent().onLegalClick).not.toHaveBeenCalled();

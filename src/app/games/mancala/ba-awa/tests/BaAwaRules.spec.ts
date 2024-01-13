@@ -33,7 +33,7 @@ describe('BaAwaRules', () => {
             // When doing a simple move
             const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(5));
 
-            // Then the seed should be distributed
+            // Then the seeds should be distributed
             const expectedBoard: Table<number> = [
                 [6, 6, 0, 1, 6, 6],
                 [6, 1, 6, 1, 7, 2],
@@ -43,7 +43,7 @@ describe('BaAwaRules', () => {
         });
 
         it('should drop a piece in the starting space', () => {
-            // Given a state where the player can perform a distributing move with at least 12 stones
+            // Given a state where the player can perform a distributing move with at least 12 seeds
             const board: Table<number> = [
                 [0, 0, 0, 0, 0, 18],
                 [0, 0, 0, 0, 0, 0],
@@ -51,7 +51,7 @@ describe('BaAwaRules', () => {
             const state: MancalaState = new MancalaState(board, 1, [0, 0]);
             // When performing a distribution
             const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(5));
-            // Then the distribution should be performed as expected, and leave 0 stones in the starting space
+            // Then the distribution should be performed as expected, and leave 0 seeds in the starting space
             const expectedBoard: Table<number> = [
                 [3, 1, 2, 0, 2, 0],
                 [1, 0, 3, 3, 0, 3],
@@ -84,7 +84,7 @@ describe('BaAwaRules', () => {
 
     describe('starvation and monsoon', () => {
 
-        it('should monsoon for opponent when player give its last seed', () => {
+        it('should monsoon for opponent when player gives its last seed', () => {
             // Given a state where next player is unable to feed current player
             const board: Table<number> = [
                 [0, 0, 0, 0, 0, 5],
@@ -92,7 +92,7 @@ describe('BaAwaRules', () => {
             ];
             const state: MancalaState = new MancalaState(board, 1, [19, 20]);
 
-            // When player give its last stone
+            // When player gives its last seed
             const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(5));
 
             // Then we still let that player do its last move, so they see the last move was all the same
@@ -146,7 +146,7 @@ describe('BaAwaRules', () => {
         });
 
         it('should do capture-on-the-go for opponent when possible', () => {
-            // Given a state where a capture-on-the-go is possible for passive player !
+            // Given a state where a capture-on-the-go is possible for passive player
             const board: Table<number> = [
                 [3, 1, 0, 0, 0, 8],
                 [3, 1, 0, 0, 0, 0],
@@ -186,7 +186,7 @@ describe('BaAwaRules', () => {
         });
 
         it('should do multiple capture-on-the-go for opponent when possible', () => {
-            // Given a state where a multiplie capture-on-the-go is possible for passive player !
+            // Given a state where a multiplie capture-on-the-go is possible for passive player
             const board: Table<number> = [
                 [3, 3, 0, 0, 0, 8],
                 [5, 1, 0, 0, 0, 0],
@@ -226,7 +226,7 @@ describe('BaAwaRules', () => {
         });
 
         it(`should mansoon for player zero when total of seed drop to 8 or less (Player.ZERO's turn)`, () => {
-            // Given a state in which Player.ZERO could capture and make total seed drop to zero
+            // Given a state in which Player.ZERO could capture and make total count of seeds drop below 8
             const board: Table<number> = [
                 [0, 0, 0, 3, 3, 0],
                 [0, 0, 2, 0, 3, 1],
@@ -243,17 +243,17 @@ describe('BaAwaRules', () => {
         });
 
         it(`should mansoon for player zero when total of seed drop to 8 or less (Player.ONE's turn)`, () => {
-            // Given a state in which Player.ONE could capture and make total seed drop to zero
+            // Given a state in which Player.ONE could capture and make the total of seeds drop below 8
             const board: Table<number> = [
                 [0, 0, 2, 3, 1, 0],
                 [0, 0, 2, 0, 3, 1],
             ];
             const state: MancalaState = new MancalaState(board, 1, [0, 0]);
 
-            // When the player does a would-starve move
+            // When the player does the move that drops the number of piece below 8
             const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(2));
 
-            // Then, the distribution should be done but not the capture
+            // Then the mansoon should be done
             const expectedBoard: Table<number> = TableUtils.create(6, 2, 0);
             const expectedState: MancalaState = new MancalaState(expectedBoard, 2, [8, 4]);
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
@@ -263,8 +263,8 @@ describe('BaAwaRules', () => {
 
     describe('Custom Config', () => {
 
-        it('should count "store-dropping" as "passing bellow 8"', () => {
-            // Given a board where we are about to pass by store and drop to 8 or bellow
+        it('should count "store-dropping" as "passing below 8"', () => {
+            // Given a board where we are about to pass by store and drop to 8 or below
             const customConfig: MGPOptional<BaAwaConfig> = MGPOptional.of({
                 ...defaultConfig.get(),
                 passByPlayerStore: true,
@@ -286,10 +286,10 @@ describe('BaAwaRules', () => {
         });
 
         it(`should split mansoon for when total of seed drop to 8 or less and config ask for even split`, () => {
-            // Given a state in which Player.ZERO could capture and make total seed drop to zero
+            // Given a state in which Player.ONE could capture and make total seed drop below 8
             // And a config mentionning that final seeds are split
             const board: Table<number> = [
-                [0, 0, 2, 3, 1, 0],
+                [0, 1, 2, 3, 0, 0],
                 [0, 0, 2, 0, 3, 1],
             ];
             const state: MancalaState = new MancalaState(board, 1, [0, 0]);
@@ -298,12 +298,13 @@ describe('BaAwaRules', () => {
                 splitFinalSeedsEvenly: true,
             });
 
-            // When the player does a would-starve move
+            // When the move is done
             const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(2));
 
-            // Then, the distribution should be done but not the capture
+            // Then the distribution should be done, Player.ONE should have captured 4 + 4 after the split
+            // And Player.ZERO only have the 4 of the split
             const expectedBoard: Table<number> = TableUtils.create(6, 2, 0);
-            const expectedState: MancalaState = new MancalaState(expectedBoard, 2, [8, 4]);
+            const expectedState: MancalaState = new MancalaState(expectedBoard, 2, [4, 8]);
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState, customConfig);
         });
 

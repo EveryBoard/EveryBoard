@@ -197,7 +197,7 @@ describe('TableUtils', () => {
 
     describe('add', () => {
 
-        it('should add element of same index of a number table', () => {
+        it('should add elements of same index of a number table', () => {
             // Given two element
             const left: Table<number> = [
                 [+1, +2, +3],

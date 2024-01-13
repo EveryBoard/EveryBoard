@@ -18,21 +18,21 @@ export class BaAwaTutorial extends Tutorial {
             BaAwaRules.get().getInitialState(defaultConfig),
         ),
         TutorialStep.informational(
-            $localize`Kalah`,
+            $localize`Ba-awa`,
             $localize`Bonus fact: Ba-awa, also called Adi, is played mainly in Ghana.`,
             BaAwaRules.get().getInitialState(defaultConfig),
         ),
         MancalaTutorial.sowing(
             new MancalaState([
-                [0, 0, 0, 0, 0, 0],
-                [0, 0, 0, 0, 0, 9],
+                [4, 4, 4, 4, 4, 4],
+                [4, 0, 4, 4, 4, 4],
             ], 0, [0, 0]),
         ),
         TutorialStep.fromMove(
             $localize`Multiple laps sowing`,
-            $localize`However, the distribution only stop when the last house contains, after you dropped your last seed, zero or four seeds.<br/><br/>You're playing Dark, do such a move!`,
+            $localize`However, the distribution only stops when the last seed is dropped in a house that contains zero or three seeds (before drop).<br/><br/>You're playing Dark, do such a move!`,
             new MancalaState([
-                [0, 2, 0, 0, 2, 0],
+                [0, 2, 4, 0, 0, 0],
                 [0, 0, 0, 5, 0, 0],
             ], 0, [0, 0]),
             [MancalaMove.of(MancalaDistribution.of(3))],
@@ -69,18 +69,18 @@ export class BaAwaTutorial extends Tutorial {
                 [2, 7, 2, 0, 0, 0],
             ], 0, [0, 0]),
             [MancalaMove.of(MancalaDistribution.of(0))],
-            $localize`There it is, the opponent captured 4 seeds.`,
+            $localize`There it is, you captured 4 seeds.`,
             $localize`Wrong, you did not capture anything.`,
         ),
         TutorialStep.fromMove(
             $localize`End game`,
-            $localize`At any end of turn, if the number of seed reach 8 or less, the first player capture capture the 8 seeds`,
+            $localize`At any end of turn, if the number of seed reach 8 or less, the first player capture capture the 8 seeds.<br/><br/>You're playing Dark, end the game by capturing!`,
             new MancalaState([
-                [0, 1, 1, 3, 8, 0],
-                [2, 7, 2, 0, 0, 0],
+                [0, 1, 1, 3, 0, 0],
+                [1, 0, 2, 0, 0, 0],
             ], 0, [0, 0]),
-            [MancalaMove.of(MancalaDistribution.of(0))],
-            $localize`There it is, the opponent captured 4 seeds.`,
+            [MancalaMove.of(MancalaDistribution.of(2))],
+            $localize`There it is, you captured all remaining seeds.`,
             $localize`Wrong, you did not capture anything.`,
         ),
     ];

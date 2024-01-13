@@ -2186,17 +2186,65 @@
       <trans-unit id="4966070806582905191" datatype="html">
         <source>Also, as soon as on player cannot play, the other player captures all the seeds in its own side. Here, it was the first player&apos;s turn, and the second player has taken all the remaining seeds.</source>
       </trans-unit>
+      <trans-unit id="6243517581301426418" datatype="html">
+        <source>Split final seeds evenly</source>
+      </trans-unit>
+      <trans-unit id="3458197467832550172" datatype="html">
+        <source>Even-Ba-Awa</source>
+      </trans-unit>
       <trans-unit id="6179314931812970793" datatype="html">
         <source>Bonus fact: Ba-awa, also called Adi, is played mainly in Ghana.</source>
       </trans-unit>
       <trans-unit id="2932513123180634807" datatype="html">
         <source>Multiple laps sowing</source>
       </trans-unit>
-      <trans-unit id="7401522682103634470" datatype="html">
-        <source>However, the distribution only stop when the last house contains, after you dropped your last seed, zero or four seeds. Example here</source>
+      <trans-unit id="1218183221112518220" datatype="html">
+        <source>However, the distribution only stops when the last seed is dropped in a house that contains zero or three seeds (before drop).&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, do such a move!</source>
       </trans-unit>
-      <trans-unit id="1172032283461186966" datatype="html">
-        <source>So, after landing in a house with 3 seeds, a second lap has been started</source>
+      <trans-unit id="4651814494564877992" datatype="html">
+        <source>So, after landing in the house with 3 seeds, a second lap has been started</source>
+      </trans-unit>
+      <trans-unit id="7226426855832465537" datatype="html">
+        <source>Failed, try again</source>
+      </trans-unit>
+      <trans-unit id="1776667084127870728" datatype="html">
+        <source>Captures during move (1/2)</source>
+      </trans-unit>
+      <trans-unit id="7539631448120131582" datatype="html">
+        <source>If, during some distribution, you pass by one of your house that contains 3 seeds, and drop a fourth seed, you capture it immediately!&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, do such a move!</source>
+      </trans-unit>
+      <trans-unit id="4885077843917899750" datatype="html">
+        <source>Congratulation, you captured 4 seeds.</source>
+      </trans-unit>
+      <trans-unit id="5394576294370511747" datatype="html">
+        <source>Wrong, you did not capture anything.</source>
+      </trans-unit>
+      <trans-unit id="8038230146619867043" datatype="html">
+        <source>Captures during move (2/2)</source>
+      </trans-unit>
+      <trans-unit id="1607840910020748993" datatype="html">
+        <source>If, during some distribution, you pass by one house of the opponent that contains 3 seeds, and drop a fourth seed, the opponent capture it immediately!&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, do such a move!</source>
+      </trans-unit>
+      <trans-unit id="1192652665972488441" datatype="html">
+        <source>There it is, the opponent captured 4 seeds.</source>
+      </trans-unit>
+      <trans-unit id="5216257512116603462" datatype="html">
+        <source>Captures</source>
+      </trans-unit>
+      <trans-unit id="4644061788564030704" datatype="html">
+        <source>Though, if your very last seed is drop in a house of the opponent that contains 3 seeds, you capture it immediately!&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, do such a move!</source>
+      </trans-unit>
+      <trans-unit id="2070211158160637018" datatype="html">
+        <source>There it is, you captured 4 seeds.</source>
+      </trans-unit>
+      <trans-unit id="4031483934278136444" datatype="html">
+        <source>End game</source>
+      </trans-unit>
+      <trans-unit id="8792877198846045936" datatype="html">
+        <source>At any end of turn, if the number of seed reach 8 or less, the first player capture capture the 8 seeds.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, end the game by capturing!</source>
+      </trans-unit>
+      <trans-unit id="2821967115826330186" datatype="html">
+        <source>There it is, you captured all remaining seeds.</source>
       </trans-unit>
       <trans-unit id="8840015526202664476" datatype="html">
         <source>You must distribute one of your houses.</source>
@@ -2219,8 +2267,8 @@
       <trans-unit id="8576122948092687879" datatype="html">
         <source>Must continue distribution after last seed ends in store</source>
       </trans-unit>
-      <trans-unit id="2685972626228203020" datatype="html">
-        <source>Continue new laps until capture or empty house</source>
+      <trans-unit id="356626260857129297" datatype="html">
+        <source>Continue distribution until capture or empty house</source>
       </trans-unit>
       <trans-unit id="7080802734755670775" datatype="html">
         <source>Seeds by house</source>
@@ -2234,8 +2282,8 @@
       <trans-unit id="935549280838012268" datatype="html">
         <source>The main move in Mancala games is sowing, let&apos;s see how seeds are sown. As you are playing Dark, the 6 houses on the bottom are yours.&lt;br/&gt;&lt;br&gt;Click on the rightmost bottom house to sow the seeds it contains: they will be sown clockwise, one seed per house.&lt;br/&gt;&lt;br/&gt;Click on the rightmost house!</source>
       </trans-unit>
-      <trans-unit id="6994033934467498174" datatype="html">
-        <source>Look at the 4 houses that follow clockwise the one you picked, they now contain 5 seeds. This is how seeds are sown: one by one from the house next to the one they come from, clockwise.</source>
+      <trans-unit id="8909995708712093055" datatype="html">
+        <source>Look at the 4 houses that follow clockwise the one you picked, they now contain one more seed. This is how seeds are sown: one by one from the house next to the one they come from, clockwise.</source>
       </trans-unit>
       <trans-unit id="8587148937080588417" datatype="html">
         <source>Failed. Choose the rightmost house on the bottom.</source>
@@ -2246,8 +2294,8 @@
       <trans-unit id="7111322038810092184" datatype="html">
         <source>The Kalah (1/2)</source>
       </trans-unit>
-      <trans-unit id="1494658367285976347" datatype="html">
-        <source>The houses on the extreme left and right, unaligned with the others, are the Kalah. Yours is on the left, the opponent&apos;s on the right. When sowing, before passing from your last house to the first of the opponent, you must drop one seed in your Kalah, but you won&apos;t have to drop seed in your opponent&apos;s Kalah. When you make a capture, the captured seeds are put in your Kalah.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark. Make a move that passes through your Kalah then feeds opponent&apos;s houses.</source>
+      <trans-unit id="3586015705184533702" datatype="html">
+        <source>The houses on the extreme left and right, unaligned with the others, are the Kalah. Yours is on the left, the opponent&apos;s on the right. When sowing, before passing from your leftmost house to the leftmost house of the opponent, you must drop one seed in your Kalah, but you won&apos;t have to drop seed in your opponent&apos;s Kalah. When you make a capture, the captured seeds are put in your Kalah.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark. Make a move that passes through your Kalah then feeds opponent&apos;s houses.</source>
       </trans-unit>
       <trans-unit id="108833396164233870" datatype="html">
         <source>As you see, three houses have been fed in addition to your Kalah.</source>

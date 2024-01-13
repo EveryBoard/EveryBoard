@@ -6,7 +6,7 @@ import { MGPValidators } from 'src/app/utils/MGPValidator';
 import { TableUtils } from 'src/app/utils/ArrayUtils';
 import { MancalaState } from '../common/MancalaState';
 import { Coord } from 'src/app/jscaip/Coord';
-import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
+import { Player } from 'src/app/jscaip/Player';
 
 export class BaAwaRules extends MancalaRules<BaAwaConfig> {
 
@@ -88,15 +88,19 @@ export class BaAwaRules extends MancalaRules<BaAwaConfig> {
         }
     }
 
-    public override mustMansoon(postCaptureState: MancalaState, config: BaAwaConfig): PlayerOrNone {
-        const mustMansoon: PlayerOrNone = super.mustMansoon(postCaptureState, config);
-        if (mustMansoon.isPlayer()) {
+    public override mustMansoon(postCaptureState: MancalaState, config: BaAwaConfig): Player[] {
+        const mustMansoon: Player[] = super.mustMansoon(postCaptureState, config);
+        if (mustMansoon.length > 0) {
             return mustMansoon;
         } else {
             if (postCaptureState.getTotalRemainingSeeds() <= 8) {
-                return Player.ZERO;
+                if (config.splitFinalSeedsEvenly) {
+                    return [Player.ZERO, Player.ONE];
+                } else {
+                    return [Player.ZERO];
+                }
             } else {
-                return PlayerOrNone.NONE;
+                return [];
             }
         }
     }

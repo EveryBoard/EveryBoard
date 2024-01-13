@@ -34,7 +34,7 @@ describe('KalahRules', () => {
             // When doing a simple move
             const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(5));
 
-            // Then the seed should be distributed
+            // Then the seeds should be distributed
             const expectedBoard: Table<number> = [
                 [4, 4, 4, 4, 4, 4],
                 [4, 5, 5, 5, 5, 0],
@@ -53,7 +53,7 @@ describe('KalahRules', () => {
             // When doing a simple move
             const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(0));
 
-            // Then the seed should be distributed (and then by default that means a capture)
+            // Then the seeds should be distributed (and then by default that means a capture)
             const expectedBoard: Table<number> = [
                 [0, 1, 1, 1, 1, 1],
                 [0, 1, 1, 1, 1, 1],
@@ -93,7 +93,7 @@ describe('KalahRules', () => {
         });
 
         it('should drop a piece in your Kalah when passing by', () => {
-            // Given any move going further than your last house
+            // Given any move going further than your leftmost
             const state: MancalaState = KalahRules.get().getInitialState(defaultConfig);
 
             // When doing it
@@ -110,7 +110,7 @@ describe('KalahRules', () => {
         });
 
         it(`should not drop a piece in opponent's Kalah when passing by`, () => {
-            // Given any move going further than your last house, and than last opponent's house
+            // Given any move going further than your leftmost house, and than last opponent's house
             const board: Table<number> = [
                 [4, 4, 4, 4, 4, 4],
                 [8, 4, 4, 4, 4, 4],
@@ -180,7 +180,7 @@ describe('KalahRules', () => {
             const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(0));
 
             // Then that normally-illegal move should be accepted
-            // And since player gave their last stone, monsoon
+            // And since player gave their last seeds, monsoon follows
             const expectedState: MancalaState = new MancalaState(
                 TableUtils.create(6, 2, 0),
                 11,
@@ -201,7 +201,7 @@ describe('KalahRules', () => {
             ];
             const state: MancalaState = new MancalaState(board, 1, [22, 22]);
 
-            // When current player player give its last stone
+            // When current player player gives its last seed
             const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(5));
 
             // Then the move should be the last of the game and Player.ZERO should monsoon
@@ -220,7 +220,7 @@ describe('KalahRules', () => {
             ];
             const state: MancalaState = new MancalaState(board, 0, [22, 22]);
 
-            // When current player capture opponent last stones
+            // When current player capture opponent last seeds
             const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(5));
 
             // Then the move should be the last of the game and Player.ZERO should monsoon
@@ -239,7 +239,7 @@ describe('KalahRules', () => {
             ];
             const state: MancalaState = new MancalaState(board, 1, [10, 22]);
 
-            // When player give its last stone
+            // When player gives its last seed
             const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(5));
 
             // Then, since the other player can't distribute, all its pieces should be mansooned

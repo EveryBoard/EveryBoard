@@ -110,11 +110,11 @@ describe('BaAwaComponent', () => {
                 tick(MancalaComponent.TIMEOUT_BETWEEN_LAPS); // House emptied, waiting for lap to start
 
                 // When feeding the capturable house
-                tick(MancalaComponent.TIMEOUT_BETWEEN_SEED);
+                tick(MancalaComponent.TIMEOUT_BETWEEN_SEEDS);
 
                 // Then it should be captured
                 mancalaTestUtils.expectToBeCaptured([{ x: 0, y: 1, content: { mainContent: ' 0 ', secondaryContent: ' -4 ' } }]);
-                tick(MancalaComponent.TIMEOUT_BETWEEN_SEED); // Dropping last stone
+                tick(MancalaComponent.TIMEOUT_BETWEEN_SEEDS); // Dropping last seed
             }));
         });
     });

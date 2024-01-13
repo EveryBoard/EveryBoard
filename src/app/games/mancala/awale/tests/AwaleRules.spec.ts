@@ -35,7 +35,7 @@ describe('AwaleRules', () => {
             // When doing a simple move
             const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(5));
 
-            // Then the seed should be distributed
+            // Then the seeds should be distributed
             const expectedBoard: Table<number> = [
                 [4, 4, 4, 4, 4, 4],
                 [4, 5, 5, 5, 5, 0],
@@ -45,7 +45,7 @@ describe('AwaleRules', () => {
         });
 
         it('should not drop a piece in the starting space', () => {
-            // Given a state where the player can perform a distributing move with at least 12 stones
+            // Given a state where the player can perform a distributing move with at least 12 seeds
             const board: Table<number> = [
                 [0, 0, 0, 0, 0, 18],
                 [0, 0, 0, 0, 0, 0],
@@ -53,7 +53,7 @@ describe('AwaleRules', () => {
             const state: MancalaState = new MancalaState(board, 1, [0, 0]);
             // When performing a distribution
             const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(5));
-            // Then the distribution should be performed as expected, and leave 0 stones in the starting space
+            // Then the distribution should be performed as expected, and leave 0 seeds in the starting space
             const expectedBoard: Table<number> = [
                 [2, 1, 1, 1, 1, 0],
                 [2, 2, 2, 2, 2, 2],
@@ -110,7 +110,7 @@ describe('AwaleRules', () => {
             ];
             const state: MancalaState = new MancalaState(board, 1, [0, 0]);
 
-            // When current player player give its last stone
+            // When current player player gives its last seed
             const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(5));
 
             // Then the move should be legal and no monsoon should be done
@@ -130,7 +130,7 @@ describe('AwaleRules', () => {
             ];
             const state: MancalaState = new MancalaState(board, 1, [10, 23]);
 
-            // When player give its last stone
+            // When player gives its last seed
             const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(5));
 
             // Then, since the other player can't distribute, all its pieces should be mansooned

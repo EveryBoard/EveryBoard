@@ -30,8 +30,7 @@ export class RulesUtils {
             if (isComparableObject(resultingState)) {
                 const equals: boolean = comparableEquals(resultingState, expectedState);
                 if (equals === false) {
-                    console.clear()
-                    console.log('le pet lo', expectedState, resultingState);
+                    console.log(expectedState, resultingState);
                 }
                 expect(equals).withContext('comparable states should be equal').toBeTrue();
             } else {
