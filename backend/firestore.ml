@@ -1,7 +1,9 @@
 open Utils
 
-(** A getter takes a contextual request and an id, and returns the JSON document if found, None otherwise *)
-type getter = Dream.request -> string -> JSON.t option Lwt.t
+let ( >>= ) = Result.bind
+
+(** A getter takes a contextual request and an id, and returns the document if found, and raises an error otherwise *)
+type 'a getter = Dream.request -> string -> 'a Lwt.t
 (** An updater takes a contextual request, an id, and a document update. It updates the corresponding document *)
 type updater = Dream.request -> string -> JSON.t -> unit Lwt.t
 (** A deleter takes a contextual request and an id, and deletes the corresponding document *)
@@ -14,16 +16,16 @@ module type FIRESTORE = sig
   val transaction : Dream.request -> (unit -> ('a, 'a) result Lwt.t) -> 'a Lwt.t
 
   module User : sig
-    (** Retrieve an user as a JSON document, from its id *)
-    val get : getter
+    (** Retrieve an user from its id *)
+    val get : Domain.User.t getter
   end
 
   module Game : sig
-    (** Retrieve a full game as a JSON document, from its id *)
-    val get : getter
+    (** Retrieve a full game, from its id *)
+    val get : Domain.Game.t getter
 
     (** Get the name of a game if the game exists *)
-    val get_name : Dream.request -> string -> string option Lwt.t
+    val get_name : Dream.request -> string -> string Lwt.t
 
     (** Create a game  *)
     val create : Dream.request -> Domain.Game.t -> string Lwt.t
@@ -41,7 +43,7 @@ module type FIRESTORE = sig
 
   module ConfigRoom : sig
     (** Retrieve a config room as a JSON document, from its id *)
-    val get : getter
+    val get : Domain.ConfigRoom.t getter
 
     (** Create a config room, with a given id *)
     val create : Dream.request -> string -> Domain.ConfigRoom.t -> unit Lwt.t
@@ -78,27 +80,36 @@ module Make (FirestorePrimitives : FirestorePrimitives.FIRESTORE_PRIMITIVES) : F
       let* _ = FirestorePrimitives.rollback request transaction_id in
       raise e
 
-  let get (request : Dream.request) (path : string) : JSON.t option Lwt.t =
-    try
-      let* doc : JSON.t = FirestorePrimitives.get_doc request path in
-      Lwt.return (Some doc)
-    with Error _ -> Lwt.return None
+  let get_or_fail (error : exn) (maybe_value : ('a, 'b) result)  : 'a =
+    match maybe_value with
+    | Result.Ok value -> value
+    | Result.Error _ -> raise error
+
+  let get (request : Dream.request) (path : string) (of_yojson : JSON.t -> ('a, 'b) result) : 'a Lwt.t =
+      let* doc = FirestorePrimitives.get_doc request path in
+      doc
+      |> of_yojson
+      |> get_or_fail (Error "user does not exist or is invalid")
+      |> Lwt.return
 
   module User = struct
 
-    let get (request : Dream.request) (uid : string) : JSON.t option Lwt.t =
-      get request ("users/" ^ uid)
+    let get (request : Dream.request) (uid : string) : Domain.User.t Lwt.t =
+      get request ("users/" ^ uid) Domain.User.of_yojson
   end
 
   module Game = struct
 
-    let get (request : Dream.request) (game_id : string) : JSON.t option Lwt.t =
-      get request ("parts/" ^ game_id)
+    let get (request : Dream.request) (game_id : string) : Domain.Game.t Lwt.t =
+      get request ("parts/" ^ game_id) Domain.Game.of_yojson
 
-    let get_name (request : Dream.request) (game_id : string) : string option Lwt.t =
-      let* doc = get request ("parts/" ^ game_id ^ "?mask=typeGame") in
-      let game_name_opt = Option.map (fun json -> JSON.Util.to_string (JSON.Util.member "typeGame" json)) doc in
-      Lwt.return game_name_opt
+    let get_name (request : Dream.request) (game_id : string) : string Lwt.t =
+      let* doc = FirestorePrimitives.get_doc request ("parts/" ^ game_id ^ "?mask=typeGame") in
+      let open JSON.Util in
+      doc
+      |> member "typeGame"
+      |> to_string
+      |> Lwt.return
 
     let create (request : Dream.request) (game : Domain.Game.t) : string Lwt.t =
       let json : JSON.t = Domain.Game.to_yojson game in
@@ -118,8 +129,8 @@ module Make (FirestorePrimitives : FirestorePrimitives.FIRESTORE_PRIMITIVES) : F
 
   module ConfigRoom = struct
 
-    let get (request : Dream.request) (game_id : string) : JSON.t option Lwt.t =
-      get request ("config-room/" ^ game_id)
+    let get (request : Dream.request) (game_id : string) : Domain.ConfigRoom.t Lwt.t =
+      get request ("config-room/" ^ game_id) Domain.ConfigRoom.of_yojson
 
     let create (request : Dream.request) (id : string) (config_room : Domain.ConfigRoom.t) : unit Lwt.t =
       let json = Domain.ConfigRoom.to_yojson config_room in

@@ -10,7 +10,7 @@ let () =
     JwtTests.tests;
     TokenRefresherTests.tests;
     FirestorePrimitivesTests.tests;
-    (* TODO: FirestoreTests.tests *)
+    FirestoreTests.tests;
     (* TODO: AuthTests.tests *)
     (* TODO: GameTests.tests *)
   ]

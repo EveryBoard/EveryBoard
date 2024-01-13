@@ -1,7 +1,7 @@
-(* open Alcotest *)
+open Alcotest
 open Backend
-(* open Utils *)
-(* open TestUtils *)
+open Utils
+open TestUtils
 
 module type MOCK = sig
   include Firestore.FIRESTORE
@@ -17,7 +17,7 @@ module Mock : MOCK = struct
   module User = struct
 
     let get _  _ =
-      Lwt.return (Option.map Domain.User.to_yojson !user)
+      Lwt.return !user
   end
 
   module Game = struct
@@ -55,31 +55,51 @@ let verified_user : Domain.User.t = {
   current_game = None;
 }
 
-(* module Firebase_ops = Firebase_ops.Make(Firebase_primitives_tests.Mock) *)
+module Firestore = Firestore.Make(FirestorePrimitivesTests.Mock)
 
 let tests = [
-(*
-  "Firebase_ops.get_user", [
+
+  "Firestore.User.get", [
+
     lwt_test "should retrieve user" (fun () ->
+        let request = Dream.request "/" in
         (* Given a user *)
-        Firebase_primitives_tests.Mock.doc_to_return := Some (Firebase.User.to_yojson verified_user);
+        FirestorePrimitivesTests.Mock.doc_to_return := Some (Domain.User.to_yojson verified_user);
         (* When getting it with get_user *)
-        let* actual = Firebase_ops.get_user "access-token" "uid" in
+        let* actual = Firestore.User.get request "uid" in
         (* Then it should be retrieved *)
         let expected = Some verified_user in
         check (option user) "success" expected actual;
         Lwt.return ()
     );
 
-    lwt_test "should retrieve nothing if user does not exist" (fun () ->
+    lwt_test "should return nothing if user does not exist" (fun () ->
+        let request = Dream.request "/" in
         (* Given that no user exist *)
-        Firebase_primitives_tests.Mock.doc_to_return := None;
+        FirestorePrimitivesTests.Mock.doc_to_return := None;
         (* When trying to get a user with get_user *)
-        let* actual = Firebase_ops.get_user "access-token" "uid" in
+        let* actual = Firestore.User.get request "uid" in
         (* Then it should not retrieve anything *)
         let expected = None in
         check (option user) "failure" expected actual;
         Lwt.return ()
-      )
-  ]; *)
+      );
+
+    lwt_test "should raise an error if user exists but is invalid" (fun () ->
+        let request = Dream.request "/" in
+        (* Given a user *)
+        FirestorePrimitivesTests.Mock.doc_to_return := Some (`Assoc [("not-a", `String "user!")]);
+        (* When getting it with get_user *)
+        (* Then it should raise an error *)
+        lwt_check_raises "failure" (Error "invalid user") (fun () ->
+            let* _ = Firestore.User.get request "uid" in
+            Lwt.return ())
+      );
+  ];
+
+  "Firestore.Game.get", [
+    lwt_test "should retrieve game" (fun () ->
+
+      );
+  ];
 ]
