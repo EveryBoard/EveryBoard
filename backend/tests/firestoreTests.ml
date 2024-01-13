@@ -58,7 +58,8 @@ let verified_user : Domain.User.t = {
 }
 
 let verified_minimal_user : Domain.MinimalUser.t =
-  Domain.User.to_minimal_user "uid" verified_user
+  (* The uid is set to match the uid of JwtTests.identity_token *)
+  Domain.User.to_minimal_user "wECcuMPVQHO9VSs7bgOL5rLxmPD2" verified_user
 
 let unstarted_game : Domain.Game.t =
   Domain.Game.initial "P4" verified_minimal_user

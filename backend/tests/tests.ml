@@ -11,7 +11,7 @@ let () =
     TokenRefresherTests.tests;
     FirestorePrimitivesTests.tests;
     FirestoreTests.tests;
-    (* TODO: AuthTests.tests *)
+    AuthTests.tests;
     (* TODO: GameTests.tests *)
   ]
 

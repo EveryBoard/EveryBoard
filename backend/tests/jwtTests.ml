@@ -5,12 +5,14 @@ open Utils
 
 module type MOCK = sig
   include Jwt.JWT
+
+  val validate_token : bool ref
+
 end
 
-module Mock : MOCK = struct
+module Mock = struct
   include Jwt.Make(ExternalTests.Mock)
 
-  (*
   let validate_token = ref false
 
   let verify_and_get_uid token _ _ =
@@ -18,7 +20,6 @@ module Mock : MOCK = struct
     if !validate_token
     then to_string (member "sub" token.payload)
     else raise (Error "Token verification failed")
- *)
 end
 
 module Jwt = Jwt.Make(ExternalTests.Mock)

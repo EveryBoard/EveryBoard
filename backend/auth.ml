@@ -52,11 +52,8 @@ module Make
             fail `Unauthorized "Authorization token is invalid"
           | uid ->
             Dream.log "Checking user";
-            let* user = Firestore.User.get request uid in
-            match user with
-            | exception _ ->
-              fail `Unauthorized "User is invalid"
-            | user ->
+            try
+              let* user = Firestore.User.get request uid in
               if user.verified then begin
                 (* The user has a verified account, so we can finally call the handler *)
                 Dream.set_field request user_field (uid, user);
@@ -64,6 +61,7 @@ module Make
                 handler request
               end else
                 fail `Unauthorized "User is not verified"
+            with Error _ -> fail `Unauthorized "User is invalid"
         end
       | _ -> fail `Unauthorized "Authorization header is invalid"
 

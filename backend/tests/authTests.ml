@@ -1,11 +1,9 @@
-
-(*
 open Alcotest
 open TestUtils
 open Backend
 open Utils
 
-module Auth = Auth.Make(Firebase_ops_tests.Mock)(Token_refresher_tests.Mock)(Google_certificates_tests.Mock)(Jwt_tests.Mock)
+module Auth = Auth.Make(FirestoreTests.Mock)(GoogleCertificatesTests.Mock)(StatsTests.Mock)(JwtTests.Mock)
 
 let tests = [
   "Auth.middleware", [
@@ -16,7 +14,8 @@ let tests = [
         let handler = Dream.router [ Dream.get "/" (fun _ -> Dream.empty `Found) ] in
         let* actual = Auth.middleware handler request in
         (* Then it should fail *)
-        let expected = Dream.response ~status:`Unauthorized "Authorization token is missing" in
+        let json_response = `Assoc [("reason", `String "Authorization token is missing")] in
+        let expected = Dream.response ~status:`Unauthorized (JSON.to_string json_response) in
         lwt_check_response "failure"  expected actual
       );
 
@@ -27,7 +26,8 @@ let tests = [
         let handler = Dream.router [ Dream.get "/" (fun _ -> Dream.empty `Found) ] in
         let* actual = Auth.middleware handler request in
         (* Then it should fail *)
-        let expected = Dream.response ~status:`Unauthorized "Authorization header is invalid" in
+        let json_response = `Assoc [("reason", `String "Authorization header is invalid")] in
+        let expected = Dream.response ~status:`Unauthorized (JSON.to_string json_response) in
         lwt_check_response "failure" expected actual
       );
 
@@ -38,48 +38,56 @@ let tests = [
         let handler = Dream.router [ Dream.get "/" (fun _ -> Dream.empty `Found) ] in
         let* actual = Auth.middleware handler request in
         (* Then it should fail *)
-        let expected = Dream.response ~status:`Unauthorized "Authorization token is invalid" in
+        let json_response = `Assoc [("reason", `String "Authorization token is invalid")] in
+        let expected = Dream.response ~status:`Unauthorized (JSON.to_string json_response) in
         lwt_check_response "failure" expected actual
       );
 
-
     lwt_test "should fail if the user has no account" (fun () ->
         (* Given a request with a valid Authorization token, but no corresponding user *)
-        let request = Dream.request ~headers:[("Authorization", "Bearer " ^ Jwt_tests.identity_token_str)] "/" in
-        Jwt_tests.Mock.validate_token := true;
-        Firebase_ops_tests.Mock.user := None;
+        let request = Dream.request ~headers:[("Authorization", "Bearer " ^ JwtTests.identity_token_str)] "/" in
+        JwtTests.Mock.validate_token := true;
+        FirestoreTests.Mock.user := None;
         (* When it is received by the middleware *)
         let handler = Dream.router [ Dream.get "/" (fun _ -> Dream.empty `Found) ] in
         let* actual = Auth.middleware handler request in
         (* Then it should fail *)
-        let expected = Dream.response ~status:`Unauthorized "User does not exist" in
+        let json_response = `Assoc [("reason", `String "User is invalid")] in
+        let expected = Dream.response ~status:`Unauthorized (JSON.to_string json_response) in
         lwt_check_response "failure" expected actual
       );
 
     lwt_test "should fail if the user has an unverified account" (fun () ->
         (* Given a request with a valid Authorization token for an user that is not verified *)
-        let request = Dream.request ~headers:[("Authorization", "Bearer " ^ Jwt_tests.identity_token_str)] "/" in
-        Jwt_tests.Mock.validate_token := true;
-        Firebase_ops_tests.Mock.user := Some Firebase_ops_tests.unverified_user;
+        let request = Dream.request ~headers:[("Authorization", "Bearer " ^ JwtTests.identity_token_str)] "/" in
+        JwtTests.Mock.validate_token := true;
+        FirestoreTests.Mock.user := Some FirestoreTests.unverified_user;
         (* When it is received by the middleware *)
         let handler = Dream.router [ Dream.get "/" (fun _ -> Dream.empty `Found) ] in
         let* actual = Auth.middleware handler request in
         (* Then it should fail *)
-        let expected = Dream.response ~status:`Unauthorized "User is not verified" in
+        let json_response = `Assoc [("reason", `String "User is not verified")] in
+        let expected = Dream.response ~status:`Unauthorized (JSON.to_string json_response) in
         lwt_check_response "failure" expected actual
       );
 
     lwt_test "should call the handler with the user bound if the request is well formed" (fun () ->
         (* Given a request with a valid Authorization token for an user that is verified *)
-        let request = Dream.request ~headers:[("Authorization", "Bearer " ^ Jwt_tests.identity_token_str)] "/" in
-        Jwt_tests.Mock.validate_token := true;
-        Firebase_ops_tests.Mock.user := Some Firebase_ops_tests.verified_user;
+        let request = Dream.request ~headers:[("Authorization", "Bearer " ^ JwtTests.identity_token_str)] "/" in
+        JwtTests.Mock.validate_token := true;
+        FirestoreTests.Mock.user := Some FirestoreTests.verified_user;
         (* When it is received by the middleware *)
         (* Then it should succeed and bind the user in the handler *)
         let handler = Dream.router [ Dream.get "/" (fun request ->
-            let (_uid, actual_user) : (string * Firebase.User.t) = Auth.get_user request in
-            let expected_user : Firebase.User.t = Firebase_ops_tests.verified_user in
+            let (uid, actual_user) : (string * Domain.User.t) = Auth.get_user request in
+            let minimal_user : Domain.MinimalUser.t = Auth.get_minimal_user request in
+            let expected_user : Domain.User.t = FirestoreTests.verified_user in
+            let expected_minimal_user : Domain.MinimalUser.t = FirestoreTests.verified_minimal_user in
+            (* TODO: fix uid? *)
             check user "user" expected_user actual_user;
+            check string "uid (user)" expected_minimal_user.id uid;
+            check string "name" expected_minimal_user.name minimal_user.name;
+            check string "uid (minimal user)" expected_minimal_user.id minimal_user.id;
             Dream.html ~status:`Found "response from the handler") ] in
         let* actual = Auth.middleware handler request in
         let expected = Dream.response ~status:`Found "response from the handler" in
@@ -97,4 +105,4 @@ let tests = [
       );
   ];
 
-] *)
+]
