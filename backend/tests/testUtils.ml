@@ -36,6 +36,14 @@ let user : Domain.User.t testable =
   let pp ppf user = Fmt.pf ppf "%s" (Option.value ~default:"" Domain.User.(user.username)) in
   testable pp (=)
 
+let game : Domain.Game.t testable =
+  let pp ppf game = Fmt.pf ppf "%s" (JSON.to_string (Domain.Game.to_yojson game)) in
+  testable pp (=)
+
+let config_room : Domain.ConfigRoom.t testable =
+  let pp ppf game = Fmt.pf ppf "%s" (JSON.to_string (Domain.ConfigRoom.to_yojson game)) in
+  testable pp (=)
+
 let minimal_user : Domain.MinimalUser.t testable =
   let pp (ppf : Format.formatter) (user : Domain.MinimalUser.t) : unit =
     Fmt.pf ppf "%s:%s" user.id user.name in

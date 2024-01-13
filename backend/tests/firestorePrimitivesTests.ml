@@ -6,14 +6,38 @@ open TestUtils
 module type MOCK = sig
   include FirestorePrimitives.FIRESTORE_PRIMITIVES
 
+  val started_transactions : string list ref
+
+  val succeeded_transactions : string list ref
+
+  val failed_transactions : string list ref
+
   val read_docs : string list ref
+
+  val created_docs : (string * string option * JSON.t) list ref
+
+  val updated_docs : (string * JSON.t) list ref
+
+  val deleted_docs : string list ref
 
   val doc_to_return : JSON.t option ref
 end
 
 module Mock : MOCK = struct
 
+  let started_transactions = ref []
+
+  let succeeded_transactions = ref []
+
+  let failed_transactions = ref []
+
   let read_docs = ref []
+
+  let created_docs = ref []
+
+  let updated_docs = ref []
+
+  let deleted_docs = ref []
 
   let doc_to_return = ref None
 
@@ -23,17 +47,30 @@ module Mock : MOCK = struct
     | Some doc -> Lwt.return doc
     | None -> raise (Error "can't retrieve doc")
 
-  let create_doc _ _ ?id:_ = failwith "TODO"
+  let create_doc _ path ?id doc =
+    created_docs := (path, id, doc) :: !created_docs;
+    Lwt.return "created-id"
 
-  let update_doc _ _ _ = failwith "TODO"
+  let update_doc _ path update =
+    updated_docs := (path, update) :: !updated_docs;
+    Lwt.return ()
 
-  let delete_doc _ _ = failwith "TODO"
+  let delete_doc _ path =
+    deleted_docs := path :: !deleted_docs;
+    Lwt.return ()
 
-  let begin_transaction _ = failwith "TODO"
+  let begin_transaction _ =
+    let transaction_id = "transaction-id" in
+    started_transactions := transaction_id :: !started_transactions;
+    Lwt.return "transaction-id"
 
-  let commit _ _ = failwith "TODO"
+  let commit _ transaction_id =
+    succeeded_transactions := transaction_id :: !succeeded_transactions;
+    Lwt.return ()
 
-  let rollback _ _ = failwith "TODO"
+  let rollback _ transaction_id =
+    failed_transactions := transaction_id :: !failed_transactions;
+    Lwt.return ()
 
 end
 

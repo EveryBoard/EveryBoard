@@ -14,10 +14,12 @@ module Mock : MOCK = struct
   let transaction _ _ = failwith "TODO"
 
   let user : Domain.User.t option ref = ref None
-  module User = struct
 
+  module User = struct
     let get _  _ =
-      Lwt.return !user
+      match !user with
+      | Some user -> Lwt.return user
+      | None -> raise (Error "user does not exist")
   end
 
   module Game = struct
@@ -55,34 +57,38 @@ let verified_user : Domain.User.t = {
   current_game = None;
 }
 
+let verified_minimal_user : Domain.MinimalUser.t =
+  Domain.User.to_minimal_user "uid" verified_user
+
+let unstarted_game : Domain.Game.t =
+  Domain.Game.initial "P4" verified_minimal_user
+
+let initial_config_room : Domain.ConfigRoom.t =
+  Domain.ConfigRoom.initial verified_minimal_user
+
 module Firestore = Firestore.Make(FirestorePrimitivesTests.Mock)
 
-let tests = [
-
-  "Firestore.User.get", [
-
-    lwt_test "should retrieve user" (fun () ->
+let test_get type_ get doc expected conversion = [
+    lwt_test "should retrieve" (fun () ->
         let request = Dream.request "/" in
         (* Given a user *)
-        FirestorePrimitivesTests.Mock.doc_to_return := Some (Domain.User.to_yojson verified_user);
-        (* When getting it with get_user *)
-        let* actual = Firestore.User.get request "uid" in
+        FirestorePrimitivesTests.Mock.doc_to_return := Some (conversion doc);
+        (* When getting it *)
+        let* actual = get request "id" in
         (* Then it should be retrieved *)
-        let expected = Some verified_user in
-        check (option user) "success" expected actual;
+        check type_ "success" expected actual;
         Lwt.return ()
     );
 
-    lwt_test "should return nothing if user does not exist" (fun () ->
+    lwt_test "should fail if document does not exist" (fun () ->
         let request = Dream.request "/" in
         (* Given that no user exist *)
         FirestorePrimitivesTests.Mock.doc_to_return := None;
         (* When trying to get a user with get_user *)
-        let* actual = Firestore.User.get request "uid" in
-        (* Then it should not retrieve anything *)
-        let expected = None in
-        check (option user) "failure" expected actual;
-        Lwt.return ()
+        (* Then it should fail *)
+        lwt_check_raises "failure" (Error "document does not exist or is invalid") (fun () ->
+            let* _ = get request "uid" in
+            Lwt.return ())
       );
 
     lwt_test "should raise an error if user exists but is invalid" (fun () ->
@@ -91,15 +97,200 @@ let tests = [
         FirestorePrimitivesTests.Mock.doc_to_return := Some (`Assoc [("not-a", `String "user!")]);
         (* When getting it with get_user *)
         (* Then it should raise an error *)
-        lwt_check_raises "failure" (Error "invalid user") (fun () ->
-            let* _ = Firestore.User.get request "uid" in
+        lwt_check_raises "failure" (Error "document does not exist or is invalid") (fun () ->
+            let* _ = get request "uid" in
             Lwt.return ())
       );
-  ];
+]
 
-  "Firestore.Game.get", [
-    lwt_test "should retrieve game" (fun () ->
+let creations_type = list (triple string (option string) json)
 
+let tests = [
+
+  "Firestore.transaction", [
+    lwt_test "should commit the transaction upon success of the body" (fun () ->
+        let request = Dream.request "/" in
+        FirestorePrimitivesTests.Mock.started_transactions := [];
+        FirestorePrimitivesTests.Mock.succeeded_transactions := [];
+        FirestorePrimitivesTests.Mock.failed_transactions := [];
+        (* Given a transaction we want to do, which will succeed *)
+        let transaction_body () = Lwt.return (Result.Ok 42) in
+        (* When doing it *)
+        let* result = Firestore.transaction request transaction_body in
+        (* Then it should have begun and committed the transaction *)
+        let started = !FirestorePrimitivesTests.Mock.started_transactions in
+        let succeeded = !FirestorePrimitivesTests.Mock.succeeded_transactions in
+        let failed = !FirestorePrimitivesTests.Mock.failed_transactions in
+        check int "result" 42 result;
+        check (list string) "started" ["transaction-id"] started;
+        check (list string) "succeeded" ["transaction-id"] succeeded;
+        check (list string) "failed" [] failed;
+        Lwt.return ()
+      );
+
+    lwt_test "should rollback the transaction upon failure of the body" (fun () ->
+        let request = Dream.request "/" in
+        FirestorePrimitivesTests.Mock.started_transactions := [];
+        FirestorePrimitivesTests.Mock.succeeded_transactions := [];
+        FirestorePrimitivesTests.Mock.failed_transactions := [];
+        (* Given a transaction we want to do, which will fail *)
+        let transaction_body () = Lwt.return (Result.Error 42) in
+        (* When doing it *)
+        let* result = Firestore.transaction request transaction_body in
+        (* Then it should have begun and rolled back the transaction *)
+        let started = !FirestorePrimitivesTests.Mock.started_transactions in
+        let succeeded = !FirestorePrimitivesTests.Mock.succeeded_transactions in
+        let failed = !FirestorePrimitivesTests.Mock.failed_transactions in
+        check int "result" 42 result;
+        check (list string) "started" ["transaction-id"] started;
+        check (list string) "succeeded" [] succeeded;
+        check (list string) "failed" ["transaction-id"] failed;
+        Lwt.return ()
+      );
+
+    lwt_test "should rollback the transaction upon an exception" (fun () ->
+        let request = Dream.request "/" in
+        FirestorePrimitivesTests.Mock.started_transactions := [];
+        FirestorePrimitivesTests.Mock.succeeded_transactions := [];
+        FirestorePrimitivesTests.Mock.failed_transactions := [];
+        (* Given a transaction we want to do, which will throw *)
+        let transaction_body () = raise (Error "Error!") in
+        (* When doing it *)
+        (* Then it should have begun and rolled back the transaction *)
+        let* _ = lwt_check_raises "failure" (Error "Error!") (fun () ->
+            let* _ = Firestore.transaction request transaction_body in
+            Lwt.return ()) in
+        let started = !FirestorePrimitivesTests.Mock.started_transactions in
+        let succeeded = !FirestorePrimitivesTests.Mock.succeeded_transactions in
+        let failed = !FirestorePrimitivesTests.Mock.failed_transactions in
+        check (list string) "started" ["transaction-id"] started;
+        check (list string) "succeeded" [] succeeded;
+        check (list string) "failed" ["transaction-id"] failed;
+        Lwt.return ()
       );
   ];
+
+  "Firestore.User.get", test_get user Firestore.User.get verified_user verified_user Domain.User.to_yojson;
+
+  "Firestore.Game.get", test_get game Firestore.Game.get unstarted_game unstarted_game Domain.Game.to_yojson;
+
+  "Firestore.Game.get_name", test_get string Firestore.Game.get_name unstarted_game "P4" Domain.Game.to_yojson;
+
+  "Firestore.Game.create", [
+    lwt_test "should create the document" (fun () ->
+        let request = Dream.request "/" in
+        FirestorePrimitivesTests.Mock.created_docs := [];
+        (* Given a game *)
+        let game = unstarted_game in
+        (* When creating it *)
+        let* id = Firestore.Game.create request game  in
+        (* Then it should have called create_doc on /parts and return the game id *)
+        let game_json = Domain.Game.to_yojson game in
+        check string "id" id "created-id";
+        let created = !FirestorePrimitivesTests.Mock.created_docs in
+        check creations_type "creations" [("parts", None, game_json)] created;
+        Lwt.return ()
+      );
+  ];
+
+  "Firestore.Game.delete", [
+    lwt_test "should delete the document" (fun () ->
+        let request = Dream.request "/" in
+        FirestorePrimitivesTests.Mock.deleted_docs := [];
+        (* Given a game *)
+        let game_id = "game-id" in
+        (* When deleting it *)
+        let* _ = Firestore.Game.delete request game_id in
+        (* Then it should have called delete_doc on /parts with the game id *)
+        let deleted = !FirestorePrimitivesTests.Mock.deleted_docs in
+        check (list string) "deletions" ["parts/" ^ game_id] deleted;
+        Lwt.return ()
+      );
+  ];
+
+  "Firestore.Game.update", [
+    lwt_test "should update the document" (fun () ->
+        let request = Dream.request "/" in
+        FirestorePrimitivesTests.Mock.updated_docs := [];
+        (* Given a game and its update *)
+        let game_id = "game-id" in
+        let update = Domain.Game.Updates.EndTurn.get 1 in
+        let json_update = Domain.Game.Updates.EndTurn.to_yojson update in
+        (* When applying the update *)
+        let* _ = Firestore.Game.update request game_id json_update in
+        (* Then it should have called update_doc on /parts with the game id and update *)
+        let updated = !FirestorePrimitivesTests.Mock.updated_docs in
+        check (list (pair string json)) "updates" [("parts/" ^ game_id, json_update)] updated;
+        Lwt.return ()
+      );
+  ];
+
+  "Firestore.Game.add_event", [
+    lwt_test "should create an event document" (fun () ->
+        let request = Dream.request "/" in
+        FirestorePrimitivesTests.Mock.created_docs := [];
+        (* Given an event we want to create in a game *)
+        let game_id = "game-id" in
+        let user = Domain.User.to_minimal_user "uid" verified_user in
+        let event = Domain.Game.Event.(Request (Request.draw user 0.)) in
+        (* When adding the event *)
+        let* _ = Firestore.Game.add_event request game_id event in
+        (* Then it should have created an event document *)
+        let json_event = Domain.Game.Event.to_yojson event in
+        let created = !FirestorePrimitivesTests.Mock.created_docs in
+        check creations_type "creations" [("parts/" ^ game_id ^ "/events", None, json_event)] created;
+        Lwt.return ()
+      );
+  ];
+
+  "Firestore.ConfigRoom.create", [
+    lwt_test "should create a config room document" (fun () ->
+        let request = Dream.request "/" in
+        FirestorePrimitivesTests.Mock.created_docs := [];
+        (* Given a config room *)
+        let game_id = "game-id" in
+        let config_room = initial_config_room in
+        (* When we create it *)
+        let* _ = Firestore.ConfigRoom.create request game_id config_room in
+        (* Then it should have been created *)
+        let json_config_room = Domain.ConfigRoom.to_yojson config_room in
+        let created = !FirestorePrimitivesTests.Mock.created_docs in
+        check creations_type "creations" [("config-room", Some game_id, json_config_room)] created;
+        Lwt.return ()
+      );
+  ];
+
+  "Firestore.ConfigRoom.accept", [
+    lwt_test "should send the appropriate update to the config room" (fun () ->
+        let request = Dream.request "/" in
+        FirestorePrimitivesTests.Mock.updated_docs := [];
+        (* Given a game for which we want to accept the config *)
+        let game_id = "game-id" in
+        (* When we accept it *)
+        let* _ = Firestore.ConfigRoom.accept request game_id in
+        (* Then it should have updated the config room *)
+        let json_update = `Assoc [("partStatus", Domain.ConfigRoom.GameStatus.(to_yojson started))] in
+        let updated = !FirestorePrimitivesTests.Mock.updated_docs in
+        check (list (pair string json)) "updates" [("config-room/" ^ game_id, json_update)] updated;
+        Lwt.return ()
+      )
+  ];
+
+  "Firestore.Chat.create", [
+    lwt_test "should create an empty chat" (fun () ->
+        let request = Dream.request "/" in
+        FirestorePrimitivesTests.Mock.created_docs := [];
+        (* Given a game for which we want to create the chat *)
+        let game_id = "game-id" in
+        (* When we create the chat *)
+        let* _ = Firestore.Chat.create request game_id in
+        (* Then it should have been created *)
+        let created = !FirestorePrimitivesTests.Mock.created_docs in
+        let empty_chat = `Assoc [] in
+        check creations_type "creations" [("chats", Some game_id, empty_chat)] created;
+        Lwt.return ()
+      );
+  ];
+
+  "Firestore.ConfigRoom.get", test_get config_room Firestore.ConfigRoom.get initial_config_room initial_config_room Domain.ConfigRoom.to_yojson;
 ]

@@ -80,17 +80,19 @@ module Make (FirestorePrimitives : FirestorePrimitives.FIRESTORE_PRIMITIVES) : F
       let* _ = FirestorePrimitives.rollback request transaction_id in
       raise e
 
-  let get_or_fail (error : exn) (maybe_value : ('a, 'b) result)  : 'a =
+  let get_or_fail (maybe_value : ('a, 'b) result)  : 'a =
     match maybe_value with
     | Result.Ok value -> value
-    | Result.Error _ -> raise error
+    | Result.Error _ -> raise (Error "invalid")
 
   let get (request : Dream.request) (path : string) (of_yojson : JSON.t -> ('a, 'b) result) : 'a Lwt.t =
+    try
       let* doc = FirestorePrimitives.get_doc request path in
       doc
       |> of_yojson
-      |> get_or_fail (Error "user does not exist or is invalid")
+      |> get_or_fail
       |> Lwt.return
+    with Error _ -> raise (Error "document does not exist or is invalid")
 
   module User = struct
 
@@ -104,12 +106,14 @@ module Make (FirestorePrimitives : FirestorePrimitives.FIRESTORE_PRIMITIVES) : F
       get request ("parts/" ^ game_id) Domain.Game.of_yojson
 
     let get_name (request : Dream.request) (game_id : string) : string Lwt.t =
-      let* doc = FirestorePrimitives.get_doc request ("parts/" ^ game_id ^ "?mask=typeGame") in
-      let open JSON.Util in
-      doc
-      |> member "typeGame"
-      |> to_string
-      |> Lwt.return
+      try
+        let* doc = FirestorePrimitives.get_doc request ("parts/" ^ game_id ^ "?mask=typeGame") in
+        let open JSON.Util in
+        doc
+        |> member "typeGame"
+        |> to_string
+        |> Lwt.return
+      with Error _ | JSON.Util.Type_error _ -> raise (Error "document does not exist or is invalid")
 
     let create (request : Dream.request) (game : Domain.Game.t) : string Lwt.t =
       let json : JSON.t = Domain.Game.to_yojson game in
