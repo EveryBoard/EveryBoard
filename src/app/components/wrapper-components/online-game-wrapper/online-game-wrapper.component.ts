@@ -313,7 +313,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
 
     private async afterEventsBatch(): Promise<void> {
         const player: Player = Player.ofTurn(this.gameComponent.getTurn());
-        const serverTime: Timestamp = await this.userService.getServerTime(this.connectedUserService.user.get().id);
+        const serverTime: number = await this.gameService.getServerTime();
         this.timeManager.afterEventsBatch(this.endGame, player, serverTime);
     }
 

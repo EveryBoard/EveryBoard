@@ -108,4 +108,7 @@ export class GameService {
     public async addMove(gameId: string, encodedMove: JSONValue): Promise<void> {
         return this.backendService.move(gameId, encodedMove);
     }
+    public async getServerTime(): Promise<number> {
+        return this.backendService.getServerTime();
+    }
 }

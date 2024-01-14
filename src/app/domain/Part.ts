@@ -26,7 +26,7 @@ type EventType = 'Move' | 'Request' | 'Reply' | 'Action';
 
 export type GameEventBase = {
     readonly eventType: EventType;
-    readonly time: FirestoreTime;
+    readonly time: number;
     readonly user: MinimalUser;
 }
 

@@ -1,3 +1,4 @@
+open Utils
 module External = External.Impl
 module Stats = Stats.Impl
 module GoogleCertificates = GoogleCertificates.Make(External)
@@ -7,10 +8,16 @@ module Firestore = Firestore.Make(FirestorePrimitives.Make(External)(TokenRefres
 module Auth = Auth.Make(Firestore)(GoogleCertificates)(Stats)(Jwt)
 module Game = Game.Make(External)(Auth)(Firestore)(Stats)
 
+let server_time = Dream.get "/time" @@ fun _ ->
+    let now = External.now () in
+    let response = `Assoc ["time", `Int now] in
+    Dream.json ~status:`OK (JSON.to_string response)
+
 let api = [
     Dream.scope "/" [TokenRefresher.middleware !Options.service_account_file; Auth.middleware]
     @@ List.concat [
       Game.routes;
+      [server_time];
     ];
   ]
 

@@ -26,10 +26,8 @@ export class BackendService {
                 },
             });
         if (this.isSuccessStatus(response.status)) {
-            console.log('success')
             return MGPFallible.success(response);
         } else {
-            console.log('error')
             try {
                 const jsonResponse: JSONValue = await response.json();
                 const error: string = (jsonResponse != null && (jsonResponse['message'] as string)) || 'No error message';
@@ -221,8 +219,17 @@ export class BackendService {
     /** Play a move */
     public async move(gameId: string, move: JSONValue): Promise<void> {
         const moveURLEncoded: string = encodeURIComponent(JSON.stringify(move));
-        const endpoint: string = `game/${gameId}&move=${moveURLEncoded}`;
+        const endpoint: string = `game/${gameId}?action=move&move=${moveURLEncoded}`;
         const result: MGPFallible<Response> = await this.performRequest('POST', endpoint);
         this.assertSuccess(result);
+    }
+
+    /** Retrieve the current time of the server */
+    public async getServerTime(): Promise<number> {
+        const endpoint: string = `time`;
+        const result: MGPFallible<JSONValue> = await this.performRequestWithJSONResponse('GET', endpoint);
+        this.assertSuccess(result);
+        // eslint-disable-next-line dot-notation
+        return Utils.getNonNullable(result.get())['time'] as number;
     }
 }
