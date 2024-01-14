@@ -1,8 +1,15 @@
 open Utils
 
 module Role = struct
-  type t = string
-  [@@deriving yojson]
+  type t = Player | Observer | Creator | ChosenOpponent | Candidate
+  let (to_yojson, of_yojson) =
+    JSON.for_enum [
+      Player, "Player";
+      Observer, "Observer";
+      Creator, "Creator";
+      ChosenOpponent, "ChosenOpponent";
+      Candidate, "Candidate";
+    ]
 end
 
 module MinimalUser = struct
@@ -38,29 +45,38 @@ end
 
 module ConfigRoom = struct
   module GameStatus = struct
-    type t = int
-    [@@deriving yojson]
+    type t = Created | ConfigProposed | Started | Finished
 
-    let created: t = 0
-    let config_proposed: t = 2
-    let started: t = 3
-    let finished: t = 4
+    let (to_yojson, of_yojson) =
+      JSON.for_enum_int [
+        Created, 0;
+        ConfigProposed, 2;
+        Started, 3;
+        Finished, 4;
+      ]
   end
 
   module FirstPlayer = struct
-    type t = string
-    [@@deriving yojson]
+    type t = Random | ChosenPlayer | Creator
 
-    let random: t = "RANDOM"
-    let chosen_player : t = "CHOSEN_PLAYER"
-    let creator : t = "CREATOR"
+    let (to_yojson, of_yojson) =
+      JSON.for_enum [
+        Random, "RANDOM";
+        ChosenPlayer, "CHOSEN_PLAYER";
+        Creator, "CREATOR";
+      ]
   end
 
   module GameType = struct
-    type t = string
-    [@@deriving yojson]
+    type t = Standard | Blitz | Custom
 
-    let standard: t = "RANDOM"
+    let (to_yojson, of_yojson) =
+      JSON.for_enum [
+        Standard, "STANDARD";
+        Blitz, "BLITZ";
+        Custom, "CUSTOM";
+      ]
+
     let standard_move_duration = 2*60
     let standard_game_duration = 30*60
 
@@ -74,39 +90,41 @@ module ConfigRoom = struct
     game_type: GameType.t [@key "partType"];
     maximal_move_duration: int [@key "maximalMoveDuration"];
     total_part_duration: int [@key "totalPartDuration"];
-    rules_config: JSON.t option [@key "rulesConfig"]; (* TODO: adapt TS code to support empty rules and use default then *)
+    rules_config: JSON.t [@key "rulesConfig"];
   }
   [@@deriving yojson]
 
   let initial (creator : MinimalUser.t) : t = {
     creator;
-    first_player = FirstPlayer.random;
+    first_player = FirstPlayer.Random;
     chosen_opponent = None;
-    game_status = GameStatus.created;
-    game_type = GameType.standard;
+    game_status = GameStatus.Created;
+    game_type = GameType.Standard;
     maximal_move_duration = GameType.standard_move_duration;
     total_part_duration = GameType.standard_game_duration;
-    rules_config = None;
+    rules_config = `Assoc [];
   }
 
   let rematch (config_room : t) (first_player : FirstPlayer.t) (creator : MinimalUser.t) (chosen_opponent : MinimalUser.t) : t =
-    let game_status = GameStatus.started in
+    let game_status = GameStatus.Started in
     { config_room with game_status; first_player; creator; chosen_opponent = Some chosen_opponent }
 
 end
 
 module Game = struct
   module GameResult = struct
-    type t = int
-    [@@deriving yojson]
+    type t = HardDraw | Resign | Victory | Timeout | Unachieved | AgreedDrawBy of int (* TODO: Player instead of int *)
 
-    let hard_draw = 0
-    let resign = 1
-    let victory = 3
-    let timeout = 4
-    let unachieved = 5
-    let agreed_draw_by (player : int) =
-      if player = 0 then 6 else 7
+    let (to_yojson, of_yojson) =
+      JSON.for_enum_int [
+        HardDraw, 0;
+        Resign, 1;
+        Victory, 3;
+        Timeout, 4;
+        Unachieved, 5;
+        AgreedDrawBy 0, 6;
+        AgreedDrawBy 1, 7;
+      ]
   end
 
   module Updates = struct
@@ -121,10 +139,13 @@ module Game = struct
 
       let get (config_room : ConfigRoom.t) (now : float) : t =
         let starter = match config_room.first_player with
-          | "RANDOM" -> if Random.bool () then "CREATOR" else "CHOSEN_PLAYER"
+          | Random ->
+            if Random.bool ()
+            then ConfigRoom.FirstPlayer.Creator
+            else ConfigRoom.FirstPlayer.ChosenPlayer
           | first -> first in
         let (player_zero, player_one) =
-          if starter = "CREATOR"
+          if starter = ConfigRoom.FirstPlayer.Creator
           then (config_room.creator, Option.get config_room.chosen_opponent)
           else (Option.get config_room.chosen_opponent, config_room.creator)
         in
@@ -199,7 +220,7 @@ module Game = struct
     type_game = game_name;
     player_zero = creator;
     turn = -1;
-    result = GameResult.unachieved;
+    result = GameResult.Unachieved;
     player_one = None;
     beginning = None;
     winner = None;

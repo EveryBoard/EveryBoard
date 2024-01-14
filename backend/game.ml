@@ -82,7 +82,7 @@ module Make
       let player_one = Option.get game.player_one in
       let winner = if minimal_user = game.player_zero then player_one else player_zero in
       let loser = minimal_user in
-      let update = Domain.Game.Updates.End.get ~winner ~loser Domain.Game.GameResult.resign in
+      let update = Domain.Game.Updates.End.get ~winner ~loser Domain.Game.GameResult.Resign in
       let* _ = Firestore.Game.update request game_id (Domain.Game.Updates.End.to_yojson update) in
       let resigner = Auth.get_minimal_user request in
       let now = External.now () in
@@ -94,7 +94,7 @@ module Make
 
   let notify_timeout (request : Dream.request) (game_id : string) (winner : Domain.MinimalUser.t) (loser : Domain.MinimalUser.t) =
     (* TODO: don't trust the client, we need to get winner and loser ourselves *)
-    let update = Domain.Game.Updates.End.get ~winner ~loser Domain.Game.GameResult.timeout in
+    let update = Domain.Game.Updates.End.get ~winner ~loser Domain.Game.GameResult.Timeout in
     let* _ = Firestore.Game.update request game_id (Domain.Game.Updates.End.to_yojson update) in
     let requester = Auth.get_minimal_user request in
     let now = External.now () in
@@ -127,7 +127,7 @@ module Make
       let accept = Domain.Game.Event.(Reply (Reply.accept user "Draw" now)) in
       let* _ = Firestore.Game.add_event request game_id accept in
       let player = if user = game.player_zero then 0 else 1 in
-      let update = Domain.Game.Updates.End.get (Domain.Game.GameResult.agreed_draw_by player) in
+      let update = Domain.Game.Updates.End.get (Domain.Game.GameResult.AgreedDrawBy player) in
       let* _ = Firestore.Game.update request game_id (Domain.Game.Updates.End.to_yojson update) in
       let game_end = Domain.Game.Event.(Action (Action.end_game user now)) in
       let* _ = Firestore.Game.add_event request game_id game_end in
@@ -143,8 +143,8 @@ module Make
       let creator = Auth.get_minimal_user request in
       let (chosen_opponent, first_player) =
         if game.player_zero = creator
-        then (Option.get game.player_one, Domain.ConfigRoom.FirstPlayer.chosen_player)
-        else (game.player_zero, Domain.ConfigRoom.FirstPlayer.creator) in
+        then (Option.get game.player_one, Domain.ConfigRoom.FirstPlayer.ChosenPlayer)
+        else (game.player_zero, Domain.ConfigRoom.FirstPlayer.Creator) in
       let rematch_config_room =
         Domain.ConfigRoom.rematch config_room first_player creator chosen_opponent in
       let now = External.now () in
@@ -204,14 +204,14 @@ module Make
 
   let draw (request : Dream.request) (game_id : string) =
     let scores = scores_from_request request in
-    let update = Domain.Game.Updates.End.get ?scores Domain.Game.GameResult.hard_draw in
+    let update = Domain.Game.Updates.End.get ?scores Domain.Game.GameResult.HardDraw in
     let* _ = Firestore.Game.update request game_id (Domain.Game.Updates.End.to_yojson update) in
     let* response = Dream.empty `OK in
     Lwt.return (Ok response)
 
   let victory (request : Dream.request) (game_id : string) (winner : Domain.MinimalUser.t) (loser : Domain.MinimalUser.t) =
     let scores = scores_from_request request in
-    let update = Domain.Game.Updates.End.get ~winner ~loser ?scores Domain.Game.GameResult.victory in
+    let update = Domain.Game.Updates.End.get ~winner ~loser ?scores Domain.Game.GameResult.Victory in
     let* _ = Firestore.Game.update request game_id (Domain.Game.Updates.End.to_yojson update) in
     let* response = Dream.empty `OK in
     Lwt.return (Ok response)

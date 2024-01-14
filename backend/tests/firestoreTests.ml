@@ -104,7 +104,7 @@ let test_get type_ get doc expected conversion = [
       );
 ]
 
-let creations_type = list (triple string (option string) json)
+let creations_type = list (triple string (option string) json_eq)
 
 let tests = [
 
@@ -171,9 +171,9 @@ let tests = [
       );
   ];
 
-  "Firestore.User.get", test_get user Firestore.User.get verified_user verified_user Domain.User.to_yojson;
+  "Firestore.User.get", test_get user_eq Firestore.User.get verified_user verified_user Domain.User.to_yojson;
 
-  "Firestore.Game.get", test_get game Firestore.Game.get unstarted_game unstarted_game Domain.Game.to_yojson;
+  "Firestore.Game.get", test_get game_eq Firestore.Game.get unstarted_game unstarted_game Domain.Game.to_yojson;
 
   "Firestore.Game.get_name", test_get string Firestore.Game.get_name unstarted_game "P4" Domain.Game.to_yojson;
 
@@ -221,7 +221,7 @@ let tests = [
         let* _ = Firestore.Game.update request game_id json_update in
         (* Then it should have called update_doc on /parts with the game id and update *)
         let updated = !FirestorePrimitivesTests.Mock.updated_docs in
-        check (list (pair string json)) "updates" [("parts/" ^ game_id, json_update)] updated;
+        check (list (pair string json_eq)) "updates" [("parts/" ^ game_id, json_update)] updated;
         Lwt.return ()
       );
   ];
@@ -270,9 +270,9 @@ let tests = [
         (* When we accept it *)
         let* _ = Firestore.ConfigRoom.accept request game_id in
         (* Then it should have updated the config room *)
-        let json_update = `Assoc [("partStatus", Domain.ConfigRoom.GameStatus.(to_yojson started))] in
+        let json_update = `Assoc [("partStatus", Domain.ConfigRoom.GameStatus.(to_yojson Started))] in
         let updated = !FirestorePrimitivesTests.Mock.updated_docs in
-        check (list (pair string json)) "updates" [("config-room/" ^ game_id, json_update)] updated;
+        check (list (pair string json_eq)) "updates" [("config-room/" ^ game_id, json_update)] updated;
         Lwt.return ()
       )
   ];
@@ -293,5 +293,5 @@ let tests = [
       );
   ];
 
-  "Firestore.ConfigRoom.get", test_get config_room Firestore.ConfigRoom.get initial_config_room initial_config_room Domain.ConfigRoom.to_yojson;
+  "Firestore.ConfigRoom.get", test_get config_room_eq Firestore.ConfigRoom.get initial_config_room initial_config_room Domain.ConfigRoom.to_yojson;
 ]

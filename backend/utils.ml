@@ -7,6 +7,32 @@ module JSON = struct
   include Yojson.Safe
   let to_yojson (json : t) : t = json
   let of_yojson (json : t) : (t, string) result = Ok json
+
+  (** Helper to define conversion for enum-like variants, as ppx-yojson's conversion is not what we want here *)
+  let for_enum (values : ('a * string) list) : ('a -> t) * (t -> ('a, string) result) =
+    let inversed_values = List.map (fun (x, y) -> (y, x)) values in
+    let enum_to_yojson v = `String (List.assoc v values) in
+    let enum_of_yojson json = match json with
+      | `String json_string ->
+        begin match List.assoc_opt json_string inversed_values with
+          | Some v -> Result.Ok v
+          | None -> Result.Error "not a member of the enum"
+        end
+      | _ -> Result.Error "not a string" in
+    (enum_to_yojson, enum_of_yojson)
+
+  (** Helper similar to [for_enum], but for conversion to ints *)
+  let for_enum_int (values : ('a * int) list) : ('a -> t) * (t -> ('a, string) result) =
+    let inversed_values = List.map (fun (x, y) -> (y, x)) values in
+    let enum_to_yojson v = `Int (List.assoc v values) in
+    let enum_of_yojson json = match json with
+      | `Int json_int ->
+        begin match List.assoc_opt json_int inversed_values with
+          | Some v -> Result.Ok v
+          | None -> Result.Error "not a member of the enum"
+        end
+      | _ -> Result.Error "not a string" in
+    (enum_to_yojson, enum_of_yojson)
 end
 
 let ( let* ) = Lwt.bind

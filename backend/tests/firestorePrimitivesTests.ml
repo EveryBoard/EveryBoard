@@ -90,7 +90,7 @@ let tests = [
         let* actual = FirestorePrimitives.get_doc request path in
         (* Then it should be the same document *)
         let expected = doc in
-        check json "success" expected actual;
+        check json_eq "success" expected actual;
         Lwt.return ()
       );
 

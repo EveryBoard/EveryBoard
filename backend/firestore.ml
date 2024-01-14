@@ -143,7 +143,7 @@ module Make (FirestorePrimitives : FirestorePrimitives.FIRESTORE_PRIMITIVES) : F
 
     let accept (request : Dream.request) (game_id : string) : unit Lwt.t =
       let update = `Assoc
-          [("partStatus", Domain.ConfigRoom.GameStatus.(to_yojson started))] in
+          [("partStatus", Domain.ConfigRoom.GameStatus.(to_yojson Started))] in
       FirestorePrimitives.update_doc request ("config-room/" ^ game_id) update
 
   end

@@ -83,8 +83,7 @@ let tests = [
             let minimal_user : Domain.MinimalUser.t = Auth.get_minimal_user request in
             let expected_user : Domain.User.t = FirestoreTests.verified_user in
             let expected_minimal_user : Domain.MinimalUser.t = FirestoreTests.verified_minimal_user in
-            (* TODO: fix uid? *)
-            check user "user" expected_user actual_user;
+            check user_eq "user" expected_user actual_user;
             check string "uid (user)" expected_minimal_user.id uid;
             check string "name" expected_minimal_user.name minimal_user.name;
             check string "uid (minimal user)" expected_minimal_user.id minimal_user.id;
