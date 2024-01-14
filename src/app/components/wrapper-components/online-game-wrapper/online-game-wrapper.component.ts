@@ -408,7 +408,6 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
     }
 
     private async setRealObserverRole(): Promise<void> {
-        let opponent: MGPOptional<MinimalUser> = MGPOptional.empty();
         if (this.players[0].equalsValue(this.getPlayer())) {
             await this.setRole(Player.ZERO);
             this.opponent = this.players[1].get();
