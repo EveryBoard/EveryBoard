@@ -14,7 +14,7 @@ export class KalahRules extends MancalaRules {
 
     public static readonly RULES_CONFIG_DESCRIPTION: RulesConfigDescription<MancalaConfig> =
         new RulesConfigDescription<MancalaConfig>({
-            name: (): string => $localize`Awalé`,
+            name: (): string => $localize`Kalah`,
             config: {
                 feedOriginalHouse: new BooleanConfig(true, MancalaRules.FEED_ORIGINAL_HOUSE),
                 mustFeed: new BooleanConfig(false, MancalaRules.MUST_FEED),
