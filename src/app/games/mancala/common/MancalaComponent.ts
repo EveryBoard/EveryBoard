@@ -216,7 +216,6 @@ export abstract class MancalaComponent<R extends MancalaRules>
     {
         const player: Player = seedDropResult.resultingState.getCurrentPlayer();
         const nextCoord: MGPOptional<Coord> = this.rules.getNextCoord(seedDropResult.houseToDistribute,
-                                                                      player, // TODO: remove as state.getCurre?
                                                                       seedDropResult.currentDropIsStore,
                                                                       seedDropResult.resultingState,
                                                                       config);

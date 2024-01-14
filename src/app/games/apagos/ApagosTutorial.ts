@@ -5,6 +5,7 @@ import { ApagosCoord } from './ApagosCoord';
 import { Player } from 'src/app/jscaip/Player';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { ApagosRules } from './ApagosRules';
+import { TutorialStepFailure } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStepFailure';
 
 export class ApagosTutorial extends Tutorial {
 
@@ -23,7 +24,7 @@ export class ApagosTutorial extends Tutorial {
                 [7, 5, 3, 1],
             ], 9, 10),
             ApagosMove.drop(ApagosCoord.ZERO, Player.ZERO),
-            $localize`Congratulations!`,
+            TutorialStepFailure.CONGRATULATIONS(),
         ),
         TutorialStep.fromPredicate(
             $localize`Transfer`,
@@ -41,7 +42,7 @@ export class ApagosTutorial extends Tutorial {
                 }
                 return MGPValidation.SUCCESS;
             },
-            $localize`Congratulations!`,
+            TutorialStepFailure.CONGRATULATIONS(),
         ),
         TutorialStep.fromPredicate(
             $localize`Victory`,
@@ -64,7 +65,7 @@ export class ApagosTutorial extends Tutorial {
                     return MGPValidation.failure($localize`Wrong choice, your opponent will win in the next turn no matter which piece is dropped!`);
                 }
             },
-            $localize`Congratulations!`,
+            TutorialStepFailure.CONGRATULATIONS(),
         ),
     ];
 }

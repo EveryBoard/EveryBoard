@@ -8,6 +8,7 @@ import { YinshState } from './YinshState';
 import { YinshCapture, YinshMove } from './YinshMove';
 import { YinshPiece } from './YinshPiece';
 import { YinshRules } from './YinshRules';
+import { TutorialStepFailure } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStepFailure';
 
 const _: YinshPiece = YinshPiece.EMPTY;
 const N: YinshPiece = YinshPiece.UNREACHABLE;
@@ -54,7 +55,7 @@ export class YinshTutorial extends Tutorial {
         You're playing Dark, put one of your ring on the board by clicking the space where you want to place it.`,
             new YinshState(YinshRules.get().getInitialState().board, [5, 5], 0),
             new YinshMove([], new Coord(5, 5), MGPOptional.empty(), []),
-            $localize`Congratulations!`),
+            TutorialStepFailure.CONGRATULATIONS()),
         TutorialStep.anyMove(
             $localize`Putting a marker`,
             $localize`Once the initial phase is done and all rings are on the board, you need to place markers on the board.
@@ -78,7 +79,7 @@ export class YinshTutorial extends Tutorial {
                 [N, _, _, _, _, N, N, N, N, N, N],
             ], [0, 0], 20),
             new YinshMove([], new Coord(2, 4), MGPOptional.of(new Coord(4, 4)), []),
-            $localize`Congratulations!`),
+            TutorialStepFailure.CONGRATULATIONS()),
         TutorialStep.fromPredicate(
             $localize`Getting a ring by aligning 5 markers`,
             $localize`Finally, the last mechanic you need is to be able to get a ring from the board in order to gain points.
@@ -109,7 +110,7 @@ export class YinshTutorial extends Tutorial {
                     return MGPValidation.failure(YinshTutorialMessages.MUST_ALIGN_FIVE());
                 }
             },
-            $localize`Congratulations!`),
+            TutorialStepFailure.CONGRATULATIONS()),
         TutorialStep.fromPredicate(
             $localize`Compound captures`,
             $localize`During a turn, you could have to choose between multiple captures,
@@ -142,6 +143,6 @@ export class YinshTutorial extends Tutorial {
                     return MGPValidation.failure(YinshTutorialMessages.MUST_CAPTURE_TWO());
                 }
             },
-            $localize`Congratulations!`),
+            TutorialStepFailure.CONGRATULATIONS()),
     ];
 }

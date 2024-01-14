@@ -3,6 +3,7 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { LascaMove } from './LascaMove';
 import { LascaPiece, LascaStack, LascaState } from './LascaState';
 import { LascaRules } from './LascaRules';
+import { TutorialStepFailure } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStepFailure';
 
 const zero: LascaPiece = LascaPiece.ZERO;
 const one: LascaPiece = LascaPiece.ONE;
@@ -29,10 +30,10 @@ export class LascaTutorial extends Tutorial {
             $localize`A simple step is made by one diagonal move forward, left or right. Click on the chosen piece, then on its landing square.<br/><br/>You are playing Dark, do the first move.`,
             LascaRules.get().getInitialState(),
             LascaMove.fromStep(new Coord(4, 4), new Coord(3, 3)).get(),
-            $localize`Congratulations!`,
+            TutorialStepFailure.CONGRATULATIONS(),
         ),
         TutorialStep.anyMove(
-            $localize`Capture`,
+            $localize`Captures`,
             $localize`A capture happens when you jump diagonally over an opponent piece to land right behind it. You have to capture when you can. It is the case here, so click on the piece that must capture, and then on its landing square.<br/><br/>You're playing Dark, go ahead.`,
             LascaState.of([
                 [_v, __, __, __, _v, __, _v],
@@ -59,7 +60,7 @@ export class LascaTutorial extends Tutorial {
                 [__, __, _u, __, _u, __, _u],
             ], 2),
             LascaMove.fromCapture([new Coord(2, 6), new Coord(0, 4), new Coord(2, 2)]).get(),
-            $localize`Congratulations!`,
+            TutorialStepFailure.CONGRATULATIONS(),
         ),
         TutorialStep.informational(
             $localize`Minority capture is allowed`,
@@ -90,7 +91,7 @@ export class LascaTutorial extends Tutorial {
                 LascaMove.fromStep(new Coord(3, 1), new Coord(2, 0)).get(),
                 LascaMove.fromStep(new Coord(3, 1), new Coord(4, 0)).get(),
             ],
-            $localize`Congratulations!`,
+            TutorialStepFailure.CONGRATULATIONS(),
             $localize`You did not choose the correct stack, and got no promotion.`,
         ),
         TutorialStep.fromMove(
@@ -109,7 +110,7 @@ export class LascaTutorial extends Tutorial {
                 LascaMove.fromStep(new Coord(4, 0), new Coord(3, 1)).get(),
                 LascaMove.fromStep(new Coord(4, 0), new Coord(5, 1)).get(),
             ],
-            $localize`Congratulations!`,
+            TutorialStepFailure.CONGRATULATIONS(),
             $localize`You did not move your officer.`,
         ),
     ];

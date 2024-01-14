@@ -2,6 +2,7 @@ import { TutorialStep } from 'src/app/components/wrapper-components/tutorial-gam
 import { MancalaDistribution, MancalaMove } from './MancalaMove';
 import { MancalaState } from './MancalaState';
 import { Utils } from 'src/app/utils/utils';
+import { Localized } from 'src/app/utils/LocaleUtils';
 
 export class MancalaTutorial {
 
@@ -25,4 +26,6 @@ export class MancalaTutorial {
             $localize`Failed. Choose the rightmost house on the bottom.`,
         );
     }
+
+    public static YOU_DID_NOT_CAPTURE_ANY_SEEDS: Localized = () => $localize`Failed. You did not capture anything. Try again.`;
 }

@@ -6,6 +6,7 @@ import { KalahRules } from './KalahRules';
 import { MancalaTutorial } from '../common/MancalaTutorial';
 import { MancalaConfig } from '../common/MancalaConfig';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { TutorialStepFailure } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStepFailure';
 
 const defaultConfig: MGPOptional<MancalaConfig> = KalahRules.get().getDefaultRulesConfig();
 
@@ -49,10 +50,10 @@ export class KalahTutorial extends Tutorial {
                     return MGPValidation.SUCCESS;
                 }
             },
-            $localize`Congratulations!`,
+            TutorialStepFailure.CONGRATULATIONS(),
         ),
         TutorialStep.fromPredicate(
-            $localize`Capture`,
+            $localize`Captures`,
             $localize`When the last seed of a distribution ends up in one of your empty houses, if the opposite house is filled, then you capture both houses. On this board, such a move is possible.<br/><br/>You're playing Dark, do a capture!`,
             new MancalaState([
                 [0, 4, 4, 4, 4, 4],
@@ -66,10 +67,10 @@ export class KalahTutorial extends Tutorial {
                     return MGPValidation.failure($localize`You did not capture, try again!`);
                 }
             },
-            $localize`Congratulations!`,
+            TutorialStepFailure.CONGRATULATIONS(),
         ),
         TutorialStep.fromMove(
-            $localize`End of the game`,
+            TutorialStepFailure.END_OF_THE_GAME(),
             $localize`At any moment, when one player has more than 24 seeds in their Kalah, they win. That can happen before the board is empty, but, there is also a second way. When you don't have any seed in your houses, the game is over and your opponent takes all the remaining seeds from their houses. Here, your opponent just need one more point to win and will get it next turn if you allow it.<br/><br/>You're playing Dark, win!`,
             new MancalaState([
                 [0, 0, 0, 0, 2, 0],

@@ -4,6 +4,7 @@ import { TeekoDropMove, TeekoTranslationMove } from './TeekoMove';
 import { Coord } from 'src/app/jscaip/Coord';
 import { PlayerOrNone } from 'src/app/jscaip/Player';
 import { TeekoRules } from './TeekoRules';
+import { TutorialStepFailure } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStepFailure';
 
 const _: PlayerOrNone = PlayerOrNone.NONE;
 const O: PlayerOrNone = PlayerOrNone.ZERO;
@@ -22,7 +23,7 @@ export class TeekoTutorial extends Tutorial {
             $localize`During your first four turns, you must drop one piece on any empty space of the board. There is no other restriction.<br/><br/>You're playing Dark, put a piece on the board.`,
             TeekoRules.get().getInitialState(),
             TeekoDropMove.from(new Coord(2, 2)).get(),
-            $localize`Congratulations!`,
+            TutorialStepFailure.CONGRATULATIONS(),
         ),
         TutorialStep.anyMove(
             $localize`Moving a piece`,
@@ -35,7 +36,7 @@ export class TeekoTutorial extends Tutorial {
                 [_, _, _, _, _],
             ], 8),
             TeekoTranslationMove.from(new Coord(1, 3), new Coord(2, 2)).get(),
-            $localize`Congratulations!`,
+            TutorialStepFailure.CONGRATULATIONS(),
         ),
         TutorialStep.fromMove(
             $localize`Victory`,
@@ -51,7 +52,7 @@ export class TeekoTutorial extends Tutorial {
                 TeekoTranslationMove.from(new Coord(3, 1), new Coord(2, 1)).get(),
             ],
             $localize`Congratulations, you won! Remember that you can also win by creating a line.`,
-            $localize`Failed. Try again.`,
+            TutorialStepFailure.FAILED_TRY_AGAIN(),
         ),
     ];
 }

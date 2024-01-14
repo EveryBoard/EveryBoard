@@ -5,6 +5,7 @@ import { BaAwaRules } from './BaAwaRules';
 import { MancalaTutorial } from '../common/MancalaTutorial';
 import { MancalaState } from '../common/MancalaState';
 import { MancalaDistribution, MancalaMove } from '../common/MancalaMove';
+import { TutorialStepFailure } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStepFailure';
 
 const defaultConfig: MGPOptional<BaAwaConfig> = BaAwaRules.get().getDefaultRulesConfig();
 
@@ -37,29 +38,29 @@ export class BaAwaTutorial extends Tutorial {
             ], 0, [0, 0]),
             [MancalaMove.of(MancalaDistribution.of(3))],
             $localize`So, after landing in the house with 3 seeds, a second lap has been started`,
-            $localize`Failed, try again`,
+            TutorialStepFailure.FAILED_TRY_AGAIN(),
         ),
         TutorialStep.fromMove(
-            $localize`Captures during move (1/2)`,
-            $localize`If, during some distribution, you pass by one of your house that contains 3 seeds, and drop a fourth seed, you capture it immediately!<br/><br/>You're playing Dark, do such a move!`,
+            $localize`Captures during distribution (1/2)`,
+            $localize`If, during some distribution, you pass by one of your house that contains 3 seeds, and drop a fourth seed, you capture the house immediately, then continue the distribution!<br/><br/>You're playing Dark, do such a move!`,
             new MancalaState([
                 [0, 8, 0, 0, 0, 0],
                 [0, 0, 3, 2, 0, 0],
             ], 0, [0, 0]),
             [MancalaMove.of(MancalaDistribution.of(3))],
-            $localize`Congratulation, you captured 4 seeds.`,
-            $localize`Wrong, you did not capture anything.`,
+            $localize`Congratulations, you captured 4 seeds.`,
+            MancalaTutorial.YOU_DID_NOT_CAPTURE_ANY_SEEDS(),
         ),
         TutorialStep.fromMove(
-            $localize`Captures during move (2/2)`,
-            $localize`If, during some distribution, you pass by one house of the opponent that contains 3 seeds, and drop a fourth seed, the opponent capture it immediately!<br/><br/>You're playing Dark, do such a move!`,
+            $localize`Captures during distribution (2/2)`,
+            $localize`If, during some distribution, you pass by one house of the opponent that contains 3 seeds, and drop a fourth seed, the opponent capture the house immediately (while you continue to distribute)!<br/><br/>You're playing Dark, do such a move!`,
             new MancalaState([
                 [0, 3, 0, 0, 8, 0],
                 [3, 0, 1, 0, 0, 0],
             ], 0, [0, 0]),
             [MancalaMove.of(MancalaDistribution.of(0))],
             $localize`There it is, the opponent captured 4 seeds.`,
-            $localize`Wrong, you did not capture anything.`,
+            MancalaTutorial.YOU_DID_NOT_CAPTURE_ANY_SEEDS(),
         ),
         TutorialStep.fromMove(
             $localize`Captures`,
@@ -69,19 +70,19 @@ export class BaAwaTutorial extends Tutorial {
                 [2, 7, 2, 0, 0, 0],
             ], 0, [0, 0]),
             [MancalaMove.of(MancalaDistribution.of(0))],
-            $localize`There it is, you captured 4 seeds.`,
-            $localize`Wrong, you did not capture anything.`,
+            $localize`Congratulations, you captured 4 seeds.`,
+            MancalaTutorial.YOU_DID_NOT_CAPTURE_ANY_SEEDS(),
         ),
         TutorialStep.fromMove(
-            $localize`End game`,
-            $localize`At any end of turn, if the number of seed reach 8 or less, the first player capture capture the 8 seeds.<br/><br/>You're playing Dark, end the game by capturing!`,
+            TutorialStepFailure.END_OF_THE_GAME(),
+            $localize`At any end of turn, if the number of seed reach 8 or less, the first player capture capture the remaining seeds.<br/><br/>You're playing Dark, end the game by capturing!`,
             new MancalaState([
                 [0, 1, 1, 3, 0, 0],
                 [1, 0, 2, 0, 0, 0],
             ], 0, [0, 0]),
             [MancalaMove.of(MancalaDistribution.of(2))],
             $localize`There it is, you captured all remaining seeds.`,
-            $localize`Wrong, you did not capture anything.`,
+            MancalaTutorial.YOU_DID_NOT_CAPTURE_ANY_SEEDS(),
         ),
     ];
 }

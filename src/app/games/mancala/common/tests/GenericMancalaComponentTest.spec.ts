@@ -85,7 +85,6 @@ export class MancalaComponentTestUtils<C extends MancalaComponent<R>,
         const component: C = this.testUtils.getGameComponent();
         const player: Player = seedDropResult.resultingState.getCurrentPlayer();
         const nextCoord: MGPOptional<Coord> = component.rules.getNextCoord(seedDropResult.houseToDistribute,
-                                                                           player,
                                                                            seedDropResult.currentDropIsStore,
                                                                            seedDropResult.resultingState,
                                                                            config);

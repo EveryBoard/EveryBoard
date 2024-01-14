@@ -38,7 +38,7 @@ export class MartianChessTutorial extends Tutorial {
                     return MGPValidation.failure($localize`This is not a pawn!`);
                 }
             },
-            $localize`Congratulations!`,
+            TutorialStepFailure.CONGRATULATIONS(),
         ),
         TutorialStep.fromPredicate(
             $localize`Moving drones`,
@@ -52,7 +52,7 @@ export class MartianChessTutorial extends Tutorial {
                     return MGPValidation.failure($localize`This is not a drone!`);
                 }
             },
-            $localize`Congratulations!`,
+            TutorialStepFailure.CONGRATULATIONS(),
         ),
         TutorialStep.fromPredicate(
             $localize`Moving queens`,
@@ -75,10 +75,10 @@ export class MartianChessTutorial extends Tutorial {
                     return MGPValidation.failure($localize`This is not a queen!`);
                 }
             },
-            $localize`Congratulations!`,
+            TutorialStepFailure.CONGRATULATIONS(),
         ),
         TutorialStep.fromMove(
-            $localize`Capture`,
+            $localize`Captures`,
             $localize`When a piece crosses the canal and lands on another piece, you capture it and gain the value of that captured piece. However, you lose control of your piece as it crosses the canal!<br/><br/>A capture is possible for Dark, do it.`,
             new MartianChessState([
                 [B, A, A, _],
@@ -111,7 +111,7 @@ export class MartianChessTutorial extends Tutorial {
                 MartianChessMove.from(new Coord(1, 1), new Coord(2, 2)).get(),
                 MartianChessMove.from(new Coord(2, 2), new Coord(1, 1)).get(),
             ],
-            $localize`Congratulations!`,
+            TutorialStepFailure.CONGRATULATIONS(),
             $localize`This is not a field promotion!`,
         ),
         TutorialStep.fromPredicate(
@@ -136,7 +136,7 @@ export class MartianChessTutorial extends Tutorial {
                     return MGPValidation.failure($localize`This is not a field promotion!`);
                 }
             },
-            $localize`Congratulations!`,
+            TutorialStepFailure.CONGRATULATIONS(),
         ),
         TutorialStep.fromPredicate(
             $localize`Call the clock`,
@@ -150,7 +150,7 @@ export class MartianChessTutorial extends Tutorial {
                     return MGPValidation.failure($localize`You did not call the clock!`);
                 }
             },
-            $localize`Congratulations!`,
+            TutorialStepFailure.CONGRATULATIONS(),
         ),
         TutorialStep.fromMove(
             $localize`Restarting the clock`,
@@ -166,7 +166,7 @@ export class MartianChessTutorial extends Tutorial {
                 [_, A, _, _],
             ], 15, MGPOptional.empty(), MGPOptional.of(1)),
             [MartianChessMove.from(new Coord(1, 1), new Coord(2, 2)).get()],
-            $localize`Congratulations!`,
+            TutorialStepFailure.CONGRATULATIONS(),
             $localize`This is not a capture, the game is now over, please retry!`,
         ),
         TutorialStep.anyMove(
@@ -183,7 +183,7 @@ export class MartianChessTutorial extends Tutorial {
                 [_, B, _, _],
             ], 15, MGPOptional.empty(), MGPOptional.of(1)),
             MartianChessMove.from(new Coord(1, 1), new Coord(2, 2)).get(),
-            $localize`Congratulations!`,
+            TutorialStepFailure.CONGRATULATIONS(),
         ),
         TutorialStep.fromPredicate(
             $localize`End by emptyness`,
@@ -206,7 +206,7 @@ export class MartianChessTutorial extends Tutorial {
                     return MGPValidation.failure($localize`Your piece is still in you territory!`);
                 }
             },
-            $localize`Congratulations!`,
+            TutorialStepFailure.CONGRATULATIONS(),
         ),
     ];
 }

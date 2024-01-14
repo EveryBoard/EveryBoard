@@ -5,6 +5,7 @@ import { TrexoMove } from './TrexoMove';
 import { TrexoRules } from './TrexoRules';
 import { TrexoPiece, TrexoPieceStack, TrexoState } from './TrexoState';
 import { Player } from 'src/app/jscaip/Player';
+import { TutorialStepFailure } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStepFailure';
 
 const ______: TrexoPieceStack = TrexoPieceStack.EMPTY;
 const ONE__0: TrexoPieceStack = TrexoPieceStack.of([new TrexoPiece(Player.ONE, 0)]);
@@ -41,7 +42,7 @@ export class TrexoTutorial extends Tutorial {
             $localize`When you drop a tile, it needs to be on even ground, and it cannot be right on top of another tile. In others words, it needs to be either on the floor, or on two tiles at the same height. To drop a tile, just click on the square where you want to put the opponent side of the tile, then on the neighboring square where you want to put your piece.<br/><br/>You're playing Dark, put a tile on the board.`,
             TrexoRules.get().getInitialState(),
             TrexoMove.from(new Coord(4, 4), new Coord(3, 4)).get(),
-            $localize`Congratulations!`,
+            TutorialStepFailure.CONGRATULATIONS(),
         ),
         TutorialStep.fromMove(
             $localize`Dropping a piece over other pieces`,
@@ -62,7 +63,7 @@ export class TrexoTutorial extends Tutorial {
                 TrexoMove.from(new Coord(4, 0), new Coord(5, 0)).get(),
                 TrexoMove.from(new Coord(5, 0), new Coord(4, 0)).get(),
             ],
-            $localize`Congratulations!`,
+            TutorialStepFailure.CONGRATULATIONS(),
             $localize`Failed, you put that piece on the floor level, please put it on top of two pieces.`,
         ),
         TutorialStep.fromPredicate(
@@ -86,10 +87,10 @@ export class TrexoTutorial extends Tutorial {
                 if (moveScore === Number.MAX_SAFE_INTEGER) {
                     return MGPValidation.SUCCESS;
                 } else {
-                    return MGPValidation.failure($localize`Failed. Try again.`);
+                    return MGPValidation.failure(TutorialStepFailure.FAILED_TRY_AGAIN());
                 }
             },
-            $localize`Congratulations, you won!`,
+            TutorialStepFailure.CONGRATULATIONS_YOU_WON(),
         ),
     ];
 }

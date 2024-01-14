@@ -5,6 +5,7 @@ import { Orthogonal } from 'src/app/jscaip/Direction';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { Tutorial, TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { SiamConfig, SiamRules } from './SiamRules';
+import { TutorialStepFailure } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStepFailure';
 
 const _: SiamPiece = SiamPiece.EMPTY;
 const M: SiamPiece = SiamPiece.MOUNTAIN;
@@ -33,7 +34,7 @@ export class SiamTutorial extends Tutorial {
             $localize`Each player has 5 pieces in total. As long as you have remaining pieces next to the board, you can insert new pieces. To do so:<ol><li>Click on one of your pieces from your reserve, next to board.</li><li>Click on one of the highlighted squares to select a landing for your piece.</li><li>Select an orientation for your piece by clicking on one of the arrows that appear on top of the board.</li></ol><br/>You're playing Dark, insert a piece on the board.`,
             SiamRules.get().getInitialState(defaultConfig),
             SiamMove.of(2, -1, MGPOptional.of(Orthogonal.DOWN), Orthogonal.DOWN),
-            $localize`Congratulations!`,
+            TutorialStepFailure.CONGRATULATIONS(),
         ),
         TutorialStep.fromMove(
             $localize`Moving a piece`,
@@ -47,7 +48,7 @@ export class SiamTutorial extends Tutorial {
             ], 0),
             [SiamMove.of(2, 4, MGPOptional.of(Orthogonal.UP), Orthogonal.LEFT)],
             $localize`Congratulations, you made a side-slip!`,
-            $localize`Failed. Try again.`,
+            TutorialStepFailure.FAILED_TRY_AGAIN(),
         ),
         TutorialStep.fromMove(
             $localize`Moving a piece out of the board`,
@@ -74,8 +75,8 @@ export class SiamTutorial extends Tutorial {
                 [_, _, _, _, _],
             ], 0),
             [SiamMove.of(2, 2, MGPOptional.of(Orthogonal.UP), Orthogonal.UP)],
-            $localize`Congratulations!`,
-            $localize`Failed. Try again.`,
+            TutorialStepFailure.CONGRATULATIONS(),
+            TutorialStepFailure.FAILED_TRY_AGAIN(),
         ),
         TutorialStep.fromMove(
             $localize`Pushing (2/2)`,
@@ -89,7 +90,7 @@ export class SiamTutorial extends Tutorial {
             ], 0),
             [SiamMove.of(1, 3, MGPOptional.of(Orthogonal.RIGHT), Orthogonal.RIGHT)],
             $localize`Congratulations! Note that this move made you lose the game, you will see why in the next step.`,
-            $localize`Failed. Try again.`,
+            TutorialStepFailure.FAILED_TRY_AGAIN(),
         ),
         TutorialStep.fromMove(
             $localize`Victory`,
@@ -102,7 +103,7 @@ export class SiamTutorial extends Tutorial {
                 [_, _, _, _, M],
             ], 0),
             [SiamMove.of(2, 2, MGPOptional.of(Orthogonal.LEFT), Orthogonal.LEFT)],
-            $localize`Congratulations, you won!`,
+            TutorialStepFailure.CONGRATULATIONS_YOU_WON(),
             $localize`Failed, you lost.`,
         ),
     ];

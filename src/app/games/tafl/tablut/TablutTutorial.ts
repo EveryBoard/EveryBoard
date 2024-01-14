@@ -6,6 +6,7 @@ import { TablutRules } from './TablutRules';
 import { TaflConfig } from '../TaflConfig';
 import { TaflState } from '../TaflState';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { TutorialStepFailure } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStepFailure';
 
 const _: TaflPawn = TaflPawn.UNOCCUPIED;
 const x: TaflPawn = TaflPawn.PLAYER_ZERO_PAWN;
@@ -26,7 +27,7 @@ export class TablutTutorial extends Tutorial {
             $localize`All pieces move the same way. Similarly to a rook in chess, a piece can move:<ol><li>By as many squares as you want.</li><li>Without going over another piece or stopping on another piece.</li><li>Horizontally or vertically.</li><li>Only the king can land on a throne.</li></ol>To move a piece, click on it and then on its landing square.<br/><br/>You're playing Dark, do the first move.`,
             TablutRules.get().getInitialState(defaultConfig),
             TablutMove.from(new Coord(4, 1), new Coord(1, 1)).get(),
-            $localize`Congratulations!`,
+            TutorialStepFailure.CONGRATULATIONS(),
         ),
         TutorialStep.fromMove(
             $localize`Capturing a soldier (1/2)`,
@@ -82,7 +83,7 @@ export class TablutTutorial extends Tutorial {
                 [_, _, _, _, _, _, _, _, _],
             ], 72),
             [TablutMove.from(new Coord(3, 4), new Coord(2, 4)).get()],
-            $localize`Congratulations, you won!`,
+            TutorialStepFailure.CONGRATULATIONS_YOU_WON(),
             $localize`Failed, you let the king run away.`,
         ),
         TutorialStep.fromMove(
@@ -101,7 +102,7 @@ export class TablutTutorial extends Tutorial {
             ], 72),
             [TablutMove.from(new Coord(3, 3), new Coord(3, 1)).get()],
             $localize`The king is dead, long live the king. Congratulations, you won.`,
-            $localize`Failed. Try again.`,
+            TutorialStepFailure.FAILED_TRY_AGAIN(),
         ),
     ];
 }

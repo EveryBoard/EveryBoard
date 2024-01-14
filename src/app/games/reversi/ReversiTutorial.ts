@@ -4,6 +4,7 @@ import { PlayerOrNone } from 'src/app/jscaip/Player';
 import { Tutorial, TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { ReversiConfig, ReversiRules } from './ReversiRules';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { TutorialStepFailure } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStepFailure';
 
 const _: PlayerOrNone = PlayerOrNone.NONE;
 const O: PlayerOrNone = PlayerOrNone.ZERO;
@@ -30,17 +31,17 @@ export class ReversiTutorial extends Tutorial {
             ], 60),
         ),
         TutorialStep.anyMove(
-            $localize`Capture (1/2)`,
+            $localize`Captures (1/2)`,
             $localize`At the beginning of the game, pieces are placed as shown here.
         For a move to be legal, it must sandwich at least one piece of the opponent between the piece you're putting and another of your pieces.<br/><br/>
         Do any move by clicking to put your piece
         Dark plays first.`,
             ReversiRules.get().getInitialState(defaultConfig),
             new ReversiMove(2, 4),
-            $localize`Congratulations!`,
+            TutorialStepFailure.CONGRATULATIONS(),
         ),
         TutorialStep.fromMove(
-            $localize`Capture (2/2)`,
+            $localize`Captures (2/2)`,
             $localize`A move can also capture a bigger line, and more than one line at a time<br/><br/>You're playing Light here. Play on the bottom left to see a capture.`,
             new ReversiState([
                 [_, _, _, _, _, _, _, _],
@@ -53,7 +54,7 @@ export class ReversiTutorial extends Tutorial {
                 [_, O, X, O, X, O, _, _],
             ], 1),
             [new ReversiMove(0, 7)],
-            $localize`Congratulations!`,
+            TutorialStepFailure.CONGRATULATIONS(),
             $localize`Lower and more to the left, please.`,
         ),
         TutorialStep.informational(

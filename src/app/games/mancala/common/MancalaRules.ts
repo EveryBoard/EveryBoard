@@ -290,7 +290,7 @@ export abstract class MancalaRules<C extends MancalaConfig = MancalaConfig>
             previousDropWasStore = endsUpInStore;
             endsUpInStore = false;
             const nextCoord: MGPOptional<Coord> =
-                this.getNextCoord(coord, player, previousDropWasStore, previousLapResult.resultingState, config);
+                this.getNextCoord(coord, previousDropWasStore, previousLapResult.resultingState, config);
             endsUpInStore = nextCoord.isAbsent();
 
             if (endsUpInStore) {
@@ -339,12 +339,12 @@ export abstract class MancalaRules<C extends MancalaConfig = MancalaConfig>
     }
 
     public getNextCoord(coord: Coord,
-                        player: Player,
                         previousDropWasStore: boolean,
                         state: MancalaState,
                         config: MancalaConfig)
     : MGPOptional<Coord>
     {
+        const player: Player = state.getCurrentPlayer();
         if (coord.y === 0) {
             if (coord.x === (state.getWidth() - 1)) {
                 if (config.passByPlayerStore && player === Player.ONE && previousDropWasStore === false) {

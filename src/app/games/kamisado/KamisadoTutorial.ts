@@ -6,6 +6,7 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { Tutorial, TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { KamisadoRules } from './KamisadoRules';
+import { TutorialStepFailure } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStepFailure';
 
 const __: KamisadoPiece = KamisadoPiece.EMPTY;
 const or: KamisadoPiece = KamisadoPiece.ZERO.ORANGE;
@@ -77,7 +78,7 @@ export class KamisadoTutorial extends Tutorial {
                 KamisadoMove.of(new Coord(3, 0), new Coord(3, 6)),
                 KamisadoMove.of(new Coord(3, 0), new Coord(4, 1)),
             ],
-            $localize`Congratulations!`,
+            TutorialStepFailure.CONGRATULATIONS(),
             $localize`You have not moved your pink piece on a blue square!`,
         ).withPreviousMove(KamisadoMove.of(new Coord(6, 7), new Coord(6, 5))),
         TutorialStep.informational(
@@ -120,7 +121,7 @@ export class KamisadoTutorial extends Tutorial {
          Your opponent will have to pass its turn too because its orange piece is also stuck: the game is completely stuck.
          In this case, the last player to have moved a piece loses.
          Here, your opponent will have moved its green piece last, you therefore win!`,
-            $localize`Failed. Try again.`,
+            TutorialStepFailure.FAILED_TRY_AGAIN(),
         ).withPreviousMove(KamisadoMove.of(new Coord(4, 0), new Coord(3, 1))),
     ];
 }
