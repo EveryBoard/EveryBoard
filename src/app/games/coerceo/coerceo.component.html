@@ -10,7 +10,7 @@
             <polygon *ngIf="mustDraw(x, y)"
                      id="space_{{ x }}_{{ y }}"
                      [attr.points]="getTrianglePoints(x, y)"
-                     [attr.transform]="getTriangleInHexTranslate(x, y)"
+                     [attr.transform]="getTriangleInHexTranslation(x, y)"
                      [ngClass]="getSpaceClass(x, y)"
                      class="base normal-stroke"
                      stroke-linecap="round"
@@ -24,7 +24,7 @@
             <polygon *ngIf="isPyramid(x, y)"
                      id="pyramid_{{ x }}_{{ y }}"
                      [attr.points]="getPyramidPoints(x, y)"
-                     [attr.transform]="getTriangleInHexTranslate(x, y)"
+                     [attr.transform]="getTriangleInHexTranslation(x, y)"
                      [ngClass]="getPyramidClass(x, y)"
                      class="base small-stroke"
                      stroke-linecap="round"
@@ -34,14 +34,14 @@
     <g *ngIf="chosenCoord.isPresent() else lastMove">
         <polygon id="selected_{{ chosenCoord.get().x }}_{{ chosenCoord.get().y }}"
                  [attr.points]="getTrianglePoints(chosenCoord.get().x, chosenCoord.get().y)"
-                 [attr.transform]="getTriangleInHexTranslate(chosenCoord.get().x, chosenCoord.get().y)"
+                 [attr.transform]="getTriangleInHexTranslation(chosenCoord.get().x, chosenCoord.get().y)"
                  class="base no-fill normal-stroke selected-stroke"/>
         <rect *ngFor="let possibleLanding of possibleLandings"
               [attr.x]="- INDICATOR_SIZE / 2"
               [attr.y]="getIndicatorY(possibleLanding)"
               [attr.width]="INDICATOR_SIZE"
               [attr.height]="INDICATOR_SIZE"
-              [attr.transform]="getTriangleInHexTranslate(possibleLanding.x, possibleLanding.y)"
+              [attr.transform]="getTriangleInHexTranslation(possibleLanding.x, possibleLanding.y)"
               (click)="onClick(possibleLanding.x, possibleLanding.y)"
               class="base-no-fill indicator clickable-fill"/>
     </g>
@@ -49,18 +49,18 @@
         <polygon *ngIf="lastStart.isPresent()"
                  id="last_start_{{ lastStart.get().x }}_{{ lastStart.get().y }}"
                  [attr.points]="getTrianglePoints(lastStart.get().x, lastStart.get().y)"
-                 [attr.transform]="getTriangleInHexTranslate(lastStart.get().x, lastStart.get().y)"
+                 [attr.transform]="getTriangleInHexTranslation(lastStart.get().x, lastStart.get().y)"
                  class="base no-fill normal-stroke last-move-stroke"/>
         <polygon *ngIf="lastEnd.isPresent()"
                  id="last_end_{{ lastEnd.get().x }}_{{ lastEnd.get().y }}"
                  [attr.points]="getTrianglePoints(lastEnd.get().x, lastEnd.get().y)"
-                 [attr.transform]="getTriangleInHexTranslate(lastEnd.get().x, lastEnd.get().y)"
+                 [attr.transform]="getTriangleInHexTranslation(lastEnd.get().x, lastEnd.get().y)"
                  class="base no-fill normal-stroke last-move-stroke"/>
     </ng-template>
     <g *ngFor="let player of Player.PLAYERS">
         <g *ngIf="mustShowTilesOf(player)"
            [id]="'tilesCount' + player.value"
-           [attr.transform]="getTilesCountTranslate(player)">
+           [attr.transform]="getTilesCountTranslation(player)">
             <polygon [attr.points]="getTilesCountCoordinate()"
                      [attr.stroke]="lastTurnWasTilesExchange(player) ? 'yellow' : 'black'"
                      [ngClass]="['base', 'player' + player.value + '-fill']"

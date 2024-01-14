@@ -19,7 +19,7 @@ export class ViewBox {
     }
 
     public static fromHexa(coords: Coord[], hexaLayout: HexaLayout, strokeWidth: number): ViewBox {
-        const points: Coord[] = coords.flatMap((coord: Coord) => hexaLayout.getHexaPointsListAt());
+        const points: Coord[] = coords.flatMap((coord: Coord) => hexaLayout.getHexaPointsList());
         const limits: Limits = ViewBox.getLimits(points);
         const left: number = limits.minX - (strokeWidth / 2);
         const up: number = limits.minY - (strokeWidth / 2);

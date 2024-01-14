@@ -35,11 +35,11 @@ export abstract class HexagonalGameComponent<R extends SuperRules<M, S, C, L>,
         return this.hexaLayout.getCenterAt(coord);
     }
 
-    public getHexaCenterTranslate(coord: Coord): string {
-        return this.getHexaCenterTranslateAtXY(coord.x, coord.y);
+    public getHexaCenterTranslation(coord: Coord): string {
+        return this.getHexaCenterTranslationAtXY(coord.x, coord.y);
     }
 
-    public getHexaCenterTranslateAtXY(x: number, y: number): string {
+    public getHexaCenterTranslationAtXY(x: number, y: number): string {
         const centerAtXY: Coord = this.getCenterAtXY(x, y);
         return `translate(${ centerAtXY.x }, ${ centerAtXY.y })`;
     }

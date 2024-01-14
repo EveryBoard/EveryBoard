@@ -101,7 +101,7 @@ export class TeekoRules extends ConfigurableRules<TeekoMove, TeekoState, TeekoCo
         if (move instanceof TeekoDropMove) {
             return this.applyLegalDrop(move, state);
         } else {
-            return this.applyLegalTranslate(move, state);
+            return this.applyLegalTranslation(move, state);
         }
     }
 
@@ -111,7 +111,7 @@ export class TeekoRules extends ConfigurableRules<TeekoMove, TeekoState, TeekoCo
         return new TeekoState(newBoard, state.turn + 1);
     }
 
-    private applyLegalTranslate(move: TeekoTranslationMove, state: TeekoState): TeekoState {
+    private applyLegalTranslation(move: TeekoTranslationMove, state: TeekoState): TeekoState {
         const newBoard: PlayerOrNone[][] = state.getCopiedBoard();
         newBoard[move.getStart().y][move.getStart().x] = PlayerOrNone.NONE;
         newBoard[move.getEnd().y][move.getEnd().x] = state.getCurrentPlayer();

@@ -54,7 +54,7 @@ export abstract class ParallelogramGameComponent<R extends SuperRules<M, S, C, L
      * @param mode the mode in which the component is to be drawn
      * @returns the coord(x, y) of the upper left parallelogram to draw on the SVG;
      */
-    protected getCoordTranslate(x: number, y: number, z: number, mode: ModeConfig): Coord {
+    protected getCoordTranslation(x: number, y: number, z: number, mode: ModeConfig): Coord {
         const spaceHeight: number = mode.parallelogramHeight;
         const spaceWidth: number = spaceHeight * mode.horizontalWidthRatio;
         const spaceOffset: number = mode.offsetRatio * spaceHeight;

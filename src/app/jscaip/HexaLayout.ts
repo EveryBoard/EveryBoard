@@ -21,7 +21,7 @@ export class HexaLayout {
     }
 
     // Points of this function have (0, 0) as the center of the hexagon
-    public getHexaPointsListAt(): Coord[] {
+    public getHexaPointsList(): Coord[] {
         const corners: Coord[] = [];
         for (let i: number = 0; i < 6; i += 1) {
             const offset: Coord = this.getCornerOffset(i);
@@ -31,7 +31,7 @@ export class HexaLayout {
     }
 
     public getHexaPoints(): string {
-        const points: string[] = this.getHexaPointsListAt().map((c: Coord) => c.toSVGPoint());
+        const points: string[] = this.getHexaPointsList().map((c: Coord) => c.toSVGPoint());
         return points.join(' ');
     }
 

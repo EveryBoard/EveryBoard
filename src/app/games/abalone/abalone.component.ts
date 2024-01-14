@@ -127,7 +127,7 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneRules,
             if (AbaloneState.isOnBoard(landing)) {
                 this.moveds.push(landing);
             } else {
-                // Since only current player could have translated out their pieces... dumbass!
+                // Since only current player could have translated out their pieces
                 const previousPlayer: Player = this.getPreviousState().getCurrentPlayer();
                 this.captureds.push({
                     coord: landing,
@@ -183,7 +183,7 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneRules,
     private showDirection(single: boolean): void {
         const state: AbaloneState = this.getState();
         for (const dir of HexaDirection.factory.all) {
-            const startToEnd: { start: Coord, pointed: Coord, end: Coord } = this.getArrowTraject(single, dir);
+            const startToEnd: { start: Coord, pointed: Coord, end: Coord } = this.getArrowPath(single, dir);
             let theoritical: AbaloneMove;
             if (single) {
                 theoritical = AbaloneMove.ofSingleCoord(startToEnd.start, dir);
@@ -209,7 +209,7 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneRules,
         }
     }
 
-    private getArrowTraject(single: boolean, direction: HexaDirection): { start: Coord, end: Coord, pointed: Coord } {
+    private getArrowPath(single: boolean, direction: HexaDirection): { start: Coord, end: Coord, pointed: Coord } {
         let start: Coord = this.selecteds[0];
         let end: Coord = this.selecteds[this.selecteds.length - 1];
         if (single === false &&

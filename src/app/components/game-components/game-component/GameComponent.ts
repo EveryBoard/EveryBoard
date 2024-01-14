@@ -52,7 +52,7 @@ export abstract class BaseGameComponent extends BaseComponent {
     // Make ArrayUtils available in game components
     public ArrayUtils: typeof ArrayUtils = ArrayUtils;
 
-    public getSVGTranslate(x: number, y: number): string {
+    public getSVGTranslation(x: number, y: number): string {
         return 'translate(' + x + ', ' + y + ')';
     }
 }

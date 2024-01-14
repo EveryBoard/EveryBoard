@@ -38,7 +38,7 @@ describe('AbaloneComponent', () => {
             testUtils.expectElementToExist('#direction_DOWN');
             testUtils.expectElementToExist('#direction_DOWN_LEFT');
 
-            // As pushing 5 pieces is not allowed
+            // As pushing 5 pieces is not allowed, direction right should not be possible
             testUtils.expectElementNotToExist('#direction_RIGHT');
         }));
 

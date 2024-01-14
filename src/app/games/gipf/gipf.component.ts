@@ -300,14 +300,11 @@ export class GipfComponent extends HexagonalGameComponent<GipfRules,
         this.moveToInitialCaptureOrPlacementPhase();
     }
 
-<<<<<<< HEAD
     public override hideLastMove(): void {
         this.arrows = [];
         this.inserted = MGPOptional.empty();
     }
 
-=======
->>>>>>> b9b581b4b1f577ed2964b5615a215eb08914707c
     public getSpaceClass(coord: Coord): string {
         if (this.captured.some((c: Coord) => c.equals(coord))) {
             return 'captured-fill';

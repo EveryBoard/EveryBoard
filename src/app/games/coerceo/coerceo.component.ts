@@ -235,20 +235,20 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
         }
     }
 
-    public getTriangleInHexTranslate(x: number, y: number): string {
-        const translate: Coord = this.getTriangleTranslateCoord(x, y);
-        const translateX: number = translate.x + 2 * Math.floor(x / 3) * this.STROKE_WIDTH;
-        let translateY: number = translate.y;
+    public getTriangleInHexTranslation(x: number, y: number): string {
+        const translation: Coord = this.getTriangleTranslationCoord(x, y);
+        const translationX: number = translation.x + 2 * Math.floor(x / 3) * this.STROKE_WIDTH;
+        let translationY: number = translation.y;
         if (Math.floor(x / 3) % 2 === 0) {
-            translateY += 2 * Math.floor(y / 2) * this.STROKE_WIDTH;
+            translationY += 2 * Math.floor(y / 2) * this.STROKE_WIDTH;
         } else {
-            translateY += 2 * Math.abs(Math.floor((y - 1) / 2)) * this.STROKE_WIDTH;
-            translateY += this.STROKE_WIDTH;
+            translationY += 2 * Math.abs(Math.floor((y - 1) / 2)) * this.STROKE_WIDTH;
+            translationY += this.STROKE_WIDTH;
         }
-        return 'translate(' + translateX + ', ' + translateY + ')';
+        return 'translate(' + translationX + ', ' + translationY + ')';
     }
 
-    public getTilesCountTranslate(player: Player): string {
+    public getTilesCountTranslation(player: Player): string {
         let x: number;
         let y: number;
         if (player === Player.ZERO) {

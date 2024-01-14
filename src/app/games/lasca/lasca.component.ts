@@ -325,10 +325,10 @@ export class LascaComponent extends ParallelogramGameComponent<LascaRules,
         }
     }
 
-    public getTranslate(x: number, y: number, z: number): string {
-        const coordTransform: Coord = this.getCoordTranslate(x, y, z, this.mode);
-        const translate: string = 'translate(' + coordTransform.x + ' ' + coordTransform.y + ')';
-        return translate;
+    public getTranslationAtXYZ(x: number, y: number, z: number): string {
+        const coordTransform: Coord = this.getCoordTranslation(x, y, z, this.mode);
+        const translation: string = 'translate(' + coordTransform.x + ' ' + coordTransform.y + ')';
+        return translation;
     }
 
     public getParallelogramPoints(): string {
@@ -383,7 +383,7 @@ export class LascaComponent extends ParallelogramGameComponent<LascaRules,
         return [x0, y0, x1, y1, x2, y2, x3, y3].join(' ');
     }
 
-    public getPieceTranslate(z: number): string {
+    public getPieceTranslation(z: number): string {
         // We want the piece to be in the center of the parallelogram, here are its coords
         const parallelogramCenter: Coord = this.getParallelogramCenter();
         const cy: number = parallelogramCenter.y;

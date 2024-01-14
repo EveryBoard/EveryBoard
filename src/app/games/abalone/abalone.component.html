@@ -6,7 +6,7 @@
     <g *ngFor="let line of hexaBoard; index as y">
         <g *ngFor="let c of line; index as x">
             <g *ngIf="isBoard(c)"
-               [attr.transform]="getHexaCenterTranslateAtXY(x, y)">
+               [attr.transform]="getHexaCenterTranslationAtXY(x, y)">
                 <polygon id="space_{{ x }}_{{ y }}"
                          (click)="onSpaceClick(x, y)"
                          [ngClass]="getSquareClasses(x, y)"
@@ -28,7 +28,7 @@
     </g>
 
     <g *ngFor="let captured of captureds"
-       [attr.transform]="getHexaCenterTranslate(captured.coord)">
+       [attr.transform]="getHexaCenterTranslation(captured.coord)">
         <polygon id="space_{{ captured.coord.x }}_{{ captured.coord.y }}"
                  [ngClass]="getSquareClasses(captured.coord.x, captured.coord.y)"
                  class="base captured-fill"
