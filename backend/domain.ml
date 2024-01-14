@@ -201,43 +201,6 @@ module Game = struct
     end
   end
 
-  type t = {
-    type_game: string [@key "typeGame"];
-    player_zero: MinimalUser.t [@key "playerZero"];
-    turn: int;
-    result: GameResult.t;
-
-    player_one: MinimalUser.t option [@key "playerOne"];
-    beginning: float option;
-    winner: MinimalUser.t option;
-    loser: MinimalUser.t option;
-    score_player_zero: int option [@key "scorePlayerZero"];
-    score_player_one: int option [@key "scorePlayerOne"];
-  }
-  [@@deriving yojson]
-
-  let initial (game_name : string) (creator : MinimalUser.t) : t = {
-    type_game = game_name;
-    player_zero = creator;
-    turn = -1;
-    result = GameResult.Unachieved;
-    player_one = None;
-    beginning = None;
-    winner = None;
-    loser = None;
-    score_player_zero = None;
-    score_player_one = None;
-  }
-
-  let rematch (game_name : string) (config_room : ConfigRoom.t) (now : float) : t =
-    let starting = Updates.Start.get config_room now in
-    let initial_game = initial game_name config_room.creator in
-    { initial_game with
-      player_zero = starting.player_zero;
-      player_one = Some starting.player_one;
-      turn = starting.turn;
-      beginning = starting.beginning }
-
   module Event = struct
     module Request = struct
       type t = {
@@ -329,4 +292,40 @@ module Game = struct
       | unknown -> Error ("unknown event type: " ^ unknown)
   end
 
+  type t = {
+    type_game: string [@key "typeGame"];
+    player_zero: MinimalUser.t [@key "playerZero"];
+    turn: int;
+    result: GameResult.t;
+
+    player_one: MinimalUser.t option [@key "playerOne"];
+    beginning: float option;
+    winner: MinimalUser.t option;
+    loser: MinimalUser.t option;
+    score_player_zero: int option [@key "scorePlayerZero"];
+    score_player_one: int option [@key "scorePlayerOne"];
+  }
+  [@@deriving yojson]
+
+  let initial (game_name : string) (creator : MinimalUser.t) : t = {
+    type_game = game_name;
+    player_zero = creator;
+    turn = -1;
+    result = GameResult.Unachieved;
+    player_one = None;
+    beginning = None;
+    winner = None;
+    loser = None;
+    score_player_zero = None;
+    score_player_one = None;
+  }
+
+  let rematch (game_name : string) (config_room : ConfigRoom.t) (now : float) : t =
+    let starting = Updates.Start.get config_room now in
+    let initial_game = initial game_name config_room.creator in
+    { initial_game with
+      player_zero = starting.player_zero;
+      player_one = Some starting.player_one;
+      turn = starting.turn;
+      beginning = starting.beginning }
 end

@@ -221,4 +221,81 @@ let tests = [
         check config_room_eq "success" expected actual
       );
   ];
+
+  "Domain.Game JSON conversion", [
+    test "should convert an unstarted game correctly" (fun () ->
+        (* Given an unstarted game *)
+        let game = Game.initial "P4" a_minimal_user in
+        let game_json = `Assoc [
+            "typeGame", `String "P4";
+            "playerZero", a_minimal_user_json;
+            "turn", `Int (-1);
+            "result", `Int 5;
+            "playerOne", `Null;
+            "beginning", `Null;
+            "winner", `Null;
+            "loser", `Null;
+            "scorePlayerZero", `Null;
+            "scorePlayerOne", `Null;
+          ] in
+        (* When converting it to and from JSON *)
+        (* Then it should work *)
+        test_json_conversion (module Game) game game_json
+      );
+
+    test "should convert a started game correctly" (fun () ->
+        (* Given an started game *)
+        let game = {
+          (Game.initial "P4" a_minimal_user) with
+          player_one = Some another_minimal_user;
+          turn = 0;
+          beginning = Some 42.;
+        } in
+        let game_json = `Assoc [
+            "typeGame", `String "P4";
+            "playerZero", a_minimal_user_json;
+            "turn", `Int 0;
+            "result", `Int 5;
+            "playerOne", another_minimal_user_json;
+            "beginning", `Float 42.;
+            "winner", `Null;
+            "loser", `Null;
+            "scorePlayerZero", `Null;
+            "scorePlayerOne", `Null;
+          ] in
+        (* When converting it to and from JSON *)
+        (* Then it should work *)
+        test_json_conversion (module Game) game game_json
+      );
+
+    test "should convert a finished game (with scores) correctly" (fun () ->
+        (* Given an finished game *)
+        let game = {
+          (Game.initial "P4" a_minimal_user) with
+          player_one = Some another_minimal_user;
+          turn = 8;
+          result = Game.GameResult.Victory;
+          beginning = Some 42.;
+          winner = Some a_minimal_user;
+          loser = Some another_minimal_user;
+          score_player_zero = Some 12;
+          score_player_one = Some 11;
+        } in
+        let game_json = `Assoc [
+            "typeGame", `String "P4";
+            "playerZero", a_minimal_user_json;
+            "turn", `Int 8;
+            "result", `Int 3;
+            "playerOne", another_minimal_user_json;
+            "beginning", `Float 42.;
+            "winner", a_minimal_user_json;
+            "loser", another_minimal_user_json;
+            "scorePlayerZero", `Int 12;
+            "scorePlayerOne", `Int 11;
+          ] in
+        (* When converting it to and from JSON *)
+        (* Then it should work *)
+        test_json_conversion (module Game) game game_json
+      );
+  ];
 ]
