@@ -20,7 +20,7 @@ describe('AbaloneMoveGenerator', () => {
         moveGenerator = new AbaloneMoveGenerator();
     });
 
-    it('should propose all non-suicidal moved at first turn, there is 42', () => {
+    it('should propose all non-suicidal moved at first turn', () => {
         // Given initial node
         const initialState: AbaloneState = AbaloneRules.get().getInitialState();
         const initialNode: AbaloneNode = new AbaloneNode(initialState);

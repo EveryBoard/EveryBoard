@@ -154,7 +154,7 @@ describe('ChatComponent', () => {
 
             // Then the scroll value did not change
             expect(chatDiv.nativeElement.scrollTop).toBe(SCROLL);
-            // and the indicator shows t hat there is a new message
+            // and the indicator shows that there is a new message
             const indicator: DebugElement = testUtils.findElement('#scrollToBottomIndicator');
             expect(indicator.nativeElement.innerHTML).toEqual('1 new message ↓');
         }));

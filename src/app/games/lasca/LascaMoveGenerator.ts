@@ -1,4 +1,4 @@
-import { MoveGenerator } from 'src/app/jscaip/AI';
+import { MoveGenerator } from 'src/app/jscaip/AI/AI';
 import { LascaMove } from './LascaMove';
 import { LascaNode, LascaRules } from './LascaRules';
 import { LascaState } from './LascaState';

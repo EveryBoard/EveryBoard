@@ -4,7 +4,6 @@ import { EncoderTestUtils } from 'src/app/utils/tests/Encoder.spec';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { ConspirateursFailure } from '../ConspirateursFailure';
 import { ConspirateursMove, ConspirateursMoveDrop, ConspirateursMoveJump, ConspirateursMoveSimple } from '../ConspirateursMove';
-import { TestUtils } from 'src/app/utils/tests/TestUtils.spec';
 
 describe('ConspirateursMove', () => {
     function drop(target: Coord): ConspirateursMoveDrop {
@@ -37,12 +36,6 @@ describe('ConspirateursMove', () => {
             expect(ConspirateursMove.isJump(move)).toBeFalse();
         });
 
-        it('should forbid creating a drop out of the board', () => {
-            TestUtils.expectToThrowAndLog(() => {
-                ConspirateursMoveDrop.of(new Coord(-1, -1));
-            }, 'Move out of board');
-        });
-
     });
 
     describe('simple', () => {
@@ -68,22 +61,6 @@ describe('ConspirateursMove', () => {
             expect(ConspirateursMove.isDrop(move)).toBeFalse();
             expect(ConspirateursMove.isSimple(move)).toBeTrue();
             expect(ConspirateursMove.isJump(move)).toBeFalse();
-        });
-
-        it('should forbid creating a simple move starting out of the board', () => {
-            function createMoveStartingOutOfRange(): void {
-                ConspirateursMoveSimple.from(new Coord(-1, 0), new Coord(0, 0));
-            }
-            const error: string = 'Move out of board';
-            TestUtils.expectToThrowAndLog(createMoveStartingOutOfRange, error);
-        });
-
-        it('should forbid creating a simple move ending out of the board', () => {
-            function createMoveEndingOutOfRange(): void {
-                ConspirateursMoveSimple.from(new Coord(0, 0), new Coord(-1, 0));
-            }
-            const error: string = 'Move out of board';
-            TestUtils.expectToThrowAndLog(createMoveEndingOutOfRange, error);
         });
 
         it('should forbid creating a move that has a distance of more than one', () => {
@@ -131,10 +108,6 @@ describe('ConspirateursMove', () => {
 
         it('should forbid creating a jump with an invalid direction', () => {
             expect(ConspirateursMoveJump.from([new Coord(1, 1), new Coord(3, 5)]).isFailure()).toBeTrue();
-        });
-
-        it('should forbid creating a jump out of the board', () => {
-            expect(ConspirateursMoveJump.from([new Coord(1, 1), new Coord(-1, 1)]).isFailure()).toBeTrue();
         });
 
     });

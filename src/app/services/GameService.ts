@@ -1,9 +1,8 @@
 import { Injectable } from '@angular/core';
 import { PartDAO } from '../dao/PartDAO';
 import { Part } from '../domain/Part';
-import { ConfigRoomService } from './ConfigRoomService';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
-import { Debug, JSONValue } from 'src/app/utils/utils';
+import { Debug } from 'src/app/utils/utils';
 import { MGPOptional } from '../utils/MGPOptional';
 import { Subscription } from 'rxjs';
 import { MinimalUser } from '../domain/MinimalUser';
@@ -38,9 +37,6 @@ export class GameService {
             return MGPValidation.SUCCESS;
         }
     }
-    // private createChat(chatId: string): Promise<void> {
-    //     return this.chatService.createNewChat(chatId);
-    // }
     public createPartConfigRoomAndChat(gameName: string): Promise<string> {
         return this.backendService.createGame(gameName);
     }

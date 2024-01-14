@@ -13,8 +13,8 @@ import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { assert } from 'src/app/utils/assert';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
-import { MCTS } from 'src/app/jscaip/MCTS';
-import { Minimax } from 'src/app/jscaip/Minimax';
+import { MCTS } from 'src/app/jscaip/AI/MCTS';
+import { Minimax } from 'src/app/jscaip/AI/Minimax';
 import { DvonnScoreHeuristic } from './DvonnScoreHeuristic';
 import { DvonnOrderedMoveGenerator } from './DvonnOrderedMoveGenerator';
 import { DvonnMaxStacksHeuristic } from './DvonnMaxStacksHeuristic';
@@ -51,9 +51,11 @@ export class DvonnComponent extends HexagonalGameComponent<DvonnRules, DvonnMove
         this.state = this.getState();
         this.hexaBoard = this.getState().board;
     }
+
     public override hideLastMove(): void {
         this.lastMove = MGPOptional.empty();
     }
+
     public async updateBoard(_triggerAnimation: boolean): Promise<void> {
         this.cancelMoveAttempt();
         this.state = this.getState();
@@ -62,6 +64,7 @@ export class DvonnComponent extends HexagonalGameComponent<DvonnRules, DvonnMove
         this.canPass = this.rules.canOnlyPass(this.state);
         this.scores = MGPOptional.of(DvonnRules.getScores(this.state));
     }
+
     public override async showLastMove(move: DvonnMove): Promise<void> {
         this.lastMove = MGPOptional.of(move);
         const previousState: DvonnState = this.getPreviousState();
@@ -83,13 +86,16 @@ export class DvonnComponent extends HexagonalGameComponent<DvonnRules, DvonnMove
             }
         }
     }
+
     public override cancelMoveAttempt(): void {
         this.chosen = MGPOptional.empty();
     }
+
     public override async pass(): Promise<MGPValidation> {
         assert(this.canPass, 'DvonnComponent: pass() can only be called if canPass is true');
         return await this.chooseMove(DvonnMove.PASS);
     }
+
     public async onClick(x: number, y: number): Promise<MGPValidation> {
         const clickValidity: MGPValidation = await this.canUserPlay('#click_' + x + '_' + y);
         if (clickValidity.isFailure()) {
@@ -105,6 +111,7 @@ export class DvonnComponent extends HexagonalGameComponent<DvonnRules, DvonnMove
             return await this.chooseDestination(x, y);
         }
     }
+
     public async choosePiece(x: number, y: number): Promise<MGPValidation> {
         const coord: Coord = new Coord(x, y);
         const legal: MGPValidation = this.rules.isMovablePiece(this.getState(), coord);
@@ -115,6 +122,7 @@ export class DvonnComponent extends HexagonalGameComponent<DvonnRules, DvonnMove
             return this.cancelMove(legal.getReason());
         }
     }
+
     private async chooseDestination(x: number, y: number): Promise<MGPValidation> {
         const state: DvonnState = this.getState();
         const chosenPiece: Coord = this.chosen.get();
@@ -137,6 +145,7 @@ export class DvonnComponent extends HexagonalGameComponent<DvonnRules, DvonnMove
             }
         }
     }
+
     public getPieceClasses(stack: DvonnPieceStack): string[] {
         if (stack.containsSource() && stack.getSize() === 1) {
             return ['nonplayer-fill', 'dashed-stroke'];
@@ -147,4 +156,5 @@ export class DvonnComponent extends HexagonalGameComponent<DvonnRules, DvonnMove
         }
         return [playerColor];
     }
+
 }

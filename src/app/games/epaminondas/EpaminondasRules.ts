@@ -1,6 +1,6 @@
 import { MGPValidation } from 'src/app/utils/MGPValidation';
+import { GameNode } from 'src/app/jscaip/AI/GameNode';
 import { Coord, CoordFailure } from 'src/app/jscaip/Coord';
-import { GameNode } from 'src/app/jscaip/GameNode';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { ConfigurableRules } from 'src/app/jscaip/Rules';
 import { EpaminondasMove } from './EpaminondasMove';

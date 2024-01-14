@@ -5,8 +5,8 @@ import { SixState } from '../SixState';
 import { SixMove } from '../SixMove';
 import { SixLegalityInformation, SixNode, SixRules } from '../SixRules';
 import { Table } from 'src/app/utils/ArrayUtils';
-import { Minimax } from 'src/app/jscaip/Minimax';
-import { AIDepthLimitOptions } from 'src/app/jscaip/AI';
+import { Minimax } from 'src/app/jscaip/AI/Minimax';
+import { AIDepthLimitOptions } from 'src/app/jscaip/AI/AI';
 import { SixMinimax } from '../SixMinimax';
 import { EmptyRulesConfig, NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 

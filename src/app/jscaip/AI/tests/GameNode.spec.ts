@@ -1,12 +1,12 @@
 /* eslint-disable max-lines-per-function */
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
-import { GameState } from '../GameState';
-import { GameStatus } from '../GameStatus';
+import { GameState } from '../../GameState';
+import { GameStatus } from '../../GameStatus';
 import { GameNode } from '../GameNode';
-import { Move } from '../Move';
-import { Rules } from '../Rules';
-import { NoConfig } from '../RulesConfigUtil';
+import { Move } from '../../Move';
+import { Rules } from '../../Rules';
+import { NoConfig } from '../../RulesConfigUtil';
 
 class GameStateMock extends GameState {
 

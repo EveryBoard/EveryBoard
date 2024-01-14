@@ -1,9 +1,8 @@
 /* eslint-disable max-lines-per-function */
-import { BoardValue } from 'src/app/jscaip/BoardValue';
 import { HiveHeuristic } from '../HiveHeuristic';
 import { HiveNode, HiveRules } from '../HiveRules';
 import { HiveState } from '../HiveState';
-import { HeuristicUtils } from 'src/app/jscaip/tests/HeuristicUtils.spec';
+import { HeuristicUtils } from 'src/app/jscaip/AI/tests/HeuristicUtils.spec';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { Player } from 'src/app/jscaip/Player';
 import { HivePiece } from '../HivePiece';
@@ -28,10 +27,10 @@ describe('HiveHeuristic', () => {
         const node: HiveNode = new HiveNode(state);
 
         // When computing its value
-        const boardValue: BoardValue = heuristic.getBoardValue(node, defaultConfig);
+        const boardValue: readonly number[] = heuristic.getBoardValue(node, defaultConfig).metrics;
 
         // Then it should be zero
-        expect(boardValue.value).toEqual(0);
+        expect(boardValue).toEqual([0]);
     });
 
     it('should prefer when queen bee has a higher mobility', () => {

@@ -880,8 +880,11 @@
       <trans-unit id="6535908388530528403" datatype="html">
         <source>Wrong choice, your opponent will win in the next turn no matter which piece is dropped!</source>
       </trans-unit>
-      <trans-unit id="8400174784913655582" datatype="html">
-        <source>Minimax</source>
+      <trans-unit id="6434791622277704389" datatype="html">
+        <source>Rightmost Focus</source>
+      </trans-unit>
+      <trans-unit id="6180360850656792663" datatype="html">
+        <source>Full Board</source>
       </trans-unit>
       <trans-unit id="6011590532570079359" datatype="html">
         <source>Your piece must land on one of the closest six triangles with the same color as the triangle on which the piece is.</source>
@@ -1344,6 +1347,9 @@
       <trans-unit id="2183903120219891237" datatype="html">
         <source>A phalanx cannot contain a piece of the opponent.</source>
       </trans-unit>
+      <trans-unit id="7849636659728976766" datatype="html">
+        <source>Piece &gt; Row Domination &gt; Alignement &gt; Row Presence</source>
+      </trans-unit>
       <trans-unit id="4563771339790181195" datatype="html">
         <source>Positional</source>
       </trans-unit>
@@ -1670,6 +1676,9 @@
       </trans-unit>
       <trans-unit id="6217706486990855046" datatype="html">
         <source>Failed, try again.</source>
+      </trans-unit>
+      <trans-unit id="8400174784913655582" datatype="html">
+        <source>Minimax</source>
       </trans-unit>
       <trans-unit id="4791280679911297134" datatype="html">
         <source>The queen bee can only move to one of its direct neighbors.</source>
@@ -2112,8 +2121,8 @@
       <trans-unit id="498712253814253582" datatype="html">
         <source>See, the house that you sowed has not been refilled, and the sowing immediately continued to the next house (which therefore contains two seeds).</source>
       </trans-unit>
-      <trans-unit id="3385498353856500123" datatype="html">
-        <source>After sowing, if the last seed falls in an opponent&apos;s house and if there is now two or three seeds in this house, the player captures these two or three seeds.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, do a capture!</source>
+      <trans-unit id="8492785011380422172" datatype="html">
+        <source>After sowing, if the last seed falls in an opponent&apos;s house and if there are now two or three seeds in this house, the player captures these two or three seeds.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, do a capture!</source>
       </trans-unit>
       <trans-unit id="1449179615423109818" datatype="html">
         <source>Well done! This was a simple capture, now let us see how to make multiple captures.</source>

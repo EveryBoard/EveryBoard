@@ -1,4 +1,4 @@
-import { MoveGenerator } from 'src/app/jscaip/AI';
+import { MoveGenerator } from 'src/app/jscaip/AI/AI';
 import { DiaballikMove, DiaballikBallPass, DiaballikSubMove, DiaballikTranslation, isTranslation } from './DiaballikMove';
 import { DiaballikPiece, DiaballikState } from './DiaballikState';
 import { DiaballikNode, DiaballikRules } from './DiaballikRules';
@@ -43,7 +43,7 @@ export class DiaballikMoveInConstruction implements ComparableObject {
     }
 
     public equals(other: this): boolean {
-        return ArrayUtils.compare(this.subMoves, other.subMoves);
+        return ArrayUtils.equals(this.subMoves, other.subMoves);
     }
 
     public addIfLegal(subMove: DiaballikSubMove, listToAddTo: DiaballikMoveInConstruction[]): void {

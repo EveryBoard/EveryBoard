@@ -1,4 +1,4 @@
-import { Minimax } from 'src/app/jscaip/Minimax';
+import { Minimax } from 'src/app/jscaip/AI/Minimax';
 import { SiamMoveGenerator } from './SiamMoveGenerator';
 import { SiamState } from './SiamState';
 import { SiamMove } from './SiamMove';
@@ -8,6 +8,10 @@ import { SiamConfig, SiamLegalityInformation, SiamRules } from './SiamRules';
 export class SiamMinimax extends Minimax<SiamMove, SiamState, SiamConfig, SiamLegalityInformation> {
 
     public constructor() {
-        super($localize`Minimax`, SiamRules.get(), new SiamHeuristic(), new SiamMoveGenerator());
+        super($localize`Minimax`,
+              SiamRules.get(),
+              new SiamHeuristic(),
+              new SiamMoveGenerator(),
+        );
     }
 }

@@ -10,7 +10,8 @@ import { GameEvent } from '../domain/Part';
 })
 export class GameEventService {
 
-    public constructor(private readonly partDAO: PartDAO) {}
+    public constructor(private readonly partDAO: PartDAO) {
+    }
 
     private eventsCollection(partId: string): IFirestoreDAO<GameEvent> {
         return this.partDAO.subCollectionDAO<GameEvent>(partId, 'events');

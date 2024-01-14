@@ -11,7 +11,7 @@ import { RelativePlayer } from 'src/app/jscaip/RelativePlayer';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { TaflFailure } from './TaflFailure';
 import { TaflConfig } from './TaflConfig';
-import { GameNode } from 'src/app/jscaip/GameNode';
+import { GameNode } from 'src/app/jscaip/AI/GameNode';
 import { TaflState } from './TaflState';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
@@ -86,13 +86,7 @@ export abstract class TaflRules<M extends TaflMove> extends ConfigurableRules<M,
     }
 
     public isExternalThrone(state: TaflState, coord: Coord): boolean {
-        const max: number = state.getSize() - 1;
-        if (coord.x === 0) {
-            return (coord.y === 0) || (coord.y === max);
-        } else if (coord.x === max) {
-            return (coord.y === 0) || (coord.y === max);
-        }
-        return false;
+        return state.isCorner(coord);
     }
 
     public tryCapture(player: Player, landingPawn: Coord, d: Orthogonal, state: TaflState, config: TaflConfig)

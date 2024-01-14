@@ -13,7 +13,7 @@ import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { Table, TableUtils } from 'src/app/utils/ArrayUtils';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
-import { GameNode } from 'src/app/jscaip/GameNode';
+import { GameNode } from 'src/app/jscaip/AI/GameNode';
 import { NumberConfig, RulesConfigDescription, RulesConfigDescriptionLocalizable } from 'src/app/components/wrapper-components/rules-configuration/RulesConfigDescription';
 import { MGPValidators } from 'src/app/utils/MGPValidator';
 
@@ -63,7 +63,7 @@ export class SiamRules extends ConfigurableRules<SiamMove, SiamState, SiamConfig
         new RulesConfigDescription<SiamConfig>({
             name: (): string => $localize`Siam`,
             config: {
-                // minimum 3 so that there is space around the mountain
+                // minimum 3 so that there are spaces around the mountain
                 width: new NumberConfig(5, RulesConfigDescriptionLocalizable.WIDTH, MGPValidators.range(3, 99)),
                 height: new NumberConfig(5, RulesConfigDescriptionLocalizable.HEIGHT, MGPValidators.range(3, 99)),
                 numberOfPiece: new NumberConfig(5, () => $localize`Number of piece by player`, MGPValidators.range(1, 99)),

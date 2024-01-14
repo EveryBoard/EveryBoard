@@ -1,4 +1,4 @@
-import { Minimax } from 'src/app/jscaip/Minimax';
+import { Minimax } from 'src/app/jscaip/AI/Minimax';
 import { EpaminondasMove } from './EpaminondasMove';
 import { EpaminondasState } from './EpaminondasState';
 import { EpaminondasConfig, EpaminondasLegalityInformation, EpaminondasRules } from './EpaminondasRules';
@@ -13,6 +13,7 @@ export class EpaminondasPositionalMinimax
         super($localize`Positional`,
               EpaminondasRules.get(),
               new EpaminondasPositionalHeuristic(),
-              new EpaminondasPhalanxSizeAndFilterMoveGenerator());
+              new EpaminondasPhalanxSizeAndFilterMoveGenerator(),
+        );
     }
 }

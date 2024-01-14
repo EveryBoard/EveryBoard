@@ -585,7 +585,7 @@ describe('SiamRules', () => {
 
     describe('Custom Config Rules', () => {
 
-        it('should allow inserting a 6th piece when config announce there is as much pieces', () => {
+        it('should allow inserting a 6th piece when config announce there are as much pieces', () => {
             // Given a state with a higher number of piece
             const customConfig: MGPOptional<SiamConfig> = MGPOptional.of({
                 ...defaultConfig.get(),

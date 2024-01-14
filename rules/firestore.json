@@ -158,13 +158,13 @@ service cloud.firestore {
         }
         function playerAddsEvent(part, event) {
             return userIsVerified() &&
-                   ((event.player == 0 && userIsPlayerZero(part)) ||
-                    (event.player == 1 && userIsPlayerOne(part)));
+                   (event.user.id == request.auth.uid) &&
+                   (eventUserIsPlayerZero(event, part) || eventUserIsPlayerOne(event, part));
         }
         function validEvent(event) {
             return hasField(event, 'eventType') &&
                    hasField(event, 'time') &&
-                   hasField(event, 'player');
+                   hasField(event, 'user');
         }
         function validAction(part, event) {
             let gameJustStarted = part.turn == 0;
@@ -199,10 +199,11 @@ service cloud.firestore {
             // Move addition is performed before updating the part turn
             // This way, if move addition fails, the part isn't corrupt
             let part = get(/databases/$(database)/documents/parts/$(partId)).data;
-            let isPlayerTurn = part.turn % 2 == moveEvent.player;
+            let isPlayerTurn = ((part.turn % 2 == 0) && eventUserIsPlayerZero(moveEvent, part)) ||
+                               ((part.turn % 2 == 1) && eventUserIsPlayerOne(moveEvent, part));
             return validEvent(moveEvent) && moveEvent.eventType == 'Move' &&
+                   moveEvent.user.id == request.auth.uid &&
                    hasField(moveEvent, 'move') &&
-                   playerAddsEvent(part, moveEvent) &&
                    isPlayerTurn;
         }
         function setsWinnerIfVictory(part, update) {
@@ -276,8 +277,14 @@ service cloud.firestore {
         function userIsPlayerZero(part) {
             return part.playerZero.id == request.auth.uid;
         }
+        function eventUserIsPlayerZero(event, part) {
+            return userIsPlayerZero(part) && event.user.id == part.playerZero.id;
+        }
         function userIsPlayerOne(part) {
             return hasField(part, 'playerOne') && part.playerOne.id == request.auth.uid;
+        }
+        function eventUserIsPlayerOne(event, part) {
+            return userIsPlayerOne(part) && event.user.id == part.playerOne.id;
         }
         function safeTurnIncrease(oldTurn, newTurn) {
             return newTurn == oldTurn + 1;
