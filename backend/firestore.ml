@@ -83,7 +83,7 @@ module Make (FirestorePrimitives : FirestorePrimitives.FIRESTORE_PRIMITIVES) : F
   let get_or_fail (maybe_value : ('a, 'b) result)  : 'a =
     match maybe_value with
     | Result.Ok value -> value
-    | Result.Error _ -> raise (Error "invalid")
+    | Result.Error e -> raise (Error ("Error when doing firestore operation: " ^ e))
 
   let get (request : Dream.request) (path : string) (of_yojson : JSON.t -> ('a, 'b) result) : 'a Lwt.t =
     try

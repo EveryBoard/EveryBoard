@@ -3,6 +3,7 @@ let () =
   Mirage_crypto_rng_lwt.initialize (module Mirage_crypto_rng.Fortuna);
   Backend.Options.emulator := false;
   Lwt_main.run @@ Alcotest_lwt.run "unit tests" @@ List.concat [
+    UtilsTests.tests;
     DomainTests.tests;
     (* TODO: ExternalTests.tests *)
     StatsTests.tests;
