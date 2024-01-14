@@ -96,13 +96,11 @@ module Make (External : External.EXTERNAL) : JWT = struct
       In case of success, the uid ("sub" field) is returned. *)
   let verify_and_get_uid (token : t) (project_id : string) (certificates : (string * X509.Certificate.t) list) : string =
     let check (field : string) (cond : unit -> bool) : unit =
-      Dream.log "checking field %s" field;
       if cond () then () else raise (Error (Printf.sprintf "Token verification failed, field %s is invalid" field)) in
     let now = External.now () in
     let open JSON.Util in
     let number (json : JSON.t) (field : string) : float = to_number (member field json) in
     let str (json : JSON.t) (field : string) : string = to_string (member field json) in
-    Dream.log "token is %s %s" (JSON.to_string token.header) (JSON.to_string token.payload);
     (* algorithm must be RS256 *)
     check "alg" (fun () ->
         if !Options.emulator then

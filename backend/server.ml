@@ -16,7 +16,7 @@ let api = [
 
 let start () =
   Mirage_crypto_rng_lwt.initialize (module Mirage_crypto_rng.Fortuna); (* Required for token refresher and JWT *)
-  Dream.initialize_log ~level:`Debug ();
+  Dream.initialize_log ~level:`Info ();
   Dream.run ~interface:!Options.address ~port:!Options.port
   @@ Dream.logger
   @@ Cors.middleware

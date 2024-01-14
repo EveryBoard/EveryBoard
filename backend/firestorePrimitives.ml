@@ -32,14 +32,18 @@ module Make
     (TokenRefresher : TokenRefresher.TOKEN_REFRESHER)
     (Stats : Stats.STATS)
   : FIRESTORE_PRIMITIVES = struct
+
+  let logger = Dream.sub_log "firestore"
+
   let is_error (response : Cohttp.Response.t) =
     Cohttp.Code.is_error (Cohttp.Code.code_of_status response.status)
 
   let get_doc (request : Dream.request) (path : string) : JSON.t Lwt.t =
     Stats.read request;
+    logger.info (fun log -> log ~request "Getting %s" path);
     let* headers = TokenRefresher.header request in
     let* (response, body) = External.Http.get (endpoint path) headers in
-    Printf.printf "%d\n" (Cohttp.Code.code_of_status (Cohttp.Response.status response));
+    logger.debug (fun log -> log ~request "Response: %s" body);
     if is_error response
     then raise (Error ("can't retrieve doc with path " ^ path))
     else Lwt.return (of_firestore (JSON.from_string body))
@@ -52,6 +56,7 @@ module Make
 
   let create_doc (request : Dream.request) (collection : string) ?(id : string option) (doc : JSON.t) : string Lwt.t =
     Stats.write request;
+    logger.info (fun log -> log ~request "Creating %s with id %s" collection (Option.value ~default:"unset" id));
     let* headers = TokenRefresher.header request in
     let path = match id with
       | Some id -> collection ^ "/" ^ id
@@ -64,22 +69,31 @@ module Make
         External.Http.patch_json endpoint headers firestore_doc
       else
         External.Http.post_json endpoint headers firestore_doc in
+    logger.debug (fun log -> log ~request "Response: %s" body);
     if is_error response
     then raise (Error "can't create doc")
     else Lwt.return (get_id_from_firestore_document_name (JSON.from_string body))
 
   let update_doc (request : Dream.request) (path : string) (update : JSON.t) : unit Lwt.t =
     Stats.write request;
+    logger.info (fun log -> log ~request "Updating %s with %s" path (JSON.to_string update));
     let* headers = TokenRefresher.header request in
+    let fields = match update with
+      | `Assoc key_values -> List.map fst key_values
+      | _ -> raise (Error "invalid update: should be a Assoc") in
+    (* We want only to update what we provide, and we don't care about the response so we provide an empty mask *)
+    let params = ("mask", "_") :: List.map (fun field -> ("updateMask", field)) fields in
     let firestore_update = to_firestore update in
-    let endpoint = endpoint path in
-    let* (response, _) = External.Http.patch_json endpoint headers firestore_update in
+    let endpoint = endpoint ~params path in
+    let* (response, body) = External.Http.patch_json endpoint headers firestore_update in
+    logger.debug (fun log -> log ~request "Response: %s" body);
     if is_error response
     then raise (Error "can't update doc")
     else Lwt.return ()
 
   let delete_doc (request : Dream.request) (path : string) : unit Lwt.t =
     Stats.write request;
+    logger.info (fun log -> log ~request "Deleting %s" path);
     let* headers = TokenRefresher.header request in
     let* response = External.Http.delete (endpoint path) headers in
     if is_error response
@@ -87,9 +101,11 @@ module Make
     else Lwt.return ()
 
   let begin_transaction (request : Dream.request) : string Lwt.t =
+    logger.info (fun log -> log ~request "Beginning transaction");
     let* headers = TokenRefresher.header request in
     let endpoint = endpoint ~last_separator:":" "beginTransaction" in
     let* (response, body) = External.Http.post_json endpoint headers (`Assoc []) in
+    logger.debug (fun log -> log ~request "Response: %s" body);
     if is_error response
     then raise (Error "can't begin transaction")
     else
@@ -100,19 +116,23 @@ module Make
       |> Lwt.return
 
   let commit (request : Dream.request) (transaction_id : string) : unit Lwt.t =
+    logger.info (fun log -> log ~request "Committing transaction");
     let* headers = TokenRefresher.header request in
     let endpoint = endpoint ~last_separator:":" "commit" in
     let json = `Assoc [("transaction", `String transaction_id)] in
-    let* (response, _) = External.Http.post_json endpoint headers json in
+    let* (response, body) = External.Http.post_json endpoint headers json in
+    logger.debug (fun log -> log ~request "Response: %s" body);
     if is_error response
     then raise (Error "can't commit transaction")
     else Lwt.return ()
 
   let rollback (request : Dream.request) (transaction_id : string) : unit Lwt.t =
+    logger.info (fun log -> log ~request "Committing transaction");
     let* headers = TokenRefresher.header request in
     let endpoint = endpoint ~last_separator:":" "rollback" in
     let json = `Assoc [("transaction", `String transaction_id)] in
-    let* (response, _) = External.Http.post_json endpoint headers json in
+    let* (response, body) = External.Http.post_json endpoint headers json in
+    logger.info (fun log -> log ~request "Response: %s" body);
     if is_error response
     then raise (Error "can't rollback transaction")
     else Lwt.return ()
