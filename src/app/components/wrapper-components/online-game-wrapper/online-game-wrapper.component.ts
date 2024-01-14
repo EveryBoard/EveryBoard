@@ -460,7 +460,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
                 return this.notifyVictory(winner, scores);
             }
         } else {
-            return this.gameService.updatePartUponMove(this.currentPartId, scores);
+            return this.gameService.endTurn(this.currentPartId, scores);
         }
     }
 

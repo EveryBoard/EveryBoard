@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { PartDAO } from '../dao/PartDAO';
 import { Part } from '../domain/Part';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
-import { Debug } from 'src/app/utils/utils';
+import { Debug, JSONValue } from 'src/app/utils/utils';
 import { MGPOptional } from '../utils/MGPOptional';
 import { Subscription } from 'rxjs';
 import { MinimalUser } from '../domain/MinimalUser';
@@ -91,8 +91,7 @@ export class GameService {
     public async addTurnTime(gameId: string): Promise<void> {
         return this.backendService.addTurnTime(gameId);
     }
-    public async updatePart(gameId: string, scores: MGPOptional<readonly [number, number]>): Promise<void> {
-        // TODO: rename appropriately
+    public async endTurn(gameId: string, scores: MGPOptional<readonly [number, number]>): Promise<void> {
         return this.backendService.endTurn(gameId, scores);
     }
     public async drawPart(gameId: string, scores: MGPOptional<readonly [number, number]>): Promise<void> {
