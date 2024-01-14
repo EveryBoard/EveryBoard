@@ -203,22 +203,29 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         tick(0);
         return result;
     }
+    function userFromPlayer(player: Player): MinimalUser {
+        if (player === Player.ZERO) {
+            return UserMocks.CREATOR_MINIMAL_USER;
+        } else {
+            return UserMocks.OPPONENT_MINIMAL_USER;
+        }
+    }
     async function receiveRequest(player: Player, request: RequestType): Promise<void> {
         // As we are mocking the DAO, we can directly add the request ourselves
         // In practice, we should receive this from the other player.
-        await gameEventService.addRequest('configRoomId', player, request);
+        await gameEventService.addRequest('configRoomId', userFromPlayer(player), request);
         testUtils.detectChanges();
     }
     async function receiveReply(player: Player, reply: Reply, request: RequestType, data?: JSONValue): Promise<void> {
         // As we are mocking the DAO, we can directly add the reply ourselves
         // In practice, we should receive this from the other player.
-        await gameEventService.addReply('configRoomId', player, reply, request, data);
+        await gameEventService.addReply('configRoomId', userFromPlayer(player), reply, request, data);
         testUtils.detectChanges();
     }
     async function receiveAction(player: Player, action: Action): Promise<void> {
         // As we are mocking the DAO, we can directly add the action ourselves
         // In practice, we should receive this from the other player.
-        await gameEventService.addAction('configRoomId', player, action);
+        await gameEventService.addAction('configRoomId', userFromPlayer(player), action);
         testUtils.detectChanges();
     }
     async function receivePartDAOUpdate(update: Partial<Part>, detectChanges: boolean = true): Promise<void> {
@@ -248,10 +255,9 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         const update: Partial<Part> = {
             turn: initialTurn + newMoves.length,
         };
-        const gameService: GameService = TestBed.inject(GameService);
         let currentPlayer: Player = Player.of(initialTurn % 2);
         for (const move of newMoves) {
-            await gameService.addMove('configRoomId', currentPlayer, move);
+            await gameEventService.addMove('configRoomId', userFromPlayer(currentPlayer), move);
             currentPlayer = currentPlayer.getOpponent();
         }
         return await receivePartDAOUpdate(update, detectChanges);
@@ -343,7 +349,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
 
     it('should be able to prepare a started game for creator', fakeAsync(async() => {
         await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER, PreparationOptions.withoutClocks);
-        expect(Utils.getNonNullable(wrapper.currentPlayer).name).toEqual('creator');
+        expect(Utils.getNonNullable(wrapper.currentUser).name).toEqual('creator');
     }));
 
     it('should no longer have PartCreationComponent and QuartoComponent instead', fakeAsync(async() => {
@@ -570,7 +576,8 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             turn: 1,
         };
         expect(partDAO.update).toHaveBeenCalledOnceWith('configRoomId', expectedUpdate);
-        expect(gameEventService.addMove).toHaveBeenCalledOnceWith('configRoomId', Player.ZERO, FIRST_MOVE_ENCODED);
+        expect(gameEventService.addMove)
+            .toHaveBeenCalledOnceWith('configRoomId', userFromPlayer(Player.ZERO), FIRST_MOVE_ENCODED);
         tick(wrapper.configRoom.maximalMoveDuration * 1000);
     }));
 
@@ -792,7 +799,8 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 await askTakeBack();
 
                 // Then a request should be sent
-                expect(gameEventService.addRequest).toHaveBeenCalledOnceWith('configRoomId', Player.ZERO, 'TakeBack');
+                expect(gameEventService.addRequest)
+                    .toHaveBeenCalledOnceWith('configRoomId', userFromPlayer(Player.ZERO), 'TakeBack');
                 tick(wrapper.configRoom.maximalMoveDuration * 1000);
             }));
             it('should not allow to propose take back after it has been proposed', fakeAsync(async() => {
@@ -857,7 +865,8 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
 
                 // Then a TakeBack rejection reply should have been sent
                 testUtils.expectElementNotToExist('#refuseTakeBack');
-                expect(gameEventService.addReply).toHaveBeenCalledOnceWith('configRoomId', Player.ZERO, 'Reject', 'TakeBack');
+                expect(gameEventService.addReply)
+                    .toHaveBeenCalledOnceWith('configRoomId', userFromPlayer(Player.ZERO), 'Reject', 'TakeBack');
 
                 tick(wrapper.configRoom.maximalMoveDuration * 1000);
             }));
@@ -887,7 +896,8 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 await doMove(THIRD_MOVE, true);
 
                 // Then the move should be sent
-                expect(gameEventService.addMove).toHaveBeenCalledWith('configRoomId', Player.ZERO, THIRD_MOVE_ENCODED);
+                expect(gameEventService.addMove)
+                    .toHaveBeenCalledWith('configRoomId', userFromPlayer(Player.ZERO), THIRD_MOVE_ENCODED);
                 tick(wrapper.configRoom.maximalMoveDuration * 1000);
             }));
             it('should forbid player to ask take back again after refusal', fakeAsync(async() => {
@@ -1017,7 +1027,8 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
 
                 // Then partDAO should be updated, and move should be sent
                 expect(partDAO.update).toHaveBeenCalledOnceWith('configRoomId', { turn: 1 });
-                expect(gameEventService.addMove).toHaveBeenCalledOnceWith('configRoomId', Player.ZERO, alternativeMoveEncoded);
+                expect(gameEventService.addMove)
+                    .toHaveBeenCalledOnceWith('configRoomId', userFromPlayer(Player.ZERO), alternativeMoveEncoded);
                 tick(wrapper.configRoom.maximalMoveDuration * 1000);
             }));
         });
@@ -1069,7 +1080,8 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
 
                 // Then partDAO should be updated, and move should be sent
                 expect(partDAO.update).toHaveBeenCalledOnceWith('configRoomId', { turn: 1 });
-                expect(gameEventService.addMove).toHaveBeenCalledOnceWith('configRoomId', Player.ZERO, alternativeMoveEncoded);
+                expect(gameEventService.addMove)
+                    .toHaveBeenCalledOnceWith('configRoomId', userFromPlayer(Player.ZERO), alternativeMoveEncoded);
                 tick(wrapper.configRoom.maximalMoveDuration * 1000);
             }));
         });
@@ -1100,7 +1112,8 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             await testUtils.clickElement('#proposeDraw');
 
             // Then a draw request should have been sent
-            expect(gameEventService.addRequest).toHaveBeenCalledOnceWith('configRoomId', Player.ZERO, 'Draw');
+            expect(gameEventService.addRequest)
+                .toHaveBeenCalledOnceWith('configRoomId', userFromPlayer(Player.ZERO), 'Draw');
             tick(wrapper.configRoom.maximalMoveDuration * 1000);
         }));
 
@@ -1212,7 +1225,8 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             spyOn(gameEventService, 'addReply').and.callThrough();
 
             await testUtils.clickElement('#reject');
-            expect(gameEventService.addReply).toHaveBeenCalledOnceWith('configRoomId', Player.ZERO, 'Reject', 'Draw');
+            expect(gameEventService.addReply)
+                .toHaveBeenCalledOnceWith('configRoomId', userFromPlayer(Player.ZERO), 'Reject', 'Draw');
 
             tick(wrapper.configRoom.maximalMoveDuration * 1000);
         }));
@@ -1320,7 +1334,8 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 await wrapper.addTurnTime();
 
                 // Then an add turn time action is generated
-                expect(gameEventService.addAction).toHaveBeenCalledOnceWith('configRoomId', Player.ZERO, 'AddTurnTime');
+                expect(gameEventService.addAction)
+                    .toHaveBeenCalledOnceWith('configRoomId', userFromPlayer(Player.ZERO), 'AddTurnTime');
                 waitTimeout();
             }));
             it('should resume both clocks at once when adding turn time', fakeAsync(async() => {
@@ -1375,7 +1390,8 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 await wrapper.addGlobalTime();
 
                 // Then a request to add global time to player one should be sent
-                expect(gameEventService.addAction).toHaveBeenCalledOnceWith('configRoomId', Player.ZERO, 'AddGlobalTime');
+                expect(gameEventService.addAction)
+                    .toHaveBeenCalledOnceWith('configRoomId', userFromPlayer(Player.ZERO), 'AddGlobalTime');
                 const msUntilTimeout: number = wrapper.configRoom.maximalMoveDuration * 1000;
                 expect(wrapper.chronoOneTurn.remainingMs).toBe(msUntilTimeout); // initial 2 minutes
                 tick(msUntilTimeout);
@@ -1430,7 +1446,8 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 await wrapper.addGlobalTime();
 
                 // Then a request to add global time to player zero should be sent
-                expect(gameEventService.addAction).toHaveBeenCalledOnceWith('configRoomId', Player.ONE, 'AddGlobalTime');
+                expect(gameEventService.addAction)
+                    .toHaveBeenCalledOnceWith('configRoomId', userFromPlayer(Player.ONE), 'AddGlobalTime');
 
                 const msUntilTimeout: number = wrapper.configRoom.maximalMoveDuration * 1000;
                 tick(msUntilTimeout);
@@ -1561,7 +1578,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             await testUtils.expectInterfaceClickSuccess('#proposeRematch');
 
             // Then the gameService must be called
-            expect(gameService.proposeRematch).toHaveBeenCalledOnceWith('configRoomId', Player.ZERO);
+            expect(gameService.proposeRematch).toHaveBeenCalledOnceWith('configRoomId');
         }));
 
         it('should send reply when rejecting', fakeAsync(async() => {
@@ -1578,7 +1595,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             await testUtils.expectInterfaceClickSuccess('#reject');
 
             // Then the gameService's rejectRematch must be called
-            expect(gameService.rejectRematch).toHaveBeenCalledOnceWith('configRoomId', Player.ZERO);
+            expect(gameService.rejectRematch).toHaveBeenCalledOnceWith('configRoomId');
         }));
 
         it('should show when opponent rejected our rematch proposal', fakeAsync(async() => {
@@ -1742,7 +1759,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         it('should display that the game is a draw', fakeAsync(async() => {
             // Given a part that the two players agreed to draw
             await prepareTestUtilsFor(USER_OBSERVER, PreparationOptions.withoutClocks);
-            await gameEventService.addRequest('configRoomId', Player.ZERO, 'Draw');
+            await gameEventService.addRequest('configRoomId', userFromPlayer(Player.ZERO), 'Draw');
             await receivePartDAOUpdate({
                 result: MGPResult.AGREED_DRAW_BY_ONE.value,
             });
