@@ -126,7 +126,7 @@ module Make
       let now = External.now () in
       let accept = Domain.Game.Event.(Reply (Reply.accept user "Draw" now)) in
       let* _ = Firestore.Game.add_event request game_id accept in
-      let player = if user = game.player_zero then 0 else 1 in
+      let player = if user = game.player_zero then Domain.Player.Zero else Domain.Player.One in
       let update = Domain.Game.Updates.End.get (Domain.Game.GameResult.AgreedDrawBy player) in
       let* _ = Firestore.Game.update request game_id (Domain.Game.Updates.End.to_yojson update) in
       let game_end = Domain.Game.Event.(Action (Action.end_game user now)) in

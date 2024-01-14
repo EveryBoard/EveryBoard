@@ -1,5 +1,14 @@
 open Utils
 
+module Player = struct
+  type t = Zero | One
+  let (to_yojson, of_yojson) =
+    JSON.for_enum_int [
+      Zero, 0;
+      One, 1;
+    ]
+end
+
 module Role = struct
   type t = Player | Observer | Creator | ChosenOpponent | Candidate
   let (to_yojson, of_yojson) =
@@ -113,7 +122,7 @@ end
 
 module Game = struct
   module GameResult = struct
-    type t = HardDraw | Resign | Victory | Timeout | Unachieved | AgreedDrawBy of int (* TODO: Player instead of int *)
+    type t = HardDraw | Resign | Victory | Timeout | Unachieved | AgreedDrawBy of Player.t
 
     let (to_yojson, of_yojson) =
       JSON.for_enum_int [
@@ -122,8 +131,8 @@ module Game = struct
         Victory, 3;
         Timeout, 4;
         Unachieved, 5;
-        AgreedDrawBy 0, 6;
-        AgreedDrawBy 1, 7;
+        AgreedDrawBy Player.Zero, 6;
+        AgreedDrawBy Player.One, 7;
       ]
   end
 

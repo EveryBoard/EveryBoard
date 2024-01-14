@@ -298,4 +298,26 @@ let tests = [
         test_json_conversion (module Game) game game_json
       );
   ];
+
+  "Domain.Game.rematch", [
+    test "should inherit players from config room and start the game" (fun () ->
+        (* Given a config room *)
+        let config_room = {
+          (ConfigRoom.initial a_minimal_user) with
+          chosen_opponent = Some another_minimal_user;
+          first_player = ConfigRoom.FirstPlayer.Creator;
+        } in
+        (* When creating the rematch game *)
+        let actual = Game.rematch "P4" config_room 42. in
+        (* Then it should have updated the fields as expected *)
+        let expected = {
+          (Game.initial "P4" a_minimal_user) with
+          player_zero = a_minimal_user;
+          player_one = Some another_minimal_user;
+          beginning = Some 42.;
+          turn = 0;
+        } in
+        check game_eq "success" expected actual
+      );
+  ]
 ]
