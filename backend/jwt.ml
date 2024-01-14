@@ -47,7 +47,7 @@ module Make (External : External.EXTERNAL) : JWT = struct
   let make (iss : string) (pk : private_key) (scopes : string list) (audience : string) : t =
     let open JSON in
     let now = External.now () in
-    let exp = now +. 3600. in
+    let exp = now + 3600 in
     let header = `Assoc [
         ("alg", `String "RS256");
         ("typ", `String "JWT");
@@ -57,9 +57,10 @@ module Make (External : External.EXTERNAL) : JWT = struct
         ("iss", `String iss);
         ("scope", `String (String.concat " " scopes));
         ("aud", `String audience);
-        ("exp", `Float exp);
-        ("iat", `Float now);
+        ("exp", `Int exp);
+        ("iat", `Int now);
       ] in
+    Printf.printf "payload: %s\n" (JSON.to_string payload);
     let payload_b64 = b64 (to_string payload) in
     let header_and_payload = header_b64 ^ "." ^ payload_b64 in
     Printf.printf "%s\n" header_and_payload;
@@ -99,7 +100,7 @@ module Make (External : External.EXTERNAL) : JWT = struct
       if cond () then () else raise (Error (Printf.sprintf "Token verification failed, field %s is invalid" field)) in
     let now = External.now () in
     let open JSON.Util in
-    let number (json : JSON.t) (field : string) : float = to_number (member field json) in
+    let number (json : JSON.t) (field : string) : int = to_int (member field json) in
     let str (json : JSON.t) (field : string) : string = to_string (member field json) in
     (* algorithm must be RS256 *)
     check "alg" (fun () ->

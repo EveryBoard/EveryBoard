@@ -161,7 +161,7 @@ let tests = [
 
   "FirestorePrimitives.update_doc", [
 
-    lwt_test "should make a PATCH request on the document" (fun () ->
+    lwt_test "should make a PATCH request on the document with only the update" (fun () ->
         let request = Dream.request "/" in
         (* Given an update that we want to apply to some document *)
         let update = `Assoc [("foo", `String "bli")] in
@@ -171,7 +171,9 @@ let tests = [
         let* _ = FirestorePrimitives.update_doc request path update in
         (* Then it should have made a PATCH request on the document with the update *)
         let firestore_update = to_firestore update in
-        check (list http_query) "query" [(`PATCH, endpoint path, Some firestore_update)] !(mock.calls);
+        (* mask=_ means we don't care about the return value, updateMask=foo means we only update the foo field *)
+        let params = [("mask", "_"); ("updateMask", "foo")] in
+        check (list http_query) "query" [(`PATCH, endpoint ~params path, Some firestore_update)] !(mock.calls);
         Lwt.return ()
       );
 

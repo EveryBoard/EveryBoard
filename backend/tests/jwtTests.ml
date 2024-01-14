@@ -104,14 +104,13 @@ let signed_token = Jwt.{
       "iss", `String "foo@bar.com";
       "scope", `String "scope1 scope2";
       "aud", `String "audience";
-      "exp", `Float 1702956001.;
-      "iat", `Float 1702952401.;
+      "exp", `Int 1702956001;
+      "iat", `Int 1702952401;
     ];
-    (* signature produced by signing base64(header).base64(payload) (without padding), which is
-       eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJmb29AYmFyLmNvbSIsInNjb3BlIjoic2NvcGUxIHNjb3BlMiIsImF1ZCI6ImF1ZGllbmNlIiwiZXhwIjoxNzAyOTU2MDAxLjAsImlhdCI6MTcwMjk1MjQwMS4wfQ
+    (* signature produced by signing base64(header).base64(payload) (without padding)
        and gets signed e.g. with openssl dgst -sha256 -sign priv.pem -out out.sign headerandpayload.txt
        and then transformed to base64url with basenc -w0 --baseurl *)
-    signature = Option.get (Dream.from_base64url "MEeubOjPw4wEYFr_r1iKzq_Ta_mD9_0tiT7o1EfWlpzmZAfySQ37K8KmxOwcI0QxqGdascwNAPvKHx0wYLShnEoIPAVCyC2B5qaSm91A9K8nGJPDiTEcjeFqqVUhgzGhbQsPVavrRQpQIw4l8vCHtYbgdfMn23anLmceE-ur0bMYsWaACqrIdxsEybCKr1U79UxOmMxto1yYUB-Dj8GLV3hBui9RVXczmWLxzWq7C154TRFZ_bnvYa56GckNTgvn3hkAqnZ8YjkLFkKCjrd_XNIf5pn5h4-xdLGFeoMaa-T7E9FwhheLfrBr8YjoHqnxyZZc9fSyB1il28BXP8R49Q");
+    signature = Option.get (Dream.from_base64url "eD9JfdUZilJiJoLDy7HayU1nU-6XD1BxzDHtZRlNhxgmldIcMtWSt6RWPIsF259G9DzZAH6hBmWfKY5RqYyC0i98G6nbM443AcfyzVd8JRY-lGoz7f79k6XRHHp4Z0zutMKfW70O9ZTGKx4tQaCLW4H_9Pcc_FK-Ugv_yjc4Syn858pxPvlj7J6xC_QRn1sgQzey-2gCJNqRBGDVwsdGHdXBJcn5CfvBIauFPktImPCPajA6mhS8Z_wStEjSJ6t0BrCpTiPrCyJgAUNhhIKlTTlMR4eQ21Q5SJw_aMJ82moEbamRJsnTNnCbyuz57KoQZSp7iFI5nJZTmiaGzYa7xQ");
   }
 
 let private_key = match private_key_str |> Cstruct.of_string |> X509.Private_key.decode_pem with
@@ -122,7 +121,7 @@ let tests = [
 
   "Jwt.make", [
     test "should construct a token" (fun () ->
-        ExternalTests.Mock.current_time := 1702952401.;
+        ExternalTests.Mock.current_time := 1702952401;
         (* When constructing a token *)
         let actual = Jwt.make "foo@bar.com" private_key ["scope1"; "scope2"] "audience" in
         (* Then it should be constructed as expected *)
@@ -137,7 +136,7 @@ let tests = [
         (* When converting it to a string *)
         let actual = Jwt.to_string signed_token in
         (* Then it should provide the expected representation *)
-        let expected = "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJmb29AYmFyLmNvbSIsInNjb3BlIjoic2NvcGUxIHNjb3BlMiIsImF1ZCI6ImF1ZGllbmNlIiwiZXhwIjoxNzAyOTU2MDAxLjAsImlhdCI6MTcwMjk1MjQwMS4wfQ.MEeubOjPw4wEYFr_r1iKzq_Ta_mD9_0tiT7o1EfWlpzmZAfySQ37K8KmxOwcI0QxqGdascwNAPvKHx0wYLShnEoIPAVCyC2B5qaSm91A9K8nGJPDiTEcjeFqqVUhgzGhbQsPVavrRQpQIw4l8vCHtYbgdfMn23anLmceE-ur0bMYsWaACqrIdxsEybCKr1U79UxOmMxto1yYUB-Dj8GLV3hBui9RVXczmWLxzWq7C154TRFZ_bnvYa56GckNTgvn3hkAqnZ8YjkLFkKCjrd_XNIf5pn5h4-xdLGFeoMaa-T7E9FwhheLfrBr8YjoHqnxyZZc9fSyB1il28BXP8R49Q" in
+        let expected = "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJmb29AYmFyLmNvbSIsInNjb3BlIjoic2NvcGUxIHNjb3BlMiIsImF1ZCI6ImF1ZGllbmNlIiwiZXhwIjoxNzAyOTU2MDAxLCJpYXQiOjE3MDI5NTI0MDF9.eD9JfdUZilJiJoLDy7HayU1nU-6XD1BxzDHtZRlNhxgmldIcMtWSt6RWPIsF259G9DzZAH6hBmWfKY5RqYyC0i98G6nbM443AcfyzVd8JRY-lGoz7f79k6XRHHp4Z0zutMKfW70O9ZTGKx4tQaCLW4H_9Pcc_FK-Ugv_yjc4Syn858pxPvlj7J6xC_QRn1sgQzey-2gCJNqRBGDVwsdGHdXBJcn5CfvBIauFPktImPCPajA6mhS8Z_wStEjSJ6t0BrCpTiPrCyJgAUNhhIKlTTlMR4eQ21Q5SJw_aMJ82moEbamRJsnTNnCbyuz57KoQZSp7iFI5nJZTmiaGzYa7xQ" in
         check string "success" expected actual
       );
   ];
@@ -186,7 +185,7 @@ let tests = [
 
   "Jwt.verify_and_get_uid",
   begin
-    let now = 1702956000. in
+    let now = 1702956000 in
     ExternalTests.Mock.current_time := now;
     let replace_assoc (json : JSON.t) (field : string) (replacement : JSON.t) : JSON.t = match json with
       | `Assoc assoc ->
@@ -224,7 +223,7 @@ let tests = [
 
       test "should fail if token is expired" (fun () ->
           (* Given an expired token *)
-          let token = { identity_token with payload = replace_assoc identity_token.payload "exp" (`Float (now -. 100000.)) } in
+          let token = { identity_token with payload = replace_assoc identity_token.payload "exp" (`Int (now - 100000)) } in
           (* When verifying it *)
           (* Then it should fail *)
           check_raises "failure" (Error "Token verification failed, field exp is invalid") (fun () ->
@@ -234,7 +233,7 @@ let tests = [
 
       test "should fail if token is issued in the future" (fun () ->
           (* Given a token issued in the future *)
-          let token = { identity_token with payload = replace_assoc identity_token.payload "iat" (`Float (now +. 1000.)) } in
+          let token = { identity_token with payload = replace_assoc identity_token.payload "iat" (`Int (now + 1000)) } in
           (* When verifying it *)
           (* Then it should fail *)
           check_raises "failure" (Error "Token verification failed, field iat is invalid") (fun () ->
@@ -274,7 +273,7 @@ let tests = [
 
      test "should fail if authentication time is in the future" (fun () ->
           (* Given a token with an authentication time in the future *)
-          let token = { identity_token with payload = replace_assoc identity_token.payload "auth_time" (`Float (now +. 1000.)) } in
+          let token = { identity_token with payload = replace_assoc identity_token.payload "auth_time" (`Int (now + 1000)) } in
           (* When verifying it *)
           (* Then it should fail *)
           check_raises "failure" (Error "Token verification failed, field auth_time is invalid") (fun () ->

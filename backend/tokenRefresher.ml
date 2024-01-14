@@ -18,7 +18,7 @@ module Make (External : External.EXTERNAL) (Jwt : Jwt.JWT) : TOKEN_REFRESHER = s
 
   type token = {
     access_token : string;
-    expiration_date : float;
+    expiration_date : int;
   }
 
   type service_account = {
@@ -55,8 +55,8 @@ module Make (External : External.EXTERNAL) (Jwt : Jwt.JWT) : TOKEN_REFRESHER = s
     let* (_response, body) = External.Http.post_form endpoint params in
     let json = JSON.from_string body in
     let access_token = json |> member "access_token" |> to_string in
-    let expires_in = json |> member "expires_in" |> to_number in
-    let expiration_date = now +. expires_in in
+    let expires_in = json |> member "expires_in" |> to_int in
+    let expiration_date = now + expires_in in
     Lwt.return { access_token; expiration_date }
 
   let request_token_if_outdated (sa : service_account) (token : token) : token Lwt.t =

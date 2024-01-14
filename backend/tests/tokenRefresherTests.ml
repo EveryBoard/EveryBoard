@@ -25,7 +25,7 @@ module TokenRefresher = TokenRefresher.Make(ExternalTests.Mock)(JwtTests.Mock)
 
 let access_token : JSON.t = `Assoc [
     ("access_token", `String "some-access-token");
-    ("expires_in", `Float 42.)
+    ("expires_in", `Int 42)
   ]
 
 let access_token_str : string = JSON.to_string access_token
@@ -84,7 +84,7 @@ let tests = [
     lwt_test "should request a new token if the old one is outdated" (fun () ->
         Mirage_crypto_rng_lwt.initialize (module Mirage_crypto_rng.Fortuna);
         (* Given a middleware where a token has already been requested but is now expired *)
-        ExternalTests.Mock.current_time := 0.;
+        ExternalTests.Mock.current_time := 0;
         let middleware : Dream.middleware = TokenRefresher.middleware "test-data/service-account.json" in
         let response = response `OK in
         let body = access_token_str in (* this token expires in 42 seconds! *)
@@ -100,7 +100,7 @@ let tests = [
         let* _ = middleware handler request in
         check int "number of tokens requested" 1 !(mock.number_of_calls);
         (* When handling a new request after expiration time *)
-        ExternalTests.Mock.current_time := 100.;
+        ExternalTests.Mock.current_time := 100;
         let* _ = middleware handler request in
         (* Then it should have requested a new token *)
         check int "number of tokens requested" 2 !(mock.number_of_calls);
@@ -109,7 +109,7 @@ let tests = [
 
     lwt_test "should not request a new token if the old one is still valid" (fun () ->
         (* Given a middleware where a token has already been requested (and is not expired) *)
-        ExternalTests.Mock.current_time := 0.;
+        ExternalTests.Mock.current_time := 0;
         let middleware : Dream.middleware = TokenRefresher.middleware "test-data/service-account.json" in
         let response = response `OK in
         let body = access_token_str in (* expires in 42 seconds! *)
@@ -124,7 +124,7 @@ let tests = [
         let* _ = middleware handler request in
         check int "number of tokens requested" 1 !(mock.number_of_calls);
         (* When handling a new request before the expiration of the token *)
-        ExternalTests.Mock.current_time := 20.;
+        ExternalTests.Mock.current_time := 20;
         let* _ = middleware handler request in
         (* Then it should not have requested a new token *)
         check int "number of tokens requested" 1 !(mock.number_of_calls);

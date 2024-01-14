@@ -5,8 +5,11 @@ open TestUtils
 module type MOCK = sig
   include External.EXTERNAL
 
-  (** Override this to change the current time *)
-  val current_time : float ref
+  (** The current time returned by [now] *)
+  val current_time : int ref
+
+  (** The random boolean returned by [rand_bool] *)
+  val bool : bool ref
 
   module Http : sig
     include module type of Http
@@ -18,9 +21,13 @@ end
 
 module Mock : MOCK = struct
 
-  let current_time = ref 0.
+  let current_time = ref 0
+
+  let bool = ref true
 
   let now () = !current_time
+
+  let rand_bool () = !bool
 
   module Http = struct
     let mock = { number_of_calls = ref 0; calls = ref [] }

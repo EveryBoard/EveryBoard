@@ -233,7 +233,7 @@ let tests = [
         (* Given an event we want to create in a game *)
         let game_id = "game-id" in
         let user = Domain.User.to_minimal_user "uid" verified_user in
-        let event = Domain.Game.Event.(Request (Request.draw user 0.)) in
+        let event = Domain.Game.Event.(Request (Request.draw user 0)) in
         (* When adding the event *)
         let* _ = Firestore.Game.add_event request game_id event in
         (* Then it should have created an event document *)

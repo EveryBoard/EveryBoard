@@ -249,7 +249,7 @@ let tests = [
           (Game.initial "P4" a_minimal_user) with
           player_one = Some another_minimal_user;
           turn = 0;
-          beginning = Some 42.;
+          beginning = Some 42;
         } in
         let game_json = `Assoc [
             "typeGame", `String "P4";
@@ -257,7 +257,7 @@ let tests = [
             "turn", `Int 0;
             "result", `Int 5;
             "playerOne", another_minimal_user_json;
-            "beginning", `Float 42.;
+            "beginning", `Int 42;
             "winner", `Null;
             "loser", `Null;
             "scorePlayerZero", `Null;
@@ -275,7 +275,7 @@ let tests = [
           player_one = Some another_minimal_user;
           turn = 8;
           result = Game.GameResult.Victory;
-          beginning = Some 42.;
+          beginning = Some 42;
           winner = Some a_minimal_user;
           loser = Some another_minimal_user;
           score_player_zero = Some 12;
@@ -287,7 +287,7 @@ let tests = [
             "turn", `Int 8;
             "result", `Int 3;
             "playerOne", another_minimal_user_json;
-            "beginning", `Float 42.;
+            "beginning", `Int 42;
             "winner", a_minimal_user_json;
             "loser", another_minimal_user_json;
             "scorePlayerZero", `Int 12;
@@ -308,13 +308,13 @@ let tests = [
           first_player = ConfigRoom.FirstPlayer.Creator;
         } in
         (* When creating the rematch game *)
-        let actual = Game.rematch "P4" config_room 42. in
+        let actual = Game.rematch "P4" config_room 42 in
         (* Then it should have updated the fields as expected *)
         let expected = {
           (Game.initial "P4" a_minimal_user) with
           player_zero = a_minimal_user;
           player_one = Some another_minimal_user;
-          beginning = Some 42.;
+          beginning = Some 42;
           turn = 0;
         } in
         check game_eq "success" expected actual

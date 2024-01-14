@@ -3,8 +3,11 @@ open Utils
     This allows us to mock them in our test *)
 
 module type EXTERNAL = sig
-  (** Provide the current timestamp *)
-  val now : unit -> float
+  (** Provide the current timestamp in seconds *)
+  val now : unit -> int
+
+  (** Provide a random boolean *)
+  val rand_bool : unit -> bool
 
   module Http : sig
     (** Perform a GET request and return the response with its body *)
@@ -27,7 +30,9 @@ end
 
 module Impl : EXTERNAL = struct
 
-  let now = Unix.time
+  let now () = int_of_float (Unix.time ())
+
+  let rand_bool () = Random.bool ()
 
   module Http = struct
     let get (endpoint : Uri.t) (headers : Cohttp.Header.t) : (Cohttp.Response.t * string) Lwt.t =

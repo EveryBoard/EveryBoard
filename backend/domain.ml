@@ -142,11 +142,11 @@ module Game = struct
         player_zero: MinimalUser.t [@key "playerZero"];
         player_one: MinimalUser.t [@key "playerOne"];
         turn: int;
-        beginning: float option;
+        beginning: int option;
       }
       [@@deriving yojson]
 
-      let get (config_room : ConfigRoom.t) (now : float) : t =
+      let get (config_room : ConfigRoom.t) (now : int) : t =
         let starter = match config_room.first_player with
           | Random ->
             if Random.bool ()
@@ -214,26 +214,26 @@ module Game = struct
     module Request = struct
       type t = {
         event_type: string [@key "eventType"];
-        time: float;
+        time: int;
         user: MinimalUser.t;
         request_type: string [@key "requestType"];
       }
       [@@deriving yojson]
 
-      let make (user : MinimalUser.t) (request_type : string) (now : float) : t =
+      let make (user : MinimalUser.t) (request_type : string) (now : int) : t =
         { event_type = "Request"; time = now; user; request_type }
-      let draw (user : MinimalUser.t) (now : float) : t =
+      let draw (user : MinimalUser.t) (now : int) : t =
         make user "Draw" now
-      let rematch (user : MinimalUser.t) (now : float) : t =
+      let rematch (user : MinimalUser.t) (now : int) : t =
         make user "Rematch" now
-      let take_back (user : MinimalUser.t) (now : float) : t =
+      let take_back (user : MinimalUser.t) (now : int) : t =
         make user "TakeBack" now
     end
 
     module Reply = struct
       type t = {
         event_type: string [@key "eventType"];
-        time: float;
+        time: int;
         user: MinimalUser.t;
         reply: string;
         request_type: string [@key "requestType"];
@@ -241,31 +241,31 @@ module Game = struct
       }
       [@@deriving yojson]
 
-      let make ?(data : JSON.t option) (user : MinimalUser.t) (reply : string) (request_type : string) (now : float) : t =
+      let make ?(data : JSON.t option) (user : MinimalUser.t) (reply : string) (request_type : string) (now : int) : t =
         { event_type = "Reply"; time = now; user; reply; request_type; data }
-      let accept (user : MinimalUser.t) (proposition : string) (now : float) : t =
+      let accept (user : MinimalUser.t) (proposition : string) (now : int) : t =
         make user "Accept" proposition now
-      let refuse (user : MinimalUser.t) (proposition : string) (now : float) : t =
+      let refuse (user : MinimalUser.t) (proposition : string) (now : int) : t =
         make user "Reject" proposition now
     end
 
     module Action = struct
       type t = {
         event_type: string [@key "eventType"];
-        time: float;
+        time: int;
         user: MinimalUser.t;
         action: string;
       }
       [@@deriving yojson]
 
-      let add_time (user : MinimalUser.t) (kind : [ `Turn | `Global ]) (now : float) : t =
+      let add_time (user : MinimalUser.t) (kind : [ `Turn | `Global ]) (now : int) : t =
         let action = match kind with
           | `Turn -> "AddTurnTime"
           | `Global -> "AddGlobalTime" in
         { event_type = "Action"; action; user; time = now }
-      let start_game (user : MinimalUser.t) (now : float): t =
+      let start_game (user : MinimalUser.t) (now : int): t =
         { event_type = "Action"; action = "StartGame"; user; time = now }
-      let end_game (user : MinimalUser.t) (now : float) : t =
+      let end_game (user : MinimalUser.t) (now : int) : t =
         { event_type = "Action"; action = "EndGame"; user; time = now }
     end
 
@@ -308,7 +308,7 @@ module Game = struct
     result: GameResult.t;
 
     player_one: MinimalUser.t option [@key "playerOne"];
-    beginning: float option;
+    beginning: int option;
     winner: MinimalUser.t option;
     loser: MinimalUser.t option;
     score_player_zero: int option [@key "scorePlayerZero"];
@@ -329,7 +329,7 @@ module Game = struct
     score_player_one = None;
   }
 
-  let rematch (game_name : string) (config_room : ConfigRoom.t) (now : float) : t =
+  let rematch (game_name : string) (config_room : ConfigRoom.t) (now : int) : t =
     let starting = Updates.Start.get config_room now in
     let initial_game = initial game_name config_room.creator in
     { initial_game with

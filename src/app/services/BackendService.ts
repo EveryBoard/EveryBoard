@@ -117,7 +117,7 @@ export class BackendService {
     public async notifyTimeout(gameId: string, winner: MinimalUser, loser: MinimalUser): Promise<void> {
         const winnerURLEncoded: string = encodeURIComponent(JSON.stringify(winner));
         const loserURLEncoded: string = encodeURIComponent(JSON.stringify(loser));
-        const endpoint: string = `game/${gameId}?action=resign&winner=${winnerURLEncoded}&loser=${loserURLEncoded}`;
+        const endpoint: string = `game/${gameId}?action=notifyTimeout&winner=${winnerURLEncoded}&loser=${loserURLEncoded}`;
         const result: MGPFallible<Response> = await this.performRequest('POST', endpoint);
         this.assertSuccess(result);
     }
