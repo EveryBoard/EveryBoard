@@ -56,7 +56,7 @@ module Make
 
   let create_doc (request : Dream.request) (collection : string) ?(id : string option) (doc : JSON.t) : string Lwt.t =
     Stats.write request;
-    logger.info (fun log -> log ~request "Creating %s with id %s" collection (Option.value ~default:"unset" id));
+    logger.info (fun log -> log ~request "Creating %s with id %s: %s" collection (Option.value ~default:"unset" id) (JSON.to_string doc));
     let* headers = TokenRefresher.header request in
     let path = match id with
       | Some id -> collection ^ "/" ^ id
@@ -132,7 +132,7 @@ module Make
     let endpoint = endpoint ~last_separator:":" "rollback" in
     let json = `Assoc [("transaction", `String transaction_id)] in
     let* (response, body) = External.Http.post_json endpoint headers json in
-    logger.info (fun log -> log ~request "Response: %s" body);
+    logger.debug (fun log -> log ~request "Response: %s" body);
     if is_error response
     then raise (Error "can't rollback transaction")
     else Lwt.return ()

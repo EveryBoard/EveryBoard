@@ -243,10 +243,10 @@ module Game = struct
 
       let make ?(data : JSON.t option) (user : MinimalUser.t) (reply : string) (request_type : string) (now : int) : t =
         { event_type = "Reply"; time = now; user; reply; request_type; data }
-      let accept (user : MinimalUser.t) (proposition : string) (now : int) : t =
-        make user "Accept" proposition now
-      let refuse (user : MinimalUser.t) (proposition : string) (now : int) : t =
-        make user "Reject" proposition now
+      let accept ?(data: JSON.t option) (user : MinimalUser.t) (proposition : string) (now : int) : t =
+        make user "Accept" proposition now ?data
+      let refuse ?(data: JSON.t option) (user : MinimalUser.t) (proposition : string) (now : int) : t =
+        make user "Reject" proposition now ?data
     end
 
     module Action = struct
@@ -272,12 +272,14 @@ module Game = struct
     module Move = struct
       type t = {
         event_type: string [@key "eventType"];
+        time: int;
         user: MinimalUser.t;
         move: JSON.t;
       }
       [@@deriving yojson]
 
-      let of_json (user : MinimalUser.t) (move : JSON.t) : t = { event_type = "Move"; user; move }
+      let of_json (user : MinimalUser.t) (move : JSON.t) (now : int) : t =
+        { event_type = "Move"; user; move; time = now }
     end
 
     type t =

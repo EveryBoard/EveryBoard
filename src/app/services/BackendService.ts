@@ -30,7 +30,7 @@ export class BackendService {
         } else {
             try {
                 const jsonResponse: JSONValue = await response.json();
-                const error: string = (jsonResponse != null && (jsonResponse['message'] as string)) || 'No error message';
+                const error: string = (jsonResponse != null && (jsonResponse['reason'] as string)) || 'No error message';
                 return MGPFallible.failure(error);
             } catch (_: unknown) {
                 return MGPFallible.failure('Invalid JSON response from the server');
@@ -206,7 +206,7 @@ export class BackendService {
                          loser: MinimalUser): Promise<void> {
         const winnerURLEncoded: string = encodeURIComponent(JSON.stringify(winner));
         const loserURLEncoded: string = encodeURIComponent(JSON.stringify(loser));
-        let endpoint: string = `game/${gameId}?action=victory&winer=${winnerURLEncoded}&loser=${loserURLEncoded}`;
+        let endpoint: string = `game/${gameId}?action=victory&winner=${winnerURLEncoded}&loser=${loserURLEncoded}`;
         if (scores.isPresent()) {
             const score0: number = scores.get()[0];
             const score1: number = scores.get()[1];

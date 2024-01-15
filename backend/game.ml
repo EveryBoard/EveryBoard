@@ -86,8 +86,8 @@ module Make
       let* _ = Firestore.Game.update request game_id (Domain.Game.Updates.End.to_yojson update) in
       let resigner = Auth.get_minimal_user request in
       let now = External.now () in
-      let event = Domain.Game.Event.(Action (Action.end_game resigner now)) in
-      let* _ = Firestore.Game.add_event request game_id event in
+      let game_end = Domain.Game.Event.(Action (Action.end_game resigner now)) in
+      let* _ = Firestore.Game.add_event request game_id game_end in
       let* response = Dream.empty `OK in
       Lwt.return (Ok response)
     with Error _ -> fail_transaction `Not_Found "Game not found"
@@ -98,8 +98,8 @@ module Make
     let* _ = Firestore.Game.update request game_id (Domain.Game.Updates.End.to_yojson update) in
     let requester = Auth.get_minimal_user request in
     let now = External.now () in
-    let event = Domain.Game.Event.(Action (Action.end_game requester now)) in
-    let* _ = Firestore.Game.add_event request game_id event in
+    let game_end = Domain.Game.Event.(Action (Action.end_game requester now)) in
+    let* _ = Firestore.Game.add_event request game_id game_end in
     let* response = Dream.empty `OK in
     Lwt.return (Ok response)
 
@@ -153,10 +153,10 @@ module Make
       let user = Auth.get_minimal_user request in
       let* _ = Firestore.ConfigRoom.create request rematch_id config_room in
       let* _ = Firestore.Chat.create request rematch_id in
-      let accept_event = Domain.Game.Event.(Reply (Reply.accept user "Rematch" now)) in
+      let accept_event = Domain.Game.Event.(Reply (Reply.accept user "Rematch" ~data:(`String rematch_id) now)) in
       let* _ = Firestore.Game.add_event request game_id accept_event in
       let start_event = Domain.Game.Event.(Action (Action.start_game user now)) in
-      let* _ = Firestore.Game.add_event request game_id start_event in
+      let* _ = Firestore.Game.add_event request rematch_id start_event in
       let* response = json_response `Created (`Assoc [("id", `String game_id)]) in
       Lwt.return (Ok response)
     with Error _ -> fail_transaction `Not_Found "Game not found"
@@ -193,6 +193,7 @@ module Make
     | _ -> None
 
   let end_turn (request : Dream.request) (game_id : string) =
+    (* TODO: get rid of this, we should instead do that as part of move *)
     try
       let* game = Firestore.Game.get request game_id in
       let scores = scores_from_request request in
@@ -206,6 +207,10 @@ module Make
     let scores = scores_from_request request in
     let update = Domain.Game.Updates.End.get ?scores Domain.Game.GameResult.HardDraw in
     let* _ = Firestore.Game.update request game_id (Domain.Game.Updates.End.to_yojson update) in
+    let now = External.now () in
+    let user = Auth.get_minimal_user request in
+    let game_end = Domain.Game.Event.(Action (Action.end_game user now)) in
+    let* _ = Firestore.Game.add_event request game_id game_end in
     let* response = Dream.empty `OK in
     Lwt.return (Ok response)
 
@@ -213,12 +218,17 @@ module Make
     let scores = scores_from_request request in
     let update = Domain.Game.Updates.End.get ~winner ~loser ?scores Domain.Game.GameResult.Victory in
     let* _ = Firestore.Game.update request game_id (Domain.Game.Updates.End.to_yojson update) in
+    let now = External.now () in
+    let user = Auth.get_minimal_user request in
+    let game_end = Domain.Game.Event.(Action (Action.end_game user now)) in
+    let* _ = Firestore.Game.add_event request game_id game_end in
     let* response = Dream.empty `OK in
     Lwt.return (Ok response)
 
   let move (request : Dream.request) (game_id : string) (move : Yojson.Safe.t) =
     let user = Auth.get_minimal_user request in
-    let event = Domain.Game.Event.(Move (Move.of_json user move)) in
+    let now = External.now () in
+    let event = Domain.Game.Event.(Move (Move.of_json user move now)) in
     let* _ = Firestore.Game.add_event request game_id event in
     let* response = Dream.empty `OK in
     Lwt.return (Ok response)
