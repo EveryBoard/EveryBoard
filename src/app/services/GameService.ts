@@ -8,6 +8,7 @@ import { Subscription } from 'rxjs';
 import { MinimalUser } from '../domain/MinimalUser';
 import { FirestoreTime } from '../domain/Time';
 import { BackendService } from './BackendService';
+import { PlayerOrNone } from '../jscaip/Player';
 
 export interface StartingPartConfig extends Partial<Part> {
     playerZero: MinimalUser,
@@ -91,22 +92,20 @@ export class GameService {
     public async addTurnTime(gameId: string): Promise<void> {
         return this.backendService.addTurnTime(gameId);
     }
-    public async endTurn(gameId: string, scores: MGPOptional<readonly [number, number]>): Promise<void> {
-        return this.backendService.endTurn(gameId, scores);
-    }
-    public async drawPart(gameId: string, scores: MGPOptional<readonly [number, number]>): Promise<void> {
-        return this.backendService.draw(gameId, scores);
-    }
-    public async endPartWithVictory(gameId: string,
-                                    winner: MinimalUser,
-                                    loser: MinimalUser,
-                                    scores: MGPOptional<readonly [number, number]>)
+    public async addMove(gameId: string,
+                         encodedMove: JSONValue,
+                         scores: MGPOptional<readonly [number, number]>)
     : Promise<void>
     {
-        return this.backendService.victory(gameId, scores, winner, loser);
+        return this.backendService.move(gameId, encodedMove, scores);
     }
-    public async addMove(gameId: string, encodedMove: JSONValue): Promise<void> {
-        return this.backendService.move(gameId, encodedMove);
+    public async addMoveAndEndGame(gameId: string,
+                                   encodedMove: JSONValue,
+                                   scores: MGPOptional<readonly [number, number]>,
+                                   winner: PlayerOrNone)
+    : Promise<void>
+    {
+        return this.backendService.moveAndEnd(gameId, encodedMove, scores, winner);
     }
     public async getServerTime(): Promise<number> {
         return this.backendService.getServerTime();

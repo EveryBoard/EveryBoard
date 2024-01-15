@@ -168,6 +168,7 @@ module Game = struct
 
     module End = struct
       type t = {
+        turn: int;
         winner: MinimalUser.t option;
         loser: MinimalUser.t option;
         result: GameResult.t;
@@ -176,11 +177,11 @@ module Game = struct
       }
       [@@deriving yojson]
 
-      let get ?(winner : MinimalUser.t option) ?(loser : MinimalUser.t option) ?(scores : (int * int) option) (result : GameResult.t) : t =
+      let get ?(winner : MinimalUser.t option) ?(loser : MinimalUser.t option) ?(scores : (int * int) option) (result : GameResult.t) (final_turn : int): t =
         let (score_player_zero, score_player_one) = match scores with
           | None -> (None, None)
           | Some (score0, score1) -> (Some score0, Some score1) in
-        { winner; loser; result; score_player_zero; score_player_one }
+        { winner; loser; result; score_player_zero; score_player_one; turn = final_turn }
     end
 
     module TakeBack = struct
@@ -202,7 +203,7 @@ module Game = struct
       [@@deriving yojson]
 
       let get ?(scores : (int * int) option) (turn : int) : t =
-        let new_turn = turn+1 in
+        let new_turn = turn + 1 in
         let (score_player_zero, score_player_one) = match scores with
         | Some (score0, score1) -> (Some score0, Some score1)
         | None -> (None, None) in

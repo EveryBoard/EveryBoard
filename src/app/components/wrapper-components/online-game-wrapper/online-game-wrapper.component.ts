@@ -260,8 +260,10 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
                 await this.takeBackToPreviousPlayerTurn(accepter.getOpponent());
                 break;
             case 'Rematch':
+                console.log(reply)
                 await this.router.navigate(['/nextGameLoading']);
                 const game: string = this.getGameName();
+                console.log(game)
                 await this.router.navigate(['/play', game, reply.data]);
                 break;
             case 'Draw':
@@ -443,45 +445,18 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
 
             // To adhere to security rules, we must add the move before updating the part
             const encodedMove: JSONValue = this.gameComponent.encoder.encode(move);
-            await this.gameService.addMove(this.currentPartId, encodedMove);
-            return this.updatePartWithStatusAndScores(gameStatus, this.gameComponent.scores);
-        }
-    }
-
-    private async updatePartWithStatusAndScores(gameStatus: GameStatus, scores: MGPOptional<readonly [number, number]>)
-    : Promise<void>
-    {
-        if (gameStatus.isEndGame) {
-            if (gameStatus === GameStatus.DRAW) {
-                return await this.gameService.drawPart(this.currentPartId, scores);
+            const partId: string = this.currentPartId;
+            const scores: MGPOptional<readonly [number, number]> = this.gameComponent.scores;
+            if (gameStatus.isEndGame) {
+                return this.gameService.addMoveAndEndGame(partId, encodedMove, scores, gameStatus.winner);
             } else {
-                Utils.assert(gameStatus.winner.isPlayer(), 'Non-draw end games should have a winner');
-                const winner: Player = gameStatus.winner as Player;
-                return this.notifyVictory(winner, scores);
+                return this.gameService.addMove(partId, encodedMove, scores);
             }
-        } else {
-            return this.gameService.endTurn(this.currentPartId, scores);
         }
     }
 
     private async notifyTimeoutVictory(victoriousPlayer: MinimalUser, loser: MinimalUser): Promise<void> {
         await this.gameService.notifyTimeout(this.currentPartId, victoriousPlayer, loser);
-    }
-
-    private async notifyVictory(winner: Player, scores: MGPOptional<readonly [number, number]>): Promise<void> {
-        const currentPart: PartDocument = Utils.getNonNullable(this.currentPart);
-        const playerZero: MinimalUser = this.players[0].get();
-        const playerOne: MinimalUser = this.players[1].get();
-        if (winner === Player.ONE) {
-            this.currentPart = currentPart.setWinnerAndLoser(playerOne, playerZero);
-        } else {
-            this.currentPart = currentPart.setWinnerAndLoser(playerZero, playerOne);
-        }
-
-        await this.gameService.endPartWithVictory(this.currentPartId,
-                                                  this.currentPart.getWinner().get(),
-                                                  this.currentPart.getLoser().get(),
-                                                  scores);
     }
 
     // Called by the resign button

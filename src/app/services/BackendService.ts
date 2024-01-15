@@ -6,6 +6,7 @@ import { MGPFallible } from '../utils/MGPFallible';
 import { MGPOptional } from '../utils/MGPOptional';
 import { Part, RequestType } from '../domain/Part';
 import { MinimalUser } from '../domain/MinimalUser';
+import { PlayerOrNone } from '../jscaip/Player';
 
 type HTTPMethod = 'POST' | 'GET' | 'PATCH' | 'HEAD' | 'DELETE';
 
@@ -217,9 +218,39 @@ export class BackendService {
     }
 
     /** Play a move */
-    public async move(gameId: string, move: JSONValue): Promise<void> {
+    public async move(gameId: string,
+                      move: JSONValue,
+                      scores: MGPOptional<readonly [number, number]>)
+    : Promise<void>
+    {
         const moveURLEncoded: string = encodeURIComponent(JSON.stringify(move));
-        const endpoint: string = `game/${gameId}?action=move&move=${moveURLEncoded}`;
+        let endpoint: string = `game/${gameId}?action=move&move=${moveURLEncoded}`;
+        if (scores.isPresent()) {
+            const score0: number = scores.get()[0];
+            const score1: number = scores.get()[1];
+            endpoint += `&score0=${score0}&score1=${score1}`;
+        }
+        const result: MGPFallible<Response> = await this.performRequest('POST', endpoint);
+        this.assertSuccess(result);
+    }
+
+    /** Play a final move */
+    public async moveAndEnd(gameId: string,
+                            move: JSONValue,
+                            scores: MGPOptional<readonly [number, number]>,
+                            winner: PlayerOrNone)
+    : Promise<void>
+    {
+        const moveURLEncoded: string = encodeURIComponent(JSON.stringify(move));
+        let endpoint: string = `game/${gameId}?action=moveAndEnd&move=${moveURLEncoded}`;
+        if (scores.isPresent()) {
+            const score0: number = scores.get()[0];
+            const score1: number = scores.get()[1];
+            endpoint += `&score0=${score0}&score1=${score1}`;
+        }
+        if (winner.isPlayer()) {
+            endpoint += `&winner=${winner.value}`;
+        }
         const result: MGPFallible<Response> = await this.performRequest('POST', endpoint);
         this.assertSuccess(result);
     }

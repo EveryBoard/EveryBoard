@@ -1,5 +1,20 @@
 exception Error of string
 
+(* TODO: use these instead of Error *)
+
+(** DocumentNotFound is raised when a firestore document is missing. This will
+    result in a [`Not_Found] response from our end *)
+exception DocumentNotFound of string
+
+(** DocumentInvalid is raised when a firestore document exists but can't be
+    converted to the proper type. This will result in a [`Not_Found] response from
+    our end, as it's like the document does not exist. *)
+exception DocumentInvalid of string
+
+(** BadInput is raised when the client did not include the correct information
+    as part of their request *)
+exception BadInput of string
+
 type public_key = Mirage_crypto_pk.Rsa.pub
 type private_key = Mirage_crypto_pk.Rsa.priv
 
