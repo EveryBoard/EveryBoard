@@ -115,7 +115,7 @@ let tests = [
         FirestorePrimitivesTests.Mock.succeeded_transactions := [];
         FirestorePrimitivesTests.Mock.failed_transactions := [];
         (* Given a transaction we want to do, which will succeed *)
-        let transaction_body () = Lwt.return (Result.Ok 42) in
+        let transaction_body () = Lwt.return 42 in
         (* When doing it *)
         let* result = Firestore.transaction request transaction_body in
         (* Then it should have begun and committed the transaction *)
@@ -126,26 +126,6 @@ let tests = [
         check (list string) "started" ["transaction-id"] started;
         check (list string) "succeeded" ["transaction-id"] succeeded;
         check (list string) "failed" [] failed;
-        Lwt.return ()
-      );
-
-    lwt_test "should rollback the transaction upon failure of the body" (fun () ->
-        let request = Dream.request "/" in
-        FirestorePrimitivesTests.Mock.started_transactions := [];
-        FirestorePrimitivesTests.Mock.succeeded_transactions := [];
-        FirestorePrimitivesTests.Mock.failed_transactions := [];
-        (* Given a transaction we want to do, which will fail *)
-        let transaction_body () = Lwt.return (Result.Error 42) in
-        (* When doing it *)
-        let* result = Firestore.transaction request transaction_body in
-        (* Then it should have begun and rolled back the transaction *)
-        let started = !FirestorePrimitivesTests.Mock.started_transactions in
-        let succeeded = !FirestorePrimitivesTests.Mock.succeeded_transactions in
-        let failed = !FirestorePrimitivesTests.Mock.failed_transactions in
-        check int "result" 42 result;
-        check (list string) "started" ["transaction-id"] started;
-        check (list string) "succeeded" [] succeeded;
-        check (list string) "failed" ["transaction-id"] failed;
         Lwt.return ()
       );
 

@@ -4,12 +4,15 @@ open Utils
     It is a low-level API. *)
 module type FIRESTORE_PRIMITIVES = sig
 
+  (** A field that can be added to a request to perform the Firestore action within a transaction *)
+  val transaction_field : string Dream.field
+
   (** Get a document from its path and return it as a JSON *)
   val get_doc : Dream.request -> string -> JSON.t Lwt.t
 
   (** Create a document, potentially with a specific id (otherwise an id will be assigned by firestore).
       In either case, the document id is returned *)
-  val create_doc : Dream.request -> string -> ?id:string -> JSON.t -> string Lwt.t
+  val create_doc : Dream.request -> string -> ?id : string -> JSON.t -> string Lwt.t
 
   (** Update a document from its path and a partial update in JSON *)
   val update_doc : Dream.request -> string -> JSON.t -> unit Lwt.t
@@ -35,14 +38,23 @@ module Make
 
   let logger = Dream.sub_log "firestore"
 
+  let transaction_field : string Dream.field =
+    Dream.new_field ~name:"transaction" ()
+
   let is_error (response : Cohttp.Response.t) =
     Cohttp.Code.is_error (Cohttp.Code.code_of_status response.status)
+
+  let transaction_params (request : Dream.request) : (string * string) list =
+    match Dream.field request transaction_field with
+    | None -> []
+    | Some id -> [("transaction", id)]
 
   let get_doc (request : Dream.request) (path : string) : JSON.t Lwt.t =
     Stats.read request;
     logger.info (fun log -> log ~request "Getting %s" path);
     let* headers = TokenRefresher.header request in
-    let* (response, body) = External.Http.get (endpoint path) headers in
+    let params = transaction_params request in
+    let* (response, body) = External.Http.get (endpoint path ~params) headers in
     logger.debug (fun log -> log ~request "Response: %s" body);
     if is_error response
     then raise (DocumentNotFound path)
@@ -62,7 +74,8 @@ module Make
       | Some id -> collection ^ "/" ^ id
       | None -> collection in
     let firestore_doc = to_firestore doc in
-    let params = [("mask", "_")] in (* By asking only for _, firestore will not give us the document back, which is what we want *)
+    (* By asking only for _, firestore will not give us the document back, which is what we want *)
+    let params = [("mask", "_")] @ (transaction_params request) in
     let endpoint = endpoint ~params path in
     let* (response, body) =
       if Option.is_some id then
@@ -82,7 +95,8 @@ module Make
       | `Assoc key_values -> List.map fst key_values
       | _ -> raise (UnexpectedError "invalid update: should be a Assoc") in
     (* We want only to update what we provide, and we don't care about the response so we provide an empty mask *)
-    let params = ("mask", "_") :: List.map (fun field -> ("updateMask", field)) fields in
+    let update_params = List.map (fun field -> ("updateMask", field)) fields in
+    let params = ("mask", "_") :: ((transaction_params request) @ update_params) in
     let firestore_update = to_firestore update in
     let endpoint = endpoint ~params path in
     let* (response, body) = External.Http.patch_json endpoint headers firestore_update in
@@ -95,7 +109,8 @@ module Make
     Stats.write request;
     logger.info (fun log -> log ~request "Deleting %s" path);
     let* headers = TokenRefresher.header request in
-    let* response = External.Http.delete (endpoint path) headers in
+    let params = transaction_params request in
+    let* response = External.Http.delete (endpoint ~params path) headers in
     if is_error response
     then raise (UnexpectedError ("error on document deletion for " ^ path))
     else Lwt.return ()

@@ -25,6 +25,9 @@ end
 
 module Mock : MOCK = struct
 
+  let transaction_field =
+    Dream.new_field ~name:"transaction" ()
+
   let started_transactions = ref []
 
   let succeeded_transactions = ref []
