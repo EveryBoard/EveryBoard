@@ -45,7 +45,7 @@ module Make
     let* (response, body) = External.Http.get (endpoint path) headers in
     logger.debug (fun log -> log ~request "Response: %s" body);
     if is_error response
-    then raise (Error ("can't retrieve doc with path " ^ path))
+    then raise (DocumentNotFound path)
     else Lwt.return (of_firestore (JSON.from_string body))
 
   let get_id_from_firestore_document_name (doc : JSON.t) : string =
@@ -71,7 +71,7 @@ module Make
         External.Http.post_json endpoint headers firestore_doc in
     logger.debug (fun log -> log ~request "Response: %s" body);
     if is_error response
-    then raise (Error "can't create doc")
+    then raise (UnexpectedError ("error on document creation for " ^ path))
     else Lwt.return (get_id_from_firestore_document_name (JSON.from_string body))
 
   let update_doc (request : Dream.request) (path : string) (update : JSON.t) : unit Lwt.t =
@@ -80,7 +80,7 @@ module Make
     let* headers = TokenRefresher.header request in
     let fields = match update with
       | `Assoc key_values -> List.map fst key_values
-      | _ -> raise (Error "invalid update: should be a Assoc") in
+      | _ -> raise (UnexpectedError "invalid update: should be a Assoc") in
     (* We want only to update what we provide, and we don't care about the response so we provide an empty mask *)
     let params = ("mask", "_") :: List.map (fun field -> ("updateMask", field)) fields in
     let firestore_update = to_firestore update in
@@ -88,7 +88,7 @@ module Make
     let* (response, body) = External.Http.patch_json endpoint headers firestore_update in
     logger.debug (fun log -> log ~request "Response: %s" body);
     if is_error response
-    then raise (Error "can't update doc")
+    then raise (UnexpectedError ("error on document update for " ^ path))
     else Lwt.return ()
 
   let delete_doc (request : Dream.request) (path : string) : unit Lwt.t =
@@ -97,7 +97,7 @@ module Make
     let* headers = TokenRefresher.header request in
     let* response = External.Http.delete (endpoint path) headers in
     if is_error response
-    then raise (Error "can't update doc")
+    then raise (UnexpectedError ("error on document deletion for " ^ path))
     else Lwt.return ()
 
   let begin_transaction (request : Dream.request) : string Lwt.t =
@@ -107,7 +107,7 @@ module Make
     let* (response, body) = External.Http.post_json endpoint headers (`Assoc []) in
     logger.debug (fun log -> log ~request "Response: %s" body);
     if is_error response
-    then raise (Error "can't begin transaction")
+    then raise (UnexpectedError "error when beginning transaction")
     else
       body
       |> JSON.from_string
@@ -123,7 +123,7 @@ module Make
     let* (response, body) = External.Http.post_json endpoint headers json in
     logger.debug (fun log -> log ~request "Response: %s" body);
     if is_error response
-    then raise (Error "can't commit transaction")
+    then raise (UnexpectedError "error when committing transaction")
     else Lwt.return ()
 
   let rollback (request : Dream.request) (transaction_id : string) : unit Lwt.t =
@@ -134,6 +134,6 @@ module Make
     let* (response, body) = External.Http.post_json endpoint headers json in
     logger.debug (fun log -> log ~request "Response: %s" body);
     if is_error response
-    then raise (Error "can't rollback transaction")
+    then raise (UnexpectedError "error when rolling back transaction")
     else Lwt.return ()
 end

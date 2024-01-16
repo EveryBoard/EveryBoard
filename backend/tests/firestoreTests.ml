@@ -19,7 +19,7 @@ module Mock : MOCK = struct
     let get _  _ =
       match !user with
       | Some user -> Lwt.return user
-      | None -> raise (Error "user does not exist")
+      | None -> raise (DocumentNotFound "user")
   end
 
   module Game = struct
@@ -69,7 +69,7 @@ let initial_config_room : Domain.ConfigRoom.t =
 
 module Firestore = Firestore.Make(FirestorePrimitivesTests.Mock)
 
-let test_get type_ get doc expected conversion = [
+let test_get type_ get collection ?(mask = "") doc expected conversion = [
     lwt_test "should retrieve" (fun () ->
         let request = Dream.request "/" in
         (* Given a user *)
@@ -87,19 +87,19 @@ let test_get type_ get doc expected conversion = [
         FirestorePrimitivesTests.Mock.doc_to_return := None;
         (* When trying to get a user with get_user *)
         (* Then it should fail *)
-        lwt_check_raises "failure" (Error "document does not exist or is invalid") (fun () ->
-            let* _ = get request "uid" in
+        lwt_check_raises "failure" (DocumentNotFound (collection ^ "/id" ^ mask)) (fun () ->
+            let* _ = get request "id" in
             Lwt.return ())
       );
 
-    lwt_test "should raise an error if user exists but is invalid" (fun () ->
+    lwt_test "should raise an error if document exists but is invalid" (fun () ->
         let request = Dream.request "/" in
         (* Given a user *)
         FirestorePrimitivesTests.Mock.doc_to_return := Some (`Assoc [("not-a", `String "user!")]);
         (* When getting it with get_user *)
         (* Then it should raise an error *)
-        lwt_check_raises "failure" (Error "document does not exist or is invalid") (fun () ->
-            let* _ = get request "uid" in
+        lwt_check_raises "failure" (DocumentInvalid (collection ^ "/id")) (fun () ->
+            let* _ = get request "id" in
             Lwt.return ())
       );
 ]
@@ -155,10 +155,10 @@ let tests = [
         FirestorePrimitivesTests.Mock.succeeded_transactions := [];
         FirestorePrimitivesTests.Mock.failed_transactions := [];
         (* Given a transaction we want to do, which will throw *)
-        let transaction_body () = raise (Error "Error!") in
+        let transaction_body () = raise (Failure "Error!") in
         (* When doing it *)
         (* Then it should have begun and rolled back the transaction *)
-        let* _ = lwt_check_raises "failure" (Error "Error!") (fun () ->
+        let* _ = lwt_check_raises "failure" (Failure "Error!") (fun () ->
             let* _ = Firestore.transaction request transaction_body in
             Lwt.return ()) in
         let started = !FirestorePrimitivesTests.Mock.started_transactions in
@@ -171,11 +171,11 @@ let tests = [
       );
   ];
 
-  "Firestore.User.get", test_get user_eq Firestore.User.get verified_user verified_user Domain.User.to_yojson;
+  "Firestore.User.get", test_get user_eq Firestore.User.get "users" verified_user verified_user Domain.User.to_yojson;
 
-  "Firestore.Game.get", test_get game_eq Firestore.Game.get unstarted_game unstarted_game Domain.Game.to_yojson;
+  "Firestore.Game.get", test_get game_eq Firestore.Game.get "parts" unstarted_game unstarted_game Domain.Game.to_yojson;
 
-  "Firestore.Game.get_name", test_get string Firestore.Game.get_name unstarted_game "P4" Domain.Game.to_yojson;
+  "Firestore.Game.get_name", test_get string Firestore.Game.get_name "parts" ~mask:"?mask=typeGame" unstarted_game "P4" Domain.Game.to_yojson;
 
   "Firestore.Game.create", [
     lwt_test "should create the document" (fun () ->
@@ -293,5 +293,5 @@ let tests = [
       );
   ];
 
-  "Firestore.ConfigRoom.get", test_get config_room_eq Firestore.ConfigRoom.get initial_config_room initial_config_room Domain.ConfigRoom.to_yojson;
+  "Firestore.ConfigRoom.get", test_get config_room_eq Firestore.ConfigRoom.get "config-room" initial_config_room initial_config_room Domain.ConfigRoom.to_yojson;
 ]

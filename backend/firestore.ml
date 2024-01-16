@@ -80,19 +80,17 @@ module Make (FirestorePrimitives : FirestorePrimitives.FIRESTORE_PRIMITIVES) : F
       let* _ = FirestorePrimitives.rollback request transaction_id in
       raise e
 
-  let get_or_fail (maybe_value : ('a, 'b) result)  : 'a =
-    match maybe_value with
-    | Result.Ok value -> value
-    | Result.Error e -> raise (Error ("Error when doing firestore operation: " ^ e))
 
   let get (request : Dream.request) (path : string) (of_yojson : JSON.t -> ('a, 'b) result) : 'a Lwt.t =
-    try
-      let* doc = FirestorePrimitives.get_doc request path in
-      doc
-      |> of_yojson
-      |> get_or_fail
-      |> Lwt.return
-    with Error _ -> raise (Error "document does not exist or is invalid")
+    let get_or_fail (maybe_value : ('a, 'b) result)  : 'a =
+      match maybe_value with
+      | Ok value -> value
+      | Error _ -> raise (DocumentInvalid path) in
+    let* doc = FirestorePrimitives.get_doc request path in
+    doc
+    |> of_yojson
+    |> get_or_fail
+    |> Lwt.return
 
   module User = struct
 
@@ -113,7 +111,7 @@ module Make (FirestorePrimitives : FirestorePrimitives.FIRESTORE_PRIMITIVES) : F
         |> member "typeGame"
         |> to_string
         |> Lwt.return
-      with Error _ | JSON.Util.Type_error _ -> raise (Error "document does not exist or is invalid")
+      with JSON.Util.Type_error _ -> raise (DocumentInvalid ("parts/" ^ game_id))
 
     let create (request : Dream.request) (game : Domain.Game.t) : string Lwt.t =
       let json : JSON.t = Domain.Game.to_yojson game in

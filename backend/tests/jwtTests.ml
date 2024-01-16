@@ -19,7 +19,7 @@ module Mock = struct
     let open JSON.Util in
     if !validate_token
     then to_string (member "sub" token.payload)
-    else raise (Error "Token verification failed")
+    else raise InvalidToken
 end
 
 module Jwt = Jwt.Make(ExternalTests.Mock)
@@ -156,7 +156,7 @@ let tests = [
         let invalid_token = "invalid token!"  in
         (* When parsing it *)
         (* Then it should fail *)
-        check_raises "failure" (Error "Invalid token") (fun () ->
+        check_raises "failure" Jwt.InvalidToken (fun () ->
             let _ = Jwt.parse invalid_token in ()
           )
       );
@@ -206,7 +206,7 @@ let tests = [
           let token = { identity_token with header = replace_assoc identity_token.header "alg" (`String "foo") } in
           (* When verifying it *)
           (* Then it should fail *)
-          check_raises "failure" (Error "Token verification failed, field alg is invalid") (fun () ->
+          check_raises "failure" Jwt.InvalidToken (fun () ->
               let _ = Jwt.verify_and_get_uid token "everyboard-test" [(cert_id, cert)] in ()
             )
         );
@@ -216,7 +216,7 @@ let tests = [
           let keys = [] in
           (* When verifying a token *)
           (* Then it should fail *)
-          check_raises "failure" (Error "Token verification failed, field kid is invalid") (fun () ->
+          check_raises "failure" Jwt.InvalidToken (fun () ->
               let _ = Jwt.verify_and_get_uid identity_token "everyboard-test" keys in ()
             )
         );
@@ -226,7 +226,7 @@ let tests = [
           let token = { identity_token with payload = replace_assoc identity_token.payload "exp" (`Int (now - 100000)) } in
           (* When verifying it *)
           (* Then it should fail *)
-          check_raises "failure" (Error "Token verification failed, field exp is invalid") (fun () ->
+          check_raises "failure" Jwt.InvalidToken (fun () ->
               let _ = Jwt.verify_and_get_uid token "everyboard-test" [(cert_id, cert)] in ()
             )
         );
@@ -236,7 +236,7 @@ let tests = [
           let token = { identity_token with payload = replace_assoc identity_token.payload "iat" (`Int (now + 1000)) } in
           (* When verifying it *)
           (* Then it should fail *)
-          check_raises "failure" (Error "Token verification failed, field iat is invalid") (fun () ->
+          check_raises "failure" Jwt.InvalidToken (fun () ->
               let _ = Jwt.verify_and_get_uid token "everyboard-test" [(cert_id, cert)] in ()
             )
         );
@@ -246,7 +246,7 @@ let tests = [
           let project_id = "another-project" in
           (* When verifying it *)
           (* Then it should fail *)
-          check_raises "failure" (Error "Token verification failed, field aud is invalid") (fun () ->
+          check_raises "failure" Jwt.InvalidToken (fun () ->
               let _ = Jwt.verify_and_get_uid identity_token project_id [(cert_id, cert)] in ()
             )
         );
@@ -256,7 +256,7 @@ let tests = [
           let token = { identity_token with payload = replace_assoc identity_token.payload "iss" (`String "http://other") } in
           (* When verifying it *)
           (* Then it should fail *)
-          check_raises "failure" (Error "Token verification failed, field iss is invalid") (fun () ->
+          check_raises "failure" Jwt.InvalidToken (fun () ->
               let _ = Jwt.verify_and_get_uid token "everyboard-test" [(cert_id, cert)] in ()
             )
        );
@@ -266,7 +266,7 @@ let tests = [
           let token = { identity_token with payload = replace_assoc identity_token.payload "sub" (`String "") } in
           (* When verifying it *)
           (* Then it should fail *)
-          check_raises "failure" (Error "Token verification failed, field sub is invalid") (fun () ->
+          check_raises "failure" Jwt.InvalidToken (fun () ->
               let _ = Jwt.verify_and_get_uid token "everyboard-test" [(cert_id, cert)] in ()
            )
        );
@@ -276,7 +276,7 @@ let tests = [
           let token = { identity_token with payload = replace_assoc identity_token.payload "auth_time" (`Int (now + 1000)) } in
           (* When verifying it *)
           (* Then it should fail *)
-          check_raises "failure" (Error "Token verification failed, field auth_time is invalid") (fun () ->
+          check_raises "failure" Jwt.InvalidToken (fun () ->
               let _ = Jwt.verify_and_get_uid token "everyboard-test" [(cert_id, cert)] in ()
             )
        );
@@ -286,7 +286,7 @@ let tests = [
           let token = { identity_token with signature = "foo" } in
           (* When verifying it *)
           (* Then it should fail *)
-          check_raises "failure" (Error "Token verification failed, field signature is invalid") (fun () ->
+          check_raises "failure" Jwt.InvalidToken (fun () ->
               let _ = Jwt.verify_and_get_uid token "everyboard-test" [(cert_id, cert)] in ()
             )
        );

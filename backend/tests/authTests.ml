@@ -96,7 +96,7 @@ let tests = [
 
   "Auth.get_user", [
     test "should fail if there is no middleware" (fun () ->
-        check_raises "failure" (Error "Unexpected: no user stored. Is the Auth middleware missing?") (fun () ->
+        check_raises "failure" (UnexpectedError "No user stored. Is the Auth middleware missing?") (fun () ->
             let request = Dream.request "" in
             let _ = Auth.get_user request in
             ()

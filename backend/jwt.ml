@@ -2,8 +2,10 @@ open Utils
 
 (** This module manages JSON Web Tokens (JWT), which are used to authentify
     ourselves to the firestore server, and to authentify users to ourselves. *)
-
 module type JWT = sig
+
+  (** [InvalidToken] is raised if at some point we encounter an invalid token *)
+  exception InvalidToken
 
   (* A JWT token *)
   type t = {
@@ -12,21 +14,28 @@ module type JWT = sig
     signature: string; (** The signature of the header + payload *)
   }
 
-  (** Convert a token to its string representation that is suitable to be passed around to another service *)
+  (** [to_string token] converts a token to its string representation that is
+      suitable to be passed around to another service *)
   val to_string : t -> string
 
-  (** Create a new token from an email, a private key, a set of scopes, and an audience *)
+  (** [make email private_key scopes audience] creates a new token from an
+      email, a private key, a set of scopes, and an audience *)
   val make : string -> private_key -> string list -> string -> t
 
-  (** Parse an existing token from its string representation *)
+  (** [parse str] parses an existing token from its string representation.
+      Raises [InvalidToken] in case the token can't be parsed. The signature of
+      the token is NOT validated at this point. *)
   val parse : string -> t
 
-  (** Verify that a token has been signed by one of the certificates passed along. *)
+  (** [verify_and_get_uid token kid certificates] verifies that a token has been
+      signed by the certificates with key id [kid]. Raises [InvalidToken] in
+      case it is not valid. *)
   val verify_and_get_uid : t -> string -> (string * X509.Certificate.t) list -> string
 end
 
 module Make (External : External.EXTERNAL) : JWT = struct
-  (* A JWT token *)
+  exception InvalidToken
+
   type t = {
     header: JSON.t; (** The header of the token *)
     payload: JSON.t; (** The payload of the token *)
@@ -43,7 +52,8 @@ module Make (External : External.EXTERNAL) : JWT = struct
     |> pkcs1_sha256
     |> Cstruct.to_string
 
-  (** Construct a JWT from an email [iss] private key [pk], a set of scopes [scopes] and an audience [audience] *)
+  (** Construct a JWT from an email [iss] private key [pk], a set of scopes
+      [scopes] and an audience [audience] *)
   let make (iss : string) (pk : private_key) (scopes : string list) (audience : string) : t =
     let open JSON in
     let now = External.now () in
@@ -81,7 +91,7 @@ module Make (External : External.EXTERNAL) : JWT = struct
       let header = JSON.from_string header_json in
       let payload = JSON.from_string payload_json in
       { header; payload; signature }
-    | _ -> raise (Error "Invalid token")
+    | _ -> raise InvalidToken
 
   let verify_signature (token : t) (cert : X509.Certificate.t) : bool =
     let only_sha256 = function
@@ -96,8 +106,8 @@ module Make (External : External.EXTERNAL) : JWT = struct
       Depends on the public keys listed at https://www.googleapis.com/robot/v1/metadata/x509/securetoken@system.gserviceaccount.com
       In case of success, the uid ("sub" field) is returned. *)
   let verify_and_get_uid (token : t) (project_id : string) (certificates : (string * X509.Certificate.t) list) : string =
-    let check (field : string) (cond : unit -> bool) : unit =
-      if cond () then () else raise (Error (Printf.sprintf "Token verification failed, field %s is invalid" field)) in
+    let check (_field : string) (cond : unit -> bool) : unit =
+      if cond () then () else raise InvalidToken in
     let now = External.now () in
     let open JSON.Util in
     let number (json : JSON.t) (field : string) : int = to_int (member field json) in

@@ -27,7 +27,7 @@ module Make
 
   let get_user (request : Dream.request) : (string * Domain.User.t) =
     match Dream.field request user_field with
-    | None -> raise (Error "Unexpected: no user stored. Is the Auth middleware missing?")
+    | None -> raise (UnexpectedError "No user stored. Is the Auth middleware missing?")
     | Some user -> user
 
   let get_minimal_user (request : Dream.request) : Domain.MinimalUser.t =
@@ -45,13 +45,11 @@ module Make
       (* Check the token validity *)
       match String.split_on_char ' ' authorization with
       | ["Bearer"; user_token] ->
-        Dream.log "Checking token";
         let* certificates = GoogleCertificates.get () in
         begin match Jwt.verify_and_get_uid (Jwt.parse user_token) !Options.project_id certificates with
-          | exception _ ->
+          | exception Jwt.InvalidToken ->
             fail `Unauthorized "Authorization token is invalid"
           | uid ->
-            Dream.log "Checking user";
             try
               let* user = Firestore.User.get request uid in
               if user.verified then begin
@@ -61,7 +59,8 @@ module Make
                 handler request
               end else
                 fail `Unauthorized "User is not verified"
-            with Error _ -> fail `Unauthorized "User is invalid"
+            with DocumentNotFound _ | DocumentInvalid _ ->
+              fail `Unauthorized "User is invalid"
         end
       | _ -> fail `Unauthorized "Authorization header is invalid"
 

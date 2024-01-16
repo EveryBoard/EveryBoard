@@ -16,7 +16,7 @@ module Make (External : External.EXTERNAL) : GOOGLE_CERTIFICATES = struct
     let extract (regexp : Str.regexp) (s : string) : string =
       if Str.string_match regexp s 0 then
         Str.matched_group 1 s
-      else raise (Error "missing or invalid max-age") in
+      else raise (UnexpectedError "missing or invalid max-age") in
     cache_control
     |> extract (Str.regexp ".*max-age=\\([0-9]+\\),.*")
     |> int_of_string
@@ -31,11 +31,11 @@ module Make (External : External.EXTERNAL) : GOOGLE_CERTIFICATES = struct
     let max_age : int = match Cohttp.Header.get response.headers "Cache-Control" with
       | Some cache_control ->
         parse_max_age cache_control
-      | None -> raise (Error "No cache-control in response") in
+      | None -> raise (UnexpectedError "No cache-control in response") in
     let certificates = match body_content with
       | `Assoc assoc when List.length assoc > 1 ->
         List.map (fun (id, cert) -> (id, read_certificate (JSON.Util.to_string cert))) assoc
-      | _ -> raise (Error "No certificates returned") in
+      | _ -> raise (UnexpectedError "No certificates returned") in
     Lwt.return (certificates, External.now () + max_age)
 
   (** This contains the certificates that will be used when verifying a token *)

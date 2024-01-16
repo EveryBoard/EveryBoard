@@ -1,17 +1,16 @@
-exception Error of string
+(** [UnexpectedError reason] is raised upon unexpected errors *)
+exception UnexpectedError of string
 
-(* TODO: use these instead of Error *)
-
-(** DocumentNotFound is raised when a firestore document is missing. This will
+(** [DocumentNotFound path] is raised when a firestore document is missing. This will
     result in a [`Not_Found] response from our end *)
 exception DocumentNotFound of string
 
-(** DocumentInvalid is raised when a firestore document exists but can't be
+(** [DocumentInvalid path] is raised when a firestore document exists but can't be
     converted to the proper type. This will result in a [`Not_Found] response from
     our end, as it's like the document does not exist. *)
 exception DocumentInvalid of string
 
-(** BadInput is raised when the client did not include the correct information
+(** [BadInput input] is raised when the client did not include the correct information
     as part of their request *)
 exception BadInput of string
 
@@ -30,10 +29,10 @@ module JSON = struct
     let enum_of_yojson json = match json with
       | `String json_string ->
         begin match List.assoc_opt json_string inversed_values with
-          | Some v -> Result.Ok v
-          | None -> Result.Error "not a member of the enum"
+          | Some v -> Ok v
+          | None -> Error "not a member of the enum"
         end
-      | _ -> Result.Error "not a string" in
+      | _ -> Error "not a string" in
     (enum_to_yojson, enum_of_yojson)
 
   (** Helper similar to [for_enum], but for conversion to ints *)
@@ -43,10 +42,10 @@ module JSON = struct
     let enum_of_yojson json = match json with
       | `Int json_int ->
         begin match List.assoc_opt json_int inversed_values with
-          | Some v -> Result.Ok v
-          | None -> Result.Error "not a member of the enum"
+          | Some v -> Ok v
+          | None -> Error "not a member of the enum"
         end
-      | _ -> Result.Error "not a string" in
+      | _ -> Error "not a string" in
     (enum_to_yojson, enum_of_yojson)
 end
 
@@ -61,14 +60,14 @@ let read_certificate (pem : string) : X509.Certificate.t =
   | Ok cert ->
     begin match X509.Certificate.public_key cert with
       | `RSA _ -> cert
-      | _ -> raise (Error "Certificate does not contain an RSA public key")
+      | _ -> raise (UnexpectedError "Certificate does not contain an RSA public key")
     end
-  | _ -> raise (Error "Invalid certificate")
+  | _ -> raise (UnexpectedError "Invalid certificate")
 
 let certificate_key (cert : X509.Certificate.t) : public_key =
   match X509.Certificate.public_key cert with
   | `RSA key -> key
-  | _ -> raise (Error "Certificate does not contain an RSA public key")
+  | _ -> raise (UnexpectedError "Certificate does not contain an RSA public key")
 
 
 let fail (status : Dream.status) (reason : string) : Dream.response Lwt.t =
@@ -102,10 +101,10 @@ let rec of_firestore (json : JSON.t) : JSON.t =
     | `Assoc [("mapValue", v)] -> of_firestore v
     | `Assoc [("integerValue", `String v)] -> `Int (int_of_string v)
     | `Assoc [(_, v)] -> v (* We just rely on the real type contained, not on the type name from firestore *)
-    | _-> raise (Error ("Invalid firestore JSON: unexpected value when extracting field: " ^ (JSON.to_string value)))) in
+    | _-> raise (UnexpectedError ("Invalid firestore JSON: unexpected value when extracting field: " ^ (JSON.to_string value)))) in
   match JSON.Util.member "fields" json with
   | `Assoc fields -> `Assoc (List.map extract_field fields)
-  | _ -> raise (Error ("Invalid firestore JSON: not an object: " ^ (JSON.to_string json)))
+  | _ -> raise (UnexpectedError ("Invalid firestore JSON: not an object: " ^ (JSON.to_string json)))
 
 let to_firestore ?(path : string option) (doc : JSON.t) : JSON.t  =
   (* Types of values are documented here: https://cloud.google.com/firestore/docs/reference/rest/Shared.Types/ArrayValue#Value *)
@@ -118,11 +117,11 @@ let to_firestore ?(path : string option) (doc : JSON.t) : JSON.t  =
       | `List v -> `Assoc [("arrayValue", `Assoc [("values", `List (List.map transform_field v))])]
       | `Float v -> `Assoc [("doubleValue", `Float v)]
       | `Int v -> `Assoc [("integerValue", `String (string_of_int v))]
-      | _ -> raise (Error ("Invalid object for firestore: unsupported field: " ^ (JSON.to_string v)))
+      | _ -> raise (UnexpectedError ("Invalid object for firestore: unsupported field: " ^ (JSON.to_string v)))
   and transform_key_and_field (key, field) : (string * JSON.t) = (key, transform_field field) in
   let doc_with_fields : JSON.t = match doc with
     | `Assoc fields -> `Assoc (List.map transform_key_and_field fields)
-    | _ -> raise (Error "Invalid object for firestore") in
+    | _ -> raise (UnexpectedError "Invalid object for firestore") in
   let name = match path with
     | Some p -> [("name", `String ("projects/" ^ !Options.project_name ^ "/databases/" ^ !Options.database_name ^ "/documents/" ^ p))]
     | None -> [] in

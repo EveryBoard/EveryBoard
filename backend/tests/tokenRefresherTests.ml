@@ -34,7 +34,7 @@ let tests = [
 
   "TokenRefresher.header", [
     lwt_test "should fail if the middleware is absent" (fun () ->
-        lwt_check_raises "failure" (Error "get_token_field not set, the middleware is probably missing") (fun () ->
+        lwt_check_raises "failure" (UnexpectedError "get_token_field not set, the middleware is probably missing") (fun () ->
             let request = Dream.request "/" in
             let* _ = TokenRefresher.header request in
             Lwt.return ()
@@ -44,13 +44,13 @@ let tests = [
 
   "TokenRefresher.middleware", [
     test "should fail if there is no service account" (fun () ->
-        check_raises "failure" (Error "does-not-exist.json: No such file or directory") (fun () ->
+        check_raises "failure" (UnexpectedError "Cannot read service account from file: does-not-exist.json: No such file or directory") (fun () ->
           let _ : Dream.middleware = TokenRefresher.middleware "does-not-exist.json" in ()
           )
       );
 
     test "should fail if the the private key is invalid" (fun () ->
-        check_raises "failure" (Error "Cannot read private key from service account file") (fun () ->
+        check_raises "failure" (UnexpectedError "Cannot read private key from service account file") (fun () ->
           let _ : Dream.middleware = TokenRefresher.middleware "test-data/corrupted-service-account.json" in ()
           )
       );

@@ -13,8 +13,20 @@ let server_time = Dream.get "/time" @@ fun _ ->
     let response = `Assoc ["time", `Int now] in
     Dream.json ~status:`OK (JSON.to_string response)
 
+let error_catcher : Dream.middleware = fun handler request ->
+  try handler request
+  with
+  | UnexpectedError e ->
+    Dream.error (fun log -> log "Encountered unexpected error: %s" e);
+    Dream.empty `Internal_Server_Error
+  | DocumentInvalid path ->
+    Dream.error (fun log -> log "Encountered invalid document: %s" path);
+    Dream.empty `Internal_Server_Error
+  | DocumentNotFound _ -> Dream.empty `Not_Found
+  | BadInput _ -> Dream.empty `Bad_Request
+
 let api = [
-    Dream.scope "/" [TokenRefresher.middleware !Options.service_account_file; Auth.middleware]
+    Dream.scope "/" [error_catcher; TokenRefresher.middleware !Options.service_account_file; Auth.middleware]
     @@ List.concat [
       Game.routes;
       [server_time];

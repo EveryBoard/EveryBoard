@@ -30,7 +30,7 @@ module Make (External : External.EXTERNAL) (Jwt : Jwt.JWT) : TOKEN_REFRESHER = s
     let open JSON.Util in
     let json =
       try JSON.from_file file
-      with Sys_error e -> raise (Error e)
+      with Sys_error e -> raise (UnexpectedError ("Cannot read service account from file: " ^ e))
     in
     let private_key = json
                       |> member "private_key"
@@ -41,7 +41,7 @@ module Make (External : External.EXTERNAL) (Jwt : Jwt.JWT) : TOKEN_REFRESHER = s
     | Ok (`RSA pk) ->
       let email = json |> member "client_email" |> to_string in
       { email ; private_key = pk }
-    | _ -> raise (Error "Cannot read private key from service account file")
+    | _ -> raise (UnexpectedError "Cannot read private key from service account file")
 
   let request_token (sa : service_account) : token Lwt.t =
     let open JSON.Util in
@@ -71,7 +71,7 @@ module Make (External : External.EXTERNAL) (Jwt : Jwt.JWT) : TOKEN_REFRESHER = s
 
   let get_token (request : Dream.request) : string Lwt.t =
     match Dream.field request get_token_field with
-    | None -> raise (Error "get_token_field not set, the middleware is probably missing")
+    | None -> raise (UnexpectedError "get_token_field not set, the middleware is probably missing")
     | Some f -> f ()
 
   let header (request : Dream.request) : Cohttp.Header.t Lwt.t =
