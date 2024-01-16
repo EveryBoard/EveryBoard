@@ -22,6 +22,7 @@ import { Minimax } from 'src/app/jscaip/AI/Minimax';
 import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 import { AbaloneScoreHeuristic } from './AbaloneScoreHeuristic';
 import { AbaloneMoveGenerator } from './AbaloneMoveGenerator';
+import { Utils } from 'src/app/utils/utils';
 
 type CapturedInfo = {
     coord: Coord,
@@ -173,6 +174,7 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneRules,
 
     private showPossibleDirections(): void {
         this.directions = [];
+        Utils.assert(this.selecteds.length > 0, 'do not call showPossibleDirections if there is no selecteds pieces');
         if (this.selecteds.length === 1) {
             this.showDirection(true);
         } else {
@@ -219,7 +221,22 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneRules,
             start = end;
             end = tmp;
         }
-        return { start, end, pointed: end.getNext(direction, 1) };
+        return { start, end, pointed: this.getPointed(single, start, end, direction) };
+    }
+
+    private getPointed(single: boolean, start: Coord, end: Coord, direction: HexaDirection): Coord {
+        const isPush: boolean = single || start.getDirectionToward(end).get().equals(direction);
+        if (isPush) {
+            const state: AbaloneState = this.getState();
+            const currentPlayer: Player = state.getCurrentPlayer();
+            let pointed: Coord = end;
+            while (state.isOnBoard(pointed) && state.getPieceAt(pointed).is(currentPlayer)) {
+                pointed = pointed.getNext(direction, 1);
+            }
+            return pointed;
+        } else {
+            return start.getNext(direction, 1);
+        }
     }
 
     public isBoard(c: FourStatePiece): boolean {

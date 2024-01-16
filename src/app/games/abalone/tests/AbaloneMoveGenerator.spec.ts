@@ -11,7 +11,7 @@ const N: FourStatePiece = FourStatePiece.UNREACHABLE;
 const O: FourStatePiece = FourStatePiece.ZERO;
 const X: FourStatePiece = FourStatePiece.ONE;
 
-describe('AbaloneMoveGenerator', () => {
+fdescribe('AbaloneMoveGenerator', () => {
 
     let moveGenerator: AbaloneMoveGenerator;
     const defaultConfig: NoConfig = AbaloneRules.get().getDefaultRulesConfig();

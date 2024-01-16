@@ -12,8 +12,8 @@ import { HivePiece } from './HivePiece';
 export class HivePieceComponent extends BaseGameComponent implements AfterContentChecked {
 
     @Input() piece: HivePiece;
-    @Input() x: number;
-    @Input() y: number;
+    @Input() x: number; // TODO KILL
+    @Input() y: number; // TODO KILL
     @Input() hexaLayout: HexaLayout;
     @Input() layer: number;
     @Input() pieceHeight: number;
@@ -32,7 +32,7 @@ export class HivePieceComponent extends BaseGameComponent implements AfterConten
         const coord: Coord = new Coord(this.x, this.y);
         this.pieceClass = this.getPlayerClass(this.piece.owner);
         this.hexaPoints = this.hexaLayout.getHexaPoints();
-        this.hexaCenter = this.hexaLayout.getCenterAt(coord);
+        this.hexaCenter = new Coord(0, 0); // this.hexaLayout.getCenterAt(coord);
         const isoPoints: [Coord[], Coord[], Coord[]] = this.hexaLayout.getIsoPoints(coord, this.pieceHeight);
         const isoPointsSVG: string[] = isoPoints.map((coords: Coord[]) =>
             coords.map((coord: Coord) => coord.toSVGPoint()).join(' '));
