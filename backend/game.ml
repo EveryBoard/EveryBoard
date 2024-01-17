@@ -3,7 +3,7 @@ open Domain
 
 let ( >>= ) = Result.bind
 
-let games_list = ["P4"] (* TODO: fill in with the rest, or extract automatically *)
+let games_list = (String.split_on_char ',' (Unix.getenv "GAMES"))
 
 module type GAME = sig
   val routes : Dream.route list

@@ -102,8 +102,12 @@ let rec of_firestore (json : JSON.t) : JSON.t =
     | `Assoc [("integerValue", `String v)] -> `Int (int_of_string v)
     | `Assoc [(_, v)] -> v (* We just rely on the real type contained, not on the type name from firestore *)
     | _-> raise (UnexpectedError ("Invalid firestore JSON: unexpected value when extracting field: " ^ (JSON.to_string value)))) in
-  match JSON.Util.member "fields" json with
-  | `Assoc fields -> `Assoc (List.map extract_field fields)
+  match json with
+  | `Assoc [] -> `Assoc []
+  | `Assoc _ -> begin match JSON.Util.member "fields" json with
+      | `Assoc fields -> `Assoc (List.map extract_field fields)
+      | _ -> raise (UnexpectedError ("Invalid firestore JSON: not an object: " ^ (JSON.to_string json)))
+    end
   | _ -> raise (UnexpectedError ("Invalid firestore JSON: not an object: " ^ (JSON.to_string json)))
 
 let to_firestore ?(path : string option) (doc : JSON.t) : JSON.t  =
