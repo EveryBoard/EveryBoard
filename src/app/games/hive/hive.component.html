@@ -6,7 +6,6 @@
         <polygon id="space_{{ groundInfo.x }}_{{ groundInfo.y }}"
                  [attr.points]="getHexaPoints()"
                  [attr.transform]="getHexaCenterTranslationAtXY(groundInfo.x, groundInfo.y)"
-                 [attr.transform]
                  class="base mid-stroke"
                  [ngClass]="groundInfo.content.spaceClasses"
                  (click)="selectSpace(groundInfo.x, groundInfo.y)"/>
