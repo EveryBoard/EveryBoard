@@ -5,7 +5,7 @@ import { MancalaConfig } from '../common/MancalaConfig';
 import { MancalaDistribution, MancalaMove } from '../common/MancalaMove';
 import { AwaleRules } from './AwaleRules';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { TutorialStepFailure } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStepFailure';
+import { TutorialStepMessage } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
 
 const defaultConfig: MGPOptional<MancalaConfig> = AwaleRules.get().getDefaultRulesConfig();
 
@@ -90,7 +90,7 @@ export class AwaleTutorial extends Tutorial {
             ], 0, [0, 0]),
             [MancalaMove.of(MancalaDistribution.of(0))],
             $localize`Sadly, you cannot capture here, otherwise the opponent could not play after you. When this happens, the move can be made, but no capture takes place!`,
-            TutorialStepFailure.FAILED_TRY_AGAIN(),
+            TutorialStepMessage.FAILED_TRY_AGAIN(),
         ),
         TutorialStep.anyMove(
             $localize`Feeding is mandatory`,
@@ -103,7 +103,7 @@ export class AwaleTutorial extends Tutorial {
             $localize`Congratulations! Note that you can choose to give your opponent the least number of seeds if it is better for you. It is often a good way to have easy captures!`,
         ),
         TutorialStep.anyMove(
-            TutorialStepFailure.END_OF_THE_GAME(),
+            TutorialStepMessage.END_OF_THE_GAME(),
             $localize`A game is won as soon as one player has captured 25 seeds, as that player has more than half of all the seeds.<br/><br/>You're playing Dark, sow the leftmost house.`,
             new MancalaState([
                 [4, 4, 3, 2, 1, 0],

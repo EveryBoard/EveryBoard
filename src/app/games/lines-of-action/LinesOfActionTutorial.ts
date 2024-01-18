@@ -5,7 +5,7 @@ import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { LinesOfActionMove } from './LinesOfActionMove';
 import { LinesOfActionState } from './LinesOfActionState';
 import { LinesOfActionRules } from './LinesOfActionRules';
-import { TutorialStepFailure } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStepFailure';
+import { TutorialStepMessage } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
 
 const _: PlayerOrNone = PlayerOrNone.NONE;
 const O: PlayerOrNone = PlayerOrNone.ZERO;
@@ -39,7 +39,7 @@ export class LinesOfActionTutorial {
          You're playing Dark, make the first move!`,
             LinesOfActionRules.get().getInitialState(),
             LinesOfActionMove.from(new Coord(1, 7), new Coord(1, 5)).get(),
-            TutorialStepFailure.CONGRATULATIONS(),
+            TutorialStepMessage.CONGRATULATIONS(),
         ),
         TutorialStep.fromMove(
             $localize`Jumping`,
@@ -57,7 +57,7 @@ export class LinesOfActionTutorial {
                 [_, _, _, _, _, _, _, O],
             ], 0),
             [LinesOfActionMove.from(new Coord(3, 1), new Coord(6, 1)).get()],
-            TutorialStepFailure.CONGRATULATIONS(),
+            TutorialStepMessage.CONGRATULATIONS(),
             $localize`Failed. You did not jump over one of your pieces.`,
         ),
         TutorialStep.fromMove(
@@ -89,7 +89,7 @@ export class LinesOfActionTutorial {
                 LinesOfActionMove.from(new Coord(3, 3), new Coord(2, 3)).get(),
                 LinesOfActionMove.from(new Coord(3, 3), new Coord(4, 3)).get(),
             ],
-            TutorialStepFailure.CONGRATULATIONS(),
+            TutorialStepMessage.CONGRATULATIONS(),
             $localize`Failed. This was not one of the expected moves.`,
         ),
         TutorialStep.fromPredicate(
@@ -114,10 +114,10 @@ export class LinesOfActionTutorial {
                 if (previous.getPieceAt(move.getEnd()) === PlayerOrNone.ONE) {
                     return MGPValidation.SUCCESS;
                 } else {
-                    return MGPValidation.failure(TutorialStepFailure.FAILED_TRY_AGAIN());
+                    return MGPValidation.failure(TutorialStepMessage.FAILED_TRY_AGAIN());
                 }
             },
-            TutorialStepFailure.CONGRATULATIONS(),
+            TutorialStepMessage.CONGRATULATIONS(),
         ),
         TutorialStep.fromMove(
             $localize`Tie`,
@@ -135,8 +135,8 @@ export class LinesOfActionTutorial {
                 [_, _, _, _, _, _, _, _],
             ], 0),
             [LinesOfActionMove.from(new Coord(0, 2), new Coord(4, 2)).get()],
-            TutorialStepFailure.CONGRATULATIONS(),
-            TutorialStepFailure.FAILED_TRY_AGAIN(),
+            TutorialStepMessage.CONGRATULATIONS(),
+            TutorialStepMessage.FAILED_TRY_AGAIN(),
         ),
     ];
 }

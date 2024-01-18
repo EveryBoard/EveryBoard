@@ -5,7 +5,7 @@ import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { MartianChessMove } from './MartianChessMove';
 import { MartianChessState } from './MartianChessState';
 import { MartianChessPiece } from './MartianChessPiece';
-import { TutorialStepFailure } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStepFailure';
+import { TutorialStepMessage } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
 import { MartianChessRules } from './MartianChessRules';
 
 const _: MartianChessPiece = MartianChessPiece.EMPTY;
@@ -38,7 +38,7 @@ export class MartianChessTutorial extends Tutorial {
                     return MGPValidation.failure($localize`This is not a pawn!`);
                 }
             },
-            TutorialStepFailure.CONGRATULATIONS(),
+            TutorialStepMessage.CONGRATULATIONS(),
         ),
         TutorialStep.fromPredicate(
             $localize`Moving drones`,
@@ -52,7 +52,7 @@ export class MartianChessTutorial extends Tutorial {
                     return MGPValidation.failure($localize`This is not a drone!`);
                 }
             },
-            TutorialStepFailure.CONGRATULATIONS(),
+            TutorialStepMessage.CONGRATULATIONS(),
         ),
         TutorialStep.fromPredicate(
             $localize`Moving queens`,
@@ -75,7 +75,7 @@ export class MartianChessTutorial extends Tutorial {
                     return MGPValidation.failure($localize`This is not a queen!`);
                 }
             },
-            TutorialStepFailure.CONGRATULATIONS(),
+            TutorialStepMessage.CONGRATULATIONS(),
         ),
         TutorialStep.fromMove(
             $localize`Captures`,
@@ -92,7 +92,7 @@ export class MartianChessTutorial extends Tutorial {
             ], 1),
             [MartianChessMove.from(new Coord(0, 2), new Coord(2, 4)).get()],
             $localize`Congratulations! By capturing that pawn, you won one point.`,
-            TutorialStepFailure.YOU_DID_NOT_CAPTURE_ANY_PIECE(),
+            TutorialStepMessage.YOU_DID_NOT_CAPTURE_ANY_PIECE(),
         ),
         TutorialStep.fromMove(
             $localize`Field Promotion (1/2)`,
@@ -111,7 +111,7 @@ export class MartianChessTutorial extends Tutorial {
                 MartianChessMove.from(new Coord(1, 1), new Coord(2, 2)).get(),
                 MartianChessMove.from(new Coord(2, 2), new Coord(1, 1)).get(),
             ],
-            TutorialStepFailure.CONGRATULATIONS(),
+            TutorialStepMessage.CONGRATULATIONS(),
             $localize`This is not a field promotion!`,
         ),
         TutorialStep.fromPredicate(
@@ -136,7 +136,7 @@ export class MartianChessTutorial extends Tutorial {
                     return MGPValidation.failure($localize`This is not a field promotion!`);
                 }
             },
-            TutorialStepFailure.CONGRATULATIONS(),
+            TutorialStepMessage.CONGRATULATIONS(),
         ),
         TutorialStep.fromPredicate(
             $localize`Call the clock`,
@@ -150,7 +150,7 @@ export class MartianChessTutorial extends Tutorial {
                     return MGPValidation.failure($localize`You did not call the clock!`);
                 }
             },
-            TutorialStepFailure.CONGRATULATIONS(),
+            TutorialStepMessage.CONGRATULATIONS(),
         ),
         TutorialStep.fromMove(
             $localize`Restarting the clock`,
@@ -166,7 +166,7 @@ export class MartianChessTutorial extends Tutorial {
                 [_, A, _, _],
             ], 15, MGPOptional.empty(), MGPOptional.of(1)),
             [MartianChessMove.from(new Coord(1, 1), new Coord(2, 2)).get()],
-            TutorialStepFailure.CONGRATULATIONS(),
+            TutorialStepMessage.CONGRATULATIONS(),
             $localize`This is not a capture, the game is now over, please retry!`,
         ),
         TutorialStep.anyMove(
@@ -183,7 +183,7 @@ export class MartianChessTutorial extends Tutorial {
                 [_, B, _, _],
             ], 15, MGPOptional.empty(), MGPOptional.of(1)),
             MartianChessMove.from(new Coord(1, 1), new Coord(2, 2)).get(),
-            TutorialStepFailure.CONGRATULATIONS(),
+            TutorialStepMessage.CONGRATULATIONS(),
         ),
         TutorialStep.fromPredicate(
             $localize`End by emptyness`,
@@ -206,7 +206,7 @@ export class MartianChessTutorial extends Tutorial {
                     return MGPValidation.failure($localize`Your piece is still in you territory!`);
                 }
             },
-            TutorialStepFailure.CONGRATULATIONS(),
+            TutorialStepMessage.CONGRATULATIONS(),
         ),
     ];
 }

@@ -6,7 +6,7 @@ import { HnefataflRules } from './HnefataflRules';
 import { TaflConfig } from '../TaflConfig';
 import { TaflState } from '../TaflState';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { TutorialStepFailure } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStepFailure';
+import { TutorialStepMessage } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
 
 const _: TaflPawn = TaflPawn.UNOCCUPIED;
 const O: TaflPawn = TaflPawn.PLAYER_ZERO_PAWN;
@@ -27,7 +27,7 @@ export class HnefataflTutorial extends Tutorial {
             $localize`All pieces move the same way. Similarly to a rook in chess, a piece can move:<ol><li>By as many squares as you want.</li><li>Without going over another piece or stopping on another piece.</li><li>Horizontally or vertically.</li><li>Only the king can land on a throne.</li></ol>To move a piece, click on it and then on its landing square.<br/><br/>You're playing Dark, do the first move.`,
             HnefataflRules.get().getInitialState(defaultConfig),
             HnefataflMove.from(new Coord(5, 1), new Coord(1, 1)).get(),
-            TutorialStepFailure.CONGRATULATIONS(),
+            TutorialStepMessage.CONGRATULATIONS(),
         ),
         TutorialStep.fromMove(
             $localize`Capturing a soldier (1/2)`,
@@ -89,7 +89,7 @@ export class HnefataflTutorial extends Tutorial {
                 [_, _, _, _, _, _, _, _, _, _, _],
             ], 72),
             [HnefataflMove.from(new Coord(3, 4), new Coord(2, 4)).get()],
-            TutorialStepFailure.CONGRATULATIONS_YOU_WON(),
+            TutorialStepMessage.CONGRATULATIONS_YOU_WON(),
             $localize`Failed, you let the king run away.`,
         ),
         TutorialStep.fromMove(
@@ -110,7 +110,7 @@ export class HnefataflTutorial extends Tutorial {
             ], 72),
             [HnefataflMove.from(new Coord(3, 3), new Coord(3, 1)).get()],
             $localize`The king is dead, long live the king. Congratulations, you won.`,
-            TutorialStepFailure.FAILED_TRY_AGAIN(),
+            TutorialStepMessage.FAILED_TRY_AGAIN(),
         ),
     ];
 }

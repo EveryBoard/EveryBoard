@@ -7,7 +7,7 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { Tutorial, TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { GipfCapture } from 'src/app/jscaip/GipfProjectHelper';
 import { GipfRules } from './GipfRules';
-import { TutorialStepFailure } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStepFailure';
+import { TutorialStepMessage } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
 
 const N: FourStatePiece = FourStatePiece.UNREACHABLE;
 const _: FourStatePiece = FourStatePiece.EMPTY;
@@ -37,7 +37,7 @@ export class GipfTutorial extends Tutorial {
         You're playing Dark, insert a piece.`,
             GipfRules.get().getInitialState(),
             new GipfMove(new GipfPlacement(new Coord(3, 0), MGPOptional.of(HexaDirection.DOWN)), [], []),
-            TutorialStepFailure.CONGRATULATIONS(),
+            TutorialStepMessage.CONGRATULATIONS(),
         ),
         TutorialStep.fromMove(
             $localize`Captures (1/3)`,
@@ -79,7 +79,7 @@ export class GipfTutorial extends Tutorial {
             )],
             $localize`Congratulations, you have gotten 4 of your pieces back. This is not the most useful capture.
         Let's now see how captures can really be useful.`,
-            TutorialStepFailure.FAILED_TRY_AGAIN(),
+            TutorialStepMessage.FAILED_TRY_AGAIN(),
         ),
         TutorialStep.fromMove(
             $localize`Captures (2/3)`,

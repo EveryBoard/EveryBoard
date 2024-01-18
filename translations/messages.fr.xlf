@@ -1392,11 +1392,11 @@
       </trans-unit>
       <trans-unit id="1218183221112518220" datatype="html">
         <source>However, the distribution only stops when the last seed is dropped in a house that contains zero or three seeds (before drop).&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, do such a move!</source>
-        <target>Cependant, la distribution ne s'arrête que quand la dernière graine est déposée dans une maison qui contient (avant déposage) zéro ou trois graines.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, faites un mouvement comme celà !</target>
+        <target>Cependant, la distribution ne s'arrête que quand la dernière graine est déposée dans une maison qui contient (avant déposage) zéro ou trois graines.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, faites un mouvement comme cela !</target>
       </trans-unit>
-      <trans-unit id="4651814494564877992" datatype="html">
-        <source>So, after landing in the house with 3 seeds, a second lap has been started</source>
-        <target>Donc, après atterissage dans la maison avec 3 graines, un second tour a commencé</target>
+      <trans-unit id="4875172921761216929" datatype="html">
+        <source>So, after landing in the house with 2 seeds (then 3), a second lap has been started.</source>
+        <target>Donc, après atterissage dans la maison avec 2 graines (puis 3), un second tour a commencé.</target>
       </trans-unit>
       <trans-unit id="3067825694318214397" datatype="html">
         <source>Captures during distribution (1/2)</source>
@@ -1414,21 +1414,21 @@
         <source>Captures during distribution (2/2)</source>
         <target>Captures pendant la distribution (2/2)</target>
       </trans-unit>
-      <trans-unit id="4075686340012399389" datatype="html">
-        <source>If, during some distribution, you pass by one house of the opponent that contains 3 seeds, and drop a fourth seed, the opponent capture the house immediately (while you continue to distribute)!&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, do such a move!</source>
-        <target>Si, durant une distribution, vous passez pas une maison de l'adversaire qui contient 3 graines, and déposez une quatrième, l'adversaire capture la maison immédiatement (pendant que vous continuez la distribution) !&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, faites un tel mouvement !</target>
+      <trans-unit id="5715964665371191258" datatype="html">
+        <source>If, during some distribution, you pass by one house of the opponent that contains 3 seeds, and drop a fourth seed, the opponent captures the house immediately, while you continue to distribute.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, do such a move!</source>
+        <target>Si, durant une distribution, vous passez pas une maison de l'adversaire qui contient 3 graines, et déposez une quatrième, l'adversaire capture la maison immédiatement, pendant que vous continuez la distribution.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, faites un tel mouvement !</target>
       </trans-unit>
       <trans-unit id="1192652665972488441" datatype="html">
         <source>There it is, the opponent captured 4 seeds.</source>
         <target>VOilà, l'adversaire a capturé 4 graines.</target>
       </trans-unit>
-      <trans-unit id="4644061788564030704" datatype="html">
-        <source>Though, if your very last seed is drop in a house of the opponent that contains 3 seeds, you capture it immediately!&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, do such a move!</source>
-        <target>Cependant, si votre dernière graine est déposée dans une maison de l'adversaire qui contient 3 graines, vous capturez immédiatement la maison !&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, faites un tel mouvement !</target>
+      <trans-unit id="4239012084263051063" datatype="html">
+        <source>Though, if your very last seed is dropped in a house of the opponent that contains 3 seeds (4 with your seed), you capture it immediately!&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, do such a move!</source>
+        <target>Cependant, si votre dernière graine est déposée dans une maison de l'adversaire qui contient 3 graines (4 avec votre graine), vous capturez immédiatement la maison !&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, faites un tel mouvement !</target>
       </trans-unit>
-      <trans-unit id="87826596030786463" datatype="html">
-        <source>At any end of turn, if the number of seed reach 8 or less, the first player capture capture the remaining seeds.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, end the game by capturing!</source>
-        <target>À n'importe quelle fin de tour, si le nombre total de graines tombe à 8 ou moins, le premier joueur capture les graines restantes.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, terminez le jeu en capturant !</target>
+      <trans-unit id="3868200086323207176" datatype="html">
+        <source>At the end of a turn, if the number of seeds reaches 8 or less, the first player (Dark) captures the remaining seeds.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, end the game by capturing!</source>
+        <target>À la fin d'un tour, si le nombre total de graines tombe à 8 ou moins, le premier joueur (Foncé) capture les graines restantes.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, terminez le jeu en capturant !</target>
       </trans-unit>
       <trans-unit id="2821967115826330186" datatype="html">
         <source>There it is, you captured all remaining seeds.</source>
@@ -3291,9 +3291,9 @@
         <source>This is not the winning move. Try again.</source>
         <target>Ce n'est pas le mouvement gagnant. Essayez encore.</target>
       </trans-unit>
-      <trans-unit id="387119594039428962" datatype="html">
-        <source><x id="PH" equiv-text="this.gameName"/> is a Mancala. Mancala is the name of a family of board games that dates back at least to the third century. Mancalas are games of distribution (sowing) and capture. Their goal is to capture the most seeds. The spaces in Mancalas are called the houses. The ones on the extreme left and right are called the stores, they contain the seeds that each player won. As you are playing Dark, the 6 houses on the bottom are yours.</source>
-        <target><x id="PH" equiv-text="this.gameName"/> est un Mancala. Mancala est le nom d'une famille de jeux de plateau datant au moins du troisième siècle. Les mancalas sont des jeux de distribution (égrenage) et capture. Leur but est de capturer le plus de graines. Les cases sont appelées des maisons. Comme vous jouez Foncé, vos 6 maisons sont celles du bas.</target>
+      <trans-unit id="4012808273739972279" datatype="html">
+        <source><x id="PH" equiv-text="gameName"/> is a Mancala. Mancala is the name of a family of board games that dates back at least to the third century. Mancalas are games of distribution (sowing) and capture. Their goal is to capture the most seeds. The spaces in Mancalas are called the houses. The ones on the extreme left and right are called the stores, they contain the seeds that each player captured. As you are playing Dark, the 6 houses on the bottom are yours.</source>
+        <target><x id="PH" equiv-text="this.gameName"/> est un Mancala. Mancala est le nom d'une famille de jeux de plateau datant au moins du troisième siècle. Les mancalas sont des jeux de distribution (égrenage) et capture. Leur but est de capturer le plus de graines. Les cases sont appelées des maisons. Celles sur l'extrême gauche et droite sont appellées les magasins, ils contiennent les graines que chaque joueur a capturé. Comme vous jouez Foncé, vos 6 maisons sont celles du bas.</target>
       </trans-unit>
       <trans-unit id="9104781897718296194" datatype="html">
         <source>Bonus fact: Awalé is the most common of all Mancalas.</source>

@@ -3,7 +3,7 @@ import { GoState, GoPiece, Phase } from 'src/app/games/go/GoState';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { Tutorial, TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { GoConfig, GoRules } from './GoRules';
-import { TutorialStepFailure } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStepFailure';
+import { TutorialStepMessage } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
 
 const X: GoPiece = GoPiece.LIGHT;
 const O: GoPiece = GoPiece.DARK;
@@ -150,10 +150,10 @@ export class GoTutorial extends Tutorial {
         This intersection is therefore marked with a red square, to remind the players that this intersection is forbidden.
         This rule is called the Ko.
         The trick for Light is to try to create a big enough threat so that Dark must answer immediately, and does not have the time to protect its last stone, so that Light can capture it right after.`,
-            TutorialStepFailure.FAILED_TRY_AGAIN(),
+            TutorialStepMessage.FAILED_TRY_AGAIN(),
         ),
         TutorialStep.fromMove(
-            TutorialStepFailure.END_OF_THE_GAME(),
+            TutorialStepMessage.END_OF_THE_GAME(),
             $localize`When a player feels that there is no advantage to putting a new stone, that player can pass a turn.
         The game phase stops when both players pass consecutively, and we move on to the counting phase.
         The dead groups are then marked by clicking on them.
@@ -176,7 +176,7 @@ export class GoTutorial extends Tutorial {
         The intersections where the prisoners are count as Dark's territory
         Light has 8 territories and 1 prisoner.
         The end result is therefore 18 - 9 for Dark.`,
-            TutorialStepFailure.FAILED_TRY_AGAIN(),
+            TutorialStepMessage.FAILED_TRY_AGAIN(),
         ),
     ];
 }

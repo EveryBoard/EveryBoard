@@ -150,7 +150,7 @@ export abstract class MancalaRules<C extends MancalaConfig = MancalaConfig>
 
     /**
      * Apply the distribution part of the move.
-     * Apply the capture that happend due to distribution (for example the passage in the store).
+     * Apply the capture that happened due to distribution (for example the passage in the store).
      * Should not increment the turn of the state.
      */
     public distributeMove(move: MancalaMove, state: MancalaState, config: MancalaConfig): MancalaDistributionResult {
@@ -416,7 +416,7 @@ export abstract class MancalaRules<C extends MancalaConfig = MancalaConfig>
         const captured: [number, number] = state.getScoresCopy();
         const capturedSum: number = state.getTotalRemainingSeeds();
         const captureMap: number[][] = TableUtils.add(postCaptureResult.captureMap, state.board);
-        captured[Player.ZERO.value] += capturedSum / 2; // TODO FOR REVIEW: on fait des demi-captures :p ?
+        captured[Player.ZERO.value] += capturedSum / 2;
         captured[Player.ONE.value] += capturedSum / 2;
         return {
             capturedSum,

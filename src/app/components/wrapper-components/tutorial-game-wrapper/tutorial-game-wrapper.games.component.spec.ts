@@ -86,7 +86,7 @@ import { YinshRules } from 'src/app/games/yinsh/YinshRules';
 import { YinshTutorial, YinshTutorialMessages } from 'src/app/games/yinsh/YinshTutorial';
 import { YinshCapture, YinshMove } from 'src/app/games/yinsh/YinshMove';
 
-import { TutorialStepFailure } from './TutorialStepFailure';
+import { TutorialStepMessage } from './TutorialStepMessage';
 import { Comparable } from 'src/app/utils/Comparable';
 import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 
@@ -262,7 +262,7 @@ describe('TutorialGameWrapperComponent (games)', () => {
                     PylosRules.get(),
                     pylosTutorial[4],
                     PylosMove.ofDrop(new PylosCoord(3, 3, 0), []),
-                    MGPValidation.failure(TutorialStepFailure.YOU_DID_NOT_CAPTURE_ANY_PIECE()),
+                    MGPValidation.failure(TutorialStepMessage.YOU_DID_NOT_CAPTURE_ANY_PIECE()),
                 ], [
                     PylosRules.get(),
                     pylosTutorial[4],

@@ -6,7 +6,7 @@ import { BrandhubRules } from './BrandhubRules';
 import { TaflConfig } from '../TaflConfig';
 import { TaflState } from '../TaflState';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { TutorialStepFailure } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStepFailure';
+import { TutorialStepMessage } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
 
 const _: TaflPawn = TaflPawn.UNOCCUPIED;
 const O: TaflPawn = TaflPawn.PLAYER_ZERO_PAWN;
@@ -27,7 +27,7 @@ export class BrandhubTutorial extends Tutorial {
             $localize`All pieces move the same way. Similarly to a rook in chess, a piece can move: <ol><li>By as many squares as you want.</li><li>Without going over another piece or stopping on another piece.</li><li>Horizontally or vertically.</li><li>Only the king can land on a corner throne.</li><li>Once the king left his central throne, no piece can land on it, but all can pass over it.</li></ol>To move a piece, click on it and then on its landing square.<br/><br/>You're playing Dark, do the first move.`,
             BrandhubRules.get().getInitialState(defaultConfig),
             BrandhubMove.from(new Coord(3, 1), new Coord(1, 1)).get(),
-            TutorialStepFailure.CONGRATULATIONS(),
+            TutorialStepMessage.CONGRATULATIONS(),
         ),
         TutorialStep.fromMove(
             $localize`Capturing a soldier (1/2)`,
@@ -79,7 +79,7 @@ export class BrandhubTutorial extends Tutorial {
                 [_, _, _, _, _, _, _],
             ], 72),
             [BrandhubMove.from(new Coord(1, 3), new Coord(2, 3)).get()],
-            TutorialStepFailure.CONGRATULATIONS_YOU_WON(),
+            TutorialStepMessage.CONGRATULATIONS_YOU_WON(),
             $localize`Failed, you let the king run away.`,
         ),
         TutorialStep.fromMove(
@@ -96,7 +96,7 @@ export class BrandhubTutorial extends Tutorial {
             ], 72),
             [BrandhubMove.from(new Coord(2, 0), new Coord(2, 2)).get()],
             $localize`The king is dead, long live the king. Congratulations, you won.`,
-            TutorialStepFailure.FAILED_TRY_AGAIN(),
+            TutorialStepMessage.FAILED_TRY_AGAIN(),
         ),
         TutorialStep.fromMove(
             $localize`Capturing the king far from his throne`,
@@ -112,7 +112,7 @@ export class BrandhubTutorial extends Tutorial {
             ], 72),
             [BrandhubMove.from(new Coord(3, 6), new Coord(2, 6)).get()],
             $localize`The king is dead, long live the king. Congratulations, you won.`,
-            TutorialStepFailure.FAILED_TRY_AGAIN(),
+            TutorialStepMessage.FAILED_TRY_AGAIN(),
         ),
     ];
 }

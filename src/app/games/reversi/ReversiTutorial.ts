@@ -4,7 +4,7 @@ import { PlayerOrNone } from 'src/app/jscaip/Player';
 import { Tutorial, TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { ReversiConfig, ReversiRules } from './ReversiRules';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { TutorialStepFailure } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStepFailure';
+import { TutorialStepMessage } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
 
 const _: PlayerOrNone = PlayerOrNone.NONE;
 const O: PlayerOrNone = PlayerOrNone.ZERO;
@@ -38,7 +38,7 @@ export class ReversiTutorial extends Tutorial {
         Dark plays first.`,
             ReversiRules.get().getInitialState(defaultConfig),
             new ReversiMove(2, 4),
-            TutorialStepFailure.CONGRATULATIONS(),
+            TutorialStepMessage.CONGRATULATIONS(),
         ),
         TutorialStep.fromMove(
             $localize`Captures (2/2)`,
@@ -54,7 +54,7 @@ export class ReversiTutorial extends Tutorial {
                 [_, O, X, O, X, O, _, _],
             ], 1),
             [new ReversiMove(0, 7)],
-            TutorialStepFailure.CONGRATULATIONS(),
+            TutorialStepMessage.CONGRATULATIONS(),
             $localize`Lower and more to the left, please.`,
         ),
         TutorialStep.informational(

@@ -4,7 +4,7 @@ import { CoerceoState } from 'src/app/games/coerceo/CoerceoState';
 import { Coord } from 'src/app/jscaip/Coord';
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
 import { CoerceoRules } from './CoerceoRules';
-import { TutorialStepFailure } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStepFailure';
+import { TutorialStepMessage } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
 
 const _: FourStatePiece = FourStatePiece.EMPTY;
 const N: FourStatePiece = FourStatePiece.UNREACHABLE;
@@ -60,7 +60,7 @@ export class CoerceoTutorial extends Tutorial {
                 CoerceoRegularMove.of(new Coord(5, 2), new Coord(4, 1)),
                 CoerceoRegularMove.of(new Coord(3, 4), new Coord(4, 3)),
             ],
-            TutorialStepFailure.CONGRATULATIONS(),
+            TutorialStepMessage.CONGRATULATIONS(),
             $localize`Failed, you have not captured any piece.`,
         ),
         TutorialStep.fromMove(
@@ -88,7 +88,7 @@ export class CoerceoTutorial extends Tutorial {
                 CoerceoRegularMove.of(new Coord(2, 6), new Coord(3, 5)),
                 CoerceoRegularMove.of(new Coord(2, 6), new Coord(3, 7)),
             ],
-            TutorialStepFailure.CONGRATULATIONS(),
+            TutorialStepMessage.CONGRATULATIONS(),
             $localize`Failed, you have not gained the two tiles that you could, try again!`,
         ),
         TutorialStep.fromMove(
@@ -113,7 +113,7 @@ export class CoerceoTutorial extends Tutorial {
             [
                 CoerceoTileExchangeMove.of(new Coord(5, 5)),
             ],
-            TutorialStepFailure.CONGRATULATIONS(),
+            TutorialStepMessage.CONGRATULATIONS(),
             $localize`It's nice to move a piece, but you could have had the opponent's piece immediately by clicking on it!`,
         ),
         TutorialStep.fromMove(
@@ -139,7 +139,7 @@ export class CoerceoTutorial extends Tutorial {
             ],
             $localize`Congratulations! See, your piece no longer had any empty neighboring space after you have gained the tile, but it stayed on the board as it was your turn.
         However, the opponent's piece has disappeared because the tile's capture has removed its last empty neighboring space.`,
-            TutorialStepFailure.FAILED_TRY_AGAIN(),
+            TutorialStepMessage.FAILED_TRY_AGAIN(),
         ),
     ];
 }

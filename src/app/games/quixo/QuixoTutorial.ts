@@ -5,7 +5,7 @@ import { PlayerOrNone } from 'src/app/jscaip/Player';
 import { Tutorial, TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { QuixoRules } from './QuixoRules';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { TutorialStepFailure } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStepFailure';
+import { TutorialStepMessage } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
 
 const _: PlayerOrNone = PlayerOrNone.NONE;
 const O: PlayerOrNone = PlayerOrNone.ZERO;
@@ -46,7 +46,7 @@ export class QuixoTutorial extends Tutorial {
             [new QuixoMove(4, 4, Orthogonal.LEFT)],
             $localize`See how the four dark pieces have been moved one space to the right.
         The neutral piece has been move 4 pieces to the left and has become light.`,
-            TutorialStepFailure.FAILED_TRY_AGAIN(),
+            TutorialStepMessage.FAILED_TRY_AGAIN(),
         ),
         TutorialStep.fromMove(
             $localize`Victory`,
@@ -64,8 +64,8 @@ export class QuixoTutorial extends Tutorial {
                 [X, O, _, X, O],
             ], 31),
             [new QuixoMove(3, 0, Orthogonal.DOWN)],
-            TutorialStepFailure.CONGRATULATIONS_YOU_WON(),
-            TutorialStepFailure.FAILED_TRY_AGAIN(),
+            TutorialStepMessage.CONGRATULATIONS_YOU_WON(),
+            TutorialStepMessage.FAILED_TRY_AGAIN(),
         ),
     ];
 }

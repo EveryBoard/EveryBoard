@@ -5,7 +5,7 @@ import { BaAwaRules } from './BaAwaRules';
 import { MancalaTutorial } from '../common/MancalaTutorial';
 import { MancalaState } from '../common/MancalaState';
 import { MancalaDistribution, MancalaMove } from '../common/MancalaMove';
-import { TutorialStepFailure } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStepFailure';
+import { TutorialStepMessage } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
 
 const defaultConfig: MGPOptional<BaAwaConfig> = BaAwaRules.get().getDefaultRulesConfig();
 
@@ -37,8 +37,8 @@ export class BaAwaTutorial extends Tutorial {
                 [0, 0, 0, 5, 0, 0],
             ], 0, [0, 0]),
             [MancalaMove.of(MancalaDistribution.of(3))],
-            $localize`So, after landing in the house with 3 seeds, a second lap has been started`,
-            TutorialStepFailure.FAILED_TRY_AGAIN(),
+            $localize`So, after landing in the house with 2 seeds (then 3), a second lap has been started.`,
+            TutorialStepMessage.FAILED_TRY_AGAIN(),
         ),
         TutorialStep.fromMove(
             $localize`Captures during distribution (1/2)`,
@@ -53,7 +53,7 @@ export class BaAwaTutorial extends Tutorial {
         ),
         TutorialStep.fromMove(
             $localize`Captures during distribution (2/2)`,
-            $localize`If, during some distribution, you pass by one house of the opponent that contains 3 seeds, and drop a fourth seed, the opponent capture the house immediately (while you continue to distribute)!<br/><br/>You're playing Dark, do such a move!`,
+            $localize`If, during some distribution, you pass by one house of the opponent that contains 3 seeds, and drop a fourth seed, the opponent captures the house immediately, while you continue to distribute.<br/><br/>You're playing Dark, do such a move!`,
             new MancalaState([
                 [0, 3, 0, 0, 8, 0],
                 [3, 0, 1, 0, 0, 0],
@@ -64,7 +64,7 @@ export class BaAwaTutorial extends Tutorial {
         ),
         TutorialStep.fromMove(
             $localize`Captures`,
-            $localize`Though, if your very last seed is drop in a house of the opponent that contains 3 seeds, you capture it immediately!<br/><br/>You're playing Dark, do such a move!`,
+            $localize`Though, if your very last seed is dropped in a house of the opponent that contains 3 seeds (4 with your seed), you capture it immediately!<br/><br/>You're playing Dark, do such a move!`,
             new MancalaState([
                 [0, 1, 1, 3, 8, 0],
                 [2, 7, 2, 0, 0, 0],
@@ -74,11 +74,11 @@ export class BaAwaTutorial extends Tutorial {
             MancalaTutorial.YOU_DID_NOT_CAPTURE_ANY_SEEDS(),
         ),
         TutorialStep.fromMove(
-            TutorialStepFailure.END_OF_THE_GAME(),
-            $localize`At any end of turn, if the number of seed reach 8 or less, the first player capture capture the remaining seeds.<br/><br/>You're playing Dark, end the game by capturing!`,
+            TutorialStepMessage.END_OF_THE_GAME(),
+            $localize`At the end of a turn, if the number of seeds reaches 8 or less, the first player (Dark) captures the remaining seeds.<br/><br/>You're playing Dark, end the game by capturing!`,
             new MancalaState([
                 [0, 1, 1, 3, 0, 0],
-                [1, 0, 2, 0, 0, 0],
+                [1, 0, 2, 0, 0, 4],
             ], 0, [0, 0]),
             [MancalaMove.of(MancalaDistribution.of(2))],
             $localize`There it is, you captured all remaining seeds.`,
