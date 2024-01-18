@@ -124,27 +124,27 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "everyboard:build"
+            "buildTarget": "everyboard:build"
           },
           "configurations": {
             "fr": {
-              "browserTarget": "everyboard:build:fr"
+              "buildTarget": "everyboard:build:fr"
             },
             "local": {
-              "browserTarget": "everyboard:build:local"
+              "buildTarget": "everyboard:build:local"
             },
             "production": {
-              "browserTarget": "everyboard:build"
+              "buildTarget": "everyboard:build"
             },
             "debug": {
-              "browserTarget": "everyboard:build:debug"
+              "buildTarget": "everyboard:build:debug"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "everyboard:build"
+            "buildTarget": "everyboard:build"
           }
         },
         "test": {

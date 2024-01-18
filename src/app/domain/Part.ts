@@ -27,7 +27,7 @@ type EventType = 'Move' | 'Request' | 'Reply' | 'Action';
 export type GameEventBase = {
     readonly eventType: EventType;
     readonly time: FirestoreTime;
-    readonly player: 0 | 1;
+    readonly user: MinimalUser;
 }
 
 export type GameEventMove = GameEventBase & {
@@ -63,8 +63,6 @@ export class MGPResult {
     public static readonly HARD_DRAW: MGPResult = new MGPResult(0);
 
     public static readonly RESIGN: MGPResult = new MGPResult(1);
-
-    public static readonly ESCAPE: MGPResult = new MGPResult(2);
 
     public static readonly VICTORY: MGPResult = new MGPResult(3);
 
