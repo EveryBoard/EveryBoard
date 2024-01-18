@@ -912,7 +912,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             }));
         });
         describe('opponent given take back during their turn', () => {
-            it('should move board back two turn', fakeAsync(async() => {
+            it('should move board back two turns', fakeAsync(async() => {
                 // Given an initial board where it's opponent second turn, and opponent asked for take back
                 await prepareTestUtilsFor(UserMocks.OPPONENT_AUTH_USER, PreparationOptions.withoutClocks);
                 await receiveNewMoves(0, [FIRST_MOVE_ENCODED]);
@@ -922,6 +922,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
 
                 // When accepting opponent's take back
                 await acceptTakeBack();
+                tick(0);
 
                 // Then turn should be changed to 0
                 const opponentTurnDiv: DebugElement = testUtils.findElement('#currentPlayerIndicator');
@@ -961,6 +962,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 // When accepting opponent's take back
                 await acceptTakeBack();
                 testUtils.detectChanges();
+                tick(0);
 
                 // Then turn should be changed to 0
                 const opponentTurnDiv: DebugElement = testUtils.findElement('#currentPlayerIndicator');
@@ -987,7 +989,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             }));
         });
         describe('User given take back during their turn', () => {
-            it('should move board back two turn', fakeAsync(async() => {
+            it('should move board back two turns', fakeAsync(async() => {
                 // Given an initial board where it's user (second) turn, and user just asked for take back
                 await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
                 await doMove(FIRST_MOVE, true);
@@ -1766,6 +1768,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             await receiveReply(Player.ONE, 'Accept', 'Draw');
             await receiveAction(Player.ONE, 'EndGame');
             testUtils.detectChanges();
+            tick(0);
 
             // When displaying the board
             // Then the text should indicate players have agreed to draw

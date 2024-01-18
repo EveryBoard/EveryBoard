@@ -597,7 +597,7 @@ describe('PartCreationComponent', () => {
                 component.stopSendingPresenceTokensAndObservingUsersIfNeeded();
             }));
         });
-        describe('Canceling part creation and component destruction', () => {
+        describe('Cancelling part creation and component destruction', () => {
             it('should delete the game, configRoom and chat', fakeAsync(async() => {
                 // Given a part creation
                 awaitComponentInitialization();
@@ -622,8 +622,8 @@ describe('PartCreationComponent', () => {
                 awaitComponentInitialization();
                 await testUtils.expectToDisplayInfoMessage('The game has been canceled!', async() => {
                     await clickElement('#cancel');
+                    tick(0);
                 });
-                tick(0);
                 component.stopSendingPresenceTokensAndObservingUsersIfNeeded();
 
                 // When the component is destroyed
@@ -643,8 +643,8 @@ describe('PartCreationComponent', () => {
                 spyOn(currentGameService, 'removeCurrentGame').and.callThrough();
                 await testUtils.expectToDisplayInfoMessage('The game has been canceled!', async() => {
                     await clickElement('#cancel');
+                    tick(0);
                 });
-                tick(0);
 
                 // Then currentGame should be emptied
                 expect(currentGameService.removeCurrentGame).toHaveBeenCalledOnceWith();
