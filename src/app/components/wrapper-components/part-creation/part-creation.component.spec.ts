@@ -597,7 +597,7 @@ describe('PartCreationComponent', () => {
                 component.stopSendingPresenceTokensAndObservingUsersIfNeeded();
             }));
         });
-        describe('Cancelling part creation and component destruction', () => {
+        describe('Canceling part creation and component destruction', () => {
             it('should delete the game, configRoom and chat', fakeAsync(async() => {
                 // Given a part creation
                 awaitComponentInitialization();

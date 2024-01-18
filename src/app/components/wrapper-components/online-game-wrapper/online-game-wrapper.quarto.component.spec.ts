@@ -242,7 +242,8 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         tick(0);
     }
     async function acceptTakeBack(): Promise<void> {
-        return await testUtils.clickElement('#accept');
+        await testUtils.clickElement('#accept');
+        tick(0);
     }
     async function refuseTakeBack(): Promise<void> {
         return await testUtils.clickElement('#reject');
@@ -843,7 +844,6 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
 
                 // Then should allow it after proposing sent
                 await acceptTakeBack();
-                tick(0);
                 testUtils.detectChanges();
 
                 // and then again not allowing it
@@ -922,7 +922,6 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
 
                 // When accepting opponent's take back
                 await acceptTakeBack();
-                tick(0);
 
                 // Then turn should be changed to 0
                 const opponentTurnDiv: DebugElement = testUtils.findElement('#currentPlayerIndicator');
@@ -962,7 +961,6 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 // When accepting opponent's take back
                 await acceptTakeBack();
                 testUtils.detectChanges();
-                tick(0);
 
                 // Then turn should be changed to 0
                 const opponentTurnDiv: DebugElement = testUtils.findElement('#currentPlayerIndicator');
@@ -980,7 +978,6 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 // When accepting opponent's take back
                 spyOn(wrapper.chronoZeroGlobal, 'resume').and.callThrough();
                 await acceptTakeBack();
-                tick(0);
 
                 // Then count down should be resumed for opponent and user should receive their decision time back
                 expect(wrapper.chronoZeroGlobal.resume).toHaveBeenCalledOnceWith();
