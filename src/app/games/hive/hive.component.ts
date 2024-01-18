@@ -174,7 +174,6 @@ export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, H
     private computeViewBox(): void {
         const coords: Coord[] = this.getPieceCoords().union(this.getAllNeighbors()).toList();
         coords.push(new Coord(0, 0)); // Need at least one coord for the first space
-        console.log('in the list:', coords)
         this.boardViewBox = ViewBox.fromHexa(coords, this.hexaLayout, this.STROKE_WIDTH);
         const minimalViewBox: ViewBox = new ViewBox(
             this.getRemainingPieceTransformAsCoord(new HivePiece(Player.ZERO, 'QueenBee')).x,
@@ -182,35 +181,34 @@ export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, H
             this.SPACE_SIZE * 4 * 5,
             0);
 
-        // const spaceForRemainingPieces: number = this.SPACE_SIZE * 5;
-        // let spaceForZero: number = 0;
-        // if (this.getState().remainingPieces.getAny(Player.ZERO).isPresent()) {
-        //     spaceForZero = spaceForRemainingPieces;
-        // }
-        // let spaceForOne: number = 0;
-        // if (this.getState().remainingPieces.getAny(Player.ONE).isPresent()) {
-        //     spaceForOne = spaceForRemainingPieces;
-        // }
+        const spaceForRemainingPieces: number = this.SPACE_SIZE * 5.5;
+        let spaceForZero: number = 0;
+        if (this.getState().remainingPieces.getAny(Player.ZERO).isPresent()) {
+            spaceForZero = spaceForRemainingPieces;
+        }
+        let spaceForOne: number = 0;
+        if (this.getState().remainingPieces.getAny(Player.ONE).isPresent()) {
+            spaceForOne = spaceForRemainingPieces;
+        }
 
-        // const boardAndRemainingViewBox: ViewBox = this.boardViewBox
-        //     .containingAtLeast(minimalViewBox)
-        //     .expand(0, 0, spaceForZero, spaceForOne);
-        // if (this.inspectedStack.isPresent()) {
-        //     const inspectedStackPosition: Coord =
-        //         new Coord(boardAndRemainingViewBox.right() + this.SPACE_SIZE,
-        //                   boardAndRemainingViewBox.center().y);
-        //     const stackSize: number = this.inspectedStack.get().size();
-        //     // y to get it centered vertically
-        //     const y: number = inspectedStackPosition.y + (stackSize-1)*3*this.PIECE_HEIGHT;
-        //     this.inspectedStackTransform = `translate(${inspectedStackPosition.x} ${y})`;
+        const boardAndRemainingViewBox: ViewBox = this.boardViewBox
+            .containingAtLeast(minimalViewBox)
+            .expandAbove(spaceForZero)
+            .expandBelow(spaceForOne);
+        if (this.inspectedStack.isPresent()) {
+            const inspectedStackPosition: Coord =
+                new Coord(boardAndRemainingViewBox.right() + this.SPACE_SIZE,
+                          boardAndRemainingViewBox.center().y);
+            const stackSize: number = this.inspectedStack.get().size();
+            // y to get it centered vertically
+            const y: number = inspectedStackPosition.y + (stackSize-1)*3*this.PIECE_HEIGHT;
+            this.inspectedStackTransform = `translate(${inspectedStackPosition.x} ${y})`;
 
-        //     const spaceForInspectedStack: number = this.SPACE_SIZE*5;
-        //     this.viewBox = boardAndRemainingViewBox.expand(0, spaceForInspectedStack, 0, 0).toSVGString();
-        // } else {
-        //     this.viewBox = boardAndRemainingViewBox.toSVGString();
-        // }
-        this.viewBox = minimalViewBox.toSVGString();
-        console.log('vue boite', this.viewBox)
+            const spaceForInspectedStack: number = this.SPACE_SIZE*5;
+            this.viewBox = boardAndRemainingViewBox.expand(0, spaceForInspectedStack, 0, 0).toSVGString();
+        } else {
+            this.viewBox = boardAndRemainingViewBox.toSVGString();
+        }
     }
 
     private getPieceCoords(): MGPSet<Coord> {
@@ -277,9 +275,9 @@ export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, H
         let y: number;
         if (piece.owner === this.getPointOfView()) {
             // Current player is below
-            y = this.boardViewBox.bottom() + (this.SPACE_SIZE * 3);
+            y = this.boardViewBox.bottom() + (this.SPACE_SIZE * 4);
         } else {
-            y = this.boardViewBox.up - (this.SPACE_SIZE * 2);
+            y = this.boardViewBox.up - (this.SPACE_SIZE * 3);
         }
         return new Coord(x, y);
     }

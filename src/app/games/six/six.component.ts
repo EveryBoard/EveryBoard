@@ -88,7 +88,12 @@ export class SixComponent
 
     public getViewBox(): ViewBox {
         const coords: Coord[] = this.pieces.concat(this.disconnecteds).concat(this.neighbors);
-        return ViewBox.fromHexa(coords, this.hexaLayout, this.STROKE_WIDTH);
+        return ViewBox
+            .fromHexa(coords, this.hexaLayout, this.STROKE_WIDTH)
+            .expandAbove(this.SPACE_SIZE + this.STROKE_WIDTH)
+            .expandBelow(this.SPACE_SIZE + this.STROKE_WIDTH)
+            .expandLeft(this.SPACE_SIZE + (2 * this.STROKE_WIDTH))
+            .expandRight(this.SPACE_SIZE + (2 * this.STROKE_WIDTH));
     }
 
     public override async showLastMove(move: SixMove): Promise<void> {

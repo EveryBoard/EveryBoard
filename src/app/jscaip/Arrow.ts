@@ -3,7 +3,7 @@ import { Line } from './Line';
 
 export class Arrow extends Line {
     public constructor(public readonly source: Coord,
-                       public readonly destination: Coord, // Not used anymore but logical and usefull, should I kill it ?
+                       public readonly destination: Coord,
                        x1: number,
                        y1: number,
                        x2: number,
