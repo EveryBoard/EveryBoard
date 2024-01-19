@@ -242,7 +242,8 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         tick(0);
     }
     async function acceptTakeBack(): Promise<void> {
-        return await testUtils.clickElement('#accept');
+        await testUtils.clickElement('#accept');
+        tick(0);
     }
     async function refuseTakeBack(): Promise<void> {
         return await testUtils.clickElement('#reject');
@@ -843,7 +844,6 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
 
                 // Then should allow it after proposing sent
                 await acceptTakeBack();
-                tick(0);
                 testUtils.detectChanges();
 
                 // and then again not allowing it
@@ -912,7 +912,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             }));
         });
         describe('opponent given take back during their turn', () => {
-            it('should move board back two turn', fakeAsync(async() => {
+            it('should move board back two turns', fakeAsync(async() => {
                 // Given an initial board where it's opponent second turn, and opponent asked for take back
                 await prepareTestUtilsFor(UserMocks.OPPONENT_AUTH_USER, PreparationOptions.withoutClocks);
                 await receiveNewMoves(0, [FIRST_MOVE_ENCODED]);
@@ -978,7 +978,6 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 // When accepting opponent's take back
                 spyOn(wrapper.chronoZeroGlobal, 'resume').and.callThrough();
                 await acceptTakeBack();
-                tick(0);
 
                 // Then count down should be resumed for opponent and user should receive their decision time back
                 expect(wrapper.chronoZeroGlobal.resume).toHaveBeenCalledOnceWith();
@@ -987,7 +986,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             }));
         });
         describe('User given take back during their turn', () => {
-            it('should move board back two turn', fakeAsync(async() => {
+            it('should move board back two turns', fakeAsync(async() => {
                 // Given an initial board where it's user (second) turn, and user just asked for take back
                 await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
                 await doMove(FIRST_MOVE, true);
@@ -1766,6 +1765,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             await receiveReply(Player.ONE, 'Accept', 'Draw');
             await receiveAction(Player.ONE, 'EndGame');
             testUtils.detectChanges();
+            tick(0);
 
             // When displaying the board
             // Then the text should indicate players have agreed to draw
