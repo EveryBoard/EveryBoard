@@ -6,7 +6,7 @@ import { KalahRules } from './KalahRules';
 import { MancalaTutorial } from '../common/MancalaTutorial';
 import { MancalaConfig } from '../common/MancalaConfig';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { TutorialStepFailure } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStepFailure';
+import { TutorialStepMessage } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
 
 const defaultConfig: MGPOptional<MancalaConfig> = KalahRules.get().getDefaultRulesConfig();
 
@@ -50,7 +50,7 @@ export class KalahTutorial extends Tutorial {
                     return MGPValidation.SUCCESS;
                 }
             },
-            TutorialStepFailure.CONGRATULATIONS(),
+            TutorialStepMessage.CONGRATULATIONS(),
         ),
         TutorialStep.fromPredicate(
             $localize`Captures`,
@@ -67,10 +67,10 @@ export class KalahTutorial extends Tutorial {
                     return MGPValidation.failure($localize`You did not capture, try again!`);
                 }
             },
-            TutorialStepFailure.CONGRATULATIONS(),
+            TutorialStepMessage.CONGRATULATIONS(),
         ),
         TutorialStep.fromMove(
-            TutorialStepFailure.END_OF_THE_GAME(),
+            TutorialStepMessage.END_OF_THE_GAME(),
             $localize`At any moment, when one player has more than 24 seeds in their Kalah, they win. That can happen before the board is empty, but, there is also a second way. When you don't have any seed in your houses, the game is over and your opponent takes all the remaining seeds from their houses. Here, your opponent just need one more point to win and will get it next turn if you allow it.<br/><br/>You're playing Dark, win!`,
             new MancalaState([
                 [0, 0, 0, 0, 2, 0],

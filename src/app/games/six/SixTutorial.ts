@@ -6,7 +6,7 @@ import { Localized } from 'src/app/utils/LocaleUtils';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { Tutorial, TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { SixRules } from './SixRules';
-import { TutorialStepFailure } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStepFailure';
+import { TutorialStepMessage } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
 
 const _: PlayerOrNone = PlayerOrNone.NONE;
 const O: PlayerOrNone = Player.ZERO;
@@ -41,8 +41,8 @@ export class SixTutorial extends Tutorial {
                 [O, _, _, _, _, _],
             ], 0),
             [SixMove.ofDrop(new Coord(3, 2))],
-            TutorialStepFailure.CONGRATULATIONS(),
-            TutorialStepFailure.FAILED_TRY_AGAIN(),
+            TutorialStepMessage.CONGRATULATIONS(),
+            TutorialStepMessage.FAILED_TRY_AGAIN(),
         ),
         TutorialStep.fromMove(
             $localize`Victory (circle)`,
@@ -56,7 +56,7 @@ export class SixTutorial extends Tutorial {
             ], 0),
             [SixMove.ofDrop(new Coord(5, 2))],
             $localize`Congratulations! Note that if a piece is inside the circle, it does not change anything.`,
-            TutorialStepFailure.FAILED_TRY_AGAIN(),
+            TutorialStepMessage.FAILED_TRY_AGAIN(),
         ),
         TutorialStep.fromMove(
             $localize`Victory (triangle)`,
@@ -69,8 +69,8 @@ export class SixTutorial extends Tutorial {
                 [X, X, X, _, X, _],
             ], 0),
             [SixMove.ofDrop(new Coord(3, 3))],
-            TutorialStepFailure.CONGRATULATIONS(),
-            TutorialStepFailure.FAILED_TRY_AGAIN(),
+            TutorialStepMessage.CONGRATULATIONS(),
+            TutorialStepMessage.FAILED_TRY_AGAIN(),
         ),
         TutorialStep.fromPredicate(
             $localize`Second phase`,
@@ -128,7 +128,7 @@ export class SixTutorial extends Tutorial {
                     return MGPValidation.failure(SixTutorialMessages.MOVEMENT_NOT_DISCONNECTING());
                 }
             },
-            TutorialStepFailure.CONGRATULATIONS_YOU_WON(),
+            TutorialStepMessage.CONGRATULATIONS_YOU_WON(),
         ),
         TutorialStep.fromPredicate(
             $localize`Special disconnection`,
@@ -155,7 +155,7 @@ export class SixTutorial extends Tutorial {
                     return MGPValidation.SUCCESS;
                 }
             },
-            TutorialStepFailure.CONGRATULATIONS_YOU_WON(),
+            TutorialStepMessage.CONGRATULATIONS_YOU_WON(),
         ),
     ];
 }

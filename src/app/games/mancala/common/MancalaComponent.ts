@@ -84,7 +84,7 @@ export abstract class MancalaComponent<R extends MancalaRules>
         this.lastDistributedHouses = move.distributions.map((d: MancalaDistribution) => new Coord(d.x, playerY));
         const mansoonedPlayer: Player[] = this.rules.mustMansoon(captureResult.resultingState, config);
         if (mansoonedPlayer.length > 0) {
-            captureResult = this.rules.monsoon(Player.ZERO, captureResult); // Who capture here is not important
+            captureResult = this.rules.monsoon(Player.ZERO, captureResult); // Who captures here is not important
             this.captured = captureResult.captureMap;
         }
         this.changeVisibleState(this.getState());

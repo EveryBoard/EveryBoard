@@ -7,7 +7,7 @@ import { Player } from 'src/app/jscaip/Player';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { assert } from 'src/app/utils/assert';
 import { DvonnRules } from './DvonnRules';
-import { TutorialStepFailure } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStepFailure';
+import { TutorialStepMessage } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
 
 const __: DvonnPieceStack = DvonnPieceStack.EMPTY;
 const NN: DvonnPieceStack = DvonnPieceStack.UNREACHABLE;
@@ -37,7 +37,7 @@ export class DvonnTutorial extends Tutorial {
         You're playing Dark, click on a stack and move it by one space.`,
             DvonnRules.get().getInitialState(),
             DvonnMove.from(new Coord(2, 0), new Coord(3, 0)).get(),
-            TutorialStepFailure.CONGRATULATIONS(),
+            TutorialStepMessage.CONGRATULATIONS(),
         ),
         TutorialStep.fromPredicate(
             $localize`Disconnection`,
@@ -101,7 +101,7 @@ export class DvonnTutorial extends Tutorial {
             ], 0, false),
         ),
         TutorialStep.fromMove(
-            TutorialStepFailure.END_OF_THE_GAME(),
+            TutorialStepMessage.END_OF_THE_GAME(),
             $localize`When no more move is possible for both players, the game ends and the player with the most points wins.<br/><br/>You're playing Dark, make your last move.`,
             new DvonnState([
                 [NN, NN, SO, __, __, __, __, __, __, __, __],

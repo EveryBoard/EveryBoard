@@ -2184,8 +2184,8 @@
       <trans-unit id="1218183221112518220" datatype="html">
         <source>However, the distribution only stops when the last seed is dropped in a house that contains zero or three seeds (before drop).&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, do such a move!</source>
       </trans-unit>
-      <trans-unit id="4651814494564877992" datatype="html">
-        <source>So, after landing in the house with 3 seeds, a second lap has been started</source>
+      <trans-unit id="4875172921761216929" datatype="html">
+        <source>So, after landing in the house with 2 seeds (then 3), a second lap has been started.</source>
       </trans-unit>
       <trans-unit id="3067825694318214397" datatype="html">
         <source>Captures during distribution (1/2)</source>
@@ -2199,17 +2199,17 @@
       <trans-unit id="8936894363705168622" datatype="html">
         <source>Captures during distribution (2/2)</source>
       </trans-unit>
-      <trans-unit id="4075686340012399389" datatype="html">
-        <source>If, during some distribution, you pass by one house of the opponent that contains 3 seeds, and drop a fourth seed, the opponent capture the house immediately (while you continue to distribute)!&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, do such a move!</source>
+      <trans-unit id="5715964665371191258" datatype="html">
+        <source>If, during some distribution, you pass by one house of the opponent that contains 3 seeds, and drop a fourth seed, the opponent captures the house immediately, while you continue to distribute.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, do such a move!</source>
       </trans-unit>
       <trans-unit id="1192652665972488441" datatype="html">
         <source>There it is, the opponent captured 4 seeds.</source>
       </trans-unit>
-      <trans-unit id="4644061788564030704" datatype="html">
-        <source>Though, if your very last seed is drop in a house of the opponent that contains 3 seeds, you capture it immediately!&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, do such a move!</source>
+      <trans-unit id="4239012084263051063" datatype="html">
+        <source>Though, if your very last seed is dropped in a house of the opponent that contains 3 seeds (4 with your seed), you capture it immediately!&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, do such a move!</source>
       </trans-unit>
-      <trans-unit id="87826596030786463" datatype="html">
-        <source>At any end of turn, if the number of seed reach 8 or less, the first player capture capture the remaining seeds.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, end the game by capturing!</source>
+      <trans-unit id="3868200086323207176" datatype="html">
+        <source>At the end of a turn, if the number of seeds reaches 8 or less, the first player (Dark) captures the remaining seeds.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, end the game by capturing!</source>
       </trans-unit>
       <trans-unit id="2821967115826330186" datatype="html">
         <source>There it is, you captured all remaining seeds.</source>
@@ -2241,8 +2241,8 @@
       <trans-unit id="7080802734755670775" datatype="html">
         <source>Seeds by house</source>
       </trans-unit>
-      <trans-unit id="387119594039428962" datatype="html">
-        <source><x id="PH" equiv-text="gameName"/> is a Mancala. Mancala is the name of a family of board games that dates back at least to the third century. Mancalas are games of distribution (sowing) and capture. Their goal is to capture the most seeds. The spaces in Mancalas are called the houses. The ones on the extreme left and right are called the stores, they contain the seeds that each player won. As you are playing Dark, the 6 houses on the bottom are yours.</source>
+      <trans-unit id="4012808273739972279" datatype="html">
+        <source><x id="PH" equiv-text="gameName"/> is a Mancala. Mancala is the name of a family of board games that dates back at least to the third century. Mancalas are games of distribution (sowing) and capture. Their goal is to capture the most seeds. The spaces in Mancalas are called the houses. The ones on the extreme left and right are called the stores, they contain the seeds that each player captured. As you are playing Dark, the 6 houses on the bottom are yours.</source>
       </trans-unit>
       <trans-unit id="2949583224863920715" datatype="html">
         <source>Sowing</source>
