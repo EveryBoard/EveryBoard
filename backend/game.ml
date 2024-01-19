@@ -105,7 +105,6 @@ module Make
 
   (** End the game by a timeout from one player. Perform 1 read and 2 writes. *)
   let notify_timeout (request : Dream.request) (game_id : string) (winner : MinimalUser.t) (loser : MinimalUser.t) =
-    (* TODO: don't trust the client, we need to get winner and loser ourselves. We can be notified, but then we look at the times + the current time *)
     Firestore.transaction request @@ fun () ->
     (* Read 1: retrieve the game *)
     let* game = Firestore.Game.get request game_id in

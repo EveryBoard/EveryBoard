@@ -53,7 +53,10 @@ module Make
     Stats.read request;
     logger.info (fun log -> log ~request "Getting %s" path);
     let* headers = TokenRefresher.header request in
-    let params = transaction_params request in
+    let params =
+      if !Options.emulator
+      then [] (* Somehow, reading in a transaction with the emulator does not work *)
+      else transaction_params request in
     let* (response, body) = External.Http.get (endpoint path ~params) headers in
     logger.debug (fun log -> log ~request "Response: %s" body);
     if is_error response
