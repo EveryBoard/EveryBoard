@@ -14,11 +14,11 @@ import { MartianChessPiece } from './MartianChessPiece';
 import { Direction } from 'src/app/jscaip/Direction';
 import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 import { Utils } from 'src/app/utils/utils';
-import { MCTS } from 'src/app/jscaip/MCTS';
+import { MCTS } from 'src/app/jscaip/AI/MCTS';
 import { MartianChessMoveGenerator } from './MartianChessMoveGenerator';
 import { MartianChessScoreHeuristic } from './MartianChessScoreHeuristic';
-import { Minimax } from 'src/app/jscaip/Minimax';
 import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
+import { Minimax } from 'src/app/jscaip/AI/Minimax';
 
 type SelectedPieceInfo = {
     selectedPiece: Coord,

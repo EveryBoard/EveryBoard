@@ -1,13 +1,13 @@
 /* eslint-disable max-lines-per-function */
 import { Coord } from 'src/app/jscaip/Coord';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { HeuristicUtils } from 'src/app/jscaip/tests/HeuristicUtils.spec';
+import { HeuristicUtils } from 'src/app/jscaip/AI/tests/HeuristicUtils.spec';
 import { SixState } from '../SixState';
 import { SixMove } from '../SixMove';
 import { SixNode, SixRules } from '../SixRules';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { Table } from 'src/app/utils/ArrayUtils';
-import { BoardValue } from 'src/app/jscaip/BoardValue';
+import { BoardValue } from 'src/app/jscaip/AI/BoardValue';
 import { SixHeuristic } from '../SixHeuristic';
 import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 
@@ -44,7 +44,7 @@ describe('SixHeuristic', () => {
             const boardValue: BoardValue = heuristic.getBoardValue(node, defaultConfig);
 
             // Then that value should be a pre-victory
-            expect(boardValue.value).toBe(Player.ZERO.getPreVictory());
+            expect(boardValue.metrics).toEqual([Player.ZERO.getPreVictory()]);
         });
 
         it('should know that 5 pieces aligned with two empty extension mean PRE_VICTORY', () => {
@@ -162,7 +162,7 @@ describe('SixHeuristic', () => {
         ], 40);
         const move: SixMove = SixMove.ofDrop(new Coord(1, 1));
         const node: SixNode = new SixNode(state, MGPOptional.empty(), MGPOptional.of(move));
-        expect(heuristic.getBoardValue(node, defaultConfig).value).toBe(2);
+        expect(heuristic.getBoardValue(node, defaultConfig).metrics).toEqual([2 * Player.ZERO.getScoreModifier()]);
     });
 
 });

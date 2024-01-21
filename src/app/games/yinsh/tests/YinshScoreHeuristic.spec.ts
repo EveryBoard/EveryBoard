@@ -19,7 +19,8 @@ describe('YinshScoreHeuristic', () => {
         const state: YinshState =
             new YinshState(YinshRules.get().getInitialState().board, PlayerNumberMap.of(2, 1), 20);
         const node: YinshNode = new YinshNode(state);
-        expect(heuristic.getBoardValue(node, defaultConfig).value * Player.ZERO.getScoreModifier()).toBeGreaterThan(0);
+        const boardValue: number = heuristic.getBoardValue(node, defaultConfig).metrics[0];
+        expect(boardValue * Player.ZERO.getScoreModifier()).toBeGreaterThan(0);
     });
 
 });

@@ -2,6 +2,7 @@ import { MGPOptional } from './MGPOptional';
 import { Comparable, comparableEquals } from './Comparable';
 import { MGPSet } from './MGPSet';
 import { assert } from './assert';
+import { Utils } from './utils';
 
 export class MGPMap<K extends NonNullable<Comparable>, V extends NonNullable<unknown>> {
 
@@ -56,9 +57,8 @@ export class MGPMap<K extends NonNullable<Comparable>, V extends NonNullable<unk
     }
 
     public assertImmutability(methodCalled: string): void {
-        if (this.isImmutable) {
-            throw new Error('Cannot call ' + methodCalled + ' on immutable map!'); // TODO: actually assert
-        }
+        Utils.assert(this.isImmutable === false,
+                     'Cannot call ' + methodCalled + ' on immutable map!');
     }
 
     public put(key: K, value: V): MGPOptional<V> {

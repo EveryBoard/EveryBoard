@@ -1,35 +1,39 @@
 import { Coord } from 'src/app/jscaip/Coord';
-import { PlayerMetricHeuristic } from 'src/app/jscaip/Minimax';
+import { PlayerMetricHeuristic } from 'src/app/jscaip/AI/Minimax';
+import { PlayerNumberTable } from 'src/app/jscaip/PlayerNumberTable';
 import { PlayerOrNone } from 'src/app/jscaip/Player';
 import { ConspirateursMove } from './ConspirateursMove';
 import { ConspirateursNode } from './ConspirateursRules';
 import { ConspirateursState } from './ConspirateursState';
+import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 export class ConspirateursHeuristic extends PlayerMetricHeuristic<ConspirateursMove, ConspirateursState> {
 
-    public getMetrics(node: ConspirateursNode): [number, number] {
+    public override getMetrics(node: ConspirateursNode, _config: NoConfig): PlayerNumberTable {
         const state: ConspirateursState = node.gameState;
-        const scores: [number, number] = [0, 0];
-        for (let y: number = 0; y < ConspirateursState.HEIGHT; y++) {
-            for (let x: number = 0; x < ConspirateursState.WIDTH; x++) {
-                const coord: Coord = new Coord(x, y);
-                const player: PlayerOrNone = state.getPieceAt(coord);
-                if (player.isPlayer()) {
-                    if (state.isShelter(coord)) {
-                        scores[player.getValue()] += 20;
-                    } else {
-                        let minEmptyShelterDistance: number = 100;
-                        for (const shelter of ConspirateursState.ALL_SHELTERS) {
-                            if (state.getPieceAt(shelter) === PlayerOrNone.NONE) {
-                                const distance: number = coord.getOrthogonalDistance(shelter);
-                                minEmptyShelterDistance = Math.min(minEmptyShelterDistance, distance);
-                            }
+        const scores: PlayerNumberTable = PlayerNumberTable.of([0, 0], [0, 0]);
+        const shelterCountIndex: number = 0;
+        const distanceCountIndex: number = 1;
+        for (const coordAndContent of state.getCoordsAndContents()) {
+            const coord: Coord = coordAndContent.coord;
+            const player: PlayerOrNone = coordAndContent.content;
+            if (player.isPlayer()) {
+                if (state.isShelter(coord)) {
+                    scores.add(player, shelterCountIndex, 1);
+                } else {
+                    let minEmptyShelterDistance: number = state.getWidth() + state.getHeight();
+                    // start as the maximum distance possible
+                    for (const shelter of ConspirateursState.ALL_SHELTERS) {
+                        if (state.getPieceAt(shelter) === PlayerOrNone.NONE) {
+                            const distance: number = coord.getOrthogonalDistance(shelter);
+                            minEmptyShelterDistance = Math.min(minEmptyShelterDistance, distance);
                         }
-                        scores[player.getValue()] -= minEmptyShelterDistance;
                     }
+                    scores.add(player, distanceCountIndex, - minEmptyShelterDistance);
                 }
             }
         }
         return scores;
     }
+
 }

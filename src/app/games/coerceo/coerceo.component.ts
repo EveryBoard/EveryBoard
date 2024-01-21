@@ -11,9 +11,9 @@ import { CoerceoFailure } from 'src/app/games/coerceo/CoerceoFailure';
 import { Player } from 'src/app/jscaip/Player';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
-import { MCTS } from 'src/app/jscaip/MCTS';
+import { MCTS } from 'src/app/jscaip/AI/MCTS';
 import { CoerceoCapturesAndFreedomHeuristic } from './CoerceoCapturesAndFreedomHeuristic';
-import { Minimax } from 'src/app/jscaip/Minimax';
+import { Minimax } from 'src/app/jscaip/AI/Minimax';
 import { CoerceoMoveGenerator } from './CoerceoMoveGenerator';
 import { CoerceoPiecesThreatsTilesHeuristic } from './CoerceoPiecesThreatsTilesHeuristic';
 import { CoerceoOrderedMoveGenerator } from './CoerceoOrderedMoveGenerator';
@@ -51,8 +51,13 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
                         this.rules,
                         new CoerceoPiecesThreatsTilesHeuristic(),
                         new CoerceoOrderedMoveGenerator()),
-            new Minimax($localize`Captures > Freedom`, this.rules, new CoerceoCapturesAndFreedomHeuristic(), new CoerceoMoveGenerator()),
-            new MCTS($localize`MCTS`, new CoerceoMoveGenerator(), this.rules),
+            new Minimax($localize`Captures > Freedom`,
+                        this.rules,
+                        new CoerceoCapturesAndFreedomHeuristic(),
+                        new CoerceoMoveGenerator()),
+            new MCTS($localize`MCTS`,
+                     new CoerceoMoveGenerator(),
+                     this.rules),
         ];
         this.encoder = CoerceoMove.encoder;
         this.scores = MGPOptional.of(PlayerNumberMap.of(0, 0));
@@ -265,4 +270,5 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
         const halfStroke: number = this.STROKE_WIDTH / 2;
         return new ViewBox(left, up, width, height).expand(halfStroke, halfStroke, halfStroke, halfStroke);
     }
+
 }

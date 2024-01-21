@@ -5,8 +5,8 @@ import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 import { Table, TableUtils } from 'src/app/utils/ArrayUtils';
 import { ComparableObject } from 'src/app/utils/Comparable';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { assert } from 'src/app/utils/assert';
 import { GoConfig } from './GoRules';
+import { Utils } from 'src/app/utils/utils';
 
 type PieceType = 'alive' | 'dead' | 'territory' | 'empty';
 
@@ -47,7 +47,7 @@ export class GoPiece implements ComparableObject {
             case GoPiece.DARK_TERRITORY:
                 return 'GoPiece.DARK_TERRITORY';
             default:
-                assert(this === GoPiece.LIGHT_TERRITORY, 'Unexisting GoPiece');
+                Utils.assert(this === GoPiece.LIGHT_TERRITORY, 'Unexisting GoPiece');
                 return 'GoPiece.LIGHT_TERRITORY';
         }
     }
@@ -57,8 +57,11 @@ export class GoPiece implements ComparableObject {
     }
 
     public static ofPlayer(player: Player): GoPiece {
-        if (player === Player.ZERO) return GoPiece.DARK;
-        else return GoPiece.LIGHT;
+        if (player === Player.ZERO) {
+            return GoPiece.DARK;
+        } else {
+            return GoPiece.LIGHT;
+        }
     }
 
     public static territoryOf(player: Player): GoPiece {
@@ -80,7 +83,7 @@ export class GoPiece implements ComparableObject {
     }
 
     public isAlive(): boolean {
-        return this.type === 'alive'; // TODO GENERALISE THIS CLEAN PATTERN
+        return this.type === 'alive';
     }
 
     public isDead(): boolean {
@@ -96,7 +99,7 @@ export class GoPiece implements ComparableObject {
     }
 
     public nonTerritory(): GoPiece {
-        assert(this.isEmpty(), 'Usually not false, if false, cover by test and return "this"');
+        Utils.assert(this.isEmpty(), 'Usually not false, if false, cover by test and return "this"');
         return GoPiece.EMPTY;
     }
 

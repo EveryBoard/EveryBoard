@@ -13,8 +13,8 @@ import { YinshCapture, YinshMove } from './YinshMove';
 import { YinshPiece } from './YinshPiece';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
-import { GameNode } from 'src/app/jscaip/GameNode';
 import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
+import { GameNode } from 'src/app/jscaip/AI/GameNode';
 import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 export type YinshLegalityInformation = YinshState;

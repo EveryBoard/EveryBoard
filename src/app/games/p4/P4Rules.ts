@@ -1,7 +1,7 @@
 import { Coord } from '../../jscaip/Coord';
+import { GameNode } from '../../jscaip/AI/GameNode';
 import { ConfigurableRules } from '../../jscaip/Rules';
 import { P4State } from './P4State';
-import { GameNode } from '../../jscaip/GameNode';
 import { PlayerOrNone } from 'src/app/jscaip/Player';
 import { Utils, Debug } from 'src/app/utils/utils';
 import { P4Move } from './P4Move';

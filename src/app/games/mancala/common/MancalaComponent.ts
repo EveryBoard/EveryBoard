@@ -13,11 +13,11 @@ import { MGPSet } from 'src/app/utils/MGPSet';
 import { MancalaFailure } from './MancalaFailure';
 import { TimeUtils } from 'src/app/utils/TimeUtils';
 import { Utils } from 'src/app/utils/utils';
+import { AI, AIOptions, MoveGenerator } from 'src/app/jscaip/AI/AI';
 import { MancalaConfig } from './MancalaConfig';
-import { AI, AIOptions, MoveGenerator } from 'src/app/jscaip/AI';
 import { MancalaScoreMinimax } from './MancalaScoreMinimax';
-import { MCTS } from 'src/app/jscaip/MCTS';
 import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
+import { MCTS } from 'src/app/jscaip/AI/MCTS';
 
 export abstract class MancalaComponent<R extends MancalaRules>
     extends RectangularGameComponent<R, MancalaMove, MancalaState, number, MancalaConfig>

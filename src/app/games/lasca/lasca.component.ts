@@ -14,11 +14,11 @@ import { LascaFailure } from './LascaFailure';
 import { LascaMove } from './LascaMove';
 import { LascaRules } from './LascaRules';
 import { LascaPiece, LascaStack, LascaState } from './LascaState';
-import { MCTS } from 'src/app/jscaip/MCTS';
-import { Minimax } from 'src/app/jscaip/Minimax';
+import { MCTS } from 'src/app/jscaip/AI/MCTS';
+import { Minimax } from 'src/app/jscaip/AI/Minimax';
 import { LascaControlHeuristic } from './LascaControlHeuristic';
 import { LascaMoveGenerator } from './LascaMoveGenerator';
-import { LascaControlAndDominationHeuristic } from './LascaControlAndDominationHeuristic';
+import { LascaControlPlusDominationHeuristic } from './LascaControlAndDominationHeuristic';
 
 interface SpaceInfo {
     x: number;
@@ -73,7 +73,7 @@ export class LascaComponent extends ParallelogramGameComponent<LascaRules,
             new Minimax($localize`Control`, this.rules, new LascaControlHeuristic(), this.moveGenerator),
             new Minimax($localize`Control and Domination`,
                         this.rules,
-                        new LascaControlAndDominationHeuristic(),
+                        new LascaControlPlusDominationHeuristic(),
                         this.moveGenerator),
             new MCTS($localize`MCTS`, this.moveGenerator, this.rules),
         ];

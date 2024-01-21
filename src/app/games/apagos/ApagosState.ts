@@ -55,7 +55,7 @@ export class ApagosState extends GameState {
 
     public equals(other: ApagosState): boolean {
         return this.turn === other.turn &&
-               ArrayUtils.compare(other.board, this.board) &&
+               ArrayUtils.equals(other.board, this.board) &&
                this.remaining.equals(other.remaining);
     }
 }

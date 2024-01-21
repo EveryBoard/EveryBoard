@@ -12,9 +12,9 @@ import { Encoder } from 'src/app/utils/Encoder';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Player } from 'src/app/jscaip/Player';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { MoveGenerator } from 'src/app/jscaip/AI/AI';
 import { MancalaConfig } from '../MancalaConfig';
 import { RulesConfigUtils } from 'src/app/jscaip/RulesConfigUtil';
-import { MoveGenerator } from 'src/app/jscaip/AI';
 import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 import { MoveTestUtils } from 'src/app/jscaip/tests/Move.spec';
 

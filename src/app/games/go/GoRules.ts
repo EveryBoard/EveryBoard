@@ -1,4 +1,4 @@
-import { GameNode } from 'src/app/jscaip/GameNode';
+import { GameNode } from 'src/app/jscaip/AI/GameNode';
 import { GoState, Phase, GoPiece } from './GoState';
 import { Orthogonal } from 'src/app/jscaip/Direction';
 import { GoMove } from './GoMove';
@@ -444,16 +444,16 @@ export class GoRules extends ConfigurableRules<GoMove, GoState, GoConfig, GoLega
 
         const newBoard: GoPiece[][] = state.getCopiedBoard();
         const currentTurn: number = state.turn;
-        const currentPlayer: GoPiece = GoPiece.ofPlayer(state.getCurrentPlayer());
+        const currentPlayer: Player = state.getCurrentPlayer();
+        const currentPlayerPiece: GoPiece = GoPiece.ofPlayer(currentPlayer);
         const newTurn: number = currentTurn + 1;
-        newBoard[y][x] = currentPlayer;
+        newBoard[y][x] = currentPlayerPiece;
         for (const capturedCoord of capturedCoords) {
             newBoard[capturedCoord.y][capturedCoord.x] = GoPiece.EMPTY;
         }
         const newKoCoord: MGPOptional<Coord> = GoRules.getNewKo(legalMove, newBoard, capturedCoords);
         const newCaptured: PlayerNumberMap = state.getCapturedCopy();
-        const player: Player = currentPlayer.player as Player; // TODO: should I assert ?
-        newCaptured.add(player, capturedCoords.length);
+        newCaptured.add(currentPlayer, capturedCoords.length);
         return new GoState(newBoard, newCaptured, newTurn, newKoCoord, Phase.PLAYING);
     }
 

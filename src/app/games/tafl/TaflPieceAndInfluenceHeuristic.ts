@@ -1,6 +1,6 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { Orthogonal } from 'src/app/jscaip/Direction';
-import { BoardValue } from 'src/app/jscaip/BoardValue';
+import { BoardValue } from 'src/app/jscaip/AI/BoardValue';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { MGPMap } from 'src/app/utils/MGPMap';
 import { MGPSet } from 'src/app/utils/MGPSet';
@@ -25,39 +25,26 @@ export type PointValue = {
 
 export class TaflPieceAndInfluenceHeuristic<M extends TaflMove> extends TaflPieceHeuristic<M> {
 
-    public getPointValue(node: TaflNode<M>, config: MGPOptional<TaflConfig>): PointValue {
-        const initialState: TaflState = this.rules.getInitialState(config);
-        const width: number = initialState.getHeight();
-        const maxInfluence: number = 16 * ((width * 2) - 2);
-        const scoreByThreatenedPiece: number = (16 * maxInfluence) + 1;
-        const scoreBySafePiece: number = (16 * scoreByThreatenedPiece) + 1;
-        return {
-            width,
-            maxInfluence,
-            scoreByThreatenedPiece,
-            scoreBySafePiece,
-        };
-    }
-
     public override getBoardValue(node: TaflNode<M>, config: MGPOptional<TaflConfig>): BoardValue {
         const gameStatus: GameStatus = this.rules.getGameStatus(node, config);
         if (gameStatus.isEndGame) {
             return gameStatus.toBoardValue();
         }
-        const pointValue: PointValue = this.getPointValue(node, config);
         const state: TaflState = node.gameState;
         const empty: TaflPawn = TaflPawn.UNOCCUPIED;
 
-        let score: number = 0;
         const pieceMap: MGPMap<Player, MGPSet<Coord>> = this.getPiecesMap(state);
         const threatMap: MGPMap<Coord, MGPSet<SandwichThreat>> = this.getThreatMap(node, pieceMap);
         const filteredThreatMap: MGPMap<Coord, MGPSet<SandwichThreat>> = this.filterThreatMap(threatMap, state);
+        let threatenedPiece: number = 0;
+        let safePiece: number = 0;
+        let totalInfluence: number = 0;
         for (const owner of Player.PLAYERS) {
             for (const coord of pieceMap.get(owner).get()) {
                 if (filteredThreatMap.get(coord).isPresent()) {
-                    score += owner.getScoreModifier() * pointValue.scoreByThreatenedPiece;
+                    threatenedPiece += owner.getScoreModifier();
                 } else {
-                    score += owner.getScoreModifier() * pointValue.scoreBySafePiece;
+                    safePiece += owner.getScoreModifier();
                     let influence: number = 0;
                     for (const dir of Orthogonal.ORTHOGONALS) {
                         let testedCoord: Coord = coord.getNext(dir, 1);
@@ -66,11 +53,15 @@ export class TaflPieceAndInfluenceHeuristic<M extends TaflMove> extends TaflPiec
                             testedCoord = testedCoord.getNext(dir, 1);
                         }
                     }
-                    score += influence * owner.getScoreModifier();
+                    totalInfluence += influence * owner.getScoreModifier();
                 }
             }
         }
-        return new BoardValue(score);
+        return BoardValue.multiMetric([
+            safePiece,
+            threatenedPiece,
+            totalInfluence,
+        ]);
     }
 
     public getPiecesMap(state: TaflState): MGPMap<Player, MGPSet<Coord>> {

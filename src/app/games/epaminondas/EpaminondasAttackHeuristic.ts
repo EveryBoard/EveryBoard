@@ -1,6 +1,6 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { Direction } from 'src/app/jscaip/Direction';
-import { BoardValue } from 'src/app/jscaip/BoardValue';
+import { BoardValue } from 'src/app/jscaip/AI/BoardValue';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { EpaminondasState } from './EpaminondasState';
 import { EpaminondasConfig, EpaminondasNode } from './EpaminondasRules';
@@ -24,7 +24,7 @@ export class EpaminondasAttackHeuristic extends EpaminondasHeuristic {
         const center: number = this.getCenter(state);
         const winning: number = this.getOffense(state);
         const mobility: number = this.getMobility(state);
-        return new BoardValue(dominance + defense + territory + center + winning + mobility);
+        return BoardValue.of(dominance + defense + territory + center + winning + mobility);
     }
 
     public getDominance(state: EpaminondasState): number {
@@ -36,6 +36,7 @@ export class EpaminondasAttackHeuristic extends EpaminondasHeuristic {
         }
         return score * this.DOMINANCE_FACTOR;
     }
+
     public getDefense(state: EpaminondasState): number {
         let score: number = 0;
         const width: number = state.getWidth();
@@ -50,6 +51,7 @@ export class EpaminondasAttackHeuristic extends EpaminondasHeuristic {
         }
         return score * this.DEFENSE_FACTOR;
     }
+
     public getTerritory(state: EpaminondasState): number {
         let score: number = 0;
         for (const coordAndContent of state.getCoordsAndContents()) {
@@ -73,6 +75,7 @@ export class EpaminondasAttackHeuristic extends EpaminondasHeuristic {
         }
         return score * this.TERRITORY_FACTOR;
     }
+
     public getOffense(state: EpaminondasState): number {
         let score: number = 0;
         const width: number = state.getWidth();
@@ -87,6 +90,7 @@ export class EpaminondasAttackHeuristic extends EpaminondasHeuristic {
         }
         return score * this.OFFENSE_FACTOR;
     }
+
     public getCenter(state: EpaminondasState): number {
         let score: number = 0;
         const width: number = state.getWidth();
@@ -99,6 +103,7 @@ export class EpaminondasAttackHeuristic extends EpaminondasHeuristic {
         }
         return score * this.CENTER_FACTOR;
     }
+
     public getMobility(state: EpaminondasState): number {
         let score: number = 0;
         let biggestZero: number = 0;

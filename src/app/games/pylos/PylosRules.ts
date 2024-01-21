@@ -1,6 +1,6 @@
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { Orthogonal } from 'src/app/jscaip/Direction';
-import { GameNode } from 'src/app/jscaip/GameNode';
+import { GameNode } from 'src/app/jscaip/AI/GameNode';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { Rules } from 'src/app/jscaip/Rules';
 import { PylosCoord } from './PylosCoord';
@@ -14,6 +14,7 @@ import { MGPFallible } from '../../utils/MGPFallible';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { TableUtils } from 'src/app/utils/ArrayUtils';
 import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { MGPMap } from 'src/app/utils/MGPMap';
 
 export class PylosNode extends GameNode<PylosMove, PylosState> {}
 
@@ -134,11 +135,10 @@ export class PylosRules extends Rules<PylosMove, PylosState> {
     }
 
     public static getGameStatus(node: PylosNode): GameStatus {
-        const state: PylosState = node.gameState;
-        const ownershipMap: { [owner: number]: number } = state.getPiecesRepartition();
-        if (ownershipMap[Player.ZERO.getValue()] === 15) {
+        const ownershipMap: MGPMap<PlayerOrNone, number> = node.gameState.getPiecesRepartition();
+        if (ownershipMap.get(Player.ZERO).get() === 15) {
             return GameStatus.ONE_WON;
-        } else if (ownershipMap[Player.ONE.getValue()] === 15) {
+        } else if (ownershipMap.get(Player.ONE).get() === 15) {
             return GameStatus.ZERO_WON;
         } else {
             return GameStatus.ONGOING;
