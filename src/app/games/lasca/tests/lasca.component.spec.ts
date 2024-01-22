@@ -105,6 +105,7 @@ describe('LascaComponent', () => {
             // Then it should show the clicked piece as 'selected'
             testUtils.expectElementToHaveClass('#square_4_4_piece_0', 'selected-stroke');
         }));
+
     });
 
     describe('second click', () => {

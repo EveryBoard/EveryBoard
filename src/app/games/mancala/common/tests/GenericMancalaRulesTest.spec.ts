@@ -81,7 +81,7 @@ export function DoMancalaRulesTests(entries: MancalaRulesTestEntries): void {
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState, customConfig);
         });
 
-        it('should know when to mansoon', () => {
+        it('should know when to monsoon', () => {
             // Given a state where player is about to cede his last seed, and won't be feedable
             const customConfig: MGPOptional<MancalaConfig> = MGPOptional.of({
                 ...defaultConfig.get(),

@@ -242,7 +242,7 @@ describe('KalahRules', () => {
             // When player gives its last seed
             const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(5));
 
-            // Then, since the other player can't distribute, all its pieces should be mansooned
+            // Then, since the other player can't distribute, all its pieces should be monsooned
             const expectedBoard: Table<number> = TableUtils.create(6, 2, 0);
             const expectedState: MancalaState = new MancalaState(expectedBoard, 2, [25, 23]);
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);

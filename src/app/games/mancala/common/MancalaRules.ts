@@ -208,7 +208,7 @@ export abstract class MancalaRules<C extends MancalaConfig = MancalaConfig>
     public abstract applyCapture(distributionResult: MancalaDistributionResult, config: MancalaConfig)
     : MancalaCaptureResult;
 
-    public mustMansoon(postCaptureState: MancalaState, config: MancalaConfig): Player[] {
+    public mustMonsoon(postCaptureState: MancalaState, config: MancalaConfig): Player[] {
         const postCaptureBoard: Table<number> = postCaptureState.getCopiedBoard();
         const opponent: Player = postCaptureState.getCurrentOpponent();
         const player: Player = postCaptureState.getCurrentPlayer();
@@ -252,15 +252,15 @@ export abstract class MancalaRules<C extends MancalaConfig = MancalaConfig>
         const distributionsResult: MancalaDistributionResult = this.distributeMove(move, state, config.get());
         const captureResult: MancalaCaptureResult = this.applyCapture(distributionsResult, config.get());
         let resultingState: MancalaState = captureResult.resultingState;
-        const playerToMansoon: Player[] = this.mustMansoon(resultingState, config.get());
-        if (playerToMansoon.length === 1) {
+        const playerTomonsoon: Player[] = this.mustMonsoon(resultingState, config.get());
+        if (playerTomonsoon.length === 1) {
             // if the player distributed their last seeds and the opponent could not give them seeds
-            const mansoonResult: MancalaCaptureResult = this.monsoon(playerToMansoon[0], captureResult);
-            resultingState = mansoonResult.resultingState;
-        } else if (playerToMansoon.length === 2) {
+            const monsoonResult: MancalaCaptureResult = this.monsoon(playerTomonsoon[0], captureResult);
+            resultingState = monsoonResult.resultingState;
+        } else if (playerTomonsoon.length === 2) {
             // if the player distributed their last seeds and the opponent could not give them seeds
-            const mansoonResult: MancalaCaptureResult = this.sharedMonsoon(captureResult);
-            resultingState = mansoonResult.resultingState;
+            const monsoonResult: MancalaCaptureResult = this.sharedMonsoon(captureResult);
+            resultingState = monsoonResult.resultingState;
         }
         return new MancalaState(resultingState.board,
                                 resultingState.turn + 1,
@@ -391,18 +391,18 @@ export abstract class MancalaRules<C extends MancalaConfig = MancalaConfig>
     }
 
     /**
-      * Captures all the seeds of the mansooning player.
+      * Captures all the seeds of the monsooning player.
       * Returns the sum of all captured seeds.
       * Is called when a game is over because of starvation
       * Or for Ba-awa/Adi: when we drop below 9 pieces
       */
-    public monsoon(mansooningPlayer: Player, postCaptureResult: MancalaCaptureResult): MancalaCaptureResult {
+    public monsoon(monsooningPlayer: Player, postCaptureResult: MancalaCaptureResult): MancalaCaptureResult {
         const state: MancalaState = postCaptureResult.resultingState;
         const resultingBoard: number[][] = TableUtils.create(state.getWidth(), 2, 0);
         const captured: [number, number] = state.getScoresCopy();
         const capturedSum: number = state.getTotalRemainingSeeds();
         const captureMap: number[][] = TableUtils.add(postCaptureResult.captureMap, state.board);
-        captured[mansooningPlayer.value] += capturedSum;
+        captured[monsooningPlayer.value] += capturedSum;
         return {
             capturedSum,
             captureMap,
@@ -416,8 +416,8 @@ export abstract class MancalaRules<C extends MancalaConfig = MancalaConfig>
         const captured: [number, number] = state.getScoresCopy();
         const capturedSum: number = state.getTotalRemainingSeeds();
         const captureMap: number[][] = TableUtils.add(postCaptureResult.captureMap, state.board);
-        captured[Player.ZERO.value] += capturedSum / 2;
-        captured[Player.ONE.value] += capturedSum / 2;
+        captured[Player.ZERO.value] += Math.floor(capturedSum / 2);
+        captured[Player.ONE.value] += Math.floor(capturedSum / 2);
         return {
             capturedSum,
             captureMap,

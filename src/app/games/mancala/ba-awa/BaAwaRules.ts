@@ -88,10 +88,10 @@ export class BaAwaRules extends MancalaRules<BaAwaConfig> {
         }
     }
 
-    public override mustMansoon(postCaptureState: MancalaState, config: BaAwaConfig): Player[] {
-        const mustMansoon: Player[] = super.mustMansoon(postCaptureState, config);
-        if (mustMansoon.length > 0) {
-            return mustMansoon;
+    public override mustMonsoon(postCaptureState: MancalaState, config: BaAwaConfig): Player[] {
+        const mustMonsoon: Player[] = super.mustMonsoon(postCaptureState, config);
+        if (mustMonsoon.length > 0) {
+            return mustMonsoon;
         } else {
             if (postCaptureState.getTotalRemainingSeeds() <= 8) {
                 if (config.splitFinalSeedsEvenly) {

@@ -39,8 +39,6 @@ export abstract class MancalaComponent<R extends MancalaRules>
 
     public currentMove: MGPOptional<MancalaMove> = MGPOptional.empty();
 
-    private clickOngoing: boolean = false;
-
     public captured: Table<number> = TableUtils.create(6, 2, 0);
 
     public droppedInStore: [number, number] = [0, 0];
@@ -82,8 +80,8 @@ export abstract class MancalaComponent<R extends MancalaRules>
         this.captured = captureResult.captureMap;
         const playerY: number = previousState.getCurrentPlayerY();
         this.lastDistributedHouses = move.distributions.map((d: MancalaDistribution) => new Coord(d.x, playerY));
-        const mansoonedPlayer: Player[] = this.rules.mustMansoon(captureResult.resultingState, config);
-        if (mansoonedPlayer.length > 0) {
+        const monsoonedPlayer: Player[] = this.rules.mustMonsoon(captureResult.resultingState, config);
+        if (monsoonedPlayer.length > 0) {
             captureResult = this.rules.monsoon(Player.ZERO, captureResult); // Who captures here is not important
             this.captured = captureResult.captureMap;
         }
@@ -94,6 +92,7 @@ export abstract class MancalaComponent<R extends MancalaRules>
         const state: MancalaState = this.getState();
         if (triggerAnimation) {
             this.opponentMoveIsBeingAnimated = true;
+            this.animationOngoing = true;
             Utils.assert(this.node.parent.isPresent(), 'triggerAnimation in store should be false at first turn');
             this.changeVisibleState(this.node.parent.get().gameState);
             let indexDistribution: number = 0;
@@ -107,6 +106,7 @@ export abstract class MancalaComponent<R extends MancalaRules>
                 indexDistribution++;
             }
             this.opponentMoveIsBeingAnimated = false;
+            this.animationOngoing = false;
         }
         this.scores = MGPOptional.of(state.getScoresCopy());
         this.changeVisibleState(state);
@@ -117,14 +117,12 @@ export abstract class MancalaComponent<R extends MancalaRules>
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }
-        if (this.clickOngoing === true) {
-            return MGPValidation.SUCCESS;
-        } else if (this.opponentMoveIsBeingAnimated === true) {
+        if (this.animationOngoing === true) {
             return MGPValidation.SUCCESS;
         } else {
-            this.clickOngoing = true;
+            this.animationOngoing = true;
             const result: MGPValidation = await this.onLegalClick(x, y);
-            this.clickOngoing = false;
+            this.animationOngoing = false;
             return result;
         }
     }

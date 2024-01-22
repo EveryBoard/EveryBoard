@@ -225,7 +225,7 @@ describe('BaAwaRules', () => {
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         });
 
-        it(`should mansoon for player zero when total of seed drop to 8 or less (Player.ZERO's turn)`, () => {
+        it(`should monsoon for player zero when total of seed drop to 8 or less (Player.ZERO's turn)`, () => {
             // Given a state in which Player.ZERO could capture and make total count of seeds drop below 8
             const board: Table<number> = [
                 [0, 0, 0, 3, 3, 0],
@@ -242,7 +242,7 @@ describe('BaAwaRules', () => {
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         });
 
-        it(`should mansoon for player zero when total of seed drop to 8 or less (Player.ONE's turn)`, () => {
+        it(`should monsoon for player zero when total of seed drop to 8 or less (Player.ONE's turn)`, () => {
             // Given a state in which Player.ONE could capture and make the total of seeds drop below 8
             const board: Table<number> = [
                 [0, 0, 2, 3, 1, 0],
@@ -253,7 +253,7 @@ describe('BaAwaRules', () => {
             // When the player does the move that drops the number of piece below 8
             const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(2));
 
-            // Then the mansoon should be done
+            // Then the monsoon should be done
             const expectedBoard: Table<number> = TableUtils.create(6, 2, 0);
             const expectedState: MancalaState = new MancalaState(expectedBoard, 2, [8, 4]);
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
@@ -277,7 +277,7 @@ describe('BaAwaRules', () => {
             // When passing by store during move
             const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(0));
 
-            // Then it should mansoon for end game
+            // Then it should monsoon for end game
             const expectedState: MancalaState = new MancalaState([
                 [0, 0, 0, 0, 0, 0],
                 [0, 0, 0, 0, 0, 0],
@@ -285,7 +285,7 @@ describe('BaAwaRules', () => {
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState, customConfig);
         });
 
-        it(`should split mansoon for when total of seed drop to 8 or less and config ask for even split`, () => {
+        it(`should split monsoon for when total of seed drop to 8 or less and config ask for even split`, () => {
             // Given a state in which Player.ONE could capture and make total seed drop below 8
             // And a config mentionning that final seeds are split
             const board: Table<number> = [

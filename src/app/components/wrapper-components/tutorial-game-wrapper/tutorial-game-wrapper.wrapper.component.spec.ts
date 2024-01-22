@@ -53,7 +53,9 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
     }));
 
     describe('Common behavior', () => {
+
         // ///////////////////////// Before ///////////////////////////////////////
+
         it('should create', () => {
             testUtils.expectToBeCreated();
         });
@@ -190,7 +192,9 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             // Then it should call setRole with playerOne
             expect(wrapper.setRole).toHaveBeenCalledOnceWith(Player.ONE);
         }));
+
         // ///////////////////////// ATTEMPTING ///////////////////////////////////
+
         it('should go to specific step when clicking on it', fakeAsync(async() => {
             // Given a TutorialStep with 3 steps
             const tutorial: TutorialStep[] = [
@@ -223,7 +227,9 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             const currentMessage: string = testUtils.findElement('#currentMessage').nativeElement.innerHTML;
             expect(currentMessage).toBe(expectedMessage);
         }));
+
         // ///////////////////// Retry ///////////////////////////////////////////////////////////////////
+
         it('should start step again after clicking "retry" on step failure', fakeAsync(async() => {
             // Given any TutorialStep where an invalid move has been done
             const tutorial: TutorialStep[] = [
@@ -337,7 +343,9 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             expect(testUtils.getGameComponent().getState())
                 .toEqual(QuartoRules.get().getInitialState());
         }));
+
         // /////////////////////// Next /////////////////////////////////////////////////////////
+
         it('should allow to skip step', fakeAsync(async() => {
             // Given a TutorialStep with one click
             wrapper.steps = [
@@ -552,9 +560,10 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             // expect navigator to have been called
             expectValidRouting(router, ['/play', 'Quarto'], OnlineGameCreationComponent);
         }));
+
     });
 
-    describe('TutorialStep awaiting specific moves', () => {
+    describe('TutorialStep expecting specific moves', () => {
         it('should show highlight of first click on multiclick game component', fakeAsync(async() => {
             // Given a TutorialStep with several moves
             const tutorial: TutorialStep[] = [
@@ -799,7 +808,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
         }));
     });
 
-    describe('TutorialStep awaiting any move', () => {
+    describe('TutorialStep expecting any move', () => {
         it('should consider any move legal when step is anyMove', fakeAsync(async() => {
             // Given tutorial step fo type "anyMove"
             const tutorial: TutorialStep[] = [
@@ -826,7 +835,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
         }));
     });
 
-    describe('TutorialStep awaiting a click', () => {
+    describe('TutorialStep expecting a click', () => {
         it('should show success message after step success (one of several clics)', fakeAsync(async() => {
             // Given a TutorialStep with several clics
             const tutorial: TutorialStep[] = [
@@ -1021,7 +1030,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
 
     });
 
-    describe('TutorialStep awaiting a predicate', () => {
+    describe('TutorialStep expecting a predicate', () => {
 
         it('should display MGPValidation.reason when predicate return a failure', fakeAsync(async() => {
             // Given a TutorialStep that always fail
