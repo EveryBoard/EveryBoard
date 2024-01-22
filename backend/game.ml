@@ -22,14 +22,14 @@ module Make
     (* Does the game name correspond to a game we have? *)
     match Dream.query request "gameName" with
     | None ->
-      fail `Bad_Request "Missing gameName in query"
+      raise (BadInput "Missing gameName in query")
     | Some game_name when List.mem game_name games_list = false ->
-      fail `Bad_Request "gameName does not correspond to an existing game"
+      raise (BadInput "gameName does not correspond to an existing game")
     | Some game_name ->
       (* Is the user allowed to create a game? That is, the user should not have a current game *)
       let (uid, user) = Auth.get_user request in
       match user.current_game with
-      | Some _ -> Dream.respond ~status:`Bad_Request "User is already in a game"
+      | Some _ -> raise (BadInput "User is already in a game")
       | None ->
         Firestore.transaction request @@ fun () ->
         let creator = User.to_minimal_user uid user in
@@ -63,6 +63,7 @@ module Make
     let game_id = Dream.param request "game_id" in
     Stats.set_action request "DELETE game";
     Stats.set_game_id request game_id;
+    (* TODO: also delete chat and config room etc. *)
     let* _ = Firestore.Game.delete request game_id in
     Dream.empty `OK
 
@@ -270,9 +271,9 @@ module Make
 
   let change : Dream.route = Dream.post "game/:game_id" @@ fun request ->
     match Dream.query request "action" with
-    | None -> fail `Bad_Request "Missing action"
+    | None -> raise (BadInput "Missing action")
     | Some action ->
-    let game_id = Dream.param request "game_id" in
+      let game_id = Dream.param request "game_id" in
       Stats.set_action request (Printf.sprintf "POST game %s" action);
       Stats.set_game_id request game_id;
       match action with
@@ -283,7 +284,7 @@ module Make
         let loser = get_json_param request "loser" >>= MinimalUser.of_yojson in
         begin match (winner, loser) with
           | (Ok winner, Ok loser) -> notify_timeout request game_id winner loser
-          | _ -> fail `Bad_Request "Missing or invalid winner or loser parameter"
+          | _ -> raise (BadInput "Missing or invalid winner or loser parameter")
         end
       | "proposeDraw" -> propose request game_id "Draw"
       | "acceptDraw" -> accept_draw request game_id
@@ -299,14 +300,14 @@ module Make
       | "move" ->
         begin match get_json_param request "move" with
           | Ok move_json -> move request game_id move_json
-          | _ -> fail `Bad_Request "Missing or invalid move parameter"
+          | _ -> raise (BadInput "Missing or invalid move parameter")
         end
       | "moveAndEnd" ->
         begin match get_json_param request "move" with
           | Ok move_json -> move_and_end request game_id move_json
-          | _ -> fail `Bad_Request "Missing or invalid move parameter"
+          | _ -> raise (BadInput "Missing or invalid move parameter")
         end
-      | _ -> raise (BadInput "unknown action")
+      | _ -> raise (BadInput "Unknown action")
 
   let routes = [create; get; delete; change]
 end

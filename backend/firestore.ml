@@ -52,8 +52,17 @@ module type FIRESTORE = sig
     (** Create a config room, with a given id *)
     val create : Dream.request -> string -> Domain.ConfigRoom.t -> unit Lwt.t
 
+    (** Add a candidate to the config room *)
+    val add_candidate : Dream.request -> string -> Domain.MinimalUser.t -> unit Lwt.t
+
+    (** [remove_candidate request game_id candidate_id] removes candidate [candidate_id] from the config room [game_id] *)
+    val remove_candidate : Dream.request -> string -> string -> unit Lwt.t
+
     (** Accept a proposed game configuration *)
     val accept : Dream.request -> string -> unit Lwt.t
+
+    (** Update a config room *)
+    val update : Dream.request -> string -> JSON.t -> unit Lwt.t
 
   end
 
@@ -139,11 +148,21 @@ module Make (FirestorePrimitives : FirestorePrimitives.FIRESTORE_PRIMITIVES) : F
       let* _ = FirestorePrimitives.create_doc request "config-room" ~id json in
       Lwt.return ()
 
+    let add_candidate (request : Dream.request) (game_id : string) (user : Domain.MinimalUser.t) : unit Lwt.t =
+      let user_json = Domain.MinimalUser.to_yojson user in
+      let* _ = FirestorePrimitives.create_doc request ("config-room/" ^ game_id ^ "/candidates") ~id:user.id user_json in
+      Lwt.return ()
+
+    let remove_candidate (request : Dream.request) (game_id : string) (candidate_id : string) : unit Lwt.t =
+      FirestorePrimitives.delete_doc request ("config-room/" ^ game_id ^ "/candidates/" ^ candidate_id)
+
     let accept (request : Dream.request) (game_id : string) : unit Lwt.t =
       let update = `Assoc
           [("partStatus", Domain.ConfigRoom.GameStatus.(to_yojson Started))] in
       FirestorePrimitives.update_doc request ("config-room/" ^ game_id) update
 
+    let update (request : Dream.request) (game_id : string) (update : JSON.t) : unit Lwt.t =
+      FirestorePrimitives.update_doc request ("config-room/" ^ game_id) update
   end
 
   module Chat = struct

@@ -34,7 +34,10 @@ module Mock : MOCK = struct
   module ConfigRoom = struct
     let get _ _ = failwith "TODO"
     let create _ _ _ = failwith "TODO"
+    let add_candidate _ _ _ = failwith "TODO"
+    let remove_candidate _ _ _ = failwith "TODO"
     let accept _ _ = failwith "TODO"
+    let update _ _ _ = failwith "TODO"
   end
 
   module Chat = struct

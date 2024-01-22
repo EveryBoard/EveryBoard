@@ -11,6 +11,7 @@ import { ConnectedUserService } from './ConnectedUserService';
 import { FirestoreCollectionObserver } from '../dao/FirestoreCollectionObserver';
 import { FirestoreDocument, IFirestoreDAO } from '../dao/FirestoreDAO';
 import { RulesConfig, RulesConfigUtils } from '../jscaip/RulesConfigUtil';
+import { BackendService } from './BackendService';
 
 @Injectable({
     providedIn: 'root',
@@ -18,19 +19,10 @@ import { RulesConfig, RulesConfigUtils } from '../jscaip/RulesConfigUtil';
 @Debug.log
 export class ConfigRoomService {
 
-    public static readonly GAME_DOES_NOT_EXIST: Localized = () => $localize`Game does not exist`;
-
     public constructor(private readonly configRoomDAO: ConfigRoomDAO,
-                       private readonly connectedUserService: ConnectedUserService)
+                       private readonly connectedUserService: ConnectedUserService,
+                       private readonly backendService: BackendService)
     {
-    }
-
-    public addCandidate(partId: string, candidate: MinimalUser): Promise<void> {
-        return this.configRoomDAO.subCollectionDAO(partId, 'candidates').set(candidate.id, candidate);
-    }
-
-    public removeCandidate(partId: string, candidate: MinimalUser): Promise<void> {
-        return this.configRoomDAO.subCollectionDAO(partId, 'candidates').delete(candidate.id);
     }
 
     public subscribeToChanges(configRoomId: string, callback: (doc: MGPOptional<ConfigRoom>) => void): Subscription {
@@ -71,50 +63,14 @@ export class ConfigRoomService {
     }
 
     public async joinGame(configRoomId: string): Promise<MGPValidation> {
-        const user: MinimalUser = this.connectedUserService.user.get().toMinimalUser();
-        const configRoom: MGPOptional<ConfigRoom> = await this.configRoomDAO.read(configRoomId);
-        if (configRoom.isAbsent()) {
-            return MGPValidation.failure(ConfigRoomService.GAME_DOES_NOT_EXIST());
-        } else {
-            if (configRoom.get().creator.id !== user.id) {
-                // Only add actual candidates to the game, not the creator
-                await this.addCandidate(configRoomId, user);
-            }
-            return MGPValidation.SUCCESS;
-        }
+        return this.backendService.joinGame(configRoomId);
     }
 
-    public async cancelJoining(configRoomId: string): Promise<void> {
-        const user: MinimalUser = this.connectedUserService.user.get().toMinimalUser();
-        const configRoomOpt: MGPOptional<ConfigRoom> = await this.configRoomDAO.read(configRoomId);
-        if (configRoomOpt.isAbsent()) {
-            // The part does not exist, so we can consider that we succesfully canceled joining
-            return;
-        } else {
-            const configRoom: ConfigRoom = configRoomOpt.get();
-            const configRoomUpdates: Promise<void>[] = [this.removeCandidate(configRoomId, user)];
-            if (configRoom.chosenOpponent?.id === user.id) {
-                // if the chosenOpponent leave, we're back to initial part creation
-                const update: Partial<ConfigRoom> = {
-                    chosenOpponent: null,
-                    partStatus: PartStatus.PART_CREATED.value,
-                };
-
-                configRoomUpdates.push(this.configRoomDAO.update(configRoomId, update));
-            }
-            await Promise.all(configRoomUpdates);
-        }
+    public removeCandidate(partId: string, candidate: MinimalUser): Promise<void> {
+        return this.backendService.removeCandidate(partId, candidate.id);
     }
 
-    public async deleteConfigRoom(configRoomId: string, candidates: MinimalUser[]): Promise<void> {
-        // We need to delete the candidates before the actual configRoom,
-        // for the security rules to check that we are allowed to delete the configRoom
-        await Promise.all(candidates.map((candidate: MinimalUser): Promise<void> =>
-            this.removeCandidate(configRoomId, candidate)));
-        await this.configRoomDAO.delete(configRoomId);
-    }
-
-    public async proposeConfig(configRoomId: string,
+    public async proposeConfig(gameId: string,
                                chosenOpponent: MinimalUser,
                                partType: PartType,
                                maximalMoveDuration: number,
@@ -123,7 +79,7 @@ export class ConfigRoomService {
                                rulesConfig: MGPOptional<RulesConfig>)
     : Promise<void>
     {
-        return this.configRoomDAO.update(configRoomId, {
+        return this.backendService.proposeConfig(gameId, {
             partStatus: PartStatus.CONFIG_PROPOSED.value,
             chosenOpponent: chosenOpponent,
             partType: partType.value,
@@ -134,27 +90,15 @@ export class ConfigRoomService {
         });
     }
 
-    public setChosenOpponent(configRoomId: string, chosenOpponent: MinimalUser): Promise<void> {
-        return this.configRoomDAO.update(configRoomId, {
-            chosenOpponent: chosenOpponent,
-        });
+    public setChosenOpponent(gameId: string, chosenOpponent: MinimalUser): Promise<void> {
+        return this.backendService.selectOpponent(gameId, chosenOpponent);
     }
 
     public async reviewConfig(configRoomId: string): Promise<void> {
-        return this.configRoomDAO.update(configRoomId, {
-            partStatus: PartStatus.PART_CREATED.value,
-        });
+        return this.backendService.reviewConfig(configRoomId);
     }
 
     public async reviewConfigAndRemoveChosenOpponent(configRoomId: string): Promise<void> {
-        return this.configRoomDAO.update(configRoomId, {
-            partStatus: PartStatus.PART_CREATED.value,
-            chosenOpponent: null,
-        });
+        return this.backendService.reviewConfigAndRemoveChosenOpponent(configRoomId);
     }
-
-    public async readConfigRoomById(configRoomId: string): Promise<ConfigRoom> {
-        return (await this.configRoomDAO.read(configRoomId)).get();
-    }
-
 }

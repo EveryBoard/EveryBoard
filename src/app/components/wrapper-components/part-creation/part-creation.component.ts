@@ -331,18 +331,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
     public async cancelGameCreation(): Promise<void> {
         this.allDocDeleted = true;
         await this.currentGameService.removeCurrentGame();
-        Debug.display('PartCreationComponent', 'cancelGameCreation', 'observed part removed');
-
-        await this.chatService.deleteChat(this.partId);
-        Debug.display('PartCreationComponent', 'cancelGameCreation', 'chat deleted');
-
         await this.gameService.deletePart(this.partId);
-        Debug.display('PartCreationComponent', 'cancelGameCreation', 'chat and part deleted');
-
-        await this.configRoomService.deleteConfigRoom(this.partId, this.candidates);
-        Debug.display('PartCreationComponent', 'cancelGameCreation', 'chat, part, and configRoom deleted');
-
-        return;
     }
     private async onCurrentConfigRoomUpdate(configRoomOpt: MGPOptional<ConfigRoom>): Promise<void> {
         if (configRoomOpt.isAbsent()) {
@@ -545,7 +534,8 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         } else {
             Debug.display('PartCreationComponent', 'ngOnDestroy', 'you are about to cancel game joining');
             await this.currentGameService.removeCurrentGame();
-            await this.configRoomService.cancelJoining(this.partId);
+            await this.configRoomService.removeCandidate(this.partId,
+                                                         this.connectedUserService.user.get().toMinimalUser());
         }
     }
 }

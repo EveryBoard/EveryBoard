@@ -4,9 +4,10 @@ import { JSONValue, Utils } from '../utils/utils';
 import { environment } from 'src/environments/environment';
 import { MGPFallible } from '../utils/MGPFallible';
 import { MGPOptional } from '../utils/MGPOptional';
-import { Part, RequestType } from '../domain/Part';
+import { Part } from '../domain/Part';
 import { MinimalUser } from '../domain/MinimalUser';
 import { PlayerOrNone } from '../jscaip/Player';
+import { MGPValidation } from '../utils/MGPValidation';
 
 type HTTPMethod = 'POST' | 'GET' | 'PATCH' | 'HEAD' | 'DELETE';
 
@@ -67,7 +68,7 @@ export class BackendService {
             await this.performRequestWithJSONResponse('POST', `game?gameName=${gameName}`);
         this.assertSuccess(result);
         // eslint-disable-next-line dot-notation
-        return Utils.getNonNullable(result.get())['id'] as string;
+        return Utils.getNonNullable(result.get())['id'] as string ;
     }
 
     /** Retrieve the name of the game with the given id. If there is no corresponding game, returns an empty option. */
@@ -263,4 +264,57 @@ export class BackendService {
         // eslint-disable-next-line dot-notation
         return Utils.getNonNullable(result.get())['time'] as number;
     }
+
+    /** Joins a game */
+    public async joinGame(gameId: string): Promise<MGPValidation> {
+        const endpoint: string = `config-room/${gameId}/candidates`;
+        const result: MGPFallible<JSONValue> = await this.performRequestWithJSONResponse('POST', endpoint);
+        if (result.isSuccess()) {
+            return MGPValidation.SUCCESS;
+        } else {
+            Utils.assert(result.getReason() === 'Game does not exist', 'Unexpected failure from backend');
+            return MGPValidation.failure($localize`Game does not exist`);
+        }
+    }
+
+    /** Remove a candidate from a config room (it can be ourselves or someone else) */
+    public async removeCandidate(gameId: string, candidateId: string): Promise<void> {
+        const endpoint: string = `config-room/${gameId}/candidates/${candidateId}`;
+        const result: MGPFallible<JSONValue> = await this.performRequestWithJSONResponse('POST', endpoint);
+        this.assertSuccess(result);
+    }
+
+    /** Propose a config to the opponent */
+    public async proposeConfig(gameId: string,
+                               config: JSONValue)
+    : Promise<void>
+    {
+        const configEncoded: string = encodeURIComponent(JSON.stringify(config));
+        const endpoint: string = `config-room/${gameId}?action=propose&config=${configEncoded}`;
+        const result: MGPFallible<JSONValue> = await this.performRequestWithJSONResponse('POST', endpoint);
+        this.assertSuccess(result);
+    }
+
+    /** Select an opponent */
+    public async selectOpponent(gameId: string, opponent: MinimalUser): Promise<void> {
+        const opponentEncoded: string = encodeURIComponent(JSON.stringify(opponent));
+        const endpoint: string = `config-room/${gameId}?action=selectOpponent&opponent=${opponentEncoded}`;
+        const result: MGPFallible<JSONValue> = await this.performRequestWithJSONResponse('POST', endpoint);
+        this.assertSuccess(result);
+    }
+
+    /** Review a config proposed to the opponent */
+    public async reviewConfig(gameId: string): Promise<void> {
+        const endpoint: string = `config-room/${gameId}?action=reviewConfig`;
+        const result: MGPFallible<JSONValue> = await this.performRequestWithJSONResponse('POST', endpoint);
+        this.assertSuccess(result);
+    }
+
+    /** Review a config proposed to the opponent, who just left */
+    public async reviewConfigAndRemoveChosenOpponent(gameId: string): Promise<void> {
+        const endpoint: string = `config-room/${gameId}?action=reviewConfigAndRemoveOpponent`;
+        const result: MGPFallible<JSONValue> = await this.performRequestWithJSONResponse('POST', endpoint);
+        this.assertSuccess(result);
+    }
+
 }

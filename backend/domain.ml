@@ -91,6 +91,55 @@ module ConfigRoom = struct
 
   end
 
+  module Updates = struct
+    module ReviewConfigAndRemoveOpponent = struct
+      type t = {
+        chosen_opponent: unit [@key "chosenOpponent"];
+        game_status: GameStatus.t [@key "partStatus"];
+      }
+      [@@deriving yojson]
+
+      let get : t = {
+        chosen_opponent = ();
+        game_status = GameStatus.Created;
+      }
+    end
+
+    module SelectOpponent = struct
+      type t = {
+        chosen_opponent: MinimalUser.t [@key "chosenOpponent"];
+      }
+      [@@deriving yojson]
+
+      let get (opponent : MinimalUser.t) : t = {
+        chosen_opponent = opponent;
+      }
+    end
+
+    module ReviewConfig = struct
+      type t = {
+        game_status: GameStatus.t [@key "partStatus"];
+      }
+      [@@deriving yojson]
+
+      let get : t = {
+        game_status = GameStatus.Created;
+      }
+    end
+
+    module Proposal = struct
+      type t = {
+        game_status: GameStatus.t [@key "partStatus"];
+        game_type: GameType.t [@key "partType"];
+        maximal_move_duration: int [@key "maximalMoveDuration"];
+        total_part_duration: int [@key "totalPartDuration"];
+        first_player: FirstPlayer.t [@key "firstPlayer"];
+        rules_config: JSON.t [@key "rulesConfig"];
+      }
+      [@@deriving yojson]
+    end
+  end
+
   type t = {
     creator: MinimalUser.t;
     chosen_opponent: MinimalUser.t option [@key "chosenOpponent"];
