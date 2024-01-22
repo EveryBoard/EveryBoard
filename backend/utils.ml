@@ -114,7 +114,7 @@ let to_firestore ?(path : string option) (doc : JSON.t) : JSON.t  =
   (* Types of values are documented here: https://cloud.google.com/firestore/docs/reference/rest/Shared.Types/ArrayValue#Value *)
   let rec transform_field (v : JSON.t) : JSON.t = match v with
       | `String v -> `Assoc [("stringValue", `String v)]
-      | `Bool v -> `Assoc [("boolValue", `Bool v)]
+      | `Bool v -> `Assoc [("booleanValue", `Bool v)]
       | `Intlit v -> `Assoc [("integerValue", `String v)]
       | `Null -> `Assoc [("nullValue", `Null)]
       | `Assoc fields -> `Assoc [("mapValue", `Assoc [("fields", `Assoc (List.map transform_key_and_field fields))])]
@@ -130,3 +130,11 @@ let to_firestore ?(path : string option) (doc : JSON.t) : JSON.t  =
     | Some p -> [("name", `String ("projects/" ^ !Options.project_name ^ "/databases/" ^ !Options.database_name ^ "/documents/" ^ p))]
     | None -> [] in
   `Assoc (name @ [("fields", doc_with_fields)])
+
+
+let get_json_param (request : Dream.request) (field : string) : (Yojson.Safe.t, string) result =
+  match Dream.query request field with
+  | None -> Error "parameter missing"
+  | Some value ->
+    try Ok (Yojson.Safe.from_string value)
+    with Yojson.Json_error error -> Error error

@@ -314,14 +314,11 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         return this.configRoomService.reviewConfig(this.partId);
     }
     public async proposeConfig(): Promise<void> {
-        const chosenOpponentName: string = this.getForm('chosenOpponent').value;
         const partType: string = this.getForm('partType').value;
         const maxMoveDur: number = this.getForm('maximalMoveDuration').value;
         const firstPlayer: string = this.getForm('firstPlayer').value;
         const totalPartDuration: number = this.getForm('totalPartDuration').value;
-        const chosenOpponent: MinimalUser = this.getUserFromName(chosenOpponentName);
         return this.configRoomService.proposeConfig(this.partId,
-                                                    chosenOpponent,
                                                     PartType.of(partType),
                                                     maxMoveDur,
                                                     FirstPlayer.of(firstPlayer),

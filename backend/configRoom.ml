@@ -52,8 +52,7 @@ module Make
 
   (** Propose a config to the opponent. Perform 1 write. *)
   let propose_config (request : Dream.request) (game_id : string) =
-    let config = Dream.param request "config" in
-    match JSON.from_string config |> Domain.ConfigRoom.Updates.Proposal.of_yojson with
+    match get_json_param request "config" >>= Domain.ConfigRoom.Updates.Proposal.of_yojson with
     | Error _ -> raise (BadInput "Invalid config proposal")
     | Ok update ->
       (* Write 1: update the config *)
@@ -63,8 +62,7 @@ module Make
 
   (** Select the opponent in a config. Perform 1 write. *)
   let select_opponent (request : Dream.request) (game_id : string) =
-    let opponent = Dream.param request "opponent" in
-    match JSON.from_string opponent |> Domain.MinimalUser.of_yojson with
+    match get_json_param request "opponent" >>= Domain.MinimalUser.of_yojson with
     | Error _ -> raise (BadInput "Invalid opponent")
     | Ok opponent ->
       (* Write 1: update the config *)
@@ -93,7 +91,7 @@ module Make
       Stats.set_action request (Printf.sprintf "POST config-room %s" action);
       Stats.set_game_id request game_id;
       match action with
-      | "proposeConfig" -> propose_config request game_id
+      | "propose" -> propose_config request game_id
       | "selectOpponent" -> select_opponent request game_id
       | "reviewConfig" -> review_config request game_id
       | "reviewConfigAndRemoveOpponent" -> review_config_and_remove_opponent request game_id

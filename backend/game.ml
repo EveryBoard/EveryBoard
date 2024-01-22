@@ -262,13 +262,6 @@ module Make
     let* _ = Firestore.Game.add_event request game_id game_end in
     Dream.empty `OK
 
-  let get_json_param (request : Dream.request) (field : string) : (Yojson.Safe.t, string) result =
-    match Dream.query request field with
-    | None -> Error "parameter missing"
-    | Some value ->
-      try Ok (Yojson.Safe.from_string value)
-      with Yojson.Json_error error -> Error error
-
   let change : Dream.route = Dream.post "game/:game_id" @@ fun request ->
     match Dream.query request "action" with
     | None -> raise (BadInput "Missing action")

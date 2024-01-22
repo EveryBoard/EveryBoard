@@ -7,6 +7,7 @@ module TokenRefresher = TokenRefresher.Make(External)(Jwt)
 module Firestore = Firestore.Make(FirestorePrimitives.Make(External)(TokenRefresher)(Stats))
 module Auth = Auth.Make(Firestore)(GoogleCertificates)(Stats)(Jwt)
 module Game = Game.Make(External)(Auth)(Firestore)(Stats)
+module ConfigRoom = ConfigRoom.Make(External)(Auth)(Firestore)(Stats)
 
 let server_time = Dream.get "/time" @@ fun _ ->
     let now = External.now () in
@@ -29,6 +30,7 @@ let api = [
     Dream.scope "/" [error_catcher; TokenRefresher.middleware !Options.service_account_file; Auth.middleware]
     @@ List.concat [
       Game.routes;
+      ConfigRoom.routes;
       [server_time];
     ];
   ]

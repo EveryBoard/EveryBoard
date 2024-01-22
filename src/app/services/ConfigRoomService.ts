@@ -71,7 +71,6 @@ export class ConfigRoomService {
     }
 
     public async proposeConfig(gameId: string,
-                               chosenOpponent: MinimalUser,
                                partType: PartType,
                                maximalMoveDuration: number,
                                firstPlayer: FirstPlayer,
@@ -81,7 +80,6 @@ export class ConfigRoomService {
     {
         return this.backendService.proposeConfig(gameId, {
             partStatus: PartStatus.CONFIG_PROPOSED.value,
-            chosenOpponent: chosenOpponent,
             partType: partType.value,
             maximalMoveDuration,
             totalPartDuration,
