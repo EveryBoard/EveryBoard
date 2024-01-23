@@ -13,7 +13,7 @@ export class SiamState extends GameStateWithTable<SiamPiece> {
     public countPlayersPawn(): PlayerNumberMap {
         const counts: PlayerNumberMap = PlayerNumberMap.of(0, 0);
         for (const coordAndContent of this.getCoordsAndContents()) {
-            if (coordAndContent.content !== SiamPiece.EMPTY) {
+            if (coordAndContent.content.getOwner().isPlayer()) {
                 counts.add(coordAndContent.content.getOwner() as Player, 1);
             }
         }

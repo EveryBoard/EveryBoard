@@ -10,15 +10,19 @@ class PlayerNone implements ComparableObject {
 
     private constructor() {
     }
+
     public isPlayer(): this is Player {
         return false;
     }
+
     public toString(): string {
         return 'PLAYER_NONE';
     }
+
     public equals(other: PlayerOrNone): boolean {
         return this === other;
     }
+
     public getValue() : number {
         return this.value;
     }
