@@ -44,8 +44,8 @@ describe('GoHeuristic', () => {
             [_, _, O, X, _],
             [_, _, O, X, _],
         ];
-        // eslint-disable-next-line max-len
-        const strongState: GoState = new GoState(strongBoard, PlayerNumberMap.of(10, 1), 0, MGPOptional.empty(), Phase.PLAYING);
+        const strongState: GoState =
+            new GoState(strongBoard, PlayerNumberMap.of(10, 1), 0, MGPOptional.empty(), Phase.PLAYING);
         const weakBoard: Table<GoPiece> = [
             [_, O, X, _, _],
             [_, O, X, _, _],

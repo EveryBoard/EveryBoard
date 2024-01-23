@@ -187,7 +187,7 @@ export function doMancalaComponentTests<C extends MancalaComponent<R>,
             const initialState: MancalaState = entries.capture.state;
             await mancalaTestUtils.testUtils.setupState(initialState);
             const currentPlayer: Player = initialState.getCurrentPlayer();
-            const initialScore: number = initialState.scores.get(currentPlayer).get();
+            const initialScore: number = initialState.scores.get(currentPlayer);
             const move: MancalaMove = entries.capture.move;
             const suffix: string = mancalaTestUtils.getSuffix(entries.capture);
 
@@ -196,7 +196,7 @@ export function doMancalaComponentTests<C extends MancalaComponent<R>,
 
             // Then the store should contain newScore +difference
             const newState: MancalaState = mancalaTestUtils.testUtils.getGameComponent().getState();
-            const newScore: number = newState.scores.get(currentPlayer).get();
+            const newScore: number = newState.scores.get(currentPlayer);
             const difference: number = newScore - initialScore;
             mancalaTestUtils.expectStoreContentToBe(currentPlayer, ' ' + newScore + ' ', ' +' + difference + ' ');
         }));
