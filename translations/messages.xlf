@@ -561,7 +561,7 @@
         <source>It is your turn.</source>
       </trans-unit>
       <trans-unit id="3724541577412345595" datatype="html">
-        <source>It is <x id="INTERPOLATION" equiv-text="{{ currentPlayer?.name }}"/>&apos;s turn.</source>
+        <source>It is <x id="INTERPOLATION" equiv-text="{{ currentUser?.name }}"/>&apos;s turn.</source>
       </trans-unit>
       <trans-unit id="715032829765584790" datatype="html">
         <source>vs.</source>
@@ -612,7 +612,7 @@
         <source>Your <x id="INTERPOLATION" equiv-text="{{ requestInfos[deniedRequest().get()].name() }}"/> request has been rejected.  <x id="START_TAG_FA_ICON" ctype="x-fa_icon" equiv-text="&lt;fa-icon [icon]=&quot;requestInfos[deniedRequest().get()].icon&quot;&gt;"/><x id="CLOSE_TAG_FA_ICON" ctype="x-fa_icon" equiv-text="&lt;/span&gt;&lt;/p&gt;"/></source>
       </trans-unit>
       <trans-unit id="1802530168433258138" datatype="html">
-        <source>Your request for a <x id="INTERPOLATION" equiv-text="{{ requestInfos[requestAwaitingReplyFromOpponent().get()].name() }}"/> has been sent.  <x id="START_TAG_FA_ICON" ctype="x-fa_icon" equiv-text="&lt;fa-icon [icon]=&quot;requestInfos[requestAwaitingReplyFromOpponent().get()].icon&quot;&gt;"/><x id="CLOSE_TAG_FA_ICON" ctype="x-fa_icon" equiv-text="&lt;/span&gt;&lt;/p&gt;"/></source>
+        <source>Your request for a <x id="INTERPOLATION" equiv-text="{{ requestInfos[getRequestAwaitingReplyFromOpponent().get()].name() }}"/> has been sent.  <x id="START_TAG_FA_ICON" ctype="x-fa_icon" equiv-text="&lt;fa-icon [icon]=&quot;requestInfos[getRequestAwaitingReplyFromOpponent().get()].icon&quot;&gt;"/><x id="CLOSE_TAG_FA_ICON" ctype="x-fa_icon" equiv-text="&lt;/span&gt;&lt;/p&gt;"/></source>
       </trans-unit>
       <trans-unit id="4624707315308487849" datatype="html">
         <source>Go back to the game list</source>
@@ -2172,8 +2172,8 @@
       <trans-unit id="6243517581301426418" datatype="html">
         <source>Split final seeds evenly</source>
       </trans-unit>
-      <trans-unit id="3458197467832550172" datatype="html">
-        <source>Even-Ba-Awa</source>
+      <trans-unit id="796568684338354748" datatype="html">
+        <source>Even Ba-awa</source>
       </trans-unit>
       <trans-unit id="6179314931812970793" datatype="html">
         <source>Bonus fact: Ba-awa, also called Adi, is played mainly in Ghana.</source>
@@ -2190,8 +2190,8 @@
       <trans-unit id="3067825694318214397" datatype="html">
         <source>Captures during distribution (1/2)</source>
       </trans-unit>
-      <trans-unit id="7526762213389215712" datatype="html">
-        <source>If, during some distribution, you pass by one of your house that contains 3 seeds, and drop a fourth seed, you capture the house immediately, then continue the distribution!&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, do such a move!</source>
+      <trans-unit id="3249311152250368197" datatype="html">
+        <source>If, during some distribution, you pass by one of your houses that contains 3 seeds, and drop a fourth seed, you capture the house immediately, then continue the distribution!&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, do such a move!</source>
       </trans-unit>
       <trans-unit id="9198664076697170304" datatype="html">
         <source>Congratulations, you captured 4 seeds.</source>

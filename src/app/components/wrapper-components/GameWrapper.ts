@@ -201,7 +201,6 @@ export abstract class GameWrapper<P extends Comparable> extends BaseWrapperCompo
     }
 
     protected async updateBoardAndShowLastMove(triggerAnimation: boolean): Promise<void> {
-        console.log('updateBoardAndShowLastMove')
         this.gameComponent.cancelMoveAttempt();
         this.gameComponent.hideLastMove();
         if (this.gameComponent.node.previousMove.isPresent()) {
@@ -209,7 +208,7 @@ export abstract class GameWrapper<P extends Comparable> extends BaseWrapperCompo
             const move: Move = this.gameComponent.node.previousMove.get();
             await this.gameComponent.showLastMove(move);
         } else {
-            // We have not previous move to animate
+            // We have no previous move to animate
             await this.gameComponent.updateBoard(false);
         }
     }

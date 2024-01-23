@@ -205,7 +205,6 @@ export class TutorialGameWrapperComponent extends GameWrapper<TutorialPlayer> im
             this.currentMessage = this.COMPLETED_TUTORIAL_MESSAGE;
             this.tutorialOver = true;
         } else {
-            console.log('coucoute papoute')
             let indexUndone: number = (this.stepIndex + 1) % this.steps.length;
             while (this.stepFinished[indexUndone] === true) {
                 indexUndone = (indexUndone + 1) % this.steps.length;

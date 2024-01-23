@@ -1378,8 +1378,8 @@
         <source>Split final seeds evenly</source>
         <target>Partager les graines finales équitablement</target>
       </trans-unit>
-      <trans-unit id="3458197467832550172" datatype="html">
-        <source>Even-Ba-Awa</source>
+      <trans-unit id="796568684338354748" datatype="html">
+        <source>Even Ba-awa</source>
         <target>Ba-awa équitable</target>
       </trans-unit>
       <trans-unit id="6179314931812970793" datatype="html">
@@ -1402,8 +1402,8 @@
         <source>Captures during distribution (1/2)</source>
         <target>Captures pendant la distribution (1/2)</target>
       </trans-unit>
-      <trans-unit id="7526762213389215712" datatype="html">
-        <source>If, during some distribution, you pass by one of your house that contains 3 seeds, and drop a fourth seed, you capture the house immediately, then continue the distribution!&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, do such a move!</source>
+      <trans-unit id="3249311152250368197" datatype="html">
+        <source>If, during some distribution, you pass by one of your houses that contains 3 seeds, and drop a fourth seed, you capture the house immediately, then continue the distribution!&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, do such a move!</source>
         <target>Si, durant une distribution, vous passez pas une de vos maison qui contient 3 graines, et déposez une quatrième graine, vous capturez la maison immédiatement, puis continuez la distribution !&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, faites un tel mouvement !</target>
       </trans-unit>
       <trans-unit id="9198664076697170304" datatype="html">

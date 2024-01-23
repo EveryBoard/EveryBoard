@@ -26,7 +26,7 @@ export class BaAwaRules extends MancalaRules<BaAwaConfig> {
                 splitFinalSeedsEvenly: new BooleanConfig(false, () => $localize`Split final seeds evenly`),
             },
         }, [{
-            name: (): string => $localize`Even-Ba-Awa`,
+            name: (): string => $localize`Even Ba-awa`,
             config: {
                 feedOriginalHouse: true,
                 mustFeed: false,
