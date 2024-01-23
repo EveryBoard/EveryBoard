@@ -3,7 +3,15 @@ open Domain
 
 let ( >>= ) = Result.bind
 
-let games_list = (String.split_on_char ',' (Unix.getenv "GAMES"))
+let read_file filename =
+    let ch = open_in_bin filename in
+    let s = really_input_string ch (in_channel_length ch) in
+    close_in ch;
+    s
+
+let games_list = read_file "games.txt"
+               |> String.split_on_char '\n'
+               |> List.filter (fun x -> String.length x > 0)
 
 module type GAME = sig
   val routes : Dream.route list
