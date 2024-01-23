@@ -39,8 +39,8 @@ export class DvonnRules extends Rules<DvonnMove, DvonnState> {
         const scores: PlayerNumberMap = DvonnRules.getScores(state);
         if (DvonnRules.getMovablePieces(state).length === 0) {
             // This is the end of the game, boost the score to clearly indicate it
-            const scoresZero: number = scores.get(Player.ZERO).get();
-            const scoresOne: number = scores.get(Player.ONE).get();
+            const scoresZero: number = scores.get(Player.ZERO);
+            const scoresOne: number = scores.get(Player.ONE);
             if (scoresZero > scoresOne) {
                 return GameStatus.ZERO_WON;
             } else if (scoresZero < scoresOne) {

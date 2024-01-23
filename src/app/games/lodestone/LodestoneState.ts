@@ -199,13 +199,13 @@ export class LodestoneState extends GameStateWithTable<LodestonePiece> {
         return remaining;
     }
 
-    public numberOfPieces(): [number, number] {
-        const playerPieces: [number, number] = [0, 0];
+    public numberOfPieces(): PlayerNumberMap {
+        const playerPieces: PlayerNumberMap = PlayerNumberMap.of(0, 0);
         for (let y: number = 0; y < LodestoneState.SIZE; y++) {
             for (let x: number = 0; x < LodestoneState.SIZE; x++) {
                 const piece: LodestonePiece = this.getPieceAtXY(x, y);
                 if (piece.isPlayerPiece()) {
-                    playerPieces[piece.owner.getValue()] += 1;
+                    playerPieces.add(piece.owner, 1);
                 }
             }
         }
@@ -213,10 +213,10 @@ export class LodestoneState extends GameStateWithTable<LodestonePiece> {
     }
 
     public getScores(): PlayerNumberMap {
-        const remainingPieces: [number, number] = this.numberOfPieces();
+        const remainingPieces: PlayerNumberMap = this.numberOfPieces();
         return PlayerNumberMap.of(
-            LodestoneState.NUMBER_OF_PIECES - remainingPieces[1],
-            LodestoneState.NUMBER_OF_PIECES - remainingPieces[0],
+            LodestoneState.NUMBER_OF_PIECES - remainingPieces.get(Player.ONE),
+            LodestoneState.NUMBER_OF_PIECES - remainingPieces.get(Player.ZERO),
         );
     }
 

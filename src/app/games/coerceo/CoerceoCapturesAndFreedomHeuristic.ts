@@ -12,8 +12,8 @@ export class CoerceoCapturesAndFreedomHeuristic extends PlayerMetricHeuristic<Co
         const state: CoerceoState = node.gameState;
         const piecesByFreedom: PlayerNumberTable = state.getPiecesByFreedom();
         const piecesScores: number[] = this.getPiecesScore(piecesByFreedom);
-        const scoreZero: number = (2 * state.captures.get(Player.ZERO).get()) + piecesScores[0];
-        const scoreOne: number = (2 * state.captures.get(Player.ONE).get()) + piecesScores[1];
+        const scoreZero: number = (2 * state.captures.get(Player.ZERO)) + piecesScores[0];
+        const scoreOne: number = (2 * state.captures.get(Player.ONE)) + piecesScores[1];
         return PlayerNumberTable.ofSingle(scoreZero, scoreOne);
     }
 
@@ -25,7 +25,7 @@ export class CoerceoCapturesAndFreedomHeuristic extends PlayerMetricHeuristic<Co
     }
 
     public getPlayerPiecesScore(piecesScores: readonly number[]): number {
-        // Since having exactly one freedom left is more less advantageous, as more dangerous
+        // Since having exactly one freedom left is less advantageous, as more dangerous
         const capturableScore: number = 1;
         const safeScore: number = 3;
         return (safeScore * piecesScores[0]) +

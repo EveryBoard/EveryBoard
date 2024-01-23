@@ -126,7 +126,7 @@ export class OGWCTimeManagerService {
         // They may get updated through later action such as time additions
         const nextPlayer: Player = player.getOpponent();
         this.availableTurnTime.put(nextPlayer, this.getMoveDurationInMs());
-        const nextPlayerTakenGlobalTime: number = this.takenGlobalTime.get(nextPlayer).get();
+        const nextPlayerTakenGlobalTime: number = this.takenGlobalTime.get(nextPlayer);
         const nextPlayerAdaptedGlobalTime: number = this.getPartDurationInMs() - nextPlayerTakenGlobalTime;
         this.globalClocks[nextPlayer.getValue()].changeDuration(nextPlayerAdaptedGlobalTime);
     }
@@ -188,10 +188,10 @@ export class OGWCTimeManagerService {
     // Update clocks with the available time
     private updateClocks(): void {
         for (const player of Player.PLAYERS) {
-            this.turnClocks[player.getValue()].changeDuration(this.availableTurnTime.get(player).get());
-            const playerTakenGlobalTime: number = this.takenGlobalTime.get(player).get();
+            this.turnClocks[player.getValue()].changeDuration(this.availableTurnTime.get(player));
+            const playerTakenGlobalTime: number = this.takenGlobalTime.get(player);
             const globalTime: number =
-                this.getPartDurationInMs() + this.extraGlobalTime.get(player).get() - playerTakenGlobalTime;
+                this.getPartDurationInMs() + this.extraGlobalTime.get(player) - playerTakenGlobalTime;
             this.globalClocks[player.getValue()].changeDuration(globalTime);
         }
     }

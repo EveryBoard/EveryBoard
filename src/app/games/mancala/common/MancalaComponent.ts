@@ -39,7 +39,7 @@ export abstract class MancalaComponent<R extends MancalaRules>
         [0, 0, 0, 0, 0, 0],
         [0, 0, 0, 0, 0, 0],
     ];
-    public droppedInStore: [number, number] = [0, 0];
+    private droppedInStore: PlayerNumberMap = PlayerNumberMap.of(0, 0);
 
     protected filledCoords: Coord[] = [];
 
@@ -68,7 +68,7 @@ export abstract class MancalaComponent<R extends MancalaRules>
     }
 
     public override async showLastMove(move: MancalaMove): Promise<void> {
-        this.droppedInStore = [0, 0];
+        this.droppedInStore = PlayerNumberMap.of(0, 0);
         const previousState: MancalaState = this.getPreviousState();
         const config: MancalaConfig = this.getConfig().get();
         const distributionResult: MancalaDistributionResult =
@@ -215,7 +215,7 @@ export abstract class MancalaComponent<R extends MancalaRules>
 
     public override cancelMoveAttempt(): void {
         this.currentMove = MGPOptional.empty();
-        this.droppedInStore = [0, 0];
+        this.droppedInStore = PlayerNumberMap.of(0, 0);
         this.filledCoords = [];
         this.lastDistributedHouses = [];
         this.changeVisibleState(this.getState());
@@ -281,12 +281,12 @@ export abstract class MancalaComponent<R extends MancalaRules>
     }
 
     public getStoreContent(owner: Player): number {
-        return this.scores.get().get(owner).get() + this.droppedInStore[owner.getValue()];
+        return this.scores.get().get(owner) + this.droppedInStore.get(owner);
     }
 
     public getStoreSecondaryContent(owner: Player): MGPOptional<string> {
-        const previousScore: number = this.getPreviousStableState().scores.get(owner).get();
-        const currentScore: number = this.constructedState.scores.get(owner).get();
+        const previousScore: number = this.getPreviousStableState().scores.get(owner);
+        const currentScore: number = this.constructedState.scores.get(owner);
         const difference: number = currentScore - previousScore;
         if (difference > 0) {
             return MGPOptional.of('+' + difference);

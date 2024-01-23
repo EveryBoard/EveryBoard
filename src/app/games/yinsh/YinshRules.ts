@@ -334,10 +334,10 @@ export class YinshRules extends Rules<YinshMove, YinshState, YinshLegalityInform
         if (node.gameState.isInitialPlacementPhase()) {
             return GameStatus.ONGOING;
         }
-        if (3 <= node.gameState.sideRings.get(Player.ZERO).get()) {
+        if (3 <= node.gameState.sideRings.get(Player.ZERO)) {
             return GameStatus.ZERO_WON;
         }
-        if (3 <= node.gameState.sideRings.get(Player.ONE).get()) {
+        if (3 <= node.gameState.sideRings.get(Player.ONE)) {
             return GameStatus.ONE_WON;
         }
         return GameStatus.ONGOING;

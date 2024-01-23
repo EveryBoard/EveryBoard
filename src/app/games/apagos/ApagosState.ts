@@ -50,7 +50,7 @@ export class ApagosState extends GameState {
     }
 
     public getRemaining(piece: Player): number {
-        return this.remaining.get(piece).get();
+        return this.remaining.get(piece);
     }
 
     public equals(other: ApagosState): boolean {

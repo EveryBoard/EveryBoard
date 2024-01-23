@@ -286,8 +286,8 @@ export class GameService {
         if (scores.isPresent()) {
             return {
                 ...update,
-                scorePlayerZero: scores.get().get(Player.ZERO).get(),
-                scorePlayerOne: scores.get().get(Player.ONE).get(),
+                scorePlayerZero: scores.get().get(Player.ZERO),
+                scorePlayerOne: scores.get().get(Player.ONE),
             };
         }
         return update;

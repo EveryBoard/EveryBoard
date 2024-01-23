@@ -1,17 +1,20 @@
 import { GameStateWithTable } from 'src/app/jscaip/GameStateWithTable';
 import { SiamPiece } from './SiamPiece';
+import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
+import { Player } from 'src/app/jscaip/Player';
 
 export class SiamState extends GameStateWithTable<SiamPiece> {
 
     public countCurrentPlayerPawn(): number {
-        return this.countPlayersPawn()[this.getCurrentPlayer().getValue()];
+        const currentPlayer: Player = this.getCurrentPlayer();
+        return this.countPlayersPawn().get(currentPlayer);
     }
 
-    public countPlayersPawn(): [number, number] {
-        const counts: [number, number] = [0, 0];
+    public countPlayersPawn(): PlayerNumberMap {
+        const counts: PlayerNumberMap = PlayerNumberMap.of(0, 0);
         for (const coordAndContent of this.getCoordsAndContents()) {
             if (coordAndContent.content !== SiamPiece.EMPTY) {
-                counts[coordAndContent.content.getOwner().getValue()]++;
+                counts.add(coordAndContent.content.getOwner() as Player, 1);
             }
         }
         return counts;

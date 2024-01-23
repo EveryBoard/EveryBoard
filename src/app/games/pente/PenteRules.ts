@@ -96,7 +96,7 @@ export class PenteRules extends ConfigurableRules<PenteMove, PenteState, GobanCo
     public getGameStatus(node: PenteNode): GameStatus {
         const state: PenteState = node.gameState;
         const opponent: Player = state.getCurrentOpponent();
-        if (10 <= state.captures.get(opponent).get()) {
+        if (10 <= state.captures.get(opponent)) {
             return GameStatus.getVictory(opponent);
         }
         const victoriousCoord: Coord[] = PenteRules.PENTE_HELPER.getVictoriousCoord(state);

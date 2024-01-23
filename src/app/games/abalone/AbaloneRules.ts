@@ -158,9 +158,9 @@ export class AbaloneRules extends Rules<AbaloneMove, AbaloneState, AbaloneLegali
     }
     public getGameStatus(node: AbaloneNode): GameStatus {
         const scores: PlayerNumberMap = node.gameState.getScores();
-        if (5 < scores.get(Player.ZERO).get()) {
+        if (5 < scores.get(Player.ZERO)) {
             return GameStatus.ZERO_WON;
-        } else if (5 < scores.get(Player.ONE).get()) {
+        } else if (5 < scores.get(Player.ONE)) {
             return GameStatus.ONE_WON;
         } else {
             return GameStatus.ONGOING;

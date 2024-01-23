@@ -156,7 +156,7 @@ export class ReversiRules extends ConfigurableRules<ReversiMove,
             return GameStatus.ONGOING;
         }
         const scores: PlayerNumberMap = state.countScore();
-        const diff: number = scores.get(Player.ONE).get() - scores.get(Player.ZERO).get();
+        const diff: number = scores.get(Player.ONE) - scores.get(Player.ZERO);
         if (diff < 0) {
             return GameStatus.ZERO_WON;
         }

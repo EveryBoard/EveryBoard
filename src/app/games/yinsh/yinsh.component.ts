@@ -148,7 +148,7 @@ export class YinshComponent extends HexagonalGameComponent<YinshRules,
             this.setMarkerInfo(coord, piece);
         });
         for (const player of Player.PLAYERS) {
-            this.viewInfo.sideRings[player.getValue()] = this.constructedState.sideRings.get(player).get();
+            this.viewInfo.sideRings[player.getValue()] = this.constructedState.sideRings.get(player);
         }
         this.showCurrentMoveCaptures();
 

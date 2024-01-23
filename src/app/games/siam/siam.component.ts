@@ -291,7 +291,7 @@ export class SiamComponent extends RectangularGameComponent<SiamRules,
         const config: SiamConfig = this.getConfig().get();
         const cx: number = config.width / 2;
         const offset: number = 1 / 2;
-        const pieceOnBoard: number = this.getState().countPlayersPawn()[player.getValue()];
+        const pieceOnBoard: number = this.getState().countPlayersPawn().get(player);
         const nbPieceToDraw: number = config.numberOfPiece - pieceOnBoard;
         const width: number = 1 + ((nbPieceToDraw - 1) * offset);
         let x: number;
@@ -338,7 +338,7 @@ export class SiamComponent extends RectangularGameComponent<SiamRules,
 
     public playerPieces(player: Player): number {
         const maxPiece: number = this.getConfig().get().numberOfPiece;
-        const pieceOnBoard: number = this.getState().countPlayersPawn()[player.getValue()];
+        const pieceOnBoard: number = this.getState().countPlayersPawn().get(player);
         return maxPiece - pieceOnBoard;
     }
 

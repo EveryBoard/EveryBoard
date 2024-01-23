@@ -308,7 +308,7 @@ export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosSt
     }
 
     public getPlayerSidePieces(player: Player): number[] {
-        const nPieces: number = this.remainingPieces.get(player).get();
+        const nPieces: number = this.remainingPieces.get(player);
         const pieces: number[] = [];
         for (let i: number = 0; i < nPieces; i++) {
             pieces.push(i);
@@ -322,8 +322,8 @@ export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosSt
         this.lastMove = this.node.previousMove;
         const repartition: PlayerNumberMap = this.state.getPiecesRepartition();
         this.remainingPieces = PlayerNumberMap.of(
-            15 - repartition.get(Player.ZERO).get(),
-            15 - repartition.get(Player.ONE).get(),
+            15 - repartition.get(Player.ZERO),
+            15 - repartition.get(Player.ONE),
         );
         this.highCapture = MGPOptional.empty();
         this.cancelMoveAttempt();

@@ -103,7 +103,7 @@ export class CoerceoRules extends Rules<CoerceoMove, CoerceoState> {
     }
 
     public isLegalTileExchange(move: CoerceoTileExchangeMove, state: CoerceoState): MGPValidation {
-        if (state.tiles.get(state.getCurrentPlayer()).get() < 2) {
+        if (state.tiles.get(state.getCurrentPlayer()) < 2) {
             return MGPValidation.failure(CoerceoFailure.NOT_ENOUGH_TILES_TO_EXCHANGE());
         }
         const captured: FourStatePiece = state.getPieceAt(move.coord);
@@ -139,10 +139,10 @@ export class CoerceoRules extends Rules<CoerceoMove, CoerceoState> {
 
     public getGameStatus(node: CoerceoNode): GameStatus {
         const state: CoerceoState = node.gameState;
-        if (18 <= state.captures.get(Player.ZERO).get()) {
+        if (18 <= state.captures.get(Player.ZERO)) {
             return GameStatus.ZERO_WON;
         }
-        if (18 <= state.captures.get(Player.ONE).get()) {
+        if (18 <= state.captures.get(Player.ONE)) {
             return GameStatus.ONE_WON;
         }
         return GameStatus.ONGOING;

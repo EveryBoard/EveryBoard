@@ -217,8 +217,8 @@ export class GoRules extends ConfigurableRules<GoMove, GoState, GoConfig, GoLega
 
     public static addDeadToScore(state: GoState): number[] {
         const captured: PlayerNumberMap = state.getCapturedCopy();
-        let playerOneScore: number = captured.get(Player.ONE).get();
-        let playerZeroScore: number = captured.get(Player.ZERO).get();
+        let playerOneScore: number = captured.get(Player.ONE);
+        let playerZeroScore: number = captured.get(Player.ZERO);
         let currentSpace: GoPiece;
         for (let y: number = 0; y < state.getHeight(); y++) {
             for (let x: number = 0; x < state.getWidth(); x++) {
@@ -278,8 +278,8 @@ export class GoRules extends ConfigurableRules<GoMove, GoState, GoConfig, GoLega
     public static getGameStatus(node: GoNode): GameStatus {
         const state: GoState = node.gameState;
         if (state.phase === Phase.FINISHED) {
-            const capturedZero: number = state.captured.get(Player.ZERO).get();
-            const capturedOne: number = state.captured.get(Player.ONE).get();
+            const capturedZero: number = state.captured.get(Player.ZERO);
+            const capturedOne: number = state.captured.get(Player.ONE);
             if (capturedOne < capturedZero) {
                 return GameStatus.ZERO_WON;
             } else if (capturedZero < capturedOne) {

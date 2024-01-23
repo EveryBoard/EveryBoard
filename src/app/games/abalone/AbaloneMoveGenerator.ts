@@ -57,7 +57,7 @@ export class AbaloneMoveGenerator extends MoveGenerator<AbaloneMove, AbaloneStat
             const opponent: Player = state.getCurrentOpponent();
             const newState: AbaloneState = new AbaloneState(status.get(), state.turn + 1);
             const newScores: PlayerNumberMap = newState.getScores();
-            if (scores.get(opponent).get() < newScores.get(opponent).get()) {
+            if (scores.get(opponent) < newScores.get(opponent)) {
                 return false; // some player just push themself
             } else {
                 return true;

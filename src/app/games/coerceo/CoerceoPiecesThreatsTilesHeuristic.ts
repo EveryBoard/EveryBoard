@@ -35,7 +35,7 @@ export class CoerceoPiecesThreatsTilesHeuristic extends PlayerMetricHeuristic<Co
                     metrics.add(owner, safeIndex, 1);
                 }
             }
-            metrics.add(owner, tilesIndex, state.tiles.get(owner).get());
+            metrics.add(owner, tilesIndex, state.tiles.get(owner));
         }
         return metrics;
     }

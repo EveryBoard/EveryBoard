@@ -14,7 +14,7 @@ import { MGPFallible } from '../../utils/MGPFallible';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { TableUtils } from 'src/app/utils/ArrayUtils';
 import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
-import { MGPMap } from 'src/app/utils/MGPMap';
+import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 
 export class PylosNode extends GameNode<PylosMove, PylosState> {}
 
@@ -135,10 +135,10 @@ export class PylosRules extends Rules<PylosMove, PylosState> {
     }
 
     public static getGameStatus(node: PylosNode): GameStatus {
-        const ownershipMap: MGPMap<PlayerOrNone, number> = node.gameState.getPiecesRepartition();
-        if (ownershipMap.get(Player.ZERO).get() === 15) {
+        const ownershipMap: PlayerNumberMap = node.gameState.getPiecesRepartition();
+        if (ownershipMap.get(Player.ZERO) === 15) {
             return GameStatus.ONE_WON;
-        } else if (ownershipMap.get(Player.ONE).get() === 15) {
+        } else if (ownershipMap.get(Player.ONE) === 15) {
             return GameStatus.ZERO_WON;
         } else {
             return GameStatus.ONGOING;

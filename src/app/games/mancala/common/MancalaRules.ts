@@ -191,14 +191,14 @@ export abstract class MancalaRules extends ConfigurableRules<MancalaMove, Mancal
         const width: number = node.gameState.getWidth();
         const seedsByHouse: number = config.get().seedsByHouse;
         const halfOfTotalSeeds: number = width * seedsByHouse;
-        if (state.scores.get(Player.ZERO).get() > halfOfTotalSeeds) {
+        if (state.scores.get(Player.ZERO) > halfOfTotalSeeds) {
             return GameStatus.ZERO_WON;
         }
-        if (state.scores.get(Player.ONE).get() > halfOfTotalSeeds) {
+        if (state.scores.get(Player.ONE) > halfOfTotalSeeds) {
             return GameStatus.ONE_WON;
         }
-        if (state.scores.get(Player.ZERO).get() === halfOfTotalSeeds &&
-            state.scores.get(Player.ONE).get() === halfOfTotalSeeds)
+        if (state.scores.get(Player.ZERO) === halfOfTotalSeeds &&
+            state.scores.get(Player.ONE) === halfOfTotalSeeds)
         {
             return GameStatus.DRAW;
         }

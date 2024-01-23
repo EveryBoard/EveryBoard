@@ -41,7 +41,7 @@ export class EpaminondasPieceThenRowDominationThenAlignementThenRowPresenceHeuri
             if (row !== 0) {
                 rowDomination += Math.abs(row) / row;
             }
-            presence += wasPresent.get(Player.ZERO).get() + wasPresent.get(Player.ONE).get();
+            presence += wasPresent.get(Player.ZERO) + wasPresent.get(Player.ONE);
         }
         return BoardValue.multiMetric([
             pieces,
