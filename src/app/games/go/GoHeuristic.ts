@@ -14,7 +14,7 @@ export class GoHeuristic extends PlayerMetricHeuristic<GoMove, GoState, GoConfig
         const goScore: PlayerNumberMap = goState.getCapturedCopy();
         const goKilled: PlayerNumberMap = this.getDeadStones(goState);
         return PlayerNumberTable.ofSingle(
-            goScore.get(Player.ZERO) + (2 * goKilled.get(Player.ZERO)),
+            goScore.get(Player.ZERO) + (2 * goKilled.get(Player.ONE)),
             goScore.get(Player.ONE) + (2 * goKilled.get(Player.ZERO)),
         );
     }

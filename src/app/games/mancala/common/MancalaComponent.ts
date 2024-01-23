@@ -187,7 +187,7 @@ export abstract class MancalaComponent<R extends MancalaRules>
             if (currentDropIsStore) {
                 seedsInHand--;
                 this.filledCoords.push(MancalaRules.FAKE_STORE_COORD.get(player).get());
-                this.droppedInStore[player.getValue()] += 1;
+                this.droppedInStore.add(player, 1);
                 scores.add(player, 1);
             } else {
                 coord = nextCoord.get();

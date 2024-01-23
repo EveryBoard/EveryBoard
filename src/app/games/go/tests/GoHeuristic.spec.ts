@@ -64,7 +64,7 @@ describe('GoHeuristic', () => {
                                                                defaultConfig);
     });
 
-    it('should not care about kills in territory', () => {
+    it('should count killed piece as two points', () => {
         const u: GoPiece = GoPiece.DEAD_DARK;
         // Given two boards with the same territory, but one with a dead opponent piece
         const strongBoard: Table<GoPiece> = [

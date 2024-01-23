@@ -230,7 +230,7 @@ export class HiveRules extends Rules<HiveMove, HiveState> {
         for (const player of Player.PLAYERS) {
             const queenBeeLocation: MGPOptional<Coord> = state.queenBeeLocation(player);
             if (queenBeeLocation.isPresent()) {
-                neighbors[player.getValue()] = state.numberOfNeighbors(queenBeeLocation.get());
+                neighbors.put(player, state.numberOfNeighbors(queenBeeLocation.get()));
             }
         }
         const neighborsZero: number = neighbors.get(Player.ZERO);
