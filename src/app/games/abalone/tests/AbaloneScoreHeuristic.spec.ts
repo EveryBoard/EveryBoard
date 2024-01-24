@@ -14,7 +14,7 @@ const N: FourStatePiece = FourStatePiece.UNREACHABLE;
 const O: FourStatePiece = FourStatePiece.ZERO;
 const X: FourStatePiece = FourStatePiece.ONE;
 
-fdescribe('AbaloneScoreHeuristic', () => {
+describe('AbaloneScoreHeuristic', () => {
 
     let heuristic: AbaloneScoreHeuristic;
     const defaultConfig: NoConfig = AbaloneRules.get().getDefaultRulesConfig();

@@ -7,7 +7,7 @@ import { MoveTestUtils } from 'src/app/jscaip/tests/Move.spec';
 import { AbaloneMoveGenerator } from '../AbaloneMoveGenerator';
 import { TestUtils } from 'src/app/utils/tests/TestUtils.spec';
 
-fdescribe('AbaloneMove', () => {
+describe('AbaloneMove', () => {
 
     it('should not construct a move with more than three piece', () => {
         TestUtils.expectToThrowAndLog(

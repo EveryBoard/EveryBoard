@@ -186,13 +186,13 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneRules,
         const state: AbaloneState = this.getState();
         for (const dir of HexaDirection.factory.all) {
             const startToEnd: { start: Coord, pointed: Coord, end: Coord } = this.getArrowPath(single, dir);
-            let theoritical: AbaloneMove;
+            let theoretical: AbaloneMove;
             if (single) {
-                theoritical = AbaloneMove.ofSingleCoord(startToEnd.start, dir);
+                theoretical = AbaloneMove.ofSingleCoord(startToEnd.start, dir);
             } else {
-                theoritical = AbaloneMove.ofDoubleCoord(startToEnd.start, startToEnd.end, dir);
+                theoretical = AbaloneMove.ofDoubleCoord(startToEnd.start, startToEnd.end, dir);
             }
-            const isLegal: MGPFallible<AbaloneLegalityInformation> = this.rules.isLegal(theoritical, state);
+            const isLegal: MGPFallible<AbaloneLegalityInformation> = this.rules.isLegal(theoretical, state);
             if (isLegal.isSuccess()) {
                 const pointedCenter: Coord = this.getCenterAt(startToEnd.pointed);
                 const centerCoord: string = pointedCenter.x + ' ' + pointedCenter.y;
@@ -214,9 +214,11 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneRules,
     private getArrowPath(single: boolean, direction: HexaDirection): { start: Coord, end: Coord, pointed: Coord } {
         let start: Coord = this.selecteds[0];
         let end: Coord = this.selecteds[this.selecteds.length - 1];
+        // If end and start are different, then single === false
         if (single === false &&
             start.getDirectionToward(end).get().equals(direction.getOpposite()))
-        {
+        { // If start towars end give us the opposite direction fo the direction provided in args:
+            // Then we draw the arrow starting from end, so that the longer arrow is always drawned
             const tmp: Coord = start;
             start = end;
             end = tmp;
