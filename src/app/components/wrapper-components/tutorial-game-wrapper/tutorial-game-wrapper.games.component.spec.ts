@@ -89,6 +89,7 @@ import { YinshCapture, YinshMove } from 'src/app/games/yinsh/YinshMove';
 import { TutorialStepMessage } from './TutorialStepMessage';
 import { Comparable } from 'src/app/utils/Comparable';
 import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { TutorialFailure } from './TutorialFailure';
 
 describe('TutorialGameWrapperComponent (games)', () => {
 
@@ -167,12 +168,12 @@ describe('TutorialGameWrapperComponent (games)', () => {
                     EncapsuleRules.get(),
                     encapsuleTutorial[3],
                     EncapsuleMove.ofMove(new Coord(0, 0), new Coord(0, 2)),
-                    MGPValidation.failure(`Failed. Try again.`),
+                    MGPValidation.failure(TutorialStepMessage.FAILED_TRY_AGAIN()),
                 ], [
                     EncapsuleRules.get(),
                     encapsuleTutorial[3],
                     EncapsuleMove.ofMove(new Coord(0, 0), new Coord(1, 0)),
-                    MGPValidation.failure(`Failed. Try again.`),
+                    MGPValidation.failure(TutorialStepMessage.FAILED_TRY_AGAIN()),
                 ], [
                     EpaminondasRules.get(),
                     epaminondasTutorial[3],
@@ -202,12 +203,12 @@ describe('TutorialGameWrapperComponent (games)', () => {
                     LinesOfActionRules.get(),
                     linesOfActionTutorial[4],
                     LinesOfActionMove.from(new Coord(1, 0), new Coord(3, 2)).get(),
-                    MGPValidation.failure(`Failed. Try again.`),
+                    MGPValidation.failure(TutorialStepMessage.FAILED_TRY_AGAIN()),
                 ], [
                     LodestoneRules.get(),
                     lodestoneTutorial[5],
                     new LodestoneMove(new Coord(0, 0), 'push', 'orthogonal'),
-                    MGPValidation.failure(`You have not captured any of the opponent's pieces, try again!`),
+                    MGPValidation.failure(TutorialStepMessage.YOU_DID_NOT_CAPTURE_ANY_PIECE()),
                 ], [
                     LodestoneRules.get(),
                     lodestoneTutorial[6],
@@ -307,7 +308,7 @@ describe('TutorialGameWrapperComponent (games)', () => {
                     TrexoRules.get(),
                     trexoTutorial[3],
                     TrexoMove.from(new Coord(0, 0), new Coord(1, 0)).get(),
-                    MGPValidation.failure(`Failed. Try again.`),
+                    MGPValidation.failure(TutorialStepMessage.FAILED_TRY_AGAIN()),
                 ], [
                     YinshRules.get(),
                     yinshTutorial[3],
