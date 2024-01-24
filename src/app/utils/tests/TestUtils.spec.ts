@@ -715,16 +715,28 @@ export async function expectPermissionToBeDenied<T>(promise: Promise<T>): Promis
     await promise.then(throwIfFulfilled, checkErrorCode);
 }
 
+/**
+ * Returns a checker to verify that a subscription method has been correctly unsubscribed
+ * to in case it has been subscribed first.
+ */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function prepareUnsubscribeCheck(service: any, subscribeMethod: string): () => void {
 
+    let subscribed: boolean = false;
     let unsubscribed: boolean = false;
-    spyOn(service, subscribeMethod).and.returnValue(new Subscription(() => {
-        unsubscribed = true;
-    }));
+    spyOn(service, subscribeMethod).and.callFake(() => {
+        subscribed = true;
+        return new Subscription(() => {
+            unsubscribed = true;
+        });
+    });
     return () => {
-        expect(unsubscribed)
-            .withContext('Service should have unsubscribed to ' + subscribeMethod + ' method bub did not')
-            .toBeTrue();
+        if (subscribed) {
+            expect(unsubscribed)
+                .withContext('Service should have unsubscribed to ' + subscribeMethod + ' method bub did not')
+                .toBeTrue();
+        }
+        // Otherwise, the service does not need to unsubscribe
+        // (and it's impossible for it to unsubscribe if it didn't subscribe first)
     };
 }
