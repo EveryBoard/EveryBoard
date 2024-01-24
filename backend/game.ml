@@ -82,7 +82,7 @@ module Make
     let* config_room = Firestore.ConfigRoom.get request game_id in
     (* Write 1: accept the config room *)
     let* _ = Firestore.ConfigRoom.accept request game_id in
-    let now = External.now () in
+    let now = External.now_ms () in
     let starting_config = Game.Updates.Start.get config_room now in
     let accepter = Auth.get_minimal_user request in
     (* Write 2: start the game *)
@@ -106,7 +106,7 @@ module Make
     (* Write 1: end the game  *)
     let* _ = Firestore.Game.update request game_id (Game.Updates.End.to_yojson update) in
     let resigner = Auth.get_minimal_user request in
-    let now = External.now () in
+    let now = External.now_ms () in
     (* Write 2: add the end action *)
     let game_end = Game.Event.(Action (Action.end_game resigner now)) in
     let* _ = Firestore.Game.add_event request game_id game_end in
@@ -121,7 +121,7 @@ module Make
     (* Write 1: end the game *)
     let* _ = Firestore.Game.update request game_id (Game.Updates.End.to_yojson update) in
     let requester = Auth.get_minimal_user request in
-    let now = External.now () in
+    let now = External.now_ms () in
     let game_end = Game.Event.(Action (Action.end_game requester now)) in
     (* Write 2: add the end action *)
     let* _ = Firestore.Game.add_event request game_id game_end in
@@ -130,7 +130,7 @@ module Make
   (** Propose something to the opponent in-game. Perform 1 write. *)
   let propose (request : Dream.request) (game_id : string) (proposition : string) =
     let user = Auth.get_minimal_user request in
-    let now = External.now () in
+    let now = External.now_ms () in
     let event = Game.Event.(Request (Request.make user proposition now)) in
     (* Write 1: add the request event *)
     let* _ = Firestore.Game.add_event request game_id event in
@@ -139,7 +139,7 @@ module Make
   (** Reject a request from the opponent. Perform 1 write. *)
   let reject (request : Dream.request) (game_id : string) (proposition : string) =
     let user = Auth.get_minimal_user request in
-    let now = External.now () in
+    let now = External.now_ms () in
     let event = Game.Event.(Reply (Reply.refuse user proposition now)) in
     (* Write 1: add the response *)
     let* _ = Firestore.Game.add_event request game_id event in
@@ -151,7 +151,7 @@ module Make
     (* Read 1: retrieve the game *)
     let* game = Firestore.Game.get request game_id in
     let user = Auth.get_minimal_user request in
-    let now = External.now () in
+    let now = External.now_ms () in
     let accept = Game.Event.(Reply (Reply.accept user "Draw" now)) in
     (* Write 1: add response *)
     let* _ = Firestore.Game.add_event request game_id accept in
@@ -179,7 +179,7 @@ module Make
       else (game.player_zero, ConfigRoom.FirstPlayer.Creator) in
     let rematch_config_room =
       ConfigRoom.rematch config_room first_player creator chosen_opponent in
-    let now = External.now () in
+    let now = External.now_ms () in
     let rematch_game = Game.rematch game.type_game rematch_config_room now in
     (* Write 1: create the rematch game *)
     let* rematch_id = Firestore.Game.create request rematch_game in
@@ -207,7 +207,7 @@ module Make
       if game.turn mod 2 == player_value
       then game.turn - 2 (* Need to take back two turns to let the requester take back their move *)
       else game.turn -1 in
-    let now = External.now () in
+    let now = External.now_ms () in
     let event = Game.Event.(Reply (Reply.accept user "TakeBack" now)) in
     (* Write 1: accept take back *)
     let* _ = Firestore.Game.add_event request game_id event in
@@ -219,7 +219,7 @@ module Make
   (** Add time to the opponent. Perform 1 write. *)
   let add_time (request : Dream.request) (game_id : string) (kind : [ `Turn | `Global ]) =
     let user = Auth.get_minimal_user request in
-    let now = External.now () in
+    let now = External.now_ms () in
     let event = Game.Event.(Action (Action.add_time user kind now)) in
     (* Write 1: add time *)
     let* _ = Firestore.Game.add_event request game_id event in
@@ -236,7 +236,7 @@ module Make
     (* Read 1: retrieve the game for the current turn *)
     let* game = Firestore.Game.get request game_id in
     let user = Auth.get_minimal_user request in
-    let now = External.now () in
+    let now = External.now_ms () in
     let event = Game.Event.(Move (Move.of_json user move now)) in
     (* Write 1: add the move *)
     let* _ = Firestore.Game.add_event request game_id event in
@@ -252,7 +252,7 @@ module Make
     (* Read 1: retrieve the game to have the current turn *)
     let* game = Firestore.Game.get request game_id in
     let user = Auth.get_minimal_user request in
-    let now = External.now () in
+    let now = External.now_ms () in
     let event = Game.Event.(Move (Move.of_json user move now)) in
     (* Write 1: add the move *)
     let* _ = Firestore.Game.add_event request game_id event in

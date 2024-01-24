@@ -94,7 +94,7 @@ module Make (FirestorePrimitives : FirestorePrimitives.FIRESTORE_PRIMITIVES) : F
     let get_or_fail (maybe_value : ('a, 'b) result)  : 'a =
       match maybe_value with
       | Ok value -> value
-      | Error _ -> raise (DocumentInvalid path) in
+      | Error e -> raise (DocumentInvalid (Printf.sprintf "%s: %s" path e)) in
     let* doc = FirestorePrimitives.get_doc request path in
     doc
     |> of_yojson
@@ -120,7 +120,8 @@ module Make (FirestorePrimitives : FirestorePrimitives.FIRESTORE_PRIMITIVES) : F
         |> member "typeGame"
         |> to_string
         |> Lwt.return
-      with JSON.Util.Type_error _ -> raise (DocumentInvalid ("parts/" ^ game_id))
+      with JSON.Util.Type_error (e, _) ->
+        raise (DocumentInvalid (Printf.sprintf "parts/%s: %s" game_id e))
 
     let create (request : Dream.request) (game : Domain.Game.t) : string Lwt.t =
       let json : JSON.t = Domain.Game.to_yojson game in

@@ -10,7 +10,7 @@ module Game = Game.Make(External)(Auth)(Firestore)(Stats)
 module ConfigRoom = ConfigRoom.Make(External)(Auth)(Firestore)(Stats)
 
 let server_time = Dream.get "/time" @@ fun _ ->
-    let now = External.now () in
+    let now = External.now_ms () in
     let response = `Assoc ["time", `Int now] in
     Dream.json ~status:`OK (JSON.to_string response)
 

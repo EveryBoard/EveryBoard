@@ -39,7 +39,7 @@ export class OGWCTimeManagerService {
     // The turn time available for each player. Distinct from the clocks so it stays constant within a turn
     private readonly availableTurnTime: [number, number] = [0, 0];
     // The time at which the current move started
-    private lastMoveStartTimestamp: MGPOptional<number> = MGPOptional.empty();
+    private lastMoveStartMs: MGPOptional<number> = MGPOptional.empty();
 
     public setClocks(turnClocks: [CountDownComponent, CountDownComponent],
                      globalClocks: [CountDownComponent, CountDownComponent])
@@ -88,7 +88,7 @@ export class OGWCTimeManagerService {
                 this.addGlobalTime(this.playerOfMinimalUser(action.user));
                 break;
             case 'StartGame':
-                this.lastMoveStartTimestamp = MGPOptional.of(action.time);
+                this.lastMoveStartMs = MGPOptional.of(action.time);
                 break;
             case 'EndGame':
                 this.onGameEnd();
@@ -108,12 +108,11 @@ export class OGWCTimeManagerService {
     public onReceivedMove(move: GameEventMove): void {
         const player: Player = this.playerOfMinimalUser(move.user);
 
-        const moveTimestamp: number = move.time;
-        const takenMoveTime: number = this.getSecondsElapsedSinceLastMoveStart(moveTimestamp);
-        this.lastMoveStartTimestamp = MGPOptional.of(moveTimestamp);
-        this.takenGlobalTime[player.value] += takenMoveTime;
-
-        this.availableTurnTime[player.value] -= takenMoveTime;
+        const moveTimeMs: number = move.time;
+        const takenMoveTimeMs: number = this.getMsElapsedSinceLastMoveStart(moveTimeMs);
+        this.lastMoveStartMs = MGPOptional.of(moveTimeMs);
+        this.takenGlobalTime[player.value] += takenMoveTimeMs;
+        this.availableTurnTime[player.value] -= takenMoveTimeMs;
 
         // Now is the time to update the other player's clock
         // They may get updated through later action such as time additions
@@ -123,10 +122,8 @@ export class OGWCTimeManagerService {
         this.globalClocks[nextPlayer.value].changeDuration(nextPlayerAdaptedGlobalTime);
     }
 
-    private getSecondsElapsedSinceLastMoveStart(timestamp: number): number {
-        console.log('server timestamp is: ' + timestamp);
-        console.log('last move timestamp is: ' + this.lastMoveStartTimestamp.get());
-        return this.lastMoveStartTimestamp.get() - timestamp;
+    private getMsElapsedSinceLastMoveStart(moveTimeMs: number): number {
+        return moveTimeMs - this.lastMoveStartMs.get();
     }
 
     // Stops all clocks that are running
@@ -148,15 +145,15 @@ export class OGWCTimeManagerService {
     }
 
     // Continue the current player clock after receiving events
-    public afterEventsBatch(gameEnd: boolean, player: Player, currentTime: number): void {
+    public afterEventsBatch(gameEnd: boolean, player: Player, currentTimeMs: number): void {
         this.updateClocks();
         if (gameEnd === false) {
             // The drift is how long has passed since the last event occurred
             // It can be only a few ms, or a much longer time in case we join mid-game
-            const drift: number = this.getSecondsElapsedSinceLastMoveStart(currentTime);
+            const driftMs: number = this.getMsElapsedSinceLastMoveStart(currentTimeMs);
             // We need to subtract the time to take the drift into account
-            this.turnClocks[player.value].subtract(drift);
-            this.globalClocks[player.value].subtract(drift);
+            this.turnClocks[player.value].subtract(driftMs);
+            this.globalClocks[player.value].subtract(driftMs);
             this.resumeClocks(player);
         }
     }
