@@ -64,14 +64,6 @@ export class GoPiece implements ComparableObject {
         }
     }
 
-    public static territoryOf(player: Player): GoPiece {
-        if (player === Player.ZERO) {
-            return GoPiece.DARK_TERRITORY;
-        } else {
-            return GoPiece.LIGHT_TERRITORY;
-        }
-    }
-
     public isOccupied(): boolean {
         return this.type === 'alive' ||
                this.type === 'dead';
@@ -80,10 +72,6 @@ export class GoPiece implements ComparableObject {
     public isEmpty(): boolean {
         return this.type === 'territory' ||
                this.type === 'empty';
-    }
-
-    public isAlive(): boolean {
-        return this.type === 'alive';
     }
 
     public isDead(): boolean {
