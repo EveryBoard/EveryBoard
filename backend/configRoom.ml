@@ -12,7 +12,6 @@ module Make
     (Firestore : Firestore.FIRESTORE)
     (Stats : Stats.STATS)
     : CONFIG_ROOM = struct
-  (* TODO: transactions *)
 
   (** Join a game. Perform 1 read and up to 1 write *)
   let join_game : Dream.route =
@@ -24,16 +23,19 @@ module Make
     (* Check if game exists, if it does not this will throw Not_found *)
     (* Read 1: retrieve the config room *)
     let* config_room = Firestore.ConfigRoom.get request game_id in
-    let* _ = if config_room.creator.id <> user.id
-      (* Write 1: User is candidate, add it to candidate list *)
-      then Firestore.ConfigRoom.add_candidate request game_id user
-      else Lwt.return () in
+    let* _ = if config_room.creator.id <> user.id then
+        (* Write 1: User is candidate, add it to candidate list *)
+        (* No need for a transaction here, we are just creating a new document *)
+        Firestore.ConfigRoom.add_candidate request game_id user
+      else
+        Lwt.return () in
     Dream.empty `OK
 
   (** Remove a candidate, potentially removing the config room if it was the creator.
       Perform 1 read and up to 2 writes. *)
   let remove_candidate : Dream.route =
     Dream.delete "config-room/:game_id/candidates/:candidate_id" @@ fun request ->
+    Firestore.transaction request @@ fun () ->
     let game_id = Dream.param request "game_id" in
     let candidate_id = Dream.param request "candidate_id" in
     Stats.set_action request (Printf.sprintf "DELETE config-room/candidates");
