@@ -397,6 +397,18 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         return this.requestManager.canMakeRequest('Draw');
     }
 
+    public override async canUserPlay(_clickedElementName: string): Promise<MGPValidation> {
+        const result: MGPValidation = await super.canUserPlay(_clickedElementName);
+        if (result.isFailure()) {
+            return result;
+        }
+        if (this.mustReply()) {
+            return MGPValidation.failure(GameWrapperMessages.MUST_ANSWER_REQUEST());
+        } else {
+            return MGPValidation.SUCCESS;
+        }
+    }
+
     private async initializePlayersDatas(part: PartDocument): Promise<void> {
         this.players = [
             MGPOptional.of(part.data.playerZero),
@@ -425,7 +437,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
 
     public async onLegalUserMove(move: Move): Promise<void> {
         if (this.mustReply()) {
-            this.gameComponent.message(GameWrapperMessages.MUST_ANSWER_REQUEST());
+            return this.gameComponent.message('couillasse'); // GameWrapperMessages.MUST_ANSWER_REQUEST()); // TODO: die ?
         } else {
             // We will update the part with new scores and game status (if needed)
             // We have to compute the game status before adding the move to avoid
