@@ -1171,7 +1171,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             tick(wrapper.configRoom.maximalMoveDuration * 1000);
         }));
 
-        it('should forbid to clic while draw request is waiting', fakeAsync(async() => {
+        it('should forbid to click while draw request is waiting', fakeAsync(async() => {
             // Given a page where we received a draw request
             await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
             await receiveRequest(Player.ONE, 'Draw');

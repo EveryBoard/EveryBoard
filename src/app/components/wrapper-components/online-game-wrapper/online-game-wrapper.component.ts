@@ -436,30 +436,25 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
     }
 
     public async onLegalUserMove(move: Move): Promise<void> {
-        if (this.mustReply()) {
-            return this.gameComponent.message('couillasse'); // GameWrapperMessages.MUST_ANSWER_REQUEST()); // TODO: die ?
-        } else {
-            // We will update the part with new scores and game status (if needed)
-            // We have to compute the game status before adding the move to avoid
-            // risking receiving the move before computing the game status (thereby adding twice the same move)
-            const oldNode: AbstractNode = this.gameComponent.node;
-            const rules: AbstractRules = this.gameComponent.rules;
-            const state: GameState = oldNode.gameState;
-            const config: MGPOptional<RulesConfig> = await this.getConfig();
-            const legality: MGPFallible<unknown> = this.gameComponent.rules.isLegal(move, state, config);
-            Utils.assert(legality.isSuccess(), 'onLegalUserMove called with an illegal move');
-            const stateAfterMove: GameState = rules.applyLegalMove(move, state, config, legality.get());
-            const newNode: AbstractNode = new GameNode(stateAfterMove,
-                                                       MGPOptional.of(oldNode),
-                                                       MGPOptional.of(move));
-            const gameStatus: GameStatus = rules.getGameStatus(newNode, config);
-
-            // To adhere to security rules, we must add the move before updating the part
-            const encodedMove: JSONValue = this.gameComponent.encoder.encode(move);
-            const user: MinimalUser = Utils.getNonNullable(this.currentUser);
-            await this.gameEventService.addMove(this.currentPartId, user, encodedMove);
-            return this.updatePartWithStatusAndScores(gameStatus, this.gameComponent.scores);
-        }
+        // We will update the part with new scores and game status (if needed)
+        // We have to compute the game status before adding the move to avoid
+        // risking receiving the move before computing the game status (thereby adding twice the same move)
+        const oldNode: AbstractNode = this.gameComponent.node;
+        const rules: AbstractRules = this.gameComponent.rules;
+        const state: GameState = oldNode.gameState;
+        const config: MGPOptional<RulesConfig> = await this.getConfig();
+        const legality: MGPFallible<unknown> = this.gameComponent.rules.isLegal(move, state, config);
+        Utils.assert(legality.isSuccess(), 'onLegalUserMove called with an illegal move');
+        const stateAfterMove: GameState = rules.applyLegalMove(move, state, config, legality.get());
+        const newNode: AbstractNode = new GameNode(stateAfterMove,
+                                                   MGPOptional.of(oldNode),
+                                                   MGPOptional.of(move));
+        const gameStatus: GameStatus = rules.getGameStatus(newNode, config);
+        // To adhere to security rules, we must add the move before updating the part
+        const encodedMove: JSONValue = this.gameComponent.encoder.encode(move);
+        const user: MinimalUser = Utils.getNonNullable(this.currentUser);
+        await this.gameEventService.addMove(this.currentPartId, user, encodedMove);
+        return this.updatePartWithStatusAndScores(gameStatus, this.gameComponent.scores);
     }
 
     private async updatePartWithStatusAndScores(gameStatus: GameStatus, scores: MGPOptional<readonly [number, number]>)
