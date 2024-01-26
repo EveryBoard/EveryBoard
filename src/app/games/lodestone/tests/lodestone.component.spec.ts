@@ -11,6 +11,7 @@ import { LodestoneComponent } from '../lodestone.component';
 import { LodestoneFailure } from '../LodestoneFailure';
 import { LodestoneMove } from '../LodestoneMove';
 import { LodestonePiece, LodestonePieceLodestone, LodestonePieceNone, LodestonePiecePlayer } from '../LodestonePiece';
+import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 import { LodestonePositions, LodestonePressurePlateGroup, LodestonePressurePlates, LodestoneState } from '../LodestoneState';
 
 describe('LodestoneComponent', () => {
@@ -620,7 +621,7 @@ describe('LodestoneComponent', () => {
             // When displaying the state
             await testUtils.setupState(state);
             // Then the score should be the number of pieces captured
-            expect(testUtils.getGameComponent().scores).toEqual(MGPOptional.of([22, 20]));
+            expect(testUtils.getGameComponent().scores).toEqual(MGPOptional.of(PlayerNumberMap.of(22, 20)));
         }));
 
         it('should not displayed removed lodestone that were on crumbled square', fakeAsync(async() => {

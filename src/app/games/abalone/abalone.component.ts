@@ -6,7 +6,7 @@ import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
 import { HexaDirection } from 'src/app/jscaip/HexaDirection';
 import { HexaLayout } from 'src/app/jscaip/HexaLayout';
 import { PointyHexaOrientation } from 'src/app/jscaip/HexaOrientation';
-import { Player } from 'src/app/jscaip/Player';
+import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
@@ -23,6 +23,7 @@ import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 import { AbaloneScoreHeuristic } from './AbaloneScoreHeuristic';
 import { AbaloneMoveGenerator } from './AbaloneMoveGenerator';
 import { Utils } from 'src/app/utils/utils';
+import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 
 type CapturedInfo = {
     coord: Coord,
@@ -74,8 +75,7 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneRules,
             new MCTS($localize`MCTS`, new AbaloneMoveGenerator(), this.rules),
         ];
         this.encoder = AbaloneMove.encoder;
-        this.scores = MGPOptional.of([0, 0]);
-
+        this.scores = MGPOptional.of(PlayerNumberMap.of(0, 0));
         this.SPACE_SIZE = 30;
         this.hexaLayout = new HexaLayout(this.SPACE_SIZE,
                                          new Coord(- 8 * this.SPACE_SIZE, 2 * this.SPACE_SIZE),
@@ -121,7 +121,7 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneRules,
             const fallenPlayer: FourStatePiece = previousState.getPieceAt(fallenPieceCoord);
             this.captureds = [{
                 coord: moved,
-                pieceClasses: [this.getPlayerClass(fallenPlayer.toPlayer())],
+                pieceClasses: [this.getPlayerClass(fallenPlayer.getPlayer())],
             }];
         }
     }
@@ -390,7 +390,7 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneRules,
 
     public getPieceClasses(x: number, y: number): string[] {
         const coord: Coord = new Coord(x, y);
-        const player: Player = Player.of(this.hexaBoard[y][x].value);
+        const player: PlayerOrNone = this.hexaBoard[y][x].getPlayer();
         const classes: string[] = [this.getPlayerClass(player)];
         if (this.selecteds.some((c: Coord) => c.equals(coord))) {
             classes.push('selected-stroke');

@@ -5,40 +5,45 @@ import { FirestoreCollectionObserver } from '../dao/FirestoreCollectionObserver'
 import { FirestoreDocument, IFirestoreDAO } from '../dao/FirestoreDAO';
 import { PartDAO } from '../dao/PartDAO';
 import { Action, GameEvent, Reply, RequestType } from '../domain/Part';
-import { Player } from '../jscaip/Player';
 import { JSONValue } from '../utils/utils';
+import { MinimalUser } from '../domain/MinimalUser';
 
 @Injectable({
     providedIn: 'root',
 })
 export class GameEventService {
 
-    public constructor(private readonly partDAO: PartDAO) {}
+    public constructor(private readonly partDAO: PartDAO) {
+    }
 
     private eventsCollection(partId: string): IFirestoreDAO<GameEvent> {
         return this.partDAO.subCollectionDAO<GameEvent>(partId, 'events');
     }
+
     private addEvent(partId: string, event: GameEvent): Promise<string> {
         return this.eventsCollection(partId).create(event);
     }
-    public addMove(partId: string, player: Player, move: JSONValue): Promise<string> {
+
+    public addMove(partId: string, user: MinimalUser, move: JSONValue): Promise<string> {
         return this.addEvent(partId, {
             eventType: 'Move',
             time: serverTimestamp(),
-            player: player.value as 0|1,
+            user,
             move,
         });
     }
-    public addRequest(partId: string, player: Player, requestType: RequestType): Promise<string> {
+
+    public addRequest(partId: string, user: MinimalUser, requestType: RequestType): Promise<string> {
         return this.addEvent(partId, {
             eventType: 'Request',
             time: serverTimestamp(),
-            player: player.value as 0|1,
+            user,
             requestType,
         });
     }
+
     public addReply(partId: string,
-                    player: Player,
+                    user: MinimalUser,
                     reply: Reply,
                     requestType: RequestType,
                     data: JSONValue = null)
@@ -47,23 +52,26 @@ export class GameEventService {
         return this.addEvent(partId, {
             eventType: 'Reply',
             time: serverTimestamp(),
-            player: player.value as 0|1,
+            user,
             reply,
             requestType,
             data,
         });
     }
-    public startGame(partId: string, player: Player): Promise<string> {
-        return this.addAction(partId, player, 'StartGame');
-    }
-    public addAction(partId: string, player: Player, action: Action): Promise<string> {
+
+    public addAction(partId: string, user: MinimalUser, action: Action): Promise<string> {
         return this.addEvent(partId, {
             eventType: 'Action',
             time: serverTimestamp(),
-            player: player.value as 0|1,
+            user,
             action,
         });
     }
+
+    public startGame(partId: string, user: MinimalUser): Promise<string> {
+        return this.addAction(partId, user, 'StartGame');
+    }
+
     public subscribeToEvents(partId: string, callback: (events: GameEvent[]) => void): Subscription {
         const internalCallback: FirestoreCollectionObserver<GameEvent> = new FirestoreCollectionObserver(
             (events: FirestoreDocument<GameEvent>[]) => {
@@ -89,4 +97,5 @@ export class GameEventService {
             });
         return this.eventsCollection(partId).observingWhere([], internalCallback, 'time');
     }
+
 }

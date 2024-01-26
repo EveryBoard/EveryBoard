@@ -1249,13 +1249,9 @@
         <source>Big sowing</source>
         <target>Gros égrénage</target>
       </trans-unit>
-      <trans-unit id="436684043682883572" datatype="html">
-        <source>When there are enough seeds to make a full turn, something else happens.&lt;br/&gt;&lt;br/&gt;
-        You&apos;re playing Dark.
-        Sow the house that contains 12 seeds.</source>
-        <target>Quand il y a assez de graines pour faire un tour complet, quelque chose d’autre se passe.&lt;br/&gt;&lt;br/&gt;
-        Vous jouez Foncé.
-        Distribuez la maison qui contient 12 graines.</target>
+      <trans-unit id="6143584678937647226" datatype="html">
+        <source>When there are enough seeds to make a full turn, something else happens.&lt;br/&gt;&lt;br/&gt; You&apos;re playing Dark. Sow the house that contains 12 seeds.</source>
+        <target>Quand il y a assez de graines pour faire un tour complet, quelque chose d’autre se passe.&lt;br/&gt;&lt;br/&gt; Vous jouez Foncé. Distribuez la maison qui contient 12 graines.</target>
       </trans-unit>
       <trans-unit id="498712253814253582" datatype="html">
         <source>See, the house that you sowed has not been refilled, and the sowing immediately continued to the next house (which therefore contains two seeds).</source>
@@ -1337,11 +1333,9 @@
         <source>You have a very nice capture that seems possible: it seems that you can capture all the opponent&apos;s seeds!&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark. Try it.</source>
         <target>Vous avez une très belle capture qui semble possible. Il semble que vous puissiez capturer tous les pions de l’adversaire !&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé. Lancez-vous !</target>
       </trans-unit>
-      <trans-unit id="5327525705025836061" datatype="html">
-        <source>Sadly, you cannot capture here, otherwise the opponent could not play after you.
-        When this happens, the move can be made, but no capture takes place!</source>
-        <target>Malheureusement, vous ne pouvez pas capturer, car sinon l’adversaire ne pourrait pas jouer après vous.
-        À ces moments là, le mouvement est autorisé mais la capture n’est pas effectuée !</target>
+      <trans-unit id="2671440213973633925" datatype="html">
+        <source>Sadly, you cannot capture here, otherwise the opponent could not play after you. When this happens, the move can be made, but no capture takes place!</source>
+        <target>Malheureusement, vous ne pouvez pas capturer, car sinon l’adversaire ne pourrait pas jouer après vous. À ces moments là, le mouvement est autorisé mais la capture n’est pas effectuée !</target>
       </trans-unit>
       <trans-unit id="6033788914683606777" datatype="html">
         <source>Feeding is mandatory</source>
@@ -1352,11 +1346,9 @@
         <target>&quot;Affamer&quot; est interdit, c&apos;est-à-dire que si votre adversaire n&apos;a plus de graines et que vous savez lui en donner au moins une, vous êtes obligé de le faire.&lt;br/&gt;&lt;br/&gt;
         Vous jouez Foncé. Donnez une graine à votre adversaire !</target>
       </trans-unit>
-      <trans-unit id="3908210272037108493" datatype="html">
-        <source>Congratulations! Note that you can choose to give your opponent the least number of seeds if it is better for you.
-        It is often a good way to have easy captures!</source>
-        <target>Bravo ! Notez que vous pouvez choisir de lui en donner le moins possible si cela vous arrange mieux.
-        C’est souvent un bon moyen d’avoir des captures faciles !</target>
+      <trans-unit id="6607296153653792913" datatype="html">
+        <source>Congratulations! Note that you can choose to give your opponent the least number of seeds if it is better for you. It is often a good way to have easy captures!</source>
+        <target>Bravo ! Notez que vous pouvez choisir de lui en donner le moins possible si cela vous arrange mieux. C’est souvent un bon moyen d’avoir des captures faciles !</target>
       </trans-unit>
       <trans-unit id="2281492801612237310" datatype="html">
         <source>End of the game</source>

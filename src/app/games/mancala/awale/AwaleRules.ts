@@ -4,6 +4,7 @@ import { Player } from 'src/app/jscaip/Player';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MancalaCaptureResult, MancalaDistributionResult, MancalaRules } from '../common/MancalaRules';
 import { Utils } from 'src/app/utils/utils';
+import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 import { MancalaConfig } from '../common/MancalaConfig';
 import { MGPValidators } from 'src/app/utils/MGPValidator';
 import { BooleanConfig, NumberConfig, RulesConfigDescription, RulesConfigDescriptionLocalizable } from 'src/app/components/wrapper-components/rules-configuration/RulesConfigDescription';
@@ -82,8 +83,9 @@ export class AwaleRules extends MancalaRules {
             x += direction;
             target = resultingBoard[y][x];
         } while ((x !== limit) && ((target === 2) || (target === 3)));
-        const captured: [number, number] = state.getScoresCopy();
-        captured[state.getCurrentPlayer().value] += capturedSum;
+        const captured: PlayerNumberMap = state.getScoresCopy();
+        const currentPlayer: Player = state.getCurrentPlayer();
+        captured.add(currentPlayer, capturedSum);
         return {
             capturedSum,
             captureMap,
@@ -101,7 +103,7 @@ export class AwaleRules extends MancalaRules {
                 [0, 0, 0, 0, 0, 0],
             ],
         };
-        if (y === player.value) {
+        if (y === player.getValue()) {
             const captureResult: MancalaCaptureResult = this.capture(x, y, state);
             const isStarving: boolean = MancalaRules.isStarving(player.getOpponent(),
                                                                 captureResult.resultingState.board);

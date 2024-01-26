@@ -8,7 +8,7 @@ export class ApagosSquare {
         if (nbZero + nbOne > nbTotal) {
             return MGPFallible.failure('invalid starting space');
         }
-        const containing: MGPMap<PlayerOrNone, number> = new MGPMap([
+        const containing: MGPMap<PlayerOrNone, number> = new MGPMap<PlayerOrNone, number>([
             { key: Player.ZERO, value: nbZero },
             { key: Player.ONE, value: nbOne },
             { key: PlayerOrNone.NONE, value: nbTotal },

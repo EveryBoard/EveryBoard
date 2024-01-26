@@ -8,6 +8,7 @@ import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { ReversibleMap } from 'src/app/utils/MGPMap';
+import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 import { GameNode } from 'src/app/jscaip/AI/GameNode';
 import { MancalaDistribution, MancalaMove } from './MancalaMove';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
@@ -53,7 +54,7 @@ export abstract class MancalaRules extends ConfigurableRules<MancalaMove, Mancal
 
     public static isStarving(player: Player, board: Table<number>): boolean {
         let i: number = 0;
-        const playerY: number = player.getOpponent().value; // For player 0 has row 1
+        const playerY: number = player.getOpponent().getValue(); // For player 0 has row 1
         while (i < board[0].length) {
             if (board[playerY][i++] > 0) {
                 return false; // found some food there, so not starving
@@ -65,7 +66,7 @@ export abstract class MancalaRules extends ConfigurableRules<MancalaMove, Mancal
     public static getInitialState(optionalConfig: MGPOptional<MancalaConfig>): MancalaState {
         const config: MancalaConfig = optionalConfig.get();
         const board: number[][] = TableUtils.create(config.width, 2, config.seedsByHouse);
-        return new MancalaState(board, 0, [0, 0]);
+        return new MancalaState(board, 0, PlayerNumberMap.of(0, 0));
     }
 
     protected constructor() {
@@ -130,7 +131,7 @@ export abstract class MancalaRules extends ConfigurableRules<MancalaMove, Mancal
      * Should not increment the turn of the state.
      */
     public distributeMove(move: MancalaMove, state: MancalaState, config: MancalaConfig): MancalaDistributionResult {
-        const playerValue: number = state.getCurrentPlayer().value;
+        const player: Player = state.getCurrentPlayer();
         const playerY: number = state.getCurrentPlayerY();
         const filledCoords: Coord[] = [];
         let passedByStoreNTimes: number = 0;
@@ -139,14 +140,14 @@ export abstract class MancalaRules extends ConfigurableRules<MancalaMove, Mancal
         for (const distributions of move) {
             const distributionResult: MancalaDistributionResult =
                 this.distributeHouse(distributions.x, playerY, postDistributionState, config);
-            const captures: [number, number] = postDistributionState.getScoresCopy();
-            captures[playerValue] += distributionResult.passedByStoreNTimes;
+            const captures: PlayerNumberMap = postDistributionState.getScoresCopy();
+            captures.add(player, distributionResult.passedByStoreNTimes);
             postDistributionState = distributionResult.resultingState;
             filledCoords.push(...distributionResult.filledCoords);
             passedByStoreNTimes += distributionResult.passedByStoreNTimes;
             endsUpInStore = distributionResult.endsUpInStore;
         }
-        const captured: [number, number] = postDistributionState.getScoresCopy();
+        const captured: PlayerNumberMap = postDistributionState.getScoresCopy();
         const distributedState: MancalaState = new MancalaState(postDistributionState.getCopiedBoard(),
                                                                 postDistributionState.turn,
                                                                 captured);
@@ -190,13 +191,15 @@ export abstract class MancalaRules extends ConfigurableRules<MancalaMove, Mancal
         const width: number = node.gameState.getWidth();
         const seedsByHouse: number = config.get().seedsByHouse;
         const halfOfTotalSeeds: number = width * seedsByHouse;
-        if (state.scores[0] > halfOfTotalSeeds) {
+        if (state.scores.get(Player.ZERO) > halfOfTotalSeeds) {
             return GameStatus.ZERO_WON;
         }
-        if (state.scores[1] > halfOfTotalSeeds) {
+        if (state.scores.get(Player.ONE) > halfOfTotalSeeds) {
             return GameStatus.ONE_WON;
         }
-        if (state.scores[0] === halfOfTotalSeeds && state.scores[1] === halfOfTotalSeeds) {
+        if (state.scores.get(Player.ZERO) === halfOfTotalSeeds &&
+            state.scores.get(Player.ONE) === halfOfTotalSeeds)
+        {
             return GameStatus.DRAW;
         }
         return GameStatus.ONGOING;
@@ -259,13 +262,13 @@ export abstract class MancalaRules extends ConfigurableRules<MancalaMove, Mancal
                 }
             }
         }
-        const score: [number, number] = state.getScoresCopy();
-        score[player.value] += passedByStoreNTimes;
+        const scores: PlayerNumberMap = state.getScoresCopy();
+        scores.add(player, passedByStoreNTimes);
         return {
             filledCoords: filledCoords,
             passedByStoreNTimes,
             endsUpInStore,
-            resultingState: new MancalaState(resultingBoard, state.turn, score),
+            resultingState: new MancalaState(resultingBoard, state.turn, scores),
         };
     }
 
@@ -314,7 +317,7 @@ export abstract class MancalaRules extends ConfigurableRules<MancalaMove, Mancal
 
     public canDistribute(player: Player, state: MancalaState, config: MancalaConfig): boolean {
         for (let x: number = 0; x < state.getWidth(); x++) {
-            if (this.doesDistribute(x, player.getOpponent().value, state, config)) {
+            if (this.doesDistribute(x, player.getOpponent().getValue(), state, config)) {
                 return true;
             }
         }
@@ -329,18 +332,18 @@ export abstract class MancalaRules extends ConfigurableRules<MancalaMove, Mancal
     public monsoon(mansooningPlayer: Player, postCaptureResult: MancalaCaptureResult): MancalaCaptureResult {
         const state: MancalaState = postCaptureResult.resultingState;
         const resultingBoard: number[][] = state.getCopiedBoard();
-        const captured: [number, number] = state.getScoresCopy();
+        const captured: PlayerNumberMap = state.getScoresCopy();
         let capturedSum: number = 0;
         const captureMap: number[][] = TableUtils.copy(postCaptureResult.captureMap);
         let x: number = 0;
-        const mansoonedY: number = mansooningPlayer.getOpponent().value;
+        const mansoonedY: number = mansooningPlayer.getOpponent().getValue();
         while (x < state.getWidth()) {
             capturedSum += resultingBoard[mansoonedY][x];
             captureMap[mansoonedY][x] += resultingBoard[mansoonedY][x];
             resultingBoard[mansoonedY][x] = 0;
             x++;
         }
-        captured[mansooningPlayer.value] += capturedSum;
+        captured.add(mansooningPlayer, capturedSum);
         return {
             capturedSum,
             captureMap,

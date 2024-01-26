@@ -11,10 +11,7 @@ export class MartianChessScoreHeuristic extends PlayerMetricHeuristic<MartianChe
     public override getMetrics(node: MartianChessNode, _config: NoConfig): PlayerNumberTable {
         const zeroScore: number = node.gameState.getScoreOf(Player.ZERO);
         const oneScore: number = node.gameState.getScoreOf(Player.ONE);
-        return PlayerNumberTable.of(
-            [zeroScore],
-            [oneScore],
-        );
+        return PlayerNumberTable.ofSingle(zeroScore, oneScore);
     }
 
 }

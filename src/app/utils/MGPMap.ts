@@ -2,6 +2,7 @@ import { MGPOptional } from './MGPOptional';
 import { Comparable, comparableEquals } from './Comparable';
 import { MGPSet } from './MGPSet';
 import { assert } from './assert';
+import { Utils } from './utils';
 
 export class MGPMap<K extends NonNullable<Comparable>, V extends NonNullable<unknown>> {
 
@@ -49,20 +50,19 @@ export class MGPMap<K extends NonNullable<Comparable>, V extends NonNullable<unk
     }
 
     public putAll(m: MGPMap<K, V>): void {
-        this.checkImmutability('putAll');
+        this.assertImmutability('putAll');
         for (const entry of m.map) {
             this.put(entry.key, entry.value);
         }
     }
 
-    public checkImmutability(methodCalled: string): void {
-        if (this.isImmutable) {
-            throw new Error('Cannot call ' + methodCalled + ' on immutable map!');
-        }
+    public assertImmutability(methodCalled: string): void {
+        Utils.assert(this.isImmutable === false,
+                     'Cannot call ' + methodCalled + ' on immutable map!');
     }
 
     public put(key: K, value: V): MGPOptional<V> {
-        this.checkImmutability('put');
+        this.assertImmutability('put');
         for (const entry of this.map) {
             if (comparableEquals(entry.key, key)) {
                 const oldValue: V = entry.value;
@@ -105,7 +105,7 @@ export class MGPMap<K extends NonNullable<Comparable>, V extends NonNullable<unk
     }
 
     public replace(key: K, newValue: V): V {
-        this.checkImmutability('replace');
+        this.assertImmutability('replace');
         const oldValue: MGPOptional<V> = this.get(key);
         if (oldValue.isAbsent()) {
             throw new Error('No Value to replace for key '+ key.toString() + '!');
@@ -116,7 +116,7 @@ export class MGPMap<K extends NonNullable<Comparable>, V extends NonNullable<unk
     }
 
     public set(key: K, firstValue: V): void {
-        this.checkImmutability('set');
+        this.assertImmutability('set');
         if (this.containsKey(key)) {
             throw new Error('Key ' + key.toString() + ' already exist in Map!');
         } else {
@@ -125,7 +125,7 @@ export class MGPMap<K extends NonNullable<Comparable>, V extends NonNullable<unk
     }
 
     public delete(key: K): V {
-        this.checkImmutability('delete');
+        this.assertImmutability('delete');
         for (let i: number = 0; i < this.map.length; i++) {
             const entry: {key: K, value: V} = this.map[i];
             if (comparableEquals(entry.key, key)) {

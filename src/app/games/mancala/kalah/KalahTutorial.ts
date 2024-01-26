@@ -3,6 +3,7 @@ import { MancalaState } from '../common/MancalaState';
 import { MancalaDistribution, MancalaMove } from '../common/MancalaMove';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { KalahRules } from './KalahRules';
+import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 import { MancalaTutorial } from '../common/MancalaTutorial';
 import { MancalaConfig } from '../common/MancalaConfig';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
@@ -59,7 +60,7 @@ export class KalahTutorial extends Tutorial {
             new MancalaState([
                 [0, 4, 4, 4, 4, 4],
                 [0, 2, 0, 2, 4, 0],
-            ], 4, [0, 0]),
+            ], 4, PlayerNumberMap.of(0, 0)),
             MancalaMove.of(MancalaDistribution.of(1), [MancalaDistribution.of(0), MancalaDistribution.of(3)]),
             (_move: MancalaMove, _state: MancalaState, resultingState: MancalaState) => {
                 if (resultingState.getPieceAtXY(1, 0) === 0) {
@@ -76,7 +77,7 @@ export class KalahTutorial extends Tutorial {
             new MancalaState([
                 [0, 0, 0, 0, 2, 0],
                 [2, 0, 0, 0, 0, 1],
-            ], 0, [19, 24]),
+            ], 0, PlayerNumberMap.of(19, 24)),
             [
                 MancalaMove.of(MancalaDistribution.of(5)),
             ],

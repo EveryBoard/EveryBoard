@@ -164,7 +164,7 @@ export class EncapsuleComponent extends RectangularGameComponent<EncapsuleRules,
     private getPieceStrokeClass(piece: EncapsulePiece): string {
         const player: PlayerOrNone = piece.getPlayer();
         assert(player.isPlayer(), 'EncapsuleComponent.getPieceStrokeClass should only be called with actual pieces!');
-        return 'player' + player.value + '-stroke';
+        return 'player' + player.getValue() + '-stroke';
     }
 
     public getPieceRadius(piece: EncapsulePiece): number {

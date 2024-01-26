@@ -4,28 +4,14 @@ import { Player, PlayerOrNone } from './Player';
 
 export class FourStatePiece implements ComparableObject {
 
-    public static ZERO: FourStatePiece = new FourStatePiece(Player.ZERO.value);
+    public static ZERO: FourStatePiece = new FourStatePiece(Player.ZERO, true);
 
-    public static ONE: FourStatePiece = new FourStatePiece(Player.ONE.value);
+    public static ONE: FourStatePiece = new FourStatePiece(Player.ONE, true);
 
-    public static EMPTY: FourStatePiece = new FourStatePiece(PlayerOrNone.NONE.value);
+    public static EMPTY: FourStatePiece = new FourStatePiece(PlayerOrNone.NONE, true);
 
-    public static UNREACHABLE: FourStatePiece = new FourStatePiece(3);
+    public static UNREACHABLE: FourStatePiece = new FourStatePiece(PlayerOrNone.NONE, false);
 
-    public static of(value: number): FourStatePiece {
-        switch (value) {
-            case FourStatePiece.ZERO.value:
-                return FourStatePiece.ZERO;
-            case FourStatePiece.ONE.value:
-                return FourStatePiece.ONE;
-            case FourStatePiece.EMPTY.value:
-                return FourStatePiece.EMPTY;
-            case FourStatePiece.UNREACHABLE.value:
-                return FourStatePiece.UNREACHABLE;
-            default:
-                throw new Error('FourStatePiece has no value matching ' + value);
-        }
-    }
     public static ofPlayer(player: Player): FourStatePiece {
         switch (player) {
             case Player.ZERO: return FourStatePiece.ZERO;
@@ -34,18 +20,25 @@ export class FourStatePiece implements ComparableObject {
                 return FourStatePiece.ONE;
         }
     }
-    private constructor(public readonly value: number) {
+
+    private constructor(private readonly player: PlayerOrNone, private readonly reachable: boolean) {
     }
-    public equals(other: ComparableObject): boolean {
-        return this === other;
+
+    public equals(other: FourStatePiece): boolean {
+        return this.player.equals(other.player) &&
+               this.reachable === other.reachable;
     }
+
     public is(player: Player): boolean {
-        return this.value === player.value;
+        return this.player === player;
     }
+
     public isPlayer(): boolean {
         return this === FourStatePiece.ZERO || this === FourStatePiece.ONE;
     }
-    public toPlayer(): PlayerOrNone {
-        return Player.of(this.value);
+
+    public getPlayer(): PlayerOrNone {
+        return this.player;
     }
+
 }
