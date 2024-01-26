@@ -89,7 +89,6 @@ import { YinshCapture, YinshMove } from 'src/app/games/yinsh/YinshMove';
 import { TutorialStepMessage } from './TutorialStepMessage';
 import { Comparable } from 'src/app/utils/Comparable';
 import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
-import { TutorialFailure } from './TutorialFailure';
 
 describe('TutorialGameWrapperComponent (games)', () => {
 
