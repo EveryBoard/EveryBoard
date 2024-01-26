@@ -397,12 +397,11 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         return this.requestManager.canMakeRequest('Draw');
     }
 
-    public override async canUserPlay(_clickedElementName: string): Promise<MGPValidation> {
-        const result: MGPValidation = await super.canUserPlay(_clickedElementName);
+    public override async canUserPlay(clickedElementName: string): Promise<MGPValidation> {
+        const result: MGPValidation = await super.canUserPlay(clickedElementName);
         if (result.isFailure()) {
             return result;
-        }
-        if (this.mustReply()) {
+        } else if (this.mustReply()) {
             return MGPValidation.failure(GameWrapperMessages.MUST_ANSWER_REQUEST());
         } else {
             return MGPValidation.SUCCESS;
