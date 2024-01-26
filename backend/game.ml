@@ -202,11 +202,11 @@ module Make
     (* Read 1: retrieve the game *)
     let* game = Firestore.Game.get request game_id in
     let user = Auth.get_minimal_user request in
-    let player_value = if game.player_zero = user then 0 else 1 in
+    let requester_player_value = if game.player_zero = user then 1 else 0 in
     let new_turn =
-      if game.turn mod 2 == player_value
+      if game.turn mod 2 = requester_player_value
       then game.turn - 2 (* Need to take back two turns to let the requester take back their move *)
-      else game.turn -1 in
+      else game.turn - 1 in
     let now = External.now_ms () in
     let event = Game.Event.(Reply (Reply.accept user "TakeBack" now)) in
     (* Write 1: accept take back *)
