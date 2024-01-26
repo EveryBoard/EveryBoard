@@ -15,6 +15,7 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MoveGenerator } from 'src/app/jscaip/AI/AI';
 import { MancalaConfig } from '../MancalaConfig';
 import { RulesConfigUtils } from 'src/app/jscaip/RulesConfigUtil';
+import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 import { MoveTestUtils } from 'src/app/jscaip/tests/Move.spec';
 
 type MancalaHouseContents = Cell<{ mainContent: string, secondaryContent?: string }>;
@@ -186,7 +187,7 @@ export function doMancalaComponentTests<C extends MancalaComponent<R>,
             const initialState: MancalaState = entries.capture.state;
             await mancalaTestUtils.testUtils.setupState(initialState);
             const currentPlayer: Player = initialState.getCurrentPlayer();
-            const initialScore: number = initialState.scores[currentPlayer.value];
+            const initialScore: number = initialState.scores.get(currentPlayer);
             const move: MancalaMove = entries.capture.move;
             const suffix: string = mancalaTestUtils.getSuffix(entries.capture);
 
@@ -195,7 +196,7 @@ export function doMancalaComponentTests<C extends MancalaComponent<R>,
 
             // Then the store should contain newScore +difference
             const newState: MancalaState = mancalaTestUtils.testUtils.getGameComponent().getState();
-            const newScore: number = newState.scores[currentPlayer.value];
+            const newScore: number = newState.scores.get(currentPlayer);
             const difference: number = newScore - initialScore;
             mancalaTestUtils.expectStoreContentToBe(currentPlayer, ' ' + newScore + ' ', ' +' + difference + ' ');
         }));
@@ -241,7 +242,7 @@ export function doMancalaComponentTests<C extends MancalaComponent<R>,
                 [0, 4, 4, 4, 4, 4],
                 [4, 4, 4, 4, 4, 4],
             ];
-            const state: MancalaState = new MancalaState(board, 1, [0, 0]);
+            const state: MancalaState = new MancalaState(board, 1, PlayerNumberMap.of(0, 0));
             await mancalaTestUtils.testUtils.setupState(state);
 
             // When clicking on the empty house
@@ -256,7 +257,7 @@ export function doMancalaComponentTests<C extends MancalaComponent<R>,
                 [4, 4, 4, 4, 4, 4],
                 [4, 4, 4, 4, 4, 4],
             ];
-            const state: MancalaState = new MancalaState(board, 0, [0, 0]);
+            const state: MancalaState = new MancalaState(board, 0, PlayerNumberMap.of(0, 0));
             await mancalaTestUtils.testUtils.setupState(state);
 
             // When clicking on a house of the opponent

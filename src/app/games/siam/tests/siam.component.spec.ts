@@ -27,7 +27,7 @@ describe('SiamComponent', () => {
 
     async function expectMoveToBeLegal(player: Player, move: SiamMove, state: SiamState): Promise<void> {
         if (rules.isInsertion(move, state)) {
-            await testUtils.expectClickSuccess('#remainingPieces_' + player.value);
+            await testUtils.expectClickSuccess('#remainingPieces_' + player.getValue());
             const target: Coord = move.coord.getNext(move.direction.get());
             await testUtils.expectClickSuccess('#square_' + target.x + '_' + target.y);
             const orientation: string = move.landingOrientation.toString();

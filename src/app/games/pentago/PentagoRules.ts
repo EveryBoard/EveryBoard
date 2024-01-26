@@ -122,7 +122,7 @@ export class PentagoRules extends Rules<PentagoMove, PentagoState> {
         const victoryCoords: Coord[] = this.getVictoryCoords(state);
         const victoryFound: [boolean, boolean] = [false, false];
         for (let i: number = 0; i < victoryCoords.length; i += 5) {
-            victoryFound[state.getPieceAt(victoryCoords[i]).value] = true;
+            victoryFound[state.getPieceAt(victoryCoords[i]).getValue()] = true;
         }
         if (victoryFound[0] === true) {
             if (victoryFound[1] === true) {

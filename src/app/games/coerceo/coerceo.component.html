@@ -59,11 +59,11 @@
     </ng-template>
     <g *ngFor="let player of Player.PLAYERS">
         <g *ngIf="mustShowTilesOf(player)"
-           [id]="'tilesCount' + player.value"
+           [id]="'tilesCount' + player.getValue()"
            [attr.transform]="getTilesCountTranslate(player)">
             <polygon [attr.points]="getTilesCountCoordinate()"
                      [attr.stroke]="lastTurnWasTilesExchange(player) ? 'yellow' : 'black'"
-                     [ngClass]="['base', 'player' + player.value + '-fill']"
+                     [ngClass]="['base', 'player' + player.getValue() + '-fill']"
                      stroke-linecap="round"
             />
             <text id="playerZeroTilesCount"
@@ -71,7 +71,7 @@
                   x="-5"
                   y="5"
                   [attr.font-size]="SPACE_SIZE / 2"
-            >{{ tiles[player.value] }}</text>
+            >{{ tiles.get(player) }}</text>
         </g>
     </g>
 </svg>

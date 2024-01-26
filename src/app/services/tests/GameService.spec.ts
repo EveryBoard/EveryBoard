@@ -23,6 +23,7 @@ import { UserMocks } from 'src/app/domain/UserMocks.spec';
 import { PartMocks } from 'src/app/domain/PartMocks.spec';
 import { Subscription } from 'rxjs';
 import { GameEventService } from '../GameEventService';
+import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 import { NoConfig, RulesConfigUtils } from 'src/app/jscaip/RulesConfigUtil';
 
 describe('GameService', () => {
@@ -332,7 +333,7 @@ describe('GameService', () => {
 
         it('should add scores to update when scores are present', fakeAsync(async() => {
             // When updating the board with scores
-            const scores: [number, number] = [5, 0];
+            const scores: PlayerNumberMap = PlayerNumberMap.of(5, 0);
             await gameService.updatePartUponMove('partId', MGPOptional.of(scores));
             // Then the update should contain the scores
             const expectedUpdate: Partial<Part> = {
@@ -371,7 +372,7 @@ describe('GameService', () => {
                 // Then PartDAO should have been called with the appropriate MGPResult
                 const result: number = [
                     MGPResult.AGREED_DRAW_BY_ZERO.value,
-                    MGPResult.AGREED_DRAW_BY_ONE.value][player.value];
+                    MGPResult.AGREED_DRAW_BY_ONE.value][player.getValue()];
                 expect(partDAO.update).toHaveBeenCalledOnceWith('configRoomId', {
                     result,
                 });

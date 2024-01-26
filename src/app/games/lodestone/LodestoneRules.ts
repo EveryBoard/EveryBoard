@@ -17,6 +17,7 @@ import { LodestonePieceLodestone, LodestonePieceNone, LodestoneDescription, Lode
 import { LodestoneState, LodestonePositions, LodestonePressurePlates } from './LodestoneState';
 import { LodestonePressurePlate, LodestonePressurePlatePosition, LodestonePressurePlateGroup } from './LodestoneState';
 import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 
 export class LodestoneNode extends GameNode<LodestoneMove, LodestoneState> {}
 
@@ -328,12 +329,14 @@ export class LodestoneRules extends Rules<LodestoneMove, LodestoneState, Lodesto
     }
     public getGameStatus(node: LodestoneNode): GameStatus {
         const state: LodestoneState = node.gameState;
-        const pieces: [number, number] = state.numberOfPieces();
-        if (pieces[0] === 0 && pieces[1] === 0) {
+        const pieces: PlayerNumberMap = state.numberOfPieces();
+        const piecesZero: number = pieces.get(Player.ZERO);
+        const piecesOne: number = pieces.get(Player.ONE);
+        if (piecesZero === 0 && piecesOne === 0) {
             return GameStatus.DRAW;
-        } else if (pieces[0] === 0) {
+        } else if (piecesZero === 0) {
             return GameStatus.ONE_WON;
-        } else if (pieces[1] === 0) {
+        } else if (piecesOne === 0) {
             return GameStatus.ZERO_WON;
         } else {
             return GameStatus.ONGOING;

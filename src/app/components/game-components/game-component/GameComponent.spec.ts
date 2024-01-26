@@ -88,7 +88,7 @@ describe('GameComponent', () => {
         Hnefatafl: { onClick: [0, 0] },
         Kalah: {
             onClick: [0, 0],
-            onStoreClick: [0],
+            onStoreClick: [Player.ZERO],
         },
         Kamisado: { onClick: [0, 0] },
         Lasca: { onClick: [0, 0] },

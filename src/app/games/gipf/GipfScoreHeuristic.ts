@@ -10,9 +10,9 @@ export class GipfScoreHeuristic extends PlayerMetricHeuristic<GipfMove, GipfStat
 
     public override getMetrics(node: GipfNode, _config: NoConfig): PlayerNumberTable {
         const state: GipfState = node.gameState;
-        return PlayerNumberTable.of(
-            [GipfRules.getPlayerScore(state, Player.ZERO).get()],
-            [GipfRules.getPlayerScore(state, Player.ONE).get()],
+        return PlayerNumberTable.ofSingle(
+            GipfRules.getPlayerScore(state, Player.ZERO).get(),
+            GipfRules.getPlayerScore(state, Player.ONE).get(),
         );
     }
 }

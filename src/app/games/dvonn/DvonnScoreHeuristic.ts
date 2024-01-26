@@ -9,10 +9,6 @@ export class DvonnScoreHeuristic extends PlayerMetricHeuristic<DvonnMove, DvonnS
 
     public override getMetrics(node: DvonnNode, _config: NoConfig): PlayerNumberTable {
         // The metric the total number of pieces controlled by a player
-        const scores: [number, number] = DvonnRules.getScores(node.gameState);
-        return PlayerNumberTable.of(
-            [scores[0]],
-            [scores[1]],
-        );
+        return DvonnRules.getScores(node.gameState).toTable();
     }
 }

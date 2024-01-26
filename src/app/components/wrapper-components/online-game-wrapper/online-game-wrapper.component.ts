@@ -29,6 +29,7 @@ import { Timestamp } from 'firebase/firestore';
 import { OGWCTimeManagerService } from './OGWCTimeManagerService';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { OGWCRequestManagerService, RequestInfo } from './OGWCRequestManagerService';
+import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 export class OnlineGameWrapperMessages {
@@ -295,7 +296,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
             await this.updateBoardAndShowLastMove(isLastMoveOfBatch);
         } else {
             // We only animate the move of opponent, because the users move has already been animated before sending it
-            const triggerAnimation: boolean = currentPartTurn % 2 !== this.role.value;
+            const triggerAnimation: boolean = currentPartTurn % 2 !== this.role.getValue();
             await this.updateBoardAndShowLastMove(triggerAnimation && isLastMoveOfBatch);
         }
         this.setCurrentPlayerAccordingToCurrentTurn();
@@ -384,7 +385,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         if (this.endGame === true) return false;
         // Cannot do a take back request before we played
         const currentPart: PartDocument = Utils.getNonNullable(this.currentPart);
-        if (currentPart.data.turn <= this.role.value) return false;
+        if (currentPart.data.turn <= this.role.getValue()) return false;
         // Otherwise, it depends on the request manager
         return this.requestManager.canMakeRequest('TakeBack');
     }
@@ -450,7 +451,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         }
     }
 
-    private async updatePartWithStatusAndScores(gameStatus: GameStatus, scores: MGPOptional<readonly [number, number]>)
+    private async updatePartWithStatusAndScores(gameStatus: GameStatus, scores: MGPOptional<PlayerNumberMap>)
     : Promise<void>
     {
         if (gameStatus.isEndGame) {
@@ -470,7 +471,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         await this.gameService.notifyTimeout(this.currentPartId, victoriousPlayer, loser);
     }
 
-    private async notifyVictory(winner: Player, scores: MGPOptional<readonly [number, number]>): Promise<void> {
+    private async notifyVictory(winner: Player, scores: MGPOptional<PlayerNumberMap>): Promise<void> {
         const currentPart: PartDocument = Utils.getNonNullable(this.currentPart);
         const playerZero: MinimalUser = this.players[0].get();
         const playerOne: MinimalUser = this.players[1].get();
@@ -489,7 +490,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
     // Called by the resign button
     public async resign(): Promise<void> {
         const resigner: MinimalUser = this.getPlayer();
-        const victoriousOpponent: MinimalUser = this.players[(this.role.value + 1) % 2].get();
+        const victoriousOpponent: MinimalUser = this.players[(this.role.getValue() + 1) % 2].get();
         await this.gameService.resign(this.currentPartId, victoriousOpponent, resigner);
     }
 

@@ -3,6 +3,7 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MancalaCaptureResult, MancalaDistributionResult, MancalaRules } from '../common/MancalaRules';
 import { Coord } from 'src/app/jscaip/Coord';
 import { TableUtils } from 'src/app/utils/ArrayUtils';
+import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 import { MancalaConfig } from '../common/MancalaConfig';
 import { BooleanConfig, NumberConfig, RulesConfigDescription, RulesConfigDescriptionLocalizable } from 'src/app/components/wrapper-components/rules-configuration/RulesConfigDescription';
 import { MGPValidators } from 'src/app/utils/MGPValidator';
@@ -62,8 +63,8 @@ export class KalahRules extends MancalaRules {
                 captureMap[1][landingSpace.x] = board[1][landingSpace.x];
                 board[0][landingSpace.x] = 0;
                 board[1][landingSpace.x] = 0;
-                const captured: [number, number] = distributedState.getScoresCopy();
-                captured[distributedState.getCurrentPlayer().value] += capturedSum;
+                const captured: PlayerNumberMap = distributedState.getScoresCopy();
+                captured.add(distributedState.getCurrentPlayer(), capturedSum);
                 const postCaptureState: MancalaState = new MancalaState(board,
                                                                         distributedState.turn,
                                                                         captured);

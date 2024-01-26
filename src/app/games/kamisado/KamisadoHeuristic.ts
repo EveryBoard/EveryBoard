@@ -11,9 +11,9 @@ export class KamisadoHeuristic extends PlayerMetricHeuristic<KamisadoMove, Kamis
         const state: KamisadoState = node.gameState;
         // Metric is how far a player's piece is from the end line
         const [furthest0, furthest1]: [number, number] = KamisadoRules.getFurthestPiecePositions(state);
-        return PlayerNumberTable.of(
-            [7 - furthest0],
-            [furthest1],
+        return PlayerNumberTable.ofSingle(
+            7 - furthest0,
+            furthest1,
         );
     }
 

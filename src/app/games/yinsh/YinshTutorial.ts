@@ -8,6 +8,7 @@ import { YinshState } from './YinshState';
 import { YinshCapture, YinshMove } from './YinshMove';
 import { YinshPiece } from './YinshPiece';
 import { YinshRules } from './YinshRules';
+import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 
 const _: YinshPiece = YinshPiece.EMPTY;
 const N: YinshPiece = YinshPiece.UNREACHABLE;
@@ -44,7 +45,7 @@ export class YinshTutorial extends Tutorial {
                 [_, _, _, _, _, _, _, _, N, N, N],
                 [_, _, _, _, _, _, _, N, N, N, N],
                 [N, _, _, _, _, N, N, N, N, N, N],
-            ], [3, 1], 20),
+            ], PlayerNumberMap.of(3, 1), 20),
         ),
         TutorialStep.anyMove(
             $localize`Initial board and placement phase`,
@@ -52,7 +53,7 @@ export class YinshTutorial extends Tutorial {
         At the beginning of the game, each player puts one of its ring on the board at their turn.
         This phase stops when all rings have been placed on the board.<br/><br/>
         You're playing Dark, put one of your ring on the board by clicking the space where you want to place it.`,
-            new YinshState(YinshRules.get().getInitialState().board, [5, 5], 0),
+            new YinshState(YinshRules.get().getInitialState().board, PlayerNumberMap.of(5, 5), 0),
             new YinshMove([], new Coord(5, 5), MGPOptional.empty(), []),
             $localize`Congratulations!`),
         TutorialStep.anyMove(
@@ -76,7 +77,7 @@ export class YinshTutorial extends Tutorial {
                 [_, _, _, A, _, _, _, N, N, N, N],
                 [_, _, _, _, _, _, _, N, N, N, N],
                 [N, _, _, _, _, N, N, N, N, N, N],
-            ], [0, 0], 20),
+            ], PlayerNumberMap.of(0, 0), 20),
             new YinshMove([], new Coord(2, 4), MGPOptional.of(new Coord(4, 4)), []),
             $localize`Congratulations!`),
         TutorialStep.fromPredicate(
@@ -99,11 +100,11 @@ export class YinshTutorial extends Tutorial {
                 [_, _, _, A, _, _, _, A, N, N, N],
                 [_, _, _, _, _, _, _, N, N, N, N],
                 [N, _, _, _, _, N, N, N, N, N, N],
-            ], [0, 0], 20),
+            ], PlayerNumberMap.of(0, 0), 20),
             new YinshMove([], new Coord(4, 4), MGPOptional.of(new Coord(7, 4)),
                           [YinshCapture.of(new Coord(2, 4), new Coord(6, 4), MGPOptional.of(new Coord(7, 4)))]),
             (_: YinshMove, _previous: YinshState, result: YinshState): MGPValidation => {
-                if (result.sideRings[Player.ZERO.value] === 1) {
+                if (result.sideRings.get(Player.ZERO) === 1) {
                     return MGPValidation.SUCCESS;
                 } else {
                     return MGPValidation.failure(YinshTutorialMessages.MUST_ALIGN_FIVE());
@@ -128,7 +129,7 @@ export class YinshTutorial extends Tutorial {
                 [_, a, _, _, _, a, _, _, N, N, N],
                 [_, _, _, _, _, a, _, N, N, N, N],
                 [N, _, _, _, _, N, N, N, N, N, N],
-            ], [0, 0], 10),
+            ], PlayerNumberMap.of(0, 0), 10),
             new YinshMove([
                 YinshCapture.of(new Coord(5, 4), new Coord(1, 8), MGPOptional.of(new Coord(3, 2))),
                 YinshCapture.of(new Coord(5, 9), new Coord(5, 5), MGPOptional.of(new Coord(3, 3))),
@@ -136,7 +137,7 @@ export class YinshTutorial extends Tutorial {
                           new Coord(4, 1), MGPOptional.of(new Coord(4, 2)),
                           []),
             (_: YinshMove, _previous: YinshState, result: YinshState): MGPValidation => {
-                if (result.sideRings[Player.ZERO.value] === 2) {
+                if (result.sideRings.get(Player.ZERO) === 2) {
                     return MGPValidation.SUCCESS;
                 } else {
                     return MGPValidation.failure(YinshTutorialMessages.MUST_CAPTURE_TWO());

@@ -15,6 +15,7 @@ import { PylosOrderedMoveGenerator } from './PylosOrderedMoveGenerator';
 import { PylosMoveGenerator } from './PylosMoveGenerator';
 import { PylosHeuristic } from './PylosHeuristic';
 import { Minimax } from 'src/app/jscaip/AI/Minimax';
+import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 
 @Component({
     selector: 'app-pylos',
@@ -45,7 +46,7 @@ export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosSt
 
     public lastMove: MGPOptional<PylosMove> = MGPOptional.empty();
 
-    private remainingPieces: { [owner: number]: number } = { 0: 15, 1: 15 };
+    private remainingPieces: PlayerNumberMap = PlayerNumberMap.of(15, 15);
 
     public constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
@@ -307,7 +308,7 @@ export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosSt
     }
 
     public getPlayerSidePieces(player: Player): number[] {
-        const nPieces: number = this.remainingPieces[player.value];
+        const nPieces: number = this.remainingPieces.get(player);
         const pieces: number[] = [];
         for (let i: number = 0; i < nPieces; i++) {
             pieces.push(i);
@@ -319,8 +320,11 @@ export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosSt
         this.state = this.getState();
         this.constructedState = this.state;
         this.lastMove = this.node.previousMove;
-        const repartition: { [owner: number]: number } = this.state.getPiecesRepartition();
-        this.remainingPieces = { 0: 15 - repartition[0], 1: 15 - repartition[1] };
+        const repartition: PlayerNumberMap = this.state.getPiecesRepartition();
+        this.remainingPieces = PlayerNumberMap.of(
+            15 - repartition.get(Player.ZERO),
+            15 - repartition.get(Player.ONE),
+        );
         this.highCapture = MGPOptional.empty();
         this.cancelMoveAttempt();
         this.hideLastMove();
