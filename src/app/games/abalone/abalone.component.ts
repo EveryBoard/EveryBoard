@@ -37,6 +37,15 @@ export class HexaDirArrow {
                        public transformation: string) {}
 }
 
+type AbaloneArrowInfo = {
+
+    start: Coord;
+
+    end: Coord;
+
+    pointed: Coord;
+};
+
 @Component({
     selector: 'app-abalone',
     templateUrl: './abalone.component.html',
@@ -174,7 +183,7 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneRules,
 
     private showPossibleDirections(): void {
         this.directions = [];
-        Utils.assert(this.selecteds.length > 0, 'do not call showPossibleDirections if there is no selecteds pieces');
+        Utils.assert(this.selecteds.length > 0, 'do not call showPossibleDirections if there is no selected piece');
         if (this.selecteds.length === 1) {
             this.showDirection(true);
         } else {
@@ -182,12 +191,12 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneRules,
         }
     }
 
-    private showDirection(single: boolean): void {
+    private showDirection(onlyOnePieceIsSelected: boolean): void {
         const state: AbaloneState = this.getState();
         for (const dir of HexaDirection.factory.all) {
-            const startToEnd: { start: Coord, pointed: Coord, end: Coord } = this.getArrowPath(single, dir);
+            const startToEnd: AbaloneArrowInfo = this.getArrowPath(onlyOnePieceIsSelected, dir);
             let theoretical: AbaloneMove;
-            if (single) {
+            if (onlyOnePieceIsSelected) {
                 theoretical = AbaloneMove.ofSingleCoord(startToEnd.start, dir);
             } else {
                 theoretical = AbaloneMove.ofDoubleCoord(startToEnd.start, startToEnd.end, dir);
@@ -211,23 +220,24 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneRules,
         }
     }
 
-    private getArrowPath(single: boolean, direction: HexaDirection): { start: Coord, end: Coord, pointed: Coord } {
+    private getArrowPath(onlyOnePieceIsSelected: boolean, direction: HexaDirection): AbaloneArrowInfo {
         let start: Coord = this.selecteds[0];
         let end: Coord = this.selecteds[this.selecteds.length - 1];
-        // If end and start are different, then single === false
-        if (single === false &&
+        // If end and start are different, then onlyOnePieceIsSelected === false
+        if (onlyOnePieceIsSelected === false &&
             start.getDirectionToward(end).get().equals(direction.getOpposite()))
-        { // If start towars end give us the opposite direction fo the direction provided in args:
-            // Then we draw the arrow starting from end, so that the longer arrow is always drawned
+        {
+            // If start.towards(end) give us the opposite direction for the direction provided in args:
+            // Then we draw the arrow starting from end, so that the longer arrow is always drawn
             const tmp: Coord = start;
             start = end;
             end = tmp;
         }
-        return { start, end, pointed: this.getPointed(single, start, end, direction) };
+        return { start, end, pointed: this.getPointed(onlyOnePieceIsSelected, start, end, direction) };
     }
 
-    private getPointed(single: boolean, start: Coord, end: Coord, direction: HexaDirection): Coord {
-        const isPush: boolean = single || start.getDirectionToward(end).get().equals(direction);
+    private getPointed(onlyOnePieceIsSelected: boolean, start: Coord, end: Coord, direction: HexaDirection): Coord {
+        const isPush: boolean = onlyOnePieceIsSelected || start.getDirectionToward(end).get().equals(direction);
         if (isPush) {
             const state: AbaloneState = this.getState();
             const currentPlayer: Player = state.getCurrentPlayer();
