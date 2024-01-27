@@ -82,6 +82,8 @@ jobs:
     steps:
     - name: Checkout the repository
       uses: actions/checkout@v4
+    - name: Install OS dependencies
+      run: sudo apt-get install -y libev-dev
     - name: Setup OCaml
       uses: ocaml/setup-ocaml@v2
       with:
