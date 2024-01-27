@@ -27,6 +27,8 @@ module Mock : MOCK = struct
 
   let now () = !current_time
 
+  let now_ms () = !current_time * 1000
+
   let rand_bool () = !bool
 
   module Http = struct
