@@ -1,6 +1,7 @@
 import { GameStateWithTable } from '../../jscaip/GameStateWithTable';
 import { Coord } from '../../jscaip/Coord';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
+import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 
 export class ReversiState extends GameStateWithTable<PlayerOrNone> {
 
@@ -20,12 +21,12 @@ export class ReversiState extends GameStateWithTable<PlayerOrNone> {
         return result;
     }
 
-    public countScore(): [number, number] {
-        const scores: [number, number] = [0, 0];
+    public countScore(): PlayerNumberMap {
+        const scores: PlayerNumberMap = PlayerNumberMap.of(0, 0);
         for (const coordAndContent of this.getCoordsAndContents()) {
             const spaceOwner: PlayerOrNone = coordAndContent.content;
             if (spaceOwner.isPlayer()) {
-                scores[spaceOwner.value] += 1;
+                scores.add(spaceOwner, 1);
             }
         }
         return scores;

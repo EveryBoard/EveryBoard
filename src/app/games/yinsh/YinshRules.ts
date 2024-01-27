@@ -13,6 +13,7 @@ import { YinshCapture, YinshMove } from './YinshMove';
 import { YinshPiece } from './YinshPiece';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
+import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 import { GameNode } from 'src/app/jscaip/AI/GameNode';
 import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 
@@ -47,7 +48,7 @@ export class YinshRules extends Rules<YinshMove, YinshState, YinshLegalityInform
             [_, _, _, _, _, _, _, N, N, N, N],
             [N, _, _, _, _, N, N, N, N, N, N],
         ];
-        return new YinshState(board, [5, 5], 0);
+        return new YinshState(board, PlayerNumberMap.of(5, 5), 0);
     }
 
     public override applyLegalMove(_move: YinshMove, _state: YinshState, _config: NoConfig, info: YinshState)
@@ -71,10 +72,10 @@ export class YinshRules extends Rules<YinshMove, YinshState, YinshLegalityInform
     }
 
     public takeRing(state: YinshState, ringTaken: Coord): YinshState {
-        const player: number = state.getCurrentPlayer().value;
+        const player: Player = state.getCurrentPlayer();
         const board: Table<YinshPiece> = state.setAt(ringTaken, YinshPiece.EMPTY).board;
-        const sideRings: [number, number] = [state.sideRings[0], state.sideRings[1]];
-        sideRings[player] += 1;
+        const sideRings: PlayerNumberMap = state.sideRings.getCopy();
+        sideRings.add(player, 1);
         return new YinshState(board, sideRings, state.turn);
     }
 
@@ -87,7 +88,7 @@ export class YinshRules extends Rules<YinshMove, YinshState, YinshLegalityInform
     }
 
     public ringSelectionValidity(state: YinshState, coord: Coord): MGPValidation {
-        const player: number = state.getCurrentPlayer().value;
+        const player: number = state.getCurrentPlayer().getValue();
         if (state.getPieceAt(coord) === YinshPiece.RINGS[player]) {
             return MGPValidation.SUCCESS;
         } else {
@@ -96,7 +97,7 @@ export class YinshRules extends Rules<YinshMove, YinshState, YinshLegalityInform
     }
 
     public applyRingMoveAndFlip(start: Coord, end: Coord, state: YinshState): YinshState {
-        const player: number = state.getCurrentPlayer().value;
+        const player: number = state.getCurrentPlayer().getValue();
         // Move ring from start (only the marker remains) to
         // end (only the ring can be there, as it must land on an empty space)
         let newState: YinshState = state.setAt(start, YinshPiece.MARKERS[player]);
@@ -157,15 +158,15 @@ export class YinshRules extends Rules<YinshMove, YinshState, YinshLegalityInform
             return MGPFallible.failure(RulesFailure.MUST_CLICK_ON_EMPTY_SPACE());
         }
         const player: Player = state.getCurrentPlayer();
-        const sideRings: [number, number] = [state.sideRings[0], state.sideRings[1]];
-        sideRings[player.value] -= 1;
+        const sideRings: PlayerNumberMap = state.sideRings.getCopy();
+        sideRings.add(player, -1);
         const newBoard: Table<YinshPiece> = state.setAt(coord, YinshPiece.of(player, true)).board;
         const newState: YinshState = new YinshState(newBoard, sideRings, state.turn);
         return MGPFallible.success(newState);
     }
 
     public moveStartValidity(state: YinshState, start: Coord): MGPValidation {
-        const player: number = state.getCurrentPlayer().value;
+        const player: number = state.getCurrentPlayer().getValue();
         // Start coord has to contain a ring of the current player
         if (state.getPieceAt(start) !== YinshPiece.RINGS[player]) {
             return MGPValidation.failure(YinshFailure.SHOULD_SELECT_PLAYER_RING());
@@ -222,7 +223,7 @@ export class YinshRules extends Rules<YinshMove, YinshState, YinshLegalityInform
     }
 
     public captureValidity(state: YinshState, capture: YinshCapture): MGPValidation {
-        const player: number = state.getCurrentPlayer().value;
+        const player: number = state.getCurrentPlayer().getValue();
         // There should be exactly 5 consecutive spaces, on the same line (invariants of YinshCapture)
         for (const coord of capture.capturedSpaces) {
             // The captured spaces must contain markers of the current player
@@ -333,10 +334,10 @@ export class YinshRules extends Rules<YinshMove, YinshState, YinshLegalityInform
         if (node.gameState.isInitialPlacementPhase()) {
             return GameStatus.ONGOING;
         }
-        if (3 <= node.gameState.sideRings[0]) {
+        if (3 <= node.gameState.sideRings.get(Player.ZERO)) {
             return GameStatus.ZERO_WON;
         }
-        if (3 <= node.gameState.sideRings[1]) {
+        if (3 <= node.gameState.sideRings.get(Player.ONE)) {
             return GameStatus.ONE_WON;
         }
         return GameStatus.ONGOING;

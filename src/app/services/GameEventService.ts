@@ -16,6 +16,7 @@ export class GameEventService {
     private eventsCollection(partId: string): IFirestoreDAO<GameEvent> {
         return this.partDAO.subCollectionDAO<GameEvent>(partId, 'events');
     }
+
     public subscribeToEvents(partId: string, callback: (events: GameEvent[]) => void): Subscription {
         const internalCallback: FirestoreCollectionObserver<GameEvent> = new FirestoreCollectionObserver(
             (events: FirestoreDocument<GameEvent>[]) => {
@@ -41,4 +42,5 @@ export class GameEventService {
             });
         return this.eventsCollection(partId).observingWhere([], internalCallback, 'time');
     }
+
 }

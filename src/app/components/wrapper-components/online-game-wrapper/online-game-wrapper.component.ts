@@ -29,6 +29,7 @@ import { Timestamp } from 'firebase/firestore';
 import { OGWCTimeManagerService } from './OGWCTimeManagerService';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { OGWCRequestManagerService, RequestInfo } from './OGWCRequestManagerService';
+import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 export class OnlineGameWrapperMessages {
@@ -296,7 +297,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
             await this.updateBoardAndShowLastMove(isLastMoveOfBatch);
         } else {
             // We only animate the move of opponent, because the users move has already been animated before sending it
-            const triggerAnimation: boolean = currentPartTurn % 2 !== this.role.value;
+            const triggerAnimation: boolean = currentPartTurn % 2 !== this.role.getValue();
             await this.updateBoardAndShowLastMove(triggerAnimation && isLastMoveOfBatch);
         }
         this.setCurrentPlayerAccordingToCurrentTurn();
@@ -385,7 +386,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         if (this.endGame === true) return false;
         // Cannot do a take back request before we played
         const currentPart: PartDocument = Utils.getNonNullable(this.currentPart);
-        if (currentPart.data.turn <= this.role.value) return false;
+        if (currentPart.data.turn <= this.role.getValue()) return false;
         // Otherwise, it depends on the request manager
         return this.requestManager.canMakeRequest('TakeBack');
     }
@@ -446,7 +447,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
             // To adhere to security rules, we must add the move before updating the part
             const encodedMove: JSONValue = this.gameComponent.encoder.encode(move);
             const partId: string = this.currentPartId;
-            const scores: MGPOptional<readonly [number, number]> = this.gameComponent.scores;
+            const scores: MGPOptional<PlayerNumberMap> = this.gameComponent.scores;
             if (gameStatus.isEndGame) {
                 return this.gameService.addMoveAndEndGame(partId, encodedMove, scores, gameStatus.winner);
             } else {

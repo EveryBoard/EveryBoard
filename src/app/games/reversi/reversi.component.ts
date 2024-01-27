@@ -13,6 +13,7 @@ import { Utils } from 'src/app/utils/utils';
 import { MCTS } from 'src/app/jscaip/AI/MCTS';
 import { ReversiMoveGenerator } from './ReversiMoveGenerator';
 import { ReversiMinimax } from './ReversiMinimax';
+import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 
 @Component({
     selector: 'app-reversi',
@@ -39,7 +40,7 @@ export class ReversiComponent extends RectangularGameComponent<ReversiRules,
             new MCTS($localize`MCTS`, new ReversiMoveGenerator(), this.rules),
         ];
         this.encoder = ReversiMove.encoder;
-        this.scores = MGPOptional.of([2, 2]);
+        this.scores = MGPOptional.of(PlayerNumberMap.of(2, 2));
     }
 
     public async onClick(x: number, y: number): Promise<MGPValidation> {

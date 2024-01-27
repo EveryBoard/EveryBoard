@@ -28,9 +28,9 @@ export class YinshPiece implements ComparableObject {
             return YinshPiece.EMPTY;
         } else {
             if (isRing) {
-                return YinshPiece.RINGS[player.value];
+                return YinshPiece.RINGS[player.getValue()];
             } else {
-                return YinshPiece.MARKERS[player.value];
+                return YinshPiece.MARKERS[player.getValue()];
             }
         }
     }

@@ -5,6 +5,7 @@ import { MancalaState } from './MancalaState';
 import { MancalaMove } from './MancalaMove';
 import { MancalaFailure } from './MancalaFailure';
 import { Player } from 'src/app/jscaip/Player';
+import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 import { GameNode } from 'src/app/jscaip/AI/GameNode';
 import { MancalaConfig } from './MancalaConfig';
 import { MancalaNode, MancalaRules } from './MancalaRules';
@@ -34,7 +35,7 @@ export function DoMancalaRulesTests(entries: MancalaRulesTestEntries): void {
                 [4, 4, 4, 4, 4, 4],
                 [4, 5, 5, 5, 5, 0],
             ];
-            const expectedState: MancalaState = new MancalaState(expectedBoard, 1, [0, 0]);
+            const expectedState: MancalaState = new MancalaState(expectedBoard, 1, PlayerNumberMap.of(0, 0));
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         });
 
@@ -44,7 +45,7 @@ export function DoMancalaRulesTests(entries: MancalaRulesTestEntries): void {
                 [4, 0, 4, 4, 4, 4],
                 [4, 0, 4, 4, 4, 0],
             ];
-            const state: MancalaState = new MancalaState(board, 0, [0, 0]);
+            const state: MancalaState = new MancalaState(board, 0, PlayerNumberMap.of(0, 0));
 
             // When attempting to distribute empty space
             const move: MancalaMove = entries.simpleMove;
@@ -62,7 +63,7 @@ export function DoMancalaRulesTests(entries: MancalaRulesTestEntries): void {
                     [0, 0, 0, 0, 0, 0],
                     [0, 0, 0, 0, 0, 0],
                 ];
-                const state: MancalaState = new MancalaState(board, 6, [26, 22]);
+                const state: MancalaState = new MancalaState(board, 6, PlayerNumberMap.of(26, 22));
                 const node: MancalaNode = new GameNode(state);
                 // Then it should be a victory for player 0
                 RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, defaultConfig);
@@ -74,7 +75,7 @@ export function DoMancalaRulesTests(entries: MancalaRulesTestEntries): void {
                     [0, 0, 0, 0, 0, 0],
                     [0, 0, 0, 0, 0, 0],
                 ];
-                const state: MancalaState = new MancalaState(board, 6, [22, 26]);
+                const state: MancalaState = new MancalaState(board, 6, PlayerNumberMap.of(22, 26));
                 const node: MancalaNode = new GameNode(state);
                 // Then it should be a victory for player 1
                 RulesUtils.expectToBeVictoryFor(entries.rules, node, Player.ONE, defaultConfig);
@@ -86,7 +87,7 @@ export function DoMancalaRulesTests(entries: MancalaRulesTestEntries): void {
                     [0, 0, 0, 0, 0, 0],
                     [0, 0, 0, 0, 0, 0],
                 ];
-                const state: MancalaState = new MancalaState(board, 6, [24, 24]);
+                const state: MancalaState = new MancalaState(board, 6, PlayerNumberMap.of(24, 24));
                 const node: MancalaNode = new GameNode(state);
                 // Then it should be a draw
                 RulesUtils.expectToBeDraw(rules, node, defaultConfig);

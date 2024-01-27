@@ -3,7 +3,7 @@
      [attr.viewBox]="(- STROKE_WIDTH / 2) + ' ' + (- STROKE_WIDTH / 2) + ' ' + (BOARD_WIDTH + STROKE_WIDTH) + ' ' + (BOARD_HEIGHT + STROKE_WIDTH)"
      preserveAspectRatio="xMidYMid meet"
 >
-    <g [attr.transform]="'rotate(' + getPointOfView().value * 180 + ' ' + (BOARD_WIDTH / 2) + ' ' + (BOARD_HEIGHT / 2) + ')'">
+    <g [attr.transform]="'rotate(' + getPointOfView().getValue() * 180 + ' ' + (BOARD_WIDTH / 2) + ' ' + (BOARD_HEIGHT / 2) + ')'">
         <circle *ngFor="let x of ArrayUtils.range(remainingOne)"
                 [attr.cx]="getRemainingPieceCx(x)"
                 [attr.cy]="PIECE_RADIUS"
