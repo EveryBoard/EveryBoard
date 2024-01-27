@@ -11,11 +11,13 @@ run: gamelist
 	opam exec -- dune exec -- ./main.exe
 
 test: bin gamelist
+	find . -name '*.coverage' | xargs rm -f
 	GAMES=$$(cat games.txt) \
 	opam exec -- dune exec --instrument-with bisect_ppx --force -- ./tests.exe test $(match)
 	opam exec -- bisect-ppx-report html
 	echo 'Coverage produced in _coverage/index.html'
-	find . -name '*.coverage' | xargs rm -f
+	opam exec -- bisect-ppx-report summary
+	opam exec -- bisect-ppx-report summary | grep '100.00%' || ( echo 'Coverage too low!' && exit 1 )
 
 docker: gamelist
 	sed -i 's/;; //' dune
