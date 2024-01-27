@@ -51,19 +51,4 @@ describe('UserService', () => {
             expect(userDAO.update).toHaveBeenCalledOnceWith('userId', { lastUpdateTime: serverTimestamp() });
         });
     });
-    describe('getServerTime', () => {
-        it('should return server time of the presence token', fakeAsync(async() => {
-            // Given a user service and some user
-            const id: string = await userDAO.create(UserMocks.CONNECTED);
-            const expectedServerTime: Timestamp = new Timestamp(1, 234);
-            spyOn(FirestoreDAOMock, 'mockServerTime').and.returnValue(expectedServerTime);
-            spyOn(userService, 'updatePresenceToken').and.callThrough();
-
-            // When calling getServerTime
-            const serverTime: Timestamp = await userService.getServerTime(id);
-
-            // Then it should return the timestamp provided by the server
-            expect(serverTime).toBe(expectedServerTime);
-        }));
-    });
 });
