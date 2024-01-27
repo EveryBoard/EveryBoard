@@ -390,17 +390,23 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         this.updateViewInfo();
     }
     private userJustChosenAsOpponent(oldConfigRoom: ConfigRoom | null, configRoom: ConfigRoom): boolean {
-        if (this.isGameStarted(configRoom)) return false;
-        const currentUserId: string = this.connectedUserService.user.get().id;
-        const userWasNotChosenOpponent: boolean = oldConfigRoom?.chosenOpponent?.id !== currentUserId;
-        const userIsChosenOpponent: boolean = configRoom.chosenOpponent?.id === currentUserId;
-        return userWasNotChosenOpponent && userIsChosenOpponent;
+        if (this.isGameStarted(configRoom)) {
+            return false;
+        } else {
+            const currentUserId: string = this.connectedUserService.user.get().id;
+            const userWasNotChosenOpponent: boolean = oldConfigRoom?.chosenOpponent?.id !== currentUserId;
+            const userIsChosenOpponent: boolean = configRoom.chosenOpponent?.id === currentUserId;
+            return userWasNotChosenOpponent && userIsChosenOpponent;
+        }
     }
     private chosenOpponentJustLeft(oldConfigRoom: ConfigRoom | null, newConfigRoom: ConfigRoom): boolean {
-        if (oldConfigRoom == null) return false;
-        const thereWasAChosenOpponent: boolean = oldConfigRoom.chosenOpponent != null;
-        const thereIsNoLongerChosenOpponent: boolean = newConfigRoom.chosenOpponent == null;
-        return thereWasAChosenOpponent && thereIsNoLongerChosenOpponent;
+        if (oldConfigRoom == null) {
+            return false;
+        } else {
+            const thereWasAChosenOpponent: boolean = oldConfigRoom.chosenOpponent != null;
+            const thereIsNoLongerChosenOpponent: boolean = newConfigRoom.chosenOpponent == null;
+            return thereWasAChosenOpponent && thereIsNoLongerChosenOpponent;
+        }
     }
     private async onGameCanceled(): Promise<void> {
         this.messageDisplayer.infoMessage($localize`The game has been canceled!`);
