@@ -184,19 +184,15 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneRules,
     private showPossibleDirections(): void {
         this.directions = [];
         Utils.assert(this.selecteds.length > 0, 'do not call showPossibleDirections if there is no selected piece');
-        if (this.selecteds.length === 1) {
-            this.showDirection(true);
-        } else {
-            this.showDirection(false);
-        }
+        this.showDirection();
     }
 
-    private showDirection(onlyOnePieceIsSelected: boolean): void {
+    private showDirection(): void {
         const state: AbaloneState = this.getState();
         for (const dir of HexaDirection.factory.all) {
-            const startToEnd: AbaloneArrowInfo = this.getArrowPath(onlyOnePieceIsSelected, dir);
+            const startToEnd: AbaloneArrowInfo = this.getArrowPath(dir);
             let theoretical: AbaloneMove;
-            if (onlyOnePieceIsSelected) {
+            if (this.selecteds.length === 1) {
                 theoretical = AbaloneMove.ofSingleCoord(startToEnd.start, dir);
             } else {
                 theoretical = AbaloneMove.ofDoubleCoord(startToEnd.start, startToEnd.end, dir);
@@ -220,24 +216,23 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneRules,
         }
     }
 
-    private getArrowPath(onlyOnePieceIsSelected: boolean, direction: HexaDirection): AbaloneArrowInfo {
+    private getArrowPath(direction: HexaDirection): AbaloneArrowInfo {
         let start: Coord = this.selecteds[0];
         let end: Coord = this.selecteds[this.selecteds.length - 1];
-        // If end and start are different, then onlyOnePieceIsSelected === false
-        if (onlyOnePieceIsSelected === false &&
+        if (this.selecteds.length > 1 &&
             start.getDirectionToward(end).get().equals(direction.getOpposite()))
         {
-            // If start.towards(end) give us the opposite direction for the direction provided in args:
-            // Then we draw the arrow starting from end, so that the longer arrow is always drawn
+            // If we selected (B, C) and a move from C to A is possible, then we swap them
+            // So the drawn line goes from C to A instead of only B to A.
             const tmp: Coord = start;
             start = end;
             end = tmp;
         }
-        return { start, end, pointed: this.getPointed(onlyOnePieceIsSelected, start, end, direction) };
+        return { start, end, pointed: this.getPointed(start, end, direction) };
     }
 
-    private getPointed(onlyOnePieceIsSelected: boolean, start: Coord, end: Coord, direction: HexaDirection): Coord {
-        const isPush: boolean = onlyOnePieceIsSelected || start.getDirectionToward(end).get().equals(direction);
+    private getPointed(start: Coord, end: Coord, direction: HexaDirection): Coord {
+        const isPush: boolean = this.selecteds.length === 1 || start.getDirectionToward(end).get().equals(direction);
         if (isPush) {
             const state: AbaloneState = this.getState();
             const currentPlayer: Player = state.getCurrentPlayer();
