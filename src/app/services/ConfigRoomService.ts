@@ -92,11 +92,11 @@ export class ConfigRoomService {
         return this.backendService.selectOpponent(gameId, chosenOpponent);
     }
 
-    public async reviewConfig(configRoomId: string): Promise<void> {
-        return this.backendService.reviewConfig(configRoomId);
+    public async reviewConfig(gameId: string): Promise<void> {
+        return this.backendService.reviewConfig(gameId);
     }
 
-    public async reviewConfigAndRemoveChosenOpponent(configRoomId: string): Promise<void> {
-        return this.backendService.reviewConfigAndRemoveChosenOpponent(configRoomId);
+    public async reviewConfigAndRemoveChosenOpponent(gameId: string): Promise<void> {
+        return this.backendService.reviewConfigAndRemoveChosenOpponent(gameId);
     }
 }
