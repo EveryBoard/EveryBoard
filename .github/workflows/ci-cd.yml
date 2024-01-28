@@ -338,7 +338,7 @@ jobs:
             mkdir -p ~/.ssh/
             cat > ~/.ssh/id_rsa <<< "$SSH_KEY"
             cat > backend/service-account.json <<< "$SERVICE_ACCOUNT"
-            cd backend && make && make deploy target=test user=$SSH_USER server=$SSH_SERVER port=$SSH_PORT listen-port=8001
+            cd backend && make deploy target=test user=$SSH_USER server=$SSH_SERVER port=$SSH_PORT listen-port=8001
           fi
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
