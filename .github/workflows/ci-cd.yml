@@ -311,6 +311,8 @@ jobs:
         if: ${{ github.ref != 'refs/heads/master'  && github.ref != 'refs/heads/develop' }}
         run: |
           echo "${{ secrets.FIREBASE_CONFIG_TEST }}" > src/app/firebaseConfig.ts
+      - name: Install OS dependencies
+        run: sudo apt-get install -y libev-dev
       - name: Setup dependencies (install OCaml)
         uses: ocaml/setup-ocaml@v2
         with:
