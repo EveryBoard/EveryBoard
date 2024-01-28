@@ -8,7 +8,7 @@
 (executable
  (name main)
  (modules Main)
- ;; (flags(:standard -cclib -static -cclib -no-pie))
+ (flags(:standard -cclib -static -cclib -no-pie))
  (libraries backend dream))
 
 (tests

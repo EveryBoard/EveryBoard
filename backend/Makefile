@@ -24,11 +24,15 @@ docker: gamelist
 	docker build -t backend-build -f Dockerfile.build .
 	sed -i 's/(flags /;; (flags/' dune
 	docker run --rm --entrypoint cat backend-build /home/ocaml/_build/default/main.exe > main.static.exe
+	chmod +x main.static.exe
 	echo "GAMES='$$(cat games.txt)'" > .env
-	docker build -t backend -f Dockerfile.serve .
+	docker build -t "backend-$(target)" -f Dockerfile.serve .
+	docker save "backend-$(target)" > "backend-$(target).tar"
 
+deploy: docker
+	ssh -p "$(port)" "$(user)@$(server)" "docker load && docker stop \$$(docker ps -q --filter ancestor=backend-$(target)) && docker container prune -f && docker image prune -f && docker run -d -p $(listen-port):8081 backend-$(target)" < "backend-$(target).tar"
 
 clean:
 	opam exec -- dune clean
 
-.PHONY: bin test clean install all
+.PHONY: bin test clean install docker deploy all
