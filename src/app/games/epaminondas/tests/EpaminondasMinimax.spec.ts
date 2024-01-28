@@ -7,6 +7,7 @@ import { Table } from 'src/app/utils/ArrayUtils';
 import { EpaminondasConfig, EpaminondasLegalityInformation, EpaminondasRules } from '../EpaminondasRules';
 import { EpaminondasMove } from '../EpaminondasMove';
 import { EpaminondasState } from '../EpaminondasState';
+import { EpaminondasNode } from '../EpaminondasRules';
 import { EpaminondasMinimax } from '../EpaminondasMinimax';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 
