@@ -29,16 +29,23 @@ describe('AbaloneComponent', () => {
             // Given the initial board
 
             // When clicking on a piece
-            await testUtils.expectClickSuccess('#piece_2_6');
+            await testUtils.expectClickSuccess('#piece_1_7');
 
             // Then highlight and 5 arrows should be shown
             testUtils.expectElementToExist('#direction_LEFT');
             testUtils.expectElementToExist('#direction_UP');
             testUtils.expectElementToExist('#direction_UP_RIGHT');
+            testUtils.expectElementToExist('#direction_DOWN');
+            testUtils.expectElementToExist('#direction_DOWN_LEFT');
+            // And also their more precisely describe part
+            testUtils.expectElementToExist('#arrow_1_7_to_1_6');
+            testUtils.expectElementToExist('#arrow_1_7_to_-1_7');
+            testUtils.expectElementToExist('#arrow_1_7_to_3_5');
+            testUtils.expectElementToExist('#arrow_1_7_to_1_9');
+            testUtils.expectElementToExist('#arrow_1_7_to_-1_9');
 
+            // As pushing 5 pieces is not allowed, direction right should not be possible
             testUtils.expectElementNotToExist('#direction_RIGHT');
-            testUtils.expectElementNotToExist('#direction_DOWN');
-            testUtils.expectElementNotToExist('#direction_DOWN_LEFT');
         }));
 
         it('should cancel move when clicking on opponent piece', fakeAsync(async() => {
@@ -56,6 +63,7 @@ describe('AbaloneComponent', () => {
             // Then it should be selected
             testUtils.expectElementToHaveClass('#piece_2_7', 'selected-stroke');
         }));
+
     });
 
     describe('second click', () => {
@@ -183,6 +191,31 @@ describe('AbaloneComponent', () => {
             const move: AbaloneMove = AbaloneMove.ofSingleCoord(new Coord(0, 7), HexaDirection.UP);
             await testUtils.expectMoveSuccess('#direction_UP', move);
         }));
+
+        it('should choose the more inclusive arrow-drawing (A > B)', fakeAsync(async() => {
+            // Given any board with two neighbor pieces, able to move in one direction but not its opposite
+            // When selecting the one "first" in that direction, then the "second"
+            await testUtils.expectClickSuccess('#piece_1_7');
+            await testUtils.expectClickSuccess('#piece_2_6');
+
+            // Then the arrow path should includes both spaces
+            testUtils.expectElementToExist('#arrow_1_7_to_3_5');
+            // And there should be a healthy line starting from first selected coord
+            testUtils.expectElementToExist('#arrow_1_7_to_1_6');
+        }));
+
+        it('should choose the more inclusive arrow-drawing (B > A)', fakeAsync(async() => {
+            // Given any board with two neighbor pieces, able to move in one direction but not its opposite
+            // When selecting the one "second" in that direction, then the "first"
+            await testUtils.expectClickSuccess('#piece_2_6');
+            await testUtils.expectClickSuccess('#piece_1_7');
+
+            // Then the arrow path should includes both spaces
+            testUtils.expectElementToExist('#arrow_1_7_to_3_5');
+            // And there should be a healthy line starting from first selected coord
+            testUtils.expectElementToExist('#arrow_2_6_to_2_5');
+        }));
+
     });
 
     describe('third click', () => {
@@ -294,6 +327,7 @@ describe('AbaloneComponent', () => {
             const move: AbaloneMove = AbaloneMove.ofSingleCoord(new Coord(2, 7), HexaDirection.UP);
             await testUtils.expectMoveSuccess('#piece_2_5', move);
         }));
+
     });
 
     it('should allow clicking on arrow landing coord as if it was the arrow (space)', fakeAsync(async() => {
@@ -304,30 +338,6 @@ describe('AbaloneComponent', () => {
         // Then the move should have been done
         const move: AbaloneMove = AbaloneMove.ofSingleCoord(new Coord(2, 6), HexaDirection.LEFT);
         await testUtils.expectMoveSuccess('#space_1_6', move);
-    }));
-
-    it('should allow clicking on arrow landing coord as if it was below an arrow (opponent)', fakeAsync(async() => {
-        // Given a board with a possible push
-        const board: Table<FourStatePiece> = [
-            [N, N, N, N, X, X, X, X, X],
-            [N, N, N, X, X, X, X, X, X],
-            [N, N, _, _, _, X, X, _, _],
-            [N, _, _, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _, _, _],
-            [_, _, X, _, _, _, _, _, N],
-            [_, _, O, O, O, _, _, N, N],
-            [O, O, O, O, O, O, N, N, N],
-            [O, O, O, O, O, N, N, N, N],
-        ];
-        const state: AbaloneState = new AbaloneState(board, 0);
-        await testUtils.setupState(state);
-        await testUtils.expectClickSuccess('#piece_2_6');
-        await testUtils.expectClickSuccess('#piece_2_7');
-
-        // When clicking on the space marked by the direction instead of its arrow
-        // Then the move should have been done
-        const move: AbaloneMove = AbaloneMove.ofSingleCoord(new Coord(2, 7), HexaDirection.UP);
-        await testUtils.expectMoveSuccess('#piece_2_5', move);
     }));
 
     it('should not do anything when clicking space that is not below a direction arrow', fakeAsync(async() => {
@@ -381,6 +391,84 @@ describe('AbaloneComponent', () => {
             testUtils.expectElementToHaveClass('#space_3_6', 'moved-fill');
             testUtils.expectElementToHaveClass('#space_4_6', 'moved-fill');
         }));
+
+        it('should show pushed out pieces', fakeAsync(async() => {
+            // Given any board where a piece has been thrown out of the board last turn
+            const previousBoard: FourStatePiece[][] = [
+                [N, N, N, N, _, _, _, _, _],
+                [N, N, N, _, _, _, _, _, _],
+                [N, N, _, _, _, _, _, _, _],
+                [N, _, _, _, _, _, _, _, _],
+                [X, X, O, O, O, _, _, _, _],
+                [_, _, _, _, _, _, _, _, N],
+                [_, _, _, _, _, _, _, N, N],
+                [O, O, O, O, O, O, N, N, N],
+                [_, O, O, O, O, N, N, N, N],
+            ];
+            const previousState: AbaloneState = new AbaloneState(previousBoard, 0);
+            const previousMove: AbaloneMove = AbaloneMove.ofSingleCoord(new Coord(4, 4), HexaDirection.LEFT);
+            const board: FourStatePiece[][] = [
+                [N, N, N, N, _, _, _, _, _],
+                [N, N, N, _, _, _, _, _, _],
+                [N, N, _, _, _, _, _, _, _],
+                [N, _, _, _, _, _, _, _, _],
+                [X, O, O, O, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, N],
+                [_, _, _, _, _, _, _, N, N],
+                [O, O, O, O, O, O, N, N, N],
+                [_, O, O, O, O, N, N, N, N],
+            ];
+            const state: AbaloneState = new AbaloneState(board, 1);
+
+            // When displaying it
+            await testUtils.setupState(state, { previousState, previousMove });
+
+            // Then a "captured" square with the pushed-out piece should be shown
+            testUtils.expectElementToHaveClass('#space_-1_4', 'captured-fill');
+            testUtils.expectElementToHaveClass('#piece_-1_4', 'player1-fill');
+        }));
+
+        it('should show suicidal-translation fallen pieces', fakeAsync(async() => {
+            // Given any board where one or several pieces has been thrown out of the board last turn by their owner
+            const previousBoard: FourStatePiece[][] = [
+                [N, N, N, N, _, _, _, _, _],
+                [N, N, N, _, _, _, _, _, _],
+                [N, N, _, _, _, _, _, _, _],
+                [N, _, _, _, _, _, _, _, _],
+                [X, X, O, O, O, _, _, _, _],
+                [_, _, _, _, _, _, _, _, N],
+                [_, _, _, _, _, _, _, N, N],
+                [O, O, O, O, O, O, N, N, N],
+                [_, O, O, O, O, N, N, N, N],
+            ];
+            const previousState: AbaloneState = new AbaloneState(previousBoard, 1);
+            const previousMove: AbaloneMove =
+                AbaloneMove.ofDoubleCoord(new Coord(1, 8), new Coord(3, 8), HexaDirection.DOWN);
+            const board: FourStatePiece[][] = [
+                [N, N, N, N, _, _, _, _, _],
+                [N, N, N, _, _, _, _, _, _],
+                [N, N, _, _, _, _, _, _, _],
+                [N, _, _, _, _, _, _, _, _],
+                [X, X, O, O, O, _, _, _, _],
+                [_, _, _, _, _, _, _, _, N],
+                [_, _, _, _, _, _, _, N, N],
+                [O, O, O, O, O, O, N, N, N],
+                [_, _, _, _, O, N, N, N, N],
+            ];
+            const state: AbaloneState = new AbaloneState(board, 2);
+
+            // When displaying it
+            await testUtils.setupState(state, { previousState, previousMove });
+
+            // Then a "captured" square with the pushed-out piece should be shown
+            testUtils.expectElementToHaveClass('#space_1_9', 'captured-fill');
+            testUtils.expectElementToHaveClass('#piece_1_9', 'player1-fill');
+            testUtils.expectElementToHaveClass('#space_2_9', 'captured-fill');
+            testUtils.expectElementToHaveClass('#piece_2_9', 'player1-fill');
+            testUtils.expectElementToHaveClass('#space_3_9', 'captured-fill');
+            testUtils.expectElementToHaveClass('#piece_3_9', 'player1-fill');
+        }));
+
     });
 
 });

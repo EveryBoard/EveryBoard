@@ -121,7 +121,7 @@ export class YinshComponent extends HexagonalGameComponent<YinshRules,
             }
             this.viewInfo.spaceInfo[coord.y][coord.x] = {
                 coord,
-                coordinates: this.getHexaPointsAt(coord),
+                coordinates: this.getHexaPoints(),
                 center: this.getCenterAt(coord),
                 spaceClasses: [],
                 markerClasses: [],

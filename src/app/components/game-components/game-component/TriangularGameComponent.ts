@@ -32,14 +32,14 @@ export abstract class TriangularGameComponent<R extends SuperRules<M, S, C, L>,
         const strings: string[] = coords.map((c: Coord) => c.x + ',' + c.y);
         return strings.reduce((sum: string, last: string) => sum + ',' + last);
     }
-    public getTriangleTranslateCoord(x: number, y: number): Coord {
-        const translateX: number = 0.5 * x * this.SPACE_SIZE;
-        const translateY: number = y * this.SPACE_SIZE;
-        return new Coord(translateX, translateY);
+    public getTriangleTranslationCoord(x: number, y: number): Coord {
+        const translationX: number = 0.5 * x * this.SPACE_SIZE;
+        const translationY: number = y * this.SPACE_SIZE;
+        return new Coord(translationX, translationY);
     }
-    public getTriangleTranslate(x: number, y: number): string {
-        const translate: Coord = this.getTriangleTranslateCoord(x, y);
-        return 'translate(' + translate.x + ', ' + translate.y + ')';
+    public getTriangleTranslation(x: number, y: number): string {
+        const translation: Coord = this.getTriangleTranslationCoord(x, y);
+        return 'translate(' + translation.x + ', ' + translation.y + ')';
     }
     private getDownwardCoordinate(): Coord[] {
         const left: number = - this.SPACE_SIZE / 2;
