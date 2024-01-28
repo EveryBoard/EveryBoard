@@ -257,6 +257,7 @@ jobs:
           if [ $result == true ]; then
             npm install @angular-devkit/architect
             npx ng deploy --base-href=/ --repo=https://github.com/EveryBoard/master --cname=everyboard.org --message="Deployment from action (commit $GITHUB_SHA)" --name acieroid --email 'everyboard@everyboard.org'
+            # TODO: adapt like for netlify
             ssh-add - <<< "$SSH_KEY"
             cat > service-account.json <<< "$SERVICE_ACCOUNT_MASTER"
             cd backend && make && make deploy target=master user=$SSH_USER server=$SSH_SERVER port=$SSH_PORT listen-port=8003
@@ -334,9 +335,9 @@ jobs:
             npm run build:netlify
             npm install netlify-cli
             netlify deploy --dir=dist/everyboard --alias="$GITHUB_HEAD_REF" --message="Deployment from github ($GITHUB_HEAD_REF, commit $GITHUB_SHA)"
-            ssh-add - <<< "$SSH_KEY"
-            cat > service-account.json <<< "$SERVICE_ACCOUNT"
-            cd backend && make && make deploy target=test user=$SSH_USER server=$SSH_SERVER port=$SSH_PORT listen-port=8001 service-account=$SERVICE ACCOUNT
+            cat > ~/.ssh/id_rsa <<< "$SSH_KEY"
+            cat > backend/service-account.json <<< "$SERVICE_ACCOUNT"
+            cd backend && make && make deploy target=test user=$SSH_USER server=$SSH_SERVER port=$SSH_PORT listen-port=8001
           fi
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
