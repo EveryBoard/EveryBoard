@@ -247,7 +247,13 @@ export abstract class MancalaComponent<R extends MancalaRules>
     }
 
     public override hideLastMove(): void {
-        this.captured = TableUtils.create(6, 2, 0);
+        let width: number;
+        if (this.config.isPresent()) {
+            width = this.config.get().width;
+        } else {
+            width = 6;
+        }
+        this.captured = TableUtils.create(width, 2, 0);
         this.filledCoords = [];
         this.lastDistributedHouses = [];
         this.changeVisibleState(this.getState());
