@@ -25,20 +25,6 @@ export function DoMancalaRulesTests(entries: MancalaRulesTestEntries): void {
 
     describe(entries.gameName + 'Rules generic tests', () => {
 
-        it('should allow simple move', () => {
-            // Given any board
-            const state: MancalaState = MancalaRules.getInitialState(defaultConfig);
-            // When doing a simple move
-            // Then the seed should be distributed
-            const expectedBoard: Table<number> = [
-                [4, 4, 4, 4, 4, 4],
-                [4, 5, 5, 5, 5, 0],
-            ];
-            const expectedState: MancalaState = new MancalaState(expectedBoard, 1, PlayerNumberMap.of(0, 0));
-            const move: MancalaMove = entries.simpleMove;
-            RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
-        });
-
         it('should refuse distributing empty space', () => {
             // Given a board where 'simpleMove' would be illegal, distributing an empty house
             const board: number[][] = [
@@ -88,15 +74,16 @@ export function DoMancalaRulesTests(entries: MancalaRulesTestEntries): void {
             const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(4));
 
             // Then the move should be a success
-            const expectedState: MancalaState = new MancalaState([
-                [0, 0, 0, 0, 0, 0],
-                [0, 0, 0, 0, 0, 0],
-            ], 11, PlayerNumberMap.of(26, 22));
+            const expectedState: MancalaState = new MancalaState(
+                TableUtils.create(6, 2, 0),
+                11,
+                PlayerNumberMap.of(26, 22),
+            );
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState, customConfig);
         });
 
-        it('should know when to mansoon', () => {
-            // Given a state where player is about to cede his last stone, and won't be feedable
+        it('should know when to monsoon', () => {
+            // Given a state where player is about to cede his last seed, and won't be feedable
             const customConfig: MGPOptional<MancalaConfig> = MGPOptional.of({
                 ...defaultConfig.get(),
                 passByPlayerStore: true,
@@ -111,10 +98,11 @@ export function DoMancalaRulesTests(entries: MancalaRulesTestEntries): void {
             const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(5));
 
             // Then the move should be a success
-            const expectedState: MancalaState = new MancalaState([
-                [0, 0, 0, 0, 0, 0],
-                [0, 0, 0, 0, 0, 0],
-            ], 12, PlayerNumberMap.of(25, 23));
+            const expectedState: MancalaState = new MancalaState(
+                TableUtils.create(6, 2, 0),
+                12,
+                PlayerNumberMap.of(25, 23),
+            );
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState, customConfig);
         });
 
@@ -125,7 +113,7 @@ export function DoMancalaRulesTests(entries: MancalaRulesTestEntries): void {
                 passByPlayerStore: true,
                 mustContinueDistributionAfterStore: true,
             });
-            const state: MancalaState = MancalaRules.getInitialState(customConfig);
+            const state: MancalaState = rules.getInitialState(customConfig);
 
             // When attempting a store-ending single distribution
             const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(3));

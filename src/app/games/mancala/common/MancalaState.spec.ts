@@ -13,6 +13,7 @@ describe('MancalaState', () => {
             mustContinueDistributionAfterStore: true,
             mustFeed: true,
             passByPlayerStore: true,
+            continueLapUntilCaptureOrEmptyHouse: true,
             seedsByHouse: 4,
             width: 6,
         });

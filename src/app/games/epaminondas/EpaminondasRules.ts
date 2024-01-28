@@ -176,7 +176,7 @@ export class EpaminondasRules
         return resultingState;
     }
 
-    public getGameStatus(node: EpaminondasNode): GameStatus {
+    public override getGameStatus(node: EpaminondasNode, _config: MGPOptional<EpaminondasConfig>): GameStatus {
         const state: EpaminondasState = node.gameState;
         const zerosInFirstLine: number = state.countRow(Player.ZERO, 0);
         const height: number = state.getHeight();

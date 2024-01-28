@@ -105,6 +105,7 @@ describe('LascaComponent', () => {
             // Then it should show the clicked piece as 'selected'
             testUtils.expectElementToHaveClass('#square_4_4_piece_0', 'selected-stroke');
         }));
+
     });
 
     describe('second click', () => {
@@ -366,9 +367,12 @@ describe('LascaComponent', () => {
 
         it('should not show possible selections for opponent', fakeAsync(async() => {
             // Given a state
+            const state: LascaState = LascaRules.get().getInitialState();
+
             // When it is not interactive
             testUtils.getGameComponent().setInteractive(false);
-            await testUtils.setupState(LascaRules.get().getInitialState());
+            await testUtils.setupState(state);
+
             // Then it should not show possible selections
             testUtils.expectElementNotToExist('.selectable-fill');
         }));

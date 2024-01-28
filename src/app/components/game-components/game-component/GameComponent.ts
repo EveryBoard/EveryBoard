@@ -126,6 +126,8 @@ export abstract class GameComponent<R extends SuperRules<M, S, C, L>,
     // This is true when the view is interactive, e.g., to display clickable pieces
     protected interactive: boolean = false;
 
+    public animationOngoing: boolean = false;
+
     public constructor(public readonly messageDisplayer: MessageDisplayer) {
         super();
     }
