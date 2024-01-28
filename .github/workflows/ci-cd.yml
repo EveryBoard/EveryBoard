@@ -233,6 +233,8 @@ jobs:
         if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/develop' }}
         run: |
           echo "${{ secrets.FIREBASE_CONFIG_DEV }}" > src/app/firebaseConfig.ts
+      - name: Install OS dependencies
+        run: sudo apt-get install -y libev-dev
       - name: Setup dependencies (install OCaml)
         uses: ocaml/setup-ocaml@v2
         with:
