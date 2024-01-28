@@ -309,6 +309,10 @@ jobs:
         if: ${{ github.ref != 'refs/heads/master'  && github.ref != 'refs/heads/develop' }}
         run: |
           echo "${{ secrets.FIREBASE_CONFIG_TEST }}" > src/app/firebaseConfig.ts
+      - name: Setup dependencies (install OCaml)
+        uses: ocaml/setup-ocaml@v2
+        with:
+          ocaml-compiler: 5.1
       - name: Setup dependencies (install OCaml dependencies)
         run: cd backend && opam install . --deps-only --with-test
       - name: Check if push by an org member
