@@ -3,7 +3,6 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MancalaCaptureResult, MancalaDistributionResult, MancalaRules } from '../common/MancalaRules';
 import { Coord } from 'src/app/jscaip/Coord';
 import { TableUtils } from 'src/app/utils/ArrayUtils';
-import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 import { MancalaConfig } from '../common/MancalaConfig';
 import { BooleanConfig, NumberConfig, RulesConfigDescription, RulesConfigDescriptionLocalizable } from 'src/app/components/wrapper-components/rules-configuration/RulesConfigDescription';
 import { MGPValidators } from 'src/app/utils/MGPValidator';

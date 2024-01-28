@@ -495,7 +495,7 @@
         <source><x id="INTERPOLATION" equiv-text="option.name }}"/></source>
       </trans-unit>
       <trans-unit id="3272612818120648715" datatype="html">
-        <source><x id="INTERPOLATION" equiv-text="gameComponent.scores.get()[0] }}"/> points</source>
+        <source><x id="INTERPOLATION" equiv-text="gameComponent.scores.get().get(Player.ZERO) }}"/> points</source>
       </trans-unit>
       <trans-unit id="8647687729200262691" datatype="html">
         <source>Draw</source>
