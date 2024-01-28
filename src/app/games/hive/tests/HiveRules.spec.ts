@@ -34,6 +34,7 @@ describe('HiveRules', () => {
     beforeEach(() => {
         rules = HiveRules.get();
     });
+
     describe('dropping', () => {
 
         it('should allow first player to drop any piece initially', () => {

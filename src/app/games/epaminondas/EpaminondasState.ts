@@ -1,6 +1,5 @@
 import { GameStateWithTable } from 'src/app/jscaip/GameStateWithTable';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { Coord } from 'src/app/jscaip/Coord';
 
 export class EpaminondasState extends GameStateWithTable<PlayerOrNone> {
 

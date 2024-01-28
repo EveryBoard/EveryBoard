@@ -3,7 +3,6 @@ import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { TaflPawn } from './TaflPawn';
 import { RelativePlayer } from 'src/app/jscaip/RelativePlayer';
 import { GameStateWithTable } from 'src/app/jscaip/GameStateWithTable';
-import { Table } from 'src/app/utils/ArrayUtils';
 
 export class TaflState extends GameStateWithTable<TaflPawn> {
 

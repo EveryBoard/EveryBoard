@@ -76,11 +76,6 @@ jobs:
           path: coverage/
       - name: Check coverage
         run: python ./scripts/coverage.py check
-      - name: Archive code coverage results
-        uses: actions/upload-artifact@v3
-        with:
-          name: code-coverage-report
-          path: coverage/
 
   e2e:
     runs-on: ubuntu-latest

@@ -3,7 +3,6 @@ import { Encoder } from 'src/app/utils/Encoder';
 import { MoveCoord } from 'src/app/jscaip/MoveCoord';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Utils } from 'src/app/utils/utils';
-import { EpaminondasState } from './EpaminondasState';
 
 type EpaminondasMoveFields = [Coord, number, number, Direction];
 
