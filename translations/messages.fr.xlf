@@ -1261,13 +1261,9 @@
         <source>Big sowing</source>
         <target>Gros égrénage</target>
       </trans-unit>
-      <trans-unit id="436684043682883572" datatype="html">
-        <source>When there are enough seeds to make a full turn, something else happens.&lt;br/&gt;&lt;br/&gt;
-        You&apos;re playing Dark.
-        Sow the house that contains 12 seeds.</source>
-        <target>Quand il y a assez de graines pour faire un tour complet, quelque chose d’autre se passe.&lt;br/&gt;&lt;br/&gt;
-        Vous jouez Foncé.
-        Distribuez la maison qui contient 12 graines.</target>
+      <trans-unit id="6143584678937647226" datatype="html">
+        <source>When there are enough seeds to make a full turn, something else happens.&lt;br/&gt;&lt;br/&gt; You&apos;re playing Dark. Sow the house that contains 12 seeds.</source>
+        <target>Quand il y a assez de graines pour faire un tour complet, quelque chose d’autre se passe.&lt;br/&gt;&lt;br/&gt; Vous jouez Foncé. Distribuez la maison qui contient 12 graines.</target>
       </trans-unit>
       <trans-unit id="498712253814253582" datatype="html">
         <source>See, the house that you sowed has not been refilled, and the sowing immediately continued to the next house (which therefore contains two seeds).</source>

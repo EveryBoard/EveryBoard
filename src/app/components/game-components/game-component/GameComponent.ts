@@ -18,6 +18,7 @@ import { AI, AIOptions } from 'src/app/jscaip/AI/AI';
 import { EmptyRulesConfig, RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 import { GameInfo } from '../../normal-component/pick-game/pick-game.component';
 import { Coord } from 'src/app/jscaip/Coord';
+import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 
 abstract class BaseComponent {
 
@@ -100,7 +101,7 @@ export abstract class GameComponent<R extends SuperRules<M, S, C, L>,
 
     public canPass: boolean = false;
 
-    public scores: MGPOptional<readonly [number, number]> = MGPOptional.empty();
+    public scores: MGPOptional<PlayerNumberMap> = MGPOptional.empty();
 
     public imagesLocation: string = 'assets/images/';
 
@@ -138,7 +139,7 @@ export abstract class GameComponent<R extends SuperRules<M, S, C, L>,
     public setPointOfView(pointOfView: Player): void {
         this.pointOfView = pointOfView;
         if (this.hasAsymmetricBoard) {
-            this.rotation = 'rotate(' + (pointOfView.value * 180) + ')';
+            this.rotation = 'rotate(' + (pointOfView.getValue() * 180) + ')';
         }
     }
 

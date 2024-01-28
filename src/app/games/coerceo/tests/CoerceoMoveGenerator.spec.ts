@@ -3,6 +3,7 @@ import { CoerceoState } from '../CoerceoState';
 import { CoerceoNode, CoerceoRules } from '../CoerceoRules';
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
 import { CoerceoMoveGenerator } from '../CoerceoMoveGenerator';
+import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 const _: FourStatePiece = FourStatePiece.EMPTY;
@@ -32,7 +33,7 @@ describe('CoerceoMoveGenerator', () => {
             [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
             [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
         ];
-        const state: CoerceoState = new CoerceoState(board, 0, [2, 0], [0, 0]);
+        const state: CoerceoState = new CoerceoState(board, 0, PlayerNumberMap.of(2, 0), PlayerNumberMap.of(0, 0));
         const node: CoerceoNode = new CoerceoNode(state);
         expect(moveGenerator.getListMoves(node, defaultConfig).length).toBe(3);
     });

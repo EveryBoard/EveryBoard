@@ -92,7 +92,7 @@ export class AwaleRules extends MancalaRules {
             resultingState: state, // Apply no capture
             captureMap: TableUtils.create(state.getWidth(), 2, 0),
         };
-        if (y === player.value) {
+        if (y === player.getValue()) {
             const captureResult: MancalaCaptureResult = this.capture(x, y, state, config);
             const isStarving: boolean = MancalaRules.isStarving(player.getOpponent(),
                                                                 captureResult.resultingState.board);

@@ -12,6 +12,7 @@ import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { MancalaDistribution, MancalaMove } from '../../common/MancalaMove';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MancalaComponent } from '../../common/MancalaComponent';
+import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 
 describe('BaAwaComponent', () => {
 
@@ -44,7 +45,7 @@ describe('BaAwaComponent', () => {
             state: new MancalaState([
                 [7, 1, 6, 1, 6, 6],
                 [2, 6, 6, 1, 0, 6],
-            ], 1, [0, 0]),
+            ], 1, PlayerNumberMap.of(0, 0)),
             move: MancalaMove.of(MancalaDistribution.of(0)),
             result: [
                 { x: 1, y: 0, content: { mainContent: ' 2 ', secondaryContent: ' +1 ' } },
@@ -60,7 +61,7 @@ describe('BaAwaComponent', () => {
             state: new MancalaState([
                 [0, 0, 0, 0, 0, 1],
                 [0, 0, 0, 5, 6, 0],
-            ], 121, [0, 0]),
+            ], 121, PlayerNumberMap.of(0, 0)),
             move: MancalaMove.of(MancalaDistribution.of(5)),
             result: [
                 { x: 3, y: 1, content: { mainContent: ' 0 ', secondaryContent: ' -5 ' } },
@@ -72,7 +73,7 @@ describe('BaAwaComponent', () => {
             state: new MancalaState([
                 [3, 1, 4, 4, 4, 4],
                 [3, 1, 4, 4, 4, 4],
-            ], 0, [0, 0]),
+            ], 0, PlayerNumberMap.of(0, 0)),
             move: MancalaMove.of(MancalaDistribution.of(1)),
             result: [{ x: 0, y: 1, content: { mainContent: ' 0 ', secondaryContent: ' -4 ' } }],
         },
@@ -80,7 +81,7 @@ describe('BaAwaComponent', () => {
             state: new MancalaState([
                 [7, 1, 6, 1, 6, 6],
                 [2, 6, 6, 1, 0, 6],
-            ], 0, [0, 0]),
+            ], 0, PlayerNumberMap.of(0, 0)),
             move: MancalaMove.of(MancalaDistribution.of(0)),
             result: [
                 { x: 3, y: 1, content: { mainContent: ' 0 ', secondaryContent: ' -4 ' } },
@@ -102,7 +103,7 @@ describe('BaAwaComponent', () => {
                 const state: MancalaState = new MancalaState([
                     [0, 0, 0, 8, 0, 0],
                     [3, 2, 1, 0, 0, 0],
-                ], 0, [0, 0]);
+                ], 0, PlayerNumberMap.of(0, 0));
                 await mancalaTestUtils.testUtils.setupState(state);
                 const element: DebugElement = mancalaTestUtils.testUtils.findElement('#click_1_1');
                 expect(element).withContext('Element "#click_1_1" should exist').toBeTruthy();
@@ -153,7 +154,7 @@ describe('BaAwaComponent', () => {
             const state: MancalaState = new MancalaState([
                 [0, 0, 8, 0, 0, 0],
                 [1, 0, 1, 1, 1, 0],
-            ], 10, [0, 0]);
+            ], 10, PlayerNumberMap.of(0, 0));
             await testUtils.setupState(state, { config: customConfig });
             await testUtils.expectClickSuccess('#click_0_1');
             tick(100);
@@ -166,7 +167,7 @@ describe('BaAwaComponent', () => {
             const expectedState: MancalaState = new MancalaState([
                 [0, 0, 8, 0, 0, 0],
                 [0, 1, 0, 1, 1, 0],
-            ], 11, [1, 0]);
+            ], 11, PlayerNumberMap.of(1, 0));
             const actualState: MancalaState = testUtils.getGameComponent().getState();
             expect(actualState).toEqual(expectedState);
         }));

@@ -17,6 +17,7 @@ import { MCTS } from 'src/app/jscaip/AI/MCTS';
 import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 import { LodestoneMoveGenerator } from './LodestoneMoveGenerator';
 import { LodestoneScoreHeuristic } from './LodestoneScoreHeuristic';
+import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 import { Minimax } from 'src/app/jscaip/AI/Minimax';
 import { Utils } from 'src/app/utils/utils';
 import { ViewBox } from 'src/app/components/game-components/GameComponentUtils';
@@ -150,10 +151,9 @@ export class LodestoneComponent
             new MCTS($localize`MCTS`, new LodestoneMoveGenerator(), this.rules),
         ];
         this.encoder = LodestoneMove.encoder;
-        this.scores = MGPOptional.of([0, 0]);
-
         this.PIECE_RADIUS = (this.SPACE_SIZE - (2 * this.STROKE_WIDTH)) * 0.5;
         this.displayedState = this.getState();
+        this.scores = MGPOptional.of(PlayerNumberMap.of(0, 0));
     }
 
     public getViewBox(): ViewBox {

@@ -7,6 +7,7 @@ import { assert } from 'src/app/utils/assert';
 import { MGPMap } from 'src/app/utils/MGPMap';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { LodestoneCaptures } from './LodestoneMove';
+import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 import { Utils } from 'src/app/utils/utils';
 
 /**
@@ -198,25 +199,25 @@ export class LodestoneState extends GameStateWithTable<LodestonePiece> {
         return remaining;
     }
 
-    public numberOfPieces(): [number, number] {
-        const playerPieces: [number, number] = [0, 0];
+    public numberOfPieces(): PlayerNumberMap {
+        const playerPieces: PlayerNumberMap = PlayerNumberMap.of(0, 0);
         for (let y: number = 0; y < LodestoneState.SIZE; y++) {
             for (let x: number = 0; x < LodestoneState.SIZE; x++) {
                 const piece: LodestonePiece = this.getPieceAtXY(x, y);
                 if (piece.isPlayerPiece()) {
-                    playerPieces[piece.owner.value] += 1;
+                    playerPieces.add(piece.owner, 1);
                 }
             }
         }
         return playerPieces;
     }
 
-    public getScores(): [number, number] {
-        const remainingPieces: [number, number] = this.numberOfPieces();
-        return [
-            LodestoneState.NUMBER_OF_PIECES - remainingPieces[1],
-            LodestoneState.NUMBER_OF_PIECES - remainingPieces[0],
-        ];
+    public getScores(): PlayerNumberMap {
+        const remainingPieces: PlayerNumberMap = this.numberOfPieces();
+        return PlayerNumberMap.of(
+            LodestoneState.NUMBER_OF_PIECES - remainingPieces.get(Player.ONE),
+            LodestoneState.NUMBER_OF_PIECES - remainingPieces.get(Player.ZERO),
+        );
     }
 
     public nextLodestoneDirection(): MGPOptional<LodestoneDirection> {

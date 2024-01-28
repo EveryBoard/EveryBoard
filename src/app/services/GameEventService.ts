@@ -19,9 +19,11 @@ export class GameEventService {
     private eventsCollection(partId: string): IFirestoreDAO<GameEvent> {
         return this.partDAO.subCollectionDAO<GameEvent>(partId, 'events');
     }
+
     private addEvent(partId: string, event: GameEvent): Promise<string> {
         return this.eventsCollection(partId).create(event);
     }
+
     public addMove(partId: string, user: MinimalUser, move: JSONValue): Promise<string> {
         return this.addEvent(partId, {
             eventType: 'Move',
@@ -30,6 +32,7 @@ export class GameEventService {
             move,
         });
     }
+
     public addRequest(partId: string, user: MinimalUser, requestType: RequestType): Promise<string> {
         return this.addEvent(partId, {
             eventType: 'Request',
@@ -38,6 +41,7 @@ export class GameEventService {
             requestType,
         });
     }
+
     public addReply(partId: string,
                     user: MinimalUser,
                     reply: Reply,
@@ -54,6 +58,7 @@ export class GameEventService {
             data,
         });
     }
+
     public addAction(partId: string, user: MinimalUser, action: Action): Promise<string> {
         return this.addEvent(partId, {
             eventType: 'Action',
@@ -62,9 +67,11 @@ export class GameEventService {
             action,
         });
     }
+
     public startGame(partId: string, user: MinimalUser): Promise<string> {
         return this.addAction(partId, user, 'StartGame');
     }
+
     public subscribeToEvents(partId: string, callback: (events: GameEvent[]) => void): Subscription {
         const internalCallback: FirestoreCollectionObserver<GameEvent> = new FirestoreCollectionObserver(
             (events: FirestoreDocument<GameEvent>[]) => {
@@ -90,4 +97,5 @@ export class GameEventService {
             });
         return this.eventsCollection(partId).observingWhere([], internalCallback, 'time');
     }
+
 }

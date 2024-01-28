@@ -1,4 +1,5 @@
 import { MancalaState } from '../MancalaState';
+import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 
 describe('MancalaState', () => {
 
@@ -7,7 +8,7 @@ describe('MancalaState', () => {
         const state: MancalaState = new MancalaState([
             [0, 0, 0, 0, 0, 0],
             [0, 0, 0, 0, 0, 0],
-        ], 0, [0, 0]);
+        ], 0, PlayerNumberMap.of(0, 0));
         // and state with different board
         const differentBoard: MancalaState = new MancalaState([
             [1, 2, 3, 4, 5, 6],
@@ -15,7 +16,7 @@ describe('MancalaState', () => {
         ], state.turn, state.scores);
         // and a state with different scores
         const differentScore: MancalaState =
-            new MancalaState(state.board, state.turn, [28, 52]);
+            new MancalaState(state.board, state.turn, PlayerNumberMap.of(28, 52));
         // and a state with a different turn
         const differentTurn: MancalaState =
             new MancalaState(state.board, state.turn + 1, state.scores);

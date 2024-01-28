@@ -4,6 +4,7 @@ import { MancalaTutorial } from '../common/MancalaTutorial';
 import { MancalaConfig } from '../common/MancalaConfig';
 import { MancalaDistribution, MancalaMove } from '../common/MancalaMove';
 import { AwaleRules } from './AwaleRules';
+import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { TutorialStepMessage } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
 
@@ -27,13 +28,11 @@ export class AwaleTutorial extends Tutorial {
 
         TutorialStep.anyMove(
             $localize`Big sowing`,
-            $localize`When there are enough seeds to make a full turn, something else happens.<br/><br/>
-        You're playing Dark.
-        Sow the house that contains 12 seeds.`,
+            $localize`When there are enough seeds to make a full turn, something else happens.<br/><br/> You're playing Dark. Sow the house that contains 12 seeds.`,
             new MancalaState([
                 [0, 0, 0, 0, 0, 0],
                 [0, 12, 0, 0, 0, 0],
-            ], 0, [0, 0]),
+            ], 0, PlayerNumberMap.of(0, 0)),
             MancalaMove.of(MancalaDistribution.of(1)),
             $localize`See, the house that you sowed has not been refilled, and the sowing immediately continued to the next house (which therefore contains two seeds).`,
         ),
@@ -43,7 +42,7 @@ export class AwaleTutorial extends Tutorial {
             new MancalaState([
                 [0, 1, 0, 0, 1, 0],
                 [2, 0, 0, 0, 1, 0],
-            ], 0, [0, 0]),
+            ], 0, PlayerNumberMap.of(0, 0)),
             [MancalaMove.of(MancalaDistribution.of(0))],
             $localize`Well done! This was a simple capture, now let us see how to make multiple captures.`,
             MancalaTutorial.YOU_DID_NOT_CAPTURE_ANY_SEEDS(),
@@ -54,7 +53,7 @@ export class AwaleTutorial extends Tutorial {
             new MancalaState([
                 [2, 1, 0, 0, 1, 0],
                 [2, 0, 0, 0, 1, 0],
-            ], 0, [0, 0]),
+            ], 0, PlayerNumberMap.of(0, 0)),
             [MancalaMove.of(MancalaDistribution.of(0))],
             $localize`Nice, you win 3 points from the first house, and 2 from the second!`,
             MancalaTutorial.YOU_DID_NOT_CAPTURE_ANY_SEEDS(),
@@ -65,7 +64,7 @@ export class AwaleTutorial extends Tutorial {
             new MancalaState([
                 [1, 0, 1, 0, 0, 1],
                 [3, 0, 0, 0, 1, 0],
-            ], 0, [0, 0]),
+            ], 0, PlayerNumberMap.of(0, 0)),
             [MancalaMove.of(MancalaDistribution.of(0))],
             $localize`Notice that because the second house was not capturable, the capture was interrupted and you have not captured the first house.`,
             MancalaTutorial.YOU_DID_NOT_CAPTURE_ANY_SEEDS(),
@@ -76,7 +75,7 @@ export class AwaleTutorial extends Tutorial {
             new MancalaState([
                 [2, 2, 0, 0, 1, 0],
                 [1, 3, 0, 0, 0, 0],
-            ], 0, [0, 0]),
+            ], 0, PlayerNumberMap.of(0, 0)),
             [MancalaMove.of(MancalaDistribution.of(1))],
             $localize`Congratulations! Notice that the capture was interrupted when entering your territory: you cannot capture your own houses!`,
             $localize`You have only captured one house, try again!`,
@@ -87,7 +86,7 @@ export class AwaleTutorial extends Tutorial {
             new MancalaState([
                 [1, 1, 1, 1, 1, 0],
                 [5, 0, 0, 1, 0, 0],
-            ], 0, [0, 0]),
+            ], 0, PlayerNumberMap.of(0, 0)),
             [MancalaMove.of(MancalaDistribution.of(0))],
             $localize`Sadly, you cannot capture here, otherwise the opponent could not play after you. When this happens, the move can be made, but no capture takes place!`,
             TutorialStepMessage.FAILED_TRY_AGAIN(),
@@ -98,7 +97,7 @@ export class AwaleTutorial extends Tutorial {
             new MancalaState([
                 [0, 0, 0, 0, 0, 0],
                 [0, 1, 2, 4, 4, 5],
-            ], 0, [0, 0]),
+            ], 0, PlayerNumberMap.of(0, 0)),
             MancalaMove.of(MancalaDistribution.of(3)),
             $localize`Congratulations! Note that you can choose to give your opponent the least number of seeds if it is better for you. It is often a good way to have easy captures!`,
         ),
@@ -108,7 +107,7 @@ export class AwaleTutorial extends Tutorial {
             new MancalaState([
                 [4, 4, 3, 2, 1, 0],
                 [1, 0, 0, 0, 0, 0],
-            ], 0, [23, 10]),
+            ], 0, PlayerNumberMap.of(23, 10)),
             MancalaMove.of(MancalaDistribution.of(0)),
             $localize`Also, as soon as on player cannot play, the other player captures all the seeds in its own side. Here, it was the first player's turn, and the second player has taken all the remaining seeds.`,
         ),

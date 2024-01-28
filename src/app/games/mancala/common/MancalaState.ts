@@ -1,7 +1,8 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { GameStateWithTable } from 'src/app/jscaip/GameStateWithTable';
 import { Player } from 'src/app/jscaip/Player';
-import { ArrayUtils, Table, TableUtils } from 'src/app/utils/ArrayUtils';
+import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
+import { Table, TableUtils } from 'src/app/utils/ArrayUtils';
 
 export class MancalaState extends GameStateWithTable<number> {
 
@@ -13,7 +14,7 @@ export class MancalaState extends GameStateWithTable<number> {
 
     public constructor(b: Table<number>,
                        turn: number,
-                       public readonly scores: readonly [number, number])
+                       public readonly scores: PlayerNumberMap)
     {
         super(b, turn);
     }
@@ -23,8 +24,8 @@ export class MancalaState extends GameStateWithTable<number> {
     }
 
     public feedStore(player: Player): MancalaState {
-        const newScore: [number, number] = this.getScoresCopy();
-        newScore[player.value] += 1;
+        const newScore: PlayerNumberMap = this.getScoresCopy();
+        newScore.add(player, 1);
         return new MancalaState(this.getCopiedBoard(),
                                 this.turn,
                                 newScore);
@@ -43,8 +44,8 @@ export class MancalaState extends GameStateWithTable<number> {
         return TableUtils.sum(this.board);
     }
 
-    public getScoresCopy(): [number, number] {
-        return [this.scores[0], this.scores[1]];
+    public getScoresCopy(): PlayerNumberMap {
+        return this.scores.getCopy();
     }
 
     /**
@@ -54,8 +55,8 @@ export class MancalaState extends GameStateWithTable<number> {
      */
     public capture(player: Player, coord: Coord): MancalaState {
         const capturedSeeds: number = this.getPieceAt(coord);
-        const newScores: [number, number] = this.getScoresCopy();
-        newScores[player.value] += capturedSeeds;
+        const newScores: PlayerNumberMap = this.getScoresCopy();
+        newScores.add(player, capturedSeeds);
         const result: MancalaState = new MancalaState(this.getCopiedBoard(),
                                                       this.turn,
                                                       newScores);
@@ -64,16 +65,16 @@ export class MancalaState extends GameStateWithTable<number> {
 
     public equals(other: MancalaState): boolean {
         if (TableUtils.compare(this.board, other.board) === false) return false;
-        if (ArrayUtils.equals(this.scores, other.scores) === false) return false;
+        if (this.scores.equals(other.scores) === false) return false;
         return this.turn === other.turn;
     }
 
     public getCurrentPlayerY(): number {
-        return this.getCurrentOpponent().value;
+        return this.getCurrentOpponent().getValue();
     }
 
     public getOpponentY(): number {
-        return this.getCurrentPlayer().value;
+        return this.getCurrentPlayer().getValue();
     }
 
 }

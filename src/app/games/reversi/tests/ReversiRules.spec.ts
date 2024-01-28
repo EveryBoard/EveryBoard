@@ -8,6 +8,7 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { ReversiFailure } from '../ReversiFailure';
+import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 
 describe('ReversiRules', () => {
 
@@ -51,7 +52,7 @@ describe('ReversiRules', () => {
         const expectedState: ReversiState = new ReversiState(expectedBoard, 1);
         node = new ReversiNode(expectedState);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
-        expect(node.gameState.countScore()).toEqual([4, 1]);
+        expect(node.gameState.countScore()).toEqual(PlayerNumberMap.of(4, 1));
     });
 
     it('Passing at first turn should be illegal', () => {

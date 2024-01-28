@@ -6,6 +6,7 @@ import { MancalaTutorial } from '../common/MancalaTutorial';
 import { MancalaState } from '../common/MancalaState';
 import { MancalaDistribution, MancalaMove } from '../common/MancalaMove';
 import { TutorialStepMessage } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
+import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 
 const defaultConfig: MGPOptional<BaAwaConfig> = BaAwaRules.get().getDefaultRulesConfig();
 
@@ -27,7 +28,7 @@ export class BaAwaTutorial extends Tutorial {
             new MancalaState([
                 [4, 4, 4, 4, 4, 4],
                 [4, 0, 4, 4, 4, 4],
-            ], 0, [0, 0]),
+            ], 0, PlayerNumberMap.of(0, 0)),
         ),
         TutorialStep.fromMove(
             $localize`Multiple laps sowing`,
@@ -35,7 +36,7 @@ export class BaAwaTutorial extends Tutorial {
             new MancalaState([
                 [0, 2, 4, 0, 0, 0],
                 [0, 0, 0, 5, 0, 0],
-            ], 0, [0, 0]),
+            ], 0, PlayerNumberMap.of(0, 0)),
             [MancalaMove.of(MancalaDistribution.of(3))],
             $localize`So, after landing in the house with 2 seeds (then 3), a second lap has been started.`,
             TutorialStepMessage.FAILED_TRY_AGAIN(),
@@ -46,7 +47,7 @@ export class BaAwaTutorial extends Tutorial {
             new MancalaState([
                 [0, 8, 0, 0, 0, 0],
                 [0, 0, 3, 2, 0, 0],
-            ], 0, [0, 0]),
+            ], 0, PlayerNumberMap.of(0, 0)),
             [MancalaMove.of(MancalaDistribution.of(3))],
             $localize`Congratulations, you captured 4 seeds.`,
             MancalaTutorial.YOU_DID_NOT_CAPTURE_ANY_SEEDS(),
@@ -57,7 +58,7 @@ export class BaAwaTutorial extends Tutorial {
             new MancalaState([
                 [0, 3, 0, 0, 8, 0],
                 [3, 0, 1, 0, 0, 0],
-            ], 0, [0, 0]),
+            ], 0, PlayerNumberMap.of(0, 0)),
             [MancalaMove.of(MancalaDistribution.of(0))],
             $localize`There it is, the opponent captured 4 seeds.`,
             MancalaTutorial.YOU_DID_NOT_CAPTURE_ANY_SEEDS(),
@@ -68,7 +69,7 @@ export class BaAwaTutorial extends Tutorial {
             new MancalaState([
                 [0, 1, 1, 3, 8, 0],
                 [2, 7, 2, 0, 0, 0],
-            ], 0, [0, 0]),
+            ], 0, PlayerNumberMap.of(0, 0)),
             [MancalaMove.of(MancalaDistribution.of(0))],
             $localize`Congratulations, you captured 4 seeds.`,
             MancalaTutorial.YOU_DID_NOT_CAPTURE_ANY_SEEDS(),
@@ -79,7 +80,7 @@ export class BaAwaTutorial extends Tutorial {
             new MancalaState([
                 [0, 1, 1, 3, 0, 0],
                 [1, 0, 2, 0, 0, 4],
-            ], 0, [0, 0]),
+            ], 0, PlayerNumberMap.of(0, 0)),
             [MancalaMove.of(MancalaDistribution.of(2))],
             $localize`There it is, you captured all remaining seeds.`,
             MancalaTutorial.YOU_DID_NOT_CAPTURE_ANY_SEEDS(),

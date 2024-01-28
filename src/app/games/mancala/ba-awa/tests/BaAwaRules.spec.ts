@@ -8,6 +8,7 @@ import { DoMancalaRulesTests } from '../../common/tests/GenericMancalaRulesTest.
 
 import { MancalaDistribution, MancalaMove } from '../../common/MancalaMove';
 import { BaAwaConfig } from '../BaAwaConfig';
+import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 
 describe('BaAwaRules', () => {
 
@@ -38,7 +39,7 @@ describe('BaAwaRules', () => {
                 [6, 6, 0, 1, 6, 6],
                 [6, 1, 6, 1, 7, 2],
             ];
-            const expectedState: MancalaState = new MancalaState(expectedBoard, 1, [0, 0]);
+            const expectedState: MancalaState = new MancalaState(expectedBoard, 1, PlayerNumberMap.of(0, 0));
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         });
 
@@ -48,7 +49,7 @@ describe('BaAwaRules', () => {
                 [0, 0, 0, 0, 0, 18],
                 [0, 0, 0, 0, 0, 0],
             ];
-            const state: MancalaState = new MancalaState(board, 1, [0, 0]);
+            const state: MancalaState = new MancalaState(board, 1, PlayerNumberMap.of(0, 0));
             // When performing a distribution
             const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(5));
             // Then the distribution should be performed as expected, and leave 0 seeds in the starting space
@@ -56,7 +57,7 @@ describe('BaAwaRules', () => {
                 [3, 1, 2, 0, 2, 0],
                 [1, 0, 3, 3, 0, 3],
             ];
-            const expectedState: MancalaState = new MancalaState(expectedBoard, 2, [0, 0]);
+            const expectedState: MancalaState = new MancalaState(expectedBoard, 2, PlayerNumberMap.of(0, 0));
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         });
 
@@ -66,7 +67,7 @@ describe('BaAwaRules', () => {
                 [8, 0, 0, 0, 0, 1],
                 [0, 0, 0, 0, 0, 0],
             ];
-            const state: MancalaState = new MancalaState(board, 1, [19, 20]);
+            const state: MancalaState = new MancalaState(board, 1, PlayerNumberMap.of(19, 20));
 
             // When performing a move that feeds the opponent
             const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(5));
@@ -74,7 +75,7 @@ describe('BaAwaRules', () => {
                 [8, 0, 0, 0, 0, 0],
                 [0, 0, 0, 0, 0, 1],
             ];
-            const expectedState: MancalaState = new MancalaState(expectedBoard, 2, [19, 20]);
+            const expectedState: MancalaState = new MancalaState(expectedBoard, 2, PlayerNumberMap.of(19, 20));
 
             // Then the move should be legal
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
@@ -90,14 +91,14 @@ describe('BaAwaRules', () => {
                 [0, 0, 0, 0, 0, 5],
                 [0, 0, 0, 1, 1, 2],
             ];
-            const state: MancalaState = new MancalaState(board, 1, [19, 20]);
+            const state: MancalaState = new MancalaState(board, 1, PlayerNumberMap.of(19, 20));
 
             // When player gives its last seed
             const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(5));
 
             // Then we still let that player do its last move, so they see the last move was all the same
             const expectedBoard: Table<number> = TableUtils.create(6, 2, 0);
-            const expectedState: MancalaState = new MancalaState(expectedBoard, 2, [28, 20]);
+            const expectedState: MancalaState = new MancalaState(expectedBoard, 2, PlayerNumberMap.of(28, 20));
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         });
 
@@ -111,7 +112,7 @@ describe('BaAwaRules', () => {
                 [3, 8, 0, 0, 0, 0],
                 [1, 1, 0, 0, 0, 0],
             ];
-            const state: MancalaState = new MancalaState(board, 2, [0, 0]);
+            const state: MancalaState = new MancalaState(board, 2, PlayerNumberMap.of(0, 0));
 
             // When performing a move that will capture
             const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(0));
@@ -121,7 +122,7 @@ describe('BaAwaRules', () => {
                 [0, 8, 0, 0, 0, 0],
                 [0, 1, 0, 0, 0, 0],
             ];
-            const expectedState: MancalaState = new MancalaState(expectedBoard, 3, [4, 0]);
+            const expectedState: MancalaState = new MancalaState(expectedBoard, 3, PlayerNumberMap.of(4, 0));
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         });
 
@@ -131,7 +132,7 @@ describe('BaAwaRules', () => {
                 [0, 0, 0, 0, 8, 1],
                 [0, 0, 0, 0, 1, 3],
             ];
-            const state: MancalaState = new MancalaState(board, 1, [0, 0]);
+            const state: MancalaState = new MancalaState(board, 1, PlayerNumberMap.of(0, 0));
 
             // When performing a move that will capture
             const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(5));
@@ -141,7 +142,7 @@ describe('BaAwaRules', () => {
                 [0, 0, 0, 0, 8, 0],
                 [0, 0, 0, 0, 1, 0],
             ];
-            const expectedState: MancalaState = new MancalaState(expectedBoard, 2, [0, 4]);
+            const expectedState: MancalaState = new MancalaState(expectedBoard, 2, PlayerNumberMap.of(0, 4));
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         });
 
@@ -151,7 +152,7 @@ describe('BaAwaRules', () => {
                 [3, 1, 0, 0, 0, 8],
                 [3, 1, 0, 0, 0, 0],
             ];
-            const state: MancalaState = new MancalaState(board, 2, [0, 0]);
+            const state: MancalaState = new MancalaState(board, 2, PlayerNumberMap.of(0, 0));
 
             // When performing a move that will capture
             const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(0));
@@ -161,7 +162,7 @@ describe('BaAwaRules', () => {
                 [0, 2, 1, 0, 0, 8],
                 [0, 1, 0, 0, 0, 0],
             ];
-            const expectedState: MancalaState = new MancalaState(expectedBoard, 3, [0, 4]);
+            const expectedState: MancalaState = new MancalaState(expectedBoard, 3, PlayerNumberMap.of(0, 4));
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         });
 
@@ -171,7 +172,7 @@ describe('BaAwaRules', () => {
                 [0, 0, 0, 0, 0, 8],
                 [3, 2, 0, 0, 1, 0],
             ];
-            const state: MancalaState = new MancalaState(board, 2, [0, 0]);
+            const state: MancalaState = new MancalaState(board, 2, PlayerNumberMap.of(0, 0));
 
             // When performing a move that will create a 4 in a player's house
             const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(1));
@@ -181,7 +182,7 @@ describe('BaAwaRules', () => {
                 [1, 0, 0, 0, 0, 8],
                 [0, 0, 0, 0, 1, 0],
             ];
-            const expectedState: MancalaState = new MancalaState(expectedBoard, 3, [4, 0]);
+            const expectedState: MancalaState = new MancalaState(expectedBoard, 3, PlayerNumberMap.of(4, 0));
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         });
 
@@ -191,7 +192,7 @@ describe('BaAwaRules', () => {
                 [3, 3, 0, 0, 0, 8],
                 [5, 1, 0, 0, 0, 0],
             ];
-            const state: MancalaState = new MancalaState(board, 2, [0, 0]);
+            const state: MancalaState = new MancalaState(board, 2, PlayerNumberMap.of(0, 0));
 
             // When performing a move that will capture
             const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(0));
@@ -201,7 +202,7 @@ describe('BaAwaRules', () => {
                 [0, 0, 1, 1, 1, 8],
                 [0, 1, 0, 0, 0, 0],
             ];
-            const expectedState: MancalaState = new MancalaState(expectedBoard, 3, [0, 8]);
+            const expectedState: MancalaState = new MancalaState(expectedBoard, 3, PlayerNumberMap.of(0, 8));
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         });
 
@@ -211,7 +212,7 @@ describe('BaAwaRules', () => {
                 [0, 0, 0, 0, 0, 8],
                 [3, 3, 3, 0, 0, 1],
             ];
-            const state: MancalaState = new MancalaState(board, 2, [0, 0]);
+            const state: MancalaState = new MancalaState(board, 2, PlayerNumberMap.of(0, 0));
 
             // When performing a move that will create a 4 in a player's house
             const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(2));
@@ -221,7 +222,7 @@ describe('BaAwaRules', () => {
                 [1, 0, 0, 0, 0, 8],
                 [0, 0, 0, 0, 0, 1],
             ];
-            const expectedState: MancalaState = new MancalaState(expectedBoard, 3, [8, 0]);
+            const expectedState: MancalaState = new MancalaState(expectedBoard, 3, PlayerNumberMap.of(8, 0));
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         });
 
@@ -231,14 +232,14 @@ describe('BaAwaRules', () => {
                 [0, 0, 0, 3, 3, 0],
                 [0, 0, 2, 0, 3, 1],
             ];
-            const state: MancalaState = new MancalaState(board, 0, [0, 0]);
+            const state: MancalaState = new MancalaState(board, 0, PlayerNumberMap.of(0, 0));
 
             // When the player does a would-starve move
             const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(5));
 
             // Then, the distribution should be done but not the capture
             const expectedBoard: Table<number> = TableUtils.create(6, 2, 0);
-            const expectedState: MancalaState = new MancalaState(expectedBoard, 1, [12, 0]);
+            const expectedState: MancalaState = new MancalaState(expectedBoard, 1, PlayerNumberMap.of(12, 0));
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         });
 
@@ -248,14 +249,14 @@ describe('BaAwaRules', () => {
                 [0, 0, 2, 3, 1, 0],
                 [0, 0, 2, 0, 3, 1],
             ];
-            const state: MancalaState = new MancalaState(board, 1, [0, 0]);
+            const state: MancalaState = new MancalaState(board, 1, PlayerNumberMap.of(0, 0));
 
             // When the player does the move that drops the number of piece below 8
             const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(2));
 
             // Then the monsoon should be done
             const expectedBoard: Table<number> = TableUtils.create(6, 2, 0);
-            const expectedState: MancalaState = new MancalaState(expectedBoard, 2, [8, 4]);
+            const expectedState: MancalaState = new MancalaState(expectedBoard, 2, PlayerNumberMap.of(8, 4));
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         });
 
@@ -272,7 +273,7 @@ describe('BaAwaRules', () => {
             const state: MancalaState = new MancalaState([
                 [0, 0, 5, 0, 0, 0],
                 [2, 0, 1, 0, 0, 0],
-            ], 10, [0, 0]);
+            ], 10, PlayerNumberMap.of(0, 0));
 
             // When passing by store during move
             const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(0));
@@ -281,7 +282,7 @@ describe('BaAwaRules', () => {
             const expectedState: MancalaState = new MancalaState([
                 [0, 0, 0, 0, 0, 0],
                 [0, 0, 0, 0, 0, 0],
-            ], 11, [8, 0]);
+            ], 11, PlayerNumberMap.of(8, 0));
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState, customConfig);
         });
 
@@ -292,7 +293,7 @@ describe('BaAwaRules', () => {
                 [0, 1, 2, 3, 0, 0],
                 [0, 0, 2, 0, 3, 1],
             ];
-            const state: MancalaState = new MancalaState(board, 1, [0, 0]);
+            const state: MancalaState = new MancalaState(board, 1, PlayerNumberMap.of(0, 0));
             const customConfig: MGPOptional<BaAwaConfig> = MGPOptional.of({
                 ...defaultConfig.get(),
                 splitFinalSeedsEvenly: true,
@@ -304,7 +305,7 @@ describe('BaAwaRules', () => {
             // Then the distribution should be done, Player.ONE should have captured 4 + 4 after the split
             // And Player.ZERO only have the 4 of the split
             const expectedBoard: Table<number> = TableUtils.create(6, 2, 0);
-            const expectedState: MancalaState = new MancalaState(expectedBoard, 2, [4, 8]);
+            const expectedState: MancalaState = new MancalaState(expectedBoard, 2, PlayerNumberMap.of(4, 8));
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState, customConfig);
         });
 
@@ -320,7 +321,7 @@ describe('BaAwaRules', () => {
             const state: MancalaState = new MancalaState([
                 [0, 2, 2, 10, 2, 0],
                 [2, 0, 2, 1, 1, 0],
-            ], 10, [14, 9]);
+            ], 10, PlayerNumberMap.of(14, 9));
 
             // When applying that move
             const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(3), [MancalaDistribution.of(4)]);
@@ -329,7 +330,7 @@ describe('BaAwaRules', () => {
             const expectedState: MancalaState = new MancalaState([
                 [0, 2, 2, 10, 2, 0],
                 [3, 1, 0, 1, 0, 0],
-            ], 11, [15, 9]);
+            ], 11, PlayerNumberMap.of(15, 9));
 
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState, customConfig);
         });

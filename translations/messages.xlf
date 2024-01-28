@@ -513,7 +513,7 @@
         <source>Start with this config</source>
       </trans-unit>
       <trans-unit id="5675185658977082941" datatype="html">
-        <source>Player <x id="PH" equiv-text="gameStatus.winner.value + 1"/></source>
+        <source>Player <x id="PH" equiv-text="gameStatus.winner.getValue() + 1"/></source>
       </trans-unit>
       <trans-unit id="8487548203433588213" datatype="html">
         <source><x id="PH" equiv-text="winner"/> won</source>
@@ -525,7 +525,7 @@
         <source>You lost</source>
       </trans-unit>
       <trans-unit id="1836885699974320953" datatype="html">
-        <source><x id="PH" equiv-text="this.players[gameStatus.winner.value].get()"/> (Player <x id="PH_1" equiv-text="gameStatus.winner.value + 1"/>) won</source>
+        <source><x id="PH" equiv-text="this.players[gameStatus.winner.getValue()].get()"/> (Player <x id="PH_1" equiv-text="gameStatus.winner.getValue() + 1"/>) won</source>
       </trans-unit>
       <trans-unit id="7464693809033181033" datatype="html">
         <source>The AI chose an illegal move! This is an unexpected situation that we logged, we will try to solve this as soon as possible. In the meantime, consider that you won!</source>
@@ -2104,10 +2104,8 @@
       <trans-unit id="8109801868756013772" datatype="html">
         <source>Big sowing</source>
       </trans-unit>
-      <trans-unit id="436684043682883572" datatype="html">
-        <source>When there are enough seeds to make a full turn, something else happens.&lt;br/&gt;&lt;br/&gt;
-        You&apos;re playing Dark.
-        Sow the house that contains 12 seeds.</source>
+      <trans-unit id="6143584678937647226" datatype="html">
+        <source>When there are enough seeds to make a full turn, something else happens.&lt;br/&gt;&lt;br/&gt; You&apos;re playing Dark. Sow the house that contains 12 seeds.</source>
       </trans-unit>
       <trans-unit id="498712253814253582" datatype="html">
         <source>See, the house that you sowed has not been refilled, and the sowing immediately continued to the next house (which therefore contains two seeds).</source>
