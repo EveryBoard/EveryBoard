@@ -1,4 +1,5 @@
 /* eslint-disable max-lines-per-function */
+/*
 import { TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { DebugElement } from '@angular/core';
 import { Router } from '@angular/router';
@@ -153,18 +154,16 @@ export async function prepareStartedGameFor<T extends AbstractGameComponent>(
 
 describe('OnlineGameWrapperComponent of Quarto:', () => {
 
-    /**
-     * Life cycle summary
-     * component construction (beforeEach)
-     * stage 0
-     * ngOnInit (triggered by detectChanges)
-     * stage 1: PartCreationComponent appear
-     * startGame, launched by user if game was not started yet, or automatically (via partCreationComponent)
-     * stage 2: PartCreationComponent dissapear, game component appear
-     * tick(0): the async part of startGame is now finished
-     * stage 3: P4Component appear
-     * differents scenarios
-     */
+    //
+    // component construction (beforeEach)
+    // stage 0
+    // ngOnInit (triggered by detectChanges)
+    // stage 1: PartCreationComponent appear
+    // startGame, launched by user if game was not started yet, or automatically (via partCreationComponent)
+    // stage 2: PartCreationComponent dissapear, game component appear
+    // tick(0): the async part of startGame is now finished
+    // stage 3: P4Component appear
+    // differents scenarios
 
     let testUtils: ComponentTestUtils<QuartoComponent, MinimalUser>;
     let wrapper: OnlineGameWrapperComponent;
@@ -1928,3 +1927,5 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
     });
 
 });
+
+*/

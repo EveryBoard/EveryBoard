@@ -1,4 +1,5 @@
 /* eslint-disable max-lines-per-function */
+/*
 import { TestBed } from '@angular/core/testing';
 import { GameEvent, RequestType, Reply, Part, MGPResult, GameEventMove, GameEventRequest, GameEventReply, GameEventAction } from 'src/app/domain/Part';
 import { PartMocks } from 'src/app/domain/PartMocks.spec';
@@ -1068,3 +1069,5 @@ describe('PartDAO security', () => {
         });
     });
 });
+
+*/

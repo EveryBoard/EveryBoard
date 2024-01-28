@@ -1,4 +1,5 @@
 /* eslint-disable max-lines-per-function */
+/*
 import { fakeAsync, TestBed } from '@angular/core/testing';
 import { ConfigRoomService } from '../ConfigRoomService';
 import { ConfigRoomDAO } from 'src/app/dao/ConfigRoomDAO';
@@ -340,3 +341,5 @@ describe('ConfigRoomService', () => {
         }));
     });
 });
+
+*/

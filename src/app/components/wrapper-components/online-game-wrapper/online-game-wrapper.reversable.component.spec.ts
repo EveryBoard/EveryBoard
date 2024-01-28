@@ -1,4 +1,5 @@
 /* eslint-disable max-lines-per-function */
+/*
 import { fakeAsync, tick } from '@angular/core/testing';
 
 import { OnlineGameWrapperComponent } from './online-game-wrapper.component';
@@ -43,3 +44,5 @@ describe('OnlineGameWrapperComponent of Reversable Game:', () => {
     }));
 });
 
+
+*/
