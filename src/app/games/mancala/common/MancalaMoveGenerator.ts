@@ -1,6 +1,6 @@
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { MancalaState } from '../common/MancalaState';
-import { MoveGenerator } from 'src/app/jscaip/AI';
+import { MoveGenerator } from 'src/app/jscaip/AI/AI';
 import { MancalaDistribution, MancalaMove } from '../common/MancalaMove';
 import { MancalaDistributionResult, MancalaNode, MancalaRules } from '../common/MancalaRules';
 import { MancalaConfig } from './MancalaConfig';
@@ -41,7 +41,10 @@ export class MancalaMoveGenerator extends MoveGenerator<MancalaMove, MancalaStat
     : MancalaMove[]
     {
         const moves: MancalaMove[] = [];
-        const distributionResult: MancalaDistributionResult = this.rules.distributeHouse(x, y, state, config);
+        const previousDistributionResult: MancalaDistributionResult =
+            MancalaRules.getEmptyDistributionResult(state);
+        const distributionResult: MancalaDistributionResult =
+            this.rules.distributeHouse(x, y, previousDistributionResult, config);
         const stateAfterDistribution: MancalaState = distributionResult.resultingState;
         const isStarving: boolean =
             MancalaRules.isStarving(stateAfterDistribution.getCurrentPlayer(),

@@ -11,10 +11,10 @@ import { LinesOfActionState } from './LinesOfActionState';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { MCTS } from 'src/app/jscaip/MCTS';
+import { MCTS } from 'src/app/jscaip/AI/MCTS';
 import { LinesOfActionHeuristic } from './LinesOfActionHeuristic';
 import { LinesOfActionMoveGenerator } from './LinesOfActionMoveGenerator';
-import { Minimax } from 'src/app/jscaip/Minimax';
+import { Minimax } from 'src/app/jscaip/AI/Minimax';
 
 @Component({
     selector: 'app-linesofaction',
@@ -43,6 +43,7 @@ export class LinesOfActionComponent extends RectangularGameComponent<LinesOfActi
         ];
         this.encoder = LinesOfActionMove.encoder;
     }
+
     public async onClick(x: number, y: number): Promise<MGPValidation> {
         const clickValidity: MGPValidation = await this.canUserPlay('#click_' + x + '_' + y);
         if (clickValidity.isFailure()) {
@@ -63,6 +64,7 @@ export class LinesOfActionComponent extends RectangularGameComponent<LinesOfActi
             return this.concludeMove(coord);
         }
     }
+
     private async concludeMove(coord: Coord): Promise<MGPValidation> {
         const move: MGPFallible<LinesOfActionMove> =
             LinesOfActionMove.from(this.selected.get(), coord);
@@ -72,6 +74,7 @@ export class LinesOfActionComponent extends RectangularGameComponent<LinesOfActi
             return this.cancelMove(move.getReason());
         }
     }
+
     private async select(coord: Coord): Promise<MGPValidation> {
         const piece: PlayerOrNone = this.getState().getPieceAt(coord);
         if (piece === PlayerOrNone.NONE) {
@@ -86,11 +89,13 @@ export class LinesOfActionComponent extends RectangularGameComponent<LinesOfActi
         }
         return MGPValidation.SUCCESS;
     }
+
     public async updateBoard(_triggerAnimation: boolean): Promise<void> {
         this.cancelMoveAttempt();
         this.board = this.getState().board;
         this.lastMove = this.node.previousMove;
     }
+
     public override async showLastMove(move: LinesOfActionMove): Promise<void> {
         if (this.getPreviousState().getPieceAt(move.getEnd()).isPlayer()) {
             this.captured = MGPOptional.of(move.getEnd());
@@ -98,10 +103,12 @@ export class LinesOfActionComponent extends RectangularGameComponent<LinesOfActi
             this.captured = MGPOptional.empty();
         }
     }
+
     public override cancelMoveAttempt(): void {
         this.selected = MGPOptional.empty();
         this.targets = [];
     }
+
     public getSquareClasses(x: number, y: number): string[] {
         const coord: Coord = new Coord(x, y);
 
@@ -117,6 +124,7 @@ export class LinesOfActionComponent extends RectangularGameComponent<LinesOfActi
         }
         return [];
     }
+
     public getPieceClasses(x: number, y: number): string[] {
         const content: PlayerOrNone = this.board[y][x];
         const coord: Coord = new Coord(x, y);
@@ -126,4 +134,5 @@ export class LinesOfActionComponent extends RectangularGameComponent<LinesOfActi
         }
         return classes;
     }
+
 }

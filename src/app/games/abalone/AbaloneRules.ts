@@ -1,7 +1,7 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { Direction } from 'src/app/jscaip/Direction';
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
-import { GameNode } from 'src/app/jscaip/GameNode';
+import { GameNode } from 'src/app/jscaip/AI/GameNode';
 import { Rules } from 'src/app/jscaip/Rules';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
@@ -13,6 +13,8 @@ import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
+import { Player } from 'src/app/jscaip/Player';
 
 export type AbaloneLegalityInformation = Table<FourStatePiece>;
 
@@ -75,16 +77,6 @@ export class AbaloneRules extends Rules<AbaloneMove, AbaloneState, AbaloneLegali
             }
         }
         return MGPFallible.success(newBoard);
-    }
-    public static getGameStatus(node: AbaloneNode): GameStatus {
-        const scores: [number, number] = node.gameState.getScores();
-        if (scores[0] > 5) {
-            return GameStatus.ZERO_WON;
-        } else if (scores[1] > 5) {
-            return GameStatus.ONE_WON;
-        } else {
-            return GameStatus.ONGOING;
-        }
     }
 
     public override applyLegalMove(_move: AbaloneMove,
@@ -165,6 +157,13 @@ export class AbaloneRules extends Rules<AbaloneMove, AbaloneState, AbaloneLegali
         return MGPFallible.success(newBoard);
     }
     public getGameStatus(node: AbaloneNode): GameStatus {
-        return AbaloneRules.getGameStatus(node);
+        const scores: PlayerNumberMap = node.gameState.getScores();
+        if (5 < scores.get(Player.ZERO)) {
+            return GameStatus.ZERO_WON;
+        } else if (5 < scores.get(Player.ONE)) {
+            return GameStatus.ONE_WON;
+        } else {
+            return GameStatus.ONGOING;
+        }
     }
 }

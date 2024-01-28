@@ -1,5 +1,5 @@
 import { NewGameState } from '../NewGameState';
-import { Minimax } from 'src/app/jscaip/Minimax';
+import { Minimax } from 'src/app/jscaip/AI/Minimax';
 import { NewGameMove } from '../NewGameMove';
 import { NewGameLegalityInfo, NewGameNode, NewGameRules } from '../NewGameRules';
 import { NewGameMinimax } from '../NewGameMinimax';

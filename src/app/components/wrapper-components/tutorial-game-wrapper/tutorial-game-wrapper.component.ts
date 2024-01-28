@@ -3,7 +3,7 @@ import {
     Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { GameWrapper } from 'src/app/components/wrapper-components/GameWrapper';
-import { AbstractNode, GameNode } from 'src/app/jscaip/GameNode';
+import { AbstractNode, GameNode } from 'src/app/jscaip/AI/GameNode';
 import { Move } from 'src/app/jscaip/Move';
 import { ConnectedUserService } from 'src/app/services/ConnectedUserService';
 import { Debug, Utils } from 'src/app/utils/utils';
@@ -113,6 +113,7 @@ export class TutorialGameWrapperComponent extends GameWrapper<TutorialPlayer> im
         const node: MGPFallible<AbstractNode> = this.gameComponent.rules.choose(this.gameComponent.node, move, config);
         Utils.assert(node.isSuccess(), 'It should be impossible to call onLegalUserMove with an illegal move, but got ' + node.getReasonOr(''));
         this.gameComponent.node = node.get();
+
         await this.updateBoardAndShowLastMove(false);
         this.moveAttemptMade = true;
         if (currentStep.isPredicate()) {

@@ -1,3 +1,4 @@
+import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 import { LodestoneRules } from '../LodestoneRules';
 import { LodestoneState } from '../LodestoneState';
 
@@ -9,10 +10,9 @@ describe('LodestoneState', () => {
             // Given the initial state
             const state: LodestoneState = LodestoneRules.get().getInitialState();
             // When computing the number of pieces for each player
-            const pieces: [number, number] = state.numberOfPieces();
+            const pieces: PlayerNumberMap = state.numberOfPieces();
             // Then we should have 24 for each player
-            expect(pieces[0]).toBe(24);
-            expect(pieces[1]).toBe(24);
+            expect(pieces).toEqual(PlayerNumberMap.of(24, 24));
         });
 
     });

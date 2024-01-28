@@ -1,6 +1,6 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { Orthogonal } from 'src/app/jscaip/Direction';
-import { GameNode } from 'src/app/jscaip/GameNode';
+import { GameNode } from 'src/app/jscaip/AI/GameNode';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { ConfigurableRules } from 'src/app/jscaip/Rules';
 import { QuixoConfig, QuixoState } from './QuixoState';
@@ -17,6 +17,8 @@ import { MGPMap } from 'src/app/utils/MGPMap';
 import { NumberConfig, RulesConfigDescription, RulesConfigDescriptionLocalizable } from 'src/app/components/wrapper-components/rules-configuration/RulesConfigDescription';
 import { MGPValidators } from 'src/app/utils/MGPValidator';
 import { TableUtils } from 'src/app/utils/ArrayUtils';
+import { NumberMap } from 'src/app/utils/NumberMap';
+import { PlayerMap } from 'src/app/jscaip/PlayerMap';
 
 export class QuixoNode extends GameNode<QuixoMove, QuixoState> {}
 
@@ -66,34 +68,29 @@ export class QuixoRules extends ConfigurableRules<QuixoMove, QuixoState, QuixoCo
         return horizontalCenterCoords;
     }
 
-    public static getLinesSums(state: QuixoState): {[player: number]: {[lineType: string]: MGPMap<number, number>}} {
-        const sums: {[player: number]: {[lineType: string]: MGPMap<number, number>}} = {};
-        sums[Player.ZERO.value] = {
-            columns: new MGPMap<number, number>(),
-            rows: new MGPMap<number, number>(),
-            ascendingDiagonal: new MGPMap<number, number>(),
-            descendingDiagonal: new MGPMap<number, number>(),
-        };
-        sums[Player.ONE.value] = {
-            columns: new MGPMap<number, number>(),
-            rows: new MGPMap<number, number>(),
-            ascendingDiagonal: new MGPMap<number, number>(),
-            descendingDiagonal: new MGPMap<number, number>(),
-        };
+    public static getLinesSums(state: QuixoState): PlayerMap<MGPMap<string, NumberMap<number>>> {
+        const sums: PlayerMap<MGPMap<string, NumberMap<number>>> = new MGPMap();
+        sums.set(Player.ZERO, new MGPMap([
+            { key: 'columns', value: new NumberMap<number>() },
+            { key: 'rows', value: new NumberMap<number>() },
+            { key: 'ascendingDiagonal', value: new NumberMap<number>() },
+            { key: 'descendingDiagonal', value: new NumberMap<number>() },
+        ]));
+        sums.set(Player.ONE, new MGPMap([
+            { key: 'columns', value: new NumberMap<number>() },
+            { key: 'rows', value: new NumberMap<number>() },
+            { key: 'ascendingDiagonal', value: new NumberMap<number>() },
+            { key: 'descendingDiagonal', value: new NumberMap<number>() },
+        ]));
         for (const coordAndContent of state.getCoordsAndContents()) {
             const content: PlayerOrNone = coordAndContent.content;
             const x: number = coordAndContent.coord.x;
             const y: number = coordAndContent.coord.y;
             if (content.isPlayer()) {
-                const c: number = content.value;
-                const previousColumn: number = sums[c].columns.get(x).getOrElse(0);
-                sums[c].columns.put(x, previousColumn + 1);
-                const previousRow: number = sums[c].rows.get(y).getOrElse(0);
-                sums[c].rows.put(y, previousRow + 1);
-                const previousAscendingDiagonal: number = sums[c].ascendingDiagonal.get(x + y).getOrElse(0);
-                sums[c].ascendingDiagonal.put(x + y, previousAscendingDiagonal + 1);
-                const previousDescendingDiagonal: number = sums[c].descendingDiagonal.get(x - y).getOrElse(0);
-                sums[c].descendingDiagonal.put(x - y, previousDescendingDiagonal + 1);
+                sums.get(content).get().get('columns').get().addOrSet(x, 1);
+                sums.get(content).get().get('rows').get().addOrSet(y, 1);
+                sums.get(content).get().get('ascendingDiagonal').get().addOrSet(x + y, 1);
+                sums.get(content).get().get('descendingDiagonal').get().addOrSet(x - y, 1);
             }
         }
         return sums;
@@ -103,11 +100,11 @@ export class QuixoRules extends ConfigurableRules<QuixoMove, QuixoState, QuixoCo
         return QuixoRules.QUIXO_HELPER.getVictoriousCoord(state);
     }
 
-    public static getFullestLine(playerLinesInfo: {[lineType: string]: MGPMap<number, number>}): number {
-        let linesScores: number[] = playerLinesInfo.columns.listValues();
-        linesScores = linesScores.concat(playerLinesInfo.rows.listValues());
-        linesScores = linesScores.concat(playerLinesInfo.ascendingDiagonal.listValues());
-        linesScores = linesScores.concat(playerLinesInfo.descendingDiagonal.listValues());
+    public static getFullestLine(playerLinesInfo: MGPMap<string, NumberMap<number>>): number {
+        let linesScores: number[] = playerLinesInfo.get('columns').get().listValues();
+        linesScores = linesScores.concat(playerLinesInfo.get('rows').get().listValues());
+        linesScores = linesScores.concat(playerLinesInfo.get('ascendingDiagonal').get().listValues());
+        linesScores = linesScores.concat(playerLinesInfo.get('descendingDiagonal').get().listValues());
         return Math.max(...linesScores);
     }
 

@@ -9,6 +9,7 @@ import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { Player } from 'src/app/jscaip/Player';
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
 import { TestUtils } from 'src/app/utils/tests/TestUtils.spec';
+import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 describe('CoerceoRules', () => {
@@ -44,7 +45,7 @@ describe('CoerceoRules', () => {
                 [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
                 [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
             ];
-            const state: CoerceoState = new CoerceoState(board, 1, [0, 0], [0, 0]);
+            const state: CoerceoState = new CoerceoState(board, 1, PlayerNumberMap.of(0, 0), PlayerNumberMap.of(0, 0));
             const move: CoerceoMove = movement(new Coord(0, 0), CoerceoStep.RIGHT);
             function tryAStartingCoordOutOfRange(): void {
                 rules.isLegal(move, state);
@@ -65,7 +66,7 @@ describe('CoerceoRules', () => {
                 [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
                 [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
             ];
-            const state: CoerceoState = new CoerceoState(board, 1, [0, 0], [0, 0]);
+            const state: CoerceoState = new CoerceoState(board, 1, PlayerNumberMap.of(0, 0), PlayerNumberMap.of(0, 0));
             const move: CoerceoMove = movement(new Coord(6, 6), CoerceoStep.LEFT);
             function tryALandingingCoordOutOfRange(): void {
                 rules.isLegal(move, state);
@@ -86,7 +87,7 @@ describe('CoerceoRules', () => {
                 [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
                 [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
             ];
-            const state: CoerceoState = new CoerceoState(board, 0, [0, 0], [0, 0]);
+            const state: CoerceoState = new CoerceoState(board, 0, PlayerNumberMap.of(0, 0), PlayerNumberMap.of(0, 0));
             const move: CoerceoMove = movement(new Coord(6, 6), CoerceoStep.RIGHT);
             const reason: string = RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT();
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
@@ -105,7 +106,7 @@ describe('CoerceoRules', () => {
                 [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
                 [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
             ];
-            const state: CoerceoState = new CoerceoState(board, 0, [0, 0], [0, 0]);
+            const state: CoerceoState = new CoerceoState(board, 0, PlayerNumberMap.of(0, 0), PlayerNumberMap.of(0, 0));
             const move: CoerceoMove = movement(new Coord(7, 7), CoerceoStep.UP_RIGHT);
             const reason: string = RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY();
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
@@ -124,7 +125,7 @@ describe('CoerceoRules', () => {
                 [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
                 [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
             ];
-            const state: CoerceoState = new CoerceoState(board, 1, [0, 0], [0, 0]);
+            const state: CoerceoState = new CoerceoState(board, 1, PlayerNumberMap.of(0, 0), PlayerNumberMap.of(0, 0));
             const move: CoerceoMove = movement(new Coord(6, 6), CoerceoStep.DOWN_RIGHT);
             const reason: string = RulesFailure.MUST_LAND_ON_EMPTY_SPACE();
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
@@ -155,9 +156,10 @@ describe('CoerceoRules', () => {
                 [N, N, N, N, N, N, _, _, _, N, N, N, N, N, N],
                 [N, N, N, N, N, N, O, _, _, N, N, N, N, N, N],
             ];
-            const state: CoerceoState = new CoerceoState(board, 1, [0, 0], [0, 0]);
+            const state: CoerceoState = new CoerceoState(board, 1, PlayerNumberMap.of(0, 0), PlayerNumberMap.of(0, 0));
             const move: CoerceoMove = movement(new Coord(6, 6), CoerceoStep.DOWN_RIGHT);
-            const expectedState: CoerceoState = new CoerceoState(expectedBoard, 2, [0, 0], [0, 1]);
+            const expectedState: CoerceoState =
+                new CoerceoState(expectedBoard, 2, PlayerNumberMap.of(0, 0), PlayerNumberMap.of(0, 1));
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         });
 
@@ -186,9 +188,10 @@ describe('CoerceoRules', () => {
                 [N, N, N, N, N, N, _, _, _, N, N, N, N, N, N],
                 [N, N, N, N, N, N, O, _, _, N, N, N, N, N, N],
             ];
-            const state: CoerceoState = new CoerceoState(board, 1, [0, 0], [0, 0]);
+            const state: CoerceoState = new CoerceoState(board, 1, PlayerNumberMap.of(0, 0), PlayerNumberMap.of(0, 0));
             const move: CoerceoMove = movement(new Coord(7, 5), CoerceoStep.DOWN_RIGHT);
-            const expectedState: CoerceoState = new CoerceoState(expectedBoard, 2, [0, 1], [0, 0]);
+            const expectedState: CoerceoState =
+                new CoerceoState(expectedBoard, 2, PlayerNumberMap.of(0, 1), PlayerNumberMap.of(0, 0));
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         });
 
@@ -217,9 +220,10 @@ describe('CoerceoRules', () => {
                 [N, N, N, N, N, N, X, _, X, _, _, _, N, N, N],
                 [N, N, N, N, N, N, _, _, _, N, N, N, N, N, N],
             ];
-            const state: CoerceoState = new CoerceoState(board, 1, [0, 0], [0, 0]);
+            const state: CoerceoState = new CoerceoState(board, 1, PlayerNumberMap.of(0, 0), PlayerNumberMap.of(0, 0));
             const move: CoerceoMove = movement(new Coord(8, 6), CoerceoStep.DOWN_RIGHT);
-            const expectedState: CoerceoState = new CoerceoState(expectedBoard, 2, [0, 1], [0, 1]);
+            const expectedState: CoerceoState =
+                new CoerceoState(expectedBoard, 2, PlayerNumberMap.of(0, 1), PlayerNumberMap.of(0, 1));
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         });
 
@@ -240,7 +244,7 @@ describe('CoerceoRules', () => {
                 [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
                 [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
             ];
-            const state: CoerceoState = new CoerceoState(board, 0, [0, 0], [0, 0]);
+            const state: CoerceoState = new CoerceoState(board, 0, PlayerNumberMap.of(0, 0), PlayerNumberMap.of(0, 0));
             const move: CoerceoMove = CoerceoTileExchangeMove.of(new Coord(6, 6)) as CoerceoMove;
             const reason: string = CoerceoFailure.NOT_ENOUGH_TILES_TO_EXCHANGE();
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
@@ -259,7 +263,7 @@ describe('CoerceoRules', () => {
                 [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
                 [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
             ];
-            const state: CoerceoState = new CoerceoState(board, 1, [0, 2], [0, 0]);
+            const state: CoerceoState = new CoerceoState(board, 1, PlayerNumberMap.of(0, 2), PlayerNumberMap.of(0, 0));
             const move: CoerceoMove = CoerceoTileExchangeMove.of(new Coord(6, 6)) as CoerceoMove;
             const reason: string = RulesFailure.CANNOT_SELF_CAPTURE();
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
@@ -278,7 +282,7 @@ describe('CoerceoRules', () => {
                 [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
                 [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
             ];
-            const state: CoerceoState = new CoerceoState(board, 1, [0, 2], [0, 0]);
+            const state: CoerceoState = new CoerceoState(board, 1, PlayerNumberMap.of(0, 2), PlayerNumberMap.of(0, 0));
             const move: CoerceoMove = CoerceoTileExchangeMove.of(new Coord(7, 7)) as CoerceoMove;
             const reason: string = CoerceoFailure.CANNOT_CAPTURE_FROM_EMPTY();
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
@@ -297,7 +301,7 @@ describe('CoerceoRules', () => {
                 [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
                 [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
             ];
-            const state: CoerceoState = new CoerceoState(board, 1, [0, 2], [0, 0]);
+            const state: CoerceoState = new CoerceoState(board, 1, PlayerNumberMap.of(0, 2), PlayerNumberMap.of(0, 0));
             const move: CoerceoMove = CoerceoTileExchangeMove.of(new Coord(0, 0)) as CoerceoMove;
             const reason: string = CoerceoFailure.CANNOT_CAPTURE_FROM_EMPTY();
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
@@ -328,9 +332,10 @@ describe('CoerceoRules', () => {
                 [N, N, N, N, N, N, X, _, _, N, N, N, N, N, N],
                 [N, N, N, N, N, N, _, _, O, N, N, N, N, N, N],
             ];
-            const state: CoerceoState = new CoerceoState(board, 1, [0, 2], [0, 0]);
+            const state: CoerceoState = new CoerceoState(board, 1, PlayerNumberMap.of(0, 2), PlayerNumberMap.of(0, 0));
             const move: CoerceoMove = CoerceoTileExchangeMove.of(new Coord(10, 7)) as CoerceoMove;
-            const expectedState: CoerceoState = new CoerceoState(expectedBoard, 2, [0, 0], [0, 1]);
+            const expectedState: CoerceoState =
+                new CoerceoState(expectedBoard, 2, PlayerNumberMap.of(0, 0), PlayerNumberMap.of(0, 1));
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         });
 
@@ -361,9 +366,10 @@ describe('CoerceoRules', () => {
             [N, N, N, N, N, N, X, _, _, _, _, _, N, N, N],
             [N, N, N, N, N, N, _, _, O, N, N, N, N, N, N],
         ];
-        const state: CoerceoState = new CoerceoState(board, 1, [0, 2], [0, 0]);
+        const state: CoerceoState = new CoerceoState(board, 1, PlayerNumberMap.of(0, 2), PlayerNumberMap.of(0, 0));
         const move: CoerceoMove = CoerceoTileExchangeMove.of(new Coord(10, 7)) as CoerceoMove;
-        const expectedState: CoerceoState = new CoerceoState(expectedBoard, 2, [0, 0], [0, 1]);
+        const expectedState: CoerceoState =
+            new CoerceoState(expectedBoard, 2, PlayerNumberMap.of(0, 0), PlayerNumberMap.of(0, 1));
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
     });
 
@@ -382,7 +388,8 @@ describe('CoerceoRules', () => {
                 [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
                 [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
             ];
-            const state: CoerceoState = new CoerceoState(board, 0, [0, 0], [18, 17]);
+            const state: CoerceoState =
+                new CoerceoState(board, 0, PlayerNumberMap.of(0, 0), PlayerNumberMap.of(18, 17));
             const node: CoerceoNode = new CoerceoNode(state);
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, defaultConfig);
         });
@@ -400,7 +407,8 @@ describe('CoerceoRules', () => {
                 [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
                 [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
             ];
-            const state: CoerceoState = new CoerceoState(board, 0, [0, 0], [17, 18]);
+            const state: CoerceoState =
+                new CoerceoState(board, 0, PlayerNumberMap.of(0, 0), PlayerNumberMap.of(17, 18));
             const node: CoerceoNode = new CoerceoNode(state);
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, defaultConfig);
         });

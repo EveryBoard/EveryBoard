@@ -2,7 +2,7 @@ import { Utils } from 'src/app/utils/utils';
 import { NInARowHelper } from '../NInARowHelper';
 import { PlayerOrNone } from '../Player';
 import { Table } from 'src/app/utils/ArrayUtils';
-import { BoardValue } from '../BoardValue';
+import { BoardValue } from '../AI/BoardValue';
 import { GameStateWithTable } from '../GameStateWithTable';
 import { GameStatus } from '../GameStatus';
 

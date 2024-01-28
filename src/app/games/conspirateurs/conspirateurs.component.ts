@@ -12,7 +12,7 @@ import { ConspirateursMove, ConspirateursMoveDrop, ConspirateursMoveJump, Conspi
 import { ConspirateursRules } from './ConspirateursRules';
 import { ConspirateursState } from './ConspirateursState';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
-import { MCTS } from 'src/app/jscaip/MCTS';
+import { MCTS } from 'src/app/jscaip/AI/MCTS';
 import { ConspirateursMoveGenerator } from './ConspirateursMoveGenerator';
 import { ConspirateursJumpMinimax } from './ConspirateursJumpMinimax';
 
@@ -77,9 +77,9 @@ export class ConspirateursComponent extends GameComponent<ConspirateursRules, Co
         this.viewInfo.dropPhase = state.isDropPhase();
         this.viewInfo.boardInfo = [];
         this.viewInfo.lastMoveArrow = '';
-        for (let y: number = 0; y < ConspirateursState.HEIGHT; y++) {
+        for (let y: number = 0; y < state.getHeight(); y++) {
             this.viewInfo.boardInfo.push([]);
-            for (let x: number = 0; x < ConspirateursState.WIDTH; x++) {
+            for (let x: number = 0; x < state.getWidth(); x++) {
                 const coord: Coord = new Coord(x, y);
                 const piece: PlayerOrNone = state.getPieceAt(coord);
                 const squareInfo: SquareInfo = {

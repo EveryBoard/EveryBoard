@@ -3,7 +3,7 @@ import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { LinesOfActionHeuristic } from '../LinesOfActionHeuristic';
 import { LinesOfActionState } from '../LinesOfActionState';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { HeuristicUtils } from 'src/app/jscaip/tests/HeuristicUtils.spec';
+import { HeuristicUtils } from 'src/app/jscaip/AI/tests/HeuristicUtils.spec';
 import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 import { LinesOfActionRules } from '../LinesOfActionRules';
 

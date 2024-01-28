@@ -1,17 +1,18 @@
 import { AI, AIDepthLimitOptions, MoveGenerator } from './AI';
-import { Move } from './Move';
+import { Move } from '../Move';
 import { BoardValue } from './BoardValue';
-import { SuperRules } from './Rules';
-import { GameState } from './GameState';
-import { MGPSet } from '../utils/MGPSet';
-import { MGPOptional } from '../utils/MGPOptional';
-import { Player } from './Player';
-import { MGPFallible } from '../utils/MGPFallible';
-import { Utils } from '../utils/utils';
-import { ArrayUtils } from '../utils/ArrayUtils';
-import { GameStatus } from './GameStatus';
-import { EmptyRulesConfig, RulesConfig } from './RulesConfigUtil';
+import { GameState } from '../GameState';
+import { MGPSet } from '../../utils/MGPSet';
+import { MGPOptional } from '../../utils/MGPOptional';
+import { Player } from '../Player';
+import { MGPFallible } from '../../utils/MGPFallible';
+import { Utils } from '../../utils/utils';
+import { ArrayUtils } from '../../utils/ArrayUtils';
+import { GameStatus } from '../GameStatus';
+import { SuperRules } from '../Rules';
+import { EmptyRulesConfig, RulesConfig } from '../RulesConfigUtil';
 import { GameNode } from './GameNode';
+import { PlayerNumberTable } from '../PlayerNumberTable';
 
 /**
  * A heuristic assigns a specific value for a node.
@@ -31,11 +32,14 @@ export abstract class PlayerMetricHeuristic<M extends Move,
                                             C extends RulesConfig = EmptyRulesConfig>
     extends Heuristic<M, S, BoardValue, C>
 {
-    public abstract getMetrics(node: GameNode<M, S>, config: MGPOptional<C>): [number, number];
+    public abstract getMetrics(node: GameNode<M, S>, config: MGPOptional<C>): PlayerNumberTable;
 
     public getBoardValue(node: GameNode<M, S>, config: MGPOptional<C>): BoardValue {
-        const metrics: [number, number] = this.getMetrics(node, config);
-        return BoardValue.of(metrics[0], metrics[1]);
+        const metrics: PlayerNumberTable = this.getMetrics(node, config);
+        return BoardValue.ofMultiple(
+            metrics.get(Player.ZERO).get(),
+            metrics.get(Player.ONE).get(),
+        );
     }
 
 }
@@ -44,9 +48,9 @@ export class DummyHeuristic<M extends Move, S extends GameState, C extends Rules
     extends PlayerMetricHeuristic<M, S, C>
 {
 
-    public getMetrics(_node: GameNode<M, S>, _config?: MGPOptional<C>): [number, number] {
+    public override getMetrics(_node: GameNode<M, S>, _config?: MGPOptional<C>): PlayerNumberTable {
         // This is really a dummy heuristic: boards have no value
-        return [0, 0];
+        return PlayerNumberTable.ofSingle(0, 0);
     }
 
 }
@@ -112,10 +116,11 @@ export class Minimax<M extends Move, S extends GameState, L = void> implements A
     public chooseNextMove(node: GameNode<M, S>, options: AIDepthLimitOptions, config: MGPOptional<C>): M {
         Utils.assert(this.rules.getGameStatus(node, config).isEndGame === false,
                      'Minimax has been asked to choose a move from a finished game');
+        const boardValue: BoardValue = this.getExpectedExtremum(node, config);
         let bestDescendant: GameNode<M, S> = this.alphaBeta(node,
                                                             options.maxDepth,
-                                                            Number.MIN_SAFE_INTEGER,
-                                                            Number.MAX_SAFE_INTEGER,
+                                                            boardValue.toMinimum(),
+                                                            boardValue.toMaximum(),
                                                             config);
         while (bestDescendant.gameState.turn > node.gameState.turn + 1) {
             bestDescendant = bestDescendant.parent.get();
@@ -123,7 +128,11 @@ export class Minimax<M extends Move, S extends GameState, L = void> implements A
         return bestDescendant.previousMove.get();
     }
 
-    public alphaBeta(node: GameNode<M, S>, depth: number, alpha: number, beta: number, config: MGPOptional<C>)
+    public alphaBeta(node: GameNode<M, S>,
+                     depth: number,
+                     alpha: BoardValue,
+                     beta: BoardValue,
+                     config: MGPOptional<C>)
     : GameNode<M, S>
     {
         if (depth < 1) {
@@ -154,27 +163,24 @@ export class Minimax<M extends Move, S extends GameState, L = void> implements A
     private getBestChildren(node: GameNode<M, S>,
                             possibleMoves: MGPSet<M>,
                             depth: number,
-                            alpha: number,
-                            beta: number,
+                            alpha: BoardValue,
+                            beta: BoardValue,
                             config: MGPOptional<C>)
     : GameNode<M, S>[]
     {
         let bestChildren: GameNode<M, S>[] = [];
         const currentPlayer: Player = node.gameState.getCurrentPlayer();
-        let extremumExpected: number =
-            currentPlayer === Player.ZERO ? Number.MAX_SAFE_INTEGER : Number.MIN_SAFE_INTEGER;
-        const newValueIsBetter: (newValue: number, currentValue: number) => boolean =
-            currentPlayer === Player.ZERO ?
-                ((a: number, b: number): boolean => a < b) :
-                ((a: number, b: number): boolean => b < a);
+        let extremumExpected: BoardValue = this.getExpectedExtremum(node, config);
+        const newValueIsBetter: (newValue: BoardValue, currentValue: BoardValue) => boolean =
+            currentPlayer === Player.ZERO ? BoardValue.isLessThan : BoardValue.isGreaterThan;
         for (const move of possibleMoves) {
             const child: GameNode<M, S> = this.getOrCreateChild(node, move, config);
             const bestChildDescendant: GameNode<M, S> = this.alphaBeta(child, depth - 1, alpha, beta, config);
-            const bestChildValue: number = this.getScore(bestChildDescendant, config).value;
+            const bestChildValue: BoardValue = this.getScore(bestChildDescendant, config);
             if (newValueIsBetter(bestChildValue, extremumExpected) || bestChildren.length === 0) {
                 extremumExpected = bestChildValue;
                 bestChildren = [bestChildDescendant];
-            } else if (bestChildValue === extremumExpected) {
+            } else if (bestChildValue.equals(extremumExpected)) {
                 bestChildren.push(bestChildDescendant);
             }
             if (this.prune && newValueIsBetter(extremumExpected, currentPlayer === Player.ZERO ? alpha : beta)) {
@@ -182,12 +188,22 @@ export class Minimax<M extends Move, S extends GameState, L = void> implements A
                 break;
             }
             if (currentPlayer === Player.ZERO) {
-                beta = Math.min(extremumExpected, beta);
+                beta = BoardValue.min(extremumExpected, beta);
             } else {
-                alpha = Math.max(extremumExpected, alpha);
+                alpha = BoardValue.max(extremumExpected, alpha);
             }
         }
         return bestChildren;
+    }
+
+    private getExpectedExtremum(node: GameNode<M, S>, config: MGPOptional<C>): BoardValue {
+        const childValue: BoardValue = this.getScore(node, config);
+        const currentPlayer: Player = node.gameState.getCurrentPlayer();
+        if (currentPlayer === Player.ZERO) {
+            return childValue.toMaximum();
+        } else {
+            return childValue.toMinimum();
+        }
     }
 
     private getBestChildAmong(bestChildren: GameNode<M, S>[]): GameNode<M, S> {
@@ -250,7 +266,7 @@ export class Minimax<M extends Move, S extends GameState, L = void> implements A
     }
 
     public getInfo(node: GameNode<M, S>, config: MGPOptional<C>): string {
-        return 'BoardValue=' + this.heuristic.getBoardValue(node, config).value;
+        return 'BoardValue=' + this.heuristic.getBoardValue(node, config).metrics;
     }
 
 }

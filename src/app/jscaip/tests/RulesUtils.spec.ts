@@ -1,5 +1,5 @@
 /* eslint-disable max-lines-per-function */
-import { GameNode } from '../GameNode';
+import { GameNode } from '../AI/GameNode';
 import { Move } from '../Move';
 import { Player } from '../Player';
 import { SuperRules } from '../Rules';
@@ -70,7 +70,7 @@ export class RulesUtils {
     : void
     {
         expect(rules.getGameStatus(node, config))
-            .withContext('Rules should consider gameStatus a victory for player ' + player.value)
+            .withContext('Rules should consider gameStatus a victory for player ' + player.getValue())
             .toEqual(GameStatus.getVictory(player));
     }
 

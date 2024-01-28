@@ -15,7 +15,7 @@ import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { MGPSet } from 'src/app/utils/MGPSet';
 import { SiamFailure } from './SiamFailure';
-import { MCTS } from 'src/app/jscaip/MCTS';
+import { MCTS } from 'src/app/jscaip/AI/MCTS';
 import { SiamMoveGenerator } from './SiamMoveGenerator';
 import { SiamMinimax } from './SiamMinimax';
 import { ViewBox } from 'src/app/components/game-components/GameComponentUtils';
@@ -89,7 +89,7 @@ export class SiamComponent extends RectangularGameComponent<SiamRules,
     }
 
     public async selectPieceForInsertion(player: Player): Promise<MGPValidation> {
-        const clickValidity: MGPValidation = await this.canUserPlay('#remainingPieces_' + player.value);
+        const clickValidity: MGPValidation = await this.canUserPlay('#remainingPieces_' + player.getValue());
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }
@@ -291,7 +291,7 @@ export class SiamComponent extends RectangularGameComponent<SiamRules,
         const config: SiamConfig = this.getConfig().get();
         const cx: number = config.width / 2;
         const offset: number = 1 / 2;
-        const pieceOnBoard: number = this.getState().countPlayersPawn()[player.value];
+        const pieceOnBoard: number = this.getState().countPlayersPawn().get(player);
         const nbPieceToDraw: number = config.numberOfPiece - pieceOnBoard;
         const width: number = 1 + ((nbPieceToDraw - 1) * offset);
         let x: number;
@@ -338,7 +338,7 @@ export class SiamComponent extends RectangularGameComponent<SiamRules,
 
     public playerPieces(player: Player): number {
         const maxPiece: number = this.getConfig().get().numberOfPiece;
-        const pieceOnBoard: number = this.getState().countPlayersPawn()[player.value];
+        const pieceOnBoard: number = this.getState().countPlayersPawn().get(player);
         return maxPiece - pieceOnBoard;
     }
 

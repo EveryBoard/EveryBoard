@@ -1,7 +1,7 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { Direction } from 'src/app/jscaip/Direction';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
-import { GameNode } from 'src/app/jscaip/GameNode';
+import { GameNode } from 'src/app/jscaip/AI/GameNode';
 import { Player } from 'src/app/jscaip/Player';
 import { Rules } from 'src/app/jscaip/Rules';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
@@ -17,6 +17,7 @@ import { LodestonePieceLodestone, LodestonePieceNone, LodestoneDescription, Lode
 import { LodestoneState, LodestonePositions, LodestonePressurePlates } from './LodestoneState';
 import { LodestonePressurePlate, LodestonePressurePlatePosition, LodestonePressurePlateGroup } from './LodestoneState';
 import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 
 export class LodestoneNode extends GameNode<LodestoneMove, LodestoneState> {}
 
@@ -169,7 +170,6 @@ export class LodestoneRules extends Rules<LodestoneMove, LodestoneState, Lodesto
             board[coord.y][coord.x] = LodestonePieceNone.UNREACHABLE;
         }
     }
-
     public override isLegal(move: LodestoneMove, state: LodestoneState): MGPFallible<LodestoneInfos> {
         const validityBeforeCaptures: MGPValidation = this.isLegalWithoutCaptures(state, move.coord, move.direction);
         if (validityBeforeCaptures.isFailure()) {
@@ -328,12 +328,14 @@ export class LodestoneRules extends Rules<LodestoneMove, LodestoneState, Lodesto
     }
     public getGameStatus(node: LodestoneNode): GameStatus {
         const state: LodestoneState = node.gameState;
-        const pieces: [number, number] = state.numberOfPieces();
-        if (pieces[0] === 0 && pieces[1] === 0) {
+        const pieces: PlayerNumberMap = state.numberOfPieces();
+        const piecesZero: number = pieces.get(Player.ZERO);
+        const piecesOne: number = pieces.get(Player.ONE);
+        if (piecesZero === 0 && piecesOne === 0) {
             return GameStatus.DRAW;
-        } else if (pieces[0] === 0) {
+        } else if (piecesZero === 0) {
             return GameStatus.ONE_WON;
-        } else if (pieces[1] === 0) {
+        } else if (piecesOne === 0) {
             return GameStatus.ZERO_WON;
         } else {
             return GameStatus.ONGOING;

@@ -5,19 +5,20 @@
 >
     <g *ngFor="let line of hexaBoard; index as y">
         <g *ngFor="let c of line; index as x">
-            <g *ngIf="isBoard(c)">
+            <g *ngIf="isBoard(c)"
+               [attr.transform]="getHexaCenterTranslationAtXY(x, y)">
                 <polygon id="space_{{ x }}_{{ y }}"
                          (click)="onSpaceClick(x, y)"
                          [ngClass]="getSquareClasses(x, y)"
                          class="base"
-                         [attr.points]="getHexaPointsAtXY(x, y)"
+                         [attr.points]="getHexaPoints()"
                          stroke-linecap="round"
                 />
                 <circle *ngIf="isPiece(c)"
                         id="piece_{{ x }}_{{ y }}"
                         (click)="onPieceClick(x, y)"
-                        [attr.cx]="getCenterAtXY(x, y).x"
-                        [attr.cy]="getCenterAtXY(x, y).y"
+                        cx="0"
+                        cy="0"
                         [attr.r]="SPACE_SIZE * 0.5"
                         [ngClass]="getPieceClasses(x, y)"
                         class="base"
@@ -25,28 +26,30 @@
             </g>
         </g>
     </g>
-    <defs>
-        <marker *ngFor="let arrow of directions"
-                id="arrowhead_{{ arrow.dir.toString() }}"
-                markerWidth="10"
-                markerHeight="7"
-                refX="5" refY="3.5" orient="auto">
-            <polygon points="0 0, 10 3.5, 0 7"/>
-        </marker>
-    </defs>
-    <g *ngFor="let arrow of directions">
-        <line id="line_start_{{ arrow.dir.toString() }}"
-              class="arrow"
+
+    <g *ngFor="let captured of captureds"
+       [attr.transform]="getHexaCenterTranslation(captured.coord)">
+        <polygon id="space_{{ captured.coord.x }}_{{ captured.coord.y }}"
+                 [ngClass]="getSquareClasses(captured.coord.x, captured.coord.y)"
+                 class="base captured-fill"
+                 [attr.points]="getHexaPoints()"
+                 stroke-linecap="round"
+        />
+        <circle id="piece_{{ captured.coord.x }}_{{ captured.coord.y }}"
+                cx="0"
+                cy="0"
+                [attr.r]="SPACE_SIZE * 0.5"
+                [ngClass]="captured.pieceClasses"
+                class="base semi-transparent"
+        />
+    </g>
+
+    <g *ngFor="let arrow of directions"
+       id="arrow_{{ arrow.start.x }}_{{ arrow.start.y }}_to_{{ arrow.landing.x }}_{{ arrow.landing.y }}">
+        <line id="line_{{ arrow.dir.toString() }}"
+              class="arrow click-delegator"
               [attr.x1]="arrow.startCenter.x"
               [attr.y1]="arrow.startCenter.y"
-              [attr.x2]="arrow.middle.x"
-              [attr.y2]="arrow.middle.y"
-        />
-        <line id="line_end_{{ arrow.dir.toString() }}"
-              class="arrow"
-              (click)="chooseDirection(arrow.dir)"
-              [attr.x1]="arrow.middle.x"
-              [attr.y1]="arrow.middle.y"
               [attr.x2]="arrow.landingCenter.x"
               [attr.y2]="arrow.landingCenter.y"
         />

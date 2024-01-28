@@ -1,5 +1,5 @@
-import { BoardValue } from 'src/app/jscaip/BoardValue';
-import { Heuristic } from 'src/app/jscaip/Minimax';
+import { BoardValue } from 'src/app/jscaip/AI/BoardValue';
+import { Heuristic } from 'src/app/jscaip/AI/Minimax';
 import { PlayerOrNone } from 'src/app/jscaip/Player';
 import { TrexoMove } from './TrexoMove';
 import { TrexoNode, TrexoRules } from './TrexoRules';
@@ -20,7 +20,7 @@ export class TrexoAlignmentHeuristic extends Heuristic<TrexoMove, TrexoState> {
                 score += squareScore;
             }
         }
-        return new BoardValue(score);
+        return BoardValue.of(score);
     }
 
 }

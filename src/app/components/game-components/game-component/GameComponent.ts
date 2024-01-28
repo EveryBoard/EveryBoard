@@ -1,3 +1,5 @@
+import { ActivatedRoute } from '@angular/router';
+
 import { Move } from '../../../jscaip/Move';
 import { SuperRules } from '../../../jscaip/Rules';
 import { Component } from '@angular/core';
@@ -11,12 +13,12 @@ import { Debug, Utils } from 'src/app/utils/utils';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
+import { GameNode } from 'src/app/jscaip/AI/GameNode';
+import { AI, AIOptions } from 'src/app/jscaip/AI/AI';
 import { EmptyRulesConfig, RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
-import { ActivatedRoute } from '@angular/router';
-import { GameNode } from 'src/app/jscaip/GameNode';
-import { AI, AIOptions } from 'src/app/jscaip/AI';
 import { GameInfo } from '../../normal-component/pick-game/pick-game.component';
 import { Coord } from 'src/app/jscaip/Coord';
+import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 
 abstract class BaseComponent {
 
@@ -51,7 +53,7 @@ export abstract class BaseGameComponent extends BaseComponent {
     // Make ArrayUtils available in game components
     public ArrayUtils: typeof ArrayUtils = ArrayUtils;
 
-    public getSVGTranslate(x: number, y: number): string {
+    public getSVGTranslation(x: number, y: number): string {
         return 'translate(' + x + ', ' + y + ')';
     }
 }
@@ -99,7 +101,7 @@ export abstract class GameComponent<R extends SuperRules<M, S, C, L>,
 
     public canPass: boolean = false;
 
-    public scores: MGPOptional<readonly [number, number]> = MGPOptional.empty();
+    public scores: MGPOptional<PlayerNumberMap> = MGPOptional.empty();
 
     public imagesLocation: string = 'assets/images/';
 
@@ -124,6 +126,8 @@ export abstract class GameComponent<R extends SuperRules<M, S, C, L>,
     // This is true when the view is interactive, e.g., to display clickable pieces
     protected interactive: boolean = false;
 
+    public animationOngoing: boolean = false;
+
     public constructor(public readonly messageDisplayer: MessageDisplayer) {
         super();
     }
@@ -135,7 +139,7 @@ export abstract class GameComponent<R extends SuperRules<M, S, C, L>,
     public setPointOfView(pointOfView: Player): void {
         this.pointOfView = pointOfView;
         if (this.hasAsymmetricBoard) {
-            this.rotation = 'rotate(' + (pointOfView.value * 180) + ')';
+            this.rotation = 'rotate(' + (pointOfView.getValue() * 180) + ')';
         }
     }
 

@@ -60,6 +60,7 @@ describe('GameComponent', () => {
             onArrowClick: [0, Player.ONE],
         },
         Awale: { onClick: [0, 0] },
+        BaAwa: { onClick: [0, 0] },
         Brandhub: { onClick: [0, 0] },
         Coerceo: { onClick: [0, 0] },
         ConnectSix: { onClick: [0, 0] },
@@ -88,7 +89,7 @@ describe('GameComponent', () => {
         Hnefatafl: { onClick: [0, 0] },
         Kalah: {
             onClick: [0, 0],
-            onStoreClick: [0],
+            onStoreClick: [Player.ZERO],
         },
         Kamisado: { onClick: [0, 0] },
         Lasca: { onClick: [0, 0] },
@@ -157,7 +158,7 @@ describe('GameComponent', () => {
 
     const refusal: MGPValidation = MGPValidation.failure(GameWrapperMessages.CANNOT_PLAY_AS_OBSERVER());
     for (const gameInfo of GameInfo.ALL_GAMES()) {
-        it(`clicks method should refuse when observer click (${ gameInfo.urlName})`, fakeAsync(async() => {
+        it(`clicks method should refuse when observer click (${ gameInfo.urlName })`, fakeAsync(async() => {
             const game: { [methodName: string]: unknown[] } | undefined = clickableMethods[gameInfo.urlName];
             if (game == null) {
                 throw new Error('Please define ' + gameInfo.urlName + ' clickable method in here to test them.');

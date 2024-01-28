@@ -2,7 +2,7 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { DiaballikDistanceHeuristic } from '../DiaballikDistanceHeuristic';
 import { DiaballikPiece, DiaballikState } from '../DiaballikState';
 import { Player } from 'src/app/jscaip/Player';
-import { HeuristicUtils } from 'src/app/jscaip/tests/HeuristicUtils.spec';
+import { HeuristicUtils } from 'src/app/jscaip/AI/tests/HeuristicUtils.spec';
 import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 import { DiaballikRules } from '../DiaballikRules';
 

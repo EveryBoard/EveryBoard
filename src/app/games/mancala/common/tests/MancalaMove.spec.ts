@@ -26,7 +26,7 @@ describe('MancalaMove', () => {
 
         // Then it should give us the moves in the expected order
         const expectedDistributions: MancalaDistribution[] = [MancalaDistribution.of(1), MancalaDistribution.of(2)];
-        expect(ArrayUtils.compare(distributions, expectedDistributions)).toBeTrue();
+        expect(ArrayUtils.equals(distributions, expectedDistributions)).toBeTrue();
     });
 
     describe('add', () => {

@@ -1,15 +1,15 @@
-import { ArrayUtils } from '../utils/ArrayUtils';
-import { MGPFallible } from '../utils/MGPFallible';
-import { MGPOptional } from '../utils/MGPOptional';
-import { Debug, Utils } from '../utils/utils';
-import { GameState } from './GameState';
-import { GameStatus } from './GameStatus';
+import { ArrayUtils } from '../../utils/ArrayUtils';
+import { MGPFallible } from '../../utils/MGPFallible';
+import { MGPOptional } from '../../utils/MGPOptional';
+import { Debug, Utils } from '../../utils/utils';
+import { GameState } from '../GameState';
+import { GameStatus } from '../GameStatus';
 import { AI, AITimeLimitOptions, MoveGenerator } from './AI';
 import { GameNode } from './GameNode';
-import { Move } from './Move';
-import { Player } from './Player';
-import { SuperRules } from './Rules';
-import { EmptyRulesConfig, RulesConfig } from './RulesConfigUtil';
+import { Move } from '../Move';
+import { Player } from '../Player';
+import { EmptyRulesConfig, RulesConfig } from '../RulesConfigUtil';
+import { SuperRules } from '../Rules';
 
 type NodeAndPath<M extends Move, S extends GameState> = {
     node: GameNode<M, S>,
@@ -104,7 +104,9 @@ implements AI<M, S, AITimeLimitOptions, C>
      */
     private winRatio(node: GameNode<M, S>): number {
         const simulations: number = this.simulations(node);
-        if (this.simulations(node) === 0) return 1;
+        if (this.simulations(node) === 0) {
+            return 1;
+        }
         return this.wins(node) / simulations;
     }
 

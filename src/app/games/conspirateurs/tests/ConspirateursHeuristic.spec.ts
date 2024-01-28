@@ -1,6 +1,6 @@
 /* eslint-disable max-lines-per-function */
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { HeuristicUtils } from 'src/app/jscaip/tests/HeuristicUtils.spec';
+import { HeuristicUtils } from 'src/app/jscaip/AI/tests/HeuristicUtils.spec';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { ConspirateursHeuristic } from '../ConspirateursHeuristic';
 import { ConspirateursState } from '../ConspirateursState';
@@ -113,7 +113,7 @@ describe('ConspirateursHeuristic', () => {
     });
 
     it('should assign a higher score for a piece close to an empty shelter', () => {
-        // Here, A is close to two empty shelters
+        // Here, O is close to two empty shelters
         const strongState: ConspirateursState = new ConspirateursState([
             [_, _, O, _, _, _, _, _, _, _, _, _, _, _, _, X, X],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
@@ -133,7 +133,7 @@ describe('ConspirateursHeuristic', () => {
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
         ], 60);
-        // Here, A is stuck between two occupied shelters
+        // Here, O is stuck between two occupied shelters
         const weakState: ConspirateursState = new ConspirateursState([
             [_, X, O, X, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],

@@ -1,6 +1,6 @@
 import { MGPValidation } from 'src/app/utils/MGPValidation';
+import { GameNode } from 'src/app/jscaip/AI/GameNode';
 import { Coord, CoordFailure } from 'src/app/jscaip/Coord';
-import { GameNode } from 'src/app/jscaip/GameNode';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { ConfigurableRules } from 'src/app/jscaip/Rules';
 import { EpaminondasMove } from './EpaminondasMove';
@@ -176,11 +176,11 @@ export class EpaminondasRules
         return resultingState;
     }
 
-    public getGameStatus(node: EpaminondasNode): GameStatus {
+    public override getGameStatus(node: EpaminondasNode, _config: MGPOptional<EpaminondasConfig>): GameStatus {
         const state: EpaminondasState = node.gameState;
-        const zerosInFirstLine: number = state.count(Player.ZERO, 0);
+        const zerosInFirstLine: number = state.countRow(Player.ZERO, 0);
         const height: number = state.getHeight();
-        const onesInLastLine: number = state.count(Player.ONE, height - 1);
+        const onesInLastLine: number = state.countRow(Player.ONE, height - 1);
         if (state.turn % 2 === 0) {
             if (zerosInFirstLine > onesInLastLine) {
                 return GameStatus.ZERO_WON;

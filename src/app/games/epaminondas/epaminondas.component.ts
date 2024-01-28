@@ -13,11 +13,12 @@ import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { EpaminondasFailure } from './EpaminondasFailure';
 import { Utils } from 'src/app/utils/utils';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { MCTS } from 'src/app/jscaip/MCTS';
+import { MCTS } from 'src/app/jscaip/AI/MCTS';
 import { EpaminondasMoveGenerator } from './EpaminondasMoveGenerator';
 import { EpaminondasAttackMinimax } from './EpaminondasAttackMinimax';
 import { EpaminondasPositionalMinimax } from './EpaminondasPositionalMinimax';
 import { EpaminondasMinimax } from './EpaminondasMinimax';
+import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 
 @Component({
     selector: 'app-epaminondas',
@@ -67,7 +68,18 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
         this.lastPiece = MGPOptional.empty();
         this.hideLastMove();
         this.board = this.getState().getCopiedBoard();
+        this.scores = this.getScores();
     }
+
+    private getScores(): MGPOptional<PlayerNumberMap> {
+        const state: EpaminondasState = this.getState();
+        const playerMap: PlayerNumberMap = PlayerNumberMap.of(
+            state.count(Player.ZERO),
+            state.count(Player.ONE),
+        );
+        return MGPOptional.of(playerMap);
+    }
+
     public override async showLastMove(move: EpaminondasMove): Promise<void> {
         let moved: Coord = move.coord;
         this.moveds = [moved];

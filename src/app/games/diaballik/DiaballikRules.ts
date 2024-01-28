@@ -9,7 +9,7 @@ import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Direction, Orthogonal } from 'src/app/jscaip/Direction';
 import { MGPSet } from 'src/app/utils/MGPSet';
-import { GameNode } from 'src/app/jscaip/GameNode';
+import { GameNode } from 'src/app/jscaip/AI/GameNode';
 import { DiaballikFailure } from './DiaballikFailure';
 import { Utils } from 'src/app/utils/utils';
 import { Table } from 'src/app/utils/ArrayUtils';
@@ -224,7 +224,7 @@ export class DiaballikRules extends Rules<DiaballikMove, DiaballikState, Diaball
         ];
         if (blocking[0].isPresent() && blocking[1].isPresent()) {
             // Both players form a line, so the current player loses
-            return blocking[state.getCurrentPlayer().value];
+            return blocking[state.getCurrentPlayer().getValue()];
         }
         if (blocking[0].isPresent()) return blocking[0];
         if (blocking[1].isPresent()) return blocking[1];

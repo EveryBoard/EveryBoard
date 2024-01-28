@@ -9,10 +9,11 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { GroupDatas } from 'src/app/jscaip/BoardDatas';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { GobanGameComponent } from 'src/app/components/game-components/goban-game-component/GobanGameComponent';
-import { MCTS } from 'src/app/jscaip/MCTS';
-import { Minimax } from 'src/app/jscaip/Minimax';
+import { MCTS } from 'src/app/jscaip/AI/MCTS';
+import { Minimax } from 'src/app/jscaip/AI/Minimax';
 import { GoHeuristic } from './GoHeuristic';
 import { GoMoveGenerator } from './GoMoveGenerator';
+import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 
 @Component({
     selector: 'app-go',
@@ -43,7 +44,7 @@ export class GoComponent
         ];
         this.encoder = GoMove.encoder;
         this.canPass = true;
-        this.scores = MGPOptional.of([0, 0]);
+        this.scores = MGPOptional.of(PlayerNumberMap.of(0, 0));
     }
 
     public async onClick(x: number, y: number): Promise<MGPValidation> {

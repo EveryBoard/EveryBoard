@@ -1,5 +1,5 @@
+import { GameNode } from 'src/app/jscaip/AI/GameNode';
 import { ConfigurableRules } from '../../jscaip/Rules';
-import { GameNode } from 'src/app/jscaip/GameNode';
 import { ReversiState } from './ReversiState';
 import { Coord } from '../../jscaip/Coord';
 import { Direction } from '../../jscaip/Direction';
@@ -13,6 +13,7 @@ import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { TableUtils } from 'src/app/utils/ArrayUtils';
+import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 import { NumberConfig, RulesConfigDescription, RulesConfigDescriptionLocalizable } from 'src/app/components/wrapper-components/rules-configuration/RulesConfigDescription';
 import { MGPValidators } from 'src/app/utils/MGPValidator';
 
@@ -47,6 +48,7 @@ export class ReversiRules extends ConfigurableRules<ReversiMove,
         }
         return ReversiRules.singleton.get();
     }
+
     public static readonly RULES_CONFIG_DESCRIPTION: RulesConfigDescription<ReversiConfig> =
         new RulesConfigDescription<ReversiConfig>({
             name: (): string => $localize`Reversi`,
@@ -153,8 +155,8 @@ export class ReversiRules extends ConfigurableRules<ReversiMove,
         if (gameIsEnded === false) {
             return GameStatus.ONGOING;
         }
-        const scores: [number, number] = state.countScore();
-        const diff: number = scores[1] - scores[0];
+        const scores: PlayerNumberMap = state.countScore();
+        const diff: number = scores.get(Player.ONE) - scores.get(Player.ZERO);
         if (diff < 0) {
             return GameStatus.ZERO_WON;
         }

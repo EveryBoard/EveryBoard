@@ -11,9 +11,9 @@ import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { PlayerOrNone } from 'src/app/jscaip/Player';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { MCTS } from 'src/app/jscaip/MCTS';
+import { MCTS } from 'src/app/jscaip/AI/MCTS';
 import { QuixoMoveGenerator } from './QuixoMoveGenerator';
-import { Minimax } from 'src/app/jscaip/Minimax';
+import { Minimax } from 'src/app/jscaip/AI/Minimax';
 import { QuixoHeuristic } from './QuixoHeuristic';
 
 @Component({
@@ -100,10 +100,10 @@ export class QuixoComponent extends RectangularGameComponent<QuixoRules,
         const directions: Orthogonal[] = [];
         const chosenCoord: Coord = this.chosenCoord.get();
         const state: QuixoState = this.getState();
-        if (chosenCoord.x !== state.getWidth() - 1) directions.push(Orthogonal.RIGHT);
-        if (chosenCoord.x !== 0) directions.push(Orthogonal.LEFT);
-        if (chosenCoord.y !== state.getHeight()) directions.push(Orthogonal.DOWN);
-        if (chosenCoord.y !== 0) directions.push(Orthogonal.UP);
+        if (chosenCoord.x < state.getWidth() - 1) directions.push(Orthogonal.RIGHT);
+        if (0 < chosenCoord.x) directions.push(Orthogonal.LEFT);
+        if (chosenCoord.y < state.getHeight() - 1) directions.push(Orthogonal.DOWN);
+        if (0 < chosenCoord.y) directions.push(Orthogonal.UP);
         return directions;
     }
 

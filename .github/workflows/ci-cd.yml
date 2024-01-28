@@ -69,6 +69,7 @@ jobs:
       - name: Install python dependencies
         run: pip install lxml pandas
       - name: Archive code coverage results
+        if: always()
         uses: actions/upload-artifact@v3
         with:
           name: code-coverage-report

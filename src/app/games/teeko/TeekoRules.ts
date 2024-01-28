@@ -1,4 +1,4 @@
-import { GameNode } from 'src/app/jscaip/GameNode';
+import { GameNode } from 'src/app/jscaip/AI/GameNode';
 import { ConfigurableRules } from 'src/app/jscaip/Rules';
 import { TeekoDropMove, TeekoMove, TeekoTranslationMove } from './TeekoMove';
 import { TeekoState } from './TeekoState';
@@ -6,12 +6,13 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { PlayerOrNone } from 'src/app/jscaip/Player';
+import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { NInARowHelper } from 'src/app/jscaip/NInARowHelper';
 import { Utils } from 'src/app/utils/utils';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Table, TableUtils, ArrayUtils } from 'src/app/utils/ArrayUtils';
 import { BooleanConfig, RulesConfigDescription } from 'src/app/components/wrapper-components/rules-configuration/RulesConfigDescription';
+import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 
 export class TeekoNode extends GameNode<TeekoMove, TeekoState> {}
 
@@ -101,7 +102,7 @@ export class TeekoRules extends ConfigurableRules<TeekoMove, TeekoState, TeekoCo
         if (move instanceof TeekoDropMove) {
             return this.applyLegalDrop(move, state);
         } else {
-            return this.applyLegalTranslate(move, state);
+            return this.applyLegalTranslation(move, state);
         }
     }
 
@@ -111,7 +112,7 @@ export class TeekoRules extends ConfigurableRules<TeekoMove, TeekoState, TeekoCo
         return new TeekoState(newBoard, state.turn + 1);
     }
 
-    private applyLegalTranslate(move: TeekoTranslationMove, state: TeekoState): TeekoState {
+    private applyLegalTranslation(move: TeekoTranslationMove, state: TeekoState): TeekoState {
         const newBoard: PlayerOrNone[][] = state.getCopiedBoard();
         newBoard[move.getStart().y][move.getStart().x] = PlayerOrNone.NONE;
         newBoard[move.getEnd().y][move.getEnd().x] = state.getCurrentPlayer();
@@ -138,7 +139,7 @@ export class TeekoRules extends ConfigurableRules<TeekoMove, TeekoState, TeekoCo
 
     public getSquareInfo(state: TeekoState): { score: number, victoriousCoords: Coord[] } {
         const victoriousCoords: Coord[] = [];
-        const possibilies: [number, number] = [0, 0];
+        const possibilies: PlayerNumberMap = PlayerNumberMap.of(0, 0);
         for (let cx: number = 0; cx < TeekoState.WIDTH - 1; cx++) {
             for (let cy: number = 0; cy < TeekoState.WIDTH - 1; cy++) {
                 const upLeft: Coord = new Coord(cx, cy);
@@ -159,15 +160,15 @@ export class TeekoRules extends ConfigurableRules<TeekoMove, TeekoState, TeekoCo
                         victoriousCoords.push(upLeft, upRight, downLeft, downRight);
                     }
                     else if (zeroCount > 0) { // Only Player.ZERO has pieces in this square
-                        possibilies[0] = possibilies[0] + 1;
+                        possibilies.add(Player.ZERO, 1);
                     } else { // Only Player.ONE has pieces in this square
-                        possibilies[1] = possibilies[1] + 1;
+                        possibilies.add(Player.ONE, 1);
                     }
                 }
             }
         }
         return {
-            score: possibilies[1] - possibilies[0],
+            score: possibilies.get(Player.ONE) - possibilies.get(Player.ZERO),
             victoriousCoords,
         };
     }

@@ -6,18 +6,25 @@ class PlayerNone implements ComparableObject {
 
     public static NONE: PlayerNone = new PlayerNone();
 
-    public value: number = 2;
+    private readonly value: number = 2;
 
     private constructor() {
     }
+
     public isPlayer(): this is Player {
         return false;
     }
+
     public toString(): string {
         return 'PLAYER_NONE';
     }
+
     public equals(other: PlayerOrNone): boolean {
         return this === other;
+    }
+
+    public getValue() : number {
+        return this.value;
     }
 }
 
@@ -25,7 +32,7 @@ export class Player implements ComparableObject {
 
     public static encoder: Encoder<Player> = Encoder.tuple(
         [Encoder.identity<0 | 1>()],
-        (player: Player) => [player.value],
+        (player: Player) => [player.getValue()],
         (fields: [0 | 1]) => Player.of(fields[0]),
     );
     public static readonly ZERO: Player = new Player(0);
@@ -41,14 +48,17 @@ export class Player implements ComparableObject {
                 return Player.ONE;
         }
     }
+
     public static ofTurn(turn: number): Player {
         return turn % 2 === 0 ? Player.ZERO : Player.ONE;
     }
-    protected constructor(public readonly value: 0 | 1) {}
+
+    protected constructor(private readonly value: 0 | 1) {}
 
     public isPlayer(): this is Player {
         return true;
     }
+
     public toString(): string {
         switch (this) {
             case Player.ZERO: return 'PLAYER_ZERO';
@@ -57,9 +67,11 @@ export class Player implements ComparableObject {
                 return 'PLAYER_ONE';
         }
     }
+
     public equals(other: PlayerOrNone): boolean {
         return this === other;
     }
+
     public getScoreModifier(): number {
         if (this.value === 0) {
             return -1;
@@ -67,9 +79,11 @@ export class Player implements ComparableObject {
             return 1;
         }
     }
+
     public getPreVictory(): number {
         return this.getVictoryValue() - this.getScoreModifier();
     }
+
     public getVictoryValue(): number {
         if (this === Player.ZERO) {
             return Number.MIN_SAFE_INTEGER;
@@ -77,6 +91,7 @@ export class Player implements ComparableObject {
             return Number.MAX_SAFE_INTEGER;
         }
     }
+
     public getOpponent(): Player {
         switch (this) {
             case Player.ZERO: return Player.ONE;
@@ -85,9 +100,14 @@ export class Player implements ComparableObject {
                 return Player.ZERO;
         }
     }
+
+    public getValue(): number {
+        return this.value;
+    }
+
 }
 
-export type PlayerOrNone = Player | PlayerNone
+export type PlayerOrNone = Player | PlayerNone;
 
 // eslint-disable-next-line no-redeclare, @typescript-eslint/no-redeclare
 export namespace PlayerOrNone {
@@ -97,7 +117,7 @@ export namespace PlayerOrNone {
 
     export const encoder: Encoder<PlayerOrNone> = new class extends Encoder<PlayerOrNone> {
         public encode(player: PlayerOrNone): JSONValueWithoutArray {
-            return player.value;
+            return player.getValue();
         }
         public decode(encoded: JSONValueWithoutArray): PlayerOrNone {
             if (encoded === 2) return PlayerOrNone.NONE;

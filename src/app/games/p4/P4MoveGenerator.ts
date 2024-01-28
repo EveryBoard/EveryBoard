@@ -2,7 +2,7 @@ import { P4Move } from './P4Move';
 import { P4State } from './P4State';
 import { P4Config, P4Node } from './P4Rules';
 import { Debug } from 'src/app/utils/utils';
-import { MoveGenerator } from 'src/app/jscaip/AI';
+import { MoveGenerator } from 'src/app/jscaip/AI/AI';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { PlayerOrNone } from 'src/app/jscaip/Player';
 

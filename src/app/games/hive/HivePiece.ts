@@ -36,7 +36,7 @@ export class HivePieceStack implements ComparableObject {
     }
     public equals(other: HivePieceStack): boolean {
         if (this.size() !== other.size()) return false;
-        return ArrayUtils.compare(this.pieces, other.pieces);
+        return ArrayUtils.equals(this.pieces, other.pieces);
     }
     public isEmpty(): boolean {
         return this.pieces.length === 0;

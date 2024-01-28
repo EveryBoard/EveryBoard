@@ -1,6 +1,6 @@
 import { Coord, CoordFailure } from 'src/app/jscaip/Coord';
 import { Direction } from 'src/app/jscaip/Direction';
-import { GameNode } from 'src/app/jscaip/GameNode';
+import { GameNode } from 'src/app/jscaip/AI/GameNode';
 import { NInARowHelper } from 'src/app/jscaip/NInARowHelper';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { ConfigurableRules } from 'src/app/jscaip/Rules';
@@ -14,6 +14,7 @@ import { PenteState } from './PenteState';
 import { GobanConfig } from 'src/app/jscaip/GobanConfig';
 import { RulesConfigDescription, RulesConfigDescriptions } from 'src/app/components/wrapper-components/rules-configuration/RulesConfigDescription';
 import { TableUtils } from 'src/app/utils/ArrayUtils';
+import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 
 export class PenteNode extends GameNode<PenteMove, PenteState> {}
 
@@ -42,7 +43,7 @@ export class PenteRules extends ConfigurableRules<PenteMove, PenteState, GobanCo
         const cx: number = Math.floor(config.width / 2);
         const cy: number = Math.floor(config.height / 2);
         board[cy][cx] = PlayerOrNone.ONE;
-        return new PenteState(board, [0, 0], 0);
+        return new PenteState(board, PlayerNumberMap.of(0, 0), 0);
     }
 
     public override getRulesConfigDescription(): MGPOptional<RulesConfigDescription<GobanConfig>> {
@@ -69,9 +70,9 @@ export class PenteRules extends ConfigurableRules<PenteMove, PenteState, GobanCo
         for (const captured of capturedPieces) {
             newBoard[captured.y][captured.x] = PlayerOrNone.NONE;
         }
-        const captures: [number, number] = [state.captures[0], state.captures[1]];
-        captures[player.value] += capturedPieces.length;
-        return new PenteState(newBoard, captures, state.turn+1);
+        const captures: PlayerNumberMap = state.captures.getCopy();
+        captures.add(player, capturedPieces.length);
+        return new PenteState(newBoard, captures, state.turn + 1);
     }
 
     public getCaptures(coord: Coord, state: PenteState, player: Player): Coord[] {
@@ -95,7 +96,7 @@ export class PenteRules extends ConfigurableRules<PenteMove, PenteState, GobanCo
     public getGameStatus(node: PenteNode): GameStatus {
         const state: PenteState = node.gameState;
         const opponent: Player = state.getCurrentOpponent();
-        if (10 <= state.captures[opponent.value]) {
+        if (10 <= state.captures.get(opponent)) {
             return GameStatus.getVictory(opponent);
         }
         const victoriousCoord: Coord[] = PenteRules.PENTE_HELPER.getVictoriousCoord(state);

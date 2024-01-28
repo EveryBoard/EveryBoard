@@ -1,6 +1,6 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { Vector } from 'src/app/jscaip/Vector';
-import { GameNode } from 'src/app/jscaip/GameNode';
+import { GameNode } from 'src/app/jscaip/AI/GameNode';
 import { PlayerOrNone } from 'src/app/jscaip/Player';
 import { Rules } from 'src/app/jscaip/Rules';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
@@ -83,6 +83,7 @@ export class PentagoRules extends Rules<PentagoMove, PentagoState> {
         }
         return MGPValidation.SUCCESS;
     }
+
     public getVictoryCoords(state: PentagoState): Coord[] {
         let victoryCoords: Coord[] = [];
         for (const maybeVictory of PentagoRules.VICTORY_SOURCE) {
@@ -117,12 +118,13 @@ export class PentagoRules extends Rules<PentagoMove, PentagoState> {
         }
         return victoryCoords;
     }
+
     public getGameStatus(node: PentagoNode): GameStatus {
         const state: PentagoState = node.gameState;
         const victoryCoords: Coord[] = this.getVictoryCoords(state);
         const victoryFound: [boolean, boolean] = [false, false];
         for (let i: number = 0; i < victoryCoords.length; i += 5) {
-            victoryFound[state.getPieceAt(victoryCoords[i]).value] = true;
+            victoryFound[state.getPieceAt(victoryCoords[i]).getValue()] = true;
         }
         if (victoryFound[0] === true) {
             if (victoryFound[1] === true) {
@@ -140,4 +142,5 @@ export class PentagoRules extends Rules<PentagoMove, PentagoState> {
             return GameStatus.ONGOING;
         }
     }
+
 }

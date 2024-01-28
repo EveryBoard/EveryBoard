@@ -9,16 +9,13 @@ import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { MGPSet } from 'src/app/utils/MGPSet';
 import { CoordSet } from 'src/app/utils/OptimizedSet';
 import { ConspirateursFailure } from './ConspirateursFailure';
-import { ConspirateursState } from './ConspirateursState';
 import { MoveWithTwoCoords } from 'src/app/jscaip/MoveWithTwoCoords';
-import { Utils } from 'src/app/utils/utils';
 
 export class ConspirateursMoveDrop extends MoveCoord {
 
     public static encoder: Encoder<ConspirateursMoveDrop> = MoveCoord.getEncoder(ConspirateursMoveDrop.of);
 
     public static of(coord: Coord): ConspirateursMoveDrop {
-        Utils.assert(ConspirateursState.isOnBoard(coord), 'Move out of board');
         return new ConspirateursMoveDrop(coord);
     }
     private constructor(coord: Coord) {
@@ -42,9 +39,6 @@ export class ConspirateursMoveSimple extends MoveCoordToCoord {
         MoveWithTwoCoords.getFallibleEncoder(ConspirateursMoveSimple.from);
 
     public static from(start: Coord, end: Coord): MGPFallible<ConspirateursMoveSimple> {
-        const startInRange: boolean = ConspirateursState.isOnBoard(start);
-        const endInRange: boolean = ConspirateursState.isOnBoard(end);
-        Utils.assert(startInRange && endInRange, 'Move out of board');
         if (start.isAlignedWith(end) && start.getDistance(end) === 1) {
             return MGPFallible.success(new ConspirateursMoveSimple(start, end));
         } else {
@@ -74,14 +68,10 @@ export class ConspirateursMoveJump extends Move {
         (move: ConspirateursMoveJump): [Coord[]] => [ArrayUtils.copy(move.coords)],
         (fields: [Coord[]]): ConspirateursMoveJump => ConspirateursMoveJump.from(fields[0]).get(),
     );
+
     public static from(coords: readonly Coord[]): MGPFallible<ConspirateursMoveJump> {
         if (coords.length < 2) {
             return MGPFallible.failure('ConspirateursMoveJump requires at least one jump, so two coords');
-        }
-        for (const coord of coords) {
-            if (ConspirateursState.isOnBoard(coord) === false) {
-                return MGPFallible.failure('Move out of board');
-            }
         }
         for (let i: number = 1; i < coords.length; i++) {
             const jumpDirection: MGPFallible<Direction> = coords[i - 1].getDirectionToward(coords[i]);
@@ -100,23 +90,29 @@ export class ConspirateursMoveJump extends Move {
             return MGPFallible.failure(ConspirateursFailure.SAME_LOCATION_VISITED_IN_JUMP());
         }
     }
+
     private constructor(public coords: readonly Coord[]) {
         super();
     }
+
     public addJump(target: Coord): MGPFallible<ConspirateursMoveJump> {
         const coords: Coord[] = ArrayUtils.copy(this.coords);
         coords.push(target);
         return ConspirateursMoveJump.from(coords);
     }
+
     public getStartingCoord(): Coord {
         return this.coords[0];
     }
+
     public getEndingCoord(): Coord {
         return this.coords[this.coords.length-1];
     }
+
     public getLandingCoords(): Coord[] {
         return this.coords.slice(1);
     }
+
     public getJumpedOverCoords(): Coord[] {
         const jumpedOver: Coord[] = [];
         for (let i: number = 1; i < this.coords.length; i++) {
@@ -125,12 +121,14 @@ export class ConspirateursMoveJump extends Move {
         }
         return jumpedOver;
     }
+
     public toString(): string {
         const jumps: string = this.coords
             .map((coord: Coord) => coord.toString())
             .reduce((coord1: string, coord2: string) => coord1 + ' -> ' + coord2);
         return `ConspirateursMoveJump(${jumps})`;
     }
+
     public equals(other: ConspirateursMove): boolean {
         if (ConspirateursMove.isSimple(other) || ConspirateursMove.isDrop(other)) {
             return false;
@@ -142,6 +140,7 @@ export class ConspirateursMoveJump extends Move {
             return true;
         }
     }
+
 }
 
 export type ConspirateursMove = ConspirateursMoveDrop | ConspirateursMoveSimple | ConspirateursMoveJump;
@@ -152,12 +151,15 @@ export namespace ConspirateursMove {
     export function isDrop(move: ConspirateursMove): move is ConspirateursMoveDrop {
         return move instanceof ConspirateursMoveDrop;
     }
+
     export function isSimple(move: ConspirateursMove): move is ConspirateursMoveSimple {
         return move instanceof ConspirateursMoveSimple;
     }
+
     export function isJump(move: ConspirateursMove): move is ConspirateursMoveJump {
         return move instanceof ConspirateursMoveJump;
     }
+
     export const encoder: Encoder<ConspirateursMove> =
         Encoder.disjunction(
             [ConspirateursMove.isDrop, ConspirateursMove.isSimple, ConspirateursMove.isJump],

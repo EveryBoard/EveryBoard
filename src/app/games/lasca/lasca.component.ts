@@ -14,11 +14,11 @@ import { LascaFailure } from './LascaFailure';
 import { LascaMove } from './LascaMove';
 import { LascaRules } from './LascaRules';
 import { LascaPiece, LascaStack, LascaState } from './LascaState';
-import { MCTS } from 'src/app/jscaip/MCTS';
-import { Minimax } from 'src/app/jscaip/Minimax';
+import { MCTS } from 'src/app/jscaip/AI/MCTS';
+import { Minimax } from 'src/app/jscaip/AI/Minimax';
 import { LascaControlHeuristic } from './LascaControlHeuristic';
 import { LascaMoveGenerator } from './LascaMoveGenerator';
-import { LascaControlAndDominationHeuristic } from './LascaControlAndDominationHeuristic';
+import { LascaControlPlusDominationHeuristic } from './LascaControlAndDominationHeuristic';
 
 interface SpaceInfo {
     x: number;
@@ -73,7 +73,7 @@ export class LascaComponent extends ParallelogramGameComponent<LascaRules,
             new Minimax($localize`Control`, this.rules, new LascaControlHeuristic(), this.moveGenerator),
             new Minimax($localize`Control and Domination`,
                         this.rules,
-                        new LascaControlAndDominationHeuristic(),
+                        new LascaControlPlusDominationHeuristic(),
                         this.moveGenerator),
             new MCTS($localize`MCTS`, this.moveGenerator, this.rules),
         ];
@@ -325,10 +325,10 @@ export class LascaComponent extends ParallelogramGameComponent<LascaRules,
         }
     }
 
-    public getTranslate(x: number, y: number, z: number): string {
-        const coordTransform: Coord = this.getCoordTranslate(x, y, z, this.mode);
-        const translate: string = 'translate(' + coordTransform.x + ' ' + coordTransform.y + ')';
-        return translate;
+    public getTranslationAtXYZ(x: number, y: number, z: number): string {
+        const coordTransform: Coord = this.getCoordTranslation(x, y, z, this.mode);
+        const translation: string = 'translate(' + coordTransform.x + ' ' + coordTransform.y + ')';
+        return translation;
     }
 
     public getParallelogramPoints(): string {
@@ -383,7 +383,7 @@ export class LascaComponent extends ParallelogramGameComponent<LascaRules,
         return [x0, y0, x1, y1, x2, y2, x3, y3].join(' ');
     }
 
-    public getPieceTranslate(z: number): string {
+    public getPieceTranslation(z: number): string {
         // We want the piece to be in the center of the parallelogram, here are its coords
         const parallelogramCenter: Coord = this.getParallelogramCenter();
         const cy: number = parallelogramCenter.y;
