@@ -10,6 +10,7 @@
             >
                 <polygon id="space_{{ x }}_{{ y }}"
                          [attr.points]="spaceInfo.coordinates"
+                         [attr.transform]="getHexaCenterTranslationAtXY(x, y)"
                          [ngClass]="spaceInfo.spaceClasses"
                          class="base"
                          stroke-linecap="round"/>

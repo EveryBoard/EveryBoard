@@ -6,7 +6,7 @@
         <g *ngFor="let space of line; index as x">
             <polygon id="space_{{ x }}_{{ y }}"
                      [attr.points]="getParallelogramPoints()"
-                     [attr.transform]="getTranslate(x, y, 0)"
+                     [attr.transform]="getTranslationAtXYZ(x, y, 0)"
                      (click)="onClick(x, y)"
                      class="base"
                      [ngClass]="getSpaceClasses(x, y)"/>
@@ -19,7 +19,7 @@
                    mgp-trexo-half-piece
                    id="half_tile_{{ x }}_{{ y }}_{{ z }}"
                    (click)="onClick(x, y)"
-                   [attr.transform]="getTranslate(x, y, z + 1)"
+                   [attr.transform]="getTranslationAtXYZ(x, y, z + 1)"
                    [mode]="mode"
                    [coord]="Coord3D.of(x, y, z)"
                    [mustDisplayHeight]="chosenMode === '2D'"
@@ -30,7 +30,7 @@
                    [mode]="mode"
                    id="dropped_piece_{{ x }}_{{ y }}_{{ z }}"
                    (click)="onClick(x, y)"
-                   [attr.transform]="getTranslate(x, y, z + 1)"
+                   [attr.transform]="getTranslationAtXYZ(x, y, z + 1)"
                    [coord]="Coord3D.of(x, y, z)"
                    [pieceClasses]="[currentOpponentClass]"/>
             </g>
@@ -50,7 +50,7 @@
                id="switchTo2D"
                (click)="switchToMode('2D')"
                [mode]="TrexoComponent.modeMap['2D']"
-               [attr.transform]="getTranslate(12, 9, 0)"
+               [attr.transform]="getTranslationAtXYZ(12, 9, 0)"
                [coord]="Coord3D.of(12, 9, 0)"
                [pieceClasses]="[currentPlayerClass]"/>
         </ng-template>
