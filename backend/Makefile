@@ -22,7 +22,7 @@ test: bin gamelist
 docker: gamelist
 	sed -i 's/;; //' dune
 	docker build -t backend-build -f Dockerfile.build .
-	sed -i 's/(flags /;; (flags/' dune
+	sed -i 's/(flags /;; (flags /' dune
 	docker run --rm --entrypoint cat backend-build /home/ocaml/_build/default/main.exe > main.static.exe
 	chmod +x main.static.exe
 	echo "GAMES='$$(cat games.txt)'" > .env
