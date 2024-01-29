@@ -19,7 +19,7 @@ import { FirstPlayer, PartStatus, PartType } from 'src/app/domain/ConfigRoom';
 import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 import { JSONValue } from 'src/app/utils/utils';
 
-fdescribe('ConfigRoomService', () => {
+describe('ConfigRoomService', () => {
 
     let configRoomDAO: ConfigRoomDAO;
     let configRoomService: ConfigRoomService;

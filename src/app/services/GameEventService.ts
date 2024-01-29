@@ -20,21 +20,13 @@ export class GameEventService {
     public subscribeToEvents(partId: string, callback: (events: GameEvent[]) => void): Subscription {
         const internalCallback: FirestoreCollectionObserver<GameEvent> = new FirestoreCollectionObserver(
             (events: FirestoreDocument<GameEvent>[]) => {
-                // When the client adds an event, firebase will initially have a null timestamp for the document creator
-                // When the event is really written, all the clients receive a modification with the real timestamp
-                // We want to keep only the latter.
-                const realEvents: GameEvent[] = events
-                    .map((event: FirestoreDocument<GameEvent>) => event.data)
-                    .filter((event: GameEvent) => event.time != null);
-                if (realEvents.length > 0) {
-                    callback(realEvents);
-                }
-            },
-            (events: FirestoreDocument<GameEvent>[]) => {
-                // Events can't be modified
-                // The only modification is when firebase adds the timestamp.
-                // So all modifications are actually treated as creations, as we ignore creations with empty timestamps
+                // Events can only be created.
+                // The timestamp is filled by the backend, and we have it directly at creation.
                 callback(events.map((event: FirestoreDocument<GameEvent>) => event.data));
+            },
+            /* istanbul ignore next */
+            (_events: FirestoreDocument<GameEvent>[]) => {
+                // Events can't be modified
             },
             /* istanbul ignore next */
             () => {
