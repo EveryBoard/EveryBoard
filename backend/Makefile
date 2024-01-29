@@ -30,7 +30,7 @@ docker: gamelist
 	docker save "backend-$(target)" > "backend-$(target).tar"
 
 deploy: docker
-	ssh -o StrictHostKeyChecking=accept-new -p "$(port)" "$(user)@$(server)" "docker load && (docker stop \$$(docker ps -q --filter ancestor=backend-$(target)) || echo 'container not running yet') && docker container prune -f && docker image prune -f && docker run -d -p $(listen-port):8081 backend-$(target)" < "backend-$(target).tar"
+	ssh -o StrictHostKeyChecking=accept-new -p "$(port)" "$(user)@$(server)" "(docker stop \$$(docker ps -q --filter ancestor=backend-$(target)) || echo 'container not running yet') && docker load && docker container prune -f && docker image prune -f && docker run -d -p $(listen-port):8081 backend-$(target)" < "backend-$(target).tar"
 
 clean:
 	opam exec -- dune clean
