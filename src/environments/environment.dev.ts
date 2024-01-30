@@ -7,5 +7,5 @@ export const environment: Environment = {
     root: '/',
     firebaseConfig: firebaseConfig,
     useEmulators: false,
-    backendURL: 'https://dev.server.everyboard.org',
+    backendURL: 'https://server-dev.everyboard.org',
 };
