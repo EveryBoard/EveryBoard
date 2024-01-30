@@ -1,41 +1,47 @@
 /* eslint-disable max-lines-per-function */
-/*
 import { fakeAsync, TestBed } from '@angular/core/testing';
-import { GameService, StartingPartConfig } from '../GameService';
+import { GameService } from '../GameService';
 import { PartDAO } from 'src/app/dao/PartDAO';
-import { Part, PartDocument, MGPResult } from 'src/app/domain/Part';
+import { Part, MGPResult } from 'src/app/domain/Part';
 import { PartDAOMock } from 'src/app/dao/tests/PartDAOMock.spec';
 import { ConfigRoomDAOMock } from 'src/app/dao/tests/ConfigRoomDAOMock.spec';
 import { ChatDAOMock } from 'src/app/dao/tests/ChatDAOMock.spec';
 import { ChatDAO } from 'src/app/dao/ChatDAO';
-import { Player } from 'src/app/jscaip/Player';
-import { FirstPlayer, ConfigRoom, PartType } from 'src/app/domain/ConfigRoom';
+import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { ConfigRoomDAO } from 'src/app/dao/ConfigRoomDAO';
 import { RouterTestingModule } from '@angular/router/testing';
 import { BlankComponent } from 'src/app/utils/tests/TestUtils.spec';
 import { ConnectedUserService } from '../ConnectedUserService';
 import { ConnectedUserServiceMock } from './ConnectedUserService.spec';
-import { ConfigRoomMocks } from 'src/app/domain/ConfigRoomMocks.spec';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { Utils } from 'src/app/utils/utils';
-import { ConfigRoomService } from '../ConfigRoomService';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { UserMocks } from 'src/app/domain/UserMocks.spec';
-import { PartMocks } from 'src/app/domain/PartMocks.spec';
 import { Subscription } from 'rxjs';
-import { GameEventService } from '../GameEventService';
 import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
-import { NoConfig, RulesConfigUtils } from 'src/app/jscaip/RulesConfigUtil';
+import { BackendService } from '../BackendService';
+import { MGPValidation } from 'src/app/utils/MGPValidation';
+import { MGPValidationTestUtils } from 'src/app/utils/tests/MGPValidation.spec';
+import { MinimalUser } from 'src/app/domain/MinimalUser';
+import { JSONValue } from 'src/app/utils/utils';
 
-describe('GameService', () => {
+fdescribe('GameService', () => {
 
     let gameService: GameService;
-
     let partDAO: PartDAO;
+    let backendService: BackendService;
 
-    let gameEventService: GameEventService;
-
-    const rulesConfig: NoConfig = RulesConfigUtils.getGameDefaultConfig('Quarto');
+    async function expectToDelegateTo<T>(method: keyof BackendService,
+                                         // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                                         expectedArgs: any[], returnValue: any,
+                                         call: () => Promise<T>)
+    : Promise<T>
+    {
+        spyOn(backendService, method).and.callFake(async() => returnValue);
+        const result: T = await call();
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        expect(backendService[method]).toHaveBeenCalledOnceWith(...expectedArgs as any);
+        return result;
+    }
 
     beforeEach(fakeAsync(async() => {
         await TestBed.configureTestingModule({
@@ -53,10 +59,11 @@ describe('GameService', () => {
             ],
         }).compileComponents();
         gameService = TestBed.inject(GameService);
-        gameEventService = TestBed.inject(GameEventService);
         partDAO = TestBed.inject(PartDAO);
+        backendService = TestBed.inject(BackendService);
         ConnectedUserServiceMock.setUser(UserMocks.CREATOR_AUTH_USER);
     }));
+
 
     it('should create', () => {
         expect(gameService).toBeTruthy();
@@ -91,318 +98,315 @@ describe('GameService', () => {
         subscription.unsubscribe();
     }));
 
-    it('should delegate delete to PartDAO', fakeAsync(async() => {
-        // Given the service at any moment
-        spyOn(partDAO, 'delete').and.resolveTo();
+    describe('getGameValidity', () => {
 
-        // When calling deletePart
-        await gameService.deletePart('partId');
+        it('should delegate to backend', fakeAsync(async() => {
+            // Given an existing game
+            const gameId: string = 'gameId';
+            const gameName: string = 'P4';
+            spyOn(backendService, 'getGameName').and.callFake(async() => MGPOptional.of(gameName));
 
-        // Then it should delegate to the DAO
-        expect(partDAO.delete).toHaveBeenCalledOnceWith('partId');
-    }));
-    describe('acceptConfig', () => {
-        it('should delegate to ConfigRoomService.acceptConfig', fakeAsync(async() => {
-            const configRoomService: ConfigRoomService = TestBed.inject(ConfigRoomService);
-            spyOn(configRoomService, 'acceptConfig').and.resolveTo();
-            spyOn(partDAO, 'update').and.resolveTo();
+            // When calling getGameValidity
+            const result: MGPValidation = await gameService.getGameValidity(gameId, gameName);
 
-            // Given a config
-            const configRoom: ConfigRoom = ConfigRoomMocks.withProposedConfig(rulesConfig);
-            // When accepting it
-            await gameService.acceptConfig('partId', configRoom);
-            // Then acceptConfig should be called
-            expect(configRoomService.acceptConfig).toHaveBeenCalledOnceWith('partId');
+            // Then it should have delegated to the backend
+            expect(backendService.getGameName).toHaveBeenCalledOnceWith(gameId);
+            MGPValidationTestUtils.expectToBeSuccess(result);
         }));
 
-        it('should call startGame with the accepter as argument (Player.ZERO)', fakeAsync(async() => {
-            const configRoomService: ConfigRoomService = TestBed.inject(ConfigRoomService);
-            const gameEventService: GameEventService = TestBed.inject(GameEventService);
-            spyOn(configRoomService, 'acceptConfig').and.resolveTo();
-            spyOn(partDAO, 'update').and.resolveTo();
-            spyOn(gameEventService, 'startGame').and.resolveTo();
+        it('should fail if the game does not exist', fakeAsync(async() => {
+            // Given a game that does not exist
+            const gameId: string = 'gameId';
+            const gameName: string = 'P4';
+            spyOn(backendService, 'getGameName').and.callFake(async() => MGPOptional.empty());
 
-            // Given a config that we want to accept, where we will start
-            const configRoom: ConfigRoom = {
-                ...ConfigRoomMocks.withProposedConfig(rulesConfig),
-                firstPlayer: FirstPlayer.CHOSEN_PLAYER.value,
-            };
-            // When accepting it
-            await gameService.acceptConfig('partId', configRoom);
-            // Then startGame is called with the user of Player.ZERO
-            expect(gameEventService.startGame).toHaveBeenCalledWith('partId', UserMocks.CREATOR_MINIMAL_USER);
+            // When calling getGameValidity
+            const result: MGPValidation = await gameService.getGameValidity(gameId, gameName);
+
+            // Then it should have delegated to the backend and failed
+            expect(backendService.getGameName).toHaveBeenCalledOnceWith(gameId);
+            MGPValidationTestUtils.expectToBeFailure(result, 'This game does not exist!');
         }));
 
-        it('should call startGame with the accepter as argument (Player.ONE)', fakeAsync(async() => {
-            const configRoomService: ConfigRoomService = TestBed.inject(ConfigRoomService);
-            const gameEventService: GameEventService = TestBed.inject(GameEventService);
-            spyOn(configRoomService, 'acceptConfig').and.resolveTo();
-            spyOn(partDAO, 'update').and.resolveTo();
-            spyOn(gameEventService, 'startGame').and.resolveTo();
+        it('should fail if the game is not the one we want', fakeAsync(async() => {
+            // Given a game that is not the one we expect
+            const gameId: string = 'gameId';
+            const gameName: string = 'P4';
 
-            // Given a config that we want to accept as opponent, where creator will start
-            const configRoom: ConfigRoom = {
-                ...ConfigRoomMocks.withProposedConfig(rulesConfig),
-                firstPlayer: FirstPlayer.CREATOR.value,
-            };
-            ConnectedUserServiceMock.setUser(UserMocks.OPPONENT_AUTH_USER);
-            // When accepting it
-            await gameService.acceptConfig('partId', configRoom);
-            // Then startGame is called with the user of Player.ONE
-            expect(gameEventService.startGame).toHaveBeenCalledWith('partId', UserMocks.OPPONENT_MINIMAL_USER);
+            spyOn(backendService, 'getGameName').and.callFake(async() => MGPOptional.of('Quarto'));
+
+            // When calling getGameValidity
+            const result: MGPValidation = await gameService.getGameValidity(gameId, gameName);
+
+            // Then it should have delegated to the backend and failed
+            expect(backendService.getGameName).toHaveBeenCalledOnceWith(gameId);
+            MGPValidationTestUtils.expectToBeFailure(result, 'This is the wrong game type!');
         }));
     });
+
     describe('createPartConfigRoomAndChat', () => {
-        it('should create in this order: part, configRoom, and then chat', fakeAsync(async() => {
-            const configRoomDAO: ConfigRoomDAO = TestBed.inject(ConfigRoomDAO);
-            const chatDAO: ChatDAO = TestBed.inject(ChatDAO);
-            // Install some mocks to check what we need
-            // (we can't rely on toHaveBeenCalled on a mocked method, so we model this manually)
-            let chatCreated: boolean = false;
-            let configRoomCreated: boolean = false;
-            spyOn(chatDAO, 'set').and.callFake(async(): Promise<void> => {
-                chatCreated = true;
-            });
-            spyOn(configRoomDAO, 'set').and.callFake(async(): Promise<void> => {
-                expect(chatCreated).withContext('configRoom should be created before the chat').toBeFalse();
-                configRoomCreated = true;
-            });
-            spyOn(partDAO, 'create').and.callFake(async(): Promise<string> => {
-                expect(chatCreated).withContext('part should be created before the chat').toBeFalse();
-                expect(configRoomCreated).withContext('part should be created before the configRoom').toBeFalse();
-                return 'partId';
-            });
 
-            // When calling createPartConfigRoomAndChat
-            await gameService.createPartConfigRoomAndChat('Quarto');
-            // Then, the order of the creations must be part, configRoom, chat (as checked by the mocks)
-            // Moreover, everything needs to have been called eventually
-            const part: Part = PartMocks.INITIAL;
-            const configRoom: ConfigRoom = ConfigRoomMocks.getInitialRandom(rulesConfig);
-            expect(partDAO.create).toHaveBeenCalledOnceWith(part);
-            expect(chatDAO.set).toHaveBeenCalledOnceWith('partId', {});
-            expect(configRoomDAO.set).toHaveBeenCalledOnceWith('partId', configRoom);
+        it('should delegate to backend', fakeAsync(async() => {
+            // Given a game
+            const gameName: string = 'P4';
+
+            // When creating it
+            // Then it should have delegated to the backend
+            const result: string = await expectToDelegateTo('createGame', [gameName], 'gameId', async() => {
+                return gameService.createPartConfigRoomAndChat(gameName);
+            });
+            expect(result).toBe('gameId');
         }));
     });
-    describe('getStartingConfig', () => {
-        it('should put creator first when math.random() is below 0.5', fakeAsync(async() => {
-            // Given a configRoom config asking random start
-            const configRoom: ConfigRoom = {
-                chosenOpponent: UserMocks.OPPONENT_MINIMAL_USER,
-                creator: UserMocks.CREATOR_MINIMAL_USER,
-                firstPlayer: 'RANDOM',
-                maximalMoveDuration: 10,
-                partStatus: 3,
-                partType: PartType.BLITZ.value,
-                totalPartDuration: 25,
-                rulesConfig: {},
-            };
 
-            // When calling getStartingConfig
-            spyOn(Math, 'random').and.returnValue(0.4);
-            const startConfig: StartingPartConfig = gameService.getStartingConfig(configRoom);
+    describe('deletePart', () => {
 
-            // Then we should have a creator starting the game
-            expect(startConfig.playerZero).toEqual(configRoom.creator);
-            expect(startConfig.playerOne).toEqual(Utils.getNonNullable(configRoom.chosenOpponent));
-        }));
+        it('should delegate to backend', fakeAsync(async() => {
+            // Given a game
+            const gameId: string = 'gameId';
 
-        it('should put ChosenOpponent first when math.random() is over 0.5', fakeAsync(async() => {
-            // Given a configRoom config asking random start
-            const configRoom: ConfigRoom = {
-                chosenOpponent: UserMocks.OPPONENT_MINIMAL_USER,
-                creator: UserMocks.CREATOR_MINIMAL_USER,
-                firstPlayer: 'RANDOM',
-                maximalMoveDuration: 10,
-                partStatus: 3,
-                partType: PartType.BLITZ.value,
-                totalPartDuration: 25,
-                rulesConfig: {},
-            };
-
-            // When calling getStartingConfig
-            spyOn(Math, 'random').and.returnValue(0.6);
-            const startConfig: StartingPartConfig = gameService.getStartingConfig(configRoom);
-
-            // Then we should have a creator starting the game
-            expect(startConfig.playerZero).toEqual(Utils.getNonNullable(configRoom.chosenOpponent));
-            expect(startConfig.playerOne).toEqual(configRoom.creator);
+            // When deleting it
+            // Then it should delegate to the backend
+            await expectToDelegateTo('deleteGame', [gameId], undefined, () => {
+                return gameService.deletePart(gameId);
+            });
         }));
     });
-    describe('rematch', () => {
-        let configRoomService: ConfigRoomService;
-        let partDAO: PartDAO;
-        beforeEach(() => {
-            configRoomService = TestBed.inject(ConfigRoomService);
-            partDAO = TestBed.inject(PartDAO);
-        });
 
-        it('should send request when proposing a rematch', fakeAsync(async() => {
-            // Given a game service
-            spyOn(gameEventService, 'addRequest').and.resolveTo();
+    describe('acceptConfig', () => {
 
-            // When proposing a rematch
-            await gameService.proposeRematch('partId');
-
-            // Then it should add a request
-            expect(gameEventService.addRequest).toHaveBeenCalledOnceWith('partId', UserMocks.CREATOR_MINIMAL_USER, 'Rematch');
-        }));
-
-        it('should send reply when rejecting a rematch', fakeAsync(async() => {
-            // Given a game service
-            spyOn(gameEventService, 'addReply').and.resolveTo();
-
-            // When rejecting a rematch
-            await gameService.rejectRematch('partId');
-
-            // Then it should add a reply
-            expect(gameEventService.addReply).toHaveBeenCalledOnceWith('partId', UserMocks.CREATOR_MINIMAL_USER, 'Reject', 'Rematch');
-        }));
-
-        it('should start with the other player when first player mentioned in previous game', fakeAsync(async() => {
-            // Given a previous game
-            const lastPart: PartDocument = new PartDocument('partId', PartMocks.FINISHED);
-            const lastConfigRoom: ConfigRoom = ConfigRoomMocks.withAcceptedConfig(rulesConfig);
-            spyOn(configRoomService, 'readConfigRoomById').and.resolveTo(lastConfigRoom);
-            spyOn(partDAO, 'create').and.resolveTo('rematchId');
-
-            // When calling acceptRematch
-            await gameService.acceptRematch(lastPart);
-
-            // Then it should create a new part with the players reversed
-            const part: Part = {
-                ...PartMocks.STARTED,
-                playerZero: Utils.getNonNullable(lastPart.data.playerOne),
-                playerOne: lastPart.data.playerZero,
-            };
-            expect(partDAO.create).toHaveBeenCalledOnceWith(part);
-        }));
-
-        it('should create elements in this order: part, configRoom, and then chat', fakeAsync(async() => {
-            // Given a previous game
-            const lastPart: PartDocument = new PartDocument('partId', PartMocks.FINISHED);
-            const lastConfigRoom: ConfigRoom = ConfigRoomMocks.withAcceptedConfig(rulesConfig);
-            spyOn(configRoomService, 'readConfigRoomById').and.resolveTo(lastConfigRoom);
-
-            // Install some mocks to check what we need
-            // (we can't rely on toHaveBeenCalled on a mocked method, so we model this manually)
-            const configRoomDAO: ConfigRoomDAO = TestBed.inject(ConfigRoomDAO);
-            const chatDAO: ChatDAO = TestBed.inject(ChatDAO);
-            let chatCreated: boolean = false;
-            let configRoomCreated: boolean = false;
-            spyOn(chatDAO, 'set').and.callFake(async(): Promise<void> => {
-                chatCreated = true;
+        it('should delegate to backend', fakeAsync(async() => {
+            // Given a game
+            const gameId: string = 'gameId';
+            // When accepting its config
+            // Then it should delegate to the backend
+            await expectToDelegateTo('acceptConfig', [gameId], undefined, () => {
+                return gameService.acceptConfig(gameId);
             });
-            spyOn(configRoomDAO, 'set').and.callFake(async(): Promise<void> => {
-                expect(chatCreated).withContext('configRoom should be created before the chat').toBeFalse();
-                configRoomCreated = true;
-            });
-            spyOn(partDAO, 'create').and.callFake(async(): Promise<string> => {
-                expect(chatCreated).withContext('part should be created before the chat').toBeFalse();
-                expect(configRoomCreated).withContext('part should be created before the configRoom').toBeFalse();
-                return 'partId';
-            });
-
-            // When calling acceptRematch
-            await gameService.acceptRematch(lastPart);
-
-            // Then, the order of the creations must be: part, configRoom, chat (as checked by the mocks)
-            // Moreover, everything needs to have been called eventually
-            const part: Part = {
-                ...PartMocks.STARTED,
-                playerZero: Utils.getNonNullable(lastPart.data.playerOne),
-                playerOne: lastPart.data.playerZero,
-            };
-            const configRoom: ConfigRoom = ConfigRoomMocks.withAcceptedConfig(rulesConfig);
-            expect(partDAO.create).toHaveBeenCalledOnceWith(part);
-            expect(chatDAO.set).toHaveBeenCalledOnceWith('partId', {});
-            expect(configRoomDAO.set).toHaveBeenCalledOnceWith('partId', configRoom);
         }));
     });
-    describe('updatePart', () => {
-        beforeEach(() => {
-            const part: Part = {
-                typeGame: 'Quarto',
+
+    describe('getExistingGame', () => {
+
+        it('should delegate to backend', fakeAsync(async() => {
+            // Given a game
+            const gameId: string = 'gameId';
+            const game: Part = {
+                typeGame: 'P4',
                 playerZero: UserMocks.CREATOR_MINIMAL_USER,
-                playerOne: UserMocks.OPPONENT_MINIMAL_USER,
-                turn: 1,
-                result: MGPResult.UNACHIEVED.value,
+                turn: -1,
+                result: 0,
             };
-            spyOn(partDAO, 'read').and.resolveTo(MGPOptional.of(part));
-            spyOn(partDAO, 'update').and.resolveTo();
-        });
 
-        it('should add scores to update when scores are present', fakeAsync(async() => {
-            // When updating the board with scores
-            const scores: PlayerNumberMap = PlayerNumberMap.of(5, 0);
-            await gameService.updatePartUponMove('partId', MGPOptional.of(scores));
-            // Then the update should contain the scores
-            const expectedUpdate: Partial<Part> = {
-                turn: 2,
-                scorePlayerZero: 5,
-                scorePlayerOne: 0,
-            };
-            expect(partDAO.update).toHaveBeenCalledOnceWith('partId', expectedUpdate);
+            // When getting the game
+            // Then it should delegate to the backend
+            const result: Part = await expectToDelegateTo('getGame', [gameId], game, () => {
+                return gameService.getExistingGame(gameId);
+            });
+            expect(result).toEqual(game);
         }));
     });
-    describe('drawPart', () => {
-        it('should include the draw notification', fakeAsync(async() => {
-            // Given a part
-            const part: Part = { ...PartMocks.STARTED, turn: 1 };
-            spyOn(partDAO, 'read').and.resolveTo(MGPOptional.of(part));
-            // When updating the board to notify of a draw
-            spyOn(partDAO, 'update').and.resolveTo();
-            await gameService.drawPart('partId', MGPOptional.empty());
-            // Then the result is set to draw in the update
-            const expectedUpdate: Partial<Part> = {
-                turn: 2,
-                result: MGPResult.HARD_DRAW.value,
-            };
-            expect(partDAO.update).toHaveBeenCalledWith('partId', expectedUpdate);
+
+    describe('resign', () => {
+
+        it('should delegate to backend', fakeAsync(async() => {
+            // Given a game
+            const gameId: string = 'gameId';
+            // When resigning
+            // Then it should delegate to the backend
+            await expectToDelegateTo('resign', [gameId], undefined, () => {
+                return gameService.resign(gameId);
+            });
         }));
     });
+
+    describe('notifyTimeout', () => {
+
+        it('should delegate to backend', fakeAsync(async() => {
+            // Given a game
+            const gameId: string = 'gameId';
+            const winner: MinimalUser = UserMocks.CREATOR_MINIMAL_USER;
+            const loser: MinimalUser = UserMocks.OPPONENT_MINIMAL_USER;
+            // When notifying a timeout
+            // Then it should delegate to the backend
+            await expectToDelegateTo('notifyTimeout', [gameId, winner, loser], undefined, () => {
+                return gameService.notifyTimeout(gameId, winner, loser);
+            });
+        }));
+    });
+
+    describe('proposeDraw', () => {
+
+        it('should delegate to backend', fakeAsync(async() => {
+            // Given a game
+            const gameId: string = 'gameId';
+            // When proposing a draw
+            // Then it should delegate to the backend
+            await expectToDelegateTo('proposeDraw', [gameId], undefined, () => {
+                return gameService.proposeDraw(gameId);
+            });
+        }));
+    });
+
     describe('acceptDraw', () => {
-        for (const player of Player.PLAYERS) {
-            it('should send AGREED_DRAW_BY_ZERO/ONE when call as ZERO/ONE', async() => {
-                // Given any state of service
-                spyOn(partDAO, 'update').and.resolveTo();
 
-                // When calling acceptDraw as the player
-                await gameService.acceptDraw('configRoomId', player);
-
-                // Then PartDAO should have been called with the appropriate MGPResult
-                const result: number = [
-                    MGPResult.AGREED_DRAW_BY_ZERO.value,
-                    MGPResult.AGREED_DRAW_BY_ONE.value][player.getValue()];
-                expect(partDAO.update).toHaveBeenCalledOnceWith('configRoomId', {
-                    result,
-                });
+        it('should delegate to backend', fakeAsync(async() => {
+            // Given a game
+            const gameId: string = 'gameId';
+            // When accepting a draw
+            // Then it should delegate to the backend
+            await expectToDelegateTo('acceptDraw', [gameId], undefined, () => {
+                return gameService.acceptDraw(gameId);
             });
-        }
+        }));
     });
+
+    describe('refuseDraw', () => {
+
+        it('should delegate to backend', fakeAsync(async() => {
+            // Given a game
+            const gameId: string = 'gameId';
+            // When refusing a draw
+            // Then it should delegate to the backend
+            await expectToDelegateTo('refuseDraw', [gameId], undefined, () => {
+                return gameService.refuseDraw(gameId);
+            });
+        }));
+    });
+
+    describe('proposeRematch', () => {
+
+        it('should delegate to backend', fakeAsync(async() => {
+            // Given a game
+            const gameId: string = 'gameId';
+            // When proposing a rematch
+            // Then it should delegate to the backend
+            await expectToDelegateTo('proposeRematch', [gameId], undefined, () => {
+                return gameService.proposeRematch(gameId);
+            });
+        }));
+    });
+
+    describe('rejectRematch', () => {
+
+        it('should delegate to backend', fakeAsync(async() => {
+            // Given a game
+            const gameId: string = 'gameId';
+            // When rejecting a rematch
+            // Then it should delegate to the backend
+            await expectToDelegateTo('rejectRematch', [gameId], undefined, () => {
+                return gameService.rejectRematch(gameId);
+            });
+        }));
+    });
+
+    describe('acceptRematch', () => {
+
+        it('should delegate to backend', fakeAsync(async() => {
+            // Given a game
+            const gameId: string = 'gameId';
+            // When accepting a rematch
+            // Then it should delegate to the backend
+            await expectToDelegateTo('acceptRematch', [gameId], undefined, () => {
+                return gameService.acceptRematch(gameId);
+            });
+        }));
+    });
+
+    describe('askTakeBack', () => {
+
+        it('should delegate to backend', fakeAsync(async() => {
+            // Given a game
+            const gameId: string = 'gameId';
+            // When asking a take back
+            // Then it should delegate to the backend
+            await expectToDelegateTo('askTakeBack', [gameId], undefined, () => {
+                return gameService.askTakeBack(gameId);
+            });
+        }));
+    });
+
     describe('acceptTakeBack', () => {
-        it('should decrease turn by 1 when accepting during our turn', fakeAsync(async() => {
-            spyOn(partDAO, 'update').and.resolveTo();
-            // Given a part during our turn
-            const part: Part = { ...PartMocks.STARTED, turn: 2 };
-            // When accepting the take back
-            await gameService.acceptTakeBack('configRoomId', part.turn, Player.ZERO);
-            // Then it should decrease the turn by one
-            expect(partDAO.update).toHaveBeenCalledOnceWith('configRoomId', { turn: 1 });
-        }));
 
-        it(`should decrease turn by 2 when accepting during the opponent's turn`, fakeAsync(async() => {
-            spyOn(partDAO, 'update').and.resolveTo();
-            // Given a part during the opponent's turn
-            const part: Part = { ...PartMocks.STARTED, turn: 3 };
-            // When accepting the take back
-            await gameService.acceptTakeBack('configRoomId', part.turn, Player.ZERO);
-            // Then it should decrease the turn by 2
-            expect(partDAO.update).toHaveBeenCalledOnceWith('configRoomId', {
-                turn: 1,
+        it('should delegate to backend', fakeAsync(async() => {
+            // Given a game
+            const gameId: string = 'gameId';
+            // When accepting a take back
+            // Then it should delegate to the backend
+            await expectToDelegateTo('acceptTakeBack', [gameId], undefined, () => {
+                return gameService.acceptTakeBack(gameId);
             });
         }));
     });
-});
 
-*/
+    describe('refuseTakeBack', () => {
+
+        it('should delegate to backend', fakeAsync(async() => {
+            // Given a game
+            const gameId: string = 'gameId';
+            // When refusing a take back
+            // Then it should delegate to the backend
+            await expectToDelegateTo('refuseTakeBack', [gameId], undefined, () => {
+                return gameService.refuseTakeBack(gameId);
+            });
+        }));
+    });
+
+    describe('addGlobalTime', () => {
+
+        it('should delegate to backend', fakeAsync(async() => {
+            // Given a game
+            const gameId: string = 'gameId';
+            // When adding global time
+            // Then it should delegate to the backend
+            await expectToDelegateTo('addGlobalTime', [gameId], undefined, () => {
+                return gameService.addGlobalTime(gameId);
+            });
+        }));
+    });
+
+    describe('addTurnTime', () => {
+
+        it('should delegate to backend', fakeAsync(async() => {
+            // Given a game
+            const gameId: string = 'gameId';
+            // When adding turn time
+            // Then it should delegate to the backend
+            await expectToDelegateTo('addTurnTime', [gameId], undefined, () => {
+                return gameService.addTurnTime(gameId);
+            });
+        }));
+    });
+
+    describe('addMove', () => {
+
+        it('should delegate to backend', fakeAsync(async() => {
+            // Given a game
+            const gameId: string = 'gameId';
+            const move: JSONValue = { x: 0 };
+            const scores: MGPOptional<PlayerNumberMap> = MGPOptional.empty();
+            // When adding move
+            // Then it should delegate to the backend
+            await expectToDelegateTo('move', [gameId, move, scores], undefined, () => {
+                return gameService.addMove(gameId, move, scores);
+            });
+        }));
+    });
+
+    describe('addMoveAndEndGame', () => {
+
+        it('should delegate to backend', fakeAsync(async() => {
+            // Given a game
+            const gameId: string = 'gameId';
+            const move: JSONValue = { x: 0 };
+            const scores: MGPOptional<PlayerNumberMap> = MGPOptional.empty();
+            const winner: PlayerOrNone = Player.ZERO;
+            // When adding move and ending game
+            // Then it should delegate to the backend
+            await expectToDelegateTo('moveAndEnd', [gameId, move, scores, winner], undefined, () => {
+                return gameService.addMoveAndEndGame(gameId, move, scores, winner);
+            });
+        }));
+    });
+
+});

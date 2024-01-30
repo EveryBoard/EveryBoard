@@ -25,12 +25,12 @@ import { MinimalUser } from 'src/app/domain/MinimalUser';
 import { CurrentGameService } from 'src/app/services/CurrentGameService';
 import { GameEventService } from 'src/app/services/GameEventService';
 import { AbstractNode, GameNode } from 'src/app/jscaip/AI/GameNode';
-import { Timestamp } from 'firebase/firestore';
 import { OGWCTimeManagerService } from './OGWCTimeManagerService';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { OGWCRequestManagerService, RequestInfo } from './OGWCRequestManagerService';
 import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { BackendService } from 'src/app/services/BackendService';
 
 export class OnlineGameWrapperMessages {
 
@@ -81,11 +81,11 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
                        router: Router,
                        messageDisplayer: MessageDisplayer,
                        private readonly currentGameService: CurrentGameService,
-                       private readonly userService: UserService,
                        private readonly gameService: GameService,
                        private readonly gameEventService: GameEventService,
                        private readonly timeManager: OGWCTimeManagerService,
-                       private readonly requestManager: OGWCRequestManagerService)
+                       private readonly requestManager: OGWCRequestManagerService,
+                       private readonly backendService: BackendService)
     {
         super(activatedRoute, connectedUserService, router, messageDisplayer);
     }
@@ -316,7 +316,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
 
     private async afterEventsBatch(): Promise<void> {
         const player: Player = Player.ofTurn(this.gameComponent.getTurn());
-        const serverTime: number = await this.gameService.getServerTime();
+        const serverTime: number = await this.backendService.getServerTime();
         this.timeManager.afterEventsBatch(this.endGame, player, serverTime);
     }
 

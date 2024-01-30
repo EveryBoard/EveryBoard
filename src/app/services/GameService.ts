@@ -30,12 +30,16 @@ export class GameService {
     {
     }
 
+    public subscribeToChanges(partId: string, callback: (part: MGPOptional<Part>) => void): Subscription {
+        return this.partDAO.subscribeToChanges(partId, callback);
+    }
+
     public async getGameValidity(gameId: string, gameName: string): Promise<MGPValidation> {
         const realGameName: MGPOptional<string> = await this.backendService.getGameName(gameId);
         if (realGameName.isAbsent()) {
-            return MGPValidation.failure('This game does not exist');
+            return MGPValidation.failure($localize`This game does not exist!`);
         } else if (realGameName.get() !== gameName) {
-            return MGPValidation.failure('This is the wrong game type');
+            return MGPValidation.failure($localize`This is the wrong game type!`);
         } else {
             return MGPValidation.SUCCESS;
         }
@@ -55,10 +59,6 @@ export class GameService {
 
     public getExistingGame(gameId: string): Promise<Part> {
         return this.backendService.getGame(gameId);
-    }
-
-    public subscribeToChanges(partId: string, callback: (part: MGPOptional<Part>) => void): Subscription {
-        return this.partDAO.subscribeToChanges(partId, callback);
     }
 
     public async resign(gameId: string): Promise<void> {
@@ -128,10 +128,6 @@ export class GameService {
     : Promise<void>
     {
         return this.backendService.moveAndEnd(gameId, encodedMove, scores, winner);
-    }
-
-    public async getServerTime(): Promise<number> {
-        return this.backendService.getServerTime();
     }
 
 }
