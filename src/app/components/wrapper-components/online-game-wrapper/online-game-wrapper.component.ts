@@ -398,6 +398,10 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
     }
 
     public override async canUserPlay(clickedElementName: string): Promise<MGPValidation> {
+        if (this.role === PlayerOrNone.NONE) {
+            const message: string = GameWrapperMessages.CANNOT_PLAY_AS_OBSERVER();
+            return MGPValidation.failure(message);
+        }
         const result: MGPValidation = await super.canUserPlay(clickedElementName);
         if (result.isFailure()) {
             return result;

@@ -69,7 +69,7 @@ describe('DemoCardComponent', () => {
         testUtils.expectElementToHaveClass('#lodestone_push_orthogonal_PLAYER_ZERO > g > .lodestone_main_circle', 'selected-stroke');
     }));
 
-    it('should not allow moves', fakeAsync(async() => {
+    it('should not allow clics', fakeAsync(async() => {
         // Given a demo component displayed for a game
         await loadNode({
             name: 'P4',
@@ -81,7 +81,7 @@ describe('DemoCardComponent', () => {
 
         // When trying to perform a click
         await testUtils.expectToDisplayGameMessage(
-            GameWrapperMessages.CANNOT_PLAY_AS_OBSERVER(),
+            GameWrapperMessages.THIS_IS_A_DEMO(),
             async() => {
                 await testUtils.clickElement('#click_2');
             },

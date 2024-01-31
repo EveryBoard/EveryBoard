@@ -313,11 +313,21 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
     }
 
     function expectGameToBeOver(): void {
-        expect(wrapper.chronoZeroGlobal.isIdle()).withContext('chrono zero global should be idle').toBeTrue();
-        expect(wrapper.chronoZeroTurn.isIdle()).withContext('chrono zero turn should be idle').toBeTrue();
-        expect(wrapper.chronoOneGlobal.isIdle()).withContext('chrono one global should be idle').toBeTrue();
-        expect(wrapper.chronoOneTurn.isIdle()).withContext('chrono one turn should be idle').toBeTrue();
-        expect(wrapper.endGame).toBeTrue();
+        expect(wrapper.chronoZeroGlobal.isIdle())
+            .withContext(`chrono zero global should be idle (${ wrapper.chronoZeroGlobal.remainingMs })`)
+            .toBeTrue();
+        expect(wrapper.chronoZeroTurn.isIdle())
+            .withContext(`chrono zero turn should be idle ${ wrapper.chronoZeroTurn.remainingMs }`)
+            .toBeTrue();
+        expect(wrapper.chronoOneGlobal.isIdle())
+            .withContext(`chrono one global should be idle ${ wrapper.chronoOneGlobal.remainingMs }`)
+            .toBeTrue();
+        expect(wrapper.chronoOneTurn.isIdle())
+            .withContext(`chrono one turn should be idle ${ wrapper.chronoOneTurn.remainingMs }`)
+            .toBeTrue();
+        expect(wrapper.endGame)
+            .withContext('game should be ended')
+            .toBeTrue();
     }
 
     async function prepareStartedGameWithMoves(encodedMoves: JSONValue[], waitForPartToStart: boolean = true)
@@ -788,9 +798,6 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             const currentGameService: CurrentGameService = TestBed.inject(CurrentGameService);
             spyOn(currentGameService, 'removeCurrentGame').and.callThrough();
             await doMoveByClicks(FIRST_MOVE);
-            // For some reason doMoveByClics calls 2 updates (without time then time only) very close to each other
-            // Provoking a call to a timeout workaround so the two update are applied sequencially and not parallelly
-            tick(1000);
 
             // Then removeCurrentGame should have been called
             expect(currentGameService.removeCurrentGame).toHaveBeenCalledOnceWith();
