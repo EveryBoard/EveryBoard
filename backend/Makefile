@@ -25,6 +25,7 @@ docker: gamelist
 	sed -i 's/(flags /;; (flags /' dune
 	docker run --rm --entrypoint cat backend-build /home/ocaml/_build/default/main.exe > main.static.exe
 	chmod +x main.static.exe
+	cp /etc/services services
 	echo "GAMES='$$(cat games.txt)'" > .env
 	docker build -t "backend-$(target)" -f Dockerfile.serve .
 	docker save "backend-$(target)" > "backend-$(target).tar"
