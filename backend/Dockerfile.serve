@@ -1,6 +1,7 @@
 FROM scratch
 COPY main.static.exe /
 COPY games.txt /
+COPY /etc/services /etc/services
 COPY service-account.json /
 CMD ["/main.static.exe"]
 EXPOSE 8081
