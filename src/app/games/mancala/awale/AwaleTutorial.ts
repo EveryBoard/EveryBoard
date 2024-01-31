@@ -6,6 +6,7 @@ import { MancalaDistribution, MancalaMove } from '../common/MancalaMove';
 import { AwaleRules } from './AwaleRules';
 import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { TutorialStepMessage } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
 
 const defaultConfig: MGPOptional<MancalaConfig> = AwaleRules.get().getDefaultRulesConfig();
 
@@ -14,9 +15,8 @@ export class AwaleTutorial extends Tutorial {
     public gameName: string = $localize`Awalé`;
 
     public tutorial: TutorialStep[] = [
-        TutorialStep.informational(
+        MancalaTutorial.intro(
             this.gameName,
-            $localize`${this.gameName} is a Mancala. Mancala is the name of a family of board games that dates back at least to the third century. Mancalas are games of distribution (sowing) and capture. Their goal is to capture the most seeds. The spaces in Mancalas are called the houses. The ones on the extreme left and right are called the stores, they contain the seeds that each player won. As you are playing Dark, the 6 houses on the bottom are yours.`,
             AwaleRules.get().getInitialState(defaultConfig),
         ),
         TutorialStep.informational(
@@ -24,10 +24,7 @@ export class AwaleTutorial extends Tutorial {
             $localize`Bonus fact: Awalé is the most common of all Mancalas.`,
             AwaleRules.get().getInitialState(defaultConfig),
         ),
-        MancalaTutorial.sowing(
-            AwaleRules.get().getInitialState(defaultConfig),
-            MancalaMove.of(MancalaDistribution.of(5)),
-        ),
+        MancalaTutorial.sowing(AwaleRules.get().getInitialState(defaultConfig)),
 
         TutorialStep.anyMove(
             $localize`Big sowing`,
@@ -48,7 +45,7 @@ export class AwaleTutorial extends Tutorial {
             ], 0, PlayerNumberMap.of(0, 0)),
             [MancalaMove.of(MancalaDistribution.of(0))],
             $localize`Well done! This was a simple capture, now let us see how to make multiple captures.`,
-            $localize`Failed. Try again and sow from the leftmost house.`,
+            MancalaTutorial.YOU_DID_NOT_CAPTURE_ANY_SEEDS(),
         ),
         TutorialStep.fromMove(
             $localize`Multiple captures`,
@@ -59,7 +56,7 @@ export class AwaleTutorial extends Tutorial {
             ], 0, PlayerNumberMap.of(0, 0)),
             [MancalaMove.of(MancalaDistribution.of(0))],
             $localize`Nice, you win 3 points from the first house, and 2 from the second!`,
-            $localize`Failed. Try again.`,
+            MancalaTutorial.YOU_DID_NOT_CAPTURE_ANY_SEEDS(),
         ),
         TutorialStep.fromMove(
             $localize`Interrupted capture`,
@@ -70,7 +67,7 @@ export class AwaleTutorial extends Tutorial {
             ], 0, PlayerNumberMap.of(0, 0)),
             [MancalaMove.of(MancalaDistribution.of(0))],
             $localize`Notice that because the second house was not capturable, the capture was interrupted and you have not captured the first house.`,
-            $localize`Failed. Try again.`,
+            MancalaTutorial.YOU_DID_NOT_CAPTURE_ANY_SEEDS(),
         ),
         TutorialStep.fromMove(
             $localize`Capture on the other side only`,
@@ -92,7 +89,7 @@ export class AwaleTutorial extends Tutorial {
             ], 0, PlayerNumberMap.of(0, 0)),
             [MancalaMove.of(MancalaDistribution.of(0))],
             $localize`Sadly, you cannot capture here, otherwise the opponent could not play after you. When this happens, the move can be made, but no capture takes place!`,
-            $localize`Failed. Try again.`,
+            TutorialStepMessage.FAILED_TRY_AGAIN(),
         ),
         TutorialStep.anyMove(
             $localize`Feeding is mandatory`,
@@ -105,7 +102,7 @@ export class AwaleTutorial extends Tutorial {
             $localize`Congratulations! Note that you can choose to give your opponent the least number of seeds if it is better for you. It is often a good way to have easy captures!`,
         ),
         TutorialStep.anyMove(
-            $localize`End of the game`,
+            TutorialStepMessage.END_OF_THE_GAME(),
             $localize`A game is won as soon as one player has captured 25 seeds, as that player has more than half of all the seeds.<br/><br/>You're playing Dark, sow the leftmost house.`,
             new MancalaState([
                 [4, 4, 3, 2, 1, 0],

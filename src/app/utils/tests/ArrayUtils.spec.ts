@@ -177,6 +177,52 @@ describe('TableUtils', () => {
 
     });
 
+    describe('sum', () => {
+
+        it('should add all element of a number table', () => {
+            // Given any list of number
+            const table: number[][] = [
+                [11, 12, 13, 14, 15],
+                [20, 19, 18, 17, 16],
+            ];
+
+            // When calling TableUtils.sum
+            const sum: number = TableUtils.sum(table);
+
+            // Then it should be correct
+            expect(sum).toBe(155);
+        });
+
+    });
+
+    describe('add', () => {
+
+        it('should add elements of same index of a number table', () => {
+            // Given two element
+            const left: Table<number> = [
+                [+1, +2, +3],
+                [+4, +2, +6],
+                [-1, -2, -3],
+            ];
+            const right: Table<number> = [
+                [+1, -2, +9],
+                [-2, +1, +1],
+                [-5, -1, +3],
+            ];
+
+            // When adding them
+            const sum: Table<number> = TableUtils.add(left, right);
+
+            // Then the result should be the sum of same-coorded-place
+            expect(sum).toEqual([
+                [2, 0, 12],
+                [2, 3, 7],
+                [-6, -3, 0],
+            ]);
+        });
+
+    });
+
 });
 
 describe('Table2DWithPossibleNegativeIndices', () => {

@@ -31,6 +31,7 @@ describe('GipfComponent', () => {
         })).withContext('expected to have an arrow pointing from ' + start.toString() + ' to ' + end.toString())
             .toBeTrue();
     }
+
     beforeEach(fakeAsync(async() => {
         testUtils = await ComponentTestUtils.forGame<GipfComponent>('Gipf');
     }));
@@ -173,6 +174,7 @@ describe('GipfComponent', () => {
             // Then it should be a failure
             await testUtils.expectClickFailure('#click_0_6', GipfFailure.NO_DIRECTIONS_AVAILABLE());
         }));
+
     });
 
     it('should accept placing after performing initial captures', fakeAsync(async() => {
@@ -510,4 +512,5 @@ describe('GipfComponent', () => {
         // Then it should no longer be selected
         expect(testUtils.getGameComponent().arrows.length).toBe(0);
     }));
+
 });

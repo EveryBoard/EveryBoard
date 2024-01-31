@@ -7,6 +7,7 @@ import { LodestoneMove } from './LodestoneMove';
 import { LodestonePiece, LodestonePieceLodestone, LodestonePieceNone, LodestonePiecePlayer } from './LodestonePiece';
 import { LodestonePressurePlateGroup, LodestonePressurePlates, LodestoneState } from './LodestoneState';
 import { LodestoneRules } from './LodestoneRules';
+import { TutorialStepMessage } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
 
 const N: LodestonePiece = LodestonePieceNone.UNREACHABLE;
 const _: LodestonePiece = LodestonePieceNone.EMPTY;
@@ -28,7 +29,7 @@ export class LodestoneTutorial extends Tutorial {
             $localize`To perform a move, you have to place your lodestone on the board. Your lodestone has two sides: <ul><li>its <i>repelling</i> side with which it will repel the opponent's pieces (indicated by the outward triangles of your opponent's color on the lodestone), and</li><li>its <i>attracting</i> side with which it will attract your pieces (indicated by the inward triangles of your color on the lodestone).</li></ul>Your lodestone can be placed to move pieces orthogonally or diagonally. All available lodestone sides and orientation are shown below the board.<br/><br/>You're playing Dark. Select the lodestone that repels your opponent's pieces diagonally.`,
             LodestoneRules.get().getInitialState(),
             ['#lodestone_push_diagonal'],
-            $localize`Congratulations!`,
+            TutorialStepMessage.CONGRATULATIONS(),
             $localize`This is not the right lodestone, try again.`,
         ),
         TutorialStep.informational(
@@ -47,17 +48,17 @@ export class LodestoneTutorial extends Tutorial {
             LodestoneRules.get().getInitialState(),
         ),
         TutorialStep.fromPredicate(
-            $localize`Capturing`,
+            $localize`Captures`,
             $localize`To summarize, it is possible to capture the opponent's pieces in two ways:<ul><li>with a repelling lodestone, by pushing your opponent's pieces out of the board, or</li><li>with an attracting lodestone, by moving your pieces on your opponent's pieces.</li></ul>Once a lodestone is placed and the pieces have been moved and/or captured, in case any of the opponent's pieces have been captured, you have to place them on the <i>pressure plates</i> that lie around the board. To do so, click on an empty space of the pressure plate of your choice for each capture. You can cancel this by clicking again on a piece you just put on a pressure plate.<br/><br/>You're playing Dark. Try to perform a move that captures at least one of your opponent's piece, and place your capture(s) on pressure plates.`,
             LodestoneRules.get().getInitialState(),
             new LodestoneMove(new Coord(0, 6), 'pull', 'orthogonal', { top: 2, bottom: 1, left: 1, right: 1 }),
             (_: LodestoneMove, _previous: LodestoneState, result: LodestoneState) => {
                 if (result.remainingSpaces() === 32) {
-                    return MGPValidation.failure($localize`You have not captured any of the opponent's pieces, try again!`);
+                    return MGPValidation.failure(TutorialStepMessage.YOU_DID_NOT_CAPTURE_ANY_PIECE());
                 }
                 return MGPValidation.SUCCESS;
             },
-            $localize`Congratulations!`,
+            TutorialStepMessage.CONGRATULATIONS(),
         ),
         TutorialStep.fromPredicate(
             $localize`Crumbling a first pressure plate`,
@@ -84,7 +85,7 @@ export class LodestoneTutorial extends Tutorial {
                 }
                 return MGPValidation.SUCCESS;
             },
-            $localize`Congratulations!`,
+            TutorialStepMessage.CONGRATULATIONS(),
         ),
         TutorialStep.fromPredicate(
             $localize`Crumbling a second pressure plate`,
@@ -111,7 +112,7 @@ export class LodestoneTutorial extends Tutorial {
                 }
                 return MGPValidation.SUCCESS;
             },
-            $localize`Congratulations!`,
+            TutorialStepMessage.CONGRATULATIONS(),
         ),
         TutorialStep.informational(
             $localize`Minimal board`,
@@ -154,10 +155,10 @@ export class LodestoneTutorial extends Tutorial {
             }),
             [new LodestoneMove(new Coord(4, 0), 'pull', 'diagonal', { top: 1, bottom: 0, left: 0, right: 0 })],
             $localize`Congratulations! At your next turn, you will be allowed to place your lodestone on any side.`,
-            $localize`Failed, try again.`,
+            TutorialStepMessage.FAILED_TRY_AGAIN(),
         ),
         TutorialStep.fromMove(
-            $localize`End of the game`,
+            TutorialStepMessage.END_OF_THE_GAME(),
             $localize`In order to win, you must take out all of your opponent's pieces.<br/><br/>Here, you can win in a single move, do it!`,
             new LodestoneState([
                 [N, N, N, N, N, N, N, N],
@@ -177,7 +178,7 @@ export class LodestoneTutorial extends Tutorial {
                 right: LodestonePressurePlateGroup.of([5, 3]).addCaptured(Player.ZERO, 8),
             }),
             [new LodestoneMove(new Coord(4, 2), 'pull', 'orthogonal', { top: 0, bottom: 0, left: 3, right: 0 })],
-            $localize`Congratulations, you won!`,
+            TutorialStepMessage.CONGRATULATIONS_YOU_WON(),
             $localize`This is not the winning move. Try again.`,
         ),
     ];

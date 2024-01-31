@@ -83,6 +83,7 @@ export class PentagoRules extends Rules<PentagoMove, PentagoState> {
         }
         return MGPValidation.SUCCESS;
     }
+
     public getVictoryCoords(state: PentagoState): Coord[] {
         let victoryCoords: Coord[] = [];
         for (const maybeVictory of PentagoRules.VICTORY_SOURCE) {
@@ -117,6 +118,7 @@ export class PentagoRules extends Rules<PentagoMove, PentagoState> {
         }
         return victoryCoords;
     }
+
     public getGameStatus(node: PentagoNode): GameStatus {
         const state: PentagoState = node.gameState;
         const victoryCoords: Coord[] = this.getVictoryCoords(state);
@@ -140,4 +142,5 @@ export class PentagoRules extends Rules<PentagoMove, PentagoState> {
             return GameStatus.ONGOING;
         }
     }
+
 }
