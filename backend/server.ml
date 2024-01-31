@@ -26,16 +26,15 @@ let error_catcher : Dream.middleware = fun handler request ->
   | DocumentNotFound _ -> Dream.empty `Not_Found
   | BadInput _ -> Dream.empty `Bad_Request
 
-let api = [
+let start () =
+  let api = [
     Dream.scope "/" [error_catcher; TokenRefresher.middleware !Options.service_account_file; Auth.middleware]
     @@ List.concat [
       Game.routes;
       ConfigRoom.routes;
       [server_time];
     ];
-  ]
-
-let start () =
+  ] in
   Mirage_crypto_rng_lwt.initialize (module Mirage_crypto_rng.Fortuna); (* Required for token refresher and JWT *)
   Dream.initialize_log ~level:`Info ();
   Dream.run ~interface:!Options.address ~port:!Options.port
