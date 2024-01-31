@@ -26,7 +26,7 @@ docker: gamelist
 	docker run --rm --entrypoint cat backend-build /home/ocaml/_build/default/main.exe > main.static.exe
 	chmod +x main.static.exe
 	cp /etc/services services
-    cp /etc/ssl/certs/ca-certificates.crt ca-certificates.crt
+	cp /etc/ssl/certs/ca-certificates.crt ca-certificates.crt
 	echo "GAMES='$$(cat games.txt)'" > .env
 	docker build -t "backend-$(target)" -f Dockerfile.serve .
 	docker save "backend-$(target)" > "backend-$(target).tar"
