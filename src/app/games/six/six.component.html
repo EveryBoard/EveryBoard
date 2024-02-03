@@ -1,50 +1,58 @@
 <svg xmlns="http://www.w3.org/2000/svg"
      width="100%" height="100%"
-     [attr.viewBox]="viewBox"
+     [attr.viewBox]="getViewBox().toSVGString()"
      preserveAspectRatio="xMidYMid meet">
     <!-- PIECES AND NEIGHBORS -->
     <polygon *ngFor="let piece of pieces"
              id="piece_{{ piece.x }}_{{ piece.y }}"
              (click)="onPieceClick(piece)"
-             [attr.points]="getHexaPointsAt(piece)"
+             [attr.points]="getHexaPoints()"
+             [attr.transform]="getHexaCenterTranslationAtXY(piece.x, piece.y)"
              [ngClass]="getPieceClass(piece)"
              class="base round"/>
     <polygon *ngFor="let neighbor of neighbors"
              id="neighbor_{{ neighbor.x }}_{{ neighbor.y }}"
              (click)="onNeighborClick(neighbor)"
-             [attr.points]="getHexaPointsAt(neighbor)"
+             [attr.points]="getHexaPoints()"
+             [attr.transform]="getHexaCenterTranslationAtXY(neighbor.x, neighbor.y)"
              class="base round"/>
     <polygon *ngIf="chosenLanding.isPresent()"
              id="chosenLanding_{{ chosenLanding.get().x }}_{{ chosenLanding.get().y }}"
              (click)="onPieceClick(chosenLanding.get())"
-             [attr.points]="getHexaPointsAt(chosenLanding.get())"
+             [attr.points]="getHexaPoints()"
+             [attr.transform]="getHexaCenterTranslationAtXY(chosenLanding.get().x, chosenLanding.get().y)"
              [ngClass]="getPlayerClass(state.getCurrentPlayer())"
              class="base round"/>
     <!-- LAST MOVE -->
     <polygon *ngFor="let disconnected of disconnecteds"
              id="disconnected_{{ disconnected.x }}_{{ disconnected.y }}"
-             [attr.points]="getHexaPointsAt(disconnected)"
+             [attr.points]="getHexaPoints()"
+             [attr.transform]="getHexaCenterTranslationAtXY(disconnected.x, disconnected.y)"
              class="base round captured-fill"/>
     <polygon *ngIf="leftCoord.isPresent()"
              id="leftCoord_{{ leftCoord.get().x }}_{{ leftCoord.get().y }}"
              (click)="onNeighborClick(leftCoord.get())"
-             [attr.points]="getHexaPointsAt(leftCoord.get())"
+             [attr.points]="getHexaPoints()"
+             [attr.transform]="getHexaCenterTranslationAtXY(leftCoord.get().x, leftCoord.get().y)"
              class="base round moved-fill mid-stroke"/>
     <polygon *ngIf="lastDrop.isPresent()"
              id="lastDrop_{{ lastDrop.get().x }}_{{ lastDrop.get().y }}"
              (click)="onPieceClick(lastDrop.get())"
-             [attr.points]="getHexaPointsAt(lastDrop.get())"
+             [attr.points]="getHexaPoints()"
+             [attr.transform]="getHexaCenterTranslationAtXY(lastDrop.get().x, lastDrop.get().y)"
              class="base no-fill round last-move-stroke mid-stroke"/>
     <!-- HIGHLIGHTS -->
     <polygon *ngIf="selectedPiece.isPresent()"
              id="selectedPiece_{{ selectedPiece.get().x }}_{{ selectedPiece.get().y }}"
              (click)="onPieceClick(selectedPiece.get())"
-             [attr.points]="getHexaPointsAt(selectedPiece.get())"
+             [attr.points]="getHexaPoints()"
+             [attr.transform]="getHexaCenterTranslationAtXY(selectedPiece.get().x, selectedPiece.get().y)"
              [ngClass]="getSelectedPieceClass()"
              class="base no-fill round"/>
     <polygon *ngFor="let victoryCoord of victoryCoords"
              id="victoryCoord_{{ victoryCoord.x }}_{{ victoryCoord.y }}"
-             [attr.points]="getHexaPointsAt(victoryCoord)"
+             [attr.points]="getHexaPoints()"
+             [attr.transform]="getHexaCenterTranslationAtXY(victoryCoord.x, victoryCoord.y)"
              class="base no-fill round victory-stroke mid-stroke"/>
     <g *ngFor="let cuttableGroup of cuttableGroups"
        pointer-events="fill"
@@ -52,7 +60,8 @@
         <polygon *ngFor="let cuttable of cuttableGroup"
                  id="cuttable_{{ cuttable.x }}_{{ cuttable.y }}"
                  (click)="onPieceClick(cuttable)"
-                 [attr.points]="getHexaPointsAt(cuttable)"
+                 [attr.points]="getHexaPoints()"
+                 [attr.transform]="getHexaCenterTranslationAtXY(cuttable.x, cuttable.y)"
                  class="no-fill"
                  stroke-linecap="round"/>
     </g>

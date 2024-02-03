@@ -1,6 +1,6 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { HexaDirection } from 'src/app/jscaip/HexaDirection';
-import { GameNode } from 'src/app/jscaip/GameNode';
+import { GameNode } from 'src/app/jscaip/AI/GameNode';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPSet } from 'src/app/utils/MGPSet';
@@ -13,12 +13,15 @@ import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { CoordSet } from 'src/app/utils/OptimizedSet';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
+import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 import { Debug } from 'src/app/utils/utils';
+import { Table } from 'src/app/utils/ArrayUtils';
 
 export type SixLegalityInformation = MGPSet<Coord>;
 
 export class SixNode extends GameNode<SixMove, SixState> {
 }
+
 export interface SixVictorySource {
     typeSource: 'LINE' | 'TRIANGLE_CORNER' | 'TRIANGLE_EDGE' | 'CIRCLE',
     index: number,
@@ -29,26 +32,34 @@ export class SixRules extends Rules<SixMove, SixState, SixLegalityInformation> {
 
     private static singleton: MGPOptional<SixRules> = MGPOptional.empty();
 
+    private currentVictorySource: SixVictorySource;
+
     public static get(): SixRules {
         if (SixRules.singleton.isAbsent()) {
             SixRules.singleton = MGPOptional.of(new SixRules());
         }
         return SixRules.singleton.get();
     }
-    private constructor() {
-        super(SixState);
+
+    public override getInitialState(): SixState {
+        const board: Table<PlayerOrNone> = [[Player.ZERO], [Player.ONE]];
+        return SixState.ofRepresentation(board, 0);
     }
 
-    private currentVictorySource: SixVictorySource;
-
-    public applyLegalMove(move: SixMove, state: SixState, kept: SixLegalityInformation): SixState {
+    public override applyLegalMove(move: SixMove,
+                                   state: SixState,
+                                   _config: NoConfig,
+                                   kept: SixLegalityInformation)
+    : SixState
+    {
         if (state.turn < 40) {
             return state.applyLegalDrop(move.landing);
         } else {
             return state.applyLegalDeplacement(move, kept);
         }
     }
-    public isLegal(move: SixMove, state: SixState): MGPFallible<SixLegalityInformation> {
+
+    public override isLegal(move: SixMove, state: SixState): MGPFallible<SixLegalityInformation> {
         const landingLegality: MGPValidation = state.isIllegalLandingZone(move.landing, move.start);
         if (landingLegality.isFailure()) {
             return landingLegality.toOtherFallible();
@@ -85,7 +96,7 @@ export class SixRules extends Rules<SixMove, SixState, SixLegalityInformation> {
         if (pieceOwner === PlayerOrNone.NONE) {
             return MGPFallible.failure(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY());
         } else if (pieceOwner === state.getCurrentOpponent()) {
-            return MGPFallible.failure(RulesFailure.CANNOT_CHOOSE_OPPONENT_PIECE());
+            return MGPFallible.failure(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT());
         }
         const stateAfterMove: SixState = state.movePiece(move);
         const groupsAfterMove: MGPSet<MGPSet<Coord>> = stateAfterMove.getGroups();

@@ -1,26 +1,39 @@
 import { Coord } from '../../jscaip/Coord';
-import { Rules } from '../../jscaip/Rules';
-import { GameNode } from '../../jscaip/GameNode';
+import { GameNode } from '../../jscaip/AI/GameNode';
+import { ConfigurableRules } from '../../jscaip/Rules';
 import { P4State } from './P4State';
 import { PlayerOrNone } from 'src/app/jscaip/Player';
 import { Utils, Debug } from 'src/app/utils/utils';
 import { P4Move } from './P4Move';
-import { Table } from 'src/app/utils/ArrayUtils';
+import { Table, TableUtils } from 'src/app/utils/ArrayUtils';
 import { P4Failure } from './P4Failure';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { NInARowHelper } from 'src/app/jscaip/NInARowHelper';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { NumberConfig, RulesConfigDescription, RulesConfigDescriptionLocalizable } from 'src/app/components/wrapper-components/rules-configuration/RulesConfigDescription';
+import { MGPValidators } from 'src/app/utils/MGPValidator';
+
+export type P4Config = {
+    width: number;
+    height: number;
+};
 
 export class P4Node extends GameNode<P4Move, P4State> {}
 
 @Debug.log
-export class P4Rules extends Rules<P4Move, P4State> {
+export class P4Rules extends ConfigurableRules<P4Move, P4State, P4Config> {
 
     private static singleton: MGPOptional<P4Rules> = MGPOptional.empty();
 
-    public static readonly P4_HELPER: NInARowHelper<PlayerOrNone> =
-        new NInARowHelper(P4State.isOnBoard, Utils.identity, 4);
+    public static readonly RULES_CONFIG_DESCRIPTION: RulesConfigDescription<P4Config> =
+        new RulesConfigDescription<P4Config>({
+            name: (): string => $localize`Four in a Row`,
+            config: {
+                width: new NumberConfig(7, RulesConfigDescriptionLocalizable.WIDTH, MGPValidators.range(1, 99)),
+                height: new NumberConfig(6, RulesConfigDescriptionLocalizable.HEIGHT, MGPValidators.range(1, 99)),
+            },
+        });
 
     public static get(): P4Rules {
         if (P4Rules.singleton.isAbsent()) {
@@ -28,36 +41,29 @@ export class P4Rules extends Rules<P4Move, P4State> {
         }
         return P4Rules.singleton.get();
     }
-    public static getVictoriousCoords(state: P4State): Coord[] {
-        return P4Rules.P4_HELPER.getVictoriousCoord(state);
-    }
-    public static getLowestUnoccupiedSpace(board: Table<PlayerOrNone>, x: number): number {
-        let y: number = 0;
-        while (y < P4State.HEIGHT && board[y][x] === PlayerOrNone.NONE) {
-            y++;
-        }
-        return y - 1;
-    }
-    public static getListMoves(node: P4Node): P4Move[] {
-        // should be called only if the game is not over
-        const originalState: P4State = node.gameState;
-        const moves: P4Move[] = [];
 
-        for (let x: number = 0; x < P4State.WIDTH; x++) {
-            if (originalState.getPieceAtXY(x, 0) === PlayerOrNone.NONE) {
-                const move: P4Move = P4Move.of(x);
-                moves.push(move);
-            }
-        }
-        return moves;
-    }
+    public readonly P4_HELPER: NInARowHelper<PlayerOrNone>;
+
     private constructor() {
-        super(P4State);
+        super();
+        this.P4_HELPER = new NInARowHelper(Utils.identity, 4);
     }
-    public applyLegalMove(move: P4Move, state: P4State, _info: void): P4State {
+
+    public override getRulesConfigDescription(): MGPOptional<RulesConfigDescription<P4Config>> {
+        return MGPOptional.of(P4Rules.RULES_CONFIG_DESCRIPTION);
+    }
+
+    public override getInitialState(config: MGPOptional<P4Config>): P4State {
+        const board: PlayerOrNone[][] = TableUtils.create(config.get().width,
+                                                          config.get().height,
+                                                          PlayerOrNone.NONE);
+        return new P4State(board, 0);
+    }
+
+    public override applyLegalMove(move: P4Move, state: P4State, _config: MGPOptional<P4Config>, _info: void): P4State {
         const x: number = move.x;
         const board: PlayerOrNone[][] = state.getCopiedBoard();
-        const y: number = P4Rules.getLowestUnoccupiedSpace(board, x);
+        const y: number = P4Rules.get().getLowestUnoccupiedSpace(board, x);
 
         const turn: number = state.turn;
 
@@ -66,18 +72,36 @@ export class P4Rules extends Rules<P4Move, P4State> {
         const resultingState: P4State = new P4State(board, turn + 1);
         return resultingState;
     }
-    public isLegal(move: P4Move, state: P4State): MGPValidation {
+
+    public override isLegal(move: P4Move, state: P4State): MGPValidation {
         if (state.getPieceAtXY(move.x, 0).isPlayer()) {
             return MGPValidation.failure(P4Failure.COLUMN_IS_FULL());
         }
         return MGPValidation.SUCCESS;
     }
+
     public getGameStatus(node: P4Node): GameStatus {
         const state: P4State = node.gameState;
-        const victoriousCoord: Coord[] = P4Rules.P4_HELPER.getVictoriousCoord(state);
+        const victoriousCoord: Coord[] = this.P4_HELPER.getVictoriousCoord(state);
         if (victoriousCoord.length > 0) {
             return GameStatus.getVictory(state.getCurrentOpponent());
         }
-        return state.turn === 42 ? GameStatus.DRAW : GameStatus.ONGOING;
+        const width: number = state.getWidth();
+        const height: number = state.getHeight();
+        return state.turn === (width * height) ? GameStatus.DRAW : GameStatus.ONGOING;
     }
+
+    public getVictoriousCoords(state: P4State): Coord[] {
+        return this.P4_HELPER.getVictoriousCoord(state);
+    }
+
+    public getLowestUnoccupiedSpace(board: Table<PlayerOrNone>, x: number): number {
+        let y: number = 0;
+        const height: number = board.length;
+        while (y < height && board[y][x] === PlayerOrNone.NONE) {
+            y++;
+        }
+        return y - 1;
+    }
+
 }

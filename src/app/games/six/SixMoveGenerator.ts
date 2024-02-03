@@ -7,11 +7,13 @@ import { SixState } from './SixState';
 import { SixMove } from './SixMove';
 import { Debug } from 'src/app/utils/utils';
 import { SixNode, SixRules } from './SixRules';
-import { MoveGenerator } from 'src/app/jscaip/AI';
+import { MoveGenerator } from 'src/app/jscaip/AI/AI';
+import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 @Debug.log
 export class SixMoveGenerator extends MoveGenerator<SixMove, SixState> {
-    public getListMoves(node: SixNode): SixMove[] {
+
+    public override getListMoves(node: SixNode, _config: NoConfig): SixMove[] {
         const legalLandings: Coord[] = SixRules.getLegalLandings(node.gameState);
         if (node.gameState.turn < 40) {
             return this.getListDrops(legalLandings);

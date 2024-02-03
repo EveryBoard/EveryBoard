@@ -1,5 +1,5 @@
 import { Rules } from '../../jscaip/Rules';
-import { GameNode } from 'src/app/jscaip/GameNode';
+import { GameNode } from 'src/app/jscaip/AI/GameNode';
 import { QuartoState } from './QuartoState';
 import { QuartoMove } from './QuartoMove';
 import { QuartoPiece } from './QuartoPiece';
@@ -15,6 +15,8 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPSet } from 'src/app/utils/MGPSet';
 import { CoordSet } from 'src/app/utils/OptimizedSet';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
+import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { TableUtils } from 'src/app/utils/ArrayUtils';
 
 /**
  * A criterion is a list of boolean sub-criteria, so three possible values: true, false, null.
@@ -135,9 +137,12 @@ export class QuartoRules extends Rules<QuartoMove, QuartoState> {
         }
         return QuartoRules.singleton.get();
     }
-    private constructor() {
-        super(QuartoState);
+
+    public override getInitialState(): QuartoState {
+        const board: QuartoPiece[][] = TableUtils.create(4, 4, QuartoPiece.EMPTY);
+        return new QuartoState(board, 0, QuartoPiece.AAAA);
     }
+
     public static readonly lines: ReadonlyArray<QuartoLine> = [
         // verticals
         new QuartoLine(new Coord(0, 0), Direction.DOWN),
@@ -189,10 +194,11 @@ export class QuartoRules extends Rules<QuartoMove, QuartoState> {
         return MGPValidation.SUCCESS;
     }
 
-    public isLegal(move: QuartoMove, state: QuartoState): MGPValidation {
+    public override isLegal(move: QuartoMove, state: QuartoState): MGPValidation {
         return QuartoRules.isLegal(move, state);
     }
-    public applyLegalMove(move: QuartoMove, state: QuartoState, _info: void): QuartoState {
+
+    public override applyLegalMove(move: QuartoMove, state: QuartoState, _config: NoConfig, _info: void): QuartoState {
         const newBoard: QuartoPiece[][] = state.getCopiedBoard();
         newBoard[move.coord.y][move.coord.x] = state.pieceInHand;
         const resultingState: QuartoState = new QuartoState(newBoard, state.turn + 1, move.piece);

@@ -1,12 +1,15 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { GameStateWithTable } from 'src/app/jscaip/GameStateWithTable';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
+import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 import { Table, TableUtils } from 'src/app/utils/ArrayUtils';
 import { ComparableObject } from 'src/app/utils/Comparable';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { assert } from 'src/app/utils/assert';
+import { GoConfig } from './GoRules';
+import { Utils } from 'src/app/utils/utils';
 
 type PieceType = 'alive' | 'dead' | 'territory' | 'empty';
+
 export class GoPiece implements ComparableObject {
 
     public static DARK: GoPiece = new GoPiece(Player.ZERO, 'alive');
@@ -19,15 +22,16 @@ export class GoPiece implements ComparableObject {
 
     public static DEAD_LIGHT: GoPiece = new GoPiece(Player.ONE, 'dead');
 
-    public static DARK_TERRITORY: GoPiece = new GoPiece(PlayerOrNone.NONE, 'territory');
+    public static DARK_TERRITORY: GoPiece = new GoPiece(Player.ZERO, 'territory');
 
-    public static LIGHT_TERRITORY: GoPiece = new GoPiece(PlayerOrNone.NONE, 'territory');
+    public static LIGHT_TERRITORY: GoPiece = new GoPiece(Player.ONE, 'territory');
 
-    private constructor(readonly player: PlayerOrNone, readonly type: PieceType) {}
+    private constructor(readonly player: PlayerOrNone, public readonly type: PieceType) {}
 
     public equals(other: GoPiece): boolean {
         return other === this;
     }
+
     public toString(): string {
         switch (this) {
             case GoPiece.DARK:
@@ -43,37 +47,52 @@ export class GoPiece implements ComparableObject {
             case GoPiece.DARK_TERRITORY:
                 return 'GoPiece.DARK_TERRITORY';
             default:
-                assert(this === GoPiece.LIGHT_TERRITORY, 'Unexisting GoPiece');
+                Utils.assert(this === GoPiece.LIGHT_TERRITORY, 'Unexisting GoPiece');
                 return 'GoPiece.LIGHT_TERRITORY';
         }
     }
+
     public static pieceBelongTo(piece: GoPiece, owner: Player): boolean {
         return owner === piece.player && piece.type !== 'territory';
     }
+
     public static ofPlayer(player: Player): GoPiece {
-        if (player === Player.ZERO) return GoPiece.DARK;
-        else return GoPiece.LIGHT;
+        if (player === Player.ZERO) {
+            return GoPiece.DARK;
+        } else {
+            return GoPiece.LIGHT;
+        }
     }
+
     public isOccupied(): boolean {
-        return [GoPiece.DARK, GoPiece.LIGHT, GoPiece.DEAD_DARK, GoPiece.DEAD_LIGHT].includes(this);
+        return this.type === 'alive' ||
+               this.type === 'dead';
     }
+
     public isEmpty(): boolean {
-        return [GoPiece.DARK_TERRITORY, GoPiece.LIGHT_TERRITORY, GoPiece.EMPTY].includes(this);
+        return this.type === 'territory' ||
+               this.type === 'empty';
     }
+
     public isDead(): boolean {
-        return [GoPiece.DEAD_DARK, GoPiece.DEAD_LIGHT].includes(this);
+        return this.type === 'dead';
     }
+
     public isTerritory(): boolean {
-        return [GoPiece.DARK_TERRITORY, GoPiece.LIGHT_TERRITORY].includes(this);
+        return this.type === 'territory';
     }
+
     public getOwner(): PlayerOrNone {
         return this.player;
     }
+
     public nonTerritory(): GoPiece {
-        assert(this.isEmpty(), 'Usually not false, if false, cover by test and return "this"');
+        Utils.assert(this.isEmpty(), 'Usually not false, if false, cover by test and return "this"');
         return GoPiece.EMPTY;
     }
+
 }
+
 export enum Phase {
     PLAYING = 'PLAYING',
     PASSED = 'PASSED',
@@ -81,20 +100,17 @@ export enum Phase {
     ACCEPT = 'ACCEPT',
     FINISHED = 'FINISHED'
 }
+
 export class GoState extends GameStateWithTable<GoPiece> {
-
-    public static WIDTH: number = 19;
-
-    public static HEIGHT: number = 19;
 
     public readonly koCoord: MGPOptional<Coord>;
 
-    public readonly captured: ReadonlyArray<number>;
+    public readonly captured: PlayerNumberMap;
 
     public readonly phase: Phase;
 
     public constructor(board: Table<GoPiece>,
-                       captured: number[],
+                       captured: PlayerNumberMap,
                        turn: number,
                        koCoord: MGPOptional<Coord>,
                        phase: Phase)
@@ -104,16 +120,15 @@ export class GoState extends GameStateWithTable<GoPiece> {
         this.koCoord = koCoord;
         this.phase = phase;
     }
-    public static getInitialState(): GoState {
-        const board: Table<GoPiece> = GoState.getStartingBoard();
-        return new GoState(board, [0, 0], 0, MGPOptional.empty(), Phase.PLAYING);
+
+    public getCapturedCopy(): PlayerNumberMap {
+        return this.captured.getCopy();
     }
-    public getCapturedCopy(): [number, number] {
-        return [this.captured[0], this.captured[1]];
+
+    public static getStartingBoard(config: GoConfig): GoPiece[][] {
+        return TableUtils.create(config.width, config.height, GoPiece.EMPTY);
     }
-    public static getStartingBoard(): Table<GoPiece> {
-        return TableUtils.create(GoState.WIDTH, GoState.HEIGHT, GoPiece.EMPTY);
-    }
+
     public copy(): GoState {
         return new GoState(this.getCopiedBoard(),
                            this.getCapturedCopy(),
@@ -121,10 +136,13 @@ export class GoState extends GameStateWithTable<GoPiece> {
                            this.koCoord,
                            this.phase);
     }
+
     public isDead(coord: Coord): boolean {
         return this.getPieceAt(coord).isDead();
     }
+
     public isTerritory(coord: Coord): boolean {
         return this.getPieceAt(coord).isTerritory();
     }
+
 }

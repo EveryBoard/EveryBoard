@@ -1,7 +1,7 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { Direction } from 'src/app/jscaip/Direction';
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
-import { GameNode } from 'src/app/jscaip/GameNode';
+import { GameNode } from 'src/app/jscaip/AI/GameNode';
 import { Rules } from 'src/app/jscaip/Rules';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
@@ -12,6 +12,9 @@ import { Table } from 'src/app/utils/ArrayUtils';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
+import { Player } from 'src/app/jscaip/Player';
 
 export type AbaloneLegalityInformation = Table<FourStatePiece>;
 
@@ -27,9 +30,26 @@ export class AbaloneRules extends Rules<AbaloneMove, AbaloneState, AbaloneLegali
         }
         return AbaloneRules.singleton.get();
     }
-    private constructor() {
-        super(AbaloneState);
+
+    public override getInitialState(): AbaloneState {
+        const _: FourStatePiece = FourStatePiece.EMPTY;
+        const N: FourStatePiece = FourStatePiece.UNREACHABLE;
+        const O: FourStatePiece = FourStatePiece.ZERO;
+        const X: FourStatePiece = FourStatePiece.ONE;
+        const board: Table<FourStatePiece> = [
+            [N, N, N, N, X, X, X, X, X],
+            [N, N, N, X, X, X, X, X, X],
+            [N, N, _, _, X, X, X, _, _],
+            [N, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, N],
+            [_, _, O, O, O, _, _, N, N],
+            [O, O, O, O, O, O, N, N, N],
+            [O, O, O, O, O, N, N, N, N],
+        ];
+        return new AbaloneState(board, 0);
     }
+
     private static isLegalRealPush(firstOpponent: Coord,
                                    move: AbaloneMove,
                                    state: AbaloneState,
@@ -46,7 +66,7 @@ export class AbaloneRules extends Rules<AbaloneMove, AbaloneState, AbaloneLegali
             opponentPieces++;
             firstOpponent = firstOpponent.getNext(move.dir);
         }
-        if (opponentPieces >= pushingPieces) {
+        if (pushingPieces <= opponentPieces) {
             return MGPFallible.failure(AbaloneFailure.NOT_ENOUGH_PIECE_TO_PUSH());
         } else if (AbaloneState.isOnBoard(firstOpponent)) {
             if (state.getPieceAt(firstOpponent) === FourStatePiece.EMPTY) {
@@ -58,20 +78,17 @@ export class AbaloneRules extends Rules<AbaloneMove, AbaloneState, AbaloneLegali
         }
         return MGPFallible.success(newBoard);
     }
-    public static getGameStatus(node: AbaloneNode): GameStatus {
-        const scores: [number, number] = node.gameState.getScores();
-        if (scores[0] > 5) {
-            return GameStatus.ZERO_WON;
-        } else if (scores[1] > 5) {
-            return GameStatus.ONE_WON;
-        } else {
-            return GameStatus.ONGOING;
-        }
-    }
-    public applyLegalMove(_move: AbaloneMove, state: AbaloneState, newBoard: AbaloneLegalityInformation): AbaloneState {
+
+    public override applyLegalMove(_move: AbaloneMove,
+                                   state: AbaloneState,
+                                   _config: NoConfig,
+                                   newBoard: AbaloneLegalityInformation)
+    : AbaloneState
+    {
         return new AbaloneState(newBoard, state.turn + 1);
     }
-    public isLegal(move: AbaloneMove, state: AbaloneState): MGPFallible<AbaloneLegalityInformation> {
+
+    public override isLegal(move: AbaloneMove, state: AbaloneState): MGPFallible<AbaloneLegalityInformation> {
         const firstPieceValidity: MGPValidation = this.getFirstPieceValidity(move, state);
         if (firstPieceValidity.isFailure()) {
             return firstPieceValidity.toOtherFallible();
@@ -87,7 +104,7 @@ export class AbaloneRules extends Rules<AbaloneMove, AbaloneState, AbaloneLegali
         if (state.isPiece(move.coord) === false) {
             return MGPValidation.failure(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY());
         } else if (firstPiece === FourStatePiece.ofPlayer(state.getCurrentOpponent())) {
-            return MGPValidation.failure(RulesFailure.CANNOT_CHOOSE_OPPONENT_PIECE());
+            return MGPValidation.failure(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT());
         } else {
             return MGPValidation.SUCCESS;
         }
@@ -140,6 +157,13 @@ export class AbaloneRules extends Rules<AbaloneMove, AbaloneState, AbaloneLegali
         return MGPFallible.success(newBoard);
     }
     public getGameStatus(node: AbaloneNode): GameStatus {
-        return AbaloneRules.getGameStatus(node);
+        const scores: PlayerNumberMap = node.gameState.getScores();
+        if (5 < scores.get(Player.ZERO)) {
+            return GameStatus.ZERO_WON;
+        } else if (5 < scores.get(Player.ONE)) {
+            return GameStatus.ONE_WON;
+        } else {
+            return GameStatus.ONGOING;
+        }
     }
 }

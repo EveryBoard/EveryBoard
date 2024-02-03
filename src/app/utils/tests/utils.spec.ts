@@ -72,6 +72,17 @@ class MyClass {
     public someMethod(arg: number): string {
         return 'boo';
     }
+    public someCycliclyUnprintableObjectIsReturned(): object {
+        const a: object = {
+            value: 5,
+        };
+        const b: object = {
+            reference: a,
+        };
+        // eslint-disable-next-line dot-notation
+        a['ref'] = b; // Will cause an infinite loop when JSON.stringify
+        return a;
+    }
 }
 
 describe('Debug', () => {
@@ -100,8 +111,21 @@ describe('Debug', () => {
             Debug.enableLog([false, false], 'Class', 'method');
             // When calling Debug.display
             Debug.display('Class', 'method', 'message');
-            // Then it should have logged the message
+            // Then it should not have logged the message
             expect(console.log).not.toHaveBeenCalled();
+        });
+        it('should throw when verbose is set to something invalid', () => {
+            // Given a verbose-disabled method and class
+            spyOn(ErrorLoggerService, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
+            spyOn(console, 'log').and.returnValue();
+            localStorage.setItem('verbosity', 'lolilol');
+            // When calling Debug.display
+            // Then it should throw and not log
+            expect(() => Debug.display('Class', 'method', 'message'))
+                .toThrowError('malformed verbosity object: lolilol');
+            expect(console.log).not.toHaveBeenCalled();
+            // because this is an error resulting from a user error, devs don't want to know about it
+            expect(ErrorLoggerService.logError).not.toHaveBeenCalled();
         });
         it('should not log when verbose is unset', () => {
             // Given a verbose-unset method and class
@@ -123,6 +147,17 @@ describe('Debug', () => {
         });
     });
     describe('log annotation', () => {
+        it('should not crash when cyclicity stringification bug occur', () => {
+            // Given a verbose-enabled method
+            spyOn(console, 'log').and.returnValue();
+            Debug.enableLog([false, true], 'MyClass', 'someCycliclyUnprintableObjectIsReturned');
+            // When calling the method
+            const instance: MyClass = new MyClass();
+            instance.someCycliclyUnprintableObjectIsReturned();
+
+            // Then it should not have thrown when trying to log recursive object
+            expect(console.log).toHaveBeenCalledWith('< MyClass.someCycliclyUnprintableObjectIsReturned -> recursive and not stringifiable!');
+        });
         it('should log entry and exit when verbose is enabled', () => {
             // Given a verbose-enabled method
             spyOn(console, 'log').and.returnValue();

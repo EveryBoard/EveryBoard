@@ -1,8 +1,8 @@
 import { MGPValidation } from 'src/app/utils/MGPValidation';
-import { Coord } from 'src/app/jscaip/Coord';
-import { GameNode } from 'src/app/jscaip/GameNode';
+import { GameNode } from 'src/app/jscaip/AI/GameNode';
+import { Coord, CoordFailure } from 'src/app/jscaip/Coord';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { Rules } from 'src/app/jscaip/Rules';
+import { ConfigurableRules } from 'src/app/jscaip/Rules';
 import { EpaminondasMove } from './EpaminondasMove';
 import { EpaminondasState } from './EpaminondasState';
 import { EpaminondasFailure } from './EpaminondasFailure';
@@ -11,14 +11,33 @@ import { Table, TableUtils } from 'src/app/utils/ArrayUtils';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { NumberConfig, RulesConfigDescription, RulesConfigDescriptionLocalizable } from 'src/app/components/wrapper-components/rules-configuration/RulesConfigDescription';
+import { MGPValidators } from 'src/app/utils/MGPValidator';
+
+export type EpaminondasConfig = {
+    width: number;
+    emptyRows: number;
+    rowsOfSoldiers: number;
+};
 
 export type EpaminondasLegalityInformation = Table<PlayerOrNone>;
 
 export class EpaminondasNode extends GameNode<EpaminondasMove, EpaminondasState> {}
 
-export class EpaminondasRules extends Rules<EpaminondasMove, EpaminondasState, EpaminondasLegalityInformation> {
-
+export class EpaminondasRules
+    extends ConfigurableRules<EpaminondasMove, EpaminondasState, EpaminondasConfig, EpaminondasLegalityInformation>
+{
     private static singleton: MGPOptional<EpaminondasRules> = MGPOptional.empty();
+
+    public static readonly RULES_CONFIG_DESCRIPTION: RulesConfigDescription<EpaminondasConfig> =
+        new RulesConfigDescription<EpaminondasConfig>({
+            name: (): string => $localize`Epaminondas`,
+            config: {
+                width: new NumberConfig(14, RulesConfigDescriptionLocalizable.WIDTH, MGPValidators.range(1, 99)),
+                emptyRows: new NumberConfig(8, () => $localize`Number of empty rows`, MGPValidators.range(1, 99)),
+                rowsOfSoldiers: new NumberConfig(2, () => $localize`Number of soldier rows`, MGPValidators.range(1, 99)),
+            },
+        });
 
     public static get(): EpaminondasRules {
         if (EpaminondasRules.singleton.isAbsent()) {
@@ -26,9 +45,7 @@ export class EpaminondasRules extends Rules<EpaminondasMove, EpaminondasState, E
         }
         return EpaminondasRules.singleton.get();
     }
-    private constructor() {
-        super(EpaminondasState);
-    }
+
     public static isLegal(move: EpaminondasMove, state: EpaminondasState): MGPFallible<EpaminondasLegalityInformation> {
         const phalanxValidity: MGPValidation = this.getPhalanxValidity(state, move);
         if (phalanxValidity.isFailure()) {
@@ -47,12 +64,16 @@ export class EpaminondasRules extends Rules<EpaminondasMove, EpaminondasState, E
         }
         return MGPFallible.success(captureValidity.get());
     }
+
     public static getPhalanxValidity(state: EpaminondasState, move: EpaminondasMove): MGPValidation {
         let coord: Coord = move.coord;
+        if (state.isOnBoard(coord) === false) {
+            return MGPValidation.failure(CoordFailure.OUT_OF_RANGE(coord));
+        }
         let soldierIndex: number = 0;
         const opponent: Player = state.getCurrentOpponent();
         while (soldierIndex < move.movedPieces) {
-            if (EpaminondasState.isOnBoard(coord) === false) {
+            if (state.isOnBoard(coord) === false) {
                 return MGPValidation.failure(EpaminondasFailure.PHALANX_CANNOT_CONTAIN_PIECES_OUTSIDE_BOARD());
             }
             const spaceContent: PlayerOrNone = state.getPieceAt(coord);
@@ -67,6 +88,7 @@ export class EpaminondasRules extends Rules<EpaminondasMove, EpaminondasState, E
         }
         return MGPValidation.SUCCESS;
     }
+
     public static getLandingStatus(state: EpaminondasState, move: EpaminondasMove)
     : MGPFallible<EpaminondasLegalityInformation> {
         const newBoard: PlayerOrNone[][] = state.getCopiedBoard();
@@ -77,7 +99,7 @@ export class EpaminondasRules extends Rules<EpaminondasMove, EpaminondasState, E
         while (landingIndex + 1 < move.stepSize) {
             newBoard[emptied.y][emptied.x] = PlayerOrNone.NONE;
             newBoard[landingCoord.y][landingCoord.x] = currentPlayer;
-            if (EpaminondasState.isOnBoard(landingCoord) === false) {
+            if (state.isOnBoard(landingCoord) === false) {
                 return MGPFallible.failure(EpaminondasFailure.PHALANX_IS_LEAVING_BOARD());
             }
             if (state.getPieceAt(landingCoord).isPlayer()) {
@@ -87,7 +109,7 @@ export class EpaminondasRules extends Rules<EpaminondasMove, EpaminondasState, E
             landingCoord = landingCoord.getNext(move.direction, 1);
             emptied = emptied.getNext(move.direction, 1);
         }
-        if (EpaminondasState.isOnBoard(landingCoord) === false) {
+        if (state.isOnBoard(landingCoord) === false) {
             return MGPFallible.failure(EpaminondasFailure.PHALANX_IS_LEAVING_BOARD());
         }
         if (state.getPieceAt(landingCoord) === currentPlayer) {
@@ -97,6 +119,7 @@ export class EpaminondasRules extends Rules<EpaminondasMove, EpaminondasState, E
         newBoard[landingCoord.y][landingCoord.x] = currentPlayer;
         return MGPFallible.success(newBoard);
     }
+
     public static getCaptureValidity(oldState: EpaminondasState,
                                      board: PlayerOrNone[][],
                                      move: EpaminondasMove,
@@ -105,7 +128,7 @@ export class EpaminondasRules extends Rules<EpaminondasMove, EpaminondasState, E
     {
         let capturedSoldier: Coord = move.coord.getNext(move.direction, move.movedPieces + move.stepSize - 1);
         let captured: number = 0;
-        while (EpaminondasState.isOnBoard(capturedSoldier) &&
+        while (oldState.isOnBoard(capturedSoldier) &&
                oldState.getPieceAt(capturedSoldier) === opponent)
         {
             // Capture
@@ -113,28 +136,51 @@ export class EpaminondasRules extends Rules<EpaminondasMove, EpaminondasState, E
                 board[capturedSoldier.y][capturedSoldier.x] = PlayerOrNone.NONE;
             }
             captured++;
-            if (captured >= move.movedPieces) {
+            if (move.movedPieces <= captured) {
                 return MGPFallible.failure(EpaminondasFailure.PHALANX_SHOULD_BE_GREATER_TO_CAPTURE());
             }
             capturedSoldier = capturedSoldier.getNext(move.direction, 1);
         }
         return MGPFallible.success(board);
     }
-    public isLegal(move: EpaminondasMove, state: EpaminondasState): MGPFallible<EpaminondasLegalityInformation> {
+
+    public override getInitialState(optionalConfig: MGPOptional<EpaminondasConfig>): EpaminondasState {
+        const config: EpaminondasConfig = optionalConfig.get();
+        const _: PlayerOrNone = PlayerOrNone.NONE;
+        const O: PlayerOrNone = PlayerOrNone.ZERO;
+        const X: PlayerOrNone = PlayerOrNone.ONE;
+        const upperBoard: PlayerOrNone[][] = TableUtils.create(config.width, config.rowsOfSoldiers, X);
+        const middleBoard: PlayerOrNone[][] = TableUtils.create(config.width, config.emptyRows, _);
+        const lowerBoard: PlayerOrNone[][] = TableUtils.create(config.width, config.rowsOfSoldiers, O);
+        const board: Table<PlayerOrNone> = upperBoard.concat(middleBoard).concat(lowerBoard);
+        return new EpaminondasState(board, 0);
+    }
+
+    public override getRulesConfigDescription(): MGPOptional<RulesConfigDescription<EpaminondasConfig>> {
+        return MGPOptional.of(EpaminondasRules.RULES_CONFIG_DESCRIPTION);
+    }
+
+    public override isLegal(move: EpaminondasMove, state: EpaminondasState)
+    : MGPFallible<EpaminondasLegalityInformation>
+    {
         return EpaminondasRules.isLegal(move, state);
     }
-    public applyLegalMove(_move: EpaminondasMove,
-                          state: EpaminondasState,
-                          newBoard: EpaminondasLegalityInformation)
+
+    public override applyLegalMove(_move: EpaminondasMove,
+                                   state: EpaminondasState,
+                                   _config: MGPOptional<EpaminondasConfig>,
+                                   newBoard: EpaminondasLegalityInformation)
     : EpaminondasState
     {
         const resultingState: EpaminondasState = new EpaminondasState(newBoard, state.turn + 1);
         return resultingState;
     }
-    public getGameStatus(node: EpaminondasNode): GameStatus {
+
+    public override getGameStatus(node: EpaminondasNode, _config: MGPOptional<EpaminondasConfig>): GameStatus {
         const state: EpaminondasState = node.gameState;
-        const zerosInFirstLine: number = state.count(Player.ZERO, 0);
-        const onesInLastLine: number = state.count(Player.ONE, EpaminondasState.HEIGHT - 1);
+        const zerosInFirstLine: number = state.countRow(Player.ZERO, 0);
+        const height: number = state.getHeight();
+        const onesInLastLine: number = state.countRow(Player.ONE, height - 1);
         if (state.turn % 2 === 0) {
             if (zerosInFirstLine > onesInLastLine) {
                 return GameStatus.ZERO_WON;
@@ -154,4 +200,5 @@ export class EpaminondasRules extends Rules<EpaminondasMove, EpaminondasState, E
         }
         return GameStatus.ONGOING;
     }
+
 }

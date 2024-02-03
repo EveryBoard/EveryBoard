@@ -5,9 +5,9 @@
     <g #remainingPieces
        *ngFor="let player of Player.PLAYERS">
         <g *ngFor="let piece of getRemainingPieces(player); index as pieceIdx">
-            <circle id="piece_{{ player.value }}_{{ piece.toString() }}_{{ pieceIdx }}"
-                    (click)="onPieceClick(player.value, piece, pieceIdx)"
-                    [attr.transform]="'rotate(' + ((this.getPointOfView().value + player.value) * 180) + ' ' + CENTER + ' ' + CENTER + ')'"
+            <circle id="piece_{{ player.getValue() }}_{{ piece.toString() }}_{{ pieceIdx }}"
+                    (click)="onPieceClick(player.getValue(), piece, pieceIdx)"
+                    [attr.transform]="'rotate(' + ((this.getPointOfView().getValue() + player.getValue()) * 180) + ' ' + CENTER + ' ' + CENTER + ')'"
                     [attr.r]="getPieceRadius(piece)"
                     [attr.cx]="getRemainingPieceCenterCoord(player, pieceIdx).x"
                     [attr.cy]="getRemainingPieceCenterCoord(player, pieceIdx).y"

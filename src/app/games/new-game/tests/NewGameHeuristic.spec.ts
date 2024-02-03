@@ -1,8 +1,10 @@
-import { HeuristicUtils } from 'src/app/jscaip/tests/HeuristicUtils.spec';
+import { HeuristicUtils } from 'src/app/jscaip/AI/tests/HeuristicUtils.spec';
 import { NewGameHeuristic } from '../NewGameHeuristic';
 import { NewGameState } from '../NewGameState';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { Player } from 'src/app/jscaip/Player';
+import { NewGameRules } from '../NewGameRules';
+import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 /**
  * These are the tests for the heuristic.
@@ -13,21 +15,25 @@ import { Player } from 'src/app/jscaip/Player';
 describe('NewGameHeuristic', () => {
 
     let heuristic: NewGameHeuristic;
+    const defaultConfig: NoConfig = NewGameRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         heuristic = new NewGameHeuristic();
     });
+
     it('should have some board value', () => {
         /**
          * To test board values, most of the time you want to rely on
          * `HeuristicUtils.expectSecondStateToBeBetterThanFirstFor`.
          * You can include last moves when needed (here there are set to MGPOptional.empty())
          */
-        const weakState: NewGameState = NewGameState.getInitialState();
+        const weakState: NewGameState = NewGameRules.get().getInitialState();
         const strongState: NewGameState = new NewGameState(42);
         HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(heuristic,
                                                                weakState, MGPOptional.empty(),
                                                                strongState, MGPOptional.empty(),
-                                                               Player.ONE);
+                                                               Player.ONE,
+                                                               defaultConfig);
     });
+
 });

@@ -1,7 +1,6 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { GameStateWithTable } from 'src/app/jscaip/GameStateWithTable';
 import { PlayerOrNone } from 'src/app/jscaip/Player';
-import { TableUtils } from 'src/app/utils/ArrayUtils';
 import { MGPSet } from 'src/app/utils/MGPSet';
 
 export class ConspirateursState extends GameStateWithTable<PlayerOrNone> {
@@ -24,33 +23,27 @@ export class ConspirateursState extends GameStateWithTable<PlayerOrNone> {
             new Coord(ConspirateursState.WIDTH-1, xOrY),
         ])).toList();
 
-    public static isOnBoard(coord: Coord): boolean {
-        return coord.isInRange(ConspirateursState.WIDTH, ConspirateursState.HEIGHT);
-    }
-    public static getInitialState(): ConspirateursState {
-        const board: PlayerOrNone[][] = TableUtils.create(ConspirateursState.WIDTH,
-                                                          ConspirateursState.HEIGHT,
-                                                          PlayerOrNone.NONE);
-        return new ConspirateursState(board, 0);
-    }
     public isShelter(coord: Coord): boolean {
-        if (coord.x === 0 || coord.x === ConspirateursState.WIDTH-1) {
+        if (this.isVerticalEdge(coord)) {
             return ConspirateursState.SHELTERS_INDICES.some((y: number) => coord.y === y);
-        } else if (coord.y === 0 || coord.y === ConspirateursState.HEIGHT-1) {
+        } else if (this.isHorizontalEdge(coord)) {
             return ConspirateursState.SHELTERS_INDICES.some((x: number) => coord.x === x);
         } else {
             return false;
         }
     }
+
     public isCentralZone(coord: Coord): boolean {
-        return coord.x >= ConspirateursState.CENTRAL_ZONE_TOP_LEFT.x &&
+        return ConspirateursState.CENTRAL_ZONE_TOP_LEFT.x <= coord.x &&
             coord.x <= ConspirateursState.CENTRAL_ZONE_BOTTOM_RIGHT.x &&
-            coord.y >= ConspirateursState.CENTRAL_ZONE_TOP_LEFT.y &&
+            ConspirateursState.CENTRAL_ZONE_TOP_LEFT.y <= coord.y &&
             coord.y <= ConspirateursState.CENTRAL_ZONE_BOTTOM_RIGHT.y;
     }
+
     public isDropPhase(): boolean {
         return this.turn < 40;
     }
+
     public getSidePieces(): [number, number] {
         if (this.turn % 2 === 0) {
             return [20 - (this.turn / 2), 20 - (this.turn / 2)];

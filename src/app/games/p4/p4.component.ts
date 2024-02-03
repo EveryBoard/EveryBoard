@@ -1,15 +1,14 @@
 import { Component } from '@angular/core';
 import { P4State } from './P4State';
-import { P4Rules } from './P4Rules';
+import { P4Config, P4Rules } from './P4Rules';
 import { RectangularGameComponent } from '../../components/game-components/rectangular-game-component/RectangularGameComponent';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { P4Move } from 'src/app/games/p4/P4Move';
 import { PlayerOrNone } from 'src/app/jscaip/Player';
 import { Coord } from 'src/app/jscaip/Coord';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
-import { P4Tutorial } from './P4Tutorial';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { MCTS } from 'src/app/jscaip/MCTS';
+import { MCTS } from 'src/app/jscaip/AI/MCTS';
 import { P4MoveGenerator } from './P4MoveGenerator';
 import { P4Minimax } from './P4Minimax';
 
@@ -18,7 +17,7 @@ import { P4Minimax } from './P4Minimax';
     templateUrl: './p4.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
 })
-export class P4Component extends RectangularGameComponent<P4Rules, P4Move, P4State, PlayerOrNone> {
+export class P4Component extends RectangularGameComponent<P4Rules, P4Move, P4State, PlayerOrNone, P4Config> {
 
     public EMPTY: PlayerOrNone = PlayerOrNone.NONE;
     public last: MGPOptional<Coord>;
@@ -26,15 +25,14 @@ export class P4Component extends RectangularGameComponent<P4Rules, P4Move, P4Sta
 
     public constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
-        this.rules = P4Rules.get();
-        this.node = this.rules.getInitialNode();
+        this.setRulesAndNode('P4');
         this.availableAIs = [
             new P4Minimax(),
             new MCTS($localize`MCTS`, new P4MoveGenerator(), this.rules),
         ];
         this.encoder = P4Move.encoder;
-        this.tutorial = new P4Tutorial().tutorial;
     }
+
     public async onClick(x: number): Promise<MGPValidation> {
         const clickValidity: MGPValidation = await this.canUserPlay('#click_' + x);
         if (clickValidity.isFailure()) {
@@ -46,12 +44,12 @@ export class P4Component extends RectangularGameComponent<P4Rules, P4Move, P4Sta
     public async updateBoard(_triggerAnimation: boolean): Promise<void> {
         const state: P4State = this.getState();
 
-        this.victoryCoords = P4Rules.getVictoriousCoords(state);
+        this.victoryCoords = P4Rules.get().getVictoriousCoords(state);
         this.board = state.board;
     }
     public override async showLastMove(move: P4Move): Promise<void> {
         const state: P4State = this.getState();
-        const y: number = P4Rules.getLowestUnoccupiedSpace(state.board, move.x) + 1;
+        const y: number = P4Rules.get().getLowestUnoccupiedSpace(state.board, move.x) + 1;
         this.last = MGPOptional.of(new Coord(move.x, y));
     }
     public override hideLastMove(): void {

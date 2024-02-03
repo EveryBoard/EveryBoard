@@ -1,6 +1,6 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { Direction } from 'src/app/jscaip/Direction';
-import { GameNode } from 'src/app/jscaip/GameNode';
+import { GameNode } from 'src/app/jscaip/AI/GameNode';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { Rules } from 'src/app/jscaip/Rules';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
@@ -12,6 +12,8 @@ import { LinesOfActionFailure } from './LinesOfActionFailure';
 import { LinesOfActionMove } from './LinesOfActionMove';
 import { LinesOfActionState } from './LinesOfActionState';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
+import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 
 export class LinesOfActionNode extends GameNode<LinesOfActionMove, LinesOfActionState> {}
 
@@ -25,24 +27,40 @@ export class LinesOfActionRules extends Rules<LinesOfActionMove, LinesOfActionSt
         }
         return LinesOfActionRules.singleton.get();
     }
-    private constructor() {
-        super(LinesOfActionState);
+
+    public override getInitialState(): LinesOfActionState {
+        const _: PlayerOrNone = PlayerOrNone.NONE;
+        const O: PlayerOrNone = PlayerOrNone.ZERO;
+        const X: PlayerOrNone = PlayerOrNone.ONE;
+        const board: PlayerOrNone[][] = [
+            [_, O, O, O, O, O, O, _],
+            [X, _, _, _, _, _, _, X],
+            [X, _, _, _, _, _, _, X],
+            [X, _, _, _, _, _, _, X],
+            [X, _, _, _, _, _, _, X],
+            [X, _, _, _, _, _, _, X],
+            [X, _, _, _, _, _, _, X],
+            [_, O, O, O, O, O, O, _],
+        ];
+        return new LinesOfActionState(board, 0);
     }
-    public static getNumberOfGroups(state: LinesOfActionState): [number, number] {
+
+    public static getNumberOfGroups(state: LinesOfActionState): PlayerNumberMap {
         const groups: number[][] = TableUtils.create(LinesOfActionState.SIZE, LinesOfActionState.SIZE, -1);
-        const numGroups: [number, number] = [0, 0];
+        const numGroups: PlayerNumberMap = PlayerNumberMap.of(0, 0);
         let highestGroup: number = 0;
         for (const coordAndContent of state.getCoordsAndContents()) {
             if (groups[coordAndContent.coord.y][coordAndContent.coord.x] === -1) {
                 if (coordAndContent.content.isPlayer()) {
                     highestGroup += 1;
                     LinesOfActionRules.markGroupStartingAt(state, groups, coordAndContent.coord, highestGroup);
-                    numGroups[coordAndContent.content.value] += 1;
+                    numGroups.add(coordAndContent.content, 1);
                 }
             }
         }
         return numGroups;
     }
+
     private static markGroupStartingAt(state: LinesOfActionState, groups: number[][], pos: Coord, id: number): void {
         const stack: Coord[] = [pos];
         const player: PlayerOrNone = state.getPieceAt(pos);
@@ -64,16 +82,24 @@ export class LinesOfActionRules extends Rules<LinesOfActionMove, LinesOfActionSt
             }
         }
     }
-    public applyLegalMove(move: LinesOfActionMove, state: LinesOfActionState, _info: void): LinesOfActionState {
+
+    public override applyLegalMove(move: LinesOfActionMove, state: LinesOfActionState, _config: NoConfig, _info: void)
+    : LinesOfActionState
+    {
         const board: PlayerOrNone[][] = state.getCopiedBoard();
         board[move.getStart().y][move.getStart().x] = PlayerOrNone.NONE;
         board[move.getEnd().y][move.getEnd().x] = state.getCurrentPlayer();
 
         return new LinesOfActionState(board, state.turn + 1);
     }
+
     public static isLegal(move: LinesOfActionMove, state: LinesOfActionState): MGPValidation {
-        if (state.getPieceAt(move.getStart()) !== state.getCurrentPlayer()) {
-            return MGPValidation.failure(RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
+        const piece: PlayerOrNone = state.getPieceAt(move.getStart());
+        if (piece === PlayerOrNone.NONE) {
+            return MGPValidation.failure(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY());
+        }
+        if (piece === state.getCurrentOpponent()) {
+            return MGPValidation.failure(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT());
         }
         if (move.length() !== this.numberOfPiecesOnLine(state, move.getStart(), move.direction)) {
             return MGPValidation.failure(LinesOfActionFailure.INVALID_MOVE_LENGTH());
@@ -87,9 +113,11 @@ export class LinesOfActionRules extends Rules<LinesOfActionMove, LinesOfActionSt
         }
         return MGPValidation.SUCCESS;
     }
-    public isLegal(move: LinesOfActionMove, state: LinesOfActionState): MGPValidation {
+
+    public override isLegal(move: LinesOfActionMove, state: LinesOfActionState): MGPValidation {
         return LinesOfActionRules.isLegal(move, state);
     }
+
     private static numberOfPiecesOnLine(state: LinesOfActionState, pos: Coord, dir: Direction): number {
         let count: number = 0;
         for (const coord of LinesOfActionRules.getLineCoords(pos, dir)) {
@@ -99,6 +127,7 @@ export class LinesOfActionRules extends Rules<LinesOfActionMove, LinesOfActionSt
         }
         return count;
     }
+
     private static getLineCoords(pos: Coord, dir: Direction): Coord[] {
         const entranceAndDir: [Coord, Direction] = LinesOfActionRules.getEntranceAndForwardDirection(pos, dir);
         let current: Coord = entranceAndDir[0];
@@ -110,6 +139,7 @@ export class LinesOfActionRules extends Rules<LinesOfActionMove, LinesOfActionSt
         }
         return coords;
     }
+
     private static getEntranceAndForwardDirection(pos: Coord, dir: Direction): [Coord, Direction] {
         switch (dir) {
             case Direction.UP:
@@ -129,9 +159,12 @@ export class LinesOfActionRules extends Rules<LinesOfActionMove, LinesOfActionSt
                 ];
         }
     }
+
     public static getVictory(state: LinesOfActionState): MGPOptional<PlayerOrNone> {
         // Returns a player in case of victory (NONE if it is a draw), otherwise an empty optional
-        const [groupsZero, groupsOne]: [number, number] = LinesOfActionRules.getNumberOfGroups(state);
+        const groups: PlayerNumberMap = LinesOfActionRules.getNumberOfGroups(state);
+        const groupsZero: number = groups.get(Player.ZERO);
+        const groupsOne: number = groups.get(Player.ONE);
         if (groupsZero === 1 && groupsOne === 1) {
             return MGPOptional.of(PlayerOrNone.NONE);
         } else if (groupsZero === 1) {
@@ -142,6 +175,7 @@ export class LinesOfActionRules extends Rules<LinesOfActionMove, LinesOfActionSt
             return MGPOptional.empty();
         }
     }
+
     public static possibleTargets(state: LinesOfActionState, start: Coord): Coord[] {
         const targets: Coord[] = [];
         for (const dir of Direction.DIRECTIONS) {
@@ -157,9 +191,12 @@ export class LinesOfActionRules extends Rules<LinesOfActionMove, LinesOfActionSt
         }
         return targets;
     }
+
     public getGameStatus(node: LinesOfActionNode): GameStatus {
         const state: LinesOfActionState = node.gameState;
-        const [zero, one]: [number, number] = LinesOfActionRules.getNumberOfGroups(state);
+        const groups: PlayerNumberMap = LinesOfActionRules.getNumberOfGroups(state);
+        const zero: number = groups.get(Player.ZERO);
+        const one: number = groups.get(Player.ONE);
         if (zero === 1 && one > 1) {
             return GameStatus.ZERO_WON;
         } else if (zero > 1 && one === 1) {
@@ -168,4 +205,5 @@ export class LinesOfActionRules extends Rules<LinesOfActionMove, LinesOfActionSt
             return GameStatus.ONGOING;
         }
     }
+
 }

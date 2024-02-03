@@ -2,12 +2,14 @@
 import { PlayerOrNone } from 'src/app/jscaip/Player';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { LinesOfActionMoveGenerator } from '../LinesOfActionMoveGenerator';
-import { LinesOfActionNode } from '../LinesOfActionRules';
+import { LinesOfActionNode, LinesOfActionRules } from '../LinesOfActionRules';
 import { LinesOfActionState } from '../LinesOfActionState';
+import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 describe('LinesOfActionMoveGenerator', () => {
 
     let moveGenerator: LinesOfActionMoveGenerator;
+    const defaultConfig: NoConfig = LinesOfActionRules.get().getDefaultRulesConfig();
     const _: PlayerOrNone = PlayerOrNone.NONE;
     const O: PlayerOrNone = PlayerOrNone.ZERO;
     const X: PlayerOrNone = PlayerOrNone.ONE;
@@ -15,11 +17,13 @@ describe('LinesOfActionMoveGenerator', () => {
     beforeEach(() => {
         moveGenerator = new LinesOfActionMoveGenerator();
     });
+
     it('should have 36 moves on the initial state', () => {
-        const state: LinesOfActionState = LinesOfActionState.getInitialState();
+        const state: LinesOfActionState = LinesOfActionRules.get().getInitialState();
         const node: LinesOfActionNode = new LinesOfActionNode(state);
-        expect(moveGenerator.getListMoves(node).length).toBe(6 * 3 * 2);
+        expect(moveGenerator.getListMoves(node, defaultConfig).length).toBe(6 * 3 * 2);
     });
+
     it('should have 0 moves on a victory state (for Player.ZERO)', () => {
         const board: Table<PlayerOrNone> = [
             [_, _, _, _, _, _, _, _],
@@ -33,8 +37,9 @@ describe('LinesOfActionMoveGenerator', () => {
         ];
         const state: LinesOfActionState = new LinesOfActionState(board, 0);
         const node: LinesOfActionNode = new LinesOfActionNode(state);
-        expect(moveGenerator.getListMoves(node).length).toBe(0);
+        expect(moveGenerator.getListMoves(node, defaultConfig).length).toBe(0);
     });
+
     it('should have 0 moves on a victory state (for Player.ONE)', () => {
         const board: Table<PlayerOrNone> = [
             [_, _, _, _, _, _, _, _],
@@ -48,6 +53,7 @@ describe('LinesOfActionMoveGenerator', () => {
         ];
         const state: LinesOfActionState = new LinesOfActionState(board, 1);
         const node: LinesOfActionNode = new LinesOfActionNode(state);
-        expect(moveGenerator.getListMoves(node).length).toBe(0);
+        expect(moveGenerator.getListMoves(node, defaultConfig).length).toBe(0);
     });
+
 });

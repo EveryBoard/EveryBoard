@@ -2,23 +2,27 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { TaflPawn } from '../TaflPawn';
-import { TablutState } from '../tablut/TablutState';
 import { TablutNode, TablutRules } from '../tablut/TablutRules';
 import { TablutMove } from '../tablut/TablutMove';
-import { Minimax } from 'src/app/jscaip/Minimax';
+import { Minimax } from 'src/app/jscaip/AI/Minimax';
 import { TaflPieceAndInfluenceMinimax } from '../TaflPieceAndInfluenceMinimax';
+import { TaflConfig } from '../TaflConfig';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { TaflState } from '../TaflState';
 
 describe('TaflPieceAndInfluenceMinimax', () => {
 
-    let minimax: Minimax<TablutMove, TablutState>;
+    let minimax: Minimax<TablutMove, TaflState, TaflConfig>;
+    const defaultConfig: MGPOptional<TaflConfig> = TablutRules.get().getDefaultRulesConfig();
 
     const _: TaflPawn = TaflPawn.UNOCCUPIED;
-    const O: TaflPawn = TaflPawn.INVADERS;
+    const O: TaflPawn = TaflPawn.PLAYER_ZERO_PAWN;
     const A: TaflPawn = TaflPawn.PLAYER_ONE_KING;
 
     beforeEach(() => {
         minimax = new TaflPieceAndInfluenceMinimax(TablutRules.get());
     });
+
     it('should choose king escape, at depth 1 and more', () => {
         const board: Table<TaflPawn> = [
             [_, A, _, _, _, _, _, O, _],
@@ -31,12 +35,13 @@ describe('TaflPieceAndInfluenceMinimax', () => {
             [_, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _],
         ];
-        const state: TablutState = new TablutState(board, 1);
+        const state: TaflState = new TaflState(board, 1);
         const node: TablutNode = new TablutNode(state);
-        const expectedMove: TablutMove = TablutMove.of(new Coord(1, 0), new Coord(0, 0));
+        const expectedMove: TablutMove = TablutMove.from(new Coord(1, 0), new Coord(0, 0)).get();
         for (let depth: number = 1; depth < 4; depth++) {
-            const chosenMove: TablutMove = minimax.chooseNextMove(node, { name: 'Level', maxDepth: depth });
+            const chosenMove: TablutMove = minimax.chooseNextMove(node, { name: 'Level', maxDepth: depth }, defaultConfig);
             expect(chosenMove).toEqual(expectedMove);
         }
     });
+
 });

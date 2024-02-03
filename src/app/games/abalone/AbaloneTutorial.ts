@@ -4,6 +4,8 @@ import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
 import { HexaDirection } from 'src/app/jscaip/HexaDirection';
 import { AbaloneState } from './AbaloneState';
 import { AbaloneMove } from './AbaloneMove';
+import { AbaloneRules } from './AbaloneRules';
+import { TutorialStepMessage } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
 
 const _: FourStatePiece = FourStatePiece.EMPTY;
 const N: FourStatePiece = FourStatePiece.UNREACHABLE;
@@ -16,7 +18,7 @@ export class AbaloneTutorial extends Tutorial {
         TutorialStep.informational(
             $localize`Initial board and object of the game`,
             $localize`At Abalone, the goal of the game is to be the first player to push 6 opponent's pieces out of the board. Let us see how!`,
-            AbaloneState.getInitialState(),
+            AbaloneRules.get().getInitialState(),
         ),
         TutorialStep.anyMove(
             $localize`Moving a piece`,
@@ -25,9 +27,9 @@ export class AbaloneTutorial extends Tutorial {
         The pieces you move must be aligned and consecutive, and the move should land on an empty space (except to push, we will see that later).
         To make a move, click on one of your pieces, then click on an arrow to choose the move direction.<br/><br/>
         You're playing Dark, make any move!`,
-            AbaloneState.getInitialState(),
-            AbaloneMove.fromSingleCoord(new Coord(2, 6), HexaDirection.UP).get(),
-            $localize`Congratulations!`,
+            AbaloneRules.get().getInitialState(),
+            AbaloneMove.ofSingleCoord(new Coord(2, 6), HexaDirection.UP),
+            TutorialStepMessage.CONGRATULATIONS(),
         ),
         TutorialStep.fromMove(
             $localize`Pushing`,
@@ -47,9 +49,9 @@ export class AbaloneTutorial extends Tutorial {
                 [_, _, _, O, _, _, N, N, N],
                 [_, _, O, _, _, N, N, N, N],
             ], 0),
-            [AbaloneMove.fromSingleCoord(new Coord(4, 4), HexaDirection.RIGHT).get()],
+            [AbaloneMove.ofSingleCoord(new Coord(4, 4), HexaDirection.RIGHT)],
             $localize`Congratulations! You know everything you need to start a game!`,
-            $localize`Failed. Try again.`,
+            TutorialStepMessage.FAILED_TRY_AGAIN(),
         ),
     ];
 }

@@ -29,9 +29,11 @@ describe('KamisadoComponent', () => {
     beforeEach(fakeAsync(async() => {
         testUtils = await ComponentTestUtils.forGame<KamisadoComponent>('Kamisado');
     }));
+
     it('should create', () => {
         testUtils.expectToBeCreated();
     });
+
     it('should remove chosen coord when calling updateBoard without move', fakeAsync(async() => {
         // Given the game component
         // When calling updateBoard()
@@ -40,12 +42,14 @@ describe('KamisadoComponent', () => {
         expect(testUtils.getGameComponent().chosen.isAbsent()).toBeTrue();
         testUtils.expectElementNotToExist('.highlight');
     }));
+
     it('should not allow to pass initially', fakeAsync(async() => {
         // Given the initial state
         // When displaying the board
         // Then the player cannot pass initially
         testUtils.expectPassToBeForbidden();
     }));
+
     it('should allow changing initial choice', fakeAsync(async() => {
         // Given a component where a piece has been selected
         await testUtils.expectClickSuccess('#click_0_7');
@@ -54,6 +58,7 @@ describe('KamisadoComponent', () => {
         // Then it should change the selected piece
         expect(testUtils.getGameComponent().chosen.equalsValue(new Coord(1, 7))).toBeTrue();
     }));
+
     it('should allow deselecting initial choice', fakeAsync(async() => {
         // Given a component where a piece has been selected
         await testUtils.expectClickSuccess('#click_0_7'); // Select initial piece
@@ -63,6 +68,7 @@ describe('KamisadoComponent', () => {
         expect(testUtils.getGameComponent().chosen.isAbsent()).toBeTrue();
         testUtils.expectElementNotToExist('.highlight');
     }));
+
     it('should allow to pass if stuck position', fakeAsync(async() => {
         // Given a board with a stuck piece being the one that has to move
         const board: Table<KamisadoPiece> = [
@@ -84,6 +90,7 @@ describe('KamisadoComponent', () => {
         // Then the player can pass
         await testUtils.expectPassSuccess(KamisadoMove.PASS);
     }));
+
     it('should forbid all click in stuck position and ask to pass', fakeAsync(async() => {
         // Given a board where the piece that must move is stuck
         const board: Table<KamisadoPiece> = [
@@ -104,6 +111,7 @@ describe('KamisadoComponent', () => {
         // Then it should fail and say that player must pass
         await testUtils.expectClickFailure('#click_1_7', RulesFailure.MUST_PASS());
     }));
+
     it('should forbid de-selecting a piece that is pre-selected', fakeAsync(async() => {
         // Given a state where the next piece to play is already selected for the player
         const board: Table<KamisadoPiece> = [
@@ -124,6 +132,7 @@ describe('KamisadoComponent', () => {
         // Then it should fail
         await testUtils.expectClickFailure('#click_0_7', KamisadoFailure.PLAY_WITH_SELECTED_PIECE());
     }));
+
     it('should forbid selecting a piece if one is already pre-selected', fakeAsync(async() => {
         // Given a state where the next piece to play is already selected for the player
         const board: Table<KamisadoPiece> = [
@@ -144,6 +153,7 @@ describe('KamisadoComponent', () => {
         // Then it should fail
         await testUtils.expectClickFailure('#click_1_7', KamisadoFailure.PLAY_WITH_SELECTED_PIECE());
     }));
+
     it('should forbid moving to invalid location', fakeAsync(async() => {
         // Given a board (here, the initial board) with a selected piece
         await testUtils.expectClickSuccess('#click_0_7');
@@ -152,12 +162,14 @@ describe('KamisadoComponent', () => {
         // Then it should fail
         await testUtils.expectMoveFailure('#click_5_4', KamisadoFailure.DIRECTION_NOT_ALLOWED(), move);
     }));
+
     it('should forbid choosing an incorrect piece', fakeAsync(async() => {
         // Given a board (here, the initial board)
         // When clicking on an opponent's piece
         // Then it should fail
-        await testUtils.expectClickFailure('#click_0_0', RulesFailure.CANNOT_CHOOSE_OPPONENT_PIECE());
+        await testUtils.expectClickFailure('#click_0_0', RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT());
     }));
+
     it('should not highlight selected piece if game has ended', fakeAsync(async() => {
         // Given a board where one player has won
         const board: Table<KamisadoPiece> = [
@@ -179,6 +191,7 @@ describe('KamisadoComponent', () => {
         // Then the next selected piece should not be highlighted
         testUtils.expectElementNotToExist('#selectedPiece');
     }));
+
     it('should show last move when it is not a PASS', fakeAsync(async() => {
         // Given a board that has a last move
         const board: Table<KamisadoPiece> = [
@@ -193,10 +206,10 @@ describe('KamisadoComponent', () => {
         ];
         const state: KamisadoState =
             new KamisadoState(0, KamisadoColor.RED, MGPOptional.of(new Coord(0, 7)), false, board);
-        const lastMove: KamisadoMove = KamisadoMove.of(new Coord(0, 7), new Coord(0, 6));
+        const previousMove: KamisadoMove = KamisadoMove.of(new Coord(0, 7), new Coord(0, 6));
 
         // When displaying it
-        await testUtils.setupState(state, undefined, lastMove);
+        await testUtils.setupState(state, { previousMove });
 
         // Then it should display last move
         testUtils.expectElementToHaveClass('#last_move_start_0_7', 'last-move-stroke');

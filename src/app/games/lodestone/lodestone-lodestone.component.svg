@@ -1,0 +1,20 @@
+<svg:g class="lodestone_wrapper"
+       [attr.transform]="getSVGTranslation(SPACE_SIZE / 2, SPACE_SIZE / 2)">
+    <svg:circle id="lodestone_{{ lodestoneInfo.direction }}_{{ lodestoneInfo.orientation }}_{{ lodestoneInfo.owner.toString() }}"
+                class="lodestone_main_circle base black-fill"
+                [ngClass]="lodestoneInfo.selectedClass"
+                [attr.r]="PIECE_RADIUS"
+                cx="0"
+                cy="0"/>
+    <svg:circle class="base no-stroke"
+                [ngClass]="getPlayerClass(lodestoneInfo.owner)"
+                [attr.r]="PIECE_RADIUS / 4"
+                cx="0"
+                cy="0"/>
+    <svg:polygon *ngFor="let i of [0, 1, 2, 3]"
+                 id="lodestone_{{ lodestoneInfo.direction }}_{{ lodestoneInfo.orientation }}_{{ lodestoneInfo.owner.toString() }}_arrow_{{ i }}"
+                 class="base no-stroke"
+                 [ngClass]="lodestoneInfo.movingClass"
+                 [attr.points]="lodestoneInfo.direction === 'push' ? TRIANGLE_OUT : TRIANGLE_IN"
+                 [attr.transform]="getArrowRotate(i)"/>
+</svg:g>

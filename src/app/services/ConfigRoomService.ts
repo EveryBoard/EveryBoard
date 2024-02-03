@@ -10,6 +10,7 @@ import { Localized } from '../utils/LocaleUtils';
 import { ConnectedUserService } from './ConnectedUserService';
 import { FirestoreCollectionObserver } from '../dao/FirestoreCollectionObserver';
 import { FirestoreDocument, IFirestoreDAO } from '../dao/FirestoreDAO';
+import { RulesConfig, RulesConfigUtils } from '../jscaip/RulesConfigUtil';
 
 @Injectable({
     providedIn: 'root',
@@ -23,15 +24,19 @@ export class ConfigRoomService {
                        private readonly connectedUserService: ConnectedUserService)
     {
     }
+
     public addCandidate(partId: string, candidate: MinimalUser): Promise<void> {
         return this.configRoomDAO.subCollectionDAO(partId, 'candidates').set(candidate.id, candidate);
     }
+
     public removeCandidate(partId: string, candidate: MinimalUser): Promise<void> {
         return this.configRoomDAO.subCollectionDAO(partId, 'candidates').delete(candidate.id);
     }
+
     public subscribeToChanges(configRoomId: string, callback: (doc: MGPOptional<ConfigRoom>) => void): Subscription {
         return this.configRoomDAO.subscribeToChanges(configRoomId, callback);
     }
+
     public subscribeToCandidates(configRoomId: string, callback: (candidates: MinimalUser[]) => void): Subscription {
         let candidates: MinimalUser[] = [];
         const observer: FirestoreCollectionObserver<MinimalUser> = new FirestoreCollectionObserver(
@@ -64,7 +69,8 @@ export class ConfigRoomService {
         const subCollection: IFirestoreDAO<FirestoreJSONObject> = this.configRoomDAO.subCollectionDAO(configRoomId, 'candidates');
         return subCollection.observingWhere([], observer);
     }
-    public async createInitialConfigRoom(configRoomId: string): Promise<void> {
+
+    public async createInitialConfigRoom(configRoomId: string, gameName: string): Promise<void> {
         const creator: MinimalUser = this.connectedUserService.user.get().toMinimalUser();
         const newConfigRoom: ConfigRoom = {
             chosenOpponent: null,
@@ -74,9 +80,11 @@ export class ConfigRoomService {
             maximalMoveDuration: PartType.NORMAL_MOVE_DURATION,
             totalPartDuration: PartType.NORMAL_PART_DURATION,
             creator,
+            rulesConfig: RulesConfigUtils.getGameDefaultConfig(gameName).getOrElse({}),
         };
         return this.configRoomDAO.set(configRoomId, newConfigRoom);
     }
+
     public async joinGame(configRoomId: string): Promise<MGPValidation> {
         const user: MinimalUser = this.connectedUserService.user.get().toMinimalUser();
         const configRoom: MGPOptional<ConfigRoom> = await this.configRoomDAO.read(configRoomId);
@@ -90,6 +98,7 @@ export class ConfigRoomService {
             return MGPValidation.SUCCESS;
         }
     }
+
     public async cancelJoining(configRoomId: string): Promise<void> {
         const user: MinimalUser = this.connectedUserService.user.get().toMinimalUser();
         const configRoomOpt: MGPOptional<ConfigRoom> = await this.configRoomDAO.read(configRoomId);
@@ -111,6 +120,7 @@ export class ConfigRoomService {
             await Promise.all(configRoomUpdates);
         }
     }
+
     public async deleteConfigRoom(configRoomId: string, candidates: MinimalUser[]): Promise<void> {
         // We need to delete the candidates before the actual configRoom,
         // for the security rules to check that we are allowed to delete the configRoom
@@ -118,12 +128,14 @@ export class ConfigRoomService {
             this.removeCandidate(configRoomId, candidate)));
         await this.configRoomDAO.delete(configRoomId);
     }
+
     public async proposeConfig(configRoomId: string,
                                chosenOpponent: MinimalUser,
                                partType: PartType,
                                maximalMoveDuration: number,
                                firstPlayer: FirstPlayer,
-                               totalPartDuration: number)
+                               totalPartDuration: number,
+                               rulesConfig: MGPOptional<RulesConfig>)
     : Promise<void>
     {
         return this.configRoomDAO.update(configRoomId, {
@@ -133,33 +145,41 @@ export class ConfigRoomService {
             maximalMoveDuration,
             totalPartDuration,
             firstPlayer: firstPlayer.value,
+            rulesConfig: rulesConfig.getOrElse({}),
         });
     }
+
     public setChosenOpponent(configRoomId: string, chosenOpponent: MinimalUser): Promise<void> {
         return this.configRoomDAO.update(configRoomId, {
             chosenOpponent: chosenOpponent,
         });
     }
+
     public async reviewConfig(configRoomId: string): Promise<void> {
         return this.configRoomDAO.update(configRoomId, {
             partStatus: PartStatus.PART_CREATED.value,
         });
     }
+
     public async reviewConfigAndRemoveChosenOpponent(configRoomId: string): Promise<void> {
         return this.configRoomDAO.update(configRoomId, {
             partStatus: PartStatus.PART_CREATED.value,
             chosenOpponent: null,
         });
     }
+
     public acceptConfig(configRoomId: string): Promise<void> {
         return this.configRoomDAO.update(configRoomId, {
             partStatus: PartStatus.PART_STARTED.value,
         });
     }
+
     public async createConfigRoom(configRoomId: string, configRoom: ConfigRoom): Promise<void> {
         return this.configRoomDAO.set(configRoomId, configRoom);
     }
+
     public async readConfigRoomById(configRoomId: string): Promise<ConfigRoom> {
         return (await this.configRoomDAO.read(configRoomId)).get();
     }
+
 }

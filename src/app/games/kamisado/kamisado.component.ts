@@ -1,5 +1,5 @@
-import { RectangularGameComponent } from '../../components/game-components/rectangular-game-component/RectangularGameComponent';
 import { Component } from '@angular/core';
+import { RectangularGameComponent } from '../../components/game-components/rectangular-game-component/RectangularGameComponent';
 import { Coord } from 'src/app/jscaip/Coord';
 import { KamisadoBoard } from 'src/app/games/kamisado/KamisadoBoard';
 import { KamisadoMove, KamisadoPieceMove } from 'src/app/games/kamisado/KamisadoMove';
@@ -11,12 +11,11 @@ import { Player } from 'src/app/jscaip/Player';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { KamisadoTutorial } from './KamisadoTutorial';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { assert } from 'src/app/utils/assert';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
-import { MCTS } from 'src/app/jscaip/MCTS';
-import { Minimax } from 'src/app/jscaip/Minimax';
+import { MCTS } from 'src/app/jscaip/AI/MCTS';
+import { Minimax } from 'src/app/jscaip/AI/Minimax';
 import { KamisadoHeuristic } from './KamisadoHeuristic';
 import { KamisadoMoveGenerator } from './KamisadoMoveGenerator';
 
@@ -38,29 +37,31 @@ export class KamisadoComponent extends RectangularGameComponent<KamisadoRules,
 
     public constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
-        this.hasAsymmetricBoard = true;
-        this.rules = KamisadoRules.get();
-        this.node = this.rules.getInitialNode();
+        this.setRulesAndNode('Kamisado');
         this.availableAIs = [
             new Minimax($localize`Minimax`, KamisadoRules.get(), new KamisadoHeuristic(), new KamisadoMoveGenerator()),
             new MCTS($localize`MCTS`, new KamisadoMoveGenerator(), this.rules),
         ];
         this.encoder = KamisadoMove.encoder;
-        this.tutorial = new KamisadoTutorial().tutorial;
-        this.canPass = false;
+        this.hasAsymmetricBoard = true;
     }
+
     public backgroundColor(x: number, y: number): string {
         return KamisadoBoard.getColorAt(x, y).rgb;
     }
+
     public isPlayerZero(piece: KamisadoPiece): boolean {
         return piece.player === Player.ZERO;
     }
+
     public pieceColor(piece: KamisadoPiece): string {
         return piece.color.rgb;
     }
+
     public piecePlayerClass(piece: KamisadoPiece): string {
         return this.getPlayerClass(piece.player);
     }
+
     public async updateBoard(_triggerAnimation: boolean): Promise<void> {
         const state: KamisadoState = this.getState();
         this.board = state.getCopiedBoard();
@@ -76,15 +77,18 @@ export class KamisadoComponent extends RectangularGameComponent<KamisadoRules,
             this.chosen = state.coordToPlay;
         }
     }
+
     public override async showLastMove(move: KamisadoMove): Promise<void> {
         if (KamisadoMove.isPiece(move)) {
             this.lastPieceMove = MGPOptional.of(move);
         }
     }
+
     public override async pass(): Promise<MGPValidation> {
         assert(this.canPass, 'KamisadoComponent: pass() must be called only if canPass is true');
         return this.chooseMove(KamisadoMove.PASS);
     }
+
     public async onClick(x: number, y: number): Promise<MGPValidation> {
         const clickValidity: MGPValidation = await this.canUserPlay('#click_' + x + '_' + y);
         if (clickValidity.isFailure()) {
@@ -116,24 +120,28 @@ export class KamisadoComponent extends RectangularGameComponent<KamisadoRules,
             }
         }
     }
+
     public async choosePiece(x: number, y: number): Promise<MGPValidation> {
         const piece: KamisadoPiece = this.getState().getPieceAtXY(x, y);
         const opponent: Player = this.getState().getCurrentOpponent();
         if (piece.belongsTo(opponent)) {
-            return this.cancelMove(RulesFailure.CANNOT_CHOOSE_OPPONENT_PIECE());
+            return this.cancelMove(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT());
         }
         this.chosen = MGPOptional.of(new Coord(x, y));
         return MGPValidation.SUCCESS;
     }
+
     private async chooseDestination(x: number, y: number): Promise<MGPValidation> {
         const chosenPiece: Coord = this.chosen.get();
         const chosenDestination: Coord = new Coord(x, y);
         const move: KamisadoMove = KamisadoMove.of(chosenPiece, chosenDestination);
         return this.chooseMove(move);
     }
+
     public override cancelMoveAttempt(): void {
         if (this.chosenAutomatically === false) {
             this.chosen = MGPOptional.empty();
         }
     }
+
 }

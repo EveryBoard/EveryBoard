@@ -3,6 +3,8 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { DiamMoveDrop, DiamMoveShift } from './DiamMove';
 import { DiamPiece } from './DiamPiece';
 import { DiamState } from './DiamState';
+import { DiamRules } from './DiamRules';
+import { TutorialStepMessage } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
 
 const __: DiamPiece = DiamPiece.EMPTY;
 const A1: DiamPiece = DiamPiece.ZERO_FIRST;
@@ -16,7 +18,7 @@ export class DiamTutorial {
         TutorialStep.informational(
             $localize`Initial board and player pieces`,
             $localize`Diam's board is a circular board made of 8 spaces. Each player has 8 pieces: 4 of one color, and 4 of another color. Initially, the board is empty. All the remaining pieces are displayed next to the board: Dark's pieces are on the left, Light's pieces are on the right.`,
-            DiamState.getInitialState(),
+            DiamRules.get().getInitialState(),
         ),
         TutorialStep.fromMove(
             $localize`Goal of the game`,
@@ -28,7 +30,7 @@ export class DiamTutorial {
                 [A1, __, __, __, A1, __, __, __],
             ], 3),
             [new DiamMoveDrop(0, DiamPiece.ONE_FIRST)],
-            $localize`Congratulations, you won!`,
+            TutorialStepMessage.CONGRATULATIONS_YOU_WON(),
             $localize`Failed, you should drop your piece on the leftmost space, using the piece of the same color of the other piece you already have on the board.`,
         ),
         TutorialStep.fromMove(
@@ -46,7 +48,7 @@ export class DiamTutorial {
                 DiamMoveShift.ofRepresentation(new Coord(4, 2), 'counterclockwise'),
                 DiamMoveShift.ofRepresentation(new Coord(4, 2), 'clockwise'),
             ],
-            $localize`Congratulations!`,
+            TutorialStepMessage.CONGRATULATIONS(),
             $localize`Failed, try to move one of your piece that is already on the board.`,
         ),
         TutorialStep.fromMove(
@@ -59,7 +61,7 @@ export class DiamTutorial {
                 [__, B1, __, __, A2, __, __, B1],
             ], 8),
             [DiamMoveShift.ofRepresentation(new Coord(4, 2), 'counterclockwise')],
-            $localize`Congratulations!`,
+            TutorialStepMessage.CONGRATULATIONS(),
             $localize`Failed, try to shift a stack of pieces to the left.`,
         ),
     ];

@@ -16,6 +16,7 @@ describe('SixState', () => {
     const X: PlayerOrNone = Player.ONE;
 
     describe('toRepresentation/fromRepresentation', () => {
+
         it('should represent correctly board', () => {
             const pieces: ReversibleMap<Coord, Player> = new ReversibleMap<Coord, Player>();
             pieces.put(new Coord(0, 0), Player.ONE);
@@ -27,6 +28,7 @@ describe('SixState', () => {
             ];
             expect(state.toRepresentation()).toEqual(expectedRepresentation);
         });
+
         it('should create correctly from representation', () => {
             const representation: Table<PlayerOrNone> = [
                 [X, _],
@@ -39,8 +41,11 @@ describe('SixState', () => {
             const state: SixState = SixState.ofRepresentation(representation, 0);
             expect(state.pieces).toEqual(expectedPieces);
         });
+
     });
+
     describe('getGroups', () => {
+
         it('when a piece has been removed, the board might be separated in several sub-groups', () => {
             const representation: Table<PlayerOrNone> = [
                 [_, _, X, _, _],
@@ -58,8 +63,11 @@ describe('SixState', () => {
             ]);
             expect(groups.equals(expectedGroups)).toBeTrue();
         });
+
     });
+
     describe('switchPiece', () => {
+
         it('should throw when trying to switch a piece that does not exist', () => {
             // Given a state with some pieces
             const representation: Table<PlayerOrNone> = [
@@ -77,5 +85,7 @@ describe('SixState', () => {
             expect(() => state.switchPiece(new Coord(0, 0))).toThrowError('SixState: ' + errorMessage + ' (extra data: {"coord":"(0, 0)"})');
             expect(ErrorLoggerService.logError).toHaveBeenCalledWith('SixState', errorMessage, { coord: '(0, 0)' });
         });
+
     });
+
 });

@@ -7,8 +7,6 @@ export class ConfigRoomServiceMock {
 
     public static emittedsConfigRoom: ConfigRoomDocument[];
 
-    public constructor() {
-    }
     public joinGame(): Promise<void> {
         return new Promise((resolve: () => void) => {
             resolve();
@@ -22,7 +20,6 @@ export class ConfigRoomServiceMock {
     public readConfigRoomById(partId: string): Promise<ConfigRoom> {
         return new Promise((resolve: (j: ConfigRoom) => void) => {
             resolve({
-                candidates: [{ id: '24854rf', name: 'uniqueCandidate' }],
                 creator: { id: 'doc-creator', name: 'creator' },
                 chosenOpponent: { id: 'uniqueCandidate-doc-id', name: 'uniqueCandidate' },
                 firstPlayer: FirstPlayer.CREATOR.value,
@@ -30,7 +27,7 @@ export class ConfigRoomServiceMock {
                 partStatus: PartStatus.PART_STARTED.value,
                 maximalMoveDuration: 60,
                 totalPartDuration: 300,
-                gameType: 42,
+                rulesConfig: {},
             });
         });
     }

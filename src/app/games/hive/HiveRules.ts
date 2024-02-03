@@ -1,6 +1,6 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { HexagonalUtils } from 'src/app/jscaip/HexagonalUtils';
-import { GameNode } from 'src/app/jscaip/GameNode';
+import { GameNode } from 'src/app/jscaip/AI/GameNode';
 import { Player } from 'src/app/jscaip/Player';
 import { Rules } from 'src/app/jscaip/Rules';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
@@ -13,6 +13,9 @@ import { HivePiece, HivePieceStack } from './HivePiece';
 import { HivePieceRules } from './HivePieceRules';
 import { HiveState } from './HiveState';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
+import { Table } from 'src/app/utils/ArrayUtils';
+import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 
 export class HiveNode extends GameNode<HiveMove, HiveState> {}
 
@@ -26,10 +29,18 @@ export class HiveRules extends Rules<HiveMove, HiveState> {
         }
         return HiveRules.singleton.get();
     }
-    private constructor() {
-        super(HiveState);
+
+    public override getInitialState(): HiveState {
+        const board: Table<HivePiece[]> = [];
+        return HiveState.fromRepresentation(board, 0);
     }
-    public applyLegalMove(move: HiveMove, state: HiveState, _info: void): HiveState {
+
+    public override applyLegalMove(move: HiveMove,
+                                   state: HiveState,
+                                   _config: NoConfig,
+                                   _info: void)
+    : HiveState
+    {
         if (move instanceof HiveDropMove) {
             return this.applyLegalDrop(move, state);
         } else if (move instanceof HiveCoordToCoordMove) {
@@ -39,6 +50,7 @@ export class HiveRules extends Rules<HiveMove, HiveState> {
             return state.update().increaseTurnAndFinalizeUpdate();
         }
     }
+
     private applyLegalDrop(drop: HiveDropMove, state: HiveState): HiveState {
         // Put the piece where it is dropped, possibly on top of other pieces
         const pieceStack: HivePieceStack = state.getAt(drop.coord);
@@ -47,6 +59,7 @@ export class HiveRules extends Rules<HiveMove, HiveState> {
             .removeRemainingPiece(drop.piece)
             .increaseTurnAndFinalizeUpdate();
     }
+
     private applyLegalMoveCoordToCoord(move: HiveCoordToCoordMove, state: HiveState): HiveState {
         // Take the top piece of the source and move it on top of the destination
         const sourcePieceStack: HivePieceStack = state.getAt(move.getStart());
@@ -56,7 +69,8 @@ export class HiveRules extends Rules<HiveMove, HiveState> {
             .setAt(move.getEnd(), destinationPieceStack.add(sourcePieceStack.topPiece()))
             .increaseTurnAndFinalizeUpdate();
     }
-    public isLegal(move: HiveMove, state: HiveState): MGPValidation {
+
+    public override isLegal(move: HiveMove, state: HiveState): MGPValidation {
         if (move instanceof HiveDropMove) {
             return this.isLegalDrop(move, state);
         } else if (move instanceof HiveCoordToCoordMove) {
@@ -70,17 +84,18 @@ export class HiveRules extends Rules<HiveMove, HiveState> {
             }
         }
     }
+
     public isLegalMoveCoordToCoord(move: HiveCoordToCoordMove, state: HiveState): MGPValidation {
         if (state.queenBeeLocation(state.getCurrentPlayer()).isPresent() === false) {
             return MGPValidation.failure(HiveFailure.QUEEN_BEE_MUST_BE_ON_BOARD_BEFORE_MOVE());
         }
         const stack: HivePieceStack = state.getAt(move.getStart());
         if (stack.isEmpty()) {
-            return MGPValidation.failure(RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
+            return MGPValidation.failure(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY());
         }
         const movedPiece: HivePiece = stack.topPiece();
         if (movedPiece.owner === state.getCurrentOpponent()) {
-            return MGPValidation.failure(RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
+            return MGPValidation.failure(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT());
         }
 
         const moveValidity: MGPValidation = HivePieceRules.of(movedPiece).moveValidity(move, state);
@@ -101,14 +116,16 @@ export class HiveRules extends Rules<HiveMove, HiveState> {
         }
         return MGPValidation.SUCCESS;
     }
+
     public mustPlaceQueenBee(state: HiveState): boolean {
-        return state.turn >= 6 && state.hasQueenBeeOnBoard(state.getCurrentPlayer()) === false;
+        return 6 <= state.turn && state.hasQueenBeeOnBoard(state.getCurrentPlayer()) === false;
     }
+
     public isLegalDrop(move: HiveDropMove, state: HiveState): MGPValidation {
         const player: Player = state.getCurrentPlayer();
         // This should be a piece of the player
         if (move.piece.owner === player.getOpponent()) {
-            return MGPValidation.failure(RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
+            return MGPValidation.failure(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT());
         }
         // The player must have the piece in its reserve to drop it
         if (state.remainingPieces.hasRemaining(move.piece) === false) {
@@ -130,6 +147,7 @@ export class HiveRules extends Rules<HiveMove, HiveState> {
         }
         return MGPValidation.SUCCESS;
     }
+
     private checkNeighborValidity(move: HiveDropMove, state: HiveState): MGPValidation {
         const player: Player = state.getCurrentPlayer();
         let hasNeighbor: boolean = false;
@@ -147,6 +165,7 @@ export class HiveRules extends Rules<HiveMove, HiveState> {
         }
         return MGPValidation.SUCCESS;
     }
+
     public getPossibleDropLocations(state: HiveState): MGPSet<Coord> {
         const player: Player = state.getCurrentPlayer();
         // At turn 0 and 1, the possible drop locations are already known
@@ -177,6 +196,7 @@ export class HiveRules extends Rules<HiveMove, HiveState> {
         }
         return locations;
     }
+
     public getPossibleMovesFrom(state: HiveState, coord: Coord): MGPSet<HiveCoordToCoordMove> {
         const player: Player = state.getCurrentPlayer();
         const moves: MGPSet<HiveCoordToCoordMove> = new MGPSet();
@@ -190,6 +210,7 @@ export class HiveRules extends Rules<HiveMove, HiveState> {
         }
         return moves;
     }
+
     public getPossibleMovesOnBoard(state: HiveState): MGPSet<HiveCoordToCoordMove> {
         const moves: MGPSet<HiveCoordToCoordMove> = new MGPSet();
         for (const coord of state.occupiedSpaces()) {
@@ -197,27 +218,32 @@ export class HiveRules extends Rules<HiveMove, HiveState> {
         }
         return moves;
     }
+
     public shouldPass(state: HiveState): boolean {
         return this.getPossibleDropLocations(state).size() === 0 && this.getPossibleMovesOnBoard(state).size() === 0;
     }
+
     public getGameStatus(node: HiveNode): GameStatus {
         const state: HiveState = node.gameState;
 
-        const neighbors: [number, number] = [0, 0];
+        const neighbors: PlayerNumberMap = PlayerNumberMap.of(0, 0);
         for (const player of Player.PLAYERS) {
             const queenBeeLocation: MGPOptional<Coord> = state.queenBeeLocation(player);
             if (queenBeeLocation.isPresent()) {
-                neighbors[player.value] = state.numberOfNeighbors(queenBeeLocation.get());
+                neighbors.put(player, state.numberOfNeighbors(queenBeeLocation.get()));
             }
         }
-        if (neighbors[0] === 6 && neighbors[1] === 6) {
+        const neighborsZero: number = neighbors.get(Player.ZERO);
+        const neighborsOne: number = neighbors.get(Player.ONE);
+        if (neighborsZero === 6 && neighborsOne === 6) {
             return GameStatus.DRAW;
-        } else if (neighbors[0] === 6) {
+        } else if (neighborsZero === 6) {
             return GameStatus.getVictory(Player.ONE);
-        } else if (neighbors[1] === 6) {
+        } else if (neighborsOne === 6) {
             return GameStatus.getVictory(Player.ZERO);
         }
 
         return GameStatus.ONGOING;
     }
+
 }

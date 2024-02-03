@@ -10,17 +10,15 @@ export class EncoderTestUtils {
     public static expectToBeBijective<T>(encoder: Encoder<T>, value: T): void {
         const encoded: JSONValue = encoder.encode(value);
         const decoded: T = encoder.decode(encoded);
-        expect(comparableEquals(decoded, value)).withContext(`Expected decoded value (${decoded}) to be ${value}`).toBeTrue();
+        expect(comparableEquals(decoded, value))
+            .withContext(`Expected decoded value ${decoded} to be ${value}`)
+            .toBeTrue();
     }
 }
 
 describe('MoveEncoder', () => {
     describe('tuple', () => {
-        class MyMove extends MoveCoordToCoord {
-            public toString(): string {
-                return `${this.getStart().toString()} -> ${this.getEnd().toString()}`;
-            }
-        }
+        class MyMove extends MoveCoordToCoord {}
         const myMoveEncoder: Encoder<MyMove> = Encoder.tuple<MyMove, [Coord, Coord]>(
             [Coord.encoder, Coord.encoder],
             (move: MyMove): [Coord, Coord] => [move.getStart(), move.getEnd()],

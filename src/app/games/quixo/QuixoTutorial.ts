@@ -1,12 +1,17 @@
-import { QuixoState } from 'src/app/games/quixo/QuixoState';
+import { QuixoConfig, QuixoState } from 'src/app/games/quixo/QuixoState';
 import { QuixoMove } from 'src/app/games/quixo/QuixoMove';
 import { Orthogonal } from 'src/app/jscaip/Direction';
 import { PlayerOrNone } from 'src/app/jscaip/Player';
 import { Tutorial, TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
+import { QuixoRules } from './QuixoRules';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { TutorialStepMessage } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
 
 const _: PlayerOrNone = PlayerOrNone.NONE;
 const O: PlayerOrNone = PlayerOrNone.ZERO;
 const X: PlayerOrNone = PlayerOrNone.ONE;
+
+const defaultConfig: MGPOptional<QuixoConfig> = QuixoRules.get().getDefaultRulesConfig();
 
 export class QuixoTutorial extends Tutorial {
 
@@ -17,7 +22,7 @@ export class QuixoTutorial extends Tutorial {
         The first player plays with dark pieces, the second with light pieces.
         The board is made of 25 spaces spread over a 5x5 square.
         Every piece has a neutral side, a light side, and a dark side.`,
-            QuixoState.getInitialState(),
+            QuixoRules.get().getInitialState(defaultConfig),
         ),
         TutorialStep.fromMove(
             $localize`What a move looks like (without animation)`,
@@ -41,7 +46,7 @@ export class QuixoTutorial extends Tutorial {
             [new QuixoMove(4, 4, Orthogonal.LEFT)],
             $localize`See how the four dark pieces have been moved one space to the right.
         The neutral piece has been move 4 pieces to the left and has become light.`,
-            $localize`Failed. Try again.`,
+            TutorialStepMessage.FAILED_TRY_AGAIN(),
         ),
         TutorialStep.fromMove(
             $localize`Victory`,
@@ -59,8 +64,8 @@ export class QuixoTutorial extends Tutorial {
                 [X, O, _, X, O],
             ], 31),
             [new QuixoMove(3, 0, Orthogonal.DOWN)],
-            $localize`Congratulations, you won!`,
-            $localize`Failed. Try again.`,
+            TutorialStepMessage.CONGRATULATIONS_YOU_WON(),
+            TutorialStepMessage.FAILED_TRY_AGAIN(),
         ),
     ];
 }

@@ -11,9 +11,8 @@ import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { ConspirateursMove, ConspirateursMoveDrop, ConspirateursMoveJump, ConspirateursMoveSimple } from './ConspirateursMove';
 import { ConspirateursRules } from './ConspirateursRules';
 import { ConspirateursState } from './ConspirateursState';
-import { ConspirateursTutorial } from './ConspirateursTutorial';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
-import { MCTS } from 'src/app/jscaip/MCTS';
+import { MCTS } from 'src/app/jscaip/AI/MCTS';
 import { ConspirateursMoveGenerator } from './ConspirateursMoveGenerator';
 import { ConspirateursJumpMinimax } from './ConspirateursJumpMinimax';
 
@@ -30,7 +29,7 @@ interface SquareInfo {
     squareClasses: string[],
     shelterClasses: string[],
     pieceClasses: string[],
-    hasPiece: boolean,
+    hasPieceToDraw: boolean,
     isShelter: boolean,
     isOccupiedShelter: boolean,
 }
@@ -62,15 +61,13 @@ export class ConspirateursComponent extends GameComponent<ConspirateursRules, Co
 
     public constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
-        this.PIECE_RADIUS = (this.SPACE_SIZE / 2) - this.STROKE_WIDTH;
-        this.rules = ConspirateursRules.get();
-        this.node = this.rules.getInitialNode();
+        this.setRulesAndNode('Conspirateurs');
         this.availableAIs = [
             new ConspirateursJumpMinimax(),
             new MCTS($localize`MCTS`, new ConspirateursMoveGenerator(), this.rules),
         ];
         this.encoder = ConspirateursMove.encoder;
-        this.tutorial = new ConspirateursTutorial().tutorial;
+        this.PIECE_RADIUS = (this.SPACE_SIZE / 2) - this.STROKE_WIDTH;
     }
     public async updateBoard(_triggerAnimation: boolean): Promise<void> {
         this.updateViewInfo();
@@ -80,17 +77,17 @@ export class ConspirateursComponent extends GameComponent<ConspirateursRules, Co
         this.viewInfo.dropPhase = state.isDropPhase();
         this.viewInfo.boardInfo = [];
         this.viewInfo.lastMoveArrow = '';
-        for (let y: number = 0; y < ConspirateursState.HEIGHT; y++) {
+        for (let y: number = 0; y < state.getHeight(); y++) {
             this.viewInfo.boardInfo.push([]);
-            for (let x: number = 0; x < ConspirateursState.WIDTH; x++) {
+            for (let x: number = 0; x < state.getWidth(); x++) {
                 const coord: Coord = new Coord(x, y);
                 const piece: PlayerOrNone = state.getPieceAt(coord);
                 const squareInfo: SquareInfo = {
                     coord,
                     squareClasses: [],
-                    shelterClasses: [],
+                    shelterClasses: ['no-fill'],
                     pieceClasses: [this.getPlayerClass(piece)],
-                    hasPiece: piece.isPlayer(),
+                    hasPieceToDraw: piece.isPlayer(),
                     isShelter: false,
                     isOccupiedShelter: false,
                 };
@@ -98,18 +95,8 @@ export class ConspirateursComponent extends GameComponent<ConspirateursRules, Co
             }
         }
         this.viewInfo.sidePieces = state.getSidePieces();
-        this.updateOccupiedShelters();
         this.updateSelected();
-        this.updateVictory();
-    }
-    private updateOccupiedShelters(): void {
-        for (const shelter of ConspirateursState.ALL_SHELTERS) {
-            const squareInfo: SquareInfo = this.viewInfo.boardInfo[shelter.y][shelter.x];
-            squareInfo.isShelter = true;
-            if (squareInfo.hasPiece) {
-                squareInfo.shelterClasses.push('selectable-stroke');
-            }
-        }
+        this.updateShelterHighlights();
     }
     private updateSelected(): void {
         if (this.selected.isPresent()) {
@@ -117,10 +104,10 @@ export class ConspirateursComponent extends GameComponent<ConspirateursRules, Co
                 const jump: ConspirateursMoveJump = this.jumpInConstruction.get();
                 const jumpStart: Coord = jump.getStartingCoord();
                 const jumpCurrent: Coord = jump.getEndingCoord();
-                this.viewInfo.boardInfo[jumpStart.y][jumpStart.x].hasPiece = false;
+                this.viewInfo.boardInfo[jumpStart.y][jumpStart.x].hasPieceToDraw = false;
                 this.viewInfo.boardInfo[jumpCurrent.y][jumpCurrent.x].pieceClasses =
                     [this.getPlayerClass(this.getCurrentPlayer()), 'selected-stroke'];
-                this.viewInfo.boardInfo[jumpCurrent.y][jumpCurrent.x].hasPiece = true;
+                this.viewInfo.boardInfo[jumpCurrent.y][jumpCurrent.x].hasPieceToDraw = true;
                 for (const coord of jump.coords) {
                     this.viewInfo.boardInfo[coord.y][coord.x].squareClasses.push('moved-fill');
                 }
@@ -130,14 +117,20 @@ export class ConspirateursComponent extends GameComponent<ConspirateursRules, Co
             }
         }
     }
-    private updateVictory(): void {
+    private updateShelterHighlights(): void {
         const state: ConspirateursState = this.getState();
         const gameStatus: GameStatus = ConspirateursRules.get().getGameStatus(this.node);
-        if (gameStatus.isEndGame === true) {
-            for (const shelter of ConspirateursState.ALL_SHELTERS) {
-                if (state.getPieceAt(shelter) === gameStatus.winner) {
-                    this.viewInfo.boardInfo[shelter.y][shelter.x].squareClasses.push('victory-fill');
-                }
+        const gameFinished: boolean = gameStatus.isEndGame === true;
+        for (const shelter of ConspirateursState.ALL_SHELTERS) {
+            const squareInfo: SquareInfo = this.viewInfo.boardInfo[shelter.y][shelter.x];
+            const owner: PlayerOrNone = state.getPieceAt(shelter);
+            const spaceIsOccupiedButNobodyWon: boolean = gameFinished === false && owner.isPlayer();
+            const shelterBelongToWinner: boolean = gameFinished && owner === gameStatus.winner;
+            if (shelterBelongToWinner || spaceIsOccupiedButNobodyWon)
+            {
+                squareInfo.shelterClasses.push('selectable-stroke');
+                squareInfo.pieceClasses.push('victory-stroke');
+                squareInfo.squareClasses.push('victory-fill');
             }
         }
     }
@@ -170,6 +163,7 @@ export class ConspirateursComponent extends GameComponent<ConspirateursRules, Co
         }
 
         const state: ConspirateursState = this.getState();
+        const piece: PlayerOrNone = state.getPieceAt(coord);
         if (state.getPieceAt(coord) === this.getCurrentPlayer()) {
             if (this.selected.equalsValue(coord)) {
                 await this.cancelMoveAttempt();
@@ -186,9 +180,12 @@ export class ConspirateursComponent extends GameComponent<ConspirateursRules, Co
         } else if (state.isDropPhase()) {
             const move: ConspirateursMove = ConspirateursMoveDrop.of(coord);
             return this.chooseMove(move);
+        } else if (piece === PlayerOrNone.NONE) {
+            return this.cancelMove(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY());
         } else {
-            return this.cancelMove(RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
+            return this.cancelMove(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT());
         }
+
     }
     private async constructJump(nextTarget: Coord): Promise<MGPValidation> {
         const jump: ConspirateursMoveJump = this.jumpInConstruction.get();

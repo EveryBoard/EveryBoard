@@ -7,25 +7,35 @@ export type SiamPieceValue = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
 
 export class SiamPiece {
 
-    public static readonly EMPTY: SiamPiece = new SiamPiece(0);
+    public static readonly EMPTY: SiamPiece =
+        new SiamPiece(0, PlayerOrNone.NONE, MGPOptional.empty());
 
-    public static readonly LIGHT_UP: SiamPiece = new SiamPiece(1);
+    public static readonly LIGHT_UP: SiamPiece =
+        new SiamPiece(1, PlayerOrNone.ONE, MGPOptional.of(Orthogonal.UP));
 
-    public static readonly LIGHT_RIGHT: SiamPiece = new SiamPiece(2);
+    public static readonly LIGHT_RIGHT: SiamPiece =
+        new SiamPiece(2, PlayerOrNone.ONE, MGPOptional.of(Orthogonal.RIGHT));
 
-    public static readonly LIGHT_DOWN: SiamPiece = new SiamPiece(3);
+    public static readonly LIGHT_DOWN: SiamPiece =
+        new SiamPiece(3, PlayerOrNone.ONE, MGPOptional.of(Orthogonal.DOWN));
 
-    public static readonly LIGHT_LEFT: SiamPiece = new SiamPiece(4);
+    public static readonly LIGHT_LEFT: SiamPiece =
+        new SiamPiece(4, PlayerOrNone.ONE, MGPOptional.of(Orthogonal.LEFT));
 
-    public static readonly DARK_UP: SiamPiece = new SiamPiece(5);
+    public static readonly DARK_UP: SiamPiece =
+        new SiamPiece(5, PlayerOrNone.ZERO, MGPOptional.of(Orthogonal.UP));
 
-    public static readonly DARK_RIGHT: SiamPiece = new SiamPiece(6);
+    public static readonly DARK_RIGHT: SiamPiece =
+        new SiamPiece(6, PlayerOrNone.ZERO, MGPOptional.of(Orthogonal.RIGHT));
 
-    public static readonly DARK_DOWN: SiamPiece = new SiamPiece(7);
+    public static readonly DARK_DOWN: SiamPiece =
+        new SiamPiece(7, PlayerOrNone.ZERO, MGPOptional.of(Orthogonal.DOWN));
 
-    public static readonly DARK_LEFT: SiamPiece = new SiamPiece(8);
+    public static readonly DARK_LEFT: SiamPiece =
+        new SiamPiece(8, PlayerOrNone.ZERO, MGPOptional.of(Orthogonal.LEFT));
 
-    public static readonly MOUNTAIN: SiamPiece = new SiamPiece(9);
+    public static readonly MOUNTAIN: SiamPiece =
+        new SiamPiece(9, PlayerOrNone.NONE, MGPOptional.empty());
 
     public static decode(value: SiamPieceValue): SiamPiece {
         switch (value) {
@@ -41,73 +51,65 @@ export class SiamPiece {
             case 9: return SiamPiece.MOUNTAIN;
         }
     }
-    public belongTo(player: Player): boolean {
-        if (player === Player.ZERO) {
-            return (1 <= this.value && this.value <= 4);
-        } else {
-            return (5 <= this.value && this.value <= 8);
-        }
-    }
-    public isEmptyOrMountain(): boolean {
-        return this.value === 0 || this.value === 9;
-    }
-    public isPiece(): boolean {
-        return this.isEmptyOrMountain() === false;
-    }
-    public getOwner(): PlayerOrNone {
-        if (1 <= this.value && this.value <= 4) return Player.ZERO;
-        if (5 <= this.value && this.value <= 8) return Player.ONE;
-        return PlayerOrNone.NONE;
-    }
-    public getOptionalDirection(): MGPOptional<Orthogonal> {
-        switch (this.value) {
-            case 0: return MGPOptional.empty();
-            case 1: return MGPOptional.of(Orthogonal.UP);
-            case 5: return MGPOptional.of(Orthogonal.UP);
-            case 2: return MGPOptional.of(Orthogonal.RIGHT);
-            case 6: return MGPOptional.of(Orthogonal.RIGHT);
-            case 3: return MGPOptional.of(Orthogonal.DOWN);
-            case 7: return MGPOptional.of(Orthogonal.DOWN);
-            case 4: return MGPOptional.of(Orthogonal.LEFT);
-            case 8: return MGPOptional.of(Orthogonal.LEFT);
-            default:
-                // must be 9, according to this.value's type
-                Utils.expectToBe(this.value, 9);
-                return MGPOptional.empty();
-        }
-    }
+
     public static of(orientation: Orthogonal, player: Player): SiamPiece {
         if (player === Player.ZERO) {
-            if (orientation === Orthogonal.UP) return SiamPiece.LIGHT_UP;
-            if (orientation === Orthogonal.RIGHT) return SiamPiece.LIGHT_RIGHT;
-            if (orientation === Orthogonal.DOWN) return SiamPiece.LIGHT_DOWN;
-            return SiamPiece.LIGHT_LEFT;
-        } else {
             if (orientation === Orthogonal.UP) return SiamPiece.DARK_UP;
             if (orientation === Orthogonal.RIGHT) return SiamPiece.DARK_RIGHT;
             if (orientation === Orthogonal.DOWN) return SiamPiece.DARK_DOWN;
             return SiamPiece.DARK_LEFT;
+        } else {
+            if (orientation === Orthogonal.UP) return SiamPiece.LIGHT_UP;
+            if (orientation === Orthogonal.RIGHT) return SiamPiece.LIGHT_RIGHT;
+            if (orientation === Orthogonal.DOWN) return SiamPiece.LIGHT_DOWN;
+            return SiamPiece.LIGHT_LEFT;
         }
     }
-    private constructor(public readonly value: number) {}
+
+    private constructor(private readonly value: number,
+                        private readonly owner: PlayerOrNone,
+                        private readonly direction: MGPOptional<Orthogonal>)
+    {
+    }
+
+    public belongsTo(player: Player): boolean {
+        return this.owner.equals(player);
+    }
+
+    public isEmptyOrMountain(): boolean {
+        return this.owner === PlayerOrNone.NONE;
+    }
+
+    public isPiece(): boolean {
+        return this.isEmptyOrMountain() === false;
+    }
+
+    public getOwner(): PlayerOrNone {
+        return this.owner;
+    }
+
+    public getOptionalDirection(): MGPOptional<Orthogonal> {
+        return this.direction;
+    }
 
     public getDirection(): Orthogonal {
         return this.getOptionalDirection().get();
     }
+
     public toString(): string {
-        switch (this.value) {
-            case 0: return 'EMPTY';
-            case 1: return 'LIGHT_UP';
-            case 2: return 'LIGHT_RIGHT';
-            case 3: return 'LIGHT_DOWN';
-            case 4: return 'LIGHT_LEFT';
-            case 5: return 'DARK_UP';
-            case 6: return 'DARK_RIGHT';
-            case 7: return 'DARK_DOWN';
-            case 8: return 'DARK_LEFT';
+        switch (this) {
+            case SiamPiece.EMPTY: return 'EMPTY';
+            case SiamPiece.LIGHT_UP: return 'LIGHT_UP';
+            case SiamPiece.LIGHT_RIGHT: return 'LIGHT_RIGHT';
+            case SiamPiece.LIGHT_DOWN: return 'LIGHT_DOWN';
+            case SiamPiece.LIGHT_LEFT: return 'LIGHT_LEFT';
+            case SiamPiece.DARK_UP: return 'DARK_UP';
+            case SiamPiece.DARK_RIGHT: return 'DARK_RIGHT';
+            case SiamPiece.DARK_DOWN: return 'DARK_DOWN';
+            case SiamPiece.DARK_LEFT: return 'DARK_LEFT';
             default:
                 // must be 9, according to this.value's type
-                Utils.expectToBe(this.value, 9);
+                Utils.expectToBe(this, SiamPiece.MOUNTAIN);
                 return 'MOUNTAIN';
         }
     }

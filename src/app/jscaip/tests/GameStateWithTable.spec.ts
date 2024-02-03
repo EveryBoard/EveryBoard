@@ -45,4 +45,16 @@ describe('GameStateWithTable', () => {
             expect(values).toEqual([0, 1, 2, 3]);
         });
     });
+    it('should give board dimensions with getWidth and getHeight', () => {
+        // Given a state
+        const state: MyGameState = new MyGameState([[0, 1, 2], [3, 4, 5]], 0);
+
+        // When accessing its dimensions
+        const width: number = state.getWidth();
+        const height: number = state.getHeight();
+
+        // Then it should have the expected dimensions
+        expect(width).toBe(3);
+        expect(height).toBe(2);
+    });
 });

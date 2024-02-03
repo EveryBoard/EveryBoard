@@ -1,19 +1,21 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { Orthogonal } from 'src/app/jscaip/Direction';
-import { QuixoState } from './QuixoState';
+import { QuixoConfig, QuixoState } from './QuixoState';
 import { QuixoMove } from './QuixoMove';
 import { QuixoNode, QuixoRules } from './QuixoRules';
-import { MoveGenerator } from 'src/app/jscaip/AI';
+import { MoveGenerator } from 'src/app/jscaip/AI/AI';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
 
-export class QuixoMoveGenerator extends MoveGenerator<QuixoMove, QuixoState> {
+export class QuixoMoveGenerator extends MoveGenerator<QuixoMove, QuixoState, QuixoConfig> {
 
-    public getListMoves(node: QuixoNode): QuixoMove[] {
+    public override getListMoves(node: QuixoNode, _config: MGPOptional<QuixoConfig>): QuixoMove[] {
+        const state: QuixoState = node.gameState;
         const moves: QuixoMove[] = [];
         const verticalCoords: Coord[] = QuixoRules.getVerticalCoords(node);
         const horizontalCenterCoords: Coord[] = QuixoRules.getHorizontalCenterCoords(node);
         const coords: Coord[] = horizontalCenterCoords.concat(verticalCoords);
         for (const coord of coords) {
-            const possibleDirections: Orthogonal[] = QuixoRules.getPossibleDirections(coord);
+            const possibleDirections: Orthogonal[] = QuixoRules.get().getPossibleDirections(state, coord);
             for (const possibleDirection of possibleDirections) {
                 const newMove: QuixoMove = new QuixoMove(coord.x, coord.y, possibleDirection);
                 moves.push(newMove);

@@ -439,7 +439,8 @@ describe('ConnectedUserService', () => {
     });
     describe('disconnect', () => {
         it('should fail if there is no user connected', async() => {
-            // Given that no user is connected (default)
+            // Given that no user is connected
+            await signOut();
 
             // When trying to disconnect
             const result: MGPValidation = await connectedUserService.disconnect();
@@ -626,6 +627,14 @@ describe('ConnectedUserService', () => {
             const userDocId: string = UserMocks.CREATOR_MINIMAL_USER.id;
             expect(userDAO.update).toHaveBeenCalledOnceWith(userDocId, { lastUpdateTime: serverTimestamp() });
         });
+    });
+    it('should throw when encountering a non-firebase error', () => {
+        // Given a non-firebase error
+        const error: Error = new Error('some other error');
+
+        // When mapping it
+        // Then it should throw
+        expect(() => connectedUserService['catchFirebaseError'](error)).toThrow(error);
     });
     afterEach(async() => {
         if (alreadyDestroyed === false) {

@@ -5,6 +5,8 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { Tutorial, TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
+import { EncapsuleRules } from './EncapsuleRules';
+import { TutorialStepMessage } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
 
 const _: EncapsuleSpace = new EncapsuleSpace(PlayerOrNone.NONE, PlayerOrNone.NONE, PlayerOrNone.NONE);
 const s: EncapsuleSpace = new EncapsuleSpace(Player.ZERO, PlayerOrNone.NONE, PlayerOrNone.NONE);
@@ -36,9 +38,9 @@ export class EncapsuleTutorial extends Tutorial {
             $localize`Putting a piece`,
             $localize`This is the initial board.<br/><br/>
         You're playing Dark. Pick one of your piece on the side of the board and put it on the board.`,
-            EncapsuleState.getInitialState(),
+            EncapsuleRules.get().getInitialState(),
             EncapsuleMove.ofDrop(EncapsulePiece.SMALL_DARK, new Coord(1, 1)),
-            $localize`Congratulations!`),
+            TutorialStepMessage.CONGRATULATIONS()),
         TutorialStep.fromMove(
             $localize`Moving`,
             $localize`Another possible action is to move one of your pieces that is already on the board.<br/><br/>
@@ -57,8 +59,9 @@ export class EncapsuleTutorial extends Tutorial {
                 EncapsuleMove.ofMove(new Coord(0, 0), new Coord(1, 2)),
                 EncapsuleMove.ofMove(new Coord(0, 0), new Coord(2, 2)),
             ],
-            $localize`Congratulations!`,
-            $localize`Failed. Try again.`),
+            TutorialStepMessage.CONGRATULATIONS(),
+            TutorialStepMessage.FAILED_TRY_AGAIN(),
+        ),
         TutorialStep.fromPredicate(
             $localize`Particularity`,
             $localize`At Encapsule, pieces encapsulate each other.
@@ -87,8 +90,8 @@ export class EncapsuleTutorial extends Tutorial {
                         return MGPValidation.SUCCESS;
                     }
                 }
-                return MGPValidation.failure($localize`Failed. Try again.`);
+                return MGPValidation.failure(TutorialStepMessage.FAILED_TRY_AGAIN());
             },
-            $localize`Congratulations!`),
+            TutorialStepMessage.CONGRATULATIONS()),
     ];
 }

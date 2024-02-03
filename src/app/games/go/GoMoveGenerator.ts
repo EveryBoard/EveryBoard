@@ -1,16 +1,17 @@
 import { GoState, GoPiece, Phase } from './GoState';
 import { GoMove } from './GoMove';
 import { Debug } from 'src/app/utils/utils';
-import { GoLegalityInformation, GoNode, GoRules } from './GoRules';
+import { GoConfig, GoLegalityInformation, GoNode, GoRules } from './GoRules';
 import { GoGroupDatas } from './GoGroupsDatas';
 import { Coord } from 'src/app/jscaip/Coord';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
-import { MoveGenerator } from 'src/app/jscaip/AI';
+import { MoveGenerator } from 'src/app/jscaip/AI/AI';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 @Debug.log
-export class GoMoveGenerator extends MoveGenerator<GoMove, GoState> {
+export class GoMoveGenerator extends MoveGenerator<GoMove, GoState, GoConfig> {
 
-    public getListMoves(node: GoNode): GoMove[] {
+    public override getListMoves(node: GoNode, _config: MGPOptional<GoConfig>): GoMove[] {
 
         const currentState: GoState = node.gameState;
         const playingMoves: GoMove[] = this.getPlayingMovesList(currentState);
@@ -31,14 +32,14 @@ export class GoMoveGenerator extends MoveGenerator<GoMove, GoState> {
         const choices: GoMove[] = [];
         let newMove: GoMove;
 
-        for (let y: number = 0; y < state.board.length; y++) {
-            for (let x: number = 0; x < state.board[0].length; x++) {
-                newMove = new GoMove(x, y);
-                if (state.getPieceAt(newMove.coord) === GoPiece.EMPTY) {
-                    const legality: MGPFallible<GoLegalityInformation> = GoRules.isLegal(newMove, state);
-                    if (legality.isSuccess()) {
-                        choices.push(newMove);
-                    }
+        for (const coordAndContent of state.getCoordsAndContents()) {
+            const coord: Coord = coordAndContent.coord;
+            const content: GoPiece = coordAndContent.content;
+            newMove = new GoMove(coord.x, coord.y);
+            if (content === GoPiece.EMPTY) {
+                const legality: MGPFallible<GoLegalityInformation> = GoRules.isLegal(newMove, state);
+                if (legality.isSuccess()) {
+                    choices.push(newMove);
                 }
             }
         }
