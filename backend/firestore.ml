@@ -94,7 +94,7 @@ module Make (FirestorePrimitives : FirestorePrimitives.FIRESTORE_PRIMITIVES) : F
     let get_or_fail (maybe_value : ('a, 'b) result)  : 'a =
       match maybe_value with
       | Ok value -> value
-      | Error _ -> raise (DocumentInvalid (Printf.sprintf "%s" path)) in
+      | Error e -> raise (DocumentInvalid (Printf.sprintf "%s: %s" path e)) in
     let* doc = FirestorePrimitives.get_doc request path in
     doc
     |> of_yojson
