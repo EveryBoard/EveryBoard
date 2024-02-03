@@ -21,6 +21,7 @@ export class BackendService {
     }
 
     private async performRequest(method: HTTPMethod, endpoint: string): Promise<MGPFallible<Response>> {
+        console.log('performing request: ' + method + ' ' + endpoint);
         const token: string = await this.connectedUserService.getIdToken();
         const response: Response =
             await fetch(environment.backendURL + '/' + endpoint, {
@@ -207,7 +208,9 @@ export class BackendService {
     public async victory(gameId: string,
                          scores: MGPOptional<PlayerNumberMap>,
                          winner: MinimalUser,
-                         loser: MinimalUser): Promise<void> {
+                         loser: MinimalUser)
+    : Promise<void>
+    {
         const winnerURLEncoded: string = encodeURIComponent(JSON.stringify(winner));
         const loserURLEncoded: string = encodeURIComponent(JSON.stringify(loser));
         let endpoint: string = `game/${gameId}?action=victory&winner=${winnerURLEncoded}&loser=${loserURLEncoded}`;
@@ -287,10 +290,7 @@ export class BackendService {
     }
 
     /** Propose a config to the opponent */
-    public async proposeConfig(gameId: string,
-                               config: JSONValue)
-    : Promise<void>
-    {
+    public async proposeConfig(gameId: string, config: JSONValue): Promise<void> {
         const configEncoded: string = encodeURIComponent(JSON.stringify(config));
         const endpoint: string = `config-room/${gameId}?action=propose&config=${configEncoded}`;
         const result: MGPFallible<Response> = await this.performRequest('POST', endpoint);

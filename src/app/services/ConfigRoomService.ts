@@ -6,11 +6,9 @@ import { MGPOptional } from '../utils/MGPOptional';
 import { Subscription } from 'rxjs';
 import { MGPValidation } from '../utils/MGPValidation';
 import { MinimalUser } from '../domain/MinimalUser';
-import { Localized } from '../utils/LocaleUtils';
-import { ConnectedUserService } from './ConnectedUserService';
 import { FirestoreCollectionObserver } from '../dao/FirestoreCollectionObserver';
 import { FirestoreDocument, IFirestoreDAO } from '../dao/FirestoreDAO';
-import { RulesConfig, RulesConfigUtils } from '../jscaip/RulesConfigUtil';
+import { RulesConfig } from '../jscaip/RulesConfigUtil';
 import { BackendService } from './BackendService';
 
 @Injectable({
@@ -20,16 +18,15 @@ import { BackendService } from './BackendService';
 export class ConfigRoomService {
 
     public constructor(private readonly configRoomDAO: ConfigRoomDAO,
-                       private readonly connectedUserService: ConnectedUserService,
                        private readonly backendService: BackendService)
     {
     }
 
-    public subscribeToChanges(configRoomId: string, callback: (doc: MGPOptional<ConfigRoom>) => void): Subscription {
-        return this.configRoomDAO.subscribeToChanges(configRoomId, callback);
+    public subscribeToChanges(gameId: string, callback: (doc: MGPOptional<ConfigRoom>) => void): Subscription {
+        return this.configRoomDAO.subscribeToChanges(gameId, callback);
     }
 
-    public subscribeToCandidates(configRoomId: string, callback: (candidates: MinimalUser[]) => void): Subscription {
+    public subscribeToCandidates(gameId: string, callback: (candidates: MinimalUser[]) => void): Subscription {
         let candidates: MinimalUser[] = [];
         const observer: FirestoreCollectionObserver<MinimalUser> = new FirestoreCollectionObserver(
             (created: FirestoreDocument<MinimalUser>[]) => {
@@ -58,24 +55,25 @@ export class ConfigRoomService {
                 }
                 callback(candidates);
             });
-        const subCollection: IFirestoreDAO<FirestoreJSONObject> = this.configRoomDAO.subCollectionDAO(configRoomId, 'candidates');
+        const subCollection: IFirestoreDAO<FirestoreJSONObject> =
+            this.configRoomDAO.subCollectionDAO(gameId, 'candidates');
         return subCollection.observingWhere([], observer);
     }
 
-    public async joinGame(configRoomId: string): Promise<MGPValidation> {
-        return this.backendService.joinGame(configRoomId);
+    public joinGame(gameId: string): Promise<MGPValidation> {
+        return this.backendService.joinGame(gameId);
     }
 
-    public removeCandidate(partId: string, candidate: MinimalUser): Promise<void> {
-        return this.backendService.removeCandidate(partId, candidate.id);
+    public removeCandidate(gameId: string, candidate: MinimalUser): Promise<void> {
+        return this.backendService.removeCandidate(gameId, candidate.id);
     }
 
-    public async proposeConfig(gameId: string,
-                               partType: PartType,
-                               maximalMoveDuration: number,
-                               firstPlayer: FirstPlayer,
-                               totalPartDuration: number,
-                               rulesConfig: MGPOptional<RulesConfig>)
+    public proposeConfig(gameId: string,
+                         partType: PartType,
+                         maximalMoveDuration: number,
+                         firstPlayer: FirstPlayer,
+                         totalPartDuration: number,
+                         rulesConfig: MGPOptional<RulesConfig>)
     : Promise<void>
     {
         return this.backendService.proposeConfig(gameId, {
@@ -92,11 +90,11 @@ export class ConfigRoomService {
         return this.backendService.selectOpponent(gameId, chosenOpponent);
     }
 
-    public async reviewConfig(gameId: string): Promise<void> {
+    public reviewConfig(gameId: string): Promise<void> {
         return this.backendService.reviewConfig(gameId);
     }
 
-    public async reviewConfigAndRemoveChosenOpponent(gameId: string): Promise<void> {
+    public reviewConfigAndRemoveChosenOpponent(gameId: string): Promise<void> {
         return this.backendService.reviewConfigAndRemoveChosenOpponent(gameId);
     }
 }

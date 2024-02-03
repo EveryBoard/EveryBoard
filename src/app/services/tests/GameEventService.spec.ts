@@ -9,7 +9,7 @@ import { PartDAOMock } from 'src/app/dao/tests/PartDAOMock.spec';
 import { IFirestoreDAO } from '../../dao/FirestoreDAO';
 import { UserMocks } from 'src/app/domain/UserMocks.spec';
 
-fdescribe('GameEventService', () => {
+describe('GameEventService', () => {
 
     let gameEventService: GameEventService;
     let partDAO: PartDAO;

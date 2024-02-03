@@ -1,8 +1,8 @@
-FROM scratch
+FROM gcr.io/distroless/static-debian12
 COPY main.static.exe /
 COPY games.txt /
-COPY services /etc/services
-COPY ca-certificates.crt /etc/ssl/certs/
+#COPY services /etc/services
+#COPY ca-certificates.crt /etc/ssl/certs/
 COPY service-account.json /
 CMD ["/main.static.exe"]
 EXPOSE 8081

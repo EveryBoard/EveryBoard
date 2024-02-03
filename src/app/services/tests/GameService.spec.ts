@@ -24,7 +24,7 @@ import { MGPValidationTestUtils } from 'src/app/utils/tests/MGPValidation.spec';
 import { MinimalUser } from 'src/app/domain/MinimalUser';
 import { JSONValue } from 'src/app/utils/utils';
 
-fdescribe('GameService', () => {
+describe('GameService', () => {
 
     let gameService: GameService;
     let partDAO: PartDAO;
