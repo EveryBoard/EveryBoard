@@ -91,14 +91,14 @@ module Make (FirestorePrimitives : FirestorePrimitives.FIRESTORE_PRIMITIVES) : F
 
 
   let get (request : Dream.request) (path : string) (of_yojson : JSON.t -> ('a, 'b) result) : 'a Lwt.t =
-    let get_or_fail (maybe_value : ('a, 'b) result)  : 'a =
+    let get_or_fail doc (maybe_value : ('a, 'b) result)  : 'a =
       match maybe_value with
       | Ok value -> value
-      | Error e -> raise (DocumentInvalid (Printf.sprintf "%s: %s" path e)) in
+      | Error e -> raise (DocumentInvalid (Printf.sprintf "%s: %s - %s" path e (JSON.to_string doc))) in
     let* doc = FirestorePrimitives.get_doc request path in
     doc
     |> of_yojson
-    |> get_or_fail
+    |> get_or_fail doc
     |> Lwt.return
 
   module User = struct
