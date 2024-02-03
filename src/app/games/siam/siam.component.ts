@@ -3,7 +3,6 @@ import { RectangularGameComponent } from '../../components/game-components/recta
 import { SiamMove } from 'src/app/games/siam/SiamMove';
 import { SiamState } from 'src/app/games/siam/SiamState';
 import { SiamLegalityInformation, SiamRules } from 'src/app/games/siam/SiamRules';
-import { SiamMinimax } from 'src/app/games/siam/SiamMinimax';
 import { SiamPiece } from 'src/app/games/siam/SiamPiece';
 import { SiamTutorial } from './SiamTutorial';
 import { Coord } from 'src/app/jscaip/Coord';
@@ -17,6 +16,9 @@ import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { Player } from 'src/app/jscaip/Player';
 import { MGPSet } from 'src/app/utils/MGPSet';
 import { SiamFailure } from './SiamFailure';
+import { MCTS } from 'src/app/jscaip/MCTS';
+import { SiamMoveGenerator } from './SiamMoveGenerator';
+import { SiamMinimax } from './SiamMinimax';
 
 export type SiamIndicatorArrow = {
     source: MGPOptional<{ coord: Coord, piece: SiamPiece }>,
@@ -52,8 +54,9 @@ export class SiamComponent extends RectangularGameComponent<SiamRules,
         super(messageDisplayer);
         this.rules = SiamRules.get();
         this.node = this.rules.getInitialNode();
-        this.availableMinimaxes = [
-            new SiamMinimax(this.rules, 'SiamMinimax'),
+        this.availableAIs = [
+            new SiamMinimax(),
+            new MCTS($localize`MCTS`, new SiamMoveGenerator(), this.rules),
         ];
         this.encoder = SiamMove.encoder;
         this.tutorial = new SiamTutorial().tutorial;
@@ -253,18 +256,18 @@ export class SiamComponent extends RectangularGameComponent<SiamRules,
         const remainingPieces: number = this.playerPieces(player);
         const closenessFactor: number = 3;
         const maxRemainingPieces: number = 5;
-        let x: number = (maxRemainingPieces + 1)/closenessFactor;
+        let x: number = (maxRemainingPieces + 1) / closenessFactor;
         let y: number;
         let orientation: Orthogonal;
-        if (player === Player.ONE) {
-            // Player zero pieces are stacked right-to-left for better visuals
-            x += (remainingPieces - piece + (maxRemainingPieces - remainingPieces)/2) / closenessFactor;
-            y = -1;
-            orientation = Orthogonal.RIGHT;
-        } else {
+        if (player === this.getPointOfView()) {
             x += ((piece + 1) + (maxRemainingPieces - remainingPieces)/2) / closenessFactor;
             y = 7;
             orientation = Orthogonal.LEFT;
+        } else {
+            // Top pieces are stacked right-to-left for better visuals
+            x += (remainingPieces - piece + (maxRemainingPieces - remainingPieces)/2) / closenessFactor;
+            y = -1;
+            orientation = Orthogonal.RIGHT;
         }
         return this.getArrowTransform(x, y, orientation);
     }

@@ -1,4 +1,4 @@
-import { ArrayUtils, NumberTable, Table } from 'src/app/utils/ArrayUtils';
+import { NumberTable, Table, TableUtils } from 'src/app/utils/ArrayUtils';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Debug } from '../utils/utils';
 import { Direction } from './Direction';
@@ -11,7 +11,7 @@ export class BoardDatas {
     }
 
     public static ofBoard<T>(board: Table<T>, groupDatasFactory: GroupDatasFactory<T>): BoardDatas {
-        const groupIndexes: number[][] = ArrayUtils.createTable<number>(board[0].length, board.length, -1);
+        const groupIndexes: number[][] = TableUtils.create(board[0].length, board.length, -1);
         const groupsDatas: GroupDatas<T>[] = [];
         for (let y: number = 0; y < board.length; y++) {
             for (let x: number = 0; x < board[0].length; x++) {
@@ -41,7 +41,7 @@ export class BoardDatas {
 
 export class GroupInfos {
     public constructor(readonly coords: ReadonlyArray<Coord>,
-                       readonly neighborsEntryPoints: ReadonlyArray<Coord>) { }
+                       readonly neighborsEntryPoints: ReadonlyArray<Coord>) {}
 }
 
 @Debug.log

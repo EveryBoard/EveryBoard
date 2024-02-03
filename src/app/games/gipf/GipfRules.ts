@@ -2,22 +2,23 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { HexaDirection } from 'src/app/jscaip/HexaDirection';
 import { HexaLine } from 'src/app/jscaip/HexaLine';
 import { FlatHexaOrientation } from 'src/app/jscaip/HexaOrientation';
-import { MGPNode } from 'src/app/jscaip/MGPNode';
+import { GameNode } from 'src/app/jscaip/GameNode';
 import { Player } from 'src/app/jscaip/Player';
 import { Rules } from 'src/app/jscaip/Rules';
 import { assert } from 'src/app/utils/assert';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
-import { GipfCapture, GipfMove, GipfPlacement } from './GipfMove';
+import { GipfMove, GipfPlacement } from './GipfMove';
 import { GipfState } from './GipfState';
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
 import { GipfFailure } from './GipfFailure';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
+import { GipfCapture } from 'src/app/jscaip/GipfProjectHelper';
 
 export type GipfLegalityInformation = GipfState
 
-export class GipfNode extends MGPNode<GipfRules, GipfMove, GipfState, GipfLegalityInformation> {}
+export class GipfNode extends GameNode<GipfMove, GipfState> {}
 
 export class GipfRules extends Rules<GipfMove, GipfState, GipfLegalityInformation> {
 

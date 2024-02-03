@@ -5,19 +5,22 @@ import { Direction } from 'src/app/jscaip/Direction';
 import { Vector } from 'src/app/jscaip/Vector';
 import { Player } from 'src/app/jscaip/Player';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
-import { ArrayUtils } from 'src/app/utils/ArrayUtils';
+import { TableUtils } from 'src/app/utils/ArrayUtils';
 import { assert } from 'src/app/utils/assert';
 import { MGPMap } from 'src/app/utils/MGPMap';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { Utils } from 'src/app/utils/utils';
-import { LodestoneDummyMinimax } from './LodestoneDummyMinimax';
 import { LodestoneFailure } from './LodestoneFailure';
 import { LodestoneCaptures, LodestoneMove } from './LodestoneMove';
 import { LodestoneOrientation, LodestoneDirection, LodestonePiece, LodestonePieceNone, LodestonePieceLodestone, LodestoneDescription } from './LodestonePiece';
 import { LodestoneInfos, PressurePlatePositionInformation, LodestoneRules, PressurePlateViewPosition } from './LodestoneRules';
 import { LodestonePositions, LodestonePressurePlate, LodestonePressurePlatePosition, LodestonePressurePlates, LodestoneState } from './LodestoneState';
 import { LodestoneTutorial } from './LodestoneTutorial';
+import { MCTS } from 'src/app/jscaip/MCTS';
+import { LodestoneMoveGenerator } from './LodestoneMoveGenerator';
+import { LodestoneScoreHeuristic } from './LodestoneScoreHeuristic';
+import { Minimax } from 'src/app/jscaip/Minimax';
 
 interface LodestoneInfo {
     direction: LodestoneDirection,
@@ -129,8 +132,9 @@ export class LodestoneComponent
         this.rules = LodestoneRules.get();
         this.node = this.rules.getInitialNode();
         this.tutorial = new LodestoneTutorial().tutorial;
-        this.availableMinimaxes = [
-            new LodestoneDummyMinimax(this.rules, 'LodestoneDummyMinimax'),
+        this.availableAIs = [
+            new Minimax($localize`Score`, this.rules, new LodestoneScoreHeuristic(), new LodestoneMoveGenerator()),
+            new MCTS($localize`MCTS`, new LodestoneMoveGenerator(), this.rules),
         ];
         this.encoder = LodestoneMove.encoder;
         this.PIECE_RADIUS = (this.SPACE_SIZE - (2 * this.STROKE_WIDTH)) * 0.5;
@@ -234,7 +238,7 @@ export class LodestoneComponent
         this.captures[position]++;
         const state: LodestoneState = this.stateAfterPlacingLodestone.get();
         const opponent: Player = this.getCurrentOpponent();
-        const board: LodestonePiece[][] = ArrayUtils.copyBiArray(state.board);
+        const board: LodestonePiece[][] = TableUtils.copy(state.board);
         const pressurePlates: LodestonePressurePlates = { ...state.pressurePlates };
         const lodestones: LodestonePositions = state.lodestones.getCopy();
         LodestoneRules.get().updatePressurePlates(board, pressurePlates, lodestones, opponent, this.captures);
@@ -258,7 +262,7 @@ export class LodestoneComponent
         this.captures[position]--;
         const state: LodestoneState = this.stateAfterPlacingLodestone.get();
         const opponent: Player = this.getCurrentOpponent();
-        const board: LodestonePiece[][] = ArrayUtils.copyBiArray(state.board);
+        const board: LodestonePiece[][] = TableUtils.copy(state.board);
         const pressurePlates: LodestonePressurePlates = { ...state.pressurePlates };
         const lodestones: LodestonePositions = state.lodestones.getCopy();
         LodestoneRules.get().updatePressurePlates(board, pressurePlates, lodestones, opponent, this.captures);
@@ -278,7 +282,7 @@ export class LodestoneComponent
         const playerLodestone: MGPOptional<Coord> = this.displayedState.lodestones.get(this.getCurrentPlayer());
         if (playerLodestone.isPresent()) {
             // Hide the lodestone so that it is clearer that the player can make its next move here
-            const board: LodestonePiece[][] = ArrayUtils.copyBiArray(this.displayedState.board);
+            const board: LodestonePiece[][] = TableUtils.copy(this.displayedState.board);
             board[playerLodestone.get().y][playerLodestone.get().x] = LodestonePieceNone.EMPTY;
             this.displayedState = this.displayedState.withBoard(board);
         }

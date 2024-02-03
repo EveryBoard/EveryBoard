@@ -1,7 +1,7 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { GameStateWithTable } from 'src/app/jscaip/GameStateWithTable';
 import { PlayerOrNone } from 'src/app/jscaip/Player';
-import { ArrayUtils, Table } from 'src/app/utils/ArrayUtils';
+import { TableUtils, Table } from 'src/app/utils/ArrayUtils';
 
 export class ConnectSixState extends GameStateWithTable<PlayerOrNone> {
 
@@ -13,9 +13,9 @@ export class ConnectSixState extends GameStateWithTable<PlayerOrNone> {
         return coord.isInRange(ConnectSixState.WIDTH, ConnectSixState.HEIGHT);
     }
     public static getInitialState(): ConnectSixState {
-        const board: Table<PlayerOrNone> = ArrayUtils.createTable(ConnectSixState.WIDTH,
-                                                                  ConnectSixState.HEIGHT,
-                                                                  PlayerOrNone.NONE);
+        const board: Table<PlayerOrNone> = TableUtils.create(ConnectSixState.WIDTH,
+                                                             ConnectSixState.HEIGHT,
+                                                             PlayerOrNone.NONE);
         return new ConnectSixState(board, 0);
     }
 }

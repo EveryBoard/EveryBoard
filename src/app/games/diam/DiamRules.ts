@@ -1,9 +1,9 @@
 import { Coord } from 'src/app/jscaip/Coord';
-import { MGPNode } from 'src/app/jscaip/MGPNode';
+import { GameNode } from 'src/app/jscaip/GameNode';
 import { Player } from 'src/app/jscaip/Player';
 import { Rules } from 'src/app/jscaip/Rules';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { ArrayUtils } from 'src/app/utils/ArrayUtils';
+import { ArrayUtils, TableUtils } from 'src/app/utils/ArrayUtils';
 import { assert } from 'src/app/utils/assert';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
@@ -13,7 +13,7 @@ import { DiamPiece } from './DiamPiece';
 import { DiamState } from './DiamState';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 
-export class DiamNode extends MGPNode<DiamRules, DiamMove, DiamState> {}
+export class DiamNode extends GameNode<DiamMove, DiamState> {}
 
 export class DiamRules extends Rules<DiamMove, DiamState> {
 
@@ -36,15 +36,15 @@ export class DiamRules extends Rules<DiamMove, DiamState> {
         }
     }
     private applyLegalDrop(drop: DiamMoveDrop, state: DiamState): DiamState {
-        const newBoard: DiamPiece[][] = ArrayUtils.copyBiArray(state.board);
+        const newBoard: DiamPiece[][] = TableUtils.copy(state.board);
         newBoard[state.getStackHeight(drop.target)][drop.target] = drop.piece;
         const newRemainingPieces: [number, number, number, number] =
-            ArrayUtils.copyImmutableArray(state.remainingPieces) as [number, number, number, number];
+            ArrayUtils.copy(state.remainingPieces) as [number, number, number, number];
         newRemainingPieces[DiamState.pieceIndex(drop.piece)] -= 1;
         return new DiamState(newBoard, newRemainingPieces, state.turn + 1);
     }
     private applyLegalShift(shift: DiamMoveShift, state: DiamState): DiamState {
-        const newBoard: DiamPiece[][] = ArrayUtils.copyBiArray(state.board);
+        const newBoard: DiamPiece[][] = TableUtils.copy(state.board);
         const targetX: number = shift.getTarget();
         let targetY: number = state.getStackHeight(targetX);
         let sourceY: number = shift.start.y;

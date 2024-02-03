@@ -476,11 +476,11 @@
       <trans-unit id="7800061171704298797" datatype="html">
         <source>Human</source>
       </trans-unit>
-      <trans-unit id="6063984594211340121" datatype="html">
-        <source>Pick the level</source>
+      <trans-unit id="3795472118461355324" datatype="html">
+        <source>Pick the options</source>
       </trans-unit>
-      <trans-unit id="8800476882871783599" datatype="html">
-        <source>Level <x id="INTERPOLATION" equiv-text="{{ i }}"/></source>
+      <trans-unit id="187187500641108332" datatype="html">
+        <source><x id="INTERPOLATION" equiv-text="option.name }}"/></source>
       </trans-unit>
       <trans-unit id="3272612818120648715" datatype="html">
         <source><x id="INTERPOLATION" equiv-text="gameComponent.scores.get()[0] }}"/> points</source>
@@ -808,6 +808,12 @@
       <trans-unit id="8017917529851412468" datatype="html">
         <source>Failed. Try again.</source>
       </trans-unit>
+      <trans-unit id="7123653594948067002" datatype="html">
+        <source>Score</source>
+      </trans-unit>
+      <trans-unit id="7183112140529419891" datatype="html">
+        <source>MCTS</source>
+      </trans-unit>
       <trans-unit id="4382056880714150954" datatype="html">
         <source>Pieces should only move downward!</source>
       </trans-unit>
@@ -852,6 +858,9 @@
       </trans-unit>
       <trans-unit id="6535908388530528403" datatype="html">
         <source>Wrong choice, your opponent will win in the next turn no matter which piece is dropped!</source>
+      </trans-unit>
+      <trans-unit id="8400174784913655582" datatype="html">
+        <source>Minimax</source>
       </trans-unit>
       <trans-unit id="6011590532570079359" datatype="html">
         <source>Your piece must land on one of the closest six triangles with the same color as the triangle on which the piece is.</source>
@@ -943,6 +952,15 @@
         <source>Congratulations! See, your piece no longer had any empty neighboring space after you have gained the tile, but it stayed on the board as it was your turn.
         However, the opponent&apos;s piece has disappeared because the tile&apos;s capture has removed its last empty neighboring space.</source>
       </trans-unit>
+      <trans-unit id="8182472154276317003" datatype="html">
+        <source>Pieces &gt; Threats &gt; Tiles</source>
+      </trans-unit>
+      <trans-unit id="7668715639068435496" datatype="html">
+        <source>Captures &gt; Freedom</source>
+      </trans-unit>
+      <trans-unit id="8560978883976627945" datatype="html">
+        <source>Alignment</source>
+      </trans-unit>
       <trans-unit id="3987391810258758141" datatype="html">
         <source>Connect Six is played on a 19x19 board, on which stones are put on the intersections. The aim of the game is to align 6 of your pieces.</source>
       </trans-unit>
@@ -978,6 +996,9 @@
       </trans-unit>
       <trans-unit id="309495911608325428" datatype="html">
         <source>You are visiting the same location twice in a move, you are not allowed to do so.</source>
+      </trans-unit>
+      <trans-unit id="4649711232397678200" datatype="html">
+        <source>Jump</source>
       </trans-unit>
       <trans-unit id="9123148140915098130" datatype="html">
         <source>Board and aim of the game</source>
@@ -1072,6 +1093,9 @@
       <trans-unit id="3765076912748475454" datatype="html">
         <source>Failed, try to shift a stack of pieces to the left.</source>
       </trans-unit>
+      <trans-unit id="7535479567631818273" datatype="html">
+        <source>Dummy</source>
+      </trans-unit>
       <trans-unit id="5012524143343727947" datatype="html">
         <source>You must select a piece or a stack of your color.</source>
       </trans-unit>
@@ -1160,6 +1184,9 @@
       <trans-unit id="8876232297721386956" datatype="html">
         <source>Bad idea, by moving on the source you would have won a point.</source>
       </trans-unit>
+      <trans-unit id="5456673610183497320" datatype="html">
+        <source>Stacks</source>
+      </trans-unit>
       <trans-unit id="6059738106874378452" datatype="html">
         <source>You do not have pieces of this type anymore.</source>
       </trans-unit>
@@ -1206,6 +1233,9 @@
       <trans-unit id="6204412729347708092" datatype="html">
         <source>You won, but the exercise is to win while moving a piece!</source>
       </trans-unit>
+      <trans-unit id="360730166369316579" datatype="html">
+        <source>Attack</source>
+      </trans-unit>
       <trans-unit id="5530182224164938313" datatype="html">
         <source>The move distance of your phalanx puts it out of the board.</source>
       </trans-unit>
@@ -1235,6 +1265,9 @@
       </trans-unit>
       <trans-unit id="2183903120219891237" datatype="html">
         <source>A phalanx cannot contain a piece of the opponent.</source>
+      </trans-unit>
+      <trans-unit id="4563771339790181195" datatype="html">
+        <source>Positional</source>
       </trans-unit>
       <trans-unit id="8733936607898144583" datatype="html">
         <source>Initial board</source>
@@ -1800,6 +1833,12 @@
       </trans-unit>
       <trans-unit id="7994037258587314442" datatype="html">
         <source>You did not move your officer.</source>
+      </trans-unit>
+      <trans-unit id="318262165361158083" datatype="html">
+        <source>Control</source>
+      </trans-unit>
+      <trans-unit id="7668804973365582935" datatype="html">
+        <source>Control and Domination</source>
       </trans-unit>
       <trans-unit id="6387863170048380356" datatype="html">
         <source>Your move should have a length equal to the number of pieces that exist on the same line.</source>
@@ -2764,6 +2803,9 @@
       <trans-unit id="4274208426593680443" datatype="html">
         <source>Failed. You did cut the board in two but you kept the half where you&apos;re in minority. Therefore, you lost! Try again.</source>
       </trans-unit>
+      <trans-unit id="2976149661707388406" datatype="html">
+        <source>Escape &gt; Pieces &gt; Control</source>
+      </trans-unit>
       <trans-unit id="4456476499852991526" datatype="html">
         <source>You cannot land on an occupied square.</source>
       </trans-unit>
@@ -2775,6 +2817,15 @@
       </trans-unit>
       <trans-unit id="6790757046240382671" datatype="html">
         <source>Tafl moves must be orthogonal.</source>
+      </trans-unit>
+      <trans-unit id="7623537877233304257" datatype="html">
+        <source>Pieces &gt; Control</source>
+      </trans-unit>
+      <trans-unit id="1760148711911088235" datatype="html">
+        <source>Pieces &gt; Influence</source>
+      </trans-unit>
+      <trans-unit id="3372037160964274985" datatype="html">
+        <source>Pieces</source>
       </trans-unit>
       <trans-unit id="3469374446011769111" datatype="html">
         <source>Brandhub is the Irish version of the Tafl, Tafl being a family of viking strategy game. The goal of the game is different for each player. The attacker plays first. Their pieces (dark) are close to the edges. Their goal is to capture the king, which is in the center of the board. The defender plays second. Their pieces (light) are in the middle. Their goal is to move the king on one of the 4 thrones in the corners. Note that the square in which the king starts, in the center of the board, is also a throne.</source>
@@ -2857,11 +2908,14 @@
       <trans-unit id="55131761932515685" datatype="html">
         <source>During your first four turns, you must drop one piece on any empty space of the board. There is no other restriction.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, put a piece on the board.</source>
       </trans-unit>
-      <trans-unit id="322267404708379069" datatype="html">
-        <source>Once all of your four pieces are placed on the board, you must now move one of your piece to another empty space. The goal remain to be the first to create a line or a square.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, move a piece.</source>
+      <trans-unit id="5528013857873835184" datatype="html">
+        <source>Once all of your four pieces are placed on the board, you must now move one of your piece to an empty neighboring space, orthogonally or diagonally. The goal remains to be the first to create a line or a square.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, move a piece.</source>
       </trans-unit>
-      <trans-unit id="366926106758793789" datatype="html">
-        <source>In this board, you can win either by creating a line, or a square.&lt;br/&gt;&lt;br/&gt;You are playing Dark, win.</source>
+      <trans-unit id="6991053095147622953" datatype="html">
+        <source>In this board, you can win by creating a square.&lt;br/&gt;&lt;br/&gt;You are playing Dark, win.</source>
+      </trans-unit>
+      <trans-unit id="4133557660322432859" datatype="html">
+        <source>Congratulations, you won! Remember that you can also win by creating a line.</source>
       </trans-unit>
       <trans-unit id="1739222080553143193" datatype="html">
         <source>Those two spaces are not neighbors!</source>
@@ -3015,6 +3069,9 @@
       </trans-unit>
       <trans-unit id="4065705313723361978" datatype="html">
         <source>There is a piece between the piece you chose and its landing space.</source>
+      </trans-unit>
+      <trans-unit id="189691672447950321" datatype="html">
+        <source>You must move on a direct neighboring space.</source>
       </trans-unit>
       <trans-unit id="682801679843744749" datatype="html">
         <source><x id="PH" equiv-text="hours"/> hours</source>

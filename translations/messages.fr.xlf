@@ -83,16 +83,16 @@
         <target>Apprendre les règles</target>
       </trans-unit>
       <trans-unit id="7164690325767499813" datatype="html">
-        <source><x id="INTERPOLATION" equiv-text="art.get().typeGame }}"/> by <x id="INTERPOLATION_1" equiv-text="{{ observedPart.get().opponent?.name }}"/></source>
-        <target><x id="INTERPOLATION" equiv-text="art.get().typeGame }}"/> de <x id="INTERPOLATION_1" equiv-text="{{ observedPart.get().opponent?.name }}"/></target>
+        <source><x id="INTERPOLATION" equiv-text="currentGame.get().typeGame }}"/> by <x id="INTERPOLATION_1" equiv-text="{{ currentGame.get().opponent?.name }}"/></source>
+        <target><x id="INTERPOLATION" equiv-text="currentGame.get().typeGame }}"/> de <x id="INTERPOLATION_1" equiv-text="{{ observedPart.get().opponent?.name }}"/></target>
       </trans-unit>
       <trans-unit id="172167399786281724" datatype="html">
-        <source><x id="INTERPOLATION" equiv-text="art.get().typeGame }}"/> against <x id="INTERPOLATION_1" equiv-text="{{ observedPart.get().opponent?.name }}"/></source>
-        <target><x id="INTERPOLATION" equiv-text="art.get().typeGame }}"/> contre <x id="INTERPOLATION_1" equiv-text="{{ observedPart.get().opponent?.name }}"/></target>
+        <source><x id="INTERPOLATION" equiv-text="currentGame.get().typeGame }}"/> against <x id="INTERPOLATION_1" equiv-text="{{ currentGame.get().opponent?.name }}"/></source>
+        <target><x id="INTERPOLATION" equiv-text="currentGame.get().typeGame }}"/> contre <x id="INTERPOLATION_1" equiv-text="{{ observedPart.get().opponent?.name }}"/></target>
       </trans-unit>
       <trans-unit id="5678362140621139107" datatype="html">
-        <source><x id="INTERPOLATION" equiv-text="art.get().typeGame }}"/> (waiting for opponent)</source>
-        <target><x id="INTERPOLATION" equiv-text="art.get().typeGame }}"/> (en attente d'adversaire)</target>
+        <source><x id="INTERPOLATION" equiv-text="currentGame.get().typeGame }}"/> (waiting for opponent)</source>
+        <target><x id="INTERPOLATION" equiv-text="currentGame.get().typeGame }}"/> (en attente d'adversaire)</target>
       </trans-unit>
       <trans-unit id="4930506384627295710" datatype="html">
         <source>Settings</source>
@@ -622,13 +622,13 @@
         <source>Human</source>
         <target>Humain</target>
       </trans-unit>
-      <trans-unit id="6063984594211340121" datatype="html">
-        <source>Pick the level</source>
-        <target>Choisissez le niveau</target>
+      <trans-unit id="3795472118461355324" datatype="html">
+        <source>Pick the options</source>
+        <target>Choisissez les options</target>
       </trans-unit>
-      <trans-unit id="8800476882871783599" datatype="html">
-        <source>Level <x id="INTERPOLATION" equiv-text="{{ i }}"/></source>
-        <target>Niveau <x id="INTERPOLATION" equiv-text="{{ i }}"/></target>
+      <trans-unit id="187187500641108332" datatype="html">
+        <source><x id="INTERPOLATION" equiv-text="option.name }}"/></source>
+        <target><x id="INTERPOLATION" equiv-text="option.name }}"/></target>
       </trans-unit>
       <trans-unit id="3272612818120648715" datatype="html">
         <source><x id="INTERPOLATION" equiv-text="{{ gameComponent.scores[0] }}"/> points</source>
@@ -1190,6 +1190,14 @@
         <source>Failed. Try again.</source>
         <target>Perdu. Recommencez.</target>
       </trans-unit>
+      <trans-unit id="7123653594948067002" datatype="html">
+        <source>Score</source>
+        <target>Score</target>
+      </trans-unit>
+      <trans-unit id="7183112140529419891" datatype="html">
+        <source>MCTS</source>
+        <target>MCTS</target>
+      </trans-unit>
       <trans-unit id="437214181691581058" datatype="html">
         <source>Interrupted capture</source>
         <target>Capture interrompue</target>
@@ -1404,6 +1412,18 @@
         <target>Bravo ! Voyez, votre pièce n'a plus de case voisine libre après avoir récupéré la tuile, mais est restée car c&apos;était votre tour.
         Celle de l&apos;adversaire a disparu car la capture de la tuile lui a enlevé sa dernière case voisine libre !</target>
       </trans-unit>
+      <trans-unit id="8182472154276317003" datatype="html">
+        <source>Pieces &gt; Threats &gt; Tiles</source>
+        <target>Pièces &gt; Menaces &gt; Tuiles</target>
+      </trans-unit>
+      <trans-unit id="7668715639068435496" datatype="html">
+        <source>Captures &gt; Freedom</source>
+        <target>Captures &gt; Libertés</target>
+      </trans-unit>
+      <trans-unit id="8560978883976627945" datatype="html">
+        <source>Alignment</source>
+        <target>Alignement</target>
+      </trans-unit>
       <trans-unit id="3987391810258758141" datatype="html">
         <source>Connect Six is played on a 19x19 board, on which stones are put on the intersections. The aim of the game is to align 6 of your pieces.</source>
         <target>Connect Six se joue sur un plateau de 19x19, sur lequel des pièces sont placées sur les intersections. Le but du jeu est d'aligner six de vos pièces.</target>
@@ -1451,6 +1471,10 @@
       <trans-unit id="309495911608325428" datatype="html">
         <source>You are visiting the same location twice in a move, you are not allowed to do so.</source>
         <target>Vous passez deux fois par la même case dans votre mouvement. Ce n'est pas autorisé.</target>
+      </trans-unit>
+      <trans-unit id="4649711232397678200" datatype="html">
+        <source>Jump</source>
+        <target>Sauts</target>
       </trans-unit>
       <trans-unit id="9123148140915098130" datatype="html">
         <source>Board and aim of the game</source>
@@ -1567,6 +1591,10 @@
       <trans-unit id="3765076912748475454" datatype="html">
         <source>Failed, try to shift a stack of pieces to the left.</source>
         <target>Raté, essayez de déplacer une pile de pièces vers la gauche.</target>
+      </trans-unit>
+      <trans-unit id="7535479567631818273" datatype="html">
+        <source>Dummy</source>
+        <target>Simplet</target>
       </trans-unit>
       <trans-unit id="5012524143343727947" datatype="html">
         <source>You must select a piece or a stack of your color.</source>
@@ -1695,6 +1723,10 @@
         <source>Bad idea, by moving on the source you would have won a point.</source>
         <target>Mauvaise idée, en déplaçant votre pile sur la source, vous auriez gagné votre pièce et gagné un point.</target>
       </trans-unit>
+      <trans-unit id="5456673610183497320" datatype="html">
+        <source>Stacks</source>
+        <target>Piles</target>
+      </trans-unit>
       <trans-unit id="6059738106874378452" datatype="html">
         <source>You do not have pieces of this type anymore.</source>
         <target>Vous n&apos;avez plus de pièces de ce type.</target>
@@ -1767,6 +1799,10 @@
         <source>You won, but the exercise is to win while moving a piece!</source>
         <target>Vous avez gagné, mais le but de l'exercice est de gagner en faisant un déplacmement !</target>
       </trans-unit>
+      <trans-unit id="360730166369316579" datatype="html">
+        <source>Attack</source>
+        <target>Attaque</target>
+      </trans-unit>
       <trans-unit id="5530182224164938313" datatype="html">
         <source>The move distance of your phalanx puts it out of the board.</source>
         <target>La distance de déplacement de votre phalange la fait sortir du plateau.</target>
@@ -1806,6 +1842,10 @@
       <trans-unit id="2183903120219891237" datatype="html">
         <source>A phalanx cannot contain a piece of the opponent.</source>
         <target>Une phalange ne peut pas contenir de pièce de l'adversaire.</target>
+      </trans-unit>
+      <trans-unit id="4563771339790181195" datatype="html">
+        <source>Positional</source>
+        <target>Positionnel</target>
       </trans-unit>
       <trans-unit id="8733936607898144583" datatype="html">
         <source>Initial board</source>
@@ -2622,6 +2662,14 @@
         <source>You did not move your officer.</source>
         <target>Vous n'avez pas déplacé votre officier.</target>
       </trans-unit>
+      <trans-unit id="318262165361158083" datatype="html">
+        <source>Control</source>
+        <target>Contrôle</target>
+      </trans-unit>
+      <trans-unit id="7668804973365582935" datatype="html">
+        <source>Control and Domination</source>
+        <target>Contrôle et domination</target>
+      </trans-unit>
       <trans-unit id="6522624192206928831" datatype="html">
         <source>Minority capture is allowed</source>
         <target>La capture minoritaire est autorisée !</target>
@@ -3057,6 +3105,10 @@
         <source>Wrong choice, your opponent will win in the next turn no matter which piece is dropped!</source>
         <target>Mauvais choix, votre adversaire va gagner au prochain tour quelle que soit la pièce déposée !</target>
       </trans-unit>
+      <trans-unit id="8400174784913655582" datatype="html">
+        <source>Minimax</source>
+        <target>Minimax</target>
+      </trans-unit>
       <trans-unit id="5880375817695791500" datatype="html">
         <source>You&apos;re playing Dark.
         Place your piece so that you create a horizontal alignment of 4 of your pieces.</source>
@@ -3458,7 +3510,7 @@
         <source>Capture (2/2)</source>
         <target>Capture (2/2)</target>
       </trans-unit>
-+      <trans-unit id="4872428604450835795" datatype="html">
+      <trans-unit id="4872428604450835795" datatype="html">
         <source>A move can also capture a bigger line, and more than one line at a time&lt;br/&gt;&lt;br/&gt;
         You&apos;re playing light here. Play on the bottom left to see a capture.</source>
         <target>Un mouvement peut également capturer une plus grande ligne, et plusieurs lignes à la fois.&lt;br/&gt;&lt;br/&gt;
@@ -3876,6 +3928,10 @@
         <source>Failed. You did cut the board in two but you kept the half where you&apos;re in minority. Therefore, you lost! Try again.</source>
         <target>Raté. Vous avez coupé le plateau en deux parties, mais avez gardé la partie où vous êtes en minorité. Vous avez donc perdu ! Essayez à nouveau.</target>
       </trans-unit>
+      <trans-unit id="2976149661707388406" datatype="html">
+        <source>Escape &gt; Pieces &gt; Control</source>
+        <target>Fuite &gt; Pièces &gt; Contrôle</target>
+      </trans-unit>
       <trans-unit id="4456476499852991526" datatype="html">
         <source>You cannot land on an occupied square.</source>
         <target>Vous ne pouvez pas atterrir sur une case occupée.</target>
@@ -3892,9 +3948,25 @@
         <source>There is a piece between the piece you chose and its landing space.</source>
         <target>Il y a une pièce entre la pièce que vous avez choisie et sa case d'atterissage.</target>
       </trans-unit>
+      <trans-unit id="189691672447950321" datatype="html">
+        <source>You must move on a direct neighboring space.</source>
+        <target>Vous devez vous déplacer sur une case voisine.</target>
+      </trans-unit>
       <trans-unit id="6790757046240382671" datatype="html">
         <source>Tafl moves must be orthogonal.</source>
         <target>Les mouvements aux jeux de Tafl doivent être orthogonaux.</target>
+      </trans-unit>
+      <trans-unit id="7623537877233304257" datatype="html">
+        <source>Pieces &gt; Control</source>
+        <target>Pièces &gt; Contrôle</target>
+      </trans-unit>
+      <trans-unit id="1760148711911088235" datatype="html">
+        <source>Pieces &gt; Influence</source>
+        <target>Pièces &gt; Influence</target>
+      </trans-unit>
+      <trans-unit id="3372037160964274985" datatype="html">
+        <source>Pieces</source>
+        <target>Pièces</target>
       </trans-unit>
       <trans-unit id="3469374446011769111" datatype="html">
         <source>Brandhub is the Irish version of the Tafl, Tafl being a family of viking strategy game. The goal of the game is different for each player. The attacker plays first. Their pieces (dark) are close to the edges. Their goal is to capture the king, which is in the center of the board. The defender plays second. Their pieces (light) are in the middle. Their goal is to move the king on one of the 4 thrones in the corners. Note that the square in which the king starts, in the center of the board, is also a throne.</source>
@@ -3980,13 +4052,17 @@
         <source>The goal of the game is to align your 4 pieces, or to form a square with them.</source>
         <target>Le but du jeu est d'aligner vos 4 pièces, ou de les placer en carré.</target>
       </trans-unit>
-      <trans-unit id="322267404708379069" datatype="html">
-        <source>Once all of your four pieces are placed on the board, you must now move one of your piece to another empty space. The goal remain to be the first to create a line or a square.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, move a piece.</source>
-        <target>Après avoir déposé vos quatre pièces, vous devez déplacer vos pièces à un emplacement vide. Le but reste le même : être le premier à créer une ligne ou un carré.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, déplacez une pièce.</target>
+      <trans-unit id="5528013857873835184" datatype="html">
+        <source>Once all of your four pieces are placed on the board, you must now move one of your piece to an empty neighboring space, orthogonally or diagonally. The goal remains to be the first to create a line or a square.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, move a piece.</source>
+        <target>Après avoir déposé vos quatre pièces, vous devez déplacer une de vos pièces à un emplacement voisin vide, orthogonalement ou diagonalement. Le but reste le même : être le premier à créer une ligne ou un carré.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, déplacez une pièce.</target>
       </trans-unit>
-      <trans-unit id="366926106758793789" datatype="html">
-        <source>In this board, you can win either by creating a line, or a square.&lt;br/&gt;&lt;br/&gt;You are playing Dark, win.</source>
-        <target>Sur ce plateau, vous pouvez gagner en créant soit une ligne, soit un carré.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, gagnez.</target>
+      <trans-unit id="6991053095147622953" datatype="html">
+        <source>In this board, you can win by creating a square.&lt;br/&gt;&lt;br/&gt;You are playing Dark, win.</source>
+        <target>Sur ce plateau, vous pouvez gagner en formant un carré.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, gagnez.</target>
+      </trans-unit>
+      <trans-unit id="4133557660322432859" datatype="html">
+        <source>Congratulations, you won! Remember that you can also win by creating a line.</source>
+        <target>Bravo, vous avez gagné ! Souvenez-vous que vous pouvez aussi gagner en créant une ligne.</target>
       </trans-unit>
       <trans-unit id="1739222080553143193" datatype="html">
         <source>Those two spaces are not neighbors!</source>

@@ -233,7 +233,7 @@ describe('TrexoComponent', () => {
                         await testUtils.expectClickSuccess('#space_5_5');
 
                         // When clicking on the same coord again
-                        // Then the move should be cancelled without toast
+                        // Then the move should be canceled without toast
                         await testUtils.expectClickSuccess('#space_5_5');
                         // And the piece deselected
                         testUtils.expectElementNotToExist('#dropped_piece_5_5');

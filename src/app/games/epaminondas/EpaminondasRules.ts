@@ -1,24 +1,20 @@
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { Coord } from 'src/app/jscaip/Coord';
-import { MGPNode } from 'src/app/jscaip/MGPNode';
+import { GameNode } from 'src/app/jscaip/GameNode';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { Rules } from 'src/app/jscaip/Rules';
 import { EpaminondasMove } from './EpaminondasMove';
 import { EpaminondasState } from './EpaminondasState';
 import { EpaminondasFailure } from './EpaminondasFailure';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { ArrayUtils, Table } from 'src/app/utils/ArrayUtils';
+import { Table, TableUtils } from 'src/app/utils/ArrayUtils';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 export type EpaminondasLegalityInformation = Table<PlayerOrNone>;
 
-
-export class EpaminondasNode extends MGPNode<EpaminondasRules,
-                                             EpaminondasMove,
-                                             EpaminondasState,
-                                             EpaminondasLegalityInformation> {}
+export class EpaminondasNode extends GameNode<EpaminondasMove, EpaminondasState> {}
 
 export class EpaminondasRules extends Rules<EpaminondasMove, EpaminondasState, EpaminondasLegalityInformation> {
 
@@ -42,7 +38,7 @@ export class EpaminondasRules extends Rules<EpaminondasMove, EpaminondasState, E
         if (landingStatus.isFailure()) {
             return landingStatus;
         }
-        const newBoard: PlayerOrNone[][] = ArrayUtils.copyBiArray(landingStatus.get());
+        const newBoard: PlayerOrNone[][] = TableUtils.copy(landingStatus.get());
         const opponent: Player = state.getCurrentOpponent();
         const captureValidity: MGPFallible<EpaminondasLegalityInformation> =
             EpaminondasRules.getCaptureValidity(state, newBoard, move, opponent);

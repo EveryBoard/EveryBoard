@@ -17,7 +17,7 @@ export class TablutComponent extends TaflComponent<TablutRules, TablutMove, Tabl
         super(messageDisplayer, TablutMove.from);
         this.rules = TablutRules.get();
         this.node = this.rules.getInitialNode();
-        this.availableMinimaxes = this.createMinimaxes();
+        this.availableAIs = this.createAIs();
         this.encoder = TablutMove.encoder;
         this.tutorial = new TablutTutorial().tutorial;
     }

@@ -5,10 +5,12 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { HexaLayout } from 'src/app/jscaip/HexaLayout';
 import { FlatHexaOrientation } from 'src/app/jscaip/HexaOrientation';
+import { MCTS } from 'src/app/jscaip/MCTS';
+import { Minimax } from 'src/app/jscaip/Minimax';
 import { Player } from 'src/app/jscaip/Player';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
-import { ArrayUtils, Table2DWithPossibleNegativeIndices } from 'src/app/utils/ArrayUtils';
+import { ArrayUtils, TableWithPossibleNegativeIndices } from 'src/app/utils/ArrayUtils';
 import { assert } from 'src/app/utils/assert';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
@@ -16,8 +18,9 @@ import { MGPSet } from 'src/app/utils/MGPSet';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { Utils } from 'src/app/utils/utils';
 import { HiveFailure } from './HiveFailure';
-import { HiveMinimax } from './HiveMinimax';
+import { HiveHeuristic } from './HiveHeuristic';
 import { HiveMove, HiveCoordToCoordMove, HiveDropMove, HiveSpiderMove } from './HiveMove';
+import { HiveMoveGenerator } from './HiveMoveGenerator';
 import { HivePiece, HivePieceStack } from './HivePiece';
 import { HiveSpiderRules } from './HivePieceRules';
 import { HiveRules } from './HiveRules';
@@ -30,7 +33,7 @@ interface GroundInfo {
     selected: boolean;
 }
 
-class Ground extends Table2DWithPossibleNegativeIndices<GroundInfo> {
+class Ground extends TableWithPossibleNegativeIndices<GroundInfo> {
     private highlighted: Coord[] = [];
 
     public initialize(coord: Coord): void {
@@ -66,7 +69,7 @@ interface SpaceInLayerInfo {
     strokeClasses: string[];
 }
 
-class Layer extends Table2DWithPossibleNegativeIndices<SpaceInLayerInfo> {
+class Layer extends TableWithPossibleNegativeIndices<SpaceInLayerInfo> {
     private highlighted: Coord[] = [];
 
     public initialize(coord: Coord, piece: HivePiece): void {
@@ -116,8 +119,9 @@ export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, H
         super(messageDisplayer);
         this.rules = HiveRules.get();
         this.node = this.rules.getInitialNode();
-        this.availableMinimaxes = [
-            new HiveMinimax(this.rules, 'HiveMinimax'),
+        this.availableAIs = [
+            new Minimax($localize`Minimax`, HiveRules.get(), new HiveHeuristic(), new HiveMoveGenerator()),
+            new MCTS($localize`MCTS`, new HiveMoveGenerator(), this.rules),
         ];
         this.encoder = HiveMove.encoder;
         this.tutorial = new HiveTutorial().tutorial;
@@ -261,7 +265,7 @@ export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, H
         const shift: number = this.getRemainingPieceShift(piece);
         const x: number = this.boardViewBox.center().x + shift * this.SPACE_SIZE * 4;
         let y: number;
-        if (piece.owner === this.role) {
+        if (piece.owner === this.getPointOfView()) {
             // Current player is below
             y = this.boardViewBox.bottom() + (this.SPACE_SIZE * 3);
         } else {

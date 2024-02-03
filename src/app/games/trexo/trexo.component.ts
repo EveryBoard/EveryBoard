@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { TrexoPiece, TrexoPieceStack, TrexoState } from './TrexoState';
 import { TrexoRules } from './TrexoRules';
-import { TrexoMinimax } from './TrexoMinimax';
 import { ModeConfig, ParallelogramGameComponent } from 'src/app/components/game-components/parallelogram-game-component/ParallelogramGameComponent';
 import { TrexoMove } from 'src/app/games/trexo/TrexoMove';
 import { Coord } from 'src/app/jscaip/Coord';
@@ -10,10 +9,14 @@ import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { TrexoTutorial } from './TrexoTutorial';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { ArrayUtils } from 'src/app/utils/ArrayUtils';
+import { Table3DUtils, TableUtils } from 'src/app/utils/ArrayUtils';
 import { Coord3D } from 'src/app/jscaip/Coord3D';
 import { TrexoFailure } from './TrexoFailure';
 import { Direction } from 'src/app/jscaip/Direction';
+import { MCTS } from 'src/app/jscaip/MCTS';
+import { TrexoAlignmentHeuristic } from './TrexoAlignmentHeuristic';
+import { Minimax } from 'src/app/jscaip/Minimax';
+import { TrexoMoveGenerator } from './TrexoMoveGenerator';
 
 interface PieceOnBoard {
 
@@ -78,8 +81,9 @@ export class TrexoComponent extends ParallelogramGameComponent<TrexoRules, Trexo
         super(messageDisplayer);
         this.rules = TrexoRules.get();
         this.node = this.rules.getInitialNode();
-        this.availableMinimaxes = [
-            new TrexoMinimax(this.rules, 'TrexoMinimax'),
+        this.availableAIs = [
+            new Minimax($localize`Alignment`, this.rules, new TrexoAlignmentHeuristic(), new TrexoMoveGenerator()),
+            new MCTS($localize`MCTS`, new TrexoMoveGenerator(), this.rules),
         ];
         this.encoder = TrexoMove.encoder;
         this.tutorial = new TrexoTutorial().tutorial;
@@ -142,7 +146,7 @@ export class TrexoComponent extends ParallelogramGameComponent<TrexoRules, Trexo
     }
     private get3DBoard(): PieceOnBoard[][][] {
         const moveByCoord: PieceOnBoard[][][] =
-            ArrayUtils.create3DTable(1, TrexoState.SIZE, TrexoState.SIZE, TrexoComponent.INITIAL_PIECE_ON_BOARD);
+            Table3DUtils.create(1, TrexoState.SIZE, TrexoState.SIZE, TrexoComponent.INITIAL_PIECE_ON_BOARD);
         let maxZ: number = 1;
         for (let z: number = 0; z <= maxZ; z++) {
             for (const stack of this.getState().toMap()) {
@@ -181,9 +185,9 @@ export class TrexoComponent extends ParallelogramGameComponent<TrexoRules, Trexo
     }
     private addMoveToArray(height: number, move: TrexoMove, moveByCoord: PieceOnBoard[][][]): void {
         while (moveByCoord.length <= height) {
-            moveByCoord.push(ArrayUtils.createTable(TrexoState.SIZE,
-                                                    TrexoState.SIZE,
-                                                    TrexoComponent.INITIAL_PIECE_ON_BOARD));
+            moveByCoord.push(TableUtils.create(TrexoState.SIZE,
+                                               TrexoState.SIZE,
+                                               TrexoComponent.INITIAL_PIECE_ON_BOARD));
         }
         moveByCoord[height][move.getZero().y][move.getZero().x] = {
             isDroppedPiece: false,
@@ -233,9 +237,9 @@ export class TrexoComponent extends ParallelogramGameComponent<TrexoRules, Trexo
         if (this.possibleMoves.some((move: TrexoMove) => move.getZero().equals(clicked))) {
             const pieceHeight: number = this.getState().getPieceAt(clicked).getHeight();
             if (pieceHeight >= this.pieceOnBoard.length) {
-                this.pieceOnBoard.push(ArrayUtils.createTable(TrexoState.SIZE,
-                                                              TrexoState.SIZE,
-                                                              TrexoComponent.INITIAL_PIECE_ON_BOARD));
+                this.pieceOnBoard.push(TableUtils.create(TrexoState.SIZE,
+                                                         TrexoState.SIZE,
+                                                         TrexoComponent.INITIAL_PIECE_ON_BOARD));
             }
             this.showDroppedPieceAndIndicators(clicked, pieceHeight);
             return MGPValidation.SUCCESS;
@@ -281,8 +285,8 @@ export class TrexoComponent extends ParallelogramGameComponent<TrexoRules, Trexo
                 break;
             }
         }
-        if (this.node.move.isPresent()) {
-            const lastMove: TrexoMove = this.node.move.get();
+        if (this.node.previousMove.isPresent()) {
+            const lastMove: TrexoMove = this.node.previousMove.get();
             if (lastMove.getZero().equals(piece) || lastMove.getOne().equals(piece)) {
                 classes.push('last-move-stroke');
             }

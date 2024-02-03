@@ -1,7 +1,7 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { HexagonalGameState } from 'src/app/jscaip/HexagonalGameState';
 import { Player } from 'src/app/jscaip/Player';
-import { ArrayUtils, Table } from 'src/app/utils/ArrayUtils';
+import { Table, TableUtils } from 'src/app/utils/ArrayUtils';
 import { YinshPiece } from './YinshPiece';
 
 export class YinshState extends HexagonalGameState<YinshPiece> {
@@ -47,7 +47,7 @@ export class YinshState extends HexagonalGameState<YinshPiece> {
         if (this.turn !== other.turn) return false;
         if (this.sideRings[0] !== other.sideRings[0]) return false;
         if (this.sideRings[1] !== other.sideRings[1]) return false;
-        return ArrayUtils.compareTable(this.board, other.board);
+        return TableUtils.compare(this.board, other.board);
     }
     public getRingCoords(player: Player): Coord[] {
         const rings: Coord[] = [];
@@ -65,7 +65,7 @@ export class YinshState extends HexagonalGameState<YinshPiece> {
         return this.board[coord.y][coord.x] !== YinshPiece.UNREACHABLE;
     }
     public setAtUnsafe(coord: Coord, value: YinshPiece): this {
-        const newBoard: YinshPiece[][] = ArrayUtils.copyBiArray(this.board);
+        const newBoard: YinshPiece[][] = TableUtils.copy(this.board);
         newBoard[coord.y][coord.x] = value;
         return new YinshState(newBoard, this.sideRings, this.turn) as this;
     }

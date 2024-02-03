@@ -1,7 +1,7 @@
 /* eslint-disable max-lines-per-function */
 import { EncoderTestUtils } from 'src/app/utils/tests/Encoder.spec';
 import { KalahMove } from '../KalahMove';
-import { MancalaDistribution } from '../../commons/MancalaMove';
+import { MancalaDistribution } from '../../common/MancalaMove';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
 
 describe('KalahMove', () => {
@@ -24,7 +24,7 @@ describe('KalahMove', () => {
 
         // Then it should give us the moves in the expected order
         const expectedDistributions: MancalaDistribution[] = [MancalaDistribution.ONE, MancalaDistribution.TWO];
-        expect(ArrayUtils.compareArray(distributions, expectedDistributions)).toBeTrue();
+        expect(ArrayUtils.compare(distributions, expectedDistributions)).toBeTrue();
     });
     describe('add', () => {
         it('should return new move with one more distribution at the end', () => {

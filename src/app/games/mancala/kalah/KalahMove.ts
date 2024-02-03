@@ -1,5 +1,5 @@
 import { Encoder } from 'src/app/utils/Encoder';
-import { MancalaDistribution, MancalaMove } from '../commons/MancalaMove';
+import { MancalaDistribution, MancalaMove } from '../common/MancalaMove';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
 
 export class KalahMove extends MancalaMove {
@@ -25,6 +25,6 @@ export class KalahMove extends MancalaMove {
         return 'KalahMove([' + distributions.join(', ') + '])';
     }
     public override equals(other: this): boolean {
-        return ArrayUtils.compareArray(this.distributions, other.distributions);
+        return ArrayUtils.compare(this.distributions, other.distributions);
     }
 }

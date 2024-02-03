@@ -1,6 +1,6 @@
 import { GameStateWithTable } from '../../jscaip/GameStateWithTable';
 import { QuartoPiece } from './QuartoPiece';
-import { ArrayUtils, Table } from 'src/app/utils/ArrayUtils';
+import { TableUtils, Table } from 'src/app/utils/ArrayUtils';
 
 export class QuartoState extends GameStateWithTable<QuartoPiece> {
 
@@ -8,7 +8,7 @@ export class QuartoState extends GameStateWithTable<QuartoPiece> {
         super(b, turn);
     }
     public static getInitialState(): QuartoState {
-        const board: QuartoPiece[][] = ArrayUtils.createTable(4, 4, QuartoPiece.EMPTY);
+        const board: QuartoPiece[][] = TableUtils.create(4, 4, QuartoPiece.EMPTY);
         return new QuartoState(board, 0, QuartoPiece.AAAA);
     }
     public static isGivable(piece: QuartoPiece, board: Table<QuartoPiece>, pieceInHand: QuartoPiece): boolean {

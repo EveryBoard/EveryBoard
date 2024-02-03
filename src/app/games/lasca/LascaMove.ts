@@ -107,9 +107,9 @@ export class LascaMove extends Move {
         const startOfSecondMove: Coord = move.coords.toList()[0];
         assert(lastLandingOfFirstMove.equals(startOfSecondMove), 'should not concatenate non-touching move');
         const thisCoordList: Coord[] = this.coords.toList();
-        const firstPart: Coord[] = ArrayUtils.copyImmutableArray(thisCoordList);
+        const firstPart: Coord[] = ArrayUtils.copy(thisCoordList);
         const otherCoordList: Coord[] = move.coords.toList();
-        const secondPart: Coord[] = ArrayUtils.copyImmutableArray(otherCoordList).slice(1);
+        const secondPart: Coord[] = ArrayUtils.copy(otherCoordList).slice(1);
         return LascaMove.fromCapture(firstPart.concat(secondPart)).get();
     }
 }
