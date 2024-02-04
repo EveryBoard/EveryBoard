@@ -1,19 +1,21 @@
 import { ConfigRoomDAO } from 'src/app/dao/ConfigRoomDAO';
 import { MinimalUser } from 'src/app/domain/MinimalUser';
-import { Part } from 'src/app/domain/Part';
+import { GameEvent, Part } from 'src/app/domain/Part';
 import { PlayerOrNone } from 'src/app/jscaip/Player';
 import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
-import { JSONValue } from 'src/app/utils/utils';
+import { JSONValue, Utils } from 'src/app/utils/utils';
 import { Injectable } from '@angular/core';
 import { ConnectedUserService } from '../ConnectedUserService';
 import { ConfigRoom, PartStatus } from 'src/app/domain/ConfigRoom';
+import { PartDAO } from 'src/app/dao/PartDAO';
 
 @Injectable({ providedIn: 'root' })
 export class BackendServiceMock {
 
     public constructor(public readonly configRoomDAO: ConfigRoomDAO,
+                       public readonly partDAO: PartDAO,
                        public readonly connectedUserService: ConnectedUserService) {}
 
     public async createGame(gameName: string): Promise<string> {
@@ -33,7 +35,22 @@ export class BackendServiceMock {
     }
 
     public async acceptConfig(gameId: string): Promise<void> {
-        throw new Error('acceptConfig not mocked')
+        const configRoom: ConfigRoom = (await this.configRoomDAO.read(gameId)).get();
+        await this.configRoomDAO.update(gameId, { partStatus: PartStatus.PART_STARTED.value });
+        await this.partDAO.update(gameId, {
+            playerZero: configRoom.creator,
+            playerOne: Utils.getNonNullable(configRoom.chosenOpponent),
+            turn: 0,
+            beginning: 42,
+        });
+        const user: MinimalUser = this.connectedUserService.user.get().toMinimalUser();
+        const start: GameEvent = {
+            eventType: 'Action',
+            action: 'StartGame',
+            user,
+            time: 42,
+        };
+        await this.partDAO.subCollectionDAO(gameId, 'events').create(start);
     }
 
     public async resign(gameId: string): Promise<void> {

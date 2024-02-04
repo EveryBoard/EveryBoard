@@ -76,6 +76,7 @@ module Make
     Dream.empty `OK
 
   (** Accept a config and start the game. Perform 1 read and 3 writes. *)
+  (* TODO: this should be on config-room endpoint *)
   let accept_config (request : Dream.request) (game_id : string) =
     Firestore.transaction request @@ fun () ->
     (* Read 1: retrieve the config room *)

@@ -35,7 +35,6 @@ import { FirestoreTime } from 'src/app/domain/Time';
 import { UserService } from 'src/app/services/UserService';
 import { CurrentGameService } from 'src/app/services/CurrentGameService';
 import { MinimalUser } from 'src/app/domain/MinimalUser';
-import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { BackendService } from 'src/app/services/BackendService';
 
 fdescribe('PartCreationComponent', () => {
@@ -805,8 +804,7 @@ fdescribe('PartCreationComponent', () => {
                 // To avoid finishing test with periodic timer in queue
                 component.stopSendingPresenceTokensAndObservingUsersIfNeeded();
             }));
-            // TODO
-            xit('accepting config should change configRoom and part', fakeAsync(async() => {
+            it('accepting config should change configRoom and part', fakeAsync(async() => {
                 spyOn(component.gameStartNotification, 'emit').and.callThrough();
                 // Given a part where the config has been proposed with creator as first player
                 awaitComponentInitialization();
