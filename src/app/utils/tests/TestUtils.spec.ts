@@ -138,7 +138,7 @@ export class SimpleComponentTestUtils<T> {
     }
     private failOn(typeOfMessage: string): (message: string) => void {
         return (message: string) => {
-            fail(`MessageDisplayer: ${typeOfMessage} was called with '${message}' but no toast was expected, use expectToToast!`);
+            fail(`MessageDisplayer: ${typeOfMessage} was called with '${message}' but no toast was expected, use expectToDisplay"!`);
         };
     }
     public async expectToDisplayGameMessage<T>(message: string, fn: () => Promise<T>): Promise<T> {

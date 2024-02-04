@@ -190,6 +190,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
                 await this.onCurrentConfigRoomUpdate(configRoom);
             };
         const candidatesCallback: (candidates: MinimalUser[]) => void = async(candidates: MinimalUser[]) => {
+            console.log(candidates)
             await this.onCandidatesUpdate(candidates);
         };
         this.configRoomSubscription =

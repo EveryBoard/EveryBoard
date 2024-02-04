@@ -9,6 +9,7 @@ import { MinimalUser } from '../domain/MinimalUser';
 import { Player, PlayerOrNone } from '../jscaip/Player';
 import { MGPValidation } from '../utils/MGPValidation';
 import { PlayerNumberMap } from '../jscaip/PlayerMap';
+import { ConfigRoom } from '../domain/ConfigRoom';
 
 type HTTPMethod = 'POST' | 'GET' | 'PATCH' | 'HEAD' | 'DELETE';
 
@@ -290,7 +291,7 @@ export class BackendService {
     }
 
     /** Propose a config to the opponent */
-    public async proposeConfig(gameId: string, config: JSONValue): Promise<void> {
+    public async proposeConfig(gameId: string, config: Partial<ConfigRoom>): Promise<void> {
         const configEncoded: string = encodeURIComponent(JSON.stringify(config));
         const endpoint: string = `config-room/${gameId}?action=propose&config=${configEncoded}`;
         const result: MGPFallible<Response> = await this.performRequest('POST', endpoint);

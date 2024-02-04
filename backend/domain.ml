@@ -45,6 +45,7 @@ module User = struct
     last_update_time: string option [@default None] [@key "lastUpdateTime"];
     verified: bool;
     current_game: CurrentGame.t option [@key "currentGame"];
+    (* TODO: observed part *)
   }
   [@@deriving yojson]
 
