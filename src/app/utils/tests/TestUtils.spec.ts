@@ -577,6 +577,7 @@ export class TestUtils {
                 { provide: ConfigRoomDAO, useClass: ConfigRoomDAOMock },
                 { provide: PartDAO, useClass: PartDAOMock },
                 { provide: ErrorLoggerService, useClass: ErrorLoggerServiceMock },
+                { provide: BackendService, useClass: BackendServiceMock },
             ],
         }).compileComponents();
     }

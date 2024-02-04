@@ -1,5 +1,4 @@
 /* eslint-disable max-lines-per-function */
-/*
 import { TestBed, fakeAsync, tick, discardPeriodicTasks } from '@angular/core/testing';
 import { DebugElement } from '@angular/core';
 import { Router } from '@angular/router';
@@ -54,7 +53,7 @@ describe('OnlineGameWrapper for non-existing game', () => {
 
 });
 
-describe('OnlineGameWrapperComponent Lifecycle', () => {
+fdescribe('OnlineGameWrapperComponent Lifecycle', () => {
 
     // Life cycle summary
     // component construction (beforeEach)
@@ -237,7 +236,7 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
         const router: Router = TestBed.inject(Router);
         spyOn(router, 'navigate').and.callThrough();
         testUtils.detectChanges();
-        await testUtils.expectToDisplayCriticalMessage(ConfigRoomService.GAME_DOES_NOT_EXIST(), async() => {
+        await testUtils.expectToDisplayCriticalMessage('Game does not exist', async() => {
             tick(0);
         });
 
@@ -266,4 +265,3 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
     }));
 });
 
-*/

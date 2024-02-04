@@ -37,7 +37,7 @@ import { CurrentGameService } from 'src/app/services/CurrentGameService';
 import { MinimalUser } from 'src/app/domain/MinimalUser';
 import { BackendService } from 'src/app/services/BackendService';
 
-fdescribe('PartCreationComponent', () => {
+describe('PartCreationComponent', () => {
 
     let testUtils: SimpleComponentTestUtils<PartCreationComponent>;
     let component: PartCreationComponent;

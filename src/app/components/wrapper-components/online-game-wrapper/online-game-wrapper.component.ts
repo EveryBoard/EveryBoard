@@ -220,6 +220,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         // we don't want to apply all clock actions then
         const mutex: Mutex = new Mutex(); // Need to ensure we receive events one at a time
         const callback: (events: GameEvent[]) => Promise<void> = async(events: GameEvent[]): Promise<void> => {
+            if (events.length === 0) return; // Only happens in the test suite
             await mutex.runExclusive(async() => {
                 const numberOfMoves: number = events.filter((g: GameEvent) => g.eventType === 'Move').length;
                 let numberOfMovesDone: number = 0;

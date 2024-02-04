@@ -23,11 +23,12 @@ export class BackendServiceMock {
     }
 
     public async getGameName(gameId: string): Promise<MGPOptional<string>> {
-        throw new Error('getGameName not mocked')
+        const game: MGPOptional<Part> = await this.partDAO.read(gameId);
+        return game.map((game: Part) => game.typeGame);
     }
 
     public async getGame(gameId: string): Promise<Part> {
-        throw new Error('BackendServiceMock.getGame should be mocked');
+        return (await this.partDAO.read(gameId)).get();
     }
 
     public async deleteGame(gameId: string): Promise<void> {
