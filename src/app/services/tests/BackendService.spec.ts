@@ -1,7 +1,7 @@
 import { ConfigRoomDAO } from 'src/app/dao/ConfigRoomDAO';
 import { MinimalUser } from 'src/app/domain/MinimalUser';
-import { GameEvent, Part } from 'src/app/domain/Part';
-import { PlayerOrNone } from 'src/app/jscaip/Player';
+import { GameEvent, MGPResult, Part } from 'src/app/domain/Part';
+import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
@@ -42,14 +42,14 @@ export class BackendServiceMock {
             playerZero: configRoom.creator,
             playerOne: Utils.getNonNullable(configRoom.chosenOpponent),
             turn: 0,
-            beginning: 42,
+            beginning: Date.now(),
         });
         const user: MinimalUser = this.connectedUserService.user.get().toMinimalUser();
         const start: GameEvent = {
             eventType: 'Action',
             action: 'StartGame',
             user,
-            time: 42,
+            time: Date.now(),
         };
         await this.partDAO.subCollectionDAO(gameId, 'events').create(start);
     }
@@ -59,7 +59,19 @@ export class BackendServiceMock {
     }
 
     public async notifyTimeout(gameId: string, winner: MinimalUser, loser: MinimalUser): Promise<void> {
-        throw new Error('notifyTimeout not mocked')
+        await this.partDAO.update(gameId, {
+            winner,
+            loser,
+            result: MGPResult.TIMEOUT.value,
+        });
+        const user: MinimalUser = this.connectedUserService.user.get().toMinimalUser();
+        const end: GameEvent = {
+            eventType: 'Action',
+            action: 'EndGame',
+            user,
+            time: Date.now(),
+        };
+        await this.partDAO.subCollectionDAO(gameId, 'events').create(end);
     }
 
     public async proposeDraw(gameId: string): Promise<void> {
@@ -128,7 +140,26 @@ export class BackendServiceMock {
                       scores: MGPOptional<PlayerNumberMap>)
     : Promise<void>
     {
-        throw new Error('move not mocked')
+        const user: MinimalUser = this.connectedUserService.user.get().toMinimalUser();
+        const event: GameEvent = {
+            eventType: 'Move',
+            user,
+            time: Date.now(),
+            move,
+        };
+        await this.partDAO.subCollectionDAO(gameId, 'events').create(event);
+        const game: Part = (await this.partDAO.read(gameId)).get();
+        let update: Partial<Part> = {
+            turn: game.turn + 1,
+        };
+        if (scores.isPresent()) {
+            update = {
+                ...update,
+                scorePlayerZero: scores.get().get(Player.ZERO),
+                scorePlayerOne: scores.get().get(Player.ONE),
+            };
+        }
+        await this.partDAO.update(gameId, update);
     }
 
     public async moveAndEnd(gameId: string,
@@ -141,7 +172,7 @@ export class BackendServiceMock {
     }
 
     public async getServerTime(): Promise<number> {
-        return 0;
+        return Date.now();
     }
 
     public async joinGame(gameId: string): Promise<MGPValidation> {

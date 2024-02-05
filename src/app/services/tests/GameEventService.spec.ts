@@ -34,7 +34,7 @@ describe('GameEventService', () => {
     async function addMove(move: JSONValue): Promise<void> {
         await events.create({
             eventType: 'Move',
-            time: 42,
+            time: Date.now(),
             user: UserMocks.CREATOR_MINIMAL_USER,
             move,
         });

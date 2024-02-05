@@ -42,6 +42,7 @@ export class CountDownComponent implements OnDestroy {
         this.changeDuration(duration);
     }
     public changeDuration(ms: number): void {
+        console.log('changeDuration to ' + ms)
         Utils.assert(this.isPaused, 'Should not change duration of a clock while it is running');
         this.remainingMs = ms;
         this.displayDuration();

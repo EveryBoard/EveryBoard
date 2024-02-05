@@ -1,6 +1,5 @@
 /* eslint-disable max-lines-per-function */
-/*
-import { TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { TestBed, fakeAsync, flush, tick } from '@angular/core/testing';
 import { DebugElement } from '@angular/core';
 import { Router } from '@angular/router';
 import * as Firestore from '@angular/fire/firestore';
@@ -16,7 +15,7 @@ import { PartMocks } from 'src/app/domain/PartMocks.spec';
 import { UserDAO } from 'src/app/dao/UserDAO';
 import { QuartoMove } from 'src/app/games/quarto/QuartoMove';
 import { QuartoPiece } from 'src/app/games/quarto/QuartoPiece';
-import { Action, MGPResult, Part, Reply, RequestType } from 'src/app/domain/Part';
+import { Action, GameEvent, MGPResult, Part, Reply, RequestType } from 'src/app/domain/Part';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { CurrentGame, User } from 'src/app/domain/User';
@@ -42,6 +41,7 @@ import { CurrentGameServiceMock } from 'src/app/services/tests/CurrentGameServic
 import { OGWCTimeManagerService } from './OGWCTimeManagerService';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { RulesConfig, RulesConfigUtils } from 'src/app/jscaip/RulesConfigUtil';
+import { IFirestoreDAO } from 'src/app/dao/FirestoreDAO';
 
 export type PreparationResult<T extends AbstractGameComponent> = {
     testUtils: ComponentTestUtils<T, MinimalUser>;
@@ -100,6 +100,11 @@ export namespace PreparationOptions {
     };
 }
 
+export async function addCandidate(candidate: MinimalUser): Promise<void> {
+    const configRoomDAO: ConfigRoomDAO = TestBed.inject(ConfigRoomDAO);
+    return configRoomDAO.subCollectionDAO('configRoomId', 'candidates').set(candidate.id, candidate);
+}
+
 export async function prepareStartedGameFor<T extends AbstractGameComponent>(
     user: AuthUser,
     game: string,
@@ -119,8 +124,7 @@ export async function prepareStartedGameFor<T extends AbstractGameComponent>(
 
     const partCreationId: DebugElement = testUtils.findElement('#partCreation');
     expect(partCreationId).withContext('partCreation id should be present after ngOnInit').toBeTruthy();
-    const configRoomService: ConfigRoomService = TestBed.inject(ConfigRoomService);
-    await configRoomService.addCandidate('configRoomId', UserMocks.OPPONENT_MINIMAL_USER);
+    await addCandidate(UserMocks.OPPONENT_MINIMAL_USER);
     testUtils.detectChanges();
     const configRoomDAO: ConfigRoomDAO = TestBed.inject(ConfigRoomDAO);
     await configRoomDAO.update('configRoomId', ConfigRoomMocks.withChosenOpponent(rulesConfig));
@@ -141,7 +145,7 @@ export async function prepareStartedGameFor<T extends AbstractGameComponent>(
         });
     }
     const gameService: GameService = TestBed.inject(GameService);
-    await gameService.acceptConfig('configRoomId', configRoom);
+    await gameService.acceptConfig('configRoomId');
     testUtils.detectChanges();
     if (preparationOptions.waitForPartToStart === true) {
         tick(2);
@@ -152,7 +156,7 @@ export async function prepareStartedGameFor<T extends AbstractGameComponent>(
     return { testUtils, role };
 }
 
-describe('OnlineGameWrapperComponent of Quarto:', () => {
+fdescribe('OnlineGameWrapperComponent of Quarto:', () => {
 
     //
     // component construction (beforeEach)
@@ -168,6 +172,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
     let testUtils: ComponentTestUtils<QuartoComponent, MinimalUser>;
     let wrapper: OnlineGameWrapperComponent;
     let partDAO: PartDAO;
+    let eventsDAO: IFirestoreDAO<GameEvent>;
     let gameEventService: GameEventService;
     let gameService: GameService;
 
@@ -212,19 +217,36 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
     async function receiveRequest(player: Player, request: RequestType): Promise<void> {
         // As we are mocking the DAO, we can directly add the request ourselves
         // In practice, we should receive this from the other player.
-        await gameEventService.addRequest('configRoomId', userFromPlayer(player), request);
+        await partDAO.subCollectionDAO('configRoomId', 'events').create({
+            eventType: 'Request',
+            time: Date.now(),
+            user: userFromPlayer(player),
+            requestType: request,
+        });
         testUtils.detectChanges();
     }
     async function receiveReply(player: Player, reply: Reply, request: RequestType, data?: JSONValue): Promise<void> {
         // As we are mocking the DAO, we can directly add the reply ourselves
         // In practice, we should receive this from the other player.
-        await gameEventService.addReply('configRoomId', userFromPlayer(player), reply, request, data);
+        await partDAO.subCollectionDAO('configRoomId', 'events').create({
+            eventType: 'Reply',
+            time: Date.now(),
+            user: userFromPlayer(player),
+            requestType: request,
+            reply,
+            data,
+        });
         testUtils.detectChanges();
     }
     async function receiveAction(player: Player, action: Action): Promise<void> {
         // As we are mocking the DAO, we can directly add the action ourselves
         // In practice, we should receive this from the other player.
-        await gameEventService.addAction('configRoomId', userFromPlayer(player), action);
+        await partDAO.subCollectionDAO('configRoomId', 'events').create({
+            eventType: 'Request',
+            time: Date.now(),
+            user: userFromPlayer(player),
+            action,
+        });
         testUtils.detectChanges();
     }
     async function receivePartDAOUpdate(update: Partial<Part>, detectChanges: boolean = true): Promise<void> {
@@ -257,7 +279,12 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         };
         let currentPlayer: Player = Player.of(initialTurn % 2);
         for (const move of newMoves) {
-            await gameEventService.addMove('configRoomId', userFromPlayer(currentPlayer), move);
+            await eventsDAO.create({
+                eventType: 'Move',
+                time: Date.now(),
+                user: userFromPlayer(currentPlayer),
+                move,
+            });
             currentPlayer = currentPlayer.getOpponent();
         }
         return await receivePartDAOUpdate(update, detectChanges);
@@ -271,6 +298,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         testUtils = preparationResult.testUtils;
         role = preparationResult.role;
         partDAO = TestBed.inject(PartDAO);
+        eventsDAO = partDAO.subCollectionDAO('configRoomId', 'events');
         gameEventService = TestBed.inject(GameEventService);
         gameService = TestBed.inject(GameService);
         wrapper = testUtils.getWrapper() as OnlineGameWrapperComponent;
@@ -352,7 +380,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         expect(Utils.getNonNullable(wrapper.currentUser).name).toEqual('creator');
     }));
 
-    it('should no longer have PartCreationComponent and QuartoComponent instead', fakeAsync(async() => {
+    it('should no longer have PartCreationComponent and QuartoComponent instead', fakeAsync(async () => {
         // Given an online game being created
         await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER, PreparationOptions.dontWait);
         const partCreationId: DebugElement = testUtils.findElement('#partCreation');
@@ -381,6 +409,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         expect(wrapper.gameComponent)
             .withContext('gameComponent field should also be present after config accepted and async millisec finished')
             .toBeTruthy();
+        console.log('ticking ' + wrapper.configRoom.maximalMoveDuration );
         tick(wrapper.configRoom.maximalMoveDuration * 1000);
     }));
 
@@ -564,6 +593,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         }));
     });
 
+    /*
     it('should trigger part change and send the move upon second move', fakeAsync(async() => {
         // Given a part
         await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
@@ -1925,7 +1955,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             tick(wrapper.configRoom.maximalMoveDuration * 1000);
         }));
     });
+    */
 
 });
 
-*/

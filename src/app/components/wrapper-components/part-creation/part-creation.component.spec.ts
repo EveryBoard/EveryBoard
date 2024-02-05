@@ -34,8 +34,8 @@ import { UserMocks } from 'src/app/domain/UserMocks.spec';
 import { FirestoreTime } from 'src/app/domain/Time';
 import { UserService } from 'src/app/services/UserService';
 import { CurrentGameService } from 'src/app/services/CurrentGameService';
-import { MinimalUser } from 'src/app/domain/MinimalUser';
 import { BackendService } from 'src/app/services/BackendService';
+import { addCandidate } from '../online-game-wrapper/online-game-wrapper.quarto.component.spec';
 
 describe('PartCreationComponent', () => {
 
@@ -55,9 +55,6 @@ describe('PartCreationComponent', () => {
 
     let destroyed: boolean;
 
-    async function addCandidate(candidate: MinimalUser): Promise<void> {
-        return configRoomDAO.subCollectionDAO('configRoomId', 'candidates').set(candidate.id, candidate);
-    }
     async function mockCandidateArrival(lastUpdateTime?: Timestamp): Promise<void> {
         if (lastUpdateTime) {
             await userDAO.update(UserMocks.OPPONENT_MINIMAL_USER.id, { lastUpdateTime });
