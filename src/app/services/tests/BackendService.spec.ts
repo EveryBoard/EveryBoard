@@ -114,7 +114,6 @@ export class BackendServiceMock {
             loser,
             result: MGPResult.TIMEOUT.value,
         });
-        const user: MinimalUser = this.connectedUserService.user.get().toMinimalUser();
         // Write 2: add the end action
         await this.action(gameId, 'EndGame');
     }

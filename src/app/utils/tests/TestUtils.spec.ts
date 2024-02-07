@@ -49,7 +49,6 @@ import { GameInfo } from 'src/app/components/normal-component/pick-game/pick-gam
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { Player } from 'src/app/jscaip/Player';
 import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
-import { ConfigRoomService } from 'src/app/services/ConfigRoomService';
 import { BackendServiceMock } from 'src/app/services/tests/BackendService.spec';
 import { BackendService } from 'src/app/services/BackendService';
 

@@ -2,11 +2,9 @@
 import { UserService } from '../UserService';
 import { UserDAO } from 'src/app/dao/UserDAO';
 import { UserDAOMock } from 'src/app/dao/tests/UserDAOMock.spec';
-import { serverTimestamp, Timestamp } from 'firebase/firestore';
+import { serverTimestamp } from 'firebase/firestore';
 import { fakeAsync, TestBed } from '@angular/core/testing';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { UserMocks } from 'src/app/domain/UserMocks.spec';
-import { FirestoreDAOMock } from 'src/app/dao/tests/FirestoreDAOMock.spec';
 
 describe('UserService', () => {
 

@@ -6,7 +6,7 @@ import { MGPOptional } from '../utils/MGPOptional';
 import { FirestoreTime } from '../domain/Time';
 import { assert } from '../utils/assert';
 import { FirestoreDocument } from '../dao/FirestoreDAO';
-import { serverTimestamp, Timestamp } from 'firebase/firestore';
+import { serverTimestamp } from 'firebase/firestore';
 
 /**
   * The aim of this service is to:

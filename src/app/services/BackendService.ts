@@ -35,8 +35,12 @@ export class BackendService {
         } else {
             try {
                 const jsonResponse: JSONValue = await response.json();
-                const error: string = (jsonResponse != null && (jsonResponse['reason'] as string)) || 'No error message';
-                return MGPFallible.failure(error);
+                if (jsonResponse != null) {
+                    // eslint-disable-next-line dot-notation
+                    return MGPFallible.failure(jsonResponse['reason'] as string);
+                } else {
+                    return MGPFallible.failure('No error message');
+                }
             } catch (_: unknown) {
                 return MGPFallible.failure('Invalid JSON response from the server');
             }
@@ -61,7 +65,6 @@ export class BackendService {
     }
 
     private assertSuccess<T>(result: MGPFallible<T>): void {
-        // TODO: better error handling?
         Utils.assert(result.isSuccess(), 'Unexpected error from backend: ' + result.getReasonOr(''));
     }
 
@@ -71,7 +74,7 @@ export class BackendService {
             await this.performRequestWithJSONResponse('POST', `game?gameName=${gameName}`);
         this.assertSuccess(result);
         // eslint-disable-next-line dot-notation
-        return Utils.getNonNullable(result.get())['id'] as string ;
+        return Utils.getNonNullable(result.get())['id'] as string;
     }
 
     /** Retrieve the name of the game with the given id. If there is no corresponding game, returns an empty option. */
@@ -79,6 +82,7 @@ export class BackendService {
         const result: MGPFallible<JSONValue> =
             await this.performRequestWithJSONResponse('GET', `game/${gameId}?onlyGameName`);
         if (result.isSuccess()) {
+            // eslint-disable-next-line dot-notation
             const gameName: string = Utils.getNonNullable(result.get())['gameName'] as string;
             return MGPOptional.of(gameName);
         } else {
