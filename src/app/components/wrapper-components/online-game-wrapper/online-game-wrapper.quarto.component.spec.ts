@@ -5,7 +5,7 @@ import { Router } from '@angular/router';
 import * as Firestore from '@angular/fire/firestore';
 import { Timestamp } from 'firebase/firestore';
 
-import { OnlineGameWrapperComponent } from './online-game-wrapper.component';
+import { OnlineGameWrapperComponent, OnlineGameWrapperMessages } from './online-game-wrapper.component';
 import { ConfigRoomDAO } from 'src/app/dao/ConfigRoomDAO';
 import { ConfigRoom } from 'src/app/domain/ConfigRoom';
 import { ConfigRoomMocks } from 'src/app/domain/ConfigRoomMocks.spec';
@@ -903,7 +903,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 await receiveRequest(Player.ONE, 'TakeBack');
 
                 // When ignoring it and trying to play
-                const reason: string = GameWrapperMessages.MUST_ANSWER_REQUEST();
+                const reason: string = OnlineGameWrapperMessages.MUST_ANSWER_REQUEST();
 
                 // Then it should fail
                 testUtils.resetSpies();
@@ -1185,7 +1185,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             testUtils.detectChanges();
 
             // When ignoring it and trying to play
-            const reason: string = GameWrapperMessages.MUST_ANSWER_REQUEST();
+            const reason: string = OnlineGameWrapperMessages.MUST_ANSWER_REQUEST();
 
             // Then it should fail
             await testUtils.expectClickFailure('#chooseCoord_0_0', reason);

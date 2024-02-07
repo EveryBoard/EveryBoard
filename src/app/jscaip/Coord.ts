@@ -172,17 +172,6 @@ export class Coord extends Vector {
         return coords;
     }
 
-    public getUntil(end: Coord): Coord[] {
-        const coords: Coord[] = [];
-        const direction: Direction = this.getDirectionToward(end).get();
-        let c: Coord = this.getNext(direction);
-        while (c.equals(end) === false) {
-            coords.push(c);
-            c = c.getNext(direction);
-        }
-        return coords;
-    }
-
     public override equals(obj: Coord): boolean {
         if (this === obj) return true;
         if (obj.x !== this.x) return false;

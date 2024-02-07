@@ -2,13 +2,14 @@ import { AfterViewInit, ChangeDetectorRef, Component, Input, OnChanges, SimpleCh
 import { AbstractNode } from 'src/app/jscaip/AI/GameNode';
 import { Utils } from 'src/app/utils/utils';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { GameWrapper, GameWrapperMessages } from '../../wrapper-components/GameWrapper';
+import { GameWrapper } from '../../wrapper-components/GameWrapper';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ConnectedUserService } from 'src/app/services/ConnectedUserService';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { Move } from 'src/app/jscaip/Move';
 import { PlayerOrNone } from 'src/app/jscaip/Player';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
+import { TutorialGameWrapperMessages } from '../tutorial-game-wrapper/tutorial-game-wrapper.component';
 
 export type DemoNodeInfo = {
     name: string, // The name of the game
@@ -88,7 +89,7 @@ export class DemoCardWrapperComponent extends GameWrapper<string> implements Aft
     }
 
     public override async canUserPlay(_clickedElementName: string): Promise<MGPValidation> {
-        return MGPValidation.failure(GameWrapperMessages.THIS_IS_A_DEMO());
+        return MGPValidation.failure(TutorialGameWrapperMessages.THIS_IS_A_DEMO());
     }
 
 }

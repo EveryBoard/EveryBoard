@@ -15,8 +15,8 @@ import { DemoCardWrapperComponent, DemoNodeInfo } from './demo-card-wrapper.comp
 import { RulesConfig, RulesConfigUtils } from 'src/app/jscaip/RulesConfigUtil';
 import { GameNode } from 'src/app/jscaip/AI/GameNode';
 import { AbstractGameComponent } from '../../game-components/game-component/GameComponent';
-import { GameWrapperMessages } from '../GameWrapper';
 import { Utils } from 'src/app/utils/utils';
+import { TutorialGameWrapperMessages } from '../tutorial-game-wrapper/tutorial-game-wrapper.component';
 
 describe('DemoCardComponent', () => {
 
@@ -69,7 +69,7 @@ describe('DemoCardComponent', () => {
         testUtils.expectElementToHaveClass('#lodestone_push_orthogonal_PLAYER_ZERO > g > .lodestone_main_circle', 'selected-stroke');
     }));
 
-    it('should not allow clics', fakeAsync(async() => {
+    it('should not allow clicks', fakeAsync(async() => {
         // Given a demo component displayed for a game
         await loadNode({
             name: 'P4',
@@ -81,7 +81,7 @@ describe('DemoCardComponent', () => {
 
         // When trying to perform a click
         await testUtils.expectToDisplayGameMessage(
-            GameWrapperMessages.THIS_IS_A_DEMO(),
+            TutorialGameWrapperMessages.THIS_IS_A_DEMO(),
             async() => {
                 await testUtils.clickElement('#click_2');
             },

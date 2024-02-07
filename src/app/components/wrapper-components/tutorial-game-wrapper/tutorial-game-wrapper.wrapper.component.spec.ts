@@ -1,5 +1,5 @@
 /* eslint-disable max-lines-per-function */
-import { TutorialGameWrapperComponent } from './tutorial-game-wrapper.component';
+import { TutorialGameWrapperComponent, TutorialGameWrapperMessages } from './tutorial-game-wrapper.component';
 import { TutorialStep } from './TutorialStep';
 import { QuartoMove } from 'src/app/games/quarto/QuartoMove';
 import { QuartoState } from 'src/app/games/quarto/QuartoState';
@@ -474,7 +474,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             await testUtils.clickElement('#nextButton');
 
             // expect to see end tutorial congratulations
-            const expectedMessage: string = wrapper.COMPLETED_TUTORIAL_MESSAGE;
+            const expectedMessage: string = TutorialGameWrapperMessages.COMPLETED_TUTORIAL_MESSAGE();
             const currentMessage: string =
                 testUtils.findElement('#currentMessage').nativeElement.innerHTML;
             expect(wrapper.successfulSteps).toBe(1);

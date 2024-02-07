@@ -21,14 +21,6 @@ export class GameWrapperMessages {
 
     public static readonly GAME_HAS_ENDED: Localized = () => $localize`This game has ended.`;
 
-    // TODO FOR REVIEW: should this contains all GameWrapper Messages, or only the one common to several ones ?
-    // Because this one is only online
-    public static readonly CANNOT_PLAY_AS_OBSERVER: Localized = () => $localize`You are an observer in this game, you cannot play.`;
-
-    public static readonly MUST_ANSWER_REQUEST: Localized = () => $localize`You must answer your opponent's request.`;
-
-    public static readonly THIS_IS_A_DEMO: Localized = () => $localize`You cannot click, this is a demo.`;
-
     public static NO_MATCHING_GAME(gameName: string): string {
         return $localize`This game (${gameName}) does not exist.`;
     }

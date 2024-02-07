@@ -34,6 +34,10 @@ import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 export class OnlineGameWrapperMessages {
 
     public static readonly NO_MATCHING_PART: Localized = () => $localize`The game you tried to join does not exist.`;
+
+    public static readonly CANNOT_PLAY_AS_OBSERVER: Localized = () => $localize`You are an observer in this game, you cannot play.`;
+
+    public static readonly MUST_ANSWER_REQUEST: Localized = () => $localize`You must answer your opponent's request.`;
 }
 
 @Component({
@@ -399,14 +403,14 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
 
     public override async canUserPlay(clickedElementName: string): Promise<MGPValidation> {
         if (this.role === PlayerOrNone.NONE) {
-            const message: string = GameWrapperMessages.CANNOT_PLAY_AS_OBSERVER();
+            const message: string = OnlineGameWrapperMessages.CANNOT_PLAY_AS_OBSERVER();
             return MGPValidation.failure(message);
         }
         const result: MGPValidation = await super.canUserPlay(clickedElementName);
         if (result.isFailure()) {
-            return result;
+            return result; // NOT_YOUR_TURN or GAME_HAS_ENDED are checked here
         } else if (this.mustReply()) {
-            return MGPValidation.failure(GameWrapperMessages.MUST_ANSWER_REQUEST());
+            return MGPValidation.failure(OnlineGameWrapperMessages.MUST_ANSWER_REQUEST());
         } else {
             return MGPValidation.SUCCESS;
         }
