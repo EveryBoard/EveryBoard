@@ -60,9 +60,11 @@ module Make
     Stats.set_game_id request game_id;
     match Dream.query request "onlyGameName" with
     | None ->
+      (* Read 1: get the game *)
       let* game = Firestore.Game.get request game_id in
       json_response `OK (Game.to_yojson game)
     | Some _ ->
+      (* Read 1: get only the game name *)
       let* name = Firestore.Game.get_name request game_id in
       json_response `OK (`Assoc [("gameName", `String name)])
 
@@ -72,6 +74,7 @@ module Make
     Stats.set_action request "DELETE game";
     Stats.set_game_id request game_id;
     (* TODO: also delete chat and config room etc. *)
+    (* Write 1: delete the game *)
     let* _ = Firestore.Game.delete request game_id in
     Dream.empty `OK
 
@@ -117,6 +120,7 @@ module Make
   let notify_timeout (request : Dream.request) (game_id : string) (winner : MinimalUser.t) (loser : MinimalUser.t) =
     Firestore.transaction request @@ fun () ->
     (* Read 1: retrieve the game *)
+    (* TODO: maybe not needed? For end, we ould skip the turn update *)
     let* game = Firestore.Game.get request game_id in
     let update = Game.Updates.End.get ~winner ~loser Game.GameResult.Timeout game.turn in
     (* Write 1: end the game *)

@@ -262,10 +262,8 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
                 await this.takeBackToPreviousPlayerTurn(accepter.getOpponent());
                 break;
             case 'Rematch':
-                console.log(reply)
                 await this.router.navigate(['/nextGameLoading']);
                 const game: string = this.getGameName();
-                console.log(game)
                 await this.router.navigate(['/play', game, reply.data]);
                 break;
             case 'Draw':
@@ -468,7 +466,6 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
 
     // Called by the clocks
     public async reachedOutOfTime(player: Player): Promise<void> {
-        console.log('reached out of time')
         if (this.isPlaying() === false) {
             return;
         }
