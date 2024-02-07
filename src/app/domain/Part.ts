@@ -114,9 +114,6 @@ export class PartDocument implements FirestoreDocument<Part> {
     public getLoser(): MGPOptional<MinimalUser> {
         return MGPOptional.ofNullable(this.data.loser);
     }
-    public setWinnerAndLoser(winner: MinimalUser, loser: MinimalUser): PartDocument {
-        return new PartDocument(this.id, { ...this.data, winner, loser });
-    }
 }
 
 export type IMGPResult = number;
