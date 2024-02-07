@@ -42,7 +42,6 @@ export class PenteComponent extends GobanGameComponent<PenteRules, PenteMove, Pe
         this.scores = MGPOptional.of(this.getState().captures);
         this.victoryCoords = PenteRules.PENTE_HELPER.getVictoriousCoord(state);
         this.createHoshis();
-        this.cancelMoveAttempt();
     }
 
     public override async showLastMove(move: PenteMove): Promise<void> {
@@ -51,9 +50,9 @@ export class PenteComponent extends GobanGameComponent<PenteRules, PenteMove, Pe
         this.captured = PenteRules.get().getCaptures(move.coord, this.getPreviousState(), opponent);
     }
 
-    public override cancelMoveAttempt(): void {
-        this.lastMoved = MGPOptional.empty();
+    public override hideLastMove(): void {
         this.captured = [];
+        this.lastMoved = MGPOptional.empty();
     }
 
     public async onClick(x: number, y: number): Promise<MGPValidation> {

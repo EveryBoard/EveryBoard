@@ -13,6 +13,7 @@ import { MCTS } from 'src/app/jscaip/AI/MCTS';
 import { Minimax } from 'src/app/jscaip/AI/Minimax';
 import { QuartoHeuristic } from './QuartoHeuristic';
 import { QuartoMoveGenerator } from './QuartoMoveGenerator';
+import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 @Component({
     selector: 'app-quarto',
@@ -48,12 +49,10 @@ export class QuartoComponent extends RectangularGameComponent<QuartoRules,
 
     public async updateBoard(_triggerAnimation: boolean): Promise<void> {
         const state: QuartoState = this.getState();
-        const move: MGPOptional<QuartoMove> = this.node.previousMove;
         this.board = state.getCopiedBoard();
         this.chosen = MGPOptional.empty();
         this.pieceInHand = state.pieceInHand;
         this.victoriousCoords = this.rules.getVictoriousCoords(state);
-        this.lastMove = move.map((move: QuartoMove) => move.coord);
     }
 
     public async chooseCoord(x: number, y: number): Promise<MGPValidation> {
@@ -107,6 +106,10 @@ export class QuartoComponent extends RectangularGameComponent<QuartoRules,
             const chosenMove: QuartoMove = new QuartoMove(chosen.x, chosen.y, this.pieceToGive.get());
             return this.chooseMove(chosenMove);
         }
+    }
+
+    public override async showLastMove(move: QuartoMove, _config: MGPOptional<EmptyRulesConfig>): Promise<void> {
+        this.lastMove = MGPOptional.of(move.coord);
     }
 
     public override hideLastMove(): void {

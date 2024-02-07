@@ -21,8 +21,12 @@ import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
 })
 @Debug.log
-export class GoComponent
-    extends GobanGameComponent<GoRules, GoMove, GoState, GoPiece, GoConfig, GoLegalityInformation>
+export class GoComponent extends GobanGameComponent<GoRules,
+                                                    GoMove,
+                                                    GoState,
+                                                    GoPiece,
+                                                    GoConfig,
+                                                    GoLegalityInformation>
 {
 
     public boardInfo: GroupDatas<GoPiece>;
@@ -47,6 +51,16 @@ export class GoComponent
         this.scores = MGPOptional.of(PlayerNumberMap.of(0, 0));
     }
 
+    public override async showLastMove(move: GoMove): Promise<void> {
+        this.last = MGPOptional.of(move.coord);
+        this.showCaptures();
+    }
+
+    public override hideLastMove(): void {
+        this.captures = [];
+        this.last = MGPOptional.empty();
+    }
+
     public async onClick(x: number, y: number): Promise<MGPValidation> {
         const clickValidity: MGPValidation = await this.canUserPlay('#click_' + x + '_' + y);
         if (clickValidity.isFailure()) {
@@ -60,19 +74,12 @@ export class GoComponent
 
     public async updateBoard(_triggerAnimation: boolean): Promise<void> {
         const state: GoState = this.getState();
-        const move: MGPOptional<GoMove> = this.node.previousMove;
         const phase: Phase = state.phase;
 
         this.board = state.getCopiedBoard();
         this.scores = MGPOptional.of(state.getCapturedCopy());
 
         this.ko = state.koCoord;
-        if (move.isPresent()) {
-            this.showCaptures();
-        } else {
-            this.captures = [];
-        }
-        this.last = move.map((move: GoMove) => move.coord);
         this.canPass = phase !== Phase.FINISHED;
         this.createHoshis();
     }

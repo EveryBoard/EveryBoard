@@ -2354,7 +2354,7 @@
         <source>This is not a queen!</source>
       </trans-unit>
       <trans-unit id="3324500494494988533" datatype="html">
-        <source>When a piece crosses the canal and lands on another piece, you capture it and gain the value of that captured piece. However, you lose control of your piece as it crosses the canal!&lt;br/&gt;&lt;br/&gt;A capture is possible for Dark, do it.</source>
+        <source>When a piece crosses the canal and lands on another piece, you capture it and gain the value of that captured piece. However, you lose control of your piece as it crosses the canal!&lt;br/&gt;&lt;br/&gt;A capture is possible for Light, do it.</source>
       </trans-unit>
       <trans-unit id="6741042150149637612" datatype="html">
         <source>Congratulations! By capturing that pawn, you won one point.</source>
@@ -2363,7 +2363,7 @@
         <source>Field Promotion (1/2)</source>
       </trans-unit>
       <trans-unit id="8675845222727327919" datatype="html">
-        <source>It is sometimes possible to perform what is called a field promotion. If you are out of one type of piece, you can merge two pieces to add their value and get a new piece. For example, if you have no drones, you can merge two pawns into a drone. To merge two pawns, move one of your pawns on another.&lt;br/&gt;&lt;br/&gt;Such a move is possible for Dark. Do it.</source>
+        <source>It is sometimes possible to perform what is called a field promotion. If you are out of one type of piece, you can merge two pieces to add their value and get a new piece. For example, if you have no drones, you can merge two pawns into a drone. To merge two pawns, move one of your pawns on another.&lt;br/&gt;&lt;br/&gt;Such a move is possible for Light. Do it.</source>
       </trans-unit>
       <trans-unit id="8941261285468529448" datatype="html">
         <source>This is not a field promotion!</source>

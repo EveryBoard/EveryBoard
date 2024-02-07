@@ -70,11 +70,6 @@ export class SixComponent
 
     public async updateBoard(_triggerAnimation: boolean): Promise<void> {
         this.state = this.node.gameState;
-        const lastMove: MGPOptional<SixMove> = this.node.previousMove;
-        if (lastMove.isAbsent()) {
-            // For tutorial
-            this.hideLastMove();
-        }
         this.pieces = this.state.getPieceCoords();
         this.neighbors = this.getEmptyNeighbors();
     }

@@ -40,7 +40,7 @@ import { CurrentGameService } from 'src/app/services/CurrentGameService';
 import { CurrentGameServiceMock } from 'src/app/services/tests/CurrentGameService.spec';
 import { OGWCTimeManagerService } from './OGWCTimeManagerService';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
-import { RulesConfig, RulesConfigUtils } from 'src/app/jscaip/RulesConfigUtil';
+import { EmptyRulesConfig, RulesConfig, RulesConfigUtils } from 'src/app/jscaip/RulesConfigUtil';
 
 export type PreparationResult<T extends AbstractGameComponent> = {
     testUtils: ComponentTestUtils<T, MinimalUser>;
@@ -1866,7 +1866,8 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             await testUtils.getWrapper().onCancelMove();
 
             // Then showLastMove should have been called
-            expect(component.showLastMove).toHaveBeenCalledOnceWith(FIRST_MOVE);
+            const defaultConfig: MGPOptional<EmptyRulesConfig> = MGPOptional.of({});
+            expect(component.showLastMove).toHaveBeenCalledOnceWith(FIRST_MOVE, defaultConfig);
         }));
 
         it('should not call gameComponent.showLastMove if there is no move', fakeAsync(async() => {

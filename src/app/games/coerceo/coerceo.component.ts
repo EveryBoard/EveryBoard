@@ -84,10 +84,12 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
         if (move instanceof CoerceoRegularMove) {
             this.lastStart = MGPOptional.of(move.getStart());
             this.lastEnd = MGPOptional.of(move.getEnd());
-        } else {
-            this.lastStart = MGPOptional.empty();
-            this.lastEnd = MGPOptional.empty();
         }
+    }
+
+    public override hideLastMove(): void {
+        this.lastStart = MGPOptional.empty();
+        this.lastEnd = MGPOptional.empty();
     }
 
     public async onClick(x: number, y: number): Promise<MGPValidation> {
