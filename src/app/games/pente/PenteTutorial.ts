@@ -5,7 +5,9 @@ import { PenteMove } from './PenteMove';
 import { PenteState } from './PenteState';
 import { GobanConfig } from 'src/app/jscaip/GobanConfig';
 import { PenteRules } from './PenteRules';
+import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { TutorialStepMessage } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
 
 const _: PlayerOrNone = PlayerOrNone.NONE;
 const O: PlayerOrNone = PlayerOrNone.ZERO;
@@ -24,10 +26,10 @@ export class PenteTutorial extends Tutorial {
             $localize`At your turn, you must drop one piece on any empty space of the board. There is no other restriction.<br/><br/>You're playing Dark, put a piece on the board.`,
             PenteRules.get().getInitialState(defaultConfig),
             PenteMove.of(new Coord(9, 8)),
-            $localize`Congratulations!`,
+            TutorialStepMessage.CONGRATULATIONS(),
         ),
         TutorialStep.fromMove(
-            $localize`Capturing`,
+            $localize`Captures`,
             $localize`You can capture exactly two pieces of your opponent by sandwiching them between two of your pieces.<br/><br/>You're playing Light and you can capture, do it!`,
             new PenteState([
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
@@ -49,10 +51,10 @@ export class PenteTutorial extends Tutorial {
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-            ], [0, 0], 3),
+            ], PlayerNumberMap.of(0, 0), 3),
             [PenteMove.of(new Coord(9, 6))],
-            $localize`Congratulations!`,
-            $localize`Failed. Try again.`,
+            TutorialStepMessage.CONGRATULATIONS(),
+            TutorialStepMessage.FAILED_TRY_AGAIN(),
         ),
         TutorialStep.fromMove(
             $localize`Placing in a sandwich position`,
@@ -77,10 +79,10 @@ export class PenteTutorial extends Tutorial {
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-            ], [0, 0], 4),
+            ], PlayerNumberMap.of(0, 0), 4),
             [PenteMove.of(new Coord(9, 7))],
-            $localize`Congratulations!`,
-            $localize`Failed. Try again.`,
+            TutorialStepMessage.CONGRATULATIONS(),
+            TutorialStepMessage.FAILED_TRY_AGAIN(),
         ),
         TutorialStep.fromMove(
             $localize`Victory`,
@@ -105,14 +107,14 @@ export class PenteTutorial extends Tutorial {
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-            ], [8, 8], 7),
+            ], PlayerNumberMap.of(8, 8), 7),
             [
                 PenteMove.of(new Coord(9, 6)),
                 PenteMove.of(new Coord(8, 9)),
                 PenteMove.of(new Coord(13, 9)),
             ],
-            $localize`Congratulations!`,
-            $localize`Failed. Try again.`,
+            TutorialStepMessage.CONGRATULATIONS(),
+            TutorialStepMessage.FAILED_TRY_AGAIN(),
         ),
     ];
 }

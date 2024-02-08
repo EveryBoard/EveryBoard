@@ -1,4 +1,7 @@
 /* eslint-disable max-lines-per-function */
+import { DebugElement } from '@angular/core';
+import { fakeAsync } from '@angular/core/testing';
+
 import { SiamComponent } from '../siam.component';
 import { SiamMove } from 'src/app/games/siam/SiamMove';
 import { Orthogonal } from 'src/app/jscaip/Direction';
@@ -7,12 +10,10 @@ import { SiamPiece } from 'src/app/games/siam/SiamPiece';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { SiamState } from 'src/app/games/siam/SiamState';
 import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
-import { fakeAsync } from '@angular/core/testing';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { Coord } from 'src/app/jscaip/Coord';
 import { SiamFailure } from '../SiamFailure';
-import { DebugElement } from '@angular/core';
 import { SiamRules } from '../SiamRules';
 
 describe('SiamComponent', () => {
@@ -27,7 +28,7 @@ describe('SiamComponent', () => {
 
     async function expectMoveToBeLegal(player: Player, move: SiamMove, state: SiamState): Promise<void> {
         if (rules.isInsertion(move, state)) {
-            await testUtils.expectClickSuccess('#remainingPieces_' + player.value);
+            await testUtils.expectClickSuccess('#remainingPieces_' + player.getValue());
             const target: Coord = move.coord.getNext(move.direction.get());
             await testUtils.expectClickSuccess('#square_' + target.x + '_' + target.y);
             const orientation: string = move.landingOrientation.toString();

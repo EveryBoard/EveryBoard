@@ -88,7 +88,7 @@ export class SaharaRules extends Rules<SaharaMove, SaharaState> {
 
     public override isLegal(move: SaharaMove, state: SaharaState): MGPValidation {
         const movedPawn: FourStatePiece = state.getPieceAt(move.getStart());
-        if (movedPawn.value !== state.getCurrentPlayer().value) {
+        if (movedPawn.is(state.getCurrentPlayer()) === false) {
             return MGPValidation.failure(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT());
         }
         const landingSpace: FourStatePiece = state.getPieceAt(move.getEnd());

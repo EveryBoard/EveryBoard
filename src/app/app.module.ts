@@ -53,6 +53,7 @@ import { SettingsComponent } from './components/normal-component/settings/settin
 import { OnlineGameCreationComponent } from './components/normal-component/online-game-creation/online-game-creation.component';
 
 import { AbaloneComponent } from './games/abalone/abalone.component';
+import { BaAwaComponent } from './games/mancala/ba-awa/ba-awa.component';
 import { ApagosComponent } from './games/apagos/apagos.component';
 import { AwaleComponent } from './games/mancala/awale/awale.component';
 
@@ -83,6 +84,7 @@ import { LascaComponent } from './games/lasca/lasca.component';
 import { LinesOfActionComponent } from './games/lines-of-action/lines-of-action.component';
 import { LodestoneComponent } from './games/lodestone/lodestone.component';
 import { LodestoneLodestoneComponent } from './games/lodestone/lodestone-lodestone.component';
+
 import { MartianChessComponent } from './games/martian-chess/martian-chess.component';
 import { MartianChessQueenComponent } from './games/martian-chess/martian-chess-queen.component';
 import { MartianChessDroneComponent } from './games/martian-chess/martian-chess-drone.component';
@@ -211,7 +213,10 @@ export class FirebaseProviders {
         AbaloneComponent,
         ApagosComponent,
         AwaleComponent, NumberedCircleComponent,
+
         BrandhubComponent,
+        BaAwaComponent,
+
         CoerceoComponent,
         ConnectSixComponent,
         ConspirateursComponent,

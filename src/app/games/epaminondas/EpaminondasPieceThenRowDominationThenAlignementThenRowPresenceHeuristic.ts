@@ -1,11 +1,11 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { Direction } from 'src/app/jscaip/Direction';
-import { PlayerOrNone } from 'src/app/jscaip/Player';
+import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { BoardValue } from 'src/app/jscaip/AI/BoardValue';
 import { EpaminondasConfig, EpaminondasNode } from './EpaminondasRules';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { MathUtils } from 'src/app/utils/MathUtils';
 import { EpaminondasHeuristic } from './EpaminondasHeuristic';
+import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 
 export class EpaminondasPieceThenRowDominationThenAlignementThenRowPresenceHeuristic extends EpaminondasHeuristic {
 
@@ -18,14 +18,14 @@ export class EpaminondasPieceThenRowDominationThenAlignementThenRowPresenceHeuri
         let presence: number = 0;
         for (let y: number = 0; y < height; y++) {
             let row: number = 0;
-            const wasPresent: number[] = [0, 0];
+            const wasPresent: PlayerNumberMap = PlayerNumberMap.of(0, 0);
             for (let x: number = 0; x < width; x++) {
                 const coord: Coord = new Coord(x, y);
                 const player: PlayerOrNone = node.gameState.getPieceAt(coord);
                 if (player.isPlayer()) {
                     const mod: number = player.getScoreModifier();
                     pieces += mod;
-                    wasPresent[player.value] = mod;
+                    wasPresent.put(player, mod);
                     row += mod;
                     for (const dir of [Direction.UP_LEFT, Direction.UP, Direction.UP_RIGHT]) {
                         let neighbor: Coord = coord.getNext(dir, 1);
@@ -41,7 +41,7 @@ export class EpaminondasPieceThenRowDominationThenAlignementThenRowPresenceHeuri
             if (row !== 0) {
                 rowDomination += Math.abs(row) / row;
             }
-            presence += wasPresent.reduce(MathUtils.sum);
+            presence += wasPresent.get(Player.ZERO) + wasPresent.get(Player.ONE);
         }
         return BoardValue.multiMetric([
             pieces,

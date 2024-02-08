@@ -105,7 +105,7 @@ export class SaharaComponent extends TriangularGameComponent<SaharaRules,
 
     public getPlayerClassFor(x: number, y: number): string {
         const piece: FourStatePiece = this.board[y][x];
-        return this.getPlayerClass(Player.of(piece.value));
+        return this.getPlayerClass(piece.getPlayer());
     }
 
 }

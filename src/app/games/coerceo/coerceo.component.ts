@@ -18,6 +18,7 @@ import { CoerceoMoveGenerator } from './CoerceoMoveGenerator';
 import { CoerceoPiecesThreatsTilesHeuristic } from './CoerceoPiecesThreatsTilesHeuristic';
 import { CoerceoOrderedMoveGenerator } from './CoerceoOrderedMoveGenerator';
 import { ViewBox } from 'src/app/components/game-components/GameComponentUtils';
+import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 
 @Component({
     selector: 'app-coerceo',
@@ -31,7 +32,7 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
 {
     private state: CoerceoState;
 
-    public tiles: { readonly 0: number; readonly 1: number; } = [0, 0];
+    public tiles: PlayerNumberMap = PlayerNumberMap.of(0, 0);
 
     public NONE: FourStatePiece = FourStatePiece.UNREACHABLE;
     public INDICATOR_SIZE: number = 10;
@@ -59,7 +60,7 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
                      this.rules),
         ];
         this.encoder = CoerceoMove.encoder;
-        this.scores = MGPOptional.of([0, 0]);
+        this.scores = MGPOptional.of(PlayerNumberMap.of(0, 0));
     }
 
     public async updateBoard(_triggerAnimation: boolean): Promise<void> {
@@ -149,10 +150,8 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
 
     public getPyramidClass(x: number, y: number): string {
         const spaceContent: FourStatePiece = this.board[y][x];
-        if (spaceContent === FourStatePiece.ZERO) {
-            return this.getPlayerClass(Player.ZERO);
-        } else if (spaceContent === FourStatePiece.ONE) {
-            return this.getPlayerClass(Player.ONE);
+        if (spaceContent.isPlayer()) {
+            return this.getPlayerClass(spaceContent.getPlayer());
         } else {
             return 'captured-fill';
         }
@@ -211,7 +210,7 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
     }
 
     public mustShowTilesOf(player: Player): boolean {
-        if (this.tiles[player.value] > 0) {
+        if (this.tiles.get(player) > 0) {
             return true;
         } else {
             return this.lastTurnWasTilesExchange(player);
@@ -222,8 +221,8 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
         if (this.node.parent.isAbsent()) {
             return false;
         }
-        const previousTiles: number = this.getPreviousState().tiles[player.value];
-        return previousTiles > this.tiles[player.value];
+        const previousTiles: number = this.getPreviousState().tiles.get(player);
+        return previousTiles > this.tiles.get(player);
     }
 
     public getIndicatorY(coord: Coord): number {
@@ -235,20 +234,20 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
         }
     }
 
-    public getTriangleInHexTranslate(x: number, y: number): string {
-        const translate: Coord = this.getTriangleTranslateCoord(x, y);
-        const translateX: number = translate.x + 2 * Math.floor(x / 3) * this.STROKE_WIDTH;
-        let translateY: number = translate.y;
+    public getTriangleInHexTranslation(x: number, y: number): string {
+        const translation: Coord = this.getTriangleTranslationCoord(x, y);
+        const translationX: number = translation.x + 2 * Math.floor(x / 3) * this.STROKE_WIDTH;
+        let translationY: number = translation.y;
         if (Math.floor(x / 3) % 2 === 0) {
-            translateY += 2 * Math.floor(y / 2) * this.STROKE_WIDTH;
+            translationY += 2 * Math.floor(y / 2) * this.STROKE_WIDTH;
         } else {
-            translateY += 2 * Math.abs(Math.floor((y - 1) / 2)) * this.STROKE_WIDTH;
-            translateY += this.STROKE_WIDTH;
+            translationY += 2 * Math.abs(Math.floor((y - 1) / 2)) * this.STROKE_WIDTH;
+            translationY += this.STROKE_WIDTH;
         }
-        return 'translate(' + translateX + ', ' + translateY + ')';
+        return 'translate(' + translationX + ', ' + translationY + ')';
     }
 
-    public getTilesCountTranslate(player: Player): string {
+    public getTilesCountTranslation(player: Player): string {
         let x: number;
         let y: number;
         if (player === Player.ZERO) {

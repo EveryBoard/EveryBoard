@@ -316,11 +316,11 @@ export class TrexoComponent extends ParallelogramGameComponent<TrexoRules, Trexo
         return [];
     }
 
-    public getTranslate(x: number, y: number, z: number): string {
+    public getTranslationAtXYZ(x: number, y: number, z: number): string {
         const mode: ModeConfig = TrexoComponent.modeMap[this.chosenMode];
-        const coordTransform: Coord = this.getCoordTranslate(x, y, z, mode);
-        const translate: string = 'translate(' + coordTransform.x + ' ' + coordTransform.y + ')';
-        return translate;
+        const coordTransform: Coord = this.getCoordTranslation(x, y, z, mode);
+        const translation: string = 'translate(' + coordTransform.x + ' ' + coordTransform.y + ')';
+        return translation;
     }
 
     public getParallelogramPoints(): string {
@@ -343,10 +343,10 @@ export class TrexoComponent extends ParallelogramGameComponent<TrexoRules, Trexo
         const widness: number = mode3D.horizontalWidthRatio + mode3D.offsetRatio;
         const scale: string = ' scale(' + (1 / widness) + ')';
         const verticalUnWideness: number = (1 - (1 / widness)) / 2;
-        const xTranslate: number = (10 + mode3D.offsetRatio) * mode3D.parallelogramHeight;
-        const yTranslate: number = (9 + verticalUnWideness) * mode3D.parallelogramHeight;
-        const translate: string = 'translate(' + xTranslate + ', ' + yTranslate + ')';
-        return translate + scale;
+        const translationX: number = (10 + mode3D.offsetRatio) * mode3D.parallelogramHeight;
+        const translationY: number = (9 + verticalUnWideness) * mode3D.parallelogramHeight;
+        const translation: string = 'translate(' + translationX + ', ' + translationY + ')';
+        return translation + scale;
     }
 
 }

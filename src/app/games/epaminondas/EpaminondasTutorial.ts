@@ -100,13 +100,10 @@ export class EpaminondasTutorial extends Tutorial {
                     return MGPValidation.failure($localize`Failed! You moved only one piece.`);
                 }
             },
-            $localize`Congratulations!
-        The moved pieces can be horizontally, vertically, or diagonally aligned.
-        The move should be made along this axis, forward or backwards.
-        There can be no opponent nor holes in the phalanx.`,
+            $localize`Congratulations! The moved pieces can be horizontally, vertically, or diagonally aligned. The move should be made along this axis, forward or backwards. There can be no opponent nor holes in the phalanx.`,
         ),
         TutorialStep.fromMove(
-            $localize`Capture`,
+            $localize`Captures`,
             $localize`In order to capture pieces of the opponent:
         <ol>
             <li>It must be aligned with the phalanx you are moving.</li>

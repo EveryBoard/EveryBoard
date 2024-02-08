@@ -35,7 +35,7 @@ export class CoerceoPiecesThreatsTilesHeuristic extends PlayerMetricHeuristic<Co
                     metrics.add(owner, safeIndex, 1);
                 }
             }
-            metrics.add(owner, tilesIndex, state.tiles[owner.value]);
+            metrics.add(owner, tilesIndex, state.tiles.get(owner));
         }
         return metrics;
     }
@@ -75,7 +75,7 @@ export class CoerceoPiecesThreatsTilesHeuristic extends PlayerMetricHeuristic<Co
     }
 
     public getThreat(coord: Coord, state: CoerceoState): MGPOptional<PieceThreat> {
-        const threatenerPlayer: Player = Player.of(state.getPieceAt(coord).value);
+        const threatenerPlayer: Player = state.getPieceAt(coord).getPlayer() as Player;
         const opponent: Player = threatenerPlayer.getOpponent();
         let uniqueFreedom: MGPOptional<Coord> = MGPOptional.empty();
         let emptiableNeighborTile: MGPOptional<Coord> = MGPOptional.empty();

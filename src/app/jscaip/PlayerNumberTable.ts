@@ -13,6 +13,13 @@ export class PlayerNumberTable extends MGPMap<Player, ReadonlyArray<number>> {
         ]);
     }
 
+    public static ofSingle(playerZero: number, playerOne: number): PlayerNumberTable {
+        return PlayerNumberTable.of(
+            [playerZero],
+            [playerOne],
+        );
+    }
+
     public add(player: Player, index: number, value: number): MGPOptional<readonly number[]> {
         const list: number[] = ArrayUtils.copy(this.get(player).get());
         list[index] += value;

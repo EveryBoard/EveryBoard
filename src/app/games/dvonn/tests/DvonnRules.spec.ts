@@ -1,4 +1,5 @@
 /* eslint-disable max-lines-per-function */
+import { fakeAsync } from '@angular/core/testing';
 import { DvonnPieceStack } from '../DvonnPieceStack';
 import { DvonnState } from '../DvonnState';
 import { Coord } from 'src/app/jscaip/Coord';
@@ -11,7 +12,6 @@ import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
 import { ErrorLoggerServiceMock } from 'src/app/services/tests/ErrorLoggerServiceMock.spec';
-import { fakeAsync } from '@angular/core/testing';
 import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 describe('DvonnRules', () => {

@@ -18,10 +18,13 @@ export class P4Move extends Move {
     private constructor(public readonly x: number) {
         super();
     }
+
     public equals(other: P4Move): boolean {
         return this.x === other.x;
     }
+
     public toString(): string {
         return 'P4Move(' + this.x + ')';
     }
+
 }

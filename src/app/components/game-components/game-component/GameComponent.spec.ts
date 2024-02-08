@@ -60,4 +60,5 @@ describe('GameComponent', () => {
             expect(component.availableAIs.length).withContext('AI list empty for ' + gameInfo.urlName).toBeGreaterThan(0);
         }));
     }
+
 });

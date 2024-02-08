@@ -18,6 +18,7 @@ export const clickableMethods: { [gameName: string]: { [methodName: string]: unk
         onArrowClick: [0, Player.ONE],
     },
     Awale: { onClick: [0, 0] },
+    BaAwa: { onClick: [0, 0] },
     Brandhub: { onClick: [0, 0] },
     Coerceo: { onClick: [0, 0] },
     ConnectSix: { onClick: [0, 0] },
@@ -46,7 +47,7 @@ export const clickableMethods: { [gameName: string]: { [methodName: string]: unk
     Hnefatafl: { onClick: [0, 0] },
     Kalah: {
         onClick: [0, 0],
-        onStoreClick: [0],
+        onStoreClick: [Player.ZERO],
     },
     Kamisado: { onClick: [0, 0] },
     Lasca: { onClick: [0, 0] },

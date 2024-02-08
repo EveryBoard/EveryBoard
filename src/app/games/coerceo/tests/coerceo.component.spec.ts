@@ -9,6 +9,7 @@ import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { fakeAsync } from '@angular/core/testing';
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
 import { CoerceoRules } from '../CoerceoRules';
+import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 
 describe('CoerceoComponent', () => {
 
@@ -37,7 +38,7 @@ describe('CoerceoComponent', () => {
 
         it('should show tile when more than zero', fakeAsync(async() => {
             const board: Table<FourStatePiece> = CoerceoRules.get().getInitialState().getCopiedBoard();
-            const state: CoerceoState = new CoerceoState(board, 0, [1, 0], [0, 0]);
+            const state: CoerceoState = new CoerceoState(board, 0, PlayerNumberMap.of(1, 0), PlayerNumberMap.of(0, 0));
             testUtils.expectElementNotToExist('#tilesCount0');
             await testUtils.setupState(state);
             testUtils.expectElementToExist('#tilesCount0');
@@ -69,8 +70,9 @@ describe('CoerceoComponent', () => {
                 [N, N, N, N, N, N, X, _, X, _, _, _, N, N, N],
                 [N, N, N, N, N, N, _, _, _, N, N, N, N, N, N],
             ];
-            const previousState: CoerceoState = new CoerceoState(previousBoard, 2, [2, 0], [0, 0]);
-            const state: CoerceoState = new CoerceoState(board, 3, [0, 0], [1, 0]);
+            const previousState: CoerceoState =
+                new CoerceoState(previousBoard, 2, PlayerNumberMap.of(2, 0), PlayerNumberMap.of(0, 0));
+            const state: CoerceoState = new CoerceoState(board, 3, PlayerNumberMap.of(0, 0), PlayerNumberMap.of(1, 0));
             const previousMove: CoerceoMove = CoerceoTileExchangeMove.of(new Coord(8, 6));
 
             // When rendering the board
@@ -113,9 +115,10 @@ describe('CoerceoComponent', () => {
                 [N, N, N, N, N, N, X, _, _, N, N, N, N, N, N],
                 [N, N, N, N, N, N, _, _, O, N, N, N, N, N, N],
             ];
-            const previousState: CoerceoState = new CoerceoState(previousBoard, 2, [0, 0], [0, 0]);
+            const previousState: CoerceoState =
+                new CoerceoState(previousBoard, 2, PlayerNumberMap.of(0, 0), PlayerNumberMap.of(0, 0));
             const previousMove: CoerceoMove = CoerceoTileExchangeMove.of(new Coord(8, 6));
-            const state: CoerceoState = new CoerceoState(board, 3, [0, 0], [1, 0]);
+            const state: CoerceoState = new CoerceoState(board, 3, PlayerNumberMap.of(0, 0), PlayerNumberMap.of(1, 0));
 
             // When rendering the board
             await testUtils.setupState(state, { previousState, previousMove });
@@ -250,7 +253,7 @@ describe('CoerceoComponent', () => {
                 [N, N, N, N, N, N, _, _, _, N, N, N, N, N, N],
                 [N, N, N, N, N, N, O, _, _, N, N, N, N, N, N],
             ];
-            const state: CoerceoState = new CoerceoState(board, 1, [0, 2], [0, 0]);
+            const state: CoerceoState = new CoerceoState(board, 1, PlayerNumberMap.of(0, 2), PlayerNumberMap.of(0, 0));
             const previousMove: CoerceoMove = CoerceoRegularMove.of(new Coord(8, 9), new Coord(6, 9));
             await testUtils.setupState(state, { previousMove });
             testUtils.expectElementToHaveClass('#last_end_6_9', 'last-move-stroke');

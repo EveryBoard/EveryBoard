@@ -11,6 +11,7 @@ import { GobanGameComponent } from 'src/app/components/game-components/goban-gam
 import { MCTS } from 'src/app/jscaip/AI/MCTS';
 import { PenteMoveGenerator } from './PenteMoveGenerator';
 import { PenteAlignmentHeuristic } from './PenteAlignmentHeuristic';
+import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 import { Minimax } from 'src/app/jscaip/AI/Minimax';
 
 @Component({
@@ -32,7 +33,7 @@ export class PenteComponent extends GobanGameComponent<PenteRules, PenteMove, Pe
             new MCTS($localize`MCTS`, new PenteMoveGenerator(), this.rules),
         ];
         this.encoder = PenteMove.encoder;
-        this.scores = MGPOptional.of([0, 0]);
+        this.scores = MGPOptional.of(PlayerNumberMap.of(0, 0));
     }
 
     public async updateBoard(_triggerAnimation: boolean): Promise<void> {

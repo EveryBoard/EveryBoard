@@ -23,6 +23,7 @@ import { GipfMoveGenerator } from './GipfMoveGenerator';
 import { GipfScoreHeuristic } from './GipfScoreHeuristic';
 import { Minimax } from 'src/app/jscaip/AI/Minimax';
 import { GipfCapture } from 'src/app/jscaip/GipfProjectHelper';
+import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 
 @Component({
     selector: 'app-gipf',
@@ -72,7 +73,7 @@ export class GipfComponent extends HexagonalGameComponent<GipfRules,
         ];
         this.encoder = GipfMove.encoder;
         this.hasAsymmetricBoard = true;
-        this.scores = MGPOptional.of([0, 0]);
+        this.scores = MGPOptional.of(PlayerNumberMap.of(0, 0));
 
         this.SPACE_SIZE = 40;
         this.constructedState = this.getState();
@@ -82,17 +83,28 @@ export class GipfComponent extends HexagonalGameComponent<GipfRules,
                                          FlatHexaOrientation.INSTANCE);
     }
 
-    public async updateBoard(_triggerAnimation: boolean): Promise<void> {
-        this.cancelMoveAttempt();
+    public override async updateBoard(_triggerAnimation: boolean): Promise<void> {
+        this.constructedState = this.getState();
+        this.captured = [];
+        this.moved = [];
+        this.initialCaptures = [];
+        this.finalCaptures = [];
+        this.placementEntrance = MGPOptional.empty();
+        this.placement = MGPOptional.empty();
+        this.arrows = [];
+        this.moveToInitialCaptureOrPlacementPhase();
     }
 
     public override async showLastMove(move: GipfMove): Promise<void> {
+        const previousState: GipfState = this.getPreviousState();
+        move.initialCaptures.forEach((c: GipfCapture) => this.markCapture(c));
+        move.finalCaptures.forEach((c: GipfCapture) => this.markCapture(c));
+        this.moved = this.rules.getPiecesMoved(previousState, move.initialCaptures, move.placement);
         this.inserted = MGPOptional.empty();
         if (move.placement.direction.isPresent()) {
             const lastPlacement: GipfPlacement = move.placement;
             this.inserted = MGPOptional.of(this.arrowTowards(lastPlacement.coord, lastPlacement.direction.get()));
         }
-        this.cancelMoveAttempt();
     }
 
     private arrowTowards(placement: Coord, direction: HexaDirection): Arrow {
@@ -281,24 +293,17 @@ export class GipfComponent extends HexagonalGameComponent<GipfRules,
         this.constructedState = this.getState();
         this.captured = [];
         this.moved = [];
-
-        const moveOptional: MGPOptional<GipfMove> = this.node.previousMove;
-        if (moveOptional.isPresent()) {
-            const move: GipfMove = moveOptional.get();
-            const previousState: GipfState = this.getPreviousState();
-            move.initialCaptures.forEach((c: GipfCapture) => this.markCapture(c));
-            move.finalCaptures.forEach((c: GipfCapture) => this.markCapture(c));
-            this.moved = this.rules.getPiecesMoved(previousState, move.initialCaptures, move.placement);
-        }
-
         this.initialCaptures = [];
         this.finalCaptures = [];
         this.placementEntrance = MGPOptional.empty();
         this.placement = MGPOptional.empty();
-
         this.arrows = [];
-
         this.moveToInitialCaptureOrPlacementPhase();
+    }
+
+    public override hideLastMove(): void {
+        this.arrows = [];
+        this.inserted = MGPOptional.empty();
     }
 
     public getSpaceClass(coord: Coord): string {
@@ -313,7 +318,7 @@ export class GipfComponent extends HexagonalGameComponent<GipfRules,
 
     public getPieceClass(coord: Coord): string {
         const piece: FourStatePiece = this.getPiece(coord);
-        return this.getPlayerClass(Player.of(piece.value));
+        return this.getPlayerClass(piece.getPlayer());
     }
 
     public getRemainingPieceCy(player: Player): number {
