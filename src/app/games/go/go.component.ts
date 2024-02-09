@@ -21,8 +21,12 @@ import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
 })
 @Debug.log
-export class GoComponent
-    extends GobanGameComponent<GoRules, GoMove, GoState, GoPiece, GoConfig, GoLegalityInformation>
+export class GoComponent extends GobanGameComponent<GoRules,
+                                                    GoMove,
+                                                    GoState,
+                                                    GoPiece,
+                                                    GoConfig,
+                                                    GoLegalityInformation>
 {
 
     public boardInfo: GroupDatas<GoPiece>;
@@ -47,7 +51,14 @@ export class GoComponent
         this.scores = MGPOptional.of(PlayerNumberMap.of(0, 0));
     }
 
-    public async onClick(x: number, y: number): Promise<MGPValidation> {
+    public async onClickByXY(x: number, y: number): Promise<MGPValidation> {
+        const coord: Coord = new Coord(x, y);
+        return this.onClick(coord);
+    }
+
+    public async onClick(coord: Coord): Promise<MGPValidation> {
+        const x: number = coord.x;
+        const y: number = coord.y;
         const clickValidity: MGPValidation = await this.canUserPlay('#click_' + x + '_' + y);
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
@@ -96,11 +107,11 @@ export class GoComponent
     public override async pass(): Promise<MGPValidation> {
         const phase: Phase = this.getState().phase;
         if (phase === Phase.PLAYING || phase === Phase.PASSED) {
-            return this.onClick(GoMove.PASS.coord.x, GoMove.PASS.coord.y);
+            return this.onClick(GoMove.PASS.coord);
         }
         Utils.assert(phase === Phase.COUNTING || phase === Phase.ACCEPT,
                      'GoComponent: pass() must be called only in playing, passed, counting, or accept phases');
-        return this.onClick(GoMove.ACCEPT.coord.x, GoMove.ACCEPT.coord.y);
+        return this.onClick(GoMove.ACCEPT.coord);
     }
 
     public getSpaceClass(x: number, y: number): string {

@@ -3,9 +3,10 @@
      [attr.viewBox]="getViewBox().toSVGString()"
      preserveAspectRatio="xMidYMid meet">
     <rect x="0" y="0"
-          [attr.width]="board.length * SPACE_SIZE"
-          [attr.height]="board.length * SPACE_SIZE"
-          class="base mid-small-stroke" />
+          [attr.width]="getState().getWidth() * SPACE_SIZE"
+          [attr.height]="getState().getHeight() * SPACE_SIZE"
+          class="base mid-small-stroke"
+    />
     <g *ngFor="let line of board; index as y">
         <g *ngFor="let spaceContent of line; index as x"
             id="click_{{ x }}_{{ y }}"
@@ -23,17 +24,20 @@
                       [attr.x]="SPACE_SIZE * x"
                       [attr.y]="SPACE_SIZE * y"
                       class="base no-stroke"
-                      fill-opacity="0" />
+                      fill-opacity="0"
+                />
                 <line [attr.x1]="SPACE_SIZE * x"
                       [attr.y1]="(SPACE_SIZE * 0.5) + (SPACE_SIZE * y)"
                       [attr.x2]="SPACE_SIZE + (SPACE_SIZE * x)"
                       [attr.y2]="(SPACE_SIZE * 0.5) + (SPACE_SIZE * y)"
-                      class="base"/>
+                      class="base"
+                />
                 <line [attr.x1]="(SPACE_SIZE * 0.5) + (SPACE_SIZE * x)"
                       [attr.y1]="SPACE_SIZE * y"
                       [attr.x2]="(SPACE_SIZE * 0.5) + (SPACE_SIZE * x)"
                       [attr.y2]="(SPACE_SIZE) + (SPACE_SIZE * y)"
-                      class="base"/>
+                      class="base"
+                />
                 <circle *ngIf="isHoshi(x, y)"
                         id="hoshi_{{ x }}_{{ y }}"
                         class="base-no-stroke"

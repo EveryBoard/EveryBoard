@@ -2,54 +2,19 @@
      width="100%" height="100%"
      [attr.viewBox]="getViewBox().toSVGString()"
      preserveAspectRatio="xMidYMid meet">
-    <rect x="0" y="0"
-          [attr.width]="getState().getWidth() * SPACE_SIZE"
-          [attr.height]="getState().getHeight() * SPACE_SIZE"
-          class="base mid-small-stroke"
-    />
-    <g id="blank_board">
-        <g *ngFor="let line of board; index as y">
-            <g *ngFor="let spaceContent of line; index as x">
-                <rect id="click_{{ x }}_{{ y }}"
-                      [attr.width]="SPACE_SIZE"
-                      [attr.height]="SPACE_SIZE"
-                      [attr.x]="SPACE_SIZE * x"
-                      [attr.y]="SPACE_SIZE * y"
-                      (click)="onClick(x, y)"
-                      class="base no-stroke"
-                      fill-opacity="0"
-                />
-                <line [attr.x1]="SPACE_SIZE * x"
-                      [attr.y1]="(SPACE_SIZE * 0.5) + (SPACE_SIZE * y)"
-                      [attr.x2]="SPACE_SIZE + (SPACE_SIZE * x)"
-                      [attr.y2]="(SPACE_SIZE * 0.5) + (SPACE_SIZE * y)"
-                      (click)="onClick(x, y)"
-                      class="base"/>
-                <line [attr.x1]="(SPACE_SIZE * 0.5) + (SPACE_SIZE * x)"
-                      [attr.y1]="SPACE_SIZE * y"
-                      [attr.x2]="(SPACE_SIZE * 0.5) + (SPACE_SIZE * x)"
-                      [attr.y2]="SPACE_SIZE + (SPACE_SIZE * y)"
-                      (click)="onClick(x, y)"
-                      class="base"/>
-            </g>
-        </g>
-        <circle *ngFor="let hoshi of hoshis"
-                id="hoshi_{{ hoshi.x }}_{{ hoshi.y }}"
-                class="base-no-stroke"
-                [attr.cx]="(SPACE_SIZE * 0.5) + (SPACE_SIZE * hoshi.x)"
-                [attr.cy]="(SPACE_SIZE * 0.5) + (SPACE_SIZE * hoshi.y)"
-                [attr.r]="SPACE_SIZE * 0.2"
-                (click)="onClick(hoshi.x, hoshi.y)"
-        />
-    </g>
-    <g id="piece_ko_territory_markers_and_dead_stones">
+
+    <g app-blank-goban
+       [width]="getState().getWidth()"
+       [height]="getState().getHeight()"
+       (clickCallBack)="onClick($event)">
+  </g><g id="piece_ko_territory_markers_and_dead_stones">
         <g *ngFor="let line of board; index as y">
             <g *ngFor="let spaceContent of line; index as x">
                 <g *ngIf="spaceIsFull(x, y) else empty">
                     <circle [attr.cx]="(SPACE_SIZE * 0.5) + (SPACE_SIZE * x)"
                             [attr.cy]="(SPACE_SIZE * 0.5) + (SPACE_SIZE * y)"
                             [attr.r]="SPACE_SIZE * 0.44"
-                            (click)="onClick(x, y)"
+                            (click)="onClickByXY(x, y)"
                             [ngClass]="getSpaceClass(x, y)"
                             class="base"
                     />
@@ -60,7 +25,7 @@
                             class="base no-fill last-move-stroke"
                     />
                     <line *ngIf="isDead(x, y)"
-                          (click)="onClick(x, y)"
+                          (click)="onClickByXY(x, y)"
                           [attr.x1]="SPACE_SIZE * x"
                           [attr.y1]="SPACE_SIZE * y"
                           [attr.x2]="SPACE_SIZE + (SPACE_SIZE * x)"
@@ -74,7 +39,7 @@
                             [attr.cy]="(SPACE_SIZE * 0.5) + (SPACE_SIZE * y)"
                             [attr.r]="SPACE_SIZE * 0.2"
                             [attr.class]="spaceContent === GoPiece.LIGHT_TERRITORY ? 'player1-fill' : 'player0-fill'"
-                            (click)="onClick(x, y)"
+                            (click)="onClickByXY(x, y)"
                     />
                 </ng-template>
             </g>
@@ -88,7 +53,7 @@
           class="captured-stroke mid-stroke no-fill"
     />
     <circle *ngFor="let capture of captures"
-            (click)="onClick(capture.x, capture.y)"
+            (click)="onClick(capture)"
             [attr.cx]="(SPACE_SIZE * 0.5) + (SPACE_SIZE * capture.x)"
             [attr.cy]="(SPACE_SIZE * 0.5) + (SPACE_SIZE * capture.y)"
             [attr.r]="SPACE_SIZE * 0.14"

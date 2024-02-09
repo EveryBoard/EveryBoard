@@ -39,12 +39,14 @@ export class ConnectSixComponent extends GobanGameComponent<ConnectSixRules,
         ];
         this.encoder = ConnectSixMove.encoder;
     }
+
     public async updateBoard(_triggerAnimation: boolean): Promise<void> {
         const state: ConnectSixState = this.getState();
         this.board = state.getCopiedBoard();
         this.victoryCoords = ConnectSixRules.getVictoriousCoords(state);
         this.createHoshis();
     }
+
     public override async showLastMove(move: ConnectSixMove): Promise<void> {
         if (move instanceof ConnectSixFirstMove) {
             this.lastMoved = [move.coord];
@@ -52,7 +54,10 @@ export class ConnectSixComponent extends GobanGameComponent<ConnectSixRules,
             this.lastMoved = [move.getFirst(), move.getSecond()];
         }
     }
-    public async onClick(x: number, y: number): Promise<MGPValidation> {
+
+    public async onClick(coord: Coord): Promise<MGPValidation> {
+        const x: number = coord.x;
+        const y: number = coord.y;
         const clickValidity: MGPValidation = await this.canUserPlay('#click_' + x + '_' + y);
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
@@ -78,6 +83,7 @@ export class ConnectSixComponent extends GobanGameComponent<ConnectSixRules,
             }
         }
     }
+
     public getSpaceClass(x: number, y: number): string[] {
         const coord: Coord = new Coord(x, y);
         const owner: PlayerOrNone = this.getState().getPieceAt(coord);
@@ -96,7 +102,9 @@ export class ConnectSixComponent extends GobanGameComponent<ConnectSixRules,
         }
         return classes;
     }
+
     public override cancelMoveAttempt(): void {
         this.droppedCoord = MGPOptional.empty();
     }
+
 }

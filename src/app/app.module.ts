@@ -126,6 +126,7 @@ import { FirestoreTimePipe } from './pipes-and-directives/firestore-time.pipe';
 
 import { ToggleVisibilityDirective } from './pipes-and-directives/toggle-visibility.directive';
 import { RulesConfigurationComponent } from './components/wrapper-components/rules-configuration/rules-configuration.component';
+import { BlankGobanComponent } from './components/game-components/goban-game-component/blank-goban/blank-goban.component';
 
 registerLocaleData(localeFr);
 
@@ -221,6 +222,7 @@ export class FirebaseProviders {
         EncapsuleComponent,
         EpaminondasComponent,
         GipfComponent,
+        BlankGobanComponent,
         GoComponent,
         HiveComponent, HivePieceComponent,
         HnefataflComponent,
