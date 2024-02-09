@@ -473,12 +473,6 @@
       <trans-unit id="7285945849261218681" datatype="html">
         <source>This game has ended.</source>
       </trans-unit>
-      <trans-unit id="4517991218544205155" datatype="html">
-        <source>You are an observer in this game, you cannot play.</source>
-      </trans-unit>
-      <trans-unit id="7360329324887745743" datatype="html">
-        <source>You must answer your opponent&apos;s request.</source>
-      </trans-unit>
       <trans-unit id="443650994975920138" datatype="html">
         <source>This game (<x id="PH" equiv-text="gameName"/>) does not exist.</source>
       </trans-unit>
@@ -619,6 +613,12 @@
       </trans-unit>
       <trans-unit id="777716481777788338" datatype="html">
         <source>The game you tried to join does not exist.</source>
+      </trans-unit>
+      <trans-unit id="4517991218544205155" datatype="html">
+        <source>You are an observer in this game, you cannot play.</source>
+      </trans-unit>
+      <trans-unit id="7360329324887745743" datatype="html">
+        <source>You must answer your opponent&apos;s request.</source>
       </trans-unit>
       <trans-unit id="1487672983218679675" datatype="html">
         <source>5 minutes</source>
@@ -793,6 +793,9 @@
       </trans-unit>
       <trans-unit id="7583363829279229518" datatype="html">
         <source>Congratulations, you completed the tutorial.</source>
+      </trans-unit>
+      <trans-unit id="1930146585049479552" datatype="html">
+        <source>You cannot click, this is a demo.</source>
       </trans-unit>
       <trans-unit id="6050846802280051862" datatype="html">
         <source>You cannot move more than 3 of your pieces!</source>

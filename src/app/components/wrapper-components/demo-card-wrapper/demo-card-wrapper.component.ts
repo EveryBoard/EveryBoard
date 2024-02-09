@@ -28,6 +28,8 @@ export class DemoCardWrapperComponent extends GameWrapper<string> implements Aft
     @ViewChild('board', { read: ViewContainerRef })
     public override boardRef: ViewContainerRef | null = null;
 
+    private gameComponentIsSetup: boolean = false;
+
     public constructor(activatedRoute: ActivatedRoute,
                        connectedUserService: ConnectedUserService,
                        router: Router,
@@ -55,6 +57,7 @@ export class DemoCardWrapperComponent extends GameWrapper<string> implements Aft
                 // Update the view after the click
                 this.cdr.detectChanges();
             }
+            this.gameComponentIsSetup = true;
             await this.setRole(PlayerOrNone.NONE);
         }, 1);
     }
@@ -89,7 +92,13 @@ export class DemoCardWrapperComponent extends GameWrapper<string> implements Aft
     }
 
     public override async canUserPlay(_clickedElementName: string): Promise<MGPValidation> {
-        return MGPValidation.failure(TutorialGameWrapperMessages.THIS_IS_A_DEMO());
+        if (this.gameComponentIsSetup) {
+            // This click is done by ourselves , to set up the game component for the demo
+            return MGPValidation.failure(TutorialGameWrapperMessages.THIS_IS_A_DEMO());
+        } else {
+            // This is when some user try to click on a demo
+            return MGPValidation.SUCCESS;
+        }
     }
 
 }

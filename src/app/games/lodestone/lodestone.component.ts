@@ -178,8 +178,7 @@ export class LodestoneComponent
         }
         this.hideLastMove();
         if (this.selectedCoord.equalsValue(coord)) {
-            await this.cancelMove();
-            return MGPValidation.SUCCESS;
+            return this.cancelMove();
         }
         this.selectedCoord = MGPOptional.of(coord);
         if (this.selectedLodestone.isPresent()) {
@@ -203,8 +202,7 @@ export class LodestoneComponent
         const player: Player = this.getCurrentPlayer();
         const playerLodestone: LodestonePieceLodestone = LodestonePieceLodestone.of(player, lodestone);
         if (this.selectedLodestone.equalsValue(playerLodestone)) {
-            await this.cancelMove();
-            return MGPValidation.SUCCESS;
+            return this.cancelMove();
         }
         this.selectedLodestone = MGPOptional.of(playerLodestone);
         if (this.selectedCoord.isPresent()) {
