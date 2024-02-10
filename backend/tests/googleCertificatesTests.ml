@@ -82,7 +82,7 @@ let tests = [
         let _ = ExternalTests.Mock.Http.mock_response (response ~headers `OK, body) in
         (* When getting the certificates *)
         (* Then it should fail *)
-        lwt_check_raises "failure" (UnexpectedError "missing or invalid max-age") (fun () ->
+        lwt_check_raises "failure" ((=) (UnexpectedError "missing or invalid max-age")) (fun () ->
             let* _ = GoogleCertificates.get () in Lwt.return ())
       );
 
@@ -96,7 +96,7 @@ let tests = [
         let _ = ExternalTests.Mock.Http.mock_response (response ~headers `OK, body) in
         (* When getting the certificates *)
         (* Then it should fail *)
-        lwt_check_raises "failure" (UnexpectedError "missing or invalid max-age") (fun () ->
+        lwt_check_raises "failure" ((=) (UnexpectedError "missing or invalid max-age")) (fun () ->
             let* _ = GoogleCertificates.get () in Lwt.return ())
       );
 
@@ -109,7 +109,7 @@ let tests = [
         let _ = ExternalTests.Mock.Http.mock_response (response ~headers `OK, body) in
         (* When getting the certificates *)
         (* Then it should fail *)
-        lwt_check_raises "failure" (UnexpectedError "No cache-control in response") (fun () ->
+        lwt_check_raises "failure" ((=) (UnexpectedError "No cache-control in response")) (fun () ->
             let* _ = GoogleCertificates.get () in Lwt.return ())
       );
 
@@ -124,7 +124,7 @@ let tests = [
         let _ = ExternalTests.Mock.Http.mock_response (response ~headers `OK, body) in
         (* When getting the certificates *)
         (* Then it should fail *)
-        lwt_check_raises "failure" (UnexpectedError "No certificates returned") (fun () ->
+        lwt_check_raises "failure" ((=) (UnexpectedError "No certificates returned")) (fun () ->
             let* _ = GoogleCertificates.get () in Lwt.return ())
       );
 

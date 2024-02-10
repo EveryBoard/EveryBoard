@@ -9,16 +9,15 @@ let test (name : string) (f : unit -> unit) =
 let lwt_test (name : string) (f : unit -> unit Lwt.t) =
   test_case name `Quick (fun _ -> f)
 
-let lwt_check_raises (name : string) (exn : exn) (f : unit -> unit Lwt.t) =
+let lwt_check_raises (name : string) (check_exn : exn -> bool) (f : unit -> unit Lwt.t) =
   try
     Lwt.bind (f ()) (fun _ ->
         Lwt.fail (Failure (Printf.sprintf "test %s should have failed but succeeded" name)))
   with
-  | exn' when exn' = exn -> Lwt.return () (* all good! *)
-  | exn' -> Lwt.fail (Failure (Printf.sprintf "test %s should have failed with %s but failed with %s"
+  | exn when check_exn exn  -> Lwt.return () (* all good! *)
+  | exn -> Lwt.fail (Failure (Printf.sprintf "test %s failed but with the wrong exception: %s"
                               name
-                              (Printexc.to_string exn)
-                              (Printexc.to_string exn')))
+                              (Printexc.to_string exn)))
 
 let status : Dream.status testable =
   let pp ppf status = Fmt.pf ppf "%s" (Dream.status_to_string status) in

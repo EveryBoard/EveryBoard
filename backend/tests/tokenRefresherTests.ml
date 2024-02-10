@@ -34,7 +34,7 @@ let tests = [
 
   "TokenRefresher.header", [
     lwt_test "should fail if the middleware is absent" (fun () ->
-        lwt_check_raises "failure" (UnexpectedError "get_token_field not set, the middleware is probably missing") (fun () ->
+        lwt_check_raises "failure" ((=) (UnexpectedError "get_token_field not set, the middleware is probably missing")) (fun () ->
             let request = Dream.request "/" in
             let* _ = TokenRefresher.header request in
             Lwt.return ()

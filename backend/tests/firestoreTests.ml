@@ -90,7 +90,7 @@ let test_get type_ get collection ?(mask = "") doc expected conversion = [
         FirestorePrimitivesTests.Mock.doc_to_return := None;
         (* When trying to get a user with get_user *)
         (* Then it should fail *)
-        lwt_check_raises "failure" (DocumentNotFound (collection ^ "/id" ^ mask)) (fun () ->
+        lwt_check_raises "failure" ((=) (DocumentNotFound (collection ^ "/id" ^ mask))) (fun () ->
             let* _ = get request "id" in
             Lwt.return ())
       );
@@ -101,7 +101,10 @@ let test_get type_ get collection ?(mask = "") doc expected conversion = [
         FirestorePrimitivesTests.Mock.doc_to_return := Some (`Assoc [("not-a", `String "user!")]);
         (* When getting it with get_user *)
         (* Then it should raise an error *)
-        lwt_check_raises "failure" (DocumentInvalid (collection ^ "/id")) (fun () ->
+        let invalid_doc_error = function
+          | DocumentInvalid _ -> true (* the message contain details about the error, we don't want to match that precisely *)
+          | _ -> false in
+        lwt_check_raises "failure" invalid_doc_error (fun () ->
             let* _ = get request "id" in
             Lwt.return ())
       );
@@ -141,7 +144,7 @@ let tests = [
         let transaction_body () = raise (Failure "Error!") in
         (* When doing it *)
         (* Then it should have begun and rolled back the transaction *)
-        let* _ = lwt_check_raises "failure" (Failure "Error!") (fun () ->
+        let* _ = lwt_check_raises "failure" ((=) (Failure "Error!")) (fun () ->
             let* _ = Firestore.transaction request transaction_body in
             Lwt.return ()) in
         let started = !FirestorePrimitivesTests.Mock.started_transactions in

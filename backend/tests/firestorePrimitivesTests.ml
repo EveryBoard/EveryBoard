@@ -103,7 +103,7 @@ let tests = [
         let _ = ExternalTests.Mock.Http.mock_response (response `Not_found, "") in
         (* When retrieving the document *)
         (* Then it should fail *)
-        lwt_check_raises "failure" (DocumentNotFound "some-doc-that-doesnt-exist") (fun () ->
+        lwt_check_raises "failure" ((=) (DocumentNotFound "some-doc-that-doesnt-exist")) (fun () ->
             let* _ = FirestorePrimitives.get_doc request "some-doc-that-doesnt-exist" in
             Lwt.return ()
           )
@@ -156,7 +156,7 @@ let tests = [
         let response = response `Bad_request in
         let _ = ExternalTests.Mock.Http.mock_response (response, "{}") in
         (* Then it should fail *)
-        lwt_check_raises "failure" (UnexpectedError "error on document creation for collection") (fun () ->
+        lwt_check_raises "failure" ((=) (UnexpectedError "error on document creation for collection")) (fun () ->
             let* _ = FirestorePrimitives.create_doc request "collection" doc in
             Lwt.return ())
       );
@@ -187,7 +187,7 @@ let tests = [
         (* When we update it and the update fails*)
         let _ = ExternalTests.Mock.Http.mock_response (response `Bad_request, "") in
         (* Then it should fail *)
-        lwt_check_raises "failure" (UnexpectedError "error on document update for collection/some-id") (fun () ->
+        lwt_check_raises "failure" ((=) (UnexpectedError "error on document update for collection/some-id")) (fun () ->
             let* _ = FirestorePrimitives.update_doc request "collection/some-id" update in
             Lwt.return ())
       );
@@ -214,7 +214,7 @@ let tests = [
         (* When we update it *)
         let _ = ExternalTests.Mock.Http.mock_response (response `Bad_request, "") in
         (* Then it should fail *)
-        lwt_check_raises "failure" (UnexpectedError "error on document deletion for collection/some-id") (fun () ->
+        lwt_check_raises "failure" ((=) (UnexpectedError "error on document deletion for collection/some-id")) (fun () ->
             let* _ = FirestorePrimitives.delete_doc request path in
             Lwt.return ())
       );
@@ -241,7 +241,7 @@ let tests = [
         (* When we try to begin a transaction but it fails *)
         let _ = ExternalTests.Mock.Http.mock_response (response `Bad_request, "{}") in
         (* Then it should fail *)
-        lwt_check_raises "failure" (UnexpectedError "error when beginning transaction") (fun () ->
+        lwt_check_raises "failure" ((=) (UnexpectedError "error when beginning transaction")) (fun () ->
             let* _ = FirestorePrimitives.begin_transaction request in
             Lwt.return ())
       );
@@ -267,7 +267,7 @@ let tests = [
         let transaction_id = "transaction-id" in
         let _ = ExternalTests.Mock.Http.mock_response (response `Bad_request, "{}") in
         (* Then it should fail *)
-        lwt_check_raises "failure" (UnexpectedError "error when committing transaction") (fun () ->
+        lwt_check_raises "failure" ((=) (UnexpectedError "error when committing transaction")) (fun () ->
             let* _ = FirestorePrimitives.commit request transaction_id in
             Lwt.return ())
       );
@@ -293,7 +293,7 @@ let tests = [
         let transaction_id = "transaction-id" in
         let _ = ExternalTests.Mock.Http.mock_response (response `Bad_request, "{}") in
         (* Then it should fail *)
-        lwt_check_raises "failure" (UnexpectedError "error when rolling back transaction") (fun () ->
+        lwt_check_raises "failure" ((=) (UnexpectedError "error when rolling back transaction")) (fun () ->
             let* _ = FirestorePrimitives.rollback request transaction_id in
             Lwt.return ())
       );
