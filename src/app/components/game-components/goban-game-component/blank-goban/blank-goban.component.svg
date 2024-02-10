@@ -31,10 +31,9 @@
     <svg:g/>
     <svg:circle *ngFor="let hoshi of hoshis"
                 id="hoshi_{{ hoshi.x }}_{{ hoshi.y }}"
-                class="base-no-stroke"
+                class="base-no-stroke click-delegator"
                 [attr.cx]="(SPACE_SIZE * 0.5) + (SPACE_SIZE * hoshi.x)"
                 [attr.cy]="(SPACE_SIZE * 0.5) + (SPACE_SIZE * hoshi.y)"
                 [attr.r]="SPACE_SIZE * 0.2"
-                (click)="onClick(hoshi.x, hoshi.y)"
     />
 <svg:g/>

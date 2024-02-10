@@ -13,13 +13,19 @@ import { PenteMoveGenerator } from './PenteMoveGenerator';
 import { PenteAlignmentHeuristic } from './PenteAlignmentHeuristic';
 import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 import { Minimax } from 'src/app/jscaip/AI/Minimax';
+import { PenteConfig } from './PenteConfig';
 
 @Component({
     selector: 'app-new-game',
     templateUrl: './pente.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
 })
-export class PenteComponent extends GobanGameComponent<PenteRules, PenteMove, PenteState, PlayerOrNone> {
+export class PenteComponent extends GobanGameComponent<PenteRules,
+                                                       PenteMove,
+                                                       PenteState,
+                                                       PlayerOrNone,
+                                                       PenteConfig>
+{
 
     public lastMoved: MGPOptional<Coord> = MGPOptional.empty();
     public victoryCoords: Coord[] = [];
@@ -40,7 +46,8 @@ export class PenteComponent extends GobanGameComponent<PenteRules, PenteMove, Pe
         const state: PenteState = this.getState();
         this.board = state.board;
         this.scores = MGPOptional.of(this.getState().captures);
-        this.victoryCoords = PenteRules.PENTE_HELPER.getVictoriousCoord(state);
+        const config: MGPOptional<PenteConfig> = this.getConfig();
+        this.victoryCoords = this.rules.getHelper(config).getVictoriousCoord(state);
         this.createHoshis();
         this.cancelMoveAttempt();
     }
@@ -56,7 +63,11 @@ export class PenteComponent extends GobanGameComponent<PenteRules, PenteMove, Pe
         this.captured = [];
     }
 
-    public async onClick(x: number, y: number): Promise<MGPValidation> {
+    public async onClick(coord: Coord): Promise<MGPValidation> {
+        return this.onClickXY(coord.x, coord.y);
+    }
+
+    public async onClickXY(x: number, y: number): Promise<MGPValidation> {
         const clickValidity: MGPValidation = await this.canUserPlay('#click_' + x + '_' + y);
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());

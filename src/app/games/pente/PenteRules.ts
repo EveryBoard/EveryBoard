@@ -12,19 +12,26 @@ import { Utils } from 'src/app/utils/utils';
 import { PenteMove } from './PenteMove';
 import { PenteState } from './PenteState';
 import { GobanConfig } from 'src/app/jscaip/GobanConfig';
-import { RulesConfigDescription, RulesConfigDescriptions } from 'src/app/components/wrapper-components/rules-configuration/RulesConfigDescription';
+import { NumberConfig, RulesConfigDescription, RulesConfigDescriptionLocalizable } from 'src/app/components/wrapper-components/rules-configuration/RulesConfigDescription';
 import { TableUtils } from 'src/app/utils/ArrayUtils';
 import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
+import { PenteConfig } from './PenteConfig';
+import { MGPValidators } from 'src/app/utils/MGPValidator';
 
 export class PenteNode extends GameNode<PenteMove, PenteState> {}
 
-export class PenteRules extends ConfigurableRules<PenteMove, PenteState, GobanConfig> {
+export class PenteRules extends ConfigurableRules<PenteMove, PenteState, PenteConfig> {
 
-    public static readonly PENTE_HELPER: NInARowHelper<PlayerOrNone> =
-        new NInARowHelper(Utils.identity, 5);
-
-    public static readonly RULES_CONFIG_DESCRIPTION: RulesConfigDescription<GobanConfig> =
-        RulesConfigDescriptions.GOBAN;
+    public static readonly RULES_CONFIG_DESCRIPTION: RulesConfigDescription<PenteConfig> =
+        new RulesConfigDescription<PenteConfig>({
+            name: (): string => $localize`Default`,
+            config: {
+                width: new NumberConfig(19, RulesConfigDescriptionLocalizable.WIDTH, MGPValidators.range(1, 99)),
+                height: new NumberConfig(19, RulesConfigDescriptionLocalizable.HEIGHT, MGPValidators.range(1, 99)),
+                winAfterNCapture: new NumberConfig(5, () => $localize`Captures needed to win (in pair)`, MGPValidators.range(1, 123456)),
+                nInARow: new NumberConfig(5, () => $localize`N In A Row`, MGPValidators.range(3, 99)),
+            },
+        });
 
     private static singleton: MGPOptional<PenteRules> = MGPOptional.empty();
 
@@ -46,7 +53,7 @@ export class PenteRules extends ConfigurableRules<PenteMove, PenteState, GobanCo
         return new PenteState(board, PlayerNumberMap.of(0, 0), 0);
     }
 
-    public override getRulesConfigDescription(): MGPOptional<RulesConfigDescription<GobanConfig>> {
+    public override getRulesConfigDescription(): MGPOptional<RulesConfigDescription<PenteConfig>> {
         return MGPOptional.of(PenteRules.RULES_CONFIG_DESCRIPTION);
     }
 
@@ -93,13 +100,13 @@ export class PenteRules extends ConfigurableRules<PenteMove, PenteState, GobanCo
         return captures;
     }
 
-    public getGameStatus(node: PenteNode): GameStatus {
+    public getGameStatus(node: PenteNode, config: MGPOptional<PenteConfig>): GameStatus {
         const state: PenteState = node.gameState;
         const opponent: Player = state.getCurrentOpponent();
-        if (10 <= state.captures.get(opponent)) {
+        if (config.get().winAfterNCapture * 2 <= state.captures.get(opponent)) {
             return GameStatus.getVictory(opponent);
         }
-        const victoriousCoord: Coord[] = PenteRules.PENTE_HELPER.getVictoriousCoord(state);
+        const victoriousCoord: Coord[] = this.getHelper(config).getVictoriousCoord(state);
         if (victoriousCoord.length > 0) {
             return GameStatus.getVictory(opponent);
         }
@@ -107,6 +114,16 @@ export class PenteRules extends ConfigurableRules<PenteMove, PenteState, GobanCo
             return GameStatus.ONGOING;
         } else {
             return GameStatus.DRAW;
+        }
+    }
+
+    public getHelper(config: MGPOptional<PenteConfig>): NInARowHelper<PlayerOrNone> {
+        console.log(config)
+        if (config.isPresent()) {
+            return new NInARowHelper(Utils.identity, config.get().nInARow);
+        } else {
+            const defaultConfig: PenteConfig = PenteRules.RULES_CONFIG_DESCRIPTION.getDefaultConfig().config;
+            return new NInARowHelper(Utils.identity, defaultConfig.nInARow);
         }
     }
 
