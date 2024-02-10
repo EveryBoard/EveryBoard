@@ -68,14 +68,18 @@ module Make
       let* name = Firestore.Game.get_name request game_id in
       json_response `OK (`Assoc [("gameName", `String name)])
 
-  (** Delete a game. Performs 1 write. *)
+  (** Delete a game. Performs 3 writes. *)
   let delete : Dream.route = Dream.delete "game/:game_id" @@ fun request ->
     let game_id = Dream.param request "game_id" in
     Stats.set_action request "DELETE game";
     Stats.set_game_id request game_id;
-    (* TODO: also delete chat and config room etc. *)
+    Firestore.transaction request @@ fun () ->
     (* Write 1: delete the game *)
     let* _ = Firestore.Game.delete request game_id in
+    (* Write 2: delete the chat *)
+    let* _ = Firestore.ConfigRoom.delete request game_id in
+    (* Write 3: delete the config room *)
+    let* _ = Firestore.Chat.delete request game_id in
     Dream.empty `OK
 
   (** Accept a config and start the game. Perform 1 read and 3 writes. *)

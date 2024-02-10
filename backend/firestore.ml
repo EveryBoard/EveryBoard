@@ -52,6 +52,9 @@ module type FIRESTORE = sig
     (** Create a config room, with a given id *)
     val create : Dream.request -> string -> Domain.ConfigRoom.t -> unit Lwt.t
 
+    (** Delete a config room *)
+    val delete : deleter
+
     (** Add a candidate to the config room *)
     val add_candidate : Dream.request -> string -> Domain.MinimalUser.t -> unit Lwt.t
 
@@ -70,6 +73,9 @@ module type FIRESTORE = sig
   module Chat : sig
     (** Create an initial chat root *)
     val create : Dream.request -> string -> unit Lwt.t
+
+    (** Delete a chat *)
+    val delete : deleter
   end
 
 end
@@ -149,6 +155,9 @@ module Make (FirestorePrimitives : FirestorePrimitives.FIRESTORE_PRIMITIVES) : F
       let* _ = FirestorePrimitives.create_doc request "config-room" ~id json in
       Lwt.return ()
 
+    let delete (request : Dream.request) (game_id : string) : unit Lwt.t =
+      FirestorePrimitives.delete_doc request ("config-room/" ^ game_id)
+
     let add_candidate (request : Dream.request) (game_id : string) (user : Domain.MinimalUser.t) : unit Lwt.t =
       let user_json = Domain.MinimalUser.to_yojson user in
       let* _ = FirestorePrimitives.create_doc request ("config-room/" ^ game_id ^ "/candidates") ~id:user.id user_json in
@@ -172,6 +181,9 @@ module Make (FirestorePrimitives : FirestorePrimitives.FIRESTORE_PRIMITIVES) : F
       let chat = `Assoc [] in (* chats are empty, messages are in a sub collection *)
       let* _ = FirestorePrimitives.create_doc request "chats" ~id chat in
       Lwt.return ()
+
+    let delete (request : Dream.request) (game_id : string) : unit Lwt.t =
+      FirestorePrimitives.delete_doc request ("config-room/" ^ game_id)
   end
 
 end

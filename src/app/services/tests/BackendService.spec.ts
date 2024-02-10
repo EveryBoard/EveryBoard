@@ -61,7 +61,11 @@ export class BackendServiceMock {
 
     public async deleteGame(gameId: string): Promise<void> {
         // Write 1: delete the game
-        return this.configRoomDAO.delete(gameId);
+        await this.configRoomDAO.delete(gameId);
+        // Write 2: delete the chat
+        await this.chatDAO.delete(gameId);
+        // Write 3: delete the configRoom
+        await this.configRoomDAO.delete(gameId);
     }
 
     public async acceptConfig(gameId: string): Promise<void> {

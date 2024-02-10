@@ -13,10 +13,13 @@ let () =
     FirestorePrimitivesTests.tests;
     FirestoreTests.tests;
     AuthTests.tests;
+    (* TODO: CORS tests *)
+    (* TODO: ConfigRoom.tests *)
     (* TODO: GameTests.tests *)
+    (* TODO: server tests *)
   ]
 
-(* TODO: integration tests
+    (* TODO: integration tests, basically check with emulator for jwt & firestore. The actual use cases should be handled by e2e tests probably? *)
   Alcotest_lwt.run "integration tests" @@ List.concat [
       JwtTests.tests;
       (* TODO: tests with emulators *)
