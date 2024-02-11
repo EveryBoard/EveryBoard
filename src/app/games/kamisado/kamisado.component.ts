@@ -65,7 +65,6 @@ export class KamisadoComponent extends RectangularGameComponent<KamisadoRules,
     public async updateBoard(_triggerAnimation: boolean): Promise<void> {
         const state: KamisadoState = this.getState();
         this.board = state.getCopiedBoard();
-        this.lastPieceMove = MGPOptional.empty();
 
         this.canPass = KamisadoRules.mustPass(state);
         const isFinished: boolean = this.rules.getGameStatus(this.node) !== GameStatus.ONGOING;
@@ -82,6 +81,10 @@ export class KamisadoComponent extends RectangularGameComponent<KamisadoRules,
         if (KamisadoMove.isPiece(move)) {
             this.lastPieceMove = MGPOptional.of(move);
         }
+    }
+
+    public override hideLastMove(): void {
+        this.lastPieceMove = MGPOptional.empty();
     }
 
     public override async pass(): Promise<MGPValidation> {

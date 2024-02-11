@@ -1,5 +1,5 @@
 /* eslint-disable max-lines-per-function */
-import { TutorialGameWrapperComponent } from './tutorial-game-wrapper.component';
+import { TutorialGameWrapperComponent, TutorialGameWrapperMessages } from './tutorial-game-wrapper.component';
 import { TutorialStep } from './TutorialStep';
 import { QuartoMove } from 'src/app/games/quarto/QuartoMove';
 import { QuartoState } from 'src/app/games/quarto/QuartoState';
@@ -22,6 +22,7 @@ import { Player } from 'src/app/jscaip/Player';
 import { RulesConfig, RulesConfigUtils } from 'src/app/jscaip/RulesConfigUtil';
 import { QuartoRules } from 'src/app/games/quarto/QuartoRules';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { TutorialStepMessage } from './TutorialStepMessage';
 
 describe('TutorialGameWrapperComponent for non-existing game', () => {
     it('should redirect to /notFound', fakeAsync(async() => {
@@ -36,7 +37,12 @@ describe('TutorialGameWrapperComponent for non-existing game', () => {
         tick(0);
 
         // Then it goes to /notFound with the expected error message
-        expectValidRouting(router, ['/notFound', GameWrapperMessages.NO_MATCHING_GAME('invalid-game')], NotFoundComponent, { skipLocationChange: true });
+        expectValidRouting(
+            router,
+            ['/notFound', GameWrapperMessages.NO_MATCHING_GAME('invalid-game')],
+            NotFoundComponent,
+            { skipLocationChange: true },
+        );
     }));
 });
 
@@ -52,7 +58,9 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
     }));
 
     describe('Common behavior', () => {
+
         // ///////////////////////// Before ///////////////////////////////////////
+
         it('should create', () => {
             testUtils.expectToBeCreated();
         });
@@ -71,7 +79,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                     'instruction',
                     state,
                     ['#click_0_0'],
-                    'Congratulations!',
+                    TutorialStepMessage.CONGRATULATIONS(),
                     'Perdu.',
                 ),
             ];
@@ -101,7 +109,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                     'instruction',
                     tutorialState,
                     ['#click_0_0'],
-                    'Congratulations!',
+                    TutorialStepMessage.CONGRATULATIONS(),
                     'Perdu.',
                 ).withPreviousMove(tutorialPreviousMove),
             ];
@@ -189,7 +197,9 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             // Then it should call setRole with playerOne
             expect(wrapper.setRole).toHaveBeenCalledOnceWith(Player.ONE);
         }));
+
         // ///////////////////////// ATTEMPTING ///////////////////////////////////
+
         it('should go to specific step when clicking on it', fakeAsync(async() => {
             // Given a TutorialStep with 3 steps
             const tutorial: TutorialStep[] = [
@@ -222,7 +232,9 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             const currentMessage: string = testUtils.findElement('#currentMessage').nativeElement.innerHTML;
             expect(currentMessage).toBe(expectedMessage);
         }));
+
         // ///////////////////// Retry ///////////////////////////////////////////////////////////////////
+
         it('should start step again after clicking "retry" on step failure', fakeAsync(async() => {
             // Given any TutorialStep where an invalid move has been done
             const tutorial: TutorialStep[] = [
@@ -231,7 +243,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                     'instruction',
                     QuartoRules.get().getInitialState(),
                     [new QuartoMove(0, 0, QuartoPiece.BBBB)],
-                    'Congratulations!',
+                    TutorialStepMessage.CONGRATULATIONS(),
                     'Perdu.',
                 ),
             ];
@@ -259,7 +271,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                     'instruction',
                     QuartoRules.get().getInitialState(),
                     [new QuartoMove(0, 0, QuartoPiece.BBBB)],
-                    'Congratulations!',
+                    TutorialStepMessage.CONGRATULATIONS(),
                     'Perdu.',
                 ),
             ];
@@ -291,7 +303,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                         new QuartoMove(3, 3, QuartoPiece.BBBB),
                         new QuartoMove(3, 0, QuartoPiece.BBBB),
                     ],
-                    'Congratulations!',
+                    TutorialStepMessage.CONGRATULATIONS(),
                     'Perdu.',
                 ),
             ];
@@ -305,7 +317,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             await testUtils.expectClickForbidden('#chooseCoord_2_2', TutorialFailure.STEP_FINISHED());
 
             // expect to see still the steps success message on component
-            const expectedMessage: string = 'Congratulations!';
+            const expectedMessage: string = TutorialStepMessage.CONGRATULATIONS();
             const currentMessage: string =
                 testUtils.findElement('#currentMessage').nativeElement.innerHTML;
             expect(currentMessage).toBe(expectedMessage);
@@ -319,7 +331,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                     'instruction',
                     QuartoRules.get().getInitialState(),
                     ['#choosePiece_15'],
-                    'Congratulations!',
+                    TutorialStepMessage.CONGRATULATIONS(),
                     'Perdu.',
                 ),
             ];
@@ -332,11 +344,13 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             // expect to see success message again
             const currentMessage: string =
                 testUtils.findElement('#currentMessage').nativeElement.innerHTML;
-            expect(currentMessage).toBe('Congratulations!');
+            expect(currentMessage).toBe(TutorialStepMessage.CONGRATULATIONS());
             expect(testUtils.getGameComponent().getState())
                 .toEqual(QuartoRules.get().getInitialState());
         }));
+
         // /////////////////////// Next /////////////////////////////////////////////////////////
+
         it('should allow to skip step', fakeAsync(async() => {
             // Given a TutorialStep with one click
             wrapper.steps = [
@@ -345,7 +359,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                     'Explanation Explanation Explanation.',
                     QuartoRules.get().getInitialState(),
                     ['chooseCoord_0_0'],
-                    'Congratulations!',
+                    TutorialStepMessage.CONGRATULATIONS(),
                     'Perdu.',
                 ),
                 TutorialStep.forClick(
@@ -376,7 +390,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                     'instruction 0',
                     QuartoRules.get().getInitialState(),
                     ['#chooseCoord_0_0'],
-                    'Congratulations!',
+                    TutorialStepMessage.CONGRATULATIONS(),
                     'Perdu.',
                 ),
                 TutorialStep.forClick(
@@ -384,7 +398,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                     'instruction 1',
                     QuartoRules.get().getInitialState(),
                     ['#chooseCoord_1_1'],
-                    'Congratulations!',
+                    TutorialStepMessage.CONGRATULATIONS(),
                     'Perdu.',
                 ),
                 TutorialStep.forClick(
@@ -392,7 +406,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                     'instruction 2',
                     QuartoRules.get().getInitialState(),
                     ['#chooseCoord_2_2'],
-                    'Congratulations!',
+                    TutorialStepMessage.CONGRATULATIONS(),
                     'Perdu.',
                 ),
             ];
@@ -419,7 +433,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                     'instruction 0',
                     QuartoRules.get().getInitialState(),
                     ['#chooseCoord_0_0'],
-                    'Congratulations!',
+                    TutorialStepMessage.CONGRATULATIONS(),
                     'Perdu.',
                 ),
                 TutorialStep.forClick(
@@ -427,7 +441,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                     'instruction 1',
                     QuartoRules.get().getInitialState(),
                     ['#chooseCoord_1_1'],
-                    'Congratulations!',
+                    TutorialStepMessage.CONGRATULATIONS(),
                     'Perdu.',
                 ),
                 TutorialStep.forClick(
@@ -435,7 +449,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                     'instruction 2',
                     QuartoRules.get().getInitialState(),
                     ['#chooseCoord_2_2'],
-                    'Congratulations!',
+                    TutorialStepMessage.CONGRATULATIONS(),
                     'Perdu.',
                 ),
             ];
@@ -463,7 +477,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                     'instruction 0',
                     QuartoRules.get().getInitialState(),
                     ['#chooseCoord_0_0'],
-                    'Congratulations!',
+                    TutorialStepMessage.CONGRATULATIONS(),
                     'Perdu.',
                 ),
             ];
@@ -474,7 +488,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             await testUtils.clickElement('#nextButton');
 
             // expect to see end tutorial congratulations
-            const expectedMessage: string = wrapper.COMPLETED_TUTORIAL_MESSAGE;
+            const expectedMessage: string = TutorialGameWrapperMessages.COMPLETED_TUTORIAL_MESSAGE();
             const currentMessage: string =
                 testUtils.findElement('#currentMessage').nativeElement.innerHTML;
             expect(wrapper.successfulSteps).toBe(1);
@@ -551,9 +565,10 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             // expect navigator to have been called
             expectValidRouting(router, ['/play', 'Quarto'], OnlineGameCreationComponent);
         }));
+
     });
 
-    describe('TutorialStep awaiting specific moves', () => {
+    describe('TutorialStep expecting specific moves', () => {
         it('should show highlight of first click on multiclick game component', fakeAsync(async() => {
             // Given a TutorialStep with several moves
             const tutorial: TutorialStep[] = [
@@ -567,7 +582,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                         new QuartoMove(3, 3, QuartoPiece.BBBB),
                         new QuartoMove(3, 0, QuartoPiece.BBBB),
                     ],
-                    'Congratulations!',
+                    TutorialStepMessage.CONGRATULATIONS(),
                     'Perdu.',
                 ),
             ];
@@ -594,7 +609,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                         new QuartoMove(3, 3, QuartoPiece.BBBB),
                         new QuartoMove(3, 0, QuartoPiece.BBBB),
                     ],
-                    'Congratulations!',
+                    TutorialStepMessage.CONGRATULATIONS(),
                     'Perdu.',
                 ),
             ];
@@ -606,7 +621,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             await testUtils.expectMoveSuccess('#choosePiece_15', move);
 
             // expect to see steps success message on component
-            const expectedMessage: string = 'Congratulations!';
+            const expectedMessage: string = TutorialStepMessage.CONGRATULATIONS();
             const currentMessage: string =
                 testUtils.findElement('#currentMessage').nativeElement.innerHTML;
             expect(currentMessage).toBe(expectedMessage);
@@ -625,7 +640,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                         new QuartoMove(3, 3, QuartoPiece.BBBB),
                         new QuartoMove(3, 0, QuartoPiece.BBBB),
                     ],
-                    'Congratulations!',
+                    TutorialStepMessage.CONGRATULATIONS(),
                     'Perdu.',
                 ),
             ];
@@ -651,7 +666,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                     'instruction',
                     QuartoRules.get().getInitialState(),
                     new QuartoMove(0, 0, QuartoPiece.BABA),
-                    'Congratulations!',
+                    TutorialStepMessage.CONGRATULATIONS(),
                 ),
             ];
             await wrapper.startTutorial(tutorial);
@@ -683,7 +698,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                         [QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY],
                     ], 0, QuartoPiece.ABBA),
                     [new QuartoMove(3, 3, QuartoPiece.BBBB)],
-                    'Congratulations!',
+                    TutorialStepMessage.CONGRATULATIONS(),
                     'Perdu.',
                 ),
             ];
@@ -711,7 +726,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                     'instruction',
                     QuartoRules.get().getInitialState(),
                     new QuartoMove(0, 0, QuartoPiece.BABA),
-                    'Congratulations!',
+                    TutorialStepMessage.CONGRATULATIONS(),
                 ),
             ];
             await wrapper.startTutorial(tutorial);
@@ -738,7 +753,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                         [QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY],
                     ], stepInitialTurn, QuartoPiece.ABBA),
                     [awaitedMove],
-                    'Congratulations!',
+                    TutorialStepMessage.CONGRATULATIONS(),
                     'Perdu.',
                 ),
             ];
@@ -772,7 +787,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                         [QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY],
                     ], stepInitialTurn, QuartoPiece.ABBA),
                     [awaitedMove],
-                    'Congratulations!',
+                    TutorialStepMessage.CONGRATULATIONS(),
                     'Perdu.',
                 ),
             ];
@@ -790,7 +805,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             expect(testUtils.getGameComponent().getTurn()).toEqual(stepInitialTurn + 1);
             // and 'solution' message to be shown
             const currentMessage: string = testUtils.findElement('#currentMessage').nativeElement.innerHTML;
-            expect(currentMessage).toBe('Congratulations!');
+            expect(currentMessage).toBe(TutorialStepMessage.CONGRATULATIONS());
             // and step not to be considered a success
             expect(wrapper.stepFinished[wrapper.stepIndex]).toBeFalse();
             // And the move done should have triggered the animation
@@ -798,7 +813,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
         }));
     });
 
-    describe('TutorialStep awaiting any move', () => {
+    describe('TutorialStep expecting any move', () => {
         it('should consider any move legal when step is anyMove', fakeAsync(async() => {
             // Given tutorial step fo type "anyMove"
             const tutorial: TutorialStep[] = [
@@ -807,7 +822,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                     'instruction',
                     QuartoRules.get().getInitialState(),
                     new QuartoMove(0, 0, QuartoPiece.BABA),
-                    'Congratulations!',
+                    TutorialStepMessage.CONGRATULATIONS(),
                 ),
             ];
             await wrapper.startTutorial(tutorial);
@@ -818,14 +833,14 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             await testUtils.expectMoveSuccess('#choosePiece_15', move);
 
             // expect to see steps success message on component
-            const expectedMessage: string = 'Congratulations!';
+            const expectedMessage: string = TutorialStepMessage.CONGRATULATIONS();
             const currentMessage: string =
                 testUtils.findElement('#currentMessage').nativeElement.innerHTML;
             expect(currentMessage).toBe(expectedMessage);
         }));
     });
 
-    describe('TutorialStep awaiting a click', () => {
+    describe('TutorialStep expecting a click', () => {
         it('should show success message after step success (one of several clics)', fakeAsync(async() => {
             // Given a TutorialStep with several clics
             const tutorial: TutorialStep[] = [
@@ -834,7 +849,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                     'Click on (0, 0) or (3, 3)',
                     QuartoRules.get().getInitialState(),
                     ['#chooseCoord_0_0', '#chooseCoord_3_3'],
-                    'Congratulations!',
+                    TutorialStepMessage.CONGRATULATIONS(),
                     'Perdu.',
                 ),
             ];
@@ -844,7 +859,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             await testUtils.expectClickSuccess('#chooseCoord_0_0');
 
             // expect to see steps success message on component
-            const expectedMessage: string = 'Congratulations!';
+            const expectedMessage: string = TutorialStepMessage.CONGRATULATIONS();
             const currentMessage: string =
                 testUtils.findElement('#currentMessage').nativeElement.innerHTML;
             expect(currentMessage).toBe(expectedMessage);
@@ -858,7 +873,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                     'Click on (0, 0) or (3, 3)',
                     QuartoRules.get().getInitialState(),
                     ['#chooseCoord_0_0', '#chooseCoord_3_3'],
-                    'Congratulations!',
+                    TutorialStepMessage.CONGRATULATIONS(),
                     'Perdu.',
                 ),
             ];
@@ -887,7 +902,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                         [QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY],
                     ], 0, QuartoPiece.ABBA),
                     ['#chooseCoord_3_3'],
-                    'Congratulations!',
+                    TutorialStepMessage.CONGRATULATIONS(),
                     'Perdu.',
                 ),
             ];
@@ -949,7 +964,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                         [QuartoPiece.AAAA, QuartoPiece.ABAB, QuartoPiece.BABB, QuartoPiece.EMPTY],
                     ], 15, QuartoPiece.BAAB),
                     ['#chooseCoord_3_3'],
-                    'Congratulations!',
+                    TutorialStepMessage.CONGRATULATIONS(),
                     'Perdu.',
                 ),
             ];
@@ -960,7 +975,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             await testUtils.expectMoveSuccess('#chooseCoord_3_3', move);
 
             // expect to see steps success message on component
-            const expectedMessage: string = 'Congratulations!';
+            const expectedMessage: string = TutorialStepMessage.CONGRATULATIONS();
             const currentMessage: string =
                 testUtils.findElement('#currentMessage').nativeElement.innerHTML;
             expect(currentMessage).toBe(expectedMessage);
@@ -1020,7 +1035,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
 
     });
 
-    describe('TutorialStep awaiting a predicate', () => {
+    describe('TutorialStep expecting a predicate', () => {
 
         it('should display MGPValidation.reason when predicate return a failure', fakeAsync(async() => {
             // Given a TutorialStep that always fail
@@ -1033,7 +1048,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                     (_move: QuartoMove, _resultingState: QuartoState) => {
                         return MGPValidation.failure('chocolatine');
                     },
-                    'Congratulations!',
+                    TutorialStepMessage.CONGRATULATIONS(),
                 ),
             ];
             await wrapper.startTutorial(tutorial);
@@ -1061,7 +1076,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                     (_move: QuartoMove, _resultingState: QuartoState) => {
                         return MGPValidation.SUCCESS;
                     },
-                    'Congratulations!',
+                    TutorialStepMessage.CONGRATULATIONS(),
                 ),
             ];
             await wrapper.startTutorial(tutorial);
@@ -1072,7 +1087,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             await testUtils.expectMoveSuccess('#choosePiece_15', move);
 
             // expect to see steps success message on component
-            const expectedMessage: string = 'Congratulations!';
+            const expectedMessage: string = TutorialStepMessage.CONGRATULATIONS();
             const currentMessage: string =
                 testUtils.findElement('#currentMessage').nativeElement.innerHTML;
             expect(currentMessage).toBe(expectedMessage);
@@ -1094,7 +1109,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                     (_move: QuartoMove, _resultingState: QuartoState) => {
                         return MGPValidation.failure('what did I say ?');
                     },
-                    'Congratulations!',
+                    TutorialStepMessage.CONGRATULATIONS(),
                 ),
             ];
             await wrapper.startTutorial(tutorial);
@@ -1111,7 +1126,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             expect(testUtils.getGameComponent().getTurn()).toEqual(1);
             // expect 'solution' message to be shown
             const currentMessage: string = testUtils.findElement('#currentMessage').nativeElement.innerHTML;
-            expect(currentMessage).toBe('Congratulations!');
+            expect(currentMessage).toBe(TutorialStepMessage.CONGRATULATIONS());
             // expect step not to be considered a success
             expect(wrapper.stepFinished[wrapper.stepIndex]).toBeFalse();
         }));

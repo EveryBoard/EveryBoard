@@ -1,6 +1,7 @@
 /* eslint-disable max-lines-per-function */
 import { MGPMap } from '../MGPMap';
 import { MGPOptional } from '../MGPOptional';
+import { TestUtils } from './TestUtils.spec';
 
 describe('MGPMap', () => {
 
@@ -9,12 +10,14 @@ describe('MGPMap', () => {
         map.set('oui', 'yes');
         expect(() => map.set('oui', 'si')).toThrow();
     });
+
     it('Put should replace value if key value was already present', () => {
         const map: MGPMap<string, string> = new MGPMap();
         map.put('oui', 'yes');
         expect(() => map.put('oui', 'DA')).not.toThrow();
         expect(map.get('oui')).toEqual(MGPOptional.of('DA'));
     });
+
     it('ListKey should work', () => {
         const map: MGPMap<string, number> = new MGPMap();
         map.set('first', 1);
@@ -22,6 +25,7 @@ describe('MGPMap', () => {
 
         expect(map.listKeys()).toEqual(['first', 'second']);
     });
+
     describe('replace', () => {
         it('Replace should work', () => {
             const map: MGPMap<string, number> = new MGPMap();
@@ -38,6 +42,7 @@ describe('MGPMap', () => {
                 .toThrowError('No Value to replace for key firstZUUU!');
         });
     });
+
     describe('delete', () => {
         it('should delete element', () => {
             const map: MGPMap<string, number> = new MGPMap();
@@ -54,13 +59,18 @@ describe('MGPMap', () => {
             expect(() => map.delete('second')).toThrowError('No Value to delete for key "second"!');
         });
     });
+
     it('should throw when calling set after making immutable', () => {
         const map: MGPMap<string, number> = new MGPMap();
         map.set('first', 0);
         map.set('second', 1);
         map.makeImmutable();
-        expect(() => map.set('third', 2)).toThrowError('Cannot call set on immutable map!');
+        const reason: string = 'Cannot call set on immutable map!';
+        TestUtils.expectToThrowAndLog(() => {
+            map.set('third', 2);
+        }, reason);
     });
+
     it('PutAll should concantenate two maps, erasing the overlapping content on the receiver', () => {
         const receiver: MGPMap<string, number> = new MGPMap();
         receiver.set('first', 0);
@@ -79,10 +89,12 @@ describe('MGPMap', () => {
 
         expect(receiver).toEqual(expectedSum);
     });
+
     it('Size should work', () => {
         const map: MGPMap<string, number> = new MGPMap();
         expect(map.size()).toBe(0);
     });
+
     describe('copy', () => {
         it('Copy should be identical when no immutable', () => {
             const map: MGPMap<string, number> = new MGPMap();
@@ -108,6 +120,7 @@ describe('MGPMap', () => {
             expect(copy).toEqual(map);
         });
     });
+
     describe('equals', () => {
         it('should detect maps with distinct keys as different', () => {
             const map1: MGPMap<string, number> = new MGPMap();
@@ -128,6 +141,7 @@ describe('MGPMap', () => {
             expect(map1.equals(map2)).toBeFalse();
         });
     });
+
     describe('forEach', () => {
         it('should iterate over all elements of the map', () => {
             // Given a map with elements
@@ -143,6 +157,7 @@ describe('MGPMap', () => {
             expect(sum).toBe(3);
         });
     });
+
     describe('getAnyPair', () => {
         it('should return an element from the map', () => {
             const map: MGPMap<string, number> = new MGPMap();
@@ -156,4 +171,5 @@ describe('MGPMap', () => {
             expect(emptyMap.getAnyPair().isAbsent()).toBeTrue();
         });
     });
+
 });

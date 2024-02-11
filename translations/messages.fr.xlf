@@ -306,6 +306,10 @@
         <source>The most widespread of the Mancalas.</source>
         <target>Le plus répandu des jeux de la famille Mancala.</target>
       </trans-unit>
+      <trans-unit id="1675508830863089385" datatype="html">
+        <source>The most widespread multiple-lap Mancala.</source>
+        <target>Le plus répandu des jeux de la famille Mancala à plusieurs tours.</target>
+      </trans-unit>
       <trans-unit id="7926456268600574942" datatype="html">
         <source>Align your pieces to score points, but beware, pieces can flip!</source>
         <target>Alignez vos pièces pour marquer des points, mais attention aux retournements de pièces !</target>
@@ -349,6 +353,10 @@
       <trans-unit id="8576122948092687879" datatype="html">
         <source>Must continue distribution after last seed ends in store</source>
         <target>Continuer la distribution après que la dernière graine soit tombée dans le magasin</target>
+      </trans-unit>
+      <trans-unit id="356626260857129297" datatype="html">
+        <source>Continue distribution until capture or empty house</source>
+        <target>Continuer la distribution jusqu'à une capture ou à une maison vide</target>
       </trans-unit>
       <trans-unit id="9195784792324730674" datatype="html">
         <source>Central throne is left for good</source>
@@ -524,6 +532,10 @@
       <trans-unit id="809030787784855848" datatype="html">
         <source>Diaballik</source>
         <target>Diaballik</target>
+      </trans-unit>
+      <trans-unit id="1493565703246564578" datatype="html">
+        <source>Ba-awa</source>
+        <target>Ba-awa</target>
       </trans-unit>
       <trans-unit id="1760292529513431093" datatype="html">
         <source>Trexo</source>
@@ -1021,6 +1033,10 @@
         <source>Congratulations, you completed the tutorial.</source>
         <target>Félicitations, vous avez fini le tutoriel.</target>
       </trans-unit>
+      <trans-unit id="1930146585049479552" datatype="html">
+        <source>You cannot click, this is a demo.</source>
+        <target>Vous ne pouvez pas cliquer, ceci est une démo.</target>
+      </trans-unit>
       <trans-unit id="2201596715619103633" datatype="html">
         <source>You cannot move a supporting piece.</source>
         <target>Vous ne pouvez pas déplacer de pièce porteuse.</target>
@@ -1185,9 +1201,9 @@
         <source>The Kalah (1/2)</source>
         <target>Le Kalah (1/2)</target>
       </trans-unit>
-      <trans-unit id="1494658367285976347" datatype="html">
-        <source>The houses on the extreme left and right, unaligned with the others, are the Kalah. Yours is on the left, the opponent&apos;s on the right. When sowing, before passing from your last house to the first of the opponent, you must drop one seed in your Kalah, but you won&apos;t have to drop seed in your opponent&apos;s Kalah. When you make a capture, the captured seeds are put in your Kalah.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark. Make a move that passes through your Kalah then feeds opponent&apos;s houses.</source>
-        <target>Les maisons à l'extrême gauche et droite, non alignées avec les autres, sont les Kalah, le vôtre est à gauche, celui de l'adversaire à droite. Quand vous distribuez, avant de passer de votre dernière maison à la première de l'adversaire, vous devez déposer une graine dans votre Kalah. Mais vous ne devrez pas distribuer dans le Kalah adverse. Quand vous capturez, les graines sont déposées dans votre Kalah.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé. Faites un mouvement qui passe par votre Kalah puis par les maisons adverses.</target>
+      <trans-unit id="3586015705184533702" datatype="html">
+        <source>The houses on the extreme left and right, unaligned with the others, are the Kalah. Yours is on the left, the opponent&apos;s on the right. When sowing, before passing from your leftmost house to the leftmost house of the opponent, you must drop one seed in your Kalah, but you won&apos;t have to drop seed in your opponent&apos;s Kalah. When you make a capture, the captured seeds are put in your Kalah.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark. Make a move that passes through your Kalah then feeds opponent&apos;s houses.</source>
+        <target>Les maisons à l'extrême gauche et droite, non alignées avec les autres, sont les Kalah, le vôtre est à gauche, celui de l'adversaire à droite. Quand vous distribuez, avant de passer de votre maison la plus à gauche à la maison la plus à gauche de l'adversaire, vous devez déposer une graine dans votre Kalah. Mais vous ne devrez pas distribuer dans le Kalah adverse. Quand vous capturez, les graines sont déposées dans votre Kalah.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé. Faites un mouvement qui passe par votre Kalah puis par les maisons adverses.</target>
       </trans-unit>
       <trans-unit id="108833396164233870" datatype="html">
         <source>As you see, three houses have been fed in addition to your Kalah.</source>
@@ -1237,9 +1253,9 @@
         <source>The main move in Mancala games is sowing, let&apos;s see how seeds are sown. As you are playing Dark, the 6 houses on the bottom are yours.&lt;br/&gt;&lt;br&gt;Click on the rightmost bottom house to sow the seeds it contains: they will be sown clockwise, one seed per house.&lt;br/&gt;&lt;br/&gt;Click on the rightmost house!</source>
         <target>Le mouvement principal aux mancalas est la distribution. Voyons voir comment les graines sont distribuées. Vous jouez Foncé, les 6 maisons du bas sont les vôtres.&lt;br/&gt;&lt;br&gt;Cliquez sur la maison la plus à droite pour distribuer les graines qu'elle contient : elles seront égrenée dans le sens horaire, une graine par maison !</target>
       </trans-unit>
-      <trans-unit id="6994033934467498174" datatype="html">
-        <source>Look at the 4 houses that follow clockwise the one you picked, they now contain 5 seeds. This is how seeds are sown: one by one from the house next to the one they come from, clockwise.</source>
-        <target>Voilà, regardez les 4 maisons suivant la maison choisie dans le sens horaire, elle comptent maintenant 5 graines. C’est comme cela que les graines se distribuent, une à une à partir de la maison suivante dans le sens horaire depuis la maison d’où elles viennent.</target>
+      <trans-unit id="8909995708712093055" datatype="html">
+        <source>Look at the 4 houses that follow clockwise the one you picked, they now contain one more seed. This is how seeds are sown: one by one from the house next to the one they come from, clockwise.</source>
+        <target>Voilà, regardez les 4 maisons suivant la maison choisie dans le sens horaire, elle comptent maintenant une graine en plus. C’est comme cela que les graines se distribuent, une à une à partir de la maison suivante dans le sens horaire depuis la maison d’où elles viennent.</target>
       </trans-unit>
       <trans-unit id="8587148937080588417" datatype="html">
         <source>Failed. Choose the rightmost house on the bottom.</source>
@@ -1249,13 +1265,9 @@
         <source>Big sowing</source>
         <target>Gros égrénage</target>
       </trans-unit>
-      <trans-unit id="436684043682883572" datatype="html">
-        <source>When there are enough seeds to make a full turn, something else happens.&lt;br/&gt;&lt;br/&gt;
-        You&apos;re playing Dark.
-        Sow the house that contains 12 seeds.</source>
-        <target>Quand il y a assez de graines pour faire un tour complet, quelque chose d’autre se passe.&lt;br/&gt;&lt;br/&gt;
-        Vous jouez Foncé.
-        Distribuez la maison qui contient 12 graines.</target>
+      <trans-unit id="6143584678937647226" datatype="html">
+        <source>When there are enough seeds to make a full turn, something else happens.&lt;br/&gt;&lt;br/&gt; You&apos;re playing Dark. Sow the house that contains 12 seeds.</source>
+        <target>Quand il y a assez de graines pour faire un tour complet, quelque chose d’autre se passe.&lt;br/&gt;&lt;br/&gt; Vous jouez Foncé. Distribuez la maison qui contient 12 graines.</target>
       </trans-unit>
       <trans-unit id="498712253814253582" datatype="html">
         <source>See, the house that you sowed has not been refilled, and the sowing immediately continued to the next house (which therefore contains two seeds).</source>
@@ -1273,9 +1285,9 @@
         <source>Well done! This was a simple capture, now let us see how to make multiple captures.</source>
         <target>Bravo ! Il s&apos;agissait ici d&apos;une capture simple, voyons maintenant une capture composée.</target>
       </trans-unit>
-      <trans-unit id="8065050610159894114" datatype="html">
-        <source>Failed. Try again and sow from the leftmost house.</source>
-        <target>Perdu. Recommencez et distribuez la maison la plus à gauche.</target>
+      <trans-unit id="9012344731580734627" datatype="html">
+        <source>Failed. You did not capture anything. Try again.</source>
+        <target>Raté. Vous n'avez rien capturé. Essayez à nouveau.</target>
       </trans-unit>
       <trans-unit id="3104604410220998192" datatype="html">
         <source>Multiple captures</source>
@@ -1288,10 +1300,6 @@
       <trans-unit id="830087202472977218" datatype="html">
         <source>Nice, you win 3 points from the first house, and 2 from the second!</source>
         <target>Bravo, vous gagnez 3 points dans la première maison plus 2 dans la seconde !</target>
-      </trans-unit>
-      <trans-unit id="8017917529851412468" datatype="html">
-        <source>Failed. Try again.</source>
-        <target>Perdu. Recommencez.</target>
       </trans-unit>
       <trans-unit id="7123653594948067002" datatype="html">
         <source>Score</source>
@@ -1337,11 +1345,9 @@
         <source>You have a very nice capture that seems possible: it seems that you can capture all the opponent&apos;s seeds!&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark. Try it.</source>
         <target>Vous avez une très belle capture qui semble possible. Il semble que vous puissiez capturer tous les pions de l’adversaire !&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé. Lancez-vous !</target>
       </trans-unit>
-      <trans-unit id="5327525705025836061" datatype="html">
-        <source>Sadly, you cannot capture here, otherwise the opponent could not play after you.
-        When this happens, the move can be made, but no capture takes place!</source>
-        <target>Malheureusement, vous ne pouvez pas capturer, car sinon l’adversaire ne pourrait pas jouer après vous.
-        À ces moments là, le mouvement est autorisé mais la capture n’est pas effectuée !</target>
+      <trans-unit id="2671440213973633925" datatype="html">
+        <source>Sadly, you cannot capture here, otherwise the opponent could not play after you. When this happens, the move can be made, but no capture takes place!</source>
+        <target>Malheureusement, vous ne pouvez pas capturer, car sinon l’adversaire ne pourrait pas jouer après vous. À ces moments là, le mouvement est autorisé mais la capture n’est pas effectuée !</target>
       </trans-unit>
       <trans-unit id="6033788914683606777" datatype="html">
         <source>Feeding is mandatory</source>
@@ -1352,11 +1358,9 @@
         <target>&quot;Affamer&quot; est interdit, c&apos;est-à-dire que si votre adversaire n&apos;a plus de graines et que vous savez lui en donner au moins une, vous êtes obligé de le faire.&lt;br/&gt;&lt;br/&gt;
         Vous jouez Foncé. Donnez une graine à votre adversaire !</target>
       </trans-unit>
-      <trans-unit id="3908210272037108493" datatype="html">
-        <source>Congratulations! Note that you can choose to give your opponent the least number of seeds if it is better for you.
-        It is often a good way to have easy captures!</source>
-        <target>Bravo ! Notez que vous pouvez choisir de lui en donner le moins possible si cela vous arrange mieux.
-        C’est souvent un bon moyen d’avoir des captures faciles !</target>
+      <trans-unit id="6607296153653792913" datatype="html">
+        <source>Congratulations! Note that you can choose to give your opponent the least number of seeds if it is better for you. It is often a good way to have easy captures!</source>
+        <target>Bravo ! Notez que vous pouvez choisir de lui en donner le moins possible si cela vous arrange mieux. C’est souvent un bon moyen d’avoir des captures faciles !</target>
       </trans-unit>
       <trans-unit id="2281492801612237310" datatype="html">
         <source>End of the game</source>
@@ -1369,6 +1373,66 @@
       <trans-unit id="4966070806582905191" datatype="html">
         <source>Also, as soon as on player cannot play, the other player captures all the seeds in its own side. Here, it was the first player&apos;s turn, and the second player has taken all the remaining seeds.</source>
         <target>Aussi, dès qu&apos;un joueur ne peut plus jouer, l’autre joueur capture toutes les graines dans son propre camp. Ici, c&apos;était à vous de jouer et au joueur suivant de récolter toutes les graines restantes, en mettant ainsi fin à la partie.</target>
+      </trans-unit>
+      <trans-unit id="6243517581301426418" datatype="html">
+        <source>Split final seeds evenly</source>
+        <target>Partager les graines finales équitablement</target>
+      </trans-unit>
+      <trans-unit id="796568684338354748" datatype="html">
+        <source>Even Ba-awa</source>
+        <target>Ba-awa équitable</target>
+      </trans-unit>
+      <trans-unit id="6179314931812970793" datatype="html">
+        <source>Bonus fact: Ba-awa, also called Adi, is played mainly in Ghana.</source>
+        <target>Info bonus: Ba-awa, aussi appellé Adi, est joué principalement au Ghana.</target>
+      </trans-unit>
+      <trans-unit id="2932513123180634807" datatype="html">
+        <source>Multiple laps sowing</source>
+        <target>Distribution à plusieur tours</target>
+      </trans-unit>
+      <trans-unit id="1218183221112518220" datatype="html">
+        <source>However, the distribution only stops when the last seed is dropped in a house that contains zero or three seeds (before drop).&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, do such a move!</source>
+        <target>Cependant, la distribution ne s'arrête que quand la dernière graine est déposée dans une maison qui contient (avant déposage) zéro ou trois graines.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, faites un mouvement comme cela !</target>
+      </trans-unit>
+      <trans-unit id="4875172921761216929" datatype="html">
+        <source>So, after landing in the house with 2 seeds (then 3), a second lap has been started.</source>
+        <target>Donc, après atterissage dans la maison avec 2 graines (puis 3), un second tour a commencé.</target>
+      </trans-unit>
+      <trans-unit id="3067825694318214397" datatype="html">
+        <source>Captures during distribution (1/2)</source>
+        <target>Captures pendant la distribution (1/2)</target>
+      </trans-unit>
+      <trans-unit id="3249311152250368197" datatype="html">
+        <source>If, during some distribution, you pass by one of your houses that contains 3 seeds, and drop a fourth seed, you capture the house immediately, then continue the distribution!&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, do such a move!</source>
+        <target>Si, durant une distribution, vous passez pas une de vos maison qui contient 3 graines, et déposez une quatrième graine, vous capturez la maison immédiatement, puis continuez la distribution !&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, faites un tel mouvement !</target>
+      </trans-unit>
+      <trans-unit id="9198664076697170304" datatype="html">
+        <source>Congratulations, you captured 4 seeds.</source>
+        <target>Félicitations, vous capturez 4 graines.</target>
+      </trans-unit>
+      <trans-unit id="8936894363705168622" datatype="html">
+        <source>Captures during distribution (2/2)</source>
+        <target>Captures pendant la distribution (2/2)</target>
+      </trans-unit>
+      <trans-unit id="5715964665371191258" datatype="html">
+        <source>If, during some distribution, you pass by one house of the opponent that contains 3 seeds, and drop a fourth seed, the opponent captures the house immediately, while you continue to distribute.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, do such a move!</source>
+        <target>Si, durant une distribution, vous passez pas une maison de l'adversaire qui contient 3 graines, et déposez une quatrième, l'adversaire capture la maison immédiatement, pendant que vous continuez la distribution.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, faites un tel mouvement !</target>
+      </trans-unit>
+      <trans-unit id="1192652665972488441" datatype="html">
+        <source>There it is, the opponent captured 4 seeds.</source>
+        <target>VOilà, l'adversaire a capturé 4 graines.</target>
+      </trans-unit>
+      <trans-unit id="4239012084263051063" datatype="html">
+        <source>Though, if your very last seed is dropped in a house of the opponent that contains 3 seeds (4 with your seed), you capture it immediately!&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, do such a move!</source>
+        <target>Cependant, si votre dernière graine est déposée dans une maison de l'adversaire qui contient 3 graines (4 avec votre graine), vous capturez immédiatement la maison !&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, faites un tel mouvement !</target>
+      </trans-unit>
+      <trans-unit id="3868200086323207176" datatype="html">
+        <source>At the end of a turn, if the number of seeds reaches 8 or less, the first player (Dark) captures the remaining seeds.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, end the game by capturing!</source>
+        <target>À la fin d'un tour, si le nombre total de graines tombe à 8 ou moins, le premier joueur (Foncé) capture les graines restantes.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, terminez le jeu en capturant !</target>
+      </trans-unit>
+      <trans-unit id="2821967115826330186" datatype="html">
+        <source>There it is, you captured all remaining seeds.</source>
+        <target>Voilà, vous capturez toutes les graines restantes.</target>
       </trans-unit>
       <trans-unit id="8840015526202664476" datatype="html">
         <source>You must distribute one of your houses.</source>
@@ -1437,9 +1501,9 @@
         <source>Congratulations! Let&apos;s see captures now.</source>
         <target>Bravo, voyons ensuite les captures.</target>
       </trans-unit>
-      <trans-unit id="7869356423919656180" datatype="html">
-        <source>Capture</source>
-        <target>Capture</target>
+      <trans-unit id="5216257512116603462" datatype="html">
+        <source>Captures</source>
+        <target>Captures</target>
       </trans-unit>
       <trans-unit id="4864789526486078372" datatype="html">
         <source>Every piece has three neighboring triangular spaces (2 on the sides).
@@ -2108,15 +2172,9 @@
         <source>Failed! You moved only one piece.</source>
         <target>Raté ! Vous n&apos;avez bougé qu&apos;une pièce.</target>
       </trans-unit>
-      <trans-unit id="2414303972754655852" datatype="html">
-        <source>Congratulations!
-        The moved pieces can be horizontally, vertically, or diagonally aligned.
-        The move should be made along this axis, forward or backwards.
-        There can be no opponent nor holes in the phalanx.</source>
-        <target>Bravo !
-        Les pièces déplacées doivent être horizontalement, verticalement, ou diagonalement alignées.
-        Le déplacement doit se faire le long de cette ligne, en avant ou en arrière.
-        Il ne peut y avoir ni pièces adverses ni trous dans la phalange.</target>
+      <trans-unit id="9139891273410430459" datatype="html">
+        <source>Congratulations! The moved pieces can be horizontally, vertically, or diagonally aligned. The move should be made along this axis, forward or backwards. There can be no opponent nor holes in the phalanx.</source>
+        <target>Bravo ! Les pièces déplacées doivent être horizontalement, verticalement, ou diagonalement alignées. Le déplacement doit se faire le long de cette ligne, en avant ou en arrière. Il ne peut y avoir ni pièces adverses ni trous dans la phalange.</target>
       </trans-unit>
       <trans-unit id="757498846466496147" datatype="html">
         <source>In order to capture pieces of the opponent:
@@ -2209,9 +2267,9 @@
         Une poussée est interdite dans une rangée complète.&lt;br/&gt;&lt;br/&gt;
         Vous jouez Foncé, insérez une pièce.</target>
       </trans-unit>
-      <trans-unit id="172569065763877258" datatype="html">
-        <source>Capture (1/3)</source>
-        <target>Capture (1/3)</target>
+      <trans-unit id="3073611604547170859" datatype="html">
+        <source>Captures (1/3)</source>
+        <target>Captures (1/3)</target>
       </trans-unit>
       <trans-unit id="7511966090954669277" datatype="html">
         <source>To capture, you must align 4 of your own pieces, which will be the first 4 captured pieces.
@@ -2255,9 +2313,9 @@
         <target>Bravo, vous avez récupéré 4 de vos pièces, mais ce n&apos;est pas la capture la plus utile.
         Voyons maintenant la vraie utilité d&apos;une capture.</target>
       </trans-unit>
-      <trans-unit id="2764152826180362947" datatype="html">
-        <source>Capture (2/3)</source>
-        <target>Capture (2/3)</target>
+      <trans-unit id="3205566995766748513" datatype="html">
+        <source>Captures (2/3)</source>
+        <target>Captures (2/3)</target>
       </trans-unit>
       <trans-unit id="624120683333042102" datatype="html">
         <source>Here, there are three different ways for Dark to capture.
@@ -2287,9 +2345,9 @@
         <source>Failed, the best capture was taking 2 of your opponent&apos;s pieces</source>
         <target>Raté, la capture optimale capture 2 pièces adverses.</target>
       </trans-unit>
-      <trans-unit id="1459810772427125920" datatype="html">
-        <source>Capture (3/3)</source>
-        <target>Capture (3/3)</target>
+      <trans-unit id="6179417983395316464" datatype="html">
+        <source>Captures (3/3)</source>
+        <target>Captures (3/3)</target>
       </trans-unit>
       <trans-unit id="1160906405303068410" datatype="html">
         <source>Here, you must capture at the beginning of your turn.
@@ -2940,10 +2998,6 @@
         <source>Failed. This was not one of the expected moves.</source>
         <target>Ce n&apos;était pas un des déplacements attendus</target>
       </trans-unit>
-      <trans-unit id="8752797532802461254" datatype="html">
-        <source>Capturing</source>
-        <target>Captures</target>
-      </trans-unit>
       <trans-unit id="5036745511795758114" datatype="html">
         <source>If a move ends on an opponent&apos;s piece, it is captured and removed from the board.
         However, a move cannot end on one of the player&apos;s pieces.
@@ -3033,17 +3087,17 @@
         <source>Moving queens</source>
         <target>Déplacer les reines</target>
       </trans-unit>
-      <trans-unit id="246448750813949151" datatype="html">
-        <source>Queens are worth three points. They can move any number of steps in any direction, in a straight line, without jumping over other pieces.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, move a queen.</source>
-        <target>Les reines valent trois points. Elles peuvent se déplacer d'autant de pas que souhaité dans n'importe quelle direction, en ligne droite, sans sauter au dessus d'autres pièces.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, déplacez une reine.</target>
+      <trans-unit id="2106860890585726458" datatype="html">
+        <source>Queens are worth three points. They can move any number of steps in any direction, in a straight line, without jumping over other pieces.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Light, move a queen.</source>
+        <target>Les reines valent trois points. Elles peuvent se déplacer d'autant de pas que souhaité dans n'importe quelle direction, en ligne droite, sans sauter au dessus d'autres pièces.&lt;br/&gt;&lt;br/&gt;Vous jouez Clair, déplacez une reine.</target>
       </trans-unit>
       <trans-unit id="3206825395681468712" datatype="html">
         <source>This is not a queen!</source>
         <target>Ceci n'est pas une reine !</target>
       </trans-unit>
-      <trans-unit id="3324500494494988533" datatype="html">
-        <source>When a piece crosses the canal and lands on another piece, you capture it and gain the value of that captured piece. However, you lose control of your piece as it crosses the canal!&lt;br/&gt;&lt;br/&gt;A capture is possible for Dark, do it.</source>
-        <target>Quand une pièce traverse le canal et atterrit sur une autre pièce, vous la capturez et gagnez la valeur de la pièce, cependant vous en perdez le contrôle car elle a traversé le canal !&lt;br/&gt;&lt;br/&gt;Une capture est possible pour Foncé, faites-la.</target>
+      <trans-unit id="6164047187960612635" datatype="html">
+        <source>When a piece crosses the canal and lands on another piece, you capture it and gain the value of that captured piece. However, you lose control of your piece as it crosses the canal!&lt;br/&gt;&lt;br/&gt;A capture is possible for Light, do it.</source>
+        <target>Quand une pièce traverse le canal et atterrit sur une autre pièce, vous la capturez et gagnez la valeur de la pièce, cependant vous en perdez le contrôle car elle a traversé le canal !&lt;br/&gt;&lt;br/&gt;Une capture est possible pour Clair, faites-la.</target>
       </trans-unit>
       <trans-unit id="6741042150149637612" datatype="html">
         <source>Congratulations! By capturing that pawn, you won one point.</source>
@@ -3053,9 +3107,9 @@
         <source>Field Promotion (1/2)</source>
         <target>Promotion (1/2)</target>
       </trans-unit>
-      <trans-unit id="8675845222727327919" datatype="html">
-        <source>It is sometimes possible to perform what is called a field promotion. If you are out of one type of piece, you can merge two pieces to add their value and get a new piece. For example, if you have no drones, you can merge two pawns into a drone. To merge two pawns, move one of your pawns on another.&lt;br/&gt;&lt;br/&gt;Such a move is possible for Dark. Do it.</source>
-        <target>Il est parfois possible de faire ce qu'on appelle une promotion. Quand vous n'avez pas un type de pièce, vous pouvez fusionner deux pièces pour additionner leur valeur et obtenir une nouvelle pièce. Premier exemple, si vous n'avez pas de drône, vous pouvez fusionner deux de vos pions en un drône. Pour ce faire, déplacez un de vos pions sur un autre.&lt;br/&gt;&lt;br/&gt;Un tel coup est possible pour Foncé, faites-le.</target>
+      <trans-unit id="9082504092683509261" datatype="html">
+        <source>It is sometimes possible to perform what is called a field promotion. If you are out of one type of piece, you can merge two pieces to add their value and get a new piece. For example, if you have no drones, you can merge two pawns into a drone. To merge two pawns, move one of your pawns on another.&lt;br/&gt;&lt;br/&gt;Such a move is possible for Light. Do it.</source>
+        <target>Il est parfois possible de faire ce qu'on appelle une promotion. Quand vous n'avez pas un type de pièce, vous pouvez fusionner deux pièces pour additionner leur valeur et obtenir une nouvelle pièce. Premier exemple, si vous n'avez pas de drône, vous pouvez fusionner deux de vos pions en un drône. Pour ce faire, déplacez un de vos pions sur un autre.&lt;br/&gt;&lt;br/&gt;Un tel coup est possible pour Clair, faites-le.</target>
       </trans-unit>
       <trans-unit id="8941261285468529448" datatype="html">
         <source>This is not a field promotion!</source>
@@ -3097,9 +3151,9 @@
         <source>End game (by clock)</source>
         <target>Fin au temps</target>
       </trans-unit>
-      <trans-unit id="5334745019478145111" datatype="html">
-        <source>When seven turns have passed after the clock has been called, the player with the most points win. If both player have the same number of points, it is a tie.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, do the last move.</source>
-        <target>7 Tours après le lancement du compte à rebour, le joueur qui a le plus de point gagne. Si les joueurs ont autant de point, c'est un match nul.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, faites le dernier mouvement.</target>
+      <trans-unit id="3700959958039999617" datatype="html">
+        <source>When seven turns have passed after the clock has been called, the player with the most points win. If both player have the same number of points, it is a tie.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Light, do the last move.</source>
+        <target>7 Tours après le lancement du compte à rebour, le joueur qui a le plus de point gagne. Si les joueurs ont autant de point, c'est un match nul.&lt;br/&gt;&lt;br/&gt;Vous jouez Clair, faites le dernier mouvement.</target>
       </trans-unit>
       <trans-unit id="1679797944253761486" datatype="html">
         <source>End by emptyness</source>
@@ -3185,10 +3239,6 @@
         <source>To summarize, it is possible to capture the opponent&apos;s pieces in two ways:&lt;ul&gt;&lt;li&gt;with a repelling lodestone, by pushing your opponent&apos;s pieces out of the board, or&lt;/li&gt;&lt;li&gt;with an attracting lodestone, by moving your pieces on your opponent&apos;s pieces.&lt;/li&gt;&lt;/ul&gt;Once a lodestone is placed and the pieces have been moved and/or captured, in case any of the opponent&apos;s pieces have been captured, you have to place them on the &lt;i&gt;pressure plates&lt;/i&gt; that lie around the board. To do so, click on an empty space of the pressure plate of your choice for each capture. You can cancel this by clicking again on a piece you just put on a pressure plate.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark. Try to perform a move that captures at least one of your opponent&apos;s piece, and place your capture(s) on pressure plates.</source>
         <target>En résumé, il est possible de capturer les pièces de l'adversaire de deux façons :&lt;ul&gt;&lt;li&gt;avec une pierre magnétique sur sa face répulsive, en poussant les pièces adverses hors du plateau ;&lt;/li&gt;&lt;li&gt;avec une pierre magnétique sur sa face attractive, en attirant vos pièces pour qu'elles écrasent les pièces adverses.&lt;/li&gt;&lt;/ul&gt;Une fois qu'une pierre magnétique est placée et que les pièces ont été déplacées et/ou capturées, si des pièces adverses ont été capturées, vous devez les placer sur les &lt;i&gt;plaques de pressions&lt;/i&gt;, situées autour du plateau. Pour ce faire, cliquez sur une case libre de la plaque de pression de votre choix pour chaque capture. Vous pouvez annuler ce placement en cliquant sur une pièce récemment placée sur plaque de pression.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé. Effectuez un mouvement qui capture au moins une pièce adverse, et placez vos captures sur des plaques de pression.</target>
       </trans-unit>
-      <trans-unit id="575124313782539246" datatype="html">
-        <source>You have not captured any of the opponent&apos;s pieces, try again!</source>
-        <target>Vous n'avez capturé aucune pièce adverse, rééssayez !</target>
-      </trans-unit>
       <trans-unit id="443433725102640869" datatype="html">
         <source>Crumbling a first pressure plate</source>
         <target>Premier effondrement d'une plaque de pression</target>
@@ -3241,9 +3291,9 @@
         <source>This is not the winning move. Try again.</source>
         <target>Ce n'est pas le mouvement gagnant. Essayez encore.</target>
       </trans-unit>
-      <trans-unit id="387119594039428962" datatype="html">
-        <source><x id="PH" equiv-text="this.gameName"/> is a Mancala. Mancala is the name of a family of board games that dates back at least to the third century. Mancalas are games of distribution (sowing) and capture. Their goal is to capture the most seeds. The spaces in Mancalas are called the houses. The ones on the extreme left and right are called the stores, they contain the seeds that each player won. As you are playing Dark, the 6 houses on the bottom are yours.</source>
-        <target><x id="PH" equiv-text="this.gameName"/> est un Mancala. Mancala est le nom d'une famille de jeux de plateau datant au moins du troisième siècle. Les mancalas sont des jeux de distribution (égrenage) et capture. Leur but est de capturer le plus de graines. Les cases sont appelées des maisons. Comme vous jouez Foncé, vos 6 maisons sont celles du bas.</target>
+      <trans-unit id="4012808273739972279" datatype="html">
+        <source><x id="PH" equiv-text="gameName"/> is a Mancala. Mancala is the name of a family of board games that dates back at least to the third century. Mancalas are games of distribution (sowing) and capture. Their goal is to capture the most seeds. The spaces in Mancalas are called the houses. The ones on the extreme left and right are called the stores, they contain the seeds that each player captured. As you are playing Dark, the 6 houses on the bottom are yours.</source>
+        <target><x id="PH" equiv-text="this.gameName"/> est un Mancala. Mancala est le nom d'une famille de jeux de plateau datant au moins du troisième siècle. Les mancalas sont des jeux de distribution (égrenage) et capture. Leur but est de capturer le plus de graines. Les cases sont appelées des maisons. Celles sur l'extrême gauche et droite sont appellées les magasins, ils contiennent les graines que chaque joueur a capturé. Comme vous jouez Foncé, vos 6 maisons sont celles du bas.</target>
       </trans-unit>
       <trans-unit id="9104781897718296194" datatype="html">
         <source>Bonus fact: Awalé is the most common of all Mancalas.</source>
@@ -3677,9 +3727,9 @@
         Le joueur possédant le plus de pièces en fin de partie gagne.
         Ici, le joueur foncé a 28 points et le joueur clair en a 36, le joueur clair a donc gagné.</target>
       </trans-unit>
-      <trans-unit id="8462968705575405423" datatype="html">
-        <source>Capture (1/2)</source>
-        <target>Capture (1/2)</target>
+      <trans-unit id="3656469467006851761" datatype="html">
+        <source>Captures (1/2)</source>
+        <target>Captures (1/2)</target>
       </trans-unit>
       <trans-unit id="5285597397338861824" datatype="html">
         <source>At the beginning of the game, pieces are placed as shown here.
@@ -3690,9 +3740,9 @@
         Pour qu&apos;un coup soit légal il faut qu&apos;il prenne en sandwich minimum une pièce adverse entre la pièce que vous posez et une de vos pièces.&lt;br/&gt;&lt;br/&gt;
         Foncé joue en premier, faites n&apos;importe quel mouvement en cliquant pour déposer votre pièce.</target>
       </trans-unit>
-      <trans-unit id="6014794960681933717" datatype="html">
-        <source>Capture (2/2)</source>
-        <target>Capture (2/2)</target>
+      <trans-unit id="4590681633219539758" datatype="html">
+        <source>Captures (2/2)</source>
+        <target>Captures (2/2)</target>
       </trans-unit>
       <trans-unit id="7280078972566788741" datatype="html">
         <source>A move can also capture a bigger line, and more than one line at a time&lt;br/&gt;&lt;br/&gt;You&apos;re playing Light here. Play on the bottom left to see a capture.</source>
@@ -3838,6 +3888,10 @@
         <source>Number of bonus mountains</source>
         <target>Nombre de montagnes bonus</target>
       </trans-unit>
+      <trans-unit id="8745202933853690845" datatype="html">
+        <source>The goal at Siam is to be the first to push a mountain out of the board. The initial board contains three mountains, and no pieces are initially on the board. During its turn, a player can do one of the following actions:&lt;ol&gt;&lt;li&gt;Put a new piece on the board.&lt;/li&gt;&lt;li&gt;Change the orientation of one of its piece&lt;/li&gt;&lt;li&gt;Move one of its piece and optionally reorient it.&lt;/li&gt;&lt;li&gt;Take one of its pieces out of the board.&lt;/li&gt;&lt;/ol&gt;</source>
+        <target>Le but du Siam est d&apos;être le premier à pousser une montagne hors du plateau. Le plateau de départ en contient trois, au centre, et aucun pion n&apos;est initialement sur le plateau. Durant son tour de jeu un joueur peut effectuer l&apos;une des actions suivantes :&lt;ol&gt;&lt;li&gt;Faire entrer une pièce sur le plateau.&lt;/li&gt;&lt;li&gt;Changer l&apos;orientation d&apos;une de ses pièces.&lt;/li&gt;&lt;li&gt;Déplacer une de ses pièces et éventuellement la réorienter.&lt;/li&gt;&lt;li&gt;Sortir un de ses pions du plateau.&lt;/li&gt;&lt;/ol&gt;</target>
+      </trans-unit>
       <trans-unit id="5290831626966707862" datatype="html">
         <source>Cannot rotate piece outside the board: <x id="PH" equiv-text="move.toString()"/></source>
         <target>On ne peut pas rotationner une pièce hors du plateau: <x id="PH" equiv-text="move.toString()"/></target>
@@ -3849,10 +3903,6 @@
       <trans-unit id="5519545750670700019" datatype="html">
         <source>SiamMove should have moveDirection and landingOrientation matching when a piece goes out of the board: <x id="PH" equiv-text="move.toString()"/></source>
         <target>Les SiamMove doivent avoir moveDirection et landingOrientation identique quand une pièce sort du plateau: <x id="PH" equiv-text="move.toString()"/></target>
-      </trans-unit>
-      <trans-unit id="1043275525655591688" datatype="html">
-        <source>The goal at Siam is to be the first to push a mountain out of the board. The initial board contains three mountains, and no pieces are initially on the board. During its turn, a player can do one of the following actions: &lt;ol&gt;&lt;li&gt;Put a new piece on the board.&lt;/li&gt;&lt;li&gt;Change the orientation of one of its piece&lt;/li&gt;&lt;li&gt;Move one of its piece and optionally reorient it.&lt;/li&gt;&lt;li&gt;Take one of its pieces out of the board.&lt;/li&gt;&lt;/ol&gt;</source>
-        <target>Le but du Siam est d&apos;être le premier à pousser une montagne hors du plateau. Le plateau de départ en contient trois, au centre, et aucun pion n&apos;est initialement sur le plateau. Durant son tour de jeu un joueur peut effectuer l&apos;une des actions suivantes :&lt;ol&gt;&lt;li&gt;Faire entrer une pièce sur le plateau.&lt;/li&gt;&lt;li&gt;Changer l&apos;orientation d&apos;une de ses pièces.&lt;/li&gt;&lt;li&gt;Déplacer une de ses pièces et éventuellement la réorienter.&lt;/li&gt;&lt;li&gt;Sortir un de ses pions du plateau.&lt;/li&gt;&lt;/ol&gt;</target>
       </trans-unit>
       <trans-unit id="4040000701091542987" datatype="html">
         <source>Inserting a piece</source>

@@ -24,11 +24,11 @@ export class GipfState extends HexagonalGameState<FourStatePiece> {
     }
 
     public getNumberOfPiecesToPlace(player: Player): number {
-        return this.sidePieces[player.value];
+        return this.sidePieces[player.getValue()];
     }
 
     public getNumberOfPiecesCaptured(player: Player): number {
-        return this.capturedPieces[player.value];
+        return this.capturedPieces[player.getValue()];
     }
 
     public setAtUnsafe(coord: Coord, v: FourStatePiece): this {

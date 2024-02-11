@@ -8,11 +8,7 @@ import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 export class LodestoneScoreHeuristic extends PlayerMetricHeuristic<LodestoneMove, LodestoneState> {
 
     public override getMetrics(node: LodestoneNode, _config: NoConfig): PlayerNumberTable {
-        const scores: [number, number] = node.gameState.getScores();
-        return PlayerNumberTable.of(
-            [scores[0]],
-            [scores[1]],
-        );
+        return node.gameState.getScores().toTable();
     }
 
 }

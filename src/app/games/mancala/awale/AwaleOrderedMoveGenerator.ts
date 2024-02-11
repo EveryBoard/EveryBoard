@@ -18,7 +18,7 @@ export class AwaleOrderedMoveGenerator extends AwaleMoveGenerator {
     private orderMoves(node: MancalaNode, moves: MancalaMove[], config: MancalaConfig): MancalaMove[] {
         const player: Player = node.gameState.getCurrentPlayer();
         const playerY: number = node.gameState.getOpponentY();
-        const opponentY: number = player.value;
+        const opponentY: number = player.getValue();
         // sort by captured houses
         ArrayUtils.sortByDescending(moves, (move: MancalaMove): number => {
             const board: number[][] = node.gameState.getCopiedBoard();
@@ -35,7 +35,7 @@ export class AwaleOrderedMoveGenerator extends AwaleMoveGenerator {
                     sameTerritoryValue = 10;
                 }
             } else {
-                captured = AwaleRules.get().captureIfLegal(endHouse.x, opponentY, node.gameState).capturedSum;
+                captured = AwaleRules.get().captureIfLegal(endHouse.x, opponentY, node.gameState, config).capturedSum;
             }
             // Prioritize captured, then moves in same territory, then tries to minimize number of pieces distributed
             return captured * 100 + sameTerritoryValue - toDistribute;

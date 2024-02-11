@@ -11,6 +11,7 @@ import { GobanGameComponent } from 'src/app/components/game-components/goban-gam
 import { MCTS } from 'src/app/jscaip/AI/MCTS';
 import { PenteMoveGenerator } from './PenteMoveGenerator';
 import { PenteAlignmentHeuristic } from './PenteAlignmentHeuristic';
+import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 import { Minimax } from 'src/app/jscaip/AI/Minimax';
 
 @Component({
@@ -32,7 +33,7 @@ export class PenteComponent extends GobanGameComponent<PenteRules, PenteMove, Pe
             new MCTS($localize`MCTS`, new PenteMoveGenerator(), this.rules),
         ];
         this.encoder = PenteMove.encoder;
-        this.scores = MGPOptional.of([0, 0]);
+        this.scores = MGPOptional.of(PlayerNumberMap.of(0, 0));
     }
 
     public async updateBoard(_triggerAnimation: boolean): Promise<void> {
@@ -41,7 +42,6 @@ export class PenteComponent extends GobanGameComponent<PenteRules, PenteMove, Pe
         this.scores = MGPOptional.of(this.getState().captures);
         this.victoryCoords = PenteRules.PENTE_HELPER.getVictoriousCoord(state);
         this.createHoshis();
-        this.cancelMoveAttempt();
     }
 
     public override async showLastMove(move: PenteMove): Promise<void> {
@@ -50,9 +50,9 @@ export class PenteComponent extends GobanGameComponent<PenteRules, PenteMove, Pe
         this.captured = PenteRules.get().getCaptures(move.coord, this.getPreviousState(), opponent);
     }
 
-    public override cancelMoveAttempt(): void {
-        this.lastMoved = MGPOptional.empty();
+    public override hideLastMove(): void {
         this.captured = [];
+        this.lastMoved = MGPOptional.empty();
     }
 
     public async onClick(x: number, y: number): Promise<MGPValidation> {

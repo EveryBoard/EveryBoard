@@ -6,6 +6,7 @@ import { PlayerOrNone } from 'src/app/jscaip/Player';
 import { ConnectSixRules } from './ConnectSixRules';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { GobanConfig } from 'src/app/jscaip/GobanConfig';
+import { TutorialStepMessage } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
 
 const _: PlayerOrNone = PlayerOrNone.NONE;
 const O: PlayerOrNone = PlayerOrNone.ZERO;
@@ -26,7 +27,7 @@ export class ConnectSixTutorial extends Tutorial {
             $localize`On the first turn, the first player plays only one piece.<br/><br/>You're playing Dark, place your first piece by clicking on an intersection.`,
             ConnectSixRules.get().getInitialState(defaultConfig),
             ConnectSixFirstMove.of(new Coord(9, 9)),
-            $localize`Congratulations!`,
+            TutorialStepMessage.CONGRATULATIONS(),
         ),
         // Next turn: you must place six, try to win
         TutorialStep.anyMove(
@@ -54,7 +55,7 @@ export class ConnectSixTutorial extends Tutorial {
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             ], 20),
             ConnectSixDrops.of(new Coord(4, 11), new Coord(5, 10)),
-            $localize`Congratulations!`,
+            TutorialStepMessage.CONGRATULATIONS(),
         ),
     ];
 }

@@ -8,6 +8,7 @@ import { AbaloneMove } from './AbaloneMove';
 import { AbaloneLegalityInformation, AbaloneNode, AbaloneRules } from './AbaloneRules';
 import { AbaloneState } from './AbaloneState';
 import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 
 export class AbaloneMoveGenerator extends MoveGenerator<AbaloneMove, AbaloneState> {
 
@@ -49,14 +50,15 @@ export class AbaloneMoveGenerator extends MoveGenerator<AbaloneMove, AbaloneStat
         }
         return new MGPSet(moves).toList();
     }
+
     private isAcceptablePush(move: AbaloneMove, state: AbaloneState): boolean {
-        const scores: [number, number] = state.getScores();
+        const scores: PlayerNumberMap = state.getScores();
         const status: MGPFallible<AbaloneLegalityInformation> = AbaloneRules.get().isLegal(move, state);
         if (status.isSuccess()) {
-            const OPPONENT: number = state.getCurrentOpponent().value;
+            const opponent: Player = state.getCurrentOpponent();
             const newState: AbaloneState = new AbaloneState(status.get(), state.turn + 1);
-            const newScores: [number, number] = newState.getScores();
-            if (newScores[OPPONENT] > scores[OPPONENT]) {
+            const newScores: PlayerNumberMap = newState.getScores();
+            if (scores.get(opponent) < newScores.get(opponent)) {
                 return false; // some player just push themself
             } else {
                 return true;

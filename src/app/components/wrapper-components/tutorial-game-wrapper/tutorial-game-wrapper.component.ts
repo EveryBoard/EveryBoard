@@ -15,6 +15,14 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { Localized } from 'src/app/utils/LocaleUtils';
+
+export class TutorialGameWrapperMessages {
+
+    public static readonly COMPLETED_TUTORIAL_MESSAGE: Localized = () => $localize`Congratulations, you completed the tutorial.`;
+
+    public static readonly THIS_IS_A_DEMO: Localized = () => $localize`You cannot click, this is a demo.`;
+}
 
 type TutorialPlayer = 'tutorial-player';
 
@@ -25,8 +33,6 @@ type TutorialPlayer = 'tutorial-player';
 })
 @Debug.log
 export class TutorialGameWrapperComponent extends GameWrapper<TutorialPlayer> implements AfterViewInit {
-
-    public COMPLETED_TUTORIAL_MESSAGE: string = $localize`Congratulations, you completed the tutorial.`;
 
     public steps: TutorialStep[] = [];
     public successfulSteps: number = 0;
@@ -113,6 +119,7 @@ export class TutorialGameWrapperComponent extends GameWrapper<TutorialPlayer> im
         const node: MGPFallible<AbstractNode> = this.gameComponent.rules.choose(this.gameComponent.node, move, config);
         Utils.assert(node.isSuccess(), 'It should be impossible to call onLegalUserMove with an illegal move, but got ' + node.getReasonOr(''));
         this.gameComponent.node = node.get();
+
         await this.updateBoardAndShowLastMove(false);
         this.moveAttemptMade = true;
         if (currentStep.isPredicate()) {
@@ -201,7 +208,7 @@ export class TutorialGameWrapperComponent extends GameWrapper<TutorialPlayer> im
             this.updateSuccessCount();
         }
         if (this.stepFinished.length === this.successfulSteps) {
-            this.currentMessage = this.COMPLETED_TUTORIAL_MESSAGE;
+            this.currentMessage = TutorialGameWrapperMessages.COMPLETED_TUTORIAL_MESSAGE();
             this.tutorialOver = true;
         } else {
             let indexUndone: number = (this.stepIndex + 1) % this.steps.length;

@@ -29,11 +29,16 @@ import { Timestamp } from 'firebase/firestore';
 import { OGWCTimeManagerService } from './OGWCTimeManagerService';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { OGWCRequestManagerService, RequestInfo } from './OGWCRequestManagerService';
+import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 export class OnlineGameWrapperMessages {
 
     public static readonly NO_MATCHING_PART: Localized = () => $localize`The game you tried to join does not exist.`;
+
+    public static readonly CANNOT_PLAY_AS_OBSERVER: Localized = () => $localize`You are an observer in this game, you cannot play.`;
+
+    public static readonly MUST_ANSWER_REQUEST: Localized = () => $localize`You must answer your opponent's request.`;
 }
 
 @Component({
@@ -295,7 +300,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
             await this.updateBoardAndShowLastMove(isLastMoveOfBatch);
         } else {
             // We only animate the move of opponent, because the users move has already been animated before sending it
-            const triggerAnimation: boolean = currentPartTurn % 2 !== this.role.value;
+            const triggerAnimation: boolean = currentPartTurn % 2 !== this.role.getValue();
             await this.updateBoardAndShowLastMove(triggerAnimation && isLastMoveOfBatch);
         }
         this.setCurrentPlayerAccordingToCurrentTurn();
@@ -384,7 +389,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         if (this.endGame === true) return false;
         // Cannot do a take back request before we played
         const currentPart: PartDocument = Utils.getNonNullable(this.currentPart);
-        if (currentPart.data.turn <= this.role.value) return false;
+        if (currentPart.data.turn <= this.role.getValue()) return false;
         // Otherwise, it depends on the request manager
         return this.requestManager.canMakeRequest('TakeBack');
     }
@@ -395,6 +400,21 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         if (this.endGame) return false;
         // Otherwise, it depends on the request manager
         return this.requestManager.canMakeRequest('Draw');
+    }
+
+    public override async canUserPlay(clickedElementName: string): Promise<MGPValidation> {
+        if (this.role === PlayerOrNone.NONE) {
+            const message: string = OnlineGameWrapperMessages.CANNOT_PLAY_AS_OBSERVER();
+            return MGPValidation.failure(message);
+        }
+        const result: MGPValidation = await super.canUserPlay(clickedElementName);
+        if (result.isFailure()) {
+            return result; // NOT_YOUR_TURN or GAME_HAS_ENDED are checked here
+        } else if (this.mustReply()) {
+            return MGPValidation.failure(OnlineGameWrapperMessages.MUST_ANSWER_REQUEST());
+        } else {
+            return MGPValidation.SUCCESS;
+        }
     }
 
     private async initializePlayersDatas(part: PartDocument): Promise<void> {
@@ -424,33 +444,28 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
     }
 
     public async onLegalUserMove(move: Move): Promise<void> {
-        if (this.mustReply()) {
-            this.gameComponent.message(GameWrapperMessages.MUST_ANSWER_REQUEST());
-        } else {
-            // We will update the part with new scores and game status (if needed)
-            // We have to compute the game status before adding the move to avoid
-            // risking receiving the move before computing the game status (thereby adding twice the same move)
-            const oldNode: AbstractNode = this.gameComponent.node;
-            const rules: AbstractRules = this.gameComponent.rules;
-            const state: GameState = oldNode.gameState;
-            const config: MGPOptional<RulesConfig> = await this.getConfig();
-            const legality: MGPFallible<unknown> = this.gameComponent.rules.isLegal(move, state, config);
-            Utils.assert(legality.isSuccess(), 'onLegalUserMove called with an illegal move');
-            const stateAfterMove: GameState = rules.applyLegalMove(move, state, config, legality.get());
-            const newNode: AbstractNode = new GameNode(stateAfterMove,
-                                                       MGPOptional.of(oldNode),
-                                                       MGPOptional.of(move));
-            const gameStatus: GameStatus = rules.getGameStatus(newNode, config);
-
-            // To adhere to security rules, we must add the move before updating the part
-            const encodedMove: JSONValue = this.gameComponent.encoder.encode(move);
-            const user: MinimalUser = Utils.getNonNullable(this.currentUser);
-            await this.gameEventService.addMove(this.currentPartId, user, encodedMove);
-            return this.updatePartWithStatusAndScores(gameStatus, this.gameComponent.scores);
-        }
+        // We will update the part with new scores and game status (if needed)
+        // We have to compute the game status before adding the move to avoid
+        // risking receiving the move before computing the game status (thereby adding twice the same move)
+        const oldNode: AbstractNode = this.gameComponent.node;
+        const rules: AbstractRules = this.gameComponent.rules;
+        const state: GameState = oldNode.gameState;
+        const config: MGPOptional<RulesConfig> = await this.getConfig();
+        const legality: MGPFallible<unknown> = this.gameComponent.rules.isLegal(move, state, config);
+        Utils.assert(legality.isSuccess(), 'onLegalUserMove called with an illegal move');
+        const stateAfterMove: GameState = rules.applyLegalMove(move, state, config, legality.get());
+        const newNode: AbstractNode = new GameNode(stateAfterMove,
+                                                   MGPOptional.of(oldNode),
+                                                   MGPOptional.of(move));
+        const gameStatus: GameStatus = rules.getGameStatus(newNode, config);
+        // To adhere to security rules, we must add the move before updating the part
+        const encodedMove: JSONValue = this.gameComponent.encoder.encode(move);
+        const user: MinimalUser = Utils.getNonNullable(this.currentUser);
+        await this.gameEventService.addMove(this.currentPartId, user, encodedMove);
+        return this.updatePartWithStatusAndScores(gameStatus, this.gameComponent.scores);
     }
 
-    private async updatePartWithStatusAndScores(gameStatus: GameStatus, scores: MGPOptional<readonly [number, number]>)
+    private async updatePartWithStatusAndScores(gameStatus: GameStatus, scores: MGPOptional<PlayerNumberMap>)
     : Promise<void>
     {
         if (gameStatus.isEndGame) {
@@ -470,7 +485,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         await this.gameService.notifyTimeout(this.currentPartId, victoriousPlayer, loser);
     }
 
-    private async notifyVictory(winner: Player, scores: MGPOptional<readonly [number, number]>): Promise<void> {
+    private async notifyVictory(winner: Player, scores: MGPOptional<PlayerNumberMap>): Promise<void> {
         const currentPart: PartDocument = Utils.getNonNullable(this.currentPart);
         const playerZero: MinimalUser = this.players[0].get();
         const playerOne: MinimalUser = this.players[1].get();
@@ -489,7 +504,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
     // Called by the resign button
     public async resign(): Promise<void> {
         const resigner: MinimalUser = this.getPlayer();
-        const victoriousOpponent: MinimalUser = this.players[(this.role.value + 1) % 2].get();
+        const victoriousOpponent: MinimalUser = this.players[(this.role.getValue() + 1) % 2].get();
         await this.gameService.resign(this.currentPartId, victoriousOpponent, resigner);
     }
 
@@ -581,7 +596,8 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
     public async onCancelMove(reason?: string): Promise<void> {
         if (this.gameComponent.node.previousMove.isPresent()) {
             const move: Move = this.gameComponent.node.previousMove.get();
-            await this.gameComponent.showLastMove(move);
+            const config: MGPOptional<RulesConfig> = await this.getConfig();
+            await this.gameComponent.showLastMove(move, config);
         }
     }
 

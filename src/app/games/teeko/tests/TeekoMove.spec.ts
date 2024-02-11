@@ -68,7 +68,7 @@ describe('TeekoMove', () => {
 
     });
 
-    describe('TeekoTranslateMove', () => {
+    describe('TeekoTranslationMove', () => {
 
         describe('from', () => {
 

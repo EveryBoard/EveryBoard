@@ -50,19 +50,20 @@ export class EncapsuleComponent extends RectangularGameComponent<EncapsuleRules,
         this.encoder = EncapsuleMove.encoder;
     }
 
+    public override async showLastMove(move: EncapsuleMove): Promise<void> {
+        this.lastLandingCoord = MGPOptional.of(move.landingCoord);
+        this.lastStartingCoord = move.startingCoord;
+    }
+
+    public override hideLastMove(): void {
+        this.lastLandingCoord = MGPOptional.empty();
+        this.lastStartingCoord = MGPOptional.empty();
+    }
+
     public async updateBoard(_triggerAnimation: boolean): Promise<void> {
         const state: EncapsuleState = this.getState();
         this.board = state.getCopiedBoard();
-        const move: MGPOptional<EncapsuleMove> = this.node.previousMove;
         this.calculateLeftPieceCoords();
-
-        if (move.isPresent()) {
-            this.lastLandingCoord = MGPOptional.of(move.get().landingCoord);
-            this.lastStartingCoord = move.get().startingCoord;
-        } else {
-            this.lastLandingCoord = MGPOptional.empty();
-            this.lastStartingCoord = MGPOptional.empty();
-        }
     }
 
     public getListPieces(content: EncapsuleSpace): EncapsulePiece[] {
@@ -164,7 +165,7 @@ export class EncapsuleComponent extends RectangularGameComponent<EncapsuleRules,
     private getPieceStrokeClass(piece: EncapsulePiece): string {
         const player: PlayerOrNone = piece.getPlayer();
         assert(player.isPlayer(), 'EncapsuleComponent.getPieceStrokeClass should only be called with actual pieces!');
-        return 'player' + player.value + '-stroke';
+        return 'player' + player.getValue() + '-stroke';
     }
 
     public getPieceRadius(piece: EncapsulePiece): number {

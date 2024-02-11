@@ -27,42 +27,47 @@ export abstract class TriangularGameComponent<R extends SuperRules<M, S, C, L>,
             return this.getDownwardCoordinate();
         }
     }
+
     public getTrianglePoints(x: number, y: number): string {
         const coords: Coord[] = this.getTriangleCornerCoords(x, y);
-        const strings: string[] = coords.map((c: Coord) => c.x + ',' + c.y);
-        return strings.reduce((sum: string, last: string) => sum + ',' + last);
+        return this.mapCoordsToPoints(coords);
     }
-    public getTriangleTranslateCoord(x: number, y: number): Coord {
-        const translateX: number = 0.5 * x * this.SPACE_SIZE;
-        const translateY: number = y * this.SPACE_SIZE;
-        return new Coord(translateX, translateY);
+
+    public getTriangleTranslationCoord(x: number, y: number): Coord {
+        const translationX: number = 0.5 * x * this.SPACE_SIZE;
+        const translationY: number = y * this.SPACE_SIZE;
+        return new Coord(translationX, translationY);
     }
-    public getTriangleTranslate(x: number, y: number): string {
-        const translate: Coord = this.getTriangleTranslateCoord(x, y);
-        return 'translate(' + translate.x + ', ' + translate.y + ')';
+
+    public getTriangleTranslation(x: number, y: number): string {
+        const translation: Coord = this.getTriangleTranslationCoord(x, y);
+        return 'translate(' + translation.x + ', ' + translation.y + ')';
     }
+
     private getDownwardCoordinate(): Coord[] {
-        const left: number = - this.SPACE_SIZE / 2;
-        const middle: number = 0;
-        const right: number = this.SPACE_SIZE / 2;
-        const top: number = - this.SPACE_SIZE / 2;
-        const bottom: number = this.SPACE_SIZE / 2;
+        const left: number = 0;
+        const middle: number = this.SPACE_SIZE / 2;
+        const right: number = this.SPACE_SIZE;
+        const top: number = 0;
+        const bottom: number = this.SPACE_SIZE;
         const leftCorner: Coord = new Coord(left, top);
         const middleCorner: Coord = new Coord(middle, bottom);
         const rightCorner: Coord = new Coord(right, top);
         return [leftCorner, middleCorner, rightCorner, leftCorner];
     }
+
     private getUpwardCoordinate(): Coord[] {
-        const left: number = - this.SPACE_SIZE / 2;
-        const middle: number = 0;
-        const right: number = this.SPACE_SIZE / 2;
-        const top: number = - this.SPACE_SIZE / 2;
-        const bottom: number = this.SPACE_SIZE / 2;
+        const left: number = 0;
+        const middle: number = this.SPACE_SIZE / 2;
+        const right: number = this.SPACE_SIZE;
+        const top: number = 0;
+        const bottom: number = this.SPACE_SIZE;
         const leftCorner: Coord = new Coord(left, bottom);
         const middleCorner: Coord = new Coord(middle, top);
         const rightCorner: Coord = new Coord(right, bottom);
         return [leftCorner, middleCorner, rightCorner, leftCorner];
     }
+
     public getPyramidPoints(x: number, y: number): string {
         if ((x + y) % 2 === 1) {
             return this.getDownwardPyramidPoints();
@@ -70,40 +75,65 @@ export abstract class TriangularGameComponent<R extends SuperRules<M, S, C, L>,
             return this.getUpwardPyramidPoints();
         }
     }
+
+    private getDownwardPyramidCoords(): Coord[] {
+        const width: number = this.SPACE_SIZE;
+        const halfWidth: number = this.SPACE_SIZE / 2;
+        const UP_LEFT: Coord = new Coord(0, 0);
+        const UP_RIGHT: Coord = new Coord(width, 0);
+        const DOWN_CENTER: Coord = new Coord(halfWidth, width);
+        const CENTER: Coord = new Coord(halfWidth, halfWidth);
+        return [
+            UP_LEFT,
+            DOWN_CENTER,
+            CENTER,
+            UP_LEFT,
+            CENTER,
+            UP_RIGHT,
+            UP_LEFT,
+            UP_RIGHT,
+            DOWN_CENTER,
+            CENTER,
+            UP_RIGHT,
+        ];
+    }
+
     private getDownwardPyramidPoints(): string {
-        const halfWidth: number = this.SPACE_SIZE / 2;
-        const UP_LEFT: string = (- halfWidth) + ', ' + (- halfWidth);
-        const UP_RIGHT: string = halfWidth + ', ' + (- halfWidth);
-        const DOWN_CENTER: string = '0, ' + halfWidth;
-        const CENTER: string = '0, 0';
-        return UP_LEFT + ',' +
-               DOWN_CENTER + ',' +
-               CENTER + ',' +
-               UP_LEFT + ',' +
-               CENTER + ',' +
-               UP_RIGHT + ',' +
-               UP_LEFT + ',' +
-               UP_RIGHT + ',' +
-               DOWN_CENTER + ',' +
-               CENTER + ',' +
-               UP_RIGHT;
+        const coords: Coord[] = this.getDownwardPyramidCoords();
+        return this.mapCoordsToPoints(coords);
     }
+
+    private mapCoordsToPoints(coords: Coord[]): string {
+        return coords
+            .map((coord: Coord) => coord.toSVGPoint())
+            .join(', ');
+    }
+
+    private getUpwardPyramidCoords(): Coord[] {
+        const halfWidth: number = this.SPACE_SIZE / 2;
+        const width: number = this.SPACE_SIZE;
+        const DOWN_LEFT: Coord = new Coord(0, width);
+        const DOWN_RIGHT: Coord = new Coord(width, width);
+        const UP_CENTER: Coord = new Coord(halfWidth, 0);
+        const CENTER: Coord = new Coord(halfWidth, halfWidth);
+        return [
+            DOWN_LEFT,
+            UP_CENTER,
+            CENTER,
+            DOWN_LEFT,
+            CENTER,
+            DOWN_RIGHT,
+            DOWN_LEFT,
+            DOWN_RIGHT,
+            UP_CENTER,
+            CENTER,
+            DOWN_RIGHT,
+        ];
+    }
+
     private getUpwardPyramidPoints(): string {
-        const halfWidth: number = this.SPACE_SIZE / 2;
-        const DOWN_LEFT: string = (- halfWidth) + ', ' + halfWidth;
-        const DOWN_RIGHT: string = halfWidth + ', ' + halfWidth;
-        const UP_CENTER: string = '0, ' + (- halfWidth);
-        const CENTER: string = '0, 0';
-        return DOWN_LEFT + ',' +
-               UP_CENTER + ',' +
-               CENTER + ',' +
-               DOWN_LEFT + ',' +
-               CENTER + ',' +
-               DOWN_RIGHT + ',' +
-               DOWN_LEFT + ',' +
-               DOWN_RIGHT + ',' +
-               UP_CENTER + ',' +
-               CENTER + ',' +
-               DOWN_RIGHT;
+        const coords: Coord[] = this.getUpwardPyramidCoords();
+        return this.mapCoordsToPoints(coords);
     }
+
 }

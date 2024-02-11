@@ -15,10 +15,7 @@ export class HiveHeuristic extends PlayerMetricHeuristic<HiveMove, HiveState> {
         // The board value is based on the number of neighbors to the queen
         const scoreZero: number = this.queenBeeMobility(node.gameState, Player.ZERO);
         const scoreOne: number = this.queenBeeMobility(node.gameState, Player.ONE);
-        return PlayerNumberTable.of(
-            [scoreZero],
-            [scoreOne],
-        );
+        return PlayerNumberTable.ofSingle(scoreZero, scoreOne);
     }
 
     private queenBeeMobility(state: HiveState, player: Player): number {

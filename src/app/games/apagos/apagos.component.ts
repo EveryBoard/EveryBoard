@@ -95,8 +95,8 @@ export class ApagosComponent extends GameComponent<ApagosRules, ApagosMove, Apag
     public async updateBoard(_triggerAnimation: boolean): Promise<void> {
         const state: ApagosState = this.getState();
         this.board = state.board;
-        this.remainingZero = state.remaining.get(Player.ZERO).get();
-        this.remainingOne = state.remaining.get(Player.ONE).get();
+        this.remainingZero = state.remaining.get(Player.ZERO);
+        this.remainingOne = state.remaining.get(Player.ONE);
 
         this.hideLastMove();
         this.showPossibleDrops();
@@ -168,10 +168,10 @@ export class ApagosComponent extends GameComponent<ApagosRules, ApagosMove, Apag
         const state: ApagosState = this.getState();
         for (let x: number = 0; x < 4; x++) {
             if (state.board[x].isFull() === false) {
-                if (state.remaining.get(Player.ZERO).get() > 0) {
+                if (state.remaining.get(Player.ZERO) > 0) {
                     this.displayableArrow.push({ x, player: Player.ZERO });
                 }
-                if (state.remaining.get(Player.ONE).get() > 0) {
+                if (state.remaining.get(Player.ONE) > 0) {
                     this.displayableArrow.push({ x, player: Player.ONE });
                 }
             }

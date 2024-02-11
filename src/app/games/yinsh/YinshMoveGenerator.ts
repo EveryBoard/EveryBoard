@@ -8,6 +8,7 @@ import { YinshNode, YinshRules } from './YinshRules';
 import { MoveGenerator } from 'src/app/jscaip/AI/AI';
 import { GipfCapture, GipfProjectHelper } from 'src/app/jscaip/GipfProjectHelper';
 import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { Player } from 'src/app/jscaip/Player';
 
 export class YinshMoveGenerator extends MoveGenerator<YinshMove, YinshState> {
 
@@ -69,10 +70,10 @@ export class YinshMoveGenerator extends MoveGenerator<YinshMove, YinshState> {
         return moves;
     }
     private getRingCoords(state: YinshState): Coord[] {
-        const player: number = state.getCurrentPlayer().value;
+        const player: Player = state.getCurrentPlayer();
         const coords: Coord[] = [];
         state.forEachCoord((coord: Coord, content: YinshPiece): void => {
-            if (content === YinshPiece.RINGS[player]) {
+            if (content === YinshPiece.RINGS.get(player).get()) {
                 coords.push(coord);
             }
         });

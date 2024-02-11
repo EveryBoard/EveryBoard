@@ -3,6 +3,7 @@ import { Player } from 'src/app/jscaip/Player';
 import { GoPiece, GoState, Phase } from '../GoState';
 import { GoConfig, GoRules } from '../GoRules';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 
 const O: GoPiece = GoPiece.DARK;
 const _: GoPiece = GoPiece.EMPTY;
@@ -67,7 +68,11 @@ describe('GoState', () => {
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             ];
-            const expectedState: GoState = new GoState(expectedBoard, [0, 0], 1, MGPOptional.empty(), Phase.PLAYING);
+            const expectedState: GoState = new GoState(expectedBoard,
+                                                       PlayerNumberMap.of(0, 0),
+                                                       1,
+                                                       MGPOptional.empty(),
+                                                       Phase.PLAYING);
             expect(expectedState).toEqual(state);
         });
 
@@ -100,7 +105,11 @@ describe('GoState', () => {
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             ];
-            const expectedState: GoState = new GoState(expectedBoard, [0, 0], 1, MGPOptional.empty(), Phase.PLAYING);
+            const expectedState: GoState = new GoState(expectedBoard,
+                                                       PlayerNumberMap.of(0, 0),
+                                                       1,
+                                                       MGPOptional.empty(),
+                                                       Phase.PLAYING);
             expect(expectedState).toEqual(state);
         });
 
@@ -133,7 +142,11 @@ describe('GoState', () => {
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             ];
-            const expectedState: GoState = new GoState(expectedBoard, [0, 0], 1, MGPOptional.empty(), Phase.PLAYING);
+            const expectedState: GoState = new GoState(expectedBoard,
+                                                       PlayerNumberMap.of(0, 0),
+                                                       1,
+                                                       MGPOptional.empty(),
+                                                       Phase.PLAYING);
             expect(expectedState).toEqual(state);
         });
 
@@ -166,7 +179,11 @@ describe('GoState', () => {
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             ];
-            const expectedState: GoState = new GoState(expectedBoard, [0, 0], 1, MGPOptional.empty(), Phase.PLAYING);
+            const expectedState: GoState = new GoState(expectedBoard,
+                                                       PlayerNumberMap.of(0, 0),
+                                                       1,
+                                                       MGPOptional.empty(),
+                                                       Phase.PLAYING);
             expect(expectedState).toEqual(state);
         });
 

@@ -343,6 +343,13 @@ export class ComponentTestUtils<T extends AbstractGameComponent, P extends Compa
         this.canUserPlaySpy = spyOn(this.gameComponent, 'canUserPlay').and.callThrough();
     }
 
+    public resetSpies(): void {
+        this.cancelMoveSpy.calls.reset();
+        this.chooseMoveSpy.calls.reset();
+        this.onLegalUserMoveSpy.calls.reset();
+        this.canUserPlaySpy.calls.reset();
+    }
+
     public expectToBeCreated(): void {
         expect(this.getWrapper()).withContext('Wrapper should be created').toBeTruthy();
         expect(this.getGameComponent()).withContext('Component should be created').toBeTruthy();

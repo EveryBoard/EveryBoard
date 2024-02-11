@@ -17,6 +17,7 @@ import { MCTS } from 'src/app/jscaip/AI/MCTS';
 import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 import { LodestoneMoveGenerator } from './LodestoneMoveGenerator';
 import { LodestoneScoreHeuristic } from './LodestoneScoreHeuristic';
+import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 import { Minimax } from 'src/app/jscaip/AI/Minimax';
 import { Utils } from 'src/app/utils/utils';
 import { ViewBox } from 'src/app/components/game-components/GameComponentUtils';
@@ -150,10 +151,9 @@ export class LodestoneComponent
             new MCTS($localize`MCTS`, new LodestoneMoveGenerator(), this.rules),
         ];
         this.encoder = LodestoneMove.encoder;
-        this.scores = MGPOptional.of([0, 0]);
-
         this.PIECE_RADIUS = (this.SPACE_SIZE - (2 * this.STROKE_WIDTH)) * 0.5;
         this.displayedState = this.getState();
+        this.scores = MGPOptional.of(PlayerNumberMap.of(0, 0));
     }
 
     public getViewBox(): ViewBox {
@@ -178,8 +178,7 @@ export class LodestoneComponent
         }
         this.hideLastMove();
         if (this.selectedCoord.equalsValue(coord)) {
-            await this.cancelMove();
-            return MGPValidation.SUCCESS;
+            return this.cancelMove();
         }
         this.selectedCoord = MGPOptional.of(coord);
         if (this.selectedLodestone.isPresent()) {
@@ -203,8 +202,7 @@ export class LodestoneComponent
         const player: Player = this.getCurrentPlayer();
         const playerLodestone: LodestonePieceLodestone = LodestonePieceLodestone.of(player, lodestone);
         if (this.selectedLodestone.equalsValue(playerLodestone)) {
-            await this.cancelMove();
-            return MGPValidation.SUCCESS;
+            return this.cancelMove();
         }
         this.selectedLodestone = MGPOptional.of(playerLodestone);
         if (this.selectedCoord.isPresent()) {

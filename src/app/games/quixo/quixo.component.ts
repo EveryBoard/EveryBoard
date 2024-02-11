@@ -50,10 +50,17 @@ export class QuixoComponent extends RectangularGameComponent<QuixoRules,
         this.encoder = QuixoMove.encoder;
     }
 
+    public override async showLastMove(move: QuixoMove): Promise<void> {
+        this.lastMoveCoord = MGPOptional.of(move.coord);
+    }
+
+    public override hideLastMove(): void {
+        this.lastMoveCoord = MGPOptional.empty();
+    }
+
     public async updateBoard(_triggerAnimation: boolean): Promise<void> {
         this.state = this.getState();
         this.board = this.state.board;
-        this.lastMoveCoord = this.node.previousMove.map((move: QuixoMove) => move.coord);
         this.victoriousCoords = QuixoRules.getVictoriousCoords(this.state);
     }
 
@@ -100,10 +107,10 @@ export class QuixoComponent extends RectangularGameComponent<QuixoRules,
         const directions: Orthogonal[] = [];
         const chosenCoord: Coord = this.chosenCoord.get();
         const state: QuixoState = this.getState();
-        if (chosenCoord.x !== state.getWidth() - 1) directions.push(Orthogonal.RIGHT);
-        if (chosenCoord.x !== 0) directions.push(Orthogonal.LEFT);
-        if (chosenCoord.y !== state.getHeight()) directions.push(Orthogonal.DOWN);
-        if (chosenCoord.y !== 0) directions.push(Orthogonal.UP);
+        if (chosenCoord.x < state.getWidth() - 1) directions.push(Orthogonal.RIGHT);
+        if (0 < chosenCoord.x) directions.push(Orthogonal.LEFT);
+        if (chosenCoord.y < state.getHeight() - 1) directions.push(Orthogonal.DOWN);
+        if (0 < chosenCoord.y) directions.push(Orthogonal.UP);
         return directions;
     }
 

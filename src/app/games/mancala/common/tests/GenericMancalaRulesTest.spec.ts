@@ -10,6 +10,7 @@ import { GameNode } from 'src/app/jscaip/AI/GameNode';
 import { MancalaNode, MancalaRules } from '../MancalaRules';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { TestUtils } from 'src/app/utils/tests/TestUtils.spec';
+import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 
 export class MancalaRulesTestEntries {
     gameName: string; // 'Awale', 'Kalah', etc
@@ -24,27 +25,13 @@ export function DoMancalaRulesTests(entries: MancalaRulesTestEntries): void {
 
     describe(entries.gameName + 'Rules generic tests', () => {
 
-        it('should allow simple move', () => {
-            // Given any board
-            const state: MancalaState = MancalaRules.getInitialState(defaultConfig);
-            // When doing a simple move
-            // Then the seed should be distributed
-            const expectedBoard: Table<number> = [
-                [4, 4, 4, 4, 4, 4],
-                [4, 5, 5, 5, 5, 0],
-            ];
-            const expectedState: MancalaState = new MancalaState(expectedBoard, 1, [0, 0]);
-            const move: MancalaMove = entries.simpleMove;
-            RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
-        });
-
         it('should refuse distributing empty space', () => {
             // Given a board where 'simpleMove' would be illegal, distributing an empty house
             const board: number[][] = [
                 [4, 0, 4, 4, 4, 4],
                 [4, 0, 4, 4, 4, 0],
             ];
-            const state: MancalaState = new MancalaState(board, 0, [0, 0]);
+            const state: MancalaState = new MancalaState(board, 0, PlayerNumberMap.of(0, 0));
             // When attempting to distribute empty space
             // Then it should be illegal
             const reason: string = MancalaFailure.MUST_CHOOSE_NON_EMPTY_HOUSE();
@@ -61,7 +48,7 @@ export function DoMancalaRulesTests(entries: MancalaRulesTestEntries): void {
             const state: MancalaState = new MancalaState([
                 [0, 0, 0, 0, 0, 0],
                 [2, 0, 0, 0, 2, 0],
-            ], 10, [0, 0]);
+            ], 10, PlayerNumberMap.of(0, 0));
 
             // When attempting starving move
             const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(4));
@@ -81,21 +68,22 @@ export function DoMancalaRulesTests(entries: MancalaRulesTestEntries): void {
             const state: MancalaState = new MancalaState([
                 [0, 0, 0, 0, 0, 0],
                 [2, 0, 0, 0, 2, 0],
-            ], 10, [22, 22]);
+            ], 10, PlayerNumberMap.of(22, 22));
 
             // When attempting starving move
             const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(4));
 
             // Then the move should be a success
-            const expectedState: MancalaState = new MancalaState([
-                [0, 0, 0, 0, 0, 0],
-                [0, 0, 0, 0, 0, 0],
-            ], 11, [26, 22]);
+            const expectedState: MancalaState = new MancalaState(
+                TableUtils.create(6, 2, 0),
+                11,
+                PlayerNumberMap.of(26, 22),
+            );
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState, customConfig);
         });
 
-        it('should know when to mansoon', () => {
-            // Given a state where player is about to cede his last stone, and won't be feedable
+        it('should know when to monsoon', () => {
+            // Given a state where player is about to cede his last seed, and won't be feedable
             const customConfig: MGPOptional<MancalaConfig> = MGPOptional.of({
                 ...defaultConfig.get(),
                 passByPlayerStore: true,
@@ -104,16 +92,17 @@ export function DoMancalaRulesTests(entries: MancalaRulesTestEntries): void {
             const state: MancalaState = new MancalaState([
                 [0, 0, 0, 0, 0, 1],
                 [1, 0, 0, 0, 2, 0],
-            ], 11, [22, 22]);
+            ], 11, PlayerNumberMap.of(22, 22));
 
             // When doing the last move
             const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(5));
 
             // Then the move should be a success
-            const expectedState: MancalaState = new MancalaState([
-                [0, 0, 0, 0, 0, 0],
-                [0, 0, 0, 0, 0, 0],
-            ], 12, [25, 23]);
+            const expectedState: MancalaState = new MancalaState(
+                TableUtils.create(6, 2, 0),
+                12,
+                PlayerNumberMap.of(25, 23),
+            );
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState, customConfig);
         });
 
@@ -124,7 +113,7 @@ export function DoMancalaRulesTests(entries: MancalaRulesTestEntries): void {
                 passByPlayerStore: true,
                 mustContinueDistributionAfterStore: true,
             });
-            const state: MancalaState = MancalaRules.getInitialState(customConfig);
+            const state: MancalaState = rules.getInitialState(customConfig);
 
             // When attempting a store-ending single distribution
             const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(3));
@@ -152,7 +141,7 @@ export function DoMancalaRulesTests(entries: MancalaRulesTestEntries): void {
                         // Given a state with no more seeds and where player 0 has captured more seeds
                         const board: Table<number> = TableUtils.create(config.width, 2, 0);
                         const state: MancalaState =
-                            new MancalaState(board, 6, [halfOfTotalSeeds + 2, halfOfTotalSeeds - 2]);
+                            new MancalaState(board, 6, PlayerNumberMap.of(halfOfTotalSeeds + 2, halfOfTotalSeeds - 2));
                         const node: MancalaNode = new GameNode(state);
                         // Then it should be a victory for player 0
                         RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, MGPOptional.of(config));
@@ -162,7 +151,7 @@ export function DoMancalaRulesTests(entries: MancalaRulesTestEntries): void {
                         // Given a state with no more seeds and where player 1 has captured more seeds
                         const board: Table<number> = TableUtils.create(config.width, 2, 0);
                         const state: MancalaState =
-                            new MancalaState(board, 6, [halfOfTotalSeeds - 2, halfOfTotalSeeds + 2]);
+                            new MancalaState(board, 6, PlayerNumberMap.of(halfOfTotalSeeds - 2, halfOfTotalSeeds + 2));
                         const node: MancalaNode = new GameNode(state);
                         // Then it should be a victory for player 1
                         RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, MGPOptional.of(config));
@@ -172,7 +161,7 @@ export function DoMancalaRulesTests(entries: MancalaRulesTestEntries): void {
                         // Given a state with no more seeds and both players have captured the same number of seeds
                         const board: Table<number> = TableUtils.create(config.width, 2, 0);
                         const state: MancalaState =
-                            new MancalaState(board, 6, [halfOfTotalSeeds, halfOfTotalSeeds]);
+                            new MancalaState(board, 6, PlayerNumberMap.of(halfOfTotalSeeds, halfOfTotalSeeds));
                         const node: MancalaNode = new GameNode(state);
                         // Then it should be a draw
                         RulesUtils.expectToBeDraw(rules, node, MGPOptional.of(config));

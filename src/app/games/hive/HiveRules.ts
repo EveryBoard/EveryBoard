@@ -15,6 +15,7 @@ import { HiveState } from './HiveState';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 
 export class HiveNode extends GameNode<HiveMove, HiveState> {}
 
@@ -225,18 +226,20 @@ export class HiveRules extends Rules<HiveMove, HiveState> {
     public getGameStatus(node: HiveNode): GameStatus {
         const state: HiveState = node.gameState;
 
-        const neighbors: [number, number] = [0, 0];
+        const neighbors: PlayerNumberMap = PlayerNumberMap.of(0, 0);
         for (const player of Player.PLAYERS) {
             const queenBeeLocation: MGPOptional<Coord> = state.queenBeeLocation(player);
             if (queenBeeLocation.isPresent()) {
-                neighbors[player.value] = state.numberOfNeighbors(queenBeeLocation.get());
+                neighbors.put(player, state.numberOfNeighbors(queenBeeLocation.get()));
             }
         }
-        if (neighbors[0] === 6 && neighbors[1] === 6) {
+        const neighborsZero: number = neighbors.get(Player.ZERO);
+        const neighborsOne: number = neighbors.get(Player.ONE);
+        if (neighborsZero === 6 && neighborsOne === 6) {
             return GameStatus.DRAW;
-        } else if (neighbors[0] === 6) {
+        } else if (neighborsZero === 6) {
             return GameStatus.getVictory(Player.ONE);
-        } else if (neighbors[1] === 6) {
+        } else if (neighborsOne === 6) {
             return GameStatus.getVictory(Player.ZERO);
         }
 

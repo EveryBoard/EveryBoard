@@ -32,6 +32,7 @@ import { P4MoveGenerator } from 'src/app/games/p4/P4MoveGenerator';
 import { P4Heuristic } from 'src/app/games/p4/P4Heuristic';
 import { P4Config, P4Rules } from 'src/app/games/p4/P4Rules';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
+import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 
 const _: PlayerOrNone = PlayerOrNone.NONE;
 const O: PlayerOrNone = PlayerOrNone.ZERO;
@@ -152,7 +153,7 @@ describe('LocalGameWrapperComponent (game phase)', () => {
         testUtils.expectElementNotToExist('#scoreZero');
         testUtils.expectElementNotToExist('#scoreOne');
 
-        testUtils.getGameComponent().scores = MGPOptional.of([0, 0]);
+        testUtils.getGameComponent().scores = MGPOptional.of(PlayerNumberMap.of(0, 0));
         testUtils.forceChangeDetection();
 
         testUtils.expectElementToExist('#scoreZero');
@@ -506,7 +507,8 @@ describe('LocalGameWrapperComponent (game phase)', () => {
             await testUtils.getWrapper().onCancelMove();
 
             // Then showLastMove should have been called
-            expect(component.showLastMove).toHaveBeenCalledOnceWith(P4Move.of(4));
+            const defaultConfig: MGPOptional<P4Config> = P4Rules.get().getDefaultRulesConfig();
+            expect(component.showLastMove).toHaveBeenCalledOnceWith(P4Move.of(4), defaultConfig);
         }));
 
         it('should not showLastMove when there is none', fakeAsync(async() => {

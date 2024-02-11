@@ -254,6 +254,10 @@ export class DiamComponent extends GameComponent<DiamRules, DiamMove, DiamState>
         this.showLastMoveOnPieces(move);
     }
 
+    public override hideLastMove(): void {
+        return;
+    }
+
     private showLastMoveOnSpaces(move: DiamMove): void {
         for (let x: number = 0; x < DiamState.WIDTH; x++) {
             const classes: string[] = [];
@@ -307,9 +311,9 @@ export class DiamComponent extends GameComponent<DiamRules, DiamMove, DiamState>
                 const pieceInfos: PieceInfo[] = this.viewInfo.remainingPieces.get(piece.owner).get();
                 const backgroundClasses: string[] = [];
                 if (piece.otherPieceType) {
-                    backgroundClasses.push('player' + (piece.owner.value) + '-alternate-fill');
+                    backgroundClasses.push('player' + (piece.owner.getValue()) + '-alternate-fill');
                 } else {
-                    backgroundClasses.push('player' + (piece.owner.value) + '-fill');
+                    backgroundClasses.push('player' + (piece.owner.getValue()) + '-fill');
                 }
                 pieceInfos.push({
                     backgroundClasses,
@@ -369,7 +373,7 @@ export class DiamComponent extends GameComponent<DiamRules, DiamMove, DiamState>
                     foregroundClasses.push('clickable-stroke-hover');
                 }
                 infos.push({
-                    backgroundClasses: ['player' + piece.owner.value + (piece.otherPieceType ? '-alternate-fill' : '-fill')],
+                    backgroundClasses: ['player' + piece.owner.getValue() + (piece.otherPieceType ? '-alternate-fill' : '-fill')],
                     foregroundClasses,
                     y,
                     drawPosition: this.getDrawPositionOnBoard(x, y),

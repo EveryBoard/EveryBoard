@@ -5,6 +5,7 @@ import { assert } from 'src/app/utils/assert';
 import { DiamPiece } from './DiamPiece';
 
 export class DiamState extends GameStateWithTable<DiamPiece> {
+
     public static WIDTH: number = 8;
 
     public static HEIGHT: number = 4;

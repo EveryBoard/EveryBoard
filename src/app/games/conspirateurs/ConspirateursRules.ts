@@ -13,6 +13,7 @@ import { ConspirateursState } from './ConspirateursState';
 import { TableUtils } from 'src/app/utils/ArrayUtils';
 import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 import { Utils } from 'src/app/utils/utils';
+import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 
 export class ConspirateursNode extends GameNode<ConspirateursMove, ConspirateursState> {}
 
@@ -164,14 +165,14 @@ export class ConspirateursRules extends Rules<ConspirateursMove, ConspirateursSt
         return this.nextJumps(jump, state).length > 0;
     }
 
-    public getGameStatus(node: ConspirateursNode): GameStatus {
+    public override getGameStatus(node: ConspirateursNode): GameStatus {
         const state: ConspirateursState = node.gameState;
-        const protectedPawns: [number, number] = [0, 0];
+        const protectedPawns: PlayerNumberMap = PlayerNumberMap.of(0, 0);
         for (const shelter of ConspirateursState.ALL_SHELTERS) {
             const content: PlayerOrNone = state.getPieceAt(shelter);
             if (content.isPlayer()) {
-                protectedPawns[content.value] += 1;
-                if (protectedPawns[content.value] === 20) {
+                protectedPawns.add(content, 1);
+                if (protectedPawns.get(content) === 20) {
                     return GameStatus.getVictory(content);
                 }
             }

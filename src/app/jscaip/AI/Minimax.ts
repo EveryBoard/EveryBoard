@@ -50,7 +50,7 @@ export class DummyHeuristic<M extends Move, S extends GameState, C extends Rules
 
     public override getMetrics(_node: GameNode<M, S>, _config?: MGPOptional<C>): PlayerNumberTable {
         // This is really a dummy heuristic: boards have no value
-        return PlayerNumberTable.of([0], [0]);
+        return PlayerNumberTable.ofSingle(0, 0);
     }
 
 }

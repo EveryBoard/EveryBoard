@@ -5,6 +5,7 @@ import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { LinesOfActionMove } from './LinesOfActionMove';
 import { LinesOfActionState } from './LinesOfActionState';
 import { LinesOfActionRules } from './LinesOfActionRules';
+import { TutorialStepMessage } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
 
 const _: PlayerOrNone = PlayerOrNone.NONE;
 const O: PlayerOrNone = PlayerOrNone.ZERO;
@@ -38,7 +39,7 @@ export class LinesOfActionTutorial {
          You're playing Dark, make the first move!`,
             LinesOfActionRules.get().getInitialState(),
             LinesOfActionMove.from(new Coord(1, 7), new Coord(1, 5)).get(),
-            $localize`Congratulations!`,
+            TutorialStepMessage.CONGRATULATIONS(),
         ),
         TutorialStep.fromMove(
             $localize`Jumping`,
@@ -56,7 +57,7 @@ export class LinesOfActionTutorial {
                 [_, _, _, _, _, _, _, O],
             ], 0),
             [LinesOfActionMove.from(new Coord(3, 1), new Coord(6, 1)).get()],
-            $localize`Congratulations!`,
+            TutorialStepMessage.CONGRATULATIONS(),
             $localize`Failed. You did not jump over one of your pieces.`,
         ),
         TutorialStep.fromMove(
@@ -88,11 +89,11 @@ export class LinesOfActionTutorial {
                 LinesOfActionMove.from(new Coord(3, 3), new Coord(2, 3)).get(),
                 LinesOfActionMove.from(new Coord(3, 3), new Coord(4, 3)).get(),
             ],
-            $localize`Congratulations!`,
+            TutorialStepMessage.CONGRATULATIONS(),
             $localize`Failed. This was not one of the expected moves.`,
         ),
         TutorialStep.fromPredicate(
-            $localize`Capturing`,
+            $localize`Captures`,
             $localize`If a move ends on an opponent's piece, it is captured and removed from the board.
         However, a move cannot end on one of the player's pieces.
         Watch out, having less pieces at Lines of Action makes a victory easier, as there are less pieces to regroup!
@@ -113,10 +114,10 @@ export class LinesOfActionTutorial {
                 if (previous.getPieceAt(move.getEnd()) === PlayerOrNone.ONE) {
                     return MGPValidation.SUCCESS;
                 } else {
-                    return MGPValidation.failure($localize`Failed. Try again.`);
+                    return MGPValidation.failure(TutorialStepMessage.FAILED_TRY_AGAIN());
                 }
             },
-            $localize`Congratulations!`,
+            TutorialStepMessage.CONGRATULATIONS(),
         ),
         TutorialStep.fromMove(
             $localize`Tie`,
@@ -134,8 +135,8 @@ export class LinesOfActionTutorial {
                 [_, _, _, _, _, _, _, _],
             ], 0),
             [LinesOfActionMove.from(new Coord(0, 2), new Coord(4, 2)).get()],
-            $localize`Congratulations!`,
-            $localize`Failed. Try again.`,
+            TutorialStepMessage.CONGRATULATIONS(),
+            TutorialStepMessage.FAILED_TRY_AGAIN(),
         ),
     ];
 }

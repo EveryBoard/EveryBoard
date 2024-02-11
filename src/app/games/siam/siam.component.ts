@@ -69,7 +69,6 @@ export class SiamComponent extends RectangularGameComponent<SiamRules,
     public async updateBoard(_triggerAnimation: boolean): Promise<void> {
         const state: SiamState = this.getState();
         this.board = state.board;
-        this.movedPieces = [];
     }
 
     public override async showLastMove(move: SiamMove): Promise<void> {
@@ -77,6 +76,11 @@ export class SiamComponent extends RectangularGameComponent<SiamRules,
         const previousGameState: SiamState = this.getPreviousState();
         const config: MGPOptional<SiamConfig> = this.getConfig();
         this.movedPieces = this.rules.isLegal(this.lastMove.get(), previousGameState, config).get().moved;
+    }
+
+    public override hideLastMove(): void {
+        this.lastMove = MGPOptional.empty();
+        this.movedPieces = [];
     }
 
     public override cancelMoveAttempt(): void {
@@ -89,7 +93,7 @@ export class SiamComponent extends RectangularGameComponent<SiamRules,
     }
 
     public async selectPieceForInsertion(player: Player): Promise<MGPValidation> {
-        const clickValidity: MGPValidation = await this.canUserPlay('#remainingPieces_' + player.value);
+        const clickValidity: MGPValidation = await this.canUserPlay('#remainingPieces_' + player.getValue());
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }
@@ -291,7 +295,7 @@ export class SiamComponent extends RectangularGameComponent<SiamRules,
         const config: SiamConfig = this.getConfig().get();
         const cx: number = config.width / 2;
         const offset: number = 1 / 2;
-        const pieceOnBoard: number = this.getState().countPlayersPawn()[player.value];
+        const pieceOnBoard: number = this.getState().countPlayersPawn().get(player);
         const nbPieceToDraw: number = config.numberOfPiece - pieceOnBoard;
         const width: number = 1 + ((nbPieceToDraw - 1) * offset);
         let x: number;
@@ -338,7 +342,7 @@ export class SiamComponent extends RectangularGameComponent<SiamRules,
 
     public playerPieces(player: Player): number {
         const maxPiece: number = this.getConfig().get().numberOfPiece;
-        const pieceOnBoard: number = this.getState().countPlayersPawn()[player.value];
+        const pieceOnBoard: number = this.getState().countPlayersPawn().get(player);
         return maxPiece - pieceOnBoard;
     }
 
