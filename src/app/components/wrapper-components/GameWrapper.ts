@@ -21,10 +21,6 @@ export class GameWrapperMessages {
 
     public static readonly GAME_HAS_ENDED: Localized = () => $localize`This game has ended.`;
 
-    public static readonly CANNOT_PLAY_AS_OBSERVER: Localized = () => $localize`You are an observer in this game, you cannot play.`;
-
-    public static readonly MUST_ANSWER_REQUEST: Localized = () => $localize`You must answer your opponent's request.`;
-
     public static NO_MATCHING_GAME(gameName: string): string {
         return $localize`This game (${gameName}) does not exist.`;
     }
@@ -158,10 +154,6 @@ export abstract class GameWrapper<P extends Comparable> extends BaseWrapperCompo
     }
 
     public async canUserPlay(_clickedElementName: string): Promise<MGPValidation> {
-        if (this.role === PlayerOrNone.NONE) {
-            const message: string = GameWrapperMessages.CANNOT_PLAY_AS_OBSERVER();
-            return MGPValidation.failure(message);
-        }
         if (this.isPlayerTurn() === false) {
             return MGPValidation.failure(GameWrapperMessages.NOT_YOUR_TURN());
         }

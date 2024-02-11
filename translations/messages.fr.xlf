@@ -1033,6 +1033,10 @@
         <source>Congratulations, you completed the tutorial.</source>
         <target>Félicitations, vous avez fini le tutoriel.</target>
       </trans-unit>
+      <trans-unit id="1930146585049479552" datatype="html">
+        <source>You cannot click, this is a demo.</source>
+        <target>Vous ne pouvez pas cliquer, ceci est une démo.</target>
+      </trans-unit>
       <trans-unit id="2201596715619103633" datatype="html">
         <source>You cannot move a supporting piece.</source>
         <target>Vous ne pouvez pas déplacer de pièce porteuse.</target>

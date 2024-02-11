@@ -151,10 +151,6 @@ export abstract class GameComponent<R extends SuperRules<M, S, C, L>,
         return this.interactive;
     }
 
-    public message(msg: string): void {
-        this.messageDisplayer.gameMessage(msg);
-    }
-
     public async cancelMove(reason?: string): Promise<MGPValidation> {
         this.cancelMoveAttempt();
         this.cancelMoveOnWrapper(reason);
