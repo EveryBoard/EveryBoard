@@ -229,10 +229,11 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
 
     public getIndicatorY(coord: Coord): number {
         const y: number = this.INDICATOR_SIZE / 2;
+        const center: number = this.SPACE_SIZE / 2;
         if ((coord.x + coord.y) % 2 === 0) {
-            return y;
+            return y + center;
         } else {
-            return y - 30;
+            return y + center - 30;
         }
     }
 
@@ -265,8 +266,8 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
     }
 
     public getViewBox(): ViewBox {
-        const left: number = - this.SPACE_SIZE / 2;
-        const up: number = - this.SPACE_SIZE / 2;
+        const left: number = 0;
+        const up: number = 0;
         const width: number = this.SPACE_SIZE * 8.5 + this.STROKE_WIDTH * 2;
         const height: number = this.SPACE_SIZE * 10.5 + this.STROKE_WIDTH * 2;
         const halfStroke: number = this.STROKE_WIDTH / 2;
