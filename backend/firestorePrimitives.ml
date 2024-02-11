@@ -87,7 +87,7 @@ module Make
         External.Http.post_json endpoint headers firestore_doc in
     logger.debug (fun log -> log ~request "Response: %s" body);
     if is_error response
-    then raise (UnexpectedError ("error on document creation for " ^ path))
+    then raise (UnexpectedError (Printf.sprintf "error on document creation for %s: %s" path body))
     else Lwt.return (get_id_from_firestore_document_name (JSON.from_string body))
 
   let update_doc (request : Dream.request) (path : string) (update : JSON.t) : unit Lwt.t =
@@ -105,7 +105,7 @@ module Make
     let* (response, body) = External.Http.patch_json endpoint headers firestore_update in
     logger.debug (fun log -> log ~request "Response: %s" body);
     if is_error response
-    then raise (UnexpectedError ("error on document update for " ^ path))
+    then raise (UnexpectedError (Printf.sprintf "error on document update for %s: %s" path body))
     else Lwt.return ()
 
   let delete_doc (request : Dream.request) (path : string) : unit Lwt.t =
@@ -113,9 +113,9 @@ module Make
     logger.info (fun log -> log ~request "Deleting %s" path);
     let* headers = TokenRefresher.header request in
     let params = transaction_params request in
-    let* response = External.Http.delete (endpoint ~params path) headers in
+    let* (response, body) = External.Http.delete (endpoint ~params path) headers in
     if is_error response
-    then raise (UnexpectedError ("error on document deletion for " ^ path))
+    then raise (UnexpectedError (Printf.sprintf "error on document deletion for %s: %s" path body))
     else Lwt.return ()
 
   let begin_transaction (request : Dream.request) : string Lwt.t =
@@ -125,7 +125,7 @@ module Make
     let* (response, body) = External.Http.post_json endpoint headers (`Assoc []) in
     logger.debug (fun log -> log ~request "Response: %s" body);
     if is_error response
-    then raise (UnexpectedError "error when beginning transaction")
+    then raise (UnexpectedError (Printf.sprintf "error when beginning transaction: %s" body))
     else
       body
       |> JSON.from_string
@@ -141,7 +141,7 @@ module Make
     let* (response, body) = External.Http.post_json endpoint headers json in
     logger.debug (fun log -> log ~request "Response: %s" body);
     if is_error response
-    then raise (UnexpectedError "error when committing transaction")
+    then raise (UnexpectedError (Printf.sprintf "error when committing transaction: %s" body))
     else Lwt.return ()
 
   let rollback (request : Dream.request) (transaction_id : string) : unit Lwt.t =
@@ -152,6 +152,6 @@ module Make
     let* (response, body) = External.Http.post_json endpoint headers json in
     logger.debug (fun log -> log ~request "Response: %s" body);
     if is_error response
-    then raise (UnexpectedError "error when rolling back transaction")
+    then raise (UnexpectedError (Printf.sprintf "error when rolling back transaction: %s" body))
     else Lwt.return ()
 end

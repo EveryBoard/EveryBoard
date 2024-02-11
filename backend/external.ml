@@ -26,7 +26,7 @@ module type EXTERNAL = sig
     val patch_json : Uri.t -> Cohttp.Header.t -> JSON.t -> (Cohttp.Response.t * string) Lwt.t
 
     (** Perform a DELETE request *)
-    val delete : Uri.t -> Cohttp.Header.t -> Cohttp.Response.t Lwt.t
+    val delete : Uri.t -> Cohttp.Header.t -> (Cohttp.Response.t * string) Lwt.t
 
   end
 end
@@ -46,16 +46,16 @@ module Impl : EXTERNAL = struct
       Lwt.return (response, body_string)
 
     let post_form (endpoint : Uri.t) (params : (string * string list) list) : (Cohttp.Response.t * string) Lwt.t =
-        let* (response, body) = Cohttp_lwt_unix.Client.post_form ~params endpoint in
-        let* body_string = Cohttp_lwt.Body.to_string body in
-        Lwt.return (response, body_string)
+      let* (response, body) = Cohttp_lwt_unix.Client.post_form ~params endpoint in
+      let* body_string = Cohttp_lwt.Body.to_string body in
+      Lwt.return (response, body_string)
 
     let post_json (endpoint : Uri.t) (headers : Cohttp.Header.t) (json : JSON.t) : (Cohttp.Response.t * string) Lwt.t =
-        let headers = Cohttp.Header.add headers "Content-Type" "application/json" in
-        let body = `String (JSON.to_string json) in
-        let* (response, body) = Cohttp_lwt_unix.Client.post ~headers endpoint ~body in
-        let* body_string = Cohttp_lwt.Body.to_string body in
-        Lwt.return (response, body_string)
+      let headers = Cohttp.Header.add headers "Content-Type" "application/json" in
+      let body = `String (JSON.to_string json) in
+      let* (response, body) = Cohttp_lwt_unix.Client.post ~headers endpoint ~body in
+      let* body_string = Cohttp_lwt.Body.to_string body in
+      Lwt.return (response, body_string)
 
     let patch_json (endpoint : Uri.t) (headers : Cohttp.Header.t) (json : JSON.t) : (Cohttp.Response.t * string) Lwt.t =
       let headers = Cohttp.Header.add headers "Content-Type" "application/json" in
@@ -64,8 +64,9 @@ module Impl : EXTERNAL = struct
       let* body_string = Cohttp_lwt.Body.to_string body in
       Lwt.return (response, body_string)
 
-    let delete (endpoint : Uri.t) (headers : Cohttp.Header.t) : Cohttp.Response.t Lwt.t =
-        let* (response, _) = Cohttp_lwt_unix.Client.delete ~headers endpoint in
-        Lwt.return response
+    let delete (endpoint : Uri.t) (headers : Cohttp.Header.t) : (Cohttp.Response.t * string) Lwt.t =
+      let* (response, body) = Cohttp_lwt_unix.Client.delete ~headers endpoint in
+      let* body_string = Cohttp_lwt.Body.to_string body in
+      Lwt.return (response, body_string)
   end
 end

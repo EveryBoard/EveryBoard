@@ -49,9 +49,7 @@ module Mock : MOCK = struct
     let post_form endpoint _ = mocked `POST endpoint None
     let post_json endpoint _ body = mocked `POST endpoint (Some body)
     let patch_json endpoint _ body =  mocked `PATCH endpoint (Some body)
-    let delete endpoint _ =
-      let* (response, _) = mocked `DELETE endpoint None in
-      Lwt.return response
+    let delete endpoint _ = mocked `DELETE endpoint None
   end
 
 end
