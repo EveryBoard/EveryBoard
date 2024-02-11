@@ -14,21 +14,19 @@ let server_time = Dream.get "/time" @@ fun _ ->
     let response = `Assoc ["time", `Int now] in
     Dream.json ~status:`OK (JSON.to_string response)
 
-let error_catcher : Dream.middleware = fun handler request ->
-  try handler request
-  with
-  | UnexpectedError e ->
-    Dream.error (fun log -> log "Encountered unexpected error: %s" e);
-    Dream.empty `Internal_Server_Error
-  | DocumentInvalid path ->
-    Dream.error (fun log -> log "Encountered invalid document: %s" path);
-    Dream.empty `Internal_Server_Error
-  | DocumentNotFound _ -> Dream.empty `Not_Found
-  | BadInput _ -> Dream.empty `Bad_Request
+let error_handler : Dream.error_handler =
+  Dream.error_template (fun _error debug_info suggested_response ->
+    let body =
+      match !Options.show_errors with
+      | true -> Dream.html_escape debug_info
+      | false -> Dream.status_to_string (Dream.status suggested_response)
+    in
+    Dream.set_body suggested_response body;
+    Lwt.return suggested_response)
 
 let start () =
   let api = [
-    Dream.scope "/" [error_catcher; TokenRefresher.middleware !Options.service_account_file; Auth.middleware]
+    Dream.scope "/" [TokenRefresher.middleware !Options.service_account_file; Auth.middleware]
     @@ List.concat [
       Game.routes;
       ConfigRoom.routes;
@@ -37,7 +35,7 @@ let start () =
   ] in
   Mirage_crypto_rng_lwt.initialize (module Mirage_crypto_rng.Fortuna); (* Required for token refresher and JWT *)
   Dream.initialize_log ~level:`Info ();
-  Dream.run ~interface:!Options.address ~port:!Options.port
+  Dream.run ~interface:!Options.address ~error_handler ~port:!Options.port
   @@ Dream.logger
   @@ Cors.middleware
   @@ Dream.router (List.concat [

@@ -4,6 +4,7 @@ let address : string ref = ref "0.0.0.0"
 let port : int ref = ref 8081
 let emulator : bool ref = ref true
 let frontend_origin : string ref = ref "http://localhost:4200"
+let show_errors : bool ref = ref false
 
 let database_name : string ref = ref "(default)"
 let project_name : string ref = ref "my-project"

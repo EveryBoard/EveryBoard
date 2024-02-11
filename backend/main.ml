@@ -8,6 +8,7 @@ let arguments_spec = [
   ("-port", Arg.Set_int Options.port, "Port on which to listen for connections");
   ("-no-emulator", Arg.Clear Options.emulator, "Whether this is linked to a firebase emulator");
   ("-origin", Arg.Set_string Options.frontend_origin, "Where the frontend is hosted, for CORS");
+  ("-show-errors", Arg.Set Options.show_errors, "Should error be shown in details when sent back to the client?");
 ]
 
 let () =

@@ -340,7 +340,7 @@ jobs:
             cat > ~/.ssh/id_rsa <<< "$SSH_KEY"
             chmod u+rw,go-rw,a-x ~/.ssh/id_rsa
             cat > backend/service-account.json <<< "$SERVICE_ACCOUNT"
-            cd backend && make deploy target=test user=$SSH_USER server=$SSH_SERVER port=$SSH_PORT listen-port=8001 args="-no-emulator -project everyboard-test -origin '*' -endpoint 'https://firestore.googleapis.com'"
+            cd backend && make deploy target=test user=$SSH_USER server=$SSH_SERVER port=$SSH_PORT listen-port=8001 args="-no-emulator -project everyboard-test -origin '*' -endpoint 'https://firestore.googleapis.com' -show-errors"
           fi
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
