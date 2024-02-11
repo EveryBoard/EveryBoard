@@ -99,7 +99,7 @@ export class DemoCardWrapperComponent extends GameWrapper<string> implements Aft
             // This is when some user try to click on a demo
             return MGPValidation.failure(TutorialGameWrapperMessages.THIS_IS_A_DEMO());
         } else {
-            // This click is done by ourselves , to set up the game component for the demo
+            // This click is done by ourselves, to set up the game component for the demo
             return MGPValidation.SUCCESS;
         }
     }
