@@ -254,6 +254,10 @@ export class DiamComponent extends GameComponent<DiamRules, DiamMove, DiamState>
         this.showLastMoveOnPieces(move);
     }
 
+    public override hideLastMove(): void {
+        return;
+    }
+
     private showLastMoveOnSpaces(move: DiamMove): void {
         for (let x: number = 0; x < DiamState.WIDTH; x++) {
             const classes: string[] = [];

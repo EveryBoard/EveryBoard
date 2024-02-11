@@ -37,6 +37,7 @@ describe('YinshComponent', () => {
             // Given a state in the initial placement phase
             // When clicking on an empty space
             const move: YinshMove = new YinshMove([], new Coord(3, 2), MGPOptional.empty(), []);
+
             // Then it should place a ring and show it
             await testUtils.expectMoveSuccess('#click_3_2', move);
             testUtils.expectElementToHaveClasses('#space_3_2', ['base', 'moved-fill']);
@@ -59,6 +60,7 @@ describe('YinshComponent', () => {
             ];
             const state: YinshState = new YinshState(board, PlayerNumberMap.of(4, 5), 1);
             await testUtils.setupState(state);
+
             // When clicking on an occupied space
             // Then it should fail
             await testUtils.expectClickFailure('#click_3_2', RulesFailure.MUST_CLICK_ON_EMPTY_SPACE());

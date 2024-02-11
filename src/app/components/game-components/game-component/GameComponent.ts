@@ -151,15 +151,11 @@ export abstract class GameComponent<R extends SuperRules<M, S, C, L>,
         return this.interactive;
     }
 
-    public message(msg: string): void {
-        this.messageDisplayer.gameMessage(msg);
-    }
-
     public async cancelMove(reason?: string): Promise<MGPValidation> {
         this.cancelMoveAttempt();
         this.cancelMoveOnWrapper(reason);
         if (this.node.previousMove.isPresent()) {
-            await this.showLastMove(this.node.previousMove.get());
+            await this.showLastMove(this.node.previousMove.get(), this.getConfig());
         }
         if (reason == null) {
             return MGPValidation.SUCCESS;
@@ -201,15 +197,9 @@ export abstract class GameComponent<R extends SuperRules<M, S, C, L>,
         return this.node.parent.get().gameState;
     }
 
-    public async showLastMove(move: M, config: MGPOptional<C> = MGPOptional.empty()): Promise<void> {
-        // Not needed by default
-        return;
-    }
+    public abstract showLastMove(move: M, config: MGPOptional<C>): Promise<void>;
 
-    public hideLastMove(): void {
-        // Not needed by default
-        return;
-    }
+    public abstract hideLastMove(): void;
 
     protected setRulesAndNode(urlName: string): void {
         const gameInfo: GameInfo = GameInfo.getByUrlName(urlName).get();

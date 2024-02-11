@@ -8,6 +8,8 @@ import { ConnectedUserService } from 'src/app/services/ConnectedUserService';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { Move } from 'src/app/jscaip/Move';
 import { PlayerOrNone } from 'src/app/jscaip/Player';
+import { MGPValidation } from 'src/app/utils/MGPValidation';
+import { TutorialGameWrapperMessages } from '../tutorial-game-wrapper/tutorial-game-wrapper.component';
 
 export type DemoNodeInfo = {
     name: string, // The name of the game
@@ -25,6 +27,8 @@ export class DemoCardWrapperComponent extends GameWrapper<string> implements Aft
 
     @ViewChild('board', { read: ViewContainerRef })
     public override boardRef: ViewContainerRef | null = null;
+
+    private gameComponentIsSetup: boolean = false;
 
     public constructor(activatedRoute: ActivatedRoute,
                        connectedUserService: ConnectedUserService,
@@ -53,6 +57,7 @@ export class DemoCardWrapperComponent extends GameWrapper<string> implements Aft
                 // Update the view after the click
                 this.cdr.detectChanges();
             }
+            this.gameComponentIsSetup = true;
             await this.setRole(PlayerOrNone.NONE);
         }, 1);
     }
@@ -79,11 +84,24 @@ export class DemoCardWrapperComponent extends GameWrapper<string> implements Aft
     }
 
     public override getPlayer(): string {
+        // Note, this code is never reached, as getPlayer only get called by GameWrapper when needed
+        // and it is only needed in GameWrapper.canUserPlay (that is overriden here)
+        // and in getBoardHighlight, unused in demo cards.
         return 'no-player';
     }
 
     public async onCancelMove(_reason?: string | undefined): Promise<void> {
         return;
+    }
+
+    public override async canUserPlay(_clickedElementName: string): Promise<MGPValidation> {
+        if (this.gameComponentIsSetup) {
+            // This is when some user try to click on a demo
+            return MGPValidation.failure(TutorialGameWrapperMessages.THIS_IS_A_DEMO());
+        } else {
+            // This click is done by ourselves, to set up the game component for the demo
+            return MGPValidation.SUCCESS;
+        }
     }
 
 }

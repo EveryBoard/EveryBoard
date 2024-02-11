@@ -8,7 +8,7 @@ import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { MartianChessMove } from './MartianChessMove';
-import { MartianChessMoveResult, MartianChessNode, MartianChessRules } from './MartianChessRules';
+import { MartianChessMoveResult, MartianChessRules } from './MartianChessRules';
 import { MartianChessState } from './MartianChessState';
 import { MartianChessPiece } from './MartianChessPiece';
 import { Direction } from 'src/app/jscaip/Direction';
@@ -87,6 +87,10 @@ export class MartianChessComponent extends RectangularGameComponent<MartianChess
     public readonly configCogTransformation: string;
 
     public selectedPieceInfo: MGPOptional<SelectedPieceInfo> = MGPOptional.empty();
+
+    private lastMoved: Coord[] = [];
+    private captured: MGPOptional<Coord> = MGPOptional.empty();
+    private promoted: MGPOptional<Coord> = MGPOptional.empty();
 
     public countDown: MGPOptional<number> = MGPOptional.empty();
 
@@ -212,6 +216,28 @@ export class MartianChessComponent extends RectangularGameComponent<MartianChess
         this.scores = MGPOptional.of(PlayerNumberMap.of(scoreZero, scoreOne));
     }
 
+    public override async showLastMove(move: MartianChessMove): Promise<void> {
+        this.lastMoved = move.getCoords();
+        const landing: Coord = move.getEnd();
+        const previousPiece: MartianChessPiece = this.node.parent.get().gameState.getPieceAt(landing);
+        const wasFilled: boolean = previousPiece !== MartianChessPiece.EMPTY;
+        // Since now, current player is previous opponent
+        const landingInOpponentTerritory: boolean = this.node.gameState.isInPlayerTerritory(landing);
+        if (wasFilled) {
+            if (landingInOpponentTerritory) {
+                this.captured = MGPOptional.of(landing);
+            } else {
+                this.promoted = MGPOptional.of(landing);
+            }
+        }
+    }
+
+    public override hideLastMove(): void {
+        this.lastMoved = [];
+        this.captured = MGPOptional.empty();
+        this.promoted = MGPOptional.empty();
+    }
+
     public getPieceLocation(x: number, y: number): string {
         const cx: number = this.SPACE_SIZE * x;
         const cy: number = this.SPACE_SIZE * y;
@@ -219,24 +245,14 @@ export class MartianChessComponent extends RectangularGameComponent<MartianChess
     }
 
     public getPieceClasses(x: number, y: number): string[] {
-        const clickedCoord: Coord = new Coord(x, y);
+        const coord: Coord = new Coord(x, y);
         const classes: string[] = [];
         classes.push(y > 3 ? 'player0-fill' : 'player1-fill');
-        if (this.selectedPieceInfo.isPresent() && this.selectedPieceInfo.get().selectedPiece.equals(clickedCoord)) {
+        if (this.selectedPieceInfo.isPresent() && this.selectedPieceInfo.get().selectedPiece.equals(coord)) {
             classes.push('selected-stroke');
         }
-        if (this.node.previousMove.isPresent()) {
-            const move: MartianChessMove = this.node.previousMove.get();
-            if (move.getEnd().equals(clickedCoord)) {
-                const previousPiece: MartianChessPiece = this.getPreviousState().getPieceAt(clickedCoord);
-                const wasOccupied: boolean = previousPiece !== MartianChessPiece.EMPTY;
-                if (wasOccupied) {
-                    const landingHome: boolean = this.getState().isInOpponentTerritory(new Coord(0, y));
-                    if (landingHome) {
-                        classes.push('last-move-stroke');
-                    }
-                }
-            }
+        if (this.promoted.equalsValue(coord)) {
+            classes.push('last-move-stroke');
         }
         return classes;
     }
@@ -372,25 +388,10 @@ export class MartianChessComponent extends RectangularGameComponent<MartianChess
     public getSquareClasses(x: number, y: number): string[] {
         const square: Coord = new Coord(x, y);
         const classes: string[] = ['base'];
-        if (this.node.previousMove.isPresent()) {
-            const node: MartianChessNode = this.node;
-            const move: MartianChessMove = node.previousMove.get();
-            if (move.getStart().equals(square)) {
-                classes.push('moved-fill');
-            } else if (move.getEnd().equals(square)) {
-                const previousPiece: MartianChessPiece = node.parent.get().gameState.getPieceAt(square);
-                const wasEmpty: boolean = previousPiece === MartianChessPiece.EMPTY;
-                if (wasEmpty) {
-                    classes.push('moved-fill');
-                } else {
-                    const landingHome: boolean = node.gameState.isInOpponentTerritory(new Coord(0, y));
-                    if (landingHome) {
-                        classes.push('moved-fill');
-                    } else {
-                        classes.push('captured-fill');
-                    }
-                }
-            }
+        if (this.captured.equalsValue(square)) {
+            classes.push('captured-fill');
+        } else if (this.lastMoved.some((coord: Coord) => coord.equals(square))) {
+            classes.push('moved-fill');
         }
         return classes;
     }

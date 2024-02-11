@@ -34,6 +34,10 @@ import { BackendService } from 'src/app/services/BackendService';
 export class OnlineGameWrapperMessages {
 
     public static readonly NO_MATCHING_PART: Localized = () => $localize`The game you tried to join does not exist.`;
+
+    public static readonly CANNOT_PLAY_AS_OBSERVER: Localized = () => $localize`You are an observer in this game, you cannot play.`;
+
+    public static readonly MUST_ANSWER_REQUEST: Localized = () => $localize`You must answer your opponent's request.`;
 }
 
 @Component({
@@ -397,6 +401,21 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         return this.requestManager.canMakeRequest('Draw');
     }
 
+    public override async canUserPlay(clickedElementName: string): Promise<MGPValidation> {
+        if (this.role === PlayerOrNone.NONE) {
+            const message: string = OnlineGameWrapperMessages.CANNOT_PLAY_AS_OBSERVER();
+            return MGPValidation.failure(message);
+        }
+        const result: MGPValidation = await super.canUserPlay(clickedElementName);
+        if (result.isFailure()) {
+            return result; // NOT_YOUR_TURN or GAME_HAS_ENDED are checked here
+        } else if (this.mustReply()) {
+            return MGPValidation.failure(OnlineGameWrapperMessages.MUST_ANSWER_REQUEST());
+        } else {
+            return MGPValidation.SUCCESS;
+        }
+    }
+
     private async initializePlayersDatas(part: PartDocument): Promise<void> {
         this.players = [
             MGPOptional.of(part.data.playerZero),
@@ -424,33 +443,29 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
     }
 
     public async onLegalUserMove(move: Move): Promise<void> {
-        if (this.mustReply()) {
-            this.gameComponent.message(GameWrapperMessages.MUST_ANSWER_REQUEST());
-        } else {
-            // We will update the part with new scores and game status (if needed)
-            // We have to compute the game status before adding the move to avoid
-            // risking receiving the move before computing the game status (thereby adding twice the same move)
-            const oldNode: AbstractNode = this.gameComponent.node;
-            const rules: AbstractRules = this.gameComponent.rules;
-            const state: GameState = oldNode.gameState;
-            const config: MGPOptional<RulesConfig> = await this.getConfig();
-            const legality: MGPFallible<unknown> = this.gameComponent.rules.isLegal(move, state, config);
-            Utils.assert(legality.isSuccess(), 'onLegalUserMove called with an illegal move');
-            const stateAfterMove: GameState = rules.applyLegalMove(move, state, config, legality.get());
-            const newNode: AbstractNode = new GameNode(stateAfterMove,
-                                                       MGPOptional.of(oldNode),
-                                                       MGPOptional.of(move));
-            const gameStatus: GameStatus = rules.getGameStatus(newNode, config);
+        // We will update the part with new scores and game status (if needed)
+        // We have to compute the game status before adding the move to avoid
+        // risking receiving the move before computing the game status (thereby adding twice the same move)
+        const oldNode: AbstractNode = this.gameComponent.node;
+        const rules: AbstractRules = this.gameComponent.rules;
+        const state: GameState = oldNode.gameState;
+        const config: MGPOptional<RulesConfig> = await this.getConfig();
+        const legality: MGPFallible<unknown> = this.gameComponent.rules.isLegal(move, state, config);
+        Utils.assert(legality.isSuccess(), 'onLegalUserMove called with an illegal move');
+        const stateAfterMove: GameState = rules.applyLegalMove(move, state, config, legality.get());
+        const newNode: AbstractNode = new GameNode(stateAfterMove,
+                                                   MGPOptional.of(oldNode),
+                                                   MGPOptional.of(move));
+        const gameStatus: GameStatus = rules.getGameStatus(newNode, config);
 
-            // To adhere to security rules, we must add the move before updating the part
-            const encodedMove: JSONValue = this.gameComponent.encoder.encode(move);
-            const partId: string = this.currentPartId;
-            const scores: MGPOptional<PlayerNumberMap> = this.gameComponent.scores;
-            if (gameStatus.isEndGame) {
-                return this.gameService.addMoveAndEndGame(partId, encodedMove, scores, gameStatus.winner);
-            } else {
-                return this.gameService.addMove(partId, encodedMove, scores);
-            }
+        // To adhere to security rules, we must add the move before updating the part
+        const encodedMove: JSONValue = this.gameComponent.encoder.encode(move);
+        const partId: string = this.currentPartId;
+        const scores: MGPOptional<PlayerNumberMap> = this.gameComponent.scores;
+        if (gameStatus.isEndGame) {
+            return this.gameService.addMoveAndEndGame(partId, encodedMove, scores, gameStatus.winner);
+        } else {
+            return this.gameService.addMove(partId, encodedMove, scores);
         }
     }
 
@@ -549,7 +564,8 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
     public async onCancelMove(reason?: string): Promise<void> {
         if (this.gameComponent.node.previousMove.isPresent()) {
             const move: Move = this.gameComponent.node.previousMove.get();
-            await this.gameComponent.showLastMove(move);
+            const config: MGPOptional<RulesConfig> = await this.getConfig();
+            await this.gameComponent.showLastMove(move, config);
         }
     }
 

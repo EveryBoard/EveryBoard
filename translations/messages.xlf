@@ -473,12 +473,6 @@
       <trans-unit id="7285945849261218681" datatype="html">
         <source>This game has ended.</source>
       </trans-unit>
-      <trans-unit id="4517991218544205155" datatype="html">
-        <source>You are an observer in this game, you cannot play.</source>
-      </trans-unit>
-      <trans-unit id="7360329324887745743" datatype="html">
-        <source>You must answer your opponent&apos;s request.</source>
-      </trans-unit>
       <trans-unit id="443650994975920138" datatype="html">
         <source>This game (<x id="PH" equiv-text="gameName"/>) does not exist.</source>
       </trans-unit>
@@ -619,6 +613,12 @@
       </trans-unit>
       <trans-unit id="777716481777788338" datatype="html">
         <source>The game you tried to join does not exist.</source>
+      </trans-unit>
+      <trans-unit id="4517991218544205155" datatype="html">
+        <source>You are an observer in this game, you cannot play.</source>
+      </trans-unit>
+      <trans-unit id="7360329324887745743" datatype="html">
+        <source>You must answer your opponent&apos;s request.</source>
       </trans-unit>
       <trans-unit id="1487672983218679675" datatype="html">
         <source>5 minutes</source>
@@ -793,6 +793,9 @@
       </trans-unit>
       <trans-unit id="7583363829279229518" datatype="html">
         <source>Congratulations, you completed the tutorial.</source>
+      </trans-unit>
+      <trans-unit id="1930146585049479552" datatype="html">
+        <source>You cannot click, this is a demo.</source>
       </trans-unit>
       <trans-unit id="6050846802280051862" datatype="html">
         <source>You cannot move more than 3 of your pieces!</source>
@@ -2347,14 +2350,14 @@
       <trans-unit id="731242877035493751" datatype="html">
         <source>Moving queens</source>
       </trans-unit>
-      <trans-unit id="246448750813949151" datatype="html">
-        <source>Queens are worth three points. They can move any number of steps in any direction, in a straight line, without jumping over other pieces.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, move a queen.</source>
+      <trans-unit id="2106860890585726458" datatype="html">
+        <source>Queens are worth three points. They can move any number of steps in any direction, in a straight line, without jumping over other pieces.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Light, move a queen.</source>
       </trans-unit>
       <trans-unit id="3206825395681468712" datatype="html">
         <source>This is not a queen!</source>
       </trans-unit>
-      <trans-unit id="3324500494494988533" datatype="html">
-        <source>When a piece crosses the canal and lands on another piece, you capture it and gain the value of that captured piece. However, you lose control of your piece as it crosses the canal!&lt;br/&gt;&lt;br/&gt;A capture is possible for Dark, do it.</source>
+      <trans-unit id="6164047187960612635" datatype="html">
+        <source>When a piece crosses the canal and lands on another piece, you capture it and gain the value of that captured piece. However, you lose control of your piece as it crosses the canal!&lt;br/&gt;&lt;br/&gt;A capture is possible for Light, do it.</source>
       </trans-unit>
       <trans-unit id="6741042150149637612" datatype="html">
         <source>Congratulations! By capturing that pawn, you won one point.</source>
@@ -2362,8 +2365,8 @@
       <trans-unit id="7827243981380355367" datatype="html">
         <source>Field Promotion (1/2)</source>
       </trans-unit>
-      <trans-unit id="8675845222727327919" datatype="html">
-        <source>It is sometimes possible to perform what is called a field promotion. If you are out of one type of piece, you can merge two pieces to add their value and get a new piece. For example, if you have no drones, you can merge two pawns into a drone. To merge two pawns, move one of your pawns on another.&lt;br/&gt;&lt;br/&gt;Such a move is possible for Dark. Do it.</source>
+      <trans-unit id="9082504092683509261" datatype="html">
+        <source>It is sometimes possible to perform what is called a field promotion. If you are out of one type of piece, you can merge two pieces to add their value and get a new piece. For example, if you have no drones, you can merge two pawns into a drone. To merge two pawns, move one of your pawns on another.&lt;br/&gt;&lt;br/&gt;Such a move is possible for Light. Do it.</source>
       </trans-unit>
       <trans-unit id="8941261285468529448" datatype="html">
         <source>This is not a field promotion!</source>
@@ -2395,8 +2398,8 @@
       <trans-unit id="4805475752093007535" datatype="html">
         <source>End game (by clock)</source>
       </trans-unit>
-      <trans-unit id="5334745019478145111" datatype="html">
-        <source>When seven turns have passed after the clock has been called, the player with the most points win. If both player have the same number of points, it is a tie.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, do the last move.</source>
+      <trans-unit id="3700959958039999617" datatype="html">
+        <source>When seven turns have passed after the clock has been called, the player with the most points win. If both player have the same number of points, it is a tie.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Light, do the last move.</source>
       </trans-unit>
       <trans-unit id="1679797944253761486" datatype="html">
         <source>End by emptyness</source>

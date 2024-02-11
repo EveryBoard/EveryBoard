@@ -88,8 +88,8 @@ export class YinshRules extends Rules<YinshMove, YinshState, YinshLegalityInform
     }
 
     public ringSelectionValidity(state: YinshState, coord: Coord): MGPValidation {
-        const player: number = state.getCurrentPlayer().getValue();
-        if (state.getPieceAt(coord) === YinshPiece.RINGS[player]) {
+        const player: Player = state.getCurrentPlayer();
+        if (state.getPieceAt(coord) === YinshPiece.RINGS.get(player).get()) {
             return MGPValidation.SUCCESS;
         } else {
             return MGPValidation.failure(YinshFailure.CAPTURE_SHOULD_TAKE_RING());
@@ -97,11 +97,11 @@ export class YinshRules extends Rules<YinshMove, YinshState, YinshLegalityInform
     }
 
     public applyRingMoveAndFlip(start: Coord, end: Coord, state: YinshState): YinshState {
-        const player: number = state.getCurrentPlayer().getValue();
+        const player: Player = state.getCurrentPlayer();
         // Move ring from start (only the marker remains) to
         // end (only the ring can be there, as it must land on an empty space)
-        let newState: YinshState = state.setAt(start, YinshPiece.MARKERS[player]);
-        newState = newState.setAt(end, YinshPiece.RINGS[player]);
+        let newState: YinshState = state.setAt(start, YinshPiece.MARKERS.get(player).get());
+        newState = newState.setAt(end, YinshPiece.RINGS.get(player).get());
         // Flip all pieces between start and end (both not included)
         // Direction is valid because this function is called with a valid move
         const dir: HexaDirection = HexaDirection.factory.fromMove(start, end).get();
@@ -151,7 +151,7 @@ export class YinshRules extends Rules<YinshMove, YinshState, YinshLegalityInform
     }
 
     public initialPlacementValidity(state: YinshState, coord: Coord): MGPFallible<YinshLegalityInformation> {
-        if (state.isInitialPlacementPhase() !== true) {
+        if (state.isInitialPlacementPhase() === false) {
             return MGPFallible.failure(YinshFailure.PLACEMENT_AFTER_INITIAL_PHASE());
         }
         if (state.getPieceAt(coord) !== YinshPiece.EMPTY) {
@@ -166,12 +166,13 @@ export class YinshRules extends Rules<YinshMove, YinshState, YinshLegalityInform
     }
 
     public moveStartValidity(state: YinshState, start: Coord): MGPValidation {
-        const player: number = state.getCurrentPlayer().getValue();
+        const player: Player = state.getCurrentPlayer();
         // Start coord has to contain a ring of the current player
-        if (state.getPieceAt(start) !== YinshPiece.RINGS[player]) {
+        if (state.getPieceAt(start) === YinshPiece.RINGS.get(player).get()) {
+            return MGPValidation.SUCCESS;
+        } else {
             return MGPValidation.failure(YinshFailure.SHOULD_SELECT_PLAYER_RING());
         }
-        return MGPValidation.SUCCESS;
     }
 
     public moveValidity(state: YinshState, start: Coord, end: Coord): MGPValidation {
@@ -223,16 +224,16 @@ export class YinshRules extends Rules<YinshMove, YinshState, YinshLegalityInform
     }
 
     public captureValidity(state: YinshState, capture: YinshCapture): MGPValidation {
-        const player: number = state.getCurrentPlayer().getValue();
+        const player: Player = state.getCurrentPlayer();
         // There should be exactly 5 consecutive spaces, on the same line (invariants of YinshCapture)
         for (const coord of capture.capturedSpaces) {
             // The captured spaces must contain markers of the current player
-            if (state.getPieceAt(coord) !== YinshPiece.MARKERS[player]) {
+            if (state.getPieceAt(coord) !== YinshPiece.MARKERS.get(player).get()) {
                 return MGPValidation.failure(YinshFailure.CAN_ONLY_CAPTURE_YOUR_MARKERS());
             }
         }
         // The ring taken should be a ring
-        if (state.getPieceAt(capture.ringTaken.get()) !== YinshPiece.RINGS[player]) {
+        if (state.getPieceAt(capture.ringTaken.get()) !== YinshPiece.RINGS.get(player).get()) {
             return MGPValidation.failure(YinshFailure.CAPTURE_SHOULD_TAKE_RING());
         }
         return MGPValidation.SUCCESS;

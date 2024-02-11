@@ -507,7 +507,8 @@ describe('LocalGameWrapperComponent (game phase)', () => {
             await testUtils.getWrapper().onCancelMove();
 
             // Then showLastMove should have been called
-            expect(component.showLastMove).toHaveBeenCalledOnceWith(P4Move.of(4));
+            const defaultConfig: MGPOptional<P4Config> = P4Rules.get().getDefaultRulesConfig();
+            expect(component.showLastMove).toHaveBeenCalledOnceWith(P4Move.of(4), defaultConfig);
         }));
 
         it('should not showLastMove when there is none', fakeAsync(async() => {

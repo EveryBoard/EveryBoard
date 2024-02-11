@@ -15,8 +15,8 @@ import { DemoCardWrapperComponent, DemoNodeInfo } from './demo-card-wrapper.comp
 import { RulesConfig, RulesConfigUtils } from 'src/app/jscaip/RulesConfigUtil';
 import { GameNode } from 'src/app/jscaip/AI/GameNode';
 import { AbstractGameComponent } from '../../game-components/game-component/GameComponent';
-import { GameWrapperMessages } from '../GameWrapper';
 import { Utils } from 'src/app/utils/utils';
+import { TutorialGameWrapperMessages } from '../tutorial-game-wrapper/tutorial-game-wrapper.component';
 
 describe('DemoCardComponent', () => {
 
@@ -69,7 +69,7 @@ describe('DemoCardComponent', () => {
         testUtils.expectElementToHaveClass('#lodestone_push_orthogonal_PLAYER_ZERO > g > .lodestone_main_circle', 'selected-stroke');
     }));
 
-    it('should not allow moves', fakeAsync(async() => {
+    it('should not allow clicks', fakeAsync(async() => {
         // Given a demo component displayed for a game
         await loadNode({
             name: 'P4',
@@ -81,7 +81,7 @@ describe('DemoCardComponent', () => {
 
         // When trying to perform a click
         await testUtils.expectToDisplayGameMessage(
-            GameWrapperMessages.CANNOT_PLAY_AS_OBSERVER(),
+            TutorialGameWrapperMessages.THIS_IS_A_DEMO(),
             async() => {
                 await testUtils.clickElement('#click_2');
             },
@@ -151,6 +151,18 @@ describe('DemoCardComponent', () => {
 
             // Then the return should be the default game config
             expect(actualDefaultRulesConfig).toEqual(defaultRulesConfig);
+        }));
+
+    });
+
+    describe('getPlayer', () => {
+
+        it('should never get called', fakeAsync(async() => {
+            // DemoCardWrapper are not allowing clicks.
+            // Hence, nowhere any logic needs to check who the current player is,
+            // because it's nobody, nobody is doing anything on demo cards !
+            // So we just need to cover this here, as we aim for 100% coverage
+            expect(testUtils.getComponent().getPlayer()).toBe('no-player');
         }));
 
     });
