@@ -18,7 +18,7 @@ let error_handler : Dream.error_handler =
   Dream.error_template (fun _error debug_info suggested_response ->
     let body =
       match !Options.show_errors with
-      | true -> Dream.html_escape debug_info
+      | true -> debug_info
       | false -> Dream.status_to_string (Dream.status suggested_response)
     in
     Dream.set_body suggested_response body;
