@@ -37,7 +37,7 @@
                  [attr.transform]="getTriangleInHexTranslation(chosenCoord.get().x, chosenCoord.get().y)"
                  class="base no-fill normal-stroke selected-stroke"/>
         <rect *ngFor="let possibleLanding of possibleLandings"
-              [attr.x]="- INDICATOR_SIZE / 2"
+              [attr.x]="(SPACE_SIZE / 2) - (INDICATOR_SIZE / 2)"
               [attr.y]="getIndicatorY(possibleLanding)"
               [attr.width]="INDICATOR_SIZE"
               [attr.height]="INDICATOR_SIZE"

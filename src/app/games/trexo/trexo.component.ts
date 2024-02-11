@@ -16,6 +16,7 @@ import { MCTS } from 'src/app/jscaip/AI/MCTS';
 import { TrexoAlignmentHeuristic } from './TrexoAlignmentHeuristic';
 import { Minimax } from 'src/app/jscaip/AI/Minimax';
 import { TrexoMoveGenerator } from './TrexoMoveGenerator';
+import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 interface PieceOnBoard {
 
@@ -36,11 +37,13 @@ type ModeType = '2D' | '3D';
 export class TrexoComponent extends ParallelogramGameComponent<TrexoRules, TrexoMove, TrexoState, TrexoPieceStack> {
 
     public static STROKE_WIDTH: number;
+
     private static readonly INITIAL_PIECE_ON_BOARD: PieceOnBoard = {
         isDroppedPiece: false,
         isPossibleClick: false,
         move: MGPOptional.empty(),
     };
+
     public static modeMap: Record<ModeType, ModeConfig> = {
         '2D': {
             offsetRatio: 0,
@@ -57,6 +60,7 @@ export class TrexoComponent extends ParallelogramGameComponent<TrexoRules, Trexo
             abstractBoardSize: 10,
         },
     };
+
     public TrexoComponent: typeof TrexoComponent = TrexoComponent;
     public readonly left: number = - this.STROKE_WIDTH / 2;
     public Coord3D: typeof Coord3D = Coord3D;
@@ -67,6 +71,7 @@ export class TrexoComponent extends ParallelogramGameComponent<TrexoRules, Trexo
     public chosenMode: ModeType = '3D';
 
     public victoryCoords: Coord[] = [];
+    public lastMoved: Coord[] = [];
 
     public droppedPiece: MGPOptional<Coord> = MGPOptional.empty();
     public possibleNextClicks: Coord[] = [];
@@ -146,6 +151,17 @@ export class TrexoComponent extends ParallelogramGameComponent<TrexoRules, Trexo
         this.pieceOnBoard = this.get3DBoard();
         this.height = this.getViewBoxHeight();
         this.up = this.getViewBoxUp();
+    }
+
+    public override async showLastMove(move: TrexoMove, config: MGPOptional<EmptyRulesConfig>): Promise<void> {
+        this.lastMoved = [
+            move.getZero(),
+            move.getOne(),
+        ];
+    }
+
+    public override hideLastMove(): void {
+        this.lastMoved = [];
     }
 
     private get3DBoard(): PieceOnBoard[][][] {
@@ -292,17 +308,11 @@ export class TrexoComponent extends ParallelogramGameComponent<TrexoRules, Trexo
         const pieceOwner: PlayerOrNone = this.getState().getPieceAtXYZ(x, y, z).owner;
         let classes: string[] = [this.getPlayerClass(pieceOwner)];
         classes = classes.concat(this.getSpaceClasses(x, y));
-        for (const victoryCoord of this.victoryCoords) {
-            if (victoryCoord.equals(piece)) {
-                classes.push('victory-stroke');
-                break;
-            }
+        if (this.victoryCoords.some((coord: Coord) => coord.equals(piece))) {
+            classes.push('victory-stroke');
         }
-        if (this.node.previousMove.isPresent()) {
-            const lastMove: TrexoMove = this.node.previousMove.get();
-            if (lastMove.getZero().equals(piece) || lastMove.getOne().equals(piece)) {
-                classes.push('last-move-stroke');
-            }
+        if (this.lastMoved.some((coord: Coord) => coord.equals(piece))) {
+            classes.push('last-move-stroke');
         }
         return classes;
     }

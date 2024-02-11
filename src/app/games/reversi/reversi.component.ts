@@ -28,7 +28,7 @@ export class ReversiComponent extends RectangularGameComponent<ReversiRules,
                                                                ReversiLegalityInformation>
 {
     public EMPTY: PlayerOrNone = PlayerOrNone.NONE;
-    public lastMove: Coord = new Coord(-2, -2);
+    public lastMove: MGPOptional<Coord> = MGPOptional.empty();
 
     private capturedCoords: Coord[] = [];
 
@@ -58,19 +58,16 @@ export class ReversiComponent extends RectangularGameComponent<ReversiRules,
         this.board = state.getCopiedBoard();
         this.capturedCoords = [];
 
-        // Will be set to the real value in showLastMove if there is a last move
-        this.lastMove = new Coord(-2, -2);
-
         this.scores = MGPOptional.of(state.countScore());
         this.canPass = this.rules.playerCanOnlyPass(state, this.config);
     }
 
     public override async showLastMove(move: ReversiMove): Promise<void> {
-        this.lastMove = move.coord;
+        this.lastMove = MGPOptional.of(move.coord);
         const player: Player = this.getState().getCurrentPlayer();
         const opponent: Player = this.getState().getCurrentOpponent();
         for (const dir of Direction.DIRECTIONS) {
-            let captured: Coord = this.lastMove.getNext(dir, 1);
+            let captured: Coord = move.coord.getNext(dir, 1);
             while (this.getState().isOnBoard(captured) &&
                    this.getState().getPieceAt(captured) === opponent &&
                    this.getPreviousState().getPieceAt(captured) === player)
@@ -81,11 +78,15 @@ export class ReversiComponent extends RectangularGameComponent<ReversiRules,
         }
     }
 
+    public override hideLastMove(): void {
+        this.capturedCoords = [];
+    }
+
     public getRectClasses(x: number, y: number): string[] {
         const coord: Coord = new Coord(x, y);
         if (this.capturedCoords.some((c: Coord) => c.equals(coord))) {
             return ['captured-fill'];
-        } else if (coord.equals(this.lastMove)) {
+        } else if (this.lastMove.equalsValue(coord)) {
             return ['moved-fill'];
         } else {
             return [];

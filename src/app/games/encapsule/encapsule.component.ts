@@ -50,19 +50,20 @@ export class EncapsuleComponent extends RectangularGameComponent<EncapsuleRules,
         this.encoder = EncapsuleMove.encoder;
     }
 
+    public override async showLastMove(move: EncapsuleMove): Promise<void> {
+        this.lastLandingCoord = MGPOptional.of(move.landingCoord);
+        this.lastStartingCoord = move.startingCoord;
+    }
+
+    public override hideLastMove(): void {
+        this.lastLandingCoord = MGPOptional.empty();
+        this.lastStartingCoord = MGPOptional.empty();
+    }
+
     public async updateBoard(_triggerAnimation: boolean): Promise<void> {
         const state: EncapsuleState = this.getState();
         this.board = state.getCopiedBoard();
-        const move: MGPOptional<EncapsuleMove> = this.node.previousMove;
         this.calculateLeftPieceCoords();
-
-        if (move.isPresent()) {
-            this.lastLandingCoord = MGPOptional.of(move.get().landingCoord);
-            this.lastStartingCoord = move.get().startingCoord;
-        } else {
-            this.lastLandingCoord = MGPOptional.empty();
-            this.lastStartingCoord = MGPOptional.empty();
-        }
     }
 
     public getListPieces(content: EncapsuleSpace): EncapsulePiece[] {

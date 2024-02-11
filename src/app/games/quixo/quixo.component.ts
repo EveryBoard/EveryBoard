@@ -50,10 +50,17 @@ export class QuixoComponent extends RectangularGameComponent<QuixoRules,
         this.encoder = QuixoMove.encoder;
     }
 
+    public override async showLastMove(move: QuixoMove): Promise<void> {
+        this.lastMoveCoord = MGPOptional.of(move.coord);
+    }
+
+    public override hideLastMove(): void {
+        this.lastMoveCoord = MGPOptional.empty();
+    }
+
     public async updateBoard(_triggerAnimation: boolean): Promise<void> {
         this.state = this.getState();
         this.board = this.state.board;
-        this.lastMoveCoord = this.node.previousMove.map((move: QuixoMove) => move.coord);
         this.victoriousCoords = QuixoRules.getVictoriousCoords(this.state);
     }
 
