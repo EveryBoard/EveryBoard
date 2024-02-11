@@ -364,18 +364,13 @@ export class PartCreationComponent implements OnInit, OnDestroy {
                 this.messageDisplayer.infoMessage($localize`${userName} left the game, please pick another opponent.`);
                 await this.currentGameService.updateCurrentGame({ opponent: null });
             }
-            let currentGameUpdated: boolean = false;
-            if (this.userJustChosenAsOpponent(oldConfigRoom, configRoom)) {
-                // We've been chosen, so we record this as our current game
+            if (this.userJustChosenAsOpponent(oldConfigRoom, configRoom) ||
+                this.allUserInterval.isAbsent())
+            {
+                // Only update user doc if we were chosen and we haven't updated the doc yet
                 await this.updateUserDocWithCurrentGame(configRoom);
-                currentGameUpdated = true;
             }
-            this.currentConfigRoom = configRoom;
-            if (this.allUserInterval.isAbsent()) { // Only do it once
-                if (currentGameUpdated === false) {
-                    // Only update user doc if we were chosen and we haven't updated the doc yet
-                    await this.updateUserDocWithCurrentGame(configRoom);
-                }
+            if (this.allUserInterval.isAbsent()) {
                 await this.observeNeededPlayers(configRoom);
             }
             this.updateViewInfo();
