@@ -56,7 +56,7 @@ export class MartianChessTutorial extends Tutorial {
         ),
         TutorialStep.fromPredicate(
             $localize`Moving queens`,
-            $localize`Queens are worth three points. They can move any number of steps in any direction, in a straight line, without jumping over other pieces.<br/><br/>You're playing Dark, move a queen.`,
+            $localize`Queens are worth three points. They can move any number of steps in any direction, in a straight line, without jumping over other pieces.<br/><br/>You're playing Light, move a queen.`,
             new MartianChessState([
                 [B, A, _, _],
                 [C, _, _, _],
@@ -79,7 +79,7 @@ export class MartianChessTutorial extends Tutorial {
         ),
         TutorialStep.fromMove(
             $localize`Captures`,
-            $localize`When a piece crosses the canal and lands on another piece, you capture it and gain the value of that captured piece. However, you lose control of your piece as it crosses the canal!<br/><br/>A capture is possible for Dark, do it.`,
+            $localize`When a piece crosses the canal and lands on another piece, you capture it and gain the value of that captured piece. However, you lose control of your piece as it crosses the canal!<br/><br/>A capture is possible for Light, do it.`,
             new MartianChessState([
                 [B, A, A, _],
                 [_, _, _, _],
@@ -96,7 +96,7 @@ export class MartianChessTutorial extends Tutorial {
         ),
         TutorialStep.fromMove(
             $localize`Field Promotion (1/2)`,
-            $localize`It is sometimes possible to perform what is called a field promotion. If you are out of one type of piece, you can merge two pieces to add their value and get a new piece. For example, if you have no drones, you can merge two pawns into a drone. To merge two pawns, move one of your pawns on another.<br/><br/>Such a move is possible for Dark. Do it.`,
+            $localize`It is sometimes possible to perform what is called a field promotion. If you are out of one type of piece, you can merge two pieces to add their value and get a new piece. For example, if you have no drones, you can merge two pawns into a drone. To merge two pawns, move one of your pawns on another.<br/><br/>Such a move is possible for Light. Do it.`,
             new MartianChessState([
                 [_, _, _, C],
                 [_, A, _, _],
@@ -163,15 +163,15 @@ export class MartianChessTutorial extends Tutorial {
                 [_, _, _, _],
                 [_, _, _, A],
                 [_, _, B, _],
-                [_, A, _, _],
-            ], 15, MGPOptional.empty(), MGPOptional.of(1)),
-            [MartianChessMove.from(new Coord(1, 1), new Coord(2, 2)).get()],
+                [_, C, _, _],
+            ], 16, MGPOptional.empty(), MGPOptional.of(1)),
+            [MartianChessMove.from(new Coord(1, 7), new Coord(1, 1)).get()],
             TutorialStepMessage.CONGRATULATIONS(),
             $localize`This is not a capture, the game is now over, please retry!`,
         ),
         TutorialStep.anyMove(
             $localize`End game (by clock)`,
-            $localize`When seven turns have passed after the clock has been called, the player with the most points win. If both player have the same number of points, it is a tie.<br/><br/>You're playing Dark, do the last move.`,
+            $localize`When seven turns have passed after the clock has been called, the player with the most points win. If both player have the same number of points, it is a tie.<br/><br/>You're playing Light, do the last move.`,
             new MartianChessState([
                 [_, _, _, C],
                 [_, A, _, _],

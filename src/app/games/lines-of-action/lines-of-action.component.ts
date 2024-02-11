@@ -31,7 +31,7 @@ export class LinesOfActionComponent extends RectangularGameComponent<LinesOfActi
     public targets: Coord[] = [];
     public state: LinesOfActionState;
     private selected: MGPOptional<Coord> = MGPOptional.empty();
-    private lastMove: MGPOptional<LinesOfActionMove> = MGPOptional.empty();
+    private lastMoved: Coord[] = [];
     private captured: MGPOptional<Coord> = MGPOptional.empty();
 
     public constructor(messageDisplayer: MessageDisplayer) {
@@ -93,15 +93,20 @@ export class LinesOfActionComponent extends RectangularGameComponent<LinesOfActi
     public async updateBoard(_triggerAnimation: boolean): Promise<void> {
         this.cancelMoveAttempt();
         this.board = this.getState().board;
-        this.lastMove = this.node.previousMove;
     }
 
     public override async showLastMove(move: LinesOfActionMove): Promise<void> {
         if (this.getPreviousState().getPieceAt(move.getEnd()).isPlayer()) {
             this.captured = MGPOptional.of(move.getEnd());
-        } else {
-            this.captured = MGPOptional.empty();
         }
+        const lastMoveStart: Coord = move.getStart();
+        const lastMoveEnd: Coord = move.getEnd();
+        this.lastMoved = [lastMoveStart, lastMoveEnd];
+    }
+
+    public override hideLastMove(): void {
+        this.captured = MGPOptional.empty();
+        this.lastMoved = [];
     }
 
     public override cancelMoveAttempt(): void {
@@ -111,16 +116,11 @@ export class LinesOfActionComponent extends RectangularGameComponent<LinesOfActi
 
     public getSquareClasses(x: number, y: number): string[] {
         const coord: Coord = new Coord(x, y);
-
-        if (this.lastMove.isPresent()) {
-            const lastMoveStart: Coord = this.lastMove.get().getStart();
-            const lastMoveEnd: Coord = this.lastMove.get().getEnd();
-            if (this.captured.isPresent() && coord.equals(this.captured.get())) {
-                return ['captured-fill'];
-            }
-            if (coord.equals(lastMoveStart) || coord.equals(lastMoveEnd)) {
-                return ['moved-fill'];
-            }
+        if (this.captured.equalsValue(coord)) {
+            return ['captured-fill'];
+        }
+        if (this.lastMoved.some((c: Coord) => c.equals(coord))) {
+            return ['moved-fill'];
         }
         return [];
     }

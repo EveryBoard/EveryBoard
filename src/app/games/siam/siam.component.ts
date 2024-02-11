@@ -69,7 +69,6 @@ export class SiamComponent extends RectangularGameComponent<SiamRules,
     public async updateBoard(_triggerAnimation: boolean): Promise<void> {
         const state: SiamState = this.getState();
         this.board = state.board;
-        this.movedPieces = [];
     }
 
     public override async showLastMove(move: SiamMove): Promise<void> {
@@ -77,6 +76,11 @@ export class SiamComponent extends RectangularGameComponent<SiamRules,
         const previousGameState: SiamState = this.getPreviousState();
         const config: MGPOptional<SiamConfig> = this.getConfig();
         this.movedPieces = this.rules.isLegal(this.lastMove.get(), previousGameState, config).get().moved;
+    }
+
+    public override hideLastMove(): void {
+        this.lastMove = MGPOptional.empty();
+        this.movedPieces = [];
     }
 
     public override cancelMoveAttempt(): void {

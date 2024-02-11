@@ -49,17 +49,27 @@ export class NewGameComponent extends GameComponent<NewGameRules,
         // If your game has scores in-game, enable the following:
         // this.scores = MGPOptional.of([0, 0]);
     }
+
     /**
      * This method updates the displayed board.
      */
     public async updateBoard(_triggerAnimation: boolean): Promise<void> {
     }
+
     /**
      * This method should display the last move in the component
      */
     public override async showLastMove(move: NewGameMove): Promise<void> {
         return;
     }
+
+    /**
+     * This method has the role to hide the last move
+     */
+    public override hideLastMove(): void {
+        return;
+    }
+
     /**
      * This method should clear out any data coming from a move attempt
      */

@@ -198,7 +198,8 @@ export abstract class GameWrapper<P extends Comparable> extends BaseWrapperCompo
         if (this.gameComponent.node.previousMove.isPresent()) {
             await this.gameComponent.updateBoard(triggerAnimation);
             const move: Move = this.gameComponent.node.previousMove.get();
-            await this.gameComponent.showLastMove(move);
+            const config: MGPOptional<RulesConfig> = await this.getConfig();
+            await this.gameComponent.showLastMove(move, config);
         } else {
             // We have no previous move to animate
             await this.gameComponent.updateBoard(false);

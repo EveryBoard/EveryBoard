@@ -3087,17 +3087,17 @@
         <source>Moving queens</source>
         <target>Déplacer les reines</target>
       </trans-unit>
-      <trans-unit id="246448750813949151" datatype="html">
-        <source>Queens are worth three points. They can move any number of steps in any direction, in a straight line, without jumping over other pieces.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, move a queen.</source>
-        <target>Les reines valent trois points. Elles peuvent se déplacer d'autant de pas que souhaité dans n'importe quelle direction, en ligne droite, sans sauter au dessus d'autres pièces.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, déplacez une reine.</target>
+      <trans-unit id="2106860890585726458" datatype="html">
+        <source>Queens are worth three points. They can move any number of steps in any direction, in a straight line, without jumping over other pieces.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Light, move a queen.</source>
+        <target>Les reines valent trois points. Elles peuvent se déplacer d'autant de pas que souhaité dans n'importe quelle direction, en ligne droite, sans sauter au dessus d'autres pièces.&lt;br/&gt;&lt;br/&gt;Vous jouez Clair, déplacez une reine.</target>
       </trans-unit>
       <trans-unit id="3206825395681468712" datatype="html">
         <source>This is not a queen!</source>
         <target>Ceci n'est pas une reine !</target>
       </trans-unit>
-      <trans-unit id="3324500494494988533" datatype="html">
-        <source>When a piece crosses the canal and lands on another piece, you capture it and gain the value of that captured piece. However, you lose control of your piece as it crosses the canal!&lt;br/&gt;&lt;br/&gt;A capture is possible for Dark, do it.</source>
-        <target>Quand une pièce traverse le canal et atterrit sur une autre pièce, vous la capturez et gagnez la valeur de la pièce, cependant vous en perdez le contrôle car elle a traversé le canal !&lt;br/&gt;&lt;br/&gt;Une capture est possible pour Foncé, faites-la.</target>
+      <trans-unit id="6164047187960612635" datatype="html">
+        <source>When a piece crosses the canal and lands on another piece, you capture it and gain the value of that captured piece. However, you lose control of your piece as it crosses the canal!&lt;br/&gt;&lt;br/&gt;A capture is possible for Light, do it.</source>
+        <target>Quand une pièce traverse le canal et atterrit sur une autre pièce, vous la capturez et gagnez la valeur de la pièce, cependant vous en perdez le contrôle car elle a traversé le canal !&lt;br/&gt;&lt;br/&gt;Une capture est possible pour Clair, faites-la.</target>
       </trans-unit>
       <trans-unit id="6741042150149637612" datatype="html">
         <source>Congratulations! By capturing that pawn, you won one point.</source>
@@ -3107,9 +3107,9 @@
         <source>Field Promotion (1/2)</source>
         <target>Promotion (1/2)</target>
       </trans-unit>
-      <trans-unit id="8675845222727327919" datatype="html">
-        <source>It is sometimes possible to perform what is called a field promotion. If you are out of one type of piece, you can merge two pieces to add their value and get a new piece. For example, if you have no drones, you can merge two pawns into a drone. To merge two pawns, move one of your pawns on another.&lt;br/&gt;&lt;br/&gt;Such a move is possible for Dark. Do it.</source>
-        <target>Il est parfois possible de faire ce qu'on appelle une promotion. Quand vous n'avez pas un type de pièce, vous pouvez fusionner deux pièces pour additionner leur valeur et obtenir une nouvelle pièce. Premier exemple, si vous n'avez pas de drône, vous pouvez fusionner deux de vos pions en un drône. Pour ce faire, déplacez un de vos pions sur un autre.&lt;br/&gt;&lt;br/&gt;Un tel coup est possible pour Foncé, faites-le.</target>
+      <trans-unit id="9082504092683509261" datatype="html">
+        <source>It is sometimes possible to perform what is called a field promotion. If you are out of one type of piece, you can merge two pieces to add their value and get a new piece. For example, if you have no drones, you can merge two pawns into a drone. To merge two pawns, move one of your pawns on another.&lt;br/&gt;&lt;br/&gt;Such a move is possible for Light. Do it.</source>
+        <target>Il est parfois possible de faire ce qu'on appelle une promotion. Quand vous n'avez pas un type de pièce, vous pouvez fusionner deux pièces pour additionner leur valeur et obtenir une nouvelle pièce. Premier exemple, si vous n'avez pas de drône, vous pouvez fusionner deux de vos pions en un drône. Pour ce faire, déplacez un de vos pions sur un autre.&lt;br/&gt;&lt;br/&gt;Un tel coup est possible pour Clair, faites-le.</target>
       </trans-unit>
       <trans-unit id="8941261285468529448" datatype="html">
         <source>This is not a field promotion!</source>
@@ -3151,9 +3151,9 @@
         <source>End game (by clock)</source>
         <target>Fin au temps</target>
       </trans-unit>
-      <trans-unit id="5334745019478145111" datatype="html">
-        <source>When seven turns have passed after the clock has been called, the player with the most points win. If both player have the same number of points, it is a tie.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, do the last move.</source>
-        <target>7 Tours après le lancement du compte à rebour, le joueur qui a le plus de point gagne. Si les joueurs ont autant de point, c'est un match nul.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, faites le dernier mouvement.</target>
+      <trans-unit id="3700959958039999617" datatype="html">
+        <source>When seven turns have passed after the clock has been called, the player with the most points win. If both player have the same number of points, it is a tie.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Light, do the last move.</source>
+        <target>7 Tours après le lancement du compte à rebour, le joueur qui a le plus de point gagne. Si les joueurs ont autant de point, c'est un match nul.&lt;br/&gt;&lt;br/&gt;Vous jouez Clair, faites le dernier mouvement.</target>
       </trans-unit>
       <trans-unit id="1679797944253761486" datatype="html">
         <source>End by emptyness</source>
