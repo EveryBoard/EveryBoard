@@ -17,6 +17,7 @@ import { GameNode } from 'src/app/jscaip/AI/GameNode';
 import { AbstractGameComponent } from '../../game-components/game-component/GameComponent';
 import { Utils } from 'src/app/utils/utils';
 import { TutorialGameWrapperMessages } from '../tutorial-game-wrapper/tutorial-game-wrapper.component';
+import { faK } from '@fortawesome/free-solid-svg-icons';
 
 describe('DemoCardComponent', () => {
 
@@ -151,6 +152,18 @@ describe('DemoCardComponent', () => {
 
             // Then the return should be the default game config
             expect(actualDefaultRulesConfig).toEqual(defaultRulesConfig);
+        }));
+
+    });
+
+    describe('getPlayer', () => {
+
+        it('should never get called', fakeAsync(async() => {
+            // DemoCardWrapper are not allowing clicks.
+            // Hence, nowhere any logic needs to check who the current player is,
+            // because it's nobody, nobody is doing anything on demo cards !
+            // So we just need to cover this here, as we aim for 100% coverage
+            expect(testUtils.getComponent().getPlayer()).toBe('no-player');
         }));
 
     });

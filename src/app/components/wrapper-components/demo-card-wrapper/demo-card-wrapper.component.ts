@@ -84,6 +84,9 @@ export class DemoCardWrapperComponent extends GameWrapper<string> implements Aft
     }
 
     public override getPlayer(): string {
+        // Note, this code is never reached, as getPlayer only get called by GameWrapper when needed
+        // and it is only needed in GameWrapper.canUserPlay (that is overriden here)
+        // and in getBoardHighlight, unused in demo cards.
         return 'no-player';
     }
 
@@ -93,10 +96,10 @@ export class DemoCardWrapperComponent extends GameWrapper<string> implements Aft
 
     public override async canUserPlay(_clickedElementName: string): Promise<MGPValidation> {
         if (this.gameComponentIsSetup) {
-            // This click is done by ourselves , to set up the game component for the demo
+            // This is when some user try to click on a demo
             return MGPValidation.failure(TutorialGameWrapperMessages.THIS_IS_A_DEMO());
         } else {
-            // This is when some user try to click on a demo
+            // This click is done by ourselves , to set up the game component for the demo
             return MGPValidation.SUCCESS;
         }
     }

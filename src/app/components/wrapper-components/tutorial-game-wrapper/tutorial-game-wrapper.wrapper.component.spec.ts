@@ -37,7 +37,12 @@ describe('TutorialGameWrapperComponent for non-existing game', () => {
         tick(0);
 
         // Then it goes to /notFound with the expected error message
-        expectValidRouting(router, ['/notFound', GameWrapperMessages.NO_MATCHING_GAME('invalid-game')], NotFoundComponent, { skipLocationChange: true });
+        expectValidRouting(
+            router,
+            ['/notFound', GameWrapperMessages.NO_MATCHING_GAME('invalid-game')],
+            NotFoundComponent,
+            { skipLocationChange: true },
+        );
     }));
 });
 
