@@ -17,7 +17,6 @@ import { GameNode } from 'src/app/jscaip/AI/GameNode';
 import { AbstractGameComponent } from '../../game-components/game-component/GameComponent';
 import { Utils } from 'src/app/utils/utils';
 import { TutorialGameWrapperMessages } from '../tutorial-game-wrapper/tutorial-game-wrapper.component';
-import { faK } from '@fortawesome/free-solid-svg-icons';
 
 describe('DemoCardComponent', () => {
 
