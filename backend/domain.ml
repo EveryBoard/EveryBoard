@@ -45,9 +45,8 @@ module User = struct
     last_update_time: string option [@default None] [@key "lastUpdateTime"];
     verified: bool;
     current_game: CurrentGame.t option [@key "currentGame"];
-    (* TODO: observed part *)
   }
-  [@@deriving yojson]
+  [@@deriving yojson] [@@yojson.allow_extra_fields]
 
   let to_minimal_user (uid : string) (user : t) : MinimalUser.t =
     { id = uid; name = Option.get user.username }
