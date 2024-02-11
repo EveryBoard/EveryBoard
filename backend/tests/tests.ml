@@ -5,7 +5,6 @@ let () =
   Lwt_main.run @@ Alcotest_lwt.run "unit tests" @@ List.concat [
     UtilsTests.tests;
     DomainTests.tests;
-    (* TODO: ExternalTests.tests *)
     StatsTests.tests;
     GoogleCertificatesTests.tests;
     JwtTests.tests;
@@ -19,7 +18,7 @@ let () =
     (* TODO: server tests *)
   ]
 
-    (* TODO: integration tests, basically check with emulator for jwt & firestore. The actual use cases should be handled by e2e tests probably? *)
+    (* TODO: integration tests, basically check with emulator for jwt & firestore. The actual use cases should be handled by e2e tests probably?
   Alcotest_lwt.run "integration tests" @@ List.concat [
       JwtTests.tests;
       (* TODO: tests with emulators *)

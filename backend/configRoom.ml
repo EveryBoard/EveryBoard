@@ -62,6 +62,23 @@ module Make
       let* _ = Firestore.ConfigRoom.update request game_id update_json in
       Dream.empty `OK
 
+  (** Accept a config and start the game. Perform 1 read and 3 writes. *)
+  let accept_config (request : Dream.request) (game_id : string) =
+    Firestore.transaction request @@ fun () ->
+    (* Read 1: retrieve the config room *)
+    let* config_room = Firestore.ConfigRoom.get request game_id in
+    (* Write 1: accept the config room *)
+    let* _ = Firestore.ConfigRoom.accept request game_id in
+    let now = External.now_ms () in
+    let starting_config = Domain.Game.Updates.Start.get config_room now in
+    let accepter = Auth.get_minimal_user request in
+    (* Write 2: start the game *)
+    let* _ = Firestore.Game.update request game_id (Domain.Game.Updates.Start.to_yojson starting_config) in
+    let event = Domain.Game.Event.(Action (Action.start_game accepter now)) in
+    (* Write 3: add a start action *)
+    let* _ = Firestore.Game.add_event request game_id event in
+    Dream.empty `OK
+
   (** Select the opponent in a config. Perform 1 write. *)
   let select_opponent (request : Dream.request) (game_id : string) =
     match get_json_param request "opponent" >>= Domain.MinimalUser.of_yojson with
@@ -96,6 +113,7 @@ module Make
       | "propose" -> propose_config request game_id
       | "selectOpponent" -> select_opponent request game_id
       | "reviewConfig" -> review_config request game_id
+      | "acceptConfig" -> accept_config request game_id
       | "reviewConfigAndRemoveOpponent" -> review_config_and_remove_opponent request game_id
       | _ -> raise (BadInput "Unknown action")
 

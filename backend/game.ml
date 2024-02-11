@@ -82,24 +82,6 @@ module Make
     let* _ = Firestore.Chat.delete request game_id in
     Dream.empty `OK
 
-  (** Accept a config and start the game. Perform 1 read and 3 writes. *)
-  (* TODO: this should be on config-room endpoint *)
-  let accept_config (request : Dream.request) (game_id : string) =
-    Firestore.transaction request @@ fun () ->
-    (* Read 1: retrieve the config room *)
-    let* config_room = Firestore.ConfigRoom.get request game_id in
-    (* Write 1: accept the config room *)
-    let* _ = Firestore.ConfigRoom.accept request game_id in
-    let now = External.now_ms () in
-    let starting_config = Game.Updates.Start.get config_room now in
-    let accepter = Auth.get_minimal_user request in
-    (* Write 2: start the game *)
-    let* _ = Firestore.Game.update request game_id (Game.Updates.Start.to_yojson starting_config) in
-    let event = Game.Event.(Action (Action.start_game accepter now)) in
-    (* Write 3: add a start action *)
-    let* _ = Firestore.Game.add_event request game_id event in
-    Dream.empty `OK
-
   (** Resign from a game. Perform 1 read and 2 writes. *)
   let resign (request : Dream.request) (game_id : string) =
     Firestore.transaction request @@ fun () ->
@@ -124,7 +106,7 @@ module Make
   let notify_timeout (request : Dream.request) (game_id : string) (winner : MinimalUser.t) (loser : MinimalUser.t) =
     Firestore.transaction request @@ fun () ->
     (* Read 1: retrieve the game *)
-    (* TODO: maybe not needed? For end, we ould skip the turn update *)
+    (* TODO: maybe not needed? For end, we could skip the turn update *)
     let* game = Firestore.Game.get request game_id in
     let update = Game.Updates.End.get ~winner ~loser Game.GameResult.Timeout game.turn in
     (* Write 1: end the game *)
@@ -287,7 +269,6 @@ module Make
       Stats.set_action request (Printf.sprintf "POST game %s" action);
       Stats.set_game_id request game_id;
       match action with
-      | "acceptConfig" -> accept_config request game_id
       | "resign" -> resign request game_id
       | "notifyTimeout" ->
         let winner = get_json_param request "winner" >>= MinimalUser.of_yojson in

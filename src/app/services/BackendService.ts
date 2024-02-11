@@ -112,7 +112,9 @@ export class BackendService {
 
     /** Accept a game config */
     public async acceptConfig(gameId: string): Promise<void> {
-        return this.gameAction(gameId, 'acceptConfig');
+        const endpoint: string = `config-room/${gameId}?action=acceptConfig`;
+        const result: MGPFallible<Response> = await this.performRequest('POST', endpoint);
+        this.assertSuccess(result);
     }
 
     /** Give the current player resignation in a game */
