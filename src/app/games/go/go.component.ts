@@ -61,7 +61,7 @@ export class GoComponent extends GobanGameComponent<GoRules,
         this.last = MGPOptional.empty();
     }
 
-    public async onClickByXY(x: number, y: number): Promise<MGPValidation> {
+    public async onClickXY(x: number, y: number): Promise<MGPValidation> {
         const coord: Coord = new Coord(x, y);
         return this.onClick(coord);
     }

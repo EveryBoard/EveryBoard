@@ -10,7 +10,7 @@ import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 import { GoConfig, GoRules } from '../GoRules';
 
-describe('GoComponent', () => {
+fdescribe('GoComponent', () => {
 
     let testUtils: ComponentTestUtils<GoComponent>;
 

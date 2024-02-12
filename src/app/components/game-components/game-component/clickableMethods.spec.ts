@@ -39,7 +39,10 @@ export const clickableMethods: { [gameName: string]: { [methodName: string]: unk
     },
     Epaminondas: { onClick: [0, 0] },
     Gipf: { onClick: [0, 0] },
-    Go: { onClick: [0, 0] },
+    Go: {
+        onClick: [new Coord(0, 0)],
+        onClickXY: [0, 0],
+    },
     Hive: {
         selectSpace: [new Coord(0, 0), 'space'],
         selectRemaining: [new HivePiece(Player.ZERO, 'QueenBee')],
@@ -73,7 +76,8 @@ export const clickableMethods: { [gameName: string]: { [methodName: string]: unk
         skipRotation: [],
     },
     Pente: {
-        onClick: [0, 0],
+        onClick: [new Coord(0, 0)],
+        onClickXY: [0, 0],
     },
     Pylos: {
         onPieceClick: [0, 0, 0],

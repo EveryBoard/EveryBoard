@@ -14,7 +14,7 @@
                     <circle [attr.cx]="(SPACE_SIZE * 0.5) + (SPACE_SIZE * x)"
                             [attr.cy]="(SPACE_SIZE * 0.5) + (SPACE_SIZE * y)"
                             [attr.r]="SPACE_SIZE * 0.44"
-                            (click)="onClickByXY(x, y)"
+                            (click)="onClickXY(x, y)"
                             [ngClass]="getSpaceClass(x, y)"
                             class="base"
                     />
@@ -25,7 +25,7 @@
                             class="base no-fill last-move-stroke"
                     />
                     <line *ngIf="isDead(x, y)"
-                          (click)="onClickByXY(x, y)"
+                          (click)="onClickXY(x, y)"
                           [attr.x1]="SPACE_SIZE * x"
                           [attr.y1]="SPACE_SIZE * y"
                           [attr.x2]="SPACE_SIZE + (SPACE_SIZE * x)"
@@ -39,7 +39,7 @@
                             [attr.cy]="(SPACE_SIZE * 0.5) + (SPACE_SIZE * y)"
                             [attr.r]="SPACE_SIZE * 0.2"
                             [attr.class]="spaceContent === GoPiece.LIGHT_TERRITORY ? 'player1-fill' : 'player0-fill'"
-                            (click)="onClickByXY(x, y)"
+                            (click)="onClickXY(x, y)"
                     />
                 </ng-template>
             </g>
