@@ -5,6 +5,7 @@ import { HexaDirection } from 'src/app/jscaip/HexaDirection';
 import { AbaloneState } from './AbaloneState';
 import { AbaloneMove } from './AbaloneMove';
 import { AbaloneRules } from './AbaloneRules';
+import { TutorialStepMessage } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
 
 const _: FourStatePiece = FourStatePiece.EMPTY;
 const N: FourStatePiece = FourStatePiece.UNREACHABLE;
@@ -28,7 +29,7 @@ export class AbaloneTutorial extends Tutorial {
         You're playing Dark, make any move!`,
             AbaloneRules.get().getInitialState(),
             AbaloneMove.ofSingleCoord(new Coord(2, 6), HexaDirection.UP),
-            $localize`Congratulations!`,
+            TutorialStepMessage.CONGRATULATIONS(),
         ),
         TutorialStep.fromMove(
             $localize`Pushing`,
@@ -50,7 +51,7 @@ export class AbaloneTutorial extends Tutorial {
             ], 0),
             [AbaloneMove.ofSingleCoord(new Coord(4, 4), HexaDirection.RIGHT)],
             $localize`Congratulations! You know everything you need to start a game!`,
-            $localize`Failed. Try again.`,
+            TutorialStepMessage.FAILED_TRY_AGAIN(),
         ),
     ];
 }

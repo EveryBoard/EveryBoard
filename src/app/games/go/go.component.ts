@@ -51,6 +51,16 @@ export class GoComponent extends GobanGameComponent<GoRules,
         this.scores = MGPOptional.of(PlayerNumberMap.of(0, 0));
     }
 
+    public override async showLastMove(move: GoMove): Promise<void> {
+        this.last = MGPOptional.of(move.coord);
+        this.showCaptures();
+    }
+
+    public override hideLastMove(): void {
+        this.captures = [];
+        this.last = MGPOptional.empty();
+    }
+
     public async onClickByXY(x: number, y: number): Promise<MGPValidation> {
         const coord: Coord = new Coord(x, y);
         return this.onClick(coord);
@@ -71,19 +81,12 @@ export class GoComponent extends GobanGameComponent<GoRules,
 
     public async updateBoard(_triggerAnimation: boolean): Promise<void> {
         const state: GoState = this.getState();
-        const move: MGPOptional<GoMove> = this.node.previousMove;
         const phase: Phase = state.phase;
 
         this.board = state.getCopiedBoard();
         this.scores = MGPOptional.of(state.getCapturedCopy());
 
         this.ko = state.koCoord;
-        if (move.isPresent()) {
-            this.showCaptures();
-        } else {
-            this.captures = [];
-        }
-        this.last = move.map((move: GoMove) => move.coord);
         this.canPass = phase !== Phase.FINISHED;
         this.createHoshis();
     }

@@ -19,7 +19,7 @@ export class NewGameHeuristic extends Heuristic<NewGameMove, NewGameState> {
      * You may want to use `PlayerMetricHeuristic` to define a score for each player instead, which
      * is often what you want.
      */
-    public getBoardValue(node: NewGameNode, _config: NoConfig): BoardValue {
+    public override getBoardValue(node: NewGameNode, _config: NoConfig): BoardValue {
         return BoardValue.of(node.gameState.turn);
     }
 

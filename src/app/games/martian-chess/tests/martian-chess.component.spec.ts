@@ -185,8 +185,9 @@ describe('MartianChessComponent', () => {
         const move: MartianChessMove = MartianChessMove.from(new Coord(1, 4), new Coord(2, 3)).get();
         await testUtils.expectMoveSuccess('#click_2_3', move);
 
-        // Then left square and landing square should be captured
+        // Then left square should be moved
         testUtils.expectElementToHaveClass('#square_1_4', 'moved-fill');
+        // And landing square should be captured (and not captured)
         testUtils.expectElementNotToHaveClass('#square_2_3', 'moved-fill');
         testUtils.expectElementToHaveClass('#square_2_3', 'captured-fill');
     }));

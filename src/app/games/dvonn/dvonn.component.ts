@@ -11,7 +11,6 @@ import { HexagonalGameComponent }
     from 'src/app/components/game-components/game-component/HexagonalGameComponent';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { assert } from 'src/app/utils/assert';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { MCTS } from 'src/app/jscaip/AI/MCTS';
 import { Minimax } from 'src/app/jscaip/AI/Minimax';
@@ -19,6 +18,7 @@ import { DvonnScoreHeuristic } from './DvonnScoreHeuristic';
 import { DvonnOrderedMoveGenerator } from './DvonnOrderedMoveGenerator';
 import { DvonnMaxStacksHeuristic } from './DvonnMaxStacksHeuristic';
 import { DvonnMoveGenerator } from './DvonnMoveGenerator';
+import { Utils } from 'src/app/utils/utils';
 
 @Component({
     selector: 'app-dvonn',
@@ -57,10 +57,8 @@ export class DvonnComponent extends HexagonalGameComponent<DvonnRules, DvonnMove
     }
 
     public async updateBoard(_triggerAnimation: boolean): Promise<void> {
-        this.cancelMoveAttempt();
         this.state = this.getState();
         this.disconnecteds = [];
-        this.hideLastMove();
         this.canPass = this.rules.canOnlyPass(this.state);
         this.scores = MGPOptional.of(DvonnRules.getScores(this.state));
     }
@@ -92,7 +90,7 @@ export class DvonnComponent extends HexagonalGameComponent<DvonnRules, DvonnMove
     }
 
     public override async pass(): Promise<MGPValidation> {
-        assert(this.canPass, 'DvonnComponent: pass() can only be called if canPass is true');
+        Utils.assert(this.canPass, 'DvonnComponent: pass() can only be called if canPass is true');
         return await this.chooseMove(DvonnMove.PASS);
     }
 

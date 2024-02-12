@@ -275,7 +275,6 @@ describe('SiamRules', () => {
 
         // When moving the piece in a different direction than its orientation
         const move: SiamMove = SiamMove.of(0, 4, MGPOptional.of(Orthogonal.RIGHT), Orthogonal.LEFT);
-
         // Then it should succeed
         const expectedBoard: Table<SiamPiece> = [
             [_, _, _, _, _],

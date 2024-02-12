@@ -55,6 +55,10 @@ export class ConnectSixComponent extends GobanGameComponent<ConnectSixRules,
         }
     }
 
+    public override hideLastMove(): void {
+        this.lastMoved = [];
+    }
+
     public async onClick(coord: Coord): Promise<MGPValidation> {
         const x: number = coord.x;
         const y: number = coord.y;

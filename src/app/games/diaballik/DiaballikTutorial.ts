@@ -4,6 +4,7 @@ import { DiaballikMove, DiaballikBallPass, DiaballikTranslation } from './Diabal
 import { Coord } from 'src/app/jscaip/Coord';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { DiaballikRules } from './DiaballikRules';
+import { TutorialStepMessage } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
 
 const O: DiaballikPiece = DiaballikPiece.ZERO;
 const Ȯ: DiaballikPiece = DiaballikPiece.ZERO_WITH_BALL;
@@ -25,8 +26,8 @@ export class DiaballikTutorial extends Tutorial {
             [new DiaballikMove(DiaballikTranslation.from(new Coord(0, 6), new Coord(0, 5)).get(),
                                MGPOptional.empty(),
                                MGPOptional.empty())],
-            $localize`Congratulations!`,
-            $localize`Failed. Try again.`,
+            TutorialStepMessage.CONGRATULATIONS(),
+            TutorialStepMessage.FAILED_TRY_AGAIN(),
         ),
         TutorialStep.fromMove(
             $localize`Pass`,
@@ -43,8 +44,8 @@ export class DiaballikTutorial extends Tutorial {
             [new DiaballikMove(DiaballikTranslation.from(new Coord(3, 1), new Coord(4, 1)).get(),
                                MGPOptional.of(DiaballikTranslation.from(new Coord(4, 1), new Coord(4, 0)).get()),
                                MGPOptional.of(DiaballikBallPass.from(new Coord(0, 4), new Coord(4, 0)).get()))],
-            $localize`Congratulations!`,
-            $localize`Failed. Try again.`,
+            TutorialStepMessage.CONGRATULATIONS(),
+            TutorialStepMessage.FAILED_TRY_AGAIN(),
         ),
         TutorialStep.fromMove(
             $localize`Blocking the opponent`,
@@ -61,8 +62,8 @@ export class DiaballikTutorial extends Tutorial {
             [new DiaballikMove(DiaballikTranslation.from(new Coord(0, 1), new Coord(0, 2)).get(),
                                MGPOptional.of(DiaballikTranslation.from(new Coord(0, 2), new Coord(0, 3)).get()),
                                MGPOptional.empty())],
-            $localize`Congratulations!`,
-            $localize`Failed. Try again.`,
+            TutorialStepMessage.CONGRATULATIONS(),
+            TutorialStepMessage.FAILED_TRY_AGAIN(),
         ),
     ];
 }

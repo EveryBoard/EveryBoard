@@ -50,7 +50,7 @@ describe('AwaleComponent', () => {
                 [0, 0, 0, 0, 0, 4],
             ], 121, PlayerNumberMap.of(0, 0)),
             move: MancalaMove.of(MancalaDistribution.of(5)),
-            result: [{ x: 5, y: 1, content: { mainContent: ' -5 ' } }],
+            result: [{ x: 5, y: 1, content: { mainContent: ' 0 ', secondaryContent: ' -5 ' } }],
         },
         capture: {
             state: new MancalaState([
@@ -58,7 +58,7 @@ describe('AwaleComponent', () => {
                 [2, 4, 4, 4, 4, 4],
             ], 0, PlayerNumberMap.of(0, 0)),
             move: MancalaMove.of(MancalaDistribution.of(0)),
-            result: [{ x: 1, y: 0, content: { mainContent: ' -2 ' } }],
+            result: [{ x: 1, y: 0, content: { mainContent: ' 0 ', secondaryContent: ' -2 ' } }],
         },
         fillThenCapture: {
             state: new MancalaState([
@@ -66,7 +66,7 @@ describe('AwaleComponent', () => {
                 [17, 4, 4, 4, 4, 4],
             ], 0, PlayerNumberMap.of(0, 0)),
             move: MancalaMove.of(MancalaDistribution.of(0)),
-            result: [{ x: 5, y: 0, content: { mainContent: ' -2 ' } }],
+            result: [{ x: 5, y: 0, content: { mainContent: ' 0 ', secondaryContent: ' -2 ' } }],
         },
     });
 
@@ -95,7 +95,7 @@ describe('AwaleComponent', () => {
         }));
 
         it('should allow redistribution if allowed by config', fakeAsync(async() => {
-            // Given an awale state where multiple so would be possible, and the first sowing is done
+            // Given an awale state with where multiple so would be possible, and the first sowing is done
             const customConfig: MGPOptional<MancalaConfig> = MGPOptional.of({
                 ...defaultConfig.get(),
                 passByPlayerStore: true,

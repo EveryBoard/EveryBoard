@@ -131,8 +131,8 @@ describe('SaharaComponent', () => {
             [N, _, _, _, _, _, _, X, _, _, N],
             [N, N, X, O, _, _, _, _, O, N, N],
         ];
-        const initialState: SaharaState = new SaharaState(board, 2);
-        await testUtils.setupState(initialState);
+        const state: SaharaState = new SaharaState(board, 2);
+        await testUtils.setupState(state);
 
         await testUtils.expectClickSuccess('#click_2_1'); // select first piece
         const move: SaharaMove = SaharaMove.from(new Coord(2, 1), new Coord(1, 2)).get();

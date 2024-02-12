@@ -50,6 +50,7 @@ export class AbaloneMoveGenerator extends MoveGenerator<AbaloneMove, AbaloneStat
         }
         return new MGPSet(moves).toList();
     }
+
     private isAcceptablePush(move: AbaloneMove, state: AbaloneState): boolean {
         const scores: PlayerNumberMap = state.getScores();
         const status: MGPFallible<AbaloneLegalityInformation> = AbaloneRules.get().isLegal(move, state);

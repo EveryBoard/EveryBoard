@@ -84,10 +84,12 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
         if (move instanceof CoerceoRegularMove) {
             this.lastStart = MGPOptional.of(move.getStart());
             this.lastEnd = MGPOptional.of(move.getEnd());
-        } else {
-            this.lastStart = MGPOptional.empty();
-            this.lastEnd = MGPOptional.empty();
         }
+    }
+
+    public override hideLastMove(): void {
+        this.lastStart = MGPOptional.empty();
+        this.lastEnd = MGPOptional.empty();
     }
 
     public async onClick(x: number, y: number): Promise<MGPValidation> {
@@ -227,27 +229,28 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
 
     public getIndicatorY(coord: Coord): number {
         const y: number = this.INDICATOR_SIZE / 2;
+        const center: number = this.SPACE_SIZE / 2;
         if ((coord.x + coord.y) % 2 === 0) {
-            return y;
+            return y + center;
         } else {
-            return y - 30;
+            return y + center - 30;
         }
     }
 
-    public getTriangleInHexTranslate(x: number, y: number): string {
-        const translate: Coord = this.getTriangleTranslateCoord(x, y);
-        const translateX: number = translate.x + 2 * Math.floor(x / 3) * this.STROKE_WIDTH;
-        let translateY: number = translate.y;
+    public getTriangleInHexTranslation(x: number, y: number): string {
+        const translation: Coord = this.getTriangleTranslationCoord(x, y);
+        const translationX: number = translation.x + 2 * Math.floor(x / 3) * this.STROKE_WIDTH;
+        let translationY: number = translation.y;
         if (Math.floor(x / 3) % 2 === 0) {
-            translateY += 2 * Math.floor(y / 2) * this.STROKE_WIDTH;
+            translationY += 2 * Math.floor(y / 2) * this.STROKE_WIDTH;
         } else {
-            translateY += 2 * Math.abs(Math.floor((y - 1) / 2)) * this.STROKE_WIDTH;
-            translateY += this.STROKE_WIDTH;
+            translationY += 2 * Math.abs(Math.floor((y - 1) / 2)) * this.STROKE_WIDTH;
+            translationY += this.STROKE_WIDTH;
         }
-        return 'translate(' + translateX + ', ' + translateY + ')';
+        return 'translate(' + translationX + ', ' + translationY + ')';
     }
 
-    public getTilesCountTranslate(player: Player): string {
+    public getTilesCountTranslation(player: Player): string {
         let x: number;
         let y: number;
         if (player === Player.ZERO) {
@@ -263,8 +266,8 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
     }
 
     public getViewBox(): ViewBox {
-        const left: number = - this.SPACE_SIZE / 2;
-        const up: number = - this.SPACE_SIZE / 2;
+        const left: number = 0;
+        const up: number = 0;
         const width: number = this.SPACE_SIZE * 8.5 + this.STROKE_WIDTH * 2;
         const height: number = this.SPACE_SIZE * 10.5 + this.STROKE_WIDTH * 2;
         const halfStroke: number = this.STROKE_WIDTH / 2;
