@@ -5,7 +5,7 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { PenteAlignmentHeuristic } from '../PenteAlignmentHeuristic';
 import { PenteState } from '../PenteState';
 import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
-import { GobanConfig } from 'src/app/jscaip/GobanConfig';
+import { PenteConfig } from '../PenteConfig';
 import { PenteRules } from '../PenteRules';
 
 const _: PlayerOrNone = PlayerOrNone.NONE;
@@ -14,7 +14,7 @@ const O: PlayerOrNone = PlayerOrNone.ZERO;
 describe('PenteAlignmentHeuristic', () => {
 
     let heuristic: PenteAlignmentHeuristic;
-    const defaultConfig: MGPOptional<GobanConfig> = PenteRules.get().getDefaultRulesConfig();
+    const defaultConfig: MGPOptional<PenteConfig> = PenteRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         heuristic = new PenteAlignmentHeuristic();

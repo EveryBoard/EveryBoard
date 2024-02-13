@@ -6,4 +6,6 @@ export type PenteConfig = GobanConfig & {
 
     nInARow: number;
 
+    sizeOfSandwich: number;
+
 };

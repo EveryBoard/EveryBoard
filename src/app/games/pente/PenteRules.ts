@@ -11,7 +11,6 @@ import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { Utils } from 'src/app/utils/utils';
 import { PenteMove } from './PenteMove';
 import { PenteState } from './PenteState';
-import { GobanConfig } from 'src/app/jscaip/GobanConfig';
 import { NumberConfig, RulesConfigDescription, RulesConfigDescriptionLocalizable } from 'src/app/components/wrapper-components/rules-configuration/RulesConfigDescription';
 import { TableUtils } from 'src/app/utils/ArrayUtils';
 import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
@@ -28,8 +27,9 @@ export class PenteRules extends ConfigurableRules<PenteMove, PenteState, PenteCo
             config: {
                 width: new NumberConfig(19, RulesConfigDescriptionLocalizable.WIDTH, MGPValidators.range(1, 99)),
                 height: new NumberConfig(19, RulesConfigDescriptionLocalizable.HEIGHT, MGPValidators.range(1, 99)),
-                winAfterNCapture: new NumberConfig(5, () => $localize`Captures needed to win (1 capture = 2 stones)`, MGPValidators.range(1, 123456)),
+                winAfterNCapture: new NumberConfig(5, () => $localize`Captures needed to win (1 capture = multiples stones)`, MGPValidators.range(1, 123456)),
                 nInARow: new NumberConfig(5, () => $localize`Number of aligned pieces needed to win`, MGPValidators.range(3, 99)),
+                sizeOfSandwich: new NumberConfig(2, () => $localize`Size of captures`, MGPValidators.range(1, 99)),
             },
         });
 
@@ -42,8 +42,8 @@ export class PenteRules extends ConfigurableRules<PenteMove, PenteState, PenteCo
         return PenteRules.singleton.get();
     }
 
-    public override getInitialState(optionalConfig: MGPOptional<GobanConfig>): PenteState {
-        const config: GobanConfig = optionalConfig.get();
+    public override getInitialState(optionalConfig: MGPOptional<PenteConfig>): PenteState {
+        const config: PenteConfig = optionalConfig.get();
         const board: PlayerOrNone[][] = TableUtils.create(config.width,
                                                           config.height,
                                                           PlayerOrNone.NONE);
@@ -67,13 +67,13 @@ export class PenteRules extends ConfigurableRules<PenteMove, PenteState, PenteCo
         }
     }
 
-    public override applyLegalMove(move: PenteMove, state: PenteState, _config: MGPOptional<GobanConfig>, _info: void)
+    public override applyLegalMove(move: PenteMove, state: PenteState, config: MGPOptional<PenteConfig>, _info: void)
     : PenteState
     {
         const player: Player = state.getCurrentPlayer();
         const newBoard: PlayerOrNone[][] = state.getCopiedBoard();
         newBoard[move.coord.y][move.coord.x]= player;
-        const capturedPieces: Coord[] = this.getCaptures(move.coord, state, player);
+        const capturedPieces: Coord[] = this.getCaptures(move.coord, state, config.get(), player);
         for (const captured of capturedPieces) {
             newBoard[captured.y][captured.x] = PlayerOrNone.NONE;
         }
@@ -82,19 +82,26 @@ export class PenteRules extends ConfigurableRules<PenteMove, PenteState, PenteCo
         return new PenteState(newBoard, captures, state.turn + 1);
     }
 
-    public getCaptures(coord: Coord, state: PenteState, player: Player): Coord[] {
+    public getCaptures(coord: Coord, state: PenteState, config: PenteConfig, player: Player): Coord[] {
         const opponent: Player = player.getOpponent();
         const captures: Coord[] = [];
+        const sizeOfCapture: number = config.sizeOfSandwich;
         for (const direction of Direction.factory.all) {
-            const firstCapture: Coord = coord.getNext(direction, 1);
-            const secondCapture: Coord = coord.getNext(direction, 2);
-            const sandwicher: Coord = coord.getNext(direction, 3);
-            if (state.isOnBoard(firstCapture) && state.getPieceAt(firstCapture) === opponent &&
-                state.isOnBoard(secondCapture) && state.getPieceAt(secondCapture) === opponent &&
-                state.isOnBoard(sandwicher) && state.getPieceAt(sandwicher) === player)
+            let i: number = 1;
+            let potentialCapture: Coord = coord.getNext(direction, i);
+            const captured: Coord[] = [potentialCapture];
+            while (state.has(potentialCapture, opponent) && i < sizeOfCapture)
             {
-                captures.push(firstCapture);
-                captures.push(secondCapture);
+                i++;
+                potentialCapture = potentialCapture.getNext(direction, 1);
+                captured.push(potentialCapture);
+            }
+            const sandwicher: Coord = coord.getNext(direction, sizeOfCapture + 1);
+            if (state.has(potentialCapture, opponent) &&
+                i === sizeOfCapture &&
+                state.has(sandwicher, player))
+            {
+                captures.push(...captured);
             }
         }
         return captures;
@@ -103,7 +110,8 @@ export class PenteRules extends ConfigurableRules<PenteMove, PenteState, PenteCo
     public getGameStatus(node: PenteNode, config: MGPOptional<PenteConfig>): GameStatus {
         const state: PenteState = node.gameState;
         const opponent: Player = state.getCurrentOpponent();
-        if (config.get().winAfterNCapture * 2 <= state.captures.get(opponent)) {
+        const stonesCountForVictory: number = config.get().winAfterNCapture * config.get().sizeOfSandwich;
+        if (stonesCountForVictory <= state.captures.get(opponent)) {
             return GameStatus.getVictory(opponent);
         }
         const victoriousCoord: Coord[] = this.getHelper(config).getVictoriousCoord(state);
