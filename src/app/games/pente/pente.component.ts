@@ -63,20 +63,14 @@ export class PenteComponent extends GobanGameComponent<PenteRules,
     }
 
     public async onClick(coord: Coord): Promise<MGPValidation> {
-        return this.onClickXY(coord.x, coord.y);
-    }
-
-    public async onClickXY(x: number, y: number): Promise<MGPValidation> {
-        const clickValidity: MGPValidation = await this.canUserPlay('#click_' + x + '_' + y);
+        const clickValidity: MGPValidation = await this.canUserPlay('#click_' + coord.x + '_' + coord.y);
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }
-        const clickedCoord: Coord = new Coord(x, y);
-        return this.chooseMove(PenteMove.of(clickedCoord));
+        return this.chooseMove(PenteMove.of(coord));
     }
 
-    public getSpaceClass(x: number, y: number): string[] {
-        const coord: Coord = new Coord(x, y);
+    public getSpaceClass(coord: Coord): string[] {
         const owner: PlayerOrNone = this.getState().getPieceAt(coord);
         const classes: string[] = [];
         classes.push(this.getPlayerClass(owner));

@@ -7,42 +7,41 @@
        [width]="getState().getWidth()"
        [height]="getState().getHeight()"
        (clickCallBack)="onClick($event)">
-  </g><g id="piece_ko_territory_markers_and_dead_stones">
-        <g *ngFor="let line of board; index as y">
-            <g *ngFor="let spaceContent of line; index as x">
-                <g *ngIf="spaceIsFull(x, y) else empty">
-                    <circle [attr.cx]="(SPACE_SIZE * 0.5) + (SPACE_SIZE * x)"
-                            [attr.cy]="(SPACE_SIZE * 0.5) + (SPACE_SIZE * y)"
-                            [attr.r]="SPACE_SIZE * 0.44"
-                            (click)="onClickXY(x, y)"
-                            [ngClass]="getSpaceClass(x, y)"
-                            class="base"
-                    />
-                    <circle *ngIf="isLastSpace(x, y)"
-                            [attr.cx]="(SPACE_SIZE * 0.5) + (SPACE_SIZE * x)"
-                            [attr.cy]="(SPACE_SIZE * 0.5) + (SPACE_SIZE * y)"
-                            [attr.r]="SPACE_SIZE * 0.44"
-                            class="base no-fill last-move-stroke"
-                    />
-                    <line *ngIf="isDead(x, y)"
-                          (click)="onClickXY(x, y)"
-                          [attr.x1]="SPACE_SIZE * x"
-                          [attr.y1]="SPACE_SIZE * y"
-                          [attr.x2]="SPACE_SIZE + (SPACE_SIZE * x)"
-                          [attr.y2]="SPACE_SIZE + (SPACE_SIZE * y)"
-                          class="base no-fill captured-stroke"
-                    />
-                </g>
-                <ng-template #empty>
-                    <circle *ngIf="isTerritory(x, y)"
-                            [attr.cx]="(SPACE_SIZE * 0.5) + (SPACE_SIZE * x)"
-                            [attr.cy]="(SPACE_SIZE * 0.5) + (SPACE_SIZE * y)"
-                            [attr.r]="SPACE_SIZE * 0.2"
-                            [attr.class]="spaceContent === GoPiece.LIGHT_TERRITORY ? 'player1-fill' : 'player0-fill'"
-                            (click)="onClickXY(x, y)"
-                    />
-                </ng-template>
+    </g>
+    <g id="piece_ko_territory_markers_and_dead_stones">
+        <g *ngFor="let coordAndContent of getState().getCoordsAndContents()">
+            <g *ngIf="spaceIsFull(coordAndContent.coord) else empty">
+                <circle [attr.cx]="(SPACE_SIZE * 0.5) + (SPACE_SIZE * coordAndContent.coord.x)"
+                        [attr.cy]="(SPACE_SIZE * 0.5) + (SPACE_SIZE * coordAndContent.coord.y)"
+                        [attr.r]="SPACE_SIZE * 0.44"
+                        (click)="onClick(coordAndContent.coord)"
+                        [ngClass]="getSpaceClass(coordAndContent.coord)"
+                        class="base"
+                />
+                <circle *ngIf="isLastSpace(coordAndContent.coord)"
+                        [attr.cx]="(SPACE_SIZE * 0.5) + (SPACE_SIZE * coordAndContent.coord.x)"
+                        [attr.cy]="(SPACE_SIZE * 0.5) + (SPACE_SIZE * coordAndContent.coord.y)"
+                        [attr.r]="SPACE_SIZE * 0.44"
+                        class="base no-fill last-move-stroke"
+                />
+                <line *ngIf="isDead(coordAndContent.coord)"
+                      (click)="onClick(coordAndContent.coord)"
+                      [attr.x1]="SPACE_SIZE * coordAndContent.coord.x"
+                      [attr.y1]="SPACE_SIZE * coordAndContent.coord.y"
+                      [attr.x2]="SPACE_SIZE + (SPACE_SIZE * coordAndContent.coord.x)"
+                      [attr.y2]="SPACE_SIZE + (SPACE_SIZE * coordAndContent.coord.y)"
+                      class="base no-fill captured-stroke"
+                />
             </g>
+            <ng-template #empty>
+                <circle *ngIf="isTerritory(coordAndContent.coord)"
+                        [attr.cx]="(SPACE_SIZE * 0.5) + (SPACE_SIZE * coordAndContent.coord.x)"
+                        [attr.cy]="(SPACE_SIZE * 0.5) + (SPACE_SIZE * coordAndContent.coord.y)"
+                        [attr.r]="SPACE_SIZE * 0.2"
+                        [attr.class]="coordAndContent.content === GoPiece.LIGHT_TERRITORY ? 'player1-fill' : 'player0-fill'"
+                        (click)="onClick(coordAndContent.coord)"
+                />
+            </ng-template>
         </g>
     </g>
     <rect *ngIf="ko.isPresent()"

@@ -28,7 +28,7 @@ export class PenteRules extends ConfigurableRules<PenteMove, PenteState, PenteCo
             config: {
                 width: new NumberConfig(19, RulesConfigDescriptionLocalizable.WIDTH, MGPValidators.range(1, 99)),
                 height: new NumberConfig(19, RulesConfigDescriptionLocalizable.HEIGHT, MGPValidators.range(1, 99)),
-                winAfterNCapture: new NumberConfig(5, () => $localize`Captures needed to win (in pair)`, MGPValidators.range(1, 123456)),
+                winAfterNCapture: new NumberConfig(5, () => $localize`Captures needed to win (2 stones = 1 capture)`, MGPValidators.range(1, 123456)),
                 nInARow: new NumberConfig(5, () => $localize`Number of aligned pieces needed to win`, MGPValidators.range(3, 99)),
             },
         });

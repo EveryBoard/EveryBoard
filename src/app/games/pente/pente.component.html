@@ -7,18 +7,16 @@
        [height]="getState().getHeight()"
        (clickCallBack)="onClick($event)">
     </g>
-    <g *ngFor="let line of board; index as y">
-        <g *ngFor="let spaceContent of line; index as x"
-            id="click_{{ x }}_{{ y }}"
-            (click)="onClickXY(x, y)">
-            <circle *ngIf="spaceContent.isPlayer()"
-                    id="piece_{{ x }}_{{ y }}"
-                    [attr.cx]="(SPACE_SIZE * 0.5) + (SPACE_SIZE * x)"
-                    [attr.cy]="(SPACE_SIZE * 0.5) + (SPACE_SIZE * y)"
+    <g *ngFor="let coordAndContent of getState().getCoordsAndContents()"
+       id="click_{{ coordAndContent.coord.x }}_{{ coordAndContent.coord.y }}"
+       (click)="onClick(coordAndContent.coord)">
+            <circle *ngIf="coordAndContent.content.isPlayer()"
+                    id="piece_{{ coordAndContent.coord.x }}_{{ coordAndContent.coord.y }}"
+                    [attr.cx]="(SPACE_SIZE * 0.5) + (SPACE_SIZE * coordAndContent.coord.x)"
+                    [attr.cy]="(SPACE_SIZE * 0.5) + (SPACE_SIZE * coordAndContent.coord.y)"
                     [attr.r]="SPACE_SIZE * 0.44"
-                    [ngClass]="getSpaceClass(x, y)"
+                    [ngClass]="getSpaceClass(coordAndContent.coord)"
                     class="base" />
-        </g>
     </g>
     <circle *ngFor="let capture of captured"
             id="capture_{{ capture.x }}_{{ capture.y }}"

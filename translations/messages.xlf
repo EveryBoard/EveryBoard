@@ -2474,8 +2474,8 @@
       <trans-unit id="2426029962112596303" datatype="html">
         <source>Congratulations! Note that if all quadrants are neutral after you have put your piece, there will be no rotation.</source>
       </trans-unit>
-      <trans-unit id="8746180332226099583" datatype="html">
-        <source>Captures needed to win (in pair)</source>
+      <trans-unit id="3083043187430985874" datatype="html">
+        <source>Captures needed to win (2 stones = 1 capture)</source>
       </trans-unit>
       <trans-unit id="1997992313730455534" datatype="html">
         <source>Number of aligned pieces needed to win</source>

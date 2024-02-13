@@ -61,11 +61,6 @@ export class GoComponent extends GobanGameComponent<GoRules,
         this.last = MGPOptional.empty();
     }
 
-    public async onClickXY(x: number, y: number): Promise<MGPValidation> {
-        const coord: Coord = new Coord(x, y);
-        return this.onClick(coord);
-    }
-
     public async onClick(coord: Coord): Promise<MGPValidation> {
         const x: number = coord.x;
         const y: number = coord.y;
@@ -117,33 +112,28 @@ export class GoComponent extends GobanGameComponent<GoRules,
         return this.onClick(GoMove.ACCEPT.coord);
     }
 
-    public getSpaceClass(x: number, y: number): string {
+    public getSpaceClass(coord: Coord): string {
         const state: GoState = this.getState();
-        const piece: GoPiece = state.getPieceAtXY(x, y);
+        const piece: GoPiece = state.getPieceAt(coord);
         return this.getPlayerClass(piece.getOwner());
     }
 
-    public spaceIsFull(x: number, y: number): boolean {
+    public spaceIsFull(coord: Coord): boolean {
         const state: GoState = this.getState();
-        const piece: GoPiece = state.getPieceAtXY(x, y);
-        return piece !== GoPiece.EMPTY && this.isTerritory(x, y) === false;
+        const piece: GoPiece = state.getPieceAt(coord);
+        return piece !== GoPiece.EMPTY && this.isTerritory(coord) === false;
     }
 
-    public isLastSpace(x: number, y: number): boolean {
-        if (this.last.isPresent()) {
-            const last: Coord = this.last.get();
-            return x === last.x && y === last.y;
-        } else {
-            return false;
-        }
+    public isLastSpace(coord: Coord): boolean {
+        return this.last.equalsValue(coord);
     }
 
-    public isDead(x: number, y: number): boolean {
-        return this.getState().isDead(new Coord(x, y));
+    public isDead(coord: Coord): boolean {
+        return this.getState().isDead(coord);
     }
 
-    public isTerritory(x: number, y: number): boolean {
-        return this.getState().isTerritory(new Coord(x, y));
+    public isTerritory(coord: Coord): boolean {
+        return this.getState().isTerritory(coord);
     }
 
 }

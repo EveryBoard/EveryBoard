@@ -41,7 +41,6 @@ export const clickableMethods: { [gameName: string]: { [methodName: string]: unk
     Gipf: { onClick: [0, 0] },
     Go: {
         onClick: [new Coord(0, 0)],
-        onClickXY: [0, 0],
     },
     Hive: {
         selectSpace: [new Coord(0, 0), 'space'],
@@ -77,7 +76,6 @@ export const clickableMethods: { [gameName: string]: { [methodName: string]: unk
     },
     Pente: {
         onClick: [new Coord(0, 0)],
-        onClickXY: [0, 0],
     },
     Pylos: {
         onPieceClick: [0, 0, 0],
