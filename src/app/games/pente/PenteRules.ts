@@ -27,7 +27,7 @@ export class PenteRules extends ConfigurableRules<PenteMove, PenteState, PenteCo
             config: {
                 width: new NumberConfig(19, RulesConfigDescriptionLocalizable.WIDTH, MGPValidators.range(1, 99)),
                 height: new NumberConfig(19, RulesConfigDescriptionLocalizable.HEIGHT, MGPValidators.range(1, 99)),
-                captureNeededToWin: new NumberConfig(10, () => $localize`Captures needed to win (in stones)`, MGPValidators.range(1, 123456)),
+                capturesNeededToWin: new NumberConfig(10, () => $localize`Captured stones needed to win`, MGPValidators.range(1, 123456)),
                 nInARow: new NumberConfig(5, () => $localize`Number of aligned pieces needed to win`, MGPValidators.range(3, 99)),
                 sizeOfSandwich: new NumberConfig(2, () => $localize`Size of captures`, MGPValidators.range(1, 99)),
             },
@@ -110,8 +110,8 @@ export class PenteRules extends ConfigurableRules<PenteMove, PenteState, PenteCo
     public getGameStatus(node: PenteNode, config: MGPOptional<PenteConfig>): GameStatus {
         const state: PenteState = node.gameState;
         const opponent: Player = state.getCurrentOpponent();
-        const captureNeededToWin: number = config.get().captureNeededToWin;
-        if (captureNeededToWin <= state.captures.get(opponent)) {
+        const capturesNeededToWin: number = config.get().capturesNeededToWin;
+        if (capturesNeededToWin <= state.captures.get(opponent)) {
             return GameStatus.getVictory(opponent);
         }
         const victoriousCoord: Coord[] = this.getHelper(config).getVictoriousCoord(state);
