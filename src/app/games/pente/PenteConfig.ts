@@ -2,7 +2,7 @@ import { GobanConfig } from 'src/app/jscaip/GobanConfig';
 
 export type PenteConfig = GobanConfig & {
 
-    winAfterNCapture: number;
+    captureNeededToWin: number;
 
     nInARow: number;
 
