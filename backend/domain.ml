@@ -46,7 +46,7 @@ module User = struct
     verified: bool;
     current_game: CurrentGame.t option [@key "currentGame"];
   }
-  [@@deriving yojson] [@@yojson.allow_extra_fields]
+  [@@deriving yojson]
 
   let to_minimal_user (uid : string) (user : t) : MinimalUser.t =
     { id = uid; name = Option.get user.username }

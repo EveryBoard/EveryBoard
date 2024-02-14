@@ -141,18 +141,18 @@ let tests = [
         check user_eq "success" expected actual
       );
 
-    test "should work when user has extra field" (fun () ->
+    test "should fail when user has extra field" (fun () ->
         (* Given a user JSON with an extra field *)
         let user_json = `Assoc [
             "currentGame", `Null;
             "lastUpdateTime", `String "2024-02-10T20:15:16.466Z";
-            (* "observedPart", `Null; *)
+            "observedPart", `Null;
             "username", `String "laziwofi";
             "verified", `Bool true
           ] in
         (* When converting it to a user *)
         let _actual = Result.get_ok (User.of_yojson user_json) in
-        (* Then it should giyve the expected user *)
+        (* Then it should fail  *)
         () (* TODO *)
       );
 

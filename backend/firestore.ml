@@ -152,7 +152,7 @@ module Make (FirestorePrimitives : FirestorePrimitives.FIRESTORE_PRIMITIVES) : F
 
     let create (request : Dream.request) (id : string) (config_room : Domain.ConfigRoom.t) : unit Lwt.t =
       let json = Domain.ConfigRoom.to_yojson config_room in
-      let* _ = FirestorePrimitives.create_doc request "config-room" ~id json in
+      let* _ = FirestorePrimitives.set_doc request "config-room" id json in
       Lwt.return ()
 
     let delete (request : Dream.request) (game_id : string) : unit Lwt.t =
@@ -160,7 +160,7 @@ module Make (FirestorePrimitives : FirestorePrimitives.FIRESTORE_PRIMITIVES) : F
 
     let add_candidate (request : Dream.request) (game_id : string) (user : Domain.MinimalUser.t) : unit Lwt.t =
       let user_json = Domain.MinimalUser.to_yojson user in
-      let* _ = FirestorePrimitives.create_doc request ("config-room/" ^ game_id ^ "/candidates") ~id:user.id user_json in
+      let* _ = FirestorePrimitives.set_doc request ("config-room/" ^ game_id ^ "/candidates") user.id user_json in
       Lwt.return ()
 
     let remove_candidate (request : Dream.request) (game_id : string) (candidate_id : string) : unit Lwt.t =
@@ -169,7 +169,7 @@ module Make (FirestorePrimitives : FirestorePrimitives.FIRESTORE_PRIMITIVES) : F
     let accept (request : Dream.request) (game_id : string) : unit Lwt.t =
       let update = `Assoc
           [("partStatus", Domain.ConfigRoom.GameStatus.(to_yojson Started))] in
-      FirestorePrimitives.update_doc request ("config-room/" ^ game_id) update
+      FirestorePrimitives.set_doc request "config-room" game_id update
 
     let update (request : Dream.request) (game_id : string) (update : JSON.t) : unit Lwt.t =
       FirestorePrimitives.update_doc request ("config-room/" ^ game_id) update
@@ -179,7 +179,7 @@ module Make (FirestorePrimitives : FirestorePrimitives.FIRESTORE_PRIMITIVES) : F
 
     let create (request : Dream.request) (id : string) : unit Lwt.t =
       let chat = `Assoc [] in (* chats are empty, messages are in a sub collection *)
-      let* _ = FirestorePrimitives.create_doc request "chats" ~id chat in
+      let* _ = FirestorePrimitives.set_doc request "chats" id chat in
       Lwt.return ()
 
     let delete (request : Dream.request) (game_id : string) : unit Lwt.t =

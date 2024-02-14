@@ -14,7 +14,9 @@ module type MOCK = sig
 
   val read_docs : string list ref
 
-  val created_docs : (string * string option * JSON.t) list ref
+  val created_docs : (string * JSON.t) list ref
+
+  val set_docs : (string * string * JSON.t) list ref
 
   val updated_docs : (string * JSON.t) list ref
 
@@ -38,6 +40,8 @@ module Mock : MOCK = struct
 
   let created_docs = ref []
 
+  let set_docs = ref []
+
   let updated_docs = ref []
 
   let deleted_docs = ref []
@@ -50,9 +54,13 @@ module Mock : MOCK = struct
     | Some doc -> Lwt.return doc
     | None -> raise (DocumentNotFound path)
 
-  let create_doc _ path ?id doc =
-    created_docs := (path, id, doc) :: !created_docs;
+  let create_doc _ path doc =
+    created_docs := (path, doc) :: !created_docs;
     Lwt.return "created-id"
+
+  let set_doc _ path id doc =
+    set_docs := (path, id, doc) :: !set_docs;
+    Lwt.return ()
 
   let update_doc _ path update =
     updated_docs := (path, update) :: !updated_docs;
@@ -130,23 +138,6 @@ let tests = [
         Lwt.return ()
       );
 
-    lwt_test "should make a PATCH request if we want an id, and return the id" (fun () ->
-        let request = Dream.request "/" in
-        (* Given a document that we want to create, along with a specific id *)
-        let collection = "collection" in
-        let id = "some-id" in
-        let path = collection ^ "/" ^ id in
-        let doc = `Assoc [("foo", `String "bar")] in
-        (* When we create it *)
-        let body = JSON.to_string (`Assoc [("name", `String path)]) in
-        let mock = ExternalTests.Mock.Http.mock_response (response `OK, body) in
-        let* actual_id = FirestorePrimitives.create_doc ~id request "collection" doc in
-        (* Then it should have made a PATCH request with the doc and should return the document id*)
-        let firestore_doc = to_firestore doc in
-        check (list http_query) "query" [(`PATCH, endpoint ~params:[("mask", "_")] path, Some firestore_doc)] !(mock.calls);
-        check string "document id" id actual_id;
-        Lwt.return ()
-      );
 
     lwt_test "should fail if the document cannot be created" (fun () ->
         let request = Dream.request "/" in
@@ -159,6 +150,25 @@ let tests = [
         lwt_check_raises "failure" ((=) (UnexpectedError "error on document creation for collection")) (fun () ->
             let* _ = FirestorePrimitives.create_doc request "collection" doc in
             Lwt.return ())
+      );
+  ];
+
+  "FirestorePrimitives.set_doc", [
+    lwt_test "should make a PATCH request" (fun () ->
+        let request = Dream.request "/" in
+        (* Given a document that we want to create, along with a specific id *)
+        let collection = "collection" in
+        let id = "some-id" in
+        let path = collection ^ "/" ^ id in
+        let doc = `Assoc [("foo", `String "bar")] in
+        (* When we create it (with set_doc) *)
+        let body = JSON.to_string (`Assoc [("name", `String path)]) in
+        let mock = ExternalTests.Mock.Http.mock_response (response `OK, body) in
+        let* _ = FirestorePrimitives.set_doc request "collection" id doc in
+        (* Then it should have made a PATCH request with the doc *)
+        let firestore_doc = to_firestore doc in
+        check (list http_query) "query" [(`PATCH, endpoint ~params:[("mask", "_")] path, Some firestore_doc)] !(mock.calls);
+        Lwt.return ()
       );
   ];
 

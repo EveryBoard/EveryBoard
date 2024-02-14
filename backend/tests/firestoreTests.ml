@@ -112,7 +112,8 @@ let test_get type_ get collection ?(mask = "") doc expected conversion = [
       );
 ]
 
-let creations_type = list (triple string (option string) json_eq)
+let creations_type = list (pair string json_eq)
+let set_type = list (triple string string json_eq)
 
 let tests = [
 
@@ -177,7 +178,7 @@ let tests = [
         let game_json = Domain.Game.to_yojson game in
         check string "id" id "created-id";
         let created = !FirestorePrimitivesTests.Mock.created_docs in
-        check creations_type "creations" [("parts", None, game_json)] created;
+        check creations_type "creations" [("parts", game_json)] created;
         Lwt.return ()
       );
   ];
@@ -227,7 +228,7 @@ let tests = [
         (* Then it should have created an event document *)
         let json_event = Domain.Game.Event.to_yojson event in
         let created = !FirestorePrimitivesTests.Mock.created_docs in
-        check creations_type "creations" [("parts/" ^ game_id ^ "/events", None, json_event)] created;
+        check creations_type "creations" [("parts/" ^ game_id ^ "/events", json_event)] created;
         Lwt.return ()
       );
   ];
@@ -243,8 +244,8 @@ let tests = [
         let* _ = Firestore.ConfigRoom.create request game_id config_room in
         (* Then it should have been created *)
         let json_config_room = Domain.ConfigRoom.to_yojson config_room in
-        let created = !FirestorePrimitivesTests.Mock.created_docs in
-        check creations_type "creations" [("config-room", Some game_id, json_config_room)] created;
+        let set = !FirestorePrimitivesTests.Mock.set_docs in
+        check set_type "creations" [("config-room", game_id, json_config_room)] set;
         Lwt.return ()
       );
   ];
@@ -274,9 +275,9 @@ let tests = [
         (* When we create the chat *)
         let* _ = Firestore.Chat.create request game_id in
         (* Then it should have been created *)
-        let created = !FirestorePrimitivesTests.Mock.created_docs in
+        let set = !FirestorePrimitivesTests.Mock.set_docs in
         let empty_chat = `Assoc [] in
-        check creations_type "creations" [("chats", Some game_id, empty_chat)] created;
+        check set_type "creations" [("chats", game_id, empty_chat)] set;
         Lwt.return ()
       );
   ];

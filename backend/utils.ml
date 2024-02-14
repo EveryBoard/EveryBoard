@@ -84,14 +84,19 @@ let json_response (status : Dream.status) (response : JSON.t) : Dream.response L
   let headers = [("Content-Type", "application/json")] in
   Dream.respond ~headers ~status (JSON.to_string response)
 
+let path_in_project ?(last_separator = "/") (path : string) : string =
+  Printf.sprintf "projects/%s/databases/%s/documents%s%s"
+    !Options.project_name
+    !Options.database_name
+    last_separator
+    path
 
 let endpoint ?(version = "v1beta1") ?(params = []) ?(last_separator = "/") (path : string) : Uri.t =
-  let url = Uri.of_string (!Options.base_endpoint ^ "/" ^ version ^
-                           "/projects/" ^ !Options.project_name ^
-                           "/databases/" ^ !Options.database_name ^
-                           "/documents" ^ last_separator ^ path) in
+  let url = Uri.of_string (Printf.sprintf "%s/%s/%s"
+                             !Options.base_endpoint
+                             version
+                             (path_in_project ~last_separator path)) in
   Uri.with_query' url params
-
 
 let authorization_header (access_token : string) : string * string =
   ("Authorization", "Bearer " ^ access_token)
