@@ -97,8 +97,6 @@ export class ApagosComponent extends GameComponent<ApagosRules, ApagosMove, Apag
         this.board = state.board;
         this.remainingZero = state.remaining.get(Player.ZERO);
         this.remainingOne = state.remaining.get(Player.ONE);
-
-        this.hideLastMove();
         this.showPossibleDrops();
     }
 

@@ -117,7 +117,6 @@ export class QuartoComponent extends RectangularGameComponent<QuartoRules,
     }
 
     public override cancelMoveAttempt(): void {
-        this.hideLastMove();
         this.pieceToGive = MGPOptional.empty();
         this.chosen = MGPOptional.empty();
     }

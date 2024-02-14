@@ -388,12 +388,12 @@ export abstract class MancalaComponent<R extends MancalaRules>
      * @param x the X value of the distribution that has been done
      */
     protected updateOrCreateCurrentMove(x: number): void {
-        if (this.currentMove.isAbsent()) {
-            this.hideLastMove();
-            this.currentMove = MGPOptional.of(this.generateMove(x));
-        } else {
+        if (this.currentMove.isPresent()) {
             const newMove: MancalaMove = this.addToMove(x);
             this.currentMove = MGPOptional.of(newMove);
+        } else {
+            this.hideLastMove();
+            this.currentMove = MGPOptional.of(this.generateMove(x));
         }
     }
 

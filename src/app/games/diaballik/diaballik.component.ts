@@ -199,6 +199,7 @@ export class DiaballikComponent extends RectangularGameComponent<DiaballikRules,
         const clickedCoord: Coord = new Coord(x, y);
         return this.onLegalClick(clickedCoord);
     }
+
     private onLegalClick(clickedCoord: Coord): MGPValidation | PromiseLike<MGPValidation> {
         const clickedPiece: DiaballikPiece = this.stateInConstruction.getPieceAt(clickedCoord);
         if (this.subMoves.length === 0) {
@@ -312,4 +313,5 @@ export class DiaballikComponent extends RectangularGameComponent<DiaballikRules,
     public override getViewBox(): ViewBox {
         return super.getViewBox().expand(0, 0, this.SPACE_SIZE, this.SPACE_SIZE);
     }
+
 }

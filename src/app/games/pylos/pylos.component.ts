@@ -323,8 +323,6 @@ export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosSt
             15 - repartition.get(Player.ONE),
         );
         this.highCapture = MGPOptional.empty();
-        this.cancelMoveAttempt();
-        this.hideLastMove();
     }
 
     public override async showLastMove(move: PylosMove): Promise<void> {
