@@ -731,19 +731,25 @@ export function prepareUnsubscribeCheck(service: any, subscribeMethod: string): 
 
     let subscribed: boolean = false;
     let unsubscribed: boolean = false;
-    spyOn(service, subscribeMethod).and.callFake(() => {
+    const spy: jasmine.Spy = spyOn(service, subscribeMethod);
+    spy.and.callFake((...args: unknown[]): Subscription => {
         subscribed = true;
+        // We need to call the original function.
+        // This is a bit hacky, but seems to be the only way:
+        // we change the spy to call through, and apply the original method.
+        // This is fine for subscribe methods as they are expected to be called only once.
+        spy.and.callThrough();
+        service[subscribeMethod](...args);
         return new Subscription(() => {
             unsubscribed = true;
         });
     });
     return () => {
-        if (subscribed) {
-            expect(unsubscribed)
-                .withContext('Service should have unsubscribed to ' + subscribeMethod + ' method bub did not')
-                .toBeTrue();
-        }
-        // Otherwise, the service does not need to unsubscribe
-        // (and it's impossible for it to unsubscribe if it didn't subscribe first)
+        expect(subscribed)
+            .withContext('Service should have subscribed to ' + subscribeMethod + ' method but did not')
+            .toBeTrue();
+        expect(unsubscribed)
+            .withContext('Service should have unsubscribed to ' + subscribeMethod + ' method but did not')
+            .toBeTrue();
     };
 }

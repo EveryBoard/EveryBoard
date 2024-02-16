@@ -236,8 +236,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
                 this.viewInfo.firstPlayer = firstPlayer;
             });
     }
-    private updateViewInfo(): void {
-        const configRoom: ConfigRoom = Utils.getNonNullable(this.currentConfigRoom);
+    private updateViewInfo(configRoom: ConfigRoom): void {
         const authUser: AuthUser = this.connectedUserService.user.get();
 
         this.viewInfo.canReviewConfig = configRoom.partStatus === PartStatus.CONFIG_PROPOSED.value;
@@ -354,6 +353,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         } else {
             const oldConfigRoom: ConfigRoom | null = this.currentConfigRoom;
             const configRoom: ConfigRoom = configRoomOpt.get();
+            this.currentConfigRoom = configRoom;
             if (this.rulesConfig.isAbsent()) {
                 this.rulesConfig = MGPOptional.of(configRoom.rulesConfig);
             }
@@ -373,7 +373,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
             if (this.allUserInterval.isAbsent()) {
                 await this.observeNeededPlayers(configRoom);
             }
-            this.updateViewInfo();
+            this.updateViewInfo(configRoom);
             if (this.isGameStarted(configRoom)) {
                 Debug.display('PartCreationComponent', 'onCurrentConfigRoomUpdate', 'the game has started');
                 this.onGameStarted();
@@ -382,7 +382,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
     }
     private async onCandidatesUpdate(candidates: MinimalUser[]): Promise<void> {
         this.candidates = candidates;
-        this.updateViewInfo();
+        this.updateViewInfo(Utils.getNonNullable(this.currentConfigRoom));
     }
     private userJustChosenAsOpponent(oldConfigRoom: ConfigRoom | null, configRoom: ConfigRoom): boolean {
         if (this.isGameStarted(configRoom)) {
