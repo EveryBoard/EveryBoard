@@ -10,6 +10,7 @@ import { SixVictorySource, SixNode } from './SixRules';
 import { BoardValue } from 'src/app/jscaip/AI/BoardValue';
 import { AlignmentHeuristic, BoardInfo } from 'src/app/jscaip/AI/AlignmentHeuristic';
 import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 
 export class SixHeuristic extends AlignmentHeuristic<SixMove, SixState, SixVictorySource> {
 
@@ -35,10 +36,8 @@ export class SixHeuristic extends AlignmentHeuristic<SixMove, SixState, SixVicto
             return BoardValue.of(victoryValue);
         }
         if (state.turn > 39) {
-            const pieces: [number, number] = state.countPieces();
-            const zeroPieces: number = pieces[0];
-            const onePieces: number = pieces[1];
-            return BoardValue.ofSingle(zeroPieces, onePieces);
+            const pieces: PlayerNumberMap = state.countPieces();
+            return BoardValue.ofSingle(pieces.get(Player.ZERO), pieces.get(Player.ONE));
         }
         if (shapeInfo.status === SCORE.PRE_VICTORY) {
             return BoardValue.of(LAST_PLAYER.getPreVictory());
