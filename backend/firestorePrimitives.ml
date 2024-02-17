@@ -180,7 +180,9 @@ module Make
         | Update (path, json) ->
           let (fields, firestore_update) = update_to_fields_and_firestore json in
           `Assoc [
-            "updateMask", `List (List.map (fun x -> `String x) fields);
+            "updateMask", `Assoc [
+              "fieldPaths", `List (List.map (fun x -> `String x) fields);
+            ];
             "update", `Assoc [
               "name", `String (path_in_project path);
               "fields", firestore_update;
