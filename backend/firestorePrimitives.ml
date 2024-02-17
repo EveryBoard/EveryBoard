@@ -101,7 +101,7 @@ module Make
     let* headers = TokenRefresher.header request in
     let firestore_doc = to_firestore doc in
     (* By asking only for _, firestore will not give us the document back, which is what we want *)
-    let params = [ (* ("mask", "_") *) ] in
+    let params = [("mask", "_")] in
     let endpoint = endpoint ~params collection in
     (* Note: We *can't* create a doc and retrieve its id in a transaction, so we just ignore whether we are in a transaction *)
     let* (response, body) = External.Http.post_json endpoint headers firestore_doc in
@@ -121,7 +121,7 @@ module Make
     logger.info (fun log -> log ~request "Updating %s with %s" path (JSON.to_string update));
     (* We want only to update what we provide, and we don't care about the response so we provide an empty mask *)
     match Dream.field request transaction_field with
-    | Some transaction_id when false (* disable transactions for now *) ->
+    | Some transaction_id ->
       record_transaction_write transaction_id (Update (path, update));
       Lwt.return ()
     | None ->
@@ -144,7 +144,7 @@ module Make
     Stats.write request;
     logger.info (fun log -> log ~request "Deleting %s" path);
     match Dream.field request transaction_field with
-    | Some transaction_id when false (* disable transactions for now *) ->
+    | Some transaction_id ->
       record_transaction_write transaction_id (Delete path);
       Lwt.return ()
     | None ->

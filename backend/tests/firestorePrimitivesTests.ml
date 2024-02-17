@@ -147,7 +147,7 @@ let tests = [
         let response = response `Bad_request in
         let _ = ExternalTests.Mock.Http.mock_response (response, "{}") in
         (* Then it should fail *)
-        lwt_check_raises "failure" ((=) (UnexpectedError "error on document creation for collection")) (fun () ->
+        lwt_check_raises "failure" ((=) (UnexpectedError "error on document creation for collection: {}")) (fun () ->
             let* _ = FirestorePrimitives.create_doc request "collection" doc in
             Lwt.return ())
       );
@@ -167,7 +167,7 @@ let tests = [
         let* _ = FirestorePrimitives.set_doc request "collection" id doc in
         (* Then it should have made a PATCH request with the doc *)
         let firestore_doc = to_firestore doc in
-        check (list http_query) "query" [(`PATCH, endpoint ~params:[("mask", "_")] path, Some firestore_doc)] !(mock.calls);
+        check (list http_query) "query" [(`PATCH, endpoint ~params:[("mask", "_"); ("updateMask", "foo")] path, Some firestore_doc)] !(mock.calls);
         Lwt.return ()
       );
   ];
@@ -197,7 +197,7 @@ let tests = [
         (* When we update it and the update fails*)
         let _ = ExternalTests.Mock.Http.mock_response (response `Bad_request, "") in
         (* Then it should fail *)
-        lwt_check_raises "failure" ((=) (UnexpectedError "error on document update for collection/some-id")) (fun () ->
+        lwt_check_raises "failure" ((=) (UnexpectedError "error on document update for collection/some-id: ")) (fun () ->
             let* _ = FirestorePrimitives.update_doc request "collection/some-id" update in
             Lwt.return ())
       );
@@ -224,7 +224,7 @@ let tests = [
         (* When we update it *)
         let _ = ExternalTests.Mock.Http.mock_response (response `Bad_request, "") in
         (* Then it should fail *)
-        lwt_check_raises "failure" ((=) (UnexpectedError "error on document deletion for collection/some-id")) (fun () ->
+        lwt_check_raises "failure" ((=) (UnexpectedError "error on document deletion for collection/some-id: ")) (fun () ->
             let* _ = FirestorePrimitives.delete_doc request path in
             Lwt.return ())
       );
@@ -251,7 +251,7 @@ let tests = [
         (* When we try to begin a transaction but it fails *)
         let _ = ExternalTests.Mock.Http.mock_response (response `Bad_request, "{}") in
         (* Then it should fail *)
-        lwt_check_raises "failure" ((=) (UnexpectedError "error when beginning transaction")) (fun () ->
+        lwt_check_raises "failure" ((=) (UnexpectedError "error when beginning transaction: {}")) (fun () ->
             let* _ = FirestorePrimitives.begin_transaction request in
             Lwt.return ())
       );
@@ -261,23 +261,31 @@ let tests = [
 
     lwt_test "should make a POST request on :commit endpoint" (fun () ->
         let request = Dream.request "/" in
-        (* When we commit a transaction *)
+        (* Given a transaction *)
         let transaction_id = "transaction-id" in
+        let transaction_response = `Assoc [("transaction", `String transaction_id)] in
+        let _ = ExternalTests.Mock.Http.mock_response (response `OK, JSON.to_string transaction_response) in
+        let* _ = FirestorePrimitives.begin_transaction request in
+        (* When we commit it *)
         let mock = ExternalTests.Mock.Http.mock_response (response `OK, "") in
         let* _ = FirestorePrimitives.commit request transaction_id in
         (* Then it should have made a POST request on :commit with the transaction id *)
-        let expected_body = `Assoc [("transaction", `String transaction_id)] in
+        let expected_body = `Assoc [("transaction", `String transaction_id); ("writes", `List [])] in
         check (list http_query) "query" [(`POST, endpoint ~last_separator:":" "commit", Some expected_body)] !(mock.calls);
         Lwt.return ()
       );
 
-    lwt_test "should fail if commiting the transaction failed" (fun () ->
+    lwt_test "should fail if committing the transaction failed" (fun () ->
         let request = Dream.request "/" in
-        (* When we try to commit a transaction but it fails *)
+        (* Given a transaction *)
         let transaction_id = "transaction-id" in
+        let transaction_response = `Assoc [("transaction", `String transaction_id)] in
+        let _ = ExternalTests.Mock.Http.mock_response (response `OK, JSON.to_string transaction_response) in
+        let* _ = FirestorePrimitives.begin_transaction request in
+        (* When we try to commit it (but it fails) *)
         let _ = ExternalTests.Mock.Http.mock_response (response `Bad_request, "{}") in
         (* Then it should fail *)
-        lwt_check_raises "failure" ((=) (UnexpectedError "error when committing transaction")) (fun () ->
+        lwt_check_raises "failure" ((=) (UnexpectedError "error when committing transaction: {}")) (fun () ->
             let* _ = FirestorePrimitives.commit request transaction_id in
             Lwt.return ())
       );
@@ -303,7 +311,7 @@ let tests = [
         let transaction_id = "transaction-id" in
         let _ = ExternalTests.Mock.Http.mock_response (response `Bad_request, "{}") in
         (* Then it should fail *)
-        lwt_check_raises "failure" ((=) (UnexpectedError "error when rolling back transaction")) (fun () ->
+        lwt_check_raises "failure" ((=) (UnexpectedError "error when rolling back transaction: {}")) (fun () ->
             let* _ = FirestorePrimitives.rollback request transaction_id in
             Lwt.return ())
       );

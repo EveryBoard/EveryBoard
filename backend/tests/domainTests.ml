@@ -151,9 +151,9 @@ let tests = [
             "verified", `Bool true
           ] in
         (* When converting it to a user *)
-        let _actual = Result.get_ok (User.of_yojson user_json) in
-        (* Then it should fail  *)
-        () (* TODO *)
+        let actual = User.of_yojson user_json in
+        (* Then it should fail *)
+        check (result user_eq string) "failure" (Error "Domain.User.t") actual
       );
 
   ];
