@@ -7,8 +7,8 @@ import { PenteMove } from '../PenteMove';
 import { PenteNode, PenteRules } from '../PenteRules';
 import { PenteState } from '../PenteState';
 import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
-import { GobanConfig } from 'src/app/jscaip/GobanConfig';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { PenteConfig } from '../PenteConfig';
 
 describe('PenteRules', () => {
 
@@ -17,7 +17,7 @@ describe('PenteRules', () => {
     const X: PlayerOrNone = PlayerOrNone.ONE;
 
     let rules: PenteRules;
-    const defaultConfig: MGPOptional<GobanConfig> = PenteRules.get().getDefaultRulesConfig();
+    const defaultConfig: MGPOptional<PenteConfig> = PenteRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         rules = PenteRules.get();

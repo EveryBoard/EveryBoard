@@ -1,4 +1,5 @@
 import { Table, TableUtils } from '../utils/ArrayUtils';
+import { comparableEquals } from '../utils/Comparable';
 import { MGPOptional } from '../utils/MGPOptional';
 import { Coord } from './Coord';
 import { GameState } from './GameState';
@@ -15,6 +16,11 @@ export abstract class GameStateWithTable<P> extends GameState {
         } else {
             throw new Error('Accessing coord not on board ' + coord + '.');
         }
+    }
+
+    public has(coord: Coord, value: P): boolean {
+        return this.isOnBoard(coord) &&
+               comparableEquals(this.getPieceAt(coord), value);
     }
 
     public setPieceAt(coord: Coord,
