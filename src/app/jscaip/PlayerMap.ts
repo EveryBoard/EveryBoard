@@ -23,10 +23,6 @@ export class PlayerMap<T extends NonNullable<unknown>> {
         return this.map.equals(other.map);
     }
 
-    public getCopy(): PlayerMap<T> {
-        return new PlayerMap(this.map.getCopy());
-    }
-
     public get(player: Player): T {
         return this.map.get(player).get();
     }
@@ -59,7 +55,7 @@ export class PlayerNumberMap extends PlayerMap<number> {
         );
     }
 
-    public override getCopy(): PlayerNumberMap {
+    public getCopy(): PlayerNumberMap {
         return new PlayerNumberMap(this.map.getCopy());
     }
 
