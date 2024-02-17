@@ -101,7 +101,7 @@ module Make
     let* headers = TokenRefresher.header request in
     let firestore_doc = to_firestore doc in
     (* By asking only for _, firestore will not give us the document back, which is what we want *)
-    let params = [("mask", "_")] in
+    let params = [("mask.fieldPaths", "_")] in
     let endpoint = endpoint ~params collection in
     (* Note: We *can't* create a doc and retrieve its id in a transaction, so we just ignore whether we are in a transaction *)
     let* (response, body) = External.Http.post_json endpoint headers firestore_doc in
@@ -127,8 +127,8 @@ module Make
     | None ->
       (* Not in a transaction, perform the write *)
       let (fields, firestore_update) = update_to_fields_and_firestore update in
-      let update_params = List.map (fun field -> ("updateMask", field)) fields in
-      let params = ("mask", "_") :: update_params in
+      let update_params = List.map (fun field -> ("updateMask.fieldPaths", field)) fields in
+      let params = ("mask.fieldPaths", "_") :: update_params in
       let endpoint = endpoint ~params path in
       let* headers = TokenRefresher.header request in
       let* (response, body) = External.Http.patch_json endpoint headers firestore_update in
