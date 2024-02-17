@@ -222,7 +222,7 @@ module Game = struct
         loser: MinimalUser.t option;
         result: GameResult.t;
         score_player_zero: int option [@key "scorePlayerZero"];
-        score_player_one: int option [@key "scorePlayerZero"];
+        score_player_one: int option [@key "scorePlayerOne"];
       }
       [@@deriving yojson]
 
