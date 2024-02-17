@@ -1,5 +1,5 @@
 /* eslint-disable max-lines-per-function */
-import { GobanConfig } from 'src/app/jscaip/GobanConfig';
+import { PenteConfig } from '../PenteConfig';
 import { PenteMove } from '../PenteMove';
 import { PenteMoveGenerator } from '../PenteMoveGenerator';
 import { PenteNode, PenteRules } from '../PenteRules';
@@ -8,7 +8,7 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 describe('PenteMoveGenerator', () => {
 
     let moveGenerator: PenteMoveGenerator;
-    const defaultConfig: MGPOptional<GobanConfig> = PenteRules.get().getDefaultRulesConfig();
+    const defaultConfig: MGPOptional<PenteConfig> = PenteRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         moveGenerator = new PenteMoveGenerator();

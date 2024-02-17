@@ -123,15 +123,14 @@ describe('PenteComponent', () => {
         // Given a state
         // When displaying it
         // Then it should show the visible hoshis
-        testUtils.expectElementToExist('#hoshi_3_9');
-        testUtils.expectElementToExist('#hoshi_9_3');
-        testUtils.expectElementToExist('#hoshi_9_15');
-        testUtils.expectElementToExist('#hoshi_15_9');
         testUtils.expectElementToExist('#hoshi_3_3');
+        testUtils.expectElementToExist('#hoshi_3_9');
         testUtils.expectElementToExist('#hoshi_3_15');
+        testUtils.expectElementToExist('#hoshi_9_3');
+        testUtils.expectElementToExist('#hoshi_9_9');
+        testUtils.expectElementToExist('#hoshi_9_15');
         testUtils.expectElementToExist('#hoshi_15_3');
+        testUtils.expectElementToExist('#hoshi_15_9');
         testUtils.expectElementToExist('#hoshi_15_15');
-        // But not the occupied ones
-        testUtils.expectElementNotToExist('#hoshi_9_9');
     }));
 });

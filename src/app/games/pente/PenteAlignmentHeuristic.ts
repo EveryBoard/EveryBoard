@@ -3,13 +3,16 @@ import { Heuristic } from 'src/app/jscaip/AI/Minimax';
 import { PenteMove } from './PenteMove';
 import { PenteNode, PenteRules } from './PenteRules';
 import { PenteState } from './PenteState';
-import { GobanConfig } from 'src/app/jscaip/GobanConfig';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { PenteConfig } from './PenteConfig';
 
-export class PenteAlignmentHeuristic extends Heuristic<PenteMove, PenteState, BoardValue, GobanConfig> {
+export class PenteAlignmentHeuristic extends Heuristic<PenteMove, PenteState, BoardValue, PenteConfig> {
 
-    public getBoardValue(node: PenteNode, _config: MGPOptional<GobanConfig>): BoardValue {
-        return PenteRules.PENTE_HELPER.getBoardValue(node.gameState);
+    public getBoardValue(node: PenteNode, config: MGPOptional<PenteConfig>): BoardValue {
+        return PenteRules
+            .get()
+            .getHelper(config)
+            .getBoardValue(node.gameState);
     }
 
 }

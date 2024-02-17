@@ -11,20 +11,27 @@ import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { Utils } from 'src/app/utils/utils';
 import { PenteMove } from './PenteMove';
 import { PenteState } from './PenteState';
-import { GobanConfig } from 'src/app/jscaip/GobanConfig';
-import { RulesConfigDescription, RulesConfigDescriptions } from 'src/app/components/wrapper-components/rules-configuration/RulesConfigDescription';
+import { NumberConfig, RulesConfigDescription, RulesConfigDescriptionLocalizable } from 'src/app/components/wrapper-components/rules-configuration/RulesConfigDescription';
 import { TableUtils } from 'src/app/utils/ArrayUtils';
 import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
+import { PenteConfig } from './PenteConfig';
+import { MGPValidators } from 'src/app/utils/MGPValidator';
 
 export class PenteNode extends GameNode<PenteMove, PenteState> {}
 
-export class PenteRules extends ConfigurableRules<PenteMove, PenteState, GobanConfig> {
+export class PenteRules extends ConfigurableRules<PenteMove, PenteState, PenteConfig> {
 
-    public static readonly PENTE_HELPER: NInARowHelper<PlayerOrNone> =
-        new NInARowHelper(Utils.identity, 5);
-
-    public static readonly RULES_CONFIG_DESCRIPTION: RulesConfigDescription<GobanConfig> =
-        RulesConfigDescriptions.GOBAN;
+    public static readonly RULES_CONFIG_DESCRIPTION: RulesConfigDescription<PenteConfig> =
+        new RulesConfigDescription<PenteConfig>({
+            name: (): string => $localize`Default`,
+            config: {
+                width: new NumberConfig(19, RulesConfigDescriptionLocalizable.WIDTH, MGPValidators.range(1, 99)),
+                height: new NumberConfig(19, RulesConfigDescriptionLocalizable.HEIGHT, MGPValidators.range(1, 99)),
+                capturesNeededToWin: new NumberConfig(10, () => $localize`Captured stones needed to win`, MGPValidators.range(1, 123456)),
+                nInARow: new NumberConfig(5, () => $localize`Number of aligned pieces needed to win`, MGPValidators.range(3, 99)),
+                sizeOfSandwich: new NumberConfig(2, () => $localize`Size of captures`, MGPValidators.range(1, 99)),
+            },
+        });
 
     private static singleton: MGPOptional<PenteRules> = MGPOptional.empty();
 
@@ -35,8 +42,8 @@ export class PenteRules extends ConfigurableRules<PenteMove, PenteState, GobanCo
         return PenteRules.singleton.get();
     }
 
-    public override getInitialState(optionalConfig: MGPOptional<GobanConfig>): PenteState {
-        const config: GobanConfig = optionalConfig.get();
+    public override getInitialState(optionalConfig: MGPOptional<PenteConfig>): PenteState {
+        const config: PenteConfig = optionalConfig.get();
         const board: PlayerOrNone[][] = TableUtils.create(config.width,
                                                           config.height,
                                                           PlayerOrNone.NONE);
@@ -46,7 +53,7 @@ export class PenteRules extends ConfigurableRules<PenteMove, PenteState, GobanCo
         return new PenteState(board, PlayerNumberMap.of(0, 0), 0);
     }
 
-    public override getRulesConfigDescription(): MGPOptional<RulesConfigDescription<GobanConfig>> {
+    public override getRulesConfigDescription(): MGPOptional<RulesConfigDescription<PenteConfig>> {
         return MGPOptional.of(PenteRules.RULES_CONFIG_DESCRIPTION);
     }
 
@@ -60,13 +67,13 @@ export class PenteRules extends ConfigurableRules<PenteMove, PenteState, GobanCo
         }
     }
 
-    public override applyLegalMove(move: PenteMove, state: PenteState, _config: MGPOptional<GobanConfig>, _info: void)
+    public override applyLegalMove(move: PenteMove, state: PenteState, config: MGPOptional<PenteConfig>, _info: void)
     : PenteState
     {
         const player: Player = state.getCurrentPlayer();
         const newBoard: PlayerOrNone[][] = state.getCopiedBoard();
         newBoard[move.coord.y][move.coord.x]= player;
-        const capturedPieces: Coord[] = this.getCaptures(move.coord, state, player);
+        const capturedPieces: Coord[] = this.getCaptures(move.coord, state, config.get(), player);
         for (const captured of capturedPieces) {
             newBoard[captured.y][captured.x] = PlayerOrNone.NONE;
         }
@@ -75,31 +82,39 @@ export class PenteRules extends ConfigurableRules<PenteMove, PenteState, GobanCo
         return new PenteState(newBoard, captures, state.turn + 1);
     }
 
-    public getCaptures(coord: Coord, state: PenteState, player: Player): Coord[] {
+    public getCaptures(coord: Coord, state: PenteState, config: PenteConfig, player: Player): Coord[] {
         const opponent: Player = player.getOpponent();
         const captures: Coord[] = [];
+        const sizeOfCapture: number = config.sizeOfSandwich;
         for (const direction of Direction.factory.all) {
-            const firstCapture: Coord = coord.getNext(direction, 1);
-            const secondCapture: Coord = coord.getNext(direction, 2);
-            const sandwicher: Coord = coord.getNext(direction, 3);
-            if (state.isOnBoard(firstCapture) && state.getPieceAt(firstCapture) === opponent &&
-                state.isOnBoard(secondCapture) && state.getPieceAt(secondCapture) === opponent &&
-                state.isOnBoard(sandwicher) && state.getPieceAt(sandwicher) === player)
+            let i: number = 1;
+            let potentialCapture: Coord = coord.getNext(direction, i);
+            const captured: Coord[] = [potentialCapture];
+            while (state.has(potentialCapture, opponent) && i < sizeOfCapture)
             {
-                captures.push(firstCapture);
-                captures.push(secondCapture);
+                i++;
+                potentialCapture = potentialCapture.getNext(direction, 1);
+                captured.push(potentialCapture);
+            }
+            const sandwicher: Coord = coord.getNext(direction, sizeOfCapture + 1);
+            if (state.has(potentialCapture, opponent) &&
+                i === sizeOfCapture &&
+                state.has(sandwicher, player))
+            {
+                captures.push(...captured);
             }
         }
         return captures;
     }
 
-    public getGameStatus(node: PenteNode): GameStatus {
+    public getGameStatus(node: PenteNode, config: MGPOptional<PenteConfig>): GameStatus {
         const state: PenteState = node.gameState;
         const opponent: Player = state.getCurrentOpponent();
-        if (10 <= state.captures.get(opponent)) {
+        const capturesNeededToWin: number = config.get().capturesNeededToWin;
+        if (capturesNeededToWin <= state.captures.get(opponent)) {
             return GameStatus.getVictory(opponent);
         }
-        const victoriousCoord: Coord[] = PenteRules.PENTE_HELPER.getVictoriousCoord(state);
+        const victoriousCoord: Coord[] = this.getHelper(config).getVictoriousCoord(state);
         if (victoriousCoord.length > 0) {
             return GameStatus.getVictory(opponent);
         }
@@ -107,6 +122,15 @@ export class PenteRules extends ConfigurableRules<PenteMove, PenteState, GobanCo
             return GameStatus.ONGOING;
         } else {
             return GameStatus.DRAW;
+        }
+    }
+
+    public getHelper(config: MGPOptional<PenteConfig>): NInARowHelper<PlayerOrNone> {
+        if (config.isPresent()) {
+            return new NInARowHelper(Utils.identity, config.get().nInARow);
+        } else {
+            const defaultConfig: PenteConfig = PenteRules.RULES_CONFIG_DESCRIPTION.getDefaultConfig().config;
+            return new NInARowHelper(Utils.identity, defaultConfig.nInARow);
         }
     }
 

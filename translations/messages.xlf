@@ -2474,6 +2474,15 @@
       <trans-unit id="2426029962112596303" datatype="html">
         <source>Congratulations! Note that if all quadrants are neutral after you have put your piece, there will be no rotation.</source>
       </trans-unit>
+      <trans-unit id="3823427068887903090" datatype="html">
+        <source>Captured stones needed to win</source>
+      </trans-unit>
+      <trans-unit id="1997992313730455534" datatype="html">
+        <source>Number of aligned pieces needed to win</source>
+      </trans-unit>
+      <trans-unit id="2370571702661444910" datatype="html">
+        <source>Size of captures</source>
+      </trans-unit>
       <trans-unit id="481364308060927522" datatype="html">
         <source>Pente is played on a 19x19 board, on which the pieces are put on the intersections of the squares. The object of the game is to align 5 of your pieces, or to capture 10 pieces of your opponent. Initially, a piece of the second player is in the center location of the board.</source>
       </trans-unit>
