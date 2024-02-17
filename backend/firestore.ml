@@ -85,15 +85,19 @@ module Make (FirestorePrimitives : FirestorePrimitives.FIRESTORE_PRIMITIVES) : F
   (* This will be called in request handlers. We catch any exception and rethrow
      it, as we need to rollback the transaction. *)
   let transaction (request : Dream.request) (body : unit -> 'a Lwt.t) : 'a Lwt.t =
-    let* transaction_id = FirestorePrimitives.begin_transaction request in
-    Dream.set_field request FirestorePrimitives.transaction_field transaction_id;
-    try
-      let* result = body () in
-      let* _ = FirestorePrimitives.commit request transaction_id in
-      Lwt.return result
-    with e ->
-      let* _ = FirestorePrimitives.rollback request transaction_id in
-      raise e
+    if false then
+      let* transaction_id = FirestorePrimitives.begin_transaction request in
+      Dream.set_field request FirestorePrimitives.transaction_field transaction_id;
+      try
+        let* result = body () in
+        let* _ = FirestorePrimitives.commit request transaction_id in
+        Lwt.return result
+      with e ->
+        let* _ = FirestorePrimitives.rollback request transaction_id in
+        raise e
+    else
+      (* Transactions are disabled *)
+      body ()
 
 
   let get (request : Dream.request) (path : string) (of_yojson : JSON.t -> ('a, 'b) result) : 'a Lwt.t =
