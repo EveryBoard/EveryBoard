@@ -662,7 +662,6 @@ describe('PartCreationComponent', () => {
                 awaitComponentInitialization();
                 spyOn(component, 'cancelGameCreation').and.resolveTo(); // spied in order to avoid calling it
 
-
                 // When the component is destroyed
                 component.stopSendingPresenceTokensAndObservingUsersIfNeeded();
                 destroyed = true;
