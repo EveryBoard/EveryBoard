@@ -121,7 +121,7 @@ module Make
     logger.info (fun log -> log ~request "Updating %s with %s" path (JSON.to_string update));
     (* We want only to update what we provide, and we don't care about the response so we provide an empty mask *)
     match Dream.field request transaction_field with
-    | Some transaction_id ->
+    | Some transaction_id when false (* disable transactions for now *) ->
       record_transaction_write transaction_id (Update (path, update));
       Lwt.return ()
     | None ->
@@ -144,7 +144,7 @@ module Make
     Stats.write request;
     logger.info (fun log -> log ~request "Deleting %s" path);
     match Dream.field request transaction_field with
-    | Some transaction_id ->
+    | Some transaction_id when false (* disable transactions for now *) ->
       record_transaction_write transaction_id (Delete path);
       Lwt.return ()
     | None ->
