@@ -8,6 +8,7 @@ import { TrexoPiece, TrexoPieceStack, TrexoState } from '../TrexoState';
 import { TrexoRules } from '../TrexoRules';
 
 describe('TrexoState', () => {
+
     it('should refuse creating a board of which width is not 10', () => {
         const error: string = 'Invalid board dimensions';
         spyOn(Utils, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
@@ -19,6 +20,7 @@ describe('TrexoState', () => {
         expect(() => TrexoState.of(board, 0)).toThrowError('Assertion failure: ' + error);
         expect(Utils.logError).toHaveBeenCalledOnceWith('Assertion failure', error, undefined);
     });
+
     it('should refuse creating a board of which height is not 10', () => {
         const error: string = 'Invalid board dimensions';
         spyOn(Utils, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
@@ -30,6 +32,7 @@ describe('TrexoState', () => {
         expect(() => TrexoState.of(board, 0)).toThrowError('Assertion failure: ' + error);
         expect(Utils.logError).toHaveBeenCalledOnceWith('Assertion failure', error, undefined);
     });
+
     it('should drop piece at the lowest level possible', () => {
         // Given an empty board
         const state: TrexoState = TrexoRules.get().getInitialState();
@@ -44,6 +47,7 @@ describe('TrexoState', () => {
         const piece: TrexoPiece = new TrexoPiece(owner, dropTurn);
         expect(nextState.getPieceAt(coord)).toEqual(TrexoPieceStack.of([piece]));
     });
+
     describe('toString', () => {
         const ______: TrexoPieceStack = TrexoPieceStack.EMPTY;
         const O1__T0: TrexoPieceStack = TrexoPieceStack.of([new TrexoPiece(Player.ZERO, 0)]);
@@ -60,6 +64,7 @@ describe('TrexoState', () => {
             new TrexoPiece(Player.ONE, 2),
         ]);
         const X1__T3: TrexoPieceStack = TrexoPieceStack.of([new TrexoPiece(Player.ONE, 3)]);
+
         it('should display state', () => {
             const state: TrexoState = TrexoState.of([
                 [______, ______, ______, ______, ______, ______, ______, ______, ______, ______],
@@ -85,5 +90,7 @@ describe('TrexoState', () => {
 ,[TrexoPieceStack.of([]), TrexoPieceStack.of([]), TrexoPieceStack.of([]), TrexoPieceStack.of([]), TrexoPieceStack.of([]), TrexoPieceStack.of([]), TrexoPieceStack.of([]), TrexoPieceStack.of([]), TrexoPieceStack.of([]), TrexoPieceStack.of([])]`;
             expect(state.toString()).toBe(representation);
         });
+
     });
+
 });

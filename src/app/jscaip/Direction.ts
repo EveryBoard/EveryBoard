@@ -14,15 +14,19 @@ export abstract class BaseDirection extends Vector {
     public isDown(): boolean {
         return this.y === 1;
     }
+
     public isUp(): boolean {
         return this.y === -1;
     }
+
     public isLeft(): boolean {
         return this.x === -1;
     }
+
     public isRight(): boolean {
         return this.x === 1;
     }
+
     public toInt(): number {
         if (this.x === 0 && this.y === -1) return 0;
         if (this.x === 1 && this.y === 0) return 1;
@@ -33,6 +37,7 @@ export abstract class BaseDirection extends Vector {
         if (this.x === -1 && this.y === 1) return 6;
         else return 7;
     }
+
     public override toString(): string {
         if (this.x === 0 && this.y === -1) return 'UP';
         if (this.x === 1 && this.y === 0) return 'RIGHT';
@@ -43,6 +48,7 @@ export abstract class BaseDirection extends Vector {
         if (this.x === -1 && this.y === 1) return 'DOWN_LEFT';
         else return 'DOWN_RIGHT';
     }
+
 }
 
 export abstract class DirectionFactory<T extends BaseDirection> {
@@ -55,6 +61,7 @@ export abstract class DirectionFactory<T extends BaseDirection> {
         }
         return MGPFallible.failure('Invalid x and y in direction construction');
     }
+
     public fromDelta(dx: number, dy: number): MGPFallible<T> {
         if (dx === 0 && dy === 0) {
             return MGPFallible.failure('Empty delta for direction');
@@ -66,9 +73,11 @@ export abstract class DirectionFactory<T extends BaseDirection> {
         }
         return MGPFallible.failure(DirectionFailure.DIRECTION_MUST_BE_LINEAR());
     }
+
     public fromMove(start: Coord, end: Coord): MGPFallible<T> {
         return this.fromDelta(end.x - start.x, end.y - start.y);
     }
+
     public fromString(str: string): MGPFallible<T> {
         switch (str) {
             case 'UP': return this.from(0, -1);
@@ -82,6 +91,7 @@ export abstract class DirectionFactory<T extends BaseDirection> {
             default: return MGPFallible.failure(`Invalid direction string ${str}`);
         }
     }
+
     public fromInt(int: number): MGPFallible<T> {
         switch (int) {
             case 0: return this.from(0, -1);
@@ -95,6 +105,7 @@ export abstract class DirectionFactory<T extends BaseDirection> {
             default: return MGPFallible.failure(`Invalid int direction: ${int}`);
         }
     }
+
 }
 
 export class Direction extends BaseDirection {
@@ -120,6 +131,7 @@ export class Direction extends BaseDirection {
                 Direction.UP_LEFT,
             ];
         };
+
     public static readonly DIRECTIONS: ReadonlyArray<Direction> = Direction.factory.all;
 
     public static readonly DIAGONALS: ReadonlyArray<Direction> = [
@@ -128,12 +140,14 @@ export class Direction extends BaseDirection {
         Direction.DOWN_LEFT,
         Direction.UP_LEFT,
     ];
+
     public static readonly ORTHOGONALS: ReadonlyArray<Direction> = [
         Direction.UP,
         Direction.RIGHT,
         Direction.DOWN,
         Direction.LEFT,
     ];
+
     public static readonly encoder: Encoder<Direction> = Encoder.fromFunctions(
         (dir: Direction): string => {
             return dir.toString();
@@ -144,13 +158,16 @@ export class Direction extends BaseDirection {
             return fromString.get();
         },
     );
+
     private constructor(x: 0|1|-1, y: 0|1|-1) {
         super(x, y);
     }
+
     public getOpposite(): Direction {
         const opposite: MGPFallible<Direction> = Direction.factory.from(-this.x, -this.y);
         return opposite.get();
     }
+
 }
 
 export class Orthogonal extends BaseDirection {
@@ -192,10 +209,12 @@ export class Orthogonal extends BaseDirection {
     private constructor(x: 0|1|-1, y: 0|1|-1) {
         super(x, y);
     }
+
     public getOpposite(): Orthogonal {
         const opposite: MGPFallible<Orthogonal> = Orthogonal.factory.from(-this.x, -this.y);
         return opposite.get();
     }
+
     public rotateClockwise(): Orthogonal {
         const rotated: MGPFallible<Orthogonal> = Orthogonal.factory.from(-this.y, this.x);
         return rotated.get();

@@ -1,6 +1,5 @@
 import { Move } from 'src/app/jscaip/Move';
-import { Encoder } from '@everyboard/lib';
-import { Utils } from '@everyboard/lib';
+import { ArrayUtils, Encoder, Utils } from '@everyboard/lib';
 
 export class MancalaDistribution {
 
@@ -9,29 +8,10 @@ export class MancalaDistribution {
         (distribution: MancalaDistribution) => [distribution.x],
         (value: [number]) => MancalaDistribution.of(value[0]),
     );
-    public static readonly ZERO: MancalaDistribution = new MancalaDistribution(0);
-
-    public static readonly ONE: MancalaDistribution = new MancalaDistribution(1);
-
-    public static readonly TWO: MancalaDistribution = new MancalaDistribution(2);
-
-    public static readonly THREE: MancalaDistribution = new MancalaDistribution(3);
-
-    public static readonly FOUR: MancalaDistribution = new MancalaDistribution(4);
-
-    public static readonly FIVE: MancalaDistribution = new MancalaDistribution(5);
 
     public static of(x: number): MancalaDistribution {
-        switch (x) {
-            case 0: return MancalaDistribution.ZERO;
-            case 1: return MancalaDistribution.ONE;
-            case 2: return MancalaDistribution.TWO;
-            case 3: return MancalaDistribution.THREE;
-            case 4: return MancalaDistribution.FOUR;
-            default:
-                Utils.expectToBe(x, 5, 'Invalid x for AwaleMove: ' + x);
-                return MancalaDistribution.FIVE;
-        }
+        Utils.assert(0 <= x, 'MancalaDistribution should be a positive integer!');
+        return new MancalaDistribution(x);
     }
     protected constructor(public readonly x: number) {
     }
@@ -41,11 +21,45 @@ export class MancalaDistribution {
     }
 }
 
-export abstract class MancalaMove extends Move {
+export class MancalaMove extends Move {
+
+    public static encoder: Encoder<MancalaMove> = Encoder.tuple(
+        [Encoder.list(MancalaDistribution.encoder)],
+        (move: MancalaMove) => [move.distributions],
+        (value: [MancalaDistribution[]]) => MancalaMove.of(value[0][0], value[0].slice(1)),
+    );
+
+    public static of(mandatoryDistribution: MancalaDistribution, bonusDistributions: MancalaDistribution[] = [])
+    : MancalaMove
+    {
+        const distributions: MancalaDistribution[] = [mandatoryDistribution];
+        distributions.push(...bonusDistributions);
+        return new MancalaMove(distributions);
+    }
 
     protected constructor(public readonly distributions: MancalaDistribution[]) {
         super();
+        Utils.assert(distributions.length > 0, 'Move should have distribution ');
     }
+
+    public add(move: MancalaDistribution): MancalaMove {
+        return MancalaMove.of(this.distributions[0],
+                              this.distributions.slice(1).concat(move));
+    }
+
+    public override toString(): string {
+        const distributions: number[] = this.distributions.map((move: MancalaDistribution) => move.x);
+        return 'MancalaMove([' + distributions.join(', ') + '])';
+    }
+
+    public override equals(other: this): boolean {
+        return ArrayUtils.equals(this.distributions, other.distributions);
+    }
+
+    public getFirstDistribution(): MancalaDistribution {
+        return this.distributions[0];
+    }
+
     [Symbol.iterator](): IterableIterator<MancalaDistribution> {
         return this.distributions.values();
     }

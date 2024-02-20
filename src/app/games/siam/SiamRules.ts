@@ -1,17 +1,18 @@
-import { Rules } from 'src/app/jscaip/Rules';
+import { ConfigurableRules } from 'src/app/jscaip/Rules';
 import { SiamMove } from './SiamMove';
 import { SiamState } from './SiamState';
 import { SiamPiece } from './SiamPiece';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Orthogonal } from 'src/app/jscaip/Direction';
-import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
+import { MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 import { SiamFailure } from './SiamFailure';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { Table, TableUtils } from 'src/app/jscaip/TableUtils';
-import { MGPFallible } from '@everyboard/lib';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
-import { GameNode } from 'src/app/jscaip/GameNode';
+import { GameNode } from 'src/app/jscaip/AI/GameNode';
+import { NumberConfig, RulesConfigDescription, RulesConfigDescriptionLocalizable } from 'src/app/components/wrapper-components/rules-configuration/RulesConfigDescription';
+import { MGPValidators } from 'src/app/utils/MGPValidator';
 import { Debug } from 'src/app/utils/Debug';
 
 export class SiamLegalityInformation {
@@ -22,8 +23,30 @@ export class SiamLegalityInformation {
 
 export class SiamNode extends GameNode<SiamMove, SiamState> {}
 
+type ClosestPusher = {
+    distance: number,
+    coord: Coord
+};
+
+type InitialLineInfo = {
+    resistance: Orthogonal,
+    previousPiece: SiamPiece,
+    closestPusher: ClosestPusher,
+    almostPusher: MGPOptional<Coord>,
+    pusherFound: boolean,
+    mountainEncountered: boolean,
+    missingForce: number,
+};
+
+export type SiamConfig = {
+    width: number,
+    height: number,
+    numberOfPiece: number,
+    numberOfBonusMountain: number,
+};
+
 @Debug.log
-export class SiamRules extends Rules<SiamMove, SiamState, SiamLegalityInformation> {
+export class SiamRules extends ConfigurableRules<SiamMove, SiamState, SiamConfig, SiamLegalityInformation> {
 
     private static singleton: MGPOptional<SiamRules> = MGPOptional.empty();
 
@@ -34,18 +57,78 @@ export class SiamRules extends Rules<SiamMove, SiamState, SiamLegalityInformatio
         return SiamRules.singleton.get();
     }
 
-    public getInitialState(): SiamState {
-        const board: SiamPiece[][] = TableUtils.create(SiamState.SIZE, SiamState.SIZE, SiamPiece.EMPTY);
+    public static readonly RULES_CONFIG_DESCRIPTION: RulesConfigDescription<SiamConfig> =
+        new RulesConfigDescription<SiamConfig>({
+            name: (): string => $localize`Siam`,
+            config: {
+                // minimum 3 so that there are spaces around the mountain
+                width: new NumberConfig(5, RulesConfigDescriptionLocalizable.WIDTH, MGPValidators.range(3, 99)),
+                height: new NumberConfig(5, RulesConfigDescriptionLocalizable.HEIGHT, MGPValidators.range(3, 99)),
+                numberOfPiece: new NumberConfig(5, () => $localize`Number of piece by player`, MGPValidators.range(1, 99)),
+                // -1 on two ends because there will always be the first mountain
+                numberOfBonusMountain: new NumberConfig(2, () => $localize`Number of bonus mountains`, MGPValidators.range(0, 98)),
+            },
+        });
 
-        board[2][1] = SiamPiece.MOUNTAIN;
-        board[2][2] = SiamPiece.MOUNTAIN;
-        board[2][3] = SiamPiece.MOUNTAIN;
+    public override getRulesConfigDescription(): MGPOptional<RulesConfigDescription<SiamConfig>> {
+        return MGPOptional.of(SiamRules.RULES_CONFIG_DESCRIPTION);
+    }
 
+    public override getInitialState(optionalConfig: MGPOptional<SiamConfig>): SiamState {
+        const config: SiamConfig = optionalConfig.get();
+        const board: SiamPiece[][] = TableUtils.create(config.width, config.height, SiamPiece.EMPTY);
+        const cy: number = Math.floor(config.height / 2);
+        const cx: number = Math.floor(config.width / 2);
+        board[cy][cx] = SiamPiece.MOUNTAIN;
+        config.numberOfBonusMountain = Math.min(config.numberOfBonusMountain, config.width - 1);
+        let numberOfBonusMountainDropped: number = 0;
+        while (numberOfBonusMountainDropped < config.numberOfBonusMountain) {
+            const mountainExcentricity: number = Math.ceil((numberOfBonusMountainDropped + 1) / 2);
+            board[cy][cx + mountainExcentricity] = SiamPiece.MOUNTAIN;
+            numberOfBonusMountainDropped++;
+            if (numberOfBonusMountainDropped < config.numberOfBonusMountain) {
+                board[cy][cx - mountainExcentricity] = SiamPiece.MOUNTAIN;
+                numberOfBonusMountainDropped++;
+            }
+        }
         return new SiamState(board, 0);
     }
 
-    public isLegal(move: SiamMove, state: SiamState): MGPFallible<SiamLegalityInformation> {
-        if (move.isInsertion() === false) {
+    private getMoveValidity(move: SiamMove, state: SiamState): MGPValidation {
+        const startedOutside: boolean = state.isOnBoard(move.coord) === false;
+        if (move.isRotation()) {
+            if (startedOutside) {
+                return MGPFallible.failure($localize`Cannot rotate piece outside the board: ${move.toString()}`);
+            }
+        } else {
+            const finishedOutside: boolean = state.isOnBoard(move.coord.getNext(move.direction.get())) === false;
+            if (finishedOutside) {
+                if (startedOutside) {
+                    return MGPFallible.failure($localize`SiamMove should end or start on the board: ${ move.toString() }`);
+                }
+                if (move.direction.get() !== move.landingOrientation) {
+                    return MGPFallible.failure($localize`SiamMove should have moveDirection and landingOrientation matching when a piece goes out of the board: ${ move.toString() }`);
+                }
+            }
+        }
+        return MGPValidation.SUCCESS;
+    }
+
+    public isInsertion(move: SiamMove, state: SiamState): boolean {
+        return move.coord.x === -1 ||
+               move.coord.x === state.getWidth() ||
+               move.coord.y === -1 ||
+               move.coord.y === state.getHeight();
+    }
+
+    public override isLegal(move: SiamMove, state: SiamState, optionalConfig: MGPOptional<SiamConfig>)
+    : MGPFallible<SiamLegalityInformation>
+    {
+        const moveValidity: MGPValidation = this.getMoveValidity(move, state);
+        if (moveValidity.isFailure()) {
+            return moveValidity.toOtherFallible();
+        }
+        if (this.isInsertion(move, state) === false) {
             const movedPiece: SiamPiece = state.getPieceAt(move.coord);
             if (movedPiece === SiamPiece.EMPTY) {
                 return MGPFallible.failure(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY());
@@ -57,9 +140,9 @@ export class SiamRules extends Rules<SiamMove, SiamState, SiamLegalityInformatio
             return this.isLegalRotation(move, state);
         } else {
             let movingPiece: SiamPiece;
-            if (move.isInsertion()) {
+            if (this.isInsertion(move, state)) {
                 const insertionInfo: {insertedPiece: SiamPiece, legal: MGPValidation} =
-                    this.isLegalInsertion(move.coord, state);
+                    this.isLegalInsertion(move.coord, state, optionalConfig.get());
                 if (insertionInfo.legal.isFailure()) {
                     return MGPFallible.failure(insertionInfo.legal.getReason());
                 }
@@ -70,22 +153,27 @@ export class SiamRules extends Rules<SiamMove, SiamState, SiamLegalityInformatio
             return this.isLegalForwarding(move, state, movingPiece);
         }
     }
-    public isLegalInsertion(coord: Coord, state: SiamState): {insertedPiece: SiamPiece, legal: MGPValidation} {
+
+    private isLegalInsertion(coord: Coord, state: SiamState, config: SiamConfig)
+    : {insertedPiece: SiamPiece, legal: MGPValidation}
+    {
         const numberOnBoard: number = state.countCurrentPlayerPawn();
         const currentPlayer: Player = state.getCurrentPlayer();
-        const legal: MGPValidation = (numberOnBoard < 5) ?
+        const legal: MGPValidation = (numberOnBoard < config.numberOfPiece) ?
             MGPValidation.SUCCESS :
             MGPValidation.failure(SiamFailure.NO_REMAINING_PIECE_TO_INSERT());
-        const insertedPiece: SiamPiece = this.getInsertedPiece(coord, currentPlayer);
+        const insertedPiece: SiamPiece = this.getInsertedPiece(coord, currentPlayer, state.getWidth());
         return { insertedPiece, legal };
     }
-    public getInsertedPiece(entrance: Coord, player: Player): SiamPiece {
+
+    private getInsertedPiece(entrance: Coord, player: Player, width: number): SiamPiece {
         if (entrance.x === -1) return SiamPiece.of(Orthogonal.RIGHT, player);
         if (entrance.y === -1) return SiamPiece.of(Orthogonal.DOWN, player);
-        if (entrance.x === SiamState.SIZE) return SiamPiece.of(Orthogonal.LEFT, player);
+        if (entrance.x === width) return SiamPiece.of(Orthogonal.LEFT, player);
         return SiamPiece.of(Orthogonal.UP, player);
     }
-    public isLegalForwarding(move: SiamMove, state: SiamState, firstPiece: SiamPiece)
+
+    private isLegalForwarding(move: SiamMove, state: SiamState, firstPiece: SiamPiece)
     : MGPFallible<SiamLegalityInformation>
     {
         Utils.assert(firstPiece !== SiamPiece.MOUNTAIN && firstPiece !== SiamPiece.EMPTY, 'forwarding must be done with player piece');
@@ -94,7 +182,7 @@ export class SiamRules extends Rules<SiamMove, SiamState, SiamLegalityInformatio
         let movingPiece: SiamPiece = SiamPiece.of(move.landingOrientation, state.getCurrentPlayer());
         const pushingDir: Orthogonal = move.direction.get();
         let landingCoord: Coord = move.coord.getNext(pushingDir);
-        if (SiamState.isOnBoard(landingCoord) &&
+        if (state.isOnBoard(landingCoord) &&
             state.getPieceAt(landingCoord) !== SiamPiece.EMPTY &&
             this.isStraight(firstPiece, move) === false)
         {
@@ -104,11 +192,11 @@ export class SiamRules extends Rules<SiamMove, SiamState, SiamLegalityInformatio
         const resistingDir: Orthogonal = pushingDir.getOpposite();
         let totalForce: number = 0;
         const resultingBoard: SiamPiece[][] = state.getCopiedBoard();
-        if (SiamState.isOnBoard(move.coord)) {
+        if (state.isOnBoard(move.coord)) {
             resultingBoard[move.coord.y][move.coord.x] = SiamPiece.EMPTY;
             movedPieces.push(move.coord);
         }
-        let pushingPossible: boolean = SiamState.isOnBoard(landingCoord) &&
+        let pushingPossible: boolean = state.isOnBoard(landingCoord) &&
                                        movingPiece !== SiamPiece.EMPTY;
         while (pushingPossible) {
             if (currentDirection.equalsValue(pushingDir)) totalForce++;
@@ -120,11 +208,11 @@ export class SiamRules extends Rules<SiamMove, SiamState, SiamLegalityInformatio
             movingPiece = tmpPiece;
             landingCoord = landingCoord.getNext(pushingDir);
             currentDirection = movingPiece.getOptionalDirection();
-            pushingPossible = SiamState.isOnBoard(landingCoord) &&
+            pushingPossible = state.isOnBoard(landingCoord) &&
                               movingPiece !== SiamPiece.EMPTY &&
                               totalForce > 0;
         }
-        if (SiamState.isOnBoard(landingCoord) === false) {
+        if (state.isOnBoard(landingCoord) === false) {
             if (currentDirection.equalsValue(pushingDir)) totalForce++;
             else if (currentDirection.equalsValue(resistingDir)) totalForce--;
         }
@@ -134,12 +222,14 @@ export class SiamRules extends Rules<SiamMove, SiamState, SiamLegalityInformatio
 
         return MGPFallible.success(new SiamLegalityInformation(resultingBoard, movedPieces));
     }
-    public isStraight(piece: SiamPiece, move: SiamMove): boolean {
+
+    private isStraight(piece: SiamPiece, move: SiamMove): boolean {
         const pieceDirection: Orthogonal = piece.getDirection();
         return (move.direction.equalsValue(pieceDirection) &&
                 pieceDirection === move.landingOrientation);
     }
-    public isLegalRotation(rotation: SiamMove, state: SiamState): MGPFallible<SiamLegalityInformation> {
+
+    private isLegalRotation(rotation: SiamMove, state: SiamState): MGPFallible<SiamLegalityInformation> {
         const coord: Coord = rotation.coord;
         const currentPiece: SiamPiece = state.getPieceAt(coord);
         const currentPlayer: Player = state.getCurrentPlayer();
@@ -150,12 +240,19 @@ export class SiamRules extends Rules<SiamMove, SiamState, SiamLegalityInformatio
         resultingBoard[coord.y][coord.x] = SiamPiece.of(rotation.landingOrientation, currentPlayer);
         return MGPFallible.success(new SiamLegalityInformation(resultingBoard, [coord]));
     }
-    public applyLegalMove(_move: SiamMove, state: SiamState, info: SiamLegalityInformation): SiamState {
+
+    public override applyLegalMove(_move: SiamMove,
+                                   state: SiamState,
+                                   _config: MGPOptional<SiamConfig>,
+                                   info: SiamLegalityInformation)
+    : SiamState
+    {
         const newBoard: Table<SiamPiece> = TableUtils.copy(info.resultingBoard);
         const newTurn: number = state.turn + 1;
         const resultingState: SiamState = new SiamState(newBoard, newTurn);
         return resultingState;
     }
+
     public getScoreFromShortestDistances(zeroShortestDistance: number,
                                          oneShortestDistance: number,
                                          currentPlayer: Player)
@@ -173,6 +270,7 @@ export class SiamRules extends Rules<SiamMove, SiamState, SiamLegalityInformatio
             return (10 * (oneScore + 1)) - (zeroScore + 1);
         }
     }
+
     public getMountainsRowsAndColumns(state: SiamState)
     : { rows: number[], columns: number[], nbMountain: number }
     {
@@ -192,37 +290,45 @@ export class SiamRules extends Rules<SiamMove, SiamState, SiamLegalityInformatio
         }
         return { rows, columns, nbMountain };
     }
-    public getWinner(state: SiamState, move: MGPOptional<SiamMove>, nbMountain: number): PlayerOrNone {
-        if (nbMountain === 2) {
+
+    private getWinner(state: SiamState,
+                      move: MGPOptional<SiamMove>,
+                      nbMountain: number,
+                      config: SiamConfig)
+    : PlayerOrNone
+    {
+        if (nbMountain === config.numberOfBonusMountain) {
             return this.getPusher(state, move.get());
         } else {
             return PlayerOrNone.NONE;
         }
     }
+
     public getPusher(state: SiamState, finishingMove: SiamMove): PlayerOrNone {
         // here we will call the piece that started the move "moveStarter", obviously
         // and the piece in the right direction that was the closest to the falling mountain: the pusher
 
         const moveStarterCoord: Coord = finishingMove.coord;
         let moveStarterPiece: SiamPiece;
-        if (SiamState.isOnBoard(moveStarterCoord)) {
+        if (state.isOnBoard(moveStarterCoord)) {
             const moveStarterDir: Orthogonal = finishingMove.landingOrientation;
             moveStarterPiece = state.getPieceAt(moveStarterCoord.getNext(moveStarterDir));
         } else { // insertion
-            moveStarterPiece = this.getInsertedPiece(moveStarterCoord, state.getCurrentOpponent());
+            moveStarterPiece = this.getInsertedPiece(moveStarterCoord, state.getCurrentOpponent(), state.getWidth());
         }
         const pushingDirection: Orthogonal = moveStarterPiece.getDirection();
         const pusherCoord: Coord = this.getPusherCoord(state, pushingDirection, moveStarterCoord);
         const winner: PlayerOrNone = state.getPieceAt(pusherCoord).getOwner();
         Debug.display('SiamRules', 'getPusher',
-                      moveStarterCoord.toString() + ' belong to ' + state.getCurrentOpponent().value + ', ' +
-                      pusherCoord.toString() + ' belong to ' + winner.value + ', ' + winner.value + ' win');
+                      moveStarterCoord.toString() + ' belong to ' + state.getCurrentOpponent().getValue() + ', ' +
+                      pusherCoord.toString() + ' belong to ' + winner.getValue() + ', ' + winner.getValue() + ' win');
         return winner;
     }
-    public getPusherCoord(state: SiamState, pushingDirection: Orthogonal, pusher: Coord): Coord {
+
+    private getPusherCoord(state: SiamState, pushingDirection: Orthogonal, pusher: Coord): Coord {
         let pushed: Coord = pusher.getNext(pushingDirection);
         let lastCorrectPusher: Coord = pusher;
-        while (SiamState.isOnBoard(pushed)) {
+        while (state.isOnBoard(pushed)) {
             pusher = pushed;
             pushed = pushed.getNext(pushingDirection);
             const pushingPiece: SiamPiece = state.getPieceAt(pusher);
@@ -232,16 +338,18 @@ export class SiamRules extends Rules<SiamMove, SiamState, SiamLegalityInformatio
         }
         return lastCorrectPusher;
     }
+
     public getPushers(state: SiamState,
                       mountainsColumn: number[],
-                      mountainsRow: number[])
+                      mountainsRow: number[],
+                      config: SiamConfig)
     : { coord: Coord; distance: number; }[]
     {
         let pushers: { coord: Coord; distance: number; }[] = [];
         const lineDirections: { direction: Orthogonal, fallingCoord: Coord}[] = [];
         for (const x of mountainsColumn) {
             let direction: Orthogonal = Orthogonal.DOWN;
-            let fallingCoord: Coord = new Coord(x, 4);
+            let fallingCoord: Coord = new Coord(x, config.height - 1);
             lineDirections.push({ direction, fallingCoord });
 
             direction = Orthogonal.UP;
@@ -254,25 +362,26 @@ export class SiamRules extends Rules<SiamMove, SiamState, SiamLegalityInformatio
             lineDirections.push({ direction, fallingCoord });
 
             direction = Orthogonal.RIGHT;
-            fallingCoord = new Coord(4, y);
+            fallingCoord = new Coord(config.width - 1, y);
             lineDirections.push({ direction, fallingCoord });
         }
         for (const lineDirection of lineDirections) {
             const fallingCoord: Coord = lineDirection.fallingCoord;
             const direction: Orthogonal = lineDirection.direction;
-
-            pushers = this.addPotentialDirectionPusher(state, fallingCoord, direction, pushers);
+            pushers = this.addPotentialDirectionPusher(state, fallingCoord, direction, pushers, config);
         }
         return pushers;
     }
-    public addPotentialDirectionPusher(state: SiamState,
-                                       fallingCoord: Coord,
-                                       direction: Orthogonal,
-                                       pushers: { coord: Coord, distance: number }[])
+
+    private addPotentialDirectionPusher(state: SiamState,
+                                        fallingCoord: Coord,
+                                        direction: Orthogonal,
+                                        pushers: { coord: Coord, distance: number }[],
+                                        config: SiamConfig)
     : { coord: Coord, distance: number }[]
     {
         const directionClosestPusher: MGPOptional<{ distance: number, coord: Coord }> =
-            this.getLineClosestPusher(state, fallingCoord, direction);
+            this.getLineClosestPusher(state, fallingCoord, direction, config);
         if (directionClosestPusher.isAbsent()) {
             return pushers;
         }
@@ -286,108 +395,132 @@ export class SiamRules extends Rules<SiamMove, SiamState, SiamLegalityInformatio
         });
         return pushers;
     }
-    public getLineClosestPusher(state: SiamState, fallingCoord: Coord, direction: Orthogonal)
-    : MGPOptional<{ distance: number, coord: Coord }>
-    {
-        const resistance: Orthogonal = direction.getOpposite();
-        let currentDistance: number = 1;
-        let previousPiece: SiamPiece = state.getPieceAt(fallingCoord);
-        let testedCoord: Coord = fallingCoord;
-        let almostPusher: MGPOptional<Coord> = MGPOptional.empty();
-        let pusherFound: boolean = false;
-        let mountainEncountered: boolean = false;
-        let missingForce: number = 0;
-        while (SiamState.isOnBoard(testedCoord) && pusherFound === false) {
-            const currentPiece: SiamPiece = state.getPieceAt(testedCoord);
-            if (currentPiece.isEmptyOrMountain()) {
-                if (currentPiece === SiamPiece.MOUNTAIN) {
-                    missingForce += 0.9;
-                    mountainEncountered = true;
-                } else { // Encountered empty space
-                    currentDistance++;
-                }
-            } else { // Player found
-                const playerOrientation: Orthogonal = currentPiece.getDirection();
-                if (playerOrientation === direction) {
-                    if (mountainEncountered) {
-                        missingForce -= 1; // We count her as active pusher
-                        // We found a piece pushing right in the good direction
-                        if (missingForce <= 0) {// And she has enough force to push
-                            pusherFound = true;
-                            testedCoord = testedCoord.getNext(direction);
-                        }
-                    }
-                } else if (playerOrientation === resistance) { // We found a piece resisting the pushing direction
-                    missingForce += 1;
-                    if (mountainEncountered === false) {
-                        currentDistance++;
-                    }
-                } else {
-                    if (mountainEncountered) {
-                        almostPusher = MGPOptional.of(testedCoord);
-                        if (previousPiece !== SiamPiece.EMPTY) {
-                            currentDistance++;
-                        }
-                    } else {
-                        currentDistance++;
-                    }
-                }
-            }
-            // Still no player there, let's go back further
-            previousPiece = currentPiece;
-            testedCoord = testedCoord.getPrevious(direction);
+
+    private getInitialLineInfo(state: SiamState, fallingCoord: Coord, direction: Orthogonal): InitialLineInfo {
+        return {
+            resistance: direction.getOpposite(),
+            previousPiece: state.getPieceAt(fallingCoord),
+            closestPusher: {
+                coord: fallingCoord,
+                distance: 1,
+            },
+            almostPusher: MGPOptional.empty(),
+            pusherFound: false,
+            mountainEncountered: false,
+            missingForce: 0,
+        };
+    }
+
+    public getLineClosestPusher(state: SiamState, fallingCoord: Coord, direction: Orthogonal, config: SiamConfig)
+    : MGPOptional<ClosestPusher> {
+        let lineInfo: InitialLineInfo = this.getInitialLineInfo(state, fallingCoord, direction);
+        while (state.isOnBoard(lineInfo.closestPusher.coord) && lineInfo.pusherFound === false) {
+            lineInfo = this.updateLineInfo(state, lineInfo, direction);
         }
-        if (pusherFound === false && almostPusher.isPresent()) {
-            currentDistance++;
-            missingForce -= 1;
-            while (testedCoord.equals(almostPusher.get()) === false) {
-                testedCoord = testedCoord.getNext(direction);
-                currentDistance--;
+        if (lineInfo.pusherFound === false && lineInfo.almostPusher.isPresent()) {
+            lineInfo.closestPusher.distance++;
+            lineInfo.missingForce -= 1;
+            while (lineInfo.closestPusher.coord.equals(lineInfo.almostPusher.get()) === false) {
+                lineInfo.closestPusher.coord = lineInfo.closestPusher.coord.getNext(direction);
+                lineInfo.closestPusher.distance--;
             }
         }
-        if (SiamState.isOnBoard(testedCoord) === false) {
-            missingForce -= 1;
-            if (state.countCurrentPlayerPawn() === 5) {
+        if (state.isOnBoard(lineInfo.closestPusher.coord) === false) {
+            lineInfo.missingForce -= 1;
+            if (state.countCurrentPlayerPawn() === config.numberOfPiece) {
                 return MGPOptional.empty();
             }
         }
-        if (missingForce > 0) {
+        if (lineInfo.missingForce > 0) {
             return MGPOptional.empty();
         }
-        return MGPOptional.of({ distance: currentDistance, coord: testedCoord });
+        return MGPOptional.of(lineInfo.closestPusher);
     }
-    public getInsertions(state: SiamState): SiamMove[] {
-        let moves: SiamMove[] = [];
-        for (let xOrY: number = 1; xOrY < 4; xOrY++) {
-            moves = moves.concat(this.getInsertionsAt(state, 0, xOrY));
-            moves = moves.concat(this.getInsertionsAt(state, 4, xOrY));
-            moves = moves.concat(this.getInsertionsAt(state, xOrY, 0));
-            moves = moves.concat(this.getInsertionsAt(state, xOrY, 4));
+
+    private updateLineInfo(state: SiamState, lineInfo: InitialLineInfo, direction: Orthogonal): InitialLineInfo {
+        const currentPiece: SiamPiece = state.getPieceAt(lineInfo.closestPusher.coord);
+        if (currentPiece.isEmptyOrMountain()) {
+            if (currentPiece === SiamPiece.MOUNTAIN) {
+                lineInfo.missingForce += 0.9;
+                lineInfo.mountainEncountered = true;
+            } else { // Encountered empty space
+                lineInfo.closestPusher.distance++;
+            }
+        } else { // Player found
+            const playerOrientation: Orthogonal = currentPiece.getDirection();
+            if (playerOrientation === direction) {
+                if (lineInfo.mountainEncountered) {
+                    lineInfo.missingForce -= 1; // We count her as active pusher
+                    // We found a piece pushing right in the good direction
+                    if (lineInfo.missingForce <= 0) {// And she has enough force to push
+                        lineInfo.pusherFound = true;
+                        lineInfo.closestPusher.coord =
+                        lineInfo.closestPusher.coord.getNext(direction);
+                    }
+                }
+            } else if (playerOrientation === lineInfo.resistance) {
+                // We found a piece resisting the pushing direction
+                lineInfo.missingForce += 1;
+                if (lineInfo.mountainEncountered === false) {
+                    lineInfo.closestPusher.distance++;
+                }
+            } else {
+                if (lineInfo.mountainEncountered) {
+                    lineInfo.almostPusher = MGPOptional.of(lineInfo.closestPusher.coord);
+                    if (lineInfo.previousPiece !== SiamPiece.EMPTY) {
+                        lineInfo.closestPusher.distance++;
+                    }
+                } else {
+                    lineInfo.closestPusher.distance++;
+                }
+            }
         }
-        moves = moves.concat(this.getInsertionsAt(state, 0, 0));
-        moves = moves.concat(this.getInsertionsAt(state, 0, 4));
-        moves = moves.concat(this.getInsertionsAt(state, 4, 0));
-        moves = moves.concat(this.getInsertionsAt(state, 4, 4));
+        // Still no player there, let's go back further
+        lineInfo.previousPiece = currentPiece;
+        lineInfo.closestPusher.coord = lineInfo.closestPusher.coord.getPrevious(direction);
+        return lineInfo;
+    }
+
+    public getInsertions(state: SiamState, config: SiamConfig): SiamMove[] {
+        let moves: SiamMove[] = [];
+        const maxX: number = config.width - 1;
+        const maxY: number = config.height - 1;
+        for (let x: number = 1; x < maxX; x++) {
+            moves = moves.concat(this.getInsertionsAt(state, x, 0, config));
+            moves = moves.concat(this.getInsertionsAt(state, x, maxY, config));
+        }
+        for (let y: number = 1; y < maxY; y++) {
+            moves = moves.concat(this.getInsertionsAt(state, 0, y, config));
+            moves = moves.concat(this.getInsertionsAt(state, maxX, y, config));
+        }
+        moves = moves.concat(this.getInsertionsAt(state, 0, 0, config));
+        moves = moves.concat(this.getInsertionsAt(state, 0, maxY, config));
+        moves = moves.concat(this.getInsertionsAt(state, maxX, 0, config));
+        moves = moves.concat(this.getInsertionsAt(state, maxX, maxY, config));
         return moves;
     }
-    public getInsertionsAt(state: SiamState, x: number, y: number): SiamMove[] {
+
+    public getInsertionsAt(state: SiamState, x: number, y: number, config: SiamConfig): SiamMove[] {
         const moves: SiamMove[] = [];
         for (const direction of Orthogonal.ORTHOGONALS) {
             const entrance: Coord = new Coord(x, y).getPrevious(direction);
-            if (SiamState.isOnBoard(entrance) === false) {
+            if (state.isOnBoard(entrance) === false) {
                 for (const orientation of Orthogonal.ORTHOGONALS) {
-                    const move: MGPFallible<SiamMove> =
-                        SiamMove.from(entrance.x, entrance.y, MGPOptional.of(direction), orientation);
-                    Utils.assert(move.isSuccess(), 'SiamRules.getInsertionsAt should only construct valid insertions');
-                    const legality: MGPFallible<SiamLegalityInformation> = this.isLegal(move.get(), state);
+                    const move: SiamMove =
+                        SiamMove.of(entrance.x, entrance.y, MGPOptional.of(direction), orientation);
+                    Utils.assert(this.getMoveValidity(move, state).isSuccess(),
+                                 'SiamRules.getInsertionsAt should only construct valid insertions');
+                    const legality: MGPFallible<SiamLegalityInformation> =
+                        this.isLegal(move, state, MGPOptional.of(config));
                     if (legality.isSuccess()) {
-                        moves.push(move.get());
+                        moves.push(move);
                     }
                 }
             }
         }
         return moves;
     }
+
     public getMovesFrom(state: SiamState, piece: SiamPiece, x: number, y: number): SiamMove[] {
         const coord: Coord = new Coord(x, y);
         // Three rotations
@@ -400,6 +533,7 @@ export class SiamRules extends Rules<SiamMove, SiamState, SiamLegalityInformatio
         }
         return moves;
     }
+
     public getMovesBetween(state: SiamState, piece: SiamPiece, start: Coord, end: Coord): SiamMove[] {
         if (start.equals(end)) {
             return this.getRotationMovesAt(start, piece);
@@ -413,33 +547,35 @@ export class SiamRules extends Rules<SiamMove, SiamState, SiamLegalityInformatio
             }
         }
     }
-    public getRotationMovesAt(coord: Coord, piece: SiamPiece): SiamMove[] {
+
+    private getRotationMovesAt(coord: Coord, piece: SiamPiece): SiamMove[] {
         const moves: SiamMove[] = [];
         const currentOrientation: Orthogonal = piece.getDirection();
         for (const direction of Orthogonal.ORTHOGONALS) {
             if (direction !== currentOrientation) {
-                const newMove: SiamMove = SiamMove.from(coord.x, coord.y, MGPOptional.empty(), direction).get();
+                const newMove: SiamMove = SiamMove.of(coord.x, coord.y, MGPOptional.empty(), direction);
                 moves.push(newMove);
             }
         }
         return moves;
     }
-    public getForwardMovesBetween(state: SiamState,
-                                  start: Coord,
-                                  end: Coord)
+
+    private getForwardMovesBetween(state: SiamState,
+                                   start: Coord,
+                                   end: Coord)
     : SiamMove[]
     {
         const moves: SiamMove[] = [];
         let orientations: ReadonlyArray<Orthogonal>;
         const direction: Orthogonal = Orthogonal.factory.fromMove(start, end).get();
         const piece: SiamPiece = state.getPieceAt(start);
-        if (SiamState.isOnBoard(end)) {
+        if (state.isOnBoard(end)) {
             orientations = Orthogonal.ORTHOGONALS;
         } else {
             orientations = [direction];
         }
         for (const orientation of orientations) {
-            const move: SiamMove = SiamMove.from(start.x, start.y, MGPOptional.of(direction), orientation).get();
+            const move: SiamMove = SiamMove.of(start.x, start.y, MGPOptional.of(direction), orientation);
             const legality: MGPFallible<SiamLegalityInformation> = this.isLegalForwarding(move, state, piece);
             if (legality.isSuccess()) {
                 moves.push(move);
@@ -447,15 +583,18 @@ export class SiamRules extends Rules<SiamMove, SiamState, SiamLegalityInformatio
         }
         return moves;
     }
-    public getGameStatus(node: SiamNode): GameStatus {
+
+    public getGameStatus(node: SiamNode, config: MGPOptional<SiamConfig>): GameStatus {
         const mountainsInfo: { rows: number[], columns: number[], nbMountain: number } =
             this.getMountainsRowsAndColumns(node.gameState);
 
-        const winner: PlayerOrNone = this.getWinner(node.gameState, node.previousMove, mountainsInfo.nbMountain);
+        const winner: PlayerOrNone =
+            this.getWinner(node.gameState, node.previousMove, mountainsInfo.nbMountain, config.get());
         if (winner.isPlayer()) {
             return GameStatus.getVictory(winner);
         } else {
             return GameStatus.ONGOING;
         }
     }
+
 }

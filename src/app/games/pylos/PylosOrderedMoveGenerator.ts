@@ -1,13 +1,15 @@
 import { PylosMove } from './PylosMove';
 import { PylosMoveGenerator } from './PylosMoveGenerator';
 import { PylosNode } from './PylosRules';
+import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 export class PylosOrderedMoveGenerator extends PylosMoveGenerator {
 
-    public override getListMoves(node: PylosNode): PylosMove[] {
-        const moves: PylosMove[] = super.getListMoves(node);
+    public override getListMoves(node: PylosNode, config: NoConfig): PylosMove[] {
+        const moves: PylosMove[] = super.getListMoves(node, config);
         return this.orderMoves(moves);
     }
+
     private orderMoves(moves: PylosMove[]): PylosMove[] {
         return moves.sort((a: PylosMove, b: PylosMove) => {
             const captureA: number = 12 * this.countStoneUsed(a);

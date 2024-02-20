@@ -23,14 +23,10 @@ export class ConspirateursState extends GameStateWithTable<PlayerOrNone> {
             new Coord(ConspirateursState.WIDTH-1, xOrY),
         ])).toList();
 
-    public static isOnBoard(coord: Coord): boolean {
-        return coord.isInRange(ConspirateursState.WIDTH, ConspirateursState.HEIGHT);
-    }
-
     public isShelter(coord: Coord): boolean {
-        if (coord.x === 0 || coord.x === ConspirateursState.WIDTH-1) {
+        if (this.isVerticalEdge(coord)) {
             return ConspirateursState.SHELTERS_INDICES.some((y: number) => coord.y === y);
-        } else if (coord.y === 0 || coord.y === ConspirateursState.HEIGHT-1) {
+        } else if (this.isHorizontalEdge(coord)) {
             return ConspirateursState.SHELTERS_INDICES.some((x: number) => coord.x === x);
         } else {
             return false;
@@ -38,9 +34,9 @@ export class ConspirateursState extends GameStateWithTable<PlayerOrNone> {
     }
 
     public isCentralZone(coord: Coord): boolean {
-        return coord.x >= ConspirateursState.CENTRAL_ZONE_TOP_LEFT.x &&
+        return ConspirateursState.CENTRAL_ZONE_TOP_LEFT.x <= coord.x &&
             coord.x <= ConspirateursState.CENTRAL_ZONE_BOTTOM_RIGHT.x &&
-            coord.y >= ConspirateursState.CENTRAL_ZONE_TOP_LEFT.y &&
+            ConspirateursState.CENTRAL_ZONE_TOP_LEFT.y <= coord.y &&
             coord.y <= ConspirateursState.CENTRAL_ZONE_BOTTOM_RIGHT.y;
     }
 

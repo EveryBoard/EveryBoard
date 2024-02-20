@@ -1,10 +1,11 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { Direction } from 'src/app/jscaip/Direction';
-import { BoardValue } from 'src/app/jscaip/BoardValue';
+import { BoardValue } from 'src/app/jscaip/AI/BoardValue';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { EpaminondasState } from './EpaminondasState';
-import { EpaminondasNode } from './EpaminondasRules';
+import { EpaminondasConfig, EpaminondasNode } from './EpaminondasRules';
 import { EpaminondasHeuristic } from './EpaminondasHeuristic';
+import { MGPOptional } from '@everyboard/lib';
 
 export class EpaminondasAttackHeuristic extends EpaminondasHeuristic {
 
@@ -15,7 +16,7 @@ export class EpaminondasAttackHeuristic extends EpaminondasHeuristic {
     private readonly CENTER_FACTOR: number = 5;
     private readonly MOBILITY_FACTOR: number = 0.12;
 
-    public override getBoardValue(node: EpaminondasNode): BoardValue {
+    public override getBoardValue(node: EpaminondasNode, _config: MGPOptional<EpaminondasConfig>): BoardValue {
         const state: EpaminondasState = node.gameState;
         const dominance: number = this.getDominance(state);
         const defense: number = this.getDefense(state);
@@ -23,7 +24,7 @@ export class EpaminondasAttackHeuristic extends EpaminondasHeuristic {
         const center: number = this.getCenter(state);
         const winning: number = this.getOffense(state);
         const mobility: number = this.getMobility(state);
-        return new BoardValue(dominance + defense + territory + center + winning + mobility);
+        return BoardValue.of(dominance + defense + territory + center + winning + mobility);
     }
 
     public getDominance(state: EpaminondasState): number {
@@ -35,10 +36,13 @@ export class EpaminondasAttackHeuristic extends EpaminondasHeuristic {
         }
         return score * this.DOMINANCE_FACTOR;
     }
+
     public getDefense(state: EpaminondasState): number {
         let score: number = 0;
-        for (let x: number = 0; x < EpaminondasState.WIDTH; x++) {
-            if (state.getPieceAtXY(x, EpaminondasState.HEIGHT - 1) === Player.ZERO) {
+        const width: number = state.getWidth();
+        const height: number = state.getHeight();
+        for (let x: number = 0; x < width; x++) {
+            if (state.getPieceAtXY(x, height - 1) === Player.ZERO) {
                 score += Player.ZERO.getScoreModifier();
             }
             if (state.getPieceAtXY(x, 0) === Player.ONE) {
@@ -47,6 +51,7 @@ export class EpaminondasAttackHeuristic extends EpaminondasHeuristic {
         }
         return score * this.DEFENSE_FACTOR;
     }
+
     public getTerritory(state: EpaminondasState): number {
         let score: number = 0;
         for (const coordAndContent of state.getCoordsAndContents()) {
@@ -55,7 +60,7 @@ export class EpaminondasAttackHeuristic extends EpaminondasHeuristic {
                 for (let dx: number = -1; dx <= 1; dx++) {
                     for (let dy: number = -1; dy <= 1; dy++) {
                         const coord: Coord = coordAndContent.coord.getNext(new Coord(dx, dy), 1);
-                        if (EpaminondasState.isOnBoard(coord)) {
+                        if (state.isOnBoard(coord)) {
                             const neighbor: PlayerOrNone = state.getPieceAt(coord);
                             if (neighbor === owner) {
                                 score += 1 * owner.getScoreModifier();
@@ -70,21 +75,26 @@ export class EpaminondasAttackHeuristic extends EpaminondasHeuristic {
         }
         return score * this.TERRITORY_FACTOR;
     }
+
     public getOffense(state: EpaminondasState): number {
         let score: number = 0;
-        for (let x: number = 0; x < EpaminondasState.WIDTH; x++) {
+        const width: number = state.getWidth();
+        const height: number = state.getHeight();
+        for (let x: number = 0; x < width; x++) {
             if (state.getPieceAtXY(x, 0) === Player.ZERO) {
                 score += Player.ZERO.getScoreModifier();
             }
-            if (state.getPieceAtXY(x, EpaminondasState.HEIGHT - 1) === Player.ONE) {
+            if (state.getPieceAtXY(x, height - 1) === Player.ONE) {
                 score += Player.ONE.getScoreModifier();
             }
         }
         return score * this.OFFENSE_FACTOR;
     }
+
     public getCenter(state: EpaminondasState): number {
         let score: number = 0;
-        const cx: number = (EpaminondasState.WIDTH - 1) / 2;
+        const width: number = state.getWidth();
+        const cx: number = (width - 1) / 2;
         for (const coordAndContent of state.getCoordsAndContents()) {
             const owner: PlayerOrNone = coordAndContent.content;
             if (owner.isPlayer()) {
@@ -93,6 +103,7 @@ export class EpaminondasAttackHeuristic extends EpaminondasHeuristic {
         }
         return score * this.CENTER_FACTOR;
     }
+
     public getMobility(state: EpaminondasState): number {
         let score: number = 0;
         let biggestZero: number = 0;
@@ -104,14 +115,14 @@ export class EpaminondasAttackHeuristic extends EpaminondasHeuristic {
                 for (const direction of Direction.DIRECTIONS) {
                     let movedPieces: number = 1;
                     let nextCoord: Coord = firstCoord.getNext(direction, 1);
-                    while (EpaminondasState.isOnBoard(nextCoord) &&
+                    while (state.isOnBoard(nextCoord) &&
                            state.getPieceAt(nextCoord) === owner)
                     {
                         movedPieces += 1;
                         nextCoord = nextCoord.getNext(direction, 1);
                     }
                     let stepSize: number = 1;
-                    while (EpaminondasState.isOnBoard(nextCoord) &&
+                    while (state.isOnBoard(nextCoord) &&
                            stepSize <= movedPieces &&
                            state.getPieceAt(nextCoord) === PlayerOrNone.NONE)
                     {

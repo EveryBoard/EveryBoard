@@ -10,14 +10,14 @@ import { CoerceoFailure } from 'src/app/games/coerceo/CoerceoFailure';
 import { Player } from 'src/app/jscaip/Player';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
-import { CoerceoTutorial } from './CoerceoTutorial';
-import { MCTS } from 'src/app/jscaip/MCTS';
+import { MCTS } from 'src/app/jscaip/AI/MCTS';
 import { CoerceoCapturesAndFreedomHeuristic } from './CoerceoCapturesAndFreedomHeuristic';
-import { Minimax } from 'src/app/jscaip/Minimax';
+import { Minimax } from 'src/app/jscaip/AI/Minimax';
 import { CoerceoMoveGenerator } from './CoerceoMoveGenerator';
 import { CoerceoPiecesThreatsTilesHeuristic } from './CoerceoPiecesThreatsTilesHeuristic';
 import { CoerceoOrderedMoveGenerator } from './CoerceoOrderedMoveGenerator';
 import { ViewBox } from 'src/app/components/game-components/GameComponentUtils';
+import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 
 @Component({
     selector: 'app-coerceo',
@@ -31,7 +31,7 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
 {
     private state: CoerceoState;
 
-    public tiles: { readonly 0: number; readonly 1: number; } = [0, 0];
+    public tiles: PlayerNumberMap = PlayerNumberMap.of(0, 0);
 
     public NONE: FourStatePiece = FourStatePiece.UNREACHABLE;
     public INDICATOR_SIZE: number = 10;
@@ -44,20 +44,24 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
 
     public constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
-        this.scores = MGPOptional.of([0, 0]);
-        this.rules = CoerceoRules.get();
-        this.node = this.rules.getInitialNode();
+        this.setRulesAndNode('Coerceo');
         this.availableAIs = [
             new Minimax($localize`Pieces > Threats > Tiles`,
                         this.rules,
                         new CoerceoPiecesThreatsTilesHeuristic(),
                         new CoerceoOrderedMoveGenerator()),
-            new Minimax($localize`Captures > Freedom`, this.rules, new CoerceoCapturesAndFreedomHeuristic(), new CoerceoMoveGenerator()),
-            new MCTS($localize`MCTS`, new CoerceoMoveGenerator(), this.rules),
+            new Minimax($localize`Captures > Freedom`,
+                        this.rules,
+                        new CoerceoCapturesAndFreedomHeuristic(),
+                        new CoerceoMoveGenerator()),
+            new MCTS($localize`MCTS`,
+                     new CoerceoMoveGenerator(),
+                     this.rules),
         ];
         this.encoder = CoerceoMove.encoder;
-        this.tutorial = new CoerceoTutorial().tutorial;
+        this.scores = MGPOptional.of(PlayerNumberMap.of(0, 0));
     }
+
     public async updateBoard(_triggerAnimation: boolean): Promise<void> {
         this.chosenCoord = MGPOptional.empty();
         this.state = this.getState();
@@ -65,22 +69,28 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
         this.tiles = this.state.tiles;
         this.board = this.getState().board;
     }
+
     private showHighlight(): void {
         this.possibleLandings = this.state.getLegalLandings(this.chosenCoord.get());
     }
+
     public override cancelMoveAttempt(): void {
         this.chosenCoord = MGPOptional.empty();
         this.possibleLandings = [];
     }
+
     public override async showLastMove(move: CoerceoMove): Promise<void> {
         if (move instanceof CoerceoRegularMove) {
             this.lastStart = MGPOptional.of(move.getStart());
             this.lastEnd = MGPOptional.of(move.getEnd());
-        } else {
-            this.lastStart = MGPOptional.empty();
-            this.lastEnd = MGPOptional.empty();
         }
     }
+
+    public override hideLastMove(): void {
+        this.lastStart = MGPOptional.empty();
+        this.lastEnd = MGPOptional.empty();
+    }
+
     public async onClick(x: number, y: number): Promise<MGPValidation> {
         const clickValidity: MGPValidation = await this.canUserPlay('#click_' + x + '_' + y);
         if (clickValidity.isFailure()) {
@@ -100,6 +110,7 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
             return this.secondClick(coord);
         }
     }
+
     private async firstClick(coord: Coord): Promise<MGPValidation> {
         const clickedPiece: FourStatePiece = this.state.getPieceAt(coord);
         if (clickedPiece.is(this.state.getCurrentOpponent())) {
@@ -113,6 +124,7 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
             return this.cancelMove(CoerceoFailure.FIRST_CLICK_SHOULD_NOT_BE_NULL());
         }
     }
+
     private async secondClick(coord: Coord): Promise<MGPValidation> {
         if (this.possibleLandings.some((c: Coord) => c.equals(coord))) {
             const move: CoerceoMove = CoerceoRegularMove.of(this.chosenCoord.get(), coord);
@@ -121,10 +133,12 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
             return this.cancelMove(CoerceoFailure.INVALID_DISTANCE());
         }
     }
+
     public isPyramid(x: number, y: number): boolean {
         const spaceContent: FourStatePiece = this.board[y][x];
         return spaceContent.isPlayer() || this.wasOpponent(x, y);
     }
+
     private wasOpponent(x: number, y: number): boolean {
         const parent: MGPOptional<CoerceoNode> = this.node.parent;
         if (parent.isPresent()) {
@@ -134,16 +148,16 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
             return false;
         }
     }
+
     public getPyramidClass(x: number, y: number): string {
         const spaceContent: FourStatePiece = this.board[y][x];
-        if (spaceContent === FourStatePiece.ZERO) {
-            return this.getPlayerClass(Player.ZERO);
-        } else if (spaceContent === FourStatePiece.ONE) {
-            return this.getPlayerClass(Player.ONE);
+        if (spaceContent.isPlayer()) {
+            return this.getPlayerClass(spaceContent.getPlayer());
         } else {
             return 'captured-fill';
         }
     }
+
     public mustDraw(x: number, y: number): boolean {
         const spaceContent: FourStatePiece = this.board[y][x];
         if (spaceContent === FourStatePiece.UNREACHABLE) {
@@ -154,6 +168,7 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
             return true;
         }
     }
+
     private wasRemoved(x: number, y: number): boolean {
         const spaceContent: FourStatePiece = this.board[y][x];
         const parent: MGPOptional<CoerceoNode> = this.node.parent;
@@ -165,6 +180,7 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
             return false;
         }
     }
+
     public getSpaceClass(x: number, y: number): string {
         if (this.wasRemoved(x, y)) {
             return 'captured-alternate-fill';
@@ -176,6 +192,7 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
             }
         }
     }
+
     public getTilesCountCoordinate(): string {
         const bx: number = -40; const by: number = -40;
         const corner0x: number = bx + 25; const corner0y: number = by;
@@ -192,41 +209,47 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
                     corner5x + ', ' + corner5y + ', ' +
                     corner0x + ', ' + corner0y;
     }
+
     public mustShowTilesOf(player: Player): boolean {
-        if (this.tiles[player.value] > 0) {
+        if (this.tiles.get(player) > 0) {
             return true;
         } else {
             return this.lastTurnWasTilesExchange(player);
         }
     }
+
     public lastTurnWasTilesExchange(player: Player): boolean {
         if (this.node.parent.isAbsent()) {
             return false;
         }
-        const previousTiles: number = this.getPreviousState().tiles[player.value];
-        return previousTiles > this.tiles[player.value];
+        const previousTiles: number = this.getPreviousState().tiles.get(player);
+        return previousTiles > this.tiles.get(player);
     }
+
     public getIndicatorY(coord: Coord): number {
         const y: number = this.INDICATOR_SIZE / 2;
+        const center: number = this.SPACE_SIZE / 2;
         if ((coord.x + coord.y) % 2 === 0) {
-            return y;
+            return y + center;
         } else {
-            return y - 30;
+            return y + center - 30;
         }
     }
-    public getTriangleInHexTranslate(x: number, y: number): string {
-        const translate: Coord = this.getTriangleTranslateCoord(x, y);
-        const translateX: number = translate.x + 2 * Math.floor(x / 3) * this.STROKE_WIDTH;
-        let translateY: number = translate.y;
+
+    public getTriangleInHexTranslation(x: number, y: number): string {
+        const translation: Coord = this.getTriangleTranslationCoord(x, y);
+        const translationX: number = translation.x + 2 * Math.floor(x / 3) * this.STROKE_WIDTH;
+        let translationY: number = translation.y;
         if (Math.floor(x / 3) % 2 === 0) {
-            translateY += 2 * Math.floor(y / 2) * this.STROKE_WIDTH;
+            translationY += 2 * Math.floor(y / 2) * this.STROKE_WIDTH;
         } else {
-            translateY += 2 * Math.abs(Math.floor((y - 1) / 2)) * this.STROKE_WIDTH;
-            translateY += this.STROKE_WIDTH;
+            translationY += 2 * Math.abs(Math.floor((y - 1) / 2)) * this.STROKE_WIDTH;
+            translationY += this.STROKE_WIDTH;
         }
-        return 'translate(' + translateX + ', ' + translateY + ')';
+        return 'translate(' + translationX + ', ' + translationY + ')';
     }
-    public getTilesCountTranslate(player: Player): string {
+
+    public getTilesCountTranslation(player: Player): string {
         let x: number;
         let y: number;
         if (player === Player.ZERO) {
@@ -242,11 +265,12 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
     }
 
     public getViewBox(): ViewBox {
-        const left: number = - this.SPACE_SIZE / 2;
-        const up: number = - this.SPACE_SIZE / 2;
+        const left: number = 0;
+        const up: number = 0;
         const width: number = this.SPACE_SIZE * 8.5 + this.STROKE_WIDTH * 2;
         const height: number = this.SPACE_SIZE * 10.5 + this.STROKE_WIDTH * 2;
         const halfStroke: number = this.STROKE_WIDTH / 2;
         return new ViewBox(left, up, width, height).expand(halfStroke, halfStroke, halfStroke, halfStroke);
     }
+
 }

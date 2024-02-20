@@ -5,17 +5,19 @@ import { ConspirateursMove, ConspirateursMoveDrop, ConspirateursMoveJump, Conspi
 import { ConspirateursNode, ConspirateursRules } from './ConspirateursRules';
 import { ConspirateursState } from './ConspirateursState';
 import { MGPSet } from '@everyboard/lib';
-import { MoveGenerator } from 'src/app/jscaip/AI';
+import { MoveGenerator } from 'src/app/jscaip/AI/AI';
+import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 export class ConspirateursMoveGenerator extends MoveGenerator<ConspirateursMove, ConspirateursState> {
 
-    public getListMoves(node: ConspirateursNode): ConspirateursMove[] {
+    public override getListMoves(node: ConspirateursNode, _config: NoConfig): ConspirateursMove[] {
         if (node.gameState.turn < 40) {
             return this.getListMovesDrop(node.gameState);
         } else {
             return this.getListMovesAfterDrop(node.gameState);
         }
     }
+
     private getListMovesDrop(state: ConspirateursState): ConspirateursMoveDrop[] {
         const moves: ConspirateursMoveDrop[] = [];
         const start: Coord = ConspirateursState.CENTRAL_ZONE_TOP_LEFT;
@@ -29,20 +31,19 @@ export class ConspirateursMoveGenerator extends MoveGenerator<ConspirateursMove,
         }
         return moves;
     }
+
     private getListMovesAfterDrop(state: ConspirateursState): ConspirateursMove[] {
         let moves: ConspirateursMove[] = [];
         const currentPlayer: Player = state.getCurrentPlayer();
-        for (let y: number = 0; y < ConspirateursState.HEIGHT; y++) {
-            for (let x: number = 0; x < ConspirateursState.WIDTH; x++) {
-                const coord: Coord = new Coord(x, y);
-                if (state.getPieceAt(coord) === currentPlayer) {
-                    moves = moves.concat(this.getListSimpleMoves(state, coord));
-                    moves = moves.concat(this.getListJumps(state, coord));
-                }
+        for (const coordAndContent of state.getCoordsAndContents()) {
+            if (coordAndContent.content === currentPlayer) {
+                moves = moves.concat(this.getListSimpleMoves(state, coordAndContent.coord));
+                moves = moves.concat(this.getListJumps(state, coordAndContent.coord));
             }
         }
         return moves;
     }
+
     private getListSimpleMoves(state: ConspirateursState, coord: Coord): ConspirateursMoveSimple[] {
         const moves: ConspirateursMoveSimple[] = [];
         const targets: Coord[] = [
@@ -54,7 +55,7 @@ export class ConspirateursMoveGenerator extends MoveGenerator<ConspirateursMove,
             new Coord(coord.x + 1, coord.y - 1),
             new Coord(coord.x - 1, coord.y + 1),
             new Coord(coord.x - 1, coord.y - 1),
-        ].filter((coord: Coord) => ConspirateursState.isOnBoard(coord));
+        ].filter((coord: Coord) => state.isOnBoard(coord));
         for (const target of targets) {
             const move: MGPFallible<ConspirateursMoveSimple> = ConspirateursMoveSimple.from(coord, target);
             if (move.isSuccess() && ConspirateursRules.get().simpleMoveLegality(move.get(), state).isSuccess()) {
@@ -63,9 +64,10 @@ export class ConspirateursMoveGenerator extends MoveGenerator<ConspirateursMove,
         }
         return moves;
     }
+
     private getListJumps(state: ConspirateursState, start: Coord): ConspirateursMoveJump[] {
         const moves: MGPSet<ConspirateursMoveJump> = new MGPSet();
-        for (const firstTarget of ConspirateursRules.get().jumpTargetsFrom(start)) {
+        for (const firstTarget of ConspirateursRules.get().jumpTargetsFrom(state, start)) {
             const jump: ConspirateursMoveJump = ConspirateursMoveJump.from([start, firstTarget]).get();
             if (ConspirateursRules.get().jumpLegality(jump, state).isSuccess()) {
                 moves.add(jump);
@@ -74,6 +76,7 @@ export class ConspirateursMoveGenerator extends MoveGenerator<ConspirateursMove,
         }
         return moves.toList();
     }
+
     private getListJumpStartingFrom(state: ConspirateursState, jump: ConspirateursMoveJump)
     : MGPSet<ConspirateursMoveJump>
     {
@@ -84,4 +87,5 @@ export class ConspirateursMoveGenerator extends MoveGenerator<ConspirateursMove,
         }
         return jumps;
     }
+
 }

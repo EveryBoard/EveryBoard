@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { faBackwardStep, faFlag, faRepeat, IconDefinition } from '@fortawesome/free-solid-svg-icons';
+import { MinimalUser } from 'src/app/domain/MinimalUser';
 import { GameEventReply, GameEventRequest, RequestType } from 'src/app/domain/Part';
-import { Player } from 'src/app/jscaip/Player';
+import { ConnectedUserService } from 'src/app/services/ConnectedUserService';
 import { Localized } from 'src/app/utils/LocaleUtils';
 import { MGPOptional } from '@everyboard/lib';
 import { MGPSet } from '@everyboard/lib';
@@ -52,6 +53,9 @@ export class OGWCRequestManagerService {
     private lastDeniedRequest: MGPOptional<RequestType> = MGPOptional.empty();
     private forbiddenRequests: MGPSet<RequestType> = new MGPSet();
 
+    public constructor(private readonly connectedUserService: ConnectedUserService) {
+    }
+
     public onGameStart(): void {
         // Upon game start, clear out requests
         this.requestAwaitingReply = MGPOptional.empty();
@@ -71,7 +75,7 @@ export class OGWCRequestManagerService {
      * Called when a reply is received.
      * @returns true if the request has been accepted and must be handled by the OGWC
      */
-    public async onReceivedReply(reply: GameEventReply, currentPlayer: Player): Promise<boolean> {
+    public async onReceivedReply(reply: GameEventReply): Promise<boolean> {
         this.requestAwaitingReply = MGPOptional.empty();
         switch (reply.reply) {
             case 'Accept':
@@ -79,7 +83,8 @@ export class OGWCRequestManagerService {
                 return true;
             case 'Reject':
                 // When one of our requests is rejected, we cannot make this request until the next turn
-                if (reply.player === currentPlayer.getOpponent().value) {
+                const user: MinimalUser = this.connectedUserService.user.get().toMinimalUser();
+                if (reply.user.id !== user.id) {
                     // Opponent denied our request
                     this.lastDeniedRequest = MGPOptional.of(reply.requestType);
                     this.forbiddenRequests.add(reply.requestType);
@@ -94,11 +99,9 @@ export class OGWCRequestManagerService {
         if (this.forbiddenRequests.contains(request)) return false;
         return true;
     }
-    public getRequestAwaitingReplyFrom(player: Player): MGPOptional<RequestType> {
+    public getUnrespondedRequestFrom(user: MinimalUser): MGPOptional<RequestType> {
         // Different from canMakeRequest, as we can play if our requests have not been answered for example.
-        if (this.requestAwaitingReply.isPresent() &&
-            this.requestAwaitingReply.get().player === player.getOpponent().value)
-        {
+        if (this.requestAwaitingReply.isPresent() && this.requestAwaitingReply.get().user.id === user.id) {
             return MGPOptional.of(this.requestAwaitingReply.get().requestType);
         } else {
             return MGPOptional.empty();

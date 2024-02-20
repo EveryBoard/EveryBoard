@@ -8,14 +8,15 @@ import { Utils } from '@everyboard/lib';
 export class ConnectSixFirstMove extends MoveCoord {
 
     public static of(coord: Coord): ConnectSixFirstMove {
-        Utils.assert(ConnectSixState.isOnBoard(coord), 'FIRST_COORD_IS_OUT_OF_RANGE');
         return new ConnectSixFirstMove(coord.x, coord.y);
     }
+
     public static encoder: Encoder<ConnectSixFirstMove> = MoveCoord.getEncoder(ConnectSixFirstMove.of);
 
     private constructor(x: number, y: number) {
         super(x, y);
     }
+
     public toString(): string {
         return 'ConnectSixFirstMove(' + this.coord.x + ', ' + this.coord.y + ')';
     }
@@ -25,8 +26,6 @@ export class ConnectSixDrops extends MoveWithTwoCoords {
     public static encoder: Encoder<ConnectSixDrops> = MoveWithTwoCoords.getEncoder(ConnectSixDrops.of);
 
     public static of(first: Coord, second: Coord): ConnectSixDrops {
-        Utils.assert(ConnectSixState.isOnBoard(first), 'FIRST_COORD_IS_OUT_OF_RANGE');
-        Utils.assert(ConnectSixState.isOnBoard(second), 'SECOND_COORD_IS_OUT_OF_RANGE');
         Utils.assert(first.equals(second) === false, 'COORDS_SHOULD_BE_DIFFERENT');
         return new ConnectSixDrops(first, second);
     }

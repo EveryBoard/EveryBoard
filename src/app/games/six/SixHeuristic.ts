@@ -7,8 +7,9 @@ import { SixMove } from './SixMove';
 import { SCORE } from 'src/app/jscaip/SCORE';
 import { Utils } from '@everyboard/lib';
 import { SixVictorySource, SixNode } from './SixRules';
-import { BoardValue } from 'src/app/jscaip/BoardValue';
-import { AlignmentHeuristic, BoardInfo } from 'src/app/jscaip/AlignmentHeuristic';
+import { BoardValue } from 'src/app/jscaip/AI/BoardValue';
+import { AlignmentHeuristic, BoardInfo } from 'src/app/jscaip/AI/AlignmentHeuristic';
+import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 export class SixHeuristic extends AlignmentHeuristic<SixMove, SixState, SixVictorySource> {
 
@@ -16,7 +17,7 @@ export class SixHeuristic extends AlignmentHeuristic<SixMove, SixState, SixVicto
 
     public currentVictorySource: SixVictorySource;
 
-    public getBoardValue(node: SixNode): BoardValue {
+    public getBoardValue(node: SixNode, _config: NoConfig): BoardValue {
         const move: MGPOptional<SixMove> = node.previousMove;
         const state: SixState = node.gameState;
         const LAST_PLAYER: Player = state.getCurrentOpponent();
@@ -31,29 +32,32 @@ export class SixHeuristic extends AlignmentHeuristic<SixMove, SixState, SixVicto
             shapeInfo = this.calculateBoardValue(move.get(), state);
         }
         if (shapeInfo.status === SCORE.VICTORY) {
-            return new BoardValue(victoryValue);
+            return BoardValue.of(victoryValue);
         }
         if (state.turn > 39) {
-            const pieces: number[] = state.countPieces();
+            const pieces: [number, number] = state.countPieces();
             const zeroPieces: number = pieces[0];
             const onePieces: number = pieces[1];
-            return new BoardValue(zeroPieces - onePieces);
+            return BoardValue.ofSingle(zeroPieces, onePieces);
         }
         if (shapeInfo.status === SCORE.PRE_VICTORY) {
-            return new BoardValue(LAST_PLAYER.getPreVictory());
+            return BoardValue.of(LAST_PLAYER.getPreVictory());
         }
-        return new BoardValue(shapeInfo.sum * LAST_PLAYER.getScoreModifier());
+        return BoardValue.of(shapeInfo.sum * LAST_PLAYER.getScoreModifier());
     }
+
     public startSearchingVictorySources(): void {
         this.currentVictorySource = {
             typeSource: 'LINE',
             index: -1,
         };
     }
+
     public hasNextVictorySource(): boolean {
         return this.currentVictorySource.typeSource !== 'CIRCLE' ||
             this.currentVictorySource.index !== 5;
     }
+
     public getNextVictorySource(): SixVictorySource {
         const source: SixVictorySource = this.currentVictorySource;
         if (source.index === 5) {
@@ -85,6 +89,7 @@ export class SixHeuristic extends AlignmentHeuristic<SixMove, SixState, SixVicto
         }
         return this.currentVictorySource;
     }
+
     public searchVictoryOnly(victorySource: SixVictorySource, move: SixMove, state: SixState): BoardInfo {
         const lastDrop: Coord = move.landing;
         switch (victorySource.typeSource) {
@@ -98,6 +103,7 @@ export class SixHeuristic extends AlignmentHeuristic<SixMove, SixState, SixVicto
                 return this.searchVictoryOnlyForTriangleEdge(victorySource.index, lastDrop, state);
         }
     }
+
     public searchVictoryOnlyForCircle(index: number, lastDrop: Coord, state: SixState): BoardInfo {
         const LAST_PLAYER: Player = state.getCurrentOpponent();
         const initialDirection: HexaDirection = HexaDirection.factory.all[index];
@@ -125,6 +131,7 @@ export class SixHeuristic extends AlignmentHeuristic<SixMove, SixState, SixVicto
             sum: 0,
         };
     }
+
     public searchVictoryOnlyForLine(index: number, lastDrop: Coord, state: SixState): BoardInfo {
         const LAST_PLAYER: Player = state.getCurrentOpponent();
         let dir: HexaDirection = HexaDirection.factory.all[index];
@@ -158,6 +165,7 @@ export class SixHeuristic extends AlignmentHeuristic<SixMove, SixState, SixVicto
             sum: 0,
         };
     }
+
     public searchVictoryOnlyForTriangleCorner(index: number, lastDrop: Coord, state: SixState): BoardInfo {
         const LAST_PLAYER: Player = state.getCurrentOpponent();
         let edgeDirection: HexaDirection = HexaDirection.factory.all[index];
@@ -189,6 +197,7 @@ export class SixHeuristic extends AlignmentHeuristic<SixMove, SixState, SixVicto
             sum: 0,
         };
     }
+
     public searchVictoryOnlyForTriangleEdge(index: number, lastDrop: Coord, state: SixState): BoardInfo {
         const LAST_PLAYER: Player = state.getCurrentOpponent();
         let edgeDirection: HexaDirection = HexaDirection.factory.all[index];
@@ -220,6 +229,7 @@ export class SixHeuristic extends AlignmentHeuristic<SixMove, SixState, SixVicto
             sum: 0,
         };
     }
+
     public getBoardInfo(victorySource: SixVictorySource,
                         move: SixMove,
                         state: SixState,
@@ -238,6 +248,7 @@ export class SixHeuristic extends AlignmentHeuristic<SixMove, SixState, SixVicto
                 return this.getBoardInfoForTriangleEdge(victorySource.index, lastDrop, state, boardInfo);
         }
     }
+
     public getBoardInfoForCircle(index: number, lastDrop: Coord, state: SixState, boardInfo: BoardInfo): BoardInfo {
         const LAST_OPPONENT: Player = state.getCurrentPlayer();
         const initialDirection: HexaDirection = HexaDirection.factory.all[index];
@@ -263,6 +274,7 @@ export class SixHeuristic extends AlignmentHeuristic<SixMove, SixState, SixVicto
         }
         return this.getBoardInfoResult(subSum, lastEmpty, testedCoords, boardInfo);
     }
+
     public getBoardInfoResult(subSum: number,
                               lastEmpty: MGPOptional<Coord>,
                               testedCoords: Coord[],
@@ -297,6 +309,7 @@ export class SixHeuristic extends AlignmentHeuristic<SixMove, SixState, SixVicto
             sum: boardInfo.sum + subSum,
         };
     }
+
     public getBoardInfoForLine(index: number, lastDrop: Coord, state: SixState, boardInfo: BoardInfo): BoardInfo {
         const dir: HexaDirection = HexaDirection.factory.all[index];
         let testedCoord: Coord = lastDrop.getPrevious(dir, 5);
@@ -346,6 +359,7 @@ export class SixHeuristic extends AlignmentHeuristic<SixMove, SixState, SixVicto
         };
         return this.getBoardInfoResult(finalSubSum, lastEmpty, testedCoords, newBoardInfo);
     }
+
     private updateEncounterAndReturnLastEmpty(state: SixState,
                                               testedCoord: Coord,
                                               encountered: number[]): MGPOptional<Coord> {
@@ -363,6 +377,7 @@ export class SixHeuristic extends AlignmentHeuristic<SixMove, SixState, SixVicto
                 return MGPOptional.empty();
         }
     }
+
     public getBoardInfoForTriangleCorner(index: number,
                                          lastDrop: Coord,
                                          state: SixState,
@@ -397,6 +412,7 @@ export class SixHeuristic extends AlignmentHeuristic<SixMove, SixState, SixVicto
         }
         return this.getBoardInfoResult(subSum, lastEmpty, testedCoords, boardInfo);
     }
+
     public getBoardInfoForTriangleEdge(index: number,
                                        lastDrop: Coord,
                                        state: SixState,
@@ -430,4 +446,5 @@ export class SixHeuristic extends AlignmentHeuristic<SixMove, SixState, SixVicto
         }
         return this.getBoardInfoResult(subSum, lastEmpty, testedCoords, boardInfo);
     }
+
 }

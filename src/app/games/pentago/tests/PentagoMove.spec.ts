@@ -11,6 +11,7 @@ describe('PentagoMove', () => {
         }
         TestUtils.expectToThrowAndLog(rotatingNonExistingBlock, 'This block does not exist: -1');
     });
+
     it('should throw when space not in range', () => {
         function usingOutOfRangeCoord(): void {
             PentagoMove.rotationless(-1, 6);
@@ -18,6 +19,7 @@ describe('PentagoMove', () => {
         TestUtils.expectToThrowAndLog(usingOutOfRangeCoord,
                                       'The board is a 6 space wide square, invalid coord: (-1, 6)');
     });
+
     it('should print nicely', () => {
         let expectedString: string = 'PentagoMove(4, 2)';
         let move: PentagoMove = PentagoMove.rotationless(4, 2);
@@ -31,6 +33,7 @@ describe('PentagoMove', () => {
         move = PentagoMove.withRotation(4, 2, 1, false);
         expect(move.toString()).toEqual(expectedString);
     });
+
     it('should implements equals correctly', () => {
         const move: PentagoMove = PentagoMove.withRotation(0, 0, 0, false);
         const firstDiff: PentagoMove = PentagoMove.withRotation(1, 1, 0, false);
@@ -42,6 +45,7 @@ describe('PentagoMove', () => {
         expect(move.equals(thirdDiff)).toBeFalse();
         expect(move.equals(noDiff)).toBeTrue();
     });
+
     it('should translate move correctly', () => {
         const moves: PentagoMove[] = [
             PentagoMove.rotationless(2, 3),
@@ -53,4 +57,5 @@ describe('PentagoMove', () => {
             EncoderTestUtils.expectToBeBijective(PentagoMove.encoder, move);
         }
     });
+
 });

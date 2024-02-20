@@ -1,14 +1,17 @@
 /* eslint-disable max-lines-per-function */
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
-import { HeuristicUtils } from 'src/app/jscaip/tests/HeuristicUtils.spec';
+import { HeuristicUtils } from 'src/app/jscaip/AI/tests/HeuristicUtils.spec';
 import { SaharaState } from '../SaharaState';
 import { MGPOptional } from '@everyboard/lib';
 import { Player } from 'src/app/jscaip/Player';
 import { SaharaHeuristic } from '../SaharaHeuristic';
+import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { SaharaRules } from '../SaharaRules';
 
-describe('SaharaTeuristic', () => {
+describe('SaharaHeuristic', () => {
 
     let heuristic: SaharaHeuristic;
+    const defaultConfig: NoConfig = SaharaRules.get().getDefaultRulesConfig();
 
     const N: FourStatePiece = FourStatePiece.UNREACHABLE;
     const O: FourStatePiece = FourStatePiece.ZERO;
@@ -18,6 +21,7 @@ describe('SaharaTeuristic', () => {
     beforeEach(() => {
         heuristic = new SaharaHeuristic();
     });
+
     it('should prefer having more freedoms', () => {
         const weakBoard: FourStatePiece[][] = [
             [N, N, O, X, _, _, _, O, X, N, N],
@@ -40,6 +44,8 @@ describe('SaharaTeuristic', () => {
         HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(heuristic,
                                                                weakState, MGPOptional.empty(),
                                                                strongState, MGPOptional.empty(),
-                                                               Player.ONE);
+                                                               Player.ONE,
+                                                               defaultConfig);
     });
+
 });

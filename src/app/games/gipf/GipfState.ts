@@ -20,15 +20,15 @@ export class GipfState extends HexagonalGameState<FourStatePiece> {
         if (this.sidePieces[1] !== other.sidePieces[1]) return false;
         if (this.capturedPieces[0] !== other.capturedPieces[0]) return false;
         if (this.capturedPieces[1] !== other.capturedPieces[1]) return false;
-        return TableUtils.compare(this.board, other.board);
+        return TableUtils.equals(this.board, other.board);
     }
 
     public getNumberOfPiecesToPlace(player: Player): number {
-        return this.sidePieces[player.value];
+        return this.sidePieces[player.getValue()];
     }
 
     public getNumberOfPiecesCaptured(player: Player): number {
-        return this.capturedPieces[player.value];
+        return this.capturedPieces[player.getValue()];
     }
 
     public setAtUnsafe(coord: Coord, v: FourStatePiece): this {

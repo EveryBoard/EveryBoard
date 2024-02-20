@@ -1,9 +1,10 @@
-import { HeuristicUtils } from 'src/app/jscaip/tests/HeuristicUtils.spec';
+import { HeuristicUtils } from 'src/app/jscaip/AI/tests/HeuristicUtils.spec';
 import { NewGameHeuristic } from '../NewGameHeuristic';
 import { NewGameState } from '../NewGameState';
 import { MGPOptional } from '@everyboard/lib';
 import { Player } from 'src/app/jscaip/Player';
 import { NewGameRules } from '../NewGameRules';
+import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 /**
  * These are the tests for the heuristic.
@@ -14,10 +15,12 @@ import { NewGameRules } from '../NewGameRules';
 describe('NewGameHeuristic', () => {
 
     let heuristic: NewGameHeuristic;
+    const defaultConfig: NoConfig = NewGameRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         heuristic = new NewGameHeuristic();
     });
+
     it('should have some board value', () => {
         /**
          * To test board values, most of the time you want to rely on
@@ -29,6 +32,8 @@ describe('NewGameHeuristic', () => {
         HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(heuristic,
                                                                weakState, MGPOptional.empty(),
                                                                strongState, MGPOptional.empty(),
-                                                               Player.ONE);
+                                                               Player.ONE,
+                                                               defaultConfig);
     });
+
 });

@@ -1,74 +1,72 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { Orthogonal } from 'src/app/jscaip/Direction';
-import { BoardValue } from 'src/app/jscaip/BoardValue';
+import { BoardValue } from 'src/app/jscaip/AI/BoardValue';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { MGPMap, MGPSet, Utils } from '@everyboard/lib';
+import { MGPMap, MGPOptional, MGPSet, Utils } from '@everyboard/lib';
 import { SandwichThreat } from '../../jscaip/PieceThreat';
 import { TaflPawn } from './TaflPawn';
-import { TaflNode, TaflRules } from './TaflRules';
+import { TaflNode } from './TaflRules';
 import { TaflState } from './TaflState';
 import { TaflMove } from './TaflMove';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { TaflPieceHeuristic } from './TaflPieceHeuristic';
 import { CoordSet } from 'src/app/jscaip/CoordSet';
+import { TaflConfig } from './TaflConfig';
+
+export type PointValue = {
+    width: number;
+    maxInfluence: number;
+    scoreByThreatenedPiece: number;
+    scoreBySafePiece: number;
+}
 
 export class TaflPieceAndInfluenceHeuristic<M extends TaflMove> extends TaflPieceHeuristic<M> {
 
-    protected width: number;
-
-    private maxInfluence: number;
-
-    private scoreByThreatenedPiece: number;
-
-    private scoreBySafePiece: number;
-
-    public constructor(rules: TaflRules<M>) {
-        super(rules);
-        this.width = this.rules.config.WIDTH;
-        this.maxInfluence = 16 * ((this.width * 2) - 2);
-        this.scoreByThreatenedPiece = (16 * this.maxInfluence) + 1;
-        this.scoreBySafePiece = (16 * this.scoreByThreatenedPiece) + 1;
-    }
-    public override getBoardValue(node: TaflNode<M>): BoardValue {
-        const gameStatus: GameStatus = this.rules.getGameStatus(node);
+    public override getBoardValue(node: TaflNode<M>, config: MGPOptional<TaflConfig>): BoardValue {
+        const gameStatus: GameStatus = this.rules.getGameStatus(node, config);
         if (gameStatus.isEndGame) {
             return gameStatus.toBoardValue();
         }
         const state: TaflState = node.gameState;
         const empty: TaflPawn = TaflPawn.UNOCCUPIED;
 
-        let score: number = 0;
         const pieceMap: MGPMap<Player, MGPSet<Coord>> = this.getPiecesMap(state);
-        const threatMap: MGPMap<Coord, MGPSet<SandwichThreat>> = this.getThreatMap(state, pieceMap);
+        const threatMap: MGPMap<Coord, MGPSet<SandwichThreat>> = this.getThreatMap(node, pieceMap);
         const filteredThreatMap: MGPMap<Coord, MGPSet<SandwichThreat>> = this.filterThreatMap(threatMap, state);
+        let threatenedPiece: number = 0;
+        let safePiece: number = 0;
+        let totalInfluence: number = 0;
         for (const owner of Player.PLAYERS) {
             for (const coord of pieceMap.get(owner).get()) {
                 if (filteredThreatMap.get(coord).isPresent()) {
-                    score += owner.getScoreModifier() * this.scoreByThreatenedPiece;
+                    threatenedPiece += owner.getScoreModifier();
                 } else {
-                    score += owner.getScoreModifier() * this.scoreBySafePiece;
+                    safePiece += owner.getScoreModifier();
                     let influence: number = 0;
                     for (const dir of Orthogonal.ORTHOGONALS) {
                         let testedCoord: Coord = coord.getNext(dir, 1);
-                        while (testedCoord.isInRange(this.width, this.width) &&
-                               state.getPieceAt(testedCoord) === empty)
-                        {
+                        while (state.isOnBoard(testedCoord) && state.getPieceAt(testedCoord) === empty) {
                             influence++;
                             testedCoord = testedCoord.getNext(dir, 1);
                         }
                     }
-                    score += influence * owner.getScoreModifier();
+                    totalInfluence += influence * owner.getScoreModifier();
                 }
             }
         }
-        return new BoardValue(score);
+        return BoardValue.multiMetric([
+            safePiece,
+            threatenedPiece,
+            totalInfluence,
+        ]);
     }
+
     public getPiecesMap(state: TaflState): MGPMap<Player, MGPSet<Coord>> {
         const empty: TaflPawn = TaflPawn.UNOCCUPIED;
         const zeroPieces: Coord[] = [];
         const onePieces: Coord[] = [];
-        for (let y: number = 0; y < this.width; y++) {
-            for (let x: number = 0; x < this.width; x++) {
+        for (let y: number = 0; y < state.getHeight(); y++) {
+            for (let x: number = 0; x < state.getWidth(); x++) {
                 const coord: Coord = new Coord(x, y);
                 const piece: TaflPawn = state.getPieceAt(coord);
                 if (piece !== empty) {
@@ -87,20 +85,22 @@ export class TaflPieceAndInfluenceHeuristic<M extends TaflMove> extends TaflPiec
         ]);
         return map;
     }
-    public getThreatMap(state: TaflState, pieces: MGPMap<Player, MGPSet<Coord>>)
+
+    public getThreatMap(node: TaflNode<M>, pieces: MGPMap<Player, MGPSet<Coord>>)
     : MGPMap<Coord, MGPSet<SandwichThreat>>
     {
         const threatMap: MGPMap<Coord, MGPSet<SandwichThreat>> = new MGPMap();
         for (const player of Player.PLAYERS) {
             for (const piece of pieces.get(player).get()) {
-                const threats: SandwichThreat[] = this.getThreats(piece, state);
-                if (this.isThreatReal(piece, state, threats)) {
+                const threats: SandwichThreat[] = this.getThreats(piece, node.gameState);
+                if (this.isThreatReal(piece, node.gameState, threats)) {
                     threatMap.set(piece, new MGPSet(threats));
                 }
             }
         }
         return threatMap;
     }
+
     private getThreats(coord: Coord, state: TaflState): SandwichThreat[] {
         const owner: PlayerOrNone = state.getAbsoluteOwner(coord);
         Utils.assert(owner.isPlayer(), 'TaflPieceAndInfluenceMinimax.getThreats should be called with an occupied coordinate');
@@ -115,12 +115,12 @@ export class TaflPieceAndInfluenceHeuristic<M extends TaflMove> extends TaflPiec
                         continue;
                     }
                     let futureCapturer: Coord = coord.getNext(dir, 1);
-                    while (futureCapturer.isInRange(this.width, this.width) &&
-                        state.getPieceAt(futureCapturer) === TaflPawn.UNOCCUPIED)
+                    while (state.isOnBoard(futureCapturer) &&
+                           state.getPieceAt(futureCapturer) === TaflPawn.UNOCCUPIED)
                     {
                         futureCapturer = futureCapturer.getNext(captureDirection);
                     }
-                    if (futureCapturer.isInRange(this.width, this.width) &&
+                    if (state.isOnBoard(futureCapturer) &&
                         state.getAbsoluteOwner(futureCapturer) === threatenerPlayer &&
                         coord.getNext(dir, 1).equals(futureCapturer) === false)
                     {
@@ -132,8 +132,9 @@ export class TaflPieceAndInfluenceHeuristic<M extends TaflMove> extends TaflPiec
         }
         return threats;
     }
+
     protected isAThreat(coord: Coord, state: TaflState, opponent: Player): boolean {
-        if (coord.isNotInRange(this.width, this.width)) {
+        if (state.isOnBoard(coord) === false) {
             return false;
         }
         if (state.getAbsoluteOwner(coord) === opponent) {
@@ -148,6 +149,7 @@ export class TaflPieceAndInfluenceHeuristic<M extends TaflMove> extends TaflPiec
         }
         return false;
     }
+
     protected isThreatReal(coord: Coord, state: TaflState, threats: SandwichThreat[]): boolean {
         if (threats.length === 0) {
             return false;
@@ -163,6 +165,7 @@ export class TaflPieceAndInfluenceHeuristic<M extends TaflMove> extends TaflPiec
             return false;
         }
     }
+
     public filterThreatMap(threatMap: MGPMap<Coord, MGPSet<SandwichThreat>>, state: TaflState)
     : MGPMap<Coord, MGPSet<SandwichThreat>>
     {
@@ -202,4 +205,5 @@ export class TaflPieceAndInfluenceHeuristic<M extends TaflMove> extends TaflPiec
         }
         return filteredThreatMap;
     }
+
 }

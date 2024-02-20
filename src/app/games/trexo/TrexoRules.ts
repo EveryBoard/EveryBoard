@@ -1,16 +1,16 @@
-import { BoardValue } from 'src/app/jscaip/BoardValue';
+import { BoardValue } from 'src/app/jscaip/AI/BoardValue';
 import { Coord } from 'src/app/jscaip/Coord';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
-import { GameNode } from 'src/app/jscaip/GameNode';
+import { GameNode } from 'src/app/jscaip/AI/GameNode';
 import { NInARowHelper } from 'src/app/jscaip/NInARowHelper';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { Rules } from 'src/app/jscaip/Rules';
-import { MGPOptional } from '@everyboard/lib';
-import { MGPValidation } from '@everyboard/lib';
+import { MGPOptional, MGPValidation } from '@everyboard/lib';
 import { TrexoFailure } from './TrexoFailure';
 import { TrexoMove } from './TrexoMove';
 import { TrexoPieceStack, TrexoState } from './TrexoState';
 import { TableUtils } from 'src/app/jscaip/TableUtils';
+import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 export class TrexoNode extends GameNode<TrexoMove, TrexoState> {}
 
@@ -28,44 +28,12 @@ export class TrexoRules extends Rules<TrexoMove, TrexoState> {
         return piece.getOwner();
     }
     public static readonly TREXO_HELPER: NInARowHelper<TrexoPieceStack> =
-        new NInARowHelper(TrexoState.isOnBoard, TrexoRules.getOwner, 5);
+        new NInARowHelper(TrexoRules.getOwner, 5);
 
-    public getInitialState(): TrexoState {
-        const board: TrexoPieceStack[][] = TableUtils.create(TrexoState.SIZE, TrexoState.SIZE, TrexoPieceStack.EMPTY);
-        return new TrexoState(board, 0);
-    }
-
-    public applyLegalMove(move: TrexoMove, state: TrexoState, _info: void): TrexoState {
-        return state
-            .drop(move.getZero(), Player.ZERO)
-            .drop(move.getOne(), Player.ONE)
-            .incrementTurn();
-    }
-    public isLegal(move: TrexoMove, state: TrexoState): MGPValidation {
-        if (this.isUnevenGround(move, state)) {
-            return MGPValidation.failure(TrexoFailure.CANNOT_DROP_PIECE_ON_UNEVEN_GROUNDS());
-        }
-        if (this.landsOnOnlyOnePiece(move, state)) {
-            return MGPValidation.failure(TrexoFailure.CANNOT_DROP_ON_ONLY_ONE_PIECE());
-        }
-        return MGPValidation.SUCCESS;
-    }
-    public isUnevenGround(move: TrexoMove, state: TrexoState): boolean {
-        const zero: TrexoPieceStack = state.getPieceAt(move.getZero());
-        const one: TrexoPieceStack = state.getPieceAt(move.getOne());
-        return zero.getHeight() !== one.getHeight();
-    }
-    public landsOnOnlyOnePiece(move: TrexoMove, state: TrexoState): boolean {
-        const zeroSpace: TrexoPieceStack = state.getPieceAt(move.getZero());
-        const oneSpace: TrexoPieceStack = state.getPieceAt(move.getOne());
-        if (zeroSpace.getUpperTileId() === -1 && oneSpace.getUpperTileId() === -1) {
-            return false;
-        }
-        return zeroSpace.getUpperTileId() === oneSpace.getUpperTileId();
-    }
     public static getSquareScore(state: TrexoState, coord: Coord): number {
         return TrexoRules.TREXO_HELPER.getSquareScore(state, coord);
     }
+
     public static getVictoriousCoords(state: TrexoState): Coord[] {
         const victoryOfLastPlayer: Coord[] = [];
         const victoryOfNextPlayer: Coord[] = [];
@@ -92,6 +60,44 @@ export class TrexoRules extends Rules<TrexoMove, TrexoState> {
             return victoryOfLastPlayer;
         }
     }
+
+    public override getInitialState(): TrexoState {
+        const board: TrexoPieceStack[][] = TableUtils.create(TrexoState.SIZE, TrexoState.SIZE, TrexoPieceStack.EMPTY);
+        return new TrexoState(board, 0);
+    }
+
+    public override applyLegalMove(move: TrexoMove, state: TrexoState, _config: NoConfig, _info: void): TrexoState {
+        return state
+            .drop(move.getZero(), Player.ZERO)
+            .drop(move.getOne(), Player.ONE)
+            .incrementTurn();
+    }
+
+    public override isLegal(move: TrexoMove, state: TrexoState): MGPValidation {
+        if (this.isUnevenGround(move, state)) {
+            return MGPValidation.failure(TrexoFailure.CANNOT_DROP_PIECE_ON_UNEVEN_GROUNDS());
+        }
+        if (this.landsOnOnlyOnePiece(move, state)) {
+            return MGPValidation.failure(TrexoFailure.CANNOT_DROP_ON_ONLY_ONE_PIECE());
+        }
+        return MGPValidation.SUCCESS;
+    }
+
+    public isUnevenGround(move: TrexoMove, state: TrexoState): boolean {
+        const zero: TrexoPieceStack = state.getPieceAt(move.getZero());
+        const one: TrexoPieceStack = state.getPieceAt(move.getOne());
+        return zero.getHeight() !== one.getHeight();
+    }
+
+    public landsOnOnlyOnePiece(move: TrexoMove, state: TrexoState): boolean {
+        const zeroSpace: TrexoPieceStack = state.getPieceAt(move.getZero());
+        const oneSpace: TrexoPieceStack = state.getPieceAt(move.getOne());
+        if (zeroSpace.getUpperTileId() === -1 && oneSpace.getUpperTileId() === -1) {
+            return false;
+        }
+        return zeroSpace.getUpperTileId() === oneSpace.getUpperTileId();
+    }
+
     public getGameStatus(node: TrexoNode): GameStatus {
         const state: TrexoState = node.gameState;
         const lastPlayer: Player = state.getCurrentOpponent();
@@ -119,6 +125,7 @@ export class TrexoRules extends Rules<TrexoMove, TrexoState> {
         }
         return GameStatus.ONGOING;
     }
+
     public getLegalMoves(state: TrexoState): TrexoMove[] {
         const moves: TrexoMove[] = [];
         for (const keyValue of state.toMap()) {
@@ -134,6 +141,7 @@ export class TrexoRules extends Rules<TrexoMove, TrexoState> {
         }
         return moves;
     }
+
     public getPossiblesMoves(state: TrexoState, first: Coord, second: Coord): TrexoMove[] {
         const firstStack: TrexoPieceStack = state.getPieceAt(first);
         const secondStack: TrexoPieceStack = state.getPieceAt(second);
@@ -153,4 +161,5 @@ export class TrexoRules extends Rules<TrexoMove, TrexoState> {
             ];
         }
     }
+
 }

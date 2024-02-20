@@ -113,5 +113,113 @@ describe('ArrayUtils', () => {
             expect(count).toBe(2);
         });
     });
+
+    describe('isGreaterThan && isLessThan', () => {
+
+        function expectComparisonCorrectness(left: number[], status: '<' | '=' | '>', right: number[]): void {
+            const actualIsGreaterThan: boolean = ArrayUtils.isGreaterThan(left, right);
+            const actualIsLessThan: boolean = ArrayUtils.isLessThan(left, right);
+            switch (status) {
+                case '<':
+                    expect(actualIsLessThan).toBeTrue();
+                    expect(actualIsGreaterThan).toBeFalse();
+                    break;
+                case '=':
+                    expect(actualIsLessThan).toBeFalse();
+                    expect(actualIsGreaterThan).toBeFalse();
+                    break;
+                default:
+                    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+                    Utils.assert(status === '>', 'should be >');
+                    expect(actualIsLessThan).toBeFalse();
+                    expect(actualIsGreaterThan).toBeTrue();
+                    break;
+
+            }
+        }
+
+        it('should discover superiority on short list', () => {
+            // Given a list being superior in the early number
+            const superior: number[] = [874797];
+            // and another list being inferior in the early number
+            const inferior: number[] = [Number.MIN_SAFE_INTEGER];
+
+            // When comparing them
+            // Then isGreaterThan should be true and isLessThan false
+            expectComparisonCorrectness(superior, '>', inferior);
+        });
+
+        it('should discover superiority', () => {
+            // Given a list being superior in the early number
+            const superior: number[] = [3, 2, 1];
+            // and another list being inferior in the early number
+            const inferior: number[] = [2, 2, 1];
+
+            // When comparing them
+            // Then isGreaterThan should be true and isLessThan false
+            expectComparisonCorrectness(superior, '>', inferior);
+        });
+
+        it('should discover inferiority', () => {
+            // Given a list being inferior in the early number
+            const inferior: number[] = [2, 2, 1];
+            // and another list being superior in the early number
+            const superior: number[] = [3, 2, 1];
+
+            // When comparing them
+            // Then isGreaterThan should be false and isLessThan true
+            expectComparisonCorrectness(inferior, '<', superior);
+        });
+
+        it('should discover inferiority on short list', () => {
+            // Given a list being inferior in the early number
+            const inferior: number[] = [9876156];
+            // and another list being superior in the early number
+            const superior: number[] = [Number.MAX_SAFE_INTEGER];
+
+            // When comparing them
+            // Then isGreaterThan should be false and isLessThan true
+            expectComparisonCorrectness(inferior, '<', superior);
+        });
+
+        it('should discover equality', () => {
+            // Given two equal lists
+            const left: number[] = [3, 2, 1];
+            const right: number[] = [3, 2, 1];
+
+            // When comparing them
+            // Then isGreaterThan should be false and isLessThan false
+            expectComparisonCorrectness(left, '=', right);
+        });
+
+        it('should discover equality on short list', () => {
+            // Given two equal lists
+            const left: number[] = [123456789];
+            const right: number[] = [123456789];
+
+            // When comparing them
+            // Then isGreaterThan should be false and isLessThan false
+            expectComparisonCorrectness(left, '=', right);
+        });
+
+        it('should throw with empty list (isGreaterThan)', () => {
+            // Given one empty list and one normal
+            // When comparing both list
+            const reason: string = 'ArrayUtils.isLessThan/isGreaterThan should have two non-empty list as parameter';
+            TestUtils.expectToThrowAndLog(() => {
+                ArrayUtils.isGreaterThan([], [1]);
+            }, reason);
+        });
+
+        it('should throw with empty list (isLessThan)', () => {
+            // Given one empty list and one normal
+            // When comparing both list
+            const reason: string = 'ArrayUtils.isLessThan/isGreaterThan should have two non-empty list as parameter';
+            TestUtils.expectToThrowAndLog(() => {
+                ArrayUtils.isLessThan([], [1]);
+            }, reason);
+        });
+
+    });
 });
 

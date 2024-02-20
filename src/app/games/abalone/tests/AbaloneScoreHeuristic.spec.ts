@@ -6,6 +6,8 @@ import { HeuristicUtils } from 'src/app/jscaip/tests/HeuristicUtils.spec';
 import { MGPOptional } from '@everyboard/lib';
 import { Player } from 'src/app/jscaip/Player';
 import { AbaloneScoreHeuristic } from '../AbaloneScoreHeuristic';
+import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { AbaloneRules } from '../AbaloneRules';
 
 const _: FourStatePiece = FourStatePiece.EMPTY;
 const N: FourStatePiece = FourStatePiece.UNREACHABLE;
@@ -15,10 +17,12 @@ const X: FourStatePiece = FourStatePiece.ONE;
 describe('AbaloneScoreHeuristic', () => {
 
     let heuristic: AbaloneScoreHeuristic;
+    const defaultConfig: NoConfig = AbaloneRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         heuristic = new AbaloneScoreHeuristic();
     });
+
     it('should assign a higher score when one has more pieces on board', () => {
         // Given two boards, one with more player piece than the other
         const boardWithLessPieces: Table<FourStatePiece> = [
@@ -50,6 +54,8 @@ describe('AbaloneScoreHeuristic', () => {
                                                                MGPOptional.empty(),
                                                                new AbaloneState(boardWithMorePieces, 0),
                                                                MGPOptional.empty(),
-                                                               Player.ZERO);
+                                                               Player.ZERO,
+                                                               defaultConfig);
     });
+
 });

@@ -3,11 +3,12 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { SixState } from '../SixState';
 import { SixMove } from '../SixMove';
-import { SixLegalityInformation, SixNode } from '../SixRules';
 import { Table } from 'src/app/jscaip/TableUtils';
-import { Minimax } from 'src/app/jscaip/Minimax';
-import { AIDepthLimitOptions } from 'src/app/jscaip/AI';
+import { SixLegalityInformation, SixNode, SixRules } from '../SixRules';
+import { Minimax } from 'src/app/jscaip/AI/Minimax';
+import { AIDepthLimitOptions } from 'src/app/jscaip/AI/AI';
 import { SixMinimax } from '../SixMinimax';
+import { EmptyRulesConfig, NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 const O: PlayerOrNone = Player.ZERO;
 const X: PlayerOrNone = Player.ONE;
@@ -15,12 +16,14 @@ const _: PlayerOrNone = PlayerOrNone.NONE;
 
 describe('SixMinimax', () => {
 
-    let minimax: Minimax<SixMove, SixState, SixLegalityInformation>;
+    let minimax: Minimax<SixMove, SixState, EmptyRulesConfig, SixLegalityInformation>;
     const minimaxOptions: AIDepthLimitOptions = { name: 'Level 1', maxDepth: 1 };
+    const defaultConfig: NoConfig = SixRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         minimax = new SixMinimax();
     });
+
     it('should not consider moving piece that are blocking an opponent victory', () => {
         // Given a board with only one non losing move
         const board: Table<PlayerOrNone> = [
@@ -35,7 +38,8 @@ describe('SixMinimax', () => {
         const node: SixNode = new SixNode(state);
 
         // When asking the minimax the best choice
-        const bestMove: SixMove = minimax.chooseNextMove(node, minimaxOptions);
+        const bestMove: SixMove = minimax.chooseNextMove(node, minimaxOptions, defaultConfig);
         expect(bestMove.start.get()).toEqual(new Coord(1, 0));
     });
+
 });

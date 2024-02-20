@@ -8,33 +8,36 @@ import { CoerceoMove, CoerceoStep } from './CoerceoMove';
 import { CoerceoState } from './CoerceoState';
 import { CoerceoNode } from './CoerceoRules';
 import { Vector } from 'src/app/jscaip/Vector';
-import { PlayerMetricHeuristic } from 'src/app/jscaip/Minimax';
 import { CoordSet } from 'src/app/jscaip/CoordSet';
+import { PlayerNumberTable } from 'src/app/jscaip/PlayerNumberTable';
+import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { PlayerMetricHeuristic } from 'src/app/jscaip/AI/Minimax';
 
 export class CoerceoPiecesThreatsTilesHeuristic extends PlayerMetricHeuristic<CoerceoMove, CoerceoState> {
 
-    public static readonly SCORE_BY_THREATENED_PIECE: number = 1000;
-
-    public static readonly SCORE_BY_SAFE_PIECE: number = 1000 * 1000;
-
-    public getMetrics(node: CoerceoNode): [number, number] {
+    public override getMetrics(node: CoerceoNode, _config: NoConfig): PlayerNumberTable {
         const state: CoerceoState = node.gameState;
         const pieceMap: MGPMap<Player, MGPSet<Coord>> = this.getPiecesMap(state);
         const threatMap: MGPMap<Coord, PieceThreat> = this.getThreatMap(state, pieceMap);
         const filteredThreatMap: MGPMap<Coord, PieceThreat> = this.filterThreatMap(threatMap, state);
-        const scores: [number, number] = [0, 0];
+        const safeIndex: number = 0;
+        const threatenedIndex: number = 1;
+        const tilesIndex: number = 2;
+        const metrics: PlayerNumberTable = PlayerNumberTable.of([0, 0, 0], [0, 0, 0]);
+
         for (const owner of Player.PLAYERS) {
             for (const coord of pieceMap.get(owner).get()) {
                 if (filteredThreatMap.get(coord).isPresent()) {
-                    scores[owner.value] += CoerceoPiecesThreatsTilesHeuristic.SCORE_BY_THREATENED_PIECE;
+                    metrics.add(owner, threatenedIndex, 1);
                 } else {
-                    scores[owner.value] += CoerceoPiecesThreatsTilesHeuristic.SCORE_BY_SAFE_PIECE;
+                    metrics.add(owner, safeIndex, 1);
                 }
             }
-            scores[owner.value] += state.tiles[owner.value];
+            metrics.add(owner, tilesIndex, state.tiles.get(owner));
         }
-        return scores;
+        return metrics;
     }
+
     public getPiecesMap(state: CoerceoState): MGPMap<Player, MGPSet<Coord>> {
         const map: MGPMap<Player, MGPSet<Coord>> = new MGPMap();
         const zeroPieces: Coord[] = [];
@@ -52,6 +55,7 @@ export class CoerceoPiecesThreatsTilesHeuristic extends PlayerMetricHeuristic<Co
         map.set(Player.ONE, new CoordSet(onePieces));
         return map;
     }
+
     public getThreatMap(state: CoerceoState,
                         pieces: MGPMap<Player, MGPSet<Coord>>)
     : MGPMap<Coord, PieceThreat>
@@ -67,8 +71,9 @@ export class CoerceoPiecesThreatsTilesHeuristic extends PlayerMetricHeuristic<Co
         }
         return threatMap;
     }
+
     public getThreat(coord: Coord, state: CoerceoState): MGPOptional<PieceThreat> {
-        const threatenerPlayer: Player = Player.of(state.getPieceAt(coord).value);
+        const threatenerPlayer: Player = state.getPieceAt(coord).getPlayer() as Player;
         const opponent: Player = threatenerPlayer.getOpponent();
         let uniqueFreedom: MGPOptional<Coord> = MGPOptional.empty();
         let emptiableNeighborTile: MGPOptional<Coord> = MGPOptional.empty();
@@ -114,6 +119,7 @@ export class CoerceoPiecesThreatsTilesHeuristic extends PlayerMetricHeuristic<Co
         }
         return MGPOptional.empty();
     }
+
     private tileCouldBeRemovedThisTurn(coord: Coord, state: CoerceoState, OPPONENT: Player): boolean {
         const player: Player = OPPONENT.getOpponent();
         const isTileRemovable: boolean = state.isDeconnectable(coord);
@@ -140,6 +146,7 @@ export class CoerceoPiecesThreatsTilesHeuristic extends PlayerMetricHeuristic<Co
         }
         return uniqueThreat.isPresent();
     }
+
     public pieceCouldLeaveTheTile(piece: Coord, state: CoerceoState): boolean {
         const startingTileUpperLeft: Coord = CoerceoState.getTilesUpperLeftCoord(piece);
         for (const dir of CoerceoStep.STEPS) {
@@ -154,6 +161,7 @@ export class CoerceoPiecesThreatsTilesHeuristic extends PlayerMetricHeuristic<Co
         }
         return false;
     }
+
     public filterThreatMap(threatMap: MGPMap<Coord, PieceThreat>,
                            state: CoerceoState)
     : MGPMap<Coord, PieceThreat>
@@ -194,4 +202,5 @@ export class CoerceoPiecesThreatsTilesHeuristic extends PlayerMetricHeuristic<Co
         }
         return filteredThreatMap;
     }
+
 }

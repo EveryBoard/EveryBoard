@@ -1,17 +1,30 @@
-import { TableUtils } from 'src/app/jscaip/TableUtils';
 import { MancalaState } from './MancalaState';
+import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
+import { MancalaRules } from './MancalaRules';
+import { MGPOptional } from '@everyboard/lib';
+import { MancalaConfig } from './MancalaConfig';
 
 describe('MancalaState', () => {
+
     it('should compare correctly', () => {
         // Given an initial state
-        const state: MancalaState = new MancalaState(TableUtils.create(MancalaState.WIDTH, 2, 4), 0, [0, 0]);
+        const config: MGPOptional<MancalaConfig> = MGPOptional.of({
+            feedOriginalHouse: true,
+            mustContinueDistributionAfterStore: true,
+            mustFeed: true,
+            passByPlayerStore: true,
+            continueLapUntilCaptureOrEmptyHouse: true,
+            seedsByHouse: 4,
+            width: 6,
+        });
+        const state: MancalaState = MancalaRules.getInitialState(config);
         // and state with different board
         const differentBoard: MancalaState = new MancalaState([
             [1, 2, 3, 4, 5, 6],
             [1, 2, 3, 4, 5, 6],
         ], state.turn, state.scores);
         // and a state with different scores
-        const differentScore: MancalaState = new MancalaState(state.board, state.turn, [28, 52]);
+        const differentScore: MancalaState = new MancalaState(state.board, state.turn, PlayerNumberMap.of(28, 52));
         // and a state with a different turn
         const differentTurn: MancalaState = new MancalaState(state.board, state.turn + 1, state.scores);
 
@@ -21,4 +34,5 @@ describe('MancalaState', () => {
         expect(state.equals(differentScore)).toBeFalse();
         expect(state.equals(differentTurn)).toBeFalse();
     });
+
 });

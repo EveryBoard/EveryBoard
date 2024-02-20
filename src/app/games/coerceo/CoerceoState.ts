@@ -8,6 +8,8 @@ import { CoerceoRegularMove, CoerceoStep } from './CoerceoMove';
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
 import { Player } from 'src/app/jscaip/Player';
 import { Debug } from 'src/app/utils/Debug';
+import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
+import { PlayerNumberTable } from 'src/app/jscaip/PlayerNumberTable';
 
 @Debug.log
 export class CoerceoState extends TriangularGameState<FourStatePiece> {
@@ -49,10 +51,12 @@ export class CoerceoState extends TriangularGameState<FourStatePiece> {
 
     public constructor(board: Table<FourStatePiece>,
                        turn: number,
-                       public readonly tiles: readonly [number, number],
-                       public readonly captures: readonly [number, number])
+                       public readonly tiles: PlayerNumberMap,
+                       public readonly captures: PlayerNumberMap)
     {
         super(board, turn);
+        tiles.makeImmutable();
+        captures.makeImmutable();
     }
 
     public applyLegalMovement(move: CoerceoRegularMove): CoerceoState {
@@ -96,9 +100,9 @@ export class CoerceoState extends TriangularGameState<FourStatePiece> {
 
     public capture(coord: Coord): CoerceoState {
         const newBoard: FourStatePiece[][] = this.getCopiedBoard();
-        const newCaptures: [number, number] = [this.captures[0], this.captures[1]];
+        const newCaptures: PlayerNumberMap = this.captures.getCopy();
         newBoard[coord.y][coord.x] = FourStatePiece.EMPTY;
-        newCaptures[this.getCurrentPlayer().value] += 1;
+        newCaptures.add(this.getCurrentPlayer(), 1);
         return new CoerceoState(newBoard, this.turn, this.tiles, newCaptures);
     }
 
@@ -140,7 +144,7 @@ export class CoerceoState extends TriangularGameState<FourStatePiece> {
     }
 
     public isDeconnectable(tile: Coord): boolean {
-        const neighborsIndex: number[] = this.getPresentNeighborTilesRelativeIndexes(tile);
+        const neighborsIndex: number[] = this.getPresentNeighborTilesRelativeIndices(tile);
         if (neighborsIndex.length > 3) {
             return false;
         }
@@ -161,8 +165,8 @@ export class CoerceoState extends TriangularGameState<FourStatePiece> {
                (smallTileIndex === 0 && bigTileIndex === 5);
     }
 
-    public getPresentNeighborTilesRelativeIndexes(tile: Coord): number[] {
-        const neighborsIndexes: number[] = [];
+    public getPresentNeighborTilesRelativeIndices(tile: Coord): number[] {
+        const neighborsIndices: number[] = [];
         let firstIndex: MGPOptional<number> = MGPOptional.empty();
         for (let i: number = 0; i < 6; i++) {
             const vector: Vector = CoerceoState.NEIGHBORS_TILES_DIRECTIONS[i];
@@ -173,10 +177,10 @@ export class CoerceoState extends TriangularGameState<FourStatePiece> {
                 if (firstIndex.isAbsent()) {
                     firstIndex = MGPOptional.of(i);
                 }
-                neighborsIndexes.push(i - firstIndex.get());
+                neighborsIndices.push(i - firstIndex.get());
             }
         }
-        return neighborsIndexes;
+        return neighborsIndices;
     }
 
     public deconnectTile(tileUpperLeft: Coord, countTiles: boolean): CoerceoState {
@@ -188,9 +192,9 @@ export class CoerceoState extends TriangularGameState<FourStatePiece> {
                 newBoard[y0 + y][x0 + x] = FourStatePiece.UNREACHABLE;
             }
         }
-        const newTiles: [number, number] = [this.tiles[0], this.tiles[1]];
+        const newTiles: PlayerNumberMap = this.tiles.getCopy();
         if (countTiles) {
-            newTiles[this.getCurrentPlayer().value] += 1;
+            newTiles.add(this.getCurrentPlayer(), 1);
         }
         return new CoerceoState(newBoard, this.turn, newTiles, this.captures);
     }
@@ -206,19 +210,19 @@ export class CoerceoState extends TriangularGameState<FourStatePiece> {
         return legalLandings;
     }
 
-    public getPiecesByFreedom(): number[][] {
-        const playersScores: number[][] = [
+    public getPiecesByFreedom(): PlayerNumberTable {
+        const playersScores: PlayerNumberTable = PlayerNumberTable.of(
             [0, 0, 0, 0],
             [0, 0, 0, 0],
-        ];
+        );
         for (let y: number = 0; y < 10; y++) {
             for (let x: number = 0; x < 15; x++) {
                 const piece: FourStatePiece = this.board[y][x];
                 if (piece.isPlayer()) {
+                    const player: Player = piece.getPlayer() as Player;
                     const nbFreedom: number =
                         this.getEmptyNeighbors(new Coord(x, y), FourStatePiece.EMPTY).length;
-                    const oldValue: number = playersScores[piece.value][nbFreedom];
-                    playersScores[piece.value][nbFreedom] = oldValue + 1;
+                    playersScores.add(player, nbFreedom, 1);
                 }
             }
         }

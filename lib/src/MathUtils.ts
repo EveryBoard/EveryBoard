@@ -10,4 +10,5 @@ export class MathUtils {
             return MathUtils.gcd(b, a % b);
         }
     }
+
 }

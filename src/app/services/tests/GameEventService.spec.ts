@@ -4,11 +4,11 @@ import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { serverTimestamp } from 'firebase/firestore';
 import { GameEventService } from '../GameEventService';
 import { PartDAO } from 'src/app/dao/PartDAO';
-import { Player } from 'src/app/jscaip/Player';
 import { GameEvent, Reply, RequestType, Action } from 'src/app/domain/Part';
 import { JSONValue } from '@everyboard/lib';
 import { PartDAOMock } from 'src/app/dao/tests/PartDAOMock.spec';
 import { IFirestoreDAO } from '../../dao/FirestoreDAO';
+import { UserMocks } from 'src/app/domain/UserMocks.spec';
 
 describe('GameEventService', () => {
 
@@ -40,12 +40,12 @@ describe('GameEventService', () => {
             spyOn(events, 'create').and.callThrough();
             // When adding a move to the part
             const move: JSONValue = { x: 0, y: 0 };
-            await gameEventService.addMove(partId, Player.ZERO, move);
+            await gameEventService.addMove(partId, UserMocks.CREATOR_MINIMAL_USER, move);
             // Then it is added to the DAO events subcollection
             const moveEvent: GameEvent = {
                 eventType: 'Move',
                 time: serverTimestamp(),
-                player: 0,
+                user: UserMocks.CREATOR_MINIMAL_USER,
                 move,
             };
             expect(events.create).toHaveBeenCalledOnceWith(moveEvent);
@@ -57,12 +57,12 @@ describe('GameEventService', () => {
             spyOn(events, 'create').and.callThrough();
             // When adding a move to the part
             const requestType: RequestType = 'TakeBack';
-            await gameEventService.addRequest(partId, Player.ZERO, requestType);
+            await gameEventService.addRequest(partId, UserMocks.CREATOR_MINIMAL_USER, requestType);
             // Then it is added to the DAO events subcollection
             const event: GameEvent = {
                 eventType: 'Request',
                 time: serverTimestamp(),
-                player: 0,
+                user: UserMocks.CREATOR_MINIMAL_USER,
                 requestType,
             };
             expect(events.create).toHaveBeenCalledOnceWith(event);
@@ -75,12 +75,12 @@ describe('GameEventService', () => {
             // When adding a move to the part
             const requestType: RequestType = 'TakeBack';
             const reply: Reply = 'Accept';
-            await gameEventService.addReply(partId, Player.ZERO, reply, requestType);
+            await gameEventService.addReply(partId, UserMocks.CREATOR_MINIMAL_USER, reply, requestType);
             // Then it is added to the DAO events subcollection
             const event: GameEvent = {
                 eventType: 'Reply',
                 time: serverTimestamp(),
-                player: 0,
+                user: UserMocks.CREATOR_MINIMAL_USER,
                 requestType,
                 reply,
                 data: null,
@@ -94,12 +94,12 @@ describe('GameEventService', () => {
             spyOn(events, 'create').and.callThrough();
             // When adding a move to the part
             const action: Action = 'StartGame';
-            await gameEventService.startGame(partId, Player.ZERO);
+            await gameEventService.startGame(partId, UserMocks.CREATOR_MINIMAL_USER);
             // Then it is added to the DAO events subcollection
             const event: GameEvent = {
                 eventType: 'Action',
                 time: serverTimestamp(),
-                player: 0,
+                user: UserMocks.CREATOR_MINIMAL_USER,
                 action,
             };
             expect(events.create).toHaveBeenCalledOnceWith(event);
@@ -111,12 +111,12 @@ describe('GameEventService', () => {
             spyOn(events, 'create').and.callThrough();
             // When adding a move to the part
             const action: Action = 'AddTurnTime';
-            await gameEventService.addAction(partId, Player.ZERO, action);
+            await gameEventService.addAction(partId, UserMocks.CREATOR_MINIMAL_USER, action);
             // Then it is added to the DAO events subcollection
             const event: GameEvent = {
                 eventType: 'Action',
                 time: serverTimestamp(),
-                player: 0,
+                user: UserMocks.CREATOR_MINIMAL_USER,
                 action,
             };
             expect(events.create).toHaveBeenCalledOnceWith(event);
@@ -130,7 +130,7 @@ describe('GameEventService', () => {
                 receivedEvents += events.length;
             });
             // When a new event is added
-            await gameEventService.addMove(partId, Player.ZERO, { x: 0, y: 0 });
+            await gameEventService.addMove(partId, UserMocks.CREATOR_MINIMAL_USER, { x: 0, y: 0 });
             // Then we receive it a single time
             // (firestore gives us two updates, one with a null time, which should be filtered by the service)
             tick(0);
@@ -138,8 +138,8 @@ describe('GameEventService', () => {
         }));
         it('should receive already present events when subscribing', fakeAsync(async() => {
             // Given a part service with events already in the part
-            await gameEventService.addMove(partId, Player.ZERO, { x: 0, y: 0 });
-            await gameEventService.addMove(partId, Player.ONE, { x: 0, y: 1 });
+            await gameEventService.addMove(partId, UserMocks.CREATOR_MINIMAL_USER, { x: 0, y: 0 });
+            await gameEventService.addMove(partId, UserMocks.OPPONENT_MINIMAL_USER, { x: 0, y: 1 });
             // When we subscribed to the part events
             let receivedEvents: number = 0;
             gameEventService.subscribeToEvents(partId, (events: GameEvent[]) => {

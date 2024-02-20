@@ -1,14 +1,15 @@
-import { MoveGenerator } from 'src/app/jscaip/AI';
+import { MoveGenerator } from 'src/app/jscaip/AI/AI';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Player } from 'src/app/jscaip/Player';
 import { DiamMove, DiamMoveDrop, DiamMoveShift } from './DiamMove';
 import { DiamPiece } from './DiamPiece';
 import { DiamNode, DiamRules } from './DiamRules';
 import { DiamState } from './DiamState';
+import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 export class DiamMoveGenerator extends MoveGenerator<DiamMove, DiamState> {
 
-    public getListMoves(node: DiamNode): DiamMove[] {
+    public override getListMoves(node: DiamNode, _config: NoConfig): DiamMove[] {
         const state: DiamState = node.gameState;
         const drops: DiamMove[] = this.getListDrops(state);
         const shifts: DiamMove[] = this.getListShifts(state);

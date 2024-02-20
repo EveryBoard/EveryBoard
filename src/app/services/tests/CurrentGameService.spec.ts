@@ -309,7 +309,7 @@ describe('CurrentGameService', () => {
             // When asking if you can create
             const validation: MGPValidation = currentGameService.canUserCreate();
 
-            // Then it's should be authorised
+            // Then it's should be authorized
             expect(validation.isSuccess()).toBeTrue();
         }));
         it('should refuse for a player already playing', fakeAsync(async() => {
@@ -373,7 +373,7 @@ describe('CurrentGameService', () => {
             // When asking if you can join that specific part again
             const validation: MGPValidation = currentGameService.canUserJoin(partToJoin, gameStarted);
 
-            // Then it's should be authorised
+            // Then it's should be authorized
             expect(validation.isSuccess())
                 .withContext('validation should be a success')
                 .toBeTrue();
@@ -403,7 +403,7 @@ describe('CurrentGameService', () => {
             // When asking if you can join that specific part again
             const validation: MGPValidation = currentGameService.canUserJoin('some-id', true);
 
-            // Then it's should be authorised
+            // Then it's should be authorized
             expect(validation.isSuccess()).toBeTrue();
         }));
         it('should allow user to join unstarted part when user do not observe any part', fakeAsync(async() => {
@@ -413,7 +413,7 @@ describe('CurrentGameService', () => {
             // When asking if you can join that specific part again
             const validation: MGPValidation = currentGameService.canUserJoin('some-id', false);
 
-            // Then it's should be authorised
+            // Then it's should be authorized
             expect(validation.isSuccess()).toBeTrue();
         }));
         it('should allow user to join twice the same part', fakeAsync(async() => {

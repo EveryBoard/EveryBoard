@@ -13,4 +13,5 @@ describe('ReversiMove', () => {
         MoveTestUtils.testFirstTurnMovesBijectivity(rules, moveGenerator, ReversiMove.encoder);
         EncoderTestUtils.expectToBeBijective(ReversiMove.encoder, ReversiMove.PASS);
     });
+
 });

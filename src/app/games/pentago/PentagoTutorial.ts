@@ -4,6 +4,7 @@ import { MGPValidation } from '@everyboard/lib';
 import { PentagoMove } from './PentagoMove';
 import { PentagoState } from './PentagoState';
 import { PentagoRules } from './PentagoRules';
+import { TutorialStepMessage } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
 
 const _: PlayerOrNone = PlayerOrNone.NONE;
 const O: PlayerOrNone = PlayerOrNone.ZERO;
@@ -31,10 +32,7 @@ export class PentagoTutorial {
         ).withPreviousMove(PentagoMove.withRotation(0, 0, 0, false)),
         TutorialStep.fromPredicate(
             $localize`Simple move`,
-            $localize`At their turn, players put a piece on the board and possibly rotate one quadrant.
-        As long as there are neutral quadrants, i.e., quadrants that would not change after being rotated, a player may skip rotating a quadrant.
-        To do this, you have to click on the crossed circle that appears at the center of the board when it is possible.<br/><br/>
-        You're playing dark, do a simple move.`,
+            $localize`At their turn, players put a piece on the board and possibly rotate one quadrant. As long as there are neutral quadrants, i.e., quadrants that would not change after being rotated, a player may skip rotating a quadrant. To do this, you have to click on the crossed circle that appears at the center of the board when it is possible.<br/><br/>You're playing Dark, do a simple move.`,
             new PentagoState([
                 [_, _, _, _, _, _],
                 [_, O, _, _, X, _],
@@ -51,7 +49,7 @@ export class PentagoTutorial {
                     return MGPValidation.SUCCESS;
                 }
             },
-            $localize`Congratulations!`,
+            TutorialStepMessage.CONGRATULATIONS(),
         ),
         TutorialStep.fromPredicate(
             $localize`Move with rotation`,

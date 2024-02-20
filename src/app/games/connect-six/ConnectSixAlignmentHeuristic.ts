@@ -1,12 +1,14 @@
-import { BoardValue } from 'src/app/jscaip/BoardValue';
-import { Heuristic } from 'src/app/jscaip/Minimax';
+import { BoardValue } from 'src/app/jscaip/AI/BoardValue';
+import { Heuristic } from 'src/app/jscaip/AI/Minimax';
 import { ConnectSixMove } from './ConnectSixMove';
 import { ConnectSixNode, ConnectSixRules } from './ConnectSixRules';
 import { ConnectSixState } from './ConnectSixState';
+import { MGPOptional } from '@everyboard/lib';
+import { GobanConfig } from 'src/app/jscaip/GobanConfig';
 
-export class ConnectSixAlignmentHeuristic extends Heuristic<ConnectSixMove, ConnectSixState> {
+export class ConnectSixAlignmentHeuristic extends Heuristic<ConnectSixMove, ConnectSixState, BoardValue, GobanConfig> {
 
-    public getBoardValue(node: ConnectSixNode): BoardValue {
+    public getBoardValue(node: ConnectSixNode, _config: MGPOptional<GobanConfig>): BoardValue {
         const state: ConnectSixState = node.gameState;
         let score: number = 0;
         for (const coordAndContent of state.getCoordsAndContents()) {
@@ -16,6 +18,7 @@ export class ConnectSixAlignmentHeuristic extends Heuristic<ConnectSixMove, Conn
                 score += squareScore;
             }
         }
-        return new BoardValue(score);
+        return BoardValue.of(score);
     }
+
 }

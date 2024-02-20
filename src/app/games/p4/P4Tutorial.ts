@@ -2,11 +2,14 @@ import { P4Move } from 'src/app/games/p4/P4Move';
 import { P4State } from 'src/app/games/p4/P4State';
 import { Tutorial, TutorialStep } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { PlayerOrNone } from 'src/app/jscaip/Player';
-import { P4Rules } from './P4Rules';
+import { P4Config, P4Rules } from './P4Rules';
+import { MGPOptional } from '@everyboard/lib';
 
 const _: PlayerOrNone = PlayerOrNone.NONE;
 const O: PlayerOrNone = PlayerOrNone.ZERO;
 const X: PlayerOrNone = PlayerOrNone.ONE;
+
+const defaultConfig: MGPOptional<P4Config> = P4Rules.get().getDefaultRulesConfig();
 
 export class P4Tutorial extends Tutorial {
 
@@ -16,13 +19,13 @@ export class P4Tutorial extends Tutorial {
             $localize`The board at Four in a Row is made of 7 columns and 6 rows, and it is initially empty.
         The first player plays Dark, the second plays Light.
         The goal is to be the first to align 4 of its pieces (horizontally, vertically, or diagonally).`,
-            P4Rules.get().getInitialState(),
+            P4Rules.get().getInitialState(defaultConfig),
         ),
         TutorialStep.anyMove(
             $localize`Dropping a piece`,
             $localize`Click on any space in any column.`,
-            P4Rules.get().getInitialState(),
-            P4Move.THREE,
+            P4Rules.get().getInitialState(defaultConfig),
+            P4Move.of(3),
             $localize`As you can see, the piece falls at the bottom of the column.`,
         ),
         TutorialStep.fromMove(

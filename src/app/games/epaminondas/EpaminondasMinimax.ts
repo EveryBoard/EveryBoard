@@ -1,16 +1,22 @@
-import { Minimax } from 'src/app/jscaip/Minimax';
+import { Minimax } from 'src/app/jscaip/AI/Minimax';
 import { EpaminondasMove } from './EpaminondasMove';
 import { EpaminondasState } from './EpaminondasState';
-import { EpaminondasLegalityInformation, EpaminondasRules } from './EpaminondasRules';
+import { EpaminondasConfig, EpaminondasLegalityInformation, EpaminondasRules } from './EpaminondasRules';
 import { EpaminondasPhalanxSizeAndFilterMoveGenerator } from './EpaminondasPhalanxSizeAndFilterMoveGenerator';
-import { EpaminondasHeuristic } from './EpaminondasHeuristic';
+import { EpaminondasPieceThenRowDominationThenAlignementThenRowPresenceHeuristic } from './EpaminondasPieceThenRowDominationThenAlignementThenRowPresenceHeuristic';
 
-export class EpaminondasMinimax extends Minimax<EpaminondasMove, EpaminondasState, EpaminondasLegalityInformation> {
+export class EpaminondasMinimax extends Minimax<EpaminondasMove,
+                                                EpaminondasState,
+                                                EpaminondasConfig,
+                                                EpaminondasLegalityInformation>
+{
 
     public constructor() {
-        super($localize`Minimax`,
+        super($localize`Piece > Row Domination > Alignement > Row Presence`,
               EpaminondasRules.get(),
-              new EpaminondasHeuristic(),
-              new EpaminondasPhalanxSizeAndFilterMoveGenerator());
+              new EpaminondasPieceThenRowDominationThenAlignementThenRowPresenceHeuristic(),
+              new EpaminondasPhalanxSizeAndFilterMoveGenerator(),
+        );
     }
+
 }

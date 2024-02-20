@@ -64,7 +64,7 @@
         <text *ngIf="countDown.isPresent()"
               id="countDownText"
               class="text-giant text-center"
-              [ngClass]="'player' + getCurrentPlayer().value"
+              [ngClass]="'player' + getCurrentPlayer().getValue()"
               [attr.x]="0.5 * SPACE_SIZE"
               [attr.y]="0.5 * SPACE_SIZE"
               [ngClass]="getClockCircleClasses()">{{ countDown.get() }}</text>
@@ -99,14 +99,14 @@
                    app-martian-chess-queen
                    (click)="chooseStyle(y)"
                    [attr.transform]="'translate(0, ' + (- (y + 1) * SPACE_SIZE) + ')'"
-                   [pieceClasses]="['player' + getCurrentPlayer().value + '-fill']"
+                   [pieceClasses]="['player' + getCurrentPlayer().getValue() + '-fill']"
                    [style]="proposedStyle.style"/>
             </ng-container>
         </g>
     </g>
     <g id="captures">
         <g *ngFor="let player of Player.PLAYERS">
-            <g id="capture_of_player_{{ player.value }}"
+            <g id="capture_of_player_{{ player.getValue() }}"
                [attr.transform]="getCapturesTransformation(player)">
                 <g *ngFor="let value of state.getCapturesOf(player); index as piece">
                     <g *ngIf="value > 0"
@@ -117,7 +117,7 @@
                               [attr.x]="SPACE_SIZE / 2"
                               [attr.y]="SPACE_SIZE / 2"
                         >{{ value + ' x ' }}</text>
-                        <g id="piece_{{ piece }}_player_{{ player.value }}"
+                        <g id="piece_{{ piece }}_player_{{ player.getValue() }}"
                            [attr.transform]="'translate(' + SPACE_SIZE + ', 0)'">
                             <g *ngIf="piece === 0"
                                app-martian-chess-pawn

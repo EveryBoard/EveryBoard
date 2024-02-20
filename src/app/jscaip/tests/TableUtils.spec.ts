@@ -1,29 +1,81 @@
-import { Coord } from '../Coord';
-import { NumberTable, TableUtils, TableWithPossibleNegativeIndices } from 'src/app/jscaip/TableUtils';
-import { ArrayUtils, MGPOptional } from '@everyboard/lib';
+/* eslint-disable max-lines-per-function */
+import { Coord } from 'src/app/jscaip/Coord';
+import { ArrayUtils, Table, TableUtils, TableWithPossibleNegativeIndices } from '../ArrayUtils';
 
-describe('@everyboard/lib', () => {
-    describe('compare', () => {
+describe('TableUtils', () => {
+
+    describe('equals', () => {
+
         it('should notice different table sizes', () => {
-            const shortBoard: NumberTable = [[1]];
-            const longBoard: NumberTable = [[1], [2]];
-            expect(TableUtils.compare(shortBoard, longBoard)).toBeFalse();
+            const shortBoard: Table<number> = [[1]];
+            const longBoard: Table<number> = [[1], [2]];
+            expect(TableUtils.equals(shortBoard, longBoard)).toBeFalse();
         });
+
         it('should delegate sub-list comparaison to ArrayUtils and return false if it does', () => {
-            spyOn(ArrayUtils, 'compare').and.returnValue(false);
-            const table: NumberTable = [[1], [2]];
-            expect(TableUtils.compare(table, table)).toBeFalse();
+            spyOn(ArrayUtils, 'equals').and.returnValue(false);
+            const table: Table<number> = [[1], [2]];
+            expect(TableUtils.equals(table, table)).toBeFalse();
         });
+
         it('should delegate sub-list comparaison to ArrayUtils and return true if ArrayUtils.compare always does', () => {
-            spyOn(ArrayUtils, 'compare').and.returnValue(true);
-            const table: NumberTable = [[1], [2]];
-            expect(TableUtils.compare(table, table)).toBeTrue();
+            spyOn(ArrayUtils, 'equals').and.returnValue(true);
+            const table: Table<number> = [[1], [2]];
+            expect(TableUtils.equals(table, table)).toBeTrue();
         });
+
     });
+
+    describe('sum', () => {
+
+        it('should add all element of a number table', () => {
+            // Given any list of number
+            const table: number[][] = [
+                [11, 12, 13, 14, 15],
+                [20, 19, 18, 17, 16],
+            ];
+
+            // When calling TableUtils.sum
+            const sum: number = TableUtils.sum(table);
+
+            // Then it should be correct
+            expect(sum).toBe(155);
+        });
+
+    });
+
+    describe('add', () => {
+
+        it('should add elements of same index of a number table', () => {
+            // Given two element
+            const left: Table<number> = [
+                [+1, +2, +3],
+                [+4, +2, +6],
+                [-1, -2, -3],
+            ];
+            const right: Table<number> = [
+                [+1, -2, +9],
+                [-2, +1, +1],
+                [-5, -1, +3],
+            ];
+
+            // When adding them
+            const sum: Table<number> = TableUtils.add(left, right);
+
+            // Then the result should be the sum of same-coorded-place
+            expect(sum).toEqual([
+                [2, 0, 12],
+                [2, 3, 7],
+                [-6, -3, 0],
+            ]);
+        });
+
+    });
+
 });
 
-
 describe('Table2DWithPossibleNegativeIndices', () => {
+
     it('should return empty when accessing a non existing element', () => {
         // Given a table
         const table: TableWithPossibleNegativeIndices<number> = new TableWithPossibleNegativeIndices();
@@ -32,6 +84,7 @@ describe('Table2DWithPossibleNegativeIndices', () => {
         // Then it should be empty
         expect(element.isAbsent()).toBeTrue();
     });
+
     it('should return the accessed element after it has been set', () => {
         // Given a table with a set element
         const table: TableWithPossibleNegativeIndices<number> = new TableWithPossibleNegativeIndices();
@@ -43,6 +96,7 @@ describe('Table2DWithPossibleNegativeIndices', () => {
         expect(element.isPresent()).toBeTrue();
         expect(element.get()).toBe(somePiece);
     });
+
     it('should iterate over elements in order', () => {
         // Given a table with multiple elements
         const table: TableWithPossibleNegativeIndices<number> = new TableWithPossibleNegativeIndices();
@@ -57,4 +111,5 @@ describe('Table2DWithPossibleNegativeIndices', () => {
         // Then it should have seen ys from low to high, and xs from low to high
         expect(seen).toEqual([1, 2, 3]);
     });
+
 });

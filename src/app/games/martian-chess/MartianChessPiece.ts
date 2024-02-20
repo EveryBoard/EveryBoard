@@ -1,6 +1,5 @@
 import { MGPOptional, Utils } from '@everyboard/lib';
 
-
 export class MartianChessPiece {
 
     public static EMPTY: MartianChessPiece = new MartianChessPiece(0);

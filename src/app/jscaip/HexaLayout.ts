@@ -7,29 +7,34 @@ export class HexaLayout {
                        public readonly origin: Coord,
                        public readonly orientation: HexaOrientation) {
     }
+
     public getCenterAt(coord: Coord): Coord {
         const M: [number, number, number, number] = this.orientation.conversionMatrix;
         const x: number = this.size * (M[0] * coord.x + M[1] * coord.y);
         const y: number = this.size * (M[2] * coord.x + M[3] * coord.y);
         return new Coord(x + this.origin.x, y + this.origin.y);
     }
+
     private getCornerOffset(corner: number): Coord {
         const angle: number = 2 * Math.PI * (this.orientation.startAngle + corner) / 6;
         return new Coord(this.size * Math.cos(angle), this.size * Math.sin(angle));
     }
-    public getHexaPointsListAt(coord: Coord): Coord[] {
-        const center: Coord = this.getCenterAt(coord);
+
+    // Points of this function have (0, 0) as the center of the hexagon
+    public getHexaPointsList(): Coord[] {
         const corners: Coord[] = [];
         for (let i: number = 0; i < 6; i += 1) {
             const offset: Coord = this.getCornerOffset(i);
-            corners.push(new Coord(center.x + offset.x, center.y + offset.y));
+            corners.push(new Coord(offset.x, offset.y));
         }
         return corners;
     }
-    public getHexaPointsAt(coord: Coord): string {
-        const points: string[] = this.getHexaPointsListAt(coord).map((c: Coord) => c.toSVGPoint());
+
+    public getHexaPoints(): string {
+        const points: string[] = this.getHexaPointsList().map((c: Coord) => c.toSVGPoint());
         return points.join(' ');
     }
+
     /**
      * Returns the points to draw polygons to render an hexagon in an isometric view.
      * The first polygon is the one on the bottom left.

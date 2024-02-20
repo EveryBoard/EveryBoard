@@ -24,6 +24,6 @@ export class DiaballikPiece implements ComparableObject {
 export class DiaballikState extends GameStateWithTable<DiaballikPiece> {
 
     public equals(other: DiaballikState): boolean {
-        return TableUtils.compare(this.board, other.board);
+        return TableUtils.equals(this.board, other.board);
     }
 }

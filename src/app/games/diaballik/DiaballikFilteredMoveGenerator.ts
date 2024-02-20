@@ -2,6 +2,7 @@ import { Utils } from '@everyboard/lib';
 import { DiaballikMove } from './DiaballikMove';
 import { DiaballikMoveGenerator, DiaballikMoveInConstruction } from './DiaballikMoveGenerator';
 import { DiaballikNode } from './DiaballikRules';
+import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 export class DiaballikFilteredMoveGenerator extends DiaballikMoveGenerator {
 
@@ -15,7 +16,7 @@ export class DiaballikFilteredMoveGenerator extends DiaballikMoveGenerator {
     /**
      * Implemented similarly as DiaballikMoveGenerator, but only generates moves containing exactly 3 sub moves.
      */
-    public override getListMoves(node: DiaballikNode): DiaballikMove[] {
+    public override getListMoves(node: DiaballikNode, _config: NoConfig): DiaballikMove[] {
         const emptyMove: DiaballikMoveInConstruction =
             new DiaballikMoveInConstruction([], node.gameState, node.gameState);
         let movesInConstruction: DiaballikMoveInConstruction[] = [emptyMove];

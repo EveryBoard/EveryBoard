@@ -5,7 +5,7 @@ import { MGPValidation } from '@everyboard/lib';
 import { MartianChessMove } from './MartianChessMove';
 import { MartianChessState } from './MartianChessState';
 import { MartianChessPiece } from './MartianChessPiece';
-import { TutorialStepFailure } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStepFailure';
+import { TutorialStepMessage } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
 import { MartianChessRules } from './MartianChessRules';
 
 const _: MartianChessPiece = MartianChessPiece.EMPTY;
@@ -38,7 +38,7 @@ export class MartianChessTutorial extends Tutorial {
                     return MGPValidation.failure($localize`This is not a pawn!`);
                 }
             },
-            $localize`Congratulations!`,
+            TutorialStepMessage.CONGRATULATIONS(),
         ),
         TutorialStep.fromPredicate(
             $localize`Moving drones`,
@@ -52,11 +52,11 @@ export class MartianChessTutorial extends Tutorial {
                     return MGPValidation.failure($localize`This is not a drone!`);
                 }
             },
-            $localize`Congratulations!`,
+            TutorialStepMessage.CONGRATULATIONS(),
         ),
         TutorialStep.fromPredicate(
             $localize`Moving queens`,
-            $localize`Queens are worth three points. They can move any number of steps in any direction, in a straight line, without jumping over other pieces.<br/><br/>You're playing Dark, move a queen.`,
+            $localize`Queens are worth three points. They can move any number of steps in any direction, in a straight line, without jumping over other pieces.<br/><br/>You're playing Light, move a queen.`,
             new MartianChessState([
                 [B, A, _, _],
                 [C, _, _, _],
@@ -75,11 +75,11 @@ export class MartianChessTutorial extends Tutorial {
                     return MGPValidation.failure($localize`This is not a queen!`);
                 }
             },
-            $localize`Congratulations!`,
+            TutorialStepMessage.CONGRATULATIONS(),
         ),
         TutorialStep.fromMove(
-            $localize`Capture`,
-            $localize`When a piece crosses the canal and lands on another piece, you capture it and gain the value of that captured piece. However, you lose control of your piece as it crosses the canal!<br/><br/>A capture is possible for Dark, do it.`,
+            $localize`Captures`,
+            $localize`When a piece crosses the canal and lands on another piece, you capture it and gain the value of that captured piece. However, you lose control of your piece as it crosses the canal!<br/><br/>A capture is possible for Light, do it.`,
             new MartianChessState([
                 [B, A, A, _],
                 [_, _, _, _],
@@ -92,11 +92,11 @@ export class MartianChessTutorial extends Tutorial {
             ], 1),
             [MartianChessMove.from(new Coord(0, 2), new Coord(2, 4)).get()],
             $localize`Congratulations! By capturing that pawn, you won one point.`,
-            TutorialStepFailure.YOU_DID_NOT_CAPTURE_ANY_PIECE(),
+            TutorialStepMessage.YOU_DID_NOT_CAPTURE_ANY_PIECE(),
         ),
         TutorialStep.fromMove(
             $localize`Field Promotion (1/2)`,
-            $localize`It is sometimes possible to perform what is called a field promotion. If you are out of one type of piece, you can merge two pieces to add their value and get a new piece. For example, if you have no drones, you can merge two pawns into a drone. To merge two pawns, move one of your pawns on another.<br/><br/>Such a move is possible for Dark. Do it.`,
+            $localize`It is sometimes possible to perform what is called a field promotion. If you are out of one type of piece, you can merge two pieces to add their value and get a new piece. For example, if you have no drones, you can merge two pawns into a drone. To merge two pawns, move one of your pawns on another.<br/><br/>Such a move is possible for Light. Do it.`,
             new MartianChessState([
                 [_, _, _, C],
                 [_, A, _, _],
@@ -111,7 +111,7 @@ export class MartianChessTutorial extends Tutorial {
                 MartianChessMove.from(new Coord(1, 1), new Coord(2, 2)).get(),
                 MartianChessMove.from(new Coord(2, 2), new Coord(1, 1)).get(),
             ],
-            $localize`Congratulations!`,
+            TutorialStepMessage.CONGRATULATIONS(),
             $localize`This is not a field promotion!`,
         ),
         TutorialStep.fromPredicate(
@@ -136,7 +136,7 @@ export class MartianChessTutorial extends Tutorial {
                     return MGPValidation.failure($localize`This is not a field promotion!`);
                 }
             },
-            $localize`Congratulations!`,
+            TutorialStepMessage.CONGRATULATIONS(),
         ),
         TutorialStep.fromPredicate(
             $localize`Call the clock`,
@@ -150,7 +150,7 @@ export class MartianChessTutorial extends Tutorial {
                     return MGPValidation.failure($localize`You did not call the clock!`);
                 }
             },
-            $localize`Congratulations!`,
+            TutorialStepMessage.CONGRATULATIONS(),
         ),
         TutorialStep.fromMove(
             $localize`Restarting the clock`,
@@ -163,15 +163,15 @@ export class MartianChessTutorial extends Tutorial {
                 [_, _, _, _],
                 [_, _, _, A],
                 [_, _, B, _],
-                [_, A, _, _],
-            ], 15, MGPOptional.empty(), MGPOptional.of(1)),
-            [MartianChessMove.from(new Coord(1, 1), new Coord(2, 2)).get()],
-            $localize`Congratulations!`,
+                [_, C, _, _],
+            ], 16, MGPOptional.empty(), MGPOptional.of(1)),
+            [MartianChessMove.from(new Coord(1, 7), new Coord(1, 1)).get()],
+            TutorialStepMessage.CONGRATULATIONS(),
             $localize`This is not a capture, the game is now over, please retry!`,
         ),
         TutorialStep.anyMove(
             $localize`End game (by clock)`,
-            $localize`When seven turns have passed after the clock has been called, the player with the most points win. If both player have the same number of points, it is a tie.<br/><br/>You're playing Dark, do the last move.`,
+            $localize`When seven turns have passed after the clock has been called, the player with the most points win. If both player have the same number of points, it is a tie.<br/><br/>You're playing Light, do the last move.`,
             new MartianChessState([
                 [_, _, _, C],
                 [_, A, _, _],
@@ -183,7 +183,7 @@ export class MartianChessTutorial extends Tutorial {
                 [_, B, _, _],
             ], 15, MGPOptional.empty(), MGPOptional.of(1)),
             MartianChessMove.from(new Coord(1, 1), new Coord(2, 2)).get(),
-            $localize`Congratulations!`,
+            TutorialStepMessage.CONGRATULATIONS(),
         ),
         TutorialStep.fromPredicate(
             $localize`End by emptyness`,
@@ -206,7 +206,7 @@ export class MartianChessTutorial extends Tutorial {
                     return MGPValidation.failure($localize`Your piece is still in you territory!`);
                 }
             },
-            $localize`Congratulations!`,
+            TutorialStepMessage.CONGRATULATIONS(),
         ),
     ];
 }

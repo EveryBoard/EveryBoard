@@ -6,6 +6,8 @@ import { ConnectSixState } from '../ConnectSixState';
 import { PlayerOrNone } from 'src/app/jscaip/Player';
 import { Table } from 'src/app/jscaip/TableUtils';
 import { ConnectSixMoveGenerator } from '../ConnectSixMoveGenerator';
+import { GobanConfig } from 'src/app/jscaip/GobanConfig';
+import { MGPOptional } from '@everyboard/lib';
 
 describe('ConnectSixMoveGenerator', () => {
 
@@ -14,18 +16,21 @@ describe('ConnectSixMoveGenerator', () => {
     const _: PlayerOrNone = PlayerOrNone.NONE;
     const O: PlayerOrNone = PlayerOrNone.ZERO;
 
+    const defaultConfig: MGPOptional<GobanConfig> = ConnectSixRules.get().getDefaultRulesConfig();
+
     beforeEach(() => {
         moveGenerator = new ConnectSixMoveGenerator();
     });
-    it('should propose only one move at first turn', () => {
+
+    it('should propose only one move at first turns', () => {
         // Given the initial node
-        const width: number = ConnectSixState.WIDTH;
-        const height: number = ConnectSixState.HEIGHT;
-        const state: ConnectSixState = ConnectSixRules.get().getInitialState();
+        const width: number = defaultConfig.get().width;
+        const height: number = defaultConfig.get().height;
+        const state: ConnectSixState = ConnectSixRules.get().getInitialState(defaultConfig);
         const node: ConnectSixNode = new ConnectSixNode(state);
 
-        // When asking it the list of move at the first turn
-        const moves: ConnectSixMove[] = moveGenerator.getListMoves(node);
+        // When listing the moves
+        const moves: ConnectSixMove[] = moveGenerator.getListMoves(node, defaultConfig);
 
         // Then it should only include the center of the board
         const cx: number = Math.floor(width/2);
@@ -33,6 +38,7 @@ describe('ConnectSixMoveGenerator', () => {
         expect(moves.length).toBe(1);
         expect(moves[0]).toEqual(ConnectSixFirstMove.of(new Coord(cx, cy)));
     });
+
     it('should count all possible moves including only neighboring-coord', () => {
         // Given a board with 60 possibles combinations of two coords
         // With the firsts being neighbors of a piece on board
@@ -61,10 +67,11 @@ describe('ConnectSixMoveGenerator', () => {
         const state: ConnectSixState = new ConnectSixState(board, 3);
         const node: ConnectSixNode = new ConnectSixNode(state);
 
-        // When counting the number of choices
-        const moves: ConnectSixMove[] = moveGenerator.getListMoves(node);
+        // When listing the moves
+        const moves: ConnectSixMove[] = moveGenerator.getListMoves(node, defaultConfig);
 
         // Then the answer should be 65
         expect(moves.length).toBe(65);
     });
+
 });

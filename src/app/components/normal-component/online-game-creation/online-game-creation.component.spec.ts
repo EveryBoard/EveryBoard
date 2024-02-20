@@ -13,9 +13,12 @@ import { NotFoundComponent } from '../not-found/not-found.component';
 import { OnlineGameCreationComponent } from './online-game-creation.component';
 
 describe('OnlineGameCreationComponent for non-existing game', () => {
+
     it('should redirect to /notFound', fakeAsync(async() => {
         // Given a creation of a game that does not exist
-        const testUtils: SimpleComponentTestUtils<OnlineGameCreationComponent> = await SimpleComponentTestUtils.create(OnlineGameCreationComponent, new ActivatedRouteStub('invalid-game'));
+        const testUtils: SimpleComponentTestUtils<OnlineGameCreationComponent> =
+            await SimpleComponentTestUtils.create(OnlineGameCreationComponent,
+                                                  new ActivatedRouteStub('invalid-game'));
         const router: Router = TestBed.inject(Router);
         spyOn(router, 'navigate').and.resolveTo();
 
@@ -27,6 +30,7 @@ describe('OnlineGameCreationComponent for non-existing game', () => {
         const route: string[] = ['/notFound', GameWrapperMessages.NO_MATCHING_GAME('invalid-game')];
         expectValidRouting(router, route, NotFoundComponent, { skipLocationChange: true });
     }));
+
 });
 
 describe('OnlineGameCreationComponent', () => {
@@ -35,8 +39,10 @@ describe('OnlineGameCreationComponent', () => {
 
     const game: string = 'P4';
     beforeEach(fakeAsync(async() => {
-        testUtils = await SimpleComponentTestUtils.create(OnlineGameCreationComponent, new ActivatedRouteStub(game));
+        testUtils = await SimpleComponentTestUtils.create(OnlineGameCreationComponent,
+                                                          new ActivatedRouteStub(game));
     }));
+
     it('should create and redirect to the game upon success', fakeAsync(async() => {
         // Given a page that is loaded for a specific game by an online user that can create a game
         const router: Router = TestBed.inject(Router);
@@ -50,6 +56,7 @@ describe('OnlineGameCreationComponent', () => {
         // Then the user should be redirected to the game
         expectValidRouting(router, ['/play', game, 'PartDAOMock0'], OnlineGameWrapperComponent);
     }));
+
     it('should show toast and navigate to server when creator has active parts', fakeAsync(async() => {
         // Given a page that is loaded for a specific game by a connected user that already has an active part
         const router: Router = TestBed.inject(Router);
@@ -67,4 +74,5 @@ describe('OnlineGameCreationComponent', () => {
 
         expectValidRouting(router, ['/lobby'], LobbyComponent);
     }));
+
 });

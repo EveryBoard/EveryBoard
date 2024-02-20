@@ -1,25 +1,27 @@
 import { QuartoState } from './QuartoState';
 import { QuartoMove } from './QuartoMove';
 import { SCORE } from 'src/app/jscaip/SCORE';
-import { Heuristic } from 'src/app/jscaip/Minimax';
-import { BoardValue } from 'src/app/jscaip/BoardValue';
+import { Heuristic } from 'src/app/jscaip/AI/Minimax';
+import { BoardValue } from 'src/app/jscaip/AI/BoardValue';
 import { QuartoNode, BoardStatus, QuartoRules } from './QuartoRules';
 import { Player } from 'src/app/jscaip/Player';
 import { Utils } from '@everyboard/lib';
 import { CoordSet } from 'src/app/jscaip/CoordSet';
+import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 export class QuartoHeuristic extends Heuristic<QuartoMove, QuartoState> {
 
     private scoreToBoardValue(score: SCORE, turn: number): BoardValue {
         if (score === SCORE.DEFAULT) {
-            return new BoardValue(0);
+            return BoardValue.of(0);
         } else {
             Utils.assert(score === SCORE.PRE_VICTORY, 'QuartoHeuristic score can only be pre-victory or default');
             const player: Player = Player.of(turn % 2);
-            return new BoardValue(player.getPreVictory());
+            return BoardValue.of(player.getPreVictory());
         }
     }
-    public getBoardValue(node: QuartoNode): BoardValue {
+
+    public getBoardValue(node: QuartoNode, _config: NoConfig): BoardValue {
         const state: QuartoState = node.gameState;
         let boardStatus: BoardStatus = {
             score: SCORE.DEFAULT,
@@ -30,4 +32,5 @@ export class QuartoHeuristic extends Heuristic<QuartoMove, QuartoState> {
         }
         return this.scoreToBoardValue(boardStatus.score, state.turn);
     }
+
 }

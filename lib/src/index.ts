@@ -11,6 +11,7 @@ export * from './MGPOptional';
 export * from './MGPSet';
 export * from './MGPUniqueList';
 export * from './MGPValidation';
+export * from './NumberMap';
 export * from './ObservableSubject';
 export * from './OptimizedSet';
 export * from './Sets';

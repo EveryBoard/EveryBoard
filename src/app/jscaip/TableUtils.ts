@@ -1,4 +1,4 @@
-import { ArrayUtils, Comparable, MGPMap, MGPOptional } from '@everyboard/lib';
+import { ArrayUtils, Comparable, MGPMap, MGPOptional, Utils } from '@everyboard/lib';
 import { Coord } from './Coord';
 
 export type Table<T> = ReadonlyArray<ReadonlyArray<T>>;
@@ -23,13 +23,38 @@ export class TableUtils {
         return TableUtils.map(table, (t: T): T => t);
     }
 
-    public static compare<T extends Comparable>(t1: Table<T>, t2: Table<T>): boolean {
+    public static equals<T extends Comparable>(t1: Table<T>, t2: Table<T>): boolean {
         if (t1.length !== t2.length) return false;
         for (let i: number = 0; i < t1.length; i++) {
-            if (ArrayUtils.compare(t1[i], t2[i]) === false) return false;
+            if (ArrayUtils.equals(t1[i], t2[i]) === false) return false;
         }
         return true;
     }
+
+    public static sum(board: Table<number>): number {
+        let sum: number = 0;
+        for (const line of board) {
+            for (const element of line) {
+                sum += element;
+            }
+        }
+        return sum;
+    }
+
+    public static add(left: Table<number>, right: Table<number>): number[][] {
+        const width: number = left[0].length;
+        const height: number = left.length;
+        Utils.assert(height === right.length, 'Table should have same height');
+        Utils.assert(width === right[0].length, 'Table should have same width');
+        const sum: number[][] = TableUtils.create(width, height, 0);
+        for (let y: number = 0; y < height; y++) {
+            for (let x: number = 0; x < width; x++) {
+                sum[y][x] = left[y][x] + right[y][x];
+            }
+        }
+        return sum;
+    }
+
 
 }
 

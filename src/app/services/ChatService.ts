@@ -40,7 +40,8 @@ export class ChatService {
         return this.chatDAO.set(chatId, {});
     }
     public async sendMessage(chatId: string, sender: MinimalUser, content: string, currentTurn?: number)
-    : Promise<MGPValidation> {
+    : Promise<MGPValidation>
+    {
         if (this.userCanSendMessage(sender.name, chatId) === false) {
             return MGPValidation.failure(ChatMessages.CANNOT_SEND_MESSAGE());
         }

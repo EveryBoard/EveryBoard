@@ -3,6 +3,7 @@ import { EncoderTestUtils } from '@everyboard/lib';
 import { LodestoneMove } from '../LodestoneMove';
 
 describe('LodestoneMove', () => {
+
     describe('equals', () => {
         const someMove: LodestoneMove = new LodestoneMove(new Coord(0, 0), 'push', 'diagonal');
         it('should detect different moves', () => {
@@ -32,12 +33,15 @@ describe('LodestoneMove', () => {
             expect(someMove.equals(equalMove)).toBeTrue();
         });
     });
+
     it('should redefine toString', () => {
         const move: LodestoneMove = new LodestoneMove(new Coord(0, 0), 'push', 'diagonal');
         expect(move.toString()).toEqual('LodestoneMove((0, 0), push, diagonal, { top: 0, bottom: 0, left: 0, right: 0 })');
     });
+
     it('should have a bijective encoder', () => {
         const move: LodestoneMove = new LodestoneMove(new Coord(0, 0), 'push', 'diagonal', { top: 1, bottom: 0, left: 0, right: 0 });
         EncoderTestUtils.expectToBeBijective(LodestoneMove.encoder, move);
     });
+
 });

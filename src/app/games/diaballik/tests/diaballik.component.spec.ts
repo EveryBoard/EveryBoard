@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 import { fakeAsync } from '@angular/core/testing';
 import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { DiaballikComponent } from '../diaballik.component';
@@ -227,14 +228,14 @@ describe('DiaballikComponent', () => {
             [O, O, _, _, _, _, _],
             [_, _, O, O, Ȯ, O, O],
         ], 0);
-        const move: DiaballikMove =
+        const previousMove: DiaballikMove =
             new DiaballikMove(DiaballikTranslation.from(new Coord(0, 6), new Coord(0, 5)).get(),
                               MGPOptional.of(DiaballikTranslation.from(new Coord(1, 6), new Coord(1, 5)).get()),
                               MGPOptional.of(DiaballikBallPass.from(new Coord(3, 6), new Coord(4, 6)).get()));
-
+        const previousState: DiaballikState = DiaballikRules.get().getInitialState();
 
         // When displaying it
-        await testUtils.setupState(state, DiaballikRules.get().getInitialState(), move);
+        await testUtils.setupState(state, { previousState, previousMove });
 
         // Then it should show the last move
         testUtils.expectElementToHaveClass('#space_0_6', 'moved-fill');
@@ -263,11 +264,12 @@ describe('DiaballikComponent', () => {
             [O, O, _, _, _, _, _],
             [_, _, O, O, Ȯ, O, O],
         ], 1);
-        const move: DiaballikMove =
+        const previousMove: DiaballikMove =
             new DiaballikMove(DiaballikTranslation.from(new Coord(0, 6), new Coord(0, 5)).get(),
                               MGPOptional.of(DiaballikTranslation.from(new Coord(1, 6), new Coord(1, 5)).get()),
                               MGPOptional.of(DiaballikBallPass.from(new Coord(3, 6), new Coord(4, 6)).get()));
-        await testUtils.setupState(state, DiaballikRules.get().getInitialState(), move);
+        const previousState: DiaballikState = DiaballikRules.get().getInitialState();
+        await testUtils.setupState(state, { previousState, previousMove });
 
         // When starting a new move
         await testUtils.expectClickSuccess('#click_0_0');
@@ -297,11 +299,12 @@ describe('DiaballikComponent', () => {
             [O, O, _, _, _, _, _],
             [_, _, O, O, Ȯ, O, O],
         ], 1);
-        const move: DiaballikMove =
+        const previousMove: DiaballikMove =
             new DiaballikMove(DiaballikTranslation.from(new Coord(0, 6), new Coord(0, 5)).get(),
                               MGPOptional.of(DiaballikTranslation.from(new Coord(1, 6), new Coord(1, 5)).get()),
                               MGPOptional.of(DiaballikBallPass.from(new Coord(3, 6), new Coord(4, 6)).get()));
-        await testUtils.setupState(state, DiaballikRules.get().getInitialState(), move);
+        const previousState: DiaballikState = DiaballikRules.get().getInitialState();
+        await testUtils.setupState(state, { previousState, previousMove });
         await testUtils.expectClickSuccess('#click_0_0');
 
         // When deselecting the piece

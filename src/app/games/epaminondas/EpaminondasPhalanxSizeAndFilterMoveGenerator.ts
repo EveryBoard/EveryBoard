@@ -2,15 +2,17 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { ArrayUtils } from '@everyboard/lib';
 import { EpaminondasMove } from './EpaminondasMove';
 import { EpaminondasState } from './EpaminondasState';
-import { EpaminondasNode } from './EpaminondasRules';
+import { EpaminondasConfig, EpaminondasNode } from './EpaminondasRules';
 import { EpaminondasMoveGenerator } from './EpaminondasMoveGenerator';
+import { MGPOptional } from '@everyboard/lib';
 
 export class EpaminondasPhalanxSizeAndFilterMoveGenerator extends EpaminondasMoveGenerator {
 
-    public override getListMoves(node: EpaminondasNode): EpaminondasMove[] {
-        const moves: EpaminondasMove[] = super.getListMoves(node);
+    public override getListMoves(node: EpaminondasNode, config: MGPOptional<EpaminondasConfig>): EpaminondasMove[] {
+        const moves: EpaminondasMove[] = super.getListMoves(node, config);
         return this.orderMovesByPhalanxSizeAndFilter(moves, node.gameState);
     }
+
     private orderMovesByPhalanxSizeAndFilter(moves: EpaminondasMove[], state: EpaminondasState): EpaminondasMove[] {
         ArrayUtils.sortByDescending(moves, (move: EpaminondasMove): number => {
             return move.movedPieces;

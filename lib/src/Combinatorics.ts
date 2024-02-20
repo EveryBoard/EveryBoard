@@ -3,7 +3,7 @@ import { Utils } from './Utils';
 export class Combinatorics {
 
     public static getCombinations<T>(elements: T[], size: number): T[][] {
-        Utils.assert(elements.length >= size, 'cannot compute combinations for less elements than needed');
+        Utils.assert(size <= elements.length, 'cannot compute combinations for less elements than needed');
         return this.getSubsetsOfSize(elements, size).map((subset: T[]): T[][] => {
             return this.getPermutations(subset);
         }).reduce((accumulator: T[][], combinations: T[][]): T[][] => {
@@ -36,7 +36,7 @@ export class Combinatorics {
 
     public static getSubsetsOfSize<T>(elements: T[], size: number): T[][] {
         function subsets(length: number, start: number): T[][] {
-            if (start >= elements.length || length < 1) {
+            if (elements.length <= start || length < 1) {
                 return [[]];
             } else {
                 const results: T[][] = [];

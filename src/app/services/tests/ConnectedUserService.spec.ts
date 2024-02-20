@@ -435,7 +435,8 @@ describe('ConnectedUserService', () => {
     });
     describe('disconnect', () => {
         it('should fail if there is no user connected', async() => {
-            // Given that no user is connected (default)
+            // Given that no user is connected
+            await signOut();
 
             // When trying to disconnect
             const result: MGPValidation = await connectedUserService.disconnect();

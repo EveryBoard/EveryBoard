@@ -1,7 +1,6 @@
-import { Encoder } from '@everyboard/lib';
+import { ComparableObject, Encoder, Utils } from '@everyboard/lib';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { ComparableObject } from '@everyboard/lib';
-import { Utils } from '@everyboard/lib';
+import { PlayerMap } from 'src/app/jscaip/PlayerMap';
 
 export class YinshPiece implements ComparableObject {
 
@@ -16,20 +15,21 @@ export class YinshPiece implements ComparableObject {
 
     public static MARKER_ZERO: YinshPiece = new YinshPiece(Player.ZERO, false);
     public static MARKER_ONE: YinshPiece = new YinshPiece(Player.ONE, false);
-    public static MARKERS: [YinshPiece, YinshPiece] = [YinshPiece.MARKER_ZERO, YinshPiece.MARKER_ONE];
+    public static MARKERS: PlayerMap<YinshPiece> = PlayerMap.of(YinshPiece.MARKER_ZERO, YinshPiece.MARKER_ONE);
 
     public static RING_ZERO: YinshPiece = new YinshPiece(Player.ZERO, true);
     public static RING_ONE: YinshPiece = new YinshPiece(Player.ONE, true);
-    public static RINGS: [YinshPiece, YinshPiece] = [YinshPiece.RING_ZERO, YinshPiece.RING_ONE];
+    public static RINGS: PlayerMap<YinshPiece> = PlayerMap.of(YinshPiece.RING_ZERO, YinshPiece.RING_ONE);
 
-    public static of(player: PlayerOrNone, isRing: boolean): YinshPiece {
-        if (player === PlayerOrNone.NONE) {
+    public static of(playerOrNone: PlayerOrNone, isRing: boolean): YinshPiece {
+        if (playerOrNone === PlayerOrNone.NONE) {
             return YinshPiece.EMPTY;
         } else {
+            const player: Player = playerOrNone as Player;
             if (isRing) {
-                return YinshPiece.RINGS[player.value];
+                return YinshPiece.RINGS.get(player).get();
             } else {
-                return YinshPiece.MARKERS[player.value];
+                return YinshPiece.MARKERS.get(player).get();
             }
         }
     }
@@ -39,12 +39,14 @@ export class YinshPiece implements ComparableObject {
     public equals(piece: YinshPiece): boolean {
         return this === piece;
     }
+
     public flip(): YinshPiece {
         Utils.assert(this.isRing === false, 'cannot flip a ring (it should never happen)');
         Utils.assert(this.player.isPlayer(), 'cannot flip a non-player piece');
         const player: Player = this.player as Player;
         return YinshPiece.of(player.getOpponent(), this.isRing);
     }
+
     public toString(): string {
         switch (this) {
             case YinshPiece.UNREACHABLE: return 'NONE';
@@ -57,4 +59,5 @@ export class YinshPiece implements ComparableObject {
                 return 'RING_ONE';
         }
     }
+
 }

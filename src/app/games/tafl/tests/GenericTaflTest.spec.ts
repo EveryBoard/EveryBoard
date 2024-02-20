@@ -3,8 +3,7 @@ import { Type } from '@angular/core';
 import { fakeAsync } from '@angular/core/testing';
 import { Coord } from 'src/app/jscaip/Coord';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { Encoder } from '@everyboard/lib';
-import { EncoderTestUtils } from '@everyboard/lib';
+import { Encoder, EncoderTestUtils, MGPFallible, MGPOptional } from '@everyboard/lib';
 import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { TaflComponent } from '../tafl.component';
 import { TaflFailure } from '../TaflFailure';
@@ -12,8 +11,8 @@ import { TaflMove } from '../TaflMove';
 import { TaflMoveGenerator } from '../TaflMoveGenerator';
 import { TaflRules } from '../TaflRules';
 import { TaflState } from '../TaflState';
-import { MGPFallible } from '@everyboard/lib';
-
+import { RulesConfigUtils } from 'src/app/jscaip/RulesConfigUtil';
+import { TaflConfig } from '../TaflConfig';
 
 export class TaflTestEntries<C extends TaflComponent<R, M>,
                              R extends TaflRules<M>,
@@ -184,8 +183,9 @@ export function DoTaflTests<C extends TaflComponent<R, M>,
             const rules: R = testUtils.getGameComponent().rules;
             const encoder: Encoder<M> = testUtils.getGameComponent().encoder;
             const moveGenerator: TaflMoveGenerator<M> = new TaflMoveGenerator(rules);
+            const defaultConfig: MGPOptional<TaflConfig> = RulesConfigUtils.getGameDefaultConfig(entries.gameName);
             const firstTurnMoves: M[] = moveGenerator
-                .getListMoves(rules.getInitialNode())
+                .getListMoves(rules.getInitialNode(defaultConfig), defaultConfig)
                 .map((move: TaflMove) => {
                     return entries.moveProvider(move.getStart(), move.getEnd()).get();
                 });

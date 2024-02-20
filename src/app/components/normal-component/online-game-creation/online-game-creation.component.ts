@@ -8,7 +8,6 @@ import { GameInfo } from '../pick-game/pick-game.component';
 import { GameWrapperMessages } from '../../wrapper-components/GameWrapper';
 import { CurrentGameService } from 'src/app/services/CurrentGameService';
 
-
 @Component({
     selector: 'app-online-game-creation',
     template: '<p i18n>Creating online game, please wait, it should not take long.</p>',

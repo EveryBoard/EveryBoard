@@ -1,11 +1,11 @@
-import { MGPOptional } from '@everyboard/lib';
+/* eslint-disable max-lines-per-function */
+import { MGPFallible, MGPOptional, MGPSet } from '@everyboard/lib';
 import { DiaballikBallPass, DiaballikMove, DiaballikSubMove, DiaballikTranslation } from '../DiaballikMove';
 import { DiaballikMoveGenerator, DiaballikMoveInConstruction } from '../DiaballikMoveGenerator';
 import { DiaballikNode, DiaballikRules } from '../DiaballikRules';
 import { DiaballikPiece, DiaballikState } from '../DiaballikState';
 import { Coord } from 'src/app/jscaip/Coord';
-import { MGPSet } from '@everyboard/lib';
-import { MGPFallible } from '@everyboard/lib';
+import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 describe('DiaballikMoveInConstruction', () => {
 
@@ -80,6 +80,7 @@ describe('DiaballikMoveInConstruction', () => {
 function numberOfSubMovesIs(n: number): (move: DiaballikMove) => boolean {
     return (move: DiaballikMove): boolean => move.getSubMoves().length === n;
 }
+const defaultConfig: NoConfig = DiaballikRules.get().getDefaultRulesConfig();
 
 describe('DiaballikMoveGenerator', () => {
 
@@ -101,7 +102,7 @@ describe('DiaballikMoveGenerator', () => {
         const firstIsPresent: boolean = moves.some((m: DiaballikMove) => m.equals(firstOrder));
         const secondIsPresent: boolean = moves.some((m: DiaballikMove) => m.equals(secondOrder));
         // Only one of them can be true. Here, !== is xor on booleans
-        expect(firstIsPresent !== secondIsPresent).toBeTrue();
+        expect(firstIsPresent).not.toEqual(secondIsPresent);
     }
 
     beforeEach(() => {
@@ -113,7 +114,7 @@ describe('DiaballikMoveGenerator', () => {
         const node: DiaballikNode = new DiaballikNode(DiaballikRules.get().getInitialState());
 
         // When computing the list of moves
-        const moves: DiaballikMove[] = moveGenerator.getListMoves(node);
+        const moves: DiaballikMove[] = moveGenerator.getListMoves(node, defaultConfig);
 
         // Then it should have all move options containing 1-step moves (8 exactly, 6 translations and 2 passes),
         // 2-steps, and 3-steps move
@@ -128,10 +129,10 @@ describe('DiaballikMoveGenerator', () => {
         const node: DiaballikNode = new DiaballikNode(DiaballikRules.get().getInitialState());
 
         // When computing the states resulting from the possible moves
-        const moves: DiaballikMove[] = moveGenerator.getListMoves(node);
+        const moves: DiaballikMove[] = moveGenerator.getListMoves(node, defaultConfig);
         function applyMove(move: DiaballikMove): DiaballikState {
             const legalityInfo: MGPFallible<DiaballikState> = DiaballikRules.get().isLegal(move, node.gameState);
-            return DiaballikRules.get().applyLegalMove(move, node.gameState, legalityInfo.get());
+            return DiaballikRules.get().applyLegalMove(move, node.gameState, defaultConfig, legalityInfo.get());
         }
         const states: DiaballikState[] = new MGPSet(moves.map(applyMove)).toList();
 
@@ -153,7 +154,7 @@ describe('DiaballikMoveGenerator', () => {
         const node: DiaballikNode = new DiaballikNode(state);
 
         // When computing the list of moves
-        const moves: DiaballikMove[] = moveGenerator.getListMoves(node);
+        const moves: DiaballikMove[] = moveGenerator.getListMoves(node, defaultConfig);
 
         // Then it should not have "no-op" translations
         // Here, possible moves include: 2 of length 1, 3 of length 2
@@ -177,7 +178,7 @@ describe('DiaballikMoveGenerator', () => {
         const node: DiaballikNode = new DiaballikNode(state);
 
         // When computing the list of moves
-        const moves: DiaballikMove[] = moveGenerator.getListMoves(node);
+        const moves: DiaballikMove[] = moveGenerator.getListMoves(node, defaultConfig);
 
         // Then it should only have one of each 2-translation option
         // We look for some specific ones here: (0,6) -> (0,5) ; (1, 6) -> (1, 5)
@@ -188,6 +189,7 @@ describe('DiaballikMoveGenerator', () => {
                                            DiaballikTranslation.from(new Coord(0, 6), new Coord(0, 5)).get(),
                                            DiaballikTranslation.from(new Coord(2, 5), new Coord(2, 4)).get());
     });
+
 });
 
 describe('DiaballikMoveGenerator (not avoiding duplicates)', () => {
@@ -203,7 +205,7 @@ describe('DiaballikMoveGenerator (not avoiding duplicates)', () => {
         const node: DiaballikNode = new DiaballikNode(DiaballikRules.get().getInitialState());
 
         // When computing the list of moves
-        const moves: DiaballikMove[] = moveGenerator.getListMoves(node);
+        const moves: DiaballikMove[] = moveGenerator.getListMoves(node, defaultConfig);
 
         // Then it should have all move options containing 1-step moves (8 exactly, 6 translations and 2 passes),
         // 2-steps, and 3-steps move
@@ -212,4 +214,5 @@ describe('DiaballikMoveGenerator (not avoiding duplicates)', () => {
         expect(moves.filter(numberOfSubMovesIs(3)).length).toBeGreaterThanOrEqual(80);
         expect(moves.length).toBeGreaterThanOrEqual(8 + 45 + 80);
     });
+
 });

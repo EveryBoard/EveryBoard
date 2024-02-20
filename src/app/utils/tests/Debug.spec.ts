@@ -7,6 +7,17 @@ class MyClass {
     public someMethod(arg: number): string {
         return 'boo';
     }
+    public someCycliclyUnprintableObjectIsReturned(): object {
+        const a: object = {
+            value: 5,
+        };
+        const b: object = {
+            reference: a,
+        };
+        // eslint-disable-next-line dot-notation
+        a['ref'] = b; // Will cause an infinite loop when JSON.stringify
+        return a;
+    }
 }
 
 describe('Debug', () => {
@@ -71,6 +82,17 @@ describe('Debug', () => {
         });
     });
     describe('log annotation', () => {
+        it('should not crash when cyclicity stringification bug occur', () => {
+            // Given a verbose-enabled method
+            spyOn(console, 'log').and.returnValue();
+            Debug.enableLog([false, true], 'MyClass', 'someCycliclyUnprintableObjectIsReturned');
+            // When calling the method
+            const instance: MyClass = new MyClass();
+            instance.someCycliclyUnprintableObjectIsReturned();
+
+            // Then it should not have thrown when trying to log recursive object
+            expect(console.log).toHaveBeenCalledWith('< MyClass.someCycliclyUnprintableObjectIsReturned -> recursive and not stringifiable!');
+        });
         it('should log entry and exit when verbose is enabled', () => {
             // Given a verbose-enabled method
             spyOn(console, 'log').and.returnValue();

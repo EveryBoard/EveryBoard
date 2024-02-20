@@ -1,7 +1,6 @@
 /* eslint-disable max-lines-per-function */
 import { fakeAsync } from '@angular/core/testing';
 import { SimpleComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
-
 import { PickGameComponent } from './pick-game.component';
 
 describe('PickGameComponent', () => {
@@ -25,4 +24,5 @@ describe('PickGameComponent', () => {
 
         expect(testUtils.getComponent().pickGame.emit).toHaveBeenCalledWith(gameSelection.options[2].innerText);
     }));
+
 });

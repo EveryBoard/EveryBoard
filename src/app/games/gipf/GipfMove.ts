@@ -66,8 +66,8 @@ export class GipfMove extends Move {
     public equals(other: GipfMove): boolean {
         if (this === other) return true;
         if (this.placement.equals(other.placement) === false) return false;
-        if (ArrayUtils.compare(this.initialCaptures, other.initialCaptures) === false) return false;
-        if (ArrayUtils.compare(this.finalCaptures, other.finalCaptures) === false) return false;
+        if (ArrayUtils.equals(this.initialCaptures, other.initialCaptures) === false) return false;
+        if (ArrayUtils.equals(this.finalCaptures, other.finalCaptures) === false) return false;
         return true;
     }
 }

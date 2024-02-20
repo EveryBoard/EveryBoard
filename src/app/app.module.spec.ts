@@ -74,7 +74,7 @@ export function findMatchingRoute(url: string): MGPOptional<Route> {
     return MGPOptional.empty();
 }
 
-describe('app module', () => {
+describe('App module', () => {
     it('should provide all necessary firebase components', async() => {
         await setupEmulators();
         expect(TestBed.inject(FireAuth.Auth)).toBeDefined();

@@ -1,16 +1,16 @@
 import { GoState, GoPiece, Phase } from './GoState';
 import { GoMove } from './GoMove';
-import { GoLegalityInformation, GoNode, GoRules } from './GoRules';
+import { GoConfig, GoLegalityInformation, GoNode, GoRules } from './GoRules';
 import { GoGroupDatas } from './GoGroupsDatas';
 import { Coord } from 'src/app/jscaip/Coord';
-import { MGPFallible } from '@everyboard/lib';
-import { MoveGenerator } from 'src/app/jscaip/AI';
+import { MGPFallible, MGPOptional } from '@everyboard/lib';
+import { MoveGenerator } from 'src/app/jscaip/AI/AI';
 import { Debug } from 'src/app/utils/Debug';
 
 @Debug.log
-export class GoMoveGenerator extends MoveGenerator<GoMove, GoState> {
+export class GoMoveGenerator extends MoveGenerator<GoMove, GoState, GoConfig> {
 
-    public getListMoves(node: GoNode): GoMove[] {
+    public override getListMoves(node: GoNode, _config: MGPOptional<GoConfig>): GoMove[] {
 
         const currentState: GoState = node.gameState;
         const playingMoves: GoMove[] = this.getPlayingMovesList(currentState);

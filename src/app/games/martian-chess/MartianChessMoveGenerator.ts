@@ -7,11 +7,12 @@ import { MartianChessState } from './MartianChessState';
 import { MartianChessPiece } from './MartianChessPiece';
 import { MGPSet } from '@everyboard/lib';
 import { MartianChessNode } from './MartianChessRules';
-import { MoveGenerator } from 'src/app/jscaip/AI';
+import { MoveGenerator } from 'src/app/jscaip/AI/AI';
+import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 export class MartianChessMoveGenerator extends MoveGenerator<MartianChessMove, MartianChessState> {
 
-    public getListMoves(node: MartianChessNode): MartianChessMove[] {
+    public override getListMoves(node: MartianChessNode, _config: NoConfig): MartianChessMove[] {
         const state: MartianChessState = node.gameState;
         const currentPlayer: Player = state.getCurrentPlayer();
         const playerTerritory: MGPSet<number> = state.getPlayerTerritory(currentPlayer);

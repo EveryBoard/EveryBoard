@@ -4,21 +4,23 @@ import { CoerceoState } from './CoerceoState';
 import { CoerceoNode } from './CoerceoRules';
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
 import { Player } from 'src/app/jscaip/Player';
-import { MoveGenerator } from 'src/app/jscaip/AI';
+import { MoveGenerator } from 'src/app/jscaip/AI/AI';
+import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 export class CoerceoMoveGenerator extends MoveGenerator<CoerceoMove, CoerceoState> {
 
-    public getListMoves(node: CoerceoNode): CoerceoMove[] {
+    public override getListMoves(node: CoerceoNode, _config: NoConfig): CoerceoMove[] {
         let moves: CoerceoMove[] = this.getListExchanges(node);
         moves = moves.concat(this.getListMovement(node));
         return moves;
     }
+
     public getListExchanges(node: CoerceoNode): CoerceoMove[] {
         const exchanges: CoerceoMove[] = [];
         const state: CoerceoState = node.gameState;
-        const PLAYER: number = state.getCurrentPlayer().value;
+        const PLAYER: Player = state.getCurrentPlayer();
         const OPPONENT: FourStatePiece = FourStatePiece.ofPlayer(state.getCurrentOpponent());
-        if (state.tiles[PLAYER] < 2) {
+        if (state.tiles.get(PLAYER) < 2) {
             return exchanges;
         }
         for (const coordAndContent of state.getCoordsAndContents()) {
@@ -29,6 +31,7 @@ export class CoerceoMoveGenerator extends MoveGenerator<CoerceoMove, CoerceoStat
         }
         return exchanges;
     }
+
     public getListMovement(node: CoerceoNode): CoerceoMove[] {
         const movements: CoerceoMove[] = [];
         const state: CoerceoState = node.gameState;
@@ -45,4 +48,5 @@ export class CoerceoMoveGenerator extends MoveGenerator<CoerceoMove, CoerceoStat
         }
         return movements;
     }
+
 }

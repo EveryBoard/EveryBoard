@@ -1,19 +1,17 @@
 import { Rules } from 'src/app/jscaip/Rules';
-import { MGPFallible } from '@everyboard/lib';
 import { DiaballikMove, DiaballikBallPass, DiaballikSubMove, DiaballikTranslation } from './DiaballikMove';
 import { DiaballikPiece, DiaballikState } from './DiaballikState';
-import { MGPOptional } from '@everyboard/lib';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Direction, Orthogonal } from 'src/app/jscaip/Direction';
-import { MGPSet } from '@everyboard/lib';
-import { GameNode } from 'src/app/jscaip/GameNode';
+import { MGPFallible, MGPOptional, MGPSet, Utils } from '@everyboard/lib';
+import { GameNode } from 'src/app/jscaip/AI/GameNode';
 import { DiaballikFailure } from './DiaballikFailure';
-import { Utils } from '@everyboard/lib';
 import { Table } from 'src/app/jscaip/TableUtils';
 import { CoordFailure } from '../../jscaip/Coord';
+import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 export class VictoryOrDefeatCoords {
     protected constructor(public readonly winner: Player) {}
@@ -51,7 +49,7 @@ export class DiaballikRules extends Rules<DiaballikMove, DiaballikState, Diaball
         return DiaballikRules.singleton.get();
     }
 
-    public getInitialState(): DiaballikState {
+    public override getInitialState(): DiaballikState {
         const O: DiaballikPiece = DiaballikPiece.ZERO;
         const Ȯ: DiaballikPiece = DiaballikPiece.ZERO_WITH_BALL;
         const X: DiaballikPiece = DiaballikPiece.ONE;
@@ -69,7 +67,7 @@ export class DiaballikRules extends Rules<DiaballikMove, DiaballikState, Diaball
         return new DiaballikState(board, 0);
     }
 
-    public isLegal(move: DiaballikMove, state: DiaballikState): MGPFallible<DiaballikState> {
+    public override isLegal(move: DiaballikMove, state: DiaballikState): MGPFallible<DiaballikState> {
         let currentState: DiaballikState = state;
         for (const subMove of move.getSubMoves()) {
             const start: Coord = subMove.getStart();
@@ -165,9 +163,10 @@ export class DiaballikRules extends Rules<DiaballikMove, DiaballikState, Diaball
         return MGPFallible.success(new DiaballikState(updatedBoard, state.turn));
     }
 
-    public applyLegalMove(_move: DiaballikMove,
-                          state: DiaballikState,
-                          stateAfterSubMoves: DiaballikState)
+    public override applyLegalMove(_move: DiaballikMove,
+                                   state: DiaballikState,
+                                   _config: NoConfig,
+                                   stateAfterSubMoves: DiaballikState)
     : DiaballikState
     {
         // All submoves have already been applied and are stored in stateAfterSubMoves
@@ -202,7 +201,7 @@ export class DiaballikRules extends Rules<DiaballikMove, DiaballikState, Diaball
     }
 
     private getBallCoordInRow(state: DiaballikState, y: number, player: Player): MGPOptional<Coord> {
-        for (let x: number = 0; x < state.board.length; x++) {
+        for (let x: number = 0; x < state.getHeight(); x++) {
             const piece: DiaballikPiece = state.getPieceAtXY(x, y);
             if (piece.holdsBall === true && piece.owner === player) {
                 return MGPOptional.of(new Coord(x, y));
@@ -222,7 +221,7 @@ export class DiaballikRules extends Rules<DiaballikMove, DiaballikState, Diaball
         ];
         if (blocking[0].isPresent() && blocking[1].isPresent()) {
             // Both players form a line, so the current player loses
-            return blocking[state.getCurrentPlayer().value];
+            return blocking[state.getCurrentPlayer().getValue()];
         }
         if (blocking[0].isPresent()) return blocking[0];
         if (blocking[1].isPresent()) return blocking[1];

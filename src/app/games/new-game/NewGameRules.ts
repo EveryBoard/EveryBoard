@@ -1,10 +1,11 @@
-import { GameNode } from 'src/app/jscaip/GameNode';
-import { Rules } from 'src/app/jscaip/Rules';
 import { MGPFallible } from '@everyboard/lib';
+import { GameNode } from 'src/app/jscaip/AI/GameNode';
 import { NewGameMove } from './NewGameMove';
 import { NewGameState } from './NewGameState';
 import { MGPOptional } from '@everyboard/lib';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
+import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { Rules } from 'src/app/jscaip/Rules';
 
 /**
  * This class is optional.
@@ -47,16 +48,9 @@ export class NewGameRules extends Rules<NewGameMove, NewGameState, NewGameLegali
     }
 
     /**
-     * The constructor is made private to avoid creating other instances of this class.
-     */
-    private constructor() {
-        super();
-    }
-
-    /**
      * This method returns the initial state of a game
      */
-    public getInitialState(): NewGameState {
+    public override getInitialState(): NewGameState {
         return new NewGameState(0);
     }
 
@@ -67,9 +61,10 @@ export class NewGameRules extends Rules<NewGameMove, NewGameState, NewGameLegali
      * @returns a MGPFallible of the GameLegalityInfo, being a success if the move is legal,
      *   a failure containing the reason for the illegality of the move.
      */
-    public isLegal(move: NewGameMove, state: NewGameState): MGPFallible<NewGameLegalityInfo> {
+    public override isLegal(move: NewGameMove, state: NewGameState): MGPFallible<NewGameLegalityInfo> {
         return MGPFallible.success(new NewGameLegalityInfo());
     }
+
     /**
      * This is the methods that applies the move to a state.
      * We know the move is legal because it has been checked with `isLegal`.
@@ -78,19 +73,26 @@ export class NewGameRules extends Rules<NewGameMove, NewGameState, NewGameLegali
      * @param info the info that had been returned by `isLegal`
      * @returns the resulting state, i.e., the state on which move has been applied
      */
-    public applyLegalMove(move: NewGameMove, state: NewGameState, info: NewGameLegalityInfo): NewGameState {
+    public override applyLegalMove(_move: NewGameMove,
+                                   state: NewGameState,
+                                   _config: NoConfig,
+                                   _info: NewGameLegalityInfo)
+    : NewGameState
+    {
         return new NewGameState(state.turn + 1);
     }
+
     /**
      * This method checks whether the game is in progress or finished.
      * @param node the node for which we check the game status
      * @returns a GameStatus (ZERO_WON, ONE_WON, DRAW, ONGOING)
      */
-    public getGameStatus(node: NewGameNode): GameStatus {
+    public getGameStatus(node: NewGameNode, _config: NoConfig): GameStatus {
         if (node.gameState.turn < 42) {
             return GameStatus.ONGOING;
         } else {
             return GameStatus.DRAW;
         }
     }
+
 }

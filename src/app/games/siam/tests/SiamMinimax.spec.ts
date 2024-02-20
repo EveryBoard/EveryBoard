@@ -1,13 +1,13 @@
 /* eslint-disable max-lines-per-function */
-import { SiamNode, SiamLegalityInformation } from '../SiamRules';
+import { SiamNode, SiamLegalityInformation, SiamConfig, SiamRules } from '../SiamRules';
 import { SiamPiece } from '../SiamPiece';
 import { SiamState } from '../SiamState';
 import { SiamMove } from '../SiamMove';
 import { Orthogonal } from 'src/app/jscaip/Direction';
 import { MGPOptional } from '@everyboard/lib';
 import { Table } from 'src/app/jscaip/TableUtils';
-import { Minimax } from 'src/app/jscaip/Minimax';
-import { AIDepthLimitOptions } from 'src/app/jscaip/AI';
+import { Minimax } from 'src/app/jscaip/AI/Minimax';
+import { AIDepthLimitOptions } from 'src/app/jscaip/AI/AI';
 import { SiamMinimax } from '../SiamMinimax';
 
 const _: SiamPiece = SiamPiece.EMPTY;
@@ -18,13 +18,17 @@ const R: SiamPiece = SiamPiece.LIGHT_RIGHT;
 const d: SiamPiece = SiamPiece.DARK_DOWN;
 
 describe('SiamMinimax', () => {
-    let minimax: Minimax<SiamMove, SiamState, SiamLegalityInformation>;
+
+    let minimax: Minimax<SiamMove, SiamState, SiamConfig, SiamLegalityInformation>;
     const minimaxOptions: AIDepthLimitOptions = { name: 'Level 1', maxDepth: 1 };
+    const defaultConfig: MGPOptional<SiamConfig> = SiamRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         minimax = new SiamMinimax();
     });
+
     describe('best choices', () => {
+
         it('should choose victory immediately', () => {
             // Given a board where victory can be achieved
             const board: Table<SiamPiece> = [
@@ -34,14 +38,15 @@ describe('SiamMinimax', () => {
                 [_, _, _, _, _],
                 [_, _, _, _, _],
             ];
-            const state: SiamState = new SiamState(board, 0);
+            const state: SiamState = new SiamState(board, 1);
             const node: SiamNode = new SiamNode(state);
             // When computing the best move
-            const chosenMove: SiamMove = minimax.chooseNextMove(node, minimaxOptions);
+            const chosenMove: SiamMove = minimax.chooseNextMove(node, minimaxOptions, defaultConfig);
             // Then it should go for victory
-            const bestMove: SiamMove = SiamMove.from(3, 1, MGPOptional.of(Orthogonal.UP), Orthogonal.UP).get();
+            const bestMove: SiamMove = SiamMove.of(3, 1, MGPOptional.of(Orthogonal.UP), Orthogonal.UP);
             expect(chosenMove).toEqual(bestMove);
         });
+
         it('should consider pushing as the best option', () => {
             // Given a board where it is possible to push
             const board: Table<SiamPiece> = [
@@ -51,14 +56,15 @@ describe('SiamMinimax', () => {
                 [_, _, _, _, _],
                 [_, _, _, _, _],
             ];
-            const state: SiamState = new SiamState(board, 0);
+            const state: SiamState = new SiamState(board, 1);
             const node: SiamNode = new SiamNode(state);
             // When computing the best move
-            const chosenMove: SiamMove = minimax.chooseNextMove(node, minimaxOptions);
+            const chosenMove: SiamMove = minimax.chooseNextMove(node, minimaxOptions, defaultConfig);
             // Then it should push
-            const bestMove: SiamMove = SiamMove.from(3, 2, MGPOptional.of(Orthogonal.UP), Orthogonal.UP).get();
+            const bestMove: SiamMove = SiamMove.of(3, 2, MGPOptional.of(Orthogonal.UP), Orthogonal.UP);
             expect(chosenMove).toEqual(bestMove);
         });
+
         it('should consider pushing from outside to be the best option', () => {
             // Given a specific board
             const board: Table<SiamPiece> = [
@@ -68,13 +74,15 @@ describe('SiamMinimax', () => {
                 [_, _, _, U, _],
                 [_, _, _, U, _],
             ];
-            const state: SiamState = new SiamState(board, 0);
+            const state: SiamState = new SiamState(board, 1);
             const node: SiamNode = new SiamNode(state);
             // When computing the best move
-            const chosenMove: SiamMove = minimax.chooseNextMove(node, minimaxOptions);
+            const chosenMove: SiamMove = minimax.chooseNextMove(node, minimaxOptions, defaultConfig);
             // Then the best move should push from outside
-            const bestMove: SiamMove = SiamMove.from(3, 5, MGPOptional.of(Orthogonal.UP), Orthogonal.UP).get();
+            const bestMove: SiamMove = SiamMove.of(3, 5, MGPOptional.of(Orthogonal.UP), Orthogonal.UP);
             expect(chosenMove).toEqual(bestMove);
         });
+
     });
+
 });

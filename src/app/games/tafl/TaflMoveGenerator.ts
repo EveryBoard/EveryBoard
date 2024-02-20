@@ -2,34 +2,37 @@ import { TaflNode, TaflRules } from './TaflRules';
 import { TaflState } from './TaflState';
 import { TaflMove } from './TaflMove';
 import { Player } from 'src/app/jscaip/Player';
-import { ArrayUtils } from '@everyboard/lib';
+import { ArrayUtils, MGPOptional } from '@everyboard/lib';
 import { Coord } from 'src/app/jscaip/Coord';
-import { MoveGenerator } from 'src/app/jscaip/AI';
 import { Debug } from 'src/app/utils/Debug';
+import { MoveGenerator } from 'src/app/jscaip/AI/AI';
+import { TaflConfig } from './TaflConfig';
 
 @Debug.log
-export class TaflMoveGenerator<M extends TaflMove> extends MoveGenerator<M, TaflState> {
+export class TaflMoveGenerator<M extends TaflMove> extends MoveGenerator<M, TaflState, TaflConfig> {
 
     public constructor(private readonly rules: TaflRules<M>) {
         super();
     }
-    public getListMoves(node: TaflNode<M>): M[] {
+
+    public override getListMoves(node: TaflNode<M>, config: MGPOptional<TaflConfig>): M[] {
         const state: TaflState = node.gameState;
         const currentPlayer: Player = state.getCurrentPlayer();
-        const listMoves: M[] = this.rules.getPlayerListMoves(currentPlayer, state);
-        return this.orderMoves(state, listMoves);
+        const listMoves: M[] = this.rules.getPlayerListMoves(currentPlayer, state, config.get());
+        return this.orderMoves(state, listMoves, config.get());
     }
-    public orderMoves(state: TaflState, listMoves: M[]): M[] {
+
+    public orderMoves(state: TaflState, listMoves: M[], config: TaflConfig): M[] {
         const king: Coord = this.rules.getKingCoord(state).get();
-        if (state.getCurrentPlayer() === this.rules.config.INVADER) {
-            // Invader
+        const invader: Player = this.rules.getInvader(config);
+        if (state.getCurrentPlayer() === invader) { // Invader
             ArrayUtils.sortByDescending(listMoves, (move: TaflMove) => {
                 return - move.getEnd().getOrthogonalDistance(king);
             });
         } else {
             ArrayUtils.sortByDescending(listMoves, (move: TaflMove) => {
                 if (move.getStart().equals(king)) {
-                    if (this.rules.isExternalThrone(move.getEnd())) {
+                    if (this.rules.isExternalThrone(state, move.getEnd())) {
                         return 2;
                     } else {
                         return 1;
@@ -41,4 +44,5 @@ export class TaflMoveGenerator<M extends TaflMove> extends MoveGenerator<M, Tafl
         }
         return listMoves;
     }
+
 }

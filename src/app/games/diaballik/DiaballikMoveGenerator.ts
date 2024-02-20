@@ -1,16 +1,12 @@
-import { MoveGenerator } from 'src/app/jscaip/AI';
+import { MoveGenerator } from 'src/app/jscaip/AI/AI';
 import { DiaballikMove, DiaballikBallPass, DiaballikSubMove, DiaballikTranslation, isTranslation } from './DiaballikMove';
 import { DiaballikPiece, DiaballikState } from './DiaballikState';
 import { DiaballikNode, DiaballikRules } from './DiaballikRules';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Direction, Orthogonal } from 'src/app/jscaip/Direction';
-import { MGPOptional } from '@everyboard/lib';
-import { Utils } from '@everyboard/lib';
-import { MGPFallible } from '@everyboard/lib';
-import { MGPSet } from '@everyboard/lib';
-import { ArrayUtils } from '@everyboard/lib';
-import { ComparableObject } from '@everyboard/lib';
+import { ArrayUtils, ComparableObject, MGPFallible, MGPOptional, MGPSet, Utils } from '@everyboard/lib';
+import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 export class DiaballikMoveInConstruction implements ComparableObject {
 
@@ -42,7 +38,7 @@ export class DiaballikMoveInConstruction implements ComparableObject {
     }
 
     public equals(other: this): boolean {
-        return ArrayUtils.compare(this.subMoves, other.subMoves);
+        return ArrayUtils.equals(this.subMoves, other.subMoves);
     }
 
     public addIfLegal(subMove: DiaballikSubMove, listToAddTo: DiaballikMoveInConstruction[]): void {
@@ -168,7 +164,7 @@ export class DiaballikMoveGenerator extends MoveGenerator<DiaballikMove, Diaball
         super();
     }
 
-    public getListMoves(node: DiaballikNode): DiaballikMove[] {
+    public override getListMoves(node: DiaballikNode, config: NoConfig): DiaballikMove[] {
         const emptyMove: DiaballikMoveInConstruction =
             new DiaballikMoveInConstruction([], node.gameState, node.gameState);
         let movesInConstruction: DiaballikMoveInConstruction[] = [emptyMove];
@@ -182,18 +178,22 @@ export class DiaballikMoveGenerator extends MoveGenerator<DiaballikMove, Diaball
             }
             movesInConstruction = nextMovesInConstruction;
         }
-        return this.removeDuplicates(node.gameState, moves);
+        return this.removeDuplicates(node.gameState, moves, config);
     }
 
-    private removeDuplicates(state: DiaballikState, moves: MGPSet<DiaballikMove>): DiaballikMove[] {
+    private removeDuplicates(state: DiaballikState, moves: MGPSet<DiaballikMove>, config: NoConfig)
+    : DiaballikMove[]
+    {
         if (this.avoidDuplicates === false) {
             return moves.toList();
         }
         const seenStates: MGPSet<DiaballikState> = new MGPSet();
         const movesToKeep: DiaballikMove[] = [];
+        const rules: DiaballikRules = DiaballikRules.get();
         for (const move of moves) {
             const legalityInfo: MGPFallible<DiaballikState> = DiaballikRules.get().isLegal(move, state);
-            const stateAfterMove: DiaballikState = DiaballikRules.get().applyLegalMove(move, state, legalityInfo.get());
+            const stateAfterMove: DiaballikState =
+                rules.applyLegalMove(move, state, config, legalityInfo.get());
             if (seenStates.contains(stateAfterMove) === false) {
                 movesToKeep.push(move);
                 seenStates.add(stateAfterMove);

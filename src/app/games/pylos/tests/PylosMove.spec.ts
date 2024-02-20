@@ -20,6 +20,7 @@ describe('PylosMove', () => {
         const error: string = PylosFailure.MUST_MOVE_UPWARD();
         TestUtils.expectToThrowAndLog(creatingAMoveGoingHorizontally, error);
     });
+
     it('should allow move creation', () => {
         // From Climb
         expect(PylosMove.ofClimb(coord, highCoord, [])).toBeDefined();
@@ -27,6 +28,7 @@ describe('PylosMove', () => {
         // From Drop
         expect(PylosMove.ofDrop(coord, [coord])).toBeDefined();
     });
+
     it('should check and change captures correctly', () => {
         // Check capture
         expect(() => PylosMove.checkCaptures([coord, coord]))
@@ -40,6 +42,7 @@ describe('PylosMove', () => {
         const otherMove: PylosMove = PylosMove.ofDrop(coord, [highCoord]);
         expect(PylosMove.changeCapture(move, [highCoord])).toEqual(otherMove);
     });
+
     it('should have a bijective encoder', () => {
         const initialMoves: PylosMove[] = [
             PylosMove.ofClimb(coord, highCoord, []),
@@ -53,12 +56,14 @@ describe('PylosMove', () => {
             EncoderTestUtils.expectToBeBijective(PylosMove.encoder, move);
         }
     });
+
     it('should override toString correctly', () => {
         const lightMove: PylosMove = PylosMove.ofDrop(coord, []);
         const heavyMove: PylosMove = PylosMove.ofClimb(coord, highCoord, [highCoord, coord]);
         expect(lightMove.toString()).toEqual('PylosMove(-, (0, 0, 0), -, -)');
         expect(heavyMove.toString()).toEqual('PylosMove((0, 0, 0), (0, 0, 2), (0, 0, 2), (0, 0, 0))');
     });
+
     it('should override equals correctly', () => {
         const badCoord: PylosCoord = new PylosCoord(1, 1, 1);
         const move: PylosMove = PylosMove.ofClimb(coord, highCoord, [coord, highCoord]);
@@ -75,8 +80,10 @@ describe('PylosMove', () => {
         expect(move.equals(otherMove3)).toBeFalse();
         expect(move.equals(otherMove4)).toBeFalse();
     });
+
     it('should create [low, high] equal to [high, low]', () => {
         const moveAB: PylosMove = PylosMove.ofClimb(coord, highCoord, [coord, highCoord]);
         expect(moveAB.firstCapture.get()).toEqual(highCoord);
     });
+
 });

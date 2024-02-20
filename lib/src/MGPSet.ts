@@ -155,8 +155,22 @@ export class MGPSet<T extends Comparable> implements ComparableObject {
         return result;
     }
 
+    /**
+     * @param other the "reference" set
+     * @returns an empty optional is nothing miss in this set; the first element missing as an optional if there is one
+     */
+    public getMissingElementFrom(other: MGPSet<T>): MGPOptional<T> {
+        for (const element of other) {
+            if (this.contains(element) === false) {
+                return MGPOptional.of(element);
+            }
+        }
+        return MGPOptional.empty();
+    }
+
     [Symbol.iterator](): IterableIterator<T> {
         return this.values.values();
     }
+
 }
 

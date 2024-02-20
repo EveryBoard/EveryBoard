@@ -5,7 +5,8 @@ import { ObservableSubject } from '@everyboard/lib';
 import { JSONValue } from '@everyboard/lib';
 import { ErrorDocument, MGPError } from '../ErrorDAO';
 
-type ErrorOS = ObservableSubject<MGPOptional<ErrorDocument>>
+type ErrorOS = ObservableSubject<MGPOptional<ErrorDocument>>;
+
 export class ErrorDAOMock extends FirestoreDAOMock<MGPError> {
 
     public static errorDB: MGPMap<string, ErrorOS>;

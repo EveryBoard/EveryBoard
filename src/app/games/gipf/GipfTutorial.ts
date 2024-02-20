@@ -7,6 +7,7 @@ import { MGPOptional } from '@everyboard/lib';
 import { Tutorial, TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { GipfCapture } from 'src/app/jscaip/GipfProjectHelper';
 import { GipfRules } from './GipfRules';
+import { TutorialStepMessage } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
 
 const N: FourStatePiece = FourStatePiece.UNREACHABLE;
 const _: FourStatePiece = FourStatePiece.EMPTY;
@@ -36,10 +37,10 @@ export class GipfTutorial extends Tutorial {
         You're playing Dark, insert a piece.`,
             GipfRules.get().getInitialState(),
             new GipfMove(new GipfPlacement(new Coord(3, 0), MGPOptional.of(HexaDirection.DOWN)), [], []),
-            $localize`Congratulations!`,
+            TutorialStepMessage.CONGRATULATIONS(),
         ),
         TutorialStep.fromMove(
-            $localize`Capture (1/3)`,
+            $localize`Captures (1/3)`,
             $localize`To capture, you must align 4 of your own pieces, which will be the first 4 captured pieces.
         There are multiple important aspects of a capture:
         <ol>
@@ -78,10 +79,10 @@ export class GipfTutorial extends Tutorial {
             )],
             $localize`Congratulations, you have gotten 4 of your pieces back. This is not the most useful capture.
         Let's now see how captures can really be useful.`,
-            $localize`Failed. Try again.`,
+            TutorialStepMessage.FAILED_TRY_AGAIN(),
         ),
         TutorialStep.fromMove(
-            $localize`Capture (2/3)`,
+            $localize`Captures (2/3)`,
             $localize`Here, there are three different ways for Dark to capture.
         <ol>
           <li>One way does not capture any of your opponent's pieces.</li>
@@ -116,7 +117,7 @@ export class GipfTutorial extends Tutorial {
             $localize`Failed, the best capture was taking 2 of your opponent's pieces`,
         ),
         TutorialStep.fromMove(
-            $localize`Capture (3/3)`,
+            $localize`Captures (3/3)`,
             $localize`Here, you must capture at the beginning of your turn.
         This is due to a move of your opponent at the previous turn
         (even though this is a fictitious board for pedagogical purpose).

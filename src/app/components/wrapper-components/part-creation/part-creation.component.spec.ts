@@ -76,22 +76,27 @@ describe('PartCreationComponent', () => {
         tick(0);
     }
     async function clickElement(elementName: string): Promise<void> {
+        // [W] [medium] PartCreationComponent & TestUtils refactor
         testUtils.detectChanges();
-        await testUtils.clickElement(elementName, false); // Ticketted Refactor (2022.124)
+        await testUtils.clickElement(elementName, false);
     }
-    function expectElementToExist(elementName: string): void { // Ticketted Refactor (2022.124)
+    function expectElementToExist(elementName: string): void {
+        // [W] [medium] PartCreationComponent & TestUtils refactor
         testUtils.detectChanges();
         testUtils.expectElementToExist(elementName);
     }
-    function expectElementNotToExist(elementName: string): void { // Ticketted Refactor (2022.124)
+    function expectElementNotToExist(elementName: string): void {
+        // [W] [medium] PartCreationComponent & TestUtils refactor
         testUtils.detectChanges();
         testUtils.expectElementNotToExist(elementName);
     }
-    function findElement(elementName: string): DebugElement { // Ticketted Refactor (2022.124)
+    function findElement(elementName: string): DebugElement {
+        // [W] [medium] PartCreationComponent & TestUtils refactor
         testUtils.detectChanges();
         return testUtils.findElement(elementName);
     }
-    function expectElementToHaveClass(elementName: string, classes: string): void { // Ticketted Refactor (2022.124)
+    function expectElementToHaveClass(elementName: string, classes: string): void {
+        // [W] [medium] PartCreationComponent & TestUtils refactor
         testUtils.detectChanges();
         testUtils.expectElementToHaveClass(elementName, classes);
     }
@@ -110,6 +115,7 @@ describe('PartCreationComponent', () => {
         currentGameService = TestBed.inject(CurrentGameService);
         component = testUtils.getComponent();
         component.partId = 'configRoomId';
+        component.rulesConfigDescription = MGPOptional.empty();
         await chatDAO.set('configRoomId', { messages: [], status: 'dummy status' });
         await userDAO.set(UserMocks.CREATOR_AUTH_USER.id, UserMocks.CREATOR);
         await userDAO.set(UserMocks.OPPONENT_AUTH_USER.id, UserMocks.OPPONENT);
@@ -120,7 +126,7 @@ describe('PartCreationComponent', () => {
             // Given a component that is loaded by the creator
             // meaning that before clicking it, user was subscribed to themself
             ConnectedUserServiceMock.setUser(UserMocks.CREATOR_AUTH_USER);
-            await configRoomDAO.set('configRoomId', ConfigRoomMocks.INITIAL);
+            await configRoomDAO.set('configRoomId', ConfigRoomMocks.getInitial(MGPOptional.empty()));
         }));
         describe('Creator arrival on component', () => {
             it('should call joinGame and observe', fakeAsync(() => {
@@ -172,7 +178,7 @@ describe('PartCreationComponent', () => {
                 await mockCandidateArrival();
 
                 // Then it is possible to choose a candidate
-                expect(component.currentConfigRoom).toEqual(ConfigRoomMocks.INITIAL);
+                expect(component.currentConfigRoom).toEqual(ConfigRoomMocks.getInitial(MGPOptional.empty()));
                 expectElementToExist('#chooseOpponent');
                 component.stopSendingPresenceTokensAndObservingUsersIfNeeded();
             }));
@@ -215,7 +221,7 @@ describe('PartCreationComponent', () => {
                 // Then it is not selected anymore
                 expectElementNotToExist('#selected_' + UserMocks.OPPONENT.username);
                 // And configRoom when back to its initial state
-                expect(component.currentConfigRoom).toEqual(ConfigRoomMocks.INITIAL);
+                expect(component.currentConfigRoom).toEqual(ConfigRoomMocks.getInitial(MGPOptional.empty()));
                 // And component should update the observedPart
                 expect(currentGameService.updateCurrentGame).toHaveBeenCalledOnceWith({ opponent: null });
                 component.stopSendingPresenceTokensAndObservingUsersIfNeeded();
@@ -231,7 +237,7 @@ describe('PartCreationComponent', () => {
 
                 // Then it is still not selected, configRoom is back to start
                 expectElementNotToExist('#presenceOf_' + UserMocks.OPPONENT.username);
-                expect(component.currentConfigRoom).toEqual(ConfigRoomMocks.INITIAL);
+                expect(component.currentConfigRoom).toEqual(ConfigRoomMocks.getInitial(MGPOptional.empty()));
                 component.stopSendingPresenceTokensAndObservingUsersIfNeeded();
             }));
         });
@@ -255,7 +261,7 @@ describe('PartCreationComponent', () => {
 
                 // Then there is no longer any candidate nor chosen opponent in the room
                 expectElementNotToExist('#selected_' + UserMocks.OPPONENT.username);
-                expect(component.currentConfigRoom).toEqual(ConfigRoomMocks.INITIAL);
+                expect(component.currentConfigRoom).toEqual(ConfigRoomMocks.getInitial(MGPOptional.empty()));
                 // And component should update the currentGame
                 expect(currentGameService.updateCurrentGame).toHaveBeenCalledOnceWith({ opponent: null });
                 component.stopSendingPresenceTokensAndObservingUsersIfNeeded();
@@ -274,7 +280,7 @@ describe('PartCreationComponent', () => {
 
                 // Then the candidate should have disappeared and the configRoom have been updated and no toast appeared
                 expectElementNotToExist('#candidate_firstCandidate');
-                expect(component.currentConfigRoom).toEqual(ConfigRoomMocks.INITIAL);
+                expect(component.currentConfigRoom).toEqual(ConfigRoomMocks.getInitial(MGPOptional.empty()));
                 component.stopSendingPresenceTokensAndObservingUsersIfNeeded();
             }));
         });
@@ -300,7 +306,7 @@ describe('PartCreationComponent', () => {
                 // and the candidate has been deselected
                 expectElementNotToExist('#selected_' + UserMocks.OPPONENT.username);
                 // and the candidate has been removed from the lobby
-                expect(component.currentConfigRoom).toEqual(ConfigRoomMocks.INITIAL);
+                expect(component.currentConfigRoom).toEqual(ConfigRoomMocks.getInitial(MGPOptional.empty()));
                 component.stopSendingPresenceTokensAndObservingUsersIfNeeded();
             }));
         });
@@ -318,7 +324,7 @@ describe('PartCreationComponent', () => {
                 await chooseOpponent();
 
                 // Then current config room doc should be updated
-                expect(component.currentConfigRoom).toEqual(ConfigRoomMocks.WITH_CHOSEN_OPPONENT);
+                expect(component.currentConfigRoom).toEqual(ConfigRoomMocks.withChosenOpponent(MGPOptional.empty()));
 
                 // and proposal should now be possible
                 const proposeConfigDisabled: boolean = findElement('#proposeConfig').nativeElement.disabled;
@@ -371,6 +377,7 @@ describe('PartCreationComponent', () => {
                     totalPartDuration: 1000,
                     chosenOpponent: UserMocks.OPPONENT_MINIMAL_USER,
                     firstPlayer: FirstPlayer.RANDOM.value,
+                    rulesConfig: {},
                 });
                 component.stopSendingPresenceTokensAndObservingUsersIfNeeded();
             }));
@@ -394,6 +401,7 @@ describe('PartCreationComponent', () => {
                     totalPartDuration: 900,
                     chosenOpponent: UserMocks.OPPONENT_MINIMAL_USER,
                     firstPlayer: FirstPlayer.RANDOM.value,
+                    rulesConfig: {},
                 });
                 component.stopSendingPresenceTokensAndObservingUsersIfNeeded();
             }));
@@ -408,13 +416,70 @@ describe('PartCreationComponent', () => {
 
                 // Then currentConfigRoom should be updated with the proposed config
                 const proposedConfig: ConfigRoom = {
-                    ...ConfigRoomMocks.INITIAL_RANDOM,
+                    ...ConfigRoomMocks.getInitialRandom(MGPOptional.empty()),
                     chosenOpponent: UserMocks.OPPONENT_MINIMAL_USER,
                     partStatus: PartStatus.CONFIG_PROPOSED.value,
                 };
                 expect(component.currentConfigRoom).toEqual(proposedConfig);
                 component.stopSendingPresenceTokensAndObservingUsersIfNeeded();
             }));
+
+            it('should not emit rules config when modifying field', fakeAsync(async() => {
+                // Given a component where creator selected a config and chose an opponent
+                awaitComponentInitialization();
+                await mockCandidateArrival();
+                await chooseOpponent();
+
+                // When changing a rules config but not saving config
+                component.saveRulesConfig(MGPOptional.of({ chaussettes_de_crepes: 5 }));
+
+                // Then the config should not have been sent yet
+                const proposedConfig: ConfigRoom = {
+                    ...ConfigRoomMocks.getInitial(MGPOptional.empty()),
+                    chosenOpponent: UserMocks.OPPONENT_MINIMAL_USER,
+                };
+                expect(component.currentConfigRoom).toEqual(proposedConfig);
+                component.stopSendingPresenceTokensAndObservingUsersIfNeeded();
+            }));
+
+            it('should emit rules config when proposing config', fakeAsync(async() => {
+                // Given a component where creator selected a config and chose an opponent
+                awaitComponentInitialization();
+                await mockCandidateArrival();
+                await chooseOpponent();
+
+                // When changing a rules config then proposing config
+                component.saveRulesConfig(MGPOptional.of({ chaussettes_de_crepes: 5 }));
+                await proposeConfig();
+
+                // Then currentConfigRoom should be updated with the proposed config
+                const proposedConfig: ConfigRoom = {
+                    ...ConfigRoomMocks.getInitialRandom(MGPOptional.empty()),
+                    chosenOpponent: UserMocks.OPPONENT_MINIMAL_USER,
+                    partStatus: PartStatus.CONFIG_PROPOSED.value,
+                    rulesConfig: {
+                        chaussettes_de_crepes: 5,
+                    },
+                };
+                expect(component.currentConfigRoom).toEqual(proposedConfig);
+                component.stopSendingPresenceTokensAndObservingUsersIfNeeded();
+            }));
+
+            it('should disable config proposition button when rules config is invalid', fakeAsync(async() => {
+                // Given a component where creator selected a config and chose an opponent
+                awaitComponentInitialization();
+                await mockCandidateArrival();
+                await chooseOpponent();
+
+                // When changing a rules config to something illegal
+                // (then as a rule, we'll get informed by an empty optional)
+                component.saveRulesConfig(MGPOptional.empty());
+
+                // Then the propose config should be disabled
+                testUtils.expectElementToBeDisabled('#proposeConfig');
+                component.stopSendingPresenceTokensAndObservingUsersIfNeeded();
+            }));
+
         });
         describe('Form interaction', () => {
             it('should modify configRoom, make proposal possible, and select opponent when choosing opponent', fakeAsync(async() => {
@@ -430,7 +495,7 @@ describe('PartCreationComponent', () => {
                 await chooseOpponent();
 
                 // Then configRoom doc should be updated
-                expect(component.currentConfigRoom).toEqual(ConfigRoomMocks.WITH_CHOSEN_OPPONENT);
+                expect(component.currentConfigRoom).toEqual(ConfigRoomMocks.withChosenOpponent(MGPOptional.empty()));
 
                 // and proposal should now be possible
                 const proposeConfigDisabled: boolean = findElement('#proposeConfig').nativeElement.disabled;
@@ -555,8 +620,8 @@ describe('PartCreationComponent', () => {
                 awaitComponentInitialization();
                 await testUtils.expectToDisplayInfoMessage('The game has been canceled!', async() => {
                     await clickElement('#cancel');
+                    tick(0);
                 });
-                tick(0);
                 component.stopSendingPresenceTokensAndObservingUsersIfNeeded();
 
                 // When the component is destroyed
@@ -576,18 +641,18 @@ describe('PartCreationComponent', () => {
                 spyOn(currentGameService, 'removeCurrentGame').and.callThrough();
                 await testUtils.expectToDisplayInfoMessage('The game has been canceled!', async() => {
                     await clickElement('#cancel');
+                    tick(0);
                 });
-                tick(0);
 
                 // Then currentGame should be emptied
                 expect(currentGameService.removeCurrentGame).toHaveBeenCalledOnceWith();
                 component.stopSendingPresenceTokensAndObservingUsersIfNeeded();
                 await partDAO.set('configRoomId', PartMocks.INITIAL);
-                await configRoomDAO.set('configRoomId', ConfigRoomMocks.INITIAL);
+                await configRoomDAO.set('configRoomId', ConfigRoomMocks.getInitial(MGPOptional.empty()));
                 await chatDAO.set('configRoomId', { messages: [], status: 'dummy status' });
             }));
             it('should unsubscribe from configRoom upon destruction', fakeAsync(async() => {
-                // Given a component that is loaded by anyone (here, the creator)
+                // Given a component that is loaded by anyone (here, the creator) for a started part
                 const expectConfigRoomUnsubscribeToHaveBeenCalled: () => void =
                     prepareUnsubscribeCheck(configRoomService, 'subscribeToChanges');
                 const expectCandidateUnsubscribeToHaveBeenCalled: () => void =
@@ -610,7 +675,7 @@ describe('PartCreationComponent', () => {
         beforeEach(fakeAsync(async() => {
             // Given a component where user is a candidate
             ConnectedUserServiceMock.setUser(UserMocks.OPPONENT_AUTH_USER);
-            await configRoomDAO.set('configRoomId', ConfigRoomMocks.INITIAL);
+            await configRoomDAO.set('configRoomId', ConfigRoomMocks.getInitial(MGPOptional.empty()));
         }));
         describe('Arrival', () => {
             it('should add user to configRoom candidates with service', fakeAsync(() => {
@@ -622,7 +687,7 @@ describe('PartCreationComponent', () => {
                 // Then the candidate is added to the configRoom and the configRoom is updated
                 expect(configRoomService.addCandidate)
                     .toHaveBeenCalledOnceWith('configRoomId', UserMocks.OPPONENT_MINIMAL_USER);
-                expect(component.currentConfigRoom).toEqual(ConfigRoomMocks.INITIAL);
+                expect(component.currentConfigRoom).toEqual(ConfigRoomMocks.getInitial(MGPOptional.empty()));
                 component.stopSendingPresenceTokensAndObservingUsersIfNeeded();
             }));
             it('should add currentGame to user doc', fakeAsync(() => {
@@ -698,7 +763,7 @@ describe('PartCreationComponent', () => {
 
                 // When user is selected as chosen opponent
                 spyOn(component, 'startSendingPresenceTokens').and.callThrough();
-                await receiveConfigRoomUpdate(ConfigRoomMocks.WITH_CHOSEN_OPPONENT);
+                await receiveConfigRoomUpdate(ConfigRoomMocks.withChosenOpponent(MGPOptional.empty()));
 
                 // Then "start sending token" should have been called
                 expect(component.startSendingPresenceTokens).not.toHaveBeenCalled();
@@ -710,7 +775,7 @@ describe('PartCreationComponent', () => {
             it('each 5 second a presence token should be sent', fakeAsync(async() => {
                 // Given a partCreation were you are already chosen as candidate
                 awaitComponentInitialization();
-                await receiveConfigRoomUpdate(ConfigRoomMocks.WITH_CHOSEN_OPPONENT);
+                await receiveConfigRoomUpdate(ConfigRoomMocks.withChosenOpponent(MGPOptional.empty()));
 
                 // When 2 * 5 sec pass
                 spyOn(connectedUserService, 'sendPresenceToken').and.callFake(async() => {});
@@ -724,7 +789,7 @@ describe('PartCreationComponent', () => {
             it('should make config acceptation possible for configRoom when config is proposed', fakeAsync(async() => {
                 // Given a part in creation where the candidate is chosen
                 awaitComponentInitialization();
-                await receiveConfigRoomUpdate(ConfigRoomMocks.WITH_CHOSEN_OPPONENT);
+                await receiveConfigRoomUpdate(ConfigRoomMocks.withChosenOpponent(MGPOptional.empty()));
                 testUtils.expectElementNotToExist('#acceptConfig');
 
                 // When the config is proposed
@@ -745,7 +810,7 @@ describe('PartCreationComponent', () => {
                 // Given a part where the config has been proposed with creator as first player
                 awaitComponentInitialization();
                 await receiveConfigRoomUpdate({
-                    ...ConfigRoomMocks.WITH_PROPOSED_CONFIG,
+                    ...ConfigRoomMocks.withProposedConfig(MGPOptional.empty()),
                     firstPlayer: FirstPlayer.CREATOR.value,
                 });
 
@@ -755,12 +820,12 @@ describe('PartCreationComponent', () => {
 
                 // Then the game start notification is emitted
                 expect(component.gameStartNotification.emit).toHaveBeenCalledWith({
-                    ...ConfigRoomMocks.WITH_ACCEPTED_CONFIG,
+                    ...ConfigRoomMocks.withAcceptedConfig(MGPOptional.empty()),
                     firstPlayer: FirstPlayer.CREATOR.value,
                 });
                 // the configRoom is updated
                 expect(component.currentConfigRoom).toEqual({
-                    ...ConfigRoomMocks.WITH_ACCEPTED_CONFIG,
+                    ...ConfigRoomMocks.withAcceptedConfig(MGPOptional.empty()),
                     firstPlayer: FirstPlayer.CREATOR.value,
                 });
                 // and the part is set to starting
@@ -773,14 +838,14 @@ describe('PartCreationComponent', () => {
             it('should not stop sending token when no longer chosen opponent', fakeAsync(async() => {
                 // Given a component where user is chosen opponent amongst two candidate
                 awaitComponentInitialization();
-                await receiveConfigRoomUpdate(ConfigRoomMocks.INITIAL);
+                await receiveConfigRoomUpdate(ConfigRoomMocks.getInitial(MGPOptional.empty()));
                 await configRoomService.addCandidate('configRoomId', UserMocks.OTHER_OPPONENT_MINIMAL_USER);
                 await configRoomService.addCandidate('configRoomId', UserMocks.OPPONENT_MINIMAL_USER);
-                await receiveConfigRoomUpdate(ConfigRoomMocks.WITH_CHOSEN_OPPONENT);
+                await receiveConfigRoomUpdate(ConfigRoomMocks.withChosenOpponent(MGPOptional.empty()));
 
                 // When an update notifies user that the chosen opponent changed
                 spyOn(component, 'stopSendingPresenceTokensAndObservingUsersIfNeeded').and.callThrough();
-                await receiveConfigRoomUpdate(ConfigRoomMocks.WITH_ANOTHER_CHOSEN_OPPONENT);
+                await receiveConfigRoomUpdate(ConfigRoomMocks.withAnotherChosenOpponent(MGPOptional.empty()));
 
                 // Then stopSendingPresenceTokensAndObservingCreatorIfNeeded should not have been called
                 expect(component.stopSendingPresenceTokensAndObservingUsersIfNeeded).not.toHaveBeenCalled();
@@ -792,7 +857,7 @@ describe('PartCreationComponent', () => {
 
                 // When user is selected as chosen opponent
                 spyOn(currentGameService, 'updateCurrentGame').and.callThrough();
-                await receiveConfigRoomUpdate(ConfigRoomMocks.WITH_CHOSEN_OPPONENT);
+                await receiveConfigRoomUpdate(ConfigRoomMocks.withChosenOpponent(MGPOptional.empty()));
 
                 // Then an update should change user doc to say it's chosenOpponent now
                 expect(currentGameService.updateCurrentGame)
@@ -805,7 +870,7 @@ describe('PartCreationComponent', () => {
             it('should remove yourself when leaving the room and empty user.currentGame', fakeAsync(async() => {
                 // Given a partCreation where user is candidate
                 awaitComponentInitialization();
-                expect(component.currentConfigRoom).toEqual(ConfigRoomMocks.INITIAL);
+                expect(component.currentConfigRoom).toEqual(ConfigRoomMocks.getInitial(MGPOptional.empty()));
                 expect(component.candidates).toEqual([UserMocks.OPPONENT_MINIMAL_USER]);
 
                 // When leaving the page (tested here by calling ngOnDestroy)

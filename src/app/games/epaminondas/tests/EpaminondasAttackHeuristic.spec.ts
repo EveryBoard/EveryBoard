@@ -1,22 +1,26 @@
 /* eslint-disable max-lines-per-function */
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { Table } from 'src/app/jscaip/TableUtils';
-import { HeuristicUtils } from 'src/app/jscaip/tests/HeuristicUtils.spec';
+import { Table } from 'src/app/utils/ArrayUtils';
+import { HeuristicUtils } from 'src/app/jscaip/AI/tests/HeuristicUtils.spec';
 import { EpaminondasState } from '../EpaminondasState';
 import { MGPOptional } from '@everyboard/lib';
 import { EpaminondasAttackHeuristic } from '../EpaminondasAttackHeuristic';
+import { EpaminondasConfig, EpaminondasRules } from '../EpaminondasRules';
 
 const _: PlayerOrNone = PlayerOrNone.NONE;
 const O: PlayerOrNone = PlayerOrNone.ZERO;
 const X: PlayerOrNone = PlayerOrNone.ONE;
 
-describe('AttackEpaminondasHeuristic', () => {
+describe('EpaminondasAttackHeuristic', () => {
 
     let heuristic: EpaminondasAttackHeuristic;
+    const defaultConfig: MGPOptional<EpaminondasConfig> = EpaminondasRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         heuristic = new EpaminondasAttackHeuristic();
     });
+
     it('should go forward', () => {
         const weakerBoard: Table<PlayerOrNone> = [
             [X, X, X, X, X, X, X, X, X, X, X, X, X, X],
@@ -51,8 +55,10 @@ describe('AttackEpaminondasHeuristic', () => {
         HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(heuristic,
                                                                weakerState, MGPOptional.empty(),
                                                                strongerState, MGPOptional.empty(),
-                                                               Player.ZERO);
+                                                               Player.ZERO,
+                                                               defaultConfig);
     });
+
     it('should prefer going into the winning territory', () => {
         const strongerBoard: Table<PlayerOrNone> = [
             [_, O, _, _, _, _, _, _, _, _, _, _, _, _],
@@ -87,6 +93,8 @@ describe('AttackEpaminondasHeuristic', () => {
         HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(heuristic,
                                                                strongerState, MGPOptional.empty(),
                                                                weakerState, MGPOptional.empty(),
-                                                               Player.ONE);
+                                                               Player.ONE,
+                                                               defaultConfig);
     });
+
 });

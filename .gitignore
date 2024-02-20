@@ -43,9 +43,9 @@ Thumbs.db
 # firebase config file
 /src/app/firebaseConfig.ts
 
-
 # Local Netlify folder
 .netlify
 /lib/tsconfig.tsbuildinfo
 /lib/build/
 /lib/node_modules/
+/lib/dist/

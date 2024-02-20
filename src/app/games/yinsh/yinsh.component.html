@@ -10,7 +10,8 @@
             >
                 <polygon id="space_{{ x }}_{{ y }}"
                          [attr.points]="spaceInfo.coordinates"
-                         [ngClass]="spaceInfo.spaceClasses"
+                         [attr.transform]="getHexaCenterTranslationAtXY(x, y)"
+                         [ngClass]="getSpaceClasses(x, y)"
                          class="base"
                          stroke-linecap="round"/>
                 <g id="pieceGroup_{{ x }}_{{ y }}"
@@ -69,21 +70,21 @@
           (click)="onClick(coord)"
           class="indicator"/>
     <g *ngFor="let player of Player.PLAYERS"
-       [attr.transform]="'rotate(' + ((getPointOfView().value + 1) * 180) + ' 532.5 780)'">
-        <g *ngFor="let _ of [].constructor(viewInfo.sideRings[player.value]); index as ring">
-            <circle id="player_{{ player.value }}_sideRing_{{ ring + 1 }}"
-                    [attr.cx]="(player.value === 0 ? 15 : 1050) + (player.value === 0 ? 1 : -1) * 1.2 * viewInfo.ringOuterSize * (ring + 1)"
-                    [attr.cy]="player.value === 0 ? 300 : 1260"
+       [attr.transform]="'rotate(' + ((getPointOfView().getValue() + 1) * 180) + ' 532.5 780)'">
+        <g *ngFor="let _ of [].constructor(viewInfo.sideRings[player.getValue()]); index as ring">
+            <circle id="player_{{ player.getValue() }}_sideRing_{{ ring + 1 }}"
+                    [attr.cx]="(player.getValue() === 0 ? 15 : 1050) + (player.getValue() === 0 ? 1 : -1) * 1.2 * viewInfo.ringOuterSize * (ring + 1)"
+                    [attr.cy]="player.getValue() === 0 ? 300 : 1260"
                     [attr.r]="viewInfo.ringOuterSize"
                     class="base no-fill mid-stroke"/>
-            <circle [attr.cx]="(player.value === 0 ? 15 : 1050) + (player.value === 0 ? 1 : -1) * 1.2 * viewInfo.ringOuterSize * (ring + 1)"
-                    [attr.cy]="(player.value === 0 ? 300 : 1260)"
+            <circle [attr.cx]="(player.getValue() === 0 ? 15 : 1050) + (player.getValue() === 0 ? 1 : -1) * 1.2 * viewInfo.ringOuterSize * (ring + 1)"
+                    [attr.cy]="(player.getValue() === 0 ? 300 : 1260)"
                     [attr.r]="viewInfo.ringInnerSize"
                     class="base no-fill mid-stroke"/>
-            <circle [attr.cx]="(player.value === 0 ? 15 : 1050) + (player.value === 0 ? 1 : -1) * 1.2 * viewInfo.ringOuterSize * (ring + 1)"
-                    [attr.cy]="player.value === 0 ? 300 : 1260"
+            <circle [attr.cx]="(player.getValue() === 0 ? 15 : 1050) + (player.getValue() === 0 ? 1 : -1) * 1.2 * viewInfo.ringOuterSize * (ring + 1)"
+                    [attr.cy]="player.getValue() === 0 ? 300 : 1260"
                     [attr.r]="viewInfo.ringMidSize"
-                    [ngClass]="viewInfo.sideRingClass[player.value]"
+                    [ngClass]="viewInfo.sideRingClass[player.getValue()]"
                     class="base no-fill"/>
         </g>
     </g>

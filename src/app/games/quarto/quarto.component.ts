@@ -4,16 +4,15 @@ import { QuartoState } from './QuartoState';
 import { QuartoRules } from './QuartoRules';
 import { QuartoPiece } from './QuartoPiece';
 import { Coord } from 'src/app/jscaip/Coord';
-import { MGPValidation } from '@everyboard/lib';
+import { MGPOptional, MGPValidation } from '@everyboard/lib';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { QuartoTutorial } from './QuartoTutorial';
 import { RectangularGameComponent } from 'src/app/components/game-components/rectangular-game-component/RectangularGameComponent';
-import { MGPOptional } from '@everyboard/lib';
-import { MCTS } from 'src/app/jscaip/MCTS';
-import { Minimax } from 'src/app/jscaip/Minimax';
 import { QuartoHeuristic } from './QuartoHeuristic';
 import { QuartoMoveGenerator } from './QuartoMoveGenerator';
+import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { Minimax } from 'src/app/jscaip/AI/Minimax';
+import { MCTS } from 'src/app/jscaip/AI/MCTS';
 
 @Component({
     selector: 'app-quarto',
@@ -38,26 +37,23 @@ export class QuartoComponent extends RectangularGameComponent<QuartoRules,
 
     public constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
-        this.rules = QuartoRules.get();
-        this.node = this.rules.getInitialNode();
-        this.node = this.rules.getInitialNode();
+        this.setRulesAndNode('Quarto');
         this.availableAIs = [
             new Minimax($localize`Minimax`, this.rules, new QuartoHeuristic(), new QuartoMoveGenerator()),
             new MCTS($localize`MCTS`, new QuartoMoveGenerator(), this.rules),
         ];
         this.encoder = QuartoMove.encoder;
-        this.tutorial = new QuartoTutorial().tutorial;
         this.pieceInHand = this.getState().pieceInHand;
     }
+
     public async updateBoard(_triggerAnimation: boolean): Promise<void> {
         const state: QuartoState = this.getState();
-        const move: MGPOptional<QuartoMove> = this.node.previousMove;
         this.board = state.getCopiedBoard();
         this.chosen = MGPOptional.empty();
         this.pieceInHand = state.pieceInHand;
         this.victoriousCoords = this.rules.getVictoriousCoords(state);
-        this.lastMove = move.map((move: QuartoMove) => move.coord);
     }
+
     public async chooseCoord(x: number, y: number): Promise<MGPValidation> {
         // called when the user click on the quarto board
         const clickValidity: MGPValidation = await this.canUserPlay('#chooseCoord_' + x + '_' + y);
@@ -87,6 +83,7 @@ export class QuartoComponent extends RectangularGameComponent<QuartoRules,
             return this.cancelMove(RulesFailure.MUST_CLICK_ON_EMPTY_SPACE());
         }
     }
+
     public async choosePiece(givenPiece: number): Promise<MGPValidation> {
         const clickValidity: MGPValidation = await this.canUserPlay('#choosePiece_' + givenPiece);
         if (clickValidity.isFailure()) {
@@ -109,16 +106,23 @@ export class QuartoComponent extends RectangularGameComponent<QuartoRules,
             return this.chooseMove(chosenMove);
         }
     }
+
+    public override async showLastMove(move: QuartoMove, _config: MGPOptional<EmptyRulesConfig>): Promise<void> {
+        this.lastMove = MGPOptional.of(move.coord);
+    }
+
     public override hideLastMove(): void {
         this.lastMove = MGPOptional.empty();
     }
+
     public override cancelMoveAttempt(): void {
         this.hideLastMove();
         this.pieceToGive = MGPOptional.empty();
         this.chosen = MGPOptional.empty();
     }
+
     public async deselectDroppedPiece(): Promise<MGPValidation> {
-        // So it does not throw when there is no dese chosen piece (used in clickValidity test)
+        // So it does not throw when there is no chosen piece (used in clickValidity test)
         const chosen: Coord = this.chosen.getOrElse(new Coord(404, 404));
         const droppedPieceName: string = '#droppedPiece_' + chosen.x + '_' + chosen.y;
         const clickValidity: MGPValidation = await this.canUserPlay(droppedPieceName);
@@ -128,12 +132,15 @@ export class QuartoComponent extends RectangularGameComponent<QuartoRules,
         this.cancelMoveAttempt();
         return MGPValidation.SUCCESS;
     }
+
     private showPieceInHandOnBoard(x: number, y: number): void {
         this.chosen = MGPOptional.of(new Coord(x, y));
     }
+
     public isRemaining(pawn: number): boolean {
         return QuartoState.isGivable(QuartoPiece.ofInt(pawn), this.board, this.pieceInHand);
     }
+
     public getSquareClasses(x: number, y: number): string[] {
         const coord: Coord = new Coord(x, y);
         if (this.lastMove.equalsValue(coord)) {
@@ -141,6 +148,7 @@ export class QuartoComponent extends RectangularGameComponent<QuartoRules,
         }
         return [];
     }
+
     public getPieceClasses(piece: number): string[] {
         const classes: string[] = [];
         if (piece % 2 === 0) {
@@ -150,6 +158,7 @@ export class QuartoComponent extends RectangularGameComponent<QuartoRules,
         }
         return classes;
     }
+
     public getPieceSize(piece: number): number {
         if (piece < 8) {
             return 40;
@@ -157,7 +166,9 @@ export class QuartoComponent extends RectangularGameComponent<QuartoRules,
             return 25;
         }
     }
+
     public pieceHasDot(piece: number): boolean {
         return piece !== QuartoPiece.EMPTY.value && (piece % 8 < 4);
     }
+
 }

@@ -17,13 +17,16 @@ describe('P4Component', () => {
     beforeEach(fakeAsync(async() => {
         testUtils = await ComponentTestUtils.forGame<P4Component>('P4');
     }));
+
     it('should create', () => {
         testUtils.expectToBeCreated();
     });
+
     it('should accept simple move', fakeAsync(async() => {
-        const move: P4Move = P4Move.THREE;
+        const move: P4Move = P4Move.of(3);
         await testUtils.expectMoveSuccess('#click_3', move);
     }));
+
     it('should highlight victory', fakeAsync(async() => {
         // Given a board with a victory
         const board: Table<PlayerOrNone> = [

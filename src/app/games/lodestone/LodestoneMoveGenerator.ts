@@ -1,4 +1,4 @@
-import { MoveGenerator } from 'src/app/jscaip/AI';
+import { MoveGenerator } from 'src/app/jscaip/AI/AI';
 import { Coord } from 'src/app/jscaip/Coord';
 import { MGPOptional } from '@everyboard/lib';
 import { MGPSet } from '@everyboard/lib';
@@ -6,10 +6,11 @@ import { LodestoneCaptures, LodestoneMove } from './LodestoneMove';
 import { LodestoneDirection, LodestoneOrientation, LodestonePiece } from './LodestonePiece';
 import { LodestoneInfos, LodestoneNode, LodestoneRules } from './LodestoneRules';
 import { LodestoneState } from './LodestoneState';
+import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 export class LodestoneMoveGenerator extends MoveGenerator<LodestoneMove, LodestoneState> {
 
-    public getListMoves(node: LodestoneNode): LodestoneMove[] {
+    public override getListMoves(node: LodestoneNode, _config: NoConfig): LodestoneMove[] {
         const state: LodestoneState = node.gameState;
         return this.flatMapEmptyCoords(state, (coord: Coord): LodestoneMove[] => {
             const moves: LodestoneMove[] = [];

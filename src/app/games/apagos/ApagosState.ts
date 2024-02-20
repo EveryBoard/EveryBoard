@@ -1,13 +1,14 @@
 import { GameState } from 'src/app/jscaip/GameState';
 import { Player } from 'src/app/jscaip/Player';
-import { NumberTable } from 'src/app/jscaip/TableUtils';
-import { ArrayUtils, MGPMap } from '@everyboard/lib';
+import { ArrayUtils } from '@everyboard/lib';
 import { ApagosCoord } from './ApagosCoord';
 import { ApagosSquare } from './ApagosSquare';
+import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
+import { Table } from 'src/app/jscaip/TableUtils';
 
 export class ApagosState extends GameState {
 
-    public static fromRepresentation(turn: number, board: NumberTable, nbZero: number, nbOne: number): ApagosState {
+    public static fromRepresentation(turn: number, board: Table<number>, nbZero: number, nbOne: number): ApagosState {
         const squares: ApagosSquare[] = [];
         for (let x: number = 0; x < 4; x++) {
             const nbZero: number = board[0][x];
@@ -16,15 +17,13 @@ export class ApagosState extends GameState {
             const square: ApagosSquare = ApagosSquare.from(nbZero, nbOne, nbTotal).get();
             squares.push(square);
         }
-        const remaining: MGPMap<Player, number> = new MGPMap();
-        remaining.set(Player.ZERO, nbZero);
-        remaining.set(Player.ONE, nbOne);
+        const remaining: PlayerNumberMap = PlayerNumberMap.of(nbZero, nbOne);
         return new ApagosState(turn, squares, remaining);
     }
 
     public constructor(turn: number,
                        public readonly board: ReadonlyArray<ApagosSquare>,
-                       public readonly remaining: MGPMap<Player, number>)
+                       public readonly remaining: PlayerNumberMap)
     {
         super(turn);
         this.remaining.makeImmutable();
@@ -43,21 +42,21 @@ export class ApagosState extends GameState {
                 newBoard.push(this.board[x]);
             }
         }
-        const remaining: MGPMap<Player, number> = this.getRemainingCopy();
+        const remaining: PlayerNumberMap = this.getRemainingCopy();
         return new ApagosState(this.turn, newBoard, remaining);
     }
 
-    public getRemainingCopy(): MGPMap<Player, number> {
+    public getRemainingCopy(): PlayerNumberMap {
         return this.remaining.getCopy();
     }
 
     public getRemaining(piece: Player): number {
-        return this.remaining.get(piece).get();
+        return this.remaining.get(piece);
     }
 
     public equals(other: ApagosState): boolean {
         return this.turn === other.turn &&
-               ArrayUtils.compare(other.board, this.board) &&
+               ArrayUtils.equals(other.board, this.board) &&
                this.remaining.equals(other.remaining);
     }
 }

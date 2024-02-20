@@ -4,6 +4,7 @@ import { Utils } from '@everyboard/lib';
 import { DiamPiece } from './DiamPiece';
 
 export class DiamState extends GameStateWithTable<DiamPiece> {
+
     public static WIDTH: number = 8;
 
     public static HEIGHT: number = 4;
@@ -19,7 +20,7 @@ export class DiamState extends GameStateWithTable<DiamPiece> {
                 }
             }
         }
-        Utils.assert(pieces.every((remaining: number) => remaining >= 0),
+        Utils.assert(pieces.every((remaining: number) => 0 <= remaining),
                      'Invalid DiamState representation uses too many pieces');
         return new DiamState(board, pieces, turn);
     }

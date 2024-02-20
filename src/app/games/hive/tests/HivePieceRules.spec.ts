@@ -18,6 +18,7 @@ const A: HivePiece = new HivePiece(Player.ZERO, 'SoldierAnt');
 const q: HivePiece = new HivePiece(Player.ONE, 'QueenBee');
 
 describe('HivePieceRules', () => {
+
     it('should compute all possible moves for the queen bee', () => {
         // Given a state with 5 queen bee moves
         const board: Table<HivePiece[]> = [
@@ -30,6 +31,7 @@ describe('HivePieceRules', () => {
         // Then we should have exactly 5, as one neighbor is occupied
         expect(moves.length).toBe(5);
     });
+
     it('should compute all possible moves for the beetle', () => {
         // Given a state with 6 possible beetle moves
         const board: Table<HivePiece[]> = [
@@ -42,6 +44,7 @@ describe('HivePieceRules', () => {
         // Then we should have exactly 6 as the beetle can climb on its neighbor
         expect(moves.length).toBe(6);
     });
+
     it('should compute all possible moves for the grasshopper', () => {
         // Given a state with 3 moves for the grasshopper
         const board: Table<HivePiece[]> = [
@@ -55,6 +58,7 @@ describe('HivePieceRules', () => {
         // Then we should have exactly 3 moves
         expect(moves.length).toBe(3);
     });
+
     it('should compute all possible moves for the spider', () => {
         // Given a state with 2 possible spider moves
         const board: Table<HivePiece[]> = [
@@ -69,6 +73,7 @@ describe('HivePieceRules', () => {
         // Then we should have exactly 2 moves
         expect(moves.length).toBe(2);
     });
+
     it('should take offset into account in spider prefixLegality', () => {
         // Given a state with a spider of which the move would create an offset
         const board: Table<HivePiece[]> = [
@@ -84,6 +89,7 @@ describe('HivePieceRules', () => {
         // Then it should have taken the offset into account and produce the expected result
         expect(legality.isSuccess()).toBeTrue();
     });
+
     it('should take offset into account in spider possible moves', () => {
         // Given a state with a spider of which the move would create an offset
         const board: Table<HivePiece[]> = [
@@ -103,6 +109,7 @@ describe('HivePieceRules', () => {
             expect(legality.isSuccess()).toBeTrue();
         }
     });
+
     it('should compute all possible moves for the soldier ant', () => {
         // Given a state with 7 ant moves
         const board: Table<HivePiece[]> = [
@@ -115,4 +122,5 @@ describe('HivePieceRules', () => {
         // Then we should have exactly 7 moves
         expect(moves.length).toBe(7);
     });
+
 });
