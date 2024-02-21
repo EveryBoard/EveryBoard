@@ -1,6 +1,5 @@
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { MGPFallible } from '@everyboard/lib';
-import { MGPMap } from '@everyboard/lib';
+import { MGPFallible, MGPMap } from '@everyboard/lib';
 
 export class ApagosSquare {
 

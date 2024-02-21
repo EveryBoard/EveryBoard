@@ -5,6 +5,7 @@ import { ReversiState } from '../ReversiState';
 import { Table } from 'src/app/jscaip/TableUtils';
 import { ReversiConfig, ReversiNode, ReversiRules } from '../ReversiRules';
 import { ReversiOrderedMoveGenerator } from '../ReversiOrderedMoveGenerator';
+import { MGPOptional } from '@everyboard/lib';
 
 const _: PlayerOrNone = PlayerOrNone.NONE;
 const O: PlayerOrNone = PlayerOrNone.ZERO;

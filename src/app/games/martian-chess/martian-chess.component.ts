@@ -4,15 +4,12 @@ import { RectangularGameComponent } from 'src/app/components/game-components/rec
 import { Coord } from 'src/app/jscaip/Coord';
 import { Player } from 'src/app/jscaip/Player';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
-import { MGPFallible } from '@everyboard/lib';
-import { MGPOptional } from '@everyboard/lib';
-import { MGPValidation } from '@everyboard/lib';
+import { MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 import { MartianChessMove } from './MartianChessMove';
 import { MartianChessMoveResult, MartianChessRules } from './MartianChessRules';
 import { MartianChessState } from './MartianChessState';
 import { MartianChessPiece } from './MartianChessPiece';
 import { Direction } from 'src/app/jscaip/Direction';
-import { Utils } from '@everyboard/lib';
 import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 import { MCTS } from 'src/app/jscaip/AI/MCTS';
 import { MartianChessMoveGenerator } from './MartianChessMoveGenerator';

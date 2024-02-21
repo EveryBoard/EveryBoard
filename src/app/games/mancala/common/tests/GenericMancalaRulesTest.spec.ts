@@ -1,6 +1,5 @@
 /* eslint-disable max-lines-per-function */
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
-import { Table, TableUtils } from 'src/app/utils/ArrayUtils';
 import { MancalaState } from '../MancalaState';
 import { MancalaDistribution, MancalaMove } from '../MancalaMove';
 import { MancalaFailure } from '../MancalaFailure';
@@ -11,6 +10,7 @@ import { MancalaNode, MancalaRules } from '../MancalaRules';
 import { MGPOptional } from '@everyboard/lib';
 import { TestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
+import { Table, TableUtils } from 'src/app/jscaip/TableUtils';
 
 export class MancalaRulesTestEntries {
     gameName: string; // 'Awale', 'Kalah', etc

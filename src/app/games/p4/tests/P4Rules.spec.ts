@@ -5,7 +5,7 @@ import { P4State } from '../P4State';
 import { P4Move } from '../P4Move';
 import { P4Failure } from '../P4Failure';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
-import { Table } from 'src/app/jscaip/TableUtils';
+import { Table, TableUtils } from 'src/app/jscaip/TableUtils';
 import { MGPOptional } from '@everyboard/lib';
 
 const defaultConfig: MGPOptional<P4Config> = P4Rules.get().getDefaultRulesConfig();

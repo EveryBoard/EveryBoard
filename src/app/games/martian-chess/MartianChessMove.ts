@@ -1,11 +1,9 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { Direction } from 'src/app/jscaip/Direction';
-import { Encoder } from '@everyboard/lib';
+import { Encoder, MGPFallible, MGPOptional } from '@everyboard/lib';
 import { MoveCoordToCoord } from 'src/app/jscaip/MoveCoordToCoord';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { Localized } from 'src/app/utils/LocaleUtils';
-import { MGPFallible } from '@everyboard/lib';
-import { MGPOptional } from '@everyboard/lib';
 import { Vector } from 'src/app/jscaip/Vector';
 import { MartianChessState } from './MartianChessState';
 

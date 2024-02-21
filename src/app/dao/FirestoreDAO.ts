@@ -1,5 +1,4 @@
-import { FirestoreJSONObject, Utils } from '@everyboard/lib';
-import { MGPOptional } from '@everyboard/lib';
+import { FirestoreJSONObject, MGPOptional, Utils } from '@everyboard/lib';
 import * as Firestore from '@angular/fire/firestore';
 import { FirestoreCollectionObserver } from './FirestoreCollectionObserver';
 import { Subscription } from 'rxjs';

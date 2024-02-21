@@ -1,8 +1,6 @@
 import { Direction } from 'src/app/jscaip/Direction';
-import { MGPFallible } from '@everyboard/lib';
-import { Encoder } from '@everyboard/lib';
+import { Encoder, MGPFallible, Utils } from '@everyboard/lib';
 import { Vector } from './Vector';
-import { Utils } from '@everyboard/lib';
 
 export class CoordFailure {
     public static OUT_OF_RANGE(coord: Coord): string {

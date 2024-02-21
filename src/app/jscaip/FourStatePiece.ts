@@ -1,5 +1,4 @@
-import { ComparableObject } from '@everyboard/lib';
-import { Utils } from '@everyboard/lib';
+import { ComparableObject, Utils } from '@everyboard/lib';
 import { Player, PlayerOrNone } from './Player';
 
 export class FourStatePiece implements ComparableObject {

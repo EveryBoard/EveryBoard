@@ -1,12 +1,10 @@
-import { Encoder } from '@everyboard/lib';
-import { EncoderTestUtils } from '@everyboard/lib';
+import { Encoder, EncoderTestUtils, MGPOptional } from '@everyboard/lib';
 import { GameState } from '../GameState';
 import { GameNode } from '../AI/GameNode';
 import { Move } from '../Move';
 import { MoveGenerator } from '../AI/AI';
 import { SuperRules } from '../Rules';
 import { EmptyRulesConfig, RulesConfig } from '../RulesConfigUtil';
-import { MGPOptional } from '@everyboard/lib';
 
 export class MoveTestUtils {
 

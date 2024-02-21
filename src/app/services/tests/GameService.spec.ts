@@ -23,6 +23,7 @@ import { Subscription } from 'rxjs';
 import { GameEventService } from '../GameEventService';
 import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 import { NoConfig, RulesConfigUtils } from 'src/app/jscaip/RulesConfigUtil';
+import { BlankComponent } from 'src/app/utils/tests/TestUtils.spec';
 
 describe('GameService', () => {
 

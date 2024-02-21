@@ -1,12 +1,8 @@
 import { Coord, CoordFailure } from 'src/app/jscaip/Coord';
 import { Direction } from 'src/app/jscaip/Direction';
-import { Encoder } from '@everyboard/lib';
+import { ArrayUtils, Encoder, MGPFallible, MGPOptional, Utils } from '@everyboard/lib';
 import { HexaDirection } from 'src/app/jscaip/HexaDirection';
 import { MoveCoord } from 'src/app/jscaip/MoveCoord';
-import { ArrayUtils } from '@everyboard/lib';
-import { MGPFallible } from '@everyboard/lib';
-import { MGPOptional } from '@everyboard/lib';
-import { Utils } from '@everyboard/lib';
 
 type AbaloneMoveFields = [Coord, HexaDirection, MGPOptional<Coord>];
 

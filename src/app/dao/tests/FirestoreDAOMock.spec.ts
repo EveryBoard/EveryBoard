@@ -1,11 +1,8 @@
 /* eslint-disable max-lines-per-function */
 import { Observable, BehaviorSubject, Subscription } from 'rxjs';
-import { FirestoreJSONObject, FirestoreJSONValue, Utils } from '@everyboard/lib';
-import { MGPOptional } from '@everyboard/lib';
+import { FirestoreJSONObject, FirestoreJSONValue, MGPMap, MGPOptional, ObservableSubject, Utils } from '@everyboard/lib';
 import { FirestoreCollectionObserver } from '../FirestoreCollectionObserver';
 import { FirestoreCondition, FirestoreDocument, IFirestoreDAO } from '../FirestoreDAO';
-import { MGPMap } from '@everyboard/lib';
-import { ObservableSubject } from '@everyboard/lib';
 import { FieldValue, UpdateData } from '@angular/fire/firestore';
 import { Timestamp } from 'firebase/firestore';
 import { Debug } from 'src/app/utils/Debug';

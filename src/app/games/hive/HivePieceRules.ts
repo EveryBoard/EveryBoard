@@ -1,11 +1,10 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { HexaDirection } from 'src/app/jscaip/HexaDirection';
-import { MGPOptional, MGPSet, MGPValidation, Utils } from '@everyboard/lib';
+import { MGPFallible, MGPOptional, MGPSet, MGPValidation, Utils } from '@everyboard/lib';
 import { HiveFailure } from './HiveFailure';
 import { HiveCoordToCoordMove, HiveSpiderMove } from './HiveMove';
 import { HivePiece, HivePieceKind, HivePieceStack } from './HivePiece';
 import { HiveState } from './HiveState';
-import { MGPFallible } from '@everyboard/lib';
 import { HexagonalUtils } from 'src/app/jscaip/HexagonalUtils';
 
 export abstract class HivePieceRules {

@@ -1,10 +1,9 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { Direction } from 'src/app/jscaip/Direction';
-import { Encoder } from '@everyboard/lib';
 import { Move } from 'src/app/jscaip/Move';
 import { MoveCoord } from 'src/app/jscaip/MoveCoord';
 import { MoveCoordToCoord } from 'src/app/jscaip/MoveCoordToCoord';
-import { ArrayUtils, MGPFallible, MGPSet, Utils } from '@everyboard/lib';
+import { Encoder, ArrayUtils, MGPFallible, MGPSet } from '@everyboard/lib';
 import { ConspirateursFailure } from './ConspirateursFailure';
 import { MoveWithTwoCoords } from 'src/app/jscaip/MoveWithTwoCoords';
 import { CoordSet } from 'src/app/jscaip/CoordSet';

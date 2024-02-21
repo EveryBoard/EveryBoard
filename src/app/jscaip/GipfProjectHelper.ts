@@ -1,7 +1,4 @@
-import { ArrayUtils } from '@everyboard/lib';
-import { Encoder } from '@everyboard/lib';
-import { MGPOptional } from '@everyboard/lib';
-import { Utils } from '@everyboard/lib';
+import { ArrayUtils, Encoder, MGPOptional, Utils } from '@everyboard/lib';
 import { Coord } from './Coord';
 import { HexaLine } from './HexaLine';
 import { Table } from './TableUtils';

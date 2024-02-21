@@ -1,7 +1,5 @@
-import { Utils } from '@everyboard/lib';
-import { MGPFallible } from '@everyboard/lib';
+import { Encoder, MGPFallible, Utils } from '@everyboard/lib';
 import { BaseDirection, DirectionFactory } from './Direction';
-import { Encoder } from '@everyboard/lib';
 
 /** Hexagonal directions encoded with axial coordinates, for "flat toped" hexagons */
 export class HexaDirection extends BaseDirection {

@@ -4,8 +4,7 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { MyTaflMove } from './MyTaflMove.spec';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { TaflFailure } from '../TaflFailure';
-import { MGPValidation } from '@everyboard/lib';
-import { MGPValidationTestUtils } from '@everyboard/lib';
+import { MGPValidation, MGPValidationTestUtils } from '@everyboard/lib';
 import { TestUtils } from 'src/app/utils/tests/TestUtils.spec';
 
 describe('TaflMove', () => {

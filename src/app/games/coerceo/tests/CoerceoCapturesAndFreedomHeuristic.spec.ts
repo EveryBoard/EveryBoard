@@ -8,6 +8,7 @@ import { CoerceoCapturesAndFreedomHeuristic } from '../CoerceoCapturesAndFreedom
 import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 import { CoerceoRules } from '../CoerceoRules';
+import { HeuristicUtils } from 'src/app/jscaip/AI/tests/HeuristicUtils.spec';
 
 const _: FourStatePiece = FourStatePiece.EMPTY;
 const N: FourStatePiece = FourStatePiece.UNREACHABLE;

@@ -1,9 +1,8 @@
 import { Coord } from 'src/app/jscaip/Coord';
-import { Encoder } from '@everyboard/lib';
+import { Encoder, MGPFallible } from '@everyboard/lib';
 import { MoveCoordToCoord } from 'src/app/jscaip/MoveCoordToCoord';
 import { DvonnState } from './DvonnState';
 import { MoveWithTwoCoords } from 'src/app/jscaip/MoveWithTwoCoords';
-import { MGPFallible } from '@everyboard/lib';
 import { DvonnFailure } from './DvonnFailure';
 
 export class DvonnMove extends MoveCoordToCoord {

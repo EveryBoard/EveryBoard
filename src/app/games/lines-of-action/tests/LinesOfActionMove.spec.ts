@@ -1,8 +1,7 @@
 /* eslint-disable max-lines-per-function */
 import { Coord } from 'src/app/jscaip/Coord';
 import { DirectionFailure } from 'src/app/jscaip/Direction';
-import { EncoderTestUtils } from '@everyboard/lib';
-import { MGPFallible } from '@everyboard/lib';
+import { EncoderTestUtils, MGPFallible } from '@everyboard/lib';
 import { LinesOfActionMove } from '../LinesOfActionMove';
 
 describe('LinesOfActionMove', () => {

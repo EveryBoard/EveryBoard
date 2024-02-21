@@ -6,7 +6,7 @@ import { createConnectedUser, createUnverifiedUser, signOut, reconnectUser, crea
 import { PartDAO } from '../PartDAO';
 import { UserDAO } from '../UserDAO';
 import { serverTimestamp, Timestamp } from 'firebase/firestore';
-import { MGPOptional } from '@everyboard/lib';
+import { MGPOptional, TimeUtils } from '@everyboard/lib';
 import { ConfigRoomDAO } from '../ConfigRoomDAO';
 import { MinimalUser } from 'src/app/domain/MinimalUser';
 import { ConfigRoomMocks } from 'src/app/domain/ConfigRoomMocks.spec';
@@ -17,7 +17,6 @@ import { CurrentGameMocks } from 'src/app/domain/mocks/CurrentGameMocks.spec';
 import { ConfigRoomService } from 'src/app/services/ConfigRoomService';
 import { GameEventService } from '../../services/GameEventService';
 import { IFirestoreDAO } from '../FirestoreDAO';
-import { TimeUtils } from '@everyboard/lib';
 import { expectPermissionToBeDenied, setupEmulators } from 'src/app/utils/tests/TestUtils.spec';
 
 type PartInfo = {

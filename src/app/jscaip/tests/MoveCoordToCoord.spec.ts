@@ -1,6 +1,5 @@
 /* eslint-disable max-lines-per-function */
-import { MGPFallible } from '@everyboard/lib';
-import { EncoderTestUtils } from '@everyboard/lib';
+import { EncoderTestUtils, MGPFallible } from '@everyboard/lib';
 import { Coord } from '../Coord';
 import { Direction } from '../Direction';
 import { MoveCoordToCoord } from '../MoveCoordToCoord';

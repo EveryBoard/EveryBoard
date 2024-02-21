@@ -1,8 +1,6 @@
-import { Encoder } from '@everyboard/lib';
-import { EncoderTestUtils } from '@everyboard/lib';
+import { Encoder, EncoderTestUtils, MGPFallible } from '@everyboard/lib';
 import { Coord } from '../Coord';
 import { MoveCoord } from '../MoveCoord';
-import { MGPFallible } from '@everyboard/lib';
 
 class MyMoveCoord extends MoveCoord {
     public toString(): string {

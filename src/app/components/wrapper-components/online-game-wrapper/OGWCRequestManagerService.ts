@@ -4,9 +4,7 @@ import { MinimalUser } from 'src/app/domain/MinimalUser';
 import { GameEventReply, GameEventRequest, RequestType } from 'src/app/domain/Part';
 import { ConnectedUserService } from 'src/app/services/ConnectedUserService';
 import { Localized } from 'src/app/utils/LocaleUtils';
-import { MGPOptional } from '@everyboard/lib';
-import { MGPSet } from '@everyboard/lib';
-import { Utils } from '@everyboard/lib';
+import { MGPOptional, MGPSet, Utils } from '@everyboard/lib';
 
 export interface RequestInfo {
     requestType: RequestType,

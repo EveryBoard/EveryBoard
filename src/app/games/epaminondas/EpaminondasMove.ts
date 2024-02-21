@@ -1,9 +1,7 @@
 import { Direction } from 'src/app/jscaip/Direction';
-import { Encoder } from '@everyboard/lib';
+import { Encoder, Utils } from '@everyboard/lib';
 import { MoveCoord } from 'src/app/jscaip/MoveCoord';
 import { Coord } from 'src/app/jscaip/Coord';
-import { Utils } from '@everyboard/lib';
-import { EpaminondasState } from './EpaminondasState';
 
 type EpaminondasMoveFields = [Coord, number, number, Direction];
 

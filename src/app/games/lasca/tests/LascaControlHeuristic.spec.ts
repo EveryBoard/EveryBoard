@@ -1,11 +1,11 @@
 /* eslint-disable max-lines-per-function */
 import { Player } from 'src/app/jscaip/Player';
-import { HeuristicUtils } from 'src/app/jscaip/tests/HeuristicUtils.spec';
 import { MGPOptional } from '@everyboard/lib';
 import { LascaControlHeuristic } from '../LascaControlHeuristic';
 import { LascaPiece, LascaStack, LascaState } from '../LascaState';
 import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 import { LascaRules } from '../LascaRules';
+import { HeuristicUtils } from 'src/app/jscaip/AI/tests/HeuristicUtils.spec';
 
 const u: LascaStack = new LascaStack([LascaPiece.ZERO]);
 const v: LascaStack = new LascaStack([LascaPiece.ONE]);

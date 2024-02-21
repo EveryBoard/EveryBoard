@@ -1,7 +1,5 @@
-import { JSONValue, Utils } from '@everyboard/lib';
-import { MGPFallible } from '@everyboard/lib';
+import { Encoder, JSONValue, MGPFallible, Utils } from '@everyboard/lib';
 import { Coord } from './Coord';
-import { Encoder } from '@everyboard/lib';
 import { Vector } from './Vector';
 import { Localized } from '../utils/LocaleUtils';
 

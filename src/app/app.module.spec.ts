@@ -16,8 +16,7 @@ import { WelcomeComponent } from './components/normal-component/welcome/welcome.
 import { LocalGameWrapperComponent } from './components/wrapper-components/local-game-wrapper/local-game-wrapper.component';
 import { OnlineGameWrapperComponent } from './components/wrapper-components/online-game-wrapper/online-game-wrapper.component';
 import { TutorialGameWrapperComponent } from './components/wrapper-components/tutorial-game-wrapper/tutorial-game-wrapper.component';
-import { MGPOptional } from '@everyboard/lib';
-import { Utils } from '@everyboard/lib';
+import { MGPOptional, Utils } from '@everyboard/lib';
 
 import * as Firestore from '@angular/fire/firestore';
 import * as FireAuth from '@angular/fire/auth';

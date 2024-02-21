@@ -222,4 +222,31 @@ describe('MGPSet', () => {
         });
     });
 
+    describe('getMissingElement', () => {
+
+        it('should return a missing element between two sets', () => {
+            // Given two set, one with one element, the other empty
+            const fullSet: MGPSet<number> = new MGPSet([0]);
+            const emptySet: MGPSet<number> = new MGPSet([]);
+
+            // When calling getMissingElement on the empty one
+            const missingElement: MGPOptional<number> = emptySet.getMissingElementFrom(fullSet);
+
+            // Then it should appear than the empty set miss one element
+            expect(missingElement).toEqual(MGPOptional.of(0));
+        });
+
+        it('should return empty when nothing is missing', () => {
+            // Given two set, one with one element, the other empty
+            const fullSet: MGPSet<number> = new MGPSet([0]);
+            const emptySet: MGPSet<number> = new MGPSet([]);
+
+            // When calling getMissingElement on the full one
+            const missingElement: MGPOptional<number> = fullSet.getMissingElementFrom(emptySet);
+
+            // Then it should appear than the full set miss nothing
+            expect(missingElement).toEqual(MGPOptional.empty());
+        });
+
+    });
 });

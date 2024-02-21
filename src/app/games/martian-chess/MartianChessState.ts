@@ -2,9 +2,7 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { GameStateWithTable } from 'src/app/jscaip/GameStateWithTable';
 import { Player } from 'src/app/jscaip/Player';
 import { Table } from 'src/app/jscaip/TableUtils';
-import { MGPMap } from '@everyboard/lib';
-import { MGPOptional } from '@everyboard/lib';
-import { MGPSet } from '@everyboard/lib';
+import { MGPMap, MGPOptional, MGPSet } from '@everyboard/lib';
 import { MartianChessMove } from './MartianChessMove';
 import { MartianChessPiece } from './MartianChessPiece';
 

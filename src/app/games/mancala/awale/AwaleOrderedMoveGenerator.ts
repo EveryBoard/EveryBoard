@@ -1,12 +1,11 @@
 import { MancalaMove } from '../common/MancalaMove';
 import { AwaleRules } from './AwaleRules';
-import { ArrayUtils } from '@everyboard/lib';
+import { ArrayUtils, MGPOptional } from '@everyboard/lib';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Player } from 'src/app/jscaip/Player';
 import { AwaleMoveGenerator } from './AwaleMoveGenerator';
 import { MancalaDistributionResult, MancalaNode } from '../common/MancalaRules';
 import { MancalaConfig } from '../common/MancalaConfig';
-import { MGPOptional } from '@everyboard/lib';
 
 export class AwaleOrderedMoveGenerator extends AwaleMoveGenerator {
 

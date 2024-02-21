@@ -1,5 +1,4 @@
-import { MGPValidation } from '@everyboard/lib';
-import { JSONValue } from '@everyboard/lib';
+import { JSONValue, MGPValidation } from '@everyboard/lib';
 
 export class ErrorLoggerServiceMock {
 

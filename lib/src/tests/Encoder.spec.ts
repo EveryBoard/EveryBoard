@@ -10,7 +10,7 @@ class Triplet implements ComparableObject {
     }
 
     public equals(other: Triplet): boolean {
-        return ArrayUtils.compare(this.elements, other.elements);
+        return ArrayUtils.equals(this.elements, other.elements);
     }
 }
 

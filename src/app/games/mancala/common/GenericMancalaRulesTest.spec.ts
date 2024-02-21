@@ -1,7 +1,6 @@
 /* eslint-disable max-lines-per-function */
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
-import { Table } from 'src/app/jscaip/TableUtils';
-import { Rules } from 'src/app/jscaip/Rules';
+import { Table, TableUtils } from 'src/app/jscaip/TableUtils';
 import { MancalaState } from './MancalaState';
 import { MancalaMove } from './MancalaMove';
 import { MancalaFailure } from './MancalaFailure';

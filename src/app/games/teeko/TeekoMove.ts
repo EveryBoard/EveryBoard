@@ -2,8 +2,7 @@ import { Coord, CoordFailure } from 'src/app/jscaip/Coord';
 import { MoveCoord } from 'src/app/jscaip/MoveCoord';
 import { MoveCoordToCoord } from 'src/app/jscaip/MoveCoordToCoord';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { Encoder } from '@everyboard/lib';
-import { MGPFallible } from '@everyboard/lib';
+import { Encoder, MGPFallible } from '@everyboard/lib';
 import { TeekoState } from './TeekoState';
 
 export type TeekoMove = TeekoDropMove | TeekoTranslationMove;

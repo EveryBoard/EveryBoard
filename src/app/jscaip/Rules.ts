@@ -1,9 +1,7 @@
 import { GameNode } from 'src/app/jscaip/AI/GameNode';
 import { Move } from './Move';
-import { Utils } from '@everyboard/lib';
+import { MGPFallible, MGPOptional, Utils } from '@everyboard/lib';
 import { GameState } from './GameState';
-import { MGPOptional } from '@everyboard/lib';
-import { MGPFallible } from '@everyboard/lib';
 import { GameStatus } from './GameStatus';
 import { EmptyRulesConfig, RulesConfig } from './RulesConfigUtil';
 import { RulesConfigDescription } from '../components/wrapper-components/rules-configuration/RulesConfigDescription';

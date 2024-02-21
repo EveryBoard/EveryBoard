@@ -1,7 +1,6 @@
 import { Coord } from './Coord';
-import { Encoder } from '@everyboard/lib';
+import { Encoder, MGPFallible } from '@everyboard/lib';
 import { Move } from './Move';
-import { MGPFallible } from '@everyboard/lib';
 
 export abstract class MoveWithTwoCoords extends Move {
 

@@ -3,10 +3,9 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { Player } from 'src/app/jscaip/Player';
 import { Table } from 'src/app/jscaip/TableUtils';
 import { MGPMap, MGPOptional, MGPSet } from '@everyboard/lib';
-import { HeuristicUtils } from 'src/app/jscaip/tests/HeuristicUtils.spec';
 import { TaflPawn } from '../TaflPawn';
 import { SandwichThreat } from '../../../jscaip/PieceThreat';
-import { TablutRules } from '../tablut/TablutRules';
+import { TablutNode, TablutRules } from '../tablut/TablutRules';
 import { TaflPieceAndInfluenceHeuristic } from '../TaflPieceAndInfluenceHeuristic';
 import { TaflConfig } from '../TaflConfig';
 import { TaflState } from '../TaflState';
@@ -14,6 +13,7 @@ import { CoordSet } from 'src/app/jscaip/CoordSet';
 import { TaflMove } from '../TaflMove';
 import { BrandhubRules } from '../brandhub/BrandhubRules';
 import { HnefataflRules } from '../hnefatafl/HnefataflRules';
+import { HeuristicUtils } from 'src/app/jscaip/AI/tests/HeuristicUtils.spec';
 
 describe('TafPieceAndInfluenceHeuristic', () => {
 

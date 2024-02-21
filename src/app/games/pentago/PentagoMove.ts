@@ -1,8 +1,6 @@
 import { Coord } from 'src/app/jscaip/Coord';
-import { Encoder } from '@everyboard/lib';
+import { MGPOptional, Encoder, Utils } from '@everyboard/lib';
 import { MoveCoord } from 'src/app/jscaip/MoveCoord';
-import { MGPOptional } from '@everyboard/lib';
-import { Utils } from '@everyboard/lib';
 import { PentagoState } from './PentagoState';
 
 type PentagoMoveFields = [Coord, MGPOptional<number>, boolean];

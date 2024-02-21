@@ -4,16 +4,14 @@ import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
 import { PieceThreat } from 'src/app/jscaip/PieceThreat';
 import { Player } from 'src/app/jscaip/Player';
 import { Table } from 'src/app/jscaip/TableUtils';
-import { MGPMap } from '@everyboard/lib';
-import { MGPSet } from '@everyboard/lib';
-import { HeuristicUtils } from 'src/app/jscaip/tests/HeuristicUtils.spec';
+import { MGPMap, MGPOptional, MGPSet } from '@everyboard/lib';
 import { CoerceoState } from '../CoerceoState';
-import { CoerceoNode } from '../CoerceoRules';
-import { MGPOptional } from '@everyboard/lib';
+import { CoerceoNode, CoerceoRules } from '../CoerceoRules';
 import { CoerceoPiecesThreatsTilesHeuristic } from '../CoerceoPiecesThreatsTilesHeuristic';
 import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 import { PlayerNumberTable } from 'src/app/jscaip/PlayerNumberTable';
+import { HeuristicUtils } from 'src/app/jscaip/AI/tests/HeuristicUtils.spec';
 
 describe('CoerceoPiecesThreatTilesHeuristic', () => {
 

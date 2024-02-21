@@ -1,8 +1,5 @@
 import { Player } from 'src/app/jscaip/Player';
-import { ArrayUtils } from '@everyboard/lib';
-import { ComparableObject } from '@everyboard/lib';
-import { Encoder } from '@everyboard/lib';
-import { JSONValueWithoutArray, Utils } from '@everyboard/lib';
+import { ArrayUtils, ComparableObject, Encoder, JSONValueWithoutArray, Utils } from '@everyboard/lib';
 
 export type HivePieceKind = 'QueenBee' | 'Beetle' | 'Grasshopper' | 'Spider' | 'SoldierAnt';
 

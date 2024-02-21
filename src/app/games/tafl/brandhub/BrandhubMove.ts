@@ -1,9 +1,7 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { MoveWithTwoCoords } from 'src/app/jscaip/MoveWithTwoCoords';
-import { Encoder } from '@everyboard/lib';
-import { MGPFallible } from '@everyboard/lib';
+import { Encoder, MGPFallible, MGPValidation } from '@everyboard/lib';
 import { TaflMove } from '../TaflMove';
-import { MGPValidation } from '@everyboard/lib';
 
 export class BrandhubMove extends TaflMove {
 

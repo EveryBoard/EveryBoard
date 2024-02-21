@@ -2,8 +2,7 @@ import { GameStateWithTable } from 'src/app/jscaip/GameStateWithTable';
 import { EncapsulePiece, Size } from 'src/app/games/encapsule/EncapsulePiece';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { Table } from 'src/app/jscaip/TableUtils';
-import { MGPOptional } from '@everyboard/lib';
-import { ArrayUtils, Utils } from '@everyboard/lib';
+import { ArrayUtils, MGPOptional, Utils } from '@everyboard/lib';
 
 export class EncapsuleState extends GameStateWithTable<EncapsuleSpace> {
 

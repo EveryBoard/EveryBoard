@@ -29,7 +29,6 @@ import { Minimax } from 'src/app/jscaip/AI/Minimax';
 import { P4MoveGenerator } from 'src/app/games/p4/P4MoveGenerator';
 import { P4Heuristic } from 'src/app/games/p4/P4Heuristic';
 import { P4Config, P4Rules } from 'src/app/games/p4/P4Rules';
-import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 
 const _: PlayerOrNone = PlayerOrNone.NONE;

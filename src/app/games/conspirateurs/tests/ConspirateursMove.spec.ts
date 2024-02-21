@@ -1,7 +1,6 @@
 /* eslint-disable max-lines-per-function */
 import { Coord } from 'src/app/jscaip/Coord';
-import { EncoderTestUtils } from '@everyboard/lib';
-import { MGPFallible } from '@everyboard/lib';
+import { EncoderTestUtils, MGPFallible } from '@everyboard/lib';
 import { ConspirateursFailure } from '../ConspirateursFailure';
 import { ConspirateursMove, ConspirateursMoveDrop, ConspirateursMoveJump, ConspirateursMoveSimple } from '../ConspirateursMove';
 

@@ -1,9 +1,6 @@
 import { Move } from 'src/app/jscaip/Move';
 import { MoveCoordToCoord } from 'src/app/jscaip/MoveCoordToCoord';
-import { Encoder } from '@everyboard/lib';
-import { MGPOptional } from '@everyboard/lib';
-import { Utils } from '@everyboard/lib';
-import { MGPFallible } from '@everyboard/lib';
+import { Encoder, MGPFallible, MGPOptional, Utils } from '@everyboard/lib';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Direction } from 'src/app/jscaip/Direction';
 import { Vector } from 'src/app/jscaip/Vector';

@@ -1,7 +1,6 @@
 /* eslint-disable max-lines-per-function */
 import { Coord, CoordFailure } from 'src/app/jscaip/Coord';
-import { MGPFallible } from '@everyboard/lib';
-import { JSONValue } from '@everyboard/lib';
+import { JSONValue, MGPFallible } from '@everyboard/lib';
 import { LascaFailure } from '../LascaFailure';
 import { LascaMove } from '../LascaMove';
 

@@ -1,9 +1,7 @@
 /* eslint-disable max-lines-per-function */
-import { MGPMap } from '@everyboard/lib';
-import { ObservableSubject } from '@everyboard/lib';
+import { MGPMap, MGPOptional, ObservableSubject } from '@everyboard/lib';
 import { FirestoreDAOMock } from './FirestoreDAOMock.spec';
 import { Chat, ChatDocument } from 'src/app/domain/Chat';
-import { MGPOptional } from '@everyboard/lib';
 import { MessageDocument } from 'src/app/domain/Message';
 import { Debug } from 'src/app/utils/Debug';
 
