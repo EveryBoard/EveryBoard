@@ -12,6 +12,7 @@ import { MartianChessFailure } from '../MartianChessFailure';
 import { MartianChessCapture, MartianChessState } from '../MartianChessState';
 import { MartianChessPiece } from '../MartianChessPiece';
 import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { TestUtils } from 'src/app/utils/tests/TestUtils.spec';
 
 describe('MartianChessRules', () => {
 
@@ -681,7 +682,7 @@ describe('MartianChessRules', () => {
                 // When calling the clock once more
                 const move: MartianChessMove = MartianChessMove.from(new Coord(1, 7), new Coord(0, 6), true).get();
 
-                // Then the move should throw, cause dev should not do that
+                // Then the move should throw, because the component should not allow it
                 const expectedBoard: Table<MartianChessPiece> = [
                     [C, C, B, _],
                     [C, B, A, _],
@@ -693,10 +694,10 @@ describe('MartianChessRules', () => {
                     [_, _, C, C],
                 ];
                 const expectedState: MartianChessState = new MartianChessState(expectedBoard, 1, MGPOptional.of(move));
-                const component: string = 'Assertion failure';
-                const error: string = 'Should not call the clock twice';
-                expect(() => RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig)).toThrowError(component + ': ' + error);
-                expect(Utils.logError).toHaveBeenCalledOnceWith(component, error);
+                const reason: string = 'Should not call the clock twice';
+                TestUtils.expectToThrowAndLog(() => {
+                    RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
+                }, reason);
             });
 
             it('should decrease clock-count-down each captureless-turn when clock was called', () => {

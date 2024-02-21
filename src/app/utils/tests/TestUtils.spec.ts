@@ -556,7 +556,7 @@ export class TestUtils {
         expect(func)
             .withContext('Expected Assertion failure: ' + error)
             .toThrowError('Assertion failure: ' + error);
-        expect(Utils.logError).toHaveBeenCalledWith('Assertion failure', error);
+        expect(Utils.logError).toHaveBeenCalledWith('Assertion failure', error, undefined);
     }
 
     public static async configureTestingModuleForGame(activatedRouteStub: ActivatedRouteStub): Promise<void> {
