@@ -7,8 +7,7 @@ import { Player } from 'src/app/jscaip/Player';
 import { MancalaConfig } from '../MancalaConfig';
 import { GameNode } from 'src/app/jscaip/AI/GameNode';
 import { MancalaNode, MancalaRules } from '../MancalaRules';
-import { MGPOptional } from '@everyboard/lib';
-import { TestUtils } from 'src/app/utils/tests/TestUtils.spec';
+import { MGPOptional, TestUtils } from '@everyboard/lib';
 import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 import { Table, TableUtils } from 'src/app/jscaip/TableUtils';
 

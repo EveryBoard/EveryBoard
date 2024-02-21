@@ -8,9 +8,8 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { Table } from 'src/app/jscaip/TableUtils';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
-import { MGPOptional, MGPSet } from '@everyboard/lib';
+import { MGPOptional, MGPSet, TestUtils } from '@everyboard/lib';
 import { QuixoFailure } from '../QuixoFailure';
-import { TestUtils } from 'src/app/utils/tests/TestUtils.spec';
 
 describe('QuixoRules', () => {
 

@@ -114,7 +114,6 @@ export abstract class Encoder<T> {
     public abstract decode(encodedMove: JSONValue): T;
 }
 
-
 /**
  * This is a helper class to test encoders
  */

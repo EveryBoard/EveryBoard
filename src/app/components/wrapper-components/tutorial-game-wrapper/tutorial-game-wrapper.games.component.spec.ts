@@ -1,11 +1,11 @@
 /* eslint-disable max-lines-per-function */
 import { TutorialGameWrapperComponent } from './tutorial-game-wrapper.component';
-import { ComponentTestUtils, TestUtils } from 'src/app/utils/tests/TestUtils.spec';
+import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { GameInfo } from '../../normal-component/pick-game/pick-game.component';
 import { fakeAsync } from '@angular/core/testing';
 import { GameWrapper } from '../GameWrapper';
 import { Click, TutorialPredicate, TutorialStep } from './TutorialStep';
-import { Comparable, MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
+import { Comparable, MGPFallible, MGPOptional, MGPValidation, MGPValidationTestUtils, TestUtils, Utils } from '@everyboard/lib';
 import { Move } from 'src/app/jscaip/Move';
 import { Coord } from 'src/app/jscaip/Coord';
 import { AbstractRules, SuperRules } from 'src/app/jscaip/Rules';
@@ -334,7 +334,7 @@ describe('TutorialGameWrapperComponent (games)', () => {
                             .toEqual(validation);
                     } else {
                         const context: string = 'Move should be legal to reach predicate but failed in "' + step.title+ '" because';
-                        TestUtils.expectValidationSuccess(MGPValidation.ofFallible(moveResult), context);
+                        MGPValidationTestUtils.expectToBeSuccess(MGPValidation.ofFallible(moveResult), context);
                     }
                 } else {
                     throw new Error('This test expects only predicate steps, remove "' + step.title + '"');

@@ -1,11 +1,10 @@
 /* eslint-disable max-lines-per-function */
-import { TestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { PentagoMove } from '../PentagoMove';
-import { EncoderTestUtils } from '@everyboard/lib';
+import { EncoderTestUtils, TestUtils } from '@everyboard/lib';
 
 describe('PentagoMove', () => {
 
-    it('should throw when rotating inexistant block', () => {
+    it('should throw when rotating unexisting block', () => {
         function rotatingNonExistingBlock(): void {
             PentagoMove.withRotation(0, 0, -1, true);
         }

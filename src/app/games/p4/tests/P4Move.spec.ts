@@ -1,7 +1,6 @@
 /* eslint-disable max-lines-per-function */
-import { EncoderTestUtils } from '@everyboard/lib';
+import { EncoderTestUtils, TestUtils } from '@everyboard/lib';
 import { P4Move } from '../P4Move';
-import { TestUtils } from 'src/app/utils/tests/TestUtils.spec';
 
 describe('P4Move', () => {
 

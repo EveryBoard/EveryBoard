@@ -7,8 +7,7 @@ import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { Coord, CoordFailure } from 'src/app/jscaip/Coord';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { GobanConfig } from 'src/app/jscaip/GobanConfig';
-import { TestUtils } from 'src/app/utils/tests/TestUtils.spec';
-import { MGPOptional } from '@everyboard/lib';
+import { MGPOptional, TestUtils } from '@everyboard/lib';
 
 describe('ConnectSixRules', () => {
     /**

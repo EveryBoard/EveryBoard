@@ -7,8 +7,7 @@ import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { Table } from 'src/app/jscaip/TableUtils';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { MGPOptional } from '@everyboard/lib';
-import { TestUtils } from 'src/app/utils/tests/TestUtils.spec';
+import { MGPOptional, TestUtils } from '@everyboard/lib';
 
 describe('TeekoRules', () => {
 

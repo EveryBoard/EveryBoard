@@ -2,7 +2,7 @@
 import { fakeAsync, tick } from '@angular/core/testing';
 import { Player } from 'src/app/jscaip/Player';
 import { JSONValue, MGPValidation, Utils } from '@everyboard/lib';
-import { ActivatedRouteStub, ComponentTestUtils, TestUtils } from 'src/app/utils/tests/TestUtils.spec';
+import { ActivatedRouteStub, ComponentTestUtils, ConfigureTestingModuleUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { GameInfo } from '../../normal-component/pick-game/pick-game.component';
 import { AbstractGameComponent } from './GameComponent';
 import { AbaloneComponent } from 'src/app/games/abalone/abalone.component';
@@ -13,7 +13,7 @@ describe('GameComponent', () => {
     const activatedRouteStub: ActivatedRouteStub = new ActivatedRouteStub();
 
     beforeEach(fakeAsync(async() => {
-        await TestUtils.configureTestingModuleForGame(activatedRouteStub);
+        await ConfigureTestingModuleUtils.configureTestingModuleForGame(activatedRouteStub);
     }));
 
     it('should fail if pass() is called on a game that does not support it', fakeAsync(async() => {

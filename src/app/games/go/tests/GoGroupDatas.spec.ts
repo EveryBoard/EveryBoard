@@ -2,10 +2,9 @@
 import { GoPiece } from '../GoState';
 import { Coord } from 'src/app/jscaip/Coord';
 import { GoGroupDatas } from 'src/app/games/go/GoGroupsDatas';
-import { Utils } from '@everyboard/lib';
+import { Utils, TestUtils } from '@everyboard/lib';
 import { ErrorLoggerServiceMock } from 'src/app/services/tests/ErrorLoggerServiceMock.spec';
 import { fakeAsync } from '@angular/core/testing';
-import { TestUtils } from 'src/app/utils/tests/TestUtils.spec';
 
 describe('GoGroupDatas', () => {
 

@@ -4,12 +4,11 @@ import { KalahRules } from '../KalahRules';
 import { MancalaDistribution, MancalaMove } from '../../common/MancalaMove';
 import { MancalaState } from '../../common/MancalaState';
 import { Table, TableUtils } from 'src/app/jscaip/TableUtils';
-import { MGPOptional } from '@everyboard/lib';
+import { MGPOptional, TestUtils } from '@everyboard/lib';
 import { DoMancalaRulesTests } from '../../common/tests/GenericMancalaRulesTest.spec';
 import { Player } from 'src/app/jscaip/Player';
 import { MancalaConfig } from '../../common/MancalaConfig';
 import { MancalaNode, MancalaRules } from '../../common/MancalaRules';
-import { TestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 
 describe('KalahRules', () => {

@@ -1,5 +1,6 @@
 /* eslint-disable max-lines-per-function */
 import { ArrayUtils } from '../ArrayUtils';
+import { TestUtils } from '../TestUtils';
 import { Utils } from '../Utils';
 
 describe('ArrayUtils', () => {
@@ -38,13 +39,13 @@ describe('ArrayUtils', () => {
         });
     });
 
-    describe('compare', () => {
+    describe('equals', () => {
         it('should return true for equal arrays', () => {
-            expect(ArrayUtils.compare([0, 1, 2], [0, 1, 2])).toBeTrue();
+            expect(ArrayUtils.equals([0, 1, 2], [0, 1, 2])).toBeTrue();
         });
         it('should return false for different arrays', () => {
-            expect(ArrayUtils.compare([0, 1, 2], [0, 1, 3])).toBeFalse();
-            expect(ArrayUtils.compare([0, 1, 2], [0, 1])).toBeFalse();
+            expect(ArrayUtils.equals([0, 1, 2], [0, 1, 3])).toBeFalse();
+            expect(ArrayUtils.equals([0, 1, 2], [0, 1])).toBeFalse();
         });
     });
 

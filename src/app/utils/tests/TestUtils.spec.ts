@@ -87,7 +87,7 @@ export class SimpleComponentTestUtils<T> {
     public static async create<T>(componentType: Type<T>, activatedRouteStub?: ActivatedRouteStub)
     : Promise<SimpleComponentTestUtils<T>>
     {
-        await TestUtils.configureTestingModule(componentType, activatedRouteStub);
+        await ConfigureTestingModuleUtils.configureTestingModule(componentType, activatedRouteStub);
         ConnectedUserServiceMock.setUser(UserMocks.CONNECTED_AUTH_USER);
         const testUtils: SimpleComponentTestUtils<T> = new SimpleComponentTestUtils<T>();
         testUtils.prepareFixture(componentType);
@@ -316,7 +316,7 @@ export class ComponentTestUtils<T extends AbstractGameComponent, P extends Compa
     {
         const activatedRouteStub: ActivatedRouteStub = new ActivatedRouteStub(game, 'configRoomId');
         if (configureTestingModule) {
-            await TestUtils.configureTestingModuleForGame(activatedRouteStub);
+            await ConfigureTestingModuleUtils.configureTestingModuleForGame(activatedRouteStub);
         }
         const testUtils: ComponentTestUtils<T, P> = new ComponentTestUtils<T, P>();
         testUtils.prepareMessageDisplayerSpies();
@@ -542,22 +542,7 @@ export class ComponentTestUtils<T extends AbstractGameComponent, P extends Compa
 
 }
 
-export class TestUtils {
-
-    public static expectValidationSuccess(validation: MGPValidation, context?: string): void {
-        const reason: string = validation.getReason();
-        expect(validation.isSuccess()).withContext(context + ': ' + reason).toBeTrue();
-    }
-
-    public static expectToThrowAndLog(func: () => void, error: string): void {
-        if (jasmine.isSpy(Utils.logError) === false) {
-            spyOn(Utils, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
-        }
-        expect(func)
-            .withContext('Expected Assertion failure: ' + error)
-            .toThrowError('Assertion failure: ' + error);
-        expect(Utils.logError).toHaveBeenCalledWith('Assertion failure', error, undefined);
-    }
+export class ConfigureTestingModuleUtils {
 
     public static async configureTestingModuleForGame(activatedRouteStub: ActivatedRouteStub): Promise<void> {
         await TestBed.configureTestingModule({

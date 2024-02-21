@@ -1,8 +1,7 @@
 /* eslint-disable max-lines-per-function */
 import { Coord } from 'src/app/jscaip/Coord';
-import { EncoderTestUtils } from '@everyboard/lib';
+import { EncoderTestUtils, TestUtils } from '@everyboard/lib';
 import { SixMove } from '../SixMove';
-import { TestUtils } from 'src/app/utils/tests/TestUtils.spec';
 
 describe('SixMove', () => {
 

@@ -7,7 +7,6 @@ import { CurrentGameService } from 'src/app/services/CurrentGameService';
 import { UserService } from 'src/app/services/UserService';
 import { MGPOptional } from '@everyboard/lib';
 import { CurrentGame } from 'src/app/domain/User';
-import { Debug } from 'src/app/utils/Debug';
 
 @Component({
     selector: 'app-header',
@@ -35,7 +34,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
     {
     }
     public ngOnInit(): void {
-        window['enableLog'] = Debug.enableLog;
         this.userSubscription = this.connectedUserService.subscribeToUser((user: AuthUser) => {
             this.loading = false;
             if (user.username.isPresent()) {

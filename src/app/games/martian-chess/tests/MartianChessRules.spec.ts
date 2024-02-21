@@ -5,14 +5,13 @@ import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { ErrorLoggerServiceMock } from 'src/app/services/tests/ErrorLoggerServiceMock.spec';
 import { Table } from 'src/app/jscaip/TableUtils';
-import { MGPMap, MGPOptional, Utils } from '@everyboard/lib';
+import { MGPMap, MGPOptional, TestUtils, Utils } from '@everyboard/lib';
 import { MartianChessMove, MartianChessMoveFailure } from '../MartianChessMove';
 import { MartianChessNode, MartianChessRules } from '../MartianChessRules';
 import { MartianChessFailure } from '../MartianChessFailure';
 import { MartianChessCapture, MartianChessState } from '../MartianChessState';
 import { MartianChessPiece } from '../MartianChessPiece';
 import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
-import { TestUtils } from 'src/app/utils/tests/TestUtils.spec';
 
 describe('MartianChessRules', () => {
 
