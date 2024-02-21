@@ -3,7 +3,6 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { GameState } from 'src/app/jscaip/GameState';
 import { HexaLayout } from 'src/app/jscaip/HexaLayout';
 import { Move } from 'src/app/jscaip/Move';
-import { Rules } from 'src/app/jscaip/Rules';
 import { Table } from 'src/app/jscaip/TableUtils';
 import { SuperRules } from 'src/app/jscaip/Rules';
 import { GameComponent } from './GameComponent';

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { MGPValidation, MGPOptional, JSONValue, Utils } from '@everyboard/lib';
+import { MGPValidation, MGPOptional, Utils } from '@everyboard/lib';
 import { PartDAO } from '../dao/PartDAO';
 import { MGPResult, Part, PartDocument } from '../domain/Part';
 import { FirstPlayer, ConfigRoom, PartStatus } from '../domain/ConfigRoom';

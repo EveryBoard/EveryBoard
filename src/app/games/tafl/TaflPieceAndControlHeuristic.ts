@@ -2,7 +2,7 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { Orthogonal } from 'src/app/jscaip/Direction';
 import { BoardValue } from 'src/app/jscaip/AI/BoardValue';
 import { Player } from 'src/app/jscaip/Player';
-import { MGPMap, MGPOptional, MGPSet, Utils } from '@everyboard/lib';
+import { MGPMap, MGPOptional, MGPSet } from '@everyboard/lib';
 import { TaflPawn } from './TaflPawn';
 import { TaflState } from './TaflState';
 import { SandwichThreat } from '../../jscaip/PieceThreat';

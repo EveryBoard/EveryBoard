@@ -3,7 +3,6 @@ import { DefeatCoords, DiaballikRules, VictoryCoord, VictoryOrDefeatCoords } fro
 import { DiaballikMove, DiaballikBallPass, DiaballikSubMove, DiaballikTranslation } from './DiaballikMove';
 import { DiaballikPiece, DiaballikState } from './DiaballikState';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
-import { DiaballikTutorial } from './DiaballikTutorial';
 import { MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 import { Coord } from 'src/app/jscaip/Coord';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';

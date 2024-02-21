@@ -4,7 +4,7 @@ import { SiamMove } from '../SiamMove';
 import { SiamState } from '../SiamState';
 import { Orthogonal } from 'src/app/jscaip/Direction';
 import { SiamPiece } from '../SiamPiece';
-import { EncoderTestUtils, MGPFallible, MGPOptional } from '@everyboard/lib';
+import { EncoderTestUtils, MGPOptional } from '@everyboard/lib';
 import { Table } from 'src/app/jscaip/TableUtils';
 import { SiamMoveGenerator } from '../SiamMoveGenerator';
 

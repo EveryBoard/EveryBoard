@@ -6,7 +6,6 @@ import { Player } from 'src/app/jscaip/Player';
 import { GoGroupDatas } from './GoGroupsDatas';
 import { MGPFallible, MGPOptional, Utils } from '@everyboard/lib';
 import { Table } from 'src/app/jscaip/TableUtils';
-import { Rules } from 'src/app/jscaip/Rules';
 import { ConfigurableRules } from 'src/app/jscaip/Rules';
 import { Coord } from 'src/app/jscaip/Coord';
 import { GoGroupDatasFactory } from './GoGroupDatasFactory';

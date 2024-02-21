@@ -19,7 +19,6 @@ import { HivePiece, HivePieceStack } from './HivePiece';
 import { HiveSpiderRules } from './HivePieceRules';
 import { HiveRules } from './HiveRules';
 import { HiveState } from './HiveState';
-import { HiveTutorial } from './HiveTutorial';
 import { ViewBox } from 'src/app/components/game-components/GameComponentUtils';
 
 interface GroundInfo {
