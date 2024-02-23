@@ -142,7 +142,7 @@ describe('MGPMap', () => {
 
         it('should throw when called on immutable set', () => {
             map.makeImmutable();
-            expect(() => map.set('non', 'no')).toThrowError('Cannot call set on immutable map!');
+            expect(() => map.set('non', 'no')).toThrowError('Assertion failure: Cannot call set on immutable map!');
         });
     });
 
@@ -161,7 +161,7 @@ describe('MGPMap', () => {
 
         it('should throw when called on immutable set', () => {
             map.makeImmutable();
-            expect(() => map.delete('first')).toThrowError('Cannot call delete on immutable map!');
+            expect(() => map.delete('first')).toThrowError('Assertion failure: Cannot call delete on immutable map!');
         });
     });
 

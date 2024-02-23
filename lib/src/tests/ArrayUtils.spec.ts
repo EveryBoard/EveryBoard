@@ -139,18 +139,18 @@ describe('ArrayUtils', () => {
             }
         }
 
-        it('should discover superiority on short list', () => {
-            // Given a list being superior in the early number
-            const superior: number[] = [874797];
-            // and another list being inferior in the early number
-            const inferior: number[] = [Number.MIN_SAFE_INTEGER];
+        it('should consider a one-element list with a greater number greater', () => {
+            // Given a 1-element list
+            const superior: number[] = [5];
+            // and another 1-element list with a smaller number
+            const inferior: number[] = [0];
 
             // When comparing them
             // Then isGreaterThan should be true and isLessThan false
             expectComparisonCorrectness(superior, '>', inferior);
         });
 
-        it('should discover superiority', () => {
+        it('should consider a multiple-element list with greater numbers greater', () => {
             // Given a list being superior in the early number
             const superior: number[] = [3, 2, 1];
             // and another list being inferior in the early number
@@ -161,7 +161,7 @@ describe('ArrayUtils', () => {
             expectComparisonCorrectness(superior, '>', inferior);
         });
 
-        it('should discover inferiority', () => {
+        it('should consider a multiple-element list with smaller numbers smaller', () => {
             // Given a list being inferior in the early number
             const inferior: number[] = [2, 2, 1];
             // and another list being superior in the early number
@@ -172,7 +172,7 @@ describe('ArrayUtils', () => {
             expectComparisonCorrectness(inferior, '<', superior);
         });
 
-        it('should discover inferiority on short list', () => {
+        it('should consider a one-element list with smaller number smaller', () => {
             // Given a list being inferior in the early number
             const inferior: number[] = [9876156];
             // and another list being superior in the early number
@@ -183,7 +183,7 @@ describe('ArrayUtils', () => {
             expectComparisonCorrectness(inferior, '<', superior);
         });
 
-        it('should discover equality', () => {
+        it('should consider equal lists equal', () => {
             // Given two equal lists
             const left: number[] = [3, 2, 1];
             const right: number[] = [3, 2, 1];
@@ -193,7 +193,7 @@ describe('ArrayUtils', () => {
             expectComparisonCorrectness(left, '=', right);
         });
 
-        it('should discover equality on short list', () => {
+        it('should consider equal 1-element lists equal', () => {
             // Given two equal lists
             const left: number[] = [123456789];
             const right: number[] = [123456789];
@@ -221,6 +221,48 @@ describe('ArrayUtils', () => {
             }, reason);
         });
 
+    });
+
+    describe('min', () => {
+        it('should return the first argument if it is smaller than the second one', () => {
+            // Given a list smaller than another
+            const smaller: number[] = [1];
+            const greater: number[] = [2];
+            // When taking the min
+            const result: ReadonlyArray<number> = ArrayUtils.min(smaller, greater);
+            // Then it should take the smallest
+            expect(result).toEqual(smaller);
+        });
+        it('should return the second argument if it is smaller than the first one', () => {
+            // Given a list smaller than another
+            const smaller: number[] = [1];
+            const greater: number[] = [2];
+            // When taking the min
+            const result: ReadonlyArray<number> = ArrayUtils.min(greater, smaller);
+            // Then it should take the smallest
+            expect(result).toEqual(smaller);
+        });
+    });
+
+    describe('max', () => {
+        it('should return the first argument if it is greater than the second one', () => {
+            // Given a list greater than another
+            const smaller: number[] = [1];
+            const greater: number[] = [2];
+            // When taking the max
+            const result: ReadonlyArray<number> = ArrayUtils.max(smaller, greater);
+            // Then it should take the smallest
+            expect(result).toEqual(greater);
+        });
+        it('should return the second argument if it is greater than the first one', () => {
+            // Given a list greater than another
+            const smaller: number[] = [1];
+            const greater: number[] = [2];
+            // When taking the max
+            const result: ReadonlyArray<number> = ArrayUtils.max(greater, smaller);
+            // Then it should take the smallest
+            expect(result).toEqual(greater);
+        });
     });
 });
 

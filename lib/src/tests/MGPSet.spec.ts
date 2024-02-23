@@ -224,7 +224,7 @@ describe('MGPSet', () => {
 
     describe('getMissingElement', () => {
 
-        it('should return a missing element between two sets', () => {
+        it('should return a missing element between two sets that have no intersection', () => {
             // Given two set, one with one element, the other empty
             const fullSet: MGPSet<number> = new MGPSet([0]);
             const emptySet: MGPSet<number> = new MGPSet([]);
@@ -232,8 +232,20 @@ describe('MGPSet', () => {
             // When calling getMissingElement on the empty one
             const missingElement: MGPOptional<number> = emptySet.getMissingElementFrom(fullSet);
 
-            // Then it should appear than the empty set miss one element
+            // Then it should return the missing element
             expect(missingElement).toEqual(MGPOptional.of(0));
+        });
+
+        it('should return a missing element between two sets that have an intersection', () => {
+            // Given two set that have some intersection, but also an element not in common
+            const fullSet: MGPSet<number> = new MGPSet([1, 2, 3]);
+            const missingElementSet: MGPSet<number> = new MGPSet([1, 2]);
+
+            // When calling getMissingElement on the one missing an element
+            const missingElement: MGPOptional<number> = missingElementSet.getMissingElementFrom(fullSet);
+
+            // Then it should return the missing element
+            expect(missingElement).toEqual(MGPOptional.of(3));
         });
 
         it('should return empty when nothing is missing', () => {

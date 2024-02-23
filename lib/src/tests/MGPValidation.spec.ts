@@ -40,6 +40,10 @@ describe('MGPValidationTestUtils', () => {
         MGPValidationTestUtils.expectToBeSuccess(MGPValidation.SUCCESS);
     });
 
+    it('should validate success with expectToBeSuccess and a context', () => {
+        MGPValidationTestUtils.expectToBeSuccess(MGPValidation.SUCCESS, 'this should be a success');
+    });
+
     it('should validate failure with expectToBeFailure', () => {
         const failure: MGPValidation = MGPValidation.failure('I am a failure!');
         MGPValidationTestUtils.expectToBeFailure(failure, 'I am a failure!');
