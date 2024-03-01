@@ -12,7 +12,7 @@ let () =
     FirestorePrimitivesTests.tests;
     FirestoreTests.tests;
     AuthTests.tests;
-    (* TODO: CORS tests *)
+    CorsTests.tests;
     (* TODO: ConfigRoom.tests *)
     (* TODO: GameTests.tests *)
     (* TODO: server tests *)
