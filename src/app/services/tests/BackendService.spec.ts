@@ -61,7 +61,7 @@ export class BackendServiceMock {
 
     public async deleteGame(gameId: string): Promise<void> {
         // Write 1: delete the game
-        await this.configRoomDAO.delete(gameId);
+        await this.partDAO.delete(gameId);
         // Write 2: delete the chat
         await this.chatDAO.delete(gameId);
         // Write 3: delete the configRoom
