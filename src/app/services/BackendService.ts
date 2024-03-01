@@ -241,7 +241,7 @@ export class BackendService {
             return MGPValidation.SUCCESS;
         } else {
             Utils.assert(result.getReason() === 'Game does not exist', 'Unexpected failure from backend');
-            return MGPValidation.failure($localize`Game does not exist`);
+            return MGPValidation.failure($localize`This game does not exist!`);
         }
     }
 
