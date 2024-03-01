@@ -425,7 +425,6 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         expect(wrapper.gameComponent)
             .withContext('gameComponent field should also be present after config accepted and async millisec finished')
             .toBeTruthy();
-        console.log('ticking ' + wrapper.configRoom.maximalMoveDuration );
         tick(wrapper.configRoom.maximalMoveDuration * 1000);
     }));
 

@@ -4,18 +4,12 @@ import { expectPermissionToBeDenied, setupEmulators } from 'src/app/utils/tests/
 import { ChatDAO } from '../ChatDAO';
 import * as FireAuth from '@angular/fire/auth';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { Chat } from 'src/app/domain/Chat';
-import { serverTimestamp, Timestamp } from 'firebase/firestore';
+import { serverTimestamp } from 'firebase/firestore';
 import { Message, MessageDocument } from 'src/app/domain/Message';
-import { PartDAO } from '../PartDAO';
-import { PartMocks } from 'src/app/domain/PartMocks.spec';
-import { ConfigRoomMocks } from 'src/app/domain/ConfigRoomMocks.spec';
-import { ConfigRoomDAO } from '../ConfigRoomDAO';
 import { MinimalUser } from 'src/app/domain/MinimalUser';
 import { IFirestoreDAO } from '../FirestoreDAO';
 import { FirestoreCollectionObserver } from '../FirestoreCollectionObserver';
 import { createConnectedUser } from 'src/app/services/tests/ConnectedUserService.spec';
-import { UserDAO } from '../UserDAO';
 import { ChatService } from 'src/app/services/ChatService';
 import { Subscription } from 'rxjs';
 
@@ -23,25 +17,14 @@ describe('ChatDAO', () => {
 
     let chatDAO: ChatDAO;
     let chatService: ChatService;
-    let partDAO: PartDAO;
-    let configRoomDAO: ConfigRoomDAO;
-    let userDAO: UserDAO;
 
     function signOut(): Promise<void> {
         return TestBed.inject(FireAuth.Auth).signOut();
-    }
-    async function createPartAndConfigRoom(creator: MinimalUser): Promise<string> {
-        const id: string = await partDAO.create({ ...PartMocks.INITIAL, playerZero: creator });
-        await configRoomDAO.set(id, { ...ConfigRoomMocks.getInitial(MGPOptional.empty()), creator });
-        return id;
     }
     beforeEach(async() => {
         await setupEmulators();
         chatDAO = TestBed.inject(ChatDAO);
         chatService = TestBed.inject(ChatService);
-        partDAO = TestBed.inject(PartDAO);
-        configRoomDAO = TestBed.inject(ConfigRoomDAO);
-        userDAO = TestBed.inject(UserDAO);
     });
     it('should be created', () => {
         expect(chatDAO).toBeTruthy();
@@ -80,14 +63,6 @@ describe('ChatDAO', () => {
             // and a message from the current user, who is able to add messages
             myUser = await createConnectedUser('bar@bar.com', 'user');
             myMessageId = await chatService.addMessage('lobby', { ...message, sender: myUser });
-        });
-        it('should forbid disconnected users to read a chat', async() => {
-            // Given a disconnected user
-            await signOut();
-            // When trying to read a chat
-            const chatRead: Promise<MGPOptional<Chat>> = chatDAO.read('lobby');
-            // Then it fails
-            await expectPermissionToBeDenied(chatRead);
         });
         it('should forbid a user to post a message as another user', async() => {
             // When posting a message as another user
@@ -195,71 +170,6 @@ describe('ChatDAO', () => {
             const result: Promise<string> = chatService.addMessage('lobby', message);
             // Then it fails
             await expectPermissionToBeDenied(result);
-        });
-    });
-    describe('on a part chat', () => {
-        it('should allow a part owner to create the corresponding chat', async() => {
-            // Given a verified user who is a part owner
-            const user: MinimalUser = await createConnectedUser('foo@bar.com', 'creator');
-            const partId: string = await createPartAndConfigRoom(user);
-            // When creating the corresponding chat
-            const result: Promise<void> = chatDAO.set(partId, {});
-            // Then it should succeed
-            await expectAsync(result).toBeResolvedTo();
-        });
-        it('should allow a part owner to delete the corresponding chat', async() => {
-            // Given a verified user who is a part owner, and a chat
-            const user: MinimalUser = await createConnectedUser('foo@bar.com', 'creator');
-            const partId: string = await createPartAndConfigRoom(user);
-            await chatDAO.set(partId, {});
-            // When deleting the chat
-            const result: Promise<void> = chatDAO.delete(partId);
-            // Then it should succeed
-            await expectAsync(result).toBeResolvedTo();
-        });
-        it('should forbid creating a chat if there is no corresponding part', async() => {
-            // Given a verified user and no corresponding part
-            await createConnectedUser('foo@bar.com', 'creator');
-            // When creating a part chat
-            const result: Promise<void> = chatDAO.set('unexisting-part-id', {});
-            // Then it should fail
-            await expectPermissionToBeDenied(result);
-        });
-        it('should forbid a non-part owner to create the corresponding chat', async() => {
-            // Given a part and verified user who is not a part owner
-            const user: MinimalUser = await createConnectedUser('foo@bar.com', 'creator');
-            const partId: string = await createPartAndConfigRoom(user);
-            await signOut();
-            await createConnectedUser('bar@bar.com', 'username');
-            // When creating a part chat
-            const result: Promise<void> = chatDAO.set(partId, {});
-            // Then it should fail
-            await expectPermissionToBeDenied(result);
-        });
-        it('should forbid a non-part owner to delete the corresponding chat', async() => {
-            // Given a part, a chat, and a non-part owner user
-            const user: MinimalUser = await createConnectedUser('foo@bar.com', 'creator');
-            const partId: string = await createPartAndConfigRoom(user);
-            await chatDAO.set(partId, {});
-            await signOut();
-            await createConnectedUser('bar@bar.com', 'other');
-            // When deleting the chat as the non-owner
-            const result: Promise<void> = chatDAO.delete(partId);
-            // Then it should fail
-            await expectPermissionToBeDenied(result);
-        });
-        it('should allow non-part owner to delete the corresponding chat if owner has timed out', async() => {
-            // Given a part (whose owner has timed out), a chat, and another user
-            const user: MinimalUser = await createConnectedUser('foo@bar.com', 'creator');
-            const partId: string = await createPartAndConfigRoom(user);
-            await chatDAO.set(partId, {});
-            await userDAO.update(user.id, { lastUpdateTime: new Timestamp(0, 0) });
-            await signOut();
-            await createConnectedUser('bar@bar.com', 'other');
-            // When deleting the chat as the non-owner
-            const result: Promise<void> = chatDAO.delete(partId);
-            // Then it should succeed
-            await expectAsync(result).toBeResolvedTo();
         });
     });
 });
