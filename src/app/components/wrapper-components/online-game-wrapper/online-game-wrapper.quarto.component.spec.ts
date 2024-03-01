@@ -38,7 +38,7 @@ import { CurrentGameService } from 'src/app/services/CurrentGameService';
 import { CurrentGameServiceMock } from 'src/app/services/tests/CurrentGameService.spec';
 import { OGWCTimeManagerService } from './OGWCTimeManagerService';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
-import { RulesConfig, RulesConfigUtils } from 'src/app/jscaip/RulesConfigUtil';
+import { EmptyRulesConfig, RulesConfig, RulesConfigUtils } from 'src/app/jscaip/RulesConfigUtil';
 import { IFirestoreDAO } from 'src/app/dao/FirestoreDAO';
 
 export type PreparationResult<T extends AbstractGameComponent> = {
