@@ -133,7 +133,7 @@ let tests = [
         let* actual_id = FirestorePrimitives.create_doc request collection doc in
         (* Then it should have made a POST request with the doc, and should return the document id*)
         let firestore_doc = to_firestore doc in
-        check (list http_query) "query" [(`POST, endpoint ~params:[("mask", "_")] collection, Some firestore_doc)] !(mock.calls);
+        check (list http_query) "query" [(`POST, endpoint ~params:[("mask.fieldPaths", "_")] collection, Some firestore_doc)] !(mock.calls);
         check string "document id" id actual_id;
         Lwt.return ()
       );
@@ -167,7 +167,7 @@ let tests = [
         let* _ = FirestorePrimitives.set_doc request "collection" id doc in
         (* Then it should have made a PATCH request with the doc *)
         let firestore_doc = to_firestore doc in
-        check (list http_query) "query" [(`PATCH, endpoint ~params:[("mask", "_"); ("updateMask", "foo")] path, Some firestore_doc)] !(mock.calls);
+        check (list http_query) "query" [(`PATCH, endpoint ~params:[("mask.fieldPaths", "_"); ("updateMask.fieldPaths", "foo")] path, Some firestore_doc)] !(mock.calls);
         Lwt.return ()
       );
   ];
@@ -185,7 +185,7 @@ let tests = [
         (* Then it should have made a PATCH request on the document with the update *)
         let firestore_update = to_firestore update in
         (* mask=_ means we don't care about the return value, updateMask=foo means we only update the foo field *)
-        let params = [("mask", "_"); ("updateMask", "foo")] in
+        let params = [("mask.fieldPaths", "_"); ("updateMask.fieldPaths", "foo")] in
         check (list http_query) "query" [(`PATCH, endpoint ~params path, Some firestore_update)] !(mock.calls);
         Lwt.return ()
       );

@@ -170,13 +170,11 @@ module Make (FirestorePrimitives : FirestorePrimitives.FIRESTORE_PRIMITIVES) : F
     let remove_candidate (request : Dream.request) (game_id : string) (candidate_id : string) : unit Lwt.t =
       FirestorePrimitives.delete_doc request ("config-room/" ^ game_id ^ "/candidates/" ^ candidate_id)
 
-    let accept (request : Dream.request) (game_id : string) : unit Lwt.t =
-      let update = `Assoc
-          [("partStatus", Domain.ConfigRoom.GameStatus.(to_yojson Started))] in
-      FirestorePrimitives.set_doc request "config-room" game_id update
-
     let update (request : Dream.request) (game_id : string) (update : JSON.t) : unit Lwt.t =
       FirestorePrimitives.update_doc request ("config-room/" ^ game_id) update
+
+    let accept (request : Dream.request) (game_id : string) : unit Lwt.t =
+      update request game_id (`Assoc [("partStatus", Domain.ConfigRoom.GameStatus.(to_yojson Started))])
   end
 
   module Chat = struct
