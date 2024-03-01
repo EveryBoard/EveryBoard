@@ -16,6 +16,7 @@ import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 import { Debug } from 'src/app/utils/utils';
 import { Table } from 'src/app/utils/ArrayUtils';
+import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 
 export type SixLegalityInformation = MGPSet<Coord>;
 
@@ -162,9 +163,9 @@ export class SixRules extends Rules<SixMove, SixState, SixLegalityInformation> {
             return GameStatus.getVictory(LAST_PLAYER);
         }
         if (state.turn > 39) {
-            const pieces: number[] = state.countPieces();
-            const zeroPieces: number = pieces[0];
-            const onePieces: number = pieces[1];
+            const pieces: PlayerNumberMap = state.countPieces();
+            const zeroPieces: number = pieces.get(Player.ZERO);
+            const onePieces: number = pieces.get(Player.ONE);
             if (zeroPieces < 6 && onePieces < 6) {
                 if (zeroPieces < onePieces) {
                     return GameStatus.ONE_WON;
