@@ -42,13 +42,13 @@
               [attr.height]="SPACE_SIZE - (3 * STROKE_WIDTH)"
         />
     </g>
-    <circle *ngFor="let y of ArrayUtils.range(viewInfo.sidePieces[0])"
+    <circle *ngFor="let y of ArrayUtils.range(viewInfo.sidePieces.get(Player.ZERO))"
             id="sidePiece_0_{{ y }}"
             [attr.cx]="-PIECE_RADIUS"
             [attr.cy]="1670 - y * PIECE_RADIUS"
             [attr.r]="PIECE_RADIUS - 5"
             class="base mid-stroke player0-fill"/>
-    <circle *ngFor="let y of ArrayUtils.range(viewInfo.sidePieces[1])"
+    <circle *ngFor="let y of ArrayUtils.range(viewInfo.sidePieces.get(Player.ONE))"
             id="sidePiece_1_{{ y }}"
             [attr.cx]="1715 + PIECE_RADIUS"
             [attr.cy]="1670 - y * PIECE_RADIUS"

@@ -13,6 +13,7 @@ import { Table } from 'src/app/utils/ArrayUtils';
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
 import { Player } from 'src/app/jscaip/Player';
 import { GipfCapture } from 'src/app/jscaip/GipfProjectHelper';
+import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 
 describe('GipfComponent', () => {
 
@@ -81,7 +82,7 @@ describe('GipfComponent', () => {
                 [_, _, B, A, _, N, N],
                 [_, _, _, _, N, N, N],
             ];
-            const state: GipfState = new GipfState(board, P0Turn, [5, 5], [0, 0]);
+            const state: GipfState = new GipfState(board, P0Turn, PlayerNumberMap.of(5, 5), PlayerNumberMap.of(0, 0));
             await testUtils.setupState(state);
 
             // When clicking on a space/piece not part of a capture
@@ -100,7 +101,7 @@ describe('GipfComponent', () => {
                 [_, _, _, A, _, N, N],
                 [_, _, _, _, N, N, N],
             ];
-            const state: GipfState = new GipfState(board, P0Turn, [5, 5], [0, 0]);
+            const state: GipfState = new GipfState(board, P0Turn, PlayerNumberMap.of(5, 5), PlayerNumberMap.of(0, 0));
             await testUtils.setupState(state);
 
             // When clicking a piece amongst the capturable one
@@ -124,7 +125,7 @@ describe('GipfComponent', () => {
                 [_, _, B, A, _, N, N],
                 [_, _, _, _, N, N, N],
             ];
-            const state: GipfState = new GipfState(board, P0Turn, [5, 5], [0, 0]);
+            const state: GipfState = new GipfState(board, P0Turn, PlayerNumberMap.of(5, 5), PlayerNumberMap.of(0, 0));
             await testUtils.setupState(state);
 
             // When clicking on a piece part of the capture
@@ -148,7 +149,7 @@ describe('GipfComponent', () => {
                 [A, _, B, _, _, N, N],
                 [_, _, B, _, N, N, N],
             ];
-            const state: GipfState = new GipfState(board, P1Turn, [5, 5], [0, 0]);
+            const state: GipfState = new GipfState(board, P1Turn, PlayerNumberMap.of(5, 5), PlayerNumberMap.of(0, 0));
             await testUtils.setupState(state);
 
             // When clicking on that space
@@ -167,7 +168,7 @@ describe('GipfComponent', () => {
                 [A, A, _, _, _, N, N],
                 [B, A, B, A, N, N, N],
             ];
-            const state: GipfState = new GipfState(board, P0Turn, [5, 5], [0, 0]);
+            const state: GipfState = new GipfState(board, P0Turn, PlayerNumberMap.of(5, 5), PlayerNumberMap.of(0, 0));
             await testUtils.setupState(state);
 
             // When clicking on that space
@@ -187,7 +188,7 @@ describe('GipfComponent', () => {
             [_, _, B, A, _, N, N],
             [_, _, _, _, N, N, N],
         ];
-        const state: GipfState = new GipfState(board, P0Turn, [5, 5], [0, 0]);
+        const state: GipfState = new GipfState(board, P0Turn, PlayerNumberMap.of(5, 5), PlayerNumberMap.of(0, 0));
         await testUtils.setupState(state);
 
         await testUtils.expectClickSuccess('#click_3_3');
@@ -208,7 +209,7 @@ describe('GipfComponent', () => {
             [A, _, B, _, _, N, N],
             [_, _, B, _, N, N, N],
         ];
-        const state: GipfState = new GipfState(board, P1Turn, [5, 5], [0, 0]);
+        const state: GipfState = new GipfState(board, P1Turn, PlayerNumberMap.of(5, 5), PlayerNumberMap.of(0, 0));
         await testUtils.setupState(state);
 
         // Perform the placement to prepare for final capture
@@ -227,7 +228,7 @@ describe('GipfComponent', () => {
             [A, _, B, _, _, N, N],
             [_, _, B, _, N, N, N],
         ];
-        const state: GipfState = new GipfState(board, P1Turn, [5, 5], [0, 0]);
+        const state: GipfState = new GipfState(board, P1Turn, PlayerNumberMap.of(5, 5), PlayerNumberMap.of(0, 0));
         await testUtils.setupState(state);
 
         await testUtils.expectClickSuccess('#click_0_3');
@@ -252,7 +253,7 @@ describe('GipfComponent', () => {
             [_, _, _, _, _, N, N],
             [_, B, _, _, N, N, N],
         ];
-        const state: GipfState = new GipfState(board, P0Turn, [5, 5], [0, 0]);
+        const state: GipfState = new GipfState(board, P0Turn, PlayerNumberMap.of(5, 5), PlayerNumberMap.of(0, 0));
         await testUtils.setupState(state);
 
         const placement: GipfPlacement = new GipfPlacement(new Coord(1, 6), MGPOptional.of(HexaDirection.UP_RIGHT));
@@ -275,7 +276,7 @@ describe('GipfComponent', () => {
             [_, _, B, A, _, N, N],
             [_, _, _, _, N, N, N],
         ];
-        const state: GipfState = new GipfState(board, P0Turn, [5, 5], [0, 0]);
+        const state: GipfState = new GipfState(board, P0Turn, PlayerNumberMap.of(5, 5), PlayerNumberMap.of(0, 0));
         await testUtils.setupState(state);
 
         expect(testUtils.getGameComponent().possibleCaptures).toContain(new GipfCapture([
@@ -296,7 +297,7 @@ describe('GipfComponent', () => {
             [_, _, B, A, _, N, N],
             [_, _, _, _, N, N, N],
         ];
-        const state: GipfState = new GipfState(board, P0Turn, [5, 5], [0, 0]);
+        const state: GipfState = new GipfState(board, P0Turn, PlayerNumberMap.of(5, 5), PlayerNumberMap.of(0, 0));
         await testUtils.setupState(state);
 
         await testUtils.expectClickSuccess('#click_3_3');
@@ -323,7 +324,7 @@ describe('GipfComponent', () => {
             [_, _, B, A, _, N, N],
             [_, _, _, _, N, N, N],
         ];
-        const state: GipfState = new GipfState(board, P0Turn, [5, 5], [0, 0]);
+        const state: GipfState = new GipfState(board, P0Turn, PlayerNumberMap.of(5, 5), PlayerNumberMap.of(0, 0));
         await testUtils.setupState(state);
 
         await testUtils.expectClickSuccess('#click_3_3');
@@ -348,7 +349,7 @@ describe('GipfComponent', () => {
             [_, _, B, _, _, N, N],
             [_, B, _, _, N, N, N],
         ];
-        const state: GipfState = new GipfState(board, P0Turn, [5, 5], [0, 0]);
+        const state: GipfState = new GipfState(board, P0Turn, PlayerNumberMap.of(5, 5), PlayerNumberMap.of(0, 0));
         await testUtils.setupState(state);
 
         await testUtils.expectClickSuccess('#click_1_6');
@@ -366,7 +367,7 @@ describe('GipfComponent', () => {
             [_, _, _, _, _, N, N],
             [_, _, _, _, N, N, N],
         ];
-        const state: GipfState = new GipfState(board, P0Turn, [5, 5], [0, 0]);
+        const state: GipfState = new GipfState(board, P0Turn, PlayerNumberMap.of(5, 5), PlayerNumberMap.of(0, 0));
         await testUtils.setupState(state);
 
         const move: GipfMove = new GipfMove(new GipfPlacement(new Coord(6, 3),
@@ -397,7 +398,7 @@ describe('GipfComponent', () => {
             [_, _, _, _, _, N, N],
             [_, _, _, _, N, N, N],
         ];
-        const state: GipfState = new GipfState(board, P0Turn, [5, 5], [0, 0]);
+        const state: GipfState = new GipfState(board, P0Turn, PlayerNumberMap.of(5, 5), PlayerNumberMap.of(0, 0));
         await testUtils.setupState(state);
 
         const move: GipfMove = new GipfMove(new GipfPlacement(new Coord(5, 4),
@@ -430,7 +431,7 @@ describe('GipfComponent', () => {
             [_, _, _, A, A, N, N],
             [_, _, _, _, N, N, N],
         ];
-        const state: GipfState = new GipfState(board, P0Turn, [5, 5], [0, 0]);
+        const state: GipfState = new GipfState(board, P0Turn, PlayerNumberMap.of(5, 5), PlayerNumberMap.of(0, 0));
         await testUtils.setupState(state);
 
         await testUtils.expectClickSuccess('#click_3_3');
@@ -453,7 +454,7 @@ describe('GipfComponent', () => {
             [A, A, A, B, B, N, N],
             [_, _, _, A, N, N, N],
         ];
-        const state: GipfState = new GipfState(board, P0Turn, [8, 4], [2, 3]);
+        const state: GipfState = new GipfState(board, P0Turn, PlayerNumberMap.of(8, 4), PlayerNumberMap.of(2, 3));
         await testUtils.setupState(state);
 
         const move: GipfMove = new GipfMove(

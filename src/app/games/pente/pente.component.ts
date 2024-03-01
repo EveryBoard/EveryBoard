@@ -13,13 +13,19 @@ import { PenteMoveGenerator } from './PenteMoveGenerator';
 import { PenteAlignmentHeuristic } from './PenteAlignmentHeuristic';
 import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 import { Minimax } from 'src/app/jscaip/AI/Minimax';
+import { PenteConfig } from './PenteConfig';
 
 @Component({
     selector: 'app-new-game',
     templateUrl: './pente.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
 })
-export class PenteComponent extends GobanGameComponent<PenteRules, PenteMove, PenteState, PlayerOrNone> {
+export class PenteComponent extends GobanGameComponent<PenteRules,
+                                                       PenteMove,
+                                                       PenteState,
+                                                       PlayerOrNone,
+                                                       PenteConfig>
+{
 
     public lastMoved: MGPOptional<Coord> = MGPOptional.empty();
     public victoryCoords: Coord[] = [];
@@ -40,14 +46,21 @@ export class PenteComponent extends GobanGameComponent<PenteRules, PenteMove, Pe
         const state: PenteState = this.getState();
         this.board = state.board;
         this.scores = MGPOptional.of(this.getState().captures);
-        this.victoryCoords = PenteRules.PENTE_HELPER.getVictoriousCoord(state); // TODO: showing victory should be done in showLastMove ?
+        const config: MGPOptional<PenteConfig> = this.getConfig();
+        // TODO: showing victory should be done in showLastMove ?
+        this.victoryCoords = this.rules.getHelper(config).getVictoriousCoord(state);
         this.createHoshis();
     }
 
     public override async showLastMove(move: PenteMove): Promise<void> {
         this.lastMoved = MGPOptional.of(move.coord);
         const opponent: Player = this.getCurrentOpponent();
-        this.captured = PenteRules.get().getCaptures(move.coord, this.getPreviousState(), opponent);
+        this.captured = PenteRules.get().getCaptures(
+            move.coord,
+            this.getPreviousState(),
+            this.getConfig().get(),
+            opponent,
+        );
     }
 
     public override hideLastMove(): void {
@@ -55,17 +68,15 @@ export class PenteComponent extends GobanGameComponent<PenteRules, PenteMove, Pe
         this.lastMoved = MGPOptional.empty();
     }
 
-    public async onClick(x: number, y: number): Promise<MGPValidation> {
-        const clickValidity: MGPValidation = await this.canUserPlay('#click_' + x + '_' + y);
+    public async onClick(coord: Coord): Promise<MGPValidation> {
+        const clickValidity: MGPValidation = await this.canUserPlay('#click_' + coord.x + '_' + coord.y);
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }
-        const clickedCoord: Coord = new Coord(x, y);
-        return this.chooseMove(PenteMove.of(clickedCoord));
+        return this.chooseMove(PenteMove.of(coord));
     }
 
-    public getSpaceClass(x: number, y: number): string[] {
-        const coord: Coord = new Coord(x, y);
+    public getSpaceClass(coord: Coord): string[] {
         const owner: PlayerOrNone = this.getState().getPieceAt(coord);
         const classes: string[] = [];
         classes.push(this.getPlayerClass(owner));

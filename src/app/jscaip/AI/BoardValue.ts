@@ -1,6 +1,7 @@
 import { Utils } from 'src/app/utils/utils';
 import { Player } from '../Player';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
+import { PlayerNumberMap } from '../PlayerMap';
 
 export class BoardValue {
 
@@ -31,6 +32,13 @@ export class BoardValue {
      */
     public static ofSingle(playerZeroScore: number, playerOneScore: number): BoardValue {
         return BoardValue.ofMultiple([playerZeroScore], [playerOneScore]);
+    }
+
+    /**
+     * return the board value corresponding to the players' scores, as a number map
+     */
+    public static ofPlayerNumberMap(map: PlayerNumberMap): BoardValue {
+        return BoardValue.ofSingle(map.get(Player.ZERO), map.get(Player.ONE));
     }
 
     /**

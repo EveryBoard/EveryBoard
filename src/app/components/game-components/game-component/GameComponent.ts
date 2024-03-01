@@ -143,7 +143,8 @@ export abstract class GameComponent<R extends SuperRules<M, S, C, L>,
         }
     }
 
-    public setInteractive(interactive: boolean): void { // TODO: make the ones who call that not trigger updateBoard if nothing changed
+    public setInteractive(interactive: boolean): void {
+        // TODO: make the ones who call that not trigger updateBoard if nothing changed
         this.interactive = interactive;
     }
 

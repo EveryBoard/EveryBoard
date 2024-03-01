@@ -17,6 +17,7 @@ import { GipfCapture } from 'src/app/jscaip/GipfProjectHelper';
 import { Utils } from 'src/app/utils/utils';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 
 export type GipfLegalityInformation = GipfState
 
@@ -47,7 +48,7 @@ export class GipfRules extends Rules<GipfMove, GipfState, GipfLegalityInformatio
             [_, _, _, _, _, N, N],
             [X, _, _, O, N, N, N],
         ];
-        return new GipfState(board, 0, [12, 12], [0, 0]);
+        return new GipfState(board, 0, PlayerNumberMap.of(12, 12), PlayerNumberMap.of(0, 0));
     }
 
     public override applyLegalMove(_move: GipfMove,
@@ -75,15 +76,15 @@ export class GipfRules extends Rules<GipfMove, GipfState, GipfLegalityInformatio
     public static applyCapture(capture: GipfCapture, state: GipfState): GipfState {
         const player: Player = state.getCurrentPlayer();
         let newState: GipfState = state;
-        const sidePieces: [number, number] = [state.sidePieces[0], state.sidePieces[1]];
-        const capturedPieces: [number, number] = [state.capturedPieces[0], state.capturedPieces[1]];
+        const sidePieces: PlayerNumberMap = state.sidePieces.getCopy();
+        const capturedPieces: PlayerNumberMap = state.capturedPieces.getCopy();
         capture.forEach((coord: Coord) => {
             const piece: FourStatePiece = state.getPieceAt(coord);
             newState = newState.setAt(coord, FourStatePiece.EMPTY);
             if (piece.is(player)) {
-                sidePieces[player.getValue()] += 1;
+                sidePieces.add(player, 1);
             } else {
-                capturedPieces[player.getValue()] += 1;
+                capturedPieces.add(player, 1);
             }
         });
         return new GipfState(newState.board, state.turn, sidePieces, capturedPieces);
@@ -138,8 +139,8 @@ export class GipfRules extends Rules<GipfMove, GipfState, GipfLegalityInformatio
                 prevPiece = curPiece;
             }
         }
-        const sidePieces: [number, number] = [state.sidePieces[0], state.sidePieces[1]];
-        sidePieces[player.getValue()] -= 1;
+        const sidePieces: PlayerNumberMap = state.sidePieces.getCopy();
+        sidePieces.add(player, -1);
         return new GipfState(newState.board, state.turn, sidePieces, state.capturedPieces);
     }
 
