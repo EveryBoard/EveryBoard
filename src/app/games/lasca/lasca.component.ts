@@ -20,16 +20,6 @@ import { LascaControlHeuristic } from './LascaControlHeuristic';
 import { LascaMoveGenerator } from './LascaMoveGenerator';
 import { LascaControlPlusDominationHeuristic } from './LascaControlAndDominationHeuristic';
 
-interface SpaceInfo {
-    x: number;
-    y: number;
-    squareClasses: string[];
-    pieceInfos: LascaPieceInfo[];
-}
-interface LascaPieceInfo {
-    classes: string[];
-    isOfficer: boolean;
-}
 @Component({
     selector: 'app-lasca',
     templateUrl: './lasca.component.html',
@@ -57,11 +47,13 @@ export class LascaComponent extends ParallelogramGameComponent<LascaRules,
     public readonly CX: number = this.WIDTH / 2;
     public readonly CY: number = (this.HEIGHT + this.UP) / 2;
 
-    public adaptedBoard: { isAlreadySwitched: boolean, spaceInfo: SpaceInfo[][] } = {
-        isAlreadySwitched: false,
-        spaceInfo: [],
-    };
+    public constructedState: LascaState;
     private currentMoveClicks: Coord[] = [];
+    private lastCaptures: Coord[] = [];
+    private lastMoveds: Coord[] = [];
+    private possibleClicks: Coord[] = []; // TODO: name better, since capturableCoords are possible clicks too
+    private capturableCoords: Coord[] = [];
+    private selectedStack: MGPOptional<Coord> = MGPOptional.empty();
     private capturedCoords: Coord[] = []; // Only the coords capture by active player during this turn
     private legalMoves: LascaMove[] = [];
     private readonly moveGenerator: LascaMoveGenerator = new LascaMoveGenerator();
@@ -82,61 +74,47 @@ export class LascaComponent extends ParallelogramGameComponent<LascaRules,
     }
 
     public async updateBoard(_triggerAnimation: boolean): Promise<void> {
-        const state: LascaState = this.getState();
-        this.board = state.getCopiedBoard();
+        this.constructedState = this.getState(); // AND SWITCH IT
         this.legalMoves = this.moveGenerator.getListMoves(this.node, this.config);
-        this.createAdaptedBoardFrom(state);
         this.showPossibleMoves();
-        this.rotateAdaptedBoardIfNeeded();
     }
 
-    private createAdaptedBoardFrom(state: LascaState): void {
-        this.adaptedBoard = {
-            isAlreadySwitched: false,
-            spaceInfo: [],
-        };
-        for (let y: number = 0; y < LascaState.SIZE; y++) {
-            const newRow: SpaceInfo[] = [];
-            for (let x: number = 0; x < LascaState.SIZE; x++) {
-                const newSpace: SpaceInfo = this.getSpaceInfo(state, x, y);
-                newRow.push(newSpace);
-            }
-            this.adaptedBoard.spaceInfo.push(newRow);
+    public getSquareClass(x: number, y: number): string[] {
+        const coord: Coord = new Coord(x, y);
+        const classes: string[] = [];
+        if (this.capturedCoords.concat(this.lastCaptures).some((c: Coord) => c.equals(coord))) {
+            classes.push('captured-fill');
         }
-        const lastClick: Coord = this.currentMoveClicks[this.currentMoveClicks.length - 1];
-        const selectedPiece: MGPOptional<Coord> = MGPOptional.ofNullable(lastClick);
-        if (selectedPiece.isPresent()) {
-            const coord: Coord = selectedPiece.get();
-            for (const pieceInfo of this.getSpaceInfoAt(coord).pieceInfos) {
-                pieceInfo.classes.push('selected-stroke');
-            }
-            this.showPossibleLandings(coord, state);
+        if (this.currentMoveClicks.concat(this.lastMoveds).some((c: Coord) => c.equals(coord))) {
+            classes.push('moved-fill');
         }
-        for (const captured of this.capturedCoords) {
-            this.getSpaceInfoAt(captured).squareClasses.push('captured-fill');
+        if (this.possibleClicks.some((c: Coord) => c.equals(coord))) {
+            classes.push('selectable-fill');
         }
-        for (const moved of this.currentMoveClicks) {
-            this.getSpaceInfoAt(moved).squareClasses.push('moved-fill');
+        if (this.capturableCoords.some((c: Coord) => c.equals(coord))) {
+            classes.push('capturable-fill');
         }
+        return classes;
     }
 
-    private getSpaceInfo(state: LascaState, x: number, y: number): SpaceInfo {
-        const square: LascaStack = state.getPieceAtXY(x, y);
-        const pieceInfos: LascaPieceInfo[] = [];
-        // Start by the lower piece
-        for (let pieceIndex: number = square.getStackSize() - 1; 0 <= pieceIndex; pieceIndex--) {
-            const piece: LascaPiece = square.get(pieceIndex);
-            pieceInfos.push({
-                classes: [this.getPlayerClass(piece.player)],
-                isOfficer: piece.isOfficer,
-            });
+    public getPieceClasses(x: number, y: number, z: number): string[] {
+        const coord: Coord = new Coord(x, y);
+        const square: LascaStack = this.constructedState.getPieceAt(coord);
+        const max: number = square.getStackSize() - 1;
+        const piece: LascaPiece = square.get(max - z);
+        const classes: string[] = [this.getPlayerClass(piece.player)];
+        if (this.selectedStack.equalsValue(coord)) {
+            classes.push('selected-stroke');
         }
-        return {
-            pieceInfos,
-            x,
-            y,
-            squareClasses: [],
-        };
+        return classes;
+    }
+
+    public isPieceOfficer(x: number, y: number, z: number): boolean {
+        const coord: Coord = new Coord(x, y);
+        const square: LascaStack = this.constructedState.getPieceAt(coord);
+        const max: number = square.getStackSize() - 1;
+        const piece: LascaPiece = square.get(max - z);
+        return piece.isOfficer;
     }
 
     public override async showLastMove(move: LascaMove): Promise<void> {
@@ -145,62 +123,36 @@ export class LascaComponent extends ParallelogramGameComponent<LascaRules,
     }
 
     private showLastCapture(move: LascaMove): void {
+        this.lastCaptures = [];
         if (move.isStep === false) {
             const jumpedOverCoord: MGPFallible<MGPSet<Coord>> = move.getCapturedCoords();
             Utils.assert(jumpedOverCoord.isSuccess(), 'Last move is a capture yet has illegal jumps !?');
             for (const coord of jumpedOverCoord.get()) {
-                this.getSpaceInfoAt(coord).squareClasses.push('captured-fill');
+                this.lastCaptures.push(coord);
             }
         }
     }
 
     private showSteppedOnCoord(move: LascaMove): void {
+        this.lastMoveds = [];
         for (const steppedCoord of move.coords) {
-            this.getSpaceInfoAt(steppedCoord).squareClasses.push('moved-fill');
+            this.lastMoveds.push(steppedCoord);
         }
     }
 
     private showPossibleMoves(): void {
+        this.possibleClicks = [];
         if (this.interactive) {
             for (const validMove of this.legalMoves) {
                 const startingCoord: Coord = validMove.getStartingCoord();
-                this.getSpaceInfoAt(startingCoord).squareClasses.push('selectable-fill');
+                this.possibleClicks.push(startingCoord);
             }
-        }
-    }
-
-    private getSpaceInfoAt(unadapedCoord: Coord): SpaceInfo {
-        // Adapt the coord if needed so we don't affect the "centrally symmetrical" coord to this one
-        if (this.getPointOfView() === Player.ONE && this.adaptedBoard.isAlreadySwitched) {
-            const max: number = LascaState.SIZE - 1;
-            const adaptedCoord: Coord = new Coord(max - unadapedCoord.x, max - unadapedCoord.y);
-            return this.adaptedBoard.spaceInfo[adaptedCoord.y][adaptedCoord.x];
-        } else {
-            return this.adaptedBoard.spaceInfo[unadapedCoord.y][unadapedCoord.x];
-        }
-    }
-
-    private rotateAdaptedBoardIfNeeded(): void {
-        if (this.getPointOfView() === Player.ONE) {
-            const rotatedAdaptedBoard: SpaceInfo[][] = [];
-            for (let y: number = 0; y < LascaState.SIZE; y++) {
-                rotatedAdaptedBoard[(LascaState.SIZE - 1) - y] = [];
-                for (let x: number = 0; x < LascaState.SIZE; x++) {
-                    const rx: number = (LascaState.SIZE - 1) - x;
-                    const ry: number = (LascaState.SIZE - 1) - y;
-                    rotatedAdaptedBoard[ry][rx] = this.getSpaceInfoAt(new Coord(x, y));
-                }
-            }
-            this.adaptedBoard = {
-                isAlreadySwitched: true,
-                spaceInfo: rotatedAdaptedBoard,
-            };
         }
     }
 
     public override hideLastMove(): void {
-        this.createAdaptedBoardFrom(this.getState());
-        this.rotateAdaptedBoardIfNeeded();
+        this.lastCaptures = [];
+        this.lastMoveds = [];
     }
 
     public async onClick(x: number, y: number): Promise<MGPValidation> {
@@ -209,8 +161,8 @@ export class LascaComponent extends ParallelogramGameComponent<LascaRules,
             return this.cancelMove(clickValidity.getReason());
         }
         const clickedCoord: Coord = new Coord(x, y);
-        const clickedSpace: LascaStack = this.getState().getPieceAt(clickedCoord);
-        const opponent: Player = this.getState().getCurrentOpponent();
+        const clickedSpace: LascaStack = this.constructedState.getPieceAt(clickedCoord);
+        const opponent: Player = this.constructedState.getCurrentOpponent();
         if (clickedSpace.isCommandedBy(opponent)) {
             return this.cancelMove(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT());
         }
@@ -224,18 +176,17 @@ export class LascaComponent extends ParallelogramGameComponent<LascaRules,
     public override cancelMoveAttempt(): void {
         this.currentMoveClicks = [];
         this.capturedCoords = [];
-        this.createAdaptedBoardFrom(this.getState());
+        this.selectedStack = MGPOptional.empty();
+        this.capturableCoords = [];
         this.showPossibleMoves();
-        this.rotateAdaptedBoardIfNeeded();
     }
 
     public async moveClick(clicked: Coord): Promise<MGPValidation> {
         if (clicked.equals(this.currentMoveClicks[0])) {
-            this.cancelMoveAttempt();
-            return MGPValidation.SUCCESS;
+            return this.cancelMove();
         }
-        const clickedSpace: LascaStack = this.getState().getPieceAt(clicked);
-        const player: Player = this.getState().getCurrentPlayer();
+        const clickedSpace: LascaStack = this.constructedState.getPieceAt(clicked);
+        const player: Player = this.constructedState.getCurrentPlayer();
         if (clickedSpace.isCommandedBy(player)) {
             this.cancelMoveAttempt();
             return this.trySelectingPiece(clicked);
@@ -273,24 +224,25 @@ export class LascaComponent extends ParallelogramGameComponent<LascaRules,
     }
 
     private applyPartialCapture(): MGPValidation {
-        let partialState: LascaState = this.getState().remove(this.currentMoveClicks[0]);
-        let movingStack: LascaStack = this.getState().getPieceAt(this.currentMoveClicks[0]);
-        for (const captured of this.capturedCoords) {
-            const previousSpace: LascaStack = this.getState().getPieceAt(captured);
-            const capturedCommander: LascaPiece = previousSpace.getCommander();
-            const commandedStack: LascaStack = previousSpace.getPiecesUnderCommander();
-            partialState = partialState.set(captured, commandedStack);
-            movingStack = movingStack.capturePiece(capturedCommander);
-        }
-        const landing: Coord = this.currentMoveClicks[this.currentMoveClicks.length - 1];
-        partialState = partialState.set(landing, movingStack);
-        this.createAdaptedBoardFrom(partialState);
-        this.rotateAdaptedBoardIfNeeded();
+        const lastCaptureIndex: number = this.capturedCoords.length - 1;
+        const lastCapturedCoord: Coord = this.capturedCoords[lastCaptureIndex];
+        const lastMoveIndex: number = this.currentMoveClicks.length - 2;
+        const lastMovedCoord: Coord = this.currentMoveClicks[lastMoveIndex];
+        const landingIndex: number = this.currentMoveClicks.length - 1;
+        const landingCoord: Coord = this.currentMoveClicks[landingIndex];
+        const movingStack: LascaStack = this.constructedState.getPieceAt(lastMovedCoord);
+        const capturedStack: LascaStack = this.constructedState.getPieceAt(lastCapturedCoord);
+        const capturedCommander: LascaPiece = capturedStack.getCommander();
+        const pieceUnderCommander: LascaStack = capturedStack.getPiecesUnderCommander();
+        const landingStack: LascaStack = movingStack.capturePiece(capturedCommander);
+        this.constructedState = this.constructedState.remove(lastMovedCoord);
+        this.constructedState = this.constructedState.set(lastCapturedCoord, pieceUnderCommander);
+        this.constructedState = this.constructedState.set(landingCoord, landingStack);
         return MGPValidation.SUCCESS;
     }
 
     private async trySelectingPiece(clicked: Coord): Promise<MGPValidation> {
-        const clickedSpace: LascaStack = this.getState().getPieceAt(clicked);
+        const clickedSpace: LascaStack = this.constructedState.getPieceAt(clicked);
         if (clickedSpace.isEmpty()) {
             return this.cancelMove(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY());
         } else {
@@ -299,10 +251,10 @@ export class LascaComponent extends ParallelogramGameComponent<LascaRules,
     }
 
     private async selectPiece(coord: Coord): Promise<MGPValidation> {
-        this.capturedCoords = [];
+        this.selectedStack = MGPOptional.of(coord);
         if (this.legalMoves.some((move: LascaMove) => move.getStartingCoord().equals(coord))) {
-            this.currentMoveClicks = [coord];
-            this.hideLastMove();
+            this.currentMoveClicks = [coord]; // TODO: currentMoveClicks might supplant selectedStack hey
+            this.showPossibleLandings(coord, this.constructedState);
             return MGPValidation.SUCCESS;
         } else {
             return this.cancelMove(LascaFailure.THIS_PIECE_CANNOT_MOVE());
@@ -310,25 +262,35 @@ export class LascaComponent extends ParallelogramGameComponent<LascaRules,
     }
 
     private showPossibleLandings(coord: Coord, state: LascaState): void {
+        this.possibleClicks = [];
         const possibleCaptures: LascaMove[] = this.rules.getPieceCaptures(state, coord);
         if (possibleCaptures.length === 0) {
             const possibleSteps: LascaMove[] = this.rules.getPieceSteps(state, coord);
             for (const possibleStep of possibleSteps) {
-                this.getSpaceInfoAt(possibleStep.getEndingCoord()).squareClasses.push('selectable-fill');
+                this.possibleClicks.push(possibleStep.getEndingCoord());
             }
         } else {
             const nextLegalLandings: Coord[] = possibleCaptures
                 .map((capture: LascaMove) => capture.coords.get(1));
-            for (const nextLegalLanding of nextLegalLandings) {
-                this.getSpaceInfoAt(nextLegalLanding).squareClasses.push('capturable-fill');
-            }
+            this.capturableCoords = nextLegalLandings;
         }
     }
 
     public getTranslationAtXYZ(x: number, y: number, z: number): string {
-        const coordTransform: Coord = this.getCoordTranslation(x, y, z, this.mode);
+        const adaptedCoord: Coord = this.adaptXY(x, y);
+        const coordTransform: Coord = this.getCoordTranslation(adaptedCoord.x, adaptedCoord.y, z, this.mode);
         const translation: string = 'translate(' + coordTransform.x + ' ' + coordTransform.y + ')';
         return translation;
+    }
+
+    private adaptXY(x: number, y: number): Coord {
+        if (this.getPointOfView() === Player.ONE) {
+            const maxX: number = this.getState().getWidth() - 1;
+            const maxY: number = this.getState().getHeight() - 1;
+            return new Coord(maxX - x, maxY - y);
+        } else {
+            return new Coord(x, y); // TODO: last move don't reappear when double clicking on a piece
+        }
     }
 
     public getParallelogramPoints(): string {

@@ -369,6 +369,19 @@ describe('LodestoneComponent', () => {
             testUtils.expectElementToHaveClass('#plateSquare_top_0_1', 'moved-fill');
         }));
 
+        it('should not remove highlight during post captures phase', fakeAsync(async() => {
+            // Given an intermediary state where a lodestone has been placed, resulting in 3 captures
+            await testUtils.expectClickSuccess('#square_1_0');
+            await testUtils.expectClickSuccess('#lodestone_pull_orthogonal_PLAYER_ZERO');
+
+            // When the player clicks on the plates where the captures will go
+            testUtils.expectElementNotToExist('#platePiece_top_0_0');
+
+            // Then the capture coord should be displayed
+            testUtils.expectElementToHaveClass('#square_3_0 > rect', 'captured-fill');
+            testUtils.expectElementToHaveClass('#square_4_0 > rect', 'moved-fill');
+        }));
+
         it('should remove a temporary capture from pressure plate when it is clicked again', fakeAsync(async() => {
             // Given an intermediary plate where a capture has been placed on a pressure plate
             await testUtils.expectClickSuccess('#square_3_3');
@@ -435,7 +448,7 @@ describe('LodestoneComponent', () => {
                 [_, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _],
+                [_, _, _, _, O, _, _, _],
                 [_, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _],
@@ -497,7 +510,7 @@ describe('LodestoneComponent', () => {
                 [_, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _],
+                [_, _, O, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _],
@@ -624,7 +637,7 @@ describe('LodestoneComponent', () => {
             expect(testUtils.getGameComponent().scores).toEqual(MGPOptional.of(PlayerNumberMap.of(22, 20)));
         }));
 
-        it('should not displayed removed lodestone that were on crumbled square', fakeAsync(async() => {
+        it('should not display removed lodestone that were on crumbled square', fakeAsync(async() => {
             // Given initial state
             // + we add 'the problematic' lodestone
             const move0: LodestoneMove = new LodestoneMove(new Coord(1, 0),

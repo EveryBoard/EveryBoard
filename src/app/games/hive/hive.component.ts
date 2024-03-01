@@ -322,7 +322,7 @@ export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, H
         }
 
         if (this.selectedRemaining.equalsValue(piece)) {
-            this.cancelMoveAttempt();
+            return this.cancelMove();
         } else {
             this.cancelMoveAttempt();
             this.selectedRemaining = MGPOptional.of(piece);
@@ -331,8 +331,8 @@ export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, H
             for (const coord of possibleDropLocations) {
                 this.ground.highlightStroke(coord, 'clickable-stroke');
             }
+            return MGPValidation.SUCCESS;
         }
-        return MGPValidation.SUCCESS;
     }
 
     public async selectStack(x: number, y: number): Promise<MGPValidation> {
@@ -393,7 +393,7 @@ export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, H
                 return this.cancelMove(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT());
             } else if (this.inspectedStack.isPresent()) {
                 this.cancelMoveAttempt();
-                this.clearHighlights();
+                this.clearHighlights(); // TODO ERK
                 return MGPValidation.SUCCESS;
             } else {
                 // We will only inspect the opponent stack, not do a move

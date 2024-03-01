@@ -64,8 +64,8 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
         this.hasAsymmetricBoard = true;
     }
     public async updateBoard(_triggerAnimation: boolean): Promise<void> {
-        this.firstPiece = MGPOptional.empty();
-        this.lastPiece = MGPOptional.empty();
+        this.firstPiece = MGPOptional.empty(); // TODO: kill, no moveAttempt var modification in updateBoard
+        this.lastPiece = MGPOptional.empty(); // TODO: kill, no moveAttempt var modification in updateBoard
         this.board = this.getState().getCopiedBoard();
         this.scores = this.getScores();
     }
@@ -254,8 +254,7 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
         const clicked: Coord = new Coord(x, y);
         const firstPiece: Coord = this.firstPiece.get();
         if (clicked.equals(firstPiece)) {
-            this.cancelMoveAttempt();
-            return MGPValidation.SUCCESS;
+            return this.cancelMove();
         }
         const opponent: Player = this.getState().getCurrentOpponent();
         const player: Player = this.getState().getCurrentPlayer();

@@ -170,6 +170,33 @@ describe('ConspirateursComponent', () => {
             await testUtils.expectMoveSuccess('#click_7_2', move);
         }));
 
+        it('should show last move after move is finished', fakeAsync(async() => {
+            // When doing move
+            await testUtils.expectClickSuccess('#click_5_4');
+            await testUtils.expectClickSuccess('#click_5_2');
+            const move: ConspirateursMoveJump =
+                ConspirateursMoveJump.from([new Coord(5, 4), new Coord(5, 2), new Coord(7, 2)]).get();
+            await testUtils.expectMoveSuccess('#click_7_2', move);
+
+            // Then last move should be displyed
+            testUtils.expectElementToExist('#lastJump');
+        }));
+
+        it('should hide last move when doing a click', fakeAsync(async() => {
+            // Given a board in move phase with a last mvoe
+            await testUtils.expectClickSuccess('#click_5_4');
+            await testUtils.expectClickSuccess('#click_5_2');
+            const move: ConspirateursMoveJump =
+                ConspirateursMoveJump.from([new Coord(5, 4), new Coord(5, 2), new Coord(7, 2)]).get();
+            await testUtils.expectMoveSuccess('#click_7_2', move);
+
+            // When starting a new move
+            await testUtils.expectClickSuccess('#click_5_5');
+
+            // Then last move should be hidden
+            testUtils.expectElementNotToExist('#lastJump');
+        }));
+
         it('should allow stopping a jump early by clicking twice on the destination', fakeAsync(async() => {
             // When clicking on the desired jump steps and then a second time on the final step
             await testUtils.expectClickSuccess('#click_5_4');
@@ -217,7 +244,7 @@ describe('ConspirateursComponent', () => {
             testUtils.expectElementToHaveClass('#piece_5_4', 'selected-stroke');
 
             // When clicking on it again
-            await testUtils.expectClickSuccess('#click_5_4');
+            await testUtils.expectClickFailure('#click_5_4');
 
             // Then it should no longer be selected
             testUtils.expectElementNotToHaveClass('#piece_5_4', 'selected-stroke');

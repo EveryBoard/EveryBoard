@@ -95,11 +95,11 @@ export class QuixoComponent extends RectangularGameComponent<QuixoRules,
             return this.cancelMove(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT());
         } else {
             if (this.chosenCoord.equalsValue(clickedCoord)) {
-                this.cancelMoveAttempt();
+                return this.cancelMove();
             } else {
                 this.chosenCoord = MGPOptional.of(clickedCoord);
+                return MGPValidation.SUCCESS;
             }
-            return MGPValidation.SUCCESS;
         }
     }
 

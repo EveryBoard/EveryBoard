@@ -90,10 +90,6 @@ export class DemoCardWrapperComponent extends GameWrapper<string> implements Aft
         return 'no-player';
     }
 
-    public async onCancelMove(_reason?: string | undefined): Promise<void> {
-        return;
-    }
-
     public override async canUserPlay(_clickedElementName: string): Promise<MGPValidation> {
         if (this.gameComponentIsSetup) {
             // This is when some user try to click on a demo

@@ -65,6 +65,7 @@ export class SixComponent
         this.chosenLanding = MGPOptional.empty();
         this.cuttableGroups = [];
         this.nextClickShouldSelectGroup = false;
+        // TODO eeeeew
         await this.updateBoard(false); // Need to refresh the board in case we showed virtual moves for cuts
     }
 
@@ -151,11 +152,11 @@ export class SixComponent
             if (this.state.getPieceAt(piece) === this.state.getCurrentOpponent()) {
                 return this.cancelMove(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT());
             } else if (this.selectedPiece.equalsValue(piece)) {
-                this.selectedPiece = MGPOptional.empty();
+                return this.cancelMove();
             } else {
                 this.selectedPiece = MGPOptional.of(piece);
+                return MGPValidation.SUCCESS;
             }
-            return MGPValidation.SUCCESS;
         } else {
             const cuttingMove: SixMove = SixMove.ofCut(this.selectedPiece.get(),
                                                        this.chosenLanding.get(),

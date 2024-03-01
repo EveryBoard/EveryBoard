@@ -40,7 +40,7 @@ export class PenteComponent extends GobanGameComponent<PenteRules, PenteMove, Pe
         const state: PenteState = this.getState();
         this.board = state.board;
         this.scores = MGPOptional.of(this.getState().captures);
-        this.victoryCoords = PenteRules.PENTE_HELPER.getVictoriousCoord(state);
+        this.victoryCoords = PenteRules.PENTE_HELPER.getVictoriousCoord(state); // TODO: showing victory should be done in showLastMove ?
         this.createHoshis();
     }
 

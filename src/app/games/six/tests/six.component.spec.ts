@@ -122,7 +122,7 @@ describe('SixComponent', () => {
             await testUtils.expectClickSuccess('#piece_0_0');
 
             // When clicking on it again
-            await testUtils.expectClickSuccess('#piece_0_0');
+            await testUtils.expectClickFailure('#piece_0_0');
 
             // Then the piece should no longer be selected
             testUtils.expectElementNotToExist('#selectedPiece_0_0');

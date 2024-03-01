@@ -94,6 +94,39 @@ describe('ConnectSixComponent', () => {
             // Then the dropped piece should be displayed
             testUtils.expectElementToHaveClass('#dropped', 'moved-stroke');
         }));
+
+        it('should hide last move when doing first click', fakeAsync(async() => {
+            // Given a board with a last move
+            const state: ConnectSixState = new ConnectSixState([
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, O, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            ], 1);
+            const previousMove: ConnectSixMove = ConnectSixFirstMove.of(new Coord(9, 9));
+            await testUtils.setupState(state, { previousMove });
+
+            // When doing a first click
+            await testUtils.expectClickSuccess('#click_8_8');
+
+            // Then the highlights from last turn should be hidden
+            testUtils.expectElementNotToHaveClass('#piece_9_9', 'last-move-stroke');
+        }));
     });
 
     describe('second click', () => {

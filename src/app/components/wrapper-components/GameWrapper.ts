@@ -46,6 +46,8 @@ export abstract class GameWrapper<P extends Comparable> extends BaseWrapperCompo
 
     public endGame: boolean = false;
 
+    private isMoveAttemptOngoing: boolean = false;
+
     public Player: typeof Player = Player;
 
     public constructor(activatedRoute: ActivatedRoute,
@@ -57,9 +59,9 @@ export abstract class GameWrapper<P extends Comparable> extends BaseWrapperCompo
     }
 
     private getMatchingComponent(gameName: string): MGPOptional<Type<AbstractGameComponent>> {
-        const gameInfo: MGPOptional<GameInfo> =
+        const optionalGameInfo: MGPOptional<GameInfo> =
             MGPOptional.ofNullable(GameInfo.ALL_GAMES().find((gameInfo: GameInfo) => gameInfo.urlName === gameName));
-        return gameInfo.map((gameInfo: GameInfo) => gameInfo.component);
+        return optionalGameInfo.map((gameInfo: GameInfo) => gameInfo.component);
     }
 
     /**
@@ -126,7 +128,17 @@ export abstract class GameWrapper<P extends Comparable> extends BaseWrapperCompo
         } else {
             this.gameComponent.setPointOfView(role as Player);
         }
-        await this.updateBoardAndShowLastMove(false); // Trigger redrawing of the board (might need to be rotated 180°)
+        // TODO FOR REVIEW: on veux cancelMoveAttempt, HideLastMove, UpdateBoard(ça oui eh), ShowLastMove quand on change de role ?
+        await this.showCurrentState(false); // Trigger redrawing of the board (might need to be rotated 180°)
+        // TODO: check showCurrentState use to remove it when board did not change !!!
+    }
+
+    protected async setInteractive(interactive: boolean): Promise<void> {
+        const interactivityChanged: boolean = this.gameComponent.isInteractive() !== interactive;
+        if (interactivityChanged) {
+            this.gameComponent.setInteractive(interactive);
+            await this.gameComponent.updateBoard(false);
+        }
     }
 
     public async receiveValidMove(move: Move): Promise<MGPValidation> {
@@ -137,14 +149,17 @@ export abstract class GameWrapper<P extends Comparable> extends BaseWrapperCompo
             await this.gameComponent.cancelMove(legality.getReason());
             return MGPValidation.ofFallible(legality);
         }
-        this.gameComponent.cancelMoveAttempt();
+        this.gameComponent.cancelMoveAttempt(); // TODO: put inside onLegalUserMove ?
+        this.isMoveAttemptOngoing = false;
         await this.onLegalUserMove(move);
         return MGPValidation.SUCCESS;
     }
 
     public abstract onLegalUserMove(move: Move, scores?: [number, number]): Promise<void>;
 
-    public abstract onCancelMove(_reason?: string): Promise<void>;
+    public async onCancelMove(_reason?: string): Promise<void> { // TODO add override in childs
+        this.isMoveAttemptOngoing = false; // TODO: test
+    }
 
     public abstract getPlayer(): P;
 
@@ -159,6 +174,13 @@ export abstract class GameWrapper<P extends Comparable> extends BaseWrapperCompo
         }
         if (this.endGame) {
             return MGPValidation.failure(GameWrapperMessages.GAME_HAS_ENDED());
+        }
+        // TODO: this part should be in common to all gameWrapper
+        // Hence, we should have some kind of "preClicChecks" that calls this one
+        if (this.isMoveAttemptOngoing === false) {
+            // It is the first clic
+            this.gameComponent.hideLastMove();
+            this.isMoveAttemptOngoing = true;
         }
         return MGPValidation.SUCCESS;
     }
@@ -192,7 +214,14 @@ export abstract class GameWrapper<P extends Comparable> extends BaseWrapperCompo
         }
     }
 
-    protected async updateBoardAndShowLastMove(triggerAnimation: boolean): Promise<void> {
+    /**
+     * Called when there is a need to put the current board to original state, meaning:
+     *     1. ongoing move attempt must be cancelled (cancelMoveAttempt)
+     *     2. any previous move must be hidden (hideLastMove)
+     *     3. after the board is changed, we now show the correct previous move (showLastMove)
+     * @param triggerAnimation a boolean set to true if there is a need to trigger the animation of the last move
+     */
+    protected async showCurrentState(triggerAnimation: boolean): Promise<void> {
         this.gameComponent.cancelMoveAttempt();
         this.gameComponent.hideLastMove();
         if (this.gameComponent.node.previousMove.isPresent()) {
@@ -204,6 +233,19 @@ export abstract class GameWrapper<P extends Comparable> extends BaseWrapperCompo
             // We have no previous move to animate
             await this.gameComponent.updateBoard(false);
         }
+    }
+
+    /**
+     * To use when a previous move exist when the user provoked a move by clicking
+     * Since he clicked, the hideLastMove is no longer necessary
+     * Since the last move exist, no need to check
+     * @param triggerAnimation a boolean set to true if there is a need to trigger the animation of the last move
+     */
+    protected async showNextMove(triggerAnimation: boolean): Promise<void> {
+        await this.gameComponent.updateBoard(triggerAnimation);
+        const lastMove: Move = this.gameComponent.node.previousMove.get();
+        const config: MGPOptional<RulesConfig> = await this.getConfig();
+        await this.gameComponent.showLastMove(lastMove, config);
     }
 
     public getRulesConfigDescription(): MGPOptional<RulesConfigDescription<RulesConfig>> {

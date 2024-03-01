@@ -75,7 +75,7 @@ describe('MartianChessComponent', () => {
         // Given the initial board
 
         // When clicking an opponent piece
-        await testUtils.expectClickSuccess('#click_0_0');
+        await testUtils.expectClickFailure('#click_0_0');
 
         // Then it should not select the piece but not toast error
         testUtils.expectElementNotToHaveClass('#queen_0_0', 'selected-stroke');
@@ -85,7 +85,7 @@ describe('MartianChessComponent', () => {
         // Given the initial board
         // When clicking an empty space immediately
         // Then it should not toast
-        await testUtils.expectClickSuccess('#click_3_4');
+        await testUtils.expectClickFailure('#click_3_4');
     }));
 
     it('should cancel move attempt when clicking twice on the same piece', fakeAsync(async() => {
@@ -93,7 +93,7 @@ describe('MartianChessComponent', () => {
         await testUtils.expectClickSuccess('#click_1_5');
 
         // When clicking on the piece again
-        await testUtils.expectClickSuccess('#click_1_5');
+        await testUtils.expectClickFailure('#click_1_5');
 
         // Then the piece should be deselected
         testUtils.expectElementNotToHaveClass('#pawn_1_5', 'selected-stroke');

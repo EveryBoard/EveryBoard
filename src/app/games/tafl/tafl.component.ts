@@ -95,8 +95,7 @@ export abstract class TaflComponent<R extends TaflRules<M>, M extends TaflMove>
         }
         const clicked: Coord = new Coord(x, y);
         if (this.chosen.equalsValue(clicked)) {
-            this.cancelMoveAttempt();
-            return MGPValidation.SUCCESS;
+            return this.cancelMove();
         }
         if (this.chosen.isAbsent() ||
             this.pieceBelongsToCurrentPlayer(clicked))

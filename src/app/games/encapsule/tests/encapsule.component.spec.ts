@@ -189,7 +189,7 @@ describe('EncapsuleComponent', () => {
             await testUtils.expectClickSuccess('#piece_0_SMALL_DARK_5');
 
             // When clicking on it again
-            await testUtils.expectClickSuccess('#piece_0_SMALL_DARK_5');
+            await testUtils.expectClickFailure('#piece_0_SMALL_DARK_5');
 
             // Then that piece should be selected no more
             testUtils.expectElementNotToHaveClass('#piece_0_SMALL_DARK_5', 'selected-stroke');
@@ -219,7 +219,7 @@ describe('EncapsuleComponent', () => {
             await testUtils.expectClickSuccess('#click_0_1');
 
             // When clicking on this coord again
-            await testUtils.expectClickSuccess('#click_0_1');
+            await testUtils.expectClickFailure('#click_0_1');
 
             // Then it should no longer be selected, and component should not throw
             testUtils.expectElementNotToExist('#chosenCoord_0_1');

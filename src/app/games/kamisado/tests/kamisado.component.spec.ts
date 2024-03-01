@@ -62,8 +62,10 @@ describe('KamisadoComponent', () => {
     it('should allow deselecting initial choice', fakeAsync(async() => {
         // Given a component where a piece has been selected
         await testUtils.expectClickSuccess('#click_0_7'); // Select initial piece
+
         // When clicking on the same piece
-        await testUtils.expectClickSuccess('#click_0_7');
+        await testUtils.expectClickFailure('#click_0_7');
+
         // Then it should be deselected
         expect(testUtils.getGameComponent().chosen.isAbsent()).toBeTrue();
         testUtils.expectElementNotToExist('.highlight');

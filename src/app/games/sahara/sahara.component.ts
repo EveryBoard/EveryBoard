@@ -17,7 +17,6 @@ import { MCTS } from 'src/app/jscaip/AI/MCTS';
 import { Minimax } from 'src/app/jscaip/AI/Minimax';
 import { SaharaHeuristic } from './SaharaHeuristic';
 import { SaharaMoveGenerator } from './SaharaMoveGenerator';
-import { TableUtils } from 'src/app/utils/ArrayUtils';
 
 @Component({
     selector: 'app-sahara',
@@ -70,8 +69,7 @@ export class SaharaComponent extends TriangularGameComponent<SaharaRules,
         const currentPlayer: Player = this.getState().getCurrentPlayer();
         const player: FourStatePiece = FourStatePiece.ofPlayer(currentPlayer);
         if (this.chosenCoord.equalsValue(new Coord(x, y))) {
-            this.cancelMoveAttempt();
-            return MGPValidation.SUCCESS;
+            return this.cancelMove();
         } else if (this.chosenCoord.isAbsent() ||
                   this.board[y][x] === player)
         { // Must select pyramid
@@ -109,7 +107,6 @@ export class SaharaComponent extends TriangularGameComponent<SaharaRules,
 
     public async updateBoard(_triggerAnimation: boolean): Promise<void> {
         this.board = this.getState().board;
-        console.table(TableUtils.map(this.board, (p: FourStatePiece) => p.isPlayer()));
     }
 
     public getPlayerClassFor(x: number, y: number): string {

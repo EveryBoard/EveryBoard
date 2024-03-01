@@ -50,7 +50,6 @@ export class QuartoComponent extends RectangularGameComponent<QuartoRules,
     public async updateBoard(_triggerAnimation: boolean): Promise<void> {
         const state: QuartoState = this.getState();
         this.board = state.getCopiedBoard();
-        this.chosen = MGPOptional.empty();
         this.pieceInHand = state.pieceInHand;
         this.victoriousCoords = this.rules.getVictoriousCoords(state);
     }
@@ -61,9 +60,6 @@ export class QuartoComponent extends RectangularGameComponent<QuartoRules,
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }
-        this.hideLastMove(); // now the user tried to choose something
-        // so I guess he don't need to see what's the last move of the opponent
-
         if (this.board[y][x] === QuartoPiece.EMPTY) {
             // if it's a legal place to put the piece
             this.showPieceInHandOnBoard(x, y); // let's show the user his decision
@@ -90,12 +86,8 @@ export class QuartoComponent extends RectangularGameComponent<QuartoRules,
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }
-        this.hideLastMove(); // now the user tried to choose something
-        // so I guess he don't need to see what's the last move of the opponent
-
         if (this.pieceToGive.equalsValue(QuartoPiece.ofInt(givenPiece))) {
-            this.cancelMoveAttempt();
-            return MGPValidation.SUCCESS;
+            return this.cancelMove();
         }
         this.pieceToGive = MGPOptional.of(QuartoPiece.ofInt(givenPiece));
         if (this.chosen.isAbsent()) {
@@ -129,8 +121,7 @@ export class QuartoComponent extends RectangularGameComponent<QuartoRules,
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }
-        this.cancelMoveAttempt();
-        return MGPValidation.SUCCESS;
+        return this.cancelMove();
     }
 
     private showPieceInHandOnBoard(x: number, y: number): void {
@@ -145,8 +136,9 @@ export class QuartoComponent extends RectangularGameComponent<QuartoRules,
         const coord: Coord = new Coord(x, y);
         if (this.lastMove.equalsValue(coord)) {
             return ['moved-fill'];
+        } else {
+            return [];
         }
-        return [];
     }
 
     public getPieceClasses(piece: number): string[] {
@@ -161,9 +153,9 @@ export class QuartoComponent extends RectangularGameComponent<QuartoRules,
 
     public getPieceSize(piece: number): number {
         if (piece < 8) {
-            return 40;
+            return 35;
         } else {
-            return 25;
+            return 20;
         }
     }
 

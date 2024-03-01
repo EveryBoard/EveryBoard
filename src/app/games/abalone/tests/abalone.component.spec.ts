@@ -64,6 +64,46 @@ describe('AbaloneComponent', () => {
             testUtils.expectElementToHaveClass('#piece_2_7', 'selected-stroke');
         }));
 
+        it('should hide last move when clicking on a piece', fakeAsync(async() => {
+            // Given a board with last move
+            const previousBoard: FourStatePiece[][] = [
+                [N, N, N, N, _, _, _, _, _],
+                [N, N, N, _, _, _, _, _, _],
+                [N, N, _, _, _, _, _, _, _],
+                [N, _, _, _, _, _, _, _, _],
+                [X, X, O, O, O, _, _, _, _],
+                [_, _, _, _, _, _, _, _, N],
+                [_, _, _, _, _, _, _, N, N],
+                [O, O, O, O, O, O, N, N, N],
+                [_, O, O, O, O, N, N, N, N],
+            ];
+            const previousState: AbaloneState = new AbaloneState(previousBoard, 0);
+            const previousMove: AbaloneMove = AbaloneMove.ofSingleCoord(new Coord(4, 4), HexaDirection.LEFT);
+            const board: FourStatePiece[][] = [
+                [N, N, N, N, _, _, _, _, _],
+                [N, N, N, _, _, _, _, _, _],
+                [N, N, _, _, _, _, _, _, _],
+                [N, _, _, _, _, _, _, _, _],
+                [X, O, O, O, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, N],
+                [_, _, _, _, _, _, _, N, N],
+                [O, O, O, O, O, O, N, N, N],
+                [_, O, O, O, O, N, N, N, N],
+            ];
+            const state: AbaloneState = new AbaloneState(board, 1);
+            await testUtils.setupState(state, { previousState, previousMove });
+
+            // When doing a click
+            await testUtils.expectClickSuccess('#space_0_4');
+
+            // Then the previous move should be hidden
+            testUtils.expectElementNotToHaveClass('#space_1_4', 'moved-fill');
+            testUtils.expectElementNotToHaveClass('#space_2_4', 'moved-fill');
+            testUtils.expectElementNotToHaveClass('#space_3_4', 'moved-fill');
+            testUtils.expectElementNotToExist('#space_-1_4');
+            testUtils.expectElementNotToExist('#piece_-1_4');
+        }));
+
     });
 
     describe('second click', () => {
@@ -90,7 +130,7 @@ describe('AbaloneComponent', () => {
             await testUtils.expectClickSuccess('#piece_2_7');
 
             // When reclicking it
-            await testUtils.expectClickSuccess('#piece_2_7');
+            await testUtils.expectClickFailure('#piece_2_7');
 
             // Then it should no longer be selected
             testUtils.expectElementNotToHaveClass('#piece_2_7', 'selected-stroke');
@@ -252,7 +292,7 @@ describe('AbaloneComponent', () => {
             await testUtils.expectClickSuccess('#piece_4_7');
 
             // When reclicking middle one
-            await testUtils.expectClickSuccess('#piece_3_7');
+            await testUtils.expectClickFailure('#piece_3_7');
 
             // Then all three pieces should be unselected
             testUtils.expectElementNotToHaveClass('#piece_2_7', 'selected-stroke');

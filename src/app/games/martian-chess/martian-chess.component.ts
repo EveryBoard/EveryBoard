@@ -275,8 +275,7 @@ export class MartianChessComponent extends RectangularGameComponent<MartianChess
         if (this.isOneOfUsersPieces(startCoord)) {
             return this.selectAsFirstPiece(startCoord);
         } else {
-            this.cancelMoveAttempt();
-            return MGPValidation.SUCCESS;
+            return this.cancelMove();
         }
     }
 
@@ -330,8 +329,7 @@ export class MartianChessComponent extends RectangularGameComponent<MartianChess
     private async secondClick(endCoord: Coord): Promise<MGPValidation> {
         const info: SelectedPieceInfo = this.selectedPieceInfo.get();
         if (info.selectedPiece.equals(endCoord)) {
-            this.cancelMoveAttempt();
-            return MGPValidation.SUCCESS;
+            return this.cancelMove();
         } else if (info.legalLandings.some((c: Coord) => c.equals(endCoord))) {
             const move: MGPFallible<MartianChessMove> =
                 MartianChessMove.from(info.selectedPiece, endCoord, this.callTheClock);

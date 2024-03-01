@@ -798,8 +798,8 @@ describe('YinshComponent', () => {
             await testUtils.expectClickFailure('#click_6_8', YinshFailure.MISSING_CAPTURES()); // select second capture coord
         }));
 
-        it('should make pieces captured at the last turn disappear upon first player action', fakeAsync(async() => {
-            // Given a board with a previous move that has captured
+        it('should make pieces captured at the last turn disappear upon first player click', fakeAsync(async() => {
+            // Given a board with a previous move that has made a capture for current player now possible
             const board: Table<YinshPiece> = [
                 [N, N, N, N, N, N, _, _, _, _, N],
                 [N, N, N, N, _, _, _, _, _, _, _],
@@ -840,7 +840,8 @@ describe('YinshComponent', () => {
             testUtils.expectElementNotToExist('#ring_3_2');
             testUtils.expectElementNotToHaveClass('#pieceGroup_3_2', 'semi-transparent');
         }));
-
+// TODO: when taking back thenfirst click: no hide last move is done ! (it takes 3 click for it to disappear)
+// TODO: start new move don't hide ongoing move ?
         it('should show indicator when selecting your ring', fakeAsync(async() => {
             // Given an initial board on which a ring are all put
             const board: Table<YinshPiece> = [
@@ -888,7 +889,7 @@ describe('YinshComponent', () => {
             await testUtils.expectClickSuccess('#click_3_2');
 
             // When clicking again on the ring
-            await testUtils.expectClickSuccess('#click_3_2');
+            await testUtils.expectClickFailure('#click_3_2');
 
             // Then there should no longer be indicators
             testUtils.expectElementNotToExist('#indicator_4_1'); // The one in the up-right diagonal

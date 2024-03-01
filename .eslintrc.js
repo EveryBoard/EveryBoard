@@ -82,6 +82,7 @@ module.exports = {
                 'ArrowFunctionExpression': false,
                 'FunctionExpression': false,
             } }],
+            'no-shadow': ['error'],
             'new-cap': ['off'], // Because there are false positives
             'no-undef': ['off'], // Because there are false positives
             'valid-jsdoc': ['off'], // Because we do not use jsdoc

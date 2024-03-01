@@ -85,13 +85,6 @@ export class GipfComponent extends HexagonalGameComponent<GipfRules,
 
     public override async updateBoard(_triggerAnimation: boolean): Promise<void> {
         this.constructedState = this.getState();
-        this.captured = [];
-        this.moved = [];
-        this.initialCaptures = [];
-        this.finalCaptures = [];
-        this.placementEntrance = MGPOptional.empty();
-        this.placement = MGPOptional.empty();
-        this.arrows = [];
         this.moveToInitialCaptureOrPlacementPhase();
     }
 
@@ -242,8 +235,7 @@ export class GipfComponent extends HexagonalGameComponent<GipfRules,
             return this.cancelMove(validity.getReason());
         }
         if (this.placementEntrance.equalsValue(coord)) {
-            this.cancelMoveAttempt();
-            return MGPValidation.SUCCESS;
+            return this.cancelMove();
         }
         this.placementEntrance = MGPOptional.of(coord);
         const clickedPiece: FourStatePiece = this.constructedState.getPieceAt(coord);

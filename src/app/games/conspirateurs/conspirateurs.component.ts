@@ -20,7 +20,6 @@ interface ViewInfo {
     boardInfo: SquareInfo[][],
     dropPhase: boolean,
     victory: Coord[],
-    lastMoveArrow: string,
     sidePieces: [number, number],
 }
 
@@ -52,12 +51,13 @@ export class ConspirateursComponent extends GameComponent<ConspirateursRules, Co
         dropPhase: true,
         boardInfo: [],
         victory: [],
-        lastMoveArrow: '',
         sidePieces: [20, 20],
     };
     private selected: MGPOptional<Coord> = MGPOptional.empty();
 
     private jumpInConstruction: MGPOptional<ConspirateursMoveJump> = MGPOptional.empty();
+
+    public lastMoveArrow: MGPOptional<string> = MGPOptional.empty();
 
     public constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
@@ -78,7 +78,6 @@ export class ConspirateursComponent extends GameComponent<ConspirateursRules, Co
         const state: ConspirateursState = this.getState();
         this.viewInfo.dropPhase = state.isDropPhase();
         this.viewInfo.boardInfo = [];
-        this.viewInfo.lastMoveArrow = '';
         for (let y: number = 0; y < state.getHeight(); y++) {
             this.viewInfo.boardInfo.push([]);
             for (let x: number = 0; x < state.getWidth(); x++) {
@@ -146,26 +145,26 @@ export class ConspirateursComponent extends GameComponent<ConspirateursRules, Co
             this.viewInfo.boardInfo[move.getStart().y][move.getStart().x].squareClasses.push('moved-fill');
             this.viewInfo.boardInfo[move.getEnd().y][move.getEnd().x].squareClasses.push('moved-fill');
         } else {
-            this.viewInfo.lastMoveArrow = '';
+            let lastMoveArrow: string = '';
             for (const coord of move.coords) {
                 this.viewInfo.boardInfo[coord.y][coord.x].squareClasses.push('moved-fill');
-                this.viewInfo.lastMoveArrow += (coord.x * this.SPACE_SIZE) + this.SPACE_SIZE/2 + this.STROKE_WIDTH;
-                this.viewInfo.lastMoveArrow += ' ';
-                this.viewInfo.lastMoveArrow += (coord.y * this.SPACE_SIZE) + this.SPACE_SIZE/2 + this.STROKE_WIDTH;
-                this.viewInfo.lastMoveArrow += ' ';
+                lastMoveArrow += (coord.x * this.SPACE_SIZE) + this.SPACE_SIZE/2 + this.STROKE_WIDTH;
+                lastMoveArrow += ' ';
+                lastMoveArrow += (coord.y * this.SPACE_SIZE) + this.SPACE_SIZE/2 + this.STROKE_WIDTH;
+                lastMoveArrow += ' ';
             }
+            this.lastMoveArrow = MGPOptional.of(lastMoveArrow);
         }
     }
 
     public override hideLastMove(): void {
-        // Not really needed here because of the recalculation of this.viewInfo at every updateBoard.
-        // Update board actually hide last move by default (by... not drawing it!)
+        this.lastMoveArrow = MGPOptional.empty();
     }
 
     public override async cancelMoveAttempt(): Promise<void> {
         this.jumpInConstruction = MGPOptional.empty();
         this.selected = MGPOptional.empty();
-        await this.updateBoard(false);
+        await this.updateBoard(false); // TODO WTF ?
     }
 
     public async onClick(coord: Coord): Promise<MGPValidation> {
@@ -178,7 +177,7 @@ export class ConspirateursComponent extends GameComponent<ConspirateursRules, Co
         const piece: PlayerOrNone = state.getPieceAt(coord);
         if (state.getPieceAt(coord) === this.getCurrentPlayer()) {
             if (this.selected.equalsValue(coord)) {
-                await this.cancelMoveAttempt();
+                return this.cancelMove();
             } else {
                 this.selected = MGPOptional.of(coord);
                 this.jumpInConstruction = MGPOptional.empty();

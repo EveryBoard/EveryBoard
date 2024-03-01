@@ -258,8 +258,7 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneRules,
         const firstPiece: Coord = this.selecteds[0];
         const coord: Coord = new Coord(x, y);
         if (coord.equals(firstPiece)) {
-            this.cancelMoveAttempt();
-            return MGPValidation.SUCCESS;
+            return this.cancelMove();
         }
         if (coord.isHexagonallyAlignedWith(firstPiece) === false) {
             this.cancelMoveAttempt();
@@ -299,8 +298,7 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneRules,
             // move lastPiece one step closer to firstPiece if possible
         }
         if (this.selecteds.length === 3 && clicked.equals(this.selecteds[1])) {
-            this.cancelMoveAttempt();
-            return MGPValidation.SUCCESS;
+            return this.cancelMove();
         }
         return this.tryExtension(clicked, firstPiece, lastPiece);
     }

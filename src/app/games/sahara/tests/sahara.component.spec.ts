@@ -104,7 +104,7 @@ describe('SaharaComponent', () => {
             testUtils.expectElementToExist('#possible_landing_2_1');
 
             // When clicking that piece again
-            await testUtils.expectClickSuccess('#click_2_0');
+            await testUtils.expectClickFailure('#click_2_0');
 
             // Then the piece should no longer be selected
             testUtils.expectElementNotToExist('chosen_coord_2_0');
@@ -138,6 +138,6 @@ describe('SaharaComponent', () => {
         const move: SaharaMove = SaharaMove.from(new Coord(2, 1), new Coord(1, 2)).get();
         await testUtils.expectMoveSuccess('#click_1_2', move); // select landing
 
-        expect(testUtils.getWrapper().endGame).toBeTrue();
+        expect(testUtils.getWrapper().endGame).withContext('game should be finished').toBeTrue();
     }));
 });

@@ -87,34 +87,40 @@ export class SimpleComponentTestUtils<T> {
     private criticalMessageSpy: jasmine.Spy;
     protected gameMessageSpy: jasmine.Spy;
 
-    public static async create<T>(componentType: Type<T>, activatedRouteStub?: ActivatedRouteStub)
-    : Promise<SimpleComponentTestUtils<T>>
+    public static async create<U>(componentType: Type<U>, activatedRouteStub?: ActivatedRouteStub)
+    : Promise<SimpleComponentTestUtils<U>>
     {
         await TestUtils.configureTestingModule(componentType, activatedRouteStub);
         ConnectedUserServiceMock.setUser(UserMocks.CONNECTED_AUTH_USER);
-        const testUtils: SimpleComponentTestUtils<T> = new SimpleComponentTestUtils<T>();
+        const testUtils: SimpleComponentTestUtils<U> = new SimpleComponentTestUtils<U>();
         testUtils.prepareFixture(componentType);
         testUtils.prepareMessageDisplayerSpies();
         return testUtils;
     }
+
     protected constructor() {}
 
     public prepareFixture(componentType: Type<T>): void {
         this.fixture = TestBed.createComponent(componentType);
         this.component = this.fixture.debugElement.componentInstance;
     }
+
     public getComponent(): T {
         return this.component;
     }
+
     public detectChanges(): void {
         this.fixture.detectChanges();
     }
+
     public destroy(): void {
         return this.fixture.destroy();
     }
+
     public async whenStable(): Promise<void> {
         return this.fixture.whenStable();
     }
+
     public prepareMessageDisplayerSpies(): void {
         const messageDisplayer: MessageDisplayer = TestBed.inject(MessageDisplayer);
         if (jasmine.isSpy(messageDisplayer.gameMessage)) {
@@ -133,30 +139,34 @@ export class SimpleComponentTestUtils<T> {
             this.infoMessageSpy = spyOn(messageDisplayer, 'infoMessage').and.callFake(this.failOn('infoMessage'));
         }
     }
+
     private failOn(typeOfMessage: string): (message: string) => void {
         return (message: string) => {
             fail(`MessageDisplayer: ${typeOfMessage} was called with '${message}' but no toast was expected, use expectToToast!`);
         };
     }
-    public async expectToDisplayGameMessage<T>(message: string, fn: () => Promise<T>): Promise<T> {
+
+    public async expectToDisplayGameMessage<U>(message: string, fn: () => Promise<U>): Promise<U> {
         this.gameMessageSpy.and.returnValue(undefined);
-        const result: T = await fn();
+        const result: U = await fn();
         expect(this.gameMessageSpy).toHaveBeenCalledOnceWith(message);
         this.gameMessageSpy.calls.reset();
         this.gameMessageSpy.and.callFake(this.failOn('gameMessage')); // Restore previous spy behavior
         return result;
     }
-    public async expectToDisplayCriticalMessage<T>(message: string, fn: () => Promise<T>): Promise<T> {
+
+    public async expectToDisplayCriticalMessage<U>(message: string, fn: () => Promise<U>): Promise<U> {
         this.criticalMessageSpy.and.returnValue(undefined);
-        const result: T = await fn();
+        const result: U = await fn();
         expect(this.criticalMessageSpy).toHaveBeenCalledOnceWith(message);
         this.criticalMessageSpy.calls.reset();
         this.criticalMessageSpy.and.callFake(this.failOn('criticalMessage')); // Restore previous spy behavior
         return result;
     }
-    public async expectToDisplayInfoMessage<T>(message: string, fn: () => Promise<T>): Promise<T> {
+
+    public async expectToDisplayInfoMessage<U>(message: string, fn: () => Promise<U>): Promise<U> {
         this.infoMessageSpy.and.returnValue(undefined);
-        const result: T = await fn();
+        const result: U = await fn();
         expect(this.infoMessageSpy).toHaveBeenCalledOnceWith(message);
         this.infoMessageSpy.calls.reset();
         this.infoMessageSpy.and.callFake(this.failOn('infoMessage')); // Restore previous spy behavior
@@ -182,20 +192,25 @@ export class SimpleComponentTestUtils<T> {
         }
         this.detectChanges();
     }
+
     public forceChangeDetection(): void {
         this.fixture.debugElement.injector.get<ChangeDetectorRef>(ChangeDetectorRef).markForCheck();
         this.detectChanges();
     }
+
     public findElement(elementName: string): DebugElement {
         this.forceChangeDetection();
         return this.fixture.debugElement.query(By.css(elementName));
     }
+
     public findElements(elementName: string): DebugElement[] {
         return this.fixture.debugElement.queryAll(By.css(elementName));
     }
+
     public findElementByDirective(directive: Type<unknown>): DebugElement {
         return this.fixture.debugElement.query(By.directive(directive));
     }
+
     public expectElementToHaveClass(elementName: string, cssClass: string): void {
         const element: DebugElement = this.findElement(elementName);
         expect(element).withContext(`${elementName} should exist`).toBeTruthy();
@@ -206,6 +221,7 @@ export class SimpleComponentTestUtils<T> {
             expect(elementClasses).withContext(`${elementName} should contain CSS class ${cssClass}`).toContain(cssClass);
         }
     }
+
     public expectElementNotToHaveClass(elementName: string, cssClass: string): void {
         const element: DebugElement = this.findElement(elementName);
         expect(element).withContext(`${elementName} should exist`).toBeTruthy();
@@ -214,6 +230,7 @@ export class SimpleComponentTestUtils<T> {
             expect(elementClasses).withContext(`${elementName} should not contain CSS class ${cssClass}`).not.toContain(cssClass);
         }
     }
+
     public expectElementToHaveClasses(elementName: string, classes: string[]): void {
         const classesSorted: string[] = [...classes].sort();
         const element: DebugElement = this.findElement(elementName);
@@ -222,36 +239,43 @@ export class SimpleComponentTestUtils<T> {
         const elementClasses: string[] = Utils.getNonNullable(element.attributes.class).split(' ').sort();
         expect(elementClasses).withContext(`For ${elementName}`).toEqual(classesSorted);
     }
+
     public expectElementNotToExist(elementName: string): void {
         const element: DebugElement = this.findElement(elementName);
         expect(element).withContext(`${elementName} should not exist`).toBeNull();
     }
+
     public expectElementToExist(elementName: string): DebugElement {
         const element: DebugElement = this.findElement(elementName);
         expect(element).withContext(`${elementName} should exist`).toBeTruthy();
         return element;
     }
+
     public expectElementToBeEnabled(elementName: string): void {
         const element: DebugElement = this.findElement(elementName);
         expect(element).withContext(`${elementName} should exist`).toBeTruthy();
         expect(element.nativeElement.disabled).withContext(elementName + ' should be enabled').toBeFalsy();
     }
+
     public expectElementToBeDisabled(elementName: string): void {
         const element: DebugElement = this.findElement(elementName);
         expect(element).withContext(`${elementName} should exist`).toBeTruthy();
         expect(element.nativeElement.disabled).withContext(`${elementName} should be disabled`).toBeTruthy();
     }
+
     public expectTextToBe(elementName: string, expectedText: string): void {
         const element: DebugElement = this.findElement(elementName);
         expect(element).withContext(`${elementName} should exist`).toBeTruthy();
         expect(element.nativeNode.innerHTML).toEqual(expectedText);
     }
+
     public fillInput(elementName: string, value: string): void {
         const element: DebugElement = this.findElement(elementName);
         expect(element).withContext(`${elementName} should exist in order to fill its value`).toBeTruthy();
         element.nativeElement.value = value;
         element.nativeElement.dispatchEvent(new Event('input'));
     }
+
 }
 
 export class ComponentTestUtils<T extends AbstractGameComponent, P extends Comparable = string>
@@ -265,15 +289,15 @@ export class ComponentTestUtils<T extends AbstractGameComponent, P extends Compa
     private chooseMoveSpy: jasmine.Spy;
     private onLegalUserMoveSpy: jasmine.Spy;
 
-    public static async forGame<T extends AbstractGameComponent>(
+    public static async forGame<U extends AbstractGameComponent>(
         game: string,
         configureTestingModule: boolean = true,
         chooseDefaultConfig: boolean = true)
-    : Promise<ComponentTestUtils<T>>
+    : Promise<ComponentTestUtils<U>>
     {
-        const gameInfo: MGPOptional<GameInfo> =
+        const optionalGameInfo: MGPOptional<GameInfo> =
             MGPOptional.ofNullable(GameInfo.ALL_GAMES().find((gameInfo: GameInfo) => gameInfo.urlName === game));
-        if (gameInfo.isAbsent()) {
+        if (optionalGameInfo.isAbsent()) {
             throw new Error(game + ' is not a game developped on MGP, check if its name is in the second param of GameInfo');
         }
         return ComponentTestUtils.forGameWithWrapper(game,
@@ -283,15 +307,15 @@ export class ComponentTestUtils<T extends AbstractGameComponent, P extends Compa
                                                      chooseDefaultConfig);
     }
 
-    public static async forGameWithWrapper<T extends AbstractGameComponent, P extends Comparable>(
+    public static async forGameWithWrapper<U extends AbstractGameComponent, V extends Comparable>(
         game: string,
-        wrapperKind: Type<GameWrapper<P>>,
+        wrapperKind: Type<GameWrapper<V>>,
         user: AuthUser = AuthUser.NOT_CONNECTED,
         configureTestingModule: boolean = true,
         chooseDefaultConfig: boolean = true)
-    : Promise<ComponentTestUtils<T, P>>
+    : Promise<ComponentTestUtils<U, V>>
     {
-        const testUtils: ComponentTestUtils<T, P> = await ComponentTestUtils.basic(game, configureTestingModule);
+        const testUtils: ComponentTestUtils<U, V> = await ComponentTestUtils.basic(game, configureTestingModule);
         ConnectedUserServiceMock.setUser(user);
         testUtils.prepareFixture(wrapperKind);
         testUtils.detectChanges();
@@ -312,16 +336,16 @@ export class ComponentTestUtils<T extends AbstractGameComponent, P extends Compa
         return testUtils;
     }
 
-    public static async basic<T extends AbstractGameComponent, P extends Comparable>(
+    public static async basic<U extends AbstractGameComponent, V extends Comparable>(
         game: string,
         configureTestingModule: boolean = true)
-    : Promise<ComponentTestUtils<T, P>>
+    : Promise<ComponentTestUtils<U, V>>
     {
         const activatedRouteStub: ActivatedRouteStub = new ActivatedRouteStub(game, 'configRoomId');
         if (configureTestingModule) {
             await TestUtils.configureTestingModuleForGame(activatedRouteStub);
         }
-        const testUtils: ComponentTestUtils<T, P> = new ComponentTestUtils<T, P>();
+        const testUtils: ComponentTestUtils<U, V> = new ComponentTestUtils<U, V>();
         testUtils.prepareMessageDisplayerSpies();
         return testUtils;
     }
@@ -416,6 +440,14 @@ export class ComponentTestUtils<T extends AbstractGameComponent, P extends Compa
         await this.expectInterfaceClickSuccess(nameInHtml);
         expect(this.canUserPlaySpy).toHaveBeenCalledOnceWith(nameInFunction);
         this.canUserPlaySpy.calls.reset();
+    }
+
+    public expectTranslationYToBe(elementSelector: string, y: number): void {
+        const element: DebugElement = this.findElement(elementSelector);
+        const transform: SVGTransform = element.nativeElement.transform.baseVal.getItem(0);
+        expect(transform.type).toBe(SVGTransform.SVG_TRANSFORM_TRANSLATE);
+        // In a SVG transform, f is the y coordinate
+        expect(transform.matrix.f).toBe(y);
     }
 
     public async expectClickSuccess(elementName: string): Promise<void> {

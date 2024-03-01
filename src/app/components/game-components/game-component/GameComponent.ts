@@ -25,10 +25,10 @@ abstract class BaseComponent {
     /**
      * Gets the CSS class for a player color
      */
-    public getPlayerClass(player: PlayerOrNone): string {
+    public getPlayerClass(player: PlayerOrNone, suffix: string = 'fill'): string {
         switch (player) {
-            case Player.ZERO: return 'player0-fill';
-            case Player.ONE: return 'player1-fill';
+            case Player.ZERO: return 'player0-' + suffix;
+            case Player.ONE: return 'player1-' + suffix;
             default:
                 Utils.expectToBe(player, PlayerOrNone.NONE);
                 return '';
@@ -143,7 +143,7 @@ export abstract class GameComponent<R extends SuperRules<M, S, C, L>,
         }
     }
 
-    public setInteractive(interactive: boolean): void {
+    public setInteractive(interactive: boolean): void { // TODO: make the ones who call that not trigger updateBoard if nothing changed
         this.interactive = interactive;
     }
 
@@ -167,6 +167,9 @@ export abstract class GameComponent<R extends SuperRules<M, S, C, L>,
 
     public cancelMoveAttempt(): void {
         // Override if need be
+        // Only call it manually in the component if you want (by example) to switch the selected piece
+        // If you wish to manually say that user did something invalid that cancel the move without popup message,
+        // Then just call cancelMove without parameter, otherwise the last move won't be displayed
     }
 
     public abstract updateBoard(triggerAnimation: boolean): Promise<void>;

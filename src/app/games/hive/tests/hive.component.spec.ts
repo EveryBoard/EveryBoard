@@ -153,7 +153,7 @@ describe('HiveComponent', () => {
             await testUtils.expectClickSuccess('#remainingPiece_QueenBee_PLAYER_ZERO');
 
             // When clicking on the selected piece again
-            await testUtils.expectClickSuccess('#remainingPiece_QueenBee_PLAYER_ZERO');
+            await testUtils.expectClickFailure('#remainingPiece_QueenBee_PLAYER_ZERO');
 
             // Then it should not be selected anymore
             testUtils.expectElementNotToExist('#remaining_highlight');

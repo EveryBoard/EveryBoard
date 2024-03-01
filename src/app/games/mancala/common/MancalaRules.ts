@@ -132,9 +132,7 @@ export abstract class MancalaRules<C extends MancalaConfig = MancalaConfig>
     }
 
     public override getInitialState(optionalConfig: MGPOptional<MancalaConfig>): MancalaState {
-        const config: MancalaConfig = optionalConfig.get();
-        const board: number[][] = TableUtils.create(config.width, 2, config.seedsByHouse);
-        return new MancalaState(board, 0, PlayerNumberMap.of(0, 0));
+        return MancalaRules.getInitialState(optionalConfig);
     }
 
     /**

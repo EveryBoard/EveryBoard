@@ -109,24 +109,22 @@ export class LascaStack {
 
 export class LascaState extends GameStateWithTable<LascaStack> {
 
-    public static readonly SIZE: number = 7;
+    public static readonly SIZE: number = 7; // TODO: kill, while we're at it
 
     public static of(board: Table<LascaStack>, turn: number): LascaState {
         return new LascaState(board, turn);
     }
 
-    public static isNotOnBoard(coord: Coord): boolean {
+    public static isNotOnBoard(coord: Coord): boolean { // TODO KILL
         return coord.isNotInRange(LascaState.SIZE, LascaState.SIZE);
-    }
-
-    public static isOnBoard(coord: Coord): boolean {
-        return coord.isInRange(LascaState.SIZE, LascaState.SIZE);
     }
 
     public getStacksOf(player: Player): Coord[] {
         const stackCoords: Coord[] = [];
-        for (let y: number = 0; y < LascaState.SIZE; y++) {
-            for (let x: number = 0; x < LascaState.SIZE; x++) {
+        const height: number = this.getHeight();
+        const width: number = this.getWidth();
+        for (let y: number = 0; y < height; y++) {
+            for (let x: number = 0; x < width; x++) {
                 if (this.getPieceAtXY(x, y).isCommandedBy(player)) {
                     stackCoords.push(new Coord(x, y));
                 }
@@ -153,22 +151,24 @@ export class LascaState extends GameStateWithTable<LascaStack> {
         if (player === Player.ZERO) {
             return 0;
         } else {
-            return LascaState.SIZE - 1;
+            return this.getHeight() - 1;
         }
     }
 
     public override toString(): string {
         let biggerStack: number = 1;
-        for (let y: number = 0; y < LascaState.SIZE; y++) {
-            for (let x: number = 0; x < LascaState.SIZE; x++) {
+        const height: number = this.getHeight();
+        const width: number = this.getWidth();
+        for (let y: number = 0; y < height; y++) {
+            for (let x: number = 0; x < width; x++) {
                 const newStackSize: number = this.getPieceAtXY(x, y).getStackSize();
                 biggerStack = Math.max(biggerStack, newStackSize);
             }
         }
         const lines: string[] = [];
-        for (let y: number = 0; y < LascaState.SIZE; y++) {
+        for (let y: number = 0; y < height; y++) {
             const squares: string[] = [];
-            for (let x: number = 0; x < LascaState.SIZE; x++) {
+            for (let x: number = 0; x < width; x++) {
                 squares.push(this.getPieceAtXY(x, y).toString(biggerStack));
             }
             lines.push(squares.join(' '));
