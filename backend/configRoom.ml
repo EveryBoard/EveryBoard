@@ -35,7 +35,6 @@ module Make
       Perform 1 read and up to 2 writes. *)
   let remove_candidate : Dream.route =
     Dream.delete "config-room/:game_id/candidates/:candidate_id" @@ fun request ->
-    Firestore.transaction request @@ fun () ->
     let game_id = Dream.param request "game_id" in
     let candidate_id = Dream.param request "candidate_id" in
     Stats.set_action request (Printf.sprintf "DELETE config-room/candidates");
@@ -64,7 +63,6 @@ module Make
 
   (** Accept a config and start the game. Perform 1 read and 3 writes. *)
   let accept_config (request : Dream.request) (game_id : string) =
-    Firestore.transaction request @@ fun () ->
     (* Read 1: retrieve the config room *)
     let* config_room = Firestore.ConfigRoom.get request game_id in
     (* Write 1: accept the config room *)

@@ -10,13 +10,6 @@ type deleter = Dream.request -> string -> unit Lwt.t
 (** This is the high-level firestore operations for the various data types *)
 module type FIRESTORE = sig
 
-  (** [transaction request f] begins a firestore transaction to bundle multiple
-      reads and writes together. [f] is then called. Transactions will be used
-      by [FirestorePrimitives] operations. Upon success, the return value of [f]
-      is returned. Firestore's doc states that all reads have to be performed
-      before the writes. *)
-  val transaction : Dream.request -> (unit -> 'a Lwt.t) -> 'a Lwt.t
-
   module User : sig
     (** Retrieve an user from its id *)
     val get : Domain.User.t getter
@@ -79,23 +72,6 @@ module type FIRESTORE = sig
 end
 
 module Make (FirestorePrimitives : FirestorePrimitives.FIRESTORE_PRIMITIVES) : FIRESTORE = struct
-
-  (* This will be called in request handlers. We catch any exception and rethrow
-     it, as we need to rollback the transaction. *)
-  let transaction (request : Dream.request) (body : unit -> 'a Lwt.t) : 'a Lwt.t =
-    if false then
-      let* transaction_id = FirestorePrimitives.begin_transaction request in
-      Dream.set_field request FirestorePrimitives.transaction_field transaction_id;
-      try
-        let* result = body () in
-        let* _ = FirestorePrimitives.commit request transaction_id in
-        Lwt.return result
-      with e ->
-        let* _ = FirestorePrimitives.rollback request transaction_id in
-        raise e
-    else
-      (* Transactions are disabled *)
-      body ()
 
 
   let get (request : Dream.request) (path : string) (of_yojson : JSON.t -> ('a, 'b) result) : 'a Lwt.t =

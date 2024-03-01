@@ -39,7 +39,6 @@ module Make
       match user.current_game with
       | Some _ -> raise (BadInput "User is already in a game")
       | None ->
-        Firestore.transaction request @@ fun () ->
         let creator = User.to_minimal_user uid user in
         (* Create the game, then the config room, then the chat room *)
         let game = Game.initial game_name creator in
@@ -73,7 +72,6 @@ module Make
     let game_id = Dream.param request "game_id" in
     Stats.set_action request "DELETE game";
     Stats.set_game_id request game_id;
-    Firestore.transaction request @@ fun () ->
     (* Write 1: delete the game *)
     let* _ = Firestore.Game.delete request game_id in
     (* Write 2: delete the chat *)
@@ -84,7 +82,6 @@ module Make
 
   (** Resign from a game. Perform 1 read and 2 writes. *)
   let resign (request : Dream.request) (game_id : string) =
-    Firestore.transaction request @@ fun () ->
     (* Read 1: retrieve the game *)
     let* game = Firestore.Game.get request game_id in
     let minimal_user = Auth.get_minimal_user request in
@@ -104,7 +101,6 @@ module Make
 
   (** End the game by a timeout from one player. Perform 1 read and 2 writes. *)
   let notify_timeout (request : Dream.request) (game_id : string) (winner : MinimalUser.t) (loser : MinimalUser.t) =
-    Firestore.transaction request @@ fun () ->
     (* Read 1: retrieve the game *)
     (* TODO: maybe not needed? For end, we could skip the turn update *)
     let* game = Firestore.Game.get request game_id in
@@ -138,7 +134,6 @@ module Make
 
   (** Accept a draw request from the opponent. Perform 1 read and 3 writes. *)
   let accept_draw (request : Dream.request) (game_id : string) =
-    Firestore.transaction request @@ fun () ->
     (* Read 1: retrieve the game *)
     let* game = Firestore.Game.get request game_id in
     let user = Auth.get_minimal_user request in
@@ -157,7 +152,6 @@ module Make
 
   (** Accept a rematch request from the opponent. Perform 2 read and 3 writes. *)
   let accept_rematch (request : Dream.request) (game_id : string) =
-    Firestore.transaction request @@ fun () ->
     (* Read 1: retrieve the game *)
     let* game = Firestore.Game.get request game_id in
     (* Read 2: retrieve the config room *)
@@ -189,7 +183,6 @@ module Make
 
   (** Accept a take back request from the opponent. Perform 1 read and 2 writes. *)
   let accept_take_back (request : Dream.request) (game_id : string) =
-    Firestore.transaction request @@ fun () ->
     (* Read 1: retrieve the game *)
     let* game = Firestore.Game.get request game_id in
     let user = Auth.get_minimal_user request in
@@ -223,7 +216,6 @@ module Make
 
   (** Perform a move. Perform 1 read and 2 writes. *)
   let move (request : Dream.request) (game_id : string) (move : Yojson.Safe.t) =
-    Firestore.transaction request @@ fun () ->
     (* Read 1: retrieve the game for the current turn *)
     let* game = Firestore.Game.get request game_id in
     let user = Auth.get_minimal_user request in
@@ -239,7 +231,6 @@ module Make
 
   (** Similar to [move], but also ends the game. Perform 1 read and 3 writes *)
   let move_and_end (request : Dream.request) (game_id : string) (move : Yojson.Safe.t) =
-    Firestore.transaction request @@ fun () ->
     (* Read 1: retrieve the game to have the current turn *)
     let* game = Firestore.Game.get request game_id in
     let user = Auth.get_minimal_user request in
