@@ -272,6 +272,55 @@ let tests = [
       )
   ];
 
+  "Firestore.ConfigRoom.delete", [
+    lwt_test "should delete the document" (fun () ->
+        let request = Dream.request "/" in
+        FirestorePrimitivesTests.Mock.deleted_docs := [];
+        (* Given a config room *)
+        let game_id = "game-id" in
+        (* When deleting it *)
+        let* _ = Firestore.ConfigRoom.delete request game_id in
+        (* Then it should have called delete_doc on /chat with the game id *)
+        let deleted = !FirestorePrimitivesTests.Mock.deleted_docs in
+        check (list string) "deletions" ["config-room/" ^ game_id] deleted;
+        Lwt.return ()
+      );
+  ];
+
+  "Firestore.ConfigRoom.add_candidate", [
+    lwt_test "should create a candidate document in a sub-collection" (fun () ->
+        let request = Dream.request "/" in
+        FirestorePrimitivesTests.Mock.set_docs := [];
+        (* Given a config room *)
+        let game_id = "game-id" in
+        let candidate = DomainTests.a_minimal_user in
+        (* When we add a candidate *)
+        let* _ = Firestore.ConfigRoom.add_candidate request game_id candidate in
+        (* Then it should have created a document in the sub collection *)
+        let json_user = Domain.MinimalUser.to_yojson candidate in
+        let set = !FirestorePrimitivesTests.Mock.set_docs in
+        check set_type "creations" [("config-room/game-id/candidates", candidate.id, json_user)] set;
+        Lwt.return ()
+      );
+  ];
+
+  "Firestore.ConfigRoom.remove_candidate", [
+    lwt_test "should remove candidate document" (fun () ->
+        let request = Dream.request "/" in
+        FirestorePrimitivesTests.Mock.deleted_docs := [];
+        (* Given a config room with a candidate *)
+        let game_id = "game-id" in
+        let candidate = DomainTests.a_minimal_user in
+        let* _ = Firestore.ConfigRoom.add_candidate request game_id candidate in
+        (* When we remove a candidate *)
+        let* _ = Firestore.ConfigRoom.remove_candidate request game_id candidate.id in
+        (* Then it should have deleted the corresponding document *)
+        let deleted = !FirestorePrimitivesTests.Mock.deleted_docs in
+        check (list string) "deletions" ["config-room/game-id/candidates/" ^ candidate.id] deleted;
+        Lwt.return ()
+      );
+  ];
+
   "Firestore.Chat.create", [
     lwt_test "should create an empty chat" (fun () ->
         let request = Dream.request "/" in
@@ -284,6 +333,21 @@ let tests = [
         let set = !FirestorePrimitivesTests.Mock.set_docs in
         let empty_chat = `Assoc [] in
         check set_type "creations" [("chats", game_id, empty_chat)] set;
+        Lwt.return ()
+      );
+  ];
+
+  "Firestore.Chat.delete", [
+    lwt_test "should delete the document" (fun () ->
+        let request = Dream.request "/" in
+        FirestorePrimitivesTests.Mock.deleted_docs := [];
+        (* Given a chat *)
+        let game_id = "game-id" in
+        (* When deleting it *)
+        let* _ = Firestore.Chat.delete request game_id in
+        (* Then it should have called delete_doc on /chat with the game id *)
+        let deleted = !FirestorePrimitivesTests.Mock.deleted_docs in
+        check (list string) "deletions" ["chats/" ^ game_id] deleted;
         Lwt.return ()
       );
   ];

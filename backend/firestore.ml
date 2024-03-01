@@ -1,7 +1,5 @@
 open Utils
 
-let ( >>= ) = Result.bind
-
 (** A getter takes a contextual request and an id, and returns the document if found, and raises an error otherwise *)
 type 'a getter = Dream.request -> string -> 'a Lwt.t
 (** An updater takes a contextual request, an id, and a document update. It updates the corresponding document *)
@@ -185,7 +183,7 @@ module Make (FirestorePrimitives : FirestorePrimitives.FIRESTORE_PRIMITIVES) : F
       Lwt.return ()
 
     let delete (request : Dream.request) (game_id : string) : unit Lwt.t =
-      FirestorePrimitives.delete_doc request ("config-room/" ^ game_id)
+      FirestorePrimitives.delete_doc request ("chats/" ^ game_id)
   end
 
 end
