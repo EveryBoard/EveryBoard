@@ -150,7 +150,7 @@ export class EpaminondasRules
         const O: PlayerOrNone = PlayerOrNone.ZERO;
         const X: PlayerOrNone = PlayerOrNone.ONE;
         const upperBoard: PlayerOrNone[][] = TableUtils.create(config.width, config.rowsOfSoldiers, X);
-        const middleBoard: PlayerOrNone[][] = TableUtils.create(config.width, config.emptyRows, _);
+        const middleBoard: PlayerOrNoneRulesConfigDescription[][] = TableUtils.create(config.width, config.emptyRows, _);
         const lowerBoard: PlayerOrNone[][] = TableUtils.create(config.width, config.rowsOfSoldiers, O);
         const board: Table<PlayerOrNone> = upperBoard.concat(middleBoard).concat(lowerBoard);
         return new EpaminondasState(board, 0);

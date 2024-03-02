@@ -1,18 +1,14 @@
-import {Coord, CoordFailure} from 'src/app/jscaip/Coord';
+import { Coord, CoordFailure } from 'src/app/jscaip/Coord';
 import { Move } from 'src/app/jscaip/Move';
 import { Encoder } from 'src/app/utils/Encoder';
-import {ArrayUtils, Table} from "../../utils/ArrayUtils";
-import {MGPUniqueList} from "../../utils/MGPUniqueList";
-import { types } from "sass";
-import List = types.List;
-import {publish} from "rxjs";
-import {MGPFallible} from "../../utils/MGPFallible";
-import {LascaState} from "../lasca/LascaState";
-import {Vector} from "../../jscaip/Vector";
-import {LascaFailure} from "../lasca/LascaFailure";
-import {MGPSet} from "../../utils/MGPSet";
-import {MGPOptional} from "../../utils/MGPOptional";
-import {assert} from "../../utils/assert";
+import { ArrayUtils } from '../../utils/ArrayUtils';
+import { MGPFallible } from '../../utils/MGPFallible';
+import { LascaState } from '../lasca/LascaState';
+import { Vector } from '../../jscaip/Vector';
+import { LascaFailure } from '../lasca/LascaFailure';
+import { MGPSet } from '../../utils/MGPSet';
+import { MGPOptional } from '../../utils/MGPOptional';
+import { assert } from '../../utils/assert';
 
 /**
   * This class represents the moves of your game.
@@ -47,6 +43,7 @@ export class DraughtMove extends Move {
             return MGPFallible.failure(jumpsValidity.getReason());
         }
     }
+
 
     public static getSteppedOverCoords(steppedOn: Coord[]): MGPFallible<MGPSet<Coord>> {
         let lastCoordOpt: MGPOptional<Coord> = MGPOptional.empty();
@@ -93,6 +90,7 @@ export class DraughtMove extends Move {
 
     private constructor(public readonly coords: ReadonlyArray<Coord>) {
         super();
+        this.coords = coords;
     }
 
     public override toString(): string {
@@ -112,7 +110,7 @@ export class DraughtMove extends Move {
         else return 'PREFIX';
     }
     public equals(other: this): boolean {
-        return this.getRelation(other) === "EQUALITY";
+        return this.getRelation(other) === 'EQUALITY';
     }
 
     public isPrefix(other: DraughtMove): boolean {

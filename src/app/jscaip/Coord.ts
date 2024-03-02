@@ -144,10 +144,6 @@ export class Coord extends Vector {
         return new Vector(dx, dy);
     }
 
-    public toVector(): Vector {
-        return new Vector(this.x, this.y);
-    }
-
     public getCoordsToward(c: Coord): Coord[] {
         Utils.assert(c.isAlignedWith(this), 'Should only call getCoordsTowards on aligned coords');
         if (c.equals(this)) {

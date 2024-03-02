@@ -86,11 +86,11 @@ export class ArrayUtils {
         let maxMetricValue: number = -Infinity;
         for (const element of array) {
             const currentMetricValue: number = metric(element);
-            if (currentMetricValue >= maxMetricValue) {
-                if (currentMetricValue > maxMetricValue) {
-                    maximums = [];
-                }
+
+            if (currentMetricValue > maxMetricValue) {
+                maximums = [element];
                 maxMetricValue = currentMetricValue;
+            } else if (currentMetricValue === maxMetricValue) {
                 maximums.push(element);
             }
         }
