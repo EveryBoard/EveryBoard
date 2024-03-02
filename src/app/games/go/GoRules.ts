@@ -1,28 +1,61 @@
-import { GameNode } from 'src/app/jscaip/GameNode';
+import { GameNode } from 'src/app/jscaip/AI/GameNode';
 import { GoState, Phase, GoPiece } from './GoState';
 import { Orthogonal } from 'src/app/jscaip/Direction';
 import { GoMove } from './GoMove';
 import { Player } from 'src/app/jscaip/Player';
 import { GoGroupDatas } from './GoGroupsDatas';
 import { Debug, Utils } from 'src/app/utils/utils';
-import { assert } from 'src/app/utils/assert';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { Rules } from 'src/app/jscaip/Rules';
+import { ConfigurableRules } from 'src/app/jscaip/Rules';
 import { Coord } from 'src/app/jscaip/Coord';
 import { GoGroupDatasFactory } from './GoGroupDatasFactory';
 import { GoFailure } from './GoFailure';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
+import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
+import { GobanConfig } from 'src/app/jscaip/GobanConfig';
+import { MGPValidators } from 'src/app/utils/MGPValidator';
+import { NumberConfig, RulesConfigDescription, RulesConfigDescriptionLocalizable } from 'src/app/components/wrapper-components/rules-configuration/RulesConfigDescription';
+import { GobanUtils } from 'src/app/jscaip/GobanUtils';
 
 export type GoLegalityInformation = Coord[];
+
+export type GoConfig = GobanConfig & {
+
+    handicap: number;
+};
 
 export class GoNode extends GameNode<GoMove, GoState> {}
 
 @Debug.log
-export class GoRules extends Rules<GoMove, GoState, GoLegalityInformation> {
+export class GoRules extends ConfigurableRules<GoMove, GoState, GoConfig, GoLegalityInformation> {
 
     private static singleton: MGPOptional<GoRules> = MGPOptional.empty();
+
+    public static readonly RULES_CONFIG_DESCRIPTION: RulesConfigDescription<GoConfig> =
+        new RulesConfigDescription<GoConfig>({
+            name: (): string => $localize`19 x 19`,
+            config: {
+                width: new NumberConfig(19, RulesConfigDescriptionLocalizable.WIDTH, MGPValidators.range(1, 99)),
+                height: new NumberConfig(19, RulesConfigDescriptionLocalizable.HEIGHT, MGPValidators.range(1, 99)),
+                handicap: new NumberConfig(0, () => $localize`Handicap`, MGPValidators.range(0, 9)),
+            },
+        }, [{
+            name: (): string => $localize`13 x 13`,
+            config: {
+                width: 13,
+                height: 13,
+                handicap: 0,
+            },
+        }, {
+            name: (): string => $localize`9 x 9`,
+            config: {
+                width: 9,
+                height: 9,
+                handicap: 0,
+            },
+        }]);
 
     public static get(): GoRules {
         if (GoRules.singleton.isAbsent()) {
@@ -31,13 +64,35 @@ export class GoRules extends Rules<GoMove, GoState, GoLegalityInformation> {
         return GoRules.singleton.get();
     }
 
-    private constructor() {
-        super();
-    }
-
-    public getInitialState(): GoState {
-        const board: Table<GoPiece> = GoState.getStartingBoard();
-        return new GoState(board, [0, 0], 0, MGPOptional.empty(), Phase.PLAYING);
+    public override getInitialState(optionalConfig: MGPOptional<GoConfig>): GoState {
+        const config: GoConfig = optionalConfig.get();
+        const board: GoPiece[][] = GoState.getStartingBoard(config);
+        let turn: number = 0;
+        const left: number = GobanUtils.getHorizontalLeft(config.width);
+        const right: number = GobanUtils.getHorizontalRight(config.width);
+        const up: number = GobanUtils.getVerticalUp(config.height);
+        const down: number = GobanUtils.getVerticalDown(config.height);
+        const horizontalCenter: number = GobanUtils.getHorizontalCenter(config.width);
+        const verticalCenter: number = GobanUtils.getVerticalCenter(config.height);
+        const orderedHandicaps: Coord[] = [
+            new Coord(left, up),
+            new Coord(right, down),
+            new Coord(right, up),
+            new Coord(left, down),
+            new Coord(horizontalCenter, verticalCenter),
+            new Coord(horizontalCenter, up),
+            new Coord(horizontalCenter, down),
+            new Coord(left, verticalCenter),
+            new Coord(right, verticalCenter),
+        ];
+        if (1 <= config.handicap) {
+            turn = 1;
+        }
+        for (let i: number = 0; i < config.handicap; i++) {
+            const handicapToPut: Coord = orderedHandicaps[i];
+            board[handicapToPut.y][handicapToPut.x] = GoPiece.DARK;
+        }
+        return new GoState(board, PlayerNumberMap.of(0, 0), turn, MGPOptional.empty(), Phase.PLAYING);
     }
 
     public static isLegal(move: GoMove, state: GoState): MGPFallible<GoLegalityInformation> {
@@ -74,6 +129,7 @@ export class GoRules extends Rules<GoMove, GoState, GoLegalityInformation> {
             return GoRules.isLegalNormalMove(move, state);
         }
     }
+
     public static getNewKo(move: GoMove, newBoard: GoPiece[][], captures: Coord[]): MGPOptional<Coord> {
         if (captures.length === 1) {
             const captured: Coord = captures[0];
@@ -94,23 +150,24 @@ export class GoRules extends Rules<GoMove, GoState, GoLegalityInformation> {
         }
         return MGPOptional.empty();
     }
+
     public static markTerritoryAndCount(state: GoState): GoState {
         const resultingBoard: GoPiece[][] = state.getCopiedBoard();
         const emptyZones: GoGroupDatas[] = GoRules.getTerritoryLikeGroup(state);
-        const captured: number[] = state.getCapturedCopy();
+        const captured: PlayerNumberMap = state.getCapturedCopy();
 
         for (const emptyZone of emptyZones) {
             const pointMaker: GoPiece = emptyZone.getWrapper();
             if (pointMaker === GoPiece.LIGHT) {
                 // light territory
-                captured[1] += emptyZone.emptyCoords.length;
+                captured.add(Player.ONE, emptyZone.emptyCoords.length);
                 for (const territory of emptyZone.getCoords()) {
                     resultingBoard[territory.y][territory.x] = GoPiece.LIGHT_TERRITORY;
                 }
             } else {
-                assert(pointMaker === GoPiece.DARK, 'territory should be wrapped by dark or light, not by ' + pointMaker.toString());
+                Utils.assert(pointMaker === GoPiece.DARK, 'territory should be wrapped by dark or light, not by ' + pointMaker.toString());
                 // dark territory
-                captured[0] += emptyZone.emptyCoords.length;
+                captured.add(Player.ZERO, emptyZone.emptyCoords.length);
                 for (const territory of emptyZone.getCoords()) {
                     resultingBoard[territory.y][territory.x] = GoPiece.DARK_TERRITORY;
                 }
@@ -118,27 +175,25 @@ export class GoRules extends Rules<GoMove, GoState, GoLegalityInformation> {
         }
         return new GoState(resultingBoard, captured, state.turn, state.koCoord, state.phase);
     }
+
     public static removeAndSubstractTerritory(state: GoState): GoState {
         const resultingBoard: GoPiece[][] = state.getCopiedBoard();
-        const captured: number[] = state.getCapturedCopy();
-        let currentPiece: GoPiece;
-        for (let y: number = 0; y < state.getHeight(); y++) {
-            for (let x: number = 0; x < state.getWidth(); x++) {
-                currentPiece = resultingBoard[y][x];
-                if (currentPiece === GoPiece.DARK_TERRITORY) {
-                    resultingBoard[y][x] = GoPiece.EMPTY;
-                    captured[0] = captured[0] - 1;
-                } else if (currentPiece === GoPiece.LIGHT_TERRITORY) {
-                    resultingBoard[y][x] = GoPiece.EMPTY;
-                    captured[1] = captured[1] - 1;
-                }
+        const captured: PlayerNumberMap = state.getCapturedCopy();
+        for (const coordAndContent of state.getCoordsAndContents()) {
+            const coord: Coord = coordAndContent.coord;
+            if (coordAndContent.content.isTerritory()) {
+                resultingBoard[coord.y][coord.x] = GoPiece.EMPTY;
+                const owner: Player = coordAndContent.content.getOwner() as Player;
+                captured.add(owner, - 1);
             }
         }
         return new GoState(resultingBoard, captured, state.turn, state.koCoord, state.phase);
     }
+
     public static getEmptyZones(deadlessState: GoState): GoGroupDatas[] {
         return GoRules.getGroupsDatasWhere(deadlessState.getCopiedBoard(), (pawn: GoPiece) => pawn.isEmpty());
     }
+
     public static getGroupsDatasWhere(board: GoPiece[][], condition: (pawn: GoPiece) => boolean): GoGroupDatas[] {
         const groups: GoGroupDatas[] = [];
         let coord: Coord;
@@ -159,10 +214,11 @@ export class GoRules extends Rules<GoMove, GoState, GoLegalityInformation> {
         }
         return groups;
     }
+
     public static addDeadToScore(state: GoState): number[] {
-        const captured: number[] = state.getCapturedCopy();
-        let playerOneScore: number = captured[1];
-        let playerZeroScore: number = captured[0];
+        const captured: PlayerNumberMap = state.getCapturedCopy();
+        let playerOneScore: number = captured.get(Player.ONE);
+        let playerZeroScore: number = captured.get(Player.ZERO);
         let currentSpace: GoPiece;
         for (let y: number = 0; y < state.getHeight(); y++) {
             for (let x: number = 0; x < state.getWidth(); x++) {
@@ -176,36 +232,37 @@ export class GoRules extends Rules<GoMove, GoState, GoLegalityInformation> {
         }
         return [playerZeroScore, playerOneScore];
     }
+
     public static switchAliveness(groupCoord: Coord, switchedState: GoState): GoState {
         const switchedBoard: GoPiece[][] = switchedState.getCopiedBoard();
         const switchedPiece: GoPiece = switchedBoard[groupCoord.y][groupCoord.x];
-        assert(switchedPiece.isOccupied(), `Can't switch emptyness aliveness`);
+        Utils.assert(switchedPiece.isOccupied(), `Can't switch emptyness aliveness`);
 
         const goGroupDatasFactory: GoGroupDatasFactory = new GoGroupDatasFactory();
         const group: GoGroupDatas = goGroupDatasFactory.getGroupDatas(groupCoord, switchedBoard) as GoGroupDatas;
-        const captured: number[] = switchedState.getCapturedCopy();
+        const captured: PlayerNumberMap = switchedState.getCapturedCopy();
         switch (group.color) {
             case GoPiece.DEAD_DARK:
-                captured[1] -= 2 * group.deadDarkCoords.length;
+                captured.add(Player.ONE, - 2 * group.deadDarkCoords.length);
                 for (const deadDarkCoord of group.deadDarkCoords) {
                     switchedBoard[deadDarkCoord.y][deadDarkCoord.x] = GoPiece.DARK;
                 }
                 break;
             case GoPiece.DEAD_LIGHT:
-                captured[0] -= 2 * group.deadLightCoords.length;
+                captured.add(Player.ZERO, - 2 * group.deadLightCoords.length);
                 for (const deadLightCoord of group.deadLightCoords) {
                     switchedBoard[deadLightCoord.y][deadLightCoord.x] = GoPiece.LIGHT;
                 }
                 break;
             case GoPiece.LIGHT:
-                captured[0] += 2 * group.lightCoords.length;
+                captured.add(Player.ZERO, 2 * group.lightCoords.length);
                 for (const lightCoord of group.lightCoords) {
                     switchedBoard[lightCoord.y][lightCoord.x] = GoPiece.DEAD_LIGHT;
                 }
                 break;
             default:
                 Utils.expectToBe(group.color, GoPiece.DARK);
-                captured[1] += 2 * group.darkCoords.length;
+                captured.add(Player.ONE, 2 * group.darkCoords.length);
                 for (const darkCoord of group.darkCoords) {
                     switchedBoard[darkCoord.y][darkCoord.x] = GoPiece.DEAD_DARK;
                 }
@@ -217,12 +274,15 @@ export class GoRules extends Rules<GoMove, GoState, GoLegalityInformation> {
                            switchedState.koCoord,
                            switchedState.phase);
     }
+
     public static getGameStatus(node: GoNode): GameStatus {
         const state: GoState = node.gameState;
         if (state.phase === Phase.FINISHED) {
-            if (state.captured[0] > state.captured[1]) {
+            const capturedZero: number = state.captured.get(Player.ZERO);
+            const capturedOne: number = state.captured.get(Player.ONE);
+            if (capturedOne < capturedZero) {
                 return GameStatus.ZERO_WON;
-            } else if (state.captured[1] > state.captured[0]) {
+            } else if (capturedZero < capturedOne) {
                 return GameStatus.ONE_WON;
             } else {
                 return GameStatus.DRAW;
@@ -231,16 +291,20 @@ export class GoRules extends Rules<GoMove, GoState, GoLegalityInformation> {
             return GameStatus.ONGOING;
         }
     }
+
     private static isPass(move: GoMove): boolean {
         return move.equals(GoMove.PASS);
     }
+
     private static isAccept(move: GoMove): boolean {
         return move.equals(GoMove.ACCEPT);
     }
+
     private static isLegalDeadMarking(move: GoMove, state: GoState): boolean {
         return GoRules.isOccupied(move.coord, state.getCopiedBoard()) &&
                (state.phase === Phase.COUNTING || state.phase === Phase.ACCEPT);
     }
+
     private static isLegalNormalMove(move: GoMove, state: GoState): MGPFallible<GoLegalityInformation> {
 
         const boardCopy: GoPiece[][] = state.getCopiedBoard();
@@ -268,9 +332,11 @@ export class GoRules extends Rules<GoMove, GoState, GoLegalityInformation> {
             }
         }
     }
+
     private static isOccupied(coord: Coord, board: Table<GoPiece>): boolean {
         return board[coord.y][coord.x].isOccupied();
     }
+
     public static isKo(move: GoMove, state: GoState): boolean {
         if (state.koCoord.isPresent()) {
             return move.coord.equals(state.koCoord.get());
@@ -278,6 +344,7 @@ export class GoRules extends Rules<GoMove, GoState, GoLegalityInformation> {
             return false;
         }
     }
+
     public static getCaptureState(move: GoMove, state: GoState): CaptureState {
         const captureState: CaptureState = new CaptureState();
         let capturedInDirection: Coord[];
@@ -291,6 +358,7 @@ export class GoRules extends Rules<GoMove, GoState, GoLegalityInformation> {
         }
         return captureState;
     }
+
     public static getCapturedInDirection(coord: Coord, direction: Orthogonal, state: GoState): Coord[] {
         const copiedBoard: GoPiece[][] = state.getCopiedBoard();
         const neightbooringCoord: Coord = coord.getNext(direction);
@@ -313,6 +381,7 @@ export class GoRules extends Rules<GoMove, GoState, GoLegalityInformation> {
         }
         return [];
     }
+
     public static isCapturableGroup(groupDatas: GoGroupDatas, koCoord: MGPOptional<Coord>): boolean {
         if (groupDatas.color.isOccupied() && groupDatas.emptyCoords.length === 1) {
             return koCoord.equalsValue(groupDatas.emptyCoords[0]) === false; // Ko Rules Block Capture
@@ -320,13 +389,15 @@ export class GoRules extends Rules<GoMove, GoState, GoLegalityInformation> {
             return false;
         }
     }
+
     public static getTerritoryLikeGroup(state: GoState): GoGroupDatas[] {
         const emptyGroups: GoGroupDatas[] = GoRules.getEmptyZones(state);
         return emptyGroups.filter((currentGroup: GoGroupDatas) => currentGroup.isMonoWrapped());
     }
+
     private static applyPass(state: GoState): GoState {
         const oldBoard: GoPiece[][] = state.getCopiedBoard();
-        const oldCaptured: number[] = state.getCapturedCopy();
+        const oldCaptured: PlayerNumberMap = state.getCapturedCopy();
         const oldTurn: number = state.turn;
         let newPhase: Phase;
         let resultingState: GoState;
@@ -335,12 +406,13 @@ export class GoRules extends Rules<GoMove, GoState, GoLegalityInformation> {
             resultingState = new GoState(oldBoard, oldCaptured, oldTurn + 1, MGPOptional.empty(), newPhase);
             resultingState = GoRules.markTerritoryAndCount(resultingState);
         } else {
-            assert(state.phase === Phase.PLAYING, 'Cannot pass in counting phase!');
+            Utils.assert(state.phase === Phase.PLAYING, 'Cannot pass in counting phase!');
             newPhase = Phase.PASSED;
             resultingState = new GoState(oldBoard, oldCaptured, oldTurn + 1, MGPOptional.empty(), newPhase);
         }
         return resultingState;
     }
+
     private static applyLegalAccept(state: GoState): GoState {
         const countingBoard: GoPiece[][] = state.getCopiedBoard();
         let phase: Phase;
@@ -355,6 +427,7 @@ export class GoRules extends Rules<GoMove, GoState, GoLegalityInformation> {
                            MGPOptional.empty(),
                            phase);
     }
+
     private static applyNormalLegalMove(legalMove: GoMove,
                                         currentState: GoState,
                                         capturedCoords: GoLegalityInformation)
@@ -371,17 +444,19 @@ export class GoRules extends Rules<GoMove, GoState, GoLegalityInformation> {
 
         const newBoard: GoPiece[][] = state.getCopiedBoard();
         const currentTurn: number = state.turn;
-        const currentPlayer: GoPiece = GoPiece.ofPlayer(state.getCurrentPlayer());
+        const currentPlayer: Player = state.getCurrentPlayer();
+        const currentPlayerPiece: GoPiece = GoPiece.ofPlayer(currentPlayer);
         const newTurn: number = currentTurn + 1;
-        newBoard[y][x] = currentPlayer;
+        newBoard[y][x] = currentPlayerPiece;
         for (const capturedCoord of capturedCoords) {
             newBoard[capturedCoord.y][capturedCoord.x] = GoPiece.EMPTY;
         }
         const newKoCoord: MGPOptional<Coord> = GoRules.getNewKo(legalMove, newBoard, capturedCoords);
-        const newCaptured: number[] = state.getCapturedCopy();
-        newCaptured[currentPlayer.player.value] += capturedCoords.length;
+        const newCaptured: PlayerNumberMap = state.getCapturedCopy();
+        newCaptured.add(currentPlayer, capturedCoords.length);
         return new GoState(newBoard, newCaptured, newTurn, newKoCoord, Phase.PLAYING);
     }
+
     public static resurrectStones(state: GoState): GoState {
         for (let y: number = 0; y < state.getHeight(); y++) {
             for (let x: number = 0; x < state.getWidth(); x++) {
@@ -392,6 +467,7 @@ export class GoRules extends Rules<GoMove, GoState, GoLegalityInformation> {
         }
         return GoRules.removeAndSubstractTerritory(state);
     }
+
     private static applyDeadMarkingMove(legalMove: GoMove,
                                         state: GoState)
     : GoState
@@ -406,10 +482,17 @@ export class GoRules extends Rules<GoMove, GoState, GoLegalityInformation> {
                         Phase.COUNTING);
         return GoRules.markTerritoryAndCount(resultingState);
     }
-    public isLegal(move: GoMove, state: GoState): MGPFallible<GoLegalityInformation> {
+
+    public override isLegal(move: GoMove, state: GoState): MGPFallible<GoLegalityInformation> {
         return GoRules.isLegal(move, state);
     }
-    public applyLegalMove(legalMove: GoMove, state: GoState, infos: GoLegalityInformation): GoState {
+
+    public override applyLegalMove(legalMove: GoMove,
+                                   state: GoState,
+                                   _config: MGPOptional<GoConfig>,
+                                   infos: GoLegalityInformation)
+    : GoState
+    {
         if (GoRules.isPass(legalMove)) {
             Debug.display('GoRules', 'applyLegalMove', 'isPass');
             return GoRules.applyPass(state);
@@ -424,15 +507,22 @@ export class GoRules extends Rules<GoMove, GoState, GoLegalityInformation> {
             return GoRules.applyNormalLegalMove(legalMove, state, infos);
         }
     }
+
     public getGameStatus(node: GoNode): GameStatus {
         return GoRules.getGameStatus(node);
     }
+
+    public override getRulesConfigDescription(): MGPOptional<RulesConfigDescription<GoConfig>> {
+        return MGPOptional.of(GoRules.RULES_CONFIG_DESCRIPTION);
+    }
+
 }
 class CaptureState {
+
     public capturedCoords: Coord[] = [];
 
     public static isCapturing(captureState: CaptureState): boolean {
         return captureState.capturedCoords.length > 0;
     }
-}
 
+}

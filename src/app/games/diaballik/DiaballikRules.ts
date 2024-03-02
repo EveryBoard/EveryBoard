@@ -9,11 +9,13 @@ import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Direction, Orthogonal } from 'src/app/jscaip/Direction';
 import { MGPSet } from 'src/app/utils/MGPSet';
-import { GameNode } from 'src/app/jscaip/GameNode';
+import { GameNode } from 'src/app/jscaip/AI/GameNode';
 import { DiaballikFailure } from './DiaballikFailure';
 import { Utils } from 'src/app/utils/utils';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { CoordFailure } from '../../jscaip/Coord';
+import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { PlayerMap } from 'src/app/jscaip/PlayerMap';
 
 export class VictoryOrDefeatCoords {
     protected constructor(public readonly winner: Player) {}
@@ -51,7 +53,7 @@ export class DiaballikRules extends Rules<DiaballikMove, DiaballikState, Diaball
         return DiaballikRules.singleton.get();
     }
 
-    public getInitialState(): DiaballikState {
+    public override getInitialState(): DiaballikState {
         const O: DiaballikPiece = DiaballikPiece.ZERO;
         const Ȯ: DiaballikPiece = DiaballikPiece.ZERO_WITH_BALL;
         const X: DiaballikPiece = DiaballikPiece.ONE;
@@ -69,7 +71,7 @@ export class DiaballikRules extends Rules<DiaballikMove, DiaballikState, Diaball
         return new DiaballikState(board, 0);
     }
 
-    public isLegal(move: DiaballikMove, state: DiaballikState): MGPFallible<DiaballikState> {
+    public override isLegal(move: DiaballikMove, state: DiaballikState): MGPFallible<DiaballikState> {
         let currentState: DiaballikState = state;
         for (const subMove of move.getSubMoves()) {
             const start: Coord = subMove.getStart();
@@ -165,9 +167,10 @@ export class DiaballikRules extends Rules<DiaballikMove, DiaballikState, Diaball
         return MGPFallible.success(new DiaballikState(updatedBoard, state.turn));
     }
 
-    public applyLegalMove(_move: DiaballikMove,
-                          state: DiaballikState,
-                          stateAfterSubMoves: DiaballikState)
+    public override applyLegalMove(_move: DiaballikMove,
+                                   state: DiaballikState,
+                                   _config: NoConfig,
+                                   stateAfterSubMoves: DiaballikState)
     : DiaballikState
     {
         // All submoves have already been applied and are stored in stateAfterSubMoves
@@ -202,7 +205,7 @@ export class DiaballikRules extends Rules<DiaballikMove, DiaballikState, Diaball
     }
 
     private getBallCoordInRow(state: DiaballikState, y: number, player: Player): MGPOptional<Coord> {
-        for (let x: number = 0; x < state.board.length; x++) {
+        for (let x: number = 0; x < state.getHeight(); x++) {
             const piece: DiaballikPiece = state.getPieceAtXY(x, y);
             if (piece.holdsBall === true && piece.owner === player) {
                 return MGPOptional.of(new Coord(x, y));
@@ -216,16 +219,16 @@ export class DiaballikRules extends Rules<DiaballikMove, DiaballikState, Diaball
         // and that if three opponent's pieces are touching the line, then the blocker loses
         // We check this one player at a time.
         // In case both players form a line, the one that just moved wins.
-        const blocking: [MGPOptional<DefeatCoords>, MGPOptional<DefeatCoords>] = [
+        const blocking: PlayerMap<MGPOptional<DefeatCoords>> = PlayerMap.ofValues(
             this.getBlockerCoords(state, Player.ZERO),
             this.getBlockerCoords(state, Player.ONE),
-        ];
-        if (blocking[0].isPresent() && blocking[1].isPresent()) {
+        );
+        if (blocking.get(Player.ZERO).isPresent() && blocking.get(Player.ONE).isPresent()) {
             // Both players form a line, so the current player loses
-            return blocking[state.getCurrentPlayer().value];
+            return blocking.get(state.getCurrentPlayer());
         }
-        if (blocking[0].isPresent()) return blocking[0];
-        if (blocking[1].isPresent()) return blocking[1];
+        if (blocking.get(Player.ZERO).isPresent()) return blocking.get(Player.ZERO);
+        if (blocking.get(Player.ONE).isPresent()) return blocking.get(Player.ONE);
         return MGPOptional.empty();
     }
 

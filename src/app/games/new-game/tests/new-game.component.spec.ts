@@ -18,6 +18,7 @@ describe('NewGameComponent', () => {
         // This `testUtils` will be used throughout the test suites as a matcher for various test conditions
         testUtils = await ComponentTestUtils.forGame<NewGameComponent>('NewGame');
     }));
+
     it('should create', () => {
         // This test is done in all games to ensure that their initialization works as expected
         testUtils.expectToBeCreated();

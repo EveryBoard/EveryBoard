@@ -2,13 +2,13 @@
 import { TutorialGameWrapperComponent } from './tutorial-game-wrapper.component';
 import { ComponentTestUtils, TestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { GameInfo } from '../../normal-component/pick-game/pick-game.component';
-import { fakeAsync, TestBed } from '@angular/core/testing';
+import { fakeAsync } from '@angular/core/testing';
 import { GameWrapper } from '../GameWrapper';
-import { Click, TutorialStep } from './TutorialStep';
+import { Click, TutorialPredicate, TutorialStep } from './TutorialStep';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { Move } from 'src/app/jscaip/Move';
 import { Coord } from 'src/app/jscaip/Coord';
-import { Rules } from 'src/app/jscaip/Rules';
+import { AbstractRules, SuperRules } from 'src/app/jscaip/Rules';
 import { Direction } from 'src/app/jscaip/Direction';
 import { AbstractGameComponent } from '../../game-components/game-component/GameComponent';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
@@ -45,7 +45,7 @@ import { HiveMove } from 'src/app/games/hive/HiveMove';
 
 import { KalahRules } from 'src/app/games/mancala/kalah/KalahRules';
 import { KalahTutorial } from 'src/app/games/mancala/kalah/KalahTutorial';
-import { KalahMove } from 'src/app/games/mancala/kalah/KalahMove';
+import { MancalaMove } from 'src/app/games/mancala/common/MancalaMove';
 
 import { LinesOfActionRules } from 'src/app/games/lines-of-action/LinesOfActionRules';
 import { LinesOfActionTutorial } from 'src/app/games/lines-of-action/LinesOfActionTutorial';
@@ -86,22 +86,25 @@ import { YinshRules } from 'src/app/games/yinsh/YinshRules';
 import { YinshTutorial, YinshTutorialMessages } from 'src/app/games/yinsh/YinshTutorial';
 import { YinshCapture, YinshMove } from 'src/app/games/yinsh/YinshMove';
 
-import { TutorialStepFailure } from './TutorialStepFailure';
+import { TutorialStepMessage } from './TutorialStepMessage';
 import { Comparable } from 'src/app/utils/Comparable';
+import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 describe('TutorialGameWrapperComponent (games)', () => {
 
     describe('Game should load correctly', () => {
-        for (const game of GameInfo.ALL_GAMES()) {
-            it(game.urlName, fakeAsync(async() => {
+        for (const gameInfo of GameInfo.ALL_GAMES()) {
+            it(gameInfo.urlName, fakeAsync(async() => {
                 const wrapper: GameWrapper<Comparable> =
-                    (await ComponentTestUtils.forGameWithWrapper(game.urlName, TutorialGameWrapperComponent))
+                    (await ComponentTestUtils.forGameWithWrapper(gameInfo.urlName, TutorialGameWrapperComponent))
                         .getWrapper();
                 expect(wrapper).toBeTruthy();
             }));
         }
     });
+
     describe('Tutorials', () => {
+
         it('should make sure that predicate step have healthy behaviors', fakeAsync(async() => {
             const apagosTutorial: TutorialStep[] = new ApagosTutorial().tutorial;
             const conspirateursTutorial: TutorialStep[] = new ConspirateursTutorial().tutorial;
@@ -119,7 +122,7 @@ describe('TutorialGameWrapperComponent (games)', () => {
             const sixTutorial: TutorialStep[] = new SixTutorial().tutorial;
             const trexoTutorial: TutorialStep[] = new TrexoTutorial().tutorial;
             const yinshTutorial: TutorialStep[] = new YinshTutorial().tutorial;
-            const stepExpectations: [Rules<Move, GameState, unknown>, TutorialStep, Move, MGPValidation][] = [
+            const stepExpectations: [AbstractRules, TutorialStep, Move, MGPValidation][] = [
                 [
                     ApagosRules.get(),
                     apagosTutorial[2],
@@ -164,12 +167,12 @@ describe('TutorialGameWrapperComponent (games)', () => {
                     EncapsuleRules.get(),
                     encapsuleTutorial[3],
                     EncapsuleMove.ofMove(new Coord(0, 0), new Coord(0, 2)),
-                    MGPValidation.failure(`Failed. Try again.`),
+                    MGPValidation.failure(TutorialStepMessage.FAILED_TRY_AGAIN()),
                 ], [
                     EncapsuleRules.get(),
                     encapsuleTutorial[3],
                     EncapsuleMove.ofMove(new Coord(0, 0), new Coord(1, 0)),
-                    MGPValidation.failure(`Failed. Try again.`),
+                    MGPValidation.failure(TutorialStepMessage.FAILED_TRY_AGAIN()),
                 ], [
                     EpaminondasRules.get(),
                     epaminondasTutorial[3],
@@ -188,23 +191,23 @@ describe('TutorialGameWrapperComponent (games)', () => {
                 ], [
                     KalahRules.get(),
                     kalahTutorial[4],
-                    KalahMove.of(MancalaDistribution.ZERO),
+                    MancalaMove.of(MancalaDistribution.of(0)),
                     MGPValidation.failure('This move only distributed one house, do one distribution that ends in the Kalah, then do a second one!'),
                 ], [
                     KalahRules.get(),
                     kalahTutorial[5],
-                    KalahMove.of(MancalaDistribution.FOUR),
+                    MancalaMove.of(MancalaDistribution.of(4)),
                     MGPValidation.failure('You did not capture, try again!'),
                 ], [
                     LinesOfActionRules.get(),
                     linesOfActionTutorial[4],
                     LinesOfActionMove.from(new Coord(1, 0), new Coord(3, 2)).get(),
-                    MGPValidation.failure(`Failed. Try again.`),
+                    MGPValidation.failure(TutorialStepMessage.FAILED_TRY_AGAIN()),
                 ], [
                     LodestoneRules.get(),
                     lodestoneTutorial[5],
                     new LodestoneMove(new Coord(0, 0), 'push', 'orthogonal'),
-                    MGPValidation.failure(`You have not captured any of the opponent's pieces, try again!`),
+                    MGPValidation.failure(TutorialStepMessage.YOU_DID_NOT_CAPTURE_ANY_PIECE()),
                 ], [
                     LodestoneRules.get(),
                     lodestoneTutorial[6],
@@ -259,7 +262,7 @@ describe('TutorialGameWrapperComponent (games)', () => {
                     PylosRules.get(),
                     pylosTutorial[4],
                     PylosMove.ofDrop(new PylosCoord(3, 3, 0), []),
-                    MGPValidation.failure(TutorialStepFailure.YOU_DID_NOT_CAPTURE_ANY_PIECE()),
+                    MGPValidation.failure(TutorialStepMessage.YOU_DID_NOT_CAPTURE_ANY_PIECE()),
                 ], [
                     PylosRules.get(),
                     pylosTutorial[4],
@@ -304,7 +307,7 @@ describe('TutorialGameWrapperComponent (games)', () => {
                     TrexoRules.get(),
                     trexoTutorial[3],
                     TrexoMove.from(new Coord(0, 0), new Coord(1, 0)).get(),
-                    MGPValidation.failure(`Failed. Try again.`),
+                    MGPValidation.failure(TutorialStepMessage.FAILED_TRY_AGAIN()),
                 ], [
                     YinshRules.get(),
                     yinshTutorial[3],
@@ -320,15 +323,18 @@ describe('TutorialGameWrapperComponent (games)', () => {
                 ],
             ];
             for (const stepExpectation of stepExpectations) {
-                const rules: Rules<Move, GameState, unknown> = stepExpectation[0];
+                const rules: SuperRules<Move, GameState, RulesConfig, unknown> = stepExpectation[0];
                 const step: TutorialStep = stepExpectation[1];
                 if (step.isPredicate()) {
+                    const config: MGPOptional<RulesConfig> = rules.getDefaultRulesConfig();
                     const move: Move = stepExpectation[2];
-                    const moveResult: MGPFallible<unknown> = rules.isLegal(move, step.state);
+                    const moveResult: MGPFallible<unknown> = rules.isLegal(move, step.state, config);
                     if (moveResult.isSuccess()) {
-                        const resultingState: GameState = rules.applyLegalMove(move, step.state, moveResult.get());
+                        const resultingState: GameState =
+                            rules.applyLegalMove(move, step.state, config, moveResult.get());
                         const validation: MGPValidation = stepExpectation[3];
                         expect(Utils.getNonNullable(step.predicate)(move, step.state, resultingState))
+                            .withContext(move.toString())
                             .toEqual(validation);
                     } else {
                         const context: string = 'Move should be legal to reach predicate but failed in "' + step.title+ '" because';
@@ -339,23 +345,28 @@ describe('TutorialGameWrapperComponent (games)', () => {
                 }
             }
         }));
-        it('should make sure all solutionMove are legal', fakeAsync(async() => {
-            for (const gameInfo of GameInfo.ALL_GAMES()) {
+
+        for (const gameInfo of GameInfo.ALL_GAMES()) {
+            it('should make sure all solutionMove are legal for ' + gameInfo.name, fakeAsync(async() => {
                 const gameComponent: AbstractGameComponent =
-                    TestBed.createComponent(gameInfo.component).debugElement.componentInstance;
-                const rules: Rules<Move, GameState, unknown> = gameComponent.rules;
+                    (await ComponentTestUtils.forGameWithWrapper(gameInfo.urlName,
+                                                                 TutorialGameWrapperComponent))
+                        .getGameComponent();
+                const rules: SuperRules<Move, GameState, RulesConfig, unknown> = gameComponent.rules;
                 const steps: TutorialStep[] = gameComponent.tutorial;
+                const config: MGPOptional<RulesConfig> = gameInfo.getRulesConfig();
                 for (const step of steps) {
                     if (step.hasSolution()) {
                         const solution: Move | Click = step.getSolution();
                         if (solution instanceof Move) {
-                            const moveResult: MGPFallible<unknown> = rules.isLegal(solution, step.state);
+                            const moveResult: MGPFallible<unknown> = rules.isLegal(solution, step.state, config);
                             if (moveResult.isSuccess()) {
                                 if (step.isPredicate()) {
                                     const resultingState: GameState =
-                                        rules.applyLegalMove(solution, step.state, moveResult.get());
-                                    expect(Utils.getNonNullable(step.predicate)(solution, step.state, resultingState))
-                                        .toEqual(MGPValidation.SUCCESS);
+                                        rules.applyLegalMove(solution, step.state, config, moveResult.get());
+                                    const predicate: TutorialPredicate = Utils.getNonNullable(step.predicate);
+                                    const result: MGPValidation = predicate(solution, step.state, resultingState);
+                                    expect(result).withContext(step.title).toEqual(MGPValidation.SUCCESS);
                                 }
                             } else {
                                 const context: string = 'Solution move should be legal but failed in "' + gameInfo.name + ': '+ step.title + '"';
@@ -364,7 +375,8 @@ describe('TutorialGameWrapperComponent (games)', () => {
                         }
                     }
                 }
-            }
-        }));
+            }));
+        }
     });
+
 });

@@ -6,6 +6,8 @@ import { Localized } from 'src/app/utils/LocaleUtils';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { Tutorial, TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { SixRules } from './SixRules';
+import { TutorialStepMessage } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
+import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 
 const _: PlayerOrNone = PlayerOrNone.NONE;
 const O: PlayerOrNone = Player.ZERO;
@@ -40,8 +42,8 @@ export class SixTutorial extends Tutorial {
                 [O, _, _, _, _, _],
             ], 0),
             [SixMove.ofDrop(new Coord(3, 2))],
-            $localize`Congratulations!`,
-            $localize`Failed. Try again.`,
+            TutorialStepMessage.CONGRATULATIONS(),
+            TutorialStepMessage.FAILED_TRY_AGAIN(),
         ),
         TutorialStep.fromMove(
             $localize`Victory (circle)`,
@@ -55,7 +57,7 @@ export class SixTutorial extends Tutorial {
             ], 0),
             [SixMove.ofDrop(new Coord(5, 2))],
             $localize`Congratulations! Note that if a piece is inside the circle, it does not change anything.`,
-            $localize`Failed. Try again.`,
+            TutorialStepMessage.FAILED_TRY_AGAIN(),
         ),
         TutorialStep.fromMove(
             $localize`Victory (triangle)`,
@@ -68,8 +70,8 @@ export class SixTutorial extends Tutorial {
                 [X, X, X, _, X, _],
             ], 0),
             [SixMove.ofDrop(new Coord(3, 3))],
-            $localize`Congratulations!`,
-            $localize`Failed. Try again.`,
+            TutorialStepMessage.CONGRATULATIONS(),
+            TutorialStepMessage.FAILED_TRY_AGAIN(),
         ),
         TutorialStep.fromPredicate(
             $localize`Second phase`,
@@ -91,9 +93,9 @@ export class SixTutorial extends Tutorial {
             ], 40),
             SixMove.ofMovement(new Coord(6, 1), new Coord(5, 1)),
             (_move: SixMove, _previousState: SixState, resultingState: SixState) => {
-                const pieces: [number, number] = resultingState.countPieces();
-                if (pieces[0] === 19) {
-                    if (pieces[1] === 18) {
+                const pieces: PlayerNumberMap = resultingState.countPieces();
+                if (pieces.get(Player.ZERO) === 19) {
+                    if (pieces.get(Player.ONE) === 18) {
                         return MGPValidation.SUCCESS;
                     } else {
                         return MGPValidation.failure(SixTutorialMessages.MOVEMENT_NOT_DISCONNECTING());
@@ -127,7 +129,7 @@ export class SixTutorial extends Tutorial {
                     return MGPValidation.failure(SixTutorialMessages.MOVEMENT_NOT_DISCONNECTING());
                 }
             },
-            $localize`Congratulations, you won!`,
+            TutorialStepMessage.CONGRATULATIONS_YOU_WON(),
         ),
         TutorialStep.fromPredicate(
             $localize`Special disconnection`,
@@ -154,7 +156,7 @@ export class SixTutorial extends Tutorial {
                     return MGPValidation.SUCCESS;
                 }
             },
-            $localize`Congratulations, you won!`,
+            TutorialStepMessage.CONGRATULATIONS_YOU_WON(),
         ),
     ];
 }

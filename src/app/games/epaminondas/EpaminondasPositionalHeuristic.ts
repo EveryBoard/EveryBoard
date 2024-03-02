@@ -1,19 +1,25 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { Direction } from 'src/app/jscaip/Direction';
-import { Heuristic } from 'src/app/jscaip/Minimax';
-import { BoardValue } from 'src/app/jscaip/BoardValue';
+import { Heuristic } from 'src/app/jscaip/AI/Minimax';
+import { BoardValue } from 'src/app/jscaip/AI/BoardValue';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { EpaminondasMove } from './EpaminondasMove';
 import { EpaminondasState } from './EpaminondasState';
-import { EpaminondasNode } from './EpaminondasRules';
+import { EpaminondasConfig, EpaminondasNode } from './EpaminondasRules';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
 
-export class EpaminondasPositionalHeuristic extends Heuristic<EpaminondasMove, EpaminondasState> {
+export class EpaminondasPositionalHeuristic
+    extends Heuristic<EpaminondasMove, EpaminondasState, BoardValue, EpaminondasConfig>
+{
 
-    public getBoardValue(node: EpaminondasNode): BoardValue {
-        return new BoardValue(this.getPieceCountThenSupportThenAdvancement(node.gameState));
+    public getBoardValue(node: EpaminondasNode, _config: MGPOptional<EpaminondasConfig>): BoardValue {
+        return BoardValue.of(this.getPieceCountThenSupportThenAdvancement(node.gameState));
     }
+
     private getPieceCountThenSupportThenAdvancement(state: EpaminondasState): number {
-        const MAX_ADVANCEMENT_SCORE_TOTAL: number = 28 * EpaminondasState.WIDTH;
+        const width: number = state.getWidth();
+        const height: number = state.getHeight();
+        const MAX_ADVANCEMENT_SCORE_TOTAL: number = 28 * width;
         const SCORE_BY_ALIGNEMENT: number = MAX_ADVANCEMENT_SCORE_TOTAL + 1; // OLDLY 13
         const MAX_NUMBER_OF_ALIGNEMENT: number = (24*16) + (4*15);
         const SCORE_BY_PIECE: number = (MAX_NUMBER_OF_ALIGNEMENT * SCORE_BY_ALIGNEMENT) + 1; // OLDLY 25*13
@@ -25,7 +31,7 @@ export class EpaminondasPositionalHeuristic extends Heuristic<EpaminondasMove, E
                 let avancement: number; // between 0 and 11
                 let dirs: Direction[];
                 if (player === Player.ZERO) {
-                    avancement = EpaminondasState.HEIGHT - coord.y;
+                    avancement = height - coord.y;
                     dirs = [Direction.UP_LEFT, Direction.UP, Direction.UP_RIGHT];
                 } else {
                     avancement = coord.y + 1;
@@ -36,7 +42,7 @@ export class EpaminondasPositionalHeuristic extends Heuristic<EpaminondasMove, E
                 total += SCORE_BY_PIECE * mod;
                 for (const dir of dirs) {
                     let neighbor: Coord = coord.getNext(dir, 1);
-                    while (EpaminondasState.isOnBoard(neighbor) &&
+                    while (state.isOnBoard(neighbor) &&
                            state.getPieceAt(neighbor) === player)
                     {
                         total += mod * SCORE_BY_ALIGNEMENT;
@@ -47,4 +53,5 @@ export class EpaminondasPositionalHeuristic extends Heuristic<EpaminondasMove, E
         }
         return total;
     }
+
 }

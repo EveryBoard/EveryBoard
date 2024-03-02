@@ -12,8 +12,10 @@ import { TaflMove } from '../TaflMove';
 import { TaflMoveGenerator } from '../TaflMoveGenerator';
 import { TaflRules } from '../TaflRules';
 import { TaflState } from '../TaflState';
+import { RulesConfigUtils } from 'src/app/jscaip/RulesConfigUtil';
+import { TaflConfig } from '../TaflConfig';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
-
+import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 export class TaflTestEntries<C extends TaflComponent<R, M>,
                              R extends TaflRules<M>,
@@ -184,8 +186,9 @@ export function DoTaflTests<C extends TaflComponent<R, M>,
             const rules: R = testUtils.getGameComponent().rules;
             const encoder: Encoder<M> = testUtils.getGameComponent().encoder;
             const moveGenerator: TaflMoveGenerator<M> = new TaflMoveGenerator(rules);
+            const defaultConfig: MGPOptional<TaflConfig> = RulesConfigUtils.getGameDefaultConfig(entries.gameName);
             const firstTurnMoves: M[] = moveGenerator
-                .getListMoves(rules.getInitialNode())
+                .getListMoves(rules.getInitialNode(defaultConfig), defaultConfig)
                 .map((move: TaflMove) => {
                     return entries.moveProvider(move.getStart(), move.getEnd()).get();
                 });

@@ -7,42 +7,118 @@ import { assert } from 'src/app/utils/assert';
 import { MGPMap } from 'src/app/utils/MGPMap';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { LodestoneCaptures } from './LodestoneMove';
-export class LodestonePressurePlate {
-    public static POSITIONS: LodestonePressurePlatePosition[] = ['top', 'bottom', 'left', 'right'];
-    public static EMPTY_5: LodestonePressurePlate = new LodestonePressurePlate(5, []);
-    public static EMPTY_3: LodestonePressurePlate = new LodestonePressurePlate(3, []);
+import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
+import { Utils } from 'src/app/utils/utils';
 
-    public constructor(public readonly width: 3 | 5,
-                       private readonly pieces: readonly LodestonePiecePlayer[])
-    {
-    }
+/**
+ * Represent different LodestonePressurePlate from the same side of the board
+ */
+export class LodestonePressurePlateGroup {
 
-    public remainingSpaces(): number {
-        if (this.width === 5) {
-            return 8 - this.pieces.length;
-        } else {
-            return 3 - this.pieces.length;
+    public static of(sizes: number[]): LodestonePressurePlateGroup {
+        let plates: LodestonePressurePlate[] = [];
+        for (const size of sizes) {
+            const newPlate: LodestonePressurePlate = new LodestonePressurePlate(size, []);
+            plates = plates.concat(newPlate);
         }
+        return new LodestonePressurePlateGroup(plates);
     }
 
-    public addCaptured(player: Player, quantity: number): MGPOptional<LodestonePressurePlate> {
-        if (this.pieces.length + quantity >= this.width) {
-            // The pressure plate is full, it therefore crumbles the floor.
-            if (this.width === 5) {
-                // Put the rest of the pieces on the next pressure plate
-                return LodestonePressurePlate.EMPTY_3.addCaptured(player, quantity + this.pieces.length - 5);
+    public constructor(public readonly plates: LodestonePressurePlate[]) {
+    }
+
+    public getCrumbledPlates(): LodestonePressurePlate[] {
+        const fullPlates: LodestonePressurePlate[] = [];
+        for (const plate of this.plates) {
+            if (plate.getRemainingSpaces() === 0) {
+                fullPlates.push(plate);
             } else {
-                // This was the last plate level
-                assert(this.pieces.length + quantity === 3, 'should never put more pieces than the plate can support');
-                return MGPOptional.empty();
+                return fullPlates;
             }
-        } else {
-            const newPieces: LodestonePiecePlayer[] = ArrayUtils.copy(this.pieces);
-            for (let i: number = 0; i < quantity; i++) {
-                newPieces.push(LodestonePiecePlayer.of(player));
-            }
-            return MGPOptional.of(new LodestonePressurePlate(this.width, newPieces));
         }
+        return fullPlates;
+    }
+
+    public getCurrentPlate(): MGPOptional<LodestonePressurePlate> {
+        for (const plate of this.plates) {
+            if (plate.getRemainingSpaces() > 0) {
+                return MGPOptional.of(plate);
+            }
+        }
+        return MGPOptional.empty();
+    }
+
+    private getFollowingPlates(): LodestonePressurePlate[] {
+        const nextPlates: LodestonePressurePlate[] = [];
+        let currentPlateReached: boolean = false;
+        for (const plate of this.plates) {
+            if (currentPlateReached) {
+                nextPlates.push(plate);
+            } else if (plate.getRemainingSpaces() > 0) {
+                currentPlateReached = true;
+            }
+        }
+        return nextPlates;
+    }
+
+    public getCurrentPlateWidth(): number {
+        const currentPlate: MGPOptional<LodestonePressurePlate> = this.getCurrentPlate();
+        const emptyplate: LodestonePressurePlate = new LodestonePressurePlate(0, []);
+        return currentPlate.getOrElse(emptyplate).width;
+    }
+
+    /**
+     * @returns the number of piece that can be put in that pressure plate group, all pressures plates included
+     */
+    public getGroupRemainingSpaces(): number {
+        const remainingSpaces: number[] =
+            this.plates.map((plate: LodestonePressurePlate) => plate.getRemainingSpaces());
+        const totalRemainingSpaces: number = remainingSpaces.reduce((left: number, right: number) => left + right);
+        return totalRemainingSpaces;
+    }
+
+    public addCaptured(player: Player, quantity: number): LodestonePressurePlateGroup {
+        if (quantity === 0) {
+            return this;
+        }
+        const remainingSpaces: number = this.getGroupRemainingSpaces();
+        Utils.assert(quantity <= remainingSpaces,
+                     `should never put more pieces than the plate can support (${ remainingSpaces } > ${ quantity})`);
+        const fullPlates: LodestonePressurePlate[] = this.getCrumbledPlates();
+        const currentPlate: LodestonePressurePlate = this.getCurrentPlate().get();
+        const nextPlates: LodestonePressurePlate[] = this.getFollowingPlates();
+        const newPieces: LodestonePiecePlayer[] = ArrayUtils.copy(currentPlate.getPiecesCopy());
+        const maxPiecesToPut: number = Math.min(quantity, currentPlate.getRemainingSpaces());
+        for (let i: number = 0; i < maxPiecesToPut; i++) {
+            newPieces.push(LodestonePiecePlayer.of(player));
+            quantity--;
+        }
+        const newCurrentPlate: LodestonePressurePlate =
+            new LodestonePressurePlate(currentPlate.width, newPieces);
+        const newGroup: LodestonePressurePlateGroup =
+            new LodestonePressurePlateGroup(fullPlates.concat(newCurrentPlate).concat(nextPlates));
+        return newGroup.addCaptured(player, quantity);
+    }
+
+    public getFillablePlateIndex(): number {
+        let i: number = 0;
+        for (const plate of this.plates) {
+            if (plate.getRemainingSpaces() > 0) {
+                return i;
+            }
+            i++;
+        }
+        return -1;
+    }
+
+}
+
+export class LodestonePressurePlate {
+
+    public static POSITIONS: LodestonePressurePlatePosition[] = ['top', 'bottom', 'left', 'right'];
+
+    public constructor(public readonly width: number,
+                       private readonly pieces: readonly LodestonePiecePlayer[]) {
     }
 
     public getPieceAt(index: number): LodestonePiece {
@@ -52,15 +128,45 @@ export class LodestonePressurePlate {
             return LodestonePieceNone.EMPTY;
         }
     }
+
+    public getRemainingSpaces(): number {
+        return this.width - this.pieces.length;
+    }
+
+    public getPiecesCopy(): LodestonePiecePlayer[] {
+        return ArrayUtils.copy(this.pieces);
+    }
+
 }
 
 export type LodestonePressurePlatePosition = 'top' | 'bottom' | 'left' | 'right';
-export type LodestonePressurePlates = Record<LodestonePressurePlatePosition, MGPOptional<LodestonePressurePlate>>
-export type LodestonePositions = MGPMap<Player, Coord>
+
+export type LodestonePressurePlates = Record<LodestonePressurePlatePosition,
+                                             LodestonePressurePlateGroup>;
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export namespace LodestonePressurePlates {
+
+    export function getInitialLodestonePressurePlates(sizes: number[]): LodestonePressurePlates {
+        const newLodestonePressurePlates: LodestonePressurePlates = {} as LodestonePressurePlates;
+        for (const position of LodestonePressurePlate.POSITIONS) {
+            newLodestonePressurePlates[position] = LodestonePressurePlateGroup.of(sizes);
+        }
+        return newLodestonePressurePlates;
+    }
+
+}
+
+export type LodestonePositions = MGPMap<Player, Coord>;
 
 export class LodestoneState extends GameStateWithTable<LodestonePiece> {
 
     public static readonly SIZE: number = 8;
+
+    public static readonly NUMBER_OF_PIECES: number = 24;
+
+    public static readonly INITIAL_PRESSURE_PLATES: LodestonePressurePlates =
+        LodestonePressurePlates.getInitialLodestonePressurePlates([5, 3]);
 
     public constructor(board: Table<LodestonePiece>,
                        turn: number,
@@ -82,30 +188,36 @@ export class LodestoneState extends GameStateWithTable<LodestonePiece> {
     public remainingSpacesDetails(): LodestoneCaptures {
         const remaining: LodestoneCaptures = { top: 0, bottom: 0, left: 0, right: 0 };
         for (const position of LodestonePressurePlate.POSITIONS) {
-            const pressurePlate: MGPOptional<LodestonePressurePlate> = this.pressurePlates[position];
-            if (pressurePlate.isPresent()) {
-                remaining[position] = pressurePlate.get().remainingSpaces();
+            const pressurePlates: LodestonePressurePlateGroup = this.pressurePlates[position];
+            const currentlyFillablePlateIndex: number = pressurePlates.getFillablePlateIndex();
+            if (currentlyFillablePlateIndex === -1) {
+                remaining[position] = 0;
+            } else {
+                remaining[position] = pressurePlates.getGroupRemainingSpaces();
             }
         }
         return remaining;
     }
 
-    public numberOfPieces(): [number, number] {
-        const playerPieces: [number, number] = [0, 0];
+    public numberOfPieces(): PlayerNumberMap {
+        const playerPieces: PlayerNumberMap = PlayerNumberMap.of(0, 0);
         for (let y: number = 0; y < LodestoneState.SIZE; y++) {
             for (let x: number = 0; x < LodestoneState.SIZE; x++) {
                 const piece: LodestonePiece = this.getPieceAtXY(x, y);
                 if (piece.isPlayerPiece()) {
-                    playerPieces[piece.owner.value] += 1;
+                    playerPieces.add(piece.owner, 1);
                 }
             }
         }
         return playerPieces;
     }
 
-    public getScores(): [number, number] {
-        const remainingPieces: [number, number] = this.numberOfPieces();
-        return [24 - remainingPieces[1], 24 - remainingPieces[0]];
+    public getScores(): PlayerNumberMap {
+        const remainingPieces: PlayerNumberMap = this.numberOfPieces();
+        return PlayerNumberMap.of(
+            LodestoneState.NUMBER_OF_PIECES - remainingPieces.get(Player.ONE),
+            LodestoneState.NUMBER_OF_PIECES - remainingPieces.get(Player.ZERO),
+        );
     }
 
     public nextLodestoneDirection(): MGPOptional<LodestoneDirection> {
@@ -124,4 +236,5 @@ export class LodestoneState extends GameStateWithTable<LodestonePiece> {
             return MGPOptional.empty();
         }
     }
+
 }

@@ -4,6 +4,8 @@ import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
 import { GipfNode, GipfRules } from '../GipfRules';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { GipfMoveGenerator } from '../GipfMoveGenerator';
+import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 
 const N: FourStatePiece = FourStatePiece.UNREACHABLE;
 const _: FourStatePiece = FourStatePiece.EMPTY;
@@ -15,16 +17,20 @@ describe('GipfMoveGenerator', () => {
     let rules: GipfRules;
 
     let moveGenerator: GipfMoveGenerator;
+    const defaultConfig: NoConfig = GipfRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         rules = GipfRules.get();
         moveGenerator = new GipfMoveGenerator();
     });
+
     describe('getListMoves', () => {
+
         it('should have 30 moves on the initial state', () => {
-            const node: GipfNode = rules.getInitialNode();
-            expect(moveGenerator.getListMoves(node).length).toBe(30);
+            const node: GipfNode = rules.getInitialNode(defaultConfig);
+            expect(moveGenerator.getListMoves(node, defaultConfig).length).toBe(30);
         });
+
         it('should have 0 moves on a victory state', () => {
             const board: Table<FourStatePiece> = [
                 [N, N, N, _, O, _, _],
@@ -35,10 +41,11 @@ describe('GipfMoveGenerator', () => {
                 [X, _, X, _, _, N, N],
                 [_, X, _, _, N, N, N],
             ];
-            const state: GipfState = new GipfState(board, 0, [0, 5], [0, 0]);
+            const state: GipfState = new GipfState(board, 0, PlayerNumberMap.of(0, 5), PlayerNumberMap.of(0, 0));
             const node: GipfNode = new GipfNode(state);
-            expect(moveGenerator.getListMoves(node).length).toBe(0);
+            expect(moveGenerator.getListMoves(node, defaultConfig).length).toBe(0);
         });
+
         it('should have 19 moves on an example state with non-intersecting capture', () => {
             const board: Table<FourStatePiece> = [
                 [N, N, N, _, _, _, _],
@@ -49,10 +56,11 @@ describe('GipfMoveGenerator', () => {
                 [_, _, X, O, _, N, N],
                 [_, _, _, _, N, N, N],
             ];
-            const state: GipfState = new GipfState(board, 0, [5, 5], [0, 0]);
+            const state: GipfState = new GipfState(board, 0, PlayerNumberMap.of(5, 5), PlayerNumberMap.of(0, 0));
             const node: GipfNode = new GipfNode(state);
-            expect(moveGenerator.getListMoves(node).length).toBe(19);
+            expect(moveGenerator.getListMoves(node, defaultConfig).length).toBe(19);
         });
+
         it('should have 20 moves on an example state with a complete line', () => {
             // 16 simple moves and 4 diagonal ones on the occupied borders
             const board: Table<FourStatePiece> = [
@@ -64,10 +72,11 @@ describe('GipfMoveGenerator', () => {
                 [_, _, _, X, _, N, N],
                 [_, _, _, O, N, N, N],
             ];
-            const state: GipfState = new GipfState(board, 0, [5, 5], [0, 0]);
+            const state: GipfState = new GipfState(board, 0, PlayerNumberMap.of(5, 5), PlayerNumberMap.of(0, 0));
             const node: GipfNode = new GipfNode(state);
-            expect(moveGenerator.getListMoves(node).length).toBe(20);
+            expect(moveGenerator.getListMoves(node, defaultConfig).length).toBe(20);
         });
+
         it('should have 30 moves on an example state with all borders occupied', () => {
             // 16 simple moves and 4 diagonal ones on the occupied borders
             const board: Table<FourStatePiece> = [
@@ -79,10 +88,11 @@ describe('GipfMoveGenerator', () => {
                 [X, _, _, _, O, N, N],
                 [O, X, O, X, N, N, N],
             ];
-            const state: GipfState = new GipfState(board, 0, [5, 5], [0, 0]);
+            const state: GipfState = new GipfState(board, 0, PlayerNumberMap.of(5, 5), PlayerNumberMap.of(0, 0));
             const node: GipfNode = new GipfNode(state);
-            expect(moveGenerator.getListMoves(node).length).toBe(30);
+            expect(moveGenerator.getListMoves(node, defaultConfig).length).toBe(30);
         });
+
         it('should have 38 moves on an example state with intersecting captures', () => {
             // There are 19 valid placements, each can be played with one of 2 captures
             const board: Table<FourStatePiece> = [
@@ -94,9 +104,11 @@ describe('GipfMoveGenerator', () => {
                 [_, _, X, O, _, N, N],
                 [_, _, _, _, N, N, N],
             ];
-            const state: GipfState = new GipfState(board, 0, [5, 5], [0, 0]);
+            const state: GipfState = new GipfState(board, 0, PlayerNumberMap.of(5, 5), PlayerNumberMap.of(0, 0));
             const node: GipfNode = new GipfNode(state);
-            expect(moveGenerator.getListMoves(node).length).toBe(38);
+            expect(moveGenerator.getListMoves(node, defaultConfig).length).toBe(38);
         });
+
     });
+
 });

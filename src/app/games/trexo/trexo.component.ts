@@ -6,17 +6,17 @@ import { TrexoMove } from 'src/app/games/trexo/TrexoMove';
 import { Coord } from 'src/app/jscaip/Coord';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
-import { TrexoTutorial } from './TrexoTutorial';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { Table3DUtils, TableUtils } from 'src/app/utils/ArrayUtils';
 import { Coord3D } from 'src/app/jscaip/Coord3D';
 import { TrexoFailure } from './TrexoFailure';
 import { Direction } from 'src/app/jscaip/Direction';
-import { MCTS } from 'src/app/jscaip/MCTS';
+import { MCTS } from 'src/app/jscaip/AI/MCTS';
 import { TrexoAlignmentHeuristic } from './TrexoAlignmentHeuristic';
-import { Minimax } from 'src/app/jscaip/Minimax';
+import { Minimax } from 'src/app/jscaip/AI/Minimax';
 import { TrexoMoveGenerator } from './TrexoMoveGenerator';
+import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 interface PieceOnBoard {
 
@@ -26,8 +26,8 @@ interface PieceOnBoard {
 
     move: MGPOptional<TrexoMove>;
 }
-type ModeType = '2D' | '3D';
 
+type ModeType = '2D' | '3D';
 
 @Component({
     selector: 'app-trexo',
@@ -37,11 +37,13 @@ type ModeType = '2D' | '3D';
 export class TrexoComponent extends ParallelogramGameComponent<TrexoRules, TrexoMove, TrexoState, TrexoPieceStack> {
 
     public static STROKE_WIDTH: number;
+
     private static readonly INITIAL_PIECE_ON_BOARD: PieceOnBoard = {
         isDroppedPiece: false,
         isPossibleClick: false,
         move: MGPOptional.empty(),
     };
+
     public static modeMap: Record<ModeType, ModeConfig> = {
         '2D': {
             offsetRatio: 0,
@@ -58,6 +60,7 @@ export class TrexoComponent extends ParallelogramGameComponent<TrexoRules, Trexo
             abstractBoardSize: 10,
         },
     };
+
     public TrexoComponent: typeof TrexoComponent = TrexoComponent;
     public readonly left: number = - this.STROKE_WIDTH / 2;
     public Coord3D: typeof Coord3D = Coord3D;
@@ -68,6 +71,7 @@ export class TrexoComponent extends ParallelogramGameComponent<TrexoRules, Trexo
     public chosenMode: ModeType = '3D';
 
     public victoryCoords: Coord[] = [];
+    public lastMoved: Coord[] = [];
 
     public droppedPiece: MGPOptional<Coord> = MGPOptional.empty();
     public possibleNextClicks: Coord[] = [];
@@ -79,17 +83,16 @@ export class TrexoComponent extends ParallelogramGameComponent<TrexoRules, Trexo
 
     public constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
-        this.rules = TrexoRules.get();
-        this.node = this.rules.getInitialNode();
+        this.setRulesAndNode('Trexo');
         this.availableAIs = [
             new Minimax($localize`Alignment`, this.rules, new TrexoAlignmentHeuristic(), new TrexoMoveGenerator()),
             new MCTS($localize`MCTS`, new TrexoMoveGenerator(), this.rules),
         ];
         this.encoder = TrexoMove.encoder;
-        this.tutorial = new TrexoTutorial().tutorial;
         TrexoComponent.STROKE_WIDTH = this.STROKE_WIDTH;
         this.switchToMode('3D');
     }
+
     public switchToMode(mode: ModeType): void {
         this.chosenMode = mode;
         this.width = this.getViewBoxWidth();
@@ -97,6 +100,7 @@ export class TrexoComponent extends ParallelogramGameComponent<TrexoRules, Trexo
         this.height = this.getViewBoxHeight();
         this.mode = TrexoComponent.modeMap[mode];
     }
+
     private getViewBoxWidth(): number {
         const mode3D: ModeConfig = TrexoComponent.modeMap['3D'];
         const boardWidth: number = TrexoState.SIZE;
@@ -108,6 +112,7 @@ export class TrexoComponent extends ParallelogramGameComponent<TrexoRules, Trexo
             return (boardWidth * spaceWidth3D) + this.STROKE_WIDTH;
         }
     }
+
     private getViewBoxHeight(): number {
         const stroke: number = this.STROKE_WIDTH;
         const boardHeight: number = TrexoState.SIZE * this.SPACE_SIZE;
@@ -118,6 +123,7 @@ export class TrexoComponent extends ParallelogramGameComponent<TrexoRules, Trexo
             return stroke + boardHeight + pieceBonus;
         }
     }
+
     private getViewBoxUp(): number {
         if (this.chosenMode === '2D') {
             return 0;
@@ -127,12 +133,14 @@ export class TrexoComponent extends ParallelogramGameComponent<TrexoRules, Trexo
             return - (stroke + stackHeight);
         }
     }
+
     private getHigherStackHeight(): number {
         const mode: ModeConfig = TrexoComponent.modeMap[this.chosenMode];
         const maxZ: number = this.pieceOnBoard.length + 1;
         const pieceBonus: number = maxZ * mode.pieceHeightRatio * this.SPACE_SIZE;
         return pieceBonus;
     }
+
     public async updateBoard(_triggerAnimation: boolean): Promise<void> {
         const state: TrexoState = this.getState();
         this.board = state.getCopiedBoard();
@@ -144,6 +152,18 @@ export class TrexoComponent extends ParallelogramGameComponent<TrexoRules, Trexo
         this.height = this.getViewBoxHeight();
         this.up = this.getViewBoxUp();
     }
+
+    public override async showLastMove(move: TrexoMove, config: MGPOptional<EmptyRulesConfig>): Promise<void> {
+        this.lastMoved = [
+            move.getZero(),
+            move.getOne(),
+        ];
+    }
+
+    public override hideLastMove(): void {
+        this.lastMoved = [];
+    }
+
     private get3DBoard(): PieceOnBoard[][][] {
         const moveByCoord: PieceOnBoard[][][] =
             Table3DUtils.create(1, TrexoState.SIZE, TrexoState.SIZE, TrexoComponent.INITIAL_PIECE_ON_BOARD);
@@ -161,6 +181,7 @@ export class TrexoComponent extends ParallelogramGameComponent<TrexoRules, Trexo
         }
         return moveByCoord;
     }
+
     private extractMoveFromState(x: number, y: number, z: number): TrexoMove {
         const piece: TrexoPiece = this.getState().getPieceAtXYZ(x, y, z);
         const pieceCoord: Coord = new Coord(x, y);
@@ -183,6 +204,7 @@ export class TrexoComponent extends ParallelogramGameComponent<TrexoRules, Trexo
             return TrexoMove.from(otherCoord, pieceCoord).get();
         }
     }
+
     private addMoveToArray(height: number, move: TrexoMove, moveByCoord: PieceOnBoard[][][]): void {
         while (moveByCoord.length <= height) {
             moveByCoord.push(TableUtils.create(TrexoState.SIZE,
@@ -200,6 +222,7 @@ export class TrexoComponent extends ParallelogramGameComponent<TrexoRules, Trexo
             move: MGPOptional.of(move),
         };
     }
+
     public async onClick(x: number, y: number): Promise<MGPValidation> {
         const clickValidity: MGPValidation = await this.canUserPlay('#space_' + x + '_' + y);
         if (clickValidity.isFailure()) {
@@ -224,6 +247,7 @@ export class TrexoComponent extends ParallelogramGameComponent<TrexoRules, Trexo
         }
         return this.selectPiece(clicked);
     }
+
     private deselectPiece(): void {
         const z: number = this.getState().getPieceAt(this.droppedPiece.get()).getHeight();
         const y: number = this.droppedPiece.get().y;
@@ -233,10 +257,11 @@ export class TrexoComponent extends ParallelogramGameComponent<TrexoRules, Trexo
             this.pieceOnBoard[z][nextClick.y][nextClick.x].isPossibleClick = false;
         }
     }
+
     private async selectPiece(clicked: Coord): Promise<MGPValidation> {
         if (this.possibleMoves.some((move: TrexoMove) => move.getZero().equals(clicked))) {
             const pieceHeight: number = this.getState().getPieceAt(clicked).getHeight();
-            if (pieceHeight >= this.pieceOnBoard.length) {
+            if (this.pieceOnBoard.length <= pieceHeight) {
                 this.pieceOnBoard.push(TableUtils.create(TrexoState.SIZE,
                                                          TrexoState.SIZE,
                                                          TrexoComponent.INITIAL_PIECE_ON_BOARD));
@@ -247,6 +272,7 @@ export class TrexoComponent extends ParallelogramGameComponent<TrexoRules, Trexo
             return this.cancelMove(TrexoFailure.NO_WAY_TO_DROP_IT_HERE());
         }
     }
+
     private showDroppedPieceAndIndicators(dropped: Coord, pieceHeight: number): void {
         this.droppedPiece = MGPOptional.of(dropped);
         this.possibleNextClicks = this.getPossibleNextClicks(dropped);
@@ -263,36 +289,34 @@ export class TrexoComponent extends ParallelogramGameComponent<TrexoRules, Trexo
             move: MGPOptional.empty(),
         };
     }
+
     private getPossibleNextClicks(coord: Coord): Coord[] {
         const potentiallyStartedMove: TrexoMove[] = this.possibleMoves.filter((move: TrexoMove) => {
             return move.getZero().equals(coord);
         });
         return potentiallyStartedMove.map((move: TrexoMove) => move.getOne());
     }
+
     public override async cancelMoveAttempt(): Promise<void> {
         this.droppedPiece = MGPOptional.empty();
         this.possibleNextClicks = [];
         await this.updateBoard(false);
     }
+
     public getPieceClasses(x: number, y: number, z: number): string[] {
         const piece: Coord = new Coord(x, y);
         const pieceOwner: PlayerOrNone = this.getState().getPieceAtXYZ(x, y, z).owner;
         let classes: string[] = [this.getPlayerClass(pieceOwner)];
         classes = classes.concat(this.getSpaceClasses(x, y));
-        for (const victoryCoord of this.victoryCoords) {
-            if (victoryCoord.equals(piece)) {
-                classes.push('victory-stroke');
-                break;
-            }
+        if (this.victoryCoords.some((coord: Coord) => coord.equals(piece))) {
+            classes.push('victory-stroke');
         }
-        if (this.node.previousMove.isPresent()) {
-            const lastMove: TrexoMove = this.node.previousMove.get();
-            if (lastMove.getZero().equals(piece) || lastMove.getOne().equals(piece)) {
-                classes.push('last-move-stroke');
-            }
+        if (this.lastMoved.some((coord: Coord) => coord.equals(piece))) {
+            classes.push('last-move-stroke');
         }
         return classes;
     }
+
     public getSpaceClasses(x: number, y: number): string[] {
         for (const boardLayer of this.pieceOnBoard) {
             if (boardLayer[y][x].isPossibleClick) {
@@ -301,18 +325,21 @@ export class TrexoComponent extends ParallelogramGameComponent<TrexoRules, Trexo
         }
         return [];
     }
-    public getTranslate(x: number, y: number, z: number): string {
+
+    public getTranslationAtXYZ(x: number, y: number, z: number): string {
         const mode: ModeConfig = TrexoComponent.modeMap[this.chosenMode];
-        const coordTransform: Coord = this.getCoordTranslate(x, y, z, mode);
-        const translate: string = 'translate(' + coordTransform.x + ' ' + coordTransform.y + ')';
-        return translate;
+        const coordTransform: Coord = this.getCoordTranslation(x, y, z, mode);
+        const translation: string = 'translate(' + coordTransform.x + ' ' + coordTransform.y + ')';
+        return translation;
     }
+
     public getParallelogramPoints(): string {
         const coords: Coord[] = this.getParallelogramCoordsForTrexo();
         return coords.map((coord: Coord) => {
             return coord.x + ' ' + coord.y;
         }).join(' ');
     }
+
     /**
      * @returns a list of concrete coord for the parallelogram, with (0, 0) as left and upper coord
      */
@@ -320,14 +347,16 @@ export class TrexoComponent extends ParallelogramGameComponent<TrexoRules, Trexo
         const mode: ModeConfig = TrexoComponent.modeMap[this.chosenMode];
         return this.getParallelogramCoords(mode);
     }
+
     public get3DSwitcherTransform(): string {
         const mode3D: ModeConfig = TrexoComponent.modeMap['3D'];
         const widness: number = mode3D.horizontalWidthRatio + mode3D.offsetRatio;
         const scale: string = ' scale(' + (1 / widness) + ')';
         const verticalUnWideness: number = (1 - (1 / widness)) / 2;
-        const xTranslate: number = (10 + mode3D.offsetRatio) * mode3D.parallelogramHeight;
-        const yTranslate: number = (9 + verticalUnWideness) * mode3D.parallelogramHeight;
-        const translate: string = 'translate(' + xTranslate + ', ' + yTranslate + ')';
-        return translate + scale;
+        const translationX: number = (10 + mode3D.offsetRatio) * mode3D.parallelogramHeight;
+        const translationY: number = (9 + verticalUnWideness) * mode3D.parallelogramHeight;
+        const translation: string = 'translate(' + translationX + ', ' + translationY + ')';
+        return translation + scale;
     }
+
 }

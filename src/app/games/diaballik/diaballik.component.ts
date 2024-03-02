@@ -1,9 +1,8 @@
+import { Component } from '@angular/core';
 import { DefeatCoords, DiaballikRules, VictoryCoord, VictoryOrDefeatCoords } from './DiaballikRules';
 import { DiaballikMove, DiaballikBallPass, DiaballikSubMove, DiaballikTranslation } from './DiaballikMove';
 import { DiaballikPiece, DiaballikState } from './DiaballikState';
-import { Component } from '@angular/core';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
-import { DiaballikTutorial } from './DiaballikTutorial';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { Coord } from 'src/app/jscaip/Coord';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
@@ -11,7 +10,7 @@ import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { DiaballikMinimax } from './DiaballikMinimax';
 import { DiaballikMoveGenerator } from './DiaballikMoveGenerator';
-import { MCTS } from 'src/app/jscaip/MCTS';
+import { MCTS } from 'src/app/jscaip/AI/MCTS';
 import { Utils } from 'src/app/utils/utils';
 import { RectangularGameComponent } from 'src/app/components/game-components/rectangular-game-component/RectangularGameComponent';
 import { DiaballikFailure } from './DiaballikFailure';
@@ -19,6 +18,7 @@ import { Line } from 'src/app/jscaip/Line';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { DiaballikFilteredMoveGenerator } from './DiaballikFilteredMoveGenerator';
 import { ViewBox } from 'src/app/components/game-components/GameComponentUtils';
+import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 @Component({
     selector: 'app-diaballik',
@@ -26,8 +26,12 @@ import { ViewBox } from 'src/app/components/game-components/GameComponentUtils';
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
 })
 
-export class DiaballikComponent
-    extends RectangularGameComponent<DiaballikRules, DiaballikMove, DiaballikState, DiaballikPiece, DiaballikState>
+export class DiaballikComponent extends RectangularGameComponent<DiaballikRules,
+                                                                 DiaballikMove,
+                                                                 DiaballikState,
+                                                                 DiaballikPiece,
+                                                                 EmptyRulesConfig,
+                                                                 DiaballikState>
 {
 
     public stateInConstruction: DiaballikState;
@@ -54,13 +58,11 @@ export class DiaballikComponent
 
     public constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
+        this.setRulesAndNode('Diaballik');
         this.hasAsymmetricBoard = true;
-        this.rules = DiaballikRules.get();
-        this.node = this.rules.getInitialNode();
         this.WIDTH = this.getState().getWidth();
         this.HEIGHT = this.getState().getHeight();
         this.encoder = DiaballikMove.encoder;
-        this.tutorial = new DiaballikTutorial().tutorial;
         this.availableAIs = [
             new DiaballikMinimax($localize`AllMoves`, new DiaballikMoveGenerator(true)),
             new MCTS($localize`MCTS`, this.moveGenerator, this.rules),
@@ -195,6 +197,9 @@ export class DiaballikComponent
         }
 
         const clickedCoord: Coord = new Coord(x, y);
+        return this.onLegalClick(clickedCoord);
+    }
+    private onLegalClick(clickedCoord: Coord): MGPValidation | PromiseLike<MGPValidation> {
         const clickedPiece: DiaballikPiece = this.stateInConstruction.getPieceAt(clickedCoord);
         if (this.subMoves.length === 0) {
             this.hideLastMove();
@@ -275,7 +280,7 @@ export class DiaballikComponent
     }
 
     public showDoneButton(): boolean {
-        return this.isInteractive && this.subMoves.length >= 1;
+        return this.interactive && this.subMoves.length >= 1;
     }
 
     public async done(): Promise<MGPValidation> {
@@ -296,7 +301,7 @@ export class DiaballikComponent
     }
 
     public getBoardRotation(): string {
-        const rotation: number = this.getPointOfView().value * 180;
+        const rotation: number = this.getPointOfView().getValue() * 180;
         const boardWidth: number = this.getState().getWidth() * this.SPACE_SIZE + this.STROKE_WIDTH;
         const boardHeight: number = this.getState().getHeight() * this.SPACE_SIZE + this.STROKE_WIDTH;
         const centerX: number = boardWidth / 2;

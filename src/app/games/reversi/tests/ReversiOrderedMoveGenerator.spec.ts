@@ -2,13 +2,15 @@
 import { PlayerOrNone } from 'src/app/jscaip/Player';
 import { ReversiMove } from '../ReversiMove';
 import { ReversiState } from '../ReversiState';
-import { ReversiNode } from '../ReversiRules';
+import { ReversiConfig, ReversiNode, ReversiRules } from '../ReversiRules';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { ReversiOrderedMoveGenerator } from '../ReversiOrderedMoveGenerator';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 const _: PlayerOrNone = PlayerOrNone.NONE;
 const O: PlayerOrNone = PlayerOrNone.ZERO;
 const X: PlayerOrNone = PlayerOrNone.ONE;
+const defaultConfig: MGPOptional<ReversiConfig> = ReversiRules.get().getDefaultRulesConfig();
 
 describe('ReversiOrderedMoveGenerator', () => {
 
@@ -32,10 +34,13 @@ describe('ReversiOrderedMoveGenerator', () => {
         ];
         const state: ReversiState = new ReversiState(board, 2);
         const node: ReversiNode = new ReversiNode(state);
-        // When generating the moves
-        const moves: ReversiMove[] = moveGenerator.getListMoves(node);
+
+        // When listing the moves
+        const moves: ReversiMove[] = moveGenerator.getListMoves(node, defaultConfig);
+
         // Then it should contain the move in the corner first
         expect(moves.length).toBe(2);
-        expect(moves[0]).toEqual(new ReversiMove(ReversiState.BOARD_WIDTH-1, ReversiState.BOARD_HEIGHT-1));
+        expect(moves[0]).toEqual(new ReversiMove(7, 7));
     });
+
 });

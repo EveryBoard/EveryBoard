@@ -7,6 +7,7 @@ import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { PenteComponent } from '../pente.component';
 import { PenteMove } from '../PenteMove';
 import { PenteState } from '../PenteState';
+import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 
 describe('PenteComponent', () => {
 
@@ -19,9 +20,11 @@ describe('PenteComponent', () => {
     beforeEach(fakeAsync(async() => {
         testUtils = await ComponentTestUtils.forGame<PenteComponent>('Pente');
     }));
+
     it('should create', () => {
         testUtils.expectToBeCreated();
     });
+
     it('should do the move when clicking on an empty square', fakeAsync(async() => {
         // Given a state
         // When clicking on an empty state
@@ -29,6 +32,7 @@ describe('PenteComponent', () => {
         const move: PenteMove = PenteMove.of(new Coord(4, 2));
         await testUtils.expectMoveSuccess('#click_4_2', move);
     }));
+
     it('should forbid dropping on a piece already on the board', fakeAsync(async() => {
         // Given a state
         // When clicking on square with a piece
@@ -36,6 +40,7 @@ describe('PenteComponent', () => {
         const move: PenteMove = PenteMove.of(new Coord(9, 9));
         await testUtils.expectMoveFailure('#click_9_9', RulesFailure.MUST_CLICK_ON_EMPTY_SQUARE(), move);
     }));
+
     it('should show last move', fakeAsync(async() => {
         // Given a state
         // When doing a move
@@ -44,6 +49,7 @@ describe('PenteComponent', () => {
         // Then it should show the last move
         testUtils.expectElementToHaveClass('#piece_4_2', 'last-move-stroke');
     }));
+
     it('should show captures along with last move', fakeAsync(async() => {
         // Given a board where a capture is possible
         const state: PenteState = new PenteState([
@@ -66,7 +72,7 @@ describe('PenteComponent', () => {
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-        ], [0, 0], 3);
+        ], PlayerNumberMap.of(0, 0), 3);
         await testUtils.setupState(state);
 
         // When doing the capture
@@ -79,6 +85,7 @@ describe('PenteComponent', () => {
         testUtils.expectElementNotToExist('#capture_9_6');
         testUtils.expectElementToHaveClass('#piece_9_6', 'last-move-stroke');
     }));
+
     it('should show victory', fakeAsync(async() => {
         // Given a victory
         const state: PenteState = new PenteState([
@@ -101,7 +108,7 @@ describe('PenteComponent', () => {
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-        ], [0, 0], 6);
+        ], PlayerNumberMap.of(0, 0), 6);
         // When displaying it
         await testUtils.setupState(state);
         // Then it should show the victory
@@ -111,19 +118,19 @@ describe('PenteComponent', () => {
         testUtils.expectElementToHaveClass('#piece_12_9', 'victory-stroke');
         testUtils.expectElementToHaveClass('#piece_13_9', 'victory-stroke');
     }));
+
     it('should show hoshis', fakeAsync(async() => {
         // Given a state
         // When displaying it
         // Then it should show the visible hoshis
-        testUtils.expectElementToExist('#hoshi_3_9');
-        testUtils.expectElementToExist('#hoshi_9_3');
-        testUtils.expectElementToExist('#hoshi_9_15');
-        testUtils.expectElementToExist('#hoshi_15_9');
         testUtils.expectElementToExist('#hoshi_3_3');
+        testUtils.expectElementToExist('#hoshi_3_9');
         testUtils.expectElementToExist('#hoshi_3_15');
+        testUtils.expectElementToExist('#hoshi_9_3');
+        testUtils.expectElementToExist('#hoshi_9_9');
+        testUtils.expectElementToExist('#hoshi_9_15');
         testUtils.expectElementToExist('#hoshi_15_3');
+        testUtils.expectElementToExist('#hoshi_15_9');
         testUtils.expectElementToExist('#hoshi_15_15');
-        // But not the occupied ones
-        testUtils.expectElementNotToExist('#hoshi_9_9');
     }));
 });

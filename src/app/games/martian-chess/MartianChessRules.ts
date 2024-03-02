@@ -1,8 +1,7 @@
-import { GameNode } from 'src/app/jscaip/GameNode';
+import { GameNode } from 'src/app/jscaip/AI/GameNode';
 import { Player } from 'src/app/jscaip/Player';
 import { Rules } from 'src/app/jscaip/Rules';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { assert } from 'src/app/utils/assert';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { MGPMap } from 'src/app/utils/MGPMap';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
@@ -12,6 +11,8 @@ import { MartianChessPiece } from './MartianChessPiece';
 import { MartianChessFailure } from './MartianChessFailure';
 import { MGPValidation } from '../../utils/MGPValidation';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
+import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { Utils } from 'src/app/utils/utils';
 import { Table } from 'src/app/utils/ArrayUtils';
 
 export interface MartianChessMoveResult {
@@ -36,11 +37,7 @@ export class MartianChessRules extends Rules<MartianChessMove, MartianChessState
         return MartianChessRules.singleton.get();
     }
 
-    private constructor() {
-        super();
-    }
-
-    public getInitialState(): MartianChessState {
+    public override getInitialState(): MartianChessState {
         const _: MartianChessPiece = MartianChessPiece.EMPTY;
         const A: MartianChessPiece = MartianChessPiece.PAWN;
         const B: MartianChessPiece = MartianChessPiece.DRONE;
@@ -58,9 +55,10 @@ export class MartianChessRules extends Rules<MartianChessMove, MartianChessState
         return new MartianChessState(board, 0, MGPOptional.empty());
     }
 
-    public applyLegalMove(move: MartianChessMove,
-                          state: MartianChessState,
-                          info: MartianChessMoveResult)
+    public override applyLegalMove(move: MartianChessMove,
+                                   state: MartianChessState,
+                                   _config: NoConfig,
+                                   info: MartianChessMoveResult)
     : MartianChessState
     {
         const newBoard: MartianChessPiece[][] = state.getCopiedBoard();
@@ -83,7 +81,7 @@ export class MartianChessRules extends Rules<MartianChessMove, MartianChessState
         }
         return new MartianChessState(newBoard, state.turn + 1, MGPOptional.of(move), countDown, captured);
     }
-    public isLegal(move: MartianChessMove, state: MartianChessState): MGPFallible<MartianChessMoveResult> {
+    public override isLegal(move: MartianChessMove, state: MartianChessState): MGPFallible<MartianChessMoveResult> {
         this.assertNonDoubleClockCall(move, state);
         const moveLegality: MGPValidation = this.isLegalMove(move, state);
         if (moveLegality.isFailure()) {
@@ -112,7 +110,7 @@ export class MartianChessRules extends Rules<MartianChessMove, MartianChessState
         const clockHadAlreadyBeenCalled: boolean = state.countDown.isPresent();
         const clockCalledThisTurn: boolean = move.calledTheClock;
         const doubleClockCall: boolean = clockHadAlreadyBeenCalled && clockCalledThisTurn;
-        assert(doubleClockCall === false, 'Should not call the clock twice');
+        Utils.assert(doubleClockCall === false, 'Should not call the clock twice');
     }
     private isCapture(move: MartianChessMove, state: MartianChessState): boolean {
         const moveEndsInOpponentTerritory: boolean = state.isInOpponentTerritory(move.getEnd());
@@ -162,7 +160,7 @@ export class MartianChessRules extends Rules<MartianChessMove, MartianChessState
                 return MGPValidation.failure(MartianChessMoveFailure.DRONE_MUST_DO_TWO_ORTHOGONAL_STEPS());
             }
         }
-        for (const coord of move.getStart().getUntil(move.getEnd())) {
+        for (const coord of move.getStart().getCoordsToward(move.getEnd())) {
             if (state.getPieceAt(coord) !== MartianChessPiece.EMPTY) {
                 return MGPValidation.failure(RulesFailure.SOMETHING_IN_THE_WAY());
             }

@@ -5,6 +5,7 @@ import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { Tutorial, TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { SaharaRules } from './SaharaRules';
+import { TutorialStepMessage } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
 
 const N: FourStatePiece = FourStatePiece.UNREACHABLE;
 const O: FourStatePiece = FourStatePiece.ZERO;
@@ -52,7 +53,7 @@ export class SaharaTutorial extends Tutorial {
                     return MGPValidation.failure($localize`You have made a double step, which is good but it is the next exercise!`);
                 }
             },
-            $localize`Congratulations!`,
+            TutorialStepMessage.CONGRATULATIONS(),
         ),
         TutorialStep.fromPredicate(
             $localize`Double step`,
@@ -73,7 +74,7 @@ export class SaharaTutorial extends Tutorial {
                     return MGPValidation.SUCCESS;
                 }
             },
-            $localize`Congratulations!`,
+            TutorialStepMessage.CONGRATULATIONS(),
         ),
     ];
 }

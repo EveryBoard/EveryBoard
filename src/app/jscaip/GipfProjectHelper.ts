@@ -21,7 +21,7 @@ export class GipfCapture {
     public readonly capturedSpaces: ReadonlyArray<Coord>;
 
     public constructor(captured: ReadonlyArray<Coord>) {
-        Utils.assert(captured.length >= 4, 'Cannot create a GipfCapture with less than 4 captured pieces');
+        Utils.assert(4 <= captured.length, 'Cannot create a GipfCapture with less than 4 captured pieces');
         Utils.assert(HexaLine.areOnSameLine(captured), 'Cannot create a GipfCapture with pieces that are not on the same line');
         this.capturedSpaces = ArrayUtils.copy(captured).sort((coord1: Coord, coord2: Coord) => {
             if (coord1.x === coord2.x) {

@@ -2,27 +2,32 @@ import { TablutMove } from 'src/app/games/tafl/tablut/TablutMove';
 import { TaflPawn } from 'src/app/games/tafl/TaflPawn';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Tutorial, TutorialStep } from '../../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
-import { TaflState } from '../TaflState';
 import { TablutRules } from './TablutRules';
+import { TaflConfig } from '../TaflConfig';
+import { TaflState } from '../TaflState';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { TutorialStepMessage } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
 
 const _: TaflPawn = TaflPawn.UNOCCUPIED;
-const x: TaflPawn = TaflPawn.INVADERS;
-const i: TaflPawn = TaflPawn.DEFENDERS;
+const x: TaflPawn = TaflPawn.PLAYER_ZERO_PAWN;
+const i: TaflPawn = TaflPawn.PLAYER_ONE_PAWN;
 const A: TaflPawn = TaflPawn.PLAYER_ONE_KING;
+
+const defaultConfig: MGPOptional<TaflConfig> = TablutRules.get().getDefaultRulesConfig();
 
 export class TablutTutorial extends Tutorial {
     public tutorial: TutorialStep[] = [
         TutorialStep.informational(
             $localize`Goal of the game`,
             $localize`Tablut is the lapland version of the Tafl, Tafl being a family of viking strategy game. The goal of the game is different for each player. The attacker plays first. Its pieces (dark) are close to the edges. Its goal is to capture the king, which is in the center of the board. The defender plays second. Its pieces (light) are in the middle. Its goal is to move the king on one of the 4 thrones in the corners. Note that the square in which the king starts, in the center of the board, is also a throne.`,
-            TablutRules.get().getInitialState(),
+            TablutRules.get().getInitialState(defaultConfig),
         ),
         TutorialStep.anyMove(
             $localize`Moving`,
             $localize`All pieces move the same way. Similarly to a rook in chess, a piece can move:<ol><li>By as many squares as you want.</li><li>Without going over another piece or stopping on another piece.</li><li>Horizontally or vertically.</li><li>Only the king can land on a throne.</li></ol>To move a piece, click on it and then on its landing square.<br/><br/>You're playing Dark, do the first move.`,
-            TablutRules.get().getInitialState(),
+            TablutRules.get().getInitialState(defaultConfig),
             TablutMove.from(new Coord(4, 1), new Coord(1, 1)).get(),
-            $localize`Congratulations!`,
+            TutorialStepMessage.CONGRATULATIONS(),
         ),
         TutorialStep.fromMove(
             $localize`Capturing a soldier (1/2)`,
@@ -78,7 +83,7 @@ export class TablutTutorial extends Tutorial {
                 [_, _, _, _, _, _, _, _, _],
             ], 72),
             [TablutMove.from(new Coord(3, 4), new Coord(2, 4)).get()],
-            $localize`Congratulations, you won!`,
+            TutorialStepMessage.CONGRATULATIONS_YOU_WON(),
             $localize`Failed, you let the king run away.`,
         ),
         TutorialStep.fromMove(
@@ -97,7 +102,7 @@ export class TablutTutorial extends Tutorial {
             ], 72),
             [TablutMove.from(new Coord(3, 3), new Coord(3, 1)).get()],
             $localize`The king is dead, long live the king. Congratulations, you won.`,
-            $localize`Failed. Try again.`,
+            TutorialStepMessage.FAILED_TRY_AGAIN(),
         ),
     ];
 }

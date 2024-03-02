@@ -1,16 +1,16 @@
 /* eslint-disable max-lines-per-function */
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { ReversiState } from '../ReversiState';
-import { ReversiNode } from '../ReversiRules';
+import { ReversiConfig, ReversiNode, ReversiRules } from '../ReversiRules';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { ReversiHeuristic } from '../ReversiHeuristic';
-import { HeuristicUtils } from 'src/app/jscaip/tests/HeuristicUtils.spec';
+import { HeuristicUtils } from 'src/app/jscaip/AI/tests/HeuristicUtils.spec';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 const _: PlayerOrNone = PlayerOrNone.NONE;
 const O: PlayerOrNone = PlayerOrNone.ZERO;
 const X: PlayerOrNone = PlayerOrNone.ONE;
-
+const defaultConfig: MGPOptional<ReversiConfig> = ReversiRules.get().getDefaultRulesConfig();
 
 describe('ReversiHeuristic', () => {
 
@@ -19,6 +19,7 @@ describe('ReversiHeuristic', () => {
     beforeEach(() => {
         heuristic = new ReversiHeuristic();
     });
+
     it('should get 16 points for corner', () => {
         const board: Table<PlayerOrNone> = [
             [_, _, _, _, _, _, _, _],
@@ -32,9 +33,10 @@ describe('ReversiHeuristic', () => {
         ];
         const state: ReversiState = new ReversiState(board, 1);
         const node: ReversiNode = new ReversiNode(state);
-        const boardValue: number = heuristic.getBoardValue(node).value;
-        expect(boardValue).toBe(16);
+        const boardValue: readonly number[] = heuristic.getBoardValue(node, defaultConfig).metrics;
+        expect(boardValue).toEqual([16]);
     });
+
     it('should get 4 points for edges', () => {
         const board: Table<PlayerOrNone> = [
             [_, _, _, _, _, _, _, _],
@@ -48,9 +50,10 @@ describe('ReversiHeuristic', () => {
         ];
         const state: ReversiState = new ReversiState(board, 1);
         const node: ReversiNode = new ReversiNode(state);
-        const boardValue: number = heuristic.getBoardValue(node).value;
-        expect(boardValue).toBe(4);
+        const boardValue: readonly number[] = heuristic.getBoardValue(node, defaultConfig).metrics;
+        expect(boardValue).toEqual([4]);
     });
+
     it('should get 1 points for normal square', () => {
         const board: Table<PlayerOrNone> = [
             [_, _, _, _, _, _, _, _],
@@ -64,9 +67,10 @@ describe('ReversiHeuristic', () => {
         ];
         const state: ReversiState = new ReversiState(board, 1);
         const node: ReversiNode = new ReversiNode(state);
-        const boardValue: number = heuristic.getBoardValue(node).value;
-        expect(boardValue).toBe(1);
+        const boardValue: readonly number[] = heuristic.getBoardValue(node, defaultConfig).metrics;
+        expect(boardValue).toEqual([1]);
     });
+
     it('should prefer owning the corners', () => {
         // Given two boards where we control the corner in one, and not in the other
         const weakerBoard: Table<PlayerOrNone> = [
@@ -96,6 +100,8 @@ describe('ReversiHeuristic', () => {
         HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(heuristic,
                                                                weakerState, MGPOptional.empty(),
                                                                strongerState, MGPOptional.empty(),
-                                                               Player.ZERO);
+                                                               Player.ZERO,
+                                                               defaultConfig);
     });
+
 });

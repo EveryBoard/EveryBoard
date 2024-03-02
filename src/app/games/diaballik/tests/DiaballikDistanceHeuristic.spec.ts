@@ -2,11 +2,14 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { DiaballikDistanceHeuristic } from '../DiaballikDistanceHeuristic';
 import { DiaballikPiece, DiaballikState } from '../DiaballikState';
 import { Player } from 'src/app/jscaip/Player';
-import { HeuristicUtils } from 'src/app/jscaip/tests/HeuristicUtils.spec';
+import { HeuristicUtils } from 'src/app/jscaip/AI/tests/HeuristicUtils.spec';
+import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { DiaballikRules } from '../DiaballikRules';
 
 describe('DiaballikDistanceHeuristic', () => {
 
     let heuristic: DiaballikDistanceHeuristic;
+    const defaultConfig: NoConfig = DiaballikRules.get().getDefaultRulesConfig();
 
     const O: DiaballikPiece = DiaballikPiece.ZERO;
     const Ȯ: DiaballikPiece = DiaballikPiece.ZERO_WITH_BALL;
@@ -42,10 +45,10 @@ describe('DiaballikDistanceHeuristic', () => {
 
         // Then it should prefer the one with the ball closest to opponent line
         HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(heuristic,
-                                                               weakState,
-                                                               MGPOptional.empty(),
-                                                               strongState,
-                                                               MGPOptional.empty(),
-                                                               Player.ZERO);
+                                                               weakState, MGPOptional.empty(),
+                                                               strongState, MGPOptional.empty(),
+                                                               Player.ZERO,
+                                                               defaultConfig);
     });
+
 });

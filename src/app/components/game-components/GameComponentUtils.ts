@@ -19,7 +19,7 @@ export class ViewBox {
     }
 
     public static fromHexa(coords: Coord[], hexaLayout: HexaLayout, strokeWidth: number): ViewBox {
-        const points: Coord[] = coords.flatMap((coord: Coord) => hexaLayout.getHexaPointsListAt(coord));
+        const points: Coord[] = coords.flatMap((coord: Coord) => hexaLayout.getCenterAt(coord));
         const limits: Limits = ViewBox.getLimits(points);
         const left: number = limits.minX - (strokeWidth / 2);
         const up: number = limits.minY - (strokeWidth / 2);
@@ -61,11 +61,29 @@ export class ViewBox {
         return this.left + this.width;
     }
 
+    public expandAbove(above: number): ViewBox {
+        return this.expand(0, 0, above, 0);
+    }
+
+    public expandBelow(below: number): ViewBox {
+        return this.expand(0, 0, 0, below);
+    }
+
+    public expandLeft(left: number): ViewBox {
+        return this.expand(left, 0, 0, 0);
+    }
+
+    public expandRight(right: number): ViewBox {
+        return this.expand(0, right, 0, 0);
+    }
+
     public expand(left: number, right: number, above: number, below: number): ViewBox {
-        return new ViewBox(this.left - left,
-                           this.up - above,
-                           this.width + left + right,
-                           this.height + above + below);
+        return new ViewBox(
+            this.left - left,
+            this.up - above,
+            this.width + left + right,
+            this.height + above + below,
+        );
     }
 
     public containingAtLeast(viewBox: ViewBox): ViewBox {
@@ -83,7 +101,7 @@ export class ViewBox {
 
 export class GameComponentUtils {
 
-    public static getArrowTransform(boardWidth: number, direction: Orthogonal): string {
+    public static getArrowTransform(boardWidth: number, boardHeight: number, direction: Orthogonal): string {
         // The triangle will be wrapped inside a square
         // The board will be considered in this example as a 3x3 on which we place the triangle in (tx, ty)
         let tx: number;
@@ -112,7 +130,7 @@ export class GameComponentUtils {
                 angle = 0;
                 break;
         }
-        const scale: string = 'scale(' + (boardWidth / 300) + ')';
+        const scale: string = `scale( ${ boardWidth / 300} ${ boardHeight / 300 } )`;
         const realX: number = tx * 100;
         const realY: number = ty * 100;
         const translation: string = `translate(${realX} ${realY})`;

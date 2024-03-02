@@ -1,4 +1,4 @@
-import { TutorialStepFailure } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStepFailure';
+import { TutorialStepMessage } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
 import { PylosCoord } from 'src/app/games/pylos/PylosCoord';
 import { PylosMove } from 'src/app/games/pylos/PylosMove';
 import { PylosState } from 'src/app/games/pylos/PylosState';
@@ -68,7 +68,7 @@ export class PylosTutorial extends Tutorial {
             <li>Of course, you cannot move the opponent's pieces.</li>
             <li>You can only climb when the landing square is higher than the starting square.</li>
         </ol>`,
-            $localize`Failed. Try again.`,
+            TutorialStepMessage.FAILED_TRY_AGAIN(),
         ),
         TutorialStep.fromMove(
             $localize`Square (1/2)`,
@@ -102,7 +102,7 @@ export class PylosTutorial extends Tutorial {
                 PylosMove.ofDrop(new PylosCoord(0, 1, 0), [new PylosCoord(1, 1, 0)]),
             ],
             $localize`Congratulations, you have saved up one piece. Note, you can cancel your selection by clicking again on the piece.`,
-            $localize`Failed. Try again.`,
+            TutorialStepMessage.FAILED_TRY_AGAIN(),
         ),
         TutorialStep.fromPredicate(
             $localize`Square (2/2)`,
@@ -133,7 +133,7 @@ export class PylosTutorial extends Tutorial {
                 if (move.firstCapture.isPresent()) {
                     return MGPValidation.failure($localize`Failed, you only captured one piece.`);
                 }
-                return MGPValidation.failure(TutorialStepFailure.YOU_DID_NOT_CAPTURE_ANY_PIECE());
+                return MGPValidation.failure(TutorialStepMessage.YOU_DID_NOT_CAPTURE_ANY_PIECE());
             },
             $localize`Congratulations, you have saved up two pieces.`,
         ),

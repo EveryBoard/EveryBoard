@@ -12,9 +12,11 @@ import { KamisadoFailure } from './KamisadoFailure';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
-import { assert } from 'src/app/utils/assert';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
-import { GameNode } from 'src/app/jscaip/GameNode';
+import { GameNode } from 'src/app/jscaip/AI/GameNode';
+import { Utils } from 'src/app/utils/utils';
+import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 
 export class KamisadoNode extends GameNode<KamisadoMove, KamisadoState> {}
 
@@ -29,7 +31,7 @@ export class KamisadoRules extends Rules<KamisadoMove, KamisadoState> {
         return KamisadoRules.singleton.get();
     }
 
-    public getInitialState(): KamisadoState {
+    public override getInitialState(): KamisadoState {
         return new KamisadoState(0,
                                  KamisadoColor.ANY,
                                  MGPOptional.empty(),
@@ -55,6 +57,7 @@ export class KamisadoRules extends Rules<KamisadoMove, KamisadoState> {
             new Coord(7, 7),
         ];
     }
+
     public static getMovablePieces(state: KamisadoState): Array<Coord> {
         return KamisadoRules.getColorMatchingPiece(state)
             .filter((startCoord: Coord): boolean => {
@@ -69,6 +72,7 @@ export class KamisadoRules extends Rules<KamisadoMove, KamisadoState> {
                 return false;
             });
     }
+
     // Returns the directions allowed for the move of a player
     public static playerDirections(player: Player): Array<Direction> {
         if (player === Player.ONE) {
@@ -77,6 +81,7 @@ export class KamisadoRules extends Rules<KamisadoMove, KamisadoState> {
             return [Direction.UP, Direction.UP_LEFT, Direction.UP_RIGHT];
         }
     }
+
     // Check if a direction is allowed for a given player
     public static directionAllowedForPlayer(dir: Direction, player: Player): boolean {
         if (player === Player.ZERO) {
@@ -85,25 +90,28 @@ export class KamisadoRules extends Rules<KamisadoMove, KamisadoState> {
             return dir.y > 0;
         }
     }
+
     // Check if the only possible move is to pass
     public static mustPass(state: KamisadoState): boolean {
         return this.getMovablePieces(state).length === 0;
     }
-    public static getFurthestPiecePositions(state: KamisadoState): [number, number] {
+
+    public static getFurthestPiecePositions(state: KamisadoState): PlayerNumberMap {
         let furthest0: number = 7; // player 0 goes from bottom (7) to top (0)
         let furthest1: number = 0; // player 1 goes from top (0) to bottom (7)
 
         KamisadoBoard.allPieceCoords(state.board).forEach((c: Coord) => {
             const piece: KamisadoPiece = state.getPieceAt(c);
-            assert(piece !== KamisadoPiece.EMPTY, 'allPieceCoords failed to filter KamisadoPiece.EMPTY');
+            Utils.assert(piece !== KamisadoPiece.EMPTY, 'allPieceCoords failed to filter KamisadoPiece.EMPTY');
             if (piece.player === Player.ONE) { // player 1, top (0) to bottom (7) so we want the max
                 furthest1 = Math.max(furthest1, c.y);
             } else { // player 0, bottom (7) to top (0), so we want the min
                 furthest0 = Math.min(furthest0, c.y);
             }
         });
-        return [furthest0, furthest1];
+        return PlayerNumberMap.of(furthest0, furthest1);
     }
+
     public static isLegal(move: KamisadoMove, state: KamisadoState): MGPValidation {
         if (KamisadoMove.isPiece(move)) {
             const start: Coord = move.getStart();
@@ -152,6 +160,7 @@ export class KamisadoRules extends Rules<KamisadoMove, KamisadoState> {
             return this.isLegalPass(state);
         }
     }
+
     private static isLegalPass(state: KamisadoState): MGPValidation {
         if (this.mustPass(state) && state.alreadyPassed === false) {
             return MGPValidation.SUCCESS;
@@ -159,6 +168,7 @@ export class KamisadoRules extends Rules<KamisadoMove, KamisadoState> {
             return MGPValidation.failure(RulesFailure.CANNOT_PASS());
         }
     }
+
     // Returns the next coord that plays
     public nextCoordToPlay(state: KamisadoState, colorToPlay: KamisadoColor): MGPOptional<Coord> {
         return MGPOptional.ofNullable(KamisadoBoard.allPieceCoords(state.board).find((c: Coord): boolean => {
@@ -166,8 +176,11 @@ export class KamisadoRules extends Rules<KamisadoMove, KamisadoState> {
             return piece.player === state.getCurrentOpponent() && piece.color === colorToPlay;
         }));
     }
+
     // Apply the move by only relying on tryMove
-    public applyLegalMove(move: KamisadoMove, state: KamisadoState, _info: void): KamisadoState {
+    public override applyLegalMove(move: KamisadoMove, state: KamisadoState, _config: NoConfig, _info: void)
+    : KamisadoState
+    {
         if (KamisadoMove.isPiece(move)) {
             const start: Coord = move.getStart();
             const end: Coord = move.getEnd();
@@ -192,9 +205,11 @@ export class KamisadoRules extends Rules<KamisadoMove, KamisadoState> {
             return resultingState;
         }
     }
-    public isLegal(move: KamisadoMove, state: KamisadoState): MGPValidation {
+
+    public override isLegal(move: KamisadoMove, state: KamisadoState): MGPValidation {
         return KamisadoRules.isLegal(move, state);
     }
+
     public getGameStatus(node: KamisadoNode): GameStatus {
         const state: KamisadoState = node.gameState;
         const player: Player = state.getCurrentPlayer();
@@ -202,14 +217,15 @@ export class KamisadoRules extends Rules<KamisadoMove, KamisadoState> {
             return GameStatus.getDefeat(player);
         }
 
-        const [furthest0, furthest1]: [number, number] = KamisadoRules.getFurthestPiecePositions(state);
+        const furthest: PlayerNumberMap = KamisadoRules.getFurthestPiecePositions(state);
         // Board value is how far my piece is - how far my opponent piece is, except in case of victory
-        if (furthest1 === 7) {
+        if (furthest.get(Player.ONE) === 7) {
             return GameStatus.ONE_WON;
-        } else if (furthest0 === 0) {
+        } else if (furthest.get(Player.ZERO) === 0) {
             return GameStatus.ZERO_WON;
         } else {
             return GameStatus.ONGOING;
         }
     }
+
 }

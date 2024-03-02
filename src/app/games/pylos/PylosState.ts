@@ -4,6 +4,7 @@ import { PylosCoord } from './PylosCoord';
 import { PylosMove } from './PylosMove';
 import { GameState } from 'src/app/jscaip/GameState';
 import { Utils } from 'src/app/utils/utils';
+import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 
 export class PylosState extends GameState {
 
@@ -87,17 +88,16 @@ export class PylosState extends GameState {
         return false;
     }
 
-    public getPiecesRepartition(): { [owner: number]: number } {
-        const ownershipMap: { [owner: number]: number } = {};
-        ownershipMap[PlayerOrNone.NONE.value] = 0;
-        ownershipMap[Player.ZERO.value] = 0;
-        ownershipMap[Player.ONE.value] = 0;
+    public getPiecesRepartition(): PlayerNumberMap {
+        const ownershipMap: PlayerNumberMap = PlayerNumberMap.of(0, 0);
         for (let z: number = 0; z < 3; z++) {
             for (let y: number = 0; y < (4 - z); y++) {
                 for (let x: number = 0; x < (4 - z); x++) {
                     const c: PylosCoord = new PylosCoord(x, y, z);
                     const v: PlayerOrNone = this.getPieceAt(c);
-                    ownershipMap[v.value] = 1 + ownershipMap[v.value];
+                    if (v.isPlayer()) {
+                        ownershipMap.add(v, 1);
+                    }
                 }
             }
         }

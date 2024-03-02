@@ -3,23 +3,29 @@ import { PenteMove } from './PenteMove';
 import { PenteState } from './PenteState';
 import { Component } from '@angular/core';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
-import { PenteTutorial } from './PenteTutorial';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { GobanGameComponent } from 'src/app/components/game-components/goban-game-component/GobanGameComponent';
-import { MCTS } from 'src/app/jscaip/MCTS';
+import { MCTS } from 'src/app/jscaip/AI/MCTS';
 import { PenteMoveGenerator } from './PenteMoveGenerator';
 import { PenteAlignmentHeuristic } from './PenteAlignmentHeuristic';
-import { Minimax } from 'src/app/jscaip/Minimax';
+import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
+import { Minimax } from 'src/app/jscaip/AI/Minimax';
+import { PenteConfig } from './PenteConfig';
 
 @Component({
     selector: 'app-new-game',
     templateUrl: './pente.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
 })
-export class PenteComponent extends GobanGameComponent<PenteRules, PenteMove, PenteState, PlayerOrNone> {
+export class PenteComponent extends GobanGameComponent<PenteRules,
+                                                       PenteMove,
+                                                       PenteState,
+                                                       PlayerOrNone,
+                                                       PenteConfig>
+{
 
     public lastMoved: MGPOptional<Coord> = MGPOptional.empty();
     public victoryCoords: Coord[] = [];
@@ -27,43 +33,49 @@ export class PenteComponent extends GobanGameComponent<PenteRules, PenteMove, Pe
 
     public constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
-        this.scores = MGPOptional.of([0, 0]);
-        this.rules = PenteRules.get();
-        this.node = this.rules.getInitialNode();
-        this.encoder = PenteMove.encoder;
-        this.tutorial = new PenteTutorial().tutorial;
+        this.setRulesAndNode('Pente');
         this.availableAIs = [
             new Minimax($localize`Alignment`, this.rules, new PenteAlignmentHeuristic(), new PenteMoveGenerator()),
             new MCTS($localize`MCTS`, new PenteMoveGenerator(), this.rules),
         ];
+        this.encoder = PenteMove.encoder;
+        this.scores = MGPOptional.of(PlayerNumberMap.of(0, 0));
     }
+
     public async updateBoard(_triggerAnimation: boolean): Promise<void> {
         const state: PenteState = this.getState();
         this.board = state.board;
         this.scores = MGPOptional.of(this.getState().captures);
-        this.victoryCoords = PenteRules.PENTE_HELPER.getVictoriousCoord(state);
+        const config: MGPOptional<PenteConfig> = this.getConfig();
+        this.victoryCoords = this.rules.getHelper(config).getVictoriousCoord(state);
         this.createHoshis();
-        this.cancelMoveAttempt();
     }
+
     public override async showLastMove(move: PenteMove): Promise<void> {
         this.lastMoved = MGPOptional.of(move.coord);
         const opponent: Player = this.getCurrentOpponent();
-        this.captured = PenteRules.get().getCaptures(move.coord, this.getPreviousState(), opponent);
+        this.captured = PenteRules.get().getCaptures(
+            move.coord,
+            this.getPreviousState(),
+            this.getConfig().get(),
+            opponent,
+        );
     }
-    public override cancelMoveAttempt(): void {
-        this.lastMoved = MGPOptional.empty();
+
+    public override hideLastMove(): void {
         this.captured = [];
+        this.lastMoved = MGPOptional.empty();
     }
-    public async onClick(x: number, y: number): Promise<MGPValidation> {
-        const clickValidity: MGPValidation = await this.canUserPlay('#click_' + x + '_' + y);
+
+    public async onClick(coord: Coord): Promise<MGPValidation> {
+        const clickValidity: MGPValidation = await this.canUserPlay('#click_' + coord.x + '_' + coord.y);
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }
-        const clickedCoord: Coord = new Coord(x, y);
-        return this.chooseMove(PenteMove.of(clickedCoord));
+        return this.chooseMove(PenteMove.of(coord));
     }
-    public getSpaceClass(x: number, y: number): string[] {
-        const coord: Coord = new Coord(x, y);
+
+    public getSpaceClass(coord: Coord): string[] {
         const owner: PlayerOrNone = this.getState().getPieceAt(coord);
         const classes: string[] = [];
         classes.push(this.getPlayerClass(owner));
@@ -75,4 +87,5 @@ export class PenteComponent extends GobanGameComponent<PenteRules, PenteMove, Pe
         }
         return classes;
     }
+
 }

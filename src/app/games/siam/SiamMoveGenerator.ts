@@ -2,12 +2,13 @@ import { SiamMove } from './SiamMove';
 import { SiamState } from './SiamState';
 import { SiamPiece } from './SiamPiece';
 import { Player } from 'src/app/jscaip/Player';
-import { SiamRules, SiamNode } from './SiamRules';
-import { MoveGenerator } from 'src/app/jscaip/AI';
+import { MoveGenerator } from 'src/app/jscaip/AI/AI';
+import { SiamRules, SiamNode, SiamConfig } from './SiamRules';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
 
-export class SiamMoveGenerator extends MoveGenerator<SiamMove, SiamState> {
+export class SiamMoveGenerator extends MoveGenerator<SiamMove, SiamState, SiamConfig> {
 
-    public getListMoves(node: SiamNode): SiamMove[] {
+    public override getListMoves(node: SiamNode, config: MGPOptional<SiamConfig>): SiamMove[] {
         let moves: SiamMove[] = [];
         const currentPlayer: Player = node.gameState.getCurrentPlayer();
         for (const coordAndContent of node.gameState.getCoordsAndContents()) {
@@ -19,15 +20,17 @@ export class SiamMoveGenerator extends MoveGenerator<SiamMove, SiamState> {
                                                                   coordAndContent.coord.y));
             }
         }
-        if (node.gameState.countCurrentPlayerPawn() < 5) {
+        if (node.gameState.countCurrentPlayerPawn() < config.get().numberOfPiece) {
             // up to 44 insertions
             // we remove some legal but useless insertions as explained below
-            for (const insertion of SiamRules.get().getInsertions(node.gameState)) {
+            for (const insertion of SiamRules.get().getInsertions(node.gameState, config.get())) {
                 if (insertion.direction.get().getOpposite() === insertion.landingOrientation) {
                     // this is an insertion with an orientation opposite to its direction,
                     // these are always a useless move and we don't want to take them into account here
                     continue;
-                } else if (this.isOnBorder(insertion) && insertion.direction.get() !== insertion.landingOrientation) {
+                } else if (node.gameState.isEdge(insertion.coord) &&
+                           insertion.direction.get() !== insertion.landingOrientation)
+                {
                     // this insertion is made in the corner but is not forward, so it cannot push
                     // there is always an equivalent insertion from the other entrance to the same corner,
                     // but the other one is able to push so it is strictly better
@@ -38,11 +41,5 @@ export class SiamMoveGenerator extends MoveGenerator<SiamMove, SiamState> {
             }
         }
         return moves;
-    }
-    private isOnBorder(insertion: SiamMove): boolean {
-        return insertion.coord.x === 0 ||
-               insertion.coord.x === 4 ||
-               insertion.coord.y === 0 ||
-               insertion.coord.y === 4;
     }
 }

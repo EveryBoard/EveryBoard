@@ -9,17 +9,21 @@ import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { Player } from 'src/app/jscaip/Player';
 import { QuartoFailure } from '../QuartoFailure';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 describe('QuartoRules', () => {
 
     let rules: QuartoRules;
+    const defaultConfig: NoConfig = QuartoRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         rules = QuartoRules.get();
     });
+
     it('should create', () => {
         expect(rules).toBeTruthy();
     });
+
     it('should forbid not to give a piece when not last turn', () => {
         // Given a board that is not on last turn
         const state: QuartoState = QuartoRules.get().getInitialState();
@@ -29,8 +33,9 @@ describe('QuartoRules', () => {
 
         // Then the move should be illegal
         const reason: string = 'You must give a piece.';
-        RulesUtils.expectMoveFailure(rules, state, move, reason);
+        RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
     });
+
     it('should allow not to give a piece on last turn, and consider the game a draw if no one win', () => {
         // Given a board on last turn
         const board: Table<QuartoPiece> = [
@@ -53,9 +58,10 @@ describe('QuartoRules', () => {
         ];
         const expectedState: QuartoState = new QuartoState(expectedBoard, 16, QuartoPiece.EMPTY);
         const node: QuartoNode = new QuartoNode(expectedState);
-        RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
-        RulesUtils.expectToBeDraw(rules, node);
+        RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
+        RulesUtils.expectToBeDraw(rules, node, defaultConfig);
     });
+
     it('should forbid to give a piece already on the board', () => {
         // Given a board with AAAA on it
         const board: Table<QuartoPiece> = [
@@ -71,8 +77,9 @@ describe('QuartoRules', () => {
 
         // Then the move should be illegal
         const reason: string = QuartoFailure.PIECE_ALREADY_ON_BOARD();
-        RulesUtils.expectMoveFailure(rules, state, move, reason);
+        RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
     });
+
     it('should forbid to give the piece that you had in your hand', () => {
         // Given any board
         const state: QuartoState = QuartoRules.get().getInitialState();
@@ -82,8 +89,9 @@ describe('QuartoRules', () => {
 
         // Then the move should be deemed illegal
         const reason: string = QuartoFailure.CANNOT_GIVE_PIECE_IN_HAND();
-        RulesUtils.expectMoveFailure(rules, state, move, reason);
+        RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
     });
+
     it('should forbid to play on occupied square', () => {
         // Given a board with occupied square
         const board: Table<QuartoPiece> = [
@@ -99,8 +107,9 @@ describe('QuartoRules', () => {
 
         // Then the move should be deemed illegal
         const reason: string = RulesFailure.MUST_LAND_ON_EMPTY_SPACE();
-        RulesUtils.expectMoveFailure(rules, state, move, reason);
+        RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
     });
+
     it('should allow simple move', () => {
         // Given a board
         const state: QuartoState = QuartoRules.get().getInitialState();
@@ -116,8 +125,9 @@ describe('QuartoRules', () => {
             [QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY],
         ];
         const expectedState: QuartoState = new QuartoState(expectedBoard, 1, QuartoPiece.AAAB);
-        RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+        RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
     });
+
     it('should consider Player.ZERO winner when doing a full line', () => {
         // Given a board with 3 piece aligned with common criterion
         const board: Table<QuartoPiece> = [
@@ -141,9 +151,10 @@ describe('QuartoRules', () => {
         const expectedState: QuartoState = new QuartoState(expectedBoard, 5, QuartoPiece.AAAB);
         const node: QuartoNode = new QuartoNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
 
-        RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
-        RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO);
+        RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
+        RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, defaultConfig);
     });
+
     it('should consider Player.ONE winner when doing a full line', () => {
         // Given a board with 3 piece with common criterion aligned
         const board: Table<QuartoPiece> = [
@@ -167,9 +178,10 @@ describe('QuartoRules', () => {
         const expectedState: QuartoState = new QuartoState(expectedBoard, 10, QuartoPiece.AABA);
         const node: QuartoNode = new QuartoNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
 
-        RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
-        RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE);
+        RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
+        RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, defaultConfig);
     });
+
     it('should recognize ongoing games', () => {
         // Given an ongoing game
         const board: Table<QuartoPiece> = [
@@ -183,6 +195,7 @@ describe('QuartoRules', () => {
 
         // When evaluating board value
         // Then it should be considered as ongoing
-        RulesUtils.expectToBeOngoing(rules, node);
+        RulesUtils.expectToBeOngoing(rules, node, defaultConfig);
     });
+
 });

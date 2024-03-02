@@ -1,4 +1,5 @@
 /* eslint-disable max-lines-per-function */
+import { fakeAsync } from '@angular/core/testing';
 import { DvonnPieceStack } from '../DvonnPieceStack';
 import { DvonnState } from '../DvonnState';
 import { Coord } from 'src/app/jscaip/Coord';
@@ -11,11 +12,12 @@ import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
 import { ErrorLoggerServiceMock } from 'src/app/services/tests/ErrorLoggerServiceMock.spec';
-import { fakeAsync } from '@angular/core/testing';
+import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 describe('DvonnRules', () => {
 
     let rules: DvonnRules;
+    const defaultConfig: NoConfig = DvonnRules.get().getDefaultRulesConfig();
 
     const N: DvonnPieceStack = DvonnPieceStack.UNREACHABLE;
     const _: DvonnPieceStack = DvonnPieceStack.EMPTY;
@@ -33,6 +35,7 @@ describe('DvonnRules', () => {
     beforeEach(() => {
         rules = DvonnRules.get();
     });
+
     it('initial stacks should be of size 1', () => {
         const state: DvonnState = DvonnRules.get().getInitialState();
         for (let y: number = 0; y < DvonnState.HEIGHT; y++) {
@@ -46,6 +49,7 @@ describe('DvonnRules', () => {
             }
         }
     });
+
     it('should allow 11 pieces to move in the first turn', () => {
         // 6. Important: a piece or stack that is surrounded on all 6 sides may
         // not be moved. So, at the beginning of the game only the pieces at
@@ -56,6 +60,7 @@ describe('DvonnRules', () => {
         const firstTurnMovablePieces: Coord[] = DvonnRules.getMovablePieces(state);
         expect(firstTurnMovablePieces.length).toEqual(11);
     });
+
     it('should only allow moves from the current player color', () => {
         const state: DvonnState = DvonnRules.get().getInitialState();
         const movablePieces: Coord[] = DvonnRules.getMovablePieces(state);
@@ -63,21 +68,23 @@ describe('DvonnRules', () => {
             expect(state.getPieceAt(coord).belongsTo(Player.ZERO)).toBeTrue();
         }
         const move: DvonnMove = DvonnMove.from(new Coord(2, 0), new Coord(3, 0)).get();
-        const state2: DvonnState = rules.applyLegalMove(move, state, undefined);
+        const state2: DvonnState = rules.applyLegalMove(move, state, defaultConfig);
         const movablePieces2: Coord[] = DvonnRules.getMovablePieces(state2);
         for (const coord of movablePieces2) {
             expect(state2.getPieceAt(coord).belongsTo(Player.ONE)).toBeTrue();
         }
         const illegalMove: DvonnMove = DvonnMove.from(new Coord(1, 1), new Coord(1, 2)).get();
         const reason: string = DvonnFailure.NOT_PLAYER_PIECE();
-        RulesUtils.expectMoveFailure(rules, state, illegalMove, reason);
+        RulesUtils.expectMoveFailure(rules, state, illegalMove, reason, defaultConfig);
     });
+
     it('should forbid moves for pieces with more than 6 neighbors', () => {
         const state: DvonnState = DvonnRules.get().getInitialState();
         const move: DvonnMove = DvonnMove.from(new Coord(1, 3), new Coord(1, 2)).get();
         const reason: string = DvonnFailure.TOO_MANY_NEIGHBORS();
-        RulesUtils.expectMoveFailure(rules, state, move, reason);
+        RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
     });
+
     it('should forbid moves from an empty stack', () => {
         const board: Table<DvonnPieceStack> = [
             [N, N, _, X, X, X, O, O, X, S, X],
@@ -89,8 +96,9 @@ describe('DvonnRules', () => {
         const state: DvonnState = new DvonnState(board, 0, false);
         const move: DvonnMove = DvonnMove.from(new Coord(2, 0), new Coord(2, 1)).get();
         const reason: string = DvonnFailure.EMPTY_STACK();
-        RulesUtils.expectMoveFailure(rules, state, move, reason);
+        RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
     });
+
     it('should forbid moves with pieces that cannot reach any target', () => {
         const board: Table<DvonnPieceStack> = [
             [N, N, OO, S, _, _, _, _, _, _, _],
@@ -102,8 +110,9 @@ describe('DvonnRules', () => {
         const state: DvonnState = new DvonnState(board, 0, false);
         const move: DvonnMove = DvonnMove.from(new Coord(2, 0), new Coord(4, 0)).get();
         const reason: string = DvonnFailure.CANT_REACH_TARGET();
-        RulesUtils.expectMoveFailure(rules, state, move, reason);
+        RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
     });
+
     it('should forbid moves with a different length than the stack size', () => {
         const board: Table<DvonnPieceStack> = [
             [N, N, OO, X, _, _, _, _, _, _, _],
@@ -115,8 +124,9 @@ describe('DvonnRules', () => {
         const state: DvonnState = new DvonnState(board, 0, false);
         const move: DvonnMove = DvonnMove.from(new Coord(2, 0), new Coord(3, 0)).get();
         const reason: string = DvonnFailure.INVALID_MOVE_LENGTH();
-        RulesUtils.expectMoveFailure(rules, state, move, reason);
+        RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
     });
+
     it('should have the target stack owned by the owner of the source stack after the move', () => {
         const expectedBoard: Table<DvonnPieceStack> = [
             [N, N, O, X, X, X, O, O, X, S, X],
@@ -128,10 +138,11 @@ describe('DvonnRules', () => {
         const state: DvonnState = DvonnRules.get().getInitialState();
         const move: DvonnMove = DvonnMove.from(new Coord(0, 3), new Coord(0, 2)).get();
         const expectedState: DvonnState = new DvonnState(expectedBoard, 1, false);
-        RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+        RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         const stack: DvonnPieceStack = expectedState.getPieceAtXY(0, 2);
         expect(stack.belongsTo(Player.ZERO)).toBeTrue();
     });
+
     it('should forbid moves to empty spaces', () => {
         const board: Table<DvonnPieceStack> = [
             [N, N, O, X, _, X, O, _, X, S, X],
@@ -143,8 +154,9 @@ describe('DvonnRules', () => {
         const state: DvonnState = new DvonnState(board, 0, false);
         const move: DvonnMove = DvonnMove.from(new Coord(3, 1), new Coord(3, 2)).get();
         const reason: string = DvonnFailure.EMPTY_TARGET_STACK();
-        RulesUtils.expectMoveFailure(rules, state, move, reason);
+        RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
     });
+
     it('should move stacks as a whole, by as many spaces as there are pieces in the stack', () => {
         const board: Table<DvonnPieceStack> = [
             [N, N, OO, X, _, _, _, _, _, _, _],
@@ -156,8 +168,9 @@ describe('DvonnRules', () => {
         const state: DvonnState = new DvonnState(board, 0, false);
         const move: DvonnMove = DvonnMove.from(new Coord(2, 0), new Coord(3, 0)).get();
         const reason: string = DvonnFailure.INVALID_MOVE_LENGTH();
-        RulesUtils.expectMoveFailure(rules, state, move, reason);
+        RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
     });
+
     it('should not allow to move a single red piece, but allows stacks with red pieces within it to move', () => {
         const board: Table<DvonnPieceStack> = [
             [N, N, OO, X, _, _, _, _, _, _, _],
@@ -169,14 +182,16 @@ describe('DvonnRules', () => {
         const state: DvonnState = new DvonnState(board, 0, false);
         const move: DvonnMove = DvonnMove.from(new Coord(2, 0), new Coord(2, 4)).get();
         const reason: string = DvonnFailure.INVALID_MOVE_LENGTH();
-        RulesUtils.expectMoveFailure(rules, state, move, reason);
+        RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
     });
+
     it('should not allow to pass turns if moves are possible', () => {
         const state: DvonnState = DvonnRules.get().getInitialState();
         const move: DvonnMove = DvonnMove.PASS;
         const reason: string = RulesFailure.CANNOT_PASS();
-        RulesUtils.expectMoveFailure(rules, state, move, reason);
+        RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
     });
+
     it('should allow to pass turn if no moves are possible', () => {
         const board: Table<DvonnPieceStack> = [
             [N, N, OO, _, _, _, _, _, _, _, _],
@@ -186,11 +201,12 @@ describe('DvonnRules', () => {
             [_, _, _, _, _, _, _, _, _, N, N],
         ];
         const state: DvonnState = new DvonnState(board, 0, false);
-        expect(rules.isLegal(DvonnMove.PASS, state).isSuccess()).toBeTrue();
+        expect(rules.isLegal(DvonnMove.PASS, state, defaultConfig).isSuccess()).toBeTrue();
         const move: DvonnMove = DvonnMove.from(new Coord(2, 0), new Coord(2, 1)).get();
         const reason: string = RulesFailure.MUST_PASS();
-        RulesUtils.expectMoveFailure(rules, state, move, reason);
+        RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
     });
+
     it('should remove of the board any portion disconnected from a source', () => {
         const board: Table<DvonnPieceStack> = [
             [N, N, OO, _, _, X, _, _, _, _, _],
@@ -209,9 +225,11 @@ describe('DvonnRules', () => {
         const state: DvonnState = new DvonnState(board, 0, false);
         const move: DvonnMove = DvonnMove.from(new Coord(3, 1), new Coord(2, 1)).get();
         const expectedState: DvonnState = new DvonnState(expectedBoard, 1, false);
-        RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+        RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
     });
+
     describe('endgames', () => {
+
         it('should recognize victory for player zero', () => {
             const board: Table<DvonnPieceStack> = [
                 [N, N, OO, _, _, _, _, _, _, _, _],
@@ -222,8 +240,9 @@ describe('DvonnRules', () => {
             ];
             const state: DvonnState = new DvonnState(board, 0, false);
             const node: DvonnNode = new DvonnNode(state);
-            RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO);
+            RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, defaultConfig);
         });
+
         it('should recognize victory for player one', () => {
             const board: Table<DvonnPieceStack> = [
                 [N, N, _, _, _, _, _, _, _, _, _],
@@ -234,8 +253,9 @@ describe('DvonnRules', () => {
             ];
             const state: DvonnState = new DvonnState(board, 0, false);
             const node: DvonnNode = new DvonnNode(state);
-            RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE);
+            RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, defaultConfig);
         });
+
         it('should recognize draw', () => {
             const board: Table<DvonnPieceStack> = [
                 [N, N, _, OO, _, _, _, _, _, _, _],
@@ -246,15 +266,20 @@ describe('DvonnRules', () => {
             ];
             const state: DvonnState = new DvonnState(board, 0, false);
             const node: DvonnNode = new DvonnNode(state);
-            RulesUtils.expectToBeDraw(rules, node);
+            RulesUtils.expectToBeDraw(rules, node, defaultConfig);
         });
+
     });
+
     describe('isMovablePiece', () => {
+
         it('should fail if the coord is not on the board', fakeAsync(() => {
             spyOn(ErrorLoggerService, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
             expect(() => rules.isMovablePiece(DvonnRules.get().getInitialState(), new Coord(-1, -1)))
                 .toThrowError('Assertion failure: piece is not on the board');
             expect(ErrorLoggerService.logError).toHaveBeenCalledWith('Assertion failure', 'piece is not on the board');
         }));
+
     });
+
 });

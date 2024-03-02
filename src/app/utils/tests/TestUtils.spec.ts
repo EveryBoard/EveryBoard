@@ -12,7 +12,7 @@ import { MGPValidation } from '../MGPValidation';
 import { AppModule, FirebaseProviders } from '../../app.module';
 import { UserDAO } from '../../dao/UserDAO';
 import { ConnectedUserService, AuthUser } from '../../services/ConnectedUserService';
-import { GameNode } from '../../jscaip/GameNode';
+import { GameNode } from '../../jscaip/AI/GameNode';
 import { GameWrapper } from '../../components/wrapper-components/GameWrapper';
 import { ConnectedUserServiceMock } from '../../services/tests/ConnectedUserService.spec';
 import { OnlineGameWrapperComponent }
@@ -48,6 +48,7 @@ import { CurrentGameServiceMock } from 'src/app/services/tests/CurrentGameServic
 import { GameInfo } from 'src/app/components/normal-component/pick-game/pick-game.component';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { Player } from 'src/app/jscaip/Player';
+import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 @Component({})
 export class BlankComponent {}
@@ -266,7 +267,8 @@ export class ComponentTestUtils<T extends AbstractGameComponent, P extends Compa
 
     public static async forGame<T extends AbstractGameComponent>(
         game: string,
-        configureTestingModule: boolean = true)
+        configureTestingModule: boolean = true,
+        chooseDefaultConfig: boolean = true)
     : Promise<ComponentTestUtils<T>>
     {
         const gameInfo: MGPOptional<GameInfo> =
@@ -277,13 +279,16 @@ export class ComponentTestUtils<T extends AbstractGameComponent, P extends Compa
         return ComponentTestUtils.forGameWithWrapper(game,
                                                      LocalGameWrapperComponent,
                                                      AuthUser.NOT_CONNECTED,
-                                                     configureTestingModule);
+                                                     configureTestingModule,
+                                                     chooseDefaultConfig);
     }
+
     public static async forGameWithWrapper<T extends AbstractGameComponent, P extends Comparable>(
         game: string,
         wrapperKind: Type<GameWrapper<P>>,
         user: AuthUser = AuthUser.NOT_CONNECTED,
-        configureTestingModule: boolean = true)
+        configureTestingModule: boolean = true,
+        chooseDefaultConfig: boolean = true)
     : Promise<ComponentTestUtils<T, P>>
     {
         const testUtils: ComponentTestUtils<T, P> = await ComponentTestUtils.basic(game, configureTestingModule);
@@ -291,12 +296,24 @@ export class ComponentTestUtils<T extends AbstractGameComponent, P extends Compa
         testUtils.prepareFixture(wrapperKind);
         testUtils.detectChanges();
         tick(1); // Need to be at least 1ms
-        testUtils.bindGameComponent();
-        testUtils.prepareSpies();
+        if (chooseDefaultConfig) {
+            const wrapperIsLocal: boolean = testUtils.getWrapper() instanceof LocalGameWrapperComponent;
+            const config: MGPOptional<RulesConfig> = GameInfo.getByUrlName(game).get().getRulesConfig();
+            if (wrapperIsLocal && config.isPresent()) {
+                await testUtils.acceptDefaultConfig();
+            }
+            /**
+             * If we just choose default config, here, the local game wrapper is not yet in playing phase
+             * so most things are not spyable
+             */
+            testUtils.bindGameComponent();
+            testUtils.prepareSpies();
+        }
         return testUtils;
     }
+
     public static async basic<T extends AbstractGameComponent, P extends Comparable>(
-        game?: string,
+        game: string,
         configureTestingModule: boolean = true)
     : Promise<ComponentTestUtils<T, P>>
     {
@@ -309,50 +326,88 @@ export class ComponentTestUtils<T extends AbstractGameComponent, P extends Compa
         return testUtils;
     }
 
+    public async acceptDefaultConfig(): Promise<void> {
+        await this.clickElement('#startGameWithConfig');
+        tick(1);
+    }
+
     public bindGameComponent(): void {
         expect(this.component.gameComponent).withContext('gameComponent should be bound on the wrapper').toBeDefined();
         this.gameComponent = this.component.gameComponent;
     }
+
     public prepareSpies(): void {
         this.cancelMoveSpy = spyOn(this.gameComponent, 'cancelMove').and.callThrough();
         this.chooseMoveSpy = spyOn(this.gameComponent, 'chooseMove').and.callThrough();
         this.onLegalUserMoveSpy = spyOn(this.component, 'onLegalUserMove').and.callThrough();
         this.canUserPlaySpy = spyOn(this.gameComponent, 'canUserPlay').and.callThrough();
     }
+
+    public resetSpies(): void {
+        this.cancelMoveSpy.calls.reset();
+        this.chooseMoveSpy.calls.reset();
+        this.onLegalUserMoveSpy.calls.reset();
+        this.canUserPlaySpy.calls.reset();
+    }
+
     public expectToBeCreated(): void {
         expect(this.getWrapper()).withContext('Wrapper should be created').toBeTruthy();
         expect(this.getGameComponent()).withContext('Component should be created').toBeTruthy();
     }
+
     public override forceChangeDetection(): void {
         this.fixture.debugElement.injector.get<ChangeDetectorRef>(ChangeDetectorRef).markForCheck();
         this.detectChanges();
     }
+
     public setRoute(id: string, value: string): void {
         TestBed.inject(ActivatedRouteStub).setRoute(id, value);
     }
+
     public async setupState(state: GameState,
-                            previousState?: GameState,
-                            previousMove?: Move)
+                            params: { previousState?: GameState,
+                                      previousMove?: Move,
+                                      config?: MGPOptional<RulesConfig>
+                            } = {})
     : Promise<void>
     {
+        const config: MGPOptional<RulesConfig> = this.getConfigFrom(params.config);
+        if (config.isPresent()) {
+            const wrapper: LocalGameWrapperComponent = this.getWrapper() as unknown as LocalGameWrapperComponent;
+            wrapper.updateConfig(config);
+            this.gameComponent.config = config;
+            wrapper.markConfigAsFilled();
+            tick(0);
+        }
         this.gameComponent.node = new GameNode(
             state,
-            MGPOptional.ofNullable(previousState).map((previousState: GameState) =>
+            MGPOptional.ofNullable(params.previousState).map((previousState: GameState) =>
                 new GameNode(previousState)),
-            MGPOptional.ofNullable(previousMove),
+            MGPOptional.ofNullable(params.previousMove),
         );
         await this.gameComponent.updateBoard(false);
-        if (previousMove !== undefined) {
-            await this.gameComponent.showLastMove(previousMove);
+        if (params.previousMove !== undefined) {
+            await this.gameComponent.showLastMove(params.previousMove, config);
         }
         this.forceChangeDetection();
     }
+
+    private getConfigFrom(config?: MGPOptional<RulesConfig>): MGPOptional<RulesConfig> {
+        if (config === undefined) {
+            return this.gameComponent.rules.getDefaultRulesConfig();
+        } else {
+            return config;
+        }
+    }
+
     public getWrapper(): GameWrapper<P> {
         return this.component;
     }
+
     public getGameComponent(): T {
         return (this.gameComponent as unknown) as T;
     }
+
     /**
      * @param nameInHtml The real name (id) of the element in the XML
      * @param nameInFunction Its name inside the code
@@ -362,9 +417,11 @@ export class ComponentTestUtils<T extends AbstractGameComponent, P extends Compa
         expect(this.canUserPlaySpy).toHaveBeenCalledOnceWith(nameInFunction);
         this.canUserPlaySpy.calls.reset();
     }
+
     public async expectClickSuccess(elementName: string): Promise<void> {
         return this.expectClickSuccessWithAsymmetricNaming(elementName, elementName);
     }
+
     public async expectInterfaceClickSuccess(elementName: string, waitInMs?: number): Promise<void> {
         const context: string = 'expectInterfaceClickSuccess(' + elementName + ')';
         await this.clickElement(elementName, false, waitInMs);
@@ -373,6 +430,7 @@ export class ComponentTestUtils<T extends AbstractGameComponent, P extends Compa
         expect(this.chooseMoveSpy).withContext(context).not.toHaveBeenCalledWith();
         expect(this.onLegalUserMoveSpy).withContext(context).not.toHaveBeenCalledWith();
     }
+
     public async expectClickFailureWithAsymmetricNaming(nameInHtml: string,
                                                         nameInFunction: string,
                                                         reason?: string)
@@ -396,9 +454,11 @@ export class ComponentTestUtils<T extends AbstractGameComponent, P extends Compa
         }
         this.cancelMoveSpy.calls.reset();
     }
+
     public async expectClickFailure(elementName: string, reason?: string): Promise<void> {
         return this.expectClickFailureWithAsymmetricNaming(elementName, elementName, reason);
     }
+
     public async expectClickForbidden(elementName: string, reason: string): Promise<void> {
         const clickValidity: MGPValidation = await this.gameComponent.canUserPlay(elementName);
         expect(clickValidity.getReason()).toBe(reason);
@@ -413,6 +473,7 @@ export class ComponentTestUtils<T extends AbstractGameComponent, P extends Compa
         expect(this.cancelMoveSpy).toHaveBeenCalledOnceWith(reason);
         this.cancelMoveSpy.calls.reset();
     }
+
     public async expectMoveSuccess(elementName: string,
                                    move: Move,
                                    clickAnimationDuration?: number)
@@ -431,6 +492,7 @@ export class ComponentTestUtils<T extends AbstractGameComponent, P extends Compa
         expect(this.onLegalUserMoveSpy).toHaveBeenCalledOnceWith(move);
         this.onLegalUserMoveSpy.calls.reset();
     }
+
     public async expectMoveFailure(elementName: string, reason: string, move: Move) : Promise<void> {
         await this.expectToDisplayGameMessage(reason, async() => {
             await this.clickElement(elementName);
@@ -443,20 +505,24 @@ export class ComponentTestUtils<T extends AbstractGameComponent, P extends Compa
         this.cancelMoveSpy.calls.reset();
         expect(this.onLegalUserMoveSpy).not.toHaveBeenCalled();
     }
+
     public expectPassToBeForbidden(): void {
         this.expectElementNotToExist('#passButton');
     }
+
     public async expectPassSuccess(move: Move): Promise<void> {
-        await this.clickElement('#passButton');
+        await this.clickElement('#passButton', true, 0);
         expect(this.chooseMoveSpy).toHaveBeenCalledOnceWith(move);
         this.chooseMoveSpy.calls.reset();
         expect(this.onLegalUserMoveSpy).toHaveBeenCalledOnceWith(move);
         this.onLegalUserMoveSpy.calls.reset();
     }
+
     public async selectAIPlayer(player: Player): Promise<void> {
         await this.choosingAIOrHuman(player, 'AI');
         await this.choosingAILevel(player);
     }
+
     public async choosingAIOrHuman(player: Player, aiOrHuman: 'AI' | 'human'): Promise<void> {
         const playerSelect: string = player === Player.ZERO ? '#playerZeroSelect' : '#playerOneSelect';
         const selectAI: HTMLSelectElement = this.findElement(playerSelect).nativeElement;
@@ -465,6 +531,7 @@ export class ComponentTestUtils<T extends AbstractGameComponent, P extends Compa
         this.detectChanges();
         await this.whenStable();
     }
+
     public async choosingAILevel(player: Player): Promise<void> {
         const aiDepthSelect: string = player === Player.ZERO ? '#aiZeroLevelSelect' : '#aiOneLevelSelect';
         const selectDepth: HTMLSelectElement = this.findElement(aiDepthSelect).nativeElement;
@@ -475,6 +542,7 @@ export class ComponentTestUtils<T extends AbstractGameComponent, P extends Compa
         expect(aiDepth).toBe('Level 1');
         this.detectChanges();
     }
+
 }
 
 export class TestUtils {
@@ -488,7 +556,9 @@ export class TestUtils {
         if (jasmine.isSpy(ErrorLoggerService.logError) === false) {
             spyOn(ErrorLoggerService, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
         }
-        expect(func).toThrowError('Assertion failure: ' + error);
+        expect(func)
+            .withContext('Expected Assertion failure: ' + error)
+            .toThrowError('Assertion failure: ' + error);
         expect(ErrorLoggerService.logError).toHaveBeenCalledWith('Assertion failure', error);
     }
 
@@ -652,16 +722,34 @@ export async function expectPermissionToBeDenied<T>(promise: Promise<T>): Promis
     await promise.then(throwIfFulfilled, checkErrorCode);
 }
 
+/**
+ * Returns a checker to verify that a subscription method has been correctly unsubscribed
+ * to in case it has been subscribed first.
+ */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function prepareUnsubscribeCheck(service: any, subscribeMethod: string): () => void {
 
+    let subscribed: boolean = false;
     let unsubscribed: boolean = false;
-    spyOn(service, subscribeMethod).and.returnValue(new Subscription(() => {
-        unsubscribed = true;
-    }));
+    const spy: jasmine.Spy = spyOn(service, subscribeMethod);
+    spy.and.callFake((...args: unknown[]): Subscription => {
+        subscribed = true;
+        // We need to call the original function.
+        // This is a bit hacky, but seems to be the only way:
+        // we change the spy to call through, and apply the original method.
+        // This is fine for subscribe methods as they are expected to be called only once.
+        spy.and.callThrough();
+        service[subscribeMethod](...args);
+        return new Subscription(() => {
+            unsubscribed = true;
+        });
+    });
     return () => {
+        expect(subscribed)
+            .withContext('Service should have subscribed to ' + subscribeMethod + ' method but did not')
+            .toBeTrue();
         expect(unsubscribed)
-            .withContext('Service should have unsubscribed to ' + subscribeMethod + ' method bub did not')
+            .withContext('Service should have unsubscribed to ' + subscribeMethod + ' method but did not')
             .toBeTrue();
     };
 }

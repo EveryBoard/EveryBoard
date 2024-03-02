@@ -4,13 +4,17 @@ import { Direction } from 'src/app/jscaip/Direction';
 import { PlayerOrNone } from 'src/app/jscaip/Player';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { Tutorial, TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
-import { EpaminondasRules } from './EpaminondasRules';
+import { EpaminondasConfig, EpaminondasRules } from './EpaminondasRules';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 const _: PlayerOrNone = PlayerOrNone.NONE;
 const O: PlayerOrNone = PlayerOrNone.ZERO;
 const X: PlayerOrNone = PlayerOrNone.ONE;
 
+const defaultConfig: MGPOptional<EpaminondasConfig> = EpaminondasRules.get().getDefaultRulesConfig();
+
 export class EpaminondasTutorial extends Tutorial {
+
 
     public tutorial: TutorialStep[] = [
         TutorialStep.informational(
@@ -18,7 +22,7 @@ export class EpaminondasTutorial extends Tutorial {
             $localize`This is the initial board of Epaminondas.
         The top line is the starting line of Light.
         The bottom line is the starting line of Dark.`,
-            EpaminondasRules.get().getInitialState(),
+            EpaminondasRules.get().getInitialState(defaultConfig),
         ),
         TutorialStep.informational(
             $localize`Goal of the game (1/2)`,
@@ -67,7 +71,7 @@ export class EpaminondasTutorial extends Tutorial {
             <li>Click on a piece.</li>
             <li>Click on a empty neighboring square.</li>
         </ol><br/>You're playing Dark, move a piece.`,
-            EpaminondasRules.get().getInitialState(),
+            EpaminondasRules.get().getInitialState(defaultConfig),
             new EpaminondasMove(0, 10, 1, 1, Direction.UP),
             (move: EpaminondasMove, _previous: EpaminondasState, _result: EpaminondasState) => {
                 if (move.movedPieces === 1) {
@@ -87,7 +91,7 @@ export class EpaminondasTutorial extends Tutorial {
             <li>Click on one of the squares highlighted in yellow; you can move your phalanx up to a distance equal to its length.</li>
         </ol><br/>
         You're playing Dark, Move a phalanx!`,
-            EpaminondasRules.get().getInitialState(),
+            EpaminondasRules.get().getInitialState(defaultConfig),
             new EpaminondasMove(0, 11, 2, 1, Direction.UP),
             (move: EpaminondasMove, _previous: EpaminondasState, _result: EpaminondasState) => {
                 if (move.movedPieces > 1) {
@@ -96,13 +100,10 @@ export class EpaminondasTutorial extends Tutorial {
                     return MGPValidation.failure($localize`Failed! You moved only one piece.`);
                 }
             },
-            $localize`Congratulations!
-        The moved pieces can be horizontally, vertically, or diagonally aligned.
-        The move should be made along this axis, forward or backwards.
-        There can be no opponent nor holes in the phalanx.`,
+            $localize`Congratulations! The moved pieces can be horizontally, vertically, or diagonally aligned. The move should be made along this axis, forward or backwards. There can be no opponent nor holes in the phalanx.`,
         ),
         TutorialStep.fromMove(
-            $localize`Capture`,
+            $localize`Captures`,
             $localize`In order to capture pieces of the opponent:
         <ol>
             <li>It must be aligned with the phalanx you are moving.</li>

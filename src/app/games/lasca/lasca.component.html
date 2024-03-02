@@ -14,7 +14,7 @@
         <g *ngFor="let squareInfo of line; index as x"
             id="square_at_{{ x }}_{{ y }}" >
             <g id="coord_{{ squareInfo.x }}_{{ squareInfo.y }}"
-               [attr.transform]="getTranslate(x, y, 0)"
+               [attr.transform]="getTranslationAtXYZ(x, y, 0)"
                (click)="onClick(squareInfo.x, squareInfo.y)">
                 <polygon id="square_{{ squareInfo.x }}_{{ squareInfo.y }}"
                          [attr.points]="getParallelogramPoints()"
@@ -22,7 +22,7 @@
                          class="base"/>
                 <g *ngFor="let pieceInfo of squareInfo.pieceInfos; index as z"
                    pointer-events="fill"
-                   [attr.transform]="getPieceTranslate(z)"
+                   [attr.transform]="getPieceTranslation(z)"
                    class="base mid-small-stroke">
                     <use id="square_{{ squareInfo.x }}_{{ squareInfo.y }}_piece_{{ z }}"
                          xlink:href="#piece"
@@ -31,7 +31,7 @@
                     <circle id="square_{{ squareInfo.x }}_{{ squareInfo.y }}_piece_{{ z }}_officer_symbol"
                             *ngIf="pieceInfo.isOfficer"
                             [attr.cx]="SPACE_SIZE * 0.4"
-                            [attr.cy]="SPACE_SIZE *  0.575"
+                            [attr.cy]="SPACE_SIZE * 0.575"
                             [attr.r]="SPACE_SIZE * 0.045"
                             [ngClass]="pieceInfo.classes"/>
                 </g>

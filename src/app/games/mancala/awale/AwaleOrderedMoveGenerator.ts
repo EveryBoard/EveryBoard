@@ -1,43 +1,46 @@
-import { MancalaState } from '../common/MancalaState';
-import { AwaleMove } from './AwaleMove';
-import { AwaleNode, AwaleRules } from './AwaleRules';
+import { MancalaMove } from '../common/MancalaMove';
+import { AwaleRules } from './AwaleRules';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Player } from 'src/app/jscaip/Player';
 import { AwaleMoveGenerator } from './AwaleMoveGenerator';
-import { MancalaDistributionResult } from '../common/MancalaRules';
+import { MancalaDistributionResult, MancalaNode } from '../common/MancalaRules';
+import { MancalaConfig } from '../common/MancalaConfig';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 export class AwaleOrderedMoveGenerator extends AwaleMoveGenerator {
 
-    public override getListMoves(node: AwaleNode): AwaleMove[] {
-        const moves: AwaleMove[] = super.getListMoves(node);
-        return this.orderMoves(node, moves);
+    public override getListMoves(node: MancalaNode, config: MGPOptional<MancalaConfig>): MancalaMove[] {
+        const moves: MancalaMove[] = super.getListMoves(node, config);
+        return this.orderMoves(node, moves, config.get());
     }
-    private orderMoves(node: AwaleNode, moves: AwaleMove[]): AwaleMove[] {
+
+    private orderMoves(node: MancalaNode, moves: MancalaMove[], config: MancalaConfig): MancalaMove[] {
         const player: Player = node.gameState.getCurrentPlayer();
         const playerY: number = node.gameState.getOpponentY();
-        const opponentY: number = player.value;
+        const opponentY: number = player.getValue();
         // sort by captured houses
-        ArrayUtils.sortByDescending(moves, (move: AwaleMove): number => {
+        ArrayUtils.sortByDescending(moves, (move: MancalaMove): number => {
             const board: number[][] = node.gameState.getCopiedBoard();
-            const toDistribute: number = board[playerY][move.x];
+            const toDistribute: number = board[playerY][move.getFirstDistribution().x];
             const mancalaDistributionResult: MancalaDistributionResult =
-                AwaleRules.get().distributeMove(move, node.gameState);
+                AwaleRules.get().distributeMove(move, node.gameState, config);
             const filledCoords: Coord[] = mancalaDistributionResult.filledCoords;
             const endHouse: Coord = filledCoords[filledCoords.length - 1];
             let captured: number;
             let sameTerritoryValue: number = 0;
             if (endHouse.y === playerY) {
                 captured = 0;
-                if (toDistribute <= MancalaState.WIDTH) {
+                if (toDistribute <= node.gameState.getWidth()) {
                     sameTerritoryValue = 10;
                 }
             } else {
-                captured = AwaleRules.get().captureIfLegal(endHouse.x, opponentY, node.gameState).capturedSum;
+                captured = AwaleRules.get().captureIfLegal(endHouse.x, opponentY, node.gameState, config).capturedSum;
             }
             // Prioritize captured, then moves in same territory, then tries to minimize number of pieces distributed
             return captured * 100 + sameTerritoryValue - toDistribute;
         });
         return moves;
     }
+
 }

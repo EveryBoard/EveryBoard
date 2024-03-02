@@ -71,10 +71,10 @@ export class Coord extends Vector {
         if (this.y < 0) {
             return false;
         }
-        if (this.x >= sizeX) {
+        if (sizeX <= this.x) {
             return false;
         }
-        if (this.y >= sizeY) {
+        if (sizeY <= this.y) {
             return false;
         }
         return true;
@@ -87,10 +87,10 @@ export class Coord extends Vector {
         if (this.y < 0) {
             return true;
         }
-        if (this.x >= sizeX) {
+        if (sizeX <= this.x) {
             return true;
         }
-        if (this.y >= sizeY) {
+        if (sizeY <= this.y) {
             return true;
         }
         return false;
@@ -118,7 +118,7 @@ export class Coord extends Vector {
         const sdy: number = this.y - coord.y;
         if (sdx === sdy) return false;
         if (sdx === -sdy) return true;
-        if (sdx*sdy === 0) return true;
+        if (sdx * sdy === 0) return true;
         return false;
     }
 
@@ -126,7 +126,7 @@ export class Coord extends Vector {
         const dx: number = Math.abs(this.x - coord.x);
         const dy: number = Math.abs(this.y - coord.y);
         if (dx === dy) return true;
-        if (dx*dy === 0) return true;
+        if (dx * dy === 0) return true;
         return false;
     }
 
@@ -172,17 +172,6 @@ export class Coord extends Vector {
         return coords;
     }
 
-    public getUntil(end: Coord): Coord[] {
-        const coords: Coord[] = [];
-        const direction: Direction = this.getDirectionToward(end).get();
-        let c: Coord = this.getNext(direction);
-        while (c.equals(end) === false) {
-            coords.push(c);
-            c = c.getNext(direction);
-        }
-        return coords;
-    }
-
     public override equals(obj: Coord): boolean {
         if (this === obj) return true;
         if (obj.x !== this.x) return false;
@@ -201,6 +190,10 @@ export class Coord extends Vector {
 
     public toSVGPoint(): string {
         return this.x + ',' + this.y;
+    }
+
+    public scale(x: number, y: number): Coord {
+        return new Coord(this.x * x, this.y * y);
     }
 
 }
