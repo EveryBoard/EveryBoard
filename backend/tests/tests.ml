@@ -13,7 +13,7 @@ let () =
     FirestoreTests.tests;
     AuthTests.tests;
     CorsTests.tests;
-    (* TODO: ConfigRoom.tests *)
+    ConfigRoomTests.tests;
     (* TODO: GameTests.tests *)
     (* TODO: server tests *)
   ]

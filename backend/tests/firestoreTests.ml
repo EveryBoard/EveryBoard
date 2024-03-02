@@ -3,15 +3,34 @@ open Backend
 open Utils
 open TestUtils
 
+type call =
+  | AddCandidate of string * Domain.MinimalUser.t
+[@@deriving show]
+
+let call : call testable =
+  let pp ppf (call : call) = Fmt.pf ppf "%s" (show_call call) in
+  testable pp (=)
+
 module type MOCK = sig
   include Firestore.FIRESTORE
 
   val user : Domain.User.t option ref
+
+  val calls : call list ref
+  val clear_calls : unit -> unit
+
+  module ConfigRoom : sig
+    include module type of ConfigRoom
+    val set : Domain.ConfigRoom.t -> unit
+  end
 end
 
 module Mock : MOCK = struct
 
   let user : Domain.User.t option ref = ref None
+
+  let calls : call list ref = ref []
+  let clear_calls () = calls := []
 
   module User = struct
     let get _  _ =
@@ -30,10 +49,17 @@ module Mock : MOCK = struct
   end
 
   module ConfigRoom = struct
-    let get _ _ = failwith "TODO"
+    let config_room : Domain.ConfigRoom.t option ref = ref None
+    let set new_config_room =
+      config_room := Some new_config_room
+    let get _ _ =
+      Lwt.return (Option.get !config_room)
+
     let create _ _ _ = failwith "TODO"
     let delete _ _ = failwith "TODO"
-    let add_candidate _ _ _ = failwith "TODO"
+    let add_candidate _ game_id user =
+      calls := AddCandidate (game_id, user) :: !calls;
+      Lwt.return ()
     let remove_candidate _ _ _ = failwith "TODO"
     let accept _ _ = failwith "TODO"
     let update _ _ _ = failwith "TODO"

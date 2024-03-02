@@ -23,11 +23,13 @@ module Make
     (* Check if game exists, if it does not this will throw Not_found *)
     (* Read 1: retrieve the config room *)
     let* config_room = Firestore.ConfigRoom.get request game_id in
-    let* _ = if config_room.creator.id <> user.id then
+    Printf.printf "add candidate, creator is %s, user is %s\n" config_room.creator.id user.id;
+    let* _ = if config_room.creator.id <> user.id then begin
         (* Write 1: User is candidate, add it to candidate list *)
         (* No need for a transaction here, we are just creating a new document *)
+        Printf.printf "user is candidate\n";
         Firestore.ConfigRoom.add_candidate request game_id user
-      else
+      end else
         Lwt.return () in
     Dream.empty `OK
 

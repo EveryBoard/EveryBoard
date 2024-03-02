@@ -26,7 +26,7 @@ module MinimalUser = struct
     id: string;
     name: string;
   }
-  [@@deriving yojson]
+  [@@deriving yojson, show]
 end
 
 module CurrentGame = struct

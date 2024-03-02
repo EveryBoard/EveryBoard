@@ -3,6 +3,34 @@ open TestUtils
 open Backend
 open Utils
 
+module type MOCK = sig
+  include Auth.AUTH
+
+  val set : string -> Domain.User.t -> unit
+
+end
+
+module Mock : MOCK = struct
+
+  let uid : string ref = ref ""
+  let user : Domain.User.t option ref = ref None
+
+  let set new_uid new_user =
+    uid := new_uid;
+    user := Some new_user
+
+  let get_user _request = match !user with
+    | Some user -> (!uid, user)
+    | None -> failwith "No user set"
+
+  let get_minimal_user _request =
+    Domain.User.to_minimal_user !uid (Option.get !user)
+
+  let middleware = fun handler request ->
+    handler request
+
+end
+
 module Auth = Auth.Make(FirestoreTests.Mock)(GoogleCertificatesTests.Mock)(StatsTests.Mock)(JwtTests.Mock)
 
 let tests = [

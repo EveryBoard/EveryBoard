@@ -23,11 +23,25 @@ let a_minimal_user : MinimalUser.t =
 let a_minimal_user_json : JSON.t =
   `Assoc [("id", `String a_minimal_user.id); ("name", `String a_minimal_user.name)]
 
+let a_user : User.t = {
+  username = Some a_minimal_user.name;
+  last_update_time = None;
+  verified = true;
+  current_game = None;
+}
+
 let another_minimal_user : MinimalUser.t =
-  { id = "uid"; name = "Jeanne Jaja" }
+  { id = "other-uid"; name = "Jeanne Jaja" }
 
 let another_minimal_user_json : JSON.t =
   `Assoc [("id", `String another_minimal_user.id); ("name", `String another_minimal_user.name)]
+
+let another_user : User.t = {
+  username = Some another_minimal_user.name;
+  last_update_time = None;
+  verified = true;
+  current_game = None;
+}
 
 let tests = [
 
