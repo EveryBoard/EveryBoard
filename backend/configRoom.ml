@@ -33,8 +33,7 @@ module Make
         Lwt.return () in
     Dream.empty `OK
 
-  (** Remove a candidate, potentially removing the config room if it was the creator.
-      Perform 1 read and up to 2 writes. *)
+  (** Remove a candidate. Perform 1 read and up to 2 writes. *)
   let remove_candidate : Dream.route =
     Dream.delete "config-room/:game_id/candidates/:candidate_id" @@ fun request ->
     let game_id = Dream.param request "game_id" in

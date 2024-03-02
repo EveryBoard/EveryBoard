@@ -5,6 +5,8 @@ open TestUtils
 
 type call =
   | AddCandidate of string * Domain.MinimalUser.t
+  | RemoveCandidate of string * string
+  | UpdateConfigRoom of string * JSON.t
 [@@deriving show]
 
 let call : call testable =
@@ -60,9 +62,13 @@ module Mock : MOCK = struct
     let add_candidate _ game_id user =
       calls := AddCandidate (game_id, user) :: !calls;
       Lwt.return ()
-    let remove_candidate _ _ _ = failwith "TODO"
+    let remove_candidate _ game_id uid =
+      calls := RemoveCandidate (game_id, uid) :: !calls;
+      Lwt.return ()
     let accept _ _ = failwith "TODO"
-    let update _ _ _ = failwith "TODO"
+    let update _ game_id update =
+      calls := UpdateConfigRoom (game_id, update) :: !calls;
+      Lwt.return ()
   end
 
   module Chat = struct
