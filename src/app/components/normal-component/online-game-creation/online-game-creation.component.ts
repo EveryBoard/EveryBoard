@@ -49,8 +49,8 @@ export class OnlineGameCreationComponent implements OnInit {
         }
     }
     private gameExists(gameName: string): boolean {
-        const gameInfo: MGPOptional<GameInfo> =
+        const optionalGameInfo: MGPOptional<GameInfo> =
             MGPOptional.ofNullable(GameInfo.ALL_GAMES().find((gameInfo: GameInfo) => gameInfo.urlName === gameName));
-        return gameInfo.isPresent();
+        return optionalGameInfo.isPresent();
     }
 }

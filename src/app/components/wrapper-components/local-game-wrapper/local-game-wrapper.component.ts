@@ -96,7 +96,10 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
         // TODO: test, I might want to update some visual stuff there for sure !!!
         await this.proposeAIToPlay();
     }
-
+// TODO: Abalone clic dans le vide fait disparaitre le last move mais ne crée pas de move attempt -> ça doit toujours faire l'un ou l'autre
+// TODO: Ba-awa, ne pas authoriser un clic pindin l'animation !!!
+// TODO: ConnectSix cancelling move attempt does not re-show last move !
+// TODO: Diaballik quand un reçois le mouvement adverse, son dernier mouvement est toujours visible
     public async onLegalUserMove(move: Move): Promise<void> {
         const config: MGPOptional<RulesConfig> = await this.getConfig();
         this.gameComponent.node = this.gameComponent.rules.choose(this.gameComponent.node, move, config).get();
@@ -135,7 +138,7 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
         await this.setInteractive(isAISelected === false);
         if (isAISelected) {
             // It is AI's turn, let it play after a small delay
-            const playingAI: MGPOptional<{ ai: AbstractAI, options: AIOptions }> = this.getPlayingAI();
+            const playingAI: MGPOptional<{ ai: AbstractAI, options: AIOptions }> = this.getCurrentAIOption();
             if (playingAI.isPresent()) {
                 window.setTimeout(async() => {
                     await this.doAIMove(playingAI.get().ai, playingAI.get().options);
@@ -157,9 +160,15 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
         return this.playerSelection[playerIndex] !== 'human';
     }
 
-    private getPlayingAI(): MGPOptional<{ ai: AbstractAI, options: AIOptions }> {
+    private lastMoveWasAI(): boolean {
+        const playerIndex: number = (this.gameComponent.getTurn() - 1) % 2;
+        return this.playerSelection[playerIndex] !== 'human';
+    }
+
+    private getCurrentAIOption(): MGPOptional<{ ai: AbstractAI, options: AIOptions }> {
+        // TODO ticketter le refactor de isAITurn & all
         const playerIndex: number = this.gameComponent.getTurn() % 2;
-        const aiOpt: MGPOptional<AbstractAI> = this.findAI(playerIndex);
+        const aiOpt: MGPOptional<AbstractAI> = this.getAI(playerIndex);
         if (aiOpt.isPresent()) {
             const ai: AbstractAI = aiOpt.get();
             const optionsName: string = this.aiOptions[playerIndex];
@@ -175,7 +184,7 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
         }
     }
 
-    private findAI(playerIndex: number): MGPOptional<AbstractAI> {
+    private getAI(playerIndex: number): MGPOptional<AbstractAI> {
         return MGPOptional.ofNullable(
             this.gameComponent.availableAIs.find((a: AbstractAI) => {
                 return this.players[playerIndex].equalsValue(a.name);
@@ -214,7 +223,8 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
     }
 
     private async applyNewMove(): Promise<void> {
-        await this.showNextMove(true);
+        const lastMoveWasAI: boolean = this.lastMoveWasAI();
+        await this.showNextMove(lastMoveWasAI); // TODO UNIT TEST
         await this.updateWrapper();
         await this.proposeAIToPlay();
     }
@@ -230,7 +240,7 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
     }
 
     public availableAIOptions(player: number): AIOptions[] {
-        return this.findAI(player).get().availableOptions;
+        return this.getAI(player).get().availableOptions;
     }
 
     public canTakeBack(): boolean {
@@ -245,7 +255,7 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
 
     public async takeBack(): Promise<void> {
         this.gameComponent.node = this.gameComponent.node.parent.get();
-        if (this.isAITurn()) {
+        if (this.isConcreteAITurn()) {
             Utils.assert(this.gameComponent.node.parent.isPresent(),
                          'Cannot take back in first turn when AI is Player.ZERO');
             this.gameComponent.node = this.gameComponent.node.parent.get();
@@ -253,8 +263,8 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
         await this.showCurrentState(false);
     }
 
-    private isAITurn(): boolean {
-        return this.getPlayingAI().isPresent();
+    private isConcreteAITurn(): boolean {
+        return this.getCurrentAIOption().isPresent();
     }
 
     public async restartGame(): Promise<void> {

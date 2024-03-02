@@ -105,7 +105,7 @@ describe('EncapsuleRules', () => {
         ]);
 
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
-        const node: EncapsuleNode = new EncapsuleNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
+        node = new EncapsuleNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
         RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, defaultConfig);
     });
 

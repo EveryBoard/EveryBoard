@@ -87,6 +87,7 @@ describe('LocalGameWrapperComponent (game phase)', () => {
         ConnectedUserServiceMock.setUser(UserMocks.CONNECTED_AUTH_USER);
         TestBed.inject(ErrorLoggerService);
     }));
+
     it('should create the component at turn 0', () => {
         expect(testUtils.getGameComponent()).toBeTruthy();
         const state: P4State = testUtils.getGameComponent().getState();
@@ -110,12 +111,14 @@ describe('LocalGameWrapperComponent (game phase)', () => {
         // Then the turn should be incremented
         expect(testUtils.getGameComponent().getTurn()).toBe(1);
     }));
+
     it('should be interactive by default', fakeAsync(async() => {
         // Given a game
         // When displaying it
         // Then it is interactive
         expect(testUtils.getGameComponent().isInteractive()).toBeTrue();
     }));
+
     it('should show draw', fakeAsync(async() => {
         const board: PlayerOrNone[][] = [
             [O, O, O, _, O, O, O],
@@ -131,6 +134,7 @@ describe('LocalGameWrapperComponent (game phase)', () => {
         await testUtils.expectMoveSuccess('#click_3', P4Move.of(3));
         testUtils.expectElementToExist('#draw');
     }));
+
     it('should not allow clicks after the end of the game', fakeAsync(async() => {
         // Given a game about to end
         const board: PlayerOrNone[][] = [
@@ -148,6 +152,7 @@ describe('LocalGameWrapperComponent (game phase)', () => {
         // Then it should not be possible to click again
         await testUtils.expectClickFailure('#click_3', GameWrapperMessages.GAME_HAS_ENDED());
     }));
+
     it('should show score if needed', fakeAsync(async() => {
         testUtils.getGameComponent().scores = MGPOptional.empty();
         testUtils.expectElementNotToExist('#scoreZero');
@@ -159,6 +164,7 @@ describe('LocalGameWrapperComponent (game phase)', () => {
         testUtils.expectElementToExist('#scoreZero');
         testUtils.expectElementToExist('#scoreOne');
     }));
+
     describe('restarting games', () => {
         it('should allow to restart game during the play', fakeAsync(async() => {
             // Given the board at any moment
@@ -227,6 +233,7 @@ describe('LocalGameWrapperComponent (game phase)', () => {
             expect(testUtils.getGameComponent().hideLastMove).toHaveBeenCalledOnceWith();
         }));
     });
+
     describe('Using AI', () => {
         it('should disable interactivity when AI is selected without level', async() => {
             // Given a game which is initially interactive, with a background showing it
@@ -412,6 +419,7 @@ describe('LocalGameWrapperComponent (game phase)', () => {
         }));
 
     });
+
     describe('winner indicator', () => {
 
         const preVictoryBoard: PlayerOrNone[][] = [
@@ -496,6 +504,7 @@ describe('LocalGameWrapperComponent (game phase)', () => {
             expect(winnerTag).toBe('Minimax (Player 2) won');
         }));
     });
+
     describe('onCancelMove', () => {
         it('should showLastMove when there is one', fakeAsync(async() => {
             // Given a component with a last move

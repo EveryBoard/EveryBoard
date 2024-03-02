@@ -116,9 +116,9 @@ export class SaharaRules extends Rules<SaharaMove, SaharaState> {
     }
 
     public getLandingCoords(board: Table<FourStatePiece>, coord: Coord): Coord[] {
-        const isOnBoardAndEmpty: (coord: Coord) => boolean = (coord: Coord) => {
-            return SaharaState.isOnBoard(coord) &&
-                   board[coord.y][coord.x] === FourStatePiece.EMPTY;
+        const isOnBoardAndEmpty: (c: Coord) => boolean = (c: Coord) => {
+            return SaharaState.isOnBoard(c) &&
+                   board[c.y][c.x] === FourStatePiece.EMPTY;
         };
         const landings: MGPSet<Coord> =
             new MGPSet(TriangularCheckerBoard.getNeighbors(coord).filter(isOnBoardAndEmpty));

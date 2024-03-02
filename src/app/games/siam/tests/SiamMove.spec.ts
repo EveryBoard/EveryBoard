@@ -30,8 +30,8 @@ describe('SiamMove', () => {
             new SiamNode(state, undefined, MGPOptional.of(move));
         const moveGenerator: SiamMoveGenerator = new SiamMoveGenerator();
         const moves: SiamMove[] = moveGenerator.getListMoves(node, defaultConfig);
-        for (const move of moves) {
-            EncoderTestUtils.expectToBeBijective(SiamMove.encoder, move);
+        for (const firstMove of moves) {
+            EncoderTestUtils.expectToBeBijective(SiamMove.encoder, firstMove);
         }
     });
 

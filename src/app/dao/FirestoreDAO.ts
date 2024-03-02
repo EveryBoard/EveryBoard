@@ -36,7 +36,7 @@ export interface IFirestoreDAO<T extends FirestoreJSONObject> {
 
     findWhere(conditions: FirestoreCondition[], order?: string, limit?: number): Promise<FirestoreDocument<T>[]>
 
-    subCollectionDAO<T extends FirestoreJSONObject>(id: string, name: string): IFirestoreDAO<T>;
+    subCollectionDAO<U extends FirestoreJSONObject>(id: string, name: string): IFirestoreDAO<U>;
 }
 
 export abstract class FirestoreDAO<T extends FirestoreJSONObject> implements IFirestoreDAO<T> {
@@ -164,12 +164,13 @@ export abstract class FirestoreDAO<T extends FirestoreJSONObject> implements IFi
         }
         return query;
     }
-    public subCollectionDAO<T extends FirestoreJSONObject>(id: string, name: string): IFirestoreDAO<T> {
+    // TODO C6 lifecycle hide but don't reshow
+    public subCollectionDAO<U extends FirestoreJSONObject>(id: string, name: string): IFirestoreDAO<U> {
         const fullPath: string = `${this.collection.path}/${id}/${name}`;
         if (fullPath in this.subDAOs) {
-            return this.subDAOs[fullPath] as IFirestoreDAO<T>;
+            return this.subDAOs[fullPath] as IFirestoreDAO<U>;
         } else {
-            const subDAO: FirestoreDAO<T> = new class extends FirestoreDAO<T> {
+            const subDAO: FirestoreDAO<U> = new class extends FirestoreDAO<U> {
                 public constructor(firestore: Firestore.Firestore) {
                     super(fullPath, firestore);
                 }

@@ -23,9 +23,9 @@ describe('QuixoMove', () => {
             [X, _, _, _, _],
             [_, _, _, X, _],
         ];
-        const move: QuixoMove = new QuixoMove(0, 0, Orthogonal.DOWN);
+        const previousMove: QuixoMove = new QuixoMove(0, 0, Orthogonal.DOWN);
         const state: QuixoState = new QuixoState(board, 0);
-        const node: QuixoNode = new QuixoNode(state, MGPOptional.empty(), MGPOptional.of(move));
+        const node: QuixoNode = new QuixoNode(state, MGPOptional.empty(), MGPOptional.of(previousMove));
         const moveGenerator: QuixoMoveGenerator = new QuixoMoveGenerator();
         const moves: QuixoMove[] = moveGenerator.getListMoves(node, defaultConfig);
         for (const move of moves) {

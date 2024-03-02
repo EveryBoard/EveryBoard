@@ -55,7 +55,7 @@ export class ConspirateursMoveGenerator extends MoveGenerator<ConspirateursMove,
             new Coord(coord.x + 1, coord.y - 1),
             new Coord(coord.x - 1, coord.y + 1),
             new Coord(coord.x - 1, coord.y - 1),
-        ].filter((coord: Coord) => state.isOnBoard(coord));
+        ].filter((c: Coord) => state.isOnBoard(c));
         for (const target of targets) {
             const move: MGPFallible<ConspirateursMoveSimple> = ConspirateursMoveSimple.from(coord, target);
             if (move.isSuccess() && ConspirateursRules.get().simpleMoveLegality(move.get(), state).isSuccess()) {

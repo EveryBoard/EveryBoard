@@ -38,14 +38,19 @@ describe('SixMove', () => {
 
     describe('Overrides', () => {
 
-        const drop: SixMove = SixMove.ofDrop(new Coord(5, 5));
-        const movement: SixMove = SixMove.ofMovement(new Coord(5, 5), new Coord(7, 5));
+        let drop: SixMove;
+        let movement: SixMove;
         const cut: SixMove = SixMove.ofCut(new Coord(5, 5), new Coord(7, 5), new Coord(9, 9));
 
+        beforeEach(() => {
+            drop = SixMove.ofDrop(new Coord(5, 5));
+            movement = SixMove.ofMovement(new Coord(5, 5), new Coord(7, 5));
+        });
+
         it('should have functionnal equals', () => {
-            const drop: SixMove = SixMove.ofDrop(new Coord(0, 0));
+            drop = SixMove.ofDrop(new Coord(0, 0));
             const otherDrop: SixMove = SixMove.ofDrop(new Coord(1, 1));
-            const movement: SixMove = SixMove.ofMovement(new Coord(1, 1), new Coord(0, 0));
+            movement = SixMove.ofMovement(new Coord(1, 1), new Coord(0, 0));
             const cuttingDeplacement: SixMove =
                 SixMove.ofCut(new Coord(1, 1), new Coord(0, 0), new Coord(2, 2));
             expect(drop.equals(otherDrop)).toBeFalse();

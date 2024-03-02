@@ -458,8 +458,8 @@ export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, H
         }
         this.clearHighlights();
         this.highlight(this.selectedStart.get(), 'selected-stroke');
-        for (const coord of this.selectedSpiderCoords) {
-            this.ground.select(coord);
+        for (const spiderCoord of this.selectedSpiderCoords) {
+            this.ground.select(spiderCoord);
         }
         this.highlightNextPossibleCoords(this.selectedStart.get());
         return MGPValidation.SUCCESS;

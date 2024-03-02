@@ -33,11 +33,11 @@ export abstract class Encoder<T> {
             }
         };
     }
-    public static tuple<T, Fields extends object>(encoders: EncoderArray<Fields>,
-                                                  encode: (t: T) => Fields,
-                                                  decode: (fields: Fields) => T): Encoder<T> {
-        return new class extends Encoder<T> {
-            public encode(value: T): JSONValueWithoutArray {
+    public static tuple<U, Fields extends object>(encoders: EncoderArray<Fields>,
+                                                  encode: (t: U) => Fields,
+                                                  decode: (fields: Fields) => U): Encoder<U> {
+        return new class extends Encoder<U> {
+            public encode(value: U): JSONValueWithoutArray {
                 const fields: Fields = encode(value);
                 const encoded: JSONValueWithoutArray = {};
                 Object.keys(fields).forEach((key: string): void => {
@@ -45,7 +45,7 @@ export abstract class Encoder<T> {
                 });
                 return encoded;
             }
-            public decode(encoded: NonNullable<JSONValueWithoutArray>): T {
+            public decode(encoded: NonNullable<JSONValueWithoutArray>): U {
                 const fields: Record<string, unknown> = {};
                 Object.keys(encoders).reverse().forEach((key: string): void => {
                     const field: JSONValue = encoded[key] as NonNullable<JSONValue>;
@@ -58,13 +58,13 @@ export abstract class Encoder<T> {
     /**
      * This creates a "sum" encoder, i.e., it encodes values of either type T and U and V and ...
      */
-    public static disjunction<T>(typePredicates: ((value: unknown) => boolean)[],
+    public static disjunction<U>(typePredicates: ((value: unknown) => boolean)[],
                                  encoders: Encoder<unknown>[],
-    ): Encoder<T>
+    ): Encoder<U>
     {
         Utils.assert(typePredicates.length === encoders.length, 'typePredicates and encoders should have same length');
-        return new class extends Encoder<T> {
-            public encode(value: T): JSONValueWithoutArray {
+        return new class extends Encoder<U> {
+            public encode(value: U): JSONValueWithoutArray {
                 let indexClass: number = 0;
                 for (const identifier of typePredicates) {
                     if (identifier(value) === true) {
@@ -76,26 +76,26 @@ export abstract class Encoder<T> {
                     indexClass++;
                 }
             }
-            public decode(encoded: JSONValueWithoutArray): T {
+            public decode(encoded: JSONValueWithoutArray): U {
                 // eslint-disable-next-line dot-notation
                 const type_: number = Utils.getNonNullable(encoded)['type'];
                 // eslint-disable-next-line dot-notation
                 const content: JSONValue = Utils.getNonNullable(encoded)['encoded'] as JSONValue;
-                return encoders[type_].decode(content) as T;
+                return encoders[type_].decode(content) as U;
             }
         };
     }
-    public static list<T>(encoder: Encoder<T>): Encoder<Array<T>> {
-        return new class extends Encoder<Array<T>> {
-            public encode(list: T[]): JSONValue {
-                return list.map((t: T): JSONValueWithoutArray => {
+    public static list<U>(encoder: Encoder<U>): Encoder<Array<U>> {
+        return new class extends Encoder<Array<U>> {
+            public encode(list: U[]): JSONValue {
+                return list.map((t: U): JSONValueWithoutArray => {
                     const encodedCoord: JSONValue = encoder.encode(t);
                     Utils.assert(Array.isArray(encodedCoord) === false,
                                  'This encoder should not encode as array');
                     return encodedCoord as JSONValueWithoutArray;
                 });
             }
-            public decode(encoded: JSONValue): T[] {
+            public decode(encoded: JSONValue): U[] {
                 const casted: Array<JSONValue> = encoded as Array<JSONValue>;
                 return casted.map(encoder.decode);
             }

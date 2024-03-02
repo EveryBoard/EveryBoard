@@ -93,39 +93,6 @@ export class LodestoneRules extends Rules<LodestoneMove, LodestoneState, Lodesto
         ];
         const plates: LodestonePressurePlates = LodestonePressurePlates.getInitialLodestonePressurePlates([5, 3]);
         return new LodestoneState(board, 0, new MGPMap(), plates);
-
-        // const allPressurePlates: LodestonePressurePlates =
-            // LodestonePressurePlates.getInitialLodestonePressurePlates([5, 3]);
-        // const board: Table<LodestonePiece> = [
-        //     [X, _, _, _, _, _, _, X],
-        //     [_, _, _, _, _, _, _, _],
-        //     [_, _, _, _, _, _, _, _],
-        //     [_, _, O, _, _, _, _, _],
-        //     [_, _, _, _, _, _, _, _],
-        //     [_, _, _, _, _, _, _, _],
-        //     [_, _, _, _, _, _, _, _],
-        //     [_, _, _, _, _, _, _, _],
-        // ];
-        // const pressurePlates: LodestonePressurePlates = {
-            // ...allPressurePlates,
-            // top: LodestonePressurePlateGroup.of([5, 3]).addCaptured(Player.ONE, 4),
-        // };
-        // return new LodestoneState(board, 0, new MGPMap(), pressurePlates);
-        // const board: Table<LodestonePiece> = [
-        //     [X, X, _, _, X, _, X, X],
-        //     [_, _, _, _, _, _, _, _],
-        //     [_, _, _, _, _, _, _, _],
-        //     [_, _, _, _, O, _, _, _],
-        //     [_, _, _, _, _, _, _, _],
-        //     [_, _, _, _, _, _, _, _],
-        //     [_, _, _, _, _, _, _, _],
-        //     [_, _, _, _, _, _, _, _],
-        // ];
-        // const pressurePlates: LodestonePressurePlates = {
-        //     ...allPressurePlates,
-        //     top: LodestonePressurePlateGroup.of([5, 3]).addCaptured(Player.ONE, 4),
-        // };
-        // return new LodestoneState(board, 0, new MGPMap(), pressurePlates);
     }
 
     public override applyLegalMove(move: LodestoneMove, state: LodestoneState, _config: NoConfig, infos: LodestoneInfos)

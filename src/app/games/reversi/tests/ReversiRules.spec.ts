@@ -140,8 +140,7 @@ describe('ReversiRules', () => {
             const move: ReversiMove = new ReversiMove(0, 7);
             const expectedState: ReversiState = new ReversiState(expectedBoard, 60);
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
-            const node: ReversiNode =
-                new ReversiNode(expectedState, undefined, MGPOptional.of(move));
+            node = new ReversiNode(expectedState, undefined, MGPOptional.of(move));
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, defaultConfig);
         });
 
@@ -170,8 +169,7 @@ describe('ReversiRules', () => {
             const move: ReversiMove = new ReversiMove(0, 7);
             const expectedState: ReversiState = new ReversiState(expectedBoard, 61);
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
-            const node: ReversiNode =
-                new ReversiNode(expectedState, undefined, MGPOptional.of(move));
+            node = new ReversiNode(expectedState, undefined, MGPOptional.of(move));
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, defaultConfig);
         });
 
@@ -200,8 +198,7 @@ describe('ReversiRules', () => {
             const move: ReversiMove = new ReversiMove(0, 7);
             const expectedState: ReversiState = new ReversiState(expectedBoard, 61);
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
-            const node: ReversiNode =
-                new ReversiNode(expectedState, undefined, MGPOptional.of(move));
+            node = new ReversiNode(expectedState, undefined, MGPOptional.of(move));
             RulesUtils.expectToBeDraw(rules, node, defaultConfig);
         });
 

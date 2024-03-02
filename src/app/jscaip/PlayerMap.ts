@@ -5,8 +5,8 @@ import { PlayerNumberTable } from './PlayerNumberTable';
 
 export class PlayerMap<T extends NonNullable<unknown>> {
 
-    public static ofValues<T extends NonNullable<unknown>>(playerZeroValue: T, playerOneValue: T): PlayerMap<T> {
-        const map: MGPMap<Player, T> = new MGPMap([
+    public static ofValues<U extends NonNullable<unknown>>(playerZeroValue: U, playerOneValue: U): PlayerMap<U> {
+        const map: MGPMap<Player, U> = new MGPMap([
             { key: Player.ZERO, value: playerZeroValue },
             { key: Player.ONE, value: playerOneValue },
         ]);

@@ -29,7 +29,7 @@ describe('GipfState', () => {
         it('should contain 3 simple pieces for each player', () => {
             let p0: number = 0;
             let p1: number = 0;
-            state.forEachCoord((_: Coord, content: FourStatePiece) => {
+            state.forEachCoord((_coord: Coord, content: FourStatePiece) => {
                 if (content !== FourStatePiece.EMPTY) {
                     if (content === FourStatePiece.ZERO) {
                         p0 += 1;

@@ -7,15 +7,7 @@ import { LinesOfActionMove } from '../LinesOfActionMove';
 
 describe('LinesOfActionMove', () => {
 
-    const move: LinesOfActionMove = LinesOfActionMove.from(new Coord(5, 3), new Coord(3, 5)).get();
-
-    describe('encoder', () => {
-
-        it('should have a bijective encoder', () => {
-            EncoderTestUtils.expectToBeBijective(LinesOfActionMove.encoder, move);
-        });
-
-    });
+    const someMove: LinesOfActionMove = LinesOfActionMove.from(new Coord(5, 3), new Coord(3, 5)).get();
 
     it('should not create a move outside of the board', () => {
         expect(LinesOfActionMove.from(new Coord(-1, 5), new Coord(3, 5))).toEqual(MGPFallible.failure('start coord is not in range'));
@@ -30,7 +22,7 @@ describe('LinesOfActionMove', () => {
     describe('toString', () => {
 
         it('should be defined', () => {
-            expect(move.toString()).toEqual('LinesOfActionMove((5, 3)->(3, 5))');
+            expect(someMove.toString()).toEqual('LinesOfActionMove((5, 3)->(3, 5))');
         });
 
     });
@@ -38,17 +30,17 @@ describe('LinesOfActionMove', () => {
     describe('equal', () => {
 
         it('should consider a move equal to itself', () => {
-            expect(move.equals(move)).toBeTrue();
+            expect(someMove.equals(someMove)).toBeTrue();
         });
 
         it('should not consider equal moves with different starting coordinate', () => {
             const move2: LinesOfActionMove = LinesOfActionMove.from(new Coord(2, 4), new Coord(3, 5)).get();
-            expect(move.equals(move2)).toBeFalse();
+            expect(someMove.equals(move2)).toBeFalse();
         });
 
         it('should not consider equal moves with different end coordinate', () => {
             const move2: LinesOfActionMove = LinesOfActionMove.from(new Coord(5, 3), new Coord(6, 4)).get();
-            expect(move.equals(move2)).toBeFalse();
+            expect(someMove.equals(move2)).toBeFalse();
         });
 
     });
@@ -56,6 +48,7 @@ describe('LinesOfActionMove', () => {
     it('should have a bijective encoder', () => {
         const moves: LinesOfActionMove[] = [
             LinesOfActionMove.from(new Coord(5, 3), new Coord(6, 4)).get(),
+            someMove,
         ];
         for (const move of moves) {
             EncoderTestUtils.expectToBeBijective(LinesOfActionMove.encoder, move);
