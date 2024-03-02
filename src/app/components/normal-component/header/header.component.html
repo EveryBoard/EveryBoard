@@ -41,11 +41,11 @@
                id="currentGameLink"
                class="navbar-item"
                (click)="navigateToPart()">
-                <ng-container *ngIf="currentGame.get().role === 'Observer' || currentGame.get().role === 'Candidate' else activeUser" i18n>{{ currentGame.get().typeGame }} by {{ currentGame.get().opponent?.name }}</ng-container>
+                <ng-container *ngIf="currentGame.get().role === 'Observer' || currentGame.get().role === 'Candidate' else activeUser" i18n>{{ currentGameName() }} by {{ currentGame.get().opponent?.name }}</ng-container>
                 <ng-template #activeUser>
-                    <ng-container *ngIf="currentGame.get().opponent else waitingForOpponent" i18n>{{ currentGame.get().typeGame }} against {{ currentGame.get().opponent?.name }}</ng-container>
+                    <ng-container *ngIf="currentGame.get().opponent else waitingForOpponent" i18n>{{ currentGameName() }} against {{ currentGame.get().opponent?.name }}</ng-container>
                     <ng-template #waitingForOpponent>
-                        <ng-container i18n>{{ currentGame.get().typeGame }} (waiting for opponent)</ng-container>
+                        <ng-container i18n>{{ currentGameName() }} (waiting for opponent)</ng-container>
                     </ng-template>
                 </ng-template>
             </a>

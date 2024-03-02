@@ -4,6 +4,7 @@ import { FirestoreTime } from './Time';
 import { MinimalUser } from './MinimalUser';
 import { FirestoreDocument } from '../dao/FirestoreDAO';
 import { MGPOptional } from '../utils/MGPOptional';
+import { GameInfo } from '../components/normal-component/pick-game/pick-game.component';
 
 export type Part = {
     readonly typeGame: string; // the type of game
@@ -83,6 +84,9 @@ export class PartDocument implements FirestoreDocument<Part> {
     }
     public getTurn(): number {
         return this.data.turn;
+    }
+    public gameName(): string {
+        return GameInfo.getByUrlName(this.data.typeGame).get().name;
     }
     public isHardDraw(): boolean {
         return this.data.result === MGPResult.HARD_DRAW.value;
