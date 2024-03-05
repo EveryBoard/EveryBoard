@@ -4,10 +4,9 @@ import { Injectable } from '@angular/core';
 import { FirestoreDocument, FirestoreDAO } from '../FirestoreDAO';
 import { FirestoreJSONObject } from 'src/app/utils/utils';
 import { FirestoreCollectionObserver } from '../FirestoreCollectionObserver';
-import { setupEmulators } from 'src/app/utils/tests/TestUtils.spec';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import * as Firestore from '@angular/fire/firestore';
 import { Subscription } from 'rxjs';
+import { setupEmulators } from 'src/app/utils/tests/TestUtils.spec';
 
 type Foo = {
     value: string,
@@ -19,8 +18,8 @@ type Foo = {
 })
 class FooDAO extends FirestoreDAO<Foo> {
 
-    public constructor(firestore: Firestore.Firestore) {
-        super('foo', firestore);
+    public constructor() {
+        super('foo');
     }
 }
 

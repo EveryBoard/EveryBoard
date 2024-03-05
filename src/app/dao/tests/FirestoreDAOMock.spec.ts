@@ -7,7 +7,7 @@ import { FirestoreCollectionObserver } from '../FirestoreCollectionObserver';
 import { FirestoreCondition, FirestoreDocument, IFirestoreDAO } from '../FirestoreDAO';
 import { MGPMap } from 'src/app/utils/MGPMap';
 import { ObservableSubject } from 'src/app/utils/tests/ObservableSubject.spec';
-import { FieldValue, UpdateData } from '@angular/fire/firestore';
+import { FieldValue, UpdateData } from '@firebase/firestore';
 import { Timestamp } from 'firebase/firestore';
 
 type DocumentSubject<T> = ObservableSubject<MGPOptional<FirestoreDocument<T>>>;
