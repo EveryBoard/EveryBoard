@@ -8,6 +8,7 @@ import { Tutorial, TutorialStep } from '../../components/wrapper-components/tuto
 import { GipfCapture } from 'src/app/jscaip/GipfProjectHelper';
 import { GipfRules } from './GipfRules';
 import { TutorialStepMessage } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
+import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 
 const N: FourStatePiece = FourStatePiece.UNREACHABLE;
 const _: FourStatePiece = FourStatePiece.EMPTY;
@@ -66,7 +67,7 @@ export class GipfTutorial extends Tutorial {
                 [X, _, _, _, _, _, N],
                 [_, _, _, X, _, N, N],
                 [_, _, _, X, N, N, N],
-            ], 42, [8, 8], [0, 0]),
+            ], 42, PlayerNumberMap.of(8, 8), PlayerNumberMap.of(0, 0)),
             [new GipfMove(
                 new GipfPlacement(new Coord(0, 3), MGPOptional.of(HexaDirection.RIGHT)),
                 [],
@@ -99,7 +100,7 @@ export class GipfTutorial extends Tutorial {
                 [_, _, _, O, _, _, N],
                 [_, _, _, O, _, N, N],
                 [_, _, _, X, N, N, N],
-            ], 42, [8, 4], [2, 3]),
+            ], 42, PlayerNumberMap.of(8, 4), PlayerNumberMap.of(2, 3)),
             [new GipfMove(
                 new GipfPlacement(new Coord(0, 3), MGPOptional.of(HexaDirection.RIGHT)),
                 [],
@@ -132,7 +133,7 @@ export class GipfTutorial extends Tutorial {
                 [_, _, _, O, _, _, N],
                 [O, O, O, X, X, N, N],
                 [_, _, _, O, N, N, N],
-            ], 42, [3, 4], [2, 3]),
+            ], 42, PlayerNumberMap.of(3, 4), PlayerNumberMap.of(2, 3)),
             [
                 new GipfMove(
                     new GipfPlacement(new Coord(3, 6), MGPOptional.of(HexaDirection.UP)),

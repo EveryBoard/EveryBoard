@@ -3,16 +3,16 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { PlayerOrNone } from 'src/app/jscaip/Player';
 import { PenteMove } from './PenteMove';
 import { PenteState } from './PenteState';
-import { GobanConfig } from 'src/app/jscaip/GobanConfig';
 import { PenteRules } from './PenteRules';
 import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { TutorialStepMessage } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
+import { PenteConfig } from './PenteConfig';
 
 const _: PlayerOrNone = PlayerOrNone.NONE;
 const O: PlayerOrNone = PlayerOrNone.ZERO;
 const X: PlayerOrNone = PlayerOrNone.ONE;
-const defaultConfig: MGPOptional<GobanConfig> = PenteRules.get().getDefaultRulesConfig();
+const defaultConfig: MGPOptional<PenteConfig> = PenteRules.get().getDefaultRulesConfig();
 
 export class PenteTutorial extends Tutorial {
     public tutorial: TutorialStep[] = [

@@ -15,13 +15,14 @@ import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { MCTS } from 'src/app/jscaip/AI/MCTS';
 import { ConspirateursMoveGenerator } from './ConspirateursMoveGenerator';
 import { ConspirateursJumpMinimax } from './ConspirateursJumpMinimax';
+import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 
 interface ViewInfo {
     boardInfo: SquareInfo[][],
     dropPhase: boolean,
     victory: Coord[],
     lastMoveArrow: string,
-    sidePieces: [number, number],
+    sidePieces: PlayerNumberMap,
 }
 
 interface SquareInfo {
@@ -53,7 +54,7 @@ export class ConspirateursComponent extends GameComponent<ConspirateursRules, Co
         boardInfo: [],
         victory: [],
         lastMoveArrow: '',
-        sidePieces: [20, 20],
+        sidePieces: PlayerNumberMap.of(20, 20),
     };
     private selected: MGPOptional<Coord> = MGPOptional.empty();
 

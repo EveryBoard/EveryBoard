@@ -19,7 +19,7 @@ import { MCTS } from 'src/app/jscaip/AI/MCTS';
 import { Minimax } from 'src/app/jscaip/AI/Minimax';
 import { YinshScoreHeuristic } from './YinshScoreHeuristic';
 import { YinshMoveGenerator } from './YinshMoveGenerator';
-import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
+import { PlayerMap, PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 interface SpaceInfo {
@@ -43,8 +43,8 @@ interface ViewInfo {
     ringOuterSize: number,
     ringMidSize: number,
     ringInnerSize: number,
-    sideRings: [number, number],
-    sideRingClass: [string, string],
+    sideRings: PlayerNumberMap,
+    sideRingClass: PlayerMap<string>,
 }
 
 @Component({
@@ -99,8 +99,8 @@ export class YinshComponent extends HexagonalGameComponent<YinshRules,
         ringMidSize: YinshComponent.RING_MID_SIZE,
         ringInnerSize: YinshComponent.RING_INNER_SIZE,
         indicatorSize: YinshComponent.INDICATOR_SIZE,
-        sideRings: [5, 5],
-        sideRingClass: ['player0-stroke', 'player1-stroke'],
+        sideRings: PlayerNumberMap.of(5, 5),
+        sideRingClass: PlayerMap.ofValues('player0-stroke', 'player1-stroke'),
     };
 
     public constructor(messageDisplayer: MessageDisplayer) {
@@ -148,9 +148,7 @@ export class YinshComponent extends HexagonalGameComponent<YinshRules,
             this.setRingInfo(coord, piece);
             this.setMarkerInfo(coord, piece);
         });
-        for (const player of Player.PLAYERS) {
-            this.viewInfo.sideRings[player.getValue()] = this.constructedState.sideRings.get(player);
-        }
+        this.viewInfo.sideRings = this.constructedState.sideRings;
         this.showCurrentMoveCaptures();
 
         this.viewInfo.targets = [];
@@ -397,12 +395,12 @@ export class YinshComponent extends HexagonalGameComponent<YinshRules,
 
     private markRemovedMarker(coord: Coord, player: Player): void {
         this.viewInfo.spaceInfo[coord.y][coord.x].removedClass = 'semi-transparent';
-        this.setMarkerInfo(coord, YinshPiece.MARKERS.get(player).get());
+        this.setMarkerInfo(coord, YinshPiece.MARKERS.get(player));
     }
 
     private markRemovedRing(coord: Coord, player: Player): void {
         this.viewInfo.spaceInfo[coord.y][coord.x].removedClass = 'semi-transparent';
-        this.setRingInfo(coord, YinshPiece.RINGS.get(player).get());
+        this.setRingInfo(coord, YinshPiece.RINGS.get(player));
     }
 
     private async selectRing(coord: Coord): Promise<MGPValidation> {
@@ -480,7 +478,7 @@ export class YinshComponent extends HexagonalGameComponent<YinshRules,
             this.cancelMoveAttempt();
             return MGPValidation.SUCCESS;
         }
-        const currentPlayerRing: YinshPiece = YinshPiece.RINGS.get(this.getState().getCurrentPlayer()).get();
+        const currentPlayerRing: YinshPiece = YinshPiece.RINGS.get(this.getState().getCurrentPlayer());
         if (this.constructedState.getPieceAt(coord) === currentPlayerRing) {
             this.cancelMoveAttempt();
             return this.selectMoveStart(coord);

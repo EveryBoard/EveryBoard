@@ -59,7 +59,9 @@ export class ConnectSixComponent extends GobanGameComponent<ConnectSixRules,
         this.lastMoved = [];
     }
 
-    public async onClick(x: number, y: number): Promise<MGPValidation> {
+    public async onClick(coord: Coord): Promise<MGPValidation> {
+        const x: number = coord.x;
+        const y: number = coord.y;
         const clickValidity: MGPValidation = await this.canUserPlay('#click_' + x + '_' + y);
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());

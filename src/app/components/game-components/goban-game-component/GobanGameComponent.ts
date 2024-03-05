@@ -34,7 +34,4 @@ export abstract class GobanGameComponent<R extends SuperRules<M, S, C, L>,
         this.hoshis = GobanUtils.getHoshis(width, height);
     }
 
-    public isHoshi(x: number, y: number): boolean {
-        return this.hoshis.some((c: Coord): boolean => c.x === x && c.y === y);
-    }
 }

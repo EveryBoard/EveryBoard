@@ -106,8 +106,8 @@ export class PartCreationComponent implements OnInit, OnDestroy {
     private lastToken: Timestamp;
     private selfSubscription: Subscription = new Subscription();
 
-    private configRoomSubscription: Subscription = new Subscription();
-    private candidatesSubscription: Subscription = new Subscription();
+    private configRoomSubscription: Subscription = Subscription.EMPTY;
+    private candidatesSubscription: Subscription = Subscription.EMPTY;
 
     public configFormGroup: FormGroup;
 
@@ -159,7 +159,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         const role: UserRoleInPart = this.getUserRoleInPart(configRoom);
         const currentGame: CurrentGame = {
             id: this.partId,
-            opponent: this.getOpponent(),
+            opponent: this.getOpponent(configRoom),
             typeGame: this.getGameUrlName(),
             role,
         };
@@ -175,27 +175,30 @@ export class PartCreationComponent implements OnInit, OnDestroy {
             return 'Candidate';
         }
     }
-    private getOpponent(): MinimalUser | null {
+    private getOpponent(configRoom: ConfigRoom): MinimalUser | null {
         let userOrUndefined: MinimalUser | null = null;
-        if (this.connectedUserService.user.get().id === this.currentConfigRoom?.creator.id) {
-            userOrUndefined = this.currentConfigRoom.chosenOpponent;
+        if (this.connectedUserService.user.get().id === configRoom.creator.id) {
+            userOrUndefined = configRoom.chosenOpponent;
         } else {
-            userOrUndefined = Utils.getNonNullable(this.currentConfigRoom?.creator);
+            userOrUndefined = configRoom.creator;
         }
         return userOrUndefined;
     }
     private subscribeToConfigRoomDoc(): void {
-        const configRoomCallback: (configRoom: MGPOptional<ConfigRoom>) => void =
-            async(configRoom: MGPOptional<ConfigRoom>) => {
-                await this.onCurrentConfigRoomUpdate(configRoom);
-            };
         const candidatesCallback: (candidates: MinimalUser[]) => void = async(candidates: MinimalUser[]) => {
             await this.onCandidatesUpdate(candidates);
         };
+        const configRoomCallback: (configRoom: MGPOptional<ConfigRoom>) => void =
+            async(configRoom: MGPOptional<ConfigRoom>) => {
+                await this.onCurrentConfigRoomUpdate(configRoom);
+                if (configRoom.isPresent() && this.candidatesSubscription === Subscription.EMPTY) {
+                    // We want to subscribe to candidates AFTER receiving a first config room
+                    this.candidatesSubscription =
+                        this.configRoomService.subscribeToCandidates(this.partId, candidatesCallback);
+                }
+            };
         this.configRoomSubscription =
             this.configRoomService.subscribeToChanges(this.partId, configRoomCallback);
-        this.candidatesSubscription =
-            this.configRoomService.subscribeToCandidates(this.partId, candidatesCallback);
     }
     private getForm(name: string): AbstractControl {
         return Utils.getNonNullable(this.configFormGroup.get(name));
@@ -233,8 +236,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
                 this.viewInfo.firstPlayer = firstPlayer;
             });
     }
-    private updateViewInfo(): void {
-        const configRoom: ConfigRoom = Utils.getNonNullable(this.currentConfigRoom);
+    private updateViewInfo(configRoom: ConfigRoom): void {
         const authUser: AuthUser = this.connectedUserService.user.get();
 
         this.viewInfo.canReviewConfig = configRoom.partStatus === PartStatus.CONFIG_PROPOSED.value;
@@ -335,31 +337,30 @@ export class PartCreationComponent implements OnInit, OnDestroy {
             Debug.display('PartCreationComponent', 'onCurrentConfigRoomUpdate', 'LAST UPDATE : the game is cancelled');
             return this.onGameCanceled();
         } else {
+            const oldConfigRoom: ConfigRoom | null = this.currentConfigRoom;
             const configRoom: ConfigRoom = configRoomOpt.get();
+            this.currentConfigRoom = configRoom;
             if (this.rulesConfig.isAbsent()) {
                 this.rulesConfig = MGPOptional.of(configRoom.rulesConfig);
             }
-            if (this.chosenOpponentJustLeft(configRoom) &&
+            if (this.chosenOpponentJustLeft(oldConfigRoom, configRoom) &&
                 this.userIsCreator(configRoom))
             {
-                const currentConfigRoom: ConfigRoom = Utils.getNonNullable(this.currentConfigRoom);
-                const userName: string = Utils.getNonNullable(currentConfigRoom.chosenOpponent).name;
+                const userName: string = Utils.getNonNullable(oldConfigRoom?.chosenOpponent).name;
                 this.messageDisplayer.infoMessage($localize`${userName} left the game, please pick another opponent.`);
                 await this.currentGameService.updateCurrentGame({ opponent: null });
             }
-            let currentGameUpdated: boolean = false;
-            if (this.userJustChosenAsOpponent(configRoom)) {
+            if (this.userJustChosenAsOpponent(oldConfigRoom, configRoom) ||
+                this.allUserInterval.isAbsent())
+            {
+                // Only update user doc if we were chosen and we haven't updated the doc yet
                 await this.updateUserDocWithCurrentGame(configRoom);
-                currentGameUpdated = true;
             }
-            this.currentConfigRoom = configRoom;
-            if (this.allUserInterval.isAbsent()) { // Only do it once
-                Utils.assert(currentGameUpdated === false, 'Expected currentGameUpdate to be false at first call of onCurrentConfigRoomUpdate');
-                await this.updateUserDocWithCurrentGame(this.currentConfigRoom);
-                await this.observeNeededPlayers();
+            if (this.allUserInterval.isAbsent()) {
+                await this.observeNeededPlayers(configRoom);
             }
-            this.updateViewInfo();
-            if (this.isGameStarted(this.currentConfigRoom)) {
+            this.updateViewInfo(configRoom);
+            if (this.isGameStarted(configRoom)) {
                 Debug.display('PartCreationComponent', 'onCurrentConfigRoomUpdate', 'the game has started');
                 this.onGameStarted();
             }
@@ -367,21 +368,26 @@ export class PartCreationComponent implements OnInit, OnDestroy {
     }
     private async onCandidatesUpdate(candidates: MinimalUser[]): Promise<void> {
         this.candidates = candidates;
-        this.updateViewInfo();
+        this.updateViewInfo(Utils.getNonNullable(this.currentConfigRoom));
     }
-    private userJustChosenAsOpponent(configRoom: ConfigRoom): boolean {
-        if (this.isGameStarted(configRoom)) return false;
-        const currentUserId: string = this.connectedUserService.user.get().id;
-        const userWasNotChosenOpponent: boolean = this.currentConfigRoom?.chosenOpponent?.id !== currentUserId;
-        const userIsChosenOpponent: boolean = configRoom.chosenOpponent?.id === currentUserId;
-        return userWasNotChosenOpponent && userIsChosenOpponent;
+    private userJustChosenAsOpponent(oldConfigRoom: ConfigRoom | null, configRoom: ConfigRoom): boolean {
+        if (this.isGameStarted(configRoom)) {
+            return false;
+        } else {
+            const currentUserId: string = this.connectedUserService.user.get().id;
+            const userWasNotChosenOpponent: boolean = oldConfigRoom?.chosenOpponent?.id !== currentUserId;
+            const userIsChosenOpponent: boolean = configRoom.chosenOpponent?.id === currentUserId;
+            return userWasNotChosenOpponent && userIsChosenOpponent;
+        }
     }
-    private chosenOpponentJustLeft(newConfigRoom: ConfigRoom): boolean {
-        if (this.currentConfigRoom == null) return false;
-        const currentConfigRoom: ConfigRoom = this.currentConfigRoom;
-        const thereWasAChosenOpponent: boolean = currentConfigRoom.chosenOpponent != null;
-        const thereIsNoLongerChosenOpponent: boolean = newConfigRoom.chosenOpponent == null;
-        return thereWasAChosenOpponent && thereIsNoLongerChosenOpponent;
+    private chosenOpponentJustLeft(oldConfigRoom: ConfigRoom | null, newConfigRoom: ConfigRoom): boolean {
+        if (oldConfigRoom == null) {
+            return false;
+        } else {
+            const thereWasAChosenOpponent: boolean = oldConfigRoom.chosenOpponent != null;
+            const thereIsNoLongerChosenOpponent: boolean = newConfigRoom.chosenOpponent == null;
+            return thereWasAChosenOpponent && thereIsNoLongerChosenOpponent;
+        }
     }
     private async onGameCanceled(): Promise<void> {
         this.messageDisplayer.infoMessage($localize`The game has been canceled!`);
@@ -397,8 +403,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         this.gameStartNotification.emit(configRoom);
         this.gameStarted = true;
     }
-    private async observeNeededPlayers(): Promise<void> {
-        const configRoom: ConfigRoom = Utils.getNonNullable(this.currentConfigRoom);
+    private async observeNeededPlayers(configRoom: ConfigRoom): Promise<void> {
         Utils.assert(this.allUserInterval.isAbsent(), 'Cannot observe players multiple times');
         this.allUserInterval = MGPOptional.of(window.setInterval(async() => {
             const currentTime: Timestamp = this.lastToken;

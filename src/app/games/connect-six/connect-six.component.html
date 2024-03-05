@@ -2,55 +2,30 @@
      width="100%" height="100%"
      [attr.viewBox]="getViewBox().toSVGString()"
      preserveAspectRatio="xMidYMid meet">
-    <rect x="0" y="0"
-          [attr.width]="getState().getWidth() * SPACE_SIZE"
-          [attr.height]="getState().getHeight() * SPACE_SIZE"
-          class="base mid-small-stroke"
-    />
-    <g *ngFor="let line of board; index as y">
-        <g *ngFor="let spaceContent of line; index as x"
-           id="click_{{ x }}_{{ y }}"
-           (click)="onClick(x, y)">
-            <circle *ngIf="spaceContent.isPlayer() else empty"
-                    id="piece_{{ x }}_{{ y }}"
-                    [attr.cx]="(SPACE_SIZE * 0.5) + (SPACE_SIZE * x)"
-                    [attr.cy]="(SPACE_SIZE * 0.5) + (SPACE_SIZE * y)"
-                    [attr.r]="SPACE_SIZE * 0.44"
-                    [ngClass]="getSpaceClass(x, y)"
-                    class="base"
-            />
-            <ng-template #empty>
-                <rect [attr.width]="SPACE_SIZE"
-                      [attr.height]="SPACE_SIZE"
-                      [attr.x]="SPACE_SIZE * x"
-                      [attr.y]="SPACE_SIZE * y"
-                      class="base no-stroke"
-                      fill-opacity="0"
-                />
-                <line [attr.x1]="SPACE_SIZE * x"
-                      [attr.y1]="(SPACE_SIZE * 0.5) + (SPACE_SIZE * y)"
-                      [attr.x2]="SPACE_SIZE + (SPACE_SIZE * x)"
-                      [attr.y2]="(SPACE_SIZE * 0.5) + (SPACE_SIZE * y)"
-                      class="base"
-                />
-                <line [attr.x1]="(SPACE_SIZE * 0.5) + (SPACE_SIZE * x)"
-                      [attr.y1]="SPACE_SIZE * y"
-                      [attr.x2]="(SPACE_SIZE * 0.5) + (SPACE_SIZE * x)"
-                      [attr.y2]="SPACE_SIZE + (SPACE_SIZE * y)"
-                      class="base"
-                />
-                <circle *ngIf="isHoshi(x, y)"
-                        id="hoshi_{{ x }}_{{ y }}"
-                        class="base-no-stroke"
+
+    <g app-blank-goban
+       [width]="getState().getWidth()"
+       [height]="getState().getHeight()"
+       (clickCallBack)="onClick($event)">
+    </g>
+
+    <g id="pieces">
+        <g *ngFor="let line of board; index as y">
+            <g *ngFor="let spaceContent of line; index as x">
+                <circle *ngIf="spaceContent.isPlayer()"
+                        id="piece_{{ x }}_{{ y }}"
                         [attr.cx]="(SPACE_SIZE * 0.5) + (SPACE_SIZE * x)"
                         [attr.cy]="(SPACE_SIZE * 0.5) + (SPACE_SIZE * y)"
-                        [attr.r]="SPACE_SIZE * 0.2" />
-            </ng-template>
+                        [attr.r]="SPACE_SIZE * 0.44"
+                        [ngClass]="getSpaceClass(x, y)"
+                        class="base"
+                />
+            </g>
         </g>
     </g>
     <circle *ngIf="droppedCoord.isPresent()"
             id="dropped"
-            (click)="onClick(droppedCoord.get().x, droppedCoord.get().y)"
+            (click)="onClick(droppedCoord.get())"
             [attr.cx]="(SPACE_SIZE * 0.5) + (SPACE_SIZE * droppedCoord.get().x)"
             [attr.cy]="(SPACE_SIZE * 0.5) + (SPACE_SIZE * droppedCoord.get().y)"
             [attr.r]="SPACE_SIZE * 0.44"

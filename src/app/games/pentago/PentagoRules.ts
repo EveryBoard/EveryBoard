@@ -1,7 +1,7 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { Vector } from 'src/app/jscaip/Vector';
 import { GameNode } from 'src/app/jscaip/AI/GameNode';
-import { PlayerOrNone } from 'src/app/jscaip/Player';
+import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { Rules } from 'src/app/jscaip/Rules';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
@@ -12,6 +12,7 @@ import { PentagoState } from './PentagoState';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 import { Table, TableUtils } from 'src/app/utils/ArrayUtils';
+import { PlayerMap } from 'src/app/jscaip/PlayerMap';
 
 export class PentagoNode extends GameNode<PentagoMove, PentagoState> {}
 
@@ -122,18 +123,18 @@ export class PentagoRules extends Rules<PentagoMove, PentagoState> {
     public getGameStatus(node: PentagoNode): GameStatus {
         const state: PentagoState = node.gameState;
         const victoryCoords: Coord[] = this.getVictoryCoords(state);
-        const victoryFound: [boolean, boolean] = [false, false];
+        const victoryFound: PlayerMap<boolean> = PlayerMap.ofValues(false, false);
         for (let i: number = 0; i < victoryCoords.length; i += 5) {
-            victoryFound[state.getPieceAt(victoryCoords[i]).getValue()] = true;
+            victoryFound.put(state.getPieceAt(victoryCoords[i]) as Player, true);
         }
-        if (victoryFound[0] === true) {
-            if (victoryFound[1] === true) {
+        if (victoryFound.get(Player.ZERO) === true) {
+            if (victoryFound.get(Player.ONE) === true) {
                 return GameStatus.DRAW;
             } else {
                 return GameStatus.ZERO_WON;
             }
         }
-        if (victoryFound[1] === true) {
+        if (victoryFound.get(Player.ONE) === true) {
             return GameStatus.ONE_WON;
         }
         if (state.turn === PentagoState.SIZE * PentagoState.SIZE) {

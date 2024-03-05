@@ -652,7 +652,7 @@ describe('PartCreationComponent', () => {
                 await chatDAO.set('configRoomId', { messages: [], status: 'dummy status' });
             }));
             it('should unsubscribe from configRoom upon destruction', fakeAsync(async() => {
-                // Given a component that is loaded by anyone (here, the creator)
+                // Given a component that is loaded by anyone (here, the creator) for a started part
                 const expectConfigRoomUnsubscribeToHaveBeenCalled: () => void =
                     prepareUnsubscribeCheck(configRoomService, 'subscribeToChanges');
                 const expectCandidateUnsubscribeToHaveBeenCalled: () => void =
