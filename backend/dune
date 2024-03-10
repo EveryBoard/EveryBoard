@@ -13,7 +13,7 @@
 
 (tests
  (names tests)
- (modules Tests TestUtils AuthTests JwtTests GoogleCertificatesTests TokenRefresherTests FirestoreTests FirestorePrimitivesTests IntegrationTests DomainTests ExternalTests StatsTests UtilsTests CorsTests ConfigRoomTests)
+ (modules Tests TestUtils AuthTests JwtTests GoogleCertificatesTests TokenRefresherTests FirestoreTests FirestorePrimitivesTests IntegrationTests DomainTests ExternalTests StatsTests UtilsTests CorsTests ConfigRoomTests GameTests)
  (preprocess (pps lwt_ppx ppx_deriving_yojson ppx_deriving.show))
  (libraries backend alcotest alcotest-lwt))
 

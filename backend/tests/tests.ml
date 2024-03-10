@@ -14,7 +14,7 @@ let () =
     AuthTests.tests;
     CorsTests.tests;
     ConfigRoomTests.tests;
-    (* TODO: GameTests.tests *)
+    GameTests.tests;
     (* TODO: server tests *)
   ]
 
