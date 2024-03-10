@@ -69,7 +69,7 @@ module Make
     (* Write 1: accept the config room *)
     let* _ = Firestore.ConfigRoom.accept request game_id in
     let now = External.now_ms () in
-    let starting_config = Domain.Game.Updates.Start.get config_room now in
+    let starting_config = Domain.Game.Updates.Start.get config_room now External.rand_bool in
     let accepter = Auth.get_minimal_user request in
     (* Write 2: start the game *)
     let* _ = Firestore.Game.update request game_id (Domain.Game.Updates.Start.to_yojson starting_config) in
@@ -111,8 +111,8 @@ module Make
       match action with
       | "propose" -> propose_config request game_id
       | "selectOpponent" -> select_opponent request game_id
-      | "reviewConfig" -> review_config request game_id
-      | "acceptConfig" -> accept_config request game_id
+      | "review" -> review_config request game_id
+      | "accept" -> accept_config request game_id
       | "reviewConfigAndRemoveOpponent" -> review_config_and_remove_opponent request game_id
       | _ -> raise (BadInput "Unknown action")
 

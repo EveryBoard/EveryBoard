@@ -137,6 +137,13 @@ module ConfigRoom = struct
         rules_config: JSON.t [@key "rulesConfig"];
       }
       [@@deriving yojson]
+
+      let of_yojson (json : JSON.t) : (t, string) result =
+        match of_yojson json with
+        | Ok config when config.game_status = ConfigProposed ->
+          Ok config
+        | Ok _ -> Error "invalid config proposal update: game_status must be ConfigProposed"
+        | Error err -> Error err
     end
   end
 
@@ -195,10 +202,10 @@ module Game = struct
       }
       [@@deriving yojson]
 
-      let get (config_room : ConfigRoom.t) (now : int) : t =
+      let get (config_room : ConfigRoom.t) (now : int) (rand_bool : unit -> bool) : t =
         let starter = match config_room.first_player with
           | Random ->
-            if Random.bool ()
+            if rand_bool ()
             then ConfigRoom.FirstPlayer.Creator
             else ConfigRoom.FirstPlayer.ChosenPlayer
           | first -> first in
@@ -381,8 +388,8 @@ module Game = struct
     score_player_one = None;
   }
 
-  let rematch (game_name : string) (config_room : ConfigRoom.t) (now : int) : t =
-    let starting = Updates.Start.get config_room now in
+  let rematch (game_name : string) (config_room : ConfigRoom.t) (now : int) (rand_bool : unit -> bool) : t =
+    let starting = Updates.Start.get config_room now rand_bool in
     let initial_game = initial game_name config_room.creator in
     { initial_game with
       player_zero = starting.player_zero;

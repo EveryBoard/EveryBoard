@@ -165,7 +165,7 @@ module Make
     let rematch_config_room =
       ConfigRoom.rematch config_room first_player creator chosen_opponent in
     let now = External.now_ms () in
-    let rematch_game = Game.rematch game.type_game rematch_config_room now in
+    let rematch_game = Game.rematch game.type_game rematch_config_room now External.rand_bool in
     (* Write 1: create the rematch game *)
     let* rematch_id = Firestore.Game.create request rematch_game in
     let user = Auth.get_minimal_user request in

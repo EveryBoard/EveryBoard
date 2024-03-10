@@ -337,7 +337,7 @@ let tests = [
           first_player = ConfigRoom.FirstPlayer.Creator;
         } in
         (* When creating the rematch game *)
-        let actual = Game.rematch "P4" config_room 42 in
+        let actual = Game.rematch "P4" config_room 42 ExternalTests.Mock.rand_bool in
         (* Then it should have updated the fields as expected *)
         let expected = {
           (Game.initial "P4" a_minimal_user) with

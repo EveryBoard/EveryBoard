@@ -4,9 +4,14 @@ open Utils
 open TestUtils
 
 type call =
+  | DeleteGame of string
+  | UpdateGame of string * JSON.t
+  | AddEvent of string * JSON.t
+
   | AddCandidate of string * Domain.MinimalUser.t
   | RemoveCandidate of string * string
   | UpdateConfigRoom of string * JSON.t
+  | AcceptConfig of string
 [@@deriving show]
 
 let call : call testable =
@@ -33,6 +38,8 @@ module Mock : MOCK = struct
 
   let calls : call list ref = ref []
   let clear_calls () = calls := []
+  let record_call (call : call) : unit =
+    calls := !calls @ [call]
 
   module User = struct
     let get _  _ =
@@ -46,8 +53,12 @@ module Mock : MOCK = struct
     let get_name _ _ = failwith "TODO"
     let create _ _ = failwith "TODO"
     let delete _ _ = failwith "TODO"
-    let update _ _ _ = failwith "TODO"
-    let add_event _ _ _ = failwith "TODO"
+    let update _ game_id update =
+      record_call (UpdateGame (game_id, update));
+      Lwt.return ()
+    let add_event _ game_id event =
+      record_call (AddEvent (game_id, Domain.Game.Event.to_yojson event));
+      Lwt.return ()
   end
 
   module ConfigRoom = struct
@@ -60,14 +71,16 @@ module Mock : MOCK = struct
     let create _ _ _ = failwith "TODO"
     let delete _ _ = failwith "TODO"
     let add_candidate _ game_id user =
-      calls := AddCandidate (game_id, user) :: !calls;
+      record_call (AddCandidate (game_id, user));
       Lwt.return ()
     let remove_candidate _ game_id uid =
-      calls := RemoveCandidate (game_id, uid) :: !calls;
+      record_call (RemoveCandidate (game_id, uid));
       Lwt.return ()
-    let accept _ _ = failwith "TODO"
+    let accept _ game_id =
+      record_call (AcceptConfig game_id);
+      Lwt.return ()
     let update _ game_id update =
-      calls := UpdateConfigRoom (game_id, update) :: !calls;
+      record_call (UpdateConfigRoom (game_id, update));
       Lwt.return ()
   end
 

@@ -112,7 +112,7 @@ export class BackendService {
 
     /** Accept a game config */
     public async acceptConfig(gameId: string): Promise<void> {
-        const endpoint: string = `config-room/${gameId}?action=acceptConfig`;
+        const endpoint: string = `config-room/${gameId}?action=accept`;
         const result: MGPFallible<Response> = await this.performRequest('POST', endpoint);
         this.assertSuccess(result);
     }
@@ -270,7 +270,7 @@ export class BackendService {
 
     /** Review a config proposed to the opponent */
     public async reviewConfig(gameId: string): Promise<void> {
-        const endpoint: string = `config-room/${gameId}?action=reviewConfig`;
+        const endpoint: string = `config-room/${gameId}?action=review`;
         const result: MGPFallible<Response> = await this.performRequest('POST', endpoint);
         this.assertSuccess(result);
     }
