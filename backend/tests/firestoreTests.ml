@@ -4,14 +4,20 @@ open Utils
 open TestUtils
 
 type call =
+  | CreateGame of JSON.t
   | DeleteGame of string
   | UpdateGame of string * JSON.t
   | AddEvent of string * JSON.t
 
+  | CreateConfigRoom of string * JSON.t
+  | DeleteConfigRoom of string
   | AddCandidate of string * Domain.MinimalUser.t
   | RemoveCandidate of string * string
   | UpdateConfigRoom of string * JSON.t
   | AcceptConfig of string
+
+  | CreateChat of string
+  | DeleteChat of string
 [@@deriving show]
 
 let call : call testable =
@@ -25,6 +31,11 @@ module type MOCK = sig
 
   val calls : call list ref
   val clear_calls : unit -> unit
+
+  module Game : sig
+    include module type of Game
+    val set : Domain.Game.t -> unit
+  end
 
   module ConfigRoom : sig
     include module type of ConfigRoom
@@ -49,10 +60,19 @@ module Mock : MOCK = struct
   end
 
   module Game = struct
-    let get _ _ = failwith "TODO"
-    let get_name _ _ = failwith "TODO"
-    let create _ _ = failwith "TODO"
-    let delete _ _ = failwith "TODO"
+    let game : Domain.Game.t option ref = ref None
+    let set new_game =
+      game := Some new_game
+    let get _ _ =
+      Lwt.return (Option.get !game)
+    let get_name _ _ =
+      Lwt.return (Option.get !game).type_game
+    let create _ game =
+      record_call (CreateGame (Domain.Game.to_yojson game));
+      Lwt.return "game_id"
+    let delete _ game_id =
+      record_call (DeleteGame game_id);
+      Lwt.return ()
     let update _ game_id update =
       record_call (UpdateGame (game_id, update));
       Lwt.return ()
@@ -68,8 +88,12 @@ module Mock : MOCK = struct
     let get _ _ =
       Lwt.return (Option.get !config_room)
 
-    let create _ _ _ = failwith "TODO"
-    let delete _ _ = failwith "TODO"
+    let create _ game_id config_room =
+      record_call (CreateConfigRoom (game_id, Domain.ConfigRoom.to_yojson config_room));
+      Lwt.return ()
+    let delete _ game_id =
+      record_call (DeleteConfigRoom game_id);
+      Lwt.return ()
     let add_candidate _ game_id user =
       record_call (AddCandidate (game_id, user));
       Lwt.return ()
@@ -85,8 +109,12 @@ module Mock : MOCK = struct
   end
 
   module Chat = struct
-    let create _ _ = failwith "TODO"
-    let delete _ _ = failwith "TODO"
+    let create _ game_id =
+      record_call (CreateChat game_id);
+      Lwt.return ()
+    let delete _ game_id =
+      record_call (DeleteChat game_id);
+      Lwt.return ()
   end
 
 end
