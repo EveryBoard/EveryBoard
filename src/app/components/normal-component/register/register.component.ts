@@ -5,7 +5,7 @@ import { ConnectedUserService } from 'src/app/services/ConnectedUserService';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { faEye, IconDefinition } from '@fortawesome/free-solid-svg-icons';
-import * as FireAuth from '@angular/fire/auth';
+import * as FireAuth from '@firebase/auth';
 
 @Component({
     selector: 'app-register',
