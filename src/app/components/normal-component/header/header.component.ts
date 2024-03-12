@@ -62,7 +62,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
         this.currentGameSubscription.unsubscribe();
     }
 
-    public currentGameName(): string {
+    public getCurrentGameName(): string {
         return GameInfo.getByUrlName(this.currentGame.get().typeGame).get().name;
     }
 }

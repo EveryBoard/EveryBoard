@@ -85,7 +85,7 @@ export class PartDocument implements FirestoreDocument<Part> {
     public getTurn(): number {
         return this.data.turn;
     }
-    public gameName(): string {
+    public getGameName(): string {
         return GameInfo.getByUrlName(this.data.typeGame).get().name;
     }
     public isHardDraw(): boolean {

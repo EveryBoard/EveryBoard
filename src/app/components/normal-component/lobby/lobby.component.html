@@ -29,7 +29,7 @@
                 <tr *ngFor="let part of activeParts; index as i"
                     id="part_{{ i }}"
                     (click)="joinGame(part)">
-                    <td class="td gameName">{{ part.gameName() }}</td>
+                    <td class="td gameName">{{ part.getGameName() }}</td>
                     <td class="td">{{ part.data.playerZero.name }}</td>
                     <td class="td">
                         <ng-container *ngIf="part.data.playerOne else waitingForOpponent">{{ part.data.playerOne.name }}</ng-container>
