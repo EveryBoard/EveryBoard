@@ -3,7 +3,6 @@ import { MGPOptional } from '../utils/MGPOptional';
 import * as Firestore from '@firebase/firestore';
 import { FirestoreCollectionObserver } from './FirestoreCollectionObserver';
 import { Subscription } from 'rxjs';
-import { Injectable } from '@angular/core';
 
 export interface FirestoreDocument<T> {
     id: string

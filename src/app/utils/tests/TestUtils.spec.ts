@@ -33,9 +33,6 @@ import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
 import { ErrorLoggerServiceMock } from 'src/app/services/tests/ErrorLoggerServiceMock.spec';
 import { AbstractGameComponent } from 'src/app/components/game-components/game-component/GameComponent';
 import { findMatchingRoute } from 'src/app/app.module.spec';
-import * as Firebase from '@firebase/app';
-import * as Firestore from '@firebase/firestore';
-import * as Auth from '@firebase/auth';
 import { HumanDurationPipe } from 'src/app/pipes-and-directives/human-duration.pipe';
 import { AutofocusDirective } from 'src/app/pipes-and-directives/autofocus.directive';
 import { ToggleVisibilityDirective } from 'src/app/pipes-and-directives/toggle-visibility.directive';
@@ -50,7 +47,6 @@ import { GameInfo } from 'src/app/components/normal-component/pick-game/pick-gam
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { Player } from 'src/app/jscaip/Player';
 import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
-import { environment } from 'src/environments/environment';
 
 @Component({})
 export class BlankComponent {}
