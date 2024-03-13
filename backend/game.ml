@@ -86,18 +86,20 @@ module Make
     let* game = Firestore.Game.get request game_id in
     let minimal_user = Auth.get_minimal_user request in
     let player_zero = game.player_zero in
-    let player_one = Option.get game.player_one in
-    let winner = if minimal_user = game.player_zero then player_one else player_zero in
-    let loser = minimal_user in
-    let update = Game.Updates.End.get ~winner ~loser Game.GameResult.Resign game.turn in
-    (* Write 1: end the game  *)
-    let* _ = Firestore.Game.update request game_id (Game.Updates.End.to_yojson update) in
-    let resigner = Auth.get_minimal_user request in
-    let now = External.now_ms () in
-    (* Write 2: add the end action *)
-    let game_end = Game.Event.(Action (Action.end_game resigner now)) in
-    let* _ = Firestore.Game.add_event request game_id game_end in
-    Dream.empty `OK
+    match game.player_one with
+    | None -> raise (BadInput "game has no opponent")
+    | Some player_one ->
+      let winner = if minimal_user = game.player_zero then player_one else player_zero in
+      let loser = minimal_user in
+      let update = Game.Updates.End.get ~winner ~loser Game.GameResult.Resign game.turn in
+      (* Write 1: end the game  *)
+      let* _ = Firestore.Game.update request game_id (Game.Updates.End.to_yojson update) in
+      let resigner = Auth.get_minimal_user request in
+      let now = External.now_ms () in
+      (* Write 2: add the end action *)
+      let game_end = Game.Event.(Action (Action.end_game resigner now)) in
+      let* _ = Firestore.Game.add_event request game_id game_end in
+      Dream.empty `OK
 
   (** End the game by a timeout from one player. Perform 1 read and 2 writes. *)
   let notify_timeout (request : Dream.request) (game_id : string) (winner : MinimalUser.t) (loser : MinimalUser.t) =

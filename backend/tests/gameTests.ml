@@ -176,6 +176,61 @@ let tests = [
             let* _ = handler request in
             Lwt.return ())
       );
-  ]
+  ];
+
+  "Game.routes POST game/:game-id?action=resign", [
+    lwt_test "should resign from the game" (fun () ->
+        FirestoreTests.Mock.clear_calls ();
+        AuthTests.Mock.set DomainTests.a_minimal_user.id DomainTests.a_user;
+        let now = 42 in
+        ExternalTests.Mock.current_time := now;
+
+        (* Given a game with an opponent *)
+        let game_id = "game_id" in
+        let game = {
+          (Domain.Game.initial "P4" DomainTests.a_minimal_user) with
+          player_one = Some DomainTests.another_minimal_user
+        } in
+        FirestoreTests.Mock.Game.set game;
+
+        (* When resigning from it *)
+        let target = Printf.sprintf "game/%s?action=resign" game_id in
+        let request = Dream.request ~method_:`POST ~target "" in
+        let* result = handler request in
+
+        (* Then it should resign from the game *)
+        check status "response status" `OK (Dream.status result);
+        let winner = DomainTests.another_minimal_user in
+        let loser = DomainTests.a_minimal_user in
+        let end_game = Domain.Game.Updates.End.(to_yojson (get ~winner ~loser Domain.Game.GameResult.Resign (-1))) in
+        let end_game_event = Domain.Game.Event.(to_yojson (Action (Action.end_game DomainTests.a_minimal_user (now * 1000)))) in
+        let expected = [
+          FirestoreTests.UpdateGame (game_id, end_game);
+          FirestoreTests.AddEvent (game_id, end_game_event);
+        ] in
+        check (list FirestoreTests.call) "calls" expected !FirestoreTests.Mock.calls;
+        Lwt.return ()
+      );
+
+    lwt_test "should fail when there is no opponent" (fun () ->
+        FirestoreTests.Mock.clear_calls ();
+        AuthTests.Mock.set DomainTests.a_minimal_user.id DomainTests.a_user;
+
+        (* Given a game without an opponent *)
+        let game_id = "game_id" in
+        let game = Domain.Game.initial "P4" DomainTests.a_minimal_user in
+        FirestoreTests.Mock.Game.set game;
+
+        (* When resigning from it *)
+        (* Then it should fail *)
+        lwt_check_raises "failure" ((=) (BadInput "game has no opponent")) (fun () ->
+            let target = Printf.sprintf "game/%s?action=resign" game_id in
+            let request = Dream.request ~method_:`POST ~target "" in
+            let* _ = handler request in
+            Lwt.return ())
+      );
+
+  ];
+
 
 ]
