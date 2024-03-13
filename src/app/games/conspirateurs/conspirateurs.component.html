@@ -3,11 +3,12 @@
      viewBox="-100 0 1915 1715"
      preserveAspectRatio="xMidYMid meet">
     <g *ngFor="let line of viewInfo.boardInfo; index as y">
-        <g *ngFor="let square of line; index as x">
-            <rect id="click_{{ x }}_{{ y }}"
+        <g *ngFor="let square of line; index as x"
+           id="click_{{ x }}_{{ y }}"
+           (click)="onClick(square.coord)">
+            <rect id="space_{{ x }}_{{ y }}"
                   class="base"
-                  [ngClass]="square.squareClasses"
-                  (click)="onClick(square.coord)"
+                  [ngClass]="getSpaceClasses(x, y)"
                   [attr.x]="(SPACE_SIZE * x) + STROKE_WIDTH"
                   [attr.y]="(SPACE_SIZE * y) + STROKE_WIDTH"
                   [attr.width]="SPACE_SIZE"
@@ -15,17 +16,15 @@
             />
             <rect *ngIf="square.isShelter"
                   class="base no-fill mid-stroke"
-                  (click)="onClick(square.coord)"
                   [attr.x]="STROKE_WIDTH * 1.5 + (SPACE_SIZE * square.coord.x) + STROKE_WIDTH"
                   [attr.y]="STROKE_WIDTH * 1.5 + (SPACE_SIZE * square.coord.y) + STROKE_WIDTH"
                   [attr.width]="SPACE_SIZE - STROKE_WIDTH * 3"
                   [attr.height]="SPACE_SIZE - STROKE_WIDTH * 3"
             />
-            <circle *ngIf="square.hasPieceToDraw"
+            <circle *ngIf="hasPieceToDraw(x, y)"
                     id="piece_{{ x }}_{{ y }}"
-                    [ngClass]="square.pieceClasses"
+                    [ngClass]="getPieceClasses(x, y)"
                     class="base"
-                    (click)="onClick(square.coord)"
                     [attr.r]="PIECE_RADIUS"
                     [attr.cx]="(SPACE_SIZE * x) + STROKE_WIDTH + (SPACE_SIZE / 2)"
                     [attr.cy]="(SPACE_SIZE * y) + STROKE_WIDTH + (SPACE_SIZE / 2)"

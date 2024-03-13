@@ -19,6 +19,8 @@ export class ConspirateursNode extends GameNode<ConspirateursMove, Conspirateurs
 
 export class ConspirateursRules extends Rules<ConspirateursMove, ConspirateursState> {
 
+    public static readonly NUMBER_OF_PIECES: number = 40;
+
     private static singleton: MGPOptional<ConspirateursRules> = MGPOptional.empty();
 
     public static get(): ConspirateursRules {
@@ -65,8 +67,8 @@ export class ConspirateursRules extends Rules<ConspirateursMove, ConspirateursSt
 
     public dropLegality(move: ConspirateursMoveDrop, state: ConspirateursState): MGPValidation {
         Utils.assert(state.isOnBoard(move.coord), 'Move out of board');
-        if (40 <= state.turn) {
-            return MGPValidation.failure(ConspirateursFailure.CANNOT_DROP_AFTER_TURN_40());
+        if (ConspirateursRules.NUMBER_OF_PIECES <= state.turn) {
+            return MGPValidation.failure(ConspirateursFailure.CANNOT_DROP_WHEN_OUT_OF_PIECE());
         }
         if (state.getPieceAt(move.coord).isPlayer()) {
             return MGPValidation.failure(RulesFailure.MUST_LAND_ON_EMPTY_SPACE());
@@ -81,8 +83,8 @@ export class ConspirateursRules extends Rules<ConspirateursMove, ConspirateursSt
         const startInRange: boolean = state.isOnBoard(move.getStart());
         const endInRange: boolean = state.isOnBoard(move.getEnd());
         Utils.assert(startInRange && endInRange, 'Move out of board');
-        if (state.turn < 40) {
-            return MGPValidation.failure(ConspirateursFailure.CANNOT_MOVE_BEFORE_TURN_40());
+        if (state.turn < ConspirateursRules.NUMBER_OF_PIECES) {
+            return MGPValidation.failure(ConspirateursFailure.CANNOT_MOVE_BEFORE_DROPPING_ALL_PIECES());
         }
         const startPiece: PlayerOrNone = state.getPieceAt(move.getStart());
         if (startPiece === PlayerOrNone.NONE) {
@@ -103,8 +105,8 @@ export class ConspirateursRules extends Rules<ConspirateursMove, ConspirateursSt
                 return MGPFallible.failure(CoordFailure.OUT_OF_RANGE(coord));
             }
         }
-        if (state.turn < 40) {
-            return MGPValidation.failure(ConspirateursFailure.CANNOT_MOVE_BEFORE_TURN_40());
+        if (state.turn < ConspirateursRules.NUMBER_OF_PIECES) {
+            return MGPValidation.failure(ConspirateursFailure.CANNOT_MOVE_BEFORE_DROPPING_ALL_PIECES());
         }
         const startPiece: PlayerOrNone = state.getPieceAt(move.getStartingCoord());
         if (startPiece === PlayerOrNone.NONE) {

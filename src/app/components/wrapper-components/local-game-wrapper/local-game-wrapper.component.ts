@@ -29,7 +29,7 @@ import { MGPFallible } from 'src/app/utils/MGPFallible';
 @Debug.log
 export class LocalGameWrapperComponent extends GameWrapper<string> implements AfterViewInit {
 
-    public static readonly AI_TIMEOUT: number = 1;
+    public static readonly AI_TIMEOUT: number = 3000;
 
     public aiOptions: [string, string] = ['none', 'none'];
 
@@ -93,13 +93,9 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
             await this.setInteractive(true);
             await this.setRole(Player.ZERO);
         }
-        // TODO: test, I might want to update some visual stuff there for sure !!!
         await this.proposeAIToPlay();
     }
-// TODO: Abalone clic dans le vide fait disparaitre le last move mais ne crée pas de move attempt -> ça doit toujours faire l'un ou l'autre
-// TODO: Ba-awa, ne pas authoriser un clic pindin l'animation !!!
-// TODO: ConnectSix cancelling move attempt does not re-show last move !
-// TODO: Diaballik quand un reçois le mouvement adverse, son dernier mouvement est toujours visible
+
     public async onLegalUserMove(move: Move): Promise<void> {
         const config: MGPOptional<RulesConfig> = await this.getConfig();
         this.gameComponent.node = this.gameComponent.rules.choose(this.gameComponent.node, move, config).get();
@@ -133,7 +129,6 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
     }
 
     public async proposeAIToPlay(): Promise<void> {
-        // TODO: should that not be always call at the end of updateWrapper
         const isAISelected: boolean = await this.hasSelectedAI();
         await this.setInteractive(isAISelected === false);
         if (isAISelected) {
@@ -142,6 +137,7 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
             if (playingAI.isPresent()) {
                 window.setTimeout(async() => {
                     await this.doAIMove(playingAI.get().ai, playingAI.get().options);
+                    this.cdr.detectChanges();
                 }, LocalGameWrapperComponent.AI_TIMEOUT);
             }
             // If playingAI is absent, that means the user selected an AI without selecting options yet
@@ -166,7 +162,6 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
     }
 
     private getCurrentAIOption(): MGPOptional<{ ai: AbstractAI, options: AIOptions }> {
-        // TODO ticketter le refactor de isAITurn & all
         const playerIndex: number = this.gameComponent.getTurn() % 2;
         const aiOpt: MGPOptional<AbstractAI> = this.getAI(playerIndex);
         if (aiOpt.isPresent()) {
@@ -214,6 +209,7 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
         const aiMove: Move = playingAI.chooseNextMove(this.gameComponent.node, options, config);
         const nextNode: MGPFallible<AbstractNode> = ruler.choose(this.gameComponent.node, aiMove, config);
         if (nextNode.isSuccess()) {
+            this.gameComponent.hideLastMove();
             this.gameComponent.node = nextNode.get();
             await this.applyNewMove();
             return MGPValidation.SUCCESS;
@@ -224,7 +220,7 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
 
     private async applyNewMove(): Promise<void> {
         const lastMoveWasAI: boolean = this.lastMoveWasAI();
-        await this.showNextMove(lastMoveWasAI); // TODO UNIT TEST
+        await this.showNextMove(lastMoveWasAI);
         await this.updateWrapper();
         await this.proposeAIToPlay();
     }
@@ -274,7 +270,6 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
         await this.gameComponent.updateBoard(false);
         this.endGame = false;
         this.winnerMessage = MGPOptional.empty();
-        // TODO: might want to use the second half of wrapperUpdateBoard here
         await this.proposeAIToPlay();
     }
 
@@ -282,7 +277,7 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
         return 'human';
     }
 
-    public override async onCancelMove(reason?: string): Promise<void> { // TODO DEDUPLICATE SLM call in onCancelMove & gc.cancelMove
+    public override async onCancelMove(reason?: string): Promise<void> {
         await super.onCancelMove(reason);
         if (this.gameComponent.node.previousMove.isPresent()) {
             const move: Move = this.gameComponent.node.previousMove.get();

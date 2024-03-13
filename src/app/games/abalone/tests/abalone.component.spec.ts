@@ -23,7 +23,7 @@ describe('AbaloneComponent', () => {
         testUtils = await ComponentTestUtils.forGame<AbaloneComponent>('Abalone');
     }));
 
-    describe('First click', () => {
+    describe('first click', () => {
 
         it('should show legal directions choice when clicking piece', fakeAsync(async() => {
             // Given the initial board
@@ -52,7 +52,7 @@ describe('AbaloneComponent', () => {
             // Given the initial board
             // When clicking on an opponent piece
             // Then expect click to be a failure
-            await testUtils.expectClickFailure('#piece_8_0', RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT());
+            await testUtils.expectClickFailure('#piece_8_0');
         }));
 
         it('should select piece when clicking it', fakeAsync(async() => {
@@ -104,6 +104,13 @@ describe('AbaloneComponent', () => {
             testUtils.expectElementNotToExist('#piece_-1_4');
         }));
 
+        it('should cancel move when clicking on empty space', fakeAsync(async() => {
+            // Given the initial board
+            // When clicking on an empty space
+            // Then expect click to be a failure
+            await testUtils.expectClickFailure('#space_3_3', RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY());
+        }));
+
     });
 
     describe('second click', () => {
@@ -136,11 +143,11 @@ describe('AbaloneComponent', () => {
             testUtils.expectElementNotToHaveClass('#piece_2_7', 'selected-stroke');
         }));
 
-        it('should select clicked piece when not aligned with first (non dir)', fakeAsync(async() => {
+        it('should select clicked piece when second clicked piece is not aligned with first (non dir)', fakeAsync(async() => {
             // Given the initial board with a selected piece
             await testUtils.expectClickSuccess('#piece_2_6');
 
-            // When clicking second unaligned coord
+            // When clicking second unaligned piece
             await testUtils.expectClickSuccess('#piece_4_7');
 
             // Then the first piece should be unselected and the second one should be selected
@@ -378,14 +385,6 @@ describe('AbaloneComponent', () => {
         // Then the move should have been done
         const move: AbaloneMove = AbaloneMove.ofSingleCoord(new Coord(2, 6), HexaDirection.LEFT);
         await testUtils.expectMoveSuccess('#space_1_6', move);
-    }));
-
-    it('should not do anything when clicking space that is not below a direction arrow', fakeAsync(async() => {
-        // Given the initial board with first space clicked
-        await testUtils.expectClickSuccess('#space_1_6');
-
-        // When clicking on the space marked by the direction instead of its arrow
-        // Then expect nothing, just want this line covered!
     }));
 
     describe('showLastMove', () => {

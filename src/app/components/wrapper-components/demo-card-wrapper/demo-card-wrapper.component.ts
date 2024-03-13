@@ -44,7 +44,7 @@ export class DemoCardWrapperComponent extends GameWrapper<string> implements Aft
             await this.createMatchingGameComponent();
             this.gameComponent.node = this.demoNodeInfo.node;
             // The component needs to be interactive in order to show all possible stylistic elements
-            this.gameComponent.setInteractive(true);
+            await this.setInteractive(true);
             // The board needs to be updated to render the changed node, setRole will do it
             await this.setRole(this.gameComponent.getCurrentPlayer());
             // Need to detect changes before potentially clicking,

@@ -278,7 +278,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
 
     private async onGameEnd(): Promise<void> {
         await this.currentGameService.removeCurrentGame();
-        this.setInteractive(false);
+        await this.setInteractive(false);
         this.endGame = true;
     }
 
@@ -303,14 +303,17 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
             const triggerAnimation: boolean = currentPartTurn % 2 !== this.role.getValue();
             await this.showNextMove(triggerAnimation && isLastMoveOfBatch);
         }
-        this.setCurrentPlayerAccordingToCurrentTurn();
+        await this.setCurrentPlayerAccordingToCurrentTurn();
         this.timeManager.onReceivedMove(moveEvent);
         this.requestManager.onReceivedMove();
     }
 
-    private setCurrentPlayerAccordingToCurrentTurn(): void {
+    private async setCurrentPlayerAccordingToCurrentTurn(): Promise<void> {
         this.currentUser = this.players[this.gameComponent.getTurn() % 2].get();
-        this.gameComponent.setInteractive(this.currentUser.name === this.getPlayer().name);
+        await this.setInteractive(
+            this.currentUser.name === this.getPlayer().name,
+            false,
+        );
     }
 
     private beforeEventsBatch(): void {
@@ -331,8 +334,9 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
             // Take back a second time to make sure it end up on player's turn
             this.gameComponent.node = this.gameComponent.node.parent.get();
         }
-        this.setCurrentPlayerAccordingToCurrentTurn();
+        await this.setCurrentPlayerAccordingToCurrentTurn();
         const triggerAnimation: boolean = this.gameComponent.getTurn() === 0;
+        // TODO FOR REVIEW: when taking back like, a l'awalé, tu reveux l'animation :/ ? Je dirais non
         await this.showCurrentState(triggerAnimation);
     }
 
@@ -423,7 +427,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
             MGPOptional.ofNullable(part.data.playerOne),
         ];
         Utils.assert(part.data.playerOne != null, 'should not initializePlayersDatas when players data is not received');
-        this.setCurrentPlayerAccordingToCurrentTurn();
+        await this.setCurrentPlayerAccordingToCurrentTurn();
         await this.setRealObserverRole();
     }
 

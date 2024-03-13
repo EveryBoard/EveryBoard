@@ -460,4 +460,5 @@ describe('DiaballikComponent', () => {
         testUtils.expectElementToHaveClass('#passCountIndicator circle', 'player1-fill');
         testUtils.expectElementToHaveClass('#translationCountIndicator circle', 'player1-fill');
     }));
+
 });

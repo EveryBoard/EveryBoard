@@ -153,6 +153,10 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneRules,
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }
+        return this._onPieceClick(x, y);
+    }
+
+    private _onPieceClick(x: number, y: number): MGPValidation | PromiseLike<MGPValidation> {
         const opponent: Player = this.getState().getCurrentOpponent();
         if (this.hexaBoard[y][x].is(opponent)) {
             return this.opponentClick(x, y);
@@ -167,12 +171,7 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneRules,
     }
 
     private async opponentClick(x: number, y: number): Promise<MGPValidation> {
-        const directionValidity: MGPValidation = await this.tryChoosingDirection(x, y);
-        if (directionValidity.isSuccess()) {
-            return MGPValidation.SUCCESS;
-        } else {
-            return this.cancelMove(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT());
-        }
+        return this.tryChoosingDirection(x, y);
     }
 
     private async firstClick(x: number, y: number): Promise<MGPValidation> {
@@ -359,7 +358,14 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneRules,
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }
-        return this.tryChoosingDirection(x, y);
+        if (this.getState().getPieceAtXY(x, y).isPlayer()) {
+            return this._onPieceClick(x, y);
+        }
+        if (this.selecteds.length === 0) {
+            return this.cancelMove(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY());
+        } else {
+            return this.tryChoosingDirection(x, y);
+        }
     }
 
     private async tryChoosingDirection(x: number, y: number): Promise<MGPValidation> {
@@ -369,7 +375,7 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneRules,
                 return this._chooseDirection(direction.dir);
             }
         }
-        return MGPValidation.failure('not a direction');
+        return this.cancelMove();
     }
 
     public getSquareClasses(x: number, y: number): string[] {

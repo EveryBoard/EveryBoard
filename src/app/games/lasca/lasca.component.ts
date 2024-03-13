@@ -51,7 +51,7 @@ export class LascaComponent extends ParallelogramGameComponent<LascaRules,
     private currentMoveClicks: Coord[] = [];
     private lastCaptures: Coord[] = [];
     private lastMoveds: Coord[] = [];
-    private possibleClicks: Coord[] = []; // TODO: name better, since capturableCoords are possible clicks too
+    private possibleClicks: Coord[] = [];
     private capturableCoords: Coord[] = [];
     private selectedStack: MGPOptional<Coord> = MGPOptional.empty();
     private capturedCoords: Coord[] = []; // Only the coords capture by active player during this turn
@@ -253,7 +253,7 @@ export class LascaComponent extends ParallelogramGameComponent<LascaRules,
     private async selectPiece(coord: Coord): Promise<MGPValidation> {
         this.selectedStack = MGPOptional.of(coord);
         if (this.legalMoves.some((move: LascaMove) => move.getStartingCoord().equals(coord))) {
-            this.currentMoveClicks = [coord]; // TODO: currentMoveClicks might supplant selectedStack hey
+            this.currentMoveClicks = [coord];
             this.showPossibleLandings(coord, this.constructedState);
             return MGPValidation.SUCCESS;
         } else {
@@ -289,7 +289,7 @@ export class LascaComponent extends ParallelogramGameComponent<LascaRules,
             const maxY: number = this.getState().getHeight() - 1;
             return new Coord(maxX - x, maxY - y);
         } else {
-            return new Coord(x, y); // TODO: last move don't reappear when double clicking on a piece
+            return new Coord(x, y);
         }
     }
 

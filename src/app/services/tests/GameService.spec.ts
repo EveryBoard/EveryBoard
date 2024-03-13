@@ -26,7 +26,7 @@ import { GameEventService } from '../GameEventService';
 import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 import { NoConfig, RulesConfigUtils } from 'src/app/jscaip/RulesConfigUtil';
 
-xdescribe('GameService', () => {
+describe('GameService', () => {
 
     let gameService: GameService;
 

@@ -65,11 +65,14 @@ export class SixComponent
         this.chosenLanding = MGPOptional.empty();
         this.cuttableGroups = [];
         this.nextClickShouldSelectGroup = false;
-        // TODO eeeeew
-        await this.updateBoard(false); // Need to refresh the board in case we showed virtual moves for cuts
+        this.resetPieceAndNeighbors();
     }
 
     public async updateBoard(_triggerAnimation: boolean): Promise<void> {
+        this.resetPieceAndNeighbors();
+    }
+
+    private resetPieceAndNeighbors(): void {
         this.state = this.node.gameState;
         this.pieces = this.state.getPieceCoords();
         this.neighbors = this.getEmptyNeighbors();

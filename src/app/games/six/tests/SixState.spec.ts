@@ -19,8 +19,8 @@ describe('SixState', () => {
 
         it('should represent correctly board', () => {
             const pieces: ReversibleMap<Coord, Player> = new ReversibleMap<Coord, Player>();
-            pieces.put(new Coord(0, 0), Player.ONE);
-            pieces.put(new Coord(1, 1), Player.ZERO);
+            pieces.set(new Coord(0, 0), Player.ONE);
+            pieces.set(new Coord(1, 1), Player.ZERO);
             const state: SixState = new SixState(pieces, 0);
             const expectedRepresentation: Table<PlayerOrNone> = [
                 [X, _],
@@ -35,8 +35,8 @@ describe('SixState', () => {
                 [_, O],
             ];
             const expectedPieces: ReversibleMap<Coord, Player> = new ReversibleMap<Coord, Player>();
-            expectedPieces.put(new Coord(0, 0), Player.ONE);
-            expectedPieces.put(new Coord(1, 1), Player.ZERO);
+            expectedPieces.set(new Coord(0, 0), Player.ONE);
+            expectedPieces.set(new Coord(1, 1), Player.ZERO);
             expectedPieces.makeImmutable();
             const state: SixState = SixState.ofRepresentation(representation, 0);
             expect(state.pieces).toEqual(expectedPieces);

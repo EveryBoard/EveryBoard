@@ -569,6 +569,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
     });
 
     describe('TutorialStep expecting specific moves', () => {
+
         it('should show highlight of first click on multiclick game component', fakeAsync(async() => {
             // Given a TutorialStep with several moves
             const tutorial: TutorialStep[] = [
@@ -811,9 +812,39 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             // And the move done should have triggered the animation
             expect(testUtils.getGameComponent().updateBoard).toHaveBeenCalledWith(true);
         }));
+
+        it('should hide last move after click', fakeAsync(async() => {
+            // Given a TutorialStep for specific move
+            const tutorial: TutorialStep[] = [
+                TutorialStep.fromMove(
+                    'title',
+                    'Put your piece in a corner and give the opposite one.',
+                    QuartoRules.get().getInitialState(),
+                    [
+                        new QuartoMove(0, 0, QuartoPiece.BBBB),
+                        new QuartoMove(0, 3, QuartoPiece.BBBB),
+                        new QuartoMove(3, 3, QuartoPiece.BBBB),
+                        new QuartoMove(3, 0, QuartoPiece.BBBB),
+                    ],
+                    TutorialStepMessage.CONGRATULATIONS(),
+                    'Perdu.',
+                ),
+            ];
+            await wrapper.startTutorial(tutorial);
+            const gameComponent: AbstractGameComponent = testUtils.getGameComponent();
+            spyOn(gameComponent, 'hideLastMove').and.callThrough();
+
+            // When doing that click
+            await testUtils.expectClickSuccess('#chooseCoord_0_0');
+
+            // Then hideLastMove should have been called
+            expect(gameComponent.hideLastMove).toHaveBeenCalledOnceWith();
+        }));
+
     });
 
     describe('TutorialStep expecting any move', () => {
+
         it('should consider any move legal when step is anyMove', fakeAsync(async() => {
             // Given tutorial step fo type "anyMove"
             const tutorial: TutorialStep[] = [
@@ -838,9 +869,33 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                 testUtils.findElement('#currentMessage').nativeElement.innerHTML;
             expect(currentMessage).toBe(expectedMessage);
         }));
+
+        it('should hide last move after click', fakeAsync(async() => {
+            // Given tutorial step fo type "anyMove"
+            const tutorial: TutorialStep[] = [
+                TutorialStep.anyMove(
+                    'title',
+                    'instruction',
+                    QuartoRules.get().getInitialState(),
+                    new QuartoMove(0, 0, QuartoPiece.BABA),
+                    TutorialStepMessage.CONGRATULATIONS(),
+                ),
+            ];
+            await wrapper.startTutorial(tutorial);
+            const gameComponent: AbstractGameComponent = testUtils.getGameComponent();
+            spyOn(gameComponent, 'hideLastMove').and.callThrough();
+
+            // When doing that click
+            await testUtils.expectClickSuccess('#chooseCoord_0_0');
+
+            // Then hideLastMove should have been called
+            expect(gameComponent.hideLastMove).toHaveBeenCalledOnceWith();
+        }));
+
     });
 
     describe('TutorialStep expecting a click', () => {
+
         it('should show success message after step success (one of several clics)', fakeAsync(async() => {
             // Given a TutorialStep with several clics
             const tutorial: TutorialStep[] = [
@@ -863,6 +918,29 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             const currentMessage: string =
                 testUtils.findElement('#currentMessage').nativeElement.innerHTML;
             expect(currentMessage).toBe(expectedMessage);
+        }));
+
+        it('should hide last move after click', fakeAsync(async() => {
+            // Given a TutorialStep with several clics
+            const tutorial: TutorialStep[] = [
+                TutorialStep.forClick(
+                    'title',
+                    'Click on (0, 0) or (3, 3)',
+                    QuartoRules.get().getInitialState(),
+                    ['#chooseCoord_0_0', '#chooseCoord_3_3'],
+                    TutorialStepMessage.CONGRATULATIONS(),
+                    'Perdu.',
+                ),
+            ];
+            await wrapper.startTutorial(tutorial);
+            const gameComponent: AbstractGameComponent = testUtils.getGameComponent();
+            spyOn(gameComponent, 'hideLastMove').and.callThrough();
+
+            // When doing that click
+            await testUtils.expectClickSuccess('#chooseCoord_0_0');
+
+            // Then hideLastMove should have been called
+            expect(gameComponent.hideLastMove).toHaveBeenCalledOnceWith();
         }));
 
         it('should show failure message after step failure (one of several clics)', fakeAsync(async() => {
@@ -1066,7 +1144,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
         }));
 
         it('should display successMessage when predicate return MGPValidation.SUCCESS', fakeAsync(async() => {
-            // Given a TutorialStep with several clics
+            // Given a TutorialStep of predicate
             const tutorial: TutorialStep[] = [
                 TutorialStep.fromPredicate(
                     'title',
@@ -1091,6 +1169,31 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             const currentMessage: string =
                 testUtils.findElement('#currentMessage').nativeElement.innerHTML;
             expect(currentMessage).toBe(expectedMessage);
+        }));
+
+        it('should hide last move after click', fakeAsync(async() => {
+            // Given a TutorialStep of predicate
+            const tutorial: TutorialStep[] = [
+                TutorialStep.fromPredicate(
+                    'title',
+                    'No matter what you do, it will be success!',
+                    QuartoRules.get().getInitialState(),
+                    new QuartoMove(1, 1, QuartoPiece.BAAB),
+                    (_move: QuartoMove, _resultingState: QuartoState) => {
+                        return MGPValidation.SUCCESS;
+                    },
+                    TutorialStepMessage.CONGRATULATIONS(),
+                ),
+            ];
+            await wrapper.startTutorial(tutorial);
+            const gameComponent: AbstractGameComponent = testUtils.getGameComponent();
+            spyOn(gameComponent, 'hideLastMove').and.callThrough();
+
+            // When doing that click
+            await testUtils.expectClickSuccess('#chooseCoord_0_0');
+
+            // Then hideLastMove should have been called
+            expect(gameComponent.hideLastMove).toHaveBeenCalledOnceWith();
         }));
 
     });

@@ -6,7 +6,7 @@ import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { HiveComponent } from '../hive.component';
 import { HiveFailure } from '../HiveFailure';
-import { HiveMove } from '../HiveMove';
+import { HiveDropMove, HiveMove } from '../HiveMove';
 import { HivePiece } from '../HivePiece';
 import { HiveState } from '../HiveState';
 import { HiveRules } from '../HiveRules';
@@ -85,6 +85,7 @@ describe('HiveComponent', () => {
                 const reason: string = HiveFailure.MUST_PLACE_QUEEN_BEE_LATEST_AT_FOURTH_TURN();
                 await testUtils.expectClickFailure('#remainingPiece_Beetle_PLAYER_ZERO', reason);
             }));
+
         });
 
         describe('dropping', () => {
@@ -144,6 +145,7 @@ describe('HiveComponent', () => {
                 // Then the last move should be shown
                 testUtils.expectElementToHaveClass('#stroke_0_0', 'last-move-stroke');
             }));
+
         });
 
         it('should deselect the piece at second click on it', fakeAsync(async() => {
@@ -158,11 +160,31 @@ describe('HiveComponent', () => {
             // Then it should not be selected anymore
             testUtils.expectElementNotToExist('#remaining_highlight');
         }));
+
     });
 
     describe('moving', () => {
 
         describe('selection', () => {
+
+            it('should hide last move (drop) at first clic', fakeAsync(async() => {
+                // Given a state with pieces on the board and a last move (drop)
+                const previousState: HiveState = HiveState.fromRepresentation([
+                    [[Q]],
+                ], 1);
+                const previousMove: HiveMove = HiveDropMove.of(new HivePiece(Player.ONE, 'QueenBee'), new Coord(1, 0));
+                const state: HiveState = HiveState.fromRepresentation([
+                    [[Q], [q]],
+                ], 2);
+                await testUtils.setupState(state, { previousMove, previousState });
+                testUtils.expectElementToHaveClass('#stroke_1_0', 'last-move-stroke');
+
+                // When clicking on a piece on the board
+                await testUtils.expectClickSuccess('#piece_0_0');
+
+                // Then last drop should be hidden
+                testUtils.expectElementNotToExist('#stroke_1_0');
+            }));
 
             it('should select the piece clicked', fakeAsync(async() => {
                 // Given a state with pieces on the board
@@ -236,6 +258,7 @@ describe('HiveComponent', () => {
                 // Then it should cancel the move without error
                 await testUtils.expectClickFailure('#piece_0_0');
             }));
+
         });
 
         describe('finishing move', () => {
@@ -270,7 +293,9 @@ describe('HiveComponent', () => {
                 const move: HiveMove = HiveMove.move(new Coord(0, 1), new Coord(0, 2)).get();
                 await testUtils.expectMoveFailure('#space_0_2', reason, move);
             }));
+
             describe('spider', () => {
+
                 it('should allow selecting all intermediary spaces for spider', fakeAsync(async() => {
                     // Given a state with a spider on the board
                     const state: HiveState = HiveState.fromRepresentation([
@@ -330,6 +355,7 @@ describe('HiveComponent', () => {
                     const reason: string = HiveFailure.SPIDER_MUST_MOVE_ON_NEIGHBORING_SPACES();
                     await testUtils.expectClickFailure('#space_1_0', reason);
                 }));
+
             });
 
             it('should show the last move', fakeAsync(async() => {
@@ -350,6 +376,7 @@ describe('HiveComponent', () => {
                 testUtils.expectElementToHaveClass('#stroke_1_1', 'last-move-stroke');
                 testUtils.expectElementToHaveClass('#space_0_1', 'moved-fill');
             }));
+
         });
 
     });
@@ -419,10 +446,12 @@ describe('HiveComponent', () => {
             testUtils.expectElementToExist('#inspectedStack_0');
 
             // When clicking on the stack a second time
+            await testUtils.expectClickFailure('#piece_0_0');
+
             // Then it should hide the stack
-            await testUtils.expectClickSuccess('#piece_0_0');
             testUtils.expectElementNotToExist('#inspectedStack_0');
         }));
+
     });
 
     it('should cancel move when clicking on an empty space', fakeAsync(async() => {
@@ -501,4 +530,5 @@ describe('HiveComponent', () => {
         // Then the last move should still be displayed
         testUtils.expectElementToHaveClass('#stroke_1_0', 'last-move-stroke');
     }));
+
 });

@@ -109,13 +109,13 @@ export class LascaStack {
 
 export class LascaState extends GameStateWithTable<LascaStack> {
 
-    public static readonly SIZE: number = 7; // TODO: kill, while we're at it
+    public static readonly SIZE: number = 7;
 
     public static of(board: Table<LascaStack>, turn: number): LascaState {
         return new LascaState(board, turn);
     }
 
-    public static isNotOnBoard(coord: Coord): boolean { // TODO KILL
+    public static isNotOnBoard(coord: Coord): boolean {
         return coord.isNotInRange(LascaState.SIZE, LascaState.SIZE);
     }
 

@@ -63,9 +63,8 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
         this.encoder = EpaminondasMove.encoder;
         this.hasAsymmetricBoard = true;
     }
+
     public async updateBoard(_triggerAnimation: boolean): Promise<void> {
-        this.firstPiece = MGPOptional.empty(); // TODO: kill, no moveAttempt var modification in updateBoard
-        this.lastPiece = MGPOptional.empty(); // TODO: kill, no moveAttempt var modification in updateBoard
         this.board = this.getState().getCopiedBoard();
         this.scores = this.getScores();
     }

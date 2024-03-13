@@ -840,8 +840,7 @@ describe('YinshComponent', () => {
             testUtils.expectElementNotToExist('#ring_3_2');
             testUtils.expectElementNotToHaveClass('#pieceGroup_3_2', 'semi-transparent');
         }));
-// TODO: when taking back thenfirst click: no hide last move is done ! (it takes 3 click for it to disappear)
-// TODO: start new move don't hide ongoing move ?
+
         it('should show indicator when selecting your ring', fakeAsync(async() => {
             // Given an initial board on which a ring are all put
             const board: Table<YinshPiece> = [

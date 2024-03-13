@@ -11,7 +11,7 @@ import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 export class ConspirateursMoveGenerator extends MoveGenerator<ConspirateursMove, ConspirateursState> {
 
     public override getListMoves(node: ConspirateursNode, _config: NoConfig): ConspirateursMove[] {
-        if (node.gameState.turn < 40) {
+        if (node.gameState.turn < ConspirateursRules.NUMBER_OF_PIECES) {
             return this.getListMovesDrop(node.gameState);
         } else {
             return this.getListMovesAfterDrop(node.gameState);

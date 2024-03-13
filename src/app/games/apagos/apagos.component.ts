@@ -89,7 +89,6 @@ export class ApagosComponent extends GameComponent<ApagosRules, ApagosMove, Apag
 
     public override cancelMoveAttempt(): void {
         this.selectedPiece = MGPOptional.empty();
-        this.showPossibleDrops(); // TODO: not needed
     }
 
     public async updateBoard(_triggerAnimation: boolean): Promise<void> {

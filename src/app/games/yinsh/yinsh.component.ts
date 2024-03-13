@@ -161,7 +161,7 @@ export class YinshComponent extends HexagonalGameComponent<YinshRules,
         for (const capture of this.finalCaptures) {
             this.markCurrentCapture(capture);
         }
-    } // TODO: fix and test yinsh interractivity
+    }
 
     protected getSpaceClasses(x: number, y: number): string[] {
         const coord: Coord = new Coord(x, y);
@@ -205,8 +205,7 @@ export class YinshComponent extends HexagonalGameComponent<YinshRules,
         const coord: Coord = new Coord(x, y);
         return this.constructedState.getPieceAt(coord).isMarker() ||
                this.moveStart.equalsValue(coord) ||
-               this.isCapturedMarker(coord, this.lastCapture) || // TODO TEST IT
-               this.isCapturedMarker(coord, this.currentCapture) || // TODO TEST IT
+               this.isCapturedMarker(coord, this.lastCapture) ||
                this.selectedCoords.some((c: Coord) => c.equals(coord));
     }
 
@@ -248,7 +247,7 @@ export class YinshComponent extends HexagonalGameComponent<YinshRules,
         const piece: YinshPiece = this.constructedState.getPieceAt(coord);
         let owner: PlayerOrNone = piece.player;
         const classes: string[] = [];
-        if (this.isCapturedRing(coord, this.lastCapture)) { // TODO PUT IN COMMON ALL RINGTAKEN CHECK
+        if (this.isCapturedRing(coord, this.lastCapture)) {
             classes.push('semi-transparent');
             owner = this.getCurrentOpponent();
         }
@@ -280,7 +279,7 @@ export class YinshComponent extends HexagonalGameComponent<YinshRules,
         } else {
             this.lastMoved = this.coordsBetween(move.start, move.end.get());
             this.lastCapture = MGPOptional.empty();
-            move.initialCaptures.forEach((c: YinshCapture) => this.lastCapture = MGPOptional.of(c)); // TODO ADD AND CHECK
+            move.initialCaptures.forEach((c: YinshCapture) => this.lastCapture = MGPOptional.of(c));
             move.finalCaptures.forEach((c: YinshCapture) => this.lastCapture = MGPOptional.of(c));
         }
     }
@@ -350,9 +349,7 @@ export class YinshComponent extends HexagonalGameComponent<YinshRules,
         this.selectableCoords = [];
         this.possibleCaptures = possibleCaptures;
         for (const capture of possibleCaptures) {
-            for (const coord of capture.capturedSpaces) {
-                this.selectableCoords.push(coord); // TODO add without loop
-            }
+            this.selectableCoords.push(...capture.capturedSpaces);
         }
         if (this.movePhase === 'INITIAL_CAPTURE_SELECT_FIRST') {
             this.movePhase = 'INITIAL_CAPTURE_SELECT_LAST';

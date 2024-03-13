@@ -164,7 +164,6 @@ export abstract class FirestoreDAO<T extends FirestoreJSONObject> implements IFi
         }
         return query;
     }
-    // TODO C6 lifecycle hide but don't reshow
     public subCollectionDAO<U extends FirestoreJSONObject>(id: string, name: string): IFirestoreDAO<U> {
         const fullPath: string = `${this.collection.path}/${id}/${name}`;
         if (fullPath in this.subDAOs) {

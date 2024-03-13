@@ -235,40 +235,43 @@ describe('LocalGameWrapperComponent (game phase)', () => {
     });
 
     describe('Using AI', () => {
-        it('should disable interactivity when AI is selected without level', async() => {
+
+        async function selectFirstElementOfDropDown(dropDownName: string): Promise<void> {
+            const selectedAI: HTMLSelectElement = testUtils.findElement(dropDownName).nativeElement;
+            selectedAI.value = selectedAI.options[1].value;
+            selectedAI.dispatchEvent(new Event('change'));
+            testUtils.detectChanges();
+            tick();
+        }
+
+        it('should disable interactivity when AI is selected without level', fakeAsync(async() => {
             // Given a game which is initially interactive, with a background showing it
             expect(testUtils.getGameComponent().isInteractive()).toBeTrue();
             testUtils.expectElementToExist('.tile .player0-bg');
 
             // When selecting only the AI without the depth for the current player
-            const selectAI: HTMLSelectElement = testUtils.findElement('#playerZeroSelect').nativeElement;
-            selectAI.value = selectAI.options[1].value;
-            selectAI.dispatchEvent(new Event('change'));
-            testUtils.detectChanges();
-            await testUtils.whenStable();
+            await selectFirstElementOfDropDown('#playerZeroSelect');
 
             // Then the game should not be interactive anymore
             expect(testUtils.getGameComponent().isInteractive()).toBeFalse();
             // nor should it show the current player background
             testUtils.expectElementNotToExist('.tile .player0-bg');
-        });
+        }));
 
-        it('should show level when non-human player is selected', async() => {
+        it('should show level when non-human player is selected', fakeAsync(async() => {
             // Given a board where human are playing human
             testUtils.expectElementNotToExist('#aiZeroLevelSelect');
 
             // When selecting an AI for player ZERO
-            const selectAI: HTMLSelectElement = testUtils.findElement('#playerZeroSelect').nativeElement;
-            selectAI.value = selectAI.options[1].value;
-            selectAI.dispatchEvent(new Event('change'));
-            testUtils.detectChanges();
-            await testUtils.whenStable();
+            const aiName: string = '#playerZeroSelect';
+            await selectFirstElementOfDropDown(aiName);
 
             // Then AI name should be diplayed and the level selectable
-            const aiName: string = selectAI.options[selectAI.selectedIndex].label;
-            expect(aiName).toBe('Minimax');
+            const selectedAI: HTMLSelectElement = testUtils.findElement(aiName).nativeElement;
+            const chosenAiName: string = selectedAI.options[selectedAI.selectedIndex].label;
+            expect(chosenAiName).toBe('Minimax');
             testUtils.expectElementToExist('#aiZeroLevelSelect');
-        });
+        }));
 
         it('should show level when non-human player is selected, and propose AI to play', fakeAsync(async() => {
             // Given any board
@@ -328,24 +331,25 @@ describe('LocalGameWrapperComponent (game phase)', () => {
         it('should propose AI 2 to play when selecting her just before her turn', fakeAsync(async() => {
             // Given wrapper on which a first move have been done
             await testUtils.expectMoveSuccess('#click_4', P4Move.of(4));
-
             // When clicking on AI then its level
-            const selectAI: HTMLSelectElement = testUtils.findElement('#playerOneSelect').nativeElement;
-            selectAI.value = selectAI.options[1].value;
-            selectAI.dispatchEvent(new Event('change'));
-            testUtils.detectChanges();
-            await testUtils.whenStable();
-            const selectDepth: HTMLSelectElement = testUtils.findElement('#aiOneLevelSelect').nativeElement;
-            const proposeAIToPlay: jasmine.Spy =
-                spyOn(testUtils.getWrapper() as LocalGameWrapperComponent, 'proposeAIToPlay').and.callThrough();
-            selectDepth.value = selectDepth.options[1].value;
-            selectDepth.dispatchEvent(new Event('change'));
-            testUtils.detectChanges();
+            await selectFirstElementOfDropDown('#playerOneSelect');
+            const localGameWrapper: LocalGameWrapperComponent = testUtils.getWrapper() as LocalGameWrapperComponent;
+            spyOn(localGameWrapper, 'proposeAIToPlay').and.callThrough();
+            const gameComponent: AbstractGameComponent = testUtils.getGameComponent();
+            spyOn(gameComponent, 'hideLastMove').and.callThrough();
+            expect(gameComponent.getState().turn)
+                .withContext('after we did one move')
+                .toEqual(1);
+            await selectFirstElementOfDropDown('#aiOneLevelSelect');
             tick(LocalGameWrapperComponent.AI_TIMEOUT);
-            await testUtils.whenStable();
 
             // Then it should have proposed AI to play
-            expect(proposeAIToPlay).toHaveBeenCalledTimes(2);
+            expect(localGameWrapper.proposeAIToPlay).toHaveBeenCalledTimes(2);
+            // And hideLastMove should have been called twice (the first one is too soon)
+            expect(gameComponent.hideLastMove).toHaveBeenCalledTimes(2);
+            expect(gameComponent.getState().turn)
+                .withContext('after AI did her move')
+                .toEqual(2);
         }));
 
         it('Minimax proposing illegal move should log error and show it to the user', fakeAsync(async() => {
@@ -379,16 +383,8 @@ describe('LocalGameWrapperComponent (game phase)', () => {
             spyOn(testUtils.getGameComponent().rules, 'getGameStatus').and.returnValue(GameStatus.ZERO_WON);
 
             // When selecting an AI for the current player
-            const selectAI: HTMLSelectElement = testUtils.findElement('#playerZeroSelect').nativeElement;
-            selectAI.value = selectAI.options[1].value;
-            selectAI.dispatchEvent(new Event('change'));
-            testUtils.detectChanges();
-            await testUtils.whenStable();
-            const selectDepth: HTMLSelectElement = testUtils.findElement('#aiZeroLevelSelect').nativeElement;
-            selectDepth.value = selectDepth.options[1].value;
-            selectDepth.dispatchEvent(new Event('change'));
-            testUtils.detectChanges();
-            await testUtils.whenStable();
+            await selectFirstElementOfDropDown('#playerZeroSelect');
+            await selectFirstElementOfDropDown('#aiZeroLevelSelect');
 
             // Then it should not try to play
             expect(localGameWrapper.doAIMove).not.toHaveBeenCalled();

@@ -354,7 +354,7 @@ export class LodestoneComponent
             const pieceThatCrumbledLastEndOfTurn: MGPOptional<LodestonePiece> =
                 this.getPieceThatCrumbledLastEndOfTurn(coord,
                                                        preCaptureInfo.get().preCaptureState,
-                                                       preCaptureInfo.get().preCaptureMove); // TODO DEDUPLICATE THERE
+                                                       preCaptureInfo.get().preCaptureMove);
             if (pieceThatCrumbledLastEndOfTurn.isPresent()) {
                 const crumbledOwner: PlayerOrNone = pieceThatCrumbledLastEndOfTurn.get().owner;
                 classes = [
@@ -378,24 +378,7 @@ export class LodestoneComponent
     }
 
     public hasPieceToDraw(x: number, y: number): boolean {
-        const coord: Coord = new Coord(x, y);
-        const piece: LodestonePiece = this.displayedState.getPieceAt(coord);
-        if (piece.isPlayerPiece()) {
-            return true;
-        } else if (piece.isUnreachable()) {
-            const preCaptureInfo: MGPOptional<PreCaptureInfo> = this.getPreCaptureInfo();
-            if (preCaptureInfo.isAbsent()) {
-                return false;
-            }
-            const pieceThatCrumbledLastEndOfTurn: MGPOptional<LodestonePiece> =
-                this.getPieceThatCrumbledLastEndOfTurn(coord,
-                                                       preCaptureInfo.get().preCaptureState,
-                                                       preCaptureInfo.get().preCaptureMove); // TODO DEDUPLICATE THERE
-            if (pieceThatCrumbledLastEndOfTurn.isPresent()) {
-                return true;
-            }
-        }
-        return false;
+        return this.getPieceClasses(x, y).length > 0;
     }
 
     private getPreCaptureInfo(): MGPOptional<PreCaptureInfo> {
@@ -416,7 +399,7 @@ export class LodestoneComponent
         }
     }
 
-    public getLodestoneInfo(x: number, y: number): MGPOptional<LodestoneInfo> { // TODO: split function in CMA-LS & SLM-LS
+    public getLodestoneInfo(x: number, y: number): MGPOptional<LodestoneInfo> {
         const coord: Coord = new Coord(x, y);
         const piece: LodestonePiece = this.displayedState.getPieceAt(coord);
         if (piece.isLodestone()) {

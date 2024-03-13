@@ -130,14 +130,15 @@ export abstract class GameWrapper<P extends Comparable> extends BaseWrapperCompo
         }
         // TODO FOR REVIEW: on veux cancelMoveAttempt, HideLastMove, UpdateBoard(ça oui eh), ShowLastMove quand on change de role ?
         await this.showCurrentState(false); // Trigger redrawing of the board (might need to be rotated 180°)
-        // TODO: check showCurrentState use to remove it when board did not change !!!
     }
 
-    protected async setInteractive(interactive: boolean): Promise<void> {
+    public async setInteractive(interactive: boolean, updateBoard: boolean = true): Promise<void> {
         const interactivityChanged: boolean = this.gameComponent.isInteractive() !== interactive;
         if (interactivityChanged) {
             this.gameComponent.setInteractive(interactive);
-            await this.gameComponent.updateBoard(false);
+            if (updateBoard) {
+                await this.gameComponent.updateBoard(false);
+            }
         }
     }
 
@@ -149,7 +150,7 @@ export abstract class GameWrapper<P extends Comparable> extends BaseWrapperCompo
             await this.gameComponent.cancelMove(legality.getReason());
             return MGPValidation.ofFallible(legality);
         }
-        this.gameComponent.cancelMoveAttempt(); // TODO: put inside onLegalUserMove ?
+        this.gameComponent.cancelMoveAttempt();
         this.isMoveAttemptOngoing = false;
         await this.onLegalUserMove(move);
         return MGPValidation.SUCCESS;
@@ -157,8 +158,8 @@ export abstract class GameWrapper<P extends Comparable> extends BaseWrapperCompo
 
     public abstract onLegalUserMove(move: Move, scores?: [number, number]): Promise<void>;
 
-    public async onCancelMove(_reason?: string): Promise<void> { // TODO add override in childs
-        this.isMoveAttemptOngoing = false; // TODO: test
+    public async onCancelMove(_reason?: string): Promise<void> {
+        this.isMoveAttemptOngoing = false;
     }
 
     public abstract getPlayer(): P;
@@ -175,8 +176,6 @@ export abstract class GameWrapper<P extends Comparable> extends BaseWrapperCompo
         if (this.endGame) {
             return MGPValidation.failure(GameWrapperMessages.GAME_HAS_ENDED());
         }
-        // TODO: this part should be in common to all gameWrapper
-        // Hence, we should have some kind of "preClicChecks" that calls this one
         if (this.isMoveAttemptOngoing === false) {
             // It is the first clic
             this.gameComponent.hideLastMove();
@@ -222,7 +221,6 @@ export abstract class GameWrapper<P extends Comparable> extends BaseWrapperCompo
      * @param triggerAnimation a boolean set to true if there is a need to trigger the animation of the last move
      */
     protected async showCurrentState(triggerAnimation: boolean): Promise<void> {
-        console.log('GW.showCurrentState(' + triggerAnimation + ')')
         this.gameComponent.cancelMoveAttempt();
         this.gameComponent.hideLastMove();
         if (this.gameComponent.node.previousMove.isPresent()) {
@@ -243,7 +241,6 @@ export abstract class GameWrapper<P extends Comparable> extends BaseWrapperCompo
      * @param triggerAnimation a boolean set to true if there is a need to trigger the animation of the last move
      */
     protected async showNextMove(triggerAnimation: boolean): Promise<void> {
-        console.log('showNextMove(' + triggerAnimation + ')')
         await this.gameComponent.updateBoard(triggerAnimation);
         const lastMove: Move = this.gameComponent.node.previousMove.get();
         const config: MGPOptional<RulesConfig> = await this.getConfig();

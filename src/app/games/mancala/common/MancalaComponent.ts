@@ -129,8 +129,7 @@ export abstract class MancalaComponent<R extends MancalaRules>
     }
 
     public async onLegalClick(x: number, y: number): Promise<MGPValidation> {
-        // if (Player.of(y) === this.getState().getCurrentPlayer()) { TODO
-        if (y === this.getState().getCurrentPlayer().getValue()) {
+        if (Player.of(y) === this.getState().getCurrentPlayer()) {
             return this.cancelMove(MancalaFailure.MUST_DISTRIBUTE_YOUR_OWN_HOUSES());
         }
         this.updateOrCreateCurrentMove(x);
@@ -393,7 +392,6 @@ export abstract class MancalaComponent<R extends MancalaRules>
             const newMove: MancalaMove = this.addToMove(x);
             this.currentMove = MGPOptional.of(newMove);
         } else {
-            // this.hideLastMove(); TODO test it
             this.currentMove = MGPOptional.of(this.generateMove(x));
         }
     }

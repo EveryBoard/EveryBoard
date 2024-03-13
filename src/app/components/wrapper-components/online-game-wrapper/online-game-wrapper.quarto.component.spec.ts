@@ -227,6 +227,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         // In practice, we should receive this from the other player.
         await gameEventService.addReply('configRoomId', userFromPlayer(player), reply, request, data);
         testUtils.detectChanges();
+        await testUtils.whenStable(); // TODO FOR REVIEW: on préfère ça ou tick() ?
     }
 
     async function receiveAction(player: Player, action: Action): Promise<void> {

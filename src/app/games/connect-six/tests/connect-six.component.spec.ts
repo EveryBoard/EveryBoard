@@ -127,6 +127,7 @@ describe('ConnectSixComponent', () => {
             // Then the highlights from last turn should be hidden
             testUtils.expectElementNotToHaveClass('#piece_9_9', 'last-move-stroke');
         }));
+
     });
 
     describe('second click', () => {
@@ -158,7 +159,7 @@ describe('ConnectSixComponent', () => {
             await testUtils.expectClickSuccess('#click_8_8');
 
             // When clicking again on this piece
-            await testUtils.expectClickSuccessWithAsymmetricNaming('#dropped', '#click_8_8');
+            await testUtils.expectClickFailureWithAsymmetricNaming('#dropped', '#click_8_8');
 
             // Then it should deselect it without popup
             testUtils.expectElementNotToExist('#dropped');
@@ -196,6 +197,40 @@ describe('ConnectSixComponent', () => {
             // Then the move should be done
             await testUtils.expectMoveSuccess('#click_7_7', move);
         }));
+
+        it('should show last move again when cancelling move', fakeAsync(async() => {
+            // Given a component with one move already done, and a first clic done
+            const state: ConnectSixState = new ConnectSixState([
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, O, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            ], 1);
+            await testUtils.setupState(state);
+            await testUtils.expectClickSuccess('#click_8_8');
+
+            // When clicking on an empty square
+            await testUtils.expectClickFailure('#click_8_8');
+
+            // Then the dropped piece should be displayed
+            testUtils.expectElementToHaveClasses('#piece_9_9', ['base', 'player0-fill']);
+        }));
+
     });
 
     describe('view', () => {
@@ -303,6 +338,7 @@ describe('ConnectSixComponent', () => {
             testUtils.expectElementToHaveClass('#piece_10_9', 'last-move-stroke');
             testUtils.expectElementToHaveClass('#piece_11_9', 'last-move-stroke');
         }));
+
     });
 
 });

@@ -106,10 +106,10 @@ export class TutorialGameWrapperComponent extends GameWrapper<TutorialPlayer> im
         this.gameComponent.node = new GameNode(currentStep.state,
                                                undefined,
                                                currentStep.previousMove);
-        // Set role will update view with updateBoardAndShowLastMove
+        // Set role will update view with showCurrentState
         await this.setRole(this.gameComponent.getCurrentPlayer());
         // All steps but informational ones are interactive
-        this.gameComponent.setInteractive(currentStep.isInformation() === false);
+        await this.setInteractive(currentStep.isInformation() === false);
         this.cdr.detectChanges();
     }
 
@@ -164,8 +164,7 @@ export class TutorialGameWrapperComponent extends GameWrapper<TutorialPlayer> im
         }
         const currentStep: TutorialStep = this.steps[this.stepIndex];
         if (currentStep.isClick()) {
-            // this.gameComponent.hideLastMove(); // TODO TEST & CHECK
-            // await this.showCurrentState(false);
+            this.gameComponent.hideLastMove();
             this.moveAttemptMade = true;
             if (Utils.getNonNullable(currentStep.acceptedClicks).some((m: string) => m === elementName)) {
                 this.showStepSuccess(currentStep.getSuccessMessage());
@@ -174,7 +173,7 @@ export class TutorialGameWrapperComponent extends GameWrapper<TutorialPlayer> im
             }
             return MGPValidation.SUCCESS;
         } else if (currentStep.isMove() || currentStep.isPredicate() || currentStep.isAnyMove()) {
-            // this.gameComponent.hideLastMove(); TODO TESTER ET CHECKER L'UTILITÉ
+            this.gameComponent.hideLastMove();
             return MGPValidation.SUCCESS;
         } else {
             return MGPValidation.failure(TutorialFailure.INFORMATIONAL_STEP());
