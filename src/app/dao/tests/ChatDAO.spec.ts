@@ -2,7 +2,7 @@
 import { TestBed } from '@angular/core/testing';
 import { expectPermissionToBeDenied, setupEmulators } from 'src/app/utils/tests/TestUtils.spec';
 import { ChatDAO } from '../ChatDAO';
-import * as FireAuth from '@angular/fire/auth';
+import * as FireAuth from '@firebase/auth';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { Chat } from 'src/app/domain/Chat';
 import { serverTimestamp, Timestamp } from 'firebase/firestore';
@@ -28,7 +28,7 @@ describe('ChatDAO', () => {
     let userDAO: UserDAO;
 
     function signOut(): Promise<void> {
-        return TestBed.inject(FireAuth.Auth).signOut();
+        return FireAuth.getAuth().signOut();
     }
     async function createPartAndConfigRoom(creator: MinimalUser): Promise<string> {
         const id: string = await partDAO.create({ ...PartMocks.INITIAL, playerZero: creator });
