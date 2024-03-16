@@ -251,7 +251,7 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
         if (clicked.isAlignedWith(firstPiece) === false) {
             return this.cancelMove(EpaminondasFailure.SQUARE_NOT_ALIGNED_WITH_SELECTED());
         }
-        const distance: number = clicked.getDistance(firstPiece);
+        const distance: number = clicked.getLinearDistanceToward(firstPiece);
         const direction: Direction = firstPiece.getDirectionToward(clicked).get();
         switch (this.board[y][x]) {
             case PlayerOrNone.NONE:
@@ -311,8 +311,8 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
         if (this.board[y][x] === player) {
             return this.thirdClickOnPlayerPiece(clicked, phalanxDirection, player);
         } else {
-            const phalanxSize: number = this.firstPiece.get().getDistance(this.lastPiece.get()) + 1;
-            const stepSize: number = this.lastPiece.get().getDistance(clicked);
+            const phalanxSize: number = this.firstPiece.get().getLinearDistanceToward(this.lastPiece.get()) + 1;
+            const stepSize: number = this.lastPiece.get().getLinearDistanceToward(clicked);
             const move: EpaminondasMove = new EpaminondasMove(this.firstPiece.get().x,
                                                               this.firstPiece.get().y,
                                                               phalanxSize,
@@ -327,7 +327,7 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
     : Promise<MGPValidation>
     {
         this.lastPiece = MGPOptional.of(clicked);
-        const phalanxSize: number = this.firstPiece.get().getDistance(clicked) + 1;
+        const phalanxSize: number = this.firstPiece.get().getLinearDistanceToward(clicked) + 1;
         const incompleteMove: EpaminondasMove = new EpaminondasMove(this.firstPiece.get().x,
                                                                     this.firstPiece.get().y,
                                                                     phalanxSize,

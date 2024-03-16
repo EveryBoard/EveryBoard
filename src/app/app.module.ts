@@ -100,6 +100,7 @@ import { PylosComponent } from './games/pylos/pylos.component';
 import { QuartoComponent } from './games/quarto/quarto.component';
 import { QuixoComponent } from './games/quixo/quixo.component';
 
+import { RectanglzComponent } from './games/rectanglz/rectanglz.component';
 import { ReversiComponent } from './games/reversi/reversi.component';
 
 import { SaharaComponent } from './games/sahara/sahara.component';
@@ -213,6 +214,7 @@ export const routes: Route[] = [
         PylosComponent,
         QuartoComponent,
         QuixoComponent,
+        RectanglzComponent,
         ReversiComponent,
         SaharaComponent,
         SiamComponent, SiamOrientationArrowComponent,

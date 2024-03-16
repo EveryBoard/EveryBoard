@@ -274,7 +274,7 @@ export class GipfComponent extends HexagonalGameComponent<GipfRules,
     private async selectPlacementDirectionOrPlacementCoord(coord: Coord): Promise<MGPValidation> {
         const entrance: Coord = this.placementEntrance.get();
         if (entrance.isAlignedWith(coord) === false ||
-            entrance.getDistance(coord) !== 1)
+            entrance.getLinearDistanceToward(coord) !== 1)
         {
             return this.selectPlacementCoord(coord);
         }

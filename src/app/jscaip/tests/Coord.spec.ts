@@ -56,7 +56,7 @@ describe('Coord', () => {
     it('should throw when asked distance toward an unaligned coord', () => {
         const coord: Coord = new Coord(0, 0);
         const unalignedCoord: Coord = new Coord(1, 2);
-        expect(() => coord.getDistance(unalignedCoord))
+        expect(() => coord.getLinearDistanceToward(unalignedCoord))
             .toThrowError('Cannot calculate distance with non aligned coords.');
     });
 

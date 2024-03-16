@@ -4,9 +4,11 @@ import { MGPOptional } from '../MGPOptional';
 
 export class MGPFallibleTestUtils {
 
-    public static expectToBeSuccess<T>(fallible: MGPFallible<T>, value: T): void {
+    public static expectToBeSuccess<T>(fallible: MGPFallible<T>, value?: T): void {
         expect(fallible.isSuccess()).toBeTrue();
-        expect(fallible.get()).toBe(value);
+        if (value != null) {
+            expect(fallible.get()).toBe(value);
+        }
     }
 
     public static expectToBeFailure<T>(fallible: MGPFallible<T>, reason: string): void {
