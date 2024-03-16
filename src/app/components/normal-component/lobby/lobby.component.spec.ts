@@ -345,6 +345,21 @@ describe('LobbyComponent', () => {
         const turn: DebugElement = testUtils.findElement('#part_0 > .turn');
         expect(turn.nativeElement.innerText).toEqual('1');
     }));
+    it('should display game name for humans', fakeAsync(async() => {
+        // Given a server with an existing part
+        setLobbyPartList([new PartDocument('started', {
+            ...PartMocks.STARTED,
+            typeGame: 'P4', // A game whose name is different from "type game"
+        })]);
+
+        // When displaying it
+        testUtils.detectChanges();
+
+        // Then it should show the turn, starting at turn 0 instead of -1
+        testUtils.expectElementToExist('#part_0 > .turn');
+        const turn: DebugElement = testUtils.findElement('#part_0 > .gameName');
+        expect(turn.nativeElement.innerText).toEqual('Four in a Row');
+    }));
     it('should show the chat when clicking on the corresponding tab', fakeAsync(async() => {
         // Given a lobby
 

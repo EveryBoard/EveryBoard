@@ -15,6 +15,7 @@ import { expectValidRoutingLink, prepareUnsubscribeCheck, SimpleComponentTestUti
 import { Utils } from 'src/app/utils/utils';
 import { AccountComponent } from '../account/account.component';
 import { HeaderComponent } from './header.component';
+import { GameInfo } from '../pick-game/pick-game.component';
 
 describe('HeaderComponent', () => {
 
@@ -105,15 +106,17 @@ describe('HeaderComponent', () => {
             testUtils.expectElementNotToExist('#currentGameLink');
 
             // When user become linked to an currentGame
-            CurrentGameServiceMock.setCurrentGame(MGPOptional.of(CurrentGameMocks.CREATOR_WITHOUT_OPPONENT));
+            const currentGame: CurrentGame = CurrentGameMocks.CREATOR_WITHOUT_OPPONENT;
+            CurrentGameServiceMock.setCurrentGame(MGPOptional.of(currentGame));
             testUtils.detectChanges();
             tick(0);
 
-            // Then "P4 (waiting for opponent)" should be displayed
+            // Then "Four in a Row (waiting for opponent)" should be displayed
             const currentGameLink: DebugElement = testUtils.findElement('#currentGameLink');
-            expect(currentGameLink.nativeElement.innerText).toEqual('P4 (waiting for opponent)');
+            const gameName: string = GameInfo.getByUrlName(currentGame.typeGame).get().name;
+            expect(currentGameLink.nativeElement.innerText).toEqual(gameName + ' (waiting for opponent)');
         }));
-        it('should display "<TypeGame> againt <Opponent>" when creator with chosenOpponent', fakeAsync(async() => {
+        it('should display "<TypeGame> against <Opponent>" when creator with chosenOpponent', fakeAsync(async() => {
             // Given a connected user that has no currentGame
             ConnectedUserServiceMock.setUser(UserMocks.CONNECTED_AUTH_USER);
             testUtils.detectChanges();
@@ -128,9 +131,9 @@ describe('HeaderComponent', () => {
 
             // Then "<Game> against <Opponent>" should be displayed
             const currentGameLink: DebugElement = testUtils.findElement('#currentGameLink');
-            const typeGame: string = currentGame.typeGame;
+            const gameName: string = GameInfo.getByUrlName(currentGame.typeGame).get().name;
             const opponentName: string = Utils.getNonNullable(currentGame.opponent?.name);
-            expect(currentGameLink.nativeElement.innerText).toEqual(typeGame + ' against ' + opponentName);
+            expect(currentGameLink.nativeElement.innerText).toEqual(gameName + ' against ' + opponentName);
         }));
         it(`should display '<TypeGame> by <Creator>' when watching as observer`, fakeAsync(async() => {
             // Given a connected user that has no currentGame
@@ -147,9 +150,9 @@ describe('HeaderComponent', () => {
 
             // Then "<TypeGame> by <Opponent, that should contain the creator>" should be displayed
             const currentGameLink: DebugElement = testUtils.findElement('#currentGameLink');
-            const typeGame: string = currentGame.typeGame;
+            const gameName: string = GameInfo.getByUrlName(currentGame.typeGame).get().name;
             const opponent: string = Utils.getNonNullable(currentGame.opponent?.name);
-            expect(currentGameLink.nativeElement.innerText).toEqual(typeGame + ' by ' + opponent);
+            expect(currentGameLink.nativeElement.innerText).toEqual(gameName + ' by ' + opponent);
         }));
         it(`should display '<TypeGame> by <Creator>' when watching as candidate`, fakeAsync(async() => {
             // Given a connected user that has no currentGame
@@ -166,9 +169,9 @@ describe('HeaderComponent', () => {
 
             // Then "Epaminondas by El Creatoro" should be displayed
             const currentGameLink: DebugElement = testUtils.findElement('#currentGameLink');
-            const typeGame: string = currentGame.typeGame;
+            const gameName: string = GameInfo.getByUrlName(currentGame.typeGame).get().name;
             const opponent: string = Utils.getNonNullable(currentGame.opponent?.name);
-            expect(currentGameLink.nativeElement.innerText).toEqual(typeGame + ' by ' + opponent);
+            expect(currentGameLink.nativeElement.innerText).toEqual(gameName + ' by ' + opponent);
         }));
     });
     it('should unsubscribe from connectedUserService when destroying component', fakeAsync(async() => {
