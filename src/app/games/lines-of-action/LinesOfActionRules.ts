@@ -76,7 +76,7 @@ export class LinesOfActionRules extends Rules<LinesOfActionMove, LinesOfActionSt
                             stack.push(next);
                         }
                     }
-                } else if (content === PlayerOrNone.NONE) {
+                } else if (content.isNone()) {
                     groups[coord.y][coord.x] = 0;
                 }
             }
@@ -95,7 +95,7 @@ export class LinesOfActionRules extends Rules<LinesOfActionMove, LinesOfActionSt
 
     public static isLegal(move: LinesOfActionMove, state: LinesOfActionState): MGPValidation {
         const piece: PlayerOrNone = state.getPieceAt(move.getStart());
-        if (piece === PlayerOrNone.NONE) {
+        if (piece.isNone()) {
             return MGPValidation.failure(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY());
         }
         if (piece === state.getCurrentOpponent()) {

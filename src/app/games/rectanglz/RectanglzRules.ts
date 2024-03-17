@@ -42,11 +42,11 @@ export class RectanglzRules extends Rules<RectanglzMove, RectanglzState> {
         if (start === opponent) {
             return MGPValidation.failure(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT());
         }
-        if (start === PlayerOrNone.NONE) {
+        if (start.isNone()) {
             return MGPValidation.failure(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY());
         }
         const landing: PlayerOrNone = state.getPieceAt(move.getEnd());
-        if (landing === PlayerOrNone.NONE) {
+        if (landing.isNone()) {
             return MGPValidation.SUCCESS;
         } else {
             return MGPValidation.failure(RulesFailure.MUST_LAND_ON_EMPTY_SPACE());
@@ -59,29 +59,73 @@ export class RectanglzRules extends Rules<RectanglzMove, RectanglzState> {
         const moveDistance: number = start.getDistanceToward(end);
         const player: Player = state.getCurrentPlayer();
         const opponent: Player = state.getCurrentOpponent();
-        let resultingState: RectanglzState = state.setPieceAt(end, player, RectanglzState.mapper);
+        let resultingState: RectanglzState = state.setPieceAt(end, player);
         if (moveDistance > 1) {
-            resultingState = resultingState.setPieceAt(start, PlayerOrNone.NONE, RectanglzState.mapper);
+            resultingState = resultingState.setPieceAt(start, PlayerOrNone.NONE);
         }
         for (const direction of Direction.DIRECTIONS) {
             const neighbor: Coord = end.getNext(direction, 1);
             if (resultingState.isOnBoard(neighbor) &&
                 resultingState.getPieceAt(neighbor) === opponent)
             {
-                resultingState = resultingState.setPieceAt(neighbor, player, RectanglzState.mapper);
+                resultingState = resultingState.setPieceAt(neighbor, player);
             }
         }
         return new RectanglzState(resultingState.board, resultingState.turn + 1);
     }
 
-    /**
-     * This method checks whether the game is in progress or finished.
-     * @param node the node for which we check the game status
-     * @returns a GameStatus (ZERO_WON, ONE_WON, DRAW, ONGOING)
-     */
     public getGameStatus(node: RectanglzNode, _config: NoConfig): GameStatus {
-        if (node.gameState.turn < 42) {
+        const state: RectanglzState = node.gameState;
+        const currentPlayer: Player = state.getCurrentPlayer();
+        if (this.canPlayerMove(state, currentPlayer)) {
             return GameStatus.ONGOING;
+        } else {
+            return this.getDominantPlayerVictory(state);
+        }
+    }
+
+    private canPlayerMove(state: RectanglzState, player: Player): boolean {
+        for (const coordAndContent of state.getCoordsAndContents()) {
+            if (coordAndContent.content.equals(player)) {
+                if (this.canCoordMove(state, coordAndContent.coord)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    private canCoordMove(state: RectanglzState, coord: Coord): boolean {
+        const sizeOfStep: number = 2;
+        for (let y: number = -sizeOfStep; y < sizeOfStep; y++) {
+            for (let x: number = -sizeOfStep; x < sizeOfStep; x++) {
+                const landingCoord: Coord = new Coord(coord.x + x, coord.y + y);
+                if (state.isOnBoard(landingCoord) && state.getPieceAt(landingCoord).isNone()) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public getPossiblesMoves(state: RectanglzState, coord: Coord): RectanglzMove[] {
+        const sizeOfStep: number = 2;
+        const moves: RectanglzMove[] = [];
+        for (let y: number = -sizeOfStep; y <= sizeOfStep; y++) {
+            for (let x: number = -sizeOfStep; x <= sizeOfStep; x++) {
+                const landingCoord: Coord = new Coord(coord.x + x, coord.y + y);
+                if (state.isOnBoard(landingCoord) && state.getPieceAt(landingCoord).isNone()) {
+                    moves.push(RectanglzMove.from(coord, landingCoord).get());
+                }
+            }
+        }
+        return moves;
+    }
+
+    private getDominantPlayerVictory(state: RectanglzState): GameStatus {
+        const winner: PlayerOrNone = state.getDominantPlayer();
+        if (winner.isPlayer()) {
+            return GameStatus.getVictory(winner);
         } else {
             return GameStatus.DRAW;
         }

@@ -48,7 +48,7 @@ export class SixState extends OpenHexagonalGameState<Player> {
 
     public toRepresentation(): Table<PlayerOrNone> {
         const board: PlayerOrNone[][] = TableUtils.create(this.width, this.height, PlayerOrNone.NONE);
-        for (const piece of this.pieces.listKeys()) {
+        for (const piece of this.pieces.getKeyList()) {
             const pieceValue: PlayerOrNone = this.getPieceAt(piece);
             board[piece.y][piece.x] = pieceValue;
         }

@@ -37,7 +37,7 @@ export class HiveRemainingPieces implements ComparableObject {
         return this.getQuantity(piece) > 0;
     }
     public getAny(player: Player): MGPOptional<HivePiece> {
-        for (const piece of this.pieces.listKeys()) {
+        for (const piece of this.pieces.getKeyList()) {
             if (piece.owner === player && this.hasRemaining(piece)) {
                 return MGPOptional.of(piece);
             }
@@ -148,7 +148,7 @@ export class HiveState extends OpenHexagonalGameState<HivePieceStack> implements
     {
         super(pieces, turn);
         this.queenBees = queenBees.getCopy();
-        for (const player of queenBees.listKeys()) {
+        for (const player of queenBees.getKeyList()) {
             // If the offset computed by the parent's constructor is not (0, 0),
             // We will need to adapt the position of the queen bees.
             // The position of the pieces has already been adapted by the parent's constructor
@@ -200,7 +200,7 @@ export class HiveState extends OpenHexagonalGameState<HivePieceStack> implements
     }
 
     public occupiedSpaces(): Coord[] {
-        return this.pieces.listKeys();
+        return this.pieces.getKeyList();
     }
 
     public emptyNeighbors(coord: Coord): Coord[] {

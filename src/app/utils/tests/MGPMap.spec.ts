@@ -23,7 +23,7 @@ describe('MGPMap', () => {
         map.set('first', 1);
         map.set('second', 2);
 
-        expect(map.listKeys()).toEqual(['first', 'second']);
+        expect(map.getKeyList()).toEqual(['first', 'second']);
     });
 
     describe('replace', () => {

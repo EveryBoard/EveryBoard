@@ -401,7 +401,7 @@ export abstract class TaflRules<M extends TaflMove> extends ConfigurableRules<M,
             foundDestination = start.getNext(dir, 1);
             let obstacleFound: boolean = false;
             while (state.isOnBoard(foundDestination) && obstacleFound === false) {
-                const destinationEmpty: boolean = state.getAbsoluteOwner(foundDestination) === PlayerOrNone.NONE;
+                const destinationEmpty: boolean = state.getAbsoluteOwner(foundDestination).isNone();
                 if (destinationEmpty) {
                     if (this.isExternalThrone(state, foundDestination)) {
                         if (state.getPieceAt(start).isKing()) {

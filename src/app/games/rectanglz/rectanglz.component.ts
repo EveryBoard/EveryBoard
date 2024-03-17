@@ -27,10 +27,10 @@ export class RectanglzComponent extends RectangularGameComponent<RectanglzRules,
 {
     public EMPTY: PlayerOrNone = PlayerOrNone.NONE;
 
-    private capturedCoords: Coord[] = [];
-    private lastDrops: Coord[] = [];
+    private lastStart: MGPOptional<Coord> = MGPOptional.empty();
+    private lastLanding: MGPOptional<Coord> = MGPOptional.empty();
 
-    public chosen: MGPOptional<Coord> = MGPOptional.empty();
+    public selected: MGPOptional<Coord> = MGPOptional.empty();
 
     public constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
@@ -50,28 +50,33 @@ export class RectanglzComponent extends RectangularGameComponent<RectanglzRules,
     }
 
     public override async showLastMove(move: RectanglzMove): Promise<void> {
-        return;
+        console.log('show last move', move.toString());
+        this.lastStart = MGPOptional.of(move.getStart());
+        this.lastLanding = MGPOptional.of(move.getEnd());
     }
 
     public override hideLastMove(): void {
-        return;
+        console.log('hide last move');
+        this.lastStart = MGPOptional.empty();
+        this.lastLanding = MGPOptional.empty();
     }
 
     public override cancelMoveAttempt(): void {
+        this.selected = MGPOptional.empty();
     }
 
     public async onClick(x: number, y: number): Promise<MGPValidation> {
-        console.log('onClick')
+        console.log('onClick!')
         const clickValidity: MGPValidation = await this.canUserPlay('#click_' + x + '_' + y);
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }
         const clicked: Coord = new Coord(x, y);
-        if (this.chosen.equalsValue(clicked)) {
+        if (this.selected.equalsValue(clicked)) {
             this.cancelMoveAttempt();
             return MGPValidation.SUCCESS;
         }
-        if (this.chosen.isAbsent() ||
+        if (this.selected.isAbsent() ||
             this.pieceBelongsToCurrentPlayer(clicked))
         {
             return this.choosePiece(clicked);
@@ -87,21 +92,19 @@ export class RectanglzComponent extends RectangularGameComponent<RectanglzRules,
     }
 
     private async choosePiece(coord: Coord): Promise<MGPValidation> {
-        console.log('choosePiece')
-        if (this.board[coord.y][coord.x] === PlayerOrNone.NONE) {
+        if (this.board[coord.y][coord.x].isNone()) {
             return this.cancelMove(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY());
         }
         if (this.pieceBelongsToCurrentPlayer(coord) === false) {
             return this.cancelMove(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT());
         }
 
-        this.chosen = MGPOptional.of(coord);
+        this.selected = MGPOptional.of(coord);
         return MGPValidation.SUCCESS;
     }
 
     private async chooseDestination(x: number, y: number): Promise<MGPValidation> {
-        console.log('chooseDestination')
-        const chosenPiece: Coord = this.chosen.get();
+        const chosenPiece: Coord = this.selected.get();
         const chosenDestination: Coord = new Coord(x, y);
         const move: MGPFallible<RectanglzMove> = RectanglzMove.from(chosenPiece, chosenDestination);
         if (move.isSuccess()) {
@@ -113,9 +116,7 @@ export class RectanglzComponent extends RectangularGameComponent<RectanglzRules,
 
     public getRectClasses(x: number, y: number): string[] {
         const coord: Coord = new Coord(x, y);
-        if (this.capturedCoords.some((c: Coord) => c.equals(coord))) {
-            return ['captured-fill'];
-        } else if (this.lastDrops.some((c: Coord) => c.equals(coord))) {
+        if (this.lastLanding.equalsValue(coord)) {
             return ['moved-fill'];
         } else {
             return [];
@@ -129,8 +130,12 @@ export class RectanglzComponent extends RectangularGameComponent<RectanglzRules,
         const owner: PlayerOrNone = this.getState().getPieceAt(coord);
         classes.push(this.getPlayerClass(owner));
 
-        if (this.chosen.equalsValue(coord)) {
+        if (this.selected.equalsValue(coord)) {
             classes.push('selected-stroke');
+        } else if (this.lastStart.equalsValue(coord) ||
+                   this.lastLanding.equalsValue(coord))
+        {
+            classes.push('last-move-stroke');
         }
         return classes;
     }

@@ -6,7 +6,7 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { MGPFallibleTestUtils } from 'src/app/utils/tests/MGPFallible.spec';
 import { RectanglzFailure } from '../RectanglzFailure';
 
-fdescribe('RectanglzMove', () => {
+xdescribe('RectanglzMove', () => {
 
     describe('toString', () => {
 

@@ -239,7 +239,7 @@ export class DiaballikComponent extends RectangularGameComponent<DiaballikRules,
                     }
                     return MGPValidation.SUCCESS;
                 }
-            } else if (clickedPiece.owner === PlayerOrNone.NONE) {
+            } else if (clickedPiece.owner.isNone()) {
                 return this.cancelMove(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY());
             } else {
                 return this.cancelMove(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT());

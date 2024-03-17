@@ -121,7 +121,7 @@ export abstract class GameWrapper<P extends Comparable> extends BaseWrapperCompo
 
     public async setRole(role: PlayerOrNone): Promise<void> {
         this.role = role;
-        if (role === PlayerOrNone.NONE) {
+        if (role.isNone()) {
             this.gameComponent.setPointOfView(Player.ZERO);
         } else {
             this.gameComponent.setPointOfView(role as Player);
@@ -164,7 +164,7 @@ export abstract class GameWrapper<P extends Comparable> extends BaseWrapperCompo
     }
 
     public isPlayerTurn(): boolean {
-        if (this.role === PlayerOrNone.NONE) {
+        if (this.role.isNone()) {
             return false;
         }
         if (this.gameComponent == null) {

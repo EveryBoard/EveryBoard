@@ -194,7 +194,7 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
         for (const direction of Direction.DIRECTIONS) {
             const coord: Coord = this.firstPiece.get().getNext(direction, 1);
             if (this.getState().isOnBoard(coord) &&
-                this.board[coord.y][coord.x] === PlayerOrNone.NONE)
+                this.board[coord.y][coord.x].isNone())
             {
                 neighbors.push(coord);
             }

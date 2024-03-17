@@ -77,7 +77,7 @@ export class SiamPiece {
     }
 
     public isEmptyOrMountain(): boolean {
-        return this.owner === PlayerOrNone.NONE;
+        return this.owner.isNone();
     }
 
     public isPiece(): boolean {

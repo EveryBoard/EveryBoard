@@ -21,7 +21,7 @@ export class TeekoMoveGenerator extends MoveGenerator<TeekoMove, TeekoState, Tee
         const moves: TeekoMove[] = [];
         for (const coordAndContent of state.getCoordsAndContents()) {
             const coord: Coord = coordAndContent.coord;
-            if (coordAndContent.content.isPlayer() === false) {
+            if (coordAndContent.content.isNone()) {
                 const newMove: TeekoDropMove = TeekoDropMove.from(coord).get();
                 moves.push(newMove);
             }
@@ -49,7 +49,7 @@ export class TeekoMoveGenerator extends MoveGenerator<TeekoMove, TeekoState, Tee
             const possibleTargets: Coord[] = [];
             for (const direction of Direction.factory.all) {
                 const target: Coord = start.getNext(direction);
-                if (TeekoState.isOnBoard(target) && state.getPieceAt(target) === PlayerOrNone.NONE) {
+                if (TeekoState.isOnBoard(target) && state.getPieceAt(target).isNone()) {
                     possibleTargets.push(target);
                 }
             }

@@ -103,7 +103,7 @@ export class DiaballikRules extends Rules<DiaballikMove, DiaballikState, Diaball
         // The origin must be a piece owned by the player
         const start: Coord = translation.getStart();
         const startPiece: DiaballikPiece = state.getPieceAt(start);
-        if (startPiece.owner === PlayerOrNone.NONE) {
+        if (startPiece.owner.isNone()) {
             return MGPFallible.failure(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY());
         }
         if (startPiece.owner === state.getCurrentOpponent()) {
@@ -131,7 +131,7 @@ export class DiaballikRules extends Rules<DiaballikMove, DiaballikState, Diaball
         // The origin must be a piece of the player that holds the ball
         const start: Coord = pass.getStart();
         const startPiece: DiaballikPiece = state.getPieceAt(start);
-        if (startPiece.owner === PlayerOrNone.NONE) {
+        if (startPiece.owner.isNone()) {
             return MGPFallible.failure(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY());
         }
         if (startPiece.owner === state.getCurrentOpponent()) {
@@ -142,7 +142,7 @@ export class DiaballikRules extends Rules<DiaballikMove, DiaballikState, Diaball
         // The destination must be a piece of the player
         const end: Coord = pass.getEnd();
         const endPiece: DiaballikPiece = state.getPieceAt(end);
-        if (endPiece.owner === PlayerOrNone.NONE) {
+        if (endPiece.owner.isNone()) {
             return MGPFallible.failure(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY());
         }
         if (endPiece.owner === state.getCurrentOpponent()) {

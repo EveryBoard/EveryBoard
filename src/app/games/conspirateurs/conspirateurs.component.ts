@@ -193,7 +193,7 @@ export class ConspirateursComponent extends GameComponent<ConspirateursRules, Co
         } else if (state.isDropPhase()) {
             const move: ConspirateursMove = ConspirateursMoveDrop.of(coord);
             return this.chooseMove(move);
-        } else if (piece === PlayerOrNone.NONE) {
+        } else if (piece.isNone()) {
             return this.cancelMove(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY());
         } else {
             return this.cancelMove(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT());

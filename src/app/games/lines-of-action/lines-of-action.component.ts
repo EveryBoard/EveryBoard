@@ -77,7 +77,7 @@ export class LinesOfActionComponent extends RectangularGameComponent<LinesOfActi
 
     private async select(coord: Coord): Promise<MGPValidation> {
         const piece: PlayerOrNone = this.getState().getPieceAt(coord);
-        if (piece === PlayerOrNone.NONE) {
+        if (piece.isNone()) {
             return this.cancelMove(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY());
         } else if (piece === this.getState().getCurrentOpponent()) {
             return this.cancelMove(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT());

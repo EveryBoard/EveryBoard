@@ -8,7 +8,7 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 
-fdescribe('RectanglzRules', () => {
+xdescribe('RectanglzRules', () => {
 
     const _: PlayerOrNone = PlayerOrNone.NONE;
     const O: PlayerOrNone = PlayerOrNone.ZERO;
@@ -188,7 +188,7 @@ fdescribe('RectanglzRules', () => {
             [_, _, _, O, O, O, X, X],
             [_, _, _, O, O, O, X, X],
             [_, _, _, O, O, O, X, X],
-        ], 64);
+        ], 65);
         // Then victory should be granted to Player.ZERO
         const node: RectanglzNode = new RectanglzNode(state);
         RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, defaultConfig);

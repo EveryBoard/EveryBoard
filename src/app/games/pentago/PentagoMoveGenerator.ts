@@ -46,7 +46,7 @@ export class PentagoMoveGenerator extends MoveGenerator<PentagoMove, PentagoStat
         for (let y: number = 0; y < PentagoState.SIZE; y++) {
             for (let x: number = 0; x < PentagoState.SIZE; x++) {
                 const coord: Coord = new Coord(x, y);
-                if (state.getPieceAt(coord) === PlayerOrNone.NONE) {
+                if (state.getPieceAt(coord).isNone()) {
                     legalDrops.push(coord);
                 }
             }

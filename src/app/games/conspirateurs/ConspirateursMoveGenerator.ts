@@ -24,7 +24,7 @@ export class ConspirateursMoveGenerator extends MoveGenerator<ConspirateursMove,
         const end: Coord = ConspirateursState.CENTRAL_ZONE_BOTTOM_RIGHT;
         for (let y: number = start.y; y <= end.y; y++) {
             for (let x: number = start.x; x <= end.x; x++) {
-                if (state.getPieceAtXY(x, y) === PlayerOrNone.NONE) {
+                if (state.getPieceAtXY(x, y).isNone()) {
                     moves.push(ConspirateursMoveDrop.of(new Coord(x, y)));
                 }
             }
