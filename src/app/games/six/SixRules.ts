@@ -13,7 +13,6 @@ import { Table } from 'src/app/jscaip/TableUtils';
 import { Debug } from 'src/app/utils/Debug';
 import { CoordSet } from 'src/app/jscaip/CoordSet';
 import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
-import { Table } from 'src/app/utils/ArrayUtils';
 import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 
 export type SixLegalityInformation = MGPSet<Coord>;

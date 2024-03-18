@@ -11,11 +11,7 @@ import { PentagoState } from './PentagoState';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { Table, TableUtils } from 'src/app/jscaip/TableUtils';
 import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
-<<<<<<< HEAD
-=======
-import { Table, TableUtils } from 'src/app/utils/ArrayUtils';
 import { PlayerMap } from 'src/app/jscaip/PlayerMap';
->>>>>>> 04e25b8f94e1cbe6242c2d4caba85329567e47f1
 
 export class PentagoNode extends GameNode<PentagoMove, PentagoState> {}
 

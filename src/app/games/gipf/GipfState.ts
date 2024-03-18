@@ -19,7 +19,7 @@ export class GipfState extends HexagonalGameState<FourStatePiece> {
         if (this.turn !== other.turn) return false;
         if (this.sidePieces.equals(other.sidePieces) === false) return false;
         if (this.capturedPieces.equals(other.capturedPieces) === false) return false;
-        return TableUtils.compare(this.board, other.board);
+        return TableUtils.equals(this.board, other.board);
     }
 
     public getNumberOfPiecesToPlace(player: Player): number {
