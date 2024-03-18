@@ -165,7 +165,7 @@ export class SiamComponent extends RectangularGameComponent<SiamRules,
             } else {
                 Utils.assert(this.getState().isOnBoard(clickedCoord), 'SiamComponent: user clicked outside of board when it should not be possible');
                 const clickedPiece: SiamPiece = this.board[y][x];
-                if (clickedPiece.getOwner() === PlayerOrNone.NONE) {
+                if (clickedPiece.getOwner().isNone()) {
                     return this.cancelMove(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY());
                 } else if (clickedPiece.getOwner() !== this.getCurrentPlayer()) {
                     return this.cancelMove(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT());

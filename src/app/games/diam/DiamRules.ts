@@ -98,7 +98,7 @@ export class DiamRules extends Rules<DiamMove, DiamState> {
 
     private isShiftLegal(shift: DiamMoveShift, state: DiamState): MGPValidation {
         const piece: DiamPiece = state.getPieceAt(shift.start);
-        if (piece.owner === PlayerOrNone.NONE) {
+        if (piece.owner.isNone()) {
             return MGPValidation.failure(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY());
         }
         if (piece.owner === state.getCurrentOpponent()) {

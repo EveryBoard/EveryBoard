@@ -64,7 +64,7 @@ export class EpaminondasAttackHeuristic extends EpaminondasHeuristic {
                             const neighbor: PlayerOrNone = state.getPieceAt(coord);
                             if (neighbor === owner) {
                                 score += 1 * owner.getScoreModifier();
-                            } else if (neighbor === PlayerOrNone.NONE) {
+                            } else if (neighbor.isNone()) {
                                 score += 1 * owner.getScoreModifier();
                             }
                         }
@@ -124,7 +124,7 @@ export class EpaminondasAttackHeuristic extends EpaminondasHeuristic {
                     let stepSize: number = 1;
                     while (state.isOnBoard(nextCoord) &&
                            stepSize <= movedPieces &&
-                           state.getPieceAt(nextCoord) === PlayerOrNone.NONE)
+                           state.getPieceAt(nextCoord).isNone())
                     {
                         stepSize++;
                         nextCoord = nextCoord.getNext(direction, 1);

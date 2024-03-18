@@ -134,7 +134,7 @@ export class ReversiRules extends ConfigurableRules<ReversiMove,
                 // we found a sandwicher, in range, in this direction
                 return sandwichedsCoord;
             }
-            if (testedCoordContent === PlayerOrNone.NONE) {
+            if (testedCoordContent.isNone()) {
                 // we found the emptyness before a capturer, so there won't be a next space
                 return [];
             } // we found a switched/captured
@@ -189,7 +189,7 @@ export class ReversiRules extends ConfigurableRules<ReversiMove,
         const opponent: Player = state.getCurrentOpponent();
         for (const coordAndContent of state.getCoordsAndContents()) {
             const coord: Coord = coordAndContent.coord;
-            if (state.getPieceAt(coord) === PlayerOrNone.NONE) {
+            if (state.getPieceAt(coord).isNone()) {
                 // For each empty spaces
                 nextBoard = state.getCopiedBoard();
                 const opponentNeighbors: Coord[] = state.getNeighboringPawnLike(opponent, coord);

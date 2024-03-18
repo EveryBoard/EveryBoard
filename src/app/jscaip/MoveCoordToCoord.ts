@@ -12,7 +12,7 @@ export abstract class MoveCoordToCoord extends MoveWithTwoCoords {
     }
 
     public length(): number {
-        return this.getStart().getDistance(this.getEnd());
+        return this.getStart().getLinearDistanceToward(this.getEnd());
     }
 
     public getDirection(): MGPFallible<Direction> {

@@ -64,7 +64,7 @@ export class MartianChessMove extends MoveCoordToCoord {
         return vector.isDiagonalOfLength(1);
     }
     public isValidForDrone(): boolean {
-        const distance: number = this.getStart().getDistance(this.getEnd());
+        const distance: number = this.getStart().getLinearDistanceToward(this.getEnd());
         return distance <= 2;
     }
     public isUndoneBy(moveOpt: MGPOptional<MartianChessMove>): boolean {

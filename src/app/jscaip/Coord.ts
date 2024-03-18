@@ -104,8 +104,12 @@ export class Coord extends Vector {
         return Math.abs(this.x - c.x) + Math.abs(this.y - c.y);
     }
 
-    public getDistance(c: Coord): number {
-        if (c.isAlignedWith(this) === false) {
+    public getLinearDistanceToward(c: Coord): number {
+        return this.getDistanceToward(c, true);
+    }
+
+    public getDistanceToward(c: Coord, checkAlignement: boolean = false): number { // TODO TEST
+        if (checkAlignement && c.isAlignedWith(this) === false) {
             throw new Error('Cannot calculate distance with non aligned coords.');
         }
         const dx: number = Math.abs(c.x - this.x);
@@ -132,7 +136,7 @@ export class Coord extends Vector {
 
     public isNeighborWith(coord: Coord): boolean {
         if (this.isAlignedWith(coord)) {
-            return this.getDistance(coord) === 1;
+            return this.getLinearDistanceToward(coord) === 1;
         } else {
             return false;
         }

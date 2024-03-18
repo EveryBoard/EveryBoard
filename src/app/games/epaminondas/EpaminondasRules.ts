@@ -77,7 +77,7 @@ export class EpaminondasRules
                 return MGPValidation.failure(EpaminondasFailure.PHALANX_CANNOT_CONTAIN_PIECES_OUTSIDE_BOARD());
             }
             const spaceContent: PlayerOrNone = state.getPieceAt(coord);
-            if (spaceContent === PlayerOrNone.NONE) {
+            if (spaceContent.isNone()) {
                 return MGPValidation.failure(EpaminondasFailure.PHALANX_CANNOT_CONTAIN_EMPTY_SQUARE());
             }
             if (spaceContent === opponent) {

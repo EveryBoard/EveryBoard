@@ -64,7 +64,7 @@ export class GameNode<M extends Move, S extends GameState> {
      * Returns all the children of the node
      */
     public getChildren(): GameNode<M, S>[] {
-        return this.children.listValues();
+        return this.children.getValueList();
     }
 
     /**
@@ -114,7 +114,7 @@ export class GameNode<M extends Move, S extends GameState> {
 
         let nextId: number = id+1;
         if (max === undefined || level < max) {
-            for (const child of this.children.listValues()) {
+            for (const child of this.children.getValueList()) {
                 console.log(`    node_${id} -> node_${nextId} [label="${child.previousMove.get()}"];`);
                 nextId = child.printDot(rules, labelFn, max, level+1, nextId);
             }

@@ -25,10 +25,10 @@ export class YinshPiece implements ComparableObject {
     public static RINGS: PlayerMap<YinshPiece> = PlayerMap.ofValues(YinshPiece.RING_ZERO, YinshPiece.RING_ONE);
 
     public static of(playerOrNone: PlayerOrNone, isRing: boolean): YinshPiece {
-        if (playerOrNone === PlayerOrNone.NONE) {
+        if (playerOrNone.isNone()) {
             return YinshPiece.EMPTY;
         } else {
-            const player: Player = playerOrNone as Player;
+            const player: Player = playerOrNone;
             if (isRing) {
                 return YinshPiece.RINGS.get(player);
             } else {

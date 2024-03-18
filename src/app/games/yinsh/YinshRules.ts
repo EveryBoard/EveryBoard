@@ -299,7 +299,7 @@ export class YinshRules extends Rules<YinshMove, YinshState, YinshLegalityInform
         this.getLinePortionsWithAtLeastFivePiecesOfPlayer(state, player)
             .forEach((linePortion: { start: Coord, end: Coord, dir: HexaDirection}) => {
                 for (let cur: Coord = linePortion.start;
-                    5 <= cur.getDistance(linePortion.end);
+                    5 <= cur.getLinearDistanceToward(linePortion.end);
                     cur = cur.getNext(linePortion.dir)) {
                     captures.push(YinshCapture.of(cur, cur.getNext(linePortion.dir, 4)));
                 }

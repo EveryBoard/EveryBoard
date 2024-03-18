@@ -34,7 +34,7 @@ export class GipfCapture {
         let previous: MGPOptional<Coord> = MGPOptional.empty();
         // Captured coords must be consecutive
         for (const coord of this.capturedSpaces) {
-            Utils.assert(previous.isAbsent() || previous.get().getDistance(coord) === 1,
+            Utils.assert(previous.isAbsent() || previous.get().getLinearDistanceToward(coord) === 1,
                          'Cannot create a GipfCapture with non-consecutive coords');
             previous = MGPOptional.of(coord);
         }

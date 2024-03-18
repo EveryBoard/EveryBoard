@@ -39,7 +39,7 @@ export class ConspirateursMoveSimple extends MoveCoordToCoord {
         MoveWithTwoCoords.getFallibleEncoder(ConspirateursMoveSimple.from);
 
     public static from(start: Coord, end: Coord): MGPFallible<ConspirateursMoveSimple> {
-        if (start.isAlignedWith(end) && start.getDistance(end) === 1) {
+        if (start.isAlignedWith(end) && start.getLinearDistanceToward(end) === 1) {
             return MGPFallible.success(new ConspirateursMoveSimple(start, end));
         } else {
             return MGPFallible.failure(ConspirateursFailure.SIMPLE_MOVE_SHOULD_BE_OF_ONE_STEP());
@@ -78,7 +78,7 @@ export class ConspirateursMoveJump extends Move {
             if (jumpDirection.isFailure()) {
                 return MGPFallible.failure(ConspirateursFailure.INVALID_JUMP());
             }
-            const jumpDistance: number = coords[i-1].getDistance(coords[i]);
+            const jumpDistance: number = coords[i-1].getLinearDistanceToward(coords[i]);
             if (jumpDistance !== 2) {
                 return MGPFallible.failure(ConspirateursFailure.INVALID_JUMP());
             }

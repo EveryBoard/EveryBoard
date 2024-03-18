@@ -26,14 +26,14 @@ export abstract class OpenHexagonalGameState<T extends NonNullable<Comparable>> 
         return this.pieces;
     }
     public getPieceCoords(): Coord[] {
-        return this.pieces.listKeys();
+        return this.pieces.getKeyList();
     }
     public computeScale(): Scale {
         let minWidth: number = Number.MAX_SAFE_INTEGER;
         let maxWidth: number = Number.MIN_SAFE_INTEGER;
         let minHeight: number = Number.MAX_SAFE_INTEGER;
         let maxHeight: number = Number.MIN_SAFE_INTEGER;
-        for (const coord of this.pieces.listKeys()) {
+        for (const coord of this.pieces.getKeyList()) {
             minWidth = Math.min(coord.x, minWidth);
             maxWidth = Math.max(coord.x, maxWidth);
             minHeight = Math.min(coord.y, minHeight);

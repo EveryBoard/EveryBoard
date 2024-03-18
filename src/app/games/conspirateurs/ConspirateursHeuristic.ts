@@ -24,7 +24,7 @@ export class ConspirateursHeuristic extends PlayerMetricHeuristic<ConspirateursM
                     let minEmptyShelterDistance: number = state.getWidth() + state.getHeight();
                     // start as the maximum distance possible
                     for (const shelter of ConspirateursState.ALL_SHELTERS) {
-                        if (state.getPieceAt(shelter) === PlayerOrNone.NONE) {
+                        if (state.getPieceAt(shelter).isNone()) {
                             const distance: number = coord.getOrthogonalDistance(shelter);
                             minEmptyShelterDistance = Math.min(minEmptyShelterDistance, distance);
                         }

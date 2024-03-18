@@ -265,7 +265,7 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneRules,
             this.cancelMoveAttempt();
             return this.firstClick(x, y);
         }
-        const distance: number = coord.getDistance(firstPiece);
+        const distance: number = coord.getLinearDistanceToward(firstPiece);
         if (distance > 2) {
             return this.cancelMove(AbaloneFailure.CANNOT_MOVE_MORE_THAN_THREE_PIECES());
         }
@@ -311,8 +311,8 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneRules,
             const secondAlignment: MGPFallible<Direction> = Direction.factory.fromMove(lastPiece, clicked);
             if (alignement.equals(secondAlignment)) {
                 // Then it's an extension of the line
-                const firstDistance: number = firstPiece.getDistance(clicked);
-                const secondDistance: number = lastPiece.getDistance(clicked);
+                const firstDistance: number = firstPiece.getLinearDistanceToward(clicked);
+                const secondDistance: number = lastPiece.getLinearDistanceToward(clicked);
                 if (Math.max(firstDistance, secondDistance) === 2) {
                     this.selecteds.push(clicked);
                     ArrayUtils.sortByDescending(this.selecteds, AbaloneMove.sortCoord);

@@ -14,17 +14,16 @@ export class RulesFailure {
 
     public static readonly CANNOT_SELF_CAPTURE: Localized = () => $localize`You cannot capture your own pieces.`;
 
-
     public static readonly CANNOT_PASS: Localized = () => $localize`You cannot pass your turn.`;
 
     public static readonly MUST_LAND_ON_EMPTY_SPACE: Localized = () => $localize`You must drop your piece on an empty space.`;
 
     public static readonly MUST_PASS: Localized = () => $localize`You must pass your turn.`;
 
-
     public static readonly MOVE_CANNOT_BE_STATIC: Localized = () => $localize`You must choose different starting and ending coordinates.`;
 
     public static readonly SOMETHING_IN_THE_WAY: Localized = () => $localize`There is a piece between the piece you chose and its landing space.`;
 
     public static readonly MUST_MOVE_ON_NEIGHBOR: Localized = () => $localize`You must move on a direct neighboring space.`;
+
 }

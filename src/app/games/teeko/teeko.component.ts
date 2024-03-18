@@ -90,7 +90,7 @@ export class TeekoComponent extends RectangularGameComponent<TeekoRules,
                 if (clickedPiece === currentPlayer) {
                     this.selected = MGPOptional.of(clickedCoord);
                     return MGPValidation.SUCCESS;
-                } else if (clickedPiece === PlayerOrNone.NONE) {
+                } else if (clickedPiece.isNone()) {
                     return this.cancelMove(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY());
                 } else {
                     return this.cancelMove(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT());

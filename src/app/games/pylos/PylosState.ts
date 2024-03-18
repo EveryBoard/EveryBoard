@@ -66,11 +66,13 @@ export class PylosState extends GameState {
     }
 
     public isLandable(coord: PylosCoord): boolean {
-        if (this.getPieceAt(coord).isPlayer()) return false;
+        if (this.getPieceAt(coord).isPlayer()) {
+            return false;
+        }
         if (coord.z === 0) return true;
         const lowerPieces: PylosCoord[] = coord.getLowerPieces();
         for (const lowerPiece of lowerPieces) {
-            if (this.getPieceAt(lowerPiece) === PlayerOrNone.NONE) {
+            if (this.getPieceAt(lowerPiece).isNone()) {
                 return false;
             }
         }
