@@ -1,7 +1,6 @@
 import { MoveCoord } from 'src/app/jscaip/MoveCoord';
 import { Orthogonal } from 'src/app/jscaip/Direction';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { Encoder } from 'src/app/utils/Encoder';
+import { Encoder, MGPOptional } from '@everyboard/lib';
 
 type SiamMoveFields = [number, number, MGPOptional<Orthogonal>, Orthogonal];
 

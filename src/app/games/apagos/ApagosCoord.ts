@@ -1,5 +1,4 @@
-import { assert } from 'src/app/utils/assert';
-import { Encoder } from 'src/app/utils/Encoder';
+import { Encoder, Utils } from '@everyboard/lib';
 
 export class ApagosCoord {
 
@@ -22,7 +21,7 @@ export class ApagosCoord {
             case 1: return ApagosCoord.ONE;
             case 2: return ApagosCoord.TWO;
             default:
-                assert(x === 3, 'Invalid Apagos Coord ' + x);
+                Utils.assert(x === 3, 'Invalid Apagos Coord ' + x);
                 return ApagosCoord.THREE;
         }
     }

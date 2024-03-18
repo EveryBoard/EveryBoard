@@ -1,9 +1,9 @@
 /* eslint-disable max-lines-per-function */
 import { GoMove } from '../GoMove';
 import { Phase, GoState, GoPiece } from '../GoState';
-import { Table } from 'src/app/utils/ArrayUtils';
+import { Table } from 'src/app/jscaip/TableUtils';
 import { Coord } from 'src/app/jscaip/Coord';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { MGPOptional } from '@everyboard/lib';
 import { GoConfig, GoNode, GoRules } from '../GoRules';
 import { GoFailure } from '../GoFailure';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';

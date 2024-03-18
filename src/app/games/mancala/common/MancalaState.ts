@@ -1,8 +1,8 @@
-import { Coord } from 'src/app/jscaip/Coord';
 import { GameStateWithTable } from 'src/app/jscaip/GameStateWithTable';
+import { Table, TableUtils } from 'src/app/jscaip/TableUtils';
 import { Player } from 'src/app/jscaip/Player';
 import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
-import { Table, TableUtils } from 'src/app/utils/ArrayUtils';
+import { Coord } from 'src/app/jscaip/Coord';
 
 export class MancalaState extends GameStateWithTable<number> {
 
@@ -64,7 +64,7 @@ export class MancalaState extends GameStateWithTable<number> {
     }
 
     public equals(other: MancalaState): boolean {
-        if (TableUtils.compare(this.board, other.board) === false) return false;
+        if (TableUtils.equals(this.board, other.board) === false) return false;
         if (this.scores.equals(other.scores) === false) return false;
         return this.turn === other.turn;
     }

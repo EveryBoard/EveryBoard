@@ -1,5 +1,5 @@
 import { fakeAsync, TestBed } from '@angular/core/testing';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { MGPOptional } from '@everyboard/lib';
 import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { UserMocks } from 'src/app/domain/UserMocks.spec';
 import { P4Component } from 'src/app/games/p4/p4.component';

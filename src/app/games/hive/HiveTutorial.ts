@@ -6,7 +6,7 @@ import { HiveMove } from './HiveMove';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Move } from 'src/app/jscaip/Move';
 import { GameState } from 'src/app/jscaip/GameState';
-import { MGPValidation } from 'src/app/utils/MGPValidation';
+import { MGPValidation } from '@everyboard/lib';
 import { HiveRules } from './HiveRules';
 import { TutorialStepMessage } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
 

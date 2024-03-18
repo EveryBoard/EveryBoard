@@ -1,7 +1,7 @@
 /* eslint-disable max-lines-per-function */
 import { QuartoPiece } from '../QuartoPiece';
 import { QuartoState } from '../QuartoState';
-import { Table } from 'src/app/utils/ArrayUtils';
+import { Table } from 'src/app/jscaip/TableUtils';
 import { QuartoMove } from '../QuartoMove';
 import { HeuristicUtils } from 'src/app/jscaip/AI/tests/HeuristicUtils.spec';
 import { Player } from 'src/app/jscaip/Player';

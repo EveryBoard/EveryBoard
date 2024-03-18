@@ -1,7 +1,7 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { HexagonalGameState } from 'src/app/jscaip/HexagonalGameState';
 import { Player } from 'src/app/jscaip/Player';
-import { Table, TableUtils } from 'src/app/utils/ArrayUtils';
+import { Table, TableUtils } from 'src/app/jscaip/TableUtils';
 import { YinshPiece } from './YinshPiece';
 import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 
@@ -38,7 +38,7 @@ export class YinshState extends HexagonalGameState<YinshPiece> {
         if (this.sideRings.equals(other.sideRings) === false) {
             return false;
         }
-        return TableUtils.compare(this.board, other.board);
+        return TableUtils.equals(this.board, other.board);
     }
 
     public getRingCoords(player: Player): Coord[] {

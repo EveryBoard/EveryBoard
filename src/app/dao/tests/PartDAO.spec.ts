@@ -3,11 +3,10 @@ import { TestBed } from '@angular/core/testing';
 import { GameEvent, RequestType, Reply, Part, MGPResult, GameEventMove, GameEventRequest, GameEventReply, GameEventAction } from 'src/app/domain/Part';
 import { PartMocks } from 'src/app/domain/PartMocks.spec';
 import { createConnectedUser, createUnverifiedUser, signOut, reconnectUser, createDisconnectedUser } from 'src/app/services/tests/ConnectedUserService.spec';
-import { expectPermissionToBeDenied, setupEmulators } from 'src/app/utils/tests/TestUtils.spec';
 import { PartDAO } from '../PartDAO';
 import { UserDAO } from '../UserDAO';
 import { serverTimestamp, Timestamp } from 'firebase/firestore';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { MGPOptional, TimeUtils } from '@everyboard/lib';
 import { ConfigRoomDAO } from '../ConfigRoomDAO';
 import { MinimalUser } from 'src/app/domain/MinimalUser';
 import { ConfigRoomMocks } from 'src/app/domain/ConfigRoomMocks.spec';
@@ -18,7 +17,7 @@ import { CurrentGameMocks } from 'src/app/domain/mocks/CurrentGameMocks.spec';
 import { ConfigRoomService } from 'src/app/services/ConfigRoomService';
 import { GameEventService } from '../../services/GameEventService';
 import { IFirestoreDAO } from '../FirestoreDAO';
-import { TimeUtils } from 'src/app/utils/TimeUtils';
+import { expectPermissionToBeDenied, setupEmulators } from 'src/app/utils/tests/TestUtils.spec';
 
 type PartInfo = {
     id: string,

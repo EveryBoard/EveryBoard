@@ -11,20 +11,19 @@ import { Player } from 'src/app/jscaip/Player';
 import { FirstPlayer, ConfigRoom, PartType } from 'src/app/domain/ConfigRoom';
 import { ConfigRoomDAO } from 'src/app/dao/ConfigRoomDAO';
 import { RouterTestingModule } from '@angular/router/testing';
-import { BlankComponent } from 'src/app/utils/tests/TestUtils.spec';
 import { ConnectedUserService } from '../ConnectedUserService';
 import { ConnectedUserServiceMock } from './ConnectedUserService.spec';
 import { ConfigRoomMocks } from 'src/app/domain/ConfigRoomMocks.spec';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { Utils } from 'src/app/utils/utils';
+import { MGPOptional, Utils } from '@everyboard/lib';
 import { ConfigRoomService } from '../ConfigRoomService';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { UserMocks } from 'src/app/domain/UserMocks.spec';
 import { PartMocks } from 'src/app/domain/PartMocks.spec';
 import { Subscription } from 'rxjs';
 import { GameEventService } from '../GameEventService';
 import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 import { NoConfig, RulesConfigUtils } from 'src/app/jscaip/RulesConfigUtil';
+import { BlankComponent } from 'src/app/utils/tests/TestUtils.spec';
 
 describe('GameService', () => {
 

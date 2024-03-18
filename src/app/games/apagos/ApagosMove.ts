@@ -1,9 +1,6 @@
-import { Encoder } from 'src/app/utils/Encoder';
+import { Encoder, MGPFallible, MGPOptional, Utils } from '@everyboard/lib';
 import { Move } from 'src/app/jscaip/Move';
 import { Player } from 'src/app/jscaip/Player';
-import { MGPFallible } from 'src/app/utils/MGPFallible';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { Utils } from 'src/app/utils/utils';
 import { ApagosCoord } from './ApagosCoord';
 import { ApagosFailure } from './ApagosFailure';
 

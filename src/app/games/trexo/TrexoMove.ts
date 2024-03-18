@@ -1,10 +1,8 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { MoveWithTwoCoords } from 'src/app/jscaip/MoveWithTwoCoords';
-import { Encoder } from 'src/app/utils/Encoder';
-import { MGPFallible } from 'src/app/utils/MGPFallible';
+import { Encoder, MGPFallible, Utils } from '@everyboard/lib';
 import { TrexoFailure } from './TrexoFailure';
 import { TrexoState } from './TrexoState';
-import { Utils } from 'src/app/utils/utils';
 
 /**
  * It's not really a move coord to coord but rather a "drop two coords" (that are neighbor)

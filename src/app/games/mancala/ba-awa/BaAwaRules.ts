@@ -1,12 +1,12 @@
 import { BooleanConfig, NumberConfig, RulesConfigDescription, RulesConfigDescriptionLocalizable } from 'src/app/components/wrapper-components/rules-configuration/RulesConfigDescription';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { MGPOptional } from '@everyboard/lib';
 import { BaAwaConfig } from './BaAwaConfig';
 import { MancalaCaptureResult, MancalaDistributionResult, MancalaDropResult, MancalaRules } from '../common/MancalaRules';
 import { MGPValidators } from 'src/app/utils/MGPValidator';
-import { TableUtils } from 'src/app/utils/ArrayUtils';
 import { MancalaState } from '../common/MancalaState';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Player } from 'src/app/jscaip/Player';
+import { TableUtils } from 'src/app/jscaip/TableUtils';
 
 export class BaAwaRules extends MancalaRules<BaAwaConfig> {
 

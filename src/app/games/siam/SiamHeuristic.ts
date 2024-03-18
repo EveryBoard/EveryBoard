@@ -6,7 +6,7 @@ import { SiamState } from './SiamState';
 import { Player } from 'src/app/jscaip/Player';
 import { SiamPiece } from './SiamPiece';
 import { Coord } from 'src/app/jscaip/Coord';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { MGPOptional } from '@everyboard/lib';
 
 export class SiamHeuristic extends Heuristic<SiamMove, SiamState, BoardValue, SiamConfig> {
 

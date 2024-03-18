@@ -3,7 +3,7 @@ import { PenteConfig } from '../PenteConfig';
 import { PenteMove } from '../PenteMove';
 import { PenteMoveGenerator } from '../PenteMoveGenerator';
 import { PenteNode, PenteRules } from '../PenteRules';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { MGPOptional } from '@everyboard/lib';
 
 describe('PenteMoveGenerator', () => {
 

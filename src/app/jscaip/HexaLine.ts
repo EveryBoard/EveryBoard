@@ -1,4 +1,4 @@
-import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { MGPOptional } from '@everyboard/lib';
 import { Coord } from './Coord';
 import { HexaDirection } from './HexaDirection';
 

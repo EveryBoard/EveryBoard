@@ -7,14 +7,11 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { HexaLayout } from 'src/app/jscaip/HexaLayout';
 import { FlatHexaOrientation } from 'src/app/jscaip/HexaOrientation';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { MGPSet } from 'src/app/utils/MGPSet';
-import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { HexagonalGameComponent }
     from '../../components/game-components/game-component/HexagonalGameComponent';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { MGPFallible } from 'src/app/utils/MGPFallible';
+import { MGPFallible, MGPOptional, MGPSet, MGPValidation } from '@everyboard/lib';
 import { ViewBox } from 'src/app/components/game-components/GameComponentUtils';
 import { MCTS } from 'src/app/jscaip/AI/MCTS';
 import { Minimax } from 'src/app/jscaip/AI/Minimax';

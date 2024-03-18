@@ -1,4 +1,4 @@
-import { ComparableObject } from 'src/app/utils/Comparable';
+import { ComparableObject } from '@everyboard/lib';
 import { KamisadoColor } from './KamisadoColor';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 

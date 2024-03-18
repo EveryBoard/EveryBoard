@@ -1,6 +1,6 @@
 import { KamisadoColor } from './KamisadoColor';
 import { KamisadoPiece } from './KamisadoPiece';
-import { TableUtils, Table } from 'src/app/utils/ArrayUtils';
+import { TableUtils, Table } from 'src/app/jscaip/TableUtils';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Player } from 'src/app/jscaip/Player';
 

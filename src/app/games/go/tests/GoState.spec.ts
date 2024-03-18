@@ -2,7 +2,7 @@
 import { Player } from 'src/app/jscaip/Player';
 import { GoPiece, GoState, Phase } from '../GoState';
 import { GoConfig, GoRules } from '../GoRules';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { MGPOptional } from '@everyboard/lib';
 import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 
 const O: GoPiece = GoPiece.DARK;

@@ -1,8 +1,6 @@
-import { Encoder } from 'src/app/utils/Encoder';
-import { EncoderTestUtils } from 'src/app/utils/tests/Encoder.spec';
+import { Encoder, EncoderTestUtils, MGPFallible } from '@everyboard/lib';
 import { Coord } from '../Coord';
 import { MoveCoord } from '../MoveCoord';
-import { MGPFallible } from 'src/app/utils/MGPFallible';
 
 class MyMoveCoord extends MoveCoord {
     public toString(): string {

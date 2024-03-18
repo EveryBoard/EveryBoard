@@ -1,11 +1,11 @@
 /* eslint-disable max-lines-per-function */
-import { Table } from 'src/app/utils/ArrayUtils';
+import { Table } from 'src/app/jscaip/TableUtils';
 import { PlayerOrNone } from 'src/app/jscaip/Player';
 import { EpaminondasMove } from '../EpaminondasMove';
 import { EpaminondasState } from '../EpaminondasState';
 import { EpaminondasConfig, EpaminondasNode, EpaminondasRules } from '../EpaminondasRules';
 import { EpaminondasPhalanxSizeAndFilterMoveGenerator } from '../EpaminondasPhalanxSizeAndFilterMoveGenerator';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { MGPOptional } from '@everyboard/lib';
 
 const _: PlayerOrNone = PlayerOrNone.NONE;
 const O: PlayerOrNone = PlayerOrNone.ZERO;

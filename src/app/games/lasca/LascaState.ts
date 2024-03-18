@@ -1,8 +1,8 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { GameStateWithTable } from 'src/app/jscaip/GameStateWithTable';
 import { Player } from 'src/app/jscaip/Player';
-import { Table } from 'src/app/utils/ArrayUtils';
-import { Utils } from 'src/app/utils/utils';
+import { Table } from 'src/app/jscaip/TableUtils';
+import { Utils } from '@everyboard/lib';
 
 export class LascaPiece {
 

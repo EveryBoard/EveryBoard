@@ -2,10 +2,9 @@
 import { fakeAsync, tick } from '@angular/core/testing';
 import { DebugElement } from '@angular/core';
 import { RulesConfigurationComponent } from './rules-configuration.component';
-import { ActivatedRouteStub, SimpleComponentTestUtils, TestUtils } from 'src/app/utils/tests/TestUtils.spec';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { ActivatedRouteStub, SimpleComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
+import { MGPOptional, Utils, TestUtils } from '@everyboard/lib';
 import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
-import { Utils } from 'src/app/utils/utils';
 import { KamisadoState } from 'src/app/games/kamisado/KamisadoState';
 import { MGPValidators } from 'src/app/utils/MGPValidator';
 import { RulesConfigDescription, NumberConfig, BooleanConfig } from './RulesConfigDescription';

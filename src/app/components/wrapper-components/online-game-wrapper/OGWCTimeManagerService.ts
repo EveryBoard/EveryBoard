@@ -3,12 +3,10 @@ import { GameEventMove, GameEventAction } from '../../../domain/Part';
 import { CountDownComponent } from '../../normal-component/count-down/count-down.component';
 import { ConfigRoom } from 'src/app/domain/ConfigRoom';
 import { Player } from 'src/app/jscaip/Player';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { getMillisecondsElapsed, MGPOptional, Utils } from '@everyboard/lib';
 import { Timestamp } from 'firebase/firestore';
-import { getMillisecondsElapsed } from 'src/app/utils/TimeUtils';
-import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 import { MinimalUser } from 'src/app/domain/MinimalUser';
-import { Utils } from 'src/app/utils/utils';
+import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 
 /**
  * The time manager manages clocks of each player.

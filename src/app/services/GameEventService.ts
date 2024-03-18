@@ -5,7 +5,7 @@ import { FirestoreCollectionObserver } from '../dao/FirestoreCollectionObserver'
 import { FirestoreDocument, IFirestoreDAO } from '../dao/FirestoreDAO';
 import { PartDAO } from '../dao/PartDAO';
 import { Action, GameEvent, Reply, RequestType } from '../domain/Part';
-import { JSONValue } from '../utils/utils';
+import { JSONValue } from '@everyboard/lib';
 import { MinimalUser } from '../domain/MinimalUser';
 
 @Injectable({

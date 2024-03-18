@@ -1,6 +1,6 @@
 /* eslint-disable max-lines-per-function */
 import { GipfComponent } from '../gipf.component';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { MGPOptional } from '@everyboard/lib';
 import { GipfFailure } from 'src/app/games/gipf/GipfFailure';
 import { HexaDirection } from 'src/app/jscaip/HexaDirection';
 import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
@@ -9,7 +9,7 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { GipfMove, GipfPlacement } from 'src/app/games/gipf/GipfMove';
 import { GipfState } from 'src/app/games/gipf/GipfState';
 import { Arrow } from 'src/app/jscaip/Arrow';
-import { Table } from 'src/app/utils/ArrayUtils';
+import { Table } from 'src/app/jscaip/TableUtils';
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
 import { Player } from 'src/app/jscaip/Player';
 import { GipfCapture } from 'src/app/jscaip/GipfProjectHelper';

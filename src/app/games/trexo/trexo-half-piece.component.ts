@@ -2,7 +2,7 @@ import { Component, Input } from '@angular/core';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Coord3D } from 'src/app/jscaip/Coord3D';
 import { Vector } from 'src/app/jscaip/Vector';
-import { assert } from 'src/app/utils/assert';
+import { Utils } from '@everyboard/lib';
 import { TrexoComponent } from './trexo.component';
 import { TrexoMove } from './TrexoMove';
 import { ModeConfig } from 'src/app/components/game-components/parallelogram-game-component/ParallelogramGameComponent';
@@ -190,7 +190,7 @@ export class TrexoHalfPieceComponent {
     public getOtherCoord(): Coord {
         // If the coord is part of a move there is another coord toward which the shape is oriented
         // It is this coord that we return
-        assert(this.move != null, 'Move should be set before calling getOtherCoord');
+        Utils.assert(this.move != null, 'Move should be set before calling getOtherCoord');
         const move: TrexoMove = this.move as TrexoMove;
         if (move.getZero().equals(this.coord)) {
             return move.getOne();

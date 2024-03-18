@@ -5,7 +5,7 @@ import { Tutorial, TutorialStep } from '../../../components/wrapper-components/t
 import { BrandhubRules } from './BrandhubRules';
 import { TaflConfig } from '../TaflConfig';
 import { TaflState } from '../TaflState';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { MGPOptional } from '@everyboard/lib';
 import { TutorialStepMessage } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
 
 const _: TaflPawn = TaflPawn.UNOCCUPIED;

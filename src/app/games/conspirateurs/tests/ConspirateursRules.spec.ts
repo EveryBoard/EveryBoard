@@ -8,7 +8,7 @@ import { ConspirateursMove, ConspirateursMoveDrop, ConspirateursMoveJump, Conspi
 import { ConspirateursNode, ConspirateursRules } from '../ConspirateursRules';
 import { ConspirateursState } from '../ConspirateursState';
 import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
-import { TestUtils } from 'src/app/utils/tests/TestUtils.spec';
+import { TestUtils } from '@everyboard/lib';
 
 describe('ConspirateursRules', () => {
     const _: PlayerOrNone = PlayerOrNone.NONE;

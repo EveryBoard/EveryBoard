@@ -4,7 +4,7 @@ import { EpaminondasRules } from '../EpaminondasRules';
 import { EpaminondasMove } from '../EpaminondasMove';
 import { EpaminondasMoveGenerator } from '../EpaminondasMoveGenerator';
 import { MoveTestUtils } from 'src/app/jscaip/tests/Move.spec';
-import { TestUtils } from 'src/app/utils/tests/TestUtils.spec';
+import { TestUtils } from '@everyboard/lib';
 
 describe('EpaminondasMove: ', () => {
 

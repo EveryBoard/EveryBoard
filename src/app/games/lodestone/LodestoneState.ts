@@ -2,13 +2,10 @@ import { LodestoneDirection, LodestonePiece, LodestonePieceLodestone, LodestoneP
 import { Coord } from 'src/app/jscaip/Coord';
 import { GameStateWithTable } from 'src/app/jscaip/GameStateWithTable';
 import { Player } from 'src/app/jscaip/Player';
-import { ArrayUtils, Table } from 'src/app/utils/ArrayUtils';
-import { assert } from 'src/app/utils/assert';
-import { MGPMap } from 'src/app/utils/MGPMap';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { Table } from 'src/app/jscaip/TableUtils';
+import { ArrayUtils, MGPMap, MGPOptional, Utils } from '@everyboard/lib';
 import { LodestoneCaptures } from './LodestoneMove';
 import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
-import { Utils } from 'src/app/utils/utils';
 
 /**
  * Represent different LodestonePressurePlate from the same side of the board
@@ -225,7 +222,7 @@ export class LodestoneState extends GameStateWithTable<LodestonePiece> {
         const lodestonePosition: MGPOptional<Coord> = this.lodestones.get(currentPlayer);
         if (lodestonePosition.isPresent()) {
             const piece: LodestonePiece = this.getPieceAt(lodestonePosition.get());
-            assert(piece.isLodestone(), 'Piece must be lodestone (invariant from LodestoneState)' + lodestonePosition.get());
+            Utils.assert(piece.isLodestone(), 'Piece must be lodestone (invariant from LodestoneState)' + lodestonePosition.get());
             const lodestone: LodestonePieceLodestone = piece as LodestonePieceLodestone;
             const currentDirection: LodestoneDirection = lodestone.direction;
             switch (currentDirection) {

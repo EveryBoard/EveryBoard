@@ -1,4 +1,4 @@
-import { ComparableObject } from 'src/app/utils/Comparable';
+import { ComparableObject } from '@everyboard/lib';
 
 export abstract class Move implements ComparableObject {
 

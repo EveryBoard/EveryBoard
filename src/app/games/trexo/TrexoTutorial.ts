@@ -1,6 +1,6 @@
 import { Tutorial, TutorialStep } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { Coord } from 'src/app/jscaip/Coord';
-import { MGPValidation } from 'src/app/utils/MGPValidation';
+import { MGPValidation } from '@everyboard/lib';
 import { TrexoMove } from './TrexoMove';
 import { TrexoRules } from './TrexoRules';
 import { TrexoPiece, TrexoPieceStack, TrexoState } from './TrexoState';

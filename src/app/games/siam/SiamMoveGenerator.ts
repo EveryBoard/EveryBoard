@@ -4,7 +4,7 @@ import { SiamPiece } from './SiamPiece';
 import { Player } from 'src/app/jscaip/Player';
 import { MoveGenerator } from 'src/app/jscaip/AI/AI';
 import { SiamRules, SiamNode, SiamConfig } from './SiamRules';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { MGPOptional } from '@everyboard/lib';
 
 export class SiamMoveGenerator extends MoveGenerator<SiamMove, SiamState, SiamConfig> {
 

@@ -1,10 +1,10 @@
 /* eslint-disable max-lines-per-function */
-import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { MGPOptional } from '@everyboard/lib';
 import { TaflNode, TaflRules } from '../TaflRules';
 import { MyTaflMove } from './MyTaflMove.spec';
+import { Table } from 'src/app/jscaip/TableUtils';
 import { TaflConfig } from '../TaflConfig';
 import { BooleanConfig, RulesConfigDescription } from 'src/app/components/wrapper-components/rules-configuration/RulesConfigDescription';
-import { Table } from 'src/app/utils/ArrayUtils';
 import { TaflPawn } from '../TaflPawn';
 import { TaflState } from '../TaflState';
 

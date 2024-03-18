@@ -2,7 +2,7 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { CoerceoMove } from './CoerceoMove';
 import { CoerceoState } from './CoerceoState';
 import { CoerceoNode } from './CoerceoRules';
-import { ArrayUtils } from 'src/app/utils/ArrayUtils';
+import { ArrayUtils } from '@everyboard/lib';
 import { CoerceoMoveGenerator } from './CoerceoMoveGenerator';
 import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 

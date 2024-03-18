@@ -3,8 +3,8 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { SixState } from '../SixState';
 import { SixMove } from '../SixMove';
+import { Table } from 'src/app/jscaip/TableUtils';
 import { SixNode, SixRules } from '../SixRules';
-import { Table } from 'src/app/utils/ArrayUtils';
 import { SixFilteredMoveGenerator } from '../SixFilteredMoveGenerator';
 import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 

@@ -5,7 +5,7 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { PlayerOrNone } from 'src/app/jscaip/Player';
 import { MoveGenerator } from 'src/app/jscaip/AI/AI';
 import { Direction } from 'src/app/jscaip/Direction';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { MGPOptional } from '@everyboard/lib';
 
 export class TeekoMoveGenerator extends MoveGenerator<TeekoMove, TeekoState, TeekoConfig> {
 

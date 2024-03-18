@@ -1,12 +1,11 @@
+import { MGPMap, MGPOptional, Utils } from '@everyboard/lib';
 import { Move } from '../Move';
-import { MGPMap } from '../../utils/MGPMap';
-import { Debug, Utils } from 'src/app/utils/utils';
-import { MGPOptional } from '../../utils/MGPOptional';
 import { GameState } from '../GameState';
 import { GameStatus } from '../GameStatus';
 import { Player } from '../Player';
 import { RulesConfig } from '../RulesConfigUtil';
 import { AbstractRules } from '../Rules';
+import { Debug } from 'src/app/utils/Debug';
 
 export class GameNodeStats {
     public static createdNodes: number = 0;

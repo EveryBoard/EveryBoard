@@ -10,7 +10,7 @@ import { BaAwaMoveGenerator } from '../BaAwaMoveGenerator';
 import { BaAwaConfig } from '../BaAwaConfig';
 import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { MancalaDistribution, MancalaMove } from '../../common/MancalaMove';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { MGPOptional } from '@everyboard/lib';
 import { MancalaComponent } from '../../common/MancalaComponent';
 import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 

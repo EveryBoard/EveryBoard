@@ -5,7 +5,7 @@ import { PlayerMetricHeuristic } from 'src/app/jscaip/AI/Minimax';
 import { PlayerNumberTable } from 'src/app/jscaip/PlayerNumberTable';
 import { ReversiConfig, ReversiNode } from './ReversiRules';
 import { Coord } from 'src/app/jscaip/Coord';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { MGPOptional } from '@everyboard/lib';
 
 export class ReversiHeuristic extends PlayerMetricHeuristic<ReversiMove, ReversiState, ReversiConfig> {
 

@@ -1,5 +1,5 @@
 /* eslint-disable max-lines-per-function */
-import { Table } from 'src/app/utils/ArrayUtils';
+import { Table } from 'src/app/jscaip/TableUtils';
 import { Direction } from 'src/app/jscaip/Direction';
 import { Minimax } from 'src/app/jscaip/AI/Minimax';
 import { AIDepthLimitOptions } from 'src/app/jscaip/AI/AI';
@@ -8,7 +8,7 @@ import { EpaminondasState } from '../EpaminondasState';
 import { EpaminondasConfig, EpaminondasLegalityInformation, EpaminondasNode, EpaminondasRules } from '../EpaminondasRules';
 import { EpaminondasMove } from '../EpaminondasMove';
 import { EpaminondasPositionalMinimax } from '../EpaminondasPositionalMinimax';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { MGPOptional } from '@everyboard/lib';
 
 const _: PlayerOrNone = PlayerOrNone.NONE;
 const O: PlayerOrNone = PlayerOrNone.ZERO;

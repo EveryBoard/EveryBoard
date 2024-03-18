@@ -5,7 +5,7 @@ import { AIDepthLimitOptions } from 'src/app/jscaip/AI/AI';
 import { Minimax } from 'src/app/jscaip/AI/Minimax';
 import { ReversiConfig, ReversiLegalityInformation, ReversiNode, ReversiRules } from '../ReversiRules';
 import { ReversiMinimax } from '../ReversiMinimax';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { MGPOptional } from '@everyboard/lib';
 
 describe('ReversiMinimax', () => {
 

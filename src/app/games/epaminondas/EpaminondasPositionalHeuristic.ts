@@ -6,7 +6,7 @@ import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { EpaminondasMove } from './EpaminondasMove';
 import { EpaminondasState } from './EpaminondasState';
 import { EpaminondasConfig, EpaminondasNode } from './EpaminondasRules';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { MGPOptional } from '@everyboard/lib';
 
 export class EpaminondasPositionalHeuristic
     extends Heuristic<EpaminondasMove, EpaminondasState, BoardValue, EpaminondasConfig>

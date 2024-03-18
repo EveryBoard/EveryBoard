@@ -1,7 +1,7 @@
 import { GameStateWithTable } from 'src/app/jscaip/GameStateWithTable';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { ComparableObject } from 'src/app/utils/Comparable';
-import { TableUtils } from '../../utils/ArrayUtils';
+import { ComparableObject } from '@everyboard/lib';
+import { TableUtils } from 'src/app/jscaip/TableUtils';
 
 export class DiaballikPiece implements ComparableObject {
 
@@ -24,6 +24,6 @@ export class DiaballikPiece implements ComparableObject {
 export class DiaballikState extends GameStateWithTable<DiaballikPiece> {
 
     public equals(other: DiaballikState): boolean {
-        return TableUtils.compare(this.board, other.board);
+        return TableUtils.equals(this.board, other.board);
     }
 }

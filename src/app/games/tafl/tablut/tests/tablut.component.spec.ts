@@ -7,7 +7,7 @@ import { DoTaflTests, TaflTestEntries } from '../../tests/GenericTaflTest.spec';
 import { TablutComponent } from '../tablut.component';
 import { TaflConfig } from '../../TaflConfig';
 import { TaflState } from '../../TaflState';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { MGPOptional } from '@everyboard/lib';
 
 const _: TaflPawn = TaflPawn.UNOCCUPIED;
 const x: TaflPawn = TaflPawn.PLAYER_ZERO_PAWN;

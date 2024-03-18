@@ -2,14 +2,14 @@
 import { fakeAsync } from '@angular/core/testing';
 import { Coord } from 'src/app/jscaip/Coord';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { MGPOptional } from '@everyboard/lib';
 import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { YinshComponent } from '../yinsh.component';
 import { YinshFailure } from '../YinshFailure';
 import { YinshState } from '../YinshState';
 import { YinshCapture, YinshMove } from '../YinshMove';
 import { YinshPiece } from '../YinshPiece';
-import { Table } from 'src/app/utils/ArrayUtils';
+import { Table } from 'src/app/jscaip/TableUtils';
 import { YinshRules } from '../YinshRules';
 import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 

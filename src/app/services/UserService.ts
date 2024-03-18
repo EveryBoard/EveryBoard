@@ -2,11 +2,10 @@ import { Injectable } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { UserDAO } from '../dao/UserDAO';
 import { User } from '../domain/User';
-import { MGPOptional } from '../utils/MGPOptional';
 import { FirestoreTime } from '../domain/Time';
-import { assert } from '../utils/assert';
 import { FirestoreDocument } from '../dao/FirestoreDAO';
 import { serverTimestamp, Timestamp } from 'firebase/firestore';
+import { Utils, MGPOptional } from '@everyboard/lib';
 
 /**
   * The aim of this service is to:
@@ -52,7 +51,7 @@ export class UserService {
             return MGPOptional.empty();
         } else {
             const lastUpdateTime: FirestoreTime | undefined = user.get().lastUpdateTime;
-            assert(lastUpdateTime != null, 'should not receive a lastUpdateTime equal to null');
+            Utils.assert(lastUpdateTime != null, 'should not receive a lastUpdateTime equal to null');
             return MGPOptional.of(lastUpdateTime as FirestoreTime);
         }
     }

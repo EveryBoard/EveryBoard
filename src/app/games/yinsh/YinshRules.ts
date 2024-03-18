@@ -4,18 +4,16 @@ import { HexaLine } from 'src/app/jscaip/HexaLine';
 import { Player } from 'src/app/jscaip/Player';
 import { Rules } from 'src/app/jscaip/Rules';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { MGPFallible } from 'src/app/utils/MGPFallible';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { MGPValidation } from 'src/app/utils/MGPValidation';
+import { MGPFallible, MGPOptional, MGPValidation } from '@everyboard/lib';
 import { YinshFailure } from './YinshFailure';
 import { YinshState } from './YinshState';
 import { YinshCapture, YinshMove } from './YinshMove';
 import { YinshPiece } from './YinshPiece';
-import { Table } from 'src/app/utils/ArrayUtils';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 import { GameNode } from 'src/app/jscaip/AI/GameNode';
 import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { Table } from 'src/app/jscaip/TableUtils';
 
 export type YinshLegalityInformation = YinshState;
 

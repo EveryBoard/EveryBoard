@@ -4,7 +4,7 @@ import { PenteMove } from './PenteMove';
 import { PenteNode } from './PenteRules';
 import { Coord } from 'src/app/jscaip/Coord';
 import { MoveGenerator } from 'src/app/jscaip/AI/AI';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { MGPOptional } from '@everyboard/lib';
 import { PenteConfig } from './PenteConfig';
 
 export class PenteMoveGenerator extends MoveGenerator<PenteMove, PenteState, PenteConfig> {

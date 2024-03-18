@@ -3,17 +3,15 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
 import { PieceThreat } from 'src/app/jscaip/PieceThreat';
 import { Player } from 'src/app/jscaip/Player';
-import { Table } from 'src/app/utils/ArrayUtils';
-import { MGPMap } from 'src/app/utils/MGPMap';
-import { MGPSet } from 'src/app/utils/MGPSet';
-import { HeuristicUtils } from 'src/app/jscaip/AI/tests/HeuristicUtils.spec';
+import { Table } from 'src/app/jscaip/TableUtils';
+import { MGPMap, MGPOptional, MGPSet } from '@everyboard/lib';
 import { CoerceoState } from '../CoerceoState';
 import { CoerceoNode, CoerceoRules } from '../CoerceoRules';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { CoerceoPiecesThreatsTilesHeuristic } from '../CoerceoPiecesThreatsTilesHeuristic';
 import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 import { PlayerNumberTable } from 'src/app/jscaip/PlayerNumberTable';
+import { HeuristicUtils } from 'src/app/jscaip/AI/tests/HeuristicUtils.spec';
 
 describe('CoerceoPiecesThreatTilesHeuristic', () => {
 

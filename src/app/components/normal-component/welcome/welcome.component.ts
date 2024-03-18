@@ -3,10 +3,9 @@ import { Router } from '@angular/router';
 import { ThemeService } from 'src/app/services/ThemeService';
 import { GameInfo } from '../pick-game/pick-game.component';
 import { faNetworkWired, faDesktop, faBookOpen, IconDefinition } from '@fortawesome/free-solid-svg-icons';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { MGPOptional, MGPValidation } from '@everyboard/lib';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { CurrentGameService } from 'src/app/services/CurrentGameService';
-import { MGPValidation } from 'src/app/utils/MGPValidation';
 
 @Component({
     selector: 'app-welcome',

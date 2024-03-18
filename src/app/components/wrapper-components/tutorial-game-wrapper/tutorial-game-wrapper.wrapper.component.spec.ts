@@ -7,21 +7,18 @@ import { QuartoPiece } from 'src/app/games/quarto/QuartoPiece';
 import { ComponentTestUtils, expectValidRouting } from 'src/app/utils/tests/TestUtils.spec';
 import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { QuartoComponent } from '../../../games/quarto/quarto.component';
-import { MGPValidation } from 'src/app/utils/MGPValidation';
+import { Comparable, MGPFallible, MGPOptional, MGPValidation } from '@everyboard/lib';
 import { TutorialFailure } from './TutorialFailure';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { Router } from '@angular/router';
-import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { LocalGameWrapperComponent } from '../local-game-wrapper/local-game-wrapper.component';
 import { OnlineGameCreationComponent } from '../../normal-component/online-game-creation/online-game-creation.component';
 import { GameWrapperMessages } from '../GameWrapper';
 import { NotFoundComponent } from '../../normal-component/not-found/not-found.component';
 import { AbstractGameComponent } from '../../game-components/game-component/GameComponent';
-import { Comparable } from 'src/app/utils/Comparable';
 import { Player } from 'src/app/jscaip/Player';
 import { RulesConfig, RulesConfigUtils } from 'src/app/jscaip/RulesConfigUtil';
 import { QuartoRules } from 'src/app/games/quarto/QuartoRules';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { TutorialStepMessage } from './TutorialStepMessage';
 
 describe('TutorialGameWrapperComponent for non-existing game', () => {

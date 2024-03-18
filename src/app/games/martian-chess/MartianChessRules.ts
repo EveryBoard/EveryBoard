@@ -2,18 +2,14 @@ import { GameNode } from 'src/app/jscaip/AI/GameNode';
 import { Player } from 'src/app/jscaip/Player';
 import { Rules } from 'src/app/jscaip/Rules';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { MGPFallible } from 'src/app/utils/MGPFallible';
-import { MGPMap } from 'src/app/utils/MGPMap';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { MGPFallible, MGPMap, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 import { MartianChessMove, MartianChessMoveFailure } from './MartianChessMove';
 import { MartianChessCapture, MartianChessState } from './MartianChessState';
 import { MartianChessPiece } from './MartianChessPiece';
 import { MartianChessFailure } from './MartianChessFailure';
-import { MGPValidation } from '../../utils/MGPValidation';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
+import { Table } from 'src/app/jscaip/TableUtils';
 import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
-import { Utils } from 'src/app/utils/utils';
-import { Table } from 'src/app/utils/ArrayUtils';
 
 export interface MartianChessMoveResult {
 

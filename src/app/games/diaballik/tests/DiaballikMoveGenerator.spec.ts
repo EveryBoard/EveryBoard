@@ -1,12 +1,10 @@
 /* eslint-disable max-lines-per-function */
-import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { MGPFallible, MGPOptional, MGPSet } from '@everyboard/lib';
 import { DiaballikBallPass, DiaballikMove, DiaballikSubMove, DiaballikTranslation } from '../DiaballikMove';
 import { DiaballikMoveGenerator, DiaballikMoveInConstruction } from '../DiaballikMoveGenerator';
 import { DiaballikNode, DiaballikRules } from '../DiaballikRules';
 import { DiaballikPiece, DiaballikState } from '../DiaballikState';
 import { Coord } from 'src/app/jscaip/Coord';
-import { MGPSet } from 'src/app/utils/MGPSet';
-import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 describe('DiaballikMoveInConstruction', () => {

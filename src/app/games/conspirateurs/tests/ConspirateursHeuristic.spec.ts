@@ -1,7 +1,7 @@
 /* eslint-disable max-lines-per-function */
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
+import { MGPOptional } from '@everyboard/lib';
 import { HeuristicUtils } from 'src/app/jscaip/AI/tests/HeuristicUtils.spec';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { ConspirateursHeuristic } from '../ConspirateursHeuristic';
 import { ConspirateursState } from '../ConspirateursState';
 import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';

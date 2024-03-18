@@ -1,7 +1,6 @@
 import { GameStateWithTable } from 'src/app/jscaip/GameStateWithTable';
-import { Table } from 'src/app/utils/ArrayUtils';
-import { Utils } from 'src/app/utils/utils';
-import { assert } from 'src/app/utils/assert';
+import { Table } from 'src/app/jscaip/TableUtils';
+import { Utils } from '@everyboard/lib';
 import { DiamPiece } from './DiamPiece';
 
 export class DiamState extends GameStateWithTable<DiamPiece> {
@@ -21,8 +20,8 @@ export class DiamState extends GameStateWithTable<DiamPiece> {
                 }
             }
         }
-        assert(pieces.every((remaining: number) => 0 <= remaining),
-               'Invalid DiamState representation uses too many pieces');
+        Utils.assert(pieces.every((remaining: number) => 0 <= remaining),
+                     'Invalid DiamState representation uses too many pieces');
         return new DiamState(board, pieces, turn);
     }
     public static pieceIndex(piece: DiamPiece): number {

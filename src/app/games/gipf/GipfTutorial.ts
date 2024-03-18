@@ -3,7 +3,7 @@ import { GipfState } from 'src/app/games/gipf/GipfState';
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
 import { Coord } from 'src/app/jscaip/Coord';
 import { HexaDirection } from 'src/app/jscaip/HexaDirection';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { MGPOptional } from '@everyboard/lib';
 import { Tutorial, TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { GipfCapture } from 'src/app/jscaip/GipfProjectHelper';
 import { GipfRules } from './GipfRules';

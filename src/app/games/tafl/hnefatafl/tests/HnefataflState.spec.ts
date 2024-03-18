@@ -2,7 +2,7 @@ import { PlayerOrNone } from 'src/app/jscaip/Player';
 import { TaflConfig } from '../../TaflConfig';
 import { HnefataflRules } from '../HnefataflRules';
 import { TaflState } from '../../TaflState';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { MGPOptional } from '@everyboard/lib';
 
 const defaultConfig: MGPOptional<TaflConfig> = HnefataflRules.get().getDefaultRulesConfig();
 

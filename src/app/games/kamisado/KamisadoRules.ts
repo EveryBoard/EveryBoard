@@ -5,16 +5,13 @@ import { KamisadoColor } from './KamisadoColor';
 import { KamisadoMove } from './KamisadoMove';
 import { KamisadoState } from './KamisadoState';
 import { KamisadoPiece } from './KamisadoPiece';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { Player } from 'src/app/jscaip/Player';
 import { Rules } from 'src/app/jscaip/Rules';
 import { KamisadoFailure } from './KamisadoFailure';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { MGPValidation } from 'src/app/utils/MGPValidation';
-import { MGPFallible } from 'src/app/utils/MGPFallible';
+import { MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { GameNode } from 'src/app/jscaip/AI/GameNode';
-import { Utils } from 'src/app/utils/utils';
 import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 

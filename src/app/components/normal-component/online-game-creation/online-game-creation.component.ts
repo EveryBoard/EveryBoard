@@ -3,12 +3,9 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ConnectedUserService, AuthUser } from 'src/app/services/ConnectedUserService';
 import { GameService } from 'src/app/services/GameService';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
-import { Utils } from 'src/app/utils/utils';
-import { assert } from 'src/app/utils/assert';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 import { GameInfo } from '../pick-game/pick-game.component';
 import { GameWrapperMessages } from '../../wrapper-components/GameWrapper';
-import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { CurrentGameService } from 'src/app/services/CurrentGameService';
 
 @Component({
@@ -32,7 +29,7 @@ export class OnlineGameCreationComponent implements OnInit {
     }
     private async createGameAndRedirectOrShowError(game: string): Promise<boolean> {
         const authUser: AuthUser = this.connectedUserService.user.get();
-        assert(authUser.isConnected(), 'User must be connected and have a username to reach this page');
+        Utils.assert(authUser.isConnected(), 'User must be connected and have a username to reach this page');
         if (this.gameExists(game) === false) {
             await this.router.navigate(['/notFound', GameWrapperMessages.NO_MATCHING_GAME(game)], { skipLocationChange: true });
             return false;

@@ -1,7 +1,7 @@
 /* eslint-disable max-lines-per-function */
 import { fakeAsync, tick } from '@angular/core/testing';
 
-import { MGPValidation } from 'src/app/utils/MGPValidation';
+import { MGPValidation } from '@everyboard/lib';
 import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { AbstractGameComponent } from '../../game-components/game-component/GameComponent';
 import { GameInfo } from '../../normal-component/pick-game/pick-game.component';

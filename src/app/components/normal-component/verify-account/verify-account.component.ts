@@ -3,7 +3,7 @@ import { FormControl, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { ConnectedUserService, AuthUser } from 'src/app/services/ConnectedUserService';
-import { MGPValidation } from 'src/app/utils/MGPValidation';
+import { MGPValidation } from '@everyboard/lib';
 
 /**
  * Component to verify an account.

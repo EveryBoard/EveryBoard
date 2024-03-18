@@ -1,21 +1,19 @@
 /* eslint-disable max-lines-per-function */
 import { fakeAsync, tick } from '@angular/core/testing';
 import { Player } from 'src/app/jscaip/Player';
-import { MGPValidation } from 'src/app/utils/MGPValidation';
-import { ActivatedRouteStub, ComponentTestUtils, TestUtils } from 'src/app/utils/tests/TestUtils.spec';
+import { JSONValue, MGPValidation, Utils } from '@everyboard/lib';
+import { ActivatedRouteStub, ComponentTestUtils, ConfigureTestingModuleUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { GameInfo } from '../../normal-component/pick-game/pick-game.component';
 import { AbstractGameComponent } from './GameComponent';
-import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
 import { AbaloneComponent } from 'src/app/games/abalone/abalone.component';
 import { ErrorLoggerServiceMock } from 'src/app/services/tests/ErrorLoggerServiceMock.spec';
-import { JSONValue } from 'src/app/utils/utils';
 
 describe('GameComponent', () => {
 
     const activatedRouteStub: ActivatedRouteStub = new ActivatedRouteStub();
 
     beforeEach(fakeAsync(async() => {
-        await TestUtils.configureTestingModuleForGame(activatedRouteStub);
+        await ConfigureTestingModuleUtils.configureTestingModuleForGame(activatedRouteStub);
     }));
 
     it('should fail if pass() is called on a game that does not support it', fakeAsync(async() => {
@@ -28,7 +26,7 @@ describe('GameComponent', () => {
         testUtils.detectChanges();
         tick(0);
 
-        spyOn(ErrorLoggerService, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
+        spyOn(Utils, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
 
         // When the player tries to pass
         const result: MGPValidation = await component.pass();
@@ -38,7 +36,7 @@ describe('GameComponent', () => {
         const errorData: JSONValue = { gameName: 'AbaloneComponent' };
         expect(result.isFailure()).toBeTrue();
         expect(result.getReason()).toEqual('GameComponent: ' + errorMessage);
-        expect(ErrorLoggerService.logError).toHaveBeenCalledWith('GameComponent', errorMessage, errorData);
+        expect(Utils.logError).toHaveBeenCalledWith('GameComponent', errorMessage, errorData);
     }));
 
     for (const gameInfo of GameInfo.ALL_GAMES()) {

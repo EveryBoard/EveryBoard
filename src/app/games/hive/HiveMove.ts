@@ -3,8 +3,7 @@ import { Move } from 'src/app/jscaip/Move';
 import { MoveCoord } from 'src/app/jscaip/MoveCoord';
 import { MoveCoordToCoord } from 'src/app/jscaip/MoveCoordToCoord';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { Encoder } from 'src/app/utils/Encoder';
-import { MGPFallible } from 'src/app/utils/MGPFallible';
+import { Encoder, MGPFallible } from '@everyboard/lib';
 import { HivePiece } from './HivePiece';
 import { MoveWithTwoCoords } from 'src/app/jscaip/MoveWithTwoCoords';
 

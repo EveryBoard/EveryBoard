@@ -1,6 +1,6 @@
 /* eslint-disable max-lines-per-function */
 import { Player } from 'src/app/jscaip/Player';
-import { EncoderTestUtils } from 'src/app/utils/tests/Encoder.spec';
+import { EncoderTestUtils } from '@everyboard/lib';
 import { DvonnPieceStack } from '../DvonnPieceStack';
 
 describe('DvonnPieceStack', () => {
@@ -95,4 +95,12 @@ describe('DvonnPieceStack', () => {
 
     });
 
+    describe('equals', () => {
+        it('should detect equal stacks', () => {
+            expect(DvonnPieceStack.PLAYER_ZERO.equals(DvonnPieceStack.PLAYER_ZERO)).toBeTrue();
+            expect(DvonnPieceStack.PLAYER_ZERO.equals(DvonnPieceStack.PLAYER_ONE)).toBeFalse();
+            expect(DvonnPieceStack.PLAYER_ZERO.equals(DvonnPieceStack.SOURCE)).toBeFalse();
+            expect(DvonnPieceStack.PLAYER_ZERO.equals(stack4)).toBeFalse();
+        });
+    });
 });

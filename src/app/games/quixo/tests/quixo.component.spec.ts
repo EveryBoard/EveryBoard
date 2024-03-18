@@ -5,7 +5,7 @@ import { QuixoMove } from 'src/app/games/quixo/QuixoMove';
 import { Orthogonal } from 'src/app/jscaip/Direction';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
-import { Table } from 'src/app/utils/ArrayUtils';
+import { Table } from 'src/app/jscaip/TableUtils';
 import { PlayerOrNone } from 'src/app/jscaip/Player';
 import { QuixoState } from 'src/app/games/quixo/QuixoState';
 import { QuixoFailure } from 'src/app/games/quixo/QuixoFailure';

@@ -1,15 +1,9 @@
 import { Coord, CoordFailure } from 'src/app/jscaip/Coord';
 import { Vector } from 'src/app/jscaip/Vector';
 import { Move } from 'src/app/jscaip/Move';
-import { ArrayUtils } from 'src/app/utils/ArrayUtils';
-import { assert } from 'src/app/utils/assert';
-import { Encoder } from 'src/app/utils/Encoder';
-import { MGPFallible } from 'src/app/utils/MGPFallible';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { MGPSet } from 'src/app/utils/MGPSet';
+import { ArrayUtils, Encoder, MGPFallible, MGPOptional, MGPSet, MGPUniqueList, Utils } from '@everyboard/lib';
 import { LascaFailure } from './LascaFailure';
 import { LascaState } from './LascaState';
-import { MGPUniqueList } from 'src/app/utils/MGPUniqueList';
 
 export class LascaMove extends Move {
 
@@ -104,7 +98,7 @@ export class LascaMove extends Move {
     public concatenate(move: LascaMove): LascaMove {
         const lastLandingOfFirstMove: Coord = this.getEndingCoord();
         const startOfSecondMove: Coord = move.coords.toList()[0];
-        assert(lastLandingOfFirstMove.equals(startOfSecondMove), 'should not concatenate non-touching move');
+        Utils.assert(lastLandingOfFirstMove.equals(startOfSecondMove), 'should not concatenate non-touching move');
         const thisCoordList: Coord[] = this.coords.toList();
         const firstPart: Coord[] = ArrayUtils.copy(thisCoordList);
         const otherCoordList: Coord[] = move.coords.toList();

@@ -8,7 +8,7 @@ import { LinesOfActionMove } from '../LinesOfActionMove';
 import { LinesOfActionFailure } from '../LinesOfActionFailure';
 import { LinesOfActionState } from '../LinesOfActionState';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { Table } from 'src/app/utils/ArrayUtils';
+import { Table } from 'src/app/jscaip/TableUtils';
 import { DirectionFailure } from 'src/app/jscaip/Direction';
 import { LinesOfActionRules } from '../LinesOfActionRules';
 

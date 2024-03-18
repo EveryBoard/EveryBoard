@@ -2,7 +2,7 @@
 import { HeuristicUtils } from 'src/app/jscaip/AI/tests/HeuristicUtils.spec';
 import { MancalaScoreHeuristic } from '../common/MancalaScoreHeurisic';
 import { MancalaState } from '../common/MancalaState';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { MGPOptional } from '@everyboard/lib';
 import { Player } from 'src/app/jscaip/Player';
 import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 import { AwaleRules } from '../awale/AwaleRules';

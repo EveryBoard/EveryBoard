@@ -1,7 +1,7 @@
 /* eslint-disable max-lines-per-function */
 import { Coord } from 'src/app/jscaip/Coord';
-import { Table } from 'src/app/utils/ArrayUtils';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { Table } from 'src/app/jscaip/TableUtils';
+import { MGPOptional } from '@everyboard/lib';
 import { MartianChessMove } from '../MartianChessMove';
 import { MartianChessNode, MartianChessRules } from '../MartianChessRules';
 import { MartianChessState } from '../MartianChessState';

@@ -5,17 +5,15 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { SaharaMove } from './SaharaMove';
 import { SaharaState } from './SaharaState';
 import { TriangularCheckerBoard } from 'src/app/jscaip/TriangularCheckerBoard';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { Debug } from 'src/app/utils/utils';
+import { MGPOptional, MGPSet, MGPValidation } from '@everyboard/lib';
 import { TriangularGameState } from 'src/app/jscaip/TriangularGameState';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { SaharaFailure } from './SaharaFailure';
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
-import { MGPValidation } from 'src/app/utils/MGPValidation';
-import { Table } from 'src/app/utils/ArrayUtils';
-import { MGPSet } from 'src/app/utils/MGPSet';
+import { Table } from 'src/app/jscaip/TableUtils';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { Debug } from 'src/app/utils/Debug';
 
 export class SaharaNode extends GameNode<SaharaMove, SaharaState> {}
 

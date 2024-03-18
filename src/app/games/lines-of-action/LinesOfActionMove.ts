@@ -1,8 +1,7 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { Direction } from 'src/app/jscaip/Direction';
-import { Encoder } from 'src/app/utils/Encoder';
+import { Encoder, MGPFallible } from '@everyboard/lib';
 import { MoveCoordToCoord } from 'src/app/jscaip/MoveCoordToCoord';
-import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { LinesOfActionState } from './LinesOfActionState';
 import { MoveWithTwoCoords } from 'src/app/jscaip/MoveWithTwoCoords';
 

@@ -3,7 +3,7 @@ import { Direction } from 'src/app/jscaip/Direction';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { BoardValue } from 'src/app/jscaip/AI/BoardValue';
 import { EpaminondasConfig, EpaminondasNode } from './EpaminondasRules';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { MGPOptional } from '@everyboard/lib';
 import { EpaminondasHeuristic } from './EpaminondasHeuristic';
 import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 

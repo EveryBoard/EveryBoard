@@ -1,18 +1,16 @@
 import { ConfigurableRules } from 'src/app/jscaip/Rules';
 import { ConnectSixState } from './ConnectSixState';
 import { GameNode } from 'src/app/jscaip/AI/GameNode';
-import { MGPValidation } from 'src/app/utils/MGPValidation';
+import { MGPValidation, MGPOptional, Utils } from '@everyboard/lib';
 import { ConnectSixDrops, ConnectSixFirstMove, ConnectSixMove } from './ConnectSixMove';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { Coord, CoordFailure } from 'src/app/jscaip/Coord';
 import { NInARowHelper } from 'src/app/jscaip/NInARowHelper';
-import { Utils } from 'src/app/utils/utils';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
+import { Table, TableUtils } from 'src/app/jscaip/TableUtils';
 import { GobanConfig } from 'src/app/jscaip/GobanConfig';
 import { RulesConfigDescription, RulesConfigDescriptions } from 'src/app/components/wrapper-components/rules-configuration/RulesConfigDescription';
-import { Table, TableUtils } from 'src/app/utils/ArrayUtils';
 
 export class ConnectSixNode extends GameNode<ConnectSixMove, ConnectSixState> {}
 

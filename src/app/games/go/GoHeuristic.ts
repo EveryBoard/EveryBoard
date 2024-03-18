@@ -5,7 +5,7 @@ import { Player } from 'src/app/jscaip/Player';
 import { PlayerMetricHeuristic } from 'src/app/jscaip/AI/Minimax';
 import { PlayerNumberTable } from 'src/app/jscaip/PlayerNumberTable';
 import { GoConfig, GoNode, GoRules } from './GoRules';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { MGPOptional } from '@everyboard/lib';
 
 export class GoHeuristic extends PlayerMetricHeuristic<GoMove, GoState, GoConfig> {
 

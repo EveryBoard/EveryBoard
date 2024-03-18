@@ -1,14 +1,13 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { Debug } from 'src/app/utils/utils';
 import { ActivePartsService } from 'src/app/services/ActivePartsService';
 import { PartDocument } from 'src/app/domain/Part';
 import { CurrentGame } from 'src/app/domain/User';
 import { CurrentGameService } from 'src/app/services/CurrentGameService';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { MGPOptional, MGPValidation } from '@everyboard/lib';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
-import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { Subscription } from 'rxjs';
+import { Debug } from 'src/app/utils/Debug';
 
 type Tab = 'games' | 'create' | 'chat';
 

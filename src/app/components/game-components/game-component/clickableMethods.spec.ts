@@ -5,7 +5,7 @@ import { SiamMove } from 'src/app/games/siam/SiamMove';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Direction, Orthogonal } from 'src/app/jscaip/Direction';
 import { Player } from 'src/app/jscaip/Player';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { MGPOptional } from '@everyboard/lib';
 
 export const clickableMethods: { [gameName: string]: { [methodName: string]: unknown[]; }; } = {
     Abalone: {

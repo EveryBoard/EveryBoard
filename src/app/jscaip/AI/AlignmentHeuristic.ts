@@ -1,11 +1,11 @@
-import { MGPOptional } from '../../utils/MGPOptional';
-import { Coord } from '../Coord';
-import { Move } from '../Move';
-import { SCORE } from '../SCORE';
-import { GameState } from '../GameState';
+import { MGPOptional } from '@everyboard/lib';
 import { Heuristic } from './Minimax';
 import { EmptyRulesConfig, RulesConfig } from '../RulesConfigUtil';
 import { BoardValue } from './BoardValue';
+import { SCORE } from '../SCORE';
+import { Coord } from '../Coord';
+import { Move } from '../Move';
+import { GameState } from '../GameState';
 
 export interface BoardInfo {
     status: SCORE,

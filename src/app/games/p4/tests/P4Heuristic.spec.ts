@@ -2,9 +2,9 @@
 import { P4State } from '../P4State';
 import { P4Config, P4Node, P4Rules } from '../P4Rules';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
+import { MGPOptional } from '@everyboard/lib';
+import { Table } from 'src/app/jscaip/TableUtils';
 import { HeuristicUtils } from 'src/app/jscaip/AI/tests/HeuristicUtils.spec';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { Table } from 'src/app/utils/ArrayUtils';
 import { P4Heuristic } from '../P4Heuristic';
 
 const _: PlayerOrNone = PlayerOrNone.NONE;

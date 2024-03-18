@@ -3,7 +3,7 @@ import { P4State } from 'src/app/games/p4/P4State';
 import { Tutorial, TutorialStep } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { PlayerOrNone } from 'src/app/jscaip/Player';
 import { P4Config, P4Rules } from './P4Rules';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { MGPOptional } from '@everyboard/lib';
 
 const _: PlayerOrNone = PlayerOrNone.NONE;
 const O: PlayerOrNone = PlayerOrNone.ZERO;

@@ -4,7 +4,7 @@ import { ConnectSixDrops, ConnectSixFirstMove } from './ConnectSixMove';
 import { Coord } from 'src/app/jscaip/Coord';
 import { PlayerOrNone } from 'src/app/jscaip/Player';
 import { ConnectSixRules } from './ConnectSixRules';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { MGPOptional } from '@everyboard/lib';
 import { GobanConfig } from 'src/app/jscaip/GobanConfig';
 import { TutorialStepMessage } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
 

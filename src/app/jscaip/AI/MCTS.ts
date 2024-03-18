@@ -1,7 +1,4 @@
-import { ArrayUtils } from '../../utils/ArrayUtils';
-import { MGPFallible } from '../../utils/MGPFallible';
-import { MGPOptional } from '../../utils/MGPOptional';
-import { Debug, Utils } from '../../utils/utils';
+import { ArrayUtils, MGPFallible, MGPOptional, Utils } from '@everyboard/lib';
 import { GameState } from '../GameState';
 import { GameStatus } from '../GameStatus';
 import { AI, AITimeLimitOptions, MoveGenerator } from './AI';
@@ -10,6 +7,7 @@ import { Move } from '../Move';
 import { Player } from '../Player';
 import { EmptyRulesConfig, RulesConfig } from '../RulesConfigUtil';
 import { SuperRules } from '../Rules';
+import { Debug } from 'src/app/utils/Debug';
 
 type NodeAndPath<M extends Move, S extends GameState> = {
     node: GameNode<M, S>,

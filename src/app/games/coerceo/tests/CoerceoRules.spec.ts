@@ -8,7 +8,7 @@ import { CoerceoNode, CoerceoRules } from '../CoerceoRules';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { Player } from 'src/app/jscaip/Player';
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
-import { TestUtils } from 'src/app/utils/tests/TestUtils.spec';
+import { TestUtils } from '@everyboard/lib';
 import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 

@@ -5,7 +5,7 @@ import { SixMove } from 'src/app/games/six/SixMove';
 import { SixFailure } from 'src/app/games/six/SixFailure';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { Table } from 'src/app/utils/ArrayUtils';
+import { Table } from 'src/app/jscaip/TableUtils';
 import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { SixComponent } from '../six.component';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';

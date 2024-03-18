@@ -1,7 +1,7 @@
 import { P4Move } from './P4Move';
 import { P4Config, P4Node } from './P4Rules';
 import { P4MoveGenerator } from './P4MoveGenerator';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { MGPOptional } from '@everyboard/lib';
 
 export class P4OrderedMoveGenerator extends P4MoveGenerator {
 

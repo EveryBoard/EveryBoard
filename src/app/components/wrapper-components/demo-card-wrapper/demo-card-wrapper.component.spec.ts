@@ -8,14 +8,13 @@ import { P4Move } from 'src/app/games/p4/P4Move';
 import { P4State } from 'src/app/games/p4/P4State';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { AbstractRules } from 'src/app/jscaip/Rules';
-import { Table, TableUtils } from 'src/app/utils/ArrayUtils';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { Table, TableUtils } from 'src/app/jscaip/TableUtils';
+import { MGPOptional, Utils } from '@everyboard/lib';
 import { SimpleComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { DemoCardWrapperComponent, DemoNodeInfo } from './demo-card-wrapper.component';
 import { RulesConfig, RulesConfigUtils } from 'src/app/jscaip/RulesConfigUtil';
 import { GameNode } from 'src/app/jscaip/AI/GameNode';
 import { AbstractGameComponent } from '../../game-components/game-component/GameComponent';
-import { Utils } from 'src/app/utils/utils';
 import { TutorialGameWrapperMessages } from '../tutorial-game-wrapper/tutorial-game-wrapper.component';
 
 describe('DemoCardComponent', () => {

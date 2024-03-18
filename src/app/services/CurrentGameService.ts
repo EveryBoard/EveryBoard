@@ -2,14 +2,11 @@ import { Injectable, OnDestroy } from '@angular/core';
 import { Observable, ReplaySubject, Subscription } from 'rxjs';
 
 import { CurrentGame, User, UserRoleInPart } from '../domain/User';
-import { MGPOptional } from '../utils/MGPOptional';
+import { MGPMap, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 import { UserDAO } from '../dao/UserDAO';
 import { AuthUser, ConnectedUserService, GameActionFailure } from './ConnectedUserService';
-import { MGPValidation } from '../utils/MGPValidation';
-import { assert } from '../utils/assert';
-import { MGPMap } from '../utils/MGPMap';
-import { Localized } from '../utils/LocaleUtils';
 import { UserService } from './UserService';
+import { Localized } from '../utils/LocaleUtils';
 
 @Injectable({
     providedIn: 'root',
@@ -50,7 +47,7 @@ export class CurrentGameService implements OnDestroy {
             // We need to subscribe to any change to the user's observed part
             this.userSubscription =
                 this.userService.observeUserOnServer(user.id, (docOpt: MGPOptional<User>) => {
-                    assert(docOpt.isPresent(), 'Observing part service expected user to already have a document!');
+                    Utils.assert(docOpt.isPresent(), 'Observing part service expected user to already have a document!');
                     const doc: User = docOpt.get();
                     this.onCurrentGameUpdate(doc.currentGame);
                 });
@@ -73,7 +70,7 @@ export class CurrentGameService implements OnDestroy {
         }
     }
     public updateCurrentGame(currentGame: Partial<CurrentGame>): Promise<void> {
-        assert(this.connectedUserService.user.isPresent(), 'Should not call updateCurrentGame when not connected');
+        Utils.assert(this.connectedUserService.user.isPresent(), 'Should not call updateCurrentGame when not connected');
         if (this.currentGame.isPresent()) {
             const oldCurrentGame: CurrentGame = this.currentGame.get();
             const mergedCurrentGame: CurrentGame = { ...oldCurrentGame, ...currentGame };
@@ -86,14 +83,14 @@ export class CurrentGameService implements OnDestroy {
             };
             const keys: string[] = Object.keys(fakeCurrentGame);
             for (const key of keys) {
-                assert(currentGame[key] != null, 'field ' + key + ' should be set before updating currentGame');
+                Utils.assert(currentGame[key] != null, 'field ' + key + ' should be set before updating currentGame');
             }
             // Here, we know that currentGame is not partial
             return this.userDAO.update(this.connectedUserService.user.get().id, { currentGame });
         }
     }
     public removeCurrentGame(): Promise<void> {
-        assert(this.connectedUserService.user.isPresent(), 'Should not call removeCurrentGame when not connected');
+        Utils.assert(this.connectedUserService.user.isPresent(), 'Should not call removeCurrentGame when not connected');
         return this.userDAO.update(this.connectedUserService.user.get().id, { currentGame: null });
     }
     public subscribeToCurrentGame(callback: (optCurrentGame: MGPOptional<CurrentGame>) => void): Subscription {

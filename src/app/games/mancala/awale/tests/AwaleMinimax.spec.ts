@@ -1,7 +1,7 @@
 /* eslint-disable max-lines-per-function */
 import { AwaleRules } from '../AwaleRules';
 import { MancalaState } from 'src/app/games/mancala/common/MancalaState';
-import { Table } from 'src/app/utils/ArrayUtils';
+import { Table } from 'src/app/jscaip/TableUtils';
 import { AIDepthLimitOptions } from 'src/app/jscaip/AI/AI';
 import { Minimax } from 'src/app/jscaip/AI/Minimax';
 import { MancalaScoreMinimax } from '../../common/MancalaScoreMinimax';
@@ -10,8 +10,7 @@ import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 import { MancalaConfig } from '../../common/MancalaConfig';
 import { MancalaDistribution, MancalaMove } from '../../common/MancalaMove';
 import { MancalaNode } from '../../common/MancalaRules';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { MGPValidation } from 'src/app/utils/MGPValidation';
+import { MGPOptional, MGPValidation } from '@everyboard/lib';
 
 describe('AwaleScoreMinimax', () => {
 

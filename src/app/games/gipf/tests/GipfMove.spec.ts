@@ -2,9 +2,8 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { HexaDirection } from 'src/app/jscaip/HexaDirection';
 import { HexaLine } from 'src/app/jscaip/HexaLine';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { EncoderTestUtils, MGPOptional } from '@everyboard/lib';
 import { GipfMove, GipfPlacement } from '../GipfMove';
-import { EncoderTestUtils } from 'src/app/utils/tests/Encoder.spec';
 import { GipfCapture } from 'src/app/jscaip/GipfProjectHelper';
 
 describe('GipfCapture', () => {

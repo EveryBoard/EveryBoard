@@ -1,9 +1,9 @@
 /* eslint-disable max-lines-per-function */
-import { Table } from 'src/app/utils/ArrayUtils';
+import { Table } from 'src/app/jscaip/TableUtils';
 import { EpaminondasPositionalHeuristic } from '../EpaminondasPositionalHeuristic';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
+import { MGPOptional } from '@everyboard/lib';
 import { HeuristicUtils } from 'src/app/jscaip/AI/tests/HeuristicUtils.spec';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { EpaminondasState } from '../EpaminondasState';
 import { EpaminondasConfig, EpaminondasRules } from '../EpaminondasRules';
 

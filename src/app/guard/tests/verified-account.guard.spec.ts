@@ -6,7 +6,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { BlankComponent } from 'src/app/utils/tests/TestUtils.spec';
 import { ConnectedUserServiceMock } from 'src/app/services/tests/ConnectedUserService.spec';
 import { VerifiedAccountGuard } from '../verified-account.guard';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { MGPOptional } from '@everyboard/lib';
 import { UserMocks } from 'src/app/domain/UserMocks.spec';
 
 describe('VerifiedAccountGuard', () => {

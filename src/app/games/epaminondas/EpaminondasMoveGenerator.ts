@@ -4,9 +4,8 @@ import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { EpaminondasMove } from './EpaminondasMove';
 import { EpaminondasState } from './EpaminondasState';
 import { EpaminondasNode, EpaminondasLegalityInformation, EpaminondasRules, EpaminondasConfig } from './EpaminondasRules';
-import { MGPFallible } from 'src/app/utils/MGPFallible';
+import { MGPFallible, MGPOptional } from '@everyboard/lib';
 import { MoveGenerator } from 'src/app/jscaip/AI/AI';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 export class EpaminondasMoveGenerator extends MoveGenerator<EpaminondasMove, EpaminondasState, EpaminondasConfig> {
 

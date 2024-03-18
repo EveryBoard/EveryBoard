@@ -2,7 +2,7 @@ import { SiamMove } from 'src/app/games/siam/SiamMove';
 import { SiamPiece } from 'src/app/games/siam/SiamPiece';
 import { SiamState } from 'src/app/games/siam/SiamState';
 import { Orthogonal } from 'src/app/jscaip/Direction';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { MGPOptional } from '@everyboard/lib';
 import { Tutorial, TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { SiamConfig, SiamRules } from './SiamRules';
 import { TutorialStepMessage } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';

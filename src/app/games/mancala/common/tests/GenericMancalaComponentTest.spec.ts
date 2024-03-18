@@ -2,21 +2,20 @@
 import { DebugElement, Type } from '@angular/core';
 import { fakeAsync, tick } from '@angular/core/testing';
 import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
-import { MancalaComponent, SeedDropResult } from '../MancalaComponent';
-import { MancalaDropResult, MancalaRules } from '../MancalaRules';
-import { MancalaDistribution, MancalaMove } from '../MancalaMove';
-import { MancalaState } from '../MancalaState';
-import { Cell, Table } from 'src/app/utils/ArrayUtils';
-import { MancalaFailure } from '../MancalaFailure';
-import { Encoder } from 'src/app/utils/Encoder';
-import { Coord } from 'src/app/jscaip/Coord';
-import { Player } from 'src/app/jscaip/Player';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { Encoder, MGPOptional } from '@everyboard/lib';
 import { MoveGenerator } from 'src/app/jscaip/AI/AI';
 import { MancalaConfig } from '../MancalaConfig';
 import { RulesConfigUtils } from 'src/app/jscaip/RulesConfigUtil';
 import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 import { MoveTestUtils } from 'src/app/jscaip/tests/Move.spec';
+import { Cell, Table } from 'src/app/jscaip/TableUtils';
+import { MancalaComponent, SeedDropResult } from '../MancalaComponent';
+import { MancalaDropResult, MancalaRules } from '../MancalaRules';
+import { MancalaDistribution, MancalaMove } from '../MancalaMove';
+import { MancalaState } from '../MancalaState';
+import { Coord } from 'src/app/jscaip/Coord';
+import { MancalaFailure } from '../MancalaFailure';
+import { Player } from 'src/app/jscaip/Player';
 
 type MancalaHouseContents = Cell<{ mainContent: string, secondaryContent?: string }>;
 

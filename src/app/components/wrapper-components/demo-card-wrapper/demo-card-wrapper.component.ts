@@ -1,15 +1,13 @@
 import { AfterViewInit, ChangeDetectorRef, Component, Input, OnChanges, SimpleChanges, ViewChild, ViewContainerRef } from '@angular/core';
-import { AbstractNode } from 'src/app/jscaip/AI/GameNode';
-import { Utils } from 'src/app/utils/utils';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 import { GameWrapper } from '../../wrapper-components/GameWrapper';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ConnectedUserService } from 'src/app/services/ConnectedUserService';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { Move } from 'src/app/jscaip/Move';
 import { PlayerOrNone } from 'src/app/jscaip/Player';
-import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { TutorialGameWrapperMessages } from '../tutorial-game-wrapper/tutorial-game-wrapper.component';
+import { AbstractNode } from 'src/app/jscaip/AI/GameNode';
 
 export type DemoNodeInfo = {
     name: string, // The name of the game

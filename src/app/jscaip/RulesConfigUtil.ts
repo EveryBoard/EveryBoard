@@ -1,8 +1,8 @@
 /* eslint-disable no-multi-spaces */
+import { MGPOptional } from '@everyboard/lib';
 import { GameInfo } from '../components/normal-component/pick-game/pick-game.component';
 import { ConfigLine } from '../components/wrapper-components/rules-configuration/RulesConfigDescription';
 import { Localized } from '../utils/LocaleUtils';
-import { MGPOptional } from '../utils/MGPOptional';
 
 export type ConfigDescriptionType = number | boolean;
 

@@ -3,7 +3,7 @@ import { fakeAsync } from '@angular/core/testing';
 import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { DiaballikComponent } from '../diaballik.component';
 import { DiaballikMove, DiaballikBallPass, DiaballikTranslation } from '../DiaballikMove';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { MGPOptional } from '@everyboard/lib';
 import { Coord } from 'src/app/jscaip/Coord';
 import { DiaballikPiece, DiaballikState } from '../DiaballikState';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';

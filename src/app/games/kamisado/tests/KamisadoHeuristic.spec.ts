@@ -1,13 +1,13 @@
 /* eslint-disable max-lines-per-function */
 import { Coord } from 'src/app/jscaip/Coord';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { MGPOptional } from '@everyboard/lib';
 import { KamisadoState } from '../KamisadoState';
 import { KamisadoPiece } from '../KamisadoPiece';
 import { KamisadoNode, KamisadoRules } from '../KamisadoRules';
-import { Table } from 'src/app/utils/ArrayUtils';
 import { KamisadoHeuristic } from '../KamisadoHeuristic';
 import { KamisadoColor } from '../KamisadoColor';
 import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { Table } from 'src/app/jscaip/TableUtils';
 
 const _: KamisadoPiece = KamisadoPiece.EMPTY;
 const R: KamisadoPiece = KamisadoPiece.ZERO.RED;

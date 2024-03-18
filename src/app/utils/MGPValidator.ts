@@ -1,4 +1,4 @@
-import { MGPValidation } from './MGPValidation';
+import { MGPValidation } from '@everyboard/lib';
 
 export type MGPValidator = (v: number | null) => MGPValidation;
 

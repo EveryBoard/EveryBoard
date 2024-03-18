@@ -1,5 +1,5 @@
 /* eslint-disable max-lines-per-function */
-import { MGPSet } from 'src/app/utils/MGPSet';
+import { MGPSet } from '@everyboard/lib';
 import { Coord } from '../Coord';
 import { PieceThreat, SandwichThreat } from '../PieceThreat';
 

@@ -4,14 +4,13 @@ import { GameNode } from 'src/app/jscaip/AI/GameNode';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { Rules } from 'src/app/jscaip/Rules';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { MGPValidation } from 'src/app/utils/MGPValidation';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { MGPOptional, MGPValidation } from '@everyboard/lib';
 import { PentagoFailure } from './PentagoFailure';
 import { PentagoMove } from './PentagoMove';
 import { PentagoState } from './PentagoState';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
+import { Table, TableUtils } from 'src/app/jscaip/TableUtils';
 import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
-import { Table, TableUtils } from 'src/app/utils/ArrayUtils';
 import { PlayerMap } from 'src/app/jscaip/PlayerMap';
 
 export class PentagoNode extends GameNode<PentagoMove, PentagoState> {}

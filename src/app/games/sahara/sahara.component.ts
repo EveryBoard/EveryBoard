@@ -1,23 +1,20 @@
 import { Component } from '@angular/core';
 
-import { TriangularGameComponent }
-    from 'src/app/components/game-components/game-component/TriangularGameComponent';
+import { TriangularGameComponent } from 'src/app/components/game-components/game-component/TriangularGameComponent';
 import { Coord } from 'src/app/jscaip/Coord';
 import { SaharaMove } from 'src/app/games/sahara/SaharaMove';
 import { SaharaState } from 'src/app/games/sahara/SaharaState';
 import { SaharaRules } from 'src/app/games/sahara/SaharaRules';
-import { MGPValidation } from 'src/app/utils/MGPValidation';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { MGPFallible, MGPOptional, MGPValidation } from '@everyboard/lib';
 import { Player } from 'src/app/jscaip/Player';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { SaharaFailure } from './SaharaFailure';
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
-import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { MCTS } from 'src/app/jscaip/AI/MCTS';
 import { Minimax } from 'src/app/jscaip/AI/Minimax';
 import { SaharaHeuristic } from './SaharaHeuristic';
 import { SaharaMoveGenerator } from './SaharaMoveGenerator';
-import { TableUtils } from 'src/app/utils/ArrayUtils';
+import { TableUtils } from 'src/app/jscaip/TableUtils';
 
 @Component({
     selector: 'app-sahara',

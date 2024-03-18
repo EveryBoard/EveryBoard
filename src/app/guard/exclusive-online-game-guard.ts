@@ -5,7 +5,7 @@ import { Subscription } from 'rxjs';
 
 import { CurrentGame } from '../domain/User';
 import { CurrentGameService } from '../services/CurrentGameService';
-import { MGPOptional } from '../utils/MGPOptional';
+import { MGPOptional } from '@everyboard/lib';
 
 @Injectable({
     providedIn: 'root',

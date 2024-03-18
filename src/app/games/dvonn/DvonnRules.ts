@@ -4,17 +4,14 @@ import { DvonnPieceStack } from './DvonnPieceStack';
 import { DvonnMove } from './DvonnMove';
 import { Rules } from 'src/app/jscaip/Rules';
 import { Coord } from 'src/app/jscaip/Coord';
-import { TableUtils } from 'src/app/utils/ArrayUtils';
+import { TableUtils } from 'src/app/jscaip/TableUtils';
 import { Player } from 'src/app/jscaip/Player';
-import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { DvonnFailure } from './DvonnFailure';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { MGPFallible } from 'src/app/utils/MGPFallible';
+import { MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 import { HexagonalUtils } from 'src/app/jscaip/HexagonalUtils';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
-import { Utils } from 'src/app/utils/utils';
 import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 export class DvonnNode extends GameNode<DvonnMove, DvonnState> {}

@@ -3,14 +3,13 @@ import { GameNode } from '../../jscaip/AI/GameNode';
 import { ConfigurableRules } from '../../jscaip/Rules';
 import { P4State } from './P4State';
 import { PlayerOrNone } from 'src/app/jscaip/Player';
-import { Utils, Debug } from 'src/app/utils/utils';
+import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 import { P4Move } from './P4Move';
-import { Table, TableUtils } from 'src/app/utils/ArrayUtils';
+import { Table, TableUtils } from 'src/app/jscaip/TableUtils';
 import { P4Failure } from './P4Failure';
-import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { NInARowHelper } from 'src/app/jscaip/NInARowHelper';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { Debug } from 'src/app/utils/Debug';
 import { NumberConfig, RulesConfigDescription, RulesConfigDescriptionLocalizable } from 'src/app/components/wrapper-components/rules-configuration/RulesConfigDescription';
 import { MGPValidators } from 'src/app/utils/MGPValidator';
 

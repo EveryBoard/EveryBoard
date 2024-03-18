@@ -1,13 +1,12 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { Player } from 'src/app/jscaip/Player';
-import { MGPMap } from 'src/app/utils/MGPMap';
-import { MGPSet } from 'src/app/utils/MGPSet';
+import { MGPMap, MGPSet } from '@everyboard/lib';
 import { SixState } from './SixState';
 import { SixMove } from './SixMove';
 import { SCORE } from 'src/app/jscaip/SCORE';
-import { CoordSet } from 'src/app/utils/OptimizedSet';
 import { SixMoveGenerator } from './SixMoveGenerator';
 import { SixHeuristic } from './SixHeuristic';
+import { CoordSet } from 'src/app/jscaip/CoordSet';
 import { BoardInfo } from 'src/app/jscaip/AI/AlignmentHeuristic';
 
 export class SixFilteredMoveGenerator extends SixMoveGenerator {

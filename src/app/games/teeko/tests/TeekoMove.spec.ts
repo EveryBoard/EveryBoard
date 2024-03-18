@@ -1,8 +1,7 @@
 /* eslint-disable max-lines-per-function */
-import { EncoderTestUtils } from 'src/app/utils/tests/Encoder.spec';
+import { EncoderTestUtils, MGPFallible } from '@everyboard/lib';
 import { TeekoDropMove, TeekoMove, TeekoTranslationMove } from '../TeekoMove';
 import { Coord, CoordFailure } from 'src/app/jscaip/Coord';
-import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 
 describe('TeekoMove', () => {

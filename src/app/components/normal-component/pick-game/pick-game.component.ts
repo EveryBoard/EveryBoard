@@ -135,9 +135,8 @@ import { AbstractRules } from 'src/app/jscaip/Rules';
 import { Localized } from 'src/app/utils/LocaleUtils';
 import { Tutorial } from '../../wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { RulesConfigDescription } from '../../wrapper-components/rules-configuration/RulesConfigDescription';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { MGPOptional, Utils } from '@everyboard/lib';
 import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
-import { Utils } from 'src/app/utils/utils';
 
 class GameDescription {
 

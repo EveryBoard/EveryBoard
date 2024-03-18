@@ -4,18 +4,16 @@ import { ReplaySubject, Subscription } from 'rxjs';
 import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { CurrentGame } from 'src/app/domain/User';
 import { CurrentGameService } from '../CurrentGameService';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { MGPValidation } from 'src/app/utils/MGPValidation';
+import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 import { AuthUser, ConnectedUserService, GameActionFailure } from '../ConnectedUserService';
 import { UserDAO } from 'src/app/dao/UserDAO';
 import { ConnectedUserServiceMock } from './ConnectedUserService.spec';
 import { UserDAOMock } from 'src/app/dao/tests/UserDAOMock.spec';
 import { UserMocks } from 'src/app/domain/UserMocks.spec';
-import { ErrorLoggerService } from '../ErrorLoggerService';
 import { ErrorLoggerServiceMock } from './ErrorLoggerServiceMock.spec';
 import { CurrentGameMocks } from 'src/app/domain/mocks/CurrentGameMocks.spec';
-import { prepareUnsubscribeCheck } from 'src/app/utils/tests/TestUtils.spec';
 import { UserService } from '../UserService';
+import { prepareUnsubscribeCheck } from 'src/app/utils/tests/TestUtils.spec';
 
 export class CurrentGameServiceMock {
 
@@ -200,7 +198,7 @@ describe('CurrentGameService', () => {
         describe('updateCurrentGame', () => {
             it('should throw when called whilst no user is logged', fakeAsync(async() => {
                 // Given a moment at which service is not observing any user (not even AuthUser.NOT_CONNECTED)
-                spyOn(ErrorLoggerService, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
+                spyOn(Utils, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
                 const expectedError: string = 'Assertion failure: Should not call updateCurrentGame when not connected';
 
                 // When calling updateCurrentGame
@@ -250,7 +248,7 @@ describe('CurrentGameService', () => {
                 ConnectedUserServiceMock.setUser(UserMocks.CREATOR_AUTH_USER);
 
                 // When updating with only one field the part
-                spyOn(ErrorLoggerService, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
+                spyOn(Utils, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
                 const expectedError: string = 'Assertion failure: field role should be set before updating currentGame';
 
                 // Then the userDAO should update the connected user doc
@@ -265,7 +263,7 @@ describe('CurrentGameService', () => {
                 ConnectedUserServiceMock.setUser(UserMocks.CREATOR_AUTH_USER);
 
                 // When updating with only one field the part
-                spyOn(ErrorLoggerService, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
+                spyOn(Utils, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
                 const expectedError: string = 'Assertion failure: field typeGame should be set before updating currentGame';
 
                 // Then it should throw
@@ -279,7 +277,7 @@ describe('CurrentGameService', () => {
         describe('removeCurrentGame', () => {
             it('should throw when asking to remove whilst no user is logged', fakeAsync(async() => {
                 // Given a moment at which service is not observing any user (not even AuthUser.NOT_CONNECTED)
-                spyOn(ErrorLoggerService, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
+                spyOn(Utils, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
                 const expectedError: string = 'Assertion failure: Should not call removeCurrentGame when not connected';
 
                 // When calling updateCurrentGame

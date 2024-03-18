@@ -1,13 +1,13 @@
 /* eslint-disable max-lines-per-function */
 import { Coord } from 'src/app/jscaip/Coord';
-import { Table } from 'src/app/utils/ArrayUtils';
+import { Table } from 'src/app/jscaip/TableUtils';
 import { TaflPawn } from '../TaflPawn';
 import { TablutNode, TablutRules } from '../tablut/TablutRules';
 import { TablutMove } from '../tablut/TablutMove';
 import { Minimax } from 'src/app/jscaip/AI/Minimax';
 import { TaflPieceAndInfluenceMinimax } from '../TaflPieceAndInfluenceMinimax';
 import { TaflConfig } from '../TaflConfig';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { MGPOptional } from '@everyboard/lib';
 import { TaflState } from '../TaflState';
 
 describe('TaflPieceAndInfluenceMinimax', () => {

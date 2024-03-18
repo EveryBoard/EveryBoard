@@ -3,7 +3,7 @@ import { P4State } from '../P4State';
 import { P4Config, P4Node, P4Rules } from '../P4Rules';
 import { P4OrderedMoveGenerator } from '../P4OrderedMoveGenerator';
 import { P4Move } from '../P4Move';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { MGPOptional } from '@everyboard/lib';
 
 describe('P4OrderedMoveGenerator', () => {
 

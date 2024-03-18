@@ -3,15 +3,12 @@ import { DefeatCoords, DiaballikRules, VictoryCoord, VictoryOrDefeatCoords } fro
 import { DiaballikMove, DiaballikBallPass, DiaballikSubMove, DiaballikTranslation } from './DiaballikMove';
 import { DiaballikPiece, DiaballikState } from './DiaballikState';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 import { Coord } from 'src/app/jscaip/Coord';
-import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { DiaballikMinimax } from './DiaballikMinimax';
 import { DiaballikMoveGenerator } from './DiaballikMoveGenerator';
 import { MCTS } from 'src/app/jscaip/AI/MCTS';
-import { Utils } from 'src/app/utils/utils';
 import { RectangularGameComponent } from 'src/app/components/game-components/rectangular-game-component/RectangularGameComponent';
 import { DiaballikFailure } from './DiaballikFailure';
 import { Line } from 'src/app/jscaip/Line';

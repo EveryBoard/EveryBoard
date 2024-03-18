@@ -2,7 +2,7 @@
 import { QuartoNode, QuartoRules } from '../QuartoRules';
 import { QuartoMove } from '../QuartoMove';
 import { QuartoPiece } from '../QuartoPiece';
-import { EncoderTestUtils } from 'src/app/utils/tests/Encoder.spec';
+import { EncoderTestUtils } from '@everyboard/lib';
 import { QuartoMoveGenerator } from '../QuartoMoveGenerator';
 import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 
