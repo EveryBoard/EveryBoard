@@ -17,7 +17,7 @@ describe('ApagosComponent', () => {
         testUtils = await ComponentTestUtils.forGame<ApagosComponent>('Apagos');
     }));
 
-    describe('first clic', () => {
+    describe('first click', () => {
 
         it('should cancel move when starting move attempt by clicking a square without pieces of player', fakeAsync(async() => {
             // Given a board with a square with piece of your opponent
@@ -84,7 +84,7 @@ describe('ApagosComponent', () => {
             await testUtils.expectClickFailure('#square_1', reason);
         }));
 
-        it('should hide last move when doing first clic', fakeAsync(async() => {
+        it('should hide last move when doing first click', fakeAsync(async() => {
             //  Given a board with a last move
             const previousState: ApagosState = ApagosRules.get().getInitialState();
             const previousMove: ApagosMove = ApagosMove.drop(ApagosCoord.THREE, Player.ZERO);
@@ -104,7 +104,7 @@ describe('ApagosComponent', () => {
 
     });
 
-    describe('second clic', () => {
+    describe('second click', () => {
 
         it('should confirm slide down by clicking on a dropping arrow', fakeAsync(async() => {
             // Given a board where a square has been selected

@@ -128,7 +128,6 @@ export abstract class GameWrapper<P extends Comparable> extends BaseWrapperCompo
         } else {
             this.gameComponent.setPointOfView(role as Player);
         }
-        // TODO FOR REVIEW: on veux cancelMoveAttempt, HideLastMove, UpdateBoard(ça oui eh), ShowLastMove quand on change de role ?
         await this.showCurrentState(false); // Trigger redrawing of the board (might need to be rotated 180°)
     }
 
@@ -177,7 +176,7 @@ export abstract class GameWrapper<P extends Comparable> extends BaseWrapperCompo
             return MGPValidation.failure(GameWrapperMessages.GAME_HAS_ENDED());
         }
         if (this.isMoveAttemptOngoing === false) {
-            // It is the first clic
+            // It is the first click
             this.gameComponent.hideLastMove();
             this.isMoveAttemptOngoing = true;
         }
@@ -235,9 +234,10 @@ export abstract class GameWrapper<P extends Comparable> extends BaseWrapperCompo
     }
 
     /**
-     * To use when a previous move exist when the user provoked a move by clicking
-     * Since he clicked, the hideLastMove is no longer necessary
-     * Since the last move exist, no need to check
+     * Used when a new move is done:
+     *     1. by user click, locally
+     *     2. by opponent online
+     *     3. by the AI
      * @param triggerAnimation a boolean set to true if there is a need to trigger the animation of the last move
      */
     protected async showNextMove(triggerAnimation: boolean): Promise<void> {

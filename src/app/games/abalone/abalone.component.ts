@@ -260,7 +260,6 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneRules,
             return this.cancelMove();
         }
         if (coord.isHexagonallyAlignedWith(firstPiece) === false) {
-            this.cancelMoveAttempt();
             return this.firstClick(x, y);
         }
         const distance: number = coord.getDistance(firstPiece);
@@ -276,7 +275,6 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneRules,
             const middle: Coord = this.selecteds[1];
             const player: Player = this.getState().getCurrentPlayer();
             if (this.hexaBoard[middle.y][middle.x].is(player) === false) {
-                this.cancelMoveAttempt();
                 return this.firstClick(x, y);
             }
         }

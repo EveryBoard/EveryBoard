@@ -199,7 +199,7 @@ describe('ConnectSixComponent', () => {
         }));
 
         it('should show last move again when cancelling move', fakeAsync(async() => {
-            // Given a component with one move already done, and a first clic done
+            // Given a component with one move already done, and a first click done
             const state: ConnectSixState = new ConnectSixState([
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],

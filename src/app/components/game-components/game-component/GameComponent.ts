@@ -151,6 +151,10 @@ export abstract class GameComponent<R extends SuperRules<M, S, C, L>,
         return this.interactive;
     }
 
+    /**
+     * @param reason the reason of the cancellation, this message will be toasted
+     * @returns MGPValidation.SUCCESS in case of success, MGPValidation.failure(reason) otherwise
+     */
     public async cancelMove(reason?: string): Promise<MGPValidation> {
         this.cancelMoveAttempt();
         this.cancelMoveOnWrapper(reason);
@@ -166,9 +170,10 @@ export abstract class GameComponent<R extends SuperRules<M, S, C, L>,
     }
 
     public cancelMoveAttempt(): void {
-        // Override if need be
-        // Only call it manually in the component if you want (by example) to switch the selected piece
-        // If you wish to manually say that user did something invalid that cancel the move without popup message,
+        // Override if move takes more than one click.
+        // The goal of this method is purely to hide the clicks that the user made.
+        // Only call it in the component if you want to cancel all the previous clicks then select one piece
+        // If the user did something invalid, that cancelled the move, but popup are not needed,
         // Then just call cancelMove without parameter, otherwise the last move won't be displayed
     }
 

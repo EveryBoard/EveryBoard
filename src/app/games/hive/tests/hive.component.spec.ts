@@ -167,7 +167,7 @@ describe('HiveComponent', () => {
 
         describe('selection', () => {
 
-            it('should hide last move (drop) at first clic', fakeAsync(async() => {
+            it('should hide last move (drop) at first click', fakeAsync(async() => {
                 // Given a state with pieces on the board and a last move (drop)
                 const previousState: HiveState = HiveState.fromRepresentation([
                     [[Q]],
