@@ -2,8 +2,8 @@
 import { ReplaySubject, Subscription } from 'rxjs';
 import { fakeAsync, TestBed } from '@angular/core/testing';
 import { Injectable } from '@angular/core';
-import { FirebaseError } from '@angular/fire/app';
-import * as FireAuth from '@angular/fire/auth';
+import { FirebaseError } from '@firebase/app';
+import * as FireAuth from '@firebase/auth';
 import { serverTimestamp } from 'firebase/firestore';
 
 import { Auth, ConnectedUserService, AuthUser } from '../ConnectedUserService';
@@ -102,12 +102,11 @@ function setupAuthTestModule(): Promise<unknown> {
 export async function createConnectedGoogleUser(email: string, username?: string): Promise<FireAuth.User> {
     const userDAO: UserDAO = TestBed.inject(UserDAO);
     // Sign out current user in case there is one
-    await FireAuth.signOut(TestBed.inject(FireAuth.Auth));
+    await FireAuth.signOut(FireAuth.getAuth());
     // Create a new google user
     const token: string = '{"sub": "' + email + '", "email": "' + email + '", "email_verified": true}';
     const credential: FireAuth.UserCredential =
-        await FireAuth.signInWithCredential(TestBed.inject(FireAuth.Auth),
-                                            FireAuth.GoogleAuthProvider.credential(token));
+        await FireAuth.signInWithCredential(FireAuth.getAuth(), FireAuth.GoogleAuthProvider.credential(token));
     await userDAO.set(credential.user.uid, { verified: false, currentGame: null });
     if (username != null) {
         // This needs to happen in multiple updates to match the security rules
@@ -124,13 +123,13 @@ export async function createConnectedUser(email: string, username: string): Prom
 
 export async function createDisconnectedUser(email: string, username: string): Promise<MinimalUser> {
     const user: FireAuth.User = await createConnectedGoogleUser(email, username);
-    await FireAuth.signOut(TestBed.inject(FireAuth.Auth));
+    await FireAuth.signOut(FireAuth.getAuth());
     return { id: user.uid, name: username };
 }
 
 export async function reconnectUser(email: string): Promise<void> {
     const token: string = '{"sub": "' + email + '", "email": "' + email + '", "email_verified": true}';
-    await FireAuth.signInWithCredential(TestBed.inject(FireAuth.Auth),
+    await FireAuth.signInWithCredential(FireAuth.getAuth(),
                                         FireAuth.GoogleAuthProvider.credential(token));
 }
 
@@ -138,7 +137,7 @@ export async function createUnverifiedUser(email: string, username: string): Pro
     const userDAO: UserDAO = TestBed.inject(UserDAO);
     const token: string = '{"sub": "' + email + '", "email": "' + email + '", "email_verified": false}';
     const credential: FireAuth.UserCredential =
-        await FireAuth.signInWithCredential(TestBed.inject(FireAuth.Auth),
+        await FireAuth.signInWithCredential(FireAuth.getAuth(),
                                             FireAuth.GoogleAuthProvider.credential(token));
     await userDAO.set(credential.user.uid, { verified: false, currentGame: null });
     await userDAO.update(credential.user.uid, { username });
@@ -146,7 +145,7 @@ export async function createUnverifiedUser(email: string, username: string): Pro
 }
 
 export function signOut(): Promise<void> {
-    return TestBed.inject(FireAuth.Auth).signOut();
+    return FireAuth.getAuth().signOut();
 }
 
 export async function createDisconnectedGoogleUser(email: string, username?: string): Promise<FireAuth.User> {
@@ -170,7 +169,7 @@ describe('ConnectedUserService', () => {
     beforeEach(async() => {
         await setupAuthTestModule();
         connectedUserService = TestBed.inject(ConnectedUserService);
-        auth = TestBed.inject(FireAuth.Auth);
+        auth = FireAuth.getAuth();
         userDAO = TestBed.inject(UserDAO);
         alreadyDestroyed = false;
     });
@@ -387,7 +386,7 @@ describe('ConnectedUserService', () => {
             spyOn(connectedUserService, 'createUser').and.callThrough();
             const token: string = '{"sub": "' + email + '", "email": "' + email + '", "email_verified": true}';
             const credential: FireAuth.UserCredential =
-                await FireAuth.signInWithCredential(TestBed.inject(FireAuth.Auth),
+                await FireAuth.signInWithCredential(FireAuth.getAuth(),
                                                     FireAuth.GoogleAuthProvider.credential(token));
             const user: FireAuth.User = credential.user;
             spyOn(Auth, 'signInWithPopup').and.resolveTo(user);

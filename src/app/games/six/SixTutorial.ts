@@ -7,6 +7,7 @@ import { MGPValidation } from '@everyboard/lib';
 import { Tutorial, TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { SixRules } from './SixRules';
 import { TutorialStepMessage } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
+import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 
 const _: PlayerOrNone = PlayerOrNone.NONE;
 const O: PlayerOrNone = Player.ZERO;
@@ -92,9 +93,9 @@ export class SixTutorial extends Tutorial {
             ], 40),
             SixMove.ofMovement(new Coord(6, 1), new Coord(5, 1)),
             (_move: SixMove, _previousState: SixState, resultingState: SixState) => {
-                const pieces: [number, number] = resultingState.countPieces();
-                if (pieces[0] === 19) {
-                    if (pieces[1] === 18) {
+                const pieces: PlayerNumberMap = resultingState.countPieces();
+                if (pieces.get(Player.ZERO) === 19) {
+                    if (pieces.get(Player.ONE) === 18) {
                         return MGPValidation.SUCCESS;
                     } else {
                         return MGPValidation.failure(SixTutorialMessages.MOVEMENT_NOT_DISCONNECTING());

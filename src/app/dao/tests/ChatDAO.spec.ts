@@ -1,8 +1,8 @@
 /* eslint-disable max-lines-per-function */
 import { TestBed } from '@angular/core/testing';
 import { ChatDAO } from '../ChatDAO';
-import * as FireAuth from '@angular/fire/auth';
 import { MGPOptional } from '@everyboard/lib';
+import * as FireAuth from '@firebase/auth';
 import { Chat } from 'src/app/domain/Chat';
 import { serverTimestamp, Timestamp } from 'firebase/firestore';
 import { Message, MessageDocument } from 'src/app/domain/Message';
@@ -28,7 +28,7 @@ describe('ChatDAO', () => {
     let userDAO: UserDAO;
 
     function signOut(): Promise<void> {
-        return TestBed.inject(FireAuth.Auth).signOut();
+        return FireAuth.getAuth().signOut();
     }
     async function createPartAndConfigRoom(creator: MinimalUser): Promise<string> {
         const id: string = await partDAO.create({ ...PartMocks.INITIAL, playerZero: creator });

@@ -1,8 +1,7 @@
 import { FirestoreDAO } from './FirestoreDAO';
 import { ConfigRoom } from '../domain/ConfigRoom';
 import { Injectable } from '@angular/core';
-import { Firestore } from '@angular/fire/firestore';
-import { Debug } from '../utils/Debug';
+import { Debug } from 'src/app/utils/utils';
 
 @Injectable({
     providedIn: 'root',
@@ -10,7 +9,7 @@ import { Debug } from '../utils/Debug';
 @Debug.log
 export class ConfigRoomDAO extends FirestoreDAO<ConfigRoom> {
 
-    public constructor(firestore: Firestore) {
-        super('config-room', firestore);
+    public constructor() {
+        super('config-room');
     }
 }

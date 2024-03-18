@@ -12,8 +12,8 @@ export class QuixoHeuristic extends PlayerMetricHeuristic<QuixoMove, QuixoState,
     public override getMetrics(node: QuixoNode, _config: MGPOptional<QuixoConfig>): PlayerNumberTable {
         const state: QuixoState = node.gameState;
         const linesSums: PlayerMap<MGPMap<string, NumberMap<number>>> = QuixoRules.getLinesSums(state);
-        const zerosFullestLine: number = QuixoRules.getFullestLine(linesSums.get(Player.ZERO).get());
-        const onesFullestLine: number = QuixoRules.getFullestLine(linesSums.get(Player.ONE).get());
+        const zerosFullestLine: number = QuixoRules.getFullestLine(linesSums.get(Player.ZERO));
+        const onesFullestLine: number = QuixoRules.getFullestLine(linesSums.get(Player.ONE));
         return PlayerNumberTable.ofSingle(zerosFullestLine, onesFullestLine);
     }
 

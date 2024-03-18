@@ -5,6 +5,7 @@ import { GipfNode, GipfRules } from '../GipfRules';
 import { Table } from 'src/app/jscaip/TableUtils';
 import { GipfMoveGenerator } from '../GipfMoveGenerator';
 import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 
 const N: FourStatePiece = FourStatePiece.UNREACHABLE;
 const _: FourStatePiece = FourStatePiece.EMPTY;
@@ -40,7 +41,7 @@ describe('GipfMoveGenerator', () => {
                 [X, _, X, _, _, N, N],
                 [_, X, _, _, N, N, N],
             ];
-            const state: GipfState = new GipfState(board, 0, [0, 5], [0, 0]);
+            const state: GipfState = new GipfState(board, 0, PlayerNumberMap.of(0, 5), PlayerNumberMap.of(0, 0));
             const node: GipfNode = new GipfNode(state);
             expect(moveGenerator.getListMoves(node, defaultConfig).length).toBe(0);
         });
@@ -55,7 +56,7 @@ describe('GipfMoveGenerator', () => {
                 [_, _, X, O, _, N, N],
                 [_, _, _, _, N, N, N],
             ];
-            const state: GipfState = new GipfState(board, 0, [5, 5], [0, 0]);
+            const state: GipfState = new GipfState(board, 0, PlayerNumberMap.of(5, 5), PlayerNumberMap.of(0, 0));
             const node: GipfNode = new GipfNode(state);
             expect(moveGenerator.getListMoves(node, defaultConfig).length).toBe(19);
         });
@@ -71,7 +72,7 @@ describe('GipfMoveGenerator', () => {
                 [_, _, _, X, _, N, N],
                 [_, _, _, O, N, N, N],
             ];
-            const state: GipfState = new GipfState(board, 0, [5, 5], [0, 0]);
+            const state: GipfState = new GipfState(board, 0, PlayerNumberMap.of(5, 5), PlayerNumberMap.of(0, 0));
             const node: GipfNode = new GipfNode(state);
             expect(moveGenerator.getListMoves(node, defaultConfig).length).toBe(20);
         });
@@ -87,7 +88,7 @@ describe('GipfMoveGenerator', () => {
                 [X, _, _, _, O, N, N],
                 [O, X, O, X, N, N, N],
             ];
-            const state: GipfState = new GipfState(board, 0, [5, 5], [0, 0]);
+            const state: GipfState = new GipfState(board, 0, PlayerNumberMap.of(5, 5), PlayerNumberMap.of(0, 0));
             const node: GipfNode = new GipfNode(state);
             expect(moveGenerator.getListMoves(node, defaultConfig).length).toBe(30);
         });
@@ -103,7 +104,7 @@ describe('GipfMoveGenerator', () => {
                 [_, _, X, O, _, N, N],
                 [_, _, _, _, N, N, N],
             ];
-            const state: GipfState = new GipfState(board, 0, [5, 5], [0, 0]);
+            const state: GipfState = new GipfState(board, 0, PlayerNumberMap.of(5, 5), PlayerNumberMap.of(0, 0));
             const node: GipfNode = new GipfNode(state);
             expect(moveGenerator.getListMoves(node, defaultConfig).length).toBe(38);
         });

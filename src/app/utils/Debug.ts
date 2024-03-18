@@ -1,5 +1,3 @@
-import { Utils } from '@everyboard/lib';
-
 export class Debug {
     /**
      * Enables logging for a class or method programmatically.

@@ -2,19 +2,37 @@ import { MGPMap, MGPOptional } from '@everyboard/lib';
 import { Player } from './Player';
 import { PlayerNumberTable } from './PlayerNumberTable';
 
-export class PlayerMap<T extends NonNullable<unknown>> extends MGPMap<Player, T> {
+export class PlayerMap<T extends NonNullable<unknown>> {
 
-    public static of<T extends NonNullable<unknown>>(playerZeroValue: T, playerOneValue: T): PlayerMap<T> {
+    public static ofValues<T extends NonNullable<unknown>>(playerZeroValue: T, playerOneValue: T): PlayerMap<T> {
         const map: MGPMap<Player, T> = new MGPMap([
             { key: Player.ZERO, value: playerZeroValue },
             { key: Player.ONE, value: playerOneValue },
         ]);
-        return map;
+        return new PlayerMap(map);
+    }
+
+    protected constructor(protected readonly map: MGPMap<Player, T>) {}
+
+    public makeImmutable(): void {
+        return this.map.makeImmutable();
+    }
+
+    public equals(other: PlayerMap<T>): boolean {
+        return this.map.equals(other.map);
+    }
+
+    public get(player: Player): T {
+        return this.map.get(player).get();
+    }
+
+    public put(player: Player, value: T): T {
+        return this.map.put(player, value).get();
     }
 
 }
 
-export class PlayerNumberMap {
+export class PlayerNumberMap extends PlayerMap<number> {
 
     public static of(playerZeroValue: number, playerOneValue: number): PlayerNumberMap {
         const map: MGPMap<Player, number> = new MGPMap([
@@ -22,28 +40,6 @@ export class PlayerNumberMap {
             { key: Player.ONE, value: playerOneValue },
         ]);
         return new PlayerNumberMap(map);
-    }
-
-    private constructor(private readonly map: MGPMap<Player, number>) {}
-
-    public makeImmutable(): void {
-        return this.map.makeImmutable();
-    }
-
-    public equals(other: PlayerNumberMap): boolean {
-        return this.map.equals(other.map);
-    }
-
-    public getCopy(): PlayerNumberMap {
-        return new PlayerNumberMap(this.map.getCopy());
-    }
-
-    public get(player: Player): number {
-        return this.map.get(player).get();
-    }
-
-    public put(player: Player, value: number): number {
-        return this.map.put(player, value).get();
     }
 
     public add(player: Player, value: number): MGPOptional<number> {
@@ -56,6 +52,10 @@ export class PlayerNumberMap {
             this.get(Player.ZERO),
             this.get(Player.ONE),
         );
+    }
+
+    public getCopy(): PlayerNumberMap {
+        return new PlayerNumberMap(this.map.getCopy());
     }
 
 }

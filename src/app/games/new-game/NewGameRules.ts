@@ -8,7 +8,7 @@ import { Rules } from 'src/app/jscaip/Rules';
 
 /**
  * This class is optional.
- * If you don't use it, you can remove it everywhere it is mentionned.
+ * If you don't use it, you can remove it everywhere it is mentioned.
  *
  * It provides extra information that is returned by the `isLegal` method of the rules.
  * This information is then provided to the `applyLegalMove` method of the rules.

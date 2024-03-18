@@ -4,7 +4,6 @@ import { Injectable } from '@angular/core';
 import { FirestoreDocument, FirestoreDAO } from '../FirestoreDAO';
 import { FirestoreJSONObject, MGPOptional } from '@everyboard/lib';
 import { FirestoreCollectionObserver } from '../FirestoreCollectionObserver';
-import * as Firestore from '@angular/fire/firestore';
 import { Subscription } from 'rxjs';
 import { setupEmulators } from 'src/app/utils/tests/TestUtils.spec';
 
@@ -18,8 +17,8 @@ type Foo = {
 })
 class FooDAO extends FirestoreDAO<Foo> {
 
-    public constructor(firestore: Firestore.Firestore) {
-        super('foo', firestore);
+    public constructor() {
+        super('foo');
     }
 }
 

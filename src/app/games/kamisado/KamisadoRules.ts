@@ -13,6 +13,7 @@ import { MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib'
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { GameNode } from 'src/app/jscaip/AI/GameNode';
 import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 
 export class KamisadoNode extends GameNode<KamisadoMove, KamisadoState> {}
 
@@ -92,7 +93,7 @@ export class KamisadoRules extends Rules<KamisadoMove, KamisadoState> {
         return this.getMovablePieces(state).length === 0;
     }
 
-    public static getFurthestPiecePositions(state: KamisadoState): [number, number] {
+    public static getFurthestPiecePositions(state: KamisadoState): PlayerNumberMap {
         let furthest0: number = 7; // player 0 goes from bottom (7) to top (0)
         let furthest1: number = 0; // player 1 goes from top (0) to bottom (7)
 
@@ -105,7 +106,7 @@ export class KamisadoRules extends Rules<KamisadoMove, KamisadoState> {
                 furthest0 = Math.min(furthest0, c.y);
             }
         });
-        return [furthest0, furthest1];
+        return PlayerNumberMap.of(furthest0, furthest1);
     }
 
     public static isLegal(move: KamisadoMove, state: KamisadoState): MGPValidation {
@@ -213,11 +214,11 @@ export class KamisadoRules extends Rules<KamisadoMove, KamisadoState> {
             return GameStatus.getDefeat(player);
         }
 
-        const [furthest0, furthest1]: [number, number] = KamisadoRules.getFurthestPiecePositions(state);
+        const furthest: PlayerNumberMap = KamisadoRules.getFurthestPiecePositions(state);
         // Board value is how far my piece is - how far my opponent piece is, except in case of victory
-        if (furthest1 === 7) {
+        if (furthest.get(Player.ONE) === 7) {
             return GameStatus.ONE_WON;
-        } else if (furthest0 === 0) {
+        } else if (furthest.get(Player.ZERO) === 0) {
             return GameStatus.ZERO_WON;
         } else {
             return GameStatus.ONGOING;

@@ -2,6 +2,7 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { GameStateWithTable } from 'src/app/jscaip/GameStateWithTable';
 import { PlayerOrNone } from 'src/app/jscaip/Player';
 import { MGPSet } from '@everyboard/lib';
+import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 
 export class ConspirateursState extends GameStateWithTable<PlayerOrNone> {
 
@@ -44,12 +45,18 @@ export class ConspirateursState extends GameStateWithTable<PlayerOrNone> {
         return this.turn < 40;
     }
 
-    public getSidePieces(): [number, number] {
+    public getSidePieces(): PlayerNumberMap {
         if (this.turn % 2 === 0) {
-            return [20 - (this.turn / 2), 20 - (this.turn / 2)];
+            return PlayerNumberMap.of(
+                20 - (this.turn / 2),
+                20 - (this.turn / 2),
+            );
         } else {
             // Player 0 plays on even turn, so has one less piece on odd turns
-            return [20 - ((this.turn - 1) / 2) - 1, 20 - ((this.turn - 1) / 2)];
+            return PlayerNumberMap.of(
+                20 - ((this.turn - 1) / 2) - 1,
+                20 - ((this.turn - 1) / 2),
+            );
         }
     }
 }

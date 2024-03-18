@@ -8,6 +8,7 @@ import { HeuristicUtils } from 'src/app/jscaip/AI/tests/HeuristicUtils.spec';
 import { Player } from 'src/app/jscaip/Player';
 import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 import { GipfRules } from '../GipfRules';
+import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 
 const N: FourStatePiece = FourStatePiece.UNREACHABLE;
 const _: FourStatePiece = FourStatePiece.EMPTY;
@@ -34,10 +35,10 @@ describe('GipfScoreHeuristic', () => {
             [X, _, X, _, _, N, N],
             [_, X, _, _, N, N, N],
         ];
-        const capturedPieces: [number, number] = [0, 3];
-        const moreCapturedPieces: [number, number] = [0, 7];
-        const weakState: GipfState = new GipfState(board, 0, [5, 5], capturedPieces);
-        const strongState: GipfState = new GipfState(board, 0, [5, 5], moreCapturedPieces);
+        const capturedPieces: PlayerNumberMap = PlayerNumberMap.of(0, 3);
+        const moreCapturedPieces: PlayerNumberMap = PlayerNumberMap.of(0, 7);
+        const weakState: GipfState = new GipfState(board, 0, PlayerNumberMap.of(5, 5), capturedPieces);
+        const strongState: GipfState = new GipfState(board, 0, PlayerNumberMap.of(5, 5), moreCapturedPieces);
         // When computing their values
         // Then it should prefer having more captured pieces
         HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(heuristic,
@@ -58,10 +59,10 @@ describe('GipfScoreHeuristic', () => {
             [X, _, X, _, _, N, N],
             [_, X, _, _, N, N, N],
         ];
-        const piecesToPlay: [number, number] = [5, 5];
-        const morePiecesToPlay: [number, number] = [5, 7];
-        const weakState: GipfState = new GipfState(board, 0, piecesToPlay, [0, 0]);
-        const strongState: GipfState = new GipfState(board, 0, morePiecesToPlay, [0, 0]);
+        const piecesToPlay: PlayerNumberMap = PlayerNumberMap.of(5, 5);
+        const morePiecesToPlay: PlayerNumberMap = PlayerNumberMap.of(5, 7);
+        const weakState: GipfState = new GipfState(board, 0, piecesToPlay, PlayerNumberMap.of(0, 0));
+        const strongState: GipfState = new GipfState(board, 0, morePiecesToPlay, PlayerNumberMap.of(0, 0));
         // When computing their minimax values
         // Then it should prefer having more pieces to place
         HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(heuristic,

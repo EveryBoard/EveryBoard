@@ -6,7 +6,7 @@ import { FieldValue } from 'firebase/firestore';
 
 export type JSONPrimitive = string | number | boolean | null | undefined;
 export type JSONValue = JSONPrimitive | JSONObject | Array<JSONValueWithoutArray>;
-export type JSONValueWithoutArray = JSONPrimitive | JSONObject
+export type JSONValueWithoutArray = JSONPrimitive | JSONObject;
 export type JSONObject = { [member: string]: JSONValue };
 
 export function isJSONPrimitive(value: unknown): value is JSONPrimitive {
@@ -23,5 +23,5 @@ export type FirestoreJSONValue =
     FirestoreJSONObject |
     Array<FirestoreJSONValueWithoutArray> |
     ReadonlyArray<FirestoreJSONValueWithoutArray>;
-export type FirestoreJSONValueWithoutArray = FirestoreJSONPrimitive | FirestoreJSONObject
+export type FirestoreJSONValueWithoutArray = FirestoreJSONPrimitive | FirestoreJSONObject;
 export type FirestoreJSONObject = { [member: string]: FirestoreJSONValue };

@@ -72,7 +72,7 @@ export class YinshMoveGenerator extends MoveGenerator<YinshMove, YinshState> {
         const player: Player = state.getCurrentPlayer();
         const coords: Coord[] = [];
         state.forEachCoord((coord: Coord, content: YinshPiece): void => {
-            if (content === YinshPiece.RINGS.get(player).get()) {
+            if (content === YinshPiece.RINGS.get(player)) {
                 coords.push(coord);
             }
         });

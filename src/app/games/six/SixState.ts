@@ -9,6 +9,7 @@ import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { OpenHexagonalGameState } from 'src/app/jscaip/OpenHexagonalGameState';
 import { HexagonalUtils } from 'src/app/jscaip/HexagonalUtils';
 import { CoordSet } from 'src/app/jscaip/CoordSet';
+import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 
 export class SixState extends OpenHexagonalGameState<Player> {
 
@@ -101,11 +102,11 @@ export class SixState extends OpenHexagonalGameState<Player> {
 
     }
 
-    public countPieces(): [number, number] {
+    public countPieces(): PlayerNumberMap {
         const pieces: ReversibleMap<Player, MGPSet<Coord>> = this.pieces.reverse();
         const zeroPieces: MGPSet<Coord> = pieces.get(Player.ZERO).getOrElse(new CoordSet());
         const onePieces: MGPSet<Coord> = pieces.get(Player.ONE).getOrElse(new CoordSet());
-        return [zeroPieces.size(), onePieces.size()];
+        return PlayerNumberMap.of(zeroPieces.size(), onePieces.size());
     }
 
     public switchPiece(coord: Coord): SixState {

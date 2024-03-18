@@ -15,11 +15,11 @@ export class YinshPiece implements ComparableObject {
 
     public static MARKER_ZERO: YinshPiece = new YinshPiece(Player.ZERO, false);
     public static MARKER_ONE: YinshPiece = new YinshPiece(Player.ONE, false);
-    public static MARKERS: PlayerMap<YinshPiece> = PlayerMap.of(YinshPiece.MARKER_ZERO, YinshPiece.MARKER_ONE);
+    public static MARKERS: PlayerMap<YinshPiece> = PlayerMap.ofValues(YinshPiece.MARKER_ZERO, YinshPiece.MARKER_ONE);
 
     public static RING_ZERO: YinshPiece = new YinshPiece(Player.ZERO, true);
     public static RING_ONE: YinshPiece = new YinshPiece(Player.ONE, true);
-    public static RINGS: PlayerMap<YinshPiece> = PlayerMap.of(YinshPiece.RING_ZERO, YinshPiece.RING_ONE);
+    public static RINGS: PlayerMap<YinshPiece> = PlayerMap.ofValues(YinshPiece.RING_ZERO, YinshPiece.RING_ONE);
 
     public static of(playerOrNone: PlayerOrNone, isRing: boolean): YinshPiece {
         if (playerOrNone === PlayerOrNone.NONE) {
@@ -27,9 +27,9 @@ export class YinshPiece implements ComparableObject {
         } else {
             const player: Player = playerOrNone as Player;
             if (isRing) {
-                return YinshPiece.RINGS.get(player).get();
+                return YinshPiece.RINGS.get(player);
             } else {
-                return YinshPiece.MARKERS.get(player).get();
+                return YinshPiece.MARKERS.get(player);
             }
         }
     }

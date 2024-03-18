@@ -6,7 +6,7 @@ import { MGPFallible, MGPValidation } from '@everyboard/lib';
 import { expectValidRouting, SimpleComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { RegisterComponent } from './register.component';
 import { VerifyAccountComponent } from '../verify-account/verify-account.component';
-import * as FireAuth from '@angular/fire/auth';
+import * as FireAuth from '@firebase/auth';
 
 describe('RegisterComponent', () => {
     let testUtils: SimpleComponentTestUtils<RegisterComponent>;

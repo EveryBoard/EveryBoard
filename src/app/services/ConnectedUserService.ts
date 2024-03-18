@@ -1,5 +1,5 @@
-import { FirebaseError } from '@angular/fire/app';
-import * as FireAuth from '@angular/fire/auth';
+import { FirebaseError } from '@firebase/app';
+import * as FireAuth from '@firebase/auth';
 import { Injectable, OnDestroy } from '@angular/core';
 import { Observable, ReplaySubject, Subscription } from 'rxjs';
 
@@ -109,11 +109,12 @@ export class ConnectedUserService implements OnDestroy {
     private readonly userRS: ReplaySubject<AuthUser>;
     private readonly userObs: Observable<AuthUser>;
     private userSubscription: Subscription = new Subscription();
+    public readonly auth: FireAuth.Auth;
 
     public constructor(private readonly userDAO: UserDAO,
-                       private readonly userService: UserService,
-                       private readonly auth: FireAuth.Auth)
+                       private readonly userService: UserService)
     {
+        this.auth = FireAuth.getAuth();
         this.userRS = new ReplaySubject<AuthUser>(1);
         this.userObs = this.userRS.asObservable();
         this.authSubscription =

@@ -1,13 +1,13 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { LOCALE_ID, ModuleWithProviders, NgModule } from '@angular/core';
+import { LOCALE_ID, NgModule } from '@angular/core';
 import { registerLocaleData } from '@angular/common';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { RouterModule, Route } from '@angular/router';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import * as Firebase from '@angular/fire/app';
-import * as Firestore from '@angular/fire/firestore';
-import * as Auth from '@angular/fire/auth';
+import * as Firebase from '@firebase/app';
+import * as Firestore from '@firebase/firestore';
+import * as Auth from '@firebase/auth';
 import localeFr from '@angular/common/locales/fr';
 
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
@@ -154,36 +154,6 @@ export const routes: Route[] = [
     { path: '**', component: NotFoundComponent },
 ];
 
-export class FirebaseProviders {
-
-    public static app(): ModuleWithProviders<Firebase.FirebaseAppModule> {
-        return Firebase.provideFirebaseApp(() => {
-            return Firebase.initializeApp(environment.firebaseConfig);
-        });
-    }
-    public static firestore(): ModuleWithProviders<Firestore.FirestoreModule> {
-        return Firestore.provideFirestore(() => {
-            const firestore: Firestore.Firestore = Firestore.getFirestore();
-            // eslint-disable-next-line dot-notation
-            const host: string = firestore.toJSON()['settings'].host;
-            if (environment.useEmulators && host !== 'localhost:8080') {
-                Firestore.connectFirestoreEmulator(firestore, 'localhost', 8080);
-            }
-            return firestore;
-        });
-    }
-    public static auth(): ModuleWithProviders<Auth.AuthModule> {
-        return Auth.provideAuth(() => {
-            const fireauth: Auth.Auth = Auth.getAuth();
-            // eslint-disable-next-line dot-notation
-            if (environment.useEmulators && fireauth.config['emulator'] == null) {
-                Auth.connectAuthEmulator(fireauth, 'http://localhost:9099', { disableWarnings: true });
-            }
-            return fireauth;
-        });
-    }
-}
-
 @NgModule({
     declarations: [
         AppComponent,
@@ -259,9 +229,6 @@ export class FirebaseProviders {
         RulesConfigurationComponent,
     ],
     imports: [
-        FirebaseProviders.app(),
-        FirebaseProviders.firestore(),
-        FirebaseProviders.auth(),
         BrowserModule,
         HttpClientModule,
         RouterModule.forRoot(routes, { useHash: false }),
@@ -282,4 +249,20 @@ export class FirebaseProviders {
     ],
     bootstrap: [AppComponent],
 })
-export class AppModule {}
+export class AppModule {
+
+    public constructor() {
+        Firebase.initializeApp(environment.firebaseConfig);
+        const firestore: Firestore.Firestore = Firestore.getFirestore();
+        const host: string = firestore.toJSON()['settings'].host;
+        if (environment.useEmulators && host !== 'localhost:8080') {
+            Firestore.connectFirestoreEmulator(firestore, 'localhost', 8080);
+        }
+
+        const fireauth: Auth.Auth = Auth.getAuth();
+        if (environment.useEmulators && fireauth.config['emulator'] == null) {
+            Auth.connectAuthEmulator(fireauth, 'http://localhost:9099', { disableWarnings: true });
+        }
+    }
+
+}

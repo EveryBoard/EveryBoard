@@ -5,6 +5,7 @@ import { GipfState } from '../GipfState';
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
 import { Table } from 'src/app/jscaip/TableUtils';
 import { GipfRules } from '../GipfRules';
+import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 
 describe('GipfState', () => {
 
@@ -59,7 +60,7 @@ describe('GipfState', () => {
                 [B, _, B, _, _, _, _],
                 [_, B, _, _, _, _, _],
             ];
-            const state: GipfState = new GipfState(board, 5, [5, 5], [0, 0]);
+            const state: GipfState = new GipfState(board, 5, PlayerNumberMap.of(5, 5), PlayerNumberMap.of(0, 0));
             expect(state.equals(state)).toBeTrue();
         });
 
@@ -73,7 +74,7 @@ describe('GipfState', () => {
                 [B, _, B, _, _, _, _],
                 [_, B, _, _, _, _, _],
             ];
-            const state1: GipfState = new GipfState(board1, 6, [5, 5], [0, 0]);
+            const state1: GipfState = new GipfState(board1, 6, PlayerNumberMap.of(5, 5), PlayerNumberMap.of(0, 0));
 
             const board2: Table<FourStatePiece> = [
                 [_, _, _, _, A, _, _],
@@ -84,7 +85,7 @@ describe('GipfState', () => {
                 [B, _, B, _, _, _, _],
                 [_, A, _, _, _, _, _],
             ];
-            const state2: GipfState = new GipfState(board2, 6, [5, 5], [0, 0]);
+            const state2: GipfState = new GipfState(board2, 6, PlayerNumberMap.of(5, 5), PlayerNumberMap.of(0, 0));
             expect(state1.equals(state2)).toBeFalse();
         });
 
@@ -98,8 +99,8 @@ describe('GipfState', () => {
                 [B, _, B, _, _, _, _],
                 [_, B, _, _, _, _, _],
             ];
-            const state1: GipfState = new GipfState(board, 5, [5, 5], [0, 0]);
-            const state2: GipfState = new GipfState(board, 6, [5, 5], [0, 0]);
+            const state1: GipfState = new GipfState(board, 5, PlayerNumberMap.of(5, 5), PlayerNumberMap.of(0, 0));
+            const state2: GipfState = new GipfState(board, 6, PlayerNumberMap.of(5, 5), PlayerNumberMap.of(0, 0));
             expect(state1.equals(state2)).toBeFalse();
         });
 
@@ -113,10 +114,10 @@ describe('GipfState', () => {
                 [B, _, B, _, _, _, _],
                 [_, B, _, _, _, _, _],
             ];
-            const state1: GipfState = new GipfState(board, 5, [5, 5], [0, 0]);
-            const state2: GipfState = new GipfState(board, 5, [5, 6], [0, 0]);
+            const state1: GipfState = new GipfState(board, 5, PlayerNumberMap.of(5, 5), PlayerNumberMap.of(0, 0));
+            const state2: GipfState = new GipfState(board, 5, PlayerNumberMap.of(5, 6), PlayerNumberMap.of(0, 0));
             expect(state1.equals(state2)).toBeFalse();
-            const state3: GipfState = new GipfState(board, 5, [6, 5], [0, 0]);
+            const state3: GipfState = new GipfState(board, 5, PlayerNumberMap.of(6, 5), PlayerNumberMap.of(0, 0));
             expect(state1.equals(state3)).toBeFalse();
         });
 
@@ -130,10 +131,10 @@ describe('GipfState', () => {
                 [B, _, B, _, _, _, _],
                 [_, B, _, _, _, _, _],
             ];
-            const state1: GipfState = new GipfState(board, 5, [5, 5], [0, 0]);
-            const state2: GipfState = new GipfState(board, 5, [5, 5], [0, 1]);
+            const state1: GipfState = new GipfState(board, 5, PlayerNumberMap.of(5, 5), PlayerNumberMap.of(0, 0));
+            const state2: GipfState = new GipfState(board, 5, PlayerNumberMap.of(5, 5), PlayerNumberMap.of(0, 1));
             expect(state1.equals(state2)).toBeFalse();
-            const state3: GipfState = new GipfState(board, 5, [5, 5], [1, 0]);
+            const state3: GipfState = new GipfState(board, 5, PlayerNumberMap.of(5, 5), PlayerNumberMap.of(1, 0));
             expect(state1.equals(state3)).toBeFalse();
         });
 

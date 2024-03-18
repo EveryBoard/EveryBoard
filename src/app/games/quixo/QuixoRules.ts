@@ -64,28 +64,28 @@ export class QuixoRules extends ConfigurableRules<QuixoMove, QuixoState, QuixoCo
     }
 
     public static getLinesSums(state: QuixoState): PlayerMap<MGPMap<string, NumberMap<number>>> {
-        const sums: PlayerMap<MGPMap<string, NumberMap<number>>> = new MGPMap();
-        sums.set(Player.ZERO, new MGPMap([
-            { key: 'columns', value: new NumberMap<number>() },
-            { key: 'rows', value: new NumberMap<number>() },
-            { key: 'ascendingDiagonal', value: new NumberMap<number>() },
-            { key: 'descendingDiagonal', value: new NumberMap<number>() },
-        ]));
-        sums.set(Player.ONE, new MGPMap([
-            { key: 'columns', value: new NumberMap<number>() },
-            { key: 'rows', value: new NumberMap<number>() },
-            { key: 'ascendingDiagonal', value: new NumberMap<number>() },
-            { key: 'descendingDiagonal', value: new NumberMap<number>() },
-        ]));
+        const sums: PlayerMap<MGPMap<string, NumberMap<number>>> = PlayerMap.ofValues(
+            new MGPMap([
+                { key: 'columns', value: new NumberMap<number>() },
+                { key: 'rows', value: new NumberMap<number>() },
+                { key: 'ascendingDiagonal', value: new NumberMap<number>() },
+                { key: 'descendingDiagonal', value: new NumberMap<number>() },
+            ]),
+            new MGPMap([
+                { key: 'columns', value: new NumberMap<number>() },
+                { key: 'rows', value: new NumberMap<number>() },
+                { key: 'ascendingDiagonal', value: new NumberMap<number>() },
+                { key: 'descendingDiagonal', value: new NumberMap<number>() },
+            ]));
         for (const coordAndContent of state.getCoordsAndContents()) {
             const content: PlayerOrNone = coordAndContent.content;
             const x: number = coordAndContent.coord.x;
             const y: number = coordAndContent.coord.y;
             if (content.isPlayer()) {
-                sums.get(content).get().get('columns').get().addOrSet(x, 1);
-                sums.get(content).get().get('rows').get().addOrSet(y, 1);
-                sums.get(content).get().get('ascendingDiagonal').get().addOrSet(x + y, 1);
-                sums.get(content).get().get('descendingDiagonal').get().addOrSet(x - y, 1);
+                sums.get(content).get('columns').get().addOrSet(x, 1);
+                sums.get(content).get('rows').get().addOrSet(y, 1);
+                sums.get(content).get('ascendingDiagonal').get().addOrSet(x + y, 1);
+                sums.get(content).get('descendingDiagonal').get().addOrSet(x - y, 1);
             }
         }
         return sums;

@@ -13,8 +13,9 @@ export class ErrorLoggerService {
 
     private static singleton: MGPOptional<ErrorLoggerService> = MGPOptional.empty();
 
-    public static setSingletonInstance(service: ErrorLoggerService): void {
-        ErrorLoggerService.singleton = MGPOptional.of(service);
+    public static logErrorAndFail(component: string, message: string, data?: JSONValue): never {
+        ErrorLoggerService.logError(component, message, data);
+        throw new Error(`${component}: ${message} (extra data: ${JSON.stringify(data)})`);
     }
     public static logError(component: string, message: string, data?: JSONValue): MGPValidation {
         if (this.singleton.isAbsent()) {
@@ -28,11 +29,12 @@ export class ErrorLoggerService {
         this.singleton.get().logError(component, message, data);
         return MGPValidation.failure(component + ': ' + message);
     }
-    public constructor(private readonly errorDAO: ErrorDAO,
-                       private readonly router: Router,
-                       private readonly messageDisplayer: MessageDisplayer)
+
+    private constructor(private readonly errorDAO: ErrorDAO,
+                        private readonly router: Router,
+                        private readonly messageDisplayer: MessageDisplayer)
     {
-        ErrorLoggerService.setSingletonInstance(this);
+        ErrorLoggerService.singleton = MGPOptional.of(this);
     }
     public findErrors(component: string, route: string, message: string, data?: JSONValue): Promise<ErrorDocument[]> {
         if (data === undefined) {

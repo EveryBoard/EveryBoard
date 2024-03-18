@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { ConnectedUserService } from 'src/app/services/ConnectedUserService';
 import { MGPFallible, MGPValidation } from '@everyboard/lib';
 import { faEye, IconDefinition } from '@fortawesome/free-solid-svg-icons';
-import * as FireAuth from '@angular/fire/auth';
+import * as FireAuth from '@firebase/auth';
 
 @Component({
     selector: 'app-register',

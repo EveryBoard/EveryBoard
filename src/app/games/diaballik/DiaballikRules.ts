@@ -12,6 +12,7 @@ import { DiaballikFailure } from './DiaballikFailure';
 import { Table } from 'src/app/jscaip/TableUtils';
 import { CoordFailure } from '../../jscaip/Coord';
 import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { PlayerMap } from 'src/app/jscaip/PlayerMap';
 
 export class VictoryOrDefeatCoords {
     protected constructor(public readonly winner: Player) {}
@@ -215,16 +216,16 @@ export class DiaballikRules extends Rules<DiaballikMove, DiaballikState, Diaball
         // and that if three opponent's pieces are touching the line, then the blocker loses
         // We check this one player at a time.
         // In case both players form a line, the one that just moved wins.
-        const blocking: [MGPOptional<DefeatCoords>, MGPOptional<DefeatCoords>] = [
+        const blocking: PlayerMap<MGPOptional<DefeatCoords>> = PlayerMap.ofValues(
             this.getBlockerCoords(state, Player.ZERO),
             this.getBlockerCoords(state, Player.ONE),
-        ];
-        if (blocking[0].isPresent() && blocking[1].isPresent()) {
+        );
+        if (blocking.get(Player.ZERO).isPresent() && blocking.get(Player.ONE).isPresent()) {
             // Both players form a line, so the current player loses
-            return blocking[state.getCurrentPlayer().getValue()];
+            return blocking.get(state.getCurrentPlayer());
         }
-        if (blocking[0].isPresent()) return blocking[0];
-        if (blocking[1].isPresent()) return blocking[1];
+        if (blocking.get(Player.ZERO).isPresent()) return blocking.get(Player.ZERO);
+        if (blocking.get(Player.ONE).isPresent()) return blocking.get(Player.ONE);
         return MGPOptional.empty();
     }
 

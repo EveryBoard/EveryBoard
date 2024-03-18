@@ -33,6 +33,13 @@ export class BoardValue {
     }
 
     /**
+     * return the board value corresponding to the players' scores, as a number map
+     */
+    public static ofPlayerNumberMap(map: PlayerNumberMap): BoardValue {
+        return BoardValue.ofSingle(map.get(Player.ZERO), map.get(Player.ONE));
+    }
+
+    /**
      * return the board value corresponding to the players' scores
      * @param playerZeroScores the positive score list of player zero
      * @param playerOneScores the positive score list of player one

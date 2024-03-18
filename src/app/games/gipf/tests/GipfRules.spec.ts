@@ -12,6 +12,7 @@ import { Player } from 'src/app/jscaip/Player';
 import { Table } from 'src/app/jscaip/TableUtils';
 import { GipfCapture } from 'src/app/jscaip/GipfProjectHelper';
 import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 
 describe('GipfRules', () => {
 
@@ -81,7 +82,7 @@ describe('GipfRules', () => {
                 [_, _, _, _, _, _, N],
                 [_, _, _, _, _, N, N],
                 [B, _, _, A, N, N, N],
-            ], state.turn + 1, [11, 12], state.capturedPieces);
+            ], state.turn + 1, PlayerNumberMap.of(11, 12), state.capturedPieces);
 
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         });
@@ -97,7 +98,7 @@ describe('GipfRules', () => {
                 [B, _, B, _, _, N, N],
                 [_, B, _, _, N, N, N],
             ];
-            const state: GipfState = new GipfState(board, P0Turn, [5, 5], [0, 0]);
+            const state: GipfState = new GipfState(board, P0Turn, PlayerNumberMap.of(5, 5), PlayerNumberMap.of(0, 0));
             const placement: GipfPlacement = new GipfPlacement(new Coord(1, 6),
                                                                MGPOptional.of(HexaDirection.UP_RIGHT));
             const move: GipfMove = new GipfMove(placement, [], []);
@@ -112,7 +113,8 @@ describe('GipfRules', () => {
                 [B, _, B, _, _, N, N],
                 [_, A, _, _, N, N, N],
             ];
-            const expectedState: GipfState = new GipfState(expectedBoard, P1Turn, [4, 5], [0, 0]);
+            const expectedState: GipfState =
+                new GipfState(expectedBoard, P1Turn, PlayerNumberMap.of(4, 5), PlayerNumberMap.of(0, 0));
 
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         });
@@ -128,7 +130,7 @@ describe('GipfRules', () => {
                 [B, A, B, B, _, N, N],
                 [B, A, _, _, N, N, N],
             ];
-            const state: GipfState = new GipfState(board, P0Turn, [5, 5], [0, 0]);
+            const state: GipfState = new GipfState(board, P0Turn, PlayerNumberMap.of(5, 5), PlayerNumberMap.of(0, 0));
             const invalidPlacements: GipfPlacement[] = [
                 new GipfPlacement(new Coord(3, 0), MGPOptional.of(HexaDirection.RIGHT)),
                 new GipfPlacement(new Coord(0, 3), MGPOptional.of(HexaDirection.RIGHT)),
@@ -154,7 +156,7 @@ describe('GipfRules', () => {
                 [_, A, _, B, _, N, N],
                 [_, A, _, _, N, N, N],
             ];
-            const state: GipfState = new GipfState(board, P0Turn, [5, 5], [0, 0]);
+            const state: GipfState = new GipfState(board, P0Turn, PlayerNumberMap.of(5, 5), PlayerNumberMap.of(0, 0));
             const placement: GipfPlacement = new GipfPlacement(new Coord(1, 6), MGPOptional.of(HexaDirection.LEFT));
             const move: GipfMove = new GipfMove(placement, [], []);
             const reason: string = GipfFailure.INVALID_PLACEMENT_DIRECTION();
@@ -180,7 +182,8 @@ describe('GipfRules', () => {
                     [_, _, _, _, _, N, N],
                     [_, _, _, _, N, N, N],
                 ];
-                const state: GipfState = new GipfState(board, P1Turn, [5, 5], [0, 0]);
+                const state: GipfState =
+                    new GipfState(board, P1Turn, PlayerNumberMap.of(5, 5), PlayerNumberMap.of(0, 0));
                 const capture: GipfCapture = new GipfCapture(capturePositions.map((q: number) => new Coord(q, 3)));
                 const placement: GipfPlacement = new GipfPlacement(new Coord(3, 0), MGPOptional.empty());
                 const move: GipfMove = new GipfMove(placement, [capture], []);
@@ -195,8 +198,8 @@ describe('GipfRules', () => {
                 ];
                 const expectedState: GipfState = new GipfState(expectedBoard,
                                                                P1Turn + 1,
-                                                               [5, 4 + capturedSelf],
-                                                               [0, capturedOpponent]);
+                                                               PlayerNumberMap.of(5, 4 + capturedSelf),
+                                                               PlayerNumberMap.of(0, capturedOpponent));
                 RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
             }
         });
@@ -212,7 +215,7 @@ describe('GipfRules', () => {
                 [_, B, A, _, _, N, N],
                 [A, A, _, _, N, N, N],
             ];
-            const state: GipfState = new GipfState(board, P0Turn, [5, 5], [0, 0]);
+            const state: GipfState = new GipfState(board, P0Turn, PlayerNumberMap.of(5, 5), PlayerNumberMap.of(0, 0));
             const firstPlacement: GipfPlacement = new GipfPlacement(new Coord(1, 6),
                                                                     MGPOptional.of(HexaDirection.UP_RIGHT));
             const move: GipfMove = new GipfMove(firstPlacement, [], []);
@@ -248,7 +251,7 @@ describe('GipfRules', () => {
                 [A, _, B, _, _, N, N],
                 [_, _, B, _, N, N, N],
             ];
-            const state: GipfState = new GipfState(board, P1Turn, [5, 5], [0, 0]);
+            const state: GipfState = new GipfState(board, P1Turn, PlayerNumberMap.of(5, 5), PlayerNumberMap.of(0, 0));
 
             const placement: GipfPlacement = new GipfPlacement(new Coord(3, 0),
                                                                MGPOptional.of(HexaDirection.DOWN));
@@ -288,7 +291,7 @@ describe('GipfRules', () => {
                 [_, _, A, _, _, N, N],
                 [_, A, A, _, N, N, N],
             ];
-            const state: GipfState = new GipfState(board, P0Turn, [5, 5], [0, 0]);
+            const state: GipfState = new GipfState(board, P0Turn, PlayerNumberMap.of(5, 5), PlayerNumberMap.of(0, 0));
 
             const placementA: GipfPlacement = new GipfPlacement(new Coord(0, 4),
                                                                 MGPOptional.of(HexaDirection.RIGHT));
@@ -332,7 +335,7 @@ describe('GipfRules', () => {
                 [_, _, A, _, _, N, N],
                 [_, A, A, _, N, N, N],
             ];
-            const state: GipfState = new GipfState(board, P0Turn, [5, 5], [0, 0]);
+            const state: GipfState = new GipfState(board, P0Turn, PlayerNumberMap.of(5, 5), PlayerNumberMap.of(0, 0));
 
             const placement: GipfPlacement = new GipfPlacement(new Coord(-3, 1),
                                                                MGPOptional.of(HexaDirection.RIGHT));
@@ -354,7 +357,7 @@ describe('GipfRules', () => {
                 [_, _, _, _, _, N, N],
                 [_, A, A, _, N, N, N],
             ];
-            const state: GipfState = new GipfState(board, P0Turn, [5, 5], [0, 0]);
+            const state: GipfState = new GipfState(board, P0Turn, PlayerNumberMap.of(5, 5), PlayerNumberMap.of(0, 0));
 
             const placement: GipfPlacement = new GipfPlacement(new Coord(-3, 1),
                                                                MGPOptional.of(HexaDirection.RIGHT));
@@ -377,7 +380,7 @@ describe('GipfRules', () => {
                 [_, _, A, _, _, N, N],
                 [_, A, A, _, N, N, N],
             ];
-            const state: GipfState = new GipfState(board, P0Turn, [5, 5], [0, 0]);
+            const state: GipfState = new GipfState(board, P0Turn, PlayerNumberMap.of(5, 5), PlayerNumberMap.of(0, 0));
 
             const placement: GipfPlacement = new GipfPlacement(new Coord(0, 4),
                                                                MGPOptional.of(HexaDirection.RIGHT));
@@ -399,7 +402,7 @@ describe('GipfRules', () => {
                 [B, _, B, _, _, N, N],
                 [_, B, _, _, N, N, N],
             ];
-            const state: GipfState = new GipfState(board, P0Turn, [5, 5], [0, 0]);
+            const state: GipfState = new GipfState(board, P0Turn, PlayerNumberMap.of(5, 5), PlayerNumberMap.of(0, 0));
             const placement: GipfPlacement = new GipfPlacement(new Coord(1, 6),
                                                                MGPOptional.of(HexaDirection.UP_RIGHT));
             const move: GipfMove = new GipfMove(placement, [], []);
@@ -413,7 +416,8 @@ describe('GipfRules', () => {
                 [B, _, B, _, _, N, N],
                 [_, A, _, _, N, N, N],
             ];
-            const expectedState: GipfState = new GipfState(expectedBoard, P1Turn, [4, 5], [0, 0]);
+            const expectedState: GipfState =
+                new GipfState(expectedBoard, P1Turn, PlayerNumberMap.of(4, 5), PlayerNumberMap.of(0, 0));
 
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         });
@@ -445,7 +449,7 @@ describe('GipfRules', () => {
                 [B, _, B, _, _, N, N],
                 [_, B, _, _, N, N, N],
             ];
-            const state: GipfState = new GipfState(board, P1Turn, [5, 0], [0, 0]);
+            const state: GipfState = new GipfState(board, P1Turn, PlayerNumberMap.of(5, 0), PlayerNumberMap.of(0, 0));
             const node: GipfNode = new GipfNode(state, MGPOptional.empty(), MGPOptional.of(dummyMove));
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, defaultConfig);
         });
@@ -460,7 +464,7 @@ describe('GipfRules', () => {
                 [B, _, B, _, _, N, N],
                 [_, B, _, _, N, N, N],
             ];
-            const state: GipfState = new GipfState(board, P0Turn, [0, 5], [0, 0]);
+            const state: GipfState = new GipfState(board, P0Turn, PlayerNumberMap.of(0, 5), PlayerNumberMap.of(0, 0));
             const node: GipfNode = new GipfNode(state, MGPOptional.empty(), MGPOptional.of(dummyMove));
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, defaultConfig);
         });
@@ -475,7 +479,7 @@ describe('GipfRules', () => {
                 [_, _, _, A, _, N, N],
                 [_, _, _, _, N, N, N],
             ];
-            const state: GipfState = new GipfState(board, P0Turn, [0, 5], [0, 0]);
+            const state: GipfState = new GipfState(board, P0Turn, PlayerNumberMap.of(0, 5), PlayerNumberMap.of(0, 0));
             const node: GipfNode = new GipfNode(state, MGPOptional.empty(), MGPOptional.of(dummyMove));
             // Then it should be considered as ongoing
             RulesUtils.expectToBeOngoing(rules, node, defaultConfig);
