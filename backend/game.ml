@@ -89,9 +89,10 @@ module Make
     match game.player_one with
     | None -> raise (BadInput "game has no opponent")
     | Some player_one ->
+      Printf.printf "minimal: %s, zero: %s\n" (Domain.MinimalUser.show minimal_user) (Domain.MinimalUser.show game.player_zero);
       let winner = if minimal_user = game.player_zero then player_one else player_zero in
       let loser = minimal_user in
-      let update = Game.Updates.End.get ~winner ~loser Game.GameResult.Resign game.turn in
+      let update = Game.Updates.End.get ~winner ~loser Game.GameResult.Resign in
       (* Write 1: end the game  *)
       let* _ = Firestore.Game.update request game_id (Game.Updates.End.to_yojson update) in
       let resigner = Auth.get_minimal_user request in
@@ -104,9 +105,7 @@ module Make
   (** End the game by a timeout from one player. Perform 1 read and 2 writes. *)
   let notify_timeout (request : Dream.request) (game_id : string) (winner : MinimalUser.t) (loser : MinimalUser.t) =
     (* Read 1: retrieve the game *)
-    (* TODO: maybe not needed? For end, we could skip the turn update *)
-    let* game = Firestore.Game.get request game_id in
-    let update = Game.Updates.End.get ~winner ~loser Game.GameResult.Timeout game.turn in
+    let update = Game.Updates.End.get ~winner ~loser Game.GameResult.Timeout in
     (* Write 1: end the game *)
     let* _ = Firestore.Game.update request game_id (Game.Updates.End.to_yojson update) in
     let requester = Auth.get_minimal_user request in
@@ -144,7 +143,7 @@ module Make
     (* Write 1: add response *)
     let* _ = Firestore.Game.add_event request game_id accept in
     let player = if user = game.player_zero then Player.Zero else Player.One in
-    let update = Game.Updates.End.get (Game.GameResult.AgreedDrawBy player) game.turn in
+    let update = Game.Updates.End.get (Game.GameResult.AgreedDrawBy player) in
     (* Write 2: end the game *)
     let* _ = Firestore.Game.update request game_id (Game.Updates.End.to_yojson update) in
     let game_end = Game.Event.(Action (Action.end_game user now)) in
@@ -172,7 +171,7 @@ module Make
     let* rematch_id = Firestore.Game.create request rematch_game in
     let user = Auth.get_minimal_user request in
     (* Write 2: create the rematch config room *)
-    let* _ = Firestore.ConfigRoom.create request rematch_id config_room in
+    let* _ = Firestore.ConfigRoom.create request rematch_id rematch_config_room in
     (* Write 3: create the rematch chat *)
     let* _ = Firestore.Chat.create request rematch_id in
     let accept_event = Game.Event.(Reply (Reply.accept user "Rematch" ~data:(`String rematch_id) now)) in
@@ -246,9 +245,9 @@ module Make
       | Some "1" -> (Game.GameResult.Victory, game.player_one, Some game.player_zero)
       | None -> (Game.GameResult.HardDraw, None, None)
       | _ -> raise (BadInput "Invalid winner") in
-    let update = Game.Updates.End.get ?scores ?winner ?loser result (game.turn + 1) in
+    let update = Game.Updates.EndWithMove.get ?scores ?winner ?loser result (game.turn + 1) in
     (* Write 2: end the turn and game, update the scores *)
-    let* _ = Firestore.Game.update request game_id (Game.Updates.End.to_yojson update) in
+    let* _ = Firestore.Game.update request game_id (Game.Updates.EndWithMove.to_yojson update) in
     (* Write 3: add the game end action *)
     let game_end = Domain.Game.Event.(Action (Action.end_game user now)) in
     let* _ = Firestore.Game.add_event request game_id game_end in

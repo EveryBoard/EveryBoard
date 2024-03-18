@@ -97,7 +97,7 @@ module ConfigRoom = struct
         chosen_opponent: unit [@key "chosenOpponent"];
         game_status: GameStatus.t [@key "partStatus"];
       }
-      [@@deriving yojson]
+      [@@deriving to_yojson]
 
       let get : t = {
         chosen_opponent = ();
@@ -109,7 +109,7 @@ module ConfigRoom = struct
       type t = {
         chosen_opponent: MinimalUser.t [@key "chosenOpponent"];
       }
-      [@@deriving yojson]
+      [@@deriving to_yojson]
 
       let get (opponent : MinimalUser.t) : t = {
         chosen_opponent = opponent;
@@ -120,7 +120,7 @@ module ConfigRoom = struct
       type t = {
         game_status: GameStatus.t [@key "partStatus"];
       }
-      [@@deriving yojson]
+      [@@deriving to_yojson]
 
       let get : t = {
         game_status = GameStatus.Created;
@@ -200,7 +200,7 @@ module Game = struct
         turn: int;
         beginning: int option;
       }
-      [@@deriving yojson]
+      [@@deriving to_yojson]
 
       let get (config_room : ConfigRoom.t) (now : int) (rand_bool : unit -> bool) : t =
         let starter = match config_room.first_player with
@@ -224,6 +224,23 @@ module Game = struct
 
     module End = struct
       type t = {
+        winner: MinimalUser.t option;
+        loser: MinimalUser.t option;
+        result: GameResult.t;
+        score_player_zero: int option [@key "scorePlayerZero"];
+        score_player_one: int option [@key "scorePlayerOne"];
+      }
+      [@@deriving to_yojson]
+
+      let get ?(winner : MinimalUser.t option) ?(loser : MinimalUser.t option) ?(scores : (int * int) option) (result : GameResult.t) : t =
+        let (score_player_zero, score_player_one) = match scores with
+          | None -> (None, None)
+          | Some (score0, score1) -> (Some score0, Some score1) in
+        { winner; loser; result; score_player_zero; score_player_one }
+    end
+
+    module EndWithMove = struct
+      type t = {
         turn: int;
         winner: MinimalUser.t option;
         loser: MinimalUser.t option;
@@ -231,9 +248,9 @@ module Game = struct
         score_player_zero: int option [@key "scorePlayerZero"];
         score_player_one: int option [@key "scorePlayerOne"];
       }
-      [@@deriving yojson]
+      [@@deriving to_yojson]
 
-      let get ?(winner : MinimalUser.t option) ?(loser : MinimalUser.t option) ?(scores : (int * int) option) (result : GameResult.t) (final_turn : int): t =
+      let get ?(winner : MinimalUser.t option) ?(loser : MinimalUser.t option) ?(scores : (int * int) option) (result : GameResult.t) (final_turn : int) : t =
         let (score_player_zero, score_player_one) = match scores with
           | None -> (None, None)
           | Some (score0, score1) -> (Some score0, Some score1) in
@@ -244,7 +261,7 @@ module Game = struct
       type t = {
         turn: int;
       }
-      [@@deriving yojson]
+      [@@deriving to_yojson]
 
       let get (turn : int) : t =
         { turn }
@@ -256,7 +273,7 @@ module Game = struct
         score_player_zero: int option [@key "scorePlayerZero"];
         score_player_one: int option [@key "scorePlayerOne"];
       }
-      [@@deriving yojson]
+      [@@deriving to_yojson]
 
       let get ?(scores : (int * int) option) (turn : int) : t =
         let new_turn = turn + 1 in
