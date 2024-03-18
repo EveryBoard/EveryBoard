@@ -6,51 +6,7 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { MGPFallibleTestUtils } from 'src/app/utils/tests/MGPFallible.spec';
 import { RectanglzFailure } from '../RectanglzFailure';
 
-xdescribe('RectanglzMove', () => {
-
-    describe('toString', () => {
-
-        it('should be defined', () => {
-            // const move: RectanglzMove = new RectanglzMove();
-            // expect(move.toString()).toBe('This method is really more debug oriented');
-        });
-
-    });
-
-    describe('equals', () => {
-
-        it('should return true for the same move', () => {
-        //     const move: RectanglzMove = new RectanglzMove();
-        //     const identical: RectanglzMove = new RectanglzMove();
-        //     // Here you should rather test
-        //     // expect(move.equals(identical)).toBeTrue();
-        //     expect(() => move.equals(identical)).toThrow();
-        });
-
-        // it('should return false for another move', () => {
-        //     const move: RectanglzMove = new RectanglzMove();
-        //     const different: RectanglzMove = new RectanglzMove();
-        //     // Here you should rather test
-        //     // expect(move.equals(different)).toBeTrue();
-        //     expect(() => move.equals(different)).toThrow();
-        // });
-
-    });
-
-    describe('encoder', () => {
-
-        it('should be bijective', () => {
-            // We want to ensure that decoding an encoded move returns the same move.
-            // Use `EncoderTestUtils.expectToBeBijective` for this.
-            const moves: RectanglzMove[] = [
-                // Some of your moves
-            ];
-            for (const move of moves) {
-                EncoderTestUtils.expectToBeBijective(RectanglzMove.encoder, move);
-            }
-        });
-
-    });
+fdescribe('RectanglzMove', () => {
 
     describe('from', () => {
 

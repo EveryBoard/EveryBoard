@@ -8,6 +8,7 @@ import { RectanglzRules } from '../RectanglzRules';
 import { RectanglzMove } from '../RectanglzMove';
 import { Coord } from 'src/app/jscaip/Coord';
 import { PlayerOrNone } from 'src/app/jscaip/Player';
+import { RectanglzFailure } from '../RectanglzFailure';
 
 fdescribe('RectanglzComponent', () => {
 
@@ -71,10 +72,15 @@ fdescribe('RectanglzComponent', () => {
             testUtils.expectElementToHaveClasses('#space_0_0', ['base']);
             testUtils.expectElementToHaveClasses('#piece_1_1', ['base', 'player0-fill', 'last-move-stroke']);
             testUtils.expectElementToHaveClasses('#space_1_1', ['base', 'moved-fill']);
-        }));
 
-        it('should display valid landing spaces', fakeAsync(async() => {
+            // When doing that first click
+            await testUtils.expectClickSuccess('#click_0_7');
 
+            // Then the last move should be hidden
+            testUtils.expectElementToHaveClasses('#piece_0_0', ['base', 'player0-fill']);
+            testUtils.expectElementToHaveClasses('#space_0_0', ['base']);
+            testUtils.expectElementToHaveClasses('#piece_1_1', ['base', 'player0-fill']);
+            testUtils.expectElementToHaveClasses('#space_1_1', ['base']);
         }));
 
     });
@@ -97,8 +103,30 @@ fdescribe('RectanglzComponent', () => {
             testUtils.expectElementToHaveClasses('#space_1_1', ['base', 'moved-fill']);
         }));
 
-        it('should cancel move attempt when clicking on invalid landing');
-        it('should change selected piece when clicking on another of your piece');
+        it('should cancel move attempt when clicking on invalid landing', fakeAsync(async() => {
+            // Given a board with a selected piece
+            await testUtils.expectClickSuccess('#click_0_0');
+            testUtils.expectElementToHaveClasses('#piece_0_0', ['base', 'player0-fill', 'selected-stroke']);
+
+            // When licking on invalid landing space
+            await testUtils.expectClickFailure('#click_5_5', RectanglzFailure.MAX_DISTANCE_IS_2());
+
+            // Then the piece should no longer be selected
+            testUtils.expectElementToHaveClasses('#piece_0_0', ['base', 'player0-fill']);
+        }));
+
+        it('should change selected piece when clicking on another of your piece', fakeAsync(async() => {
+            // Given a board with a selected piece
+            await testUtils.expectClickSuccess('#click_0_0');
+            testUtils.expectElementToHaveClass('#piece_0_0', 'selected-stroke');
+
+            // When clicking on another piece
+            await testUtils.expectClickSuccess('#click_7_7');
+
+            // Then new clicked piece should be highlighted, not the previous
+            testUtils.expectElementNotToHaveClass('#piece_0_0', 'selected-stroke');
+            testUtils.expectElementToHaveClass('#piece_7_7', 'selected-stroke');
+        }));
 
         it('should cancel move without throwing when clicking on piece again', fakeAsync(async() => {
             // Given the initial board with one selected piece
@@ -110,6 +138,46 @@ fdescribe('RectanglzComponent', () => {
 
             // Then the piece should no longer be selected
             testUtils.expectElementToHaveClasses('#piece_0_0', ['base', 'player0-fill']);
+        }));
+
+        it('should show captured piece after move', fakeAsync(async() => {
+            // Given a board with a selected piece
+            const state: RectanglzState = new RectanglzState([
+                [_, _, _, _, _, _, _, X],
+                [_, _, _, _, _, _, _, _],
+                [O, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _],
+                [X, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, O],
+            ], 2);
+            await testUtils.setupState(state);
+            await testUtils.expectClickSuccess('#click_0_2');
+
+            // When clicking on valid landing space
+            const move: RectanglzMove = RectanglzMove.from(new Coord(0, 2), new Coord(0, 4)).get();
+            await testUtils.expectMoveSuccess('#click_0_4', move);
+
+            // Then captured piece should be displayed
+            testUtils.expectElementToHaveClasses('#space_0_4', ['base', 'moved-fill']);
+            testUtils.expectElementToHaveClasses('#space_0_5', ['base', 'captured-fill']);
+        }));
+
+        it('should should show left square when doing a jump', fakeAsync(async() => {
+            // Given a board with a selected piece
+            await testUtils.expectClickSuccess('#click_0_0');
+
+            // When clicking on valid landing space
+            const move: RectanglzMove = RectanglzMove.from(new Coord(0, 0), new Coord(2, 2)).get();
+            await testUtils.expectMoveSuccess('#click_2_2', move);
+
+            // Then both piece should be displayed as last-move
+            testUtils.expectElementNotToExist('#piece_0_0');
+            testUtils.expectElementToHaveClasses('#piece_2_2', ['base', 'player0-fill', 'last-move-stroke']);
+            // But only created space should be displayed as last-move
+            testUtils.expectElementToHaveClasses('#space_0_0', ['base', 'moved-fill']);
+            testUtils.expectElementToHaveClasses('#space_2_2', ['base', 'moved-fill']);
         }));
 
     });

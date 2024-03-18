@@ -8,7 +8,7 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 
-xdescribe('RectanglzRules', () => {
+fdescribe('RectanglzRules', () => {
 
     const _: PlayerOrNone = PlayerOrNone.NONE;
     const O: PlayerOrNone = PlayerOrNone.ZERO;
@@ -160,55 +160,78 @@ xdescribe('RectanglzRules', () => {
         RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
     });
 
-    it('should give victory to player with the most piece once board is full', () => {
-        // Given a full board mostly owned by Player.ZERO
-        const state: RectanglzState = new RectanglzState([
-            [O, O, O, O, O, O, X, X],
-            [O, O, O, O, O, O, X, X],
-            [O, O, O, O, O, O, X, X],
-            [O, O, O, O, O, O, X, X],
-            [O, O, O, O, O, O, X, X],
-            [O, O, O, O, O, O, X, X],
-            [O, O, O, O, O, O, X, X],
-            [O, O, O, O, O, O, X, X],
-        ], 64);
-        // Then victory should be granted to Player.ZERO
-        const node: RectanglzNode = new RectanglzNode(state);
-        RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, defaultConfig);
-    });
+    describe('gameStatus', () => {
 
-    it('should give victory to player with the most piece once opponent can no longer play', () => {
-        // Given a board mostly owned by Player.ZERO, and Player.ONE cannot move
-        const state: RectanglzState = new RectanglzState([
-            [_, _, _, O, O, O, X, X],
-            [_, _, _, O, O, O, X, X],
-            [_, _, _, O, O, O, X, X],
-            [_, _, _, O, O, O, X, X],
-            [_, _, _, O, O, O, X, X],
-            [_, _, _, O, O, O, X, X],
-            [_, _, _, O, O, O, X, X],
-            [_, _, _, O, O, O, X, X],
-        ], 65);
-        // Then victory should be granted to Player.ZERO
-        const node: RectanglzNode = new RectanglzNode(state);
-        RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, defaultConfig);
-    });
+        it('should give victory to player with the most piece once board is full', () => {
+            // Given a full board mostly owned by Player.ZERO
+            const state: RectanglzState = new RectanglzState([
+                [O, O, O, O, O, O, X, X],
+                [O, O, O, O, O, O, X, X],
+                [O, O, O, O, O, O, X, X],
+                [O, O, O, O, O, O, X, X],
+                [O, O, O, O, O, O, X, X],
+                [O, O, O, O, O, O, X, X],
+                [O, O, O, O, O, O, X, X],
+                [O, O, O, O, O, O, X, X],
+            ], 64);
+            // Then victory should be granted to Player.ZERO
+            const node: RectanglzNode = new RectanglzNode(state);
+            RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, defaultConfig);
+        });
 
-    it('should be a draw', () => {
-        // Given a full board perfectly shared
-        const state: RectanglzState = new RectanglzState([
-            [O, O, O, O, X, X, X, X],
-            [O, O, O, O, X, X, X, X],
-            [O, O, O, O, X, X, X, X],
-            [O, O, O, O, X, X, X, X],
-            [O, O, O, O, X, X, X, X],
-            [O, O, O, O, X, X, X, X],
-            [O, O, O, O, X, X, X, X],
-            [O, O, O, O, X, X, X, X],
-        ], 64);
-        // Then it should be a draw
-        const node: RectanglzNode = new RectanglzNode(state);
-        RulesUtils.expectToBeDraw(rules, node, defaultConfig);
+        it('should give victory to player with the most piece once opponent can no longer play', () => {
+            // Given a board mostly owned by Player.ZERO, and Player.ONE cannot move
+            const state: RectanglzState = new RectanglzState([
+                [_, _, _, O, O, O, X, X],
+                [_, _, _, O, O, O, X, X],
+                [_, _, _, O, O, O, X, X],
+                [_, _, _, O, O, O, X, X],
+                [_, _, _, O, O, O, X, X],
+                [_, _, _, O, O, O, X, X],
+                [_, _, _, O, O, O, X, X],
+                [_, _, _, O, O, O, X, X],
+            ], 65);
+            // Then victory should be granted to Player.ZERO
+            const node: RectanglzNode = new RectanglzNode(state);
+            RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, defaultConfig);
+        });
+
+        it('should recognize a draw', () => {
+            // Given a full board perfectly shared
+            const state: RectanglzState = new RectanglzState([
+                [O, O, O, O, X, X, X, X],
+                [O, O, O, O, X, X, X, X],
+                [O, O, O, O, X, X, X, X],
+                [O, O, O, O, X, X, X, X],
+                [O, O, O, O, X, X, X, X],
+                [O, O, O, O, X, X, X, X],
+                [O, O, O, O, X, X, X, X],
+                [O, O, O, O, X, X, X, X],
+            ], 64);
+            // Then it should be a draw
+            const node: RectanglzNode = new RectanglzNode(state);
+            RulesUtils.expectToBeDraw(rules, node, defaultConfig);
+        });
+
+        it('should recognize ongoing board', () => {
+            // Given state
+            const state: RectanglzState = new RectanglzState([
+                [X, X, X, X, X, X, X, X],
+                [X, X, X, X, X, X, X, O],
+                [O, O, O, O, O, O, O, O],
+                [O, O, O, O, O, O, O, O],
+                [O, O, X, X, O, X, O, O],
+                [O, X, X, X, O, X, X, X],
+                [O, X, O, X, X, X, _, X],
+                [O, X, O, X, X, X, X, X],
+            ], 100);
+            const node: RectanglzNode = new RectanglzNode(state);
+
+            // When
+            // Then
+            RulesUtils.expectToBeOngoing(rules, node, defaultConfig);
+        });
+
     });
 
 });

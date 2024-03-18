@@ -27,6 +27,7 @@ export class RectanglzMoveGenerator extends MoveGenerator<RectanglzMove, Rectang
             }
         }
         const duplications: RectanglzMove[] = duplicationMap.getValueList();
+        console.log(jumps.concat(duplications), 'moves at turn', node.gameState.turn)
         return jumps.concat(duplications);
     }
 }

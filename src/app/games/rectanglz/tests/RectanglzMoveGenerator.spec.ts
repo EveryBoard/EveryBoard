@@ -1,10 +1,15 @@
+import { PlayerOrNone } from 'src/app/jscaip/Player';
 import { RectanglzMove } from '../RectanglzMove';
 import { RectanglzMoveGenerator } from '../RectanglzMoveGenerator';
 import { RectanglzNode, RectanglzRules } from '../RectanglzRules';
 import { RectanglzState } from '../RectanglzState';
 import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 
-xdescribe('RectanglzMoveGenerator', () => {
+fdescribe('RectanglzMoveGenerator', () => {
+
+    const _: PlayerOrNone = PlayerOrNone.NONE;
+    const O: PlayerOrNone = PlayerOrNone.ZERO;
+    const X: PlayerOrNone = PlayerOrNone.ONE;
 
     let moveGenerator: RectanglzMoveGenerator;
     const defaultConfig: NoConfig = RectanglzRules.get().getDefaultRulesConfig();
@@ -21,8 +26,29 @@ xdescribe('RectanglzMoveGenerator', () => {
         // When listing the moves
         const moves: RectanglzMove[] = moveGenerator.getListMoves(node, defaultConfig);
 
-        // Then there should be this many moves
+        // Then there should be 16 moves (6 duplications, 10 jumps)
         expect(moves.length).toBe(16);
+    });
+
+    it('should provide move', () => {
+        // Given state
+        const state: RectanglzState = new RectanglzState([
+            [X, X, X, X, X, X, X, X],
+            [X, X, X, X, X, X, X, O],
+            [O, O, O, O, O, O, O, O],
+            [O, O, O, O, O, O, O, O],
+            [O, O, X, X, O, X, O, O],
+            [O, X, X, X, O, X, X, X],
+            [O, X, O, X, X, X, _, X],
+            [O, X, O, X, X, X, X, X],
+        ], 100);
+        const node: RectanglzNode = new RectanglzNode(state);
+
+        // When calling getListMoves
+        const moves: RectanglzMove[] = moveGenerator.getListMoves(node, defaultConfig);
+
+        // Then there should be 4 moves (all jumps)
+        expect(moves.length).toBe(4);
     });
 
     it('should have only one duplication by landing space');

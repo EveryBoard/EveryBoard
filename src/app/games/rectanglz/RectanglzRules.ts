@@ -97,8 +97,8 @@ export class RectanglzRules extends Rules<RectanglzMove, RectanglzState> {
 
     private canCoordMove(state: RectanglzState, coord: Coord): boolean {
         const sizeOfStep: number = 2;
-        for (let y: number = -sizeOfStep; y < sizeOfStep; y++) {
-            for (let x: number = -sizeOfStep; x < sizeOfStep; x++) {
+        for (let y: number = -sizeOfStep; y <= sizeOfStep; y++) {
+            for (let x: number = -sizeOfStep; x <= sizeOfStep; x++) {
                 const landingCoord: Coord = new Coord(coord.x + x, coord.y + y);
                 if (state.isOnBoard(landingCoord) && state.getPieceAt(landingCoord).isNone()) {
                     return true;

@@ -1,6 +1,7 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { GameStateWithTable } from 'src/app/jscaip/GameStateWithTable';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
+import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 import { Table } from 'src/app/utils/ArrayUtils';
 
 export class RectanglzState extends GameStateWithTable<PlayerOrNone> {
@@ -47,6 +48,17 @@ export class RectanglzState extends GameStateWithTable<PlayerOrNone> {
             .getCoordsAndContents()
             .filter((value: { coord: Coord, content: PlayerOrNone}) => value.content === player)
             .length;
+    }
+
+    public getScores(): PlayerNumberMap {
+        const scores: PlayerNumberMap = PlayerNumberMap.of(0, 0);
+        for (const coordAndContent of this.getCoordsAndContents()) {
+            const piece: PlayerOrNone = coordAndContent.content;
+            if (piece.isPlayer()) {
+                scores.add(piece, 1);
+            }
+        }
+        return scores;
     }
 
 }

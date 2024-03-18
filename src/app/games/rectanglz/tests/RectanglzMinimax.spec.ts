@@ -4,8 +4,13 @@ import { RectanglzMove } from '../RectanglzMove';
 import { RectanglzNode, RectanglzRules } from '../RectanglzRules';
 import { RectanglzMinimax } from '../RectanglzMinimax';
 import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { PlayerOrNone } from 'src/app/jscaip/Player';
 
-xdescribe('RectanglzMinimax', () => {
+fdescribe('RectanglzMinimax', () => {
+
+    const _: PlayerOrNone = PlayerOrNone.NONE;
+    const O: PlayerOrNone = PlayerOrNone.ZERO;
+    const X: PlayerOrNone = PlayerOrNone.ONE;
 
     let minimax: Minimax<RectanglzMove, RectanglzState>;
     const defaultConfig: NoConfig = RectanglzRules.get().getDefaultRulesConfig();
@@ -14,15 +19,7 @@ xdescribe('RectanglzMinimax', () => {
         minimax = new RectanglzMinimax();
     });
 
-    it('should select some move', () => {
-        // Given state
-        const state: RectanglzState = RectanglzRules.get().getInitialState();
-        const node: RectanglzNode = new RectanglzNode(state);
-
-        // When selecting the best move
-        const bestMove: RectanglzMove = minimax.chooseNextMove(node, { name: 'Level 1', maxDepth: 1 }, defaultConfig);
-        // Then it should be the move I want it to be
-        expect(bestMove).toBeTruthy();
+    it('should provide  move TODO KILL IT IS HEURISTIC', () => {
     });
 
 });

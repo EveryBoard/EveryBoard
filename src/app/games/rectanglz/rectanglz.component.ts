@@ -14,6 +14,7 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
+import { Direction } from 'src/app/jscaip/Direction';
 
 @Component({
     selector: 'app-rectanglz',
@@ -27,8 +28,9 @@ export class RectanglzComponent extends RectangularGameComponent<RectanglzRules,
 {
     public EMPTY: PlayerOrNone = PlayerOrNone.NONE;
 
-    private lastStart: MGPOptional<Coord> = MGPOptional.empty();
-    private lastLanding: MGPOptional<Coord> = MGPOptional.empty();
+    private movedSpaces: Coord[] = [];
+    private movedPieces: Coord[] = [];
+    private captured: Coord[] = [];
 
     public selected: MGPOptional<Coord> = MGPOptional.empty();
 
@@ -47,18 +49,32 @@ export class RectanglzComponent extends RectangularGameComponent<RectanglzRules,
     public async updateBoard(_triggerAnimation: boolean): Promise<void> {
         const state: RectanglzState = this.getState();
         this.board = state.getCopiedBoard();
+        this.scores = MGPOptional.of(this.getState().getScores());
     }
 
     public override async showLastMove(move: RectanglzMove): Promise<void> {
-        console.log('show last move', move.toString());
-        this.lastStart = MGPOptional.of(move.getStart());
-        this.lastLanding = MGPOptional.of(move.getEnd());
+        const previousState: RectanglzState = this.getPreviousState();
+        const opponent: Player = previousState.getCurrentOpponent();
+        if (move.isJump()) {
+            this.movedSpaces.push(move.getStart());
+        } else {
+            this.movedPieces.push(move.getStart());
+        }
+        const moveEnd: Coord = move.getEnd();
+        this.movedPieces.push(moveEnd);
+        this.movedSpaces.push(moveEnd);
+        for (const direction of Direction.DIRECTIONS) {
+            const neighbor: Coord = moveEnd.getNext(direction);
+            if (previousState.isOnBoard(neighbor) && previousState.getPieceAt(neighbor) === opponent) {
+                this.captured.push(neighbor);
+            }
+        }
     }
 
     public override hideLastMove(): void {
-        console.log('hide last move');
-        this.lastStart = MGPOptional.empty();
-        this.lastLanding = MGPOptional.empty();
+        this.movedSpaces = [];
+        this.movedPieces = [];
+        this.captured = [];
     }
 
     public override cancelMoveAttempt(): void {
@@ -116,8 +132,10 @@ export class RectanglzComponent extends RectangularGameComponent<RectanglzRules,
 
     public getRectClasses(x: number, y: number): string[] {
         const coord: Coord = new Coord(x, y);
-        if (this.lastLanding.equalsValue(coord)) {
+        if (this.movedSpaces.some((c: Coord) => c.equals(coord))) {
             return ['moved-fill'];
+        } else if (this.captured.some((c: Coord) => c.equals(coord))) {
+            return ['captured-fill'];
         } else {
             return [];
         }
@@ -132,9 +150,7 @@ export class RectanglzComponent extends RectangularGameComponent<RectanglzRules,
 
         if (this.selected.equalsValue(coord)) {
             classes.push('selected-stroke');
-        } else if (this.lastStart.equalsValue(coord) ||
-                   this.lastLanding.equalsValue(coord))
-        {
+        } else if (this.movedPieces.some((c: Coord) => c.equals(coord))) {
             classes.push('last-move-stroke');
         }
         return classes;
