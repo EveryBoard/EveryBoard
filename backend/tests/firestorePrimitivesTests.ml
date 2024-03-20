@@ -6,12 +6,6 @@ open TestUtils
 module type MOCK = sig
   include FirestorePrimitives.FIRESTORE_PRIMITIVES
 
-  val started_transactions : string list ref
-
-  val succeeded_transactions : string list ref
-
-  val failed_transactions : string list ref
-
   val read_docs : string list ref
 
   val created_docs : (string * JSON.t) list ref
@@ -26,15 +20,6 @@ module type MOCK = sig
 end
 
 module Mock : MOCK = struct
-
-  let transaction_field =
-    Dream.new_field ~name:"transaction" ()
-
-  let started_transactions = ref []
-
-  let succeeded_transactions = ref []
-
-  let failed_transactions = ref []
 
   let read_docs = ref []
 
@@ -68,19 +53,6 @@ module Mock : MOCK = struct
 
   let delete_doc _ path =
     deleted_docs := path :: !deleted_docs;
-    Lwt.return ()
-
-  let begin_transaction _ =
-    let transaction_id = "transaction-id" in
-    started_transactions := transaction_id :: !started_transactions;
-    Lwt.return "transaction-id"
-
-  let commit _ transaction_id =
-    succeeded_transactions := transaction_id :: !succeeded_transactions;
-    Lwt.return ()
-
-  let rollback _ transaction_id =
-    failed_transactions := transaction_id :: !failed_transactions;
     Lwt.return ()
 
 end
@@ -201,6 +173,17 @@ let tests = [
             let* _ = FirestorePrimitives.update_doc request "collection/some-id" update in
             Lwt.return ())
       );
+
+    lwt_test "should fail if provided an invalid update" (fun () ->
+        let request = Dream.request "/" in
+        (* Given an update that is not an Assoc, hence is invalid *)
+        let update = `String "I am illegal" in
+        (* When we try to perform the update *)
+        (* Then it should fail *)
+        lwt_check_raises "failure" ((=) (UnexpectedError "invalid update: should be a Assoc")) (fun () ->
+            let* _ = FirestorePrimitives.update_doc request "collection/some-id" update in
+            Lwt.return ())
+      );
   ];
 
   "FirestorePrimitives.delete_doc", [
@@ -226,93 +209,6 @@ let tests = [
         (* Then it should fail *)
         lwt_check_raises "failure" ((=) (UnexpectedError "error on document deletion for collection/some-id: ")) (fun () ->
             let* _ = FirestorePrimitives.delete_doc request path in
-            Lwt.return ())
-      );
-  ];
-
-  "FirestorePrimitives.begin_transaction", [
-
-    lwt_test "should make a POST request on :beginTransaction endpoint" (fun () ->
-        let request = Dream.request "/" in
-        (* When we begin a transaction *)
-        let transaction_id = "transaction-id" in
-        let transaction_response = `Assoc [("transaction", `String transaction_id)] in
-        let mock = ExternalTests.Mock.Http.mock_response (response `OK, JSON.to_string transaction_response) in
-        let* actual = FirestorePrimitives.begin_transaction request in
-        (* Then it should have made a POST request on :beginTransaction, and return the transaction id *)
-        let nothing = `Assoc [] in
-        check (list http_query) "query" [(`POST, endpoint ~last_separator:":" "beginTransaction", Some nothing)] !(mock.calls);
-        check string "transaction id" transaction_id actual;
-        Lwt.return ()
-      );
-
-    lwt_test "should fail if beginning the transaction failed" (fun () ->
-        let request = Dream.request "/" in
-        (* When we try to begin a transaction but it fails *)
-        let _ = ExternalTests.Mock.Http.mock_response (response `Bad_request, "{}") in
-        (* Then it should fail *)
-        lwt_check_raises "failure" ((=) (UnexpectedError "error when beginning transaction: {}")) (fun () ->
-            let* _ = FirestorePrimitives.begin_transaction request in
-            Lwt.return ())
-      );
-  ];
-
-  "FirestorePrimitives.commit", [
-
-    lwt_test "should make a POST request on :commit endpoint" (fun () ->
-        let request = Dream.request "/" in
-        (* Given a transaction *)
-        let transaction_id = "transaction-id" in
-        let transaction_response = `Assoc [("transaction", `String transaction_id)] in
-        let _ = ExternalTests.Mock.Http.mock_response (response `OK, JSON.to_string transaction_response) in
-        let* _ = FirestorePrimitives.begin_transaction request in
-        (* When we commit it *)
-        let mock = ExternalTests.Mock.Http.mock_response (response `OK, "") in
-        let* _ = FirestorePrimitives.commit request transaction_id in
-        (* Then it should have made a POST request on :commit with the transaction id *)
-        let expected_body = `Assoc [("transaction", `String transaction_id); ("writes", `List [])] in
-        check (list http_query) "query" [(`POST, endpoint ~last_separator:":" "commit", Some expected_body)] !(mock.calls);
-        Lwt.return ()
-      );
-
-    lwt_test "should fail if committing the transaction failed" (fun () ->
-        let request = Dream.request "/" in
-        (* Given a transaction *)
-        let transaction_id = "transaction-id" in
-        let transaction_response = `Assoc [("transaction", `String transaction_id)] in
-        let _ = ExternalTests.Mock.Http.mock_response (response `OK, JSON.to_string transaction_response) in
-        let* _ = FirestorePrimitives.begin_transaction request in
-        (* When we try to commit it (but it fails) *)
-        let _ = ExternalTests.Mock.Http.mock_response (response `Bad_request, "{}") in
-        (* Then it should fail *)
-        lwt_check_raises "failure" ((=) (UnexpectedError "error when committing transaction: {}")) (fun () ->
-            let* _ = FirestorePrimitives.commit request transaction_id in
-            Lwt.return ())
-      );
-  ];
-
-  "FirestorePrimitives.rollback_transaction", [
-
-    lwt_test "should make a POST request on :rollback endpoint" (fun () ->
-        let request = Dream.request "/" in
-        (* When we rollback a transaction *)
-        let transaction_id = "transaction-id" in
-        let mock = ExternalTests.Mock.Http.mock_response (response `OK, "") in
-        let* _ = FirestorePrimitives.rollback request transaction_id in
-        (* Then it should have made a POST request on :rollback with the transaction id *)
-        let expected_body = `Assoc [("transaction", `String transaction_id)] in
-        check (list http_query) "query" [(`POST, endpoint ~last_separator:":" "rollback", Some expected_body)] !(mock.calls);
-        Lwt.return ()
-      );
-
-    lwt_test "should fail if the rollback failed" (fun () ->
-        let request = Dream.request "/" in
-        (* When we try to commit a transaction but it fails *)
-        let transaction_id = "transaction-id" in
-        let _ = ExternalTests.Mock.Http.mock_response (response `Bad_request, "{}") in
-        (* Then it should fail *)
-        lwt_check_raises "failure" ((=) (UnexpectedError "error when rolling back transaction: {}")) (fun () ->
-            let* _ = FirestorePrimitives.rollback request transaction_id in
             Lwt.return ())
       );
   ];

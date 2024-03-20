@@ -189,7 +189,7 @@ module Make
     let user = Auth.get_minimal_user request in
     let requester_player_value = if game.player_zero = user then 1 else 0 in
     let new_turn =
-      if game.turn mod 2 = requester_player_value
+      if requester_player_value = game.turn mod 2
       then game.turn - 2 (* Need to take back two turns to let the requester take back their move *)
       else game.turn - 1 in
     let now = External.now_ms () in

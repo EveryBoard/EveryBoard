@@ -227,16 +227,11 @@ module Game = struct
         winner: MinimalUser.t option;
         loser: MinimalUser.t option;
         result: GameResult.t;
-        score_player_zero: int option [@key "scorePlayerZero"];
-        score_player_one: int option [@key "scorePlayerOne"];
       }
       [@@deriving to_yojson]
 
-      let get ?(winner : MinimalUser.t option) ?(loser : MinimalUser.t option) ?(scores : (int * int) option) (result : GameResult.t) : t =
-        let (score_player_zero, score_player_one) = match scores with
-          | None -> (None, None)
-          | Some (score0, score1) -> (Some score0, Some score1) in
-        { winner; loser; result; score_player_zero; score_player_one }
+      let get ?(winner : MinimalUser.t option) ?(loser : MinimalUser.t option) (result : GameResult.t) : t =
+        { winner; loser; result; }
     end
 
     module EndWithMove = struct
@@ -292,7 +287,7 @@ module Game = struct
         user: MinimalUser.t;
         request_type: string [@key "requestType"];
       }
-      [@@deriving yojson]
+      [@@deriving to_yojson]
 
       let make (user : MinimalUser.t) (request_type : string) (now : int) : t =
         { event_type = "Request"; time = now; user; request_type }
@@ -313,7 +308,7 @@ module Game = struct
         request_type: string [@key "requestType"];
         data: JSON.t option;
       }
-      [@@deriving yojson]
+      [@@deriving to_yojson]
 
       let make ?(data : JSON.t option) (user : MinimalUser.t) (reply : string) (request_type : string) (now : int) : t =
         { event_type = "Reply"; time = now; user; reply; request_type; data }
@@ -330,7 +325,7 @@ module Game = struct
         user: MinimalUser.t;
         action: string;
       }
-      [@@deriving yojson]
+      [@@deriving to_yojson]
 
       let add_time (user : MinimalUser.t) (kind : [ `Turn | `Global ]) (now : int) : t =
         let action = match kind with
@@ -350,7 +345,7 @@ module Game = struct
         user: MinimalUser.t;
         move: JSON.t;
       }
-      [@@deriving yojson]
+      [@@deriving to_yojson]
 
       let of_json (user : MinimalUser.t) (move : JSON.t) (now : int) : t =
         { event_type = "Move"; user; move; time = now }
@@ -368,13 +363,6 @@ module Game = struct
       | Action action -> Action.to_yojson action
       | Move move -> Move.to_yojson move
 
-    let of_yojson (json : JSON.t) : (t, string) result =
-      match JSON.Util.(to_string (member "eventType" json)) with
-      | "Request" -> Result.map (fun x -> Request x) (Request.of_yojson json)
-      | "Reply" -> Result.map (fun x -> Reply x) (Reply.of_yojson json)
-      | "Action" -> Result.map (fun x -> Action x) (Action.of_yojson json)
-      | "Move" -> Result.map (fun x -> Move x) (Move.of_yojson json)
-      | unknown -> Error ("unknown event type: " ^ unknown)
   end
 
   type t = {
@@ -383,6 +371,7 @@ module Game = struct
     turn: int;
     result: GameResult.t;
 
+    (* TODO: winner/loser in the DB should probably just be player zero/one, as we already know who is who according to player_zero and _one *)
     player_one: MinimalUser.t option [@key "playerOne"];
     beginning: int option;
     winner: MinimalUser.t option;

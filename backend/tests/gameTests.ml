@@ -3,7 +3,7 @@ open Backend
 open Utils
 open TestUtils
 
-(* TODO: maybe rename GameEndpoint, to be able to always import Domain *)
+(* TODO: maybe rename to GameEndpoint, to be able to always import Domain. Similarly for ConfigRoom *)
 module Game = Game.Make(ExternalTests.Mock)(AuthTests.Mock)(FirestoreTests.Mock)(StatsTests.Mock)
 
 let handler = Dream.router Game.routes
@@ -357,7 +357,7 @@ let tests = [
 
         (* Then it should add the event *)
         check status "response status" `OK (Dream.status result);
-        let propose_event = Domain.Game.Event.(to_yojson (Request (Request.make DomainTests.a_minimal_user "Draw" (now * 1000)))) in
+        let propose_event = Domain.Game.Event.(to_yojson (Request (Request.draw DomainTests.a_minimal_user (now * 1000)))) in
         let expected = [
           FirestoreTests.AddEvent (game_id, propose_event);
         ] in
@@ -487,7 +487,7 @@ let tests = [
 
         (* Then it should add the event *)
         check status "response status" `OK (Dream.status result);
-        let propose_event = Domain.Game.Event.(to_yojson (Request (Request.make DomainTests.a_minimal_user "Rematch" (now * 1000)))) in
+        let propose_event = Domain.Game.Event.(to_yojson (Request (Request.rematch DomainTests.a_minimal_user (now * 1000)))) in
         let expected = [
           FirestoreTests.AddEvent (game_id, propose_event);
         ] in
@@ -633,7 +633,7 @@ let tests = [
 
         (* Then it should add the event *)
         check status "response status" `OK (Dream.status result);
-        let propose_event = Domain.Game.Event.(to_yojson (Request (Request.make DomainTests.a_minimal_user "TakeBack" (now * 1000)))) in
+        let propose_event = Domain.Game.Event.(to_yojson (Request (Request.take_back DomainTests.a_minimal_user (now * 1000)))) in
         let expected = [
           FirestoreTests.AddEvent (game_id, propose_event);
         ] in
@@ -699,6 +699,38 @@ let tests = [
         check status "response status" `OK (Dream.status result);
         let accept_event = Domain.Game.Event.(to_yojson (Reply (Reply.make DomainTests.a_minimal_user "Accept" "TakeBack" (now * 1000)))) in
         let update = Domain.Game.Updates.TakeBack.(to_yojson (get 1)) in
+        let expected = [
+          FirestoreTests.AddEvent (game_id, accept_event);
+          FirestoreTests.UpdateGame (game_id, update);
+        ] in
+        check (list FirestoreTests.call) "calls" expected !FirestoreTests.Mock.calls;
+        Lwt.return ()
+      );
+
+    lwt_test "should accept take back (as player one)" (fun () ->
+        FirestoreTests.Mock.clear_calls ();
+        AuthTests.Mock.set DomainTests.a_minimal_user.id DomainTests.a_user;
+        let now = 42 in
+        ExternalTests.Mock.current_time := now;
+
+        (* Given a game with an opponent (on our turn) *)
+        let game_id = "game_id" in
+        let game = {
+          (Domain.Game.initial "P4" DomainTests.another_minimal_user) with
+          player_one = Some DomainTests.a_minimal_user;
+          turn = 2;
+        } in
+        FirestoreTests.Mock.Game.set game;
+
+        (* When accepting a take back *)
+        let target = Printf.sprintf "game/%s?action=acceptTakeBack" game_id in
+        let request = Dream.request ~method_:`POST ~target "" in
+        let* result = handler request in
+
+        (* Then it should take back to previous opponent turn *)
+        check status "response status" `OK (Dream.status result);
+        let accept_event = Domain.Game.Event.(to_yojson (Reply (Reply.make DomainTests.a_minimal_user "Accept" "TakeBack" (now * 1000)))) in
+        let update = Domain.Game.Updates.TakeBack.(to_yojson (get 0)) in
         let expected = [
           FirestoreTests.AddEvent (game_id, accept_event);
           FirestoreTests.UpdateGame (game_id, update);
@@ -836,6 +868,42 @@ let tests = [
         Lwt.return ()
       );
 
+    lwt_test "should take scores into account" (fun () ->
+        FirestoreTests.Mock.clear_calls ();
+        AuthTests.Mock.set DomainTests.a_minimal_user.id DomainTests.a_user;
+        let now = 42 in
+        ExternalTests.Mock.current_time := now;
+
+        (* Given a game with an opponent *)
+        let game_id = "game_id" in
+        let game = {
+          (Domain.Game.initial "P4" DomainTests.a_minimal_user) with
+          player_one = Some DomainTests.another_minimal_user;
+          turn = 0;
+        } in
+        FirestoreTests.Mock.Game.set game;
+
+        (* When sending a move with a score *)
+        let move = `Assoc ["x", `Int 0] in
+        let move_url = Dream.to_percent_encoded (JSON.to_string move) in
+        let score0 = 42 in
+        let score1 = 37 in
+        let target = Printf.sprintf "game/%s?action=move&move=%s&score0=%d&score1=%d" game_id move_url score0 score1 in
+        let request = Dream.request ~method_:`POST ~target "" in
+        let* result = handler request in
+
+        (* Then it should add the event and end the game *)
+        check status "response status" `OK (Dream.status result);
+        let update = Domain.Game.Updates.EndTurn.(to_yojson (get ~scores:(score0, score1) 0)) in
+        let move_event = Domain.Game.Event.(to_yojson (Move (Move.of_json DomainTests.a_minimal_user move (now * 1000)))) in
+        let expected = [
+          FirestoreTests.AddEvent (game_id, move_event);
+          FirestoreTests.UpdateGame (game_id, update);
+        ] in
+        check (list FirestoreTests.call) "calls" expected !FirestoreTests.Mock.calls;
+        Lwt.return ()
+      );
+
     lwt_test "should fail if no move is provided" (fun () ->
         (* Given a game *)
         let game_id = "game_id" in
@@ -865,7 +933,7 @@ let tests = [
         } in
         FirestoreTests.Mock.Game.set game;
 
-        (* When sending a move *)
+        (* When sending a move that ends the game in a draw *)
         let move = `Assoc ["x", `Int 0] in
         let move_url = Dream.to_percent_encoded (JSON.to_string move) in
         let target = Printf.sprintf "game/%s?action=moveAndEnd&move=%s" game_id move_url in
@@ -886,6 +954,123 @@ let tests = [
         Lwt.return ()
       );
 
+    lwt_test "should set winner accordingly (player zero)" (fun () ->
+        FirestoreTests.Mock.clear_calls ();
+        AuthTests.Mock.set DomainTests.a_minimal_user.id DomainTests.a_user;
+        let now = 42 in
+        ExternalTests.Mock.current_time := now;
+
+        (* Given a game with an opponent *)
+        let game_id = "game_id" in
+        let game = {
+          (Domain.Game.initial "P4" DomainTests.a_minimal_user) with
+          player_one = Some DomainTests.another_minimal_user;
+          turn = 0;
+        } in
+        FirestoreTests.Mock.Game.set game;
+
+        (* When sending a move that ends the game with player 0 as winner *)
+        let move = `Assoc ["x", `Int 0] in
+        let move_url = Dream.to_percent_encoded (JSON.to_string move) in
+        let target = Printf.sprintf "game/%s?action=moveAndEnd&move=%s&winner=0" game_id move_url in
+        let request = Dream.request ~method_:`POST ~target "" in
+        let* result = handler request in
+
+        (* Then it should add the event and end the game *)
+        check status "response status" `OK (Dream.status result);
+        let winner = DomainTests.a_minimal_user in
+        let loser = DomainTests.another_minimal_user in
+        let update = Domain.Game.Updates.EndWithMove.(to_yojson (get ~winner ~loser Domain.Game.GameResult.Victory 1)) in
+        let move_event = Domain.Game.Event.(to_yojson (Move (Move.of_json DomainTests.a_minimal_user move (now * 1000)))) in
+        let end_game = Domain.Game.Event.(to_yojson (Action (Action.end_game DomainTests.a_minimal_user (now * 1000)))) in
+        let expected = [
+          FirestoreTests.AddEvent (game_id, move_event);
+          FirestoreTests.UpdateGame (game_id, update);
+          FirestoreTests.AddEvent (game_id, end_game);
+        ] in
+        check (list FirestoreTests.call) "calls" expected !FirestoreTests.Mock.calls;
+        Lwt.return ()
+      );
+
+    lwt_test "should set winner accordingly (player one)" (fun () ->
+        FirestoreTests.Mock.clear_calls ();
+        AuthTests.Mock.set DomainTests.a_minimal_user.id DomainTests.a_user;
+        let now = 42 in
+        ExternalTests.Mock.current_time := now;
+
+        (* Given a game with an opponent *)
+        let game_id = "game_id" in
+        let game = {
+          (Domain.Game.initial "P4" DomainTests.a_minimal_user) with
+          player_one = Some DomainTests.another_minimal_user;
+          turn = 0;
+        } in
+        FirestoreTests.Mock.Game.set game;
+
+        (* When sending a move that ends the game with player 0 as winner *)
+        let move = `Assoc ["x", `Int 0] in
+        let move_url = Dream.to_percent_encoded (JSON.to_string move) in
+        let target = Printf.sprintf "game/%s?action=moveAndEnd&move=%s&winner=1" game_id move_url in
+        let request = Dream.request ~method_:`POST ~target "" in
+        let* result = handler request in
+
+        (* Then it should add the event and end the game *)
+        check status "response status" `OK (Dream.status result);
+        let winner = DomainTests.another_minimal_user in
+        let loser = DomainTests.a_minimal_user in
+        let update = Domain.Game.Updates.EndWithMove.(to_yojson (get ~winner ~loser Domain.Game.GameResult.Victory 1)) in
+        let move_event = Domain.Game.Event.(to_yojson (Move (Move.of_json DomainTests.a_minimal_user move (now * 1000)))) in
+        let end_game = Domain.Game.Event.(to_yojson (Action (Action.end_game DomainTests.a_minimal_user (now * 1000)))) in
+        let expected = [
+          FirestoreTests.AddEvent (game_id, move_event);
+          FirestoreTests.UpdateGame (game_id, update);
+          FirestoreTests.AddEvent (game_id, end_game);
+        ] in
+        check (list FirestoreTests.call) "calls" expected !FirestoreTests.Mock.calls;
+        Lwt.return ()
+      );
+
+    lwt_test "should set scores accordingly" (fun () ->
+        FirestoreTests.Mock.clear_calls ();
+        AuthTests.Mock.set DomainTests.a_minimal_user.id DomainTests.a_user;
+        let now = 42 in
+        ExternalTests.Mock.current_time := now;
+
+        (* Given a game with an opponent *)
+        let game_id = "game_id" in
+        let game = {
+          (Domain.Game.initial "P4" DomainTests.a_minimal_user) with
+          player_one = Some DomainTests.another_minimal_user;
+          turn = 0;
+        } in
+        FirestoreTests.Mock.Game.set game;
+
+        (* When sending a move that ends the game with player 0 as winner *)
+        let move = `Assoc ["x", `Int 0] in
+        let move_url = Dream.to_percent_encoded (JSON.to_string move) in
+        let score0 = 2 in
+        let score1 = 1 in
+        let target = Printf.sprintf "game/%s?action=moveAndEnd&move=%s&winner=0&score0=%d&score1=%d" game_id move_url score0 score1 in
+        let request = Dream.request ~method_:`POST ~target "" in
+        let* result = handler request in
+
+        (* Then it should add the event and end the game *)
+        check status "response status" `OK (Dream.status result);
+        let winner = DomainTests.a_minimal_user in
+        let loser = DomainTests.another_minimal_user in
+        let scores = (score0, score1) in
+        let update = Domain.Game.Updates.EndWithMove.(to_yojson (get ~winner ~loser ~scores Domain.Game.GameResult.Victory 1)) in
+        let move_event = Domain.Game.Event.(to_yojson (Move (Move.of_json DomainTests.a_minimal_user move (now * 1000)))) in
+        let end_game = Domain.Game.Event.(to_yojson (Action (Action.end_game DomainTests.a_minimal_user (now * 1000)))) in
+        let expected = [
+          FirestoreTests.AddEvent (game_id, move_event);
+          FirestoreTests.UpdateGame (game_id, update);
+          FirestoreTests.AddEvent (game_id, end_game);
+        ] in
+        check (list FirestoreTests.call) "calls" expected !FirestoreTests.Mock.calls;
+        Lwt.return ()
+      );
+
     lwt_test "should fail if no move is provided" (fun () ->
         (* Given a game *)
         let game_id = "game_id" in
@@ -893,6 +1078,20 @@ let tests = [
         (* Then it should fail *)
         lwt_check_raises "failure" ((=) (BadInput "Missing or invalid move parameter")) (fun () ->
             let target = Printf.sprintf "game/%s?action=moveAndEnd" game_id in
+            let request = Dream.request ~method_:`POST ~target "" in
+            let* _ = handler request in
+            Lwt.return ())
+      );
+
+    lwt_test "should fail if invalid winner is provided" (fun () ->
+        (* Given a game *)
+        let game_id = "game_id" in
+        (* When making a POST request with valid move but invalid winner/loser *)
+        (* Then it should fail *)
+        lwt_check_raises "failure" ((=) (BadInput "Invalid winner")) (fun () ->
+            let move = `Assoc ["x", `Int 0] in
+            let move_url = Dream.to_percent_encoded (JSON.to_string move) in
+            let target = Printf.sprintf "game/%s?action=moveAndEnd&move=%s&winner=9" game_id move_url in
             let request = Dream.request ~method_:`POST ~target "" in
             let* _ = handler request in
             Lwt.return ())

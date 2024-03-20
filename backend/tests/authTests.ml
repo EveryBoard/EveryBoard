@@ -75,7 +75,21 @@ let tests = [
         (* Given a request with a valid Authorization token, but no corresponding user *)
         let request = Dream.request ~headers:[("Authorization", "Bearer " ^ JwtTests.identity_token_str)] "/" in
         JwtTests.Mock.validate_token := true;
-        FirestoreTests.Mock.user := None;
+        FirestoreTests.Mock.user := (fun () -> raise (DocumentNotFound "user"));
+        (* When it is received by the middleware *)
+        let handler = Dream.router [ Dream.get "/" (fun _ -> Dream.empty `Found) ] in
+        let* actual = Auth.middleware handler request in
+        (* Then it should fail *)
+        let json_response = `Assoc [("reason", `String "User is invalid")] in
+        let expected = Dream.response ~status:`Unauthorized (JSON.to_string json_response) in
+        lwt_check_response "failure" expected actual
+      );
+
+    lwt_test "should fail if the user is broken" (fun () ->
+        (* Given a request with a valid Authorization token, but no corresponding user *)
+        let request = Dream.request ~headers:[("Authorization", "Bearer " ^ JwtTests.identity_token_str)] "/" in
+        JwtTests.Mock.validate_token := true;
+        FirestoreTests.Mock.user := (fun () -> raise (DocumentInvalid "user"));
         (* When it is received by the middleware *)
         let handler = Dream.router [ Dream.get "/" (fun _ -> Dream.empty `Found) ] in
         let* actual = Auth.middleware handler request in
@@ -89,7 +103,7 @@ let tests = [
         (* Given a request with a valid Authorization token for an user that is not verified *)
         let request = Dream.request ~headers:[("Authorization", "Bearer " ^ JwtTests.identity_token_str)] "/" in
         JwtTests.Mock.validate_token := true;
-        FirestoreTests.Mock.user := Some FirestoreTests.unverified_user;
+        FirestoreTests.Mock.user := (fun () -> FirestoreTests.unverified_user);
         (* When it is received by the middleware *)
         let handler = Dream.router [ Dream.get "/" (fun _ -> Dream.empty `Found) ] in
         let* actual = Auth.middleware handler request in
@@ -103,7 +117,7 @@ let tests = [
         (* Given a request with a valid Authorization token for an user that is verified *)
         let request = Dream.request ~headers:[("Authorization", "Bearer " ^ JwtTests.identity_token_str)] "/" in
         JwtTests.Mock.validate_token := true;
-        FirestoreTests.Mock.user := Some FirestoreTests.verified_user;
+        FirestoreTests.Mock.user := (fun () -> FirestoreTests.verified_user);
         (* When it is received by the middleware *)
         (* Then it should succeed and bind the user in the handler *)
         let handler = Dream.router [ Dream.get "/" (fun request ->

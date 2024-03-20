@@ -13,7 +13,7 @@ run: gamelist
 test: bin gamelist
 	find . -name '*.coverage' | xargs rm -f
 	GAMES=$$(cat games.txt) \
-	opam exec -- dune exec --instrument-with bisect_ppx --force -- ./tests.exe test $(match)
+	opam exec -- dune exec --instrument-with bisect_ppx --force -- ./tests.exe test $(match) $(test-number)
 	opam exec -- bisect-ppx-report html
 	echo 'Coverage produced in _coverage/index.html'
 	opam exec -- bisect-ppx-report summary

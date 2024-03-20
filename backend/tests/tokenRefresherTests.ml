@@ -131,5 +131,28 @@ let tests = [
         Lwt.return ()
       );
 
+    lwt_test "should not request a token in the emulator" (fun () ->
+        Mirage_crypto_rng_lwt.initialize (module Mirage_crypto_rng.Fortuna);
+        (* Given a middleware run wit the emulator *)
+        Options.emulator := true;
+        let middleware : Dream.middleware = TokenRefresher.middleware "test-data/service-account.json" in
+        let response = response `OK in
+        let body = access_token_str in
+        let mock = ExternalTests.Mock.Http.mock_response (response, body) in
+        (* When the middleware receives a request *)
+        let request = Dream.request "/" in
+        (* Then it should not retrieve the token but use the string "owner" instead *)
+        let handler = Dream.router [ Dream.get "/" (fun request ->
+            let* header = TokenRefresher.header request in
+            let actual = Cohttp.Header.to_list header in
+            let expected = [("Authorization", "Bearer owner")] in
+            check (list (pair string string)) "success" expected actual;
+            Dream.empty `Found) ] in
+        let* _ = middleware handler request in
+        check int "number of tokens requested" 0 !(mock.number_of_calls);
+        Options.emulator := false;
+        Lwt.return ()
+      );
+
   ];
 ]

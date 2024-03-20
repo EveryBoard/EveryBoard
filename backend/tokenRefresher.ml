@@ -67,7 +67,7 @@ module Make (External : External.EXTERNAL) (Jwt : Jwt.JWT) : TOKEN_REFRESHER = s
       Lwt.return token
 
   let get_token_field : (unit -> string Lwt.t) Dream.field =
-    Dream.new_field ~name:"token" ~show_value:(fun _ -> "ACCESS_TOKEN") ()
+    Dream.new_field ~name:"token" ()
 
   let get_token (request : Dream.request) : string Lwt.t =
     match Dream.field request get_token_field with

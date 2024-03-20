@@ -27,7 +27,7 @@ let call : call testable =
 module type MOCK = sig
   include Firestore.FIRESTORE
 
-  val user : Domain.User.t option ref
+  val user : (unit -> Domain.User.t) ref
 
   val calls : call list ref
   val clear_calls : unit -> unit
@@ -45,7 +45,7 @@ end
 
 module Mock : MOCK = struct
 
-  let user : Domain.User.t option ref = ref None
+  let user = ref (fun () -> raise (DocumentNotFound "user"))
 
   let calls : call list ref = ref []
   let clear_calls () = calls := []
@@ -53,10 +53,7 @@ module Mock : MOCK = struct
     calls := !calls @ [call]
 
   module User = struct
-    let get _  _ =
-      match !user with
-      | Some user -> Lwt.return user
-      | None -> raise (DocumentNotFound "user")
+    let get _  _ = Lwt.return (!user ())
   end
 
   module Game = struct

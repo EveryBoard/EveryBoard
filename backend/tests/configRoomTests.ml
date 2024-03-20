@@ -172,7 +172,7 @@ let tests = [
         (* When proposing the config but providing an ill-formed config *)
         (* Then it should fail with a BadInput exception *)
         let* _ = lwt_check_raises "failure" ((=) (BadInput "Invalid config proposal")) (fun () ->
-            let target = Printf.sprintf "config-room/%s?action=propose&config=blibli" game_id in
+            let target = Printf.sprintf "config-room/%s?action=propose&config={}" game_id in
             let request = Dream.request ~method_:`POST ~target "" in
             let* _ = handler request in
             Lwt.return ()) in
@@ -193,24 +193,21 @@ let tests = [
         FirestoreTests.Mock.ConfigRoom.set config_room;
 
         (* When proposing the config *)
-        let update = Domain.ConfigRoom.Updates.Proposal.to_yojson {
-            game_status = ConfigProposed;
-            game_type = Standard;
-            maximal_move_duration = 60;
-            total_part_duration = 3600;
-            first_player = Random;
-            rules_config = `Assoc []
-          } in
-        let update_str = Dream.to_percent_encoded (JSON.to_string update) in
-        let target = Printf.sprintf "config-room/%s?action=propose&config=%s" game_id update_str  in
-        let request = Dream.request ~method_:`POST ~target "" in
-        let* result = handler request in
-
-        (* Then it should update the config accordingly *)
-        check status "response status" `OK (Dream.status result);
-        let expected = [FirestoreTests.UpdateConfigRoom (game_id, update)] in
-        check (list FirestoreTests.call) "calls" expected !FirestoreTests.Mock.calls;
-        Lwt.return ()
+        (* Then it should fail *)
+        lwt_check_raises "failure" ((=) (BadInput "Invalid config proposal")) (fun () ->
+            let update = `Assoc [
+                "partStatus", Domain.ConfigRoom.GameStatus.(to_yojson Created);
+                "partType", Domain.ConfigRoom.GameType.(to_yojson Standard);
+                "maximalMoveDuration", `Int 60;
+                "totalPartDuration", `Int 3600;
+                "firstPlayer", Domain.ConfigRoom.FirstPlayer.(to_yojson Random);
+                "rulesConfig", `Assoc [];
+              ] in
+            let update_str = Dream.to_percent_encoded (JSON.to_string update) in
+            let target = Printf.sprintf "config-room/%s?action=propose&config=%s" game_id update_str  in
+            let request = Dream.request ~method_:`POST ~target "" in
+            let* _ = handler request in
+            Lwt.return ())
       );
 
   ];
@@ -243,6 +240,43 @@ let tests = [
           FirestoreTests.AddEvent (game_id, Domain.Game.Event.(to_yojson (Action (Action.start_game DomainTests.a_minimal_user (now * 1000)))));
         ] in
         check (list FirestoreTests.call) "calls" expected !FirestoreTests.Mock.calls;
+        Lwt.return ()
+      );
+
+    lwt_test "should be able to randomly select chosen player" (fun () ->
+        FirestoreTests.Mock.clear_calls ();
+        AuthTests.Mock.set DomainTests.a_minimal_user.id DomainTests.a_user;
+        ExternalTests.Mock.bool := false;
+        let now = 42 in
+        ExternalTests.Mock.current_time := now;
+
+        (* Given a game proposed to us *)
+        let game_id = "game_id" in
+        let config_room = {
+          (Domain.ConfigRoom.initial DomainTests.another_minimal_user) with
+          chosen_opponent = Some DomainTests.a_minimal_user
+        } in
+        FirestoreTests.Mock.ConfigRoom.set config_room;
+
+        (* When accepting it *)
+        let target = Printf.sprintf "config-room/%s?action=accept" game_id in
+        let request = Dream.request ~method_:`POST ~target "" in
+        let* result = handler request in
+
+        (* Then it should be able to select chosen player as starter *)
+        check status "response status" `OK (Dream.status result);
+        let expected = [
+          FirestoreTests.AcceptConfig game_id;
+          FirestoreTests.UpdateGame (game_id, Domain.Game.Updates.Start.(to_yojson {
+              player_zero = DomainTests.a_minimal_user;
+              player_one = DomainTests.another_minimal_user;
+              turn = 0;
+              beginning = Some (now * 1000);
+            }));
+          FirestoreTests.AddEvent (game_id, Domain.Game.Event.(to_yojson (Action (Action.start_game DomainTests.a_minimal_user (now * 1000)))));
+        ] in
+        check (list FirestoreTests.call) "calls" expected !FirestoreTests.Mock.calls;
+        ExternalTests.Mock.bool := true;
         Lwt.return ()
       );
   ];
