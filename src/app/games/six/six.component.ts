@@ -34,7 +34,7 @@ export class SixComponent
     public state: SixState;
 
     public pieces: Coord[];
-    public disconnecteds: Coord[] = [];
+    public disconnectedCoords: Coord[] = [];
     public cuttableGroups: Coord[][] = [];
     public victoryCoords: Coord[];
     public neighbors: Coord[];
@@ -82,11 +82,11 @@ export class SixComponent
         this.leftCoord = MGPOptional.empty();
         this.lastDrop = MGPOptional.empty();
         this.victoryCoords = [];
-        this.disconnecteds = [];
+        this.disconnectedCoords = [];
     }
 
     public getViewBox(): ViewBox {
-        const coords: Coord[] = this.pieces.concat(this.disconnecteds).concat(this.neighbors);
+        const coords: Coord[] = this.pieces.concat(this.disconnectedCoords).concat(this.neighbors);
         return ViewBox
             .fromHexa(coords, this.hexaLayout, this.STROKE_WIDTH)
             .expandAbove(this.SPACE_SIZE + this.STROKE_WIDTH)
@@ -106,7 +106,7 @@ export class SixComponent
         if (this.rules.getGameStatus(this.node).isEndGame) {
             this.victoryCoords = this.rules.getShapeVictory(move, state);
         }
-        this.disconnecteds = this.getDisconnected();
+        this.disconnectedCoords = this.getDisconnected();
     }
 
     private getDisconnected(): Coord[] {

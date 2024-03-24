@@ -211,7 +211,7 @@ describe('SiamComponent', () => {
         // and must select the target for a move
         await testUtils.expectClickSuccess('#remainingPieces_0');
         // When the player clicks on an invalid target which would result in an impossible move
-        // Then the move should be canceled
+        // Then it should fail
         await testUtils.expectClickFailure('#square_2_2', SiamFailure.MUST_SELECT_VALID_DESTINATION());
     }));
 

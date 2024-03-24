@@ -9,7 +9,6 @@ import { LascaFailure } from '../LascaFailure';
 import { LascaMove } from '../LascaMove';
 import { LascaPiece, LascaStack, LascaState } from '../LascaState';
 import { LascaRules } from '../LascaRules';
-import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 describe('LascaComponent', () => {
 
@@ -22,7 +21,6 @@ describe('LascaComponent', () => {
     const __: LascaStack = LascaStack.EMPTY;
 
     let testUtils: ComponentTestUtils<LascaComponent>;
-    const defaultConfig: NoConfig = LascaRules.get().getDefaultRulesConfig();
 
     beforeEach(fakeAsync(async() => {
         testUtils = await ComponentTestUtils.forGame<LascaComponent>('Lasca');
@@ -111,7 +109,7 @@ describe('LascaComponent', () => {
                 [__, _u, __, _u, __, _u, __],
                 [_u, __, _u, __, _u, __, _u],
             ], 1);
-            await testUtils.setupState(state, { previousState, previousMove, config: defaultConfig });
+            await testUtils.setupState(state, { previousState, previousMove });
 
             // When selecting stack
             await testUtils.expectClickSuccess('#coord_4_2');

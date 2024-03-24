@@ -41,14 +41,14 @@ describe('LodestoneComponent', () => {
         it('should forbid placing a lodestone on an occupied square', fakeAsync(async() => {
             // Given the initial state
             // When clicking on a an occupied square
-            // Then the move should fail
+            // Then it should fail
             await testUtils.expectClickFailure('#square_1_1', RulesFailure.MUST_CLICK_ON_EMPTY_SQUARE());
         }));
 
         it('should forbid selecting a pressure plate if no capture has been made yet', fakeAsync(async() => {
             // Given the initial state
             // When clicking on a pressure plate
-            // Then the move should fail
+            // Then it should fail
             await testUtils.expectClickFailure('#plate_top_0_0', LodestoneFailure.NO_CAPTURES_TO_PLACE_YET());
         }));
 
@@ -586,7 +586,7 @@ describe('LodestoneComponent', () => {
             await testUtils.expectClickSuccess('#square_3_3');
             await testUtils.expectClickSuccess('#lodestone_push_orthogonal_PLAYER_ZERO');
             // When clicking on the board
-            // Then the move should be canceled
+            // Then it should fail
             await testUtils.expectClickFailure('#square_0_0', LodestoneFailure.MUST_PLACE_CAPTURES());
         }));
 

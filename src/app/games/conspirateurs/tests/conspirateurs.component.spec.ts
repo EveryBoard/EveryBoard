@@ -143,13 +143,13 @@ describe('ConspirateursComponent', () => {
 
         it('should not allow selecting an empty space', fakeAsync(async() => {
             // When clicking on an empty space
-            // Then the click should be rejected
+            // Then it should fail
             await testUtils.expectClickFailure('#click_0_0', RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY());
         }));
 
         it('should forbid selecting a piece of the opponent', fakeAsync(async() => {
             // When clicking on a piece of the opponent
-            // Then the click should be rejected
+            // Then it should fail
             await testUtils.expectClickFailure('#click_5_5', RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT());
         }));
 
@@ -273,7 +273,7 @@ describe('ConspirateursComponent', () => {
             // Given a selected piece
             await testUtils.expectClickSuccess('#click_5_4');
             // When clicking on an invalid jump target
-            // Then the click fails
+            // Then it should fail
             await testUtils.expectClickFailure('#click_5_8', ConspirateursFailure.INVALID_JUMP());
         }));
 
@@ -282,7 +282,7 @@ describe('ConspirateursComponent', () => {
             await testUtils.expectClickSuccess('#click_5_4');
             await testUtils.expectClickSuccess('#click_5_2');
             // When clicking on an invalid jump target
-            // Then the click fails
+            // Then it should fail
             await testUtils.expectClickFailure('#click_2_2', ConspirateursFailure.INVALID_JUMP());
         }));
 
@@ -290,8 +290,9 @@ describe('ConspirateursComponent', () => {
             // Given a jump being constructed
             await testUtils.expectClickSuccess('#click_5_4');
             await testUtils.expectClickSuccess('#click_5_2');
+
             // When clicking on an invalid jump target
-            // Then the click fails
+            // Then it should fail
             await testUtils.expectClickFailure('#click_5_0', ConspirateursFailure.MUST_JUMP_OVER_PIECES());
             // And the state should go back to normal
             testUtils.expectElementToHaveClasses('#piece_5_4', ['base', 'player0-fill']);

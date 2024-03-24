@@ -834,7 +834,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             const gameComponent: AbstractGameComponent = testUtils.getGameComponent();
             spyOn(gameComponent, 'hideLastMove').and.callThrough();
 
-            // When doing that click
+            // When doing that move
             await testUtils.expectClickSuccess('#chooseCoord_0_0');
 
             // Then hideLastMove should have been called
@@ -846,7 +846,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
     describe('TutorialStep expecting any move', () => {
 
         it('should consider any move legal when step is anyMove', fakeAsync(async() => {
-            // Given tutorial step fo type "anyMove"
+            // Given tutorial step of type "anyMove"
             const tutorial: TutorialStep[] = [
                 TutorialStep.anyMove(
                     'title',
@@ -871,7 +871,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
         }));
 
         it('should hide last move after click', fakeAsync(async() => {
-            // Given tutorial step fo type "anyMove"
+            // Given tutorial step fofo type "anyMove"
             const tutorial: TutorialStep[] = [
                 TutorialStep.anyMove(
                     'title',
@@ -885,7 +885,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             const gameComponent: AbstractGameComponent = testUtils.getGameComponent();
             spyOn(gameComponent, 'hideLastMove').and.callThrough();
 
-            // When doing that click
+            // When doing that move
             await testUtils.expectClickSuccess('#chooseCoord_0_0');
 
             // Then hideLastMove should have been called
@@ -896,8 +896,8 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
 
     describe('TutorialStep expecting a click', () => {
 
-        it('should show success message after step success (one of several clics)', fakeAsync(async() => {
-            // Given a TutorialStep with several clics
+        it('should show success message after step success (one of several clicks)', fakeAsync(async() => {
+            // Given a TutorialStep with several clicks
             const tutorial: TutorialStep[] = [
                 TutorialStep.forClick(
                     'title',
@@ -910,7 +910,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             ];
             await wrapper.startTutorial(tutorial);
 
-            // When doing that click
+            // When doing one of those click
             await testUtils.expectClickSuccess('#chooseCoord_0_0');
 
             // expect to see steps success message on component
@@ -921,7 +921,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
         }));
 
         it('should hide last move after click', fakeAsync(async() => {
-            // Given a TutorialStep with several clics
+            // Given a TutorialStep with several clicks
             const tutorial: TutorialStep[] = [
                 TutorialStep.forClick(
                     'title',
@@ -936,15 +936,15 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             const gameComponent: AbstractGameComponent = testUtils.getGameComponent();
             spyOn(gameComponent, 'hideLastMove').and.callThrough();
 
-            // When doing that click
+            // When click for the first time
             await testUtils.expectClickSuccess('#chooseCoord_0_0');
 
             // Then hideLastMove should have been called
             expect(gameComponent.hideLastMove).toHaveBeenCalledOnceWith();
         }));
 
-        it('should show failure message after step failure (one of several clics)', fakeAsync(async() => {
-            // Given a TutorialStep with several clics
+        it('should show failure message after step failure (one of several clicks)', fakeAsync(async() => {
+            // Given a TutorialStep with several clicks
             const tutorial: TutorialStep[] = [
                 TutorialStep.forClick(
                     'title',
@@ -1030,7 +1030,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
         }));
 
         it('should not throw for click leading to move', fakeAsync(async() => {
-            // Given a TutorialStep with several clics
+            // Given a TutorialStep with several clicks
             const tutorial: TutorialStep[] = [
                 TutorialStep.forClick(
                     'title',
@@ -1048,7 +1048,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             ];
             await wrapper.startTutorial(tutorial);
 
-            // When doing that click-move
+            // When doing that move
             const move: QuartoMove = new QuartoMove(3, 3, QuartoPiece.EMPTY);
             await testUtils.expectMoveSuccess('#chooseCoord_3_3', move);
 
@@ -1189,7 +1189,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             const gameComponent: AbstractGameComponent = testUtils.getGameComponent();
             spyOn(gameComponent, 'hideLastMove').and.callThrough();
 
-            // When doing that click
+            // When clicking for the first time
             await testUtils.expectClickSuccess('#chooseCoord_0_0');
 
             // Then hideLastMove should have been called

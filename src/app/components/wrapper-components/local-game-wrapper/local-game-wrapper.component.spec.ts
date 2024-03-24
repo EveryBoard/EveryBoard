@@ -236,41 +236,35 @@ describe('LocalGameWrapperComponent (game phase)', () => {
 
     describe('Using AI', () => {
 
-        async function selectFirstElementOfDropDown(dropDownName: string): Promise<void> {
-            const selectedAI: HTMLSelectElement = testUtils.findElement(dropDownName).nativeElement;
-            selectedAI.value = selectedAI.options[1].value;
-            selectedAI.dispatchEvent(new Event('change'));
-            testUtils.detectChanges();
-            tick();
-        }
-
         it('should disable interactivity when AI is selected without level', fakeAsync(async() => {
             // Given a game which is initially interactive, with a background showing it
             expect(testUtils.getGameComponent().isInteractive()).toBeTrue();
             testUtils.expectElementToExist('.tile .player0-bg');
 
             // When selecting only the AI without the depth for the current player
-            await selectFirstElementOfDropDown('#playerZeroSelect');
+            await testUtils.selectChildElementOfDropDown('#playerZeroSelect', 'playerZero_ai_Minimax');
 
             // Then the game should not be interactive anymore
-            expect(testUtils.getGameComponent().isInteractive()).toBeFalse();
+            expect(testUtils.getGameComponent().isInteractive())
+                .withContext('Interactivity should be false')
+                .toBeFalse();
             // nor should it show the current player background
             testUtils.expectElementNotToExist('.tile .player0-bg');
         }));
 
         it('should show level when non-human player is selected', fakeAsync(async() => {
             // Given a board where human are playing human
-            testUtils.expectElementNotToExist('#aiZeroLevelSelect');
+            testUtils.expectElementNotToExist('#aiZeroOptionSelect');
 
             // When selecting an AI for player ZERO
             const aiName: string = '#playerZeroSelect';
-            await selectFirstElementOfDropDown(aiName);
+            await testUtils.selectChildElementOfDropDown(aiName, 'playerZero_ai_Minimax');
 
             // Then AI name should be diplayed and the level selectable
             const selectedAI: HTMLSelectElement = testUtils.findElement(aiName).nativeElement;
             const chosenAiName: string = selectedAI.options[selectedAI.selectedIndex].label;
             expect(chosenAiName).toBe('Minimax');
-            testUtils.expectElementToExist('#aiZeroLevelSelect');
+            testUtils.expectElementToExist('#aiZeroOptionSelect');
         }));
 
         it('should show level when non-human player is selected, and propose AI to play', fakeAsync(async() => {
@@ -332,7 +326,7 @@ describe('LocalGameWrapperComponent (game phase)', () => {
             // Given wrapper on which a first move have been done
             await testUtils.expectMoveSuccess('#click_4', P4Move.of(4));
             // When clicking on AI then its level
-            await selectFirstElementOfDropDown('#playerOneSelect');
+            await testUtils.selectChildElementOfDropDown('#playerOneSelect', 'playerOne_ai_Minimax');
             const localGameWrapper: LocalGameWrapperComponent = testUtils.getWrapper() as LocalGameWrapperComponent;
             spyOn(localGameWrapper, 'proposeAIToPlay').and.callThrough();
             const gameComponent: AbstractGameComponent = testUtils.getGameComponent();
@@ -340,7 +334,7 @@ describe('LocalGameWrapperComponent (game phase)', () => {
             expect(gameComponent.getState().turn)
                 .withContext('after we did one move')
                 .toEqual(1);
-            await selectFirstElementOfDropDown('#aiOneLevelSelect');
+            await testUtils.selectChildElementOfDropDown('#aiOneOptionSelect', 'playerOne_option_Level 1');
             tick(LocalGameWrapperComponent.AI_TIMEOUT);
 
             // Then it should have proposed AI to play
@@ -383,8 +377,9 @@ describe('LocalGameWrapperComponent (game phase)', () => {
             spyOn(testUtils.getGameComponent().rules, 'getGameStatus').and.returnValue(GameStatus.ZERO_WON);
 
             // When selecting an AI for the current player
-            await selectFirstElementOfDropDown('#playerZeroSelect');
-            await selectFirstElementOfDropDown('#aiZeroLevelSelect');
+            await testUtils.selectChildElementOfDropDown('#playerZeroSelect', 'playerZero_ai_Minimax');
+            console.clear();
+            await testUtils.selectChildElementOfDropDown('#aiZeroOptionSelect', 'playerZero_option_Level 1');
 
             // Then it should not try to play
             expect(localGameWrapper.doAIMove).not.toHaveBeenCalled();

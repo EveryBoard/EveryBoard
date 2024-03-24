@@ -29,7 +29,7 @@ import { MGPFallible } from 'src/app/utils/MGPFallible';
 @Debug.log
 export class LocalGameWrapperComponent extends GameWrapper<string> implements AfterViewInit {
 
-    public static readonly AI_TIMEOUT: number = 3000;
+    public static readonly AI_TIMEOUT: number = 1500;
 
     public aiOptions: [string, string] = ['none', 'none'];
 
@@ -133,7 +133,7 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
         await this.setInteractive(isAISelected === false);
         if (isAISelected) {
             // It is AI's turn, let it play after a small delay
-            const playingAI: MGPOptional<{ ai: AbstractAI, options: AIOptions }> = this.getCurrentAIOption();
+            const playingAI: MGPOptional<{ ai: AbstractAI, options: AIOptions }> = this.getCurrentAIAndOptions();
             if (playingAI.isPresent()) {
                 window.setTimeout(async() => {
                     await this.doAIMove(playingAI.get().ai, playingAI.get().options);
@@ -161,7 +161,7 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
         return this.playerSelection[playerIndex] !== 'human';
     }
 
-    private getCurrentAIOption(): MGPOptional<{ ai: AbstractAI, options: AIOptions }> {
+    private getCurrentAIAndOptions(): MGPOptional<{ ai: AbstractAI, options: AIOptions }> {
         const playerIndex: number = this.gameComponent.getTurn() % 2;
         const aiOpt: MGPOptional<AbstractAI> = this.getAI(playerIndex);
         if (aiOpt.isPresent()) {
@@ -251,7 +251,7 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
 
     public async takeBack(): Promise<void> {
         this.gameComponent.node = this.gameComponent.node.parent.get();
-        if (this.isConcreteAITurn()) {
+        if (this.isTurnOfConcreteAI()) {
             Utils.assert(this.gameComponent.node.parent.isPresent(),
                          'Cannot take back in first turn when AI is Player.ZERO');
             this.gameComponent.node = this.gameComponent.node.parent.get();
@@ -259,8 +259,8 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
         await this.showCurrentState(false);
     }
 
-    private isConcreteAITurn(): boolean {
-        return this.getCurrentAIOption().isPresent();
+    private isTurnOfConcreteAI(): boolean {
+        return this.getCurrentAIAndOptions().isPresent();
     }
 
     public async restartGame(): Promise<void> {

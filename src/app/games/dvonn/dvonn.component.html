@@ -32,7 +32,7 @@
         </g>
     </g>
     <!-- Show disconnecteds -->
-    <g *ngFor="let disconnected of disconnecteds"
+    <g *ngFor="let disconnected of disconnectedSpaces"
         id="disconnected_{{ disconnected.coord.x }}_{{ disconnected.coord.y }}" >
         <polygon [attr.points]="getHexaPoints()"
                  [attr.transform]="getHexaCenterTranslation(disconnected.coord)"

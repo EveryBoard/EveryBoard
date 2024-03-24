@@ -51,7 +51,7 @@ describe('AbaloneComponent', () => {
         it('should cancel move when clicking on opponent piece', fakeAsync(async() => {
             // Given the initial board
             // When clicking on an opponent piece
-            // Then expect click to be a failure
+            // Then it should fail
             await testUtils.expectClickFailure('#piece_8_0');
         }));
 
@@ -107,7 +107,7 @@ describe('AbaloneComponent', () => {
         it('should cancel move when clicking on empty space', fakeAsync(async() => {
             // Given the initial board
             // When clicking on an empty space
-            // Then expect click to be a failure
+            // Then it should fail
             await testUtils.expectClickFailure('#space_3_3', RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY());
         }));
 

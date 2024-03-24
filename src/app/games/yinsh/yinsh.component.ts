@@ -63,12 +63,9 @@ export class YinshComponent extends HexagonalGameComponent<YinshRules,
                        'FINAL_CAPTURE_SELECT_RING' =
             'MOVE_START';
 
-    // ???
-
-    // Possible clics infos
     public selectableCoords: Coord[] = [];
 
-    // Ongoing move variable
+    // Ongoing move variables
     public removed: Coord[] = [];
     private possibleCaptures: YinshCapture[] = [];
     private initialCaptures: YinshCapture[] = [];

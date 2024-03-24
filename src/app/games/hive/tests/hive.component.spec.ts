@@ -406,7 +406,7 @@ describe('HiveComponent', () => {
             await testUtils.expectClickSuccess('#piece_0_0');
 
             // When clicking on the stack a second time
-            // Then it should cancel the move
+            // Then it should fail
             await testUtils.expectClickFailure('#piece_0_0');
         }));
 
@@ -462,7 +462,7 @@ describe('HiveComponent', () => {
         await testUtils.setupState(state);
 
         // When clicking on an empty space
-        // Then the move should be canceled
+        // Then it should fail
         await testUtils.expectClickFailure('#space_2_0');
     }));
 

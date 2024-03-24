@@ -159,7 +159,7 @@ describe('CoerceoComponent', () => {
         it('should cancel the move when first click is on empty space', fakeAsync(async() => {
             // Given any board
             // When clicking on empty space
-            // Then it should have been a failure
+            // Then it should fail
             await testUtils.expectClickFailure('#click_5_5', CoerceoFailure.FIRST_CLICK_SHOULD_NOT_BE_NULL());
         }));
 

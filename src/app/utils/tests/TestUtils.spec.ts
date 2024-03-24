@@ -277,9 +277,21 @@ export class SimpleComponentTestUtils<T> {
         element.nativeElement.dispatchEvent(new Event('input'));
     }
 
+    public async selectChildElementOfDropDown(dropDownName: string, childName: string): Promise<void> {
+        const selectedDropDOwn: HTMLSelectElement = this.findElement(dropDownName).nativeElement;
+        // eslint-disable-next-line guard-for-in
+        for (const o in selectedDropDOwn.options) {
+            console.log(dropDownName, 'has', o);
+        }
+        selectedDropDOwn.value = selectedDropDOwn.options[childName].value;
+        selectedDropDOwn.dispatchEvent(new Event('change'));
+        this.detectChanges();
+        tick();
+    }
+
 }
 
-export class ComponentTestUtils<T extends AbstractGameComponent, P extends Comparable = string>
+export class ComponentTestUtils<C extends AbstractGameComponent, P extends Comparable = string>
     extends SimpleComponentTestUtils<GameWrapper<P>>
 {
 
@@ -290,11 +302,11 @@ export class ComponentTestUtils<T extends AbstractGameComponent, P extends Compa
     private chooseMoveSpy: jasmine.Spy;
     private onLegalUserMoveSpy: jasmine.Spy;
 
-    public static async forGame<U extends AbstractGameComponent>(
+    public static async forGame<Component extends AbstractGameComponent>(
         game: string,
         configureTestingModule: boolean = true,
         chooseDefaultConfig: boolean = true)
-    : Promise<ComponentTestUtils<U>>
+    : Promise<ComponentTestUtils<Component>>
     {
         const optionalGameInfo: MGPOptional<GameInfo> =
             MGPOptional.ofNullable(GameInfo.ALL_GAMES().find((gameInfo: GameInfo) => gameInfo.urlName === game));
@@ -308,15 +320,16 @@ export class ComponentTestUtils<T extends AbstractGameComponent, P extends Compa
                                                      chooseDefaultConfig);
     }
 
-    public static async forGameWithWrapper<U extends AbstractGameComponent, V extends Comparable>(
+    public static async forGameWithWrapper<Component extends AbstractGameComponent, Actor extends Comparable>(
         game: string,
-        wrapperKind: Type<GameWrapper<V>>,
+        wrapperKind: Type<GameWrapper<Actor>>,
         user: AuthUser = AuthUser.NOT_CONNECTED,
         configureTestingModule: boolean = true,
         chooseDefaultConfig: boolean = true)
-    : Promise<ComponentTestUtils<U, V>>
+    : Promise<ComponentTestUtils<Component, Actor>>
     {
-        const testUtils: ComponentTestUtils<U, V> = await ComponentTestUtils.basic(game, configureTestingModule);
+        const testUtils: ComponentTestUtils<Component, Actor> =
+            await ComponentTestUtils.basic(game, configureTestingModule);
         ConnectedUserServiceMock.setUser(user);
         testUtils.prepareFixture(wrapperKind);
         testUtils.detectChanges();
@@ -337,16 +350,16 @@ export class ComponentTestUtils<T extends AbstractGameComponent, P extends Compa
         return testUtils;
     }
 
-    public static async basic<U extends AbstractGameComponent, V extends Comparable>(
+    public static async basic<Component extends AbstractGameComponent, Actor extends Comparable>(
         game: string,
         configureTestingModule: boolean = true)
-    : Promise<ComponentTestUtils<U, V>>
+    : Promise<ComponentTestUtils<Component, Actor>>
     {
         const activatedRouteStub: ActivatedRouteStub = new ActivatedRouteStub(game, 'configRoomId');
         if (configureTestingModule) {
             await TestUtils.configureTestingModuleForGame(activatedRouteStub);
         }
-        const testUtils: ComponentTestUtils<U, V> = new ComponentTestUtils<U, V>();
+        const testUtils: ComponentTestUtils<Component, Actor> = new ComponentTestUtils<Component, Actor>();
         testUtils.prepareMessageDisplayerSpies();
         return testUtils;
     }
@@ -429,8 +442,8 @@ export class ComponentTestUtils<T extends AbstractGameComponent, P extends Compa
         return this.component;
     }
 
-    public getGameComponent(): T {
-        return (this.gameComponent as unknown) as T;
+    public getGameComponent(): C {
+        return (this.gameComponent as unknown) as C;
     }
 
     /**
@@ -565,8 +578,8 @@ export class ComponentTestUtils<T extends AbstractGameComponent, P extends Compa
         await this.whenStable();
     }
 
-    public async choosingAILevel(player: Player): Promise<void> {
-        const aiDepthSelect: string = player === Player.ZERO ? '#aiZeroLevelSelect' : '#aiOneLevelSelect';
+    public async choosingAILevel(player: Player): Promise<void> { // TODO REFUSE THE NEW ONE THERE LO
+        const aiDepthSelect: string = player === Player.ZERO ? '#aiZeroOptionSelect' : '#aiOneOptionSelect';
         const selectDepth: HTMLSelectElement = this.findElement(aiDepthSelect).nativeElement;
         selectDepth.value = selectDepth.options[1].value;
         selectDepth.dispatchEvent(new Event('change'));

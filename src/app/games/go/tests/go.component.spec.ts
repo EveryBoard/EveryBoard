@@ -60,7 +60,7 @@ describe('GoComponent', () => {
 
     describe('hoshi', () => {
 
-        it('should be in (3, 3) and other centraly symmetrical coords fo 19x19 board', fakeAsync(async() => {
+        it('should be in (3, 3) and other centraly symmetrical coords for 19x19 board', fakeAsync(async() => {
             // Given a 19x19 board
             const board: Table<GoPiece> = TableUtils.create(19, 19, GoPiece.EMPTY);
             const state: GoState = new GoState(board, PlayerNumberMap.of(0, 0), 0, MGPOptional.empty(), Phase.PLAYING);

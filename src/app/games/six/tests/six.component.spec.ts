@@ -209,7 +209,7 @@ describe('SixComponent', () => {
             await testUtils.expectClickSuccess('#piece_0_2');
             await testUtils.expectClickSuccess('#neighbor_0_-1');
             // When the user clicks on an empty space instead of selecting a group
-            // Then the move should be canceled and the board is back to its initial state
+            // Then it should fail
             await testUtils.expectClickFailure('#neighbor_1_-1', SixFailure.MUST_CUT());
             testUtils.expectElementToExist('#piece_0_2');
         }));

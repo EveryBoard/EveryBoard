@@ -30,13 +30,15 @@ describe('SaharaComponent', () => {
 
         it('should not allow to click on empty space when no pyramid selected', fakeAsync(async() => {
             // Given the initial board
-            // When clicking on empty space, expect move to be refused
+            // When clicking on empty space
+            // Then it should fail
             await testUtils.expectClickFailure('#click_2_2', SaharaFailure.MUST_CHOOSE_PYRAMID_FIRST());
         }));
 
         it('should not allow to select opponent pyramid', fakeAsync(async() => {
             // Given the initial board
-            // When clicking on opponent's pyramid, expect move to be refused
+            // When clicking on opponent's pyramid
+            // Then it should fail
             await testUtils.expectClickFailure('#click_0_4', SaharaFailure.MUST_CHOOSE_OWN_PYRAMID());
         }));
 

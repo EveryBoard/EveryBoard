@@ -176,15 +176,14 @@ export class MancalaComponentTestUtils<C extends MancalaComponent<R>,
 
     public expectHouseToContain(coord: Coord, value: string, secondaryMessage?: string): void {
         const suffix: string = '_' + coord.x + '_' + coord.y;
-        let content: DebugElement = this.testUtils.findElement('#number' + suffix);
-        expect(content.nativeElement.innerHTML).withContext('For ' + coord.toString()).toBe(value);
+        const numberContent: DebugElement = this.testUtils.findElement('#number' + suffix);
+        const secondaryContent: DebugElement = this.testUtils.findElement('#secondary_message' + suffix);
+        expect(numberContent.nativeElement.innerHTML).withContext('For ' + coord.toString()).toBe(value);
         if (secondaryMessage === undefined) {
-            content = this.testUtils.findElement('#secondary_message' + suffix);
-            expect(content).withContext('For ' + coord.toString()).toBeNull();
+            expect(secondaryContent).withContext('For ' + coord.toString()).toBeNull();
         } else {
-            content = this.testUtils.findElement('#secondary_message' + suffix);
-            expect(content).withContext('For ' + coord.toString()).not.toBeNull();
-            expect(content.nativeElement.innerHTML).withContext('For ' + coord.toString()).toBe(secondaryMessage);
+            expect(secondaryContent).withContext('For ' + coord.toString()).not.toBeNull();
+            expect(secondaryContent.nativeElement.innerHTML).withContext('For ' + coord.toString()).toBe(secondaryMessage);
         }
     }
 
@@ -413,7 +412,7 @@ export function doMancalaComponentTests<C extends MancalaComponent<R>,
         it('should explain why clicking on store is stupid', fakeAsync(async() => {
             // Given any board
             // When clicking on any store
-            // THen it should fail cause it's dumb
+            // Then it should fail cause it's dumb
             const reason: string = MancalaFailure.MUST_DISTRIBUTE_YOUR_OWN_HOUSES();
             await mancalaTestUtils.testUtils.expectClickFailure('#store_player_0', reason);
         }));

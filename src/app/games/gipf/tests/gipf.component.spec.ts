@@ -54,7 +54,7 @@ describe('GipfComponent', () => {
         it('should not accept selecting a non-border coord for placement', fakeAsync(async() => {
             // Given any board with empty space
             // When clicking on those spaces as first click
-            // Then it should be a failure
+            // Then it should fail
             await testUtils.expectClickFailure('#click_3_3', GipfFailure.PLACEMENT_NOT_ON_BORDER());
         }));
 
@@ -86,7 +86,7 @@ describe('GipfComponent', () => {
             await testUtils.setupState(state);
 
             // When clicking on a space/piece not part of a capture
-            // Then it should be a failure
+            // Then it should fail
             await testUtils.expectClickFailure('#click_6_3', GipfFailure.MISSING_CAPTURES());
         }));
 
@@ -172,7 +172,7 @@ describe('GipfComponent', () => {
             await testUtils.setupState(state);
 
             // When clicking on that space
-            // Then it should be a failure
+            // Then it should fail
             await testUtils.expectClickFailure('#click_0_6', GipfFailure.NO_DIRECTIONS_AVAILABLE());
         }));
 

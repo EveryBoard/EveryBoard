@@ -20,7 +20,7 @@ describe('ApagosComponent', () => {
     describe('first click', () => {
 
         it('should cancel move when starting move attempt by clicking a square without pieces of player', fakeAsync(async() => {
-            // Given a board with a square with piece of your opponent
+            // Given a board with a square containing a piece of the opponent
             const state: ApagosState = ApagosState.fromRepresentation(1, [
                 [0, 0, 1, 0],
                 [0, 0, 0, 0],
@@ -29,7 +29,7 @@ describe('ApagosComponent', () => {
             await testUtils.setupState(state);
 
             // When clicking on that square
-            // Then click should fail
+            // Then it should fail
             const reason: string = ApagosFailure.NO_PIECE_OF_YOU_IN_CHOSEN_SQUARE();
             await testUtils.expectClickFailure('#square_2', reason);
         }));
@@ -44,7 +44,7 @@ describe('ApagosComponent', () => {
         }));
 
         it('should select piece when clicking on square and show only legal following slide', fakeAsync(async() => {
-            // Given a board, turn for Player.ZERO, with one of his piece in square 2, and square 0 full
+            // Given a board, at the turn of Player.ZERO, with one of their piece in square 2, and with square 0 full
             const state: ApagosState = ApagosState.fromRepresentation(2, [
                 [2, 0, 2, 0],
                 [5, 0, 0, 0],
@@ -70,7 +70,7 @@ describe('ApagosComponent', () => {
         }));
 
         it('should not allow to select leftmost space for transfer', fakeAsync(async() => {
-            // Given a board with leftmost space not empty
+            // Given a board with leftmost space full
             const state: ApagosState = ApagosState.fromRepresentation(2, [
                 [2, 2, 2, 1],
                 [5, 3, 0, 0],
@@ -78,8 +78,8 @@ describe('ApagosComponent', () => {
             ], 5, 5);
             await testUtils.setupState(state);
 
-            // When clicking on leftmost space
-            // Then click should fail
+            // When clicking on leftmost space to attempt a transfert
+            // Then it should fail
             const reason: string = ApagosFailure.NO_POSSIBLE_TRANSFER_REMAINS();
             await testUtils.expectClickFailure('#square_1', reason);
         }));
@@ -116,7 +116,7 @@ describe('ApagosComponent', () => {
             await testUtils.setupState(state);
             await testUtils.expectClickSuccess('#square_2');
 
-            // When clicking on a drop arrow (#dropArrow_zero_1)
+            // When clicking on drop arrow #dropArrow_zero_1
             // Then the move should have been done
             const move: ApagosMove = ApagosMove.transfer(ApagosCoord.TWO, ApagosCoord.ONE).get();
             await testUtils.expectMoveSuccess('#dropArrow_zero_1', move);
@@ -150,7 +150,7 @@ describe('ApagosComponent', () => {
             await testUtils.setupState(state);
             await testUtils.expectClickSuccess('#square_2');
 
-            // When clicking another VALID square
+            // When clicking another valid square
             // Then the move should not have been canceled
             await testUtils.expectClickSuccess('#square_1');
         }));
@@ -313,7 +313,7 @@ describe('ApagosComponent', () => {
     describe('visuals', () => {
 
         it('should not show arrow when player has no longer pieces', fakeAsync(async() => {
-            // Given a board where all piece could receive a drop but no piece are remaining
+            // Given a board where all pieces could receive a drop but no piece are remaining
             const state: ApagosState = ApagosState.fromRepresentation(2, [
                 [3, 2, 1, 1],
                 [3, 2, 1, 0],

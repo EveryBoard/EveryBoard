@@ -175,7 +175,7 @@ describe('DiamComponent', () => {
             ], 4);
             await testUtils.setupState(state);
             // When clicking on A2 and then somewhere else than the first line
-            // Then the move should be not legal
+            // Then it should fail
             await testUtils.expectClickSuccess('#click_7_0');
             await testUtils.expectClickFailure('#click_2', DiamFailure.MUST_SHIFT_TO_NEIGHBOR());
         }));

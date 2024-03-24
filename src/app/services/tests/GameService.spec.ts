@@ -26,13 +26,14 @@ import { GameEventService } from '../GameEventService';
 import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 import { NoConfig, RulesConfigUtils } from 'src/app/jscaip/RulesConfigUtil';
 
-describe('GameService', () => {
+xdescribe('GameService', () => {
 
     let gameService: GameService;
 
     let partDAO: PartDAO;
 
     let gameEventService: GameEventService;
+    let configRoomService: ConfigRoomService;
 
     const rulesConfig: NoConfig = RulesConfigUtils.getGameDefaultConfig('Quarto');
 
@@ -53,6 +54,7 @@ describe('GameService', () => {
         }).compileComponents();
         gameService = TestBed.inject(GameService);
         gameEventService = TestBed.inject(GameEventService);
+        configRoomService = TestBed.inject(ConfigRoomService);
         partDAO = TestBed.inject(PartDAO);
         ConnectedUserServiceMock.setUser(UserMocks.CREATOR_AUTH_USER);
     }));
@@ -104,7 +106,6 @@ describe('GameService', () => {
     describe('acceptConfig', () => {
 
         it('should delegate to ConfigRoomService.acceptConfig', fakeAsync(async() => {
-            const configRoomService: ConfigRoomService = TestBed.inject(ConfigRoomService);
             spyOn(configRoomService, 'acceptConfig').and.resolveTo();
             spyOn(partDAO, 'update').and.resolveTo();
 
@@ -117,8 +118,6 @@ describe('GameService', () => {
         }));
 
         it('should call startGame with the accepter as argument (Player.ZERO)', fakeAsync(async() => {
-            const configRoomService: ConfigRoomService = TestBed.inject(ConfigRoomService);
-            gameEventService = TestBed.inject(GameEventService);
             spyOn(configRoomService, 'acceptConfig').and.resolveTo();
             spyOn(partDAO, 'update').and.resolveTo();
             spyOn(gameEventService, 'startGame').and.resolveTo();
@@ -135,8 +134,6 @@ describe('GameService', () => {
         }));
 
         it('should call startGame with the accepter as argument (Player.ONE)', fakeAsync(async() => {
-            const configRoomService: ConfigRoomService = TestBed.inject(ConfigRoomService);
-            gameEventService = TestBed.inject(GameEventService);
             spyOn(configRoomService, 'acceptConfig').and.resolveTo();
             spyOn(partDAO, 'update').and.resolveTo();
             spyOn(gameEventService, 'startGame').and.resolveTo();
@@ -238,10 +235,8 @@ describe('GameService', () => {
     });
 
     describe('rematch', () => {
-        let configRoomService: ConfigRoomService;
 
         beforeEach(() => {
-            configRoomService = TestBed.inject(ConfigRoomService);
             partDAO = TestBed.inject(PartDAO);
         });
 

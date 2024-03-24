@@ -227,7 +227,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         // In practice, we should receive this from the other player.
         await gameEventService.addReply('configRoomId', userFromPlayer(player), reply, request, data);
         testUtils.detectChanges();
-        await testUtils.whenStable(); // TODO FOR REVIEW: on préfère ça ou tick() ?
+        tick();
     }
 
     async function receiveAction(player: Player, action: Action): Promise<void> {
@@ -482,7 +482,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             // When receiving several pairs of moves
             tick(2);
 
-            // Finish the part (the real Then is in the callback fo onReceivedMove)
+            // Finish the part (the real Then is in the callback of onReceivedMove)
             tick(wrapper.configRoom.maximalMoveDuration * 1000);
         }));
     });
@@ -1556,7 +1556,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             tick(0);
 
             // When attempting a move
-            // Then it should be refused
+            // Then it should fail
             spyOn(partDAO, 'update').and.callThrough();
             await testUtils.expectClickFailure('#choosePiece_1', GameWrapperMessages.GAME_HAS_ENDED());
 

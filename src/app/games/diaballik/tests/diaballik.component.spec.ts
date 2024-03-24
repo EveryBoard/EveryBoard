@@ -188,10 +188,10 @@ describe('DiaballikComponent', () => {
         await testUtils.expectClickSuccess('#click_4_5');
         await testUtils.expectClickSuccess('#click_4_5');
         await testUtils.expectClickSuccess('#click_4_4');
+        await testUtils.expectClickSuccess('#click_3_6');
 
         // When trying to pass along a non-straight line
         // Then it should fail
-        await testUtils.expectClickSuccess('#click_3_6');
         await testUtils.expectClickFailure('#click_4_4', DiaballikFailure.PASS_MUST_BE_IN_STRAIGHT_LINE());
     }));
 

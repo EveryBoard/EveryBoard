@@ -79,15 +79,10 @@ export class TestingHexagonalState extends HexagonalGameState<number> {
 
 describe('HexagonalGameState', () => {
 
-    let state: TestingHexagonalState;
-
-    beforeEach(() => {
-        state = TestingHexagonalState.empty(7, 7, [3, 2, 1], 0);
-    });
-
     describe('equals', () => {
 
         it('should consider a board equal to itself', () => {
+            const state: TestingHexagonalState = TestingHexagonalState.empty(7, 7, [3, 2, 1], 0);
             expect(state.equals(state)).toBeTrue();
         });
 
@@ -98,6 +93,7 @@ describe('HexagonalGameState', () => {
         });
 
         it('should distinguish different boards due to different contents', () => {
+            const state: TestingHexagonalState = TestingHexagonalState.empty(7, 7, [3, 2, 1], 0);
             const otherState: TestingHexagonalState = state.setAt(new Coord(4, 4), 73);
             expect(state.equals(otherState)).toBeFalse();
         });
@@ -133,12 +129,13 @@ describe('HexagonalGameState', () => {
     describe('getPieceAt', () => {
 
         it('should fail when accessing coords not on board', () => {
+            const state: TestingHexagonalState = TestingHexagonalState.empty(7, 7, [3, 2, 1], 0);
             spyOn(state, 'isOnBoard').and.returnValue(false);
             expect(() => state.getPieceAtXY(0, 0)).toThrow();
         });
 
         it('should return the right content', () => {
-            state = TestingHexagonalState.fromTable(1, [[0, 1, 0]], [], 0);
+            const state: TestingHexagonalState = TestingHexagonalState.fromTable(1, [[0, 1, 0]], [], 0);
             expect(state.getPieceAtXY(1, 0)).toBe(1);
         });
 
@@ -147,10 +144,12 @@ describe('HexagonalGameState', () => {
     describe('setAt', () => {
 
         it('should fail when setting a coord not on board', () => {
+            const state: TestingHexagonalState = TestingHexagonalState.empty(7, 7, [3, 2, 1], 0);
             expect(() => state.setAt(new Coord(10, 5), 5)).toThrow();
         });
 
         it('should return updated board upon update', () => {
+            const state: TestingHexagonalState = TestingHexagonalState.empty(7, 7, [3, 2, 1], 0);
             const coord: Coord = new Coord(4, 3);
             const updatedState: TestingHexagonalState = state.setAt(coord, 42);
             expect(updatedState.getPieceAt(coord)).toEqual(42);
@@ -161,6 +160,7 @@ describe('HexagonalGameState', () => {
     describe('forEachCoord', () => {
 
         it('should iterate over coords with forEachCoord', () => {
+            const state: TestingHexagonalState = TestingHexagonalState.empty(7, 7, [3, 2, 1], 0);
             let count: number = 0;
             state.forEachCoord((_coord: Coord, _content: number) => {
                 count += 1;
@@ -173,6 +173,7 @@ describe('HexagonalGameState', () => {
     describe('allLines', () => {
 
         it('should contain 21 different lines', () => {
+            const state: TestingHexagonalState = TestingHexagonalState.empty(7, 7, [3, 2, 1], 0);
             const lines: ReadonlyArray<HexaLine> = state.allLines();
             expect(lines.length).toEqual(21);
             for (const line1 of lines) {
@@ -191,9 +192,8 @@ describe('HexagonalGameState', () => {
 
     describe('getEntrance', () => {
 
-        state = TestingHexagonalState.empty(7, 7, [3, 2, 1], 0);
-
         it('should return the correct entrance for lines with a constant q', () => {
+            const state: TestingHexagonalState = TestingHexagonalState.empty(7, 7, [3, 2, 1], 0);
             const line: HexaLine = HexaLine.constantQ(0);
             expect(state.getEntranceOnLine(line).equals(new Coord(0, 3))).toBeTrue();
 
@@ -202,6 +202,7 @@ describe('HexagonalGameState', () => {
         });
 
         it('should return the correct entrance for lines with a constant r', () => {
+            const state: TestingHexagonalState = TestingHexagonalState.empty(7, 7, [3, 2, 1], 0);
             const line: HexaLine = HexaLine.constantR(2);
             expect(state.getEntranceOnLine(line).equals(new Coord(1, 2))).toBeTrue();
 
@@ -210,6 +211,7 @@ describe('HexagonalGameState', () => {
         });
 
         it('should return the correct entrance for lines with a constant s', () => {
+            const state: TestingHexagonalState = TestingHexagonalState.empty(7, 7, [3, 2, 1], 0);
             // Given a line
             const line: HexaLine = HexaLine.constantS(4);
             // When computing the entrance

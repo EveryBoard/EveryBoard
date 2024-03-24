@@ -6,11 +6,11 @@ import { Utils } from './utils';
 
 export class MGPMap<K extends NonNullable<Comparable>, V extends NonNullable<unknown>> {
 
-    public static from<L extends string | number, W extends NonNullable<unknown>>(record: Record<L, W>)
-    : MGPMap<L, W>
+    public static from<Key extends string | number, Value extends NonNullable<unknown>>(record: Record<Key, Value>)
+    : MGPMap<Key, Value>
     {
-        const keys: L[] = Object.keys(record) as L[];
-        const map: MGPMap<L, W> = new MGPMap();
+        const keys: Key[] = Object.keys(record) as Key[];
+        const map: MGPMap<Key, Value> = new MGPMap();
         for (const key of keys) {
             map.set(key, record[key]);
         }

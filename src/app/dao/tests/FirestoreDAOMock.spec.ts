@@ -113,7 +113,7 @@ export abstract class FirestoreDAOMock<T extends FirestoreJSONObject> implements
             const subject: BehaviorSubject<MGPOptional<FirestoreDocument<T>>> =
                 new BehaviorSubject(MGPOptional.of(tid));
             const observable: Observable<MGPOptional<FirestoreDocument<T>>> = subject.asObservable();
-            this.getStaticDB().set(id, new ObservableSubject(subject, observable));
+            this.getStaticDB().put(id, new ObservableSubject(subject, observable));
             for (const callback of this.callbacks) {
                 if (this.conditionsHold(callback[0], subject.value.get().data)) {
                     callback[1].onDocumentCreated([subject.value.get()]);

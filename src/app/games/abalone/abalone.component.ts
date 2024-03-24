@@ -153,10 +153,10 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneRules,
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }
-        return this._onPieceClick(x, y);
+        return this.onLegalPieceClick(x, y);
     }
 
-    private _onPieceClick(x: number, y: number): MGPValidation | PromiseLike<MGPValidation> {
+    private onLegalPieceClick(x: number, y: number): MGPValidation | PromiseLike<MGPValidation> {
         const opponent: Player = this.getState().getCurrentOpponent();
         if (this.hexaBoard[y][x].is(opponent)) {
             return this.opponentClick(x, y);
@@ -357,7 +357,7 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneRules,
             return this.cancelMove(clickValidity.getReason());
         }
         if (this.getState().getPieceAtXY(x, y).isPlayer()) {
-            return this._onPieceClick(x, y);
+            return this.onLegalPieceClick(x, y);
         }
         if (this.selecteds.length === 0) {
             return this.cancelMove(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY());

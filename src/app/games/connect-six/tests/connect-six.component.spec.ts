@@ -59,7 +59,7 @@ describe('ConnectSixComponent', () => {
             ], 1);
             await testUtils.setupState(state);
             // When clicking on them
-            // Then the move should be canceled
+            // Then it should fail
             await testUtils.expectClickFailure('#click_9_9', RulesFailure.MUST_CLICK_ON_EMPTY_SQUARE());
         }));
 

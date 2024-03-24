@@ -84,7 +84,7 @@ describe('MartianChessComponent', () => {
     it('should not select empty space', fakeAsync(async() => {
         // Given the initial board
         // When clicking an empty space immediately
-        // Then it should not toast
+        // Then it should fail without toast
         await testUtils.expectClickFailure('#click_3_4');
     }));
 
@@ -104,7 +104,7 @@ describe('MartianChessComponent', () => {
         await testUtils.expectClickSuccess('#click_1_5');
 
         // When cliking on an invalid second coord
-        // Then the move should have been illegal
+        // Then it should fail
         const reason: string = DirectionFailure.DIRECTION_MUST_BE_LINEAR();
         await testUtils.expectClickFailure('#click_0_3', reason);
     }));

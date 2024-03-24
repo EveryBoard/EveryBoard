@@ -51,10 +51,10 @@ export class MancalaMoveGenerator extends MoveGenerator<MancalaMove, MancalaStat
                                     stateAfterDistribution.board);
         const playerHasPieces: boolean = isStarving === false;
         if (distributionResult.endsUpInStore && playerHasPieces) {
-            for (let ix: number = 0; ix < stateAfterDistribution.getWidth(); ix++) {
-                if (stateAfterDistribution.getPieceAtXY(ix, y) > 0) {
-                    const move: MancalaMove = currentMove.add(MancalaDistribution.of(ix));
-                    moves.push(...this.getPossibleMoveContinuations(stateAfterDistribution, ix, y, move, config));
+            for (let i: number = 0; i < stateAfterDistribution.getWidth(); i++) {
+                if (stateAfterDistribution.getPieceAtXY(i, y) > 0) {
+                    const move: MancalaMove = currentMove.add(MancalaDistribution.of(i));
+                    moves.push(...this.getPossibleMoveContinuations(stateAfterDistribution, i, y, move, config));
                 }
             }
             return moves;

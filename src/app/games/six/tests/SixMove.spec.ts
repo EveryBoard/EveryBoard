@@ -38,19 +38,12 @@ describe('SixMove', () => {
 
     describe('Overrides', () => {
 
-        let drop: SixMove;
-        let movement: SixMove;
         const cut: SixMove = SixMove.ofCut(new Coord(5, 5), new Coord(7, 5), new Coord(9, 9));
 
-        beforeEach(() => {
-            drop = SixMove.ofDrop(new Coord(5, 5));
-            movement = SixMove.ofMovement(new Coord(5, 5), new Coord(7, 5));
-        });
-
         it('should have functionnal equals', () => {
-            drop = SixMove.ofDrop(new Coord(0, 0));
+            const drop: SixMove = SixMove.ofDrop(new Coord(0, 0));
             const otherDrop: SixMove = SixMove.ofDrop(new Coord(1, 1));
-            movement = SixMove.ofMovement(new Coord(1, 1), new Coord(0, 0));
+            const movement: SixMove = SixMove.ofMovement(new Coord(1, 1), new Coord(0, 0));
             const cuttingDeplacement: SixMove =
                 SixMove.ofCut(new Coord(1, 1), new Coord(0, 0), new Coord(2, 2));
             expect(drop.equals(otherDrop)).toBeFalse();
@@ -59,12 +52,18 @@ describe('SixMove', () => {
         });
 
         it('should stringify nicely', () => {
-            expect(drop.toString()).toEqual('SixMove((5, 5))');
+            const movement: SixMove = SixMove.ofMovement(new Coord(5, 5), new Coord(7, 5));
             expect(movement.toString()).toEqual('SixMove((5, 5) > (7, 5))');
+
+            const drop: SixMove = SixMove.ofDrop(new Coord(5, 5));
+            expect(drop.toString()).toEqual('SixMove((5, 5))');
             expect(cut.toString()).toEqual('SixMove((5, 5) > (7, 5), keep: (9, 9))');
         });
 
         it('should have a bijective encoder', () => {
+            const drop: SixMove = SixMove.ofDrop(new Coord(5, 5));
+            const movement: SixMove = SixMove.ofMovement(new Coord(5, 5), new Coord(7, 5));
+
             const moves: SixMove[] = [drop, movement, cut];
             for (const move of moves) {
                 EncoderTestUtils.expectToBeBijective(SixMove.encoder, move);
