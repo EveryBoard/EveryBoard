@@ -72,13 +72,14 @@ export class YinshComponent extends HexagonalGameComponent<YinshRules,
     private finalCaptures: YinshCapture[] = [];
     private currentCapture: MGPOptional<YinshCapture> = MGPOptional.empty();
     public selectedCoords: Coord[] = [];
+    public selectedRings: Coord[] = [];
     private moveStart: MGPOptional<Coord> = MGPOptional.empty();
     private moveEnd: MGPOptional<Coord> = MGPOptional.empty();
     private currentlyMoved: Coord[] = [];
 
     // Last move variables
     private lastMoved: Coord[] = [];
-    private lastCapture: MGPOptional<YinshCapture> = MGPOptional.empty();
+    private lastCaptures: YinshCapture[] = [];
 
     public viewInfo: ViewInfo = {
         targets: [],
@@ -172,24 +173,22 @@ export class YinshComponent extends HexagonalGameComponent<YinshRules,
     }
 
     private isInLastCapture(coord: Coord): boolean {
-        return this.isCapturedMarker(coord, this.lastCapture) ||
-               this.isCapturedRing(coord, this.lastCapture);
+        return this.isCapturedMarker(coord, this.lastCaptures) ||
+               this.isCapturedRing(coord, this.lastCaptures);
     }
 
-    private isCapturedRing(coord: Coord, capture: MGPOptional<YinshCapture>): boolean {
-        return capture.isPresent() &&
-               capture.get().ringTaken.equalsValue(coord);
+    private isCapturedMarker(coord: Coord, captures: YinshCapture[]): boolean {
+        return captures.some((cap: YinshCapture) => cap.capturedSpaces.some((c: Coord) => c.equals(coord)));
     }
 
-    private isCapturedMarker(coord: Coord, capture: MGPOptional<YinshCapture>): boolean {
-        return capture.isPresent() &&
-               capture.get().capturedSpaces.some((c: Coord) => c.equals(coord));
+    private isCapturedRing(coord: Coord, captures: YinshCapture[]): boolean {
+        return captures.some((c: YinshCapture) => c.ringTaken.equalsValue(coord));
     }
 
     public getPieceGroupClasses(x: number, y: number): string[] {
         const coord: Coord = new Coord(x, y);
         const classes: string[] = [];
-        if (this.selectedCoords.some((c: Coord) => c.equals(coord)) ||
+        if (this.selectedCoords.concat(this.selectedRings).some((c: Coord) => c.equals(coord)) ||
             this.isInLastCapture(coord))
         {
             return ['semi-transparent'];
@@ -202,7 +201,7 @@ export class YinshComponent extends HexagonalGameComponent<YinshRules,
         const coord: Coord = new Coord(x, y);
         return this.constructedState.getPieceAt(coord).isMarker() ||
                this.moveStart.equalsValue(coord) ||
-               this.isCapturedMarker(coord, this.lastCapture) ||
+               this.isCapturedMarker(coord, this.lastCaptures) ||
                this.selectedCoords.some((c: Coord) => c.equals(coord));
     }
 
@@ -220,7 +219,7 @@ export class YinshComponent extends HexagonalGameComponent<YinshRules,
         if (this.selectedCoords.some((c: Coord) => c.equals(coord))) {
             classes.push(currentPlayerClass);
         }
-        if (this.isCapturedMarker(coord, this.lastCapture)) {
+        if (this.isCapturedMarker(coord, this.lastCaptures)) {
             const currentOpponentClass: string = this.getPlayerClass(this.getCurrentOpponent());
             classes.push(currentOpponentClass);
         }
@@ -232,7 +231,7 @@ export class YinshComponent extends HexagonalGameComponent<YinshRules,
         return this.constructedState.getPieceAt(coord).isRing ||
                this.moveEnd.equalsValue(coord) ||
                this.isInitialCaptureRing(coord) ||
-               this.isCapturedRing(coord, this.lastCapture);
+               this.isCapturedRing(coord, this.lastCaptures);
     }
 
     private isInitialCaptureRing(coord: Coord): boolean {
@@ -244,7 +243,9 @@ export class YinshComponent extends HexagonalGameComponent<YinshRules,
         const piece: YinshPiece = this.constructedState.getPieceAt(coord);
         let owner: PlayerOrNone = piece.player;
         const classes: string[] = [];
-        if (this.isCapturedRing(coord, this.lastCapture)) {
+        if (this.isCapturedRing(coord, this.lastCaptures) ||
+            this.selectedRings.some((c: Coord) => c.equals(coord)))
+        {
             classes.push('semi-transparent');
             owner = this.getCurrentOpponent();
         }
@@ -262,6 +263,7 @@ export class YinshComponent extends HexagonalGameComponent<YinshRules,
         this.initialCaptures = [];
         this.finalCaptures = [];
         this.selectedCoords = [];
+        this.selectedRings = [];
         this.currentCapture = MGPOptional.empty();
         this.moveStart = MGPOptional.empty();
         this.moveEnd = MGPOptional.empty();
@@ -275,15 +277,15 @@ export class YinshComponent extends HexagonalGameComponent<YinshRules,
             this.lastMoved = [move.start];
         } else {
             this.lastMoved = this.coordsBetween(move.start, move.end.get());
-            this.lastCapture = MGPOptional.empty();
-            move.initialCaptures.forEach((c: YinshCapture) => this.lastCapture = MGPOptional.of(c));
-            move.finalCaptures.forEach((c: YinshCapture) => this.lastCapture = MGPOptional.of(c));
+            this.lastCaptures = [];
+            move.initialCaptures.forEach((c: YinshCapture) => this.lastCaptures.push(c));
+            move.finalCaptures.forEach((c: YinshCapture) => this.lastCaptures.push(c));
         }
     }
 
     public override hideLastMove(): void {
         this.lastMoved = [];
-        this.lastCapture = MGPOptional.empty();
+        this.lastCaptures = [];
     }
 
     private coordsBetween(start: Coord, end: Coord): Coord[] {
@@ -332,7 +334,7 @@ export class YinshComponent extends HexagonalGameComponent<YinshRules,
             }
         });
         if (captures.length > 1) {
-            this.selectedCoords.push(coord);
+            // this.selectedCoords.push(coord);
             this.moveToCaptureSelectLast(captures);
         } else if (captures.length === 0) {
             return this.cancelMove(YinshFailure.MISSING_CAPTURES());
@@ -395,7 +397,7 @@ export class YinshComponent extends HexagonalGameComponent<YinshRules,
     private markCurrentCapture(capture: YinshCapture): void {
         this.selectedCoords.push(...capture.capturedSpaces);
         if (capture.ringTaken.isPresent()) {
-            this.selectedCoords.push(capture.ringTaken.get());
+            this.selectedRings.push(capture.ringTaken.get());
         }
     }
 

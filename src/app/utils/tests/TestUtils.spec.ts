@@ -570,20 +570,19 @@ export class ComponentTestUtils<C extends AbstractGameComponent, P extends Compa
     }
 
     public async choosingAIOrHuman(player: Player, aiOrHuman: 'AI' | 'human'): Promise<void> {
-        const playerSelect: string = player === Player.ZERO ? '#playerZeroSelect' : '#playerOneSelect';
-        const selectAI: HTMLSelectElement = this.findElement(playerSelect).nativeElement;
+        const dropDownName: string = player === Player.ZERO ? '#playerZeroSelect' : '#playerOneSelect';
+        const selectAI: HTMLSelectElement = this.findElement(dropDownName).nativeElement;
         selectAI.value = aiOrHuman === 'AI' ? selectAI.options[1].value : selectAI.options[0].value;
         selectAI.dispatchEvent(new Event('change'));
         this.detectChanges();
         await this.whenStable();
     }
 
-    public async choosingAILevel(player: Player): Promise<void> { // TODO REFUSE THE NEW ONE THERE LO
-        const aiDepthSelect: string = player === Player.ZERO ? '#aiZeroOptionSelect' : '#aiOneOptionSelect';
-        const selectDepth: HTMLSelectElement = this.findElement(aiDepthSelect).nativeElement;
-        selectDepth.value = selectDepth.options[1].value;
-        selectDepth.dispatchEvent(new Event('change'));
-        this.detectChanges();
+    public async choosingAILevel(player: Player): Promise<void> {
+        const dropDownName: string = player === Player.ZERO ? '#aiZeroOptionSelect' : '#aiOneOptionSelect';
+        const childrenName: string = player === Player.ZERO ? 'playerZero_option_Level 1' : 'playerOne_option_Level 1';
+        await this.selectChildElementOfDropDown(dropDownName, childrenName);
+        const selectDepth: HTMLSelectElement = this.findElement(dropDownName).nativeElement;
         const aiDepth: string = selectDepth.options[selectDepth.selectedIndex].label;
         expect(aiDepth).toBe('Level 1');
         this.detectChanges();

@@ -127,6 +127,7 @@ describe('SixComponent', () => {
             // Then the piece should no longer be selected
             testUtils.expectElementNotToExist('#selectedPiece_0_0');
         }));
+
     });
 
     describe('Third click (cutting)', () => {
@@ -231,6 +232,7 @@ describe('SixComponent', () => {
             const move: SixMove = SixMove.ofCut(new Coord(0, 2), new Coord(0, -1), new Coord(0, 1));
             await testUtils.expectMoveSuccess('#piece_0_1', move);
         }));
+
     });
 
     describe('view', () => {
@@ -250,6 +252,7 @@ describe('SixComponent', () => {
             testUtils.expectElementToHaveClass('#victoryCoord_-1_1', 'victory-stroke');
             testUtils.expectElementToHaveClass('#victoryCoord_4_1', 'victory-stroke');
         }));
+
     });
 
 });

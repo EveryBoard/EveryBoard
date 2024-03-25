@@ -378,7 +378,6 @@ describe('LocalGameWrapperComponent (game phase)', () => {
 
             // When selecting an AI for the current player
             await testUtils.selectChildElementOfDropDown('#playerZeroSelect', 'playerZero_ai_Minimax');
-            console.clear();
             await testUtils.selectChildElementOfDropDown('#aiZeroOptionSelect', 'playerZero_option_Level 1');
 
             // Then it should not try to play

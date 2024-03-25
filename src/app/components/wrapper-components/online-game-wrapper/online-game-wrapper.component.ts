@@ -336,7 +336,6 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         }
         await this.setCurrentPlayerAccordingToCurrentTurn();
         const triggerAnimation: boolean = this.gameComponent.getTurn() === 0;
-        // TODO FOR REVIEW: when taking back like, a l'awalé, tu reveux l'animation :/ ? Je dirais non
         await this.showCurrentState(triggerAnimation);
     }
 
