@@ -15,7 +15,8 @@ let test_json_conversion (type t) (module M : JSONable with type t = t) (value :
     let pp ppf game = Fmt.pf ppf "%s" (JSON.to_string (M.to_yojson game)) in
     testable pp (=) in
   check json_eq "to JSON" json_value (M.to_yojson value);
-  check eq "from JSON" value (Result.get_ok (M.of_yojson json_value))
+  check eq "from JSON" value (Result.get_ok (M.of_yojson json_value));
+  check json_eq "through firestore" json_value (FirestoreUtils.of_firestore (FirestoreUtils.to_firestore json_value))
 
 let a_minimal_user : MinimalUser.t =
   { id = "uid"; name = "JeanJJ" }

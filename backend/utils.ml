@@ -93,9 +93,10 @@ module FirestoreUtils = struct
 
 
   let rec of_firestore (json : JSON.t) : JSON.t =
-    let extract_field ((key, value) : (string * JSON.t)) : (string * JSON.t) = (key, match value with
+    let rec extract_field ((key, value) : (string * JSON.t)) : (string * JSON.t) = (key, match value with
       | `Assoc [("mapValue", v)] -> of_firestore v
       | `Assoc [("integerValue", `String v)] -> `Int (int_of_string v)
+      | `Assoc [("arrayValue", `Assoc ["values", `List l])] -> `List (List.map (fun x -> snd (extract_field ("k", x))) l)
       | `Assoc [(_, v)] -> v (* We just rely on the real type contained, not on the type name from firestore *)
       | _-> raise (UnexpectedError ("Invalid firestore JSON: unexpected value when extracting field: " ^ (JSON.to_string value)))) in
     match json with
