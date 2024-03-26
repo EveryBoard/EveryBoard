@@ -1,7 +1,8 @@
 open Alcotest
+open TestUtils
 open Backend
 open Utils
-open TestUtils
+open FirestoreUtils
 
 module type MOCK = sig
   include FirestorePrimitives.FIRESTORE_PRIMITIVES

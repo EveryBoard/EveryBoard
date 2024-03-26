@@ -1,4 +1,5 @@
 open Utils
+open DreamUtils
 
 (** This module provides a middleware that ensures that the user making a request to the backend is authenticated. *)
 module type AUTH = sig

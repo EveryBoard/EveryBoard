@@ -3,9 +3,9 @@ open Utils
 module Player = struct
   type t = Zero | One
   let (to_yojson, of_yojson) =
-    JSON.for_enum_int [
-      Zero, 0;
-      One, 1;
+    JSON.for_enum [
+      Zero, `Int 0;
+      One, `Int 1;
     ]
 end
 
@@ -13,11 +13,11 @@ module Role = struct
   type t = Player | Observer | Creator | ChosenOpponent | Candidate
   let (to_yojson, of_yojson) =
     JSON.for_enum [
-      Player, "Player";
-      Observer, "Observer";
-      Creator, "Creator";
-      ChosenOpponent, "ChosenOpponent";
-      Candidate, "Candidate";
+      Player, `String "Player";
+      Observer, `String "Observer";
+      Creator, `String "Creator";
+      ChosenOpponent, `String "ChosenOpponent";
+      Candidate, `String "Candidate";
     ]
 end
 
@@ -57,11 +57,11 @@ module ConfigRoom = struct
     type t = Created | ConfigProposed | Started | Finished
 
     let (to_yojson, of_yojson) =
-      JSON.for_enum_int [
-        Created, 0;
-        ConfigProposed, 2;
-        Started, 3;
-        Finished, 4;
+      JSON.for_enum [
+        Created, `Int 0;
+        ConfigProposed, `Int 2;
+        Started, `Int 3;
+        Finished, `Int 4;
       ]
   end
 
@@ -70,9 +70,9 @@ module ConfigRoom = struct
 
     let (to_yojson, of_yojson) =
       JSON.for_enum [
-        Random, "RANDOM";
-        ChosenPlayer, "CHOSEN_PLAYER";
-        Creator, "CREATOR";
+        Random, `String "RANDOM";
+        ChosenPlayer, `String "CHOSEN_PLAYER";
+        Creator, `String "CREATOR";
       ]
   end
 
@@ -81,9 +81,9 @@ module ConfigRoom = struct
 
     let (to_yojson, of_yojson) =
       JSON.for_enum [
-        Standard, "STANDARD";
-        Blitz, "BLITZ";
-        Custom, "CUSTOM";
+        Standard, `String "STANDARD";
+        Blitz, `String "BLITZ";
+        Custom, `String "CUSTOM";
       ]
 
     let standard_move_duration = 2*60
@@ -181,14 +181,14 @@ module Game = struct
     type t = HardDraw | Resign | Victory | Timeout | Unachieved | AgreedDrawBy of Player.t
 
     let (to_yojson, of_yojson) =
-      JSON.for_enum_int [
-        HardDraw, 0;
-        Resign, 1;
-        Victory, 3;
-        Timeout, 4;
-        Unachieved, 5;
-        AgreedDrawBy Player.Zero, 6;
-        AgreedDrawBy Player.One, 7;
+      JSON.for_enum [
+        HardDraw, `Int 0;
+        Resign, `Int 1;
+        Victory, `Int 3;
+        Timeout, `Int 4;
+        Unachieved, `Int 5;
+        AgreedDrawBy Player.Zero, `Int 6;
+        AgreedDrawBy Player.One, `Int 7;
       ]
   end
 

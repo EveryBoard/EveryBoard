@@ -2,7 +2,7 @@ open Utils
 
 module type GOOGLE_CERTIFICATES = sig
 
-  val get : unit -> (string * X509.Certificate.t) list Lwt.t
+  val get : unit -> (string * CryptoUtils.public_key) list Lwt.t
   (** Retrieve the Google certificates. Uses cached versions if there are any *)
 
   val clear : unit -> unit
@@ -23,7 +23,7 @@ module Make (External : External.EXTERNAL) : GOOGLE_CERTIFICATES = struct
 
   (** Fetches the certificates listed at https://www.googleapis.com/robot/v1/metadata/x509/securetoken@system.gserviceaccount.com
       Returns the certificates and their expiration time (as a unix timestamp). *)
-  let get_certificates () : ((string * X509.Certificate.t) list * int) Lwt.t =
+  let get_certificates () : ((string * CryptoUtils.public_key) list * int) Lwt.t =
     let endpoint = Uri.of_string "https://www.googleapis.com/robot/v1/metadata/x509/securetoken@system.gserviceaccount.com" in
     let no_headers = Cohttp.Header.init () in
     let* (response, body_string) = External.Http.get endpoint no_headers in
@@ -34,21 +34,24 @@ module Make (External : External.EXTERNAL) : GOOGLE_CERTIFICATES = struct
       | None -> raise (UnexpectedError "No cache-control in response") in
     let certificates = match body_content with
       | `Assoc assoc when List.length assoc > 1 ->
-        List.map (fun (id, cert) -> (id, read_certificate (JSON.Util.to_string cert))) assoc
+        List.map (fun (id, cert) ->
+            (id,
+             CryptoUtils.public_key_of_certificate_string (JSON.Util.to_string cert)))
+          assoc
       | _ -> raise (UnexpectedError "No certificates returned") in
     Lwt.return (certificates, External.now () + max_age)
 
   (** This contains the certificates that will be used when verifying a token *)
-  let certificates_ref : ((string * X509.Certificate.t) list * int) ref =
+  let certificates_ref : ((string * CryptoUtils.public_key) list * int) ref =
     ref ([], 0)
 
   (** Update the certificates stored in certificates_ref *)
-  let update_certificates () : (string * X509.Certificate.t) list Lwt.t =
+  let update_certificates () : (string * CryptoUtils.public_key) list Lwt.t =
     let* (keys, expiration) = get_certificates () in
     certificates_ref := (keys, expiration);
     Lwt.return keys
 
-  let get () : (string * X509.Certificate.t) list Lwt.t =
+  let get () : (string * CryptoUtils.public_key) list Lwt.t =
     let now = External.now () in
     match !certificates_ref with
     | (_, expiration) when expiration < now ->

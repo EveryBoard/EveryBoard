@@ -1,4 +1,5 @@
 open Utils
+open FirestoreUtils
 
 (** These are the primitive operations that we need to perform on firestore.
     It is a low-level API. *)

@@ -1,4 +1,5 @@
 open Utils
+open CryptoUtils
 
 (** The token refresher manages the admin token of the backend. When a request
     need to be done to firestore, the token can be passed in the header with the
@@ -76,7 +77,7 @@ module Make (External : External.EXTERNAL) (Jwt : Jwt.JWT) : TOKEN_REFRESHER = s
 
   let header (request : Dream.request) : Cohttp.Header.t Lwt.t =
     let* token = get_token request in
-    Lwt.return (Cohttp.Header.of_list [authorization_header token])
+    Lwt.return (Cohttp.Header.of_list [DreamUtils.authorization_header token])
 
   let middleware (service_account_file : string) : Dream.middleware =
     let service_account = read_service_account_from_file service_account_file in

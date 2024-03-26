@@ -24,6 +24,9 @@ end
 
 module Jwt = Jwt.Make(ExternalTests.Mock)
 
+
+let b64_of_json (json : JSON.t) : string = Dream.to_base64url (JSON.to_string json)
+
 let jwt : Jwt.t testable =
   let pp_jwt ppf jwt = Fmt.pf ppf "%s, %s, %s"
       (JSON.to_string Jwt.(jwt.header))
@@ -32,37 +35,6 @@ let jwt : Jwt.t testable =
   in
   testable pp_jwt (=)
 
-(* Some identity token *)
-let identity_token_str = "eyJhbGciOiJSUzI1NiIsImtpZCI6IjAzMmNjMWNiMjg5ZGQ0NjI2YTQzNWQ3Mjk4OWFlNDMyMTJkZWZlNzgiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL3NlY3VyZXRva2VuLmdvb2dsZS5jb20vZXZlcnlib2FyZC10ZXN0IiwiYXVkIjoiZXZlcnlib2FyZC10ZXN0IiwiYXV0aF90aW1lIjoxNjc3OTM2MTQ5LCJ1c2VyX2lkIjoid0VDY3VNUFZRSE85VlNzN2JnT0w1ckx4bVBEMiIsInN1YiI6IndFQ2N1TVBWUUhPOVZTczdiZ09MNXJMeG1QRDIiLCJpYXQiOjE3MDI5NTI0MDEsImV4cCI6MTcwMjk1NjAwMSwiZW1haWwiOiJhYmNAZGVmLmNvbSIsImVtYWlsX3ZlcmlmaWVkIjpmYWxzZSwiZmlyZWJhc2UiOnsiaWRlbnRpdGllcyI6eyJlbWFpbCI6WyJhYmNAZGVmLmNvbSJdfSwic2lnbl9pbl9wcm92aWRlciI6InBhc3N3b3JkIn19.w356bi9Dwx9gGqORRfOwKSPLhq21XyiE7V1pmqnNxpUsQJeKRlHz9vi8QeJDwFT1dTkt79pVRacqd2w4G52tjNv7Khf6aRx6arbBtWfqLBNzbzD-US2iQFkPnXy_EkJma-YGTGbUSly6Ry9vd0axiUAvUkJ_DD1Ig1ySeYLMzeVkf501MZHshn7FO4Gx27DeLEQOLebNR9wJW4YnFN1lzyD4FM8KMpkgrpe7QQdoKNtG01aG96musc0YW0LofXN8_oQILg2Ocpnm9GLtSoUy7XNSqmQzgjiDvCR9xrPKMoPHmLcWZdrsTwTzLda9q4g0-RFGzA1yV1JMKzfY9qoRgQ"
-let identity_token = Jwt.{
-    header = `Assoc [
-        "alg", `String "RS256";
-        "kid", `String "032cc1cb289dd4626a435d72989ae43212defe78";
-        "typ", `String "JWT";
-      ];
-    payload = `Assoc [
-      "iss", `String "https://securetoken.google.com/everyboard-test";
-      "aud", `String "everyboard-test";
-      "auth_time", `Int 1677936149;
-      "user_id", `String "wECcuMPVQHO9VSs7bgOL5rLxmPD2";
-      "sub", `String "wECcuMPVQHO9VSs7bgOL5rLxmPD2";
-      "iat", `Int 1702952401;
-      "exp", `Int 1702956001;
-      "email", `String "abc@def.com";
-      "email_verified", `Bool false;
-      "firebase", `Assoc [
-        "identities", `Assoc [
-          "email", `List [`String "abc@def.com"]
-        ];
-        "sign_in_provider", `String "password";
-      ];
-    ];
-    signature = Option.get (Dream.from_base64url "w356bi9Dwx9gGqORRfOwKSPLhq21XyiE7V1pmqnNxpUsQJeKRlHz9vi8QeJDwFT1dTkt79pVRacqd2w4G52tjNv7Khf6aRx6arbBtWfqLBNzbzD-US2iQFkPnXy_EkJma-YGTGbUSly6Ry9vd0axiUAvUkJ_DD1Ig1ySeYLMzeVkf501MZHshn7FO4Gx27DeLEQOLebNR9wJW4YnFN1lzyD4FM8KMpkgrpe7QQdoKNtG01aG96musc0YW0LofXN8_oQILg2Ocpnm9GLtSoUy7XNSqmQzgjiDvCR9xrPKMoPHmLcWZdrsTwTzLda9q4g0-RFGzA1yV1JMKzfY9qoRgQ");
-  }
-(* The certificates that can be used to check the signature of the identity token *)
-let cert_id = "032cc1cb289dd4626a435d72989ae43212defe78"
-let cert_pem = "-----BEGIN CERTIFICATE-----\nMIIDHTCCAgWgAwIBAgIJAInoyDZA9itYMA0GCSqGSIb3DQEBBQUAMDExLzAtBgNV\nBAMMJnNlY3VyZXRva2VuLnN5c3RlbS5nc2VydmljZWFjY291bnQuY29tMB4XDTIz\nMTIxNjA3MzIwNFoXDTI0MDEwMTE5NDcwNFowMTEvMC0GA1UEAwwmc2VjdXJldG9r\nZW4uc3lzdGVtLmdzZXJ2aWNlYWNjb3VudC5jb20wggEiMA0GCSqGSIb3DQEBAQUA\nA4IBDwAwggEKAoIBAQDSXU+Cs60axpdXWc1He+K2ZN1ZMGFwae+gQejx0K6Vj1BW\nG/ZWXa7zwBHvkPjAfSUL7KWxbkTPWjMplUYKJwiQc8kXQffIBnp499m4EAuaq42k\nuLlxgDjgSRYIwNLTBsM3X97/ymcqfRNqQnKUAgsSSzmfYUqyNgbSQY7GrfdR9RSE\nNT2igff6613sn6lSiokZ/9mNxd3A4Gtf6J3inG8jNI4yTO4hdtqWoZ0AZt9E3cN3\n8KN7UWXkfWiuaKEfdpew3YsU9H31GO3EvWwpvonQBZOWik/ZhwkDRXjBnTLXel9+\nanpzZK1iWCRU2/BvdypDCgtTFDZYZGimEYeijnLNAgMBAAGjODA2MAwGA1UdEwEB\n/wQCMAAwDgYDVR0PAQH/BAQDAgeAMBYGA1UdJQEB/wQMMAoGCCsGAQUFBwMCMA0G\nCSqGSIb3DQEBBQUAA4IBAQCC86r0A58kd2zxsX5hbMONr1//eIbNTKppxQ9a5cyx\nXaddCiN/pu+RitXRjEdka24zskMXChjOa2eVDL+C4pGSp5q43v6W0qCjJZHFr/+K\nNGk6zvKrpLBVKspyzxu1g/A1GjI2XLt6Frbvt3MsQtvh4Ih6DSVEJG/8pRNa9UJs\nZ/MaSdwYC1xe1v1WlfwE7nJSWBV6xX/nGAE3Zg6sROmTLKKIsz99Uvi1A71CWyup\nLOf+P0R5q1k5jMPmVCx2Usd+V6esVWCudgRltgc7EsxwHkWQzt+vYIMOpZHcbedu\nwjwrEjOFdlk36dRwI8HWNecz4x2cn9bfr8ixAvzu6/ek\n-----END CERTIFICATE-----\n"
-let cert = read_certificate cert_pem
 
 (* Some private key used to sign tokens (not used anywhere in production) *)
 let private_key_str = "-----BEGIN PRIVATE KEY-----
@@ -94,33 +66,83 @@ h9IaRp8KW+Z7gik0lu4UDkoeMc9HLdkG60LY5mMLSe64cObbZ8q1xwTidsY0Fw6+
 a720UxBIZrGsdffHKHoyceuO
 -----END PRIVATE KEY-----"
 
-(* Some signed token *)
-let signed_token = Jwt.{
-    header = `Assoc [
-        "alg", `String "RS256";
-        "typ", `String "JWT";
-      ];
-    payload = `Assoc [
-      "iss", `String "foo@bar.com";
-      "scope", `String "scope1 scope2";
-      "aud", `String "audience";
-      "exp", `Int 1702956001;
-      "iat", `Int 1702952401;
-    ];
-    (* signature produced by signing base64(header).base64(payload) (without padding)
-       echo -ne '{"alg":"RS256","typ":"JWT"}' | basenc -w0 --base64 > headerandpayload.txt
-       echo -ne '.' >> headerandpayload.txt
-       echo -ne '{"iss":"foo@bar.com","scope":"scope1 scope2","aud":"audience","exp":1702956001,"iat":1702952401}' | basenc -w0 --base64
-       and gets signed e.g. with openssl dgst -sha256 -sign priv.pem -out out.sign headerandpayload.txt
-       and then transformed to base64url with basenc -w0 --base64url out.sign *)
-    signature = Option.get (Dream.from_base64url "eD9JfdUZilJiJoLDy7HayU1nU-6XD1BxzDHtZRlNhxgmldIcMtWSt6RWPIsF259G9DzZAH6hBmWfKY5RqYyC0i98G6nbM443AcfyzVd8JRY-lGoz7f79k6XRHHp4Z0zutMKfW70O9ZTGKx4tQaCLW4H_9Pcc_FK-Ugv_yjc4Syn858pxPvlj7J6xC_QRn1sgQzey-2gCJNqRBGDVwsdGHdXBJcn5CfvBIauFPktImPCPajA6mhS8Z_wStEjSJ6t0BrCpTiPrCyJgAUNhhIKlTTlMR4eQ21Q5SJw_aMJ82moEbamRJsnTNnCbyuz57KoQZSp7iFI5nJZTmiaGzYa7xQ");
-  }
+(* The corresponding public key *)
+let public_key_str = "-----BEGIN PUBLIC KEY-----
+MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAsNW7SDxzbpodbTLZCZU2
+vKxH2sxu6f9UhuhH3tq5CCQamRDiyAUVaHFIQ3IgSsG7o5J7R4rlKHvTe1hXFEFs
+seVymT+QdOdE78J+suMR6J173BSuFFkqiphsygtVwNwca3VLhw0sUWZrYB71tL5q
+sAAp6ICt+rqfN0WGWBLjve9ayZO9LVa5xgr4oniZk+NP5RSPyqmAeChY/mcZTjmi
+EFzYwwr0fb8lI3aAlk5DdWzU3PkvRYlgcYYvBQUzOr5MP1ifqQy1rHqfjj5Z1C/x
+brgpPnswcAnhA+1qK6GFQsxGNweDXNc/R7tZUTS7NtGprHYUCsiIMXFO2os+AJwp
+DQIDAQAB
+-----END PUBLIC KEY-----"
 
-let private_key = match private_key_str |> Cstruct.of_string |> X509.Private_key.decode_pem with
-  | Ok (`RSA key) -> key
+let public_key_id = "032cc1cb289dd4626a435d72989ae43212defe78"
+
+let get_rsa = function
+  | `RSA k -> k
   | _ -> failwith "Invalid key"
 
-let tests = [
+let tests () =
+
+  let private_key = private_key_str |> Cstruct.of_string |> X509.Private_key.decode_pem |> Result.get_ok |> get_rsa in
+
+  let public_key = public_key_str |> Cstruct.of_string |> X509.Public_key.decode_pem |> Result.get_ok |> get_rsa in
+
+  (* Some identity token *)
+  let identity_token =
+    let header = `Assoc [
+        "alg", `String "RS256";
+        "kid", `String "032cc1cb289dd4626a435d72989ae43212defe78";
+        "typ", `String "JWT";
+      ] in
+    let payload = `Assoc [
+        "iss", `String "https://securetoken.google.com/everyboard-test";
+        "aud", `String "everyboard-test";
+        "auth_time", `Int 1677936149;
+        "user_id", `String "wECcuMPVQHO9VSs7bgOL5rLxmPD2";
+        "sub", `String "wECcuMPVQHO9VSs7bgOL5rLxmPD2";
+        "iat", `Int 1702952401;
+        "exp", `Int 1702956001;
+        "email", `String "abc@def.com";
+        "email_verified", `Bool false;
+        "firebase", `Assoc [
+          "identities", `Assoc [
+            "email", `List [`String "abc@def.com"]
+          ];
+          "sign_in_provider", `String "password";
+        ];
+      ] in
+    let to_sign = (b64_of_json header) ^ "." ^ (b64_of_json payload) in
+    let signature = Mirage_crypto_pk.Rsa.PKCS1.sign ~hash:`SHA256 ~key:private_key (`Message (Cstruct.of_string to_sign)) |> Cstruct.to_string in
+    Printf.printf "verify: %b\n%!" (Mirage_crypto_pk.Rsa.PKCS1.verify ~hashp:(function _ -> true) ~key:public_key ~signature:(Cstruct.of_string signature) (`Message (Cstruct.of_string to_sign)));
+    (* signature = Option.get (Dream.from_base64url "w356bi9Dwx9gGqORRfOwKSPLhq21XyiE7V1pmqnNxpUsQJeKRlHz9vi8QeJDwFT1dTkt79pVRacqd2w4G52tjNv7Khf6aRx6arbBtWfqLBNzbzD-US2iQFkPnXy_EkJma-YGTGbUSly6Ry9vd0axiUAvUkJ_DD1Ig1ySeYLMzeVkf501MZHshn7FO4Gx27DeLEQOLebNR9wJW4YnFN1lzyD4FM8KMpkgrpe7QQdoKNtG01aG96musc0YW0LofXN8_oQILg2Ocpnm9GLtSoUy7XNSqmQzgjiDvCR9xrPKMoPHmLcWZdrsTwTzLda9q4g0-RFGzA1yV1JMKzfY9qoRgQ"); *)
+    Jwt.{ header; payload; signature } in
+
+  let identity_token_str = Jwt.to_string identity_token in
+
+  (* Some signed token *)
+  let signed_token =
+    let header = `Assoc [
+          "alg", `String "RS256";
+          "typ", `String "JWT";
+        ] in
+    let payload = `Assoc [
+          "iss", `String "foo@bar.com";
+          "scope", `String "scope1 scope2";
+          "aud", `String "audience";
+          "exp", `Int 1702956001;
+          "iat", `Int 1702952401;
+        ] in
+    let to_sign = (b64_of_json header) ^ "." ^ (b64_of_json payload) in
+    let signature = Mirage_crypto_pk.Rsa.PKCS1.sign ~hash:`SHA256 ~key:private_key (`Message (Cstruct.of_string to_sign)) |> Cstruct.to_string in
+    Jwt.{
+      header;
+      payload;
+      signature;
+    } in
+
+  [
 
   "Jwt.make", [
     test "should construct a token" (fun () ->
@@ -155,7 +177,7 @@ let tests = [
       );
 
     test "should fail on an invalid identity token" (fun () ->
-        (* Given an invalid idetnity token string representation *)
+        (* Given an invalid identity token string representation *)
         let invalid_token = "invalid token!"  in
         (* When parsing it *)
         (* Then it should fail *)
@@ -177,14 +199,14 @@ let tests = [
       test "should succeed on a valid token" (fun () ->
           (* Given a valid token *)
           (* When verifying it and extracting the uid *)
-          let actual = Jwt.verify_and_get_uid identity_token "everyboard-test" [(cert_id, cert)] in
+          let actual = Jwt.verify_and_get_uid identity_token "everyboard-test" [(public_key_id, public_key)] in
           (* Then it should provide the expected uid *)
           let expected = "wECcuMPVQHO9VSs7bgOL5rLxmPD2" in
           check string "success" expected actual
         );
 
       test "should succeed with emulator tokens" (fun () ->
-          (* Given an emulator token, and the emulator mode beng on *)
+          (* Given an emulator token, and the emulator mode being on *)
           Options.emulator := true;
           (* When verifying it and extracting the uid *)
           let emulator_token : Jwt.t = {
@@ -195,7 +217,7 @@ let tests = [
               ];
             signature = "";
           } in
-          let actual = Jwt.verify_and_get_uid emulator_token "everyboard-test" [(cert_id, cert)] in
+          let actual = Jwt.verify_and_get_uid emulator_token "everyboard-test" [(public_key_id, public_key)] in
           (* Then it should provide the expected uid *)
           let expected = "wECcuMPVQHO9VSs7bgOL5rLxmPD2" in
           check string "success" expected actual;
@@ -208,7 +230,7 @@ let tests = [
           (* When verifying it *)
           (* Then it should fail *)
           check_raises "failure" Jwt.InvalidToken (fun () ->
-              let _ = Jwt.verify_and_get_uid token "everyboard-test" [(cert_id, cert)] in
+              let _ = Jwt.verify_and_get_uid token "everyboard-test" [(public_key_id, public_key)] in
               ())
         );
 
@@ -228,7 +250,7 @@ let tests = [
           (* When verifying it *)
           (* Then it should fail *)
           check_raises "failure" Jwt.InvalidToken (fun () ->
-              let _ = Jwt.verify_and_get_uid token "everyboard-test" [(cert_id, cert)] in
+              let _ = Jwt.verify_and_get_uid token "everyboard-test" [(public_key_id, public_key)] in
               ())
         );
 
@@ -238,7 +260,7 @@ let tests = [
           (* When verifying it *)
           (* Then it should fail *)
           check_raises "failure" Jwt.InvalidToken (fun () ->
-              let _ = Jwt.verify_and_get_uid token "everyboard-test" [(cert_id, cert)] in
+              let _ = Jwt.verify_and_get_uid token "everyboard-test" [(public_key_id, public_key)] in
               ())
         );
 
@@ -248,7 +270,7 @@ let tests = [
           (* When verifying it *)
           (* Then it should fail *)
           check_raises "failure" Jwt.InvalidToken (fun () ->
-              let _ = Jwt.verify_and_get_uid identity_token project_id [(cert_id, cert)] in
+              let _ = Jwt.verify_and_get_uid identity_token project_id [(public_key_id, public_key)] in
               ())
         );
 
@@ -258,7 +280,7 @@ let tests = [
           (* When verifying it *)
           (* Then it should fail *)
           check_raises "failure" Jwt.InvalidToken (fun () ->
-              let _ = Jwt.verify_and_get_uid token "everyboard-test" [(cert_id, cert)] in
+              let _ = Jwt.verify_and_get_uid token "everyboard-test" [(public_key_id, public_key)] in
               ())
         );
 
@@ -268,44 +290,40 @@ let tests = [
           (* When verifying it *)
           (* Then it should fail *)
           check_raises "failure" Jwt.InvalidToken (fun () ->
-              let _ = Jwt.verify_and_get_uid token "everyboard-test" [(cert_id, cert)] in
+              let _ = Jwt.verify_and_get_uid token "everyboard-test" [(public_key_id, public_key)] in
               ())
         );
 
-     test "should fail if authentication time is in the future" (fun () ->
+      test "should fail if authentication time is in the future" (fun () ->
           (* Given a token with an authentication time in the future *)
           let token = { identity_token with payload = replace_assoc identity_token.payload "auth_time" (`Int (now + 1000)) } in
           (* When verifying it *)
           (* Then it should fail *)
           check_raises "failure" Jwt.InvalidToken (fun () ->
-              let _ = Jwt.verify_and_get_uid token "everyboard-test" [(cert_id, cert)] in
+              let _ = Jwt.verify_and_get_uid token "everyboard-test" [(public_key_id, public_key)] in
               ())
        );
 
-     test "should fail if signature is invalid" (fun () ->
+      test "should fail if signature is invalid" (fun () ->
           (* Given a token with an invalid signature *)
           let token = { identity_token with signature = "foo" } in
           (* When verifying it *)
           (* Then it should fail *)
           check_raises "failure" Jwt.InvalidToken (fun () ->
-              let _ = Jwt.verify_and_get_uid token "everyboard-test" [(cert_id, cert)] in
+              let _ = Jwt.verify_and_get_uid token "everyboard-test" [(public_key_id, public_key)] in
               ())
        );
 
-      (*
       test "should fail if signature is not using SHA256" (fun () ->
+          let sha224_signature = "Qwa2V6lxKUua-Mc-pt--w7vTwnkaPZI2MGT7C3_yubz8vRy7vUPOJdUOyGrhc1Dw76uR7JSI8niqisE1NryvVTKoEqfXBNjxEVHSoeX-wbRzXnJILnTPLqi323-LgHsnc8EvRUs2_t5AoOA4T85DEZxbUugpcg332Kk2t4USBMDw7zIIu2QoHxuh1DoYlhmAd89tVg9ucNd4tNSx--Yf5GtOWq0SuoDwjaX_OA-43s61aoE2Y6XUrxmPYkBfpHOsIl5CJdh6vl9v-7SKRUDAIZMWx8GhDM9LSOR7nQ9ywIxZAWQ-x9bl3MIPfx6JHVWmfelF0goZkTNxQc7vrnr8BQ==" in
           (* Given a token with a SHA-224 signature instead of SHA-256 *)
-          (* TODO: need to use a cert that matches the private key. Also, need to recompute the signature, as it is not from an identity token *)
-          let b64_signature = "mYh2u8dz0l9Uqtm7eHhRkbfgcGoJD7yIMNysHr-_58d-jGZzoD7LApj9lUyDBNqHcWRmMsvOT7IuAA4jajhudFiZNvVoyVw1CDcY22TsTUS7AsShtrAMegKjEy7h3ylidfvqmWvK_Ojb55dQoHHbn8vWrDq29qSrXng5sdxYznLxQbW28xncXMU8OHBSZPKAS4aNhPiexKODOpUBGym1ospOTxTq3r8u9MG3_HZJK7q0jg47XErf807B_qC8DQa6k5skPlHc7mXRkocJJbuAWWiioC7dSv2p7O8ffRgdmUfCbzxG4e8QR-sKv9BgQzgZS-RFGHK66Am6P1BBojQ_kA==" in
-          let token = { identity_token with signature = Option.get (Dream.from_base64url b64_signature) } in
+          let token = { identity_token with signature = Option.get (Dream.from_base64url sha224_signature) } in
           (* When verifying it *)
           (* Then it should fail *)
           check_raises "failure" Jwt.InvalidToken (fun () ->
-              let _ = Jwt.verify_and_get_uid token "everyboard-test" [(cert_id, cert)] in
+              let _ = Jwt.verify_and_get_uid token "everyboard-test" [(public_key_id, public_key)] in
               ());
-          check_raises "failure" Jwt.InvalidToken (fun () -> ())
         );
-      *)
   ]
   end;
 

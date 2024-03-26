@@ -2,6 +2,7 @@ open Alcotest
 open TestUtils
 open Backend
 open Utils
+open DreamUtils
 
 module type MOCK = sig
   include TokenRefresher.TOKEN_REFRESHER

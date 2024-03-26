@@ -23,8 +23,8 @@ let status : Dream.status testable =
   let pp ppf status = Fmt.pf ppf "%s" (Dream.status_to_string status) in
   testable pp (=)
 
-let certificate : X509.Certificate.t testable =
-  let pp ppf cert = Fmt.pf ppf "%s" (X509.Certificate.encode_pem cert |> Cstruct.to_string) in
+let public_key : CryptoUtils.public_key testable =
+  let pp ppf _cert = Fmt.pf ppf "<public key>" in
   testable pp (=)
 
 let json_eq : JSON.t testable =

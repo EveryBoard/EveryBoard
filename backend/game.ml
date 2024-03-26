@@ -1,4 +1,5 @@
 open Utils
+open DreamUtils
 open Domain
 
 let ( >>= ) = Result.bind
@@ -12,6 +13,10 @@ let read_file filename =
 let games_list = read_file "games.txt"
                |> String.split_on_char '\n'
                |> List.filter (fun x -> String.length x > 0)
+
+let json_response (status : Dream.status) (response : JSON.t) : Dream.response Lwt.t =
+  let headers = [("Content-Type", "application/json")] in
+  Dream.respond ~headers ~status (JSON.to_string response)
 
 module type GAME = sig
   val routes : Dream.route list

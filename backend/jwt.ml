@@ -1,4 +1,5 @@
 open Utils
+open CryptoUtils
 
 (** This module manages JSON Web Tokens (JWT), which are used to authentify
     ourselves to the firestore server, and to authentify users to ourselves. *)
@@ -30,7 +31,7 @@ module type JWT = sig
   (** [verify_and_get_uid token kid certificates] verifies that a token has been
       signed by the certificates with key id [kid]. Raises [InvalidToken] in
       case it is not valid. *)
-  val verify_and_get_uid : t -> string -> (string * X509.Certificate.t) list -> string
+  val verify_and_get_uid : t -> string -> (string * CryptoUtils.public_key) list -> string
 end
 
 module Make (External : External.EXTERNAL) : JWT = struct
@@ -70,10 +71,8 @@ module Make (External : External.EXTERNAL) : JWT = struct
         ("exp", `Int exp);
         ("iat", `Int now);
       ] in
-    Printf.printf "payload: %s\n" (JSON.to_string payload);
     let payload_b64 = b64 (to_string payload) in
     let header_and_payload = header_b64 ^ "." ^ payload_b64 in
-    Printf.printf "%s\n" header_and_payload;
     let signature = sign pk header_and_payload in
     { header; payload; signature }
 
@@ -93,19 +92,19 @@ module Make (External : External.EXTERNAL) : JWT = struct
       { header; payload; signature }
     | _ -> raise InvalidToken
 
-  let verify_signature (token : t) (cert : X509.Certificate.t) : bool =
+  let verify_signature (token : t) (pk : CryptoUtils.public_key) : bool =
     let only_sha256 = function
       | `SHA256 -> true
       | _ -> false in
     let pkcs1_sha256_verify m signature =
-      Mirage_crypto_pk.Rsa.PKCS1.verify ~hashp:only_sha256 ~key:(certificate_key cert) ~signature:signature (`Message m) in
+      Mirage_crypto_pk.Rsa.PKCS1.verify ~hashp:only_sha256 ~key:pk ~signature:signature (`Message m) in
     let header_and_content_b64 = (token.header |> JSON.to_string |> b64) ^ "." ^ (token.payload |> JSON.to_string |> b64) in
     pkcs1_sha256_verify (Cstruct.of_string header_and_content_b64) (Cstruct.of_string token.signature)
 
   (** Verify the signature of a JWT according to https://firebase.google.com/docs/auth/admin/verify-id-tokens.
       Depends on the public keys listed at https://www.googleapis.com/robot/v1/metadata/x509/securetoken@system.gserviceaccount.com
       In case of success, the uid ("sub" field) is returned. *)
-  let verify_and_get_uid (token : t) (project_id : string) (certificates : (string * X509.Certificate.t) list) : string =
+  let verify_and_get_uid (token : t) (project_id : string) (pks : (string * CryptoUtils.public_key) list) : string =
     let check (_field : string) (cond : unit -> bool) : unit =
       if cond () then () else raise InvalidToken in
     let now = External.now () in
@@ -125,7 +124,7 @@ module Make (External : External.EXTERNAL) : JWT = struct
           (* The emulator doesn't provide a key with the token *)
           true
         else
-          List.mem (str token.header "kid") (List.map fst certificates));
+          List.mem_assoc (str token.header "kid") pks);
     (* expiration must be in the future *)
     check "exp" (fun () -> now <= number token.payload "exp");
     (* "issued-at-time" must be in the past *)
@@ -145,8 +144,8 @@ module Make (External : External.EXTERNAL) : JWT = struct
           (* The emulator doesn't sign the tokens *)
           true
         else
-          let cert = List.assoc (str token.header "kid") certificates in
-          verify_signature token cert);
+          let pk = List.assoc (str token.header "kid") pks in
+          verify_signature token pk);
     (* If everything has succeeded, we can extract the uid from the "sub" field *)
     str token.payload "sub"
 end

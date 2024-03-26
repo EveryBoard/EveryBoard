@@ -7,7 +7,7 @@ let () =
     DomainTests.tests;
     StatsTests.tests;
     GoogleCertificatesTests.tests;
-    JwtTests.tests;
+    JwtTests.tests ();
     TokenRefresherTests.tests;
     FirestorePrimitivesTests.tests;
     FirestoreTests.tests;
