@@ -1,4 +1,4 @@
-import { FieldValue } from '@angular/fire/firestore';
+import { FieldValue } from '@firebase/firestore';
 import { ErrorLoggerService } from '../services/ErrorLoggerService';
 
 // These are the datatypes supported by firestore. Arrays of arrays are not

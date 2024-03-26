@@ -1,4 +1,4 @@
-import * as Firestore from '@angular/fire/firestore';
+import * as Firestore from '@firebase/firestore';
 
 /* For time handled by firestore:
  *   - when we send it in a document, we send a FieldValue

@@ -19,11 +19,10 @@ import { TutorialGameWrapperComponent } from './components/wrapper-components/tu
 import { MGPOptional } from './utils/MGPOptional';
 import { Utils } from './utils/utils';
 
-import * as Firestore from '@angular/fire/firestore';
-import * as FireAuth from '@angular/fire/auth';
-import { TestBed } from '@angular/core/testing';
-import { setupEmulators } from './utils/tests/TestUtils.spec';
+import * as Firestore from '@firebase/firestore';
+import * as Auth from '@firebase/auth';
 import { AccountComponent } from './components/normal-component/account/account.component';
+import { setupEmulators } from './utils/tests/TestUtils.spec';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const routingSpecification: [string, Type<any>][] = [
@@ -77,8 +76,8 @@ export function findMatchingRoute(url: string): MGPOptional<Route> {
 describe('App module', () => {
     it('should provide all necessary firebase components', async() => {
         await setupEmulators();
-        expect(TestBed.inject(FireAuth.Auth)).toBeDefined();
-        expect(TestBed.inject(Firestore.Firestore)).toBeDefined();
+        expect(Firestore.getFirestore()).toBeDefined();
+        expect(Auth.getAuth()).toBeDefined();
     });
     it('router should map all urls to their expected components', () => {
         for (const [url, expectedComponent] of routingSpecification) {

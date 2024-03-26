@@ -2,7 +2,7 @@
 import { TestBed } from '@angular/core/testing';
 import { expectPermissionToBeDenied, setupEmulators } from 'src/app/utils/tests/TestUtils.spec';
 import { ChatDAO } from '../ChatDAO';
-import * as FireAuth from '@angular/fire/auth';
+import * as FireAuth from '@firebase/auth';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { serverTimestamp } from 'firebase/firestore';
 import { Message, MessageDocument } from 'src/app/domain/Message';
@@ -19,7 +19,7 @@ describe('ChatDAO', () => {
     let chatService: ChatService;
 
     function signOut(): Promise<void> {
-        return TestBed.inject(FireAuth.Auth).signOut();
+        return FireAuth.getAuth().signOut();
     }
     beforeEach(async() => {
         await setupEmulators();
