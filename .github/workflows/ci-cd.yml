@@ -7,13 +7,13 @@ on:
     branches: [master, develop]
 
 jobs:
-  build:
+  build-front:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout the repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
       - name: Setup dependencies (cache node modules)
-        uses: actions/cache@v1
+        uses: actions/cache@v4
         env:
           cache-name: cache-node-modules
         with:
@@ -24,7 +24,7 @@ jobs:
             ${{ runner.os }}-build-
             ${{ runner.os }}-
       - name: Setup dependencies (setup node)
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v4
         with:
           node-version: 18
       - name: Setup dependencies (install dependencies)
@@ -34,14 +34,14 @@ jobs:
       - name: Build
         run: npm run build
 
-  tests:
+  tests-front:
     runs-on: ubuntu-latest
-    needs: build
+    needs: build-front
     steps:
       - name: Checkout the repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
       - name: Setup dependencies (cache node modules)
-        uses: actions/cache@v1
+        uses: actions/cache@v4
         env:
           cache-name: cache-node-modules
         with:
@@ -52,18 +52,17 @@ jobs:
             ${{ runner.os }}-build-
             ${{ runner.os }}-
       - name: Setup dependencies (setup node)
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v4
         with:
           node-version: 18
       - name: Setup dependencies (install dependencies)
         run: npm ci
       - name: Setup dependencies (setup dummy Firebase secret)
         run: cp ./src/app/firebaseConfig.ts.dummy ./src/app/firebaseConfig.ts
-
       - name: Run test suite
         run: npm run test:ci
       - name: Setup python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: '3.10'
       - name: Install python dependencies
@@ -77,14 +76,32 @@ jobs:
       - name: Check coverage
         run: python ./scripts/coverage.py check
 
+  tests-back:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout the repository
+      uses: actions/checkout@v4
+    - name: Install OS dependencies
+      run: sudo apt-get install -y libev-dev
+    - name: Setup OCaml
+      uses: ocaml/setup-ocaml@v2
+      with:
+        ocaml-compiler: 5.1
+    - name: Install OCaml dependencies
+      run: cd backend && opam install . --deps-only --with-test
+    - name: Build
+      run: cd backend && make
+    - name: Test
+      run: cd backend && make test
+
   e2e:
     runs-on: ubuntu-latest
-    needs: [ build, tests ]
+    needs: [ build-front, tests-front, tests-back ]
     steps:
       - name: Checkout the repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
       - name: Setup dependencies (cache node modules)
-        uses: actions/cache@v1
+        uses: actions/cache@v4
         env:
           cache-name: cache-node-modules
         with:
@@ -95,7 +112,7 @@ jobs:
             ${{ runner.os }}-build-
             ${{ runner.os }}-
       - name: Setup dependencies (setup node)
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v4
         with:
           node-version: 18
       - name: Setup dependencies (install dependencies)
@@ -103,7 +120,7 @@ jobs:
       - name: Setup dependencies (setup dummy Firebase secret)
         run: cp ./src/app/firebaseConfig.ts.dummy ./src/app/firebaseConfig.ts
       - name: Setup python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: '3.10'
       - name: Install python dependencies
@@ -113,12 +130,12 @@ jobs:
 
   linter:
     runs-on: ubuntu-latest
-    needs: build
+    needs: build-front
     steps:
       - name: Checkout the repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
       - name: Setup dependencies (cache node modules)
-        uses: actions/cache@v1
+        uses: actions/cache@v4
         env:
           cache-name: cache-node-modules
         with:
@@ -129,7 +146,7 @@ jobs:
             ${{ runner.os }}-build-
             ${{ runner.os }}-
       - name: Setup dependencies (setup node)
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v4
         with:
           node-version: 18
       - name: Setup dependencies (install dependencies)
@@ -142,21 +159,21 @@ jobs:
 
   images:
     runs-on: ubuntu-latest
-    needs: build
+    needs: build-front
     steps:
       - name: Checkout the repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
       - name: Check the presence of all game images
         run: ./scripts/check-images.sh
 
   translations:
     runs-on: ubuntu-latest
-    needs: build
+    needs: build-front
     steps:
       - name: Checkout the repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
       - name: Setup dependencies (cache node modules)
-        uses: actions/cache@v1
+        uses: actions/cache@v4
         env:
           cache-name: cache-node-modules
         with:
@@ -167,7 +184,7 @@ jobs:
             ${{ runner.os }}-build-
             ${{ runner.os }}-
       - name: Setup dependencies (setup node)
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v4
         with:
           node-version: 18
       - name: Setup dependencies (install dependencies)
@@ -186,13 +203,13 @@ jobs:
 
   deployment:
     runs-on: ubuntu-latest
-    needs: [ build, tests, linter, images, translations ]
+    needs: [ build-front, tests-front, tests-back, linter, images, translations ]
     environment: netlify
     steps:
       - name: Checkout the repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
       - name: Setup dependencies (cache node modules)
-        uses: actions/cache@v1
+        uses: actions/cache@v4
         env:
           cache-name: cache-node-modules
         with:
@@ -203,10 +220,10 @@ jobs:
             ${{ runner.os }}-build-
             ${{ runner.os }}-
       - name: Setup dependencies (setup node)
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v4
         with:
           node-version: 18
-      - name: Setup dependencies (install dependencies)
+      - name: Setup dependencies (install JS dependencies)
         run: npm ci
       - name: Setup dependencies (setup Firebase secret, master)
         if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' }}
@@ -216,6 +233,16 @@ jobs:
         if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/develop' }}
         run: |
           echo "${{ secrets.FIREBASE_CONFIG_DEV }}" > src/app/firebaseConfig.ts
+      - name: Install OS dependencies
+        run: sudo apt-get install -y libev-dev
+      - name: Setup dependencies (install OCaml)
+        uses: ocaml/setup-ocaml@v2
+        with:
+          ocaml-compiler: 5.1
+      - name: Setup dependencies (install OCaml dependencies)
+        run: cd backend && opam install . --deps-only --with-test
+      - name: Build backend
+        run: cd backend && make
       - name: Check if push by an org member
         id: is_organization_member
         uses: jamessingleton/is-organization-member@1.0.1
@@ -230,6 +257,10 @@ jobs:
           if [ $result == true ]; then
             npm install @angular-devkit/architect
             npx ng deploy --base-href=/ --repo=https://github.com/EveryBoard/master --cname=everyboard.org --message="Deployment from action (commit $GITHUB_SHA)" --name acieroid --email 'everyboard@everyboard.org'
+            # TODO: adapt like for netlify
+            ssh-add - <<< "$SSH_KEY"
+            cat > service-account.json <<< "$SERVICE_ACCOUNT_MASTER"
+            cd backend && make && make deploy target=master user=$SSH_USER server=$SSH_SERVER port=$SSH_PORT listen-port=8003
           fi
         env:
           GH_TOKEN: ${{ secrets.DEPLOY_GH_TOKEN }}
@@ -240,19 +271,28 @@ jobs:
           if [ $result == true ]; then
             npm install @angular-devkit/architect
             npx ng deploy --base-href=/ --repo=https://github.com/EveryBoard/develop --cname=dev.everyboard.org --message="Deployment from action (commit $GITHUB_SHA)" --name acieroid --email 'everyboard@everyboard.org'
+            ssh-add - <<< "$SSH_KEY"
+            cat > service-account.json <<< "$SERVICE_ACCOUNT_DEV"
+            cd backend && make && make deploy target=dev user=$SSH_USER server=$SSH_SERVER port=$SSH_PORT listen-port=8002
           fi
         env:
           GH_TOKEN: ${{ secrets.DEPLOY_GH_TOKEN }}
+          SSH_KEY: ${{ secrets.EVERYBOARD_DEPLOY_SSH_KEY }}
+          SSH_USER: ${{ secrets.EVERYBOARD_DEPLOY_SSH_USER }}
+          SSH_SERVER: ${{ secrets.EVERYBOARD_DEPLOY_SSH_SERVER }}
+          SSH_PORT: ${{ secrets.EVERYBOARD_DEPLOY_SSH_PORT }}
+          SERVICE_ACCOUNT_MASTER: ${{ secrets.EVERYBOARD_DEPLOY_SERVICE_ACCOUNT_MASTER }}
+          SERVICE_ACCOUNT_DEV: ${{ secrets.EVERYBOARD_DEPLOY_SERVICE_ACCOUNT_DEV }}
 
   deployment-netlify:
     runs-on: ubuntu-latest
-    needs: [ build ]
+    needs: [ build-front ]
     environment: netlify
     steps:
       - name: Checkout the repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
       - name: Setup dependencies (cache node modules)
-        uses: actions/cache@v1
+        uses: actions/cache@v4
         env:
           cache-name: cache-node-modules
         with:
@@ -263,7 +303,7 @@ jobs:
             ${{ runner.os }}-build-
             ${{ runner.os }}-
       - name: Setup dependencies (setup node)
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v4
         with:
           node-version: 18
       - name: Setup dependencies (install dependencies)
@@ -272,6 +312,14 @@ jobs:
         if: ${{ github.ref != 'refs/heads/master'  && github.ref != 'refs/heads/develop' }}
         run: |
           echo "${{ secrets.FIREBASE_CONFIG_TEST }}" > src/app/firebaseConfig.ts
+      - name: Install OS dependencies
+        run: sudo apt-get install -y libev-dev
+      - name: Setup dependencies (install OCaml)
+        uses: ocaml/setup-ocaml@v2
+        with:
+          ocaml-compiler: 5.1
+      - name: Setup dependencies (install OCaml dependencies)
+        run: cd backend && opam install . --deps-only --with-test
       - name: Check if push by an org member
         id: is_organization_member
         uses: jamessingleton/is-organization-member@1.0.1
@@ -287,7 +335,19 @@ jobs:
             npm run build:netlify
             npm install netlify-cli
             netlify deploy --dir=dist/everyboard --alias="$GITHUB_HEAD_REF" --message="Deployment from github ($GITHUB_HEAD_REF, commit $GITHUB_SHA)"
+            mkdir -p ~/.ssh/
+            cat > ~/.ssh/known_hosts <<< "$SSH_KNOWN_HOSTS"
+            cat > ~/.ssh/id_rsa <<< "$SSH_KEY"
+            chmod u+rw,go-rw,a-x ~/.ssh/id_rsa
+            cat > backend/service-account.json <<< "$SERVICE_ACCOUNT"
+            cd backend && make deploy target=test user=$SSH_USER server=$SSH_SERVER port=$SSH_PORT listen-port=8001 args="-no-emulator -project everyboard-test -origin '*' -endpoint 'https://firestore.googleapis.com' -show-errors"
           fi
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
           NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+          SSH_KEY: ${{ secrets.EVERYBOARD_DEPLOY_SSH_KEY }}
+          SSH_USER: ${{ secrets.EVERYBOARD_DEPLOY_SSH_USER }}
+          SSH_SERVER: ${{ secrets.EVERYBOARD_DEPLOY_SSH_SERVER }}
+          SSH_PORT: ${{ secrets.EVERYBOARD_DEPLOY_SSH_PORT }}
+          SSH_KNOWN_HOSTS: ${{ secrets.EVERYBOARD_DEPLOY_KNOWN_HOST }}
+          SERVICE_ACCOUNT: ${{ secrets.EVERYBOARD_DEPLOY_SERVICE_ACCOUNT_TEST }}

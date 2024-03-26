@@ -47,6 +47,8 @@ import { GameInfo } from 'src/app/components/normal-component/pick-game/pick-gam
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { Player } from 'src/app/jscaip/Player';
 import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { BackendServiceMock } from 'src/app/services/tests/BackendService.spec';
+import { BackendService } from 'src/app/services/BackendService';
 
 @Component({})
 export class BlankComponent {}
@@ -133,7 +135,7 @@ export class SimpleComponentTestUtils<T> {
     }
     private failOn(typeOfMessage: string): (message: string) => void {
         return (message: string) => {
-            fail(`MessageDisplayer: ${typeOfMessage} was called with '${message}' but no toast was expected, use expectToToast!`);
+            fail(`MessageDisplayer: ${typeOfMessage} was called with '${message}' but no toast was expected, use expectToDisplay"!`);
         };
     }
     public async expectToDisplayGameMessage<T>(message: string, fn: () => Promise<T>): Promise<T> {
@@ -579,6 +581,7 @@ export class TestUtils {
                 { provide: ConfigRoomDAO, useClass: ConfigRoomDAOMock },
                 { provide: PartDAO, useClass: PartDAOMock },
                 { provide: ErrorLoggerService, useClass: ErrorLoggerServiceMock },
+                { provide: BackendService, useClass: BackendServiceMock },
             ],
         }).compileComponents();
     }
@@ -612,6 +615,7 @@ export class TestUtils {
                 { provide: ConfigRoomDAO, useClass: ConfigRoomDAOMock },
                 { provide: ChatDAO, useClass: ChatDAOMock },
                 { provide: UserDAO, useClass: UserDAOMock },
+                { provide: BackendService, useClass: BackendServiceMock },
                 { provide: ConnectedUserService, useClass: ConnectedUserServiceMock },
                 { provide: CurrentGameService, useClass: CurrentGameServiceMock },
                 { provide: ErrorLoggerService, useClass: ErrorLoggerServiceMock },

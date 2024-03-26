@@ -36,34 +36,10 @@ describe('ChatService', () => {
     it('should be created', () => {
         expect(chatService).toBeTruthy();
     });
-    describe('deleteChat', () => {
-        it('should delete the chat through the DAO', fakeAsync(async() => {
-            spyOn(chatDAO, 'delete').and.callThrough();
-            // Given a chat that exists
-            await chatService.createNewChat('id');
-
-            // When calling deleteChat
-            await chatService.deleteChat('id');
-
-            // Then the chat has been removed
-            expect(chatDAO.delete).toHaveBeenCalledWith('id');
-        }));
-    });
-    describe('createNewChat', () => {
-        it('should create the chat through the DAO', fakeAsync(async() => {
-            spyOn(chatDAO, 'set').and.callThrough();
-
-            // When calling createNewChat
-            await chatService.createNewChat('id');
-
-            // Then the chat has been initialized with the DAO
-            expect(chatDAO.set).toHaveBeenCalledWith('id', {});
-        }));
-    });
     describe('sendMessage', () => {
         it('should not send message if the user is not allowed to send a message in the chat', fakeAsync(async() => {
             // Given a chat
-            await chatService.createNewChat('id');
+            await chatDAO.set('id', {});
             // When sending a message without a username
             const sender: MinimalUser = { name: '', id: 'fooId' };
             const result: Promise<MGPValidation> = chatService.sendMessage('id', sender, 'foo', 2);
@@ -72,7 +48,7 @@ describe('ChatService', () => {
         }));
         it('should not send message if it is empty', fakeAsync(async() => {
             // Given a chat
-            await chatService.createNewChat('id');
+            await chatDAO.set('id', {});
 
             // When sending an empty message
             const sender: MinimalUser = { name: 'sender', id: 'senderId' };
@@ -85,7 +61,7 @@ describe('ChatService', () => {
             spyOn(Date, 'now').and.returnValue(42);
             spyOn(chatService, 'addMessage').and.callThrough();
             // Given an empty chat
-            await chatService.createNewChat('id');
+            await chatDAO.set('id', {});
 
             // When a message is sent on that chat
             const sender: MinimalUser = { name: 'sender', id: 'senderId' };

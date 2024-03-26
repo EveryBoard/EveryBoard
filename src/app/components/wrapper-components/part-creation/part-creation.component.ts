@@ -316,14 +316,11 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         return this.configRoomService.reviewConfig(this.partId);
     }
     public async proposeConfig(): Promise<void> {
-        const chosenOpponentName: string = this.getForm('chosenOpponent').value;
         const partType: string = this.getForm('partType').value;
         const maxMoveDur: number = this.getForm('maximalMoveDuration').value;
         const firstPlayer: string = this.getForm('firstPlayer').value;
         const totalPartDuration: number = this.getForm('totalPartDuration').value;
-        const chosenOpponent: MinimalUser = this.getUserFromName(chosenOpponentName);
         return this.configRoomService.proposeConfig(this.partId,
-                                                    chosenOpponent,
                                                     PartType.of(partType),
                                                     maxMoveDur,
                                                     FirstPlayer.of(firstPlayer),
@@ -333,18 +330,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
     public async cancelGameCreation(): Promise<void> {
         this.allDocDeleted = true;
         await this.currentGameService.removeCurrentGame();
-        Debug.display('PartCreationComponent', 'cancelGameCreation', 'observed part removed');
-
-        await this.chatService.deleteChat(this.partId);
-        Debug.display('PartCreationComponent', 'cancelGameCreation', 'chat deleted');
-
         await this.gameService.deletePart(this.partId);
-        Debug.display('PartCreationComponent', 'cancelGameCreation', 'chat and part deleted');
-
-        await this.configRoomService.deleteConfigRoom(this.partId, this.candidates);
-        Debug.display('PartCreationComponent', 'cancelGameCreation', 'chat, part, and configRoom deleted');
-
-        return;
     }
     private async onCurrentConfigRoomUpdate(configRoomOpt: MGPOptional<ConfigRoom>): Promise<void> {
         if (configRoomOpt.isAbsent()) {
@@ -497,7 +483,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
     public acceptConfig(): Promise<void> {
         // called by the configRoom
         // triggers the redirection that will be applied for every subscribed user
-        return this.gameService.acceptConfig(this.partId, Utils.getNonNullable(this.currentConfigRoom));
+        return this.gameService.acceptConfig(this.partId);
     }
 
     public saveRulesConfig(rulesConfig: MGPOptional<RulesConfig>): void {
@@ -550,7 +536,8 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         } else {
             Debug.display('PartCreationComponent', 'ngOnDestroy', 'you are about to cancel game joining');
             await this.currentGameService.removeCurrentGame();
-            await this.configRoomService.cancelJoining(this.partId);
+            await this.configRoomService.removeCandidate(this.partId,
+                                                         this.connectedUserService.user.get().toMinimalUser());
         }
     }
 }

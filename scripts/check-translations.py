@@ -27,7 +27,7 @@ for source_tu in sources.findall('.//%strans-unit' % NS):
     target_tu = target_tu[0]
     if len(target_tu) != 2:
         failed = True
-        print('ERROR: Trans-unit with ID %s does not have exactly two child (one <source> and one <target>) in messages.fr.xlf' % source_tu.attrib['id'])
+        print('ERROR: Trans-unit with ID %s does not have exactly two childs (one <source> and one <target>) in messages.fr.xlf' % source_tu.attrib['id'])
         continue
     if target_tu[0].tag != ('%ssource' % NS):
         failed = True

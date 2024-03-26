@@ -55,17 +55,17 @@ describe('OnlineGameWrapper for non-existing game', () => {
 
 describe('OnlineGameWrapperComponent Lifecycle', () => {
 
-    /* Life cycle summary
-     * component construction (beforeEach)
-     * stage 0
-     * ngOnInit (triggered by detectChanges)
-     * stage 1: PartCreationComponent appear
-     * startGame, launched by user if game was not started yet, or automatically (via partCreationComponent)
-     * stage 2: PartCreationComponent disappear, game component appear
-     * tick(0): the async part of startGame is now finished
-     * stage 3: P4Component appear
-     * differents scenarios
-     */
+    // Life cycle summary
+    // component construction (beforeEach)
+    // stage 0
+    // ngOnInit (triggered by detectChanges)
+    // stage 1: PartCreationComponent appear
+    // startGame, launched by user if game was not started yet, or automatically (via partCreationComponent)
+    // stage 2: PartCreationComponent disappear, game component appear
+    // tick(0): the async part of startGame is now finished
+    // stage 3: P4Component appear
+    // differents scenarios
+
     let testUtils: ComponentTestUtils<P4Component, MinimalUser>;
     let wrapper: OnlineGameWrapperComponent;
     let configRoomDAO: ConfigRoomDAO;
@@ -236,7 +236,7 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
         const router: Router = TestBed.inject(Router);
         spyOn(router, 'navigate').and.callThrough();
         testUtils.detectChanges();
-        await testUtils.expectToDisplayCriticalMessage(ConfigRoomService.GAME_DOES_NOT_EXIST(), async() => {
+        await testUtils.expectToDisplayCriticalMessage('Game does not exist', async() => {
             tick(0);
         });
 
@@ -264,3 +264,4 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
         expectUnsubscribeToHaveBeenCalled();
     }));
 });
+
