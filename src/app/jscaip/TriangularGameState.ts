@@ -5,7 +5,7 @@ import { TriangularCheckerBoard } from './TriangularCheckerBoard';
 
 export abstract class TriangularGameState<T> extends GameStateWithTable<T> {
 
-    public static getEmptyNeighbors<T>(board: Table<T>, coord: Coord, empty: T): Coord[] {
+    public static getEmptyNeighbors<U>(board: Table<U>, coord: Coord, empty: U): Coord[] {
         const neighbors: Coord[] = [];
         for (const neighbor of TriangularCheckerBoard.getNeighbors(coord)) {
             if (neighbor.isInRange(board[0].length, board.length) &&

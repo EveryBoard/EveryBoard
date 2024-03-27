@@ -7,16 +7,16 @@ import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 
 export class ApagosState extends GameState {
 
-    public static fromRepresentation(turn: number, board: Table<number>, nbZero: number, nbOne: number): ApagosState {
+    public static fromRepresentation(turn: number, board: Table<number>, nZero: number, nOne: number): ApagosState {
         const squares: ApagosSquare[] = [];
         for (let x: number = 0; x < 4; x++) {
-            const nbZero: number = board[0][x];
-            const nbOne: number = board[1][x];
+            const localZeroCount: number = board[0][x];
+            const localOneCount: number = board[1][x];
             const nbTotal: number = board[2][x];
-            const square: ApagosSquare = ApagosSquare.from(nbZero, nbOne, nbTotal).get();
+            const square: ApagosSquare = ApagosSquare.from(localZeroCount, localOneCount, nbTotal).get();
             squares.push(square);
         }
-        const remaining: PlayerNumberMap = PlayerNumberMap.of(nbZero, nbOne);
+        const remaining: PlayerNumberMap = PlayerNumberMap.of(nZero, nOne);
         return new ApagosState(turn, squares, remaining);
     }
 

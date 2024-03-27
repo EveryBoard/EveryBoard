@@ -7,11 +7,12 @@
         <g #boardDiv
            *ngFor="let line of board; index as y"
         >
-            <g *ngFor="let spaceContent of line; index as x">
+            <g *ngFor="let spaceContent of line; index as x"
+               [attr.transform]="getSVGTranslation(SPACE_SIZE * x, SPACE_SIZE * y)">
                 <rect id="chooseCoord_{{ x }}_{{ y }}"
                       (click)="chooseCoord(x, y)"
-                      [attr.x]="SPACE_SIZE * x"
-                      [attr.y]="SPACE_SIZE * y"
+                      x="0"
+                      y="0"
                       [attr.width]="SPACE_SIZE"
                       [attr.height]="SPACE_SIZE"
                       [ngClass]="getSquareClasses(x, y)"
@@ -19,24 +20,24 @@
                 />
                 <g *ngIf="spaceContent !== EMPTY">
                     <rect *ngIf="spaceContent.isRectangle() else circle"
-                          [attr.x]="(SPACE_SIZE * x) + (SPACE_SIZE/2 - getPieceSize(spaceContent.value))"
-                          [attr.y]="(SPACE_SIZE * y) + (SPACE_SIZE/2 - getPieceSize(spaceContent.value))"
-                          [attr.width]="getPieceSize(spaceContent.value)*2"
-                          [attr.height]="getPieceSize(spaceContent.value)*2"
+                          [attr.x]="SPACE_SIZE/2 - getPieceSize(spaceContent.value)"
+                          [attr.y]="SPACE_SIZE/2 - getPieceSize(spaceContent.value)"
+                          [attr.width]="getPieceSize(spaceContent.value) * 2"
+                          [attr.height]="getPieceSize(spaceContent.value) * 2"
                           [ngClass]="getPieceClasses(spaceContent.value)"
                           class="base"
                     />
                     <ng-template #circle>
-                        <circle [attr.cx]="(SPACE_SIZE * x) + (SPACE_SIZE / 2)"
-                                [attr.cy]="(SPACE_SIZE * y) + (SPACE_SIZE / 2)"
+                        <circle [attr.cx]="SPACE_SIZE / 2"
+                                [attr.cy]="SPACE_SIZE / 2"
                                 [attr.r]="getPieceSize(spaceContent.value)"
                                 [ngClass]="getPieceClasses(spaceContent.value)"
                                 class="base"
                         />
                     </ng-template>
                     <circle *ngIf="pieceHasDot(spaceContent.value)"
-                            [attr.cx]="(SPACE_SIZE * x) + (SPACE_SIZE / 2)"
-                            [attr.cy]="(SPACE_SIZE * y) + (SPACE_SIZE / 2)"
+                            [attr.cx]="SPACE_SIZE / 2"
+                            [attr.cy]="SPACE_SIZE / 2"
                             [attr.r]="10"
                     />
                 </g>

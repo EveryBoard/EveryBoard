@@ -94,7 +94,7 @@ describe('PylosComponent', () => {
             await testUtils.setupState(initialState);
 
             // When clicking on one
-            // Then the move should be illegal
+            // Then it should fail
             await testUtils.expectClickFailure('#piece_0_0_0', RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT());
         }));
 
@@ -121,7 +121,7 @@ describe('PylosComponent', () => {
             await testUtils.setupState(initialState);
 
             // When clicking on the supporting piece
-            // Then the move should be canceled
+            // Then it should fail
             await testUtils.expectClickFailure('#piece_0_0_0', PylosFailure.CANNOT_MOVE_SUPPORTING_PIECE());
         }));
 
@@ -163,7 +163,7 @@ describe('PylosComponent', () => {
             await testUtils.expectClickSuccess('#piece_0_0_1');
 
             // When choosing a piece that support selected piece
-            // Then it should be illegal
+            // Then it should fail
             const error: string = PylosFailure.CANNOT_MOVE_SUPPORTING_PIECE();
             await testUtils.expectClickFailure('#piece_0_0_0', error);
         }));
@@ -174,7 +174,7 @@ describe('PylosComponent', () => {
             await testUtils.expectClickSuccess('#piece_0_0_0');
 
             // When clicking on it again
-            await testUtils.expectClickSuccess('#piece_0_0_0');
+            await testUtils.expectClickFailure('#piece_0_0_0');
 
             // Then it should no longer be selected
             testUtils.expectElementNotToHaveClass('#piece_0_0_0', 'selected-stroke');
@@ -341,7 +341,7 @@ describe('PylosComponent', () => {
             await testUtils.expectClickSuccess('#piece_1_1_0'); // capture
 
             // Then it should be selected
-            const expectedClasses: string[] = ['base', 'player0-fill', 'selected-stroke', 'pre-captured-fill', 'small-stroke'];
+            const expectedClasses: string[] = ['base', 'player0-fill', 'selected-stroke', 'pre-captured-fill', 'mid-stroke'];
             testUtils.expectElementToHaveClasses('#piece_1_1_0', expectedClasses);
         }));
 
@@ -356,7 +356,7 @@ describe('PylosComponent', () => {
             await testUtils.expectClickSuccess('#piece_0_0_0');
 
             // Then both should be shown as captured
-            const expectedClasses: string[] = ['base', 'player0-fill', 'pre-captured-fill', 'small-stroke'];
+            const expectedClasses: string[] = ['base', 'player0-fill', 'pre-captured-fill', 'mid-stroke'];
             testUtils.expectElementToHaveClasses('#piece_0_0_0', expectedClasses);
             testUtils.expectElementToHaveClasses('#piece_0_1_0', expectedClasses);
         }));
@@ -385,7 +385,7 @@ describe('PylosComponent', () => {
             await testUtils.expectClickSuccess('#piece_0_0_0'); // un-capture
 
             // Then it should no longer be selected
-            const expectedClasses: string[] = ['base', 'player0-fill', 'small-stroke']; // No longer 'selected' and 'pre-captured'
+            const expectedClasses: string[] = ['base', 'player0-fill', 'mid-stroke']; // No longer 'selected' and 'pre-captured'
             testUtils.expectElementToHaveClasses('#piece_0_0_0', expectedClasses);
         }));
 
@@ -401,7 +401,7 @@ describe('PylosComponent', () => {
             await testUtils.expectClickSuccess('#piece_0_1_0'); // un-capture
 
             // Then it should no longer be selected
-            const expectedClasses: string[] = ['base', 'player0-fill', 'small-stroke']; // No longer 'selected' and 'pre-captured'
+            const expectedClasses: string[] = ['base', 'player0-fill', 'mid-stroke']; // No longer 'selected' and 'pre-captured'
             testUtils.expectElementToHaveClasses('#piece_0_1_0', expectedClasses);
         }));
 
@@ -530,7 +530,7 @@ describe('PylosComponent', () => {
             await testUtils.expectClickSuccess('#drop_1_1_1');
 
             // When clicking on a non capturable piece
-            // Then the move should be illegal
+            // Then it should fail
             await testUtils.expectClickFailure('#piece_2_1_0', PylosFailure.CANNOT_MOVE_SUPPORTING_PIECE());
         }));
 

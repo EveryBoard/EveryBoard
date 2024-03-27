@@ -21,8 +21,8 @@ describe('SixFilteredMoveGenerator', () => {
         moveGenerator = new SixFilteredMoveGenerator();
     });
 
-    it(`should propose only one starting piece when all piece are blocking an opponent's victory (lines)`, () => {
-        // Given an initial board where all piece are blocked but there is a forcing move
+    it(`should propose only one starting piece when all pieces are blocking an opponent's victory (lines)`, () => {
+        // Given an initial board where all pieces are blocked but there is a forcing move
         const board: Table<PlayerOrNone> = [
             [_, _, _, O, O, O, _],
             [O, X, X, X, X, X, _],
@@ -40,8 +40,8 @@ describe('SixFilteredMoveGenerator', () => {
         expect(choices.every((move: SixMove) => move.start.equalsValue(startingCoord))).toBeTrue();
     });
 
-    it(`should propose only one starting piece when all piece are blocking an opponent's victory (triangle)`, () => {
-        // Given an initial board where all piece are blocked but there is a forcing move
+    it(`should propose only one starting piece when all pieces are blocking an opponent's victory (triangle)`, () => {
+        // Given an initial board where all pieces are blocked but there is a forcing move
         const board: Table<PlayerOrNone> = [
             [_, X, X, _],
             [_, O, X, O],
@@ -58,8 +58,8 @@ describe('SixFilteredMoveGenerator', () => {
         expect(choices.every((move: SixMove) => move.start.equalsValue(startingCoord))).toBeTrue();
     });
 
-    it(`should propose only one starting piece when all piece are blocking an opponent's victory (circle)`, () => {
-        // Given an initial board where all piece are blocked but there is a forcing move
+    it(`should propose only one starting piece when all pieces are blocking an opponent's victory (circle)`, () => {
+        // Given an initial board where all pieces are blocked but there is a forcing move
         const board: Table<PlayerOrNone> = [
             [_, X, X, _],
             [O, _, X, _],

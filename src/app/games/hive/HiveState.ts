@@ -84,6 +84,7 @@ class HiveStateUpdate {
                         public readonly remainingPieces: HiveRemainingPieces,
                         public readonly queenBees: MGPMap<Player, Coord>,
                         public readonly turn: number) {}
+
     public setAt(coord: Coord, stack: HivePieceStack): HiveStateUpdate {
         const queenBees: MGPMap<Player, Coord> = this.queenBees.getCopy();
         for (const player of Player.PLAYERS) {

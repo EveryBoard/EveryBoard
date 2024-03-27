@@ -4,30 +4,30 @@ import { JSONValue } from './utils';
 
 export class MGPOptional<T> {
 
-    public static of<T>(value: T): MGPOptional<T> {
+    public static of<U>(value: U): MGPOptional<U> {
         return new MGPOptional(value);
     }
-    public static ofNullable<T>(value: T | null | undefined): MGPOptional<T> {
+    public static ofNullable<U>(value: U | null | undefined): MGPOptional<U> {
         if (value == null) return MGPOptional.empty();
         return MGPOptional.of(value);
     }
-    public static empty<T>(): MGPOptional<T> {
-        return new MGPOptional(null as T | null);
+    public static empty<U>(): MGPOptional<U> {
+        return new MGPOptional(null as U | null);
     }
     /**
      * Encodes a MGPOptional<T> using an encoder of T.
      * It will use the same encoding as T, and use null to encode an empty optional.
      */
-    public static getEncoder<T>(encoderT: Encoder<T>): Encoder<MGPOptional<T>> {
-        return new class extends Encoder<MGPOptional<T>> {
-            public encode(opt: MGPOptional<T>): JSONValue {
+    public static getEncoder<U>(encoderT: Encoder<U>): Encoder<MGPOptional<U>> {
+        return new class extends Encoder<MGPOptional<U>> {
+            public encode(opt: MGPOptional<U>): JSONValue {
                 if (opt.isPresent()) {
                     return encoderT.encode(opt.get());
                 } else {
                     return null;
                 }
             }
-            public decode(encoded: JSONValue): MGPOptional<T> {
+            public decode(encoded: JSONValue): MGPOptional<U> {
                 if (encoded === null) {
                     return MGPOptional.empty();
                 } else {

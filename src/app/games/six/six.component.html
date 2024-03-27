@@ -24,7 +24,7 @@
              [ngClass]="getPlayerClass(state.getCurrentPlayer())"
              class="base round"/>
     <!-- LAST MOVE -->
-    <polygon *ngFor="let disconnected of disconnecteds"
+    <polygon *ngFor="let disconnected of disconnectedCoords"
              id="disconnected_{{ disconnected.x }}_{{ disconnected.y }}"
              [attr.points]="getHexaPoints()"
              [attr.transform]="getHexaCenterTranslationAtXY(disconnected.x, disconnected.y)"

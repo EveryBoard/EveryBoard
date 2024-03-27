@@ -63,10 +63,8 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
         this.encoder = EpaminondasMove.encoder;
         this.hasAsymmetricBoard = true;
     }
+
     public async updateBoard(_triggerAnimation: boolean): Promise<void> {
-        this.firstPiece = MGPOptional.empty();
-        this.lastPiece = MGPOptional.empty();
-        this.hideLastMove();
         this.board = this.getState().getCopiedBoard();
         this.scores = this.getScores();
     }
@@ -96,6 +94,7 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
             moved = moved.getNext(move.direction, 1);
         }
     }
+
     public async onClick(x: number, y: number): Promise<MGPValidation> {
         const clickValidity: MGPValidation = await this.canUserPlay('#click_' + x + '_' + y);
         if (clickValidity.isFailure()) {
@@ -109,6 +108,7 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
             return this.thirdClick(x, y);
         }
     }
+
     private async firstClick(x: number, y: number): Promise<MGPValidation> {
         const opponent: Player = this.getState().getCurrentOpponent();
         const player: Player = this.getState().getCurrentPlayer();
@@ -125,10 +125,12 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
                 return this.cancelMove(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY());
         }
     }
+
     public override hideLastMove(): void {
         this.capturedCoords = [];
         this.moveds = [];
     }
+
     private getValidExtensions(PLAYER: Player): Coord[] {
         if (this.lastPiece.isPresent()) {
             return this.getPhalanxValidExtensions(PLAYER);
@@ -136,6 +138,7 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
             return this.getFirstPieceExtensions(PLAYER);
         }
     }
+
     private getFirstPieceExtensions(player: Player): Coord[] {
         const extensions: Coord[] = [];
         for (const direction of Direction.DIRECTIONS) {
@@ -149,6 +152,7 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
         }
         return extensions;
     }
+
     private getPhalanxValidExtensions(PLAYER: Player): Coord[] {
         let direction: Direction = Direction.factory.fromMove(this.firstPiece.get(), this.lastPiece.get()).get();
         const forward: Coord = this.lastPiece.get().getNext(direction, 1);
@@ -159,6 +163,7 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
         const extensionsBackward: Coord[] = this.getExtensionsToward(backWard, direction, PLAYER);
         return extensionForward.concat(extensionsBackward);
     }
+
     private getExtensionsToward(coord: Coord, direction: Direction, PLAYER: Player): Coord[] {
         const extensions: Coord[] = [];
         while (this.getState().isOnBoard(coord) &&
@@ -169,6 +174,7 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
         }
         return extensions;
     }
+
     private getPhalanxValidLandings(): Coord[] {
         if (this.lastPiece.isPresent()) {
             const firstPiece: Coord = this.firstPiece.get();
@@ -189,6 +195,7 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
             return this.getNeighboringEmptySpaces();
         }
     }
+
     private getNeighboringEmptySpaces(): Coord[] {
         const neighbors: Coord[] = [];
         for (const direction of Direction.DIRECTIONS) {
@@ -201,6 +208,7 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
         }
         return neighbors;
     }
+
     private getLandingsToward(landing: Coord, direction: Direction, phalanxSize: number): Coord[] {
         const player: Player = this.getState().getCurrentPlayer();
         const opponent: Player = this.getState().getCurrentOpponent();
@@ -221,6 +229,7 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
         }
         return landings;
     }
+
     private getPhalanxLength(firstPiece: Coord, direction: Direction, owner: Player): number {
         let length: number = 0;
         while (this.getState().isOnBoard(firstPiece) &&
@@ -231,20 +240,20 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
         }
         return length;
     }
+
     public override cancelMoveAttempt(): void {
         this.firstPiece = MGPOptional.empty();
         this.validExtensions = [];
         this.phalanxValidLandings = [];
         this.lastPiece = MGPOptional.empty();
         this.phalanxMiddles = [];
-        this.hideLastMove();
     }
+
     private async secondClick(x: number, y: number): Promise<MGPValidation> {
         const clicked: Coord = new Coord(x, y);
         const firstPiece: Coord = this.firstPiece.get();
         if (clicked.equals(firstPiece)) {
-            this.cancelMoveAttempt();
-            return MGPValidation.SUCCESS;
+            return this.cancelMove();
         }
         const opponent: Player = this.getState().getCurrentOpponent();
         const player: Player = this.getState().getCurrentPlayer();
@@ -283,6 +292,7 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
                 }
         }
     }
+
     private async thirdClick(x: number, y: number): Promise<MGPValidation> {
         const player: Player = this.getState().getCurrentPlayer();
         const clicked: Coord = new Coord(x, y);
@@ -321,6 +331,7 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
             return this.chooseMove(move);
         }
     }
+
     private async thirdClickOnPlayerPiece(clicked: Coord,
                                           phalanxDirection: Direction,
                                           player: Player)
@@ -344,6 +355,7 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
             return MGPValidation.SUCCESS;
         }
     }
+
     private async moveFirstPiece(player: Player): Promise<MGPValidation> {
         this.firstPiece = MGPOptional.of(this.firstPiece.get().getNext(this.phalanxDirection.get(), 1));
         if (this.firstPiece.equals(this.lastPiece)) {
@@ -356,6 +368,7 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
         this.phalanxValidLandings = this.getPhalanxValidLandings();
         return MGPValidation.SUCCESS;
     }
+
     private async moveLastPiece(player: Player): Promise<MGPValidation> {
         this.lastPiece = MGPOptional.of(this.lastPiece.get().getPrevious(this.phalanxDirection.get(), 1));
         if (this.firstPiece.equals(this.lastPiece)) {
@@ -368,6 +381,7 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
         this.phalanxValidLandings = this.getPhalanxValidLandings();
         return MGPValidation.SUCCESS;
     }
+
     private async moveOnlyPiece(player: Player): Promise<MGPValidation> {
         this.lastPiece = MGPOptional.empty();
         this.validExtensions = this.getFirstPieceExtensions(player);
@@ -376,11 +390,13 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
         this.phalanxValidLandings = this.getPhalanxValidLandings();
         return MGPValidation.SUCCESS;
     }
+
     public getPieceClasses(x: number, y: number): string[] {
         const player: string = this.getPlayerClass(this.board[y][x]);
         const stroke: string[] = this.getPieceStrokeClasses(x, y);
         return stroke.concat([player]);
     }
+
     private getPieceStrokeClasses(x: number, y: number): string[] {
         // Show pieces belonging to the phalanx to move
         const coord: Coord = new Coord(x, y);
@@ -395,6 +411,7 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
             return [];
         }
     }
+
     public getRectClasses(x: number, y: number): string[] {
         const clicked: Coord = new Coord(x, y);
         if (this.capturedCoords.some((c: Coord) => c.equals(clicked))) {
@@ -404,6 +421,7 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
         }
         return [];
     }
+
     public getHighlightedCoords(): Coord[] {
         if (this.interactive === false) {
             return [];
@@ -414,6 +432,7 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
             return this.getCurrentPlayerPieces();
         }
     }
+
     private getCurrentPlayerPieces(): Coord[] {
         const pieces: Coord[] = [];
         const state: EpaminondasState = this.getState();
@@ -427,4 +446,5 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
         }
         return pieces;
     }
+
 }

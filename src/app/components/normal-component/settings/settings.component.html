@@ -7,6 +7,7 @@
                 <select id="theme" (change)="changeTheme($event)">
                     <option *ngFor="let theme of availableThemes"
                             [value]="theme.value"
+                            id="theme_{{ theme.value }}"
                             [selected]="theme.value === currentTheme">
                         {{ theme.name }}
                     </option>
@@ -21,6 +22,7 @@
                 <select id="language" (change)="changeLanguage($event)">
                     <option *ngFor="let language of availableLanguages"
                             [value]="language.value"
+                            id="language_{{ language.value }}"
                             [selected]="language.value === currentLanguage">
                         {{ language.name }}
                     </option>

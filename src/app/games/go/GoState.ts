@@ -8,6 +8,14 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { GoConfig } from './GoRules';
 import { Utils } from 'src/app/utils/utils';
 
+export enum Phase {
+    PLAYING = 'PLAYING',
+    PASSED = 'PASSED',
+    COUNTING = 'COUNTING',
+    ACCEPT = 'ACCEPT',
+    FINISHED = 'FINISHED'
+}
+
 type PieceType = 'alive' | 'dead' | 'territory' | 'empty';
 
 export class GoPiece implements ComparableObject {
@@ -91,14 +99,6 @@ export class GoPiece implements ComparableObject {
         return GoPiece.EMPTY;
     }
 
-}
-
-export enum Phase {
-    PLAYING = 'PLAYING',
-    PASSED = 'PASSED',
-    COUNTING = 'COUNTING',
-    ACCEPT = 'ACCEPT',
-    FINISHED = 'FINISHED'
 }
 
 export class GoState extends GameStateWithTable<GoPiece> {

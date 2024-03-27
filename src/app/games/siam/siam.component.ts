@@ -102,8 +102,7 @@ export class SiamComponent extends RectangularGameComponent<SiamRules,
         }
         if (this.insertingPiece) {
             // We were already inserting, we deselect the piece
-            this.cancelMoveAttempt();
-            return MGPValidation.SUCCESS;
+            return this.cancelMove();
         }
         this.cancelMoveAttempt();
         const config: SiamConfig = this.getConfig().get();
@@ -148,8 +147,7 @@ export class SiamComponent extends RectangularGameComponent<SiamRules,
             // Clicking a square to select a piece or end a non-insertion move
             if (this.selectedLanding.isPresent()) {
                 // Player clicked somewhere on the board instead of an orientation arrow, cancel the move
-                this.cancelMoveAttempt();
-                return MGPValidation.SUCCESS;
+                return this.cancelMove();
             } else if (this.selectedPiece.isPresent()) {
                 // Select the landing
                 this.selectedLanding = MGPOptional.of(clickedCoord);

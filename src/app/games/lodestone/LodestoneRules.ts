@@ -170,6 +170,7 @@ export class LodestoneRules extends Rules<LodestoneMove, LodestoneState, Lodesto
             board[coord.y][coord.x] = LodestonePieceNone.UNREACHABLE;
         }
     }
+
     public override isLegal(move: LodestoneMove, state: LodestoneState): MGPFallible<LodestoneInfos> {
         const validityBeforeCaptures: MGPValidation = this.isLegalWithoutCaptures(state, move.coord, move.direction);
         if (validityBeforeCaptures.isFailure()) {
@@ -191,6 +192,7 @@ export class LodestoneRules extends Rules<LodestoneMove, LodestoneState, Lodesto
         }
         return MGPFallible.success(infos);
     }
+
     public applyMoveWithoutPlacingCaptures(state: LodestoneState,
                                            coord: Coord,
                                            lodestone: LodestoneDescription)
@@ -213,6 +215,7 @@ export class LodestoneRules extends Rules<LodestoneMove, LodestoneState, Lodesto
         result.moved.push(coord);
         return result;
     }
+
     private applyPull(state: LodestoneState,
                       board: LodestonePiece[][],
                       lodestone: Coord,
@@ -254,6 +257,7 @@ export class LodestoneRules extends Rules<LodestoneMove, LodestoneState, Lodesto
         }
         return { board, captures, moved };
     }
+
     private applyPush(state: LodestoneState,
                       board: LodestonePiece[][],
                       lodestone: Coord,
@@ -299,6 +303,7 @@ export class LodestoneRules extends Rules<LodestoneMove, LodestoneState, Lodesto
         }
         return { board, captures, moved };
     }
+
     public isLegalWithoutCaptures(state: LodestoneState, coord: Coord, direction: LodestoneDirection): MGPValidation {
         const targetValidity: MGPValidation = this.isTargetLegal(state, coord);
         if (targetValidity.isFailure()) {
@@ -312,6 +317,7 @@ export class LodestoneRules extends Rules<LodestoneMove, LodestoneState, Lodesto
         }
         return MGPValidation.SUCCESS;
     }
+
     public isTargetLegal(state: LodestoneState, coord: Coord): MGPValidation {
         const targetContent: LodestonePiece = state.getPieceAt(coord);
         if (targetContent.isUnreachable()) {
@@ -326,6 +332,7 @@ export class LodestoneRules extends Rules<LodestoneMove, LodestoneState, Lodesto
         }
         return MGPValidation.SUCCESS;
     }
+
     public getGameStatus(node: LodestoneNode): GameStatus {
         const state: LodestoneState = node.gameState;
         const pieces: PlayerNumberMap = state.numberOfPieces();
@@ -341,4 +348,5 @@ export class LodestoneRules extends Rules<LodestoneMove, LodestoneState, Lodesto
             return GameStatus.ONGOING;
         }
     }
+
 }

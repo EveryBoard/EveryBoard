@@ -96,8 +96,7 @@ export class EncapsuleComponent extends RectangularGameComponent<EncapsuleRules,
             }
         } else {
             if (this.chosenCoord.equalsValue(clickedCoord)) {
-                this.cancelMoveAttempt();
-                return MGPValidation.SUCCESS;
+                return this.cancelMove();
             } else {
                 const chosenMove: EncapsuleMove =
                     EncapsuleMove.ofMove(this.chosenCoord.get(), clickedCoord);
@@ -124,13 +123,12 @@ export class EncapsuleComponent extends RectangularGameComponent<EncapsuleRules,
             return this.cancelMove(EncapsuleFailure.NOT_DROPPABLE());
         } else if (this.chosenCoord.isAbsent()) {
             if (this.chosenPiece.equalsValue(piece) && this.chosenPieceIndex.equalsValue(index)) {
-                this.chosenPiece = MGPOptional.empty();
-                this.chosenPieceIndex = MGPOptional.empty();
+                return this.cancelMove();
             } else {
                 this.chosenPiece = MGPOptional.of(piece);
                 this.chosenPieceIndex = MGPOptional.of(index);
+                return MGPValidation.SUCCESS;
             }
-            return MGPValidation.SUCCESS;
         } else {
             return this.cancelMove(EncapsuleFailure.END_YOUR_MOVE());
         }

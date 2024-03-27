@@ -48,7 +48,7 @@ describe('PentagoComponent', () => {
         }));
 
         it('should not accept click on pieces', fakeAsync(async() => {
-            // Given an initial state with a piece on it
+            // Given a state with a piece on it
             const board: Table<PlayerOrNone> = [
                 [O, _, _, _, _, _],
                 [_, _, _, _, _, _],
@@ -58,11 +58,10 @@ describe('PentagoComponent', () => {
                 [_, _, _, _, _, _],
             ];
             const state: PentagoState = new PentagoState(board, 5);
-
-            // When rendering the board
             await testUtils.setupState(state);
 
-            // Then there should not be clickable thing there
+            // When clicking on that piece
+            // Then it should fail
             await testUtils.expectClickFailure('#click_0_0', RulesFailure.MUST_LAND_ON_EMPTY_SPACE());
         }));
 
@@ -143,6 +142,7 @@ describe('PentagoComponent', () => {
         }));
 
         it('should highlight last move (with rotation, but not of last drop)', fakeAsync(async() => {
+            // Given a board with a piece in block number 1
             const board: Table<PlayerOrNone> = [
                 [_, _, _, _, _, _],
                 [_, _, _, O, _, _],
@@ -153,12 +153,17 @@ describe('PentagoComponent', () => {
             ];
             const state: PentagoState = new PentagoState(board, 5);
             await testUtils.setupState(state);
+
+            // When dropping in block number 0 and rotating block number 1
             await testUtils.expectClickSuccess('#click_0_1');
             const move: PentagoMove = PentagoMove.withRotation(0, 1, 1, false);
             await testUtils.expectMoveSuccess('#rotate_1_counterclockwise', move);
+
+            // Then the dropped piece should be highlighted as last moved
             const component: PentagoComponent = testUtils.getGameComponent();
-            expect(component.getBlockClasses(1, 0)).toEqual(['last-move-stroke']);
             expect(component.getSquareClasses(0, 1)).toEqual(['player1-fill', 'last-move-stroke']);
+            // And the rotated block should be marked as last moved
+            expect(component.getBlockClasses(1, 0)).toEqual(['last-move-stroke']);
         }));
     });
 

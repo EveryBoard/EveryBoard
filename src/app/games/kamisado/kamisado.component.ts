@@ -105,8 +105,7 @@ export class KamisadoComponent extends RectangularGameComponent<KamisadoRules,
             return this.choosePiece(x, y);
         } else if (this.chosenAutomatically === false && this.chosen.equalsValue(clickedCoord)) {
             // user selected the already-selected piece
-            this.cancelMoveAttempt();
-            return MGPValidation.SUCCESS;
+            return this.cancelMove();
         } else {
             const piece: KamisadoPiece = this.getState().getPieceAtXY(x, y);
             const player: Player = this.getState().getCurrentPlayer();

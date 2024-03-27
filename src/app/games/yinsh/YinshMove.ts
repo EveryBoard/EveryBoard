@@ -9,12 +9,18 @@ import { GipfCapture } from 'src/app/jscaip/GipfProjectHelper';
 // A capture at Yinsh is just like a capture at Gipf, with the only difference
 // that it needs to be of length 5 rather than 4, and it contains a ring taken
 export class YinshCapture extends GipfCapture {
+
     public static override encoder: Encoder<YinshCapture> = Encoder.tuple(
         [Encoder.list(Coord.encoder), MGPOptional.getEncoder(Coord.encoder)],
         (capture: YinshCapture) => [capture.capturedSpaces, capture.ringTaken],
         (fields: [Array<Coord>, MGPOptional<Coord>]) => new YinshCapture(fields[0], fields[1]),
     );
-    public static of(start: Coord, end: Coord, ringTaken?: MGPOptional<Coord>): YinshCapture {
+
+    public static of(start: Coord,
+                     end: Coord,
+                     ringTaken: MGPOptional<Coord> = MGPOptional.empty())
+    : YinshCapture
+    {
         const coords: Coord[] = [];
         const dir: HexaDirection = HexaDirection.factory.fromMove(start, end).get();
         for (let cur: Coord = start; cur.equals(end) === false; cur = cur.getNext(dir)) {
@@ -23,6 +29,7 @@ export class YinshCapture extends GipfCapture {
         coords.push(end);
         return new YinshCapture(coords, ringTaken);
     }
+
     public readonly ringTaken: MGPOptional<Coord>;
 
     public constructor(captured: ReadonlyArray<Coord>,
@@ -34,14 +41,17 @@ export class YinshCapture extends GipfCapture {
         }
         this.ringTaken = ringTaken;
     }
+
     public setRingTaken(ringTaken: Coord): YinshCapture {
         return new YinshCapture(this.capturedSpaces, MGPOptional.of(ringTaken));
     }
+
     public override equals(other: YinshCapture): boolean {
         if (super.equals(other) === false) return false;
         if (this.ringTaken.equals(other.ringTaken) === false) return false;
         return true;
     }
+
 }
 
 export type YinshFields = [YinshCapture[], Coord, MGPOptional<Coord>, YinshCapture[]];
@@ -58,6 +68,7 @@ export class YinshMove extends Move {
         (move: YinshMove) => [move.initialCaptures, move.start, move.end, move.finalCaptures],
         (fields: YinshFields) => new YinshMove(fields[0], fields[1], fields[2], fields[3]),
     );
+
     public constructor(public readonly initialCaptures: ReadonlyArray<YinshCapture>,
                        public readonly start: Coord,
                        public readonly end: MGPOptional<Coord>,
@@ -65,9 +76,11 @@ export class YinshMove extends Move {
     {
         super();
     }
+
     public isInitialPlacement(): boolean {
         return this.end.isAbsent();
     }
+
     public equals(other: YinshMove): boolean {
         if (this === other) return true;
         if (this.start.equals(other.start) === false) return false;
@@ -76,6 +89,7 @@ export class YinshMove extends Move {
         if (ArrayUtils.equals(this.finalCaptures, other.finalCaptures) === false) return false;
         return true;
     }
+
     public override toString(): string {
         return 'YinshMove([' +
             this.capturesToString(this.initialCaptures) + '], ' +
@@ -83,6 +97,7 @@ export class YinshMove extends Move {
             this.end.toString() + ', [' +
             this.capturesToString(this.finalCaptures) + '])';
     }
+
     private capturesToString(captures: ReadonlyArray<YinshCapture>): string {
         let str: string = '';
         for (const capture of captures) {
@@ -93,5 +108,6 @@ export class YinshMove extends Move {
         }
         return str;
     }
+
 }
 

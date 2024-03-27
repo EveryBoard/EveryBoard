@@ -21,6 +21,7 @@ describe('SettingsComponent', () => {
         testUtils.detectChanges();
         expect(testUtils.getComponent()).toBeTruthy();
     }));
+
     it('should update user setting and redirect when a language change is made', fakeAsync(async() => {
         // Given that the language is set to english
         spyOn(LocaleUtils, 'getNavigatorLanguage').and.returnValue('en-US');
@@ -29,10 +30,7 @@ describe('SettingsComponent', () => {
         testUtils.detectChanges();
 
         // When another language is selected
-        const languageSelection: HTMLSelectElement = testUtils.findElement('#language').nativeElement;
-        languageSelection.value = 'fr';
-        languageSelection.dispatchEvent(new Event('change'));
-        testUtils.detectChanges();
+        await testUtils.selectChildElementOfDropDown('#language', 'language_fr');
 
         // Then the language is changed and the page is reloaded
         expect(userSettingsService.changeLanguage).toHaveBeenCalledWith('fr');
@@ -40,6 +38,7 @@ describe('SettingsComponent', () => {
 
         localStorage.clear(); // clean up local storage
     }));
+
     it('should update user setting and redirect when a theme change is made', fakeAsync(async() => {
         // Given that the dark theme is selected
         spyOn(userSettingsService, 'getTheme').and.returnValue(MGPOptional.of('dark'));
@@ -59,4 +58,5 @@ describe('SettingsComponent', () => {
 
         localStorage.clear(); // clean up local storage
     }));
+
 });

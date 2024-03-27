@@ -16,11 +16,11 @@ describe('HiveMove', () => {
 
     it('should fail to create static moves', () => {
         // When creating a static move
-        const move: MGPFallible<HiveMove> = HiveMove.move(new Coord(0, 0), new Coord(0, 0));
+        const fallibleMove: MGPFallible<HiveMove> = HiveMove.move(new Coord(0, 0), new Coord(0, 0));
         // Then it should fail
-        expect(move.isSuccess()).toBeFalse();
+        expect(fallibleMove.isSuccess()).toBeFalse();
         const reason: string = RulesFailure.MOVE_CANNOT_BE_STATIC();
-        expect(move.getReason()).toBe(reason);
+        expect(fallibleMove.getReason()).toBe(reason);
     });
 
     it('should redefine toString', () => {
@@ -47,9 +47,14 @@ describe('HiveMove', () => {
     });
 
     it('should encode and decode all types of moves correctly', () => {
-        const moves: HiveMove[] = [drop, move, spiderMove, HiveMove.PASS];
-        for (const move of moves) {
-            EncoderTestUtils.expectToBeBijective(HiveMove.encoder, move);
+        const moves: HiveMove[] = [
+            drop,
+            move,
+            spiderMove,
+            HiveMove.PASS,
+        ];
+        for (const sampleMove of moves) {
+            EncoderTestUtils.expectToBeBijective(HiveMove.encoder, sampleMove);
         }
     });
 
@@ -61,8 +66,8 @@ describe('HiveMove', () => {
             HiveMove.drop(new HivePiece(Player.ZERO, 'Spider'), new Coord(0, 0)),
             HiveMove.drop(new HivePiece(Player.ZERO, 'SoldierAnt'), new Coord(0, 0)),
         ];
-        for (const move of drops) {
-            EncoderTestUtils.expectToBeBijective(HiveMove.encoder, move);
+        for (const sampleDrop of drops) {
+            EncoderTestUtils.expectToBeBijective(HiveMove.encoder, sampleDrop);
         }
     });
 

@@ -105,7 +105,7 @@ export class CoerceoPiecesThreatsTilesHeuristic extends PlayerMetricHeuristic<Co
                 const movingThreat: Coord = uniqueFreedom.get().getNext(step.direction, 1);
                 if (CoerceoState.isOnBoard(movingThreat) &&
                     state.getPieceAt(movingThreat).is(opponent) &&
-                    directThreats.some((coord: Coord) => coord.equals(movingThreat)) === false)
+                    directThreats.some((c: Coord) => c.equals(movingThreat)) === false)
                 {
                     movingThreats.push(movingThreat);
                 }

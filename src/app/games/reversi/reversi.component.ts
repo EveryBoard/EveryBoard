@@ -56,7 +56,6 @@ export class ReversiComponent extends RectangularGameComponent<ReversiRules,
         const state: ReversiState = this.getState();
 
         this.board = state.getCopiedBoard();
-        this.capturedCoords = [];
 
         this.scores = MGPOptional.of(state.countScore());
         this.canPass = this.rules.playerCanOnlyPass(state, this.config);
@@ -80,6 +79,7 @@ export class ReversiComponent extends RectangularGameComponent<ReversiRules,
 
     public override hideLastMove(): void {
         this.capturedCoords = [];
+        this.lastMove = MGPOptional.empty();
     }
 
     public getRectClasses(x: number, y: number): string[] {

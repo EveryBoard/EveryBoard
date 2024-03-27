@@ -85,11 +85,11 @@ describe('QuixoRules', () => {
             const move: QuixoMove = moveByDirection[i];
 
             // Then it should throw
-            const reason: string = errorByDirection[i];
+            const error: string = errorByDirection[i];
             TestUtils.expectToThrowAndLog(() => {
                 const reason: string = `won't reach the return of isLegal`;
                 RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
-            }, reason);
+            }, error);
         });
     }
 

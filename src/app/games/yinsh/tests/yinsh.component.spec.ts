@@ -75,6 +75,7 @@ describe('YinshComponent', () => {
             // Then it should not show the placed ring on the side anymore
             testUtils.expectElementNotToExist('#player_0_sideRing_5');
         }));
+
     });
 
     describe('Main phase', () => {
@@ -798,8 +799,8 @@ describe('YinshComponent', () => {
             await testUtils.expectClickFailure('#click_6_8', YinshFailure.MISSING_CAPTURES()); // select second capture coord
         }));
 
-        it('should make pieces captured at the last turn disappear upon first player action', fakeAsync(async() => {
-            // Given a board with a previous move that has captured
+        it('should make pieces captured at the last turn disappear upon first player click', fakeAsync(async() => {
+            // Given a board with a previous move that has made a capture for current player now possible
             const board: Table<YinshPiece> = [
                 [N, N, N, N, N, N, _, _, _, _, N],
                 [N, N, N, N, _, _, _, _, _, _, _],
@@ -888,7 +889,7 @@ describe('YinshComponent', () => {
             await testUtils.expectClickSuccess('#click_3_2');
 
             // When clicking again on the ring
-            await testUtils.expectClickSuccess('#click_3_2');
+            await testUtils.expectClickFailure('#click_3_2');
 
             // Then there should no longer be indicators
             testUtils.expectElementNotToExist('#indicator_4_1'); // The one in the up-right diagonal
@@ -924,6 +925,84 @@ describe('YinshComponent', () => {
             testUtils.expectElementToExist('#indicator_4_3'); // Some of the one below
             testUtils.expectElementToExist('#indicator_4_4');
             testUtils.expectElementToExist('#indicator_4_5');
+        }));
+
+        it('should not put marker inside captured ring', fakeAsync(async() => {
+            // Given a state where two pre-captures are possible
+            const state: YinshState = new YinshState([
+                [N, N, N, N, N, N, _, _, _, _, N],
+                [N, N, N, N, A, _, _, B, B, A, _],
+                [N, N, N, A, _, _, b, B, _, A, _],
+                [N, N, _, A, _, _, _, _, _, B, _],
+                [N, _, _, _, _, a, _, _, B, _, _],
+                [N, _, _, _, a, a, _, b, _, _, N],
+                [_, _, _, a, _, a, _, _, _, _, N],
+                [_, _, a, _, _, a, _, _, _, N, N],
+                [_, a, _, _, _, a, _, _, N, N, N],
+                [_, _, _, _, _, a, _, N, N, N, N],
+                [N, _, _, _, _, N, N, N, N, N, N],
+            ], PlayerNumberMap.of(0, 0), 10);
+            await testUtils.setupState(state);
+
+            // When choosing first pre-capture and ring
+            await testUtils.expectClickSuccess('#click_4_5');
+            await testUtils.expectClickSuccess('#click_3_3');
+
+            // Then marker below captured piece should not exist
+            testUtils.expectElementNotToExist('#marker_3_3');
+            // But it should be selected
+            testUtils.expectElementToExist('#selected_3_3');
+            testUtils.expectElementToHaveClass('#ring_3_3', 'semi-transparent');
+        }));
+
+        it('should show multiple capture of previous turn', fakeAsync(async() => {
+            // Given a state where two pre-capture must but shown
+            const previousState: YinshState = new YinshState([
+                [N, N, N, N, N, N, _, _, _, _, N],
+                [N, N, N, N, A, _, _, B, B, A, _],
+                [N, N, N, A, _, _, b, B, _, A, _],
+                [N, N, _, A, _, _, _, _, _, B, _],
+                [N, _, _, _, _, a, _, _, B, _, _],
+                [N, _, _, _, a, a, _, b, _, _, N],
+                [_, _, _, a, _, a, _, _, _, _, N],
+                [_, _, a, _, _, a, _, _, _, N, N],
+                [_, a, _, _, _, a, _, _, N, N, N],
+                [_, _, _, _, _, a, _, N, N, N, N],
+                [N, _, _, _, _, N, N, N, N, N, N],
+            ], PlayerNumberMap.of(0, 0), 10);
+            const initialCaptures: YinshCapture[] = [
+                YinshCapture.of(new Coord(1, 8), new Coord(5, 4), MGPOptional.of(new Coord(3, 2))),
+                YinshCapture.of(new Coord(5, 5), new Coord(5, 9), MGPOptional.of(new Coord(9, 1))),
+            ];
+            const previousMove: YinshMove = new YinshMove(initialCaptures,
+                                                          new Coord(3, 3),
+                                                          MGPOptional.of(new Coord(4, 3)),
+                                                          [],
+            );
+            const state: YinshState = new YinshState([
+                [N, N, N, N, N, N, _, _, _, _, N],
+                [N, N, N, N, A, _, _, B, B, A, _],
+                [N, N, N, _, _, _, b, B, _, A, _],
+                [N, N, _, a, A, _, _, _, _, B, _],
+                [N, _, _, _, _, _, _, _, B, _, _],
+                [N, _, _, _, _, _, _, b, _, _, N],
+                [_, _, _, _, _, _, _, _, _, _, N],
+                [_, _, _, _, _, _, _, _, _, N, N],
+                [_, _, _, _, _, _, _, _, N, N, N],
+                [_, _, _, _, _, _, _, N, N, N, N],
+                [N, _, _, _, _, N, N, N, N, N, N],
+            ], PlayerNumberMap.of(0, 0), 11);
+
+            // When rendering state
+            await testUtils.setupState(state, { previousState, previousMove });
+
+            // Then 10 different captures should be displayed and 2 rings taken
+            for (const capture of previousMove.initialCaptures) {
+                for (const capturedCoord of capture.capturedSpaces.concat(capture.ringTaken.get())) {
+                    const spaceName: string = '#space_' + capturedCoord.x + '_' + capturedCoord.y;
+                    testUtils.expectElementToHaveClass(spaceName, 'captured-fill');
+                }
+            }
         }));
 
     });

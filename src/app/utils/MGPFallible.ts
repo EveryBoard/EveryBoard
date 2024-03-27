@@ -3,10 +3,10 @@ import { MGPOptional } from './MGPOptional';
 
 export abstract class MGPFallible<T> {
 
-    public static success<T>(value: T): MGPFallible<T> {
+    public static success<U>(value: U): MGPFallible<U> {
         return new MGPFallibleSuccess(value);
     }
-    public static failure<T>(reason: string): MGPFallible<T> {
+    public static failure<U>(reason: string): MGPFallible<U> {
         return new MGPFallibleFailure(reason);
     }
 

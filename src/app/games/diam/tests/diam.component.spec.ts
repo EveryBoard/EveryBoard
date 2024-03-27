@@ -175,7 +175,7 @@ describe('DiamComponent', () => {
             ], 4);
             await testUtils.setupState(state);
             // When clicking on A2 and then somewhere else than the first line
-            // Then the move should be not legal
+            // Then it should fail
             await testUtils.expectClickSuccess('#click_7_0');
             await testUtils.expectClickFailure('#click_2', DiamFailure.MUST_SHIFT_TO_NEIGHBOR());
         }));
@@ -240,7 +240,7 @@ describe('DiamComponent', () => {
             await testUtils.expectClickSuccess('#click_7_0');
 
             // When clicking on it again
-            await testUtils.expectClickSuccess('#click_7_0');
+            await testUtils.expectClickFailure('#click_7_0');
 
             // Then it should no longer be marked as selected
             testUtils.expectElementNotToHaveClass('#click_7_0', 'selected-stroke');

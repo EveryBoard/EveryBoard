@@ -63,4 +63,13 @@ export class YinshPiece implements ComparableObject {
         }
     }
 
+    public isReachable(): boolean {
+        return this !== YinshPiece.UNREACHABLE;
+    }
+
+    public isMarker(): boolean {
+        return this === YinshPiece.MARKER_ZERO ||
+               this === YinshPiece.MARKER_ONE;
+    }
+
 }

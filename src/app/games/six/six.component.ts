@@ -34,7 +34,7 @@ export class SixComponent
     public state: SixState;
 
     public pieces: Coord[];
-    public disconnecteds: Coord[] = [];
+    public disconnectedCoords: Coord[] = [];
     public cuttableGroups: Coord[][] = [];
     public victoryCoords: Coord[];
     public neighbors: Coord[];
@@ -65,10 +65,14 @@ export class SixComponent
         this.chosenLanding = MGPOptional.empty();
         this.cuttableGroups = [];
         this.nextClickShouldSelectGroup = false;
-        await this.updateBoard(false); // Need to refresh the board in case we showed virtual moves for cuts
+        this.resetPiecesAndNeighbors();
     }
 
     public async updateBoard(_triggerAnimation: boolean): Promise<void> {
+        this.resetPiecesAndNeighbors();
+    }
+
+    private resetPiecesAndNeighbors(): void {
         this.state = this.node.gameState;
         this.pieces = this.state.getPieceCoords();
         this.neighbors = this.getEmptyNeighbors();
@@ -78,11 +82,11 @@ export class SixComponent
         this.leftCoord = MGPOptional.empty();
         this.lastDrop = MGPOptional.empty();
         this.victoryCoords = [];
-        this.disconnecteds = [];
+        this.disconnectedCoords = [];
     }
 
     public getViewBox(): ViewBox {
-        const coords: Coord[] = this.pieces.concat(this.disconnecteds).concat(this.neighbors);
+        const coords: Coord[] = this.pieces.concat(this.disconnectedCoords).concat(this.neighbors);
         return ViewBox
             .fromHexa(coords, this.hexaLayout, this.STROKE_WIDTH)
             .expandAbove(this.SPACE_SIZE + this.STROKE_WIDTH)
@@ -102,7 +106,7 @@ export class SixComponent
         if (this.rules.getGameStatus(this.node).isEndGame) {
             this.victoryCoords = this.rules.getShapeVictory(move, state);
         }
-        this.disconnecteds = this.getDisconnected();
+        this.disconnectedCoords = this.getDisconnected();
     }
 
     private getDisconnected(): Coord[] {
@@ -151,11 +155,11 @@ export class SixComponent
             if (this.state.getPieceAt(piece) === this.state.getCurrentOpponent()) {
                 return this.cancelMove(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT());
             } else if (this.selectedPiece.equalsValue(piece)) {
-                this.selectedPiece = MGPOptional.empty();
+                return this.cancelMove();
             } else {
                 this.selectedPiece = MGPOptional.of(piece);
+                return MGPValidation.SUCCESS;
             }
-            return MGPValidation.SUCCESS;
         } else {
             const cuttingMove: SixMove = SixMove.ofCut(this.selectedPiece.get(),
                                                        this.chosenLanding.get(),

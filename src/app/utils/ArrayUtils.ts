@@ -210,6 +210,7 @@ export class TableWithPossibleNegativeIndices<T extends NonNullable<unknown>> {
         if (line.isAbsent()) return MGPOptional.empty();
         return line.get().get(coord.x);
     }
+
     public set(coord: Coord, value: T): void {
         const lineOpt: MGPOptional<MGPMap<number, T>> = this.content.get(coord.y);
         let line: MGPMap<number, T>;
@@ -221,6 +222,7 @@ export class TableWithPossibleNegativeIndices<T extends NonNullable<unknown>> {
         }
         line.set(coord.x, value);
     }
+
     [Symbol.iterator](): IterableIterator<Cell<T>> {
         const elements: Cell<T>[] = [];
         const ys: number[] = this.content.getKeySet().toList();

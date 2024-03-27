@@ -232,8 +232,7 @@ export class TrexoComponent extends ParallelogramGameComponent<TrexoRules, Trexo
         if (this.droppedPiece.isPresent()) {
             const dropped: Coord = this.droppedPiece.get();
             if (this.droppedPiece.equalsValue(clicked)) {
-                await this.cancelMoveAttempt();
-                return MGPValidation.SUCCESS;
+                return this.cancelMove();
             }
             if (this.possibleNextClicks.some((c: Coord) => c.equals(clicked))) {
                 const isPlayerZero: boolean = this.getState().getCurrentPlayer() === Player.ZERO;

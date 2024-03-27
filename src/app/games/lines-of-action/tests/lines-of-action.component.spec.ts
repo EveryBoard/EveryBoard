@@ -127,7 +127,7 @@ describe('LinesOfActionComponent', () => {
             await testUtils.expectClickSuccess('#click_2_0');
 
             // When clicking on that piece again
-            await testUtils.expectClickSuccess('#click_2_0');
+            await testUtils.expectClickFailure('#click_2_0');
 
             // Then it should no longer be selected
             testUtils.expectElementNotToHaveClass('#piece_2_0', 'selected-stroke');

@@ -18,18 +18,20 @@
                                 <option selected
                                         value="human" i18n>Human</option>
                                 <option *ngFor="let ai of gameComponent.availableAIs"
+                                        id="playerZero_ai_{{ ai.name }}"
                                         [value]="ai.name">{{ ai.name }}</option>
                             </select>
                        </div>
                         <div class="select">
                             <select *ngIf="players[0].equalsValue('human') === false"
-                                    id="aiZeroLevelSelect"
+                                    id="aiZeroOptionSelect"
                                     [(ngModel)]="aiOptions[0]"
                                     (change)="updatePlayer(Player.ZERO)">
                                 <option selected
                                         value="none"
                                         i18n>Pick the options</option>
                                 <option *ngFor="let option of this.availableAIOptions(0)"
+                                        id="playerZero_option_{{ option.name }}"
                                         [value]="option.name"
                                         i18n>{{ option.name }}</option>
                             </select>
@@ -48,18 +50,20 @@
                                         value="human"
                                         i18n>Human</option>
                                 <option *ngFor="let ai of gameComponent.availableAIs"
+                                        id="playerOne_ai_{{ ai.name }}"
                                         [value]="ai.name">{{ ai.name }}</option>
                             </select>
                         </div>
                         <div class="select">
                             <select *ngIf="players[1].equalsValue('human') === false"
-                                    id="aiOneLevelSelect"
+                                    id="aiOneOptionSelect"
                                     [(ngModel)]="aiOptions[1]"
                                     (change)="updatePlayer(Player.ONE)">
                                 <option selected
                                         value="none"
                                         i18n>Pick the options</option>
                                 <option *ngFor="let option of this.availableAIOptions(1)"
+                                        id="playerOne_option_{{ option.name }}"
                                         [value]="option.name"
                                         i18n>{{ option.name }}</option>
                             </select>
