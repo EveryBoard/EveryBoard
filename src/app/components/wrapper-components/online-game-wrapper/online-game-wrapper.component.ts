@@ -297,11 +297,11 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         Utils.assert(success.isSuccess(), 'Chosen move should be legal after all checks, but it is not! Reason: ' + success.getReasonOr(''));
         this.gameComponent.node = success.get();
         if (this.role === PlayerOrNone.NONE) {
-            await this.showNextMove(isLastMoveOfBatch);
+            await this.showNewMove(isLastMoveOfBatch);
         } else {
             // We only animate the move of opponent, because the users move has already been animated before sending it
             const triggerAnimation: boolean = currentPartTurn % 2 !== this.role.getValue();
-            await this.showNextMove(triggerAnimation && isLastMoveOfBatch);
+            await this.showNewMove(triggerAnimation && isLastMoveOfBatch);
         }
         await this.setCurrentPlayerAccordingToCurrentTurn();
         this.timeManager.onReceivedMove(moveEvent);

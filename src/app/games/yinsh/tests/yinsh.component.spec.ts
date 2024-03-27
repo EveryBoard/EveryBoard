@@ -928,7 +928,7 @@ describe('YinshComponent', () => {
         }));
 
         it('should not put marker inside captured ring', fakeAsync(async() => {
-            // Given a state where two pre-capture are possible
+            // Given a state where two pre-captures are possible
             const state: YinshState = new YinshState([
                 [N, N, N, N, N, N, _, _, _, _, N],
                 [N, N, N, N, A, _, _, B, B, A, _],
@@ -996,7 +996,7 @@ describe('YinshComponent', () => {
             // When rendering state
             await testUtils.setupState(state, { previousState, previousMove });
 
-            // Then 10 different captures should be displayed and 2 ring taken
+            // Then 10 different captures should be displayed and 2 rings taken
             for (const capture of previousMove.initialCaptures) {
                 for (const capturedCoord of capture.capturedSpaces.concat(capture.ringTaken.get())) {
                     const spaceName: string = '#space_' + capturedCoord.x + '_' + capturedCoord.y;

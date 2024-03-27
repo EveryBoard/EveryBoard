@@ -65,14 +65,14 @@ export class SixComponent
         this.chosenLanding = MGPOptional.empty();
         this.cuttableGroups = [];
         this.nextClickShouldSelectGroup = false;
-        this.resetPieceAndNeighbors();
+        this.resetPiecesAndNeighbors();
     }
 
     public async updateBoard(_triggerAnimation: boolean): Promise<void> {
-        this.resetPieceAndNeighbors();
+        this.resetPiecesAndNeighbors();
     }
 
-    private resetPieceAndNeighbors(): void {
+    private resetPiecesAndNeighbors(): void {
         this.state = this.node.gameState;
         this.pieces = this.state.getPieceCoords();
         this.neighbors = this.getEmptyNeighbors();

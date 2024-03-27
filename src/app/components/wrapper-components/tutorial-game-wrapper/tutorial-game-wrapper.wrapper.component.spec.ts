@@ -871,7 +871,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
         }));
 
         it('should hide last move after click', fakeAsync(async() => {
-            // Given tutorial step fofo type "anyMove"
+            // Given tutorial step of type "anyMove"
             const tutorial: TutorialStep[] = [
                 TutorialStep.anyMove(
                     'title',
@@ -910,7 +910,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             ];
             await wrapper.startTutorial(tutorial);
 
-            // When doing one of those click
+            // When doing one of those clicks
             await testUtils.expectClickSuccess('#chooseCoord_0_0');
 
             // expect to see steps success message on component

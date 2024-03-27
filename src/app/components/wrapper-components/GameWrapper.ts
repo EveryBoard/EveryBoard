@@ -240,7 +240,7 @@ export abstract class GameWrapper<P extends Comparable> extends BaseWrapperCompo
      *     3. by the AI
      * @param triggerAnimation a boolean set to true if there is a need to trigger the animation of the last move
      */
-    protected async showNextMove(triggerAnimation: boolean): Promise<void> {
+    protected async showNewMove(triggerAnimation: boolean): Promise<void> {
         await this.gameComponent.updateBoard(triggerAnimation);
         const lastMove: Move = this.gameComponent.node.previousMove.get();
         const config: MGPOptional<RulesConfig> = await this.getConfig();

@@ -78,7 +78,7 @@ describe('ApagosComponent', () => {
             ], 5, 5);
             await testUtils.setupState(state);
 
-            // When clicking on leftmost space to attempt a transfert
+            // When clicking on leftmost space to attempt a transfer
             // Then it should fail
             const reason: string = ApagosFailure.NO_POSSIBLE_TRANSFER_REMAINS();
             await testUtils.expectClickFailure('#square_1', reason);
@@ -116,7 +116,7 @@ describe('ApagosComponent', () => {
             await testUtils.setupState(state);
             await testUtils.expectClickSuccess('#square_2');
 
-            // When clicking on drop arrow #dropArrow_zero_1
+            // When clicking on drop arrow
             // Then the move should have been done
             const move: ApagosMove = ApagosMove.transfer(ApagosCoord.TWO, ApagosCoord.ONE).get();
             await testUtils.expectMoveSuccess('#dropArrow_zero_1', move);

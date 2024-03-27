@@ -380,7 +380,7 @@ describe('LascaComponent', () => {
         it('should highlight piece that can move this turn (when step moves)', () => {
             // Given a board where current player can move 4 pieces (for example, the starting board)
             // When displaying the board
-            // Then those 3 coord should be "selectable-fill"
+            // Then those 4 coords should be "selectable-fill"
             testUtils.expectElementToHaveClass('#square_0_4', 'selectable-fill');
             testUtils.expectElementToHaveClass('#square_2_4', 'selectable-fill');
             testUtils.expectElementToHaveClass('#square_4_4', 'selectable-fill');

@@ -120,7 +120,7 @@ export class TutorialGameWrapperComponent extends GameWrapper<TutorialPlayer> im
         Utils.assert(node.isSuccess(), 'It should be impossible to call onLegalUserMove with an illegal move, but got ' + node.getReasonOr(''));
         this.gameComponent.node = node.get();
 
-        await this.showNextMove(false);
+        await this.showNewMove(false);
         this.moveAttemptMade = true;
         if (currentStep.isPredicate()) {
             const previousState: GameState = this.gameComponent.getPreviousState();
