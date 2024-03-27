@@ -2,7 +2,7 @@
 import { TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { DebugElement } from '@angular/core';
 import { Router } from '@angular/router';
-import * as Firestore from '@angular/fire/firestore';
+import * as Firestore from '@firebase/firestore';
 import { Timestamp } from 'firebase/firestore';
 
 import { OnlineGameWrapperComponent, OnlineGameWrapperMessages } from './online-game-wrapper.component';

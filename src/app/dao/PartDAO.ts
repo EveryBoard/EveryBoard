@@ -1,7 +1,6 @@
 import { FirestoreDAO } from './FirestoreDAO';
 import { Part } from '../domain/Part';
 import { Injectable } from '@angular/core';
-import { Firestore } from '@angular/fire/firestore';
 import { Debug } from '../utils/utils';
 
 @Injectable({
@@ -10,7 +9,7 @@ import { Debug } from '../utils/utils';
 @Debug.log
 export class PartDAO extends FirestoreDAO<Part> {
 
-    public constructor(firestore: Firestore) {
-        super('parts', firestore);
+    public constructor() {
+        super('parts');
     }
 }

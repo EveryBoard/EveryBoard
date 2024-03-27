@@ -9,7 +9,7 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { GameState } from '../../jscaip/GameState';
 import { Move } from '../../jscaip/Move';
 import { MGPValidation } from '../MGPValidation';
-import { AppModule, FirebaseProviders } from '../../app.module';
+import { AppModule } from '../../app.module';
 import { UserDAO } from '../../dao/UserDAO';
 import { ConnectedUserService, AuthUser } from '../../services/ConnectedUserService';
 import { GameNode } from '../../jscaip/AI/GameNode';
@@ -33,8 +33,6 @@ import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
 import { ErrorLoggerServiceMock } from 'src/app/services/tests/ErrorLoggerServiceMock.spec';
 import { AbstractGameComponent } from 'src/app/components/game-components/game-component/GameComponent';
 import { findMatchingRoute } from 'src/app/app.module.spec';
-import * as Firestore from '@angular/fire/firestore';
-import * as Auth from '@angular/fire/auth';
 import { HumanDurationPipe } from 'src/app/pipes-and-directives/human-duration.pipe';
 import { AutofocusDirective } from 'src/app/pipes-and-directives/autofocus.directive';
 import { ToggleVisibilityDirective } from 'src/app/pipes-and-directives/toggle-visibility.directive';
@@ -668,19 +666,15 @@ export class TestUtils {
 }
 
 export async function setupEmulators(): Promise<unknown> {
+    new AppModule(); // This will initialize firebase with the emulators
     await TestBed.configureTestingModule({
         imports: [
             HttpClientModule,
-            FirebaseProviders.app(),
-            FirebaseProviders.firestore(),
-            FirebaseProviders.auth(),
         ],
         providers: [
             ConnectedUserService,
         ],
     }).compileComponents();
-    TestBed.inject(Firestore.Firestore);
-    TestBed.inject(Auth.Auth);
     const http: HttpClient = TestBed.inject(HttpClient);
     // Clear the content of the firestore database in the emulator
     await http.delete('http://localhost:8080/emulator/v1/projects/my-project/databases/(default)/documents').toPromise();
@@ -699,7 +693,7 @@ function getComponentClassName(component: Type<any>): string {
 
 /**
  * Tests that the routes are used as expected. The router.navigate method should
- * be spyed on. This function will match the route that is navigated to with
+ * be spied on. This function will match the route that is navigated to with
  * the declared routes of the application, and ensure that the component that is
  * routed to matches `component`. In case multiple router.navigate calls happen,
  * set otherRoutes to true.

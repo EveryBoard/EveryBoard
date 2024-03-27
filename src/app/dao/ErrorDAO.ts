@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { Firestore } from '@angular/fire/firestore';
 import { FirestoreTime } from '../domain/Time';
 import { JSONValue } from '../utils/utils';
 import { FirestoreDocument, FirestoreDAO } from './FirestoreDAO';
@@ -27,7 +26,7 @@ export type ErrorDocument = FirestoreDocument<MGPError>;
 })
 // The DAO used to log the errors within firebase
 export class ErrorDAO extends FirestoreDAO<MGPError> {
-    public constructor(firestore: Firestore) {
-        super('errors', firestore);
+    public constructor() {
+        super('errors');
     }
 }
