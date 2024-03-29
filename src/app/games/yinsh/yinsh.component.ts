@@ -178,7 +178,7 @@ export class YinshComponent extends HexagonalGameComponent<YinshRules,
     }
 
     private isCapturedMarker(coord: Coord, captures: YinshCapture[]): boolean {
-        return captures.some((cap: YinshCapture) => cap.capturedSpaces.some((c: Coord) => c.equals(coord)));
+        return captures.some((capture: YinshCapture) => capture.capturedSpaces.some((c: Coord) => c.equals(coord)));
     }
 
     private isCapturedRing(coord: Coord, captures: YinshCapture[]): boolean {
@@ -235,7 +235,7 @@ export class YinshComponent extends HexagonalGameComponent<YinshRules,
     }
 
     private isInitialCaptureRing(coord: Coord): boolean {
-        return this.initialCaptures.some((cap: YinshCapture) => cap.ringTaken.equalsValue(coord));
+        return this.initialCaptures.some((c: YinshCapture) => c.ringTaken.equalsValue(coord));
     }
 
     public getRingClasses(x: number, y: number): string[] {
@@ -278,8 +278,7 @@ export class YinshComponent extends HexagonalGameComponent<YinshRules,
         } else {
             this.lastMoved = this.coordsBetween(move.start, move.end.get());
             this.lastCaptures = [];
-            move.initialCaptures.forEach((c: YinshCapture) => this.lastCaptures.push(c));
-            move.finalCaptures.forEach((c: YinshCapture) => this.lastCaptures.push(c));
+            this.lastCaptures = this.lastCaptures.concat(move.initialCaptures).concat(move.finalCaptures);
         }
     }
 
@@ -334,7 +333,6 @@ export class YinshComponent extends HexagonalGameComponent<YinshRules,
             }
         });
         if (captures.length > 1) {
-            // this.selectedCoords.push(coord);
             this.moveToCaptureSelectLast(captures);
         } else if (captures.length === 0) {
             return this.cancelMove(YinshFailure.MISSING_CAPTURES());

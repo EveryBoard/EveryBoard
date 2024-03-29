@@ -277,10 +277,6 @@ export class SimpleComponentTestUtils<T> {
 
     public async selectChildElementOfDropDown(dropDownName: string, childName: string): Promise<void> {
         const selectedDropDOwn: HTMLSelectElement = this.findElement(dropDownName).nativeElement;
-        // eslint-disable-next-line guard-for-in
-        for (const o in selectedDropDOwn.options) {
-            console.log(dropDownName, 'has', o);
-        }
         selectedDropDOwn.value = selectedDropDOwn.options[childName].value;
         selectedDropDOwn.dispatchEvent(new Event('change'));
         this.detectChanges();

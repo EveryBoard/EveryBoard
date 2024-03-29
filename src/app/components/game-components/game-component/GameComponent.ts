@@ -152,9 +152,9 @@ export abstract class GameComponent<R extends SuperRules<M, S, C, L>,
     }
 
     /**
-     * reason: the reason of the cancellation, this message will be toasted if present.
      * Put the view back where it was before move attempt.
      * Note: cancelMoveAttempt only hide the move attempt but does not show last move again
+     * @param reason: the reason of the cancellation, this message will be toasted if present.
      */
     public async cancelMove(reason?: string): Promise<MGPValidation> {
         this.cancelMoveAttempt();

@@ -177,8 +177,8 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
                     return options.name === optionsName;
                 }));
             // If the option is not selected
-            // then it is not a PLAYING AI yet, just a selected ai
-            // and user must still select the ai's options
+            // then it is not a PLAYING AI yet, just a selected AI
+            // and user must still select the AI's options
             return matchingOptions.map((options: AIOptions) => {
                 return { ai, options };
             });
@@ -190,7 +190,7 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
     /**
      * @param playerIndex 0 or 1 given the index of the current player
      * @returns MGPOptional.empty() if no AI is selected
-     *          MGPOptional.of(some ai) if an AI is selected, even if ai has its options unchosen still
+     *          MGPOptional.of(some AI) if an AI is selected, even if AI has its options unchosen
      */
     private getAI(playerIndex: number): MGPOptional<AbstractAI> {
         return MGPOptional.ofNullable(
