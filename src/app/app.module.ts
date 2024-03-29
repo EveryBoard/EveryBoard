@@ -129,6 +129,7 @@ import { FirestoreTimePipe } from './pipes-and-directives/firestore-time.pipe';
 import { ToggleVisibilityDirective } from './pipes-and-directives/toggle-visibility.directive';
 import { RulesConfigurationComponent } from './components/wrapper-components/rules-configuration/rules-configuration.component';
 import { BlankGobanComponent } from './components/game-components/goban-game-component/blank-goban/blank-goban.component';
+import { DirArrowComponent } from './components/game-components/arrow-component/dir-arrow.component';
 
 registerLocaleData(localeFr);
 
@@ -180,6 +181,8 @@ export const routes: Route[] = [
         AccountComponent,
         DemoCardWrapperComponent,
         DemoPageComponent,
+
+        DirArrowComponent,
 
         AbaloneComponent,
         ApagosComponent,

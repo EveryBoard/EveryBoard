@@ -24,19 +24,12 @@ import { AbaloneScoreHeuristic } from './AbaloneScoreHeuristic';
 import { AbaloneMoveGenerator } from './AbaloneMoveGenerator';
 import { Utils } from 'src/app/utils/utils';
 import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
+import { HexaDirArrow } from 'src/app/components/game-components/arrow-component/HexaDirArrow';
 
 type CapturedInfo = {
     coord: Coord,
     pieceClasses: string[],
 };
-export class HexaDirArrow {
-    public constructor(public start: Coord,
-                       public startCenter: Coord,
-                       public landing: Coord,
-                       public landingCenter: Coord,
-                       public dir: HexaDirection,
-                       public transformation: string) {}
-}
 
 type AbaloneArrowInfo = {
 

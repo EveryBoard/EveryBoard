@@ -11,7 +11,7 @@ import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { EpaminondasFailure } from '../EpaminondasFailure';
 import { Table } from 'src/app/utils/ArrayUtils';
 
-describe('EpaminondasComponent', () => {
+fdescribe('EpaminondasComponent', () => {
 
     let testUtils: ComponentTestUtils<EpaminondasComponent>;
 
@@ -21,13 +21,20 @@ describe('EpaminondasComponent', () => {
 
     function expectClickable(x: number, y: number): void {
         const coord: Coord = new Coord(x, y);
-        expect(testUtils.getGameComponent()
-            .getHighlightedCoords().some((c: Coord) => c.equals(coord))).toBeTrue();
+        const coordHighlighted: boolean = testUtils
+            .getGameComponent()
+            .getHighlightedCoords()
+            .some((c: Coord) => c.equals(coord));
+        expect(coordHighlighted).toBeTrue();
     }
+
     function expectNotClickable(x: number, y: number): void {
         const coord: Coord = new Coord(x, y);
-        expect(testUtils.getGameComponent()
-            .getHighlightedCoords().some((c: Coord) => c.equals(coord))).toBeFalse();
+        const coordIsHighlighted: boolean = testUtils
+            .getGameComponent()
+            .getHighlightedCoords()
+            .some((c: Coord) => c.equals(coord));
+        expect(coordIsHighlighted).toBeFalse();
     }
 
     beforeEach(fakeAsync(async() => {
@@ -359,6 +366,7 @@ describe('EpaminondasComponent', () => {
     }));
 
     describe('third click behaviour', () => {
+
         beforeEach(fakeAsync(async() => {
             // Given a board with aligned soldiers that are selected
             const board: Table<PlayerOrNone> = [
@@ -399,6 +407,7 @@ describe('EpaminondasComponent', () => {
             // Then it should fail
             await testUtils.expectClickFailure('#click_0_7', EpaminondasFailure.PHALANX_CANNOT_CONTAIN_OPPONENT_PIECE());
         }));
+
     });
 
     it('should change first soldier coord when last click was a phalanx extension in the opposite direction of the phalanx', fakeAsync(async() => {
@@ -476,4 +485,5 @@ describe('EpaminondasComponent', () => {
         // Then no coordinate should be clickable
         testUtils.expectElementNotToExist('.clickable-stroke');
     }));
+
 });
