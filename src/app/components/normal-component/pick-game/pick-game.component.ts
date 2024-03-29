@@ -202,7 +202,7 @@ class GameDescription {
 
     public static readonly QUIXO: Localized = () => $localize`Align 5 of your pieces on a board where pieces slide!`;
 
-    public static readonly RECTANGLZ: Localized = () => $localize`TODO: Duplicate yourself and conquer the board`;
+    public static readonly RECTANGLZ: Localized = () => $localize`Duplicate yourself to conquer the board!`;
 
     public static readonly REVERSI: Localized = () => $localize`Sandwich your opponent's pieces to dominate the board!`;
 

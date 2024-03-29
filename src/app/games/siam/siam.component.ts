@@ -12,7 +12,7 @@ import { Utils } from 'src/app/utils/utils';
 import { Debug } from 'src/app/utils/utils';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
+import { Player } from 'src/app/jscaip/Player';
 import { MGPSet } from 'src/app/utils/MGPSet';
 import { SiamFailure } from './SiamFailure';
 import { MCTS } from 'src/app/jscaip/AI/MCTS';

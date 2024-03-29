@@ -15,7 +15,7 @@ import { Utils } from 'src/app/utils/utils';
 import { RectangularGameComponent } from 'src/app/components/game-components/rectangular-game-component/RectangularGameComponent';
 import { DiaballikFailure } from './DiaballikFailure';
 import { Line } from 'src/app/jscaip/Line';
-import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
+import { Player } from 'src/app/jscaip/Player';
 import { DiaballikFilteredMoveGenerator } from './DiaballikFilteredMoveGenerator';
 import { ViewBox } from 'src/app/components/game-components/GameComponentUtils';
 import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';

@@ -1,18 +1,18 @@
 import { PlayerOrNone } from 'src/app/jscaip/Player';
 import { RectanglzMove } from '../RectanglzMove';
 import { RectanglzMoveGenerator } from '../RectanglzMoveGenerator';
-import { RectanglzNode, RectanglzRules } from '../RectanglzRules';
+import { RectanglzConfig, RectanglzNode, RectanglzRules } from '../RectanglzRules';
 import { RectanglzState } from '../RectanglzState';
-import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
 
-fdescribe('RectanglzMoveGenerator', () => {
+describe('RectanglzMoveGenerator', () => {
 
     const _: PlayerOrNone = PlayerOrNone.NONE;
     const O: PlayerOrNone = PlayerOrNone.ZERO;
     const X: PlayerOrNone = PlayerOrNone.ONE;
 
     let moveGenerator: RectanglzMoveGenerator;
-    const defaultConfig: NoConfig = RectanglzRules.get().getDefaultRulesConfig();
+    const defaultConfig: MGPOptional<RectanglzConfig> = RectanglzRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         moveGenerator = new RectanglzMoveGenerator();
@@ -20,7 +20,7 @@ fdescribe('RectanglzMoveGenerator', () => {
 
     it('should have all move options', () => {
         // Given an initial node
-        const initialState: RectanglzState = RectanglzRules.get().getInitialState();
+        const initialState: RectanglzState = RectanglzRules.get().getInitialState(defaultConfig);
         const node: RectanglzNode = new RectanglzNode(initialState);
 
         // When listing the moves

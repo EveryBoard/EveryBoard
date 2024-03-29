@@ -4,17 +4,19 @@ import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { RectanglzComponent } from '../rectanglz.component';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { RectanglzState } from '../RectanglzState';
-import { RectanglzRules } from '../RectanglzRules';
+import { RectanglzConfig, RectanglzRules } from '../RectanglzRules';
 import { RectanglzMove } from '../RectanglzMove';
 import { Coord } from 'src/app/jscaip/Coord';
 import { PlayerOrNone } from 'src/app/jscaip/Player';
 import { RectanglzFailure } from '../RectanglzFailure';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
 
-fdescribe('RectanglzComponent', () => {
+describe('RectanglzComponent', () => {
 
     const _: PlayerOrNone = PlayerOrNone.NONE;
     const O: PlayerOrNone = PlayerOrNone.ZERO;
     const X: PlayerOrNone = PlayerOrNone.ONE;
+    const defaultConfig: MGPOptional<RectanglzConfig> = RectanglzRules.get().getDefaultRulesConfig();
 
     let testUtils: ComponentTestUtils<RectanglzComponent>;
 
@@ -65,7 +67,7 @@ fdescribe('RectanglzComponent', () => {
                 [_, _, _, _, _, _, _, _],
                 [X, _, _, _, _, _, _, O],
             ], 1);
-            const previousState: RectanglzState = RectanglzRules.get().getInitialState();
+            const previousState: RectanglzState = RectanglzRules.get().getInitialState(defaultConfig);
             const previousMove: RectanglzMove = RectanglzMove.from(new Coord(0, 0), new Coord(1, 1)).get();
             await testUtils.setupState(state, { previousMove, previousState });
             testUtils.expectElementToHaveClasses('#piece_0_0', ['base', 'player0-fill', 'last-move-stroke']);
@@ -109,7 +111,7 @@ fdescribe('RectanglzComponent', () => {
             testUtils.expectElementToHaveClasses('#piece_0_0', ['base', 'player0-fill', 'selected-stroke']);
 
             // When licking on invalid landing space
-            await testUtils.expectClickFailure('#click_5_5', RectanglzFailure.MAX_DISTANCE_IS_2());
+            await testUtils.expectClickFailure('#click_5_5', RectanglzFailure.MAX_DISTANCE_IS_(2));
 
             // Then the piece should no longer be selected
             testUtils.expectElementToHaveClasses('#piece_0_0', ['base', 'player0-fill']);

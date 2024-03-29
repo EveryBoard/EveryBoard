@@ -4,7 +4,6 @@ import { P4Config, P4Node } from './P4Rules';
 import { Debug } from 'src/app/utils/utils';
 import { MoveGenerator } from 'src/app/jscaip/AI/AI';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { PlayerOrNone } from 'src/app/jscaip/Player';
 
 @Debug.log
 export class P4MoveGenerator extends MoveGenerator<P4Move, P4State, P4Config> {

@@ -1,4 +1,4 @@
-import { RectanglzRules as RectanglzRules } from './RectanglzRules';
+import { RectanglzConfig, RectanglzRules as RectanglzRules } from './RectanglzRules';
 import { RectanglzMove as RectanglzMove } from './RectanglzMove';
 import { RectanglzState } from './RectanglzState';
 import { Component } from '@angular/core';
@@ -24,7 +24,8 @@ import { Direction } from 'src/app/jscaip/Direction';
 export class RectanglzComponent extends RectangularGameComponent<RectanglzRules,
                                                                  RectanglzMove,
                                                                  RectanglzState,
-                                                                 PlayerOrNone>
+                                                                 PlayerOrNone,
+                                                                 RectanglzConfig>
 {
     public EMPTY: PlayerOrNone = PlayerOrNone.NONE;
 
@@ -82,7 +83,6 @@ export class RectanglzComponent extends RectangularGameComponent<RectanglzRules,
     }
 
     public async onClick(x: number, y: number): Promise<MGPValidation> {
-        console.log('onClick!')
         const clickValidity: MGPValidation = await this.canUserPlay('#click_' + x + '_' + y);
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());

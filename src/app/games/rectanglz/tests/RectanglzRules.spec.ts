@@ -1,21 +1,22 @@
 /* eslint-disable max-lines-per-function */
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
-import { RectanglzNode, RectanglzRules } from '../RectanglzRules';
+import { RectanglzConfig, RectanglzNode, RectanglzRules } from '../RectanglzRules';
 import { RectanglzState } from '../RectanglzState';
-import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 import { RectanglzMove } from '../RectanglzMove';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
+import { RectanglzFailure } from '../RectanglzFailure';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
 
-fdescribe('RectanglzRules', () => {
+describe('RectanglzRules', () => {
 
     const _: PlayerOrNone = PlayerOrNone.NONE;
     const O: PlayerOrNone = PlayerOrNone.ZERO;
     const X: PlayerOrNone = PlayerOrNone.ONE;
 
     let rules: RectanglzRules;
-    const defaultConfig: NoConfig = RectanglzRules.get().getDefaultRulesConfig();
+    const defaultConfig: MGPOptional<RectanglzConfig> = RectanglzRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         // This is the rules instance that we will test
@@ -24,7 +25,7 @@ fdescribe('RectanglzRules', () => {
 
     it('should allow duplication move', () => {
         // Given any state
-        const state: RectanglzState = rules.getInitialState();
+        const state: RectanglzState = rules.getInitialState(defaultConfig);
 
         // When applying duplication move
         const move: RectanglzMove = RectanglzMove.from(new Coord(0, 0), new Coord(1, 1)).get();
@@ -45,7 +46,7 @@ fdescribe('RectanglzRules', () => {
 
     it('should allow jump move (linear)', () => {
         // Given any state with possible jumps
-        const state: RectanglzState = rules.getInitialState();
+        const state: RectanglzState = rules.getInitialState(defaultConfig);
 
         // When doing a jump
         const move: RectanglzMove = RectanglzMove.from(new Coord(0, 0), new Coord(2, 2)).get();
@@ -96,7 +97,7 @@ fdescribe('RectanglzRules', () => {
 
     it('should allow jump move (horse)', () => {
         // Given any state with possible jumps
-        const state: RectanglzState = rules.getInitialState();
+        const state: RectanglzState = rules.getInitialState(defaultConfig);
 
         // When doing a horse jump
         const move: RectanglzMove = RectanglzMove.from(new Coord(0, 0), new Coord(1, 2)).get();
@@ -117,7 +118,7 @@ fdescribe('RectanglzRules', () => {
 
     it('should refuse moving opponent piece', () => {
         // Given any state
-        const state: RectanglzState = rules.getInitialState();
+        const state: RectanglzState = rules.getInitialState(defaultConfig);
 
         // When moving an opponent piece
         const move: RectanglzMove = RectanglzMove.from(new Coord(7, 0), new Coord(6, 0)).get();
@@ -129,7 +130,7 @@ fdescribe('RectanglzRules', () => {
 
     it('should refuse moving empty space', () => {
         // Given any state
-        const state: RectanglzState = rules.getInitialState();
+        const state: RectanglzState = rules.getInitialState(defaultConfig);
 
         // When moving an opponent piece
         const move: RectanglzMove = RectanglzMove.from(new Coord(4, 4), new Coord(3, 3)).get();
@@ -157,6 +158,18 @@ fdescribe('RectanglzRules', () => {
 
         // Then it should fail
         const reason: string = RulesFailure.MUST_LAND_ON_EMPTY_SPACE();
+        RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
+    });
+
+    it('should refuse when making jump longer than 2', () => {
+        // Given any state
+        const state: RectanglzState = rules.getInitialState(defaultConfig);
+
+        // When trying to create a jump of 3
+        const move: RectanglzMove = RectanglzMove.from(new Coord(0, 0), new Coord(3, 3)).get();
+
+        // Then it should be a failure
+        const reason: string = RectanglzFailure.MAX_DISTANCE_IS_(2);
         RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
     });
 
@@ -230,6 +243,35 @@ fdescribe('RectanglzRules', () => {
             // When
             // Then
             RulesUtils.expectToBeOngoing(rules, node, defaultConfig);
+        });
+
+    });
+
+    describe('other config', () => {
+
+        it('should allow longer jumps when config allows it', () => {
+            // Given any state and a different config
+            const customConfig: MGPOptional<RectanglzConfig> = MGPOptional.of({
+                ...defaultConfig.get(),
+                jumpSize: 3,
+            });
+            const state: RectanglzState = rules.getInitialState(customConfig);
+
+            // When trying to create a jump of 3
+            const move: RectanglzMove = RectanglzMove.from(new Coord(0, 0), new Coord(3, 3)).get();
+
+            // Then it should be legal
+            const expectedState: RectanglzState = new RectanglzState([
+                [_, _, _, _, _, _, _, X],
+                [_, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _],
+                [_, _, _, O, _, _, _, _],
+                [_, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _],
+                [X, _, _, _, _, _, _, O],
+            ], 1);
+            RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         });
 
     });

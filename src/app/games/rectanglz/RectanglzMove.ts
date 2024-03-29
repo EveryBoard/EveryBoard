@@ -2,7 +2,6 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { MoveCoordToCoord } from 'src/app/jscaip/MoveCoordToCoord';
 import { Encoder } from 'src/app/utils/Encoder';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
-import { RectanglzFailure } from './RectanglzFailure';
 import { MoveWithTwoCoords } from 'src/app/jscaip/MoveWithTwoCoords';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 
@@ -14,21 +13,23 @@ export class RectanglzMove extends MoveCoordToCoord {
         const distance: number = start.getDistanceToward(end);
         if (distance === 0) {
             return MGPFallible.failure(RulesFailure.MOVE_CANNOT_BE_STATIC());
-        } else if (distance < 3) {
-            return MGPFallible.success(new RectanglzMove(start, end));
         } else {
-            return MGPFallible.failure(RectanglzFailure.MAX_DISTANCE_IS_2());
+            return MGPFallible.success(new RectanglzMove(start, end));
         }
     }
 
     public isDuplication(): boolean {
-        const distance: number = this.getStart().getDistanceToward(this.getEnd());
+        const distance: number = this.getDistance();
         return distance === 1;
     }
 
     public isJump(): boolean {
-        const distance: number = this.getStart().getDistanceToward(this.getEnd());
+        const distance: number = this.getDistance();
         return distance > 1;
+    }
+
+    public getDistance(): number {
+        return this.getStart().getDistanceToward(this.getEnd());
     }
 
 }

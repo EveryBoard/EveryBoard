@@ -262,6 +262,10 @@
         <source>Create a winning alignment. The problem: you don&apos;t pick the piece that you&apos;re placing on the board!</source>
         <target>Faites un alignement gagnant. La difficulté : vous ne choisissez pas la pièce que vous placez !</target>
       </trans-unit>
+      <trans-unit id="7277920626199847666" datatype="html">
+        <source>Duplicate yourself to conquer the board!</source>
+        <target>Dupliquez vous pour conquerir le plateau !</target>
+      </trans-unit>
       <trans-unit id="3529667957993318888" datatype="html">
         <source>Align 5 of your pieces on a board where pieces slide!</source>
         <target>Alignez 5 de vos pièces sur un plateau dont les pièces glissent !</target>
@@ -536,6 +540,9 @@
       <trans-unit id="1493565703246564578" datatype="html">
         <source>Ba-awa</source>
         <target>Ba-awa</target>
+      </trans-unit><trans-unit id="8555057300464580380" datatype="html">
+        <source>Rectanglz</source>
+        <target>Rectanglz</target>
       </trans-unit>
       <trans-unit id="1760292529513431093" datatype="html">
         <source>Trexo</source>
@@ -3721,6 +3728,18 @@
         Ce plateau permet de gagner, essayez.
         Vous jouez Clair.</target>
       </trans-unit>
+      <trans-unit id="6822183852587312465" datatype="html">
+        <source>The maximum size of a jump is <x id="PH" equiv-text="n"/> step!</source>
+        <target>La longueur maximum d'un saut est de <x id="PH" equiv-text="n"/> pas!</target>
+      </trans-unit>
+      <trans-unit id="323770883664351270" datatype="html">
+        <source>Jump Size</source>
+        <target>Longueur d'un saut</target>
+      </trans-unit>
+      <trans-unit id="4514360412923104145" datatype="html">
+        <source>Rectanglz is board control game. Here is the initial state. The goal is to have the more piece at the end of the game.</source>
+        <target>Rectanglz est un jeu de contrôle de plateau. Voici le plateau initial. Le but est d'avoir une majorité de vos pièces sur le plateau à la fin de la partie.</target>
+      </trans-unit>
       <trans-unit id="5489405522962962283" datatype="html">
         <source>Congratulations, you won!</source>
         <target>Bravo, vous avez gagné !</target>
@@ -3819,6 +3838,26 @@
       <trans-unit id="1300852626039829767" datatype="html">
         <source>Simple step</source>
         <target>Simple pas</target>
+      </trans-unit>
+      <trans-unit id="5709585603504191391" datatype="html">
+        <source>One of the two kind of move you can do is the simple step. When you do one, you create a new piece. To do this, select one of your pieces, and click on its neighbors space.&lt;br/&gt;You&apos;re playing Dark, make a simple step.</source>
+        <target>Un des deux types de mouvement que vous pouvez faire est un pas simple. Quand vous en faites un, vous créez une nouvelle pièce. Pour ce faire, sélectionnez une de vos pièces, et cliquez sur une de vos pièces, puis sur une case voisine à celle-ci.&lt;br/&gt;Vous jouez Foncé, faite un simple pas.</target>
+      </trans-unit>
+      <trans-unit id="7755660952457346720" datatype="html">
+        <source>This was a single step, try a jump now.</source>
+        <target>C'était un simple pas, essayez un saut maintenant.</target>
+      </trans-unit>
+      <trans-unit id="5043415569082211419" datatype="html">
+        <source>The second type of move you can do is the jump. When you do one, your piece leaves it&apos;s original space and jump two space further. To do this, select one of your pieces, and click on its landing space two space further.&lt;br/&gt;You&apos;re playing Light, make a jump.</source>
+        <target>Le deuxième type de mouvement que vous savez faire est un saut. Quand vous en faites un, votre pièce quitte sa case d'origine et atterit deux cases plus loin. Pour faire ceci, sélectionnez une de vos pièces, et cliquez sur sa case d'atterrissage, deux cases plus loin.&lt;br/&gt;Vous jouez Clair, faites un saut.</target>
+      </trans-unit>
+      <trans-unit id="6330009772468407143" datatype="html">
+        <source>When one of your pieces arrives on a square neighbor to opponent&apos;s pieces, those pieces switch color.&lt;br/&gt;You&apos;re playing Dark, do such a move!</source>
+        <target>Quand une de vos pièces arrive sur une case voisine d'un adversaire, ces pièces changent de couleur.&lt;br/&gt;Vous jouez Foncé, faite un tel mouvement.</target>
+      </trans-unit>
+      <trans-unit id="527533079155909336" datatype="html">
+        <source>Bad choice, by making this move you allowed the opponent to steal you 5 pieces, win 5 pieces, and duplicate one piece, hence taking 11 points of advance on you and winning.&lt;br/&gt;Try again!</source>
+        <target>Mauvais choix, en faisant ce saut vous avez autorisé l'adversaire à vous voler 5 pièces, en gagner 5, et dupliquer l'une des siennes, dont prenant 11 points d'avance et donc de gagner.&lt;br/&gt;Essayez à nouveau !</target>
       </trans-unit>
       <trans-unit id="3615756484359681386" datatype="html">
         <source>To immobilize your opponent, you have to move your pyramids.
