@@ -60,6 +60,10 @@ export abstract class GameStateWithTable<P> extends GameState {
         }
     }
 
+    public getOptionalPieceAt(coord: Coord): MGPOptional<P> {
+        return this.getOptionalPieceAtXY(coord.x, coord.y);
+    }
+
     public forEachCoord(callback: (coord: Coord, content: P) => void): void {
         for (const { coord, content } of this.getCoordsAndContents()) {
             callback(coord, content);

@@ -1,5 +1,6 @@
 import { Coord } from 'src/app/jscaip/Coord';
-import { Orthogonal } from 'src/app/jscaip/Direction';
+import { Direction, Orthogonal } from 'src/app/jscaip/Direction';
+import { HexaDirection } from 'src/app/jscaip/HexaDirection';
 import { HexaLayout } from 'src/app/jscaip/HexaLayout';
 import { Utils } from 'src/app/utils/utils';
 
@@ -101,33 +102,29 @@ export class ViewBox {
 
 export class GameComponentUtils {
 
-    public static getArrowTransform(boardWidth: number, boardHeight: number, direction: Orthogonal): string {
+    public static getArrowTransform(boardWidth: number, boardHeight: number, direction: Direction): string {
         // The triangle will be wrapped inside a square
         // The board will be considered in this example as a 3x3 on which we place the triangle in (tx, ty)
         let tx: number;
         let ty: number;
-        let angle: number;
+        const angle: number = GameComponentUtils.getAngle(direction);
         switch (direction) {
             case Orthogonal.UP:
                 tx = 1;
                 ty = 0;
-                angle = -90;
                 break;
             case Orthogonal.DOWN:
                 tx = 1;
                 ty = 2;
-                angle = 90;
                 break;
             case Orthogonal.LEFT:
                 tx = 0;
                 ty = 1;
-                angle = 180;
                 break;
             default:
                 Utils.expectToBe(direction, Orthogonal.RIGHT);
                 tx = 2;
                 ty = 1;
-                angle = 0;
                 break;
         }
         const scale: string = `scale( ${ boardWidth / 300} ${ boardHeight / 300 } )`;
@@ -137,4 +134,20 @@ export class GameComponentUtils {
         const rotation: string = 'rotate(' + angle + ' 50 50)';
         return [scale, translation, rotation].join(' ');
     }
+
+    public static getAngle(direction: Direction): number {
+        switch (direction) {
+            case Direction.RIGHT: return 0;
+            case Direction.DOWN_RIGHT: return 45;
+            case Direction.DOWN: return 90;
+            case Direction.DOWN_LEFT: return 135;
+            case Direction.LEFT: return 180;
+            case Direction.UP_LEFT: return -135;
+            case Direction.UP: return -90; // TODO: make it make more sense
+            default:
+                Utils.expectToBe(direction, Direction.UP_RIGHT);
+                return -45;
+        }
+    }
+
 }

@@ -24,19 +24,12 @@ import { AbaloneScoreHeuristic } from './AbaloneScoreHeuristic';
 import { AbaloneMoveGenerator } from './AbaloneMoveGenerator';
 import { Utils } from 'src/app/utils/utils';
 import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
+import { HexArrow } from 'src/app/components/game-components/arrow-component/HexaDirArrow';
 
 type CapturedInfo = {
     coord: Coord,
     pieceClasses: string[],
 };
-export class HexaDirArrow {
-    public constructor(public start: Coord,
-                       public startCenter: Coord,
-                       public landing: Coord,
-                       public landingCenter: Coord,
-                       public dir: HexaDirection,
-                       public transformation: string) {}
-}
 
 type AbaloneArrowInfo = {
 
@@ -63,7 +56,7 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneRules,
 
     public captureds: CapturedInfo[] = [];
 
-    public directions: HexaDirArrow[] = [];
+    public directions: HexArrow[] = [];
 
     public selecteds: Coord[] = [];
 
@@ -199,18 +192,10 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneRules,
             }
             const isLegal: MGPFallible<AbaloneLegalityInformation> = this.rules.isLegal(theoretical, state);
             if (isLegal.isSuccess()) {
-                const pointedCenter: Coord = this.getCenterAt(startToEnd.pointed);
-                const centerCoord: string = pointedCenter.x + ' ' + pointedCenter.y;
-                const angle: number = HexaDirection.getAngle(dir) + 150;
-                const rotation: string = 'rotate(' + angle + ' ' + centerCoord + ')';
-                const translation: string = 'translate(' + centerCoord + ')';
-                const transformation: string = rotation + ' ' + translation;
-                const arrow: HexaDirArrow = new HexaDirArrow(startToEnd.start,
-                                                             this.getCenterAt(startToEnd.start),
-                                                             startToEnd.pointed,
-                                                             this.getCenterAt(startToEnd.pointed),
-                                                             dir,
-                                                             transformation);
+                const arrow: HexArrow = new HexArrow(startToEnd.start,
+                                                     startToEnd.pointed,
+                                                     dir,
+                                                     (c: Coord) => this.hexaLayout.getCenterAt(c));
                 this.directions.push(arrow);
             }
         }
