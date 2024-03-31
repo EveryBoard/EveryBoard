@@ -1,2 +1,3 @@
 # HTML conventions
-- HTML element ids that are solely used for debug purposes are named `"debug-..."`, e.g., `"debug-game-name"`
+- HTML id and class names are separated by `-`
+- HTML classes that do not have a corresponding CSS class must be prefixed with `data-`, e.g., `data-game-name`
