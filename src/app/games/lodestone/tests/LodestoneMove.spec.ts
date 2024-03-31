@@ -28,8 +28,8 @@ describe('LodestoneMove', () => {
             expect(someMove.equals(moveWithDifferentRightCaptures)).toBeFalse();
         });
         it('should detect equal moves', () => {
-            expect(someMove.equals(someMove)).toBeTrue();
             const equalMove: LodestoneMove = new LodestoneMove(new Coord(0, 0), 'push', 'diagonal');
+            expect(someMove.equals(someMove)).toBeTrue();
             expect(someMove.equals(equalMove)).toBeTrue();
         });
     });
