@@ -35,7 +35,7 @@ describe('LobbyComponent', () => {
         expect(component).toBeDefined();
         component.ngOnInit();
     }));
-    describe('tab-create element', () => {
+    describe('debug-tab-create element', () => {
         it('should display online-game-selection component when clicking on it when allowed by connectedUserService', fakeAsync(async() => {
             // Given a server page
             testUtils.detectChanges();
@@ -44,11 +44,11 @@ describe('LobbyComponent', () => {
             spyOn(currentGameService, 'canUserCreate').and.returnValue(MGPValidation.SUCCESS);
 
             // When clicking on the 'create game' tab
-            await testUtils.clickElement('#tab-create');
+            await testUtils.clickElement('#debug-tab-create');
             await testUtils.whenStable();
 
             // Then online-game-selection component should be on the page
-            testUtils.expectElementToExist('#online-game-selection');
+            testUtils.expectElementToExist('#debug-online-game-selection');
         }));
         it('should refuse to change page when clicking on it while not allowed by connectedUserService, and toast the reason', fakeAsync(async() => {
             // Given a server page
@@ -61,11 +61,11 @@ describe('LobbyComponent', () => {
             // When clicking on the 'create game' tab
             // Then online-game-selection component should not be visible and an error should be toasted
             await testUtils.expectToDisplayCriticalMessage(error, async() => {
-                await testUtils.clickElement('#tab-create');
+                await testUtils.clickElement('#debug-tab-create');
             });
 
             await testUtils.whenStable();
-            testUtils.expectElementNotToExist('#online-game-selection');
+            testUtils.expectElementNotToExist('#debug-online-game-selection');
         }));
     });
 
@@ -83,7 +83,7 @@ describe('LobbyComponent', () => {
         testUtils.detectChanges();
 
         // When clicking on the first part
-        await testUtils.clickElement('#part_0');
+        await testUtils.clickElement('#debug-part-0');
 
         // Then the component should have navigate to the part
         expectValidRouting(router, ['/play', 'Quarto', partList[0].id], OnlineGameWrapperComponent);
@@ -95,7 +95,7 @@ describe('LobbyComponent', () => {
         // When clicking on the part
         // Then the refusal reason should be given
         await testUtils.expectToDisplayCriticalMessage(reason, async() => {
-            await testUtils.clickElement('#part_0');
+            await testUtils.clickElement('#debug-part-0');
         });
     }
     describe('clicking on a started game', () => {
@@ -341,8 +341,8 @@ describe('LobbyComponent', () => {
         testUtils.detectChanges();
 
         // Then it should show the turn, starting at turn 0 instead of -1
-        testUtils.expectElementToExist('#part_0 > .turn');
-        const turn: DebugElement = testUtils.findElement('#part_0 > .turn');
+        testUtils.expectElementToExist('#debug-part-0 > .turn');
+        const turn: DebugElement = testUtils.findElement('#debug-part-0 > .turn');
         expect(turn.nativeElement.innerText).toEqual('1');
     }));
     it('should display game name for humans', fakeAsync(async() => {
@@ -356,19 +356,19 @@ describe('LobbyComponent', () => {
         testUtils.detectChanges();
 
         // Then it should show the turn, starting at turn 0 instead of -1
-        testUtils.expectElementToExist('#part_0 > .turn');
-        const turn: DebugElement = testUtils.findElement('#part_0 > .gameName');
+        testUtils.expectElementToExist('#debug-part-0 > .turn');
+        const turn: DebugElement = testUtils.findElement('#debug-part-0 > .gameName');
         expect(turn.nativeElement.innerText).toEqual('Four in a Row');
     }));
     it('should show the chat when clicking on the corresponding tab', fakeAsync(async() => {
         // Given a lobby
 
         // When clicking on the chat tab
-        await testUtils.clickElement('#tab-chat');
+        await testUtils.clickElement('#debug-tab-chat');
         tick(0);
         testUtils.detectChanges();
 
         // Then it should show the chat
-        testUtils.expectElementToExist('#chat');
+        testUtils.expectElementToExist('#debug-chat');
     }));
 });

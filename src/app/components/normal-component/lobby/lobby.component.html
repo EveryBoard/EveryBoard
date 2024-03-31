@@ -1,19 +1,18 @@
 <div class="tabs is-toggle is-fullwidth">
     <ul>
         <li ngClass="if (currentTab === 'games') 'is-active'">
-            <a id="tab-games" (click)="selectTab('games')" i18n>Games</a>
+            <a (click)="selectTab('games')" i18n>Games</a>
         </li>
         <li ngClass="if (currentTab === 'create') 'is-active'">
-            <a id="tab-create" [ngClass]="createTabClasses" (click)="selectTab('create')" i18n>Create</a>
+            <a id="debug-tab-create" [ngClass]="createTabClasses" (click)="selectTab('create')" i18n>Create</a>
         </li>
         <li ngClass="if (currentTab === 'chat') 'is-active'">
-            <a id="tab-chat" (click)="selectTab('chat')" i18n>Chat</a>
+            <a id="debug-tab-chat" (click)="selectTab('chat')" i18n>Chat</a>
         </li>
     </ul>
 </div>
 
 <div *ngIf="currentTab === 'games'"
-     id="actualGames"
      class="box">
     <div class="table-container">
         <table class="table is-fullwidth is-hoverable is-striped">
@@ -27,7 +26,7 @@
             </thead>
             <tbody>
                 <tr *ngFor="let part of activeParts; index as i"
-                    id="part_{{ i }}"
+                    id="debug-part-{{ i }}"
                     (click)="joinGame(part)">
                     <td class="td gameName">{{ part.getGameName() }}</td>
                     <td class="td">{{ part.data.playerZero.name }}</td>
@@ -45,17 +44,15 @@
 </div>
 
 <div *ngIf="currentTab === 'create'"
-     id="gameCreator"
      class="box">
-    <app-online-game-selection id="online-game-selection"></app-online-game-selection>
+    <app-online-game-selection></app-online-game-selection>
 </div>
 
 <div *ngIf="currentTab === 'chat'"
-     id="chatTab"
      class="columns">
     <div class="column is-12">
-        <div id="chat" class="box">
-            <app-chat chatId="server" [turn]="-1"></app-chat>
+        <div class="box">
+            <app-chat [turn]="-1"></app-chat>
         </div>
     </div>
 </div>
