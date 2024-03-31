@@ -52,6 +52,9 @@ import { ResetPasswordComponent } from './components/normal-component/reset-pass
 import { SettingsComponent } from './components/normal-component/settings/settings.component';
 import { OnlineGameCreationComponent } from './components/normal-component/online-game-creation/online-game-creation.component';
 
+import { DirArrowComponent } from './components/game-components/arrow-component/dir-arrow.component';
+import { HexArrowComponent } from './components/game-components/arrow-component/hex-arrow.component';
+
 import { AbaloneComponent } from './games/abalone/abalone.component';
 import { BaAwaComponent } from './games/mancala/ba-awa/ba-awa.component';
 import { ApagosComponent } from './games/apagos/apagos.component';
@@ -129,7 +132,7 @@ import { FirestoreTimePipe } from './pipes-and-directives/firestore-time.pipe';
 import { ToggleVisibilityDirective } from './pipes-and-directives/toggle-visibility.directive';
 import { RulesConfigurationComponent } from './components/wrapper-components/rules-configuration/rules-configuration.component';
 import { BlankGobanComponent } from './components/game-components/goban-game-component/blank-goban/blank-goban.component';
-import { DirArrowComponent } from './components/game-components/arrow-component/dir-arrow.component';
+
 
 registerLocaleData(localeFr);
 
@@ -183,6 +186,7 @@ export const routes: Route[] = [
         DemoPageComponent,
 
         DirArrowComponent,
+        HexArrowComponent,
 
         AbaloneComponent,
         ApagosComponent,

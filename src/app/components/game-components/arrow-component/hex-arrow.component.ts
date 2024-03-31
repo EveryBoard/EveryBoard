@@ -1,14 +1,14 @@
 import { Component, Input } from '@angular/core';
 import { BaseGameComponent } from '../game-component/GameComponent';
-import { DirArrow } from './DirArrow';
+import { HexArrow } from './HexaDirArrow';
 
 @Component({
-    selector: '[app-dir-arrow]',
+    selector: '[app-hex-arrow]',
     templateUrl: './arrow.component.svg',
     styleUrls: ['../game-component/game-component.scss'],
 })
-export class DirArrowComponent extends BaseGameComponent { // implements AfterContentChecked {
+export class HexArrowComponent extends BaseGameComponent { // implements AfterContentChecked {
 
-    @Input() arrow: DirArrow;
+    @Input() arrow: HexArrow;
 
 }

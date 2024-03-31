@@ -7,7 +7,7 @@
 />
 <svg:polygon id="direction_{{ arrow.dir.toString() }}"
              points="-10 -5, 10 -5, 0 15, -10 -5"
-             class="arrow"
+             class="arrow click-delegator"
              [attr.transform]="arrow.transformation"
-             (click)="chooseDirection(arrow.dir)"
 />
+<!-- (click)="chooseDirection(arrow.dir)"  -->
