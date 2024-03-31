@@ -1,345 +1,307 @@
-import { ConfigRoomDAO } from 'src/app/dao/ConfigRoomDAO';
+/* eslint-disable max-lines-per-function */
+import { TestBed, fakeAsync } from '@angular/core/testing';
+import { BackendService } from '../BackendService';
+import { ConnectedUserServiceMock } from './ConnectedUserService.spec';
+import { AppModule } from 'src/app/app.module';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { ConnectedUserService } from '../ConnectedUserService';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { PartMocks } from 'src/app/domain/PartMocks.spec';
+import { Part } from 'src/app/domain/Part';
+import { UserMocks } from 'src/app/domain/UserMocks.spec';
 import { MinimalUser } from 'src/app/domain/MinimalUser';
-import { Action, GameEvent, MGPResult, Part, RequestType } from 'src/app/domain/Part';
+import { JSONValue } from 'src/app/utils/utils';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
-import { JSONValue, Utils } from 'src/app/utils/utils';
-import { Injectable } from '@angular/core';
-import { ConnectedUserService } from '../ConnectedUserService';
-import { ConfigRoom, FirstPlayer, PartStatus, PartType } from 'src/app/domain/ConfigRoom';
-import { PartDAO } from 'src/app/dao/PartDAO';
-import { ChatDAO } from 'src/app/dao/ChatDAO';
 
-@Injectable({ providedIn: 'root' })
-export class BackendServiceMock {
+fdescribe('BackendService', () => {
+    let backendService: BackendService;
 
-    public constructor(public readonly configRoomDAO: ConfigRoomDAO,
-                       public readonly partDAO: PartDAO,
-                       public readonly chatDAO: ChatDAO,
-                       public readonly connectedUserService: ConnectedUserService) {}
-
-    public async createGame(gameName: string): Promise<string> {
-        const creator: MinimalUser = this.connectedUserService.user.get().toMinimalUser();
-        const game: Part = {
-            typeGame: gameName,
-            playerZero: creator,
-            turn: -1,
-            result: MGPResult.UNACHIEVED.value,
-            beginning: null,
+    function expectedParams(method: 'POST' | 'GET' | 'DELETE'): object {
+        return {
+            method,
+            headers: {
+                Authorization: 'Bearer idToken',
+            },
         };
-        // Write 1: create the game
-        const gameId: string = await this.partDAO.create(game);
-        // Write 2: create the config room
-        const configRoom: ConfigRoom = {
-            creator,
-            firstPlayer: FirstPlayer.RANDOM.value,
-            chosenOpponent: null,
-            partStatus: PartStatus.PART_CREATED.value,
-            partType: PartType.STANDARD.value,
-            maximalMoveDuration: 2*60,
-            totalPartDuration: 30*60,
-            rulesConfig: {},
-        };
-        await this.configRoomDAO.set(gameId, configRoom);
-        // Write 3: create the chat
-        await this.chatDAO.set(gameId, {});
-        return gameId;
     }
 
-    public async getGameName(gameId: string): Promise<MGPOptional<string>> {
-        // Read 1: get only the game name
-        const game: MGPOptional<Part> = await this.partDAO.read(gameId);
-        return game.map((game: Part) => game.typeGame);
+    function endpoint(path: string): string {
+        return 'http://localhost:8081' + path;
     }
 
-    public async getGame(gameId: string): Promise<Part> {
-        // Read 1: get the game
-        return (await this.partDAO.read(gameId)).get();
-    }
-
-    public async deleteGame(gameId: string): Promise<void> {
-        // Write 1: delete the game
-        await this.partDAO.delete(gameId);
-        // Write 2: delete the chat
-        await this.chatDAO.delete(gameId);
-        // Write 3: delete the configRoom
-        await this.configRoomDAO.delete(gameId);
-    }
-
-    public async acceptConfig(gameId: string): Promise<void> {
-        // Read 1: retrieve the config room
-        const configRoom: ConfigRoom = (await this.configRoomDAO.read(gameId)).get();
-        // Write 1: accept the config room
-        await this.configRoomDAO.update(gameId, { partStatus: PartStatus.PART_STARTED.value });
-        // Write 2: start the game
-        await this.partDAO.update(gameId, {
-            playerZero: configRoom.creator,
-            playerOne: Utils.getNonNullable(configRoom.chosenOpponent),
-            turn: 0,
-            beginning: Date.now(),
+    beforeEach(async() => {
+        await TestBed.configureTestingModule({
+            imports: [
+                AppModule,
+            ],
+            schemas: [CUSTOM_ELEMENTS_SCHEMA],
+            providers: [
+                { provide: ConnectedUserService, useClass: ConnectedUserServiceMock },
+            ],
+        }).compileComponents();
+        backendService = TestBed.inject(BackendService);
+        spyOn(TestBed.inject(ConnectedUserService), 'getIdToken').and.callFake(async() => {
+            return 'idToken';
         });
-        const user: MinimalUser = this.connectedUserService.user.get().toMinimalUser();
-        const start: GameEvent = {
-            eventType: 'Action',
-            action: 'StartGame',
-            user,
-            time: Date.now(),
-        };
-        // Write 3: add a start action
-        await this.partDAO.subCollectionDAO(gameId, 'events').create(start);
-    }
+    });
 
-    public async resign(gameId: string): Promise<void> {
-        const user: MinimalUser = this.connectedUserService.user.get().toMinimalUser();
-        // Read 1: retrieve the game
-        const game: Part = (await this.partDAO.read(gameId)).get();
-        const playerZero: MinimalUser = game.playerZero;
-        const playerOne: MinimalUser = Utils.getNonNullable(game.playerOne);
-        const winner: MinimalUser = user.id === playerZero.id ? playerOne : playerZero;
-        // Write 1: end the game
-        const update: Partial<Part> = {
-            result: MGPResult.RESIGN.value,
-            winner,
-            loser: user,
-        };
-        await this.partDAO.update(gameId, update);
-        // Write 2: add the end action
-        await this.action(gameId, 'EndGame');
-    }
+    describe('createGame', () => {
+        it('should fetch expected resource and extract game id', fakeAsync(async() => {
+            const response: Response = Response.json({ id: 'game-id' });
+            spyOn(window, 'fetch').and.resolveTo(response);
+            // When calling createGame
+            const gameId: string = await backendService.createGame('P4');
+            // Then it should fetch the expected resource and return the game id
+            expect(window.fetch).toHaveBeenCalledOnceWith(endpoint('/game?gameName=P4'), expectedParams('POST'));
+            expect(gameId).toEqual('game-id');
+        }));
+    });
 
-    public async notifyTimeout(gameId: string, winner: MinimalUser, loser: MinimalUser): Promise<void> {
-        // Read 1: retrieve the game
-        // Not needed here
-        // Write 1: end the game
-        await this.partDAO.update(gameId, {
-            winner,
-            loser,
-            result: MGPResult.TIMEOUT.value,
+    describe('getGameName', () => {
+        it('should fetch expected resource and extract game name', fakeAsync(async() => {
+            // Given an existing game
+            const response: Response = Response.json({ gameName: 'P4' });
+            spyOn(window, 'fetch').and.resolveTo(response);
+            const gameId: string = 'game-id';
+            // When calling getGameName
+            const gameName: MGPOptional<string> = await backendService.getGameName(gameId);
+            // Then it should fetch the expected resource and return the game name
+            expect(window.fetch).toHaveBeenCalledOnceWith(endpoint(`/game/${gameId}?onlyGameName`), expectedParams('GET'));
+            expect(gameName).toEqual(MGPOptional.of('P4'));
+        }));
+
+        it('should return MGPOptional.empty if there is no corresponding game', fakeAsync(async() => {
+            // Given a game id corresponding to no game
+            const response: Response = Response.error();
+            spyOn(window, 'fetch').and.resolveTo(response);
+            const gameId: string = 'game-id';
+            // When calling getGameName
+            const gameName: MGPOptional<string> = await backendService.getGameName(gameId);
+            // Then it should fetch the expected resource and return no game name
+            expect(window.fetch).toHaveBeenCalledOnceWith(endpoint(`/game/${gameId}?onlyGameName`), expectedParams('GET'));
+            expect(gameName).toEqual(MGPOptional.empty());
+        }));
+    });
+
+    describe('getGame', () => {
+        it('should fetch expected resource and extract game name', fakeAsync(async() => {
+            // Given a game
+            const game: Part = PartMocks.INITIAL;
+            const response: Response = Response.json(game);
+            spyOn(window, 'fetch').and.resolveTo(response);
+            const gameId: string = 'game-id';
+            // When calling getGame
+            const actualGame: Part = await backendService.getGame(gameId);
+            // Then it should fetch the full game
+            expect(window.fetch).toHaveBeenCalledOnceWith(endpoint(`/game/${gameId}`), expectedParams('GET'));
+            expect(actualGame).toEqual(game);
+        }));
+    });
+
+    describe('deleteGame', () => {
+        it('should delete the expected resource', fakeAsync(async() => {
+            // Given a game
+            const response: Response = { status: 200 } as unknown as Response;
+            spyOn(window, 'fetch').and.resolveTo(response);
+            const gameId: string = 'game-id';
+            // When calling deleteGame
+            await backendService.deleteGame(gameId);
+            // Then it should delete the resource
+            expect(window.fetch).toHaveBeenCalledOnceWith(endpoint(`/game/${gameId}`), expectedParams('DELETE'));
+        }));
+    });
+
+    describe('acceptConfig', () => {
+        it('should POST on the expected resource', fakeAsync(async() => {
+            // Given a game
+            const response: Response = { status: 200 } as unknown as Response;
+            spyOn(window, 'fetch').and.resolveTo(response);
+            const gameId: string = 'game-id';
+            // When calling acceptConfig
+            await backendService.acceptConfig(gameId);
+            // Then it should post on the expected resource
+            expect(window.fetch).toHaveBeenCalledOnceWith(endpoint(`/config-room/${gameId}?action=accept`), expectedParams('POST'));
+        }));
+    });
+
+    describe('resign', () => {
+        it('should POST on the expected resource', fakeAsync(async() => {
+            // Given a game
+            const response: Response = { status: 200 } as unknown as Response;
+            spyOn(window, 'fetch').and.resolveTo(response);
+            const gameId: string = 'game-id';
+            // When calling resign
+            await backendService.resign(gameId);
+            // Then it should post on the expected resource
+            expect(window.fetch).toHaveBeenCalledOnceWith(endpoint(`/game/${gameId}?action=resign`), expectedParams('POST'));
+        }));
+    });
+
+    describe('notifyTimeout', () => {
+        it('should POST on the expected resource', fakeAsync(async() => {
+            // Given a game
+            const response: Response = { status: 200 } as unknown as Response;
+            spyOn(window, 'fetch').and.resolveTo(response);
+            const gameId: string = 'game-id';
+            // When calling notifyTimeout
+            const winner: MinimalUser = UserMocks.CANDIDATE_MINIMAL_USER;
+            const loser: MinimalUser = UserMocks.OPPONENT_MINIMAL_USER;
+            await backendService.notifyTimeout(gameId, winner, loser);
+            // Then it should post on the expected resource
+            const winnerStr: string = encodeURIComponent(JSON.stringify(winner));
+            const loserStr: string = encodeURIComponent(JSON.stringify(loser));
+            const expectedEndpoint: string = endpoint(`/game/${gameId}?action=notifyTimeout&winner=${winnerStr}&loser=${loserStr}`);
+            expect(window.fetch).toHaveBeenCalledOnceWith(expectedEndpoint, expectedParams('POST'));
+        }));
+    });
+
+    function testSimpleAction(methodName: string, action: string): void {
+        describe(methodName, () => {
+            it('should POST on the expected resource', fakeAsync(async() => {
+                // Given a game
+                const response: Response = { status: 200 } as unknown as Response;
+                spyOn(window, 'fetch').and.resolveTo(response);
+                const gameId: string = 'game-id';
+                // When doing the action
+                await backendService[methodName](gameId);
+                // Then it should post on the expected resource
+                expect(window.fetch).toHaveBeenCalledOnceWith(endpoint(`/game/${gameId}?action=${action}`), expectedParams('POST'));
+            }));
         });
-        // Write 2: add the end action
-        await this.action(gameId, 'EndGame');
     }
 
-    private async request(gameId: string, requestType: RequestType): Promise<void> {
-        const user: MinimalUser = this.connectedUserService.user.get().toMinimalUser();
-        const event: GameEvent = {
-            eventType: 'Request',
-            requestType,
-            user,
-            time: Date.now(),
-        };
-        await this.partDAO.subCollectionDAO(gameId, 'events').create(event);
-    }
+    testSimpleAction('proposeDraw', 'proposeDraw');
+    testSimpleAction('acceptDraw', 'acceptDraw');
+    testSimpleAction('refuseDraw', 'refuseDraw');
+    testSimpleAction('proposeRematch', 'proposeRematch');
+    testSimpleAction('acceptRematch', 'acceptRematch');
+    testSimpleAction('rejectRematch', 'rejectRematch');
+    testSimpleAction('askTakeBack', 'askTakeBack');
+    testSimpleAction('acceptTakeBack', 'acceptTakeBack');
+    testSimpleAction('refuseTakeBack', 'refuseTakeBack');
+    testSimpleAction('addGlobalTime', 'addGlobalTime');
+    testSimpleAction('addTurnTime', 'addTurnTime');
 
-    private async accept(gameId: string, requestType: RequestType): Promise<void> {
-        const user: MinimalUser = this.connectedUserService.user.get().toMinimalUser();
-        const event: GameEvent = {
-            eventType: 'Reply',
-            requestType,
-            reply: 'Accept',
-            user,
-            time: Date.now(),
-        };
-        await this.partDAO.subCollectionDAO(gameId, 'events').create(event);
-    }
+    describe('move', () => {
 
-    private async reject(gameId: string, requestType: RequestType): Promise<void> {
-        const user: MinimalUser = this.connectedUserService.user.get().toMinimalUser();
-        const event: GameEvent = {
-            eventType: 'Reply',
-            requestType,
-            reply: 'Reject',
-            user,
-            time: Date.now(),
-        };
-        await this.partDAO.subCollectionDAO(gameId, 'events').create(event);
-    }
+        it('should POST on the expected resource', fakeAsync(async() => {
+            // Given a game
+            const response: Response = { status: 200 } as unknown as Response;
+            spyOn(window, 'fetch').and.resolveTo(response);
+            const gameId: string = 'game-id';
+            // When doing a move
+            const move: JSONValue = { x: 1 };
+            await backendService.move(gameId, move, MGPOptional.empty());
+            // Then it should post on the expected resource
+            const moveStr: string = encodeURIComponent(JSON.stringify(move));
+            const expectedEndpoint: string = endpoint(`/game/${gameId}?action=move&move=${moveStr}`);
+            expect(window.fetch).toHaveBeenCalledOnceWith(expectedEndpoint, expectedParams('POST'));
+        }));
 
-    private async action(gameId: string, action: Action): Promise<void> {
-        const user: MinimalUser = this.connectedUserService.user.get().toMinimalUser();
-        const event: GameEvent = {
-            eventType: 'Action',
-            action,
-            user,
-            time: Date.now(),
-        };
-        await this.partDAO.subCollectionDAO(gameId, 'events').create(event);
-    }
+        it('should POST on the expected resource (with scores)', fakeAsync(async() => {
+            // Given a game
+            const response: Response = { status: 200 } as unknown as Response;
+            spyOn(window, 'fetch').and.resolveTo(response);
+            const gameId: string = 'game-id';
+            // When doing a move (with scores)
+            const move: JSONValue = { x: 1 };
+            const scores: PlayerNumberMap = PlayerNumberMap.of(0, 1);
+            await backendService.move(gameId, move, MGPOptional.of(scores));
+            // Then it should post on the expected resource
+            const moveStr: string = encodeURIComponent(JSON.stringify(move));
+            const expectedEndpoint: string = endpoint(`/game/${gameId}?action=move&move=${moveStr}&score0=${scores.get(Player.ZERO)}&score1=${scores.get(Player.ONE)}`);
+            expect(window.fetch).toHaveBeenCalledOnceWith(expectedEndpoint, expectedParams('POST'));
+        }));
+    });
 
-    public async proposeDraw(gameId: string): Promise<void> {
-        return this.request(gameId, 'Draw');
-    }
+    describe('moveAndEnd', () => {
 
-    public async acceptDraw(gameId: string): Promise<void> {
-        const user: MinimalUser = this.connectedUserService.user.get().toMinimalUser();
-        const game: Part = (await this.partDAO.read(gameId)).get();
-        // Write 1: add response
-        await this.accept(gameId, 'Draw');
-        let result: MGPResult;
-        if (game.playerZero.id === user.id) {
-            result = MGPResult.AGREED_DRAW_BY_ZERO;
-        } else {
-            result = MGPResult.AGREED_DRAW_BY_ONE;
-        }
-        const update: Partial<Part> = { result: result.value };
-        // Write 2: end the game
-        await this.partDAO.update(gameId, update);
-        // Write 3: add the end event
-        await this.action(gameId, 'EndGame');
-    }
+        it('should POST on the expected resource', fakeAsync(async() => {
+            // Given a game
+            const response: Response = { status: 200 } as unknown as Response;
+            spyOn(window, 'fetch').and.resolveTo(response);
+            const gameId: string = 'game-id';
+            // When doing a move
+            const move: JSONValue = { x: 1 };
+            await backendService.moveAndEnd(gameId, move, MGPOptional.empty(), PlayerOrNone.NONE);
+            // Then it should post on the expected resource
+            const moveStr: string = encodeURIComponent(JSON.stringify(move));
+            const expectedEndpoint: string = endpoint(`/game/${gameId}?action=moveAndEnd&move=${moveStr}`);
+            expect(window.fetch).toHaveBeenCalledOnceWith(expectedEndpoint, expectedParams('POST'));
+        }));
 
-    public async refuseDraw(gameId: string): Promise<void> {
-        return this.reject(gameId, 'Draw');
-    }
+        it('should POST on the expected resource (with scores)', fakeAsync(async() => {
+            // Given a game
+            const response: Response = { status: 200 } as unknown as Response;
+            spyOn(window, 'fetch').and.resolveTo(response);
+            const gameId: string = 'game-id';
+            // When doing a move (with scores)
+            const move: JSONValue = { x: 1 };
+            const scores: PlayerNumberMap = PlayerNumberMap.of(0, 1);
+            await backendService.moveAndEnd(gameId, move, MGPOptional.of(scores), PlayerOrNone.NONE);
+            // Then it should post on the expected resource
+            const moveStr: string = encodeURIComponent(JSON.stringify(move));
+            const expectedEndpoint: string = endpoint(`/game/${gameId}?action=moveAndEnd&move=${moveStr}&score0=${scores.get(Player.ZERO)}&score1=${scores.get(Player.ONE)}`);
+            expect(window.fetch).toHaveBeenCalledOnceWith(expectedEndpoint, expectedParams('POST'));
+        }));
 
-    public async proposeRematch(gameId: string): Promise<void> {
-        return this.request(gameId, 'Rematch');
-    }
+        it('should POST on the expected resource (with winner)', fakeAsync(async() => {
+            // Given a game
+            const response: Response = { status: 200 } as unknown as Response;
+            spyOn(window, 'fetch').and.resolveTo(response);
+            const gameId: string = 'game-id';
+            // When doing a move
+            const move: JSONValue = { x: 1 };
+            await backendService.moveAndEnd(gameId, move, MGPOptional.empty(), Player.ZERO);
+            // Then it should post on the expected resource
+            const moveStr: string = encodeURIComponent(JSON.stringify(move));
+            const expectedEndpoint: string = endpoint(`/game/${gameId}?action=moveAndEnd&move=${moveStr}&winner=0`);
+            expect(window.fetch).toHaveBeenCalledOnceWith(expectedEndpoint, expectedParams('POST'));
+        }));
+    });
 
-    public async acceptRematch(gameId: string): Promise<void> {
-        return this.accept(gameId, 'Rematch');
-    }
+    describe('getServerTime', () => {
+        it('should fetch the expected resource', fakeAsync(async() => {
+            // Given a game
+            const response: Response = Response.json({ time: 42 });
+            spyOn(window, 'fetch').and.resolveTo(response);
+            // When fetching the server time
+            const time: number = await backendService.getServerTime();
+            // Then it should fetch the expected resource and return the time
+            expect(window.fetch).toHaveBeenCalledOnceWith(endpoint('/time'), expectedParams('GET'));
+            expect(time).toEqual(42);
+        }));
+    });
 
-    public async rejectRematch(gameId: string): Promise<void> {
-        return this.reject(gameId, 'Rematch');
-    }
-
-    public async askTakeBack(gameId: string): Promise<void> {
-        return this.request(gameId, 'TakeBack');
-    }
-
-    public async acceptTakeBack(gameId: string): Promise<void> {
-        return this.accept(gameId, 'TakeBack');
-    }
-
-    public async refuseTakeBack(gameId: string): Promise<void> {
-        return this.reject(gameId, 'TakeBack');
-    }
-
-    public async addGlobalTime(gameId: string): Promise<void> {
-        return this.action(gameId, 'AddGlobalTime');
-    }
-
-    public async addTurnTime(gameId: string): Promise<void> {
-        return this.action(gameId, 'AddTurnTime');
-    }
-
-    private addWinnerIfNeeded(update: Partial<Part>, game: Part, winnerIfEnd: MGPOptional<PlayerOrNone>)
-    : Partial<Part>
-    {
-        if (winnerIfEnd.isPresent()) {
-            const winnerPlayer: PlayerOrNone = winnerIfEnd.get();
-            if (winnerPlayer.isPlayer()) {
-                let winner: MinimalUser;
-                let loser: MinimalUser;
-                if (winnerPlayer === Player.ZERO) {
-                    winner = game.playerZero;
-                    loser = Utils.getNonNullable(game.playerOne);
-                } else {
-                    winner = Utils.getNonNullable(game.playerOne);
-                    loser = game.playerZero;
-                }
-                return {
-                    ...update,
-                    result: MGPResult.VICTORY.value,
-                    winner,
-                    loser,
-                };
-            } else {
-                return {
-                    ...update,
-                    result: MGPResult.HARD_DRAW.value,
-                };
-            }
-        } else {
-            return update;
-        }
-    }
-    private async moveAndMaybeEnd(gameId: string,
-                                  move: JSONValue,
-                                  scores: MGPOptional<PlayerNumberMap>,
-                                  winnerIfEnd: MGPOptional<PlayerOrNone>)
-    : Promise<void> {
-        const user: MinimalUser = this.connectedUserService.user.get().toMinimalUser();
-        const event: GameEvent = {
-            eventType: 'Move',
-            user,
-            time: Date.now(),
-            move,
-        };
-        await this.partDAO.subCollectionDAO(gameId, 'events').create(event);
-        const game: Part = (await this.partDAO.read(gameId)).get();
-        let update: Partial<Part> = {
-            turn: game.turn + 1,
-        };
-        if (scores.isPresent()) {
-            update = {
-                ...update,
-                scorePlayerZero: scores.get().get(Player.ZERO),
-                scorePlayerOne: scores.get().get(Player.ONE),
+    describe('joinGame', () => {
+        it('should POST to the expected resource', fakeAsync(async() => {
+            // Given a game
+            const response: Response = { status: 200 } as unknown as Response;
+            spyOn(window, 'fetch').and.resolveTo(response);
+            const gameId: string = 'game-id';
+            // When joining it move
+            const result: MGPValidation = await backendService.joinGame(gameId);
+            // Then it should post on the expected resource
+            const expectedEndpoint: string = endpoint(`/config-room/${gameId}/candidates`);
+            expect(window.fetch).toHaveBeenCalledOnceWith(expectedEndpoint, expectedParams('POST'));
+            expect(result).toEqual(MGPValidation.SUCCESS);
+        }));
+        it('should fail if the game does not exist', fakeAsync(async() => {
+            // Given a game
+            const response: Response = {
+                ...Response.json({ reason: 'Game does not exist' }),
+                status: 404,
             };
-        }
-        update = this.addWinnerIfNeeded(update, game, winnerIfEnd);
-        await this.partDAO.update(gameId, update);
-        if (winnerIfEnd.isPresent()) {
-            await this.action(gameId, 'EndGame');
-        }
-    }
-
-    public async move(gameId: string,
-                      move: JSONValue,
-                      scores: MGPOptional<PlayerNumberMap>)
-    : Promise<void>
-    {
-        return this.moveAndMaybeEnd(gameId, move, scores, MGPOptional.empty());
-    }
-
-    public async moveAndEnd(gameId: string,
-                            move: JSONValue,
-                            scores: MGPOptional<PlayerNumberMap>,
-                            winner: PlayerOrNone)
-    : Promise<void>
-    {
-        return this.moveAndMaybeEnd(gameId, move, scores, MGPOptional.of(winner));
-    }
-
-    public async getServerTime(): Promise<number> {
-        return Date.now();
-    }
-
-    public async joinGame(gameId: string): Promise<MGPValidation> {
-        const configRoom: MGPOptional<ConfigRoom> = await this.configRoomDAO.read(gameId);
-        if (configRoom.isAbsent()) {
-            return MGPValidation.failure('Game does not exist');
-        } else {
-            const candidate: MinimalUser = this.connectedUserService.user.get().toMinimalUser();
-            // Creator is not a candidate
-            if (configRoom.get().creator.id !== candidate.id) {
-                await this.configRoomDAO.subCollectionDAO(gameId, 'candidates').set(candidate.id, candidate);
-            }
-            return MGPValidation.SUCCESS;
-        }
-    }
-
-    public async removeCandidate(gameId: string, candidateId: string): Promise<void> {
-        await this.configRoomDAO.subCollectionDAO(gameId, 'candidates').delete(candidateId);
-    }
-
-    public async proposeConfig(gameId: string, config: Partial<ConfigRoom>): Promise<void> {
-        await this.configRoomDAO.update(gameId, config);
-    }
-
-    public async selectOpponent(gameId: string, opponent: MinimalUser): Promise<void> {
-        await this.configRoomDAO.update(gameId, { chosenOpponent: opponent });
-    }
-
-    public async reviewConfig(gameId: string): Promise<void> {
-        await this.configRoomDAO.update(gameId, { partStatus: PartStatus.PART_CREATED.value });
-    }
-
-    public async reviewConfigAndRemoveChosenOpponent(gameId: string): Promise<void> {
-        await this.configRoomDAO.update(gameId, { chosenOpponent: null, partStatus: PartStatus.PART_CREATED.value });
-    }
-}
+            spyOn(window, 'fetch').and.resolveTo(response);
+            const gameId: string = 'game-id';
+            // When joining it move
+            const result: MGPValidation = await backendService.joinGame(gameId);
+            // Then it should post on the expected resource
+            const expectedEndpoint: string = endpoint(`/config-room/${gameId}/candidates`);
+            expect(window.fetch).toHaveBeenCalledOnceWith(expectedEndpoint, expectedParams('POST'));
+            expect(result).toEqual(MGPValidation.failure('foo'));
+        }));
+    });
+});

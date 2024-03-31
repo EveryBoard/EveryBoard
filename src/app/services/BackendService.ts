@@ -74,7 +74,7 @@ export class BackendService {
             await this.performRequestWithJSONResponse('POST', `game?gameName=${gameName}`);
         this.assertSuccess(result);
         // eslint-disable-next-line dot-notation
-        return Utils.getNonNullable(result.get())['id'] as string;
+        return Utils.getNonNullable(Utils.getNonNullable(result.get())['id']) as string;
     }
 
     /** Retrieve the name of the game with the given id. If there is no corresponding game, returns an empty option. */
@@ -83,7 +83,7 @@ export class BackendService {
             await this.performRequestWithJSONResponse('GET', `game/${gameId}?onlyGameName`);
         if (result.isSuccess()) {
             // eslint-disable-next-line dot-notation
-            const gameName: string = Utils.getNonNullable(result.get())['gameName'] as string;
+            const gameName: string = Utils.getNonNullable(Utils.getNonNullable(result.get())['gameName']) as string;
             return MGPOptional.of(gameName);
         } else {
             return MGPOptional.empty();

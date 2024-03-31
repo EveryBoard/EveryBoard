@@ -92,6 +92,9 @@ export class ConnectedUserServiceMock {
     public async sendPresenceToken(): Promise<void> {
         return;
     }
+    public async getIdToken(): Promise<string> {
+        throw new Error('ConnectedUserServiceMock.getIdToken not implemented');
+    }
 }
 
 function setupAuthTestModule(): Promise<unknown> {
