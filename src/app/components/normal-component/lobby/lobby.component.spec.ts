@@ -330,7 +330,7 @@ describe('LobbyComponent', () => {
         // When it is destroyed
         component.ngOnDestroy();
 
-        // Then it should have unsubscirbed from active users
+        // Then it should have unsubscribed from active users
         expectUnsubscribeToHaveBeenCalled();
     }));
     it('should display turn for humans', fakeAsync(async() => {
@@ -341,8 +341,8 @@ describe('LobbyComponent', () => {
         testUtils.detectChanges();
 
         // Then it should show the turn, starting at turn 0 instead of -1
-        testUtils.expectElementToExist('#part-0 > .turn');
-        const turn: DebugElement = testUtils.findElement('#part-0 > .turn');
+        testUtils.expectElementToExist('#part-0 > .data-turn');
+        const turn: DebugElement = testUtils.findElement('#part-0 > .data-turn');
         expect(turn.nativeElement.innerText).toEqual('1');
     }));
     it('should display game name for humans', fakeAsync(async() => {
@@ -356,9 +356,9 @@ describe('LobbyComponent', () => {
         testUtils.detectChanges();
 
         // Then it should show the turn, starting at turn 0 instead of -1
-        testUtils.expectElementToExist('#part-0 > .turn');
-        const turn: DebugElement = testUtils.findElement('#part-0 > .gameName');
-        expect(turn.nativeElement.innerText).toEqual('Four in a Row');
+        testUtils.expectElementToExist('#part-0 > .data-turn');
+        const gameName: DebugElement = testUtils.findElement('#part-0 > .data-game-name');
+        expect(gameName.nativeElement.innerText).toEqual('Four in a Row');
     }));
     it('should show the chat when clicking on the corresponding tab', fakeAsync(async() => {
         // Given a lobby
