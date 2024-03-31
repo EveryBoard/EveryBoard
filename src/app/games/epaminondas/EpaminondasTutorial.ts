@@ -74,7 +74,7 @@ export class EpaminondasTutorial extends Tutorial {
             EpaminondasRules.get().getInitialState(defaultConfig),
             new EpaminondasMove(0, 10, 1, 1, Direction.UP),
             (move: EpaminondasMove, _previous: EpaminondasState, _result: EpaminondasState) => {
-                if (move.movedPieces === 1) {
+                if (move.phalanxSize === 1) {
                     return MGPValidation.SUCCESS;
                 } else {
                     return MGPValidation.failure($localize`Congratulations, you are in advance. But this is not the exercise here, try again.`);
@@ -94,7 +94,7 @@ export class EpaminondasTutorial extends Tutorial {
             EpaminondasRules.get().getInitialState(defaultConfig),
             new EpaminondasMove(0, 11, 2, 1, Direction.UP),
             (move: EpaminondasMove, _previous: EpaminondasState, _result: EpaminondasState) => {
-                if (move.movedPieces > 1) {
+                if (move.phalanxSize > 1) {
                     return MGPValidation.SUCCESS;
                 } else {
                     return MGPValidation.failure($localize`Failed! You moved only one piece.`);

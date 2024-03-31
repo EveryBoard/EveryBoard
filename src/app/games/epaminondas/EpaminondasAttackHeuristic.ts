@@ -113,17 +113,17 @@ export class EpaminondasAttackHeuristic extends EpaminondasHeuristic {
             const owner: PlayerOrNone = coordAndContent.content;
             if (owner.isPlayer()) {
                 for (const direction of Direction.DIRECTIONS) {
-                    let movedPieces: number = 1;
+                    let phalanxSize: number = 1;
                     let nextCoord: Coord = firstCoord.getNext(direction, 1);
                     while (state.isOnBoard(nextCoord) &&
                            state.getPieceAt(nextCoord) === owner)
                     {
-                        movedPieces += 1;
+                        phalanxSize += 1;
                         nextCoord = nextCoord.getNext(direction, 1);
                     }
                     let stepSize: number = 1;
                     while (state.isOnBoard(nextCoord) &&
-                           stepSize <= movedPieces &&
+                           stepSize <= phalanxSize &&
                            state.getPieceAt(nextCoord) === PlayerOrNone.NONE)
                     {
                         stepSize++;

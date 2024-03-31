@@ -444,7 +444,9 @@ export class ComponentTestUtils<T extends AbstractGameComponent, P extends Compa
         }
         expect(this.canUserPlaySpy).toHaveBeenCalledOnceWith(nameInFunction);
         this.canUserPlaySpy.calls.reset();
-        expect(this.chooseMoveSpy).not.toHaveBeenCalled();
+        expect(this.chooseMoveSpy)
+            .withContext('chooseMove has been called, use expectMoveFailure in the test if the code is correct, or cancelMove in the coe if the test is correct.')
+            .not.toHaveBeenCalled();
         if (reason == null) {
             expect(this.cancelMoveSpy).toHaveBeenCalledOnceWith();
         } else {

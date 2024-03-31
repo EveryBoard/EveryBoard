@@ -5,6 +5,7 @@ import { EpaminondasMove } from '../EpaminondasMove';
 import { EpaminondasMoveGenerator } from '../EpaminondasMoveGenerator';
 import { MoveTestUtils } from 'src/app/jscaip/tests/Move.spec';
 import { TestUtils } from 'src/app/utils/tests/TestUtils.spec';
+import { EpaminondasFailure } from '../EpaminondasFailure';
 
 describe('EpaminondasMove: ', () => {
 
@@ -12,7 +13,10 @@ describe('EpaminondasMove: ', () => {
         function movingAPhalanxTooMuch(): void {
             new EpaminondasMove(0, 0, 2, 3, Direction.UP);
         }
-        TestUtils.expectToThrowAndLog(movingAPhalanxTooMuch, 'Cannot move a phalanx further than its size (got step size 3 for 2 pieces).');
+        TestUtils.expectToThrowAndLog(
+            movingAPhalanxTooMuch,
+            EpaminondasFailure.PHALANX_CANNOT_JUMP_FURTHER_THAN_ITS_SIZE(3, 2),
+        );
     });
 
     it('should forbid creation of a move with with negative or null number of selected piece', () => {
