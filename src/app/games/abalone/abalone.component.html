@@ -46,7 +46,9 @@
 
     <g *ngFor="let arrow of directions"
        id="arrow_{{ arrow.start.x }}_{{ arrow.start.y }}_to_{{ arrow.landing.x }}_{{ arrow.landing.y }}"
+       (click)="chooseDirection(arrow.dir)"
        app-hex-arrow
-       [arrow]="arrow">
-    </g>
+       [arrow]="arrow"
+       (emitEvent)="() => chooseDirection(arrow.dir)"
+    />
 </svg>

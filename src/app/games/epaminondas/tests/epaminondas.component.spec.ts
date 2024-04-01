@@ -11,7 +11,7 @@ import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { EpaminondasFailure } from '../EpaminondasFailure';
 import { Table } from 'src/app/utils/ArrayUtils';
 
-fdescribe('EpaminondasComponent', () => {
+describe('EpaminondasComponent', () => {
 
     let testUtils: ComponentTestUtils<EpaminondasComponent>;
 
@@ -20,22 +20,11 @@ fdescribe('EpaminondasComponent', () => {
     const X: PlayerOrNone = PlayerOrNone.ONE;
 
     function expectClickable(x: number, y: number): void {
-        const coord: Coord = new Coord(x, y);
-        const coordHighlighted: boolean = testUtils
-            .getGameComponent()
-            .getHighlightedCoords() // TODO: not like this
-            .some((c: Coord) => c.equals(coord));
-        expect(coordHighlighted).toBeTrue();
+        testUtils.expectElementToHaveClasses(
+            '#clickable-' + x + '-' + y,
+            ['no-fill', 'mid-stroke', 'clickable-stroke'],
+        );
     }
-
-    // function expectNotClickable(x: number, y: number): void {
-    //     const coord: Coord = new Coord(x, y);
-    //     const coordIsHighlighted: boolean = testUtils
-    //         .getGameComponent()
-    //         .getHighlightedCoords()
-    //         .some((c: Coord) => c.equals(coord));
-    //     expect(coordIsHighlighted).toBeFalse();
-    // }
 
     beforeEach(fakeAsync(async() => {
         testUtils = await ComponentTestUtils.forGame<EpaminondasComponent>('Epaminondas');

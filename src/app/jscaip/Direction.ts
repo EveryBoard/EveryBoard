@@ -1,4 +1,4 @@
-import { JSONValue } from 'src/app/utils/utils';
+import { JSONValue, Utils } from 'src/app/utils/utils';
 import { assert } from 'src/app/utils/assert';
 import { MGPFallible } from '../utils/MGPFallible';
 import { Coord } from './Coord';
@@ -219,6 +219,17 @@ export class Orthogonal extends BaseDirection {
     public rotateClockwise(): Orthogonal {
         const rotated: MGPFallible<Orthogonal> = Orthogonal.factory.from(-this.y, this.x);
         return rotated.get();
+    }
+
+    public toDirection(): Direction {
+        switch (this) {
+            case Orthogonal.UP: return Direction.UP;
+            case Orthogonal.RIGHT: return Direction.RIGHT;
+            case Orthogonal.DOWN: return Direction.DOWN;
+            default:
+                Utils.expectToBe(this, Orthogonal.LEFT);
+                return Direction.LEFT;
+        }
     }
 }
 

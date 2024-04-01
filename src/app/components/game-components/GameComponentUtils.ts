@@ -1,6 +1,5 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { Direction, Orthogonal } from 'src/app/jscaip/Direction';
-import { HexaDirection } from 'src/app/jscaip/HexaDirection';
 import { HexaLayout } from 'src/app/jscaip/HexaLayout';
 import { Utils } from 'src/app/utils/utils';
 
@@ -102,13 +101,13 @@ export class ViewBox {
 
 export class GameComponentUtils {
 
-    public static getArrowTransform(boardWidth: number, boardHeight: number, direction: Direction): string {
+    public static getArrowTransform(boardWidth: number, boardHeight: number, orthogonal: Orthogonal): string {
         // The triangle will be wrapped inside a square
         // The board will be considered in this example as a 3x3 on which we place the triangle in (tx, ty)
         let tx: number;
         let ty: number;
-        const angle: number = GameComponentUtils.getAngle(direction);
-        switch (direction) {
+        const angle: number = GameComponentUtils.getAngle(orthogonal.toDirection());
+        switch (orthogonal) {
             case Orthogonal.UP:
                 tx = 1;
                 ty = 0;
@@ -122,7 +121,7 @@ export class GameComponentUtils {
                 ty = 1;
                 break;
             default:
-                Utils.expectToBe(direction, Orthogonal.RIGHT);
+                Utils.expectToBe(orthogonal, Orthogonal.RIGHT);
                 tx = 2;
                 ty = 1;
                 break;

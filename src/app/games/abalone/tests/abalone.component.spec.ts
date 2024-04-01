@@ -11,7 +11,7 @@ import { AbaloneFailure } from '../AbaloneFailure';
 import { AbaloneState } from '../AbaloneState';
 import { AbaloneMove } from '../AbaloneMove';
 
-describe('AbaloneComponent', () => {
+fdescribe('AbaloneComponent', () => {
 
     const _: FourStatePiece = FourStatePiece.EMPTY;
     const N: FourStatePiece = FourStatePiece.UNREACHABLE;
@@ -359,7 +359,7 @@ describe('AbaloneComponent', () => {
             // Then the translation move should be done
             const move: AbaloneMove =
                 AbaloneMove.ofDoubleCoord(new Coord(2, 6), new Coord(3, 6), HexaDirection.UP);
-            await testUtils.expectMoveSuccess('#direction_UP', move);
+            await testUtils.expectMoveSuccessWithAsymmetricNaming('#arrow_2_6_to_2_5', '#direction_UP', move);
         }));
 
         it('should show last move moved pieces (push)', fakeAsync(async() => {
@@ -367,7 +367,7 @@ describe('AbaloneComponent', () => {
             await testUtils.expectClickSuccess('#piece_0_7');
             await testUtils.expectClickSuccess('#piece_0_8');
             const move: AbaloneMove = AbaloneMove.ofSingleCoord(new Coord(0, 7), HexaDirection.DOWN);
-            await testUtils.expectMoveSuccess('#direction_DOWN', move);
+            await testUtils.expectMoveSuccessWithAsymmetricNaming('#arrow_0_7_to_0_8', '#direction_DOWN', move);
 
             // When rendering it
             // Then the starting square of the moved piece should be shown as moved
@@ -383,7 +383,7 @@ describe('AbaloneComponent', () => {
             // When clicking third one then moving them
             await testUtils.expectClickSuccess('#piece_4_6');
             const move: AbaloneMove = AbaloneMove.ofSingleCoord(new Coord(4, 6), HexaDirection.LEFT);
-            await testUtils.expectMoveSuccess('#direction_LEFT', move);
+            await testUtils.expectMoveSuccessWithAsymmetricNaming('#arrow_4_6_to_1_6', '#direction_LEFT', move);
 
             // Then four spaces should be moved
             testUtils.expectElementToHaveClass('#space_1_6', 'moved-fill');

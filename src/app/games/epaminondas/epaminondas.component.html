@@ -26,15 +26,15 @@
             />
         </g>
     </g>
-    <g *ngFor="let coord of getHighlightedCoords()">
-        <rect (click)="onClick(coord.x, coord.y)"
-              [attr.x] = "SPACE_SIZE * coord.x"
-              [attr.y] = "SPACE_SIZE * coord.y"
-              [attr.width]="SPACE_SIZE"
-              [attr.height]="SPACE_SIZE"
-              class="no-fill mid-stroke clickable-stroke"
-        />
-    </g>
+    <rect *ngFor="let coord of getHighlightedCoords()"
+          id="clickable-{{ coord.x }}-{{ coord.y }}"
+          (click)="onClick(coord.x, coord.y)"
+          [attr.x] = "SPACE_SIZE * coord.x"
+          [attr.y] = "SPACE_SIZE * coord.y"
+          [attr.width]="SPACE_SIZE"
+          [attr.height]="SPACE_SIZE"
+          class="no-fill mid-stroke clickable-stroke"
+    />
     <g *ngFor="let possibleMove of possibleMoves"
        id="arrow_{{ possibleMove.arrow.start.x }}_{{ possibleMove.arrow.start.y }}_to_{{ possibleMove.arrow.landing.x }}_{{ possibleMove.arrow.landing.y }}"
        app-dir-arrow

@@ -47,6 +47,7 @@ import { GameInfo } from 'src/app/components/normal-component/pick-game/pick-gam
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { Player } from 'src/app/jscaip/Player';
 import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { AbaloneMove } from 'src/app/games/abalone/AbaloneMove';
 
 @Component({})
 export class BlankComponent {}
@@ -255,7 +256,6 @@ export class SimpleComponentTestUtils<T> {
 export class ComponentTestUtils<T extends AbstractGameComponent, P extends Comparable = string>
     extends SimpleComponentTestUtils<GameWrapper<P>>
 {
-
     private gameComponent: AbstractGameComponent;
 
     private canUserPlaySpy: jasmine.Spy;
@@ -479,13 +479,22 @@ export class ComponentTestUtils<T extends AbstractGameComponent, P extends Compa
                                    clickAnimationDuration?: number)
     : Promise<void>
     {
-        await this.clickElement(elementName);
+        return this.expectMoveSuccessWithAsymmetricNaming(elementName, elementName, move, clickAnimationDuration);
+    }
+
+    public async expectMoveSuccessWithAsymmetricNaming(nameInHtml: string,
+                                                       nameInFunction: string,
+                                                       move: Move,
+                                                       clickAnimationDuration?: number)
+    : Promise<void>
+    {
+        await this.clickElement(nameInHtml);
         if (clickAnimationDuration === undefined) {
             tick(0);
         } else {
             tick(clickAnimationDuration);
         }
-        expect(this.canUserPlaySpy).toHaveBeenCalledOnceWith(elementName);
+        expect(this.canUserPlaySpy).toHaveBeenCalledOnceWith(nameInFunction);
         this.canUserPlaySpy.calls.reset();
         expect(this.chooseMoveSpy).toHaveBeenCalledOnceWith(move);
         this.chooseMoveSpy.calls.reset();

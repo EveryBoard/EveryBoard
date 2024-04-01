@@ -10,7 +10,7 @@ import { PlayerOrNone } from 'src/app/jscaip/Player';
 import { QuixoState } from 'src/app/games/quixo/QuixoState';
 import { QuixoFailure } from 'src/app/games/quixo/QuixoFailure';
 
-describe('QuixoComponent', () => {
+fdescribe('QuixoComponent', () => {
 
     let testUtils: ComponentTestUtils<QuixoComponent>;
 

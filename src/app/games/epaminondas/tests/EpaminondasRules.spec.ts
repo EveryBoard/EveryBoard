@@ -241,6 +241,32 @@ describe('EpaminondasRules', () => {
         RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
     });
 
+    it('should forbid moving split-phalanx', () => {
+        // Given a board
+        const board: Table<PlayerOrNone> = [
+            [_, X, X, X, X, X, X, X, X, X, X, X, X, X],
+            [X, X, X, X, X, X, X, X, X, X, X, X, X, X],
+            [X, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [O, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, O, O, O, O, O, O, O, O, O, O, O, O, O],
+            [O, O, O, O, O, O, O, O, O, O, O, O, O, O],
+        ];
+        const state: EpaminondasState = new EpaminondasState(board, 2);
+
+        // When trying to move a piece of the opponent
+        const move: EpaminondasMove = new EpaminondasMove(0, 11, 3, 1, Direction.UP);
+
+        // Then it should fail
+        const reason: string = EpaminondasFailure.PHALANX_CANNOT_CONTAIN_EMPTY_SQUARE();
+        RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
+    });
+
     it('should allow legal move', () => {
         // Given a board
         const board: Table<PlayerOrNone> = [

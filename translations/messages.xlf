@@ -1335,14 +1335,8 @@
       <trans-unit id="5389576774289628382" datatype="html">
         <source>Your phalanx must be bigger than the one you are capturing.</source>
       </trans-unit>
-      <trans-unit id="2291068586508886218" datatype="html">
-        <source>This square is not aligned with the selected piece.</source>
-      </trans-unit>
-      <trans-unit id="8716552567618018184" datatype="html">
-        <source>A single piece can only move by one square.</source>
-      </trans-unit>
-      <trans-unit id="3099022711875888574" datatype="html">
-        <source>A single piece cannot make a capture.</source>
+      <trans-unit id="2536383576156157449" datatype="html">
+        <source>Cannot move a phalanx further than its size (got <x id="PH" equiv-text="p"/> jumping <x id="PH_1" equiv-text="s"/> spaces).</source>
       </trans-unit>
       <trans-unit id="5151115756771676188" datatype="html">
         <source>This square is not aligned with the direction of the phalanx.</source>
