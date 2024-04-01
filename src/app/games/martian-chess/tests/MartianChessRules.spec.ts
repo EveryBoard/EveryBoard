@@ -669,7 +669,7 @@ describe('MartianChessRules', () => {
                 RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
             });
 
-            it('should be "asked to dev" not to call it again on a clock-started state', () => {
+            it('should not be allowed to call it again on a clock-started state', () => {
                 // Given a board with clock called
                 const board: Table<MartianChessPiece> = MartianChessRules.get().getInitialState().getCopiedBoard();
                 const state: MartianChessState = new MartianChessState(board,
@@ -681,7 +681,7 @@ describe('MartianChessRules', () => {
                 // When calling the clock once more
                 const move: MartianChessMove = MartianChessMove.from(new Coord(1, 7), new Coord(0, 6), true).get();
 
-                // Then the move should throw, because the component should not allow it
+                // Then the move should throw, as is it not an expected move
                 const expectedBoard: Table<MartianChessPiece> = [
                     [C, C, B, _],
                     [C, B, A, _],
