@@ -30,7 +30,7 @@ jobs:
       - name: Setup dependencies (install dependencies)
         run: npm ci
       - name: Build lib
-        run: cd lib && npm run build
+        run: rm -rf node_modules/@types/glob && cd lib && npm run build
       - name: Setup dependencies (setup dummy Firebase secret)
         run: cp ./src/app/firebaseConfig.ts.dummy ./src/app/firebaseConfig.ts
       - name: Build
