@@ -19,9 +19,5 @@
     "jasmine": "^5.1.0",
     "nyc": "^15.1.0",
     "ts-node": "^10.9.2"
-  },
-  "overrides": {
-      "minimatch": "3.0.3",
-      "glob": "8.1.0"
   }
 }
