@@ -41,7 +41,7 @@ export class BackendService {
                 } else {
                     return MGPFallible.failure('No error message');
                 }
-            } catch (_: unknown) {
+            } catch (err: unknown) {
                 return MGPFallible.failure('Invalid JSON response from the server');
             }
         }

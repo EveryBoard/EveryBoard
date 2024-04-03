@@ -14,6 +14,8 @@ import { JSONValue } from 'src/app/utils/utils';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
+import { ConfigRoomMocks } from 'src/app/domain/ConfigRoomMocks.spec';
+import { ConfigRoom } from 'src/app/domain/ConfigRoom';
 
 fdescribe('BackendService', () => {
     let backendService: BackendService;
@@ -103,7 +105,7 @@ fdescribe('BackendService', () => {
     describe('deleteGame', () => {
         it('should delete the expected resource', fakeAsync(async() => {
             // Given a game
-            const response: Response = { status: 200 } as unknown as Response;
+            const response: Response = Response.json({}, { status: 200 });
             spyOn(window, 'fetch').and.resolveTo(response);
             const gameId: string = 'game-id';
             // When calling deleteGame
@@ -116,7 +118,7 @@ fdescribe('BackendService', () => {
     describe('acceptConfig', () => {
         it('should POST on the expected resource', fakeAsync(async() => {
             // Given a game
-            const response: Response = { status: 200 } as unknown as Response;
+            const response: Response = Response.json({}, { status: 200 });
             spyOn(window, 'fetch').and.resolveTo(response);
             const gameId: string = 'game-id';
             // When calling acceptConfig
@@ -129,7 +131,7 @@ fdescribe('BackendService', () => {
     describe('resign', () => {
         it('should POST on the expected resource', fakeAsync(async() => {
             // Given a game
-            const response: Response = { status: 200 } as unknown as Response;
+            const response: Response = Response.json({}, { status: 200 });
             spyOn(window, 'fetch').and.resolveTo(response);
             const gameId: string = 'game-id';
             // When calling resign
@@ -142,7 +144,7 @@ fdescribe('BackendService', () => {
     describe('notifyTimeout', () => {
         it('should POST on the expected resource', fakeAsync(async() => {
             // Given a game
-            const response: Response = { status: 200 } as unknown as Response;
+            const response: Response = Response.json({}, { status: 200 });
             spyOn(window, 'fetch').and.resolveTo(response);
             const gameId: string = 'game-id';
             // When calling notifyTimeout
@@ -161,7 +163,7 @@ fdescribe('BackendService', () => {
         describe(methodName, () => {
             it('should POST on the expected resource', fakeAsync(async() => {
                 // Given a game
-                const response: Response = { status: 200 } as unknown as Response;
+                const response: Response = Response.json({}, { status: 200 });
                 spyOn(window, 'fetch').and.resolveTo(response);
                 const gameId: string = 'game-id';
                 // When doing the action
@@ -188,7 +190,7 @@ fdescribe('BackendService', () => {
 
         it('should POST on the expected resource', fakeAsync(async() => {
             // Given a game
-            const response: Response = { status: 200 } as unknown as Response;
+            const response: Response = Response.json({}, { status: 200 });
             spyOn(window, 'fetch').and.resolveTo(response);
             const gameId: string = 'game-id';
             // When doing a move
@@ -202,7 +204,7 @@ fdescribe('BackendService', () => {
 
         it('should POST on the expected resource (with scores)', fakeAsync(async() => {
             // Given a game
-            const response: Response = { status: 200 } as unknown as Response;
+            const response: Response = Response.json({}, { status: 200 });
             spyOn(window, 'fetch').and.resolveTo(response);
             const gameId: string = 'game-id';
             // When doing a move (with scores)
@@ -220,7 +222,7 @@ fdescribe('BackendService', () => {
 
         it('should POST on the expected resource', fakeAsync(async() => {
             // Given a game
-            const response: Response = { status: 200 } as unknown as Response;
+            const response: Response = Response.json({}, { status: 200 });
             spyOn(window, 'fetch').and.resolveTo(response);
             const gameId: string = 'game-id';
             // When doing a move
@@ -234,7 +236,7 @@ fdescribe('BackendService', () => {
 
         it('should POST on the expected resource (with scores)', fakeAsync(async() => {
             // Given a game
-            const response: Response = { status: 200 } as unknown as Response;
+            const response: Response = Response.json({}, { status: 200 });
             spyOn(window, 'fetch').and.resolveTo(response);
             const gameId: string = 'game-id';
             // When doing a move (with scores)
@@ -249,7 +251,7 @@ fdescribe('BackendService', () => {
 
         it('should POST on the expected resource (with winner)', fakeAsync(async() => {
             // Given a game
-            const response: Response = { status: 200 } as unknown as Response;
+            const response: Response = Response.json({}, { status: 200 });
             spyOn(window, 'fetch').and.resolveTo(response);
             const gameId: string = 'game-id';
             // When doing a move
@@ -276,32 +278,111 @@ fdescribe('BackendService', () => {
     });
 
     describe('joinGame', () => {
+
         it('should POST to the expected resource', fakeAsync(async() => {
             // Given a game
-            const response: Response = { status: 200 } as unknown as Response;
+            const response: Response = Response.json({}, { status: 200 });
             spyOn(window, 'fetch').and.resolveTo(response);
             const gameId: string = 'game-id';
-            // When joining it move
+            // When joining it
             const result: MGPValidation = await backendService.joinGame(gameId);
             // Then it should post on the expected resource
             const expectedEndpoint: string = endpoint(`/config-room/${gameId}/candidates`);
             expect(window.fetch).toHaveBeenCalledOnceWith(expectedEndpoint, expectedParams('POST'));
             expect(result).toEqual(MGPValidation.SUCCESS);
         }));
+
         it('should fail if the game does not exist', fakeAsync(async() => {
-            // Given a game
-            const response: Response = {
-                ...Response.json({ reason: 'Game does not exist' }),
-                status: 404,
-            };
+            // Given no game
+            const response: Response = Response.json({ reason: 'Game does not exist' }, { status: 404 });
             spyOn(window, 'fetch').and.resolveTo(response);
             const gameId: string = 'game-id';
-            // When joining it move
+            // When joining it
             const result: MGPValidation = await backendService.joinGame(gameId);
             // Then it should post on the expected resource
             const expectedEndpoint: string = endpoint(`/config-room/${gameId}/candidates`);
             expect(window.fetch).toHaveBeenCalledOnceWith(expectedEndpoint, expectedParams('POST'));
-            expect(result).toEqual(MGPValidation.failure('foo'));
+            expect(result).toEqual(MGPValidation.failure('This game does not exist!'));
+        }));
+    });
+
+    describe('removeCandidate', () => {
+
+        it('should DELETE the expected resource', fakeAsync(async() => {
+            // Given a game with a candidate
+            const response: Response = Response.json({}, { status: 200 });
+            spyOn(window, 'fetch').and.resolveTo(response);
+            const gameId: string = 'game-id';
+            const candidateId: string = 'candidate-id';
+            // When removing the candidate
+            await backendService.removeCandidate(gameId, candidateId);
+            // Then it should delete the resource
+            const expectedEndpoint: string = endpoint(`/config-room/${gameId}/candidates/${candidateId}`);
+            expect(window.fetch).toHaveBeenCalledOnceWith(expectedEndpoint, expectedParams('DELETE'));
+        }));
+    });
+
+    describe('proposeConfig', () => {
+
+        it('should POST on the expected resource', fakeAsync(async() => {
+            // Given a game
+            const response: Response = Response.json({}, { status: 200 });
+            spyOn(window, 'fetch').and.resolveTo(response);
+            const gameId: string = 'game-id';
+            // When proposing config
+            const config: ConfigRoom = ConfigRoomMocks.withProposedConfig(MGPOptional.empty());
+            await backendService.proposeConfig(gameId, config);
+            // Then it should post on the expected resource
+            const configStr: string = encodeURIComponent(JSON.stringify(config));
+            const expectedEndpoint: string = endpoint(`/config-room/${gameId}?action=propose&config=${configStr}`);
+            expect(window.fetch).toHaveBeenCalledOnceWith(expectedEndpoint, expectedParams('POST'));
+        }));
+    });
+
+    describe('selectOpponent"', () => {
+
+        it('should POST on the expected resource', fakeAsync(async() => {
+            // Given a game
+            const response: Response = Response.json({}, { status: 200 });
+            spyOn(window, 'fetch').and.resolveTo(response);
+            const gameId: string = 'game-id';
+            // When selecting an opponent
+            const opponent: MinimalUser = UserMocks.OPPONENT_MINIMAL_USER;
+            await backendService.selectOpponent(gameId, opponent);
+            // Then it should post on the expected resource
+            const opponentStr: string = encodeURIComponent(JSON.stringify(opponent));
+            const expectedEndpoint: string = endpoint(`/config-room/${gameId}?action=selectOpponent&opponent=${opponentStr}`);
+            expect(window.fetch).toHaveBeenCalledOnceWith(expectedEndpoint, expectedParams('POST'));
+        }));
+    });
+
+    describe('reviewConfig"', () => {
+
+        it('should POST on the expected resource', fakeAsync(async() => {
+            // Given a game
+            const response: Response = Response.json({}, { status: 200 });
+            spyOn(window, 'fetch').and.resolveTo(response);
+            const gameId: string = 'game-id';
+            // When reviewing config
+            await backendService.reviewConfig(gameId);
+            // Then it should post on the expected resource
+            const expectedEndpoint: string = endpoint(`/config-room/${gameId}?action=review`);
+            expect(window.fetch).toHaveBeenCalledOnceWith(expectedEndpoint, expectedParams('POST'));
+        }));
+    });
+
+    describe('reviewConfigAndRemoveChosenOpponent"', () => {
+
+        it('should POST on the expected resource', fakeAsync(async() => {
+            // Given a game
+            const response: Response = Response.json({}, { status: 200 });
+            spyOn(window, 'fetch').and.resolveTo(response);
+            const gameId: string = 'game-id';
+            // When reviewing config
+            await backendService.reviewConfigAndRemoveChosenOpponent(gameId);
+            // Then it should post on the expected resource
+            const expectedEndpoint: string = endpoint(`/config-room/${gameId}?action=reviewConfigAndRemoveOpponent`);
+            expect(window.fetch).toHaveBeenCalledOnceWith(expectedEndpoint, expectedParams('POST'));
         }));
     });
 });
