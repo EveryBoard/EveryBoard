@@ -31,8 +31,7 @@ export class Coord extends Vector {
         return new Coord(combinedVector.x, combinedVector.y);
     }
 
-    public getPrevious(dir: Vector, distance?: number): Coord {
-        distance = distance == null ? 1 : distance;
+    public getPrevious(dir: Vector, distance: number = 1): Coord {
         return this.getNext(dir, -distance);
     }
 
@@ -194,6 +193,10 @@ export class Coord extends Vector {
 
     public scale(x: number, y: number): Coord {
         return new Coord(this.x * x, this.y * y);
+    }
+
+    public getNeighbors(): Coord[] {
+        return Direction.DIRECTIONS.map((direction: Direction) => this.getNext(direction));
     }
 
 }

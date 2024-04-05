@@ -11,7 +11,7 @@ import { AbaloneFailure } from '../AbaloneFailure';
 import { AbaloneState } from '../AbaloneState';
 import { AbaloneMove } from '../AbaloneMove';
 
-fdescribe('AbaloneComponent', () => {
+describe('AbaloneComponent', () => {
 
     const _: FourStatePiece = FourStatePiece.EMPTY;
     const N: FourStatePiece = FourStatePiece.UNREACHABLE;
@@ -189,7 +189,7 @@ fdescribe('AbaloneComponent', () => {
             // When clicking on coord then direction
             // Then the move should be done
             const move: AbaloneMove = AbaloneMove.ofSingleCoord(new Coord(0, 7), HexaDirection.UP);
-            await testUtils.expectMoveSuccess('#direction_UP', move);
+            await testUtils.expectMoveSuccessWithAsymmetricNaming('#arrow_0_7_to_0_6', '#direction_UP', move);
         }));
 
         it('should choose the more inclusive arrow-drawing (A > B)', fakeAsync(async() => {
@@ -367,7 +367,7 @@ fdescribe('AbaloneComponent', () => {
             await testUtils.expectClickSuccess('#piece_0_7');
             await testUtils.expectClickSuccess('#piece_0_8');
             const move: AbaloneMove = AbaloneMove.ofSingleCoord(new Coord(0, 7), HexaDirection.DOWN);
-            await testUtils.expectMoveSuccessWithAsymmetricNaming('#arrow_0_7_to_0_8', '#direction_DOWN', move);
+            await testUtils.expectMoveSuccessWithAsymmetricNaming('#arrow_0_7_to_0_9', '#direction_DOWN', move);
 
             // When rendering it
             // Then the starting square of the moved piece should be shown as moved

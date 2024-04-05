@@ -160,6 +160,21 @@ export class Direction extends BaseDirection {
         },
     );
 
+    public static getAngle(direction: Direction): number {
+        switch (direction) {
+            case Direction.RIGHT: return 0;
+            case Direction.DOWN_RIGHT: return 45;
+            case Direction.DOWN: return 90;
+            case Direction.DOWN_LEFT: return 135;
+            case Direction.LEFT: return 180;
+            case Direction.UP_LEFT: return -135;
+            case Direction.UP: return -90;
+            default:
+                Utils.expectToBe(direction, Direction.UP_RIGHT);
+                return -45;
+        }
+    }
+
     private constructor(x: 0|1|-1, y: 0|1|-1) {
         super(x, y);
     }

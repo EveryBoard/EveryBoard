@@ -140,8 +140,8 @@ export class LascaRules extends Rules<LascaMove, LascaState> {
                 const commander: LascaPiece = capturedSpace.getCommander();
                 movingStack = movingStack.capturePiece(commander);
 
-                const reaminingStack: LascaStack = capturedSpace.getPiecesUnderCommander();
-                resultingState = resultingState.set(capturedCoord, reaminingStack);
+                const remainingStack: LascaStack = capturedSpace.getPiecesUnderCommander();
+                resultingState = resultingState.set(capturedCoord, remainingStack);
             }
         }
         resultingState = resultingState.set(moveEnd, movingStack);

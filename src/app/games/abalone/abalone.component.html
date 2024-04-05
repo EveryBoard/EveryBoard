@@ -3,6 +3,16 @@
      viewBox="-165 0 470 500"
      preserveAspectRatio="xMidYMid meet"
 >
+
+    <polygon *ngFor="let invisibleSpace of boardNeighboringCoords"
+             id="invisible_space_{{ invisibleSpace.x }}_{{ invisibleSpace.y }}"
+             [attr.transform]="getHexaCenterTranslationAtXY(invisibleSpace.x, invisibleSpace.y)"
+             (click)="onSpaceClick(invisibleSpace.x, invisibleSpace.y)"
+             class="transparent"
+             [attr.points]="getHexaPoints()"
+             stroke-linecap="round"
+    />
+
     <g *ngFor="let line of hexaBoard; index as y">
         <g *ngFor="let c of line; index as x">
             <g *ngIf="isBoard(c)"
@@ -49,6 +59,6 @@
        (click)="chooseDirection(arrow.dir)"
        app-hex-arrow
        [arrow]="arrow"
-       (emitEvent)="() => chooseDirection(arrow.dir)"
     />
+
 </svg>

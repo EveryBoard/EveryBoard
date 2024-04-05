@@ -106,7 +106,7 @@ export class GameComponentUtils {
         // The board will be considered in this example as a 3x3 on which we place the triangle in (tx, ty)
         let tx: number;
         let ty: number;
-        const angle: number = GameComponentUtils.getAngle(orthogonal.toDirection());
+        const angle: number = Direction.getAngle(orthogonal.toDirection());
         switch (orthogonal) {
             case Orthogonal.UP:
                 tx = 1;
@@ -132,21 +132,6 @@ export class GameComponentUtils {
         const translation: string = `translate(${realX} ${realY})`;
         const rotation: string = 'rotate(' + angle + ' 50 50)';
         return [scale, translation, rotation].join(' ');
-    }
-
-    public static getAngle(direction: Direction): number {
-        switch (direction) {
-            case Direction.RIGHT: return 0;
-            case Direction.DOWN_RIGHT: return 45;
-            case Direction.DOWN: return 90;
-            case Direction.DOWN_LEFT: return 135;
-            case Direction.LEFT: return 180;
-            case Direction.UP_LEFT: return -135;
-            case Direction.UP: return -90; // TODO: make it make more sense
-            default:
-                Utils.expectToBe(direction, Direction.UP_RIGHT);
-                return -45;
-        }
     }
 
 }

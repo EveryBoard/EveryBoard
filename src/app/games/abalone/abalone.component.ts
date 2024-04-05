@@ -60,6 +60,12 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneRules,
 
     public selecteds: Coord[] = [];
 
+    public boardNeighboringCoords: Coord[] = AbaloneRules
+        .get()
+        .getInitialState()
+        .getCoordsAndContents()
+        .flatMap((coordAndContent: { coord: Coord }) => coordAndContent.coord.getNeighbors());
+
     public constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
         this.setRulesAndNode('Abalone');
