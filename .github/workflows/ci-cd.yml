@@ -60,7 +60,7 @@ jobs:
       - name: Setup dependencies (install dependencies)
         run: npm ci
       - name: Build lib
-        run: cd lib && npm run build
+        run: rm -rf node_modules/@types/glob && cd lib && npm run build
       - name: Setup dependencies (setup dummy Firebase secret)
         run: cp ./src/app/firebaseConfig.ts.dummy ./src/app/firebaseConfig.ts
 
@@ -105,7 +105,7 @@ jobs:
       - name: Setup dependencies (install dependencies)
         run: npm ci
       - name: Build lib
-        run: cd lib && npm run build
+        run: rm -rf node_modules/@types/glob && cd lib && npm run build
       - name: Setup dependencies (setup dummy Firebase secret)
         run: cp ./src/app/firebaseConfig.ts.dummy ./src/app/firebaseConfig.ts
       - name: Setup python
@@ -141,7 +141,7 @@ jobs:
       - name: Setup dependencies (install dependencies)
         run: npm ci
       - name: Build lib
-        run: cd lib && npm run build
+        run: rm -rf node_modules/@types/glob && cd lib && npm run build
       - name: Setup dependencies (setup dummy Firebase secret)
         run: cp ./src/app/firebaseConfig.ts.dummy ./src/app/firebaseConfig.ts
 
@@ -181,7 +181,7 @@ jobs:
       - name: Setup dependencies (install dependencies)
         run: npm ci
       - name: Build lib
-        run: cd lib && npm run build
+        run: rm -rf node_modules/@types/glob && cd lib && npm run build
       - name: Setup dependencies (setup dummy Firebase secret)
         run: cp ./src/app/firebaseConfig.ts.dummy ./src/app/firebaseConfig.ts
 
@@ -219,7 +219,7 @@ jobs:
       - name: Setup dependencies (install dependencies)
         run: npm ci
       - name: Build lib
-        run: cd lib && npm run build
+        run: rm -rf node_modules/@types/glob && cd lib && npm run build
       - name: Setup dependencies (setup Firebase secret, master)
         if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' }}
         run: |
@@ -281,7 +281,7 @@ jobs:
       - name: Setup dependencies (install dependencies)
         run: npm ci
       - name: Build lib
-        run: cd lib && npm run build
+        run: rm -rf node_modules/@types/glob && cd lib && npm run build
       - name: Setup dependencies (setup Firebase secret, others)
         if: ${{ github.ref != 'refs/heads/master'  && github.ref != 'refs/heads/develop' }}
         run: |
