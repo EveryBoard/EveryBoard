@@ -54,6 +54,7 @@
     "@angular/compiler-cli": "^17.2.3",
     "@angular/localize": "^17.2.3",
     "@types/jasmine": "^5.1.4",
+    "@typescript-eslint/eslint-plugin": "^7.5.0",
     "angular-cli-ghpages": "^1.0.6",
     "angular-eslint": "^0.0.1-alpha.0",
     "eslint": "^8.57.0",
