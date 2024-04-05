@@ -5,7 +5,7 @@ import { GameInfo } from '../../normal-component/pick-game/pick-game.component';
 import { fakeAsync } from '@angular/core/testing';
 import { GameWrapper } from '../GameWrapper';
 import { Click, TutorialPredicate, TutorialStep } from './TutorialStep';
-import { Comparable, MGPFallible, MGPOptional, MGPValidation, MGPValidationTestUtils, TestUtils, Utils } from '@everyboard/lib';
+import { Comparable, MGPFallible, MGPOptional, MGPValidation, MGPValidationTestUtils, Utils } from '@everyboard/lib';
 import { Move } from 'src/app/jscaip/Move';
 import { Coord } from 'src/app/jscaip/Coord';
 import { AbstractRules, SuperRules } from 'src/app/jscaip/Rules';

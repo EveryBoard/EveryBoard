@@ -1,4 +1,4 @@
-import { Utils } from "@everyboard/lib";
+import { Utils } from '@everyboard/lib';
 
 export class Debug {
     /**
