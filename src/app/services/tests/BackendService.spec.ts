@@ -16,8 +16,9 @@ import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { ConfigRoomMocks } from 'src/app/domain/ConfigRoomMocks.spec';
 import { ConfigRoom } from 'src/app/domain/ConfigRoom';
+import { MGPFallible } from 'src/app/utils/MGPFallible';
 
-fdescribe('BackendService', () => {
+describe('BackendService', () => {
     let backendService: BackendService;
 
     function expectedParams(method: 'POST' | 'GET' | 'DELETE'): object {
@@ -383,6 +384,19 @@ fdescribe('BackendService', () => {
             // Then it should post on the expected resource
             const expectedEndpoint: string = endpoint(`/config-room/${gameId}?action=reviewConfigAndRemoveOpponent`);
             expect(window.fetch).toHaveBeenCalledOnceWith(expectedEndpoint, expectedParams('POST'));
+        }));
+    });
+
+    describe('performRequest', () => {
+
+        it('should fail properly if no error message is returned', fakeAsync(async() => {
+            // Given a backend that does not return error messages but fails
+            const response: Response = Response.json(null, { status: 404 });
+            spyOn(window, 'fetch').and.resolveTo(response);
+            // When making a request that will fail
+            const result: MGPFallible<Response> = await backendService['performRequest']('GET', 'some-endpoint');
+            // Then it should fail properly
+            expect(result.getReason()).toBe('No error message');
         }));
     });
 });

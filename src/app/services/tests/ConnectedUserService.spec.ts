@@ -1,6 +1,6 @@
 /* eslint-disable max-lines-per-function */
 import { ReplaySubject, Subscription } from 'rxjs';
-import { fakeAsync, TestBed } from '@angular/core/testing';
+import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { Injectable } from '@angular/core';
 import { FirebaseError } from '@firebase/app';
 import * as FireAuth from '@firebase/auth';
@@ -637,6 +637,21 @@ describe('ConnectedUserService', () => {
         // When mapping it
         // Then it should throw
         expect(() => connectedUserService['catchFirebaseError'](error)).toThrow(error);
+    });
+
+    describe('getIdToken', () => {
+        it('should retrieve id token of the current user', async() => {
+            // Given a user
+            const result: MGPFallible<FireAuth.User> = await connectedUserService.doRegister(username, email, password);
+            const auth: FireAuth.Auth = FireAuth.getAuth();
+            const user: FireAuth.User = Utils.getNonNullable(auth.currentUser);
+            spyOn(user, 'getIdToken').and.callFake(async() => 'MyIdToken');
+            // When getting the id token
+            const idToken: string = await connectedUserService.getIdToken();
+            // Then it should fetch the one of the user
+            expect(idToken).toEqual('MyIdToken');
+            expect(user.getIdToken).toHaveBeenCalled();
+        });
     });
     afterEach(async() => {
         if (alreadyDestroyed === false) {
