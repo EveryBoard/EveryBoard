@@ -8,6 +8,7 @@ import { UserService } from 'src/app/services/UserService';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { CurrentGame } from 'src/app/domain/User';
 import { Debug } from 'src/app/utils/utils';
+import { GameInfo } from '../pick-game/pick-game.component';
 
 @Component({
     selector: 'app-header',
@@ -48,15 +49,22 @@ export class HeaderComponent implements OnInit, OnDestroy {
                 this.currentGame = currentGame;
             });
     }
+
     public async logout(): Promise<void> {
         await this.connectedUserService.disconnect();
         await this.router.navigate(['/']);
     }
+
     public async navigateToPart(): Promise<boolean> {
         return this.router.navigate(['/play', this.currentGame.get().typeGame, this.currentGame.get().id]);
     }
+
     public ngOnDestroy(): void {
         this.userSubscription.unsubscribe();
         this.currentGameSubscription.unsubscribe();
+    }
+
+    public getCurrentGameName(): string {
+        return GameInfo.getByUrlName(this.currentGame.get().typeGame).get().name;
     }
 }
