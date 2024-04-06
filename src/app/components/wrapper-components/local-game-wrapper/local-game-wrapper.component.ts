@@ -129,9 +129,9 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
     }
 
     public async proposeAIToPlay(): Promise<void> {
-        const isAISelected: boolean = await this.hasSelectedAI();
-        await this.setInteractive(isAISelected === false);
-        if (isAISelected) {
+        const currentPlayerIsHuman: boolean = await this.hasSelectedAI() === false;
+        await this.setInteractive(currentPlayerIsHuman);
+        if (currentPlayerIsHuman === false) {
             // It is AI's turn, let it play after a small delay
             const playingAI: MGPOptional<{ ai: AbstractAI, options: AIOptions }> = this.getPlayingAI();
             if (playingAI.isPresent()) {
@@ -188,7 +188,7 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
     }
 
     /**
-     * @param playerIndex 0 or 1 given the index of the current player
+     * @param playerIndex 0 or 1 (the index of the current player)
      * @returns MGPOptional.empty() if no AI is selected
      *          MGPOptional.of(some AI) if an AI is selected, even if AI has its options unchosen
      */
