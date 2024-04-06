@@ -47,7 +47,6 @@ import { GameInfo } from 'src/app/components/normal-component/pick-game/pick-gam
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { Player } from 'src/app/jscaip/Player';
 import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
-import { AbaloneMove } from 'src/app/games/abalone/AbaloneMove';
 
 @Component({})
 export class BlankComponent {}

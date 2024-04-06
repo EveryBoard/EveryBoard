@@ -121,9 +121,9 @@ export class EpaminondasRules extends ConfigurableRules<EpaminondasMove,
     }
 
     private static getCaptureValidity(oldState: EpaminondasState,
-                                     board: PlayerOrNone[][],
-                                     move: EpaminondasMove,
-                                     opponent: Player)
+                                      board: PlayerOrNone[][],
+                                      move: EpaminondasMove,
+                                      opponent: Player)
     : MGPFallible<EpaminondasLegalityInformation>
     {
         let capturedSoldier: Coord = move.coord.getNext(move.direction, move.phalanxSize + move.stepSize - 1);

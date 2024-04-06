@@ -3,12 +3,13 @@
      [attr.viewBox]="getViewBox().toSVGString()"
      [attr.transform]="rotation"
      preserveAspectRatio="xMidYMid meet">
+
     <g *ngFor="let line of board; index as y">
         <g *ngFor="let c of line; index as x"
            [attr.transform]="getTranslationXY(x, y)"
-           id="click_{{ x }}_{{ y }}"
+           id="click-{{ x }}-{{ y }}"
            (click)="onClick(x, y)">
-            <rect id="space_{{ x }}_{{ y }}"
+            <rect id="space-{{ x }}-{{ y }}"
                   x="0"
                   y="0"
                   [attr.width]="SPACE_SIZE"
@@ -17,7 +18,7 @@
                   class="base"
             />
             <circle *ngIf="board[y][x] !== NONE"
-                    id="piece_{{ x }}_{{ y }}"
+                    id="piece-{{ x }}-{{ y }}"
                     [attr.cx]="SPACE_SIZE / 2"
                     [attr.cy]="SPACE_SIZE / 2"
                     [attr.r]="(SPACE_SIZE / 2) - STROKE_WIDTH"
@@ -26,6 +27,7 @@
             />
         </g>
     </g>
+
     <rect *ngFor="let coord of getHighlightedCoords()"
           id="clickable-{{ coord.x }}-{{ coord.y }}"
           (click)="onClick(coord.x, coord.y)"
@@ -36,7 +38,7 @@
           class="no-fill mid-stroke clickable-stroke"
     />
     <g *ngFor="let possibleMove of possibleMoves"
-       id="arrow_{{ possibleMove.arrow.start.x }}_{{ possibleMove.arrow.start.y }}_to_{{ possibleMove.arrow.landing.x }}_{{ possibleMove.arrow.landing.y }}"
+       id="arrow-{{ possibleMove.arrow.start.x }}-{{ possibleMove.arrow.start.y }}-to-{{ possibleMove.arrow.landing.x }}-{{ possibleMove.arrow.landing.y }}"
        app-dir-arrow
        [arrow]="possibleMove.arrow"
     />

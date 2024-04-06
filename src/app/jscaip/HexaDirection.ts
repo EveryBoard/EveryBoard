@@ -48,7 +48,7 @@ export class HexaDirection extends BaseDirection {
 
     public static getAngle(direction: HexaDirection): number {
         switch (direction) {
-            case HexaDirection.UP: return 0; // TODO KILL IT
+            case HexaDirection.UP: return 0;
             case HexaDirection.UP_RIGHT: return 60;
             case HexaDirection.RIGHT: return 120;
             case HexaDirection.DOWN: return 180;
