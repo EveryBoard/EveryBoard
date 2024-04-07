@@ -148,7 +148,7 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
     /**
      * @returns false if the game is finished
      *          false if no AI is selected
-     *          true if an AI is selected even if it's option is not selected yet
+     *          true if an AI is selected even if its option is not selected yet
      */
     private async hasSelectedAI(): Promise<boolean> {
         const config: MGPOptional<RulesConfig> = await this.getConfig();

@@ -182,7 +182,7 @@ export class YinshComponent extends HexagonalGameComponent<YinshRules,
     }
 
     private isCapturedRing(coord: Coord, captures: YinshCapture[]): boolean {
-        return captures.some((c: YinshCapture) => c.ringTaken.equalsValue(coord));
+        return captures.some((capture: YinshCapture) => capture.ringTaken.equalsValue(coord));
     }
 
     public getPieceGroupClasses(x: number, y: number): string[] {
@@ -235,7 +235,7 @@ export class YinshComponent extends HexagonalGameComponent<YinshRules,
     }
 
     private isInitialCaptureRing(coord: Coord): boolean {
-        return this.initialCaptures.some((c: YinshCapture) => c.ringTaken.equalsValue(coord));
+        return this.initialCaptures.some((capture: YinshCapture) => capture.ringTaken.equalsValue(coord));
     }
 
     public getRingClasses(x: number, y: number): string[] {
