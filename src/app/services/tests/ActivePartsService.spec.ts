@@ -54,6 +54,9 @@ describe('ActivePartsService', () => {
             // Then the new part should have been observed
             expect(seenActiveParts.length).toBe(1);
             expect(seenActiveParts[0].data).toEqual(part);
+            // And it should really be a PartDocument, not just a FirestoreDocument<Part>
+            // hence, it has methods such as getGameName()
+            expect(seenActiveParts[0].getGameName).toBeDefined();
 
             activePartsSubscription.unsubscribe();
         }));
