@@ -18,12 +18,12 @@ import { EpaminondasAttackMinimax } from './EpaminondasAttackMinimax';
 import { EpaminondasPositionalMinimax } from './EpaminondasPositionalMinimax';
 import { EpaminondasMinimax } from './EpaminondasMinimax';
 import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
-import { DirArrow } from 'src/app/components/game-components/arrow-component/DirArrow';
+import { DirectionalArrow } from 'src/app/components/game-components/arrow-component/DirArrow';
 import { EpaminondasFailure } from './EpaminondasFailure';
 
 export type PossibleMove = {
 
-    arrow: DirArrow;
+    arrow: DirectionalArrow;
 
     endingCoord: Coord;
 
@@ -150,7 +150,7 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
                     direction,
                 );
                 if (this.rules.isLegal(move, state).isSuccess()) {
-                    const arrow: DirArrow = new DirArrow(
+                    const arrow: DirectionalArrow = new DirectionalArrow(
                         this.firstPiece.get(),
                         coord,
                         direction,
@@ -229,7 +229,7 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
     }
 
     private getStepSize(clicked: Coord, phalanxSize: number): number {
-        // Only called if clicked is align with first piece
+        // Only called if clicked is aligned with first piece
         const direction: Direction = this.firstPiece.get().getDirectionToward(clicked).get();
         let stepSize: number = 1;
         let coord: Coord = this.firstPiece.get().getNext(direction, phalanxSize);

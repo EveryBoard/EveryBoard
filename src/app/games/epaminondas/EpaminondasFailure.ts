@@ -8,7 +8,7 @@ export class EpaminondasFailure {
 
     public static readonly PHALANX_SHOULD_BE_GREATER_TO_CAPTURE: Localized = () => $localize`Your phalanx must be bigger than the one you are capturing.`;
 
-    public static readonly PHALANX_CANNOT_JUMP_FURTHER_THAN_ITS_SIZE: (stepSize: number, phalanxSize: number) => string = (s: number, p: number) => $localize`Cannot move a phalanx further than its size (got ${ p } jumping ${ s } spaces).`;
+    public static readonly PHALANX_CANNOT_JUMP_FURTHER_THAN_ITS_SIZE: (stepSize: number, phalanxSize: number) => string = (s: number, p: number) => $localize`You took a phalanx of size ${ p } and moved it ${ s } steps. Phalanx cannot move further than their sizes.`;
 
     public static readonly SQUARE_NOT_ALIGNED_WITH_PHALANX: Localized = () => $localize`This square is not aligned with the direction of the phalanx.`;
 

@@ -29,6 +29,7 @@ export class HexaDirection extends BaseDirection {
                 HexaDirection.LEFT,
             ];
         };
+
     public static readonly encoder: Encoder<HexaDirection> = Encoder.fromFunctions(
         (direction: HexaDirection): number => {
             switch (direction) {
@@ -46,18 +47,19 @@ export class HexaDirection extends BaseDirection {
         },
     );
 
-    public static getAngle(direction: HexaDirection): number {
-        switch (direction) {
+    public override getAngle(): number {
+        switch (this) {
             case HexaDirection.UP: return 0;
             case HexaDirection.UP_RIGHT: return 60;
             case HexaDirection.RIGHT: return 120;
             case HexaDirection.DOWN: return 180;
             case HexaDirection.DOWN_LEFT: return 240;
             default:
-                Utils.expectToBe(direction, HexaDirection.LEFT);
+                Utils.expectToBe(this, HexaDirection.LEFT);
                 return 300;
         }
     }
+
     private constructor(x: 0|1|-1, y: 0|1|-1) {
         super(x, y);
     }

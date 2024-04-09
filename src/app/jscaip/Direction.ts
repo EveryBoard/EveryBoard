@@ -50,6 +50,8 @@ export abstract class BaseDirection extends Vector {
         else return 'DOWN_RIGHT';
     }
 
+    public abstract getAngle(): number;
+
 }
 
 export abstract class DirectionFactory<T extends BaseDirection> {
@@ -160,8 +162,8 @@ export class Direction extends BaseDirection {
         },
     );
 
-    public static getAngle(direction: Direction): number {
-        switch (direction) {
+    public getAngle(): number {
+        switch (this) {
             case Direction.RIGHT: return 0;
             case Direction.DOWN_RIGHT: return 45;
             case Direction.DOWN: return 90;
@@ -170,7 +172,7 @@ export class Direction extends BaseDirection {
             case Direction.UP_LEFT: return -135;
             case Direction.UP: return -90;
             default:
-                Utils.expectToBe(direction, Direction.UP_RIGHT);
+                Utils.expectToBe(this, Direction.UP_RIGHT);
                 return -45;
         }
     }
@@ -246,6 +248,18 @@ export class Orthogonal extends BaseDirection {
                 return Direction.LEFT;
         }
     }
+
+    public getAngle(): number {
+        switch (this) {
+            case Orthogonal.RIGHT: return 0;
+            case Orthogonal.DOWN: return 90;
+            case Orthogonal.LEFT: return 180;
+            default:
+                Utils.expectToBe(this, Orthogonal.UP);
+                return -90;
+        }
+    }
+
 }
 
 export class DirectionFailure {

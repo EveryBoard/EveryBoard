@@ -39,7 +39,7 @@ describe('HexaDirection', () => {
     it('should map to angle correctly', () => {
         for (let i: number = 0; i < 6; i++) {
             const dir: HexaDirection = HexaDirection.factory.all[i];
-            expect(HexaDirection.getAngle(dir)).toBe(i * 60);
+            expect(dir.getAngle()).toBe(i * 60);
         }
     });
 

@@ -1,7 +1,8 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { Line } from './Line';
 
-export class Arrow extends Line {
+export class ArrowOfLine extends Line {
+
     public constructor(public readonly source: Coord,
                        public readonly destination: Coord,
                        x1: number,
@@ -11,4 +12,5 @@ export class Arrow extends Line {
     {
         super(x1, y1, x2, y2);
     }
+
 }

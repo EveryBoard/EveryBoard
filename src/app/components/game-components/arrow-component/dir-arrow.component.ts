@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { BaseGameComponent } from '../game-component/GameComponent';
-import { DirArrow } from './DirArrow';
+import { DirectionalArrow } from './DirArrow';
 
 @Component({
     selector: '[app-dir-arrow]',
@@ -9,6 +9,6 @@ import { DirArrow } from './DirArrow';
 })
 export class DirArrowComponent extends BaseGameComponent {
 
-    @Input() arrow: DirArrow;
+    @Input() arrow: DirectionalArrow;
 
 }

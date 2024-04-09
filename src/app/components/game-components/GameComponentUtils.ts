@@ -1,5 +1,5 @@
 import { Coord } from 'src/app/jscaip/Coord';
-import { Direction, Orthogonal } from 'src/app/jscaip/Direction';
+import { Orthogonal } from 'src/app/jscaip/Direction';
 import { HexaLayout } from 'src/app/jscaip/HexaLayout';
 import { Utils } from 'src/app/utils/utils';
 
@@ -106,7 +106,7 @@ export class GameComponentUtils {
         // The board will be considered in this example as a 3x3 on which we place the triangle in (tx, ty)
         let tx: number;
         let ty: number;
-        const angle: number = Direction.getAngle(orthogonal.toDirection());
+        const angle: number = orthogonal.getAngle();
         switch (orthogonal) {
             case Orthogonal.UP:
                 tx = 1;

@@ -195,7 +195,7 @@ export class Coord extends Vector {
         return new Coord(this.x * x, this.y * y);
     }
 
-    public getNeighbors(): Coord[] {
+    public getOrdinalNeighbors(): Coord[] {
         return Direction.DIRECTIONS.map((direction: Direction) => this.getNext(direction));
     }
 

@@ -13,7 +13,7 @@ import { HexagonalGameComponent }
 import { GipfMove, GipfPlacement } from 'src/app/games/gipf/GipfMove';
 import { GipfState } from 'src/app/games/gipf/GipfState';
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
-import { Arrow } from 'src/app/jscaip/Arrow';
+import { ArrowOfLine } from 'src/app/jscaip/Arrow';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { Utils } from 'src/app/utils/utils';
@@ -42,8 +42,8 @@ export class GipfComponent extends HexagonalGameComponent<GipfRules,
     private static readonly PHASE_PLACEMENT_DIRECTION: number = 2;
     private static readonly PHASE_FINAL_CAPTURE: number = 3;
 
-    public inserted: MGPOptional<Arrow> = MGPOptional.empty();
-    public arrows: Arrow[] = [];
+    public inserted: MGPOptional<ArrowOfLine> = MGPOptional.empty();
+    public arrows: ArrowOfLine[] = [];
     public captured: Coord[] = [];
     public moved: Coord[] = [];
 
@@ -107,11 +107,11 @@ export class GipfComponent extends HexagonalGameComponent<GipfRules,
         }
     }
 
-    private arrowTowards(placement: Coord, direction: HexaDirection): Arrow {
+    private arrowTowards(placement: Coord, direction: HexaDirection): ArrowOfLine {
         const previous: Coord = placement.getNext(direction.getOpposite());
         const center: Coord = this.getCenterAt(placement);
         const previousCenter: Coord = this.getCenterAt(previous);
-        return new Arrow(previous, placement, previousCenter.x, previousCenter.y, center.x, center.y);
+        return new ArrowOfLine(previous, placement, previousCenter.x, previousCenter.y, center.x, center.y);
     }
 
     private markCapture(capture: GipfCapture): void {
@@ -231,7 +231,7 @@ export class GipfComponent extends HexagonalGameComponent<GipfRules,
                 const nextSpace: Coord = placement.getNext(dir);
                 const center1: Coord = this.getCenterAt(placement);
                 const center2: Coord = this.getCenterAt(nextSpace);
-                this.arrows.push(new Arrow(placement, nextSpace, center1.x, center1.y, center2.x, center2.y));
+                this.arrows.push(new ArrowOfLine(placement, nextSpace, center1.x, center1.y, center2.x, center2.y));
             }
         }
     }

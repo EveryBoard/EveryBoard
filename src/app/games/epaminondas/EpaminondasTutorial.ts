@@ -74,7 +74,7 @@ export class EpaminondasTutorial extends Tutorial {
         ),
         TutorialStep.fromPredicate(
             $localize`Moving a phalanx`,
-            $localize`Let us now see how to move multiple pieces along a line, which is called a phalanx:<ol><li>Click on the first piece of the phalanx.</li><li>Click on one of the squares highlighted in yellow; you can move your phalanx up to a distance equal to its length.</li></ol><br/>You're playing Dark, Move a phalanx!`,
+            $localize`A line of several piece is called a phalanx. Let us now see how to move a phalanx along a line:<ol><li>Click on the first piece of the phalanx.</li><li>Click on one of the squares highlighted in yellow; you can move your phalanx up to a distance equal to its length.</li></ol><br/>You're playing Dark, Move a phalanx!`,
             EpaminondasRules.get().getInitialState(defaultConfig),
             new EpaminondasMove(0, 11, 2, 1, Direction.UP),
             (move: EpaminondasMove, _previous: EpaminondasState, _result: EpaminondasState) => {
@@ -88,7 +88,7 @@ export class EpaminondasTutorial extends Tutorial {
         ),
         TutorialStep.fromMove(
             $localize`Captures`,
-            $localize`In order to capture pieces of the opponent:<ol><li>It must be aligned with the phalanx you are moving.</li><li>It must be strictly shorter than your phalanx.</li><li>The first piece of your phalanx should land on the first piece of the opponent's phalanx that you want to capture.</li></ol><br/>You're playing Dark, capture a phalanx.`,
+            $localize`In order to capture an opponent phalanx:<ol><li>It must be aligned with the phalanx you are moving.</li><li>It must be strictly shorter than your phalanx.</li><li>The first piece of your phalanx should land on the first piece of the opponent's phalanx that you want to capture.</li></ol><br/>You're playing Dark, capture a phalanx.`,
             new EpaminondasState([
                 [_, _, _, _, _, _, _, _, X, X, X, X, X, X],
                 [_, _, _, _, _, _, X, _, _, _, _, _, _, _],
