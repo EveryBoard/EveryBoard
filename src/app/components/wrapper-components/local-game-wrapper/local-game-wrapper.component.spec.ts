@@ -282,7 +282,7 @@ describe('LocalGameWrapperComponent (game phase)', () => {
             // Once by changing it on the select, once after the AI move and check who is next
         }));
 
-        it('should rotate the board when selecting AI as player zero', async() => {
+        it('should rotate the board when selecting AI as player zero', fakeAsync(async() => {
             // Given a board of a reversible component
             testUtils.getGameComponent().hasAsymmetricBoard = true;
 
@@ -292,12 +292,14 @@ describe('LocalGameWrapperComponent (game phase)', () => {
             // Then the board should have been rotated so that player one, the human, stays below
             const rotation: string = testUtils.getGameComponent().rotation;
             expect(rotation).toBe('rotate(180)');
-        });
+            tick(LocalGameWrapperComponent.AI_TIMEOUT);
+        }));
 
-        it('should de-rotate the board when selecting human as player zero again', async() => {
+        it('should de-rotate the board when selecting human as player zero again', fakeAsync(async() => {
             // Given a board of a reversible component, where AI is player zero
             testUtils.getGameComponent().hasAsymmetricBoard = true;
             await testUtils.selectAIPlayer(Player.ZERO);
+            tick(LocalGameWrapperComponent.AI_TIMEOUT);
 
             // When chosing the human as player zero again
             await testUtils.choosingAIOrHuman(Player.ZERO, 'human');
@@ -305,7 +307,7 @@ describe('LocalGameWrapperComponent (game phase)', () => {
             // Then the board should have been rotated so that player zero is below again
             const rotation: string = testUtils.getGameComponent().rotation;
             expect(rotation).toBe('rotate(0)');
-        });
+        }));
 
         it('should propose AI to play when restarting game', fakeAsync(async() => {
             const wrapper: LocalGameWrapperComponent = testUtils.getWrapper() as LocalGameWrapperComponent;
