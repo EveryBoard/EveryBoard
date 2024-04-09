@@ -18,12 +18,12 @@ import { EpaminondasAttackMinimax } from './EpaminondasAttackMinimax';
 import { EpaminondasPositionalMinimax } from './EpaminondasPositionalMinimax';
 import { EpaminondasMinimax } from './EpaminondasMinimax';
 import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
-import { DirectionalArrow } from 'src/app/components/game-components/arrow-component/DirArrow';
 import { EpaminondasFailure } from './EpaminondasFailure';
+import { Arrow } from 'src/app/components/game-components/arrow-component/Arrow';
 
 export type PossibleMove = {
 
-    arrow: DirectionalArrow;
+    arrow: Arrow<Direction>;
 
     endingCoord: Coord;
 
@@ -150,7 +150,7 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
                     direction,
                 );
                 if (this.rules.isLegal(move, state).isSuccess()) {
-                    const arrow: DirectionalArrow = new DirectionalArrow(
+                    const arrow: Arrow<Direction> = new Arrow<Direction>(
                         this.firstPiece.get(),
                         coord,
                         direction,

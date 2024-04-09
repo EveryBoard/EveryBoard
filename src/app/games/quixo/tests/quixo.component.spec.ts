@@ -91,7 +91,7 @@ describe('QuixoComponent', () => {
             testUtils.expectElementToHaveClass('#click_4_0', 'last-move-stroke');
         }));
 
-        fit('should allow a simple move upwards', fakeAsync(async() => {
+        it('should allow a simple move upwards', fakeAsync(async() => {
             await testUtils.expectClickSuccess('#click_4_4');
             await testUtils.expectMoveSuccess('#chooseDirection_UP', new QuixoMove(4, 4, Orthogonal.UP));
         }));
