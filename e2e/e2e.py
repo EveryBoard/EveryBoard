@@ -36,7 +36,7 @@ def click_button(driver, selector):
         button = wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, selector)))
         button.click()
     except Exception as e:
-        print("Failed when clicking on button '{}'".format(selector))
+        print("Failed when clicking on button '{}': {}".format(selector, e))
         raise e
 
 def click_menu_button(driver, hover_selector, button_selector):
