@@ -1,27 +1,27 @@
 /* eslint-disable max-lines-per-function */
 import { fakeAsync } from '@angular/core/testing';
 import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
-import { RectanglzComponent } from '../rectanglz.component';
+import { SquarzComponent } from '../squarz.component';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { RectanglzState } from '../RectanglzState';
-import { RectanglzConfig, RectanglzRules } from '../RectanglzRules';
-import { RectanglzMove } from '../RectanglzMove';
+import { SquarzState } from '../SquarzState';
+import { SquarzConfig, SquarzRules } from '../SquarzRules';
+import { SquarzMove } from '../SquarzMove';
 import { Coord } from 'src/app/jscaip/Coord';
 import { PlayerOrNone } from 'src/app/jscaip/Player';
-import { RectanglzFailure } from '../RectanglzFailure';
+import { SquarzFailure } from '../SquarzFailure';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 
-describe('RectanglzComponent', () => {
+describe('SquarzComponent', () => {
 
     const _: PlayerOrNone = PlayerOrNone.NONE;
     const O: PlayerOrNone = PlayerOrNone.ZERO;
     const X: PlayerOrNone = PlayerOrNone.ONE;
-    const defaultConfig: MGPOptional<RectanglzConfig> = RectanglzRules.get().getDefaultRulesConfig();
+    const defaultConfig: MGPOptional<SquarzConfig> = SquarzRules.get().getDefaultRulesConfig();
 
-    let testUtils: ComponentTestUtils<RectanglzComponent>;
+    let testUtils: ComponentTestUtils<SquarzComponent>;
 
     beforeEach(fakeAsync(async() => {
-        testUtils = await ComponentTestUtils.forGame<RectanglzComponent>('Rectanglz');
+        testUtils = await ComponentTestUtils.forGame<SquarzComponent>('Squarz');
     }));
 
     it('should create', () => {
@@ -42,7 +42,7 @@ describe('RectanglzComponent', () => {
         it('should toast when selecting opponent piece', fakeAsync( async() => {
             // Given any state
             // When clicking on an opponent piece
-            // Then the move should be illegal
+            // Then it should fail
             const opponentPiece: string = '#click_7_0';
             const reason: string = RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT();
             await testUtils.expectClickFailure(opponentPiece, reason);
@@ -51,13 +51,13 @@ describe('RectanglzComponent', () => {
         it('should toast when selecting empty space piece', fakeAsync( async() => {
             // Given any state
             // When clicking on an empty space
-            // Then it should be a failure
+            // Then it should fail
             await testUtils.expectClickFailure('#click_2_2', RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY());
         }));
 
         it('should hide previous move', fakeAsync(async() => {
             // Given a board with a previous move
-            const state: RectanglzState = new RectanglzState([
+            const state: SquarzState = new SquarzState([
                 [O, _, _, _, _, _, _, X],
                 [_, O, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _],
@@ -67,15 +67,15 @@ describe('RectanglzComponent', () => {
                 [_, _, _, _, _, _, _, _],
                 [X, _, _, _, _, _, _, O],
             ], 1);
-            const previousState: RectanglzState = RectanglzRules.get().getInitialState(defaultConfig);
-            const previousMove: RectanglzMove = RectanglzMove.from(new Coord(0, 0), new Coord(1, 1)).get();
+            const previousState: SquarzState = SquarzRules.get().getInitialState(defaultConfig);
+            const previousMove: SquarzMove = SquarzMove.from(new Coord(0, 0), new Coord(1, 1)).get();
             await testUtils.setupState(state, { previousMove, previousState });
             testUtils.expectElementToHaveClasses('#piece_0_0', ['base', 'player0-fill', 'last-move-stroke']);
             testUtils.expectElementToHaveClasses('#space_0_0', ['base']);
             testUtils.expectElementToHaveClasses('#piece_1_1', ['base', 'player0-fill', 'last-move-stroke']);
             testUtils.expectElementToHaveClasses('#space_1_1', ['base', 'moved-fill']);
 
-            // When doing that first click
+            // When doing a first click
             await testUtils.expectClickSuccess('#click_0_7');
 
             // Then the last move should be hidden
@@ -94,13 +94,13 @@ describe('RectanglzComponent', () => {
             await testUtils.expectClickSuccess('#click_0_0');
 
             // When clicking on valid landing space
-            const move: RectanglzMove = RectanglzMove.from(new Coord(0, 0), new Coord(1, 1)).get();
+            const move: SquarzMove = SquarzMove.from(new Coord(0, 0), new Coord(1, 1)).get();
             await testUtils.expectMoveSuccess('#click_1_1', move);
 
-            // Then both piece should be displayed as last-move
+            // Then both pieces should be displayed as last-move-stroke
             testUtils.expectElementToHaveClasses('#piece_0_0', ['base', 'player0-fill', 'last-move-stroke']);
             testUtils.expectElementToHaveClasses('#piece_1_1', ['base', 'player0-fill', 'last-move-stroke']);
-            // But only created space should be displayed as last-move
+            // But only created the space should be displayed as moved-fill
             testUtils.expectElementToHaveClasses('#space_0_0', ['base']);
             testUtils.expectElementToHaveClasses('#space_1_1', ['base', 'moved-fill']);
         }));
@@ -110,10 +110,11 @@ describe('RectanglzComponent', () => {
             await testUtils.expectClickSuccess('#click_0_0');
             testUtils.expectElementToHaveClasses('#piece_0_0', ['base', 'player0-fill', 'selected-stroke']);
 
-            // When licking on invalid landing space
-            await testUtils.expectClickFailure('#click_5_5', RectanglzFailure.MAX_DISTANCE_IS_(2));
+            // When clicking on an invalid landing space
+            const move: SquarzMove = SquarzMove.from(new Coord(0, 0), new Coord(5, 5)).get();
+            await testUtils.expectMoveFailure('#click_5_5', SquarzFailure.MAX_DISTANCE_IS_N(2), move);
 
-            // Then the piece should no longer be selected
+            // Then the piece should not be highlighted
             testUtils.expectElementToHaveClasses('#piece_0_0', ['base', 'player0-fill']);
         }));
 
@@ -125,7 +126,7 @@ describe('RectanglzComponent', () => {
             // When clicking on another piece
             await testUtils.expectClickSuccess('#click_7_7');
 
-            // Then new clicked piece should be highlighted, not the previous
+            // Then newly selected piece should be highlighted, not the previous one
             testUtils.expectElementNotToHaveClass('#piece_0_0', 'selected-stroke');
             testUtils.expectElementToHaveClass('#piece_7_7', 'selected-stroke');
         }));
@@ -138,13 +139,13 @@ describe('RectanglzComponent', () => {
             // When clicking that piece again
             await testUtils.expectClickSuccess('#click_0_0');
 
-            // Then the piece should no longer be selected
+            // Then the piece should not be highlighted
             testUtils.expectElementToHaveClasses('#piece_0_0', ['base', 'player0-fill']);
         }));
 
         it('should show captured piece after move', fakeAsync(async() => {
             // Given a board with a selected piece
-            const state: RectanglzState = new RectanglzState([
+            const state: SquarzState = new SquarzState([
                 [_, _, _, _, _, _, _, X],
                 [_, _, _, _, _, _, _, _],
                 [O, _, _, _, _, _, _, _],
@@ -157,11 +158,11 @@ describe('RectanglzComponent', () => {
             await testUtils.setupState(state);
             await testUtils.expectClickSuccess('#click_0_2');
 
-            // When clicking on valid landing space
-            const move: RectanglzMove = RectanglzMove.from(new Coord(0, 2), new Coord(0, 4)).get();
+            // When clicking on a valid landing space
+            const move: SquarzMove = SquarzMove.from(new Coord(0, 2), new Coord(0, 4)).get();
             await testUtils.expectMoveSuccess('#click_0_4', move);
 
-            // Then captured piece should be displayed
+            // Then the captured piece should be displayed
             testUtils.expectElementToHaveClasses('#space_0_4', ['base', 'moved-fill']);
             testUtils.expectElementToHaveClasses('#space_0_5', ['base', 'captured-fill']);
         }));
@@ -170,16 +171,16 @@ describe('RectanglzComponent', () => {
             // Given a board with a selected piece
             await testUtils.expectClickSuccess('#click_0_0');
 
-            // When clicking on valid landing space
-            const move: RectanglzMove = RectanglzMove.from(new Coord(0, 0), new Coord(2, 2)).get();
+            // When clicking on a valid landing space
+            const move: SquarzMove = SquarzMove.from(new Coord(0, 0), new Coord(2, 2)).get();
             await testUtils.expectMoveSuccess('#click_2_2', move);
 
-            // Then both piece should be displayed as last-move
-            testUtils.expectElementNotToExist('#piece_0_0');
-            testUtils.expectElementToHaveClasses('#piece_2_2', ['base', 'player0-fill', 'last-move-stroke']);
-            // But only created space should be displayed as last-move
+            // Then both spaces should be displayed as last-moved-fill
             testUtils.expectElementToHaveClasses('#space_0_0', ['base', 'moved-fill']);
             testUtils.expectElementToHaveClasses('#space_2_2', ['base', 'moved-fill']);
+            // But only the landing piece should exist (as last-move-stroke)
+            testUtils.expectElementNotToExist('#piece_0_0');
+            testUtils.expectElementToHaveClasses('#piece_2_2', ['base', 'player0-fill', 'last-move-stroke']);
         }));
 
     });

@@ -94,7 +94,7 @@ describe('PylosComponent', () => {
             await testUtils.setupState(initialState);
 
             // When clicking on one
-            // Then the move should be illegal
+            // Then it should fail
             await testUtils.expectClickFailure('#piece_0_0_0', RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT());
         }));
 
@@ -530,7 +530,7 @@ describe('PylosComponent', () => {
             await testUtils.expectClickSuccess('#drop_1_1_1');
 
             // When clicking on a non capturable piece
-            // Then the move should be illegal
+            // Then it should fail
             await testUtils.expectClickFailure('#piece_2_1_0', PylosFailure.CANNOT_MOVE_SUPPORTING_PIECE());
         }));
 

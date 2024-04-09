@@ -136,4 +136,27 @@ describe('Coord', () => {
 
     });
 
+    describe('getDistanceToward', () => {
+
+        const coord: Coord = new Coord(0, 0);
+
+        it('should calculate result and not check alignment', () => {
+            const distance: number = coord.getDistanceToward(new Coord(1, 1), false);
+            expect(distance).toBe(1);
+        });
+
+        it('should calculate result for "knight-like" distance without checking alignment', () => {
+            const distance: number = coord.getDistanceToward(new Coord(1, 2), false);
+            expect(distance).toBe(2);
+        });
+
+        it('should throw and check alignement', () => {
+            TestUtils.expectToThrowAndLog(
+                () => coord.getDistanceToward(new Coord(1, 2), true),
+                'Cannot calculate distance with non aligned coords.',
+            );
+        });
+
+    });
+
 });

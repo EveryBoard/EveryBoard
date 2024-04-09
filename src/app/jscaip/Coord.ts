@@ -108,7 +108,7 @@ export class Coord extends Vector {
         return this.getDistanceToward(c, true);
     }
 
-    public getDistanceToward(c: Coord, checkAlignement: boolean = false): number { // TODO TEST
+    public getDistanceToward(c: Coord, checkAlignement: boolean = false): number {
         if (checkAlignement && c.isAlignedWith(this) === false) {
             throw new Error('Cannot calculate distance with non aligned coords.');
         }

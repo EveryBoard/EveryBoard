@@ -374,8 +374,8 @@
       <trans-unit id="1493565703246564578" datatype="html">
         <source>Ba-awa</source>
       </trans-unit>
-      <trans-unit id="8555057300464580380" datatype="html">
-        <source>Rectanglz</source>
+      <trans-unit id="2597247746010343961" datatype="html">
+        <source>Squarz</source>
       </trans-unit>
       <trans-unit id="2218572265318708454" datatype="html">
         <source>Registering</source>
@@ -1752,8 +1752,8 @@
       <trans-unit id="4766965064757095472" datatype="html">
         <source>Placing pieces after the second turn</source>
       </trans-unit>
-      <trans-unit id="7211778570517391304" datatype="html">
-        <source>After the second turn, you are still allowed to place pieces any time you want, as long as you respect two conditions: &lt;ol&gt;&lt;li&gt;your piece must be connected to the hive, and&lt;/li&gt;&lt;li&gt;the space on which you drop your piece must not touch a stack of the opponent.&lt;/li&gt;&lt;/ol&gt;&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, drop a piece on the board.</source>
+      <trans-unit id="4687115502403685230" datatype="html">
+        <source>After the second turn, you are still allowed to place pieces any time you want, as long as you respect two conditions: &lt;ol&gt;&lt;li&gt;your piece must be connected to the hive, and&lt;/li&gt;&lt;li&gt;the space on which you drop your piece must not touch a stack of the opponent.&lt;/li&gt;&lt;/ol&gt;&lt;br/&gt;You&apos;re playing Dark, drop a piece on the board.</source>
       </trans-unit>
       <trans-unit id="2751556568646013753" datatype="html">
         <source>Moving pieces: the queen bee</source>
@@ -2254,8 +2254,8 @@
       <trans-unit id="2949583224863920715" datatype="html">
         <source>Sowing</source>
       </trans-unit>
-      <trans-unit id="935549280838012268" datatype="html">
-        <source>The main move in Mancala games is sowing, let&apos;s see how seeds are sown. As you are playing Dark, the 6 houses on the bottom are yours.&lt;br/&gt;&lt;br&gt;Click on the rightmost bottom house to sow the seeds it contains: they will be sown clockwise, one seed per house.&lt;br/&gt;&lt;br/&gt;Click on the rightmost house!</source>
+      <trans-unit id="3369432302159653901" datatype="html">
+        <source>The main move in Mancala games is sowing, let&apos;s see how seeds are sown. As you are playing Dark, the 6 houses on the bottom are yours.&lt;br/&gt;&lt;br/&gt;Click on the rightmost bottom house to sow the seeds it contains: they will be sown clockwise, one seed per house.&lt;br/&gt;&lt;br/&gt;Click on the rightmost house!</source>
       </trans-unit>
       <trans-unit id="8909995708712093055" datatype="html">
         <source>Look at the 4 houses that follow clockwise the one you picked, they now contain one more seed. This is how seeds are sown: one by one from the house next to the one they come from, clockwise.</source>
@@ -2583,9 +2583,8 @@
       <trans-unit id="3444837986058371302" datatype="html">
         <source>Square (2/2)</source>
       </trans-unit>
-      <trans-unit id="4122674190040152445" datatype="html">
-        <source>You&apos;re playing Dark.&lt;br/&gt;&lt;br/&gt;
-        Do like in the previous step, but this time click on two different pieces before validating.</source>
+      <trans-unit id="5218035582670205877" datatype="html">
+        <source>You&apos;re playing Dark.&lt;br/&gt;&lt;br/&gt;Do like in the previous step, but this time click on two different pieces before validating.</source>
       </trans-unit>
       <trans-unit id="8313533670567464817" datatype="html">
         <source>Failed, you only captured one piece.</source>
@@ -2679,33 +2678,6 @@
         You can win with this board, try it.
         You&apos;re playing Light.</source>
       </trans-unit>
-      <trans-unit id="6822183852587312465" datatype="html">
-        <source>The maximum size of a jump is <x id="PH" equiv-text="n"/> step!</source>
-      </trans-unit>
-      <trans-unit id="323770883664351270" datatype="html">
-        <source>Jump Size</source>
-      </trans-unit>
-      <trans-unit id="4514360412923104145" datatype="html">
-        <source>Rectanglz is board control game. Here is the initial state. The goal is to have the more piece at the end of the game.</source>
-      </trans-unit>
-      <trans-unit id="1300852626039829767" datatype="html">
-        <source>Simple step</source>
-      </trans-unit>
-      <trans-unit id="5709585603504191391" datatype="html">
-        <source>One of the two kind of move you can do is the simple step. When you do one, you create a new piece. To do this, select one of your pieces, and click on its neighbors space.&lt;br/&gt;You&apos;re playing Dark, make a simple step.</source>
-      </trans-unit>
-      <trans-unit id="7755660952457346720" datatype="html">
-        <source>This was a single step, try a jump now.</source>
-      </trans-unit>
-      <trans-unit id="5043415569082211419" datatype="html">
-        <source>The second type of move you can do is the jump. When you do one, your piece leaves it&apos;s original space and jump two space further. To do this, select one of your pieces, and click on its landing space two space further.&lt;br/&gt;You&apos;re playing Light, make a jump.</source>
-      </trans-unit>
-      <trans-unit id="6330009772468407143" datatype="html">
-        <source>When one of your pieces arrives on a square neighbor to opponent&apos;s pieces, those pieces switch color.&lt;br/&gt;You&apos;re playing Dark, do such a move!</source>
-      </trans-unit>
-      <trans-unit id="527533079155909336" datatype="html">
-        <source>Bad choice, by making this move you allowed the opponent to steal you 5 pieces, win 5 pieces, and duplicate one piece, hence taking 11 points of advance on you and winning.&lt;br/&gt;Try again!</source>
-      </trans-unit>
       <trans-unit id="2829152398724302132" datatype="html">
         <source>Your move should switch at least one piece.</source>
       </trans-unit>
@@ -2769,6 +2741,9 @@
         <source>At Sâhârâ, the goal of the game is to immobilize one of the opponent&apos;s pyramids.
         To do so, you have to occupy all neighboring space of that pyramid.
         Here, Light has lost because its leftmost pyramid is immobilized.</source>
+      </trans-unit>
+      <trans-unit id="1300852626039829767" datatype="html">
+        <source>Simple step</source>
       </trans-unit>
       <trans-unit id="3615756484359681386" datatype="html">
         <source>To immobilize your opponent, you have to move your pyramids.
@@ -2970,6 +2945,36 @@
       </trans-unit>
       <trans-unit id="4274208426593680443" datatype="html">
         <source>Failed. You did cut the board in two but you kept the half where you&apos;re in minority. Therefore, you lost! Try again.</source>
+      </trans-unit>
+      <trans-unit id="6822183852587312465" datatype="html">
+        <source>The maximum size of a jump is <x id="PH" equiv-text="n"/> step!</source>
+      </trans-unit>
+      <trans-unit id="323770883664351270" datatype="html">
+        <source>Jump Size</source>
+      </trans-unit>
+      <trans-unit id="2875926120657969888" datatype="html">
+        <source>Squarz is board control game. Here is the initial state. The goal is to have the most piece at the end of the game.</source>
+      </trans-unit>
+      <trans-unit id="6228262372157040796" datatype="html">
+        <source>One of the two kinds of move you can do is the duplication. When you do one, you create a new piece. To do this, select one of your pieces, and click on its neighbors space.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, make a duplication.</source>
+      </trans-unit>
+      <trans-unit id="805836787886487858" datatype="html">
+        <source>This was a jump, try a duplication now.</source>
+      </trans-unit>
+      <trans-unit id="1234758343143401720" datatype="html">
+        <source>The second type of move you can do is the jump. When you do one, your piece leaves it&apos;s original space and jump two space further. To do this, select one of your pieces, and click on its landing space two space further.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Light, make a jump.</source>
+      </trans-unit>
+      <trans-unit id="4273222196833633277" datatype="html">
+        <source>This was a duplication, try a jump now.</source>
+      </trans-unit>
+      <trans-unit id="4531607774937783527" datatype="html">
+        <source>When one of your pieces lands on a square neighbors to opponent&apos;s pieces, those pieces become yours.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, do such a move!</source>
+      </trans-unit>
+      <trans-unit id="8185889618290318299" datatype="html">
+        <source>When one player cannot play, the game ends, and the player with the most piece wins. Here, you can do a final move and win.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Light, do it.</source>
+      </trans-unit>
+      <trans-unit id="3808135421251943457" datatype="html">
+        <source>Bad choice, by making this move you allowed the opponent to win.&lt;br/&gt;&lt;br/&gt;Try again!</source>
       </trans-unit>
       <trans-unit id="2976149661707388406" datatype="html">
         <source>Escape &gt; Pieces &gt; Control</source>

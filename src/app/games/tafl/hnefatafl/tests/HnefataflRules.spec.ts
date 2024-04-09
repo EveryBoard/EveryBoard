@@ -335,7 +335,7 @@ describe('HnefataflRules', () => {
         // When trying to sit on the king's throne
         const move: HnefataflMove = HnefataflMove.from(new Coord(0, 5), new Coord(5, 5)).get();
 
-        // Then the move should be illegal
+        // Then it should fail
         const reason: string = TaflFailure.SOLDIERS_CANNOT_SIT_ON_THRONE();
         RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
     });

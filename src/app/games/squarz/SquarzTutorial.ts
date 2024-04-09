@@ -1,40 +1,40 @@
 import { Tutorial, TutorialStep } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStep';
-import { RectanglzConfig, RectanglzRules } from './RectanglzRules';
+import { SquarzConfig, SquarzRules } from './SquarzRules';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { RectanglzState } from './RectanglzState';
-import { RectanglzMove } from './RectanglzMove';
+import { SquarzState } from './SquarzState';
+import { SquarzMove } from './SquarzMove';
 import { Coord } from 'src/app/jscaip/Coord';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { TutorialStepMessage } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 
-const defaultConfig: MGPOptional<RectanglzConfig> = RectanglzRules.get().getDefaultRulesConfig();
-const initialState: RectanglzState = RectanglzRules.get().getInitialState(defaultConfig);
+const defaultConfig: MGPOptional<SquarzConfig> = SquarzRules.get().getDefaultRulesConfig();
+const initialState: SquarzState = SquarzRules.get().getInitialState(defaultConfig);
 
 const _: PlayerOrNone = PlayerOrNone.NONE;
 const O: PlayerOrNone = PlayerOrNone.ZERO;
 const X: PlayerOrNone = PlayerOrNone.ONE;
 
-export class RectanglzTutorial extends Tutorial {
+export class SquarzTutorial extends Tutorial {
 
     public tutorial: TutorialStep[] = [
 
         TutorialStep.informational(
-            $localize`Rectanglz`,
-            $localize`Rectanglz is board control game. Here is the initial state. The goal is to have the more piece at the end of the game.`,
+            $localize`Squarz`,
+            $localize`Squarz is board control game. Here is the initial state. The goal is to have the most piece at the end of the game.`,
             initialState,
         ),
 
         TutorialStep.fromPredicate(
             $localize`Simple step`,
-            $localize`One of the two kind of move you can do is the simple step. When you do one, you create a new piece. To do this, select one of your pieces, and click on its neighbors space.<br/>You're playing Dark, make a simple step.`,
+            $localize`One of the two kinds of move you can do is the duplication. When you do one, you create a new piece. To do this, select one of your pieces, and click on its neighbors space.<br/><br/>You're playing Dark, make a duplication.`,
             initialState,
-            RectanglzMove.from(new Coord(0, 0), new Coord(1, 1)).get(),
-            (move: RectanglzMove, _: RectanglzState) => {
+            SquarzMove.from(new Coord(0, 0), new Coord(1, 1)).get(),
+            (move: SquarzMove, _: SquarzState) => {
                 if (move.isDuplication()) {
                     return MGPValidation.SUCCESS;
                 } else {
-                    return MGPValidation.failure($localize`This was a single step, try a jump now.`);
+                    return MGPValidation.failure($localize`This was a jump, try a duplication now.`);
                 }
             },
             TutorialStepMessage.CONGRATULATIONS(),
@@ -42,8 +42,8 @@ export class RectanglzTutorial extends Tutorial {
 
         TutorialStep.fromPredicate(
             $localize`Jumps`,
-            $localize`The second type of move you can do is the jump. When you do one, your piece leaves it's original space and jump two space further. To do this, select one of your pieces, and click on its landing space two space further.<br/>You're playing Light, make a jump.`,
-            new RectanglzState([
+            $localize`The second type of move you can do is the jump. When you do one, your piece leaves it's original space and jump two space further. To do this, select one of your pieces, and click on its landing space two space further.<br/><br/>You're playing Light, make a jump.`,
+            new SquarzState([
                 [O, _, _, _, _, _, _, X],
                 [_, O, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _],
@@ -53,20 +53,20 @@ export class RectanglzTutorial extends Tutorial {
                 [_, _, _, _, _, _, _, _],
                 [X, _, _, _, _, _, _, O],
             ], 1),
-            RectanglzMove.from(new Coord(7, 0), new Coord(5, 2)).get(),
-            (move: RectanglzMove, _: RectanglzState) => {
+            SquarzMove.from(new Coord(7, 0), new Coord(5, 2)).get(),
+            (move: SquarzMove, _: SquarzState) => {
                 if (move.isDuplication()) {
-                    return MGPValidation.failure($localize`This was a single step, try a jump now.`);
+                    return MGPValidation.failure($localize`This was a duplication, try a jump now.`);
                 } else {
                     return MGPValidation.SUCCESS;
                 }
             },
             TutorialStepMessage.CONGRATULATIONS(),
-        ).withPreviousMove(RectanglzMove.from(new Coord(0, 0), new Coord(1, 1)).get()), // TODO: check that we SEE the highlight
+        ).withPreviousMove(SquarzMove.from(new Coord(0, 0), new Coord(1, 1)).get()), // TODO: check that we SEE the highlight
         TutorialStep.fromPredicate(
             $localize`Captures`,
-            $localize`When one of your pieces arrives on a square neighbor to opponent's pieces, those pieces switch color.<br/>You're playing Dark, do such a move!`,
-            new RectanglzState([
+            $localize`When one of your pieces lands on a square neighbors to opponent's pieces, those pieces become yours.<br/><br/>You're playing Dark, do such a move!`,
+            new SquarzState([
                 [O, _, _, _, _, _, _, X],
                 [_, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _],
@@ -76,8 +76,8 @@ export class RectanglzTutorial extends Tutorial {
                 [_, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, O],
             ], 3),
-            RectanglzMove.from(new Coord(2, 5), new Coord(3, 4)).get(),
-            (_move: RectanglzMove, _state: RectanglzState, resultingState: RectanglzState) => {
+            SquarzMove.from(new Coord(2, 5), new Coord(3, 4)).get(),
+            (_move: SquarzMove, _state: SquarzState, resultingState: SquarzState) => {
                 if (resultingState.getPieceAtXY(3, 3) === Player.ONE) {
                     return MGPValidation.SUCCESS;
                 } else {
@@ -85,11 +85,11 @@ export class RectanglzTutorial extends Tutorial {
                 }
             },
             TutorialStepMessage.CONGRATULATIONS(),
-        ).withPreviousMove(RectanglzMove.from(new Coord(1, 1), new Coord(3, 3)).get()),
+        ).withPreviousMove(SquarzMove.from(new Coord(1, 1), new Coord(3, 3)).get()),
         TutorialStep.fromPredicate(
-            $localize`Captures`,
-            $localize`When one of your pieces arrives on a square neighbor to opponent's pieces, those pieces switch color.<br/>You're playing Dark, do such a move!`,
-            new RectanglzState([
+            $localize`End of the game`,
+            $localize`When one player cannot play, the game ends, and the player with the most piece wins. Here, you can do a final move and win.<br/><br/>You're playing Light, do it.`,
+            new SquarzState([
                 [X, X, X, X, X, X, X, X],
                 [O, O, O, O, O, O, O, O],
                 [O, O, O, O, O, O, O, O],
@@ -99,16 +99,16 @@ export class RectanglzTutorial extends Tutorial {
                 [X, X, X, X, X, X, X, X],
                 [O, O, O, O, O, O, O, O],
             ], 3),
-            RectanglzMove.from(new Coord(2, 5), new Coord(3, 4)).get(),
-            (move: RectanglzMove, _state: RectanglzState, _resultingState: RectanglzState) => {
+            SquarzMove.from(new Coord(2, 5), new Coord(3, 4)).get(),
+            (move: SquarzMove, _state: SquarzState, _resultingState: SquarzState) => {
                 if (move.isDuplication()) {
                     return MGPValidation.SUCCESS;
                 } else {
-                    return MGPValidation.failure($localize`Bad choice, by making this move you allowed the opponent to steal you 5 pieces, win 5 pieces, and duplicate one piece, hence taking 11 points of advance on you and winning.<br/>Try again!`);
+                    return MGPValidation.failure($localize`Bad choice, by making this move you allowed the opponent to win.<br/><br/>Try again!`);
                 }
             },
             TutorialStepMessage.CONGRATULATIONS_YOU_WON(),
-        ).withPreviousMove(RectanglzMove.from(new Coord(1, 1), new Coord(3, 3)).get()),
+        ).withPreviousMove(SquarzMove.from(new Coord(1, 1), new Coord(3, 3)).get()),
     ];
 
 }

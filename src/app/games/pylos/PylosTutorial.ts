@@ -106,8 +106,7 @@ export class PylosTutorial extends Tutorial {
         ),
         TutorialStep.fromPredicate(
             $localize`Square (2/2)`,
-            $localize`You're playing Dark.<br/><br/>
-        Do like in the previous step, but this time click on two different pieces before validating.`,
+            $localize`You're playing Dark.<br/><br/>Do like in the previous step, but this time click on two different pieces before validating.`,
             new PylosState([
                 [
                     [O, O, _, _],

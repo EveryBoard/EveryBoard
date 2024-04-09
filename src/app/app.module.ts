@@ -100,13 +100,13 @@ import { PylosComponent } from './games/pylos/pylos.component';
 import { QuartoComponent } from './games/quarto/quarto.component';
 import { QuixoComponent } from './games/quixo/quixo.component';
 
-import { RectanglzComponent } from './games/rectanglz/rectanglz.component';
 import { ReversiComponent } from './games/reversi/reversi.component';
 
 import { SaharaComponent } from './games/sahara/sahara.component';
 import { SiamComponent } from './games/siam/siam.component';
 import { SiamOrientationArrowComponent } from './games/siam/siam-orientation-arrow.component';
 import { SixComponent } from './games/six/six.component';
+import { SquarzComponent } from './games/squarz/squarz.component';
 
 import { TablutComponent } from './games/tafl/tablut/tablut.component';
 import { TeekoComponent } from './games/teeko/teeko.component';
@@ -214,11 +214,11 @@ export const routes: Route[] = [
         PylosComponent,
         QuartoComponent,
         QuixoComponent,
-        RectanglzComponent,
         ReversiComponent,
         SaharaComponent,
         SiamComponent, SiamOrientationArrowComponent,
         SixComponent,
+        SquarzComponent,
         TablutComponent,
         TeekoComponent,
         TrexoComponent, TrexoHalfPieceComponent,

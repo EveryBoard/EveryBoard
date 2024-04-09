@@ -1,6 +1,6 @@
 import { GameNode } from 'src/app/jscaip/AI/GameNode';
-import { RectanglzMove } from './RectanglzMove';
-import { RectanglzState } from './RectanglzState';
+import { SquarzMove } from './SquarzMove';
+import { SquarzState } from './SquarzState';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { ConfigurableRules } from 'src/app/jscaip/Rules';
@@ -12,30 +12,30 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { Direction } from 'src/app/jscaip/Direction';
 import { NumberConfig, RulesConfigDescription, RulesConfigDescriptionLocalizable } from 'src/app/components/wrapper-components/rules-configuration/RulesConfigDescription';
 import { MGPValidators } from 'src/app/utils/MGPValidator';
-import { RectanglzFailure } from './RectanglzFailure';
+import { SquarzFailure } from './SquarzFailure';
 
-export class RectanglzNode extends GameNode<RectanglzMove, RectanglzState> {}
+export class SquarzNode extends GameNode<SquarzMove, SquarzState> {}
 
-export type RectanglzConfig = {
+export type SquarzConfig = {
     width: number,
     height: number,
     jumpSize: number;
 };
 
-export class RectanglzRules extends ConfigurableRules<RectanglzMove, RectanglzState, RectanglzConfig> {
+export class SquarzRules extends ConfigurableRules<SquarzMove, SquarzState, SquarzConfig> {
 
-    private static singleton: MGPOptional<RectanglzRules> = MGPOptional.empty();
+    private static singleton: MGPOptional<SquarzRules> = MGPOptional.empty();
 
-    public static get(): RectanglzRules {
-        if (RectanglzRules.singleton.isAbsent()) {
-            RectanglzRules.singleton = MGPOptional.of(new RectanglzRules());
+    public static get(): SquarzRules {
+        if (SquarzRules.singleton.isAbsent()) {
+            SquarzRules.singleton = MGPOptional.of(new SquarzRules());
         }
-        return RectanglzRules.singleton.get();
+        return SquarzRules.singleton.get();
     }
 
-    public static readonly RULES_CONFIG_DESCRIPTION: RulesConfigDescription<RectanglzConfig> =
-        new RulesConfigDescription<RectanglzConfig>({
-            name: (): string => $localize`Rectanglz`,
+    public static readonly RULES_CONFIG_DESCRIPTION: RulesConfigDescription<SquarzConfig> =
+        new RulesConfigDescription<SquarzConfig>({
+            name: (): string => $localize`Squarz`,
             config: {
                 width: new NumberConfig(8, RulesConfigDescriptionLocalizable.WIDTH, MGPValidators.range(3, 99)),
                 height: new NumberConfig(8, RulesConfigDescriptionLocalizable.HEIGHT, MGPValidators.range(3, 99)),
@@ -43,12 +43,12 @@ export class RectanglzRules extends ConfigurableRules<RectanglzMove, RectanglzSt
             },
         });
 
-    public override getRulesConfigDescription(): MGPOptional<RulesConfigDescription<RectanglzConfig>> {
-        return MGPOptional.of(RectanglzRules.RULES_CONFIG_DESCRIPTION);
+    public override getRulesConfigDescription(): MGPOptional<RulesConfigDescription<SquarzConfig>> {
+        return MGPOptional.of(SquarzRules.RULES_CONFIG_DESCRIPTION);
     }
 
-    public override getInitialState(optionalConfig: MGPOptional<RectanglzConfig>): RectanglzState {
-        const config: RectanglzConfig = optionalConfig.get();
+    public override getInitialState(optionalConfig: MGPOptional<SquarzConfig>): SquarzState {
+        const config: SquarzConfig = optionalConfig.get();
         const width: number = config.width;
         const height: number = config.height;
         const board: PlayerOrNone[][] = TableUtils.create(width, height, PlayerOrNone.NONE);
@@ -56,16 +56,16 @@ export class RectanglzRules extends ConfigurableRules<RectanglzMove, RectanglzSt
         board[height - 1][width - 1] = Player.ZERO;
         board[height - 1][0] = Player.ONE;
         board[0][width - 1] = Player.ONE;
-        return new RectanglzState(board, 0);
+        return new SquarzState(board, 0);
     }
 
-    public override isLegal(move: RectanglzMove, state: RectanglzState, config: MGPOptional<RectanglzConfig>)
+    public override isLegal(move: SquarzMove, state: SquarzState, config: MGPOptional<SquarzConfig>)
     : MGPValidation
     {
         const distance: number = move.getDistance();
         const jumpSize: number = config.get().jumpSize;
         if (jumpSize < distance) {
-            return MGPValidation.failure(RectanglzFailure.MAX_DISTANCE_IS_(jumpSize));
+            return MGPValidation.failure(SquarzFailure.MAX_DISTANCE_IS_N(jumpSize));
         }
         const start: PlayerOrNone = state.getPieceAt(move.getStart());
         const opponent: Player = state.getCurrentOpponent();
@@ -83,13 +83,13 @@ export class RectanglzRules extends ConfigurableRules<RectanglzMove, RectanglzSt
         }
     }
 
-    public override applyLegalMove(move: RectanglzMove, state: RectanglzState): RectanglzState {
+    public override applyLegalMove(move: SquarzMove, state: SquarzState): SquarzState {
         const start: Coord = move.getStart();
         const end: Coord = move.getEnd();
         const moveDistance: number = start.getDistanceToward(end);
         const player: Player = state.getCurrentPlayer();
         const opponent: Player = state.getCurrentOpponent();
-        let resultingState: RectanglzState = state.setPieceAt(end, player);
+        let resultingState: SquarzState = state.setPieceAt(end, player);
         if (moveDistance > 1) {
             resultingState = resultingState.setPieceAt(start, PlayerOrNone.NONE);
         }
@@ -101,12 +101,12 @@ export class RectanglzRules extends ConfigurableRules<RectanglzMove, RectanglzSt
                 resultingState = resultingState.setPieceAt(neighbor, player);
             }
         }
-        return new RectanglzState(resultingState.board, resultingState.turn + 1);
+        return new SquarzState(resultingState.board, resultingState.turn + 1);
     }
 
-    public getGameStatus(node: RectanglzNode, config: MGPOptional<RectanglzConfig>): GameStatus {
+    public getGameStatus(node: SquarzNode, config: MGPOptional<SquarzConfig>): GameStatus {
         const jumpSize: number = config.get().jumpSize;
-        const state: RectanglzState = node.gameState;
+        const state: SquarzState = node.gameState;
         const currentPlayer: Player = state.getCurrentPlayer();
         if (this.canPlayerMove(state, currentPlayer, jumpSize)) {
             return GameStatus.ONGOING;
@@ -115,7 +115,7 @@ export class RectanglzRules extends ConfigurableRules<RectanglzMove, RectanglzSt
         }
     }
 
-    private canPlayerMove(state: RectanglzState, player: Player, jumpSize: number): boolean {
+    private canPlayerMove(state: SquarzState, player: Player, jumpSize: number): boolean {
         for (const coordAndContent of state.getCoordsAndContents()) {
             if (coordAndContent.content.equals(player)) {
                 if (this.canCoordMove(state, coordAndContent.coord, jumpSize)) {
@@ -126,7 +126,7 @@ export class RectanglzRules extends ConfigurableRules<RectanglzMove, RectanglzSt
         return false;
     }
 
-    private canCoordMove(state: RectanglzState, coord: Coord, jumpSize: number): boolean {
+    private canCoordMove(state: SquarzState, coord: Coord, jumpSize: number): boolean {
         for (let y: number = -jumpSize; y <= jumpSize; y++) {
             for (let x: number = -jumpSize; x <= jumpSize; x++) {
                 const landingCoord: Coord = new Coord(coord.x + x, coord.y + y);
@@ -138,23 +138,23 @@ export class RectanglzRules extends ConfigurableRules<RectanglzMove, RectanglzSt
         return false;
     }
 
-    public getPossiblesMoves(state: RectanglzState, coord: Coord, config: MGPOptional<RectanglzConfig>)
-    : RectanglzMove[]
+    public getPossiblesMoves(state: SquarzState, coord: Coord, config: MGPOptional<SquarzConfig>)
+    : SquarzMove[]
     {
-        const moves: RectanglzMove[] = [];
+        const moves: SquarzMove[] = [];
         const jumpSize: number = config.get().jumpSize;
         for (let y: number = -jumpSize; y <= jumpSize; y++) {
             for (let x: number = -jumpSize; x <= jumpSize; x++) {
                 const landingCoord: Coord = new Coord(coord.x + x, coord.y + y);
                 if (state.isOnBoard(landingCoord) && state.getPieceAt(landingCoord).isNone()) {
-                    moves.push(RectanglzMove.from(coord, landingCoord).get());
+                    moves.push(SquarzMove.from(coord, landingCoord).get());
                 }
             }
         }
         return moves;
     }
 
-    private getDominantPlayerVictory(state: RectanglzState): GameStatus {
+    private getDominantPlayerVictory(state: SquarzState): GameStatus {
         const winner: PlayerOrNone = state.getDominantPlayer();
         if (winner.isPlayer()) {
             return GameStatus.getVictory(winner);

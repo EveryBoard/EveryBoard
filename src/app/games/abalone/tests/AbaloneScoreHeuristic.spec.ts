@@ -24,7 +24,7 @@ describe('AbaloneScoreHeuristic', () => {
     });
 
     it('should assign a higher score when one has more pieces on board', () => {
-        // Given two boards, one with more player piece than the other
+        // Given two boards, one with more player pieces than the other
         const boardWithLessPieces: Table<FourStatePiece> = [
             [N, N, N, N, X, X, X, X, X],
             [N, N, N, X, X, X, X, X, X],

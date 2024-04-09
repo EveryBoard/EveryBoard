@@ -5,16 +5,16 @@ import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { MoveWithTwoCoords } from 'src/app/jscaip/MoveWithTwoCoords';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 
-export class RectanglzMove extends MoveCoordToCoord {
+export class SquarzMove extends MoveCoordToCoord {
 
-    public static encoder: Encoder<RectanglzMove> = MoveWithTwoCoords.getFallibleEncoder(RectanglzMove.from);
+    public static encoder: Encoder<SquarzMove> = MoveWithTwoCoords.getFallibleEncoder(SquarzMove.from);
 
-    public static from(start: Coord, end: Coord): MGPFallible<RectanglzMove> {
+    public static from(start: Coord, end: Coord): MGPFallible<SquarzMove> {
         const distance: number = start.getDistanceToward(end);
         if (distance === 0) {
             return MGPFallible.failure(RulesFailure.MOVE_CANNOT_BE_STATIC());
         } else {
-            return MGPFallible.success(new RectanglzMove(start, end));
+            return MGPFallible.success(new SquarzMove(start, end));
         }
     }
 

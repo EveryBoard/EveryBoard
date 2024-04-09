@@ -203,7 +203,7 @@ describe('PylosRules', () => {
         const state: PylosState = new PylosState(board, 0);
 
         // When trying to capture a piece below the landed piece
-        // Then the move should be illegal
+        // Then it should fail
         const move: PylosMove = PylosMove.ofDrop(new PylosCoord(1, 1, 1), [new PylosCoord(2, 2, 0)]);
         const reason: string = PylosFailure.INVALID_FIRST_CAPTURE();
         RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);

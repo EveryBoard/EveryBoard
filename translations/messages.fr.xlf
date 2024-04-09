@@ -264,7 +264,7 @@
       </trans-unit>
       <trans-unit id="7277920626199847666" datatype="html">
         <source>Duplicate yourself to conquer the board!</source>
-        <target>Dupliquez vous pour conquerir le plateau !</target>
+        <target>Dupliquez-vous pour conquérir le plateau !</target>
       </trans-unit>
       <trans-unit id="3529667957993318888" datatype="html">
         <source>Align 5 of your pieces on a board where pieces slide!</source>
@@ -540,9 +540,10 @@
       <trans-unit id="1493565703246564578" datatype="html">
         <source>Ba-awa</source>
         <target>Ba-awa</target>
-      </trans-unit><trans-unit id="8555057300464580380" datatype="html">
-        <source>Rectanglz</source>
-        <target>Rectanglz</target>
+      </trans-unit>
+      <trans-unit id="2597247746010343961" datatype="html">
+        <source>Squarz</source>
+        <target>Squarz</target>
       </trans-unit>
       <trans-unit id="1760292529513431093" datatype="html">
         <source>Trexo</source>
@@ -1256,9 +1257,9 @@
         <source>Sowing</source>
         <target>Égrénage</target>
       </trans-unit>
-      <trans-unit id="935549280838012268" datatype="html">
-        <source>The main move in Mancala games is sowing, let&apos;s see how seeds are sown. As you are playing Dark, the 6 houses on the bottom are yours.&lt;br/&gt;&lt;br&gt;Click on the rightmost bottom house to sow the seeds it contains: they will be sown clockwise, one seed per house.&lt;br/&gt;&lt;br/&gt;Click on the rightmost house!</source>
-        <target>Le mouvement principal aux mancalas est la distribution. Voyons voir comment les graines sont distribuées. Vous jouez Foncé, les 6 maisons du bas sont les vôtres.&lt;br/&gt;&lt;br&gt;Cliquez sur la maison la plus à droite pour distribuer les graines qu'elle contient : elles seront égrenée dans le sens horaire, une graine par maison !</target>
+      <trans-unit id="3369432302159653901" datatype="html">
+        <source>The main move in Mancala games is sowing, let&apos;s see how seeds are sown. As you are playing Dark, the 6 houses on the bottom are yours.&lt;br/&gt;&lt;br/&gt;Click on the rightmost bottom house to sow the seeds it contains: they will be sown clockwise, one seed per house.&lt;br/&gt;&lt;br/&gt;Click on the rightmost house!</source>
+        <target>Le mouvement principal aux mancalas est la distribution. Voyons voir comment les graines sont distribuées. Vous jouez Foncé, les 6 maisons du bas sont les vôtres.&lt;br/&gt;&lt;br/&gt;Cliquez sur la maison la plus à droite pour distribuer les graines qu'elle contient : elles seront égrenée dans le sens horaire, une graine par maison.&lt;br/&gt;&lt;br/&gt;Cliquez sur la maison la plus à droite !</target>
       </trans-unit>
       <trans-unit id="8909995708712093055" datatype="html">
         <source>Look at the 4 houses that follow clockwise the one you picked, they now contain one more seed. This is how seeds are sown: one by one from the house next to the one they come from, clockwise.</source>
@@ -2649,9 +2650,9 @@
         <source>Placing pieces after the second turn</source>
         <target>Placer des pièces après le deuxième tour</target>
       </trans-unit>
-      <trans-unit id="7211778570517391304" datatype="html">
-        <source>After the second turn, you are still allowed to place pieces any time you want, as long as you respect two conditions: &lt;ol&gt;&lt;li&gt;your piece must be connected to the hive, and&lt;/li&gt;&lt;li&gt;the space on which you drop your piece must not touch a stack of the opponent.&lt;/li&gt;&lt;/ol&gt;&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, drop a piece on the board.</source>
-        <target>Après le deuxième tour, vous êtes toujours autorisé à déposer des pièces quand vous le désirez, à condition de respecter deux conditions :&lt;ol&gt;&lt;li&gt;votre pièce doit être connectée à la ruche ;&lt;/li&gt;&lt;li&gt;la case sur laquelle vous déposez votre pièce ne peut pas toucher une pile adverse&lt;/li&gt;&lt;/ol&gt;&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, introduisez une pièce sur le plateau.</target>
+      <trans-unit id="4687115502403685230" datatype="html">
+        <source>After the second turn, you are still allowed to place pieces any time you want, as long as you respect two conditions: &lt;ol&gt;&lt;li&gt;your piece must be connected to the hive, and&lt;/li&gt;&lt;li&gt;the space on which you drop your piece must not touch a stack of the opponent.&lt;/li&gt;&lt;/ol&gt;&lt;br/&gt;You&apos;re playing Dark, drop a piece on the board.</source>
+        <target>Après le deuxième tour, vous êtes toujours autorisé à déposer des pièces quand vous le désirez, à condition de respecter deux conditions :&lt;ol&gt;&lt;li&gt;votre pièce doit être connectée à la ruche ;&lt;/li&gt;&lt;li&gt;la case sur laquelle vous déposez votre pièce ne peut pas toucher une pile adverse&lt;/li&gt;&lt;/ol&gt;&lt;br/&gt;Vous jouez Foncé, introduisez une pièce sur le plateau.</target>
       </trans-unit>
       <trans-unit id="2751556568646013753" datatype="html">
         <source>Moving pieces: the queen bee</source>
@@ -3574,9 +3575,8 @@
         <source>Square (2/2)</source>
         <target>Carré (2/2)</target>
       </trans-unit>
-      <trans-unit id="4122674190040152445" datatype="html">
-        <source>You&apos;re playing Dark.&lt;br/&gt;&lt;br/&gt;
-        Do like in the previous step, but this time click on two different pieces before validating.</source>
+      <trans-unit id="5218035582670205877" datatype="html">
+        <source>You&apos;re playing Dark.&lt;br/&gt;&lt;br/&gt;Do like in the previous step, but this time click on two different pieces before validating.</source>
         <target>Vous jouez Foncé.&lt;br/&gt;&lt;br/&gt;
         Faites comme à l&apos;étape précédente, mais cliquez cette fois sur deux pièces différentes avant de valider.</target>
       </trans-unit>
@@ -3729,16 +3729,16 @@
         Vous jouez Clair.</target>
       </trans-unit>
       <trans-unit id="6822183852587312465" datatype="html">
-        <source>The maximum size of a jump is <x id="PH" equiv-text="n"/> step!</source>
+        <source>The maximum size of a jump is <x id="PH" equiv-text="n"/> steps!</source>
         <target>La longueur maximum d'un saut est de <x id="PH" equiv-text="n"/> pas!</target>
       </trans-unit>
       <trans-unit id="323770883664351270" datatype="html">
         <source>Jump Size</source>
         <target>Longueur d'un saut</target>
       </trans-unit>
-      <trans-unit id="4514360412923104145" datatype="html">
-        <source>Rectanglz is board control game. Here is the initial state. The goal is to have the more piece at the end of the game.</source>
-        <target>Rectanglz est un jeu de contrôle de plateau. Voici le plateau initial. Le but est d'avoir une majorité de vos pièces sur le plateau à la fin de la partie.</target>
+      <trans-unit id="2875926120657969888" datatype="html">
+        <source>Squarz is board control game. Here is the initial state. The goal is to have the most piece at the end of the game.</source>
+        <target>Squarz est un jeu de contrôle de plateau. Voici le plateau initial. Le but est d'avoir une majorité de vos pièces sur le plateau à la fin de la partie.</target>
       </trans-unit>
       <trans-unit id="5489405522962962283" datatype="html">
         <source>Congratulations, you won!</source>
@@ -3839,25 +3839,33 @@
         <source>Simple step</source>
         <target>Simple pas</target>
       </trans-unit>
-      <trans-unit id="5709585603504191391" datatype="html">
-        <source>One of the two kind of move you can do is the simple step. When you do one, you create a new piece. To do this, select one of your pieces, and click on its neighbors space.&lt;br/&gt;You&apos;re playing Dark, make a simple step.</source>
+      <trans-unit id="6228262372157040796" datatype="html">
+        <source>One of the two kinds of move you can do is the duplication. When you do one, you create a new piece. To do this, select one of your pieces, and click on its neighbors space.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, make a duplication.</source>
         <target>Un des deux types de mouvement que vous pouvez faire est un pas simple. Quand vous en faites un, vous créez une nouvelle pièce. Pour ce faire, sélectionnez une de vos pièces, et cliquez sur une de vos pièces, puis sur une case voisine à celle-ci.&lt;br/&gt;Vous jouez Foncé, faite un simple pas.</target>
       </trans-unit>
-      <trans-unit id="7755660952457346720" datatype="html">
-        <source>This was a single step, try a jump now.</source>
-        <target>C'était un simple pas, essayez un saut maintenant.</target>
+      <trans-unit id="805836787886487858" datatype="html">
+        <source>This was a jump, try a duplication now.</source>
+        <target>C'était un saut, essayez une duplication maintenant.</target>
       </trans-unit>
-      <trans-unit id="5043415569082211419" datatype="html">
-        <source>The second type of move you can do is the jump. When you do one, your piece leaves it&apos;s original space and jump two space further. To do this, select one of your pieces, and click on its landing space two space further.&lt;br/&gt;You&apos;re playing Light, make a jump.</source>
+      <trans-unit id="4273222196833633277" datatype="html">
+        <source>This was a duplication, try a jump now.</source>
+        <target>C'était une duplication, essayez un saut maintenant.</target>
+      </trans-unit>
+      <trans-unit id="1234758343143401720" datatype="html">
+        <source>The second type of move you can do is the jump. When you do one, your piece leaves it&apos;s original space and jump two space further. To do this, select one of your pieces, and click on its landing space two space further.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Light, make a jump.</source>
         <target>Le deuxième type de mouvement que vous savez faire est un saut. Quand vous en faites un, votre pièce quitte sa case d'origine et atterit deux cases plus loin. Pour faire ceci, sélectionnez une de vos pièces, et cliquez sur sa case d'atterrissage, deux cases plus loin.&lt;br/&gt;Vous jouez Clair, faites un saut.</target>
       </trans-unit>
-      <trans-unit id="6330009772468407143" datatype="html">
-        <source>When one of your pieces arrives on a square neighbor to opponent&apos;s pieces, those pieces switch color.&lt;br/&gt;You&apos;re playing Dark, do such a move!</source>
-        <target>Quand une de vos pièces arrive sur une case voisine d'un adversaire, ces pièces changent de couleur.&lt;br/&gt;Vous jouez Foncé, faite un tel mouvement.</target>
+      <trans-unit id="4531607774937783527" datatype="html">
+        <source>When one of your pieces lands on a square neighbors to opponent&apos;s pieces, those pieces become yours.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, do such a move!</source>
+        <target>Quand une de vos pièces arrive sur une case voisine d'un adversaire, ces pièces changent de couleur.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, faite un tel mouvement.</target>
       </trans-unit>
-      <trans-unit id="527533079155909336" datatype="html">
-        <source>Bad choice, by making this move you allowed the opponent to steal you 5 pieces, win 5 pieces, and duplicate one piece, hence taking 11 points of advance on you and winning.&lt;br/&gt;Try again!</source>
-        <target>Mauvais choix, en faisant ce saut vous avez autorisé l'adversaire à vous voler 5 pièces, en gagner 5, et dupliquer l'une des siennes, dont prenant 11 points d'avance et donc de gagner.&lt;br/&gt;Essayez à nouveau !</target>
+      <trans-unit id="8185889618290318299" datatype="html">
+        <source>When one player cannot play, the game ends, and the player with the most piece wins. Here, you can do a final move and win.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Light, do it.</source>
+        <target>Quand un des joueur ne peut pas jouer, la partie finit, et le jouueur avec le plus de pièces gagne. Ici, vous pouvez faire le dernier mouvement et gagner.&lt;br/&gt;&lt;br/&gt;Vous jouez Clair, faites-le !</target>
+      </trans-unit>
+      <trans-unit id="3808135421251943457" datatype="html">
+        <source>Bad choice, by making this move you allowed the opponent to win.&lt;br/&gt;&lt;br/&gt;Try again!</source>
+        <target>Mauvais choix, en faisant ce saut vous avez autorisé l'adversaire à gagner.&lt;br/&gt;&lt;br/&gt;Essayez à nouveau !</target>
       </trans-unit>
       <trans-unit id="3615756484359681386" datatype="html">
         <source>To immobilize your opponent, you have to move your pyramids.

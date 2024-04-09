@@ -1,28 +1,28 @@
 import { HeuristicUtils } from 'src/app/jscaip/AI/tests/HeuristicUtils.spec';
-import { RectanglzHeuristic } from '../RectanglzHeuristic';
-import { RectanglzState } from '../RectanglzState';
+import { SquarzHeuristic } from '../SquarzHeuristic';
+import { SquarzState } from '../SquarzState';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { RectanglzConfig, RectanglzRules } from '../RectanglzRules';
+import { SquarzConfig, SquarzRules } from '../SquarzRules';
 
-describe('RectanglzHeuristic', () => {
+describe('SquarzHeuristic', () => {
 
     const _: PlayerOrNone = PlayerOrNone.NONE;
     const O: PlayerOrNone = PlayerOrNone.ZERO;
     const X: PlayerOrNone = PlayerOrNone.ONE;
 
-    let heuristic: RectanglzHeuristic;
-    const defaultConfig: MGPOptional<RectanglzConfig> = RectanglzRules.get().getDefaultRulesConfig();
+    let heuristic: SquarzHeuristic;
+    const defaultConfig: MGPOptional<SquarzConfig> = SquarzRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
-        heuristic = new RectanglzHeuristic();
+        heuristic = new SquarzHeuristic();
     });
 
     it('should assign a higher score when one has more pieces on board', () => {
-        // Given two boards, one with more player piece than the other
-        const weakState: RectanglzState = RectanglzRules.get().getInitialState(defaultConfig);
+        // Given two boards, one with more player pieces than the other
+        const weakState: SquarzState = SquarzRules.get().getInitialState(defaultConfig);
 
-        const strongState: RectanglzState = new RectanglzState([
+        const strongState: SquarzState = new SquarzState([
             [O, _, _, _, _, _, _, X],
             [_, O, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _],

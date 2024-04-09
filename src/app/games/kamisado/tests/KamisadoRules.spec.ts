@@ -153,7 +153,7 @@ describe('KamisadoRules', () => {
             // When moving a piece on another one
             const move: KamisadoMove = KamisadoMove.of(new Coord(0, 7), new Coord(0, 6));
 
-            // Then the move should be illegal
+            // Then it should fail
             const reason: string = RulesFailure.MUST_CLICK_ON_EMPTY_SPACE();
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
@@ -176,7 +176,7 @@ describe('KamisadoRules', () => {
             // When trying to move a piece over another one
             const move: KamisadoMove = KamisadoMove.of(new Coord(0, 7), new Coord(0, 5));
 
-            // Then the move should be illegal
+            // Then it should fail
             const reason: string = KamisadoFailure.MOVE_BLOCKED();
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
@@ -201,7 +201,7 @@ describe('KamisadoRules', () => {
             const diagonalyBackwardMove: KamisadoMove = KamisadoMove.of(new Coord(0, 6), new Coord(1, 7));
             const reason: string = KamisadoFailure.DIRECTION_NOT_ALLOWED();
 
-            // Then the move should be illegal
+            // Then it should fail
             RulesUtils.expectMoveFailure(rules, state, verticalBackwardMove, reason, defaultConfig);
             RulesUtils.expectMoveFailure(rules, state, diagonalyBackwardMove, reason, defaultConfig);
         });
@@ -224,7 +224,7 @@ describe('KamisadoRules', () => {
             // When moving backward
             const move: KamisadoMove = KamisadoMove.of(new Coord(0, 6), new Coord(7, 6));
 
-            // Then the move should be illegal
+            // Then it should fail
             const reason: string = KamisadoFailure.DIRECTION_NOT_ALLOWED();
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
@@ -248,7 +248,7 @@ describe('KamisadoRules', () => {
             const illegalLandingMove: KamisadoMove = KamisadoMove.of(new Coord(0, 7), new Coord(1, 6));
             const illegalJumpOverMove: KamisadoMove = KamisadoMove.of(new Coord(0, 7), new Coord(7, 0));
 
-            // Then the move should be illegal
+            // Then it should fail
             let reason: string = RulesFailure.MUST_CLICK_ON_EMPTY_SPACE();
             RulesUtils.expectMoveFailure(rules, state, illegalLandingMove, reason, defaultConfig);
             reason = KamisadoFailure.MOVE_BLOCKED();
@@ -273,7 +273,7 @@ describe('KamisadoRules', () => {
             // When user pass
             const move: KamisadoMove = KamisadoMove.PASS;
 
-            // Then the move should be forbidden
+            // Then it should fail
             const reason: string = RulesFailure.CANNOT_PASS();
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
@@ -296,7 +296,7 @@ describe('KamisadoRules', () => {
             // When moving the wrong piece (but still yours)
             const move: KamisadoMove = KamisadoMove.of(new Coord(0, 2), new Coord(0, 0));
 
-            // Then the move should be illegal
+            // Then it should fail
             const reason: string = KamisadoFailure.NOT_RIGHT_COLOR();
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
@@ -319,7 +319,7 @@ describe('KamisadoRules', () => {
             // When moving a piece not linearly
             const move: KamisadoMove = KamisadoMove.of(new Coord(0, 7), new Coord(3, 5));
 
-            // Then the move should be illegal
+            // Then it should fail
             const reason: string = KamisadoFailure.DIRECTION_NOT_ALLOWED();
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });

@@ -47,7 +47,7 @@ describe('LodestoneRules', () => {
         const state: LodestoneState = LodestoneRules.get().getInitialState();
         // When placing a lodestone on an occupied square
         const move: LodestoneMove = new LodestoneMove(new Coord(2, 2), 'pull', 'orthogonal');
-        // Then the move should be illegal
+        // Then it should fail
         const reason: string = RulesFailure.MUST_CLICK_ON_EMPTY_SQUARE();
         RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
     });
@@ -71,7 +71,7 @@ describe('LodestoneRules', () => {
         const state: LodestoneState = new LodestoneState(board, 0, lodestones, allPressurePlates);
         // When placing a lodestone on the opponent's lodestone
         const move: LodestoneMove = new LodestoneMove(new Coord(0, 0), 'pull', 'orthogonal');
-        // Then the move should be illegal
+        // Then it should fail
         const reason: string = RulesFailure.MUST_CLICK_ON_EMPTY_SQUARE();
         RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
     });
@@ -95,7 +95,7 @@ describe('LodestoneRules', () => {
         const state: LodestoneState = new LodestoneState(board, 0, lodestones, allPressurePlates);
         // When placing our lodestone on its previous sqaure
         const move: LodestoneMove = new LodestoneMove(new Coord(0, 0), 'pull', 'orthogonal');
-        // Then the move should be illegal
+        // Then it should fail
         const Y: LodestonePiece = LodestonePieceLodestone.ZERO_PULL_ORTHOGONAL;
         const expectedBoard: Table<LodestonePiece> = [
             [Y, _, _, _, _, _, _, _],
@@ -134,7 +134,7 @@ describe('LodestoneRules', () => {
         const state: LodestoneState = new LodestoneState(board, 0, lodestones, allPressurePlates);
         // When placing our lodestone on a different square
         const move: LodestoneMove = new LodestoneMove(new Coord(1, 0), 'pull', 'orthogonal');
-        // Then the move should be illegal
+        // Then it should fail
         const Y: LodestonePiece = LodestonePieceLodestone.ZERO_PULL_ORTHOGONAL;
         const expectedBoard: Table<LodestonePiece> = [
             [_, Y, _, _, _, _, _, _],
@@ -190,7 +190,7 @@ describe('LodestoneRules', () => {
         const state: LodestoneState = new LodestoneState(board, 0, lodestones, allPressurePlates);
         // When placing a lodestone in the same direction
         const move: LodestoneMove = new LodestoneMove(new Coord(4, 3), 'push', 'orthogonal');
-        // Then the move should be illegal
+        // Then it should fail
         const reason: string = LodestoneFailure.MUST_FLIP_LODESTONE();
         RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
     });
@@ -214,7 +214,7 @@ describe('LodestoneRules', () => {
         const state: LodestoneState = new LodestoneState(board, 0, lodestones, allPressurePlates);
         // When placing a lodestone in the same direction
         const move: LodestoneMove = new LodestoneMove(new Coord(4, 3), 'pull', 'orthogonal');
-        // Then the move should be illegal
+        // Then it should fail
         const reason: string = LodestoneFailure.MUST_FLIP_LODESTONE();
         RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
     });
@@ -296,7 +296,7 @@ describe('LodestoneRules', () => {
                                                       'pull',
                                                       'orthogonal',
                                                       { top: 12, bottom: 0, left: 0, right: 0 });
-        // Then the move should be illegal
+        // Then it should fail
         const reason: string = LodestoneFailure.MUST_PLACE_CAPTURES_ON_PRESSURE_PLATES();
         RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
     });
@@ -509,7 +509,7 @@ describe('LodestoneRules', () => {
         const state: LodestoneState = new LodestoneState(board, 0, noLodestones, pressurePlates);
         // When placing a lodestone on the crumbled floor
         const move: LodestoneMove = new LodestoneMove(new Coord(0, 0), 'push', 'orthogonal');
-        // Then the move should be illegal
+        // Then it should fail
         const reason: string = LodestoneFailure.TARGET_IS_CRUMBLED();
         RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
     });
@@ -721,7 +721,7 @@ describe('LodestoneRules', () => {
                                                       'pull',
                                                       'orthogonal',
                                                       { top: 5, bottom: 0, left: 0, right: 0 });
-        // Then the move should be illegal
+        // Then it should fail
         const reason: string = LodestoneFailure.TOO_MANY_CAPTURES_ON_SAME_PRESSURE_PLATE();
         RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
     });

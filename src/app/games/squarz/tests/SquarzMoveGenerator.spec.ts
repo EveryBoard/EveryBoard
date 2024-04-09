@@ -1,38 +1,38 @@
 import { PlayerOrNone } from 'src/app/jscaip/Player';
-import { RectanglzMove } from '../RectanglzMove';
-import { RectanglzMoveGenerator } from '../RectanglzMoveGenerator';
-import { RectanglzConfig, RectanglzNode, RectanglzRules } from '../RectanglzRules';
-import { RectanglzState } from '../RectanglzState';
+import { SquarzMove } from '../SquarzMove';
+import { SquarzMoveGenerator } from '../SquarzMoveGenerator';
+import { SquarzConfig, SquarzNode, SquarzRules } from '../SquarzRules';
+import { SquarzState } from '../SquarzState';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 
-describe('RectanglzMoveGenerator', () => {
+describe('SquarzMoveGenerator', () => {
 
     const _: PlayerOrNone = PlayerOrNone.NONE;
     const O: PlayerOrNone = PlayerOrNone.ZERO;
     const X: PlayerOrNone = PlayerOrNone.ONE;
 
-    let moveGenerator: RectanglzMoveGenerator;
-    const defaultConfig: MGPOptional<RectanglzConfig> = RectanglzRules.get().getDefaultRulesConfig();
+    let moveGenerator: SquarzMoveGenerator;
+    const defaultConfig: MGPOptional<SquarzConfig> = SquarzRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
-        moveGenerator = new RectanglzMoveGenerator();
+        moveGenerator = new SquarzMoveGenerator();
     });
 
     it('should have all move options', () => {
         // Given an initial node
-        const initialState: RectanglzState = RectanglzRules.get().getInitialState(defaultConfig);
-        const node: RectanglzNode = new RectanglzNode(initialState);
+        const initialState: SquarzState = SquarzRules.get().getInitialState(defaultConfig);
+        const node: SquarzNode = new SquarzNode(initialState);
 
         // When listing the moves
-        const moves: RectanglzMove[] = moveGenerator.getListMoves(node, defaultConfig);
+        const moves: SquarzMove[] = moveGenerator.getListMoves(node, defaultConfig);
 
         // Then there should be 16 moves (6 duplications, 10 jumps)
         expect(moves.length).toBe(16);
     });
 
-    it('should provide move', () => {
+    it('should have all jump options', () => {
         // Given state
-        const state: RectanglzState = new RectanglzState([
+        const state: SquarzState = new SquarzState([
             [X, X, X, X, X, X, X, X],
             [X, X, X, X, X, X, X, O],
             [O, O, O, O, O, O, O, O],
@@ -42,10 +42,10 @@ describe('RectanglzMoveGenerator', () => {
             [O, X, O, X, X, X, _, X],
             [O, X, O, X, X, X, X, X],
         ], 100);
-        const node: RectanglzNode = new RectanglzNode(state);
+        const node: SquarzNode = new SquarzNode(state);
 
         // When calling getListMoves
-        const moves: RectanglzMove[] = moveGenerator.getListMoves(node, defaultConfig);
+        const moves: SquarzMove[] = moveGenerator.getListMoves(node, defaultConfig);
 
         // Then there should be 4 moves (all jumps)
         expect(moves.length).toBe(4);
