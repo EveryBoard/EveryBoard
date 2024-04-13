@@ -81,8 +81,6 @@ export class MartianChessComponent extends RectangularGameComponent<MartianChess
     };
     public readonly pieces: typeof MartianChessPiece = MartianChessPiece;
 
-    public state: MartianChessState;
-
     public readonly configViewTranslation: string;
     public readonly configCogTransformation: string;
 

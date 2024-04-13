@@ -29,7 +29,7 @@ describe('PentagoComponent', () => {
 
         it('should do move in one click when click make all block are neutral', fakeAsync(async() => {
             const move: PentagoMove = PentagoMove.rotationless(1, 1);
-            await testUtils.expectMoveSuccess('#click_1_1', move);
+            await testUtils.expectMoveSuccess('#click-1-1', move);
         }));
 
         it('should not display arrows on neutral blocks and display dropped piece meanwhile', fakeAsync(async() => {
@@ -43,8 +43,8 @@ describe('PentagoComponent', () => {
             ];
             const state: PentagoState = new PentagoState(board, 5);
             await testUtils.setupState(state);
-            await testUtils.expectClickSuccess('#click_0_0');
-            testUtils.expectElementNotToExist('#rotate_0_clockwise');
+            await testUtils.expectClickSuccess('#click-0-0');
+            testUtils.expectElementNotToExist('#rotate-0-clockwise');
         }));
 
         it('should not accept click on pieces', fakeAsync(async() => {
@@ -63,7 +63,7 @@ describe('PentagoComponent', () => {
             await testUtils.setupState(state);
 
             // Then there should not be clickable thing there
-            await testUtils.expectClickFailure('#click_0_0', RulesFailure.MUST_LAND_ON_EMPTY_SPACE());
+            await testUtils.expectClickFailure('#click-0-0', RulesFailure.MUST_LAND_ON_EMPTY_SPACE());
         }));
 
         it('should hide last rotation when starting the move', fakeAsync(async() => {
@@ -80,29 +80,29 @@ describe('PentagoComponent', () => {
             const previousMove: PentagoMove = PentagoMove.withRotation(5, 5, 3, false);
             const previousState: PentagoState = PentagoRules.get().getInitialState();
             await testUtils.setupState(state, { previousState, previousMove });
-            testUtils.expectElementToHaveClass('#last_rotation_3_counterclockwise', 'last-move-stroke');
+            testUtils.expectElementToHaveClass('#last-rotation-3-counterclockwise', 'last-move-stroke');
 
             // When clicking on a piece (and when having to click again to finish the move)
-            await testUtils.expectClickSuccess('#click_0_0');
+            await testUtils.expectClickSuccess('#click-0-0');
 
             // Then the last rotation should be hidden
-            testUtils.expectElementNotToExist('#last_rotation_3_counterclockwise');
+            testUtils.expectElementNotToExist('#last-rotation-3-counterclockwise');
         }));
     });
 
     describe('second click', () => {
 
         it('should show a "skip rotation button" when there are both neutral and non-neutral blocks', fakeAsync(async() => {
-            await testUtils.expectClickSuccess('#click_0_0');
+            await testUtils.expectClickSuccess('#click-0-0');
             const move: PentagoMove = PentagoMove.rotationless(0, 0);
-            await testUtils.expectMoveSuccess('#skipRotation', move);
+            await testUtils.expectMoveSuccess('#skip-rotation', move);
         }));
 
         it('should display arrows to allow rotating specific block', fakeAsync(async() => {
-            await testUtils.expectClickSuccess('#click_0_0');
-            testUtils.expectElementToExist('#currentDrop_0_0');
+            await testUtils.expectClickSuccess('#click-0-0');
+            testUtils.expectElementToExist('#current-drop-0-0');
             const move: PentagoMove = PentagoMove.withRotation(0, 0, 0, true);
-            await testUtils.expectMoveSuccess('#rotate_0_clockwise', move);
+            await testUtils.expectMoveSuccess('#rotate-0-clockwise', move);
         }));
 
         it('should show highlighted winning line', fakeAsync(async() => {
@@ -116,30 +116,33 @@ describe('PentagoComponent', () => {
             ];
             const state: PentagoState = new PentagoState(board, 5);
             await testUtils.setupState(state);
-            await testUtils.expectClickSuccess('#click_0_5');
+            await testUtils.expectClickSuccess('#click-0-5');
             const move: PentagoMove = PentagoMove.withRotation(0, 5, 2, true);
-            await testUtils.expectMoveSuccess('#rotate_2_clockwise', move);
-            testUtils.expectElementToExist('#victoryCoord_0_1');
-            testUtils.expectElementToExist('#victoryCoord_0_5');
+            await testUtils.expectMoveSuccess('#rotate-2-clockwise', move);
+            testUtils.expectElementToExist('#victory-coord-0-1');
+            testUtils.expectElementToExist('#victory-coord-0-5');
         }));
 
         it('should highlight last move (with rotation of last drop, clockwise)', fakeAsync(async() => {
-            await testUtils.expectClickSuccess('#click_5_5');
+            // GIven a board with a piece dropped already
+            await testUtils.expectClickSuccess('#click-5-5');
+
+            // When doing the rotation
             const move: PentagoMove = PentagoMove.withRotation(5, 5, 3, true);
-            await testUtils.expectMoveSuccess('#rotate_3_clockwise', move);
-            const component: PentagoComponent = testUtils.getGameComponent();
-            expect(component.getBlockClasses(1, 1)).toEqual(['last-move-stroke']);
-            testUtils.expectElementToHaveClass('#last_rotation_3_clockwise', 'last-move-stroke');
-            expect(component.getSquareClasses(3, 5)).toEqual(['player0-fill', 'last-move-stroke']);
+            await testUtils.expectMoveSuccess('#rotate-3-clockwise', move);
+
+            // Then block should be displayed as last move
+            testUtils.expectElementToHaveClasses('#block-1-1', ['base-no-fill', 'last-move-stroke']);
+            testUtils.expectElementToHaveClasses('#last-rotation-3-clockwise', ['no-fill', 'last-move-stroke']);
+            testUtils.expectElementToHaveClasses('#click-3-5', ['base', 'player0-fill', 'last-move-stroke']);
         }));
 
         it('should highlight last move (with rotation of last drop, counterclockwise)', fakeAsync(async() => {
-            await testUtils.expectClickSuccess('#click_0_5');
+            await testUtils.expectClickSuccess('#click-0-5');
             const move: PentagoMove = PentagoMove.withRotation(0, 5, 2, false);
-            await testUtils.expectMoveSuccess('#rotate_2_counterclockwise', move);
-            const component: PentagoComponent = testUtils.getGameComponent();
-            expect(component.getBlockClasses(0, 1)).toEqual(['last-move-stroke']);
-            expect(component.getSquareClasses(2, 5)).toEqual(['player0-fill', 'last-move-stroke']);
+            await testUtils.expectMoveSuccess('#rotate-2-counterclockwise', move);
+            testUtils.expectElementToHaveClasses('#block-0-1', ['base-no-fill', 'last-move-stroke']);
+            testUtils.expectElementToHaveClasses('#click-2-5', ['base', 'player0-fill', 'last-move-stroke']);
         }));
 
         it('should highlight last move (with rotation, but not of last drop)', fakeAsync(async() => {
@@ -153,12 +156,11 @@ describe('PentagoComponent', () => {
             ];
             const state: PentagoState = new PentagoState(board, 5);
             await testUtils.setupState(state);
-            await testUtils.expectClickSuccess('#click_0_1');
+            await testUtils.expectClickSuccess('#click-0-1');
             const move: PentagoMove = PentagoMove.withRotation(0, 1, 1, false);
-            await testUtils.expectMoveSuccess('#rotate_1_counterclockwise', move);
-            const component: PentagoComponent = testUtils.getGameComponent();
-            expect(component.getBlockClasses(1, 0)).toEqual(['last-move-stroke']);
-            expect(component.getSquareClasses(0, 1)).toEqual(['player1-fill', 'last-move-stroke']);
+            await testUtils.expectMoveSuccess('#rotate-1-counterclockwise', move);
+            testUtils.expectElementToHaveClasses('#block-1-0', ['base-no-fill', 'last-move-stroke']);
+            testUtils.expectElementToHaveClasses('#click-0-1', ['base', 'player1-fill', 'last-move-stroke']);
         }));
     });
 
@@ -181,6 +183,6 @@ describe('PentagoComponent', () => {
         await testUtils.expectInterfaceClickSuccess('#takeBack');
 
         // Then no highlight should be found
-        testUtils.expectElementNotToHaveClass('#click_5_5', 'last-move-stroke');
+        testUtils.expectElementNotToHaveClass('#click-5-5', 'last-move-stroke');
     }));
 });

@@ -1,8 +1,8 @@
 <svg xmlns="http://www.w3.org/2000/svg"
      width="100%" height="100%"
-     viewBox="-60 -60 780 780">
+     [attr.viewBox]="getViewBox().toSVGString()">
     <defs>
-        <marker id="bluearrowhead"
+        <marker id="blue-arrow-head"
                 markerWidth="5"
                 markerHeight="3.5"
                 refX="2.5"
@@ -14,7 +14,7 @@
         </marker>
     </defs>
     <defs>
-        <marker id="movedarrowhead"
+        <marker id="moved-arrow-head"
                 class="last-move-fill"
                 markerWidth="5"
                 markerHeight="3.5"
@@ -25,81 +25,95 @@
             <polygon points="0 0, 5 1.75, 0 3.5"/>
         </marker>
     </defs>
-    <ng-container *ngFor="let blockY of [0, BLOCK_SEPARATION]; index as by">
-        <ng-container *ngFor="let blockX of [0, BLOCK_SEPARATION]; index as bx">
-            <rect [attr.x]="STROKE_WIDTH + blockX"
-                  [attr.y]="STROKE_WIDTH + blockY"
-                  [attr.rx]="3 * STROKE_WIDTH"
-                  [attr.ry]="3 * STROKE_WIDTH"
-                  [attr.width]="BLOCK_WIDTH"
-                  [attr.height]="BLOCK_WIDTH"
-                  [ngClass]="getBlockClasses(bx, by)"
-                  class="base no-fill"
-            />
-            <ng-container *ngFor="let localY of [0, 1, 2]">
-                <circle *ngFor="let localX of [0, 1, 2]"
-                        (click)="onClick(3 * bx + localX, 3 * by + localY)"
-                        id="click_{{ 3 * bx + localX }}_{{ 3 * by + localY }}"
-                        [attr.cx]="blockX + (2 * STROKE_WIDTH) + ((localX + 0.5) * SPACE_SIZE)"
-                        [attr.cy]="blockY + (2 * STROKE_WIDTH) + ((localY + 0.5) * SPACE_SIZE)"
-                        [attr.r]="(SPACE_SIZE - STROKE_WIDTH) / 2"
-                        [ngClass]="getSquareClasses(3 * bx + localX, 3 * by + localY)"
-                        class="base"
-                        pointer-events="fill"
-                />
-            </ng-container>
-        </ng-container>
+
+    <ng-container *ngFor="let blockY of [0, BLOCK_WIDTH + BLOCK_SEPARATION]; index as by">
+        <rect *ngFor="let blockX of [0, BLOCK_WIDTH + BLOCK_SEPARATION]; index as bx"
+              id="block-{{ bx }}-{{ by }}"
+              x="0"
+              y="0"
+              [attr.transform]="'translate(' + blockX + ', ' + blockY + ')'"
+              [attr.rx]="3 * STROKE_WIDTH"
+              [attr.ry]="3 * STROKE_WIDTH"
+              [attr.width]="BLOCK_WIDTH"
+              [attr.height]="BLOCK_WIDTH"
+              [ngClass]="getBlockClasses(bx, by)"
+              class="base-no-fill"
+        />
     </ng-container>
-    <circle *ngIf="currentDrop.isPresent()"
-            id="currentDrop_{{ currentDrop.get().x }}_{{ currentDrop.get().y }}"
-            [attr.cx]="getCenter(currentDrop.get().x)"
-            [attr.cy]="getCenter(currentDrop.get().y)"
+
+    <circle *ngFor="let cac of state.getCoordsAndContents()"
+            id="click-{{ cac.coord.x }}-{{ cac.coord.y }}"
+            [attr.transform]="getPieceTranslate(cac.coord)"
+            (click)="onClick(cac.coord)"
+            [attr.cx]="0.5 * SPACE_SIZE"
+            [attr.cy]="0.5 * SPACE_SIZE"
             [attr.r]="(SPACE_SIZE - STROKE_WIDTH) / 2"
-            [ngClass]="getPlayerClass(getCurrentPlayer())"
+            [ngClass]="getSquareClasses(cac.coord)"
             class="base"
             pointer-events="fill"
     />
-    <path *ngFor="let arrow of arrows"
-          [attr.d]="arrow.path"
-          id="rotate_{{ arrow.blockIndex }}_{{ arrow.clockwise ? 'clockwise' : 'counterclockwise' }}"
-          class="no-fill"
-          stroke="blue"
-          (click)="rotate(arrow)"
-          [attr.stroke-width]="2 * STROKE_WIDTH"
-          marker-end="url(#bluearrowhead)"
+
+    <circle *ngIf="currentDrop.isPresent()"
+            id="current-drop-{{ currentDrop.get().x }}-{{ currentDrop.get().y }}"
+            class="base"
+            [ngClass]="getPlayerClass(getCurrentPlayer())"
+            [attr.transform]="getPieceTranslate(currentDrop.get())"
+            [attr.cx]="0.5 * SPACE_SIZE"
+            [attr.cy]="0.5 * SPACE_SIZE"
+            [attr.r]="(SPACE_SIZE - STROKE_WIDTH) / 2"
+            pointer-events="fill"
     />
+
+    <ng-container *ngFor="let arrow of arrows">
+
+        <path id="rotate-{{ arrow.blockIndex }}-{{ arrow.clockwise ? 'clockwise' : 'counterclockwise' }}"
+              class="no-fill"
+              [attr.d]="arrow.path"
+              stroke="blue"
+              (click)="rotate(arrow)"
+              [attr.stroke-width]="2 * STROKE_WIDTH"
+              marker-end="url(#blue-arrow-head)"
+        />
+
+    </ng-container>
+
     <path *ngIf="lastRotation.isPresent()"
           [attr.d]="lastRotation.get().path"
-          id="last_rotation_{{ lastRotation.get().blockIndex }}_{{ lastRotation.get().clockwise ? 'clockwise' : 'counterclockwise' }}"
+          id="last-rotation-{{ lastRotation.get().blockIndex }}-{{ lastRotation.get().clockwise ? 'clockwise' : 'counterclockwise' }}"
           class="no-fill last-move-stroke"
           [attr.stroke-width]="2 * STROKE_WIDTH"
-          marker-end="url(#movedarrowhead)"
+          marker-end="url(#moved-arrow-head)"
     />
+
     <circle *ngFor="let victoryCoord of victoryCoords"
-            id="victoryCoord_{{ victoryCoord.x }}_{{ victoryCoord.y }}"
-            [attr.cx]="getCenter(victoryCoord.x)"
-            [attr.cy]="getCenter(victoryCoord.y)"
+            id="victory-coord-{{ victoryCoord.x }}-{{ victoryCoord.y }}"
+            [attr.transform]="getPieceTranslate(victoryCoord)"
+            [attr.cx]="0.5 * SPACE_SIZE"
+            [attr.cy]="0.5 * SPACE_SIZE"
             [attr.r]="(SPACE_SIZE - STROKE_WIDTH) / 2"
-            [ngClass]="getSquareClasses(victoryCoord.x, victoryCoord.y)"
+            [ngClass]="getSquareClasses(victoryCoord)"
             class="base victory-stroke"
             [attr.stroke-width]="STROKE_WIDTH"
     />
+
     <g *ngIf="canSkipRotation"
-       id="skipRotation"
-       (click)="skipRotation()">
-       <circle [attr.cx]="BLOCK_SEPARATION"
-               [attr.cy]="BLOCK_SEPARATION"
+       id="skip-rotation"
+       (click)="skipRotation()"
+       [attr.transform]="getSkipRotationCircleTranslate()">
+       <circle [attr.cx]="0"
+               [attr.cy]=""
                [attr.r]="0.75 * SPACE_SIZE"
                stroke="red"
                [attr.stroke-width]="2 * STROKE_WIDTH"
                class="background"
         />
-        <line [attr.x1]="BLOCK_SEPARATION - DIAGONAL_BAR_OFFSET"
-              [attr.y1]="BLOCK_SEPARATION + DIAGONAL_BAR_OFFSET"
-              [attr.x2]="BLOCK_SEPARATION + DIAGONAL_BAR_OFFSET"
-              [attr.y2]="BLOCK_SEPARATION - DIAGONAL_BAR_OFFSET"
+        <line [attr.x1]="- DIAGONAL_BAR_OFFSET"
+              [attr.y1]="+ DIAGONAL_BAR_OFFSET"
+              [attr.x2]="+ DIAGONAL_BAR_OFFSET"
+              [attr.y2]="- DIAGONAL_BAR_OFFSET"
               stroke="red"
               [attr.stroke-width]="2 * STROKE_WIDTH"
         />
     </g>
+
 </svg>

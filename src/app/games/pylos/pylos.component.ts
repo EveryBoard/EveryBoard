@@ -28,7 +28,6 @@ export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosSt
     public boardWidth: number = (4 * this.SPACE_SIZE) + this.STROKE_WIDTH;
     public pieceRowHeight: number = this.SPACE_SIZE / 2;
     public boardHeight: number = this.boardWidth + 2 * this.pieceRowHeight;
-    public state: PylosState;
     public constructedState: PylosState;
 
     public lastLandingCoord: MGPOptional<PylosCoord> = MGPOptional.empty();
