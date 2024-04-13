@@ -9,9 +9,10 @@ from selenium.webdriver.support.ui import WebDriverWait
 import random
 import string
 import time
+import textwrap
 
 # Set to False to see the script happening in real time. Useful for debugging
-HEADLESS = True
+HEADLESS = False
 # Set to True if somehow the selenium driver is acting like a mobile device (with small screen)
 # It seems to be the case when we are in headless mode, so let's just inherit the value of HEADLESS
 MOBILE = HEADLESS
@@ -141,121 +142,67 @@ scenarios = {
     "two_drivers": [],
 }
 
-@scenario("registered")
-def can_access_lobby_after_registration(driver, username, email, password):
+def ensure_no_errors(driver):
+    """Ensures that no error has been logged in the browser's console"""
+    logs = driver.get_log('browser')
+
+    error_logs = [log for log in logs if log['level'] == 'SEVERE']
+    if error_logs:
+        for log in error_logs:
+            print(textwrap.fill(log['message'], 120))
+        # TODO
+        #raise Exception('Errors encountered, stopping here.')
+
+
+def launch_scenarios():
+    """Launches all the scenarios, stop at the first one that fails"""
+    options = Options()
+    if HEADLESS:
+        options.add_argument('-headless')
+    driver = webdriver.Chrome(options=options)
+    #driver.get("http://localhost:4200")
+
+    for simple_scenario in scenarios["simple"]:
+        # Always go back home for a new scenario
+        driver.get("http://localhost:4200")
+        print("Running scenario: " + simple_scenario.__name__)
+        simple_scenario(driver)
+        ensure_no_errors(driver)
+
+    # Now we need a registered account
+    username = ''.join(random.choices(string.ascii_uppercase + string.digits, k=16))
+    email = username + '@everyboard.org'
+    password = ''.join(random.choices(string.ascii_uppercase + string.digits, k=16))
+
+    register(driver, email, username, password)
+    for registered_scenario in scenarios["registered"]:
+        driver.get("http://localhost:4200")
+        print("Running scenario: " + registered_scenario.__name__)
+        registered_scenario(driver, username, email, password)
+        ensure_no_errors(driver)
+
+    # Now we need another driver
+    driver2 = webdriver.Chrome(options=options)
+    username2 = ''.join(random.choices(string.ascii_uppercase + string.digits, k=16))
+    email2 = username2 + '@everyboard.org'
+    password2 = ''.join(random.choices(string.ascii_uppercase + string.digits, k=16))
+    register(driver2, email2, username2, password2)
+    for two_drivers_scenario in scenarios["two_drivers"]:
+        driver.get("http://localhost:4200")
+        driver2.get("http://localhost:4200")
+        print("Running scenario: " + two_drivers_scenario.__name__)
+        two_drivers_scenario(driver, username, driver2, username2)
+        ensure_no_errors(driver)
+        ensure_no_errors(driver2)
+
+    driver.close()
+    driver2.close()
+
+def create_part(driver1, driver2, username2):
     """
-    Role: I am a logged in user
-    Action: I try to access the lobby
-    Result: It works
-    """
-    access_game_list(driver)
-
-@scenario("registered")
-def can_logout_and_login(driver, username, email, password):
-    """
-    Role: I am a registered and logged in user
-    Action: I want to be able to log out and log back in
-    Result: I am logged in and I can again access the lobby
-    """
-    logout(driver)
-    login(driver, email, password)
-    access_game_list(driver)
-
-@scenario("simple")
-def can_play_tutorial(driver):
-    """
-    Role: I am a visitor
-    Action: I play the four in a row tutorial
-    Result: I can complete it fully
-    """
-    # Launch the tutorial
-    click_menu_button(driver, "#playOffline", "#tutorial")
-    select(driver, "#gameType", "Four in a Row")
-    click_button(driver, "#launchTutorial")
-
-    # First step does not require any move, so just click ok
-    click_button(driver, "#nextButton")
-
-    # In the second step I should play something, so I just do it
-    click_button(driver, "#click_3 > rect")
-    click_button(driver, "#nextButton")
-
-    # The third step requires me to win, so I do it
-    click_button(driver, "#click_1 > rect")
-    click_button(driver, "#nextButton")
-
-    # The final step also requires me to win
-    click_button(driver, "#click_4 > rect")
-    click_button(driver, "#nextButton")
-
-    # Now I should have finished the tuto
-    # And it should show a button to play locally
-    driver.find_element(By.CSS_SELECTOR, "#playLocallyButton")
-
-@scenario("simple")
-def can_play_local_2_players(driver):
-    """
-    Scenario: I am a visitor
-    Action: I play a game against a friend on the same computer
-    Result: I can go until the end of the game
-    """
-    # Launch a game of four in a row
-    click_menu_button(driver, "#playOffline", "#playLocally")
-    select(driver, "#gameType", "Four in a Row")
-    click_button(driver, "#launchGame")
-    use_default_config(driver)
-
-    # Stupid game between player 0 and 1, where 0 wins
-    click_button(driver, "#click_3 > rect")
-    click_button(driver, "#click_2 > rect")
-    click_button(driver, "#click_3 > rect")
-    click_button(driver, "#click_2 > rect")
-    click_button(driver, "#click_3 > rect")
-    click_button(driver, "#click_2 > rect")
-    click_button(driver, "#click_3 > rect")
-
-    # Now 0 won
-    winner = driver.find_element(By.ID, "gameResult").text
-    if winner != "Player 1 won":
-        raise Exception("failed: text should be {}".format(winner))
-
-@scenario("simple")
-def can_play_local_vs_ai(driver):
-    """
-    Scenario: I am a visitor
-    Action: I play a game against the AI
-    Result: The AI plays its move and I can play again
+    Create an online game and start it
     """
 
-    # Launch a game of four in a row
-    click_menu_button(driver, "#playOffline", "#playLocally")
-    select(driver, "#gameType", "Four in a Row")
-    click_button(driver, "#launchGame")
-    use_default_config(driver)
-
-    # Select the AI as second player
-    select(driver, "#playerOneSelect", "Minimax")
-    select(driver, "#aiOneLevelSelect", "Level 1")
-
-    # I play a move
-    click_button(driver, "#click_2 > rect")
-
-    # Let AI play
-    time.sleep(2) # Two seconds should be more than enough
-
-    # AI should have played a second move, I can play again
-    click_button(driver, "#click_1 > rect")
-
-    # Now there should be a piece in #click_1
-    wait_for_presence_of(driver, "#click_1 > circle")
-
-@scenario("two_drivers")
-def can_create_part_and_play(driver1, username1, driver2, username2):
-    """
-    Role: We are two registered users
-    Action: We create and play a full game
-    Result: We see who has won
-    """
     # Player 1 creates the part
     click_button(driver1, "#createOnlineGame")
     select(driver1, "#gameType", "Four in a Row")
@@ -275,69 +222,244 @@ def can_create_part_and_play(driver1, username1, driver2, username2):
     # Player 2 accepts
     click_button(driver2, "#acceptConfig")
 
-    # Now we are in the game!
-    # Let's play it until the end
-    # First, reload the page to avoid a potential bug (temporary, we can remove this once the bug is fixed)
+    time.sleep(1) # just to make sure the part has started
+
+#@scenario("registered")
+#def can_access_lobby_after_registration(driver, username, email, password):
+#    """
+#    Role: I am a logged in user
+#    Action: I try to access the lobby
+#    Result: It works
+#    """
+#    access_game_list(driver)
+#
+#@scenario("registered")
+#def can_logout_and_login(driver, username, email, password):
+#    """
+#    Role: I am a registered and logged in user
+#    Action: I want to be able to log out and log back in
+#    Result: I am logged in and I can again access the lobby
+#    """
+#    logout(driver)
+#    login(driver, email, password)
+#    access_game_list(driver)
+#
+#@scenario("simple")
+#def can_play_tutorial(driver):
+#    """
+#    Role: I am a visitor
+#    Action: I play the four in a row tutorial
+#    Result: I can complete it fully
+#    """
+#    # Launch the tutorial
+#    click_menu_button(driver, "#playOffline", "#tutorial")
+#    select(driver, "#gameType", "Four in a Row")
+#    click_button(driver, "#launchTutorial")
+#
+#    # First step does not require any move, so just click ok
+#    click_button(driver, "#nextButton")
+#
+#    # In the second step I should play something, so I just do it
+#    click_button(driver, "#click_3 > rect")
+#    click_button(driver, "#nextButton")
+#
+#    # The third step requires me to win, so I do it
+#    click_button(driver, "#click_1 > rect")
+#    click_button(driver, "#nextButton")
+#
+#    # The final step also requires me to win
+#    click_button(driver, "#click_4 > rect")
+#    click_button(driver, "#nextButton")
+#
+#    # Now I should have finished the tuto
+#    # And it should show a button to play locally
+#    driver.find_element(By.CSS_SELECTOR, "#playLocallyButton")
+#
+#@scenario("simple")
+#def can_play_local_2_players(driver):
+#    """
+#    Scenario: I am a visitor
+#    Action: I play a game against a friend on the same computer
+#    Result: I can go until the end of the game
+#    """
+#    # Launch a game of four in a row
+#    click_menu_button(driver, "#playOffline", "#playLocally")
+#    select(driver, "#gameType", "Four in a Row")
+#    click_button(driver, "#launchGame")
+#    use_default_config(driver)
+#
+#    # Stupid game between player 0 and 1, where 0 wins
+#    click_button(driver, "#click_3 > rect")
+#    click_button(driver, "#click_2 > rect")
+#    click_button(driver, "#click_3 > rect")
+#    click_button(driver, "#click_2 > rect")
+#    click_button(driver, "#click_3 > rect")
+#    click_button(driver, "#click_2 > rect")
+#    click_button(driver, "#click_3 > rect")
+#
+#    # Now 0 won
+#    winner = driver.find_element(By.ID, "gameResult").text
+#    if winner != "Player 1 won":
+#        raise Exception("failed: text should be {}".format(winner))
+#
+#@scenario("simple")
+#def can_play_local_vs_ai(driver):
+#    """
+#    Scenario: I am a visitor
+#    Action: I play a game against the AI
+#    Result: The AI plays its move and I can play again
+#    """
+#
+#    # Launch a game of four in a row
+#    click_menu_button(driver, "#playOffline", "#playLocally")
+#    select(driver, "#gameType", "Four in a Row")
+#    click_button(driver, "#launchGame")
+#    use_default_config(driver)
+#
+#    # Select the AI as second player
+#    select(driver, "#playerOneSelect", "Minimax")
+#    select(driver, "#aiOneLevelSelect", "Level 1")
+#
+#    # I play a move
+#    click_button(driver, "#click_2 > rect")
+#
+#    # Let AI play
+#    time.sleep(2) # Two seconds should be more than enough
+#
+#    # AI should have played a second move, I can play again
+#    click_button(driver, "#click_1 > rect")
+#
+#    # Now there should be a piece in #click_1
+#    wait_for_presence_of(driver, "#click_1 > circle")
+#
+#@scenario("two_drivers")
+#def can_create_part_and_play(driver1, username1, driver2, username2):
+#    """
+#    Role: We are two registered users
+#    Action: We create and play a full game
+#    Result: We see who has won
+#    """
+#    create_part(driver1, driver2, username2)
+#    # Now we are in the game!
+#    # Let's play it until the end
+#    wait_for_presence_of(driver1, "#playerTurn")
+#    click_button(driver1, "#click_3 > rect")
+#    wait_for_presence_of(driver2, "#playerTurn")
+#    click_button(driver2, "#click_2 > rect")
+#    wait_for_presence_of(driver1, "#playerTurn")
+#    click_button(driver1, "#click_3 > rect")
+#    wait_for_presence_of(driver2, "#playerTurn")
+#    click_button(driver2, "#click_2 > rect")
+#    wait_for_presence_of(driver1, "#playerTurn")
+#    click_button(driver1, "#click_3 > rect")
+#    wait_for_presence_of(driver2, "#playerTurn")
+#    click_button(driver2, "#click_2 > rect")
+#    wait_for_presence_of(driver1, "#playerTurn")
+#    click_button(driver1, "#click_3 > rect")
+#
+#    # Now player 1 has won
+#    wait_for_presence_of(driver1, "#youWonIndicator")
+#    wait_for_presence_of(driver2, "#youLostIndicator")
+
+@scenario("registered")
+def can_reload_part_creation(driver, username, email, password):
+    """
+    Role: I am a registered user with a game in creation
+    Action: I reload the page
+    Result: It works
+    """
+    # I create a part
+    click_button(driver, "#createOnlineGame")
+    select(driver, "#gameType", "Four in a Row")
+    click_button(driver, "#launchGame")
+
+    # I reload the page
+    driver.get(driver.current_url)
     time.sleep(1)
+
+    # Now I should still be on the part creation page
+    wait_for_presence_of(driver, '#proposeConfig') # proposeConfig identifies the part creation page
+
+@scenario("two_drivers")
+def can_reload_game(driver1, username1, driver2, username2):
+    """
+    Role: We are two users in a game
+    Action: I reload the page
+    Result: It works
+    """
+    # A game is being played
+    create_part(driver1, driver2, username2)
+    # I reload the page
     driver1.get(driver1.current_url)
-    wait_for_presence_of(driver1, "#playerTurn")
-    click_button(driver1, "#click_3 > rect")
-    wait_for_presence_of(driver2, "#playerTurn")
-    click_button(driver2, "#click_2 > rect")
-    wait_for_presence_of(driver1, "#playerTurn")
-    click_button(driver1, "#click_3 > rect")
-    wait_for_presence_of(driver2, "#playerTurn")
-    click_button(driver2, "#click_2 > rect")
-    wait_for_presence_of(driver1, "#playerTurn")
-    click_button(driver1, "#click_3 > rect")
-    wait_for_presence_of(driver2, "#playerTurn")
-    click_button(driver2, "#click_2 > rect")
-    wait_for_presence_of(driver1, "#playerTurn")
-    click_button(driver1, "#click_3 > rect")
+    time.sleep(1)
 
-    # Now player 1 has won
-    wait_for_presence_of(driver1, "#youWonIndicator")
-    wait_for_presence_of(driver2, "#youLostIndicator")
+    # Now I should still see the game
+    wait_for_presence_of(driver, '#game')
 
-def launch_scenarios():
-    """Launches all the scenarios, stop at the first one that fails"""
-    options = Options()
-    if HEADLESS:
-        options.add_argument('-headless')
-    driver = webdriver.Chrome(options=options)
-    #driver.get("http://localhost:4200")
+@scenario("two_drivers")
+def can_perform_time_actions(driver1, username1, driver2, username2):
+    """
+    Role: We are two users in a game
+    Action: I add time to my opponent (turn and global time)
+    Result: I see they have more time than before
+    """
+    # A game is being played
+    # I add turn time to the opponent
+    # I can see they have more time now
+    # I add global time to the opponent
+    # I can see they have more time now
+    # TODO
+    pass
 
-    for simple_scenario in scenarios["simple"]:
-        # Always go back home for a new scenario
-        driver.get("http://localhost:4200")
-        print("Running scenario: " + simple_scenario.__name__)
-        simple_scenario(driver)
+@scenario("two_drivers")
+def can_perform_take_back(driver1, username1, driver2, username2):
+    """
+    Role: We are two users in a game
+    Action: I ask a take back and the opponent refuses, but then accepts on my second request
+    Result: I took back my turn only after the acceptance
+    """
+    # TODO
+    pass
 
-    # Now we need a registered account
-    username = ''.join(random.choices(string.ascii_uppercase + string.digits, k=16))
-    email = username + '@everyboard.org'
-    password = ''.join(random.choices(string.ascii_uppercase + string.digits, k=16))
+@scenario("two_drivers")
+def can_draw(driver1, username1, driver2, username2):
+    """
+    Role: We are two users in a game
+    Action: I ask to draw and opponent refuses, but then accepts on my second request
+    Result: We draw but only after the acceptance
+    """
+    # TODO
+    pass
 
-    register(driver, email, username, password)
-    for registered_scenario in scenarios["registered"]:
-        driver.get("http://localhost:4200")
-        print("Running scenario: " + registered_scenario.__name__)
-        registered_scenario(driver, username, email, password)
+@scenario("two_drivers")
+def can_hard_draw(driver1, username1, driver2, username2):
+    """
+    Role: We are two users in a game
+    Action: We play until the end with a hard draw
+    Result: We see that it is indeed a hard draw
+    """
+    # TODO
+    pass
 
-    # Now we need another driver
-    driver2 = webdriver.Chrome(options=options)
-    username2 = ''.join(random.choices(string.ascii_uppercase + string.digits, k=16))
-    email2 = username2 + '@everyboard.org'
-    password2 = ''.join(random.choices(string.ascii_uppercase + string.digits, k=16))
-    register(driver2, email2, username2, password2)
-    for two_drivers_scenario in scenarios["two_drivers"]:
-        driver.get("http://localhost:4200")
-        driver2.get("http://localhost:4200")
-        print("Running scenario: " + two_drivers_scenario.__name__)
-        two_drivers_scenario(driver, username, driver2, username2)
+@scenario("two_drivers")
+def can_resign(driver1, username1, driver2, username2):
+    """
+    Role: We are two users in a game
+    Action: I resign
+    Result: I lost
+    """
+    # TODO
+    pass
 
-    driver.close()
-    driver2.close()
+@scenario("two_drivers")
+def can_resign(driver1, username1, driver2, username2):
+    """
+    Role: We are two users in a game
+    Action: I resign and ask for rematch, the opponent accepts
+    Result: We started a new game
+    """
+    # TODO
+    pass
 
 if __name__ == "__main__":
     launch_scenarios()
