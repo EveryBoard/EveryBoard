@@ -1,5 +1,5 @@
 import { Coord } from 'src/app/jscaip/Coord';
-import { Orthogonal } from 'src/app/jscaip/Direction';
+import { Orthogonal } from 'src/app/jscaip/Orthogonal';
 import { HexaLayout } from 'src/app/jscaip/HexaLayout';
 import { Utils } from 'src/app/utils/utils';
 
@@ -106,7 +106,6 @@ export class GameComponentUtils {
         // The board will be considered in this example as a 3x3 on which we place the triangle in (tx, ty)
         let tx: number;
         let ty: number;
-        const angle: number = orthogonal.getAngle();
         switch (orthogonal) {
             case Orthogonal.UP:
                 tx = 1;
@@ -130,6 +129,7 @@ export class GameComponentUtils {
         const realX: number = tx * 100;
         const realY: number = ty * 100;
         const translation: string = `translate(${realX} ${realY})`;
+        const angle: number = orthogonal.getAngle();
         const rotation: string = 'rotate(' + angle + ' 50 50)';
         return [scale, translation, rotation].join(' ');
     }

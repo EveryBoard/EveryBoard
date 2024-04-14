@@ -5,7 +5,7 @@ import { EpaminondasMove } from 'src/app/games/epaminondas/EpaminondasMove';
 import { EpaminondasState } from 'src/app/games/epaminondas/EpaminondasState';
 import { EpaminondasConfig, EpaminondasLegalityInformation, EpaminondasNode, EpaminondasRules } from 'src/app/games/epaminondas/EpaminondasRules';
 import { Coord } from 'src/app/jscaip/Coord';
-import { Direction } from 'src/app/jscaip/Direction';
+import { Ordinal } from 'src/app/jscaip/Ordinal';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { RectangularGameComponent } from '../../components/game-components/rectangular-game-component/RectangularGameComponent';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
@@ -23,7 +23,7 @@ import { Arrow } from 'src/app/components/game-components/arrow-component/Arrow'
 
 export type PossibleMove = {
 
-    arrow: Arrow<Direction>;
+    arrow: Arrow<Ordinal>;
 
     endingCoord: Coord;
 
@@ -138,7 +138,7 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
     private getPossibleMoves(): PossibleMove[] {
         const state: EpaminondasState = this.getState();
         const possibleMoves: PossibleMove[] = [];
-        for (const direction of Direction.DIRECTIONS) {
+        for (const direction of Ordinal.ORDINALS) {
             const phalanxSize: number = this.countPhalanxSize(direction);
             let coord: Coord = this.firstPiece.get().getNext(direction, phalanxSize);
             for (let stepSize: number = 1; stepSize <= phalanxSize; stepSize++) {
@@ -150,7 +150,7 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
                     direction,
                 );
                 if (this.rules.isLegal(move, state).isSuccess()) {
-                    const arrow: Arrow<Direction> = new Arrow<Direction>(
+                    const arrow: Arrow<Ordinal> = new Arrow<Ordinal>(
                         this.firstPiece.get(),
                         coord,
                         direction,
@@ -203,7 +203,7 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
     }
 
     private chooseMoveFromClicks(clicked: Coord): Promise<MGPValidation> {
-        const direction: Direction = this.firstPiece.get().getDirectionToward(clicked).get();
+        const direction: Ordinal = this.firstPiece.get().getDirectionToward(clicked).get();
         const phalanxSize: number = this.countPhalanxSize(direction);
         const stepSize: number = this.getStepSize(clicked, phalanxSize);
         if (stepSize > phalanxSize) {
@@ -217,7 +217,7 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
         return this.chooseMove(move);
     }
 
-    private countPhalanxSize(direction: Direction): number {
+    private countPhalanxSize(direction: Ordinal): number {
         let phalanxSize: number = 1;
         let coord: Coord = this.firstPiece.get().getNext(direction, 1);
         const currentPlayer: Player = this.getState().getCurrentPlayer();
@@ -230,7 +230,7 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
 
     private getStepSize(clicked: Coord, phalanxSize: number): number {
         // Only called if clicked is aligned with first piece
-        const direction: Direction = this.firstPiece.get().getDirectionToward(clicked).get();
+        const direction: Ordinal = this.firstPiece.get().getDirectionToward(clicked).get();
         let stepSize: number = 1;
         let coord: Coord = this.firstPiece.get().getNext(direction, phalanxSize);
         while (coord.equals(clicked) === false) {

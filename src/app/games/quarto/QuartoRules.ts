@@ -6,7 +6,7 @@ import { QuartoPiece } from './QuartoPiece';
 import { Debug } from 'src/app/utils/utils';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { Coord } from 'src/app/jscaip/Coord';
-import { Direction } from 'src/app/jscaip/Direction';
+import { Ordinal } from 'src/app/jscaip/Ordinal';
 import { SCORE } from 'src/app/jscaip/SCORE';
 import { Player } from 'src/app/jscaip/Player';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
@@ -107,7 +107,7 @@ export interface BoardStatus {
 
 class QuartoLine {
     public constructor(public readonly initialCoord: Coord,
-                       public readonly direction: Direction) {}
+                       public readonly direction: Ordinal) {}
     public allCoords(): Coord[] {
         const coords: Coord[] = [];
         for (let i: number = 0; i < 4; i++) {
@@ -145,18 +145,18 @@ export class QuartoRules extends Rules<QuartoMove, QuartoState> {
 
     public static readonly lines: ReadonlyArray<QuartoLine> = [
         // verticals
-        new QuartoLine(new Coord(0, 0), Direction.DOWN),
-        new QuartoLine(new Coord(1, 0), Direction.DOWN),
-        new QuartoLine(new Coord(2, 0), Direction.DOWN),
-        new QuartoLine(new Coord(3, 0), Direction.DOWN),
+        new QuartoLine(new Coord(0, 0), Ordinal.DOWN),
+        new QuartoLine(new Coord(1, 0), Ordinal.DOWN),
+        new QuartoLine(new Coord(2, 0), Ordinal.DOWN),
+        new QuartoLine(new Coord(3, 0), Ordinal.DOWN),
         // horizontals
-        new QuartoLine(new Coord(0, 0), Direction.RIGHT),
-        new QuartoLine(new Coord(0, 1), Direction.RIGHT),
-        new QuartoLine(new Coord(0, 2), Direction.RIGHT),
-        new QuartoLine(new Coord(0, 3), Direction.RIGHT),
+        new QuartoLine(new Coord(0, 0), Ordinal.RIGHT),
+        new QuartoLine(new Coord(0, 1), Ordinal.RIGHT),
+        new QuartoLine(new Coord(0, 2), Ordinal.RIGHT),
+        new QuartoLine(new Coord(0, 3), Ordinal.RIGHT),
         // diagonals
-        new QuartoLine(new Coord(0, 0), Direction.DOWN_RIGHT),
-        new QuartoLine(new Coord(0, 3), Direction.UP_RIGHT),
+        new QuartoLine(new Coord(0, 0), Ordinal.DOWN_RIGHT),
+        new QuartoLine(new Coord(0, 3), Ordinal.UP_RIGHT),
     ];
 
     private static isOccupied(square: QuartoPiece): boolean {

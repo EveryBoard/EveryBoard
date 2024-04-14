@@ -1,5 +1,5 @@
 import { Coord } from 'src/app/jscaip/Coord';
-import { Direction } from 'src/app/jscaip/Direction';
+import { Ordinal } from 'src/app/jscaip/Ordinal';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { GameNode } from 'src/app/jscaip/AI/GameNode';
 import { Player } from 'src/app/jscaip/Player';
@@ -29,7 +29,7 @@ export type LodestoneInfos = {
 
 export interface PressurePlateViewPosition {
     start: (plateIndex: number, plateWidth: number) => Coord,
-    direction: Direction,
+    direction: Ordinal,
 }
 
 export type PressurePlatePositionInformation = MGPMap<LodestonePressurePlatePosition,
@@ -43,28 +43,28 @@ export class LodestoneRules extends Rules<LodestoneMove, LodestoneState, Lodesto
                 0,
                 indexPlate,
             ),
-            direction: Direction.RIGHT,
+            direction: Ordinal.RIGHT,
         },
         bottom: {
             start: (indexPlate: number) => new Coord(
                 0,
                 LodestoneState.SIZE - (indexPlate + 1),
             ),
-            direction: Direction.RIGHT,
+            direction: Ordinal.RIGHT,
         },
         left: {
             start: (indexPlate: number) => new Coord(
                 indexPlate,
                 0,
             ),
-            direction: Direction.DOWN,
+            direction: Ordinal.DOWN,
         },
         right: {
             start: (indexPlate: number) => new Coord(
                 LodestoneState.SIZE - (indexPlate + 1),
                 0,
             ),
-            direction: Direction.DOWN,
+            direction: Ordinal.DOWN,
         },
     });
 
@@ -154,7 +154,7 @@ export class LodestoneRules extends Rules<LodestoneMove, LodestoneState, Lodesto
 
     private removePressurePlate(board: LodestonePiece[][],
                                 start: Coord,
-                                direction: Direction,
+                                direction: Ordinal,
                                 lodestones: LodestonePositions)
     : void
     {
@@ -223,7 +223,7 @@ export class LodestoneRules extends Rules<LodestoneMove, LodestoneState, Lodesto
         const opponent: Player = currentPlayer.getOpponent();
         const captures: Coord[] = [];
         const moved: Coord[] = [];
-        const directions: readonly Direction[] = orientation === 'diagonal' ? Direction.DIAGONALS : Direction.ORTHOGONALS;
+        const directions: readonly Ordinal[] = orientation === 'diagonal' ? Ordinal.DIAGONALS : Ordinal.ORTHOGONALS;
         for (const direction of directions) {
             for (let coord: Coord = lodestone.getNext(direction); // eslint-disable-next-line indent
                  state.isOnBoard(coord); // eslint-disable-next-line indent
@@ -264,7 +264,7 @@ export class LodestoneRules extends Rules<LodestoneMove, LodestoneState, Lodesto
         const opponent: Player = currentPlayer.getOpponent();
         const captures: Coord[] = [];
         const moved: Coord[] = [];
-        const directions: readonly Direction[] = orientation === 'diagonal' ? Direction.DIAGONALS : Direction.ORTHOGONALS;
+        const directions: readonly Ordinal[] = orientation === 'diagonal' ? Ordinal.DIAGONALS : Ordinal.ORTHOGONALS;
         for (const direction of directions) {
             const start: Coord = lodestone.getNext(direction, LodestoneState.SIZE);
             for (let coord: Coord = start; // eslint-disable-next-line indent

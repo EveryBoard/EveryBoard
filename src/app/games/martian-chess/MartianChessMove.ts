@@ -1,5 +1,5 @@
 import { Coord } from 'src/app/jscaip/Coord';
-import { Direction } from 'src/app/jscaip/Direction';
+import { Ordinal } from 'src/app/jscaip/Ordinal';
 import { Encoder } from 'src/app/utils/Encoder';
 import { MoveCoordToCoord } from 'src/app/jscaip/MoveCoordToCoord';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
@@ -37,7 +37,7 @@ export class MartianChessMove extends MoveCoordToCoord {
         if (end.equals(start)) {
             return MGPFallible.failure(RulesFailure.MOVE_CANNOT_BE_STATIC());
         }
-        const dir: MGPFallible<Direction> = Direction.factory.fromDelta(end.x - start.x, end.y - start.y);
+        const dir: MGPFallible<Ordinal> = Ordinal.factory.fromDelta(end.x - start.x, end.y - start.y);
         if (dir.isFailure()) {
             return MGPFallible.failure(dir.getReason());
         }

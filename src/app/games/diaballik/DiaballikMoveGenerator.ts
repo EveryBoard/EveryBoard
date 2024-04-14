@@ -4,7 +4,8 @@ import { DiaballikPiece, DiaballikState } from './DiaballikState';
 import { DiaballikNode, DiaballikRules } from './DiaballikRules';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { Coord } from 'src/app/jscaip/Coord';
-import { Direction, Orthogonal } from 'src/app/jscaip/Direction';
+import { Orthogonal } from 'src/app/jscaip/Orthogonal';
+import { Ordinal } from 'src/app/jscaip/Ordinal';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { Utils } from 'src/app/utils/utils';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
@@ -263,7 +264,7 @@ export class DiaballikMoveGenerator extends MoveGenerator<DiaballikMove, Diaball
         const player: Player = state.getCurrentPlayer();
         const ends: Coord[] = [];
         // A pass is in any direction, as long as it reaches a player piece and is not obstructed
-        for (const direction of Direction.factory.all) {
+        for (const direction of Ordinal.factory.all) {
             let coord: Coord = start.getNext(direction);
             while (state.isOnBoard(coord)) {
                 const piece: DiaballikPiece = state.getPieceAt(coord);

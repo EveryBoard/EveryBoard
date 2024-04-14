@@ -1,5 +1,5 @@
 import { Coord } from 'src/app/jscaip/Coord';
-import { Direction } from 'src/app/jscaip/Direction';
+import { Ordinal } from 'src/app/jscaip/Ordinal';
 import { Encoder } from 'src/app/utils/Encoder';
 import { Move } from 'src/app/jscaip/Move';
 import { MoveCoord } from 'src/app/jscaip/MoveCoord';
@@ -74,7 +74,7 @@ export class ConspirateursMoveJump extends Move {
             return MGPFallible.failure('ConspirateursMoveJump requires at least one jump, so two coords');
         }
         for (let i: number = 1; i < coords.length; i++) {
-            const jumpDirection: MGPFallible<Direction> = coords[i - 1].getDirectionToward(coords[i]);
+            const jumpDirection: MGPFallible<Ordinal> = coords[i - 1].getDirectionToward(coords[i]);
             if (jumpDirection.isFailure()) {
                 return MGPFallible.failure(ConspirateursFailure.INVALID_JUMP());
             }
@@ -116,7 +116,7 @@ export class ConspirateursMoveJump extends Move {
     public getJumpedOverCoords(): Coord[] {
         const jumpedOver: Coord[] = [];
         for (let i: number = 1; i < this.coords.length; i++) {
-            const jumpDirection: Direction = this.coords[i-1].getDirectionToward(this.coords[i]).get();
+            const jumpDirection: Ordinal = this.coords[i-1].getDirectionToward(this.coords[i]).get();
             jumpedOver.push(this.coords[i-1].getNext(jumpDirection, 1));
         }
         return jumpedOver;

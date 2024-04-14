@@ -4,7 +4,7 @@ import { fakeAsync } from '@angular/core/testing';
 
 import { SiamComponent } from '../siam.component';
 import { SiamMove } from 'src/app/games/siam/SiamMove';
-import { Orthogonal } from 'src/app/jscaip/Direction';
+import { Orthogonal } from 'src/app/jscaip/Orthogonal';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { SiamPiece } from 'src/app/games/siam/SiamPiece';
 import { Table } from 'src/app/utils/ArrayUtils';

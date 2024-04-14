@@ -2,7 +2,7 @@
 import { fakeAsync } from '@angular/core/testing';
 import { QuixoComponent } from '../quixo.component';
 import { QuixoMove } from 'src/app/games/quixo/QuixoMove';
-import { Orthogonal } from 'src/app/jscaip/Direction';
+import { Orthogonal } from 'src/app/jscaip/Orthogonal';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { Table } from 'src/app/utils/ArrayUtils';

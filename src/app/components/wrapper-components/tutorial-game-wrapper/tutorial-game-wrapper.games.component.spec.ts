@@ -9,7 +9,7 @@ import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { Move } from 'src/app/jscaip/Move';
 import { Coord } from 'src/app/jscaip/Coord';
 import { AbstractRules, SuperRules } from 'src/app/jscaip/Rules';
-import { Direction } from 'src/app/jscaip/Direction';
+import { Ordinal } from 'src/app/jscaip/Ordinal';
 import { AbstractGameComponent } from '../../game-components/game-component/GameComponent';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { GameState } from 'src/app/jscaip/GameState';
@@ -176,12 +176,12 @@ describe('TutorialGameWrapperComponent (games)', () => {
                 ], [
                     EpaminondasRules.get(),
                     epaminondasTutorial[3],
-                    new EpaminondasMove(0, 11, 2, 1, Direction.UP),
+                    new EpaminondasMove(0, 11, 2, 1, Ordinal.UP),
                     MGPValidation.failure(`Congratulations, you are in advance. But this is not the exercise here, try again.`),
                 ], [
                     EpaminondasRules.get(),
                     epaminondasTutorial[4],
-                    new EpaminondasMove(0, 10, 1, 1, Direction.UP),
+                    new EpaminondasMove(0, 10, 1, 1, Ordinal.UP),
                     MGPValidation.failure(`Failed! You moved only one piece.`),
                 ], [
                     HiveRules.get(),

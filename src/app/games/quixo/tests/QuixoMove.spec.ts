@@ -1,5 +1,5 @@
 /* eslint-disable max-lines-per-function */
-import { Orthogonal } from 'src/app/jscaip/Direction';
+import { Orthogonal } from 'src/app/jscaip/Orthogonal';
 import { PlayerOrNone } from 'src/app/jscaip/Player';
 import { QuixoConfig, QuixoState } from '../QuixoState';
 import { QuixoNode, QuixoRules } from '../QuixoRules';

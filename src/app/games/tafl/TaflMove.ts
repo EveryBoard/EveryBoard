@@ -1,6 +1,6 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { MoveCoordToCoord } from 'src/app/jscaip/MoveCoordToCoord';
-import { Direction } from 'src/app/jscaip/Direction';
+import { Ordinal } from 'src/app/jscaip/Ordinal';
 import { TaflFailure } from './TaflFailure';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
@@ -9,7 +9,7 @@ import { Utils } from 'src/app/utils/utils';
 export abstract class TaflMove extends MoveCoordToCoord {
 
     public static isValidDirection(start: Coord, end: Coord): MGPValidation {
-        const dir: MGPFallible<Direction> = start.getDirectionToward(end);
+        const dir: MGPFallible<Ordinal> = start.getDirectionToward(end);
         if (dir.isFailure() || dir.get().isDiagonal()) {
             return MGPValidation.failure(TaflFailure.MOVE_MUST_BE_ORTHOGONAL());
         }

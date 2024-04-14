@@ -36,7 +36,7 @@ describe('HexaDirection', () => {
         }
     });
 
-    it('should map to angle correctly', () => {
+    it('should map to angle by multiple of 60', () => {
         for (let i: number = 0; i < 6; i++) {
             const dir: HexaDirection = HexaDirection.factory.all[i];
             expect(dir.getAngle()).toBe(i * 60);

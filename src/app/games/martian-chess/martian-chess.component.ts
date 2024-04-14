@@ -11,7 +11,7 @@ import { MartianChessMove } from './MartianChessMove';
 import { MartianChessMoveResult, MartianChessRules } from './MartianChessRules';
 import { MartianChessState } from './MartianChessState';
 import { MartianChessPiece } from './MartianChessPiece';
-import { Direction } from 'src/app/jscaip/Direction';
+import { Ordinal } from 'src/app/jscaip/Ordinal';
 import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 import { Utils } from 'src/app/utils/utils';
 import { MCTS } from 'src/app/jscaip/AI/MCTS';
@@ -293,7 +293,7 @@ export class MartianChessComponent extends RectangularGameComponent<MartianChess
         const firstPiece: MartianChessPiece = this.state.getPieceAt(coord);
         let landingSquares: Coord[];
         if (firstPiece === MartianChessPiece.PAWN) {
-            landingSquares = Direction.DIAGONALS.map((d: Direction) => coord.getNext(d));
+            landingSquares = Ordinal.DIAGONALS.map((d: Ordinal) => coord.getNext(d));
         } else if (firstPiece === MartianChessPiece.DRONE) {
             landingSquares = this.getValidLinearLandingSquareUntil(coord, 2);
         } else {
@@ -310,7 +310,7 @@ export class MartianChessComponent extends RectangularGameComponent<MartianChess
     }
 
     private getValidLinearLandingSquareUntil(coord: Coord, until: number): Coord[] {
-        return Direction.DIRECTIONS.flatMap((d: Direction) => {
+        return Ordinal.ORDINALS.flatMap((d: Ordinal) => {
             const landings: Coord[] = [];
             let landing: Coord = coord.getNext(d);
             let steps: number = 1;

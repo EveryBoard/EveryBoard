@@ -8,12 +8,12 @@ import { fakeAsync } from '@angular/core/testing';
 import { Coord } from 'src/app/jscaip/Coord';
 import { GipfMove, GipfPlacement } from 'src/app/games/gipf/GipfMove';
 import { GipfState } from 'src/app/games/gipf/GipfState';
-import { ArrowOfLine } from 'src/app/jscaip/Arrow';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
 import { Player } from 'src/app/jscaip/Player';
 import { GipfCapture } from 'src/app/jscaip/GipfProjectHelper';
 import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
+import { Arrow } from 'src/app/components/game-components/arrow-component/Arrow';
 
 describe('GipfComponent', () => {
 
@@ -27,8 +27,8 @@ describe('GipfComponent', () => {
     const P1Turn: number = P0Turn + 1;
 
     function expectToHaveArrow(start: Coord, end: Coord): void {
-        expect(testUtils.getGameComponent().arrows.some((arrow: ArrowOfLine) => {
-            return arrow.source.equals(start) && arrow.destination.equals(end);
+        expect(testUtils.getGameComponent().arrows.some((arrow: Arrow<HexaDirection>) => {
+            return arrow.start.equals(start) && arrow.landing.equals(end);
         })).withContext('expected to have an arrow pointing from ' + start.toString() + ' to ' + end.toString())
             .toBeTrue();
     }

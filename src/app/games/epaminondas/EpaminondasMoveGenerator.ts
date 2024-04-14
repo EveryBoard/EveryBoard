@@ -1,5 +1,5 @@
 import { Coord } from 'src/app/jscaip/Coord';
-import { Direction } from 'src/app/jscaip/Direction';
+import { Ordinal } from 'src/app/jscaip/Ordinal';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { EpaminondasMove } from './EpaminondasMove';
 import { EpaminondasState } from './EpaminondasState';
@@ -21,7 +21,7 @@ export class EpaminondasMoveGenerator extends MoveGenerator<EpaminondasMove, Epa
             const firstCoord: Coord = coordAndContent.coord;
             if (coordAndContent.content === player) {
                 let move: EpaminondasMove;
-                for (const direction of Direction.DIRECTIONS) {
+                for (const direction of Ordinal.ORDINALS) {
                     let phalanxSize: number = 1;
                     let nextCoord: Coord = firstCoord.getNext(direction, 1);
                     while (state.isOnBoard(nextCoord) &&

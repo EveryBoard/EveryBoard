@@ -1,5 +1,5 @@
 import { MoveCoord } from 'src/app/jscaip/MoveCoord';
-import { Orthogonal } from 'src/app/jscaip/Direction';
+import { Orthogonal } from 'src/app/jscaip/Orthogonal';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { Encoder } from 'src/app/utils/Encoder';
 

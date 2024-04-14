@@ -1,16 +1,16 @@
 import { Coord } from 'src/app/jscaip/Coord';
-import { BaseDirection } from 'src/app/jscaip/Direction';
+import { Direction } from 'src/app/jscaip/Direction';
 
-export class Arrow<T extends BaseDirection> {
+export class Arrow<T extends Direction> {
 
     public transformation: string;
     public startCenter: Coord;
     public landingCenter: Coord;
 
-    public constructor(public start: Coord,
-                       public landing: Coord,
-                       public dir: T,
-                       public getCenterAt: (c: Coord) => Coord)
+    public constructor(public readonly start: Coord,
+                       public readonly landing: Coord,
+                       public readonly dir: T,
+                       public readonly getCenterAt: (c: Coord) => Coord)
     {
         const pointedCenter: Coord = this.getCenterAt(landing);
         const centerCoord: string = pointedCenter.x + ' ' + pointedCenter.y;

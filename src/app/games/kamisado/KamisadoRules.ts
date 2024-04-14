@@ -1,5 +1,5 @@
 import { Coord } from 'src/app/jscaip/Coord';
-import { Direction } from 'src/app/jscaip/Direction';
+import { Ordinal } from 'src/app/jscaip/Ordinal';
 import { KamisadoBoard } from './KamisadoBoard';
 import { KamisadoColor } from './KamisadoColor';
 import { KamisadoMove } from './KamisadoMove';
@@ -74,16 +74,16 @@ export class KamisadoRules extends Rules<KamisadoMove, KamisadoState> {
     }
 
     // Returns the directions allowed for the move of a player
-    public static playerDirections(player: Player): Array<Direction> {
+    public static playerDirections(player: Player): Array<Ordinal> {
         if (player === Player.ONE) {
-            return [Direction.DOWN, Direction.DOWN_LEFT, Direction.DOWN_RIGHT];
+            return [Ordinal.DOWN, Ordinal.DOWN_LEFT, Ordinal.DOWN_RIGHT];
         } else {
-            return [Direction.UP, Direction.UP_LEFT, Direction.UP_RIGHT];
+            return [Ordinal.UP, Ordinal.UP_LEFT, Ordinal.UP_RIGHT];
         }
     }
 
     // Check if a direction is allowed for a given player
-    public static directionAllowedForPlayer(dir: Direction, player: Player): boolean {
+    public static directionAllowedForPlayer(dir: Ordinal, player: Player): boolean {
         if (player === Player.ZERO) {
             return dir.y < 0;
         } else {
@@ -138,12 +138,12 @@ export class KamisadoRules extends Rules<KamisadoMove, KamisadoState> {
                 return MGPValidation.failure(RulesFailure.MUST_CLICK_ON_EMPTY_SPACE());
             }
             //    - move direction is linear
-            const directionOptional: MGPFallible<Direction> = Direction.factory.fromMove(start, end);
+            const directionOptional: MGPFallible<Ordinal> = Ordinal.factory.fromMove(start, end);
             if (directionOptional.isFailure()) {
                 return MGPValidation.failure(KamisadoFailure.DIRECTION_NOT_ALLOWED());
             }
             //    - move direction is toward the opponent's line
-            const dir: Direction = directionOptional.get();
+            const dir: Ordinal = directionOptional.get();
             if (KamisadoRules.directionAllowedForPlayer(dir, state.getCurrentPlayer()) === false) {
                 return MGPValidation.failure(KamisadoFailure.DIRECTION_NOT_ALLOWED());
             }

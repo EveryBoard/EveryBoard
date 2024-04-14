@@ -1,5 +1,5 @@
 import { Coord, CoordFailure } from 'src/app/jscaip/Coord';
-import { Direction } from 'src/app/jscaip/Direction';
+import { Ordinal } from 'src/app/jscaip/Ordinal';
 import { GameNode } from 'src/app/jscaip/AI/GameNode';
 import { NInARowHelper } from 'src/app/jscaip/NInARowHelper';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
@@ -86,7 +86,7 @@ export class PenteRules extends ConfigurableRules<PenteMove, PenteState, PenteCo
         const opponent: Player = player.getOpponent();
         const captures: Coord[] = [];
         const sizeOfCapture: number = config.sizeOfSandwich;
-        for (const direction of Direction.factory.all) {
+        for (const direction of Ordinal.factory.all) {
             let i: number = 1;
             let potentialCapture: Coord = coord.getNext(direction, i);
             const captured: Coord[] = [potentialCapture];

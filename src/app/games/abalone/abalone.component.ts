@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
 import { HexagonalGameComponent } from 'src/app/components/game-components/game-component/HexagonalGameComponent';
 import { Coord } from 'src/app/jscaip/Coord';
-import { BaseDirection, Direction } from 'src/app/jscaip/Direction';
+import { Direction } from 'src/app/jscaip/Direction';
+import { Ordinal } from 'src/app/jscaip/Ordinal';
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
 import { HexaDirection } from 'src/app/jscaip/HexaDirection';
 import { HexaLayout } from 'src/app/jscaip/HexaLayout';
@@ -261,7 +262,7 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneRules,
         if (distance > 2) {
             return this.cancelMove(AbaloneFailure.CANNOT_MOVE_MORE_THAN_THREE_PIECES());
         }
-        const alignement: BaseDirection = firstPiece.getDirectionToward(coord).get();
+        const alignement: Direction = firstPiece.getDirectionToward(coord).get();
         this.selecteds = [firstPiece];
         for (let i: number = 0; i < distance; i++) {
             this.selecteds.push(firstPiece.getNext(alignement, i + 1));
@@ -298,9 +299,9 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneRules,
     }
 
     private async tryExtension(clicked: Coord, firstPiece: Coord, lastPiece: Coord): Promise<MGPValidation> {
-        const alignement: MGPFallible<Direction> = Direction.factory.fromMove(firstPiece, clicked);
+        const alignement: MGPFallible<Ordinal> = Ordinal.factory.fromMove(firstPiece, clicked);
         if (alignement.isSuccess()) {
-            const secondAlignment: MGPFallible<Direction> = Direction.factory.fromMove(lastPiece, clicked);
+            const secondAlignment: MGPFallible<Ordinal> = Ordinal.factory.fromMove(lastPiece, clicked);
             if (alignement.equals(secondAlignment)) {
                 // Then it's an extension of the line
                 const firstDistance: number = firstPiece.getDistance(clicked);

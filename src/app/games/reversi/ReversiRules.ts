@@ -2,7 +2,7 @@ import { GameNode } from 'src/app/jscaip/AI/GameNode';
 import { ConfigurableRules } from '../../jscaip/Rules';
 import { ReversiState } from './ReversiState';
 import { Coord } from '../../jscaip/Coord';
-import { Direction } from '../../jscaip/Direction';
+import { Ordinal } from 'src/app/jscaip/Ordinal';
 import { ReversiMove } from './ReversiMove';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { Utils } from 'src/app/utils/utils';
@@ -100,7 +100,7 @@ export class ReversiRules extends ConfigurableRules<ReversiMove,
         const switcheds: Coord[] = [];
         const opponent: Player = player.getOpponent();
 
-        for (const direction of Direction.DIRECTIONS) {
+        for (const direction of Ordinal.ORDINALS) {
             const firstSpace: Coord = move.coord.getNext(direction);
             if (state.isOnBoard(firstSpace)) {
                 if (state.getPieceAt(firstSpace) === opponent) {
@@ -116,7 +116,7 @@ export class ReversiRules extends ConfigurableRules<ReversiMove,
     }
 
     public getSandwicheds(capturer: Player,
-                          direction: Direction,
+                          direction: Ordinal,
                           start: Coord,
                           state: ReversiState)
     : Coord[]

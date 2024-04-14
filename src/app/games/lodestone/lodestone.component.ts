@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { GameComponent } from 'src/app/components/game-components/game-component/GameComponent';
 import { Coord } from 'src/app/jscaip/Coord';
-import { Direction } from 'src/app/jscaip/Direction';
+import { Ordinal } from 'src/app/jscaip/Ordinal';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { TableUtils } from 'src/app/utils/ArrayUtils';
@@ -92,7 +92,7 @@ export class LodestoneComponent
                 (8 - plateWidth) / 2,
                 - (plateIndex + 1) * (1 + LodestoneComponent.PRESSURE_PLATE_EXTRA_SHIFT),
             ),
-            direction: Direction.RIGHT,
+            direction: Ordinal.RIGHT,
         },
         bottom: {
             start: (plateIndex: number, plateWidth: number) => new Coord(
@@ -100,14 +100,14 @@ export class LodestoneComponent
                 8 + LodestoneComponent.PRESSURE_PLATE_EXTRA_SHIFT +
                 plateIndex * (1 + LodestoneComponent.PRESSURE_PLATE_EXTRA_SHIFT),
             ),
-            direction: Direction.RIGHT,
+            direction: Ordinal.RIGHT,
         },
         left: {
             start: (plateIndex: number, plateWidth: number) => new Coord(
                 - (1 + LodestoneComponent.PRESSURE_PLATE_EXTRA_SHIFT) * (1 + plateIndex),
                 (8 - plateWidth) / 2,
             ),
-            direction: Direction.DOWN,
+            direction: Ordinal.DOWN,
         },
         right: {
             start: (plateIndex: number, plateWidth: number) => new Coord(
@@ -115,7 +115,7 @@ export class LodestoneComponent
                 plateIndex * (1 + LodestoneComponent.PRESSURE_PLATE_EXTRA_SHIFT),
                 (8 - plateWidth) / 2,
             ),
-            direction: Direction.DOWN,
+            direction: Ordinal.DOWN,
         },
     });
 

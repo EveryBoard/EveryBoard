@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { BaseGameComponent } from '../game-component/GameComponent';
 import { Arrow } from './Arrow';
-import { Direction } from 'src/app/jscaip/Direction';
+import { Ordinal } from 'src/app/jscaip/Ordinal';
 
 @Component({
     selector: '[app-dir-arrow]',
@@ -10,6 +10,6 @@ import { Direction } from 'src/app/jscaip/Direction';
 })
 export class DirArrowComponent extends BaseGameComponent {
 
-    @Input() arrow: Arrow<Direction>;
+    @Input() arrow: Arrow<Ordinal>;
 
 }

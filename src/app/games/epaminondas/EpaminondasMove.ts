@@ -1,16 +1,16 @@
-import { Direction } from 'src/app/jscaip/Direction';
+import { Ordinal } from 'src/app/jscaip/Ordinal';
 import { Encoder } from 'src/app/utils/Encoder';
 import { MoveCoord } from 'src/app/jscaip/MoveCoord';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Utils } from 'src/app/utils/utils';
 import { EpaminondasFailure } from './EpaminondasFailure';
 
-type EpaminondasMoveFields = [Coord, number, number, Direction];
+type EpaminondasMoveFields = [Coord, number, number, Ordinal];
 
 export class EpaminondasMove extends MoveCoord {
 
     public static encoder: Encoder<EpaminondasMove> = Encoder.tuple(
-        [Coord.encoder, Encoder.identity<number>(), Encoder.identity<number>(), Direction.encoder],
+        [Coord.encoder, Encoder.identity<number>(), Encoder.identity<number>(), Ordinal.encoder],
         (m: EpaminondasMove): EpaminondasMoveFields => [m.coord, m.phalanxSize, m.stepSize, m.direction],
         (fields: EpaminondasMoveFields): EpaminondasMove =>
             new EpaminondasMove(fields[0].x, fields[0].y, fields[1], fields[2], fields[3]));
@@ -19,7 +19,7 @@ export class EpaminondasMove extends MoveCoord {
                        y: number,
                        public readonly phalanxSize: number,
                        public readonly stepSize: number,
-                       public readonly direction: Direction)
+                       public readonly direction: Ordinal)
     {
         super(x, y);
         Utils.assert(phalanxSize > 0, 'Must select minimum one piece (got ' + phalanxSize + ').');

@@ -2,7 +2,7 @@ import { MGPMap } from '../utils/MGPMap';
 import { Utils } from '../utils/utils';
 import { BoardValue } from './AI/BoardValue';
 import { Coord } from './Coord';
-import { Direction } from './Direction';
+import { Ordinal } from './Ordinal';
 import { GameStateWithTable } from './GameStateWithTable';
 import { Player, PlayerOrNone } from './Player';
 
@@ -35,10 +35,10 @@ export class NInARowHelper<T> {
         const ally: Player = this.getOwner(piece, state) as Player;
         Utils.assert(ally.isPlayer(), 'getSquareScore should not be called with PlayerOrNone.NONE piece');
 
-        const freeSpaceByDirs: MGPMap<Direction, number> = new MGPMap();
-        const alliesByDirs: MGPMap<Direction, number> = new MGPMap();
+        const freeSpaceByDirs: MGPMap<Ordinal, number> = new MGPMap();
+        const alliesByDirs: MGPMap<Ordinal, number> = new MGPMap();
 
-        for (const dir of Direction.DIRECTIONS) {
+        for (const dir of Ordinal.ORDINALS) {
             const freeSpaceAndAllies: [number, number] = this.getNumberOfFreeSpacesAndAllies(state, coord, dir, ally);
             freeSpaceByDirs.set(dir, freeSpaceAndAllies[0]);
             alliesByDirs.set(dir, freeSpaceAndAllies[1]);
@@ -47,12 +47,12 @@ export class NInARowHelper<T> {
         return score * ally.getScoreModifier();
     }
 
-    public getScoreFromDirectionAlliesAndFreeSpaces(alliesByDirs: MGPMap<Direction, number>,
-                                                    freeSpaceByDirs: MGPMap<Direction, number>)
+    public getScoreFromDirectionAlliesAndFreeSpaces(alliesByDirs: MGPMap<Ordinal, number>,
+                                                    freeSpaceByDirs: MGPMap<Ordinal, number>)
     : number
     {
         let score: number = 0;
-        for (const dir of [Direction.UP, Direction.UP_RIGHT, Direction.RIGHT, Direction.DOWN_RIGHT]) {
+        for (const dir of [Ordinal.UP, Ordinal.UP_RIGHT, Ordinal.RIGHT, Ordinal.DOWN_RIGHT]) {
             // for each pair of opposite directions
             const directionAllies: number = alliesByDirs.get(dir).get();
             const oppositeDirectionAllies: number = alliesByDirs.get(dir.getOpposite()).get();
@@ -72,7 +72,7 @@ export class NInARowHelper<T> {
 
     public getNumberOfFreeSpacesAndAllies(state: GameStateWithTable<T>,
                                           i: Coord,
-                                          dir: Direction,
+                                          dir: Ordinal,
                                           ally: Player)
     : [number, number]
     {

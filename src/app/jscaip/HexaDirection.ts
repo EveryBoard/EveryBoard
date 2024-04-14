@@ -1,10 +1,10 @@
 import { Utils } from 'src/app/utils/utils';
 import { MGPFallible } from '../utils/MGPFallible';
-import { BaseDirection, DirectionFactory } from './Direction';
+import { Direction, DirectionFactory } from './Direction';
 import { Encoder } from '../utils/Encoder';
 
 /** Hexagonal directions encoded with axial coordinates, for "flat toped" hexagons */
-export class HexaDirection extends BaseDirection {
+export class HexaDirection extends Direction {
 
     public static readonly UP: HexaDirection = new HexaDirection(0, -1);
 

@@ -1,5 +1,5 @@
 import { Coord, CoordFailure } from 'src/app/jscaip/Coord';
-import { Direction } from 'src/app/jscaip/Direction';
+import { Ordinal } from 'src/app/jscaip/Ordinal';
 import { Encoder } from 'src/app/utils/Encoder';
 import { HexaDirection } from 'src/app/jscaip/HexaDirection';
 import { MoveCoord } from 'src/app/jscaip/MoveCoord';
@@ -24,7 +24,7 @@ export class AbaloneMove extends MoveCoord {
     public static ofDoubleCoord(first: Coord, second: Coord, dir: HexaDirection): AbaloneMove {
         const coords: Coord[] = [first, second];
         ArrayUtils.sortByDescending(coords, AbaloneMove.sortCoord);
-        const direction: Direction = coords[1].getDirectionToward(coords[0]).get();
+        const direction: Ordinal = coords[1].getDirectionToward(coords[0]).get();
         const hexaDirectionOptional: MGPFallible<HexaDirection> =
             HexaDirection.factory.fromDelta(direction.x, direction.y);
         Utils.assert(hexaDirectionOptional.isSuccess(), 'Invalid direction'); // Should be ensured by component

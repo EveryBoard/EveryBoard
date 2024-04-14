@@ -1,6 +1,6 @@
 import { GameNode } from 'src/app/jscaip/AI/GameNode';
 import { GoState, Phase, GoPiece } from './GoState';
-import { Orthogonal } from 'src/app/jscaip/Direction';
+import { Orthogonal } from 'src/app/jscaip/Orthogonal';
 import { GoMove } from './GoMove';
 import { Player } from 'src/app/jscaip/Player';
 import { GoGroupDatas } from './GoGroupsDatas';

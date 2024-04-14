@@ -2,7 +2,8 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { BaseGameComponent } from 'src/app/components/game-components/game-component/GameComponent';
 import { SiamMove } from './SiamMove';
 import { Player } from 'src/app/jscaip/Player';
-import { Direction, Orthogonal } from 'src/app/jscaip/Direction';
+import { Orthogonal } from 'src/app/jscaip/Orthogonal';
+import { Ordinal } from 'src/app/jscaip/Ordinal';
 import { SiamConfig } from './SiamRules';
 import { Coord } from 'src/app/jscaip/Coord';
 
@@ -32,8 +33,8 @@ export class SiamOrientationArrowComponent extends BaseGameComponent {
         const scaleValue: number = arrowRatio * sizeRatio;
         const cxAfterScale: number = 0.5 * scaleValue;
         let centralCoord: Coord = new Coord(config.width / 2, config.height / 2);
-        centralCoord = centralCoord.getNext(Direction.LEFT, cxAfterScale);
-        centralCoord = centralCoord.getNext(Direction.UP, cxAfterScale);
+        centralCoord = centralCoord.getNext(Ordinal.LEFT, cxAfterScale);
+        centralCoord = centralCoord.getNext(Ordinal.UP, cxAfterScale);
         centralCoord = centralCoord.getNext(orientation, scaleValue - sizeRatio);
         centralCoord = centralCoord.scale(this.SPACE_SIZE, this.SPACE_SIZE);
 
