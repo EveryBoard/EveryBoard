@@ -1,10 +1,9 @@
 import { Coord } from 'src/app/jscaip/Coord';
-import { ArrayUtils } from 'src/app/utils/ArrayUtils';
+import { ArrayUtils, MGPOptional } from '@everyboard/lib';
 import { EpaminondasMove } from './EpaminondasMove';
 import { EpaminondasState } from './EpaminondasState';
 import { EpaminondasConfig, EpaminondasNode } from './EpaminondasRules';
 import { EpaminondasMoveGenerator } from './EpaminondasMoveGenerator';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 export class EpaminondasPhalanxSizeAndFilterMoveGenerator extends EpaminondasMoveGenerator {
 

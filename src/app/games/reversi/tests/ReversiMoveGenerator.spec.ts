@@ -2,10 +2,10 @@
 import { PlayerOrNone } from 'src/app/jscaip/Player';
 import { ReversiMove } from '../ReversiMove';
 import { ReversiState } from '../ReversiState';
+import { Table } from 'src/app/jscaip/TableUtils';
 import { ReversiConfig, ReversiNode, ReversiRules } from '../ReversiRules';
-import { Table } from 'src/app/utils/ArrayUtils';
 import { ReversiMoveGenerator } from '../ReversiMoveGenerator';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { MGPOptional } from '@everyboard/lib';
 
 const _: PlayerOrNone = PlayerOrNone.NONE;
 const O: PlayerOrNone = PlayerOrNone.ZERO;

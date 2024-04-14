@@ -3,12 +3,11 @@ import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { DiaballikMove, DiaballikBallPass, DiaballikTranslation, DiaballikSubMove } from '../DiaballikMove';
 import { DiaballikNode, DiaballikRules } from '../DiaballikRules';
 import { DiaballikPiece, DiaballikState } from '../DiaballikState';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { MGPOptional, TestUtils } from '@everyboard/lib';
 import { Coord } from 'src/app/jscaip/Coord';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { Player } from 'src/app/jscaip/Player';
 import { DiaballikFailure } from '../DiaballikFailure';
-import { TestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { CoordFailure } from '../../../jscaip/Coord';
 import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 

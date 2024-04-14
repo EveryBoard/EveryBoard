@@ -3,7 +3,7 @@ import { EncapsuleRules } from '../EncapsuleRules';
 import { Coord } from 'src/app/jscaip/Coord';
 import { EncapsulePiece } from '../EncapsulePiece';
 import { EncapsuleMove } from '../EncapsuleMove';
-import { EncoderTestUtils } from 'src/app/utils/tests/Encoder.spec';
+import { EncoderTestUtils } from '@everyboard/lib';
 import { MoveTestUtils } from 'src/app/jscaip/tests/Move.spec';
 import { EncapsuleMoveGenerator } from '../EncapsuleMoveGenerator';
 

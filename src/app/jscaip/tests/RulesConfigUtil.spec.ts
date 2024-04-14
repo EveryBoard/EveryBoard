@@ -2,7 +2,7 @@
 import { DefaultConfigDescription, NamedRulesConfig, RulesConfig } from '../RulesConfigUtil';
 import { MGPValidators } from 'src/app/utils/MGPValidator';
 import { NumberConfig, RulesConfigDescription } from 'src/app/components/wrapper-components/rules-configuration/RulesConfigDescription';
-import { TestUtils } from 'src/app/utils/tests/TestUtils.spec';
+import { TestUtils } from '@everyboard/lib';
 
 describe('RulesConfigUtil', () => {
 

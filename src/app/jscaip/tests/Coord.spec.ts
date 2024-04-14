@@ -1,5 +1,5 @@
 /* eslint-disable max-lines-per-function */
-import { TestUtils } from 'src/app/utils/tests/TestUtils.spec';
+import { TestUtils } from '@everyboard/lib';
 import { Coord } from '../Coord';
 import { Direction } from '../Direction';
 

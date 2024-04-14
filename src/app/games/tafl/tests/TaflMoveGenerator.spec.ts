@@ -1,12 +1,12 @@
 /* eslint-disable max-lines-per-function */
 import { Coord } from 'src/app/jscaip/Coord';
 import { TaflPawn } from '../TaflPawn';
-import { Table } from 'src/app/utils/ArrayUtils';
+import { Table } from 'src/app/jscaip/TableUtils';
 import { BrandhubMove } from '../brandhub/BrandhubMove';
 import { BrandhubNode, BrandhubRules } from '../brandhub/BrandhubRules';
 import { TaflMoveGenerator } from '../TaflMoveGenerator';
 import { TaflConfig } from '../TaflConfig';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { MGPOptional } from '@everyboard/lib';
 import { TaflState } from '../TaflState';
 
 describe('TaflMoveGenerator', () => {

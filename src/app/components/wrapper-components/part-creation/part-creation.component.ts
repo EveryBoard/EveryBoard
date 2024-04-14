@@ -8,16 +8,12 @@ import { FirstPlayer, IFirstPlayer, ConfigRoom, IPartType, PartStatus, PartType,
 import { GameService } from '../../../services/GameService';
 import { ConfigRoomService } from '../../../services/ConfigRoomService';
 import { ChatService } from '../../../services/ChatService';
-import { Debug, Utils } from 'src/app/utils/utils';
+import { getMillisecondsElapsed, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 import { UserService } from 'src/app/services/UserService';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { AuthUser, ConnectedUserService } from 'src/app/services/ConnectedUserService';
-import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { MinimalUser } from 'src/app/domain/MinimalUser';
-import { getMillisecondsElapsed } from 'src/app/utils/TimeUtils';
 import { FirestoreTime } from 'src/app/domain/Time';
-import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
 import { CurrentGame, User, UserRoleInPart } from 'src/app/domain/User';
 import { Timestamp } from 'firebase/firestore';
 import { Subscription } from 'rxjs';
@@ -28,6 +24,7 @@ import { GameInfo } from '../../normal-component/pick-game/pick-game.component';
 import { GameState } from 'src/app/jscaip/GameState';
 import { RulesConfigDescription } from '../rules-configuration/RulesConfigDescription';
 import { AbstractRules } from 'src/app/jscaip/Rules';
+import { Debug } from 'src/app/utils/Debug';
 
 type PartCreationViewInfo = {
     userIsCreator: boolean;
@@ -455,7 +452,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         const lastChangedOpt: MGPOptional<FirestoreTime> = await this.userService.getUserLastUpdateTime(userId);
         if (lastChangedOpt.isAbsent()) {
             const error: string = 'found no user while observing ' + userId + ' !';
-            ErrorLoggerService.logError('PartCreationComponent', error);
+            Utils.logError('PartCreationComponent', error);
             return true;
         }
         const lastUpdateTime: Timestamp = lastChangedOpt.get() as Timestamp;
