@@ -25,19 +25,19 @@ def fill_field(driver, selector, content):
         input.clear()
         input.send_keys(content)
     except Exception as e:
-        print("Failed when filling in field '{}'".format(selector))
+        print('Failed when filling in field "{}"'.format(selector))
         raise e
 
 def click_button(driver, selector):
     try:
-        print("Clicking button: {}".format(selector))
+        print('Clicking button: {}'.format(selector))
         # Force a small wait to mimick a real user. This is to stabilize these tests a bit more
         time.sleep(USER_RESPONSE_TIME)
         wait = WebDriverWait(driver, 1200) # wait up to 10s to find the element
         button = wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, selector)))
         button.click()
     except Exception as e:
-        print("Failed when clicking on button '{}': {}".format(selector, e))
+        print('Failed when clicking on button "{}": {}'.format(selector, e))
         raise e
 
 def click_menu_button(driver, hover_selector, button_selector):
@@ -51,7 +51,7 @@ def click_menu_button(driver, hover_selector, button_selector):
             actions.move_to_element(hover).perform()
         click_button(driver, button_selector)
     except Exception as e:
-        print("Failed when hovering over '{}' and clicking on button '{}'".format(hover_selector, button_selector))
+        print('Failed when hovering over "{}" and clicking on button "{}"'.format(hover_selector, button_selector))
         raise e
 
 def select(driver, selector, selection):
@@ -60,19 +60,19 @@ def select(driver, selector, selection):
         element = Select(wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, selector))))
         element.select_by_visible_text(selection)
     except Exception as e:
-        print("Failed when selecting from drop down '{}'".format(selector))
+        print('Failed when selecting from drop down "{}"'.format(selector))
         raise e
 
 def get_text_of(driver, selector):
     try:
-        print("Getting text of {}".format(selector))
+        print('Getting text of {}'.format(selector))
         wait = WebDriverWait(driver, 120) # wait up to 10s to find the element
         element = wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, selector)))
         print(element)
         print(element.get_attribute('innerText'))
         return element.get_attribute('innerText')
     except Exception as e:
-        print("Failed when getting text of '{}'".format(selector))
+        print('Failed when getting text of "{}"'.format(selector))
         raise e
 
 def wait_for_presence_of(driver, selector):
@@ -80,64 +80,64 @@ def wait_for_presence_of(driver, selector):
         wait = WebDriverWait(driver, 10)
         wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, selector)))
     except Exception as e:
-        print("Failed when checking presence of element '{}'".format(selector))
+        print('Failed when checking presence of element "{}"'.format(selector))
         # Display the page for debugging purposes
-        print(driver.find_element(By.CSS_SELECTOR, "body").get_attribute('innerHTML'))
+        print(driver.find_element(By.CSS_SELECTOR, 'body').get_attribute('innerHTML'))
         raise e
 
 def register(driver, email, username, password):
-    """Registers the user by filling in the registration form"""
-    driver.get("http://localhost:4200")
+    '''Registers the user by filling in the registration form'''
+    driver.get('http://localhost:4200')
     # Access registration page
     if MOBILE:
         click_button(driver, '.navbar-burger')
-    click_button(driver, "#register")
+    click_button(driver, '#register')
 
     # Fill in registration form
-    fill_field(driver, "#email", email)
-    fill_field(driver, "#username", username)
-    fill_field(driver, "#password", password)
+    fill_field(driver, '#email', email)
+    fill_field(driver, '#username', username)
+    fill_field(driver, '#password', password)
 
     # Click on registration button
-    click_button(driver, "#registerButton")
+    click_button(driver, '#registerButton')
 
     # Click on finalize verification button
     time.sleep(0.5) # Wait for the email verification to be done by the other script
-    click_button(driver, "#finalizeVerification")
+    click_button(driver, '#finalizeVerification')
 
 def access_game_list(driver):
-    """Accesses the list of games"""
+    '''Accesses the list of games'''
     # Go back to the main page
-    click_button(driver, "#logo")
+    click_button(driver, '#logo')
 
     # Go to the lobby
-    click_button(driver, "#seeGameList")
+    click_button(driver, '#seeGameList')
 
     # Now I should see the game list (this will throw it if does not find it)
     wait_for_presence_of(driver, '#game-list-tab')
 
 def logout(driver):
-    """Logs the current user out"""
+    '''Logs the current user out'''
     # Just click on the logout button
-    click_menu_button(driver, "#connectedUserName", "#logout")
+    click_menu_button(driver, '#connectedUserName', '#logout')
 
 def login(driver, email, password):
     # Go to the login page
     if MOBILE:
         click_button(driver, '.navbar-burger')
-    click_button(driver, "#login")
+    click_button(driver, '#login')
 
     # Fill in the form
-    fill_field(driver, "#email", email)
-    fill_field(driver, "#password", password)
+    fill_field(driver, '#email', email)
+    fill_field(driver, '#password', password)
 
     # Log in
-    click_button(driver, "#loginButton")
+    click_button(driver, '#loginButton')
 
 def use_default_config(driver):
     try:
-        # Click on "accept config" for configurable games
-        accept_config_button = driver.find_element(By.ID, "startGameWithConfig")
+        # Click on 'accept config' for configurable games
+        accept_config_button = driver.find_element(By.ID, 'startGameWithConfig')
         accept_config_button.click()
     except:
         # Games that do not have startGameWithConfig, not configurable so we already use the default config
@@ -149,13 +149,13 @@ def scenario(kind):
     return decorator
 
 scenarios = {
-    "simple": [],
-    "registered": [],
-    "two_drivers": [],
+    'simple': [],
+    'registered': [],
+    'two_drivers': [],
 }
 
 def ensure_no_errors(driver):
-    """Ensures that no error has been logged in the browser's console"""
+    '''Ensures that no error has been logged in the browser's console'''
     logs = driver.get_log('browser')
 
     error_logs = [log for log in logs if log['level'] == 'SEVERE']
@@ -166,21 +166,21 @@ def ensure_no_errors(driver):
         #raise Exception('Errors encountered, stopping here.')
 
 def launch_scenarios():
-    """
+    '''
     Launches all the scenarios, stop at the first one that fails.
     It is important that each scenario finishes what it started, e.g., if a part is created, it should be canceled or ended
-    """
+    '''
     options = Options()
     if HEADLESS:
         options.add_argument('-headless')
     driver = webdriver.Chrome(options=options)
-    #driver.get("http://localhost:4200")
+    #driver.get('http://localhost:4200')
 
-    for simple_scenario in scenarios["simple"]:
+    for simple_scenario in scenarios['simple']:
         # Always go back home for a new scenario
-        driver.get("http://localhost:4200")
-        print("----------------------------------------------")
-        print("Running scenario: " + simple_scenario.__name__)
+        driver.get('http://localhost:4200')
+        print('----------------------------------------------')
+        print('Running scenario: ' + simple_scenario.__name__)
         simple_scenario(driver)
         ensure_no_errors(driver)
 
@@ -190,10 +190,10 @@ def launch_scenarios():
     password = ''.join(random.choices(string.ascii_uppercase + string.digits, k=16))
 
     register(driver, email, username, password)
-    for registered_scenario in scenarios["registered"]:
-        driver.get("http://localhost:4200")
-        print("----------------------------------------------")
-        print("Running scenario: " + registered_scenario.__name__)
+    for registered_scenario in scenarios['registered']:
+        driver.get('http://localhost:4200')
+        print('----------------------------------------------')
+        print('Running scenario: ' + registered_scenario.__name__)
         registered_scenario(driver, username, email, password)
         ensure_no_errors(driver)
 
@@ -203,11 +203,11 @@ def launch_scenarios():
     email2 = username2 + '@everyboard.org'
     password2 = ''.join(random.choices(string.ascii_uppercase + string.digits, k=16))
     register(driver2, email2, username2, password2)
-    for two_drivers_scenario in scenarios["two_drivers"]:
-        driver.get("http://localhost:4200")
-        driver2.get("http://localhost:4200")
-        print("----------------------------------------------")
-        print("Running scenario: " + two_drivers_scenario.__name__)
+    for two_drivers_scenario in scenarios['two_drivers']:
+        driver.get('http://localhost:4200')
+        driver2.get('http://localhost:4200')
+        print('----------------------------------------------')
+        print('Running scenario: ' + two_drivers_scenario.__name__)
         two_drivers_scenario(driver, username, driver2, username2)
         ensure_no_errors(driver)
         ensure_no_errors(driver2)
@@ -216,315 +216,370 @@ def launch_scenarios():
     driver2.close()
 
 def create_part(driver1, username1, driver2, username2):
-    """
+    '''
     Create an online game and start it
-    """
+    '''
 
     # Player 1 creates the part
-    click_button(driver1, "#createOnlineGame")
-    select(driver1, "#gameType", "Four in a Row")
-    click_button(driver1, "#launchGame")
+    click_button(driver1, '#createOnlineGame')
+    select(driver1, '#gameType', 'Four in a Row')
+    click_button(driver1, '#launchGame')
 
     # Player 1 configures the part
-    click_button(driver1, "#firstPlayerCreator") # Player 1 will start
+    click_button(driver1, '#firstPlayerCreator') # Player 1 will start
 
     # Player 2 joins the part
-    click_button(driver2, "#seeGameList")
-    click_button(driver2, "#part-of-{}".format(username1))
+    click_button(driver2, '#seeGameList')
+    click_button(driver2, '#part-of-{}'.format(username1))
 
     # Player 1 sees player 2 arrive and selects them
-    click_button(driver1, "#presenceOf_{}".format(username2))
-    click_button(driver1, "#proposeConfig")
+    click_button(driver1, '#presenceOf_{}'.format(username2))
+    click_button(driver1, '#proposeConfig')
 
     # Player 2 accepts
-    click_button(driver2, "#acceptConfig")
+    click_button(driver2, '#acceptConfig')
 
     time.sleep(1) # just to make sure the part has started
 
-#@scenario("registered")
-#def can_access_lobby_after_registration(driver, username, email, password):
-#    """
-#    Role: I am a logged in user
-#    Action: I try to access the lobby
-#    Result: It works
-#    """
-#    access_game_list(driver)
-#
-#@scenario("registered")
-#def can_logout_and_login(driver, username, email, password):
-#    """
-#    Role: I am a registered and logged in user
-#    Action: I want to be able to log out and log back in
-#    Result: I am logged in and I can again access the lobby
-#    """
-#    logout(driver)
-#    login(driver, email, password)
-#    access_game_list(driver)
-#
-#@scenario("simple")
-#def can_play_tutorial(driver):
-#    """
-#    Role: I am a visitor
-#    Action: I play the four in a row tutorial
-#    Result: I can complete it fully
-#    """
-#    # Launch the tutorial
-#    click_menu_button(driver, "#playOffline", "#tutorial")
-#    select(driver, "#gameType", "Four in a Row")
-#    click_button(driver, "#launchTutorial")
-#
-#    # First step does not require any move, so just click ok
-#    click_button(driver, "#nextButton")
-#
-#    # In the second step I should play something, so I just do it
-#    click_button(driver, "#click_3 > rect")
-#    click_button(driver, "#nextButton")
-#
-#    # The third step requires me to win, so I do it
-#    click_button(driver, "#click_1 > rect")
-#    click_button(driver, "#nextButton")
-#
-#    # The final step also requires me to win
-#    click_button(driver, "#click_4 > rect")
-#    click_button(driver, "#nextButton")
-#
-#    # Now I should have finished the tuto
-#    # And it should show a button to play locally
-#    driver.find_element(By.CSS_SELECTOR, "#playLocallyButton")
-#
-#@scenario("simple")
-#def can_play_local_2_players(driver):
-#    """
-#    Scenario: I am a visitor
-#    Action: I play a game against a friend on the same computer
-#    Result: I can go until the end of the game
-#    """
-#    # Launch a game of four in a row
-#    click_menu_button(driver, "#playOffline", "#playLocally")
-#    select(driver, "#gameType", "Four in a Row")
-#    click_button(driver, "#launchGame")
-#    use_default_config(driver)
-#
-#    # Stupid game between player 0 and 1, where 0 wins
-#    click_button(driver, "#click_3 > rect")
-#    click_button(driver, "#click_2 > rect")
-#    click_button(driver, "#click_3 > rect")
-#    click_button(driver, "#click_2 > rect")
-#    click_button(driver, "#click_3 > rect")
-#    click_button(driver, "#click_2 > rect")
-#    click_button(driver, "#click_3 > rect")
-#
-#    # Now 0 won
-#    winner = driver.find_element(By.ID, "gameResult").text
-#    if winner != "Player 1 won":
-#        raise Exception("failed: text should be {}".format(winner))
-#
-#@scenario("simple")
-#def can_play_local_vs_ai(driver):
-#    """
-#    Scenario: I am a visitor
-#    Action: I play a game against the AI
-#    Result: The AI plays its move and I can play again
-#    """
-#
-#    # Launch a game of four in a row
-#    click_menu_button(driver, "#playOffline", "#playLocally")
-#    select(driver, "#gameType", "Four in a Row")
-#    click_button(driver, "#launchGame")
-#    use_default_config(driver)
-#
-#    # Select the AI as second player
-#    select(driver, "#playerOneSelect", "Minimax")
-#    select(driver, "#aiOneLevelSelect", "Level 1")
-#
-#    # I play a move
-#    click_button(driver, "#click_2 > rect")
-#
-#    # Let AI play
-#    time.sleep(2) # Two seconds should be more than enough
-#
-#    # AI should have played a second move, I can play again
-#    click_button(driver, "#click_1 > rect")
-#
-#    # Now there should be a piece in #click_1
-#    wait_for_presence_of(driver, "#click_1 > circle")
-#
-#@scenario("two_drivers")
-#def can_create_part_and_play(driver1, username1, driver2, username2):
-#    """
-#    Role: We are two registered users
-#    Action: We create and play a full game
-#    Result: We see who has won
-#    """
-#    create_part(driver1, username1, driver2, username2)
-#    # Now we are in the game!
-#    # Let's play it until the end
-#    wait_for_presence_of(driver1, "#playerTurn")
-#    click_button(driver1, "#click_3 > rect")
-#    wait_for_presence_of(driver2, "#playerTurn")
-#    click_button(driver2, "#click_2 > rect")
-#    wait_for_presence_of(driver1, "#playerTurn")
-#    click_button(driver1, "#click_3 > rect")
-#    wait_for_presence_of(driver2, "#playerTurn")
-#    click_button(driver2, "#click_2 > rect")
-#    wait_for_presence_of(driver1, "#playerTurn")
-#    click_button(driver1, "#click_3 > rect")
-#    wait_for_presence_of(driver2, "#playerTurn")
-#    click_button(driver2, "#click_2 > rect")
-#    wait_for_presence_of(driver1, "#playerTurn")
-#    click_button(driver1, "#click_3 > rect")
-#
-#    # Now player 1 has won
-#    wait_for_presence_of(driver1, "#youWonIndicator")
-#    wait_for_presence_of(driver2, "#youLostIndicator")
-#
-#@scenario("registered")
-#def can_reload_part_creation(driver, username, email, password):
-#    """
-#    Role: I am a registered user with a game in creation
-#    Action: I reload the page
-#    Result: It works
-#    """
-#    # I create a part
-#    click_button(driver, "#createOnlineGame")
-#    select(driver, "#gameType", "Four in a Row")
-#    click_button(driver, "#launchGame")
-#
-#    # I reload the page
-#    driver.get(driver.current_url)
-#    time.sleep(1)
-#
-#    # Now I should still be on the part creation page
-#    wait_for_presence_of(driver, '#proposeConfig') # proposeConfig identifies the part creation page
-#
-#    # Cleanup
-#    click_button(driver, "#cancel")
+@scenario('registered')
+def can_access_lobby_after_registration(driver, username, email, password):
+    '''
+    Role: I am a logged in user
+    Action: I try to access the lobby
+    Result: It works
+    '''
+    access_game_list(driver)
 
-#@scenario("two_drivers")
-#def can_reload_game(driver1, username1, driver2, username2):
-#    """
-#    Role: We are two users in a game
-#    Action: I reload the page
-#    Result: It works
-#    """
-#    # A game is being played
-#    create_part(driver1, username1, driver2, username2)
-#    # I reload the page
-#    driver1.get(driver1.current_url)
-#    time.sleep(1)
-#
-#    # Now I should still see the game
-#    wait_for_presence_of(driver1, '#game')
-#
-#    # Cleanup
-#    click_button(driver1, '#resign')
+@scenario('registered')
+def can_logout_and_login(driver, username, email, password):
+    '''
+    Role: I am a registered and logged in user
+    Action: I want to be able to log out and log back in
+    Result: I am logged in and I can again access the lobby
+    '''
+    logout(driver)
+    login(driver, email, password)
+    access_game_list(driver)
 
-#@scenario("two_drivers")
-#def can_perform_time_actions(driver1, username1, driver2, username2):
-#    """
-#    Role: We are two users in a game
-#    Action: I add time to my opponent (turn and global time)
-#    Result: I see they have more time than before
-#    """
-#    def parse_time(t):
-#        minutes, seconds = t.split(':')
-#        return int(minutes) * 60 + int(seconds)
-#
-#    def check_time_increase(chrono_name):
-#        remainingTimeBeforeAddition = parse_time(get_text_of(driver1, '{} p'.format(chrono_name)))
-#
-#        # I add time to the opponent
-#        click_button(driver1, '{} .button'.format(chrono_name))
-#        time.sleep(1) # wait a bit to receive the update
-#
-#        # I can see they have more time now
-#        remainingTimeAfterAddition = parse_time(get_text_of(driver1, '{} p'.format(chrono_name)))
-#        if not(remainingTimeAfterAddition > remainingTimeBeforeAddition):
-#            print('Time was not added!')
-#            raise Exception('Test failed')
-#
-#    # A game is being played
-#    create_part(driver1, username1, driver2, username2)
-#
-#    # I can add global time
-#    check_time_increase('#chronoOneGlobal')
-#    # I can add turn time
-#    check_time_increase('#chronoOneTurn')
-#
-#    click_button(driver, '#resign')
+@scenario('simple')
+def can_play_tutorial(driver):
+    '''
+    Role: I am a visitor
+    Action: I play the four in a row tutorial
+    Result: I can complete it fully
+    '''
+    # Launch the tutorial
+    click_menu_button(driver, '#playOffline', '#tutorial')
+    select(driver, '#gameType', 'Four in a Row')
+    click_button(driver, '#launchTutorial')
 
-#@scenario("two_drivers")
-#def can_perform_take_back(driver1, username1, driver2, username2):
-#    """
-#    Role: We are two users in a game
-#    Action: I ask a take back and the opponent refuses, but then accepts on my second request
-#    Result: I took back my turn only after the acceptance
-#    """
-#    def parse_turn(t):
-#        return int(t[7:]) # Drop the "Turn n°" part
-#    # A game is being played for a few turns
-#    create_part(driver1, username1, driver2, username2)
-#    wait_for_presence_of(driver1, "#playerTurn")
-#    click_button(driver1, "#click_3 > rect")
-#    wait_for_presence_of(driver2, "#playerTurn")
-#    click_button(driver2, "#click_2 > rect")
-#    wait_for_presence_of(driver1, "#playerTurn")
-#    click_button(driver1, "#click_3 > rect")
-#
-#    # I can ask for take back
-#    click_button(driver1, '#proposeTakeBack')
-#    turnBeforeTakeBack = parse_turn(get_text_of(driver1, '#turn-number'))
-#
-#    # After take back is accepted, my turn has decreased
-#    click_button(driver2, '#accept')
-#    time.sleep(1)
-#    turnAfterTakeBack = parse_turn(get_text_of(driver1, '#turn-number'))
-#
-#    if not(turnAfterTakeBack < turnBeforeTakeBack):
-#        print('Turn has not decreased')
-#        raise Exception('Test failed')
-#
-#    click_button(driver1, '#resign')
+    # First step does not require any move, so just click ok
+    click_button(driver, '#nextButton')
 
-@scenario("two_drivers")
+    # In the second step I should play something, so I just do it
+    click_button(driver, '#click_3 > rect')
+    click_button(driver, '#nextButton')
+
+    # The third step requires me to win, so I do it
+    click_button(driver, '#click_1 > rect')
+    click_button(driver, '#nextButton')
+
+    # The final step also requires me to win
+    click_button(driver, '#click_4 > rect')
+    click_button(driver, '#nextButton')
+
+    # Now I should have finished the tuto
+    # And it should show a button to play locally
+    driver.find_element(By.CSS_SELECTOR, '#playLocallyButton')
+
+@scenario('simple')
+def can_play_local_2_players(driver):
+    '''
+    Scenario: I am a visitor
+    Action: I play a game against a friend on the same computer
+    Result: I can go until the end of the game
+    '''
+    # Launch a game of four in a row
+    click_menu_button(driver, '#playOffline', '#playLocally')
+    select(driver, '#gameType', 'Four in a Row')
+    click_button(driver, '#launchGame')
+    use_default_config(driver)
+
+    # Stupid game between player 0 and 1, where 0 wins
+    click_button(driver, '#click_3 > rect')
+    click_button(driver, '#click_2 > rect')
+    click_button(driver, '#click_3 > rect')
+    click_button(driver, '#click_2 > rect')
+    click_button(driver, '#click_3 > rect')
+    click_button(driver, '#click_2 > rect')
+    click_button(driver, '#click_3 > rect')
+
+    # Now 0 won
+    winner = driver.find_element(By.ID, 'gameResult').text
+    if winner != 'Player 1 won':
+        raise Exception('failed: text should be {}'.format(winner))
+
+@scenario('simple')
+def can_play_local_vs_ai(driver):
+    '''
+    Scenario: I am a visitor
+    Action: I play a game against the AI
+    Result: The AI plays its move and I can play again
+    '''
+
+    # Launch a game of four in a row
+    click_menu_button(driver, '#playOffline', '#playLocally')
+    select(driver, '#gameType', 'Four in a Row')
+    click_button(driver, '#launchGame')
+    use_default_config(driver)
+
+    # Select the AI as second player
+    select(driver, '#playerOneSelect', 'Minimax')
+    select(driver, '#aiOneLevelSelect', 'Level 1')
+
+    # I play a move
+    click_button(driver, '#click_2 > rect')
+
+    # Let AI play
+    time.sleep(2) # Two seconds should be more than enough
+
+    # AI should have played a second move, I can play again
+    click_button(driver, '#click_1 > rect')
+
+    # Now there should be a piece in #click_1
+    wait_for_presence_of(driver, '#click_1 > circle')
+
+@scenario('two_drivers')
+def can_create_part_and_play(driver1, username1, driver2, username2):
+    '''
+    Role: We are two registered users
+    Action: We create and play a full game
+    Result: We see who has won
+    '''
+    create_part(driver1, username1, driver2, username2)
+    # Now we are in the game!
+    # Let's play it until the end
+    wait_for_presence_of(driver1, '#playerTurn')
+    click_button(driver1, '#click_3 > rect')
+    wait_for_presence_of(driver2, '#playerTurn')
+    click_button(driver2, '#click_2 > rect')
+    wait_for_presence_of(driver1, '#playerTurn')
+    click_button(driver1, '#click_3 > rect')
+    wait_for_presence_of(driver2, '#playerTurn')
+    click_button(driver2, '#click_2 > rect')
+    wait_for_presence_of(driver1, '#playerTurn')
+    click_button(driver1, '#click_3 > rect')
+    wait_for_presence_of(driver2, '#playerTurn')
+    click_button(driver2, '#click_2 > rect')
+    wait_for_presence_of(driver1, '#playerTurn')
+    click_button(driver1, '#click_3 > rect')
+
+    # Now player 1 has won
+    wait_for_presence_of(driver1, '#youWonIndicator')
+    wait_for_presence_of(driver2, '#youLostIndicator')
+
+@scenario('registered')
+def can_reload_part_creation(driver, username, email, password):
+    '''
+    Role: I am a registered user with a game in creation
+    Action: I reload the page
+    Result: It works
+    '''
+    # I create a part
+    click_button(driver, '#createOnlineGame')
+    select(driver, '#gameType', 'Four in a Row')
+    click_button(driver, '#launchGame')
+    time.sleep(1)
+
+    # I reload the page
+    driver.get(driver.current_url)
+    time.sleep(1)
+
+    # Now I should still be on the part creation page
+    wait_for_presence_of(driver, '#proposeConfig') # proposeConfig identifies the part creation page
+
+    # Cleanup
+    click_button(driver, '#cancel')
+
+@scenario('two_drivers')
+def can_reload_game(driver1, username1, driver2, username2):
+    '''
+    Role: We are two users in a game
+    Action: I reload the page
+    Result: It works
+    '''
+    # A game is being played
+    create_part(driver1, username1, driver2, username2)
+    # I reload the page
+    driver1.get(driver1.current_url)
+    time.sleep(1)
+
+    # Now I should still see the game
+    wait_for_presence_of(driver1, '#game')
+
+    # Cleanup
+    click_button(driver1, '#resign')
+
+@scenario('two_drivers')
+def can_perform_time_actions(driver1, username1, driver2, username2):
+    '''
+    Role: We are two users in a game
+    Action: I add time to my opponent (turn and global time)
+    Result: I see they have more time than before
+    '''
+    def parse_time(t):
+        minutes, seconds = t.split(':')
+        return int(minutes) * 60 + int(seconds)
+
+    def check_time_increase(chrono_name):
+        remainingTimeBeforeAddition = parse_time(get_text_of(driver1, '{} p'.format(chrono_name)))
+
+        # I add time to the opponent
+        click_button(driver1, '{} .button'.format(chrono_name))
+        time.sleep(1) # wait a bit to receive the update
+
+        # I can see they have more time now
+        remainingTimeAfterAddition = parse_time(get_text_of(driver1, '{} p'.format(chrono_name)))
+        if not(remainingTimeAfterAddition > remainingTimeBeforeAddition):
+            print('Time was not added!')
+            raise Exception('Test failed')
+
+    # A game is being played
+    create_part(driver1, username1, driver2, username2)
+
+    # I can add global time
+    check_time_increase('#chronoOneGlobal')
+    # I can add turn time
+    check_time_increase('#chronoOneTurn')
+
+    click_button(driver, '#resign')
+
+@scenario('two_drivers')
+def can_perform_take_back(driver1, username1, driver2, username2):
+    '''
+    Role: We are two users in a game
+    Action: I ask a take back and the opponent refuses, but then accepts on my second request
+    Result: I took back my turn only after the acceptance
+    '''
+    def parse_turn(t):
+        return int(t[7:]) # Drop the 'Turn n°' part
+    # A game is being played for a few turns
+    create_part(driver1, username1, driver2, username2)
+    wait_for_presence_of(driver1, '#playerTurn')
+    click_button(driver1, '#click_3 > rect')
+    wait_for_presence_of(driver2, '#playerTurn')
+    click_button(driver2, '#click_2 > rect')
+    wait_for_presence_of(driver1, '#playerTurn')
+    click_button(driver1, '#click_3 > rect')
+
+    # I can ask for take back
+    click_button(driver1, '#proposeTakeBack')
+    turnBeforeTakeBack = parse_turn(get_text_of(driver1, '#turn-number'))
+
+    # After take back is accepted, my turn has decreased
+    click_button(driver2, '#accept')
+    time.sleep(1)
+    turnAfterTakeBack = parse_turn(get_text_of(driver1, '#turn-number'))
+
+    if not(turnAfterTakeBack < turnBeforeTakeBack):
+        print('Turn has not decreased')
+        raise Exception('Test failed')
+
+    click_button(driver1, '#resign')
+
+@scenario('two_drivers')
 def can_draw(driver1, username1, driver2, username2):
-    """
+    '''
     Role: We are two users in a game
     Action: I ask to draw and opponent refuses, but then accepts on my second request
     Result: We draw but only after the acceptance
-    """
-    # TODO
-    pass
-#
-#@scenario("two_drivers")
-#def can_hard_draw(driver1, username1, driver2, username2):
-#    """
-#    Role: We are two users in a game
-#    Action: We play until the end with a hard draw
-#    Result: We see that it is indeed a hard draw
-#    """
-#    # TODO
-#    pass
-#
-#@scenario("two_drivers")
-#def can_resign(driver1, username1, driver2, username2):
-#    """
-#    Role: We are two users in a game
-#    Action: I resign
-#    Result: I lost
-#    """
-#    # TODO
-#    pass
-#
-#@scenario("two_drivers")
-#def can_resign(driver1, username1, driver2, username2):
-#    """
-#    Role: We are two users in a game
-#    Action: I resign and ask for rematch, the opponent accepts
-#    Result: We started a new game
-#    """
-#    # TODO
-#    pass
+    '''
+    # A game is being played
+    create_part(driver1, username1, driver2, username2)
+    # I propose draw and the opponent accepts it
+    click_button(driver1, '#proposeDraw')
+    click_button(driver2, '#accept')
 
-if __name__ == "__main__":
+    # I can see that the part is a draw
+    wait_for_presence_of(driver1, '#yourOpponentAgreedToDrawIndicator')
+
+@scenario('two_drivers')
+def can_hard_draw(driver1, username1, driver2, username2):
+    '''
+    Role: We are two users in a game
+    Action: We play until the end with a hard draw
+    Result: We see that it is indeed a hard draw
+    '''
+    def play(driver, column):
+        wait_for_presence_of(driver, '#playerTurn')
+        click_button(driver, '#click_{} > rect'.format(column))
+    # A game is being played
+    create_part(driver1, username1, driver2, username2)
+    # We eventually arrive at a draw
+    for col in range(3):
+        for i in range(3):
+            play(driver1, col)
+            play(driver2, col)
+    play(driver1, 4)
+    play(driver2, 3)
+    for i in range(2):
+          play(driver1, 3)
+          play(driver2, 3)
+    play(driver1, 3)
+    play(driver2, 4)
+    for i in range(2):
+          play(driver1, 4)
+          play(driver2, 4)
+    for col in range(5, 7):
+        for i in range(3):
+            play(driver1, col)
+            play(driver2, col)
+
+    # We see the draw
+    wait_for_presence_of(driver1, '#hardDrawIndicator')
+
+@scenario('two_drivers')
+def can_resign(driver1, username1, driver2, username2):
+    '''
+    Role: We are two users in a game
+    Action: I resign
+    Result: I lost
+    '''
+    # A game is being played
+    create_part(driver1, username1, driver2, username2)
+    # I resign
+    click_button(driver1, '#resign')
+    # I can see I resigned
+    wait_for_presence_of(driver1, '#resignIndicator')
+
+@scenario('two_drivers')
+def can_rematch(driver1, username1, driver2, username2):
+    '''
+    Role: We are two users in a game
+    Action: I resign and ask for rematch, the opponent accepts
+    Result: We started a new game
+    '''
+    # A game has finished
+    create_part(driver1, username1, driver2, username2)
+    click_button(driver1, '#resign')
+    game_url = driver1.current_url
+    print(game_url)
+
+    # I ask for a rematch and the user accepts
+    click_button(driver1, '#proposeRematch')
+    click_button(driver2, '#accept')
+    time.sleep(1)
+
+    # It is a new part
+    wait_for_presence_of(driver1, '#game')
+    new_game_url = driver1.current_url
+    print(new_game_url)
+    if not(new_game_url != game_url):
+        print('Game has not changed!')
+        raise Exception('Test failed')
+
+    click_button(driver1, '#resign')
+    time.sleep(1)
+
+if __name__ == '__main__':
     launch_scenarios()
