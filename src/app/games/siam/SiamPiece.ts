@@ -1,7 +1,6 @@
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { Orthogonal } from 'src/app/jscaip/Orthogonal';
-import { Utils } from 'src/app/utils/utils';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { MGPOptional, Utils } from '@everyboard/lib';
 
 export type SiamPieceValue = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
 

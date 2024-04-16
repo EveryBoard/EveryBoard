@@ -6,18 +6,13 @@ import { ConfigurableRules } from 'src/app/jscaip/Rules';
 import { QuixoConfig, QuixoState } from './QuixoState';
 import { QuixoMove } from './QuixoMove';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { NInARowHelper } from 'src/app/jscaip/NInARowHelper';
-import { Utils } from 'src/app/utils/utils';
-import { MGPSet } from 'src/app/utils/MGPSet';
+import { MGPMap, MGPOptional, MGPSet, MGPValidation, NumberMap, Utils } from '@everyboard/lib';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { TableUtils } from 'src/app/jscaip/TableUtils';
 import { QuixoFailure } from './QuixoFailure';
-import { MGPMap } from 'src/app/utils/MGPMap';
 import { NumberConfig, RulesConfigDescription, RulesConfigDescriptionLocalizable } from 'src/app/components/wrapper-components/rules-configuration/RulesConfigDescription';
 import { MGPValidators } from 'src/app/utils/MGPValidator';
-import { TableUtils } from 'src/app/utils/ArrayUtils';
-import { NumberMap } from 'src/app/utils/NumberMap';
 import { PlayerMap } from 'src/app/jscaip/PlayerMap';
 
 export class QuixoNode extends GameNode<QuixoMove, QuixoState> {}

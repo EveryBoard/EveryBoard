@@ -1,9 +1,8 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { Ordinal } from 'src/app/jscaip/Ordinal';
 import { Vector } from 'src/app/jscaip/Vector';
-import { Encoder } from 'src/app/utils/Encoder';
+import { Encoder, Utils } from '@everyboard/lib';
 import { CoerceoFailure } from './CoerceoFailure';
-import { Utils } from 'src/app/utils/utils';
 import { MoveCoordToCoord } from 'src/app/jscaip/MoveCoordToCoord';
 import { MoveCoord } from 'src/app/jscaip/MoveCoord';
 import { CoerceoState } from './CoerceoState';

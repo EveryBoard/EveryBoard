@@ -118,7 +118,6 @@ import { TrexoHalfPieceComponent } from './games/trexo/trexo-half-piece.componen
 import { YinshComponent } from './games/yinsh/yinsh.component';
 
 import { environment } from 'src/environments/environment';
-import { LocaleUtils } from './utils/LocaleUtils';
 
 import { VerifiedAccountGuard } from './guard/verified-account.guard';
 import { ExclusiveOnlineGameGuard } from './guard/exclusive-online-game-guard';
@@ -132,6 +131,7 @@ import { FirestoreTimePipe } from './pipes-and-directives/firestore-time.pipe';
 import { ToggleVisibilityDirective } from './pipes-and-directives/toggle-visibility.directive';
 import { RulesConfigurationComponent } from './components/wrapper-components/rules-configuration/rules-configuration.component';
 import { BlankGobanComponent } from './components/game-components/goban-game-component/blank-goban/blank-goban.component';
+import { LocaleUtils } from './utils/LocaleUtils';
 
 
 registerLocaleData(localeFr);

@@ -10,22 +10,18 @@ import { PointyHexaOrientation } from 'src/app/jscaip/HexaOrientation';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
-import { ArrayUtils } from 'src/app/utils/ArrayUtils';
-import { MGPFallible } from 'src/app/utils/MGPFallible';
-import { MGPValidation } from 'src/app/utils/MGPValidation';
+import { ArrayUtils, MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 import { AbaloneFailure } from './AbaloneFailure';
 import { AbaloneState } from './AbaloneState';
 import { AbaloneMove } from './AbaloneMove';
 import { AbaloneLegalityInformation, AbaloneRules } from './AbaloneRules';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { MCTS } from 'src/app/jscaip/AI/MCTS';
-import { Minimax } from 'src/app/jscaip/AI/Minimax';
 import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 import { AbaloneScoreHeuristic } from './AbaloneScoreHeuristic';
 import { AbaloneMoveGenerator } from './AbaloneMoveGenerator';
-import { Utils } from 'src/app/utils/utils';
 import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 import { Arrow } from 'src/app/components/game-components/arrow-component/Arrow';
+import { Minimax } from 'src/app/jscaip/AI/Minimax';
+import { MCTS } from 'src/app/jscaip/AI/MCTS';
 
 type CapturedInfo = {
     coord: Coord,

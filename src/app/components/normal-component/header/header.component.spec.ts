@@ -10,9 +10,8 @@ import { AuthUser, ConnectedUserService } from 'src/app/services/ConnectedUserSe
 import { CurrentGameService } from 'src/app/services/CurrentGameService';
 import { ConnectedUserServiceMock } from 'src/app/services/tests/ConnectedUserService.spec';
 import { CurrentGameServiceMock } from 'src/app/services/tests/CurrentGameService.spec';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { MGPOptional, Utils } from '@everyboard/lib';
 import { expectValidRoutingLink, prepareUnsubscribeCheck, SimpleComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
-import { Utils } from 'src/app/utils/utils';
 import { AccountComponent } from '../account/account.component';
 import { HeaderComponent } from './header.component';
 import { GameInfo } from '../pick-game/pick-game.component';

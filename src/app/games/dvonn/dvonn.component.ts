@@ -4,21 +4,18 @@ import { DvonnMove } from 'src/app/games/dvonn/DvonnMove';
 import { DvonnState } from 'src/app/games/dvonn/DvonnState';
 import { DvonnRules } from 'src/app/games/dvonn/DvonnRules';
 import { DvonnPieceStack } from 'src/app/games/dvonn/DvonnPieceStack';
-import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { HexaLayout } from 'src/app/jscaip/HexaLayout';
 import { PointyHexaOrientation } from 'src/app/jscaip/HexaOrientation';
 import { HexagonalGameComponent }
     from 'src/app/components/game-components/game-component/HexagonalGameComponent';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { MGPFallible } from 'src/app/utils/MGPFallible';
+import { MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 import { MCTS } from 'src/app/jscaip/AI/MCTS';
 import { Minimax } from 'src/app/jscaip/AI/Minimax';
 import { DvonnScoreHeuristic } from './DvonnScoreHeuristic';
 import { DvonnOrderedMoveGenerator } from './DvonnOrderedMoveGenerator';
 import { DvonnMaxStacksHeuristic } from './DvonnMaxStacksHeuristic';
 import { DvonnMoveGenerator } from './DvonnMoveGenerator';
-import { Utils } from 'src/app/utils/utils';
 
 @Component({
     selector: 'app-dvonn',

@@ -1,4 +1,4 @@
-import { MGPFallible } from 'src/app/utils/MGPFallible';
+import { MGPFallible } from '@everyboard/lib';
 import { Orthogonal } from '../Orthogonal';
 
 describe('Orthogonal', () => {

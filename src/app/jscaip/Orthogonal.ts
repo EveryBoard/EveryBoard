@@ -1,10 +1,6 @@
-import { JSONValue, Utils } from 'src/app/utils/utils';
-import { assert } from 'src/app/utils/assert';
-import { MGPFallible } from '../utils/MGPFallible';
-import { Encoder } from '../utils/Encoder';
 import { Ordinal } from './Ordinal';
 import { Direction, DirectionFactory } from './Direction';
-
+import { Encoder, JSONValue, MGPFallible, Utils } from '@everyboard/lib';
 
 export class Orthogonal extends Direction {
 
@@ -12,6 +8,7 @@ export class Orthogonal extends Direction {
     public static readonly RIGHT: Orthogonal = new Orthogonal(1, 0);
     public static readonly DOWN: Orthogonal = new Orthogonal(0, 1);
     public static readonly LEFT: Orthogonal = new Orthogonal(-1, 0);
+
     public static readonly factory: DirectionFactory<Orthogonal> = new class extends DirectionFactory<Orthogonal> {
         public all: ReadonlyArray<Orthogonal> = [
             Orthogonal.RIGHT,
@@ -19,14 +16,6 @@ export class Orthogonal extends Direction {
             Orthogonal.LEFT,
             Orthogonal.UP,
         ];
-
-        public override from(x: number, y: number): MGPFallible<Orthogonal> {
-            if (x === 0 && y === -1) return MGPFallible.success(Orthogonal.UP);
-            if (x === 1 && y === 0) return MGPFallible.success(Orthogonal.RIGHT);
-            if (x === 0 && y === 1) return MGPFallible.success(Orthogonal.DOWN);
-            if (x === -1 && y === 0) return MGPFallible.success(Orthogonal.LEFT);
-            return MGPFallible.failure('Invalid orthogonal from x and y');
-        }
     };
     public static readonly ORTHOGONALS: ReadonlyArray<Orthogonal> = Orthogonal.factory.all;
 
@@ -35,7 +24,7 @@ export class Orthogonal extends Direction {
             return dir.toString();
         },
         (encoded: JSONValue): Orthogonal => {
-            assert(typeof encoded === 'string', 'Invalid encoded orthogonal');
+            Utils.assert(typeof encoded === 'string', 'Invalid encoded orthogonal');
             const fromString: MGPFallible<Orthogonal> = Orthogonal.factory.fromString(encoded as string);
             return fromString.get();
         },

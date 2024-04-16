@@ -1,7 +1,4 @@
-import { JSONValue, Utils } from 'src/app/utils/utils';
-import { assert } from 'src/app/utils/assert';
-import { MGPFallible } from '../utils/MGPFallible';
-import { Encoder } from '../utils/Encoder';
+import { Encoder, JSONValue, MGPFallible, Utils } from '@everyboard/lib';
 import { Direction, DirectionFactory } from './Direction';
 
 /**
@@ -53,7 +50,7 @@ export class Ordinal extends Direction {
             return dir.toString();
         },
         (encoded: JSONValue): Ordinal => {
-            assert(typeof encoded === 'string', 'Invalid encoded direction');
+            Utils.assert(typeof encoded === 'string', 'Invalid encoded direction');
             const fromString: MGPFallible<Ordinal> = Ordinal.factory.fromString(encoded as string);
             return fromString.get();
         },

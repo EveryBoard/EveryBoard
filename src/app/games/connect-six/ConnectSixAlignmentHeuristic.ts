@@ -3,7 +3,7 @@ import { Heuristic } from 'src/app/jscaip/AI/Minimax';
 import { ConnectSixMove } from './ConnectSixMove';
 import { ConnectSixNode, ConnectSixRules } from './ConnectSixRules';
 import { ConnectSixState } from './ConnectSixState';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { MGPOptional } from '@everyboard/lib';
 import { GobanConfig } from 'src/app/jscaip/GobanConfig';
 
 export class ConnectSixAlignmentHeuristic extends Heuristic<ConnectSixMove, ConnectSixState, BoardValue, GobanConfig> {

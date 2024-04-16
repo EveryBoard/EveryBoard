@@ -2,14 +2,12 @@ import { Component } from '@angular/core';
 import { RectangularGameComponent } from 'src/app/components/game-components/rectangular-game-component/RectangularGameComponent';
 import { Coord } from 'src/app/jscaip/Coord';
 import { PlayerOrNone } from 'src/app/jscaip/Player';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { MGPValidation } from 'src/app/utils/MGPValidation';
+import { MGPFallible, MGPOptional, MGPValidation } from '@everyboard/lib';
 import { LinesOfActionMove } from './LinesOfActionMove';
 import { LinesOfActionRules } from './LinesOfActionRules';
 import { LinesOfActionFailure } from './LinesOfActionFailure';
 import { LinesOfActionState } from './LinesOfActionState';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
-import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { MCTS } from 'src/app/jscaip/AI/MCTS';
 import { LinesOfActionHeuristic } from './LinesOfActionHeuristic';
@@ -129,7 +127,7 @@ export class LinesOfActionComponent extends RectangularGameComponent<LinesOfActi
         const content: PlayerOrNone = this.board[y][x];
         const coord: Coord = new Coord(x, y);
         const classes: string[] = [this.getPlayerClass(content)];
-        if (this.selected.isPresent() && this.selected.get().equals(coord)) {
+        if (this.selected.equalsValue(coord)) {
             classes.push('selected-stroke');
         }
         return classes;

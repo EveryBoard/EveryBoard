@@ -3,20 +3,18 @@ import { GameNode } from 'src/app/jscaip/AI/GameNode';
 import { QuartoState } from './QuartoState';
 import { QuartoMove } from './QuartoMove';
 import { QuartoPiece } from './QuartoPiece';
-import { Debug } from 'src/app/utils/utils';
-import { MGPValidation } from 'src/app/utils/MGPValidation';
+import { MGPOptional, MGPSet, MGPValidation } from '@everyboard/lib';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Ordinal } from 'src/app/jscaip/Ordinal';
 import { SCORE } from 'src/app/jscaip/SCORE';
 import { Player } from 'src/app/jscaip/Player';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { QuartoFailure } from './QuartoFailure';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { MGPSet } from 'src/app/utils/MGPSet';
-import { CoordSet } from 'src/app/utils/OptimizedSet';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
+import { TableUtils } from 'src/app/jscaip/TableUtils';
+import { CoordSet } from 'src/app/jscaip/CoordSet';
+import { Debug } from 'src/app/utils/Debug';
 import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
-import { TableUtils } from 'src/app/utils/ArrayUtils';
 
 /**
  * A criterion is a list of boolean sub-criteria, so three possible values: true, false, null.

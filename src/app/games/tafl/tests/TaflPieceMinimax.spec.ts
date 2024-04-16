@@ -2,12 +2,12 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { TaflPawn } from '../TaflPawn';
 import { TablutNode, TablutRules } from '../tablut/TablutRules';
-import { Table } from 'src/app/utils/ArrayUtils';
+import { Table } from 'src/app/jscaip/TableUtils';
 import { TablutMove } from '../tablut/TablutMove';
 import { Minimax } from 'src/app/jscaip/AI/Minimax';
 import { TaflPieceMinimax } from '../TaflPieceMinimax';
 import { TaflConfig } from '../TaflConfig';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { MGPOptional } from '@everyboard/lib';
 import { TaflState } from '../TaflState';
 
 describe('TaflPieceMinimax', () => {

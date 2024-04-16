@@ -1,8 +1,6 @@
 import { Ordinal } from './Ordinal';
-import { MGPFallible } from '../utils/MGPFallible';
-import { Encoder } from '../utils/Encoder';
+import { Encoder, MGPFallible, Utils } from '@everyboard/lib';
 import { Vector } from './Vector';
-import { Utils } from '../utils/utils';
 
 export class CoordFailure {
     public static OUT_OF_RANGE(coord: Coord): string {

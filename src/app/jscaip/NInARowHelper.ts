@@ -1,5 +1,4 @@
-import { MGPMap } from '../utils/MGPMap';
-import { Utils } from '../utils/utils';
+import { MGPMap, Utils } from '@everyboard/lib';
 import { BoardValue } from './AI/BoardValue';
 import { Coord } from './Coord';
 import { Ordinal } from './Ordinal';

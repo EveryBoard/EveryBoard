@@ -1,5 +1,4 @@
-import { MGPMap } from '../utils/MGPMap';
-import { MGPOptional } from '../utils/MGPOptional';
+import { MGPMap, MGPOptional } from '@everyboard/lib';
 import { Player } from './Player';
 import { PlayerNumberTable } from './PlayerNumberTable';
 

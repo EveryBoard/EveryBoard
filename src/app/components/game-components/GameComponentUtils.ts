@@ -1,7 +1,7 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { Orthogonal } from 'src/app/jscaip/Orthogonal';
 import { HexaLayout } from 'src/app/jscaip/HexaLayout';
-import { Utils } from 'src/app/utils/utils';
+import { Utils } from '@everyboard/lib';
 
 interface Limits {
     minX: number;

@@ -6,12 +6,7 @@ import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Orthogonal } from 'src/app/jscaip/Orthogonal';
 import { Ordinal } from 'src/app/jscaip/Ordinal';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { Utils } from 'src/app/utils/utils';
-import { MGPFallible } from 'src/app/utils/MGPFallible';
-import { MGPSet } from 'src/app/utils/MGPSet';
-import { ArrayUtils } from 'src/app/utils/ArrayUtils';
-import { ComparableObject } from 'src/app/utils/Comparable';
+import { ArrayUtils, ComparableObject, MGPFallible, MGPOptional, MGPSet, Utils } from '@everyboard/lib';
 import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 export class DiaballikMoveInConstruction implements ComparableObject {

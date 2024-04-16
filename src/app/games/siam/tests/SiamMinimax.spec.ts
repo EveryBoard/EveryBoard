@@ -4,11 +4,11 @@ import { SiamPiece } from '../SiamPiece';
 import { SiamState } from '../SiamState';
 import { SiamMove } from '../SiamMove';
 import { Orthogonal } from 'src/app/jscaip/Orthogonal';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { Table } from 'src/app/utils/ArrayUtils';
+import { MGPOptional } from '@everyboard/lib';
 import { Minimax } from 'src/app/jscaip/AI/Minimax';
 import { AIDepthLimitOptions } from 'src/app/jscaip/AI/AI';
 import { SiamMinimax } from '../SiamMinimax';
+import { Table } from 'src/app/jscaip/TableUtils';
 
 const _: SiamPiece = SiamPiece.EMPTY;
 const M: SiamPiece = SiamPiece.MOUNTAIN;

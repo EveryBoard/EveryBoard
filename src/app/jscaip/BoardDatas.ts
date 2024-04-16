@@ -1,7 +1,7 @@
-import { Table, TableUtils } from 'src/app/utils/ArrayUtils';
 import { Coord } from 'src/app/jscaip/Coord';
-import { Debug } from '../utils/utils';
 import { Ordinal } from './Ordinal';
+import { Table, TableUtils } from './TableUtils';
+import { Debug } from '../utils/Debug';
 
 export class BoardDatas {
 

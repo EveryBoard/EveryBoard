@@ -1,7 +1,7 @@
-import { MGPFallible } from '../utils/MGPFallible';
+import { MGPFallible } from '@everyboard/lib';
 import { Coord } from './Coord';
-import { Localized } from '../utils/LocaleUtils';
 import { Vector } from './Vector';
+import { Localized } from '../utils/LocaleUtils';
 
 export abstract class Direction extends Vector {
 
