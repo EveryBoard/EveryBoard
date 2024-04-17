@@ -1,4 +1,4 @@
-import { Encoder } from 'src/app/utils/Encoder';
+import { Encoder } from '@everyboard/lib';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 
 export class DiamPiece {

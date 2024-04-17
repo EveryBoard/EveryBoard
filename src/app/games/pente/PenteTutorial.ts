@@ -5,7 +5,7 @@ import { PenteMove } from './PenteMove';
 import { PenteState } from './PenteState';
 import { PenteRules } from './PenteRules';
 import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { MGPOptional } from '@everyboard/lib';
 import { TutorialStepMessage } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
 import { PenteConfig } from './PenteConfig';
 

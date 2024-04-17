@@ -4,7 +4,7 @@ import { PartDAO } from 'src/app/dao/PartDAO';
 import { fakeAsync, TestBed } from '@angular/core/testing';
 import { MGPResult, Part, PartDocument } from 'src/app/domain/Part';
 import { PartDAOMock } from 'src/app/dao/tests/PartDAOMock.spec';
-import { Utils } from 'src/app/utils/utils';
+import { Utils } from '@everyboard/lib';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { FirestoreCollectionObserver } from 'src/app/dao/FirestoreCollectionObserver';
 import { UserMocks } from 'src/app/domain/UserMocks.spec';
@@ -57,6 +57,9 @@ describe('ActivePartsService', () => {
             // Then the new part should have been observed
             expect(seenActiveParts.length).toBe(1);
             expect(seenActiveParts[0].data).toEqual(part);
+            // And it should really be a PartDocument, not just a FirestoreDocument<Part>
+            // hence, it has methods such as getGameName()
+            expect(seenActiveParts[0].getGameName).toBeDefined();
 
             activePartsSubscription.unsubscribe();
         }));

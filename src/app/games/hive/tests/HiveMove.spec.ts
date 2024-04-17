@@ -2,8 +2,7 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { Player } from 'src/app/jscaip/Player';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { MGPFallible } from 'src/app/utils/MGPFallible';
-import { EncoderTestUtils } from 'src/app/utils/tests/Encoder.spec';
+import { EncoderTestUtils, MGPFallible } from '@everyboard/lib';
 import { HiveMove } from '../HiveMove';
 import { HivePiece } from '../HivePiece';
 

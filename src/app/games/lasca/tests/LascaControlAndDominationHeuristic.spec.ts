@@ -1,11 +1,11 @@
 /* eslint-disable max-lines-per-function */
 import { Player } from 'src/app/jscaip/Player';
-import { HeuristicUtils } from 'src/app/jscaip/AI/tests/HeuristicUtils.spec';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { LascaControlPlusDominationHeuristic } from '../LascaControlAndDominationHeuristic';
+import { MGPOptional } from '@everyboard/lib';
 import { LascaPiece, LascaStack, LascaState } from '../LascaState';
 import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 import { LascaRules } from '../LascaRules';
+import { LascaControlPlusDominationHeuristic } from '../LascaControlAndDominationHeuristic';
+import { HeuristicUtils } from 'src/app/jscaip/AI/tests/HeuristicUtils.spec';
 
 describe('LascaControlAndDominationHeuristic', () => {
 

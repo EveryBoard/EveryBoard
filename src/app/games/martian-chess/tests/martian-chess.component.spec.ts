@@ -1,8 +1,8 @@
 /* eslint-disable max-lines-per-function */
 import { fakeAsync } from '@angular/core/testing';
 import { Coord } from 'src/app/jscaip/Coord';
-import { Table } from 'src/app/utils/ArrayUtils';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { Table } from 'src/app/jscaip/TableUtils';
+import { MGPOptional } from '@everyboard/lib';
 import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { MartianChessComponent, MartianChessFace } from '../martian-chess.component';
 import { MartianChessMove } from '../MartianChessMove';

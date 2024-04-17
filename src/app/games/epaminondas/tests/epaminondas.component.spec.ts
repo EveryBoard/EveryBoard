@@ -9,7 +9,7 @@ import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { fakeAsync } from '@angular/core/testing';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { EpaminondasFailure } from '../EpaminondasFailure';
-import { Table } from 'src/app/utils/ArrayUtils';
+import { Table } from 'src/app/jscaip/TableUtils';
 
 describe('EpaminondasComponent', () => {
 

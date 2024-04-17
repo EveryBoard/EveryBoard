@@ -3,7 +3,7 @@ import { SaharaMove } from './SaharaMove';
 import { SaharaState } from './SaharaState';
 import { SaharaNode, SaharaRules } from './SaharaRules';
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
-import { Table } from 'src/app/utils/ArrayUtils';
+import { Table } from 'src/app/jscaip/TableUtils';
 import { PlayerMetricHeuristic } from 'src/app/jscaip/AI/Minimax';
 import { PlayerNumberTable } from 'src/app/jscaip/PlayerNumberTable';
 import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';

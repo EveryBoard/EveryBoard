@@ -16,9 +16,7 @@ import { WelcomeComponent } from './components/normal-component/welcome/welcome.
 import { LocalGameWrapperComponent } from './components/wrapper-components/local-game-wrapper/local-game-wrapper.component';
 import { OnlineGameWrapperComponent } from './components/wrapper-components/online-game-wrapper/online-game-wrapper.component';
 import { TutorialGameWrapperComponent } from './components/wrapper-components/tutorial-game-wrapper/tutorial-game-wrapper.component';
-import { MGPOptional } from './utils/MGPOptional';
-import { Utils } from './utils/utils';
-
+import { MGPOptional, Utils } from '@everyboard/lib';
 import * as Firestore from '@firebase/firestore';
 import * as Auth from '@firebase/auth';
 import { AccountComponent } from './components/normal-component/account/account.component';

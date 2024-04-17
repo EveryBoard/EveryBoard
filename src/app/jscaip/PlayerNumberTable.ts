@@ -1,7 +1,5 @@
-import { MGPOptional } from '../utils/MGPOptional';
 import { Player } from './Player';
-import { ArrayUtils } from '../utils/ArrayUtils';
-import { MGPMap } from 'src/app/utils/MGPMap';
+import { ArrayUtils, MGPMap, MGPOptional } from '@everyboard/lib';
 
 
 export class PlayerNumberTable extends MGPMap<Player, ReadonlyArray<number>> {

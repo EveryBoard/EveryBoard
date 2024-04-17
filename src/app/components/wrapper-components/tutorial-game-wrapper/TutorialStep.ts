@@ -1,8 +1,6 @@
 import { Move } from 'src/app/jscaip/Move';
-import { MGPValidation } from 'src/app/utils/MGPValidation';
+import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 import { GameState } from 'src/app/jscaip/GameState';
-import { assert } from 'src/app/utils/assert';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 export type Click = string;
 
@@ -131,7 +129,7 @@ export class TutorialStepMove extends TutorialStepWithSolution {
                        private readonly failureMessage: string)
     {
         super(title, instruction, state, successMessage);
-        assert(acceptedMoves.length > 0, 'TutorialStepMove: At least one accepted move should be provided, otherwise use TutorialStepInformational');
+        Utils.assert(acceptedMoves.length > 0, 'TutorialStepMove: At least one accepted move should be provided, otherwise use TutorialStepInformational');
     }
 
     public override isMove(): this is TutorialStepMove {

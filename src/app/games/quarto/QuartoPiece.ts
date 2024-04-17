@@ -1,5 +1,4 @@
-import { ComparableObject } from 'src/app/utils/Comparable';
-import { Encoder } from 'src/app/utils/Encoder';
+import { ComparableObject, Encoder } from '@everyboard/lib';
 
 export class QuartoPiece implements ComparableObject {
 

@@ -2,13 +2,10 @@ import { MoveCoordToCoord } from 'src/app/jscaip/MoveCoordToCoord';
 import { Coord } from 'src/app/jscaip/Coord';
 import { SaharaState } from './SaharaState';
 import { TriangularCheckerBoard } from 'src/app/jscaip/TriangularCheckerBoard';
-import { Encoder } from 'src/app/utils/Encoder';
+import { Encoder, MGPFallible, MGPValidation, Utils } from '@everyboard/lib';
 import { SaharaFailure } from './SaharaFailure';
-import { MGPFallible } from 'src/app/utils/MGPFallible';
-import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { MoveWithTwoCoords } from 'src/app/jscaip/MoveWithTwoCoords';
-import { Utils } from 'src/app/utils/utils';
 
 export class SaharaMove extends MoveCoordToCoord {
 

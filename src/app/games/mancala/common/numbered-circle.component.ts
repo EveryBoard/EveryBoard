@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { MGPOptional } from '@everyboard/lib';
 
 @Component({
     selector: '[app-numbered-circle]',

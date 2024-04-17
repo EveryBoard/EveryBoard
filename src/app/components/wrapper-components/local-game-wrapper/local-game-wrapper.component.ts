@@ -7,19 +7,16 @@ import { AbstractNode, GameNodeStats } from 'src/app/jscaip/AI/GameNode';
 import { ConnectedUserService } from 'src/app/services/ConnectedUserService';
 import { GameWrapper } from 'src/app/components/wrapper-components/GameWrapper';
 import { Move } from 'src/app/jscaip/Move';
-import { Debug, Utils } from 'src/app/utils/utils';
+import { MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 import { GameState } from 'src/app/jscaip/GameState';
-import { SuperRules } from 'src/app/jscaip/Rules';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { MGPValidation } from 'src/app/utils/MGPValidation';
-import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { Player } from 'src/app/jscaip/Player';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
-import { AbstractAI, AIOptions, AIStats } from 'src/app/jscaip/AI/AI';
+import { Debug } from 'src/app/utils/Debug';
 import { RulesConfig, RulesConfigUtils } from 'src/app/jscaip/RulesConfigUtil';
+import { AIOptions, AIStats, AbstractAI } from 'src/app/jscaip/AI/AI';
 import { GameInfo } from '../../normal-component/pick-game/pick-game.component';
-import { MGPFallible } from 'src/app/utils/MGPFallible';
+import { SuperRules } from 'src/app/jscaip/Rules';
 
 @Component({
     selector: 'app-local-game-wrapper',
@@ -240,7 +237,7 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
 
     private async handleAIError(playingAI: AbstractAI, illegalMove: Move, error: string): Promise<MGPValidation> {
         this.messageDisplayer.criticalMessage($localize`The AI chose an illegal move! This is an unexpected situation that we logged, we will try to solve this as soon as possible. In the meantime, consider that you won!`);
-        return ErrorLoggerService.logError('LocalGameWrapper', 'AI chose illegal move', {
+        return Utils.logError('LocalGameWrapper', 'AI chose illegal move', {
             game: this.getGameName(),
             name: playingAI.name,
             move: illegalMove.toString(),

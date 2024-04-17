@@ -3,22 +3,18 @@ import { ActivatedRoute } from '@angular/router';
 import { Move } from '../../../jscaip/Move';
 import { SuperRules } from '../../../jscaip/Rules';
 import { Component } from '@angular/core';
-import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { Encoder } from 'src/app/utils/Encoder';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { TutorialStep } from '../../wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { GameState } from 'src/app/jscaip/GameState';
-import { Debug, Utils } from 'src/app/utils/utils';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
-import { ArrayUtils } from 'src/app/utils/ArrayUtils';
+import { ArrayUtils, Encoder, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 import { GameNode } from 'src/app/jscaip/AI/GameNode';
 import { AI, AIOptions } from 'src/app/jscaip/AI/AI';
 import { EmptyRulesConfig, RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
-import { GameInfo } from '../../normal-component/pick-game/pick-game.component';
 import { Coord } from 'src/app/jscaip/Coord';
 import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
+import { Debug } from 'src/app/utils/Debug';
+import { GameInfo } from '../../normal-component/pick-game/pick-game.component';
 
 abstract class BaseComponent {
 
@@ -184,7 +180,7 @@ export abstract class GameComponent<R extends SuperRules<M, S, C, L>,
     public async pass(): Promise<MGPValidation> {
         const gameName: string = this.constructor.name;
         const error: string = `pass() called on a game that does not redefine it`;
-        return ErrorLoggerService.logError('GameComponent', error, { gameName });
+        return Utils.logError('GameComponent', error, { gameName });
     }
 
     public getTurn(): number {
