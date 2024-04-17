@@ -12,7 +12,7 @@ describe('YinshCapture', () => {
         const coords2: Coord[] = [
             new Coord(2, 3), new Coord(3, 3), new Coord(4, 3), new Coord(5, 3),
             new Coord(6, 3), new Coord(7, 3)];
-        expect(() => new YinshCapture(coords2, MGPOptional.of(ringTaken))).toThrowError('YinshCapture must capture exactly 5 pieces');
+        expect(() => new YinshCapture(coords2)).toThrowError('YinshCapture must capture exactly 5 pieces');
     });
 
     describe('of', () => {
@@ -36,11 +36,31 @@ describe('YinshCapture', () => {
     describe('equals', () => {
 
         it('should consider captures with different ring takens not equal', () => {
-            const capture1: YinshCapture =
+            const capture: YinshCapture =
                 YinshCapture.of(new Coord(2, 3), new Coord(6, 3), MGPOptional.of(new Coord(4, 4)));
-            const capture2: YinshCapture =
+            const otherCapture: YinshCapture =
                 YinshCapture.of(new Coord(2, 3), new Coord(6, 3), MGPOptional.of(new Coord(5, 4)));
-            expect(capture1.equals(capture2)).toBeFalse();
+            expect(capture.equals(otherCapture)).toBeFalse();
+        });
+
+        it('should consider captures with different captured coord', () => {
+            const capture: YinshCapture =
+                YinshCapture.of(new Coord(2, 3), new Coord(6, 3), MGPOptional.of(new Coord(4, 4)));
+            const otherCapture: YinshCapture =
+                YinshCapture.of(new Coord(2, 4), new Coord(6, 4), MGPOptional.of(new Coord(4, 4)));
+            expect(capture.equals(otherCapture)).toBeFalse();
+        });
+
+    });
+
+    describe('setRingTaken', () => {
+
+        it('should hey', () => {
+            const captureWithoutRing: YinshCapture = YinshCapture.of(new Coord(2, 3), new Coord(6, 3));
+            const ring: Coord = new Coord(0, 0);
+            const captureWithRing: YinshCapture =
+                YinshCapture.of(new Coord(2, 3), new Coord(6, 3), MGPOptional.of(ring));
+            expect(captureWithoutRing.setRingTaken(ring).equals(captureWithRing)).toBeTrue();
         });
 
     });
@@ -131,13 +151,25 @@ describe('YinshMove', () => {
         });
 
         it('should be defined for moves with captures', () => {
-            const move: YinshMove = new YinshMove([YinshCapture.of(new Coord(2, 3),
-                                                                   new Coord(6, 3),
-                                                                   MGPOptional.of(new Coord(4, 3)))],
-                                                  new Coord(2, 3),
-                                                  MGPOptional.of(new Coord(6, 3)),
-                                                  []);
-            expect(move.toString()).toBe('YinshMove([[(2, 3),(3, 3),(4, 3),(5, 3),(6, 3)]], (2, 3), MGPOptional.of((6, 3)), [])');
+            const move: YinshMove = new YinshMove(
+                [
+                    YinshCapture.of(
+                        new Coord(2, 3),
+                        new Coord(6, 3),
+                        MGPOptional.of(new Coord(4, 3)),
+                    ),
+                    YinshCapture.of(
+                        new Coord(2, 3),
+                        new Coord(6, 3),
+                        MGPOptional.of(new Coord(4, 3)),
+                    ),
+                ],
+                new Coord(2, 3),
+                MGPOptional.of(new Coord(6, 3)),
+                [],
+            );
+            const capture: string = '[(2, 3),(3, 3),(4, 3),(5, 3),(6, 3)]';
+            expect(move.toString()).toBe(`YinshMove([${ capture }, ${ capture}], (2, 3), MGPOptional.of((6, 3)), [])`);
         });
 
     });

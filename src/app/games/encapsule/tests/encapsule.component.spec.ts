@@ -84,6 +84,7 @@ describe('EncapsuleComponent', () => {
             // Then it should be selected
             testUtils.expectElementToExist('#chosenCoord_0_1');
         }));
+
     });
 
     describe('Second click', () => {
@@ -139,6 +140,7 @@ describe('EncapsuleComponent', () => {
         }));
 
         it('should allow moving a piece on top of a smaller one', fakeAsync(async() => {
+            // Given a board with a selected piece movable on top of another one
             const x: EncapsuleSpace = new EncapsuleSpace(PlayerOrNone.NONE, Player.ZERO, PlayerOrNone.NONE);
             const X: EncapsuleSpace = new EncapsuleSpace(PlayerOrNone.NONE, PlayerOrNone.NONE, Player.ZERO);
             const board: EncapsuleSpace[][] = [
@@ -147,11 +149,15 @@ describe('EncapsuleComponent', () => {
                 [_, _, _],
             ];
             await testUtils.setupState(new EncapsuleState(board, P0Turn, []));
-
             await testUtils.expectClickSuccess('#click_1_1');
 
+            // When moving the big piece atop the small one
             const move: EncapsuleMove = EncapsuleMove.ofMove(new Coord(1, 1), new Coord(0, 1));
+
+            // Then it shoud work and the starting and landing coord should be "moved-fill"
             await testUtils.expectMoveSuccess('#click_0_1', move);
+            testUtils.expectElementToHaveClasses('#click_0_1', ['base', 'moved-fill']);
+            testUtils.expectElementToHaveClasses('#click_1_1', ['base', 'moved-fill']);
         }));
 
         it('should forbid moving a piece on top of a bigger one', fakeAsync(async() => {
@@ -224,6 +230,7 @@ describe('EncapsuleComponent', () => {
             // Then it should no longer be selected, and component should not throw
             testUtils.expectElementNotToExist('#chosenCoord_0_1');
         }));
+
     });
 
 });

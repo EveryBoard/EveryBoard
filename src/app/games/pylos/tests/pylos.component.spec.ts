@@ -179,9 +179,6 @@ describe('PylosComponent', () => {
             // Then it should no longer be selected
             testUtils.expectElementNotToHaveClass('#piece_0_0_0', 'selected-stroke');
         }));
-    });
-
-    describe('climbing', () => {
 
         it(`should show as 'left' climbing piece during the capture`, fakeAsync(async() => {
             // Given a board where by climbing you can make a capture
@@ -216,6 +213,10 @@ describe('PylosComponent', () => {
             testUtils.expectElementToExist('#piece_1_1_1');
             testUtils.expectElementToHaveClass('#piece_1_1_1', 'selected-stroke');
         }));
+
+    });
+
+    describe('climbing', () => {
 
         it('should not allow a piece climbing on itself', fakeAsync(async() => {
             // Given a board where a piece could climb on itself then capture
@@ -256,6 +257,7 @@ describe('PylosComponent', () => {
 
             // Then the climb should be legal
             await testUtils.expectMoveSuccess('#drop_0_0_1', move);
+            testUtils.expectElementToHaveClasses('#drop_3_3_0', ['base', 'mid-stroke', 'moved-fill']);
         }));
 
         it('should no longer display unlandable coord', fakeAsync(async() => {

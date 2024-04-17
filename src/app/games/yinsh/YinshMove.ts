@@ -97,14 +97,9 @@ export class YinshMove extends Move {
     }
 
     private capturesToString(captures: ReadonlyArray<YinshCapture>): string {
-        let str: string = '';
-        for (const capture of captures) {
-            if (str !== '') {
-                str += ',';
-            }
-            str += '[' + capture.toString() + ']';
-        }
-        return str;
+        return captures
+            .map((y: YinshCapture) => '[' + y.toString() + ']')
+            .join(', ');
     }
 
 }
