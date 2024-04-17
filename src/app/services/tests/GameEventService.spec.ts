@@ -4,7 +4,7 @@ import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { GameEventService } from '../GameEventService';
 import { PartDAO } from 'src/app/dao/PartDAO';
 import { GameEvent } from 'src/app/domain/Part';
-import { JSONValue } from 'src/app/utils/utils';
+import { JSONValue } from '@everyboard/lib';
 import { PartDAOMock } from 'src/app/dao/tests/PartDAOMock.spec';
 import { IFirestoreDAO } from '../../dao/FirestoreDAO';
 import { UserMocks } from 'src/app/domain/UserMocks.spec';

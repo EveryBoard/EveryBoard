@@ -8,7 +8,7 @@ import { Player } from 'src/app/jscaip/Player';
 import { fakeAsync } from '@angular/core/testing';
 import { DvonnFailure } from 'src/app/games/dvonn/DvonnFailure';
 import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
-import { Table } from 'src/app/utils/ArrayUtils';
+import { Table } from 'src/app/jscaip/TableUtils';
 
 describe('DvonnComponent', () => {
 

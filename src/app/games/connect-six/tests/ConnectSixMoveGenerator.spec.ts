@@ -4,10 +4,10 @@ import { ConnectSixFirstMove, ConnectSixMove } from '../ConnectSixMove';
 import { ConnectSixNode, ConnectSixRules } from '../ConnectSixRules';
 import { ConnectSixState } from '../ConnectSixState';
 import { PlayerOrNone } from 'src/app/jscaip/Player';
-import { Table } from 'src/app/utils/ArrayUtils';
+import { Table } from 'src/app/jscaip/TableUtils';
 import { ConnectSixMoveGenerator } from '../ConnectSixMoveGenerator';
 import { GobanConfig } from 'src/app/jscaip/GobanConfig';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { MGPOptional } from '@everyboard/lib';
 
 describe('ConnectSixMoveGenerator', () => {
 

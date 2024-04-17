@@ -10,19 +10,16 @@ import { ChatDAO } from 'src/app/dao/ChatDAO';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { ConfigRoomDAO } from 'src/app/dao/ConfigRoomDAO';
 import { RouterTestingModule } from '@angular/router/testing';
-import { BlankComponent } from 'src/app/utils/tests/TestUtils.spec';
 import { ConnectedUserService } from '../ConnectedUserService';
 import { ConnectedUserServiceMock } from './ConnectedUserService.spec';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { JSONValue, MGPOptional, MGPValidation, MGPValidationTestUtils } from '@everyboard/lib';
 import { UserMocks } from 'src/app/domain/UserMocks.spec';
 import { Subscription } from 'rxjs';
 import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 import { BackendService } from '../BackendService';
-import { MGPValidation } from 'src/app/utils/MGPValidation';
-import { MGPValidationTestUtils } from 'src/app/utils/tests/MGPValidation.spec';
 import { MinimalUser } from 'src/app/domain/MinimalUser';
-import { JSONValue } from 'src/app/utils/utils';
+import { BlankComponent } from 'src/app/utils/tests/TestUtils.spec';
 
 describe('GameService', () => {
 

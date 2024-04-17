@@ -5,7 +5,7 @@ import { AbaloneMove } from '../AbaloneMove';
 import { AbaloneRules } from '../AbaloneRules';
 import { MoveTestUtils } from 'src/app/jscaip/tests/Move.spec';
 import { AbaloneMoveGenerator } from '../AbaloneMoveGenerator';
-import { TestUtils } from 'src/app/utils/tests/TestUtils.spec';
+import { TestUtils } from '@everyboard/lib';
 
 describe('AbaloneMove', () => {
 

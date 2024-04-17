@@ -1,9 +1,8 @@
 /* eslint-disable max-lines-per-function */
 import { TestBed } from '@angular/core/testing';
-import { expectPermissionToBeDenied, setupEmulators } from 'src/app/utils/tests/TestUtils.spec';
 import { ChatDAO } from '../ChatDAO';
+import { MGPOptional } from '@everyboard/lib';
 import * as FireAuth from '@firebase/auth';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { serverTimestamp } from 'firebase/firestore';
 import { Message, MessageDocument } from 'src/app/domain/Message';
 import { MinimalUser } from 'src/app/domain/MinimalUser';
@@ -12,6 +11,7 @@ import { FirestoreCollectionObserver } from '../FirestoreCollectionObserver';
 import { createConnectedUser } from 'src/app/services/tests/ConnectedUserService.spec';
 import { ChatService } from 'src/app/services/ChatService';
 import { Subscription } from 'rxjs';
+import { expectPermissionToBeDenied, setupEmulators } from 'src/app/utils/tests/TestUtils.spec';
 
 describe('ChatDAO', () => {
 

@@ -2,14 +2,13 @@ import { Component } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { GameNode } from 'src/app/jscaip/AI/GameNode';
 import { Move } from 'src/app/jscaip/Move';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { MGPFallible, MGPOptional } from '@everyboard/lib';
 import { TutorialStep } from '../../wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { GameInfo } from '../pick-game/pick-game.component';
 import { AbstractNode } from 'src/app/jscaip/AI/GameNode';
 import { AbstractRules } from 'src/app/jscaip/Rules';
 import { DemoNodeInfo } from '../../wrapper-components/demo-card-wrapper/demo-card-wrapper.component';
 import { GameState } from 'src/app/jscaip/GameState';
-import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 @Component({

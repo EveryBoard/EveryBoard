@@ -1,12 +1,10 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { GameStateWithTable } from 'src/app/jscaip/GameStateWithTable';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
+import { Table, TableUtils } from 'src/app/jscaip/TableUtils';
+import { ComparableObject, MGPOptional, Utils } from '@everyboard/lib';
 import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
-import { Table, TableUtils } from 'src/app/utils/ArrayUtils';
-import { ComparableObject } from 'src/app/utils/Comparable';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { GoConfig } from './GoRules';
-import { Utils } from 'src/app/utils/utils';
 
 type PieceType = 'alive' | 'dead' | 'territory' | 'empty';
 

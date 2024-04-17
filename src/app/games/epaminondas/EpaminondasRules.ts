@@ -1,5 +1,4 @@
-import { MGPValidation } from 'src/app/utils/MGPValidation';
-import { GameNode } from 'src/app/jscaip/AI/GameNode';
+import { MGPFallible, MGPOptional, MGPValidation } from '@everyboard/lib';
 import { Coord, CoordFailure } from 'src/app/jscaip/Coord';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { ConfigurableRules } from 'src/app/jscaip/Rules';
@@ -7,12 +6,11 @@ import { EpaminondasMove } from './EpaminondasMove';
 import { EpaminondasState } from './EpaminondasState';
 import { EpaminondasFailure } from './EpaminondasFailure';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { Table, TableUtils } from 'src/app/utils/ArrayUtils';
-import { MGPFallible } from 'src/app/utils/MGPFallible';
+import { Table, TableUtils } from 'src/app/jscaip/TableUtils';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { NumberConfig, RulesConfigDescription, RulesConfigDescriptionLocalizable } from 'src/app/components/wrapper-components/rules-configuration/RulesConfigDescription';
 import { MGPValidators } from 'src/app/utils/MGPValidator';
+import { GameNode } from 'src/app/jscaip/AI/GameNode';
 
 export type EpaminondasConfig = {
     width: number;

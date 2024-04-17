@@ -4,7 +4,7 @@ import { ChatDAO } from 'src/app/dao/ChatDAO';
 import { ChatDAOMock } from 'src/app/dao/tests/ChatDAOMock.spec';
 import { fakeAsync, TestBed } from '@angular/core/testing';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { MGPValidation } from 'src/app/utils/MGPValidation';
+import { MGPValidation } from '@everyboard/lib';
 import { Message } from 'src/app/domain/Message';
 import { serverTimestamp } from 'firebase/firestore';
 import { MinimalUser } from 'src/app/domain/MinimalUser';

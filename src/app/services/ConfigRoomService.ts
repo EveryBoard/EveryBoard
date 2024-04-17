@@ -1,15 +1,14 @@
 import { Injectable } from '@angular/core';
 import { FirstPlayer, ConfigRoom, PartStatus, PartType } from '../domain/ConfigRoom';
 import { ConfigRoomDAO } from '../dao/ConfigRoomDAO';
-import { Debug, FirestoreJSONObject } from 'src/app/utils/utils';
-import { MGPOptional } from '../utils/MGPOptional';
+import { FirestoreJSONObject, MGPOptional, MGPValidation } from '@everyboard/lib';
 import { Subscription } from 'rxjs';
-import { MGPValidation } from '../utils/MGPValidation';
 import { MinimalUser } from '../domain/MinimalUser';
 import { FirestoreCollectionObserver } from '../dao/FirestoreCollectionObserver';
 import { FirestoreDocument, IFirestoreDAO } from '../dao/FirestoreDAO';
 import { RulesConfig } from '../jscaip/RulesConfigUtil';
 import { BackendService } from './BackendService';
+import { Debug } from '../utils/Debug';
 
 @Injectable({
     providedIn: 'root',

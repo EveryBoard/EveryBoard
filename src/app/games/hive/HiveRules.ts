@@ -1,19 +1,17 @@
 import { Coord } from 'src/app/jscaip/Coord';
-import { HexagonalUtils } from 'src/app/jscaip/HexagonalUtils';
 import { GameNode } from 'src/app/jscaip/AI/GameNode';
 import { Player } from 'src/app/jscaip/Player';
 import { Rules } from 'src/app/jscaip/Rules';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { MGPValidation } from 'src/app/utils/MGPValidation';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { MGPSet } from 'src/app/utils/MGPSet';
+import { MGPOptional, MGPSet, MGPValidation } from '@everyboard/lib';
 import { HiveFailure } from './HiveFailure';
 import { HiveDropMove, HiveMove, HiveCoordToCoordMove } from './HiveMove';
 import { HivePiece, HivePieceStack } from './HivePiece';
 import { HivePieceRules } from './HivePieceRules';
 import { HiveState } from './HiveState';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
-import { Table } from 'src/app/utils/ArrayUtils';
+import { Table } from 'src/app/jscaip/TableUtils';
+import { HexagonalUtils } from 'src/app/jscaip/HexagonalUtils';
 import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 

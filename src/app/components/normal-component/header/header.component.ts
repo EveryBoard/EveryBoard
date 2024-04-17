@@ -5,7 +5,7 @@ import { Subscription } from 'rxjs';
 import { ConnectedUserService, AuthUser } from 'src/app/services/ConnectedUserService';
 import { CurrentGameService } from 'src/app/services/CurrentGameService';
 import { UserService } from 'src/app/services/UserService';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { MGPOptional } from '@everyboard/lib';
 import { CurrentGame } from 'src/app/domain/User';
 import { Debug } from 'src/app/utils/utils';
 import { GameInfo } from '../pick-game/pick-game.component';

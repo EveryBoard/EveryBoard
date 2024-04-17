@@ -21,7 +21,7 @@ import { UserMocks } from 'src/app/domain/UserMocks.spec';
 import { GameWrapperMessages } from '../GameWrapper';
 import { GameService } from 'src/app/services/GameService';
 import { MinimalUser } from 'src/app/domain/MinimalUser';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { MGPOptional } from '@everyboard/lib';
 
 describe('OnlineGameWrapper for non-existing game', () => {
 

@@ -29,6 +29,8 @@ jobs:
           node-version: 18
       - name: Setup dependencies (install dependencies)
         run: npm ci
+      - name: Build lib
+        run: rm -rf node_modules/@types/glob && cd lib && npm run build
       - name: Setup dependencies (setup dummy Firebase secret)
         run: cp ./src/app/firebaseConfig.ts.dummy ./src/app/firebaseConfig.ts
       - name: Build
@@ -57,10 +59,12 @@ jobs:
           node-version: 18
       - name: Setup dependencies (install dependencies)
         run: npm ci
+      - name: Build lib
+        run: rm -rf node_modules/@types/glob && cd lib && npm run build
       - name: Setup dependencies (setup dummy Firebase secret)
         run: cp ./src/app/firebaseConfig.ts.dummy ./src/app/firebaseConfig.ts
-      - name: Run test suite
-        run: npm run test:ci
+      - name: Run test suites
+        run: npm run libtest:ci && npm run test:ci
       - name: Setup python
         uses: actions/setup-python@v5
         with:
@@ -117,6 +121,8 @@ jobs:
           node-version: 18
       - name: Setup dependencies (install dependencies)
         run: npm ci
+      - name: Build lib
+        run: rm -rf node_modules/@types/glob && cd lib && npm run build
       - name: Setup dependencies (setup dummy Firebase secret)
         run: cp ./src/app/firebaseConfig.ts.dummy ./src/app/firebaseConfig.ts
       - name: Setup python
@@ -151,9 +157,10 @@ jobs:
           node-version: 18
       - name: Setup dependencies (install dependencies)
         run: npm ci
+      - name: Build lib
+        run: rm -rf node_modules/@types/glob && cd lib && npm run build
       - name: Setup dependencies (setup dummy Firebase secret)
         run: cp ./src/app/firebaseConfig.ts.dummy ./src/app/firebaseConfig.ts
-
       - name: Run linter with config
         run: npm run lint
 
@@ -189,9 +196,10 @@ jobs:
           node-version: 18
       - name: Setup dependencies (install dependencies)
         run: npm ci
+      - name: Build lib
+        run: rm -rf node_modules/@types/glob && cd lib && npm run build
       - name: Setup dependencies (setup dummy Firebase secret)
         run: cp ./src/app/firebaseConfig.ts.dummy ./src/app/firebaseConfig.ts
-
       - name: Install python dependencies
         uses: BSFishy/pip-action@v1
         with:
@@ -225,6 +233,8 @@ jobs:
           node-version: 18
       - name: Setup dependencies (install JS dependencies)
         run: npm ci
+      - name: Build lib
+        run: rm -rf node_modules/@types/glob && cd lib && npm run build
       - name: Setup dependencies (setup Firebase secret, master)
         if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' }}
         run: |
@@ -308,6 +318,8 @@ jobs:
           node-version: 18
       - name: Setup dependencies (install dependencies)
         run: npm ci
+      - name: Build lib
+        run: rm -rf node_modules/@types/glob && cd lib && npm run build
       - name: Setup dependencies (setup Firebase secret, others)
         if: ${{ github.ref != 'refs/heads/master'  && github.ref != 'refs/heads/develop' }}
         run: |

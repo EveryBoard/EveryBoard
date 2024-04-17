@@ -28,13 +28,20 @@
 /.angular/cache
 /.sass-cache
 /connect.lock
+/typings
+*.log
+
+# Backend build and coverage files
+/backend/_build/
+/backend/_coverage/
+/backend/games.txt
+
+# Frontend coverage
 /coverage
 ! /coverage/branches.csv
 ! /coverage/functions.csv
 ! /coverage/statements.csv
 ! /coverage/lines.csv
-/typings
-*.log
 
 # System Files
 .DS_Store
@@ -46,7 +53,8 @@ Thumbs.db
 # Local Netlify folder
 .netlify
 
-# Backend build and coverage files
-/backend/_build/
-/backend/_coverage/
-/backend/games.txt
+# Lib stuff
+/lib/tsconfig.tsbuildinfo
+/lib/build/
+/lib/node_modules/
+/lib/dist/

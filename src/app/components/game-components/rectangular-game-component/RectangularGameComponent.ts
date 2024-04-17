@@ -2,7 +2,7 @@ import { Move } from '../../../jscaip/Move';
 import { Component } from '@angular/core';
 import { GameStateWithTable } from 'src/app/jscaip/GameStateWithTable';
 import { GameComponent } from '../game-component/GameComponent';
-import { Table } from 'src/app/utils/ArrayUtils';
+import { Table } from 'src/app/jscaip/TableUtils';
 import { SuperRules } from 'src/app/jscaip/Rules';
 import { EmptyRulesConfig, RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 import { ViewBox } from '../GameComponentUtils';

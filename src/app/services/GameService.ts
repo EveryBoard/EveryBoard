@@ -1,15 +1,14 @@
 import { Injectable } from '@angular/core';
+import { MGPValidation, MGPOptional, JSONValue } from '@everyboard/lib';
 import { PartDAO } from '../dao/PartDAO';
 import { Part } from '../domain/Part';
-import { MGPValidation } from 'src/app/utils/MGPValidation';
-import { Debug, JSONValue } from 'src/app/utils/utils';
-import { MGPOptional } from '../utils/MGPOptional';
 import { Subscription } from 'rxjs';
 import { MinimalUser } from '../domain/MinimalUser';
 import { FirestoreTime } from '../domain/Time';
 import { BackendService } from './BackendService';
 import { PlayerOrNone } from '../jscaip/Player';
 import { PlayerNumberMap } from '../jscaip/PlayerMap';
+import { Debug } from '../utils/Debug';
 
 export interface StartingPartConfig extends Partial<Part> {
     playerZero: MinimalUser,

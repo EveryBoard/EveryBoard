@@ -3,9 +3,8 @@ import { GameEventMove, GameEventAction } from '../../../domain/Part';
 import { CountDownComponent } from '../../normal-component/count-down/count-down.component';
 import { ConfigRoom } from 'src/app/domain/ConfigRoom';
 import { Player } from 'src/app/jscaip/Player';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MinimalUser } from 'src/app/domain/MinimalUser';
-import { Utils } from 'src/app/utils/utils';
+import { MGPOptional, Utils } from '@everyboard/lib';
 import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 
 /**

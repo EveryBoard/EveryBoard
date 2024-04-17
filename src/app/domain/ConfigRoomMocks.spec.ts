@@ -1,6 +1,6 @@
 /* eslint-disable max-lines-per-function */
 import { RulesConfig } from '../jscaip/RulesConfigUtil';
-import { MGPOptional } from '../utils/MGPOptional';
+import { MGPOptional } from '@everyboard/lib';
 import { FirstPlayer, ConfigRoom, PartStatus, PartType } from './ConfigRoom';
 import { UserMocks } from './UserMocks.spec';
 

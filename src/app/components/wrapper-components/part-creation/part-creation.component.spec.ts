@@ -9,7 +9,6 @@ import { LobbyComponent } from '../../normal-component/lobby/lobby.component';
 
 import { ConfigRoomService } from 'src/app/services/ConfigRoomService';
 import { GameService } from 'src/app/services/GameService';
-import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
 import { ErrorLoggerServiceMock } from 'src/app/services/tests/ErrorLoggerServiceMock.spec';
 import { AuthUser, ConnectedUserService } from 'src/app/services/ConnectedUserService';
 import { ConnectedUserServiceMock } from 'src/app/services/tests/ConnectedUserService.spec';
@@ -19,10 +18,8 @@ import { PartDAO } from 'src/app/dao/PartDAO';
 import { ChatDAO } from 'src/app/dao/ChatDAO';
 import { UserDAO } from 'src/app/dao/UserDAO';
 
-import { ActivatedRouteStub } from 'src/app/utils/tests/TestUtils.spec';
-import { expectValidRouting, prepareUnsubscribeCheck, SimpleComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
-import { Utils } from 'src/app/utils/utils';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { ActivatedRouteStub, expectValidRouting, prepareUnsubscribeCheck, SimpleComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
+import { MGPOptional, Utils } from '@everyboard/lib';
 
 import { ConfigRoomMocks } from 'src/app/domain/ConfigRoomMocks.spec';
 import { FirstPlayer, PartStatus, PartType, ConfigRoom } from 'src/app/domain/ConfigRoom';
@@ -290,7 +287,7 @@ describe('PartCreationComponent', () => {
         });
         describe('Candidate/ChosenOpponent removal', () => {
             it('should deselect candidate, remove it, and call logError when a candidate is removed from db', fakeAsync(async() => {
-                spyOn(ErrorLoggerService, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
+                spyOn(Utils, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
                 // Given a part with a candidate that has been chosen
                 awaitComponentInitialization();
                 await mockCandidateArrival();
@@ -306,7 +303,7 @@ describe('PartCreationComponent', () => {
 
                 // Then logError has been called as this is an unusual situation
                 const error: string = 'found no user while observing ' + UserMocks.OPPONENT_MINIMAL_USER.id + ' !';
-                expect(ErrorLoggerService.logError).toHaveBeenCalledOnceWith('PartCreationComponent', error);
+                expect(Utils.logError).toHaveBeenCalledOnceWith('PartCreationComponent', error);
                 // and the candidate has been deselected
                 expectElementNotToExist('#selected_' + UserMocks.OPPONENT.username);
                 // and the candidate has been removed from the lobby

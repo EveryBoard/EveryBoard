@@ -1,6 +1,6 @@
-import { Table } from '../utils/ArrayUtils';
 import { Coord } from './Coord';
 import { GameStateWithTable } from './GameStateWithTable';
+import { Table } from './TableUtils';
 import { TriangularCheckerBoard } from './TriangularCheckerBoard';
 
 export abstract class TriangularGameState<T> extends GameStateWithTable<T> {

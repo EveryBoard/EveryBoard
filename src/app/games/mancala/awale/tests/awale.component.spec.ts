@@ -10,7 +10,7 @@ import { AwaleMoveGenerator } from '../AwaleMoveGenerator';
 import { MancalaConfig } from '../../common/MancalaConfig';
 import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { MancalaDistribution, MancalaMove } from '../../common/MancalaMove';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { MGPOptional } from '@everyboard/lib';
 
 const defaultConfig: MGPOptional<MancalaConfig> = AwaleRules.get().getDefaultRulesConfig();
 

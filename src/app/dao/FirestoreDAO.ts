@@ -1,8 +1,8 @@
-import { Debug, FirestoreJSONObject, Utils } from 'src/app/utils/utils';
-import { MGPOptional } from '../utils/MGPOptional';
+import { FirestoreJSONObject, MGPOptional, Utils } from '@everyboard/lib';
 import * as Firestore from '@firebase/firestore';
 import { FirestoreCollectionObserver } from './FirestoreCollectionObserver';
 import { Subscription } from 'rxjs';
+import { Debug } from '../utils/Debug';
 
 export interface FirestoreDocument<T> {
     id: string

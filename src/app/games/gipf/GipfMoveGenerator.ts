@@ -1,4 +1,4 @@
-import { Table } from 'src/app/utils/ArrayUtils';
+import { Table } from 'src/app/jscaip/TableUtils';
 import { GipfMove, GipfPlacement } from './GipfMove';
 import { GipfState } from './GipfState';
 import { GipfRules, GipfNode } from './GipfRules';

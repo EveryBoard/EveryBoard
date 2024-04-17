@@ -4,20 +4,18 @@ import { ConfigRoomService } from '../ConfigRoomService';
 import { ConfigRoomDAO } from 'src/app/dao/ConfigRoomDAO';
 import { ConfigRoomDAOMock } from 'src/app/dao/tests/ConfigRoomDAOMock.spec';
 import { ConfigRoomMocks } from 'src/app/domain/ConfigRoomMocks.spec';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { MGPValidation } from 'src/app/utils/MGPValidation';
+import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 import { UserMocks } from 'src/app/domain/UserMocks.spec';
 import { MinimalUser } from 'src/app/domain/MinimalUser';
 import { ConnectedUserService } from '../ConnectedUserService';
 import { ConnectedUserServiceMock } from './ConnectedUserService.spec';
 import { RouterTestingModule } from '@angular/router/testing';
-import { BlankComponent } from 'src/app/utils/tests/TestUtils.spec';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { BackendService } from '../BackendService';
 import { IFirestoreDAO } from 'src/app/dao/FirestoreDAO';
 import { FirstPlayer, PartStatus, PartType } from 'src/app/domain/ConfigRoom';
 import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
-import { JSONValue } from 'src/app/utils/utils';
+import { BlankComponent } from 'src/app/utils/tests/TestUtils.spec';
 
 describe('ConfigRoomService', () => {
 
