@@ -4,7 +4,7 @@ import { ConfigRoomService } from '../ConfigRoomService';
 import { ConfigRoomDAO } from 'src/app/dao/ConfigRoomDAO';
 import { ConfigRoomDAOMock } from 'src/app/dao/tests/ConfigRoomDAOMock.spec';
 import { ConfigRoomMocks } from 'src/app/domain/ConfigRoomMocks.spec';
-import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
+import { MGPOptional, MGPValidation } from '@everyboard/lib';
 import { UserMocks } from 'src/app/domain/UserMocks.spec';
 import { MinimalUser } from 'src/app/domain/MinimalUser';
 import { ConnectedUserService } from '../ConnectedUserService';

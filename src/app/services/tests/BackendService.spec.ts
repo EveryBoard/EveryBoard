@@ -5,18 +5,15 @@ import { ConnectedUserServiceMock } from './ConnectedUserService.spec';
 import { AppModule } from 'src/app/app.module';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { ConnectedUserService } from '../ConnectedUserService';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { PartMocks } from 'src/app/domain/PartMocks.spec';
 import { Part } from 'src/app/domain/Part';
 import { UserMocks } from 'src/app/domain/UserMocks.spec';
 import { MinimalUser } from 'src/app/domain/MinimalUser';
-import { JSONValue } from 'src/app/utils/utils';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
-import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { ConfigRoomMocks } from 'src/app/domain/ConfigRoomMocks.spec';
 import { ConfigRoom } from 'src/app/domain/ConfigRoom';
-import { MGPFallible } from 'src/app/utils/MGPFallible';
+import { JSONValue, MGPFallible, MGPOptional, MGPValidation } from '@everyboard/lib';
 
 describe('BackendService', () => {
     let backendService: BackendService;
