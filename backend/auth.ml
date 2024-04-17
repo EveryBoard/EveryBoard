@@ -52,6 +52,7 @@ module Make
             fail `Unauthorized "Authorization token is invalid"
           | uid ->
             try
+              (* Check that the user exists and is verified *)
               let* user = Firestore.User.get request uid in
               if user.verified then begin
                 (* The user has a verified account, so we can finally call the handler *)
