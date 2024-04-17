@@ -53,7 +53,7 @@ describe('CountDownComponent', () => {
         it('should show remaining time once set', () => {
             component.setDuration(62000);
             testUtils.detectChanges();
-            const element: DebugElement = testUtils.findElement('#remainingTime');
+            const element: DebugElement = testUtils.findElement('.remainingTime');
             const timeText: string = element.nativeElement.innerText;
             expect(timeText).toBe('1:02');
         });
@@ -139,11 +139,11 @@ describe('CountDownComponent', () => {
         component.start();
         tick(1000);
         testUtils.detectChanges();
-        let timeText: string = testUtils.findElement('#remainingTime').nativeElement.innerText;
+        let timeText: string = testUtils.findElement('.remainingTime').nativeElement.innerText;
         expect(timeText).toBe('0:02');
         tick(1000);
         testUtils.detectChanges();
-        timeText = testUtils.findElement('#remainingTime').nativeElement.innerText;
+        timeText = testUtils.findElement('.remainingTime').nativeElement.innerText;
         expect(timeText).toBe('0:01');
         component.stop();
     }));
@@ -151,21 +151,21 @@ describe('CountDownComponent', () => {
         spyOn(component.outOfTimeAction, 'emit').and.callThrough();
         component.setDuration((9 * 60 + 59) * 1000 + 501); // 9 minutes 59 sec 501 ms
         testUtils.detectChanges();
-        let timeText: string = testUtils.findElement('#remainingTime').nativeElement.innerText;
+        let timeText: string = testUtils.findElement('.remainingTime').nativeElement.innerText;
         expect(timeText).toBe('9:59');
         component.start();
 
         tick(401); // 9 min 59.501s -> 9 min 59.1 (9:59)
         component.pause();
         testUtils.detectChanges();
-        timeText = testUtils.findElement('#remainingTime').nativeElement.innerText;
+        timeText = testUtils.findElement('.remainingTime').nativeElement.innerText;
         expect(timeText).toBe('9:59');
 
         component.resume();
         tick(200); // 9 min 59.1 -> 9 min 58.9 (9:58)
         component.pause();
         testUtils.detectChanges();
-        timeText = testUtils.findElement('#remainingTime').nativeElement.innerText;
+        timeText = testUtils.findElement('.remainingTime').nativeElement.innerText;
         expect(timeText).toBe('9:58');
     }));
     it('should emit when timeout reached', fakeAsync(() => {
