@@ -1,5 +1,5 @@
 <div [ngClass]="getTimeClass()">
-    <p>{{ displayedMinute }}:{{ displayedSec | number:'2.0-0' }}</p>
+    <p class="data-remaining-time">{{ displayedMinute }}:{{ displayedSec | number:'2.0-0' }}</p>
     <button class="button is-small is-fullwidth"
             *ngIf="canAddTime"
             (click)="addTime()"
