@@ -133,7 +133,6 @@ import { RulesConfigurationComponent } from './components/wrapper-components/rul
 import { BlankGobanComponent } from './components/game-components/goban-game-component/blank-goban/blank-goban.component';
 import { LocaleUtils } from './utils/LocaleUtils';
 
-
 registerLocaleData(localeFr);
 
 export const routes: Route[] = [
