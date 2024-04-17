@@ -8,8 +8,7 @@ module type FIRESTORE_PRIMITIVES = sig
   (** Get a document from its path and return it as a JSON *)
   val get_doc : Dream.request -> string -> JSON.t Lwt.t
 
-  (** Create a document, potentially with a specific id (otherwise an id will be assigned by firestore).
-      In either case, the document id is returned *)
+  (** Create a document from its path and return its id. *)
   val create_doc : Dream.request -> string -> JSON.t -> string Lwt.t
 
   (** Set a document. Like create, but with an id *)
@@ -36,7 +35,6 @@ module Make
 
   let get_doc (request : Dream.request) (path : string) : JSON.t Lwt.t =
     Stats.read request;
-    logger.info (fun log -> log ~request "Getting %s" path);
     let* headers = TokenRefresher.header request in
     let* (response, body) = External.Http.get (endpoint path) headers in
     logger.info (fun log -> log ~request "Response: %s" body);
@@ -44,13 +42,12 @@ module Make
     then raise (DocumentNotFound path)
     else Lwt.return (of_firestore (JSON.from_string body))
 
-  let get_id_from_firestore_document_name (doc : JSON.t) : string =
-    let name = JSON.Util.(doc |> member "name" |> to_string) in
-    let elements = String.split_on_char '/' name in
-    let id = List.nth elements (List.length elements - 1) in
-    id
-
   let create_doc (request : Dream.request) (collection : string) (doc : JSON.t) : string Lwt.t =
+    let get_id_from_firestore_document_name (doc : JSON.t) : string =
+      let name = JSON.Util.(doc |> member "name" |> to_string) in
+      let elements = String.split_on_char '/' name in
+      let id = List.nth elements (List.length elements - 1) in
+      id in
     Stats.write request;
     logger.info (fun log -> log ~request "Creating %s: %s" collection (JSON.to_string doc));
     let* headers = TokenRefresher.header request in
@@ -65,13 +62,12 @@ module Make
     then raise (UnexpectedError (Printf.sprintf "error on document creation for %s: %s" collection body))
     else Lwt.return (get_id_from_firestore_document_name (JSON.from_string body))
 
-  let update_to_fields_and_firestore (update : JSON.t) : string list * JSON.t =
-    let fields = match update with
-      | `Assoc key_values -> List.map fst key_values
-      | _ -> raise (UnexpectedError "invalid update: should be a Assoc") in
-    (fields, to_firestore update)
-
   let update_doc (request : Dream.request) (path : string) (update : JSON.t) : unit Lwt.t =
+    let update_to_fields_and_firestore (update : JSON.t) : string list * JSON.t =
+      let fields = match update with
+        | `Assoc key_values -> List.map fst key_values
+        | _ -> raise (UnexpectedError "invalid update: should be a Assoc") in
+     (fields, to_firestore update) in
     Stats.write request;
     logger.info (fun log -> log ~request "Updating %s with %s" path (JSON.to_string update));
     (* We want only to update what we provide, and we don't care about the response so we provide an empty mask *)

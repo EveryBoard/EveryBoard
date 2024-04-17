@@ -1,4 +1,3 @@
-
 let service_account_file : string ref = ref "service-account.json"
 let address : string ref = ref "0.0.0.0"
 let port : int ref = ref 8081

@@ -1,8 +1,7 @@
 open Utils
 open DreamUtils
 
-let ( >>= ) = Result.bind
-
+(** The /config-room/ endpoint, dealing mostly with part creation *)
 module type CONFIG_ROOM = sig
   val routes : Dream.route list
 end
@@ -13,6 +12,7 @@ module Make
     (Firestore : Firestore.FIRESTORE)
     (Stats : Stats.STATS)
     : CONFIG_ROOM = struct
+  let ( >>= ) = Result.bind (* for convenience *)
 
   (** Join a game. Perform 1 read and up to 1 write *)
   let join_game : Dream.route =
@@ -101,6 +101,7 @@ module Make
     let* _ = Firestore.ConfigRoom.update request game_id update in
     Dream.empty `OK
 
+  (** Change a config room. Done by dispatching to one of the functions defined above *)
   let change : Dream.route =
     Dream.post "config-room/:game_id" @@ fun request ->
     match Dream.query request "action" with

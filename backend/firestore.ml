@@ -1,10 +1,10 @@
 open Utils
 
-(** A getter takes a contextual request and an id, and returns the document if found, and raises an error otherwise *)
+(** A getter takes a contextual request and an id. It returns the document if found, and raises an error otherwise *)
 type 'a getter = Dream.request -> string -> 'a Lwt.t
 (** An updater takes a contextual request, an id, and a document update. It updates the corresponding document *)
 type updater = Dream.request -> string -> JSON.t -> unit Lwt.t
-(** A deleter takes a contextual request and an id, and deletes the corresponding document *)
+(** A deleter takes a contextual request and an id. It deletes the corresponding document *)
 type deleter = Dream.request -> string -> unit Lwt.t
 
 (** This is the high-level firestore operations for the various data types *)
@@ -60,7 +60,6 @@ module type FIRESTORE = sig
 
   end
 
-
   module Chat : sig
     (** Create an initial chat root *)
     val create : Dream.request -> string -> unit Lwt.t
@@ -73,7 +72,7 @@ end
 
 module Make (FirestorePrimitives : FirestorePrimitives.FIRESTORE_PRIMITIVES) : FIRESTORE = struct
 
-
+  (* Generic version of get that retrieves a document at a given path *)
   let get (request : Dream.request) (path : string) (of_yojson : JSON.t -> ('a, 'b) result) : 'a Lwt.t =
     let get_or_fail doc (maybe_value : ('a, 'b) result)  : 'a =
       match maybe_value with

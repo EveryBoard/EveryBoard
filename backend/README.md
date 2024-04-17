@@ -1,5 +1,7 @@
 EveryBoard's backend
 
+It is build in OCaml with Dream's HTTP server.
+
 To build:
 
 ```sh

@@ -1,6 +1,8 @@
 open Utils
 open Domain
 
+(** This module is used for telemetry: we record the number of reads/writes per endpoint.
+    It will make it easier with this information to know which endpoints should be optimized *)
 module type STATS = sig
   (** Remember which action we are doing in order to track reads and writes *)
   val set_action : Dream.request -> string -> unit

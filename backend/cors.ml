@@ -2,8 +2,8 @@ open Utils
 
 (** This middleware is used for Cross-Origin Request Sharing (CORS). It lets the
     clients know which HTTP methods are authorized when they do preflight
-    requests. We have to allow CORS requests because the backend and frontend
-    are not on the same domain (i.e., origin). *)
+    requests (i.e., OPTIONS). We have to allow CORS requests because the backend
+    and frontend are not on the same domain (i.e., origin). *)
 let middleware : Dream.middleware = fun handler request ->
   let headers = [
     ("Access-Control-Allow-Origin", !Options.frontend_origin);

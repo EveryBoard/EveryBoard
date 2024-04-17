@@ -2,22 +2,7 @@ open Utils
 open DreamUtils
 open Domain
 
-let ( >>= ) = Result.bind
-
-let read_file filename =
-    let ch = open_in_bin filename in
-    let s = really_input_string ch (in_channel_length ch) in
-    close_in ch;
-    s
-
-let games_list = read_file "games.txt"
-               |> String.split_on_char '\n'
-               |> List.filter (fun x -> String.length x > 0)
-
-let json_response (status : Dream.status) (response : JSON.t) : Dream.response Lwt.t =
-  let headers = [("Content-Type", "application/json")] in
-  Dream.respond ~headers ~status (JSON.to_string response)
-
+(** The /game/ endpoint, dealing with ongoing games *)
 module type GAME = sig
   val routes : Dream.route list
 end
@@ -28,6 +13,24 @@ module Make
     (Firestore : Firestore.FIRESTORE)
     (Stats : Stats.STATS)
     : GAME = struct
+
+  let ( >>= ) = Result.bind (* for convenience *)
+
+  (* The list of available games *)
+  let games_list =
+    let read_file filename =
+      let ch = open_in_bin filename in
+      let s = really_input_string ch (in_channel_length ch) in
+      close_in ch;
+      s in
+    read_file "games.txt"
+    |> String.split_on_char '\n'
+    |> List.filter (fun x -> String.length x > 0)
+
+  (* Respond with some JSON to the client *)
+  let json_response (status : Dream.status) (response : JSON.t) : Dream.response Lwt.t =
+    let headers = [("Content-Type", "application/json")] in
+    Dream.respond ~headers ~status (JSON.to_string response)
 
   (** Create a game. Perform 3 writes. *)
   let create : Dream.route = Dream.post "game" @@ fun request ->

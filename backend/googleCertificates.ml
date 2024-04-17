@@ -1,12 +1,13 @@
 open Utils
 
+(** This module deals with fetching Google certificates, needed by Firebase *)
 module type GOOGLE_CERTIFICATES = sig
 
-  val get : unit -> (string * CryptoUtils.public_key) list Lwt.t
   (** Retrieve the Google certificates. Uses cached versions if there are any *)
+  val get : unit -> (string * CryptoUtils.public_key) list Lwt.t
 
-  val clear : unit -> unit
   (** Clear the cached certificates. Useful for tests only *)
+  val clear : unit -> unit
 end
 
 module Make (External : External.EXTERNAL) : GOOGLE_CERTIFICATES = struct
