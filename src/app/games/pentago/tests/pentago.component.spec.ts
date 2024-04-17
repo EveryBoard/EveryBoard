@@ -132,7 +132,7 @@ describe('PentagoComponent', () => {
             await testUtils.expectMoveSuccess('#rotate-3-clockwise', move);
 
             // Then block should be displayed as last move
-            testUtils.expectElementToHaveClasses('#block-1-1', ['base-no-fill', 'last-move-stroke']);
+            testUtils.expectElementToHaveClasses('#block-1-1', ['base', 'no-fill', 'last-move-stroke']);
             testUtils.expectElementToHaveClasses('#last-rotation-3-clockwise', ['no-fill', 'last-move-stroke']);
             testUtils.expectElementToHaveClasses('#click-3-5', ['base', 'player0-fill', 'last-move-stroke']);
         }));
@@ -141,7 +141,7 @@ describe('PentagoComponent', () => {
             await testUtils.expectClickSuccess('#click-0-5');
             const move: PentagoMove = PentagoMove.withRotation(0, 5, 2, false);
             await testUtils.expectMoveSuccess('#rotate-2-counterclockwise', move);
-            testUtils.expectElementToHaveClasses('#block-0-1', ['base-no-fill', 'last-move-stroke']);
+            testUtils.expectElementToHaveClasses('#block-0-1', ['base', 'no-fill', 'last-move-stroke']);
             testUtils.expectElementToHaveClasses('#click-2-5', ['base', 'player0-fill', 'last-move-stroke']);
         }));
 
@@ -159,7 +159,7 @@ describe('PentagoComponent', () => {
             await testUtils.expectClickSuccess('#click-0-1');
             const move: PentagoMove = PentagoMove.withRotation(0, 1, 1, false);
             await testUtils.expectMoveSuccess('#rotate-1-counterclockwise', move);
-            testUtils.expectElementToHaveClasses('#block-1-0', ['base-no-fill', 'last-move-stroke']);
+            testUtils.expectElementToHaveClasses('#block-1-0', ['base', 'no-fill', 'last-move-stroke']);
             testUtils.expectElementToHaveClasses('#click-0-1', ['base', 'player1-fill', 'last-move-stroke']);
         }));
     });
