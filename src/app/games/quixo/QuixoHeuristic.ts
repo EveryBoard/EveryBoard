@@ -4,10 +4,8 @@ import { QuixoMove } from './QuixoMove';
 import { PlayerMetricHeuristic } from 'src/app/jscaip/AI/Minimax';
 import { PlayerNumberTable } from 'src/app/jscaip/PlayerNumberTable';
 import { QuixoNode, QuixoRules } from './QuixoRules';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { NumberMap } from 'src/app/utils/NumberMap';
+import { MGPMap, MGPOptional, NumberMap } from '@everyboard/lib';
 import { PlayerMap } from 'src/app/jscaip/PlayerMap';
-import { MGPMap } from 'src/app/utils/MGPMap';
 
 export class QuixoHeuristic extends PlayerMetricHeuristic<QuixoMove, QuixoState, QuixoConfig> {
 

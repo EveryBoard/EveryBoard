@@ -1,8 +1,8 @@
 /* eslint-disable max-lines-per-function */
 import { Coord } from 'src/app/jscaip/Coord';
 import { Player } from 'src/app/jscaip/Player';
-import { Table } from 'src/app/utils/ArrayUtils';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { Table } from 'src/app/jscaip/TableUtils';
+import { MGPOptional } from '@everyboard/lib';
 import { DvonnMove } from '../DvonnMove';
 import { DvonnMoveGenerator } from '../DvonnMoveGenerator';
 import { DvonnPieceStack } from '../DvonnPieceStack';

@@ -21,7 +21,7 @@ export class SquarzTutorial extends Tutorial {
 
         TutorialStep.informational(
             $localize`Squarz`,
-            $localize`Squarz is board control game. Here is the initial state. The goal is to have the most piece at the end of the game.`,
+            $localize`Squarz is board control game. Here is the initial state. The goal is to have the most pieces at the end of the game.`,
             initialState,
         ),
 
@@ -88,7 +88,7 @@ export class SquarzTutorial extends Tutorial {
         ).withPreviousMove(SquarzMove.from(new Coord(1, 1), new Coord(3, 3)).get()),
         TutorialStep.fromPredicate(
             $localize`End of the game`,
-            $localize`When one player cannot play, the game ends, and the player with the most piece wins. Here, you can do a final move and win.<br/><br/>You're playing Light, do it.`,
+            $localize`When one player cannot play, the game ends, and the player with the most pieces wins. Here, you can do a final move and win.<br/><br/>You're playing Light, do it.`,
             new SquarzState([
                 [X, X, X, X, X, X, X, X],
                 [O, O, O, O, O, O, O, O],

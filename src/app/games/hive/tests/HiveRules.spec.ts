@@ -3,15 +3,13 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { Player } from 'src/app/jscaip/Player';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
-import { Table } from 'src/app/utils/ArrayUtils';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { MGPSet } from 'src/app/utils/MGPSet';
+import { Table } from 'src/app/jscaip/TableUtils';
+import { MGPOptional, MGPSet, Utils } from '@everyboard/lib';
 import { HiveFailure } from '../HiveFailure';
 import { HiveMove, HiveCoordToCoordMove } from '../HiveMove';
 import { HivePiece } from '../HivePiece';
 import { HiveNode, HiveRules } from '../HiveRules';
 import { HiveState } from '../HiveState';
-import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
 import { ErrorLoggerServiceMock } from 'src/app/services/tests/ErrorLoggerServiceMock.spec';
 import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 
@@ -614,7 +612,7 @@ describe('HiveRules', () => {
         });
 
         it('should forbid moving the spider by a regular move instead of a spider move', () => {
-            spyOn(ErrorLoggerService, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
+            spyOn(Utils, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
             // Given a board with a spider
             const board: Table<HivePiece[]> = [
                 [[Q], [S], [q]],
@@ -627,7 +625,7 @@ describe('HiveRules', () => {
 
             // Then it should fail and an error should be logged
             expect(() => rules.isLegal(move, state)).toThrow();
-            expect(ErrorLoggerService.logError).toHaveBeenCalledWith('Assertion failure', 'HiveSpiderRules: move should be a spider move');
+            expect(Utils.logError).toHaveBeenCalledWith('Assertion failure', 'HiveSpiderRules: move should be a spider move', undefined);
         });
 
         it('should allow the spider to move by 3 spaces', () => {

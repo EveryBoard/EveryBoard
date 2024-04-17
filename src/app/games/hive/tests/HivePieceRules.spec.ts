@@ -2,8 +2,8 @@
 
 import { Coord } from 'src/app/jscaip/Coord';
 import { Player } from 'src/app/jscaip/Player';
-import { Table } from 'src/app/utils/ArrayUtils';
-import { MGPValidation } from '../../../utils/MGPValidation';
+import { Table } from 'src/app/jscaip/TableUtils';
+import { MGPValidation } from '@everyboard/lib';
 import { HiveMove } from '../HiveMove';
 import { HivePiece } from '../HivePiece';
 import { HivePieceRules, HiveSpiderRules } from '../HivePieceRules';

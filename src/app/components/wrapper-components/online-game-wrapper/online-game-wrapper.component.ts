@@ -12,12 +12,8 @@ import { CurrentGame } from '../../../domain/User';
 import { GameWrapper, GameWrapperMessages } from '../GameWrapper';
 import { ConfigRoom } from 'src/app/domain/ConfigRoom';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { MGPValidation } from 'src/app/utils/MGPValidation';
-import { Debug, JSONValue, Utils } from 'src/app/utils/utils';
-import { AbstractRules, SuperRules } from 'src/app/jscaip/Rules';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { JSONValue, MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 import { GameState } from 'src/app/jscaip/GameState';
-import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { GameInfo } from '../../normal-component/pick-game/pick-game.component';
 import { Localized } from 'src/app/utils/LocaleUtils';
@@ -31,6 +27,8 @@ import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { OGWCRequestManagerService, RequestInfo } from './OGWCRequestManagerService';
 import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { Debug } from 'src/app/utils/Debug';
+import { AbstractRules, SuperRules } from 'src/app/jscaip/Rules';
 
 export class OnlineGameWrapperMessages {
 

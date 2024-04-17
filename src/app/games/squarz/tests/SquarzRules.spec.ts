@@ -175,7 +175,7 @@ describe('SquarzRules', () => {
 
     describe('gameStatus', () => {
 
-        it('should give victory to player with the most piece once board is full', () => {
+        it('should give victory to player with the most pieces once board is full', () => {
             // Given a full board mostly owned by Player.ZERO
             const state: SquarzState = new SquarzState([
                 [O, O, O, O, O, O, X, X],
@@ -192,7 +192,7 @@ describe('SquarzRules', () => {
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, defaultConfig);
         });
 
-        it('should give victory to player with the most piece once current player can no longer play', () => {
+        it('should give victory to player with the most pieces once current player can no longer play', () => {
             // Given a board mostly owned by Player.ONE, and Player.ZERO cannot move
             const state: SquarzState = new SquarzState([
                 [_, _, _, X, X, X, O, O],

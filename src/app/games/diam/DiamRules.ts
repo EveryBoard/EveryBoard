@@ -3,15 +3,13 @@ import { GameNode } from 'src/app/jscaip/AI/GameNode';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { Rules } from 'src/app/jscaip/Rules';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { ArrayUtils, Table, TableUtils } from 'src/app/utils/ArrayUtils';
-import { MGPValidation } from 'src/app/utils/MGPValidation';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { Table, TableUtils } from 'src/app/jscaip/TableUtils';
+import { ArrayUtils, MGPValidation, MGPOptional, Utils } from '@everyboard/lib';
 import { DiamFailure } from './DiamFailure';
 import { DiamMove, DiamMoveDrop, DiamMoveShift } from './DiamMove';
 import { DiamPiece } from './DiamPiece';
 import { DiamState } from './DiamState';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
-import { Utils } from 'src/app/utils/utils';
 import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 export class DiamNode extends GameNode<DiamMove, DiamState> {}

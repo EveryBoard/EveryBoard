@@ -1,6 +1,5 @@
 /* eslint-disable max-lines-per-function */
-import { EncoderTestUtils } from 'src/app/utils/tests/Encoder.spec';
-import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
+import { EncoderTestUtils, Utils } from '@everyboard/lib';
 import { ErrorLoggerServiceMock } from 'src/app/services/tests/ErrorLoggerServiceMock.spec';
 import { YinshPiece } from '../YinshPiece';
 
@@ -27,14 +26,14 @@ describe('YinshPiece', () => {
     });
 
     it('should forbid flipping a non-player piece', () => {
-        spyOn(ErrorLoggerService, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
+        spyOn(Utils, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
         // Given a non-player piece
         const piece: YinshPiece = YinshPiece.EMPTY;
         // When trying to flip it
         // Then it should fail
         const message: string = 'cannot flip a non-player piece';
         expect(() => piece.flip()).toThrowError('Assertion failure: ' + message);
-        expect(ErrorLoggerService.logError).toHaveBeenCalledWith('Assertion failure', message);
+        expect(Utils.logError).toHaveBeenCalledWith('Assertion failure', message, undefined);
     });
 
 });

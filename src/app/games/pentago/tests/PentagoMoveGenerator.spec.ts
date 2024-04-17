@@ -1,7 +1,7 @@
 /* eslint-disable max-lines-per-function */
 import { PlayerOrNone } from 'src/app/jscaip/Player';
-import { Table } from 'src/app/utils/ArrayUtils';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { Table } from 'src/app/jscaip/TableUtils';
+import { MGPOptional } from '@everyboard/lib';
 import { PentagoMove } from '../PentagoMove';
 import { PentagoMoveGenerator } from '../PentagoMoveGenerator';
 import { PentagoNode, PentagoRules } from '../PentagoRules';

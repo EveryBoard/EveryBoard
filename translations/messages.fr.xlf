@@ -3737,7 +3737,7 @@
         <target>Longueur d'un saut</target>
       </trans-unit>
       <trans-unit id="2875926120657969888" datatype="html">
-        <source>Squarz is board control game. Here is the initial state. The goal is to have the most piece at the end of the game.</source>
+        <source>Squarz is board control game. Here is the initial state. The goal is to have the most pieces at the end of the game.</source>
         <target>Squarz est un jeu de contrôle de plateau. Voici le plateau initial. Le but est d'avoir une majorité de vos pièces sur le plateau à la fin de la partie.</target>
       </trans-unit>
       <trans-unit id="5489405522962962283" datatype="html">
@@ -3860,7 +3860,7 @@
         <target>Quand une de vos pièces arrive sur une case voisine d'un adversaire, ces pièces changent de couleur.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, faite un tel mouvement.</target>
       </trans-unit>
       <trans-unit id="8185889618290318299" datatype="html">
-        <source>When one player cannot play, the game ends, and the player with the most piece wins. Here, you can do a final move and win.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Light, do it.</source>
+        <source>When one player cannot play, the game ends, and the player with the most pieces wins. Here, you can do a final move and win.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Light, do it.</source>
         <target>Quand un des joueur ne peut pas jouer, la partie finit, et le jouueur avec le plus de pièces gagne. Ici, vous pouvez faire le dernier mouvement et gagner.&lt;br/&gt;&lt;br/&gt;Vous jouez Clair, faites-le !</target>
       </trans-unit>
       <trans-unit id="3808135421251943457" datatype="html">

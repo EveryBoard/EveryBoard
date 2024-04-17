@@ -1,14 +1,14 @@
 /* eslint-disable max-lines-per-function */
-import { Table } from 'src/app/utils/ArrayUtils';
-import { HeuristicUtils } from 'src/app/jscaip/AI/tests/HeuristicUtils.spec';
+import { Table } from 'src/app/jscaip/TableUtils';
 import { CoerceoState } from '../CoerceoState';
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { MGPOptional } from '@everyboard/lib';
 import { Player } from 'src/app/jscaip/Player';
 import { CoerceoCapturesAndFreedomHeuristic } from '../CoerceoCapturesAndFreedomHeuristic';
 import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 import { CoerceoRules } from '../CoerceoRules';
+import { HeuristicUtils } from 'src/app/jscaip/AI/tests/HeuristicUtils.spec';
 
 const _: FourStatePiece = FourStatePiece.EMPTY;
 const N: FourStatePiece = FourStatePiece.UNREACHABLE;

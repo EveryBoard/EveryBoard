@@ -3,12 +3,9 @@ import { P4Move } from 'src/app/games/p4/P4Move';
 import { GameNode } from '../AI/GameNode';
 import { Rules } from '../Rules';
 import { GameStateWithTable } from '../GameStateWithTable';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { MGPValidation } from '../../utils/MGPValidation';
 import { GameStatus } from '../GameStatus';
-import { JSONValue } from 'src/app/utils/utils';
+import { JSONValue, MGPFallible, MGPOptional, MGPValidation } from '@everyboard/lib';
 import { RulesUtils } from './RulesUtils.spec';
-import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { NoConfig, RulesConfig } from '../RulesConfigUtil';
 
 class AbstractState extends GameStateWithTable<number> {}

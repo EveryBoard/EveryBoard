@@ -5,12 +5,12 @@ import { KamisadoMove } from '../KamisadoMove';
 import { KamisadoState } from '../KamisadoState';
 import { KamisadoPiece } from '../KamisadoPiece';
 import { KamisadoNode, KamisadoRules } from '../KamisadoRules';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { MGPOptional } from '@everyboard/lib';
 import { Player } from 'src/app/jscaip/Player';
 import { KamisadoFailure } from '../KamisadoFailure';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
-import { Table } from 'src/app/utils/ArrayUtils';
+import { Table } from 'src/app/jscaip/TableUtils';
 import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 describe('KamisadoRules', () => {

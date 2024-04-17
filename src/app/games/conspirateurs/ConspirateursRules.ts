@@ -4,15 +4,12 @@ import { GameNode } from 'src/app/jscaip/AI/GameNode';
 import { PlayerOrNone } from 'src/app/jscaip/Player';
 import { Rules } from 'src/app/jscaip/Rules';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { MGPFallible } from 'src/app/utils/MGPFallible';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { MGPValidation } from '../../utils/MGPValidation';
+import { MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 import { ConspirateursFailure } from './ConspirateursFailure';
 import { ConspirateursMove, ConspirateursMoveDrop, ConspirateursMoveJump, ConspirateursMoveSimple } from './ConspirateursMove';
 import { ConspirateursState } from './ConspirateursState';
-import { TableUtils } from 'src/app/utils/ArrayUtils';
+import { TableUtils } from 'src/app/jscaip/TableUtils';
 import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
-import { Utils } from 'src/app/utils/utils';
 import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 
 export class ConspirateursNode extends GameNode<ConspirateursMove, ConspirateursState> {}

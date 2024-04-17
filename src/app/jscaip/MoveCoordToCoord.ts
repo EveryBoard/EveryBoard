@@ -1,6 +1,6 @@
 import { Coord } from './Coord';
 import { Direction } from './Direction';
-import { MGPFallible } from '../utils/MGPFallible';
+import { MGPFallible } from '@everyboard/lib';
 import { RulesFailure } from './RulesFailure';
 import { MoveWithTwoCoords } from './MoveWithTwoCoords';
 

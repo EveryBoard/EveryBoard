@@ -4,7 +4,7 @@ import { P4State } from '../P4State';
 import { Minimax } from 'src/app/jscaip/AI/Minimax';
 import { P4Config, P4Node, P4Rules } from '../P4Rules';
 import { P4Minimax } from '../P4Minimax';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { MGPOptional } from '@everyboard/lib';
 
 describe('P4Minimax', () => {
 

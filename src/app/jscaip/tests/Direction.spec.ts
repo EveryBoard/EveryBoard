@@ -1,6 +1,5 @@
 /* eslint-disable max-lines-per-function */
-import { MGPFallible } from 'src/app/utils/MGPFallible';
-import { MGPValidation } from '../../utils/MGPValidation';
+import { MGPFallible, MGPValidation } from '@everyboard/lib';
 import { Coord } from '../Coord';
 import { Direction, DirectionFailure, Orthogonal } from '../Direction';
 

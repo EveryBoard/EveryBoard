@@ -3,8 +3,7 @@ import { Type } from '@angular/core';
 import { fakeAsync } from '@angular/core/testing';
 import { Coord } from 'src/app/jscaip/Coord';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { Encoder } from 'src/app/utils/Encoder';
-import { EncoderTestUtils } from 'src/app/utils/tests/Encoder.spec';
+import { Encoder, EncoderTestUtils, MGPFallible, MGPOptional } from '@everyboard/lib';
 import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { TaflComponent } from '../tafl.component';
 import { TaflFailure } from '../TaflFailure';
@@ -14,8 +13,6 @@ import { TaflRules } from '../TaflRules';
 import { TaflState } from '../TaflState';
 import { RulesConfigUtils } from 'src/app/jscaip/RulesConfigUtil';
 import { TaflConfig } from '../TaflConfig';
-import { MGPFallible } from 'src/app/utils/MGPFallible';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 export class TaflTestEntries<C extends TaflComponent<R, M>,
                              R extends TaflRules<M>,
