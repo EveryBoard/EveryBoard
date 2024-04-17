@@ -1,15 +1,13 @@
 import { Injectable } from '@angular/core';
 import { ConnectedUserService } from './ConnectedUserService';
-import { Debug, JSONValue, Utils } from '../utils/utils';
 import { environment } from 'src/environments/environment';
-import { MGPFallible } from '../utils/MGPFallible';
-import { MGPOptional } from '../utils/MGPOptional';
 import { Part } from '../domain/Part';
 import { MinimalUser } from '../domain/MinimalUser';
 import { Player, PlayerOrNone } from '../jscaip/Player';
-import { MGPValidation } from '../utils/MGPValidation';
 import { PlayerNumberMap } from '../jscaip/PlayerMap';
 import { ConfigRoom } from '../domain/ConfigRoom';
+import { Debug } from '../utils/Debug';
+import { JSONValue, MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
 type HTTPMethod = 'POST' | 'GET' | 'PATCH' | 'HEAD' | 'DELETE';
 

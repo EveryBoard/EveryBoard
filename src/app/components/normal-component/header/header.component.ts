@@ -7,7 +7,6 @@ import { CurrentGameService } from 'src/app/services/CurrentGameService';
 import { UserService } from 'src/app/services/UserService';
 import { MGPOptional } from '@everyboard/lib';
 import { CurrentGame } from 'src/app/domain/User';
-import { Debug } from 'src/app/utils/utils';
 import { GameInfo } from '../pick-game/pick-game.component';
 
 @Component({
@@ -34,7 +33,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
                        public currentGameService: CurrentGameService,
                        public userService: UserService)
     {
-        Debug.enableLog([true, false], 'BackendService');
     }
     public ngOnInit(): void {
         this.userSubscription = this.connectedUserService.subscribeToUser((user: AuthUser) => {
