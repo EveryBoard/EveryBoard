@@ -1,1 +1,0 @@
-{"version":3,"file":"ObservableSubject.js","sourceRoot":"","sources":["../src/ObservableSubject.ts"],"names":[],"mappings":";;;AAIA,MAAa,iBAAiB;IAEf;IACA;IAFX,YACW,OAA2B,EAC3B,UAAyB;QADzB,YAAO,GAAP,OAAO,CAAoB;QAC3B,eAAU,GAAV,UAAU,CAAe;IACpC,CAAC;IACM,MAAM;QACT,MAAM,IAAI,KAAK,CAAC,+BAA+B,CAAC,CAAC;IACrD,CAAC;CACJ;AARD,8CAQC"}
