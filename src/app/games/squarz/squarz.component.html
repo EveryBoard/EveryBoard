@@ -25,4 +25,13 @@
             />
         </g>
     </g>
+    <rect *ngFor="let move of moves"
+          (click)="onClick(move.getSecond().x, move.getSecond().y)"
+          [attr.transform]="getTranslation(move.getSecond())"
+          [attr.x]="SPACE_SIZE / 3"
+          [attr.y]="SPACE_SIZE / 3"
+          [attr.width]="SPACE_SIZE / 3"
+          [attr.height]="SPACE_SIZE / 3"
+          [attr.fill]="move.isDuplication() ? 'green' : 'red'"
+    />
 </svg>

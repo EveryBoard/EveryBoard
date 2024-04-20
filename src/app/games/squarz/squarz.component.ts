@@ -31,6 +31,8 @@ export class SquarzComponent extends RectangularGameComponent<SquarzRules,
     private movedPieces: Coord[] = [];
     private captured: Coord[] = [];
 
+    public moves: SquarzMove[] = [];
+
     public selected: MGPOptional<Coord> = MGPOptional.empty();
 
     public constructor(messageDisplayer: MessageDisplayer) {
@@ -78,6 +80,7 @@ export class SquarzComponent extends RectangularGameComponent<SquarzRules,
 
     public override cancelMoveAttempt(): void {
         this.selected = MGPOptional.empty();
+        this.moves = [];
     }
 
     public async onClick(x: number, y: number): Promise<MGPValidation> {
@@ -114,7 +117,11 @@ export class SquarzComponent extends RectangularGameComponent<SquarzRules,
         }
 
         this.selected = MGPOptional.of(coord);
+        this.showIndicators();
         return MGPValidation.SUCCESS;
+    }
+    private showIndicators(): void {
+        this.moves = this.rules.getPossiblesMoves(this.getState(), this.selected.get(), this.getConfig());
     }
 
     private async chooseDestination(x: number, y: number): Promise<MGPValidation> {
