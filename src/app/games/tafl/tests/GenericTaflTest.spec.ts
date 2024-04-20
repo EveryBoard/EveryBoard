@@ -154,13 +154,13 @@ export function DoTaflTests<C extends TaflComponent<R, M>,
                 await testUtils.expectClickSuccess('#click_' + playersCoord);
 
                 // When clicking on it again
-                await testUtils.expectClickSuccess('#click_' + playersCoord);
+                await testUtils.expectClickFailure('#click_' + playersCoord);
 
                 // Then that piece should be deselected
                 testUtils.expectElementNotToHaveClass('#piece_' + playersCoord, 'selected-stroke');
             }));
 
-            it('should cancelMove when trying to jump over another piece', fakeAsync(async() => {
+            it('should cancel the move when trying to jump over another piece', fakeAsync(async() => {
                 // Given a state where first click selected one of your pieces
                 await testUtils.setupState(entries.stateReadyForJumpOver);
                 const firstCoord: string = entries.jumpOver.getStart().x + '_' + entries.jumpOver.getStart().y;

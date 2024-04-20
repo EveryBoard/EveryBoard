@@ -146,7 +146,7 @@ export class DiamComponent extends GameComponent<DiamRules, DiamMove, DiamState>
         const clickedPiece: DiamPiece = this.getState().getPieceAt(clicked);
         if (clickedPiece.owner === this.getCurrentPlayer()) {
             if (this.isSelected(null, clicked)) {
-                await this.cancelMoveAttempt();
+                return this.cancelMove();
             } else {
                 this.selected = MGPOptional.of({ type: 'pieceFromBoard', position: clicked });
             }

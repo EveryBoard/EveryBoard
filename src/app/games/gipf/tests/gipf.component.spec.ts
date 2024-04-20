@@ -508,7 +508,7 @@ describe('GipfComponent', () => {
         await testUtils.expectClickSuccess('#click_6_3');
 
         // When clicking on it again
-        await testUtils.expectClickSuccess('#click_6_3');
+        await testUtils.expectClickFailure('#click_6_3');
 
         // Then it should no longer be selected
         expect(testUtils.getGameComponent().arrows.length).toBe(0);

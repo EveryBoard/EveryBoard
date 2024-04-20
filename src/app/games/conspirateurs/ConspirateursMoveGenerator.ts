@@ -10,7 +10,7 @@ import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 export class ConspirateursMoveGenerator extends MoveGenerator<ConspirateursMove, ConspirateursState> {
 
     public override getListMoves(node: ConspirateursNode, _config: NoConfig): ConspirateursMove[] {
-        if (node.gameState.turn < 40) {
+        if (node.gameState.turn < ConspirateursRules.NUMBER_OF_PIECES) {
             return this.getListMovesDrop(node.gameState);
         } else {
             return this.getListMovesAfterDrop(node.gameState);
@@ -54,7 +54,7 @@ export class ConspirateursMoveGenerator extends MoveGenerator<ConspirateursMove,
             new Coord(coord.x + 1, coord.y - 1),
             new Coord(coord.x - 1, coord.y + 1),
             new Coord(coord.x - 1, coord.y - 1),
-        ].filter((coord: Coord) => state.isOnBoard(coord));
+        ].filter((c: Coord) => state.isOnBoard(c));
         for (const target of targets) {
             const move: MGPFallible<ConspirateursMoveSimple> = ConspirateursMoveSimple.from(coord, target);
             if (move.isSuccess() && ConspirateursRules.get().simpleMoveLegality(move.get(), state).isSuccess()) {

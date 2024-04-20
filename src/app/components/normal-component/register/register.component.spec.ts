@@ -38,9 +38,11 @@ describe('RegisterComponent', () => {
         router = TestBed.inject(Router);
         connectedUserService = TestBed.inject(ConnectedUserService);
     }));
+
     it('should create', () => {
         expect(testUtils.getComponent()).toBeTruthy();
     });
+
     it('should register, send email verification, and navigate to verification page upon success', fakeAsync(async() => {
         spyOn(router, 'navigate').and.callThrough();
         spyOn(connectedUserService, 'doRegister').and.resolveTo(MGPFallible.success(user));
@@ -57,8 +59,8 @@ describe('RegisterComponent', () => {
         expect(connectedUserService.sendEmailVerification).toHaveBeenCalledWith();
         expect(connectedUserService.doRegister).toHaveBeenCalledWith(username, email, password);
     }));
+
     it('should show a message upon registration failure', fakeAsync(async() => {
-        const router: Router = TestBed.inject(Router);
         spyOn(router, 'navigate').and.callThrough();
 
         // Given some user
@@ -74,8 +76,8 @@ describe('RegisterComponent', () => {
         expect(getShownError()).toBe(error);
         expect(router.navigate).not.toHaveBeenCalled();
     }));
+
     it('should show a message if verification email fails to be sent', fakeAsync(async() => {
-        const router: Router = TestBed.inject(Router);
         spyOn(router, 'navigate').and.callThrough();
 
         // Given some user
@@ -92,8 +94,8 @@ describe('RegisterComponent', () => {
         expect(getShownError()).toBe(error);
         expect(router.navigate).not.toHaveBeenCalled();
     }));
+
     it('should fail if the email is not given', fakeAsync(async() => {
-        const router: Router = TestBed.inject(Router);
         spyOn(router, 'navigate').and.callThrough();
 
         // Given some user that does not provide an email address
@@ -108,8 +110,8 @@ describe('RegisterComponent', () => {
         expect(getShownError()).toBe(`There are missing fields in the registration form, please check that you filled in all fields.`);
         expect(router.navigate).not.toHaveBeenCalled();
     }));
+
     it('should fail if the username is not given', fakeAsync(async() => {
-        const router: Router = TestBed.inject(Router);
         spyOn(router, 'navigate').and.callThrough();
 
         // Given some user that does not provide a username
@@ -124,8 +126,8 @@ describe('RegisterComponent', () => {
         expect(getShownError()).toBe(`There are missing fields in the registration form, please check that you filled in all fields.`);
         expect(router.navigate).not.toHaveBeenCalled();
     }));
+
     it('should fail if the password is not given', fakeAsync(async() => {
-        const router: Router = TestBed.inject(Router);
         spyOn(router, 'navigate').and.callThrough();
 
         // Given some user that does not provide a password
@@ -140,6 +142,7 @@ describe('RegisterComponent', () => {
         expect(getShownError()).toBe(`There are missing fields in the registration form, please check that you filled in all fields.`);
         expect(router.navigate).not.toHaveBeenCalled();
     }));
+
     it('should dynamically validate password', fakeAsync(async() => {
         // Given some user
         // When it fills in a password that is too short
@@ -149,7 +152,9 @@ describe('RegisterComponent', () => {
         // Then the help indicator is colored red
         testUtils.expectElementToHaveClass('#passwordHelp', 'is-danger');
     }));
+
     describe('google registration', () => {
+
         it('should delegate registration with google to auth service', fakeAsync(async() => {
             // Given a google user
             spyOn(connectedUserService, 'doGoogleLogin').and.resolveTo(MGPValidation.SUCCESS);
@@ -160,6 +165,7 @@ describe('RegisterComponent', () => {
             // Then the corresponding service method is called
             expect(connectedUserService.doGoogleLogin).toHaveBeenCalledWith();
         }));
+
         it('should show an error if registration fails', fakeAsync(async() => {
             // Given a user that will fail to register
             spyOn(connectedUserService, 'doGoogleLogin').and.resolveTo(MGPValidation.failure('Error message'));
@@ -170,5 +176,7 @@ describe('RegisterComponent', () => {
             // Then the error message is shown
             expect(getShownError()).toEqual('Error message');
         }));
+
     });
+
 });

@@ -101,7 +101,7 @@ describe('QuixoComponent', () => {
             await testUtils.expectClickSuccess('#click_0_0');
 
             // When clicking on it again
-            await testUtils.expectClickSuccess('#click_0_0');
+            await testUtils.expectClickFailure('#click_0_0');
 
             // Then it should no longer be selected
             testUtils.expectElementNotToHaveClass('#click_0_0', 'selected-stroke');

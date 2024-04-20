@@ -240,7 +240,7 @@ describe('DiamComponent', () => {
             await testUtils.expectClickSuccess('#click_7_0');
 
             // When clicking on it again
-            await testUtils.expectClickSuccess('#click_7_0');
+            await testUtils.expectClickFailure('#click_7_0');
 
             // Then it should no longer be marked as selected
             testUtils.expectElementNotToHaveClass('#click_7_0', 'selected-stroke');

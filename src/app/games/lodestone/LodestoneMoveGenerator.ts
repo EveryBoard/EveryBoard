@@ -20,8 +20,8 @@ export class LodestoneMoveGenerator extends MoveGenerator<LodestoneMove, Lodesto
                         LodestoneRules.get().applyMoveWithoutPlacingCaptures(state, coord, { direction, orientation });
                     const captures: Coord[] = infos.captures;
                     const numberOfCaptures: number = captures.length;
-                    for (const captures of this.captureCombinations(state, numberOfCaptures)) {
-                        moves.push(new LodestoneMove(coord, direction, orientation, captures));
+                    for (const captureCombination of this.captureCombinations(state, numberOfCaptures)) {
+                        moves.push(new LodestoneMove(coord, direction, orientation, captureCombination));
                     }
                 }
             }

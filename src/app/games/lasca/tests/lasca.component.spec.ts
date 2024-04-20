@@ -42,16 +42,6 @@ describe('LascaComponent', () => {
             testUtils.expectElementToHaveClass('#square_5_3', 'selectable-fill');
         }));
 
-        it('should highlight piece that can move this turn (when step moves)', () => {
-            // Given a board where current player can move 4 pieces (for example, the starting board)
-            // When displaying the board
-            // Then those 3 coord should be "selectable-fill"
-            testUtils.expectElementToHaveClass('#square_0_4', 'selectable-fill');
-            testUtils.expectElementToHaveClass('#square_2_4', 'selectable-fill');
-            testUtils.expectElementToHaveClass('#square_4_4', 'selectable-fill');
-            testUtils.expectElementToHaveClass('#square_6_4', 'selectable-fill');
-        });
-
         it('should highlight piece that can move this turn (when forced capture)', fakeAsync(async() => {
             // Given a board where current player have 3 "mobile" pieces but one must capture
             const state: LascaState = LascaState.of([
@@ -106,6 +96,29 @@ describe('LascaComponent', () => {
             testUtils.expectElementToHaveClass('#square_4_4_piece_0', 'selected-stroke');
         }));
 
+        it('should hide last move when selecting stack', fakeAsync(async() => {
+            // Given a board with a last move
+            const previousState: LascaState = LascaRules.get().getInitialState();
+            const previousMove: LascaMove = LascaMove.fromStep(new Coord(2, 4), new Coord(3, 3)).get();
+            const state: LascaState = LascaState.of([
+                [_v, __, _v, __, _v, __, _v],
+                [__, _v, __, _v, __, _v, __],
+                [_v, __, _v, __, _v, __, _v],
+                [__, __, __, _u, __, __, __],
+                [_u, __, __, __, _u, __, _u],
+                [__, _u, __, _u, __, _u, __],
+                [_u, __, _u, __, _u, __, _u],
+            ], 1);
+            await testUtils.setupState(state, { previousState, previousMove });
+
+            // When selecting stack
+            await testUtils.expectClickSuccess('#coord_4_2');
+
+            // Then start and end coord of last move should not be highlighted
+            testUtils.expectElementNotToHaveClass('#square_2_4', 'moved-fill');
+            testUtils.expectElementNotToHaveClass('#square_3_3', 'moved-fill');
+        }));
+
     });
 
     describe('second click', () => {
@@ -136,7 +149,7 @@ describe('LascaComponent', () => {
             testUtils.expectElementToHaveClass('#square_4_4_piece_0', 'selected-stroke');
 
             // When clicking on the selected piece again
-            await testUtils.expectClickSuccess('#coord_4_4');
+            await testUtils.expectClickFailure('#coord_4_4');
 
             // Then the piece should no longer be selected
             testUtils.expectElementNotToHaveClass('#square_4_4_piece_0', 'selected-stroke');
@@ -148,7 +161,7 @@ describe('LascaComponent', () => {
             testUtils.expectElementToHaveClass('#square_4_4_piece_0', 'selected-stroke');
 
             // When clicking on the selected piece again
-            await testUtils.expectClickSuccess('#coord_4_4');
+            await testUtils.expectClickFailure('#coord_4_4');
 
             // Then the possible first choices should be shown again
             testUtils.expectElementToHaveClass('#square_0_4', 'selectable-fill');
@@ -291,8 +304,8 @@ describe('LascaComponent', () => {
             testUtils.detectChanges();
 
             // Then the square at (2, 2) should be coord (4, 4)
-            testUtils.expectElementToExist('#square_at_2_2 #square_4_4');
-            testUtils.expectElementNotToExist('#square_at_2_2 #square_2_2');
+            testUtils.expectTranslationYToBe('#coord_4_4', 200);
+            testUtils.expectTranslationYToBe('#coord_2_2', 400);
         }));
 
         it('should not duplicate highlight when doing incorrect second click', fakeAsync(async() => {
@@ -311,18 +324,17 @@ describe('LascaComponent', () => {
             testUtils.expectElementNotToHaveClass('#square_6_4', 'selectable-fill');
         }));
 
-        it('should show lastMove reversed', fakeAsync(async() => {
-            // Given a board shown from Player.ONE's point of view
+        it('should show last move reversed', fakeAsync(async() => {
+            // Given a board with a last move
             await testUtils.expectClickSuccess('#coord_4_4');
             const move: LascaMove = LascaMove.fromStep(new Coord(4, 4), new Coord(3, 3)).get();
             await testUtils.expectMoveSuccess('#coord_3_3', move);
+
+            // When reversing the board view
             await testUtils.getWrapper().setRole(Player.ONE);
 
-            // When clicking on one of your piece
-            await testUtils.expectClickSuccess('#coord_2_2');
-
             // Then the last move should be shown at the expected place
-            testUtils.expectElementToHaveClass('#square_at_4_4 #square_2_2', 'moved-fill');
+            testUtils.expectTranslationYToBe('#coord_2_2', 400);
         }));
     });
 
@@ -364,6 +376,16 @@ describe('LascaComponent', () => {
             // Then it should show possible selections
             testUtils.expectElementToExist('.selectable-fill');
         }));
+
+        it('should highlight piece that can move this turn (when step moves)', () => {
+            // Given a board where current player can move 4 pieces (for example, the starting board)
+            // When displaying the board
+            // Then those 4 coords should be "selectable-fill"
+            testUtils.expectElementToHaveClass('#square_0_4', 'selectable-fill');
+            testUtils.expectElementToHaveClass('#square_2_4', 'selectable-fill');
+            testUtils.expectElementToHaveClass('#square_4_4', 'selectable-fill');
+            testUtils.expectElementToHaveClass('#square_6_4', 'selectable-fill');
+        });
 
         it('should not show possible selections for opponent', fakeAsync(async() => {
             // Given a state

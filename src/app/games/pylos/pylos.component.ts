@@ -102,8 +102,7 @@ export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosSt
             return this.cancelMove(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT());
         }
         if (this.chosenStartingCoord.equalsValue(clickedCoord)) {
-            this.cancelMoveAttempt();
-            return MGPValidation.SUCCESS;
+            return this.cancelMove();
         }
         if (this.chosenLandingCoord.isPresent()) {
             // Starting to select capture
@@ -321,9 +320,6 @@ export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosSt
             15 - repartition.get(Player.ZERO),
             15 - repartition.get(Player.ONE),
         );
-        this.highCapture = MGPOptional.empty();
-        this.cancelMoveAttempt();
-        this.hideLastMove();
     }
 
     public override async showLastMove(move: PylosMove): Promise<void> {

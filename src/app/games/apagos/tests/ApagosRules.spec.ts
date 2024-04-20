@@ -75,7 +75,7 @@ describe('ApagosRules', () => {
     });
 
     it('should refuse to drop when there is no longer enough pieces', () => {
-        // Given a board with all piece of Player.ZERO on the board
+        // Given a board with all pieces of Player.ZERO on the board
         const state: ApagosState = ApagosState.fromRepresentation(10, [
             [6, 0, 3, 1],
             [0, 0, 0, 0],

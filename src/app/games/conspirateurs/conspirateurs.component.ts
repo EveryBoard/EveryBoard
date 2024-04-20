@@ -27,7 +27,6 @@ interface SquareInfo {
     coord: Coord,
     squareClasses: string[],
     shelterClasses: string[],
-    pieceClasses: string[],
     hasPieceToDraw: boolean,
     isShelter: boolean,
     isOccupiedShelter: boolean,
@@ -58,6 +57,13 @@ export class ConspirateursComponent extends GameComponent<ConspirateursRules, Co
 
     private jumpInConstruction: MGPOptional<ConspirateursMoveJump> = MGPOptional.empty();
 
+    public lastMoveArrow: MGPOptional<string> = MGPOptional.empty();
+
+    private lastDrop: MGPOptional<Coord> = MGPOptional.empty();
+    private lastJump: MGPOptional<ConspirateursMoveJump> = MGPOptional.empty();
+    private lastStep: MGPOptional<ConspirateursMoveSimple> = MGPOptional.empty();
+    private victoriousCoords: Coord[] = [];
+
     public constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
         this.setRulesAndNode('Conspirateurs');
@@ -77,7 +83,6 @@ export class ConspirateursComponent extends GameComponent<ConspirateursRules, Co
         const state: ConspirateursState = this.getState();
         this.viewInfo.dropPhase = state.isDropPhase();
         this.viewInfo.boardInfo = [];
-        this.viewInfo.lastMoveArrow = '';
         for (let y: number = 0; y < state.getHeight(); y++) {
             this.viewInfo.boardInfo.push([]);
             for (let x: number = 0; x < state.getWidth(); x++) {
@@ -87,7 +92,6 @@ export class ConspirateursComponent extends GameComponent<ConspirateursRules, Co
                     coord,
                     squareClasses: [],
                     shelterClasses: ['no-fill'],
-                    pieceClasses: [this.getPlayerClass(content)],
                     hasPieceToDraw: content.isPlayer(),
                     isShelter: false,
                     isOccupiedShelter: false,
@@ -107,15 +111,10 @@ export class ConspirateursComponent extends GameComponent<ConspirateursRules, Co
                 const jumpStart: Coord = jump.getStartingCoord();
                 const jumpCurrent: Coord = jump.getEndingCoord();
                 this.viewInfo.boardInfo[jumpStart.y][jumpStart.x].hasPieceToDraw = false;
-                this.viewInfo.boardInfo[jumpCurrent.y][jumpCurrent.x].pieceClasses =
-                    [this.getPlayerClass(this.getCurrentPlayer()), 'selected-stroke'];
                 this.viewInfo.boardInfo[jumpCurrent.y][jumpCurrent.x].hasPieceToDraw = true;
                 for (const coord of jump.coords) {
                     this.viewInfo.boardInfo[coord.y][coord.x].squareClasses.push('moved-fill');
                 }
-            } else {
-                const selected: Coord = this.selected.get();
-                this.viewInfo.boardInfo[selected.y][selected.x].pieceClasses.push('selected-stroke');
             }
         }
     }
@@ -124,6 +123,7 @@ export class ConspirateursComponent extends GameComponent<ConspirateursRules, Co
         const state: ConspirateursState = this.getState();
         const gameStatus: GameStatus = ConspirateursRules.get().getGameStatus(this.node);
         const gameFinished: boolean = gameStatus.isEndGame === true;
+        this.victoriousCoords = [];
         for (const shelter of ConspirateursState.ALL_SHELTERS) {
             const squareInfo: SquareInfo = this.viewInfo.boardInfo[shelter.y][shelter.x];
             const owner: PlayerOrNone = state.getPieceAt(shelter);
@@ -132,39 +132,117 @@ export class ConspirateursComponent extends GameComponent<ConspirateursRules, Co
             if (shelterBelongToWinner || spaceIsOccupiedButNobodyWon)
             {
                 squareInfo.shelterClasses.push('selectable-stroke');
-                squareInfo.pieceClasses.push('victory-stroke');
+                // squareInfo.pieceClasses.push('victory-stroke');
+                this.victoriousCoords.push(shelter);
                 squareInfo.squareClasses.push('victory-fill');
             }
         }
     }
 
+    public hasPieceToDraw(x: number, y: number): boolean {
+        const coord: Coord = new Coord(x, y);
+        if (this.isStartingCoordOfMovingPiece(coord)) {
+            return false;
+        }
+        return this.getState().getPieceAt(coord).isPlayer() ||
+               this.isLandingCoordOfMovingPiece(coord);
+    }
+
+    private isStartingCoordOfMovingPiece(coord: Coord): boolean {
+        return this.jumpInConstruction.isPresent() &&
+               this.jumpInConstruction.get().getStartingCoord().equals(coord);
+    }
+
+    private isLandingCoordOfMovingPiece(coord: Coord): boolean {
+        return this.jumpInConstruction.isPresent() &&
+               this.jumpInConstruction.get().getEndingCoord().equals(coord);
+    }
+
+    public getPieceClasses(x: number, y: number): string[] {
+        const coord: Coord = new Coord(x, y);
+        const piece: PlayerOrNone = this.getState().getPieceAt(coord);
+        const classes: string[] = [
+            this.getPlayerClass(piece),
+        ];
+        if (this.selected.equalsValue(coord)) {
+            classes.push('selected-stroke');
+        }
+        if (this.jumpInConstruction.isPresent() &&
+            this.jumpInConstruction.get().coords.some((c: Coord) => c.equals(coord)))
+        {
+            const currentPlayerFill: string = this.getPlayerClass(this.getCurrentPlayer());
+            classes.push('selected-stroke', currentPlayerFill);
+        }
+        if (this.victoriousCoords.some((c: Coord) => c.equals(coord))) {
+            classes.push('victory-stroke');
+        }
+        return classes;
+    }
+
+    public getSpaceClasses(x: number, y: number): string[] {
+        const coord: Coord = new Coord(x, y);
+        if (this.isPartOfJumpInProgress(coord) ||
+            this.isPartOfLastMove(coord))
+        {
+            return ['moved-fill'];
+        } else if (this.victoriousCoords.some((c: Coord) => c.equals(coord))) {
+            return ['victory-fill'];
+        } else {
+            return [];
+        }
+    }
+
+    private isPartOfLastMove(coord: Coord): boolean {
+        return this.lastDrop.equalsValue(coord) ||
+               this.isPartOfLastJump(coord) ||
+               this.isPartOfLastStep(coord);
+    }
+
+    private isPartOfLastStep(coord: Coord): boolean {
+        return this.lastStep.isPresent() &&
+               this.lastStep.get().getCoords().some((c: Coord) => c.equals(coord));
+    }
+
+    private isPartOfLastJump(coord: Coord): boolean {
+        return this.lastJump.isPresent() &&
+               this.lastJump.get().coords.some((c: Coord) => c.equals(coord));
+    }
+
+    private isPartOfJumpInProgress(coord: Coord): boolean {
+        return this.jumpInConstruction.isPresent() &&
+               this.jumpInConstruction.get().coords.some((c: Coord) => c.equals(coord));
+    }
+
     public override async showLastMove(move: ConspirateursMove): Promise<void> {
         if (ConspirateursMove.isDrop(move)) {
-            this.viewInfo.boardInfo[move.coord.y][move.coord.x].squareClasses.push('moved-fill');
+            this.lastDrop = MGPOptional.of(move.coord);
         } else if (ConspirateursMove.isSimple(move)) {
-            this.viewInfo.boardInfo[move.getStart().y][move.getStart().x].squareClasses.push('moved-fill');
-            this.viewInfo.boardInfo[move.getEnd().y][move.getEnd().x].squareClasses.push('moved-fill');
+            this.lastStep = MGPOptional.of(move);
         } else {
-            this.viewInfo.lastMoveArrow = '';
+            let lastMoveArrow: string = '';
             for (const coord of move.coords) {
                 this.viewInfo.boardInfo[coord.y][coord.x].squareClasses.push('moved-fill');
-                this.viewInfo.lastMoveArrow += (coord.x * this.SPACE_SIZE) + this.SPACE_SIZE/2 + this.STROKE_WIDTH;
-                this.viewInfo.lastMoveArrow += ' ';
-                this.viewInfo.lastMoveArrow += (coord.y * this.SPACE_SIZE) + this.SPACE_SIZE/2 + this.STROKE_WIDTH;
-                this.viewInfo.lastMoveArrow += ' ';
+                lastMoveArrow += (coord.x * this.SPACE_SIZE) + this.SPACE_SIZE/2 + this.STROKE_WIDTH;
+                lastMoveArrow += ' ';
+                lastMoveArrow += (coord.y * this.SPACE_SIZE) + this.SPACE_SIZE/2 + this.STROKE_WIDTH;
+                lastMoveArrow += ' ';
             }
+            this.lastMoveArrow = MGPOptional.of(lastMoveArrow);
+            this.lastJump = MGPOptional.of(move);
         }
     }
 
     public override hideLastMove(): void {
-        // Not really needed here because of the recalculation of this.viewInfo at every updateBoard.
-        // Update board actually hide last move by default (by... not drawing it!)
+        this.lastMoveArrow = MGPOptional.empty();
+        this.lastDrop = MGPOptional.empty();
+        this.lastJump = MGPOptional.empty();
+        this.lastStep = MGPOptional.empty();
     }
 
     public override async cancelMoveAttempt(): Promise<void> {
+
         this.jumpInConstruction = MGPOptional.empty();
         this.selected = MGPOptional.empty();
-        await this.updateBoard(false);
     }
 
     public async onClick(coord: Coord): Promise<MGPValidation> {
@@ -177,7 +255,7 @@ export class ConspirateursComponent extends GameComponent<ConspirateursRules, Co
         const piece: PlayerOrNone = state.getPieceAt(coord);
         if (state.getPieceAt(coord) === this.getCurrentPlayer()) {
             if (this.selected.equalsValue(coord)) {
-                await this.cancelMoveAttempt();
+                return this.cancelMove();
             } else {
                 this.selected = MGPOptional.of(coord);
                 this.jumpInConstruction = MGPOptional.empty();

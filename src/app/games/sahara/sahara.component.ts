@@ -66,8 +66,7 @@ export class SaharaComponent extends TriangularGameComponent<SaharaRules,
         const currentPlayer: Player = this.getState().getCurrentPlayer();
         const player: FourStatePiece = FourStatePiece.ofPlayer(currentPlayer);
         if (this.chosenCoord.equalsValue(new Coord(x, y))) {
-            this.cancelMoveAttempt();
-            return MGPValidation.SUCCESS;
+            return this.cancelMove();
         } else if (this.chosenCoord.isAbsent() ||
                   this.board[y][x] === player)
         { // Must select pyramid

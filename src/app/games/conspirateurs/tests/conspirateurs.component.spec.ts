@@ -79,6 +79,17 @@ describe('ConspirateursComponent', () => {
             testUtils.expectElementToExist('#sidePiece_1_19');
         }));
 
+        it('should highlight last drop', fakeAsync(async() => {
+            // Given a board with a last-drop
+            const move: ConspirateursMove = ConspirateursMoveDrop.of(new Coord(7, 7));
+            await testUtils.expectMoveSuccess('#click_7_7', move);
+
+            // When rendering it
+            // Then last drop should be displayed
+            testUtils.expectElementToHaveClasses('#space_7_7', ['base', 'moved-fill']);
+            testUtils.expectElementToHaveClasses('#piece_7_7', ['base', 'player0-fill']);
+        }));
+
     });
 
     describe('move phase', () => {
@@ -103,8 +114,8 @@ describe('ConspirateursComponent', () => {
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-            ], 42);
-            await testUtils.setupState(state);
+            ], 40);
+            await testUtils.setupState(state, { previousMove: ConspirateursMoveDrop.of(new Coord(5, 5)) });
         });
 
         it('should cancel jump when clicking on another piece of the player', fakeAsync(async() => {
@@ -116,18 +127,29 @@ describe('ConspirateursComponent', () => {
             await testUtils.expectClickSuccess('#click_7_5');
 
             // Then the new piece should be selected
-            testUtils.expectElementToHaveClass('#piece_7_5', 'selected-stroke');
+            testUtils.expectElementToHaveClasses('#piece_7_5', ['base', 'player0-fill', 'selected-stroke']);
+        }));
+
+        it('should show correctly piece style during move', fakeAsync(async() => {
+            // Given a move on which a piece is selected
+            await testUtils.expectClickSuccess('#click_5_4');
+
+            // When doing the first part of the multi-jump move
+            await testUtils.expectClickSuccess('#click_5_2');
+
+            // Then the landing coord should be displayed all nicely
+            testUtils.expectElementToHaveClasses('#piece_5_2', ['base', 'player0-fill', 'selected-stroke']);
         }));
 
         it('should not allow selecting an empty space', fakeAsync(async() => {
             // When clicking on an empty space
-            // Then the click should be rejected
+            // Then it should fail
             await testUtils.expectClickFailure('#click_0_0', RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY());
         }));
 
         it('should forbid selecting a piece of the opponent', fakeAsync(async() => {
             // When clicking on a piece of the opponent
-            // Then the click should be rejected
+            // Then it should fail
             await testUtils.expectClickFailure('#click_5_5', RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT());
         }));
 
@@ -139,6 +161,19 @@ describe('ConspirateursComponent', () => {
             // Then the simple move should be performed
             const move: ConspirateursMoveSimple = ConspirateursMoveSimple.from(new Coord(5, 4), new Coord(4, 4)).get();
             await testUtils.expectMoveSuccess('#click_4_4', move);
+        }));
+
+        it('should display last move (simple move)', fakeAsync(async() => {
+            // Given a board with a simple move possible
+            await testUtils.expectClickSuccess('#click_5_4');
+            const move: ConspirateursMoveSimple = ConspirateursMoveSimple.from(new Coord(5, 4), new Coord(4, 4)).get();
+
+            // When doing simple move
+            await testUtils.expectMoveSuccess('#click_4_4', move);
+
+            // Then it should be highlighted
+            testUtils.expectElementToHaveClasses('#space_5_4', ['base', 'moved-fill']);
+            testUtils.expectElementToHaveClasses('#space_4_4', ['base', 'moved-fill']);
         }));
 
         it('should forbid illegal simple moves', fakeAsync(async() => {
@@ -170,6 +205,60 @@ describe('ConspirateursComponent', () => {
             await testUtils.expectMoveSuccess('#click_7_2', move);
         }));
 
+        it('should show last move after move is finished', fakeAsync(async() => {
+            // When doing move
+            await testUtils.expectClickSuccess('#click_5_4');
+            await testUtils.expectClickSuccess('#click_5_2');
+            const move: ConspirateursMoveJump =
+                ConspirateursMoveJump.from([new Coord(5, 4), new Coord(5, 2), new Coord(7, 2)]).get();
+            await testUtils.expectMoveSuccess('#click_7_2', move);
+
+            // Then last move should be displyed
+            testUtils.expectElementToExist('#lastJump');
+        }));
+
+        it('should hide last move when doing a click (jump)', fakeAsync(async() => {
+            // Given a board in move phase with a last move (jump)
+            await testUtils.expectClickSuccess('#click_5_4');
+            await testUtils.expectClickSuccess('#click_5_2');
+            const move: ConspirateursMoveJump =
+                ConspirateursMoveJump.from([new Coord(5, 4), new Coord(5, 2), new Coord(7, 2)]).get();
+            await testUtils.expectMoveSuccess('#click_7_2', move);
+
+            // When starting a new move
+            await testUtils.expectClickSuccess('#click_5_5');
+
+            // Then last move should be hidden
+            testUtils.expectElementNotToExist('#lastJump');
+            testUtils.expectElementNotToExist('#piece_5_4');
+            testUtils.expectElementToHaveClasses('#space_5_4', ['base']);
+            testUtils.expectElementNotToExist('#piece_5_2');
+            testUtils.expectElementToHaveClasses('#space_5_2', ['base']);
+        }));
+
+        it('should hide last move when doing a click (drop)', fakeAsync(async() => {
+            // Given a board in move phase with a last move (drop)
+            // When starting a new move
+            await testUtils.expectClickSuccess('#click_5_4');
+
+            // Then last move should not be "moved-fill"
+            testUtils.expectElementToHaveClasses('#space_5_5', ['base']);
+        }));
+
+        it('should hide last move when doing a click (single step)', fakeAsync(async() => {
+            // Given a board in move phase with a last move (single step)
+            await testUtils.expectClickSuccess('#click_5_4');
+            const move: ConspirateursMoveSimple = ConspirateursMoveSimple.from(new Coord(5, 4), new Coord(4, 4)).get();
+            await testUtils.expectMoveSuccess('#click_4_4', move);
+
+            // When doing a click
+            await testUtils.expectClickSuccess('#click_5_5');
+
+            // Then last move should no longer be highlighted
+            testUtils.expectElementToHaveClasses('#space_5_4', ['base']);
+            testUtils.expectElementToHaveClasses('#space_4_4', ['base']);
+        }));
+
         it('should allow stopping a jump early by clicking twice on the destination', fakeAsync(async() => {
             // When clicking on the desired jump steps and then a second time on the final step
             await testUtils.expectClickSuccess('#click_5_4');
@@ -184,7 +273,7 @@ describe('ConspirateursComponent', () => {
             // Given a selected piece
             await testUtils.expectClickSuccess('#click_5_4');
             // When clicking on an invalid jump target
-            // Then the click fails
+            // Then it should fail
             await testUtils.expectClickFailure('#click_5_8', ConspirateursFailure.INVALID_JUMP());
         }));
 
@@ -193,7 +282,7 @@ describe('ConspirateursComponent', () => {
             await testUtils.expectClickSuccess('#click_5_4');
             await testUtils.expectClickSuccess('#click_5_2');
             // When clicking on an invalid jump target
-            // Then the click fails
+            // Then it should fail
             await testUtils.expectClickFailure('#click_2_2', ConspirateursFailure.INVALID_JUMP());
         }));
 
@@ -201,9 +290,13 @@ describe('ConspirateursComponent', () => {
             // Given a jump being constructed
             await testUtils.expectClickSuccess('#click_5_4');
             await testUtils.expectClickSuccess('#click_5_2');
+
             // When clicking on an invalid jump target
-            // Then the click fails
+            // Then it should fail
             await testUtils.expectClickFailure('#click_5_0', ConspirateursFailure.MUST_JUMP_OVER_PIECES());
+            // And the state should go back to normal
+            testUtils.expectElementToHaveClasses('#piece_5_4', ['base', 'player0-fill']);
+            testUtils.expectElementToHaveClasses('#space_5_4', ['base']);
         }));
 
         it('should not display any remaining piece', fakeAsync(async() => {
@@ -217,11 +310,26 @@ describe('ConspirateursComponent', () => {
             testUtils.expectElementToHaveClass('#piece_5_4', 'selected-stroke');
 
             // When clicking on it again
-            await testUtils.expectClickSuccess('#click_5_4');
+            await testUtils.expectClickFailure('#click_5_4');
 
             // Then it should no longer be selected
             testUtils.expectElementNotToHaveClass('#piece_5_4', 'selected-stroke');
         }));
+
+        it('should display ongoing move', fakeAsync(async() => {
+            // Given a state in move phase
+            // When starting a long move
+            await testUtils.expectClickSuccess('#click_5_4');
+            await testUtils.expectClickSuccess('#click_5_2');
+
+            // Then left space should be emptied and highlighted
+            testUtils.expectElementToHaveClasses('#space_5_4', ['base', 'moved-fill']);
+            testUtils.expectElementNotToExist('#piece_5_4');
+            // And landing space filled and highlighted
+            testUtils.expectElementToHaveClasses('#space_5_2', ['base', 'moved-fill']);
+            testUtils.expectElementToHaveClasses('#piece_5_2', ['base', 'selected-stroke', 'player0-fill']);
+        }));
+
     });
 
     it('should highlight shelters of victorious pieces upon victory', fakeAsync(async() => {
@@ -250,9 +358,10 @@ describe('ConspirateursComponent', () => {
         await testUtils.setupState(state);
 
         // The its pieces are highlighted
-        testUtils.expectElementToHaveClass('#click_0_0', 'victory-fill');
+        testUtils.expectElementToHaveClass('#space_0_0', 'victory-fill');
+        testUtils.expectElementToHaveClass('#piece_0_0', 'victory-stroke');
         // And the opponent should not be
-        testUtils.expectElementNotToHaveClass('#click_16_16', 'victory-fill');
+        testUtils.expectElementNotToHaveClass('#space_16_16', 'victory-fill');
     }));
 
     it('should highlight shelters of everyone before victory', fakeAsync(async() => {
@@ -281,9 +390,9 @@ describe('ConspirateursComponent', () => {
         await testUtils.setupState(state);
 
         // The player zero pieces are highlighted
-        testUtils.expectElementToHaveClass('#click_0_0', 'victory-fill');
+        testUtils.expectElementToHaveClass('#space_0_0', 'victory-fill');
         // And player one too
-        testUtils.expectElementToHaveClass('#click_16_16', 'victory-fill');
+        testUtils.expectElementToHaveClass('#space_16_16', 'victory-fill');
     }));
 
 });
