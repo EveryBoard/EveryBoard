@@ -63,7 +63,6 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
     }
 
     public async updateBoard(_triggerAnimation: boolean): Promise<void> {
-        this.chosenCoord = MGPOptional.empty();
         this.state = this.getState();
         this.scores = MGPOptional.of(this.state.captures);
         this.tiles = this.state.tiles;
@@ -100,8 +99,7 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
         const currentPlayer: Player = this.state.getCurrentPlayer();
         if (this.chosenCoord.equalsValue(coord)) {
             // Deselects the piece
-            this.cancelMoveAttempt();
-            return MGPValidation.SUCCESS;
+            return this.cancelMove();
         } else if (this.chosenCoord.isAbsent() ||
                    this.state.getPieceAt(coord).is(currentPlayer))
         {

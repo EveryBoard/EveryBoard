@@ -28,23 +28,28 @@ interface GroundInfo {
 }
 
 class Ground extends TableWithPossibleNegativeIndices<GroundInfo> {
+
     private highlighted: Coord[] = [];
 
     public initialize(coord: Coord): void {
         this.set(coord, { spaceClasses: [], strokeClasses: [], selected: false });
     }
+
     public highlightFill(coord: Coord, fill: string): void {
         this.highlighted.push(coord);
         this.get(coord).map((g: GroundInfo) => g.spaceClasses.push(fill));
     }
+
     public highlightStroke(coord: Coord, stroke: string): void {
         this.highlighted.push(coord);
         this.get(coord).map((g: GroundInfo) => g.strokeClasses.push(stroke));
     }
+
     public select(coord: Coord): void {
         this.highlighted.push(coord);
         this.get(coord).map((g: GroundInfo) => g.selected = true);
     }
+
     public clearHighlights(): void {
         for (const coord of this.highlighted) {
             this.get(coord).map((g: GroundInfo) => {
@@ -55,6 +60,7 @@ class Ground extends TableWithPossibleNegativeIndices<GroundInfo> {
         }
         this.highlighted = [];
     }
+
 }
 
 // What to display at a given (x, y, z)
@@ -64,15 +70,18 @@ interface SpaceInLayerInfo {
 }
 
 class Layer extends TableWithPossibleNegativeIndices<SpaceInLayerInfo> {
+
     private highlighted: Coord[] = [];
 
     public initialize(coord: Coord, piece: HivePiece): void {
         this.set(coord, { piece, strokeClasses: [] });
     }
+
     public highlight(coord: Coord, stroke: string): void {
         this.highlighted.push(coord);
         this.get(coord).map((s: SpaceInLayerInfo) => s.strokeClasses.push(stroke));
     }
+
     public clearHighlights(): void {
         for (const coord of this.highlighted) {
             this.get(coord).map((s: SpaceInLayerInfo) => {
@@ -81,6 +90,7 @@ class Layer extends TableWithPossibleNegativeIndices<SpaceInLayerInfo> {
         }
         this.highlighted = [];
     }
+
 }
 
 @Component({
@@ -157,8 +167,9 @@ export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, H
 
     private highlight(coord: Coord, stroke: string): void {
         const stackSize: number = this.getState().getAt(coord).size();
-        if (stackSize-1 in this.layers === false) return;
-        this.layers[stackSize-1].highlight(coord, stroke);
+        if (stackSize-1 in this.layers) {
+            this.layers[stackSize-1].highlight(coord, stroke);
+        }
     }
 
     public override async pass(): Promise<MGPValidation> {
@@ -317,7 +328,7 @@ export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, H
         }
 
         if (this.selectedRemaining.equalsValue(piece)) {
-            this.cancelMoveAttempt();
+            return this.cancelMove();
         } else {
             this.cancelMoveAttempt();
             this.selectedRemaining = MGPOptional.of(piece);
@@ -326,8 +337,8 @@ export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, H
             for (const coord of possibleDropLocations) {
                 this.ground.highlightStroke(coord, 'clickable-stroke');
             }
+            return MGPValidation.SUCCESS;
         }
-        return MGPValidation.SUCCESS;
     }
 
     public async selectStack(x: number, y: number): Promise<MGPValidation> {
@@ -387,9 +398,7 @@ export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, H
             if (stack.size() === 1) {
                 return this.cancelMove(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT());
             } else if (this.inspectedStack.isPresent()) {
-                this.cancelMoveAttempt();
-                this.clearHighlights();
-                return MGPValidation.SUCCESS;
+                return this.cancelMove();
             } else {
                 // We will only inspect the opponent stack, not do a move
                 this.highlight(coord, 'selected-stroke');
@@ -453,8 +462,8 @@ export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, H
         }
         this.clearHighlights();
         this.highlight(this.selectedStart.get(), 'selected-stroke');
-        for (const coord of this.selectedSpiderCoords) {
-            this.ground.select(coord);
+        for (const spiderCoord of this.selectedSpiderCoords) {
+            this.ground.select(spiderCoord);
         }
         this.highlightNextPossibleCoords(this.selectedStart.get());
         return MGPValidation.SUCCESS;

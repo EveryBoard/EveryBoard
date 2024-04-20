@@ -1,10 +1,11 @@
 import { TutorialStep } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { PlayerOrNone } from 'src/app/jscaip/Player';
-import { MGPValidation } from '@everyboard/lib';
+import { MGPOptional, MGPValidation } from '@everyboard/lib';
 import { PentagoMove } from './PentagoMove';
 import { PentagoState } from './PentagoState';
 import { PentagoRules } from './PentagoRules';
 import { TutorialStepMessage } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
+import { Coord } from 'src/app/jscaip/Coord';
 
 const _: PlayerOrNone = PlayerOrNone.NONE;
 const O: PlayerOrNone = PlayerOrNone.ZERO;
@@ -50,7 +51,7 @@ export class PentagoTutorial {
                 }
             },
             TutorialStepMessage.CONGRATULATIONS(),
-        ),
+        ).withPreviousMove(PentagoMove.of(new Coord(1, 4), MGPOptional.empty(), false)),
         TutorialStep.fromPredicate(
             $localize`Move with rotation`,
             $localize`After putting a piece, arrows will appear on non-neutral quadrants.<br/><br/>
@@ -72,6 +73,6 @@ export class PentagoTutorial {
                 }
             },
             $localize`Congratulations! Note that if all quadrants are neutral after you have put your piece, there will be no rotation.`,
-        ),
+        ).withPreviousMove(PentagoMove.of(new Coord(1, 4), MGPOptional.empty(), false)),
     ];
 }

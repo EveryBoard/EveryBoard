@@ -32,6 +32,7 @@ describe('GameService', () => {
     let partDAO: PartDAO;
 
     let gameEventService: GameEventService;
+    let configRoomService: ConfigRoomService;
 
     const rulesConfig: NoConfig = RulesConfigUtils.getGameDefaultConfig('Quarto');
 
@@ -52,6 +53,7 @@ describe('GameService', () => {
         }).compileComponents();
         gameService = TestBed.inject(GameService);
         gameEventService = TestBed.inject(GameEventService);
+        configRoomService = TestBed.inject(ConfigRoomService);
         partDAO = TestBed.inject(PartDAO);
         ConnectedUserServiceMock.setUser(UserMocks.CREATOR_AUTH_USER);
     }));
@@ -99,9 +101,10 @@ describe('GameService', () => {
         // Then it should delegate to the DAO
         expect(partDAO.delete).toHaveBeenCalledOnceWith('partId');
     }));
+
     describe('acceptConfig', () => {
+
         it('should delegate to ConfigRoomService.acceptConfig', fakeAsync(async() => {
-            const configRoomService: ConfigRoomService = TestBed.inject(ConfigRoomService);
             spyOn(configRoomService, 'acceptConfig').and.resolveTo();
             spyOn(partDAO, 'update').and.resolveTo();
 
@@ -114,8 +117,6 @@ describe('GameService', () => {
         }));
 
         it('should call startGame with the accepter as argument (Player.ZERO)', fakeAsync(async() => {
-            const configRoomService: ConfigRoomService = TestBed.inject(ConfigRoomService);
-            const gameEventService: GameEventService = TestBed.inject(GameEventService);
             spyOn(configRoomService, 'acceptConfig').and.resolveTo();
             spyOn(partDAO, 'update').and.resolveTo();
             spyOn(gameEventService, 'startGame').and.resolveTo();
@@ -132,8 +133,6 @@ describe('GameService', () => {
         }));
 
         it('should call startGame with the accepter as argument (Player.ONE)', fakeAsync(async() => {
-            const configRoomService: ConfigRoomService = TestBed.inject(ConfigRoomService);
-            const gameEventService: GameEventService = TestBed.inject(GameEventService);
             spyOn(configRoomService, 'acceptConfig').and.resolveTo();
             spyOn(partDAO, 'update').and.resolveTo();
             spyOn(gameEventService, 'startGame').and.resolveTo();
@@ -150,7 +149,9 @@ describe('GameService', () => {
             expect(gameEventService.startGame).toHaveBeenCalledWith('partId', UserMocks.OPPONENT_MINIMAL_USER);
         }));
     });
+
     describe('createPartConfigRoomAndChat', () => {
+
         it('should create in this order: part, configRoom, and then chat', fakeAsync(async() => {
             const configRoomDAO: ConfigRoomDAO = TestBed.inject(ConfigRoomDAO);
             const chatDAO: ChatDAO = TestBed.inject(ChatDAO);
@@ -181,8 +182,11 @@ describe('GameService', () => {
             expect(chatDAO.set).toHaveBeenCalledOnceWith('partId', {});
             expect(configRoomDAO.set).toHaveBeenCalledOnceWith('partId', configRoom);
         }));
+
     });
+
     describe('getStartingConfig', () => {
+
         it('should put creator first when math.random() is below 0.5', fakeAsync(async() => {
             // Given a configRoom config asking random start
             const configRoom: ConfigRoom = {
@@ -226,12 +230,12 @@ describe('GameService', () => {
             expect(startConfig.playerZero).toEqual(Utils.getNonNullable(configRoom.chosenOpponent));
             expect(startConfig.playerOne).toEqual(configRoom.creator);
         }));
+
     });
+
     describe('rematch', () => {
-        let configRoomService: ConfigRoomService;
-        let partDAO: PartDAO;
+
         beforeEach(() => {
-            configRoomService = TestBed.inject(ConfigRoomService);
             partDAO = TestBed.inject(PartDAO);
         });
 
@@ -316,8 +320,11 @@ describe('GameService', () => {
             expect(chatDAO.set).toHaveBeenCalledOnceWith('partId', {});
             expect(configRoomDAO.set).toHaveBeenCalledOnceWith('partId', configRoom);
         }));
+
     });
+
     describe('updatePart', () => {
+
         beforeEach(() => {
             const part: Part = {
                 typeGame: 'Quarto',
@@ -342,8 +349,11 @@ describe('GameService', () => {
             };
             expect(partDAO.update).toHaveBeenCalledOnceWith('partId', expectedUpdate);
         }));
+
     });
+
     describe('drawPart', () => {
+
         it('should include the draw notification', fakeAsync(async() => {
             // Given a part
             const part: Part = { ...PartMocks.STARTED, turn: 1 };
@@ -358,9 +368,13 @@ describe('GameService', () => {
             };
             expect(partDAO.update).toHaveBeenCalledWith('partId', expectedUpdate);
         }));
+
     });
+
     describe('acceptDraw', () => {
+
         for (const player of Player.PLAYERS) {
+
             it('should send AGREED_DRAW_BY_ZERO/ONE when call as ZERO/ONE', async() => {
                 // Given any state of service
                 spyOn(partDAO, 'update').and.resolveTo();
@@ -376,9 +390,13 @@ describe('GameService', () => {
                     result,
                 });
             });
+
         }
+
     });
+
     describe('acceptTakeBack', () => {
+
         it('should decrease turn by 1 when accepting during our turn', fakeAsync(async() => {
             spyOn(partDAO, 'update').and.resolveTo();
             // Given a part during our turn
@@ -400,5 +418,7 @@ describe('GameService', () => {
                 turn: 1,
             });
         }));
+
     });
+
 });

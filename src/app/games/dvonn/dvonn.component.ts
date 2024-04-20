@@ -27,7 +27,7 @@ export class DvonnComponent extends HexagonalGameComponent<DvonnRules, DvonnMove
 
     public lastMove: MGPOptional<DvonnMove> = MGPOptional.empty();
     public chosen: MGPOptional<Coord> = MGPOptional.empty();
-    public disconnecteds: { coord: Coord, spaceContent: DvonnPieceStack }[] = [];
+    public disconnectedSpaces: { coord: Coord, spaceContent: DvonnPieceStack }[] = [];
     public state: DvonnState;
 
     public constructor(messageDisplayer: MessageDisplayer) {
@@ -51,11 +51,11 @@ export class DvonnComponent extends HexagonalGameComponent<DvonnRules, DvonnMove
 
     public override hideLastMove(): void {
         this.lastMove = MGPOptional.empty();
+        this.disconnectedSpaces = [];
     }
 
     public async updateBoard(_triggerAnimation: boolean): Promise<void> {
         this.state = this.getState();
-        this.disconnecteds = [];
         this.canPass = this.rules.canOnlyPass(this.state);
         this.scores = MGPOptional.of(DvonnRules.getScores(this.state));
     }
@@ -68,14 +68,14 @@ export class DvonnComponent extends HexagonalGameComponent<DvonnRules, DvonnMove
             for (let x: number = 0; x < state.board[y].length; x++) {
                 const coord: Coord = new Coord(x, y);
                 if (state.isOnBoard(coord) === true &&
-                    coord.equals(this.lastMove.get().getStart()) === false) {
+                    coord.equals(this.lastMove.get().getStart()) === false)
+                {
                     const stack: DvonnPieceStack = state.getPieceAt(coord);
                     const previousStack: DvonnPieceStack = previousState.getPieceAt(coord);
                     if (stack.isEmpty() && previousStack.hasPieces()) {
-                        const coord: Coord = new Coord(x, y);
                         const disconnected: { coord: Coord, spaceContent: DvonnPieceStack } =
                             { coord, spaceContent: previousStack };
-                        this.disconnecteds.push(disconnected);
+                        this.disconnectedSpaces.push(disconnected);
                     }
                 }
             }
@@ -100,8 +100,7 @@ export class DvonnComponent extends HexagonalGameComponent<DvonnRules, DvonnMove
             return this.choosePiece(x, y);
         } else if (this.chosen.equalsValue(new Coord(x, y))) {
             // Deselects the piece
-            this.cancelMoveAttempt();
-            return MGPValidation.SUCCESS;
+            return this.cancelMove();
         } else {
             return await this.chooseDestination(x, y);
         }

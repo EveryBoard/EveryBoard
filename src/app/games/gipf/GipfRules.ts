@@ -358,16 +358,16 @@ export class GipfRules extends Rules<GipfMove, GipfState, GipfLegalityInformatio
             capturable.push(cur);
             cur = cur.getNext(oppositeDir);
         }
-        for (let cur: Coord = start; cur.equals(end) === false; cur = cur.getNext(dir)) {
+        for (let coord: Coord = start; coord.equals(end) === false; coord = coord.getNext(dir)) {
             // The 4 pieces are capturable
-            capturable.push(cur);
+            capturable.push(coord);
         }
-        for (let cur: Coord = end;
-            state.isOnBoard(cur) && state.getPieceAt(cur) !== FourStatePiece.EMPTY;
-            cur = cur.getNext(dir))
+        for (let coord: Coord = end;
+            state.isOnBoard(coord) && state.getPieceAt(coord) !== FourStatePiece.EMPTY;
+            coord = coord.getNext(dir))
         {
             // Go forward to identify capturable pieces after the 4 aligned pieces
-            capturable.push(cur);
+            capturable.push(coord);
         }
         return new GipfCapture(capturable);
     }

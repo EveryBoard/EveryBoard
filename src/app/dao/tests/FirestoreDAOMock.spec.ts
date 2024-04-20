@@ -217,13 +217,13 @@ export abstract class FirestoreDAOMock<T extends FirestoreJSONObject> implements
             return matchingDocs;
         }
     }
-    public subCollectionDAO<T extends FirestoreJSONObject>(id: string, name: string): IFirestoreDAO<T> {
+    public subCollectionDAO<U extends FirestoreJSONObject>(id: string, name: string): IFirestoreDAO<U> {
         if (this.subDAOs.containsKey(name)) {
-            return this.subDAOs.get(name).get() as IFirestoreDAO<T>;
+            return this.subDAOs.get(name).get() as IFirestoreDAO<U>;
         } else {
             const superName: string = this.collectionName;
-            type OS = ObservableSubject<MGPOptional<FirestoreDocument<T>>>;
-            class CustomMock extends FirestoreDAOMock<T> {
+            type OS = ObservableSubject<MGPOptional<FirestoreDocument<U>>>;
+            class CustomMock extends FirestoreDAOMock<U> {
                 private static db: MGPMap<string, OS>;
                 public getStaticDB(): MGPMap<string, OS> {
                     return CustomMock.db;
@@ -235,7 +235,7 @@ export abstract class FirestoreDAOMock<T extends FirestoreJSONObject> implements
                     super(`${superName}/${id}/${name}`);
                 }
             }
-            const mock: FirestoreDAOMock<T> = new CustomMock();
+            const mock: FirestoreDAOMock<U> = new CustomMock();
             this.subDAOs.set(name, mock);
             return mock;
         }

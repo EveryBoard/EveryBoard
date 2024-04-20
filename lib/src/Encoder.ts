@@ -64,13 +64,13 @@ export abstract class Encoder<T> {
     /**
      * This creates a "sum" encoder, i.e., it encodes values of either type T and U and V and ...
      */
-    public static disjunction<T>(typePredicates: ((value: unknown) => boolean)[],
+    public static disjunction<U>(typePredicates: ((value: unknown) => boolean)[],
                                  encoders: Encoder<unknown>[],
-    ): Encoder<T>
+    ): Encoder<U>
     {
         Utils.assert(typePredicates.length === encoders.length, 'typePredicates and encoders should have same length');
-        return new class extends Encoder<T> {
-            public encode(value: T): JSONValueWithoutArray {
+        return new class extends Encoder<U> {
+            public encode(value: U): JSONValueWithoutArray {
                 let indexClass: number = 0;
                 for (const identifier of typePredicates) {
                     if (identifier(value) === true) {
@@ -82,12 +82,12 @@ export abstract class Encoder<T> {
                     indexClass++;
                 }
             }
-            public decode(encoded: JSONValueWithoutArray): T {
+            public decode(encoded: JSONValueWithoutArray): U {
                 // eslint-disable-next-line dot-notation
                 const type_: number = Utils.getNonNullable(encoded)['type'];
                 // eslint-disable-next-line dot-notation
                 const content: JSONValue = Utils.getNonNullable(encoded)['encoded'] as JSONValue;
-                return encoders[type_].decode(content) as T;
+                return encoders[type_].decode(content) as U;
             }
         };
     }

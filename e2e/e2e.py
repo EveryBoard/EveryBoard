@@ -235,7 +235,7 @@ def can_play_local_vs_ai(driver):
 
     # Select the AI as second player
     select(driver, "#playerOneSelect", "Minimax")
-    select(driver, "#aiOneLevelSelect", "Level 1")
+    select(driver, "#aiOneOptionSelect", "Level 1")
 
     # I play a move
     click_button(driver, "#click_2 > rect")

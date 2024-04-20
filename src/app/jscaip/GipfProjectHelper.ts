@@ -58,8 +58,8 @@ export class GipfCapture {
     }
 
     public contains(coord: Coord): boolean {
-        for (let i: number = 0; i < this.capturedSpaces.length; i++) {
-            if (this.capturedSpaces[i].equals(coord)) {
+        for (const capturedSpace of this.capturedSpaces) {
+            if (capturedSpace.equals(coord)) {
                 return true;
             }
         }

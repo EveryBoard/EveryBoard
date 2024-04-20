@@ -21,10 +21,10 @@ abstract class BaseComponent {
     /**
      * Gets the CSS class for a player color
      */
-    public getPlayerClass(player: PlayerOrNone): string {
+    public getPlayerClass(player: PlayerOrNone, suffix: string = 'fill'): string {
         switch (player) {
-            case Player.ZERO: return 'player0-fill';
-            case Player.ONE: return 'player1-fill';
+            case Player.ZERO: return 'player0-' + suffix;
+            case Player.ONE: return 'player1-' + suffix;
             default:
                 Utils.expectToBe(player, PlayerOrNone.NONE);
                 return '';
@@ -147,6 +147,11 @@ export abstract class GameComponent<R extends SuperRules<M, S, C, L>,
         return this.interactive;
     }
 
+    /**
+     * Put the view back where it was before move attempt.
+     * Note: cancelMoveAttempt only hide the move attempt but does not show last move again
+     * @param reason: the reason of the cancellation, this message will be toasted if present.
+     */
     public async cancelMove(reason?: string): Promise<MGPValidation> {
         this.cancelMoveAttempt();
         this.cancelMoveOnWrapper(reason);
@@ -161,8 +166,13 @@ export abstract class GameComponent<R extends SuperRules<M, S, C, L>,
         }
     }
 
+    /**
+     * Hide the move attempt.
+     * Does not show again the previous move.
+     * If you need to put the component right where it was before move attempt: call cancelMove
+     */
     public cancelMoveAttempt(): void {
-        // Override if need be
+        // Override if move takes more than one click.
     }
 
     public abstract updateBoard(triggerAnimation: boolean): Promise<void>;

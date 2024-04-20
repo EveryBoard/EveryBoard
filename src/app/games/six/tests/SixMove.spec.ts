@@ -37,8 +37,6 @@ describe('SixMove', () => {
 
     describe('Overrides', () => {
 
-        const drop: SixMove = SixMove.ofDrop(new Coord(5, 5));
-        const movement: SixMove = SixMove.ofMovement(new Coord(5, 5), new Coord(7, 5));
         const cut: SixMove = SixMove.ofCut(new Coord(5, 5), new Coord(7, 5), new Coord(9, 9));
 
         it('should have functionnal equals', () => {
@@ -53,12 +51,18 @@ describe('SixMove', () => {
         });
 
         it('should stringify nicely', () => {
-            expect(drop.toString()).toEqual('SixMove((5, 5))');
+            const movement: SixMove = SixMove.ofMovement(new Coord(5, 5), new Coord(7, 5));
             expect(movement.toString()).toEqual('SixMove((5, 5) > (7, 5))');
+
+            const drop: SixMove = SixMove.ofDrop(new Coord(5, 5));
+            expect(drop.toString()).toEqual('SixMove((5, 5))');
             expect(cut.toString()).toEqual('SixMove((5, 5) > (7, 5), keep: (9, 9))');
         });
 
         it('should have a bijective encoder', () => {
+            const drop: SixMove = SixMove.ofDrop(new Coord(5, 5));
+            const movement: SixMove = SixMove.ofMovement(new Coord(5, 5), new Coord(7, 5));
+
             const moves: SixMove[] = [drop, movement, cut];
             for (const move of moves) {
                 EncoderTestUtils.expectToBeBijective(SixMove.encoder, move);
