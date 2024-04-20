@@ -1633,7 +1633,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             expect(gameService.proposeRematch).toHaveBeenCalledOnceWith('configRoomId');
         }));
 
-        fit('should disable button after proposing', fakeAsync(async() => {
+        it('should disable button after proposing', fakeAsync(async() => {
             // Given an ended game
             await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER, PreparationOptions.withoutClocks);
             await testUtils.expectInterfaceClickSuccess('#resign');
