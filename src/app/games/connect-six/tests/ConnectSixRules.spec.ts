@@ -7,8 +7,7 @@ import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { Coord, CoordFailure } from 'src/app/jscaip/Coord';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { GobanConfig } from 'src/app/jscaip/GobanConfig';
-import { TestUtils } from 'src/app/utils/tests/TestUtils.spec';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { MGPOptional, TestUtils } from '@everyboard/lib';
 
 describe('ConnectSixRules', () => {
     /**
@@ -74,7 +73,7 @@ describe('ConnectSixRules', () => {
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         });
 
-        it('should refuse move that drop two pieces on first turn', () => {
+        it('should refuse move that drops two pieces on first turn', () => {
             // Given the first turn
             const state: ConnectSixState = ConnectSixRules.get().getInitialState(defaultConfig);
             // When dropping two pieces

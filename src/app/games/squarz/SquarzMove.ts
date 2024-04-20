@@ -1,7 +1,6 @@
+import { Encoder, MGPFallible } from '@everyboard/lib';
 import { Coord } from 'src/app/jscaip/Coord';
 import { MoveCoordToCoord } from 'src/app/jscaip/MoveCoordToCoord';
-import { Encoder } from 'src/app/utils/Encoder';
-import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { MoveWithTwoCoords } from 'src/app/jscaip/MoveWithTwoCoords';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 

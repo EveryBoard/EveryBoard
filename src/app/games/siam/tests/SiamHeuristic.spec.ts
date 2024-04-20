@@ -5,9 +5,9 @@ import { SiamState } from '../SiamState';
 import { SiamMove } from '../SiamMove';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Orthogonal } from 'src/app/jscaip/Direction';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { MGPOptional } from '@everyboard/lib';
 import { Player } from 'src/app/jscaip/Player';
-import { Table } from 'src/app/utils/ArrayUtils';
+import { Table } from 'src/app/jscaip/TableUtils';
 import { SiamHeuristic } from '../SiamHeuristic';
 import { BoardValue } from 'src/app/jscaip/AI/BoardValue';
 

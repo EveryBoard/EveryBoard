@@ -1,3 +1,4 @@
+import { MGPOptional, MGPValidation } from '@everyboard/lib';
 import { SquarzConfig, SquarzRules } from './SquarzRules';
 import { SquarzMove as SquarzMove } from './SquarzMove';
 import { SquarzState } from './SquarzState';
@@ -8,12 +9,9 @@ import { SquarzMoveGenerator } from './SquarzMoveGenerator';
 import { SquarzMinimax } from './SquarzMinimax';
 import { RectangularGameComponent } from 'src/app/components/game-components/rectangular-game-component/RectangularGameComponent';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 import { Coord } from 'src/app/jscaip/Coord';
-import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { Direction } from 'src/app/jscaip/Direction';
 
 @Component({

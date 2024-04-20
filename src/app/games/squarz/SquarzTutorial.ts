@@ -1,12 +1,11 @@
 import { Tutorial, TutorialStep } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { SquarzConfig, SquarzRules } from './SquarzRules';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { SquarzState } from './SquarzState';
 import { SquarzMove } from './SquarzMove';
 import { Coord } from 'src/app/jscaip/Coord';
-import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { TutorialStepMessage } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
+import { MGPOptional, MGPValidation } from '@everyboard/lib';
 
 const defaultConfig: MGPOptional<SquarzConfig> = SquarzRules.get().getDefaultRulesConfig();
 const initialState: SquarzState = SquarzRules.get().getInitialState(defaultConfig);
@@ -21,13 +20,13 @@ export class SquarzTutorial extends Tutorial {
 
         TutorialStep.informational(
             $localize`Squarz`,
-            $localize`Squarz is board control game. Here is the initial state. The goal is to have the most piece at the end of the game.`,
+            $localize`Squarz is board control game. Here is the initial state. The goal is to have the most pieces at the end of the game.`,
             initialState,
         ),
 
         TutorialStep.fromPredicate(
-            $localize`Simple step`,
-            $localize`One of the two kinds of move you can do is the duplication. When you do one, you create a new piece. To do this, select one of your pieces, and click on its neighbors space.<br/><br/>You're playing Dark, make a duplication.`,
+            $localize`Duplication`,
+            $localize`One of the two kinds of move you can do is the duplication. When you do one, you create a new piece. To do this, select one of your pieces, and click on one of its neighboring space.<br/><br/>You're playing Dark, make a duplication.`,
             initialState,
             SquarzMove.from(new Coord(0, 0), new Coord(1, 1)).get(),
             (move: SquarzMove, _: SquarzState) => {
@@ -42,7 +41,7 @@ export class SquarzTutorial extends Tutorial {
 
         TutorialStep.fromPredicate(
             $localize`Jumps`,
-            $localize`The second type of move you can do is the jump. When you do one, your piece leaves it's original space and jump two space further. To do this, select one of your pieces, and click on its landing space two space further.<br/><br/>You're playing Light, make a jump.`,
+            $localize`The second type of move you can do is the jump. When you do one, your piece leaves its original space and jump two spaces further. To do this, select one of your pieces, and click on its landing space two space further.<br/><br/>You're playing Light, make a jump.`,
             new SquarzState([
                 [O, _, _, _, _, _, _, X],
                 [_, O, _, _, _, _, _, _],
@@ -88,7 +87,7 @@ export class SquarzTutorial extends Tutorial {
         ).withPreviousMove(SquarzMove.from(new Coord(1, 1), new Coord(3, 3)).get()),
         TutorialStep.fromPredicate(
             $localize`End of the game`,
-            $localize`When one player cannot play, the game ends, and the player with the most piece wins. Here, you can do a final move and win.<br/><br/>You're playing Light, do it.`,
+            $localize`When one player cannot play, the game ends, and the player with the most pieces wins. Here, you can do a final move and win.<br/><br/>You're playing Light, do it.`,
             new SquarzState([
                 [X, X, X, X, X, X, X, X],
                 [O, O, O, O, O, O, O, O],

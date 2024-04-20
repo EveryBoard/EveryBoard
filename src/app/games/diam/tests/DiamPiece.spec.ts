@@ -1,5 +1,5 @@
 /* eslint-disable max-lines-per-function */
-import { EncoderTestUtils } from 'src/app/utils/tests/Encoder.spec';
+import { EncoderTestUtils } from '@everyboard/lib';
 import { DiamPiece } from '../DiamPiece';
 
 describe('DiamPiece', () => {
@@ -15,4 +15,10 @@ describe('DiamPiece', () => {
         expect(DiamPiece.ZERO_FIRST.toString()).toBe('DiamPiece(PLAYER_ZERO, false)');
     });
 
+    describe('equals', () => {
+        it('should detect equal pieces', () => {
+            expect(DiamPiece.ZERO_FIRST.equals(DiamPiece.ZERO_FIRST)).toBeTrue();
+            expect(DiamPiece.ZERO_FIRST.equals(DiamPiece.ZERO_SECOND)).toBeFalse();
+        });
+    });
 });

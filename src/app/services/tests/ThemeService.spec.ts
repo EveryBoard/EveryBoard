@@ -2,8 +2,8 @@
 import { DOCUMENT } from '@angular/common';
 import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { WelcomeComponent } from 'src/app/components/normal-component/welcome/welcome.component';
-import { SimpleComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { ThemeService } from '../ThemeService';
+import { SimpleComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 
 describe('ThemeService', () => {
 

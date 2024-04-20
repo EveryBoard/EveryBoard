@@ -1,6 +1,6 @@
 /* eslint-disable max-lines-per-function */
-import { Table } from 'src/app/utils/ArrayUtils';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { Table } from 'src/app/jscaip/TableUtils';
+import { MGPOptional } from '@everyboard/lib';
 import { GoState, GoPiece, Phase } from '../GoState';
 import { GoConfig, GoNode, GoRules } from '../GoRules';
 import { GoHeuristic } from '../GoHeuristic';

@@ -8,7 +8,6 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { GameState } from '../../jscaip/GameState';
 import { Move } from '../../jscaip/Move';
-import { MGPValidation } from '../MGPValidation';
 import { AppModule } from '../../app.module';
 import { UserDAO } from '../../dao/UserDAO';
 import { ConnectedUserService, AuthUser } from '../../services/ConnectedUserService';
@@ -26,9 +25,8 @@ import { ChatDAOMock } from '../../dao/tests/ChatDAOMock.spec';
 import { PartDAOMock } from '../../dao/tests/PartDAOMock.spec';
 import { LocalGameWrapperComponent }
     from '../../components/wrapper-components/local-game-wrapper/local-game-wrapper.component';
-import { Utils } from '../utils';
+import { Comparable, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
-import { MGPOptional } from '../MGPOptional';
 import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
 import { ErrorLoggerServiceMock } from 'src/app/services/tests/ErrorLoggerServiceMock.spec';
 import { AbstractGameComponent } from 'src/app/components/game-components/game-component/GameComponent';
@@ -39,7 +37,6 @@ import { ToggleVisibilityDirective } from 'src/app/pipes-and-directives/toggle-v
 import { FirestoreTimePipe } from 'src/app/pipes-and-directives/firestore-time.pipe';
 import { UserMocks } from 'src/app/domain/UserMocks.spec';
 import { FirebaseError } from 'firebase/app';
-import { Comparable } from '../Comparable';
 import { Subscription } from 'rxjs';
 import { CurrentGameService } from 'src/app/services/CurrentGameService';
 import { CurrentGameServiceMock } from 'src/app/services/tests/CurrentGameService.spec';
@@ -88,7 +85,7 @@ export class SimpleComponentTestUtils<T> {
     public static async create<T>(componentType: Type<T>, activatedRouteStub?: ActivatedRouteStub)
     : Promise<SimpleComponentTestUtils<T>>
     {
-        await TestUtils.configureTestingModule(componentType, activatedRouteStub);
+        await ConfigureTestingModuleUtils.configureTestingModule(componentType, activatedRouteStub);
         ConnectedUserServiceMock.setUser(UserMocks.CONNECTED_AUTH_USER);
         const testUtils: SimpleComponentTestUtils<T> = new SimpleComponentTestUtils<T>();
         testUtils.prepareFixture(componentType);
@@ -317,7 +314,7 @@ export class ComponentTestUtils<T extends AbstractGameComponent, P extends Compa
     {
         const activatedRouteStub: ActivatedRouteStub = new ActivatedRouteStub(game, 'configRoomId');
         if (configureTestingModule) {
-            await TestUtils.configureTestingModuleForGame(activatedRouteStub);
+            await ConfigureTestingModuleUtils.configureTestingModuleForGame(activatedRouteStub);
         }
         const testUtils: ComponentTestUtils<T, P> = new ComponentTestUtils<T, P>();
         testUtils.prepareMessageDisplayerSpies();
@@ -445,7 +442,7 @@ export class ComponentTestUtils<T extends AbstractGameComponent, P extends Compa
         expect(this.canUserPlaySpy).toHaveBeenCalledOnceWith(nameInFunction);
         this.canUserPlaySpy.calls.reset();
         expect(this.chooseMoveSpy)
-            .withContext('chooseMove should not have been called, you might need to try to call expectMoveFailure since this clic resulted in a move')
+            .withContext('chooseMove should not have been called, you might need to try to call expectMoveFailure since this click resulted in a move')
             .not.toHaveBeenCalled();
         if (reason == null) {
             expect(this.cancelMoveSpy).toHaveBeenCalledOnceWith();
@@ -545,22 +542,7 @@ export class ComponentTestUtils<T extends AbstractGameComponent, P extends Compa
 
 }
 
-export class TestUtils {
-
-    public static expectValidationSuccess(validation: MGPValidation, context?: string): void {
-        const reason: string = validation.getReason();
-        expect(validation.isSuccess()).withContext(context + ': ' + reason).toBeTrue();
-    }
-
-    public static expectToThrowAndLog(func: () => void, error: string): void {
-        if (jasmine.isSpy(ErrorLoggerService.logError) === false) {
-            spyOn(ErrorLoggerService, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
-        }
-        expect(func)
-            .withContext('Expected Assertion failure: ' + error)
-            .toThrowError('Assertion failure: ' + error);
-        expect(ErrorLoggerService.logError).toHaveBeenCalledWith('Assertion failure', error);
-    }
+export class ConfigureTestingModuleUtils {
 
     public static async configureTestingModuleForGame(activatedRouteStub: ActivatedRouteStub): Promise<void> {
         await TestBed.configureTestingModule({

@@ -1,13 +1,11 @@
 /* eslint-disable max-lines-per-function */
 import { Coord } from 'src/app/jscaip/Coord';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
 import { ErrorLoggerServiceMock } from 'src/app/services/tests/ErrorLoggerServiceMock.spec';
-import { Table } from 'src/app/utils/ArrayUtils';
-import { ReversibleMap } from 'src/app/utils/MGPMap';
-import { MGPSet } from 'src/app/utils/MGPSet';
-import { CoordSet } from 'src/app/utils/OptimizedSet';
+import { Table } from 'src/app/jscaip/TableUtils';
+import { MGPSet, ReversibleMap, Utils } from '@everyboard/lib';
 import { SixState } from '../SixState';
+import { CoordSet } from 'src/app/jscaip/CoordSet';
 
 describe('SixState', () => {
 
@@ -80,10 +78,10 @@ describe('SixState', () => {
             const state: SixState = SixState.ofRepresentation(representation, 40);
             // When trying to switch an empty coord
             // Then it should throw and call logError
-            spyOn(ErrorLoggerService, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
+            spyOn(Utils, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
             const errorMessage: string = 'Cannot switch piece if there is no piece!';
-            expect(() => state.switchPiece(new Coord(0, 0))).toThrowError('SixState: ' + errorMessage + ' (extra data: {"coord":"(0, 0)"})');
-            expect(ErrorLoggerService.logError).toHaveBeenCalledWith('SixState', errorMessage, { coord: '(0, 0)' });
+            expect(() => state.switchPiece(new Coord(0, 0))).toThrowError('Assertion failure: ' + errorMessage);
+            expect(Utils.logError).toHaveBeenCalledWith('Assertion failure', errorMessage, { coord: '(0, 0)' });
         });
 
     });

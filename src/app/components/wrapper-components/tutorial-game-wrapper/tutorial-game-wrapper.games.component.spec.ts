@@ -1,21 +1,18 @@
 /* eslint-disable max-lines-per-function */
 import { TutorialGameWrapperComponent } from './tutorial-game-wrapper.component';
-import { ComponentTestUtils, TestUtils } from 'src/app/utils/tests/TestUtils.spec';
+import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { GameInfo } from '../../normal-component/pick-game/pick-game.component';
 import { fakeAsync } from '@angular/core/testing';
 import { GameWrapper } from '../GameWrapper';
 import { Click, TutorialPredicate, TutorialStep } from './TutorialStep';
-import { MGPValidation } from 'src/app/utils/MGPValidation';
+import { Comparable, MGPFallible, MGPOptional, MGPValidation, MGPValidationTestUtils, Utils } from '@everyboard/lib';
 import { Move } from 'src/app/jscaip/Move';
 import { Coord } from 'src/app/jscaip/Coord';
 import { AbstractRules, SuperRules } from 'src/app/jscaip/Rules';
 import { Direction } from 'src/app/jscaip/Direction';
 import { AbstractGameComponent } from '../../game-components/game-component/GameComponent';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { GameState } from 'src/app/jscaip/GameState';
-import { Utils } from 'src/app/utils/utils';
 import { Player } from 'src/app/jscaip/Player';
-import { MGPFallible } from 'src/app/utils/MGPFallible';
 
 import { ApagosTutorial } from 'src/app/games/apagos/ApagosTutorial';
 import { ApagosRules } from 'src/app/games/apagos/ApagosRules';
@@ -79,6 +76,7 @@ import { SixRules } from 'src/app/games/six/SixRules';
 import { SixTutorial, SixTutorialMessages } from '../../../games/six/SixTutorial';
 import { SquarzTutorial } from 'src/app/games/squarz/SquarzTutorial';
 import { SquarzRules } from 'src/app/games/squarz/SquarzRules';
+import { SquarzMove } from 'src/app/games/squarz/SquarzMove';
 
 import { TrexoTutorial } from 'src/app/games/trexo/TrexoTutorial';
 import { TrexoRules } from 'src/app/games/trexo/TrexoRules';
@@ -88,10 +86,8 @@ import { YinshRules } from 'src/app/games/yinsh/YinshRules';
 import { YinshTutorial, YinshTutorialMessages } from 'src/app/games/yinsh/YinshTutorial';
 import { YinshCapture, YinshMove } from 'src/app/games/yinsh/YinshMove';
 
-import { TutorialStepMessage } from './TutorialStepMessage';
-import { Comparable } from 'src/app/utils/Comparable';
 import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
-import { SquarzMove } from 'src/app/games/squarz/SquarzMove';
+import { TutorialStepMessage } from './TutorialStepMessage';
 
 describe('TutorialGameWrapperComponent (games)', () => {
 
@@ -363,7 +359,7 @@ describe('TutorialGameWrapperComponent (games)', () => {
                             .toEqual(validation);
                     } else {
                         const context: string = 'Move should be legal to reach predicate but failed in "' + step.title+ '" because';
-                        TestUtils.expectValidationSuccess(MGPValidation.ofFallible(moveResult), context);
+                        MGPValidationTestUtils.expectToBeSuccess(MGPValidation.ofFallible(moveResult), context);
                     }
                 } else {
                     throw new Error('This test expects only predicate steps, remove "' + step.title + '"');

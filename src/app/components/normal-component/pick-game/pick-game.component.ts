@@ -115,6 +115,9 @@ import { SiamRules } from 'src/app/games/siam/SiamRules';
 import { SixComponent } from 'src/app/games/six/six.component';
 import { SixTutorial } from 'src/app/games/six/SixTutorial';
 import { SixRules } from 'src/app/games/six/SixRules';
+import { SquarzComponent } from 'src/app/games/squarz/squarz.component';
+import { SquarzTutorial } from 'src/app/games/squarz/SquarzTutorial';
+import { SquarzRules } from 'src/app/games/squarz/SquarzRules';
 
 import { TablutComponent } from 'src/app/games/tafl/tablut/tablut.component';
 import { TablutTutorial } from 'src/app/games/tafl/tablut/TablutTutorial';
@@ -135,12 +138,8 @@ import { AbstractRules } from 'src/app/jscaip/Rules';
 import { Localized } from 'src/app/utils/LocaleUtils';
 import { Tutorial } from '../../wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { RulesConfigDescription } from '../../wrapper-components/rules-configuration/RulesConfigDescription';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { MGPOptional, Utils } from '@everyboard/lib';
 import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
-import { Utils } from 'src/app/utils/utils';
-import { SquarzComponent } from 'src/app/games/squarz/squarz.component';
-import { SquarzTutorial } from 'src/app/games/squarz/SquarzTutorial';
-import { SquarzRules } from 'src/app/games/squarz/SquarzRules';
 
 class GameDescription {
 
@@ -202,8 +201,6 @@ class GameDescription {
 
     public static readonly QUIXO: Localized = () => $localize`Align 5 of your pieces on a board where pieces slide!`;
 
-    public static readonly SQUARZ: Localized = () => $localize`Duplicate yourself to conquer the board!`;
-
     public static readonly REVERSI: Localized = () => $localize`Sandwich your opponent's pieces to dominate the board!`;
 
     public static readonly SAHARA: Localized = () => $localize`Immobilize one of your opponent's pyramids before your opponent does!`;
@@ -211,6 +208,8 @@ class GameDescription {
     public static readonly SIAM: Localized = () => $localize`Be the first to push a mountain out of the board!`;
 
     public static readonly SIX: Localized = () => $localize`Put your hexagonal pieces next to another one, and create one of the 3 victorious shapes to win!`;
+
+    public static readonly SQUARZ: Localized = () => $localize`Duplicate yourself to conquer the board!`;
 
     public static readonly TABLUT: Localized = () => $localize`Lapland version of the Tafl game family! Invaders must capture the king, defender must make him escape!`;
 
@@ -270,7 +269,7 @@ export class GameInfo {
             new GameInfo($localize`Diaballik`,       'Diaballik',     DiaballikComponent,     new DiaballikTutorial(),     DiaballikRules.get(),     new Date('2023-11-18'), GameDescription.DIABALLIK()      ), //                             * Quentin
 
             new GameInfo($localize`Ba-awa`,          'BaAwa',         BaAwaComponent,         new BaAwaTutorial(),         BaAwaRules.get(),         new Date('2024-01-28'), GameDescription.BA_AWA()         ), //                             * Martin
-            new GameInfo($localize`Squarz`,          'Squarz',        SquarzComponent,        new SquarzTutorial(),        SquarzRules.get(),        new Date('2024-04-10'), GameDescription.SQUARZ()         ), //                             * Martin
+            new GameInfo($localize`Squarz`,          'Squarz',        SquarzComponent,        new SquarzTutorial(),        SquarzRules.get(),        new Date('2024-04-25'), GameDescription.SQUARZ()         ), //                             * Martin
         ].sort((a: GameInfo, b: GameInfo) => a.name.localeCompare(b.name));
         // After Apagos: median = 26d; average = 53d
         // 9d 10d 12d 13d 18d - 18d 20d 22d 25d 26d - (26d) - 49d 65d 71d 76d 93d - 94j 4m 4m 7m 11m

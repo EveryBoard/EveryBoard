@@ -4,9 +4,8 @@ import { ConnectedUserService, AuthUser } from 'src/app/services/ConnectedUserSe
 import { expectValidRouting, SimpleComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { VerifyAccountComponent } from './verify-account.component';
 import { ConnectedUserServiceMock } from 'src/app/services/tests/ConnectedUserService.spec';
-import { MGPValidation } from 'src/app/utils/MGPValidation';
+import { MGPOptional, MGPValidation } from '@everyboard/lib';
 import { Router } from '@angular/router';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { LobbyComponent } from '../lobby/lobby.component';
 
 describe('VerifyAccountComponent', () => {

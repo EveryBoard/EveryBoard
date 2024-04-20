@@ -1,8 +1,6 @@
 import { Direction } from 'src/app/jscaip/Direction';
-import { MGPFallible } from '../utils/MGPFallible';
-import { Encoder } from '../utils/Encoder';
+import { Encoder, MGPFallible, Utils } from '@everyboard/lib';
 import { Vector } from './Vector';
-import { Utils } from '../utils/utils';
 
 export class CoordFailure {
     public static OUT_OF_RANGE(coord: Coord): string {
@@ -108,6 +106,7 @@ export class Coord extends Vector {
         return this.getDistanceToward(c, true);
     }
 
+    // If asked not to check alignement, a knight move would count a 2
     public getDistanceToward(c: Coord, checkAlignement: boolean = false): number {
         if (checkAlignement && c.isAlignedWith(this) === false) {
             throw new Error('Cannot calculate distance with non aligned coords.');

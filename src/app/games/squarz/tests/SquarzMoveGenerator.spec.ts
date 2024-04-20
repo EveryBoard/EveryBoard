@@ -51,6 +51,25 @@ describe('SquarzMoveGenerator', () => {
         expect(moves.length).toBe(4);
     });
 
-    it('should have only one duplication by landing space');
+    it('should have only one duplication by landing space', () => {
+        // Given any board where several duplication are possible for one same landing coord
+        const state: SquarzState = new SquarzState([
+            [O, O, O, X, X, O, O, O],
+            [O, _, O, X, X, O, _, O],
+            [O, O, O, X, X, O, O, O],
+            [X, X, X, X, X, X, X, X],
+            [X, X, X, X, X, X, X, X],
+            [O, O, O, X, X, O, O, O],
+            [O, _, O, X, X, O, _, O],
+            [O, O, O, X, X, O, O, O],
+        ], 100);
+        const node: SquarzNode = new SquarzNode(state);
+
+        // When calling getListMoves
+        const moves: SquarzMove[] = moveGenerator.getListMoves(node, defaultConfig);
+
+        // Then there should be only one duplication by landing coord
+        expect(moves.length).toBe(4);
+    });
 
 });

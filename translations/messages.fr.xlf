@@ -3737,7 +3737,7 @@
         <target>Longueur d'un saut</target>
       </trans-unit>
       <trans-unit id="2875926120657969888" datatype="html">
-        <source>Squarz is board control game. Here is the initial state. The goal is to have the most piece at the end of the game.</source>
+        <source>Squarz is board control game. Here is the initial state. The goal is to have the most pieces at the end of the game.</source>
         <target>Squarz est un jeu de contrôle de plateau. Voici le plateau initial. Le but est d'avoir une majorité de vos pièces sur le plateau à la fin de la partie.</target>
       </trans-unit>
       <trans-unit id="5489405522962962283" datatype="html">
@@ -3840,7 +3840,7 @@
         <target>Simple pas</target>
       </trans-unit>
       <trans-unit id="6228262372157040796" datatype="html">
-        <source>One of the two kinds of move you can do is the duplication. When you do one, you create a new piece. To do this, select one of your pieces, and click on its neighbors space.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, make a duplication.</source>
+        <source>One of the two kinds of move you can do is the duplication. When you do one, you create a new piece. To do this, select one of your pieces, and click on one of its neighboring space.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, make a duplication.</source>
         <target>Un des deux types de mouvement que vous pouvez faire est un pas simple. Quand vous en faites un, vous créez une nouvelle pièce. Pour ce faire, sélectionnez une de vos pièces, et cliquez sur une de vos pièces, puis sur une case voisine à celle-ci.&lt;br/&gt;Vous jouez Foncé, faite un simple pas.</target>
       </trans-unit>
       <trans-unit id="805836787886487858" datatype="html">
@@ -3852,7 +3852,7 @@
         <target>C'était une duplication, essayez un saut maintenant.</target>
       </trans-unit>
       <trans-unit id="1234758343143401720" datatype="html">
-        <source>The second type of move you can do is the jump. When you do one, your piece leaves it&apos;s original space and jump two space further. To do this, select one of your pieces, and click on its landing space two space further.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Light, make a jump.</source>
+        <source>The second type of move you can do is the jump. When you do one, your piece leaves its original space and jump two spaces further. To do this, select one of your pieces, and click on its landing space two space further.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Light, make a jump.</source>
         <target>Le deuxième type de mouvement que vous savez faire est un saut. Quand vous en faites un, votre pièce quitte sa case d'origine et atterit deux cases plus loin. Pour faire ceci, sélectionnez une de vos pièces, et cliquez sur sa case d'atterrissage, deux cases plus loin.&lt;br/&gt;Vous jouez Clair, faites un saut.</target>
       </trans-unit>
       <trans-unit id="4531607774937783527" datatype="html">
@@ -3860,7 +3860,7 @@
         <target>Quand une de vos pièces arrive sur une case voisine d'un adversaire, ces pièces changent de couleur.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, faite un tel mouvement.</target>
       </trans-unit>
       <trans-unit id="8185889618290318299" datatype="html">
-        <source>When one player cannot play, the game ends, and the player with the most piece wins. Here, you can do a final move and win.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Light, do it.</source>
+        <source>When one player cannot play, the game ends, and the player with the most pieces wins. Here, you can do a final move and win.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Light, do it.</source>
         <target>Quand un des joueur ne peut pas jouer, la partie finit, et le jouueur avec le plus de pièces gagne. Ici, vous pouvez faire le dernier mouvement et gagner.&lt;br/&gt;&lt;br/&gt;Vous jouez Clair, faites-le !</target>
       </trans-unit>
       <trans-unit id="3808135421251943457" datatype="html">

@@ -7,8 +7,7 @@ import { ActivePartsService } from 'src/app/services/ActivePartsService';
 import { GameActionFailure } from 'src/app/services/ConnectedUserService';
 import { ConnectedUserServiceMock } from 'src/app/services/tests/ConnectedUserService.spec';
 import { expectValidRouting, prepareUnsubscribeCheck, SimpleComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { MGPValidation } from 'src/app/utils/MGPValidation';
+import { MGPOptional, MGPValidation } from '@everyboard/lib';
 import { PartMocks } from 'src/app/domain/PartMocks.spec';
 import { PartDocument } from 'src/app/domain/Part';
 import { UserMocks } from 'src/app/domain/UserMocks.spec';
@@ -83,7 +82,7 @@ describe('LobbyComponent', () => {
         testUtils.detectChanges();
 
         // When clicking on the first part
-        await testUtils.clickElement('#part_0');
+        await testUtils.clickElement('#part-0');
 
         // Then the component should have navigate to the part
         expectValidRouting(router, ['/play', 'Quarto', partList[0].id], OnlineGameWrapperComponent);
@@ -95,7 +94,7 @@ describe('LobbyComponent', () => {
         // When clicking on the part
         // Then the refusal reason should be given
         await testUtils.expectToDisplayCriticalMessage(reason, async() => {
-            await testUtils.clickElement('#part_0');
+            await testUtils.clickElement('#part-0');
         });
     }
     describe('clicking on a started game', () => {
@@ -330,7 +329,7 @@ describe('LobbyComponent', () => {
         // When it is destroyed
         component.ngOnDestroy();
 
-        // Then it should have unsubscirbed from active users
+        // Then it should have unsubscribed from active users
         expectUnsubscribeToHaveBeenCalled();
     }));
     it('should display turn for humans', fakeAsync(async() => {
@@ -341,9 +340,24 @@ describe('LobbyComponent', () => {
         testUtils.detectChanges();
 
         // Then it should show the turn, starting at turn 0 instead of -1
-        testUtils.expectElementToExist('#part_0 > .turn');
-        const turn: DebugElement = testUtils.findElement('#part_0 > .turn');
+        testUtils.expectElementToExist('#part-0 > .data-turn');
+        const turn: DebugElement = testUtils.findElement('#part-0 > .data-turn');
         expect(turn.nativeElement.innerText).toEqual('1');
+    }));
+    it('should display game name for humans', fakeAsync(async() => {
+        // Given a server with an existing part
+        setLobbyPartList([new PartDocument('started', {
+            ...PartMocks.STARTED,
+            typeGame: 'P4', // A game whose name is different from "type game"
+        })]);
+
+        // When displaying it
+        testUtils.detectChanges();
+
+        // Then it should show the turn, starting at turn 0 instead of -1
+        testUtils.expectElementToExist('#part-0 > .data-turn');
+        const gameName: DebugElement = testUtils.findElement('#part-0 > .data-game-name');
+        expect(gameName.nativeElement.innerText).toEqual('Four in a Row');
     }));
     it('should show the chat when clicking on the corresponding tab', fakeAsync(async() => {
         // Given a lobby

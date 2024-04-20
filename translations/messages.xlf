@@ -2953,16 +2953,16 @@
         <source>Jump Size</source>
       </trans-unit>
       <trans-unit id="2875926120657969888" datatype="html">
-        <source>Squarz is board control game. Here is the initial state. The goal is to have the most piece at the end of the game.</source>
+        <source>Squarz is board control game. Here is the initial state. The goal is to have the most pieces at the end of the game.</source>
       </trans-unit>
       <trans-unit id="6228262372157040796" datatype="html">
-        <source>One of the two kinds of move you can do is the duplication. When you do one, you create a new piece. To do this, select one of your pieces, and click on its neighbors space.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, make a duplication.</source>
+        <source>One of the two kinds of move you can do is the duplication. When you do one, you create a new piece. To do this, select one of your pieces, and click on one of its neighboring space.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, make a duplication.</source>
       </trans-unit>
       <trans-unit id="805836787886487858" datatype="html">
         <source>This was a jump, try a duplication now.</source>
       </trans-unit>
       <trans-unit id="1234758343143401720" datatype="html">
-        <source>The second type of move you can do is the jump. When you do one, your piece leaves it&apos;s original space and jump two space further. To do this, select one of your pieces, and click on its landing space two space further.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Light, make a jump.</source>
+        <source>The second type of move you can do is the jump. When you do one, your piece leaves its original space and jump two spaces further. To do this, select one of your pieces, and click on its landing space two space further.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Light, make a jump.</source>
       </trans-unit>
       <trans-unit id="4273222196833633277" datatype="html">
         <source>This was a duplication, try a jump now.</source>
@@ -2971,7 +2971,7 @@
         <source>When one of your pieces lands on a square neighbors to opponent&apos;s pieces, those pieces become yours.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, do such a move!</source>
       </trans-unit>
       <trans-unit id="8185889618290318299" datatype="html">
-        <source>When one player cannot play, the game ends, and the player with the most piece wins. Here, you can do a final move and win.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Light, do it.</source>
+        <source>When one player cannot play, the game ends, and the player with the most pieces wins. Here, you can do a final move and win.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Light, do it.</source>
       </trans-unit>
       <trans-unit id="3808135421251943457" datatype="html">
         <source>Bad choice, by making this move you allowed the opponent to win.&lt;br/&gt;&lt;br/&gt;Try again!</source>

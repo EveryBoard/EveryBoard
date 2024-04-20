@@ -3,11 +3,9 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { Player } from 'src/app/jscaip/Player';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
-import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
 import { ErrorLoggerServiceMock } from 'src/app/services/tests/ErrorLoggerServiceMock.spec';
-import { Table } from 'src/app/utils/ArrayUtils';
-import { MGPMap } from 'src/app/utils/MGPMap';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { Table } from 'src/app/jscaip/TableUtils';
+import { MGPMap, MGPOptional, TestUtils, Utils } from '@everyboard/lib';
 import { MartianChessMove, MartianChessMoveFailure } from '../MartianChessMove';
 import { MartianChessNode, MartianChessRules } from '../MartianChessRules';
 import { MartianChessFailure } from '../MartianChessFailure';
@@ -671,19 +669,19 @@ describe('MartianChessRules', () => {
                 RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
             });
 
-            it('should be "asked to dev" not to call it again on a clock-started state', () => {
+            it('should not be allowed to call it again on a clock-started state', () => {
                 // Given a board with clock called
                 const board: Table<MartianChessPiece> = MartianChessRules.get().getInitialState().getCopiedBoard();
                 const state: MartianChessState = new MartianChessState(board,
                                                                        0,
                                                                        MGPOptional.empty(),
                                                                        MartianChessRules.STARTING_COUNT_DOWN);
-                spyOn(ErrorLoggerService, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
+                spyOn(Utils, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
 
                 // When calling the clock once more
                 const move: MartianChessMove = MartianChessMove.from(new Coord(1, 7), new Coord(0, 6), true).get();
 
-                // Then the move should throw, cause dev should not do that
+                // Then the move should throw, as is it not an expected move
                 const expectedBoard: Table<MartianChessPiece> = [
                     [C, C, B, _],
                     [C, B, A, _],
@@ -695,10 +693,10 @@ describe('MartianChessRules', () => {
                     [_, _, C, C],
                 ];
                 const expectedState: MartianChessState = new MartianChessState(expectedBoard, 1, MGPOptional.of(move));
-                const component: string = 'Assertion failure';
-                const error: string = 'Should not call the clock twice';
-                expect(() => RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig)).toThrowError(component + ': ' + error);
-                expect(ErrorLoggerService.logError).toHaveBeenCalledOnceWith(component, error);
+                const reason: string = 'Should not call the clock twice';
+                TestUtils.expectToThrowAndLog(() => {
+                    RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
+                }, reason);
             });
 
             it('should decrease clock-count-down each captureless-turn when clock was called', () => {

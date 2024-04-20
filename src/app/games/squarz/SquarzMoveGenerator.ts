@@ -3,9 +3,8 @@ import { SquarzMove } from './SquarzMove';
 import { SquarzConfig, SquarzNode, SquarzRules } from './SquarzRules';
 import { SquarzState } from './SquarzState';
 import { Player } from 'src/app/jscaip/Player';
-import { MGPMap } from 'src/app/utils/MGPMap';
+import { MGPMap, MGPOptional } from '@everyboard/lib';
 import { Coord } from 'src/app/jscaip/Coord';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 export class SquarzMoveGenerator extends MoveGenerator<SquarzMove, SquarzState, SquarzConfig> {
 

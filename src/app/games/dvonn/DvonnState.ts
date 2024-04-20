@@ -1,8 +1,8 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { HexagonalGameState } from 'src/app/jscaip/HexagonalGameState';
-import { HexagonalUtils } from 'src/app/jscaip/HexagonalUtils';
-import { Table, TableUtils } from 'src/app/utils/ArrayUtils';
+import { Table, TableUtils } from 'src/app/jscaip/TableUtils';
 import { DvonnPieceStack } from './DvonnPieceStack';
+import { HexagonalUtils } from 'src/app/jscaip/HexagonalUtils';
 
 export class DvonnState extends HexagonalGameState<DvonnPieceStack> {
 

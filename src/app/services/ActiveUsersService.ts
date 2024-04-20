@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { User, UserDocument } from '../domain/User';
 import { UserDAO } from '../dao/UserDAO';
 import { FirestoreCollectionObserver } from '../dao/FirestoreCollectionObserver';
-import { Debug, Utils } from 'src/app/utils/utils';
+import { Debug, Utils } from '@everyboard/lib';
 import { Subscription } from 'rxjs';
 import { Timestamp } from 'firebase/firestore';
 

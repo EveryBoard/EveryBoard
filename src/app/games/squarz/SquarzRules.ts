@@ -1,18 +1,17 @@
 import { GameNode } from 'src/app/jscaip/AI/GameNode';
 import { SquarzMove } from './SquarzMove';
 import { SquarzState } from './SquarzState';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { ConfigurableRules } from 'src/app/jscaip/Rules';
-import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { TableUtils } from 'src/app/utils/ArrayUtils';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Direction } from 'src/app/jscaip/Direction';
 import { NumberConfig, RulesConfigDescription, RulesConfigDescriptionLocalizable } from 'src/app/components/wrapper-components/rules-configuration/RulesConfigDescription';
 import { MGPValidators } from 'src/app/utils/MGPValidator';
 import { SquarzFailure } from './SquarzFailure';
+import { MGPOptional, MGPValidation } from '@everyboard/lib';
+import { TableUtils } from 'src/app/jscaip/TableUtils';
 
 export class SquarzNode extends GameNode<SquarzMove, SquarzState> {}
 
