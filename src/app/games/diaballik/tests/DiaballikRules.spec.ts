@@ -24,12 +24,12 @@ describe('DiaballikRules', () => {
 
     const empty: MGPOptional<DiaballikSubMove> = MGPOptional.empty();
 
-    function translation(from: Coord, to: Coord): DiaballikMove {
+    function getTranslation(from: Coord, to: Coord): DiaballikMove {
         const translation: DiaballikSubMove = DiaballikTranslation.from(from, to).get();
         return new DiaballikMove(translation, empty, empty);
     }
 
-    function pass(from: Coord, to: Coord): DiaballikMove {
+    function getPassMove(from: Coord, to: Coord): DiaballikMove {
         const pass: DiaballikSubMove = DiaballikBallPass.from(from, to).get();
         return new DiaballikMove(pass, empty, empty);
     }
@@ -45,7 +45,7 @@ describe('DiaballikRules', () => {
             const state: DiaballikState = DiaballikRules.get().getInitialState();
 
             // When doing a move out of board
-            const move: DiaballikMove = translation(new Coord(-1, 0), new Coord(0, 0));
+            const move: DiaballikMove = getTranslation(new Coord(-1, 0), new Coord(0, 0));
 
             // Then it should fail
             const reason: string = CoordFailure.OUT_OF_RANGE(new Coord(-1, 0));
@@ -57,7 +57,7 @@ describe('DiaballikRules', () => {
             const state: DiaballikState = DiaballikRules.get().getInitialState();
 
             // When doing a move out of board
-            const move: DiaballikMove = translation(new Coord(0, 0), new Coord(-1, 0));
+            const move: DiaballikMove = getTranslation(new Coord(0, 0), new Coord(-1, 0));
 
             // Then it should fail
             const reason: string = CoordFailure.OUT_OF_RANGE(new Coord(-1, 0));
@@ -69,7 +69,7 @@ describe('DiaballikRules', () => {
             const state: DiaballikState = DiaballikRules.get().getInitialState();
 
             // When doing a move out of board
-            const move: DiaballikMove = pass(new Coord(-1, 0), new Coord(0, 0));
+            const move: DiaballikMove = getPassMove(new Coord(-1, 0), new Coord(0, 0));
 
             // Then it should fail
             const reason: string = CoordFailure.OUT_OF_RANGE(new Coord(-1, 0));
@@ -81,7 +81,7 @@ describe('DiaballikRules', () => {
             const state: DiaballikState = DiaballikRules.get().getInitialState();
 
             // When doing a move out of board
-            const move: DiaballikMove = pass(new Coord(0, 0), new Coord(-1, 0));
+            const move: DiaballikMove = getPassMove(new Coord(0, 0), new Coord(-1, 0));
 
             // Then it should fail
             const reason: string = CoordFailure.OUT_OF_RANGE(new Coord(-1, 0));
@@ -210,7 +210,7 @@ describe('DiaballikRules', () => {
         const state: DiaballikState = DiaballikRules.get().getInitialState();
 
         // When doing a move containing one translation and no pass
-        const move: DiaballikMove = translation(new Coord(1, 6), new Coord(1, 5));
+        const move: DiaballikMove = getTranslation(new Coord(1, 6), new Coord(1, 5));
 
         // Then it should succeed
         const expectedState: DiaballikState = new DiaballikState([
@@ -253,7 +253,7 @@ describe('DiaballikRules', () => {
         const state: DiaballikState = DiaballikRules.get().getInitialState();
 
         // When trying to move with the ball
-        const move: DiaballikMove = translation(new Coord(3, 6), new Coord(3, 5));
+        const move: DiaballikMove = getTranslation(new Coord(3, 6), new Coord(3, 5));
 
         // Then it should fail
         const reason: string = DiaballikFailure.CANNOT_MOVE_WITH_BALL();
@@ -265,7 +265,7 @@ describe('DiaballikRules', () => {
         const state: DiaballikState = DiaballikRules.get().getInitialState();
 
         // When trying to move from an empty space
-        const move: DiaballikMove = translation(new Coord(3, 3), new Coord(3, 4));
+        const move: DiaballikMove = getTranslation(new Coord(3, 3), new Coord(3, 4));
 
         // Then it should fail
         const reason: string = RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY();
@@ -277,7 +277,7 @@ describe('DiaballikRules', () => {
         const state: DiaballikState = DiaballikRules.get().getInitialState();
 
         // When trying to move a piece of the opponent
-        const move: DiaballikMove = translation(new Coord(0, 0), new Coord(0, 1));
+        const move: DiaballikMove = getTranslation(new Coord(0, 0), new Coord(0, 1));
 
         // Then it should fail
         const reason: string = RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT();
@@ -289,7 +289,7 @@ describe('DiaballikRules', () => {
         const state: DiaballikState = DiaballikRules.get().getInitialState();
 
         // When trying to pass from an empty space
-        const move: DiaballikMove = pass(new Coord(4, 1), new Coord(4, 0));
+        const move: DiaballikMove = getPassMove(new Coord(4, 1), new Coord(4, 0));
 
         // Then it should fail
         const reason: string = RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY();
@@ -301,7 +301,7 @@ describe('DiaballikRules', () => {
         const state: DiaballikState = DiaballikRules.get().getInitialState();
 
         // When trying to pass from a piece of the opponent
-        const move: DiaballikMove = pass(new Coord(3, 0), new Coord(4, 0));
+        const move: DiaballikMove = getPassMove(new Coord(3, 0), new Coord(4, 0));
 
         // Then it should fail
         const reason: string = RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT();
@@ -313,7 +313,7 @@ describe('DiaballikRules', () => {
         const state: DiaballikState = DiaballikRules.get().getInitialState();
 
         // When trying to pass from a piece that does not hold the ball
-        const move: DiaballikMove = pass(new Coord(2, 6), new Coord(1, 6));
+        const move: DiaballikMove = getPassMove(new Coord(2, 6), new Coord(1, 6));
 
         // Then it should throw, the component should not allow it at all
         TestUtils.expectToThrowAndLog(() => rules.isLegal(move, state), 'DiaballikRules: cannot pass without the ball');
@@ -324,7 +324,7 @@ describe('DiaballikRules', () => {
         const state: DiaballikState = DiaballikRules.get().getInitialState();
 
         // When trying to pass from a piece to an empty space for example
-        const move: DiaballikMove = pass(new Coord(3, 6), new Coord(3, 3));
+        const move: DiaballikMove = getPassMove(new Coord(3, 6), new Coord(3, 3));
 
         // Then it should fail
         const reason: string = RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY();
@@ -336,7 +336,7 @@ describe('DiaballikRules', () => {
         const state: DiaballikState = DiaballikRules.get().getInitialState();
 
         // When trying to move to an occupied space
-        const move: DiaballikMove = translation(new Coord(1, 6), new Coord(2, 6));
+        const move: DiaballikMove = getTranslation(new Coord(1, 6), new Coord(2, 6));
 
         // Then it should fail
         const reason: string = RulesFailure.MUST_LAND_ON_EMPTY_SPACE();
@@ -356,7 +356,7 @@ describe('DiaballikRules', () => {
         ], 0);
 
         // When trying to pass on an obstructed path
-        const move: DiaballikMove = pass(new Coord(3, 6), new Coord(3, 2));
+        const move: DiaballikMove = getPassMove(new Coord(3, 6), new Coord(3, 2));
 
         // Then it should fail
         const reason: string = DiaballikFailure.PASS_PATH_OBSTRUCTED();

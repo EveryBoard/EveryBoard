@@ -64,9 +64,9 @@ export class LascaRules extends Rules<LascaMove, LascaState> {
         const moved: LascaStack = state.getPieceAt(coord);
         for (const direction of directions) {
             const captured: Coord = coord.getNext(direction, 1);
-            if (LascaState.isOnBoard(captured) && state.getPieceAt(captured).isCommandedBy(opponent)) {
+            if (state.isOnBoard(captured) && state.getPieceAt(captured).isCommandedBy(opponent)) {
                 const landing: Coord = captured.getNext(direction, 1);
-                if (LascaState.isOnBoard(landing) && state.getPieceAt(landing).isEmpty()) {
+                if (state.isOnBoard(landing) && state.getPieceAt(landing).isEmpty()) {
                     const fakePostCaptureState: LascaState = state.remove(coord).remove(captured).set(landing, moved);
                     // Not needed to do the real capture
                     const startOfMove: LascaMove = LascaMove.fromCapture([coord, landing]).get();
@@ -119,7 +119,7 @@ export class LascaRules extends Rules<LascaMove, LascaState> {
         const directions: Direction[] = this.getPieceDirections(state, coord);
         for (const direction of directions) {
             const landing: Coord = coord.getNext(direction, 1);
-            if (LascaState.isOnBoard(landing) && state.getPieceAt(landing).isEmpty()) {
+            if (state.isOnBoard(landing) && state.getPieceAt(landing).isEmpty()) {
                 const newStep: LascaMove = LascaMove.fromStep(coord, landing).get();
                 pieceMoves.push(newStep);
             }

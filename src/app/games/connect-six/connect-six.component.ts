@@ -74,8 +74,7 @@ export class ConnectSixComponent extends GobanGameComponent<ConnectSixRules,
                 return this.cancelMove(RulesFailure.MUST_CLICK_ON_EMPTY_SQUARE());
             } else if (this.droppedCoord.isPresent()) {
                 if (this.droppedCoord.equalsValue(clickedCoord)) {
-                    this.droppedCoord = MGPOptional.empty();
-                    return MGPValidation.SUCCESS;
+                    return this.cancelMove();
                 } else {
                     const move: ConnectSixMove = ConnectSixDrops.of(this.droppedCoord.get(), clickedCoord);
                     return this.chooseMove(move);

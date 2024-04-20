@@ -103,7 +103,7 @@ export class YinshTutorial extends Tutorial {
             ], PlayerNumberMap.of(0, 0), 20),
             new YinshMove([], new Coord(4, 4), MGPOptional.of(new Coord(7, 4)),
                           [YinshCapture.of(new Coord(2, 4), new Coord(6, 4), MGPOptional.of(new Coord(7, 4)))]),
-            (_: YinshMove, _previous: YinshState, result: YinshState): MGPValidation => {
+            (_move: YinshMove, _previous: YinshState, result: YinshState): MGPValidation => {
                 if (result.sideRings.get(Player.ZERO) === 1) {
                     return MGPValidation.SUCCESS;
                 } else {
@@ -136,7 +136,7 @@ export class YinshTutorial extends Tutorial {
             ],
                           new Coord(4, 1), MGPOptional.of(new Coord(4, 2)),
                           []),
-            (_: YinshMove, _previous: YinshState, result: YinshState): MGPValidation => {
+            (_move: YinshMove, _previous: YinshState, result: YinshState): MGPValidation => {
                 if (result.sideRings.get(Player.ZERO) === 2) {
                     return MGPValidation.SUCCESS;
                 } else {

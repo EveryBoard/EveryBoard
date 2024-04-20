@@ -30,13 +30,15 @@ describe('SaharaComponent', () => {
 
         it('should not allow to click on empty space when no pyramid selected', fakeAsync(async() => {
             // Given the initial board
-            // When clicking on empty space, expect move to be refused
+            // When clicking on empty space
+            // Then it should fail
             await testUtils.expectClickFailure('#click_2_2', SaharaFailure.MUST_CHOOSE_PYRAMID_FIRST());
         }));
 
         it('should not allow to select opponent pyramid', fakeAsync(async() => {
             // Given the initial board
-            // When clicking on opponent's pyramid, expect move to be refused
+            // When clicking on opponent's pyramid
+            // Then it should fail
             await testUtils.expectClickFailure('#click_0_4', SaharaFailure.MUST_CHOOSE_OWN_PYRAMID());
         }));
 
@@ -104,7 +106,7 @@ describe('SaharaComponent', () => {
             testUtils.expectElementToExist('#possible_landing_2_1');
 
             // When clicking that piece again
-            await testUtils.expectClickSuccess('#click_2_0');
+            await testUtils.expectClickFailure('#click_2_0');
 
             // Then the piece should no longer be selected
             testUtils.expectElementNotToExist('chosen_coord_2_0');
@@ -138,6 +140,6 @@ describe('SaharaComponent', () => {
         const move: SaharaMove = SaharaMove.from(new Coord(2, 1), new Coord(1, 2)).get();
         await testUtils.expectMoveSuccess('#click_1_2', move); // select landing
 
-        expect(testUtils.getWrapper().endGame).toBeTrue();
+        expect(testUtils.getWrapper().endGame).withContext('game should be finished').toBeTrue();
     }));
 });

@@ -45,11 +45,12 @@ describe('GameEventService', () => {
     });
 
     describe('subscribeToEvents', () => {
+
         it('should receive newly added events exactly once', fakeAsync(async() => {
             // Given a part service with a part without event, and where we subscribed to the part's events
             let receivedEvents: number = 0;
-            gameEventService.subscribeToEvents(partId, (events: GameEvent[]) => {
-                receivedEvents += events.length;
+            gameEventService.subscribeToEvents(partId, (gameEvents: GameEvent[]) => {
+                receivedEvents += gameEvents.length;
             });
             // When a new event is added
             await addMove({ x: 0 });
@@ -58,18 +59,21 @@ describe('GameEventService', () => {
             tick(0);
             expect(receivedEvents).toBe(1);
         }));
+
         it('should receive already present events when subscribing', fakeAsync(async() => {
             // Given a part service with events already in the part
             await addMove({ x: 0 });
             await addMove({ x: 1 });
             // When we subscribed to the part events
             let receivedEvents: number = 0;
-            gameEventService.subscribeToEvents(partId, (events: GameEvent[]) => {
-                receivedEvents += events.length;
+            gameEventService.subscribeToEvents(partId, (gameEvents: GameEvent[]) => {
+                receivedEvents += gameEvents.length;
             });
             // Then we receive the existing events
             expect(receivedEvents).toBe(2);
         }));
+
     });
+
 });
 

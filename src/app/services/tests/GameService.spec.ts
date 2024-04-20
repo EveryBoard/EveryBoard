@@ -154,6 +154,7 @@ describe('GameService', () => {
             });
             expect(result).toBe('gameId');
         }));
+
     });
 
     describe('deletePart', () => {
@@ -168,6 +169,7 @@ describe('GameService', () => {
                 return gameService.deletePart(gameId);
             });
         }));
+
     });
 
     describe('acceptConfig', () => {
@@ -181,6 +183,7 @@ describe('GameService', () => {
                 return gameService.acceptConfig(gameId);
             });
         }));
+
     });
 
     describe('getExistingGame', () => {
@@ -202,6 +205,7 @@ describe('GameService', () => {
             });
             expect(result).toEqual(game);
         }));
+
     });
 
     describe('resign', () => {
@@ -215,6 +219,7 @@ describe('GameService', () => {
                 return gameService.resign(gameId);
             });
         }));
+
     });
 
     describe('notifyTimeout', () => {
@@ -334,6 +339,7 @@ describe('GameService', () => {
                 return gameService.acceptTakeBack(gameId);
             });
         }));
+
     });
 
     describe('refuseTakeBack', () => {

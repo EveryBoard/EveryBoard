@@ -55,6 +55,8 @@ Thumbs.db
 
 # Lib stuff
 /lib/tsconfig.tsbuildinfo
-/lib/build/
-/lib/node_modules/
-/lib/dist/
+/lib/build
+/lib/node_modules
+/lib/dist
+
+.nx/

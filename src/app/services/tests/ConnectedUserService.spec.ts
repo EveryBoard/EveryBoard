@@ -180,6 +180,7 @@ describe('ConnectedUserService', () => {
     it('should create', fakeAsync(async() => {
         expect(connectedUserService).toBeTruthy();
     }));
+
     it('should mark user as verified if the user finalized its account but is not yet marked as verified', async() => {
         const userService: UserService = TestBed.inject(UserService);
         spyOn(userService, 'markAsVerified').and.callThrough();
@@ -208,7 +209,9 @@ describe('ConnectedUserService', () => {
 
         subscription.unsubscribe();
     });
+
     describe('register', () => {
+
         it('should create user upon successful registration', async() => {
             spyOn(connectedUserService, 'createUser').and.callThrough();
             // Given an user that does not exist
@@ -220,6 +223,7 @@ describe('ConnectedUserService', () => {
             expect(result.isSuccess()).toBeTrue();
             expect(connectedUserService.createUser).toHaveBeenCalledWith(result.get().uid, username);
         });
+
         it('should fail when trying to register an user with an email that is already registered', async() => {
             // Given an user that already exists
             expect((await connectedUserService.doRegister(username, email, password)).isSuccess()).toBeTrue();
@@ -231,6 +235,7 @@ describe('ConnectedUserService', () => {
             expect(result.isFailure()).toBeTrue();
             expect(result.getReason()).toBe('This email address is already in use.');
         });
+
         it('should fail when trying to register an user with an username that is already registered', async() => {
             // Given an user that already exists
             expect((await connectedUserService.doRegister(username, email, password)).isSuccess()).toBeTrue();
@@ -242,6 +247,7 @@ describe('ConnectedUserService', () => {
             expect(result.isFailure()).toBeTrue();
             expect(result.getReason()).toBe('This username is already in use.');
         });
+
         it('should fail when trying to register an user with an invalid email', async() => {
             // Given an invalid email address
             const invalidEmail: string = 'blibli';
@@ -254,19 +260,23 @@ describe('ConnectedUserService', () => {
             expect(result.isFailure()).toBeTrue();
             expect(result.getReason()).toBe('This email address is invalid.');
         });
+
         it('should fail when trying to register with a weak password', async() => {
             // Given an weak password
-            const password: string = '1';
+            const weakPassword: string = '1';
 
             // When an user registers with that password
-            const result: MGPFallible<FireAuth.User> = await connectedUserService.doRegister(username, email, password);
+            const result: MGPFallible<FireAuth.User> =
+                await connectedUserService.doRegister(username, email, weakPassword);
 
             // Then an error is thrown
             expect(result.isFailure()).toBeTrue();
             expect(result.getReason()).toBe('Your password is too weak, please use a stronger password.');
         });
     });
+
     describe('sendEmailVerification', () => {
+
         it('should send the email verification', async() => {
             // Given a user that just registered and hence is not verified
             const userRegistrationResult: MGPFallible<FireAuth.User> =
@@ -285,6 +295,7 @@ describe('ConnectedUserService', () => {
             expect(result).toBe(MGPValidation.SUCCESS);
             expect(Auth.sendEmailVerification).toHaveBeenCalledOnceWith(user);
         });
+
         it('should fail and log the error if there is no connected user', async() => {
             // Given nothing
             spyOn(Utils, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
@@ -297,6 +308,7 @@ describe('ConnectedUserService', () => {
             expect(result.getReason()).toBe('ConnectedUserService: Unlogged users cannot request for email verification');
             expect(Utils.logError).toHaveBeenCalledWith('ConnectedUserService', 'Unlogged users cannot request for email verification');
         });
+
         it('should fail if the user already verified its email', async() => {
             // Given a connected user that is registered and verified, for example through a google account
             await createConnectedGoogleUser('foo@bar.com');
@@ -310,6 +322,7 @@ describe('ConnectedUserService', () => {
             expect(result.getReason()).toBe('ConnectedUserService: Verified users should not ask email verification after being verified');
             expect(Utils.logError).toHaveBeenCalledWith('ConnectedUserService', 'Verified users should not ask email verification after being verified');
         });
+
         it('should fail if there is a genuine error in the email verification process from firebase', async() => {
             // Given a user that just registered and hence is not verified
             expect((await connectedUserService.doRegister(username, email, password)).isSuccess()).toBeTrue();
@@ -324,8 +337,11 @@ describe('ConnectedUserService', () => {
             // Then a failure is returned
             expect(result.isFailure()).toBeTrue();
         });
+
     });
+
     describe('email login', () => {
+
         it('should succeed when the password is correct', async() => {
             // Given a registered user
             expect((await connectedUserService.doRegister(username, email, password)).isSuccess()).toBeTrue();
@@ -338,6 +354,7 @@ describe('ConnectedUserService', () => {
             expect(result.isSuccess()).toBeTrue();
             expect(Utils.getNonNullable(auth.currentUser).email).toBe(email);
         });
+
         it('should update user when successfully logging in', async() => {
             // Given a registered user and a listener waiting for user updates
             expect((await connectedUserService.doRegister(username, email, password)).isSuccess()).toBeTrue();
@@ -360,6 +377,7 @@ describe('ConnectedUserService', () => {
             await expectAsync(updateSeen).toBeResolved();
             subscription.unsubscribe();
         });
+
         it('should fail when the password is incorrect', async() => {
             // Given a registered user
             expect((await connectedUserService.doRegister(username, email, password)).isSuccess()).toBeTrue();
@@ -372,6 +390,7 @@ describe('ConnectedUserService', () => {
             expect(result.isFailure()).toBeTrue();
             expect(result.getReason()).toBe(`You have entered invalid credentials.`);
         });
+
         it('should fail when the user is not registered', async() => {
             // Given that the user does not exist
 
@@ -382,8 +401,11 @@ describe('ConnectedUserService', () => {
             expect(result.isFailure()).toBeTrue();
             expect(result.getReason()).toBe(`You have entered invalid credentials.`);
         });
+
     });
+
     describe('google login', () => {
+
         it('should delegate to signInPopup and create the user if it does not exist', async() => {
             // Given a non-existing google user
             spyOn(connectedUserService, 'createUser').and.callThrough();
@@ -405,6 +427,7 @@ describe('ConnectedUserService', () => {
             expect(Auth.signInWithPopup).toHaveBeenCalledWith(auth, provider);
             expect(connectedUserService.createUser).toHaveBeenCalledWith(user.uid);
         });
+
         it('should not create the user if it already exists', async() => {
             // Given a disconnected google user
             spyOn(connectedUserService, 'createUser').and.callThrough();
@@ -422,6 +445,7 @@ describe('ConnectedUserService', () => {
             expect(Auth.signInWithPopup).toHaveBeenCalledWith(auth, provider);
             expect(connectedUserService.createUser).not.toHaveBeenCalled();
         });
+
         it('should fail if google login also fails', async() => {
             // Given a google user that will fail to connect
             const error: FirebaseError = new FirebaseError('auth/invalid-credential', 'Invalid credential');
@@ -434,8 +458,11 @@ describe('ConnectedUserService', () => {
             expect(result.isFailure()).toBeTrue();
             expect(result.getReason()).toEqual('The credential is invalid or has expired, please try again.');
         });
+
     });
+
     describe('disconnect', () => {
+
         it('should fail if there is no user connected', async() => {
             // Given that no user is connected
             await signOut();
@@ -446,6 +473,7 @@ describe('ConnectedUserService', () => {
             // Then it fails
             expect(result).toEqual(MGPValidation.failure('Cannot disconnect a non-connected user'));
         });
+
         it('should succeed if a user is connected, and disconnected the user', async() => {
             // Given a registered and connected user
             const registrationResult: MGPFallible<FireAuth.User> =
@@ -462,8 +490,11 @@ describe('ConnectedUserService', () => {
             // and there is no current user
             expect(auth.currentUser).toBeNull();
         });
+
     });
+
     describe('mapFirebaseError', () => {
+
         it('should call logError when encountering an unsupported error', async() => {
             spyOn(Utils, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
 
@@ -476,6 +507,7 @@ describe('ConnectedUserService', () => {
             // Then logError is called
             expect(Utils.logError).toHaveBeenCalledWith('ConnectedUserService', 'Unsupported firebase error', { errorCode: 'auth/unknown-error', errorMessage: 'Error message' });
         });
+
         it('should map the errors encountered in the wild but that we cannot reproduce in a test environment', async() => {
             spyOn(Utils, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
             const errorCodes: string[] = [
@@ -495,12 +527,16 @@ describe('ConnectedUserService', () => {
                 expect(Utils.logError).not.toHaveBeenCalled();
             }
         });
+
     });
+
     describe('setUsername', () => {
+
         beforeEach(async() => {
             // Given a registered and logged in user
             await createConnectedGoogleUser('foo@bar.com');
         });
+
         it('should update the username', async() => {
             // When the username is set
             const newUsername: string = 'grandgaga';
@@ -509,6 +545,7 @@ describe('ConnectedUserService', () => {
             // Then the username is updated
             expect(result.isSuccess()).toBeTrue();
         });
+
         it('should not throw upon failure', async() => {
             spyOn(Utils, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
 
@@ -522,6 +559,7 @@ describe('ConnectedUserService', () => {
             expect(result.getReason()).toEqual('Error');
             expect(Utils.logError).toHaveBeenCalledOnceWith('ConnectedUserService', 'Unsupported firebase error', { errorCode: 'unknown/error', errorMessage: 'Error' });
         });
+
         it('should reject empty usernames', async() => {
             // When the username is set to an empty username
             const result: MGPValidation = await connectedUserService.setUsername('');
@@ -530,6 +568,7 @@ describe('ConnectedUserService', () => {
             expect(result.isFailure()).toBeTrue();
             expect(result.getReason()).toEqual(`Your username may not be empty.`);
         });
+
         it('should reject existing usernames', async() => {
             const userService: UserService = TestBed.inject(UserService);
             // When the username is set to an username that is not available
@@ -540,8 +579,11 @@ describe('ConnectedUserService', () => {
             expect(result.isFailure()).toBeTrue();
             expect(result.getReason()).toEqual(`This username is already in use, please select a different one.`);
         });
+
     });
+
     describe('setPicture', () => {
+
         it('should update the picture', async() => {
             // Given a registered and logged in user
             await createConnectedGoogleUser('foo@bar.com');
@@ -554,6 +596,7 @@ describe('ConnectedUserService', () => {
             expect(result.isSuccess()).toBeTrue();
             expect(Utils.getNonNullable(auth.currentUser).photoURL).toEqual(photoURL);
         });
+
         it('should not throw upon failure', async() => {
             spyOn(Utils, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
             // Given a registered and logged in user
@@ -569,8 +612,11 @@ describe('ConnectedUserService', () => {
             expect(result.getReason()).toEqual('Error');
             expect(Utils.logError).toHaveBeenCalledOnceWith('ConnectedUserService', 'Unsupported firebase error', { errorCode: 'unknown/error', errorMessage: 'Error' });
         });
+
     });
+
     describe('sendPasswordResetEmail', () => {
+
         it('should delegate to Auth.sendPasswordResetEmail', async() => {
             spyOn(Auth, 'sendPasswordResetEmail').and.callThrough();
             // Given a registered user
@@ -583,18 +629,23 @@ describe('ConnectedUserService', () => {
             expect(result.isSuccess()).toBeTrue();
             expect(Auth.sendPasswordResetEmail).toHaveBeenCalledWith(auth, email);
         });
+
         it('should properly map errors', async() => {
             // Given a user that doesn't exist
-            const email: string = 'foo@jaja.com';
+            const unexistingEmail: string = 'foo@jaja.com';
             const error: FirebaseError = new FirebaseError('auth/user-not-found', 'Error');
             spyOn(Auth, 'sendPasswordResetEmail').and.rejectWith(error);
+
             // When asking for password reset
-            const result: MGPValidation = await connectedUserService.sendPasswordResetEmail(email);
+            const result: MGPValidation = await connectedUserService.sendPasswordResetEmail(unexistingEmail);
+
             // Then it should fail
             expect(result.isFailure()).toBeTrue();
             expect(result.getReason()).toBe('You have entered invalid credentials.');
         });
+
     });
+
     it('should unsubscribe from auth subscription upon destruction', () => {
         // eslint-disable-next-line dot-notation
         spyOn(connectedUserService['authSubscription'], 'unsubscribe').and.callThrough();
@@ -607,12 +658,15 @@ describe('ConnectedUserService', () => {
         // eslint-disable-next-line dot-notation
         expect(connectedUserService['authSubscription'].unsubscribe).toHaveBeenCalledWith();
     });
+
     describe('sendPresenceToken', () => {
+
         it('should throw when asking to send presence token while no user is logged', fakeAsync(() => {
             spyOn(Utils, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
             const expectedError: string = 'Assertion failure: Should not call sendPresenceToken when not connected';
             expect(() => connectedUserService.sendPresenceToken()).toThrowError(expectedError);
         }));
+
         it('should delegate presence token sending to userDAO', async() => {
             // Given a service observing an user
             connectedUserService.user = MGPOptional.of(UserMocks.CREATOR_AUTH_USER);
@@ -625,7 +679,9 @@ describe('ConnectedUserService', () => {
             const userDocId: string = UserMocks.CREATOR_MINIMAL_USER.id;
             expect(userDAO.update).toHaveBeenCalledOnceWith(userDocId, { lastUpdateTime: serverTimestamp() });
         });
+
     });
+
     it('should throw when encountering a non-firebase error', () => {
         // Given a non-firebase error
         const error: Error = new Error('some other error');
@@ -649,10 +705,12 @@ describe('ConnectedUserService', () => {
             expect(user.getIdToken).toHaveBeenCalled();
         });
     });
+
     afterEach(async() => {
         if (alreadyDestroyed === false) {
             connectedUserService.ngOnDestroy();
         }
         await auth.signOut();
     });
+
 });

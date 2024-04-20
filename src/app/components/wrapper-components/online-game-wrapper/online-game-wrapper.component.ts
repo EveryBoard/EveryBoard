@@ -275,7 +275,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
 
     private async onGameEnd(): Promise<void> {
         await this.currentGameService.removeCurrentGame();
-        this.gameComponent.setInteractive(false);
+        await this.setInteractive(false);
         this.endGame = true;
     }
 
@@ -294,20 +294,23 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         Utils.assert(success.isSuccess(), 'Chosen move should be legal after all checks, but it is not! Reason: ' + success.getReasonOr(''));
         this.gameComponent.node = success.get();
         if (this.role === PlayerOrNone.NONE) {
-            await this.updateBoardAndShowLastMove(isLastMoveOfBatch);
+            await this.showNewMove(isLastMoveOfBatch);
         } else {
             // We only animate the move of opponent, because the users move has already been animated before sending it
             const triggerAnimation: boolean = currentPartTurn % 2 !== this.role.getValue();
-            await this.updateBoardAndShowLastMove(triggerAnimation && isLastMoveOfBatch);
+            await this.showNewMove(triggerAnimation && isLastMoveOfBatch);
         }
-        this.setCurrentPlayerAccordingToCurrentTurn();
+        await this.setCurrentPlayerAccordingToCurrentTurn();
         this.timeManager.onReceivedMove(moveEvent);
         this.requestManager.onReceivedMove();
     }
 
-    private setCurrentPlayerAccordingToCurrentTurn(): void {
+    private async setCurrentPlayerAccordingToCurrentTurn(): Promise<void> {
         this.currentUser = this.players[this.gameComponent.getTurn() % 2].get();
-        this.gameComponent.setInteractive(this.currentUser.name === this.getPlayer().name);
+        await this.setInteractive(
+            this.currentUser.name === this.getPlayer().name,
+            false,
+        );
     }
 
     private beforeEventsBatch(): void {
@@ -328,9 +331,9 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
             // Take back a second time to make sure it end up on player's turn
             this.gameComponent.node = this.gameComponent.node.parent.get();
         }
-        this.setCurrentPlayerAccordingToCurrentTurn();
+        await this.setCurrentPlayerAccordingToCurrentTurn();
         const triggerAnimation: boolean = this.gameComponent.getTurn() === 0;
-        await this.updateBoardAndShowLastMove(triggerAnimation);
+        await this.showCurrentState(triggerAnimation);
     }
 
     public canResign(): boolean {
@@ -420,7 +423,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
             MGPOptional.ofNullable(part.data.playerOne),
         ];
         Utils.assert(part.data.playerOne != null, 'should not initializePlayersDatas when players data is not received');
-        this.setCurrentPlayerAccordingToCurrentTurn();
+        await this.setCurrentPlayerAccordingToCurrentTurn();
         await this.setRealObserverRole();
     }
 
@@ -559,7 +562,8 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         return this.gameService.addTurnTime(this.currentPartId);
     }
 
-    public async onCancelMove(reason?: string): Promise<void> {
+    public override async onCancelMove(reason?: string): Promise<void> {
+        await super.onCancelMove(reason);
         if (this.gameComponent.node.previousMove.isPresent()) {
             const move: Move = this.gameComponent.node.previousMove.get();
             const config: MGPOptional<RulesConfig> = await this.getConfig();
