@@ -1,9 +1,10 @@
+/* eslint-disable max-lines-per-function */
 import { PlayerOrNone } from 'src/app/jscaip/Player';
 import { SquarzMove } from '../SquarzMove';
 import { SquarzMoveGenerator } from '../SquarzMoveGenerator';
 import { SquarzConfig, SquarzNode, SquarzRules } from '../SquarzRules';
 import { SquarzState } from '../SquarzState';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { MGPOptional } from '@everyboard/lib';
 
 describe('SquarzMoveGenerator', () => {
 

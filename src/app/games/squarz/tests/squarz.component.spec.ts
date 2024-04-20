@@ -9,7 +9,7 @@ import { SquarzMove } from '../SquarzMove';
 import { Coord } from 'src/app/jscaip/Coord';
 import { PlayerOrNone } from 'src/app/jscaip/Player';
 import { SquarzFailure } from '../SquarzFailure';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { MGPOptional } from '@everyboard/lib';
 
 describe('SquarzComponent', () => {
 

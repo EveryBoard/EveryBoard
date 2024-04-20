@@ -8,7 +8,7 @@ import { MCTS } from 'src/app/jscaip/AI/MCTS';
 import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 import { NewGameMoveGenerator } from './NewGameMoveGenerator';
 import { NewGameMinimax } from './NewGameMinimax';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { MGPOptional } from '@everyboard/lib';
 import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 
 /**
