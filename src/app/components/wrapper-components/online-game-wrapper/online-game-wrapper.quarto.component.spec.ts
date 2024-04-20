@@ -1645,8 +1645,8 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             spyOn(gameService, 'proposeRematch').and.callThrough();
             await testUtils.expectInterfaceClickSuccess('#proposeRematch');
 
-            // Then the abutton should be disabled
-            testUtils.expectElementToBeDisabled('#proposeRematch')
+            // Then the button should be disabled
+            testUtils.expectElementToBeDisabled('#proposeRematch');
         }));
 
         it('should send reply when rejecting', fakeAsync(async() => {
