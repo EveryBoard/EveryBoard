@@ -1633,6 +1633,22 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             expect(gameService.proposeRematch).toHaveBeenCalledOnceWith('configRoomId');
         }));
 
+        fit('should disable button after proposing', fakeAsync(async() => {
+            // Given an ended game
+            await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER, PreparationOptions.withoutClocks);
+            await testUtils.expectInterfaceClickSuccess('#resign');
+            tick(0);
+            testUtils.detectChanges();
+
+            // When the propose rematch button is clicked
+            const gameService: GameService = TestBed.inject(GameService);
+            spyOn(gameService, 'proposeRematch').and.callThrough();
+            await testUtils.expectInterfaceClickSuccess('#proposeRematch');
+
+            // Then the abutton should be disabled
+            testUtils.expectElementToBeDisabled('#proposeRematch')
+        }));
+
         it('should send reply when rejecting', fakeAsync(async() => {
             // Given an ended game with a received proposal request
             await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER, PreparationOptions.withoutClocks);

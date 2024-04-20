@@ -350,7 +350,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
                 return this.canProposeDraw();
             default:
                 Utils.expectToBe(request, 'Rematch');
-                return this.endGame;
+                return this.endGame && this.requestManager.canMakeRequest('Rematch');
         }
     }
 
