@@ -43,7 +43,7 @@ describe('YinshCapture', () => {
             expect(capture.equals(otherCapture)).toBeFalse();
         });
 
-        it('should consider captures with different captured coord', () => {
+        it('should consider captures with different captured coord not equal', () => {
             const capture: YinshCapture =
                 YinshCapture.of(new Coord(2, 3), new Coord(6, 3), MGPOptional.of(new Coord(4, 4)));
             const otherCapture: YinshCapture =
@@ -55,7 +55,7 @@ describe('YinshCapture', () => {
 
     describe('setRingTaken', () => {
 
-        it('should hey', () => {
+        it('should set the taken ring', () => {
             const captureWithoutRing: YinshCapture = YinshCapture.of(new Coord(2, 3), new Coord(6, 3));
             const ring: Coord = new Coord(0, 0);
             const captureWithRing: YinshCapture =
