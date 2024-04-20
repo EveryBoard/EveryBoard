@@ -63,13 +63,13 @@
         <source>Learn the rules</source>
       </trans-unit>
       <trans-unit id="7164690325767499813" datatype="html">
-        <source><x id="INTERPOLATION" equiv-text="currentGame.get().typeGame }}"/> by <x id="INTERPOLATION_1" equiv-text="{{ currentGame.get().opponent?.name }}"/></source>
+        <source><x id="INTERPOLATION" equiv-text="getCurrentGameName() }}"/> by <x id="INTERPOLATION_1" equiv-text="{{ currentGame.get().opponent?.name }}"/></source>
       </trans-unit>
       <trans-unit id="172167399786281724" datatype="html">
-        <source><x id="INTERPOLATION" equiv-text="currentGame.get().typeGame }}"/> against <x id="INTERPOLATION_1" equiv-text="{{ currentGame.get().opponent?.name }}"/></source>
+        <source><x id="INTERPOLATION" equiv-text="getCurrentGameName() }}"/> against <x id="INTERPOLATION_1" equiv-text="{{ currentGame.get().opponent?.name }}"/></source>
       </trans-unit>
       <trans-unit id="5678362140621139107" datatype="html">
-        <source><x id="INTERPOLATION" equiv-text="currentGame.get().typeGame }}"/> (waiting for opponent)</source>
+        <source><x id="INTERPOLATION" equiv-text="getCurrentGameName() }}"/> (waiting for opponent)</source>
       </trans-unit>
       <trans-unit id="4930506384627295710" datatype="html">
         <source>Settings</source>
@@ -236,9 +236,6 @@
       <trans-unit id="3529667957993318888" datatype="html">
         <source>Align 5 of your pieces on a board where pieces slide!</source>
       </trans-unit>
-      <trans-unit id="7277920626199847666" datatype="html">
-        <source>Duplicate yourself to conquer the board!</source>
-      </trans-unit>
       <trans-unit id="6046365494353024298" datatype="html">
         <source>Sandwich your opponent&apos;s pieces to dominate the board!</source>
       </trans-unit>
@@ -250,6 +247,9 @@
       </trans-unit>
       <trans-unit id="5737474371494262748" datatype="html">
         <source>Put your hexagonal pieces next to another one, and create one of the 3 victorious shapes to win!</source>
+      </trans-unit>
+      <trans-unit id="7277920626199847666" datatype="html">
+        <source>Duplicate yourself to conquer the board!</source>
       </trans-unit>
       <trans-unit id="1177593339964527523" datatype="html">
         <source>Lapland version of the Tafl game family! Invaders must capture the king, defender must make him escape!</source>
@@ -2946,22 +2946,25 @@
       <trans-unit id="4274208426593680443" datatype="html">
         <source>Failed. You did cut the board in two but you kept the half where you&apos;re in minority. Therefore, you lost! Try again.</source>
       </trans-unit>
-      <trans-unit id="6822183852587312465" datatype="html">
-        <source>The maximum size of a jump is <x id="PH" equiv-text="n"/> step!</source>
+      <trans-unit id="6387064828361949367" datatype="html">
+        <source>You jumped too far! The maximum size of a jump is <x id="PH" equiv-text="n"/> step!</source>
       </trans-unit>
       <trans-unit id="323770883664351270" datatype="html">
         <source>Jump Size</source>
       </trans-unit>
-      <trans-unit id="2875926120657969888" datatype="html">
+      <trans-unit id="4941408928262720844" datatype="html">
         <source>Squarz is board control game. Here is the initial state. The goal is to have the most pieces at the end of the game.</source>
       </trans-unit>
-      <trans-unit id="6228262372157040796" datatype="html">
+      <trans-unit id="6981861179855327687" datatype="html">
+        <source>Duplication</source>
+      </trans-unit>
+      <trans-unit id="3700643537935262310" datatype="html">
         <source>One of the two kinds of move you can do is the duplication. When you do one, you create a new piece. To do this, select one of your pieces, and click on one of its neighboring space.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, make a duplication.</source>
       </trans-unit>
       <trans-unit id="805836787886487858" datatype="html">
         <source>This was a jump, try a duplication now.</source>
       </trans-unit>
-      <trans-unit id="1234758343143401720" datatype="html">
+      <trans-unit id="1286113114582068272" datatype="html">
         <source>The second type of move you can do is the jump. When you do one, your piece leaves its original space and jump two spaces further. To do this, select one of your pieces, and click on its landing space two space further.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Light, make a jump.</source>
       </trans-unit>
       <trans-unit id="4273222196833633277" datatype="html">
@@ -2970,7 +2973,7 @@
       <trans-unit id="4531607774937783527" datatype="html">
         <source>When one of your pieces lands on a square neighbors to opponent&apos;s pieces, those pieces become yours.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, do such a move!</source>
       </trans-unit>
-      <trans-unit id="8185889618290318299" datatype="html">
+      <trans-unit id="3740866626714745702" datatype="html">
         <source>When one player cannot play, the game ends, and the player with the most pieces wins. Here, you can do a final move and win.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Light, do it.</source>
       </trans-unit>
       <trans-unit id="3808135421251943457" datatype="html">

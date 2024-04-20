@@ -80,17 +80,17 @@ describe('MGPMap', () => {
         });
     });
 
-    describe('listKeys', () => {
+    describe('getKeyList', () => {
         it('should return all the keys', () => {
             const map: MGPMap<string, number> = MGPMap.from({ first: 1, second: 2 });
-            expect(map.listKeys()).toEqual(['first', 'second']);
+            expect(map.getKeyList()).toEqual(['first', 'second']);
         });
     });
 
-    describe('listValues', () => {
+    describe('getValueList', () => {
         it('should return all the values', () => {
             const map: MGPMap<string, number> = MGPMap.from({ first: 1, second: 2 });
-            expect(map.listValues()).toEqual([1, 2]);
+            expect(map.getValueList()).toEqual([1, 2]);
         });
     });
 

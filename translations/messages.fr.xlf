@@ -3728,17 +3728,21 @@
         Ce plateau permet de gagner, essayez.
         Vous jouez Clair.</target>
       </trans-unit>
-      <trans-unit id="6822183852587312465" datatype="html">
-        <source>The maximum size of a jump is <x id="PH" equiv-text="n"/> steps!</source>
-        <target>La longueur maximum d'un saut est de <x id="PH" equiv-text="n"/> pas!</target>
+      <trans-unit id="6387064828361949367" datatype="html">
+        <source>You jumped too far! The maximum size of a jump is <x id="PH" equiv-text="n"/> step!</source>
+        <target>Vous avez sauté trop loin ! La longueur maximum d'un saut est de <x id="PH" equiv-text="n"/> pas!</target>
       </trans-unit>
       <trans-unit id="323770883664351270" datatype="html">
         <source>Jump Size</source>
         <target>Longueur d'un saut</target>
       </trans-unit>
-      <trans-unit id="2875926120657969888" datatype="html">
+      <trans-unit id="4941408928262720844" datatype="html">
         <source>Squarz is board control game. Here is the initial state. The goal is to have the most pieces at the end of the game.</source>
         <target>Squarz est un jeu de contrôle de plateau. Voici le plateau initial. Le but est d'avoir une majorité de vos pièces sur le plateau à la fin de la partie.</target>
+      </trans-unit>
+      <trans-unit id="6981861179855327687" datatype="html">
+        <source>Duplication</source>
+        <target>Duplication</target>
       </trans-unit>
       <trans-unit id="5489405522962962283" datatype="html">
         <source>Congratulations, you won!</source>
@@ -3839,7 +3843,7 @@
         <source>Simple step</source>
         <target>Simple pas</target>
       </trans-unit>
-      <trans-unit id="6228262372157040796" datatype="html">
+      <trans-unit id="3700643537935262310" datatype="html">
         <source>One of the two kinds of move you can do is the duplication. When you do one, you create a new piece. To do this, select one of your pieces, and click on one of its neighboring space.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, make a duplication.</source>
         <target>Un des deux types de mouvement que vous pouvez faire est un pas simple. Quand vous en faites un, vous créez une nouvelle pièce. Pour ce faire, sélectionnez une de vos pièces, et cliquez sur une de vos pièces, puis sur une case voisine à celle-ci.&lt;br/&gt;Vous jouez Foncé, faite un simple pas.</target>
       </trans-unit>
@@ -3851,7 +3855,7 @@
         <source>This was a duplication, try a jump now.</source>
         <target>C'était une duplication, essayez un saut maintenant.</target>
       </trans-unit>
-      <trans-unit id="1234758343143401720" datatype="html">
+      <trans-unit id="1286113114582068272" datatype="html">
         <source>The second type of move you can do is the jump. When you do one, your piece leaves its original space and jump two spaces further. To do this, select one of your pieces, and click on its landing space two space further.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Light, make a jump.</source>
         <target>Le deuxième type de mouvement que vous savez faire est un saut. Quand vous en faites un, votre pièce quitte sa case d'origine et atterit deux cases plus loin. Pour faire ceci, sélectionnez une de vos pièces, et cliquez sur sa case d'atterrissage, deux cases plus loin.&lt;br/&gt;Vous jouez Clair, faites un saut.</target>
       </trans-unit>
@@ -3859,7 +3863,7 @@
         <source>When one of your pieces lands on a square neighbors to opponent&apos;s pieces, those pieces become yours.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, do such a move!</source>
         <target>Quand une de vos pièces arrive sur une case voisine d'un adversaire, ces pièces changent de couleur.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, faite un tel mouvement.</target>
       </trans-unit>
-      <trans-unit id="8185889618290318299" datatype="html">
+      <trans-unit id="3740866626714745702" datatype="html">
         <source>When one player cannot play, the game ends, and the player with the most pieces wins. Here, you can do a final move and win.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Light, do it.</source>
         <target>Quand un des joueur ne peut pas jouer, la partie finit, et le jouueur avec le plus de pièces gagne. Ici, vous pouvez faire le dernier mouvement et gagner.&lt;br/&gt;&lt;br/&gt;Vous jouez Clair, faites-le !</target>
       </trans-unit>
