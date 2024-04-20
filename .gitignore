@@ -49,3 +49,5 @@ Thumbs.db
 /lib/build/
 /lib/node_modules/
 /lib/dist/
+
+# /lib/.nyc_output
