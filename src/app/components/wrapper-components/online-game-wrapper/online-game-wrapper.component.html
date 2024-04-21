@@ -24,7 +24,6 @@
                    class="player0-bg"
                    *ngIf="players[0].isPresent()">{{ players[0].get().name }}</p>
                 <p id="scoreZeroIndicator" *ngIf="currentPart !== null && gameComponent && gameComponent.scores.isPresent()" i18n>{{ gameComponent.scores.get().get(Player.ZERO) }} points</p>
-                <p>currentPart.getTurn % 2: {{(currentPart === null) ? -1 : currentPart.getTurn() % 2}}</p>
                 <app-count-down #chronoZeroGlobal
                                 id="chronoZeroGlobal"
                                 [dangerTimeLimit]="60*1000"
