@@ -16,7 +16,7 @@ import textwrap
 # - each scenario should end with the user *not* being in any game
 
 # Set to False to see the script happening in real time. Useful for debugging
-HEADLESS = False
+HEADLESS = True
 # Set to True if somehow the selenium driver is acting like a mobile device (with small screen)
 # It seems to be the case when we are in headless mode, so let's just inherit the value of HEADLESS
 MOBILE = HEADLESS
