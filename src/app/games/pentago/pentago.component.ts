@@ -61,12 +61,9 @@ export class PentagoComponent extends RectangularGameComponent<PentagoRules,
     public async updateBoard(_triggerAnimation: boolean): Promise<void> {
         this.board = this.getState().getCopiedBoard();
         this.victoryCoords = this.rules.getVictoryCoords(this.getState());
-        this.lastDrop = MGPOptional.empty();
-        this.lastRotation = MGPOptional.empty();
     }
 
     public override async showLastMove(move: PentagoMove): Promise<void> {
-        this.cancelMoveAttempt();
         this.movedBlock = move.blockTurned;
         const localCoord: Coord = new Coord(move.coord.x % 3 - 1, move.coord.y % 3 - 1);
         if (move.blockTurned.isPresent()) {
@@ -165,7 +162,6 @@ export class PentagoComponent extends RectangularGameComponent<PentagoRules,
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }
-        this.hideLastMove();
         if (this.board[y][x].isPlayer()) {
             return this.cancelMove(RulesFailure.MUST_LAND_ON_EMPTY_SPACE());
         }

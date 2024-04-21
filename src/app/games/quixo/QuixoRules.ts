@@ -96,10 +96,10 @@ export class QuixoRules extends ConfigurableRules<QuixoMove, QuixoState, QuixoCo
     }
 
     public static getFullestLine(playerLinesInfo: MGPMap<string, NumberMap<number>>): number {
-        let linesScores: number[] = playerLinesInfo.get('columns').get().listValues();
-        linesScores = linesScores.concat(playerLinesInfo.get('rows').get().listValues());
-        linesScores = linesScores.concat(playerLinesInfo.get('ascendingDiagonal').get().listValues());
-        linesScores = linesScores.concat(playerLinesInfo.get('descendingDiagonal').get().listValues());
+        let linesScores: number[] = playerLinesInfo.get('columns').get().getValueList();
+        linesScores = linesScores.concat(playerLinesInfo.get('rows').get().getValueList());
+        linesScores = linesScores.concat(playerLinesInfo.get('ascendingDiagonal').get().getValueList());
+        linesScores = linesScores.concat(playerLinesInfo.get('descendingDiagonal').get().getValueList());
         return Math.max(...linesScores);
     }
 

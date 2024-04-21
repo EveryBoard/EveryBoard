@@ -1292,9 +1292,8 @@
       <trans-unit id="2209428336874697936" datatype="html">
         <source>You are performing a move, you must select a landing square.</source>
       </trans-unit>
-      <trans-unit id="5197172538685178535" datatype="html">
-        <source>The goal of Encapsule is to align three of your pieces.
-        Here, we have a victory of the dark player.</source>
+      <trans-unit id="7821413127222759201" datatype="html">
+        <source>The goal of Encapsule is to align three of your pieces. Here, Dark wins.</source>
       </trans-unit>
       <trans-unit id="9069271074421658276" datatype="html">
         <source>Putting a piece</source>
@@ -3116,12 +3115,8 @@
       <trans-unit id="4464967427027571359" datatype="html">
         <source>Failed! You can capture two rings in total, by capturing two times 5 of your markers. Try again.</source>
       </trans-unit>
-      <trans-unit id="2051808586522733055" datatype="html">
-        <source>The goal at Yinsh is to capture three rings in total.
-        The rings taken are shown on the top left for the dark player,
-        and on the bottom right for the light player. Here, Dark won the game.
-        Note that on the board you have two types of pieces for each player:
-        rings (empty circles) and markers (full circles).</source>
+      <trans-unit id="6448631040503247025" datatype="html">
+        <source>The goal at Yinsh is to capture three rings in total. The rings taken are shown on the top left for Dark, and on the bottom right for Light. Here, Dark won the game. Note that on the board you have two types of pieces for each player: rings (empty circles) and markers (full circles).</source>
       </trans-unit>
       <trans-unit id="6047690275464996632" datatype="html">
         <source>Initial board and placement phase</source>

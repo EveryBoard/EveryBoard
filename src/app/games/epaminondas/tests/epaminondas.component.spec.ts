@@ -49,7 +49,7 @@ describe('EpaminondasComponent', () => {
 
     describe('first click', () => {
 
-        it('should fail when clicking on empty space at first click', fakeAsync(async() => {
+        it('should cancel the move when clicking on empty space at first', fakeAsync(async() => {
             // Given a board
             // When clicking on an empty space
             // Then it should fail
@@ -64,7 +64,7 @@ describe('EpaminondasComponent', () => {
         }));
 
         it('should show possible next click', fakeAsync(async() => {
-            // Given a board
+            // Given a board with aligned soldiers that are selected
             const board: Table<PlayerOrNone> = [
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
@@ -89,6 +89,9 @@ describe('EpaminondasComponent', () => {
             testUtils.expectElementToExist('#arrow-0-11-to-0-8');
             testUtils.expectElementToExist('#arrow-0-11-to-1-10');
             testUtils.expectElementToExist('#arrow-0-11-to-1-11');
+            expectToBeClickable(0, 8);
+            expectToBeClickable(1, 10);
+            expectToBeClickable(1, 11);
         }));
 
     });
@@ -157,33 +160,16 @@ describe('EpaminondasComponent', () => {
             await testUtils.expectMoveFailure('#click-0-8', EpaminondasFailure.PHALANX_SHOULD_BE_GREATER_TO_CAPTURE(), move);
         }));
 
-        it('should deselect first piece when clicked (and no last piece exist)', fakeAsync(async() => {
+        it('should deselect piece when clicking a second time on it', fakeAsync(async() => {
             // Given a board where a piece has been selected
-            const board: Table<PlayerOrNone> = [
-                [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
-                [X, _, _, _, _, _, _, _, _, _, _, _, _, _],
-                [X, _, _, _, _, _, _, _, _, _, _, _, _, _],
-                [O, _, _, _, _, _, _, _, _, _, _, _, _, _],
-                [O, _, _, _, _, _, _, _, _, _, _, _, _, _],
-                [O, _, _, _, _, _, _, _, _, _, _, _, _, _],
-            ];
-            const state: EpaminondasState = new EpaminondasState(board, 0);
-            await testUtils.setupState(state);
             await testUtils.expectClickSuccess('#click-0-11'); // select a piece
 
             // When clicking on the same piece again
-            await testUtils.expectClickSuccess('#click-0-11');
+            await testUtils.expectClickFailure('#click-0-11');
 
             // Then it should not be selected anymore and any piece is clickable
             expectToBeClickable(0, 11);
             expectToBeClickable(0, 10);
-            expectToBeClickable(0, 9);
         }));
 
     });

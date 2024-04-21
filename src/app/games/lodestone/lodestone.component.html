@@ -3,43 +3,45 @@
      [attr.viewBox]="getViewBox().toSVGString()"
      preserveAspectRatio="xMidYMid meet">
 
-    <g *ngFor="let line of viewInfo.boardInfo; index as y">
+    <g *ngFor="let line of displayedState.board; index as y">
         <g *ngFor="let square of line; index as x">
             <g id="square_{{ x }}_{{ y }}"
                [attr.transform]="getSVGTranslation(SPACE_SIZE * x, SPACE_SIZE * y)"
-               (click)="selectCoord(square.coord)" >
-                <rect *ngIf="square.isCrumbled === false"
+               (click)="selectCoord(x, y)" >
+                <rect *ngIf="square.isUnreachable() === false"
                       class="base lodestone_square"
-                      [ngClass]="square.squareClasses"
+                      [ngClass]="getSquareClasses(x, y)"
                       [attr.x]="0"
                       [attr.y]="0"
                       [attr.width]="SPACE_SIZE"
                       [attr.height]="SPACE_SIZE"
                 />
-                <g *ngIf="square.isCrumbled"
+                <g *ngIf="square.isUnreachable()"
                    class="lodestone_crumbled_square">
                     <polygon points="0,0     42,0    17,25    67,75    42,100   0,100   0,0"
-                             [ngClass]="square.squareClasses"
+                             [ngClass]="getSquareClasses(x, y)"
                              class="base"
                     />
                     <polygon points="100,0   58,0    35,25    85,75    58,100 100,100 100,0"
-                             [ngClass]="square.squareClasses"
+                             [ngClass]="getSquareClasses(x, y)"
                              class="base"
                     />
                 </g>
-                <circle *ngIf="square.hasPieceToDraw && square.lodestone === undefined"
+                <g *ngIf="getLodestoneInfo(x, y).isPresent() else piece"
+                   id="lodestone_{{ x }}_{{ y }}"
+                   [attr.class]="square.isUnreachable() ? 'semi-transparent' : ''"
+                   app-lodestone-lodestone
+                   [lodestoneInfo]="getLodestoneInfo(x, y).get()"
+                />
+                <ng-template #piece>
+                    <circle *ngIf="hasPieceToDraw(x, y)"
                         id="piece_{{ x }}_{{ y }}"
                         class="base"
-                        [ngClass]="square.pieceClasses"
+                        [ngClass]="getPieceClasses(x, y)"
                         [attr.r]="PIECE_RADIUS"
                         [attr.cx]="SPACE_SIZE / 2"
                         [attr.cy]="SPACE_SIZE / 2"/>
-                <g *ngIf="square.lodestone"
-                   id="lodestone_{{ x }}_{{ y }}"
-                   [attr.class]="square.isCrumbled ? 'semi-transparent' : ''"
-                   app-lodestone-lodestone
-                   [lodestoneInfo]="square.lodestone"
-                />
+                </ng-template>
             </g>
         </g>
     </g>
@@ -95,11 +97,11 @@
         </g>
     </g>
 
-    <rect *ngIf="viewInfo.selected.isPresent()"
-          id="selection_{{ viewInfo.selected.get().x }}_{{ viewInfo.selected.get().y }}"
+    <rect *ngIf="selectedCoord.isPresent()"
+          id="selection_{{ selectedCoord.get().x }}_{{ selectedCoord.get().y }}"
           class="base no-fill selected-stroke"
-          [attr.x]="SPACE_SIZE * viewInfo.selected.get().x"
-          [attr.y]="SPACE_SIZE * viewInfo.selected.get().y"
+          [attr.x]="SPACE_SIZE * selectedCoord.get().x"
+          [attr.y]="SPACE_SIZE * selectedCoord.get().y"
           [attr.width]="SPACE_SIZE"
           [attr.height]="SPACE_SIZE"/>
 </svg>

@@ -56,7 +56,7 @@ export function DoTaflTests<C extends TaflComponent<R, M>,
             it('should cancel move when clicking on opponent piece', fakeAsync( async() => {
                 // Given any state
                 // When clicking on an opponent piece
-                // Then the move should be illegal
+                // Then it should fail
                 const opponentPiece: string = '#click_' + entries.secondPlayerPiece.x + '_' + entries.secondPlayerPiece.y;
                 const reason: string = RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT();
                 await testUtils.expectClickFailure(opponentPiece, reason);
@@ -65,7 +65,7 @@ export function DoTaflTests<C extends TaflComponent<R, M>,
             it('should cancel move when first click on empty space', fakeAsync( async() => {
                 // Given any state
                 // When clicking on an empty space
-                // Then it should be a failure
+                // Then it should fail
                 await testUtils.expectClickFailure('#click_0_0', RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY());
             }));
 
@@ -148,19 +148,19 @@ export function DoTaflTests<C extends TaflComponent<R, M>,
                 testUtils.expectElementNotToHaveClass('#piece_' + playersCoord, 'selected-stroke');
             }));
 
-            it('should deselect clicked piece when it is click for the second time in a row', fakeAsync(async() => {
+            it('should deselect piece when clicking a second time on it', fakeAsync(async() => {
                 // Given a state where first click selected one of your pieces
                 const playersCoord: string = entries.validFirstCoord.x + '_' + entries.validFirstCoord.y;
                 await testUtils.expectClickSuccess('#click_' + playersCoord);
 
                 // When clicking on it again
-                await testUtils.expectClickSuccess('#click_' + playersCoord);
+                await testUtils.expectClickFailure('#click_' + playersCoord);
 
                 // Then that piece should be deselected
                 testUtils.expectElementNotToHaveClass('#piece_' + playersCoord, 'selected-stroke');
             }));
 
-            it('should cancelMove when trying to jump over another piece', fakeAsync(async() => {
+            it('should cancel the move when trying to jump over another piece', fakeAsync(async() => {
                 // Given a state where first click selected one of your pieces
                 await testUtils.setupState(entries.stateReadyForJumpOver);
                 const firstCoord: string = entries.jumpOver.getStart().x + '_' + entries.jumpOver.getStart().y;

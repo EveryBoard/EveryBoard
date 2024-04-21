@@ -5,7 +5,7 @@ import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { Rules } from 'src/app/jscaip/Rules';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { TableUtils } from 'src/app/jscaip/TableUtils';
-import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
+import { MGPOptional, MGPSet, MGPValidation, Utils } from '@everyboard/lib';
 import { LinesOfActionFailure } from './LinesOfActionFailure';
 import { LinesOfActionMove } from './LinesOfActionMove';
 import { LinesOfActionState } from './LinesOfActionState';
@@ -174,8 +174,8 @@ export class LinesOfActionRules extends Rules<LinesOfActionMove, LinesOfActionSt
         }
     }
 
-    public static possibleTargets(state: LinesOfActionState, start: Coord): Coord[] {
-        const targets: Coord[] = [];
+    public static possibleTargets(state: LinesOfActionState, start: Coord): MGPSet<Coord> {
+        const targets: MGPSet<Coord> = new MGPSet();
         for (const dir of Ordinal.ORDINALS) {
             const numberOfPiecesOnLine: number = LinesOfActionRules.numberOfPiecesOnLine(state, start, dir);
             const target: Coord = start.getNext(dir, numberOfPiecesOnLine);
@@ -183,7 +183,7 @@ export class LinesOfActionRules extends Rules<LinesOfActionMove, LinesOfActionSt
                 const move: LinesOfActionMove = LinesOfActionMove.from(start, target).get();
                 const legality: MGPValidation = LinesOfActionRules.isLegal(move, state);
                 if (legality.isSuccess()) {
-                    targets.push(target);
+                    targets.add(target);
                 }
             }
         }

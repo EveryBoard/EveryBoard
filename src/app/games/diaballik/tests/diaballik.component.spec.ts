@@ -89,7 +89,7 @@ describe('DiaballikComponent', () => {
         testUtils.expectElementNotToHaveClass('#piece_0_6', 'selected-stroke');
     }));
 
-    it('should deselect current piece when clicking a second time on it', fakeAsync(async() => {
+    it('should deselect piece when clicking a second time on it', fakeAsync(async() => {
         // Given a state where a sub move has been done and a piece selected
         await testUtils.expectClickSuccess('#click_0_6');
         await testUtils.expectClickSuccess('#click_0_5');
@@ -188,10 +188,10 @@ describe('DiaballikComponent', () => {
         await testUtils.expectClickSuccess('#click_4_5');
         await testUtils.expectClickSuccess('#click_4_5');
         await testUtils.expectClickSuccess('#click_4_4');
+        await testUtils.expectClickSuccess('#click_3_6');
 
         // When trying to pass along a non-straight line
         // Then it should fail
-        await testUtils.expectClickSuccess('#click_3_6');
         await testUtils.expectClickFailure('#click_4_4', DiaballikFailure.PASS_MUST_BE_IN_STRAIGHT_LINE());
     }));
 
@@ -460,4 +460,5 @@ describe('DiaballikComponent', () => {
         testUtils.expectElementToHaveClass('#passCountIndicator circle', 'player1-fill');
         testUtils.expectElementToHaveClass('#translationCountIndicator circle', 'player1-fill');
     }));
+
 });

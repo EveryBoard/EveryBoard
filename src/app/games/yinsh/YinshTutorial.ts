@@ -28,11 +28,7 @@ export class YinshTutorial extends Tutorial {
     public tutorial: TutorialStep[] = [
         TutorialStep.informational(
             $localize`Goal of the game`,
-            $localize`The goal at Yinsh is to capture three rings in total.
-        The rings taken are shown on the top left for the dark player,
-        and on the bottom right for the light player. Here, Dark won the game.
-        Note that on the board you have two types of pieces for each player:
-        rings (empty circles) and markers (full circles).`,
+            $localize`The goal at Yinsh is to capture three rings in total. The rings taken are shown on the top left for Dark, and on the bottom right for Light. Here, Dark won the game. Note that on the board you have two types of pieces for each player: rings (empty circles) and markers (full circles).`,
             new YinshState([
                 [N, N, N, N, N, N, _, _, _, _, N],
                 [N, N, N, N, _, _, _, _, _, _, _],
@@ -103,7 +99,7 @@ export class YinshTutorial extends Tutorial {
             ], PlayerNumberMap.of(0, 0), 20),
             new YinshMove([], new Coord(4, 4), MGPOptional.of(new Coord(7, 4)),
                           [YinshCapture.of(new Coord(2, 4), new Coord(6, 4), MGPOptional.of(new Coord(7, 4)))]),
-            (_: YinshMove, _previous: YinshState, result: YinshState): MGPValidation => {
+            (_move: YinshMove, _previous: YinshState, result: YinshState): MGPValidation => {
                 if (result.sideRings.get(Player.ZERO) === 1) {
                     return MGPValidation.SUCCESS;
                 } else {
@@ -136,7 +132,7 @@ export class YinshTutorial extends Tutorial {
             ],
                           new Coord(4, 1), MGPOptional.of(new Coord(4, 2)),
                           []),
-            (_: YinshMove, _previous: YinshState, result: YinshState): MGPValidation => {
+            (_move: YinshMove, _previous: YinshState, result: YinshState): MGPValidation => {
                 if (result.sideRings.get(Player.ZERO) === 2) {
                     return MGPValidation.SUCCESS;
                 } else {

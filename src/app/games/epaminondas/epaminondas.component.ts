@@ -66,9 +66,6 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
     }
 
     public async updateBoard(_triggerAnimation: boolean): Promise<void> {
-        this.firstPiece = MGPOptional.empty();
-        this.lastPiece = MGPOptional.empty();
-        this.hideLastMove();
         this.board = this.getState().getCopiedBoard();
         this.scores = this.getScores();
     }
@@ -174,15 +171,13 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
         this.firstPiece = MGPOptional.empty();
         this.possibleMoves = [];
         this.lastPiece = MGPOptional.empty();
-        this.hideLastMove(); // TODO: merge HLM and kill this bitch
     }
 
     private async secondClick(x: number, y: number): Promise<MGPValidation> {
         const clicked: Coord = new Coord(x, y);
         const firstPiece: Coord = this.firstPiece.get();
         if (clicked.equals(firstPiece)) {
-            this.cancelMoveAttempt();
-            return MGPValidation.SUCCESS;
+            return this.cancelMove();
         }
         const validMoves: PossibleMove[] =
             this.possibleMoves.filter((m: PossibleMove) => m.endingCoord.equals(clicked));

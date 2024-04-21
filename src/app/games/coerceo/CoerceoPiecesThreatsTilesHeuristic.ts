@@ -103,7 +103,7 @@ export class CoerceoPiecesThreatsTilesHeuristic extends PlayerMetricHeuristic<Co
                 const movingThreat: Coord = uniqueFreedom.get().getNext(step.direction, 1);
                 if (CoerceoState.isOnBoard(movingThreat) &&
                     state.getPieceAt(movingThreat).is(opponent) &&
-                    directThreats.some((coord: Coord) => coord.equals(movingThreat)) === false)
+                    directThreats.some((c: Coord) => c.equals(movingThreat)) === false)
                 {
                     movingThreats.push(movingThreat);
                 }
@@ -167,7 +167,7 @@ export class CoerceoPiecesThreatsTilesHeuristic extends PlayerMetricHeuristic<Co
     : MGPMap<Coord, PieceThreat>
     {
         const filteredThreatMap: MGPMap<Coord, PieceThreat> = new MGPMap();
-        const threateneds: Coord[] = threatMap.listKeys();
+        const threateneds: Coord[] = threatMap.getKeyList();
         const threatenedPlayerPieces: Coord[] = threateneds.filter((coord: Coord) => {
             return state.getPieceAt(coord).is(state.getCurrentPlayer());
         });

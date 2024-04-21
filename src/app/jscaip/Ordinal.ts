@@ -4,7 +4,6 @@ import { Direction, DirectionFactory } from './Direction';
 /**
  * Ordinal as in both orthogonal and diagonal
  */
-
 export class Ordinal extends Direction {
 
     public static readonly UP: Ordinal = new Ordinal(0, -1);

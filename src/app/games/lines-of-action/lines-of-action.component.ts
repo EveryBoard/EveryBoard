@@ -50,8 +50,7 @@ export class LinesOfActionComponent extends RectangularGameComponent<LinesOfActi
 
         const coord: Coord = new Coord(x, y);
         if (this.selected.equalsValue(coord)) {
-            this.cancelMoveAttempt();
-            return MGPValidation.SUCCESS;
+            return this.cancelMove();
         }
         const currentPlayer: PlayerOrNone = this.getState().getCurrentPlayer();
         if (this.selected.isAbsent() ||
@@ -81,7 +80,7 @@ export class LinesOfActionComponent extends RectangularGameComponent<LinesOfActi
             return this.cancelMove(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT());
         }
         this.selected = MGPOptional.of(coord);
-        this.targets = LinesOfActionRules.possibleTargets(this.getState(), this.selected.get());
+        this.targets = LinesOfActionRules.possibleTargets(this.getState(), this.selected.get()).toList();
         if (this.targets.length === 0) {
             return this.cancelMove(LinesOfActionFailure.PIECE_CANNOT_MOVE());
         }
@@ -89,7 +88,6 @@ export class LinesOfActionComponent extends RectangularGameComponent<LinesOfActi
     }
 
     public async updateBoard(_triggerAnimation: boolean): Promise<void> {
-        this.cancelMoveAttempt();
         this.board = this.getState().board;
     }
 

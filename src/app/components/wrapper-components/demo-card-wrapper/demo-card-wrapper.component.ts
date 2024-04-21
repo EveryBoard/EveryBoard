@@ -42,7 +42,7 @@ export class DemoCardWrapperComponent extends GameWrapper<string> implements Aft
             await this.createMatchingGameComponent();
             this.gameComponent.node = this.demoNodeInfo.node;
             // The component needs to be interactive in order to show all possible stylistic elements
-            this.gameComponent.setInteractive(true);
+            await this.setInteractive(true);
             // The board needs to be updated to render the changed node, setRole will do it
             await this.setRole(this.gameComponent.getCurrentPlayer());
             // Need to detect changes before potentially clicking,
@@ -86,10 +86,6 @@ export class DemoCardWrapperComponent extends GameWrapper<string> implements Aft
         // and it is only needed in GameWrapper.canUserPlay (that is overriden here)
         // and in getBoardHighlight, unused in demo cards.
         return 'no-player';
-    }
-
-    public async onCancelMove(_reason?: string | undefined): Promise<void> {
-        return;
     }
 
     public override async canUserPlay(_clickedElementName: string): Promise<MGPValidation> {

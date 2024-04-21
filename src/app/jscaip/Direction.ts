@@ -59,7 +59,7 @@ export abstract class DirectionFactory<T extends Direction> {
         for (const dir of this.all) {
             if (dir.x === x && dir.y === y) return MGPFallible.success(dir);
         }
-        return MGPFallible.failure('Invalid x and y in direction construction');
+        return MGPFallible.failure('Invalid x or y in direction construction');
     }
 
     public fromDelta(dx: number, dy: number): MGPFallible<T> {

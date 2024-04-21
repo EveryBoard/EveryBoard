@@ -23,7 +23,7 @@ describe('Ordinal', () => {
             });
             it('should not construct an invalid direction', () => {
                 expect(Ordinal.factory.from(2, 1))
-                    .toEqual(MGPFallible.failure('Invalid x and y in direction construction'));
+                    .toEqual(MGPFallible.failure('Invalid x or y in direction construction'));
             });
         });
         describe('fromDelta', () => {
