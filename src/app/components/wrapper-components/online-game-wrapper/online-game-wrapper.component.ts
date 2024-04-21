@@ -198,9 +198,9 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         // We subscribe to the part only at this point.
         // Once we receive the notification that the part started, we will subscribe to the events
         this.partSubscription =
-            this.gameService.subscribeToChanges(this.currentPartId, async(part: MGPOptional<Part>) => {
-                Utils.assert(part.isPresent(), 'OnlineGameWrapper observed a part being deleted, this should not happen');
-                this.currentPart = new PartDocument(this.currentPartId, part.get());
+            this.gameService.subscribeToChanges(this.currentPartId, async(p: MGPOptional<Part>) => {
+                Utils.assert(p.isPresent(), 'OnlineGameWrapper observed a part being deleted, this should not happen');
+                this.currentPart = new PartDocument(this.currentPartId, p.get());
             });
         this.subscribeToEvents();
     }

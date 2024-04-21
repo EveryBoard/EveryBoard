@@ -1650,7 +1650,6 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             testUtils.detectChanges();
 
             // When the propose rematch button is clicked
-            const gameService: GameService = TestBed.inject(GameService);
             spyOn(gameService, 'proposeRematch').and.callThrough();
             await testUtils.expectInterfaceClickSuccess('#proposeRematch');
 

@@ -49,7 +49,7 @@ export class BackendServiceMock {
     public async getGameName(gameId: string): Promise<MGPOptional<string>> {
         // Read 1: get only the game name
         const game: MGPOptional<Part> = await this.partDAO.read(gameId);
-        return game.map((game: Part) => game.typeGame);
+        return game.map((g: Part) => g.typeGame);
     }
 
     public async getGame(gameId: string): Promise<Part> {

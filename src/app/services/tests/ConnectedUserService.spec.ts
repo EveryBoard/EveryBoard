@@ -695,7 +695,6 @@ describe('ConnectedUserService', () => {
         it('should retrieve id token of the current user', async() => {
             // Given a user
             await connectedUserService.doRegister(username, email, password);
-            const auth: FireAuth.Auth = FireAuth.getAuth();
             const user: FireAuth.User = Utils.getNonNullable(auth.currentUser);
             spyOn(user, 'getIdToken').and.callFake(async() => 'MyIdToken');
             // When getting the id token
