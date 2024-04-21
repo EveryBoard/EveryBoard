@@ -130,7 +130,7 @@ jobs:
         with:
           python-version: '3.10'
       - name: Install python dependencies
-        run: pip install --upgrade selenium requests
+        run: pip install --upgrade selenium requests killport
       - name: Run e2e tests
         run: npm run e2e
 
