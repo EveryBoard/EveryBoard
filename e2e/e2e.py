@@ -354,7 +354,7 @@ def can_play_local_vs_ai(user):
 
     # Select the AI as second player
     user.select('#playerOneSelect', 'Minimax')
-    user.select('#aiOneLevelSelect', 'Level 1')
+    user.select('#aiOneOptionSelect', 'Level 1')
 
     # I play a move
     user.click('#click_2 > rect')
@@ -409,6 +409,7 @@ def can_reload_part_creation(user):
     user.click('#createOnlineGame')
     user.select('#gameType', 'Four in a Row')
     user.click('#launchGame')
+    time.sleep(10)
     print(user.driver.find_element(By.CSS_SELECTOR, 'body').get_attribute('innerHTML'))
     user.wait_for('#partCreation')
 
