@@ -29,7 +29,7 @@ export class SquarzTutorial extends Tutorial {
             $localize`One of the two kinds of move you can do is the duplication. When you do one, you create a new piece. To do this, select one of your pieces, and click on one of its neighboring space.<br/><br/>You're playing Dark, make a duplication.`,
             initialState,
             SquarzMove.from(new Coord(0, 0), new Coord(1, 1)).get(),
-            (move: SquarzMove, _: SquarzState) => {
+            (move: SquarzMove, _state: SquarzState) => {
                 if (move.isDuplication()) {
                     return MGPValidation.SUCCESS;
                 } else {
@@ -53,7 +53,7 @@ export class SquarzTutorial extends Tutorial {
                 [X, _, _, _, _, _, _, O],
             ], 1),
             SquarzMove.from(new Coord(7, 0), new Coord(5, 2)).get(),
-            (move: SquarzMove, _: SquarzState) => {
+            (move: SquarzMove, _state: SquarzState) => {
                 if (move.isDuplication()) {
                     return MGPValidation.failure($localize`This was a duplication, try a jump now.`);
                 } else {
@@ -61,10 +61,11 @@ export class SquarzTutorial extends Tutorial {
                 }
             },
             TutorialStepMessage.CONGRATULATIONS(),
-        ).withPreviousMove(SquarzMove.from(new Coord(0, 0), new Coord(1, 1)).get()), // TODO: check that we SEE the highlight
+        ).withPreviousMove(SquarzMove.from(new Coord(0, 0), new Coord(1, 1)).get()),
+
         TutorialStep.fromPredicate(
             $localize`Captures`,
-            $localize`When one of your pieces lands on a square neighbors to opponent's pieces, those pieces become yours.<br/><br/>You're playing Dark, do such a move!`,
+            $localize`When one of your pieces lands on a square that neighbors to opponent's pieces, those pieces become yours.<br/><br/>You're playing Dark, do such a move!`,
             new SquarzState([
                 [O, _, _, _, _, _, _, X],
                 [_, _, _, _, _, _, _, _],
@@ -85,6 +86,7 @@ export class SquarzTutorial extends Tutorial {
             },
             TutorialStepMessage.CONGRATULATIONS(),
         ).withPreviousMove(SquarzMove.from(new Coord(1, 1), new Coord(3, 3)).get()),
+
         TutorialStep.fromPredicate(
             $localize`End of the game`,
             $localize`When one player cannot play, the game ends, and the player with the most pieces wins. Here, you can do a final move and win.<br/><br/>You're playing Light, do it.`,
@@ -108,6 +110,7 @@ export class SquarzTutorial extends Tutorial {
             },
             TutorialStepMessage.CONGRATULATIONS_YOU_WON(),
         ).withPreviousMove(SquarzMove.from(new Coord(1, 1), new Coord(3, 3)).get()),
+
     ];
 
 }

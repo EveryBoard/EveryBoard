@@ -3859,8 +3859,8 @@
         <source>The second type of move you can do is the jump. When you do one, your piece leaves its original space and jump two spaces further. To do this, select one of your pieces, and click on its landing space two space further.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Light, make a jump.</source>
         <target>Le deuxième type de mouvement que vous savez faire est un saut. Quand vous en faites un, votre pièce quitte sa case d'origine et atterit deux cases plus loin. Pour faire ceci, sélectionnez une de vos pièces, et cliquez sur sa case d'atterrissage, deux cases plus loin.&lt;br/&gt;Vous jouez Clair, faites un saut.</target>
       </trans-unit>
-      <trans-unit id="4531607774937783527" datatype="html">
-        <source>When one of your pieces lands on a square neighbors to opponent&apos;s pieces, those pieces become yours.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, do such a move!</source>
+      <trans-unit id="1697730422913786748" datatype="html">
+        <source>When one of your pieces lands on a square that neighbors to opponent&apos;s pieces, those pieces become yours.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, do such a move!</source>
         <target>Quand une de vos pièces arrive sur une case voisine d'un adversaire, ces pièces changent de couleur.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, faite un tel mouvement.</target>
       </trans-unit>
       <trans-unit id="3740866626714745702" datatype="html">
