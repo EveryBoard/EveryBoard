@@ -5,11 +5,10 @@ import { PylosState } from 'src/app/games/pylos/PylosState';
 import { PylosRules } from 'src/app/games/pylos/PylosRules';
 import { PylosCoord } from 'src/app/games/pylos/PylosCoord';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { MGPValidation } from 'src/app/utils/MGPValidation';
+import { MGPOptional, MGPValidation } from '@everyboard/lib';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { PylosFailure } from './PylosFailure';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MCTS } from 'src/app/jscaip/AI/MCTS';
 import { PylosOrderedMoveGenerator } from './PylosOrderedMoveGenerator';
 import { PylosMoveGenerator } from './PylosMoveGenerator';
@@ -102,8 +101,7 @@ export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosSt
             return this.cancelMove(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT());
         }
         if (this.chosenStartingCoord.equalsValue(clickedCoord)) {
-            this.cancelMoveAttempt();
-            return MGPValidation.SUCCESS;
+            return this.cancelMove();
         }
         if (this.chosenLandingCoord.isPresent()) {
             // Starting to select capture
@@ -321,9 +319,6 @@ export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosSt
             15 - repartition.get(Player.ZERO),
             15 - repartition.get(Player.ONE),
         );
-        this.highCapture = MGPOptional.empty();
-        this.cancelMoveAttempt();
-        this.hideLastMove();
     }
 
     public override async showLastMove(move: PylosMove): Promise<void> {

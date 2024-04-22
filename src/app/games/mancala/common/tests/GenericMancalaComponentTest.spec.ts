@@ -2,21 +2,20 @@
 import { DebugElement, Type } from '@angular/core';
 import { fakeAsync, tick } from '@angular/core/testing';
 import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
-import { MancalaComponent, SeedDropResult } from '../MancalaComponent';
-import { MancalaDropResult, MancalaRules } from '../MancalaRules';
-import { MancalaDistribution, MancalaMove } from '../MancalaMove';
-import { MancalaState } from '../MancalaState';
-import { Cell, Table } from 'src/app/utils/ArrayUtils';
-import { MancalaFailure } from '../MancalaFailure';
-import { Encoder } from 'src/app/utils/Encoder';
-import { Coord } from 'src/app/jscaip/Coord';
-import { Player } from 'src/app/jscaip/Player';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { Encoder, MGPOptional } from '@everyboard/lib';
 import { MoveGenerator } from 'src/app/jscaip/AI/AI';
 import { MancalaConfig } from '../MancalaConfig';
 import { RulesConfigUtils } from 'src/app/jscaip/RulesConfigUtil';
 import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 import { MoveTestUtils } from 'src/app/jscaip/tests/Move.spec';
+import { Cell, Table } from 'src/app/jscaip/TableUtils';
+import { MancalaComponent, SeedDropResult } from '../MancalaComponent';
+import { MancalaDropResult, MancalaRules } from '../MancalaRules';
+import { MancalaDistribution, MancalaMove } from '../MancalaMove';
+import { MancalaState } from '../MancalaState';
+import { Coord } from 'src/app/jscaip/Coord';
+import { MancalaFailure } from '../MancalaFailure';
+import { Player } from 'src/app/jscaip/Player';
 
 type MancalaHouseContents = Cell<{ mainContent: string, secondaryContent?: string }>;
 
@@ -176,15 +175,14 @@ export class MancalaComponentTestUtils<C extends MancalaComponent<R>,
 
     public expectHouseToContain(coord: Coord, value: string, secondaryMessage?: string): void {
         const suffix: string = '_' + coord.x + '_' + coord.y;
-        const content: DebugElement = this.testUtils.findElement('#number' + suffix);
-        expect(content.nativeElement.innerHTML).withContext('For ' + coord.toString()).toBe(value);
+        const numberContent: DebugElement = this.testUtils.findElement('#number' + suffix);
+        const secondaryContent: DebugElement = this.testUtils.findElement('#secondary_message' + suffix);
+        expect(numberContent.nativeElement.innerHTML).withContext('For ' + coord.toString()).toBe(value);
         if (secondaryMessage === undefined) {
-            const content: DebugElement = this.testUtils.findElement('#secondary_message' + suffix);
-            expect(content).withContext('For ' + coord.toString()).toBeNull();
+            expect(secondaryContent).withContext('For ' + coord.toString()).toBeNull();
         } else {
-            const content: DebugElement = this.testUtils.findElement('#secondary_message' + suffix);
-            expect(content).withContext('For ' + coord.toString()).not.toBeNull();
-            expect(content.nativeElement.innerHTML).withContext('For ' + coord.toString()).toBe(secondaryMessage);
+            expect(secondaryContent).withContext('For ' + coord.toString()).not.toBeNull();
+            expect(secondaryContent.nativeElement.innerHTML).withContext('For ' + coord.toString()).toBe(secondaryMessage);
         }
     }
 
@@ -413,7 +411,7 @@ export function doMancalaComponentTests<C extends MancalaComponent<R>,
         it('should explain why clicking on store is stupid', fakeAsync(async() => {
             // Given any board
             // When clicking on any store
-            // THen it should fail cause it's dumb
+            // Then it should fail cause it's dumb
             const reason: string = MancalaFailure.MUST_DISTRIBUTE_YOUR_OWN_HOUSES();
             await mancalaTestUtils.testUtils.expectClickFailure('#store_player_0', reason);
         }));

@@ -1,23 +1,19 @@
 import { Component } from '@angular/core';
 
-import { TriangularGameComponent }
-    from 'src/app/components/game-components/game-component/TriangularGameComponent';
+import { TriangularGameComponent } from 'src/app/components/game-components/game-component/TriangularGameComponent';
 import { Coord } from 'src/app/jscaip/Coord';
 import { SaharaMove } from 'src/app/games/sahara/SaharaMove';
 import { SaharaState } from 'src/app/games/sahara/SaharaState';
 import { SaharaRules } from 'src/app/games/sahara/SaharaRules';
-import { MGPValidation } from 'src/app/utils/MGPValidation';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { MGPFallible, MGPOptional, MGPValidation } from '@everyboard/lib';
 import { Player } from 'src/app/jscaip/Player';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { SaharaFailure } from './SaharaFailure';
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
-import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { MCTS } from 'src/app/jscaip/AI/MCTS';
 import { Minimax } from 'src/app/jscaip/AI/Minimax';
 import { SaharaHeuristic } from './SaharaHeuristic';
 import { SaharaMoveGenerator } from './SaharaMoveGenerator';
-import { TableUtils } from 'src/app/utils/ArrayUtils';
 
 @Component({
     selector: 'app-sahara',
@@ -70,8 +66,7 @@ export class SaharaComponent extends TriangularGameComponent<SaharaRules,
         const currentPlayer: Player = this.getState().getCurrentPlayer();
         const player: FourStatePiece = FourStatePiece.ofPlayer(currentPlayer);
         if (this.chosenCoord.equalsValue(new Coord(x, y))) {
-            this.cancelMoveAttempt();
-            return MGPValidation.SUCCESS;
+            return this.cancelMove();
         } else if (this.chosenCoord.isAbsent() ||
                   this.board[y][x] === player)
         { // Must select pyramid
@@ -109,7 +104,6 @@ export class SaharaComponent extends TriangularGameComponent<SaharaRules,
 
     public async updateBoard(_triggerAnimation: boolean): Promise<void> {
         this.board = this.getState().board;
-        console.table(TableUtils.map(this.board, (p: FourStatePiece) => p.isPlayer()));
     }
 
     public getPlayerClassFor(x: number, y: number): string {

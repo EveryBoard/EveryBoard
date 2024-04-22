@@ -1,6 +1,6 @@
 /* eslint-disable max-lines-per-function */
 import { GipfComponent } from '../gipf.component';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { MGPOptional } from '@everyboard/lib';
 import { GipfFailure } from 'src/app/games/gipf/GipfFailure';
 import { HexaDirection } from 'src/app/jscaip/HexaDirection';
 import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
@@ -9,7 +9,7 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { GipfMove, GipfPlacement } from 'src/app/games/gipf/GipfMove';
 import { GipfState } from 'src/app/games/gipf/GipfState';
 import { Arrow } from 'src/app/jscaip/Arrow';
-import { Table } from 'src/app/utils/ArrayUtils';
+import { Table } from 'src/app/jscaip/TableUtils';
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
 import { Player } from 'src/app/jscaip/Player';
 import { GipfCapture } from 'src/app/jscaip/GipfProjectHelper';
@@ -54,7 +54,7 @@ describe('GipfComponent', () => {
         it('should not accept selecting a non-border coord for placement', fakeAsync(async() => {
             // Given any board with empty space
             // When clicking on those spaces as first click
-            // Then it should be a failure
+            // Then it should fail
             await testUtils.expectClickFailure('#click_3_3', GipfFailure.PLACEMENT_NOT_ON_BORDER());
         }));
 
@@ -86,7 +86,7 @@ describe('GipfComponent', () => {
             await testUtils.setupState(state);
 
             // When clicking on a space/piece not part of a capture
-            // Then it should be a failure
+            // Then it should fail
             await testUtils.expectClickFailure('#click_6_3', GipfFailure.MISSING_CAPTURES());
         }));
 
@@ -172,7 +172,7 @@ describe('GipfComponent', () => {
             await testUtils.setupState(state);
 
             // When clicking on that space
-            // Then it should be a failure
+            // Then it should fail
             await testUtils.expectClickFailure('#click_0_6', GipfFailure.NO_DIRECTIONS_AVAILABLE());
         }));
 
@@ -508,7 +508,7 @@ describe('GipfComponent', () => {
         await testUtils.expectClickSuccess('#click_6_3');
 
         // When clicking on it again
-        await testUtils.expectClickSuccess('#click_6_3');
+        await testUtils.expectClickFailure('#click_6_3');
 
         // Then it should no longer be selected
         expect(testUtils.getGameComponent().arrows.length).toBe(0);

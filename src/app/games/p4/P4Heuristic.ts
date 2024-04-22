@@ -4,7 +4,7 @@ import { P4Move } from './P4Move';
 import { P4State } from './P4State';
 import { P4Config, P4Node, P4Rules } from './P4Rules';
 import { Coord } from 'src/app/jscaip/Coord';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { MGPOptional } from '@everyboard/lib';
 
 export class P4Heuristic extends Heuristic<P4Move, P4State, BoardValue, P4Config> {
 

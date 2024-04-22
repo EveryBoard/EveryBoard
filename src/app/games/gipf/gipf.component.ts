@@ -5,18 +5,14 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { HexaLayout } from 'src/app/jscaip/HexaLayout';
 import { FlatHexaOrientation } from 'src/app/jscaip/HexaOrientation';
 import { Player } from 'src/app/jscaip/Player';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { HexaDirection } from 'src/app/jscaip/HexaDirection';
-import { HexagonalGameComponent }
-    from '../../components/game-components/game-component/HexagonalGameComponent';
+import { HexagonalGameComponent } from '../../components/game-components/game-component/HexagonalGameComponent';
 import { GipfMove, GipfPlacement } from 'src/app/games/gipf/GipfMove';
 import { GipfState } from 'src/app/games/gipf/GipfState';
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
 import { Arrow } from 'src/app/jscaip/Arrow';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
-import { MGPFallible } from 'src/app/utils/MGPFallible';
-import { Utils } from 'src/app/utils/utils';
+import { MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 import { MCTS } from 'src/app/jscaip/AI/MCTS';
 import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 import { GipfMoveGenerator } from './GipfMoveGenerator';
@@ -85,13 +81,6 @@ export class GipfComponent extends HexagonalGameComponent<GipfRules,
 
     public override async updateBoard(_triggerAnimation: boolean): Promise<void> {
         this.constructedState = this.getState();
-        this.captured = [];
-        this.moved = [];
-        this.initialCaptures = [];
-        this.finalCaptures = [];
-        this.placementEntrance = MGPOptional.empty();
-        this.placement = MGPOptional.empty();
-        this.arrows = [];
         this.moveToInitialCaptureOrPlacementPhase();
     }
 
@@ -242,8 +231,7 @@ export class GipfComponent extends HexagonalGameComponent<GipfRules,
             return this.cancelMove(validity.getReason());
         }
         if (this.placementEntrance.equalsValue(coord)) {
-            this.cancelMoveAttempt();
-            return MGPValidation.SUCCESS;
+            return this.cancelMove();
         }
         this.placementEntrance = MGPOptional.of(coord);
         const clickedPiece: FourStatePiece = this.constructedState.getPieceAt(coord);

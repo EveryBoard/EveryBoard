@@ -4,16 +4,13 @@ import { RectangularGameComponent } from 'src/app/components/game-components/rec
 import { Coord } from 'src/app/jscaip/Coord';
 import { Player } from 'src/app/jscaip/Player';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
-import { MGPFallible } from 'src/app/utils/MGPFallible';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { MGPValidation } from 'src/app/utils/MGPValidation';
+import { MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 import { MartianChessMove } from './MartianChessMove';
 import { MartianChessMoveResult, MartianChessRules } from './MartianChessRules';
 import { MartianChessState } from './MartianChessState';
 import { MartianChessPiece } from './MartianChessPiece';
 import { Direction } from 'src/app/jscaip/Direction';
 import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
-import { Utils } from 'src/app/utils/utils';
 import { MCTS } from 'src/app/jscaip/AI/MCTS';
 import { MartianChessMoveGenerator } from './MartianChessMoveGenerator';
 import { MartianChessScoreHeuristic } from './MartianChessScoreHeuristic';
@@ -273,8 +270,7 @@ export class MartianChessComponent extends RectangularGameComponent<MartianChess
         if (this.isOneOfUsersPieces(startCoord)) {
             return this.selectAsFirstPiece(startCoord);
         } else {
-            this.cancelMoveAttempt();
-            return MGPValidation.SUCCESS;
+            return this.cancelMove();
         }
     }
 
@@ -328,8 +324,7 @@ export class MartianChessComponent extends RectangularGameComponent<MartianChess
     private async secondClick(endCoord: Coord): Promise<MGPValidation> {
         const info: SelectedPieceInfo = this.selectedPieceInfo.get();
         if (info.selectedPiece.equals(endCoord)) {
-            this.cancelMoveAttempt();
-            return MGPValidation.SUCCESS;
+            return this.cancelMove();
         } else if (info.legalLandings.some((c: Coord) => c.equals(endCoord))) {
             const move: MGPFallible<MartianChessMove> =
                 MartianChessMove.from(info.selectedPiece, endCoord, this.callTheClock);

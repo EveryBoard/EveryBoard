@@ -3,7 +3,7 @@ import { fakeAsync } from '@angular/core/testing';
 import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { DiaballikComponent } from '../diaballik.component';
 import { DiaballikMove, DiaballikBallPass, DiaballikTranslation } from '../DiaballikMove';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { MGPOptional } from '@everyboard/lib';
 import { Coord } from 'src/app/jscaip/Coord';
 import { DiaballikPiece, DiaballikState } from '../DiaballikState';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
@@ -188,10 +188,10 @@ describe('DiaballikComponent', () => {
         await testUtils.expectClickSuccess('#click_4_5');
         await testUtils.expectClickSuccess('#click_4_5');
         await testUtils.expectClickSuccess('#click_4_4');
+        await testUtils.expectClickSuccess('#click_3_6');
 
         // When trying to pass along a non-straight line
         // Then it should fail
-        await testUtils.expectClickSuccess('#click_3_6');
         await testUtils.expectClickFailure('#click_4_4', DiaballikFailure.PASS_MUST_BE_IN_STRAIGHT_LINE());
     }));
 
@@ -460,4 +460,5 @@ describe('DiaballikComponent', () => {
         testUtils.expectElementToHaveClass('#passCountIndicator circle', 'player1-fill');
         testUtils.expectElementToHaveClass('#translationCountIndicator circle', 'player1-fill');
     }));
+
 });

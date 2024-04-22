@@ -1,16 +1,13 @@
 import { Component } from '@angular/core';
-import { RectangularGameComponent }
-    from 'src/app/components/game-components/rectangular-game-component/RectangularGameComponent';
+import { RectangularGameComponent } from 'src/app/components/game-components/rectangular-game-component/RectangularGameComponent';
 import { Coord } from 'src/app/jscaip/Coord';
 import { PlayerOrNone } from 'src/app/jscaip/Player';
-import { MGPValidation } from 'src/app/utils/MGPValidation';
+import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 import { PentagoMove } from './PentagoMove';
 import { PentagoRules } from './PentagoRules';
 import { PentagoState } from './PentagoState';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { Utils } from 'src/app/utils/utils';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { MCTS } from 'src/app/jscaip/AI/MCTS';
 import { DummyHeuristic, Minimax } from 'src/app/jscaip/AI/Minimax';
@@ -89,12 +86,9 @@ export class PentagoComponent extends RectangularGameComponent<PentagoRules,
     public async updateBoard(_triggerAnimation: boolean): Promise<void> {
         this.state = this.getState();
         this.victoryCoords = this.rules.getVictoryCoords(this.getState());
-        this.lastDrop = MGPOptional.empty();
-        this.lastRotation = MGPOptional.empty();
     }
 
     public override async showLastMove(move: PentagoMove): Promise<void> {
-        this.cancelMoveAttempt();
         this.movedBlock = move.blockTurned;
         const localCoord: Coord = new Coord(move.coord.x % 3 - 1, move.coord.y % 3 - 1);
         if (move.blockTurned.isPresent()) {
@@ -195,7 +189,6 @@ export class PentagoComponent extends RectangularGameComponent<PentagoRules,
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }
-        this.hideLastMove();
         if (this.state.board[y][x].isPlayer()) {
             return this.cancelMove(RulesFailure.MUST_LAND_ON_EMPTY_SPACE());
         }

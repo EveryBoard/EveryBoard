@@ -3,7 +3,7 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { Player } from 'src/app/jscaip/Player';
 import { GipfState } from '../GipfState';
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
-import { Table } from 'src/app/utils/ArrayUtils';
+import { Table } from 'src/app/jscaip/TableUtils';
 import { GipfRules } from '../GipfRules';
 import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 
@@ -29,7 +29,7 @@ describe('GipfState', () => {
         it('should contain 3 simple pieces for each player', () => {
             let p0: number = 0;
             let p1: number = 0;
-            state.forEachCoord((_: Coord, content: FourStatePiece) => {
+            state.forEachCoord((_coord: Coord, content: FourStatePiece) => {
                 if (content !== FourStatePiece.EMPTY) {
                     if (content === FourStatePiece.ZERO) {
                         p0 += 1;

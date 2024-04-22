@@ -11,6 +11,8 @@
     "build:test": "ng build --configuration=test",
     "test": "bash ./scripts/test.sh",
     "test:ci": "bash ./scripts/test.sh --watch=false --browsers=ChromeHeadlessCustom",
+    "libtest": "cd lib && npm test",
+    "libtest:ci": "cd lib && npm ci && npm test && npm run coverage",
     "lint": "eslint --ext ts ./ --quiet",
     "e2e": "bash ./e2e/e2e.sh"
   },
@@ -24,6 +26,7 @@
     "@angular/platform-browser-dynamic": "^17.2.3",
     "@angular/router": "^17.2.3",
     "@creativebulma/bulma-tooltip": "^1.2.0",
+    "@everyboard/lib": "file:lib",
     "@fortawesome/angular-fontawesome": "^0.14.1",
     "@fortawesome/fontawesome-svg-core": "^6.5.1",
     "@fortawesome/free-brands-svg-icons": "^6.5.1",
@@ -51,6 +54,7 @@
     "@angular/compiler-cli": "^17.2.3",
     "@angular/localize": "^17.2.3",
     "@types/jasmine": "^5.1.4",
+    "@typescript-eslint/eslint-plugin": "^7.5.0",
     "angular-cli-ghpages": "^1.0.6",
     "angular-eslint": "^0.0.1-alpha.0",
     "eslint": "^8.57.0",
@@ -66,9 +70,10 @@
     "karma-jasmine-html-reporter": "^2.1.0",
     "karma-time-stats-reporter": "^0.1.0",
     "netlify-plugin-chromium": "^1.1.4",
+    "nyc": "^15.1.0",
     "protractor": "^7.0.0",
-    "sass": "^1.71.1",
-    "typescript": "^5.3.3",
-    "typescript-eslint": "^7.1.1"
+    "sass": "^1.70.0",
+    "ts-node": "^10.9.1",
+    "typescript": "^5.3.3"
   }
 }

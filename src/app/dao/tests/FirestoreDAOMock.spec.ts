@@ -1,14 +1,11 @@
 /* eslint-disable max-lines-per-function */
 import { Observable, BehaviorSubject, Subscription } from 'rxjs';
-import { Debug, FirestoreJSONObject, FirestoreJSONValue, Utils } from 'src/app/utils/utils';
-import { assert } from 'src/app/utils/assert';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { FirestoreJSONObject, FirestoreJSONValue, MGPMap, MGPOptional, ObservableSubject, Utils } from '@everyboard/lib';
 import { FirestoreCollectionObserver } from '../FirestoreCollectionObserver';
 import { FirestoreCondition, FirestoreDocument, IFirestoreDAO } from '../FirestoreDAO';
-import { MGPMap } from 'src/app/utils/MGPMap';
-import { ObservableSubject } from 'src/app/utils/tests/ObservableSubject.spec';
 import { FieldValue, UpdateData } from '@firebase/firestore';
 import { Timestamp } from 'firebase/firestore';
+import { Debug } from 'src/app/utils/Debug';
 
 type DocumentSubject<T> = ObservableSubject<MGPOptional<FirestoreDocument<T>>>;
 
@@ -191,7 +188,7 @@ export abstract class FirestoreDAOMock<T extends FirestoreJSONObject> implements
     }
     private conditionsHold(conditions: FirestoreCondition[], doc: T): boolean {
         for (const condition of conditions) {
-            assert(condition[1] === '==', 'FirestoreDAOMock currently only supports == as a condition');
+            Utils.assert(condition[1] === '==', 'FirestoreDAOMock currently only supports == as a condition');
             if (doc[condition[0]] !== condition[2]) {
                 return false;
             }
@@ -220,13 +217,13 @@ export abstract class FirestoreDAOMock<T extends FirestoreJSONObject> implements
             return matchingDocs;
         }
     }
-    public subCollectionDAO<T extends FirestoreJSONObject>(id: string, name: string): IFirestoreDAO<T> {
+    public subCollectionDAO<U extends FirestoreJSONObject>(id: string, name: string): IFirestoreDAO<U> {
         if (this.subDAOs.containsKey(name)) {
-            return this.subDAOs.get(name).get() as IFirestoreDAO<T>;
+            return this.subDAOs.get(name).get() as IFirestoreDAO<U>;
         } else {
             const superName: string = this.collectionName;
-            type OS = ObservableSubject<MGPOptional<FirestoreDocument<T>>>;
-            class CustomMock extends FirestoreDAOMock<T> {
+            type OS = ObservableSubject<MGPOptional<FirestoreDocument<U>>>;
+            class CustomMock extends FirestoreDAOMock<U> {
                 private static db: MGPMap<string, OS>;
                 public getStaticDB(): MGPMap<string, OS> {
                     return CustomMock.db;
@@ -238,7 +235,7 @@ export abstract class FirestoreDAOMock<T extends FirestoreJSONObject> implements
                     super(`${superName}/${id}/${name}`);
                 }
             }
-            const mock: FirestoreDAOMock<T> = new CustomMock();
+            const mock: FirestoreDAOMock<U> = new CustomMock();
             this.subDAOs.set(name, mock);
             return mock;
         }

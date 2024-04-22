@@ -1,5 +1,5 @@
 import { Coord } from 'src/app/jscaip/Coord';
-import { Encoder } from 'src/app/utils/Encoder';
+import { Encoder } from '@everyboard/lib';
 import { MoveCoord } from '../../jscaip/MoveCoord';
 import { QuartoPiece } from './QuartoPiece';
 

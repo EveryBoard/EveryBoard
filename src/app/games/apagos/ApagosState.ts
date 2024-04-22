@@ -1,22 +1,23 @@
 import { GameState } from 'src/app/jscaip/GameState';
 import { Player } from 'src/app/jscaip/Player';
-import { ArrayUtils, Table } from 'src/app/utils/ArrayUtils';
+import { ArrayUtils } from '@everyboard/lib';
 import { ApagosCoord } from './ApagosCoord';
 import { ApagosSquare } from './ApagosSquare';
 import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
+import { Table } from 'src/app/jscaip/TableUtils';
 
 export class ApagosState extends GameState {
 
-    public static fromRepresentation(turn: number, board: Table<number>, nbZero: number, nbOne: number): ApagosState {
+    public static fromRepresentation(turn: number, board: Table<number>, nZero: number, nOne: number): ApagosState {
         const squares: ApagosSquare[] = [];
         for (let x: number = 0; x < 4; x++) {
-            const nbZero: number = board[0][x];
-            const nbOne: number = board[1][x];
+            const localZeroCount: number = board[0][x];
+            const localOneCount: number = board[1][x];
             const nbTotal: number = board[2][x];
-            const square: ApagosSquare = ApagosSquare.from(nbZero, nbOne, nbTotal).get();
+            const square: ApagosSquare = ApagosSquare.from(localZeroCount, localOneCount, nbTotal).get();
             squares.push(square);
         }
-        const remaining: PlayerNumberMap = PlayerNumberMap.of(nbZero, nbOne);
+        const remaining: PlayerNumberMap = PlayerNumberMap.of(nZero, nOne);
         return new ApagosState(turn, squares, remaining);
     }
 

@@ -1,21 +1,16 @@
 import { Coord, CoordFailure } from 'src/app/jscaip/Coord';
 import { Vector } from 'src/app/jscaip/Vector';
 import { Move } from 'src/app/jscaip/Move';
-import { ArrayUtils } from 'src/app/utils/ArrayUtils';
-import { assert } from 'src/app/utils/assert';
-import { Encoder } from 'src/app/utils/Encoder';
-import { MGPFallible } from 'src/app/utils/MGPFallible';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { MGPSet } from 'src/app/utils/MGPSet';
+import { ArrayUtils, Encoder, MGPFallible, MGPOptional, MGPSet, MGPUniqueList, Utils } from '@everyboard/lib';
 import { LascaFailure } from './LascaFailure';
 import { LascaState } from './LascaState';
-import { MGPUniqueList } from 'src/app/utils/MGPUniqueList';
 
 export class LascaMove extends Move {
 
     public static of(coords: Coord[], isStep: boolean): LascaMove {
         return new LascaMove(coords, isStep);
     }
+
     public static fromCapture(coords: Coord[]): MGPFallible<LascaMove> {
         const jumpsValidity: MGPFallible<MGPSet<Coord>> = LascaMove.getSteppedOverCoords(coords);
         if (jumpsValidity.isSuccess()) {
@@ -24,6 +19,7 @@ export class LascaMove extends Move {
             return MGPFallible.failure(jumpsValidity.getReason());
         }
     }
+
     public static getSteppedOverCoords(steppedOn: Coord[]): MGPFallible<MGPSet<Coord>> {
         let lastCoordOpt: MGPOptional<Coord> = MGPOptional.empty();
         const jumpedOverCoords: MGPSet<Coord> = new MGPSet();
@@ -47,6 +43,7 @@ export class LascaMove extends Move {
         }
         return MGPFallible.success(jumpedOverCoords);
     }
+
     public static fromStep(start: Coord, end: Coord): MGPFallible<LascaMove> {
         if (LascaState.isNotOnBoard(start)) {
             return MGPFallible.failure(CoordFailure.OUT_OF_RANGE(start));
@@ -60,22 +57,26 @@ export class LascaMove extends Move {
         }
         return MGPFallible.success(new LascaMove([start, end], true));
     }
+
     public static encoder: Encoder<LascaMove> = Encoder.tuple(
         [Encoder.list(Coord.encoder), Encoder.identity<boolean>()],
         (move: LascaMove) => [move.coords.toList(), move.isStep],
         (fields: [Coord[], boolean]) => LascaMove.of(fields[0], fields[1]),
     );
+
     public readonly coords: MGPUniqueList<Coord>;
 
     private constructor(coords: Coord[], public readonly isStep: boolean) {
         super();
         this.coords = new MGPUniqueList(coords);
     }
+
     public override toString(): string {
         const coordStrings: string[] = this.coords.toList().map((coord: Coord) => coord.toString());
         const coordString: string = coordStrings.join(', ');
         return 'LascaMove(' + coordString + ')';
     }
+
     private getRelation(other: LascaMove): 'EQUALITY' | 'PREFIX' | 'INEQUALITY' {
         const thisLength: number = this.coords.size();
         const otherLength: number = other.coords.size();
@@ -86,29 +87,36 @@ export class LascaMove extends Move {
         if (thisLength === otherLength) return 'EQUALITY';
         else return 'PREFIX';
     }
+
     public equals(other: LascaMove): boolean {
         return this.getRelation(other) === 'EQUALITY';
     }
+
     public isPrefix(other: LascaMove): boolean {
         return this.getRelation(other) === 'PREFIX';
     }
+
     public getStartingCoord(): Coord {
         return this.coords.get(0);
     }
+
     public getEndingCoord(): Coord {
         return this.coords.getFromEnd(0);
     }
+
     public getCapturedCoords(): MGPFallible<MGPSet<Coord>> {
         return LascaMove.getSteppedOverCoords(this.coords.toList());
     }
+
     public concatenate(move: LascaMove): LascaMove {
         const lastLandingOfFirstMove: Coord = this.getEndingCoord();
         const startOfSecondMove: Coord = move.coords.toList()[0];
-        assert(lastLandingOfFirstMove.equals(startOfSecondMove), 'should not concatenate non-touching move');
+        Utils.assert(lastLandingOfFirstMove.equals(startOfSecondMove), 'should not concatenate non-touching move');
         const thisCoordList: Coord[] = this.coords.toList();
         const firstPart: Coord[] = ArrayUtils.copy(thisCoordList);
         const otherCoordList: Coord[] = move.coords.toList();
         const secondPart: Coord[] = ArrayUtils.copy(otherCoordList).slice(1);
         return LascaMove.fromCapture(firstPart.concat(secondPart)).get();
     }
+
 }

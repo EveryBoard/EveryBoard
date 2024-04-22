@@ -1,23 +1,19 @@
 import { MancalaState } from './MancalaState';
 import { RectangularGameComponent } from 'src/app/components/game-components/rectangular-game-component/RectangularGameComponent';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { MGPOptional, MGPSet, MGPValidation, TimeUtils, Utils } from '@everyboard/lib';
 import { Coord } from 'src/app/jscaip/Coord';
-import { Table, TableUtils } from 'src/app/utils/ArrayUtils';
+import { Table, TableUtils } from 'src/app/jscaip/TableUtils';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { MancalaDistribution, MancalaMove } from './MancalaMove';
 import { Player } from 'src/app/jscaip/Player';
 import { MancalaCaptureResult, MancalaDistributionResult, MancalaDropResult, MancalaRules } from './MancalaRules';
 import { ChangeDetectorRef } from '@angular/core';
-import { MGPValidation } from 'src/app/utils/MGPValidation';
-import { MGPSet } from 'src/app/utils/MGPSet';
 import { MancalaFailure } from './MancalaFailure';
-import { TimeUtils } from 'src/app/utils/TimeUtils';
-import { Utils } from 'src/app/utils/utils';
-import { AI, AIOptions, MoveGenerator } from 'src/app/jscaip/AI/AI';
-import { MancalaConfig } from './MancalaConfig';
 import { MancalaScoreMinimax } from './MancalaScoreMinimax';
 import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 import { MCTS } from 'src/app/jscaip/AI/MCTS';
+import { MancalaConfig } from './MancalaConfig';
+import { AI, AIOptions, MoveGenerator } from 'src/app/jscaip/AI/AI';
 
 export type SeedDropResult = {
     houseToDistribute: Coord,
@@ -129,7 +125,7 @@ export abstract class MancalaComponent<R extends MancalaRules>
     }
 
     public async onLegalClick(x: number, y: number): Promise<MGPValidation> {
-        if (y === this.getState().getCurrentPlayer().getValue()) {
+        if (Player.of(y) === this.getState().getCurrentPlayer()) {
             return this.cancelMove(MancalaFailure.MUST_DISTRIBUTE_YOUR_OWN_HOUSES());
         }
         this.updateOrCreateCurrentMove(x);
@@ -388,12 +384,11 @@ export abstract class MancalaComponent<R extends MancalaRules>
      * @param x the X value of the distribution that has been done
      */
     protected updateOrCreateCurrentMove(x: number): void {
-        if (this.currentMove.isAbsent()) {
-            this.hideLastMove();
-            this.currentMove = MGPOptional.of(this.generateMove(x));
-        } else {
+        if (this.currentMove.isPresent()) {
             const newMove: MancalaMove = this.addToMove(x);
             this.currentMove = MGPOptional.of(newMove);
+        } else {
+            this.currentMove = MGPOptional.of(this.generateMove(x));
         }
     }
 

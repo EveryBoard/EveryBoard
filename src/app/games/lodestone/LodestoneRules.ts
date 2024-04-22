@@ -5,11 +5,8 @@ import { GameNode } from 'src/app/jscaip/AI/GameNode';
 import { Player } from 'src/app/jscaip/Player';
 import { Rules } from 'src/app/jscaip/Rules';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { Table, TableUtils } from 'src/app/utils/ArrayUtils';
-import { MGPFallible } from 'src/app/utils/MGPFallible';
-import { MGPMap } from 'src/app/utils/MGPMap';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { MGPValidation } from 'src/app/utils/MGPValidation';
+import { Table, TableUtils } from 'src/app/jscaip/TableUtils';
+import { MGPFallible, MGPMap, MGPOptional, MGPValidation } from '@everyboard/lib';
 import { LodestoneFailure } from './LodestoneFailure';
 import { LodestoneCaptures, LodestoneMove } from './LodestoneMove';
 import { LodestoneOrientation, LodestoneDirection, LodestonePiece } from './LodestonePiece';
@@ -170,6 +167,7 @@ export class LodestoneRules extends Rules<LodestoneMove, LodestoneState, Lodesto
             board[coord.y][coord.x] = LodestonePieceNone.UNREACHABLE;
         }
     }
+
     public override isLegal(move: LodestoneMove, state: LodestoneState): MGPFallible<LodestoneInfos> {
         const validityBeforeCaptures: MGPValidation = this.isLegalWithoutCaptures(state, move.coord, move.direction);
         if (validityBeforeCaptures.isFailure()) {
@@ -191,6 +189,7 @@ export class LodestoneRules extends Rules<LodestoneMove, LodestoneState, Lodesto
         }
         return MGPFallible.success(infos);
     }
+
     public applyMoveWithoutPlacingCaptures(state: LodestoneState,
                                            coord: Coord,
                                            lodestone: LodestoneDescription)
@@ -213,6 +212,7 @@ export class LodestoneRules extends Rules<LodestoneMove, LodestoneState, Lodesto
         result.moved.push(coord);
         return result;
     }
+
     private applyPull(state: LodestoneState,
                       board: LodestonePiece[][],
                       lodestone: Coord,
@@ -254,6 +254,7 @@ export class LodestoneRules extends Rules<LodestoneMove, LodestoneState, Lodesto
         }
         return { board, captures, moved };
     }
+
     private applyPush(state: LodestoneState,
                       board: LodestonePiece[][],
                       lodestone: Coord,
@@ -299,6 +300,7 @@ export class LodestoneRules extends Rules<LodestoneMove, LodestoneState, Lodesto
         }
         return { board, captures, moved };
     }
+
     public isLegalWithoutCaptures(state: LodestoneState, coord: Coord, direction: LodestoneDirection): MGPValidation {
         const targetValidity: MGPValidation = this.isTargetLegal(state, coord);
         if (targetValidity.isFailure()) {
@@ -312,6 +314,7 @@ export class LodestoneRules extends Rules<LodestoneMove, LodestoneState, Lodesto
         }
         return MGPValidation.SUCCESS;
     }
+
     public isTargetLegal(state: LodestoneState, coord: Coord): MGPValidation {
         const targetContent: LodestonePiece = state.getPieceAt(coord);
         if (targetContent.isUnreachable()) {
@@ -326,6 +329,7 @@ export class LodestoneRules extends Rules<LodestoneMove, LodestoneState, Lodesto
         }
         return MGPValidation.SUCCESS;
     }
+
     public getGameStatus(node: LodestoneNode): GameStatus {
         const state: LodestoneState = node.gameState;
         const pieces: PlayerNumberMap = state.numberOfPieces();
@@ -341,4 +345,5 @@ export class LodestoneRules extends Rules<LodestoneMove, LodestoneState, Lodesto
             return GameStatus.ONGOING;
         }
     }
+
 }

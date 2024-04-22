@@ -1,6 +1,6 @@
 /* eslint-disable max-lines-per-function */
 import { Player } from 'src/app/jscaip/Player';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { MGPOptional } from '@everyboard/lib';
 import { HeuristicUtils } from 'src/app/jscaip/AI/tests/HeuristicUtils.spec';
 import { DvonnMaxStacksHeuristic } from '../DvonnMaxStacksHeuristic';
 import { DvonnPieceStack } from '../DvonnPieceStack';

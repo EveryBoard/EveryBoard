@@ -16,7 +16,7 @@ import { UserDAO } from 'src/app/dao/UserDAO';
 import { QuartoMove } from 'src/app/games/quarto/QuartoMove';
 import { QuartoPiece } from 'src/app/games/quarto/QuartoPiece';
 import { Action, MGPResult, Part, Reply, RequestType } from 'src/app/domain/Part';
-import { MGPValidation } from 'src/app/utils/MGPValidation';
+import { JSONValue, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { CurrentGame, User } from 'src/app/domain/User';
 import { ConnectedUserServiceMock } from 'src/app/services/tests/ConnectedUserService.spec';
@@ -24,9 +24,7 @@ import { QuartoComponent } from 'src/app/games/quarto/quarto.component';
 import { ComponentTestUtils, expectValidRouting } from 'src/app/utils/tests/TestUtils.spec';
 import { AuthUser } from 'src/app/services/ConnectedUserService';
 import { GameWrapperMessages } from '../GameWrapper';
-import { JSONValue, Utils } from 'src/app/utils/utils';
 import { GameService } from 'src/app/services/GameService';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { NextGameLoadingComponent } from '../../normal-component/next-game-loading/next-game-loading.component';
 import { UserMocks } from 'src/app/domain/UserMocks.spec';
 import { PartCreationComponent } from '../part-creation/part-creation.component';
@@ -74,29 +72,36 @@ export type PreparationOptions = {
     waitForPartToStart: boolean;
     runClocks: boolean;
 }
+
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export namespace PreparationOptions {
+
     export const def: PreparationOptions = {
         shorterGlobalClock: false,
         waitForPartToStart: true,
         runClocks: true,
     };
+
     export const dontWait: PreparationOptions = {
         ...def,
         waitForPartToStart: false,
     };
+
     export const shortGlobalClock: PreparationOptions = {
         ...def,
         shorterGlobalClock: true,
     };
+
     export const withoutClocks: PreparationOptions = {
         ...def,
         runClocks: false,
     };
+
     export const dontWaitNoClocks: PreparationOptions = {
         ...dontWait,
         runClocks: false,
     };
+
 }
 
 export async function prepareStartedGameFor<T extends AbstractGameComponent>(
@@ -220,6 +225,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         // In practice, we should receive this from the other player.
         await gameEventService.addReply('configRoomId', userFromPlayer(player), reply, request, data);
         testUtils.detectChanges();
+        tick();
     }
 
     async function receiveAction(player: Player, action: Action): Promise<void> {
@@ -361,9 +367,9 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         tick(0);
     }
 
-    type daoFunction<T> = (id: string, update: Firestore.UpdateData<T>) => Promise<void>;
+    type DaoFunction<T> = (id: string, update: Firestore.UpdateData<T>) => Promise<void>;
 
-    function setPartDAOUpdateBackup(daoFunction: daoFunction<Part>): void {
+    function setPartDAOUpdateBackup(daoFunction: DaoFunction<Part>): void {
         // eslint-disable-next-line dot-notation
         partDAO['updateBackup'] = daoFunction;
     }
@@ -474,7 +480,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             // When receiving several pairs of moves
             tick(2);
 
-            // Finish the part (the real Then is in the callback fo onReceivedMove)
+            // Finish the part (the real Then is in the callback of onReceivedMove)
             tick(wrapper.configRoom.maximalMoveDuration * 1000);
         }));
     });
@@ -1548,7 +1554,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             tick(0);
 
             // When attempting a move
-            // Then it should be refused
+            // Then it should fail
             spyOn(partDAO, 'update').and.callThrough();
             await testUtils.expectClickFailure('#choosePiece_1', GameWrapperMessages.GAME_HAS_ENDED());
 
@@ -1599,6 +1605,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
     });
 
     describe('rematch', () => {
+
         it('should show propose button only when game is ended', fakeAsync(async() => {
             // Given a game that is not finished
             await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER, PreparationOptions.withoutClocks);
@@ -1619,7 +1626,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             testUtils.detectChanges();
 
             // When the propose rematch button is clicked
-            const gameService: GameService = TestBed.inject(GameService);
+            gameService = TestBed.inject(GameService);
             spyOn(gameService, 'proposeRematch').and.callThrough();
             await testUtils.expectInterfaceClickSuccess('#proposeRematch');
 
@@ -1634,7 +1641,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             await receiveRequest(Player.ONE, 'Rematch');
             tick(0);
             testUtils.detectChanges();
-            const gameService: GameService = TestBed.inject(GameService);
+            gameService = TestBed.inject(GameService);
             spyOn(gameService, 'rejectRematch').and.callThrough();
 
             // When the reject rematch button is clicked
@@ -1685,7 +1692,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             // When accepting it
             const router: Router = TestBed.inject(Router);
             spyOn(router, 'navigate').and.resolveTo();
-            const gameService: GameService = TestBed.inject(GameService);
+            gameService = TestBed.inject(GameService);
             spyOn(gameService, 'acceptRematch').and.callThrough();
             tick(0);
             testUtils.detectChanges();

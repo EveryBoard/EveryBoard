@@ -2,7 +2,7 @@
 import { fakeAsync } from '@angular/core/testing';
 import { PlayerOrNone } from 'src/app/jscaip/Player';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { Table } from 'src/app/utils/ArrayUtils';
+import { Table } from 'src/app/jscaip/TableUtils';
 import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { PentagoComponent } from '../pentago.component';
 import { PentagoMove } from '../PentagoMove';
@@ -48,7 +48,7 @@ describe('PentagoComponent', () => {
         }));
 
         it('should not accept click on pieces', fakeAsync(async() => {
-            // Given an initial state with a piece on it
+            // Given a state with a piece on it
             const board: Table<PlayerOrNone> = [
                 [O, _, _, _, _, _],
                 [_, _, _, _, _, _],
@@ -58,11 +58,10 @@ describe('PentagoComponent', () => {
                 [_, _, _, _, _, _],
             ];
             const state: PentagoState = new PentagoState(board, 5);
-
-            // When rendering the board
             await testUtils.setupState(state);
 
-            // Then there should not be clickable thing there
+            // When clicking on that piece
+            // Then it should fail
             await testUtils.expectClickFailure('#click-0-0', RulesFailure.MUST_LAND_ON_EMPTY_SPACE());
         }));
 
@@ -146,6 +145,7 @@ describe('PentagoComponent', () => {
         }));
 
         it('should highlight last move (with rotation, but not of last drop)', fakeAsync(async() => {
+            // Given a board with a piece in block number 1
             const board: Table<PlayerOrNone> = [
                 [_, _, _, _, _, _],
                 [_, _, _, O, _, _],
@@ -156,6 +156,8 @@ describe('PentagoComponent', () => {
             ];
             const state: PentagoState = new PentagoState(board, 5);
             await testUtils.setupState(state);
+
+            // When dropping in block number 0 and rotating block number 1
             await testUtils.expectClickSuccess('#click-0-1');
             const move: PentagoMove = PentagoMove.withRotation(0, 1, 1, false);
             await testUtils.expectMoveSuccess('#rotate-1-counterclockwise', move);

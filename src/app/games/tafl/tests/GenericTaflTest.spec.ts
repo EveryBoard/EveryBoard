@@ -3,8 +3,7 @@ import { Type } from '@angular/core';
 import { fakeAsync } from '@angular/core/testing';
 import { Coord } from 'src/app/jscaip/Coord';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { Encoder } from 'src/app/utils/Encoder';
-import { EncoderTestUtils } from 'src/app/utils/tests/Encoder.spec';
+import { Encoder, EncoderTestUtils, MGPFallible, MGPOptional } from '@everyboard/lib';
 import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { TaflComponent } from '../tafl.component';
 import { TaflFailure } from '../TaflFailure';
@@ -14,8 +13,6 @@ import { TaflRules } from '../TaflRules';
 import { TaflState } from '../TaflState';
 import { RulesConfigUtils } from 'src/app/jscaip/RulesConfigUtil';
 import { TaflConfig } from '../TaflConfig';
-import { MGPFallible } from 'src/app/utils/MGPFallible';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 export class TaflTestEntries<C extends TaflComponent<R, M>,
                              R extends TaflRules<M>,
@@ -59,7 +56,7 @@ export function DoTaflTests<C extends TaflComponent<R, M>,
             it('should cancel move when clicking on opponent piece', fakeAsync( async() => {
                 // Given any state
                 // When clicking on an opponent piece
-                // Then the move should be illegal
+                // Then it should fail
                 const opponentPiece: string = '#click_' + entries.secondPlayerPiece.x + '_' + entries.secondPlayerPiece.y;
                 const reason: string = RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT();
                 await testUtils.expectClickFailure(opponentPiece, reason);
@@ -68,7 +65,7 @@ export function DoTaflTests<C extends TaflComponent<R, M>,
             it('should cancel move when first click on empty space', fakeAsync( async() => {
                 // Given any state
                 // When clicking on an empty space
-                // Then it should be a failure
+                // Then it should fail
                 await testUtils.expectClickFailure('#click_0_0', RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY());
             }));
 
@@ -157,13 +154,13 @@ export function DoTaflTests<C extends TaflComponent<R, M>,
                 await testUtils.expectClickSuccess('#click_' + playersCoord);
 
                 // When clicking on it again
-                await testUtils.expectClickSuccess('#click_' + playersCoord);
+                await testUtils.expectClickFailure('#click_' + playersCoord);
 
                 // Then that piece should be deselected
                 testUtils.expectElementNotToHaveClass('#piece_' + playersCoord, 'selected-stroke');
             }));
 
-            it('should cancelMove when trying to jump over another piece', fakeAsync(async() => {
+            it('should cancel the move when trying to jump over another piece', fakeAsync(async() => {
                 // Given a state where first click selected one of your pieces
                 await testUtils.setupState(entries.stateReadyForJumpOver);
                 const firstCoord: string = entries.jumpOver.getStart().x + '_' + entries.jumpOver.getStart().y;

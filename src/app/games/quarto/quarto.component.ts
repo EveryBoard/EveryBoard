@@ -4,16 +4,15 @@ import { QuartoState } from './QuartoState';
 import { QuartoRules } from './QuartoRules';
 import { QuartoPiece } from './QuartoPiece';
 import { Coord } from 'src/app/jscaip/Coord';
-import { MGPValidation } from 'src/app/utils/MGPValidation';
+import { MGPOptional, MGPValidation } from '@everyboard/lib';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { RectangularGameComponent } from 'src/app/components/game-components/rectangular-game-component/RectangularGameComponent';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { MCTS } from 'src/app/jscaip/AI/MCTS';
-import { Minimax } from 'src/app/jscaip/AI/Minimax';
 import { QuartoHeuristic } from './QuartoHeuristic';
 import { QuartoMoveGenerator } from './QuartoMoveGenerator';
 import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { Minimax } from 'src/app/jscaip/AI/Minimax';
+import { MCTS } from 'src/app/jscaip/AI/MCTS';
 
 @Component({
     selector: 'app-quarto',
@@ -50,7 +49,6 @@ export class QuartoComponent extends RectangularGameComponent<QuartoRules,
     public async updateBoard(_triggerAnimation: boolean): Promise<void> {
         const state: QuartoState = this.getState();
         this.board = state.getCopiedBoard();
-        this.chosen = MGPOptional.empty();
         this.pieceInHand = state.pieceInHand;
         this.victoriousCoords = this.rules.getVictoriousCoords(state);
     }
@@ -61,9 +59,6 @@ export class QuartoComponent extends RectangularGameComponent<QuartoRules,
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }
-        this.hideLastMove(); // now the user tried to choose something
-        // so I guess he don't need to see what's the last move of the opponent
-
         if (this.board[y][x] === QuartoPiece.EMPTY) {
             // if it's a legal place to put the piece
             this.showPieceInHandOnBoard(x, y); // let's show the user his decision
@@ -90,12 +85,8 @@ export class QuartoComponent extends RectangularGameComponent<QuartoRules,
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }
-        this.hideLastMove(); // now the user tried to choose something
-        // so I guess he don't need to see what's the last move of the opponent
-
         if (this.pieceToGive.equalsValue(QuartoPiece.ofInt(givenPiece))) {
-            this.cancelMoveAttempt();
-            return MGPValidation.SUCCESS;
+            return this.cancelMove();
         }
         this.pieceToGive = MGPOptional.of(QuartoPiece.ofInt(givenPiece));
         if (this.chosen.isAbsent()) {
@@ -117,7 +108,6 @@ export class QuartoComponent extends RectangularGameComponent<QuartoRules,
     }
 
     public override cancelMoveAttempt(): void {
-        this.hideLastMove();
         this.pieceToGive = MGPOptional.empty();
         this.chosen = MGPOptional.empty();
     }
@@ -130,8 +120,7 @@ export class QuartoComponent extends RectangularGameComponent<QuartoRules,
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }
-        this.cancelMoveAttempt();
-        return MGPValidation.SUCCESS;
+        return this.cancelMove();
     }
 
     private showPieceInHandOnBoard(x: number, y: number): void {
@@ -146,8 +135,9 @@ export class QuartoComponent extends RectangularGameComponent<QuartoRules,
         const coord: Coord = new Coord(x, y);
         if (this.lastMove.equalsValue(coord)) {
             return ['moved-fill'];
+        } else {
+            return [];
         }
-        return [];
     }
 
     public getPieceClasses(piece: number): string[] {
@@ -162,9 +152,9 @@ export class QuartoComponent extends RectangularGameComponent<QuartoRules,
 
     public getPieceSize(piece: number): number {
         if (piece < 8) {
-            return 40;
+            return 35;
         } else {
-            return 25;
+            return 20;
         }
     }
 

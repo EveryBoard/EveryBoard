@@ -2,9 +2,8 @@
 import { TestBed } from '@angular/core/testing';
 import { Injectable } from '@angular/core';
 import { FirestoreDocument, FirestoreDAO } from '../FirestoreDAO';
-import { FirestoreJSONObject } from 'src/app/utils/utils';
+import { FirestoreJSONObject, MGPOptional } from '@everyboard/lib';
 import { FirestoreCollectionObserver } from '../FirestoreCollectionObserver';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { Subscription } from 'rxjs';
 import { setupEmulators } from 'src/app/utils/tests/TestUtils.spec';
 

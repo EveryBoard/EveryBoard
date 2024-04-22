@@ -1,8 +1,7 @@
 import { Tutorial, TutorialStep } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Player } from 'src/app/jscaip/Player';
-import { MGPMap } from 'src/app/utils/MGPMap';
-import { MGPValidation } from 'src/app/utils/MGPValidation';
+import { MGPMap, MGPValidation } from '@everyboard/lib';
 import { LodestoneMove } from './LodestoneMove';
 import { LodestonePiece, LodestonePieceLodestone, LodestonePieceNone, LodestonePiecePlayer } from './LodestonePiece';
 import { LodestonePressurePlateGroup, LodestonePressurePlates, LodestoneState } from './LodestoneState';
@@ -52,7 +51,7 @@ export class LodestoneTutorial extends Tutorial {
             $localize`To summarize, it is possible to capture the opponent's pieces in two ways:<ul><li>with a repelling lodestone, by pushing your opponent's pieces out of the board, or</li><li>with an attracting lodestone, by moving your pieces on your opponent's pieces.</li></ul>Once a lodestone is placed and the pieces have been moved and/or captured, in case any of the opponent's pieces have been captured, you have to place them on the <i>pressure plates</i> that lie around the board. To do so, click on an empty space of the pressure plate of your choice for each capture. You can cancel this by clicking again on a piece you just put on a pressure plate.<br/><br/>You're playing Dark. Try to perform a move that captures at least one of your opponent's piece, and place your capture(s) on pressure plates.`,
             LodestoneRules.get().getInitialState(),
             new LodestoneMove(new Coord(0, 6), 'pull', 'orthogonal', { top: 2, bottom: 1, left: 1, right: 1 }),
-            (_: LodestoneMove, _previous: LodestoneState, result: LodestoneState) => {
+            (_move: LodestoneMove, _previous: LodestoneState, result: LodestoneState) => {
                 if (result.remainingSpaces() === 32) {
                     return MGPValidation.failure(TutorialStepMessage.YOU_DID_NOT_CAPTURE_ANY_PIECE());
                 }
@@ -79,7 +78,7 @@ export class LodestoneTutorial extends Tutorial {
                 top: LodestonePressurePlateGroup.of([5, 3]).addCaptured(Player.ONE, 4),
             }),
             new LodestoneMove(new Coord(6, 2), 'push', 'diagonal', { top: 1, bottom: 0, left: 0, right: 0 }),
-            (_: LodestoneMove, _previous: LodestoneState, result: LodestoneState) => {
+            (_move: LodestoneMove, _previous: LodestoneState, result: LodestoneState) => {
                 if (result.pressurePlates.top.getCurrentPlateWidth() === 5) {
                     return MGPValidation.failure($localize`You must capture and place your capture on the top pressure plate to make it crumble!`);
                 }
@@ -106,7 +105,7 @@ export class LodestoneTutorial extends Tutorial {
                 top: LodestonePressurePlateGroup.of([5, 3]).addCaptured(Player.ONE, 7),
             }),
             new LodestoneMove(new Coord(3, 5), 'pull', 'diagonal', { top: 1, bottom: 0, left: 0, right: 0 }),
-            (_: LodestoneMove, _previous: LodestoneState, result: LodestoneState) => {
+            (_move: LodestoneMove, _previous: LodestoneState, result: LodestoneState) => {
                 if (result.pressurePlates.top.getCurrentPlate().isPresent()) {
                     return MGPValidation.failure($localize`You must capture and place your capture on the top pressure plate to make it crumble a second time!`);
                 }

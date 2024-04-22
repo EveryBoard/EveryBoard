@@ -8,7 +8,7 @@ import { LinesOfActionMove } from '../LinesOfActionMove';
 import { LinesOfActionFailure } from '../LinesOfActionFailure';
 import { LinesOfActionState } from '../LinesOfActionState';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { Table } from 'src/app/utils/ArrayUtils';
+import { Table } from 'src/app/jscaip/TableUtils';
 import { DirectionFailure } from 'src/app/jscaip/Direction';
 import { LinesOfActionRules } from '../LinesOfActionRules';
 
@@ -127,7 +127,7 @@ describe('LinesOfActionComponent', () => {
             await testUtils.expectClickSuccess('#click_2_0');
 
             // When clicking on that piece again
-            await testUtils.expectClickSuccess('#click_2_0');
+            await testUtils.expectClickFailure('#click_2_0');
 
             // Then it should no longer be selected
             testUtils.expectElementNotToHaveClass('#piece_2_0', 'selected-stroke');

@@ -4,12 +4,9 @@ import { Move } from '../Move';
 import { Player } from '../Player';
 import { SuperRules } from '../Rules';
 import { GameState } from '../GameState';
-import { comparableEquals, isComparableObject } from 'src/app/utils/Comparable';
-import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { GameStatus } from '../GameStatus';
-import { JSONValue, Utils } from 'src/app/utils/utils';
+import { comparableEquals, isComparableObject, JSONValue, MGPFallible, MGPOptional, Utils } from '@everyboard/lib';
 import { EmptyRulesConfig, RulesConfig } from '../RulesConfigUtil';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 export class RulesUtils {
 

@@ -3,9 +3,7 @@ import { GoMove } from 'src/app/games/go/GoMove';
 import { GoConfig, GoLegalityInformation, GoRules } from 'src/app/games/go/GoRules';
 import { GoState, Phase, GoPiece } from 'src/app/games/go/GoState';
 import { Coord } from 'src/app/jscaip/Coord';
-import { Debug, Utils } from 'src/app/utils/utils';
-import { MGPValidation } from 'src/app/utils/MGPValidation';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 import { GroupDatas } from 'src/app/jscaip/BoardDatas';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { GobanGameComponent } from 'src/app/components/game-components/goban-game-component/GobanGameComponent';
@@ -13,6 +11,7 @@ import { MCTS } from 'src/app/jscaip/AI/MCTS';
 import { Minimax } from 'src/app/jscaip/AI/Minimax';
 import { GoHeuristic } from './GoHeuristic';
 import { GoMoveGenerator } from './GoMoveGenerator';
+import { Debug } from 'src/app/utils/Debug';
 import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 
 @Component({

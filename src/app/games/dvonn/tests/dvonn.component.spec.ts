@@ -8,7 +8,7 @@ import { Player } from 'src/app/jscaip/Player';
 import { fakeAsync } from '@angular/core/testing';
 import { DvonnFailure } from 'src/app/games/dvonn/DvonnFailure';
 import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
-import { Table } from 'src/app/utils/ArrayUtils';
+import { Table } from 'src/app/jscaip/TableUtils';
 
 describe('DvonnComponent', () => {
 
@@ -110,9 +110,11 @@ describe('DvonnComponent', () => {
     it('should allow clicking twice on a piece to deselect it', fakeAsync(async() => {
         // Given a piece selected by the user
         await testUtils.expectClickSuccess('#click_2_0');
+
         // When the user clicks a second time on the piece
         testUtils.expectElementToExist('#chosen_2_0');
-        await testUtils.expectClickSuccess('#click_2_0');
+        await testUtils.expectClickFailure('#click_2_0');
+
         // Then it should be deselected
         testUtils.expectElementNotToExist('#chosen_2_0');
     }));

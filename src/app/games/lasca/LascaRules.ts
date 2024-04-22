@@ -4,14 +4,12 @@ import { GameNode } from 'src/app/jscaip/AI/GameNode';
 import { Player } from 'src/app/jscaip/Player';
 import { Rules } from 'src/app/jscaip/Rules';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { MGPValidation } from 'src/app/utils/MGPValidation';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { MGPSet } from 'src/app/utils/MGPSet';
+import { MGPOptional, MGPSet, MGPValidation } from '@everyboard/lib';
 import { LascaMove } from './LascaMove';
 import { LascaFailure } from './LascaFailure';
 import { LascaPiece, LascaStack, LascaState } from './LascaState';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
-import { Table } from 'src/app/utils/ArrayUtils';
+import { Table } from 'src/app/jscaip/TableUtils';
 import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 export class LascaNode extends GameNode<LascaMove, LascaState> {}
@@ -66,9 +64,9 @@ export class LascaRules extends Rules<LascaMove, LascaState> {
         const moved: LascaStack = state.getPieceAt(coord);
         for (const direction of directions) {
             const captured: Coord = coord.getNext(direction, 1);
-            if (LascaState.isOnBoard(captured) && state.getPieceAt(captured).isCommandedBy(opponent)) {
+            if (state.isOnBoard(captured) && state.getPieceAt(captured).isCommandedBy(opponent)) {
                 const landing: Coord = captured.getNext(direction, 1);
-                if (LascaState.isOnBoard(landing) && state.getPieceAt(landing).isEmpty()) {
+                if (state.isOnBoard(landing) && state.getPieceAt(landing).isEmpty()) {
                     const fakePostCaptureState: LascaState = state.remove(coord).remove(captured).set(landing, moved);
                     // Not needed to do the real capture
                     const startOfMove: LascaMove = LascaMove.fromCapture([coord, landing]).get();
@@ -121,7 +119,7 @@ export class LascaRules extends Rules<LascaMove, LascaState> {
         const directions: Direction[] = this.getPieceDirections(state, coord);
         for (const direction of directions) {
             const landing: Coord = coord.getNext(direction, 1);
-            if (LascaState.isOnBoard(landing) && state.getPieceAt(landing).isEmpty()) {
+            if (state.isOnBoard(landing) && state.getPieceAt(landing).isEmpty()) {
                 const newStep: LascaMove = LascaMove.fromStep(coord, landing).get();
                 pieceMoves.push(newStep);
             }

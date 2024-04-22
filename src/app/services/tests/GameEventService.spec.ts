@@ -5,7 +5,7 @@ import { serverTimestamp } from 'firebase/firestore';
 import { GameEventService } from '../GameEventService';
 import { PartDAO } from 'src/app/dao/PartDAO';
 import { GameEvent, Reply, RequestType, Action } from 'src/app/domain/Part';
-import { JSONValue } from 'src/app/utils/utils';
+import { JSONValue } from '@everyboard/lib';
 import { PartDAOMock } from 'src/app/dao/tests/PartDAOMock.spec';
 import { IFirestoreDAO } from '../../dao/FirestoreDAO';
 import { UserMocks } from 'src/app/domain/UserMocks.spec';
@@ -31,10 +31,13 @@ describe('GameEventService', () => {
         gameEventService = TestBed.inject(GameEventService);
         events = partDAO.subCollectionDAO<GameEvent>(partId, 'events');
     }));
+
     it('should be created', () => {
         expect(gameEventService).toBeTruthy();
     });
+
     describe('addMove', () => {
+
         it('should add a move event to the DAO', fakeAsync(async() => {
             // Given a part service and its DAO
             spyOn(events, 'create').and.callThrough();
@@ -50,8 +53,11 @@ describe('GameEventService', () => {
             };
             expect(events.create).toHaveBeenCalledOnceWith(moveEvent);
         }));
+
     });
+
     describe('addRequest', () => {
+
         it('should add a request event to the DAO', fakeAsync(async() => {
             // Given a part service and its DAO
             spyOn(events, 'create').and.callThrough();
@@ -67,8 +73,11 @@ describe('GameEventService', () => {
             };
             expect(events.create).toHaveBeenCalledOnceWith(event);
         }));
+
     });
+
     describe('addReply', () => {
+
         it('should add a request event to the DAO', fakeAsync(async() => {
             // Given a part service and its DAO
             spyOn(events, 'create').and.callThrough();
@@ -87,8 +96,11 @@ describe('GameEventService', () => {
             };
             expect(events.create).toHaveBeenCalledOnceWith(event);
         }));
+
     });
+
     describe('startGame', () => {
+
         it('should add a start action to the DAO', fakeAsync(async() => {
             // Given a part service and its DAO
             spyOn(events, 'create').and.callThrough();
@@ -104,8 +116,11 @@ describe('GameEventService', () => {
             };
             expect(events.create).toHaveBeenCalledOnceWith(event);
         }));
+
     });
+
     describe('addAction', () => {
+
         it('should add an action to the DAO', fakeAsync(async() => {
             // Given a part service and its DAO
             spyOn(events, 'create').and.callThrough();
@@ -121,13 +136,16 @@ describe('GameEventService', () => {
             };
             expect(events.create).toHaveBeenCalledOnceWith(event);
         }));
+
     });
+
     describe('subscribeToEvents', () => {
+
         it('should receive newly added events exactly once', fakeAsync(async() => {
             // Given a part service with a part without event, and where we subscribed to the part's events
             let receivedEvents: number = 0;
-            gameEventService.subscribeToEvents(partId, (events: GameEvent[]) => {
-                receivedEvents += events.length;
+            gameEventService.subscribeToEvents(partId, (gameEvents: GameEvent[]) => {
+                receivedEvents += gameEvents.length;
             });
             // When a new event is added
             await gameEventService.addMove(partId, UserMocks.CREATOR_MINIMAL_USER, { x: 0, y: 0 });
@@ -136,17 +154,20 @@ describe('GameEventService', () => {
             tick(0);
             expect(receivedEvents).toBe(1);
         }));
+
         it('should receive already present events when subscribing', fakeAsync(async() => {
             // Given a part service with events already in the part
             await gameEventService.addMove(partId, UserMocks.CREATOR_MINIMAL_USER, { x: 0, y: 0 });
             await gameEventService.addMove(partId, UserMocks.OPPONENT_MINIMAL_USER, { x: 0, y: 1 });
             // When we subscribed to the part events
             let receivedEvents: number = 0;
-            gameEventService.subscribeToEvents(partId, (events: GameEvent[]) => {
-                receivedEvents += events.length;
+            gameEventService.subscribeToEvents(partId, (gameEvents: GameEvent[]) => {
+                receivedEvents += gameEvents.length;
             });
             // Then we receive the existing events
             expect(receivedEvents).toBe(2);
         }));
+
     });
+
 });

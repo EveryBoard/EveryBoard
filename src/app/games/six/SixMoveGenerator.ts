@@ -1,12 +1,10 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { Player } from 'src/app/jscaip/Player';
-import { MGPMap } from 'src/app/utils/MGPMap';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { MGPSet } from 'src/app/utils/MGPSet';
+import { MGPMap, MGPOptional, MGPSet } from '@everyboard/lib';
 import { SixState } from './SixState';
 import { SixMove } from './SixMove';
-import { Debug } from 'src/app/utils/utils';
 import { SixNode, SixRules } from './SixRules';
+import { Debug } from 'src/app/utils/Debug';
 import { MoveGenerator } from 'src/app/jscaip/AI/AI';
 import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 

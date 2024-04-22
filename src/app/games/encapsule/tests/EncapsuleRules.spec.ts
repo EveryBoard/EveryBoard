@@ -5,19 +5,17 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { EncapsuleSpace, EncapsuleState } from '../EncapsuleState';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { EncapsulePiece } from '../EncapsulePiece';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { MGPOptional } from '@everyboard/lib';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { EncapsuleFailure } from '../EncapsuleFailure';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { Table } from 'src/app/utils/ArrayUtils';
+import { Table } from 'src/app/jscaip/TableUtils';
 import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 describe('EncapsuleRules', () => {
 
     let rules: EncapsuleRules;
     const defaultConfig: NoConfig = EncapsuleRules.get().getDefaultRulesConfig();
-
-    let node: EncapsuleNode;
 
     const ___: EncapsuleSpace = new EncapsuleSpace(PlayerOrNone.NONE, PlayerOrNone.NONE, PlayerOrNone.NONE);
     const X__: EncapsuleSpace = new EncapsuleSpace(PlayerOrNone.ONE, PlayerOrNone.NONE, PlayerOrNone.NONE);
@@ -36,7 +34,6 @@ describe('EncapsuleRules', () => {
 
     beforeEach(() => {
         rules = EncapsuleRules.get();
-        node = rules.getInitialNode(defaultConfig);
     });
 
     it('should be created', () => {
@@ -54,7 +51,7 @@ describe('EncapsuleRules', () => {
             X0, X0, X1, X1, X2, X2,
             O0, O1, O2,
         ]);
-        node = new EncapsuleNode(state);
+        const node: EncapsuleNode = new EncapsuleNode(state);
         // When evaluating it
         // Then it should be a victory
         RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, defaultConfig);
@@ -71,7 +68,7 @@ describe('EncapsuleRules', () => {
             O0, O1, O1, O2, O2,
             X0, X0, X1, X2,
         ]);
-        node = new EncapsuleNode(state);
+        const node: EncapsuleNode = new EncapsuleNode(state);
 
         // When evaluating it
         // Then it should be considered as ongoing

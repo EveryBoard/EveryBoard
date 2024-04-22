@@ -1,7 +1,7 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { Move } from 'src/app/jscaip/Move';
 import { DiamPiece } from './DiamPiece';
-import { Encoder } from '../../utils/Encoder';
+import { Encoder } from '@everyboard/lib';
 
 export abstract class DiamMove extends Move {
 

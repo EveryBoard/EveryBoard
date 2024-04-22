@@ -3,17 +3,15 @@ import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
 import { PieceThreat } from 'src/app/jscaip/PieceThreat';
 import { Player } from 'src/app/jscaip/Player';
 import { TriangularCheckerBoard } from 'src/app/jscaip/TriangularCheckerBoard';
-import { MGPMap } from 'src/app/utils/MGPMap';
-import { MGPSet } from 'src/app/utils/MGPSet';
+import { MGPMap, MGPOptional, MGPSet } from '@everyboard/lib';
 import { CoerceoMove, CoerceoStep } from './CoerceoMove';
 import { CoerceoState } from './CoerceoState';
 import { CoerceoNode } from './CoerceoRules';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { CoordSet } from 'src/app/utils/OptimizedSet';
 import { Vector } from 'src/app/jscaip/Vector';
-import { PlayerMetricHeuristic } from 'src/app/jscaip/AI/Minimax';
+import { CoordSet } from 'src/app/jscaip/CoordSet';
 import { PlayerNumberTable } from 'src/app/jscaip/PlayerNumberTable';
 import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { PlayerMetricHeuristic } from 'src/app/jscaip/AI/Minimax';
 
 export class CoerceoPiecesThreatsTilesHeuristic extends PlayerMetricHeuristic<CoerceoMove, CoerceoState> {
 
@@ -105,7 +103,7 @@ export class CoerceoPiecesThreatsTilesHeuristic extends PlayerMetricHeuristic<Co
                 const movingThreat: Coord = uniqueFreedom.get().getNext(step.direction, 1);
                 if (CoerceoState.isOnBoard(movingThreat) &&
                     state.getPieceAt(movingThreat).is(opponent) &&
-                    directThreats.some((coord: Coord) => coord.equals(movingThreat)) === false)
+                    directThreats.some((c: Coord) => c.equals(movingThreat)) === false)
                 {
                     movingThreats.push(movingThreat);
                 }

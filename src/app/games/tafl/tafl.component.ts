@@ -5,9 +5,7 @@ import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { RelativePlayer } from 'src/app/jscaip/RelativePlayer';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
-import { MGPFallible } from 'src/app/utils/MGPFallible';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { MGPValidation } from 'src/app/utils/MGPValidation';
+import { MGPFallible, MGPOptional, MGPValidation } from '@everyboard/lib';
 import { TaflMove } from './TaflMove';
 import { TaflPawn } from './TaflPawn';
 import { TaflRules } from './TaflRules';
@@ -95,8 +93,7 @@ export abstract class TaflComponent<R extends TaflRules<M>, M extends TaflMove>
         }
         const clicked: Coord = new Coord(x, y);
         if (this.chosen.equalsValue(clicked)) {
-            this.cancelMoveAttempt();
-            return MGPValidation.SUCCESS;
+            return this.cancelMove();
         }
         if (this.chosen.isAbsent() ||
             this.pieceBelongsToCurrentPlayer(clicked))

@@ -63,13 +63,13 @@
         <source>Learn the rules</source>
       </trans-unit>
       <trans-unit id="7164690325767499813" datatype="html">
-        <source><x id="INTERPOLATION" equiv-text="currentGame.get().typeGame }}"/> by <x id="INTERPOLATION_1" equiv-text="{{ currentGame.get().opponent?.name }}"/></source>
+        <source><x id="INTERPOLATION" equiv-text="getCurrentGameName() }}"/> by <x id="INTERPOLATION_1" equiv-text="{{ currentGame.get().opponent?.name }}"/></source>
       </trans-unit>
       <trans-unit id="172167399786281724" datatype="html">
-        <source><x id="INTERPOLATION" equiv-text="currentGame.get().typeGame }}"/> against <x id="INTERPOLATION_1" equiv-text="{{ currentGame.get().opponent?.name }}"/></source>
+        <source><x id="INTERPOLATION" equiv-text="getCurrentGameName() }}"/> against <x id="INTERPOLATION_1" equiv-text="{{ currentGame.get().opponent?.name }}"/></source>
       </trans-unit>
       <trans-unit id="5678362140621139107" datatype="html">
-        <source><x id="INTERPOLATION" equiv-text="currentGame.get().typeGame }}"/> (waiting for opponent)</source>
+        <source><x id="INTERPOLATION" equiv-text="getCurrentGameName() }}"/> (waiting for opponent)</source>
       </trans-unit>
       <trans-unit id="4930506384627295710" datatype="html">
         <source>Settings</source>

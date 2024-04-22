@@ -4,7 +4,7 @@ import { CoerceoMove, CoerceoRegularMove, CoerceoTileExchangeMove } from 'src/ap
 import { Coord } from 'src/app/jscaip/Coord';
 import { CoerceoFailure } from 'src/app/games/coerceo/CoerceoFailure';
 import { CoerceoState } from 'src/app/games/coerceo/CoerceoState';
-import { Table } from 'src/app/utils/ArrayUtils';
+import { Table } from 'src/app/jscaip/TableUtils';
 import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { fakeAsync } from '@angular/core/testing';
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
@@ -156,10 +156,10 @@ describe('CoerceoComponent', () => {
             expect(component.possibleLandings).toContain(new Coord(4, 2));
         }));
 
-        it('should cancelMove when first click is on empty space', fakeAsync(async() => {
+        it('should cancel the move when first click is on empty space', fakeAsync(async() => {
             // Given any board
             // When clicking on empty space
-            // Then it should have been a failure
+            // Then it should fail
             await testUtils.expectClickFailure('#click_5_5', CoerceoFailure.FIRST_CLICK_SHOULD_NOT_BE_NULL());
         }));
 
@@ -176,6 +176,7 @@ describe('CoerceoComponent', () => {
             testUtils.expectElementNotToExist('#last_start_6_2');
             testUtils.expectElementNotToExist('#last_end_7_3');
         }));
+
     });
 
     describe('Second click', () => {
@@ -210,7 +211,7 @@ describe('CoerceoComponent', () => {
             await testUtils.expectClickSuccess('#click_6_2');
 
             // When clicking on it again
-            await testUtils.expectClickSuccess('#click_6_2');
+            await testUtils.expectClickFailure('#click_6_2');
 
             // Then the different highlights should be gone since the piece is deselected
             const component: CoerceoComponent = testUtils.getGameComponent();

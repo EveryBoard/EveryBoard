@@ -5,10 +5,9 @@ import { ModeConfig, ParallelogramGameComponent } from 'src/app/components/game-
 import { TrexoMove } from 'src/app/games/trexo/TrexoMove';
 import { Coord } from 'src/app/jscaip/Coord';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
-import { MGPValidation } from 'src/app/utils/MGPValidation';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { MGPOptional, MGPValidation } from '@everyboard/lib';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { Table3DUtils, TableUtils } from 'src/app/utils/ArrayUtils';
+import { Table3DUtils, TableUtils } from 'src/app/jscaip/TableUtils';
 import { Coord3D } from 'src/app/jscaip/Coord3D';
 import { TrexoFailure } from './TrexoFailure';
 import { Direction } from 'src/app/jscaip/Direction';
@@ -232,8 +231,7 @@ export class TrexoComponent extends ParallelogramGameComponent<TrexoRules, Trexo
         if (this.droppedPiece.isPresent()) {
             const dropped: Coord = this.droppedPiece.get();
             if (this.droppedPiece.equalsValue(clicked)) {
-                await this.cancelMoveAttempt();
-                return MGPValidation.SUCCESS;
+                return this.cancelMove();
             }
             if (this.possibleNextClicks.some((c: Coord) => c.equals(clicked))) {
                 const isPlayerZero: boolean = this.getState().getCurrentPlayer() === Player.ZERO;

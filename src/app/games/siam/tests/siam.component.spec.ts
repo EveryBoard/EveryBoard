@@ -1,13 +1,12 @@
 /* eslint-disable max-lines-per-function */
-import { DebugElement } from '@angular/core';
 import { fakeAsync } from '@angular/core/testing';
 
 import { SiamComponent } from '../siam.component';
 import { SiamMove } from 'src/app/games/siam/SiamMove';
 import { Orthogonal } from 'src/app/jscaip/Direction';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { MGPOptional } from '@everyboard/lib';
 import { SiamPiece } from 'src/app/games/siam/SiamPiece';
-import { Table } from 'src/app/utils/ArrayUtils';
+import { Table } from 'src/app/jscaip/TableUtils';
 import { SiamState } from 'src/app/games/siam/SiamState';
 import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
@@ -78,8 +77,10 @@ describe('SiamComponent', () => {
     it('should deselect piece when clicking a second time on it', fakeAsync(async() => {
         // Given a component where the player has selected a piece for insertion
         await testUtils.expectClickSuccess('#remainingPieces_0');
+
         // When clicking a second time on the remaining pieces
-        await testUtils.expectClickSuccess('#remainingPieces_0');
+        await testUtils.expectClickFailure('#remainingPieces_0');
+
         // Then it should deselect the piece
         testUtils.expectElementNotToHaveClass('#remainingPieces_0_4', 'selected-stroke');
     }));
@@ -210,7 +211,7 @@ describe('SiamComponent', () => {
         // and must select the target for a move
         await testUtils.expectClickSuccess('#remainingPieces_0');
         // When the player clicks on an invalid target which would result in an impossible move
-        // Then the move should be canceled
+        // Then it should fail
         await testUtils.expectClickFailure('#square_2_2', SiamFailure.MUST_SELECT_VALID_DESTINATION());
     }));
 
@@ -249,12 +250,13 @@ describe('SiamComponent', () => {
         await testUtils.setupState(state);
         await testUtils.expectClickSuccess('#square_4_4');
         await testUtils.expectClickSuccess('#square_4_3');
+        testUtils.expectElementToHaveClass('#piece_4_4', 'selected-stroke');
 
         // When the player clicks on a square instead of an orientation arrow
-        spyOn(testUtils.getGameComponent(), 'cancelMoveAttempt').and.callThrough();
-        await testUtils.expectClickSuccess('#square_2_2');
+        await testUtils.expectClickFailure('#square_2_2');
+
         // Then the move should be canceled
-        expect(testUtils.getGameComponent().cancelMoveAttempt).toHaveBeenCalledOnceWith();
+        testUtils.expectElementNotToHaveClass('#piece_4_4', 'selected-stroke');
     }));
 
     it('should cancel the move when clicking on invalid target for move', fakeAsync(async() => {
@@ -295,14 +297,6 @@ describe('SiamComponent', () => {
         await testUtils.expectMoveSuccess('#indicator_4_4_LEFT', move);
     }));
 
-    function expectTranslationYToBe(elementSelector: string, y: number): void {
-        const element: DebugElement = testUtils.findElement(elementSelector);
-        const transform: SVGTransform = element.nativeElement.transform.baseVal.getItem(0);
-        expect(transform.type).toBe(SVGTransform.SVG_TRANSFORM_TRANSLATE);
-        // In a SVG transform, f is the y coordinate
-        expect(transform.matrix.f).toBe(y);
-    }
-
     it('should display current player pieces on the bottom (Player.ONE)', fakeAsync(async() => {
         // Given a state
         const board: Table<SiamPiece> = [
@@ -319,8 +313,8 @@ describe('SiamComponent', () => {
         testUtils.getGameComponent().setPointOfView(Player.ONE);
 
         // Then Player.ONE's pieces should be on the bottom
-        expectTranslationYToBe('#remainingPieces_0_0', -100);
-        expectTranslationYToBe('#remainingPieces_1_0', 500);
+        testUtils.expectTranslationYToBe('#remainingPieces_0_0', -100);
+        testUtils.expectTranslationYToBe('#remainingPieces_1_0', 500);
     }));
 
     it('should display player zero pieces on the bottom (observer)', fakeAsync(async() => {
@@ -339,8 +333,8 @@ describe('SiamComponent', () => {
         await testUtils.getWrapper().setRole(PlayerOrNone.NONE);
 
         // Then player 0's pieces should be on the bottom
-        expectTranslationYToBe('#remainingPieces_0_0', 500);
-        expectTranslationYToBe('#remainingPieces_1_0', -100);
+        testUtils.expectTranslationYToBe('#remainingPieces_0_0', 500);
+        testUtils.expectTranslationYToBe('#remainingPieces_1_0', -100);
     }));
 
 });

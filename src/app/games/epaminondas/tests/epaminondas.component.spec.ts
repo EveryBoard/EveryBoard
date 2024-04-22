@@ -9,7 +9,7 @@ import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { fakeAsync } from '@angular/core/testing';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { EpaminondasFailure } from '../EpaminondasFailure';
-import { Table } from 'src/app/utils/ArrayUtils';
+import { Table } from 'src/app/jscaip/TableUtils';
 
 describe('EpaminondasComponent', () => {
 
@@ -38,7 +38,7 @@ describe('EpaminondasComponent', () => {
         testUtils.expectToBeCreated();
     });
 
-    it('should cancelMove when clicking on empty space at first', fakeAsync(async() => {
+    it('should cancel the move when clicking on empty space at first', fakeAsync(async() => {
         // Given a board
         // When clicking on an empty space
         // Then it should fail
@@ -152,7 +152,7 @@ describe('EpaminondasComponent', () => {
         await testUtils.expectClickSuccess('#click_0_11'); // select a piece
 
         // When clicking on the same piece again
-        await testUtils.expectClickSuccess('#click_0_11');
+        await testUtils.expectClickFailure('#click_0_11');
 
         // Then it should not be selected anymore and any piece is clickable
         expectClickable(0, 11);
@@ -359,6 +359,7 @@ describe('EpaminondasComponent', () => {
     }));
 
     describe('third click behaviour', () => {
+
         beforeEach(fakeAsync(async() => {
             // Given a board with aligned soldiers that are selected
             const board: Table<PlayerOrNone> = [
@@ -382,19 +383,19 @@ describe('EpaminondasComponent', () => {
             await testUtils.expectClickSuccess('#click_0_9');
         }));
 
-        it('should cancelMove when third click is not aligned with last click', fakeAsync(async() => {
+        it('should cancel the move when third click is not aligned with last click', fakeAsync(async() => {
             // When clicking on a square that is not aligned
             // Then it should fail
             await testUtils.expectClickFailure('#click_1_7', EpaminondasFailure.SQUARE_NOT_ALIGNED_WITH_PHALANX());
         }));
 
-        it('should cancelMove when third click is not aligned with phalanx direction', fakeAsync(async() => {
+        it('should cancel the move when third click is not aligned with phalanx direction', fakeAsync(async() => {
             // When clicking on a squae that is not aligned
             // Then it should fail
             await testUtils.expectClickFailure('#click_2_9', EpaminondasFailure.SQUARE_NOT_ALIGNED_WITH_PHALANX());
         }));
 
-        it('should cancelMove when third click is an invalid extension', fakeAsync(async() => {
+        it('should cancel the move when third click is an invalid extension', fakeAsync(async() => {
             // When trying to extend the phalanx further, but including a piece of the opponent
             // Then it should fail
             await testUtils.expectClickFailure('#click_0_7', EpaminondasFailure.PHALANX_CANNOT_CONTAIN_OPPONENT_PIECE());

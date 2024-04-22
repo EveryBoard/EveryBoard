@@ -2,7 +2,7 @@
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
 import { HeuristicUtils } from 'src/app/jscaip/AI/tests/HeuristicUtils.spec';
 import { SaharaState } from '../SaharaState';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { MGPOptional } from '@everyboard/lib';
 import { Player } from 'src/app/jscaip/Player';
 import { SaharaHeuristic } from '../SaharaHeuristic';
 import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
