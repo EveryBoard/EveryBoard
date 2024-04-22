@@ -87,7 +87,7 @@ export class EpaminondasTutorial extends Tutorial {
         ),
         TutorialStep.fromMove(
             $localize`Captures`,
-            $localize`In order to capture an opponent phalanx:<ol><li>It must be aligned with the phalanx you are moving.</li><li>It must be strictly shorter than your phalanx.</li><li>The first piece of your phalanx should land on the first piece of the opponent's phalanx that you want to capture.</li></ol><br/>You're playing Dark, capture a phalanx.`,
+            $localize`In order to capture an opponent phalanx, it must be aligned with the phalanx you are moving and be strictly shorter. The first piece of your phalanx should land on the first piece of the opponent's phalanx that you want to capture.<br/>You're playing Dark, capture a phalanx.`,
             new EpaminondasState([
                 [_, _, _, _, _, _, _, _, X, X, X, X, X, X],
                 [_, _, _, _, _, _, X, _, _, _, _, _, _, _],

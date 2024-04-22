@@ -50,5 +50,9 @@ Thumbs.db
 /lib/node_modules
 /lib/dist
 /lib/.nyc_output
-
+/lib/coverage
+! /lib/coverage/branches.csv
+! /lib/coverage/functions.csv
+! /lib/coverage/statements.csv
+! /lib/coverage/lines.csv
 .nx/

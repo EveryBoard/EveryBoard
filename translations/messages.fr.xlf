@@ -2136,9 +2136,9 @@
         <source>Congratulations! The moved pieces can be horizontally, vertically, or diagonally aligned. The move should be made along this axis, forward or backwards. There can be no opponent nor holes in the phalanx.</source>
         <target>Bravo ! Les pièces déplacées doivent être horizontalement, verticalement, ou diagonalement alignées. Le déplacement doit se faire le long de cette ligne, en avant ou en arrière. Il ne peut y avoir ni pièces adverses ni trous dans la phalange.</target>
       </trans-unit>
-      <trans-unit id="7112601423863267815" datatype="html">
-        <source>In order to capture an opponent phalanx:&lt;ol&gt;&lt;li&gt;It must be aligned with the phalanx you are moving.&lt;/li&gt;&lt;li&gt;It must be strictly shorter than your phalanx.&lt;/li&gt;&lt;li&gt;The first piece of your phalanx should land on the first piece of the opponent&apos;s phalanx that you want to capture.&lt;/li&gt;&lt;/ol&gt;&lt;br/&gt;You&apos;re playing Dark, capture a phalanx.</source>
-        <target>Pour capturer une phalange de l'adversaire :&lt;ol&gt;&lt;li&gt;Il faut que celle-ci soit alignée avec la phalange en déplacement.&lt;/li&gt;&lt;li&gt;Qu&apos;elle soit strictement plus courte.&lt;/li&gt;&lt;li&gt;Que la première pièce de votre phalange atterrisse sur la première pièce rencontrée de la phalange à capturer.&lt;/li&gt;&lt;/ol&gt;&lt;br/&gt;Vous jouez Foncé, capturez une phalange.</target>
+      <trans-unit id="5270412400264809136" datatype="html">
+        <source>In order to capture an opponent phalanx, it must be aligned with the phalanx you are moving and be strictly shorter. The first piece of your phalanx should land on the first piece of the opponent&apos;s phalanx that you want to capture.&lt;br/&gt;You&apos;re playing Dark, capture a phalanx.</source>
+        <target>Pour capturer une phalange de l'adversaire, il faut que celle-ci soit alignée avec la phalange en déplacement, et strictement plus courte. La première pièce de votre phalange doit atterrisse sur la première pièce rencontrée de la phalange à capturer.&lt;br/&gt;Vous jouez Foncé, capturez une phalange.</target>
       </trans-unit>
       <trans-unit id="5979772757820095272" datatype="html">
         <source>Congratulations, you made it! Note that the diagonal phalanx was not aligned with your phalanx, hence even if it is longer, this does not prevent you from capturing some of its pieces on another alignment.</source>
