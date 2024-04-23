@@ -29,8 +29,6 @@ export class QuixoComponent extends RectangularGameComponent<QuixoRules,
 
     public QuixoState: typeof QuixoState = QuixoState;
 
-    public state: QuixoState;
-
     public lastMoveCoord: MGPOptional<Coord> = MGPOptional.empty();
 
     public chosenCoord: MGPOptional<Coord> = MGPOptional.empty();
