@@ -29,7 +29,6 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
                                                               CoerceoState,
                                                               FourStatePiece>
 {
-    private state: CoerceoState;
 
     public tiles: PlayerNumberMap = PlayerNumberMap.of(0, 0);
 

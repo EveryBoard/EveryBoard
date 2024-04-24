@@ -12,9 +12,11 @@ import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { MCTS } from 'src/app/jscaip/AI/MCTS';
 import { DummyHeuristic, Minimax } from 'src/app/jscaip/AI/Minimax';
 import { PentagoMoveGenerator } from './PentagoMoveGenerator';
+import { ViewBox } from 'src/app/components/game-components/GameComponentUtils';
 
 interface ArrowInfo {
     path: string;
+    coord: Coord;
     blockIndex: number;
     clockwise: boolean;
 }
@@ -31,7 +33,9 @@ export class PentagoComponent extends RectangularGameComponent<PentagoRules,
 {
     public readonly BLOCK_WIDTH: number;
     public readonly BLOCK_SEPARATION: number;
+    public readonly PIECE_SEPARATION: number;
     public readonly DIAGONAL_BAR_OFFSET: number;
+    public readonly ARROW_WIDTH: number;
 
     public arrows: ArrowInfo[] = [];
     public victoryCoords: Coord[] = [];
@@ -52,14 +56,35 @@ export class PentagoComponent extends RectangularGameComponent<PentagoRules,
             new MCTS($localize`MCTS`, new PentagoMoveGenerator(), this.rules),
         ];
         this.encoder = PentagoMove.encoder;
-        this.BLOCK_WIDTH = (3 * this.SPACE_SIZE) + (2 * this.STROKE_WIDTH);
-        this.BLOCK_SEPARATION = (this.BLOCK_WIDTH + 2 * this.STROKE_WIDTH);
+        this.PIECE_SEPARATION = 4 * this.STROKE_WIDTH;
+        const blockPadding: number = this.STROKE_WIDTH;
+        this.BLOCK_WIDTH = (2 * blockPadding) + (3 * this.SPACE_SIZE) + (2 * this.PIECE_SEPARATION);
+        this.BLOCK_SEPARATION = 2 * this.STROKE_WIDTH;
         this.DIAGONAL_BAR_OFFSET = Math.cos(Math.PI / 4) * 0.75 * this.SPACE_SIZE;
+        this.ARROW_WIDTH = this.SPACE_SIZE + this.PIECE_SEPARATION;
         this.ARROWS = this.generateArrowsCoord();
     }
 
+    public override getViewBox(): ViewBox {
+        const stroke: number = 2 * this.STROKE_WIDTH + 75;
+        return new ViewBox(
+            0,
+            0,
+            2 * this.BLOCK_WIDTH + this.PIECE_SEPARATION,
+            2 * this.BLOCK_WIDTH + this.PIECE_SEPARATION,
+        ).expand(stroke + 8, stroke -8, stroke + 8, stroke - 8);
+    }
+
+    public getPieceTranslate(coord: Coord): string {
+        let xTranslate: number = (this.SPACE_SIZE + this.PIECE_SEPARATION) * coord.x;
+        let yTranslate: number = (this.SPACE_SIZE + this.PIECE_SEPARATION) * coord.y;
+        xTranslate += this.STROKE_WIDTH;
+        yTranslate += this.STROKE_WIDTH;
+        return 'translate(' + xTranslate + ', ' + yTranslate + ')';
+    }
+
     public async updateBoard(_triggerAnimation: boolean): Promise<void> {
-        this.board = this.getState().getCopiedBoard();
+        this.state = this.getState();
         this.victoryCoords = this.rules.getVictoryCoords(this.getState());
     }
 
@@ -125,29 +150,29 @@ export class PentagoComponent extends RectangularGameComponent<PentagoRules,
     }
 
     private generateArrowsCoord(): ArrowInfo[] {
-        const B2: number = 2 * this.BLOCK_SEPARATION;
-        const z0: number = 0;
-        const C2: number = this.SPACE_SIZE;
-        const D1: number = B2 - C2;
+        const B2: number = 2 * this.BLOCK_WIDTH + this.PIECE_SEPARATION;
+        const z0: number = 0.5 * this.PIECE_SEPARATION;
+        const C2: number = this.ARROW_WIDTH;
+        const D1: number = B2 - this.SPACE_SIZE + this.PIECE_SEPARATION;
         const C4: number = 2 * C2;
         const C1: number = 0.5 * this.SPACE_SIZE;
-        const path0: string = 'M ' + C1 + ' ' + z0 + ' q  ' + C2 + ' -' + C2 + '  ' + C4 + '  ' + z0;
-        const path1: string = 'M ' + z0 + ' ' + C1 + ' q -' + C2 + '  ' + C2 + '  ' + z0 + '  ' + C4;
-        const path2: string = 'M ' + B2 + ' ' + C1 + ' q  ' + C2 + '  ' + C2 + '  ' + z0 + '  ' + C4;
-        const path3: string = 'M ' + D1 + ' ' + z0 + ' q -' + C2 + ' -' + C2 + ' -' + C4 + '  ' + z0;
-        const path4: string = 'M ' + z0 + ' ' + D1 + ' q -' + C2 + ' -' + C2 + '  ' + z0 + ' -' + C4;
-        const path5: string = 'M ' + C1 + ' ' + B2 + ' q  ' + C2 + '  ' + C2 + '  ' + C4 + '  ' + z0;
-        const path6: string = 'M ' + D1 + ' ' + B2 + ' q -' + C2 + '  ' + C2 + ' -' + C4 + '  ' + z0;
-        const path7: string = 'M ' + B2 + ' ' + D1 + ' q  ' + C2 + ' -' + C2 + '  ' + z0 + ' -' + C4;
+        const path0: string = 'M  ' + C1 + ' -' + z0 + ' q  ' + C2 + ' -' + C2 + '  ' + C4 + ' -' + z0;
+        const path1: string = 'M -' + z0 + '  ' + C1 + ' q -' + C2 + '  ' + C2 + ' -' + z0 + '  ' + C4;
+        const path2: string = 'M  ' + B2 + '  ' + C1 + ' q  ' + C2 + '  ' + C2 + '  ' + z0 + '  ' + C4;
+        const path3: string = 'M  ' + D1 + ' -' + z0 + ' q -' + C2 + ' -' + C2 + ' -' + C4 + ' -' + z0;
+        const path4: string = 'M -' + z0 + '  ' + D1 + ' q -' + C2 + ' -' + C2 + ' -' + z0 + ' -' + C4;
+        const path5: string = 'M  ' + C1 + '  ' + B2 + ' q  ' + C2 + '  ' + C2 + '  ' + C4 + '  ' + z0;
+        const path6: string = 'M  ' + D1 + '  ' + B2 + ' q -' + C2 + '  ' + C2 + ' -' + C4 + '  ' + z0;
+        const path7: string = 'M  ' + B2 + '  ' + D1 + ' q  ' + C2 + ' -' + C2 + '  ' + z0 + ' -' + C4;
         return [
-            { path: path0, blockIndex: 0, clockwise: true },
-            { path: path1, blockIndex: 0, clockwise: false },
-            { path: path2, blockIndex: 1, clockwise: true },
-            { path: path3, blockIndex: 1, clockwise: false },
-            { path: path4, blockIndex: 2, clockwise: true },
-            { path: path5, blockIndex: 2, clockwise: false },
-            { path: path6, blockIndex: 3, clockwise: true },
-            { path: path7, blockIndex: 3, clockwise: false },
+            { path: path0, coord: new Coord(+C1, +z0), blockIndex: 0, clockwise: true },
+            { path: path1, coord: new Coord(-z0, +C1), blockIndex: 0, clockwise: false },
+            { path: path2, coord: new Coord(+B2, +C1), blockIndex: 1, clockwise: true },
+            { path: path3, coord: new Coord(+D1, -z0), blockIndex: 1, clockwise: false },
+            { path: path4, coord: new Coord(-z0, +D1), blockIndex: 2, clockwise: true },
+            { path: path5, coord: new Coord(+C1, +B2), blockIndex: 2, clockwise: false },
+            { path: path6, coord: new Coord(+D1, +B2), blockIndex: 3, clockwise: true },
+            { path: path7, coord: new Coord(+B2, +D1), blockIndex: 3, clockwise: false },
         ];
     }
 
@@ -157,12 +182,14 @@ export class PentagoComponent extends RectangularGameComponent<PentagoRules,
         this.canSkipRotation = false;
     }
 
-    public async onClick(x: number, y: number): Promise<MGPValidation> {
-        const clickValidity: MGPValidation = await this.canUserPlay('#click_' + x + '_' + y);
+    public async onClick(coord: Coord): Promise<MGPValidation> {
+        const x: number = coord.x;
+        const y: number = coord.y;
+        const clickValidity: MGPValidation = await this.canUserPlay('#click-' + x + '-' + y);
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }
-        if (this.board[y][x].isPlayer()) {
+        if (this.state.board[y][x].isPlayer()) {
             return this.cancelMove(RulesFailure.MUST_LAND_ON_EMPTY_SPACE());
         }
         const drop: PentagoMove = PentagoMove.rotationless(x, y);
@@ -173,14 +200,9 @@ export class PentagoComponent extends RectangularGameComponent<PentagoRules,
         }
         const gameStatus: GameStatus = this.rules.getGameStatus(this.node);
         this.canSkipRotation = postDropState.neutralBlocks.length > 0 && gameStatus.isEndGame === false;
-        this.currentDrop = MGPOptional.of(new Coord(x, y));
+        this.currentDrop = MGPOptional.of(coord);
         this.displayArrows(postDropState.neutralBlocks);
         return MGPValidation.SUCCESS;
-    }
-
-    public getCenter(xOrY: number): number {
-        const block: number = xOrY < 3 ? 0 : this.BLOCK_SEPARATION;
-        return block + (2 * this.STROKE_WIDTH) + (((xOrY % 3) + 0.5) * this.SPACE_SIZE);
     }
 
     public displayArrows(neutralBlocks: number[]): void {
@@ -203,11 +225,13 @@ export class PentagoComponent extends RectangularGameComponent<PentagoRules,
         return [];
     }
 
-    public getSquareClasses(x: number, y: number): string[] {
+    public getSquareClasses(coord: Coord): string[] {
+        const x: number = coord.x;
+        const y: number = coord.y;
         const classes: string[] = [];
-        const player: string = this.getPlayerClass(this.board[y][x]);
+        const player: string = this.getPlayerClass(this.state.board[y][x]);
         classes.push(player);
-        if (this.lastDrop.equalsValue(new Coord(x, y))) {
+        if (this.lastDrop.equalsValue(coord)) {
             classes.push('last-move-stroke');
         }
         return classes;
@@ -215,7 +239,7 @@ export class PentagoComponent extends RectangularGameComponent<PentagoRules,
 
     public async rotate(arrow: ArrowInfo): Promise<MGPValidation> {
         const clockwise: string = arrow.clockwise ? 'clockwise' : 'counterclockwise';
-        const clickValidity: MGPValidation = await this.canUserPlay('#rotate_' + arrow.blockIndex + '_' + clockwise);
+        const clickValidity: MGPValidation = await this.canUserPlay('#rotate-' + arrow.blockIndex + '-' + clockwise);
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }
@@ -226,13 +250,18 @@ export class PentagoComponent extends RectangularGameComponent<PentagoRules,
     }
 
     public async skipRotation(): Promise<MGPValidation> {
-        const clickValidity: MGPValidation = await this.canUserPlay('#skipRotation');
+        const clickValidity: MGPValidation = await this.canUserPlay('#skip-rotation');
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }
         const currentDrop: Coord = this.currentDrop.get();
         const drop: PentagoMove = PentagoMove.rotationless(currentDrop.x, currentDrop.y);
         return this.chooseMove(drop);
+    }
+
+    public getSkipRotationCircleTranslate(): string {
+        const translate: number = this.BLOCK_WIDTH + (this.PIECE_SEPARATION / 2) - this.STROKE_WIDTH;
+        return `translate(${ translate } ${ translate })`;
     }
 
 }

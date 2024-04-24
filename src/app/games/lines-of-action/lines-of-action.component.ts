@@ -27,7 +27,6 @@ export class LinesOfActionComponent extends RectangularGameComponent<LinesOfActi
     public INDICATOR_SIZE: number = 20;
     public EMPTY: PlayerOrNone = PlayerOrNone.NONE;
     public targets: Coord[] = [];
-    public state: LinesOfActionState;
     private selected: MGPOptional<Coord> = MGPOptional.empty();
     private lastMoved: Coord[] = [];
     private captured: MGPOptional<Coord> = MGPOptional.empty();
