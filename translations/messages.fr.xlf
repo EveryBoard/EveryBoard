@@ -2138,7 +2138,7 @@
       </trans-unit>
       <trans-unit id="5270412400264809136" datatype="html">
         <source>In order to capture an opponent phalanx, it must be aligned with the phalanx you are moving and be strictly shorter. The first piece of your phalanx should land on the first piece of the opponent&apos;s phalanx that you want to capture.&lt;br/&gt;You&apos;re playing Dark, capture a phalanx.</source>
-        <target>Pour capturer une phalange de l'adversaire, il faut que celle-ci soit alignée avec la phalange en déplacement, et strictement plus courte. La première pièce de votre phalange doit atterrisse sur la première pièce rencontrée de la phalange à capturer.&lt;br/&gt;Vous jouez Foncé, capturez une phalange.</target>
+        <target>Pour capturer une phalange de l'adversaire, il faut que celle-ci soit alignée avec la phalange en déplacement, et strictement plus courte. La première pièce de votre phalange doit atterrir sur la première pièce rencontrée de la phalange à capturer.&lt;br/&gt;Vous jouez Foncé, capturez une phalange.</target>
       </trans-unit>
       <trans-unit id="5979772757820095272" datatype="html">
         <source>Congratulations, you made it! Note that the diagonal phalanx was not aligned with your phalanx, hence even if it is longer, this does not prevent you from capturing some of its pieces on another alignment.</source>
