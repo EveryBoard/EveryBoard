@@ -37,12 +37,14 @@ class PlayerDriver():
         '''Ensures that no error has been logged in the browser's console'''
         logs = self.driver.get_log('browser')
 
-        error_logs = [log for log in logs if log['level'] == 'SEVERE']
-        if error_logs:
-            for log in error_logs:
-                print(textwrap.fill(log['message'], 120))
-            # TODO
-            #raise Exception('Errors encountered, stopping here.')
+        errors = False
+        for log in logs:
+            print(textwrap.fill(log['message'], 120))
+            if log['level'] == 'SEVERE':
+                errors = True
+        if errors:
+            time.sleep(1000)
+            raise Exception('Errors encountered, stopping here.')
 
     def go_to_page(self, url):
         '''Visit an URL'''
@@ -231,6 +233,7 @@ def launch_scenarios():
     for simple_scenario in scenarios['simple']:
         # Always go back home for a new scenario
         driver.go_to_page('http://localhost:4200')
+        driver.ensure_no_errors() # we don't want errors before starting scenarios
         print('----------------------------------------------')
         print('Running scenario: ' + simple_scenario.__name__)
         simple_scenario(driver)
@@ -240,6 +243,7 @@ def launch_scenarios():
     driver.register('1-')
     for registered_scenario in scenarios['registered']:
         driver.go_to_page('http://localhost:4200')
+        driver.ensure_no_errors()
         print('----------------------------------------------')
         print('Running scenario: ' + registered_scenario.__name__)
         registered_scenario(driver)
@@ -251,6 +255,8 @@ def launch_scenarios():
     for two_drivers_scenario in scenarios['two_drivers']:
         driver.go_to_page('http://localhost:4200')
         driver2.go_to_page('http://localhost:4200')
+        driver.ensure_no_errors()
+        driver2.ensure_no_errors()
         print('----------------------------------------------')
         print('Running scenario: ' + two_drivers_scenario.__name__)
         two_drivers_scenario(driver, driver2)
@@ -406,10 +412,23 @@ def can_reload_part_creation(user):
     Result: It works
     '''
     # I create a part
+    print('0000000')
+    user.ensure_no_errors()
     user.click('#createOnlineGame')
-    user.select('#gameType', 'Four in a Row')
-    user.click('#launchGame')
+    print('111111111111111111111111111')
+    user.ensure_no_errors()
     time.sleep(10)
+    user.select('#gameType', 'Four in a Row')
+    print('22222222222222222222222222222')
+    user.ensure_no_errors()
+    time.sleep(10)
+    user.click('#launchGame')
+    print('333333333333333333333333333')
+    print('waiting a bit')
+    user.ensure_no_errors()
+    time.sleep(10)
+    print('444444444444444')
+    user.ensure_no_errors()
     print(user.driver.find_element(By.CSS_SELECTOR, 'body').get_attribute('innerHTML'))
     user.wait_for('#partCreation')
 
