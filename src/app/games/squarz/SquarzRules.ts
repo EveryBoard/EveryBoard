@@ -6,7 +6,7 @@ import { ConfigurableRules } from 'src/app/jscaip/Rules';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { Coord } from 'src/app/jscaip/Coord';
-import { Direction } from 'src/app/jscaip/Direction';
+import { Ordinal } from 'src/app/jscaip/Ordinal';
 import { NumberConfig, RulesConfigDescription, RulesConfigDescriptionLocalizable } from 'src/app/components/wrapper-components/rules-configuration/RulesConfigDescription';
 import { MGPValidators } from 'src/app/utils/MGPValidator';
 import { SquarzFailure } from './SquarzFailure';
@@ -92,7 +92,7 @@ export class SquarzRules extends ConfigurableRules<SquarzMove, SquarzState, Squa
         if (moveDistance > 1) {
             resultingState = resultingState.setPieceAt(start, PlayerOrNone.NONE);
         }
-        for (const direction of Direction.DIRECTIONS) {
+        for (const direction of Ordinal.ORDINALS) {
             const neighbor: Coord = end.getNext(direction, 1);
             if (resultingState.isOnBoard(neighbor) &&
                 resultingState.getPieceAt(neighbor) === opponent)

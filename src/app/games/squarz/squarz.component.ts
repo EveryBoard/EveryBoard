@@ -12,7 +12,7 @@ import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 import { Coord } from 'src/app/jscaip/Coord';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { Direction } from 'src/app/jscaip/Direction';
+import { Ordinal } from 'src/app/jscaip/Ordinal';
 
 @Component({
     selector: 'app-squarz',
@@ -64,7 +64,7 @@ export class SquarzComponent extends RectangularGameComponent<SquarzRules,
         const moveEnd: Coord = move.getEnd();
         this.movedPieces.push(moveEnd);
         this.movedSpaces.push(moveEnd);
-        for (const direction of Direction.DIRECTIONS) {
+        for (const direction of Ordinal.ORDINALS) {
             const neighbor: Coord = moveEnd.getNext(direction);
             if (previousState.isOnBoard(neighbor) && previousState.getPieceAt(neighbor) === opponent) {
                 this.captured.push(neighbor);
