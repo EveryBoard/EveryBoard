@@ -87,6 +87,10 @@ describe('MGPFallibleTestUtils', () => {
         MGPFallibleTestUtils.expectToBeSuccess(MGPFallible.success(42), 42);
     });
 
+    it('should detect success (without value check)', () => {
+        MGPFallibleTestUtils.expectToBeSuccess(MGPFallible.success(42));
+    });
+
     it('should detect failure', () => {
         MGPFallibleTestUtils.expectToBeFailure(MGPFallible.failure('error'), 'error');
     });

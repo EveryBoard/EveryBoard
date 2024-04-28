@@ -101,7 +101,6 @@ class MGPFallibleFailure<T> extends MGPFallible<T> {
 export class MGPFallibleTestUtils {
 
     public static expectToBeSuccess<T>(fallible: MGPFallible<T>, value?: T): void {
-
         expect(fallible.isSuccess()).toBeTrue();
         if (value != null) {
             expect(fallible.get()).toBe(value);
