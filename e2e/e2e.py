@@ -39,11 +39,10 @@ class PlayerDriver():
 
         errors = False
         for log in logs:
-            print(textwrap.fill(log['message'], 120))
+            print('[browser]' + textwrap.fill(log['message'], 120))
             if log['level'] == 'SEVERE':
                 errors = True
         if errors:
-            time.sleep(1000)
             raise Exception('Errors encountered, stopping here.')
 
     def go_to_page(self, url):
@@ -77,6 +76,7 @@ class PlayerDriver():
         # Click on finalize verification button
         time.sleep(0.5) # Wait for the email verification to be done by the other script
         self.click('#finalizeVerification')
+        time.sleep(0.5) # Need to wait a bit before the verification is done
 
     def wait_for(self, selector, timeout=120):
         '''Wait for an element to be present on the page. Timeout is in seconds'''
@@ -231,13 +231,13 @@ def launch_scenarios():
     #driver.get('http://localhost:4200')
 
     for simple_scenario in scenarios['simple']:
-        # Always go back home for a new scenario
-        driver.go_to_page('http://localhost:4200')
-        driver.ensure_no_errors() # we don't want errors before starting scenarios
-        print('----------------------------------------------')
-        print('Running scenario: ' + simple_scenario.__name__)
-        simple_scenario(driver)
-        driver.ensure_no_errors()
+       # Always go back home for a new scenario
+       driver.go_to_page('http://localhost:4200')
+       driver.ensure_no_errors() # we don't want errors before starting scenarios
+       print('----------------------------------------------')
+       print('Running scenario: ' + simple_scenario.__name__)
+       simple_scenario(driver)
+       driver.ensure_no_errors()
 
     # Now we need a registered account
     driver.register('1-')
@@ -412,24 +412,10 @@ def can_reload_part_creation(user):
     Result: It works
     '''
     # I create a part
-    print('0000000')
     user.ensure_no_errors()
     user.click('#createOnlineGame')
-    print('111111111111111111111111111')
-    user.ensure_no_errors()
-    time.sleep(10)
     user.select('#gameType', 'Four in a Row')
-    print('22222222222222222222222222222')
-    user.ensure_no_errors()
-    time.sleep(10)
     user.click('#launchGame')
-    print('333333333333333333333333333')
-    print('waiting a bit')
-    user.ensure_no_errors()
-    time.sleep(10)
-    print('444444444444444')
-    user.ensure_no_errors()
-    print(user.driver.find_element(By.CSS_SELECTOR, 'body').get_attribute('innerHTML'))
     user.wait_for('#partCreation')
 
     # I reload the page
