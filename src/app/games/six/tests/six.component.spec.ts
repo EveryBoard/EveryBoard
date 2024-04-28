@@ -107,7 +107,7 @@ describe('SixComponent', () => {
             expect(gameComponent.getPieceClass(new Coord(0, 6))).toBe('player0-fill');
         }));
 
-        it('should deselect selected piece when clicking on it again', fakeAsync(async() => {
+        it('should deselect piece when clicking a second time on it', fakeAsync(async() => {
             // Given a board in moving phase, where a piece is selected
             const board: Table<PlayerOrNone> = [
                 [O],

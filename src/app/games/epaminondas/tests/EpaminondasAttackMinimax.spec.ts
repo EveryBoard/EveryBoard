@@ -1,5 +1,5 @@
 /* eslint-disable max-lines-per-function */
-import { Direction } from 'src/app/jscaip/Direction';
+import { Ordinal } from 'src/app/jscaip/Ordinal';
 import { PlayerOrNone } from 'src/app/jscaip/Player';
 import { Table } from 'src/app/jscaip/TableUtils';
 import { EpaminondasMove } from '../EpaminondasMove';
@@ -41,7 +41,7 @@ describe('EpaminondasAttackMinimax', () => {
         ];
         const state: EpaminondasState = new EpaminondasState(board, 1);
         const node: EpaminondasNode = new EpaminondasNode(state);
-        const expectedMove: EpaminondasMove = new EpaminondasMove(9, 1, 4, 4, Direction.LEFT);
+        const expectedMove: EpaminondasMove = new EpaminondasMove(9, 1, 4, 4, Ordinal.LEFT);
         const bestMove: EpaminondasMove = minimax.chooseNextMove(node, minimaxOptions, defaultConfig);
         expect(bestMove).toEqual(expectedMove);
     });

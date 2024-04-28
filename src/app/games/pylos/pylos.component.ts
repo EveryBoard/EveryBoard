@@ -360,13 +360,14 @@ export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosSt
 
     public mustDisplayLandingCoord(x: number, y: number, z: number): boolean {
         if (this.chosenStartingCoord.isPresent()) {
-            if (this.chosenStartingCoord.get().equals(new PylosCoord(x, y, z))) {
+            if (this.chosenStartingCoord.equalsValue(new PylosCoord(x, y, z))) {
                 return true;
             }
             const startingZ: number = this.chosenStartingCoord.get().z;
             return startingZ < z;
+        } else {
+            return true;
         }
-        return true;
     }
 
 }

@@ -122,7 +122,7 @@ describe('LinesOfActionComponent', () => {
             testUtils.expectElementNotToHaveClass('#piece_2_0', 'selected-stroke');
         }));
 
-        it('should deselect selected piece when clicking on it again', fakeAsync(async() => {
+        it('should deselect piece when clicking a second time on it', fakeAsync(async() => {
             // Given any board with a piece selected
             await testUtils.expectClickSuccess('#click_2_0');
 

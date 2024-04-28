@@ -1994,11 +1994,9 @@
         <source>Goal of the game</source>
         <target>But du jeu</target>
       </trans-unit>
-      <trans-unit id="5197172538685178535" datatype="html">
-        <source>The goal of Encapsule is to align three of your pieces.
-        Here, we have a victory of the dark player.</source>
-        <target>Le but du jeu à Encapsule est d&apos;aligner trois de vos pièces.
-        Ici nous avons une victoire du joueur foncé.</target>
+      <trans-unit id="7821413127222759201" datatype="html">
+        <source>The goal of Encapsule is to align three of your pieces. Here, Dark wins.</source>
+        <target>Le but du jeu à Encapsule est d&apos;aligner trois de vos pièces. Ici, Foncé gagne.</target>
       </trans-unit>
       <trans-unit id="9069271074421658276" datatype="html">
         <source>Putting a piece</source>
@@ -2058,17 +2056,9 @@
         <source>Your phalanx must be bigger than the one you are capturing.</source>
         <target>Votre phalange doit être plus grande que celle qu&apos;elle tente de capturer.</target>
       </trans-unit>
-      <trans-unit id="2291068586508886218" datatype="html">
-        <source>This square is not aligned with the selected piece.</source>
-        <target>Cette case n&apos;est pas alignée avec la pièce sélectionnée.</target>
-      </trans-unit>
-      <trans-unit id="8716552567618018184" datatype="html">
-        <source>A single piece can only move by one square.</source>
-        <target>Une pièce seule ne peut se déplacer que d&apos;une case.</target>
-      </trans-unit>
-      <trans-unit id="3099022711875888574" datatype="html">
-        <source>A single piece cannot make a capture.</source>
-        <target>Une pièce seule ne peut pas capturer.</target>
+      <trans-unit id="8675949818775194064" datatype="html">
+        <source>You took a phalanx of size <x id="PH" equiv-text="p"/> and moved it <x id="PH_1" equiv-text="s"/> steps. Phalanx cannot move further than their sizes.</source>
+        <target>Vous avez pris une phalange de <x id="PH" equiv-text="p"/> pièces de long et l'avez déplacé de <x id="PH_1" equiv-text="s"/> pas. Les phalanges ne peuvent pas se déplacer de plus de pas que leur longueur.</target>
       </trans-unit>
       <trans-unit id="5151115756771676188" datatype="html">
         <source>This square is not aligned with the direction of the phalanx.</source>
@@ -2098,47 +2088,29 @@
         <source>Initial board</source>
         <target>Plateau initial</target>
       </trans-unit>
-      <trans-unit id="1105286643551672919" datatype="html">
-        <source>This is the initial board of Epaminondas.
-        The top line is the starting line of Light.
-        The bottom line is the starting line of Dark.</source>
-        <target>Ceci est le plateau de départ.
-        La ligne tout en haut est la ligne de départ de Clair.
-        La ligne tout en bas est la ligne de départ de Foncé.</target>
+      <trans-unit id="3763163349245523745" datatype="html">
+        <source>This is the initial board of Epaminondas. The top line is the starting line of Light. The bottom line is the starting line of Dark.</source>
+        <target>Ceci est le plateau de départ. La ligne tout en haut est la ligne de départ de Clair. La ligne tout en bas est la ligne de départ de Foncé.</target>
       </trans-unit>
       <trans-unit id="6886026531074912078" datatype="html">
         <source>Goal of the game (1/2)</source>
         <target>But du jeu (1/2)</target>
       </trans-unit>
-      <trans-unit id="4503256281938932188" datatype="html">
-        <source>After multiple moves, if at the beginning of its turn, a player has more pieces on the opponent&apos;s starting line
-        than the number of pieces the opponent has on the player&apos;s starting line, the player wins.
-        Here, it&apos;s Dark&apos;s turn to play: Dark has therefore won.</source>
-        <target>Après plusieurs déplacements, si au début de son tour de jeu, un joueur a plus de pièces sur la ligne de départ de l&apos;adversaire que l&apos;adversaire n&apos;en a sur la ligne de départ du joueur, ce joueur gagne.
-        Ici, c&apos;est au tour du joueur foncé de jouer, il a donc gagné.</target>
+      <trans-unit id="6716022766676912093" datatype="html">
+        <source>After multiple moves, if at the beginning of its turn, a player has more pieces on the opponent&apos;s starting line than the number of pieces the opponent has on the player&apos;s starting line, the player wins. Here, it&apos;s Dark&apos;s turn to play: Dark has therefore won.</source>
+        <target>Après plusieurs déplacements, si au début de son tour de jeu, un joueur a plus de pièces sur la ligne de départ de l&apos;adversaire que l&apos;adversaire n&apos;en a sur la ligne de départ du joueur, ce joueur gagne. Ici, c&apos;est au tour de Foncé de jouer, il a donc gagné.</target>
       </trans-unit>
       <trans-unit id="5351770434517588207" datatype="html">
         <source>Goal of the game (2/2)</source>
         <target>But du jeu (2/2)</target>
       </trans-unit>
-      <trans-unit id="914946805822108421" datatype="html">
-        <source>Here, it is Light&apos;s turn.
-        Light wins because they have two pieces on Dark&apos;s starting line, and Dark only has one on Light&apos;s starting line.</source>
+      <trans-unit id="2623510393491755816" datatype="html">
+        <source>Here, it is Light&apos;s turn. Light wins because they have two pieces on Dark&apos;s starting line, and Dark only has one on Light&apos;s starting line.</source>
         <target>Dans ce cas ci, c&apos;est au tour de Clair, et celui-ci gagne, car il a deux pièces sur la ligne de départ de Foncé, et Foncé n&apos;en a qu&apos;une sur la ligne de départ de Clair.</target>
       </trans-unit>
-      <trans-unit id="3855586609525448246" datatype="html">
-        <source>Here is the starting board. Dark plays first.
-        Let&apos;s start with moving a single piece:
-        &lt;ol&gt;
-            &lt;li&gt;Click on a piece.&lt;/li&gt;
-            &lt;li&gt;Click on a empty neighboring square.&lt;/li&gt;
-        &lt;/ol&gt;&lt;br/&gt;You&apos;re playing Dark, move a piece.</source>
-        <target>Voici le plateau de départ, c&apos;est à Foncé de commencer.
-        Commençons simplement par un déplacement d&apos;une seule pièce :
-        &lt;ol&gt;
-            &lt;li&gt;Cliquez sur une pièce.&lt;/li&gt;
-            &lt;li&gt;Cliquez sur une case voisine libre.&lt;/li&gt;
-        &lt;/ol&gt;&lt;br/&gt;Vous jouez Foncé, déplacez une pièce.</target>
+      <trans-unit id="2973098153638160177" datatype="html">
+        <source>Here is the starting board. Dark plays first. Let&apos;s start with moving a single piece:&lt;ol&gt;&lt;li&gt;Click on a piece.&lt;/li&gt;&lt;li&gt;Click on a empty neighboring square.&lt;/li&gt;&lt;/ol&gt;&lt;br/&gt;You&apos;re playing Dark, move a piece.</source>
+        <target>Voici le plateau de départ, c&apos;est à Foncé de commencer. Commençons simplement par un déplacement d&apos;une seule pièce :&lt;ol&gt;&lt;li&gt;Cliquez sur une pièce.&lt;/li&gt;&lt;li&gt;Cliquez sur une case voisine libre.&lt;/li&gt;&lt;/ol&gt;&lt;br/&gt;Vous jouez Foncé, déplacez une pièce.</target>
       </trans-unit>
       <trans-unit id="3304007702447669410" datatype="html">
         <source>Congratulations, you are in advance. But this is not the exercise here, try again.</source>
@@ -2152,21 +2124,9 @@
         <source>Moving a phalanx</source>
         <target>Déplacement de phalange</target>
       </trans-unit>
-      <trans-unit id="2958210260003819098" datatype="html">
-        <source>Let us now see how to move multiple pieces along a line, which is called a phalanx:
-        &lt;ol&gt;
-            &lt;li&gt;Click on the first piece of the phalanx.&lt;/li&gt;
-            &lt;li&gt;Click on the last piece of the phalanx.&lt;/li&gt;
-            &lt;li&gt;Click on one of the squares highlighted in yellow; you can move your phalanx up to a distance equal to its length.&lt;/li&gt;
-        &lt;/ol&gt;&lt;br/&gt;
-        You&apos;re playing Dark, Move a phalanx!</source>
-        <target>Maintenant, comment déplacer plusieurs pièces sur une seule ligne (une phalange) :
-        &lt;ol&gt;
-            &lt;li&gt;Cliquez sur la première pièce.&lt;/li&gt;
-            &lt;li&gt;Cliquez sur la dernière pièce de la phalange.&lt;/li&gt;
-            &lt;li&gt;Cliquez une des cases encadrées en jaune, elles vous permettent de déplacer au maximum votre phalange d&apos;une distance égale à sa taille.&lt;/li&gt;
-        &lt;/ol&gt;&lt;br/&gt;
-        Faites un déplacement de phalange !</target>
+      <trans-unit id="8694316311666575180" datatype="html">
+        <source>A line of several piece is called a phalanx. Let us now see how to move a phalanx along a line:&lt;ol&gt;&lt;li&gt;Click on the first piece of the phalanx.&lt;/li&gt;&lt;li&gt;Click on one of the squares highlighted in yellow; you can move your phalanx up to a distance equal to its length.&lt;/li&gt;&lt;/ol&gt;&lt;br/&gt;You&apos;re playing Dark, move a phalanx!</source>
+        <target>Une ligne de plusieurs pièces est appellée une phalange. Voyons maintenant comment déplacer une phalange le long d'une ligne :&lt;ol&gt;&lt;li&gt;Cliquez sur la première pièce de la phalange.&lt;/li&gt;&lt;li&gt;Cliquez sur une des cases encadrées en jaune; vous pouvez bouger votre phalange au maximum d'autant de pas que sa longueur.&lt;/li&gt;&lt;/ol&gt;&lt;br/&gt;Vous jouez Foncé, déplacez une phalange !</target>
       </trans-unit>
       <trans-unit id="108222118450000526" datatype="html">
         <source>Failed! You moved only one piece.</source>
@@ -2176,27 +2136,13 @@
         <source>Congratulations! The moved pieces can be horizontally, vertically, or diagonally aligned. The move should be made along this axis, forward or backwards. There can be no opponent nor holes in the phalanx.</source>
         <target>Bravo ! Les pièces déplacées doivent être horizontalement, verticalement, ou diagonalement alignées. Le déplacement doit se faire le long de cette ligne, en avant ou en arrière. Il ne peut y avoir ni pièces adverses ni trous dans la phalange.</target>
       </trans-unit>
-      <trans-unit id="757498846466496147" datatype="html">
-        <source>In order to capture pieces of the opponent:
-        &lt;ol&gt;
-            &lt;li&gt;It must be aligned with the phalanx you are moving.&lt;/li&gt;
-            &lt;li&gt;It must be strictly shorter than your phalanx.&lt;/li&gt;
-            &lt;li&gt;The first piece of your phalanx should land on the first piece of the opponent&apos;s phalanx that you want to capture.&lt;/li&gt;
-        &lt;/ol&gt;&lt;br/&gt;
-        You&apos;re playing Dark, capture a phalanx.</source>
-        <target>Pour capturer une phalange de l'adversaire :
-        &lt;ol&gt;
-            &lt;li&gt;Il faut que celle-ci soit alignée avec la phalange en déplacement.&lt;/li&gt;
-            &lt;li&gt;Qu&apos;elle soit strictement plus courte.&lt;/li&gt;
-            &lt;li&gt;Que la première pièce de votre phalange atterrisse sur la première pièce rencontrée de la phalange à capturer.&lt;/li&gt;
-        &lt;/ol&gt;&lt;br/&gt;
-        Vous jouez Foncé, capturez une phalange.</target>
+      <trans-unit id="5270412400264809136" datatype="html">
+        <source>In order to capture an opponent phalanx, it must be aligned with the phalanx you are moving and be strictly shorter. The first piece of your phalanx should land on the first piece of the opponent&apos;s phalanx that you want to capture.&lt;br/&gt;You&apos;re playing Dark, capture a phalanx.</source>
+        <target>Pour capturer une phalange de l'adversaire, il faut que celle-ci soit alignée avec la phalange en déplacement, et strictement plus courte. La première pièce de votre phalange doit atterrir sur la première pièce rencontrée de la phalange à capturer.&lt;br/&gt;Vous jouez Foncé, capturez une phalange.</target>
       </trans-unit>
-      <trans-unit id="8213276201685541009" datatype="html">
-        <source>Congratulations, you made it!
-        Note that the diagonal phalanx was not aligned with your phalanx, hence even if it is longer, this does not prevent you from capturing some of its pieces on another alignment.</source>
-        <target>Bravo, vous avez réussi.
-        Constatez que la phalange diagonale n'étant pas alignée avec la notre, sa longueur supérieur n'empêche pas de capturer ses pièces dans un autre alignement.
+      <trans-unit id="5979772757820095272" datatype="html">
+        <source>Congratulations, you made it! Note that the diagonal phalanx was not aligned with your phalanx, hence even if it is longer, this does not prevent you from capturing some of its pieces on another alignment.</source>
+        <target>Bravo, vous avez réussi. Constatez que la phalange diagonale n'étant pas alignée avec la notre, sa longueur supérieure n'empêche pas de capturer ses pièces dans un autre alignement.
         </target>
       </trans-unit>
       <trans-unit id="4418812710815829575" datatype="html">
@@ -2413,7 +2359,7 @@
         Each player&apos;s score at the end of the game is the sum of that player&apos;s territories and captures.</source>
         <target>Le but du jeu est d&apos;avoir le plus de points en fin de partie.
         On appelle territoires les intersections inoccupées et isolées du reste du Goban par les pierres d&apos;un seul joueur.
-        Ici, le joueur foncé a 9 territoires à gauche, le joueur clair en a 8 à droite.
+        Ici, Foncé a 9 territoires à gauche, le joueur clair en a 8 à droite.
         La zone en haut au milieu n&apos;appartient à personne.
         Le score d'un joueur en fin de partie correspond à la somme de ses territoires et captures.</target>
       </trans-unit>
@@ -2737,7 +2683,7 @@
         Here, Dark wins because its brown piece is on Light&apos;s starting line, on the top left.</source>
         <target>Au Kamisado, il y a deux façons de gagner : soit en plaçant une de vos pièces sur la ligne de départ de
         l&apos;adversaire, soit en forçant l&apos;adversaire à faire un coup qui bloque la partie.
-        Ici, le joueur foncé gagne car il a sa pièce brune sur la ligne de départ du joueur clair, en haut à gauche.</target>
+        Ici, Foncé gagne car il a sa pièce brune sur la ligne de départ du joueur clair, en haut à gauche.</target>
       </trans-unit>
       <trans-unit id="5394640330288068198" datatype="html">
         <source>Initial board and initial move</source>
@@ -3737,7 +3683,7 @@
         <target>Les pièces du Reversi sont double face, une face foncée pour le premier joueur, une face claire pour le deuxième.
         Quand une pièce est retournée, elle change de propriétaire.
         Le joueur possédant le plus de pièces en fin de partie gagne.
-        Ici, le joueur foncé a 28 points et le joueur clair en a 36, le joueur clair a donc gagné.</target>
+        Ici, Foncé a 28 points et le joueur clair en a 36, le joueur clair a donc gagné.</target>
       </trans-unit>
       <trans-unit id="3656469467006851761" datatype="html">
         <source>Captures (1/2)</source>
@@ -4362,17 +4308,9 @@
         <source>Failed! You can capture two rings in total, by capturing two times 5 of your markers. Try again.</source>
         <target>Raté ! Vous pouvez capturer deux anneaux en tout, en procédant à deux captures de 5 de vos marqueurs. Réessayez.</target>
       </trans-unit>
-      <trans-unit id="2051808586522733055" datatype="html">
-        <source>The goal at Yinsh is to capture three rings in total.
-        The rings taken are shown on the top left for the dark player,
-        and on the bottom right for the light player. Here, Dark won the game.
-        Note that on the board you have two types of pieces for each player:
-        rings (empty circles) and markers (full circles).</source>
-        <target>Le but du jeu à Yinsh est de capturer trois anneaux en tout.
-         Le nombre d&apos;anneaux capturés est indiqué en haut à gauche pour le joueur foncé,
-         et en bas à droite pour le joueur clair. Ici, Foncé a gagné la partie.
-         Notez que sur le plateau vous avez deux types des pièces pour chaque joueur :
-         des anneaux (pièces creuses) et des marqueurs (pièces pleines).</target>
+      <trans-unit id="6448631040503247025" datatype="html">
+        <source>The goal at Yinsh is to capture three rings in total. The rings taken are shown on the top left for Dark, and on the bottom right for Light. Here, Dark won the game. Note that on the board you have two types of pieces for each player: rings (empty circles) and markers (full circles).</source>
+        <target>Le but du jeu à Yinsh est de capturer trois anneaux en tout. Le nombre d&apos;anneaux capturés est indiqué en haut à gauche pour Foncé, et en bas à droite pour le joueur clair. Ici, Foncé a gagné la partie. Notez que sur le plateau vous avez deux types des pièces pour chaque joueur : des anneaux (pièces creuses) et des marqueurs (pièces pleines).</target>
       </trans-unit>
       <trans-unit id="6047690275464996632" datatype="html">
         <source>Initial board and placement phase</source>

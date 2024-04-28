@@ -1,4 +1,5 @@
-import { Orthogonal, Direction } from '../../jscaip/Direction';
+import { Orthogonal } from 'src/app/jscaip/Orthogonal';
+import { Ordinal } from 'src/app/jscaip/Ordinal';
 import { ConfigurableRules } from '../../jscaip/Rules';
 import { Coord } from '../../jscaip/Coord';
 import { TaflMove } from './TaflMove';
@@ -63,7 +64,7 @@ export abstract class TaflRules<M extends TaflMove> extends ConfigurableRules<M,
                 return MGPValidation.failure(TaflFailure.SOLDIERS_CANNOT_SIT_ON_THRONE());
             }
         }
-        const dir: Direction = move.getStart().getDirectionToward(move.getEnd()).get();
+        const dir: Ordinal = move.getStart().getDirectionToward(move.getEnd()).get();
         const dist: number = move.getStart().getOrthogonalDistance(move.getEnd());
         let inspectedCoord: Coord = move.getStart().getNext(dir);
         for (let i: number = 1; i < dist; i++) {

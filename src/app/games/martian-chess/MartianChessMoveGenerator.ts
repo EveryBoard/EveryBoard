@@ -1,5 +1,5 @@
 import { Coord } from 'src/app/jscaip/Coord';
-import { Direction } from 'src/app/jscaip/Direction';
+import { Ordinal } from 'src/app/jscaip/Ordinal';
 import { Player } from 'src/app/jscaip/Player';
 import { MGPOptional, MGPSet } from '@everyboard/lib';
 import { MartianChessMove } from './MartianChessMove';
@@ -39,7 +39,7 @@ export class MartianChessMoveGenerator extends MoveGenerator<MartianChessMove, M
     public getMovesForPawnAt(state: MartianChessState, x: number, y: number): MartianChessMove[] {
         const coord: Coord = new Coord(x, y);
         const landingCoords: Coord[] = [];
-        for (const diagonal of Direction.DIAGONALS) {
+        for (const diagonal of Ordinal.DIAGONALS) {
             const landingCoord: Coord = coord.getNext(diagonal);
             if (MartianChessState.isOnBoard(landingCoord)) {
                 landingCoords.push(landingCoord);
@@ -98,7 +98,7 @@ export class MartianChessMoveGenerator extends MoveGenerator<MartianChessMove, M
     }
     private getLandingCoordsForLinearMove(startingCoord: Coord, state: MartianChessState, maxDist: number): Coord[] {
         const landingCoords: Coord[] = [];
-        for (const dir of Direction.DIRECTIONS) {
+        for (const dir of Ordinal.ORDINALS) {
             let dist: number = 1;
             let landingCoord: Coord = startingCoord.getNext(dir, dist);
             let landingContent: MGPOptional<MartianChessPiece> = state.tryToGetPieceAt(landingCoord);

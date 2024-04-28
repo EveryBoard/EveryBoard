@@ -1,5 +1,5 @@
 import { Coord } from 'src/app/jscaip/Coord';
-import { Direction } from 'src/app/jscaip/Direction';
+import { Ordinal } from 'src/app/jscaip/Ordinal';
 import { Encoder, MGPFallible } from '@everyboard/lib';
 import { MoveCoordToCoord } from 'src/app/jscaip/MoveCoordToCoord';
 import { LinesOfActionState } from './LinesOfActionState';
@@ -11,7 +11,7 @@ export class LinesOfActionMove extends MoveCoordToCoord {
         MoveWithTwoCoords.getFallibleEncoder<LinesOfActionMove>(LinesOfActionMove.from);
 
     public static from(start: Coord, end: Coord): MGPFallible<LinesOfActionMove> {
-        const directionOptional: MGPFallible<Direction> = Direction.factory.fromMove(start, end);
+        const directionOptional: MGPFallible<Ordinal> = Ordinal.factory.fromMove(start, end);
         if (directionOptional.isFailure()) {
             return MGPFallible.failure(directionOptional.getReason());
         }
@@ -23,9 +23,9 @@ export class LinesOfActionMove extends MoveCoordToCoord {
         }
         return MGPFallible.success(new LinesOfActionMove(start, end, directionOptional.get()));
     }
-    private constructor(start: Coord, end: Coord, public readonly direction: Direction) {
+    private constructor(start: Coord, end: Coord, public readonly direction: Ordinal) {
         super(start, end);
-        this.direction = Direction.factory.fromMove(start, end).get();
+        this.direction = Ordinal.factory.fromMove(start, end).get();
     }
     public override toString(): string {
         return 'LinesOfActionMove(' + this.getStart() + '->' + this.getEnd() + ')';

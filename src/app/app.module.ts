@@ -52,6 +52,9 @@ import { ResetPasswordComponent } from './components/normal-component/reset-pass
 import { SettingsComponent } from './components/normal-component/settings/settings.component';
 import { OnlineGameCreationComponent } from './components/normal-component/online-game-creation/online-game-creation.component';
 
+import { DirArrowComponent } from './components/game-components/arrow-component/dir-arrow.component';
+import { HexArrowComponent } from './components/game-components/arrow-component/hex-arrow.component';
+
 import { AbaloneComponent } from './games/abalone/abalone.component';
 import { BaAwaComponent } from './games/mancala/ba-awa/ba-awa.component';
 import { ApagosComponent } from './games/apagos/apagos.component';
@@ -180,6 +183,9 @@ export const routes: Route[] = [
         AccountComponent,
         DemoCardWrapperComponent,
         DemoPageComponent,
+
+        DirArrowComponent,
+        HexArrowComponent,
 
         AbaloneComponent,
         ApagosComponent,

@@ -3,6 +3,7 @@ import { Coord } from './Coord';
 import { FlatHexaOrientation, HexaOrientation } from './HexaOrientation';
 
 export class HexaLayout {
+
     public constructor(public readonly size: number,
                        public readonly origin: Coord,
                        public readonly orientation: HexaOrientation) {
@@ -86,4 +87,5 @@ export class HexaLayout {
         ];
         return [bottomLeftPolygon, bottomRightPolygon, fullPolygon];
     }
+
 }

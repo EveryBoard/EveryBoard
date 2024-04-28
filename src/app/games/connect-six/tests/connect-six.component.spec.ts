@@ -132,7 +132,7 @@ describe('ConnectSixComponent', () => {
 
     describe('second click', () => {
 
-        it('should deselect piece from ongoing turn when clicking on it again', fakeAsync(async() => {
+        it('should deselect piece when clicking a second time on it', fakeAsync(async() => {
             // Given a component where you clicked already to drop your first piece
             const state: ConnectSixState = new ConnectSixState([
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],

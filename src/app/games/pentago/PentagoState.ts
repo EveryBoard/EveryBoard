@@ -1,5 +1,5 @@
 import { Coord } from 'src/app/jscaip/Coord';
-import { Direction } from 'src/app/jscaip/Direction';
+import { Ordinal } from 'src/app/jscaip/Ordinal';
 import { GameStateWithTable } from 'src/app/jscaip/GameStateWithTable';
 import { PlayerOrNone } from 'src/app/jscaip/Player';
 import { Vector } from 'src/app/jscaip/Vector';
@@ -45,19 +45,19 @@ export class PentagoState extends GameStateWithTable<PlayerOrNone> {
 
     private getBlockNeutrality(blockIndex: number): boolean {
         const center: Coord = PentagoState.getBlockCenter(blockIndex);
-        const initialUp: PlayerOrNone = this.getPieceAt(center.getNext(Direction.UP, 1));
-        const initialDiagonal: PlayerOrNone = this.getPieceAt(center.getNext(Direction.UP_LEFT, 1));
+        const initialUp: PlayerOrNone = this.getPieceAt(center.getNext(Ordinal.UP, 1));
+        const initialDiagonal: PlayerOrNone = this.getPieceAt(center.getNext(Ordinal.UP_LEFT, 1));
         // Testing edges
-        if (this.getPieceAt(center.getNext(Direction.RIGHT, 1)) !== initialUp ||
-            this.getPieceAt(center.getNext(Direction.DOWN, 1)) !== initialUp ||
-            this.getPieceAt(center.getNext(Direction.LEFT, 1)) !== initialUp)
+        if (this.getPieceAt(center.getNext(Ordinal.RIGHT, 1)) !== initialUp ||
+            this.getPieceAt(center.getNext(Ordinal.DOWN, 1)) !== initialUp ||
+            this.getPieceAt(center.getNext(Ordinal.LEFT, 1)) !== initialUp)
         {
             return false;
         }
         // Testing corners
-        return this.getPieceAt(center.getNext(Direction.UP_RIGHT, 1)) === initialDiagonal &&
-               this.getPieceAt(center.getNext(Direction.DOWN_RIGHT, 1)) === initialDiagonal &&
-               this.getPieceAt(center.getNext(Direction.DOWN_LEFT, 1)) === initialDiagonal;
+        return this.getPieceAt(center.getNext(Ordinal.UP_RIGHT, 1)) === initialDiagonal &&
+               this.getPieceAt(center.getNext(Ordinal.DOWN_RIGHT, 1)) === initialDiagonal &&
+               this.getPieceAt(center.getNext(Ordinal.DOWN_LEFT, 1)) === initialDiagonal;
     }
 
     public static getBlockCenter(blockIndex: number): Coord {

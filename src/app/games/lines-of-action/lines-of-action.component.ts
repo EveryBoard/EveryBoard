@@ -79,7 +79,7 @@ export class LinesOfActionComponent extends RectangularGameComponent<LinesOfActi
             return this.cancelMove(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT());
         }
         this.selected = MGPOptional.of(coord);
-        this.targets = LinesOfActionRules.possibleTargets(this.getState(), this.selected.get());
+        this.targets = LinesOfActionRules.possibleTargets(this.getState(), this.selected.get()).toList();
         if (this.targets.length === 0) {
             return this.cancelMove(LinesOfActionFailure.PIECE_CANNOT_MOVE());
         }
@@ -124,7 +124,7 @@ export class LinesOfActionComponent extends RectangularGameComponent<LinesOfActi
         const content: PlayerOrNone = this.board[y][x];
         const coord: Coord = new Coord(x, y);
         const classes: string[] = [this.getPlayerClass(content)];
-        if (this.selected.isPresent() && this.selected.get().equals(coord)) {
+        if (this.selected.equalsValue(coord)) {
             classes.push('selected-stroke');
         }
         return classes;

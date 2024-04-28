@@ -81,16 +81,16 @@ export class MGPMap<K extends NonNullable<Comparable>, V extends NonNullable<unk
         return this.map.length;
     }
 
-    public listKeys(): K[] {
+    public getKeyList(): K[] {
         return this.map.map((entry: {key: K, value: V}) => entry.key);
     }
 
-    public listValues(): V[] {
+    public getValueList(): V[] {
         return this.map.map((entry: {key: K, value: V}) => entry.value);
     }
 
     public getKeySet(): MGPSet<K> {
-        return new MGPSet<K>(this.listKeys());
+        return new MGPSet<K>(this.getKeyList());
     }
 
     public filter(predicate: (key: K, value: V) => boolean): MGPMap<K, V> {
@@ -141,7 +141,7 @@ export class MGPMap<K extends NonNullable<Comparable>, V extends NonNullable<unk
     public getCopy(): this {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const newMap: this = new (<any> this.constructor)();
-        for (const key of this.listKeys()) {
+        for (const key of this.getKeyList()) {
             newMap.set(key, this.get(key).get());
         }
         return newMap;
@@ -169,7 +169,7 @@ export class ReversibleMap<K extends NonNullable<Comparable>, V extends NonNulla
 
     public reverse(): ReversibleMap<V, MGPSet<K>> {
         const reversedMap: ReversibleMap<V, MGPSet<K>> = new ReversibleMap<V, MGPSet<K>>();
-        for (const key of this.listKeys()) {
+        for (const key of this.getKeyList()) {
             const value: V = this.get(key).get();
             if (reversedMap.containsKey(value)) {
                 reversedMap.get(value).get().add(key);

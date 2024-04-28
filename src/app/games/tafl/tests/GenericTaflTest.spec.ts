@@ -148,7 +148,7 @@ export function DoTaflTests<C extends TaflComponent<R, M>,
                 testUtils.expectElementNotToHaveClass('#piece_' + playersCoord, 'selected-stroke');
             }));
 
-            it('should deselect clicked piece when it is click for the second time in a row', fakeAsync(async() => {
+            it('should deselect piece when clicking a second time on it', fakeAsync(async() => {
                 // Given a state where first click selected one of your pieces
                 const playersCoord: string = entries.validFirstCoord.x + '_' + entries.validFirstCoord.y;
                 await testUtils.expectClickSuccess('#click_' + playersCoord);

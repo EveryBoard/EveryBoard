@@ -89,7 +89,7 @@ describe('DiaballikComponent', () => {
         testUtils.expectElementNotToHaveClass('#piece_0_6', 'selected-stroke');
     }));
 
-    it('should deselect current piece when clicking a second time on it', fakeAsync(async() => {
+    it('should deselect piece when clicking a second time on it', fakeAsync(async() => {
         // Given a state where a sub move has been done and a piece selected
         await testUtils.expectClickSuccess('#click_0_6');
         await testUtils.expectClickSuccess('#click_0_5');
