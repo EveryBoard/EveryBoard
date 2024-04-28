@@ -2,11 +2,13 @@
 
 # compiled output
 /dist
+/lib/dist
 /tmp
 /out-tsc
 
 # dependencies
 /node_modules
+/lib/node_modules
 
 # IDEs and editors
 /.idea
@@ -49,5 +51,6 @@ Thumbs.db
 /lib/build
 /lib/node_modules
 /lib/dist
-
+/lib/.nyc_output
+/lib/coverage
 .nx/

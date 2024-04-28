@@ -148,7 +148,7 @@ describe('HiveComponent', () => {
 
         });
 
-        it('should deselect the piece at second click on it', fakeAsync(async() => {
+        it('should deselect remaining piece when clicking a second time on it', fakeAsync(async() => {
             // Given a state with remaining pieces and a selected one
             const state: HiveState = HiveRules.get().getInitialState();
             await testUtils.setupState(state);
@@ -246,7 +246,7 @@ describe('HiveComponent', () => {
                 await testUtils.expectClickFailure('#piece_0_0', reason);
             }));
 
-            it('should deselect if the piece is clicked a second time', fakeAsync(async() => {
+            it('should deselect piece when clicking a second time on it', fakeAsync(async() => {
                 // Given a state with pieces on the board and a piece already selected
                 const state: HiveState = HiveState.fromRepresentation([
                     [[Q], [q]],

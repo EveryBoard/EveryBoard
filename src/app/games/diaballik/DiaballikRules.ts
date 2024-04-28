@@ -5,7 +5,8 @@ import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { Player } from 'src/app/jscaip/Player';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { Coord } from 'src/app/jscaip/Coord';
-import { Direction, Orthogonal } from 'src/app/jscaip/Direction';
+import { Orthogonal } from 'src/app/jscaip/Orthogonal';
+import { Ordinal } from 'src/app/jscaip/Ordinal';
 import { MGPFallible, MGPOptional, MGPSet, Utils } from '@everyboard/lib';
 import { GameNode } from 'src/app/jscaip/AI/GameNode';
 import { DiaballikFailure } from './DiaballikFailure';
@@ -147,7 +148,7 @@ export class DiaballikRules extends Rules<DiaballikMove, DiaballikState, Diaball
         }
 
         // The straight-line path between origin and destination contains no other piece
-        const direction: Direction = Direction.factory.fromMove(start, end).get();
+        const direction: Ordinal = Ordinal.factory.fromMove(start, end).get();
         const afterStart: Coord = start.getNext(direction);
         for (let coord: Coord = afterStart; coord.equals(end) === false; coord = coord.getNext(direction)) {
             if (state.getPieceAt(coord) !== DiaballikPiece.NONE) {
@@ -281,7 +282,7 @@ export class DiaballikRules extends Rules<DiaballikMove, DiaballikState, Diaball
             // A piece in the first column is considered connected
             return true;
         }
-        for (const direction of [Direction.LEFT, Direction.UP_LEFT, Direction.DOWN_LEFT]) {
+        for (const direction of [Ordinal.LEFT, Ordinal.UP_LEFT, Ordinal.DOWN_LEFT]) {
             const neighbor: Coord = coord.getNext(direction);
             if (state.isOnBoard(neighbor)) {
                 const piece: DiaballikPiece = state.getPieceAt(neighbor);

@@ -22,8 +22,10 @@ export type EpaminondasLegalityInformation = Table<PlayerOrNone>;
 
 export class EpaminondasNode extends GameNode<EpaminondasMove, EpaminondasState> {}
 
-export class EpaminondasRules
-    extends ConfigurableRules<EpaminondasMove, EpaminondasState, EpaminondasConfig, EpaminondasLegalityInformation>
+export class EpaminondasRules extends ConfigurableRules<EpaminondasMove,
+                                                        EpaminondasState,
+                                                        EpaminondasConfig,
+                                                        EpaminondasLegalityInformation>
 {
     private static singleton: MGPOptional<EpaminondasRules> = MGPOptional.empty();
 
@@ -63,14 +65,13 @@ export class EpaminondasRules
         return MGPFallible.success(captureValidity.get());
     }
 
-    public static getPhalanxValidity(state: EpaminondasState, move: EpaminondasMove): MGPValidation {
+    private static getPhalanxValidity(state: EpaminondasState, move: EpaminondasMove): MGPValidation {
         let coord: Coord = move.coord;
         if (state.isOnBoard(coord) === false) {
             return MGPValidation.failure(CoordFailure.OUT_OF_RANGE(coord));
         }
-        let soldierIndex: number = 0;
         const opponent: Player = state.getCurrentOpponent();
-        while (soldierIndex < move.movedPieces) {
+        for (let soldierIndex: number = 0; soldierIndex < move.phalanxSize; soldierIndex++) {
             if (state.isOnBoard(coord) === false) {
                 return MGPValidation.failure(EpaminondasFailure.PHALANX_CANNOT_CONTAIN_PIECES_OUTSIDE_BOARD());
             }
@@ -82,17 +83,16 @@ export class EpaminondasRules
                 return MGPValidation.failure(EpaminondasFailure.PHALANX_CANNOT_CONTAIN_OPPONENT_PIECE());
             }
             coord = coord.getNext(move.direction, 1);
-            soldierIndex++;
         }
         return MGPValidation.SUCCESS;
     }
 
-    public static getLandingStatus(state: EpaminondasState, move: EpaminondasMove)
+    private static getLandingStatus(state: EpaminondasState, move: EpaminondasMove)
     : MGPFallible<EpaminondasLegalityInformation> {
         const newBoard: PlayerOrNone[][] = state.getCopiedBoard();
         const currentPlayer: Player = state.getCurrentPlayer();
         let emptied: Coord = move.coord;
-        let landingCoord: Coord = move.coord.getNext(move.direction, move.movedPieces);
+        let landingCoord: Coord = move.coord.getNext(move.direction, move.phalanxSize);
         let landingIndex: number = 0;
         while (landingIndex + 1 < move.stepSize) {
             newBoard[emptied.y][emptied.x] = PlayerOrNone.NONE;
@@ -118,13 +118,13 @@ export class EpaminondasRules
         return MGPFallible.success(newBoard);
     }
 
-    public static getCaptureValidity(oldState: EpaminondasState,
-                                     board: PlayerOrNone[][],
-                                     move: EpaminondasMove,
-                                     opponent: Player)
+    private static getCaptureValidity(oldState: EpaminondasState,
+                                      board: PlayerOrNone[][],
+                                      move: EpaminondasMove,
+                                      opponent: Player)
     : MGPFallible<EpaminondasLegalityInformation>
     {
-        let capturedSoldier: Coord = move.coord.getNext(move.direction, move.movedPieces + move.stepSize - 1);
+        let capturedSoldier: Coord = move.coord.getNext(move.direction, move.phalanxSize + move.stepSize - 1);
         let captured: number = 0;
         while (oldState.isOnBoard(capturedSoldier) &&
                oldState.getPieceAt(capturedSoldier) === opponent)
@@ -134,7 +134,7 @@ export class EpaminondasRules
                 board[capturedSoldier.y][capturedSoldier.x] = PlayerOrNone.NONE;
             }
             captured++;
-            if (move.movedPieces <= captured) {
+            if (move.phalanxSize <= captured) {
                 return MGPFallible.failure(EpaminondasFailure.PHALANX_SHOULD_BE_GREATER_TO_CAPTURE());
             }
             capturedSoldier = capturedSoldier.getNext(move.direction, 1);

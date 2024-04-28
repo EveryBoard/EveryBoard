@@ -28,7 +28,6 @@ export class DvonnComponent extends HexagonalGameComponent<DvonnRules, DvonnMove
     public lastMove: MGPOptional<DvonnMove> = MGPOptional.empty();
     public chosen: MGPOptional<Coord> = MGPOptional.empty();
     public disconnectedSpaces: { coord: Coord, spaceContent: DvonnPieceStack }[] = [];
-    public state: DvonnState;
 
     public constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);

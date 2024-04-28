@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { RectangularGameComponent } from '../../components/game-components/rectangular-game-component/RectangularGameComponent';
 import { Coord } from 'src/app/jscaip/Coord';
-import { Orthogonal } from 'src/app/jscaip/Direction';
+import { Orthogonal } from 'src/app/jscaip/Orthogonal';
 import { QuixoMove } from 'src/app/games/quixo/QuixoMove';
 import { QuixoConfig, QuixoState } from 'src/app/games/quixo/QuixoState';
 import { QuixoRules } from 'src/app/games/quixo/QuixoRules';
@@ -28,8 +28,6 @@ export class QuixoComponent extends RectangularGameComponent<QuixoRules,
 {
 
     public QuixoState: typeof QuixoState = QuixoState;
-
-    public state: QuixoState;
 
     public lastMoveCoord: MGPOptional<Coord> = MGPOptional.empty();
 

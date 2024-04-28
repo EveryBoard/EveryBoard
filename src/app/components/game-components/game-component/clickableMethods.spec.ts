@@ -3,7 +3,8 @@ import { EncapsulePiece } from 'src/app/games/encapsule/EncapsulePiece';
 import { HivePiece } from 'src/app/games/hive/HivePiece';
 import { SiamMove } from 'src/app/games/siam/SiamMove';
 import { Coord } from 'src/app/jscaip/Coord';
-import { Direction, Orthogonal } from 'src/app/jscaip/Direction';
+import { Orthogonal } from 'src/app/jscaip/Orthogonal';
+import { Ordinal } from 'src/app/jscaip/Ordinal';
 import { Player } from 'src/app/jscaip/Player';
 import { MGPOptional } from '@everyboard/lib';
 
@@ -11,7 +12,7 @@ export const clickableMethods: { [gameName: string]: { [methodName: string]: unk
     Abalone: {
         onPieceClick: [0, 0],
         onSpaceClick: [0, 0],
-        chooseDirection: [Direction.UP],
+        chooseDirection: [Ordinal.UP],
     },
     Apagos: {
         onSquareClick: [0],

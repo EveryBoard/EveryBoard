@@ -28,7 +28,6 @@ import { SixFilteredMoveGenerator } from './SixFilteredMoveGenerator';
 export class SixComponent
     extends HexagonalGameComponent<SixRules, SixMove, SixState, Player, EmptyRulesConfig, SixLegalityInformation>
 {
-    public state: SixState;
 
     public pieces: Coord[];
     public disconnectedCoords: Coord[] = [];

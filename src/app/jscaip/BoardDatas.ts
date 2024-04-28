@@ -1,5 +1,5 @@
 import { Coord } from 'src/app/jscaip/Coord';
-import { Direction } from './Direction';
+import { Ordinal } from './Ordinal';
 import { Table, TableUtils } from './TableUtils';
 import { Debug } from '../utils/Debug';
 
@@ -69,7 +69,7 @@ export abstract class GroupDatasFactory<T> {
         }
         return groupDatas;
     }
-    public abstract getDirections(): ReadonlyArray<Direction>;
+    public abstract getDirections(): ReadonlyArray<Ordinal>;
 }
 
 export abstract class GroupDatas<T> {

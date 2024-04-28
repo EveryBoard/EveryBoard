@@ -5,7 +5,7 @@ import { SiamState } from 'src/app/games/siam/SiamState';
 import { SiamConfig, SiamLegalityInformation, SiamRules } from 'src/app/games/siam/SiamRules';
 import { SiamPiece } from 'src/app/games/siam/SiamPiece';
 import { Coord } from 'src/app/jscaip/Coord';
-import { Orthogonal } from 'src/app/jscaip/Direction';
+import { Orthogonal } from 'src/app/jscaip/Orthogonal';
 import { MGPOptional, MGPSet, MGPValidation, Utils } from '@everyboard/lib';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';

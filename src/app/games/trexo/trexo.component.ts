@@ -10,7 +10,7 @@ import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { Table3DUtils, TableUtils } from 'src/app/jscaip/TableUtils';
 import { Coord3D } from 'src/app/jscaip/Coord3D';
 import { TrexoFailure } from './TrexoFailure';
-import { Direction } from 'src/app/jscaip/Direction';
+import { Ordinal } from 'src/app/jscaip/Ordinal';
 import { MCTS } from 'src/app/jscaip/AI/MCTS';
 import { TrexoAlignmentHeuristic } from './TrexoAlignmentHeuristic';
 import { Minimax } from 'src/app/jscaip/AI/Minimax';
@@ -185,7 +185,7 @@ export class TrexoComponent extends ParallelogramGameComponent<TrexoRules, Trexo
         const piece: TrexoPiece = this.getState().getPieceAtXYZ(x, y, z);
         const pieceCoord: Coord = new Coord(x, y);
         let otherCoord: Coord = new Coord(-2, -2); // Will get erased
-        for (const dir of Direction.ORTHOGONALS) {
+        for (const dir of Ordinal.ORTHOGONALS) {
             const neighborCoord: Coord = pieceCoord.getNext(dir);
             if (TrexoState.isOnBoard(neighborCoord)) {
                 const neighborStack: TrexoPieceStack = this.getState().getPieceAt(neighborCoord);

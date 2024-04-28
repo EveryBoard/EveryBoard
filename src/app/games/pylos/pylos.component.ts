@@ -27,7 +27,6 @@ export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosSt
     public boardWidth: number = (4 * this.SPACE_SIZE) + this.STROKE_WIDTH;
     public pieceRowHeight: number = this.SPACE_SIZE / 2;
     public boardHeight: number = this.boardWidth + 2 * this.pieceRowHeight;
-    public state: PylosState;
     public constructedState: PylosState;
 
     public lastLandingCoord: MGPOptional<PylosCoord> = MGPOptional.empty();
@@ -361,13 +360,14 @@ export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosSt
 
     public mustDisplayLandingCoord(x: number, y: number, z: number): boolean {
         if (this.chosenStartingCoord.isPresent()) {
-            if (this.chosenStartingCoord.get().equals(new PylosCoord(x, y, z))) {
+            if (this.chosenStartingCoord.equalsValue(new PylosCoord(x, y, z))) {
                 return true;
             }
             const startingZ: number = this.chosenStartingCoord.get().z;
             return startingZ < z;
+        } else {
+            return true;
         }
-        return true;
     }
 
 }

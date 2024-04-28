@@ -45,10 +45,10 @@
     </g>
 
     <line *ngFor="let arrow of arrows"
-          [attr.x1]="arrow.x1"
-          [attr.y1]="arrow.y1"
-          [attr.x2]="arrow.x2"
-          [attr.y2]="arrow.y2"
+          [attr.x1]="arrow.startCenter.x"
+          [attr.y1]="arrow.startCenter.y"
+          [attr.x2]="arrow.landingCenter.x"
+          [attr.y2]="arrow.landingCenter.y"
           class="arrow click-delegator"
           marker-end="url(#arrowhead)"/>
 
@@ -65,10 +65,10 @@
     </g>
 
     <line *ngIf="inserted.isPresent()"
-          [attr.x1]="inserted.get().x1"
-          [attr.y1]="inserted.get().y1"
-          [attr.x2]="inserted.get().x2"
-          [attr.y2]="inserted.get().y2"
+          [attr.x1]="inserted.get().startCenter.x"
+          [attr.y1]="inserted.get().startCenter.y"
+          [attr.x2]="inserted.get().landingCenter.x"
+          [attr.y2]="inserted.get().landingCenter.y"
           class="arrow moved-stroke click-delegator"
           marker-end="url(#arrowhead-moved)"
     />

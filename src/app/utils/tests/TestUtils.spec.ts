@@ -285,7 +285,6 @@ export class SimpleComponentTestUtils<T> {
 export class ComponentTestUtils<C extends AbstractGameComponent, P extends Comparable = string>
     extends SimpleComponentTestUtils<GameWrapper<P>>
 {
-
     private gameComponent: AbstractGameComponent;
 
     private canUserPlaySpy: jasmine.Spy;
@@ -468,12 +467,19 @@ export class ComponentTestUtils<C extends AbstractGameComponent, P extends Compa
         expect(this.onLegalUserMoveSpy).withContext(context).not.toHaveBeenCalledWith();
     }
 
+    /**
+     * To call when you expect the component to reject the click.
+     * If you expect the code to submit the move, and the rules to reject it:
+     *     then use expectMoveFailure[WithAsymmetricNaming]
+     * @param nameInHtml name of the clicked element in the HTML file
+     * @param nameInFunction name of the element inside the TS file
+     * @param reason the toasted error message
+     */
     public async expectClickFailureWithAsymmetricNaming(nameInHtml: string,
                                                         nameInFunction: string,
                                                         reason?: string)
     : Promise<void>
     {
-
         if (reason == null) {
             await this.clickElement(nameInHtml);
         } else {
@@ -484,7 +490,7 @@ export class ComponentTestUtils<C extends AbstractGameComponent, P extends Compa
         expect(this.canUserPlaySpy).toHaveBeenCalledOnceWith(nameInFunction);
         this.canUserPlaySpy.calls.reset();
         expect(this.chooseMoveSpy)
-            .withContext('chooseMove should not have been called, you might need to try to call expectMoveFailure since this click resulted in a move')
+            .withContext('chooseMove should not be called in case of click failure. If you expect the code to submit the move, and the rules to reject it, use expectMoveFailure.')
             .not.toHaveBeenCalled();
         if (reason == null) {
             expect(this.cancelMoveSpy).toHaveBeenCalledOnceWith();
@@ -518,13 +524,22 @@ export class ComponentTestUtils<C extends AbstractGameComponent, P extends Compa
                                    clickAnimationDuration?: number)
     : Promise<void>
     {
-        await this.clickElement(elementName);
+        return this.expectMoveSuccessWithAsymmetricNaming(elementName, elementName, move, clickAnimationDuration);
+    }
+
+    public async expectMoveSuccessWithAsymmetricNaming(nameInHtml: string,
+                                                       nameInFunction: string,
+                                                       move: Move,
+                                                       clickAnimationDuration?: number)
+    : Promise<void>
+    {
+        await this.clickElement(nameInHtml);
         if (clickAnimationDuration === undefined) {
             tick(0);
         } else {
             tick(clickAnimationDuration);
         }
-        expect(this.canUserPlaySpy).toHaveBeenCalledOnceWith(elementName);
+        expect(this.canUserPlaySpy).toHaveBeenCalledOnceWith(nameInFunction);
         this.canUserPlaySpy.calls.reset();
         expect(this.chooseMoveSpy).toHaveBeenCalledOnceWith(move);
         this.chooseMoveSpy.calls.reset();

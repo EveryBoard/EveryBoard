@@ -1,5 +1,5 @@
 import { Coord } from 'src/app/jscaip/Coord';
-import { Direction } from 'src/app/jscaip/Direction';
+import { Ordinal } from 'src/app/jscaip/Ordinal';
 import { GameNode } from 'src/app/jscaip/AI/GameNode';
 import { Player } from 'src/app/jscaip/Player';
 import { Rules } from 'src/app/jscaip/Rules';
@@ -60,7 +60,7 @@ export class LascaRules extends Rules<LascaMove, LascaState> {
         const piece: LascaStack = state.getPieceAt(coord);
         const pieceOwner: Player = piece.getCommander().player;
         const opponent: Player = pieceOwner.getOpponent();
-        const directions: Direction[] = this.getPieceDirections(state, coord);
+        const directions: Ordinal[] = this.getPieceDirections(state, coord);
         const moved: LascaStack = state.getPieceAt(coord);
         for (const direction of directions) {
             const captured: Coord = coord.getNext(direction, 1);
@@ -83,19 +83,19 @@ export class LascaRules extends Rules<LascaMove, LascaState> {
         return pieceMoves;
     }
 
-    private getPieceDirections(state: LascaState, coord: Coord): Direction[] {
+    private getPieceDirections(state: LascaState, coord: Coord): Ordinal[] {
         const piece: LascaStack = state.getPieceAt(coord);
         const pieceOwner: Player = piece.getCommander().player;
         // Since player zero must go up (-1) and player one go down (+1)
         // Then we can use the score modifier that happens to match to the "vertical direction" of each player
         const verticalDirection: number = pieceOwner.getScoreModifier();
-        const directions: Direction[] = [
-            Direction.factory.fromDelta(-1, verticalDirection).get(),
-            Direction.factory.fromDelta(1, verticalDirection).get(),
+        const directions: Ordinal[] = [
+            Ordinal.factory.fromDelta(-1, verticalDirection).get(),
+            Ordinal.factory.fromDelta(1, verticalDirection).get(),
         ];
         if (state.getPieceAt(coord).getCommander().isOfficer) {
-            directions.push(Direction.factory.fromDelta(-1, - verticalDirection).get(),
-                            Direction.factory.fromDelta(1, - verticalDirection).get());
+            directions.push(Ordinal.factory.fromDelta(-1, - verticalDirection).get(),
+                            Ordinal.factory.fromDelta(1, - verticalDirection).get());
         }
         return directions;
     }
@@ -116,7 +116,7 @@ export class LascaRules extends Rules<LascaMove, LascaState> {
 
     public getPieceSteps(state: LascaState, coord: Coord): LascaMove[] {
         const pieceMoves: LascaMove[] = [];
-        const directions: Direction[] = this.getPieceDirections(state, coord);
+        const directions: Ordinal[] = this.getPieceDirections(state, coord);
         for (const direction of directions) {
             const landing: Coord = coord.getNext(direction, 1);
             if (state.isOnBoard(landing) && state.getPieceAt(landing).isEmpty()) {
@@ -138,8 +138,8 @@ export class LascaRules extends Rules<LascaMove, LascaState> {
                 const commander: LascaPiece = capturedSpace.getCommander();
                 movingStack = movingStack.capturePiece(commander);
 
-                const reaminingStack: LascaStack = capturedSpace.getPiecesUnderCommander();
-                resultingState = resultingState.set(capturedCoord, reaminingStack);
+                const remainingStack: LascaStack = capturedSpace.getPiecesUnderCommander();
+                resultingState = resultingState.set(capturedCoord, remainingStack);
             }
         }
         resultingState = resultingState.set(moveEnd, movingStack);

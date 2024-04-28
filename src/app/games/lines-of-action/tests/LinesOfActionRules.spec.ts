@@ -2,7 +2,7 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { MGPOptional } from '@everyboard/lib';
+import { MGPOptional, MGPSet } from '@everyboard/lib';
 import { LinesOfActionFailure } from '../LinesOfActionFailure';
 import { LinesOfActionMove } from '../LinesOfActionMove';
 import { LinesOfActionNode, LinesOfActionRules } from '../LinesOfActionRules';
@@ -327,8 +327,9 @@ describe('LinesOfActionRules', () => {
 
     it('should list all possible targets', () => {
         const state: LinesOfActionState = LinesOfActionRules.get().getInitialState();
-        const targets: Coord[] = LinesOfActionRules.possibleTargets(state, new Coord(4, 7));
-        expect(targets).toEqual([new Coord(4, 5), new Coord(6, 5), new Coord(2, 5)]);
+        const targets: MGPSet<Coord> = LinesOfActionRules.possibleTargets(state, new Coord(4, 7));
+        const expectedTarget: MGPSet<Coord> = new MGPSet([new Coord(4, 5), new Coord(6, 5), new Coord(2, 5)]);
+        expect(targets.equals(expectedTarget)).toBeTrue();
     });
 
     it('should list only legal moves in possible targets', () => {
@@ -343,12 +344,15 @@ describe('LinesOfActionRules', () => {
             [_, _, _, _, _, _, _, _],
         ];
         const state: LinesOfActionState = new LinesOfActionState(board, 0);
-        const targets: Coord[] = LinesOfActionRules.possibleTargets(state, new Coord(2, 2));
-        expect(targets).toEqual([
-            new Coord(2, 1), new Coord(3, 1),
-            new Coord(3, 3), new Coord(2, 3),
-            new Coord(1, 3), new Coord(1, 1),
-        ]);
+        const targets: MGPSet<Coord> = LinesOfActionRules.possibleTargets(state, new Coord(2, 2));
+        expect(targets.equals(new MGPSet([
+            new Coord(1, 1),
+            new Coord(1, 3),
+            new Coord(2, 1),
+            new Coord(2, 3),
+            new Coord(3, 1),
+            new Coord(3, 3),
+        ]))).toBeTrue();
     });
 
 });
