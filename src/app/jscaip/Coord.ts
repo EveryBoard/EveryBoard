@@ -1,8 +1,6 @@
-import { Direction } from 'src/app/jscaip/Direction';
-import { MGPFallible } from '../utils/MGPFallible';
-import { Encoder } from '../utils/Encoder';
+import { Ordinal } from './Ordinal';
+import { Encoder, MGPFallible, Utils } from '@everyboard/lib';
 import { Vector } from './Vector';
-import { Utils } from '../utils/utils';
 
 export class CoordFailure {
     public static OUT_OF_RANGE(coord: Coord): string {
@@ -31,8 +29,7 @@ export class Coord extends Vector {
         return new Coord(combinedVector.x, combinedVector.y);
     }
 
-    public getPrevious(dir: Vector, distance?: number): Coord {
-        distance = distance == null ? 1 : distance;
+    public getPrevious(dir: Vector, distance: number = 1): Coord {
         return this.getNext(dir, -distance);
     }
 
@@ -96,8 +93,8 @@ export class Coord extends Vector {
         return false;
     }
 
-    public getDirectionToward(c: Coord): MGPFallible<Direction> {
-        return Direction.factory.fromMove(this, c);
+    public getDirectionToward(c: Coord): MGPFallible<Ordinal> {
+        return Ordinal.factory.fromMove(this, c);
     }
 
     public getOrthogonalDistance(c: Coord): number {
@@ -153,7 +150,7 @@ export class Coord extends Vector {
         if (c.equals(this)) {
             return [];
         }
-        const dir: Direction = this.getDirectionToward(c).get();
+        const dir: Ordinal = this.getDirectionToward(c).get();
         let coord: Coord = this.getNext(dir, 1);
         const coords: Coord[] = [];
         while (coord.equals(c) === false) {
@@ -194,6 +191,14 @@ export class Coord extends Vector {
 
     public scale(x: number, y: number): Coord {
         return new Coord(this.x * x, this.y * y);
+    }
+
+    /**
+     * Ordinal as in both orthogonal and diagonal
+     * @returns the list of coord that are considered as neighbor coords, here, the 8 ones
+     */
+    public getOrdinalNeighbors(): Coord[] {
+        return Ordinal.ORDINALS.map((direction: Ordinal) => this.getNext(direction));
     }
 
 }

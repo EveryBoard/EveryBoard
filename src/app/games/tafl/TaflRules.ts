@@ -1,12 +1,11 @@
-import { Orthogonal, Direction } from '../../jscaip/Direction';
+import { Orthogonal } from 'src/app/jscaip/Orthogonal';
+import { Ordinal } from 'src/app/jscaip/Ordinal';
 import { ConfigurableRules } from '../../jscaip/Rules';
 import { Coord } from '../../jscaip/Coord';
 import { TaflMove } from './TaflMove';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { TaflPawn } from './TaflPawn';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { Debug } from 'src/app/utils/utils';
-import { MGPValidation } from 'src/app/utils/MGPValidation';
+import { MGPFallible, MGPOptional, MGPValidation } from '@everyboard/lib';
 import { RelativePlayer } from 'src/app/jscaip/RelativePlayer';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { TaflFailure } from './TaflFailure';
@@ -14,7 +13,7 @@ import { TaflConfig } from './TaflConfig';
 import { GameNode } from 'src/app/jscaip/AI/GameNode';
 import { TaflState } from './TaflState';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
-import { MGPFallible } from 'src/app/utils/MGPFallible';
+import { Debug } from 'src/app/utils/Debug';
 import { Localized } from 'src/app/utils/LocaleUtils';
 
 export class TaflNode<M extends TaflMove> extends GameNode<M, TaflState> {}
@@ -65,7 +64,7 @@ export abstract class TaflRules<M extends TaflMove> extends ConfigurableRules<M,
                 return MGPValidation.failure(TaflFailure.SOLDIERS_CANNOT_SIT_ON_THRONE());
             }
         }
-        const dir: Direction = move.getStart().getDirectionToward(move.getEnd()).get();
+        const dir: Ordinal = move.getStart().getDirectionToward(move.getEnd()).get();
         const dist: number = move.getStart().getOrthogonalDistance(move.getEnd());
         let inspectedCoord: Coord = move.getStart().getNext(dir);
         for (let i: number = 1; i < dist; i++) {

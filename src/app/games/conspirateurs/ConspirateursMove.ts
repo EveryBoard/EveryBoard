@@ -1,15 +1,12 @@
 import { Coord } from 'src/app/jscaip/Coord';
-import { Direction } from 'src/app/jscaip/Direction';
-import { Encoder } from 'src/app/utils/Encoder';
+import { Ordinal } from 'src/app/jscaip/Ordinal';
 import { Move } from 'src/app/jscaip/Move';
 import { MoveCoord } from 'src/app/jscaip/MoveCoord';
 import { MoveCoordToCoord } from 'src/app/jscaip/MoveCoordToCoord';
-import { ArrayUtils } from 'src/app/utils/ArrayUtils';
-import { MGPFallible } from 'src/app/utils/MGPFallible';
-import { MGPSet } from 'src/app/utils/MGPSet';
-import { CoordSet } from 'src/app/utils/OptimizedSet';
+import { Encoder, ArrayUtils, MGPFallible, MGPSet } from '@everyboard/lib';
 import { ConspirateursFailure } from './ConspirateursFailure';
 import { MoveWithTwoCoords } from 'src/app/jscaip/MoveWithTwoCoords';
+import { CoordSet } from 'src/app/jscaip/CoordSet';
 
 export class ConspirateursMoveDrop extends MoveCoord {
 
@@ -74,7 +71,7 @@ export class ConspirateursMoveJump extends Move {
             return MGPFallible.failure('ConspirateursMoveJump requires at least one jump, so two coords');
         }
         for (let i: number = 1; i < coords.length; i++) {
-            const jumpDirection: MGPFallible<Direction> = coords[i - 1].getDirectionToward(coords[i]);
+            const jumpDirection: MGPFallible<Ordinal> = coords[i - 1].getDirectionToward(coords[i]);
             if (jumpDirection.isFailure()) {
                 return MGPFallible.failure(ConspirateursFailure.INVALID_JUMP());
             }
@@ -116,7 +113,7 @@ export class ConspirateursMoveJump extends Move {
     public getJumpedOverCoords(): Coord[] {
         const jumpedOver: Coord[] = [];
         for (let i: number = 1; i < this.coords.length; i++) {
-            const jumpDirection: Direction = this.coords[i-1].getDirectionToward(this.coords[i]).get();
+            const jumpDirection: Ordinal = this.coords[i-1].getDirectionToward(this.coords[i]).get();
             jumpedOver.push(this.coords[i-1].getNext(jumpDirection, 1));
         }
         return jumpedOver;

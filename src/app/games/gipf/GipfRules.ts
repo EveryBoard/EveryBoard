@@ -5,17 +5,14 @@ import { FlatHexaOrientation } from 'src/app/jscaip/HexaOrientation';
 import { GameNode } from 'src/app/jscaip/AI/GameNode';
 import { Player } from 'src/app/jscaip/Player';
 import { Rules } from 'src/app/jscaip/Rules';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { MGPValidation } from 'src/app/utils/MGPValidation';
+import { MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 import { GipfMove, GipfPlacement } from './GipfMove';
 import { GipfState } from './GipfState';
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
 import { GipfFailure } from './GipfFailure';
-import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { GipfCapture } from 'src/app/jscaip/GipfProjectHelper';
-import { Utils } from 'src/app/utils/utils';
-import { Table } from 'src/app/utils/ArrayUtils';
+import { Table } from 'src/app/jscaip/TableUtils';
 import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 
@@ -361,16 +358,16 @@ export class GipfRules extends Rules<GipfMove, GipfState, GipfLegalityInformatio
             capturable.push(cur);
             cur = cur.getNext(oppositeDir);
         }
-        for (let cur: Coord = start; cur.equals(end) === false; cur = cur.getNext(dir)) {
+        for (let coord: Coord = start; coord.equals(end) === false; coord = coord.getNext(dir)) {
             // The 4 pieces are capturable
-            capturable.push(cur);
+            capturable.push(coord);
         }
-        for (let cur: Coord = end;
-            state.isOnBoard(cur) && state.getPieceAt(cur) !== FourStatePiece.EMPTY;
-            cur = cur.getNext(dir))
+        for (let coord: Coord = end;
+            state.isOnBoard(coord) && state.getPieceAt(coord) !== FourStatePiece.EMPTY;
+            coord = coord.getNext(dir))
         {
             // Go forward to identify capturable pieces after the 4 aligned pieces
-            capturable.push(cur);
+            capturable.push(coord);
         }
         return new GipfCapture(capturable);
     }

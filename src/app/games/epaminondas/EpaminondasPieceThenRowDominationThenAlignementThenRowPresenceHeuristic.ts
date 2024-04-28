@@ -1,9 +1,9 @@
 import { Coord } from 'src/app/jscaip/Coord';
-import { Direction } from 'src/app/jscaip/Direction';
+import { Ordinal } from 'src/app/jscaip/Ordinal';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { BoardValue } from 'src/app/jscaip/AI/BoardValue';
 import { EpaminondasConfig, EpaminondasNode } from './EpaminondasRules';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { MGPOptional } from '@everyboard/lib';
 import { EpaminondasHeuristic } from './EpaminondasHeuristic';
 import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 
@@ -27,7 +27,7 @@ export class EpaminondasPieceThenRowDominationThenAlignementThenRowPresenceHeuri
                     pieces += mod;
                     wasPresent.put(player, mod);
                     row += mod;
-                    for (const dir of [Direction.UP_LEFT, Direction.UP, Direction.UP_RIGHT]) {
+                    for (const dir of [Ordinal.UP_LEFT, Ordinal.UP, Ordinal.UP_RIGHT]) {
                         let neighbor: Coord = coord.getNext(dir, 1);
                         while (node.gameState.isOnBoard(neighbor) &&
                                node.gameState.getPieceAt(neighbor) === player)

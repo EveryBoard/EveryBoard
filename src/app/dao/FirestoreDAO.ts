@@ -1,8 +1,8 @@
-import { Debug, FirestoreJSONObject, Utils } from 'src/app/utils/utils';
-import { MGPOptional } from '../utils/MGPOptional';
-import * as Firestore from '@angular/fire/firestore';
+import { FirestoreJSONObject, MGPOptional, Utils } from '@everyboard/lib';
+import * as Firestore from '@firebase/firestore';
 import { FirestoreCollectionObserver } from './FirestoreCollectionObserver';
 import { Subscription } from 'rxjs';
+import { Debug } from '../utils/Debug';
 
 export interface FirestoreDocument<T> {
     id: string
@@ -36,7 +36,7 @@ export interface IFirestoreDAO<T extends FirestoreJSONObject> {
 
     findWhere(conditions: FirestoreCondition[], order?: string, limit?: number): Promise<FirestoreDocument<T>[]>
 
-    subCollectionDAO<T extends FirestoreJSONObject>(id: string, name: string): IFirestoreDAO<T>;
+    subCollectionDAO<U extends FirestoreJSONObject>(id: string, name: string): IFirestoreDAO<U>;
 }
 
 export abstract class FirestoreDAO<T extends FirestoreJSONObject> implements IFirestoreDAO<T> {
@@ -45,9 +45,7 @@ export abstract class FirestoreDAO<T extends FirestoreJSONObject> implements IFi
 
     private readonly subDAOs: Record<string, IFirestoreDAO<FirestoreJSONObject>> = {};
 
-    public constructor(public readonly collectionName: string,
-                       protected readonly firestore: Firestore.Firestore)
-    {
+    public constructor(public readonly collectionName: string) {
         const genericConverter: Firestore.FirestoreDataConverter<T> = {
             fromFirestore(snapshot: Firestore.QueryDocumentSnapshot): T {
                 return snapshot.data() as T;
@@ -56,6 +54,7 @@ export abstract class FirestoreDAO<T extends FirestoreJSONObject> implements IFi
                 return data;
             },
         };
+        const firestore: Firestore.Firestore = Firestore.getFirestore();
         this.collection = Firestore.collection(firestore, this.collectionName).withConverter<T>(genericConverter);
     }
     public async create(newElement: T): Promise<string> {
@@ -164,16 +163,16 @@ export abstract class FirestoreDAO<T extends FirestoreJSONObject> implements IFi
         }
         return query;
     }
-    public subCollectionDAO<T extends FirestoreJSONObject>(id: string, name: string): IFirestoreDAO<T> {
+    public subCollectionDAO<U extends FirestoreJSONObject>(id: string, name: string): IFirestoreDAO<U> {
         const fullPath: string = `${this.collection.path}/${id}/${name}`;
         if (fullPath in this.subDAOs) {
-            return this.subDAOs[fullPath] as IFirestoreDAO<T>;
+            return this.subDAOs[fullPath] as IFirestoreDAO<U>;
         } else {
-            const subDAO: FirestoreDAO<T> = new class extends FirestoreDAO<T> {
-                public constructor(firestore: Firestore.Firestore) {
-                    super(fullPath, firestore);
+            const subDAO: FirestoreDAO<U> = new class extends FirestoreDAO<U> {
+                public constructor() {
+                    super(fullPath);
                 }
-            }(this.firestore);
+            }();
             this.subDAOs[fullPath] = subDAO;
             return subDAO;
         }

@@ -1,10 +1,9 @@
-import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { MancalaState } from '../common/MancalaState';
 import { MoveGenerator } from 'src/app/jscaip/AI/AI';
 import { MancalaDistribution, MancalaMove } from '../common/MancalaMove';
 import { MancalaDistributionResult, MancalaNode, MancalaRules } from '../common/MancalaRules';
 import { MancalaConfig } from './MancalaConfig';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { MGPOptional, MGPValidation } from '@everyboard/lib';
 
 export class MancalaMoveGenerator extends MoveGenerator<MancalaMove, MancalaState, MancalaConfig> {
 
@@ -51,10 +50,10 @@ export class MancalaMoveGenerator extends MoveGenerator<MancalaMove, MancalaStat
                                     stateAfterDistribution.board);
         const playerHasPieces: boolean = isStarving === false;
         if (distributionResult.endsUpInStore && playerHasPieces) {
-            for (let x: number = 0; x < stateAfterDistribution.getWidth(); x++) {
-                if (stateAfterDistribution.getPieceAtXY(x, y) > 0) {
-                    const move: MancalaMove = currentMove.add(MancalaDistribution.of(x));
-                    moves.push(...this.getPossibleMoveContinuations(stateAfterDistribution, x, y, move, config));
+            for (let i: number = 0; i < stateAfterDistribution.getWidth(); i++) {
+                if (stateAfterDistribution.getPieceAtXY(i, y) > 0) {
+                    const move: MancalaMove = currentMove.add(MancalaDistribution.of(i));
+                    moves.push(...this.getPossibleMoveContinuations(stateAfterDistribution, i, y, move, config));
                 }
             }
             return moves;

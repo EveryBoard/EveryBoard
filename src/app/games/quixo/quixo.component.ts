@@ -1,20 +1,19 @@
 import { Component } from '@angular/core';
 import { RectangularGameComponent } from '../../components/game-components/rectangular-game-component/RectangularGameComponent';
 import { Coord } from 'src/app/jscaip/Coord';
-import { Orthogonal } from 'src/app/jscaip/Direction';
+import { Orthogonal } from 'src/app/jscaip/Orthogonal';
 import { QuixoMove } from 'src/app/games/quixo/QuixoMove';
 import { QuixoConfig, QuixoState } from 'src/app/games/quixo/QuixoState';
 import { QuixoRules } from 'src/app/games/quixo/QuixoRules';
-import { GameComponentUtils } from 'src/app/components/game-components/GameComponentUtils';
-import { MGPValidation } from 'src/app/utils/MGPValidation';
+import { MGPOptional, MGPValidation } from '@everyboard/lib';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { PlayerOrNone } from 'src/app/jscaip/Player';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MCTS } from 'src/app/jscaip/AI/MCTS';
 import { QuixoMoveGenerator } from './QuixoMoveGenerator';
 import { Minimax } from 'src/app/jscaip/AI/Minimax';
 import { QuixoHeuristic } from './QuixoHeuristic';
+import { GameComponentUtils } from 'src/app/components/game-components/GameComponentUtils';
 
 @Component({
     selector: 'app-quixo',
@@ -29,8 +28,6 @@ export class QuixoComponent extends RectangularGameComponent<QuixoRules,
 {
 
     public QuixoState: typeof QuixoState = QuixoState;
-
-    public state: QuixoState;
 
     public lastMoveCoord: MGPOptional<Coord> = MGPOptional.empty();
 
@@ -95,11 +92,11 @@ export class QuixoComponent extends RectangularGameComponent<QuixoRules,
             return this.cancelMove(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT());
         } else {
             if (this.chosenCoord.equalsValue(clickedCoord)) {
-                this.cancelMoveAttempt();
+                return this.cancelMove();
             } else {
                 this.chosenCoord = MGPOptional.of(clickedCoord);
+                return MGPValidation.SUCCESS;
             }
-            return MGPValidation.SUCCESS;
         }
     }
 

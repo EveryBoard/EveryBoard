@@ -1,12 +1,11 @@
+import { MGPMap, MGPOptional, Utils } from '@everyboard/lib';
 import { Move } from '../Move';
-import { MGPMap } from '../../utils/MGPMap';
-import { Debug, Utils } from 'src/app/utils/utils';
-import { MGPOptional } from '../../utils/MGPOptional';
 import { GameState } from '../GameState';
 import { GameStatus } from '../GameStatus';
 import { Player } from '../Player';
 import { RulesConfig } from '../RulesConfigUtil';
 import { AbstractRules } from '../Rules';
+import { Debug } from 'src/app/utils/Debug';
 
 export class GameNodeStats {
     public static createdNodes: number = 0;
@@ -64,7 +63,7 @@ export class GameNode<M extends Move, S extends GameState> {
      * Returns all the children of the node
      */
     public getChildren(): GameNode<M, S>[] {
-        return this.children.listValues();
+        return this.children.getValueList();
     }
 
     /**
@@ -114,7 +113,7 @@ export class GameNode<M extends Move, S extends GameState> {
 
         let nextId: number = id+1;
         if (max === undefined || level < max) {
-            for (const child of this.children.listValues()) {
+            for (const child of this.children.getValueList()) {
                 console.log(`    node_${id} -> node_${nextId} [label="${child.previousMove.get()}"];`);
                 nextId = child.printDot(rules, labelFn, max, level+1, nextId);
             }

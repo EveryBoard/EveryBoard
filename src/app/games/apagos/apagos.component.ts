@@ -5,8 +5,7 @@ import { MCTS } from 'src/app/jscaip/AI/MCTS';
 import { Minimax } from 'src/app/jscaip/AI/Minimax';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { MGPValidation } from 'src/app/utils/MGPValidation';
+import { MGPOptional, MGPValidation } from '@everyboard/lib';
 import { ApagosCoord } from './ApagosCoord';
 import { ApagosFailure } from './ApagosFailure';
 import { ApagosMove } from './ApagosMove';
@@ -50,13 +49,13 @@ export class ApagosComponent extends GameComponent<ApagosRules, ApagosMove, Apag
 
     public PIECE_RADIUS: number;
 
-    public movedSquare: number[];
+    public lastMoveSquares: number[];
+
+    public lastMoveDrop: MGPOptional<PieceLocation> = MGPOptional.empty();
 
     public selectedPiece: MGPOptional<PieceLocation> = MGPOptional.empty();
 
     public leftPiece: MGPOptional<PieceLocation> = MGPOptional.empty();
-
-    public droppedPiece: MGPOptional<PieceLocation> = MGPOptional.empty();
 
     public displayableArrow: DropArrow[] = [];
 
@@ -89,7 +88,6 @@ export class ApagosComponent extends GameComponent<ApagosRules, ApagosMove, Apag
 
     public override cancelMoveAttempt(): void {
         this.selectedPiece = MGPOptional.empty();
-        this.showPossibleDrops();
     }
 
     public async updateBoard(_triggerAnimation: boolean): Promise<void> {
@@ -97,16 +95,13 @@ export class ApagosComponent extends GameComponent<ApagosRules, ApagosMove, Apag
         this.board = state.board;
         this.remainingZero = state.remaining.get(Player.ZERO);
         this.remainingOne = state.remaining.get(Player.ONE);
-
-        this.hideLastMove();
         this.showPossibleDrops();
     }
 
     public override hideLastMove(): void {
-        this.movedSquare = [];
-        this.droppedPiece = MGPOptional.empty();
+        this.lastMoveSquares = [];
+        this.lastMoveDrop = MGPOptional.empty();
         this.leftPiece = MGPOptional.empty();
-        this.selectedPiece = MGPOptional.empty();
     }
 
     public override async showLastMove(move: ApagosMove): Promise<void> {
@@ -120,14 +115,14 @@ export class ApagosComponent extends GameComponent<ApagosRules, ApagosMove, Apag
     public showLastDrop(lastMove: ApagosMove): void {
         const piece: Player = lastMove.piece.get();
         let higherIndex: number = lastMove.landing.x;
-        this.movedSquare = [higherIndex];
+        this.lastMoveSquares = [higherIndex];
         if (lastMove.landing.x !== 3) {
             higherIndex += 1;
-            this.movedSquare.push(higherIndex);
+            this.lastMoveSquares.push(higherIndex);
         }
         const climbingSquare: ApagosSquare = this.board[higherIndex];
         const landingIndex: number = this.getLowestPlayerPiece(climbingSquare, piece);
-        this.droppedPiece = MGPOptional.of({
+        this.lastMoveDrop = MGPOptional.of({
             square: higherIndex,
             piece: landingIndex,
         });
@@ -157,7 +152,7 @@ export class ApagosComponent extends GameComponent<ApagosRules, ApagosMove, Apag
         const landingCoord: number = lastMove.landing.x;
         const landedSquare: ApagosSquare = this.board[landingCoord];
         const landedPieceIndex: number = this.getLowestPlayerPiece(landedSquare, previousPlayer);
-        this.droppedPiece = MGPOptional.of({
+        this.lastMoveDrop = MGPOptional.of({
             square: landingCoord,
             piece: landedPieceIndex,
         });
@@ -211,7 +206,7 @@ export class ApagosComponent extends GameComponent<ApagosRules, ApagosMove, Apag
         const classes: string[] = ['base'];
         if (this.selectedPiece.isPresent() && this.selectedPiece.get().square === x) {
             classes.push('selected-stroke');
-        } else if (this.movedSquare.includes(x)) {
+        } else if (this.lastMoveSquares.includes(x)) {
             classes.push('last-move-stroke');
         }
         return classes;
@@ -241,7 +236,7 @@ export class ApagosComponent extends GameComponent<ApagosRules, ApagosMove, Apag
         let one: number = square.count(Player.ONE);
         if (this.selectedPiece.equalsValue(pieceLocation)) {
             classes.push('selected-stroke');
-        } else if (this.droppedPiece.equalsValue(pieceLocation)) {
+        } else if (this.lastMoveDrop.equalsValue(pieceLocation)) {
             classes.push('last-move-stroke');
         } else if (this.leftPiece.isPresent() && this.leftPiece.get().square === x) {
             if (this.leftPiece.get().piece === i) {
@@ -278,8 +273,7 @@ export class ApagosComponent extends GameComponent<ApagosRules, ApagosMove, Apag
             return this.cancelMove(clickValidity.getReason());
         }
         if (this.selectedPiece.isPresent() && this.selectedPiece.get().square === x) {
-            this.cancelMoveAttempt();
-            return MGPValidation.SUCCESS;
+            return this.cancelMove();
         }
         const currentPlayer: Player = this.getState().getCurrentPlayer();
         const square: ApagosSquare = this.board[x];

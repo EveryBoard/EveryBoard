@@ -3,13 +3,11 @@ import { ReversiConfig, ReversiLegalityInformation, ReversiRules } from './Rever
 import { ReversiState } from './ReversiState';
 import { ReversiMove } from 'src/app/games/reversi/ReversiMove';
 import { Coord } from 'src/app/jscaip/Coord';
-import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { Direction } from 'src/app/jscaip/Direction';
+import { Ordinal } from 'src/app/jscaip/Ordinal';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { RectangularGameComponent } from 'src/app/components/game-components/rectangular-game-component/RectangularGameComponent';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { Utils } from 'src/app/utils/utils';
+import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 import { MCTS } from 'src/app/jscaip/AI/MCTS';
 import { ReversiMoveGenerator } from './ReversiMoveGenerator';
 import { ReversiMinimax } from './ReversiMinimax';
@@ -56,7 +54,6 @@ export class ReversiComponent extends RectangularGameComponent<ReversiRules,
         const state: ReversiState = this.getState();
 
         this.board = state.getCopiedBoard();
-        this.capturedCoords = [];
 
         this.scores = MGPOptional.of(state.countScore());
         this.canPass = this.rules.playerCanOnlyPass(state, this.config);
@@ -66,7 +63,7 @@ export class ReversiComponent extends RectangularGameComponent<ReversiRules,
         this.lastMove = MGPOptional.of(move.coord);
         const player: Player = this.getState().getCurrentPlayer();
         const opponent: Player = this.getState().getCurrentOpponent();
-        for (const dir of Direction.DIRECTIONS) {
+        for (const dir of Ordinal.ORDINALS) {
             let captured: Coord = move.coord.getNext(dir, 1);
             while (this.getState().isOnBoard(captured) &&
                    this.getState().getPieceAt(captured) === opponent &&
@@ -80,6 +77,7 @@ export class ReversiComponent extends RectangularGameComponent<ReversiRules,
 
     public override hideLastMove(): void {
         this.capturedCoords = [];
+        this.lastMove = MGPOptional.empty();
     }
 
     public getRectClasses(x: number, y: number): string[] {

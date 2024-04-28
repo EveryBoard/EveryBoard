@@ -5,7 +5,7 @@ import { SixMove } from 'src/app/games/six/SixMove';
 import { SixFailure } from 'src/app/games/six/SixFailure';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { Table } from 'src/app/utils/ArrayUtils';
+import { Table } from 'src/app/jscaip/TableUtils';
 import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { SixComponent } from '../six.component';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
@@ -107,7 +107,7 @@ describe('SixComponent', () => {
             expect(gameComponent.getPieceClass(new Coord(0, 6))).toBe('player0-fill');
         }));
 
-        it('should deselect selected piece when clicking on it again', fakeAsync(async() => {
+        it('should deselect piece when clicking a second time on it', fakeAsync(async() => {
             // Given a board in moving phase, where a piece is selected
             const board: Table<PlayerOrNone> = [
                 [O],
@@ -122,11 +122,12 @@ describe('SixComponent', () => {
             await testUtils.expectClickSuccess('#piece_0_0');
 
             // When clicking on it again
-            await testUtils.expectClickSuccess('#piece_0_0');
+            await testUtils.expectClickFailure('#piece_0_0');
 
             // Then the piece should no longer be selected
             testUtils.expectElementNotToExist('#selectedPiece_0_0');
         }));
+
     });
 
     describe('Third click (cutting)', () => {
@@ -209,7 +210,7 @@ describe('SixComponent', () => {
             await testUtils.expectClickSuccess('#piece_0_2');
             await testUtils.expectClickSuccess('#neighbor_0_-1');
             // When the user clicks on an empty space instead of selecting a group
-            // Then the move should be canceled and the board is back to its initial state
+            // Then it should fail
             await testUtils.expectClickFailure('#neighbor_1_-1', SixFailure.MUST_CUT());
             testUtils.expectElementToExist('#piece_0_2');
         }));
@@ -231,6 +232,7 @@ describe('SixComponent', () => {
             const move: SixMove = SixMove.ofCut(new Coord(0, 2), new Coord(0, -1), new Coord(0, 1));
             await testUtils.expectMoveSuccess('#piece_0_1', move);
         }));
+
     });
 
     describe('view', () => {
@@ -250,6 +252,7 @@ describe('SixComponent', () => {
             testUtils.expectElementToHaveClass('#victoryCoord_-1_1', 'victory-stroke');
             testUtils.expectElementToHaveClass('#victoryCoord_4_1', 'victory-stroke');
         }));
+
     });
 
 });

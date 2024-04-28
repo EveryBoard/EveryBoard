@@ -2,16 +2,12 @@ import { Component, ComponentRef, Type, ViewChild, ViewContainerRef } from '@ang
 import { ActivatedRoute, Router } from '@angular/router';
 import { ConnectedUserService } from 'src/app/services/ConnectedUserService';
 import { Move } from '../../jscaip/Move';
-import { MGPValidation } from 'src/app/utils/MGPValidation';
-import { Utils } from 'src/app/utils/utils';
+import { Comparable, MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 import { GameInfo } from '../normal-component/pick-game/pick-game.component';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { Localized } from 'src/app/utils/LocaleUtils';
 import { AbstractGameComponent, BaseWrapperComponent } from '../game-components/game-component/GameComponent';
-import { MGPFallible } from 'src/app/utils/MGPFallible';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
-import { Comparable } from 'src/app/utils/Comparable';
 import { RulesConfig, RulesConfigUtils } from 'src/app/jscaip/RulesConfigUtil';
 import { RulesConfigDescription } from './rules-configuration/RulesConfigDescription';
 
@@ -46,6 +42,8 @@ export abstract class GameWrapper<P extends Comparable> extends BaseWrapperCompo
 
     public endGame: boolean = false;
 
+    private isMoveAttemptOngoing: boolean = false;
+
     public Player: typeof Player = Player;
 
     public constructor(activatedRoute: ActivatedRoute,
@@ -57,9 +55,9 @@ export abstract class GameWrapper<P extends Comparable> extends BaseWrapperCompo
     }
 
     private getMatchingComponent(gameName: string): MGPOptional<Type<AbstractGameComponent>> {
-        const gameInfo: MGPOptional<GameInfo> =
+        const optionalGameInfo: MGPOptional<GameInfo> =
             MGPOptional.ofNullable(GameInfo.ALL_GAMES().find((gameInfo: GameInfo) => gameInfo.urlName === gameName));
-        return gameInfo.map((gameInfo: GameInfo) => gameInfo.component);
+        return optionalGameInfo.map((gameInfo: GameInfo) => gameInfo.component);
     }
 
     /**
@@ -126,7 +124,17 @@ export abstract class GameWrapper<P extends Comparable> extends BaseWrapperCompo
         } else {
             this.gameComponent.setPointOfView(role as Player);
         }
-        await this.updateBoardAndShowLastMove(false); // Trigger redrawing of the board (might need to be rotated 180°)
+        await this.showCurrentState(false); // Trigger redrawing of the board (might need to be rotated 180°)
+    }
+
+    public async setInteractive(interactive: boolean, updateBoard: boolean = true): Promise<void> {
+        const interactivityChanged: boolean = this.gameComponent.isInteractive() !== interactive;
+        if (interactivityChanged) {
+            this.gameComponent.setInteractive(interactive);
+            if (updateBoard) {
+                await this.gameComponent.updateBoard(false);
+            }
+        }
     }
 
     public async receiveValidMove(move: Move): Promise<MGPValidation> {
@@ -138,13 +146,16 @@ export abstract class GameWrapper<P extends Comparable> extends BaseWrapperCompo
             return MGPValidation.ofFallible(legality);
         }
         this.gameComponent.cancelMoveAttempt();
+        this.isMoveAttemptOngoing = false;
         await this.onLegalUserMove(move);
         return MGPValidation.SUCCESS;
     }
 
     public abstract onLegalUserMove(move: Move, scores?: [number, number]): Promise<void>;
 
-    public abstract onCancelMove(_reason?: string): Promise<void>;
+    public async onCancelMove(_reason?: string): Promise<void> {
+        this.isMoveAttemptOngoing = false;
+    }
 
     public abstract getPlayer(): P;
 
@@ -159,6 +170,11 @@ export abstract class GameWrapper<P extends Comparable> extends BaseWrapperCompo
         }
         if (this.endGame) {
             return MGPValidation.failure(GameWrapperMessages.GAME_HAS_ENDED());
+        }
+        if (this.isMoveAttemptOngoing === false) {
+            // It is the first click
+            this.gameComponent.hideLastMove();
+            this.isMoveAttemptOngoing = true;
         }
         return MGPValidation.SUCCESS;
     }
@@ -192,7 +208,14 @@ export abstract class GameWrapper<P extends Comparable> extends BaseWrapperCompo
         }
     }
 
-    protected async updateBoardAndShowLastMove(triggerAnimation: boolean): Promise<void> {
+    /**
+     * Called when there is a need to put the current board to original state, meaning:
+     *     1. ongoing move attempt must be cancelled (cancelMoveAttempt)
+     *     2. any previous move must be hidden (hideLastMove)
+     *     3. after the board is changed, we now show the correct previous move (showLastMove)
+     * @param triggerAnimation a boolean set to true if there is a need to trigger the animation of the last move
+     */
+    protected async showCurrentState(triggerAnimation: boolean): Promise<void> {
         this.gameComponent.cancelMoveAttempt();
         this.gameComponent.hideLastMove();
         if (this.gameComponent.node.previousMove.isPresent()) {
@@ -204,6 +227,20 @@ export abstract class GameWrapper<P extends Comparable> extends BaseWrapperCompo
             // We have no previous move to animate
             await this.gameComponent.updateBoard(false);
         }
+    }
+
+    /**
+     * Used when a new move is done:
+     *     1. by user click, locally
+     *     2. by opponent online
+     *     3. by the AI
+     * @param triggerAnimation a boolean set to true if there is a need to trigger the animation of the last move
+     */
+    protected async showNewMove(triggerAnimation: boolean): Promise<void> {
+        await this.gameComponent.updateBoard(triggerAnimation);
+        const lastMove: Move = this.gameComponent.node.previousMove.get();
+        const config: MGPOptional<RulesConfig> = await this.getConfig();
+        await this.gameComponent.showLastMove(lastMove, config);
     }
 
     public getRulesConfigDescription(): MGPOptional<RulesConfigDescription<RulesConfig>> {

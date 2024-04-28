@@ -2,8 +2,8 @@
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { SixState } from '../SixState';
 import { SixMove } from '../SixMove';
+import { Table } from 'src/app/jscaip/TableUtils';
 import { SixNode, SixRules } from '../SixRules';
-import { Table } from 'src/app/utils/ArrayUtils';
 import { SixMoveGenerator } from '../SixMoveGenerator';
 import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 
@@ -20,7 +20,7 @@ describe('SixMoveGenerator', () => {
     });
 
     it(`should propose all movements`, () => {
-        // Given an board where all piece are blocked
+        // Given an board where all pieces are blocked
         const board: Table<PlayerOrNone> = [
             [O, X, X, X, X, X, O],
         ];

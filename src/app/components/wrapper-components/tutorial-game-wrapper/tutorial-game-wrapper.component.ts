@@ -1,21 +1,17 @@
-import {
-    AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef,
-    Component } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { GameWrapper } from 'src/app/components/wrapper-components/GameWrapper';
 import { AbstractNode, GameNode } from 'src/app/jscaip/AI/GameNode';
 import { Move } from 'src/app/jscaip/Move';
 import { ConnectedUserService } from 'src/app/services/ConnectedUserService';
-import { Debug, Utils } from 'src/app/utils/utils';
+import { MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 import { Click, TutorialStep, TutorialStepClick, TutorialStepMove, TutorialStepWithSolution } from './TutorialStep';
-import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { TutorialFailure } from './TutorialFailure';
 import { GameState } from 'src/app/jscaip/GameState';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
-import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 import { Localized } from 'src/app/utils/LocaleUtils';
+import { Debug } from 'src/app/utils/Debug';
 
 export class TutorialGameWrapperMessages {
 
@@ -106,10 +102,10 @@ export class TutorialGameWrapperComponent extends GameWrapper<TutorialPlayer> im
         this.gameComponent.node = new GameNode(currentStep.state,
                                                undefined,
                                                currentStep.previousMove);
-        // Set role will update view with updateBoardAndShowLastMove
+        // Set role will update view with showCurrentState
         await this.setRole(this.gameComponent.getCurrentPlayer());
         // All steps but informational ones are interactive
-        this.gameComponent.setInteractive(currentStep.isInformation() === false);
+        await this.setInteractive(currentStep.isInformation() === false);
         this.cdr.detectChanges();
     }
 
@@ -120,7 +116,7 @@ export class TutorialGameWrapperComponent extends GameWrapper<TutorialPlayer> im
         Utils.assert(node.isSuccess(), 'It should be impossible to call onLegalUserMove with an illegal move, but got ' + node.getReasonOr(''));
         this.gameComponent.node = node.get();
 
-        await this.updateBoardAndShowLastMove(false);
+        await this.showNewMove(false);
         this.moveAttemptMade = true;
         if (currentStep.isPredicate()) {
             const previousState: GameState = this.gameComponent.getPreviousState();
@@ -164,7 +160,7 @@ export class TutorialGameWrapperComponent extends GameWrapper<TutorialPlayer> im
         }
         const currentStep: TutorialStep = this.steps[this.stepIndex];
         if (currentStep.isClick()) {
-            await this.updateBoardAndShowLastMove(false);
+            this.gameComponent.hideLastMove();
             this.moveAttemptMade = true;
             if (Utils.getNonNullable(currentStep.acceptedClicks).some((m: string) => m === elementName)) {
                 this.showStepSuccess(currentStep.getSuccessMessage());
@@ -173,13 +169,15 @@ export class TutorialGameWrapperComponent extends GameWrapper<TutorialPlayer> im
             }
             return MGPValidation.SUCCESS;
         } else if (currentStep.isMove() || currentStep.isPredicate() || currentStep.isAnyMove()) {
+            this.gameComponent.hideLastMove();
             return MGPValidation.SUCCESS;
         } else {
             return MGPValidation.failure(TutorialFailure.INFORMATIONAL_STEP());
         }
     }
 
-    public async onCancelMove(reason?: string): Promise<void> {
+    public override async onCancelMove(reason?: string): Promise<void> {
+        await super.onCancelMove(reason);
         if (reason !== undefined) {
             this.currentReason = MGPOptional.of(reason);
         }
@@ -229,7 +227,7 @@ export class TutorialGameWrapperComponent extends GameWrapper<TutorialPlayer> im
         if (solution instanceof Move) {
             await this.showStep(this.stepIndex);
             this.gameComponent.node = this.gameComponent.rules.choose(this.gameComponent.node, solution, config).get();
-            await this.updateBoardAndShowLastMove(true);
+            await this.showCurrentState(true);
         } else {
             await this.showStep(this.stepIndex);
             const element: HTMLElement = window.document.querySelector(solution) as HTMLElement;

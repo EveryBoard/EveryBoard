@@ -1,17 +1,15 @@
 import { Coord } from 'src/app/jscaip/Coord';
-import { Orthogonal } from 'src/app/jscaip/Direction';
+import { Orthogonal } from 'src/app/jscaip/Orthogonal';
 import { BoardValue } from 'src/app/jscaip/AI/BoardValue';
 import { Player } from 'src/app/jscaip/Player';
-import { MGPMap } from 'src/app/utils/MGPMap';
-import { MGPSet } from 'src/app/utils/MGPSet';
+import { MGPMap, MGPOptional, MGPSet } from '@everyboard/lib';
 import { TaflPawn } from './TaflPawn';
 import { TaflState } from './TaflState';
 import { SandwichThreat } from '../../jscaip/PieceThreat';
-import { CoordSet } from 'src/app/utils/OptimizedSet';
+import { CoordSet } from 'src/app/jscaip/CoordSet';
 import { TaflMove } from './TaflMove';
 import { TaflPieceAndInfluenceHeuristic } from './TaflPieceAndInfluenceHeuristic';
 import { TaflNode } from './TaflRules';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { TaflConfig } from './TaflConfig';
 
 export type TaflPieceAndControlHeuristicMetrics = {

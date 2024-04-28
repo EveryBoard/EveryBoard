@@ -1,18 +1,14 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { Vector } from 'src/app/jscaip/Vector';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { TableUtils, Table } from 'src/app/utils/ArrayUtils';
-import { ReversibleMap } from 'src/app/utils/MGPMap';
-import { MGPSet } from 'src/app/utils/MGPSet';
-import { MGPValidation } from 'src/app/utils/MGPValidation';
+import { TableUtils, Table } from 'src/app/jscaip/TableUtils';
 import { SixFailure } from './SixFailure';
 import { SixMove } from './SixMove';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { MGPOptional, MGPSet, MGPValidation, ReversibleMap, Utils } from '@everyboard/lib';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { CoordSet } from 'src/app/utils/OptimizedSet';
-import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
 import { OpenHexagonalGameState } from 'src/app/jscaip/OpenHexagonalGameState';
 import { HexagonalUtils } from 'src/app/jscaip/HexagonalUtils';
+import { CoordSet } from 'src/app/jscaip/CoordSet';
 import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 
 export class SixState extends OpenHexagonalGameState<Player> {
@@ -48,7 +44,7 @@ export class SixState extends OpenHexagonalGameState<Player> {
 
     public toRepresentation(): Table<PlayerOrNone> {
         const board: PlayerOrNone[][] = TableUtils.create(this.width, this.height, PlayerOrNone.NONE);
-        for (const piece of this.pieces.listKeys()) {
+        for (const piece of this.pieces.getKeyList()) {
             const pieceValue: PlayerOrNone = this.getPieceAt(piece);
             board[piece.y][piece.x] = pieceValue;
         }
@@ -116,12 +112,9 @@ export class SixState extends OpenHexagonalGameState<Player> {
     public switchPiece(coord: Coord): SixState {
         const newPieces: ReversibleMap<Coord, Player> = this.pieces.getCopy();
         const oldPiece: PlayerOrNone = this.getPieceAt(coord);
-        if (oldPiece.isPlayer()) {
-            newPieces.replace(coord, oldPiece.getOpponent());
-            return new SixState(newPieces, this.turn);
-        } else {
-            ErrorLoggerService.logErrorAndFail('SixState', 'Cannot switch piece if there is no piece!', { coord: coord.toString() });
-        }
+        Utils.assert(oldPiece.isPlayer(), 'Cannot switch piece if there is no piece!', { coord: coord.toString() });
+        newPieces.replace(coord, (oldPiece as Player).getOpponent());
+        return new SixState(newPieces, this.turn);
     }
 
     public equals(other: SixState): boolean {

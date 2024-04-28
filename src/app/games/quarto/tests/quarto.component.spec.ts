@@ -4,7 +4,7 @@ import { QuartoComponent } from '../quarto.component';
 import { QuartoMove } from 'src/app/games/quarto/QuartoMove';
 import { QuartoPiece } from 'src/app/games/quarto/QuartoPiece';
 import { QuartoState } from 'src/app/games/quarto/QuartoState';
-import { Table } from 'src/app/utils/ArrayUtils';
+import { Table } from 'src/app/jscaip/TableUtils';
 import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 
@@ -36,7 +36,7 @@ describe('QuartoComponent', () => {
             const state: QuartoState = new QuartoState(board, 1, QuartoPiece.AAAB);
             await testUtils.setupState(state);
             // When clicking on an occupied square
-            // Then the move should be rejected
+            // Then it should fail
             await testUtils.expectClickFailure('#chooseCoord_0_0', RulesFailure.MUST_CLICK_ON_EMPTY_SPACE());
         }));
 
@@ -104,7 +104,7 @@ describe('QuartoComponent', () => {
             await testUtils.expectClickSuccess('#choosePiece_1');
 
             // When clicking on that piece again
-            await testUtils.expectClickSuccess('#choosePiece_1');
+            await testUtils.expectClickFailure('#choosePiece_1');
 
             // Then it should no longer be selected
             testUtils.expectElementNotToExist('#chosenPiece_1');
@@ -115,7 +115,7 @@ describe('QuartoComponent', () => {
             await testUtils.expectClickSuccess('#chooseCoord_0_0');
 
             // When clicking on the dropped piece's coord again (hence, on the dropped piece)
-            await testUtils.expectClickSuccess('#droppedPiece_0_0');
+            await testUtils.expectClickFailure('#droppedPiece_0_0');
 
             // Then the space should contain the piece to put on the board
             testUtils.expectElementNotToExist('#droppedPiece_0_0');

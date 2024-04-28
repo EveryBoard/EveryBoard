@@ -1,7 +1,7 @@
 import { DOCUMENT } from '@angular/common';
 import { Inject, Injectable } from '@angular/core';
-import { MGPOptional } from '../utils/MGPOptional';
 import { UserSettingsService } from './UserSettingsService';
+import { MGPOptional } from '@everyboard/lib';
 
 type Theme = 'dark' | 'light';
 

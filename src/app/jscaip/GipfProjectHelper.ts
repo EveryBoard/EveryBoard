@@ -1,9 +1,7 @@
-import { ArrayUtils, Table } from '../utils/ArrayUtils';
-import { Encoder } from '../utils/Encoder';
-import { MGPOptional } from '../utils/MGPOptional';
-import { Utils } from '../utils/utils';
+import { ArrayUtils, Encoder, MGPOptional, Utils } from '@everyboard/lib';
 import { Coord } from './Coord';
 import { HexaLine } from './HexaLine';
+import { Table } from './TableUtils';
 
 /**
  * This represents a capture in Gipf-like games.
@@ -60,8 +58,8 @@ export class GipfCapture {
     }
 
     public contains(coord: Coord): boolean {
-        for (let i: number = 0; i < this.capturedSpaces.length; i++) {
-            if (this.capturedSpaces[i].equals(coord)) {
+        for (const capturedSpace of this.capturedSpaces) {
+            if (capturedSpace.equals(coord)) {
                 return true;
             }
         }

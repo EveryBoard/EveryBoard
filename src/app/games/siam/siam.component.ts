@@ -5,20 +5,17 @@ import { SiamState } from 'src/app/games/siam/SiamState';
 import { SiamConfig, SiamLegalityInformation, SiamRules } from 'src/app/games/siam/SiamRules';
 import { SiamPiece } from 'src/app/games/siam/SiamPiece';
 import { Coord } from 'src/app/jscaip/Coord';
-import { Orthogonal } from 'src/app/jscaip/Direction';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { MGPValidation } from 'src/app/utils/MGPValidation';
-import { Utils } from 'src/app/utils/utils';
-import { Debug } from 'src/app/utils/utils';
+import { Orthogonal } from 'src/app/jscaip/Orthogonal';
+import { MGPOptional, MGPSet, MGPValidation, Utils } from '@everyboard/lib';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { MGPSet } from 'src/app/utils/MGPSet';
 import { SiamFailure } from './SiamFailure';
 import { MCTS } from 'src/app/jscaip/AI/MCTS';
 import { SiamMoveGenerator } from './SiamMoveGenerator';
 import { SiamMinimax } from './SiamMinimax';
 import { ViewBox } from 'src/app/components/game-components/GameComponentUtils';
+import { Debug } from 'src/app/utils/Debug';
 
 export type SiamIndicatorArrow = {
     source: MGPOptional<{ coord: Coord, piece: SiamPiece }>,
@@ -102,8 +99,7 @@ export class SiamComponent extends RectangularGameComponent<SiamRules,
         }
         if (this.insertingPiece) {
             // We were already inserting, we deselect the piece
-            this.cancelMoveAttempt();
-            return MGPValidation.SUCCESS;
+            return this.cancelMove();
         }
         this.cancelMoveAttempt();
         const config: SiamConfig = this.getConfig().get();
@@ -148,8 +144,7 @@ export class SiamComponent extends RectangularGameComponent<SiamRules,
             // Clicking a square to select a piece or end a non-insertion move
             if (this.selectedLanding.isPresent()) {
                 // Player clicked somewhere on the board instead of an orientation arrow, cancel the move
-                this.cancelMoveAttempt();
-                return MGPValidation.SUCCESS;
+                return this.cancelMove();
             } else if (this.selectedPiece.isPresent()) {
                 // Select the landing
                 this.selectedLanding = MGPOptional.of(clickedCoord);

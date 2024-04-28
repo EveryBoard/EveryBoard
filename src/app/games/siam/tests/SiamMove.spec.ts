@@ -2,11 +2,10 @@
 import { SiamConfig, SiamNode, SiamRules } from '../SiamRules';
 import { SiamMove } from '../SiamMove';
 import { SiamState } from '../SiamState';
-import { Orthogonal } from 'src/app/jscaip/Direction';
+import { Orthogonal } from 'src/app/jscaip/Orthogonal';
 import { SiamPiece } from '../SiamPiece';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { EncoderTestUtils } from 'src/app/utils/tests/Encoder.spec';
-import { Table } from 'src/app/utils/ArrayUtils';
+import { EncoderTestUtils, MGPOptional } from '@everyboard/lib';
+import { Table } from 'src/app/jscaip/TableUtils';
 import { SiamMoveGenerator } from '../SiamMoveGenerator';
 
 describe('SiamMove', () => {
@@ -30,8 +29,8 @@ describe('SiamMove', () => {
             new SiamNode(state, undefined, MGPOptional.of(move));
         const moveGenerator: SiamMoveGenerator = new SiamMoveGenerator();
         const moves: SiamMove[] = moveGenerator.getListMoves(node, defaultConfig);
-        for (const move of moves) {
-            EncoderTestUtils.expectToBeBijective(SiamMove.encoder, move);
+        for (const firstMove of moves) {
+            EncoderTestUtils.expectToBeBijective(SiamMove.encoder, firstMove);
         }
     });
 

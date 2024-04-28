@@ -1,23 +1,18 @@
 import { Coord } from 'src/app/jscaip/Coord';
-import { Orthogonal } from 'src/app/jscaip/Direction';
+import { Orthogonal } from 'src/app/jscaip/Orthogonal';
 import { GameNode } from 'src/app/jscaip/AI/GameNode';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { ConfigurableRules } from 'src/app/jscaip/Rules';
 import { QuixoConfig, QuixoState } from './QuixoState';
 import { QuixoMove } from './QuixoMove';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { NInARowHelper } from 'src/app/jscaip/NInARowHelper';
-import { Utils } from 'src/app/utils/utils';
-import { MGPSet } from 'src/app/utils/MGPSet';
+import { MGPMap, MGPOptional, MGPSet, MGPValidation, NumberMap, Utils } from '@everyboard/lib';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { TableUtils } from 'src/app/jscaip/TableUtils';
 import { QuixoFailure } from './QuixoFailure';
-import { MGPMap } from 'src/app/utils/MGPMap';
 import { NumberConfig, RulesConfigDescription, RulesConfigDescriptionLocalizable } from 'src/app/components/wrapper-components/rules-configuration/RulesConfigDescription';
 import { MGPValidators } from 'src/app/utils/MGPValidator';
-import { TableUtils } from 'src/app/utils/ArrayUtils';
-import { NumberMap } from 'src/app/utils/NumberMap';
 import { PlayerMap } from 'src/app/jscaip/PlayerMap';
 
 export class QuixoNode extends GameNode<QuixoMove, QuixoState> {}
@@ -101,10 +96,10 @@ export class QuixoRules extends ConfigurableRules<QuixoMove, QuixoState, QuixoCo
     }
 
     public static getFullestLine(playerLinesInfo: MGPMap<string, NumberMap<number>>): number {
-        let linesScores: number[] = playerLinesInfo.get('columns').get().listValues();
-        linesScores = linesScores.concat(playerLinesInfo.get('rows').get().listValues());
-        linesScores = linesScores.concat(playerLinesInfo.get('ascendingDiagonal').get().listValues());
-        linesScores = linesScores.concat(playerLinesInfo.get('descendingDiagonal').get().listValues());
+        let linesScores: number[] = playerLinesInfo.get('columns').get().getValueList();
+        linesScores = linesScores.concat(playerLinesInfo.get('rows').get().getValueList());
+        linesScores = linesScores.concat(playerLinesInfo.get('ascendingDiagonal').get().getValueList());
+        linesScores = linesScores.concat(playerLinesInfo.get('descendingDiagonal').get().getValueList());
         return Math.max(...linesScores);
     }
 

@@ -1,6 +1,5 @@
 import { Coord } from 'src/app/jscaip/Coord';
-import { ComparableObject } from 'src/app/utils/Comparable';
-import { MGPSet } from 'src/app/utils/MGPSet';
+import { ComparableObject, MGPSet } from '@everyboard/lib';
 
 export class PieceThreat implements ComparableObject {
 

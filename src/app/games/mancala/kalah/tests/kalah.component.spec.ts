@@ -3,7 +3,7 @@ import { fakeAsync, tick } from '@angular/core/testing';
 import { DebugElement } from '@angular/core';
 
 import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
-import { Table } from 'src/app/utils/ArrayUtils';
+import { Table } from 'src/app/jscaip/TableUtils';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Player } from 'src/app/jscaip/Player';
 import { LocalGameWrapperComponent } from 'src/app/components/wrapper-components/local-game-wrapper/local-game-wrapper.component';
@@ -19,7 +19,7 @@ import { KalahComponent } from '../kalah.component';
 import { KalahRules } from '../KalahRules';
 import { KalahMoveGenerator } from '../KalahMoveGenerator';
 import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { MGPOptional } from '@everyboard/lib';
 
 describe('KalahComponent', () => {
 

@@ -1,12 +1,12 @@
 import { Coord } from 'src/app/jscaip/Coord';
-import { Direction } from 'src/app/jscaip/Direction';
+import { Ordinal } from 'src/app/jscaip/Ordinal';
 import { Heuristic } from 'src/app/jscaip/AI/Minimax';
 import { BoardValue } from 'src/app/jscaip/AI/BoardValue';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { EpaminondasMove } from './EpaminondasMove';
 import { EpaminondasState } from './EpaminondasState';
 import { EpaminondasConfig, EpaminondasNode } from './EpaminondasRules';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { MGPOptional } from '@everyboard/lib';
 
 export class EpaminondasPositionalHeuristic
     extends Heuristic<EpaminondasMove, EpaminondasState, BoardValue, EpaminondasConfig>
@@ -29,13 +29,13 @@ export class EpaminondasPositionalHeuristic
             const player: PlayerOrNone = coordAndContent.content;
             if (player.isPlayer()) {
                 let avancement: number; // between 0 and 11
-                let dirs: Direction[];
+                let dirs: Ordinal[];
                 if (player === Player.ZERO) {
                     avancement = height - coord.y;
-                    dirs = [Direction.UP_LEFT, Direction.UP, Direction.UP_RIGHT];
+                    dirs = [Ordinal.UP_LEFT, Ordinal.UP, Ordinal.UP_RIGHT];
                 } else {
                     avancement = coord.y + 1;
-                    dirs = [Direction.DOWN_LEFT, Direction.DOWN, Direction.DOWN_RIGHT];
+                    dirs = [Ordinal.DOWN_LEFT, Ordinal.DOWN, Ordinal.DOWN_RIGHT];
                 }
                 const mod: number = player.getScoreModifier();
                 total += avancement * mod;

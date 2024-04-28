@@ -1,10 +1,10 @@
 import { Coord } from 'src/app/jscaip/Coord';
-import { Orthogonal } from 'src/app/jscaip/Direction';
+import { Orthogonal } from 'src/app/jscaip/Orthogonal';
 import { BoardValue } from 'src/app/jscaip/AI/BoardValue';
 import { Player } from 'src/app/jscaip/Player';
 import { TaflPawn } from './TaflPawn';
 import { TaflState } from './TaflState';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { MGPOptional } from '@everyboard/lib';
 import { TaflMove } from './TaflMove';
 import { TaflPieceAndControlHeuristic, TaflPieceAndControlHeuristicMetrics } from './TaflPieceAndControlHeuristic';
 import { TaflNode } from './TaflRules';

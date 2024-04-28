@@ -3,32 +3,28 @@ import { ActivatedRoute } from '@angular/router';
 import { Move } from '../../../jscaip/Move';
 import { SuperRules } from '../../../jscaip/Rules';
 import { Component } from '@angular/core';
-import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { Encoder } from 'src/app/utils/Encoder';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { TutorialStep } from '../../wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { GameState } from 'src/app/jscaip/GameState';
-import { Debug, Utils } from 'src/app/utils/utils';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
-import { ArrayUtils } from 'src/app/utils/ArrayUtils';
+import { ArrayUtils, Encoder, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 import { GameNode } from 'src/app/jscaip/AI/GameNode';
 import { AI, AIOptions } from 'src/app/jscaip/AI/AI';
 import { EmptyRulesConfig, RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
-import { GameInfo } from '../../normal-component/pick-game/pick-game.component';
 import { Coord } from 'src/app/jscaip/Coord';
 import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
+import { Debug } from 'src/app/utils/Debug';
+import { GameInfo } from '../../normal-component/pick-game/pick-game.component';
 
 abstract class BaseComponent {
 
     /**
      * Gets the CSS class for a player color
      */
-    public getPlayerClass(player: PlayerOrNone): string {
+    public getPlayerClass(player: PlayerOrNone, suffix: string = 'fill'): string {
         switch (player) {
-            case Player.ZERO: return 'player0-fill';
-            case Player.ONE: return 'player1-fill';
+            case Player.ZERO: return 'player0-' + suffix;
+            case Player.ONE: return 'player1-' + suffix;
             default:
                 Utils.expectToBe(player, PlayerOrNone.NONE);
                 return '';
@@ -128,6 +124,8 @@ export abstract class GameComponent<R extends SuperRules<M, S, C, L>,
 
     public animationOngoing: boolean = false;
 
+    public state: S;
+
     public constructor(public readonly messageDisplayer: MessageDisplayer) {
         super();
     }
@@ -151,6 +149,11 @@ export abstract class GameComponent<R extends SuperRules<M, S, C, L>,
         return this.interactive;
     }
 
+    /**
+     * Put the view back where it was before move attempt.
+     * Note: cancelMoveAttempt only hide the move attempt but does not show last move again
+     * @param reason: the reason of the cancellation, this message will be toasted if present.
+     */
     public async cancelMove(reason?: string): Promise<MGPValidation> {
         this.cancelMoveAttempt();
         this.cancelMoveOnWrapper(reason);
@@ -165,8 +168,13 @@ export abstract class GameComponent<R extends SuperRules<M, S, C, L>,
         }
     }
 
+    /**
+     * Hide the move attempt.
+     * Does not show again the previous move.
+     * If you need to put the component right where it was before move attempt: call cancelMove
+     */
     public cancelMoveAttempt(): void {
-        // Override if need be
+        // Override if move takes more than one click.
     }
 
     public abstract updateBoard(triggerAnimation: boolean): Promise<void>;
@@ -174,7 +182,7 @@ export abstract class GameComponent<R extends SuperRules<M, S, C, L>,
     public async pass(): Promise<MGPValidation> {
         const gameName: string = this.constructor.name;
         const error: string = `pass() called on a game that does not redefine it`;
-        return ErrorLoggerService.logError('GameComponent', error, { gameName });
+        return Utils.logError('GameComponent', error, { gameName });
     }
 
     public getTurn(): number {

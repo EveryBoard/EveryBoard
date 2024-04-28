@@ -1,9 +1,8 @@
 /* eslint-disable max-lines-per-function */
 import { GoConfig, GoNode, GoRules } from '../GoRules';
 import { GoMove } from '../GoMove';
-import { EncoderTestUtils } from 'src/app/utils/tests/Encoder.spec';
+import { EncoderTestUtils, MGPOptional } from '@everyboard/lib';
 import { GoMoveGenerator } from '../GoMoveGenerator';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 const defaultConfig: MGPOptional<GoConfig> = GoRules.get().getDefaultRulesConfig();
 

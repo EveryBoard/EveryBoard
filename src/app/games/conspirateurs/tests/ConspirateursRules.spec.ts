@@ -8,7 +8,7 @@ import { ConspirateursMove, ConspirateursMoveDrop, ConspirateursMoveJump, Conspi
 import { ConspirateursNode, ConspirateursRules } from '../ConspirateursRules';
 import { ConspirateursState } from '../ConspirateursState';
 import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
-import { TestUtils } from 'src/app/utils/tests/TestUtils.spec';
+import { TestUtils } from '@everyboard/lib';
 
 describe('ConspirateursRules', () => {
     const _: PlayerOrNone = PlayerOrNone.NONE;
@@ -135,7 +135,7 @@ describe('ConspirateursRules', () => {
             // When trying to drop
             const move: ConspirateursMove = drop(new Coord(8, 8));
             // Then the move should be illegal
-            const reason: string = ConspirateursFailure.CANNOT_DROP_AFTER_TURN_40();
+            const reason: string = ConspirateursFailure.CANNOT_DROP_WHEN_OUT_OF_PIECE();
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
 
@@ -317,7 +317,7 @@ describe('ConspirateursRules', () => {
             // When performing a simple move
             const move: ConspirateursMove = simpleMove(new Coord(7, 7), new Coord(7, 6));
             // Then the move should be illegal
-            const reason: string = ConspirateursFailure.CANNOT_MOVE_BEFORE_TURN_40();
+            const reason: string = ConspirateursFailure.CANNOT_MOVE_BEFORE_DROPPING_ALL_PIECES();
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
 
@@ -569,7 +569,7 @@ describe('ConspirateursRules', () => {
             // When trying to jump
             const move: ConspirateursMove = jump([new Coord(7, 7), new Coord(7, 5)]);
             // Then the move should be illegal
-            const reason: string = ConspirateursFailure.CANNOT_MOVE_BEFORE_TURN_40();
+            const reason: string = ConspirateursFailure.CANNOT_MOVE_BEFORE_DROPPING_ALL_PIECES();
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
 

@@ -1,8 +1,8 @@
 /* eslint-disable max-lines-per-function */
 import { fakeAsync } from '@angular/core/testing';
 import { Coord } from 'src/app/jscaip/Coord';
-import { Table } from 'src/app/utils/ArrayUtils';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { Table } from 'src/app/jscaip/TableUtils';
+import { MGPOptional } from '@everyboard/lib';
 import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { MartianChessComponent, MartianChessFace } from '../martian-chess.component';
 import { MartianChessMove } from '../MartianChessMove';
@@ -75,7 +75,7 @@ describe('MartianChessComponent', () => {
         // Given the initial board
 
         // When clicking an opponent piece
-        await testUtils.expectClickSuccess('#click_0_0');
+        await testUtils.expectClickFailure('#click_0_0');
 
         // Then it should not select the piece but not toast error
         testUtils.expectElementNotToHaveClass('#queen_0_0', 'selected-stroke');
@@ -84,8 +84,8 @@ describe('MartianChessComponent', () => {
     it('should not select empty space', fakeAsync(async() => {
         // Given the initial board
         // When clicking an empty space immediately
-        // Then it should not toast
-        await testUtils.expectClickSuccess('#click_3_4');
+        // Then it should fail without toast
+        await testUtils.expectClickFailure('#click_3_4');
     }));
 
     it('should cancel move attempt when clicking twice on the same piece', fakeAsync(async() => {
@@ -93,7 +93,7 @@ describe('MartianChessComponent', () => {
         await testUtils.expectClickSuccess('#click_1_5');
 
         // When clicking on the piece again
-        await testUtils.expectClickSuccess('#click_1_5');
+        await testUtils.expectClickFailure('#click_1_5');
 
         // Then the piece should be deselected
         testUtils.expectElementNotToHaveClass('#pawn_1_5', 'selected-stroke');
@@ -104,7 +104,7 @@ describe('MartianChessComponent', () => {
         await testUtils.expectClickSuccess('#click_1_5');
 
         // When cliking on an invalid second coord
-        // Then the move should have been illegal
+        // Then it should fail
         const reason: string = DirectionFailure.DIRECTION_MUST_BE_LINEAR();
         await testUtils.expectClickFailure('#click_0_3', reason);
     }));

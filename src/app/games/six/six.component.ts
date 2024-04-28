@@ -7,14 +7,11 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { HexaLayout } from 'src/app/jscaip/HexaLayout';
 import { FlatHexaOrientation } from 'src/app/jscaip/HexaOrientation';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { MGPSet } from 'src/app/utils/MGPSet';
-import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { HexagonalGameComponent }
     from '../../components/game-components/game-component/HexagonalGameComponent';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { MGPFallible } from 'src/app/utils/MGPFallible';
+import { MGPFallible, MGPOptional, MGPSet, MGPValidation } from '@everyboard/lib';
 import { ViewBox } from 'src/app/components/game-components/GameComponentUtils';
 import { MCTS } from 'src/app/jscaip/AI/MCTS';
 import { Minimax } from 'src/app/jscaip/AI/Minimax';
@@ -31,10 +28,9 @@ import { SixFilteredMoveGenerator } from './SixFilteredMoveGenerator';
 export class SixComponent
     extends HexagonalGameComponent<SixRules, SixMove, SixState, Player, EmptyRulesConfig, SixLegalityInformation>
 {
-    public state: SixState;
 
     public pieces: Coord[];
-    public disconnecteds: Coord[] = [];
+    public disconnectedCoords: Coord[] = [];
     public cuttableGroups: Coord[][] = [];
     public victoryCoords: Coord[];
     public neighbors: Coord[];
@@ -65,10 +61,14 @@ export class SixComponent
         this.chosenLanding = MGPOptional.empty();
         this.cuttableGroups = [];
         this.nextClickShouldSelectGroup = false;
-        await this.updateBoard(false); // Need to refresh the board in case we showed virtual moves for cuts
+        this.resetPiecesAndNeighbors();
     }
 
     public async updateBoard(_triggerAnimation: boolean): Promise<void> {
+        this.resetPiecesAndNeighbors();
+    }
+
+    private resetPiecesAndNeighbors(): void {
         this.state = this.node.gameState;
         this.pieces = this.state.getPieceCoords();
         this.neighbors = this.getEmptyNeighbors();
@@ -78,11 +78,11 @@ export class SixComponent
         this.leftCoord = MGPOptional.empty();
         this.lastDrop = MGPOptional.empty();
         this.victoryCoords = [];
-        this.disconnecteds = [];
+        this.disconnectedCoords = [];
     }
 
     public getViewBox(): ViewBox {
-        const coords: Coord[] = this.pieces.concat(this.disconnecteds).concat(this.neighbors);
+        const coords: Coord[] = this.pieces.concat(this.disconnectedCoords).concat(this.neighbors);
         return ViewBox
             .fromHexa(coords, this.hexaLayout, this.STROKE_WIDTH)
             .expandAbove(this.SPACE_SIZE + this.STROKE_WIDTH)
@@ -102,7 +102,7 @@ export class SixComponent
         if (this.rules.getGameStatus(this.node).isEndGame) {
             this.victoryCoords = this.rules.getShapeVictory(move, state);
         }
-        this.disconnecteds = this.getDisconnected();
+        this.disconnectedCoords = this.getDisconnected();
     }
 
     private getDisconnected(): Coord[] {
@@ -151,11 +151,11 @@ export class SixComponent
             if (this.state.getPieceAt(piece) === this.state.getCurrentOpponent()) {
                 return this.cancelMove(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT());
             } else if (this.selectedPiece.equalsValue(piece)) {
-                this.selectedPiece = MGPOptional.empty();
+                return this.cancelMove();
             } else {
                 this.selectedPiece = MGPOptional.of(piece);
+                return MGPValidation.SUCCESS;
             }
-            return MGPValidation.SUCCESS;
         } else {
             const cuttingMove: SixMove = SixMove.ofCut(this.selectedPiece.get(),
                                                        this.chosenLanding.get(),

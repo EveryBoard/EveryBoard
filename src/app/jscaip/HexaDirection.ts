@@ -1,10 +1,8 @@
-import { Utils } from 'src/app/utils/utils';
-import { MGPFallible } from '../utils/MGPFallible';
-import { BaseDirection, DirectionFactory } from './Direction';
-import { Encoder } from '../utils/Encoder';
+import { Direction, DirectionFactory } from './Direction';
+import { Encoder, MGPFallible, Utils } from '@everyboard/lib';
 
 /** Hexagonal directions encoded with axial coordinates, for "flat toped" hexagons */
-export class HexaDirection extends BaseDirection {
+export class HexaDirection extends Direction {
 
     public static readonly UP: HexaDirection = new HexaDirection(0, -1);
 
@@ -29,6 +27,7 @@ export class HexaDirection extends BaseDirection {
                 HexaDirection.LEFT,
             ];
         };
+
     public static readonly encoder: Encoder<HexaDirection> = Encoder.fromFunctions(
         (direction: HexaDirection): number => {
             switch (direction) {
@@ -45,18 +44,20 @@ export class HexaDirection extends BaseDirection {
             return HexaDirection.factory.all[encoded];
         },
     );
-    public static getAngle(direction: HexaDirection): number {
-        switch (direction) {
+
+    public override getAngle(): number {
+        switch (this) {
             case HexaDirection.UP: return 0;
             case HexaDirection.UP_RIGHT: return 60;
             case HexaDirection.RIGHT: return 120;
             case HexaDirection.DOWN: return 180;
             case HexaDirection.DOWN_LEFT: return 240;
             default:
-                Utils.expectToBe(direction, HexaDirection.LEFT);
+                Utils.expectToBe(this, HexaDirection.LEFT);
                 return 300;
         }
     }
+
     private constructor(x: 0|1|-1, y: 0|1|-1) {
         super(x, y);
     }

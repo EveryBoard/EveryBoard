@@ -1,12 +1,11 @@
 import { Coord } from 'src/app/jscaip/Coord';
-import { Direction } from 'src/app/jscaip/Direction';
+import { Ordinal } from 'src/app/jscaip/Ordinal';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { EpaminondasMove } from './EpaminondasMove';
 import { EpaminondasState } from './EpaminondasState';
 import { EpaminondasNode, EpaminondasLegalityInformation, EpaminondasRules, EpaminondasConfig } from './EpaminondasRules';
-import { MGPFallible } from 'src/app/utils/MGPFallible';
+import { MGPFallible, MGPOptional } from '@everyboard/lib';
 import { MoveGenerator } from 'src/app/jscaip/AI/AI';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 export class EpaminondasMoveGenerator extends MoveGenerator<EpaminondasMove, EpaminondasState, EpaminondasConfig> {
 
@@ -21,30 +20,30 @@ export class EpaminondasMoveGenerator extends MoveGenerator<EpaminondasMove, Epa
             const firstCoord: Coord = coordAndContent.coord;
             if (coordAndContent.content === player) {
                 let move: EpaminondasMove;
-                for (const direction of Direction.DIRECTIONS) {
-                    let movedPieces: number = 1;
+                for (const direction of Ordinal.ORDINALS) {
+                    let phalanxSize: number = 1;
                     let nextCoord: Coord = firstCoord.getNext(direction, 1);
                     while (state.isOnBoard(nextCoord) &&
                            state.getPieceAt(nextCoord) === player)
                     {
-                        movedPieces += 1;
+                        phalanxSize += 1;
                         nextCoord = nextCoord.getNext(direction, 1);
                     }
                     let stepSize: number = 1;
                     while (state.isOnBoard(nextCoord) &&
-                           stepSize <= movedPieces &&
+                           stepSize <= phalanxSize &&
                            state.getPieceAt(nextCoord) === empty)
                     {
-                        move = new EpaminondasMove(firstCoord.x, firstCoord.y, movedPieces, stepSize, direction);
+                        move = new EpaminondasMove(firstCoord.x, firstCoord.y, phalanxSize, stepSize, direction);
                         moves = this.addMove(moves, move, state);
                         stepSize++;
                         nextCoord = nextCoord.getNext(direction, 1);
                     }
                     if (state.isOnBoard(nextCoord) &&
-                        stepSize <= movedPieces &&
+                        stepSize <= phalanxSize &&
                         state.getPieceAt(nextCoord) === opponent)
                     {
-                        move = new EpaminondasMove(firstCoord.x, firstCoord.y, movedPieces, stepSize, direction);
+                        move = new EpaminondasMove(firstCoord.x, firstCoord.y, phalanxSize, stepSize, direction);
                         moves = this.addMove(moves, move, state);
                     }
                 }

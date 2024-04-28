@@ -8,11 +8,9 @@ import { KamisadoPiece } from 'src/app/games/kamisado/KamisadoPiece';
 import { KamisadoRules } from 'src/app/games/kamisado/KamisadoRules';
 import { KamisadoFailure } from 'src/app/games/kamisado/KamisadoFailure';
 import { Player } from 'src/app/jscaip/Player';
-import { MGPValidation } from 'src/app/utils/MGPValidation';
+import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { assert } from 'src/app/utils/assert';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { MCTS } from 'src/app/jscaip/AI/MCTS';
 import { Minimax } from 'src/app/jscaip/AI/Minimax';
@@ -88,7 +86,7 @@ export class KamisadoComponent extends RectangularGameComponent<KamisadoRules,
     }
 
     public override async pass(): Promise<MGPValidation> {
-        assert(this.canPass, 'KamisadoComponent: pass() must be called only if canPass is true');
+        Utils.assert(this.canPass, 'KamisadoComponent: pass() must be called only if canPass is true');
         return this.chooseMove(KamisadoMove.PASS);
     }
 
@@ -105,8 +103,7 @@ export class KamisadoComponent extends RectangularGameComponent<KamisadoRules,
             return this.choosePiece(x, y);
         } else if (this.chosenAutomatically === false && this.chosen.equalsValue(clickedCoord)) {
             // user selected the already-selected piece
-            this.cancelMoveAttempt();
-            return MGPValidation.SUCCESS;
+            return this.cancelMove();
         } else {
             const piece: KamisadoPiece = this.getState().getPieceAtXY(x, y);
             const player: Player = this.getState().getCurrentPlayer();

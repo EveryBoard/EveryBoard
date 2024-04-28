@@ -1,8 +1,7 @@
 /* eslint-disable max-lines-per-function */
-import { MGPFallible } from 'src/app/utils/MGPFallible';
-import { EncoderTestUtils } from 'src/app/utils/tests/Encoder.spec';
+import { EncoderTestUtils, MGPFallible } from '@everyboard/lib';
 import { Coord } from '../Coord';
-import { Direction } from '../Direction';
+import { Ordinal } from '../Ordinal';
 import { MoveCoordToCoord } from '../MoveCoordToCoord';
 import { MoveWithTwoCoords } from '../MoveWithTwoCoords';
 
@@ -16,15 +15,15 @@ describe('MoveCoordToCoord', () => {
     describe('getDirection', () => {
         it('should return the direction of the move', () => {
             const source: Coord = new Coord(0, 0);
-            const allDestsAndDirs: [Coord, Direction][] = [
-                [new Coord(0, 1), Direction.DOWN],
-                [new Coord(0, -1), Direction.UP],
-                [new Coord(1, 0), Direction.RIGHT],
-                [new Coord(-1, 0), Direction.LEFT],
-                [new Coord(-1, -1), Direction.UP_LEFT],
-                [new Coord(-1, 1), Direction.DOWN_LEFT],
-                [new Coord(1, -1), Direction.UP_RIGHT],
-                [new Coord(1, 1), Direction.DOWN_RIGHT],
+            const allDestsAndDirs: [Coord, Ordinal][] = [
+                [new Coord(0, 1), Ordinal.DOWN],
+                [new Coord(0, -1), Ordinal.UP],
+                [new Coord(1, 0), Ordinal.RIGHT],
+                [new Coord(-1, 0), Ordinal.LEFT],
+                [new Coord(-1, -1), Ordinal.UP_LEFT],
+                [new Coord(-1, 1), Ordinal.DOWN_LEFT],
+                [new Coord(1, -1), Ordinal.UP_RIGHT],
+                [new Coord(1, 1), Ordinal.DOWN_RIGHT],
             ];
             for (const [destination, direction] of allDestsAndDirs) {
                 expect(new ConcreteMoveCoordToCoord(source, destination).getDirection())

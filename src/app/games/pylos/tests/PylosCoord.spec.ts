@@ -1,9 +1,7 @@
 /* eslint-disable max-lines-per-function */
-import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { Orthogonal } from 'src/app/jscaip/Direction';
+import { Orthogonal } from 'src/app/jscaip/Orthogonal';
+import { EncoderTestUtils, MGPOptional, TestUtils } from '@everyboard/lib';
 import { PylosCoord } from '../PylosCoord';
-import { EncoderTestUtils } from 'src/app/utils/tests/Encoder.spec';
-import { TestUtils } from 'src/app/utils/tests/TestUtils.spec';
 
 describe('PylosCoord', () => {
 

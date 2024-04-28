@@ -3,7 +3,7 @@ import { EncapsulePiece } from 'src/app/games/encapsule/EncapsulePiece';
 import { EncapsuleSpace, EncapsuleState } from 'src/app/games/encapsule/EncapsuleState';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { MGPValidation } from 'src/app/utils/MGPValidation';
+import { MGPValidation } from '@everyboard/lib';
 import { Tutorial, TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { EncapsuleRules } from './EncapsuleRules';
 import { TutorialStepMessage } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
@@ -23,8 +23,7 @@ export class EncapsuleTutorial extends Tutorial {
     public tutorial: TutorialStep[] = [
         TutorialStep.informational(
             $localize`Goal of the game`,
-            $localize`The goal of Encapsule is to align three of your pieces.
-        Here, we have a victory of the dark player.`,
+            $localize`The goal of Encapsule is to align three of your pieces. Here, Dark wins.`,
             new EncapsuleState([
                 [s, S, B],
                 [_, m, _],

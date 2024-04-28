@@ -1,7 +1,7 @@
 /* eslint-disable max-lines-per-function */
 import { KamisadoState } from 'src/app/games/kamisado/KamisadoState';
 import { KamisadoColor } from 'src/app/games/kamisado/KamisadoColor';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { MGPOptional } from '@everyboard/lib';
 import { KamisadoPiece } from 'src/app/games/kamisado/KamisadoPiece';
 import { KamisadoFailure } from 'src/app/games/kamisado/KamisadoFailure';
 import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
@@ -10,7 +10,7 @@ import { fakeAsync } from '@angular/core/testing';
 import { Coord } from 'src/app/jscaip/Coord';
 import { KamisadoMove } from 'src/app/games/kamisado/KamisadoMove';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { Table } from 'src/app/utils/ArrayUtils';
+import { Table } from 'src/app/jscaip/TableUtils';
 
 describe('KamisadoComponent', () => {
 
@@ -62,8 +62,10 @@ describe('KamisadoComponent', () => {
     it('should allow deselecting initial choice', fakeAsync(async() => {
         // Given a component where a piece has been selected
         await testUtils.expectClickSuccess('#click_0_7'); // Select initial piece
+
         // When clicking on the same piece
-        await testUtils.expectClickSuccess('#click_0_7');
+        await testUtils.expectClickFailure('#click_0_7');
+
         // Then it should be deselected
         expect(testUtils.getGameComponent().chosen.isAbsent()).toBeTrue();
         testUtils.expectElementNotToExist('.highlight');

@@ -1,10 +1,10 @@
 /* eslint-disable max-lines-per-function */
 import { fakeAsync, TestBed } from '@angular/core/testing';
 import { UserSettingsService } from 'src/app/services/UserSettingsService';
-import { LocaleUtils } from 'src/app/utils/LocaleUtils';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { MGPOptional } from '@everyboard/lib';
 import { SimpleComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { SettingsComponent } from './settings.component';
+import { LocaleUtils } from 'src/app/utils/LocaleUtils';
 
 describe('SettingsComponent', () => {
 
@@ -21,6 +21,7 @@ describe('SettingsComponent', () => {
         testUtils.detectChanges();
         expect(testUtils.getComponent()).toBeTruthy();
     }));
+
     it('should update user setting and redirect when a language change is made', fakeAsync(async() => {
         // Given that the language is set to english
         spyOn(LocaleUtils, 'getNavigatorLanguage').and.returnValue('en-US');
@@ -29,10 +30,7 @@ describe('SettingsComponent', () => {
         testUtils.detectChanges();
 
         // When another language is selected
-        const languageSelection: HTMLSelectElement = testUtils.findElement('#language').nativeElement;
-        languageSelection.value = 'fr';
-        languageSelection.dispatchEvent(new Event('change'));
-        testUtils.detectChanges();
+        await testUtils.selectChildElementOfDropDown('#language', 'language_fr');
 
         // Then the language is changed and the page is reloaded
         expect(userSettingsService.changeLanguage).toHaveBeenCalledWith('fr');
@@ -40,6 +38,7 @@ describe('SettingsComponent', () => {
 
         localStorage.clear(); // clean up local storage
     }));
+
     it('should update user setting and redirect when a theme change is made', fakeAsync(async() => {
         // Given that the dark theme is selected
         spyOn(userSettingsService, 'getTheme').and.returnValue(MGPOptional.of('dark'));
@@ -59,4 +58,5 @@ describe('SettingsComponent', () => {
 
         localStorage.clear(); // clean up local storage
     }));
+
 });

@@ -4,8 +4,7 @@ import { ConnectSixDrops, ConnectSixFirstMove, ConnectSixMove } from './ConnectS
 import { ConnectSixState } from './ConnectSixState';
 import { PlayerOrNone } from 'src/app/jscaip/Player';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
-import { MGPValidation } from 'src/app/utils/MGPValidation';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { MGPOptional, MGPValidation } from '@everyboard/lib';
 import { Coord } from 'src/app/jscaip/Coord';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { GobanGameComponent } from 'src/app/components/game-components/goban-game-component/GobanGameComponent';
@@ -75,8 +74,7 @@ export class ConnectSixComponent extends GobanGameComponent<ConnectSixRules,
                 return this.cancelMove(RulesFailure.MUST_CLICK_ON_EMPTY_SQUARE());
             } else if (this.droppedCoord.isPresent()) {
                 if (this.droppedCoord.equalsValue(clickedCoord)) {
-                    this.droppedCoord = MGPOptional.empty();
-                    return MGPValidation.SUCCESS;
+                    return this.cancelMove();
                 } else {
                     const move: ConnectSixMove = ConnectSixDrops.of(this.droppedCoord.get(), clickedCoord);
                     return this.chooseMove(move);

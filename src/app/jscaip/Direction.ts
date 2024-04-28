@@ -1,12 +1,9 @@
-import { JSONValue } from 'src/app/utils/utils';
-import { assert } from 'src/app/utils/assert';
-import { MGPFallible } from '../utils/MGPFallible';
+import { MGPFallible } from '@everyboard/lib';
 import { Coord } from './Coord';
-import { Localized } from '../utils/LocaleUtils';
-import { Encoder } from '../utils/Encoder';
 import { Vector } from './Vector';
+import { Localized } from '../utils/LocaleUtils';
 
-export abstract class BaseDirection extends Vector {
+export abstract class Direction extends Vector {
 
     public declare readonly x: 0|1|-1;
 
@@ -50,9 +47,11 @@ export abstract class BaseDirection extends Vector {
         else return 'DOWN_RIGHT';
     }
 
+    public abstract getAngle(): number;
+
 }
 
-export abstract class DirectionFactory<T extends BaseDirection> {
+export abstract class DirectionFactory<T extends Direction> {
 
     public abstract all: ReadonlyArray<T>;
 
@@ -60,7 +59,7 @@ export abstract class DirectionFactory<T extends BaseDirection> {
         for (const dir of this.all) {
             if (dir.x === x && dir.y === y) return MGPFallible.success(dir);
         }
-        return MGPFallible.failure('Invalid x and y in direction construction');
+        return MGPFallible.failure('Invalid x or y in direction construction');
     }
 
     public fromDelta(dx: number, dy: number): MGPFallible<T> {
@@ -107,119 +106,6 @@ export abstract class DirectionFactory<T extends BaseDirection> {
         }
     }
 
-}
-
-export class Direction extends BaseDirection {
-
-    public static readonly UP: Direction = new Direction(0, -1);
-    public static readonly UP_RIGHT: Direction = new Direction(1, -1);
-    public static readonly RIGHT: Direction = new Direction(1, 0);
-    public static readonly DOWN_RIGHT: Direction = new Direction(1, 1);
-    public static readonly DOWN: Direction = new Direction(0, 1);
-    public static readonly DOWN_LEFT: Direction = new Direction(-1, 1);
-    public static readonly LEFT: Direction = new Direction(-1, 0);
-    public static readonly UP_LEFT: Direction = new Direction(-1, -1);
-    public static readonly factory: DirectionFactory<Direction> =
-        new class extends DirectionFactory<Direction> {
-            public all: ReadonlyArray<Direction> = [
-                Direction.UP,
-                Direction.UP_RIGHT,
-                Direction.RIGHT,
-                Direction.DOWN_RIGHT,
-                Direction.DOWN,
-                Direction.DOWN_LEFT,
-                Direction.LEFT,
-                Direction.UP_LEFT,
-            ];
-        };
-
-    public static readonly DIRECTIONS: ReadonlyArray<Direction> = Direction.factory.all;
-
-    public static readonly DIAGONALS: ReadonlyArray<Direction> = [
-        Direction.UP_RIGHT,
-        Direction.DOWN_RIGHT,
-        Direction.DOWN_LEFT,
-        Direction.UP_LEFT,
-    ];
-
-    public static readonly ORTHOGONALS: ReadonlyArray<Direction> = [
-        Direction.UP,
-        Direction.RIGHT,
-        Direction.DOWN,
-        Direction.LEFT,
-    ];
-
-    public static readonly encoder: Encoder<Direction> = Encoder.fromFunctions(
-        (dir: Direction): string => {
-            return dir.toString();
-        },
-        (encoded: JSONValue): Direction => {
-            assert(typeof encoded === 'string', 'Invalid encoded direction');
-            const fromString: MGPFallible<Direction> = Direction.factory.fromString(encoded as string);
-            return fromString.get();
-        },
-    );
-
-    private constructor(x: 0|1|-1, y: 0|1|-1) {
-        super(x, y);
-    }
-
-    public getOpposite(): Direction {
-        const opposite: MGPFallible<Direction> = Direction.factory.from(-this.x, -this.y);
-        return opposite.get();
-    }
-
-}
-
-export class Orthogonal extends BaseDirection {
-
-    public static readonly UP: Orthogonal = new Orthogonal(0, -1);
-    public static readonly RIGHT: Orthogonal = new Orthogonal(1, 0);
-    public static readonly DOWN: Orthogonal = new Orthogonal(0, 1);
-    public static readonly LEFT: Orthogonal = new Orthogonal(-1, 0);
-    public static readonly factory: DirectionFactory<Orthogonal> =
-        new class extends DirectionFactory<Orthogonal> {
-            public all: ReadonlyArray<Orthogonal> = [
-                Orthogonal.UP,
-                Orthogonal.RIGHT,
-                Orthogonal.DOWN,
-                Orthogonal.LEFT,
-            ];
-
-            public override from(x: number, y: number): MGPFallible<Orthogonal> {
-                if (x === 0 && y === -1) return MGPFallible.success(Orthogonal.UP);
-                if (x === 1 && y === 0) return MGPFallible.success(Orthogonal.RIGHT);
-                if (x === 0 && y === 1) return MGPFallible.success(Orthogonal.DOWN);
-                if (x === -1 && y === 0) return MGPFallible.success(Orthogonal.LEFT);
-                return MGPFallible.failure('Invalid orthogonal from x and y');
-            }
-        };
-    public static readonly ORTHOGONALS: ReadonlyArray<Orthogonal> = Orthogonal.factory.all;
-
-    public static readonly encoder: Encoder<Orthogonal> = Encoder.fromFunctions(
-        (dir: Orthogonal): string => {
-            return dir.toString();
-        },
-        (encoded: JSONValue): Orthogonal => {
-            assert(typeof encoded === 'string', 'Invalid encoded orthogonal');
-            const fromString: MGPFallible<Orthogonal> = Orthogonal.factory.fromString(encoded as string);
-            return fromString.get();
-        },
-    );
-
-    private constructor(x: 0|1|-1, y: 0|1|-1) {
-        super(x, y);
-    }
-
-    public getOpposite(): Orthogonal {
-        const opposite: MGPFallible<Orthogonal> = Orthogonal.factory.from(-this.x, -this.y);
-        return opposite.get();
-    }
-
-    public rotateClockwise(): Orthogonal {
-        const rotated: MGPFallible<Orthogonal> = Orthogonal.factory.from(-this.y, this.x);
-        return rotated.get();
-    }
 }
 
 export class DirectionFailure {

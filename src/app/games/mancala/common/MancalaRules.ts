@@ -2,19 +2,15 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { MancalaConfig } from './MancalaConfig';
 import { MancalaState } from './MancalaState';
 import { Player } from 'src/app/jscaip/Player';
-import { Table, TableUtils } from 'src/app/utils/ArrayUtils';
-import { ConfigurableRules } from 'src/app/jscaip/Rules';
+import { Table, TableUtils } from 'src/app/jscaip/TableUtils';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
-import { MGPFallible } from 'src/app/utils/MGPFallible';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { ReversibleMap } from 'src/app/utils/MGPMap';
-import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
+import { MGPFallible, MGPOptional, MGPValidation, ReversibleMap, Utils } from '@everyboard/lib';
 import { GameNode } from 'src/app/jscaip/AI/GameNode';
 import { MancalaDistribution, MancalaMove } from './MancalaMove';
-import { MGPValidation } from 'src/app/utils/MGPValidation';
-import { Utils } from 'src/app/utils/utils';
-import { MancalaFailure } from './MancalaFailure';
+import { ConfigurableRules } from 'src/app/jscaip/Rules';
 import { Localized } from 'src/app/utils/LocaleUtils';
+import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
+import { MancalaFailure } from './MancalaFailure';
 
 export interface MancalaCaptureResult {
 
@@ -132,9 +128,7 @@ export abstract class MancalaRules<C extends MancalaConfig = MancalaConfig>
     }
 
     public override getInitialState(optionalConfig: MGPOptional<MancalaConfig>): MancalaState {
-        const config: MancalaConfig = optionalConfig.get();
-        const board: number[][] = TableUtils.create(config.width, 2, config.seedsByHouse);
-        return new MancalaState(board, 0, PlayerNumberMap.of(0, 0));
+        return MancalaRules.getInitialState(optionalConfig);
     }
 
     /**

@@ -4,13 +4,9 @@ import { DiaballikPiece, DiaballikState } from './DiaballikState';
 import { DiaballikNode, DiaballikRules } from './DiaballikRules';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { Coord } from 'src/app/jscaip/Coord';
-import { Direction, Orthogonal } from 'src/app/jscaip/Direction';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { Utils } from 'src/app/utils/utils';
-import { MGPFallible } from 'src/app/utils/MGPFallible';
-import { MGPSet } from 'src/app/utils/MGPSet';
-import { ArrayUtils } from 'src/app/utils/ArrayUtils';
-import { ComparableObject } from 'src/app/utils/Comparable';
+import { Orthogonal } from 'src/app/jscaip/Orthogonal';
+import { Ordinal } from 'src/app/jscaip/Ordinal';
+import { ArrayUtils, ComparableObject, MGPFallible, MGPOptional, MGPSet, Utils } from '@everyboard/lib';
 import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 export class DiaballikMoveInConstruction implements ComparableObject {
@@ -263,7 +259,7 @@ export class DiaballikMoveGenerator extends MoveGenerator<DiaballikMove, Diaball
         const player: Player = state.getCurrentPlayer();
         const ends: Coord[] = [];
         // A pass is in any direction, as long as it reaches a player piece and is not obstructed
-        for (const direction of Direction.factory.all) {
+        for (const direction of Ordinal.factory.all) {
             let coord: Coord = start.getNext(direction);
             while (state.isOnBoard(coord)) {
                 const piece: DiaballikPiece = state.getPieceAt(coord);

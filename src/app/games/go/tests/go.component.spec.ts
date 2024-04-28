@@ -3,9 +3,9 @@ import { fakeAsync } from '@angular/core/testing';
 import { GoComponent } from '../go.component';
 import { GoMove } from 'src/app/games/go/GoMove';
 import { GoState, GoPiece, Phase } from 'src/app/games/go/GoState';
-import { TableUtils, Table } from 'src/app/utils/ArrayUtils';
+import { TableUtils, Table } from 'src/app/jscaip/TableUtils';
 import { Coord } from 'src/app/jscaip/Coord';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { MGPOptional } from '@everyboard/lib';
 import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 import { GoConfig, GoRules } from '../GoRules';
@@ -60,7 +60,7 @@ describe('GoComponent', () => {
 
     describe('hoshi', () => {
 
-        it('should be in (3, 3) and other centraly symmetrical coords fo 19x19 board', fakeAsync(async() => {
+        it('should be in (3, 3) and other centraly symmetrical coords for 19x19 board', fakeAsync(async() => {
             // Given a 19x19 board
             const board: Table<GoPiece> = TableUtils.create(19, 19, GoPiece.EMPTY);
             const state: GoState = new GoState(board, PlayerNumberMap.of(0, 0), 0, MGPOptional.empty(), Phase.PLAYING);

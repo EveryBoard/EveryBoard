@@ -101,7 +101,7 @@ def access_game_list(driver):
     click_button(driver, "#seeGameList")
 
     # Now I should see the game list (this will throw it if does not find it)
-    wait_for_presence_of(driver, '#actualGames')
+    wait_for_presence_of(driver, '#game-list-tab')
 
 def logout(driver):
     """Logs the current user out"""
@@ -235,7 +235,7 @@ def can_play_local_vs_ai(driver):
 
     # Select the AI as second player
     select(driver, "#playerOneSelect", "Minimax")
-    select(driver, "#aiOneLevelSelect", "Level 1")
+    select(driver, "#aiOneOptionSelect", "Level 1")
 
     # I play a move
     click_button(driver, "#click_2 > rect")
@@ -266,7 +266,7 @@ def can_create_part_and_play(driver1, username1, driver2, username2):
 
     # Player 2 joins the part
     click_button(driver2, "#seeGameList")
-    click_button(driver2, "#part_0 > td")
+    click_button(driver2, "#part-0 > td")
 
     # Player 1 sees player 2 arrive and selects them
     click_button(driver1, "#presenceOf_{}".format(username2))

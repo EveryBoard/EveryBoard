@@ -81,7 +81,8 @@ module.exports = {
                 'ClassDeclaration': false,
                 'ArrowFunctionExpression': false,
                 'FunctionExpression': false,
-            } }],
+            }}],
+            "@typescript-eslint/no-shadow": "error",
             'new-cap': ['off'], // Because there are false positives
             'no-undef': ['off'], // Because there are false positives
             'valid-jsdoc': ['off'], // Because we do not use jsdoc

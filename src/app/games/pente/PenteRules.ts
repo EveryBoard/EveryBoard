@@ -1,18 +1,16 @@
 import { Coord, CoordFailure } from 'src/app/jscaip/Coord';
-import { Direction } from 'src/app/jscaip/Direction';
+import { Ordinal } from 'src/app/jscaip/Ordinal';
 import { GameNode } from 'src/app/jscaip/AI/GameNode';
 import { NInARowHelper } from 'src/app/jscaip/NInARowHelper';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { ConfigurableRules } from 'src/app/jscaip/Rules';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { MGPValidation } from 'src/app/utils/MGPValidation';
-import { Utils } from 'src/app/utils/utils';
+import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 import { PenteMove } from './PenteMove';
 import { PenteState } from './PenteState';
+import { TableUtils } from 'src/app/jscaip/TableUtils';
 import { NumberConfig, RulesConfigDescription, RulesConfigDescriptionLocalizable } from 'src/app/components/wrapper-components/rules-configuration/RulesConfigDescription';
-import { TableUtils } from 'src/app/utils/ArrayUtils';
 import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 import { PenteConfig } from './PenteConfig';
 import { MGPValidators } from 'src/app/utils/MGPValidator';
@@ -86,7 +84,7 @@ export class PenteRules extends ConfigurableRules<PenteMove, PenteState, PenteCo
         const opponent: Player = player.getOpponent();
         const captures: Coord[] = [];
         const sizeOfCapture: number = config.sizeOfSandwich;
-        for (const direction of Direction.factory.all) {
+        for (const direction of Ordinal.factory.all) {
             let i: number = 1;
             let potentialCapture: Coord = coord.getNext(direction, i);
             const captured: Coord[] = [potentialCapture];

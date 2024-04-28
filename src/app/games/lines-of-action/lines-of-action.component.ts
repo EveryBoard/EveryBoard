@@ -2,14 +2,12 @@ import { Component } from '@angular/core';
 import { RectangularGameComponent } from 'src/app/components/game-components/rectangular-game-component/RectangularGameComponent';
 import { Coord } from 'src/app/jscaip/Coord';
 import { PlayerOrNone } from 'src/app/jscaip/Player';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { MGPValidation } from 'src/app/utils/MGPValidation';
+import { MGPFallible, MGPOptional, MGPValidation } from '@everyboard/lib';
 import { LinesOfActionMove } from './LinesOfActionMove';
 import { LinesOfActionRules } from './LinesOfActionRules';
 import { LinesOfActionFailure } from './LinesOfActionFailure';
 import { LinesOfActionState } from './LinesOfActionState';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
-import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { MCTS } from 'src/app/jscaip/AI/MCTS';
 import { LinesOfActionHeuristic } from './LinesOfActionHeuristic';
@@ -29,7 +27,6 @@ export class LinesOfActionComponent extends RectangularGameComponent<LinesOfActi
     public INDICATOR_SIZE: number = 20;
     public EMPTY: PlayerOrNone = PlayerOrNone.NONE;
     public targets: Coord[] = [];
-    public state: LinesOfActionState;
     private selected: MGPOptional<Coord> = MGPOptional.empty();
     private lastMoved: Coord[] = [];
     private captured: MGPOptional<Coord> = MGPOptional.empty();
@@ -52,8 +49,7 @@ export class LinesOfActionComponent extends RectangularGameComponent<LinesOfActi
 
         const coord: Coord = new Coord(x, y);
         if (this.selected.equalsValue(coord)) {
-            this.cancelMoveAttempt();
-            return MGPValidation.SUCCESS;
+            return this.cancelMove();
         }
         const currentPlayer: PlayerOrNone = this.getState().getCurrentPlayer();
         if (this.selected.isAbsent() ||
@@ -83,7 +79,7 @@ export class LinesOfActionComponent extends RectangularGameComponent<LinesOfActi
             return this.cancelMove(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT());
         }
         this.selected = MGPOptional.of(coord);
-        this.targets = LinesOfActionRules.possibleTargets(this.getState(), this.selected.get());
+        this.targets = LinesOfActionRules.possibleTargets(this.getState(), this.selected.get()).toList();
         if (this.targets.length === 0) {
             return this.cancelMove(LinesOfActionFailure.PIECE_CANNOT_MOVE());
         }
@@ -91,7 +87,6 @@ export class LinesOfActionComponent extends RectangularGameComponent<LinesOfActi
     }
 
     public async updateBoard(_triggerAnimation: boolean): Promise<void> {
-        this.cancelMoveAttempt();
         this.board = this.getState().board;
     }
 
@@ -129,7 +124,7 @@ export class LinesOfActionComponent extends RectangularGameComponent<LinesOfActi
         const content: PlayerOrNone = this.board[y][x];
         const coord: Coord = new Coord(x, y);
         const classes: string[] = [this.getPlayerClass(content)];
-        if (this.selected.isPresent() && this.selected.get().equals(coord)) {
+        if (this.selected.equalsValue(coord)) {
             classes.push('selected-stroke');
         }
         return classes;

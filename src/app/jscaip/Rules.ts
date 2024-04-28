@@ -1,12 +1,11 @@
 import { GameNode } from 'src/app/jscaip/AI/GameNode';
 import { Move } from './Move';
-import { Debug, Utils } from '../utils/utils';
+import { MGPFallible, MGPOptional, Utils } from '@everyboard/lib';
 import { GameState } from './GameState';
-import { MGPOptional } from '../utils/MGPOptional';
-import { MGPFallible } from '../utils/MGPFallible';
 import { GameStatus } from './GameStatus';
 import { EmptyRulesConfig, RulesConfig } from './RulesConfigUtil';
 import { RulesConfigDescription } from '../components/wrapper-components/rules-configuration/RulesConfigDescription';
+import { Debug } from '../utils/Debug';
 
 export abstract class SuperRules<M extends Move,
                                  S extends GameState,

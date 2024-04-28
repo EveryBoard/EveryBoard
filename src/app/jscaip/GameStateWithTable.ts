@@ -1,8 +1,7 @@
-import { Table, TableUtils } from '../utils/ArrayUtils';
-import { comparableEquals } from '../utils/Comparable';
-import { MGPOptional } from '../utils/MGPOptional';
+import { MGPOptional, comparableEquals } from '@everyboard/lib';
 import { Coord } from './Coord';
 import { GameState } from './GameState';
+import { Table, TableUtils } from './TableUtils';
 
 export abstract class GameStateWithTable<P> extends GameState {
 
@@ -58,6 +57,10 @@ export abstract class GameStateWithTable<P> extends GameState {
         } else {
             return MGPOptional.empty();
         }
+    }
+
+    public getOptionalPieceAt(coord: Coord): MGPOptional<P> {
+        return this.getOptionalPieceAtXY(coord.x, coord.y);
     }
 
     public forEachCoord(callback: (coord: Coord, content: P) => void): void {

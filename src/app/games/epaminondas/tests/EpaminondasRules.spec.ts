@@ -1,6 +1,6 @@
 /* eslint-disable max-lines-per-function */
-import { Table } from 'src/app/utils/ArrayUtils';
-import { Direction } from 'src/app/jscaip/Direction';
+import { Table } from 'src/app/jscaip/TableUtils';
+import { Ordinal } from 'src/app/jscaip/Ordinal';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { EpaminondasMove } from '../EpaminondasMove';
 import { EpaminondasState } from '../EpaminondasState';
@@ -8,7 +8,7 @@ import { EpaminondasConfig, EpaminondasNode, EpaminondasRules } from '../Epamino
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { EpaminondasFailure } from '../EpaminondasFailure';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { MGPOptional } from '@everyboard/lib';
 import { Coord, CoordFailure } from 'src/app/jscaip/Coord';
 
 describe('EpaminondasRules', () => {
@@ -42,7 +42,7 @@ describe('EpaminondasRules', () => {
         const state: EpaminondasState = new EpaminondasState(board, 0);
 
         // When trying to move a phalanx outside of the board
-        const move: EpaminondasMove = new EpaminondasMove(0, 11, 1, 1, Direction.DOWN);
+        const move: EpaminondasMove = new EpaminondasMove(0, 11, 1, 1, Ordinal.DOWN);
 
         // Then it should fail
         const reason: string = EpaminondasFailure.PHALANX_IS_LEAVING_BOARD();
@@ -68,7 +68,7 @@ describe('EpaminondasRules', () => {
         const state: EpaminondasState = new EpaminondasState(board, 0);
 
         // When trying to move a phalanx (but only its head) outside of the board
-        const move: EpaminondasMove = new EpaminondasMove(1, 11, 2, 2, Direction.UP_LEFT);
+        const move: EpaminondasMove = new EpaminondasMove(1, 11, 2, 2, Ordinal.UP_LEFT);
 
         // Then it should fail
         const reason: string = EpaminondasFailure.PHALANX_IS_LEAVING_BOARD();
@@ -94,7 +94,7 @@ describe('EpaminondasRules', () => {
         const state: EpaminondasState = new EpaminondasState(board, 0);
 
         // When trying to move a phalanx that contains pieces outside of the board
-        const move: EpaminondasMove = new EpaminondasMove(0, 11, 2, 1, Direction.DOWN);
+        const move: EpaminondasMove = new EpaminondasMove(0, 11, 2, 1, Ordinal.DOWN);
 
         // Then it should fail
         const reason: string = EpaminondasFailure.PHALANX_CANNOT_CONTAIN_PIECES_OUTSIDE_BOARD();
@@ -119,7 +119,7 @@ describe('EpaminondasRules', () => {
         ];
         const state: EpaminondasState = new EpaminondasState(board, 0);
         // When trying to move over the opponent's piece
-        const move: EpaminondasMove = new EpaminondasMove(0, 11, 3, 3, Direction.UP);
+        const move: EpaminondasMove = new EpaminondasMove(0, 11, 3, 3, Ordinal.UP);
         // Then it should fail
         const reason: string = EpaminondasFailure.SOMETHING_IN_PHALANX_WAY();
         RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
@@ -130,7 +130,7 @@ describe('EpaminondasRules', () => {
         const state: EpaminondasState = EpaminondasRules.get().getInitialState(defaultConfig);
 
         // When doing a move starting out of range
-        const move: EpaminondasMove = new EpaminondasMove(-1, 0, 1, 1, Direction.DOWN_LEFT);
+        const move: EpaminondasMove = new EpaminondasMove(-1, 0, 1, 1, Ordinal.DOWN_LEFT);
 
         // Then it should be illegal
         const reason: string = CoordFailure.OUT_OF_RANGE(new Coord(-1, 0));
@@ -156,7 +156,7 @@ describe('EpaminondasRules', () => {
         const state: EpaminondasState = new EpaminondasState(board, 0);
 
         // When trying to capture a greater phalanx
-        const move: EpaminondasMove = new EpaminondasMove(0, 10, 1, 1, Direction.UP);
+        const move: EpaminondasMove = new EpaminondasMove(0, 10, 1, 1, Ordinal.UP);
 
         // Then it should fail
         const reason: string = EpaminondasFailure.PHALANX_SHOULD_BE_GREATER_TO_CAPTURE();
@@ -182,7 +182,7 @@ describe('EpaminondasRules', () => {
         const state: EpaminondasState = new EpaminondasState(board, 0);
 
         // When trying to capture a phalanx of the same size
-        const move: EpaminondasMove = new EpaminondasMove(0, 11, 2, 2, Direction.UP);
+        const move: EpaminondasMove = new EpaminondasMove(0, 11, 2, 2, Ordinal.UP);
 
         // Then it should fail
         const reason: string = EpaminondasFailure.PHALANX_SHOULD_BE_GREATER_TO_CAPTURE();
@@ -208,7 +208,7 @@ describe('EpaminondasRules', () => {
         const state: EpaminondasState = new EpaminondasState(board, 0);
 
         // When trying to capture one of its own
-        const move: EpaminondasMove = new EpaminondasMove(0, 11, 2, 2, Direction.UP);
+        const move: EpaminondasMove = new EpaminondasMove(0, 11, 2, 2, Ordinal.UP);
 
         // Then it should fail
         const reason: string = RulesFailure.SHOULD_LAND_ON_EMPTY_OR_OPPONENT_SPACE();
@@ -234,10 +234,36 @@ describe('EpaminondasRules', () => {
         const state: EpaminondasState = new EpaminondasState(board, 1);
 
         // When trying to move a piece of the opponent
-        const move: EpaminondasMove = new EpaminondasMove(0, 10, 1, 1, Direction.UP);
+        const move: EpaminondasMove = new EpaminondasMove(0, 10, 1, 1, Ordinal.UP);
 
         // Then it should fail
         const reason: string = EpaminondasFailure.PHALANX_CANNOT_CONTAIN_OPPONENT_PIECE();
+        RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
+    });
+
+    it('should forbid moving split-phalanx', () => {
+        // Given a board
+        const board: Table<PlayerOrNone> = [
+            [_, X, X, X, X, X, X, X, X, X, X, X, X, X],
+            [X, X, X, X, X, X, X, X, X, X, X, X, X, X],
+            [X, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [O, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, O, O, O, O, O, O, O, O, O, O, O, O, O],
+            [O, O, O, O, O, O, O, O, O, O, O, O, O, O],
+        ];
+        const state: EpaminondasState = new EpaminondasState(board, 2);
+
+        // When trying to move a piece of the opponent
+        const move: EpaminondasMove = new EpaminondasMove(0, 11, 3, 1, Ordinal.UP);
+
+        // Then it should fail
+        const reason: string = EpaminondasFailure.PHALANX_CANNOT_CONTAIN_EMPTY_SQUARE();
         RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
     });
 
@@ -259,7 +285,7 @@ describe('EpaminondasRules', () => {
         ];
         const state: EpaminondasState = new EpaminondasState(board, 0);
         // When performing a legal move
-        const move: EpaminondasMove = new EpaminondasMove(0, 11, 2, 2, Direction.UP);
+        const move: EpaminondasMove = new EpaminondasMove(0, 11, 2, 2, Ordinal.UP);
         // Then it should succeed
         const expectedBoard: Table<PlayerOrNone> = [
             [X, X, X, X, X, X, X, X, X, X, X, X, X, X],
@@ -297,7 +323,7 @@ describe('EpaminondasRules', () => {
         ];
         const state: EpaminondasState = new EpaminondasState(board, 0);
         // When performing the capture
-        const move: EpaminondasMove = new EpaminondasMove(0, 11, 3, 1, Direction.UP);
+        const move: EpaminondasMove = new EpaminondasMove(0, 11, 3, 1, Ordinal.UP);
         // Then it should succeed
         const expectedBoard: Table<PlayerOrNone> = [
             [X, X, X, X, X, X, X, X, X, X, X, X, X, X],
@@ -336,7 +362,7 @@ describe('EpaminondasRules', () => {
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
             ];
             const state: EpaminondasState = new EpaminondasState(board, 2);
-            const move: EpaminondasMove = new EpaminondasMove(0, 9, 1, 1, Direction.DOWN);
+            const move: EpaminondasMove = new EpaminondasMove(0, 9, 1, 1, Ordinal.DOWN);
             const node: EpaminondasNode = new EpaminondasNode(state, MGPOptional.empty(), MGPOptional.of(move));
             // Then it should be a victory for 0
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, defaultConfig);
@@ -359,7 +385,7 @@ describe('EpaminondasRules', () => {
                 [X, _, _, _, _, _, _, _, _, _, _, _, _, _],
             ];
             const state: EpaminondasState = new EpaminondasState(board, 1);
-            const move: EpaminondasMove = new EpaminondasMove(0, 2, 1, 1, Direction.UP);
+            const move: EpaminondasMove = new EpaminondasMove(0, 2, 1, 1, Ordinal.UP);
             const node: EpaminondasNode = new EpaminondasNode(state, MGPOptional.empty(), MGPOptional.of(move));
             // Then it should be a victory for player 1
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, defaultConfig);
@@ -382,7 +408,7 @@ describe('EpaminondasRules', () => {
                 [X, _, _, _, _, _, _, _, _, _, _, _, _, _],
             ];
             const state: EpaminondasState = new EpaminondasState(board, 2);
-            const move: EpaminondasMove = new EpaminondasMove(0, 10, 1, 1, Direction.DOWN);
+            const move: EpaminondasMove = new EpaminondasMove(0, 10, 1, 1, Ordinal.DOWN);
             const node: EpaminondasNode = new EpaminondasNode(state, MGPOptional.empty(), MGPOptional.of(move));
             // Then it should be considered as ongoing
             RulesUtils.expectToBeOngoing(rules, node, defaultConfig);
@@ -405,7 +431,7 @@ describe('EpaminondasRules', () => {
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
             ];
             const state: EpaminondasState = new EpaminondasState(board, 1);
-            const move: EpaminondasMove = new EpaminondasMove(2, 9, 2, 1, Direction.LEFT);
+            const move: EpaminondasMove = new EpaminondasMove(2, 9, 2, 1, Ordinal.LEFT);
             const node: EpaminondasNode = new EpaminondasNode(state, MGPOptional.empty(), MGPOptional.of(move));
             // Then it should be a win for player zero
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, defaultConfig);
@@ -428,7 +454,7 @@ describe('EpaminondasRules', () => {
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
             ];
             const state: EpaminondasState = new EpaminondasState(board, 2);
-            const move: EpaminondasMove = new EpaminondasMove(2, 9, 2, 1, Direction.LEFT);
+            const move: EpaminondasMove = new EpaminondasMove(2, 9, 2, 1, Ordinal.LEFT);
             const node: EpaminondasNode = new EpaminondasNode(state, MGPOptional.empty(), MGPOptional.of(move));
             // Then it should be a win for player one
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, defaultConfig);

@@ -1,12 +1,11 @@
 /* eslint-disable max-lines-per-function */
-import { Orthogonal } from 'src/app/jscaip/Direction';
+import { Orthogonal } from 'src/app/jscaip/Orthogonal';
 import { PlayerOrNone } from 'src/app/jscaip/Player';
 import { QuixoConfig, QuixoState } from '../QuixoState';
 import { QuixoNode, QuixoRules } from '../QuixoRules';
 import { QuixoMove } from '../QuixoMove';
-import { EncoderTestUtils } from 'src/app/utils/tests/Encoder.spec';
-import { Table } from 'src/app/utils/ArrayUtils';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { EncoderTestUtils, MGPOptional } from '@everyboard/lib';
+import { Table } from 'src/app/jscaip/TableUtils';
 import { QuixoMoveGenerator } from '../QuixoMoveGenerator';
 
 describe('QuixoMove', () => {
@@ -23,9 +22,9 @@ describe('QuixoMove', () => {
             [X, _, _, _, _],
             [_, _, _, X, _],
         ];
-        const move: QuixoMove = new QuixoMove(0, 0, Orthogonal.DOWN);
+        const previousMove: QuixoMove = new QuixoMove(0, 0, Orthogonal.DOWN);
         const state: QuixoState = new QuixoState(board, 0);
-        const node: QuixoNode = new QuixoNode(state, MGPOptional.empty(), MGPOptional.of(move));
+        const node: QuixoNode = new QuixoNode(state, MGPOptional.empty(), MGPOptional.of(previousMove));
         const moveGenerator: QuixoMoveGenerator = new QuixoMoveGenerator();
         const moves: QuixoMove[] = moveGenerator.getListMoves(node, defaultConfig);
         for (const move of moves) {

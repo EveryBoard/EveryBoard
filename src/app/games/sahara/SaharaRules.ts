@@ -5,17 +5,15 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { SaharaMove } from './SaharaMove';
 import { SaharaState } from './SaharaState';
 import { TriangularCheckerBoard } from 'src/app/jscaip/TriangularCheckerBoard';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { Debug } from 'src/app/utils/utils';
+import { MGPOptional, MGPSet, MGPValidation } from '@everyboard/lib';
 import { TriangularGameState } from 'src/app/jscaip/TriangularGameState';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { SaharaFailure } from './SaharaFailure';
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
-import { MGPValidation } from 'src/app/utils/MGPValidation';
-import { Table } from 'src/app/utils/ArrayUtils';
-import { MGPSet } from 'src/app/utils/MGPSet';
+import { Table } from 'src/app/jscaip/TableUtils';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { Debug } from 'src/app/utils/Debug';
 
 export class SaharaNode extends GameNode<SaharaMove, SaharaState> {}
 
@@ -116,9 +114,9 @@ export class SaharaRules extends Rules<SaharaMove, SaharaState> {
     }
 
     public getLandingCoords(board: Table<FourStatePiece>, coord: Coord): Coord[] {
-        const isOnBoardAndEmpty: (coord: Coord) => boolean = (coord: Coord) => {
-            return SaharaState.isOnBoard(coord) &&
-                   board[coord.y][coord.x] === FourStatePiece.EMPTY;
+        const isOnBoardAndEmpty: (c: Coord) => boolean = (c: Coord) => {
+            return SaharaState.isOnBoard(c) &&
+                   board[c.y][c.x] === FourStatePiece.EMPTY;
         };
         const landings: MGPSet<Coord> =
             new MGPSet(TriangularCheckerBoard.getNeighbors(coord).filter(isOnBoardAndEmpty));

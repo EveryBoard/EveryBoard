@@ -3,9 +3,7 @@ import { Router } from '@angular/router';
 import { DebugElement } from '@angular/core';
 import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 
-import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { MGPValidation } from 'src/app/utils/MGPValidation';
-import { JSONValue } from 'src/app/utils/utils';
+import { JSONValue, MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 import { ComponentTestUtils, expectValidRouting } from 'src/app/utils/tests/TestUtils.spec';
 
 import { UserMocks } from 'src/app/domain/UserMocks.spec';
@@ -31,7 +29,6 @@ import { Minimax } from 'src/app/jscaip/AI/Minimax';
 import { P4MoveGenerator } from 'src/app/games/p4/P4MoveGenerator';
 import { P4Heuristic } from 'src/app/games/p4/P4Heuristic';
 import { P4Config, P4Rules } from 'src/app/games/p4/P4Rules';
-import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 
 const _: PlayerOrNone = PlayerOrNone.NONE;
@@ -87,6 +84,7 @@ describe('LocalGameWrapperComponent (game phase)', () => {
         ConnectedUserServiceMock.setUser(UserMocks.CONNECTED_AUTH_USER);
         TestBed.inject(ErrorLoggerService);
     }));
+
     it('should create the component at turn 0', () => {
         expect(testUtils.getGameComponent()).toBeTruthy();
         const state: P4State = testUtils.getGameComponent().getState();
@@ -110,12 +108,14 @@ describe('LocalGameWrapperComponent (game phase)', () => {
         // Then the turn should be incremented
         expect(testUtils.getGameComponent().getTurn()).toBe(1);
     }));
+
     it('should be interactive by default', fakeAsync(async() => {
         // Given a game
         // When displaying it
         // Then it is interactive
         expect(testUtils.getGameComponent().isInteractive()).toBeTrue();
     }));
+
     it('should show draw', fakeAsync(async() => {
         const board: PlayerOrNone[][] = [
             [O, O, O, _, O, O, O],
@@ -131,6 +131,7 @@ describe('LocalGameWrapperComponent (game phase)', () => {
         await testUtils.expectMoveSuccess('#click_3', P4Move.of(3));
         testUtils.expectElementToExist('#draw');
     }));
+
     it('should not allow clicks after the end of the game', fakeAsync(async() => {
         // Given a game about to end
         const board: PlayerOrNone[][] = [
@@ -148,6 +149,7 @@ describe('LocalGameWrapperComponent (game phase)', () => {
         // Then it should not be possible to click again
         await testUtils.expectClickFailure('#click_3', GameWrapperMessages.GAME_HAS_ENDED());
     }));
+
     it('should show score if needed', fakeAsync(async() => {
         testUtils.getGameComponent().scores = MGPOptional.empty();
         testUtils.expectElementNotToExist('#scoreZero');
@@ -159,6 +161,7 @@ describe('LocalGameWrapperComponent (game phase)', () => {
         testUtils.expectElementToExist('#scoreZero');
         testUtils.expectElementToExist('#scoreOne');
     }));
+
     describe('restarting games', () => {
         it('should allow to restart game during the play', fakeAsync(async() => {
             // Given the board at any moment
@@ -227,41 +230,39 @@ describe('LocalGameWrapperComponent (game phase)', () => {
             expect(testUtils.getGameComponent().hideLastMove).toHaveBeenCalledOnceWith();
         }));
     });
+
     describe('Using AI', () => {
-        it('should disable interactivity when AI is selected without level', async() => {
+
+        it('should disable interactivity when AI is selected without level', fakeAsync(async() => {
             // Given a game which is initially interactive, with a background showing it
             expect(testUtils.getGameComponent().isInteractive()).toBeTrue();
             testUtils.expectElementToExist('.tile .player0-bg');
 
             // When selecting only the AI without the depth for the current player
-            const selectAI: HTMLSelectElement = testUtils.findElement('#playerZeroSelect').nativeElement;
-            selectAI.value = selectAI.options[1].value;
-            selectAI.dispatchEvent(new Event('change'));
-            testUtils.detectChanges();
-            await testUtils.whenStable();
+            await testUtils.selectChildElementOfDropDown('#playerZeroSelect', 'playerZero_ai_Minimax');
 
             // Then the game should not be interactive anymore
-            expect(testUtils.getGameComponent().isInteractive()).toBeFalse();
+            expect(testUtils.getGameComponent().isInteractive())
+                .withContext('Interactivity should be false')
+                .toBeFalse();
             // nor should it show the current player background
             testUtils.expectElementNotToExist('.tile .player0-bg');
-        });
+        }));
 
-        it('should show level when non-human player is selected', async() => {
+        it('should show level when non-human player is selected', fakeAsync(async() => {
             // Given a board where human are playing human
-            testUtils.expectElementNotToExist('#aiZeroLevelSelect');
+            testUtils.expectElementNotToExist('#aiZeroOptionSelect');
 
             // When selecting an AI for player ZERO
-            const selectAI: HTMLSelectElement = testUtils.findElement('#playerZeroSelect').nativeElement;
-            selectAI.value = selectAI.options[1].value;
-            selectAI.dispatchEvent(new Event('change'));
-            testUtils.detectChanges();
-            await testUtils.whenStable();
+            const aiName: string = '#playerZeroSelect';
+            await testUtils.selectChildElementOfDropDown(aiName, 'playerZero_ai_Minimax');
 
             // Then AI name should be diplayed and the level selectable
-            const aiName: string = selectAI.options[selectAI.selectedIndex].label;
-            expect(aiName).toBe('Minimax');
-            testUtils.expectElementToExist('#aiZeroLevelSelect');
-        });
+            const selectedAI: HTMLSelectElement = testUtils.findElement(aiName).nativeElement;
+            const chosenAiName: string = selectedAI.options[selectedAI.selectedIndex].label;
+            expect(chosenAiName).toBe('Minimax');
+            testUtils.expectElementToExist('#aiZeroOptionSelect');
+        }));
 
         it('should show level when non-human player is selected, and propose AI to play', fakeAsync(async() => {
             // Given any board
@@ -278,7 +279,7 @@ describe('LocalGameWrapperComponent (game phase)', () => {
             // Once by changing it on the select, once after the AI move and check who is next
         }));
 
-        it('should rotate the board when selecting AI as player zero', async() => {
+        it('should rotate the board when selecting AI as player zero', fakeAsync(async() => {
             // Given a board of a reversible component
             testUtils.getGameComponent().hasAsymmetricBoard = true;
 
@@ -288,12 +289,14 @@ describe('LocalGameWrapperComponent (game phase)', () => {
             // Then the board should have been rotated so that player one, the human, stays below
             const rotation: string = testUtils.getGameComponent().rotation;
             expect(rotation).toBe('rotate(180)');
-        });
+            tick(LocalGameWrapperComponent.AI_TIMEOUT);
+        }));
 
-        it('should de-rotate the board when selecting human as player zero again', async() => {
+        it('should de-rotate the board when selecting human as player zero again', fakeAsync(async() => {
             // Given a board of a reversible component, where AI is player zero
             testUtils.getGameComponent().hasAsymmetricBoard = true;
             await testUtils.selectAIPlayer(Player.ZERO);
+            tick(LocalGameWrapperComponent.AI_TIMEOUT);
 
             // When chosing the human as player zero again
             await testUtils.choosingAIOrHuman(Player.ZERO, 'human');
@@ -301,7 +304,7 @@ describe('LocalGameWrapperComponent (game phase)', () => {
             // Then the board should have been rotated so that player zero is below again
             const rotation: string = testUtils.getGameComponent().rotation;
             expect(rotation).toBe('rotate(0)');
-        });
+        }));
 
         it('should propose AI to play when restarting game', fakeAsync(async() => {
             const wrapper: LocalGameWrapperComponent = testUtils.getWrapper() as LocalGameWrapperComponent;
@@ -321,28 +324,29 @@ describe('LocalGameWrapperComponent (game phase)', () => {
         it('should propose AI 2 to play when selecting her just before her turn', fakeAsync(async() => {
             // Given wrapper on which a first move have been done
             await testUtils.expectMoveSuccess('#click_4', P4Move.of(4));
-
             // When clicking on AI then its level
-            const selectAI: HTMLSelectElement = testUtils.findElement('#playerOneSelect').nativeElement;
-            selectAI.value = selectAI.options[1].value;
-            selectAI.dispatchEvent(new Event('change'));
-            testUtils.detectChanges();
-            await testUtils.whenStable();
-            const selectDepth: HTMLSelectElement = testUtils.findElement('#aiOneLevelSelect').nativeElement;
-            const proposeAIToPlay: jasmine.Spy =
-                spyOn(testUtils.getWrapper() as LocalGameWrapperComponent, 'proposeAIToPlay').and.callThrough();
-            selectDepth.value = selectDepth.options[1].value;
-            selectDepth.dispatchEvent(new Event('change'));
-            testUtils.detectChanges();
+            await testUtils.selectChildElementOfDropDown('#playerOneSelect', 'playerOne_ai_Minimax');
+            const localGameWrapper: LocalGameWrapperComponent = testUtils.getWrapper() as LocalGameWrapperComponent;
+            spyOn(localGameWrapper, 'proposeAIToPlay').and.callThrough();
+            const gameComponent: AbstractGameComponent = testUtils.getGameComponent();
+            spyOn(gameComponent, 'hideLastMove').and.callThrough();
+            expect(gameComponent.getState().turn)
+                .withContext('after we did one move')
+                .toEqual(1);
+            await testUtils.selectChildElementOfDropDown('#aiOneOptionSelect', 'playerOne_option_Level 1');
             tick(LocalGameWrapperComponent.AI_TIMEOUT);
-            await testUtils.whenStable();
 
             // Then it should have proposed AI to play
-            expect(proposeAIToPlay).toHaveBeenCalledTimes(2);
+            expect(localGameWrapper.proposeAIToPlay).toHaveBeenCalledTimes(2);
+            // And hideLastMove should have been called twice (the first one is too soon)
+            expect(gameComponent.hideLastMove).toHaveBeenCalledTimes(2);
+            expect(gameComponent.getState().turn)
+                .withContext('after AI did her move')
+                .toEqual(2);
         }));
 
         it('Minimax proposing illegal move should log error and show it to the user', fakeAsync(async() => {
-            spyOn(ErrorLoggerService, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
+            spyOn(Utils, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
             // Given a board and a buggy AI (that performs an illegal move)
             const localGameWrapper: LocalGameWrapperComponent = testUtils.getWrapper() as LocalGameWrapperComponent;
             spyOn(testUtils.getGameComponent().rules, 'choose').and.returnValue(MGPFallible.failure('illegal'));
@@ -361,7 +365,7 @@ describe('LocalGameWrapperComponent (game phase)', () => {
             expect(result.isFailure()).toBeTrue();
             const errorMessage: string = 'AI chose illegal move';
             const errorData: JSONValue = { game: 'P4', name: 'Minimax', move: 'P4Move(0)', reason: 'illegal' };
-            expect(ErrorLoggerService.logError).toHaveBeenCalledWith('LocalGameWrapper', errorMessage, errorData);
+            expect(Utils.logError).toHaveBeenCalledWith('LocalGameWrapper', errorMessage, errorData);
         }));
 
         it('should not do an AI move when the game is finished', fakeAsync(async() => {
@@ -372,16 +376,8 @@ describe('LocalGameWrapperComponent (game phase)', () => {
             spyOn(testUtils.getGameComponent().rules, 'getGameStatus').and.returnValue(GameStatus.ZERO_WON);
 
             // When selecting an AI for the current player
-            const selectAI: HTMLSelectElement = testUtils.findElement('#playerZeroSelect').nativeElement;
-            selectAI.value = selectAI.options[1].value;
-            selectAI.dispatchEvent(new Event('change'));
-            testUtils.detectChanges();
-            await testUtils.whenStable();
-            const selectDepth: HTMLSelectElement = testUtils.findElement('#aiZeroLevelSelect').nativeElement;
-            selectDepth.value = selectDepth.options[1].value;
-            selectDepth.dispatchEvent(new Event('change'));
-            testUtils.detectChanges();
-            await testUtils.whenStable();
+            await testUtils.selectChildElementOfDropDown('#playerZeroSelect', 'playerZero_ai_Minimax');
+            await testUtils.selectChildElementOfDropDown('#aiZeroOptionSelect', 'playerZero_option_Level 1');
 
             // Then it should not try to play
             expect(localGameWrapper.doAIMove).not.toHaveBeenCalled();
@@ -412,6 +408,7 @@ describe('LocalGameWrapperComponent (game phase)', () => {
         }));
 
     });
+
     describe('winner indicator', () => {
 
         const preVictoryBoard: PlayerOrNone[][] = [
@@ -496,6 +493,7 @@ describe('LocalGameWrapperComponent (game phase)', () => {
             expect(winnerTag).toBe('Minimax (Player 2) won');
         }));
     });
+
     describe('onCancelMove', () => {
         it('should showLastMove when there is one', fakeAsync(async() => {
             // Given a component with a last move
@@ -547,6 +545,7 @@ describe('LocalGameWrapperComponent (game phase)', () => {
             await testUtils.expectMoveSuccess('#click_3', P4Move.of(3));
             await testUtils.expectMoveSuccess('#click_3', P4Move.of(3));
             await testUtils.selectAIPlayer(Player.ONE);
+            await testUtils.whenStable();
 
             // When user take back
             expect(testUtils.getGameComponent().getTurn()).toBe(2);

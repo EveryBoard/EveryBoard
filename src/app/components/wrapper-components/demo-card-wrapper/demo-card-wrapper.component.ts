@@ -1,15 +1,13 @@
 import { AfterViewInit, ChangeDetectorRef, Component, Input, OnChanges, SimpleChanges, ViewChild, ViewContainerRef } from '@angular/core';
-import { AbstractNode } from 'src/app/jscaip/AI/GameNode';
-import { Utils } from 'src/app/utils/utils';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 import { GameWrapper } from '../../wrapper-components/GameWrapper';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ConnectedUserService } from 'src/app/services/ConnectedUserService';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { Move } from 'src/app/jscaip/Move';
 import { PlayerOrNone } from 'src/app/jscaip/Player';
-import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { TutorialGameWrapperMessages } from '../tutorial-game-wrapper/tutorial-game-wrapper.component';
+import { AbstractNode } from 'src/app/jscaip/AI/GameNode';
 
 export type DemoNodeInfo = {
     name: string, // The name of the game
@@ -44,7 +42,7 @@ export class DemoCardWrapperComponent extends GameWrapper<string> implements Aft
             await this.createMatchingGameComponent();
             this.gameComponent.node = this.demoNodeInfo.node;
             // The component needs to be interactive in order to show all possible stylistic elements
-            this.gameComponent.setInteractive(true);
+            await this.setInteractive(true);
             // The board needs to be updated to render the changed node, setRole will do it
             await this.setRole(this.gameComponent.getCurrentPlayer());
             // Need to detect changes before potentially clicking,
@@ -88,10 +86,6 @@ export class DemoCardWrapperComponent extends GameWrapper<string> implements Aft
         // and it is only needed in GameWrapper.canUserPlay (that is overriden here)
         // and in getBoardHighlight, unused in demo cards.
         return 'no-player';
-    }
-
-    public async onCancelMove(_reason?: string | undefined): Promise<void> {
-        return;
     }
 
     public override async canUserPlay(_clickedElementName: string): Promise<MGPValidation> {
