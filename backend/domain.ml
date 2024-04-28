@@ -1,405 +1,405 @@
 open Utils
 
 module Player = struct
-  type t = Zero | One
-  let (to_yojson, of_yojson) =
-    JSON.for_enum [
-      Zero, `Int 0;
-      One, `Int 1;
-    ]
+    type t = Zero | One
+    let (to_yojson, of_yojson) =
+        JSON.for_enum [
+            Zero, `Int 0;
+            One, `Int 1;
+        ]
 end
 
 module Role = struct
-  type t = Player | Observer | Creator | ChosenOpponent | Candidate
-  let (to_yojson, of_yojson) =
-    JSON.for_enum [
-      Player, `String "Player";
-      Observer, `String "Observer";
-      Creator, `String "Creator";
-      ChosenOpponent, `String "ChosenOpponent";
-      Candidate, `String "Candidate";
-    ]
+    type t = Player | Observer | Creator | ChosenOpponent | Candidate
+    let (to_yojson, of_yojson) =
+        JSON.for_enum [
+            Player, `String "Player";
+            Observer, `String "Observer";
+            Creator, `String "Creator";
+            ChosenOpponent, `String "ChosenOpponent";
+            Candidate, `String "Candidate";
+        ]
 end
 
 module MinimalUser = struct
-  type t = {
-    id: string;
-    name: string;
-  }
-  [@@deriving yojson, show]
+    type t = {
+        id: string;
+        name: string;
+    }
+    [@@deriving yojson, show]
 end
 
 module CurrentGame = struct
-  type t = {
-    id: string;
-    game_name: string [@key "typeGame"];
-    opponent: MinimalUser.t option;
-    role: Role.t;
-  }
-  [@@deriving yojson]
+    type t = {
+        id: string;
+        game_name: string [@key "typeGame"];
+        opponent: MinimalUser.t option;
+        role: Role.t;
+    }
+    [@@deriving yojson]
 end
 
 module User = struct
-  type t = {
-    username: string option;
-    last_update_time: string option [@default None] [@key "lastUpdateTime"];
-    verified: bool;
-    current_game: CurrentGame.t option [@key "currentGame"];
-  }
-  [@@deriving yojson]
+    type t = {
+        username: string option;
+        last_update_time: string option [@default None] [@key "lastUpdateTime"];
+        verified: bool;
+        current_game: CurrentGame.t option [@key "currentGame"];
+    }
+    [@@deriving yojson]
 
-  let to_minimal_user (uid : string) (user : t) : MinimalUser.t =
-    { id = uid; name = Option.get user.username }
+    let to_minimal_user (uid : string) (user : t) : MinimalUser.t =
+        { id = uid; name = Option.get user.username }
 end
 
 module ConfigRoom = struct
-  module GameStatus = struct
-    type t = Created | ConfigProposed | Started | Finished
+    module GameStatus = struct
+        type t = Created | ConfigProposed | Started | Finished
 
-    let (to_yojson, of_yojson) =
-      JSON.for_enum [
-        Created, `Int 0;
-        ConfigProposed, `Int 2;
-        Started, `Int 3;
-        Finished, `Int 4;
-      ]
-  end
-
-  module FirstPlayer = struct
-    type t = Random | ChosenPlayer | Creator
-
-    let (to_yojson, of_yojson) =
-      JSON.for_enum [
-        Random, `String "RANDOM";
-        ChosenPlayer, `String "CHOSEN_PLAYER";
-        Creator, `String "CREATOR";
-      ]
-  end
-
-  module GameType = struct
-    type t = Standard | Blitz | Custom
-
-    let (to_yojson, of_yojson) =
-      JSON.for_enum [
-        Standard, `String "STANDARD";
-        Blitz, `String "BLITZ";
-        Custom, `String "CUSTOM";
-      ]
-
-    let standard_move_duration = 2*60
-    let standard_game_duration = 30*60
-
-  end
-
-  module Updates = struct
-    module ReviewConfigAndRemoveOpponent = struct
-      type t = {
-        chosen_opponent: unit [@key "chosenOpponent"];
-        game_status: GameStatus.t [@key "partStatus"];
-      }
-      [@@deriving to_yojson]
-
-      let get : t = {
-        chosen_opponent = ();
-        game_status = GameStatus.Created;
-      }
+        let (to_yojson, of_yojson) =
+            JSON.for_enum [
+                Created, `Int 0;
+                ConfigProposed, `Int 2;
+                Started, `Int 3;
+                Finished, `Int 4;
+            ]
     end
 
-    module SelectOpponent = struct
-      type t = {
-        chosen_opponent: MinimalUser.t [@key "chosenOpponent"];
-      }
-      [@@deriving to_yojson]
+    module FirstPlayer = struct
+        type t = Random | ChosenPlayer | Creator
 
-      let get (opponent : MinimalUser.t) : t = {
-        chosen_opponent = opponent;
-      }
+        let (to_yojson, of_yojson) =
+            JSON.for_enum [
+                Random, `String "RANDOM";
+                ChosenPlayer, `String "CHOSEN_PLAYER";
+                Creator, `String "CREATOR";
+            ]
     end
 
-    module ReviewConfig = struct
-      type t = {
-        game_status: GameStatus.t [@key "partStatus"];
-      }
-      [@@deriving to_yojson]
+    module GameType = struct
+        type t = Standard | Blitz | Custom
 
-      let get : t = {
-        game_status = GameStatus.Created;
-      }
+        let (to_yojson, of_yojson) =
+            JSON.for_enum [
+                Standard, `String "STANDARD";
+                Blitz, `String "BLITZ";
+                Custom, `String "CUSTOM";
+            ]
+
+        let standard_move_duration = 2*60
+        let standard_game_duration = 30*60
+
     end
 
-    module Proposal = struct
-      type t = {
+    module Updates = struct
+        module ReviewConfigAndRemoveOpponent = struct
+            type t = {
+                chosen_opponent: unit [@key "chosenOpponent"];
+                game_status: GameStatus.t [@key "partStatus"];
+            }
+            [@@deriving to_yojson]
+
+            let get : t = {
+                chosen_opponent = ();
+                game_status = GameStatus.Created;
+            }
+        end
+
+        module SelectOpponent = struct
+            type t = {
+                chosen_opponent: MinimalUser.t [@key "chosenOpponent"];
+            }
+            [@@deriving to_yojson]
+
+            let get (opponent : MinimalUser.t) : t = {
+                chosen_opponent = opponent;
+            }
+        end
+
+        module ReviewConfig = struct
+            type t = {
+                game_status: GameStatus.t [@key "partStatus"];
+            }
+            [@@deriving to_yojson]
+
+            let get : t = {
+                game_status = GameStatus.Created;
+            }
+        end
+
+        module Proposal = struct
+            type t = {
+                game_status: GameStatus.t [@key "partStatus"];
+                game_type: GameType.t [@key "partType"];
+                maximal_move_duration: int [@key "maximalMoveDuration"];
+                total_part_duration: int [@key "totalPartDuration"];
+                first_player: FirstPlayer.t [@key "firstPlayer"];
+                rules_config: JSON.t [@key "rulesConfig"];
+            }
+            [@@deriving yojson]
+
+            let of_yojson (json : JSON.t) : (t, string) result =
+                match of_yojson json with
+                | Ok config when config.game_status = ConfigProposed ->
+                    Ok config
+                | Ok _ -> Error "invalid config proposal update: game_status must be ConfigProposed"
+                | Error err -> Error err
+        end
+    end
+
+    type t = {
+        creator: MinimalUser.t;
+        chosen_opponent: MinimalUser.t option [@key "chosenOpponent"];
         game_status: GameStatus.t [@key "partStatus"];
+        first_player: FirstPlayer.t [@key "firstPlayer"];
         game_type: GameType.t [@key "partType"];
         maximal_move_duration: int [@key "maximalMoveDuration"];
         total_part_duration: int [@key "totalPartDuration"];
-        first_player: FirstPlayer.t [@key "firstPlayer"];
         rules_config: JSON.t [@key "rulesConfig"];
-      }
-      [@@deriving yojson]
+    }
+    [@@deriving yojson]
 
-      let of_yojson (json : JSON.t) : (t, string) result =
-        match of_yojson json with
-        | Ok config when config.game_status = ConfigProposed ->
-          Ok config
-        | Ok _ -> Error "invalid config proposal update: game_status must be ConfigProposed"
-        | Error err -> Error err
-    end
-  end
+    let initial (creator : MinimalUser.t) : t = {
+        creator;
+        first_player = FirstPlayer.Random;
+        chosen_opponent = None;
+        game_status = GameStatus.Created;
+        game_type = GameType.Standard;
+        maximal_move_duration = GameType.standard_move_duration;
+        total_part_duration = GameType.standard_game_duration;
+        rules_config = `Assoc [];
+    }
 
-  type t = {
-    creator: MinimalUser.t;
-    chosen_opponent: MinimalUser.t option [@key "chosenOpponent"];
-    game_status: GameStatus.t [@key "partStatus"];
-    first_player: FirstPlayer.t [@key "firstPlayer"];
-    game_type: GameType.t [@key "partType"];
-    maximal_move_duration: int [@key "maximalMoveDuration"];
-    total_part_duration: int [@key "totalPartDuration"];
-    rules_config: JSON.t [@key "rulesConfig"];
-  }
-  [@@deriving yojson]
-
-  let initial (creator : MinimalUser.t) : t = {
-    creator;
-    first_player = FirstPlayer.Random;
-    chosen_opponent = None;
-    game_status = GameStatus.Created;
-    game_type = GameType.Standard;
-    maximal_move_duration = GameType.standard_move_duration;
-    total_part_duration = GameType.standard_game_duration;
-    rules_config = `Assoc [];
-  }
-
-  let rematch (config_room : t) (first_player : FirstPlayer.t) (creator : MinimalUser.t) (chosen_opponent : MinimalUser.t) : t =
-    let game_status = GameStatus.Started in
-    { config_room with game_status; first_player; creator; chosen_opponent = Some chosen_opponent }
+    let rematch (config_room : t) (first_player : FirstPlayer.t) (creator : MinimalUser.t) (chosen_opponent : MinimalUser.t) : t =
+        let game_status = GameStatus.Started in
+        { config_room with game_status; first_player; creator; chosen_opponent = Some chosen_opponent }
 
 end
 
 module Game = struct
-  module GameResult = struct
-    type t = HardDraw | Resign | Victory | Timeout | Unachieved | AgreedDrawBy of Player.t
+    module GameResult = struct
+        type t = HardDraw | Resign | Victory | Timeout | Unachieved | AgreedDrawBy of Player.t
 
-    let (to_yojson, of_yojson) =
-      JSON.for_enum [
-        HardDraw, `Int 0;
-        Resign, `Int 1;
-        Victory, `Int 3;
-        Timeout, `Int 4;
-        Unachieved, `Int 5;
-        AgreedDrawBy Player.Zero, `Int 6;
-        AgreedDrawBy Player.One, `Int 7;
-      ]
-  end
+        let (to_yojson, of_yojson) =
+            JSON.for_enum [
+                HardDraw, `Int 0;
+                Resign, `Int 1;
+                Victory, `Int 3;
+                Timeout, `Int 4;
+                Unachieved, `Int 5;
+                AgreedDrawBy Player.Zero, `Int 6;
+                AgreedDrawBy Player.One, `Int 7;
+            ]
+    end
 
-  module Updates = struct
-    module Start = struct
-      type t = {
+    module Updates = struct
+        module Start = struct
+            type t = {
+                player_zero: MinimalUser.t [@key "playerZero"];
+                player_one: MinimalUser.t [@key "playerOne"];
+                turn: int;
+                beginning: int option;
+            }
+            [@@deriving to_yojson]
+
+            let get (config_room : ConfigRoom.t) (now : int) (rand_bool : unit -> bool) : t =
+                let starter = match config_room.first_player with
+                    | Random ->
+                        if rand_bool ()
+                        then ConfigRoom.FirstPlayer.Creator
+                        else ConfigRoom.FirstPlayer.ChosenPlayer
+                    | first -> first in
+                let (player_zero, player_one) =
+                    if starter = ConfigRoom.FirstPlayer.Creator
+                    then (config_room.creator, Option.get config_room.chosen_opponent)
+                    else (Option.get config_room.chosen_opponent, config_room.creator)
+                in
+                {
+                    player_zero;
+                    player_one;
+                    turn = 0;
+                    beginning = Some now
+                }
+        end
+
+        module End = struct
+            type t = {
+                winner: MinimalUser.t option;
+                loser: MinimalUser.t option;
+                result: GameResult.t;
+            }
+            [@@deriving to_yojson]
+
+            let get ?(winner : MinimalUser.t option) ?(loser : MinimalUser.t option) (result : GameResult.t) : t =
+                { winner; loser; result; }
+        end
+
+        module EndWithMove = struct
+            type t = {
+                turn: int;
+                winner: MinimalUser.t option;
+                loser: MinimalUser.t option;
+                result: GameResult.t;
+                score_player_zero: int option [@key "scorePlayerZero"];
+                score_player_one: int option [@key "scorePlayerOne"];
+            }
+            [@@deriving to_yojson]
+
+            let get ?(winner : MinimalUser.t option) ?(loser : MinimalUser.t option) ?(scores : (int * int) option) (result : GameResult.t) (final_turn : int) : t =
+                let (score_player_zero, score_player_one) = match scores with
+                    | None -> (None, None)
+                    | Some (score0, score1) -> (Some score0, Some score1) in
+                { winner; loser; result; score_player_zero; score_player_one; turn = final_turn }
+        end
+
+        module TakeBack = struct
+            type t = {
+                turn: int;
+            }
+            [@@deriving to_yojson]
+
+            let get (turn : int) : t =
+                { turn }
+        end
+
+        module EndTurn = struct
+            type t = {
+                turn: int;
+                score_player_zero: int option [@key "scorePlayerZero"];
+                score_player_one: int option [@key "scorePlayerOne"];
+            }
+            [@@deriving to_yojson]
+
+            let get ?(scores : (int * int) option) (turn : int) : t =
+                let new_turn = turn + 1 in
+                let (score_player_zero, score_player_one) = match scores with
+                    | Some (score0, score1) -> (Some score0, Some score1)
+                    | None -> (None, None) in
+                { turn = new_turn; score_player_zero; score_player_one }
+        end
+    end
+
+    module Event = struct
+        module Request = struct
+            type t = {
+                event_type: string [@key "eventType"];
+                time: int;
+                user: MinimalUser.t;
+                request_type: string [@key "requestType"];
+            }
+            [@@deriving to_yojson]
+
+            let make (user : MinimalUser.t) (request_type : string) (now : int) : t =
+                { event_type = "Request"; time = now; user; request_type }
+            let draw (user : MinimalUser.t) (now : int) : t =
+                make user "Draw" now
+            let rematch (user : MinimalUser.t) (now : int) : t =
+                make user "Rematch" now
+            let take_back (user : MinimalUser.t) (now : int) : t =
+                make user "TakeBack" now
+        end
+
+        module Reply = struct
+            type t = {
+                event_type: string [@key "eventType"];
+                time: int;
+                user: MinimalUser.t;
+                reply: string;
+                request_type: string [@key "requestType"];
+                data: JSON.t option;
+            }
+            [@@deriving to_yojson]
+
+            let make ?(data : JSON.t option) (user : MinimalUser.t) (reply : string) (request_type : string) (now : int) : t =
+                { event_type = "Reply"; time = now; user; reply; request_type; data }
+            let accept ?(data: JSON.t option) (user : MinimalUser.t) (proposition : string) (now : int) : t =
+                make user "Accept" proposition now ?data
+            let refuse ?(data: JSON.t option) (user : MinimalUser.t) (proposition : string) (now : int) : t =
+                make user "Reject" proposition now ?data
+        end
+
+        module Action = struct
+            type t = {
+                event_type: string [@key "eventType"];
+                time: int;
+                user: MinimalUser.t;
+                action: string;
+            }
+            [@@deriving to_yojson]
+
+            let add_time (user : MinimalUser.t) (kind : [ `Turn | `Global ]) (now : int) : t =
+                let action = match kind with
+                    | `Turn -> "AddTurnTime"
+                    | `Global -> "AddGlobalTime" in
+                { event_type = "Action"; action; user; time = now }
+            let start_game (user : MinimalUser.t) (now : int): t =
+                { event_type = "Action"; action = "StartGame"; user; time = now }
+            let end_game (user : MinimalUser.t) (now : int) : t =
+                { event_type = "Action"; action = "EndGame"; user; time = now }
+        end
+
+        module Move = struct
+            type t = {
+                event_type: string [@key "eventType"];
+                time: int;
+                user: MinimalUser.t;
+                move: JSON.t;
+            }
+            [@@deriving to_yojson]
+
+            let of_json (user : MinimalUser.t) (move : JSON.t) (now : int) : t =
+                { event_type = "Move"; user; move; time = now }
+        end
+
+        type t =
+            | Request of Request.t
+            | Reply of Reply.t
+            | Action of Action.t
+            | Move of Move.t
+
+        let to_yojson (event : t) : JSON.t = match event with
+            | Request request -> Request.to_yojson request
+            | Reply reply -> Reply.to_yojson reply
+            | Action action -> Action.to_yojson action
+            | Move move -> Move.to_yojson move
+
+    end
+
+    type t = {
+        type_game: string [@key "typeGame"];
         player_zero: MinimalUser.t [@key "playerZero"];
-        player_one: MinimalUser.t [@key "playerOne"];
         turn: int;
+        result: GameResult.t;
+
+        (* TODO: winner/loser in the DB should probably just be player zero/one, as we already know who is who according to player_zero and _one *)
+        player_one: MinimalUser.t option [@key "playerOne"];
         beginning: int option;
-      }
-      [@@deriving to_yojson]
-
-      let get (config_room : ConfigRoom.t) (now : int) (rand_bool : unit -> bool) : t =
-        let starter = match config_room.first_player with
-          | Random ->
-            if rand_bool ()
-            then ConfigRoom.FirstPlayer.Creator
-            else ConfigRoom.FirstPlayer.ChosenPlayer
-          | first -> first in
-        let (player_zero, player_one) =
-          if starter = ConfigRoom.FirstPlayer.Creator
-          then (config_room.creator, Option.get config_room.chosen_opponent)
-          else (Option.get config_room.chosen_opponent, config_room.creator)
-        in
-        {
-          player_zero;
-          player_one;
-          turn = 0;
-          beginning = Some now
-        }
-    end
-
-    module End = struct
-      type t = {
         winner: MinimalUser.t option;
         loser: MinimalUser.t option;
-        result: GameResult.t;
-      }
-      [@@deriving to_yojson]
-
-      let get ?(winner : MinimalUser.t option) ?(loser : MinimalUser.t option) (result : GameResult.t) : t =
-        { winner; loser; result; }
-    end
-
-    module EndWithMove = struct
-      type t = {
-        turn: int;
-        winner: MinimalUser.t option;
-        loser: MinimalUser.t option;
-        result: GameResult.t;
         score_player_zero: int option [@key "scorePlayerZero"];
         score_player_one: int option [@key "scorePlayerOne"];
-      }
-      [@@deriving to_yojson]
+    }
+    [@@deriving yojson]
 
-      let get ?(winner : MinimalUser.t option) ?(loser : MinimalUser.t option) ?(scores : (int * int) option) (result : GameResult.t) (final_turn : int) : t =
-        let (score_player_zero, score_player_one) = match scores with
-          | None -> (None, None)
-          | Some (score0, score1) -> (Some score0, Some score1) in
-        { winner; loser; result; score_player_zero; score_player_one; turn = final_turn }
-    end
+    let initial (game_name : string) (creator : MinimalUser.t) : t = {
+        type_game = game_name;
+        player_zero = creator;
+        turn = -1;
+        result = GameResult.Unachieved;
+        player_one = None;
+        beginning = None;
+        winner = None;
+        loser = None;
+        score_player_zero = None;
+        score_player_one = None;
+    }
 
-    module TakeBack = struct
-      type t = {
-        turn: int;
-      }
-      [@@deriving to_yojson]
-
-      let get (turn : int) : t =
-        { turn }
-    end
-
-    module EndTurn = struct
-      type t = {
-        turn: int;
-        score_player_zero: int option [@key "scorePlayerZero"];
-        score_player_one: int option [@key "scorePlayerOne"];
-      }
-      [@@deriving to_yojson]
-
-      let get ?(scores : (int * int) option) (turn : int) : t =
-        let new_turn = turn + 1 in
-        let (score_player_zero, score_player_one) = match scores with
-        | Some (score0, score1) -> (Some score0, Some score1)
-        | None -> (None, None) in
-        { turn = new_turn; score_player_zero; score_player_one }
-    end
-  end
-
-  module Event = struct
-    module Request = struct
-      type t = {
-        event_type: string [@key "eventType"];
-        time: int;
-        user: MinimalUser.t;
-        request_type: string [@key "requestType"];
-      }
-      [@@deriving to_yojson]
-
-      let make (user : MinimalUser.t) (request_type : string) (now : int) : t =
-        { event_type = "Request"; time = now; user; request_type }
-      let draw (user : MinimalUser.t) (now : int) : t =
-        make user "Draw" now
-      let rematch (user : MinimalUser.t) (now : int) : t =
-        make user "Rematch" now
-      let take_back (user : MinimalUser.t) (now : int) : t =
-        make user "TakeBack" now
-    end
-
-    module Reply = struct
-      type t = {
-        event_type: string [@key "eventType"];
-        time: int;
-        user: MinimalUser.t;
-        reply: string;
-        request_type: string [@key "requestType"];
-        data: JSON.t option;
-      }
-      [@@deriving to_yojson]
-
-      let make ?(data : JSON.t option) (user : MinimalUser.t) (reply : string) (request_type : string) (now : int) : t =
-        { event_type = "Reply"; time = now; user; reply; request_type; data }
-      let accept ?(data: JSON.t option) (user : MinimalUser.t) (proposition : string) (now : int) : t =
-        make user "Accept" proposition now ?data
-      let refuse ?(data: JSON.t option) (user : MinimalUser.t) (proposition : string) (now : int) : t =
-        make user "Reject" proposition now ?data
-    end
-
-    module Action = struct
-      type t = {
-        event_type: string [@key "eventType"];
-        time: int;
-        user: MinimalUser.t;
-        action: string;
-      }
-      [@@deriving to_yojson]
-
-      let add_time (user : MinimalUser.t) (kind : [ `Turn | `Global ]) (now : int) : t =
-        let action = match kind with
-          | `Turn -> "AddTurnTime"
-          | `Global -> "AddGlobalTime" in
-        { event_type = "Action"; action; user; time = now }
-      let start_game (user : MinimalUser.t) (now : int): t =
-        { event_type = "Action"; action = "StartGame"; user; time = now }
-      let end_game (user : MinimalUser.t) (now : int) : t =
-        { event_type = "Action"; action = "EndGame"; user; time = now }
-    end
-
-    module Move = struct
-      type t = {
-        event_type: string [@key "eventType"];
-        time: int;
-        user: MinimalUser.t;
-        move: JSON.t;
-      }
-      [@@deriving to_yojson]
-
-      let of_json (user : MinimalUser.t) (move : JSON.t) (now : int) : t =
-        { event_type = "Move"; user; move; time = now }
-    end
-
-    type t =
-      | Request of Request.t
-      | Reply of Reply.t
-      | Action of Action.t
-      | Move of Move.t
-
-    let to_yojson (event : t) : JSON.t = match event with
-      | Request request -> Request.to_yojson request
-      | Reply reply -> Reply.to_yojson reply
-      | Action action -> Action.to_yojson action
-      | Move move -> Move.to_yojson move
-
-  end
-
-  type t = {
-    type_game: string [@key "typeGame"];
-    player_zero: MinimalUser.t [@key "playerZero"];
-    turn: int;
-    result: GameResult.t;
-
-    (* TODO: winner/loser in the DB should probably just be player zero/one, as we already know who is who according to player_zero and _one *)
-    player_one: MinimalUser.t option [@key "playerOne"];
-    beginning: int option;
-    winner: MinimalUser.t option;
-    loser: MinimalUser.t option;
-    score_player_zero: int option [@key "scorePlayerZero"];
-    score_player_one: int option [@key "scorePlayerOne"];
-  }
-  [@@deriving yojson]
-
-  let initial (game_name : string) (creator : MinimalUser.t) : t = {
-    type_game = game_name;
-    player_zero = creator;
-    turn = -1;
-    result = GameResult.Unachieved;
-    player_one = None;
-    beginning = None;
-    winner = None;
-    loser = None;
-    score_player_zero = None;
-    score_player_one = None;
-  }
-
-  let rematch (game_name : string) (config_room : ConfigRoom.t) (now : int) (rand_bool : unit -> bool) : t =
-    let starting = Updates.Start.get config_room now rand_bool in
-    let initial_game = initial game_name config_room.creator in
-    { initial_game with
-      player_zero = starting.player_zero;
-      player_one = Some starting.player_one;
-      turn = starting.turn;
-      beginning = starting.beginning }
+    let rematch (game_name : string) (config_room : ConfigRoom.t) (now : int) (rand_bool : unit -> bool) : t =
+        let starting = Updates.Start.get config_room now rand_bool in
+        let initial_game = initial game_name config_room.creator in
+        { initial_game with
+          player_zero = starting.player_zero;
+          player_one = Some starting.player_one;
+          turn = starting.turn;
+          beginning = starting.beginning }
 end
