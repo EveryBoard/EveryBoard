@@ -2,11 +2,13 @@
 
 # compiled output
 /dist
+/lib/dist
 /tmp
 /out-tsc
 
 # dependencies
 /node_modules
+/lib/node_modules
 
 # IDEs and editors
 /.idea
@@ -28,20 +30,13 @@
 /.angular/cache
 /.sass-cache
 /connect.lock
-/typings
-*.log
-
-# Backend build and coverage files
-/backend/_build/
-/backend/_coverage/
-/backend/games.txt
-
-# Frontend coverage
 /coverage
 ! /coverage/branches.csv
 ! /coverage/functions.csv
 ! /coverage/statements.csv
 ! /coverage/lines.csv
+/typings
+*.log
 
 # System Files
 .DS_Store
@@ -52,11 +47,15 @@ Thumbs.db
 
 # Local Netlify folder
 .netlify
-
-# Lib stuff
 /lib/tsconfig.tsbuildinfo
 /lib/build
 /lib/node_modules
 /lib/dist
-
+/lib/.nyc_output
+/lib/coverage
 .nx/
+
+# Backend build and coverage files
+/backend/_build/
+/backend/_coverage/
+/backend/games.txt

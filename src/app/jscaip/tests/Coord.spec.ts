@@ -1,7 +1,7 @@
 /* eslint-disable max-lines-per-function */
 import { TestUtils } from '@everyboard/lib';
 import { Coord } from '../Coord';
-import { Direction } from '../Direction';
+import { Ordinal } from '../Ordinal';
 
 describe('Coord', () => {
 
@@ -73,7 +73,7 @@ describe('Coord', () => {
         it('should give direction', () => {
             const center: Coord = new Coord(0, 0);
             const lowRight: Coord = new Coord(2, 2);
-            expect(center.getDirectionToward(lowRight).get()).toEqual(Direction.DOWN_RIGHT);
+            expect(center.getDirectionToward(lowRight).get()).toEqual(Ordinal.DOWN_RIGHT);
         });
 
         it('should fail when given invalid direction', () => {

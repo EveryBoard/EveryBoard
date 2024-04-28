@@ -4,7 +4,7 @@ import { TeekoConfig, TeekoNode } from './TeekoRules';
 import { Coord } from 'src/app/jscaip/Coord';
 import { PlayerOrNone } from 'src/app/jscaip/Player';
 import { MoveGenerator } from 'src/app/jscaip/AI/AI';
-import { Direction } from 'src/app/jscaip/Direction';
+import { Ordinal } from 'src/app/jscaip/Ordinal';
 import { MGPOptional } from '@everyboard/lib';
 
 export class TeekoMoveGenerator extends MoveGenerator<TeekoMove, TeekoState, TeekoConfig> {
@@ -47,7 +47,7 @@ export class TeekoMoveGenerator extends MoveGenerator<TeekoMove, TeekoState, Tee
             return this.getCoordsContaining(state, PlayerOrNone.NONE);
         } else {
             const possibleTargets: Coord[] = [];
-            for (const direction of Direction.factory.all) {
+            for (const direction of Ordinal.factory.all) {
                 const target: Coord = start.getNext(direction);
                 if (TeekoState.isOnBoard(target) && state.getPieceAt(target) === PlayerOrNone.NONE) {
                     possibleTargets.push(target);

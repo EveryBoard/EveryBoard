@@ -4,7 +4,7 @@ import { ReversiState } from './ReversiState';
 import { ReversiMove } from 'src/app/games/reversi/ReversiMove';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { Direction } from 'src/app/jscaip/Direction';
+import { Ordinal } from 'src/app/jscaip/Ordinal';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { RectangularGameComponent } from 'src/app/components/game-components/rectangular-game-component/RectangularGameComponent';
 import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
@@ -63,7 +63,7 @@ export class ReversiComponent extends RectangularGameComponent<ReversiRules,
         this.lastMove = MGPOptional.of(move.coord);
         const player: Player = this.getState().getCurrentPlayer();
         const opponent: Player = this.getState().getCurrentOpponent();
-        for (const dir of Direction.DIRECTIONS) {
+        for (const dir of Ordinal.ORDINALS) {
             let captured: Coord = move.coord.getNext(dir, 1);
             while (this.getState().isOnBoard(captured) &&
                    this.getState().getPieceAt(captured) === opponent &&

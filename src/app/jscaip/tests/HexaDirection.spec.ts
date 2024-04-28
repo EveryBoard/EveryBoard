@@ -5,6 +5,7 @@ import { HexaDirection } from '../HexaDirection';
 describe('HexaDirection', () => {
 
     describe('all', () => {
+
         it('should have its element in clockwise order', () => {
             const expectedList: HexaDirection[] = [
                 HexaDirection.UP,
@@ -16,7 +17,9 @@ describe('HexaDirection', () => {
             ];
             expect(expectedList).toEqual(HexaDirection.factory.all);
         });
+
     });
+
     it('should stringify nicely', () => {
         expect(HexaDirection.UP.toString()).toEqual('UP');
         expect(HexaDirection.UP_RIGHT.toString()).toEqual('UP_RIGHT');
@@ -25,16 +28,19 @@ describe('HexaDirection', () => {
         expect(HexaDirection.DOWN_LEFT.toString()).toEqual('DOWN_LEFT');
         expect(HexaDirection.LEFT.toString()).toEqual('LEFT');
     });
+
     it('should have a bijective encoder', () => {
         for (let i: number = 0; i < 6; i++) {
             const dir: HexaDirection = HexaDirection.factory.all[i];
             EncoderTestUtils.expectToBeBijective(HexaDirection.encoder, dir);
         }
     });
-    it('should map to angle correctly', () => {
+
+    it('should map to angle by multiple of 60', () => {
         for (let i: number = 0; i < 6; i++) {
             const dir: HexaDirection = HexaDirection.factory.all[i];
-            expect(HexaDirection.getAngle(dir)).toBe(i * 60);
+            expect(dir.getAngle()).toBe(i * 60);
         }
     });
+
 });

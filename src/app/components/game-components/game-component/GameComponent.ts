@@ -124,6 +124,8 @@ export abstract class GameComponent<R extends SuperRules<M, S, C, L>,
 
     public animationOngoing: boolean = false;
 
+    public state: S;
+
     public constructor(public readonly messageDisplayer: MessageDisplayer) {
         super();
     }

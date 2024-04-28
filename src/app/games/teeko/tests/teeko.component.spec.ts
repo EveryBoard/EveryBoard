@@ -127,7 +127,7 @@ describe('TeekoComponent', () => {
 
         describe('second click', () => {
 
-            it('should deselect the player piece when clicked on again', fakeAsync(async() => {
+            it('should deselect piece when clicking a second time on it', fakeAsync(async() => {
                 // Given any board in translation phase with a selected piece
                 const board: Table<PlayerOrNone> = [
                     [O, X, _, _, _],

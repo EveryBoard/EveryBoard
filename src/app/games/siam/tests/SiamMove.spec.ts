@@ -2,7 +2,7 @@
 import { SiamConfig, SiamNode, SiamRules } from '../SiamRules';
 import { SiamMove } from '../SiamMove';
 import { SiamState } from '../SiamState';
-import { Orthogonal } from 'src/app/jscaip/Direction';
+import { Orthogonal } from 'src/app/jscaip/Orthogonal';
 import { SiamPiece } from '../SiamPiece';
 import { EncoderTestUtils, MGPOptional } from '@everyboard/lib';
 import { Table } from 'src/app/jscaip/TableUtils';

@@ -14,14 +14,14 @@ export class EpaminondasPhalanxSizeAndFilterMoveGenerator extends EpaminondasMov
 
     private orderMovesByPhalanxSizeAndFilter(moves: EpaminondasMove[], state: EpaminondasState): EpaminondasMove[] {
         ArrayUtils.sortByDescending(moves, (move: EpaminondasMove): number => {
-            return move.movedPieces;
+            return move.phalanxSize;
         });
         if (moves.length > 40) {
             const evenMoves: EpaminondasMove[] = moves.filter((move: EpaminondasMove) => {
                 if (this.moveIsCapture(move, state)) {
                     return true;
                 } else {
-                    return (move.movedPieces * Math.random()) > 1;
+                    return (move.phalanxSize * Math.random()) > 1;
                 }
             });
             return evenMoves;
@@ -29,7 +29,7 @@ export class EpaminondasPhalanxSizeAndFilterMoveGenerator extends EpaminondasMov
         return moves;
     }
     private moveIsCapture(move: EpaminondasMove, state: EpaminondasState): boolean {
-        const landing: Coord = move.coord.getNext(move.direction, move.movedPieces + move.stepSize - 1);
+        const landing: Coord = move.coord.getNext(move.direction, move.phalanxSize + move.stepSize - 1);
         return state.board[landing.y][landing.x] === state.getCurrentOpponent();
     }
 }

@@ -1,25 +1,27 @@
 import { Component } from '@angular/core';
-import { GipfLegalityInformation, GipfRules } from 'src/app/games/gipf/GipfRules';
-import { GipfFailure } from 'src/app/games/gipf/GipfFailure';
+
 import { Coord } from 'src/app/jscaip/Coord';
 import { HexaLayout } from 'src/app/jscaip/HexaLayout';
 import { FlatHexaOrientation } from 'src/app/jscaip/HexaOrientation';
 import { Player } from 'src/app/jscaip/Player';
 import { HexaDirection } from 'src/app/jscaip/HexaDirection';
 import { HexagonalGameComponent } from '../../components/game-components/game-component/HexagonalGameComponent';
-import { GipfMove, GipfPlacement } from 'src/app/games/gipf/GipfMove';
-import { GipfState } from 'src/app/games/gipf/GipfState';
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
-import { Arrow } from 'src/app/jscaip/Arrow';
+import { Arrow } from 'src/app/components/game-components/arrow-component/Arrow';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 import { MCTS } from 'src/app/jscaip/AI/MCTS';
 import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { Minimax } from 'src/app/jscaip/AI/Minimax';
+import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
+
+import { GipfLegalityInformation, GipfRules } from 'src/app/games/gipf/GipfRules';
+import { GipfFailure } from 'src/app/games/gipf/GipfFailure';
+import { GipfMove, GipfPlacement } from 'src/app/games/gipf/GipfMove';
+import { GipfState } from 'src/app/games/gipf/GipfState';
 import { GipfMoveGenerator } from './GipfMoveGenerator';
 import { GipfScoreHeuristic } from './GipfScoreHeuristic';
-import { Minimax } from 'src/app/jscaip/AI/Minimax';
 import { GipfCapture } from 'src/app/jscaip/GipfProjectHelper';
-import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 
 @Component({
     selector: 'app-gipf',
@@ -38,8 +40,8 @@ export class GipfComponent extends HexagonalGameComponent<GipfRules,
     private static readonly PHASE_PLACEMENT_DIRECTION: number = 2;
     private static readonly PHASE_FINAL_CAPTURE: number = 3;
 
-    public inserted: MGPOptional<Arrow> = MGPOptional.empty();
-    public arrows: Arrow[] = [];
+    public inserted: MGPOptional<Arrow<HexaDirection>> = MGPOptional.empty();
+    public arrows: Arrow<HexaDirection>[] = [];
     public captured: Coord[] = [];
     public moved: Coord[] = [];
 
@@ -96,11 +98,12 @@ export class GipfComponent extends HexagonalGameComponent<GipfRules,
         }
     }
 
-    private arrowTowards(placement: Coord, direction: HexaDirection): Arrow {
+    private arrowTowards(placement: Coord, direction: HexaDirection): Arrow<HexaDirection> {
         const previous: Coord = placement.getNext(direction.getOpposite());
-        const center: Coord = this.getCenterAt(placement);
-        const previousCenter: Coord = this.getCenterAt(previous);
-        return new Arrow(previous, placement, previousCenter.x, previousCenter.y, center.x, center.y);
+        return new Arrow<HexaDirection>(previous,
+                                        placement,
+                                        direction,
+                                        (c: Coord) => this.getCenterAt(c));
     }
 
     private markCapture(capture: GipfCapture): void {
@@ -218,9 +221,9 @@ export class GipfComponent extends HexagonalGameComponent<GipfRules,
         for (const dir of GipfRules.getAllDirectionsForEntrance(this.constructedState, placement)) {
             if (GipfRules.isLineComplete(this.constructedState, placement, dir) === false) {
                 const nextSpace: Coord = placement.getNext(dir);
-                const center1: Coord = this.getCenterAt(placement);
-                const center2: Coord = this.getCenterAt(nextSpace);
-                this.arrows.push(new Arrow(placement, nextSpace, center1.x, center1.y, center2.x, center2.y));
+                this.arrows.push(
+                    new Arrow<HexaDirection>(placement, nextSpace, dir, (c: Coord) => this.getCenterAt(c)),
+                );
             }
         }
     }

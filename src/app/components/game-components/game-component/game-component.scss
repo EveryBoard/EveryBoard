@@ -213,3 +213,6 @@
 svg {
     max-height: calc(100vh - 10rem); /* Full height minus the navbar */
 }
+.click-delegator {
+    pointer-events: none;
+}

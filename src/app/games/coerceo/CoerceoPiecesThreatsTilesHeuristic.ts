@@ -167,7 +167,7 @@ export class CoerceoPiecesThreatsTilesHeuristic extends PlayerMetricHeuristic<Co
     : MGPMap<Coord, PieceThreat>
     {
         const filteredThreatMap: MGPMap<Coord, PieceThreat> = new MGPMap();
-        const threateneds: Coord[] = threatMap.listKeys();
+        const threateneds: Coord[] = threatMap.getKeyList();
         const threatenedPlayerPieces: Coord[] = threateneds.filter((coord: Coord) => {
             return state.getPieceAt(coord).is(state.getCurrentPlayer());
         });
