@@ -57,7 +57,7 @@ describe('Coord', () => {
         const coord: Coord = new Coord(0, 0);
         const unalignedCoord: Coord = new Coord(1, 2);
         expect(() => coord.getLinearDistanceToward(unalignedCoord))
-            .toThrowError('Cannot calculate distance with non aligned coords.');
+            .toThrowError('Assertion failure: Cannot calculate distance with non aligned coords.');
     });
 
     it('should compute hexagonal alignments with isHexagonallyAlignedWith', () => {
