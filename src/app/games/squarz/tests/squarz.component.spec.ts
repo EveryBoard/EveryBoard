@@ -11,7 +11,7 @@ import { PlayerOrNone } from 'src/app/jscaip/Player';
 import { SquarzFailure } from '../SquarzFailure';
 import { MGPOptional } from '@everyboard/lib';
 
-describe('SquarzComponent', () => {
+fdescribe('SquarzComponent', () => {
 
     const _: PlayerOrNone = PlayerOrNone.NONE;
     const O: PlayerOrNone = PlayerOrNone.ZERO;

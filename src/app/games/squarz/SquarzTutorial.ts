@@ -33,7 +33,7 @@ export class SquarzTutorial extends Tutorial {
                 if (move.isDuplication()) {
                     return MGPValidation.SUCCESS;
                 } else {
-                    return MGPValidation.failure($localize`This was a jump, try a duplication now.`);
+                    return MGPValidation.failure($localize`This was a jump, try to do a duplication.`);
                 }
             },
             TutorialStepMessage.CONGRATULATIONS(),
@@ -41,7 +41,7 @@ export class SquarzTutorial extends Tutorial {
 
         TutorialStep.fromPredicate(
             $localize`Jumps`,
-            $localize`The second type of move you can do is the jump. When you do one, your piece leaves its original space and jump two spaces further. To do this, select one of your pieces, and click on its landing space two space further.<br/><br/>You're playing Light, make a jump.`,
+            $localize`The second type of move you can do is the jump. When you do one, your piece leaves its original space and jump two spaces further. To do this, select one of your pieces, and click on its landing space two spaces further.<br/><br/>You're playing Light, make a jump.`,
             new SquarzState([
                 [O, _, _, _, _, _, _, X],
                 [_, O, _, _, _, _, _, _],
@@ -65,7 +65,7 @@ export class SquarzTutorial extends Tutorial {
 
         TutorialStep.fromPredicate(
             $localize`Captures`,
-            $localize`When one of your pieces lands on a square that neighbors to opponent's pieces, those pieces become yours.<br/><br/>You're playing Dark, do such a move!`,
+            $localize`When one of your pieces lands on a square that neighbors an opponent's pieces, those pieces become yours.<br/><br/>You're playing Dark, do such a move!`,
             new SquarzState([
                 [O, _, _, _, _, _, _, X],
                 [_, _, _, _, _, _, _, _],
@@ -89,7 +89,7 @@ export class SquarzTutorial extends Tutorial {
 
         TutorialStep.fromPredicate(
             $localize`End of the game`,
-            $localize`When one player cannot play, the game ends, and the player with the most pieces wins. Here, you can do a final move and win.<br/><br/>You're playing Light, do it.`,
+            $localize`When one player can no longer play, the game ends, and the player with the most pieces wins. Here, you can do a final move and win.<br/><br/>You're playing Light, do it.`,
             new SquarzState([
                 [X, X, X, X, X, X, X, X],
                 [O, O, O, O, O, O, O, O],

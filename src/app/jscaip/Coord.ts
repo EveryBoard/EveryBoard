@@ -105,7 +105,7 @@ export class Coord extends Vector {
         return this.getDistanceToward(c, true);
     }
 
-    // If asked not to check alignement, a knight move would count a 2
+    // If asked not to check alignement, a knight move would count as 2
     public getDistanceToward(c: Coord, checkAlignement: boolean = false): number {
         Utils.assert(checkAlignement === false || c.isAlignedWith(this),
                      'Cannot calculate distance with non aligned coords.');

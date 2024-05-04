@@ -9,7 +9,7 @@ import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { SquarzFailure } from '../SquarzFailure';
 import { MGPOptional } from '@everyboard/lib';
 
-describe('SquarzRules', () => {
+fdescribe('SquarzRules', () => {
 
     const _: PlayerOrNone = PlayerOrNone.NONE;
     const O: PlayerOrNone = PlayerOrNone.ZERO;

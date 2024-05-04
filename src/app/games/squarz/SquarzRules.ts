@@ -117,19 +117,7 @@ export class SquarzRules extends ConfigurableRules<SquarzMove, SquarzState, Squa
     private canPlayerMove(state: SquarzState, player: Player, jumpSize: number): boolean {
         for (const coordAndContent of state.getCoordsAndContents()) {
             if (coordAndContent.content.equals(player)) {
-                if (this.canCoordMove(state, coordAndContent.coord, jumpSize)) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-
-    private canCoordMove(state: SquarzState, coord: Coord, jumpSize: number): boolean {
-        for (let y: number = -jumpSize; y <= jumpSize; y++) {
-            for (let x: number = -jumpSize; x <= jumpSize; x++) {
-                const landingCoord: Coord = new Coord(coord.x + x, coord.y + y);
-                if (state.isOnBoard(landingCoord) && state.getPieceAt(landingCoord).isNone()) {
+                if (state.hasMovablePieceAt(coordAndContent.coord, jumpSize)) {
                     return true;
                 }
             }

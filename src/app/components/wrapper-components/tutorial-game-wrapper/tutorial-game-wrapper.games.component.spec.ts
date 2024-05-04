@@ -307,7 +307,7 @@ describe('TutorialGameWrapperComponent (games)', () => {
                     SquarzRules.get(),
                     squarzTutorial[1],
                     SquarzMove.from(new Coord(0, 0), new Coord(2, 2)).get(),
-                    MGPValidation.failure(`This was a jump, try a duplication now.`),
+                    MGPValidation.failure(`This was a jump, try to do a duplication.`),
                 ], [
                     SquarzRules.get(),
                     squarzTutorial[2],

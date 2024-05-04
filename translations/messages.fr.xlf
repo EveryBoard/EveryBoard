@@ -3791,31 +3791,31 @@
       </trans-unit>
       <trans-unit id="3700643537935262310" datatype="html">
         <source>One of the two kinds of move you can do is the duplication. When you do one, you create a new piece. To do this, select one of your pieces, and click on one of its neighboring space.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, make a duplication.</source>
-        <target>Un des deux types de mouvement que vous pouvez faire est un pas simple. Quand vous en faites un, vous créez une nouvelle pièce. Pour ce faire, sélectionnez une de vos pièces, et cliquez sur une de vos pièces, puis sur une case voisine à celle-ci.&lt;br/&gt;Vous jouez Foncé, faite un simple pas.</target>
+        <target>Un des deux types de mouvement que vous pouvez faire est la duplication. Quand vous en faites un, vous créez une nouvelle pièce. Pour ce faire, sélectionnez une de vos pièces, et cliquez sur une de vos pièces, puis sur une case voisine à celle-ci.&lt;br/&gt;Vous jouez Foncé, faite un simple pas.</target>
       </trans-unit>
-      <trans-unit id="805836787886487858" datatype="html">
-        <source>This was a jump, try a duplication now.</source>
-        <target>C'était un saut, essayez une duplication maintenant.</target>
+      <trans-unit id="2864359495844920670" datatype="html">
+        <source>This was a jump, try to do a duplication.</source>
+        <target>C'était un saut, essayez de faire une duplication.</target>
       </trans-unit>
       <trans-unit id="4273222196833633277" datatype="html">
         <source>This was a duplication, try a jump now.</source>
         <target>C'était une duplication, essayez un saut maintenant.</target>
       </trans-unit>
-      <trans-unit id="1286113114582068272" datatype="html">
-        <source>The second type of move you can do is the jump. When you do one, your piece leaves its original space and jump two spaces further. To do this, select one of your pieces, and click on its landing space two space further.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Light, make a jump.</source>
-        <target>Le deuxième type de mouvement que vous savez faire est un saut. Quand vous en faites un, votre pièce quitte sa case d'origine et atterit deux cases plus loin. Pour faire ceci, sélectionnez une de vos pièces, et cliquez sur sa case d'atterrissage, deux cases plus loin.&lt;br/&gt;Vous jouez Clair, faites un saut.</target>
+      <trans-unit id="5571754507636453304" datatype="html">
+        <source>The second type of move you can do is the jump. When you do one, your piece leaves its original space and jump two spaces further. To do this, select one of your pieces, and click on its landing space two spaces further.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Light, make a jump.</source>
+        <target>Le deuxième type de mouvement que vous pouvez faire est un saut. Quand vous en faites un, votre pièce quitte sa case d'origine et atterit deux cases plus loin. Pour faire ceci, sélectionnez une de vos pièces, et cliquez sur sa case d'atterrissage, deux cases plus loin.&lt;br/&gt;Vous jouez Clair, faites un saut.</target>
       </trans-unit>
-      <trans-unit id="1697730422913786748" datatype="html">
-        <source>When one of your pieces lands on a square that neighbors to opponent&apos;s pieces, those pieces become yours.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, do such a move!</source>
+      <trans-unit id="6394015257472015389" datatype="html">
+        <source>When one of your pieces lands on a square that neighbors an opponent&apos;s pieces, those pieces become yours.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, do such a move!</source>
         <target>Quand une de vos pièces arrive sur une case voisine d'un adversaire, ces pièces changent de couleur.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, faite un tel mouvement.</target>
       </trans-unit>
-      <trans-unit id="3740866626714745702" datatype="html">
-        <source>When one player cannot play, the game ends, and the player with the most pieces wins. Here, you can do a final move and win.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Light, do it.</source>
-        <target>Quand un des joueur ne peut pas jouer, la partie finit, et le jouueur avec le plus de pièces gagne. Ici, vous pouvez faire le dernier mouvement et gagner.&lt;br/&gt;&lt;br/&gt;Vous jouez Clair, faites-le !</target>
+      <trans-unit id="9048883519751617241" datatype="html">
+        <source>When one player can no longer play, the game ends, and the player with the most pieces wins. Here, you can do a final move and win.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Light, do it.</source>
+        <target>Quand un des joueurs ne peut plus jouer, la partie finit, et le joueur avec le plus de pièces gagne. Ici, vous pouvez faire le dernier mouvement et gagner.&lt;br/&gt;&lt;br/&gt;Vous jouez Clair, faites-le !</target>
       </trans-unit>
       <trans-unit id="3808135421251943457" datatype="html">
         <source>Bad choice, by making this move you allowed the opponent to win.&lt;br/&gt;&lt;br/&gt;Try again!</source>
-        <target>Mauvais choix, en faisant ce saut vous avez autorisé l'adversaire à gagner.&lt;br/&gt;&lt;br/&gt;Essayez à nouveau !</target>
+        <target>Mauvais choix, en faisant ce saut vous avez permis l'adversaire à gagner.&lt;br/&gt;&lt;br/&gt;Essayez à nouveau !</target>
       </trans-unit>
       <trans-unit id="3615756484359681386" datatype="html">
         <source>To immobilize your opponent, you have to move your pyramids.

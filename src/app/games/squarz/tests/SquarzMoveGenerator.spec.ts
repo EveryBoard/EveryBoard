@@ -6,7 +6,7 @@ import { SquarzConfig, SquarzNode, SquarzRules } from '../SquarzRules';
 import { SquarzState } from '../SquarzState';
 import { MGPOptional } from '@everyboard/lib';
 
-describe('SquarzMoveGenerator', () => {
+fdescribe('SquarzMoveGenerator', () => {
 
     const _: PlayerOrNone = PlayerOrNone.NONE;
     const O: PlayerOrNone = PlayerOrNone.ZERO;

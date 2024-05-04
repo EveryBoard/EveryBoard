@@ -24,8 +24,11 @@ export class SquarzState extends GameStateWithTable<PlayerOrNone> {
         }
     }
 
-    public override setPieceAt(coord: Coord, value: PlayerOrNone): SquarzState {
-        return super.setPieceAt(coord, value, SquarzState.of) as SquarzState;
+    public setPieceAt(coord: Coord, value: PlayerOrNone): SquarzState {
+        return GameStateWithTable.setPieceAt(this,
+                                             coord,
+                                             value,
+                                             SquarzState.of);
     }
 
     public getScores(): PlayerNumberMap {
@@ -37,6 +40,18 @@ export class SquarzState extends GameStateWithTable<PlayerOrNone> {
             }
         }
         return scores;
+    }
+
+    public hasMovablePieceAt(coord: Coord, jumpSize: number): boolean {
+        for (let y: number = -jumpSize; y <= jumpSize; y++) {
+            for (let x: number = -jumpSize; x <= jumpSize; x++) {
+                const landingCoord: Coord = new Coord(coord.x + x, coord.y + y);
+                if (this.isOnBoard(landingCoord) && this.getPieceAt(landingCoord).isNone()) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
 }

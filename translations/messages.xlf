@@ -2931,20 +2931,20 @@
       <trans-unit id="3700643537935262310" datatype="html">
         <source>One of the two kinds of move you can do is the duplication. When you do one, you create a new piece. To do this, select one of your pieces, and click on one of its neighboring space.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, make a duplication.</source>
       </trans-unit>
-      <trans-unit id="805836787886487858" datatype="html">
-        <source>This was a jump, try a duplication now.</source>
+      <trans-unit id="2864359495844920670" datatype="html">
+        <source>This was a jump, try to do a duplication.</source>
       </trans-unit>
-      <trans-unit id="1286113114582068272" datatype="html">
-        <source>The second type of move you can do is the jump. When you do one, your piece leaves its original space and jump two spaces further. To do this, select one of your pieces, and click on its landing space two space further.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Light, make a jump.</source>
+      <trans-unit id="5571754507636453304" datatype="html">
+        <source>The second type of move you can do is the jump. When you do one, your piece leaves its original space and jump two spaces further. To do this, select one of your pieces, and click on its landing space two spaces further.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Light, make a jump.</source>
       </trans-unit>
       <trans-unit id="4273222196833633277" datatype="html">
         <source>This was a duplication, try a jump now.</source>
       </trans-unit>
-      <trans-unit id="1697730422913786748" datatype="html">
-        <source>When one of your pieces lands on a square that neighbors to opponent&apos;s pieces, those pieces become yours.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, do such a move!</source>
+      <trans-unit id="6394015257472015389" datatype="html">
+        <source>When one of your pieces lands on a square that neighbors an opponent&apos;s pieces, those pieces become yours.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, do such a move!</source>
       </trans-unit>
-      <trans-unit id="3740866626714745702" datatype="html">
-        <source>When one player cannot play, the game ends, and the player with the most pieces wins. Here, you can do a final move and win.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Light, do it.</source>
+      <trans-unit id="9048883519751617241" datatype="html">
+        <source>When one player can no longer play, the game ends, and the player with the most pieces wins. Here, you can do a final move and win.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Light, do it.</source>
       </trans-unit>
       <trans-unit id="3808135421251943457" datatype="html">
         <source>Bad choice, by making this move you allowed the opponent to win.&lt;br/&gt;&lt;br/&gt;Try again!</source>

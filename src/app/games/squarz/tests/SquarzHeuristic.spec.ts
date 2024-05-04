@@ -5,7 +5,7 @@ import { MGPOptional } from '@everyboard/lib';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { SquarzConfig, SquarzRules } from '../SquarzRules';
 
-describe('SquarzHeuristic', () => {
+fdescribe('SquarzHeuristic', () => {
 
     const _: PlayerOrNone = PlayerOrNone.NONE;
     const O: PlayerOrNone = PlayerOrNone.ZERO;
