@@ -2934,8 +2934,8 @@
       <trans-unit id="2864359495844920670" datatype="html">
         <source>This was a jump, try to do a duplication.</source>
       </trans-unit>
-      <trans-unit id="5571754507636453304" datatype="html">
-        <source>The second type of move you can do is the jump. When you do one, your piece leaves its original space and jump two spaces further. To do this, select one of your pieces, and click on its landing space two spaces further.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Light, make a jump.</source>
+      <trans-unit id="1771050228270959005" datatype="html">
+        <source>The second type of move you can do is the jump. When you do one, your piece leaves its original space and jumps two spaces further. To do this, select one of your pieces, and click on its landing space two spaces further.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Light, make a jump.</source>
       </trans-unit>
       <trans-unit id="4273222196833633277" datatype="html">
         <source>This was a duplication, try a jump now.</source>

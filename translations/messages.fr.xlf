@@ -3801,8 +3801,8 @@
         <source>This was a duplication, try a jump now.</source>
         <target>C'était une duplication, essayez un saut maintenant.</target>
       </trans-unit>
-      <trans-unit id="5571754507636453304" datatype="html">
-        <source>The second type of move you can do is the jump. When you do one, your piece leaves its original space and jump two spaces further. To do this, select one of your pieces, and click on its landing space two spaces further.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Light, make a jump.</source>
+      <trans-unit id="1771050228270959005" datatype="html">
+        <source>The second type of move you can do is the jump. When you do one, your piece leaves its original space and jumps two spaces further. To do this, select one of your pieces, and click on its landing space two spaces further.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Light, make a jump.</source>
         <target>Le deuxième type de mouvement que vous pouvez faire est un saut. Quand vous en faites un, votre pièce quitte sa case d'origine et atterit deux cases plus loin. Pour faire ceci, sélectionnez une de vos pièces, et cliquez sur sa case d'atterrissage, deux cases plus loin.&lt;br/&gt;Vous jouez Clair, faites un saut.</target>
       </trans-unit>
       <trans-unit id="6394015257472015389" datatype="html">

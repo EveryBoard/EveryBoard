@@ -4,7 +4,7 @@ import { MGPFallible, MGPFallibleTestUtils } from '@everyboard/lib';
 import { Coord } from 'src/app/jscaip/Coord';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 
-fdescribe('SquarzMove', () => {
+describe('SquarzMove', () => {
 
     describe('from', () => {
 

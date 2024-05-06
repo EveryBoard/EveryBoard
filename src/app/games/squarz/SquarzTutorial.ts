@@ -41,7 +41,7 @@ export class SquarzTutorial extends Tutorial {
 
         TutorialStep.fromPredicate(
             $localize`Jumps`,
-            $localize`The second type of move you can do is the jump. When you do one, your piece leaves its original space and jump two spaces further. To do this, select one of your pieces, and click on its landing space two spaces further.<br/><br/>You're playing Light, make a jump.`,
+            $localize`The second type of move you can do is the jump. When you do one, your piece leaves its original space and jumps two spaces further. To do this, select one of your pieces, and click on its landing space two spaces further.<br/><br/>You're playing Light, make a jump.`,
             new SquarzState([
                 [O, _, _, _, _, _, _, X],
                 [_, O, _, _, _, _, _, _],
