@@ -1,39 +1,42 @@
-<svg:g id="blank_board">
+<svg:g id="blank-board">
     <svg:rect x="0" y="0"
               [attr.width]="width * SPACE_SIZE"
               [attr.height]="height * SPACE_SIZE"
               class="base mid-small-stroke"
     />
+    <svg:line *ngFor="let line of ArrayUtils.range(height); index as y"
+              id="horizontal-line-{{ y }}"
+              [attr.x1]="0"
+              [attr.y1]="(0.5 * SPACE_SIZE) + SPACE_SIZE * y"
+              [attr.x2]="SPACE_SIZE * width"
+              [attr.y2]="(0.5 * SPACE_SIZE) + SPACE_SIZE * y"
+              class="base"
+    />
+    <svg:line *ngFor="let line of ArrayUtils.range(width); index as x"
+              id="vertical-line-{{ x }}"
+              [attr.x1]="(0.5 * SPACE_SIZE) + SPACE_SIZE * x"
+              [attr.y1]="0"
+              [attr.x2]="(0.5 * SPACE_SIZE) + SPACE_SIZE * x"
+              [attr.y2]="SPACE_SIZE * height"
+              class="base"
+    />
     <svg:g *ngFor="let line of ArrayUtils.range(height); index as y">
-        <svg:g *ngFor="let spaceContent of ArrayUtils.range(width); index as x"
-               id="click_{{ x }}_{{ y }}"
-               (click)="onClick(x, y)">
-            <svg:rect [attr.width]="SPACE_SIZE"
-                      [attr.height]="SPACE_SIZE"
-                      [attr.x]="SPACE_SIZE * x"
-                      [attr.y]="SPACE_SIZE * y"
-                      class="base no-stroke"
-                      fill-opacity="0"
-            />
-            <svg:line [attr.x1]="SPACE_SIZE * x"
-                      [attr.y1]="(SPACE_SIZE * 0.5) + (SPACE_SIZE * y)"
-                      [attr.x2]="SPACE_SIZE + (SPACE_SIZE * x)"
-                      [attr.y2]="(SPACE_SIZE * 0.5) + (SPACE_SIZE * y)"
-                      class="base"
-            />
-            <svg:line [attr.x1]="(SPACE_SIZE * 0.5) + (SPACE_SIZE * x)"
-                      [attr.y1]="SPACE_SIZE * y"
-                      [attr.x2]="(SPACE_SIZE * 0.5) + (SPACE_SIZE * x)"
-                      [attr.y2]="SPACE_SIZE + (SPACE_SIZE * y)"
-                      class="base"
-            />
-        <svg:g/>
-    <svg:g/>
+        <svg:rect *ngFor="let spaceContent of ArrayUtils.range(width); index as x"
+                  id="click-{{ x }}-{{ y }}"
+                  (click)="onClick(x, y)"
+                  [attr.width]="SPACE_SIZE"
+                  [attr.height]="SPACE_SIZE"
+                  [attr.x]="SPACE_SIZE * x"
+                  [attr.y]="SPACE_SIZE * y"
+                  class="base no-stroke"
+                  fill-opacity="0"
+        />
+    </svg:g>
     <svg:circle *ngFor="let hoshi of hoshis"
-                id="hoshi_{{ hoshi.x }}_{{ hoshi.y }}"
+                id="hoshi-{{ hoshi.x }}-{{ hoshi.y }}"
                 class="base-no-stroke click-delegator"
                 [attr.cx]="(SPACE_SIZE * 0.5) + (SPACE_SIZE * hoshi.x)"
                 [attr.cy]="(SPACE_SIZE * 0.5) + (SPACE_SIZE * hoshi.y)"
                 [attr.r]="SPACE_SIZE * 0.2"
     />
-<svg:g/>
+</svg:g>
