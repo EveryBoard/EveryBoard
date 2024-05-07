@@ -267,7 +267,7 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
         const width: number = this.SPACE_SIZE * 8.5 + this.STROKE_WIDTH * 2;
         const height: number = this.SPACE_SIZE * 10.5 + this.STROKE_WIDTH * 2;
         const halfStroke: number = this.STROKE_WIDTH / 2;
-        return new ViewBox(left, up, width, height).expand(halfStroke, halfStroke, halfStroke, halfStroke);
+        return new ViewBox(left, up, width, height).expandAll(halfStroke);
     }
 
 }

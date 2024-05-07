@@ -35,7 +35,7 @@ export abstract class RectangularGameComponent<R extends SuperRules<M, S, C, L>,
         const halfStroke: number = 0.5 * this.STROKE_WIDTH;
         return ViewBox
             .fromLimits(0, width, 0, height)
-            .expand(halfStroke, halfStroke, halfStroke, halfStroke);
+            .expandAll(halfStroke);
     }
 
 }

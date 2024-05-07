@@ -50,8 +50,7 @@ export class EncapsuleComponent extends RectangularGameComponent<EncapsuleRules,
 
     public override getViewBox(): ViewBox {
         const boardViewBox: ViewBox = super.getViewBox();
-        // const expansion: number = this.SPACE_SIZE + 0.5 * this.STROKE_WIDTH;
-        return boardViewBox.expand(this.SPACE_SIZE, this.SPACE_SIZE, this.SPACE_SIZE, this.SPACE_SIZE);
+        return boardViewBox.expandAll(this.SPACE_SIZE);
     }
 
     public override async showLastMove(move: EncapsuleMove): Promise<void> {

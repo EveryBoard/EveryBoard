@@ -54,13 +54,7 @@ export class EncapsuleRules extends Rules<EncapsuleMove, EncapsuleState, Encapsu
 
     public getVictoriousCoords(state: EncapsuleState): Coord[] {
         for (const line of EncapsuleRules.LINES) {
-            const spaces: EncapsuleSpace[] = [
-                state.getPieceAt(line[0]),
-                state.getPieceAt(line[1]),
-                state.getPieceAt(line[2]),
-            ];
-            const victory: boolean = this.isVictoriousLine(spaces);
-            if (victory) {
+            if (this.isVictoriousLine(state, line)) {
                 return line;
             }
         }
@@ -77,13 +71,16 @@ export class EncapsuleRules extends Rules<EncapsuleMove, EncapsuleState, Encapsu
         }
     }
 
-    public isVictoriousLine(spaces: EncapsuleSpace[]): boolean {
-        const pieces: EncapsulePiece[] = spaces.map((c: EncapsuleSpace) => c.getBiggest());
-        const owner: PlayerOrNone[] = pieces.map((piece: EncapsulePiece) => piece.getPlayer());
-        if (owner[0] === PlayerOrNone.NONE) {
+    private isVictoriousLine(state: EncapsuleState, line: Coord[]): boolean {
+        const owners: PlayerOrNone[] = [
+            state.getPieceAt(line[0]).getBiggest().getPlayer(),
+            state.getPieceAt(line[1]).getBiggest().getPlayer(),
+            state.getPieceAt(line[2]).getBiggest().getPlayer(),
+        ];
+        if (owners[0] === PlayerOrNone.NONE) {
             return false;
         } else {
-            return (owner[0] === owner[1]) && (owner[1] === owner[2]);
+            return (owners[0] === owners[1]) && (owners[1] === owners[2]);
         }
     }
 
