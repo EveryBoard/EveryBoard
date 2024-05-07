@@ -210,7 +210,7 @@ export abstract class GameWrapper<P extends Comparable> extends BaseWrapperCompo
 
     /**
      * Called when there is a need to put the current board to original state, meaning:
-     *     1. ongoing move attempt must be cancelled (cancelMoveAttempt)
+     *     1. ongoing move attempt must be canceled (cancelMoveAttempt)
      *     2. any previous move must be hidden (hideLastMove)
      *     3. after the board is changed, we now show the correct previous move (showLastMove)
      * @param triggerAnimation a boolean set to true if there is a need to trigger the animation of the last move

@@ -100,7 +100,7 @@ export class TutorialGameWrapperComponent extends GameWrapper<TutorialPlayer> im
         this.currentMessage = currentStep.instruction;
         this.currentReason = MGPOptional.empty();
         this.gameComponent.node = new GameNode(currentStep.state,
-                                               undefined,
+                                               currentStep.parent,
                                                currentStep.previousMove);
         // Set role will update view with showCurrentState
         await this.setRole(this.gameComponent.getCurrentPlayer());

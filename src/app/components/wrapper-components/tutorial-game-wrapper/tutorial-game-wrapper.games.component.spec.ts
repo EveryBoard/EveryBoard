@@ -101,7 +101,7 @@ describe('TutorialGameWrapperComponent (games)', () => {
 
     describe('Tutorials', () => {
 
-        it('should make sure that predicate step have healthy behaviors', fakeAsync(async() => {
+        it('should have healthy behavior for predicate steps', fakeAsync(async() => {
             const apagosTutorial: TutorialStep[] = new ApagosTutorial().tutorial;
             const conspirateursTutorial: TutorialStep[] = new ConspirateursTutorial().tutorial;
             const dvonnTutorial: TutorialStep[] = new DvonnTutorial().tutorial;
@@ -343,7 +343,7 @@ describe('TutorialGameWrapperComponent (games)', () => {
         }));
 
         for (const gameInfo of GameInfo.ALL_GAMES()) {
-            it('should make sure all solutionMove are legal for ' + gameInfo.name, fakeAsync(async() => {
+            it('should make sure all solution moves are legal for ' + gameInfo.name, fakeAsync(async() => {
                 const gameComponent: AbstractGameComponent =
                     (await ComponentTestUtils.forGameWithWrapper(gameInfo.urlName,
                                                                  TutorialGameWrapperComponent))
@@ -372,6 +372,28 @@ describe('TutorialGameWrapperComponent (games)', () => {
                     }
                 }
             }));
+
+            it('should display the step and solution move without error for ' + gameInfo.name, fakeAsync(async() => {
+                const testUtils: ComponentTestUtils<AbstractGameComponent, Comparable> =
+                    await ComponentTestUtils.forGameWithWrapper(gameInfo.urlName, TutorialGameWrapperComponent);
+                const wrapper: TutorialGameWrapperComponent = testUtils.getWrapper() as TutorialGameWrapperComponent;
+                const gameComponent: AbstractGameComponent = testUtils.getGameComponent();
+                for (const step of gameComponent.tutorial) {
+                    // Display the step
+                    await wrapper.startTutorial([step]);
+                    if (step.hasSolution()) {
+                        // Perform the solution
+                        const solution: Move | Click = step.getSolution();
+                        if (solution instanceof Move) {
+                            const validity: MGPValidation = await wrapper.receiveValidMove(solution);
+                            expect(validity).toEqual(MGPValidation.SUCCESS);
+                        } else {
+                            await testUtils.expectClickSuccess(solution);
+                        }
+                    }
+                }
+            }));
+
         }
     });
 
