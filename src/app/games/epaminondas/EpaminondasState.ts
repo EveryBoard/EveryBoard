@@ -1,7 +1,7 @@
-import { GameStateWithTable } from 'src/app/jscaip/GameStateWithTable';
-import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
+import { Player } from 'src/app/jscaip/Player';
+import { PlayerOrNoneGameStateWithTable } from 'src/app/jscaip/PlayerOrNoneGameStateWithTable';
 
-export class EpaminondasState extends GameStateWithTable<PlayerOrNone> {
+export class EpaminondasState extends PlayerOrNoneGameStateWithTable {
 
     public countRow(player: Player, row: number): number {
         let result: number = 0;

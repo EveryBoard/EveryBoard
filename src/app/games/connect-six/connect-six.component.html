@@ -13,7 +13,7 @@
         <g *ngFor="let line of board; index as y">
             <g *ngFor="let spaceContent of line; index as x">
                 <circle *ngIf="spaceContent.isPlayer()"
-                        id="piece_{{ x }}_{{ y }}"
+                        id="piece-{{ x }}-{{ y }}"
                         [attr.cx]="(SPACE_SIZE * 0.5) + (SPACE_SIZE * x)"
                         [attr.cy]="(SPACE_SIZE * 0.5) + (SPACE_SIZE * y)"
                         [attr.r]="SPACE_SIZE * 0.44"

@@ -1,4 +1,4 @@
-<svg:g id="blank_board">
+<svg:g id="blank-board">
     <svg:rect x="0" y="0"
               [attr.width]="width * SPACE_SIZE"
               [attr.height]="height * SPACE_SIZE"
@@ -22,7 +22,7 @@
     />
     <svg:g *ngFor="let line of ArrayUtils.range(height); index as y">
         <svg:rect *ngFor="let spaceContent of ArrayUtils.range(width); index as x"
-                  id="click_{{ x }}_{{ y }}"
+                  id="click-{{ x }}-{{ y }}"
                   (click)="onClick(x, y)"
                   [attr.width]="SPACE_SIZE"
                   [attr.height]="SPACE_SIZE"
@@ -31,12 +31,12 @@
                   class="base no-stroke"
                   fill-opacity="0"
         />
-    <svg:g/>
+    </svg:g>
     <svg:circle *ngFor="let hoshi of hoshis"
-                id="hoshi_{{ hoshi.x }}_{{ hoshi.y }}"
+                id="hoshi-{{ hoshi.x }}-{{ hoshi.y }}"
                 class="base-no-stroke click-delegator"
                 [attr.cx]="(SPACE_SIZE * 0.5) + (SPACE_SIZE * hoshi.x)"
                 [attr.cy]="(SPACE_SIZE * 0.5) + (SPACE_SIZE * hoshi.y)"
                 [attr.r]="SPACE_SIZE * 0.2"
     />
-<svg:g/>
+</svg:g>

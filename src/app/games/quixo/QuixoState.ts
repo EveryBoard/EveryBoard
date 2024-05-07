@@ -1,14 +1,14 @@
 import { Coord } from 'src/app/jscaip/Coord';
-import { GameStateWithTable } from 'src/app/jscaip/GameStateWithTable';
 import { PlayerOrNone } from 'src/app/jscaip/Player';
 import { QuixoMove } from './QuixoMove';
+import { PlayerOrNoneGameStateWithTable } from 'src/app/jscaip/PlayerOrNoneGameStateWithTable';
 
 export type QuixoConfig = {
     width: number,
     height: number,
 };
 
-export class QuixoState extends GameStateWithTable<PlayerOrNone> {
+export class QuixoState extends PlayerOrNoneGameStateWithTable {
 
     public applyLegalMove(move: QuixoMove): QuixoState {
         const newBoard: PlayerOrNone[][] = this.getCopiedBoard();
