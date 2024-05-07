@@ -34,10 +34,6 @@ export abstract class GameStateWithTable<P> extends GameState {
                comparableEquals(this.getPieceAt(coord), value);
     }
 
-    protected setPieceAtWithMap(coord: Coord, value: P, map: (oldState: this, newBoard: Table<P>) => this): this {
-        return GameStateWithTable.setPieceAt(this, coord, value, map);
-    }
-
     public tryToGetPieceAt(coord: Coord): MGPOptional<P> {
         if (this.isOnBoard(coord)) {
             return MGPOptional.of(this.board[coord.y][coord.x]);
