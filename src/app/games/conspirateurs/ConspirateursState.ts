@@ -1,10 +1,9 @@
 import { Coord } from 'src/app/jscaip/Coord';
-import { GameStateWithTable } from 'src/app/jscaip/GameStateWithTable';
-import { PlayerOrNone } from 'src/app/jscaip/Player';
 import { MGPSet } from '@everyboard/lib';
 import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
+import { PlayerOrNoneGameStateWithTable } from 'src/app/jscaip/PlayerOrNoneGameStateWithTable';
 
-export class ConspirateursState extends GameStateWithTable<PlayerOrNone> {
+export class ConspirateursState extends PlayerOrNoneGameStateWithTable {
 
     public static readonly WIDTH: number = 17;
 

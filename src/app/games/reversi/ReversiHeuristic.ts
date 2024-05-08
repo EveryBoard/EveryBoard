@@ -12,15 +12,13 @@ export class ReversiHeuristic extends PlayerMetricHeuristic<ReversiMove, Reversi
     public override getMetrics(node: ReversiNode, _config: MGPOptional<ReversiConfig>): PlayerNumberTable {
         const state: ReversiState = node.gameState;
         const metrics: PlayerNumberTable = PlayerNumberTable.of([0], [0]);
-        for (const coordAndContent of state.getCoordsAndContents()) {
+        for (const coordAndContent of state.getPlayerCoordsAndContent()) {
             const coord: Coord = coordAndContent.coord;
             const content: PlayerOrNone = coordAndContent.content;
             const verticalBorder: boolean = state.isVerticalEdge(coord);
             const horizontalBorder: boolean = state.isHorizontalEdge(coord);
             const locationValue: number = (verticalBorder ? 4 : 1) * (horizontalBorder ? 4 : 1);
-            if (content.isPlayer()) {
-                metrics.add(content, 0, locationValue);
-            }
+            metrics.add(content, 0, locationValue);
         }
         return metrics;
     }
