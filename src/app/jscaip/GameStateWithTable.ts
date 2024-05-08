@@ -9,12 +9,12 @@ export abstract class GameStateWithTable<P> extends GameState {
         oldState: T,
         coord: Coord,
         value: Q,
-        map: (oldState: T, newBoard: Table<Q>) => T)
+        stateAdapter: (oldState: T, newBoard: Table<Q>) => T)
     : T
     {
         const newBoard: Q[][] = oldState.getCopiedBoard();
         newBoard[coord.y][coord.x] = value;
-        return map(oldState, newBoard);
+        return stateAdapter(oldState, newBoard);
     }
 
     public constructor(public readonly board: Table<P>, turn: number) {
