@@ -53,7 +53,7 @@ export class EpaminondasAttackHeuristic extends EpaminondasHeuristic {
     public getTerritory(state: EpaminondasState): number {
         let score: number = 0;
         for (const coordAndContent of state.getPlayerCoordsAndContent()) {
-            const owner: PlayerOrNone = coordAndContent.content;
+            const owner: Player = coordAndContent.content;
             for (let dx: number = -1; dx <= 1; dx++) {
                 for (let dy: number = -1; dy <= 1; dy++) {
                     const coord: Coord = coordAndContent.coord.getNext(new Coord(dx, dy), 1);
@@ -61,7 +61,7 @@ export class EpaminondasAttackHeuristic extends EpaminondasHeuristic {
                         const neighbor: PlayerOrNone = state.getPieceAt(coord);
                         if (neighbor === owner) {
                             score += 1 * owner.getScoreModifier();
-                        } else if (neighbor === PlayerOrNone.NONE) {
+                        } else if (neighbor.isNone()) {
                             score += 1 * owner.getScoreModifier();
                         }
                     }
@@ -92,7 +92,7 @@ export class EpaminondasAttackHeuristic extends EpaminondasHeuristic {
         const width: number = state.getWidth();
         const cx: number = (width - 1) / 2;
         for (const coordAndContent of state.getPlayerCoordsAndContent()) {
-            const owner: PlayerOrNone = coordAndContent.content;
+            const owner: Player = coordAndContent.content;
             score += owner.getScoreModifier() * Math.abs(coordAndContent.coord.x - cx);
         }
         return score * this.CENTER_FACTOR;
@@ -117,7 +117,7 @@ export class EpaminondasAttackHeuristic extends EpaminondasHeuristic {
                 let stepSize: number = 1;
                 while (state.isOnBoard(nextCoord) &&
                        stepSize <= phalanxSize &&
-                       state.getPieceAt(nextCoord) === PlayerOrNone.NONE)
+                       state.getPieceAt(nextCoord).isNone())
                 {
                     stepSize++;
                     nextCoord = nextCoord.getNext(direction, 1);

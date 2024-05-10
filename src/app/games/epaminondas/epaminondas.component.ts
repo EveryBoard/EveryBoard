@@ -166,6 +166,7 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
             this.SPACE_SIZE * (coord.y + 0.5),
         );
     }
+
     public override cancelMoveAttempt(): void {
         this.firstPiece = MGPOptional.empty();
         this.possibleMoves = [];

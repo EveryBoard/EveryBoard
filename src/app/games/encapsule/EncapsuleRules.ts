@@ -70,11 +70,11 @@ export class EncapsuleRules extends Rules<EncapsuleMove, EncapsuleState, Encapsu
     public static isVictoriousLine(spaces: EncapsuleSpace[]): MGPOptional<Player> {
         const pieces: EncapsulePiece[] = spaces.map((c: EncapsuleSpace) => c.getBiggest());
         const owner: PlayerOrNone[] = pieces.map((piece: EncapsulePiece) => piece.getPlayer());
-        if (owner[0] === PlayerOrNone.NONE) {
+        if (owner[0].isNone()) {
             return MGPOptional.empty();
         } else {
             if ((owner[0] === owner[1]) && (owner[1] === owner[2])) {
-                return MGPOptional.of(owner[0] as Player);
+                return MGPOptional.of(owner[0]);
             } else {
                 return MGPOptional.empty();
             }
@@ -86,7 +86,7 @@ export class EncapsuleRules extends Rules<EncapsuleMove, EncapsuleState, Encapsu
         if (move.isDropping()) {
             movingPiece = move.piece.get();
             const owner: PlayerOrNone = movingPiece.getPlayer();
-            if (owner === PlayerOrNone.NONE) {
+            if (owner.isNone()) {
                 return MGPFallible.failure(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY());
             }
             if (owner === state.getCurrentOpponent()) {
@@ -100,7 +100,7 @@ export class EncapsuleRules extends Rules<EncapsuleMove, EncapsuleState, Encapsu
             const startingSpace: EncapsuleSpace = state.getPieceAt(startingCoord);
             movingPiece = startingSpace.getBiggest();
             const owner: PlayerOrNone = movingPiece.getPlayer();
-            if (owner === PlayerOrNone.NONE) {
+            if (owner.isNone()) {
                 return MGPFallible.failure(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY());
             }
             if (owner === state.getCurrentOpponent()) {

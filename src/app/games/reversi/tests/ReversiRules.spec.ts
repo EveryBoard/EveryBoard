@@ -61,7 +61,7 @@ describe('ReversiRules', () => {
         // When passing
         const move: ReversiMove = ReversiMove.PASS;
 
-        // Then the move should be refused
+        // Then it should fail
         const reason: string = RulesFailure.CANNOT_PASS();
         RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
     });
@@ -73,7 +73,7 @@ describe('ReversiRules', () => {
         // When doing a non capturing move
         const move: ReversiMove = new ReversiMove(0, 0);
 
-        // Then the move should be refused
+        // Then it should fail
         const reason: string = ReversiFailure.NO_ELEMENT_SWITCHED();
         RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
     });
@@ -85,7 +85,7 @@ describe('ReversiRules', () => {
         // When playing on an occupied square
         const move: ReversiMove = new ReversiMove(3, 3);
 
-        // Then the move should be refused
+        // Then it should fail
         const reason: string = RulesFailure.MUST_CLICK_ON_EMPTY_SPACE();
         RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
     });

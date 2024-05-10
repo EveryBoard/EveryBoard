@@ -122,7 +122,7 @@ describe('BrandhubRules', () => {
         // When moving the king to his throne
         const move: BrandhubMove = BrandhubMove.from(new Coord(3, 0), new Coord(3, 3)).get();
 
-        // Then the move should be deemed illegal
+        // Then it should fail
         const reason: string = TaflFailure.THRONE_IS_LEFT_FOR_GOOD();
         RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
     });
@@ -303,7 +303,7 @@ describe('BrandhubRules', () => {
         // When attempting it
         const move: BrandhubMove = BrandhubMove.from(new Coord(3, 0), new Coord(3, 3)).get();
 
-        // Then the move should be deemed illegal
+        // Then it should fail
         const reason: string = TaflFailure.SOLDIERS_CANNOT_SIT_ON_THRONE();
         RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
     });

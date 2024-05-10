@@ -109,6 +109,7 @@ import { SaharaComponent } from './games/sahara/sahara.component';
 import { SiamComponent } from './games/siam/siam.component';
 import { SiamOrientationArrowComponent } from './games/siam/siam-orientation-arrow.component';
 import { SixComponent } from './games/six/six.component';
+import { SquarzComponent } from './games/squarz/squarz.component';
 
 import { TablutComponent } from './games/tafl/tablut/tablut.component';
 import { TeekoComponent } from './games/teeko/teeko.component';
@@ -223,6 +224,7 @@ export const routes: Route[] = [
         SaharaComponent,
         SiamComponent, SiamOrientationArrowComponent,
         SixComponent,
+        SquarzComponent,
         TablutComponent,
         TeekoComponent,
         TrexoComponent, TrexoHalfPieceComponent,

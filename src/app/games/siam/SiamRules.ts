@@ -539,7 +539,7 @@ export class SiamRules extends ConfigurableRules<SiamMove, SiamState, SiamConfig
             return this.getRotationMovesAt(start, piece);
         } else {
             const directionOpt: MGPFallible<Orthogonal> = Orthogonal.factory.fromMove(start, end);
-            if (directionOpt.isSuccess() && start.getDistance(end) === 1) {
+            if (directionOpt.isSuccess() && start.getLinearDistanceToward(end) === 1) {
                 return this.getForwardMovesBetween(state, start, end);
             } else {
                 // There are no possible moves here

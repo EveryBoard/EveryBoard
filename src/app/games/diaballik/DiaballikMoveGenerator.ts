@@ -284,7 +284,7 @@ export class DiaballikMoveGenerator extends MoveGenerator<DiaballikMove, Diaball
         // A legal translation is an orthogonal translation that ends on an empty space
         for (const direction of Orthogonal.factory.all) {
             const end: Coord = start.getNext(direction);
-            if (state.isOnBoard(end) && state.getPieceAt(end).owner === PlayerOrNone.NONE) {
+            if (state.isOnBoard(end) && state.getPieceAt(end).owner.isNone()) {
                 ends.push(end);
             }
         }

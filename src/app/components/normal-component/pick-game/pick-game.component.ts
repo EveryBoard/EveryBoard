@@ -115,6 +115,9 @@ import { SiamRules } from 'src/app/games/siam/SiamRules';
 import { SixComponent } from 'src/app/games/six/six.component';
 import { SixTutorial } from 'src/app/games/six/SixTutorial';
 import { SixRules } from 'src/app/games/six/SixRules';
+import { SquarzComponent } from 'src/app/games/squarz/squarz.component';
+import { SquarzTutorial } from 'src/app/games/squarz/SquarzTutorial';
+import { SquarzRules } from 'src/app/games/squarz/SquarzRules';
 
 import { TablutComponent } from 'src/app/games/tafl/tablut/tablut.component';
 import { TablutTutorial } from 'src/app/games/tafl/tablut/TablutTutorial';
@@ -206,6 +209,8 @@ class GameDescription {
 
     public static readonly SIX: Localized = () => $localize`Put your hexagonal pieces next to another one, and create one of the 3 victorious shapes to win!`;
 
+    public static readonly SQUARZ: Localized = () => $localize`Duplicate yourself to conquer the board!`;
+
     public static readonly TABLUT: Localized = () => $localize`Lapland version of the Tafl game family! Invaders must capture the king, defender must make him escape!`;
 
     public static readonly TEEKO: Localized = () => $localize`Align your 4 pieces or form a square with them to win!`;
@@ -264,6 +269,7 @@ export class GameInfo {
             new GameInfo($localize`Diaballik`,       'Diaballik',     DiaballikComponent,     new DiaballikTutorial(),     DiaballikRules.get(),     new Date('2023-11-18'), GameDescription.DIABALLIK()      ), //                             * Quentin
 
             new GameInfo($localize`Ba-awa`,          'BaAwa',         BaAwaComponent,         new BaAwaTutorial(),         BaAwaRules.get(),         new Date('2024-01-28'), GameDescription.BA_AWA()         ), //                             * Martin
+            new GameInfo($localize`Squarz`,          'Squarz',        SquarzComponent,        new SquarzTutorial(),        SquarzRules.get(),        new Date('2024-05-08'), GameDescription.SQUARZ()         ), //                             * Martin
         ].sort((a: GameInfo, b: GameInfo) => a.name.localeCompare(b.name));
         // After Apagos: median = 26d; average = 53d
         // 9d 10d 12d 13d 18d - 18d 20d 22d 25d 26d - (26d) - 49d 65d 71d 76d 93d - 94j 4m 4m 7m 11m
