@@ -175,10 +175,6 @@ export class SimpleComponentTestUtils<T> {
     : Promise<void>
     {
         const element: DebugElement = this.findElement(elementName);
-        expect(element).withContext(`${elementName} should exist on the page`).toBeTruthy();
-        if (element == null) {
-            return;
-        }
         element.triggerEventHandler('click', null);
         if (awaitStability) {
             await this.whenStable();
@@ -196,7 +192,21 @@ export class SimpleComponentTestUtils<T> {
 
     public findElement(elementName: string): DebugElement {
         this.forceChangeDetection();
-        return this.fixture.debugElement.query(By.css(elementName));
+        if (elementName.includes('#')) {
+            // If there's a #, that means we are looking by id, hence there should be only one result
+            const elements: DebugElement[] = this.fixture.debugElement.queryAll(By.css(elementName));
+            expect(elements.length)
+                .withContext(`findElement with id as argument expects a unique result, but got ${elements.length} results instead for element '${elementName}'`)
+                .toBe(1);
+            return elements[0];
+        } else {
+            // Without a #, there could be more than one result, and we return the one that query returns
+            const element: DebugElement | null = this.fixture.debugElement.query(By.css(elementName));
+            expect(element)
+                .withContext(`element should exist: ${elementName}`)
+                .not.toBeNull();
+            return element;
+        }
     }
 
     public findElements(elementName: string): DebugElement[] {
@@ -204,12 +214,15 @@ export class SimpleComponentTestUtils<T> {
     }
 
     public findElementByDirective(directive: Type<unknown>): DebugElement {
-        return this.fixture.debugElement.query(By.directive(directive));
+        const element: DebugElement = this.fixture.debugElement.query(By.directive(directive));
+        expect(element)
+            .withContext(`element with directive '${directive}' should exist`)
+            .not.toBeNull();
+        return element;
     }
 
     public expectElementToHaveClass(elementName: string, cssClass: string): void {
         const element: DebugElement = this.findElement(elementName);
-        expect(element).withContext(`${elementName} should exist`).toBeTruthy();
         expect(element.attributes.class).withContext(`${elementName} should have a class attribute`).toBeTruthy();
         expect(element.attributes.class).withContext(`${elementName} should have a class attribute`).not.toEqual('');
         if (element.attributes.class != null && element.attributes.class !== '') {
@@ -220,7 +233,6 @@ export class SimpleComponentTestUtils<T> {
 
     public expectElementNotToHaveClass(elementName: string, cssClass: string): void {
         const element: DebugElement = this.findElement(elementName);
-        expect(element).withContext(`${elementName} should exist`).toBeTruthy();
         if (element.attributes.class != null) {
             const elementClasses: string[] = element.attributes.class.split(' ').sort();
             expect(elementClasses).withContext(`${elementName} should not contain CSS class ${cssClass}`).not.toContain(cssClass);
@@ -237,37 +249,32 @@ export class SimpleComponentTestUtils<T> {
     }
 
     public expectElementNotToExist(elementName: string): void {
-        const element: DebugElement = this.findElement(elementName);
+        this.forceChangeDetection();
+        const element: DebugElement | null = this.fixture.debugElement.query(By.css(elementName));
         expect(element).withContext(`${elementName} should not exist`).toBeNull();
     }
 
-    public expectElementToExist(elementName: string): DebugElement {
-        const element: DebugElement = this.findElement(elementName);
-        expect(element).withContext(`${elementName} should exist`).toBeTruthy();
-        return element;
+    public expectElementToExist(elementName: string): void {
+        this.findElement(elementName); // findElement asserts that it should exist
     }
 
     public expectElementToBeEnabled(elementName: string): void {
         const element: DebugElement = this.findElement(elementName);
-        expect(element).withContext(`${elementName} should exist`).toBeTruthy();
-        expect(element.nativeElement.disabled).withContext(elementName + ' should be enabled').toBeFalsy();
+        expect(element.nativeElement.disabled).withContext(`${elementName} should be enabled`).toBeFalsy();
     }
 
     public expectElementToBeDisabled(elementName: string): void {
         const element: DebugElement = this.findElement(elementName);
-        expect(element).withContext(`${elementName} should exist`).toBeTruthy();
         expect(element.nativeElement.disabled).withContext(`${elementName} should be disabled`).toBeTruthy();
     }
 
     public expectTextToBe(elementName: string, expectedText: string): void {
         const element: DebugElement = this.findElement(elementName);
-        expect(element).withContext(`${elementName} should exist`).toBeTruthy();
         expect(element.nativeNode.innerHTML).toEqual(expectedText);
     }
 
     public fillInput(elementName: string, value: string): void {
         const element: DebugElement = this.findElement(elementName);
-        expect(element).withContext(`${elementName} should exist in order to fill its value`).toBeTruthy();
         element.nativeElement.value = value;
         element.nativeElement.dispatchEvent(new Event('input'));
     }
