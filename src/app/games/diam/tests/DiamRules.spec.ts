@@ -71,9 +71,11 @@ describe('DiamRules', () => {
                 [B1, __, __, __, __, __, __, __],
                 [A1, __, __, __, __, __, __, __],
             ], 0);
+
             // When dropping a piece in a full space
             const move: DiamMove = drop(0, A2);
             const reason: string = DiamFailure.SPACE_IS_FULL();
+
             // Then the move should be illegal
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
@@ -86,9 +88,11 @@ describe('DiamRules', () => {
                 [A1, __, B1, __, __, __, __, __],
                 [A1, __, B1, __, __, __, __, __],
             ], 0);
+
             // When dropping a piece that is not remaining
             const move: DiamMove = drop(1, A1);
             const reason: string = DiamFailure.NO_MORE_PIECES_OF_THIS_TYPE();
+
             // Then the move should be illegal
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
@@ -168,7 +172,7 @@ describe('DiamRules', () => {
             // When moving the stack starting at B2 clockwise
             const move: DiamMove = shift(new Coord(7, 2), 'clockwise');
 
-            // Then the move should be not legal
+            // Then the move should be illegal
             const reason: string = RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT();
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
@@ -181,10 +185,12 @@ describe('DiamRules', () => {
                 [B1, __, __, __, __, __, __, B2],
                 [A1, __, __, __, __, __, __, A2],
             ], 4);
+
             // When moving the stack starting at A2 clockwise
             const move: DiamMove = shift(new Coord(7, 3), 'clockwise');
             const reason: string = DiamFailure.TARGET_STACK_TOO_HIGH();
-            // Then the move should be not legal
+
+            // Then the move should be illegal
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
 
@@ -195,7 +201,7 @@ describe('DiamRules', () => {
             // When moving a non-existing stack
             const move: DiamMove = shift(new Coord(0, 1), 'clockwise');
 
-            // Then the move should be not legal
+            // Then the move should be illegal
             const reason: string = RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY();
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });

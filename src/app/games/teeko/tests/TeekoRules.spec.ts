@@ -319,7 +319,7 @@ describe('TeekoRules', () => {
             // When doing a teleportation
             const move: TeekoMove = translate(new Coord(0, 0), new Coord(2, 1));
 
-            // Then it should fail
+            // Then the move should be illegal
             const reason: string = RulesFailure.MUST_MOVE_ON_NEIGHBOR();
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });

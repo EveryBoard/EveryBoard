@@ -44,7 +44,7 @@ describe('SiamRules', () => {
             // When attempting out of board move
             const move: SiamMove = SiamMove.of(-1, 2, MGPOptional.of(Orthogonal.UP), Orthogonal.UP);
 
-            // Then it should fail
+            // Then the move should be illegal
             const reason: string = 'SiamMove should end or start on the board: SiamMove(-1, 2, UP, UP)';
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
@@ -56,7 +56,7 @@ describe('SiamRules', () => {
             // When attempting out of board move
             const move: SiamMove = SiamMove.of(-1, 2, MGPOptional.empty(), Orthogonal.UP);
 
-            // Then it should fail
+            // Then the move should be illegal
             const reason: string = 'Cannot rotate piece outside the board: SiamMove(-1, 2, -, UP)';
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
@@ -68,7 +68,7 @@ describe('SiamRules', () => {
             // When attempting out of board move
             const move: SiamMove = SiamMove.of(0, 0, MGPOptional.of(Orthogonal.UP), Orthogonal.DOWN);
 
-            // Then it should fail
+            // Then the move should be illegal
             const reason: string = 'SiamMove should have moveDirection and landingOrientation matching when a piece goes out of the board: SiamMove(0, 0, UP, DOWN)';
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
@@ -130,7 +130,7 @@ describe('SiamRules', () => {
         // When trying to move a piece of the opponent
         const move: SiamMove = SiamMove.of(2, 4, MGPOptional.of(Orthogonal.UP), Orthogonal.UP);
 
-        // Then it should fail
+        // Then the move should be illegal
         const reason: string = RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT();
         RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
     });
@@ -142,7 +142,7 @@ describe('SiamRules', () => {
         // When trying to move an empty piece
         const move: SiamMove = SiamMove.of(2, 4, MGPOptional.of(Orthogonal.UP), Orthogonal.UP);
 
-        // Then it should fail
+        // Then the move should be illegal
         const reason: string = RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY();
         RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
     });
@@ -257,7 +257,7 @@ describe('SiamRules', () => {
         // When trying to perform a rotation that does not change the orientation
         const move: SiamMove = SiamMove.of(2, 4, MGPOptional.empty(), Orthogonal.UP);
 
-        // Then it should fail
+        // Then the move should be illegal
         const reason: string = SiamFailure.MUST_MOVE_OR_ROTATE();
         RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
     });
@@ -301,7 +301,7 @@ describe('SiamRules', () => {
         // When trying to push the other piece
         const move: SiamMove = SiamMove.of(0, 4, MGPOptional.of(Orthogonal.UP), Orthogonal.UP);
 
-        // Then it should fail
+        // Then the move should be illegal
         const reason: string = SiamFailure.NOT_ENOUGH_FORCE_TO_PUSH();
         RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
     });
@@ -320,7 +320,7 @@ describe('SiamRules', () => {
         // When trying to push the other piece over the border
         const move: SiamMove = SiamMove.of(0, 3, MGPOptional.of(Orthogonal.DOWN), Orthogonal.DOWN);
 
-        // Then it should fail
+        // Then the move should be illegal
         const reason: string = SiamFailure.NOT_ENOUGH_FORCE_TO_PUSH();
         RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
     });
@@ -363,7 +363,7 @@ describe('SiamRules', () => {
         // When tryig to push the one piece
         const move: SiamMove = SiamMove.of(0, 4, MGPOptional.of(Orthogonal.UP), Orthogonal.UP);
 
-        // Then it should fail
+        // Then the move should be illegal
         const reason: string = SiamFailure.NOT_ENOUGH_FORCE_TO_PUSH();
         RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
     });
@@ -382,7 +382,7 @@ describe('SiamRules', () => {
         // When trying to push and change direction at the same time
         const move: SiamMove = SiamMove.of(0, 4, MGPOptional.of(Orthogonal.UP), Orthogonal.LEFT);
 
-        // Then it should fail
+        // Then the move should be illegal
         const reason: string = SiamFailure.ILLEGAL_PUSH();
         RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
     });
@@ -401,7 +401,7 @@ describe('SiamRules', () => {
         // When trying to insert a 6th piece
         const move: SiamMove = SiamMove.of(0, -1, MGPOptional.of(Orthogonal.DOWN), Orthogonal.DOWN);
 
-        // Then it should fail
+        // Then the move should be illegal
         const reason: string = SiamFailure.NO_REMAINING_PIECE_TO_INSERT();
         RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
     });
@@ -420,7 +420,7 @@ describe('SiamRules', () => {
         // When trying to push more than one mountain
         const move: SiamMove = SiamMove.of(0, 2, MGPOptional.of(Orthogonal.RIGHT), Orthogonal.RIGHT);
 
-        // Then it should fail
+        // Then the move should be illegal
         const reason: string = SiamFailure.NOT_ENOUGH_FORCE_TO_PUSH();
         RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
     });

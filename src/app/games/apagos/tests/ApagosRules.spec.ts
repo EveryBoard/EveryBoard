@@ -29,9 +29,11 @@ describe('ApagosRules', () => {
     it('should refuse dropping on a full square', () => {
         // Given a board with one full square
         const state: ApagosState = stateWithOneFullSquare;
+
         // When dropping on that full square
         const move: ApagosMove = ApagosMove.drop(ApagosCoord.TWO, Player.ONE);
-        // Then move should be illegal
+
+        // Then the move should be illegal
         const reason: string = ApagosFailure.CANNOT_LAND_ON_A_FULL_SQUARE();
         RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
     });
@@ -39,9 +41,11 @@ describe('ApagosRules', () => {
     it('should refuse slide down from a square not containing piece to slide', () => {
         // Given the initial board
         const state: ApagosState = ApagosRules.get().getInitialState();
+
         // When doing a slide down
         const move: ApagosMove = ApagosMove.transfer(ApagosCoord.ONE, ApagosCoord.ZERO).get();
-        // Then it should not be legal
+
+        // Then the move should be illegal
         const reason: string = ApagosFailure.NO_PIECE_OF_YOU_IN_CHOSEN_SQUARE();
         RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
     });
@@ -53,9 +57,11 @@ describe('ApagosRules', () => {
             [0, 0, 1, 1],
             [7, 5, 3, 1],
         ], ApagosRules.PIECES_PER_PLAYER - 2, ApagosRules.PIECES_PER_PLAYER - 2);
+
         // When moving a piece on it
         const move: ApagosMove = ApagosMove.transfer(ApagosCoord.THREE, ApagosCoord.TWO).get();
-        // Then it should not be legal
+
+        // Then the move should be illegal
         const reason: string = ApagosFailure.CANNOT_LAND_ON_A_FULL_SQUARE();
         RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
     });
@@ -81,9 +87,11 @@ describe('ApagosRules', () => {
             [0, 0, 0, 0],
             [7, 5, 3, 1],
         ], 0, ApagosRules.PIECES_PER_PLAYER);
+
         // When dropping a Player.ZERO piece
         const move: ApagosMove = ApagosMove.drop(ApagosCoord.ONE, Player.ZERO);
-        // Then move should be illegal
+
+        // Then the move should be illegal
         const reason: string = ApagosFailure.NO_PIECE_REMAINING_TO_DROP();
         RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
     });

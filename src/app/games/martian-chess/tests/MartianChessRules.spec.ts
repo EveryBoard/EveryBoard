@@ -377,7 +377,7 @@ describe('MartianChessRules', () => {
             // When trying to move B -> A
             const move: MartianChessMove = MartianChessMove.from(b, a).get();
 
-            // Then it should be deemed illegal
+            // Then the move should be illegal
             const reason: string = MartianChessFailure.CANNOT_UNDO_LAST_MOVE();
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
@@ -393,7 +393,7 @@ describe('MartianChessRules', () => {
             // When trying to move B -> A, call the clock
             const move: MartianChessMove = MartianChessMove.from(b, a, true).get();
 
-            // Then it should be deemed illegal
+            // Then the move should be illegal
             const reason: string = MartianChessFailure.CANNOT_UNDO_LAST_MOVE();
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });

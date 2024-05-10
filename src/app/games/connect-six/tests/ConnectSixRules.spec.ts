@@ -37,7 +37,7 @@ describe('ConnectSixRules', () => {
             // When dropping out of the board
             const move: ConnectSixMove = ConnectSixFirstMove.of(new Coord(-1, -1)) as ConnectSixMove;
 
-            // Then it should be illegal
+            // Then the move should be illegal
             const reason: string = CoordFailure.OUT_OF_RANGE(new Coord(-1, -1));
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
@@ -116,7 +116,7 @@ describe('ConnectSixRules', () => {
             // When doing a move who'se second coord is out of range
             const move: ConnectSixMove = ConnectSixDrops.of(new Coord(0, 0), new Coord(-1, -1)) as ConnectSixMove;
 
-            // Then it should fail
+            // Then the move should be illegal
             const reason: string = CoordFailure.OUT_OF_RANGE(new Coord(-1, -1));
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
@@ -148,7 +148,7 @@ describe('ConnectSixRules', () => {
             // When doing a move who'se second coord is out of range
             const move: ConnectSixMove = ConnectSixDrops.of(new Coord(-2, -2), new Coord(0, 0)) as ConnectSixMove;
 
-            // Then it should fail
+            // Then the move should be illegal
             const reason: string = CoordFailure.OUT_OF_RANGE(new Coord(-2, -2));
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
@@ -182,7 +182,8 @@ describe('ConnectSixRules', () => {
                 ConnectSixDrops.of(new Coord(9, 9), new Coord(10, 10)) as ConnectSixMove;
 
             const reason: string = RulesFailure.MUST_CLICK_ON_EMPTY_SQUARE();
-            // Then the move should be forbidden
+
+            // Then the move should be illegal
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
 
@@ -213,7 +214,7 @@ describe('ConnectSixRules', () => {
             // When dropping piece on it with the second coord already occupied
             const move: ConnectSixMove = ConnectSixDrops.of(new Coord(8, 8), new Coord(9, 9)) as ConnectSixMove;
 
-            // Then the move should be forbidden
+            // Then the move should be illegal
             const reason: string = RulesFailure.MUST_CLICK_ON_EMPTY_SQUARE();
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
@@ -266,7 +267,7 @@ describe('ConnectSixRules', () => {
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             ], 2);
 
-            // Then the move should be forbidden
+            // Then the move should be illegal
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         });
 
@@ -296,7 +297,7 @@ describe('ConnectSixRules', () => {
             // When dropping only one piece
             const move: ConnectSixMove = ConnectSixFirstMove.of(new Coord(9, 9));
 
-            // Then the move should be forbidden
+            // Then the move should be illegal
             function trySingleDropAfterFirstTurn(): void {
                 rules.isLegal(move, state);
             }

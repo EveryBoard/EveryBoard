@@ -33,6 +33,7 @@ describe('CoerceoRules', () => {
     describe('movement', () => {
 
         it('should forbid to start move from outside the board', () => {
+            // Given any
             const board: FourStatePiece[][] = [
                 [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
                 [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
@@ -46,7 +47,11 @@ describe('CoerceoRules', () => {
                 [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
             ];
             const state: CoerceoState = new CoerceoState(board, 1, PlayerNumberMap.of(0, 0), PlayerNumberMap.of(0, 0));
+
+            // When trying a board starting on an empty space
             const move: CoerceoMove = movement(new Coord(0, 0), CoerceoStep.RIGHT);
+
+            // Then it should throw
             function tryAStartingCoordOutOfRange(): void {
                 rules.isLegal(move, state);
             }
@@ -54,6 +59,7 @@ describe('CoerceoRules', () => {
         });
 
         it('should forbid to end move outside the board', () => {
+            // Given any board
             const board: FourStatePiece[][] = [
                 [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
                 [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
@@ -67,14 +73,19 @@ describe('CoerceoRules', () => {
                 [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
             ];
             const state: CoerceoState = new CoerceoState(board, 1, PlayerNumberMap.of(0, 0), PlayerNumberMap.of(0, 0));
+
+            // When doing a move leaving the board
             const move: CoerceoMove = movement(new Coord(6, 6), CoerceoStep.LEFT);
+
+            // Then it should throw
             function tryALandingingCoordOutOfRange(): void {
                 rules.isLegal(move, state);
             }
             TestUtils.expectToThrowAndLog(tryALandingingCoordOutOfRange, 'Cannot end with a coord outside the board (4, 6).');
         });
 
-        it('should forbid to move ppponent pieces', () => {
+        it('should forbid to move oppponent pieces', () => {
+            // Given any board
             const board: FourStatePiece[][] = [
                 [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
                 [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
@@ -88,12 +99,17 @@ describe('CoerceoRules', () => {
                 [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
             ];
             const state: CoerceoState = new CoerceoState(board, 0, PlayerNumberMap.of(0, 0), PlayerNumberMap.of(0, 0));
+
+            // When trying to move an opponent piece
             const move: CoerceoMove = movement(new Coord(6, 6), CoerceoStep.RIGHT);
+
+            // Then the move should be illegal
             const reason: string = RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT();
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
 
         it('should forbid to move empty pieces', () => {
+            // Given any board
             const board: FourStatePiece[][] = [
                 [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
                 [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
@@ -107,12 +123,17 @@ describe('CoerceoRules', () => {
                 [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
             ];
             const state: CoerceoState = new CoerceoState(board, 0, PlayerNumberMap.of(0, 0), PlayerNumberMap.of(0, 0));
+
+            // When attempting to move empty pieces
             const move: CoerceoMove = movement(new Coord(7, 7), CoerceoStep.UP_RIGHT);
             const reason: string = RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY();
+
+            // Then the move should be illegal
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
 
         it('should forbid to land on occupied piece', () => {
+            // Given any board
             const board: FourStatePiece[][] = [
                 [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
                 [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
@@ -126,12 +147,17 @@ describe('CoerceoRules', () => {
                 [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
             ];
             const state: CoerceoState = new CoerceoState(board, 1, PlayerNumberMap.of(0, 0), PlayerNumberMap.of(0, 0));
+
+            // When trying to move piece on another one
             const move: CoerceoMove = movement(new Coord(6, 6), CoerceoStep.DOWN_RIGHT);
+
+            // Then the move should be illegal
             const reason: string = RulesFailure.MUST_LAND_ON_EMPTY_SPACE();
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
 
         it('should remove pieces captured by movement', () => {
+            // Given any board where a piece could be captured
             const board: FourStatePiece[][] = [
                 [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
                 [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
@@ -144,6 +170,12 @@ describe('CoerceoRules', () => {
                 [N, N, N, N, N, N, _, _, _, N, N, N, N, N, N],
                 [N, N, N, N, N, N, O, _, _, N, N, N, N, N, N],
             ];
+            const state: CoerceoState = new CoerceoState(board, 1, PlayerNumberMap.of(0, 0), PlayerNumberMap.of(0, 0));
+
+            // When moving and capturing
+            const move: CoerceoMove = movement(new Coord(6, 6), CoerceoStep.DOWN_RIGHT);
+
+            // Then one piece should be moved and one captured
             const expectedBoard: FourStatePiece[][] = [
                 [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
                 [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
@@ -156,14 +188,13 @@ describe('CoerceoRules', () => {
                 [N, N, N, N, N, N, _, _, _, N, N, N, N, N, N],
                 [N, N, N, N, N, N, O, _, _, N, N, N, N, N, N],
             ];
-            const state: CoerceoState = new CoerceoState(board, 1, PlayerNumberMap.of(0, 0), PlayerNumberMap.of(0, 0));
-            const move: CoerceoMove = movement(new Coord(6, 6), CoerceoStep.DOWN_RIGHT);
             const expectedState: CoerceoState =
                 new CoerceoState(expectedBoard, 2, PlayerNumberMap.of(0, 0), PlayerNumberMap.of(0, 1));
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         });
 
         it('should remove emptied tiles', () => {
+            // Given any board where one tile could be left
             const board: FourStatePiece[][] = [
                 [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
                 [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
@@ -176,6 +207,12 @@ describe('CoerceoRules', () => {
                 [N, N, N, N, N, N, _, _, _, N, N, N, N, N, N],
                 [N, N, N, N, N, N, O, _, _, N, N, N, N, N, N],
             ];
+            const state: CoerceoState = new CoerceoState(board, 1, PlayerNumberMap.of(0, 0), PlayerNumberMap.of(0, 0));
+
+            // When leaving the tile
+            const move: CoerceoMove = movement(new Coord(7, 5), CoerceoStep.DOWN_RIGHT);
+
+            // Then the tile should be left
             const expectedBoard: FourStatePiece[][] = [
                 [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
                 [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
@@ -188,14 +225,13 @@ describe('CoerceoRules', () => {
                 [N, N, N, N, N, N, _, _, _, N, N, N, N, N, N],
                 [N, N, N, N, N, N, O, _, _, N, N, N, N, N, N],
             ];
-            const state: CoerceoState = new CoerceoState(board, 1, PlayerNumberMap.of(0, 0), PlayerNumberMap.of(0, 0));
-            const move: CoerceoMove = movement(new Coord(7, 5), CoerceoStep.DOWN_RIGHT);
             const expectedState: CoerceoState =
                 new CoerceoState(expectedBoard, 2, PlayerNumberMap.of(0, 1), PlayerNumberMap.of(0, 0));
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         });
 
         it('should capture piece killed by tiles removal', () => {
+            // Given any board where an opponent tile has a last freedom in a removable tile
             const board: FourStatePiece[][] = [
                 [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
                 [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
@@ -208,6 +244,12 @@ describe('CoerceoRules', () => {
                 [N, N, N, N, N, N, X, O, X, _, _, _, N, N, N],
                 [N, N, N, N, N, N, _, _, _, N, N, N, N, N, N],
             ];
+            const state: CoerceoState = new CoerceoState(board, 1, PlayerNumberMap.of(0, 0), PlayerNumberMap.of(0, 0));
+
+            // When leaving the tile
+            const move: CoerceoMove = movement(new Coord(8, 6), CoerceoStep.DOWN_RIGHT);
+
+            // Then the tile should be removed and the piece captured
             const expectedBoard: FourStatePiece[][] = [
                 [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
                 [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
@@ -220,8 +262,6 @@ describe('CoerceoRules', () => {
                 [N, N, N, N, N, N, X, _, X, _, _, _, N, N, N],
                 [N, N, N, N, N, N, _, _, _, N, N, N, N, N, N],
             ];
-            const state: CoerceoState = new CoerceoState(board, 1, PlayerNumberMap.of(0, 0), PlayerNumberMap.of(0, 0));
-            const move: CoerceoMove = movement(new Coord(8, 6), CoerceoStep.DOWN_RIGHT);
             const expectedState: CoerceoState =
                 new CoerceoState(expectedBoard, 2, PlayerNumberMap.of(0, 1), PlayerNumberMap.of(0, 1));
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
@@ -232,6 +272,7 @@ describe('CoerceoRules', () => {
     describe('Tiles Exchange', () => {
 
         it(`should forbid exchanges when player don't have enough tiles`, () => {
+            // Given any board where player has less than two tiles
             const board: FourStatePiece[][] = [
                 [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
                 [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
@@ -245,12 +286,17 @@ describe('CoerceoRules', () => {
                 [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
             ];
             const state: CoerceoState = new CoerceoState(board, 0, PlayerNumberMap.of(0, 0), PlayerNumberMap.of(0, 0));
+
+            // When trying to do a tile exchange
             const move: CoerceoMove = CoerceoTileExchangeMove.of(new Coord(6, 6)) as CoerceoMove;
+
+            // Then the move should be illegal
             const reason: string = CoerceoFailure.NOT_ENOUGH_TILES_TO_EXCHANGE();
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
 
         it('should forbid capturing one own piece', () => {
+            // Given any board where player has two tiles or more
             const board: FourStatePiece[][] = [
                 [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
                 [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
@@ -264,12 +310,17 @@ describe('CoerceoRules', () => {
                 [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
             ];
             const state: CoerceoState = new CoerceoState(board, 1, PlayerNumberMap.of(0, 2), PlayerNumberMap.of(0, 0));
+
+            // When trying to exchange your tiles to capture your own pieces
             const move: CoerceoMove = CoerceoTileExchangeMove.of(new Coord(6, 6)) as CoerceoMove;
+
+            // Then the move should be illegal
             const reason: string = RulesFailure.CANNOT_SELF_CAPTURE();
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
 
         it('should forbid capturing empty space', () => {
+            // Given any state where player has two tiles or more
             const board: FourStatePiece[][] = [
                 [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
                 [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
@@ -283,12 +334,17 @@ describe('CoerceoRules', () => {
                 [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
             ];
             const state: CoerceoState = new CoerceoState(board, 1, PlayerNumberMap.of(0, 2), PlayerNumberMap.of(0, 0));
+
+            // When trying to exchange tile for empty spaces
             const move: CoerceoMove = CoerceoTileExchangeMove.of(new Coord(7, 7)) as CoerceoMove;
+
+            // Then the move should be illegal
             const reason: string = CoerceoFailure.CANNOT_CAPTURE_FROM_EMPTY();
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
 
         it('should forbid capturing coord of removed tile', () => {
+            // Given any board where player has two tiles or more
             const board: FourStatePiece[][] = [
                 [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
                 [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
@@ -302,12 +358,17 @@ describe('CoerceoRules', () => {
                 [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
             ];
             const state: CoerceoState = new CoerceoState(board, 1, PlayerNumberMap.of(0, 2), PlayerNumberMap.of(0, 0));
+
+            // When trying to exchange tiles with unreachable coord
             const move: CoerceoMove = CoerceoTileExchangeMove.of(new Coord(0, 0)) as CoerceoMove;
+
+            // Then the move should be illegal
             const reason: string = CoerceoFailure.CANNOT_CAPTURE_FROM_EMPTY();
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
 
         it('should remove piece captured by tiles exchange, removing tile but no one win it', () => {
+            // Given a board where a tile exchange could remove a tile
             const board: FourStatePiece[][] = [
                 [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
                 [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
@@ -320,6 +381,12 @@ describe('CoerceoRules', () => {
                 [N, N, N, N, N, N, X, _, _, _, _, _, N, N, N],
                 [N, N, N, N, N, N, _, _, O, N, N, N, N, N, N],
             ];
+            const state: CoerceoState = new CoerceoState(board, 1, PlayerNumberMap.of(0, 2), PlayerNumberMap.of(0, 0));
+
+            // When doing the tile exchange
+            const move: CoerceoMove = CoerceoTileExchangeMove.of(new Coord(10, 7)) as CoerceoMove;
+
+            // Then the removed tile should not be won by anyone
             const expectedBoard: FourStatePiece[][] = [
                 [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
                 [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
@@ -332,8 +399,6 @@ describe('CoerceoRules', () => {
                 [N, N, N, N, N, N, X, _, _, N, N, N, N, N, N],
                 [N, N, N, N, N, N, _, _, O, N, N, N, N, N, N],
             ];
-            const state: CoerceoState = new CoerceoState(board, 1, PlayerNumberMap.of(0, 2), PlayerNumberMap.of(0, 0));
-            const move: CoerceoMove = CoerceoTileExchangeMove.of(new Coord(10, 7)) as CoerceoMove;
             const expectedState: CoerceoState =
                 new CoerceoState(expectedBoard, 2, PlayerNumberMap.of(0, 0), PlayerNumberMap.of(0, 1));
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
@@ -342,6 +407,7 @@ describe('CoerceoRules', () => {
     });
 
     it('should not remove tiles emptied, when connected by 3 separated sides', () => {
+        // Given a board where a tiles is between two others tiles and could be emptied
         const board: FourStatePiece[][] = [
             [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
             [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
@@ -354,6 +420,12 @@ describe('CoerceoRules', () => {
             [N, N, N, N, N, N, X, _, _, _, _, _, N, N, N],
             [N, N, N, N, N, N, _, _, O, N, N, N, N, N, N],
         ];
+        const state: CoerceoState = new CoerceoState(board, 1, PlayerNumberMap.of(0, 2), PlayerNumberMap.of(0, 0));
+
+        // When emptying that central tile
+        const move: CoerceoMove = CoerceoTileExchangeMove.of(new Coord(10, 7)) as CoerceoMove;
+
+        // Then it should not be removed
         const expectedBoard: FourStatePiece[][] = [
             [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
             [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
@@ -366,16 +438,15 @@ describe('CoerceoRules', () => {
             [N, N, N, N, N, N, X, _, _, _, _, _, N, N, N],
             [N, N, N, N, N, N, _, _, O, N, N, N, N, N, N],
         ];
-        const state: CoerceoState = new CoerceoState(board, 1, PlayerNumberMap.of(0, 2), PlayerNumberMap.of(0, 0));
-        const move: CoerceoMove = CoerceoTileExchangeMove.of(new Coord(10, 7)) as CoerceoMove;
         const expectedState: CoerceoState =
             new CoerceoState(expectedBoard, 2, PlayerNumberMap.of(0, 0), PlayerNumberMap.of(0, 1));
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
     });
 
-    describe('GetBoardValue', () => {
+    describe('getGameStatus', () => {
 
-        it('should set minimal value to victory of Player.ZERO', () => {
+        it('should mark Player.ZERO as winner when Player.ONE is out of pieces', () => {
+            // Given a board where all piece of Player.ONE are dead
             const board: FourStatePiece[][] = [
                 [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
                 [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
@@ -391,10 +462,14 @@ describe('CoerceoRules', () => {
             const state: CoerceoState =
                 new CoerceoState(board, 0, PlayerNumberMap.of(0, 0), PlayerNumberMap.of(18, 17));
             const node: CoerceoNode = new CoerceoNode(state);
+
+            // When evaluating its game status
+            // Then it should be a victory for Player.ZERO
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, defaultConfig);
         });
 
-        it('should set minimal value to victory of Player.ONE', () => {
+        it('should mark Player.ONE as winner when Player.ZERO is out of pieces', () => {
+            // Given a board where all piece of Player.ZERO are dead
             const board: FourStatePiece[][] = [
                 [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
                 [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
@@ -410,6 +485,9 @@ describe('CoerceoRules', () => {
             const state: CoerceoState =
                 new CoerceoState(board, 0, PlayerNumberMap.of(0, 0), PlayerNumberMap.of(17, 18));
             const node: CoerceoNode = new CoerceoNode(state);
+
+            // When evaluating its game status
+            // Then it should be a victory for Player.ONE
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, defaultConfig);
         });
 

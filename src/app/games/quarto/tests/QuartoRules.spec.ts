@@ -87,7 +87,7 @@ describe('QuartoRules', () => {
         // When giving the piece you had in hand
         const move: QuartoMove = new QuartoMove(0, 0, QuartoPiece.AAAA);
 
-        // Then the move should be deemed illegal
+        // Then the move should be illegal
         const reason: string = QuartoFailure.CANNOT_GIVE_PIECE_IN_HAND();
         RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
     });
@@ -105,7 +105,7 @@ describe('QuartoRules', () => {
         // When playing on another square
         const move: QuartoMove = new QuartoMove(0, 3, QuartoPiece.BBAA);
 
-        // Then the move should be deemed illegal
+        // Then the move should be illegal
         const reason: string = RulesFailure.MUST_LAND_ON_EMPTY_SPACE();
         RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
     });

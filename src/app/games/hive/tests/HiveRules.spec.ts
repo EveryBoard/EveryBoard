@@ -80,7 +80,7 @@ describe('HiveRules', () => {
             // When dropping a piece not next to the first piece
             const move: HiveMove = HiveMove.drop(b, new Coord(3, 0));
 
-            // Then the move should fail
+            // Then the move should be illegal
             const reason: string = HiveFailure.MUST_BE_CONNECTED_TO_HIVE();
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
 
@@ -115,7 +115,7 @@ describe('HiveRules', () => {
             // When dropping a piece next to the opponent's piece
             const move: HiveMove = HiveMove.drop(A, new Coord(2, 0));
 
-            // Then the move should fail
+            // Then the move should be illegal
             const reason: string = HiveFailure.CANNOT_DROP_NEXT_TO_OPPONENT();
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
@@ -167,7 +167,7 @@ describe('HiveRules', () => {
             // When dropping another piece than the queen bee
             const move: HiveMove = HiveMove.drop(A, new Coord(0, 1));
 
-            // Then the move should fail
+            // Then the move should be illegal
             const reason: string = HiveFailure.MUST_PLACE_QUEEN_BEE_LATEST_AT_FOURTH_TURN();
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
@@ -182,7 +182,7 @@ describe('HiveRules', () => {
             // When dropping another piece than the queen bee
             const move: HiveMove = HiveMove.drop(a, new Coord(7, 0));
 
-            // Then the move should fail
+            // Then the move should be illegal
             const reason: string = HiveFailure.MUST_PLACE_QUEEN_BEE_LATEST_AT_FOURTH_TURN();
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
@@ -197,7 +197,7 @@ describe('HiveRules', () => {
             // When dropping the beetle on another piece
             const move: HiveMove = HiveMove.drop(B, new Coord(0, 0));
 
-            // Then the move should fail
+            // Then the move should be illegal
             const reason: string = HiveFailure.MUST_DROP_ON_EMPTY_SPACE();
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
@@ -212,7 +212,7 @@ describe('HiveRules', () => {
             // When trying to drop yet another beetle
             const move: HiveMove = HiveMove.drop(B, new Coord(4, 0));
 
-            // Then the move should fail
+            // Then the move should be illegal
             const reason: string = HiveFailure.CANNOT_DROP_PIECE_YOU_DONT_HAVE();
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
@@ -227,7 +227,7 @@ describe('HiveRules', () => {
             // When trying to drop a piece of the opponent
             const move: HiveMove = HiveMove.drop(B, new Coord(0, 1));
 
-            // Then the move should fail
+            // Then the move should be illegal
             const reason: string = RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT();
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
@@ -246,7 +246,7 @@ describe('HiveRules', () => {
             // When trying to move a piece
             const move: HiveMove = HiveMove.move(new Coord(0, 0), new Coord(0, 1)).get();
 
-            // Then the move should fail
+            // Then the move should be illegal
             const reason: string = HiveFailure.QUEEN_BEE_MUST_BE_ON_BOARD_BEFORE_MOVE();
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
@@ -261,7 +261,7 @@ describe('HiveRules', () => {
             // When trying to move from an empty space
             const move: HiveMove = HiveMove.move(new Coord(-1, 0), new Coord(0, 0)).get();
 
-            // Then the move should fail
+            // Then the move should be illegal
             const reason: string = RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY();
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
@@ -276,7 +276,7 @@ describe('HiveRules', () => {
             // When trying to move a piece of the opponent
             const move: HiveMove = HiveMove.move(new Coord(1, 0), new Coord(0, 1)).get();
 
-            // Then the move should fail
+            // Then the move should be illegal
             const reason: string = RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT();
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
@@ -291,7 +291,7 @@ describe('HiveRules', () => {
             // When trying to move the piece from under the beetle
             const move: HiveMove = HiveMove.move(new Coord(1, 0), new Coord(0, 1)).get();
 
-            // Then the move should fail
+            // Then the move should be illegal
             const reason: string = RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT();
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
@@ -306,7 +306,7 @@ describe('HiveRules', () => {
             // When trying to move a non-beetle on top of another piece
             const move: HiveMove = HiveMove.move(new Coord(0, 0), new Coord(1, 0)).get();
 
-            // Then the move should fail
+            // Then the move should be illegal
             const reason: string = HiveFailure.THIS_PIECE_CANNOT_CLIMB();
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
@@ -321,7 +321,7 @@ describe('HiveRules', () => {
             // When trying to move a grasshopper on top of another piece
             const move: HiveMove = HiveMove.move(new Coord(0, 0), new Coord(2, 0)).get();
 
-            // Then the move should fail
+            // Then the move should be illegal
             const reason: string = HiveFailure.THIS_PIECE_CANNOT_CLIMB();
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
@@ -336,7 +336,7 @@ describe('HiveRules', () => {
             // When trying to move the ant on top of another piece
             const move: HiveMove = HiveMove.move(new Coord(0, 0), new Coord(1, 0)).get();
 
-            // Then the move should fail
+            // Then the move should be illegal
             const reason: string = HiveFailure.MUST_BE_ABLE_TO_SLIDE();
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
@@ -356,7 +356,7 @@ describe('HiveRules', () => {
                 new Coord(1, 0),
             ]);
 
-            // Then the move should fail
+            // Then the move should be illegal
             const reason: string = HiveFailure.THIS_PIECE_CANNOT_CLIMB();
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
@@ -391,7 +391,7 @@ describe('HiveRules', () => {
             // When moving the queen bee by two spaces
             const move: HiveMove = HiveMove.move(new Coord(0, 0), new Coord(1, 1)).get();
 
-            // Then the move should fail
+            // Then the move should be illegal
             const reason: string = HiveFailure.QUEEN_BEE_CAN_ONLY_MOVE_TO_DIRECT_NEIGHBORS();
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
@@ -426,7 +426,7 @@ describe('HiveRules', () => {
             // When moving the beetle by two space
             const move: HiveMove = HiveMove.move(new Coord(0, 0), new Coord(1, 1)).get();
 
-            // Then the move should fail
+            // Then the move should be illegal
             const reason: string = HiveFailure.BEETLE_CAN_ONLY_MOVE_TO_DIRECT_NEIGHBORS();
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
@@ -521,7 +521,7 @@ describe('HiveRules', () => {
             // When moving the grasshopper without jumping
             const move: HiveMove = HiveMove.move(new Coord(0, 0), new Coord(1, -1)).get();
 
-            // Then it should fail
+            // Then the move should be illegal
             const reason: string = HiveFailure.GRASSHOPPER_MUST_JUMP_OVER_PIECES();
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
@@ -558,7 +558,7 @@ describe('HiveRules', () => {
             // When trying to jump over the empty space and the piece
             const move: HiveMove = HiveMove.move(new Coord(0, 0), new Coord(3, 0)).get();
 
-            // Then the move should fail
+            // Then the move should be illegal
             const reason: string = HiveFailure.GRASSHOPPER_MUST_JUMP_OVER_PIECES();
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
@@ -574,7 +574,7 @@ describe('HiveRules', () => {
             // When moving by a single space
             const move: HiveMove = HiveMove.move(new Coord(0, 0), new Coord(3, 0)).get();
 
-            // Then the move should fail
+            // Then the move should be illegal
             const reason: string = HiveFailure.GRASSHOPPER_MUST_JUMP_OVER_PIECES();
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
@@ -590,7 +590,7 @@ describe('HiveRules', () => {
             // When trying to jump over nothing
             const move: HiveMove = HiveMove.move(new Coord(0, 0), new Coord(3, 0)).get();
 
-            // Then the move should fail
+            // Then the move should be illegal
             const reason: string = HiveFailure.GRASSHOPPER_MUST_JUMP_OVER_PIECES();
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
@@ -606,7 +606,7 @@ describe('HiveRules', () => {
             // When moving by a single space
             const move: HiveMove = HiveMove.move(new Coord(0, 0), new Coord(3, 1)).get();
 
-            // Then the move should fail
+            // Then the move should be illegal
             const reason: string = HiveFailure.GRASSHOPPER_MUST_MOVE_IN_STRAIGHT_LINE();
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
@@ -623,7 +623,7 @@ describe('HiveRules', () => {
             // When moving the spider with a regular move
             const move: HiveMove = HiveMove.move(new Coord(1, 0), new Coord(2, -1)).get();
 
-            // Then it should fail and an error should be logged
+            // Then the move should be illegal and an error should be logged
             expect(() => rules.isLegal(move, state)).toThrow();
             expect(Utils.logError).toHaveBeenCalledWith('Assertion failure', 'HiveSpiderRules: move should be a spider move', undefined);
         });
@@ -670,7 +670,7 @@ describe('HiveRules', () => {
                 new Coord(3, 0),
             ]);
 
-            // Then the move should fail
+            // Then the move should be illegal
             const reason: string = HiveFailure.SPIDER_MUST_MOVE_ON_NEIGHBORING_SPACES();
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
@@ -691,7 +691,7 @@ describe('HiveRules', () => {
                 new Coord(3, 0),
             ]);
 
-            // Then the move should fail
+            // Then the move should be illegal
             const reason: string = HiveFailure.THIS_PIECE_CANNOT_CLIMB();
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
@@ -712,7 +712,7 @@ describe('HiveRules', () => {
                 new Coord(2, -1),
             ]);
 
-            // Then the move should fail
+            // Then the move should be illegal
             const reason: string = HiveFailure.SPIDER_CANNOT_BACKTRACK();
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
@@ -734,7 +734,7 @@ describe('HiveRules', () => {
                 new Coord(1, 1),
             ]);
 
-            // Then the move should fail
+            // Then the move should be illegal
             const reason: string = HiveFailure.SPIDER_CAN_ONLY_MOVE_WITH_DIRECT_CONTACT();
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
@@ -777,7 +777,7 @@ describe('HiveRules', () => {
             // When trying to perform a move that would split the hive in two
             const move: HiveMove = HiveMove.move(new Coord(1, 0), new Coord(2, -1)).get();
 
-            // Then the move should fail
+            // Then the move should be illegal
             const reason: string = HiveFailure.CANNOT_DISCONNECT_HIVE();
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
@@ -792,7 +792,7 @@ describe('HiveRules', () => {
             // When trying to perform a move that would split the hive in two
             const move: HiveMove = HiveMove.move(new Coord(0, 0), new Coord(-1, 0)).get();
 
-            // Then the move should fail
+            // Then the move should be illegal
             const reason: string = HiveFailure.CANNOT_DISCONNECT_HIVE();
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
@@ -810,7 +810,7 @@ describe('HiveRules', () => {
             // When trying to perform a move that would split the hive in two temporarily
             const move: HiveMove = HiveMove.move(new Coord(0, 2), new Coord(1, 2)).get();
 
-            // Then the move should fail
+            // Then the move should be illegal
             const reason: string = HiveFailure.CANNOT_DISCONNECT_HIVE();
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
 
@@ -828,7 +828,7 @@ describe('HiveRules', () => {
             // When trying to perform a move that could not be done by sliding the piece
             const move: HiveMove = HiveMove.move(new Coord(1, 1), new Coord(1, 2)).get();
 
-            // Then the move should fail
+            // Then the move should be illegal
             const reason: string = HiveFailure.MUST_BE_ABLE_TO_SLIDE();
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
 
@@ -846,7 +846,7 @@ describe('HiveRules', () => {
             // When trying to perform a move that could not be done by sliding the piece
             const move: HiveMove = HiveMove.move(new Coord(1, 2), new Coord(1, 1)).get();
 
-            // Then the move should fail
+            // Then the move should be illegal
             const reason: string = HiveFailure.MUST_BE_ABLE_TO_SLIDE();
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
@@ -864,7 +864,7 @@ describe('HiveRules', () => {
             // When trying to move the surrounded piece
             const move: HiveMove = HiveMove.move(new Coord(2, 1), new Coord(3, 0)).get();
 
-            // Then it should fail
+            // Then the move should be illegal
             const reason: string = HiveFailure.MUST_BE_ABLE_TO_SLIDE();
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
@@ -882,7 +882,7 @@ describe('HiveRules', () => {
             // When trying to move the spider in the closed space
             const move: HiveMove = HiveMove.move(new Coord(0, 0), new Coord(1, 1)).get();
 
-            // Then it should fail
+            // Then the move should be illegal
             const reason: string = HiveFailure.MUST_BE_ABLE_TO_SLIDE();
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
@@ -904,7 +904,7 @@ describe('HiveRules', () => {
                 new Coord(3, 0),
             ]);
 
-            // Then the move should fail
+            // Then the move should be illegal
             const reason: string = HiveFailure.MUST_BE_ABLE_TO_SLIDE();
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
 
@@ -938,7 +938,7 @@ describe('HiveRules', () => {
         // When trying to pass
         const move: HiveMove = HiveMove.PASS;
 
-        // Then the move should fail
+        // Then the move should be illegal
         const reason: string = RulesFailure.CANNOT_PASS();
         RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
     });

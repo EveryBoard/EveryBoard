@@ -273,7 +273,7 @@ describe('KamisadoRules', () => {
             // When user pass
             const move: KamisadoMove = KamisadoMove.PASS;
 
-            // Then the move should be forbidden
+            // Then the move should be illegal
             const reason: string = RulesFailure.CANNOT_PASS();
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
@@ -342,7 +342,7 @@ describe('KamisadoRules', () => {
             // When moving opponent's piece
             const move: KamisadoMove = KamisadoMove.of(new Coord(0, 2), new Coord(0, 0));
 
-            // Then move should be illegal
+            // Then the move should be illegal
             const reason: string = RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT();
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
@@ -354,7 +354,7 @@ describe('KamisadoRules', () => {
             // When moving from an empty space
             const move: KamisadoMove = KamisadoMove.of(new Coord(0, 2), new Coord(0, 0));
 
-            // Then move should be illegal
+            // Then the move should be illegal
             const reason: string = RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY();
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });

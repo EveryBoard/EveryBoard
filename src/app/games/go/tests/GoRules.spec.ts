@@ -242,7 +242,7 @@ describe('GoRules', () => {
             // When accepting
             const move: GoMove = GoMove.ACCEPT;
 
-            // Then the move should be forbidden
+            // Then the move should be illegal
             const reason: string = GoFailure.CANNOT_ACCEPT_BEFORE_COUNTING_PHASE();
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
@@ -512,7 +512,7 @@ describe('GoRules', () => {
             // When passing
             const move: GoMove = GoMove.PASS;
 
-            // Then the move should be rejected
+            // Then the move should be illegal
             const reason: string = GoFailure.CANNOT_PASS_AFTER_PASSED_PHASE();
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });

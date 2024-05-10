@@ -25,6 +25,7 @@ describe('CoerceoCapturesAndFreedomHeuristic', () => {
     });
 
     it('should prefer a board with more freedom', () => {
+        // Given a board with less freedom for Player.ONE, and one with more
         const weakBoard: Table<FourStatePiece> = [
             [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
             [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
@@ -53,6 +54,8 @@ describe('CoerceoCapturesAndFreedomHeuristic', () => {
         ];
         const strongState: CoerceoState =
             new CoerceoState(strongBoard, 1, PlayerNumberMap.of(0, 0), PlayerNumberMap.of(0, 0));
+        // When comparing them
+        // Then the one with more freedom should be considered better for Player.ONE
         HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(heuristic,
                                                                weakState, MGPOptional.empty(),
                                                                strongState, MGPOptional.empty(),

@@ -71,8 +71,10 @@ describe('ConspirateursComponent', () => {
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             ], 1);
+
             // When it is displayed
             await testUtils.setupState(state);
+
             // Then player 0 Should have 19 pieces (0 to 18) and player 1 should have 20 (0 to 19)
             testUtils.expectElementNotToExist('#sidePiece_0_19');
             testUtils.expectElementToExist('#sidePiece_0_18');
@@ -142,12 +144,14 @@ describe('ConspirateursComponent', () => {
         }));
 
         it('should not allow selecting an empty space', fakeAsync(async() => {
+            // Given a state after the drop phase
             // When clicking on an empty space
             // Then it should fail
             await testUtils.expectClickFailure('#click_0_0', RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY());
         }));
 
         it('should forbid selecting a piece of the opponent', fakeAsync(async() => {
+            // Given a state after the drop phase
             // When clicking on a piece of the opponent
             // Then it should fail
             await testUtils.expectClickFailure('#click_5_5', RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT());
@@ -186,6 +190,7 @@ describe('ConspirateursComponent', () => {
         }));
 
         it('should allow performing a jump in two clicks if this is the only choice', fakeAsync(async() => {
+            // Given a state after the drop phase
             // When clicking on a player piece and then on a jump destination
             await testUtils.expectClickSuccess('#click_5_4');
 
@@ -195,6 +200,7 @@ describe('ConspirateursComponent', () => {
         }));
 
         it('should allow performing multiple jumps', fakeAsync(async() => {
+            // Given a state after the drop phase
             // When clicking on a piece and then on all jump steps up to the final one
             await testUtils.expectClickSuccess('#click_5_4');
             await testUtils.expectClickSuccess('#click_5_2');
@@ -206,6 +212,7 @@ describe('ConspirateursComponent', () => {
         }));
 
         it('should show last move after move is finished', fakeAsync(async() => {
+            // Given a state after the drop phase
             // When doing move
             await testUtils.expectClickSuccess('#click_5_4');
             await testUtils.expectClickSuccess('#click_5_2');
@@ -260,6 +267,7 @@ describe('ConspirateursComponent', () => {
         }));
 
         it('should allow stopping a jump early by clicking twice on the destination', fakeAsync(async() => {
+            // Given a state after the drop phase
             // When clicking on the desired jump steps and then a second time on the final step
             await testUtils.expectClickSuccess('#click_5_4');
             await testUtils.expectClickSuccess('#click_5_2');
@@ -300,6 +308,9 @@ describe('ConspirateursComponent', () => {
         }));
 
         it('should not display any remaining piece', fakeAsync(async() => {
+            // Given a state after the drop phase
+            // When displaying it
+            // Then there should be no side pieces
             testUtils.expectElementNotToExist('#sidePiece_0_0');
             testUtils.expectElementNotToExist('#sidePiece_1_0');
         }));
@@ -357,7 +368,7 @@ describe('ConspirateursComponent', () => {
         // When the state is displayed
         await testUtils.setupState(state);
 
-        // The its pieces are highlighted
+        // Then its pieces should be highlighted
         testUtils.expectElementToHaveClass('#space_0_0', 'victory-fill');
         testUtils.expectElementToHaveClass('#piece_0_0', 'victory-stroke');
         // And the opponent should not be
@@ -389,7 +400,7 @@ describe('ConspirateursComponent', () => {
         // When the state is displayed
         await testUtils.setupState(state);
 
-        // The player zero pieces are highlighted
+        // Then player zero pieces should not be highlighted
         testUtils.expectElementToHaveClass('#space_0_0', 'victory-fill');
         // And player one too
         testUtils.expectElementToHaveClass('#space_16_16', 'victory-fill');
