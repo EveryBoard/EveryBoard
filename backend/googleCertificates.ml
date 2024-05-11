@@ -3,14 +3,21 @@ open Utils
 (** This module deals with fetching Google certificates, needed by Firebase *)
 module type GOOGLE_CERTIFICATES = sig
 
+    (** Google certificates consist of an identifier (as a string) and a public
+        key. There can be more than one certificate. Hence, they are
+        represented as an association list *)
+    type certificates = (string * CryptoUtils.public_key) list
+
     (** Retrieve the Google certificates. Uses cached versions if there are any *)
-    val get : unit -> (string * CryptoUtils.public_key) list Lwt.t
+    val get : unit -> certificates Lwt.t
 
     (** Clear the cached certificates. Useful for tests only *)
     val clear : unit -> unit
 end
 
 module Make (External : External.EXTERNAL) : GOOGLE_CERTIFICATES = struct
+
+    type certificates = (string * CryptoUtils.public_key) list
 
     (** Parses the Cache-Control header of a response to extract the max-age field *)
     let parse_max_age (cache_control : string) : int =
@@ -24,7 +31,7 @@ module Make (External : External.EXTERNAL) : GOOGLE_CERTIFICATES = struct
 
     (** Fetches the certificates listed at https://www.googleapis.com/robot/v1/metadata/x509/securetoken@system.gserviceaccount.com
         Returns the certificates and their expiration time (as a unix timestamp). *)
-    let get_certificates () : ((string * CryptoUtils.public_key) list * int) Lwt.t =
+    let get_certificates () : (certificates * int) Lwt.t =
         let endpoint = Uri.of_string "https://www.googleapis.com/robot/v1/metadata/x509/securetoken@system.gserviceaccount.com" in
         let no_headers = Cohttp.Header.init () in
         let* (response, body_string) = External.Http.get endpoint no_headers in

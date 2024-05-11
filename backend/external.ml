@@ -1,6 +1,6 @@
 open Utils
 (** This module contains functions that rely on the external world.
-    This allows us to mock them in our test *)
+    This allows us to mock them in our tests *)
 
 module type EXTERNAL = sig
     (** Provide the current timestamp in seconds *)
@@ -33,11 +33,11 @@ end
 
 module Impl : EXTERNAL = struct
 
-    let now () = int_of_float (Unix.time ())
+    let now () : int = int_of_float (Unix.time ())
 
-    let now_ms () = int_of_float (Unix.time () *. 1000.)
+    let now_ms () : int = int_of_float (Unix.time () *. 1000.)
 
-    let rand_bool () = Random.bool ()
+    let rand_bool () : bool = Random.bool ()
 
     module Http = struct
         let get (endpoint : Uri.t) (headers : Cohttp.Header.t) : (Cohttp.Response.t * string) Lwt.t =

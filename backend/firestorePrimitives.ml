@@ -28,7 +28,7 @@ module Make
         (Stats : Stats.STATS)
     : FIRESTORE_PRIMITIVES = struct
 
-    let logger = Dream.sub_log "firestore"
+    let logger : Dream.sub_log = Dream.sub_log "firestore"
 
     let is_error (response : Cohttp.Response.t) =
         Cohttp.Code.is_error (Cohttp.Code.code_of_status response.status)

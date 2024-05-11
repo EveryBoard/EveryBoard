@@ -9,6 +9,7 @@ module type MOCK = sig
 end
 
 module Mock : MOCK = struct
+    type certificates = (string * CryptoUtils.public_key) list
 
     let certificates = ref [
         ("be7823ef01bd4d2b962741658d20807efee6de5c",

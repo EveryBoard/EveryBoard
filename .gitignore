@@ -56,6 +56,6 @@ Thumbs.db
 .nx/
 
 # Backend build and coverage files
-/backend/_build/
-/backend/_coverage/
+/backend/_build
+/backend/_coverage
 /backend/games.txt
