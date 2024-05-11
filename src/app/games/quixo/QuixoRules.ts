@@ -77,16 +77,14 @@ export class QuixoRules extends ConfigurableRules<QuixoMove, QuixoState, QuixoCo
                 { key: 'ascendingDiagonal', value: new NumberMap<number>() },
                 { key: 'descendingDiagonal', value: new NumberMap<number>() },
             ]));
-        for (const coordAndContent of state.getCoordsAndContents()) {
-            const content: PlayerOrNone = coordAndContent.content;
+        for (const coordAndContent of state.getPlayerCoordsAndContent()) {
+            const content: Player = coordAndContent.content;
             const x: number = coordAndContent.coord.x;
             const y: number = coordAndContent.coord.y;
-            if (content.isPlayer()) {
-                sums.get(content).get('columns').get().addOrSet(x, 1);
-                sums.get(content).get('rows').get().addOrSet(y, 1);
-                sums.get(content).get('ascendingDiagonal').get().addOrSet(x + y, 1);
-                sums.get(content).get('descendingDiagonal').get().addOrSet(x - y, 1);
-            }
+            sums.get(content).get('columns').get().addOrSet(x, 1);
+            sums.get(content).get('rows').get().addOrSet(y, 1);
+            sums.get(content).get('ascendingDiagonal').get().addOrSet(x + y, 1);
+            sums.get(content).get('descendingDiagonal').get().addOrSet(x - y, 1);
         }
         return sums;
     }

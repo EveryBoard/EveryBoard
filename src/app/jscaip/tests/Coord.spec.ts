@@ -56,8 +56,8 @@ describe('Coord', () => {
     it('should throw when asked distance toward an unaligned coord', () => {
         const coord: Coord = new Coord(0, 0);
         const unalignedCoord: Coord = new Coord(1, 2);
-        expect(() => coord.getDistance(unalignedCoord))
-            .toThrowError('Cannot calculate distance with non aligned coords.');
+        expect(() => coord.getLinearDistanceToward(unalignedCoord))
+            .toThrowError('Assertion failure: Cannot calculate distance with non aligned coords.');
     });
 
     it('should compute hexagonal alignments with isHexagonallyAlignedWith', () => {
@@ -132,6 +132,29 @@ describe('Coord', () => {
             TestUtils.expectToThrowAndLog(() => {
                 start.getAllCoordsToward(end);
             }, reason);
+        });
+
+    });
+
+    describe('getDistanceToward', () => {
+
+        const coord: Coord = new Coord(0, 0);
+
+        it('should calculate result and not check alignment', () => {
+            const distance: number = coord.getDistanceToward(new Coord(1, 1), false);
+            expect(distance).toBe(1);
+        });
+
+        it('should calculate result for "knight-like" distance without checking alignment', () => {
+            const distance: number = coord.getDistanceToward(new Coord(1, 2), false);
+            expect(distance).toBe(2);
+        });
+
+        it('should throw when checkAlignement = true and provided coord is not aligned', () => {
+            TestUtils.expectToThrowAndLog(
+                () => coord.getDistanceToward(new Coord(1, 2), true),
+                'Cannot calculate distance with non aligned coords.',
+            );
         });
 
     });

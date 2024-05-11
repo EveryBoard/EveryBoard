@@ -77,7 +77,7 @@ export class EncapsuleRules extends Rules<EncapsuleMove, EncapsuleState, Encapsu
             state.getPieceAt(line[1]).getBiggest().getPlayer(),
             state.getPieceAt(line[2]).getBiggest().getPlayer(),
         ];
-        if (owners[0] === PlayerOrNone.NONE) {
+        if (owners[0].isNone()) {
             return false;
         } else {
             return (owners[0] === owners[1]) && (owners[1] === owners[2]);
@@ -89,7 +89,7 @@ export class EncapsuleRules extends Rules<EncapsuleMove, EncapsuleState, Encapsu
         if (move.isDropping()) {
             movingPiece = move.piece.get();
             const owner: PlayerOrNone = movingPiece.getPlayer();
-            if (owner === PlayerOrNone.NONE) {
+            if (owner.isNone()) {
                 return MGPFallible.failure(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY());
             }
             if (owner === state.getCurrentOpponent()) {
@@ -103,7 +103,7 @@ export class EncapsuleRules extends Rules<EncapsuleMove, EncapsuleState, Encapsu
             const startingSpace: EncapsuleSpace = state.getPieceAt(startingCoord);
             movingPiece = startingSpace.getBiggest();
             const owner: PlayerOrNone = movingPiece.getPlayer();
-            if (owner === PlayerOrNone.NONE) {
+            if (owner.isNone()) {
                 return MGPFallible.failure(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY());
             }
             if (owner === state.getCurrentOpponent()) {

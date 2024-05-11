@@ -101,10 +101,14 @@ export class Coord extends Vector {
         return Math.abs(this.x - c.x) + Math.abs(this.y - c.y);
     }
 
-    public getDistance(c: Coord): number {
-        if (c.isAlignedWith(this) === false) {
-            throw new Error('Cannot calculate distance with non aligned coords.');
-        }
+    public getLinearDistanceToward(c: Coord): number {
+        return this.getDistanceToward(c, true);
+    }
+
+    // If asked not to check alignement, a knight move would count as 2
+    public getDistanceToward(c: Coord, checkAlignement: boolean = false): number {
+        Utils.assert(checkAlignement === false || c.isAlignedWith(this),
+                     'Cannot calculate distance with non aligned coords.');
         const dx: number = Math.abs(c.x - this.x);
         const dy: number = Math.abs(c.y - this.y);
         return Math.max(dx, dy);
@@ -129,7 +133,7 @@ export class Coord extends Vector {
 
     public isNeighborWith(coord: Coord): boolean {
         if (this.isAlignedWith(coord)) {
-            return this.getDistance(coord) === 1;
+            return this.getLinearDistanceToward(coord) === 1;
         } else {
             return false;
         }

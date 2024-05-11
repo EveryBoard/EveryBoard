@@ -46,16 +46,16 @@ describe('GoComponent', () => {
         await testUtils.setupState(state);
 
         const move: GoMove = new GoMove(0, 1);
-        await testUtils.expectMoveSuccess('#click_0_1', move);
+        await testUtils.expectMoveSuccess('#click-0-1', move);
         const goComponent: GoComponent = testUtils.getGameComponent();
         expect(goComponent.captures).toEqual([new Coord(0, 0)]);
     }));
 
     it('should allow simple clicks', fakeAsync(async() => {
         const move: GoMove = new GoMove(1, 1);
-        await testUtils.expectMoveSuccess('#click_1_1', move);
+        await testUtils.expectMoveSuccess('#click-1-1', move);
         const secondMove: GoMove = new GoMove(2, 2);
-        await testUtils.expectMoveSuccess('#click_2_2', secondMove);
+        await testUtils.expectMoveSuccess('#click-2-2', secondMove);
     }));
 
     describe('hoshi', () => {
@@ -69,14 +69,14 @@ describe('GoComponent', () => {
             await testUtils.setupState(state);
 
             // Then it should have hoshi in (3, 3) and (cx, 3) and the 4 central symmetric ones
-            testUtils.expectElementToExist('#hoshi_3_3'); // Left Up
-            testUtils.expectElementToExist('#hoshi_9_3'); // Middle Up
-            testUtils.expectElementToExist('#hoshi_15_3'); // Right Up
-            testUtils.expectElementToExist('#hoshi_15_9'); // Right Middle
-            testUtils.expectElementToExist('#hoshi_15_15'); // Right Down
-            testUtils.expectElementToExist('#hoshi_9_15'); // Middle Down
-            testUtils.expectElementToExist('#hoshi_3_15'); // Left Down
-            testUtils.expectElementToExist('#hoshi_3_9'); // Left Middle
+            testUtils.expectElementToExist('#hoshi-3-3'); // Left Up
+            testUtils.expectElementToExist('#hoshi-9-3'); // Middle Up
+            testUtils.expectElementToExist('#hoshi-15-3'); // Right Up
+            testUtils.expectElementToExist('#hoshi-15-9'); // Right Middle
+            testUtils.expectElementToExist('#hoshi-15-15'); // Right Down
+            testUtils.expectElementToExist('#hoshi-9-15'); // Middle Down
+            testUtils.expectElementToExist('#hoshi-3-15'); // Left Down
+            testUtils.expectElementToExist('#hoshi-3-9'); // Left Middle
         }));
 
         it('should be in (3, 3) and other centraly symmetrical coords for 13x13 board', fakeAsync(async() => {
@@ -88,15 +88,15 @@ describe('GoComponent', () => {
             await testUtils.setupState(state, { config: customConfig });
 
             // Then it should have hoshi in (3, 3) and the 4 central symmetric ones
-            testUtils.expectElementToExist('#hoshi_3_3'); // Left Up
-            testUtils.expectElementToExist('#hoshi_9_3'); // Right Up
-            testUtils.expectElementToExist('#hoshi_9_9'); // Right Down
-            testUtils.expectElementToExist('#hoshi_3_9'); // Left Down
+            testUtils.expectElementToExist('#hoshi-3-3'); // Left Up
+            testUtils.expectElementToExist('#hoshi-9-3'); // Right Up
+            testUtils.expectElementToExist('#hoshi-9-9'); // Right Down
+            testUtils.expectElementToExist('#hoshi-3-9'); // Left Down
             // And the (cx, 3) and the 4 other one
-            testUtils.expectElementToExist('#hoshi_6_3'); // Middle Up
-            testUtils.expectElementToExist('#hoshi_9_6'); // Right Middle
-            testUtils.expectElementToExist('#hoshi_6_9'); // Middle Down
-            testUtils.expectElementToExist('#hoshi_3_6'); // Left Middle
+            testUtils.expectElementToExist('#hoshi-6-3'); // Middle Up
+            testUtils.expectElementToExist('#hoshi-9-6'); // Right Middle
+            testUtils.expectElementToExist('#hoshi-6-9'); // Middle Down
+            testUtils.expectElementToExist('#hoshi-3-6'); // Left Middle
         }));
 
         it('should be in (2, 2) and other centraly symmetrical coords for 9x9 board', fakeAsync(async() => {
@@ -108,15 +108,15 @@ describe('GoComponent', () => {
             await testUtils.setupState(state, { config: customConfig });
 
             // Then it should have hoshi in (2, 2) and (cx, 2) and the 4 central symmetric ones
-            testUtils.expectElementToExist('#hoshi_2_2'); // Left Up
-            testUtils.expectElementToExist('#hoshi_6_2'); // Right Up
-            testUtils.expectElementToExist('#hoshi_6_6'); // Right Down
-            testUtils.expectElementToExist('#hoshi_2_6'); // Left Down
+            testUtils.expectElementToExist('#hoshi-2-2'); // Left Up
+            testUtils.expectElementToExist('#hoshi-6-2'); // Right Up
+            testUtils.expectElementToExist('#hoshi-6-6'); // Right Down
+            testUtils.expectElementToExist('#hoshi-2-6'); // Left Down
             // And the (3, cx) one should not be there
-            testUtils.expectElementNotToExist('#hoshi_4_2'); // Middle Up
-            testUtils.expectElementNotToExist('#hoshi_4_6'); // Middle Down
-            testUtils.expectElementNotToExist('#hoshi_6_4'); // Right Middle
-            testUtils.expectElementNotToExist('#hoshi_2_4'); // Left Middle
+            testUtils.expectElementNotToExist('#hoshi-4-2'); // Middle Up
+            testUtils.expectElementNotToExist('#hoshi-4-6'); // Middle Down
+            testUtils.expectElementNotToExist('#hoshi-6-4'); // Right Middle
+            testUtils.expectElementNotToExist('#hoshi-2-4'); // Left Middle
         }));
 
         it('should have a tengen when board has an odd width and height', fakeAsync(async() => {
@@ -128,7 +128,7 @@ describe('GoComponent', () => {
             await testUtils.setupState(state);
 
             // Then it should have a tengen in (4, 4)
-            testUtils.expectElementToExist('#hoshi_4_4'); // middle middle
+            testUtils.expectElementToExist('#hoshi-4-4'); // middle middle
         }));
 
         it('should not have a tengen when board has an even width and height', fakeAsync(async() => {
@@ -140,10 +140,10 @@ describe('GoComponent', () => {
             await testUtils.setupState(state);
 
             // Then it should not have a tengen
-            testUtils.expectElementNotToExist('#hoshi_4_4'); // upper left potential tengen
-            testUtils.expectElementNotToExist('#hoshi_4_5'); // down left potential tengen
-            testUtils.expectElementNotToExist('#hoshi_5_5'); // down right potential tengen
-            testUtils.expectElementNotToExist('#hoshi_5_4'); // upper right potentiel tengen
+            testUtils.expectElementNotToExist('#hoshi-4-4'); // upper left potential tengen
+            testUtils.expectElementNotToExist('#hoshi-4-5'); // down left potential tengen
+            testUtils.expectElementNotToExist('#hoshi-5-5'); // down right potential tengen
+            testUtils.expectElementNotToExist('#hoshi-5-4'); // upper right potentiel tengen
         }));
 
     });

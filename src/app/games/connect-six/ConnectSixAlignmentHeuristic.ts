@@ -11,12 +11,10 @@ export class ConnectSixAlignmentHeuristic extends Heuristic<ConnectSixMove, Conn
     public getBoardValue(node: ConnectSixNode, _config: MGPOptional<GobanConfig>): BoardValue {
         const state: ConnectSixState = node.gameState;
         let score: number = 0;
-        for (const coordAndContent of state.getCoordsAndContents()) {
-            if (coordAndContent.content.isPlayer()) {
-                const squareScore: number =
-                    ConnectSixRules.CONNECT_SIX_HELPER.getSquareScore(state, coordAndContent.coord);
-                score += squareScore;
-            }
+        for (const coordAndContent of state.getPlayerCoordsAndContent()) {
+            const squareScore: number =
+                ConnectSixRules.CONNECT_SIX_HELPER.getSquareScore(state, coordAndContent.coord);
+            score += squareScore;
         }
         return BoardValue.of(score);
     }

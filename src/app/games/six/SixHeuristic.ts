@@ -262,7 +262,7 @@ export class SixHeuristic extends AlignmentHeuristic<SixMove, SixState, SixVicto
             const dirIndex: number = (index + testedCoords.length) % 6;
             testedCoords.push(testCoord);
             const dir: HexaDirection = HexaDirection.factory.all[dirIndex];
-            if (testedPiece === PlayerOrNone.NONE) {
+            if (testedPiece.isNone()) {
                 subSum += 0.16; // roughly 1/6
                 lastEmpty = MGPOptional.of(testCoord);
             } else {
@@ -394,7 +394,7 @@ export class SixHeuristic extends AlignmentHeuristic<SixMove, SixState, SixVicto
             if (testedPiece === LAST_OPPONENT) {
                 return boardInfo;
             }
-            if (testedPiece === PlayerOrNone.NONE) {
+            if (testedPiece.isNone()) {
                 subSum += 0.16; // rougly 1/6
                 lastEmpty = MGPOptional.of(testCoord);
             } else {
@@ -428,7 +428,7 @@ export class SixHeuristic extends AlignmentHeuristic<SixMove, SixState, SixVicto
             if (testedPiece === LAST_OPPONENT) {
                 return boardInfo;
             }
-            if (testedPiece === PlayerOrNone.NONE) {
+            if (testedPiece.isNone()) {
                 subSum += 0.16; // rougly 1/6
                 lastEmpty = MGPOptional.of(testCoord);
             } else {

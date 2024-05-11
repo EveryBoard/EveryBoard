@@ -8,7 +8,7 @@
        [height]="getState().getHeight()"
        (clickCallBack)="onClick($event)">
     </g>
-    <g id="piece_ko_territory_markers_and_dead_stones">
+    <g id="piece-ko-territory-markers-and-dead-stones">
         <g *ngFor="let coordAndContent of getState().getCoordsAndContents()">
             <g *ngIf="spaceIsFull(coordAndContent.coord) else empty">
                 <circle [attr.cx]="(SPACE_SIZE * 0.5) + (SPACE_SIZE * coordAndContent.coord.x)"

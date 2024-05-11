@@ -50,7 +50,7 @@ export class EncapsuleSpace {
     }
 
     public isEmpty(): boolean {
-        return this.small === PlayerOrNone.NONE && this.medium === PlayerOrNone.NONE && this.big === PlayerOrNone.NONE;
+        return this.small.isNone() && this.medium.isNone() && this.big.isNone();
     }
 
     public toList(): EncapsulePiece[] {
@@ -119,12 +119,12 @@ export class EncapsuleSpace {
             case Size.BIG:
                 return new EncapsuleSpace(this.small, this.medium, piecePlayer);
             case Size.MEDIUM:
-                Utils.assert(this.big === PlayerOrNone.NONE, 'Cannot put a piece on top of a bigger one');
+                Utils.assert(this.big.isNone(), 'Cannot put a piece on top of a bigger one');
                 return new EncapsuleSpace(this.small, piecePlayer, this.big);
             default:
                 Utils.expectToBe(size, Size.SMALL);
-                Utils.assert(this.big === PlayerOrNone.NONE, 'Cannot put a piece on top of a bigger one');
-                Utils.assert(this.medium === PlayerOrNone.NONE, 'Cannot put a piece on top of a bigger one');
+                Utils.assert(this.big.isNone(), 'Cannot put a piece on top of a bigger one');
+                Utils.assert(this.medium.isNone(), 'Cannot put a piece on top of a bigger one');
                 return new EncapsuleSpace(piecePlayer, this.medium, this.big);
         }
     }
