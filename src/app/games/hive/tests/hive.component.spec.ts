@@ -147,6 +147,10 @@ fdescribe('HiveComponent', () => {
 
                 // Then the last move should be shown
                 testUtils.expectElementToHaveClass('.piece-stroke-0-0', 'last-move-stroke');
+                // TODO FOR REVIEW:
+                // avec un id, on aurait ceci :
+                // testUtils.expectElementToHaveClass('.piece-stroke-0-0-0', 'last-move-stroke');
+                // ou le dernier nombre représente la hauteur de la pièce
             }));
 
         });
