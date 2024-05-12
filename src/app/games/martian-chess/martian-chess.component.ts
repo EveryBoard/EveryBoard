@@ -254,7 +254,7 @@ export class MartianChessComponent extends RectangularGameComponent<MartianChess
 
     public async onClick(x: number, y: number): Promise<MGPValidation> {
         this.displayModePanel = false;
-        const clickValidity: MGPValidation = await this.canUserPlay('#click_' + x + '_' + y);
+        const clickValidity: MGPValidation = await this.canUserPlay('#click-' + x + '-' + y);
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }
@@ -354,7 +354,7 @@ export class MartianChessComponent extends RectangularGameComponent<MartianChess
     }
 
     public async onClockClick(): Promise<MGPValidation> {
-        const clickValidity: MGPValidation = await this.canUserPlay('#clockOrCountDownView');
+        const clickValidity: MGPValidation = await this.canUserPlay('#clock-or-count-down-view');
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }
