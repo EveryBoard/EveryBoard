@@ -11,7 +11,7 @@ import { HivePiece } from '../HivePiece';
 import { HiveState } from '../HiveState';
 import { HiveRules } from '../HiveRules';
 
-fdescribe('HiveComponent', () => {
+describe('HiveComponent', () => {
 
     let testUtils: ComponentTestUtils<HiveComponent>;
 
@@ -44,10 +44,7 @@ fdescribe('HiveComponent', () => {
                 await testUtils.setupState(state);
 
                 // When clicking on a remaining piece
-                await testUtils.expectClickSuccess('.remaining-piece-QueenBee_PLAYER_ZERO');
-                // TODO FOR REVIEW:
-                // avec un id, on aurait ceci par exemple:
-                // await testUtils.expectClickSuccess('.remaining-piece-QueenBee_PLAYER_ZERO-0');
+                await testUtils.expectClickSuccess('#remaining-piece-QueenBee_PLAYER_ZERO-0');
 
                 // Then it should be selected
                 testUtils.expectElementToExist('#remaining-highlight');
@@ -61,7 +58,7 @@ fdescribe('HiveComponent', () => {
                 // When clicking on a remaining piece of the opponent
                 // Then it should fail
                 const reason: string = RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT();
-                await testUtils.expectClickFailure('.remaining-piece-QueenBee_PLAYER_ONE', reason);
+                await testUtils.expectClickFailure('#remaining-piece-QueenBee_PLAYER_ONE-0', reason);
             }));
 
             it('should show valid landings after selection', fakeAsync(async() => {
@@ -70,7 +67,7 @@ fdescribe('HiveComponent', () => {
                 await testUtils.setupState(state);
 
                 // When clicking on a remaining piece
-                await testUtils.expectClickSuccess('.remaining-piece-QueenBee_PLAYER_ZERO');
+                await testUtils.expectClickSuccess('#remaining-piece-QueenBee_PLAYER_ZERO-0');
 
                 // Then it should show valid landings
                 testUtils.expectElementToHaveClass('#ground-stroke-0-0', 'clickable-stroke');
@@ -86,7 +83,7 @@ fdescribe('HiveComponent', () => {
                 // When trying to select a remaining piece
                 // Then it should fail
                 const reason: string = HiveFailure.MUST_PLACE_QUEEN_BEE_LATEST_AT_FOURTH_TURN();
-                await testUtils.expectClickFailure('.remaining-piece-Beetle_PLAYER_ZERO', reason);
+                await testUtils.expectClickFailure('#remaining-piece-Beetle_PLAYER_ZERO-0', reason);
             }));
 
         });
@@ -97,7 +94,7 @@ fdescribe('HiveComponent', () => {
                 // Given a state with a selected remaining piece
                 const state: HiveState = HiveRules.get().getInitialState();
                 await testUtils.setupState(state);
-                await testUtils.expectClickSuccess('.remaining-piece-QueenBee_PLAYER_ZERO');
+                await testUtils.expectClickSuccess('#remaining-piece-QueenBee_PLAYER_ZERO-0');
 
                 // When clicking on a valid landing
                 // Then the move should succeed
@@ -113,7 +110,7 @@ fdescribe('HiveComponent', () => {
                 await testUtils.setupState(state);
 
                 // When performing an illegal drop move
-                await testUtils.expectClickSuccess('.remaining-piece-Beetle_PLAYER_ZERO');
+                await testUtils.expectClickSuccess('#remaining-piece-Beetle_PLAYER_ZERO-0');
                 const move: HiveMove = HiveMove.drop(B, new Coord(2, 0));
 
                 // Then it should fail
@@ -127,12 +124,12 @@ fdescribe('HiveComponent', () => {
                 await testUtils.setupState(state);
 
                 // When performing a drop move
-                await testUtils.expectClickSuccess('.remaining-piece-QueenBee_PLAYER_ZERO');
+                await testUtils.expectClickSuccess('#remaining-piece-QueenBee_PLAYER_ZERO-0');
                 const move: HiveMove = HiveMove.drop(Q, new Coord(0, 0));
                 await testUtils.expectMoveSuccess('#space-0-0', move);
 
                 // Then the dropped piece should not be in the remaining pieces anymore
-                testUtils.expectElementNotToExist('.remaining-piece-QueenBee_PLAYER_ZERO');
+                testUtils.expectElementNotToExist('#remaining-piece-QueenBee_PLAYER_ZERO-0');
             }));
 
             it('should show the last move after dropping', fakeAsync(async() => {
@@ -141,16 +138,12 @@ fdescribe('HiveComponent', () => {
                 await testUtils.setupState(state);
 
                 // When performing a drop move
-                await testUtils.expectClickSuccess('.remaining-piece-QueenBee_PLAYER_ZERO');
+                await testUtils.expectClickSuccess('#remaining-piece-QueenBee_PLAYER_ZERO-0');
                 const move: HiveMove = HiveMove.drop(Q, new Coord(0, 0));
                 await testUtils.expectMoveSuccess('#space-0-0', move);
 
                 // Then the last move should be shown
-                testUtils.expectElementToHaveClass('.piece-stroke-0-0', 'last-move-stroke');
-                // TODO FOR REVIEW:
-                // avec un id, on aurait ceci :
-                // testUtils.expectElementToHaveClass('.piece-stroke-0-0-0', 'last-move-stroke');
-                // ou le dernier nombre représente la hauteur de la pièce
+                testUtils.expectElementToHaveClass('#piece-stroke-0-0-0', 'last-move-stroke');
             }));
 
         });
@@ -159,10 +152,10 @@ fdescribe('HiveComponent', () => {
             // Given a state with remaining pieces and a selected one
             const state: HiveState = HiveRules.get().getInitialState();
             await testUtils.setupState(state);
-            await testUtils.expectClickSuccess('.remaining-piece-QueenBee_PLAYER_ZERO');
+            await testUtils.expectClickSuccess('#remaining-piece-QueenBee_PLAYER_ZERO-0');
 
             // When clicking on the selected piece again
-            await testUtils.expectClickFailure('.remaining-piece-QueenBee_PLAYER_ZERO');
+            await testUtils.expectClickFailure('#remaining-piece-QueenBee_PLAYER_ZERO-0');
 
             // Then it should not be selected anymore
             testUtils.expectElementNotToExist('#remaining-highlight');
@@ -184,13 +177,13 @@ fdescribe('HiveComponent', () => {
                     [[Q], [q]],
                 ], 2);
                 await testUtils.setupState(state, { previousMove, previousState });
-                testUtils.expectElementToHaveClass('.piece-stroke-1-0', 'last-move-stroke');
+                testUtils.expectElementToHaveClass('#piece-stroke-1-0-0', 'last-move-stroke');
 
                 // When clicking on a piece on the board
-                await testUtils.expectClickSuccess('.stack-0-0');
+                await testUtils.expectClickSuccess('#piece-0-0-0');
 
                 // Then last drop should be hidden
-                testUtils.expectElementNotToExist('.piece-stroke-1-0');
+                testUtils.expectElementNotToExist('#piece-stroke-1-0-0');
             }));
 
             it('should select the piece clicked', fakeAsync(async() => {
@@ -201,10 +194,10 @@ fdescribe('HiveComponent', () => {
                 await testUtils.setupState(state);
 
                 // When clicking on a piece on the board
-                await testUtils.expectClickSuccess('.stack-0-0');
+                await testUtils.expectClickSuccess('#piece-0-0-0');
 
                 // Then it should be selected
-                testUtils.expectElementToHaveClass('.piece-stroke-0-0', 'selected-stroke');
+                testUtils.expectElementToHaveClass('#piece-stroke-0-0-0', 'selected-stroke');
             }));
 
             it('should forbid selecting a piece of the opponent', fakeAsync(async() => {
@@ -217,7 +210,7 @@ fdescribe('HiveComponent', () => {
                 // When clicking on a piece of the opponent
                 // Then it should fail
                 const reason: string = RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT();
-                await testUtils.expectClickFailure('.stack-1-0', reason);
+                await testUtils.expectClickFailure('#piece-1-0-0', reason);
             }));
 
             it('should show valid landings after selection', fakeAsync(async() => {
@@ -228,7 +221,7 @@ fdescribe('HiveComponent', () => {
                 await testUtils.setupState(state);
 
                 // When clicking on a piece on the board
-                await testUtils.expectClickSuccess('.stack-0-0');
+                await testUtils.expectClickSuccess('#piece-0-0-0');
 
                 // Then it should show valid landings for that piece
                 testUtils.expectElementToHaveClass('#ground-stroke-1--1', 'clickable-stroke');
@@ -250,7 +243,7 @@ fdescribe('HiveComponent', () => {
                 // When trying to select a piece
                 // Then it should fail
                 const reason: string = HiveFailure.MUST_PLACE_QUEEN_BEE_LATEST_AT_FOURTH_TURN();
-                await testUtils.expectClickFailure('.stack-0-0', reason);
+                await testUtils.expectClickFailure('#piece-0-0-0', reason);
             }));
 
             it('should deselect piece when clicking a second time on it', fakeAsync(async() => {
@@ -259,11 +252,11 @@ fdescribe('HiveComponent', () => {
                     [[Q], [q]],
                 ], 2);
                 await testUtils.setupState(state);
-                await testUtils.expectClickSuccess('.stack-0-0');
+                await testUtils.expectClickSuccess('#piece-0-0-0');
 
                 // When clicking on the selected piece again
                 // Then it should cancel the move without error
-                await testUtils.expectClickFailure('.stack-0-0');
+                await testUtils.expectClickFailure('#piece-0-0-0');
             }));
 
         });
@@ -277,7 +270,7 @@ fdescribe('HiveComponent', () => {
                     [[B], []],
                 ], 2);
                 await testUtils.setupState(state);
-                await testUtils.expectClickSuccess('.stack-0-1');
+                await testUtils.expectClickSuccess('#piece-0-1-0');
 
                 // When clicking on a destination
                 // Then the move should succeed
@@ -292,7 +285,7 @@ fdescribe('HiveComponent', () => {
                     [[B], []],
                 ], 2);
                 await testUtils.setupState(state);
-                await testUtils.expectClickSuccess('.stack-0-1');
+                await testUtils.expectClickSuccess('#piece-0-1-0');
 
                 // When clicking on an illegal destination
                 // Then it should fail
@@ -313,7 +306,7 @@ fdescribe('HiveComponent', () => {
                     await testUtils.setupState(state);
 
                     // When selecting a spider and clicking on 3 spaces to perform a spider move
-                    await testUtils.expectClickSuccess('.stack-0-2');
+                    await testUtils.expectClickSuccess('#piece-0-2-0');
                     await testUtils.expectClickSuccess('#space-1-2');
                     await testUtils.expectClickSuccess('#space-2-1');
 
@@ -337,14 +330,13 @@ fdescribe('HiveComponent', () => {
                     await testUtils.setupState(state);
 
                     // When doing intermediary clicks
-                    await testUtils.expectClickSuccess('.stack-0-2');
+                    await testUtils.expectClickSuccess('#piece-0-2-0');
                     await testUtils.expectClickSuccess('#space-1-2');
 
                     // Then it should show valid landings
                     testUtils.expectElementToHaveClass('#ground-stroke-2-1', 'clickable-stroke');
                     // and it should show and selected path, from the actual piece
-                    console.log(testUtils.findElements('.selected-stroke'))
-                    testUtils.expectElementToHaveClass('.piece-stroke-0-2', 'selected-stroke');
+                    testUtils.expectElementToHaveClass('#piece-stroke-0-2-0', 'selected-stroke');
                     testUtils.expectElementToHaveClass('#selected-1-2', 'selected-stroke');
                 }));
 
@@ -356,7 +348,7 @@ fdescribe('HiveComponent', () => {
                         [[S], []],
                     ], 2);
                     await testUtils.setupState(state);
-                    await testUtils.expectClickSuccess('.stack-0-2');
+                    await testUtils.expectClickSuccess('#piece-0-2-0');
                     await testUtils.expectClickSuccess('#space-1-2');
 
                     // When selecting an invalid landing intermediary space
@@ -374,7 +366,7 @@ fdescribe('HiveComponent', () => {
                     [[B], []],
                 ], 2);
                 await testUtils.setupState(state);
-                await testUtils.expectClickSuccess('.stack-0-1');
+                await testUtils.expectClickSuccess('#piece-0-1-0');
 
                 // When performing a move
                 const move: HiveMove = HiveMove.move(new Coord(0, 1), new Coord(1, 1)).get();
@@ -382,7 +374,7 @@ fdescribe('HiveComponent', () => {
 
                 // Then the last move should be shown
                 testUtils.expectElementToHaveClass('#ground-stroke-0-1', 'last-move-stroke');
-                testUtils.expectElementToHaveClass('.piece-stroke-1-1', 'last-move-stroke');
+                testUtils.expectElementToHaveClass('#piece-stroke-1-1-0', 'last-move-stroke');
                 testUtils.expectElementToHaveClass('#space-0-1', 'moved-fill');
             }));
 
@@ -400,7 +392,7 @@ fdescribe('HiveComponent', () => {
             await testUtils.setupState(state);
 
             // When clicking on the stack
-            await testUtils.expectClickSuccess('.stack-0-0');
+            await testUtils.expectClickSuccess('#piece-0-0-0');
 
             // Then the stack should be displayed next to the board
             testUtils.expectElementToExist('#inspected-stack-0');
@@ -412,11 +404,11 @@ fdescribe('HiveComponent', () => {
                 [[B, b, Q], [q]],
             ], 2);
             await testUtils.setupState(state);
-            await testUtils.expectClickSuccess('.stack-0-0');
+            await testUtils.expectClickSuccess('#piece-0-0-0');
 
             // When clicking on the stack a second time
             // Then it should fail
-            await testUtils.expectClickFailure('.stack-0-0');
+            await testUtils.expectClickFailure('#piece-0-0-0');
         }));
 
         it('should allow clicking on a stack with a beetle to inspect it, even if controlled by the opponent', fakeAsync(async() => {
@@ -427,7 +419,7 @@ fdescribe('HiveComponent', () => {
             await testUtils.setupState(state);
 
             // When clicking on the stack
-            await testUtils.expectClickSuccess('.stack-0-0');
+            await testUtils.expectClickSuccess('#piece-0-0-0');
 
             // Then the stack should be displayed next to the board
             testUtils.expectElementToExist('#inspected-stack-0');
@@ -442,7 +434,7 @@ fdescribe('HiveComponent', () => {
 
             // When clicking on the beetle
             // Then it should fail as there is no stack beneath it
-            await testUtils.expectClickFailure('.stack-0-0', RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT());
+            await testUtils.expectClickFailure('#piece-0-0-0', RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT());
         }));
 
         it('should hide the stack of the opponent when clicking a second time on it', fakeAsync(async() => {
@@ -451,11 +443,11 @@ fdescribe('HiveComponent', () => {
                 [[b, b, Q], [q]],
             ], 2);
             await testUtils.setupState(state);
-            await testUtils.expectClickSuccess('.stack-0-0');
+            await testUtils.expectClickSuccess('#piece-0-0-0');
             testUtils.expectElementToExist('#inspected-stack-0');
 
             // When clicking on the stack a second time
-            await testUtils.expectClickFailure('.stack-0-0');
+            await testUtils.expectClickFailure('#piece-0-0-0');
 
             // Then it should hide the stack
             testUtils.expectElementNotToExist('#inspected-stack-0');
@@ -501,7 +493,7 @@ fdescribe('HiveComponent', () => {
         await testUtils.setupState(state);
 
         // Then the victory should be shown
-        testUtils.expectElementToHaveClass('.piece-stroke-1-1', 'victory-stroke');
+        testUtils.expectElementToHaveClass('#piece-stroke-1-1-0', 'victory-stroke');
     }));
 
     it('should display draw coords', fakeAsync(async() => {
@@ -517,8 +509,8 @@ fdescribe('HiveComponent', () => {
         await testUtils.setupState(state);
 
         // Then the draw should be shown (as multiple victory strokes)
-        testUtils.expectElementToHaveClass('.piece-stroke-1-1', 'victory-stroke');
-        testUtils.expectElementToHaveClass('.piece-stroke-2-1', 'victory-stroke');
+        testUtils.expectElementToHaveClass('#piece-stroke-1-1-0', 'victory-stroke');
+        testUtils.expectElementToHaveClass('#piece-stroke-2-1-0', 'victory-stroke');
     }));
 
     it('should show the last move when canceling a move', fakeAsync(async() => {
@@ -533,11 +525,11 @@ fdescribe('HiveComponent', () => {
         await testUtils.setupState(state, { previousState, previousMove });
 
         // When starting and then canceling a move
-        await testUtils.expectClickSuccess('.stack-0-0');
-        await testUtils.expectClickFailure('.stack-0-0');
+        await testUtils.expectClickSuccess('#piece-0-0-0');
+        await testUtils.expectClickFailure('#piece-0-0-0');
 
         // Then the last move should still be displayed
-        testUtils.expectElementToHaveClass('.piece-stroke-1-0', 'last-move-stroke');
+        testUtils.expectElementToHaveClass('#piece-stroke-1-0-0', 'last-move-stroke');
     }));
 
 });

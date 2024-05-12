@@ -217,15 +217,16 @@ export class SimpleComponentTestUtils<T> {
         return element;
     }
 
-    public expectElementToHaveClass(elementName: string, cssClass: string): void {
-        // TODO FOR REVIEW: si on utilise des classes, on pourrait dire "j'attends à ce que TOUS les éléments avec cette classe ait tel style (par exemple "toutes les pièces appartenant à la stack-0-0 sur hive doivent être highlightées)"
-        // on pourrait enforcer que si on s'attends à ce que ça soit le cas, on permet les classes, sinon on doit utiliser des id pour distinguer les éléments
-        const element: DebugElement = this.findElement(elementName);
-        expect(element.attributes.class).withContext(`${elementName} should have a class attribute`).toBeTruthy();
-        expect(element.attributes.class).withContext(`${elementName} should have a class attribute`).not.toEqual('');
+    public expectElementToHaveClass(elementId: string, cssClass: string): void {
+        expect(elementId)
+            .withContext(`expectElementToHaveClass expects an element id, not ${elementId}`)
+            .toContain('#');
+        const element: DebugElement = this.findElement(elementId);
+        expect(element.attributes.class).withContext(`${elementId} should have a class attribute`).toBeTruthy();
+        expect(element.attributes.class).withContext(`${elementId} should have a class attribute`).not.toEqual('');
         if (element.attributes.class != null && element.attributes.class !== '') {
             const elementClasses: string[] = element.attributes.class.split(' ').sort();
-            expect(elementClasses).withContext(`${elementName} should contain CSS class ${cssClass}`).toContain(cssClass);
+            expect(elementClasses).withContext(`${elementId} should contain CSS class ${cssClass}`).toContain(cssClass);
         }
     }
 
