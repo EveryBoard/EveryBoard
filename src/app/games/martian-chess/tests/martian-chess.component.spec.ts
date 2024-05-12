@@ -12,7 +12,7 @@ import { DirectionFailure } from 'src/app/jscaip/Direction';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { MartianChessRules } from '../MartianChessRules';
 
-fdescribe('MartianChessComponent', () => {
+describe('MartianChessComponent', () => {
 
     let testUtils: ComponentTestUtils<MartianChessComponent>;
 

@@ -20,11 +20,11 @@
                    class="lodestone_crumbled_square">
                     <polygon points="0,0     42,0    17,25    67,75    42,100   0,100   0,0"
                              [ngClass]="getSquareClasses(x, y)"
-                             class="base"
+                             class="base crumbled-square-left"
                     />
                     <polygon points="100,0   58,0    35,25    85,75    58,100 100,100 100,0"
                              [ngClass]="getSquareClasses(x, y)"
-                             class="base"
+                             class="base crumbled-square-right"
                     />
                 </g>
                 <g *ngIf="getLodestoneInfo(x, y).isPresent() else piece"

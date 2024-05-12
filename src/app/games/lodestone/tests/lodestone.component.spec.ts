@@ -13,7 +13,7 @@ import { LodestonePiece, LodestonePieceLodestone, LodestonePieceNone, LodestoneP
 import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 import { LodestonePositions, LodestonePressurePlateGroup, LodestonePressurePlates, LodestoneState } from '../LodestoneState';
 
-describe('LodestoneComponent', () => {
+fdescribe('LodestoneComponent', () => {
 
     let testUtils: ComponentTestUtils<LodestoneComponent>;
 
@@ -194,8 +194,10 @@ describe('LodestoneComponent', () => {
             await testUtils.expectMoveSuccess('#lodestone_push_orthogonal_PLAYER_ZERO', move);
 
             // Then the selected lodestone and square should not be 'selected'
-            testUtils.expectElementNotToHaveClass('#lodestone_push_orthogonal_PLAYER_ZERO', 'selected-stroke');
+            testUtils.expectElementNotToExist('#lodestone_push_orthogonal_PLAYER_ZERO');
             testUtils.expectElementNotToExist('#selection_0_0');
+            // but it should be on the board
+            testUtils.expectElementToExist('#lodestone_0_0');
         }));
 
         it('should highlight moved square', fakeAsync(async() => {
@@ -424,8 +426,8 @@ describe('LodestoneComponent', () => {
             testUtils.expectElementNotToExist('#square_7_7 > .lodestone_square');
             // And their polygon should show them as crumbled
             // Captured for the piece, moved for the lodestone
-            testUtils.expectElementToHaveClass('#square_7_7 > .lodestone_crumbled_square > polygon', 'moved-fill');
-            testUtils.expectElementToHaveClass('#square_7_0 > .lodestone_crumbled_square > polygon', 'captured-fill');
+            testUtils.expectElementToHaveClass('#square_7_7 .crumbled-square-left', 'moved-fill');
+            testUtils.expectElementToHaveClass('#square_7_0 .crumbled-square-right', 'captured-fill');
             // And the plate should be full
             testUtils.expectElementToExist('#platePiece_right_0_0');
             testUtils.expectElementToExist('#platePiece_right_0_1');
@@ -434,10 +436,10 @@ describe('LodestoneComponent', () => {
             testUtils.expectElementToExist('#platePiece_right_0_4');
             // And the crumbled lodestone should be there
             testUtils.expectElementToHaveClasses('#lodestone_7_7', ['semi-transparent']);
-            testUtils.expectElementToHaveClasses('#lodestone_push_orthogonal_PLAYER_ZERO_arrow_0', ['base', 'no-stroke', 'player1-fill']);
-            testUtils.expectElementToHaveClasses('#lodestone_push_orthogonal_PLAYER_ZERO_arrow_1', ['base', 'no-stroke', 'player1-fill']);
-            testUtils.expectElementToHaveClasses('#lodestone_push_orthogonal_PLAYER_ZERO_arrow_2', ['base', 'no-stroke', 'player1-fill']);
-            testUtils.expectElementToHaveClasses('#lodestone_push_orthogonal_PLAYER_ZERO_arrow_3', ['base', 'no-stroke', 'player1-fill']);
+            testUtils.expectElementToHaveClasses('#lodestone_7_7 > .lodestone_wrapper > .lodestone_arrow_0', ['base', 'no-stroke', 'player1-fill', 'lodestone_arrow_0']);
+            testUtils.expectElementToHaveClasses('#lodestone_7_7 > .lodestone_wrapper > .lodestone_arrow_1', ['base', 'no-stroke', 'player1-fill', 'lodestone_arrow_1']);
+            testUtils.expectElementToHaveClasses('#lodestone_7_7 > .lodestone_wrapper > .lodestone_arrow_2', ['base', 'no-stroke', 'player1-fill', 'lodestone_arrow_2']);
+            testUtils.expectElementToHaveClasses('#lodestone_7_7 > .lodestone_wrapper > .lodestone_arrow_3', ['base', 'no-stroke', 'player1-fill', 'lodestone_arrow_3']);
         }));
 
         it('should display crumbled lodestone and pieces in the middle of placing capture', fakeAsync(async() => {
