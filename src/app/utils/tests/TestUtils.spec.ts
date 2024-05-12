@@ -192,21 +192,17 @@ export class SimpleComponentTestUtils<T> {
 
     public findElement(elementName: string): DebugElement {
         this.forceChangeDetection();
+        const elements: DebugElement[] = this.fixture.debugElement.queryAll(By.css(elementName));
+        expect(elements.length)
+            .withContext(`element should exist but does not: ${elementName}`)
+            .toBeGreaterThan(0);
         if (elementName.includes('#')) {
             // If there's a #, that means we are looking by id, hence there should be only one result
-            const elements: DebugElement[] = this.fixture.debugElement.queryAll(By.css(elementName));
             expect(elements.length)
                 .withContext(`findElement with id as argument expects a unique result, but got ${elements.length} results instead for element '${elementName}'`)
                 .toBe(1);
-            return elements[0];
-        } else {
-            // Without a #, there could be more than one result, and we return the one that query returns
-            const element: DebugElement | null = this.fixture.debugElement.query(By.css(elementName));
-            expect(element)
-                .withContext(`element should exist: ${elementName}`)
-                .not.toBeNull();
-            return element;
         }
+        return elements[0];
     }
 
     public findElements(elementName: string): DebugElement[] {
@@ -222,6 +218,8 @@ export class SimpleComponentTestUtils<T> {
     }
 
     public expectElementToHaveClass(elementName: string, cssClass: string): void {
+        // TODO FOR REVIEW: si on utilise des classes, on pourrait dire "j'attends à ce que TOUS les éléments avec cette classe ait tel style (par exemple "toutes les pièces appartenant à la stack-0-0 sur hive doivent être highlightées)"
+        // on pourrait enforcer que si on s'attends à ce que ça soit le cas, on permet les classes, sinon on doit utiliser des id pour distinguer les éléments
         const element: DebugElement = this.findElement(elementName);
         expect(element.attributes.class).withContext(`${elementName} should have a class attribute`).toBeTruthy();
         expect(element.attributes.class).withContext(`${elementName} should have a class attribute`).not.toEqual('');

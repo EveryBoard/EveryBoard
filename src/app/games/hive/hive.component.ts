@@ -316,7 +316,7 @@ export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, H
     }
 
     public async selectRemaining(piece: HivePiece): Promise<MGPValidation> {
-        const clickValidity: MGPValidation = await this.canUserPlay(`#remaining-piece-${piece.toString() }`);
+        const clickValidity: MGPValidation = await this.canUserPlay(`.remaining-piece-${piece.toString() }`);
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }
@@ -342,17 +342,17 @@ export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, H
     }
 
     public async selectStack(x: number, y: number): Promise<MGPValidation> {
-        const selectionValidity: MGPValidation = await this.select(new Coord(x, y), 'piece');
+        const selectionValidity: MGPValidation = await this.select(new Coord(x, y), '.stack');
         return selectionValidity;
     }
 
     public async selectSpace(x: number, y: number): Promise<MGPValidation> {
-        const selectionValidity: MGPValidation = await this.select(new Coord(x, y), 'space');
+        const selectionValidity: MGPValidation = await this.select(new Coord(x, y), '#space');
         return selectionValidity;
     }
 
-    private async select(coord: Coord, selection: 'piece' | 'space'): Promise<MGPValidation> {
-        const clickValidity: MGPValidation = await this.canUserPlay(`#${selection}-${coord.x}-${coord.y}`);
+    private async select(coord: Coord, selection: '.stack' | '#space'): Promise<MGPValidation> {
+        const clickValidity: MGPValidation = await this.canUserPlay(`${selection}-${coord.x}-${coord.y}`);
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }

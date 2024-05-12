@@ -14,7 +14,7 @@
          Otherwise the view doesn't look good with overlapping highlights. -->
     <g *ngFor="let groundInfo of ground">
         <polygon *ngIf="groundInfo.content.strokeClasses.length > 0"
-                 id="stroke-{{ groundInfo.x }}-{{ groundInfo.y }}"
+                 id="ground-stroke-{{ groundInfo.x }}-{{ groundInfo.y }}"
                  [attr.points]="getHexaPoints()"
                  [attr.transform]="getHexaCenterTranslationAtXY(groundInfo.x, groundInfo.y)"
                  class="base no-fill small-stroke"
@@ -32,7 +32,7 @@
     </g>
     <g *ngFor="let layer of layers; index as z">
         <g *ngFor="let pieceInfo of layer">
-            <g id="piece-{{ pieceInfo.x }}-{{ pieceInfo.y }}-{{ index }} "
+            <g class="stack-{{ pieceInfo.x }}-{{ pieceInfo.y }}"
                app-hive-piece
                [attr.transform]="getHexaCenterTranslationAtXY(pieceInfo.x, pieceInfo.y)"
                [piece]="pieceInfo.content.piece"
@@ -43,14 +43,14 @@
                [layer]="z"
                (click)="selectStack(pieceInfo.x, pieceInfo.y)"/>
         </g>
-        <!-- Need to be done after all pieces hae been drawn, so that highlights are on top of the pieces of the same level. -->
-        <g *ngFor="let pieceInfo of layer"
+        <!-- Need to be done after all pieces have been drawn, so that highlights are on top of the pieces of the same level. -->
+        <g *ngFor="let pieceInfo of layer; index as z"
             [attr.transform]="getHexaCenterTranslationAtXY(pieceInfo.x, pieceInfo.y)">
             <polygon *ngIf="pieceInfo.content.strokeClasses.length > 0"
-                     id="stroke-{{ pieceInfo.x }}-{{ pieceInfo.y }}-{{ index }} "
+                     class="piece-stroke-{{ pieceInfo.x }}-{{ pieceInfo.y }}"
                      [attr.points]="getHexaPoints()"
                      [attr.transform]="'translate(0 ' + -(z+1) * PIECE_HEIGHT + ')'"
-                     class="base no-fill small-stroke"
+                     class="base no-fill small-stroke victory-test"
                      [ngClass]="pieceInfo.content.strokeClasses"
                      (click)="selectStack(pieceInfo.x, pieceInfo.y)"/>
         </g>
@@ -58,7 +58,7 @@
     <g *ngFor="let stack of remainingStacks">
         <g *ngFor="let piece of stack.pieces"
             [attr.transform]="getHexaCenterTranslationAtXY(0, 0)">
-            <g id="remaining-piece-{{ piece.toString() }}"
+            <g class="remaining-piece-{{ piece.toString() }}"
                app-hive-piece
                [attr.transform]="getRemainingPieceTransform(piece)"
                [piece]="piece"
@@ -79,7 +79,7 @@
     </g>
     <g *ngIf="inspectedStack.isPresent()">
         <g *ngFor="let piece of inspectedStack.get().pieces.slice().reverse(); index as z"
-           id="inspectedStack-{{ z }}"
+           id="inspected-stack-{{ z }}"
            [attr.transform]="inspectedStackTransform"
            app-hive-piece
            [piece]="piece"
