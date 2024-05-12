@@ -153,7 +153,7 @@ describe('GipfComponent', () => {
             await testUtils.setupState(state);
 
             // When clicking on that space
-            // Then it should be a failure due to ambiguity
+            // Then it should fail due to ambiguity
             await testUtils.expectClickFailure('#click_2_3', GipfFailure.AMBIGUOUS_CAPTURE_COORD());
         }));
 

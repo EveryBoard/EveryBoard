@@ -48,7 +48,7 @@ export class HiveTutorial extends Tutorial {
             TutorialStepMessage.CONGRATULATIONS()),
         TutorialStep.anyMove(
             $localize`Placing pieces after the second turn`,
-            $localize`After the second turn, you are still allowed to place pieces any time you want, as long as you respect two conditions: <ol><li>your piece must be connected to the hive, and</li><li>the space on which you drop your piece must not touch a stack of the opponent.</li></ol><br/><br/>You're playing Dark, drop a piece on the board.`,
+            $localize`After the second turn, you are still allowed to place pieces any time you want, as long as you respect two conditions: <ol><li>your piece must be connected to the hive, and</li><li>the space on which you drop your piece must not touch a stack of the opponent.</li></ol><br/>You're playing Dark, drop a piece on the board.`,
             HiveState.fromRepresentation([
                 [[b], [G]],
             ], 2),

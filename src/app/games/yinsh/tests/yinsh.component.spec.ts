@@ -586,6 +586,7 @@ describe('YinshComponent', () => {
 
             // When clicking on the intersecting coordinate
             await testUtils.expectClickSuccess('#click_4_5');
+
             // Then it should fail
             await testUtils.expectClickFailure('#click_5_5', YinshFailure.AMBIGUOUS_CAPTURE_COORD());
         }));
@@ -609,6 +610,7 @@ describe('YinshComponent', () => {
             const state: YinshState = new YinshState(board, PlayerNumberMap.of(0, 0), 10);
             await testUtils.setupState(state);
             await testUtils.expectClickSuccess('#click_3_3');
+
             // When clicking somewhere else than on a ring
             // Then it should fail
             await testUtils.expectClickFailure('#click_3_5', YinshFailure.CAPTURE_SHOULD_TAKE_RING());

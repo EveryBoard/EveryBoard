@@ -91,9 +91,9 @@ describe('DiamRules', () => {
 
             // When dropping a piece that is not remaining
             const move: DiamMove = drop(1, A1);
-            const reason: string = DiamFailure.NO_MORE_PIECES_OF_THIS_TYPE();
 
             // Then the move should be illegal
+            const reason: string = DiamFailure.NO_MORE_PIECES_OF_THIS_TYPE();
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
 
@@ -188,9 +188,9 @@ describe('DiamRules', () => {
 
             // When moving the stack starting at A2 clockwise
             const move: DiamMove = shift(new Coord(7, 3), 'clockwise');
-            const reason: string = DiamFailure.TARGET_STACK_TOO_HIGH();
 
             // Then the move should be illegal
+            const reason: string = DiamFailure.TARGET_STACK_TOO_HIGH();
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
 

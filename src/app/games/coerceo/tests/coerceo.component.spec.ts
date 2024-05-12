@@ -151,7 +151,7 @@ fdescribe('CoerceoComponent', () => {
             // When clicking on an opponent piece
             const move: CoerceoMove = CoerceoTileExchangeMove.of(new Coord(6, 9));
 
-            // Then the move should fail
+            // Then it should fail
             await testUtils.expectMoveFailure('#click-6-9',
                                               CoerceoFailure.NOT_ENOUGH_TILES_TO_EXCHANGE(),
                                               move);

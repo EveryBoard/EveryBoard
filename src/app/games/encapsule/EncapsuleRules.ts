@@ -18,7 +18,6 @@ export type EncapsuleLegalityInformation = EncapsuleSpace;
 export class EncapsuleNode extends GameNode<EncapsuleMove, EncapsuleState> {}
 
 @Debug.log
-// eslint-disable-next-line max-len
 export class EncapsuleRules extends Rules<EncapsuleMove, EncapsuleState, EncapsuleLegalityInformation> {
 
     private static singleton: MGPOptional<EncapsuleRules> = MGPOptional.empty();
@@ -42,7 +41,7 @@ export class EncapsuleRules extends Rules<EncapsuleMove, EncapsuleState, Encapsu
         return new EncapsuleState(startingBoard, 0, initialPieces);
     }
 
-    public static readonly LINES: Coord[][] = [
+    private static readonly LINES: Coord[][] = [
         [new Coord(0, 0), new Coord(0, 1), new Coord(0, 2)],
         [new Coord(1, 0), new Coord(1, 1), new Coord(1, 2)],
         [new Coord(2, 0), new Coord(2, 1), new Coord(2, 2)],
@@ -53,40 +52,44 @@ export class EncapsuleRules extends Rules<EncapsuleMove, EncapsuleState, Encapsu
         [new Coord(0, 2), new Coord(1, 1), new Coord(2, 0)],
     ];
 
-    public static isVictory(state: EncapsuleState): MGPOptional<Player> {
-        const board: EncapsuleSpace[][] = state.getCopiedBoard();
+    public getVictoriousCoords(state: EncapsuleState): Coord[] {
         for (const line of EncapsuleRules.LINES) {
-            const spaces: EncapsuleSpace[] = [board[line[0].y][line[0].x],
-                board[line[1].y][line[1].x],
-                board[line[2].y][line[2].x]];
-            const victory: MGPOptional<Player> = EncapsuleRules.isVictoriousLine(spaces);
-            if (victory.isPresent()) {
-                return victory;
+            if (this.isVictoriousLine(state, line)) {
+                return line;
             }
         }
-        return MGPOptional.empty();
+        return [];
     }
 
-    public static isVictoriousLine(spaces: EncapsuleSpace[]): MGPOptional<Player> {
-        const pieces: EncapsulePiece[] = spaces.map((c: EncapsuleSpace) => c.getBiggest());
-        const owner: PlayerOrNone[] = pieces.map((piece: EncapsulePiece) => piece.getPlayer());
-        if (owner[0] === PlayerOrNone.NONE) {
-            return MGPOptional.empty();
+    public isVictory(state: EncapsuleState): MGPOptional<Player> {
+        const victoriousCoords: Coord[] = this.getVictoriousCoords(state);
+        if (victoriousCoords.length > 0) {
+            const coord: Coord = victoriousCoords[0];
+            return MGPOptional.of(state.getPieceAt(coord).getBiggest().getPlayer() as Player);
         } else {
-            if ((owner[0] === owner[1]) && (owner[1] === owner[2])) {
-                return MGPOptional.of(owner[0] as Player);
-            } else {
-                return MGPOptional.empty();
-            }
+            return MGPOptional.empty();
         }
     }
 
-    public static isLegal(move: EncapsuleMove, state: EncapsuleState): MGPFallible<EncapsuleLegalityInformation> {
+    private isVictoriousLine(state: EncapsuleState, line: Coord[]): boolean {
+        const owners: PlayerOrNone[] = [
+            state.getPieceAt(line[0]).getBiggest().getPlayer(),
+            state.getPieceAt(line[1]).getBiggest().getPlayer(),
+            state.getPieceAt(line[2]).getBiggest().getPlayer(),
+        ];
+        if (owners[0].isNone()) {
+            return false;
+        } else {
+            return (owners[0] === owners[1]) && (owners[1] === owners[2]);
+        }
+    }
+
+    public override isLegal(move: EncapsuleMove, state: EncapsuleState): MGPFallible<EncapsuleLegalityInformation> {
         let movingPiece: EncapsulePiece;
         if (move.isDropping()) {
             movingPiece = move.piece.get();
             const owner: PlayerOrNone = movingPiece.getPlayer();
-            if (owner === PlayerOrNone.NONE) {
+            if (owner.isNone()) {
                 return MGPFallible.failure(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY());
             }
             if (owner === state.getCurrentOpponent()) {
@@ -100,7 +103,7 @@ export class EncapsuleRules extends Rules<EncapsuleMove, EncapsuleState, Encapsu
             const startingSpace: EncapsuleSpace = state.getPieceAt(startingCoord);
             movingPiece = startingSpace.getBiggest();
             const owner: PlayerOrNone = movingPiece.getPlayer();
-            if (owner === PlayerOrNone.NONE) {
+            if (owner.isNone()) {
                 return MGPFallible.failure(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY());
             }
             if (owner === state.getCurrentOpponent()) {
@@ -113,10 +116,6 @@ export class EncapsuleRules extends Rules<EncapsuleMove, EncapsuleState, Encapsu
             return MGPFallible.success(superpositionResult.get());
         }
         return MGPFallible.failure(EncapsuleFailure.INVALID_PLACEMENT());
-    }
-
-    public override isLegal(move: EncapsuleMove, state: EncapsuleState): MGPFallible<EncapsuleLegalityInformation> {
-        return EncapsuleRules.isLegal(move, state);
     }
 
     public override applyLegalMove(move: EncapsuleMove,
@@ -148,9 +147,9 @@ export class EncapsuleRules extends Rules<EncapsuleMove, EncapsuleState, Encapsu
         return resultingState;
     }
 
-    public static getGameStatus(node: EncapsuleNode): GameStatus {
+    public getGameStatus(node: EncapsuleNode): GameStatus {
         const state: EncapsuleState = node.gameState;
-        const winner: MGPOptional<Player> = EncapsuleRules.isVictory(state);
+        const winner: MGPOptional<Player> = this.isVictory(state);
         if (winner.isPresent()) {
             return GameStatus.getVictory(winner.get());
         } else {
@@ -158,7 +157,4 @@ export class EncapsuleRules extends Rules<EncapsuleMove, EncapsuleState, Encapsu
         }
     }
 
-    public getGameStatus(node: EncapsuleNode): GameStatus {
-        return EncapsuleRules.getGameStatus(node);
-    }
 }

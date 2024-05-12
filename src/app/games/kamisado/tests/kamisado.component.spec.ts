@@ -159,9 +159,11 @@ describe('KamisadoComponent', () => {
     it('should forbid moving to invalid location', fakeAsync(async() => {
         // Given a board (here, the initial board) with a selected piece
         await testUtils.expectClickSuccess('#click_0_7');
+
         // When trying to perform an invalid move
         const move: KamisadoMove = KamisadoMove.of(new Coord(0, 7), new Coord(5, 4));
-        // Then it should fail
+
+        // Then the move should be illegal
         await testUtils.expectMoveFailure('#click_5_4', KamisadoFailure.DIRECTION_NOT_ALLOWED(), move);
     }));
 

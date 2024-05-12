@@ -97,7 +97,7 @@ export class P4Rules extends ConfigurableRules<P4Move, P4State, P4Config> {
     public getLowestUnoccupiedSpace(board: Table<PlayerOrNone>, x: number): number {
         let y: number = 0;
         const height: number = board.length;
-        while (y < height && board[y][x] === PlayerOrNone.NONE) {
+        while (y < height && board[y][x].isNone()) {
             y++;
         }
         return y - 1;

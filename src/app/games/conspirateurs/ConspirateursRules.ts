@@ -84,7 +84,7 @@ export class ConspirateursRules extends Rules<ConspirateursMove, ConspirateursSt
             return MGPValidation.failure(ConspirateursFailure.CANNOT_MOVE_BEFORE_DROPPING_ALL_PIECES());
         }
         const startPiece: PlayerOrNone = state.getPieceAt(move.getStart());
-        if (startPiece === PlayerOrNone.NONE) {
+        if (startPiece.isNone()) {
             return MGPValidation.failure(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY());
         }
         if (startPiece === state.getCurrentOpponent()) {
@@ -106,14 +106,14 @@ export class ConspirateursRules extends Rules<ConspirateursMove, ConspirateursSt
             return MGPValidation.failure(ConspirateursFailure.CANNOT_MOVE_BEFORE_DROPPING_ALL_PIECES());
         }
         const startPiece: PlayerOrNone = state.getPieceAt(move.getStartingCoord());
-        if (startPiece === PlayerOrNone.NONE) {
+        if (startPiece.isNone()) {
             return MGPValidation.failure(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY());
         }
         if (startPiece === state.getCurrentOpponent()) {
             return MGPValidation.failure(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT());
         }
         for (const jumpedOver of move.getJumpedOverCoords()) {
-            if (state.getPieceAt(jumpedOver) === PlayerOrNone.NONE) {
+            if (state.getPieceAt(jumpedOver).isNone()) {
                 return MGPValidation.failure(ConspirateursFailure.MUST_JUMP_OVER_PIECES());
             }
         }

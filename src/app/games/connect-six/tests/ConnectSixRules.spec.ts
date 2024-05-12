@@ -181,9 +181,8 @@ describe('ConnectSixRules', () => {
             const move: ConnectSixMove =
                 ConnectSixDrops.of(new Coord(9, 9), new Coord(10, 10)) as ConnectSixMove;
 
-            const reason: string = RulesFailure.MUST_CLICK_ON_EMPTY_SQUARE();
-
             // Then the move should be illegal
+            const reason: string = RulesFailure.MUST_CLICK_ON_EMPTY_SQUARE();
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
 
@@ -267,7 +266,7 @@ describe('ConnectSixRules', () => {
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             ], 2);
 
-            // Then the move should be illegal
+            // Then it should succeed
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         });
 

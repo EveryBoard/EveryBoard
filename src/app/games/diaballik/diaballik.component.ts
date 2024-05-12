@@ -12,7 +12,7 @@ import { MCTS } from 'src/app/jscaip/AI/MCTS';
 import { RectangularGameComponent } from 'src/app/components/game-components/rectangular-game-component/RectangularGameComponent';
 import { DiaballikFailure } from './DiaballikFailure';
 import { Line } from 'src/app/jscaip/Line';
-import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
+import { Player } from 'src/app/jscaip/Player';
 import { DiaballikFilteredMoveGenerator } from './DiaballikFilteredMoveGenerator';
 import { ViewBox } from 'src/app/components/game-components/GameComponentUtils';
 import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
@@ -256,7 +256,7 @@ export class DiaballikComponent extends RectangularGameComponent<DiaballikRules,
                     }
                     return MGPValidation.SUCCESS;
                 }
-            } else if (clickedPiece.owner === PlayerOrNone.NONE) {
+            } else if (clickedPiece.owner.isNone()) {
                 return this.cancelMove(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY());
             } else {
                 return this.cancelMove(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT());
