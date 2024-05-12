@@ -386,9 +386,9 @@ describe('TutorialGameWrapperComponent (games)', () => {
                         const solution: Move | Click = step.getSolution();
                         if (solution instanceof Move) {
                             const validity: MGPValidation = await wrapper.receiveValidMove(solution);
-                            expect(validity).toEqual(MGPValidation.SUCCESS);
+                            expect(validity).withContext(`step ${step.title} should have a valid solution`).toEqual(MGPValidation.SUCCESS);
                         } else {
-                            await testUtils.expectClickSuccess(solution);
+                            await testUtils.expectClickSuccess(solution, `step ${step.title} should have a valid solution`);
                         }
                     }
                 }
