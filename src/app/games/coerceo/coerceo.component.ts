@@ -89,12 +89,11 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
         this.lastEnd = MGPOptional.empty();
     }
 
-    public async onClick(x: number, y: number): Promise<MGPValidation> {
-        const clickValidity: MGPValidation = await this.canUserPlay('#click-' + x + '-' + y);
+    public async onClick(coord: Coord): Promise<MGPValidation> {
+        const clickValidity: MGPValidation = await this.canUserPlay('#click-' + coord.x + '-' + coord.y);
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }
-        const coord: Coord = new Coord(x, y);
         const currentPlayer: Player = this.state.getCurrentPlayer();
         if (this.chosenCoord.equalsValue(coord)) {
             // Deselects the piece
@@ -131,23 +130,23 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
         }
     }
 
-    public isPyramid(x: number, y: number): boolean {
-        const spaceContent: FourStatePiece = this.board[y][x];
-        return spaceContent.isPlayer() || this.wasOpponent(x, y);
+    public isPyramid(coord: Coord): boolean {
+        const spaceContent: FourStatePiece = this.state.getPieceAt(coord);
+        return spaceContent.isPlayer() || this.wasOpponent(coord);
     }
 
-    private wasOpponent(x: number, y: number): boolean {
+    private wasOpponent(coord: Coord): boolean {
         const parent: MGPOptional<CoerceoNode> = this.node.parent;
         if (parent.isPresent()) {
             const opponent: Player = parent.get().gameState.getCurrentOpponent();
-            return parent.get().gameState.getPieceAtXY(x, y).is(opponent);
+            return parent.get().gameState.getPieceAt(coord).is(opponent);
         } else {
             return false;
         }
     }
 
-    public getPyramidClass(x: number, y: number): string {
-        const spaceContent: FourStatePiece = this.board[y][x];
+    public getPyramidClass(coord: Coord): string {
+        const spaceContent: FourStatePiece = this.state.getPieceAt(coord);
         if (spaceContent.isPlayer()) {
             return this.getPlayerClass(spaceContent.getPlayer());
         } else {
@@ -155,22 +154,22 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
         }
     }
 
-    public mustDraw(x: number, y: number): boolean {
-        const spaceContent: FourStatePiece = this.board[y][x];
+    public mustDraw(coord: Coord): boolean {
+        const spaceContent: FourStatePiece = this.state.getPieceAt(coord);
         if (spaceContent === FourStatePiece.UNREACHABLE) {
             // If it was just removed, we want to draw it
-            return this.wasRemoved(x, y);
+            return this.wasRemoved(coord);
         } else {
             // If piece is reachable on the board, we want to draw it
             return true;
         }
     }
 
-    private wasRemoved(x: number, y: number): boolean {
-        const spaceContent: FourStatePiece = this.board[y][x];
+    private wasRemoved(coord: Coord): boolean {
+        const spaceContent: FourStatePiece = this.state.getPieceAt(coord);
         const parent: MGPOptional<CoerceoNode> = this.node.parent;
         if (spaceContent === FourStatePiece.UNREACHABLE && parent.isPresent()) {
-            const previousContent: FourStatePiece = parent.get().gameState.getPieceAtXY(x, y);
+            const previousContent: FourStatePiece = parent.get().gameState.getPieceAt(coord);
             return previousContent === FourStatePiece.EMPTY ||
                    previousContent.is(parent.get().gameState.getCurrentPlayer());
         } else {
@@ -178,11 +177,11 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
         }
     }
 
-    public getSpaceClass(x: number, y: number): string {
-        if (this.wasRemoved(x, y)) {
+    public getSpaceClass(coord: Coord): string {
+        if (this.wasRemoved(coord)) {
             return 'captured-alternate-fill';
         } else {
-            if ((x + y) % 2 === 1) {
+            if ((coord.x + coord.y) % 2 === 1) {
                 return 'background';
             } else {
                 return 'background2';
@@ -233,7 +232,9 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
         }
     }
 
-    public getTriangleInHexTranslation(x: number, y: number): string {
+    public getTriangleInHexTranslation(coord: Coord): string {
+        const x: number = coord.x;
+        const y: number = coord.y;
         const translation: Coord = this.getTriangleTranslationCoord(x, y);
         const translationX: number = translation.x + 2 * Math.floor(x / 3) * this.STROKE_WIDTH;
         let translationY: number = translation.y;

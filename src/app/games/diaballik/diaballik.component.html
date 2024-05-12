@@ -45,7 +45,7 @@
               [attr.y1]="line.y1"
               [attr.x2]="line.x2"
               [attr.y2]="line.y2"
-              class="defeat-stroke normal-stroke" />
+              class="defeat-stroke big-stroke" />
         <rect *ngFor="let coord of indicators"
               [attr.transform]="getTranslation(coord)"
               id="indicator_{{ coord.x }}_{{ coord.y }}"
