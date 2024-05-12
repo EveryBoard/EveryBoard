@@ -46,7 +46,7 @@ describe('CoerceoComponent', () => {
         }));
 
         it('should show tile when there is more than zero', fakeAsync(async() => {
-            // Given a board with more zero tiles
+            // Given a board with more than zero tiles
             const board: Table<FourStatePiece> = CoerceoRules.get().getInitialState().getCopiedBoard();
             const state: CoerceoState = new CoerceoState(board, 0, PlayerNumberMap.of(1, 0), PlayerNumberMap.of(0, 0));
 

@@ -407,7 +407,7 @@ describe('CoerceoRules', () => {
     });
 
     it('should not remove tiles emptied, when connected by 3 separated sides', () => {
-        // Given a board where a tiles is between two others tiles and could be emptied
+        // Given a board where a tile is between two others tiles and could be emptied
         const board: FourStatePiece[][] = [
             [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
             [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
