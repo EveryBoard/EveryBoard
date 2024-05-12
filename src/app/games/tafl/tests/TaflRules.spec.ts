@@ -58,7 +58,7 @@ describe('TaflRules', () => {
         // When trying to move an empty square
         const move: MyTaflMove = MyTaflMove.from(new Coord(0, 1), new Coord(1, 1)).get();
 
-        // Then the move should be illegal
+        // Then it should fail
         const reason: string = RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY();
         RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
     });
@@ -70,7 +70,7 @@ describe('TaflRules', () => {
         // When trying to move an opponent pawn
         const move: MyTaflMove = MyTaflMove.from(new Coord(4, 2), new Coord(4, 3)).get();
 
-        // Then the move should be deemed illegal
+        // Then it should fail
         const reason: string = RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT();
         RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
     });
@@ -82,7 +82,7 @@ describe('TaflRules', () => {
         // When doing a move landing on the opponent
         const move: MyTaflMove = MyTaflMove.from(new Coord(1, 0), new Coord(1, 3)).get();
 
-        // Then the move should be illegal
+        // Then it should fail
         const reason: string = TaflFailure.LANDING_ON_OCCUPIED_SQUARE();
         RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
     });
@@ -94,7 +94,7 @@ describe('TaflRules', () => {
         // When doing a move passing through a piece
         const move: MyTaflMove = MyTaflMove.from(new Coord(1, 0), new Coord(1, 4)).get();
 
-        // Then the move should be illegal
+        // Then it should fail
         const reason: string = RulesFailure.SOMETHING_IN_THE_WAY();
         RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
     });

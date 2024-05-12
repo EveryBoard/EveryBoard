@@ -3,7 +3,6 @@ import { P4State } from './P4State';
 import { P4Config, P4Node } from './P4Rules';
 import { MoveGenerator } from 'src/app/jscaip/AI/AI';
 import { MGPOptional } from '@everyboard/lib';
-import { PlayerOrNone } from 'src/app/jscaip/Player';
 import { Debug } from 'src/app/utils/Debug';
 
 @Debug.log
@@ -27,7 +26,7 @@ export class P4MoveGenerator extends MoveGenerator<P4Move, P4State, P4Config> {
         const moves: P4Move[] = [];
 
         for (let x: number = 0; x < state.getWidth(); x++) {
-            if (state.getPieceAtXY(x, 0) === PlayerOrNone.NONE) {
+            if (state.getPieceAtXY(x, 0).isNone()) {
                 const move: P4Move = P4Move.of(x);
                 moves.push(move);
             }

@@ -50,7 +50,7 @@ export class ConnectSixMoveGenerator extends MoveGenerator<ConnectSixMove, Conne
         const availableCoords: Coord[] = [];
         for (const coordAndContent of state.getCoordsAndContents()) {
             const coord: Coord = coordAndContent.coord;
-            if (usefulCoord[coord.y][coord.x] === true && coordAndContent.content.isPlayer() === false) {
+            if (usefulCoord[coord.y][coord.x] === true && coordAndContent.content.isNone()) {
                 availableCoords.push(coord);
             }
         }

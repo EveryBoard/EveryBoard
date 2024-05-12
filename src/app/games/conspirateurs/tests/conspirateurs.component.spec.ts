@@ -180,7 +180,7 @@ describe('ConspirateursComponent', () => {
             // Given a player piece that is selected
             await testUtils.expectClickSuccess('#click_5_4');
             // When clicking on an illegal destination
-            // Then the move fails
+            // Then it should fail
             const move: ConspirateursMoveSimple = ConspirateursMoveSimple.from(new Coord(5, 4), new Coord(5, 3)).get();
             await testUtils.expectMoveFailure('#click_5_3', RulesFailure.MUST_LAND_ON_EMPTY_SPACE(), move);
         }));

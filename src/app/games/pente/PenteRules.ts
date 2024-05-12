@@ -137,7 +137,7 @@ export class PenteRules extends ConfigurableRules<PenteMove, PenteState, PenteCo
         const height: number = state.getHeight();
         for (let y: number = 0; y < height; y++) {
             for (let x: number = 0; x < width; x++) {
-                if (state.board[y][x] === PlayerOrNone.NONE) {
+                if (state.board[y][x].isNone()) {
                     return true;
                 }
             }

@@ -295,7 +295,7 @@ fdescribe('HiveComponent', () => {
                 await testUtils.expectClickSuccess('.stack-0-1');
 
                 // When clicking on an illegal destination
-                // Then the move should fail
+                // Then it should fail
                 const reason: string = HiveFailure.CANNOT_DISCONNECT_HIVE();
                 const move: HiveMove = HiveMove.move(new Coord(0, 1), new Coord(0, 2)).get();
                 await testUtils.expectMoveFailure('#space-0-2', reason, move);

@@ -36,7 +36,7 @@ describe('PenteComponent', () => {
     it('should forbid dropping on a piece already on the board', fakeAsync(async() => {
         // Given a state
         // When clicking on square with a piece
-        // Then the move should fail
+        // Then it should fail
         const move: PenteMove = PenteMove.of(new Coord(9, 9));
         await testUtils.expectMoveFailure('#click-9-9', RulesFailure.MUST_CLICK_ON_EMPTY_SQUARE(), move);
     }));

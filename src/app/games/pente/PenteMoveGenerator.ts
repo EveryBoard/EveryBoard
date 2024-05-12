@@ -13,7 +13,7 @@ export class PenteMoveGenerator extends MoveGenerator<PenteMove, PenteState, Pen
         const state: PenteState = node.gameState;
         const moves: PenteMove[] = [];
         state.forEachCoord((coord: Coord, content: PlayerOrNone): void => {
-            if (content.isPlayer() === false) {
+            if (content.isNone()) {
                 moves.push(PenteMove.of(coord));
             }
         });
