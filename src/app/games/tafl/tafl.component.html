@@ -93,7 +93,7 @@
         </g>
     </g>
     <g *ngFor="let coord of getClickables()">
-        <rect id="click_{{ coord.x }}_{{ coord.y }}"
+        <rect id="stroke_{{ coord.x }}_{{ coord.y }}"
               (click)="onClick(coord.x, coord.y)"
               [attr.x]="SPACE_SIZE * coord.x"
               [attr.y]="SPACE_SIZE * coord.y"

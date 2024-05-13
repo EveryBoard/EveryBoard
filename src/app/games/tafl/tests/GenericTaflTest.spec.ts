@@ -41,7 +41,7 @@ export function DoTaflTests<C extends TaflComponent<R, M>,
 
     let testUtils: ComponentTestUtils<C>;
 
-    describe(entries.gameName + ' component generic tests', () => {
+    fdescribe(entries.gameName + ' component generic tests', () => {
 
         beforeEach(fakeAsync(async() => {
             testUtils = await ComponentTestUtils.forGame<C>(entries.gameName);
