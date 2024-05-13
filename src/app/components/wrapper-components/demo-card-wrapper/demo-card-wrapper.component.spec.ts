@@ -17,7 +17,7 @@ import { GameNode } from 'src/app/jscaip/AI/GameNode';
 import { AbstractGameComponent } from '../../game-components/game-component/GameComponent';
 import { TutorialGameWrapperMessages } from '../tutorial-game-wrapper/tutorial-game-wrapper.component';
 
-describe('DemoCardComponent', () => {
+fdescribe('DemoCardComponent', () => {
 
     let testUtils: SimpleComponentTestUtils<DemoCardWrapperComponent>;
 
@@ -82,7 +82,7 @@ describe('DemoCardComponent', () => {
         await testUtils.expectToDisplayGameMessage(
             TutorialGameWrapperMessages.THIS_IS_A_DEMO(),
             async() => {
-                await testUtils.clickElement('#click_2');
+                await testUtils.clickElement('.click-2');
             },
         );
 

@@ -13,7 +13,7 @@ import { MinimalUser } from 'src/app/domain/MinimalUser';
 import { ConnectedUserServiceMock } from 'src/app/services/tests/ConnectedUserService.spec';
 import { UserDAO } from 'src/app/dao/UserDAO';
 
-fdescribe('ChatComponent', () => {
+describe('ChatComponent', () => {
 
     let testUtils: SimpleComponentTestUtils<ChatComponent>;
 

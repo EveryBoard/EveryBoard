@@ -176,11 +176,11 @@ export class MancalaComponentTestUtils<C extends MancalaComponent<R>,
     public expectHouseToContain(coord: Coord, value: string, secondaryMessage?: string): void {
         const suffix: string = '_' + coord.x + '_' + coord.y;
         const numberContent: DebugElement = this.testUtils.findElement('#number' + suffix);
-        const secondaryContent: DebugElement = this.testUtils.findElement('#secondary_message' + suffix);
         expect(numberContent.nativeElement.innerHTML).withContext('For ' + coord.toString()).toBe(value);
         if (secondaryMessage === undefined) {
-            expect(secondaryContent).withContext('For ' + coord.toString()).toBeNull();
+            this.testUtils.expectElementNotToExist('#secondary_message' + suffix);
         } else {
+            const secondaryContent: DebugElement = this.testUtils.findElement('#secondary_message' + suffix);
             expect(secondaryContent).withContext('For ' + coord.toString()).not.toBeNull();
             expect(secondaryContent.nativeElement.innerHTML).withContext('For ' + coord.toString()).toBe(secondaryMessage);
         }
