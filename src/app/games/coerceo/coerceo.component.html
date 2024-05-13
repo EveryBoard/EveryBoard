@@ -18,11 +18,10 @@
         </g>
     </g>
     <g *ngFor="let line of board; index as y">
-        <g *ngFor="let spaceContent of line; index as x"
-           id="click_{{ x }}_{{ y }}"
-           (click)="onClick(x, y)">
+        <g *ngFor="let spaceContent of line; index as x">
             <polygon *ngIf="isPyramid(x, y)"
                      id="pyramid_{{ x }}_{{ y }}"
+                     (click)="onClick(x, y)"
                      [attr.points]="getPyramidPoints(x, y)"
                      [attr.transform]="getTriangleInHexTranslation(x, y)"
                      [ngClass]="getPyramidClass(x, y)"

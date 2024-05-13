@@ -10,7 +10,7 @@ import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { DiaballikFailure } from '../DiaballikFailure';
 import { DiaballikRules } from '../DiaballikRules';
 
-fdescribe('DiaballikComponent', () => {
+describe('DiaballikComponent', () => {
 
     let testUtils: ComponentTestUtils<DiaballikComponent>;
 
