@@ -13,7 +13,7 @@ import { LodestonePiece, LodestonePieceLodestone, LodestonePieceNone, LodestoneP
 import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 import { LodestonePositions, LodestonePressurePlateGroup, LodestonePressurePlates, LodestoneState } from '../LodestoneState';
 
-fdescribe('LodestoneComponent', () => {
+describe('LodestoneComponent', () => {
 
     let testUtils: ComponentTestUtils<LodestoneComponent>;
 

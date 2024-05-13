@@ -230,6 +230,21 @@ export class SimpleComponentTestUtils<T> {
         }
     }
 
+    public expectElementsToHaveClass(selector: string, cssClass: string): void {
+        const elements: DebugElement[] = this.fixture.debugElement.queryAll(By.css(selector));
+        expect(elements.length)
+            .withContext('expectElementsToHaveClass expects to check multiple elements')
+            .toBeGreaterThan(1);
+        for (const element of elements) {
+            expect(element.attributes.class).withContext(`${selector} should have a class attribute`).toBeTruthy();
+            expect(element.attributes.class).withContext(`${selector} should have a class attribute`).not.toEqual('');
+            if (element.attributes.class != null && element.attributes.class !== '') {
+                const elementClasses: string[] = element.attributes.class.split(' ').sort();
+                expect(elementClasses).withContext(`${selector} should contain CSS class ${cssClass}`).toContain(cssClass);
+            }
+        }
+    }
+
     public expectElementNotToHaveClass(elementName: string, cssClass: string): void {
         const element: DebugElement = this.findElement(elementName);
         if (element.attributes.class != null) {

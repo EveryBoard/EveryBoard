@@ -1,5 +1,5 @@
 /* eslint-disable max-lines-per-function */
-import { fakeAsync, tick } from '@angular/core/testing';
+import { fakeAsync } from '@angular/core/testing';
 import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { DiaballikComponent } from '../diaballik.component';
 import { DiaballikMove, DiaballikBallPass, DiaballikTranslation } from '../DiaballikMove';
@@ -10,7 +10,7 @@ import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { DiaballikFailure } from '../DiaballikFailure';
 import { DiaballikRules } from '../DiaballikRules';
 
-describe('DiaballikComponent', () => {
+fdescribe('DiaballikComponent', () => {
 
     let testUtils: ComponentTestUtils<DiaballikComponent>;
 
@@ -457,7 +457,7 @@ describe('DiaballikComponent', () => {
         await testUtils.setupState(state);
 
         // Then it should display the translation and passes in the color of player 1
-        testUtils.expectElementToHaveClass('#passCountIndicator circle', 'player1-fill');
+        testUtils.expectElementsToHaveClass('#passCountIndicator circle', 'player1-fill');
         testUtils.expectElementToHaveClass('#translationCountIndicator circle', 'player1-fill');
     }));
 
