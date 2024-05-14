@@ -13,7 +13,7 @@ import { Table } from 'src/app/jscaip/TableUtils';
 import { YinshRules } from '../YinshRules';
 import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 
-fdescribe('YinshComponent', () => {
+describe('YinshComponent', () => {
 
     let testUtils: ComponentTestUtils<YinshComponent>;
     const _: YinshPiece = YinshPiece.EMPTY;

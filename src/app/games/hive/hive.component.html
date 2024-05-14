@@ -57,9 +57,9 @@
         </g>
     </g>
     <g *ngFor="let stack of remainingStacks">
-        <g *ngFor="let piece of stack.pieces; index as index"
+        <g *ngFor="let piece of stack.pieces; index as z"
             [attr.transform]="getHexaCenterTranslationAtXY(0, 0)">
-            <g id="remaining-piece-{{ piece.toString() }}-{{ index }}"
+            <g id="remaining-piece-{{ piece.toString() }}-{{ z }}"
                app-hive-piece
                [attr.transform]="getRemainingPieceTransform(piece)"
                [piece]="piece"
@@ -68,7 +68,7 @@
                [y]="0"
                [layer]="z"
                [hexaLayout]="hexaLayout"
-               (click)="selectRemaining(piece, index)"/>
+               (click)="selectRemaining(piece, z)"/>
         </g>
     </g>
     <g [attr.transform]="getHexaCenterTranslation(ORIGIN)">
