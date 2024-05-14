@@ -17,7 +17,7 @@ import { GameNode } from 'src/app/jscaip/AI/GameNode';
 import { AbstractGameComponent } from '../../game-components/game-component/GameComponent';
 import { TutorialGameWrapperMessages } from '../tutorial-game-wrapper/tutorial-game-wrapper.component';
 
-fdescribe('DemoCardComponent', () => {
+describe('DemoCardComponent', () => {
 
     let testUtils: SimpleComponentTestUtils<DemoCardWrapperComponent>;
 

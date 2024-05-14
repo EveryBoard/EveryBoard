@@ -75,6 +75,21 @@ describe('MGPSet', () => {
         });
     });
 
+    describe('clear', () => {
+
+        it('should remove all elements from a set', () => {
+            const set: MGPSet<number> = new MGPSet([1, 2]);
+            set.clear();
+            expect(set.equals(new MGPSet())).toBeTrue();
+        });
+
+        it('should not fail on the empty set', () => {
+            const set: MGPSet<number> = new MGPSet();
+            set.clear();
+            expect(set.equals(new MGPSet())).toBeTrue();
+        });
+    });
+
     describe('union', () => {
         it('should return the elements present in either set', () => {
             const set: MGPSet<number> = new MGPSet([1, 2]);

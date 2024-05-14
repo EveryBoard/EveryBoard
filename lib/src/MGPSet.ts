@@ -61,6 +61,13 @@ export class MGPSet<T extends Comparable> implements ComparableObject {
         return false;
     }
 
+    /**
+     * Remove all elements from the set.
+     */
+    public clear(): void {
+        this.values = [];
+    }
+
     public addAll(otherSet: MGPSet<T>): void {
         for (const element of otherSet) {
             this.add(element);
