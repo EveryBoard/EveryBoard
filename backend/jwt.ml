@@ -5,9 +5,6 @@ open CryptoUtils
     ourselves to the firestore server, and to authentify users to ourselves. *)
 module type JWT = sig
 
-    (** [InvalidToken] is raised if at some point we encounter an invalid token *)
-    exception InvalidToken
-
     (* A JWT token *)
     type t = {
         header: JSON.t; (** The header of the token *)
@@ -24,18 +21,16 @@ module type JWT = sig
     val make : string -> private_key -> string list -> string -> t
 
     (** [parse str] parses an existing token from its string representation.
-        Raises [InvalidToken] in case the token can't be parsed. The signature of
-        the token is NOT validated at this point. *)
-    val parse : string -> t
+        The signature of the token is NOT validated at this point. *)
+    val parse : string -> t option
 
-    (** [verify_and_get_uid token kid certificates] verifies that a token has been
-        signed by the certificates with key id [kid]. Raises [InvalidToken] in
-        case it is not valid. *)
-    val verify_and_get_uid : t -> string -> (string * CryptoUtils.public_key) list -> string
+    (** [verify_and_get_uid token kid certificates] verifies that a token has
+        been signed by the certificates with key id [kid]. Return the user id in
+        case of success, otherwise return [None]. *)
+    val verify_and_get_uid : t -> string -> (string * CryptoUtils.public_key) list -> string option
 end
 
 module Make (External : External.EXTERNAL) : JWT = struct
-    exception InvalidToken
 
     type t = {
         header: JSON.t; (** The header of the token *)
@@ -84,13 +79,13 @@ module Make (External : External.EXTERNAL) : JWT = struct
             (Dream.to_base64url token.signature)
 
     (** Parse a token from its string representation. Does NOT validate the signature. *)
-    let parse (token : string) : t =
+    let parse (token : string) : t option =
         match String.split_on_char '.' token |> List.map Dream.from_base64url  with
         | [Some header_json; Some payload_json; Some signature] ->
             let header = JSON.from_string header_json in
             let payload = JSON.from_string payload_json in
-            { header; payload; signature }
-        | _ -> raise InvalidToken
+            Some { header; payload; signature }
+        | _ -> None (* Token is invalid *)
 
     let verify_signature (token : t) (pk : CryptoUtils.public_key) : bool =
         let only_sha256 = function
@@ -104,48 +99,53 @@ module Make (External : External.EXTERNAL) : JWT = struct
     (** Verify the signature of a JWT according to https://firebase.google.com/docs/auth/admin/verify-id-tokens.
         Depends on the public keys listed at https://www.googleapis.com/robot/v1/metadata/x509/securetoken@system.gserviceaccount.com
         In case of success, the uid ("sub" field) is returned. *)
-    let verify_and_get_uid (token : t) (project_id : string) (pks : (string * CryptoUtils.public_key) list) : string =
-        let check (_field : string) (cond : unit -> bool) : unit =
-            if cond () then () else raise InvalidToken in
+    let verify_and_get_uid (token : t) (project_id : string) (pks : (string * CryptoUtils.public_key) list) : string option =
+        let check (conditions : (string * (unit -> bool)) list) : bool =
+            List.for_all (fun (_field, cond) -> cond ()) conditions in
         let now = External.now () in
         let open JSON.Util in
         let number (json : JSON.t) (field : string) : int = to_int (member field json) in
         let str (json : JSON.t) (field : string) : string = to_string (member field json) in
-        (* algorithm must be RS256 *)
-        check "alg" (fun () ->
-            if !Options.emulator then
-                (* The emulator doesn't sign the tokens *)
-                str token.header "alg" = "none"
-            else
-                str token.header "alg" = "RS256");
-        (* key must be one of the valid keys *)
-        check "kid" (fun () ->
-            if !Options.emulator then
-                (* The emulator doesn't provide a key with the token *)
-                true
-            else
-                List.mem_assoc (str token.header "kid") pks);
-        (* expiration must be in the future *)
-        check "exp" (fun () -> now <= number token.payload "exp");
-        (* "issued-at-time" must be in the past *)
-        check "iat" (fun () -> number token.payload "iat" <= now);
-        (* audience must be the firebase project id *)
-        check "aud" (fun () -> str token.payload "aud" = project_id);
-        (* issuer must be a specific url *)
-        check "iss" (fun () -> str token.payload "iss" =  ("https://securetoken.google.com/" ^ project_id));
-        (* subject must be a non empty string *)
-        check "sub" (fun () -> String.length (str token.payload "sub") > 0);
-        (* authentication time must be in the past *)
-        check "auth_time" (fun () -> number token.payload "auth_time" <= now);
-        (* check the signature against the key *)
-        check "signature" (fun () ->
-            (* We know the kid corresponds to an actual certificate from the kid check *)
-            if !Options.emulator then
-                (* The emulator doesn't sign the tokens *)
-                true
-            else
-                let pk = List.assoc (str token.header "kid") pks in
-                verify_signature token pk);
-        (* If everything has succeeded, we can extract the uid from the "sub" field *)
-        str token.payload "sub"
+        let all_checks = [
+            (* algorithm must be RS256 *)
+            "alg", (fun () ->
+                if !Options.emulator then
+                    (* The emulator doesn't sign the tokens *)
+                    str token.header "alg" = "none"
+                else
+                    str token.header "alg" = "RS256");
+            (* key must be one of the valid keys *)
+            "kid", (fun () ->
+                if !Options.emulator then
+                    (* The emulator doesn't provide a key with the token *)
+                    true
+                else
+                    List.mem_assoc (str token.header "kid") pks);
+            (* expiration must be in the future *)
+            "exp", (fun () -> now <= number token.payload "exp");
+            (* "issued-at-time" must be in the past *)
+            "iat", (fun () -> number token.payload "iat" <= now);
+            (* audience must be the firebase project id *)
+            "aud", (fun () -> str token.payload "aud" = project_id);
+            (* issuer must be a specific url *)
+            "iss", (fun () -> str token.payload "iss" =  ("https://securetoken.google.com/" ^ project_id));
+            (* subject must be a non empty string *)
+            "sub", (fun () -> String.length (str token.payload "sub") > 0);
+            (* authentication time must be in the past *)
+            "auth_time", (fun () -> number token.payload "auth_time" <= now);
+            (* check the signature against the key *)
+            "signature", (fun () ->
+                (* We know the kid corresponds to an actual certificate from the kid check *)
+                if !Options.emulator then
+                    (* The emulator doesn't sign the tokens *)
+                    true
+                else
+                    let pk = List.assoc (str token.header "kid") pks in
+                    verify_signature token pk);
+        ] in
+        if check all_checks then
+            (* If everything has succeeded, we can extract the uid from the "sub" field *)
+            Some (str token.payload "sub")
+        else
+            None
 end

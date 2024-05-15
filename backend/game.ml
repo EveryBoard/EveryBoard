@@ -43,10 +43,11 @@ module Make
             raise (BadInput "gameName does not correspond to an existing game")
         | Some game_name ->
             (* Is the user allowed to create a game? That is, the user should not have a current game *)
-            let (uid, user) = Auth.get_user request in
+            let user = Auth.get_user request in
             match user.current_game with
             | Some _ -> raise (BadInput "User is already in a game")
             | None ->
+                let uid = Auth.get_uid request in
                 let creator = User.to_minimal_user uid user in
                 (* Create the game, then the config room, then the chat room *)
                 let game = Game.initial game_name creator in
