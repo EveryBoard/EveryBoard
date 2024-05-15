@@ -380,16 +380,20 @@ describe('TutorialGameWrapperComponent (games)', () => {
                 const gameComponent: AbstractGameComponent = testUtils.getGameComponent();
                 for (const step of gameComponent.tutorial) {
                     // Display the step
-                    await wrapper.startTutorial([step]);
-                    if (step.hasSolution()) {
-                        // Perform the solution
-                        const solution: Move | Click = step.getSolution();
-                        if (solution instanceof Move) {
-                            const validity: MGPValidation = await wrapper.receiveValidMove(solution);
-                            expect(validity).withContext(`step ${step.title} should have a valid solution`).toEqual(MGPValidation.SUCCESS);
-                        } else {
-                            await testUtils.expectClickSuccess(solution, `step ${step.title} should have a valid solution`);
+                    try {
+                        await wrapper.startTutorial([step]);
+                        if (step.hasSolution()) {
+                            // Perform the solution
+                            const solution: Move | Click = step.getSolution();
+                            if (solution instanceof Move) {
+                                const validity: MGPValidation = await wrapper.receiveValidMove(solution);
+                                expect(validity).withContext(`step ${step.title} should have a valid solution`).toEqual(MGPValidation.SUCCESS);
+                            } else {
+                                await testUtils.expectClickSuccess(solution, `step ${step.title} should have a valid solution`);
+                            }
                         }
+                    } catch (e) {
+                        expect(e).withContext(`step ${step.title} has thrown an exception`).toBeUndefined();
                     }
                 }
             }));
