@@ -18,8 +18,8 @@ module Mock = struct
     let verify_and_get_uid token _ _ =
         let open JSON.Util in
         if !validate_token
-        then to_string (member "sub" token.payload)
-        else raise InvalidToken
+        then Some (to_string (member "sub" token.payload))
+        else None
 end
 
 module Jwt = Jwt.Make(ExternalTests.Mock)
@@ -172,18 +172,18 @@ let tests () =
                 (* When parsing it *)
                 let actual = Jwt.parse identity_token_str in
                 (* Then it should provide the expected token *)
-                let expected = identity_token in
-                check jwt "success" expected actual
+                let expected = Some identity_token in
+                check (option jwt) "success" expected actual
             );
 
             test "should fail on an invalid identity token" (fun () ->
                 (* Given an invalid identity token string representation *)
                 let invalid_token = "invalid token!"  in
                 (* When parsing it *)
+                let actual = Jwt.parse invalid_token in
                 (* Then it should fail *)
-                check_raises "failure" Jwt.InvalidToken (fun () ->
-                    let _ = Jwt.parse invalid_token in ()
-                )
+                let expected = None in
+                check (option jwt) "failure" expected actual
             );
         ];
 
@@ -201,8 +201,8 @@ let tests () =
                     (* When verifying it and extracting the uid *)
                     let actual = Jwt.verify_and_get_uid identity_token "everyboard-test" [(public_key_id, public_key)] in
                     (* Then it should provide the expected uid *)
-                    let expected = "wECcuMPVQHO9VSs7bgOL5rLxmPD2" in
-                    check string "success" expected actual
+                    let expected = Some "wECcuMPVQHO9VSs7bgOL5rLxmPD2" in
+                    check (option string) "success" expected actual
                 );
 
                 test "should succeed with emulator tokens" (fun () ->
@@ -219,8 +219,8 @@ let tests () =
                     } in
                     let actual = Jwt.verify_and_get_uid emulator_token "everyboard-test" [(public_key_id, public_key)] in
                     (* Then it should provide the expected uid *)
-                    let expected = "wECcuMPVQHO9VSs7bgOL5rLxmPD2" in
-                    check string "success" expected actual;
+                    let expected = Some "wECcuMPVQHO9VSs7bgOL5rLxmPD2" in
+                    check (option string) "success" expected actual;
                     Options.emulator := false
                 );
 
@@ -228,90 +228,90 @@ let tests () =
                     (* Given an invalid token due to invalid algorithm used *)
                     let token = { identity_token with header = replace_assoc identity_token.header "alg" (`String "foo") } in
                     (* When verifying it *)
+                    let actual = Jwt.verify_and_get_uid token "everyboard-test" [(public_key_id, public_key)] in
                     (* Then it should fail *)
-                    check_raises "failure" Jwt.InvalidToken (fun () ->
-                        let _ = Jwt.verify_and_get_uid token "everyboard-test" [(public_key_id, public_key)] in
-                        ())
+                    let expected = None in
+                    check (option string) "failure" expected actual
                 );
 
                 test "should fail if kid is not a known key" (fun () ->
                     (* Given no keys to use in verification *)
                     let keys = [] in
                     (* When verifying a token *)
+                    let actual = Jwt.verify_and_get_uid identity_token "everyboard-test" keys in
                     (* Then it should fail *)
-                    check_raises "failure" Jwt.InvalidToken (fun () ->
-                        let _ = Jwt.verify_and_get_uid identity_token "everyboard-test" keys in
-                        ())
+                    let expected = None in
+                    check (option string) "failure" expected actual
                 );
 
                 test "should fail if token is expired" (fun () ->
                     (* Given an expired token *)
                     let token = { identity_token with payload = replace_assoc identity_token.payload "exp" (`Int (now - 100000)) } in
                     (* When verifying it *)
+                    let actual = Jwt.verify_and_get_uid token "everyboard-test" [(public_key_id, public_key)] in
                     (* Then it should fail *)
-                    check_raises "failure" Jwt.InvalidToken (fun () ->
-                        let _ = Jwt.verify_and_get_uid token "everyboard-test" [(public_key_id, public_key)] in
-                        ())
+                    let expected = None in
+                    check (option string) "failure" expected actual
                 );
 
                 test "should fail if token is issued in the future" (fun () ->
                     (* Given a token issued in the future *)
                     let token = { identity_token with payload = replace_assoc identity_token.payload "iat" (`Int (now + 1000)) } in
                     (* When verifying it *)
+                    let actual = Jwt.verify_and_get_uid token "everyboard-test" [(public_key_id, public_key)] in
                     (* Then it should fail *)
-                    check_raises "failure" Jwt.InvalidToken (fun () ->
-                        let _ = Jwt.verify_and_get_uid token "everyboard-test" [(public_key_id, public_key)] in
-                        ())
+                    let expected = None in
+                    check (option string) "failure" expected actual
                 );
 
                 test "should fail if audience is not the project id" (fun () ->
                     (* Given a token with an audience different from the project id *)
                     let project_id = "another-project" in
                     (* When verifying it *)
+                    let actual = Jwt.verify_and_get_uid identity_token project_id [(public_key_id, public_key)] in
                     (* Then it should fail *)
-                    check_raises "failure" Jwt.InvalidToken (fun () ->
-                        let _ = Jwt.verify_and_get_uid identity_token project_id [(public_key_id, public_key)] in
-                        ())
+                    let expected = None in
+                    check (option string) "failure" expected actual
                 );
 
                 test "should fail if issuer is not the expected url" (fun () ->
                     (* Given a token with a wrong issuer url *)
                     let token = { identity_token with payload = replace_assoc identity_token.payload "iss" (`String "http://other") } in
                     (* When verifying it *)
+                    let actual = Jwt.verify_and_get_uid token "everyboard-test" [(public_key_id, public_key)] in
                     (* Then it should fail *)
-                    check_raises "failure" Jwt.InvalidToken (fun () ->
-                        let _ = Jwt.verify_and_get_uid token "everyboard-test" [(public_key_id, public_key)] in
-                        ())
+                    let expected = None in
+                    check (option string) "failure" expected actual
                 );
 
                 test "should fail if subject is empty" (fun () ->
                     (* Given a token with an empty subject *)
                     let token = { identity_token with payload = replace_assoc identity_token.payload "sub" (`String "") } in
                     (* When verifying it *)
+                    let actual = Jwt.verify_and_get_uid token "everyboard-test" [(public_key_id, public_key)] in
                     (* Then it should fail *)
-                    check_raises "failure" Jwt.InvalidToken (fun () ->
-                        let _ = Jwt.verify_and_get_uid token "everyboard-test" [(public_key_id, public_key)] in
-                        ())
+                    let expected = None in
+                    check (option string) "failure" expected actual
                 );
 
                 test "should fail if authentication time is in the future" (fun () ->
                     (* Given a token with an authentication time in the future *)
                     let token = { identity_token with payload = replace_assoc identity_token.payload "auth_time" (`Int (now + 1000)) } in
                     (* When verifying it *)
+                    let actual = Jwt.verify_and_get_uid token "everyboard-test" [(public_key_id, public_key)] in
                     (* Then it should fail *)
-                    check_raises "failure" Jwt.InvalidToken (fun () ->
-                        let _ = Jwt.verify_and_get_uid token "everyboard-test" [(public_key_id, public_key)] in
-                        ())
+                    let expected = None in
+                    check (option string) "failure" expected actual
                 );
 
                 test "should fail if signature is invalid" (fun () ->
                     (* Given a token with an invalid signature *)
                     let token = { identity_token with signature = "foo" } in
                     (* When verifying it *)
+                    let actual = Jwt.verify_and_get_uid token "everyboard-test" [(public_key_id, public_key)] in
                     (* Then it should fail *)
-                    check_raises "failure" Jwt.InvalidToken (fun () ->
-                        let _ = Jwt.verify_and_get_uid token "everyboard-test" [(public_key_id, public_key)] in
-                        ())
+                    let expected = None in
+                    check (option string) "failure" expected actual
                 );
 
                 test "should fail if signature is not using SHA256" (fun () ->
@@ -319,10 +319,10 @@ let tests () =
                     (* Given a token with a SHA-224 signature instead of SHA-256 *)
                     let token = { identity_token with signature = Option.get (Dream.from_base64url sha224_signature) } in
                     (* When verifying it *)
+                    let actual = Jwt.verify_and_get_uid token "everyboard-test" [(public_key_id, public_key)] in
                     (* Then it should fail *)
-                    check_raises "failure" Jwt.InvalidToken (fun () ->
-                        let _ = Jwt.verify_and_get_uid token "everyboard-test" [(public_key_id, public_key)] in
-                        ());
+                    let expected = None in
+                    check (option string) "failure" expected actual
                 );
             ]
         end;

@@ -74,7 +74,7 @@ module Mock : MOCK = struct
             record_call (UpdateGame (game_id, update));
             Lwt.return ()
         let add_event _ game_id event =
-            record_call (AddEvent (game_id, Domain.Game.Event.to_yojson event));
+            record_call (AddEvent (game_id, Domain.GameEvent.to_yojson event));
             Lwt.return ()
     end
 
@@ -248,11 +248,11 @@ let tests = [
             (* Given an event we want to create in a game *)
             let game_id = "game-id" in
             let user = Domain.User.to_minimal_user "uid" verified_user in
-            let event = Domain.Game.Event.(Request (Request.draw user 0)) in
+            let event = Domain.GameEvent.(Request (Request.draw user 0)) in
             (* When adding the event *)
             let* _ = Firestore.Game.add_event request game_id event in
             (* Then it should have created an event document *)
-            let json_event = Domain.Game.Event.to_yojson event in
+            let json_event = Domain.GameEvent.to_yojson event in
             let created = !FirestorePrimitivesTests.Mock.created_docs in
             check creations_type "creations" [("parts/" ^ game_id ^ "/events", json_event)] created;
             Lwt.return ()

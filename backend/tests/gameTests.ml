@@ -204,7 +204,7 @@ let tests = [
             let winner = DomainTests.another_minimal_user in
             let loser = DomainTests.a_minimal_user in
             let end_game = Domain.Game.Updates.End.(to_yojson (get ~winner ~loser Domain.Game.GameResult.Resign)) in
-            let end_game_event = Domain.Game.Event.(to_yojson (Action (Action.end_game DomainTests.a_minimal_user (now * 1000)))) in
+            let end_game_event = Domain.GameEvent.(to_yojson (Action (Action.end_game DomainTests.a_minimal_user (now * 1000)))) in
             let expected = [
                 FirestoreTests.UpdateGame (game_id, end_game);
                 FirestoreTests.AddEvent (game_id, end_game_event);
@@ -237,7 +237,7 @@ let tests = [
             let winner = DomainTests.another_minimal_user in
             let loser = DomainTests.a_minimal_user in
             let end_game = Domain.Game.Updates.End.(to_yojson (get ~winner ~loser Domain.Game.GameResult.Resign)) in
-            let end_game_event = Domain.Game.Event.(to_yojson (Action (Action.end_game DomainTests.a_minimal_user (now * 1000)))) in
+            let end_game_event = Domain.GameEvent.(to_yojson (Action (Action.end_game DomainTests.a_minimal_user (now * 1000)))) in
             let expected = [
                 FirestoreTests.UpdateGame (game_id, end_game);
                 FirestoreTests.AddEvent (game_id, end_game_event);
@@ -293,7 +293,7 @@ let tests = [
             (* Then it should end the game *)
             check status "response status" `OK (Dream.status result);
             let end_game = Domain.Game.Updates.End.(to_yojson (get ~winner ~loser Domain.Game.GameResult.Timeout)) in
-            let end_game_event = Domain.Game.Event.(to_yojson (Action (Action.end_game DomainTests.a_minimal_user (now * 1000)))) in
+            let end_game_event = Domain.GameEvent.(to_yojson (Action (Action.end_game DomainTests.a_minimal_user (now * 1000)))) in
             let expected = [
                 FirestoreTests.UpdateGame (game_id, end_game);
                 FirestoreTests.AddEvent (game_id, end_game_event);
@@ -357,7 +357,7 @@ let tests = [
 
             (* Then it should add the event *)
             check status "response status" `OK (Dream.status result);
-            let propose_event = Domain.Game.Event.(to_yojson (Request (Request.draw DomainTests.a_minimal_user (now * 1000)))) in
+            let propose_event = Domain.GameEvent.(to_yojson (Request (Request.draw DomainTests.a_minimal_user (now * 1000)))) in
             let expected = [
                 FirestoreTests.AddEvent (game_id, propose_event);
             ] in
@@ -388,9 +388,9 @@ let tests = [
 
             (* Then it should add the event and end the game *)
             check status "response status" `OK (Dream.status result);
-            let accept_event = Domain.Game.Event.(to_yojson (Reply (Reply.make DomainTests.a_minimal_user "Accept" "Draw" (now * 1000)))) in
+            let accept_event = Domain.GameEvent.(to_yojson (Reply (Reply.make DomainTests.a_minimal_user "Accept" "Draw" (now * 1000)))) in
             let update = Domain.Game.Updates.End.(to_yojson (get (Domain.Game.GameResult.AgreedDrawBy Domain.Player.Zero))) in
-            let end_game_event = Domain.Game.Event.(to_yojson (Action (Action.end_game DomainTests.a_minimal_user (now * 1000)))) in
+            let end_game_event = Domain.GameEvent.(to_yojson (Action (Action.end_game DomainTests.a_minimal_user (now * 1000)))) in
             let expected = [
                 FirestoreTests.AddEvent (game_id, accept_event);
                 FirestoreTests.UpdateGame (game_id, update);
@@ -421,9 +421,9 @@ let tests = [
 
             (* Then it should add the event and end the game *)
             check status "response status" `OK (Dream.status result);
-            let accept_event = Domain.Game.Event.(to_yojson (Reply (Reply.make DomainTests.a_minimal_user "Accept" "Draw" (now * 1000)))) in
+            let accept_event = Domain.GameEvent.(to_yojson (Reply (Reply.make DomainTests.a_minimal_user "Accept" "Draw" (now * 1000)))) in
             let update = Domain.Game.Updates.End.(to_yojson (get (Domain.Game.GameResult.AgreedDrawBy Domain.Player.One))) in
-            let end_game_event = Domain.Game.Event.(to_yojson (Action (Action.end_game DomainTests.a_minimal_user (now * 1000)))) in
+            let end_game_event = Domain.GameEvent.(to_yojson (Action (Action.end_game DomainTests.a_minimal_user (now * 1000)))) in
             let expected = [
                 FirestoreTests.AddEvent (game_id, accept_event);
                 FirestoreTests.UpdateGame (game_id, update);
@@ -456,7 +456,7 @@ let tests = [
 
             (* Then it should add the event *)
             check status "response status" `OK (Dream.status result);
-            let propose_event = Domain.Game.Event.(to_yojson (Reply (Reply.make DomainTests.a_minimal_user "Reject" "Draw" (now * 1000)))) in
+            let propose_event = Domain.GameEvent.(to_yojson (Reply (Reply.make DomainTests.a_minimal_user "Reject" "Draw" (now * 1000)))) in
             let expected = [
                 FirestoreTests.AddEvent (game_id, propose_event);
             ] in
@@ -487,7 +487,7 @@ let tests = [
 
             (* Then it should add the event *)
             check status "response status" `OK (Dream.status result);
-            let propose_event = Domain.Game.Event.(to_yojson (Request (Request.rematch DomainTests.a_minimal_user (now * 1000)))) in
+            let propose_event = Domain.GameEvent.(to_yojson (Request (Request.rematch DomainTests.a_minimal_user (now * 1000)))) in
             let expected = [
                 FirestoreTests.AddEvent (game_id, propose_event);
             ] in
@@ -525,8 +525,8 @@ let tests = [
             check status "response status" `Created (Dream.status result);
             let new_config_room = Domain.ConfigRoom.(rematch config_room FirstPlayer.ChosenPlayer DomainTests.a_minimal_user DomainTests.another_minimal_user) in
             let new_game = Domain.Game.(to_yojson (rematch "P4" new_config_room (now * 1000) ExternalTests.Mock.rand_bool)) in
-            let accept_event = Domain.Game.Event.(to_yojson (Reply (Reply.make ~data:(`String new_game_id) DomainTests.a_minimal_user "Accept" "Rematch" (now * 1000)))) in
-            let start_event = Domain.Game.Event.(to_yojson (Action (Action.start_game DomainTests.a_minimal_user (now * 1000)))) in
+            let accept_event = Domain.GameEvent.(to_yojson (Reply (Reply.make ~data:(`String new_game_id) DomainTests.a_minimal_user "Accept" "Rematch" (now * 1000)))) in
+            let start_event = Domain.GameEvent.(to_yojson (Action (Action.start_game DomainTests.a_minimal_user (now * 1000)))) in
             let expected = [
                 FirestoreTests.CreateGame new_game;
                 FirestoreTests.CreateConfigRoom (new_game_id, Domain.ConfigRoom.to_yojson new_config_room);
@@ -566,8 +566,8 @@ let tests = [
             check status "response status" `Created (Dream.status result);
             let new_config_room = Domain.ConfigRoom.(rematch config_room FirstPlayer.Creator DomainTests.a_minimal_user DomainTests.another_minimal_user) in
             let new_game = Domain.Game.(to_yojson (rematch "P4" new_config_room (now * 1000) ExternalTests.Mock.rand_bool)) in
-            let accept_event = Domain.Game.Event.(to_yojson (Reply (Reply.make ~data:(`String new_game_id) DomainTests.a_minimal_user "Accept" "Rematch" (now * 1000)))) in
-            let start_event = Domain.Game.Event.(to_yojson (Action (Action.start_game DomainTests.a_minimal_user (now * 1000)))) in
+            let accept_event = Domain.GameEvent.(to_yojson (Reply (Reply.make ~data:(`String new_game_id) DomainTests.a_minimal_user "Accept" "Rematch" (now * 1000)))) in
+            let start_event = Domain.GameEvent.(to_yojson (Action (Action.start_game DomainTests.a_minimal_user (now * 1000)))) in
             let expected = [
                 FirestoreTests.CreateGame new_game;
                 FirestoreTests.CreateConfigRoom (new_game_id, Domain.ConfigRoom.to_yojson new_config_room);
@@ -602,7 +602,7 @@ let tests = [
 
             (* Then it should add the event *)
             check status "response status" `OK (Dream.status result);
-            let propose_event = Domain.Game.Event.(to_yojson (Reply (Reply.make DomainTests.a_minimal_user "Reject" "Rematch" (now * 1000)))) in
+            let propose_event = Domain.GameEvent.(to_yojson (Reply (Reply.make DomainTests.a_minimal_user "Reject" "Rematch" (now * 1000)))) in
             let expected = [
                 FirestoreTests.AddEvent (game_id, propose_event);
             ] in
@@ -633,7 +633,7 @@ let tests = [
 
             (* Then it should add the event *)
             check status "response status" `OK (Dream.status result);
-            let propose_event = Domain.Game.Event.(to_yojson (Request (Request.take_back DomainTests.a_minimal_user (now * 1000)))) in
+            let propose_event = Domain.GameEvent.(to_yojson (Request (Request.take_back DomainTests.a_minimal_user (now * 1000)))) in
             let expected = [
                 FirestoreTests.AddEvent (game_id, propose_event);
             ] in
@@ -665,7 +665,7 @@ let tests = [
 
             (* Then it should take back to previous opponent turn *)
             check status "response status" `OK (Dream.status result);
-            let accept_event = Domain.Game.Event.(to_yojson (Reply (Reply.make DomainTests.a_minimal_user "Accept" "TakeBack" (now * 1000)))) in
+            let accept_event = Domain.GameEvent.(to_yojson (Reply (Reply.make DomainTests.a_minimal_user "Accept" "TakeBack" (now * 1000)))) in
             let update = Domain.Game.Updates.TakeBack.(to_yojson (get 1)) in
             let expected = [
                 FirestoreTests.AddEvent (game_id, accept_event);
@@ -697,7 +697,7 @@ let tests = [
 
             (* Then it should take back to previous opponent turn *)
             check status "response status" `OK (Dream.status result);
-            let accept_event = Domain.Game.Event.(to_yojson (Reply (Reply.make DomainTests.a_minimal_user "Accept" "TakeBack" (now * 1000)))) in
+            let accept_event = Domain.GameEvent.(to_yojson (Reply (Reply.make DomainTests.a_minimal_user "Accept" "TakeBack" (now * 1000)))) in
             let update = Domain.Game.Updates.TakeBack.(to_yojson (get 1)) in
             let expected = [
                 FirestoreTests.AddEvent (game_id, accept_event);
@@ -729,7 +729,7 @@ let tests = [
 
             (* Then it should take back to previous opponent turn *)
             check status "response status" `OK (Dream.status result);
-            let accept_event = Domain.Game.Event.(to_yojson (Reply (Reply.make DomainTests.a_minimal_user "Accept" "TakeBack" (now * 1000)))) in
+            let accept_event = Domain.GameEvent.(to_yojson (Reply (Reply.make DomainTests.a_minimal_user "Accept" "TakeBack" (now * 1000)))) in
             let update = Domain.Game.Updates.TakeBack.(to_yojson (get 0)) in
             let expected = [
                 FirestoreTests.AddEvent (game_id, accept_event);
@@ -762,7 +762,7 @@ let tests = [
 
             (* Then it should add the event *)
             check status "response status" `OK (Dream.status result);
-            let propose_event = Domain.Game.Event.(to_yojson (Reply (Reply.make DomainTests.a_minimal_user "Reject" "TakeBack" (now * 1000)))) in
+            let propose_event = Domain.GameEvent.(to_yojson (Reply (Reply.make DomainTests.a_minimal_user "Reject" "TakeBack" (now * 1000)))) in
             let expected = [
                 FirestoreTests.AddEvent (game_id, propose_event);
             ] in
@@ -793,7 +793,7 @@ let tests = [
 
             (* Then it should add the event *)
             check status "response status" `OK (Dream.status result);
-            let event = Domain.Game.Event.(to_yojson (Action (Action.add_time DomainTests.a_minimal_user `Global (now * 1000)))) in
+            let event = Domain.GameEvent.(to_yojson (Action (Action.add_time DomainTests.a_minimal_user `Global (now * 1000)))) in
             let expected = [
                 FirestoreTests.AddEvent (game_id, event);
             ] in
@@ -824,7 +824,7 @@ let tests = [
 
             (* Then it should add the event *)
             check status "response status" `OK (Dream.status result);
-            let event = Domain.Game.Event.(to_yojson (Action (Action.add_time DomainTests.a_minimal_user `Turn (now * 1000)))) in
+            let event = Domain.GameEvent.(to_yojson (Action (Action.add_time DomainTests.a_minimal_user `Turn (now * 1000)))) in
             let expected = [
                 FirestoreTests.AddEvent (game_id, event);
             ] in
@@ -859,7 +859,7 @@ let tests = [
             (* Then it should add the event and end the game *)
             check status "response status" `OK (Dream.status result);
             let update = Domain.Game.Updates.EndTurn.(to_yojson (get 0)) in
-            let move_event = Domain.Game.Event.(to_yojson (Move (Move.of_json DomainTests.a_minimal_user move (now * 1000)))) in
+            let move_event = Domain.GameEvent.(to_yojson (Move (Move.of_json DomainTests.a_minimal_user move (now * 1000)))) in
             let expected = [
                 FirestoreTests.AddEvent (game_id, move_event);
                 FirestoreTests.UpdateGame (game_id, update);
@@ -895,7 +895,7 @@ let tests = [
             (* Then it should add the event and end the game *)
             check status "response status" `OK (Dream.status result);
             let update = Domain.Game.Updates.EndTurn.(to_yojson (get ~scores:(score0, score1) 0)) in
-            let move_event = Domain.Game.Event.(to_yojson (Move (Move.of_json DomainTests.a_minimal_user move (now * 1000)))) in
+            let move_event = Domain.GameEvent.(to_yojson (Move (Move.of_json DomainTests.a_minimal_user move (now * 1000)))) in
             let expected = [
                 FirestoreTests.AddEvent (game_id, move_event);
                 FirestoreTests.UpdateGame (game_id, update);
@@ -943,8 +943,8 @@ let tests = [
             (* Then it should add the event and end the game *)
             check status "response status" `OK (Dream.status result);
             let update = Domain.Game.Updates.EndWithMove.(to_yojson (get Domain.Game.GameResult.HardDraw 1)) in
-            let move_event = Domain.Game.Event.(to_yojson (Move (Move.of_json DomainTests.a_minimal_user move (now * 1000)))) in
-            let end_game = Domain.Game.Event.(to_yojson (Action (Action.end_game DomainTests.a_minimal_user (now * 1000)))) in
+            let move_event = Domain.GameEvent.(to_yojson (Move (Move.of_json DomainTests.a_minimal_user move (now * 1000)))) in
+            let end_game = Domain.GameEvent.(to_yojson (Action (Action.end_game DomainTests.a_minimal_user (now * 1000)))) in
             let expected = [
                 FirestoreTests.AddEvent (game_id, move_event);
                 FirestoreTests.UpdateGame (game_id, update);
@@ -981,8 +981,8 @@ let tests = [
             let winner = DomainTests.a_minimal_user in
             let loser = DomainTests.another_minimal_user in
             let update = Domain.Game.Updates.EndWithMove.(to_yojson (get ~winner ~loser Domain.Game.GameResult.Victory 1)) in
-            let move_event = Domain.Game.Event.(to_yojson (Move (Move.of_json DomainTests.a_minimal_user move (now * 1000)))) in
-            let end_game = Domain.Game.Event.(to_yojson (Action (Action.end_game DomainTests.a_minimal_user (now * 1000)))) in
+            let move_event = Domain.GameEvent.(to_yojson (Move (Move.of_json DomainTests.a_minimal_user move (now * 1000)))) in
+            let end_game = Domain.GameEvent.(to_yojson (Action (Action.end_game DomainTests.a_minimal_user (now * 1000)))) in
             let expected = [
                 FirestoreTests.AddEvent (game_id, move_event);
                 FirestoreTests.UpdateGame (game_id, update);
@@ -1019,8 +1019,8 @@ let tests = [
             let winner = DomainTests.another_minimal_user in
             let loser = DomainTests.a_minimal_user in
             let update = Domain.Game.Updates.EndWithMove.(to_yojson (get ~winner ~loser Domain.Game.GameResult.Victory 1)) in
-            let move_event = Domain.Game.Event.(to_yojson (Move (Move.of_json DomainTests.a_minimal_user move (now * 1000)))) in
-            let end_game = Domain.Game.Event.(to_yojson (Action (Action.end_game DomainTests.a_minimal_user (now * 1000)))) in
+            let move_event = Domain.GameEvent.(to_yojson (Move (Move.of_json DomainTests.a_minimal_user move (now * 1000)))) in
+            let end_game = Domain.GameEvent.(to_yojson (Action (Action.end_game DomainTests.a_minimal_user (now * 1000)))) in
             let expected = [
                 FirestoreTests.AddEvent (game_id, move_event);
                 FirestoreTests.UpdateGame (game_id, update);
@@ -1060,8 +1060,8 @@ let tests = [
             let loser = DomainTests.another_minimal_user in
             let scores = (score0, score1) in
             let update = Domain.Game.Updates.EndWithMove.(to_yojson (get ~winner ~loser ~scores Domain.Game.GameResult.Victory 1)) in
-            let move_event = Domain.Game.Event.(to_yojson (Move (Move.of_json DomainTests.a_minimal_user move (now * 1000)))) in
-            let end_game = Domain.Game.Event.(to_yojson (Action (Action.end_game DomainTests.a_minimal_user (now * 1000)))) in
+            let move_event = Domain.GameEvent.(to_yojson (Move (Move.of_json DomainTests.a_minimal_user move (now * 1000)))) in
+            let end_game = Domain.GameEvent.(to_yojson (Action (Action.end_game DomainTests.a_minimal_user (now * 1000)))) in
             let expected = [
                 FirestoreTests.AddEvent (game_id, move_event);
                 FirestoreTests.UpdateGame (game_id, update);

@@ -20,8 +20,10 @@ module Mock : MOCK = struct
         user := Some new_user
 
     let get_user _request = match !user with
-        | Some user -> (!uid, user)
+        | Some user -> user
         | None -> failwith "No user set"
+
+    let get_uid _request = !uid
 
     let get_minimal_user _request =
         Domain.User.to_minimal_user !uid (Option.get !user)
@@ -123,7 +125,8 @@ let tests = [
             (* When it is received by the middleware *)
             (* Then it should succeed and bind the user in the handler *)
             let handler = Dream.router [ Dream.get "/" (fun request ->
-                let (uid, actual_user) : (string * Domain.User.t) = Auth.get_user request in
+                let actual_user : Domain.User.t = Auth.get_user request in
+                let uid : string = Auth.get_uid request in
                 let minimal_user : Domain.MinimalUser.t = Auth.get_minimal_user request in
                 let expected_user : Domain.User.t = FirestoreTests.verified_user in
                 let expected_minimal_user : Domain.MinimalUser.t = FirestoreTests.verified_minimal_user in

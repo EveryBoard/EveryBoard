@@ -36,7 +36,7 @@ module Make
     let get_doc (request : Dream.request) (path : string) : JSON.t Lwt.t =
         Stats.read request;
         let* headers = TokenRefresher.header request in
-        let* (response, body) = External.Http.get (endpoint path) headers in
+        let* (response, body) = External.Http.get ~headers (endpoint path) in
         logger.info (fun log -> log ~request "Response: %s" body);
         if is_error response
         then raise (DocumentNotFound path)
@@ -56,7 +56,7 @@ module Make
         let params = [("mask.fieldPaths", "_")] in
         let endpoint = endpoint ~params collection in
         (* Note: We *can't* create a doc and retrieve its id in a transaction, so we just ignore whether we are in a transaction *)
-        let* (response, body) = External.Http.post_json endpoint headers firestore_doc in
+        let* (response, body) = External.Http.post_json ~headers firestore_doc endpoint in
         logger.info (fun log -> log ~request "Response: %s" body);
         if is_error response
         then raise (UnexpectedError (Printf.sprintf "error on document creation for %s: %s" collection body))
@@ -76,7 +76,7 @@ module Make
         let params = ("mask.fieldPaths", "_") :: update_params in
         let endpoint = endpoint ~params path in
         let* headers = TokenRefresher.header request in
-        let* (response, body) = External.Http.patch_json endpoint headers firestore_update in
+        let* (response, body) = External.Http.patch_json ~headers firestore_update endpoint in
         logger.info (fun log -> log ~request "Response: %s" body);
         if is_error response
         then raise (UnexpectedError (Printf.sprintf "error on document update for %s: %s" path body))
@@ -89,7 +89,7 @@ module Make
         Stats.write request;
         logger.info (fun log -> log ~request "Deleting %s" path);
         let* headers = TokenRefresher.header request in
-        let* (response, body) = External.Http.delete (endpoint path) headers in
+        let* (response, body) = External.Http.delete ~headers (endpoint path) in
         if is_error response
         then raise (UnexpectedError (Printf.sprintf "error on document deletion for %s: %s" path body))
         else Lwt.return ()

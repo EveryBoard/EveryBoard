@@ -45,11 +45,11 @@ module Mock : MOCK = struct
             mock.number_of_calls := !(mock.number_of_calls) + 1;
             mock.calls := (request, endpoint, body) :: !(mock.calls);
             Lwt.return !response
-        let get endpoint _ = mocked `GET endpoint None
-        let post_form endpoint _ = mocked `POST endpoint None
-        let post_json endpoint _ body = mocked `POST endpoint (Some body)
-        let patch_json endpoint _ body =  mocked `PATCH endpoint (Some body)
-        let delete endpoint _ = mocked `DELETE endpoint None
+        let get ?headers:_ endpoint = mocked `GET endpoint None
+        let post_form ~params:_ endpoint = mocked `POST endpoint None
+        let post_json ?headers:_ body endpoint  = mocked `POST endpoint (Some body)
+        let patch_json ?headers:_ body endpoint =  mocked `PATCH endpoint (Some body)
+        let delete ?headers:_ endpoint = mocked `DELETE endpoint None
     end
 
 end

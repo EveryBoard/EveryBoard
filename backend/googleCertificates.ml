@@ -33,8 +33,7 @@ module Make (External : External.EXTERNAL) : GOOGLE_CERTIFICATES = struct
         Returns the certificates and their expiration time (as a unix timestamp). *)
     let get_certificates () : (certificates * int) Lwt.t =
         let endpoint = Uri.of_string "https://www.googleapis.com/robot/v1/metadata/x509/securetoken@system.gserviceaccount.com" in
-        let no_headers = Cohttp.Header.init () in
-        let* (response, body_string) = External.Http.get endpoint no_headers in
+        let* (response, body_string) = External.Http.get endpoint in
         let body_content = JSON.from_string body_string in
         let max_age : int = match Cohttp.Header.get response.headers "Cache-Control" with
             | Some cache_control ->

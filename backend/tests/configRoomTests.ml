@@ -237,7 +237,7 @@ let tests = [
             let expected = [
                 FirestoreTests.AcceptConfig game_id;
                 FirestoreTests.UpdateGame (game_id, Domain.Game.Updates.Start.(to_yojson (get config_room (now * 1000) ExternalTests.Mock.rand_bool)));
-                FirestoreTests.AddEvent (game_id, Domain.Game.Event.(to_yojson (Action (Action.start_game DomainTests.a_minimal_user (now * 1000)))));
+                FirestoreTests.AddEvent (game_id, Domain.GameEvent.(to_yojson (Action (Action.start_game DomainTests.a_minimal_user (now * 1000)))));
             ] in
             check (list FirestoreTests.call) "calls" expected !FirestoreTests.Mock.calls;
             Lwt.return ()
@@ -273,7 +273,7 @@ let tests = [
                     turn = 0;
                     beginning = Some (now * 1000);
                 }));
-                FirestoreTests.AddEvent (game_id, Domain.Game.Event.(to_yojson (Action (Action.start_game DomainTests.a_minimal_user (now * 1000)))));
+                FirestoreTests.AddEvent (game_id, Domain.GameEvent.(to_yojson (Action (Action.start_game DomainTests.a_minimal_user (now * 1000)))));
             ] in
             check (list FirestoreTests.call) "calls" expected !FirestoreTests.Mock.calls;
             ExternalTests.Mock.bool := true;

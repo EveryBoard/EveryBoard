@@ -53,7 +53,7 @@ module Make (External : External.EXTERNAL) (Jwt : Jwt.JWT) : TOKEN_REFRESHER = s
         let params = [("grant_type", ["urn:ietf:params:oauth:grant-type:jwt-bearer"]);
                       ("assertion", [Jwt.to_string jwt])] in
         let now = External.now () in
-        let* (_response, body) = External.Http.post_form endpoint params in
+        let* (_response, body) = External.Http.post_form ~params endpoint in
         let json = JSON.from_string body in
         let access_token = json |> member "access_token" |> to_string in
         let expires_in = json |> member "expires_in" |> to_int in

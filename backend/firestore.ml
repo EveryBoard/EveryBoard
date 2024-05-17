@@ -32,7 +32,7 @@ module type FIRESTORE = sig
         val update : updater
 
         (** Add a game event to a game*)
-        val add_event : Dream.request -> string -> Domain.Game.Event.t -> unit Lwt.t
+        val add_event : Dream.request -> string -> Domain.GameEvent.t -> unit Lwt.t
 
     end
 
@@ -116,8 +116,8 @@ module Make (FirestorePrimitives : FirestorePrimitives.FIRESTORE_PRIMITIVES) : F
         let update (request : Dream.request) (game_id : string) (update : JSON.t) : unit Lwt.t =
             FirestorePrimitives.update_doc request ("parts/" ^ game_id) update
 
-        let add_event (request : Dream.request) (game_id : string) (event : Domain.Game.Event.t) : unit Lwt.t =
-            let json = Domain.Game.Event.to_yojson event in
+        let add_event (request : Dream.request) (game_id : string) (event : Domain.GameEvent.t) : unit Lwt.t =
+            let json = Domain.GameEvent.to_yojson event in
             let* _ = FirestorePrimitives.create_doc request ("parts/" ^ game_id ^ "/events") json in
             Lwt.return ()
     end
