@@ -5,7 +5,7 @@ import { CoerceoMove, CoerceoRegularMove, CoerceoTileExchangeMove } from 'src/ap
 import { CoerceoState } from 'src/app/games/coerceo/CoerceoState';
 import { MGPOptional, MGPValidation } from '@everyboard/lib';
 import { Coord } from 'src/app/jscaip/Coord';
-import { CoerceoNode, CoerceoRules } from 'src/app/games/coerceo/CoerceoRules';
+import { CoerceoConfig, CoerceoNode, CoerceoRules } from 'src/app/games/coerceo/CoerceoRules';
 import { CoerceoFailure } from 'src/app/games/coerceo/CoerceoFailure';
 import { Player } from 'src/app/jscaip/Player';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
@@ -18,6 +18,7 @@ import { CoerceoPiecesThreatsTilesHeuristic } from './CoerceoPiecesThreatsTilesH
 import { CoerceoOrderedMoveGenerator } from './CoerceoOrderedMoveGenerator';
 import { ViewBox } from 'src/app/components/game-components/GameComponentUtils';
 import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
+import { CoerceoPiecesTilesFreedomHeuristic } from './CoerceoPiecesTilesFreedomHeuristic';
 
 @Component({
     selector: 'app-coerceo',
@@ -27,7 +28,8 @@ import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
                                                               CoerceoMove,
                                                               CoerceoState,
-                                                              FourStatePiece>
+                                                              FourStatePiece,
+                                                              CoerceoConfig>
 {
 
     public tiles: PlayerNumberMap = PlayerNumberMap.of(0, 0);
@@ -52,6 +54,10 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
             new Minimax($localize`Captures > Freedom`,
                         this.rules,
                         new CoerceoCapturesAndFreedomHeuristic(),
+                        new CoerceoMoveGenerator()),
+            new Minimax($localize`Pieces > Tiles > Freedom`,
+                        this.rules,
+                        new CoerceoPiecesTilesFreedomHeuristic(),
                         new CoerceoMoveGenerator()),
             new MCTS($localize`MCTS`,
                      new CoerceoMoveGenerator(),
@@ -235,27 +241,28 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
     public getTriangleInHexTranslation(coord: Coord): string {
         const x: number = coord.x;
         const y: number = coord.y;
-        const translation: Coord = this.getTriangleTranslationCoord(x, y);
-        const translationX: number = translation.x + 2 * Math.floor(x / 3) * this.STROKE_WIDTH;
-        let translationY: number = translation.y;
+        const triangleTranslation: Coord = this.getTriangleTranslationCoord(coord);
+        const xHexagonalPadding: number = 2 * Math.floor(x / 3) * this.STROKE_WIDTH;
+        let yHexagonalPadding: number;
         if (Math.floor(x / 3) % 2 === 0) {
-            translationY += 2 * Math.floor(y / 2) * this.STROKE_WIDTH;
+            yHexagonalPadding = 2 * Math.floor(y / 2) * this.STROKE_WIDTH;
         } else {
-            translationY += 2 * Math.abs(Math.floor((y - 1) / 2)) * this.STROKE_WIDTH;
-            translationY += this.STROKE_WIDTH;
+            yHexagonalPadding = 2 * Math.abs(Math.floor((y - 1) / 2)) * this.STROKE_WIDTH;
+            yHexagonalPadding += this.STROKE_WIDTH;
         }
-        return 'translate(' + translationX + ', ' + translationY + ')';
+        return 'translate(' + (triangleTranslation.x + xHexagonalPadding) + ', ' +
+                              (triangleTranslation.y + yHexagonalPadding) + ')';
     }
 
     public getTilesCountTranslation(player: Player): string {
         let x: number;
         let y: number;
         if (player === Player.ZERO) {
-            x = -0.05;
-            y = -0.10;
+            x = +0.40;
+            y = +0.40;
         } else {
-            x = 7.5;
-            y = 9.45;
+            x = 8;
+            y = 10;
         }
         x = this.SPACE_SIZE * x;
         y = this.SPACE_SIZE * y;
@@ -265,10 +272,25 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
     public getViewBox(): ViewBox {
         const left: number = 0;
         const up: number = 0;
-        const width: number = this.SPACE_SIZE * 8.5 + this.STROKE_WIDTH * 2;
-        const height: number = this.SPACE_SIZE * 10.5 + this.STROKE_WIDTH * 2;
+        const abstractWidth: number = this.getState().getWidth();
+        const abstractHeight: number = this.getState().getHeight();
         const halfStroke: number = this.STROKE_WIDTH / 2;
+        const verticalInterPiecesSum: number = (abstractHeight - 2) * this.STROKE_WIDTH;
+        const blockWidth: number = abstractWidth / 3; // The number of hexagonal block horizontally
+        const horizontalInterPiecesSum: number = 2 * (blockWidth - 1) * this.STROKE_WIDTH;
+        const width: number = (this.SPACE_SIZE * (0.5 * (abstractWidth + 1))) + horizontalInterPiecesSum;
+        const height: number = this.SPACE_SIZE * abstractHeight + verticalInterPiecesSum;
         return new ViewBox(left, up, width, height).expandAll(halfStroke);
+    }
+
+    public getTilesCountClasses(player: Player): string[] {
+        const classes: string[] = ['base'];
+        if (this.lastTurnWasTilesExchange(player)) {
+            classes.push('captured-fill');
+        } else {
+            classes.push(this.getPlayerClass(player));
+        }
+        return classes;
     }
 
 }

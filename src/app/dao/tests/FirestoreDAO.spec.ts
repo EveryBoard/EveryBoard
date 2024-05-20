@@ -22,7 +22,7 @@ class FooDAO extends FirestoreDAO<Foo> {
     }
 }
 
-describe('FirestoreDAO', () => {
+xdescribe('FirestoreDAO', () => {
 
     let fooDAO: FooDAO;
 

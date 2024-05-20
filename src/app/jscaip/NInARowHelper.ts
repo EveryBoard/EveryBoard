@@ -1,11 +1,11 @@
-import { MGPMap, Utils } from '@everyboard/lib';
+import { Comparable, MGPMap, Utils } from '@everyboard/lib';
 import { BoardValue } from './AI/BoardValue';
 import { Coord } from './Coord';
 import { Ordinal } from './Ordinal';
 import { GameStateWithTable } from './GameStateWithTable';
 import { Player, PlayerOrNone } from './Player';
 
-export class NInARowHelper<T> {
+export class NInARowHelper<T extends NonNullable<Comparable>> {
 
     public constructor(private readonly getOwner: (piece: T, state?: GameStateWithTable<T>) => PlayerOrNone,
                        private readonly N: number)
@@ -89,16 +89,17 @@ export class NInARowHelper<T> {
         while (state.isOnBoard(coord) && testedCoords < this.N) {
             // while we're on the board
             const currentSpace: T = state.getPieceAt(coord);
-            if (this.getOwner(currentSpace, state) === opponent) {
+            const currentOwner: PlayerOrNone = this.getOwner(currentSpace, state);
+            if (currentOwner === opponent) {
                 return [freeSpaces, allies];
             }
-            if (this.getOwner(currentSpace, state) === ally && allAlliesAreSideBySide) {
+            if (currentOwner === ally && allAlliesAreSideBySide) {
                 allies++;
             } else {
                 allAlliesAreSideBySide = false; // we stop counting the allies on this line
             }
             // as soon as there is a hole
-            if (currentSpace !== opponent && currentSpace !== ally) {
+            if (currentOwner !== opponent && currentOwner !== ally) {
                 freeSpaces++;
             }
             coord = coord.getNext(dir);

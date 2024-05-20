@@ -34,11 +34,7 @@ export class CoerceoState extends TriangularGameState<FourStatePiece> {
         return new Coord(x, y);
     }
 
-    public static isOnBoard(coord: Coord): boolean {
-        return coord.isInRange(15, 10);
-    }
-
-    public static getPresentNeighborEntrances(tileUpperLeft: Coord): Coord[] {
+    public getPresentNeighborEntrances(tileUpperLeft: Coord): Coord[] {
         return [
             new Coord(tileUpperLeft.x + 1, tileUpperLeft.y - 1), // UP
             new Coord(tileUpperLeft.x + 3, tileUpperLeft.y + 0), // UP-RIGHT
@@ -46,7 +42,7 @@ export class CoerceoState extends TriangularGameState<FourStatePiece> {
             new Coord(tileUpperLeft.x + 1, tileUpperLeft.y + 2), // DOWN
             new Coord(tileUpperLeft.x - 1, tileUpperLeft.y + 1), // DOWN-LEFT
             new Coord(tileUpperLeft.x - 1, tileUpperLeft.y + 0), // UP-LEFT
-        ].filter(CoerceoState.isOnBoard);
+        ].filter((c: Coord) => this.isOnBoard(c));
     }
 
     public constructor(board: Table<FourStatePiece>,
@@ -83,7 +79,7 @@ export class CoerceoState extends TriangularGameState<FourStatePiece> {
         const opponent: Player = this.getCurrentOpponent();
         const neighbors: Coord[] = TriangularCheckerBoard.getNeighbors(coord);
         return neighbors.filter((neighbor: Coord) => {
-            if (neighbor.isNotInRange(15, 10)) {
+            if (this.isOnBoard(neighbor) === false) {
                 return false;
             }
             if (this.getPieceAt(neighbor).is(opponent)) {
@@ -114,7 +110,7 @@ export class CoerceoState extends TriangularGameState<FourStatePiece> {
             this.isDeconnectable(currentTile))
         {
             resultingState = this.deconnectTile(currentTile, countTiles);
-            const neighbors: Coord[] = CoerceoState.getPresentNeighborEntrances(currentTile);
+            const neighbors: Coord[] = this.getPresentNeighborEntrances(currentTile);
             for (const neighbor of neighbors) {
                 const spaceContent: FourStatePiece = resultingState.getPieceAt(neighbor);
                 if (spaceContent === FourStatePiece.EMPTY) {
@@ -171,7 +167,7 @@ export class CoerceoState extends TriangularGameState<FourStatePiece> {
         for (let i: number = 0; i < 6; i++) {
             const vector: Vector = CoerceoState.NEIGHBORS_TILES_DIRECTIONS[i];
             const neighborTile: Coord = tile.getNext(vector, 1);
-            if (CoerceoState.isOnBoard(neighborTile) &&
+            if (this.isOnBoard(neighborTile) &&
                 this.getPieceAt(neighborTile) !== FourStatePiece.UNREACHABLE)
             {
                 if (firstIndex.isAbsent()) {
@@ -203,27 +199,25 @@ export class CoerceoState extends TriangularGameState<FourStatePiece> {
         const legalLandings: Coord[] = [];
         for (const step of CoerceoStep.STEPS) {
             const landing: Coord = coord.getNext(step.direction, 1);
-            if (this.isOnBoard(landing) && this.getPieceAt(landing) === FourStatePiece.EMPTY) {
+            if (this.has(landing, FourStatePiece.EMPTY)) {
                 legalLandings.push(landing);
             }
         }
         return legalLandings;
     }
 
-    public getPiecesByFreedom(): PlayerNumberTable {
+    public getPiecesByFreedom(state: CoerceoState): PlayerNumberTable {
         const playersScores: PlayerNumberTable = PlayerNumberTable.of(
             [0, 0, 0, 0],
             [0, 0, 0, 0],
         );
-        for (let y: number = 0; y < 10; y++) {
-            for (let x: number = 0; x < 15; x++) {
-                const piece: FourStatePiece = this.board[y][x];
-                if (piece.isPlayer()) {
-                    const player: Player = piece.getPlayer() as Player;
-                    const nbFreedom: number =
-                        this.getEmptyNeighbors(new Coord(x, y), FourStatePiece.EMPTY).length;
-                    playersScores.add(player, nbFreedom, 1);
-                }
+        for (const coordAndContent of state.getCoordsAndContents()) {
+            const piece: FourStatePiece = coordAndContent.content;
+            if (piece.isPlayer()) {
+                const player: Player = piece.getPlayer() as Player;
+                const nbFreedom: number =
+                    this.getEmptyNeighbors(coordAndContent.coord, FourStatePiece.EMPTY).length;
+                playersScores.add(player, nbFreedom, 1);
             }
         }
         return playersScores;

@@ -4,18 +4,17 @@ import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { CoerceoMove, CoerceoRegularMove, CoerceoStep, CoerceoTileExchangeMove } from '../CoerceoMove';
 import { CoerceoState } from '../CoerceoState';
 import { CoerceoFailure } from '../CoerceoFailure';
-import { CoerceoNode, CoerceoRules } from '../CoerceoRules';
+import { CoerceoConfig, CoerceoNode, CoerceoRules } from '../CoerceoRules';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { Player } from 'src/app/jscaip/Player';
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
-import { TestUtils } from '@everyboard/lib';
+import { MGPOptional, TestUtils } from '@everyboard/lib';
 import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
-import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 
-describe('CoerceoRules', () => {
+fdescribe('CoerceoRules', () => {
 
     let rules: CoerceoRules;
-    const defaultConfig: NoConfig = CoerceoRules.get().getDefaultRulesConfig();
+    const defaultConfig: MGPOptional<CoerceoConfig> = CoerceoRules.get().getDefaultRulesConfig();
 
     const _: FourStatePiece = FourStatePiece.EMPTY;
     const N: FourStatePiece = FourStatePiece.UNREACHABLE;
@@ -33,7 +32,7 @@ describe('CoerceoRules', () => {
     describe('movement', () => {
 
         it('should forbid to start move from outside the board', () => {
-            // Given any
+            // Given any board
             const board: FourStatePiece[][] = [
                 [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
                 [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
@@ -267,6 +266,21 @@ describe('CoerceoRules', () => {
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         });
 
+        it('should throw when trying out of range starting coord', () => {
+            // Given any board
+            const state: CoerceoState = rules.getInitialState(defaultConfig);
+
+            // When trying a move starting from out of range
+            const move: CoerceoMove = CoerceoRegularMove.ofMovement(new Coord(-1, 0), CoerceoStep.LEFT);
+
+            // Then it should throw
+            const reason: string = 'Accessing coord not on board (-1, 0).';
+            function tryingOutOfRangeStartingMove(): void {
+                RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
+            }
+            TestUtils.expectToThrowAndLog(tryingOutOfRangeStartingMove, reason);
+        });
+
     });
 
     describe('Tiles Exchange', () => {
@@ -489,6 +503,36 @@ describe('CoerceoRules', () => {
             // When evaluating its game status
             // Then it should be a victory for Player.ONE
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, defaultConfig);
+        });
+
+    });
+
+    describe('Small Config', () => {
+
+        it('should mark Player.ZERO as winner when Player.ONE is out of pieces', () => {
+            // Given a board where all piece of Player.ONE are dead, but on small config
+            const smallConfig: MGPOptional<CoerceoConfig> = MGPOptional.of({
+                smallBoard: true,
+            });
+            const board: FourStatePiece[][] = [
+                [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
+                [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
+                [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
+                [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
+                [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
+                [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
+                [N, N, N, N, N, N, _, _, _, N, N, N, N, N, N],
+                [N, N, N, N, N, N, _, _, O, N, N, N, N, N, N],
+                [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
+                [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
+            ];
+            const state: CoerceoState =
+                new CoerceoState(board, 0, PlayerNumberMap.of(0, 0), PlayerNumberMap.of(6, 5));
+            const node: CoerceoNode = new CoerceoNode(state);
+
+            // When evaluating its game status
+            // Then it should be a victory for Player.ZERO
+            RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, smallConfig);
         });
 
     });

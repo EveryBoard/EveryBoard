@@ -1,3 +1,4 @@
+import { Comparable } from '@everyboard/lib';
 import { Component } from '@angular/core';
 import { RectangularGameComponent } from '../rectangular-game-component/RectangularGameComponent';
 import { SuperRules } from 'src/app/jscaip/Rules';
@@ -25,7 +26,7 @@ export interface ModeConfig {
 export abstract class ParallelogramGameComponent<R extends SuperRules<M, S, C, L>,
                                                  M extends Move,
                                                  S extends GameStateWithTable<P>,
-                                                 P,
+                                                 P extends NonNullable<Comparable>,
                                                  C extends RulesConfig = EmptyRulesConfig,
                                                  L = void>
     extends RectangularGameComponent<R, M, S, P, C, L>

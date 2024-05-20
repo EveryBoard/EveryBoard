@@ -115,8 +115,8 @@ export class EncapsuleComponent extends RectangularGameComponent<EncapsuleRules,
         this.chosenPieceIndex = MGPOptional.empty();
     }
 
-    public async onPieceClick(player: number, piece: EncapsulePiece, index: number): Promise<MGPValidation> {
-        const clickedId: string = '#piece-' + player + '-' + piece.toString() + '-' + index;
+    public async onPieceClick(player: Player, piece: EncapsulePiece, index: number): Promise<MGPValidation> {
+        const clickedId: string = '#piece-' + player.toString() + '-' + piece.toString() + '-' + index;
         const clickValidity: MGPValidation = await this.canUserPlay(clickedId);
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
@@ -167,7 +167,7 @@ export class EncapsuleComponent extends RectangularGameComponent<EncapsuleRules,
     private getPieceStrokeClass(piece: EncapsulePiece): string {
         const player: PlayerOrNone = piece.getPlayer();
         Utils.assert(player.isPlayer(), 'EncapsuleComponent.getPieceStrokeClass should only be called with actual pieces!');
-        return 'player' + player.getValue() + '-stroke';
+        return this.getPlayerClass(player, '-stroke');
     }
 
     public getPieceRadius(piece: EncapsulePiece): number {

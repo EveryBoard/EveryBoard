@@ -133,6 +133,10 @@ export class EncapsuleSpace {
         return this.getBiggest().getPlayer() === player;
     }
 
+    public equals(other: EncapsuleSpace): boolean {
+        return ArrayUtils.equals(this.toList(), other.toList());
+    }
+
     public toString(): string {
         const pieceNames: string[] = this.toOrderedPieceNames();
         return '(' + pieceNames[0] + ', ' + pieceNames[1] + ', ' + pieceNames[2] + ')';

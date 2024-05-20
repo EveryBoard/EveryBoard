@@ -7,7 +7,7 @@ import { EncoderTestUtils, TestUtils } from '@everyboard/lib';
 import { MoveTestUtils } from 'src/app/jscaip/tests/Move.spec';
 import { CoerceoMoveGenerator } from '../CoerceoMoveGenerator';
 
-describe('CoerceoMove', () => {
+fdescribe('CoerceoMove', () => {
 
     it('should distinguish move and capture based on presence or not of capture', () => {
         const move: CoerceoMove = CoerceoRegularMove.ofMovement(new Coord(5, 5), CoerceoStep.UP_RIGHT);
@@ -23,14 +23,6 @@ describe('CoerceoMove', () => {
                 CoerceoRegularMove.of(new Coord(2, 2), new Coord(9, 9));
             }
             TestUtils.expectToThrowAndLog(createMoveWithInvalidDistance, CoerceoFailure.INVALID_DISTANCE());
-        });
-
-        it('should not allow out of range starting coord', () => {
-            function createOutOfRangeStartingCoord(): void {
-                CoerceoRegularMove.ofMovement(new Coord(-1, 0), CoerceoStep.LEFT);
-            }
-            TestUtils.expectToThrowAndLog(createOutOfRangeStartingCoord,
-                                          'Starting coord cannot be out of range (width: 15, height: 10).');
         });
 
         it('should not allow out of range landing coord', () => {

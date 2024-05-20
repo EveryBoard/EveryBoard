@@ -29,12 +29,14 @@ export class CoerceoStep {
         CoerceoStep.DOWN_LEFT,
         CoerceoStep.DOWN_RIGHT,
     ];
+
     public static ofCoords(a: Coord, b: Coord): CoerceoStep {
         const vector: Vector = a.getVectorToward(b);
         const stepIndex: number = CoerceoStep.STEPS.findIndex((s: CoerceoStep) => s.direction.equals(vector));
         Utils.assert(stepIndex !== -1, CoerceoFailure.INVALID_DISTANCE());
         return CoerceoStep.STEPS[stepIndex];
     }
+
     private constructor(public readonly direction: Vector, public readonly str: string) {}
 }
 
@@ -47,18 +49,22 @@ export class CoerceoRegularMove extends MoveCoordToCoord {
         const move: CoerceoRegularMove = CoerceoRegularMove.ofMovement(start, step);
         return move;
     }
+
     public static ofMovement(start: Coord, step: CoerceoStep): CoerceoRegularMove {
-        Utils.assert(CoerceoState.isOnBoard(start), 'Starting coord cannot be out of range (width: 15, height: 10).');
+        // Utils.assert(CoerceoState.isOnBoard(start), 'Starting coord cannot be out of range (width: 15, height: 10).'); TODO
         const landingCoord: Coord = new Coord(start.x + step.direction.x, start.y + step.direction.y);
-        Utils.assert(CoerceoState.isOnBoard(landingCoord), 'Landing coord cannot be out of range (width: 15, height: 10).');
+        // Utils.assert(CoerceoState.isOnBoard(landingCoord), 'Landing coord cannot be out of range (width: 15, height: 10).'); TODO
         return new CoerceoRegularMove(start, landingCoord);
     }
+
     private constructor(start: Coord, end: Coord) {
         super(start, end);
     }
+
     public override toString(): string {
         return 'CoerceoRegularMove(' + this.getStart().toString() + ' > ' + this.getEnd().toString() + ')';
     }
+
     public override equals(other: CoerceoMove): boolean {
         if (CoerceoMove.isTileExchange(other)) {
             return false;
@@ -66,6 +72,7 @@ export class CoerceoRegularMove extends MoveCoordToCoord {
             return super.equals(other as this);
         }
     }
+
 }
 
 export class CoerceoTileExchangeMove extends MoveCoord {
@@ -73,15 +80,18 @@ export class CoerceoTileExchangeMove extends MoveCoord {
     public static encoder: Encoder<CoerceoTileExchangeMove> = MoveCoord.getEncoder(CoerceoTileExchangeMove.of);
 
     public static of(capture: Coord): CoerceoTileExchangeMove {
-        Utils.assert(CoerceoState.isOnBoard(capture), 'Captured coord cannot be out of range (width: 15, height: 10).');
+        // Utils.assert(CoerceoState.isOnBoard(capture), 'Captured coord cannot be out of range (width: 15, height: 10).'); TODO
         return new CoerceoTileExchangeMove(capture);
     }
+
     private constructor(capture: Coord) {
         super(capture.x, capture.y);
     }
+
     public override toString(): string {
         return 'CoerceoTileExchangeMove(' + this.coord.x + ', ' + this.coord.y + ')';
     }
+
     public override equals(other: CoerceoMove): boolean {
         if (CoerceoMove.isTileExchange(other)) {
             return other.coord.equals(this.coord);
@@ -89,6 +99,7 @@ export class CoerceoTileExchangeMove extends MoveCoord {
             return false;
         }
     }
+
 }
 
 export type CoerceoMove = CoerceoTileExchangeMove | CoerceoRegularMove;
@@ -99,9 +110,11 @@ export namespace CoerceoMove {
     export function isNormalMove(move: CoerceoMove): move is CoerceoRegularMove {
         return move instanceof CoerceoRegularMove;
     }
+
     export function isTileExchange(move: CoerceoMove): move is CoerceoTileExchangeMove {
         return move instanceof CoerceoTileExchangeMove;
     }
+
     export const encoder: Encoder<CoerceoMove> =
         Encoder.disjunction([CoerceoMove.isNormalMove, CoerceoMove.isTileExchange],
                             [CoerceoRegularMove.encoder, CoerceoTileExchangeMove.encoder]);

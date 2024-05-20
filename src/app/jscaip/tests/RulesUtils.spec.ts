@@ -67,7 +67,7 @@ export class RulesUtils {
     : void
     {
         expect(rules.getGameStatus(node, config))
-            .withContext('Rules should consider gameStatus a victory for player ' + player.getValue())
+            .withContext('Rules should consider gameStatus a victory for ' + player.toString())
             .toEqual(GameStatus.getVictory(player));
     }
 

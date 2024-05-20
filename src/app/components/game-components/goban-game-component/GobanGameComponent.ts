@@ -1,3 +1,4 @@
+import { Comparable } from '@everyboard/lib';
 import { Move } from '../../../jscaip/Move';
 import { Component } from '@angular/core';
 import { GameStateWithTable } from 'src/app/jscaip/GameStateWithTable';
@@ -17,7 +18,7 @@ import { GobanUtils } from 'src/app/jscaip/GobanUtils';
 export abstract class GobanGameComponent<R extends SuperRules<M, S, C, L>,
                                          M extends Move,
                                          S extends GameStateWithTable<P>,
-                                         P,
+                                         P extends NonNullable<Comparable>,
                                          C extends GobanConfig = GobanConfig,
                                          L = void>
     extends RectangularGameComponent<R, M, S, P, C, L>

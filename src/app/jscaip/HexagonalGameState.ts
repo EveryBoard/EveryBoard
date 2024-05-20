@@ -1,11 +1,11 @@
-import { MGPValidation, Utils } from '@everyboard/lib';
+import { Comparable, MGPValidation, Utils } from '@everyboard/lib';
 import { Coord } from './Coord';
 import { GameStateWithTable } from './GameStateWithTable';
 import { HexaDirection } from './HexaDirection';
 import { HexaLine } from './HexaLine';
 import { Table } from './TableUtils';
 
-export abstract class HexagonalGameState<P> extends GameStateWithTable<P> {
+export abstract class HexagonalGameState<P extends NonNullable<Comparable>> extends GameStateWithTable<P> {
 
     public constructor(turn: number,
                        board: Table<P>,

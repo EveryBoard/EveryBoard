@@ -1,11 +1,12 @@
-import { MGPOptional, comparableEquals } from '@everyboard/lib';
+import { Comparable, MGPMap, MGPOptional, MGPSet, comparableEquals } from '@everyboard/lib';
 import { Coord } from './Coord';
 import { GameState } from './GameState';
 import { Table, TableUtils } from './TableUtils';
+import { CoordSet } from './CoordSet';
 
-export abstract class GameStateWithTable<P> extends GameState {
+export abstract class GameStateWithTable<P extends NonNullable<Comparable>> extends GameState {
 
-    public static setPieceAt<Q, T extends GameStateWithTable<Q>>(
+    public static setPieceAt<Q extends NonNullable<Comparable>, T extends GameStateWithTable<Q>>(
         oldState: T,
         coord: Coord,
         value: Q,
@@ -76,12 +77,10 @@ export abstract class GameStateWithTable<P> extends GameState {
         for (let y: number = 0; y < this.getHeight(); y++) {
             for (let x: number = 0; x < this.board[y].length; x++) {
                 const coord: Coord = new Coord(x, y);
-                if (this.isOnBoard(coord)) {
-                    coordsAndContents.push({
-                        coord,
-                        content: this.getPieceAt(coord),
-                    });
-                }
+                coordsAndContents.push({
+                    coord,
+                    content: this.getPieceAt(coord),
+                });
             }
         }
         return coordsAndContents;
@@ -90,19 +89,21 @@ export abstract class GameStateWithTable<P> extends GameState {
     public getCopiedBoard(): P[][] {
         return TableUtils.copy(this.board);
     }
-
-    public toMap(): {key: Coord, value: P}[] {
-        const elements: {key: Coord, value: P}[] = [];
-        for (let y: number = 0; y < this.getHeight(); y++) {
-            for (let x: number = 0; x < this.getWidth(); x++) {
-                const coord: Coord = new Coord(x, y);
-                elements.push({
-                    key: coord,
-                    value: this.getPieceAt(coord),
-                });
+// TODO MGPSet<Coord> is CoordSet
+    public toPieceMap(): MGPMap<P, CoordSet> {
+        const map: MGPMap<P, CoordSet> = new MGPMap();
+        for (const coordAndContent of this.getCoordsAndContents()) {
+            const key: P = coordAndContent.content;
+            const value: Coord = coordAndContent.coord;
+            if (map.containsKey(key)) {
+                const oldValue: CoordSet = map.get(key).get();
+                oldValue.add(value);
+                map.put(key, oldValue);
+            } else {
+                map.set(key, new CoordSet([value]));
             }
         }
-        return elements;
+        return map;
     }
 
     public getWidth(): number {

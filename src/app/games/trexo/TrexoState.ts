@@ -1,7 +1,7 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { GameStateWithTable } from 'src/app/jscaip/GameStateWithTable';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { Utils } from '@everyboard/lib';
+import { ArrayUtils, Utils } from '@everyboard/lib';
 
 /**
  * Represent half a tile
@@ -14,6 +14,11 @@ export class TrexoPiece {
     public constructor(public readonly owner: PlayerOrNone,
                        public readonly tileId: number)
     {
+    }
+
+    public equals(other: TrexoPiece): boolean {
+        return this.owner.equals(other.owner) &&
+               this.tileId === other.tileId;
     }
 
     public toString(): string {
@@ -71,6 +76,10 @@ export class TrexoPieceStack {
 
     public isGround(): boolean {
         return this.getUpperTileId() === -1;
+    }
+
+    public equals(other: TrexoPieceStack): boolean {
+        return ArrayUtils.equals(this.pieces, other.pieces);
     }
 
     public toString(): string {

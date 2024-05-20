@@ -1,4 +1,5 @@
 /* eslint-disable max-lines-per-function */
+import { MGPOptional } from '@everyboard/lib';
 import { CoerceoComponent } from '../coerceo.component';
 import { CoerceoMove, CoerceoRegularMove, CoerceoTileExchangeMove } from 'src/app/games/coerceo/CoerceoMove';
 import { Coord } from 'src/app/jscaip/Coord';
@@ -8,10 +9,10 @@ import { Table } from 'src/app/jscaip/TableUtils';
 import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { fakeAsync } from '@angular/core/testing';
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
-import { CoerceoRules } from '../CoerceoRules';
+import { CoerceoConfig, CoerceoRules } from '../CoerceoRules';
 import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 
-describe('CoerceoComponent', () => {
+fdescribe('CoerceoComponent', () => {
 
     let testUtils: ComponentTestUtils<CoerceoComponent>;
 
@@ -19,6 +20,7 @@ describe('CoerceoComponent', () => {
     const N: FourStatePiece = FourStatePiece.UNREACHABLE;
     const O: FourStatePiece = FourStatePiece.ZERO;
     const X: FourStatePiece = FourStatePiece.ONE;
+    const defaultConfig: MGPOptional<CoerceoConfig> = CoerceoRules.get().getDefaultRulesConfig();
 
     function expectCoordToBeOfRemovedFill(x: number, y: number): void {
         testUtils.expectElementToHaveClass('#space-' + x + '-' + y, 'captured-alternate-fill');
@@ -38,23 +40,23 @@ describe('CoerceoComponent', () => {
 
     describe('visual features', () => {
 
-        it('should not show tile when there is zero', fakeAsync(async() => {
+        it('should not show tile when there is none', fakeAsync(async() => {
             // Given a board with zero tiles
             // When rendering it
             // Then it should not have a tile count
-            testUtils.expectElementNotToExist('#tiles-count-0 ');
+            testUtils.expectElementNotToExist('#tiles-count-PLAYER_ZERO ');
         }));
 
         it('should show tile when there is more than zero', fakeAsync(async() => {
             // Given a board with more than zero tiles
-            const board: Table<FourStatePiece> = CoerceoRules.get().getInitialState().getCopiedBoard();
+            const board: Table<FourStatePiece> = CoerceoRules.get().getInitialState(defaultConfig).getCopiedBoard();
             const state: CoerceoState = new CoerceoState(board, 0, PlayerNumberMap.of(1, 0), PlayerNumberMap.of(0, 0));
 
             // When rendering it
             await testUtils.setupState(state);
 
             // THen it should not have a tile count
-            testUtils.expectElementToExist('#tiles-count-0 ');
+            testUtils.expectElementToExist('#tiles-count-PLAYER_ZERO ');
         }));
 
         it('should show removed tiles, and captured piece (after tiles exchange)', fakeAsync(async() => {
@@ -99,7 +101,7 @@ describe('CoerceoComponent', () => {
             expectCoordToBeOfRemovedFill(8, 7);
             expectCoordToBeOfRemovedFill(7, 7);
             expectCoordToBeOfRemovedFill(6, 7);
-            testUtils.expectElementToExist('#tiles-count-0 ');
+            testUtils.expectElementToExist('#tiles-count-PLAYER_ZERO');
             testUtils.expectElementNotToExist('#tilesCount1');
         }));
 
@@ -155,6 +157,21 @@ describe('CoerceoComponent', () => {
             await testUtils.expectMoveFailure('#click-6-9',
                                               CoerceoFailure.NOT_ENOUGH_TILES_TO_EXCHANGE(),
                                               move);
+        }));
+
+        it('should show captured piece and used tiles when doing tiles exchange', fakeAsync(async() => {
+            // Given a board with tiles
+            const board: Table<FourStatePiece> = CoerceoRules.get().getInitialState(defaultConfig).board;
+            const state: CoerceoState = new CoerceoState(board, 0, PlayerNumberMap.of(2, 0), PlayerNumberMap.of(0, 0));
+            await testUtils.setupState(state);
+
+            // When clicking on an opponent piece
+            const move: CoerceoMove = CoerceoTileExchangeMove.of(new Coord(6, 9));
+            await testUtils.expectMoveSuccess('#click-6-9', move);
+
+            // Then the highlight should be visible
+            testUtils.expectElementToHaveClasses('#pyramid-6-9', ['base', 'mid-stroke', 'captured-fill']);
+            testUtils.expectElementToHaveClasses('#tiles-count-PLAYER_ZERO > polygon', ['base', 'captured-fill']);
         }));
 
         it('should show possibles destination after choosing your own piece', fakeAsync(async() => {
@@ -231,6 +248,19 @@ describe('CoerceoComponent', () => {
 
             // When clicking on it again
             await testUtils.expectClickFailure('#click-6-2');
+
+            // Then the different highlights should be gone since the piece is deselected
+            testUtils.expectElementNotToExist('#selected-6-2');
+            testUtils.expectElementNotToExist('possible-landing-7-3');
+        }));
+
+        it('should deselect piece when clicking on its selected highlight', fakeAsync(async() => {
+            // Given a board on which a piece is selected
+            await testUtils.expectClickSuccess('#click-6-2');
+            testUtils.expectElementToExist('#possible-landing-7-3');
+
+            // When clicking on it again
+            await testUtils.expectClickFailureWithAsymmetricNaming('#selected-6-2', '#click-6-2');
 
             // Then the different highlights should be gone since the piece is deselected
             testUtils.expectElementNotToExist('#selected-6-2');

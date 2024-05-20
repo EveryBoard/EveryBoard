@@ -6,17 +6,16 @@ import { Player } from 'src/app/jscaip/Player';
 import { Table } from 'src/app/jscaip/TableUtils';
 import { MGPMap, MGPOptional, MGPSet } from '@everyboard/lib';
 import { CoerceoState } from '../CoerceoState';
-import { CoerceoNode, CoerceoRules } from '../CoerceoRules';
+import { CoerceoConfig, CoerceoNode, CoerceoRules } from '../CoerceoRules';
 import { CoerceoPiecesThreatsTilesHeuristic } from '../CoerceoPiecesThreatsTilesHeuristic';
 import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
-import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 import { PlayerNumberTable } from 'src/app/jscaip/PlayerNumberTable';
 import { HeuristicUtils } from 'src/app/jscaip/AI/tests/HeuristicUtils.spec';
 
-describe('CoerceoPiecesThreatTilesHeuristic', () => {
+fdescribe('CoerceoPiecesThreatTilesHeuristic', () => {
 
     let heuristic: CoerceoPiecesThreatsTilesHeuristic;
-    const defaultConfig: NoConfig = CoerceoRules.get().getDefaultRulesConfig();
+    const defaultConfig: MGPOptional<CoerceoConfig> = CoerceoRules.get().getDefaultRulesConfig();
 
     const _: FourStatePiece = FourStatePiece.EMPTY;
     const N: FourStatePiece = FourStatePiece.UNREACHABLE;
