@@ -9,7 +9,7 @@ import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 import { HeuristicUtils } from 'src/app/jscaip/AI/tests/HeuristicUtils.spec';
 import { Player } from 'src/app/jscaip/Player';
 
-fdescribe('CoerceoPiecesTilesFreedomHeuristic', () => {
+describe('CoerceoPiecesTilesFreedomHeuristic', () => {
 
     let heuristic: CoerceoPiecesTilesFreedomHeuristic;
     const defaultConfig: MGPOptional<CoerceoConfig> = CoerceoRules.get().getDefaultRulesConfig();

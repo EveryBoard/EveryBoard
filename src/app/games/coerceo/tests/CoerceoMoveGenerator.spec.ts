@@ -11,7 +11,7 @@ const N: FourStatePiece = FourStatePiece.UNREACHABLE;
 const O: FourStatePiece = FourStatePiece.ZERO;
 const X: FourStatePiece = FourStatePiece.ONE;
 
-fdescribe('CoerceoMoveGenerator', () => {
+describe('CoerceoMoveGenerator', () => {
 
     let moveGenerator: CoerceoMoveGenerator;
     const defaultConfig: MGPOptional<CoerceoConfig> = CoerceoRules.get().getDefaultRulesConfig();

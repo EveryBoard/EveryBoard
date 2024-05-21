@@ -228,16 +228,6 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
         return previousTiles > this.tiles.get(player);
     }
 
-    public getIndicatorY(coord: Coord): number {
-        const y: number = this.INDICATOR_SIZE / 2;
-        const center: number = this.SPACE_SIZE / 2;
-        if ((coord.x + coord.y) % 2 === 0) {
-            return y + center;
-        } else {
-            return y + center - 30;
-        }
-    }
-
     public getTriangleInHexTranslation(coord: Coord): string {
         const x: number = coord.x;
         const y: number = coord.y;

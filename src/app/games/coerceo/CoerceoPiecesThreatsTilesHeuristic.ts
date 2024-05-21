@@ -1,17 +1,18 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { PieceThreat } from 'src/app/jscaip/PieceThreat';
 import { Player } from 'src/app/jscaip/Player';
-import { MGPMap, MGPOptional, MGPSet } from '@everyboard/lib';
+import { MGPMap, MGPOptional } from '@everyboard/lib';
 import { CoerceoState } from './CoerceoState';
 import { CoerceoConfig, CoerceoNode } from './CoerceoRules';
 import { PlayerNumberTable } from 'src/app/jscaip/PlayerNumberTable';
 import { CoerceoHeuristic } from './CoerceoHeuristic';
+import { CoordSet } from 'src/app/jscaip/CoordSet';
 
 export class CoerceoPiecesThreatsTilesHeuristic extends CoerceoHeuristic {
 
     public override getMetrics(node: CoerceoNode, _config: MGPOptional<CoerceoConfig>): PlayerNumberTable {
         const state: CoerceoState = node.gameState;
-        const pieceMap: MGPMap<Player, MGPSet<Coord>> = this.getPiecesMap(state);
+        const pieceMap: MGPMap<Player, CoordSet> = this.getPiecesMap(state);
         const threatMap: MGPMap<Coord, PieceThreat> = this.getThreatMap(state, pieceMap);
         const filteredThreatMap: MGPMap<Coord, PieceThreat> = this.filterThreatMap(threatMap, state);
         const safeIndex: number = 0;

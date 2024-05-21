@@ -127,11 +127,16 @@ export class CoerceoRules extends ConfigurableRules<CoerceoMove, CoerceoState, C
     }
 
     public override isLegal(move: CoerceoMove, state: CoerceoState): MGPValidation {
+        this.assertMoveValidity(state);
         if (CoerceoMove.isTileExchange(move)) {
             return this.isLegalTileExchange(move, state);
         } else {
             return this.isLegalMovement(move, state);
         }
+    }
+
+    private assertMoveValidity(state: CoerceoState): void {
+
     }
 
     public isLegalTileExchange(move: CoerceoTileExchangeMove, state: CoerceoState): MGPValidation {

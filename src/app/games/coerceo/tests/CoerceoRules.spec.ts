@@ -10,8 +10,9 @@ import { Player } from 'src/app/jscaip/Player';
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
 import { MGPOptional, TestUtils } from '@everyboard/lib';
 import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
+import { Table } from 'src/app/jscaip/TableUtils';
 
-fdescribe('CoerceoRules', () => {
+describe('CoerceoRules', () => {
 
     let rules: CoerceoRules;
     const defaultConfig: MGPOptional<CoerceoConfig> = CoerceoRules.get().getDefaultRulesConfig();
@@ -281,6 +282,66 @@ fdescribe('CoerceoRules', () => {
             TestUtils.expectToThrowAndLog(tryingOutOfRangeStartingMove, reason);
         });
 
+        it('should not allow starting coord unreachable', () => {
+            // Given any board
+            const state: CoerceoState = rules.getInitialState(defaultConfig);
+
+            // When starting a move on an unreachable space
+            const move: CoerceoMove = CoerceoRegularMove.ofMovement(new Coord(0, 0), CoerceoStep.LEFT);
+
+            // Then it should throw
+            const reason: string = 'Cannot start with a coord outside the board (0, 0).';
+            function allowOutOfRangeLandingCoord(): void {
+                RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
+            }
+            TestUtils.expectToThrowAndLog(allowOutOfRangeLandingCoord, reason);
+        });
+
+        it('should not allow starting coord out of board', () => {
+            // Given any board
+            const state: CoerceoState = rules.getInitialState(defaultConfig);
+
+            // When starting a move on an out of range coord
+            const move: CoerceoMove = CoerceoRegularMove.ofMovement(new Coord(-1, -1), CoerceoStep.LEFT);
+
+            // Then it should throw
+            const reason: string = 'Accessing coord not on board (-1, -1).';
+            function allowOutOfRangeLandingCoord(): void {
+                RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
+            }
+            TestUtils.expectToThrowAndLog(allowOutOfRangeLandingCoord, reason);
+        });
+
+        it('should not allow ending coord to be unreachable', () => {
+            // Given any board
+            const state: CoerceoState = rules.getInitialState(defaultConfig);
+
+            // When ending a move on an unreachable space
+            const move: CoerceoMove = CoerceoRegularMove.ofMovement(new Coord(6, 0), CoerceoStep.LEFT);
+
+            // Then it should throw
+            const reason: string = 'Cannot end with a coord outside the board (4, 0).';
+            function allowOutOfRangeLandingCoord(): void {
+                RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
+            }
+            TestUtils.expectToThrowAndLog(allowOutOfRangeLandingCoord, reason);
+        });
+
+        it('should not allow ending coord out of board', () => {
+            // Given any board
+            const state: CoerceoState = rules.getInitialState(defaultConfig);
+
+            // When starting a move on an out of range coord
+            const move: CoerceoMove = CoerceoRegularMove.ofMovement(new Coord(0, 2), CoerceoStep.LEFT);
+
+            // Then it should throw
+            const reason: string = 'Accessing coord not on board (-2, 2).';
+            function allowOutOfRangeLandingCoord(): void {
+                RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
+            }
+            TestUtils.expectToThrowAndLog(allowOutOfRangeLandingCoord, reason);
+        });
+
     });
 
     describe('Tiles Exchange', () => {
@@ -418,6 +479,21 @@ fdescribe('CoerceoRules', () => {
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         });
 
+        it('should not allow out of range capture coord', () => {
+            // Given any board
+            const board: Table<FourStatePiece> = rules.getInitialState(defaultConfig).board;
+            const state: CoerceoState = new CoerceoState(board, 1, PlayerNumberMap.of(0, 2), PlayerNumberMap.of(0, 0));
+
+            // When trying to create a exchange move from an out of board coord
+            const move: CoerceoMove = CoerceoTileExchangeMove.of(new Coord(-1, 16));
+
+            const reason: string = 'Accessing coord not on board (-1, 16).';
+            function allowOutOfRangeCaptureCoord(): void {
+                RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
+            }
+            TestUtils.expectToThrowAndLog(allowOutOfRangeCaptureCoord, reason);
+        });
+
     });
 
     it('should not remove tiles emptied, when connected by 3 separated sides', () => {
@@ -533,6 +609,20 @@ fdescribe('CoerceoRules', () => {
             // When evaluating its game status
             // Then it should be a victory for Player.ZERO
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, smallConfig);
+        });
+
+        it('should be a smaller board (for coverage)', () => {
+            // Given the small config
+            const smallConfig: MGPOptional<CoerceoConfig> = MGPOptional.of({
+                smallBoard: true,
+            });
+
+            // When creating state for this config
+            const state: CoerceoState = rules.getInitialState(smallConfig);
+
+            // Then it should be 8 x 6
+            expect(state.board.length).toBe(7);
+            expect(state.board[0].length).toBe(9);
         });
 
     });

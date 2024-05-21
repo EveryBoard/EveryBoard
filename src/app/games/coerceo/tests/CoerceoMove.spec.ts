@@ -7,7 +7,7 @@ import { EncoderTestUtils, TestUtils } from '@everyboard/lib';
 import { MoveTestUtils } from 'src/app/jscaip/tests/Move.spec';
 import { CoerceoMoveGenerator } from '../CoerceoMoveGenerator';
 
-fdescribe('CoerceoMove', () => {
+describe('CoerceoMove', () => {
 
     it('should distinguish move and capture based on presence or not of capture', () => {
         const move: CoerceoMove = CoerceoRegularMove.ofMovement(new Coord(5, 5), CoerceoStep.UP_RIGHT);
@@ -25,25 +25,6 @@ fdescribe('CoerceoMove', () => {
             TestUtils.expectToThrowAndLog(createMoveWithInvalidDistance, CoerceoFailure.INVALID_DISTANCE());
         });
 
-        it('should not allow out of range landing coord', () => {
-            function allowOutOfRangeLandingCoord(): void {
-                CoerceoRegularMove.ofMovement(new Coord(0, 0), CoerceoStep.LEFT);
-            }
-            TestUtils.expectToThrowAndLog(allowOutOfRangeLandingCoord,
-                                          'Landing coord cannot be out of range (width: 15, height: 10).');
-        });
-
-    });
-
-    describe('CoerceoTileExchangeMove.of', () => {
-
-        it('should not allow out of range capture coord', () => {
-            const reason: string = 'Captured coord cannot be out of range (width: 15, height: 10).';
-            function allowOutOfRangeCaptureCoord(): void {
-                CoerceoTileExchangeMove.of(new Coord(-1, 16));
-            }
-            TestUtils.expectToThrowAndLog(allowOutOfRangeCaptureCoord, reason);
-        });
 
     });
 

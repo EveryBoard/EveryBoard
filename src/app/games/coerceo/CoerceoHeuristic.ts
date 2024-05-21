@@ -3,7 +3,7 @@ import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
 import { PieceThreat } from 'src/app/jscaip/PieceThreat';
 import { Player } from 'src/app/jscaip/Player';
 import { TriangularCheckerBoard } from 'src/app/jscaip/TriangularCheckerBoard';
-import { MGPMap, MGPOptional, MGPSet } from '@everyboard/lib';
+import { MGPMap, MGPOptional } from '@everyboard/lib';
 import { CoerceoMove, CoerceoStep } from './CoerceoMove';
 import { CoerceoState } from './CoerceoState';
 import { Vector } from 'src/app/jscaip/Vector';
@@ -14,8 +14,8 @@ import { CoerceoConfig } from './CoerceoRules';
 
 export abstract class CoerceoHeuristic extends PlayerMetricHeuristic<CoerceoMove, CoerceoState, CoerceoConfig> {
 
-    public getPiecesMap(state: CoerceoState): MGPMap<Player, MGPSet<Coord>> {
-        const map: MGPMap<Player, MGPSet<Coord>> = new MGPMap();
+    public getPiecesMap(state: CoerceoState): MGPMap<Player, CoordSet> {
+        const map: MGPMap<Player, CoordSet> = new MGPMap();
         const zeroPieces: Coord[] = [];
         const onePieces: Coord[] = [];
         for (const coordAndContent of state.getCoordsAndContents()) {
@@ -33,7 +33,7 @@ export abstract class CoerceoHeuristic extends PlayerMetricHeuristic<CoerceoMove
     }
 
     public getThreatMap(state: CoerceoState,
-                        pieces: MGPMap<Player, MGPSet<Coord>>)
+                        pieces: MGPMap<Player, CoordSet>)
     : MGPMap<Coord, PieceThreat>
     {
         const threatMap: MGPMap<Coord, PieceThreat> = new MGPMap();
@@ -146,7 +146,7 @@ export abstract class CoerceoHeuristic extends PlayerMetricHeuristic<CoerceoMove
         const threatenedPlayerPieces: Coord[] = threateneds.filter((coord: Coord) => {
             return state.getPieceAt(coord).is(state.getCurrentPlayer());
         });
-        const threatenedOpponentPieces: MGPSet<Coord> = new CoordSet(threateneds.filter((coord: Coord) => {
+        const threatenedOpponentPieces: CoordSet = new CoordSet(threateneds.filter((coord: Coord) => {
             return state.getPieceAt(coord).is(state.getCurrentOpponent());
         }));
         for (const threatenedPiece of threatenedPlayerPieces) {

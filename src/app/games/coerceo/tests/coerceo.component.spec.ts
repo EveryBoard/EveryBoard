@@ -12,7 +12,7 @@ import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
 import { CoerceoConfig, CoerceoRules } from '../CoerceoRules';
 import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 
-fdescribe('CoerceoComponent', () => {
+describe('CoerceoComponent', () => {
 
     let testUtils: ComponentTestUtils<CoerceoComponent>;
 

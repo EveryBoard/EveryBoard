@@ -4,15 +4,16 @@ import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
 import { PieceThreat } from 'src/app/jscaip/PieceThreat';
 import { Player } from 'src/app/jscaip/Player';
 import { Table } from 'src/app/jscaip/TableUtils';
-import { MGPMap, MGPOptional, MGPSet } from '@everyboard/lib';
+import { MGPMap, MGPOptional } from '@everyboard/lib';
 import { CoerceoState } from '../CoerceoState';
 import { CoerceoConfig, CoerceoNode, CoerceoRules } from '../CoerceoRules';
 import { CoerceoPiecesThreatsTilesHeuristic } from '../CoerceoPiecesThreatsTilesHeuristic';
 import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 import { PlayerNumberTable } from 'src/app/jscaip/PlayerNumberTable';
 import { HeuristicUtils } from 'src/app/jscaip/AI/tests/HeuristicUtils.spec';
+import { CoordSet } from 'src/app/jscaip/CoordSet';
 
-fdescribe('CoerceoPiecesThreatTilesHeuristic', () => {
+describe('CoerceoPiecesThreatTilesHeuristic', () => {
 
     let heuristic: CoerceoPiecesThreatsTilesHeuristic;
     const defaultConfig: MGPOptional<CoerceoConfig> = CoerceoRules.get().getDefaultRulesConfig();
@@ -291,7 +292,7 @@ fdescribe('CoerceoPiecesThreatTilesHeuristic', () => {
                 [N, N, N, N, N, N, _, O, _, N, N, N, N, N, N],
             ];
             const state: CoerceoState = new CoerceoState(board, 0, PlayerNumberMap.of(0, 0), PlayerNumberMap.of(0, 0));
-            const pieces: MGPMap<Player, MGPSet<Coord>> = heuristic.getPiecesMap(state);
+            const pieces: MGPMap<Player, CoordSet> = heuristic.getPiecesMap(state);
             const threatMap: MGPMap<Coord, PieceThreat> = heuristic.getThreatMap(state, pieces);
             const filteredThreatMap: MGPMap<Coord, PieceThreat> = heuristic.filterThreatMap(threatMap, state);
             expect(filteredThreatMap.containsKey(new Coord(7, 6))).toBeTrue();
@@ -311,7 +312,7 @@ fdescribe('CoerceoPiecesThreatTilesHeuristic', () => {
                 [N, N, N, N, N, N, _, _, _, N, N, N, N, N, N],
             ];
             const state: CoerceoState = new CoerceoState(board, 0, PlayerNumberMap.of(0, 0), PlayerNumberMap.of(0, 0));
-            const pieces: MGPMap<Player, MGPSet<Coord>> = heuristic.getPiecesMap(state);
+            const pieces: MGPMap<Player, CoordSet> = heuristic.getPiecesMap(state);
             const threatMap: MGPMap<Coord, PieceThreat> = heuristic.getThreatMap(state, pieces);
             const filteredThreatMap: MGPMap<Coord, PieceThreat> = heuristic.filterThreatMap(threatMap, state);
             expect(filteredThreatMap.containsKey(new Coord(6, 6)))
@@ -336,7 +337,7 @@ fdescribe('CoerceoPiecesThreatTilesHeuristic', () => {
                 [N, N, N, N, N, N, _, O, _, N, N, N, N, N, N],
             ];
             const state: CoerceoState = new CoerceoState(board, 0, PlayerNumberMap.of(0, 0), PlayerNumberMap.of(0, 0));
-            const pieces: MGPMap<Player, MGPSet<Coord>> = heuristic.getPiecesMap(state);
+            const pieces: MGPMap<Player, CoordSet> = heuristic.getPiecesMap(state);
             const threatMap: MGPMap<Coord, PieceThreat> = heuristic.getThreatMap(state, pieces);
             const filteredThreatMap: MGPMap<Coord, PieceThreat> = heuristic.filterThreatMap(threatMap, state);
             expect(filteredThreatMap.containsKey(new Coord(7, 6))).toBeFalse();
@@ -356,7 +357,7 @@ fdescribe('CoerceoPiecesThreatTilesHeuristic', () => {
                 [N, N, N, N, N, N, X, _, _, N, N, N, N, N, N],
             ];
             const state: CoerceoState = new CoerceoState(board, 0, PlayerNumberMap.of(0, 0), PlayerNumberMap.of(0, 0));
-            const pieces: MGPMap<Player, MGPSet<Coord>> = heuristic.getPiecesMap(state);
+            const pieces: MGPMap<Player, CoordSet> = heuristic.getPiecesMap(state);
             const threatMap: MGPMap<Coord, PieceThreat> = heuristic.getThreatMap(state, pieces);
             const filteredThreatMap: MGPMap<Coord, PieceThreat> = heuristic.filterThreatMap(threatMap, state);
             expect(filteredThreatMap.containsKey(new Coord(5, 7))).toBeFalse();

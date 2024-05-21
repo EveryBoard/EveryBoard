@@ -4,7 +4,7 @@ import { Table } from 'src/app/jscaip/TableUtils';
 import { CoerceoState } from '../CoerceoState';
 import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 
-fdescribe('CoerceoState', () => {
+describe('CoerceoState', () => {
 
     describe('isDeconnectable', () => {
         const dummyCoord: Coord = new Coord(-1, -1);

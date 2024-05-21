@@ -1,4 +1,4 @@
-import { Comparable, MGPMap, MGPOptional, MGPSet, comparableEquals } from '@everyboard/lib';
+import { Comparable, MGPMap, MGPOptional, Utils, comparableEquals } from '@everyboard/lib';
 import { Coord } from './Coord';
 import { GameState } from './GameState';
 import { Table, TableUtils } from './TableUtils';
@@ -23,11 +23,9 @@ export abstract class GameStateWithTable<P extends NonNullable<Comparable>> exte
     }
 
     public getPieceAt(coord: Coord): P {
-        if (this.isOnBoard(coord)) {
-            return this.board[coord.y][coord.x];
-        } else {
-            throw new Error('Accessing coord not on board ' + coord + '.');
-        }
+        Utils.assert(this.isOnBoard(coord),
+                     'Accessing coord not on board ' + coord + '.');
+        return this.board[coord.y][coord.x];
     }
 
     public has(coord: Coord, value: P): boolean {
@@ -89,7 +87,7 @@ export abstract class GameStateWithTable<P extends NonNullable<Comparable>> exte
     public getCopiedBoard(): P[][] {
         return TableUtils.copy(this.board);
     }
-// TODO MGPSet<Coord> is CoordSet
+
     public toPieceMap(): MGPMap<P, CoordSet> {
         const map: MGPMap<P, CoordSet> = new MGPMap();
         for (const coordAndContent of this.getCoordsAndContents()) {
