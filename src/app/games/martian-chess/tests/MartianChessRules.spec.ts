@@ -58,7 +58,7 @@ describe('MartianChessRules', () => {
         // When choosing a piece in the opponent's territory
         const move: MartianChessMove = MartianChessMove.from(new Coord(2, 2), new Coord(3, 3)).get();
 
-        // Then the move should be illegal
+        // Then it should fail
         const reason: string = MartianChessFailure.MUST_CHOOSE_PIECE_FROM_YOUR_TERRITORY();
         RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
     });
@@ -70,7 +70,7 @@ describe('MartianChessRules', () => {
         // When choosing an empty square
         const move: MartianChessMove = MartianChessMove.from(new Coord(0, 4), new Coord(0, 3)).get();
 
-        // Then the move should be illegal
+        // Then it should fail
         const reason: string = RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY();
         RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
     });
@@ -82,7 +82,7 @@ describe('MartianChessRules', () => {
         // When moving one of your pawn vertically
         const move: MartianChessMove = MartianChessMove.from(new Coord(1, 5), new Coord(1, 4)).get();
 
-        // Then the move should be illegal
+        // Then it should fail
         const reason: string = MartianChessMoveFailure.PAWN_MUST_MOVE_ONE_DIAGONAL_STEP();
         RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
     });
@@ -94,7 +94,7 @@ describe('MartianChessRules', () => {
         // When moving a drone three orthogonal step
         const move: MartianChessMove = MartianChessMove.from(new Coord(3, 5), new Coord(3, 2)).get();
 
-        // Then the move should be illegal
+        // Then it should fail
         const reason: string = MartianChessMoveFailure.DRONE_MUST_DO_TWO_ORTHOGONAL_STEPS();
         RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
     });
@@ -106,7 +106,7 @@ describe('MartianChessRules', () => {
         // When moving a queen over another piece
         const move: MartianChessMove = MartianChessMove.from(new Coord(3, 7), new Coord(3, 2)).get();
 
-        // Then the move should be illegal
+        // Then it should fail
         const reason: string = RulesFailure.SOMETHING_IN_THE_WAY();
         RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
     });
@@ -118,7 +118,7 @@ describe('MartianChessRules', () => {
         // When landing your piece on one of your piece, when no promotion are possible
         const move: MartianChessMove = MartianChessMove.from(new Coord(2, 6), new Coord(1, 5)).get();
 
-        // Then the move should be illegal
+        // Then it should fail
         const reason: string = MartianChessFailure.CANNOT_CAPTURE_YOUR_OWN_PIECE_NOR_PROMOTE_IT();
         RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
     });
@@ -130,7 +130,7 @@ describe('MartianChessRules', () => {
         // When moving diagonally of two step one pawn
         const move: MartianChessMove = MartianChessMove.from(new Coord(1, 5), new Coord(3, 3)).get();
 
-        // Then the move should be illegal
+        // Then it should fail
         const reason: string = MartianChessMoveFailure.PAWN_MUST_MOVE_ONE_DIAGONAL_STEP();
         RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
     });

@@ -86,6 +86,10 @@ export class ViewBox {
         );
     }
 
+    public expandAll(offset: number): ViewBox {
+        return this.expand(offset, offset, offset, offset);
+    }
+
     public containingAtLeast(viewBox: ViewBox): ViewBox {
         const left: number = Math.min(this.left, viewBox.left);
         const right: number = Math.max(this.right(), viewBox.right());

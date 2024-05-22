@@ -50,7 +50,7 @@ export class ConnectSixMoveGenerator extends MoveGenerator<ConnectSixMove, Conne
         const availableCoords: Coord[] = [];
         for (const coordAndContent of state.getCoordsAndContents()) {
             const coord: Coord = coordAndContent.coord;
-            if (usefulCoord[coord.y][coord.x] === true && coordAndContent.content.isPlayer() === false) {
+            if (usefulCoord[coord.y][coord.x] === true && coordAndContent.content.isNone()) {
                 availableCoords.push(coord);
             }
         }
@@ -64,10 +64,8 @@ export class ConnectSixMoveGenerator extends MoveGenerator<ConnectSixMove, Conne
         const width: number = state.getWidth();
         const height: number = state.getHeight();
         const usefulCoord: boolean[][] = TableUtils.create(width, height, false);
-        for (const coordAndContent of state.getCoordsAndContents()) {
-            if (coordAndContent.content.isPlayer()) {
-                this.addNeighboringCoord(usefulCoord, coordAndContent.coord);
-            }
+        for (const coordAndContent of state.getPlayerCoordsAndContent()) {
+            this.addNeighboringCoord(usefulCoord, coordAndContent.coord);
         }
         return usefulCoord;
     }

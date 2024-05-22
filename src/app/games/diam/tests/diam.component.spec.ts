@@ -128,7 +128,7 @@ describe('DiamComponent', () => {
             // When dropping a piece on the full stack
             const move: DiamMove = new DiamMoveDrop(0, DiamPiece.ZERO_FIRST);
 
-            // Then the move should be illegal
+            // Then it should fail
             const reason: string = DiamFailure.SPACE_IS_FULL();
             await testUtils.expectMoveFailure('#click_0', reason, move);
         }));

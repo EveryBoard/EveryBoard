@@ -1,8 +1,7 @@
 import { Coord } from 'src/app/jscaip/Coord';
-import { GameStateWithTable } from 'src/app/jscaip/GameStateWithTable';
-import { PlayerOrNone } from 'src/app/jscaip/Player';
+import { PlayerOrNoneGameStateWithTable } from 'src/app/jscaip/PlayerOrNoneGameStateWithTable';
 
-export class TeekoState extends GameStateWithTable<PlayerOrNone> {
+export class TeekoState extends PlayerOrNoneGameStateWithTable {
 
     public static readonly WIDTH: number = 5;
 

@@ -2,7 +2,7 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { Ordinal } from 'src/app/jscaip/Ordinal';
 import { Heuristic } from 'src/app/jscaip/AI/Minimax';
 import { BoardValue } from 'src/app/jscaip/AI/BoardValue';
-import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
+import { Player } from 'src/app/jscaip/Player';
 import { EpaminondasMove } from './EpaminondasMove';
 import { EpaminondasState } from './EpaminondasState';
 import { EpaminondasConfig, EpaminondasNode } from './EpaminondasRules';
@@ -24,30 +24,28 @@ export class EpaminondasPositionalHeuristic
         const MAX_NUMBER_OF_ALIGNEMENT: number = (24*16) + (4*15);
         const SCORE_BY_PIECE: number = (MAX_NUMBER_OF_ALIGNEMENT * SCORE_BY_ALIGNEMENT) + 1; // OLDLY 25*13
         let total: number = 0;
-        for (const coordAndContent of state.getCoordsAndContents()) {
+        for (const coordAndContent of state.getPlayerCoordsAndContent()) {
             const coord: Coord = coordAndContent.coord;
-            const player: PlayerOrNone = coordAndContent.content;
-            if (player.isPlayer()) {
-                let avancement: number; // between 0 and 11
-                let dirs: Ordinal[];
-                if (player === Player.ZERO) {
-                    avancement = height - coord.y;
-                    dirs = [Ordinal.UP_LEFT, Ordinal.UP, Ordinal.UP_RIGHT];
-                } else {
-                    avancement = coord.y + 1;
-                    dirs = [Ordinal.DOWN_LEFT, Ordinal.DOWN, Ordinal.DOWN_RIGHT];
-                }
-                const mod: number = player.getScoreModifier();
-                total += avancement * mod;
-                total += SCORE_BY_PIECE * mod;
-                for (const dir of dirs) {
-                    let neighbor: Coord = coord.getNext(dir, 1);
-                    while (state.isOnBoard(neighbor) &&
-                           state.getPieceAt(neighbor) === player)
-                    {
-                        total += mod * SCORE_BY_ALIGNEMENT;
-                        neighbor = neighbor.getNext(dir, 1);
-                    }
+            const player: Player = coordAndContent.content;
+            let avancement: number; // between 0 and 11
+            let dirs: Ordinal[];
+            if (player === Player.ZERO) {
+                avancement = height - coord.y;
+                dirs = [Ordinal.UP_LEFT, Ordinal.UP, Ordinal.UP_RIGHT];
+            } else {
+                avancement = coord.y + 1;
+                dirs = [Ordinal.DOWN_LEFT, Ordinal.DOWN, Ordinal.DOWN_RIGHT];
+            }
+            const mod: number = player.getScoreModifier();
+            total += avancement * mod;
+            total += SCORE_BY_PIECE * mod;
+            for (const dir of dirs) {
+                let neighbor: Coord = coord.getNext(dir, 1);
+                while (state.isOnBoard(neighbor) &&
+                       state.getPieceAt(neighbor) === player)
+                {
+                    total += mod * SCORE_BY_ALIGNEMENT;
+                    neighbor = neighbor.getNext(dir, 1);
                 }
             }
         }

@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg"
+     width="100%" height="100%"
+     [attr.viewBox]="getViewBox().toSVGString()"
+     preserveAspectRatio="xMidYMid meet">
+    <g *ngFor="let line of board; index as y">
+        <g *ngFor="let c of line; index as x"
+           id="click_{{ x }}_{{ y }}"
+           (click)="onClick(x, y)"
+        >
+            <rect id="space_{{ x }}_{{ y }}"
+                  [attr.x]="SPACE_SIZE * x"
+                  [attr.y]="SPACE_SIZE * y"
+                  [attr.width]="SPACE_SIZE"
+                  [attr.height]="SPACE_SIZE"
+                  [ngClass]="getRectClasses(x, y)"
+                  class="base"
+            />
+            <circle id="piece_{{ x }}_{{ y }}"
+                    *ngIf="board[y][x] !== EMPTY"
+                    [attr.r]="(SPACE_SIZE / 2) - STROKE_WIDTH"
+                    [attr.cx]="(SPACE_SIZE * x) + (SPACE_SIZE / 2)"
+                    [attr.cy]="(SPACE_SIZE * y) + (SPACE_SIZE / 2)"
+                    [ngClass]="getPieceClasses(x, y)"
+                    class="base"
+            />
+        </g>
+    </g>
+    <rect *ngFor="let move of moves"
+          (click)="onClick(move.getSecond().x, move.getSecond().y)"
+          [attr.transform]="getTranslation(move.getSecond())"
+          [attr.x]="SPACE_SIZE / 3"
+          [attr.y]="SPACE_SIZE / 3"
+          [attr.width]="SPACE_SIZE / 3"
+          [attr.height]="SPACE_SIZE / 3"
+          [attr.fill]="move.isDuplication() ? 'green' : 'red'"
+    />
+</svg>

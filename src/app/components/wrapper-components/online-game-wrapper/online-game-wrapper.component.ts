@@ -294,7 +294,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         const success: MGPFallible<AbstractNode> = rules.choose(this.gameComponent.node, chosenMove, config);
         Utils.assert(success.isSuccess(), 'Chosen move should be legal after all checks, but it is not! Reason: ' + success.getReasonOr(''));
         this.gameComponent.node = success.get();
-        if (this.role === PlayerOrNone.NONE) {
+        if (this.role.isNone()) {
             await this.showNewMove(isLastMoveOfBatch);
         } else {
             // We only animate the move of opponent, because the users move has already been animated before sending it
@@ -404,7 +404,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
     }
 
     public override async canUserPlay(clickedElementName: string): Promise<MGPValidation> {
-        if (this.role === PlayerOrNone.NONE) {
+        if (this.role.isNone()) {
             const message: string = OnlineGameWrapperMessages.CANNOT_PLAY_AS_OBSERVER();
             return MGPValidation.failure(message);
         }
@@ -440,7 +440,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         }
         await this.currentGameService.updateCurrentGame({
             ...this.currentGame.get(),
-            role: this.role === PlayerOrNone.NONE ? 'Observer' : 'Player',
+            role: this.role.isNone() ? 'Observer' : 'Player',
         });
     }
 

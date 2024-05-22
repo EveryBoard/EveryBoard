@@ -5,6 +5,18 @@ import { Table, TableUtils } from './TableUtils';
 
 export abstract class GameStateWithTable<P> extends GameState {
 
+    public static setPieceAt<Q, T extends GameStateWithTable<Q>>(
+        oldState: T,
+        coord: Coord,
+        value: Q,
+        stateAdapter: (oldState: T, newBoard: Table<Q>) => T)
+    : T
+    {
+        const newBoard: Q[][] = oldState.getCopiedBoard();
+        newBoard[coord.y][coord.x] = value;
+        return stateAdapter(oldState, newBoard);
+    }
+
     public constructor(public readonly board: Table<P>, turn: number) {
         super(turn);
     }
@@ -20,16 +32,6 @@ export abstract class GameStateWithTable<P> extends GameState {
     public has(coord: Coord, value: P): boolean {
         return this.isOnBoard(coord) &&
                comparableEquals(this.getPieceAt(coord), value);
-    }
-
-    public setPieceAt(coord: Coord,
-                      value: P,
-                      map: (oldState: this, newBoard: Table<P>) => GameStateWithTable<P>)
-    : GameStateWithTable<P>
-    {
-        const newBoard: P[][] = this.getCopiedBoard();
-        newBoard[coord.y][coord.x] = value;
-        return map(this, newBoard);
     }
 
     public tryToGetPieceAt(coord: Coord): MGPOptional<P> {

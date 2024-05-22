@@ -8,6 +8,8 @@ import { MCTS } from 'src/app/jscaip/AI/MCTS';
 import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 import { NewGameMoveGenerator } from './NewGameMoveGenerator';
 import { NewGameMinimax } from './NewGameMinimax';
+import { MGPOptional } from '@everyboard/lib';
+import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 
 /**
  * This is an Angular directive to specify that this is a component of the app.
@@ -43,11 +45,11 @@ export class NewGameComponent extends GameComponent<NewGameRules,
         ];
         this.encoder = NewGameMove.encoder;
 
-        // If the board you draw must be rotated of 180° when you play the second player, enable the following:
-        // this.hasAsymmetricBoard = true;
+        // If the board you draw must not be rotated of 180° when you play the second player, disable the following:
+        this.hasAsymmetricBoard = true;
 
-        // If your game has scores in-game, enable the following:
-        // this.scores = MGPOptional.of([0, 0]);
+        // If your game has no scores in-game, disable the following:
+        this.scores = MGPOptional.of(PlayerNumberMap.of(0, 0));
     }
 
     /**

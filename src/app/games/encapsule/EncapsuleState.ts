@@ -48,9 +48,11 @@ export class EncapsuleSpace {
                        public readonly big: PlayerOrNone)
     {
     }
+
     public isEmpty(): boolean {
-        return this.small === PlayerOrNone.NONE && this.medium === PlayerOrNone.NONE && this.big === PlayerOrNone.NONE;
+        return this.small.isNone() && this.medium.isNone() && this.big.isNone();
     }
+
     public toList(): EncapsulePiece[] {
         const l: EncapsulePiece[] = [];
         if (this.small.isPlayer()) l.push(EncapsulePiece.ofSizeAndPlayer(Size.SMALL, this.small));
@@ -58,12 +60,14 @@ export class EncapsuleSpace {
         if (this.big.isPlayer()) l.push(EncapsulePiece.ofSizeAndPlayer(Size.BIG, this.big));
         return l;
     }
+
     public toOrderedPieceNames(): string[] {
         const smallPiece: EncapsulePiece = EncapsulePiece.ofSizeAndPlayer(Size.SMALL, this.small);
         const mediumPiece: EncapsulePiece = EncapsulePiece.ofSizeAndPlayer(Size.MEDIUM, this.medium);
         const bigPiece: EncapsulePiece = EncapsulePiece.ofSizeAndPlayer(Size.BIG, this.big);
         return [smallPiece.toString(), mediumPiece.toString(), bigPiece.toString()];
     }
+
     public getBiggest(): EncapsulePiece {
         if (this.big === Player.ZERO) return EncapsulePiece.BIG_DARK;
         if (this.big === Player.ONE) return EncapsulePiece.BIG_LIGHT;
@@ -73,6 +77,7 @@ export class EncapsuleSpace {
         if (this.small === Player.ONE) return EncapsulePiece.SMALL_LIGHT;
         return EncapsulePiece.NONE;
     }
+
     public tryToSuperposePiece(piece: EncapsulePiece): MGPOptional<EncapsuleSpace> {
         const biggestPresent: Size = this.getBiggest().getSize();
         if (piece === EncapsulePiece.NONE) {
@@ -84,6 +89,7 @@ export class EncapsuleSpace {
             return MGPOptional.empty();
         }
     }
+
     public removeBiggest(): {removedSpace: EncapsuleSpace, removedPiece: EncapsulePiece} {
         const removedPiece: EncapsulePiece = this.getBiggest();
         if (removedPiece === EncapsulePiece.NONE) {
@@ -104,6 +110,7 @@ export class EncapsuleSpace {
         }
         return { removedSpace: removedSpace, removedPiece };
     }
+
     public put(piece: EncapsulePiece): EncapsuleSpace {
         if (piece === EncapsulePiece.NONE) throw new Error('Cannot put NONE on space');
         const piecePlayer: PlayerOrNone = piece.getPlayer();
@@ -112,18 +119,20 @@ export class EncapsuleSpace {
             case Size.BIG:
                 return new EncapsuleSpace(this.small, this.medium, piecePlayer);
             case Size.MEDIUM:
-                Utils.assert(this.big === PlayerOrNone.NONE, 'Cannot put a piece on top of a bigger one');
+                Utils.assert(this.big.isNone(), 'Cannot put a piece on top of a bigger one');
                 return new EncapsuleSpace(this.small, piecePlayer, this.big);
             default:
                 Utils.expectToBe(size, Size.SMALL);
-                Utils.assert(this.big === PlayerOrNone.NONE, 'Cannot put a piece on top of a bigger one');
-                Utils.assert(this.medium === PlayerOrNone.NONE, 'Cannot put a piece on top of a bigger one');
+                Utils.assert(this.big.isNone(), 'Cannot put a piece on top of a bigger one');
+                Utils.assert(this.medium.isNone(), 'Cannot put a piece on top of a bigger one');
                 return new EncapsuleSpace(piecePlayer, this.medium, this.big);
         }
     }
+
     public belongsTo(player: Player): boolean {
         return this.getBiggest().getPlayer() === player;
     }
+
     public toString(): string {
         const pieceNames: string[] = this.toOrderedPieceNames();
         return '(' + pieceNames[0] + ', ' + pieceNames[1] + ', ' + pieceNames[2] + ')';

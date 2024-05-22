@@ -30,24 +30,24 @@ describe('PenteComponent', () => {
         // When clicking on an empty state
         // Then a move should be done
         const move: PenteMove = PenteMove.of(new Coord(4, 2));
-        await testUtils.expectMoveSuccess('#click_4_2', move);
+        await testUtils.expectMoveSuccess('#click-4-2', move);
     }));
 
     it('should forbid dropping on a piece already on the board', fakeAsync(async() => {
         // Given a state
         // When clicking on square with a piece
-        // Then the move should fail
+        // Then it should fail
         const move: PenteMove = PenteMove.of(new Coord(9, 9));
-        await testUtils.expectMoveFailure('#click_9_9', RulesFailure.MUST_CLICK_ON_EMPTY_SQUARE(), move);
+        await testUtils.expectMoveFailure('#click-9-9', RulesFailure.MUST_CLICK_ON_EMPTY_SQUARE(), move);
     }));
 
     it('should show last move', fakeAsync(async() => {
         // Given a state
         // When doing a move
         const move: PenteMove = PenteMove.of(new Coord(4, 2));
-        await testUtils.expectMoveSuccess('#click_4_2', move);
+        await testUtils.expectMoveSuccess('#click-4-2', move);
         // Then it should show the last move
-        testUtils.expectElementToHaveClass('#piece_4_2', 'last-move-stroke');
+        testUtils.expectElementToHaveClass('#piece-4-2', 'last-move-stroke');
     }));
 
     it('should show captures along with last move', fakeAsync(async() => {
@@ -77,13 +77,13 @@ describe('PenteComponent', () => {
 
         // When doing the capture
         const move: PenteMove = PenteMove.of(new Coord(9, 6));
-        await testUtils.expectMoveSuccess('#click_9_6', move);
+        await testUtils.expectMoveSuccess('#click-9-6', move);
 
         // Then it should show it
-        testUtils.expectElementToExist('#capture_9_8');
-        testUtils.expectElementToExist('#capture_9_7');
-        testUtils.expectElementNotToExist('#capture_9_6');
-        testUtils.expectElementToHaveClass('#piece_9_6', 'last-move-stroke');
+        testUtils.expectElementToExist('#capture-9-8');
+        testUtils.expectElementToExist('#capture-9-7');
+        testUtils.expectElementNotToExist('#capture-9-6');
+        testUtils.expectElementToHaveClass('#piece-9-6', 'last-move-stroke');
     }));
 
     it('should show victory', fakeAsync(async() => {
@@ -112,25 +112,25 @@ describe('PenteComponent', () => {
         // When displaying it
         await testUtils.setupState(state);
         // Then it should show the victory
-        testUtils.expectElementToHaveClass('#piece_9_9', 'victory-stroke');
-        testUtils.expectElementToHaveClass('#piece_10_9', 'victory-stroke');
-        testUtils.expectElementToHaveClass('#piece_11_9', 'victory-stroke');
-        testUtils.expectElementToHaveClass('#piece_12_9', 'victory-stroke');
-        testUtils.expectElementToHaveClass('#piece_13_9', 'victory-stroke');
+        testUtils.expectElementToHaveClass('#piece-9-9', 'victory-stroke');
+        testUtils.expectElementToHaveClass('#piece-10-9', 'victory-stroke');
+        testUtils.expectElementToHaveClass('#piece-11-9', 'victory-stroke');
+        testUtils.expectElementToHaveClass('#piece-12-9', 'victory-stroke');
+        testUtils.expectElementToHaveClass('#piece-13-9', 'victory-stroke');
     }));
 
     it('should show hoshis', fakeAsync(async() => {
         // Given a state
         // When displaying it
         // Then it should show the visible hoshis
-        testUtils.expectElementToExist('#hoshi_3_3');
-        testUtils.expectElementToExist('#hoshi_3_9');
-        testUtils.expectElementToExist('#hoshi_3_15');
-        testUtils.expectElementToExist('#hoshi_9_3');
-        testUtils.expectElementToExist('#hoshi_9_9');
-        testUtils.expectElementToExist('#hoshi_9_15');
-        testUtils.expectElementToExist('#hoshi_15_3');
-        testUtils.expectElementToExist('#hoshi_15_9');
-        testUtils.expectElementToExist('#hoshi_15_15');
+        testUtils.expectElementToExist('#hoshi-3-3');
+        testUtils.expectElementToExist('#hoshi-3-9');
+        testUtils.expectElementToExist('#hoshi-3-15');
+        testUtils.expectElementToExist('#hoshi-9-3');
+        testUtils.expectElementToExist('#hoshi-9-9');
+        testUtils.expectElementToExist('#hoshi-9-15');
+        testUtils.expectElementToExist('#hoshi-15-3');
+        testUtils.expectElementToExist('#hoshi-15-9');
+        testUtils.expectElementToExist('#hoshi-15-15');
     }));
 });
