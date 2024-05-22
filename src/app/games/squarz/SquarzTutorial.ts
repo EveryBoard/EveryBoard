@@ -61,7 +61,7 @@ export class SquarzTutorial extends Tutorial {
                 }
             },
             TutorialStepMessage.CONGRATULATIONS(),
-        ).withPreviousMove(SquarzMove.from(new Coord(0, 0), new Coord(1, 1)).get()),
+        ),
 
         TutorialStep.fromPredicate(
             $localize`Captures`,
@@ -85,7 +85,7 @@ export class SquarzTutorial extends Tutorial {
                 }
             },
             TutorialStepMessage.CONGRATULATIONS(),
-        ).withPreviousMove(SquarzMove.from(new Coord(1, 1), new Coord(3, 3)).get()),
+        ),
 
         TutorialStep.fromPredicate(
             $localize`End of the game`,
@@ -109,7 +109,7 @@ export class SquarzTutorial extends Tutorial {
                 }
             },
             TutorialStepMessage.CONGRATULATIONS_YOU_WON(),
-        ).withPreviousMove(SquarzMove.from(new Coord(1, 1), new Coord(3, 3)).get()),
+        ),
 
     ];
 
