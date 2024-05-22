@@ -44,7 +44,7 @@ describe('CoerceoComponent', () => {
             // Given a board with zero tiles
             // When rendering it
             // Then it should not have a tile count
-            testUtils.expectElementNotToExist('#tiles-count-PLAYER_ZERO ');
+            testUtils.expectElementNotToExist('#tiles-count-PLAYER_ZERO');
         }));
 
         it('should show tile when there is more than zero', fakeAsync(async() => {
@@ -56,7 +56,7 @@ describe('CoerceoComponent', () => {
             await testUtils.setupState(state);
 
             // THen it should not have a tile count
-            testUtils.expectElementToExist('#tiles-count-PLAYER_ZERO ');
+            testUtils.expectElementToExist('#tiles-count-PLAYER_ZERO');
         }));
 
         it('should show removed tiles, and captured piece (after tiles exchange)', fakeAsync(async() => {

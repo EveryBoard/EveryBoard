@@ -1,16 +1,16 @@
 :root {
-    --alt-alt-background-fill: dimgray;
-    --alt-background-fill: gray;
+    --alt-alt-background-fill: #AAA;
+    --alt-background-fill: #666;
     --alt-captured: #990000;
-    --base-stroke: black;
-    --background-fill: lightgrey;
-    --capturable: yellow;
+    --base-stroke: #444;
+    --background-fill: #888;
+    --capturable: #990;
     --captured: red;
-    --clickable: yellow;
+    --clickable: #990;
     --disabled-tab-color: grey;
     --indicator: green;
-    --last-move: yellow;
-    --moved: gray;
+    --last-move: #990;
+    --moved: #AAA;
     --nonplayer: #005500;
     --nonplayer-light: #007700;
     --player0: #994d00;
@@ -18,32 +18,87 @@
     --player1: #ffc34d;
     --player1-alternate: #ffe19b;
     --pre-captured: pink;
-    --selectable: yellow;
+    --selectable: green;
     --selected: #99E;
-    --spaces-fill: lightgrey;
-    --tab-highlight-on-hover: #dbdbdb;
-    --victory: yellow;
+    --spaces-fill: #888;
+    --tab-highlight-on-hover: #4a4a4a;
+    --victory: green;
     --defeat: red;
 }
 
-$primary: #ffc34d;
-$footer-padding:2rem 1rem 2rem;
-@import "../../node_modules/bulmaswatch/default/bulmaswatch.scss";
+$primary: #994d00;
+$yellow: #b38f00;
+$red: darkred;
+$red-invert: white;
+$footer-padding:1rem;
+@import "../../node_modules/bulmaswatch/cyborg/bulmaswatch.scss";
 @import "../../node_modules/@creativebulma/bulma-tooltip/dist/bulma-tooltip.css";
 @import "./mystyles.scss";
 
-.button {
-    // Fix for the following bug: https://github.com/jgthms/bulma/issues/3471
-    justify-content: center;
+.hero {
+    background-color: #000;
+}
+
+.select select {
+    background-color: #111;
+    border-color: #363636;
+    color: #fff;
+}
+.input {
+    background-color: #111;
+    border-color: #363636;
+    color: #fff;
+}
+
+.message.is-primary .message-body {
+    color: #fff;
+}
+
+.message {
+  background-color: $background;
+  border-radius: $radius;
+  font-size: $size-normal;
+  // Colors
+  @each $name, $pair in $colors {
+    $color: nth($pair, 1);
+    $color-invert: nth($pair, 2);
+    $color-lightning: max((100% - lightness($color)) - 3%, 0%);
+    $color-luminance: colorLuminance($color);
+    $darken-percentage: $color-luminance * 70%;
+    $desaturate-percentage: $color-luminance * 30%;
+
+    &.is-#{$name} {
+      background-color: darken($color, $color-lightning);
+
+      .message-header {
+        background-color: $color;
+        color: $color-invert;
+      }
+
+      .message-body {
+        border-color: $color;
+        color: $color-invert;
+      }
+    }
+  }
 }
 
 .modal-card-head, .is-primary {
     background-color: $primary;
 }
 
-.has-text-passive {
-    color: #AAA;
+.button.is-primary.is-light {
+    color: white;
 }
+
+.button[disabled], fieldset[disabled] .button {
+    background-color: #111;
+}
+
+.has-text-passive {
+    color: #555;
+}
+
 /* Show the page only after the CSS has been loaded */
 html, body {
     display: block;

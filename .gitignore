@@ -30,13 +30,24 @@
 /.angular/cache
 /.sass-cache
 /connect.lock
+/typings
+*.log
+
+# MGP
+
 /coverage
 ! /coverage/branches.csv
 ! /coverage/functions.csv
 ! /coverage/statements.csv
 ! /coverage/lines.csv
-/typings
-*.log
+games.txt
+/lib/tsconfig.tsbuildinfo
+/lib/build
+/lib/node_modules
+/lib/dist
+/lib/.nyc_output
+/lib/coverage
+*.tmp
 
 # System Files
 .DS_Store
@@ -47,10 +58,5 @@ Thumbs.db
 
 # Local Netlify folder
 .netlify
-/lib/tsconfig.tsbuildinfo
-/lib/build
-/lib/node_modules
-/lib/dist
-/lib/.nyc_output
-/lib/coverage
+
 .nx/

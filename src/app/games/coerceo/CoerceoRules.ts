@@ -56,6 +56,7 @@ export class CoerceoRules extends ConfigurableRules<CoerceoMove, CoerceoState, C
                 [_, _, _, X, _, X, _, _, _],
                 [_, _, X, _, _, _, X, _, _],
                 [N, N, N, X, _, X, N, N, N],
+                [N, N, N, N, N, N, N, N, N],
             ];
         } else {
             board = [
@@ -127,16 +128,11 @@ export class CoerceoRules extends ConfigurableRules<CoerceoMove, CoerceoState, C
     }
 
     public override isLegal(move: CoerceoMove, state: CoerceoState): MGPValidation {
-        this.assertMoveValidity(state);
         if (CoerceoMove.isTileExchange(move)) {
             return this.isLegalTileExchange(move, state);
         } else {
             return this.isLegalMovement(move, state);
         }
-    }
-
-    private assertMoveValidity(state: CoerceoState): void {
-
     }
 
     public isLegalTileExchange(move: CoerceoTileExchangeMove, state: CoerceoState): MGPValidation {

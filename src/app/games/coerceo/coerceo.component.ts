@@ -196,7 +196,7 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
     }
 
     public getTilesCountCoordinate(): string {
-        const bx: number = -40; const by: number = -40;
+        const bx: number = 0; const by: number = 0;
         const corner0x: number = bx + 25; const corner0y: number = by;
         const corner1x: number = bx + 75; const corner1y: number = by;
         const corner2x: number = bx + 100; const corner2y: number = by + 50;
@@ -248,29 +248,35 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
         let x: number;
         let y: number;
         if (player === Player.ZERO) {
-            x = +0.40;
-            y = +0.40;
+            x = 0;
+            y = 0;
         } else {
-            x = 8;
-            y = 10;
+            x = this.getWidth() - this.SPACE_SIZE;
+            y = this.getHeight() - this.SPACE_SIZE;
         }
-        x = this.SPACE_SIZE * x;
-        y = this.SPACE_SIZE * y;
         return 'translate(' + x + ', ' + y + ')';
     }
 
     public getViewBox(): ViewBox {
         const left: number = 0;
         const up: number = 0;
-        const abstractWidth: number = this.getState().getWidth();
-        const abstractHeight: number = this.getState().getHeight();
+        const width: number = this.getWidth();
+        const height: number = this.getHeight();
         const halfStroke: number = this.STROKE_WIDTH / 2;
-        const verticalInterPiecesSum: number = (abstractHeight - 2) * this.STROKE_WIDTH;
-        const blockWidth: number = abstractWidth / 3; // The number of hexagonal block horizontally
-        const horizontalInterPiecesSum: number = 2 * (blockWidth - 1) * this.STROKE_WIDTH;
-        const width: number = (this.SPACE_SIZE * (0.5 * (abstractWidth + 1))) + horizontalInterPiecesSum;
-        const height: number = this.SPACE_SIZE * abstractHeight + verticalInterPiecesSum;
         return new ViewBox(left, up, width, height).expandAll(halfStroke);
+    }
+
+    private getWidth(): number {
+        const abstractWidth: number = this.getState().getWidth();
+        const blockWidth: number = abstractWidth / 3; // The number of hexagonal blocks horizontally
+        const horizontalInterPiecesSum: number = 2 * (blockWidth - 1) * this.STROKE_WIDTH;
+        return (this.SPACE_SIZE * (0.5 * (abstractWidth + 1))) + horizontalInterPiecesSum;
+    }
+
+    private getHeight(): number {
+        const abstractHeight: number = this.getState().getHeight();
+        const verticalInterPiecesSum: number = (abstractHeight - 2) * this.STROKE_WIDTH;
+        return this.SPACE_SIZE * abstractHeight + verticalInterPiecesSum;
     }
 
     public getTilesCountClasses(player: Player): string[] {

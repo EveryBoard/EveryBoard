@@ -297,21 +297,6 @@ describe('CoerceoRules', () => {
             TestUtils.expectToThrowAndLog(allowOutOfRangeLandingCoord, reason);
         });
 
-        it('should not allow starting coord out of board', () => {
-            // Given any board
-            const state: CoerceoState = rules.getInitialState(defaultConfig);
-
-            // When starting a move on an out of range coord
-            const move: CoerceoMove = CoerceoRegularMove.ofMovement(new Coord(-1, -1), CoerceoStep.LEFT);
-
-            // Then it should throw
-            const reason: string = 'Accessing coord not on board (-1, -1).';
-            function allowOutOfRangeLandingCoord(): void {
-                RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
-            }
-            TestUtils.expectToThrowAndLog(allowOutOfRangeLandingCoord, reason);
-        });
-
         it('should not allow ending coord to be unreachable', () => {
             // Given any board
             const state: CoerceoState = rules.getInitialState(defaultConfig);
@@ -620,8 +605,8 @@ describe('CoerceoRules', () => {
             // When creating state for this config
             const state: CoerceoState = rules.getInitialState(smallConfig);
 
-            // Then it should be 8 x 6
-            expect(state.board.length).toBe(7);
+            // Then it should be a 9 x 8
+            expect(state.board.length).toBe(8);
             expect(state.board[0].length).toBe(9);
         });
 

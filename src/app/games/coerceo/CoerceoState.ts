@@ -199,7 +199,7 @@ export class CoerceoState extends TriangularGameState<FourStatePiece> {
         const legalLandings: Coord[] = [];
         for (const step of CoerceoStep.STEPS) {
             const landing: Coord = coord.getNext(step.direction, 1);
-            if (this.has(landing, FourStatePiece.EMPTY)) {
+            if (this.hasPieceAt(landing, FourStatePiece.EMPTY)) {
                 legalLandings.push(landing);
             }
         }

@@ -28,7 +28,7 @@ export abstract class GameStateWithTable<P extends NonNullable<Comparable>> exte
         return this.board[coord.y][coord.x];
     }
 
-    public has(coord: Coord, value: P): boolean {
+    public hasPieceAt(coord: Coord, value: P): boolean {
         return this.isOnBoard(coord) &&
                comparableEquals(this.getPieceAt(coord), value);
     }
