@@ -33,7 +33,6 @@
     <g *ngFor="let layer of layers; index as z">
         <g *ngFor="let pieceInfo of layer">
             <g id="piece-{{ pieceInfo.x }}-{{ pieceInfo.y }}-{{ z }}"
-               class="test"
                app-hive-piece
                [attr.transform]="getHexaCenterTranslationAtXY(pieceInfo.x, pieceInfo.y)"
                [piece]="pieceInfo.content.piece"
@@ -58,18 +57,17 @@
     </g>
     <g *ngFor="let stack of remainingStacks">
         <g *ngFor="let piece of stack.pieces; index as z"
-            [attr.transform]="getHexaCenterTranslationAtXY(0, 0)">
-            <g id="remaining-piece-{{ piece.toString() }}-{{ z }}"
-               app-hive-piece
-               [attr.transform]="getRemainingPieceTransform(piece)"
-               [piece]="piece"
-               [pieceHeight]="PIECE_HEIGHT"
-               [x]="0"
-               [y]="0"
-               [layer]="z"
-               [hexaLayout]="hexaLayout"
-               (click)="selectRemaining(piece, z)"/>
-        </g>
+            [attr.transform]="getHexaCenterTranslationAtXY(0, 0)"
+            id="remaining-piece-{{ piece.toString() }}-{{ z }}"
+            app-hive-piece
+            [attr.transform]="getRemainingPieceTransform(piece)"
+            [piece]="piece"
+            [pieceHeight]="PIECE_HEIGHT"
+            [x]="0"
+            [y]="0"
+            [layer]="z"
+            [hexaLayout]="hexaLayout"
+            (click)="selectRemaining(piece, z)"/>
     </g>
     <g [attr.transform]="getHexaCenterTranslation(ORIGIN)">
         <polygon *ngIf="selectedRemaining.isPresent()"

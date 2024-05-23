@@ -159,12 +159,15 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
             await finishTest();
         }));
         it('StartGame should replace PartCreationComponent by game component', fakeAsync(async() => {
+            // Given a online-game-wrapper page starting a game
             await prepareComponent(ConfigRoomMocks.withAcceptedConfig(MGPOptional.empty()), PartMocks.INITIAL);
             testUtils.detectChanges();
             tick(0);
 
+            // When the game is started
             testUtils.detectChanges();
 
+            // Then the game should be started, the part creation is not there anymore, and the game is present
             expect(wrapper.gameStarted).withContext('game should be started').toBeTrue();
             testUtils.expectElementNotToExist('#partCreation');
             testUtils.expectElementToExist('#game');

@@ -78,15 +78,23 @@ describe('MGPSet', () => {
     describe('clear', () => {
 
         it('should remove all elements from a set', () => {
+            // Given a set
             const set: MGPSet<number> = new MGPSet([1, 2]);
+            // When clearing it
             set.clear();
+            // Then it should be empty
             expect(set.equals(new MGPSet())).toBeTrue();
+            expect(set.size()).toBe(0);
         });
 
         it('should not fail on the empty set', () => {
+            // Given a set
             const set: MGPSet<number> = new MGPSet();
+            // When clearing it
             set.clear();
+            // Then it should be empty
             expect(set.equals(new MGPSet())).toBeTrue();
+            expect(set.size()).toBe(0);
         });
     });
 
