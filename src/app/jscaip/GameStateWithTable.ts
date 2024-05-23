@@ -75,10 +75,12 @@ export abstract class GameStateWithTable<P extends NonNullable<Comparable>> exte
         for (let y: number = 0; y < this.getHeight(); y++) {
             for (let x: number = 0; x < this.board[y].length; x++) {
                 const coord: Coord = new Coord(x, y);
-                coordsAndContents.push({
-                    coord,
-                    content: this.getPieceAt(coord),
-                });
+                if (this.isOnBoard(coord)) { // Could be overriden for unreachable coords
+                    coordsAndContents.push({
+                        coord,
+                        content: this.getPieceAt(coord),
+                    });
+                }
             }
         }
         return coordsAndContents;

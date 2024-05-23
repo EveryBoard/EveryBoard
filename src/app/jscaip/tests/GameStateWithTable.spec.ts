@@ -1,4 +1,5 @@
 /* eslint-disable max-lines-per-function */
+import { TestUtils } from 'lib/dist';
 import { Coord } from '../Coord';
 import { GameStateWithTable } from '../GameStateWithTable';
 
@@ -9,7 +10,10 @@ describe('GameStateWithTable', () => {
 
     it('should throw when calling getPieceAt with out of board coord', () => {
         const state: MyGameState = new MyGameState([[]], 0);
-        expect(() => state.getPieceAtXY(0, 0)).toThrowError('Accessing coord not on board (0, 0).');
+        TestUtils.expectToThrowAndLog(
+            () => state.getPieceAtXY(0, 0),
+            'Accessing coord not on board (0, 0).',
+        );
     });
 
     describe('getCoordsAndContents', () => {

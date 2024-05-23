@@ -5,9 +5,6 @@
     stroke-linecap: butt;
     stroke-linejoin: round;
 }
-.big-stroke {
-    stroke-width: 12;
-}
 .manual-stroke {
     stroke-width: 0;
 }
@@ -172,6 +169,9 @@
 }
 .big-stroke {
     stroke-width: 8;
+}
+.huge-stroke {
+    stroke-width: 12;
 }
 .semi-transparent {
     fill-opacity: 0.5;
