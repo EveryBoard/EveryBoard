@@ -100,8 +100,7 @@ describe('KalahComponent', () => {
 
             it('should feed the Kalah during animation', fakeAsync(async() => {
                 // Given a board where a distribution pass by the Kalah
-                const element: DebugElement = mancalaTestUtils.testUtils.findElement('#click_1_1');
-                expect(element).withContext('Element "#click_1_1" should exist').toBeTruthy();
+                const element: DebugElement = mancalaTestUtils.testUtils.findElement('#click-1-1');
                 element.triggerEventHandler('click', null);
                 tick(MancalaComponent.TIMEOUT_BETWEEN_SEEDS);
                 mancalaTestUtils.expectStoreContentToBe(Player.ZERO, ' 0 ');
@@ -111,18 +110,18 @@ describe('KalahComponent', () => {
 
                 // Then the next fed house should be the Kalah
                 mancalaTestUtils.expectStoreContentToBe(Player.ZERO, ' 1 ', ' +1 ');
-                mancalaTestUtils.testUtils.expectElementToHaveClass('#circle_-1_-1', 'moved-stroke');
+                mancalaTestUtils.testUtils.expectElementToHaveClass('#circle--1--1', 'moved-stroke');
                 tick(3 * MancalaComponent.TIMEOUT_BETWEEN_SEEDS);
             }));
 
             it('should feed the Kalah twice during animation of double-distribution-move', fakeAsync(async() => {
                 // Given a board where a first distribution has been done and the second started
                 await mancalaTestUtils.expectMancalaClickSuccess(new Coord(3, 1));
-                const element: DebugElement = mancalaTestUtils.testUtils.findElement('#click_0_1');
+                const element: DebugElement = mancalaTestUtils.testUtils.findElement('#click-0-1');
                 element.triggerEventHandler('click', null);
                 mancalaTestUtils.expectStoreContentToBe(Player.ZERO, ' 1 ', ' +1 ');
 
-                // When waiting for the first sub-move (in Kalah) to happend
+                // When waiting for the first sub-move (in Kalah) to happen
                 tick(MancalaComponent.TIMEOUT_BETWEEN_SEEDS);
 
                 // Then the Kalah should be fed a second time
@@ -161,7 +160,7 @@ describe('KalahComponent', () => {
                 await mancalaTestUtils.testUtils.setupState(state);
 
                 // When distributing the house
-                mancalaTestUtils.testUtils.findElement('#click_2_1').triggerEventHandler('click', null);
+                mancalaTestUtils.testUtils.findElement('#click-2-1').triggerEventHandler('click', null);
                 // and waiting for the time where the seed is to be dropped in the original house
                 tick(13 * MancalaComponent.TIMEOUT_BETWEEN_SEEDS);
 
@@ -173,11 +172,11 @@ describe('KalahComponent', () => {
             it('should hide capture of previous turn in opponent store (animation)', fakeAsync(async() => {
                 // Given a state where there has been a point-won last turn
                 const moveZero: MancalaMove = mancalaTestUtils.testUtils.getGameComponent().generateMove(0);
-                await mancalaTestUtils.expectMancalaMoveSuccess('#click_0_1', moveZero, defaultConfig.get());
+                await mancalaTestUtils.expectMancalaMoveSuccess('#click-0-1', moveZero, defaultConfig.get());
                 mancalaTestUtils.expectStoreContentToBe(Player.ZERO, ' 1 ', ' +1 ');
 
                 // When starting the second turn
-                const element: DebugElement = mancalaTestUtils.testUtils.findElement('#click_0_0');
+                const element: DebugElement = mancalaTestUtils.testUtils.findElement('#click-0-0');
                 element.triggerEventHandler('click', null);
                 tick(0); // Just start the click effect but we don't need to wait any window.setTimeout
 
@@ -196,11 +195,11 @@ describe('KalahComponent', () => {
             // Then it should already been displayed
             mancalaTestUtils.expectHouseToContain(new Coord(2, 1), ' 5 ', ' +1 ');
             // and the chosen coord should be visible already
-            mancalaTestUtils.testUtils.expectElementToHaveClasses('#circle_3_1', ['base', 'last-move-stroke', 'player0-fill']);
+            mancalaTestUtils.testUtils.expectElementToHaveClasses('#circle-3-1', ['base', 'last-move-stroke', 'player0-fill']);
             // The filled spaces
-            mancalaTestUtils.testUtils.expectElementToHaveClasses('#circle_2_1', ['base', 'moved-stroke', 'player0-fill']);
-            mancalaTestUtils.testUtils.expectElementToHaveClasses('#circle_1_1', ['base', 'moved-stroke', 'player0-fill']);
-            mancalaTestUtils.testUtils.expectElementToHaveClasses('#circle_0_1', ['base', 'moved-stroke', 'player0-fill']);
+            mancalaTestUtils.testUtils.expectElementToHaveClasses('#circle-2-1', ['base', 'moved-stroke', 'player0-fill']);
+            mancalaTestUtils.testUtils.expectElementToHaveClasses('#circle-1-1', ['base', 'moved-stroke', 'player0-fill']);
+            mancalaTestUtils.testUtils.expectElementToHaveClasses('#circle-0-1', ['base', 'moved-stroke', 'player0-fill']);
         }));
 
         it('should allow double distribution move', fakeAsync(async() => {
@@ -209,7 +208,7 @@ describe('KalahComponent', () => {
             // When doing double distribution move
             const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(3), [MancalaDistribution.of(0)]);
             // Then it should be a success
-            await mancalaTestUtils.expectMancalaMoveSuccess('#click_0_1', move, defaultConfig.get());
+            await mancalaTestUtils.expectMancalaMoveSuccess('#click-0-1', move, defaultConfig.get());
         }));
 
         it('should hide last move when doing illegal click during complex move', fakeAsync(async() => {
@@ -218,7 +217,7 @@ describe('KalahComponent', () => {
 
             // When doing an illegal click
             const reason: string = MancalaFailure.MUST_CHOOSE_NON_EMPTY_HOUSE();
-            await mancalaTestUtils.testUtils.expectClickFailure('#click_3_1', reason);
+            await mancalaTestUtils.testUtils.expectClickFailure('#click-3-1', reason);
 
             // Then the last move should be hidden
             mancalaTestUtils.expectHouseToContain(new Coord(3, 1), ' 4 ');
@@ -226,12 +225,12 @@ describe('KalahComponent', () => {
             mancalaTestUtils.expectHouseToContain(new Coord(1, 1), ' 4 ');
             mancalaTestUtils.expectHouseToContain(new Coord(0, 1), ' 4 ');
             mancalaTestUtils.expectStoreContentToBe(Player.ZERO, ' 0 ');
-            mancalaTestUtils.testUtils.expectElementToHaveClasses('#circle_3_1', ['base', 'player0-fill']);
+            mancalaTestUtils.testUtils.expectElementToHaveClasses('#circle-3-1', ['base', 'player0-fill']);
             // The filled spaces
-            mancalaTestUtils.testUtils.expectElementToHaveClasses('#circle_2_1', ['base', 'player0-fill']);
-            mancalaTestUtils.testUtils.expectElementToHaveClasses('#circle_1_1', ['base', 'player0-fill']);
-            mancalaTestUtils.testUtils.expectElementToHaveClasses('#circle_0_1', ['base', 'player0-fill']);
-            mancalaTestUtils.testUtils.expectElementToHaveClasses('#circle_-1_-1', ['base', 'player0-fill']);
+            mancalaTestUtils.testUtils.expectElementToHaveClasses('#circle-2-1', ['base', 'player0-fill']);
+            mancalaTestUtils.testUtils.expectElementToHaveClasses('#circle-1-1', ['base', 'player0-fill']);
+            mancalaTestUtils.testUtils.expectElementToHaveClasses('#circle-0-1', ['base', 'player0-fill']);
+            mancalaTestUtils.testUtils.expectElementToHaveClasses('#circle--1--1', ['base', 'player0-fill']);
         }));
 
         it('should allow triple distribution move (player one)', fakeAsync(async() => {
@@ -249,7 +248,7 @@ describe('KalahComponent', () => {
                                                      [MancalaDistribution.of(4), MancalaDistribution.of(1)]);
 
             // Then the move should be legal
-            await mancalaTestUtils.expectMancalaMoveSuccess('#click_1_0', move, defaultConfig.get());
+            await mancalaTestUtils.expectMancalaMoveSuccess('#click-1-0', move, defaultConfig.get());
         }));
 
         it('should allow triple distribution move (player zero)', fakeAsync(async() => {
@@ -267,7 +266,7 @@ describe('KalahComponent', () => {
                                                      [MancalaDistribution.of(0), MancalaDistribution.of(5)]);
 
             // Then the move should be legal
-            await mancalaTestUtils.expectMancalaMoveSuccess('#click_5_1', move, defaultConfig.get());
+            await mancalaTestUtils.expectMancalaMoveSuccess('#click-5-1', move, defaultConfig.get());
         }));
 
         it('should hide previous capture when starting multiple distribution move', fakeAsync(async() => {
@@ -290,14 +289,14 @@ describe('KalahComponent', () => {
             await mancalaTestUtils.expectMancalaClickSuccess(new Coord(2, 0));
 
             // Then the capture should no longer be displayed
-            mancalaTestUtils.testUtils.expectElementNotToHaveClass('#circle_1_1', 'captured-fill');
-            mancalaTestUtils.testUtils.expectElementNotToHaveClass('#circle_1_0', 'captured-fill');
+            mancalaTestUtils.testUtils.expectElementNotToHaveClass('#circle-1-1', 'captured-fill');
+            mancalaTestUtils.testUtils.expectElementNotToHaveClass('#circle-1-0', 'captured-fill');
         }));
 
         it('should get back to original board when taking back move', fakeAsync(async() => {
             // Given a board where a first move has been done
             const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(0));
-            await mancalaTestUtils.expectMancalaMoveSuccess('#click_0_1', move, defaultConfig.get());
+            await mancalaTestUtils.expectMancalaMoveSuccess('#click-0-1', move, defaultConfig.get());
 
             // When taking back
             await mancalaTestUtils.testUtils.expectInterfaceClickSuccess('#takeBack');
@@ -335,17 +334,17 @@ describe('KalahComponent', () => {
             const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(0));
 
             // Then that normally-illegal move should be accepted
-            await mancalaTestUtils.expectMancalaMoveSuccess('#click_0_1', move, defaultConfig.get());
+            await mancalaTestUtils.expectMancalaMoveSuccess('#click-0-1', move, defaultConfig.get());
         }));
 
         it('should hide capture of previous turn in opponent store (move)', fakeAsync(async() => {
             // Given a state where there has been a point-won last turn
             const moveZero: MancalaMove = mancalaTestUtils.testUtils.getGameComponent().generateMove(0);
-            await mancalaTestUtils.expectMancalaMoveSuccess('#click_0_1', moveZero, defaultConfig.get());
+            await mancalaTestUtils.expectMancalaMoveSuccess('#click-0-1', moveZero, defaultConfig.get());
             mancalaTestUtils.expectStoreContentToBe(Player.ZERO, ' 1 ', ' +1 ');
 
             // When doing second turn
-            await mancalaTestUtils.expectMancalaMoveSuccess('#click_0_0', moveZero, defaultConfig.get());
+            await mancalaTestUtils.expectMancalaMoveSuccess('#click-0-0', moveZero, defaultConfig.get());
 
             // Then the capture of last turn should be hidden
             mancalaTestUtils.expectStoreContentToBe(Player.ZERO, ' 1 '); // no longer +1

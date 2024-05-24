@@ -67,8 +67,8 @@ export class YinshComponent extends HexagonalGameComponent<YinshRules,
     private initialCaptures: YinshCapture[] = [];
     private finalCaptures: YinshCapture[] = [];
     private currentCapture: MGPOptional<YinshCapture> = MGPOptional.empty();
-    public selectedCoords: MGPSet<Coord> = new MGPSet();
-    public selectedRings: MGPSet<Coord> = new MGPSet();
+    public readonly selectedCoords: MGPSet<Coord> = new MGPSet();
+    public readonly selectedRings: MGPSet<Coord> = new MGPSet();
     private moveStart: MGPOptional<Coord> = MGPOptional.empty();
     private moveEnd: MGPOptional<Coord> = MGPOptional.empty();
     private currentlyMoved: Coord[] = [];

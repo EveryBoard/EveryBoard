@@ -62,10 +62,10 @@ describe('DemoCardComponent', () => {
         await loadNode({
             name: 'Lodestone',
             node: new LodestoneNode(LodestoneRules.get().getInitialState()),
-            click: MGPOptional.of('#lodestone_push_orthogonal_PLAYER_ZERO'),
+            click: MGPOptional.of('#lodestone-push-orthogonal-PLAYER_ZERO'),
         });
         // Then it should have performed a click
-        testUtils.expectElementToHaveClass('#lodestone_push_orthogonal_PLAYER_ZERO > g > .lodestone_main_circle', 'selected-stroke');
+        testUtils.expectElementToHaveClass('#lodestone-push-orthogonal-PLAYER_ZERO .lodestone-main-circle', 'selected-stroke');
     }));
 
     it('should not allow clicks', fakeAsync(async() => {
