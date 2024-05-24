@@ -44,7 +44,8 @@ export const clickableMethods: { [gameName: string]: { [methodName: string]: unk
         onClick: [new Coord(0, 0)],
     },
     Hive: {
-        selectSpace: [new Coord(0, 0), 'space'],
+        selectSpace: [0, 0],
+        selectPiece: [0, 0, 0],
         selectRemaining: [new HivePiece(Player.ZERO, 'QueenBee')],
     },
     Hnefatafl: { onClick: [0, 0] },
