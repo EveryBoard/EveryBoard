@@ -74,7 +74,7 @@ export abstract class TaflComponent<R extends TaflRules<M>, M extends TaflMove>
             const newLine: string[][] = [];
             for (let x: number = 0; x < this.getWidth(); x++) {
                 let newSpace: string[] = [];
-                if (this.board[y][x].getOwner() === PlayerOrNone.NONE) {
+                if (this.board[y][x].getOwner().isNone()) {
                     newSpace = [''];
                 } else {
                     newSpace = this.getPieceClasses(x, y);

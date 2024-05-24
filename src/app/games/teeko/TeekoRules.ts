@@ -80,7 +80,7 @@ export class TeekoRules extends ConfigurableRules<TeekoMove, TeekoState, TeekoCo
         const translatedPiece: PlayerOrNone = state.getPieceAt(move.getStart());
         if (translatedPiece === state.getCurrentOpponent()) {
             return MGPValidation.failure(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT());
-        } else if (translatedPiece === PlayerOrNone.NONE) {
+        } else if (translatedPiece.isNone()) {
             return MGPValidation.failure(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY());
         }
         if (state.getPieceAt(move.getEnd()).isPlayer()) {

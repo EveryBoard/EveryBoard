@@ -304,7 +304,7 @@ describe('TablutRules', () => {
         // When trying to sit on the king's throne
         const move: TablutMove = TablutMove.from(new Coord(0, 4), new Coord(4, 4)).get();
 
-        // Then the move should be illegal
+        // Then it should fail
         const reason: string = TaflFailure.SOLDIERS_CANNOT_SIT_ON_THRONE();
         RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
     });

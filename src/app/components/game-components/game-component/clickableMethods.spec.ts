@@ -109,6 +109,7 @@ export const clickableMethods: { [gameName: string]: { [methodName: string]: unk
         onPieceClick: [0, 0],
         onNeighborClick: [0, 0],
     },
+    Squarz: { onClick: [0, 0] },
     Tablut: { onClick: [0, 0] },
     Teeko: { onClick: [0, 0] },
     Trexo: {

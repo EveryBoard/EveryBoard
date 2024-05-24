@@ -196,7 +196,7 @@ describe('P4Rules', () => {
         // When playing on the full column
         const move: P4Move = P4Move.of(0);
 
-        // Then the move should be deemed illegal
+        // Then it should fail
         const reason: string = P4Failure.COLUMN_IS_FULL();
         RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
     });

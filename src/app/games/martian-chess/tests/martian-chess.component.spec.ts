@@ -125,7 +125,7 @@ describe('MartianChessComponent', () => {
         await testUtils.expectClickSuccess('#click_3_7');
 
         // When clicking on a fully illegal coord
-        // Then the move should be illegal
+        // Then it should fail
         const reason: string = RulesFailure.SOMETHING_IN_THE_WAY();
         const move: MartianChessMove = MartianChessMove.from(new Coord(3, 7), new Coord(0, 4)).get();
         await testUtils.expectMoveFailure('#click_0_4', reason, move);

@@ -61,7 +61,7 @@ describe('AbaloneRules', () => {
         // When moving one opponent piece
         const move: AbaloneMove = AbaloneMove.ofSingleCoord(new Coord(8, 1), HexaDirection.DOWN);
 
-        // Then the movement should be refused
+        // Then it should fail
         const reason: string = RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT();
         RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
     });
@@ -73,7 +73,7 @@ describe('AbaloneRules', () => {
         // When moving one empty space
         const move: AbaloneMove = AbaloneMove.ofSingleCoord(new Coord(4, 4), HexaDirection.DOWN);
 
-        // Then the movement should be refused
+        // Then it should fail
         const reason: string = RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY();
         RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
     });
@@ -119,7 +119,7 @@ describe('AbaloneRules', () => {
         // When moving four piece
         const move: AbaloneMove = AbaloneMove.ofSingleCoord(new Coord(1, 4), HexaDirection.RIGHT);
 
-        // Then the move should be forbidden
+        // Then it should fail
         const reason: string = AbaloneFailure.CANNOT_MOVE_MORE_THAN_THREE_PIECES();
         RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
     });
@@ -142,7 +142,7 @@ describe('AbaloneRules', () => {
         // When moving one piece against two
         const move: AbaloneMove = AbaloneMove.ofSingleCoord(new Coord(1, 4), HexaDirection.RIGHT);
 
-        // Then the move should be forbidden
+        // Then it should fail
         const reason: string = AbaloneFailure.NOT_ENOUGH_PIECE_TO_PUSH();
         RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
     });
@@ -165,7 +165,7 @@ describe('AbaloneRules', () => {
         // When moving two pieces against two
         const move: AbaloneMove = AbaloneMove.ofSingleCoord(new Coord(1, 4), HexaDirection.RIGHT);
 
-        // Then the move should be forbidden
+        // Then it should fail
         const reason: string = AbaloneFailure.NOT_ENOUGH_PIECE_TO_PUSH();
         RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
     });
@@ -188,7 +188,7 @@ describe('AbaloneRules', () => {
         // When moving 3 pieces against 1 but then you're own piece block
         const move: AbaloneMove = AbaloneMove.ofSingleCoord(new Coord(1, 4), HexaDirection.RIGHT);
 
-        // Then the move should be forbidden
+        // Then it should fail
         const reason: string = AbaloneFailure.CANNOT_PUSH_YOUR_OWN_PIECES();
         RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
     });
@@ -302,7 +302,7 @@ describe('AbaloneRules', () => {
         // When trying to move 3 pieces down whilst there is a blocking piece in the middle
         const move: AbaloneMove = AbaloneMove.ofDoubleCoord(new Coord(1, 4), new Coord(3, 4), HexaDirection.DOWN);
 
-        // Then the move should be forbidden
+        // Then it should fail
         const reason: string = AbaloneFailure.TRANSLATION_IMPOSSIBLE();
         RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
     });
@@ -325,7 +325,7 @@ describe('AbaloneRules', () => {
         // When trying to move 3 pieces down whilst there is a blocking piece in the middle
         const move: AbaloneMove = AbaloneMove.ofDoubleCoord(new Coord(1, 4), new Coord(3, 4), HexaDirection.DOWN);
 
-        // Then the move should be forbidden
+        // Then it should fail
         const reason: string = AbaloneFailure.MUST_ONLY_TRANSLATE_YOUR_PIECES();
         RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
     });

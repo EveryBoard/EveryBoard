@@ -1,6 +1,5 @@
 import { MoveGenerator } from 'src/app/jscaip/AI/AI';
 import { Coord } from 'src/app/jscaip/Coord';
-import { PlayerOrNone } from 'src/app/jscaip/Player';
 import { PentagoMove } from './PentagoMove';
 import { PentagoNode } from './PentagoRules';
 import { PentagoState } from './PentagoState';
@@ -46,7 +45,7 @@ export class PentagoMoveGenerator extends MoveGenerator<PentagoMove, PentagoStat
         for (let y: number = 0; y < PentagoState.SIZE; y++) {
             for (let x: number = 0; x < PentagoState.SIZE; x++) {
                 const coord: Coord = new Coord(x, y);
-                if (state.getPieceAt(coord) === PlayerOrNone.NONE) {
+                if (state.getPieceAt(coord).isNone()) {
                     legalDrops.push(coord);
                 }
             }
