@@ -4,8 +4,8 @@
  (modules Utils External
           TokenRefresher Jwt Auth GoogleCertificates Cors
           Firestore FirestorePrimitives
-          Game Domain ConfigRoom
-          Stats Server Options)
+          Domain GameEndpoint ConfigRoomEndpoint
+          Stats Server ServerUtils Options)
  (instrumentation (backend bisect_ppx))
  (preprocess (pps lwt_ppx ppx_deriving_yojson ppx_deriving.show)))
 
@@ -21,9 +21,8 @@
           UtilsTests ExternalTests
           TokenRefresherTests JwtTests AuthTests GoogleCertificatesTests CorsTests
           FirestoreTests FirestorePrimitivesTests
-          GameTests DomainTests ConfigRoomTests
-          StatsTests
-          IntegrationTests)
+          DomainTests GameEndpointTests ConfigRoomEndpointTests
+          StatsTests ServerUtilsTests)
  (preprocess (pps lwt_ppx ppx_deriving_yojson ppx_deriving.show))
  (libraries backend alcotest alcotest-lwt))
 

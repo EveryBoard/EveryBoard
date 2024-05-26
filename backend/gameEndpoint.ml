@@ -3,7 +3,7 @@ open DreamUtils
 open Domain
 
 (** The /game/ endpoint, dealing with ongoing games *)
-module type GAME = sig
+module type GAME_ENDPOINT = sig
     val routes : Dream.route list
 end
 
@@ -12,7 +12,7 @@ module Make
         (Auth : Auth.AUTH)
         (Firestore : Firestore.FIRESTORE)
         (Stats : Stats.STATS)
-    : GAME = struct
+    : GAME_ENDPOINT = struct
 
     let ( >>= ) = Result.bind (* for convenience *)
 

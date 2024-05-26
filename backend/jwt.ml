@@ -82,9 +82,14 @@ module Make (External : External.EXTERNAL) : JWT = struct
     let parse (token : string) : t option =
         match String.split_on_char '.' token |> List.map Dream.from_base64url  with
         | [Some header_json; Some payload_json; Some signature] ->
-            let header = JSON.from_string header_json in
-            let payload = JSON.from_string payload_json in
-            Some { header; payload; signature }
+            begin
+                try
+                    let header = JSON.from_string header_json in
+                    let payload = JSON.from_string payload_json in
+                    Some { header; payload; signature }
+                with
+                | Yojson.Json_error _ -> None
+            end
         | _ -> None (* Token is invalid *)
 
     let verify_signature (token : t) (pk : CryptoUtils.public_key) : bool =

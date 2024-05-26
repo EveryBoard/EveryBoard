@@ -41,7 +41,7 @@ let tests = [
         lwt_test "should request new certificates and return them" (fun () ->
             GoogleCertificates.clear ();
             (* Given a google server that will answer with some certificates *)
-            ExternalTests.Mock.current_time := 42;
+            ExternalTests.Mock.current_time_seconds := 42;
             let max_age = 22745 in
             let headers = Cohttp.Header.of_list [("Cache-Control",
                                                   Printf.sprintf "public, max-age=%d, must-revalidate, no-transform" max_age)] in
@@ -59,7 +59,7 @@ let tests = [
         lwt_test "should return cached certificates if they are not expired" (fun () ->
             GoogleCertificates.clear ();
             (* Given a google server that will answer with some certificates that we have already retrieved *)
-            ExternalTests.Mock.current_time := 42;
+            ExternalTests.Mock.current_time_seconds := 42;
             let max_age = 22745 in
             let headers = Cohttp.Header.of_list [("Cache-Control",
                                                   Printf.sprintf "public, max-age=%d, must-revalidate, no-transform" max_age)] in
@@ -77,7 +77,7 @@ let tests = [
         lwt_test "should fail if the server has no max-age in their cache-control" (fun () ->
             GoogleCertificates.clear ();
             (* Given a google server that will answer with some certificates but no max-age in their cache-control *)
-            ExternalTests.Mock.current_time := 42;
+            ExternalTests.Mock.current_time_seconds := 42;
             let headers = Cohttp.Header.of_list [("Cache-Control",
                                                   "public, must-revalidate, no-transform")] in
             let body = JSON.to_string certificates_json in
@@ -91,7 +91,7 @@ let tests = [
         lwt_test "should fail if max-age is not an int" (fun () ->
             GoogleCertificates.clear ();
             (* Given a google server that will answer with some certificates but an invalid max-age *)
-            ExternalTests.Mock.current_time := 42;
+            ExternalTests.Mock.current_time_seconds := 42;
             let headers = Cohttp.Header.of_list [("Cache-Control",
                                                   "public, max-age=lol, must-revalidate, no-transform")] in
             let body = JSON.to_string certificates_json in
@@ -105,7 +105,7 @@ let tests = [
         lwt_test "should fail if there is no cache-control" (fun () ->
             GoogleCertificates.clear ();
             (* Given a google server that will answer with some certificates but no cache-control *)
-            ExternalTests.Mock.current_time := 42;
+            ExternalTests.Mock.current_time_seconds := 42;
             let headers = Cohttp.Header.init () in
             let body = JSON.to_string certificates_json in
             let _ = ExternalTests.Mock.Http.mock_response (response ~headers `OK, body) in
@@ -118,7 +118,7 @@ let tests = [
         lwt_test "should fail if the server doesn't return any certificate" (fun () ->
             GoogleCertificates.clear ();
             (* Given a google server that will answer with no certificates *)
-            ExternalTests.Mock.current_time := 42;
+            ExternalTests.Mock.current_time_seconds := 42;
             let max_age = 22745. in
             let headers = Cohttp.Header.of_list [("Cache-Control",
                                                   Printf.sprintf "public, max-age=%.0f, must-revalidate, no-transform" max_age)] in

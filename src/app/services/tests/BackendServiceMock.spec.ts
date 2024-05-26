@@ -310,6 +310,7 @@ export class BackendServiceMock {
     public async joinGame(gameId: string): Promise<MGPValidation> {
         const configRoom: MGPOptional<ConfigRoom> = await this.configRoomDAO.read(gameId);
         if (configRoom.isAbsent()) {
+            // TODO: here
             return MGPValidation.failure('Game does not exist');
         } else {
             const candidate: MinimalUser = this.connectedUserService.user.get().toMinimalUser();

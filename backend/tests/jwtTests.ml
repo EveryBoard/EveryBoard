@@ -146,7 +146,7 @@ let tests () =
 
         "Jwt.make", [
             test "should construct a token" (fun () ->
-                ExternalTests.Mock.current_time := 1702952401;
+                ExternalTests.Mock.current_time_seconds := 1702952401;
                 (* When constructing a token *)
                 let actual = Jwt.make "foo@bar.com" private_key ["scope1"; "scope2"] "audience" in
                 (* Then it should be constructed as expected *)
@@ -185,12 +185,22 @@ let tests () =
                 let expected = None in
                 check (option jwt) "failure" expected actual
             );
+
+            test "should fail on a base64-encoded invalid identity token" (fun () ->
+                (* Given an invalid identity token string representation *)
+                let invalid_token = "TUdQ.SmVhbkphamE=.cnVsZXo="  in
+                (* When parsing it *)
+                let actual = Jwt.parse invalid_token in
+                (* Then it should fail *)
+                let expected = None in
+                check (option jwt) "failure" expected actual
+            );
         ];
 
         "Jwt.verify_and_get_uid",
         begin
             let now = 1702956000 in
-            ExternalTests.Mock.current_time := now;
+            ExternalTests.Mock.current_time_seconds := now;
             let replace_assoc (json : JSON.t) (field : string) (replacement : JSON.t) : JSON.t = match json with
                 | `Assoc assoc ->
                     `Assoc ((field, replacement) :: (List.remove_assoc field assoc))

@@ -189,8 +189,7 @@ let tests = [
 
     "Firestore.Game.get", test_get game_eq Firestore.Game.get "parts" unstarted_game unstarted_game Domain.Game.to_yojson;
 
-    (* TODO: should it be mask.fieldPaths? *)
-    "Firestore.Game.get_name", test_get string Firestore.Game.get_name "parts" ~mask:"?mask=typeGame" unstarted_game "P4" Domain.Game.to_yojson;
+    "Firestore.Game.get_name", test_get string Firestore.Game.get_name "parts" ~mask:"?mask.fieldPaths=typeGame" unstarted_game "P4" Domain.Game.to_yojson;
 
     "Firestore.Game.create", [
         lwt_test "should create the document" (fun () ->

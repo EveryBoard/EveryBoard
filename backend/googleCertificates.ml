@@ -4,8 +4,8 @@ open Utils
 module type GOOGLE_CERTIFICATES = sig
 
     (** Google certificates consist of an identifier (as a string) and a public
-        key. There can be more than one certificate. Hence, they are
-        represented as an association list *)
+        key. There can be more than one certificate. Hence, they are represented
+        as an association list *)
     type certificates = (string * CryptoUtils.public_key) list
 
     (** Retrieve the Google certificates. Uses cached versions if there are any *)

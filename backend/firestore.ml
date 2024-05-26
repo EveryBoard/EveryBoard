@@ -19,7 +19,9 @@ module type FIRESTORE = sig
         (** Retrieve a full game, from its id *)
         val get : Domain.Game.t getter
 
-        (** Get the name of a game if the game exists *)
+        (** Get the name of a game if the game exists.
+            @raise [DocumentNotFound _] if it does not exist.
+            @raise [DocumentInvalid _] if it exist but is invalid *)
         val get_name : Dream.request -> string -> string Lwt.t
 
         (** Create a game  *)
@@ -97,7 +99,7 @@ module Make (FirestorePrimitives : FirestorePrimitives.FIRESTORE_PRIMITIVES) : F
 
         let get_name (request : Dream.request) (game_id : string) : string Lwt.t =
             try
-                let* doc = FirestorePrimitives.get_doc request ("parts/" ^ game_id ^ "?mask=typeGame") in
+                let* doc = FirestorePrimitives.get_doc request ("parts/" ^ game_id ^ "?mask.fieldPaths=typeGame") in
                 let open JSON.Util in
                 doc
                 |> member "typeGame"
