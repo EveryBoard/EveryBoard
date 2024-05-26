@@ -65,7 +65,7 @@ export class SquarzTutorial extends Tutorial {
 
         TutorialStep.fromPredicate(
             $localize`Captures`,
-            $localize`When one of your pieces lands on a square, its adjacent opponent pieces become yours.<br/><br/>You're playing Dark, do such a move!`,
+            $localize`When one of your pieces lands on a square, its adjacent opponent pieces become yours.<br/><br/>You're playing Light, do such a move!`,
             new SquarzState([
                 [O, _, _, _, _, _, _, X],
                 [_, _, _, _, _, _, _, _],

@@ -2940,8 +2940,8 @@
       <trans-unit id="4273222196833633277" datatype="html">
         <source>This was a duplication, try a jump now.</source>
       </trans-unit>
-      <trans-unit id="2720829712114022892" datatype="html">
-        <source>When one of your pieces lands on a square, its adjacent opponent pieces become yours.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, do such a move!</source>
+      <trans-unit id="6313085338248539604" datatype="html">
+        <source>When one of your pieces lands on a square, its adjacent opponent pieces become yours.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Light, do such a move!</source>
       </trans-unit>
       <trans-unit id="9048883519751617241" datatype="html">
         <source>When one player can no longer play, the game ends, and the player with the most pieces wins. Here, you can do a final move and win.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Light, do it.</source>

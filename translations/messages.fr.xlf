@@ -3805,9 +3805,9 @@
         <source>The second type of move you can do is the jump. When you do one, your piece leaves its original space and jumps two spaces further. To do this, select one of your pieces, and click on its landing space two spaces further.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Light, make a jump.</source>
         <target>Le deuxième type de mouvement que vous pouvez faire est un saut. Quand vous en faites un, votre pièce quitte sa case d'origine et atterit deux cases plus loin. Pour faire ceci, sélectionnez une de vos pièces, et cliquez sur sa case d'atterrissage, deux cases plus loin.&lt;br/&gt;Vous jouez Clair, faites un saut.</target>
       </trans-unit>
-      <trans-unit id="2720829712114022892" datatype="html">
-        <source>When one of your pieces lands on a square, its adjacent opponent pieces become yours.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, do such a move!</source>
-        <target>Quand une de vos pièces arrive sur une case, les pièces adjacentes voisines deviennent les vôtres.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, faite un tel mouvement.</target>
+      <trans-unit id="6313085338248539604" datatype="html">
+        <source>When one of your pieces lands on a square, its adjacent opponent pieces become yours.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Light, do such a move!</source>
+        <target>Quand une de vos pièces arrive sur une case, les pièces adjacentes voisines deviennent les vôtres.&lt;br/&gt;&lt;br/&gt;Vous jouez Clair, faite un tel mouvement.</target>
       </trans-unit>
       <trans-unit id="9048883519751617241" datatype="html">
         <source>When one player can no longer play, the game ends, and the player with the most pieces wins. Here, you can do a final move and win.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Light, do it.</source>
