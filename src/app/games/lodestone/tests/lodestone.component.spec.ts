@@ -64,7 +64,7 @@ describe('LodestoneComponent', () => {
             // When clicking of a lodestone
             await testUtils.expectClickSuccess('#lodestone-push-orthogonal-PLAYER_ZERO');
             // Then it should be selected
-            testUtils.expectElementToHaveClass('#lodestone-push-orthogonal-PLAYER_ZERO .lodestone-main-circle', 'selected-stroke');
+            testUtils.expectElementToHaveClass('#lodestone-push-orthogonal-PLAYER_ZERO .data-lodestone-main-circle', 'selected-stroke');
         }));
 
         it('should hide last move when selecting lodestone', fakeAsync(async() => {
@@ -103,16 +103,16 @@ describe('LodestoneComponent', () => {
             ]);
             const state: LodestoneState = new LodestoneState(board, 1, expectedLodestones, pressurePlates);
             await testUtils.setupState(state, { previousState, previousMove });
-            testUtils.expectElementToHaveClass('#plateSquare-top-0-0', 'moved-fill'); // So moved are shown before first click
-            testUtils.expectElementToHaveClass('#square-4-7 > .lodestone-square', 'captured-fill'); // So captures are shown before first click
+            testUtils.expectElementToHaveClass('#plate-square-top-0-0', 'moved-fill'); // So moved are shown before first click
+            testUtils.expectElementToHaveClass('#square-4-7 > .data-lodestone-square', 'captured-fill'); // So captures are shown before first click
 
             // When selecting your lodestone
             await testUtils.expectClickSuccess('#lodestone-push-orthogonal-PLAYER_ONE');
 
             // Then last-turn-captured square should no longer be shown
-            testUtils.expectElementNotToHaveClass('#plateSquare-top-0-0', 'moved-fill');
+            testUtils.expectElementNotToHaveClass('#plate-square-top-0-0', 'moved-fill');
             // And last-turn-filled lodestone should no longer be shown
-            testUtils.expectElementNotToHaveClass('#square-4-7 > .lodestone-square ', 'captured-fill');
+            testUtils.expectElementNotToHaveClass('#square-4-7 > .data-lodestone-square ', 'captured-fill');
         }));
 
         it('should hide last move when selecting coord', fakeAsync(async() => {
@@ -151,16 +151,16 @@ describe('LodestoneComponent', () => {
             ]);
             const state: LodestoneState = new LodestoneState(board, 1, expectedLodestones, pressurePlates);
             await testUtils.setupState(state, { previousState, previousMove });
-            testUtils.expectElementToHaveClass('#plateSquare-top-0-0', 'moved-fill'); // So moved are shown before first click
-            testUtils.expectElementToHaveClass('#square-4-7 > .lodestone-square', 'captured-fill'); // So captures are shown before first click
+            testUtils.expectElementToHaveClass('#plate-square-top-0-0', 'moved-fill'); // So moved are shown before first click
+            testUtils.expectElementToHaveClass('#square-4-7 > .data-lodestone-square', 'captured-fill'); // So captures are shown before first click
 
             // When selecting your coord
             await testUtils.expectClickSuccess('#square-0-0');
 
             // Then last-turn-captured square should no longer be shown
-            testUtils.expectElementNotToHaveClass('#plateSquare-top-0-0', 'moved-fill');
+            testUtils.expectElementNotToHaveClass('#plate-square-top-0-0', 'moved-fill');
             // And last-turn-filled lodestone should no longer be shown
-            testUtils.expectElementNotToHaveClass('#square-4-7 > .lodestone-square ', 'captured-fill');
+            testUtils.expectElementNotToHaveClass('#square-4-7 > .data-lodestone-square ', 'captured-fill');
         }));
 
     });
@@ -241,7 +241,7 @@ describe('LodestoneComponent', () => {
             await testUtils.expectClickFailure('#lodestone-push-orthogonal-PLAYER_ZERO');
 
             // Then it should no longer be selected
-            testUtils.expectElementNotToHaveClass('#lodestone-push-orthogonal-PLAYER_ZERO .lodestone-main-circle', 'selected-stroke');
+            testUtils.expectElementNotToHaveClass('#lodestone-push-orthogonal-PLAYER_ZERO .data-lodestone-main-circle', 'selected-stroke');
         }));
 
         it('should show last move again when deselecting lodestone', fakeAsync(async() => {
@@ -281,17 +281,17 @@ describe('LodestoneComponent', () => {
             const state: LodestoneState = new LodestoneState(board, 1, expectedLodestones, pressurePlates);
             await testUtils.setupState(state, { previousState, previousMove });
             await testUtils.expectClickSuccess('#lodestone-push-orthogonal-PLAYER_ONE');
-            testUtils.expectElementNotToHaveClass('#plateSquare-top-0-0', 'moved-fill');
-            testUtils.expectElementNotToHaveClass('#square-4-7 > .lodestone-square ', 'captured-fill');
+            testUtils.expectElementNotToHaveClass('#plate-square-top-0-0', 'moved-fill');
+            testUtils.expectElementNotToHaveClass('#square-4-7 > .data-lodestone-square ', 'captured-fill');
 
 
             // When de-selecting your lodestone
             await testUtils.expectClickFailure('#lodestone-push-orthogonal-PLAYER_ONE');
 
             // Then last-turn-captured square should again be shown
-            testUtils.expectElementToHaveClass('#plateSquare-top-0-0', 'moved-fill');
+            testUtils.expectElementToHaveClass('#plate-square-top-0-0', 'moved-fill');
             // And last-turn-filled lodestone should again be shown
-            testUtils.expectElementToHaveClass('#square-4-7 > .lodestone-square ', 'captured-fill');
+            testUtils.expectElementToHaveClass('#square-4-7 > .data-lodestone-square ', 'captured-fill');
         }));
 
         it('should show last move again when deselecting coord', fakeAsync(async() => {
@@ -331,16 +331,16 @@ describe('LodestoneComponent', () => {
             const state: LodestoneState = new LodestoneState(board, 1, expectedLodestones, pressurePlates);
             await testUtils.setupState(state, { previousState, previousMove });
             await testUtils.expectClickSuccess('#square-7-7');
-            testUtils.expectElementNotToHaveClass('#plateSquare-top-0-0', 'moved-fill');
-            testUtils.expectElementNotToHaveClass('#square-4-7 > .lodestone-square ', 'captured-fill');
+            testUtils.expectElementNotToHaveClass('#plate-square-top-0-0', 'moved-fill');
+            testUtils.expectElementNotToHaveClass('#square-4-7 > .data-lodestone-square ', 'captured-fill');
 
             // When de-selecting your coord
             await testUtils.expectClickFailure('#square-7-7');
 
             // Then last-turn-captured square should again be shown
-            testUtils.expectElementToHaveClass('#plateSquare-top-0-0', 'moved-fill');
+            testUtils.expectElementToHaveClass('#plate-square-top-0-0', 'moved-fill');
             // And last-turn-filled lodestone should again be shown
-            testUtils.expectElementToHaveClass('#square-4-7 > .lodestone-square ', 'captured-fill');
+            testUtils.expectElementToHaveClass('#square-4-7 > .data-lodestone-square ', 'captured-fill');
         }));
 
     });
@@ -351,7 +351,7 @@ describe('LodestoneComponent', () => {
             // Given an intermediary state where a lodestone has been placed, resulting in 2 captures
             await testUtils.expectClickSuccess('#square-3-3');
             await testUtils.expectClickSuccess('#lodestone-push-orthogonal-PLAYER_ZERO');
-            testUtils.expectElementNotToExist('#platePiece-top-0-0');
+            testUtils.expectElementNotToExist('#plate-piece-top-0-0');
 
             // When the player clicks on the plates where the captures will go
             await testUtils.expectClickSuccess('#plate-top-0-0');
@@ -364,10 +364,10 @@ describe('LodestoneComponent', () => {
             await testUtils.expectMoveSuccess('#plate-top-0-1', move);
 
             // And the captures should be shown
-            testUtils.expectElementToExist('#platePiece-top-0-0');
-            testUtils.expectElementToExist('#platePiece-top-0-1');
-            testUtils.expectElementToHaveClass('#plateSquare-top-0-0', 'moved-fill');
-            testUtils.expectElementToHaveClass('#plateSquare-top-0-1', 'moved-fill');
+            testUtils.expectElementToExist('#plate-piece-top-0-0');
+            testUtils.expectElementToExist('#plate-piece-top-0-1');
+            testUtils.expectElementToHaveClass('#plate-square-top-0-0', 'moved-fill');
+            testUtils.expectElementToHaveClass('#plate-square-top-0-1', 'moved-fill');
         }));
 
         it('should not remove highlight during post captures phase', fakeAsync(async() => {
@@ -376,7 +376,7 @@ describe('LodestoneComponent', () => {
             await testUtils.expectClickSuccess('#lodestone-pull-orthogonal-PLAYER_ZERO');
 
             // When the player clicks on the plates where the captures will go
-            testUtils.expectElementNotToExist('#platePiece-top-0-0');
+            testUtils.expectElementNotToExist('#plate-piece-top-0-0');
 
             // Then the capture coord should be displayed
             testUtils.expectElementToHaveClass('#square-3-0 > rect', 'captured-fill');
@@ -391,7 +391,7 @@ describe('LodestoneComponent', () => {
             // When the player clicks on the piece that has been placed on the pressure plate
             await testUtils.expectClickSuccess('#plate-top-0-0');
             // Then it should be deselected
-            testUtils.expectElementNotToExist('#platePiece-top-0-0');
+            testUtils.expectElementNotToExist('#plate-piece-top-0-0');
         }));
 
         it('should crumble a pressure plate when full (first time)', fakeAsync(async() => {
@@ -423,23 +423,23 @@ describe('LodestoneComponent', () => {
             await testUtils.expectMoveSuccess('#plate-right-0-4', move);
 
             // Then removed squares should be hidden
-            testUtils.expectElementNotToExist('#square-7-7 > .lodestone-square');
+            testUtils.expectElementNotToExist('#square-7-7 > .data-lodestone-square');
             // And their polygon should show them as crumbled
             // Captured for the piece, moved for the lodestone
             testUtils.expectElementToHaveClass('#square-7-7-crumbled-left', 'moved-fill');
             testUtils.expectElementToHaveClass('#square-7-0-crumbled-right', 'captured-fill');
             // And the plate should be full
-            testUtils.expectElementToExist('#platePiece-right-0-0');
-            testUtils.expectElementToExist('#platePiece-right-0-1');
-            testUtils.expectElementToExist('#platePiece-right-0-2');
-            testUtils.expectElementToExist('#platePiece-right-0-3');
-            testUtils.expectElementToExist('#platePiece-right-0-4');
+            testUtils.expectElementToExist('#plate-piece-right-0-0');
+            testUtils.expectElementToExist('#plate-piece-right-0-1');
+            testUtils.expectElementToExist('#plate-piece-right-0-2');
+            testUtils.expectElementToExist('#plate-piece-right-0-3');
+            testUtils.expectElementToExist('#plate-piece-right-0-4');
             // And the crumbled lodestone should be there
             testUtils.expectElementToHaveClasses('#lodestone-7-7', ['semi-transparent']);
-            testUtils.expectElementToHaveClasses('#lodestone-7-7 .lodestone-arrow-0', ['base', 'no-stroke', 'player1-fill', 'lodestone-arrow-0']);
-            testUtils.expectElementToHaveClasses('#lodestone-7-7 .lodestone-arrow-1', ['base', 'no-stroke', 'player1-fill', 'lodestone-arrow-1']);
-            testUtils.expectElementToHaveClasses('#lodestone-7-7 .lodestone-arrow-2', ['base', 'no-stroke', 'player1-fill', 'lodestone-arrow-2']);
-            testUtils.expectElementToHaveClasses('#lodestone-7-7 .lodestone-arrow-3', ['base', 'no-stroke', 'player1-fill', 'lodestone-arrow-3']);
+            testUtils.expectElementToHaveClasses('#lodestone-7-7 .data-lodestone-arrow-0', ['base', 'no-stroke', 'player1-fill', '.data-lodestone-arrow-0']);
+            testUtils.expectElementToHaveClasses('#lodestone-7-7 .data-lodestone-arrow-1', ['base', 'no-stroke', 'player1-fill', '.data-lodestone-arrow-1']);
+            testUtils.expectElementToHaveClasses('#lodestone-7-7 .data-lodestone-arrow-2', ['base', 'no-stroke', 'player1-fill', '.data-lodestone-arrow-2']);
+            testUtils.expectElementToHaveClasses('#lodestone-7-7 .data-lodestone-arrow-3', ['base', 'no-stroke', 'player1-fill', '.data-lodestone-arrow-3']);
         }));
 
         it('should display crumbled lodestone and pieces in the middle of placing capture', fakeAsync(async() => {
@@ -537,11 +537,11 @@ describe('LodestoneComponent', () => {
             testUtils.expectElementToExist('#plate-top-0-3');
             testUtils.expectElementToExist('#plate-top-0-4');
             // And filled with pieces
-            testUtils.expectElementToExist('#platePiece-top-0-0');
-            testUtils.expectElementToExist('#platePiece-top-0-1');
-            testUtils.expectElementToExist('#platePiece-top-0-2');
-            testUtils.expectElementToExist('#platePiece-top-0-3');
-            testUtils.expectElementToExist('#platePiece-top-0-4');
+            testUtils.expectElementToExist('#plate-piece-top-0-0');
+            testUtils.expectElementToExist('#plate-piece-top-0-1');
+            testUtils.expectElementToExist('#plate-piece-top-0-2');
+            testUtils.expectElementToExist('#plate-piece-top-0-3');
+            testUtils.expectElementToExist('#plate-piece-top-0-4');
         }));
 
         it('should reallow selecting any lodestone face if a lodestone falls from the board', fakeAsync(async() => {

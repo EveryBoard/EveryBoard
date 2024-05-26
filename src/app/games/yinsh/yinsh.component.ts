@@ -185,9 +185,7 @@ export class YinshComponent extends HexagonalGameComponent<YinshRules,
         const coord: Coord = new Coord(x, y);
         const classes: string[] = [];
         const allSelected: MGPSet<Coord> = this.selectedCoords.union(this.selectedRings);
-        if (allSelected.contains(coord) ||
-            this.isInLastCapture(coord))
-        {
+        if (allSelected.contains(coord) || this.isInLastCapture(coord)) {
             return ['semi-transparent'];
         } else {
             return classes;

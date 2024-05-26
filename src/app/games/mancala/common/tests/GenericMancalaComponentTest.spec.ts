@@ -413,7 +413,7 @@ export function doMancalaComponentTests<C extends MancalaComponent<R>,
             // When clicking on any store
             // Then it should fail cause it's dumb
             const reason: string = MancalaFailure.MUST_DISTRIBUTE_YOUR_OWN_HOUSES();
-            await mancalaTestUtils.testUtils.expectClickFailure('#store-player-0', reason);
+            await mancalaTestUtils.testUtils.expectClickFailure('#store-PLAYER_ZERO', reason);
         }));
 
         describe('Move Animation', () => {

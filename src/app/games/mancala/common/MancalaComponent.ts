@@ -355,7 +355,7 @@ export abstract class MancalaComponent<R extends MancalaRules>
     }
 
     public async onStoreClick(owner: Player): Promise<MGPValidation> {
-        const clickValidity: MGPValidation = await this.canUserPlay('#store-player-' + owner.getValue());
+        const clickValidity: MGPValidation = await this.canUserPlay('#store-' + owner.toString());
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }
