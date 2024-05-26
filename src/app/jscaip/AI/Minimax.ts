@@ -86,6 +86,7 @@ implements AI<M, S, AIDepthLimitOptions, C>
         Utils.assert(this.rules.getGameStatus(node, config).isEndGame === false,
                      'Minimax has been asked to choose a move from a finished game');
         const boardValue: BoardValue = this.getExpectedExtremum(node, config);
+        console.log('we will choose next move now!')
         let bestDescendant: GameNode<M, S> = this.alphaBeta(node,
                                                             options.maxDepth,
                                                             boardValue.toMinimum(),
@@ -107,7 +108,10 @@ implements AI<M, S, AIDepthLimitOptions, C>
         if (depth < 1) {
             return node; // leaf by calculation
         } else if (this.rules.getGameStatus(node, config).isEndGame) {
+            console.log(depth, 'turn', node.gameState.turn, 'is endGamed')
             return node; // rules - leaf or calculation - leaf
+        } else {
+            console.log(depth, 'turn', node.gameState.turn, 'is not the end game')
         }
         const possibleMoves: MGPSet<M> = this.getPossibleMoves(node, config);
         Utils.assert(possibleMoves.size() > 0, 'Minimax ' + this.name + ' should give move, received none!');
@@ -142,6 +146,7 @@ implements AI<M, S, AIDepthLimitOptions, C>
         let extremumExpected: BoardValue = this.getExpectedExtremum(node, config);
         const newValueIsBetter: (newValue: BoardValue, currentValue: BoardValue) => boolean =
             currentPlayer === Player.ZERO ? BoardValue.isLessThan : BoardValue.isGreaterThan;
+        console.log('get best children alright turn = ', node.gameState.turn, 'depth = ', depth)
         for (const move of possibleMoves) {
             const child: GameNode<M, S> = this.getOrCreateChild(node, move, config);
             const bestChildDescendant: GameNode<M, S> = this.alphaBeta(child, depth - 1, alpha, beta, config);

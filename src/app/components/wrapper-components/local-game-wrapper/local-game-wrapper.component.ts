@@ -26,7 +26,7 @@ import { SuperRules } from 'src/app/jscaip/Rules';
 @Debug.log
 export class LocalGameWrapperComponent extends GameWrapper<string> implements AfterViewInit {
 
-    public static readonly AI_TIMEOUT: number = 1500;
+    public static readonly AI_TIMEOUT: number = 1;
 
     public aiOptions: [string, string] = ['none', 'none'];
 
@@ -133,7 +133,13 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
             const playingAI: MGPOptional<{ ai: AbstractAI, options: AIOptions }> = this.getPlayingAI();
             if (playingAI.isPresent()) {
                 window.setTimeout(async() => {
+                    const config: MGPOptional<RulesConfig> = await this.getConfig();
+                    const gameIsOngoing: boolean =
+                        this.gameComponent.rules.getGameStatus(this.gameComponent.node, config) === GameStatus.ONGOING;
+                    console.log(gameIsOngoing, 'trying to doAiMove')
+                    // if (gameIsOngoing) {            }
                     await this.doAIMove(playingAI.get().ai, playingAI.get().options);
+                    // }
                     this.cdr.detectChanges(); // triggers the rendering of AI move
                 }, LocalGameWrapperComponent.AI_TIMEOUT);
             }
@@ -210,7 +216,7 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
         }
     }
 
-    public async doAIMove(playingAI: AbstractAI, options: AIOptions): Promise<MGPValidation> {
+    private async doAIMove(playingAI: AbstractAI, options: AIOptions): Promise<MGPValidation> {
         // called only when it's AI's Turn
         const ruler: SuperRules<Move, GameState, RulesConfig, unknown> = this.gameComponent.rules;
         const config: MGPOptional<RulesConfig> = await this.getConfig();
