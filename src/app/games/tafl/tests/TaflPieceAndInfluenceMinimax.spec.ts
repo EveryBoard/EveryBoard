@@ -40,7 +40,7 @@ describe('TaflPieceAndInfluenceMinimax', () => {
         const expectedMove: TablutMove = TablutMove.from(new Coord(1, 0), new Coord(0, 0)).get();
         for (let depth: number = 1; depth < 4; depth++) {
             const chosenMove: TablutMove = minimax.chooseNextMove(node, { name: 'Level', maxDepth: depth }, defaultConfig);
-            expect(chosenMove).withContext('At level ' + depth + ' ai choose wrong').toEqual(expectedMove);
+            expect(chosenMove).withContext('AI chose the wrong move at level ' + depth).toEqual(expectedMove);
         }
     });
 

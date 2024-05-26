@@ -6,7 +6,7 @@ import { Table } from 'src/app/jscaip/TableUtils';
 import { MGPOptional, Utils } from '@everyboard/lib';
 import { CoerceoRegularMove, CoerceoStep } from './CoerceoMove';
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
-import { Player } from 'src/app/jscaip/Player';
+import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { Debug } from 'src/app/utils/Debug';
 import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 import { PlayerNumberTable } from 'src/app/jscaip/PlayerNumberTable';
@@ -212,12 +212,11 @@ export class CoerceoState extends TriangularGameState<FourStatePiece> {
             [0, 0, 0, 0],
         );
         for (const coordAndContent of state.getCoordsAndContents()) {
-            const piece: FourStatePiece = coordAndContent.content;
-            if (piece.isPlayer()) {
-                const player: Player = piece.getPlayer() as Player;
+            const owner: PlayerOrNone = coordAndContent.content.getPlayer();
+            if (owner.isPlayer()) {
                 const nbFreedom: number =
                     this.getEmptyNeighbors(coordAndContent.coord, FourStatePiece.EMPTY).length;
-                playersScores.add(player, nbFreedom, 1);
+                playersScores.add(owner, nbFreedom, 1);
             }
         }
         return playersScores;

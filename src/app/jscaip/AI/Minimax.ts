@@ -62,7 +62,7 @@ implements AI<M, S, AIDepthLimitOptions, C>
 {
 
     // States whether the minimax takes random moves from the list of best moves.
-    public random: boolean = true;
+    public random: boolean = false;
     // States whether alpha-beta pruning must be done. It probably is never useful to set it to false.
     public prune: boolean = true;
 
