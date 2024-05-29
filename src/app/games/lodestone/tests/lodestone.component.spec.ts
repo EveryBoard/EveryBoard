@@ -436,10 +436,10 @@ describe('LodestoneComponent', () => {
             testUtils.expectElementToExist('#plate-piece-right-0-4');
             // And the crumbled lodestone should be there
             testUtils.expectElementToHaveClasses('#lodestone-7-7', ['semi-transparent']);
-            testUtils.expectElementToHaveClasses('#lodestone-7-7 .data-lodestone-arrow-0', ['base', 'no-stroke', 'player1-fill', '.data-lodestone-arrow-0']);
-            testUtils.expectElementToHaveClasses('#lodestone-7-7 .data-lodestone-arrow-1', ['base', 'no-stroke', 'player1-fill', '.data-lodestone-arrow-1']);
-            testUtils.expectElementToHaveClasses('#lodestone-7-7 .data-lodestone-arrow-2', ['base', 'no-stroke', 'player1-fill', '.data-lodestone-arrow-2']);
-            testUtils.expectElementToHaveClasses('#lodestone-7-7 .data-lodestone-arrow-3', ['base', 'no-stroke', 'player1-fill', '.data-lodestone-arrow-3']);
+            testUtils.expectElementToHaveClasses('#lodestone-7-7 .data-lodestone-arrow-0', ['base', 'no-stroke', 'player1-fill', 'data-lodestone-arrow-0']);
+            testUtils.expectElementToHaveClasses('#lodestone-7-7 .data-lodestone-arrow-1', ['base', 'no-stroke', 'player1-fill', 'data-lodestone-arrow-1']);
+            testUtils.expectElementToHaveClasses('#lodestone-7-7 .data-lodestone-arrow-2', ['base', 'no-stroke', 'player1-fill', 'data-lodestone-arrow-2']);
+            testUtils.expectElementToHaveClasses('#lodestone-7-7 .data-lodestone-arrow-3', ['base', 'no-stroke', 'player1-fill', 'data-lodestone-arrow-3']);
         }));
 
         it('should display crumbled lodestone and pieces in the middle of placing capture', fakeAsync(async() => {
