@@ -34,25 +34,25 @@ module Mock : MOCK = struct
 
     let doc_to_return = ref None
 
-    let get_doc _ path =
+    let get_doc ~request:_ ~path =
         read_docs := path :: !read_docs;
         match !doc_to_return with
         | Some doc -> Lwt.return doc
         | None -> raise (DocumentNotFound path)
 
-    let create_doc _ path doc =
-        created_docs := (path, doc) :: !created_docs;
+    let create_doc ~request:_ ~collection ~doc =
+        created_docs := (collection, doc) :: !created_docs;
         Lwt.return "created-id"
 
-    let set_doc _ path id doc =
-        set_docs := (path, id, doc) :: !set_docs;
+    let set_doc ~request:_ ~collection ~id ~doc =
+        set_docs := (collection, id, doc) :: !set_docs;
         Lwt.return ()
 
-    let update_doc _ path update =
+    let update_doc ~request:_ ~path ~update =
         updated_docs := (path, update) :: !updated_docs;
         Lwt.return ()
 
-    let delete_doc _ path =
+    let delete_doc ~request:_ ~path =
         deleted_docs := path :: !deleted_docs;
         Lwt.return ()
 
@@ -71,7 +71,7 @@ let tests = [
             let body = JSON.to_string (to_firestore ~path doc) in
             let _ = ExternalTests.Mock.Http.mock_response (response `OK, body) in
             (* When retrieving the document *)
-            let* actual = FirestorePrimitives.get_doc request path in
+            let* actual = FirestorePrimitives.get_doc ~request ~path in
             (* Then it should be the same document *)
             let expected = doc in
             check json_eq "success" expected actual;
@@ -85,7 +85,7 @@ let tests = [
             (* When retrieving the document *)
             (* Then it should fail *)
             lwt_check_raises "failure" ((=) (DocumentNotFound "some-doc-that-doesnt-exist")) (fun () ->
-                let* _ = FirestorePrimitives.get_doc request "some-doc-that-doesnt-exist" in
+                let* _ = FirestorePrimitives.get_doc ~request ~path:"some-doc-that-doesnt-exist" in
                 Lwt.return ()
             )
         );
@@ -103,7 +103,7 @@ let tests = [
             (* When we create it *)
             let body = JSON.to_string (`Assoc [("name", `String path)]) in
             let mock = ExternalTests.Mock.Http.mock_response (response `OK, body) in
-            let* actual_id = FirestorePrimitives.create_doc request collection doc in
+            let* actual_id = FirestorePrimitives.create_doc ~request ~collection ~doc in
             (* Then it should have made a POST request with the doc, and should return the document id*)
             let firestore_doc = to_firestore doc in
             check (list http_query) "query" [(`POST, endpoint ~params:[("mask.fieldPaths", "_")] collection, Some firestore_doc)] !(mock.calls);
@@ -121,7 +121,7 @@ let tests = [
             let _ = ExternalTests.Mock.Http.mock_response (response, "{}") in
             (* Then it should fail *)
             lwt_check_raises "failure" ((=) (UnexpectedError "error on document creation for collection: {}")) (fun () ->
-                let* _ = FirestorePrimitives.create_doc request "collection" doc in
+                let* _ = FirestorePrimitives.create_doc ~request ~collection:"collection" ~doc in
                 Lwt.return ())
         );
     ];
@@ -137,7 +137,7 @@ let tests = [
             (* When we create it (with set_doc) *)
             let body = JSON.to_string (`Assoc [("name", `String path)]) in
             let mock = ExternalTests.Mock.Http.mock_response (response `OK, body) in
-            let* _ = FirestorePrimitives.set_doc request "collection" id doc in
+            let* _ = FirestorePrimitives.set_doc ~request ~collection:"collection" ~id ~doc in
             (* Then it should have made a PATCH request with the doc *)
             let firestore_doc = to_firestore doc in
             check (list http_query) "query" [(`PATCH, endpoint ~params:[("mask.fieldPaths", "_"); ("updateMask.fieldPaths", "foo")] path, Some firestore_doc)] !(mock.calls);
@@ -154,7 +154,7 @@ let tests = [
             let path = "collection/some-id" in
             (* When we update it *)
             let mock = ExternalTests.Mock.Http.mock_response (response `OK, "") in
-            let* _ = FirestorePrimitives.update_doc request path update in
+            let* _ = FirestorePrimitives.update_doc ~request ~path ~update in
             (* Then it should have made a PATCH request on the document with the update *)
             let firestore_update = to_firestore update in
             (* mask=_ means we don't care about the return value, updateMask=foo means we only update the foo field *)
@@ -171,7 +171,7 @@ let tests = [
             let _ = ExternalTests.Mock.Http.mock_response (response `Bad_request, "") in
             (* Then it should fail *)
             lwt_check_raises "failure" ((=) (UnexpectedError "error on document update for collection/some-id: ")) (fun () ->
-                let* _ = FirestorePrimitives.update_doc request "collection/some-id" update in
+                let* _ = FirestorePrimitives.update_doc ~request ~path:"collection/some-id" ~update in
                 Lwt.return ())
         );
 
@@ -182,7 +182,7 @@ let tests = [
             (* When we try to perform the update *)
             (* Then it should fail *)
             lwt_check_raises "failure" ((=) (UnexpectedError "invalid update: should be a Assoc")) (fun () ->
-                let* _ = FirestorePrimitives.update_doc request "collection/some-id" update in
+                let* _ = FirestorePrimitives.update_doc ~request ~path:"collection/some-id" ~update in
                 Lwt.return ())
         );
     ];
@@ -195,7 +195,7 @@ let tests = [
             let path = "collection/some-id" in
             (* When we update it *)
             let mock = ExternalTests.Mock.Http.mock_response (response `OK, "") in
-            let* _ = FirestorePrimitives.delete_doc request path in
+            let* _ = FirestorePrimitives.delete_doc ~request ~path in
             (* Then it should have made a DELETE request on the document *)
             check (list http_query) "query" [(`DELETE, endpoint path, None)] !(mock.calls);
             Lwt.return ()
@@ -209,29 +209,9 @@ let tests = [
             let _ = ExternalTests.Mock.Http.mock_response (response `Bad_request, "") in
             (* Then it should fail *)
             lwt_check_raises "failure" ((=) (UnexpectedError "error on document deletion for collection/some-id: ")) (fun () ->
-                let* _ = FirestorePrimitives.delete_doc request path in
+                let* _ = FirestorePrimitives.delete_doc ~request ~path in
                 Lwt.return ())
         );
     ];
 
-]
-
-let integration_tests = [
-  (*
-  "Firebase_primitives document creation", [
-    lwt_test "should successfully create and access a document" (fun () ->
-        let token = "owner" in
-        let collection = "coll" in
-        (* Given a document *)
-        let doc = `Assoc [
-            ("hello", `String "firebase");
-          ]; in
-        (* When creating it and getting it *)
-        let* uid = Firebase_primitives.create_doc token collection doc in
-        let* retrieved_doc = Firebase_primitives.get_doc token (collection ^ "/" ^ uid) in
-        (* Then it should work *)
-        check json "success" doc retrieved_doc;
-        Lwt.return ()
-      )
-  ]; *)
 ]

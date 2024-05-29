@@ -53,28 +53,28 @@ module Mock : MOCK = struct
         calls := !calls @ [call]
 
     module User = struct
-        let get _  _ = Lwt.return (!user ())
+        let get ~request:_ ~id:_ = Lwt.return (!user ())
     end
 
     module Game = struct
         let game : Domain.Game.t option ref = ref None
         let set new_game =
             game := Some new_game
-        let get _ _ =
+        let get ~request:_ ~id:_ =
             Lwt.return (Option.get !game)
-        let get_name _ _ =
+        let get_name ~request:_ ~id:_ =
             Lwt.return (Option.get !game).type_game
-        let create _ game =
+        let create ~request:_ ~game =
             record_call (CreateGame (Domain.Game.to_yojson game));
             Lwt.return "game_id"
-        let delete _ game_id =
-            record_call (DeleteGame game_id);
+        let delete ~request:_ ~id =
+            record_call (DeleteGame id);
             Lwt.return ()
-        let update _ game_id update =
-            record_call (UpdateGame (game_id, update));
+        let update ~request:_ ~id ~update =
+            record_call (UpdateGame (id, update));
             Lwt.return ()
-        let add_event _ game_id event =
-            record_call (AddEvent (game_id, Domain.GameEvent.to_yojson event));
+        let add_event ~request:_ ~id ~event =
+            record_call (AddEvent (id, Domain.GameEvent.to_yojson event));
             Lwt.return ()
     end
 
@@ -82,35 +82,35 @@ module Mock : MOCK = struct
         let config_room : Domain.ConfigRoom.t option ref = ref None
         let set new_config_room =
             config_room := Some new_config_room
-        let get _ _ =
+        let get ~request:_ ~id:_ =
             Lwt.return (Option.get !config_room)
 
-        let create _ game_id config_room =
-            record_call (CreateConfigRoom (game_id, Domain.ConfigRoom.to_yojson config_room));
+        let create ~request:_ ~id ~config_room =
+            record_call (CreateConfigRoom (id, Domain.ConfigRoom.to_yojson config_room));
             Lwt.return ()
-        let delete _ game_id =
-            record_call (DeleteConfigRoom game_id);
+        let delete ~request:_ ~id =
+            record_call (DeleteConfigRoom id);
             Lwt.return ()
-        let add_candidate _ game_id user =
-            record_call (AddCandidate (game_id, user));
+        let add_candidate ~request:_ ~id ~candidate =
+            record_call (AddCandidate (id, candidate));
             Lwt.return ()
-        let remove_candidate _ game_id uid =
-            record_call (RemoveCandidate (game_id, uid));
+        let remove_candidate ~request:_ ~id ~candidate_id =
+            record_call (RemoveCandidate (id, candidate_id));
             Lwt.return ()
-        let accept _ game_id =
-            record_call (AcceptConfig game_id);
+        let accept ~request:_ ~id =
+            record_call (AcceptConfig id);
             Lwt.return ()
-        let update _ game_id update =
-            record_call (UpdateConfigRoom (game_id, update));
+        let update ~request:_ ~id ~update =
+            record_call (UpdateConfigRoom (id, update));
             Lwt.return ()
     end
 
     module Chat = struct
-        let create _ game_id =
-            record_call (CreateChat game_id);
+        let create ~request:_ ~id =
+            record_call (CreateChat id);
             Lwt.return ()
-        let delete _ game_id =
-            record_call (DeleteChat game_id);
+        let delete ~request:_ ~id =
+            record_call (DeleteChat id);
             Lwt.return ()
     end
 
@@ -148,7 +148,7 @@ let test_get type_ get collection ?(mask = "") doc expected conversion = [
         (* Given a user *)
         FirestorePrimitivesTests.Mock.doc_to_return := Some (conversion doc);
         (* When getting it *)
-        let* actual = get request "id" in
+        let* actual = get ~request ~id:"id" in
         (* Then it should be retrieved *)
         check type_ "success" expected actual;
         Lwt.return ()
@@ -161,7 +161,7 @@ let test_get type_ get collection ?(mask = "") doc expected conversion = [
         (* When trying to get a user with get_user *)
         (* Then it should fail *)
         lwt_check_raises "failure" ((=) (DocumentNotFound (collection ^ "/id" ^ mask))) (fun () ->
-            let* _ = get request "id" in
+            let* _ = get ~request ~id:"id" in
             Lwt.return ())
     );
 
@@ -175,7 +175,7 @@ let test_get type_ get collection ?(mask = "") doc expected conversion = [
             | DocumentInvalid _ -> true (* the message contain details about the error, we don't want to match that precisely *)
             | _ -> false in
         lwt_check_raises "failure" invalid_doc_error (fun () ->
-            let* _ = get request "id" in
+            let* _ = get ~request ~id:"id" in
             Lwt.return ())
     );
 ]
@@ -198,7 +198,7 @@ let tests = [
             (* Given a game *)
             let game = unstarted_game in
             (* When creating it *)
-            let* id = Firestore.Game.create request game  in
+            let* id = Firestore.Game.create ~request ~game  in
             (* Then it should have called create_doc on /parts and return the game id *)
             let game_json = Domain.Game.to_yojson game in
             check string "id" id "created-id";
@@ -215,7 +215,7 @@ let tests = [
             (* Given a game *)
             let game_id = "game-id" in
             (* When deleting it *)
-            let* _ = Firestore.Game.delete request game_id in
+            let* _ = Firestore.Game.delete ~request ~id:game_id in
             (* Then it should have called delete_doc on /parts with the game id *)
             let deleted = !FirestorePrimitivesTests.Mock.deleted_docs in
             check (list string) "deletions" ["parts/" ^ game_id] deleted;
@@ -232,7 +232,7 @@ let tests = [
             let update = Domain.Game.Updates.EndTurn.get 1 in
             let json_update = Domain.Game.Updates.EndTurn.to_yojson update in
             (* When applying the update *)
-            let* _ = Firestore.Game.update request game_id json_update in
+            let* _ = Firestore.Game.update ~request ~id:game_id ~update:json_update in
             (* Then it should have called update_doc on /parts with the game id and update *)
             let updated = !FirestorePrimitivesTests.Mock.updated_docs in
             check (list (pair string json_eq)) "updates" [("parts/" ^ game_id, json_update)] updated;
@@ -249,7 +249,7 @@ let tests = [
             let user = Domain.User.to_minimal_user "uid" verified_user in
             let event = Domain.GameEvent.(Request (Request.draw user 0)) in
             (* When adding the event *)
-            let* _ = Firestore.Game.add_event request game_id event in
+            let* _ = Firestore.Game.add_event ~request ~id:game_id ~event in
             (* Then it should have created an event document *)
             let json_event = Domain.GameEvent.to_yojson event in
             let created = !FirestorePrimitivesTests.Mock.created_docs in
@@ -266,7 +266,7 @@ let tests = [
             let game_id = "game-id" in
             let config_room = initial_config_room in
             (* When we create it *)
-            let* _ = Firestore.ConfigRoom.create request game_id config_room in
+            let* _ = Firestore.ConfigRoom.create ~request ~id:game_id ~config_room in
             (* Then it should have been created *)
             let json_config_room = Domain.ConfigRoom.to_yojson config_room in
             let set = !FirestorePrimitivesTests.Mock.set_docs in
@@ -282,7 +282,7 @@ let tests = [
             (* Given a game for which we want to accept the config *)
             let game_id = "game-id" in
             (* When we accept it *)
-            let* _ = Firestore.ConfigRoom.accept request game_id in
+            let* _ = Firestore.ConfigRoom.accept ~request ~id:game_id in
             (* Then it should have updated the config room *)
             let json_update = `Assoc [("partStatus", Domain.ConfigRoom.GameStatus.(to_yojson Started))] in
             let updated = !FirestorePrimitivesTests.Mock.updated_docs in
@@ -298,7 +298,7 @@ let tests = [
             (* Given a config room *)
             let game_id = "game-id" in
             (* When deleting it *)
-            let* _ = Firestore.ConfigRoom.delete request game_id in
+            let* _ = Firestore.ConfigRoom.delete ~request ~id:game_id in
             (* Then it should have called delete_doc on /chat with the game id *)
             let deleted = !FirestorePrimitivesTests.Mock.deleted_docs in
             check (list string) "deletions" ["config-room/" ^ game_id] deleted;
@@ -314,7 +314,7 @@ let tests = [
             let game_id = "game-id" in
             let candidate = DomainTests.a_minimal_user in
             (* When we add a candidate *)
-            let* _ = Firestore.ConfigRoom.add_candidate request game_id candidate in
+            let* _ = Firestore.ConfigRoom.add_candidate ~request ~id:game_id ~candidate in
             (* Then it should have created a document in the sub collection *)
             let json_user = Domain.MinimalUser.to_yojson candidate in
             let set = !FirestorePrimitivesTests.Mock.set_docs in
@@ -330,9 +330,9 @@ let tests = [
             (* Given a config room with a candidate *)
             let game_id = "game-id" in
             let candidate = DomainTests.a_minimal_user in
-            let* _ = Firestore.ConfigRoom.add_candidate request game_id candidate in
+            let* _ = Firestore.ConfigRoom.add_candidate ~request ~id:game_id ~candidate in
             (* When we remove a candidate *)
-            let* _ = Firestore.ConfigRoom.remove_candidate request game_id candidate.id in
+            let* _ = Firestore.ConfigRoom.remove_candidate ~request ~id:game_id ~candidate_id:candidate.id in
             (* Then it should have deleted the corresponding document *)
             let deleted = !FirestorePrimitivesTests.Mock.deleted_docs in
             check (list string) "deletions" ["config-room/game-id/candidates/" ^ candidate.id] deleted;
@@ -347,7 +347,7 @@ let tests = [
             (* Given a game for which we want to create the chat *)
             let game_id = "game-id" in
             (* When we create the chat *)
-            let* _ = Firestore.Chat.create request game_id in
+            let* _ = Firestore.Chat.create ~request ~id:game_id in
             (* Then it should have been created *)
             let set = !FirestorePrimitivesTests.Mock.set_docs in
             let empty_chat = `Assoc [] in
@@ -363,7 +363,7 @@ let tests = [
             (* Given a chat *)
             let game_id = "game-id" in
             (* When deleting it *)
-            let* _ = Firestore.Chat.delete request game_id in
+            let* _ = Firestore.Chat.delete ~request ~id:game_id in
             (* Then it should have called delete_doc on /chat with the game id *)
             let deleted = !FirestorePrimitivesTests.Mock.deleted_docs in
             check (list string) "deletions" ["chats/" ^ game_id] deleted;
