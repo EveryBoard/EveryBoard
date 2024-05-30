@@ -1,5 +1,5 @@
 import { Mutex } from 'async-mutex';
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router, Event } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { ConnectedUserService, AuthUser } from 'src/app/services/ConnectedUserService';
@@ -42,6 +42,7 @@ export class OnlineGameWrapperMessages {
 @Component({
     selector: 'app-online-game-wrapper',
     templateUrl: './online-game-wrapper.component.html',
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 @Debug.log
 export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> implements OnInit, OnDestroy {
@@ -87,7 +88,8 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
                        private readonly gameService: GameService,
                        private readonly gameEventService: GameEventService,
                        private readonly timeManager: OGWCTimeManagerService,
-                       private readonly requestManager: OGWCRequestManagerService)
+                       private readonly requestManager: OGWCRequestManagerService,
+                       private readonly cdr: ChangeDetectorRef)
     {
         super(activatedRoute, connectedUserService, router, messageDisplayer);
     }
@@ -188,6 +190,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
             Utils.assert(this.gameComponent !== null, 'Game component should exist');
             this.gameComponent.config = MGPOptional.of(configRoom.rulesConfig);
             await this.startPart();
+            this.cdr.detectChanges();
         }, 2);
     }
 

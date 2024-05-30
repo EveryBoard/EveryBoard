@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { takeUntil } from 'rxjs/operators';
@@ -121,7 +121,8 @@ export class PartCreationComponent implements OnInit, OnDestroy {
                        public readonly chatService: ChatService,
                        public readonly userService: UserService,
                        public readonly formBuilder: FormBuilder,
-                       public readonly messageDisplayer: MessageDisplayer)
+                       public readonly messageDisplayer: MessageDisplayer,
+                       private readonly cdr: ChangeDetectorRef)
     {
     }
     public async ngOnInit(): Promise<void> {
@@ -375,6 +376,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
                 Debug.display('PartCreationComponent', 'onCurrentConfigRoomUpdate', 'the game has started');
                 this.onGameStarted();
             }
+            this.cdr.detectChanges();
         }
     }
     private async onCandidatesUpdate(candidates: MinimalUser[]): Promise<void> {
