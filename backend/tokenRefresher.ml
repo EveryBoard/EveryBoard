@@ -7,7 +7,7 @@ open CryptoUtils
     is expired. This is all handled automatically by this middleware *)
 module type TOKEN_REFRESHER = sig
 
-    (** Return the header required to pass the token along with a query *)
+    (** [header request] returns the header required to pass the token along with a query *)
     val header : Dream.request -> Cohttp.Header.t Lwt.t
 
     (** The middleware that has to be installed in order to use the token refresher *)
@@ -27,7 +27,7 @@ module Make (External : External.EXTERNAL) (Jwt : Jwt.JWT) : TOKEN_REFRESHER = s
         private_key : private_key;
     }
 
-    let read_service_account_from_file (file : string) : service_account =
+    let read_service_account_from_file = fun (file : string) : service_account ->
         let open JSON.Util in
         let json =
             try JSON.from_file file
@@ -44,7 +44,7 @@ module Make (External : External.EXTERNAL) (Jwt : Jwt.JWT) : TOKEN_REFRESHER = s
             { email ; private_key = pk }
         | _ -> raise (UnexpectedError "Cannot read private key from service account file")
 
-    let request_token (sa : service_account) : token Lwt.t =
+    let request_token = fun (sa : service_account) : token Lwt.t ->
         let open JSON.Util in
         let scopes = ["https://www.googleapis.com/auth/datastore"] in
         let audience = "https://www.googleapis.com/oauth2/v4/token" in
@@ -60,7 +60,7 @@ module Make (External : External.EXTERNAL) (Jwt : Jwt.JWT) : TOKEN_REFRESHER = s
         let expiration_date = now + expires_in in
         Lwt.return { access_token; expiration_date }
 
-    let request_token_if_outdated (sa : service_account) (token : token) : token Lwt.t =
+    let request_token_if_outdated = fun (sa : service_account) (token : token) : token Lwt.t ->
         let now = External.now () in
         if now > token.expiration_date then
             request_token sa
@@ -70,16 +70,16 @@ module Make (External : External.EXTERNAL) (Jwt : Jwt.JWT) : TOKEN_REFRESHER = s
     let get_token_field : (unit -> string Lwt.t) Dream.field =
         Dream.new_field ~name:"token" ()
 
-    let get_token (request : Dream.request) : string Lwt.t =
+    let get_token = fun (request : Dream.request) : string Lwt.t ->
         match Dream.field request get_token_field with
         | None -> raise (UnexpectedError "get_token_field not set, the middleware is probably missing")
         | Some f -> f ()
 
-    let header (request : Dream.request) : Cohttp.Header.t Lwt.t =
+    let header = fun (request : Dream.request) : Cohttp.Header.t Lwt.t ->
         let* token = get_token request in
         Lwt.return (Cohttp.Header.of_list [DreamUtils.authorization_header token])
 
-    let middleware (service_account_file : string) : Dream.middleware =
+    let middleware = fun (service_account_file : string) : Dream.middleware ->
         let service_account = read_service_account_from_file service_account_file in
         let token_ref = ref None in
         (fun handler request ->

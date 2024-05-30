@@ -10,7 +10,7 @@ module GameEndpoint = GameEndpoint.Make(External)(Auth)(Firestore)(Stats)
 module ConfigRoomEndpoint = ConfigRoomEndpoint.Make(External)(Auth)(Firestore)(Stats)
 
 (** The actual backend server, dispatching to various endpoints *)
-let start () =
+let start = fun () : unit ->
     let api = [
         Dream.scope "/" [TokenRefresher.middleware !Options.service_account_file; Auth.middleware]
         @@ List.concat [

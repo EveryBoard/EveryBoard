@@ -8,10 +8,11 @@ module type GOOGLE_CERTIFICATES = sig
         as an association list *)
     type certificates = (string * CryptoUtils.public_key) list
 
-    (** Retrieve the Google certificates. Uses cached versions if there are any *)
+    (** [get ()] retrieves the Google certificates. It uses cached versions if there are any.
+        @raise UnexpectedError in case it cannot fetch the certificates. *)
     val get : unit -> certificates Lwt.t
 
-    (** Clear the cached certificates. Useful for tests only *)
+    (** [clear ()] clears the cached certificates. Useful for tests only *)
     val clear : unit -> unit
 end
 
@@ -20,8 +21,8 @@ module Make (External : External.EXTERNAL) : GOOGLE_CERTIFICATES = struct
     type certificates = (string * CryptoUtils.public_key) list
 
     (** Parses the Cache-Control header of a response to extract the max-age field *)
-    let parse_max_age (cache_control : string) : int =
-        let extract (regexp : Str.regexp) (s : string) : string =
+    let parse_max_age = fun (cache_control : string) : int ->
+        let extract = fun (regexp : Str.regexp) (s : string) : string ->
             if Str.string_match regexp s 0 then
                 Str.matched_group 1 s
             else raise (UnexpectedError "missing or invalid max-age") in
@@ -31,7 +32,7 @@ module Make (External : External.EXTERNAL) : GOOGLE_CERTIFICATES = struct
 
     (** Fetches the certificates listed at https://www.googleapis.com/robot/v1/metadata/x509/securetoken@system.gserviceaccount.com
         Returns the certificates and their expiration time (as a unix timestamp). *)
-    let get_certificates () : (certificates * int) Lwt.t =
+    let get_certificates = fun () : (certificates * int) Lwt.t ->
         let endpoint = Uri.of_string "https://www.googleapis.com/robot/v1/metadata/x509/securetoken@system.gserviceaccount.com" in
         let* (response, body_string) = External.Http.get endpoint in
         let body_content = JSON.from_string body_string in
@@ -53,12 +54,12 @@ module Make (External : External.EXTERNAL) : GOOGLE_CERTIFICATES = struct
         ref ([], 0)
 
     (** Update the certificates stored in certificates_ref *)
-    let update_certificates () : (string * CryptoUtils.public_key) list Lwt.t =
+    let update_certificates = fun () : (string * CryptoUtils.public_key) list Lwt.t ->
         let* (keys, expiration) = get_certificates () in
         certificates_ref := (keys, expiration);
         Lwt.return keys
 
-    let get () : (string * CryptoUtils.public_key) list Lwt.t =
+    let get = fun  () : (string * CryptoUtils.public_key) list Lwt.t ->
         let now = External.now () in
         match !certificates_ref with
         | (_, expiration) when expiration < now ->
@@ -66,6 +67,6 @@ module Make (External : External.EXTERNAL) : GOOGLE_CERTIFICATES = struct
         | (certificates, _) ->
             Lwt.return certificates
 
-    let clear () =
+    let clear = fun () ->
         certificates_ref := ([], 0)
 end

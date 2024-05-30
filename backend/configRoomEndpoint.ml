@@ -53,7 +53,7 @@ module Make
         Dream.empty `OK
 
     (** Route to propose a config to the opponent. Perform 1 write. *)
-    let propose_config (request : Dream.request) (game_id : string) =
+    let propose_config = fun (request : Dream.request) (game_id : string) ->
         (* The config is attached as a json parameter to the request, we extract it *)
         match get_json_param request "config" >>= ConfigRoom.Updates.Proposal.of_yojson with
         | Error _ -> raise (BadInput "Invalid config proposal")
@@ -64,7 +64,7 @@ module Make
             Dream.empty `OK
 
     (** Route to accept a config-room and start the game. Perform 1 read and 3 writes. *)
-    let accept_config (request : Dream.request) (game_id : string) =
+    let accept_config = fun (request : Dream.request) (game_id : string) ->
         (* Read 1: retrieve the config room *)
         let* config_room = Firestore.ConfigRoom.get ~request ~id:game_id in
         (* Write 1: accept the config room *)
@@ -80,7 +80,7 @@ module Make
         Dream.empty `OK
 
     (** Route to select the opponent in a config-room. Perform 1 write. *)
-    let select_opponent (request : Dream.request) (game_id : string) =
+    let select_opponent = fun (request : Dream.request) (game_id : string) ->
         match get_json_param request "opponent" >>= MinimalUser.of_yojson with
         | Error _ -> raise (BadInput "Invalid opponent")
         | Ok opponent ->
@@ -90,19 +90,20 @@ module Make
             Dream.empty `OK
 
     (** Route to review a config-room. Perform 1 write. *)
-    let review_config (request : Dream.request) (game_id : string) =
+    let review_config = fun (request : Dream.request) (game_id : string) ->
         let update = ConfigRoom.Updates.ReviewConfig.(to_yojson get) in
         let* _ = Firestore.ConfigRoom.update ~request ~id:game_id ~update in
         Dream.empty `OK
 
     (** Route to review a config-room and remove the opponent. Perform 1 write. *)
-    let review_config_and_remove_opponent (request : Dream.request) (game_id : string) =
+    let review_config_and_remove_opponent = fun (request : Dream.request) (game_id : string) ->
         let update = ConfigRoom.Updates.ReviewConfigAndRemoveOpponent.(to_yojson get) in
         let* _ = Firestore.ConfigRoom.update ~request ~id:game_id ~update in
         Dream.empty `OK
 
     (** Route to change a config room. Done by dispatching to one of the functions defined above *)
     let change : Dream.route =
+        (* We respond to POST requests on e.g., config-room/some-id?action=... *)
         Dream.post "config-room/:game_id" @@ fun request ->
         match Dream.query request "action" with
         | None -> raise (BadInput "Missing action")

@@ -11,6 +11,7 @@ let arguments_spec = [
     ("-show-errors", Arg.Set Options.show_errors, "Should error be shown in details when sent back to the client?");
 ]
 
+(* This is the entry point. We parse the argument and start the server *)
 let () =
     Arg.parse arguments_spec (fun _ -> ()) "backend [options]";
     Server.start ()

@@ -4,6 +4,8 @@ open Domain
 
 (** The /game/ endpoint, dealing with ongoing games *)
 module type GAME_ENDPOINT = sig
+
+    (** The routes of this endpoint *)
     val routes : Dream.route list
 end
 
@@ -14,11 +16,9 @@ module Make
         (Stats : Stats.STATS)
     : GAME_ENDPOINT = struct
 
-    let ( >>= ) = Result.bind (* for convenience *)
-
-    (* The list of available games *)
+    (** The list of available games *)
     let games_list =
-        let read_file filename =
+        let read_file = fun (filename : string) : string ->
             let ch = open_in_bin filename in
             let s = really_input_string ch (in_channel_length ch) in
             close_in ch;
@@ -27,8 +27,8 @@ module Make
         |> String.split_on_char '\n'
         |> List.filter (fun x -> String.length x > 0)
 
-    (* Respond with some JSON to the client *)
-    let json_response (status : Dream.status) (response : JSON.t) : Dream.response Lwt.t =
+    (** Respond with some JSON to the client *)
+    let json_response = fun (status : Dream.status) (response : JSON.t) : Dream.response Lwt.t ->
         let headers = [("Content-Type", "application/json")] in
         Dream.respond ~headers ~status (JSON.to_string response)
 
@@ -90,7 +90,7 @@ module Make
         Dream.empty `OK
 
     (** Resign from a game. Perform 1 read and 2 writes. *)
-    let resign (request : Dream.request) (game_id : string) =
+    let resign = fun (request : Dream.request) (game_id : string) ->
         (* Read 1: retrieve the game *)
         let* game = Firestore.Game.get ~request ~id:game_id in
         let minimal_user = Auth.get_minimal_user request in
@@ -111,7 +111,7 @@ module Make
             Dream.empty `OK
 
     (** End the game by a timeout from one player. Perform 1 read and 2 writes. *)
-    let notify_timeout (request : Dream.request) (game_id : string) (winner : MinimalUser.t) (loser : MinimalUser.t) =
+    let notify_timeout = fun (request : Dream.request) (game_id : string) (winner : MinimalUser.t) (loser : MinimalUser.t) ->
         (* Read 1: retrieve the game *)
         let update = Game.Updates.End.get ~winner ~loser Game.GameResult.Timeout in
         (* Write 1: end the game *)
@@ -124,7 +124,7 @@ module Make
         Dream.empty `OK
 
     (** Propose something to the opponent in-game. Perform 1 write. *)
-    let propose (request : Dream.request) (game_id : string) (proposition : string) =
+    let propose = fun (request : Dream.request) (game_id : string) (proposition : string) ->
         let user = Auth.get_minimal_user request in
         let now = External.now_ms () in
         let event = GameEvent.(Request (Request.make user proposition now)) in
@@ -133,7 +133,7 @@ module Make
         Dream.empty `OK
 
     (** Reject a request from the opponent. Perform 1 write. *)
-    let reject (request : Dream.request) (game_id : string) (proposition : string) =
+    let reject = fun (request : Dream.request) (game_id : string) (proposition : string) ->
         let user = Auth.get_minimal_user request in
         let now = External.now_ms () in
         let event = GameEvent.(Reply (Reply.refuse user proposition now)) in
@@ -142,7 +142,7 @@ module Make
         Dream.empty `OK
 
     (** Accept a draw request from the opponent. Perform 1 read and 3 writes. *)
-    let accept_draw (request : Dream.request) (game_id : string) =
+    let accept_draw = fun (request : Dream.request) (game_id : string) ->
         (* Read 1: retrieve the game *)
         let* game = Firestore.Game.get ~request ~id:game_id in
         let user = Auth.get_minimal_user request in
@@ -160,7 +160,7 @@ module Make
         Dream.empty `OK
 
     (** Accept a rematch request from the opponent. Perform 2 read and 3 writes. *)
-    let accept_rematch (request : Dream.request) (game_id : string) =
+    let accept_rematch = fun (request : Dream.request) (game_id : string) ->
         (* Read 1: retrieve the game *)
         let* game = Firestore.Game.get ~request ~id:game_id in
         (* Read 2: retrieve the config room *)
@@ -191,7 +191,7 @@ module Make
         json_response `Created (`Assoc [("id", `String game_id)])
 
     (** Accept a take back request from the opponent. Perform 1 read and 2 writes. *)
-    let accept_take_back (request : Dream.request) (game_id : string) =
+    let accept_take_back = fun (request : Dream.request) (game_id : string) ->
         (* Read 1: retrieve the game *)
         let* game = Firestore.Game.get ~request ~id:game_id in
         let user = Auth.get_minimal_user request in
@@ -210,7 +210,7 @@ module Make
         Dream.empty `OK
 
     (** Add time to the opponent. Perform 1 write. *)
-    let add_time (request : Dream.request) (game_id : string) (kind : [ `Turn | `Global ]) =
+    let add_time = fun (request : Dream.request) (game_id : string) (kind : [ `Turn | `Global ]) ->
         let user = Auth.get_minimal_user request in
         let now = External.now_ms () in
         let event = GameEvent.(Action (Action.add_time user kind now)) in
@@ -218,13 +218,13 @@ module Make
         let* _ = Firestore.Game.add_event ~request ~id:game_id ~event in
         Dream.empty `OK
 
-    let scores_from_request (request : Dream.request) : (int * int) option =
+    let scores_from_request = fun (request : Dream.request) : (int * int) option ->
         match (Dream.query request "score0", Dream.query request "score1") with
         | (Some score0, Some score1) -> Some (int_of_string score0, int_of_string score1)
         | _ -> None
 
     (** Perform a move. Perform 1 read and 2 writes. *)
-    let move (request : Dream.request) (game_id : string) (move : Yojson.Safe.t) =
+    let move = fun (request : Dream.request) (game_id : string) (move : Yojson.Safe.t) ->
         (* Read 1: retrieve the game for the current turn *)
         let* game = Firestore.Game.get ~request ~id:game_id in
         let user = Auth.get_minimal_user request in
@@ -239,7 +239,7 @@ module Make
         Dream.empty `OK
 
     (** Similar to [move], but also ends the game. Perform 1 read and 3 writes *)
-    let move_and_end (request : Dream.request) (game_id : string) (move : Yojson.Safe.t) =
+    let move_and_end = fun (request : Dream.request) (game_id : string) (move : Yojson.Safe.t) ->
         (* Read 1: retrieve the game to have the current turn *)
         let* game = Firestore.Game.get ~request ~id:game_id in
         let user = Auth.get_minimal_user request in
@@ -262,6 +262,7 @@ module Make
         Dream.empty `OK
 
     let change : Dream.route = Dream.post "game/:game_id" @@ fun request ->
+        let ( >>= ) = Result.bind in (* for convenience *)
         match Dream.query request "action" with
         | None -> raise (BadInput "Missing action")
         | Some action ->

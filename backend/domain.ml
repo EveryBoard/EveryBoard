@@ -477,7 +477,8 @@ module GameEvent = struct
         | Action of Action.t
         | Move of Move.t
 
-    let to_yojson (event : t) : JSON.t = match event with
+    let to_yojson = fun (event : t) : JSON.t ->
+        match event with
         | Request request -> Request.to_yojson request
         | Reply reply -> Reply.to_yojson reply
         | Action action -> Action.to_yojson action

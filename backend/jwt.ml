@@ -41,8 +41,9 @@ module Make (External : External.EXTERNAL) : JWT = struct
     let b64 = Dream.to_base64url
 
     (** Sign a string with RS256 *)
-    let sign (private_key : private_key) (content : string) : string =
-        let pkcs1_sha256 m =  Mirage_crypto_pk.Rsa.PKCS1.sign ~hash:`SHA256 ~key:private_key (`Message m) in
+    let sign = fun (private_key : private_key) (content : string) : string ->
+        let pkcs1_sha256 = fun (m : Cstruct.t) : Cstruct.t ->
+            Mirage_crypto_pk.Rsa.PKCS1.sign ~hash:`SHA256 ~key:private_key (`Message m) in
         content
         |> Cstruct.of_string
         |> pkcs1_sha256
@@ -50,7 +51,7 @@ module Make (External : External.EXTERNAL) : JWT = struct
 
     (** Construct a JWT from an email [iss] private key [pk], a set of scopes
         [scopes] and an audience [audience] *)
-    let make (iss : string) (pk : private_key) (scopes : string list) (audience : string) : t =
+    let make = fun (iss : string) (pk : private_key) (scopes : string list) (audience : string) : t ->
         let open JSON in
         let now = External.now () in
         let exp = now + 3600 in
@@ -72,14 +73,14 @@ module Make (External : External.EXTERNAL) : JWT = struct
         { header; payload; signature }
 
     (** Transform the token into its string representation *)
-    let to_string (token : t) : string =
+    let to_string = fun (token : t) : string ->
         Printf.sprintf "%s.%s.%s"
             (Dream.to_base64url (JSON.to_string token.header))
             (Dream.to_base64url (JSON.to_string token.payload))
             (Dream.to_base64url token.signature)
 
     (** Parse a token from its string representation. Does NOT validate the signature. *)
-    let parse (token : string) : t option =
+    let parse = fun (token : string) : t option ->
         match String.split_on_char '.' token |> List.map Dream.from_base64url  with
         | [Some header_json; Some payload_json; Some signature] ->
             begin
@@ -92,11 +93,11 @@ module Make (External : External.EXTERNAL) : JWT = struct
             end
         | _ -> None (* Token is invalid *)
 
-    let verify_signature (token : t) (pk : CryptoUtils.public_key) : bool =
+    let verify_signature = fun (token : t) (pk : CryptoUtils.public_key) : bool ->
         let only_sha256 = function
             | `SHA256 -> true
             | _ -> false in
-        let pkcs1_sha256_verify m signature =
+        let pkcs1_sha256_verify = fun (m : Cstruct.t) (signature : Cstruct.t) : bool ->
             Mirage_crypto_pk.Rsa.PKCS1.verify ~hashp:only_sha256 ~key:pk ~signature:signature (`Message m) in
         let header_and_content_b64 = (token.header |> JSON.to_string |> b64) ^ "." ^ (token.payload |> JSON.to_string |> b64) in
         pkcs1_sha256_verify (Cstruct.of_string header_and_content_b64) (Cstruct.of_string token.signature)
@@ -104,13 +105,15 @@ module Make (External : External.EXTERNAL) : JWT = struct
     (** Verify the signature of a JWT according to https://firebase.google.com/docs/auth/admin/verify-id-tokens.
         Depends on the public keys listed at https://www.googleapis.com/robot/v1/metadata/x509/securetoken@system.gserviceaccount.com
         In case of success, the uid ("sub" field) is returned. *)
-    let verify_and_get_uid (token : t) (project_id : string) (pks : (string * CryptoUtils.public_key) list) : string option =
-        let check (conditions : (string * (unit -> bool)) list) : bool =
+    let verify_and_get_uid = fun (token : t) (project_id : string) (pks : (string * CryptoUtils.public_key) list) : string option ->
+        let check = fun (conditions : (string * (unit -> bool)) list) : bool ->
             List.for_all (fun (_field, cond) -> cond ()) conditions in
         let now = External.now () in
         let open JSON.Util in
-        let number (json : JSON.t) (field : string) : int = to_int (member field json) in
-        let str (json : JSON.t) (field : string) : string = to_string (member field json) in
+        let number = fun (json : JSON.t) (field : string) : int ->
+            to_int (member field json) in
+        let str = fun (json : JSON.t) (field : string) : string ->
+            to_string (member field json) in
         let all_checks = [
             (* algorithm must be RS256 *)
             "alg", (fun () ->
