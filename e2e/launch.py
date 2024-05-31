@@ -12,6 +12,7 @@ failed = False
 def open_urls(process):
     for line in iter(process.stdout.readline, ""):
         print(f'[front] {line}', end='')
+        # Match the URL that we will have to visit in order to validate our account
         matches = re.findall(r'(http://)(localhost|127.0.0.1)(:[0-9]+)?(/\S*)?', line)
         for match in matches:
             url = ''.join(match)

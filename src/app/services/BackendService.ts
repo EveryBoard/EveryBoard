@@ -8,6 +8,11 @@ import { PlayerNumberMap } from '../jscaip/PlayerMap';
 import { ConfigRoom } from '../domain/ConfigRoom';
 import { Debug } from '../utils/Debug';
 import { JSONValue, MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
+import { Localized } from '../utils/LocaleUtils';
+
+export class BackendFailure {
+    public static readonly GAME_DOES_NOT_EXIST: Localized = () => $localize`This game does not exist.`;
+}
 
 type HTTPMethod = 'POST' | 'GET' | 'PATCH' | 'HEAD' | 'DELETE';
 
@@ -238,8 +243,8 @@ export class BackendService {
         if (result.isSuccess()) {
             return MGPValidation.SUCCESS;
         } else {
-            Utils.assert(result.getReason() === 'Game does not exist', 'Unexpected failure from backend');
-            return MGPValidation.failure($localize`This game does not exist!`);
+            Utils.assert(result.getReason() === 'not_found', 'Unexpected failure from backend');
+            return MGPValidation.failure(BackendFailure.GAME_DOES_NOT_EXIST());
         }
     }
 

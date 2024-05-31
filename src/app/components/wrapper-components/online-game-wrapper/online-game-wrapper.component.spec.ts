@@ -22,6 +22,7 @@ import { GameWrapperMessages } from '../GameWrapper';
 import { GameService } from 'src/app/services/GameService';
 import { MinimalUser } from 'src/app/domain/MinimalUser';
 import { MGPOptional } from '@everyboard/lib';
+import { BackendFailure } from 'src/app/services/BackendService';
 
 describe('OnlineGameWrapper for non-existing game', () => {
 
@@ -236,7 +237,7 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
         const router: Router = TestBed.inject(Router);
         spyOn(router, 'navigate').and.callThrough();
         testUtils.detectChanges();
-        await testUtils.expectToDisplayCriticalMessage('Game does not exist', async() => {
+        await testUtils.expectToDisplayCriticalMessage(BackendFailure.GAME_DOES_NOT_EXIST(), async() => {
             tick(0);
         });
 

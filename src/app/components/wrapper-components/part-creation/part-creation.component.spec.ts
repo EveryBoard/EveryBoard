@@ -31,7 +31,6 @@ import { UserMocks } from 'src/app/domain/UserMocks.spec';
 import { FirestoreTime } from 'src/app/domain/Time';
 import { UserService } from 'src/app/services/UserService';
 import { CurrentGameService } from 'src/app/services/CurrentGameService';
-import { BackendService } from 'src/app/services/BackendService';
 import { addCandidate } from '../online-game-wrapper/online-game-wrapper.quarto.component.spec';
 
 describe('PartCreationComponent', () => {
@@ -43,7 +42,6 @@ describe('PartCreationComponent', () => {
     let partDAO: PartDAO;
     let userDAO: UserDAO;
     let chatDAO: ChatDAO;
-    let backendService: BackendService;
     let userService: UserService;
     let configRoomService: ConfigRoomService;
     let gameService: GameService;
@@ -107,7 +105,6 @@ describe('PartCreationComponent', () => {
         partDAO = TestBed.inject(PartDAO);
         configRoomDAO = TestBed.inject(ConfigRoomDAO);
         userDAO = TestBed.inject(UserDAO);
-        backendService = TestBed.inject(BackendService);
         userService = TestBed.inject(UserService);
         configRoomService = TestBed.inject(ConfigRoomService);
         gameService = TestBed.inject(GameService);
@@ -131,14 +128,14 @@ describe('PartCreationComponent', () => {
         }));
         describe('Creator arrival on component', () => {
             it('should call joinGame and observe', fakeAsync(() => {
-                spyOn(backendService, 'joinGame').and.callThrough();
+                spyOn(configRoomService, 'joinGame').and.callThrough();
                 spyOn(configRoomService, 'subscribeToChanges').and.callThrough();
 
                 // When the component is loaded
                 awaitComponentInitialization();
 
                 // Then joinGame and observe are called
-                expect(backendService.joinGame).toHaveBeenCalledTimes(1);
+                expect(configRoomService.joinGame).toHaveBeenCalledTimes(1);
                 expect(configRoomService.subscribeToChanges).toHaveBeenCalledTimes(1);
                 expect(component).withContext('PartCreationComponent should have been created').toBeTruthy();
                 component.stopSendingPresenceTokensAndObservingUsersIfNeeded();
