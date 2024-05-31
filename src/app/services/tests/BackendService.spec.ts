@@ -1,6 +1,6 @@
 /* eslint-disable max-lines-per-function */
 import { TestBed, fakeAsync } from '@angular/core/testing';
-import { BackendService } from '../BackendService';
+import { BackendFailure, BackendService } from '../BackendService';
 import { ConnectedUserServiceMock } from './ConnectedUserService.spec';
 import { AppModule } from 'src/app/app.module';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
@@ -292,7 +292,7 @@ describe('BackendService', () => {
 
         it('should fail if the game does not exist', fakeAsync(async() => {
             // Given no game
-            const response: Response = Response.json({ reason: 'Game does not exist' }, { status: 404 });
+            const response: Response = Response.json({ reason: 'not_found' }, { status: 404 });
             spyOn(window, 'fetch').and.resolveTo(response);
             const gameId: string = 'game-id';
             // When joining it
@@ -300,7 +300,7 @@ describe('BackendService', () => {
             // Then it should post on the expected resource
             const expectedEndpoint: string = endpoint(`/config-room/${gameId}/candidates`);
             expect(window.fetch).toHaveBeenCalledOnceWith(expectedEndpoint, expectedParams('POST'));
-            expect(result).toEqual(MGPValidation.failure('This game does not exist!'));
+            expect(result).toEqual(MGPValidation.failure(BackendFailure.GAME_DOES_NOT_EXIST()));
         }));
     });
 

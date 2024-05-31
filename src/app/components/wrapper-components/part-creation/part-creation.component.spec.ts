@@ -32,6 +32,7 @@ import { FirestoreTime } from 'src/app/domain/Time';
 import { UserService } from 'src/app/services/UserService';
 import { CurrentGameService } from 'src/app/services/CurrentGameService';
 import { addCandidate } from '../online-game-wrapper/online-game-wrapper.quarto.component.spec';
+import { BackendFailure } from 'src/app/services/BackendService';
 
 describe('PartCreationComponent', () => {
 
@@ -160,7 +161,7 @@ describe('PartCreationComponent', () => {
 
                 // When the component is loaded
                 // Then subscribeToChange is not called and a message is displayed
-                await testUtils.expectToDisplayCriticalMessage('Game does not exist', async() => {
+                await testUtils.expectToDisplayCriticalMessage(BackendFailure.GAME_DOES_NOT_EXIST(), async() => {
                     awaitComponentInitialization();
                 });
                 expect(configRoomService.subscribeToChanges).not.toHaveBeenCalled();

@@ -243,7 +243,7 @@ export class BackendService {
         if (result.isSuccess()) {
             return MGPValidation.SUCCESS;
         } else {
-            Utils.assert(result.getReason() === 'not_found', 'Unexpected failure from backend');
+            Utils.assert(result.getReason() === 'not_found', `Unexpected failure from backend: ${result.getReason()}`);
             return MGPValidation.failure(BackendFailure.GAME_DOES_NOT_EXIST());
         }
     }

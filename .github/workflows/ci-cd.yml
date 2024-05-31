@@ -102,7 +102,7 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         name: backend-code-coverage-report
-        path: _coverage/
+        path: backend/_coverage/
     - name: Check coverage
       run: cd backend && make check-coverage
 
