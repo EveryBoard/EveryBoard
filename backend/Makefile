@@ -16,6 +16,8 @@ test: bin gamelist
 	opam exec -- dune exec --instrument-with bisect_ppx --force -- ./tests.exe test $(match) $(test-number)
 	opam exec -- bisect-ppx-report html
 	echo 'Coverage produced in _coverage/index.html'
+
+check-coverage:
 	opam exec -- bisect-ppx-report summary
 	opam exec -- bisect-ppx-report summary | grep '100.00%' || ( echo 'Coverage too low!' && exit 1 )
 

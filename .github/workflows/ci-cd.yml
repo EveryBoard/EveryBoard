@@ -97,6 +97,14 @@ jobs:
       run: cd backend && make
     - name: Test
       run: cd backend && make test
+    - name: Archive code coverage results
+      if: always()
+      uses: actions/upload-artifact@v3
+      with:
+        name: backend-code-coverage-report
+        path: _coverage/
+    - name: Check coverage
+      run: cd backend && make check-coverage
 
   e2e:
     runs-on: ubuntu-latest
