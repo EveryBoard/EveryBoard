@@ -3807,7 +3807,7 @@
       </trans-unit>
       <trans-unit id="831056729992738373" datatype="html">
         <source>When one of your pieces lands on a square, its adjacent opponent pieces become yours. This is called a capture.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Light, do a capture!</source>
-        <target>Quand une de vos pièces arrive sur une case, les pièces adjacentes voisines deviennent les vôtres. C'est ce qu'on appelle capture.&lt;br/&gt;&lt;br/&gt;Vous jouez Clair, faites une capture.</target>
+        <target>Quand une de vos pièces arrive sur une case, les pièces adjacentes voisines deviennent les vôtres. C'est ce qu'on appelle une capture.&lt;br/&gt;&lt;br/&gt;Vous jouez Clair, faites une capture.</target>
       </trans-unit>
       <trans-unit id="9048883519751617241" datatype="html">
         <source>When one player can no longer play, the game ends, and the player with the most pieces wins. Here, you can do a final move and win.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Light, do it.</source>
