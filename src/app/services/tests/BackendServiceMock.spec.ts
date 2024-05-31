@@ -9,6 +9,7 @@ import { ConnectedUserService } from '../ConnectedUserService';
 import { ConfigRoom, FirstPlayer, PartStatus, PartType } from 'src/app/domain/ConfigRoom';
 import { PartDAO } from 'src/app/dao/PartDAO';
 import { ChatDAO } from 'src/app/dao/ChatDAO';
+import { BackendFailure } from '../BackendService';
 
 @Injectable({ providedIn: 'root' })
 export class BackendServiceMock {
