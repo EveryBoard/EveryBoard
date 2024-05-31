@@ -152,7 +152,7 @@ describe('PartCreationComponent', () => {
                 expect(currentGameService.updateCurrentGame).toHaveBeenCalledOnceWith(expectedCurrentGame);
                 component.stopSendingPresenceTokensAndObservingUsersIfNeeded();
             }));
-            fit('should not start observing configRoom if part does not exist', fakeAsync(async() => {
+            it('should not start observing configRoom if part does not exist', fakeAsync(async() => {
                 // Given a part that does not exist
                 component.partId = 'does not exist';
                 spyOn(configRoomDAO, 'read').and.resolveTo(MGPOptional.empty());

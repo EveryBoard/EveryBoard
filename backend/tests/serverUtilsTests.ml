@@ -87,7 +87,7 @@ let tests = [
            | Some response ->
                check status "response status" `Not_Found (Dream.status response);
                let* body = Dream.body response in
-               let expected = `Assoc [("document", `String document_path)] in
+               let expected = `Assoc [("reason", `String "not_found"); ("document", `String document_path)] in
                check json_eq "response body" expected (JSON.from_string body);
                Lwt.return ()
        );

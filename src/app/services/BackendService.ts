@@ -11,7 +11,7 @@ import { JSONValue, MGPFallible, MGPOptional, MGPValidation, Utils } from '@ever
 import { Localized } from '../utils/LocaleUtils';
 
 export class BackendFailure {
-    public static readonly GAME_DOES_NOT_EXIST: Localized = () => $localize`This game does not exist.`;
+    public static readonly GAME_DOES_NOT_EXIST: Localized = () => $localize`This game does not exist!`;
 }
 
 type HTTPMethod = 'POST' | 'GET' | 'PATCH' | 'HEAD' | 'DELETE';
