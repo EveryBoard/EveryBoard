@@ -192,7 +192,6 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
             Utils.assert(this.gameComponent !== null, 'Game component should exist');
             this.gameComponent.config = MGPOptional.of(configRoom.rulesConfig);
             await this.startPart();
-            this.cdr.detectChanges();
         }, 2);
     }
 

@@ -52,6 +52,7 @@ type PartCreationViewInfo = {
 @Component({
     selector: 'app-part-creation',
     templateUrl: './part-creation.component.html',
+    // we actually inherit the changeDetection from online-game-wrapper, but for completeness we still specify it here
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 @Debug.log
@@ -236,6 +237,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
             });
     }
     private updateViewInfo(configRoom: ConfigRoom): void {
+        console.log('update view info')
         const authUser: AuthUser = this.connectedUserService.user.get();
 
         this.viewInfo.canReviewConfig = configRoom.partStatus === PartStatus.CONFIG_PROPOSED.value;
@@ -348,7 +350,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
     }
     private async onCurrentConfigRoomUpdate(configRoomOpt: MGPOptional<ConfigRoom>): Promise<void> {
         if (configRoomOpt.isAbsent()) {
-            Debug.display('PartCreationComponent', 'onCurrentConfigRoomUpdate', 'LAST UPDATE : the game is cancelled');
+            Debug.display('PartCreationComponent', 'onCurrentConfigRoomUpdate', 'LAST UPDATE : the game is canceled');
             return this.onGameCanceled();
         } else {
             const oldConfigRoom: ConfigRoom | null = this.currentConfigRoom;
@@ -379,7 +381,6 @@ export class PartCreationComponent implements OnInit, OnDestroy {
                 this.onGameStarted();
             }
         }
-        this.cdr.detectChanges();
     }
     private async onCandidatesUpdate(candidates: MinimalUser[]): Promise<void> {
         this.candidates = candidates;
