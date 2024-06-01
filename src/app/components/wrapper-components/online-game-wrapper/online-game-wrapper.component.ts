@@ -1,5 +1,5 @@
 import { Mutex } from 'async-mutex';
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router, Event } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { ConnectedUserService, AuthUser } from 'src/app/services/ConnectedUserService';
@@ -42,6 +42,7 @@ export class OnlineGameWrapperMessages {
 @Component({
     selector: 'app-online-game-wrapper',
     templateUrl: './online-game-wrapper.component.html',
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 @Debug.log
 export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> implements OnInit, OnDestroy {
@@ -87,7 +88,8 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
                        private readonly gameService: GameService,
                        private readonly gameEventService: GameEventService,
                        private readonly timeManager: OGWCTimeManagerService,
-                       private readonly requestManager: OGWCRequestManagerService)
+                       private readonly requestManager: OGWCRequestManagerService,
+                       private readonly cdr: ChangeDetectorRef)
     {
         super(activatedRoute, connectedUserService, router, messageDisplayer);
     }
@@ -120,6 +122,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
             const message: string = GameWrapperMessages.NO_MATCHING_GAME(gameURL);
             await this.router.navigate(['/notFound', message], { skipLocationChange: true } );
         }
+        this.cdr.detectChanges();
     }
 
     private setCurrentPartIdOrRedirect(): Promise<void> {
@@ -172,6 +175,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         } else {
             this.currentGame = MGPOptional.empty();
         }
+        this.cdr.detectChanges();
     }
 
     public async startGame(configRoom: ConfigRoom): Promise<void> {
@@ -188,6 +192,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
             Utils.assert(this.gameComponent !== null, 'Game component should exist');
             this.gameComponent.config = MGPOptional.of(configRoom.rulesConfig);
             await this.startPart();
+            this.cdr.detectChanges();
         }, 2);
     }
 
@@ -213,6 +218,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         Utils.assert(turn === 0, 'turn should always be 0 upon game start');
         this.timeManager.onGameStart(this.configRoom, this.players);
         this.requestManager.onGameStart();
+        this.cdr.detectChanges();
     }
 
     private subscribeToEvents(): void {
@@ -278,6 +284,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         await this.currentGameService.removeCurrentGame();
         await this.setInteractive(false);
         this.endGame = true;
+        this.cdr.detectChanges();
     }
 
     private async onReceivedMove(moveEvent: GameEventMove, isLastMoveOfBatch: boolean): Promise<void> {
@@ -304,6 +311,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         await this.setCurrentPlayerAccordingToCurrentTurn();
         this.timeManager.onReceivedMove(moveEvent);
         this.requestManager.onReceivedMove();
+        this.cdr.detectChanges();
     }
 
     private async setCurrentPlayerAccordingToCurrentTurn(): Promise<void> {
@@ -322,6 +330,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         const player: Player = Player.ofTurn(this.gameComponent.getTurn());
         const serverTime: Timestamp = await this.userService.getServerTime(this.connectedUserService.user.get().id);
         this.timeManager.afterEventsBatch(this.endGame, player, serverTime);
+        this.cdr.detectChanges();
     }
 
     private async takeBackToPreviousPlayerTurn(player: Player): Promise<void> {
@@ -335,6 +344,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         await this.setCurrentPlayerAccordingToCurrentTurn();
         const triggerAnimation: boolean = this.gameComponent.getTurn() === 0;
         await this.showCurrentState(triggerAnimation);
+        this.cdr.detectChanges();
     }
 
     public canResign(): boolean {

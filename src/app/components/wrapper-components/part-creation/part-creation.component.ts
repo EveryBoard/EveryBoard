@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { takeUntil } from 'rxjs/operators';
@@ -52,6 +52,7 @@ type PartCreationViewInfo = {
 @Component({
     selector: 'app-part-creation',
     templateUrl: './part-creation.component.html',
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 @Debug.log
 export class PartCreationComponent implements OnInit, OnDestroy {
@@ -121,7 +122,8 @@ export class PartCreationComponent implements OnInit, OnDestroy {
                        public readonly chatService: ChatService,
                        public readonly userService: UserService,
                        public readonly formBuilder: FormBuilder,
-                       public readonly messageDisplayer: MessageDisplayer)
+                       public readonly messageDisplayer: MessageDisplayer,
+                       private readonly cdr: ChangeDetectorRef)
     {
     }
     public async ngOnInit(): Promise<void> {
@@ -267,6 +269,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
                 this.viewInfo.partTypeName = $localize`standard`;
                 break;
         }
+        this.cdr.detectChanges();
     }
     private setDataForCreator(configRoom: ConfigRoom): void {
         this.viewInfo.maximalMoveDuration = this.viewInfo.maximalMoveDuration ?? configRoom.maximalMoveDuration;
@@ -376,6 +379,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
                 this.onGameStarted();
             }
         }
+        this.cdr.detectChanges();
     }
     private async onCandidatesUpdate(candidates: MinimalUser[]): Promise<void> {
         this.candidates = candidates;
