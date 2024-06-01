@@ -46,6 +46,18 @@ let another_user : User.t = {
 
 let tests = [
 
+    "Domain.MinimalUser show", [
+        test "should work" (fun () ->
+            (* Given a minimal user *)
+            let minimal_user = MinimalUser.{ id = "123"; name = "laponira"; } in
+            (* When "showing" it *)
+            let shown = MinimalUser.show minimal_user in
+            (* Then it should have converted it to a legible string  that can be used for debugging *)
+            let expected = "{ Domain.MinimalUser.id = \"123\"; name = \"laponira\" }" in
+            check string "success" expected shown
+        )
+    ];
+
     "Domain.CurrentGame JSON conversion", [
         test "should convert to and from JSON when there is no opponent" (fun () ->
             (* Given a current game without opponent *)
