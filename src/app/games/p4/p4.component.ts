@@ -25,9 +25,13 @@ export class P4Component extends RectangularGameComponent<P4Rules, P4Move, P4Sta
     public constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
         this.setRulesAndNode('P4');
+
+        const mcts8 = new MCTS($localize`MCTS-8`, new P4MoveGenerator(), this.rules);
+        mcts8.maxGameLength = 8;
         this.availableAIs = [
             new P4Minimax(),
             new MCTS($localize`MCTS`, new P4MoveGenerator(), this.rules),
+            mcts8
         ];
         this.encoder = P4Move.encoder;
     }
