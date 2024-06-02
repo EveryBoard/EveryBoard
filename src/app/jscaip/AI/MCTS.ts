@@ -31,7 +31,7 @@ implements AI<M, S, AITimeLimitOptions, C>
     public explorationParameter: number = Math.sqrt(2);
 
     // The longest a game can be before we decide to stop simulating it
-    public maxGameLength: number = 8;
+    public maxGameLength: number = 42;
 
     public readonly availableOptions: AITimeLimitOptions[] = [];
 
