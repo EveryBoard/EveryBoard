@@ -77,7 +77,7 @@ implements AI<M, S, AITimeLimitOptions, C>
         switch (gameStatus) {
             case GameStatus.DRAW:
             case GameStatus.ONGOING:
-                return 0.5;
+                return 0;
             default:
                 if (gameStatus.winner === player) return 1;
                 else return 0;
