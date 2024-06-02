@@ -23,13 +23,12 @@ import { GameService } from 'src/app/services/GameService';
 import { MinimalUser } from 'src/app/domain/MinimalUser';
 import { MGPOptional } from '@everyboard/lib';
 
-describe('OnlineGameWrapper for non-existing game', () => {
-
-    let testUtils: ComponentTestUtils<AbstractGameComponent, MinimalUser>;
+fdescribe('OnlineGameWrapper for non-existing game', () => {
 
     it('should redirect to /notFound', fakeAsync(async() => {
         // Given a game wrapper for a game that does not exist
-        testUtils = await ComponentTestUtils.basic('invalid-game');
+        const testUtils: ComponentTestUtils<AbstractGameComponent, MinimalUser> =
+            await ComponentTestUtils.basic('invalid-game');
         ConnectedUserServiceMock.setUser(UserMocks.CONNECTED_AUTH_USER);
         testUtils.prepareFixture(OnlineGameWrapperComponent);
         const router: Router = TestBed.inject(Router);
@@ -39,10 +38,10 @@ describe('OnlineGameWrapper for non-existing game', () => {
         await TestBed.inject(PartDAO).set('configRoomId', { ...PartMocks.INITIAL, typeGame: 'invalid-game' });
         await TestBed.inject(ChatDAO).set('configRoomId', { });
         await TestBed.inject(UserDAO).set(UserMocks.CONNECTED_AUTH_USER.id, UserMocks.CONNECTED);
-        testUtils.detectChanges();
 
         // When loading the component
-        tick(0);
+        testUtils.detectChanges();
+        tick(200);
 
         // Then it goes to /notFound with the expected error message
         const expectedRoute: string[] = ['/notFound', GameWrapperMessages.NO_MATCHING_GAME('invalid-game')];

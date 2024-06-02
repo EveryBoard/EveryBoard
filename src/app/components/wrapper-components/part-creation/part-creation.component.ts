@@ -123,8 +123,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
                        public readonly chatService: ChatService,
                        public readonly userService: UserService,
                        public readonly formBuilder: FormBuilder,
-                       public readonly messageDisplayer: MessageDisplayer,
-                       private readonly cdr: ChangeDetectorRef)
+                       public readonly messageDisplayer: MessageDisplayer)
     {
     }
     public async ngOnInit(): Promise<void> {
@@ -271,7 +270,6 @@ export class PartCreationComponent implements OnInit, OnDestroy {
                 this.viewInfo.partTypeName = $localize`standard`;
                 break;
         }
-        this.cdr.detectChanges();
     }
     private setDataForCreator(configRoom: ConfigRoom): void {
         this.viewInfo.maximalMoveDuration = this.viewInfo.maximalMoveDuration ?? configRoom.maximalMoveDuration;

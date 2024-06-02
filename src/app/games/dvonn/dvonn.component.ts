@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/core';
 import { Coord } from 'src/app/jscaip/Coord';
 import { DvonnMove } from 'src/app/games/dvonn/DvonnMove';
 import { DvonnState } from 'src/app/games/dvonn/DvonnState';
@@ -21,6 +21,7 @@ import { DvonnMoveGenerator } from './DvonnMoveGenerator';
     selector: 'app-dvonn',
     templateUrl: './dvonn.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 
 export class DvonnComponent extends HexagonalGameComponent<DvonnRules, DvonnMove, DvonnState, DvonnPieceStack> {
@@ -29,7 +30,8 @@ export class DvonnComponent extends HexagonalGameComponent<DvonnRules, DvonnMove
     public chosen: MGPOptional<Coord> = MGPOptional.empty();
     public disconnectedSpaces: { coord: Coord, spaceContent: DvonnPieceStack }[] = [];
 
-    public constructor(messageDisplayer: MessageDisplayer) {
+    public constructor(messageDisplayer: MessageDisplayer,
+                       private readonly cdr: ChangeDetectorRef) {
         super(messageDisplayer);
         this.setRulesAndNode('Dvonn');
         this.availableAIs = [
@@ -57,6 +59,7 @@ export class DvonnComponent extends HexagonalGameComponent<DvonnRules, DvonnMove
         this.state = this.getState();
         this.canPass = this.rules.canOnlyPass(this.state);
         this.scores = MGPOptional.of(DvonnRules.getScores(this.state));
+        this.cdr.detectChanges();
     }
 
     public override async showLastMove(move: DvonnMove): Promise<void> {

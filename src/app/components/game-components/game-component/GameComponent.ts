@@ -2,7 +2,7 @@ import { ActivatedRoute } from '@angular/router';
 
 import { Move } from '../../../jscaip/Move';
 import { SuperRules } from '../../../jscaip/Rules';
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/core';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { TutorialStep } from '../../wrapper-components/tutorial-game-wrapper/TutorialStep';
@@ -74,6 +74,7 @@ export abstract class BaseWrapperComponent extends BaseComponent {
 @Component({
     template: '',
     styleUrls: ['./game-component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 @Debug.log
 export abstract class GameComponent<R extends SuperRules<M, S, C, L>,
@@ -126,7 +127,7 @@ export abstract class GameComponent<R extends SuperRules<M, S, C, L>,
 
     public state: S;
 
-    public constructor(public readonly messageDisplayer: MessageDisplayer) {
+    public constructor(public readonly messageDisplayer: MessageDisplayer, private readonly cdr: ChangeDetectorRef) {
         super();
     }
 
@@ -177,7 +178,12 @@ export abstract class GameComponent<R extends SuperRules<M, S, C, L>,
         // Override if move takes more than one click.
     }
 
-    public abstract updateBoard(triggerAnimation: boolean): Promise<void>;
+    public async updateBoardAndRedraw(triggerAnimation: boolean): Promise<void> {
+        await this.updateBoard(triggerAnimation);
+        this.cdr.detectChanges();
+    }
+
+    protected abstract updateBoard(triggerAnimation: boolean): Promise<void>;
 
     public async pass(): Promise<MGPValidation> {
         const gameName: string = this.constructor.name;
