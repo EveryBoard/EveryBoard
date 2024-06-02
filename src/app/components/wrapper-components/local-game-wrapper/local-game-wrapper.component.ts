@@ -21,7 +21,6 @@ import { SuperRules } from 'src/app/jscaip/Rules';
 @Component({
     selector: 'app-local-game-wrapper',
     templateUrl: './local-game-wrapper.component.html',
-    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 @Debug.log
 export class LocalGameWrapperComponent extends GameWrapper<string> implements AfterViewInit {

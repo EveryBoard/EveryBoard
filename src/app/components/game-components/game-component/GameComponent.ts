@@ -74,7 +74,7 @@ export abstract class BaseWrapperComponent extends BaseComponent {
 @Component({
     template: '',
     styleUrls: ['./game-component.scss'],
-//    changeDetection: ChangeDetectionStrategy.OnPush,
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 @Debug.log
 export abstract class GameComponent<R extends SuperRules<M, S, C, L>,
