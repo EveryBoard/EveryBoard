@@ -274,6 +274,7 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
         this.gameComponent.node = this.gameComponent.rules.getInitialNode(config);
         this.gameComponent.hideLastMove();
         await this.gameComponent.updateBoard(false);
+        this.gameComponent.redraw();
         this.endGame = false;
         this.winnerMessage = MGPOptional.empty();
         await this.proposeAIToPlay();

@@ -52,8 +52,6 @@ type PartCreationViewInfo = {
 @Component({
     selector: 'app-part-creation',
     templateUrl: './part-creation.component.html',
-    // we actually inherit the changeDetection from online-game-wrapper, but for completeness we still specify it here
-    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 @Debug.log
 export class PartCreationComponent implements OnInit, OnDestroy {

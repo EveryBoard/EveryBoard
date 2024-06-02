@@ -129,7 +129,7 @@
                              [stateProvider]="getStateProvider()"
                              [rulesConfigDescriptionOptional]="getRulesConfigDescription()"
                              [userIsCreator]="true"
-                             (updateCallback)="updateConfig($event)">
+                             (updateCallback)="updateConfig($event)"> <!-- TODO: don't use a function -->
     </app-rules-configuration>
     <div class="field is-horizontal">
         <div class="field-body">

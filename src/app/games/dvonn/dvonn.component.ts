@@ -21,7 +21,6 @@ import { DvonnMoveGenerator } from './DvonnMoveGenerator';
     selector: 'app-dvonn',
     templateUrl: './dvonn.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 
 export class DvonnComponent extends HexagonalGameComponent<DvonnRules, DvonnMove, DvonnState, DvonnPieceStack> {
@@ -31,8 +30,8 @@ export class DvonnComponent extends HexagonalGameComponent<DvonnRules, DvonnMove
     public disconnectedSpaces: { coord: Coord, spaceContent: DvonnPieceStack }[] = [];
 
     public constructor(messageDisplayer: MessageDisplayer,
-                       private readonly cdr: ChangeDetectorRef) {
-        super(messageDisplayer);
+                       cdr: ChangeDetectorRef) {
+        super(messageDisplayer, cdr);
         this.setRulesAndNode('Dvonn');
         this.availableAIs = [
             new Minimax($localize`Stacks`, this.rules, new DvonnMaxStacksHeuristic(), new DvonnOrderedMoveGenerator()),

@@ -47,9 +47,9 @@ export abstract class MancalaComponent<R extends MancalaRules>
     private opponentMoveIsBeingAnimated: boolean = false;
 
     public constructor(messageDisplayer: MessageDisplayer,
-                       public readonly cdr: ChangeDetectorRef)
+                       cdr: ChangeDetectorRef)
     {
-        super(messageDisplayer);
+        super(messageDisplayer, cdr);
         this.hasAsymmetricBoard = true;
         this.scores = MGPOptional.of(PlayerNumberMap.of(0, 0));
     }
@@ -363,6 +363,7 @@ export abstract class MancalaComponent<R extends MancalaRules>
     }
 
     private changeVisibleState(state: MancalaState): void {
+        // TODO: quoi la baise est ceci ?
         this.constructedState = state;
         this.board = this.constructedState.board;
         this.cdr.detectChanges();

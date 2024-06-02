@@ -46,6 +46,8 @@ export abstract class GameWrapper<P extends Comparable> extends BaseWrapperCompo
 
     public Player: typeof Player = Player;
 
+    public rulesConfigDescription: MGPOptional<RulesConfigDescription<RulesConfig>> = MGPOptional.empty();
+
     public constructor(activatedRoute: ActivatedRoute,
                        protected readonly connectedUserService: ConnectedUserService,
                        protected readonly router: Router,
@@ -63,7 +65,7 @@ export abstract class GameWrapper<P extends Comparable> extends BaseWrapperCompo
     /**
      * This method is to be called only after view init.
      * It will create the game component and initialize its node.
-     * It returns true if succesful, or false if this is not a valid game.
+     * It returns true if successful, or false if this is not a valid game.
      */
     protected async createMatchingGameComponent(): Promise<boolean> {
         const componentType: MGPOptional<Type<AbstractGameComponent>> =
@@ -74,6 +76,7 @@ export abstract class GameWrapper<P extends Comparable> extends BaseWrapperCompo
             this.gameComponent.config = config;
             this.gameComponent.node = this.gameComponent.rules.getInitialNode(config);
             await this.gameComponent.updateBoard(false);
+            this.gameComponent.redraw();
             return true;
         } else {
             return false;
@@ -115,6 +118,7 @@ export abstract class GameWrapper<P extends Comparable> extends BaseWrapperCompo
             return this.onCancelMove(reason);
         };
         await this.setRole(this.role);
+        this.gameComponent.redraw();
     }
 
     public async setRole(role: PlayerOrNone): Promise<void> {
@@ -122,7 +126,7 @@ export abstract class GameWrapper<P extends Comparable> extends BaseWrapperCompo
         if (role.isNone()) {
             this.gameComponent.setPointOfView(Player.ZERO);
         } else {
-            this.gameComponent.setPointOfView(role as Player);
+            this.gameComponent.setPointOfView(role);
         }
         await this.showCurrentState(false); // Trigger redrawing of the board (might need to be rotated 180°)
     }
@@ -133,6 +137,7 @@ export abstract class GameWrapper<P extends Comparable> extends BaseWrapperCompo
             this.gameComponent.setInteractive(interactive);
             if (updateBoard) {
                 await this.gameComponent.updateBoard(false);
+                this.gameComponent.redraw();
             }
         }
     }
@@ -210,7 +215,7 @@ export abstract class GameWrapper<P extends Comparable> extends BaseWrapperCompo
 
     /**
      * Called when there is a need to put the current board to original state, meaning:
-     *     1. ongoing move attempt must be cancelled (cancelMoveAttempt)
+     *     1. ongoing move attempt must be canceled (cancelMoveAttempt)
      *     2. any previous move must be hidden (hideLastMove)
      *     3. after the board is changed, we now show the correct previous move (showLastMove)
      * @param triggerAnimation a boolean set to true if there is a need to trigger the animation of the last move
@@ -223,9 +228,11 @@ export abstract class GameWrapper<P extends Comparable> extends BaseWrapperCompo
             const move: Move = this.gameComponent.node.previousMove.get();
             const config: MGPOptional<RulesConfig> = await this.getConfig();
             await this.gameComponent.showLastMove(move, config);
+            this.gameComponent.redraw();
         } else {
             // We have no previous move to animate
             await this.gameComponent.updateBoard(false);
+            this.gameComponent.redraw();
         }
     }
 
@@ -238,9 +245,11 @@ export abstract class GameWrapper<P extends Comparable> extends BaseWrapperCompo
      */
     protected async showNewMove(triggerAnimation: boolean): Promise<void> {
         await this.gameComponent.updateBoard(triggerAnimation);
+        this.gameComponent.redraw();
         const lastMove: Move = this.gameComponent.node.previousMove.get();
         const config: MGPOptional<RulesConfig> = await this.getConfig();
         await this.gameComponent.showLastMove(lastMove, config);
+        this.gameComponent.redraw();
     }
 
     public getRulesConfigDescription(): MGPOptional<RulesConfigDescription<RulesConfig>> {
@@ -248,7 +257,7 @@ export abstract class GameWrapper<P extends Comparable> extends BaseWrapperCompo
         return this.getRulesConfigDescriptionByName(gameName);
     }
 
-    public getRulesConfigDescriptionByName(gameName: string): MGPOptional<RulesConfigDescription<RulesConfig>> {
+    private getRulesConfigDescriptionByName(gameName: string): MGPOptional<RulesConfigDescription<RulesConfig>> {
         const gameInfos: MGPOptional<GameInfo> = GameInfo.getByUrlName(gameName);
         if (gameInfos.isAbsent()) {
             return MGPOptional.empty();
