@@ -21,6 +21,7 @@ import { SuperRules } from 'src/app/jscaip/Rules';
 @Component({
     selector: 'app-local-game-wrapper',
     templateUrl: './local-game-wrapper.component.html',
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 @Debug.log
 export class LocalGameWrapperComponent extends GameWrapper<string> implements AfterViewInit {
@@ -45,7 +46,8 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
     public constructor(activatedRoute: ActivatedRoute,
                        connectedUserService: ConnectedUserService,
                        router: Router,
-                       messageDisplayer: MessageDisplayer)
+                       messageDisplayer: MessageDisplayer,
+                       private readonly cdr: ChangeDetectorRef)
     {
         super(activatedRoute, connectedUserService, router, messageDisplayer);
         this.players = [MGPOptional.of(this.playerSelection[0]), MGPOptional.of(this.playerSelection[1])];
@@ -74,6 +76,7 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
             const createdSuccessfully: boolean = await this.createMatchingGameComponent();
             if (createdSuccessfully) {
                 await this.restartGame();
+                this.cdr.detectChanges();
             }
         }, 1);
     }
@@ -328,6 +331,7 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
     public markConfigAsFilled(): void {
         this.configIsSet = true;
         this.configBS.next(this.rulesConfig);
+        this.cdr.detectChanges();
     }
 
     public displayAIInfo(): boolean {
