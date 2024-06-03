@@ -270,7 +270,7 @@ export class SiamComponent extends RectangularGameComponent<SiamRules,
         return `rotate(${orientation * 90} ${this.SPACE_SIZE / 2} ${this.SPACE_SIZE / 2})`;
     }
 
-    public getPiceRotation(x: number, y: number): string {
+    public getPieceRotation(x: number, y: number): string {
         const piece: SiamPiece = this.board[y][x];
         const orientation: number = piece.getDirection().toInt() - 2;
         return this.getRotation(orientation);

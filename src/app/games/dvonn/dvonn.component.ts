@@ -29,8 +29,7 @@ export class DvonnComponent extends HexagonalGameComponent<DvonnRules, DvonnMove
     public chosen: MGPOptional<Coord> = MGPOptional.empty();
     public disconnectedSpaces: { coord: Coord, spaceContent: DvonnPieceStack }[] = [];
 
-    public constructor(messageDisplayer: MessageDisplayer,
-                       cdr: ChangeDetectorRef) {
+    public constructor(messageDisplayer: MessageDisplayer, cdr: ChangeDetectorRef) {
         super(messageDisplayer, cdr);
         this.setRulesAndNode('Dvonn');
         this.availableAIs = [

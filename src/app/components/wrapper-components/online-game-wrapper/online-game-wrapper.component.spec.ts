@@ -23,7 +23,7 @@ import { GameService } from 'src/app/services/GameService';
 import { MinimalUser } from 'src/app/domain/MinimalUser';
 import { MGPOptional } from '@everyboard/lib';
 
-fdescribe('OnlineGameWrapper for non-existing game', () => {
+describe('OnlineGameWrapper for non-existing game', () => {
 
     it('should redirect to /notFound', fakeAsync(async() => {
         // Given a game wrapper for a game that does not exist
@@ -41,7 +41,7 @@ fdescribe('OnlineGameWrapper for non-existing game', () => {
 
         // When loading the component
         testUtils.detectChanges();
-        tick(200);
+        tick(0);
 
         // Then it goes to /notFound with the expected error message
         const expectedRoute: string[] = ['/notFound', GameWrapperMessages.NO_MATCHING_GAME('invalid-game')];
