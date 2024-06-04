@@ -25,8 +25,4 @@ export class TaflPawn {
         return this.owner;
     }
 
-    public equals(other: TaflPawn): boolean {
-        return this === other;
-    }
-
 }
