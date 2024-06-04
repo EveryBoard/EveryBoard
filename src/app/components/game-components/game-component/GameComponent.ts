@@ -127,7 +127,7 @@ export abstract class GameComponent<R extends SuperRules<M, S, C, L>,
 
     public state: S;
 
-    public constructor(private readonly messageDisplayer: MessageDisplayer, protected readonly cdr: ChangeDetectorRef) {
+    public constructor(private readonly messageDisplayer: MessageDisplayer, private readonly cdr: ChangeDetectorRef) {
         super();
     }
 

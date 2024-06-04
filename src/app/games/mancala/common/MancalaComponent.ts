@@ -363,10 +363,8 @@ export abstract class MancalaComponent<R extends MancalaRules>
     }
 
     private changeVisibleState(state: MancalaState): void {
-        // TODO: quoi la baise est ceci ?
         this.constructedState = state;
         this.board = this.constructedState.board;
-        this.cdr.detectChanges();
     }
 
     protected createAIs(moveGenerator: MoveGenerator<MancalaMove, MancalaState, MancalaConfig>)

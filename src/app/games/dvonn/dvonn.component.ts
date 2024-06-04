@@ -57,7 +57,6 @@ export class DvonnComponent extends HexagonalGameComponent<DvonnRules, DvonnMove
         this.state = this.getState();
         this.canPass = this.rules.canOnlyPass(this.state);
         this.scores = MGPOptional.of(DvonnRules.getScores(this.state));
-        this.cdr.detectChanges();
     }
 
     public override async showLastMove(move: DvonnMove): Promise<void> {
