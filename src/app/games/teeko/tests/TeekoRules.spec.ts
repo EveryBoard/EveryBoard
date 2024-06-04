@@ -61,7 +61,7 @@ describe('TeekoRules', () => {
             // When dropping the piece on top of it
             const move: TeekoMove = drop(new Coord(2, 2));
 
-            // Then it should fail
+            // Then the move should be illegal
             const reason: string = RulesFailure.MUST_LAND_ON_EMPTY_SPACE();
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
@@ -236,7 +236,7 @@ describe('TeekoRules', () => {
             // When doing translation with empty starting coord
             const move: TeekoMove = translate(new Coord(2, 2), new Coord(3, 3));
 
-            // Then it should fail
+            // Then the move should be illegal
             const reason: string = RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY();
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
@@ -255,7 +255,7 @@ describe('TeekoRules', () => {
             // When translating opponent piece
             const move: TeekoMove = translate(new Coord(0, 3), new Coord(2, 2));
 
-            // Then it should fail
+            // Then the move should be illegal
             const reason: string = RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT();
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
@@ -274,7 +274,7 @@ describe('TeekoRules', () => {
             // When translating a piece on occupied place
             const move: TeekoMove = translate(new Coord(0, 0), new Coord(1, 1));
 
-            // Then it should fail
+            // Then the move should be illegal
             const reason: string = RulesFailure.MUST_LAND_ON_EMPTY_SPACE();
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
@@ -319,7 +319,7 @@ describe('TeekoRules', () => {
             // When doing a teleportation
             const move: TeekoMove = translate(new Coord(0, 0), new Coord(2, 1));
 
-            // Then it should fail
+            // Then the move should be illegal
             const reason: string = RulesFailure.MUST_MOVE_ON_NEIGHBOR();
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });

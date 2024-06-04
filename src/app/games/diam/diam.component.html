@@ -25,7 +25,7 @@
             id="click_{{ x }}_{{ piece.y }}"
             pointer-events="fill"
             (click)="onPieceInGameClick(x, piece.y)"
-            class="base-no-fill no-fill mid-small-stroke"
+            class="base no-fill mid-small-stroke"
             [ngClass]="piece.foregroundClasses" >
             <use [attr.x]="piece.drawPosition.x"
                  [attr.y]="piece.drawPosition.y"
@@ -42,7 +42,7 @@
         <g *ngFor="let piece of viewInfo.remainingPieces.get(player).get(); index as z"
            (click)="onRemainingPieceClick(piece.actualPiece, z)"
            id="piece_{{ piece.actualPiece.owner.toString() }}_{{ piece.actualPiece.otherPieceType ? 1 : 0 }}_{{ z }}"
-           class="base-no-fill no-fill mid-small-stroke"
+           class="base no-fill mid-small-stroke"
            [ngClass]="piece.foregroundClasses">
             <use [attr.x]="piece.drawPosition.x"
                  [attr.y]="piece.drawPosition.y"

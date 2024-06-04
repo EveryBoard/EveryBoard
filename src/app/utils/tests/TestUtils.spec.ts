@@ -6,7 +6,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { ActivatedRoute, Route, Router } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { GameState } from '../../jscaip/GameState';
+import { GameState } from '../../jscaip/state/GameState';
 import { Move } from '../../jscaip/Move';
 import { AppModule } from '../../app.module';
 import { UserDAO } from '../../dao/UserDAO';

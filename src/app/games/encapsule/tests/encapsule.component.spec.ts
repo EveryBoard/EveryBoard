@@ -38,13 +38,13 @@ describe('EncapsuleComponent', () => {
         it('should forbid selecting a piece that is not remaining', fakeAsync(async() => {
             await testUtils.setupState(new EncapsuleState(emptyBoard, P0Turn, []));
 
-            testUtils.expectElementNotToExist('#piece-0-SMALL_DARK-0');
+            testUtils.expectElementNotToExist('#piece-PLAYER_ZERO-SMALL_DARK-0');
         }));
 
         it('should forbid selecting a piece from the other player', fakeAsync(async() => {
             await testUtils.setupState(new EncapsuleState(emptyBoard, P0Turn, [EncapsulePiece.SMALL_LIGHT]));
 
-            await testUtils.expectClickFailure('#piece-1-SMALL_LIGHT-0', EncapsuleFailure.NOT_DROPPABLE());
+            await testUtils.expectClickFailure('#piece-PLAYER_ONE-SMALL_LIGHT-0', EncapsuleFailure.NOT_DROPPABLE());
         }));
 
         it('should forbid moving from a space that the player is not controlling', fakeAsync(async() => {
@@ -62,10 +62,10 @@ describe('EncapsuleComponent', () => {
         it('should select remaining piece that you clicked', fakeAsync(async() => {
             // Given any state with remaining pieces
             // When clicking on one of them
-            await testUtils.expectClickSuccess('#piece-0-SMALL_DARK-5');
+            await testUtils.expectClickSuccess('#piece-PLAYER_ZERO-SMALL_DARK-5');
 
             // Then that piece should be selected
-            testUtils.expectElementToHaveClass('#piece-0-SMALL_DARK-5', 'selected-stroke');
+            testUtils.expectElementToHaveClass('#piece-PLAYER_ZERO-SMALL_DARK-5', 'selected-stroke');
         }));
 
         it('should select starting coord when clicking on occupied coord', fakeAsync(async() => {
@@ -90,7 +90,7 @@ describe('EncapsuleComponent', () => {
     describe('Second click', () => {
 
         it('should drop a piece on the board when selecting it and dropping it', fakeAsync(async() => {
-            await testUtils.expectClickSuccess('#piece-0-SMALL_DARK-5');
+            await testUtils.expectClickSuccess('#piece-PLAYER_ZERO-SMALL_DARK-5');
 
             const move: EncapsuleMove = EncapsuleMove.ofDrop(EncapsulePiece.SMALL_DARK, new Coord(0, 0));
             await testUtils.expectMoveSuccess('#click-0-0', move);
@@ -104,7 +104,7 @@ describe('EncapsuleComponent', () => {
                 [_, _, _],
             ];
             await testUtils.setupState(new EncapsuleState(board, P0Turn, [EncapsulePiece.MEDIUM_DARK]));
-            await testUtils.expectClickSuccess('#piece-0-MEDIUM_DARK-0');
+            await testUtils.expectClickSuccess('#piece-PLAYER_ZERO-MEDIUM_DARK-0');
 
             const move: EncapsuleMove = EncapsuleMove.ofDrop(EncapsulePiece.MEDIUM_DARK, new Coord(0, 1));
             await testUtils.expectMoveSuccess('#click-0-1', move);
@@ -118,7 +118,7 @@ describe('EncapsuleComponent', () => {
                 [_, _, _],
             ];
             await testUtils.setupState(new EncapsuleState(board, P0Turn, [EncapsulePiece.SMALL_DARK]));
-            await testUtils.expectClickSuccess('#piece-0-SMALL_DARK-0');
+            await testUtils.expectClickSuccess('#piece-PLAYER_ZERO-SMALL_DARK-0');
 
             const move: EncapsuleMove = EncapsuleMove.ofDrop(EncapsulePiece.SMALL_DARK, new Coord(0, 1));
             await testUtils.expectMoveFailure('#click-0-1', EncapsuleFailure.INVALID_PLACEMENT(), move);
@@ -187,30 +187,30 @@ describe('EncapsuleComponent', () => {
 
             await testUtils.expectClickSuccess('#click-0-1');
 
-            await testUtils.expectClickFailure('#piece-0-SMALL_DARK-0', EncapsuleFailure.END_YOUR_MOVE());
+            await testUtils.expectClickFailure('#piece-PLAYER_ZERO-SMALL_DARK-0', EncapsuleFailure.END_YOUR_MOVE());
         }));
 
         it('should deselect piece when clicking a second time on it', fakeAsync(async() => {
             // Given any state with a remaining pieces selected
-            await testUtils.expectClickSuccess('#piece-0-SMALL_DARK-5');
+            await testUtils.expectClickSuccess('#piece-PLAYER_ZERO-SMALL_DARK-5');
 
             // When clicking on it again
-            await testUtils.expectClickFailure('#piece-0-SMALL_DARK-5');
+            await testUtils.expectClickFailure('#piece-PLAYER_ZERO-SMALL_DARK-5');
 
             // Then that piece should be selected no more
-            testUtils.expectElementNotToHaveClass('#piece-0-SMALL_DARK-5', 'selected-stroke');
+            testUtils.expectElementNotToHaveClass('#piece-PLAYER_ZERO-SMALL_DARK-5', 'selected-stroke');
         }));
 
         it('should change select piece when clicking another', fakeAsync(async() => {
             // Given any state with a remaining pieces selected
-            await testUtils.expectClickSuccess('#piece-0-SMALL_DARK-5');
+            await testUtils.expectClickSuccess('#piece-PLAYER_ZERO-SMALL_DARK-5');
 
             // When clicking on another one
-            await testUtils.expectClickSuccess('#piece-0-SMALL_DARK-4');
+            await testUtils.expectClickSuccess('#piece-PLAYER_ZERO-SMALL_DARK-4');
 
             // Then that other piece should be selected
-            testUtils.expectElementNotToHaveClass('#piece-0-SMALL_DARK-5', 'selected-stroke');
-            testUtils.expectElementToHaveClass('#piece-0-SMALL_DARK-4', 'selected-stroke');
+            testUtils.expectElementNotToHaveClass('#piece-PLAYER_ZERO-SMALL_DARK-5', 'selected-stroke');
+            testUtils.expectElementToHaveClass('#piece-PLAYER_ZERO-SMALL_DARK-4', 'selected-stroke');
         }));
 
         it('should deselect starting coord when clicking on it again', fakeAsync(async() => {

@@ -1,4 +1,4 @@
-import { Coord } from './Coord';
+import { Coord } from '../Coord';
 import { MGPOptional } from '@everyboard/lib';
 
 export class TriangularCheckerBoard {

@@ -108,6 +108,7 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
     });
 
     describe('for creator', () => {
+
         it('should have PartCreation subscribe to ConfigRoomService upon initialization', fakeAsync(async() => {
             // Given a starting component, with no accepted config yet
             await prepareComponent(false);
@@ -131,6 +132,7 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
             // finish the game to have no timeout still running
             await finishTest();
         }));
+
         it('should have PartCreationComponent calling startGame when config accepted', fakeAsync(async() => {
             // Given a starting component with an accepted config
             await prepareComponent(true);
@@ -149,6 +151,7 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
 
             tick(wrapper.configRoom.maximalMoveDuration * 1000);
         }));
+
         it('should have some tags before starting', fakeAsync(async() => {
             // Given a online-game-wrapper component
             await prepareComponent(false);
@@ -163,6 +166,7 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
             // Finish the game to have no timeout still running
             await finishTest();
         }));
+
         it('should have a PartCreationComponent', fakeAsync(async() => {
             // Given a component without accepted config
             await prepareComponent(false);
@@ -175,6 +179,7 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
             // Finish the game to have no timeout still running
             await finishTest();
         }));
+
         it('should replace PartCreationComponent by game tag upon game start', fakeAsync(async() => {
             // Given a component with accepted config
             await prepareComponent(true);
@@ -193,6 +198,7 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
             expect(p4Tag).withContext('p4Tag id should still be absent after startGame call').toBeNull();
             tick(2);
         }));
+
         it('should make the game component appear in the end', fakeAsync(async() => {
             // Given a game component with accepted config
             await prepareComponent(true);
@@ -213,7 +219,9 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
                 .toBeTruthy();
             tick(1000);
         }));
+
     });
+
     describe('for ChosenOpponent', () => {
         xit('StartGame should replace PartCreationComponent by game component', fakeAsync(async() => {
             // Given a component loaded with non creator
@@ -233,6 +241,7 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
             tick(0);
         }));
     });
+
     it('should redirect to /notFound if part does not exist', fakeAsync(async() => {
         const router: Router = TestBed.inject(Router);
         spyOn(router, 'navigate').and.callThrough();
@@ -243,6 +252,7 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
 
         expectValidRouting(router, ['/notFound', OnlineGameWrapperMessages.NO_MATCHING_PART()], NotFoundComponent, { skipLocationChange: true });
     }));
+
     it('should unsubscribe from the part upon destruction', fakeAsync(async() => {
         // Given a started part
         const expectUnsubscribeToHaveBeenCalled: () => void = prepareUnsubscribeCheck(TestBed.inject(GameService), 'subscribeToChanges');
@@ -259,4 +269,5 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
         // Then it unsubscribed from the part
         expectUnsubscribeToHaveBeenCalled();
     }));
+
 });
