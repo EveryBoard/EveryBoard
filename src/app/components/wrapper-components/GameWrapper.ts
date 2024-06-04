@@ -72,10 +72,11 @@ export abstract class GameWrapper<P extends Comparable> extends BaseWrapperCompo
         const componentType: MGPOptional<Type<AbstractGameComponent>> =
             await this.getMatchingComponentAndNavigateOutIfAbsent();
         if (componentType.isPresent()) {
-            const config: MGPOptional<RulesConfig> = await this.getConfig();
             console.log('creating matching game component')
             await this.createGameComponent(componentType.get());
-            console.log('setting config')
+            const config: MGPOptional<RulesConfig> = await this.getConfig();
+            console.log('setting config to')
+            console.log(config)
             this.gameComponent.config = config;
             this.gameComponent.node = this.gameComponent.rules.getInitialNode(config);
             await this.setRole(this.role);
@@ -176,6 +177,7 @@ export abstract class GameWrapper<P extends Comparable> extends BaseWrapperCompo
     public abstract getPlayer(): P;
 
     public async getConfig(): Promise<MGPOptional<RulesConfig>> {
+        console.log('GW.getConfig')
         const gameName: string = this.getGameName();
         return RulesConfigUtils.getGameDefaultConfig(gameName);
     }

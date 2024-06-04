@@ -187,6 +187,8 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         };
         const configRoomCallback: (configRoom: MGPOptional<ConfigRoom>) => void =
             async(configRoom: MGPOptional<ConfigRoom>) => {
+                console.log('configRoomCallback')
+                console.log(configRoom)
                 await this.onCurrentConfigRoomUpdate(configRoom);
                 if (configRoom.isPresent() && this.candidatesSubscription === Subscription.EMPTY) {
                     // We want to subscribe to candidates AFTER receiving a first config room
@@ -410,6 +412,8 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         return Utils.getNonNullable(configRoom).partStatus === PartStatus.PART_STARTED.value;
     }
     private onGameStarted(): void {
+        console.log('onGameStarted')
+        console.log(this.currentConfigRoom)
         const configRoom: ConfigRoom = Utils.getNonNullable(this.currentConfigRoom);
 
         this.gameStartNotification.emit(configRoom);

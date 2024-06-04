@@ -22,6 +22,7 @@ import { GameWrapperMessages } from '../GameWrapper';
 import { GameService } from 'src/app/services/GameService';
 import { MinimalUser } from 'src/app/domain/MinimalUser';
 import { MGPOptional } from '@everyboard/lib';
+import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 describe('OnlineGameWrapper for non-existing game', () => {
 
@@ -68,12 +69,17 @@ fdescribe('OnlineGameWrapperComponent Lifecycle', () => {
     let testUtils: ComponentTestUtils<P4Component, MinimalUser>;
     let wrapper: OnlineGameWrapperComponent;
     let configRoomDAO: ConfigRoomDAO;
+    const config: RulesConfig = { width: 7, height: 6 };
 
-    async function prepareComponent(): Promise<void> {
-        const initialConfigRoom: ConfigRoom = {
-            ...ConfigRoomMocks.withAcceptedConfig(MGPOptional.empty()),
-            rulesConfig: { width: 7, height: 6 },
-        };
+    async function prepareComponent(accepted: boolean): Promise<void> {
+        let initialConfigRoom: ConfigRoom;
+        if (accepted) {
+            initialConfigRoom = ConfigRoomMocks.withAcceptedConfig(MGPOptional.of(config));
+        } else {
+            initialConfigRoom = ConfigRoomMocks.getInitial(MGPOptional.of(config));
+        }
+        console.log('initial config room:')
+        console.log(initialConfigRoom)
         const initialPart: Part = PartMocks.INITIAL;
         configRoomDAO = TestBed.inject(ConfigRoomDAO);
         await configRoomDAO.set('configRoomId', initialConfigRoom);
@@ -88,7 +94,7 @@ fdescribe('OnlineGameWrapperComponent Lifecycle', () => {
     async function finishTest(): Promise<void> {
         testUtils.detectChanges();
         tick(0);
-        await configRoomDAO.set('configRoomId', ConfigRoomMocks.withAcceptedConfig(MGPOptional.empty()));
+        await configRoomDAO.set('configRoomId', ConfigRoomMocks.withAcceptedConfig(MGPOptional.of(config)));
         testUtils.detectChanges();
         tick(ConfigRoomMocks.getInitial(MGPOptional.empty()).maximalMoveDuration * 1000);
     }
@@ -104,7 +110,7 @@ fdescribe('OnlineGameWrapperComponent Lifecycle', () => {
     describe('for creator', () => {
         it('Initialization should lead to child component PartCreation to call ConfigRoomService', fakeAsync(async() => {
             // Given a starting component for the creator
-            await prepareComponent();
+            await prepareComponent(false);
             const configRoomService: ConfigRoomService = TestBed.inject(ConfigRoomService);
 
             spyOn(configRoomService, 'joinGame').and.callThrough();
@@ -126,7 +132,7 @@ fdescribe('OnlineGameWrapperComponent Lifecycle', () => {
             await finishTest();
         }));
         it('Initialization on accepted config should lead to PartCreationComponent to call startGame', fakeAsync(async() => {
-            await prepareComponent();
+            await prepareComponent(true);
             testUtils.detectChanges();
 
             spyOn(wrapper, 'startGame').and.callThrough();
@@ -144,7 +150,7 @@ fdescribe('OnlineGameWrapperComponent Lifecycle', () => {
         }));
         it('should have some tags before starting', fakeAsync(async() => {
             // Given a online-game-wrapper component
-            await prepareComponent();
+            await prepareComponent(false);
             // When the game is not started yet
             expect(wrapper.gameStarted).toBeFalse();
             // Then the p4 and chat tags should already be present
@@ -162,22 +168,18 @@ fdescribe('OnlineGameWrapperComponent Lifecycle', () => {
         }));
         it('Initialization should make appear PartCreationComponent', fakeAsync(async() => {
             // Given a online-game-wrapper component
-            await prepareComponent();
+            await prepareComponent(false);
             // When the game is not started yet
             expect(wrapper.gameStarted).toBeFalse();
             // Then part creation should exist
             const partCreationId: DebugElement = testUtils.findElement('#partCreation');
             expect(partCreationId).withContext('partCreation id should be present after ngOnInit').toBeTruthy();
 
-            // Finish initialization to avoid errors
-            testUtils.detectChanges();
-            tick(0);
-
             // Finish the game to have no timeout still running
             await finishTest();
         }));
         it('StartGame should replace PartCreationComponent by game component', fakeAsync(async() => {
-            await prepareComponent();
+            await prepareComponent(true);
             testUtils.detectChanges();
             tick(0);
 
@@ -194,7 +196,7 @@ fdescribe('OnlineGameWrapperComponent Lifecycle', () => {
             tick(2);
         }));
         it('stage three should make the game component appear at last', fakeAsync(async() => {
-            await prepareComponent();
+            await prepareComponent(true);
             testUtils.detectChanges();
             tick(0);
 
@@ -214,7 +216,7 @@ fdescribe('OnlineGameWrapperComponent Lifecycle', () => {
     describe('for ChosenOpponent', () => {
         xit('StartGame should replace PartCreationComponent by game component', fakeAsync(async() => {
             // Given a component loaded with non creator
-            await prepareComponent();
+            await prepareComponent(true);
             testUtils.detectChanges();
             tick(0);
 
@@ -244,7 +246,7 @@ fdescribe('OnlineGameWrapperComponent Lifecycle', () => {
         // Given a started part
         const expectUnsubscribeToHaveBeenCalled: () => void = prepareUnsubscribeCheck(TestBed.inject(GameService), 'subscribeToChanges');
 
-        await prepareComponent();
+        await prepareComponent(true);
         testUtils.detectChanges();
         tick(0);
         testUtils.detectChanges();

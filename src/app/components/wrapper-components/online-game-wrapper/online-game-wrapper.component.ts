@@ -176,6 +176,8 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
 
     public async startGame(configRoom: ConfigRoom): Promise<void> {
         Utils.assert(this.gameStarted === false, 'Should not start already started game');
+        console.log('start game')
+        console.log(configRoom)
         this.configRoom = configRoom;
 
         this.gameStarted = true;
@@ -617,6 +619,8 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
     }
 
     public override async getConfig(): Promise<MGPOptional<RulesConfig>> {
+        console.log('OGWC.getConfig, with config room being')
+        console.log(this.configRoom)
         const rulesConfig: RulesConfig = this.configRoom.rulesConfig;
         return MGPOptional.of(rulesConfig);
     }
