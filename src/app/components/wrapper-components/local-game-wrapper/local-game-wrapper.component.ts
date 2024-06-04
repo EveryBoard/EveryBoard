@@ -17,11 +17,11 @@ import { RulesConfig, RulesConfigUtils } from 'src/app/jscaip/RulesConfigUtil';
 import { AIOptions, AIStats, AbstractAI } from 'src/app/jscaip/AI/AI';
 import { GameInfo } from '../../normal-component/pick-game/pick-game.component';
 import { SuperRules } from 'src/app/jscaip/Rules';
-import { RulesConfigDescription } from '../rules-configuration/RulesConfigDescription';
 
 @Component({
     selector: 'app-local-game-wrapper',
     templateUrl: './local-game-wrapper.component.html',
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 @Debug.log
 export class LocalGameWrapperComponent extends GameWrapper<string> implements AfterViewInit {
@@ -42,7 +42,6 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
 
     private readonly configBS: BehaviorSubject<MGPOptional<RulesConfig>> = new BehaviorSubject(MGPOptional.empty());
     private readonly configObs: Observable<MGPOptional<RulesConfig>> = this.configBS.asObservable();
-    public rulesConfigDescription: MGPOptional<RulesConfigDescription<RulesConfig>> = MGPOptional.empty();
 
     public constructor(activatedRoute: ActivatedRoute,
                        connectedUserService: ConnectedUserService,
@@ -54,6 +53,7 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
         this.players = [MGPOptional.of(this.playerSelection[0]), MGPOptional.of(this.playerSelection[1])];
         this.role = Player.ZERO; // The user is playing, not observing
         this.setDefaultRulesConfig();
+
     }
 
     // Will set the default rules config.
@@ -62,7 +62,6 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
     private setDefaultRulesConfig(): void {
         const gameName: string = this.getGameName();
         this.rulesConfig = RulesConfigUtils.getGameDefaultConfig(gameName);
-        this.rulesConfigDescription = this.getRulesConfigDescription();
     }
 
     public getCreatedNodes(): number {
@@ -125,6 +124,7 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
                 }
             }
         }
+        this.cdr.detectChanges();
     }
 
     public async proposeAIToPlay(): Promise<void> {
@@ -223,6 +223,7 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
             this.gameComponent.hideLastMove();
             this.gameComponent.node = nextNode.get();
             await this.applyNewMove();
+            this.cdr.detectChanges();
             return MGPValidation.SUCCESS;
         } else {
             return this.handleAIError(playingAI, aiMove, nextNode.getReason());

@@ -127,7 +127,7 @@
      class="box">
     <app-rules-configuration id="rulesConfigComponent"
                              [stateProvider]="getStateProvider()"
-                             [rulesConfigDescriptionOptional]="rulesConfigDescription"
+                             [rulesConfigDescriptionOptional]="getRulesConfigDescription()"
                              [userIsCreator]="true"
                              (updateCallback)="updateConfig($event)">
     </app-rules-configuration>

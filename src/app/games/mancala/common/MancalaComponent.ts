@@ -365,6 +365,7 @@ export abstract class MancalaComponent<R extends MancalaRules>
     private changeVisibleState(state: MancalaState): void {
         this.constructedState = state;
         this.board = this.constructedState.board;
+        this.cdr.detectChanges();
     }
 
     protected createAIs(moveGenerator: MoveGenerator<MancalaMove, MancalaState, MancalaConfig>)
