@@ -2,7 +2,7 @@
                    #partCreation
                    *ngIf="gameStarted === false"
                    [partId]="currentPartId"
-                   [rulesConfigDescription]="rulesConfigDescription"
+                   [rulesConfigDescription]="getRulesConfigDescription()"
                    (gameStartNotification)="startGame($event)">
 </app-part-creation>
 

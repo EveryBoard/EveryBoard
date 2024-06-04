@@ -46,8 +46,6 @@ export abstract class GameWrapper<P extends Comparable> extends BaseWrapperCompo
 
     public Player: typeof Player = Player;
 
-    public rulesConfigDescription: MGPOptional<RulesConfigDescription<RulesConfig>> = MGPOptional.empty();
-
     public constructor(activatedRoute: ActivatedRoute,
                        protected readonly connectedUserService: ConnectedUserService,
                        protected readonly router: Router,
@@ -267,6 +265,7 @@ export abstract class GameWrapper<P extends Comparable> extends BaseWrapperCompo
     }
 
     public getRulesConfigDescription(): MGPOptional<RulesConfigDescription<RulesConfig>> {
+        console.log('getting rules config')
         const gameName: string = this.getGameName();
         return this.getRulesConfigDescriptionByName(gameName);
     }

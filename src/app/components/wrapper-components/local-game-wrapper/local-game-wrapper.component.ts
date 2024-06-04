@@ -17,6 +17,7 @@ import { RulesConfig, RulesConfigUtils } from 'src/app/jscaip/RulesConfigUtil';
 import { AIOptions, AIStats, AbstractAI } from 'src/app/jscaip/AI/AI';
 import { GameInfo } from '../../normal-component/pick-game/pick-game.component';
 import { SuperRules } from 'src/app/jscaip/Rules';
+import { RulesConfigDescription } from '../rules-configuration/RulesConfigDescription';
 
 @Component({
     selector: 'app-local-game-wrapper',
@@ -35,12 +36,13 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
 
     public displayAIMetrics: boolean = false;
 
-    private configIsSet: boolean = false;
+    public configIsSet: boolean = false;
 
     public rulesConfig: MGPOptional<RulesConfig> = MGPOptional.empty();
 
     private readonly configBS: BehaviorSubject<MGPOptional<RulesConfig>> = new BehaviorSubject(MGPOptional.empty());
     private readonly configObs: Observable<MGPOptional<RulesConfig>> = this.configBS.asObservable();
+    public rulesConfigDescription: MGPOptional<RulesConfigDescription<RulesConfig>> = MGPOptional.empty();
 
     public constructor(activatedRoute: ActivatedRoute,
                        connectedUserService: ConnectedUserService,
@@ -60,6 +62,7 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
     private setDefaultRulesConfig(): void {
         const gameName: string = this.getGameName();
         this.rulesConfig = RulesConfigUtils.getGameDefaultConfig(gameName);
+        this.rulesConfigDescription = this.getRulesConfigDescription();
     }
 
     public getCreatedNodes(): number {
@@ -321,10 +324,6 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
         if (rulesConfig.isPresent() && Object.keys(rulesConfig.get()).length === 0) {
             this.markConfigAsFilled();
         }
-    }
-
-    public isConfigSet(): boolean {
-        return this.configIsSet;
     }
 
     public markConfigAsFilled(): void {

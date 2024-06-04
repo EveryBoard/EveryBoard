@@ -1,4 +1,4 @@
-<div *ngIf="isConfigSet()">
+<div *ngIf="configIsSet">
     <div class="tile is-ancestor">
         <div class="tile is-3 is-vertical is-parent">
             <div *ngIf="gameComponent"
@@ -123,13 +123,13 @@
     </div>
 </div>
 
-<div *ngIf="isConfigSet() === false"
+<div *ngIf="configIsSet === false"
      class="box">
     <app-rules-configuration id="rulesConfigComponent"
                              [stateProvider]="getStateProvider()"
-                             [rulesConfigDescriptionOptional]="getRulesConfigDescription()"
+                             [rulesConfigDescriptionOptional]="rulesConfigDescription"
                              [userIsCreator]="true"
-                             (updateCallback)="updateConfig($event)"> <!-- TODO: don't use a function -->
+                             (updateCallback)="updateConfig($event)">
     </app-rules-configuration>
     <div class="field is-horizontal">
         <div class="field-body">
