@@ -8,7 +8,7 @@ import { PlayerNumberTable } from 'src/app/jscaip/PlayerNumberTable';
 import { CoerceoHeuristic } from './CoerceoHeuristic';
 import { CoordSet } from 'src/app/jscaip/CoordSet';
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
-import { TriangularCheckerBoard } from 'src/app/jscaip/TriangularCheckerBoard';
+import { TriangularCheckerBoard } from 'src/app/jscaip/state/TriangularCheckerBoard';
 import { CoerceoStep } from './CoerceoMove';
 import { Vector } from 'src/app/jscaip/Vector';
 

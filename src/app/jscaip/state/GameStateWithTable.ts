@@ -1,12 +1,12 @@
-import { Comparable, MGPMap, MGPOptional, Utils, comparableEquals } from '@everyboard/lib';
-import { Coord } from './Coord';
+import { MGPMap, MGPOptional, Utils, comparableEquals } from '@everyboard/lib';
+import { Coord } from '../Coord';
 import { GameState } from './GameState';
-import { Table, TableUtils } from './TableUtils';
-import { CoordSet } from './CoordSet';
+import { Table, TableUtils } from '../TableUtils';
+import { CoordSet } from '../CoordSet';
 
-export abstract class GameStateWithTable<P extends NonNullable<Comparable>> extends GameState {
+export abstract class GameStateWithTable<P extends NonNullable<unknown>> extends GameState {
 
-    public static setPieceAt<Q extends NonNullable<Comparable>, T extends GameStateWithTable<Q>>(
+    public static setPieceAt<Q extends NonNullable<unknown>, T extends GameStateWithTable<Q>>(
         oldState: T,
         coord: Coord,
         value: Q,

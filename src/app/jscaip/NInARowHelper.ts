@@ -1,11 +1,11 @@
-import { Comparable, MGPMap, Utils } from '@everyboard/lib';
+import { MGPMap, Utils } from '@everyboard/lib';
 import { BoardValue } from './AI/BoardValue';
 import { Coord } from './Coord';
 import { Ordinal } from './Ordinal';
-import { GameStateWithTable } from './GameStateWithTable';
+import { GameStateWithTable } from './state/GameStateWithTable';
 import { Player, PlayerOrNone } from './Player';
 
-export class NInARowHelper<T extends NonNullable<Comparable>> {
+export class NInARowHelper<T extends NonNullable<unknown>> {
 
     public constructor(private readonly getOwner: (piece: T, state?: GameStateWithTable<T>) => PlayerOrNone,
                        private readonly N: number)

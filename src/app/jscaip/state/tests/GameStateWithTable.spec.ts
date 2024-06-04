@@ -1,7 +1,7 @@
 /* eslint-disable max-lines-per-function */
 import { TestUtils } from 'lib/dist';
 import { Coord } from '../Coord';
-import { GameStateWithTable } from '../GameStateWithTable';
+import { GameStateWithTable } from '../state/GameStateWithTable';
 
 class MyGameState extends GameStateWithTable<number> {
 }

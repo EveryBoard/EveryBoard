@@ -1,4 +1,4 @@
-import { GameStateWithTable } from 'src/app/jscaip/GameStateWithTable';
+import { GameStateWithTable } from 'src/app/jscaip/state/GameStateWithTable';
 import { EncapsulePiece, Size } from 'src/app/games/encapsule/EncapsulePiece';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { Table } from 'src/app/jscaip/TableUtils';
@@ -131,10 +131,6 @@ export class EncapsuleSpace {
 
     public belongsTo(player: Player): boolean {
         return this.getBiggest().getPlayer() === player;
-    }
-
-    public equals(other: EncapsuleSpace): boolean {
-        return ArrayUtils.equals(this.toList(), other.toList());
     }
 
     public toString(): string {

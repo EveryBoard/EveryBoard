@@ -1,6 +1,6 @@
 import { Comparable } from 'lib/dist';
 import { Coord } from './Coord';
-import { HexagonalGameState } from './HexagonalGameState';
+import { HexagonalGameState } from './state/HexagonalGameState';
 
 export abstract class HexaOrientation {
     public readonly startAngle: number;

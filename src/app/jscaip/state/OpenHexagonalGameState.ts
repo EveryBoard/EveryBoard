@@ -1,7 +1,7 @@
 import { MGPSet, ReversibleMap } from '@everyboard/lib';
-import { Coord } from './Coord';
-import { GameState } from './state/GameState';
-import { HexagonalUtils } from './HexagonalUtils';
+import { Coord } from '../Coord';
+import { GameState } from './GameState';
+import { HexagonalUtils } from '../HexagonalUtils';
 
 type Scale = {
     width: number,

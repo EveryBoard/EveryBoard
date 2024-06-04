@@ -2,7 +2,7 @@
 import { Coord } from '../Coord';
 import { HexagonalGameState } from '../HexagonalGameState';
 import { FlatHexaOrientation } from '../HexaOrientation';
-import { TestingHexagonalState } from './HexagonalGameState.spec';
+import { TestingHexagonalState } from '../state/tests/HexagonalGameState.spec';
 
 describe('FlatHexaOrientation', () => {
 

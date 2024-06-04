@@ -21,7 +21,7 @@ import { CurrentGameService } from 'src/app/services/CurrentGameService';
 import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 import { RulesConfigurationComponent } from '../rules-configuration/rules-configuration.component';
 import { GameInfo } from '../../normal-component/pick-game/pick-game.component';
-import { GameState } from 'src/app/jscaip/GameState';
+import { GameState } from 'src/app/jscaip/state/GameState';
 import { RulesConfigDescription } from '../rules-configuration/RulesConfigDescription';
 import { AbstractRules } from 'src/app/jscaip/Rules';
 import { Debug } from 'src/app/utils/Debug';

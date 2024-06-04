@@ -1,6 +1,6 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
-import { GameStateWithTable } from 'src/app/jscaip/GameStateWithTable';
+import { GameStateWithTable } from 'src/app/jscaip/state/GameStateWithTable';
 import { AbaloneRules } from './AbaloneRules';
 import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 import { PlayerOrNone } from 'src/app/jscaip/Player';

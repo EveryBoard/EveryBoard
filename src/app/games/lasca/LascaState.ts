@@ -1,8 +1,8 @@
 import { Coord } from 'src/app/jscaip/Coord';
-import { GameStateWithTable } from 'src/app/jscaip/GameStateWithTable';
+import { GameStateWithTable } from 'src/app/jscaip/state/GameStateWithTable';
 import { Player } from 'src/app/jscaip/Player';
 import { Table } from 'src/app/jscaip/TableUtils';
-import { ArrayUtils, Utils } from '@everyboard/lib';
+import { Utils } from '@everyboard/lib';
 
 export class LascaPiece {
 
@@ -91,10 +91,6 @@ export class LascaStack {
 
     public get(index: number): LascaPiece {
         return this.pieces[index];
-    }
-
-    public equals(other: LascaStack): boolean {
-        return ArrayUtils.equals(other.pieces, this.pieces);
     }
 
     public toString(length: number): string {

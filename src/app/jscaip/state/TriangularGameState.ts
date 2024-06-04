@@ -1,10 +1,9 @@
-import { Comparable } from 'lib/dist';
-import { Coord } from './Coord';
+import { Coord } from '../Coord';
 import { GameStateWithTable } from './GameStateWithTable';
-import { Table } from './TableUtils';
+import { Table } from '../TableUtils';
 import { TriangularCheckerBoard } from './TriangularCheckerBoard';
 
-export abstract class TriangularGameState<T extends NonNullable<Comparable>> extends GameStateWithTable<T> {
+export abstract class TriangularGameState<T extends NonNullable<unknown>> extends GameStateWithTable<T> {
 
     public static getEmptyNeighbors<U>(board: Table<U>, coord: Coord, empty: U): Coord[] {
         const neighbors: Coord[] = [];
