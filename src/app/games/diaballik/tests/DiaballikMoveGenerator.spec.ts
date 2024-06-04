@@ -1,5 +1,5 @@
 /* eslint-disable max-lines-per-function */
-import { MGPFallible, MGPOptional, MGPSet } from '@everyboard/lib';
+import { MGPFallible, MGPOptional, ImmutableSet } from '@everyboard/lib';
 import { DiaballikBallPass, DiaballikMove, DiaballikSubMove, DiaballikTranslation } from '../DiaballikMove';
 import { DiaballikMoveGenerator, DiaballikMoveInConstruction } from '../DiaballikMoveGenerator';
 import { DiaballikNode, DiaballikRules } from '../DiaballikRules';
@@ -69,7 +69,7 @@ describe('DiaballikMoveInConstruction', () => {
             new DiaballikMoveInConstruction([firstTranslation, secondTranslation], state, state);
 
         // When putting them in a set
-        const set: MGPSet<DiaballikMoveInConstruction> = new MGPSet([move, equalMove]);
+        const set: ImmutableSet<DiaballikMoveInConstruction> = new ImmutableSet([move, equalMove]);
 
         // Then there should be only one move
         expect(set.size()).toBe(1);
@@ -134,7 +134,7 @@ describe('DiaballikMoveGenerator', () => {
             const legalityInfo: MGPFallible<DiaballikState> = DiaballikRules.get().isLegal(move, node.gameState);
             return DiaballikRules.get().applyLegalMove(move, node.gameState, defaultConfig, legalityInfo.get());
         }
-        const states: DiaballikState[] = new MGPSet(moves.map(applyMove)).toList();
+        const states: DiaballikState[] = new ImmutableSet(moves.map(applyMove)).toList();
 
         // Then we should have as many states as there are moves
         expect(states.length).toBe(moves.length);

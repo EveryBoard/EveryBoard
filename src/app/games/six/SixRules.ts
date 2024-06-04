@@ -7,15 +7,15 @@ import { SixMove } from './SixMove';
 import { SixFailure } from './SixFailure';
 import { Rules } from 'src/app/jscaip/Rules';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { MGPFallible, MGPOptional, MGPSet, MGPValidation } from '@everyboard/lib';
+import { MGPFallible, MGPOptional, ImmutableSet, MGPValidation } from '@everyboard/lib';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { Table } from 'src/app/jscaip/TableUtils';
 import { Debug } from 'src/app/utils/Debug';
-import { CoordSet } from 'src/app/jscaip/CoordSet';
+import { ImmutableCoordSet } from 'src/app/jscaip/CoordSet';
 import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 
-export type SixLegalityInformation = MGPSet<Coord>;
+export type SixLegalityInformation = ImmutableCoordSet;
 
 export class SixNode extends GameNode<SixMove, SixState> {
 }
@@ -69,12 +69,12 @@ export class SixRules extends Rules<SixMove, SixState, SixLegalityInformation> {
         }
     }
     public static getLegalLandings(state: SixState): Coord[] {
-        const neighbors: MGPSet<Coord> = new CoordSet();
+        let neighbors: ImmutableCoordSet = new ImmutableCoordSet();
         for (const piece of state.getPieceCoords()) {
             for (const dir of HexaDirection.factory.all) {
                 const neighbor: Coord = piece.getNext(dir, 1);
                 if (state.getPieceAt(neighbor).isNone()) {
-                    neighbors.add(neighbor);
+                    neighbors = neighbors.unionElement(neighbor);
                 }
             }
         }
@@ -84,7 +84,7 @@ export class SixRules extends Rules<SixMove, SixState, SixLegalityInformation> {
         if (move.isDrop() === false) {
             return MGPFallible.failure(SixFailure.NO_MOVEMENT_BEFORE_TURN_40());
         }
-        return MGPFallible.success(new MGPSet(state.getPieceCoords()));
+        return MGPFallible.success(new ImmutableCoordSet(state.getPieceCoords()));
     }
     public static isLegalPhaseTwoMove(move: SixMove, state: SixState): MGPFallible<SixLegalityInformation> {
         if (move.isDrop()) {
@@ -97,9 +97,9 @@ export class SixRules extends Rules<SixMove, SixState, SixLegalityInformation> {
             return MGPFallible.failure(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT());
         }
         const stateAfterMove: SixState = state.movePiece(move);
-        const groupsAfterMove: MGPSet<MGPSet<Coord>> = stateAfterMove.getGroups();
+        const groupsAfterMove: ImmutableSet<ImmutableCoordSet> = stateAfterMove.getGroups();
         if (SixRules.isSplit(groupsAfterMove)) {
-            const biggerGroups: MGPSet<MGPSet<Coord>> = this.getLargestGroups(groupsAfterMove);
+            const biggerGroups: ImmutableSet<ImmutableCoordSet> = this.getLargestGroups(groupsAfterMove);
             if (biggerGroups.size() === 1) {
                 if (move.keep.isPresent()) {
                     return MGPFallible.failure(SixFailure.CANNOT_CHOOSE_TO_KEEP());
@@ -110,28 +110,28 @@ export class SixRules extends Rules<SixMove, SixState, SixLegalityInformation> {
                 return this.moveKeepBiggerGroup(move.keep, biggerGroups, stateAfterMove);
             }
         } else {
-            return MGPFallible.success(new CoordSet());
+            return MGPFallible.success(new ImmutableCoordSet());
         }
     }
-    public static isSplit(groups: MGPSet<MGPSet<Coord>>): boolean {
+    public static isSplit(groups: ImmutableSet<ImmutableCoordSet>): boolean {
         return groups.size() > 1;
     }
-    public static getLargestGroups(groups: MGPSet<MGPSet<Coord>>): MGPSet<MGPSet<Coord>> {
+    public static getLargestGroups(groups: ImmutableSet<ImmutableCoordSet>): ImmutableSet<ImmutableCoordSet> {
         let biggerSize: number = 0;
-        let biggerGroups: MGPSet<MGPSet<Coord>> = new MGPSet();
+        let biggerGroups: ImmutableSet<ImmutableCoordSet> = new ImmutableSet();
         for (const group of groups) {
             const groupSize: number = group.size();
             if (groupSize > biggerSize) {
                 biggerSize = groupSize;
-                biggerGroups = new MGPSet([group]);
+                biggerGroups = new ImmutableSet([group]);
             } else if (groupSize === biggerSize) {
-                biggerGroups.add(group);
+                biggerGroups = biggerGroups.unionElement(group);
             }
         }
         return biggerGroups;
     }
     public static moveKeepBiggerGroup(keep: MGPOptional<Coord>,
-                                      biggerGroups: MGPSet<MGPSet<Coord>>,
+                                      biggerGroups: ImmutableSet<ImmutableCoordSet>,
                                       state: SixState)
     : MGPFallible<SixLegalityInformation>
     {

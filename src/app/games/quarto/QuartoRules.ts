@@ -3,7 +3,7 @@ import { GameNode } from 'src/app/jscaip/AI/GameNode';
 import { QuartoState } from './QuartoState';
 import { QuartoMove } from './QuartoMove';
 import { QuartoPiece } from './QuartoPiece';
-import { MGPOptional, MGPSet, MGPValidation } from '@everyboard/lib';
+import { MGPOptional, MGPValidation } from '@everyboard/lib';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Ordinal } from 'src/app/jscaip/Ordinal';
 import { SCORE } from 'src/app/jscaip/SCORE';
@@ -12,7 +12,7 @@ import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { QuartoFailure } from './QuartoFailure';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { TableUtils } from 'src/app/jscaip/TableUtils';
-import { CoordSet } from 'src/app/jscaip/CoordSet';
+import { ImmutableCoordSet } from 'src/app/jscaip/CoordSet';
 import { Debug } from 'src/app/utils/Debug';
 import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 
@@ -100,7 +100,7 @@ export interface BoardStatus {
 
     score: SCORE;
 
-    sensitiveSquares: MGPSet<Coord>;
+    sensitiveSquares: ImmutableCoordSet;
 }
 
 class QuartoLine {
@@ -207,7 +207,7 @@ export class QuartoRules extends Rules<QuartoMove, QuartoState> {
             if (this.isThereAVictoriousLine(line, state)) {
                 return {
                     score: SCORE.VICTORY,
-                    sensitiveSquares: new CoordSet(),
+                    sensitiveSquares: new ImmutableCoordSet(),
                 };
             } else {
                 return boardStatus;
@@ -261,14 +261,14 @@ export class QuartoRules extends Rules<QuartoMove, QuartoState> {
             // this line is not null and has a common criterion between all of its pieces
             if (sensitiveCoord.isAbsent()) {
                 // the line is full
-                return { score: SCORE.VICTORY, sensitiveSquares: new CoordSet() };
+                return { score: SCORE.VICTORY, sensitiveSquares: new ImmutableCoordSet() };
             } else {
                 // if there is only one empty square, then the sensitive square we found is indeed sensitive
                 if (commonCriterion.get().matchPiece(state.pieceInHand)) {
                     boardStatus.score = SCORE.PRE_VICTORY;
                 }
                 const coord: Coord = sensitiveCoord.get();
-                boardStatus.sensitiveSquares.add(coord);
+                boardStatus.sensitiveSquares = boardStatus.sensitiveSquares.unionElement(coord);
             }
         }
         return boardStatus;
@@ -318,7 +318,7 @@ export class QuartoRules extends Rules<QuartoMove, QuartoState> {
         const state: QuartoState = node.gameState;
         let boardStatus: BoardStatus = {
             score: SCORE.DEFAULT,
-            sensitiveSquares: new CoordSet(),
+            sensitiveSquares: new ImmutableCoordSet(),
         };
         for (const line of QuartoRules.lines) {
             boardStatus = QuartoRules.updateBoardStatus(line, state, boardStatus);

@@ -6,7 +6,7 @@ import { BoardValue } from 'src/app/jscaip/AI/BoardValue';
 import { QuartoNode, BoardStatus, QuartoRules } from './QuartoRules';
 import { Player } from 'src/app/jscaip/Player';
 import { Utils } from '@everyboard/lib';
-import { CoordSet } from 'src/app/jscaip/CoordSet';
+import { ImmutableCoordSet } from 'src/app/jscaip/CoordSet';
 import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 export class QuartoHeuristic extends Heuristic<QuartoMove, QuartoState> {
@@ -25,7 +25,7 @@ export class QuartoHeuristic extends Heuristic<QuartoMove, QuartoState> {
         const state: QuartoState = node.gameState;
         let boardStatus: BoardStatus = {
             score: SCORE.DEFAULT,
-            sensitiveSquares: new CoordSet(),
+            sensitiveSquares: new ImmutableCoordSet(),
         };
         for (const line of QuartoRules.lines) {
             boardStatus = QuartoRules.updateBoardStatus(line, state, boardStatus);

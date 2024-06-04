@@ -1,7 +1,7 @@
 /* eslint-disable max-lines-per-function */
 import { MGPMap, ReversibleMap } from '../MGPMap';
 import { MGPOptional } from '../MGPOptional';
-import { MGPSet } from '../MGPSet';
+import { ImmutableSet } from '../ImmutableSet';
 
 describe('MGPMap', () => {
 
@@ -97,7 +97,7 @@ describe('MGPMap', () => {
     describe('getKeySet', () => {
         it('should return all the keys in a set', () => {
             const map: MGPMap<string, number> = MGPMap.from({ first: 1, second: 2 });
-            expect(map.getKeySet()).toEqual(new MGPSet(['first', 'second']));
+            expect(map.getKeySet()).toEqual(new ImmutableSet(['first', 'second']));
         });
     });
 
@@ -217,11 +217,11 @@ describe('ReversibleMap', () => {
             map.set('rater', 'miss');
             map.set('manquer', 'miss');
             map.set('non', 'no');
-            const reversed: ReversibleMap<string, MGPSet<string>> = map.reverse();
+            const reversed: ReversibleMap<string, ImmutableSet<string>> = map.reverse();
 
-            const expectedReversed: ReversibleMap<string, MGPSet<string>> = new ReversibleMap();
-            expectedReversed.set('miss', new MGPSet(['rater', 'manquer']));
-            expectedReversed.set('no', new MGPSet(['non']));
+            const expectedReversed: ReversibleMap<string, ImmutableSet<string>> = new ReversibleMap();
+            expectedReversed.set('miss', new ImmutableSet(['rater', 'manquer']));
+            expectedReversed.set('no', new ImmutableSet(['non']));
             expect(reversed).toEqual(expectedReversed);
         });
     });

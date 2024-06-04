@@ -1,11 +1,12 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { HexaDirection } from 'src/app/jscaip/HexaDirection';
-import { MGPFallible, MGPOptional, MGPSet, MGPValidation, Utils } from '@everyboard/lib';
+import { MGPFallible, MGPOptional, ImmutableSet, MGPValidation, Utils } from '@everyboard/lib';
 import { HiveFailure } from './HiveFailure';
 import { HiveCoordToCoordMove, HiveSpiderMove } from './HiveMove';
 import { HivePiece, HivePieceKind, HivePieceStack } from './HivePiece';
 import { HiveState } from './HiveState';
 import { HexagonalUtils } from 'src/app/jscaip/HexagonalUtils';
+import { ImmutableCoordSet } from 'src/app/jscaip/CoordSet';
 
 export abstract class HivePieceRules {
 
@@ -32,9 +33,9 @@ export abstract class HivePieceRules {
     protected canSlideBetweenNeighbors(state: HiveState, start: Coord, end: Coord): boolean {
         // For the piece to slide from start to end,
         // one of the two common neighbors of start and end coord should be empty
-        const startNeighbors: MGPSet<Coord> = new MGPSet(HexagonalUtils.getNeighbors(start));
-        const endNeighbors: MGPSet<Coord> = new MGPSet(HexagonalUtils.getNeighbors(end));
-        const commonNeighbors: MGPSet<Coord> = startNeighbors.intersection(endNeighbors);
+        const startNeighbors: ImmutableCoordSet = new ImmutableCoordSet(HexagonalUtils.getNeighbors(start));
+        const endNeighbors: ImmutableCoordSet = new ImmutableCoordSet(HexagonalUtils.getNeighbors(end));
+        const commonNeighbors: ImmutableCoordSet = startNeighbors.intersection(endNeighbors);
         for (const neighbor of commonNeighbors) {
             if (state.getAt(neighbor).isEmpty()) {
                 return true;
@@ -157,7 +158,7 @@ export class HiveSpiderRules extends HivePieceRules {
         return this.INSTANCE.get();
     }
     public prefixLegality(coords: Coord[], state: HiveState): MGPValidation {
-        const visited: MGPSet<Coord> = new MGPSet();
+        let visited: ImmutableCoordSet = new ImmutableCoordSet();
         const stateWithoutMovedSpider: HiveState = state.update()
             .setAt(coords[0], HivePieceStack.EMPTY)
             .increaseTurnAndFinalizeUpdate();
@@ -177,7 +178,7 @@ export class HiveSpiderRules extends HivePieceRules {
             if (visited.contains(coords[i])) {
                 return MGPValidation.failure(HiveFailure.SPIDER_CANNOT_BACKTRACK());
             }
-            visited.add(coords[i]);
+            visited = visited.unionList([coords[i]]);
         }
         return MGPValidation.SUCCESS;
     }
@@ -202,7 +203,7 @@ export class HiveSpiderRules extends HivePieceRules {
         function makeMove(move: Coord[]): HiveSpiderMove {
             return HiveSpiderMove.ofCoords(move as [Coord, Coord, Coord, Coord]);
         }
-        const uniqueMoves: MGPSet<HiveCoordToCoordMove> = new MGPSet(movesSoFar.map(makeMove));
+        const uniqueMoves: ImmutableSet<HiveCoordToCoordMove> = new ImmutableSet(movesSoFar.map(makeMove));
         return uniqueMoves.toList();
     }
     private nextMoveStep(state: HiveState, move: Coord[]): Coord[][] {
@@ -219,8 +220,8 @@ export class HiveSpiderRules extends HivePieceRules {
             // Must have a common neighbor with the previous coord
             return state.haveCommonNeighbor(coord, lastCoord);
         }
-        const possibleNeighbors: MGPSet<Coord> =
-            new MGPSet(HexagonalUtils.getNeighbors(lastCoord)).filter(neighborsFilter);
+        const possibleNeighbors: ImmutableCoordSet =
+            new ImmutableCoordSet(HexagonalUtils.getNeighbors(lastCoord)).filter(neighborsFilter);
         return possibleNeighbors.toList().map((coord: Coord): Coord[] => [...move, coord]);
     }
 }
@@ -236,14 +237,14 @@ export class HiveSoldierAntRules extends HivePieceRules {
         return this.INSTANCE.get();
     }
     public pathExists(state: HiveState, start: Coord, end: Coord): boolean {
-        const visited: MGPSet<Coord> = new MGPSet();
+        let visited: ImmutableCoordSet = new ImmutableCoordSet();
         const worklist: Coord[] = [start];
         while (worklist.length > 0) {
             const coord: Coord = worklist.pop() as Coord;
             if (visited.contains(coord)) {
                 continue;
             }
-            visited.add(coord);
+            visited = visited.unionList([coord]);
 
             if (coord.equals(end)) {
                 return true;
@@ -266,14 +267,14 @@ export class HiveSoldierAntRules extends HivePieceRules {
         return this.checkEmptyDestination(move, state);
     }
     public getPotentialMoves(coord: Coord, state: HiveState): HiveCoordToCoordMove[] {
-        const moves: MGPSet<HiveCoordToCoordMove> = new MGPSet();
+        let moves: ImmutableSet<HiveCoordToCoordMove> = new ImmutableSet();
         for (const occupiedSpace of state.occupiedSpaces()) {
             if (occupiedSpace.equals(coord)) {
                 // We will move so we don't look at this space
                 continue;
             }
             for (const unoccupied of state.emptyNeighbors(occupiedSpace)) {
-                moves.add(HiveCoordToCoordMove.from(coord, unoccupied).get());
+                moves = moves.unionList([HiveCoordToCoordMove.from(coord, unoccupied).get()]);
             }
         }
         return moves.toList();

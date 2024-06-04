@@ -4,11 +4,11 @@ import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { TableUtils, Table } from 'src/app/jscaip/TableUtils';
 import { SixFailure } from './SixFailure';
 import { SixMove } from './SixMove';
-import { MGPOptional, MGPSet, MGPValidation, ReversibleMap, Utils } from '@everyboard/lib';
+import { ImmutableSet, MGPOptional, MGPValidation, ReversibleMap, Utils } from '@everyboard/lib';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { OpenHexagonalGameState } from 'src/app/jscaip/OpenHexagonalGameState';
 import { HexagonalUtils } from 'src/app/jscaip/HexagonalUtils';
-import { CoordSet } from 'src/app/jscaip/CoordSet';
+import { ImmutableCoordSet } from 'src/app/jscaip/CoordSet';
 import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 
 export class SixState extends OpenHexagonalGameState<Player> {
@@ -87,7 +87,7 @@ export class SixState extends OpenHexagonalGameState<Player> {
         return new SixState(pieces, this.turn + 1);
     }
 
-    public applyLegalDeplacement(move: SixMove, kept: MGPSet<Coord>): SixState {
+    public applyLegalDeplacement(move: SixMove, kept: ImmutableCoordSet): SixState {
         const stateAfterMove: SixState = this.movePiece(move);
 
         if (kept.size() > 0) {
@@ -103,9 +103,9 @@ export class SixState extends OpenHexagonalGameState<Player> {
     }
 
     public countPieces(): PlayerNumberMap {
-        const pieces: ReversibleMap<Player, MGPSet<Coord>> = this.pieces.reverse();
-        const zeroPieces: MGPSet<Coord> = pieces.get(Player.ZERO).getOrElse(new CoordSet());
-        const onePieces: MGPSet<Coord> = pieces.get(Player.ONE).getOrElse(new CoordSet());
+        const pieces: ReversibleMap<Player, ImmutableSet<Coord>> = this.pieces.reverse();
+        const zeroPieces: ImmutableSet<Coord> = pieces.get(Player.ZERO).getOrElse(new ImmutableCoordSet());
+        const onePieces: ImmutableSet<Coord> = pieces.get(Player.ONE).getOrElse(new ImmutableCoordSet());
         return PlayerNumberMap.of(zeroPieces.size(), onePieces.size());
     }
 

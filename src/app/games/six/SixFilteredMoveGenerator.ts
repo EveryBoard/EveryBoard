@@ -1,12 +1,12 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { Player } from 'src/app/jscaip/Player';
-import { MGPMap, MGPSet } from '@everyboard/lib';
+import { ImmutableSet, MGPMap } from '@everyboard/lib';
 import { SixState } from './SixState';
 import { SixMove } from './SixMove';
 import { SCORE } from 'src/app/jscaip/SCORE';
 import { SixMoveGenerator } from './SixMoveGenerator';
 import { SixHeuristic } from './SixHeuristic';
-import { CoordSet } from 'src/app/jscaip/CoordSet';
+import { ImmutableCoordSet } from 'src/app/jscaip/CoordSet';
 import { BoardInfo } from 'src/app/jscaip/AI/AlignmentHeuristic';
 
 export class SixFilteredMoveGenerator extends SixMoveGenerator {
@@ -14,14 +14,14 @@ export class SixFilteredMoveGenerator extends SixMoveGenerator {
     private readonly heuristic: SixHeuristic = new SixHeuristic();
 
     protected override getMovements(state: SixState, legalLandings: Coord[]): SixMove[] {
-        const safelyMovablePieceOrFirstOne: MGPSet<Coord> = this.getSafelyMovablePieceOrFirstOne(state);
+        const safelyMovablePieceOrFirstOne: ImmutableCoordSet = this.getSafelyMovablePieceOrFirstOne(state);
         return this.getMovementsFrom(state, safelyMovablePieceOrFirstOne, legalLandings);
     }
 
-    private getSafelyMovablePieceOrFirstOne(state: SixState): MGPSet<Coord> {
-        const allPieces: MGPMap<Player, MGPSet<Coord>> = state.getPieces().reverse();
+    private getSafelyMovablePieceOrFirstOne(state: SixState): ImmutableCoordSet {
+        const allPieces: MGPMap<Player, ImmutableSet<Coord>> = state.getPieces().reverse();
         const currentPlayer: Player = state.getCurrentPlayer();
-        const playerPieces: MGPSet<Coord> = allPieces.get(currentPlayer).get();
+        const playerPieces: ImmutableSet<Coord> = allPieces.get(currentPlayer).get();
         const firstPiece: Coord = playerPieces.getAnyElement().get();
 
         const safePieces: Coord[] = [];
@@ -31,9 +31,9 @@ export class SixFilteredMoveGenerator extends SixMoveGenerator {
             }
         }
         if (safePieces.length === 0) {
-            return new CoordSet([firstPiece]);
+            return new ImmutableCoordSet([firstPiece]);
         } else {
-            return new CoordSet(safePieces);
+            return new ImmutableCoordSet(safePieces);
         }
     }
 

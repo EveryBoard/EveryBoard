@@ -11,7 +11,7 @@ import { HexagonalGameComponent }
     from '../../components/game-components/game-component/HexagonalGameComponent';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
-import { MGPFallible, MGPOptional, MGPSet, MGPValidation } from '@everyboard/lib';
+import { MGPFallible, MGPOptional, ImmutableSet, MGPValidation } from '@everyboard/lib';
 import { ViewBox } from 'src/app/components/game-components/GameComponentUtils';
 import { MCTS } from 'src/app/jscaip/AI/MCTS';
 import { Minimax } from 'src/app/jscaip/AI/Minimax';
@@ -19,6 +19,7 @@ import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 import { SixHeuristic } from './SixHeuristic';
 import { SixMoveGenerator } from './SixMoveGenerator';
 import { SixFilteredMoveGenerator } from './SixFilteredMoveGenerator';
+import { ImmutableCoordSet } from 'src/app/jscaip/CoordSet';
 
 @Component({
     selector: 'app-six',
@@ -207,8 +208,8 @@ export class SixComponent
     private showCuttable(): void {
         const movement: SixMove = SixMove.ofMovement(this.selectedPiece.get(), this.chosenLanding.get());
         const stateAfterMove: SixState = this.state.movePiece(movement);
-        const groupsAfterMove: MGPSet<MGPSet<Coord>> = stateAfterMove.getGroups();
-        const biggerGroups: MGPSet<MGPSet<Coord>> = SixRules.getLargestGroups(groupsAfterMove);
+        const groupsAfterMove: ImmutableSet<ImmutableCoordSet> = stateAfterMove.getGroups();
+        const biggerGroups: ImmutableSet<ImmutableCoordSet> = SixRules.getLargestGroups(groupsAfterMove);
         this.cuttableGroups = [];
         for (const cuttableGroup of biggerGroups) {
             this.cuttableGroups.push(cuttableGroup.toList());

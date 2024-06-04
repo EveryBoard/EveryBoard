@@ -1,7 +1,8 @@
 import { MGPOptional } from './MGPOptional';
 import { Comparable, comparableEquals } from './Comparable';
-import { MGPSet } from './MGPSet';
+import { ImmutableSet } from './ImmutableSet';
 import { Utils } from './Utils';
+import { MutableSet } from './MutableSet';
 
 export class MGPMap<K extends NonNullable<Comparable>, V extends NonNullable<unknown>> {
 
@@ -89,8 +90,8 @@ export class MGPMap<K extends NonNullable<Comparable>, V extends NonNullable<unk
         return this.map.map((entry: {key: K, value: V}) => entry.value);
     }
 
-    public getKeySet(): MGPSet<K> {
-        return new MGPSet<K>(this.getKeyList());
+    public getKeySet(): ImmutableSet<K> {
+        return new ImmutableSet<K>(this.getKeyList());
     }
 
     public filter(predicate: (key: K, value: V) => boolean): MGPMap<K, V> {
@@ -148,8 +149,8 @@ export class MGPMap<K extends NonNullable<Comparable>, V extends NonNullable<unk
     }
 
     public equals(other: MGPMap<K, V>): boolean {
-        const thisKeySet: MGPSet<K> = this.getKeySet();
-        const otherKeySet: MGPSet<K> = other.getKeySet();
+        const thisKeySet: ImmutableSet<K> = this.getKeySet();
+        const otherKeySet: ImmutableSet<K> = other.getKeySet();
         if (thisKeySet.equals(otherKeySet) === false) {
             return false;
         }
@@ -167,16 +168,18 @@ export class MGPMap<K extends NonNullable<Comparable>, V extends NonNullable<unk
 
 export class ReversibleMap<K extends NonNullable<Comparable>, V extends NonNullable<Comparable>> extends MGPMap<K, V> {
 
-    public reverse(): ReversibleMap<V, MGPSet<K>> {
-        const reversedMap: ReversibleMap<V, MGPSet<K>> = new ReversibleMap<V, MGPSet<K>>();
+    public reverse(): ReversibleMap<V, ImmutableSet<K>> {
+        const reversedMap: ReversibleMap<V, ImmutableSet<K>> = new ReversibleMap<V, ImmutableSet<K>>();
         for (const key of this.getKeyList()) {
             const value: V = this.get(key).get();
             if (reversedMap.containsKey(value)) {
-                reversedMap.get(value).get().add(key);
-            } else {
-                const newSet: MGPSet<K> = new MGPSet<K>();
+                const newSet: MutableSet<K> = reversedMap.get(value).get().toMutableSet();
                 newSet.add(key);
-                reversedMap.set(value, newSet);
+                reversedMap.put(value, newSet.toImmutableSet());
+            } else {
+                const newSet: MutableSet<K> = new MutableSet<K>();
+                newSet.add(key);
+                reversedMap.set(value, newSet.toImmutableSet());
             }
         }
         return reversedMap;

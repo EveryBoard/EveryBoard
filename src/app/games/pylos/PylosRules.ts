@@ -7,7 +7,7 @@ import { PylosMove } from './PylosMove';
 import { PylosState } from './PylosState';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { PylosFailure } from './PylosFailure';
-import { MGPOptional, MGPFallible, MGPSet, MGPValidation } from '@everyboard/lib';
+import { MGPOptional, MGPFallible, ImmutableSet, MGPValidation } from '@everyboard/lib';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { TableUtils } from 'src/app/jscaip/TableUtils';
 import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
@@ -101,18 +101,18 @@ export class PylosRules extends Rules<PylosMove, PylosState> {
         return false;
     }
 
-    public static getPossibleCaptures(state: PylosState): MGPSet<MGPSet<PylosCoord>> {
-        const possiblesCapturesSet: MGPSet<MGPSet<PylosCoord>> = new MGPSet();
+    public static getPossibleCaptures(state: PylosState): ImmutableSet<ImmutableSet<PylosCoord>> {
+        let possiblesCapturesSet: ImmutableSet<ImmutableSet<PylosCoord>> = new ImmutableSet();
 
-        const freeToMoveFirsts: PylosCoord[] = state.getFreeToMoves();
+        const freeToMoveFirsts: ImmutableSet<PylosCoord> = state.getFreeToMoves();
         for (const freeToMoveFirst of freeToMoveFirsts) {
-            possiblesCapturesSet.add(new MGPSet([freeToMoveFirst]));
+            possiblesCapturesSet = possiblesCapturesSet.unionList([new ImmutableSet([freeToMoveFirst])]);
 
             const secondState: PylosState = state.removePieceAt(freeToMoveFirst);
-            const freeToMoveThens: PylosCoord[] = secondState.getFreeToMoves();
+            const freeToMoveThens: ImmutableSet<PylosCoord> = secondState.getFreeToMoves();
             for (const freeToMoveThen of freeToMoveThens) {
-                const captures: MGPSet<PylosCoord> = new MGPSet([freeToMoveFirst, freeToMoveThen]);
-                possiblesCapturesSet.add(captures);
+                const captures: ImmutableSet<PylosCoord> = new ImmutableSet([freeToMoveFirst, freeToMoveThen]);
+                possiblesCapturesSet = possiblesCapturesSet.unionList([captures]); // TODO unionElement
             }
         }
         return possiblesCapturesSet;

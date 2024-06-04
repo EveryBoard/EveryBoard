@@ -10,7 +10,7 @@ import { Player } from 'src/app/jscaip/Player';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { TableWithPossibleNegativeIndices } from 'src/app/jscaip/TableUtils';
-import { ArrayUtils, MGPFallible, MGPOptional, MGPSet, MGPValidation, Utils } from '@everyboard/lib';
+import { ArrayUtils, MGPFallible, MGPOptional, ImmutableSet, MGPValidation, Utils } from '@everyboard/lib';
 import { HiveFailure } from './HiveFailure';
 import { HiveHeuristic } from './HiveHeuristic';
 import { HiveMove, HiveCoordToCoordMove, HiveDropMove, HiveSpiderMove } from './HiveMove';
@@ -20,6 +20,7 @@ import { HiveSpiderRules } from './HivePieceRules';
 import { HiveRules } from './HiveRules';
 import { HiveState } from './HiveState';
 import { ViewBox } from 'src/app/components/game-components/GameComponentUtils';
+import { ImmutableCoordSet } from 'src/app/jscaip/CoordSet';
 
 interface GroundInfo {
     spaceClasses: string[];
@@ -217,8 +218,8 @@ export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, H
         }
     }
 
-    private getPieceCoords(): MGPSet<Coord> {
-        return this.getState().pieces.getKeySet();
+    private getPieceCoords(): ImmutableCoordSet {
+        return this.getState().pieces.getKeySet() as ImmutableCoordSet;
     }
 
     private getGround(): Ground {
@@ -229,14 +230,15 @@ export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, H
         return ground;
     }
 
-    private getAllNeighbors(): MGPSet<Coord> {
-        const neighbors: MGPSet<Coord> = new MGPSet();
+    private getAllNeighbors(): ImmutableCoordSet {
+        let neighbors: ImmutableCoordSet = new ImmutableCoordSet();
         for (const piece of this.getPieceCoords()) {
-            neighbors.addAll(new MGPSet(this.getState().emptyNeighbors(piece)));
+            const pieceNeighboors: Coord[] = this.getState().emptyNeighbors(piece);
+            neighbors = neighbors.unionList(pieceNeighboors);
         }
         if (neighbors.isEmpty()) {
             // We need at least one clickable coord to be playable at first turn
-            neighbors.add(new Coord(0, 0));
+            neighbors = neighbors.unionList([new Coord(0, 0)]);
         }
         return neighbors;
     }
@@ -437,12 +439,12 @@ export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, H
     private getNextPossibleCoords(coord: Coord): Coord[] {
         const state: HiveState = this.getState();
         const topPiece: HivePiece = state.getAt(coord).topPiece();
-        const moves: MGPSet<HiveCoordToCoordMove> = HiveRules.get().getPossibleMovesFrom(state, coord);
+        const moves: ImmutableSet<HiveCoordToCoordMove> = HiveRules.get().getPossibleMovesFrom(state, coord);
         if (topPiece.kind === 'Spider') {
-            const spiderMoves: MGPSet<HiveSpiderMove> = moves as MGPSet<HiveSpiderMove>;
+            const spiderMoves: ImmutableSet<HiveSpiderMove> = moves as ImmutableSet<HiveSpiderMove>;
             return spiderMoves
                 .filter((move: HiveSpiderMove) => ArrayUtils.isPrefix(this.selectedSpiderCoords, move.coords))
-                .map((move: HiveSpiderMove) => move.coords[this.selectedSpiderCoords.length])
+                .map<Coord>((move: HiveSpiderMove) => move.coords[this.selectedSpiderCoords.length])
                 .toList();
         } else {
             return moves.map((move: HiveCoordToCoordMove) => move.getEnd()).toList();

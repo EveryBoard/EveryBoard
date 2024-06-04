@@ -1,7 +1,8 @@
-import { Comparable, MGPSet, ReversibleMap } from '@everyboard/lib';
+import { Comparable, ImmutableSet, ReversibleMap } from '@everyboard/lib';
 import { Coord } from './Coord';
 import { GameState } from './GameState';
 import { HexagonalUtils } from './HexagonalUtils';
+import { ImmutableCoordSet } from './CoordSet';
 
 type Scale = {
     width: number,
@@ -45,29 +46,31 @@ export abstract class OpenHexagonalGameState<T extends NonNullable<Comparable>> 
     public isOnBoard(coord: Coord): boolean {
         return this.pieces.containsKey(coord);
     }
-    public getOccupiedNeighbors(coord: Coord): MGPSet<Coord> {
-        const neighbors: MGPSet<Coord> = new MGPSet(HexagonalUtils.getNeighbors(coord));
+    public getOccupiedNeighbors(coord: Coord): ImmutableCoordSet {
+        const neighbors: ImmutableCoordSet = new ImmutableCoordSet(HexagonalUtils.getNeighbors(coord));
         return neighbors.filter((neighbor: Coord) => {
             return this.pieces.get(neighbor).isPresent();
         });
     }
-    public getGroups(): MGPSet<MGPSet<Coord>> {
-        const visited: MGPSet<Coord> = new MGPSet();
-        const groups: MGPSet<MGPSet<Coord>> = new MGPSet();
+    public getGroups(): ImmutableSet<ImmutableCoordSet> {
+        let visited: ImmutableCoordSet = new ImmutableCoordSet();
+        let groups: ImmutableSet<ImmutableCoordSet> = new ImmutableSet();
         this.pieces.forEach((itemToVisit: {key: Coord, value: T}) => {
             if (visited.contains(itemToVisit.key) === false) {
                 // We will visit all reachable occupied neighbors of this coord
-                const group: MGPSet<Coord> = new MGPSet();
-                const toVisit: MGPSet<Coord> = new MGPSet([itemToVisit.key]);
+                let group: ImmutableCoordSet = new ImmutableCoordSet();
+                let toVisit: ImmutableCoordSet = new ImmutableCoordSet([itemToVisit.key]);
                 while (toVisit.hasElements()) {
                     const coord: Coord = toVisit.getAnyElement().get();
-                    toVisit.remove(coord);
-                    visited.add(coord);
-                    group.add(coord);
-                    toVisit.addAll(this.getOccupiedNeighbors(coord).filter((neighbor: Coord) =>
-                        visited.contains(neighbor) === false));
+                    toVisit = toVisit.filterElement(coord);
+                    visited = visited.unionElement(coord);
+                    group = group.unionElement(coord);
+                    const occupiedNeighboors: ImmutableCoordSet = this.getOccupiedNeighbors(coord);
+                    const unvisitedOccupiedNeighboors: ImmutableCoordSet = occupiedNeighboors
+                        .filter((neighbor: Coord) => visited.contains(neighbor) === false);
+                    toVisit = toVisit.union(unvisitedOccupiedNeighboors);
                 }
-                groups.add(group);
+                groups = groups.unionElement(group);
             }
         });
         return groups;

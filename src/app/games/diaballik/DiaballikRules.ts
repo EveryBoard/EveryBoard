@@ -7,13 +7,14 @@ import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Orthogonal } from 'src/app/jscaip/Orthogonal';
 import { Ordinal } from 'src/app/jscaip/Ordinal';
-import { MGPFallible, MGPOptional, MGPSet, Utils } from '@everyboard/lib';
+import { MGPFallible, MGPOptional, Utils } from '@everyboard/lib';
 import { GameNode } from 'src/app/jscaip/AI/GameNode';
 import { DiaballikFailure } from './DiaballikFailure';
 import { Table } from 'src/app/jscaip/TableUtils';
 import { CoordFailure } from '../../jscaip/Coord';
 import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 import { PlayerMap } from 'src/app/jscaip/PlayerMap';
+import { ImmutableCoordSet } from 'src/app/jscaip/CoordSet';
 
 export class VictoryOrDefeatCoords {
     protected constructor(public readonly winner: Player) {}
@@ -235,7 +236,7 @@ export class DiaballikRules extends Rules<DiaballikMove, DiaballikState, Diaball
         //   - there is one player piece in each column
         //   - they are all connected
         //   - at least 3 opponent's pieces are connected
-        const opponentsConnected: MGPSet<Coord> = new MGPSet(); // Needs to be a set to avoid double counting
+        const opponentsConnected: ImmutableCoordSet = new ImmutableCoordSet();
         const blockerCoords: Coord[] = [];
         for (let x: number = 0; x < state.getWidth(); x++) {
             const coord: MGPOptional<Coord> = this.getConnectedPieceCoord(x, opponentsConnected, state, player);
@@ -254,7 +255,7 @@ export class DiaballikRules extends Rules<DiaballikMove, DiaballikState, Diaball
     }
 
     private getConnectedPieceCoord(x: number,
-                                   opponentsConnected: MGPSet<Coord>,
+                                   opponentsConnected: ImmutableCoordSet,
                                    state: DiaballikState,
                                    player: Player)
     : MGPOptional<Coord>
@@ -295,7 +296,7 @@ export class DiaballikRules extends Rules<DiaballikMove, DiaballikState, Diaball
     }
 
     private addConnectedOpponents(coord: Coord,
-                                  opponentsConnected: MGPSet<Coord>,
+                                  opponentsConnected: ImmutableCoordSet,
                                   state: DiaballikState,
                                   player: Player)
     : void
@@ -305,7 +306,7 @@ export class DiaballikRules extends Rules<DiaballikMove, DiaballikState, Diaball
             if (state.isOnBoard(neighbor)) {
                 const piece: DiaballikPiece = state.getPieceAt(neighbor);
                 if (piece.owner === player.getOpponent()) {
-                    opponentsConnected.add(neighbor);
+                    opponentsConnected = opponentsConnected.unionList([neighbor]);
                 }
             }
         }
