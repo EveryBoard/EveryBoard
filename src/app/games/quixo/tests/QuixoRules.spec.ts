@@ -33,6 +33,8 @@ describe('QuixoRules', () => {
         ];
         const state: QuixoState = new QuixoState(board, 0);
         const move: QuixoMove = new QuixoMove(4, 2, Orthogonal.LEFT);
+
+        // Then the move should be illegal
         const reason: string = RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT();
         RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
     });
@@ -44,7 +46,7 @@ describe('QuixoRules', () => {
         // When doing a move inside the board
         const move: QuixoMove = new QuixoMove(1, 1, Orthogonal.UP);
 
-        // Then it should be illegal
+        // Then the move should be illegal
         const reason: string = QuixoFailure.NO_INSIDE_CLICK();
         RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
     });
@@ -55,6 +57,8 @@ describe('QuixoRules', () => {
 
         // When doing a move out of range
         const move: QuixoMove = new QuixoMove(-1, 0, Orthogonal.DOWN);
+
+        // Then it should throw
         TestUtils.expectToThrowAndLog(() => {
             const reason: string = `won't reach the return of isLegal`;
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);

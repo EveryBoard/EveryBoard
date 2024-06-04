@@ -68,12 +68,12 @@ describe('YinshComponent', () => {
 
         it('should decrease the number of rings shown on the side when a ring is placed', fakeAsync(async() => {
             // Given a state in placement phase, with all rings available
-            testUtils.expectElementToExist('#player_0_sideRing_5');
+            testUtils.expectElementToExist('#PLAYER_ZERO_sideRing_5');
             // When When placing a ring
             const move: YinshMove = new YinshMove([], new Coord(3, 2), MGPOptional.empty(), []);
             await testUtils.expectMoveSuccess('#click_3_2', move);
             // Then it should not show the placed ring on the side anymore
-            testUtils.expectElementNotToExist('#player_0_sideRing_5');
+            testUtils.expectElementNotToExist('#PLAYER_ZERO_sideRing_5');
         }));
 
     });
@@ -453,16 +453,16 @@ describe('YinshComponent', () => {
             await testUtils.setupState(state);
 
             // Then it should show all side rings for each player
-            testUtils.expectElementToExist('#player_0_sideRing_1');
-            testUtils.expectElementToExist('#player_0_sideRing_2');
-            testUtils.expectElementNotToExist('#player_0_sideRing_3');
-            testUtils.expectElementNotToExist('#player_0_sideRing_4');
-            testUtils.expectElementNotToExist('#player_0_sideRing_5');
-            testUtils.expectElementToExist('#player_1_sideRing_1');
-            testUtils.expectElementNotToExist('#player_1_sideRing_2');
-            testUtils.expectElementNotToExist('#player_1_sideRing_3');
-            testUtils.expectElementNotToExist('#player_1_sideRing_4');
-            testUtils.expectElementNotToExist('#player_1_sideRing_5');
+            testUtils.expectElementToExist('#PLAYER_ZERO_sideRing_1');
+            testUtils.expectElementToExist('#PLAYER_ZERO_sideRing_2');
+            testUtils.expectElementNotToExist('#PLAYER_ZERO_sideRing_3');
+            testUtils.expectElementNotToExist('#PLAYER_ZERO_sideRing_4');
+            testUtils.expectElementNotToExist('#PLAYER_ZERO_sideRing_5');
+            testUtils.expectElementToExist('#PLAYER_ONE_sideRing_1');
+            testUtils.expectElementNotToExist('#PLAYER_ONE_sideRing_2');
+            testUtils.expectElementNotToExist('#PLAYER_ONE_sideRing_3');
+            testUtils.expectElementNotToExist('#PLAYER_ONE_sideRing_4');
+            testUtils.expectElementNotToExist('#PLAYER_ONE_sideRing_5');
         }));
 
         it('should increase the number of rings shown when a player makes a capture', fakeAsync(async() => {
@@ -482,7 +482,7 @@ describe('YinshComponent', () => {
             ];
             const state: YinshState = new YinshState(board, PlayerNumberMap.of(0, 0), 10);
             await testUtils.setupState(state);
-            testUtils.expectElementNotToExist('#player_0_sideRing_1');
+            testUtils.expectElementNotToExist('#PLAYER_ZERO_sideRing_1');
 
             // When performing a move that captures
             const move: YinshMove = new YinshMove([YinshCapture.of(new Coord(3, 3),
@@ -497,7 +497,7 @@ describe('YinshComponent', () => {
             await testUtils.expectMoveSuccess('#click_4_3', move); // move it
 
             // Then the captured ring of player 0 is shown
-            testUtils.expectElementToExist('#player_0_sideRing_1');
+            testUtils.expectElementToExist('#PLAYER_ZERO_sideRing_1');
         }));
 
         it('should recompute captures upon intersecting captures', fakeAsync(async() => {
@@ -586,6 +586,7 @@ describe('YinshComponent', () => {
 
             // When clicking on the intersecting coordinate
             await testUtils.expectClickSuccess('#click_4_5');
+
             // Then it should fail
             await testUtils.expectClickFailure('#click_5_5', YinshFailure.AMBIGUOUS_CAPTURE_COORD());
         }));
@@ -609,6 +610,7 @@ describe('YinshComponent', () => {
             const state: YinshState = new YinshState(board, PlayerNumberMap.of(0, 0), 10);
             await testUtils.setupState(state);
             await testUtils.expectClickSuccess('#click_3_3');
+
             // When clicking somewhere else than on a ring
             // Then it should fail
             await testUtils.expectClickFailure('#click_3_5', YinshFailure.CAPTURE_SHOULD_TAKE_RING());
