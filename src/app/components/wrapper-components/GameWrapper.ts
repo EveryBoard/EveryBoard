@@ -72,9 +72,10 @@ export abstract class GameWrapper<P extends Comparable> extends BaseWrapperCompo
         const componentType: MGPOptional<Type<AbstractGameComponent>> =
             await this.getMatchingComponentAndNavigateOutIfAbsent();
         if (componentType.isPresent()) {
+            // This waits for the config to be chosen
+            const config: MGPOptional<RulesConfig> = await this.getConfig();
             console.log('creating matching game component')
             await this.createGameComponent(componentType.get());
-            const config: MGPOptional<RulesConfig> = await this.getConfig();
             console.log('setting config to')
             console.log(config)
             this.gameComponent.config = config;

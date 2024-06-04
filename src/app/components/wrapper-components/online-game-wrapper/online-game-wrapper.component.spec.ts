@@ -53,7 +53,7 @@ describe('OnlineGameWrapper for non-existing game', () => {
 
 });
 
-fdescribe('OnlineGameWrapperComponent Lifecycle', () => {
+describe('OnlineGameWrapperComponent Lifecycle', () => {
 
     /* Life cycle summary
      * component construction (beforeEach)
@@ -108,8 +108,8 @@ fdescribe('OnlineGameWrapperComponent Lifecycle', () => {
     });
 
     describe('for creator', () => {
-        it('Initialization should lead to child component PartCreation to call ConfigRoomService', fakeAsync(async() => {
-            // Given a starting component for the creator
+        it('should have PartCreation subscribe to ConfigRoomService upon initialization', fakeAsync(async() => {
+            // Given a starting component, with no accepted config yet
             await prepareComponent(false);
             const configRoomService: ConfigRoomService = TestBed.inject(ConfigRoomService);
 
@@ -131,8 +131,10 @@ fdescribe('OnlineGameWrapperComponent Lifecycle', () => {
             // finish the game to have no timeout still running
             await finishTest();
         }));
-        it('Initialization on accepted config should lead to PartCreationComponent to call startGame', fakeAsync(async() => {
+        it('should have PartCreationComponent calling startGame when config accepted', fakeAsync(async() => {
+            // Given a starting component with an accepted config
             await prepareComponent(true);
+            // When component initializes
             testUtils.detectChanges();
 
             spyOn(wrapper, 'startGame').and.callThrough();
@@ -140,12 +142,11 @@ fdescribe('OnlineGameWrapperComponent Lifecycle', () => {
 
             tick(0); // Finish calling async code from PartCreationComponent initialization
 
+            // Then startGame should be called
             expect(wrapper.startGame).toHaveBeenCalledTimes(1);
 
-            testUtils.detectChanges();
-            // Needed so PartCreation is destroyed and game component created
+            testUtils.detectChanges(); // Needed so PartCreation is destroyed and game component created
 
-            tick(0);
             tick(wrapper.configRoom.maximalMoveDuration * 1000);
         }));
         it('should have some tags before starting', fakeAsync(async() => {
@@ -159,15 +160,11 @@ fdescribe('OnlineGameWrapperComponent Lifecycle', () => {
             expect(p4Tag).withContext('app-p4 tag should be absent at start').toBeFalsy();
             expect(chatTag).withContext('app-chat tag should be present at start').toBeTruthy();
 
-            // Finish initialization to avoid errors
-            testUtils.detectChanges();
-            tick(0);
-
             // Finish the game to have no timeout still running
             await finishTest();
         }));
-        it('Initialization should make appear PartCreationComponent', fakeAsync(async() => {
-            // Given a online-game-wrapper component
+        it('should have a PartCreationComponent', fakeAsync(async() => {
+            // Given a component without accepted config
             await prepareComponent(false);
             // When the game is not started yet
             expect(wrapper.gameStarted).toBeFalse();
@@ -178,13 +175,14 @@ fdescribe('OnlineGameWrapperComponent Lifecycle', () => {
             // Finish the game to have no timeout still running
             await finishTest();
         }));
-        it('StartGame should replace PartCreationComponent by game component', fakeAsync(async() => {
+        it('should replace PartCreationComponent by game tag upon game start', fakeAsync(async() => {
+            // Given a component with accepted config
             await prepareComponent(true);
+            // When it is loaded
             testUtils.detectChanges();
             tick(0);
 
-            testUtils.detectChanges();
-
+            // Then part creation is removed and game appears
             const partCreationId: DebugElement = testUtils.findElement('#partCreation');
             const gameId: DebugElement = testUtils.findElement('#game');
             const p4Tag: DebugElement = testUtils.findElement('app-p4');
@@ -195,8 +193,10 @@ fdescribe('OnlineGameWrapperComponent Lifecycle', () => {
             expect(p4Tag).withContext('p4Tag id should still be absent after startGame call').toBeNull();
             tick(2);
         }));
-        it('stage three should make the game component appear at last', fakeAsync(async() => {
+        it('should make the game component appear in the end', fakeAsync(async() => {
+            // Given a game component with accepted config
             await prepareComponent(true);
+            // When it is fully loaded
             testUtils.detectChanges();
             tick(0);
 
@@ -207,6 +207,7 @@ fdescribe('OnlineGameWrapperComponent Lifecycle', () => {
 
             tick(2);
 
+            // Then it should have the real game component
             expect(testUtils.findElement('app-p4'))
                 .withContext(`p4Tag id should be present after startGame's async method has complete`)
                 .toBeTruthy();

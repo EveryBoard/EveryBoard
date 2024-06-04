@@ -19,7 +19,7 @@ import { P4Minimax } from './P4Minimax';
 export class P4Component extends RectangularGameComponent<P4Rules, P4Move, P4State, PlayerOrNone, P4Config> {
 
     public EMPTY: PlayerOrNone = PlayerOrNone.NONE;
-    public last: MGPOptional<Coord>;
+    public last: MGPOptional<Coord> = MGPOptional.empty();
     public victoryCoords: Coord[] = [];
 
     public constructor(messageDisplayer: MessageDisplayer, cdr: ChangeDetectorRef) {
