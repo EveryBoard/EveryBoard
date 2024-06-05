@@ -1,5 +1,5 @@
 import { GameNode } from './GameNode';
-import { GameState } from '../GameState';
+import { GameState } from '../state/GameState';
 import { Move } from '../Move';
 import { EmptyRulesConfig, RulesConfig } from '../RulesConfigUtil';
 import { MGPOptional } from '@everyboard/lib';

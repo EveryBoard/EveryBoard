@@ -1462,6 +1462,10 @@
         <source>You cannot capture from an empty space.</source>
         <target>Vous ne pouvez pas capturer sur une case vide.</target>
       </trans-unit>
+      <trans-unit id="5853742640794164153" datatype="html">
+        <source>Use small board</source>
+        <target>Utiliser un petit plateau</target>
+      </trans-unit>
       <trans-unit id="1137390440747939689" datatype="html">
         <source>You cannot capture your own pieces.</source>
         <target>Vous ne pouvez pas capturer vos propres pièces.</target>
@@ -1594,6 +1598,10 @@
       <trans-unit id="7668715639068435496" datatype="html">
         <source>Captures &gt; Freedom</source>
         <target>Captures &gt; Libertés</target>
+      </trans-unit>
+      <trans-unit id="4996962520612005595" datatype="html">
+        <source>Pieces &gt; Tiles &gt; Freedom</source>
+        <target>Pièces &gt; Tuiles &gt; Libertés</target>
       </trans-unit>
       <trans-unit id="8560978883976627945" datatype="html">
         <source>Alignment</source>

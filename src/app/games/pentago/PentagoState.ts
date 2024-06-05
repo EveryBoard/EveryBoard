@@ -4,7 +4,7 @@ import { PlayerOrNone } from 'src/app/jscaip/Player';
 import { Vector } from 'src/app/jscaip/Vector';
 import { Table } from 'src/app/jscaip/TableUtils';
 import { PentagoMove } from './PentagoMove';
-import { PlayerOrNoneGameStateWithTable } from 'src/app/jscaip/PlayerOrNoneGameStateWithTable';
+import { PlayerOrNoneGameStateWithTable } from 'src/app/jscaip/state/PlayerOrNoneGameStateWithTable';
 
 export class PentagoState extends PlayerOrNoneGameStateWithTable {
 

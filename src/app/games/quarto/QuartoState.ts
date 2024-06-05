@@ -1,4 +1,4 @@
-import { GameStateWithTable } from '../../jscaip/GameStateWithTable';
+import { GameStateWithTable } from '../../jscaip/state/GameStateWithTable';
 import { QuartoPiece } from './QuartoPiece';
 import { Table } from 'src/app/jscaip/TableUtils';
 

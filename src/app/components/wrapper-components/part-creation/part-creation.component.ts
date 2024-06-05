@@ -21,7 +21,7 @@ import { CurrentGameService } from 'src/app/services/CurrentGameService';
 import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 import { RulesConfigurationComponent } from '../rules-configuration/rules-configuration.component';
 import { GameInfo } from '../../normal-component/pick-game/pick-game.component';
-import { GameState } from 'src/app/jscaip/GameState';
+import { GameState } from 'src/app/jscaip/state/GameState';
 import { RulesConfigDescription } from '../rules-configuration/RulesConfigDescription';
 import { AbstractRules } from 'src/app/jscaip/Rules';
 import { Debug } from 'src/app/utils/Debug';
@@ -124,6 +124,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
                        public readonly messageDisplayer: MessageDisplayer)
     {
     }
+
     public async ngOnInit(): Promise<void> {
         this.checkInputs();
         this.createForms();
@@ -137,12 +138,14 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         this.subscribeToConfigRoomDoc();
         this.subscribeToFormElements();
     }
+
     private checkInputs(): void {
         const user: MGPOptional<AuthUser> = this.connectedUserService.user;
         Utils.assert(user.isPresent(), 'PartCreationComponent should not be called without connected user');
         Utils.assert(user.get() !== AuthUser.NOT_CONNECTED, 'PartCreationComponent should not be created with an empty userName');
         Utils.assert(this.partId !== '', 'PartCreationComponent should not be created with an empty partId');
     }
+
     private createForms(): void {
         this.configFormGroup = this.formBuilder.group({
             firstPlayer: [FirstPlayer.RANDOM.value, Validators.required],
@@ -152,6 +155,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
             chosenOpponent: ['', Validators.required],
         });
     }
+
     private updateUserDocWithCurrentGame(configRoom: ConfigRoom): Promise<void> {
         const role: UserRoleInPart = this.getUserRoleInPart(configRoom);
         const currentGame: CurrentGame = {
@@ -162,6 +166,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         };
         return this.currentGameService.updateCurrentGame(currentGame);
     }
+
     private getUserRoleInPart(configRoom: ConfigRoom): UserRoleInPart {
         const currentUserId: string = this.connectedUserService.user.get().id;
         if (currentUserId === configRoom.creator.id) {
@@ -172,6 +177,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
             return 'Candidate';
         }
     }
+
     private getOpponent(configRoom: ConfigRoom): MinimalUser | null {
         let userOrUndefined: MinimalUser | null = null;
         if (this.connectedUserService.user.get().id === configRoom.creator.id) {
@@ -181,6 +187,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         }
         return userOrUndefined;
     }
+
     private subscribeToConfigRoomDoc(): void {
         const candidatesCallback: (candidates: MinimalUser[]) => void = async(candidates: MinimalUser[]) => {
             await this.onCandidatesUpdate(candidates);
@@ -197,9 +204,11 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         this.configRoomSubscription =
             this.configRoomService.subscribeToChanges(this.partId, configRoomCallback);
     }
+
     private getForm(name: string): AbstractControl {
         return Utils.getNonNullable(this.configFormGroup.get(name));
     }
+
     private subscribeToFormElements(): void {
         this.getForm('chosenOpponent').valueChanges
             .pipe(takeUntil(this.ngUnsubscribe)).subscribe((opponent: string) => {
@@ -233,6 +242,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
                 this.viewInfo.firstPlayer = firstPlayer;
             });
     }
+
     private updateViewInfo(configRoom: ConfigRoom): void {
         const authUser: AuthUser = this.connectedUserService.user.get();
 
@@ -268,6 +278,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
                 break;
         }
     }
+
     private setDataForCreator(configRoom: ConfigRoom): void {
         this.viewInfo.maximalMoveDuration = this.viewInfo.maximalMoveDuration ?? configRoom.maximalMoveDuration;
         this.viewInfo.totalPartDuration = this.viewInfo.totalPartDuration ?? configRoom.totalPartDuration;
@@ -284,9 +295,11 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         }
         this.getForm('chosenOpponent').setValue(opponent);
     }
+
     public selectFirstPlayer(firstPlayer: IFirstPlayer): void {
         this.getForm('firstPlayer').setValue(firstPlayer);
     }
+
     public selectPartType(partType: IPartType): void {
         if (partType === 'STANDARD') {
             this.getForm('maximalMoveDuration').setValue(PartType.NORMAL_MOVE_DURATION);
@@ -297,6 +310,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         }
         this.getForm('partType').setValue(partType);
     }
+
     public async selectOpponent(opponentName: string): Promise<void> {
         const opponent: MinimalUser = this.getUserFromName(opponentName);
         await Promise.all([
@@ -305,13 +319,16 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         ]);
         return;
     }
+
     private getUserFromName(username: string): MinimalUser {
         const user: MinimalUser | undefined = this.candidates.find((c: MinimalUser) => c.name === username);
         return Utils.getNonNullable(user);
     }
+
     public async changeConfig(): Promise<void> {
         return this.configRoomService.reviewConfig(this.partId);
     }
+
     public async proposeConfig(): Promise<void> {
         const chosenOpponentName: string = this.getForm('chosenOpponent').value;
         const partType: string = this.getForm('partType').value;
@@ -327,6 +344,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
                                                     totalPartDuration,
                                                     this.rulesConfig);
     }
+
     public async cancelGameCreation(): Promise<void> {
         this.allDocDeleted = true;
         await this.currentGameService.removeCurrentGame();
@@ -343,6 +361,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
 
         return;
     }
+
     private async onCurrentConfigRoomUpdate(configRoomOpt: MGPOptional<ConfigRoom>): Promise<void> {
         if (configRoomOpt.isAbsent()) {
             Debug.display('PartCreationComponent', 'onCurrentConfigRoomUpdate', 'LAST UPDATE : the game is cancelled');
@@ -377,10 +396,12 @@ export class PartCreationComponent implements OnInit, OnDestroy {
             }
         }
     }
+
     private async onCandidatesUpdate(candidates: MinimalUser[]): Promise<void> {
         this.candidates = candidates;
         this.updateViewInfo(Utils.getNonNullable(this.currentConfigRoom));
     }
+
     private userJustChosenAsOpponent(oldConfigRoom: ConfigRoom | null, configRoom: ConfigRoom): boolean {
         if (this.isGameStarted(configRoom)) {
             return false;
@@ -391,6 +412,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
             return userWasNotChosenOpponent && userIsChosenOpponent;
         }
     }
+
     private chosenOpponentJustLeft(oldConfigRoom: ConfigRoom | null, newConfigRoom: ConfigRoom): boolean {
         if (oldConfigRoom == null) {
             return false;
@@ -400,20 +422,24 @@ export class PartCreationComponent implements OnInit, OnDestroy {
             return thereWasAChosenOpponent && thereIsNoLongerChosenOpponent;
         }
     }
+
     private async onGameCanceled(): Promise<void> {
         this.messageDisplayer.infoMessage($localize`The game has been canceled!`);
         await this.router.navigate(['/lobby']);
     }
+
     private isGameStarted(configRoom: ConfigRoom | null): boolean {
         Utils.assert(configRoom != null, 'configRoom should not be null (isGameStarted)');
         return Utils.getNonNullable(configRoom).partStatus === PartStatus.PART_STARTED.value;
     }
+
     private onGameStarted(): void {
         const configRoom: ConfigRoom = Utils.getNonNullable(this.currentConfigRoom);
 
         this.gameStartNotification.emit(configRoom);
         this.gameStarted = true;
     }
+
     private async observeNeededPlayers(configRoom: ConfigRoom): Promise<void> {
         Utils.assert(this.allUserInterval.isAbsent(), 'Cannot observe players multiple times');
         this.allUserInterval = MGPOptional.of(window.setInterval(async() => {
@@ -425,22 +451,26 @@ export class PartCreationComponent implements OnInit, OnDestroy {
             }
         }, PartCreationComponent.TOKEN_INTERVAL));
     }
+
     private userIsCreator(configRoom: ConfigRoom): boolean {
         const currentUserId: string = this.connectedUserService.user.get().id;
         return currentUserId === configRoom.creator.id;
     }
+
     private async checkCreatorTokenFreshness(currentTime: Timestamp): Promise<void> {
         const configRoom: ConfigRoom = Utils.getNonNullable(this.currentConfigRoom);
         if (await this.didUserTimeout(configRoom.creator.id, currentTime)) {
             await this.destroyDocIfPartDidNotStart();
         }
     }
+
     private async destroyDocIfPartDidNotStart(): Promise<void> {
         const partStarted: boolean = this.isGameStarted(this.currentConfigRoom);
         Utils.assert(partStarted === false, 'Should not try to cancelGameCreation when part started!');
         Utils.assert(this.allDocDeleted === false, 'Should not delete doc twice');
         await this.cancelGameCreation();
     }
+
     private async checkCandidatesTokensFreshness(currentTime: Timestamp): Promise<void> {
         for (const candidate of this.candidates) {
             if (await this.didUserTimeout(candidate.id, currentTime)) {
@@ -448,6 +478,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
             }
         }
     }
+
     private async didUserTimeout(userId: string, currentTime: Timestamp): Promise<boolean> {
         const lastChangedOpt: MGPOptional<FirestoreTime> = await this.userService.getUserLastUpdateTime(userId);
         if (lastChangedOpt.isAbsent()) {
@@ -459,6 +490,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         const diff: number = getMillisecondsElapsed(lastUpdateTime, currentTime);
         return diff > PartCreationComponent.TOKEN_TIMEOUT;
     }
+
     private async removeCandidateFromLobby(user: MinimalUser): Promise<void> {
         const configRoom: ConfigRoom = Utils.getNonNullable(this.currentConfigRoom);
         if (user.id === configRoom.chosenOpponent?.id) {
@@ -468,6 +500,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         }
         return this.configRoomService.removeCandidate(this.partId, user);
     }
+
     public async startSendingPresenceTokens(): Promise<void> {
         await this.connectedUserService.sendPresenceToken();
         Utils.assert(this.ownTokenInterval.isAbsent(), 'should not start sending presence tokens twice');
@@ -481,6 +514,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
             this.lastToken = Utils.getNonNullable(user.get().lastUpdateTime) as Timestamp;
         });
     }
+
     public stopSendingPresenceTokensAndObservingUsersIfNeeded(): void {
         if (this.ownTokenInterval.isPresent()) {
             window.clearInterval(this.ownTokenInterval.get());
@@ -491,6 +525,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         }
         this.selfSubscription.unsubscribe();
     }
+
     public acceptConfig(): Promise<void> {
         // called by the configRoom
         // triggers the redirection that will be applied for every subscribed user

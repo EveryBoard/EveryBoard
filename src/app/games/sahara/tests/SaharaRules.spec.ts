@@ -3,7 +3,7 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { SaharaNode, SaharaRules } from '../SaharaRules';
 import { SaharaMove } from '../SaharaMove';
 import { SaharaState } from '../SaharaState';
-import { TriangularCheckerBoard } from 'src/app/jscaip/TriangularCheckerBoard';
+import { TriangularCheckerBoard } from 'src/app/jscaip/state/TriangularCheckerBoard';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { Player } from 'src/app/jscaip/Player';
@@ -44,7 +44,7 @@ describe('SaharaHeuristic', () => {
         // When trying to rebound on occupied piece
         const move: SaharaMove = SaharaMove.from(new Coord(7, 0), new Coord(8, 1)).get();
 
-        // Then it should be illegal
+        // Then the move should be illegal
         const reason: string = SaharaFailure.CAN_ONLY_REBOUND_ON_EMPTY_SPACE();
         RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
     });
@@ -52,6 +52,8 @@ describe('SaharaHeuristic', () => {
     it('should forbid moving opponent piece', () => {
         const state: SaharaState = SaharaRules.get().getInitialState();
         const move: SaharaMove = SaharaMove.from(new Coord(3, 0), new Coord(4, 0)).get();
+
+        // Then the move should be illegal
         const reason: string = RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT();
         RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
     });
