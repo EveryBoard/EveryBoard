@@ -38,16 +38,16 @@ export class LodestoneMoveGenerator extends MoveGenerator<LodestoneMove, Lodesto
                 this.captureCombinations(state, numberOfCaptures - 1);
             for (const subCombination of subCombinations) {
                 if (subCombination.top + 1 <= available.top) {
-                    combinations = combinations.unionList([{ ...subCombination, top: subCombination.top + 1 }]);
+                    combinations = combinations.unionElement({ ...subCombination, top: subCombination.top + 1 });
                 }
                 if (subCombination.bottom + 1 <= available.bottom) {
-                    combinations = combinations.unionList([{ ...subCombination, bottom: subCombination.bottom + 1 }]);
+                    combinations = combinations.unionElement({ ...subCombination, bottom: subCombination.bottom + 1 });
                 }
                 if (subCombination.left + 1 <= available.left) {
-                    combinations = combinations.unionList([{ ...subCombination, left: subCombination.left + 1 }]);
+                    combinations = combinations.unionElement({ ...subCombination, left: subCombination.left + 1 });
                 }
                 if (subCombination.right + 1 <= available.right) {
-                    combinations = combinations.unionList([{ ...subCombination, right: subCombination.right + 1 }]);
+                    combinations = combinations.unionElement({ ...subCombination, right: subCombination.right + 1 });
                 }
             }
             if (combinations.size() === 0) {

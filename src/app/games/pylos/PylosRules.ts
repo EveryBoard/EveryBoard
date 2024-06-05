@@ -106,13 +106,13 @@ export class PylosRules extends Rules<PylosMove, PylosState> {
 
         const freeToMoveFirsts: ImmutableSet<PylosCoord> = state.getFreeToMoves();
         for (const freeToMoveFirst of freeToMoveFirsts) {
-            possiblesCapturesSet = possiblesCapturesSet.unionList([new ImmutableSet([freeToMoveFirst])]);
+            possiblesCapturesSet = possiblesCapturesSet.unionElement(new ImmutableSet([freeToMoveFirst]));
 
             const secondState: PylosState = state.removePieceAt(freeToMoveFirst);
             const freeToMoveThens: ImmutableSet<PylosCoord> = secondState.getFreeToMoves();
             for (const freeToMoveThen of freeToMoveThens) {
                 const captures: ImmutableSet<PylosCoord> = new ImmutableSet([freeToMoveFirst, freeToMoveThen]);
-                possiblesCapturesSet = possiblesCapturesSet.unionList([captures]); // TODO unionElement
+                possiblesCapturesSet = possiblesCapturesSet.unionElement(captures);
             }
         }
         return possiblesCapturesSet;
@@ -216,7 +216,7 @@ export class PylosRules extends Rules<PylosMove, PylosState> {
             return MGPValidation.failure(PylosFailure.INVALID_FIRST_CAPTURE());
         }
     }
-    public getGameStatus(node: PylosNode): GameStatus {
+    public override getGameStatus(node: PylosNode): GameStatus {
         return PylosRules.getGameStatus(node);
     }
 }

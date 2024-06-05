@@ -105,7 +105,7 @@ export class PenteRules extends ConfigurableRules<PenteMove, PenteState, PenteCo
         return captures;
     }
 
-    public getGameStatus(node: PenteNode, config: MGPOptional<PenteConfig>): GameStatus {
+    public override getGameStatus(node: PenteNode, config: MGPOptional<PenteConfig>): GameStatus {
         const state: PenteState = node.gameState;
         const opponent: Player = state.getCurrentOpponent();
         const capturesNeededToWin: number = config.get().capturesNeededToWin;

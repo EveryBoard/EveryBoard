@@ -107,7 +107,7 @@ export class SaharaRules extends Rules<SaharaMove, SaharaState> {
         }
     }
 
-    public getGameStatus(node: SaharaNode): GameStatus {
+    public override getGameStatus(node: SaharaNode): GameStatus {
         const board: FourStatePiece[][] = node.gameState.getCopiedBoard();
         const zeroFreedoms: number[] = SaharaRules.getBoardValuesFor(board, Player.ZERO);
         const oneFreedoms: number[] = SaharaRules.getBoardValuesFor(board, Player.ONE);

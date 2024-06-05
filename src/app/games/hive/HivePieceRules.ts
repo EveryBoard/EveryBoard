@@ -178,7 +178,7 @@ export class HiveSpiderRules extends HivePieceRules {
             if (visited.contains(coords[i])) {
                 return MGPValidation.failure(HiveFailure.SPIDER_CANNOT_BACKTRACK());
             }
-            visited = visited.unionList([coords[i]]);
+            visited = visited.unionElement(coords[i]);
         }
         return MGPValidation.SUCCESS;
     }
@@ -244,7 +244,7 @@ export class HiveSoldierAntRules extends HivePieceRules {
             if (visited.contains(coord)) {
                 continue;
             }
-            visited = visited.unionList([coord]);
+            visited = visited.unionElement(coord);
 
             if (coord.equals(end)) {
                 return true;
@@ -274,7 +274,7 @@ export class HiveSoldierAntRules extends HivePieceRules {
                 continue;
             }
             for (const unoccupied of state.emptyNeighbors(occupiedSpace)) {
-                moves = moves.unionList([HiveCoordToCoordMove.from(coord, unoccupied).get()]);
+                moves = moves.unionElement(HiveCoordToCoordMove.from(coord, unoccupied).get());
             }
         }
         return moves.toList();

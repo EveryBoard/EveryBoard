@@ -5,11 +5,6 @@ import { ArrayUtils } from './ArrayUtils';
 
 export class ImmutableSet<T extends Comparable> extends AbstractSet<T> {
 
-    public override provideInstance<U extends Comparable>(values?: readonly U[]): this {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        return new (<any> this.constructor)();
-    }
-
     public toMutableSet(): MutableSet<T> {
         return new MutableSet(this.toList());
     }

@@ -188,7 +188,7 @@ export class HiveRules extends Rules<HiveMove, HiveState> {
                 for (const neighbor of state.emptyNeighbors(coord)) {
                     const move: HiveDropMove = HiveDropMove.of(remainingPiece, neighbor);
                     if (this.isLegalDrop(move, state).isSuccess()) {
-                        locations = locations.unionList([neighbor]);
+                        locations = locations.unionElement(neighbor);
                     }
                 }
             }
@@ -203,7 +203,7 @@ export class HiveRules extends Rules<HiveMove, HiveState> {
         if (topPiece.owner === player) {
             for (const move of HivePieceRules.of(topPiece).getPotentialMoves(coord, state)) {
                 if (this.isLegalMoveCoordToCoord(move, state).isSuccess()) {
-                    moves = moves.unionList([move]);
+                    moves = moves.unionElement(move);
                 }
             }
         }
@@ -222,7 +222,7 @@ export class HiveRules extends Rules<HiveMove, HiveState> {
         return this.getPossibleDropLocations(state).size() === 0 && this.getPossibleMovesOnBoard(state).size() === 0;
     }
 
-    public getGameStatus(node: HiveNode): GameStatus {
+    public override getGameStatus(node: HiveNode): GameStatus {
         const state: HiveState = node.gameState;
 
         const neighbors: PlayerNumberMap = PlayerNumberMap.of(0, 0);

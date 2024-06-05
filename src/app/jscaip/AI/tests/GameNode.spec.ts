@@ -52,7 +52,7 @@ class RulesMock extends Rules<MoveMock, GameStateMock> {
         throw new Error('RulesMock.isLegal method not implemented.');
     }
 
-    public getGameStatus(node: MockNode): GameStatus {
+    public override getGameStatus(node: MockNode): GameStatus {
         throw new Error('RulesMock.getGameStatus method not implemented.');
     }
 }

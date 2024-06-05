@@ -4,10 +4,6 @@ import { AbstractSet } from './AbstractSet';
 
 export class MutableSet<T extends Comparable> extends AbstractSet<T> {
 
-    public override provideInstance(values?: readonly T[]): this {
-        return new MutableSet(values) as this;
-    }
-
     public toImmutableSet(): ImmutableSet<T> {
         return new ImmutableSet(this.toList());
     }

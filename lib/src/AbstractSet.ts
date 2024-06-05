@@ -15,7 +15,10 @@ export abstract class AbstractSet<T extends Comparable> implements ComparableObj
         }
     }
 
-    abstract provideInstance(values?: readonly T[]): AbstractSet<T>;
+    public provideInstance<U extends Comparable>(values?: readonly U[]): this {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        return new (<any> this.constructor)(values);
+    }
 
     public equals(other: AbstractSet<T>): boolean {
         if (other.size() !== this.size()) {

@@ -184,14 +184,14 @@ export class LinesOfActionRules extends Rules<LinesOfActionMove, LinesOfActionSt
                 const move: LinesOfActionMove = LinesOfActionMove.from(start, target).get();
                 const legality: MGPValidation = LinesOfActionRules.isLegal(move, state);
                 if (legality.isSuccess()) {
-                    targets = targets.unionList([target]);
+                    targets = targets.unionElement(target);
                 }
             }
         }
         return targets;
     }
 
-    public getGameStatus(node: LinesOfActionNode): GameStatus {
+    public override getGameStatus(node: LinesOfActionNode): GameStatus {
         const state: LinesOfActionState = node.gameState;
         const groups: PlayerNumberMap = LinesOfActionRules.getNumberOfGroups(state);
         const zero: number = groups.get(Player.ZERO);

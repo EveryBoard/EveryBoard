@@ -149,7 +149,7 @@ export class SixRules extends Rules<SixMove, SixState, SixLegalityInformation> {
         }
         return MGPFallible.failure(SixFailure.MUST_CAPTURE_BIGGEST_GROUPS());
     }
-    public getGameStatus(node: SixNode): GameStatus {
+    public override getGameStatus(node: SixNode): GameStatus {
         const state: SixState = node.gameState;
         const LAST_PLAYER: Player = state.getCurrentOpponent();
         let shapeVictory: Coord[] = [];

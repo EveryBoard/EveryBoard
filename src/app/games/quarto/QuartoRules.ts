@@ -314,7 +314,7 @@ export class QuartoRules extends Rules<QuartoMove, QuartoState> {
         }
         return turn === 16 ? GameStatus.DRAW : GameStatus.ONGOING;
     }
-    public getGameStatus(node: QuartoNode): GameStatus {
+    public override getGameStatus(node: QuartoNode): GameStatus {
         const state: QuartoState = node.gameState;
         let boardStatus: BoardStatus = {
             score: SCORE.DEFAULT,

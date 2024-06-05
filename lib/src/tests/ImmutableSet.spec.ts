@@ -59,6 +59,27 @@ describe('ImmutableSet', () => {
 
     });
 
+    describe('unionList', () => {
+
+        it('should return the elements present in both the set and the list', () => {
+            const set: ImmutableSet<number> = new ImmutableSet([1, 2]);
+            const list: number[] = [2, 3];
+            const union: ImmutableSet<number> = set.unionList(list);
+            expect(union).toEqual(new ImmutableSet([1, 2, 3]));
+        });
+
+    });
+
+    describe('unionElement', () => {
+
+        it('should return the elements present in the set plus the new element', () => {
+            const set: ImmutableSet<number> = new ImmutableSet([1, 2]);
+            const union: ImmutableSet<number> = set.unionElement(3);
+            expect(union).toEqual(new ImmutableSet([1, 2, 3]));
+        });
+
+    });
+
     describe('contains', () => {
 
         const set: ImmutableSet<number> = new ImmutableSet([1, 2]);
@@ -170,6 +191,16 @@ describe('ImmutableSet', () => {
             }
             const set: ImmutableSet<number> = new ImmutableSet([1, 2]);
             expect(set.filter(pred)).toEqual(new ImmutableSet([2]));
+        });
+
+    });
+
+    describe('filterElement', () => {
+
+        it('should keep all elements but the provided one', () => {
+            const set: ImmutableSet<number> = new ImmutableSet([1, 2, 3]);
+            const expected: ImmutableSet<number> = new ImmutableSet([1, 2]);
+            expect(set.filterElement(3)).toEqual(expected);
         });
 
     });

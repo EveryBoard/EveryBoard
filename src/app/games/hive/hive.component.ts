@@ -238,7 +238,7 @@ export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, H
         }
         if (neighbors.isEmpty()) {
             // We need at least one clickable coord to be playable at first turn
-            neighbors = neighbors.unionList([new Coord(0, 0)]);
+            neighbors = neighbors.unionElement(new Coord(0, 0));
         }
         return neighbors;
     }

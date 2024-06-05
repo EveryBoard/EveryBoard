@@ -38,7 +38,7 @@ export class LascaMove extends Move {
                 if (jumpedOverCoords.contains(jumpedOverCoord)) {
                     return MGPFallible.failure(LascaFailure.CANNOT_CAPTURE_TWICE_THE_SAME_COORD());
                 }
-                jumpedOverCoords = jumpedOverCoords.unionList([jumpedOverCoord]);
+                jumpedOverCoords = jumpedOverCoords.unionElement(jumpedOverCoord);
             }
             lastCoordOpt = MGPOptional.of(coord);
         }

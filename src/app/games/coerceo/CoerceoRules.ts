@@ -136,7 +136,7 @@ export class CoerceoRules extends Rules<CoerceoMove, CoerceoState> {
         return MGPValidation.SUCCESS;
     }
 
-    public getGameStatus(node: CoerceoNode): GameStatus {
+    public override getGameStatus(node: CoerceoNode): GameStatus {
         const state: CoerceoState = node.gameState;
         if (18 <= state.captures.get(Player.ZERO)) {
             return GameStatus.ZERO_WON;

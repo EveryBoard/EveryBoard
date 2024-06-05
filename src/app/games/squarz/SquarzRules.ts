@@ -103,7 +103,7 @@ export class SquarzRules extends ConfigurableRules<SquarzMove, SquarzState, Squa
         return new SquarzState(resultingState.board, resultingState.turn + 1);
     }
 
-    public getGameStatus(node: SquarzNode, config: MGPOptional<SquarzConfig>): GameStatus {
+    public override getGameStatus(node: SquarzNode, config: MGPOptional<SquarzConfig>): GameStatus {
         const jumpSize: number = config.get().jumpSize;
         const state: SquarzState = node.gameState;
         const currentPlayer: Player = state.getCurrentPlayer();

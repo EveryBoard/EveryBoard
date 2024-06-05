@@ -19,6 +19,14 @@ export class DiaballikPiece implements ComparableObject {
     public equals(other: DiaballikPiece): boolean {
         return this === other;
     }
+    public toString(): string {
+        if (this === DiaballikPiece.NONE) return '__';
+        if (this === DiaballikPiece.ZERO) return 'O_';
+        if (this === DiaballikPiece.ZERO_WITH_BALL) return 'Oo';
+        if (this === DiaballikPiece.ONE) return 'X_';
+        if (this === DiaballikPiece.ONE_WITH_BALL) return 'Xx';
+        return 'TG FDP';
+    }
 }
 
 export class DiaballikState extends GameStateWithTable<DiaballikPiece> {
