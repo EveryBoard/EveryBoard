@@ -113,7 +113,7 @@ describe('HiveComponent', () => {
                 await testUtils.expectClickSuccess('#remaining-piece-Beetle_PLAYER_ZERO-0');
                 const move: HiveMove = HiveMove.drop(B, new Coord(2, 0));
 
-                // Then it should fail
+                // Then the move should be illegal
                 const reason: string = HiveFailure.CANNOT_DROP_NEXT_TO_OPPONENT();
                 await testUtils.expectMoveFailure('#space-2-0', reason, move);
             }));
@@ -288,9 +288,10 @@ describe('HiveComponent', () => {
                 await testUtils.expectClickSuccess('#piece-0-1-0');
 
                 // When clicking on an illegal destination
-                // Then it should fail
-                const reason: string = HiveFailure.CANNOT_DISCONNECT_HIVE();
                 const move: HiveMove = HiveMove.move(new Coord(0, 1), new Coord(0, 2)).get();
+
+                // Then the move should be illegal
+                const reason: string = HiveFailure.CANNOT_DISCONNECT_HIVE();
                 await testUtils.expectMoveFailure('#space-0-2', reason, move);
             }));
 

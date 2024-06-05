@@ -3,7 +3,7 @@ import { GameNode } from '../AI/GameNode';
 import { Move } from '../Move';
 import { Player } from '../Player';
 import { SuperRules } from '../Rules';
-import { GameState } from '../GameState';
+import { GameState } from '../state/GameState';
 import { GameStatus } from '../GameStatus';
 import { comparableEquals, isComparableObject, JSONValue, MGPFallible, MGPOptional, Utils } from '@everyboard/lib';
 import { EmptyRulesConfig, RulesConfig } from '../RulesConfigUtil';
@@ -67,7 +67,7 @@ export class RulesUtils {
     : void
     {
         expect(rules.getGameStatus(node, config))
-            .withContext('Rules should consider gameStatus a victory for player ' + player.getValue())
+            .withContext('Rules should consider gameStatus a victory for ' + player.toString())
             .toEqual(GameStatus.getVictory(player));
     }
 

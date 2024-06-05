@@ -6,7 +6,7 @@
     <g [attr.transform]="'rotate(' + (getPointOfView().getValue() * 180) + ' ' + (boardWidth / 2) + ' ' + (boardHeight / 2) + ')'">
         <g *ngFor="let player of Player.PLAYERS">
             <circle *ngFor="let p of getPlayerSidePieces(player)"
-                    id="piece_{{ player.getValue() }}_{{ p }}"
+                    id="piece_{{ player.toString() }}_{{ p }}"
                     [attr.cx]="(SPACE_SIZE / 4) + ((boardWidth - (SPACE_SIZE / 4)) * (p / 15))"
                     [attr.cy]="getPiecesCyForPlayer(player)"
                     [attr.r]="(SPACE_SIZE / 4) - STROKE_WIDTH"

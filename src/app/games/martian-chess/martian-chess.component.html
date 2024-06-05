@@ -105,7 +105,7 @@
     </g>
     <g id="captures">
         <g *ngFor="let player of Player.PLAYERS">
-            <g id="capture-of-player-{{ player.getValue() }}"
+            <g id="capture-of-player-{{ player.toString() }}"
                [attr.transform]="getCapturesTransformation(player)">
                 <g *ngFor="let value of state.getCapturesOf(player); index as piece">
                     <g *ngIf="value > 0"
@@ -116,7 +116,7 @@
                               [attr.x]="SPACE_SIZE / 2"
                               [attr.y]="SPACE_SIZE / 2"
                         >{{ value + ' x ' }}</text>
-                        <g id="piece-{{ piece }}-player-{{ player.getValue() }}"
+                        <g id="piece-{{ piece }}-player-{{ player.toString() }}"
                            [attr.transform]="'translate(' + SPACE_SIZE + ', 0)'">
                             <g *ngIf="piece === 0"
                                app-martian-chess-pawn

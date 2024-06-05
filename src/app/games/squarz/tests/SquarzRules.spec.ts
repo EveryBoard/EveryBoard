@@ -123,7 +123,7 @@ describe('SquarzRules', () => {
         // When moving an opponent piece
         const move: SquarzMove = SquarzMove.from(new Coord(7, 0), new Coord(6, 0)).get();
 
-        // Then it should fail
+        // Then the move should be illegal
         const reason: string = RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT();
         RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
     });
@@ -135,7 +135,7 @@ describe('SquarzRules', () => {
         // When moving an opponent piece
         const move: SquarzMove = SquarzMove.from(new Coord(4, 4), new Coord(3, 3)).get();
 
-        // Then it should fail
+        // Then the move should be illegal
         const reason: string = RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY();
         RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
     });
@@ -156,7 +156,7 @@ describe('SquarzRules', () => {
         // When trying to land on an occupied piece
         const move: SquarzMove = SquarzMove.from(new Coord(0, 0), new Coord(1, 1)).get();
 
-        // Then it should fail
+        // Then the move should be illegal
         const reason: string = RulesFailure.MUST_LAND_ON_EMPTY_SPACE();
         RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
     });
@@ -168,7 +168,7 @@ describe('SquarzRules', () => {
         // When trying to create a jump of 3
         const move: SquarzMove = SquarzMove.from(new Coord(0, 0), new Coord(3, 3)).get();
 
-        // Then it should fail
+        // Then the move should be illegal
         const reason: string = SquarzFailure.MAX_DISTANCE_IS_N(2);
         RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
     });

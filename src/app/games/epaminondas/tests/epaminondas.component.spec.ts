@@ -156,8 +156,9 @@ describe('EpaminondasComponent', () => {
             const move: EpaminondasMove = new EpaminondasMove(0, 9, 1, 1, Ordinal.UP);
             await testUtils.expectClickSuccess('#click-0-9');
 
-            // Then it should fail
-            await testUtils.expectMoveFailure('#click-0-8', EpaminondasFailure.PHALANX_SHOULD_BE_GREATER_TO_CAPTURE(), move);
+            // Then the move should be illegal
+            const reason: string = EpaminondasFailure.PHALANX_SHOULD_BE_GREATER_TO_CAPTURE();
+            await testUtils.expectMoveFailure('#click-0-8', reason, move);
         }));
 
         it('should deselect piece when clicking a second time on it', fakeAsync(async() => {

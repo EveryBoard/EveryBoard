@@ -1,4 +1,4 @@
-import { GameState } from 'src/app/jscaip/GameState';
+import { GameState } from 'src/app/jscaip/state/GameState';
 import { Player } from 'src/app/jscaip/Player';
 import { ArrayUtils } from '@everyboard/lib';
 import { ApagosCoord } from './ApagosCoord';

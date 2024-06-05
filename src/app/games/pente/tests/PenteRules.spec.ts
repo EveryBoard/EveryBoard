@@ -62,7 +62,7 @@ describe('PenteRules', () => {
         // When doing drop outside the board
         const move: PenteMove = PenteMove.of(new Coord(-1, 0));
 
-        // Then it should be refused
+        // Then the move should be illegal
         const reason: string = CoordFailure.OUT_OF_RANGE(new Coord(-1, 0));
         RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
     });
@@ -74,7 +74,7 @@ describe('PenteRules', () => {
         // When doing a drop on an occupied space
         const move: PenteMove = PenteMove.of(new Coord(9, 9));
 
-        // Then it should fail
+        // Then the move should be illegal
         const reason: string = RulesFailure.MUST_CLICK_ON_EMPTY_SQUARE();
         RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
     });

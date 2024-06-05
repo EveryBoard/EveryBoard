@@ -41,7 +41,8 @@ describe('TeekoComponent', () => {
 
             // When clicking on the occupied space
             const move: TeekoDropMove = TeekoDropMove.from(new Coord(2, 2)).get();
-            // Then it should fail
+
+            // Then the move should be illegal
             const reason: string = RulesFailure.MUST_LAND_ON_EMPTY_SPACE();
             await testUtils.expectMoveFailure('#click_2_2', reason, move);
         }));
@@ -181,7 +182,7 @@ describe('TeekoComponent', () => {
                 await testUtils.expectClickSuccess('#click_0_0');
 
                 // When clicking on an invalid landing space
-                // Then it should fail
+                // Then the move should be illegal
                 const reason: string = RulesFailure.MUST_LAND_ON_EMPTY_SPACE();
                 const move: TeekoTranslationMove = TeekoTranslationMove.from(new Coord(0, 0), new Coord(1, 1)).get();
                 await testUtils.expectMoveFailure('#click_1_1', reason, move);

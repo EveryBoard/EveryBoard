@@ -1,7 +1,7 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { PlayerOrNone } from 'src/app/jscaip/Player';
 import { QuixoMove } from './QuixoMove';
-import { PlayerOrNoneGameStateWithTable } from 'src/app/jscaip/PlayerOrNoneGameStateWithTable';
+import { PlayerOrNoneGameStateWithTable } from 'src/app/jscaip/state/PlayerOrNoneGameStateWithTable';
 
 export type QuixoConfig = {
     width: number,

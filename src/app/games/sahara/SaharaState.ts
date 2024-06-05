@@ -1,6 +1,6 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
-import { TriangularGameState } from 'src/app/jscaip/TriangularGameState';
+import { TriangularGameState } from 'src/app/jscaip/state/TriangularGameState';
 
 export class SaharaState extends TriangularGameState<FourStatePiece> {
 

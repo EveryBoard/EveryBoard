@@ -128,7 +128,7 @@ describe('DiamComponent', () => {
             // When dropping a piece on the full stack
             const move: DiamMove = new DiamMoveDrop(0, DiamPiece.ZERO_FIRST);
 
-            // Then it should fail
+            // Then the move should be illegal
             const reason: string = DiamFailure.SPACE_IS_FULL();
             await testUtils.expectMoveFailure('#click_0', reason, move);
         }));
@@ -142,8 +142,10 @@ describe('DiamComponent', () => {
                 [O1, __, __, __, __, __, __, O2],
             ], 4);
             await testUtils.setupState(state);
+
             // When clicking on A2 (in 7, 0) and then on the first column (0)
             await testUtils.expectClickSuccess('#click_7_0');
+
             const move: DiamMove = DiamMoveShift.ofRepresentation(new Coord(7, 3), 'clockwise');
             // Then the move should be legal
             await testUtils.expectMoveSuccess('#click_0', move);
@@ -158,6 +160,7 @@ describe('DiamComponent', () => {
                 [X1, __, __, __, __, __, __, O2],
             ], 4);
             await testUtils.setupState(state);
+
             // When clicking on A1 and then on the last column
             // Then the move should be legal
             await testUtils.expectClickSuccess('#click_0_1');
@@ -174,6 +177,7 @@ describe('DiamComponent', () => {
                 [__, __, __, __, __, __, __, O2],
             ], 4);
             await testUtils.setupState(state);
+
             // When clicking on A2 and then somewhere else than the first line
             // Then it should fail
             await testUtils.expectClickSuccess('#click_7_0');
@@ -309,6 +313,7 @@ describe('DiamComponent', () => {
             testUtils.expectElementNotToHaveClass('#click_7_0', 'victory-stroke');
             testUtils.expectElementNotToHaveClass('#click_7_1', 'victory-stroke');
         }));
+
     });
 
 });
