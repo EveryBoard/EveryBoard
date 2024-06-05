@@ -78,8 +78,6 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
         } else {
             initialConfigRoom = ConfigRoomMocks.getInitial(MGPOptional.of(config));
         }
-        console.log('initial config room:')
-        console.log(initialConfigRoom)
         const initialPart: Part = PartMocks.INITIAL;
         configRoomDAO = TestBed.inject(ConfigRoomDAO);
         await configRoomDAO.set('configRoomId', initialConfigRoom);

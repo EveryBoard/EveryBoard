@@ -66,23 +66,16 @@ export abstract class GameWrapper<P extends Comparable> extends BaseWrapperCompo
      * It returns true if successful, or false if this is not a valid game.
      */
     protected async createMatchingGameComponent(): Promise<boolean> {
-        console.log('createMatching')
         const componentType: MGPOptional<Type<AbstractGameComponent>> =
             await this.getMatchingComponentAndNavigateOutIfAbsent();
         if (componentType.isPresent()) {
             // This waits for the config to be chosen
             const config: MGPOptional<RulesConfig> = await this.getConfig();
-            console.log('creating matching game component')
             await this.createGameComponent(componentType.get());
-            console.log('setting config to')
-            console.log(config)
             this.gameComponent.config = config;
             this.gameComponent.node = this.gameComponent.rules.getInitialNode(config);
             await this.setRole(this.role);
-            console.log('drawing')
-            console.log('updating board')
             await this.gameComponent.updateBoard(false);
-            console.log('redraw')
             this.gameComponent.redraw();
             return true;
         } else {
@@ -104,32 +97,26 @@ export abstract class GameWrapper<P extends Comparable> extends BaseWrapperCompo
     private async createGameComponent(component: Type<AbstractGameComponent>): Promise<void> {
         Utils.assert(this.boardRef != null, 'Board element should be present');
 
-        console.log('creating game component')
         const componentRef: ComponentRef<AbstractGameComponent> =
             Utils.getNonNullable(this.boardRef).createComponent(component);
         this.gameComponent = componentRef.instance;
 
-        console.log('binding stuff')
         // chooseMove is called by the game component when a move is done
         this.gameComponent.chooseMove = (m: Move): Promise<MGPValidation> => {
             // the game wrapper can then act accordingly to the chosen move.
             return this.receiveValidMove(m);
         };
-        console.log('1')
         // canUserPlay is called upon a click by the user
         this.gameComponent.canUserPlay = (elementName: string): Promise<MGPValidation> => {
             return this.canUserPlay(elementName);
         };
-        console.log('2')
         this.gameComponent.isPlayerTurn = (): boolean => {
             return this.isPlayerTurn();
         };
-        console.log('3')
         // Mostly for interception by TutorialGameWrapper
         this.gameComponent.cancelMoveOnWrapper = (reason?: string): Promise<void> => {
             return this.onCancelMove(reason);
         };
-        console.log('4')
     }
 
     public async setRole(role: PlayerOrNone): Promise<void> {
@@ -176,7 +163,6 @@ export abstract class GameWrapper<P extends Comparable> extends BaseWrapperCompo
     public abstract getPlayer(): P;
 
     public async getConfig(): Promise<MGPOptional<RulesConfig>> {
-        console.log('GW.getConfig')
         const gameName: string = this.getGameName();
         return RulesConfigUtils.getGameDefaultConfig(gameName);
     }
@@ -265,7 +251,6 @@ export abstract class GameWrapper<P extends Comparable> extends BaseWrapperCompo
     }
 
     public getRulesConfigDescription(): MGPOptional<RulesConfigDescription<RulesConfig>> {
-        console.log('getting rules config')
         const gameName: string = this.getGameName();
         return this.getRulesConfigDescriptionByName(gameName);
     }

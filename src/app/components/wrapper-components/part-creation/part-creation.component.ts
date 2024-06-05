@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { takeUntil } from 'rxjs/operators';
@@ -194,8 +194,6 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         };
         const configRoomCallback: (configRoom: MGPOptional<ConfigRoom>) => void =
             async(configRoom: MGPOptional<ConfigRoom>) => {
-                console.log('configRoomCallback')
-                console.log(configRoom)
                 await this.onCurrentConfigRoomUpdate(configRoom);
                 if (configRoom.isPresent() && this.candidatesSubscription === Subscription.EMPTY) {
                     // We want to subscribe to candidates AFTER receiving a first config room
@@ -246,7 +244,6 @@ export class PartCreationComponent implements OnInit, OnDestroy {
     }
 
     private updateViewInfo(configRoom: ConfigRoom): void {
-        console.log('update view info')
         const authUser: AuthUser = this.connectedUserService.user.get();
 
         this.viewInfo.canReviewConfig = configRoom.partStatus === PartStatus.CONFIG_PROPOSED.value;
@@ -437,8 +434,6 @@ export class PartCreationComponent implements OnInit, OnDestroy {
     }
 
     private onGameStarted(): void {
-        console.log('onGameStarted')
-        console.log(this.currentConfigRoom)
         const configRoom: ConfigRoom = Utils.getNonNullable(this.currentConfigRoom);
 
         this.gameStartNotification.emit(configRoom);

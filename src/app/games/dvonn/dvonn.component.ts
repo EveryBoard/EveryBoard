@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { Coord } from 'src/app/jscaip/Coord';
 import { DvonnMove } from 'src/app/games/dvonn/DvonnMove';
 import { DvonnState } from 'src/app/games/dvonn/DvonnState';
