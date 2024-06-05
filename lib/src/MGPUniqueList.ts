@@ -1,12 +1,12 @@
 import { Comparable, comparableEquals } from './Comparable';
-import { MutableSet } from './MutableSet';
+import { ImmutableSet } from './ImmutableSet';
 import { Utils } from './Utils';
 
 /**
  * This is a list that contains each element only once.
  * It is an ordered set.
  */
-export class MGPUniqueList<T extends Comparable> extends MutableSet<T> {
+export class MGPUniqueList<T extends Comparable> extends ImmutableSet<T> {
 
     public override equals(other: MGPUniqueList<T>): boolean {
         if (other.size() !== this.size()) {

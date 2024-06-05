@@ -2,7 +2,6 @@ import { MGPOptional } from './MGPOptional';
 import { Comparable, comparableEquals } from './Comparable';
 import { ImmutableSet } from './ImmutableSet';
 import { Utils } from './Utils';
-import { MutableSet } from './MutableSet';
 
 export class MGPMap<K extends NonNullable<Comparable>, V extends NonNullable<unknown>> {
 
@@ -173,13 +172,11 @@ export class ReversibleMap<K extends NonNullable<Comparable>, V extends NonNulla
         for (const key of this.getKeyList()) {
             const value: V = this.get(key).get();
             if (reversedMap.containsKey(value)) {
-                const newSet: MutableSet<K> = reversedMap.get(value).get().toMutableSet();
-                newSet.add(key);
-                reversedMap.put(value, newSet.toImmutableSet());
+                const newSet: ImmutableSet<K> = reversedMap.get(value).get().unionElement(key);
+                reversedMap.put(value, newSet);
             } else {
-                const newSet: MutableSet<K> = new MutableSet<K>();
-                newSet.add(key);
-                reversedMap.set(value, newSet.toImmutableSet());
+                const newSet: ImmutableSet<K> = new ImmutableSet<K>([key]);
+                reversedMap.set(value, newSet);
             }
         }
         return reversedMap;

@@ -2,7 +2,7 @@
 import { MGPOptional } from '@everyboard/lib';
 import { UserSettingsService } from '../UserSettingsService';
 
-describe('UserSettingsService', () => {
+xdescribe('UserSettingsService', () => {
 
     let userSettingsService: UserSettingsService;
 

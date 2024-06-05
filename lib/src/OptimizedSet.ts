@@ -1,13 +1,12 @@
 import { Comparable } from './Comparable';
 import { ImmutableSet } from './ImmutableSet';
-import { MutableSet } from './MutableSet';
 
 /**
  * This is an optimized representation of sets.
  * It performs multi-level hashing and is suitable for types
  * that can be decomposed into multiple fields represented by numbers.
  */
-export abstract class MutableOptimizedSet<T extends Comparable> extends MutableSet<T> {
+export abstract class ImmutableOptimizedSet<T extends Comparable> extends ImmutableSet<T> {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     private readonly valueMap: any; // TODO: T[] ???
 
@@ -30,7 +29,7 @@ export abstract class MutableOptimizedSet<T extends Comparable> extends MutableS
         }
     }
 
-    public override add(element: T): boolean {
+    private add(element: T): boolean {
         const fields: [[number], number] = this.toFields(element);
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         let indirection: any = this.valueMap;
@@ -67,8 +66,4 @@ export abstract class MutableOptimizedSet<T extends Comparable> extends MutableS
     [Symbol.iterator](): IterableIterator<T> {
         return this.values.values();
     }
-}
-
-export abstract class ImmutableOptimizedSet<T extends Comparable> extends ImmutableSet<T> {
-    // TODO FOR REVIEW: any OptimizedWay to handle them ?
 }

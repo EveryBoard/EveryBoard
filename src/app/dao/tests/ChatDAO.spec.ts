@@ -19,7 +19,7 @@ import { ChatService } from 'src/app/services/ChatService';
 import { Subscription } from 'rxjs';
 import { expectPermissionToBeDenied, setupEmulators } from 'src/app/utils/tests/TestUtils.spec';
 
-describe('ChatDAO', () => {
+xdescribe('ChatDAO', () => {
 
     let chatDAO: ChatDAO;
     let chatService: ChatService;

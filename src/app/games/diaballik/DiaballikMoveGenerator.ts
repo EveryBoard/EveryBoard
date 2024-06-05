@@ -6,7 +6,7 @@ import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Orthogonal } from 'src/app/jscaip/Orthogonal';
 import { Ordinal } from 'src/app/jscaip/Ordinal';
-import { ArrayUtils, ComparableObject, MGPFallible, MGPOptional, ImmutableSet, Utils, MutableSet } from '@everyboard/lib';
+import { ArrayUtils, ComparableObject, MGPFallible, MGPOptional, ImmutableSet, Utils } from '@everyboard/lib';
 import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 import { ImmutableCoordSet } from 'src/app/jscaip/CoordSet';
 
@@ -170,12 +170,12 @@ export class DiaballikMoveGenerator extends MoveGenerator<DiaballikMove, Diaball
         const emptyMove: DiaballikMoveInConstruction =
             new DiaballikMoveInConstruction([], node.gameState, node.gameState);
         let movesInConstruction: DiaballikMoveInConstruction[] = [emptyMove];
-        const moves: MutableSet<DiaballikMove> = new MutableSet();
+        let moves: ImmutableSet<DiaballikMove> = new ImmutableSet();
         for (let i: number = 0; i < 3; i++) {
             let nextMovesInConstruction: DiaballikMoveInConstruction[] = [];
             for (const move of movesInConstruction) {
                 const newMovesInConstruction: DiaballikMoveInConstruction[] = this.addAllPossibleSubMoves(move);
-                moves.addAll(new ImmutableSet(newMovesInConstruction.map(DiaballikMoveInConstruction.finalize)));
+                moves = moves.unionList(newMovesInConstruction.map(DiaballikMoveInConstruction.finalize));
                 nextMovesInConstruction = nextMovesInConstruction.concat(newMovesInConstruction);
             }
             movesInConstruction = nextMovesInConstruction;
@@ -183,13 +183,13 @@ export class DiaballikMoveGenerator extends MoveGenerator<DiaballikMove, Diaball
         return this.removeDuplicates(node.gameState, moves, config);
     }
 
-    private removeDuplicates(state: DiaballikState, moves: MutableSet<DiaballikMove>, config: NoConfig)
+    private removeDuplicates(state: DiaballikState, moves: ImmutableSet<DiaballikMove>, config: NoConfig)
     : DiaballikMove[]
     {
         if (this.avoidDuplicates === false) {
             return moves.toList();
         }
-        const seenStates: MutableSet<DiaballikState> = new MutableSet();
+        let seenStates: ImmutableSet<DiaballikState> = new ImmutableSet();
         const movesToKeep: DiaballikMove[] = [];
         const rules: DiaballikRules = DiaballikRules.get();
         for (const move of moves) {
@@ -198,7 +198,7 @@ export class DiaballikMoveGenerator extends MoveGenerator<DiaballikMove, Diaball
                 rules.applyLegalMove(move, state, config, legalityInfo.get());
             if (seenStates.contains(stateAfterMove) === false) {
                 movesToKeep.push(move);
-                seenStates.add(stateAfterMove);
+                seenStates = seenStates.unionElement(stateAfterMove);
             }
         }
         return movesToKeep;

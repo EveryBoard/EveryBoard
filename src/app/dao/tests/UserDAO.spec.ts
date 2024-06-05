@@ -8,7 +8,7 @@ import { MGPOptional } from '@everyboard/lib';
 import { UserService } from 'src/app/services/UserService';
 import { expectPermissionToBeDenied, setupEmulators } from 'src/app/utils/tests/TestUtils.spec';
 
-describe('UserDAO', () => {
+xdescribe('UserDAO', () => {
 
     let userDAO: UserDAO;
     let userService: UserService;

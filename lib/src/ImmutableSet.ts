@@ -1,18 +1,12 @@
 import { Comparable, comparableEquals } from './Comparable';
 import { AbstractSet } from './AbstractSet';
-import { MutableSet } from './MutableSet';
 import { ArrayUtils } from './ArrayUtils';
 
 export class ImmutableSet<T extends Comparable> extends AbstractSet<T> {
 
-    public toMutableSet(): MutableSet<T> {
-        return new MutableSet(this.toList());
-    }
-
     public union(otherSet: AbstractSet<T>): this {
-        const result: MutableSet<T> = this.toMutableSet();
-        result.addAll(otherSet);
-        return this.provideInstance(result.toList());
+        const values: T[] = this.toList().concat(otherSet.toList());
+        return this.provideInstance(values);
     }
 
     public unionList(list: T[]): this {
@@ -37,21 +31,21 @@ export class ImmutableSet<T extends Comparable> extends AbstractSet<T> {
     }
 
     public flatMap<U extends Comparable>(f: (element: T) => ImmutableSet<U>): ImmutableSet<U> {
-        const result: MutableSet<U> = new MutableSet();
+        let result: ImmutableSet<U> = new ImmutableSet();
         for (const element of this) {
-            result.addAll(f(element));
+            result = result.union(f(element));
         }
-        return result.toImmutableSet();
+        return result;
     }
 
     public intersection(other: AbstractSet<T>): this {
-        const result: MutableSet<T> = new MutableSet();
+        let result: this = this.provideInstance();
         for (const element of other) {
             if (this.contains(element)) {
-                result.add(element);
+                result = result.unionElement(element);
             }
         }
-        return this.provideInstance(result.toList());
+        return result;
     }
 
 }

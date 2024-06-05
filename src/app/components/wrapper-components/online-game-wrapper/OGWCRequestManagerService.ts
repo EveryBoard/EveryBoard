@@ -86,7 +86,7 @@ export class OGWCRequestManagerService {
                 if (reply.user.id !== user.id) {
                     // Opponent denied our request
                     this.lastDeniedRequest = MGPOptional.of(reply.requestType);
-                    this.forbiddenRequests = this.forbiddenRequests.union(new ImmutableSet([reply.requestType]));
+                    this.forbiddenRequests = this.forbiddenRequests.unionElement(reply.requestType);
                 }
                 return false;
         }

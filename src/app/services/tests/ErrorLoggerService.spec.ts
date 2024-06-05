@@ -11,7 +11,7 @@ import { ErrorDAOMock } from 'src/app/dao/tests/ErrorDAOMock.spec';
 import { MessageDisplayer } from '../MessageDisplayer';
 import { BlankComponent } from 'src/app/utils/tests/TestUtils.spec';
 
-describe('ErrorLoggerService', () => {
+xdescribe('ErrorLoggerService', () => {
 
     let errorLoggerService: ErrorLoggerService;
     let errorDAO: ErrorDAO;

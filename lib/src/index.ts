@@ -8,8 +8,6 @@ export * from './MathUtils';
 export * from './MGPFallible';
 export * from './MGPMap';
 export * from './MGPOptional';
-export * from './AbstractSet';
-export * from './MutableSet';
 export * from './ImmutableSet';
 export * from './MGPUniqueList';
 export * from './MGPValidation';
