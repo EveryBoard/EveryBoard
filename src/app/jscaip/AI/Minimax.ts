@@ -2,7 +2,7 @@ import { AI, AIDepthLimitOptions, MoveGenerator } from './AI';
 import { Move } from '../Move';
 import { BoardValue } from './BoardValue';
 import { ArrayUtils, MGPFallible, MGPOptional, ImmutableSet, Utils } from '@everyboard/lib';
-import { GameState } from '../GameState';
+import { GameState } from '../state/GameState';
 import { Player } from '../Player';
 import { GameStatus } from '../GameStatus';
 import { SuperRules } from '../Rules';

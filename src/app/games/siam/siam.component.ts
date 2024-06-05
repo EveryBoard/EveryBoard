@@ -91,7 +91,7 @@ export class SiamComponent extends RectangularGameComponent<SiamRules,
     }
 
     public async selectPieceForInsertion(player: Player): Promise<MGPValidation> {
-        const clickValidity: MGPValidation = await this.canUserPlay('#remainingPieces_' + player.getValue());
+        const clickValidity: MGPValidation = await this.canUserPlay('#remainingPieces_' + player.toString());
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }

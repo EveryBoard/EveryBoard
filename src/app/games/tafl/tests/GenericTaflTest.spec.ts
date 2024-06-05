@@ -180,6 +180,7 @@ export function DoTaflTests<C extends TaflComponent<R, M>,
         });
 
         it('should have a bijective encoder', () => {
+            // Given any turn (here we test only the first unfortunately)
             const rules: R = testUtils.getGameComponent().rules;
             const encoder: Encoder<M> = testUtils.getGameComponent().encoder;
             const moveGenerator: TaflMoveGenerator<M> = new TaflMoveGenerator(rules);
@@ -190,6 +191,8 @@ export function DoTaflTests<C extends TaflComponent<R, M>,
                     return entries.moveProvider(move.getStart(), move.getEnd()).get();
                 });
             for (const move of firstTurnMoves) {
+                // When checking if they are bijective
+                // Then they should be
                 EncoderTestUtils.expectToBeBijective(encoder, move);
             }
         });

@@ -1,6 +1,6 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { Vector } from 'src/app/jscaip/Vector';
-import { OpenHexagonalGameState } from 'src/app/jscaip/OpenHexagonalGameState';
+import { OpenHexagonalGameState } from 'src/app/jscaip/state/OpenHexagonalGameState';
 import { Player } from 'src/app/jscaip/Player';
 import { Table } from 'src/app/jscaip/TableUtils';
 import { ComparableObject, MGPMap, MGPOptional, ReversibleMap, Utils } from '@everyboard/lib';

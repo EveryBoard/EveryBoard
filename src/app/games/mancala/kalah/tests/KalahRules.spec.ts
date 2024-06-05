@@ -136,7 +136,7 @@ describe('KalahRules', () => {
             // When doing the move
             const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(3));
 
-            // Then it should be refused
+            // Then the move should be illegal
             const reason: string = 'Must continue playing after kalah move';
             TestUtils.expectToThrowAndLog(() => {
                 RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);

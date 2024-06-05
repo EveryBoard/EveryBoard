@@ -325,7 +325,7 @@ export function doMancalaComponentTests<C extends MancalaComponent<R>,
             await mancalaTestUtils.testUtils.setupState(state);
 
             // When clicking on the empty house
-            // Then it should fail
+            // Then the move should be illegal
             const reason: string = MancalaFailure.MUST_CHOOSE_NON_EMPTY_HOUSE();
             await mancalaTestUtils.testUtils.expectClickFailure('#click_0_0', reason);
         }));
@@ -341,7 +341,8 @@ export function doMancalaComponentTests<C extends MancalaComponent<R>,
 
             // When clicking on a house of the opponent
             // Then it should fail
-            await mancalaTestUtils.testUtils.expectClickFailure('#click_0_0', MancalaFailure.MUST_DISTRIBUTE_YOUR_OWN_HOUSES());
+            const reason: string = MancalaFailure.MUST_DISTRIBUTE_YOUR_OWN_HOUSES();
+            await mancalaTestUtils.testUtils.expectClickFailure('#click_0_0', reason);
         }));
 
         it('should hide last move when taking move back', fakeAsync(async() => {

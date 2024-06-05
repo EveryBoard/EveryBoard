@@ -1,5 +1,5 @@
 import { Coord } from 'src/app/jscaip/Coord';
-import { PlayerOrNoneGameStateWithTable } from 'src/app/jscaip/PlayerOrNoneGameStateWithTable';
+import { PlayerOrNoneGameStateWithTable } from 'src/app/jscaip/state/PlayerOrNoneGameStateWithTable';
 
 export class LinesOfActionState extends PlayerOrNoneGameStateWithTable {
 

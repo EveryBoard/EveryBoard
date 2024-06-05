@@ -31,6 +31,8 @@ describe('LinesOfActionRules', () => {
     it('should forbid moving an empty piece', () => {
         const state: LinesOfActionState = LinesOfActionRules.get().getInitialState();
         const move: LinesOfActionMove = LinesOfActionMove.from(new Coord(3, 2), new Coord(2, 2)).get();
+
+        // Then the move should be illegal
         const reason: string = RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY();
         RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
     });
@@ -38,6 +40,8 @@ describe('LinesOfActionRules', () => {
     it('should forbid moving a piece of the opponent', () => {
         const state: LinesOfActionState = LinesOfActionRules.get().getInitialState();
         const move: LinesOfActionMove = LinesOfActionMove.from(new Coord(0, 2), new Coord(2, 2)).get();
+
+        // Then the move should be illegal
         const reason: string = RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT();
         RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
     });
@@ -167,6 +171,8 @@ describe('LinesOfActionRules', () => {
     it('should forbid to move a piece by a different number of spaces than the number of pieces on the same line', () => {
         const state: LinesOfActionState = LinesOfActionRules.get().getInitialState();
         const move: LinesOfActionMove = LinesOfActionMove.from(new Coord(2, 0), new Coord(2, 1)).get();
+
+        // Then the move should be illegal
         const reason: string = LinesOfActionFailure.INVALID_MOVE_LENGTH();
         RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
     });
@@ -184,6 +190,8 @@ describe('LinesOfActionRules', () => {
         ];
         const state: LinesOfActionState = new LinesOfActionState(board, 0);
         const move: LinesOfActionMove = LinesOfActionMove.from(new Coord(2, 0), new Coord(2, 2)).get();
+
+        // Then the move should be illegal
         const reason: string = RulesFailure.SHOULD_LAND_ON_EMPTY_OR_OPPONENT_SPACE();
         RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
     });
@@ -201,6 +209,8 @@ describe('LinesOfActionRules', () => {
         ];
         const state: LinesOfActionState = new LinesOfActionState(board, 0);
         const move: LinesOfActionMove = LinesOfActionMove.from(new Coord(2, 2), new Coord(0, 2)).get();
+
+        // Then the move should be illegal
         const reason: string = LinesOfActionFailure.CANNOT_JUMP_OVER_OPPONENT();
         RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
     });

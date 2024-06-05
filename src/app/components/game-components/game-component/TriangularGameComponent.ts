@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Move } from 'src/app/jscaip/Move';
 import { GameComponent } from './GameComponent';
-import { GameState } from 'src/app/jscaip/GameState';
+import { GameState } from 'src/app/jscaip/state/GameState';
 import { Table } from 'src/app/jscaip/TableUtils';
 import { SuperRules } from 'src/app/jscaip/Rules';
 import { EmptyRulesConfig, RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
@@ -33,14 +33,15 @@ export abstract class TriangularGameComponent<R extends SuperRules<M, S, C, L>,
         return this.mapCoordsToPoints(coords);
     }
 
-    public getTriangleTranslationCoord(x: number, y: number): Coord {
-        const translationX: number = 0.5 * x * this.SPACE_SIZE;
-        const translationY: number = y * this.SPACE_SIZE;
+    public getTriangleTranslationCoord(coord: Coord): Coord {
+        const translationX: number = 0.5 * coord.x * this.SPACE_SIZE;
+        const translationY: number = coord.y * this.SPACE_SIZE;
         return new Coord(translationX, translationY);
     }
 
     public getTriangleTranslation(x: number, y: number): string {
-        const translation: Coord = this.getTriangleTranslationCoord(x, y);
+        const coord: Coord = new Coord(x, y);
+        const translation: Coord = this.getTriangleTranslationCoord(coord);
         return 'translate(' + translation.x + ', ' + translation.y + ')';
     }
 
