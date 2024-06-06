@@ -10,7 +10,7 @@ import { LinesOfActionState } from '../LinesOfActionState';
 import { Table } from 'src/app/jscaip/TableUtils';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
-import { ImmutableCoordSet } from 'src/app/jscaip/CoordSet';
+import { CoordSet } from 'src/app/jscaip/CoordSet';
 
 describe('LinesOfActionRules', () => {
 
@@ -338,9 +338,9 @@ describe('LinesOfActionRules', () => {
 
     it('should list all possible targets', () => {
         const state: LinesOfActionState = LinesOfActionRules.get().getInitialState();
-        const targets: ImmutableCoordSet = LinesOfActionRules.possibleTargets(state, new Coord(4, 7));
+        const targets: CoordSet = LinesOfActionRules.possibleTargets(state, new Coord(4, 7));
         const expectedTargetList: Coord[] = [new Coord(4, 5), new Coord(6, 5), new Coord(2, 5)];
-        const expectedTargetSet: ImmutableCoordSet = new ImmutableCoordSet(expectedTargetList);
+        const expectedTargetSet: CoordSet = new CoordSet(expectedTargetList);
         expect(targets.equals(expectedTargetSet)).toBeTrue();
     });
 
@@ -356,7 +356,7 @@ describe('LinesOfActionRules', () => {
             [_, _, _, _, _, _, _, _],
         ];
         const state: LinesOfActionState = new LinesOfActionState(board, 0);
-        const targets: ImmutableCoordSet = LinesOfActionRules.possibleTargets(state, new Coord(2, 2));
+        const targets: CoordSet = LinesOfActionRules.possibleTargets(state, new Coord(2, 2));
         expect(targets.equals(new ImmutableSet([
             new Coord(1, 1),
             new Coord(1, 3),

@@ -10,7 +10,7 @@ import { TaflState } from './TaflState';
 import { TaflMove } from './TaflMove';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { TaflPieceHeuristic } from './TaflPieceHeuristic';
-import { ImmutableCoordSet } from 'src/app/jscaip/CoordSet';
+import { CoordSet } from 'src/app/jscaip/CoordSet';
 import { TaflConfig } from './TaflConfig';
 
 export type PointValue = {
@@ -30,7 +30,7 @@ export class TaflPieceAndInfluenceHeuristic<M extends TaflMove> extends TaflPiec
         const state: TaflState = node.gameState;
         const empty: TaflPawn = TaflPawn.UNOCCUPIED;
 
-        const pieceMap: MGPMap<Player, ImmutableCoordSet> = this.getPiecesMap(state);
+        const pieceMap: MGPMap<Player, CoordSet> = this.getPiecesMap(state);
         const threatMap: MGPMap<Coord, ImmutableSet<SandwichThreat>> = this.getThreatMap(node, pieceMap);
         const filteredThreatMap: MGPMap<Coord, ImmutableSet<SandwichThreat>> = this.filterThreatMap(threatMap, state);
         let threatenedPiece: number = 0;
@@ -61,7 +61,7 @@ export class TaflPieceAndInfluenceHeuristic<M extends TaflMove> extends TaflPiec
         ]);
     }
 
-    public getPiecesMap(state: TaflState): MGPMap<Player, ImmutableCoordSet> {
+    public getPiecesMap(state: TaflState): MGPMap<Player, CoordSet> {
         const empty: TaflPawn = TaflPawn.UNOCCUPIED;
         const zeroPieces: Coord[] = [];
         const onePieces: Coord[] = [];
@@ -79,14 +79,14 @@ export class TaflPieceAndInfluenceHeuristic<M extends TaflMove> extends TaflPiec
                 }
             }
         }
-        const map: MGPMap<Player, ImmutableCoordSet> = new MGPMap([
-            { key: Player.ZERO, value: new ImmutableCoordSet(zeroPieces) },
-            { key: Player.ONE, value: new ImmutableCoordSet(onePieces) },
+        const map: MGPMap<Player, CoordSet> = new MGPMap([
+            { key: Player.ZERO, value: new CoordSet(zeroPieces) },
+            { key: Player.ONE, value: new CoordSet(onePieces) },
         ]);
         return map;
     }
 
-    public getThreatMap(node: TaflNode<M>, pieces: MGPMap<Player, ImmutableCoordSet>)
+    public getThreatMap(node: TaflNode<M>, pieces: MGPMap<Player, CoordSet>)
     : MGPMap<Coord, ImmutableSet<SandwichThreat>>
     {
         const threatMap: MGPMap<Coord, ImmutableSet<SandwichThreat>> = new MGPMap();
@@ -127,7 +127,7 @@ export class TaflPieceAndInfluenceHeuristic<M extends TaflMove> extends TaflPiec
                         movingThreats.push(futureCapturer);
                     }
                 }
-                threats.push(new SandwichThreat(directThreat, new ImmutableCoordSet(movingThreats)));
+                threats.push(new SandwichThreat(directThreat, new CoordSet(movingThreats)));
             }
         }
         return threats;
@@ -174,7 +174,7 @@ export class TaflPieceAndInfluenceHeuristic<M extends TaflMove> extends TaflPiec
         const threatenedPlayerPieces: Coord[] = threateneds.filter((coord: Coord) => {
             return state.getAbsoluteOwner(coord) === state.getCurrentPlayer();
         });
-        const threatenedOpponentPieces: ImmutableCoordSet = new ImmutableCoordSet(threateneds.filter((coord: Coord) => {
+        const threatenedOpponentPieces: CoordSet = new CoordSet(threateneds.filter((coord: Coord) => {
             return state.getAbsoluteOwner(coord) === state.getCurrentOpponent();
         }));
         for (const threatenedPiece of threatenedPlayerPieces) {
@@ -191,7 +191,7 @@ export class TaflPieceAndInfluenceHeuristic<M extends TaflMove> extends TaflPiec
                         }
                     }
                     if (newMover.length > 0) {
-                        newThreatSet.push(new SandwichThreat(threat.directThreat, new ImmutableCoordSet(newMover)));
+                        newThreatSet.push(new SandwichThreat(threat.directThreat, new CoordSet(newMover)));
                     }
                 }
             }

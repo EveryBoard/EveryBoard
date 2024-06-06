@@ -4,15 +4,15 @@ import { Player } from 'src/app/jscaip/Player';
 import { MGPMap } from '@everyboard/lib';
 import { CoerceoMove } from './CoerceoMove';
 import { CoerceoState } from './CoerceoState';
-import { ImmutableCoordSet } from 'src/app/jscaip/CoordSet';
+import { CoordSet } from 'src/app/jscaip/CoordSet';
 import { PlayerMetricHeuristic } from 'src/app/jscaip/AI/Minimax';
 import { PlayerNumberTable } from 'src/app/jscaip/PlayerNumberTable';
 import { CoerceoConfig } from './CoerceoRules';
 
 export abstract class CoerceoHeuristic extends PlayerMetricHeuristic<CoerceoMove, CoerceoState, CoerceoConfig> {
 
-    public getPiecesMap(state: CoerceoState): MGPMap<Player, ImmutableCoordSet> {
-        const map: MGPMap<Player, ImmutableCoordSet> = new MGPMap();
+    public getPiecesMap(state: CoerceoState): MGPMap<Player, CoordSet> {
+        const map: MGPMap<Player, CoordSet> = new MGPMap();
         const zeroPieces: Coord[] = [];
         const onePieces: Coord[] = [];
         for (const coordAndContent of state.getCoordsAndContents()) {
@@ -24,8 +24,8 @@ export abstract class CoerceoHeuristic extends PlayerMetricHeuristic<CoerceoMove
                 onePieces.push(coord);
             }
         }
-        map.set(Player.ZERO, new ImmutableCoordSet(zeroPieces));
-        map.set(Player.ONE, new ImmutableCoordSet(onePieces));
+        map.set(Player.ZERO, new CoordSet(zeroPieces));
+        map.set(Player.ONE, new CoordSet(onePieces));
         return map;
     }
 

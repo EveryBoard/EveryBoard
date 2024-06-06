@@ -8,7 +8,7 @@ import { ImmutableSet, MGPOptional, MGPValidation, ReversibleMap, Utils } from '
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { OpenHexagonalGameState } from 'src/app/jscaip/state/OpenHexagonalGameState';
 import { HexagonalUtils } from 'src/app/jscaip/HexagonalUtils';
-import { ImmutableCoordSet } from 'src/app/jscaip/CoordSet';
+import { CoordSet } from 'src/app/jscaip/CoordSet';
 import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 
 export class SixState extends OpenHexagonalGameState<Player> {
@@ -87,7 +87,7 @@ export class SixState extends OpenHexagonalGameState<Player> {
         return new SixState(pieces, this.turn + 1);
     }
 
-    public applyLegalDeplacement(move: SixMove, kept: ImmutableCoordSet): SixState {
+    public applyLegalDeplacement(move: SixMove, kept: CoordSet): SixState {
         const stateAfterMove: SixState = this.movePiece(move);
 
         if (kept.size() > 0) {
@@ -104,8 +104,8 @@ export class SixState extends OpenHexagonalGameState<Player> {
 
     public countPieces(): PlayerNumberMap {
         const pieces: ReversibleMap<Player, ImmutableSet<Coord>> = this.pieces.reverse();
-        const zeroPieces: ImmutableSet<Coord> = pieces.get(Player.ZERO).getOrElse(new ImmutableCoordSet());
-        const onePieces: ImmutableSet<Coord> = pieces.get(Player.ONE).getOrElse(new ImmutableCoordSet());
+        const zeroPieces: ImmutableSet<Coord> = pieces.get(Player.ZERO).getOrElse(new CoordSet());
+        const onePieces: ImmutableSet<Coord> = pieces.get(Player.ONE).getOrElse(new CoordSet());
         return PlayerNumberMap.of(zeroPieces.size(), onePieces.size());
     }
 

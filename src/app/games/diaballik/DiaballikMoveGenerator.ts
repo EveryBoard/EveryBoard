@@ -8,7 +8,7 @@ import { Orthogonal } from 'src/app/jscaip/Orthogonal';
 import { Ordinal } from 'src/app/jscaip/Ordinal';
 import { ArrayUtils, ComparableObject, MGPFallible, MGPOptional, ImmutableSet, Utils } from '@everyboard/lib';
 import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
-import { ImmutableCoordSet } from 'src/app/jscaip/CoordSet';
+import { CoordSet } from 'src/app/jscaip/CoordSet';
 
 export class DiaballikMoveInConstruction implements ComparableObject {
 
@@ -69,9 +69,9 @@ export class DiaballikMoveInConstruction implements ComparableObject {
             return;
         }
         const firstTranslation: DiaballikSubMove = subMoves[i];
-        const firstTranslationCoords: ImmutableCoordSet = new ImmutableCoordSet(firstTranslation.getCoords());
+        const firstTranslationCoords: CoordSet = new CoordSet(firstTranslation.getCoords());
         const secondTranslation: DiaballikSubMove = subMoves[i+1];
-        const secondTranslationCoords: ImmutableCoordSet = new ImmutableCoordSet(secondTranslation.getCoords());
+        const secondTranslationCoords: CoordSet = new CoordSet(secondTranslation.getCoords());
         const translationIntersect: boolean =
             firstTranslationCoords.intersection(secondTranslationCoords).size() > 0;
         if (translationIntersect) {

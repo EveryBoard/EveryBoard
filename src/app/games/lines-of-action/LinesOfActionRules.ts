@@ -12,7 +12,7 @@ import { LinesOfActionState } from './LinesOfActionState';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
-import { ImmutableCoordSet } from 'src/app/jscaip/CoordSet';
+import { CoordSet } from 'src/app/jscaip/CoordSet';
 
 export class LinesOfActionNode extends GameNode<LinesOfActionMove, LinesOfActionState> {}
 
@@ -175,8 +175,8 @@ export class LinesOfActionRules extends Rules<LinesOfActionMove, LinesOfActionSt
         }
     }
 
-    public static possibleTargets(state: LinesOfActionState, start: Coord): ImmutableCoordSet {
-        let targets: ImmutableCoordSet = new ImmutableCoordSet();
+    public static possibleTargets(state: LinesOfActionState, start: Coord): CoordSet {
+        let targets: CoordSet = new CoordSet();
         for (const dir of Ordinal.ORDINALS) {
             const numberOfPiecesOnLine: number = LinesOfActionRules.numberOfPiecesOnLine(state, start, dir);
             const target: Coord = start.getNext(dir, numberOfPiecesOnLine);

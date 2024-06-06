@@ -6,7 +6,7 @@ import { MoveCoordToCoord } from 'src/app/jscaip/MoveCoordToCoord';
 import { Encoder, ArrayUtils, MGPFallible } from '@everyboard/lib';
 import { ConspirateursFailure } from './ConspirateursFailure';
 import { MoveWithTwoCoords } from 'src/app/jscaip/MoveWithTwoCoords';
-import { ImmutableCoordSet } from 'src/app/jscaip/CoordSet';
+import { CoordSet } from 'src/app/jscaip/CoordSet';
 
 export class ConspirateursMoveDrop extends MoveCoord {
 
@@ -80,7 +80,7 @@ export class ConspirateursMoveJump extends Move {
                 return MGPFallible.failure(ConspirateursFailure.INVALID_JUMP());
             }
         }
-        const uniqueCoords: ImmutableCoordSet = new ImmutableCoordSet(coords);
+        const uniqueCoords: CoordSet = new CoordSet(coords);
         if (uniqueCoords.size() === coords.length) {
             return MGPFallible.success(new ConspirateursMoveJump(coords));
         } else {

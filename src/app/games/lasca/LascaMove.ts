@@ -4,7 +4,7 @@ import { Move } from 'src/app/jscaip/Move';
 import { ArrayUtils, Encoder, MGPFallible, MGPOptional, MGPUniqueList, Utils } from '@everyboard/lib';
 import { LascaFailure } from './LascaFailure';
 import { LascaState } from './LascaState';
-import { ImmutableCoordSet } from 'src/app/jscaip/CoordSet';
+import { CoordSet } from 'src/app/jscaip/CoordSet';
 
 export class LascaMove extends Move {
 
@@ -13,7 +13,7 @@ export class LascaMove extends Move {
     }
 
     public static fromCapture(coords: Coord[]): MGPFallible<LascaMove> {
-        const jumpsValidity: MGPFallible<ImmutableCoordSet> = LascaMove.getSteppedOverCoords(coords);
+        const jumpsValidity: MGPFallible<CoordSet> = LascaMove.getSteppedOverCoords(coords);
         if (jumpsValidity.isSuccess()) {
             return MGPFallible.success(new LascaMove(coords, false));
         } else {
@@ -21,9 +21,9 @@ export class LascaMove extends Move {
         }
     }
 
-    public static getSteppedOverCoords(steppedOn: Coord[]): MGPFallible<ImmutableCoordSet> {
+    public static getSteppedOverCoords(steppedOn: Coord[]): MGPFallible<CoordSet> {
         let lastCoordOpt: MGPOptional<Coord> = MGPOptional.empty();
-        let jumpedOverCoords: ImmutableCoordSet = new ImmutableCoordSet();
+        let jumpedOverCoords: CoordSet = new CoordSet();
         for (const coord of steppedOn) {
             if (LascaState.isNotOnBoard(coord)) {
                 return MGPFallible.failure(CoordFailure.OUT_OF_RANGE(coord));
@@ -105,7 +105,7 @@ export class LascaMove extends Move {
         return this.coords.getFromEnd(0);
     }
 
-    public getCapturedCoords(): MGPFallible<ImmutableCoordSet> {
+    public getCapturedCoords(): MGPFallible<CoordSet> {
         return LascaMove.getSteppedOverCoords(this.coords.toList());
     }
 

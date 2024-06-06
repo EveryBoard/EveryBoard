@@ -14,7 +14,7 @@ import { Table } from 'src/app/jscaip/TableUtils';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 import { Debug } from 'src/app/utils/Debug';
-import { ImmutableCoordSet } from 'src/app/jscaip/CoordSet';
+import { CoordSet } from 'src/app/jscaip/CoordSet';
 
 export class SaharaNode extends GameNode<SaharaMove, SaharaState> {}
 
@@ -119,12 +119,12 @@ export class SaharaRules extends Rules<SaharaMove, SaharaState> {
             return SaharaState.isOnBoard(c) &&
                    board[c.y][c.x] === FourStatePiece.EMPTY;
         };
-        const landings: ImmutableCoordSet =
-            new ImmutableCoordSet(TriangularCheckerBoard.getNeighbors(coord).filter(isOnBoardAndEmpty));
+        const landings: CoordSet =
+            new CoordSet(TriangularCheckerBoard.getNeighbors(coord).filter(isOnBoardAndEmpty));
         if (TriangularCheckerBoard.isSpaceDark(coord) === true) {
             return landings.toList();
         } else {
-            let farLandings: ImmutableCoordSet = new ImmutableCoordSet(landings.toList()); // Deep copy
+            let farLandings: CoordSet = new CoordSet(landings.toList()); // Deep copy
             for (const neighbor of landings) {
                 const secondStepNeighbors: Coord[] =
                     TriangularCheckerBoard.getNeighbors(neighbor).filter(isOnBoardAndEmpty);

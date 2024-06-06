@@ -6,7 +6,7 @@ import { HiveCoordToCoordMove, HiveSpiderMove } from './HiveMove';
 import { HivePiece, HivePieceKind, HivePieceStack } from './HivePiece';
 import { HiveState } from './HiveState';
 import { HexagonalUtils } from 'src/app/jscaip/HexagonalUtils';
-import { ImmutableCoordSet } from 'src/app/jscaip/CoordSet';
+import { CoordSet } from 'src/app/jscaip/CoordSet';
 
 export abstract class HivePieceRules {
 
@@ -33,9 +33,9 @@ export abstract class HivePieceRules {
     protected canSlideBetweenNeighbors(state: HiveState, start: Coord, end: Coord): boolean {
         // For the piece to slide from start to end,
         // one of the two common neighbors of start and end coord should be empty
-        const startNeighbors: ImmutableCoordSet = new ImmutableCoordSet(HexagonalUtils.getNeighbors(start));
-        const endNeighbors: ImmutableCoordSet = new ImmutableCoordSet(HexagonalUtils.getNeighbors(end));
-        const commonNeighbors: ImmutableCoordSet = startNeighbors.intersection(endNeighbors);
+        const startNeighbors: CoordSet = new CoordSet(HexagonalUtils.getNeighbors(start));
+        const endNeighbors: CoordSet = new CoordSet(HexagonalUtils.getNeighbors(end));
+        const commonNeighbors: CoordSet = startNeighbors.intersection(endNeighbors);
         for (const neighbor of commonNeighbors) {
             if (state.getAt(neighbor).isEmpty()) {
                 return true;
@@ -158,7 +158,7 @@ export class HiveSpiderRules extends HivePieceRules {
         return this.INSTANCE.get();
     }
     public prefixLegality(coords: Coord[], state: HiveState): MGPValidation {
-        let visited: ImmutableCoordSet = new ImmutableCoordSet();
+        let visited: CoordSet = new CoordSet();
         const stateWithoutMovedSpider: HiveState = state.update()
             .setAt(coords[0], HivePieceStack.EMPTY)
             .increaseTurnAndFinalizeUpdate();
@@ -220,8 +220,8 @@ export class HiveSpiderRules extends HivePieceRules {
             // Must have a common neighbor with the previous coord
             return state.haveCommonNeighbor(coord, lastCoord);
         }
-        const possibleNeighbors: ImmutableCoordSet =
-            new ImmutableCoordSet(HexagonalUtils.getNeighbors(lastCoord)).filter(neighborsFilter);
+        const possibleNeighbors: CoordSet =
+            new CoordSet(HexagonalUtils.getNeighbors(lastCoord)).filter(neighborsFilter);
         return possibleNeighbors.toList().map((coord: Coord): Coord[] => [...move, coord]);
     }
 }
@@ -237,7 +237,7 @@ export class HiveSoldierAntRules extends HivePieceRules {
         return this.INSTANCE.get();
     }
     public pathExists(state: HiveState, start: Coord, end: Coord): boolean {
-        let visited: ImmutableCoordSet = new ImmutableCoordSet();
+        let visited: CoordSet = new CoordSet();
         const worklist: Coord[] = [start];
         while (worklist.length > 0) {
             const coord: Coord = worklist.pop() as Coord;

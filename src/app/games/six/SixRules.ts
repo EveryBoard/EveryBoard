@@ -11,11 +11,11 @@ import { MGPFallible, MGPOptional, ImmutableSet, MGPValidation } from '@everyboa
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { Table } from 'src/app/jscaip/TableUtils';
 import { Debug } from 'src/app/utils/Debug';
-import { ImmutableCoordSet } from 'src/app/jscaip/CoordSet';
+import { CoordSet } from 'src/app/jscaip/CoordSet';
 import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 
-export type SixLegalityInformation = ImmutableCoordSet;
+export type SixLegalityInformation = CoordSet;
 
 export class SixNode extends GameNode<SixMove, SixState> {
 }
@@ -69,7 +69,7 @@ export class SixRules extends Rules<SixMove, SixState, SixLegalityInformation> {
         }
     }
     public static getLegalLandings(state: SixState): Coord[] {
-        let neighbors: ImmutableCoordSet = new ImmutableCoordSet();
+        let neighbors: CoordSet = new CoordSet();
         for (const piece of state.getPieceCoords()) {
             for (const dir of HexaDirection.factory.all) {
                 const neighbor: Coord = piece.getNext(dir, 1);
@@ -84,7 +84,7 @@ export class SixRules extends Rules<SixMove, SixState, SixLegalityInformation> {
         if (move.isDrop() === false) {
             return MGPFallible.failure(SixFailure.NO_MOVEMENT_BEFORE_TURN_40());
         }
-        return MGPFallible.success(new ImmutableCoordSet(state.getPieceCoords()));
+        return MGPFallible.success(new CoordSet(state.getPieceCoords()));
     }
     public static isLegalPhaseTwoMove(move: SixMove, state: SixState): MGPFallible<SixLegalityInformation> {
         if (move.isDrop()) {
@@ -97,9 +97,9 @@ export class SixRules extends Rules<SixMove, SixState, SixLegalityInformation> {
             return MGPFallible.failure(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT());
         }
         const stateAfterMove: SixState = state.movePiece(move);
-        const groupsAfterMove: ImmutableSet<ImmutableCoordSet> = stateAfterMove.getGroups();
+        const groupsAfterMove: ImmutableSet<CoordSet> = stateAfterMove.getGroups();
         if (SixRules.isSplit(groupsAfterMove)) {
-            const biggerGroups: ImmutableSet<ImmutableCoordSet> = this.getLargestGroups(groupsAfterMove);
+            const biggerGroups: ImmutableSet<CoordSet> = this.getLargestGroups(groupsAfterMove);
             if (biggerGroups.size() === 1) {
                 if (move.keep.isPresent()) {
                     return MGPFallible.failure(SixFailure.CANNOT_CHOOSE_TO_KEEP());
@@ -110,15 +110,15 @@ export class SixRules extends Rules<SixMove, SixState, SixLegalityInformation> {
                 return this.moveKeepBiggerGroup(move.keep, biggerGroups, stateAfterMove);
             }
         } else {
-            return MGPFallible.success(new ImmutableCoordSet());
+            return MGPFallible.success(new CoordSet());
         }
     }
-    public static isSplit(groups: ImmutableSet<ImmutableCoordSet>): boolean {
+    public static isSplit(groups: ImmutableSet<CoordSet>): boolean {
         return groups.size() > 1;
     }
-    public static getLargestGroups(groups: ImmutableSet<ImmutableCoordSet>): ImmutableSet<ImmutableCoordSet> {
+    public static getLargestGroups(groups: ImmutableSet<CoordSet>): ImmutableSet<CoordSet> {
         let biggerSize: number = 0;
-        let biggerGroups: ImmutableSet<ImmutableCoordSet> = new ImmutableSet();
+        let biggerGroups: ImmutableSet<CoordSet> = new ImmutableSet();
         for (const group of groups) {
             const groupSize: number = group.size();
             if (groupSize > biggerSize) {
@@ -131,7 +131,7 @@ export class SixRules extends Rules<SixMove, SixState, SixLegalityInformation> {
         return biggerGroups;
     }
     public static moveKeepBiggerGroup(keep: MGPOptional<Coord>,
-                                      biggerGroups: ImmutableSet<ImmutableCoordSet>,
+                                      biggerGroups: ImmutableSet<CoordSet>,
                                       state: SixState)
     : MGPFallible<SixLegalityInformation>
     {

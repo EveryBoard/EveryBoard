@@ -20,7 +20,7 @@ import { HiveSpiderRules } from './HivePieceRules';
 import { HiveRules } from './HiveRules';
 import { HiveState } from './HiveState';
 import { ViewBox } from 'src/app/components/game-components/GameComponentUtils';
-import { ImmutableCoordSet } from 'src/app/jscaip/CoordSet';
+import { CoordSet } from 'src/app/jscaip/CoordSet';
 
 interface GroundInfo {
     spaceClasses: string[];
@@ -218,8 +218,8 @@ export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, H
         }
     }
 
-    private getPieceCoords(): ImmutableCoordSet {
-        return this.getState().pieces.getKeySet() as ImmutableCoordSet;
+    private getPieceCoords(): CoordSet {
+        return this.getState().pieces.getKeySet() as CoordSet;
     }
 
     private getGround(): Ground {
@@ -230,8 +230,8 @@ export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, H
         return ground;
     }
 
-    private getAllNeighbors(): ImmutableCoordSet {
-        let neighbors: ImmutableCoordSet = new ImmutableCoordSet();
+    private getAllNeighbors(): CoordSet {
+        let neighbors: CoordSet = new CoordSet();
         for (const piece of this.getPieceCoords()) {
             const pieceNeighboors: Coord[] = this.getState().emptyNeighbors(piece);
             neighbors = neighbors.unionList(pieceNeighboors);

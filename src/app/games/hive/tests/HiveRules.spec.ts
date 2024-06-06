@@ -12,7 +12,7 @@ import { HiveNode, HiveRules } from '../HiveRules';
 import { HiveState } from '../HiveState';
 import { ErrorLoggerServiceMock } from 'src/app/services/tests/ErrorLoggerServiceMock.spec';
 import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
-import { ImmutableCoordSet } from 'src/app/jscaip/CoordSet';
+import { CoordSet } from 'src/app/jscaip/CoordSet';
 
 describe('HiveRules', () => {
 
@@ -955,7 +955,7 @@ describe('HiveRules', () => {
         const state: HiveState = HiveState.fromRepresentation(board, 12);
 
         // When computing the possible drop locations
-        const dropLocations: ImmutableCoordSet = rules.getPossibleDropLocations(state);
+        const dropLocations: CoordSet = rules.getPossibleDropLocations(state);
 
         // Then there should be none
         expect(dropLocations.size()).toBe(0);

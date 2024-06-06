@@ -16,7 +16,7 @@ import { SiamMoveGenerator } from './SiamMoveGenerator';
 import { SiamMinimax } from './SiamMinimax';
 import { ViewBox } from 'src/app/components/game-components/GameComponentUtils';
 import { Debug } from 'src/app/utils/Debug';
-import { ImmutableCoordSet } from 'src/app/jscaip/CoordSet';
+import { CoordSet } from 'src/app/jscaip/CoordSet';
 
 export type SiamIndicatorArrow = {
     source: MGPOptional<{ coord: Coord, piece: SiamPiece }>,
@@ -44,7 +44,7 @@ export class SiamComponent extends RectangularGameComponent<SiamRules,
     public selectedPiece: MGPOptional<Coord> = MGPOptional.empty();
     public selectedLanding: MGPOptional<Coord> = MGPOptional.empty();
     public orientations: SiamMove[] = [];
-    public clickableCoords: ImmutableCoordSet = new ImmutableCoordSet();
+    public clickableCoords: CoordSet = new CoordSet();
     public indicatorArrows: SiamIndicatorArrow[] = [];
 
     private insertingPiece: boolean = false;
@@ -86,7 +86,7 @@ export class SiamComponent extends RectangularGameComponent<SiamRules,
         this.selectedPiece = MGPOptional.empty();
         this.selectedLanding = MGPOptional.empty();
         this.orientations = [];
-        this.clickableCoords = new ImmutableCoordSet();
+        this.clickableCoords = new CoordSet();
         this.indicatorArrows = [];
     }
 
@@ -210,7 +210,7 @@ export class SiamComponent extends RectangularGameComponent<SiamRules,
             return this.chooseMove(availableMoves[0]);
         } else {
             // Since there's more than a single move, the player will have to select the orientation
-            this.clickableCoords = new ImmutableCoordSet();
+            this.clickableCoords = new CoordSet();
             this.indicatorArrows = [];
             this.orientations = availableMoves;
             return MGPValidation.SUCCESS;

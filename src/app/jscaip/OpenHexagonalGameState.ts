@@ -2,7 +2,7 @@ import { ImmutableSet, ReversibleMap } from '@everyboard/lib';
 import { Coord } from './Coord';
 import { GameState } from './state/GameState';
 import { HexagonalUtils } from './HexagonalUtils';
-import { ImmutableCoordSet } from './CoordSet';
+import { CoordSet } from './CoordSet';
 
 type Scale = {
     width: number,
@@ -46,27 +46,27 @@ export abstract class OpenHexagonalGameState<T extends NonNullable<unknown>> ext
     public isOnBoard(coord: Coord): boolean {
         return this.pieces.containsKey(coord);
     }
-    public getOccupiedNeighbors(coord: Coord): ImmutableCoordSet {
-        const neighbors: ImmutableCoordSet = new ImmutableCoordSet(HexagonalUtils.getNeighbors(coord));
+    public getOccupiedNeighbors(coord: Coord): CoordSet {
+        const neighbors: CoordSet = new CoordSet(HexagonalUtils.getNeighbors(coord));
         return neighbors.filter((neighbor: Coord) => {
             return this.pieces.get(neighbor).isPresent();
         });
     }
-    public getGroups(): ImmutableSet<ImmutableCoordSet> {
-        let visited: ImmutableCoordSet = new ImmutableCoordSet();
-        let groups: ImmutableSet<ImmutableCoordSet> = new ImmutableSet();
+    public getGroups(): ImmutableSet<CoordSet> {
+        let visited: CoordSet = new CoordSet();
+        let groups: ImmutableSet<CoordSet> = new ImmutableSet();
         this.pieces.forEach((itemToVisit: {key: Coord, value: T}) => {
             if (visited.contains(itemToVisit.key) === false) {
                 // We will visit all reachable occupied neighbors of this coord
-                let group: ImmutableCoordSet = new ImmutableCoordSet();
-                let toVisit: ImmutableCoordSet = new ImmutableCoordSet([itemToVisit.key]);
+                let group: CoordSet = new CoordSet();
+                let toVisit: CoordSet = new CoordSet([itemToVisit.key]);
                 while (toVisit.hasElements()) {
                     const coord: Coord = toVisit.getAnyElement().get();
                     toVisit = toVisit.filterElement(coord);
                     visited = visited.unionElement(coord);
                     group = group.unionElement(coord);
-                    const occupiedNeighboors: ImmutableCoordSet = this.getOccupiedNeighbors(coord);
-                    const unvisitedOccupiedNeighboors: ImmutableCoordSet = occupiedNeighboors
+                    const occupiedNeighboors: CoordSet = this.getOccupiedNeighbors(coord);
+                    const unvisitedOccupiedNeighboors: CoordSet = occupiedNeighboors
                         .filter((neighbor: Coord) => visited.contains(neighbor) === false);
                     toVisit = toVisit.union(unvisitedOccupiedNeighboors);
                 }

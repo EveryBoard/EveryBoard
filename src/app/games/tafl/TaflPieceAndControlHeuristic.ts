@@ -6,7 +6,7 @@ import { MGPMap, MGPOptional, ImmutableSet } from '@everyboard/lib';
 import { TaflPawn } from './TaflPawn';
 import { TaflState } from './TaflState';
 import { SandwichThreat } from '../../jscaip/PieceThreat';
-import { ImmutableCoordSet } from 'src/app/jscaip/CoordSet';
+import { CoordSet } from 'src/app/jscaip/CoordSet';
 import { TaflMove } from './TaflMove';
 import { TaflPieceAndInfluenceHeuristic } from './TaflPieceAndInfluenceHeuristic';
 import { TaflNode } from './TaflRules';
@@ -33,12 +33,12 @@ export class TaflPieceAndControlHeuristic<M extends TaflMove> extends TaflPieceA
     : TaflPieceAndControlHeuristicMetrics
     {
         const state: TaflState = node.gameState;
-        const pieceMap: MGPMap<Player, ImmutableCoordSet> = this.getPiecesMap(state);
+        const pieceMap: MGPMap<Player, CoordSet> = this.getPiecesMap(state);
         const threatMap: MGPMap<Coord, ImmutableSet<SandwichThreat>> = this.getThreatMap(node, pieceMap);
         const filteredThreatMap: MGPMap<Coord, ImmutableSet<SandwichThreat>> = this.filterThreatMap(threatMap, state);
         const metrics: TaflPieceAndControlHeuristicMetrics = { safeScore: 0, threatenedScore: 0, controlScore: 0 };
         for (const owner of Player.PLAYERS) {
-            let controlledSquares: ImmutableCoordSet = new ImmutableCoordSet();
+            let controlledSquares: CoordSet = new CoordSet();
             for (const coord of pieceMap.get(owner).get()) {
                 if (filteredThreatMap.get(coord).isPresent()) {
                     metrics.threatenedScore += owner.getScoreModifier();

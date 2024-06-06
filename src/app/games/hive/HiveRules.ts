@@ -14,7 +14,7 @@ import { Table } from 'src/app/jscaip/TableUtils';
 import { HexagonalUtils } from 'src/app/jscaip/HexagonalUtils';
 import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
-import { ImmutableCoordSet } from 'src/app/jscaip/CoordSet';
+import { CoordSet } from 'src/app/jscaip/CoordSet';
 
 export class HiveNode extends GameNode<HiveMove, HiveState> {}
 
@@ -165,23 +165,23 @@ export class HiveRules extends Rules<HiveMove, HiveState> {
         return MGPValidation.SUCCESS;
     }
 
-    public getPossibleDropLocations(state: HiveState): ImmutableCoordSet {
+    public getPossibleDropLocations(state: HiveState): CoordSet {
         const player: Player = state.getCurrentPlayer();
         // At turn 0 and 1, the possible drop locations are already known
         if (state.turn === 0) {
-            return new ImmutableCoordSet([new Coord(0, 0)]);
+            return new CoordSet([new Coord(0, 0)]);
         }
         if (state.turn === 1) {
-            return new ImmutableCoordSet(HexagonalUtils.getNeighbors(new Coord(0, 0)));
+            return new CoordSet(HexagonalUtils.getNeighbors(new Coord(0, 0)));
         }
 
         const remainingPieceOpt: MGPOptional<HivePiece> = state.remainingPieces.getAny(player);
         if (remainingPieceOpt.isAbsent()) {
-            return new ImmutableCoordSet();
+            return new CoordSet();
         }
 
         const remainingPiece: HivePiece = remainingPieceOpt.get();
-        let locations: ImmutableCoordSet = new ImmutableCoordSet();
+        let locations: CoordSet = new CoordSet();
         // We can only drop next to one of our piece
         for (const coord of state.occupiedSpaces()) {
             if (state.getAt(coord).topPiece().owner === player) {

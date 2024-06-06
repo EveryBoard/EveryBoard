@@ -7,7 +7,7 @@ import { SixNode, SixRules } from './SixRules';
 import { Debug } from 'src/app/utils/Debug';
 import { MoveGenerator } from 'src/app/jscaip/AI/AI';
 import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
-import { ImmutableCoordSet } from 'src/app/jscaip/CoordSet';
+import { CoordSet } from 'src/app/jscaip/CoordSet';
 
 @Debug.log
 export class SixMoveGenerator extends MoveGenerator<SixMove, SixState> {
@@ -33,9 +33,9 @@ export class SixMoveGenerator extends MoveGenerator<SixMove, SixState> {
                 const move: SixMove = SixMove.ofMovement(start, landing);
                 if (state.isCoordConnected(landing, MGPOptional.of(start))) {
                     const stateAfterMove: SixState = state.movePiece(move);
-                    const groupsAfterMove: ImmutableSet<ImmutableCoordSet> = stateAfterMove.getGroups();
+                    const groupsAfterMove: ImmutableSet<CoordSet> = stateAfterMove.getGroups();
                     if (SixRules.isSplit(groupsAfterMove)) {
-                        const largestGroups: ImmutableSet<ImmutableCoordSet> =
+                        const largestGroups: ImmutableSet<CoordSet> =
                             SixRules.getLargestGroups(groupsAfterMove);
                         if (largestGroups.size() === 1) {
                             deplacements.push(SixMove.ofMovement(start, landing));

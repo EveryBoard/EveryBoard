@@ -12,7 +12,7 @@ import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { QuartoFailure } from './QuartoFailure';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { TableUtils } from 'src/app/jscaip/TableUtils';
-import { ImmutableCoordSet } from 'src/app/jscaip/CoordSet';
+import { CoordSet } from 'src/app/jscaip/CoordSet';
 import { Debug } from 'src/app/utils/Debug';
 import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 
@@ -100,7 +100,7 @@ export interface BoardStatus {
 
     score: SCORE;
 
-    sensitiveSquares: ImmutableCoordSet;
+    sensitiveSquares: CoordSet;
 }
 
 class QuartoLine {
@@ -207,7 +207,7 @@ export class QuartoRules extends Rules<QuartoMove, QuartoState> {
             if (this.isThereAVictoriousLine(line, state)) {
                 return {
                     score: SCORE.VICTORY,
-                    sensitiveSquares: new ImmutableCoordSet(),
+                    sensitiveSquares: new CoordSet(),
                 };
             } else {
                 return boardStatus;
@@ -261,7 +261,7 @@ export class QuartoRules extends Rules<QuartoMove, QuartoState> {
             // this line is not null and has a common criterion between all of its pieces
             if (sensitiveCoord.isAbsent()) {
                 // the line is full
-                return { score: SCORE.VICTORY, sensitiveSquares: new ImmutableCoordSet() };
+                return { score: SCORE.VICTORY, sensitiveSquares: new CoordSet() };
             } else {
                 // if there is only one empty square, then the sensitive square we found is indeed sensitive
                 if (commonCriterion.get().matchPiece(state.pieceInHand)) {
@@ -318,7 +318,7 @@ export class QuartoRules extends Rules<QuartoMove, QuartoState> {
         const state: QuartoState = node.gameState;
         let boardStatus: BoardStatus = {
             score: SCORE.DEFAULT,
-            sensitiveSquares: new ImmutableCoordSet(),
+            sensitiveSquares: new CoordSet(),
         };
         for (const line of QuartoRules.lines) {
             boardStatus = QuartoRules.updateBoardStatus(line, state, boardStatus);

@@ -14,7 +14,7 @@ import { Table, TableUtils } from 'src/app/jscaip/TableUtils';
 import { CoordFailure } from '../../jscaip/Coord';
 import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 import { PlayerMap } from 'src/app/jscaip/PlayerMap';
-import { ImmutableCoordSet } from 'src/app/jscaip/CoordSet';
+import { CoordSet } from 'src/app/jscaip/CoordSet';
 
 export class VictoryOrDefeatCoords {
     protected constructor(public readonly winner: Player) {}
@@ -43,7 +43,7 @@ interface ConnectionInfos {
 
     coord: MGPOptional<Coord>;
 
-    opponentsConnected: ImmutableCoordSet;
+    opponentsConnected: CoordSet;
 
 }
 
@@ -248,7 +248,7 @@ export class DiaballikRules extends Rules<DiaballikMove, DiaballikState, Diaball
         //   - they are all connected
         //   - at least 3 opponent's pieces are connected
         console.table(TableUtils.map(state.board, (d: DiaballikPiece) => d.toString()))
-        let opponentsConnected: ImmutableCoordSet = new ImmutableCoordSet();
+        let opponentsConnected: CoordSet = new CoordSet();
         const blockerCoords: Coord[] = [];
         for (let x: number = 0; x < state.getWidth(); x++) {
             const connectionInfos: ConnectionInfos = this.getConnectedPieceCoord(x, opponentsConnected, state, player);
@@ -270,7 +270,7 @@ export class DiaballikRules extends Rules<DiaballikMove, DiaballikState, Diaball
     }
 
     private getConnectedPieceCoord(x: number,
-                                   opponentsConnected: ImmutableCoordSet,
+                                   opponentsConnected: CoordSet,
                                    state: DiaballikState,
                                    player: Player)
     : ConnectionInfos
@@ -311,10 +311,10 @@ export class DiaballikRules extends Rules<DiaballikMove, DiaballikState, Diaball
     }
 
     private addConnectedOpponents(coord: Coord,
-                                  opponentsConnected: ImmutableCoordSet,
+                                  opponentsConnected: CoordSet,
                                   state: DiaballikState,
                                   player: Player)
-    : ImmutableCoordSet
+    : CoordSet
     {
         for (const direction of Orthogonal.factory.all) {
             const neighbor: Coord = coord.getNext(direction);

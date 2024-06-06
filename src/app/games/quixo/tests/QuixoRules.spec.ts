@@ -10,7 +10,7 @@ import { Table } from 'src/app/jscaip/TableUtils';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { MGPOptional, TestUtils } from '@everyboard/lib';
 import { QuixoFailure } from '../QuixoFailure';
-import { ImmutableCoordSet } from 'src/app/jscaip/CoordSet';
+import { CoordSet } from 'src/app/jscaip/CoordSet';
 
 describe('QuixoRules', () => {
 
@@ -259,8 +259,8 @@ describe('QuixoRules', () => {
                 [O, _, _, _, _],
             ];
             const state: QuixoState = new QuixoState(board, 1);
-            const victoriousCoord: ImmutableCoordSet = new ImmutableCoordSet(QuixoRules.getVictoriousCoords(state));
-            const expectedVictoriousCoord: ImmutableCoordSet = new ImmutableCoordSet([
+            const victoriousCoord: CoordSet = new CoordSet(QuixoRules.getVictoriousCoords(state));
+            const expectedVictoriousCoord: CoordSet = new CoordSet([
                 new Coord(0, 4),
                 new Coord(1, 3),
                 new Coord(2, 2),
@@ -280,8 +280,8 @@ describe('QuixoRules', () => {
                 [_, _, _, _, _, _, O],
             ];
             const state: QuixoState = new QuixoState(board, 1);
-            const victoriousCoord: ImmutableCoordSet = new ImmutableCoordSet(QuixoRules.getVictoriousCoords(state));
-            const expectedVictoriousCoord: ImmutableCoordSet = new ImmutableCoordSet([
+            const victoriousCoord: CoordSet = new CoordSet(QuixoRules.getVictoriousCoords(state));
+            const expectedVictoriousCoord: CoordSet = new CoordSet([
                 new Coord(2, 0),
                 new Coord(3, 1),
                 new Coord(4, 2),

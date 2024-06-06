@@ -6,7 +6,7 @@ import { SixMove } from './SixMove';
 import { SCORE } from 'src/app/jscaip/SCORE';
 import { SixMoveGenerator } from './SixMoveGenerator';
 import { SixHeuristic } from './SixHeuristic';
-import { ImmutableCoordSet } from 'src/app/jscaip/CoordSet';
+import { CoordSet } from 'src/app/jscaip/CoordSet';
 import { BoardInfo } from 'src/app/jscaip/AI/AlignmentHeuristic';
 
 export class SixFilteredMoveGenerator extends SixMoveGenerator {
@@ -14,11 +14,11 @@ export class SixFilteredMoveGenerator extends SixMoveGenerator {
     private readonly heuristic: SixHeuristic = new SixHeuristic();
 
     protected override getMovements(state: SixState, legalLandings: Coord[]): SixMove[] {
-        const safelyMovablePieceOrFirstOne: ImmutableCoordSet = this.getSafelyMovablePieceOrFirstOne(state);
+        const safelyMovablePieceOrFirstOne: CoordSet = this.getSafelyMovablePieceOrFirstOne(state);
         return this.getMovementsFrom(state, safelyMovablePieceOrFirstOne, legalLandings);
     }
 
-    private getSafelyMovablePieceOrFirstOne(state: SixState): ImmutableCoordSet {
+    private getSafelyMovablePieceOrFirstOne(state: SixState): CoordSet {
         const allPieces: MGPMap<Player, ImmutableSet<Coord>> = state.getPieces().reverse();
         const currentPlayer: Player = state.getCurrentPlayer();
         const playerPieces: ImmutableSet<Coord> = allPieces.get(currentPlayer).get();
@@ -31,9 +31,9 @@ export class SixFilteredMoveGenerator extends SixMoveGenerator {
             }
         }
         if (safePieces.length === 0) {
-            return new ImmutableCoordSet([firstPiece]);
+            return new CoordSet([firstPiece]);
         } else {
-            return new ImmutableCoordSet(safePieces);
+            return new CoordSet(safePieces);
         }
     }
 

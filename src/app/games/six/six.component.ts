@@ -19,7 +19,7 @@ import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 import { SixHeuristic } from './SixHeuristic';
 import { SixMoveGenerator } from './SixMoveGenerator';
 import { SixFilteredMoveGenerator } from './SixFilteredMoveGenerator';
-import { ImmutableCoordSet } from 'src/app/jscaip/CoordSet';
+import { CoordSet } from 'src/app/jscaip/CoordSet';
 
 @Component({
     selector: 'app-six',
@@ -208,8 +208,8 @@ export class SixComponent
     private showCuttable(): void {
         const movement: SixMove = SixMove.ofMovement(this.selectedPiece.get(), this.chosenLanding.get());
         const stateAfterMove: SixState = this.state.movePiece(movement);
-        const groupsAfterMove: ImmutableSet<ImmutableCoordSet> = stateAfterMove.getGroups();
-        const biggerGroups: ImmutableSet<ImmutableCoordSet> = SixRules.getLargestGroups(groupsAfterMove);
+        const groupsAfterMove: ImmutableSet<CoordSet> = stateAfterMove.getGroups();
+        const biggerGroups: ImmutableSet<CoordSet> = SixRules.getLargestGroups(groupsAfterMove);
         this.cuttableGroups = [];
         for (const cuttableGroup of biggerGroups) {
             this.cuttableGroups.push(cuttableGroup.toList());

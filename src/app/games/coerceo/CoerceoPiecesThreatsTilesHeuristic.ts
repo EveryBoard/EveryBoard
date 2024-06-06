@@ -7,7 +7,7 @@ import { CoerceoMove, CoerceoStep } from './CoerceoMove';
 import { CoerceoState } from './CoerceoState';
 import { CoerceoNode } from './CoerceoRules';
 import { Vector } from 'src/app/jscaip/Vector';
-import { ImmutableCoordSet } from 'src/app/jscaip/CoordSet';
+import { CoordSet } from 'src/app/jscaip/CoordSet';
 import { CoerceoConfig } from './CoerceoRules';
 import { PlayerNumberTable } from 'src/app/jscaip/PlayerNumberTable';
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
@@ -27,7 +27,7 @@ export class CoerceoPiecesThreatsTilesHeuristic extends CoerceoHeuristic {
 
     public override getMetrics(node: CoerceoNode, _config: MGPOptional<CoerceoConfig>): PlayerNumberTable {
         const state: CoerceoState = node.gameState;
-        const pieceMap: MGPMap<Player, ImmutableCoordSet> = this.getPiecesMap(state);
+        const pieceMap: MGPMap<Player, CoordSet> = this.getPiecesMap(state);
         const threatMap: MGPMap<Coord, PieceThreat> = this.getThreatMap(state, pieceMap);
         const filteredThreatMap: MGPMap<Coord, PieceThreat> = this.filterThreatMap(threatMap, state);
         const safeIndex: number = 0;
@@ -48,7 +48,7 @@ export class CoerceoPiecesThreatsTilesHeuristic extends CoerceoHeuristic {
         return metrics;
     }
 
-    public getThreatMap(state: CoerceoState, pieces: MGPMap<Player, ImmutableCoordSet>): MGPMap<Coord, PieceThreat> {
+    public getThreatMap(state: CoerceoState, pieces: MGPMap<Player, CoordSet>): MGPMap<Coord, PieceThreat> {
         const threatMap: MGPMap<Coord, PieceThreat> = new MGPMap();
         for (const player of Player.PLAYERS) {
             for (const piece of pieces.get(player).get()) {
@@ -76,18 +76,18 @@ export class CoerceoPiecesThreatsTilesHeuristic extends CoerceoHeuristic {
             }
             if (movingThreats.length > 0) {
                 const pieceThreat: PieceThreat = new PieceThreat(
-                    new ImmutableCoordSet(directThreats),
-                    new ImmutableCoordSet(movingThreats),
+                    new CoordSet(directThreats),
+                    new CoordSet(movingThreats),
                 );
                 return MGPOptional.of(pieceThreat);
             }
         }
         if (emptiableNeighborTile.isPresent()) {
             directThreats = directThreats.filter((c: Coord) => c.equals(emptiableNeighborTile.get()));
-            const directThreatsSet: ImmutableCoordSet = new ImmutableCoordSet(directThreats);
+            const directThreatsSet: CoordSet = new CoordSet(directThreats);
             const pieceThreat: PieceThreat = new PieceThreat(
                 directThreatsSet,
-                new ImmutableCoordSet([emptiableNeighborTile.get()]),
+                new CoordSet([emptiableNeighborTile.get()]),
             );
             return MGPOptional.of(pieceThreat);
         }
@@ -177,7 +177,7 @@ export class CoerceoPiecesThreatsTilesHeuristic extends CoerceoHeuristic {
         const threatenedPlayerPieces: Coord[] = threateneds.filter((coord: Coord) => {
             return state.getPieceAt(coord).is(state.getCurrentPlayer());
         });
-        const threatenedOpponentPieces: ImmutableCoordSet = new ImmutableCoordSet(threateneds.filter((coord: Coord) => {
+        const threatenedOpponentPieces: CoordSet = new CoordSet(threateneds.filter((coord: Coord) => {
             return state.getPieceAt(coord).is(state.getCurrentOpponent());
         }));
         for (const threatenedPiece of threatenedPlayerPieces) {
@@ -195,7 +195,7 @@ export class CoerceoPiecesThreatsTilesHeuristic extends CoerceoHeuristic {
                     }
                     if (newMover.length > 0) {
                         const pieceThreat: PieceThreat =
-                            new PieceThreat(oldThreat.directThreats, new ImmutableCoordSet(newMover));
+                            new PieceThreat(oldThreat.directThreats, new CoordSet(newMover));
                         newThreat = MGPOptional.of(pieceThreat);
                     }
                 }
