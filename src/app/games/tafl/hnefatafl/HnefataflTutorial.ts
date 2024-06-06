@@ -48,7 +48,8 @@ export class HnefataflTutorial extends Tutorial {
             [HnefataflMove.from(new Coord(5, 3), new Coord(3, 3)).get()],
             $localize`Congratulations, that will teach him a lesson!`,
             $localize`Failed, you missed an opportunity to capture a piece of the opponent.`,
-        ).withPreviousMove(HnefataflMove.from(new Coord(3, 0), new Coord(3, 4)).get()),
+        ).withPreviousMove(HnefataflMove.from(new Coord(3, 0), new Coord(3, 4)).get(),
+                           HnefataflRules.get().getInitialState(defaultConfig)),
         TutorialStep.fromMove(
             $localize`Capturing a soldier (2/2)`,
             $localize`A second way to capture a soldier is to sandwich it against an empty throne. The king has moved and endangered one of its soldiers.<br/><br/>You're playing Dark. Capture the soldier.`,
