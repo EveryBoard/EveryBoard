@@ -33,6 +33,8 @@ describe('PentagoRules', () => {
         ];
         const state: PentagoState = new PentagoState(board, 1);
         const move: PentagoMove = PentagoMove.rotationless(1, 1);
+
+        // Then the move should be illegal
         const reason: string = RulesFailure.MUST_LAND_ON_EMPTY_SPACE();
         RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
     });
@@ -48,6 +50,8 @@ describe('PentagoRules', () => {
         ];
         const state: PentagoState = new PentagoState(board, 1);
         const move: PentagoMove = PentagoMove.withRotation(4, 1, 3, true);
+
+        // Then the move should be illegal
         const reason: string = PentagoFailure.CANNOT_ROTATE_NEUTRAL_BLOCK();
         RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
     });
@@ -63,6 +67,8 @@ describe('PentagoRules', () => {
         ];
         const state: PentagoState = new PentagoState(board, 3);
         const move: PentagoMove = PentagoMove.rotationless(0, 0);
+
+        // Then the move should be illegal
         const reason: string = PentagoFailure.MUST_CHOOSE_BLOCK_TO_ROTATE();
         RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
     });

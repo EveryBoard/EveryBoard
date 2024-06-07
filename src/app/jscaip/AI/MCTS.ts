@@ -1,5 +1,5 @@
 import { ArrayUtils, MGPFallible, MGPOptional, Utils } from '@everyboard/lib';
-import { GameState } from '../GameState';
+import { GameState } from '../state/GameState';
 import { GameStatus } from '../GameStatus';
 import { AI, AITimeLimitOptions, MoveGenerator } from './AI';
 import { GameNode } from './GameNode';

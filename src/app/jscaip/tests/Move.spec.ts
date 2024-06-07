@@ -1,5 +1,5 @@
 import { Encoder, EncoderTestUtils, MGPOptional } from '@everyboard/lib';
-import { GameState } from '../GameState';
+import { GameState } from '../state/GameState';
 import { GameNode } from '../AI/GameNode';
 import { Move } from '../Move';
 import { MoveGenerator } from '../AI/AI';

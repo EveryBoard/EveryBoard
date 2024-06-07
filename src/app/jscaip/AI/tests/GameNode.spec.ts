@@ -1,6 +1,6 @@
 /* eslint-disable max-lines-per-function */
 import { MGPOptional, MGPValidation } from '@everyboard/lib';
-import { GameState } from '../../GameState';
+import { GameState } from '../../state/GameState';
 import { GameStatus } from '../../GameStatus';
 import { GameNode } from '../GameNode';
 import { Move } from '../../Move';

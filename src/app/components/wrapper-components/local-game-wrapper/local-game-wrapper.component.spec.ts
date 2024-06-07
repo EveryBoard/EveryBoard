@@ -11,8 +11,12 @@ import { UserMocks } from 'src/app/domain/UserMocks.spec';
 import { P4State } from 'src/app/games/p4/P4State';
 import { P4Move } from 'src/app/games/p4/P4Move';
 import { P4Component } from 'src/app/games/p4/p4.component';
+import { P4MoveGenerator } from 'src/app/games/p4/P4MoveGenerator';
+import { P4Heuristic } from 'src/app/games/p4/P4Heuristic';
+import { P4Config, P4Rules } from 'src/app/games/p4/P4Rules';
 
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
+import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 
 import { ConnectedUserServiceMock } from 'src/app/services/tests/ConnectedUserService.spec';
 import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
@@ -26,10 +30,6 @@ import { NotFoundComponent } from '../../normal-component/not-found/not-found.co
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { AIDepthLimitOptions } from 'src/app/jscaip/AI/AI';
 import { Minimax } from 'src/app/jscaip/AI/Minimax';
-import { P4MoveGenerator } from 'src/app/games/p4/P4MoveGenerator';
-import { P4Heuristic } from 'src/app/games/p4/P4Heuristic';
-import { P4Config, P4Rules } from 'src/app/games/p4/P4Rules';
-import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 
 const _: PlayerOrNone = PlayerOrNone.NONE;
 const O: PlayerOrNone = PlayerOrNone.ZERO;

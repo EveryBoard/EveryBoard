@@ -8,7 +8,7 @@ import { GameInfo } from '../pick-game/pick-game.component';
 import { AbstractNode } from 'src/app/jscaip/AI/GameNode';
 import { AbstractRules } from 'src/app/jscaip/Rules';
 import { DemoNodeInfo } from '../../wrapper-components/demo-card-wrapper/demo-card-wrapper.component';
-import { GameState } from 'src/app/jscaip/GameState';
+import { GameState } from 'src/app/jscaip/state/GameState';
 import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 @Component({

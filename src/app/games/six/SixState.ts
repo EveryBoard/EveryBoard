@@ -6,7 +6,7 @@ import { SixFailure } from './SixFailure';
 import { SixMove } from './SixMove';
 import { MGPOptional, MGPSet, MGPValidation, ReversibleMap, Utils } from '@everyboard/lib';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { OpenHexagonalGameState } from 'src/app/jscaip/OpenHexagonalGameState';
+import { OpenHexagonalGameState } from 'src/app/jscaip/state/OpenHexagonalGameState';
 import { HexagonalUtils } from 'src/app/jscaip/HexagonalUtils';
 import { CoordSet } from 'src/app/jscaip/CoordSet';
 import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';

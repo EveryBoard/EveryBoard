@@ -98,7 +98,7 @@ describe('AwaleRules', () => {
             // When performing a move that does not feed the opponent
             const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(0));
 
-            // Then it should fail
+            // Then the move should be illegal
             const reason: string = MancalaFailure.SHOULD_DISTRIBUTE();
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
