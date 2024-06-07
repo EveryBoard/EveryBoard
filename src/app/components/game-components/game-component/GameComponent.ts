@@ -207,6 +207,7 @@ export abstract class GameComponent<R extends SuperRules<M, S, C, L>,
     }
 
     public getPreviousState(): S {
+        Utils.assert(this.node.parent.isPresent(), 'getPreviousState called with no previous state');
         return this.node.parent.get().gameState;
     }
 
