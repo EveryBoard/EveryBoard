@@ -46,7 +46,7 @@ export class PenteComponent extends GobanGameComponent<PenteRules,
         this.board = state.board;
         this.scores = MGPOptional.of(this.getState().captures);
         const config: MGPOptional<PenteConfig> = this.getConfig();
-        this.victoryCoords = this.rules.getHelper(config).getVictoriousCoord(state);
+        this.victoryCoords = this.rules.getHelper(config.get()).getVictoriousCoord(state);
         this.createHoshis();
     }
 
