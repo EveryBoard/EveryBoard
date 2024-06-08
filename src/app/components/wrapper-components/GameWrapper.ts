@@ -75,8 +75,7 @@ export abstract class GameWrapper<P extends Comparable> extends BaseWrapperCompo
             this.gameComponent.config = config;
             this.gameComponent.node = this.gameComponent.rules.getInitialNode(config);
             await this.setRole(this.role);
-            await this.gameComponent.updateBoard(false);
-            this.gameComponent.redraw();
+            await this.gameComponent.updateBoardAndRedraw(false);
             return true;
         } else {
             return false;
@@ -134,8 +133,7 @@ export abstract class GameWrapper<P extends Comparable> extends BaseWrapperCompo
         if (interactivityChanged) {
             this.gameComponent.setInteractive(interactive);
             if (updateBoard) {
-                await this.gameComponent.updateBoard(false);
-                this.gameComponent.redraw();
+                await this.gameComponent.updateBoardAndRedraw(false);
             }
         }
     }
@@ -222,15 +220,10 @@ export abstract class GameWrapper<P extends Comparable> extends BaseWrapperCompo
         this.gameComponent.cancelMoveAttempt();
         this.gameComponent.hideLastMove();
         if (this.gameComponent.node.previousMove.isPresent()) {
-            await this.gameComponent.updateBoard(triggerAnimation);
-            const move: Move = this.gameComponent.node.previousMove.get();
-            const config: MGPOptional<RulesConfig> = await this.getConfig();
-            await this.gameComponent.showLastMove(move, config);
-            this.gameComponent.redraw();
+            await this.showNewMove(triggerAnimation);
         } else {
             // We have no previous move to animate
-            await this.gameComponent.updateBoard(false);
-            this.gameComponent.redraw();
+            await this.gameComponent.updateBoardAndRedraw(false);
         }
     }
 
@@ -242,12 +235,8 @@ export abstract class GameWrapper<P extends Comparable> extends BaseWrapperCompo
      * @param triggerAnimation a boolean set to true if there is a need to trigger the animation of the last move
      */
     protected async showNewMove(triggerAnimation: boolean): Promise<void> {
-        await this.gameComponent.updateBoard(triggerAnimation);
-        this.gameComponent.redraw();
-        const lastMove: Move = this.gameComponent.node.previousMove.get();
-        const config: MGPOptional<RulesConfig> = await this.getConfig();
-        await this.gameComponent.showLastMove(lastMove, config);
-        this.gameComponent.redraw();
+        await this.gameComponent.updateBoardAndRedraw(triggerAnimation);
+        await this.gameComponent.showLastMoveAndRedraw();
     }
 
     public getRulesConfigDescription(): MGPOptional<RulesConfigDescription<RulesConfig>> {

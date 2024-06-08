@@ -178,11 +178,20 @@ export abstract class GameComponent<R extends SuperRules<M, S, C, L>,
         // Override if move takes more than one click.
     }
 
-    public redraw(): void {
+    public async updateBoardAndRedraw(triggerAnimation: boolean): Promise<void> {
+        await this.updateBoard(triggerAnimation);
         this.cdr.detectChanges();
     }
 
-    public abstract updateBoard(triggerAnimation: boolean): Promise<void>;
+    public async showLastMoveAndRedraw(): Promise<void> {
+        const move: M = this.node.previousMove.get();
+        const config: MGPOptional<C> = this.getConfig();
+        await this.showLastMove(move, config);
+        this.cdr.detectChanges();
+    }
+
+
+    protected abstract updateBoard(triggerAnimation: boolean): Promise<void>;
 
     public async pass(): Promise<MGPValidation> {
         const gameName: string = this.constructor.name;

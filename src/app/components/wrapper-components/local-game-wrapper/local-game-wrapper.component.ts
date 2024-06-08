@@ -53,7 +53,6 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
         this.players = [MGPOptional.of(this.playerSelection[0]), MGPOptional.of(this.playerSelection[1])];
         this.role = Player.ZERO; // The user is playing, not observing
         this.setDefaultRulesConfig();
-
     }
 
     // Will set the default rules config.
@@ -279,8 +278,7 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
         const config: MGPOptional<RulesConfig> = await this.getConfig();
         this.gameComponent.node = this.gameComponent.rules.getInitialNode(config);
         this.gameComponent.hideLastMove();
-        await this.gameComponent.updateBoard(false);
-        this.gameComponent.redraw();
+        await this.gameComponent.updateBoardAndRedraw(false);
         this.endGame = false;
         this.winnerMessage = MGPOptional.empty();
         await this.proposeAIToPlay();
