@@ -219,10 +219,7 @@ export abstract class GameWrapper<P extends Comparable> extends BaseWrapperCompo
         this.gameComponent.cancelMoveAttempt();
         this.gameComponent.hideLastMove();
         if (this.gameComponent.node.previousMove.isPresent()) {
-            await this.gameComponent.updateBoard(triggerAnimation);
-            const move: Move = this.gameComponent.node.previousMove.get();
-            const config: MGPOptional<RulesConfig> = await this.getConfig();
-            await this.gameComponent.showLastMove(move, config);
+            this.showNewMove(triggerAnimation);
         } else {
             // We have no previous move to animate
             await this.gameComponent.updateBoard(false);
@@ -237,7 +234,9 @@ export abstract class GameWrapper<P extends Comparable> extends BaseWrapperCompo
      * @param triggerAnimation a boolean set to true if there is a need to trigger the animation of the last move
      */
     protected async showNewMove(triggerAnimation: boolean): Promise<void> {
-        await this.gameComponent.updateBoard(triggerAnimation);
+        await this.gameComponent.updateBoard(triggerAnimation).catch((e) => {
+            console.log('got canceled')
+        });
         const lastMove: Move = this.gameComponent.node.previousMove.get();
         const config: MGPOptional<RulesConfig> = await this.getConfig();
         await this.gameComponent.showLastMove(lastMove, config);

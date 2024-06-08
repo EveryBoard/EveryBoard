@@ -85,7 +85,13 @@ export abstract class MancalaComponent<R extends MancalaRules>
         this.changeVisibleState(this.getState());
     }
 
+    private count: number = 0;
     public async updateBoard(triggerAnimation: boolean): Promise<void> {
+        try {
+        TimeUtils.cancelAnimations();
+        const currentCount = this.count;
+        this.count++;
+        console.log('> updateBoard ' + currentCount)
         const state: MancalaState = this.getState();
         if (triggerAnimation) {
             this.opponentMoveIsBeingAnimated = true;
@@ -98,7 +104,7 @@ export abstract class MancalaComponent<R extends MancalaRules>
                 await this.showSimpleDistribution(distributions);
                 if (indexDistribution + 1 < move.distributions.length) {
                     // This prevent to wait 1sec at the end of the animation for nothing
-                    await TimeUtils.sleep(MancalaComponent.TIMEOUT_BETWEEN_LAPS);
+                    await TimeUtils.sleepForAnimation(MancalaComponent.TIMEOUT_BETWEEN_LAPS);
                 }
                 indexDistribution++;
             }
@@ -107,6 +113,10 @@ export abstract class MancalaComponent<R extends MancalaRules>
         }
         this.scores = MGPOptional.of(state.getScoresCopy());
         this.changeVisibleState(state);
+        console.log('< updateBoard ' + currentCount);
+        } catch (e) {
+            console.error('got error: ' + e)
+        }
     }
 
     public async onClick(x: number, y: number): Promise<MGPValidation> {
@@ -185,7 +195,7 @@ export abstract class MancalaComponent<R extends MancalaRules>
                 seedDropResult.resultingState.setPieceAt(seedDropResult.houseToDistribute, 0);
             // Changing immediately the chosen house
             this.changeVisibleState(seedDropResult.resultingState);
-            await TimeUtils.sleep(MancalaComponent.TIMEOUT_BETWEEN_SEEDS);
+            await TimeUtils.sleepForAnimation(MancalaComponent.TIMEOUT_BETWEEN_SEEDS);
             while (seedDropResult.seedsInHand > 0) {
                 seedDropResult = await this.showSeedDrop(seedDropResult,
                                                          config,
@@ -198,7 +208,7 @@ export abstract class MancalaComponent<R extends MancalaRules>
                     seedDropResult.resultingState.getPieceAt(seedDropResult.houseToDistribute);
                 mustDoOneMoreLap = lastHouseContent !== 1 && lastHouseContent !== 4;
                 if (mustDoOneMoreLap) {
-                    await TimeUtils.sleep(MancalaComponent.TIMEOUT_BETWEEN_LAPS);
+                    await TimeUtils.sleepForAnimation(MancalaComponent.TIMEOUT_BETWEEN_LAPS);
                 }
             }
         }
@@ -237,7 +247,7 @@ export abstract class MancalaComponent<R extends MancalaRules>
         }
         this.changeVisibleState(resultingState);
         if (seedsInHand > 0) {
-            await TimeUtils.sleep(MancalaComponent.TIMEOUT_BETWEEN_SEEDS);
+            await TimeUtils.sleepForAnimation(MancalaComponent.TIMEOUT_BETWEEN_SEEDS);
         }
         return { houseToDistribute, currentDropIsStore, seedsInHand, resultingState };
     }
