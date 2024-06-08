@@ -107,11 +107,11 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
     }
 
     private async redirectIfPartOrGameIsInvalid(): Promise<void> {
-        const gameURL: string = this.getGameName();
-        const gameExists: boolean = GameInfo.ALL_GAMES().some((gameInfo: GameInfo) => gameInfo.urlName === gameURL);
+        const urlName: string = this.getGameUrlName();
+        const gameExists: boolean = GameInfo.ALL_GAMES().some((gameInfo: GameInfo) => gameInfo.urlName === urlName);
         if (gameExists) {
             const partValidity: MGPValidation =
-                await this.gameService.getPartValidity(this.currentPartId, gameURL);
+                await this.gameService.getPartValidity(this.currentPartId, urlName);
             if (partValidity.isFailure()) {
                 this.routerEventsSubscription.unsubscribe();
                 const message: string = OnlineGameWrapperMessages.NO_MATCHING_PART();
@@ -119,7 +119,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
             }
         } else {
             this.routerEventsSubscription.unsubscribe();
-            const message: string = GameWrapperMessages.NO_MATCHING_GAME(gameURL);
+            const message: string = GameWrapperMessages.NO_MATCHING_GAME(urlName);
             await this.router.navigate(['/notFound', message], { skipLocationChange: true } );
         }
     }
@@ -270,8 +270,8 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
                 break;
             case 'Rematch':
                 await this.router.navigate(['/nextGameLoading']);
-                const game: string = this.getGameName();
-                await this.router.navigate(['/play', game, reply.data]);
+                const urlName: string = this.getGameUrlName();
+                await this.router.navigate(['/play', urlName, reply.data]);
                 break;
             case 'Draw':
                 // Nothing to do as the part will be updated with the draw

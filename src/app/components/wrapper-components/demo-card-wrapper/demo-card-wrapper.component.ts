@@ -71,7 +71,7 @@ export class DemoCardWrapperComponent extends GameWrapper<string> implements Aft
         }
     }
 
-    protected override getGameName(): string {
+    protected override getGameUrlName(): string {
         // Unlike all other BaseWrapperComponent those will share one page: everyboard.org/demo
         // Hence we cannot read the name of the game via the URL
         return this.demoNodeInfo.name;

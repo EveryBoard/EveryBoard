@@ -83,10 +83,10 @@ export abstract class GameWrapper<P extends Comparable> extends BaseWrapperCompo
     }
 
     private async getMatchingComponentAndNavigateOutIfAbsent(): Promise<MGPOptional<Type<AbstractGameComponent>>> {
-        const gameName: string = this.getGameName();
-        const component: MGPOptional<Type<AbstractGameComponent>> = this.getMatchingComponent(gameName);
+        const urlName: string = this.getGameUrlName();
+        const component: MGPOptional<Type<AbstractGameComponent>> = this.getMatchingComponent(urlName);
         if (component.isAbsent()) {
-            await this.router.navigate(['/notFound', GameWrapperMessages.NO_MATCHING_GAME(gameName)], { skipLocationChange: true });
+            await this.router.navigate(['/notFound', GameWrapperMessages.NO_MATCHING_GAME(urlName)], { skipLocationChange: true });
             return MGPOptional.empty();
         } else {
             return component;
@@ -161,8 +161,8 @@ export abstract class GameWrapper<P extends Comparable> extends BaseWrapperCompo
     public abstract getPlayer(): P;
 
     public async getConfig(): Promise<MGPOptional<RulesConfig>> {
-        const gameName: string = this.getGameName();
-        return RulesConfigUtils.getGameDefaultConfig(gameName);
+        const urlName: string = this.getGameUrlName();
+        return RulesConfigUtils.getGameDefaultConfig(urlName);
     }
 
     public async canUserPlay(_clickedElementName: string): Promise<MGPValidation> {
@@ -240,8 +240,8 @@ export abstract class GameWrapper<P extends Comparable> extends BaseWrapperCompo
     }
 
     public getRulesConfigDescription(): MGPOptional<RulesConfigDescription<RulesConfig>> {
-        const gameName: string = this.getGameName();
-        return this.getRulesConfigDescriptionByName(gameName);
+        const urlName: string = this.getGameUrlName();
+        return this.getRulesConfigDescriptionByName(urlName);
     }
 
     private getRulesConfigDescriptionByName(gameName: string): MGPOptional<RulesConfigDescription<RulesConfig>> {

@@ -59,8 +59,8 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
     // Will set it to MGPOptional.empty() if the game doesn't exist, but an error will be handled by another function.
     // ConfiglessRules have MGPOptional.empty() value.
     private setDefaultRulesConfig(): void {
-        const gameName: string = this.getGameName();
-        this.rulesConfig = RulesConfigUtils.getGameDefaultConfig(gameName);
+        const urlName: string = this.getGameUrlName();
+        this.rulesConfig = RulesConfigUtils.getGameDefaultConfig(urlName);
     }
 
     public getCreatedNodes(): number {
@@ -197,17 +197,7 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
     }
 
     public getStateProvider(): MGPOptional<(config: MGPOptional<RulesConfig>) => GameState> {
-        const urlName: string = this.getGameName();
-        const gameInfos: MGPOptional<GameInfo> = GameInfo.getByUrlName(urlName);
-        if (gameInfos.isPresent()) {
-            const stateProvider: (config: MGPOptional<RulesConfig>) => GameState =
-                (config: MGPOptional<RulesConfig>) => {
-                    return gameInfos.get().rules.getInitialState(config);
-                };
-            return MGPOptional.of(stateProvider);
-        } else {
-            return MGPOptional.empty();
-        }
+        return GameInfo.getStateProvider(this.getGameUrlName());
     }
 
     public async doAIMove(playingAI: AbstractAI, options: AIOptions): Promise<MGPValidation> {
@@ -239,7 +229,7 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
     private async handleAIError(playingAI: AbstractAI, illegalMove: Move, error: string): Promise<MGPValidation> {
         this.messageDisplayer.criticalMessage($localize`The AI chose an illegal move! This is an unexpected situation that we logged, we will try to solve this as soon as possible. In the meantime, consider that you won!`);
         return Utils.logError('LocalGameWrapper', 'AI chose illegal move', {
-            game: this.getGameName(),
+            game: this.getGameUrlName(),
             name: playingAI.name,
             move: illegalMove.toString(),
             reason: error,

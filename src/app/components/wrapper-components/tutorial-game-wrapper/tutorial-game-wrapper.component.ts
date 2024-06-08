@@ -238,13 +238,13 @@ export class TutorialGameWrapperComponent extends GameWrapper<TutorialPlayer> im
     }
 
     public async playLocally(): Promise<void> {
-        const game: string = this.getGameName();
-        await this.router.navigate(['/local', game]);
+        const urlName: string = this.getGameUrlName();
+        await this.router.navigate(['/local', urlName]);
     }
 
     public async createGame(): Promise<void> {
-        const game: string = this.getGameName();
-        await this.router.navigate(['/play', game]);
+        const urlName: string = this.getGameUrlName();
+        await this.router.navigate(['/play', urlName]);
     }
 
     public override getPlayer(): TutorialPlayer {
