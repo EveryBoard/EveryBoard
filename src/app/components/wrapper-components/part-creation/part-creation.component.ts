@@ -23,7 +23,6 @@ import { RulesConfigurationComponent } from '../rules-configuration/rules-config
 import { GameInfo } from '../../normal-component/pick-game/pick-game.component';
 import { GameState } from 'src/app/jscaip/state/GameState';
 import { RulesConfigDescription } from '../rules-configuration/RulesConfigDescription';
-import { AbstractRules } from 'src/app/jscaip/Rules';
 import { Debug } from 'src/app/utils/Debug';
 
 type PartCreationViewInfo = {
