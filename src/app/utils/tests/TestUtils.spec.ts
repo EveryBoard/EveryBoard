@@ -264,6 +264,9 @@ export class SimpleComponentTestUtils<T> {
 
     public expectElementNotToExist(elementName: string): void {
         this.forceChangeDetection();
+        const isValidElementName: boolean =
+            elementName.startsWith('#') || elementName.startsWith('.') || elementName.startsWith('app-');
+        expect(isValidElementName).withContext(`${elementName} should be an HTML element name (id, class, or app-)`).toBeTrue();
         const element: DebugElement | null = this.fixture.debugElement.query(By.css(elementName));
         expect(element).withContext(`${elementName} should not exist`).toBeNull();
     }
