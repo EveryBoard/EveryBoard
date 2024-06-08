@@ -315,8 +315,7 @@ describe('LocalGameWrapperComponent (game phase)', () => {
             const proposeAIToPlay: jasmine.Spy = spyOn(wrapper, 'proposeAIToPlay').and.callThrough();
 
             await testUtils.expectInterfaceClickSuccess('#restartButton');
-            testUtils.detectChanges();
-            await testUtils.whenStable();
+            tick(0);
 
             expect(proposeAIToPlay).toHaveBeenCalledTimes(1);
             tick(LocalGameWrapperComponent.AI_TIMEOUT);
