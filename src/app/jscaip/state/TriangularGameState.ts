@@ -1,9 +1,9 @@
-import { Coord } from './Coord';
+import { Coord } from '../Coord';
 import { GameStateWithTable } from './GameStateWithTable';
-import { Table } from './TableUtils';
+import { Table } from '../TableUtils';
 import { TriangularCheckerBoard } from './TriangularCheckerBoard';
 
-export abstract class TriangularGameState<T> extends GameStateWithTable<T> {
+export abstract class TriangularGameState<T extends NonNullable<unknown>> extends GameStateWithTable<T> {
 
     public static getEmptyNeighbors<U>(board: Table<U>, coord: Coord, empty: U): Coord[] {
         const neighbors: Coord[] = [];
@@ -15,7 +15,9 @@ export abstract class TriangularGameState<T> extends GameStateWithTable<T> {
         }
         return neighbors;
     }
+
     public getEmptyNeighbors(coord: Coord, empty: T): Coord[] {
         return TriangularGameState.getEmptyNeighbors(this.board, coord, empty);
     }
+
 }

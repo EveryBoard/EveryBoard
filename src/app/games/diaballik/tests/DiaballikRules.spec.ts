@@ -47,7 +47,7 @@ describe('DiaballikRules', () => {
             // When doing a move out of board
             const move: DiaballikMove = getTranslation(new Coord(-1, 0), new Coord(0, 0));
 
-            // Then it should fail
+            // Then the move should be illegal
             const reason: string = CoordFailure.OUT_OF_RANGE(new Coord(-1, 0));
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
@@ -59,7 +59,7 @@ describe('DiaballikRules', () => {
             // When doing a move out of board
             const move: DiaballikMove = getTranslation(new Coord(0, 0), new Coord(-1, 0));
 
-            // Then it should fail
+            // Then the move should be illegal
             const reason: string = CoordFailure.OUT_OF_RANGE(new Coord(-1, 0));
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
@@ -71,7 +71,7 @@ describe('DiaballikRules', () => {
             // When doing a move out of board
             const move: DiaballikMove = getPassMove(new Coord(-1, 0), new Coord(0, 0));
 
-            // Then it should fail
+            // Then the move should be illegal
             const reason: string = CoordFailure.OUT_OF_RANGE(new Coord(-1, 0));
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
@@ -83,7 +83,7 @@ describe('DiaballikRules', () => {
             // When doing a move out of board
             const move: DiaballikMove = getPassMove(new Coord(0, 0), new Coord(-1, 0));
 
-            // Then it should fail
+            // Then the move should be illegal
             const reason: string = CoordFailure.OUT_OF_RANGE(new Coord(-1, 0));
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
@@ -255,7 +255,7 @@ describe('DiaballikRules', () => {
         // When trying to move with the ball
         const move: DiaballikMove = getTranslation(new Coord(3, 6), new Coord(3, 5));
 
-        // Then it should fail
+        // Then the move should be illegal
         const reason: string = DiaballikFailure.CANNOT_MOVE_WITH_BALL();
         RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
     });
@@ -267,7 +267,7 @@ describe('DiaballikRules', () => {
         // When trying to move from an empty space
         const move: DiaballikMove = getTranslation(new Coord(3, 3), new Coord(3, 4));
 
-        // Then it should fail
+        // Then the move should be illegal
         const reason: string = RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY();
         RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
     });
@@ -279,7 +279,7 @@ describe('DiaballikRules', () => {
         // When trying to move a piece of the opponent
         const move: DiaballikMove = getTranslation(new Coord(0, 0), new Coord(0, 1));
 
-        // Then it should fail
+        // Then the move should be illegal
         const reason: string = RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT();
         RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
     });
@@ -291,7 +291,7 @@ describe('DiaballikRules', () => {
         // When trying to pass from an empty space
         const move: DiaballikMove = getPassMove(new Coord(4, 1), new Coord(4, 0));
 
-        // Then it should fail
+        // Then the move should be illegal
         const reason: string = RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY();
         RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
     });
@@ -303,7 +303,7 @@ describe('DiaballikRules', () => {
         // When trying to pass from a piece of the opponent
         const move: DiaballikMove = getPassMove(new Coord(3, 0), new Coord(4, 0));
 
-        // Then it should fail
+        // Then the move should be illegal
         const reason: string = RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT();
         RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
     });
@@ -326,7 +326,7 @@ describe('DiaballikRules', () => {
         // When trying to pass from a piece to an empty space for example
         const move: DiaballikMove = getPassMove(new Coord(3, 6), new Coord(3, 3));
 
-        // Then it should fail
+        // Then the move should be illegal
         const reason: string = RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY();
         RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
     });
@@ -338,7 +338,7 @@ describe('DiaballikRules', () => {
         // When trying to move to an occupied space
         const move: DiaballikMove = getTranslation(new Coord(1, 6), new Coord(2, 6));
 
-        // Then it should fail
+        // Then the move should be illegal
         const reason: string = RulesFailure.MUST_LAND_ON_EMPTY_SPACE();
         RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
     });
@@ -358,7 +358,7 @@ describe('DiaballikRules', () => {
         // When trying to pass on an obstructed path
         const move: DiaballikMove = getPassMove(new Coord(3, 6), new Coord(3, 2));
 
-        // Then it should fail
+        // Then the move should be illegal
         const reason: string = DiaballikFailure.PASS_PATH_OBSTRUCTED();
         RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
     });

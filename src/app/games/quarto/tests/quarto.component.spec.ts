@@ -35,6 +35,7 @@ describe('QuartoComponent', () => {
             ];
             const state: QuartoState = new QuartoState(board, 1, QuartoPiece.AAAB);
             await testUtils.setupState(state);
+
             // When clicking on an occupied square
             // Then it should fail
             await testUtils.expectClickFailure('#chooseCoord_0_0', RulesFailure.MUST_CLICK_ON_EMPTY_SPACE());

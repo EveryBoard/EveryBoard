@@ -54,7 +54,7 @@
 
     <g *ngFor="let player of Player.PLAYERS">
         <g *ngFor="let p of getPlayerSidePieces(player)">
-            <circle id="piece_{{ player.getValue() }}_{{ p }}"
+            <circle id="piece_{{ player.toString() }}_{{ p }}"
                     [attr.cx]="getRemainingPieceCx(player, p)"
                     [attr.cy]="getRemainingPieceCy(player)"
                     [attr.r]="SPACE_SIZE * 0.5"

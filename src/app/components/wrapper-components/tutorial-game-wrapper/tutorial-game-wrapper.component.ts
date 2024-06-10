@@ -7,7 +7,7 @@ import { ConnectedUserService } from 'src/app/services/ConnectedUserService';
 import { MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 import { Click, TutorialStep, TutorialStepClick, TutorialStepMove, TutorialStepWithSolution } from './TutorialStep';
 import { TutorialFailure } from './TutorialFailure';
-import { GameState } from 'src/app/jscaip/GameState';
+import { GameState } from 'src/app/jscaip/state/GameState';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 import { Localized } from 'src/app/utils/LocaleUtils';
@@ -100,7 +100,7 @@ export class TutorialGameWrapperComponent extends GameWrapper<TutorialPlayer> im
         this.currentMessage = currentStep.instruction;
         this.currentReason = MGPOptional.empty();
         this.gameComponent.node = new GameNode(currentStep.state,
-                                               undefined,
+                                               currentStep.parent,
                                                currentStep.previousMove);
         // Set role will update view with showCurrentState
         await this.setRole(this.gameComponent.getCurrentPlayer());

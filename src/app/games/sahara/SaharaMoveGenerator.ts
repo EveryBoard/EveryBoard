@@ -2,7 +2,7 @@ import { Player } from 'src/app/jscaip/Player';
 import { Coord } from 'src/app/jscaip/Coord';
 import { SaharaMove } from './SaharaMove';
 import { SaharaState } from './SaharaState';
-import { TriangularGameState } from 'src/app/jscaip/TriangularGameState';
+import { TriangularGameState } from 'src/app/jscaip/state/TriangularGameState';
 import { SaharaNode, SaharaRules } from './SaharaRules';
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
 import { MoveGenerator } from 'src/app/jscaip/AI/AI';

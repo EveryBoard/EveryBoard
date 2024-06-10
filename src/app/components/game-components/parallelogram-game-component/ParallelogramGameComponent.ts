@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { RectangularGameComponent } from '../rectangular-game-component/RectangularGameComponent';
 import { SuperRules } from 'src/app/jscaip/Rules';
 import { Move } from 'src/app/jscaip/Move';
-import { GameStateWithTable } from 'src/app/jscaip/GameStateWithTable';
+import { GameStateWithTable } from 'src/app/jscaip/state/GameStateWithTable';
 import { Coord } from 'src/app/jscaip/Coord';
 import { EmptyRulesConfig, RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 
@@ -25,7 +25,7 @@ export interface ModeConfig {
 export abstract class ParallelogramGameComponent<R extends SuperRules<M, S, C, L>,
                                                  M extends Move,
                                                  S extends GameStateWithTable<P>,
-                                                 P,
+                                                 P extends NonNullable<unknown>,
                                                  C extends RulesConfig = EmptyRulesConfig,
                                                  L = void>
     extends RectangularGameComponent<R, M, S, P, C, L>

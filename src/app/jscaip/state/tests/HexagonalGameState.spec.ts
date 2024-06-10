@@ -1,8 +1,8 @@
 /* eslint-disable max-lines-per-function */
 import { Table, TableUtils } from 'src/app/jscaip/TableUtils';
-import { Coord } from '../Coord';
+import { Coord } from '../../Coord';
 import { HexagonalGameState } from '../HexagonalGameState';
-import { HexaLine } from '../HexaLine';
+import { HexaLine } from '../../HexaLine';
 import { ErrorLoggerServiceMock } from 'src/app/services/tests/ErrorLoggerServiceMock.spec';
 import { JSONValue, Utils } from '@everyboard/lib';
 

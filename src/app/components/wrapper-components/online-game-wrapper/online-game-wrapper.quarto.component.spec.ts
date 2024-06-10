@@ -1612,7 +1612,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             testUtils.expectElementToBeDisabled('#proposeRematch');
 
             // When it is finished
-            await testUtils.expectInterfaceClickSuccess('#resign', 0);
+            await testUtils.expectInterfaceClickSuccess('#resign', undefined, 0);
 
             // Then it should allow to propose rematch
             testUtils.expectElementToBeEnabled('#proposeRematch');
