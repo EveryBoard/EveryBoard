@@ -152,7 +152,7 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneRules,
         return this.onLegalPieceClick(x, y);
     }
 
-    private onLegalPieceClick(x: number, y: number): MGPValidation | PromiseLike<MGPValidation> {
+    private async onLegalPieceClick(x: number, y: number): Promise<MGPValidation> {
         const opponent: Player = this.getState().getCurrentOpponent();
         if (this.hexaBoard[y][x].is(opponent)) {
             return this.opponentClick(x, y);

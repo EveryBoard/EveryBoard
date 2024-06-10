@@ -52,7 +52,7 @@ export class TestingHexagonalState extends HexagonalGameState<number> {
             throw new Error('Invalid excluded spaces specification for HexaBoard.');
         }
     }
-    public setAtUnsafe(coord: Coord, value: number): this {
+    public override setAtUnsafe(coord: Coord, value: number): this {
         const newBoard: number[][] = TableUtils.copy(this.board);
         newBoard[coord.y][coord.x] = value;
         return new TestingHexagonalState(this.turn,

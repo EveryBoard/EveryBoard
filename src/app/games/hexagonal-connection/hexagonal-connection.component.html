@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg"
+     width="100%" height="100%"
+     [attr.viewBox]="getViewBox().toSVGString()"
+     preserveAspectRatio="xMidYMid meet">
+
+    <g *ngFor="let line of hexaBoard; index as y">
+        <g *ngFor="let c of line; index as x">
+            <g *ngIf="isBoard(c)"
+               [attr.transform]="getHexaCenterTranslationAtXY(x, y)">
+                <polygon id="space_{{ x }}_{{ y }}"
+                         (click)="onClick(x, y)"
+                         [ngClass]="getSquareClasses(x, y)"
+                         class="base"
+                         [attr.points]="getHexaPoints()"
+                         stroke-linecap="round"
+                />
+                <circle *ngIf="isPiece(c)"
+                        id="piece_{{ x }}_{{ y }}"
+                        (click)="onClick(x, y)"
+                        cx="0"
+                        cy="0"
+                        [attr.r]="SPACE_SIZE * 0.5"
+                        [ngClass]="getPieceClasses(x, y)"
+                        class="base"
+                />
+            </g>
+        </g>
+    </g>
+</svg>

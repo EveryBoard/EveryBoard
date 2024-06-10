@@ -66,7 +66,7 @@ export class DvonnState extends HexagonalGameState<DvonnPieceStack> {
         return occupiedNeighbors.length;
     }
 
-    public setAtUnsafe(coord: Coord, value: DvonnPieceStack): this {
+    public override setAtUnsafe(coord: Coord, value: DvonnPieceStack): this {
         const newBoard: DvonnPieceStack[][] = TableUtils.copy(this.board);
         newBoard[coord.y][coord.x] = value;
         return new DvonnState(newBoard, this.turn, this.alreadyPassed) as this;
