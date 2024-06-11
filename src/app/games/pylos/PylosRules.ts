@@ -216,7 +216,7 @@ export class PylosRules extends Rules<PylosMove, PylosState> {
             return MGPValidation.failure(PylosFailure.INVALID_FIRST_CAPTURE());
         }
     }
-    public getGameStatus(node: PylosNode): GameStatus {
+    public override getGameStatus(node: PylosNode): GameStatus {
         return PylosRules.getGameStatus(node);
     }
 }

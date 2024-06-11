@@ -176,7 +176,7 @@ export class DiaballikRules extends Rules<DiaballikMove, DiaballikState, Diaball
         return new DiaballikState(stateAfterSubMoves.board, state.turn + 1);
     }
 
-    public getGameStatus(node: DiaballikNode): GameStatus {
+    public override getGameStatus(node: DiaballikNode): GameStatus {
         const state: DiaballikState = node.gameState;
         const victoryOrDefeat: MGPOptional<VictoryOrDefeatCoords> = this.getVictoryOrDefeatCoords(state);
         if (victoryOrDefeat.isPresent()) {

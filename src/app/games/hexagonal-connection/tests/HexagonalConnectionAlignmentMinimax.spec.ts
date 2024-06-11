@@ -1,21 +1,22 @@
 /* eslint-disable max-lines-per-function */
+import { MGPOptional } from '@everyboard/lib';
 import { Coord } from 'src/app/jscaip/Coord';
 import { HexagonalConnectionDrops, HexagonalConnectionMove } from '../HexagonalConnectionMove';
-import { HexagonalConnectionNode, HexagonalConnectionRules } from '../HexagonalConnectionRules';
+import { HexagonalConnectionConfig, HexagonalConnectionNode, HexagonalConnectionRules } from '../HexagonalConnectionRules';
 import { HexagonalConnectionState } from '../HexagonalConnectionState';
 import { Table } from 'src/app/jscaip/TableUtils';
 import { Minimax } from 'src/app/jscaip/AI/Minimax';
 import { AIDepthLimitOptions } from 'src/app/jscaip/AI/AI';
 import { HexagonalConnectionAlignmentMinimax } from '../HexagonalConnectionAlignmentMinimax';
-import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
 
 describe('HexagonalConnectionAlignmentMinimax', () => {
 
-    let minimax: Minimax<HexagonalConnectionMove, HexagonalConnectionState>;
+    let minimax: Minimax<HexagonalConnectionMove, HexagonalConnectionState, HexagonalConnectionConfig>;
     const level1: AIDepthLimitOptions = { name: 'Level 1', maxDepth: 1 };
     const level2: AIDepthLimitOptions = { name: 'Level 2', maxDepth: 2 };
-    const defaultConfig: NoConfig = HexagonalConnectionRules.get().getDefaultRulesConfig();
+    const defaultConfig: MGPOptional<HexagonalConnectionConfig> =
+        HexagonalConnectionRules.get().getDefaultRulesConfig();
 
     const _: FourStatePiece = FourStatePiece.EMPTY;
     const O: FourStatePiece = FourStatePiece.ZERO;

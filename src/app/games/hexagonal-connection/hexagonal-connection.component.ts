@@ -9,12 +9,11 @@ import { PlayerOrNone } from 'src/app/jscaip/Player';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { Minimax } from 'src/app/jscaip/AI/Minimax';
 import { MCTS } from 'src/app/jscaip/AI/MCTS';
-import { HexagonalConnectionRules } from './HexagonalConnectionRules';
+import { HexagonalConnectionConfig, HexagonalConnectionRules } from './HexagonalConnectionRules';
 import { HexagonalConnectionDrops, HexagonalConnectionFirstMove, HexagonalConnectionMove } from './HexagonalConnectionMove';
 import { HexagonalConnectionState } from './HexagonalConnectionState';
 import { HexagonalConnectionAlignmentHeuristic } from './HexagonalConnectionAlignmentHeuristic';
 import { HexagonalConnectionMoveGenerator } from './HexagonalConnectionMoveGenerator';
-import { CoordSet } from 'src/app/jscaip/CoordSet';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { ViewBox } from 'src/app/components/game-components/GameComponentUtils';
 
@@ -26,7 +25,8 @@ import { ViewBox } from 'src/app/components/game-components/GameComponentUtils';
 export class HexagonalConnectionComponent extends HexagonalGameComponent<HexagonalConnectionRules,
                                                                          HexagonalConnectionMove,
                                                                          HexagonalConnectionState,
-                                                                         FourStatePiece>
+                                                                         FourStatePiece,
+                                                                         HexagonalConnectionConfig>
 {
     public droppedCoord: MGPOptional<Coord> = MGPOptional.empty();
 
@@ -60,7 +60,8 @@ export class HexagonalConnectionComponent extends HexagonalGameComponent<Hexagon
     public async updateBoard(_triggerAnimation: boolean): Promise<void> {
         const state: HexagonalConnectionState = this.getState();
         this.hexaBoard = state.getCopiedBoard();
-        this.victoryCoords = HexagonalConnectionRules.getVictoriousCoords(state);
+        const config: MGPOptional<HexagonalConnectionConfig> = this.getConfig();
+        this.victoryCoords = HexagonalConnectionRules.getVictoriousCoords(state, config);
     }
 
     public override async showLastMove(move: HexagonalConnectionMove): Promise<void> {

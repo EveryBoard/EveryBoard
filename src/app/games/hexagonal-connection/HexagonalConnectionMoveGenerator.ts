@@ -1,19 +1,21 @@
 import { HexagonalConnectionState } from './HexagonalConnectionState';
-import { HexagonalConnectionNode } from './HexagonalConnectionRules';
+import { HexagonalConnectionConfig, HexagonalConnectionNode } from './HexagonalConnectionRules';
 import { HexagonalConnectionMove } from './HexagonalConnectionMove';
 import { Coord } from 'src/app/jscaip/Coord';
 import { HexagonalConnectionFirstMove } from './HexagonalConnectionMove';
 import { HexagonalConnectionDrops } from './HexagonalConnectionMove';
 import { TableUtils } from 'src/app/jscaip/TableUtils';
-import { MGPSet } from '@everyboard/lib';
+import { MGPOptional, MGPSet } from '@everyboard/lib';
 import { MoveGenerator } from 'src/app/jscaip/AI/AI';
-import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
 
 export class HexagonalConnectionMoveGenerator extends MoveGenerator<HexagonalConnectionMove,
-                                                                    HexagonalConnectionState>
+                                                                    HexagonalConnectionState,
+                                                                    HexagonalConnectionConfig>
 {
-    public override getListMoves(node: HexagonalConnectionNode, _config: NoConfig): HexagonalConnectionMove[] {
+    public override getListMoves(node: HexagonalConnectionNode, _config: MGPOptional<HexagonalConnectionConfig>)
+    : HexagonalConnectionMove[]
+    {
         if (node.gameState.turn === 0) {
             return this.getFirstMove(node.gameState);
         } else {

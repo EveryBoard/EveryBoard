@@ -221,7 +221,7 @@ export class HiveRules extends Rules<HiveMove, HiveState> {
         return this.getPossibleDropLocations(state).size() === 0 && this.getPossibleMovesOnBoard(state).size() === 0;
     }
 
-    public getGameStatus(node: HiveNode): GameStatus {
+    public override getGameStatus(node: HiveNode): GameStatus {
         const state: HiveState = node.gameState;
 
         const neighbors: PlayerNumberMap = PlayerNumberMap.of(0, 0);

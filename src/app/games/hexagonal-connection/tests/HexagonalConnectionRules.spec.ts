@@ -1,13 +1,12 @@
 /* eslint-disable max-lines-per-function */
-import { TestUtils } from '@everyboard/lib';
+import { MGPOptional, TestUtils } from '@everyboard/lib';
 import { Player } from 'src/app/jscaip/Player';
-import { HexagonalConnectionNode, HexagonalConnectionRules } from '../HexagonalConnectionRules';
+import { HexagonalConnectionConfig, HexagonalConnectionNode, HexagonalConnectionRules } from '../HexagonalConnectionRules';
 import { HexagonalConnectionState } from '../HexagonalConnectionState';
 import { HexagonalConnectionDrops, HexagonalConnectionFirstMove, HexagonalConnectionMove } from '../HexagonalConnectionMove';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { Coord, CoordFailure } from 'src/app/jscaip/Coord';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
 
 describe('HexagonalConnectionRules', () => {
@@ -23,7 +22,8 @@ describe('HexagonalConnectionRules', () => {
     const X: FourStatePiece = FourStatePiece.ONE;
 
     let rules: HexagonalConnectionRules;
-    const defaultConfig: NoConfig = HexagonalConnectionRules.get().getDefaultRulesConfig();
+    const defaultConfig: MGPOptional<HexagonalConnectionConfig> =
+        HexagonalConnectionRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         rules = HexagonalConnectionRules.get();

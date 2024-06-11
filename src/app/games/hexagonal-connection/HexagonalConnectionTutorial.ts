@@ -2,15 +2,15 @@ import { Tutorial, TutorialStep } from 'src/app/components/wrapper-components/tu
 import { HexagonalConnectionState } from './HexagonalConnectionState';
 import { HexagonalConnectionDrops, HexagonalConnectionFirstMove } from './HexagonalConnectionMove';
 import { Coord } from 'src/app/jscaip/Coord';
-import { HexagonalConnectionRules } from './HexagonalConnectionRules';
+import { HexagonalConnectionConfig, HexagonalConnectionRules } from './HexagonalConnectionRules';
 import { TutorialStepMessage } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
-import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
+import { MGPOptional } from '@everyboard/lib';
 
 const _: FourStatePiece = FourStatePiece.EMPTY;
 const O: FourStatePiece = FourStatePiece.ZERO;
 const X: FourStatePiece = FourStatePiece.ONE;
-const defaultConfig: NoConfig = HexagonalConnectionRules.get().getDefaultRulesConfig();
+const defaultConfig: MGPOptional<HexagonalConnectionConfig> = HexagonalConnectionRules.get().getDefaultRulesConfig();
 
 export class HexagonalConnectionTutorial extends Tutorial {
 

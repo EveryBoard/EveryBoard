@@ -174,7 +174,7 @@ export class QuixoRules extends ConfigurableRules<QuixoMove, QuixoState, QuixoCo
         }
     }
 
-    public getGameStatus(node: QuixoNode): GameStatus {
+    public override getGameStatus(node: QuixoNode): GameStatus {
         const state: QuixoState = node.gameState;
         const victoriousCoord: Coord[] = QuixoRules.QUIXO_HELPER.getVictoriousCoord(state);
         const unreducedWinners: PlayerOrNone[] = victoriousCoord.map((coord: Coord) => state.getPieceAt(coord));

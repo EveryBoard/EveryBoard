@@ -190,7 +190,7 @@ export class LinesOfActionRules extends Rules<LinesOfActionMove, LinesOfActionSt
         return targets;
     }
 
-    public getGameStatus(node: LinesOfActionNode): GameStatus {
+    public override getGameStatus(node: LinesOfActionNode): GameStatus {
         const state: LinesOfActionState = node.gameState;
         const groups: PlayerNumberMap = LinesOfActionRules.getNumberOfGroups(state);
         const zero: number = groups.get(Player.ZERO);

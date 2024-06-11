@@ -1,11 +1,11 @@
 /* eslint-disable max-lines-per-function */
+import { MGPOptional } from '@everyboard/lib';
 import { Coord } from 'src/app/jscaip/Coord';
 import { HexagonalConnectionFirstMove, HexagonalConnectionMove } from '../HexagonalConnectionMove';
-import { HexagonalConnectionNode, HexagonalConnectionRules } from '../HexagonalConnectionRules';
+import { HexagonalConnectionConfig, HexagonalConnectionNode, HexagonalConnectionRules } from '../HexagonalConnectionRules';
 import { HexagonalConnectionState } from '../HexagonalConnectionState';
 import { Table } from 'src/app/jscaip/TableUtils';
 import { HexagonalConnectionMoveGenerator } from '../HexagonalConnectionMoveGenerator';
-import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
 
 describe('HexagonalConnectionMoveGenerator', () => {
@@ -15,7 +15,8 @@ describe('HexagonalConnectionMoveGenerator', () => {
     const _: FourStatePiece = FourStatePiece.EMPTY;
     const O: FourStatePiece = FourStatePiece.ZERO;
 
-    const defaultConfig: NoConfig = HexagonalConnectionRules.get().getDefaultRulesConfig();
+    const defaultConfig: MGPOptional<HexagonalConnectionConfig> =
+        HexagonalConnectionRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         moveGenerator = new HexagonalConnectionMoveGenerator();
@@ -23,8 +24,7 @@ describe('HexagonalConnectionMoveGenerator', () => {
 
     it('should propose only one move at first turns', () => {
         // Given the initial node
-        const width: number = defaultConfig.get().width;
-        const height: number = defaultConfig.get().height;
+        const size: number = defaultConfig.get().size;
         const state: HexagonalConnectionState = HexagonalConnectionRules.get().getInitialState(defaultConfig);
         const node: HexagonalConnectionNode = new HexagonalConnectionNode(state);
 
@@ -32,8 +32,8 @@ describe('HexagonalConnectionMoveGenerator', () => {
         const moves: HexagonalConnectionMove[] = moveGenerator.getListMoves(node, defaultConfig);
 
         // Then it should only include the center of the board
-        const cx: number = Math.floor(width/2);
-        const cy: number = Math.floor(height/2);
+        const cx: number = Math.floor(size / 2);
+        const cy: number = Math.floor(size / 2);
         expect(moves.length).toBe(1);
         expect(moves[0]).toEqual(HexagonalConnectionFirstMove.of(new Coord(cx, cy)));
     });

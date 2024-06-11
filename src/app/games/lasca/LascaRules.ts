@@ -201,7 +201,7 @@ export class LascaRules extends Rules<LascaMove, LascaState> {
         }
     }
 
-    public getGameStatus(node: LascaNode): GameStatus {
+    public override getGameStatus(node: LascaNode): GameStatus {
         const state: LascaState = node.gameState;
         const captures: LascaMove[] = this.getCaptures(state);
         if (captures.length > 0 || this.getSteps(state).length > 0) {
