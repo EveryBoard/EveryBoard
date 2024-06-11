@@ -9,18 +9,17 @@
                [attr.transform]="getHexaCenterTranslationAtXY(x, y)">
                 <polygon id="space_{{ x }}_{{ y }}"
                          (click)="onClick(x, y)"
-                         [ngClass]="getSquareClasses(x, y)"
                          class="base"
                          [attr.points]="getHexaPoints()"
                          stroke-linecap="round"
                 />
-                <circle *ngIf="isPiece(c)"
+                <circle *ngIf="isPiece(x, y)"
                         id="piece_{{ x }}_{{ y }}"
                         (click)="onClick(x, y)"
                         cx="0"
                         cy="0"
                         [attr.r]="SPACE_SIZE * 0.5"
-                        [ngClass]="getPieceClasses(x, y)"
+                        [ngClass]="getSquareClasses(x, y)"
                         class="base"
                 />
             </g>

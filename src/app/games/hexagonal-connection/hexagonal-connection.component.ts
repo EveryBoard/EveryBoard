@@ -130,8 +130,16 @@ export class HexagonalConnectionComponent extends HexagonalGameComponent<Hexagon
         this.droppedCoord = MGPOptional.empty();
     }
 
-    public isPiece(piece: FourStatePiece): boolean {
-        return piece.isPlayer();
+    public isPiece(x: number, y: number): boolean {
+        const coord: Coord = new Coord(x, y);
+        const piece: FourStatePiece = this.getState().getPieceAt(coord);
+        if (piece.isPlayer()) {
+            return true;
+        } else if (this.droppedCoord.equalsValue(coord)) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public isBoard(piece: FourStatePiece): boolean {
