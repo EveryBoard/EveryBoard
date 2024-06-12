@@ -22,7 +22,7 @@ export class ImmutableSet<T extends Comparable> extends AbstractSet<T> {
     }
 
     public filterElement(element: T): this {
-        return this.filter((e: T) => comparableEquals(e, element));
+        return this.filter((e: T) => comparableEquals(e, element) === false);
     }
 
     public map<V extends Comparable>(mapper: (element: T) => V): ImmutableSet<V> {
