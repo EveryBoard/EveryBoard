@@ -65,7 +65,7 @@ describe('ImmutableSet', () => {
             const set: ImmutableSet<number> = new ImmutableSet([1, 2]);
             const list: number[] = [2, 3];
             const union: ImmutableSet<number> = set.unionList(list);
-            expect(union).toEqual(new ImmutableSet([1, 2, 3]));
+            expect(union.equals(new ImmutableSet([1, 2, 3]))).toBeTrue();
         });
 
     });
@@ -75,7 +75,7 @@ describe('ImmutableSet', () => {
         it('should return the elements present in the set plus the new element', () => {
             const set: ImmutableSet<number> = new ImmutableSet([1, 2]);
             const union: ImmutableSet<number> = set.unionElement(3);
-            expect(union).toEqual(new ImmutableSet([1, 2, 3]));
+            expect(union.equals(new ImmutableSet([1, 2, 3]))).toBeTrue();
         });
 
     });
