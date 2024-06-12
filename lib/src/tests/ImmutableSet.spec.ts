@@ -54,7 +54,7 @@ describe('ImmutableSet', () => {
             const set: ImmutableSet<number> = new ImmutableSet([1, 2]);
             const otherSet: ImmutableSet<number> = new ImmutableSet([2, 3]);
             const union: ImmutableSet<number> = set.union(otherSet);
-            expect(union).toEqual(new ImmutableSet([1, 2, 3]));
+            expect(union.equals(new ImmutableSet([1, 2, 3]))).toBeTrue();
         });
 
     });
@@ -190,7 +190,7 @@ describe('ImmutableSet', () => {
                 return value >= 2;
             }
             const set: ImmutableSet<number> = new ImmutableSet([1, 2]);
-            expect(set.filter(pred)).toEqual(new ImmutableSet([2]));
+            expect(set.filter(pred).equals(new ImmutableSet([2]))).toBeTrue();
         });
 
     });
@@ -200,7 +200,7 @@ describe('ImmutableSet', () => {
         it('should keep all elements but the provided one', () => {
             const set: ImmutableSet<number> = new ImmutableSet([1, 2, 3]);
             const expected: ImmutableSet<number> = new ImmutableSet([1, 2]);
-            expect(set.filterElement(3)).toEqual(expected);
+            expect(set.filterElement(3).equals(expected)).toBeTrue();
         });
 
     });
@@ -228,7 +228,7 @@ describe('ImmutableSet', () => {
             const set: ImmutableSet<number> = new ImmutableSet([1, 2]);
             const otherSet: ImmutableSet<number> = new ImmutableSet([2, 3]);
             const intersection: ImmutableSet<number> = set.intersection(otherSet);
-            expect(intersection).toEqual(new ImmutableSet([2]));
+            expect(intersection.equals(new ImmutableSet([2]))).toBeTrue();
         });
 
     });
