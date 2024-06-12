@@ -10,6 +10,7 @@ import { AIDepthLimitOptions } from 'src/app/jscaip/AI/AI';
 import { ConnectSixAlignmentMinimax } from '../ConnectSixAlignmentMinimax';
 import { GobanConfig } from 'src/app/jscaip/GobanConfig';
 import { MGPOptional } from '@everyboard/lib';
+import { minimaxTest, SlowTest } from 'src/app/utils/tests/TestUtils.spec';
 
 describe('ConnectSixAlignmentMinimax', () => {
 
@@ -124,6 +125,18 @@ describe('ConnectSixAlignmentMinimax', () => {
 
         // Then the minimax level two should block
         expect(bestMove).toEqual(ConnectSixDrops.of(new Coord(1, 18), new Coord(6, 18)));
+    });
+
+    SlowTest.it('should be able play against itself', () => {
+        const minimaxOptions: AIDepthLimitOptions = { name: 'Level 1', maxDepth: 1 };
+        minimaxTest({
+            rules: ConnectSixRules.get(),
+            minimax,
+            options: minimaxOptions,
+            config: defaultConfig,
+            turns: 10,
+            shouldFinish: false, // 10 turns is all we can do in 10 seconds, but it's not enough to finish
+        });
     });
 
 });

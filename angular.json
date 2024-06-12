@@ -179,6 +179,42 @@
             }
           }
         },
+        "ci-test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "src/test.ts",
+            "polyfills": "src/polyfills.ts",
+            "tsConfig": "src/tsconfig.spec.json",
+            "karmaConfig": "src/karma.conf.js",
+            "styles": [
+              "src/sass/mystyles.scss"
+            ],
+            "stylePreprocessorOptions": {
+              "includePaths": [
+                "src/sass"
+              ]
+            },
+            "scripts": [],
+            "assets": [
+              "src/favicon.ico",
+              "src/assets"
+            ]
+          },
+          "configurations": {
+            "local": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.local.ts"
+                },
+                {
+                  "replace": "src/TestVars.spec.ts",
+                  "with": "src/TestVars.ci.spec.ts"
+                }
+              ]
+            }
+          }
+        },
         "deploy": {
           "builder": "angular-cli-ghpages:deploy"
         }

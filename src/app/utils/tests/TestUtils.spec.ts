@@ -44,6 +44,10 @@ import { GameInfo } from 'src/app/components/normal-component/pick-game/pick-gam
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { Player } from 'src/app/jscaip/Player';
 import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { TestVars } from 'src/TestVars.spec';
+import { Minimax } from 'src/app/jscaip/AI/Minimax';
+import { AIDepthLimitOptions } from 'src/app/jscaip/AI/AI';
+import { SuperRules } from 'src/app/jscaip/Rules';
 
 @Component({})
 export class BlankComponent {}
@@ -792,4 +796,62 @@ export function prepareUnsubscribeCheck(service: any, subscribeMethod: string): 
             .withContext('Service should have unsubscribed to ' + subscribeMethod + ' method but did not')
             .toBeTrue();
     };
+}
+
+const regularIt: (name: string, testBody: () => void) => void = it;
+const regularFit: (name: string, testBody: () => void) => void = fit;
+const regularXit: (name: string, testBody: () => void) => void = xit;
+export namespace SlowTest {
+
+    // Run a slow test, only if that option is enabled
+    export function it(name: string, testBody: () => void): void {
+        if (TestVars.slowTests) {
+            regularIt(name, testBody);
+        } else {
+            regularXit(name, testBody); // We still want this detected as a test to avoid karma errors
+        }
+    }
+
+    // Does a focused test (a fit), and ignores the TestVars.slowTests option
+    export function fit(name: string, testBody: () => void): void {
+        regularFit(name, testBody);
+    }
+
+}
+
+export type MinimaxTestOptions<R extends SuperRules<M, S, C, L>,
+                               M extends Move,
+                               S extends GameState,
+                               C extends RulesConfig,
+                               L> = {
+    rules: R,
+    minimax: Minimax<M, S, C, L>,
+    options: AIDepthLimitOptions,
+    config: MGPOptional<C>,
+    turns: number,
+    shouldFinish: boolean
+}
+
+/* Run a minimax test by battling it against itself for a number of turns */
+export function minimaxTest<R extends SuperRules<M, S, C, L>,
+                            M extends Move,
+                            S extends GameState,
+                            C extends RulesConfig,
+                            L>(options: MinimaxTestOptions<R, M, S, C, L>): void {
+    // Given a component where AI plays against AI
+    let node: GameNode<M, S> = options.rules.getInitialNode(options.config);
+
+    // When playing the needed number of turns
+    // Then it should not throw errors
+    let turn: number = 0;
+    while (turn < options.turns && options.rules.getGameStatus(node, options.config).isEndGame === false) {
+        const bestMove: M = options.minimax.chooseNextMove(node, options.options, options.config);
+        expect(bestMove).toBeDefined();
+        node = node.getChild(bestMove).get();
+        turn++;
+    }
+    // And maybe the game needs to be over
+    if (options.shouldFinish) {
+        expect(options.rules.getGameStatus(node, options.config).isEndGame).toBeTrue();
+    }
 }
