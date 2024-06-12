@@ -8,7 +8,7 @@ import { ImmutableSet } from './ImmutableSet';
  */
 export abstract class ImmutableOptimizedSet<T extends Comparable> extends ImmutableSet<T> {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    private readonly valueMap: any; // TODO: T[] ???
+    private readonly valueMap: T[];
 
     /**
      * This should be defined for each specialization of OptimizedSet.

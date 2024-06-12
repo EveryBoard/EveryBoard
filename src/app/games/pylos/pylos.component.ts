@@ -35,7 +35,7 @@ export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosSt
     public lastSecondCapture: MGPOptional<PylosCoord> = MGPOptional.empty();
     public highCapture: MGPOptional<PylosCoord> = MGPOptional.empty();
 
-    public capturables: ImmutableSet<PylosCoord> = new ImmutableSet(); // TODO
+    public capturables: ImmutableSet<PylosCoord> = new ImmutableSet();
 
     public chosenStartingCoord: MGPOptional<PylosCoord> = MGPOptional.empty();
     public chosenLandingCoord: MGPOptional<PylosCoord> = MGPOptional.empty();

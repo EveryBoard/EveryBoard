@@ -3,7 +3,7 @@ import { PieceThreat } from 'src/app/jscaip/PieceThreat';
 import { Player } from 'src/app/jscaip/Player';
 import { TriangularCheckerBoard } from 'src/app/jscaip/state/TriangularCheckerBoard';
 import { MGPMap, MGPOptional } from '@everyboard/lib';
-import { CoerceoMove, CoerceoStep } from './CoerceoMove';
+import { CoerceoStep } from './CoerceoMove';
 import { CoerceoState } from './CoerceoState';
 import { CoerceoNode } from './CoerceoRules';
 import { Vector } from 'src/app/jscaip/Vector';

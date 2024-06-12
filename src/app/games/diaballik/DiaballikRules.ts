@@ -10,7 +10,7 @@ import { Ordinal } from 'src/app/jscaip/Ordinal';
 import { MGPFallible, MGPOptional, Utils } from '@everyboard/lib';
 import { GameNode } from 'src/app/jscaip/AI/GameNode';
 import { DiaballikFailure } from './DiaballikFailure';
-import { Table, TableUtils } from 'src/app/jscaip/TableUtils';
+import { Table } from 'src/app/jscaip/TableUtils';
 import { CoordFailure } from '../../jscaip/Coord';
 import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 import { PlayerMap } from 'src/app/jscaip/PlayerMap';
@@ -247,12 +247,10 @@ export class DiaballikRules extends Rules<DiaballikMove, DiaballikState, Diaball
         //   - there is one player piece in each column
         //   - they are all connected
         //   - at least 3 opponent's pieces are connected
-        console.table(TableUtils.map(state.board, (d: DiaballikPiece) => d.toString()))
         let opponentsConnected: CoordSet = new CoordSet();
         const blockerCoords: Coord[] = [];
         for (let x: number = 0; x < state.getWidth(); x++) {
             const connectionInfos: ConnectionInfos = this.getConnectedPieceCoord(x, opponentsConnected, state, player);
-            console.log('for x=', x, 'we have', connectionInfos.coord.toString(), "&", connectionInfos.opponentsConnected.toList())
             opponentsConnected = connectionInfos.opponentsConnected;
             const coord: MGPOptional<Coord> = connectionInfos.coord;
             if (coord.isPresent()) {
@@ -319,11 +317,9 @@ export class DiaballikRules extends Rules<DiaballikMove, DiaballikState, Diaball
         for (const direction of Orthogonal.factory.all) {
             const neighbor: Coord = coord.getNext(direction);
             if (state.isOnBoard(neighbor)) {
-                console.log(coord.toString(), 'at direction', direction.toString())
                 const piece: DiaballikPiece = state.getPieceAt(neighbor);
                 if (piece.owner === player.getOpponent()) {
                     opponentsConnected = opponentsConnected.unionElement(neighbor);
-                    console.log('has an opponent indeed (total is now', opponentsConnected.size(), ')');
                 }
             }
         }
