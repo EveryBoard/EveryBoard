@@ -26,7 +26,7 @@ type PartInfo = {
     candidate: MinimalUser,
 }
 
-xdescribe('PartDAO security', () => {
+describe('PartDAO security', () => {
 
     let partDAO: PartDAO;
     let gameEventService: GameEventService;

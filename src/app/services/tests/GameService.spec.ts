@@ -25,7 +25,7 @@ import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 import { NoConfig, RulesConfigUtils } from 'src/app/jscaip/RulesConfigUtil';
 import { BlankComponent } from 'src/app/utils/tests/TestUtils.spec';
 
-xdescribe('GameService', () => {
+describe('GameService', () => {
 
     let gameService: GameService;
 

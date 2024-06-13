@@ -16,7 +16,7 @@ import { ErrorLoggerServiceMock } from './ErrorLoggerServiceMock.spec';
 import { RulesConfig, RulesConfigUtils } from 'src/app/jscaip/RulesConfigUtil';
 import { BlankComponent } from 'src/app/utils/tests/TestUtils.spec';
 
-xdescribe('ConfigRoomService', () => {
+describe('ConfigRoomService', () => {
 
     let configRoomDAO: ConfigRoomDAO;
 
