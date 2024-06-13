@@ -218,9 +218,9 @@ export class SimpleComponentTestUtils<T> {
     }
 
     public expectElementToHaveClass(elementId: string, cssClass: string): void {
-        expect(elementId)
+        expect(elementId[0])
             .withContext(`expectElementToHaveClass expects an element id, not ${elementId}`)
-            .toStartWith('#');
+            .toBe('#');
         const element: DebugElement = this.findElement(elementId);
         expect(element.attributes.class).withContext(`${elementId} should have a class attribute`).toBeTruthy();
         expect(element.attributes.class).withContext(`${elementId} should have a class attribute`).not.toEqual('');
