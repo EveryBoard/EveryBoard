@@ -220,7 +220,7 @@ export class SimpleComponentTestUtils<T> {
     public expectElementToHaveClass(elementId: string, cssClass: string): void {
         expect(elementId)
             .withContext(`expectElementToHaveClass expects an element id, not ${elementId}`)
-            .toContain('#');
+            .toStartWith('#');
         const element: DebugElement = this.findElement(elementId);
         expect(element.attributes.class).withContext(`${elementId} should have a class attribute`).toBeTruthy();
         expect(element.attributes.class).withContext(`${elementId} should have a class attribute`).not.toEqual('');
