@@ -1,6 +1,6 @@
 import { GameStateWithTable } from 'src/app/jscaip/state/GameStateWithTable';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { ComparableObject } from '@everyboard/lib';
+import { ComparableObject, Utils } from '@everyboard/lib';
 import { TableUtils } from 'src/app/jscaip/TableUtils';
 
 export class DiaballikPiece implements ComparableObject {
@@ -21,11 +21,13 @@ export class DiaballikPiece implements ComparableObject {
     }
     public toString(): string {
         if (this === DiaballikPiece.NONE) return '__';
-        if (this === DiaballikPiece.ZERO) return 'O_';
-        if (this === DiaballikPiece.ZERO_WITH_BALL) return 'Oo';
-        if (this === DiaballikPiece.ONE) return 'X_';
-        if (this === DiaballikPiece.ONE_WITH_BALL) return 'Xx';
-        return 'TG FDP';
+        else if (this === DiaballikPiece.ZERO) return 'O_';
+        else if (this === DiaballikPiece.ZERO_WITH_BALL) return 'Oo';
+        else if (this === DiaballikPiece.ONE) return 'X_';
+        else {
+            Utils.expectToBe(this, DiaballikPiece.ONE_WITH_BALL);
+            return 'Xx';
+        }
     }
 }
 
