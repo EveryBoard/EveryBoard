@@ -7,7 +7,7 @@ describe('ConnectSixMove', () => {
 
     describe('ConnectSixDrops', () => {
 
-        describe('from', () => {
+        describe('of', () => {
 
             it('should not create move where first coord and second coord are the same', () => {
                 function tryingIdenticalCoords(): void {
@@ -59,11 +59,6 @@ describe('ConnectSixMove', () => {
     });
 
     describe('ConnectSixFirstMove', () => {
-
-        it('should create move when coord is in the board', () => {
-            const move: ConnectSixFirstMove = ConnectSixFirstMove.of(new Coord(0, 0));
-            expect(move).toBeTruthy();
-        });
 
         describe('equals', () => {
 

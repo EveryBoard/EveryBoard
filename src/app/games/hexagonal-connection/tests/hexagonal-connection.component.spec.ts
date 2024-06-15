@@ -1,12 +1,15 @@
 /* eslint-disable max-lines-per-function */
 import { fakeAsync } from '@angular/core/testing';
-import { HexagonalConnectionDrops, HexagonalConnectionFirstMove, HexagonalConnectionMove } from '../HexagonalConnectionMove';
+import { HexagonalConnectionMove } from '../HexagonalConnectionMove';
 import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { HexagonalConnectionComponent } from '../hexagonal-connection.component';
 import { HexagonalConnectionState } from '../HexagonalConnectionState';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { Coord } from 'src/app/jscaip/Coord';
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
+import { MGPOptional } from 'lib/dist';
+import { HexagonalConnectionConfig, HexagonalConnectionRules } from '../HexagonalConnectionRules';
+import { Table } from 'src/app/jscaip/TableUtils';
 
 describe('HexagonalConnectionComponent', () => {
 
@@ -30,7 +33,7 @@ describe('HexagonalConnectionComponent', () => {
             // Given the initial state of the component
             // When clicking anywhere
             // Then a first move should be done
-            const move: HexagonalConnectionMove = HexagonalConnectionFirstMove.of(new Coord(9, 9));
+            const move: HexagonalConnectionMove = HexagonalConnectionMove.of([new Coord(9, 9)]);
             await testUtils.expectMoveSuccess('#click-9-9', move);
         }));
 
@@ -92,7 +95,7 @@ describe('HexagonalConnectionComponent', () => {
             await testUtils.expectClickSuccess('#click-8-8');
 
             // Then the dropped piece should be displayed
-            testUtils.expectElementToHaveClass('#dropped', 'moved-stroke');
+            testUtils.expectElementToHaveClass('#dropped-8-8', 'moved-stroke');
         }));
 
         it('should hide last move when doing first click', fakeAsync(async() => {
@@ -118,14 +121,14 @@ describe('HexagonalConnectionComponent', () => {
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             ], 1);
-            const previousMove: HexagonalConnectionMove = HexagonalConnectionFirstMove.of(new Coord(9, 9));
+            const previousMove: HexagonalConnectionMove = HexagonalConnectionMove.of([new Coord(9, 9)]);
             await testUtils.setupState(state, { previousMove });
 
             // When doing a first click
             await testUtils.expectClickSuccess('#click-8-8');
 
             // Then the highlights from last turn should be hidden
-            testUtils.expectElementNotToHaveClass('#piece-9-9', 'last-move-stroke');
+            testUtils.expectElementNotToHaveClass('#click-9-9', 'last-move-stroke');
         }));
 
     });
@@ -159,10 +162,10 @@ describe('HexagonalConnectionComponent', () => {
             await testUtils.expectClickSuccess('#click-8-8');
 
             // When clicking again on this piece
-            await testUtils.expectClickFailureWithAsymmetricNaming('#dropped', '#click-8-8');
+            await testUtils.expectClickFailureWithAsymmetricNaming('#dropped-8-8', '#click-8-8');
 
             // Then it should deselect it without popup
-            testUtils.expectElementNotToExist('#dropped');
+            testUtils.expectElementNotToExist('#dropped-8-8');
         }));
 
         it('should do move when clicking on a second empty square', fakeAsync(async() => {
@@ -192,7 +195,7 @@ describe('HexagonalConnectionComponent', () => {
             await testUtils.expectClickSuccess('#click-8-8');
 
             // When clicking on a second empty square
-            const move: HexagonalConnectionMove = HexagonalConnectionDrops.of(new Coord(8, 8), new Coord(7, 7));
+            const move: HexagonalConnectionMove = HexagonalConnectionMove.of([new Coord(8, 8), new Coord(7, 7)]);
 
             // Then the move should be done
             await testUtils.expectMoveSuccess('#click-7-7', move);
@@ -262,7 +265,7 @@ describe('HexagonalConnectionComponent', () => {
             await testUtils.expectClickSuccess('#click-6-8');
 
             // When finishing your move
-            const move: HexagonalConnectionMove = HexagonalConnectionDrops.of(new Coord(6, 8), new Coord(5, 8));
+            const move: HexagonalConnectionMove = HexagonalConnectionMove.of([new Coord(6, 8), new Coord(5, 8)]);
 
             // Then the victory squares should be highlighted
             await testUtils.expectMoveSuccess('#click-5-8', move);
@@ -299,7 +302,7 @@ describe('HexagonalConnectionComponent', () => {
             ], 1);
 
             // When displaying it
-            const previousMove: HexagonalConnectionMove = HexagonalConnectionFirstMove.of(new Coord(9, 9));
+            const previousMove: HexagonalConnectionMove = HexagonalConnectionMove.of([new Coord(9, 9)]);
             await testUtils.setupState(state, { previousMove });
 
             // Then last piece should have the highlight
@@ -330,7 +333,7 @@ describe('HexagonalConnectionComponent', () => {
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             ], 1);
             const previousMove: HexagonalConnectionMove =
-                HexagonalConnectionDrops.of(new Coord(10, 9), new Coord(11, 9));
+                HexagonalConnectionMove.of([new Coord(10, 9), new Coord(11, 9)]);
 
             // When displaying it
             await testUtils.setupState(state, { previousMove });
@@ -340,6 +343,36 @@ describe('HexagonalConnectionComponent', () => {
             testUtils.expectElementToHaveClass('#piece-11-9', 'last-move-stroke');
         }));
 
+    });
+
+    describe('alternative configs', () => {
+
+        const defaultConfig: MGPOptional<HexagonalConnectionConfig> =
+            HexagonalConnectionRules.get().getDefaultRulesConfig();
+
+        it('should accept more drops', fakeAsync(async() => {
+            // Given a board with a config with 3 drops
+            const alternativeConfig: MGPOptional<HexagonalConnectionConfig> = MGPOptional.of({
+                ...defaultConfig.get(),
+                numberOfDrops: 3,
+            });
+            const board: Table<FourStatePiece> =
+                HexagonalConnectionRules.get().getInitialState(alternativeConfig).board;
+            const state: HexagonalConnectionState = new HexagonalConnectionState(board, 1);
+            await testUtils.setupState(state, { config: alternativeConfig });
+
+            // When dropping 3 stones
+            await testUtils.expectClickSuccess('#click-9-9');
+            await testUtils.expectClickSuccess('#click-8-8');
+
+            // Then this should constitute a valid move
+            const move: HexagonalConnectionMove = HexagonalConnectionMove.of([
+                new Coord(9, 9),
+                new Coord(8, 8),
+                new Coord(7, 7),
+            ]);
+            await testUtils.expectMoveSuccess('#click-7-7', move);
+        }));
     });
 
 });

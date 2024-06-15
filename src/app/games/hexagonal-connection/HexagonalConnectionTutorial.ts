@@ -1,6 +1,6 @@
 import { Tutorial, TutorialStep } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { HexagonalConnectionState } from './HexagonalConnectionState';
-import { HexagonalConnectionDrops, HexagonalConnectionFirstMove } from './HexagonalConnectionMove';
+import { HexagonalConnectionMove } from './HexagonalConnectionMove';
 import { Coord } from 'src/app/jscaip/Coord';
 import { HexagonalConnectionConfig, HexagonalConnectionRules } from './HexagonalConnectionRules';
 import { TutorialStepMessage } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
@@ -25,7 +25,7 @@ export class HexagonalConnectionTutorial extends Tutorial {
             $localize`First turn`,
             $localize`On the first turn, the first player plays only one piece.<br/><br/>You're playing Dark, place your first piece by clicking on an intersection.`,
             HexagonalConnectionRules.get().getInitialState(defaultConfig),
-            HexagonalConnectionFirstMove.of(new Coord(9, 9)),
+            HexagonalConnectionMove.of([new Coord(9, 9)]),
             TutorialStepMessage.CONGRATULATIONS(),
         ),
         // Next turn: you must place six, try to win
@@ -53,7 +53,7 @@ export class HexagonalConnectionTutorial extends Tutorial {
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             ], 20),
-            HexagonalConnectionDrops.of(new Coord(4, 11), new Coord(5, 10)),
+            HexagonalConnectionMove.of([new Coord(4, 11), new Coord(5, 10)]),
             TutorialStepMessage.CONGRATULATIONS(),
         ),
     ];

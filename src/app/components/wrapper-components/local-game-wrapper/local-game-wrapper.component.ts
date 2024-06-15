@@ -297,7 +297,6 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
     }
 
     public override async getConfig(): Promise<MGPOptional<RulesConfig>> {
-        console.log('salut ?')
         let subcription: MGPOptional<Subscription> = MGPOptional.empty();
         const rulesConfigPromise: Promise<RulesConfig> =
             new Promise((resolve: (value: RulesConfig) => void) => {
@@ -314,7 +313,6 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
         // but this is needed to prevent linter from complaining that:
         // "subscription is used before it is set"
         subcription.get().unsubscribe();
-        console.log(rulesConfig)
         return MGPOptional.of(rulesConfig);
     }
 

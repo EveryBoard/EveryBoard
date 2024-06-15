@@ -2,8 +2,6 @@ import { HexagonalConnectionState } from './HexagonalConnectionState';
 import { HexagonalConnectionConfig, HexagonalConnectionNode } from './HexagonalConnectionRules';
 import { HexagonalConnectionMove } from './HexagonalConnectionMove';
 import { Coord } from 'src/app/jscaip/Coord';
-import { HexagonalConnectionFirstMove } from './HexagonalConnectionMove';
-import { HexagonalConnectionDrops } from './HexagonalConnectionMove';
 import { TableUtils } from 'src/app/jscaip/TableUtils';
 import { MGPOptional, MGPSet } from '@everyboard/lib';
 import { MoveGenerator } from 'src/app/jscaip/AI/AI';
@@ -23,19 +21,19 @@ export class HexagonalConnectionMoveGenerator extends MoveGenerator<HexagonalCon
         }
     }
 
-    private getFirstMove(state: HexagonalConnectionState): HexagonalConnectionFirstMove[] {
+    private getFirstMove(state: HexagonalConnectionState): HexagonalConnectionMove[] {
         const width: number = state.getWidth();
         const height: number = state.getHeight();
         const cx: number = Math.floor(width / 2);
         const cy: number = Math.floor(height / 2);
         const center: Coord = new Coord(cx, cy);
         return [
-            HexagonalConnectionFirstMove.of(center),
+            HexagonalConnectionMove.of([center]),
         ];
     }
     private getListDrops(node: HexagonalConnectionNode): HexagonalConnectionMove[] {
         const availableFirstCoords: Coord[] = this.getAvailableCoords(node.gameState);
-        const moves: HexagonalConnectionDrops[] = [];
+        const moves: HexagonalConnectionMove[] = [];
         for (const firstCoord of availableFirstCoords) {
             const board: FourStatePiece[][] = node.gameState.getCopiedBoard();
             board[firstCoord.y][firstCoord.x] = FourStatePiece.ofPlayer(node.gameState.getCurrentPlayer());
@@ -43,7 +41,7 @@ export class HexagonalConnectionMoveGenerator extends MoveGenerator<HexagonalCon
                 new HexagonalConnectionState(board, node.gameState.turn);
             const availableSecondCoords: Coord[] = this.getAvailableCoords(stateAfterFirstDrops);
             for (const secondCoord of availableSecondCoords) {
-                const newMove: HexagonalConnectionDrops = HexagonalConnectionDrops.of(firstCoord, secondCoord);
+                const newMove: HexagonalConnectionMove = HexagonalConnectionMove.of([firstCoord, secondCoord]);
                 moves.push(newMove);
             }
         }

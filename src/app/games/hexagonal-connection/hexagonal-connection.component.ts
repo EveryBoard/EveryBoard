@@ -10,7 +10,7 @@ import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { Minimax } from 'src/app/jscaip/AI/Minimax';
 import { MCTS } from 'src/app/jscaip/AI/MCTS';
 import { HexagonalConnectionConfig, HexagonalConnectionRules } from './HexagonalConnectionRules';
-import { HexagonalConnectionDrops, HexagonalConnectionFirstMove, HexagonalConnectionMove } from './HexagonalConnectionMove';
+import { HexagonalConnectionMove } from './HexagonalConnectionMove';
 import { HexagonalConnectionState } from './HexagonalConnectionState';
 import { HexagonalConnectionAlignmentHeuristic } from './HexagonalConnectionAlignmentHeuristic';
 import { HexagonalConnectionMoveGenerator } from './HexagonalConnectionMoveGenerator';
@@ -28,7 +28,7 @@ export class HexagonalConnectionComponent extends HexagonalGameComponent<Hexagon
                                                                          FourStatePiece,
                                                                          HexagonalConnectionConfig>
 {
-    public droppedCoord: MGPOptional<Coord> = MGPOptional.empty();
+    public droppedCoords: Coord[] = [];
 
     public lastMoved: Coord[] = [];
 
@@ -65,11 +65,7 @@ export class HexagonalConnectionComponent extends HexagonalGameComponent<Hexagon
     }
 
     public override async showLastMove(move: HexagonalConnectionMove): Promise<void> {
-        if (move instanceof HexagonalConnectionFirstMove) {
-            this.lastMoved = [move.coord];
-        } else {
-            this.lastMoved = [move.getFirst(), move.getSecond()];
-        }
+        this.lastMoved = move.coords.toList();
     }
 
     public override hideLastMove(): void {
@@ -81,24 +77,24 @@ export class HexagonalConnectionComponent extends HexagonalGameComponent<Hexagon
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }
+        const totalDrop: number = this.getConfig().get().numberOfDrops;
         const clickedCoord: Coord = new Coord(x, y);
         if (this.getState().turn === 0) {
-            const move: HexagonalConnectionMove = HexagonalConnectionFirstMove.of(clickedCoord);
+            const move: HexagonalConnectionMove = HexagonalConnectionMove.of([clickedCoord]);
             return this.chooseMove(move);
         } else {
             if (this.getState().getPieceAt(clickedCoord).isPlayer()) {
                 return this.cancelMove(RulesFailure.MUST_CLICK_ON_EMPTY_SQUARE());
-            } else if (this.droppedCoord.isPresent()) {
-                if (this.droppedCoord.equalsValue(clickedCoord)) {
-                    return this.cancelMove();
-                } else {
-                    const move: HexagonalConnectionMove =
-                        HexagonalConnectionDrops.of(this.droppedCoord.get(), clickedCoord);
-                    return this.chooseMove(move);
-                }
+            } else if (this.droppedCoords.some((c: Coord) => c.equals(clickedCoord))) {
+                return this.cancelMove();
             } else {
-                this.droppedCoord = MGPOptional.of(clickedCoord);
-                return MGPValidation.SUCCESS;
+                this.droppedCoords = this.droppedCoords.concat(clickedCoord);
+                if (this.droppedCoords.length === totalDrop) {
+                    const move: HexagonalConnectionMove = HexagonalConnectionMove.of(this.droppedCoords);
+                    return this.chooseMove(move);
+                } else {
+                    return MGPValidation.SUCCESS;
+                }
             }
         }
     }
@@ -107,39 +103,24 @@ export class HexagonalConnectionComponent extends HexagonalGameComponent<Hexagon
         const coord: Coord = new Coord(x, y);
         const owner: PlayerOrNone = this.getState().getPieceAt(coord).getPlayer();
         const classes: string[] = [];
-        if (this.droppedCoord.equalsValue(coord)) {
-            classes.push(this.getPlayerClass(this.getState().getCurrentPlayer()));
-            classes.push('highlighted-stroke');
-        } else {
-            classes.push(this.getPlayerClass(owner));
-            if (this.victoryCoords.some((c: Coord) => c.equals(coord))) {
-                classes.push('victory-stroke');
-            }
-            if (this.lastMoved.some((c: Coord) => c.equals(coord))) {
-                classes.push('last-move-stroke');
-            }
+        classes.push(this.getPlayerClass(owner));
+        if (this.victoryCoords.some((c: Coord) => c.equals(coord))) {
+            classes.push('victory-stroke');
+        }
+        if (this.lastMoved.some((c: Coord) => c.equals(coord))) {
+            classes.push('last-move-stroke');
         }
         return classes;
     }
 
-    public getPieceClasses(x: number, y: number): string[] {
-        return [];
-    }
-
     public override cancelMoveAttempt(): void {
-        this.droppedCoord = MGPOptional.empty();
+        this.droppedCoords = [];
     }
 
     public isPiece(x: number, y: number): boolean {
         const coord: Coord = new Coord(x, y);
         const piece: FourStatePiece = this.getState().getPieceAt(coord);
-        if (piece.isPlayer()) {
-            return true;
-        } else if (this.droppedCoord.equalsValue(coord)) {
-            return true;
-        } else {
-            return false;
-        }
+        return piece.isPlayer();
     }
 
     public isBoard(piece: FourStatePiece): boolean {

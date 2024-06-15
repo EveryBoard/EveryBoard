@@ -194,6 +194,9 @@
       <trans-unit id="6676975125770922470" datatype="html">
         <source>The oldest strategy game still practiced widely. A territory control game.</source>
       </trans-unit>
+      <trans-unit id="5557430840906225475" datatype="html">
+        <source>An hexagonal version of Connection, pour le moment!</source>
+      </trans-unit>
       <trans-unit id="4865500405661191388" datatype="html">
         <source>You are in charge of a hive full of insects. Use the abilities of your insects to block the opponent&apos;s queen in order to win!</source>
       </trans-unit>
@@ -376,6 +379,9 @@
       </trans-unit>
       <trans-unit id="2597247746010343961" datatype="html">
         <source>Squarz</source>
+      </trans-unit>
+      <trans-unit id="5666818274385684580" datatype="html">
+        <source>Hexagonal Connection</source>
       </trans-unit>
       <trans-unit id="2218572265318708454" datatype="html">
         <source>Registering</source>
@@ -1664,6 +1670,12 @@
       </trans-unit>
       <trans-unit id="8400174784913655582" datatype="html">
         <source>Minimax</source>
+      </trans-unit>
+      <trans-unit id="45739481977493163" datatype="html">
+        <source>Size</source>
+      </trans-unit>
+      <trans-unit id="5279283834763703262" datatype="html">
+        <source>Alignement Needed TODO UNIFORMISE</source>
       </trans-unit>
       <trans-unit id="4791280679911297134" datatype="html">
         <source>The queen bee can only move to one of its direct neighbors.</source>

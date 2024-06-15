@@ -6,16 +6,16 @@
     <g *ngFor="let line of hexaBoard; index as y">
         <g *ngFor="let c of line; index as x">
             <g *ngIf="isBoard(c)"
+               id="click-{{ x }}-{{ y }}"
+               (click)="onClick(x, y)"
                [attr.transform]="getHexaCenterTranslationAtXY(x, y)">
-                <polygon id="space_{{ x }}_{{ y }}"
-                         (click)="onClick(x, y)"
+                <polygon id="space-{{ x }}-{{ y }}"
                          class="base"
                          [attr.points]="getHexaPoints()"
                          stroke-linecap="round"
                 />
                 <circle *ngIf="isPiece(x, y)"
-                        id="piece_{{ x }}_{{ y }}"
-                        (click)="onClick(x, y)"
+                        id="piece-{{ x }}-{{ y }}"
                         cx="0"
                         cy="0"
                         [attr.r]="SPACE_SIZE * 0.5"
@@ -24,5 +24,16 @@
                 />
             </g>
         </g>
+    </g>
+    <g *ngFor="let dropped of droppedCoords">
+        <circle [attr.transform]="getHexaCenterTranslationAtXY(dropped.x, dropped.y)"
+                (click)="onClick(dropped.x, dropped.y)"
+                id="dropped-{{ dropped.x }}-{{ dropped.y }}"
+                cx="0"
+                cy="0"
+                [attr.r]="SPACE_SIZE * 0.5"
+                [ngClass]="['moved-stroke', getPlayerClass(getState().getCurrentPlayer())]"
+                class="base"
+        />
     </g>
 </svg>

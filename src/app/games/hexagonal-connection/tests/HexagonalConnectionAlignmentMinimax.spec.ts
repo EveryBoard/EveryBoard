@@ -1,7 +1,7 @@
 /* eslint-disable max-lines-per-function */
 import { MGPOptional } from '@everyboard/lib';
 import { Coord } from 'src/app/jscaip/Coord';
-import { HexagonalConnectionDrops, HexagonalConnectionMove } from '../HexagonalConnectionMove';
+import { HexagonalConnectionMove } from '../HexagonalConnectionMove';
 import { HexagonalConnectionConfig, HexagonalConnectionNode, HexagonalConnectionRules } from '../HexagonalConnectionRules';
 import { HexagonalConnectionState } from '../HexagonalConnectionState';
 import { Table } from 'src/app/jscaip/TableUtils';
@@ -55,7 +55,7 @@ describe('HexagonalConnectionAlignmentMinimax', () => {
         const bestMove: HexagonalConnectionMove = minimax.chooseNextMove(node, level1, defaultConfig);
 
         // Then it should be that victory
-        expect(bestMove).toEqual(HexagonalConnectionDrops.of(new Coord(4, 0), new Coord(5, 0)));
+        expect(bestMove).toEqual(HexagonalConnectionMove.of([new Coord(4, 0), new Coord(5, 0)]));
     });
 
     it('should block double-open fives at level two', () => {
@@ -89,7 +89,7 @@ describe('HexagonalConnectionAlignmentMinimax', () => {
         const bestMove: HexagonalConnectionMove = minimax.chooseNextMove(node, level2, defaultConfig);
 
         // Then the minimax level two should block
-        expect(bestMove).toEqual(HexagonalConnectionDrops.of(new Coord(1, 18), new Coord(7, 18)));
+        expect(bestMove).toEqual(HexagonalConnectionMove.of([new Coord(1, 18), new Coord(7, 18)]));
     });
 
     it('should block double-open four at level two', () => {
@@ -123,7 +123,7 @@ describe('HexagonalConnectionAlignmentMinimax', () => {
         const bestMove: HexagonalConnectionMove = minimax.chooseNextMove(node, level2, defaultConfig);
 
         // Then the minimax level two should block
-        expect(bestMove).toEqual(HexagonalConnectionDrops.of(new Coord(1, 18), new Coord(6, 18)));
+        expect(bestMove).toEqual(HexagonalConnectionMove.of([new Coord(1, 18), new Coord(6, 18)]));
     });
 
 });

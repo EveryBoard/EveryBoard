@@ -69,16 +69,13 @@ export abstract class GameWrapper<P extends Comparable> extends BaseWrapperCompo
         const componentType: MGPOptional<Type<AbstractGameComponent>> =
             await this.getMatchingComponentAndNavigateOutIfAbsent();
         if (componentType.isPresent()) {
-            console.log('salut 0')
             const config: MGPOptional<RulesConfig> = await this.getConfig();
             await this.createGameComponent(componentType.get());
-            console.log('setting', config)
             this.gameComponent.config = config;
             this.gameComponent.node = this.gameComponent.rules.getInitialNode(config);
             await this.gameComponent.updateBoard(false);
             return true;
         } else {
-            console.log('BEZENKOUK PUT1')
             return false;
         }
     }
@@ -135,7 +132,6 @@ export abstract class GameWrapper<P extends Comparable> extends BaseWrapperCompo
         if (interactivityChanged) {
             this.gameComponent.setInteractive(interactive);
             if (updateBoard) {
-                console.log('salut 1')
                 await this.gameComponent.updateBoard(false);
             }
         }
@@ -224,15 +220,12 @@ export abstract class GameWrapper<P extends Comparable> extends BaseWrapperCompo
         this.gameComponent.hideLastMove();
         // Even though its only used in the if, it's required in the else (perhaps) (TODO test)
         const config: MGPOptional<RulesConfig> = await this.getConfig();
-        console.log('config davant trois', config)
         if (this.gameComponent.node.previousMove.isPresent()) {
-            console.log('salut 2')
             await this.gameComponent.updateBoard(triggerAnimation);
             const move: Move = this.gameComponent.node.previousMove.get();
             await this.gameComponent.showLastMove(move, config);
         } else {
             // We have no previous move to animate
-            console.log('salut 3')
             await this.gameComponent.updateBoard(false);
         }
     }
@@ -245,7 +238,6 @@ export abstract class GameWrapper<P extends Comparable> extends BaseWrapperCompo
      * @param triggerAnimation a boolean set to true if there is a need to trigger the animation of the last move
      */
     protected async showNewMove(triggerAnimation: boolean): Promise<void> {
-        console.log('salut 4')
         await this.gameComponent.updateBoard(triggerAnimation);
         const lastMove: Move = this.gameComponent.node.previousMove.get();
         const config: MGPOptional<RulesConfig> = await this.getConfig();

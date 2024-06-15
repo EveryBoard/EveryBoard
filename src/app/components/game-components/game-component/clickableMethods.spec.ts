@@ -43,6 +43,9 @@ export const clickableMethods: { [gameName: string]: { [methodName: string]: unk
     Go: {
         onClick: [new Coord(0, 0)],
     },
+    HexagonalConnection: {
+        onClick: [0, 0],
+    },
     Hive: {
         selectSpace: [new Coord(0, 0), 'space'],
         selectRemaining: [new HivePiece(Player.ZERO, 'QueenBee')],

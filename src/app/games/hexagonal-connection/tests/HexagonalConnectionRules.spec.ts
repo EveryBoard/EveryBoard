@@ -3,7 +3,7 @@ import { MGPOptional, TestUtils } from '@everyboard/lib';
 import { Player } from 'src/app/jscaip/Player';
 import { HexagonalConnectionConfig, HexagonalConnectionNode, HexagonalConnectionRules } from '../HexagonalConnectionRules';
 import { HexagonalConnectionState } from '../HexagonalConnectionState';
-import { HexagonalConnectionDrops, HexagonalConnectionFirstMove, HexagonalConnectionMove } from '../HexagonalConnectionMove';
+import { HexagonalConnectionMove } from '../HexagonalConnectionMove';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { Coord, CoordFailure } from 'src/app/jscaip/Coord';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
@@ -20,6 +20,7 @@ describe('HexagonalConnectionRules', () => {
     const _: FourStatePiece = FourStatePiece.EMPTY;
     const O: FourStatePiece = FourStatePiece.ZERO;
     const X: FourStatePiece = FourStatePiece.ONE;
+    const N: FourStatePiece = FourStatePiece.UNREACHABLE;
 
     let rules: HexagonalConnectionRules;
     const defaultConfig: MGPOptional<HexagonalConnectionConfig> =
@@ -36,8 +37,7 @@ describe('HexagonalConnectionRules', () => {
             const state: HexagonalConnectionState = HexagonalConnectionRules.get().getInitialState(defaultConfig);
 
             // When dropping out of the board
-            const move: HexagonalConnectionMove =
-                HexagonalConnectionFirstMove.of(new Coord(-1, -1)) as HexagonalConnectionMove;
+            const move: HexagonalConnectionMove = HexagonalConnectionMove.of([new Coord(-1, -1)]);
 
             // Then it should be illegal
             const reason: string = CoordFailure.OUT_OF_RANGE(new Coord(-1, -1));
@@ -49,30 +49,24 @@ describe('HexagonalConnectionRules', () => {
             const state: HexagonalConnectionState = HexagonalConnectionRules.get().getInitialState(defaultConfig);
 
             // When dropping one piece
-            const move: HexagonalConnectionMove =
-                HexagonalConnectionFirstMove.of(new Coord(9, 9)) as HexagonalConnectionMove;
-            const expectedState: HexagonalConnectionState = new HexagonalConnectionState([
-                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, O, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-            ], 1);
+            const move: HexagonalConnectionMove = HexagonalConnectionMove.of([new Coord(6, 6)]);
+
             // Then the move should be a success
+            const expectedState: HexagonalConnectionState = new HexagonalConnectionState([
+                [N, N, N, N, N, N, _, _, _, _, _, _, _],
+                [N, N, N, N, N, _, _, _, _, _, _, _, _],
+                [N, N, N, N, _, _, _, _, _, _, _, _, _],
+                [N, N, N, _, _, _, _, _, _, _, _, _, _],
+                [N, N, _, _, _, _, _, _, _, _, _, _, _],
+                [N, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, O, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, N],
+                [_, _, _, _, _, _, _, _, _, _, _, N, N],
+                [_, _, _, _, _, _, _, _, _, _, N, N, N],
+                [_, _, _, _, _, _, _, _, _, N, N, N, N],
+                [_, _, _, _, _, _, _, _, N, N, N, N, N],
+                [_, _, _, _, _, _, _, N, N, N, N, N, N],
+            ], 1);
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         });
 
@@ -80,12 +74,12 @@ describe('HexagonalConnectionRules', () => {
             // Given the first turn
             const state: HexagonalConnectionState = HexagonalConnectionRules.get().getInitialState(defaultConfig);
             // When dropping two pieces
-            const move: HexagonalConnectionMove = HexagonalConnectionDrops.of(new Coord(11, 11), new Coord(10, 10));
+            const move: HexagonalConnectionMove = HexagonalConnectionMove.of([new Coord(11, 11), new Coord(10, 10)]);
             // Then the attempt would have throw
             function tryDoubleDropOnFirstTurn(): void {
-                rules.isLegal(move, state);
+                rules.isLegal(move, state, defaultConfig);
             }
-            TestUtils.expectToThrowAndLog(tryDoubleDropOnFirstTurn, 'HexagonalConnectionDrops should only be used after first move');
+            TestUtils.expectToThrowAndLog(tryDoubleDropOnFirstTurn, 'HexagonalConnectionMove should only drop one piece at first turn');
         });
 
     });
@@ -117,8 +111,7 @@ describe('HexagonalConnectionRules', () => {
             ], 1);
 
             // When doing a move who'se second coord is out of range
-            const move: HexagonalConnectionMove =
-                HexagonalConnectionDrops.of(new Coord(0, 0), new Coord(-1, -1)) as HexagonalConnectionMove;
+            const move: HexagonalConnectionMove = HexagonalConnectionMove.of([new Coord(0, 0), new Coord(-1, -1)]);
 
             // Then it should fail
             const reason: string = CoordFailure.OUT_OF_RANGE(new Coord(-1, -1));
@@ -150,8 +143,7 @@ describe('HexagonalConnectionRules', () => {
             ], 1);
 
             // When doing a move who'se second coord is out of range
-            const move: HexagonalConnectionMove =
-                HexagonalConnectionDrops.of(new Coord(-2, -2), new Coord(0, 0)) as HexagonalConnectionMove;
+            const move: HexagonalConnectionMove = HexagonalConnectionMove.of([new Coord(-2, -2), new Coord(0, 0)]);
 
             // Then it should fail
             const reason: string = CoordFailure.OUT_OF_RANGE(new Coord(-2, -2));
@@ -183,8 +175,7 @@ describe('HexagonalConnectionRules', () => {
             ], 1);
 
             // When dropping piece on it with the first coord already occupied
-            const move: HexagonalConnectionMove =
-                HexagonalConnectionDrops.of(new Coord(9, 9), new Coord(10, 10)) as HexagonalConnectionMove;
+            const move: HexagonalConnectionMove = HexagonalConnectionMove.of([new Coord(9, 9), new Coord(10, 10)]);
 
             const reason: string = RulesFailure.MUST_CLICK_ON_EMPTY_SQUARE();
             // Then it should fail
@@ -216,8 +207,7 @@ describe('HexagonalConnectionRules', () => {
             ], 1);
 
             // When dropping piece on it with the second coord already occupied
-            const move: HexagonalConnectionMove =
-                HexagonalConnectionDrops.of(new Coord(8, 8), new Coord(9, 9)) as HexagonalConnectionMove;
+            const move: HexagonalConnectionMove = HexagonalConnectionMove.of([new Coord(8, 8), new Coord(9, 9)]);
 
             // Then it should fail
             const reason: string = RulesFailure.MUST_CLICK_ON_EMPTY_SQUARE();
@@ -249,8 +239,7 @@ describe('HexagonalConnectionRules', () => {
             ], 1);
 
             // When dropping pieces on empty squares
-            const move: HexagonalConnectionMove =
-                HexagonalConnectionDrops.of(new Coord(7, 7), new Coord(8, 8)) as HexagonalConnectionMove;
+            const move: HexagonalConnectionMove = HexagonalConnectionMove.of([new Coord(7, 7), new Coord(8, 8)]);
             const expectedState: HexagonalConnectionState = new HexagonalConnectionState([
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
@@ -301,13 +290,13 @@ describe('HexagonalConnectionRules', () => {
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             ], 1);
             // When dropping only one piece
-            const move: HexagonalConnectionMove = HexagonalConnectionFirstMove.of(new Coord(9, 9));
+            const move: HexagonalConnectionMove = HexagonalConnectionMove.of([new Coord(9, 9)]);
 
             // Then it should fail
             function trySingleDropAfterFirstTurn(): void {
-                rules.isLegal(move, state);
+                rules.isLegal(move, state, defaultConfig);
             }
-            TestUtils.expectToThrowAndLog(trySingleDropAfterFirstTurn, 'HexagonalConnectionFirstMove should only be used at first move');
+            TestUtils.expectToThrowAndLog(trySingleDropAfterFirstTurn, 'HexagonalConnectionMove should have exactly 2 drops (got 1)');
         });
 
         it('should notify victory when aligning 6 stones of your color', () => {
@@ -359,9 +348,9 @@ describe('HexagonalConnectionRules', () => {
                 [X, X, X, X, X, O, O, O, O, O, X, X, X, X, X, O, O, O, O],
                 [X, O, X, O, X, O, X, O, X, O, X, O, X, O, X, O, X, _, _],
             ], 180);
+
             // When playing the last 181st turn
-            const move: HexagonalConnectionMove =
-                HexagonalConnectionDrops.of(new Coord(17, 18), new Coord(18, 18)) as HexagonalConnectionMove;
+            const move: HexagonalConnectionMove = HexagonalConnectionMove.of([new Coord(17, 18), new Coord(18, 18)]);
             const expectedState: HexagonalConnectionState = new HexagonalConnectionState([
                 [X, X, X, X, X, O, O, O, O, O, X, X, X, X, X, O, O, O, O],
                 [X, X, X, X, X, O, O, O, O, O, X, X, X, X, X, O, O, O, O],
@@ -390,7 +379,7 @@ describe('HexagonalConnectionRules', () => {
             RulesUtils.expectToBeDraw(rules, node, defaultConfig);
         });
 
-        it('should not count the "square-alignement"', () => {
+        it('should include the diagonals', () => {
             // Given a board where the square alignement
             // (the line that looks like an alignement on that square board but that is not on an hexagonal board)
             const state: HexagonalConnectionState = new HexagonalConnectionState([
@@ -415,7 +404,7 @@ describe('HexagonalConnectionRules', () => {
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             ], 1);
             const node: HexagonalConnectionNode = new HexagonalConnectionNode(state);
-            RulesUtils.expectToBeDraw(rules, node, defaultConfig);
+            RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, defaultConfig);
         });
 
     });

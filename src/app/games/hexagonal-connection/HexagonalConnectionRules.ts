@@ -2,7 +2,7 @@ import { ConfigurableRules } from 'src/app/jscaip/Rules';
 import { HexagonalConnectionState } from './HexagonalConnectionState';
 import { GameNode } from 'src/app/jscaip/AI/GameNode';
 import { MGPValidation, MGPOptional, Utils } from '@everyboard/lib';
-import { HexagonalConnectionDrops, HexagonalConnectionFirstMove, HexagonalConnectionMove } from './HexagonalConnectionMove';
+import { HexagonalConnectionMove } from './HexagonalConnectionMove';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { Coord, CoordFailure } from 'src/app/jscaip/Coord';
 import { NInARowHelper } from 'src/app/jscaip/NInARowHelper';
@@ -17,6 +17,8 @@ export type HexagonalConnectionConfig = {
     size: number;
 
     alignmentNeeded: number;
+
+    numberOfDrops: number;
 
 };
 
@@ -34,6 +36,7 @@ export class HexagonalConnectionRules extends ConfigurableRules<HexagonalConnect
             config: {
                 size: new NumberConfig(6, () => $localize`Size`, MGPValidators.range(1, 99)),
                 alignmentNeeded: new NumberConfig(6, () => $localize`Alignement Needed TODO UNIFORMISE`, MGPValidators.range(1, 99)),
+                numberOfDrops: new NumberConfig(2, () => $localize`Number of drops`, MGPValidators.range(1, 99)),
             },
         });
 
@@ -91,59 +94,40 @@ export class HexagonalConnectionRules extends ConfigurableRules<HexagonalConnect
                                    state: HexagonalConnectionState)
     : HexagonalConnectionState
     {
-        if (move instanceof HexagonalConnectionDrops) {
-            return this.applyLegalDrops(move, state);
-        } else {
-            return this.applyLegalFirstMove(move, state);
-        }
-    }
-
-    private applyLegalDrops(move: HexagonalConnectionDrops, state: HexagonalConnectionState): HexagonalConnectionState {
         const player: FourStatePiece = FourStatePiece.ofPlayer(state.getCurrentPlayer());
-        const first: Coord = move.getFirst();
-        const second: Coord = move.getSecond();
         const newBoard: FourStatePiece[][] = state.getCopiedBoard();
-        newBoard[first.y][first.x] = player;
-        newBoard[second.y][second.x] = player;
+        for (const coord of move.coords) {
+            newBoard[coord.y][coord.x] = player;
+        }
         return new HexagonalConnectionState(newBoard, state.turn + 1);
     }
 
-    private applyLegalFirstMove(move: HexagonalConnectionFirstMove, state: HexagonalConnectionState)
-    : HexagonalConnectionState
+    public override isLegal(move: HexagonalConnectionMove,
+                            state: HexagonalConnectionState,
+                            config: MGPOptional<HexagonalConnectionConfig>)
+    : MGPValidation
     {
-        const player: FourStatePiece = FourStatePiece.ofPlayer(state.getCurrentPlayer());
-        const newBoard: FourStatePiece[][] = state.getCopiedBoard();
-        newBoard[move.coord.y][move.coord.x] = player;
-        return new HexagonalConnectionState(newBoard, state.turn + 1);
+        const configuration: HexagonalConnectionConfig = config.get();
+        const numberOfDrop: number = move.coords.size();
+        if (state.turn === 0) {
+            Utils.assert(numberOfDrop === 1, 'HexagonalConnectionMove should only drop one piece at first turn');
+        } else {
+            Utils.assert(numberOfDrop === configuration.numberOfDrops,
+                         'HexagonalConnectionMove should have exactly ' + configuration.numberOfDrops+ ' drops (got ' + numberOfDrop + ')');
+        }
+        return this.isLegalDrops(move, state);
     }
 
-    public override isLegal(move: HexagonalConnectionMove, state: HexagonalConnectionState): MGPValidation {
-        if (move instanceof HexagonalConnectionFirstMove) {
-            Utils.assert(state.turn === 0, 'HexagonalConnectionFirstMove should only be used at first move');
-            if (state.isOnBoard(move.coord) === false) {
-                return MGPValidation.failure(CoordFailure.OUT_OF_RANGE(move.coord));
+    public isLegalDrops(move: HexagonalConnectionMove, state: HexagonalConnectionState): MGPValidation {
+        for (const coord of move.coords) {
+            if (state.isOnBoard(coord) === false) {
+                return MGPValidation.failure(CoordFailure.OUT_OF_RANGE(coord));
             }
-            return MGPValidation.SUCCESS;
-        } else {
-            Utils.assert(state.turn > 0, 'HexagonalConnectionDrops should only be used after first move');
-            if (state.isOnBoard(move.getFirst()) === false) {
-                return MGPValidation.failure(CoordFailure.OUT_OF_RANGE(move.getFirst()));
-            } else if (state.isOnBoard(move.getSecond()) === false) {
-                return MGPValidation.failure(CoordFailure.OUT_OF_RANGE(move.getSecond()));
-            } else {
-                return this.isLegalDrops(move, state);
+            if (state.getPieceAt(coord).isPlayer()) {
+                return MGPValidation.failure(RulesFailure.MUST_CLICK_ON_EMPTY_SQUARE());
             }
         }
-    }
-
-    public isLegalDrops(move: HexagonalConnectionDrops, state: HexagonalConnectionState): MGPValidation {
-        if (state.getPieceAt(move.getFirst()).isPlayer()) {
-            return MGPValidation.failure(RulesFailure.MUST_CLICK_ON_EMPTY_SQUARE());
-        } else if (state.getPieceAt(move.getSecond()).isPlayer()) {
-            return MGPValidation.failure(RulesFailure.MUST_CLICK_ON_EMPTY_SQUARE());
-        } else {
-            return MGPValidation.SUCCESS;
-        }
+        return MGPValidation.SUCCESS;
     }
 
     public override getGameStatus(node: HexagonalConnectionNode, config: MGPOptional<HexagonalConnectionConfig>)

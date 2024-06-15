@@ -1,7 +1,7 @@
 /* eslint-disable max-lines-per-function */
 import { MGPOptional } from '@everyboard/lib';
 import { Coord } from 'src/app/jscaip/Coord';
-import { HexagonalConnectionFirstMove, HexagonalConnectionMove } from '../HexagonalConnectionMove';
+import { HexagonalConnectionMove } from '../HexagonalConnectionMove';
 import { HexagonalConnectionConfig, HexagonalConnectionNode, HexagonalConnectionRules } from '../HexagonalConnectionRules';
 import { HexagonalConnectionState } from '../HexagonalConnectionState';
 import { Table } from 'src/app/jscaip/TableUtils';
@@ -24,8 +24,8 @@ describe('HexagonalConnectionMoveGenerator', () => {
 
     it('should propose only one move at first turns', () => {
         // Given the initial node
-        const size: number = defaultConfig.get().size;
         const state: HexagonalConnectionState = HexagonalConnectionRules.get().getInitialState(defaultConfig);
+        const size: number = state.getWidth();
         const node: HexagonalConnectionNode = new HexagonalConnectionNode(state);
 
         // When listing the moves
@@ -35,7 +35,7 @@ describe('HexagonalConnectionMoveGenerator', () => {
         const cx: number = Math.floor(size / 2);
         const cy: number = Math.floor(size / 2);
         expect(moves.length).toBe(1);
-        expect(moves[0]).toEqual(HexagonalConnectionFirstMove.of(new Coord(cx, cy)));
+        expect(moves[0]).toEqual(HexagonalConnectionMove.of([new Coord(cx, cy)]));
     });
 
     it('should count all possible moves including only neighboring-coord', () => {

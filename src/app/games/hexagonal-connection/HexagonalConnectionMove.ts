@@ -1,72 +1,31 @@
-import { Encoder, Utils } from '@everyboard/lib';
-import { MoveCoord } from 'src/app/jscaip/MoveCoord';
-import { MoveWithTwoCoords } from 'src/app/jscaip/MoveWithTwoCoords';
+import { Encoder } from '@everyboard/lib';
 import { Coord } from 'src/app/jscaip/Coord';
+import { CoordSet } from 'src/app/jscaip/CoordSet';
+import { Move } from 'src/app/jscaip/Move';
 
-export class HexagonalConnectionFirstMove extends MoveCoord {
+export class HexagonalConnectionMove extends Move {
 
-    public static of(coord: Coord): HexagonalConnectionFirstMove {
-        return new HexagonalConnectionFirstMove(coord.x, coord.y);
+    public static of(coords: Coord[]): HexagonalConnectionMove {
+        return new HexagonalConnectionMove(new CoordSet(coords));
     }
 
-    public static encoder: Encoder<HexagonalConnectionFirstMove> =
-        MoveCoord.getEncoder(HexagonalConnectionFirstMove.of);
+    public static encoder: Encoder<HexagonalConnectionMove> = Encoder.tuple(
+        [Encoder.list(Coord.encoder)],
+        (move: HexagonalConnectionMove) => [move.coords.toList()],
+        (value: [Coord[]]) => HexagonalConnectionMove.of(value[0]),
+    );
 
-    private constructor(x: number, y: number) {
-        super(x, y);
+    private constructor(public readonly coords: CoordSet) {
+        super();
     }
 
-    public toString(): string {
-        return 'HexagonalConnectionFirstMove(' + this.coord.x + ', ' + this.coord.y + ')';
+    public override toString(): string {
+        return 'HexagonalConnectionMove(' + this.coords.toList().map((coord: Coord) => coord.toString()).join(', ') + ')';
     }
 
-}
-
-export class HexagonalConnectionDrops extends MoveWithTwoCoords {
-
-    public static encoder: Encoder<HexagonalConnectionDrops> =
-        MoveWithTwoCoords.getEncoder(HexagonalConnectionDrops.of);
-
-    public static of(first: Coord, second: Coord): HexagonalConnectionDrops {
-        Utils.assert(first.equals(second) === false, 'COORDS_SHOULD_BE_DIFFERENT');
-        return new HexagonalConnectionDrops(first, second);
-    }
-
-    public toString(): string {
-        return 'HexagonalConnectionDrops(' + this.getFirst().toString() + ', ' + this.getSecond().toString() + ')';
-    }
-
-    public equals(other: HexagonalConnectionDrops): boolean {
-        const thisFirst: Coord = this.getFirst();
-        const otherFirst: Coord = other.getFirst();
-        const thisSecond: Coord = this.getSecond();
-        const otherSecond: Coord = other.getSecond();
-        if (thisFirst.equals(otherFirst) && thisSecond.equals(otherSecond)) {
-            return true;
-        } else if (thisFirst.equals(otherSecond) && thisSecond.equals(otherFirst)) {
-            return true;
-        } else {
-            return false;
-        }
+    public override equals(other: HexagonalConnectionMove): boolean {
+        return this.coords.equals(other.coords);
     }
 
 }
 
-// TODO: rename or put in common or refactor in config
-export type HexagonalConnectionMove = HexagonalConnectionFirstMove | HexagonalConnectionDrops;
-
-// eslint-disable-next-line @typescript-eslint/no-redeclare
-export namespace HexagonalConnectionMove {
-
-    export function isFirstMove(move: HexagonalConnectionMove): move is HexagonalConnectionFirstMove {
-        return move instanceof HexagonalConnectionFirstMove;
-    }
-
-    export function isDrop(move: HexagonalConnectionMove): move is HexagonalConnectionDrops {
-        return move instanceof HexagonalConnectionDrops;
-    }
-
-    export const encoder: Encoder<HexagonalConnectionMove> =
-        Encoder.disjunction([HexagonalConnectionMove.isFirstMove, HexagonalConnectionMove.isDrop],
-                            [HexagonalConnectionFirstMove.encoder, HexagonalConnectionDrops.encoder]);
-}
