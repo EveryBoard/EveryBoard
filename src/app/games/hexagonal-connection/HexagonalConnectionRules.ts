@@ -34,7 +34,7 @@ export class HexagonalConnectionRules extends ConfigurableRules<HexagonalConnect
         new RulesConfigDescription<HexagonalConnectionConfig>({
             name: (): string => $localize`Hexagonal Connection`,
             config: {
-                size: new NumberConfig(6, () => $localize`Size`, MGPValidators.range(1, 99)),
+                size: new NumberConfig(1, () => $localize`Size`, MGPValidators.range(1, 99)),
                 alignmentNeeded: new NumberConfig(6, () => $localize`Alignement Needed TODO UNIFORMISE`, MGPValidators.range(1, 99)),
                 numberOfDrops: new NumberConfig(2, () => $localize`Number of drops`, MGPValidators.range(1, 99)),
             },

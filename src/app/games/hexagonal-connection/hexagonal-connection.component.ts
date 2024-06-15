@@ -34,10 +34,6 @@ export class HexagonalConnectionComponent extends HexagonalGameComponent<Hexagon
 
     public victoryCoords: Coord[] = [];
 
-    public getViewBox(): ViewBox {
-        return new ViewBox(-120, 0, 600, 600);
-    }
-
     public constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
         this.setRulesAndNode('HexagonalConnection');
@@ -52,12 +48,31 @@ export class HexagonalConnectionComponent extends HexagonalGameComponent<Hexagon
         ];
         this.encoder = HexagonalConnectionMove.encoder;
         this.SPACE_SIZE = 30;
+        this.setHexaLayout();
+    }
+
+    private setHexaLayout(): void {
+        const halfStroke: number = this.STROKE_WIDTH / 2;
+        const configSize: number = Math.floor(this.getState().getWidth() / 2);
         this.hexaLayout = new HexaLayout(this.SPACE_SIZE,
-                                         new Coord(- 8 * this.SPACE_SIZE, 2 * this.SPACE_SIZE),
+                                         //  new Coord(0.5 * this.SPACE_SIZE * configSize,
+                                         //    this.SPACE_SIZE + halfStroke),
+                                         new Coord((- this.STROKE_WIDTH * 1.5 * (configSize + 1)) + (Math.sqrt(2) * this.SPACE_SIZE),
+                                                   this.SPACE_SIZE + halfStroke),
                                          PointyHexaOrientation.INSTANCE);
     }
 
+    public getViewBox(): ViewBox {
+        const abstractSize: number = this.getState().getWidth();
+        console.log(abstractSize)
+        const pieceSize: number = this.SPACE_SIZE * 1.5;
+        const size: number = (this.SPACE_SIZE * 0.5) + (abstractSize * pieceSize);
+        const configSize: number = Math.floor(abstractSize / 2);
+        return new ViewBox(configSize * this.SPACE_SIZE, 0, size, size + this.STROKE_WIDTH);
+    }
+
     public async updateBoard(_triggerAnimation: boolean): Promise<void> {
+        this.setHexaLayout();
         const state: HexagonalConnectionState = this.getState();
         this.hexaBoard = state.getCopiedBoard();
         const config: MGPOptional<HexagonalConnectionConfig> = this.getConfig();

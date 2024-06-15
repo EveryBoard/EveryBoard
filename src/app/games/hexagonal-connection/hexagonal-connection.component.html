@@ -2,7 +2,12 @@
      width="100%" height="100%"
      [attr.viewBox]="getViewBox().toSVGString()"
      preserveAspectRatio="xMidYMid meet">
-
+<rect [attr.x]="getViewBox().left"
+      [attr.y]="getViewBox().up"
+      [attr.width]="getViewBox().width"
+      [attr.height]="getViewBox().height"
+      fill="purple"
+      />
     <g *ngFor="let line of hexaBoard; index as y">
         <g *ngFor="let c of line; index as x">
             <g *ngIf="isBoard(c)"
