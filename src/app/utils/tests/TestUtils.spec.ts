@@ -190,18 +190,16 @@ export class SimpleComponentTestUtils<T> {
         this.detectChanges();
     }
 
+    // Find a unique element given a CSS selector
     public findElement(elementName: string): DebugElement {
         this.forceChangeDetection();
         const elements: DebugElement[] = this.fixture.debugElement.queryAll(By.css(elementName));
         expect(elements.length)
             .withContext(`element should exist but does not: ${elementName}`)
             .toBeGreaterThan(0);
-        if (elementName.includes('#')) {
-            // If there's a #, that means we are looking by id, hence there should be only one result
-            expect(elements.length)
-                .withContext(`findElement with id as argument expects a unique result, but got ${elements.length} results instead for element '${elementName}'`)
-                .toBe(1);
-        }
+        expect(elements.length)
+            .withContext(`findElement with id as argument expects a unique result, but got ${elements.length} results instead for element '${elementName}'`)
+            .toBe(1);
         return elements[0];
     }
 
@@ -218,9 +216,6 @@ export class SimpleComponentTestUtils<T> {
     }
 
     public expectElementToHaveClass(elementId: string, cssClass: string): void {
-        expect(elementId[0])
-            .withContext(`expectElementToHaveClass expects an element id, not ${elementId}`)
-            .toBe('#');
         const element: DebugElement = this.findElement(elementId);
         expect(element.attributes.class).withContext(`${elementId} should have a class attribute`).toBeTruthy();
         expect(element.attributes.class).withContext(`${elementId} should have a class attribute`).not.toEqual('');
@@ -272,7 +267,7 @@ export class SimpleComponentTestUtils<T> {
     }
 
     public expectElementToExist(elementName: string): void {
-        this.findElement(elementName); // findElement asserts that it should exist
+        this.findElement(elementName); // findElement asserts that it should exist (and be unique)
     }
 
     public expectElementToBeEnabled(elementName: string): void {

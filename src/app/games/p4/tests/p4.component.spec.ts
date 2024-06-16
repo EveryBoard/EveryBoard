@@ -24,7 +24,7 @@ describe('P4Component', () => {
 
     it('should accept simple move', fakeAsync(async() => {
         const move: P4Move = P4Move.of(3);
-        await testUtils.expectMoveSuccess('.click-3', move);
+        await testUtils.expectMoveSuccess('#click-3-0', move);
     }));
 
     it('should highlight victory', fakeAsync(async() => {

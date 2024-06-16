@@ -374,10 +374,14 @@ describe('LascaComponent', () => {
             // When it is interactive
             testUtils.getGameComponent().setInteractive(true);
             // Then it should show possible selections
-            testUtils.expectElementToExist('.selectable-fill');
+            testUtils.expectElementToHaveClass('#square-0-4', 'selectable-fill');
+            testUtils.expectElementToHaveClass('#square-2-4', 'selectable-fill');
+            testUtils.expectElementToHaveClass('#square-4-4', 'selectable-fill');
+            testUtils.expectElementToHaveClass('#square-6-4', 'selectable-fill');
         }));
 
         it('should highlight piece that can move this turn (when step moves)', () => {
+            // TODO: lol ce test est juste le précédent sans setInteractive, j'le kill? (me semble que par défaut interactive est à true, donc il est strictement inutile)
             // Given a board where current player can move 4 pieces (for example, the starting board)
             // When displaying the board
             // Then those 4 coords should be "selectable-fill"
