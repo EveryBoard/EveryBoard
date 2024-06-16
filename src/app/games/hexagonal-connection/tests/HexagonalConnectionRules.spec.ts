@@ -8,8 +8,9 @@ import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { Coord, CoordFailure } from 'src/app/jscaip/Coord';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
+import { HexaDirection } from 'src/app/jscaip/HexaDirection';
 
-describe('HexagonalConnectionRules', () => {
+fdescribe('HexagonalConnectionRules', () => {
     /**
      * Naming of cases, some of them will be used
      * A. double open: _ _ X X X X _ _
@@ -406,6 +407,21 @@ describe('HexagonalConnectionRules', () => {
             const node: HexagonalConnectionNode = new HexagonalConnectionNode(state);
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, defaultConfig);
         });
+
+    });
+
+    describe('victory', () => {
+
+        for (const dir of HexaDirection.directionWithWeirdDiagonals) {
+            it('should include alignment of ' + dir.toString(), () => {
+                // Given a board large enough to have 6 pieces aligned in each direction
+                const largeConfig: MGPOptional<HexagonalConnectionConfig> = MGPOptional.of({
+                    ...defaultConfig.get(),
+                    size: 12,
+                });
+                const state: HexagonalConnectionState = rules.getInitialState(largeConfig);
+            });
+        }
 
     });
 

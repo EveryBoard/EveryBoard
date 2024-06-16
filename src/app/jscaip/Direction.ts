@@ -49,6 +49,8 @@ export abstract class Direction extends Vector {
 
     public abstract getAngle(): number;
 
+    public abstract getOpposite(): this;
+
 }
 
 export abstract class DirectionFactory<T extends Direction> {

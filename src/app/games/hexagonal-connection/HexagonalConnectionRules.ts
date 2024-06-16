@@ -5,12 +5,13 @@ import { MGPValidation, MGPOptional, Utils } from '@everyboard/lib';
 import { HexagonalConnectionMove } from './HexagonalConnectionMove';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { Coord, CoordFailure } from 'src/app/jscaip/Coord';
-import { NInARowHelper } from 'src/app/jscaip/NInARowHelper';
+import { AbstractNInARowHelper } from 'src/app/jscaip/NInARowHelper';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { TableUtils } from 'src/app/jscaip/TableUtils';
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
 import { NumberConfig, RulesConfigDescription } from 'src/app/components/wrapper-components/rules-configuration/RulesConfigDescription';
 import { MGPValidators } from 'src/app/utils/MGPValidator';
+import { HexaDirection } from 'src/app/jscaip/HexaDirection';
 
 export type HexagonalConnectionConfig = {
 
@@ -34,7 +35,7 @@ export class HexagonalConnectionRules extends ConfigurableRules<HexagonalConnect
         new RulesConfigDescription<HexagonalConnectionConfig>({
             name: (): string => $localize`Hexagonal Connection`,
             config: {
-                size: new NumberConfig(1, () => $localize`Size`, MGPValidators.range(1, 99)),
+                size: new NumberConfig(6, () => $localize`Size`, MGPValidators.range(1, 99)),
                 alignmentNeeded: new NumberConfig(6, () => $localize`Alignement Needed TODO UNIFORMISE`, MGPValidators.range(1, 99)),
                 numberOfDrops: new NumberConfig(2, () => $localize`Number of drops`, MGPValidators.range(1, 99)),
             },
@@ -48,19 +49,21 @@ export class HexagonalConnectionRules extends ConfigurableRules<HexagonalConnect
     }
 
     public static getHexagonalConnectionHelper(config: MGPOptional<HexagonalConnectionConfig>)
-    : NInARowHelper<FourStatePiece>
+    : AbstractNInARowHelper<FourStatePiece>
     {
         if (config.isPresent()) {
-            return new NInARowHelper(
+            return new AbstractNInARowHelper<FourStatePiece, HexaDirection>(
                 (piece: FourStatePiece) => piece.getPlayer(),
                 config.get().alignmentNeeded,
+                HexaDirection.factory.all,
             );
         } else {
             const defaultConfig: HexagonalConnectionConfig =
                 HexagonalConnectionRules.RULES_CONFIG_DESCRIPTION.getDefaultConfig().config;
-            return new NInARowHelper(
+            return new AbstractNInARowHelper<FourStatePiece, HexaDirection>(
                 (piece: FourStatePiece) => piece.getPlayer(),
                 defaultConfig.alignmentNeeded,
+                HexaDirection.factory.all,
             );
         }
     }

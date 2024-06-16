@@ -34,9 +34,9 @@ export class Orthogonal extends Direction {
         super(x, y);
     }
 
-    public getOpposite(): Orthogonal {
+    public getOpposite(): this {
         const opposite: MGPFallible<Orthogonal> = Orthogonal.factory.from(-this.x, -this.y);
-        return opposite.get();
+        return opposite.get() as this;
     }
 
     public rotateClockwise(): Orthogonal {

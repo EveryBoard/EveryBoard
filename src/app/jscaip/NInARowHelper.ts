@@ -1,15 +1,33 @@
-import { MGPMap, Utils } from '@everyboard/lib';
+import { MGPMap, MGPSet, Utils } from '@everyboard/lib';
 import { BoardValue } from './AI/BoardValue';
 import { Coord } from './Coord';
-import { Ordinal } from './Ordinal';
+import { Direction } from './Direction';
 import { GameStateWithTable } from './state/GameStateWithTable';
 import { Player, PlayerOrNone } from './Player';
+import { Vector } from './Vector';
+import { Ordinal } from './Ordinal';
 
-export class NInARowHelper<T extends NonNullable<unknown>> {
+export class AbstractNInARowHelper<T extends NonNullable<unknown>, D extends Direction = Ordinal> {
+
+    private readonly halfDirections: MGPSet<D>;
 
     public constructor(private readonly getOwner: (piece: T, state?: GameStateWithTable<T>) => PlayerOrNone,
-                       private readonly N: number)
+                       private readonly N: number,
+                       private readonly directions: ReadonlyArray<D>)
     {
+        const halfVectors: Vector[] = [];
+        const halfDirections: D[] = [];
+        for (const direction of directions) {
+            const vector: Vector = direction.toMinimalVector();
+            const reversedVector: Vector = new Vector(- vector.x, - vector.y);
+            if (halfVectors.includes(direction) || halfVectors.includes(reversedVector)) {
+                continue;
+            } else {
+                halfVectors.push(vector);
+                halfDirections.push(direction);
+            }
+        }
+        this.halfDirections = new MGPSet(halfDirections);
     }
 
     public getBoardValue(state: GameStateWithTable<T>): BoardValue {
@@ -34,10 +52,10 @@ export class NInARowHelper<T extends NonNullable<unknown>> {
         const ally: Player = this.getOwner(piece, state) as Player;
         Utils.assert(ally.isPlayer(), 'getSquareScore should not be called with PlayerOrNone.NONE piece');
 
-        const freeSpaceByDirs: MGPMap<Ordinal, number> = new MGPMap();
-        const alliesByDirs: MGPMap<Ordinal, number> = new MGPMap();
+        const freeSpaceByDirs: MGPMap<D, number> = new MGPMap();
+        const alliesByDirs: MGPMap<D, number> = new MGPMap();
 
-        for (const dir of Ordinal.ORDINALS) {
+        for (const dir of this.directions) {
             const freeSpaceAndAllies: [number, number] = this.getNumberOfFreeSpacesAndAllies(state, coord, dir, ally);
             freeSpaceByDirs.set(dir, freeSpaceAndAllies[0]);
             alliesByDirs.set(dir, freeSpaceAndAllies[1]);
@@ -46,12 +64,12 @@ export class NInARowHelper<T extends NonNullable<unknown>> {
         return score * ally.getScoreModifier();
     }
 
-    public getScoreFromDirectionAlliesAndFreeSpaces(alliesByDirs: MGPMap<Ordinal, number>,
-                                                    freeSpaceByDirs: MGPMap<Ordinal, number>)
+    public getScoreFromDirectionAlliesAndFreeSpaces(alliesByDirs: MGPMap<D, number>,
+                                                    freeSpaceByDirs: MGPMap<D, number>)
     : number
     {
         let score: number = 0;
-        for (const dir of [Ordinal.UP, Ordinal.UP_RIGHT, Ordinal.RIGHT, Ordinal.DOWN_RIGHT]) {
+        for (const dir of this.halfDirections) {
             // for each pair of opposite directions
             const directionAllies: number = alliesByDirs.get(dir).get();
             const oppositeDirectionAllies: number = alliesByDirs.get(dir.getOpposite()).get();
@@ -66,12 +84,13 @@ export class NInARowHelper<T extends NonNullable<unknown>> {
                 score += 2 + lineFreeSpaces - this.N;
             }
         }
+        console.log(score)
         return score;
     }
 
     public getNumberOfFreeSpacesAndAllies(state: GameStateWithTable<T>,
                                           i: Coord,
-                                          dir: Ordinal,
+                                          dir: D,
                                           ally: Player)
     : [number, number]
     {
@@ -124,6 +143,15 @@ export class NInARowHelper<T extends NonNullable<unknown>> {
             }
         }
         return coords;
+    }
+
+}
+
+export class NInARowHelper<T extends NonNullable<unknown>> extends AbstractNInARowHelper<T> {
+
+    public constructor(getOwner: (piece: T, state?: GameStateWithTable<T>) => PlayerOrNone,
+                       N: number) {
+        super(getOwner, N, Ordinal.ORDINALS);
     }
 
 }

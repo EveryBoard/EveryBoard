@@ -74,9 +74,9 @@ export class Ordinal extends Direction {
         super(x, y);
     }
 
-    public getOpposite(): Ordinal {
+    public getOpposite(): this {
         const opposite: MGPFallible<Ordinal> = Ordinal.factory.from(-this.x, -this.y);
-        return opposite.get();
+        return opposite.get() as this;
     }
 
 }

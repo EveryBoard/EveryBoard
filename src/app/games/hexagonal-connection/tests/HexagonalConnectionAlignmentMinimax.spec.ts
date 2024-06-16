@@ -10,7 +10,7 @@ import { AIDepthLimitOptions } from 'src/app/jscaip/AI/AI';
 import { HexagonalConnectionAlignmentMinimax } from '../HexagonalConnectionAlignmentMinimax';
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
 
-describe('HexagonalConnectionAlignmentMinimax', () => {
+fdescribe('HexagonalConnectionAlignmentMinimax', () => {
 
     let minimax: Minimax<HexagonalConnectionMove, HexagonalConnectionState, HexagonalConnectionConfig>;
     const level1: AIDepthLimitOptions = { name: 'Level 1', maxDepth: 1 };

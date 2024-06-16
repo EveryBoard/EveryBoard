@@ -57,18 +57,22 @@ export class HexagonalConnectionComponent extends HexagonalGameComponent<Hexagon
         this.hexaLayout = new HexaLayout(this.SPACE_SIZE,
                                          //  new Coord(0.5 * this.SPACE_SIZE * configSize,
                                          //    this.SPACE_SIZE + halfStroke),
-                                         new Coord((- this.STROKE_WIDTH * 1.5 * (configSize + 1)) + (Math.sqrt(2) * this.SPACE_SIZE),
+                                         new Coord((- this.STROKE_WIDTH * 0.5 * (configSize + 1)) + (Math.sqrt(2) * this.SPACE_SIZE),
                                                    this.SPACE_SIZE + halfStroke),
                                          PointyHexaOrientation.INSTANCE);
     }
 
     public getViewBox(): ViewBox {
         const abstractSize: number = this.getState().getWidth();
-        console.log(abstractSize)
         const pieceSize: number = this.SPACE_SIZE * 1.5;
         const size: number = (this.SPACE_SIZE * 0.5) + (abstractSize * pieceSize);
         const configSize: number = Math.floor(abstractSize / 2);
-        return new ViewBox(configSize * this.SPACE_SIZE, 0, size, size + this.STROKE_WIDTH);
+        return new ViewBox(
+            this.STROKE_WIDTH + configSize * (this.SPACE_SIZE - this.STROKE_WIDTH),
+            0,
+            size + (1.75 * configSize * this.STROKE_WIDTH),
+            size + this.STROKE_WIDTH,
+        );
     }
 
     public async updateBoard(_triggerAnimation: boolean): Promise<void> {

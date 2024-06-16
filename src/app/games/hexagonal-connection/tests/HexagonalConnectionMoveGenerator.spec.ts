@@ -8,7 +8,7 @@ import { Table } from 'src/app/jscaip/TableUtils';
 import { HexagonalConnectionMoveGenerator } from '../HexagonalConnectionMoveGenerator';
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
 
-describe('HexagonalConnectionMoveGenerator', () => {
+fdescribe('HexagonalConnectionMoveGenerator', () => {
 
     let moveGenerator: HexagonalConnectionMoveGenerator;
 
