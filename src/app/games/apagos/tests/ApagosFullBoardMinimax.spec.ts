@@ -19,7 +19,7 @@ describe('ApagosFullBoardMinimax', () => {
             minimax,
             options: minimaxOptions,
             config: defaultConfig,
-            turns: 200,
+            turns: 64,
             shouldFinish: true,
         });
     });
