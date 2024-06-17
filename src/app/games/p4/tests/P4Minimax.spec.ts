@@ -34,7 +34,7 @@ describe('P4Minimax', () => {
             minimax,
             options: minimaxOptions,
             config: defaultConfig,
-            turns: 200,
+            turns: 6*7,
             shouldFinish: true,
         });
     });

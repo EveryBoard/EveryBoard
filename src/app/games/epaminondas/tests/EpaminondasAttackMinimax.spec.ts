@@ -54,7 +54,7 @@ describe('EpaminondasAttackMinimax', () => {
             options: minimaxOptions,
             config: defaultConfig,
             turns: 200,
-            shouldFinish: false, // this minimax is not a finisher
+            shouldFinish: true,
         });
     });
 

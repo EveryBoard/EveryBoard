@@ -837,19 +837,23 @@ export function minimaxTest<R extends SuperRules<M, S, C, L>,
                             M extends Move,
                             S extends GameState,
                             C extends RulesConfig,
-                            L>(options: MinimaxTestOptions<R, M, S, C, L>): void {
+                            L>(options: MinimaxTestOptions<R, M, S, C, L>): void
+{
     // Given a component where AI plays against AI
     let node: GameNode<M, S> = options.rules.getInitialNode(options.config);
 
     // When playing the needed number of turns
     // Then it should not throw errors
     let turn: number = 0;
+    const start: number = performance.now();
     while (turn < options.turns && options.rules.getGameStatus(node, options.config).isEndGame === false) {
         const bestMove: M = options.minimax.chooseNextMove(node, options.options, options.config);
         expect(bestMove).toBeDefined();
         node = node.getChild(bestMove).get();
         turn++;
     }
+    const seconds: number = (performance.now() - start) / 1000;
+    console.log(`${options.minimax.constructor.name} did ${turn} turns in ${seconds} = ${turn / seconds} turns/s`);
     // And maybe the game needs to be over
     if (options.shouldFinish) {
         expect(options.rules.getGameStatus(node, options.config).isEndGame).toBeTrue();
