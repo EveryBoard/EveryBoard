@@ -20,7 +20,7 @@ describe('AbaloneScoreMinimax', () => {
             options: minimaxOptions,
             config: defaultConfig,
             turns: 200,
-            shouldFinish: false,
+            shouldFinish: false, // not a finisher
         });
     });
 });

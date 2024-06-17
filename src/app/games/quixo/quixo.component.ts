@@ -11,9 +11,8 @@ import { PlayerOrNone } from 'src/app/jscaip/Player';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { MCTS } from 'src/app/jscaip/AI/MCTS';
 import { QuixoMoveGenerator } from './QuixoMoveGenerator';
-import { Minimax } from 'src/app/jscaip/AI/Minimax';
-import { QuixoHeuristic } from './QuixoHeuristic';
 import { GameComponentUtils } from 'src/app/components/game-components/GameComponentUtils';
+import { QuixoMinimax } from './QuixoMinimax';
 
 @Component({
     selector: 'app-quixo',
@@ -41,7 +40,7 @@ export class QuixoComponent extends RectangularGameComponent<QuixoRules,
         super(messageDisplayer);
         this.setRulesAndNode('Quixo');
         this.availableAIs = [
-            new Minimax($localize`Minimax`, this.rules, new QuixoHeuristic(), new QuixoMoveGenerator()),
+            new QuixoMinimax(),
             new MCTS($localize`MCTS`, new QuixoMoveGenerator(), this.rules),
         ];
         this.encoder = QuixoMove.encoder;

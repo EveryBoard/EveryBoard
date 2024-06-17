@@ -49,7 +49,7 @@ describe('EpaminondasMinimax', () => {
     });
 
     SlowTest.it('should be able play against itself', () => {
-        // TODO: 	Error: Assertion failure: Minimax Piece > Row Domination > Alignement > Row Presence should give move, received none!
+        // TODO: sometimes: Error: Assertion failure: Minimax Piece > Row Domination > Alignement > Row Presence should give move, received none!
         minimaxTest({
             rules: EpaminondasRules.get(),
             minimax,

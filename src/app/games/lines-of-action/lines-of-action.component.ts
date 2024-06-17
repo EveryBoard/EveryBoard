@@ -10,12 +10,11 @@ import { LinesOfActionState } from './LinesOfActionState';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { MCTS } from 'src/app/jscaip/AI/MCTS';
-import { LinesOfActionHeuristic } from './LinesOfActionHeuristic';
 import { LinesOfActionMoveGenerator } from './LinesOfActionMoveGenerator';
-import { Minimax } from 'src/app/jscaip/AI/Minimax';
+import { LinesOfActionMinimax } from './LinesOfActionMinimax';
 
 @Component({
-    selector: 'app-linesofaction',
+    selector: 'app-lines-of-action',
     templateUrl: './lines-of-action.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
 })
@@ -35,7 +34,7 @@ export class LinesOfActionComponent extends RectangularGameComponent<LinesOfActi
         super(messageDisplayer);
         this.setRulesAndNode('LinesOfAction');
         this.availableAIs = [
-            new Minimax($localize`Minimax`, this.rules, new LinesOfActionHeuristic(), new LinesOfActionMoveGenerator()),
+            new LinesOfActionMinimax(),
             new MCTS($localize`MCTS`, new LinesOfActionMoveGenerator(), this.rules),
         ];
         this.encoder = LinesOfActionMove.encoder;

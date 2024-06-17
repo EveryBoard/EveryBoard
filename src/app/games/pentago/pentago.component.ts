@@ -10,9 +10,9 @@ import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { MCTS } from 'src/app/jscaip/AI/MCTS';
-import { DummyHeuristic, Minimax } from 'src/app/jscaip/AI/Minimax';
 import { PentagoMoveGenerator } from './PentagoMoveGenerator';
 import { ViewBox } from 'src/app/components/game-components/GameComponentUtils';
+import { PentagoDummyMinimax } from './PentagoDummyMinimax';
 
 interface ArrowInfo {
     path: string;
@@ -52,7 +52,7 @@ export class PentagoComponent extends RectangularGameComponent<PentagoRules,
         super(messageDisplayer);
         this.setRulesAndNode('Pentago');
         this.availableAIs = [
-            new Minimax($localize`Dummy`, this.rules, new DummyHeuristic(), new PentagoMoveGenerator()),
+            new PentagoDummyMinimax(),
             new MCTS($localize`MCTS`, new PentagoMoveGenerator(), this.rules),
         ];
         this.encoder = PentagoMove.encoder;

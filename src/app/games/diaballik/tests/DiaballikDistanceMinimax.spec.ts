@@ -7,7 +7,7 @@ import { DiaballikDistanceMinimax } from '../DiaballikDistanceMinimax';
 import { DiaballikFilteredMoveGenerator } from '../DiaballikFilteredMoveGenerator';
 import { DiaballikMoveGenerator } from '../DiaballikMoveGenerator';
 
-describe('DiaballikJumpMinimax', () => {
+describe('DiaballikDistanceMinimax', () => {
 
     const rules: DiaballikRules = DiaballikRules.get();
     const moveGenerator: DiaballikMoveGenerator = new DiaballikFilteredMoveGenerator(3, false);

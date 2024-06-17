@@ -22,6 +22,7 @@ import { GipfState } from 'src/app/games/gipf/GipfState';
 import { GipfMoveGenerator } from './GipfMoveGenerator';
 import { GipfScoreHeuristic } from './GipfScoreHeuristic';
 import { GipfCapture } from 'src/app/jscaip/GipfProjectHelper';
+import { GipfScoreMinimax } from './GipfScoreMinimax';
 
 @Component({
     selector: 'app-gipf',
@@ -66,7 +67,7 @@ export class GipfComponent extends HexagonalGameComponent<GipfRules,
         super(messageDisplayer);
         this.setRulesAndNode('Gipf');
         this.availableAIs = [
-            new Minimax($localize`Score`, this.rules, new GipfScoreHeuristic(), new GipfMoveGenerator()),
+            new GipfScoreMinimax(),
             new MCTS($localize`MCTS`, new GipfMoveGenerator(), this.rules),
         ];
         this.encoder = GipfMove.encoder;

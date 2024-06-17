@@ -27,7 +27,7 @@ describe('P4Minimax', () => {
         }
     });
 
-    SlowTest.fit('should be able play against itself', () => {
+    SlowTest.it('should be able play against itself', () => {
         const minimaxOptions: AIDepthLimitOptions = { name: 'Level 1', maxDepth: 1 };
         minimaxTest({
             rules: P4Rules.get(),

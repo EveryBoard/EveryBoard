@@ -11,9 +11,8 @@ import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { SaharaFailure } from './SaharaFailure';
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
 import { MCTS } from 'src/app/jscaip/AI/MCTS';
-import { Minimax } from 'src/app/jscaip/AI/Minimax';
-import { SaharaHeuristic } from './SaharaHeuristic';
 import { SaharaMoveGenerator } from './SaharaMoveGenerator';
+import { SaharaMinimax } from './SaharaMinimax';
 
 @Component({
     selector: 'app-sahara',
@@ -37,7 +36,7 @@ export class SaharaComponent extends TriangularGameComponent<SaharaRules,
         super(messageDisplayer);
         this.setRulesAndNode('Sahara');
         this.availableAIs = [
-            new Minimax($localize`Minimax`, this.rules, new SaharaHeuristic(), new SaharaMoveGenerator()),
+            new SaharaMinimax(),
             new MCTS($localize`MCTS`, new SaharaMoveGenerator(), this.rules),
         ];
         this.encoder = SaharaMove.encoder;
