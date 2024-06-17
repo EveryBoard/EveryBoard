@@ -11,8 +11,6 @@ import { UserMocks } from 'src/app/domain/UserMocks.spec';
 import { P4State } from 'src/app/games/p4/P4State';
 import { P4Move } from 'src/app/games/p4/P4Move';
 import { P4Component } from 'src/app/games/p4/p4.component';
-import { P4MoveGenerator } from 'src/app/games/p4/P4MoveGenerator';
-import { P4Heuristic } from 'src/app/games/p4/P4Heuristic';
 import { P4Config, P4Rules } from 'src/app/games/p4/P4Rules';
 
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';

@@ -14,7 +14,7 @@ import { AIDepthLimitOptions } from 'src/app/jscaip/AI/AI';
 
 describe('TaflPieceAndInfluenceMinimax', () => {
 
-    const minimax: Minimax<TablutMove, TaflState, TaflConfig> = new TaflPieceAndInfluenceMinimax(TablutRules.get());;
+    const minimax: Minimax<TablutMove, TaflState, TaflConfig> = new TaflPieceAndInfluenceMinimax(TablutRules.get());
     const defaultConfig: MGPOptional<TaflConfig> = TablutRules.get().getDefaultRulesConfig();
 
     const _: TaflPawn = TaflPawn.UNOCCUPIED;
