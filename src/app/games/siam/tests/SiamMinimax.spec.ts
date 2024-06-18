@@ -92,7 +92,6 @@ describe('SiamMinimax', () => {
             minimax,
             options: minimaxOptions,
             config: defaultConfig,
-            turns: 200,
             shouldFinish: true,
         });
     });

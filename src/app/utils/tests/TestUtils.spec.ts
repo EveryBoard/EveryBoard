@@ -11,7 +11,7 @@ import { Move } from '../../jscaip/Move';
 import { AppModule } from '../../app.module';
 import { UserDAO } from '../../dao/UserDAO';
 import { ConnectedUserService, AuthUser } from '../../services/ConnectedUserService';
-import { GameNode } from '../../jscaip/AI/GameNode';
+import { GameNode, GameNodeStats } from '../../jscaip/AI/GameNode';
 import { GameWrapper } from '../../components/wrapper-components/GameWrapper';
 import { ConnectedUserServiceMock } from '../../services/tests/ConnectedUserService.spec';
 import { OnlineGameWrapperComponent }
@@ -828,7 +828,6 @@ export type MinimaxTestOptions<R extends SuperRules<M, S, C, L>,
     minimax: Minimax<M, S, C, L>,
     options: AIDepthLimitOptions,
     config: MGPOptional<C>,
-    turns: number,
     shouldFinish: boolean
 }
 
@@ -841,21 +840,22 @@ export function minimaxTest<R extends SuperRules<M, S, C, L>,
 {
     // Given a component where AI plays against AI
     let node: GameNode<M, S> = options.rules.getInitialNode(options.config);
-    const limit: number = 10000;
+    const limit: number = 10000; // Play for 10 seconds at most
 
     // When playing the needed number of turns
     // Then it should not throw errors
     let turn: number = 0;
     const start: number = performance.now();
-    console.log(`Running ${options.minimax.constructor.name}`);
-    while (turn < options.turns && performance.now() < start + limit && options.rules.getGameStatus(node, options.config).isEndGame === false) {
+    const nodesBefore: number = GameNodeStats.createdNodes;
+    while (performance.now() < start + limit && options.rules.getGameStatus(node, options.config).isEndGame === false) {
         const bestMove: M = options.minimax.chooseNextMove(node, options.options, options.config);
         expect(bestMove).toBeDefined();
         node = node.getChild(bestMove).get();
         turn++;
     }
     const seconds: number = (performance.now() - start) / 1000;
-    console.log(`${options.minimax.constructor.name} did ${turn} turns in ${seconds} seconds = ${turn / seconds} turns/s`);
+    const nodesCreated: number = GameNodeStats.createdNodes - nodesBefore;
+    console.log(`${turn / seconds} turn/s for ${options.minimax.constructor.name} with ${turn} turns in ${seconds} seconds, created ${nodesCreated}`);
     // And maybe the game needs to be over
     if (options.shouldFinish) {
         expect(options.rules.getGameStatus(node, options.config).isEndGame).toBeTrue();

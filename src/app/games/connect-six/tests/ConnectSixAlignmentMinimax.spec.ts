@@ -134,8 +134,7 @@ describe('ConnectSixAlignmentMinimax', () => {
             minimax,
             options: minimaxOptions,
             config: defaultConfig,
-            turns: 10,
-            shouldFinish: false, // 10 turns is all we can do in 10 seconds, but it's not enough to finish
+            shouldFinish: false, // not a fast minimax, actually one of the slowest
         });
     });
 

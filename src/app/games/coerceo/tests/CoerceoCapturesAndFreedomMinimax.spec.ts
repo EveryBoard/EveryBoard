@@ -18,7 +18,6 @@ describe('CoerceoCapturesAndFreedomMinimax', () => {
             minimax,
             options: minimaxOptions,
             config: defaultConfig,
-            turns: 200,
             shouldFinish: false, // not a finisher
         });
     });

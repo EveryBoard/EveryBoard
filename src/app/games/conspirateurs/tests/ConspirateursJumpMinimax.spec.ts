@@ -20,7 +20,6 @@ describe('ConspirateursJumpMinimax', () => {
             minimax,
             options: minimaxOptions,
             config: defaultConfig,
-            turns: 100,
             shouldFinish: false, // not a finisher
         });
     });

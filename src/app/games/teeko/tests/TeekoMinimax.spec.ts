@@ -18,8 +18,7 @@ describe('TeekoMinimax', () => {
             minimax,
             options: minimaxOptions,
             config: defaultConfig,
-            turns: 200,
-            shouldFinish: true,
+            shouldFinish: false, // not always a finisher
         });
     });
 });

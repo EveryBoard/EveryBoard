@@ -22,7 +22,6 @@ describe('MancalaScoreMinimax', () => {
                 minimax,
                 options: minimaxOptions,
                 config: rules.getDefaultRulesConfig(),
-                turns: 200,
                 shouldFinish: true,
             });
         });

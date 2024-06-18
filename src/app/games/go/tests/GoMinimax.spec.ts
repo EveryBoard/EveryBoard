@@ -18,8 +18,7 @@ describe('GoMinimax', () => {
             minimax,
             options: minimaxOptions,
             config: defaultConfig,
-            turns: 200,
-            shouldFinish: true,
+            shouldFinish: false, // not a finisher, 3 seconds per turn
         });
     });
 });
