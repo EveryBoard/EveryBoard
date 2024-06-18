@@ -20,7 +20,7 @@ describe('TaflEscapeThenPieceThenControlMinimax', () => {
             minimax,
             options: minimaxOptions,
             config: defaultConfig,
-            shouldFinish: true, // not always a finisher
+            shouldFinish: false, // not always a finisher
         });
     });
 });

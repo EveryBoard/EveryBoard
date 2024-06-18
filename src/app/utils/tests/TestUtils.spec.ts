@@ -855,7 +855,7 @@ export function minimaxTest<R extends SuperRules<M, S, C, L>,
     }
     const seconds: number = (performance.now() - start) / 1000;
     const nodesCreated: number = GameNodeStats.createdNodes - nodesBefore;
-    console.log(`${turn / seconds} turn/s for ${options.minimax.constructor.name} with ${turn} turns in ${seconds} seconds, created ${nodesCreated}`);
+    console.log(`${turn / seconds} turn/s for ${options.minimax.constructor.name} with ${turn} turns in ${seconds} seconds, created ${nodesCreated} nodes, so ${nodesCreated / seconds} nodes/s`);
     // And maybe the game needs to be over
     if (options.shouldFinish) {
         expect(options.rules.getGameStatus(node, options.config).isEndGame).toBeTrue();
