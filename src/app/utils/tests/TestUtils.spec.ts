@@ -846,6 +846,7 @@ export function minimaxTest<R extends SuperRules<M, S, C, L>,
     // Then it should not throw errors
     let turn: number = 0;
     const start: number = performance.now();
+    console.log(`Running ${options.minimax.constructor.name}`);
     while (turn < options.turns && options.rules.getGameStatus(node, options.config).isEndGame === false) {
         const bestMove: M = options.minimax.chooseNextMove(node, options.options, options.config);
         expect(bestMove).toBeDefined();
@@ -853,7 +854,7 @@ export function minimaxTest<R extends SuperRules<M, S, C, L>,
         turn++;
     }
     const seconds: number = (performance.now() - start) / 1000;
-    console.log(`${options.minimax.constructor.name} did ${turn} turns in ${seconds} = ${turn / seconds} turns/s`);
+    console.log(`${options.minimax.constructor.name} did ${turn} turns in ${seconds} seconds = ${turn / seconds} turns/s`);
     // And maybe the game needs to be over
     if (options.shouldFinish) {
         expect(options.rules.getGameStatus(node, options.config).isEndGame).toBeTrue();
