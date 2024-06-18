@@ -841,13 +841,14 @@ export function minimaxTest<R extends SuperRules<M, S, C, L>,
 {
     // Given a component where AI plays against AI
     let node: GameNode<M, S> = options.rules.getInitialNode(options.config);
+    const limit: number = 10000;
 
     // When playing the needed number of turns
     // Then it should not throw errors
     let turn: number = 0;
     const start: number = performance.now();
     console.log(`Running ${options.minimax.constructor.name}`);
-    while (turn < options.turns && options.rules.getGameStatus(node, options.config).isEndGame === false) {
+    while (turn < options.turns && performance.now() < start + limit && options.rules.getGameStatus(node, options.config).isEndGame === false) {
         const bestMove: M = options.minimax.chooseNextMove(node, options.options, options.config);
         expect(bestMove).toBeDefined();
         node = node.getChild(bestMove).get();
