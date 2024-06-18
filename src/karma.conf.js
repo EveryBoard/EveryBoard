@@ -60,5 +60,7 @@ module.exports = function(config) {
         browsers: ['Chrome'],
         singleRun: false,
         browserNoActivityTimeout: 60000, // Timeout set to a high value because some tests need more time than the default 2s
+        browserDisconnectTimeout: 60000,
+        pingTimeout: 60000
     });
 };
