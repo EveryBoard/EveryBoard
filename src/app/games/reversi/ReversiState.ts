@@ -1,9 +1,9 @@
-import { GameStateWithTable } from '../../jscaip/GameStateWithTable';
 import { Coord } from '../../jscaip/Coord';
-import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
+import { Player } from 'src/app/jscaip/Player';
 import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
+import { PlayerOrNoneGameStateWithTable } from 'src/app/jscaip/state/PlayerOrNoneGameStateWithTable';
 
-export class ReversiState extends GameStateWithTable<PlayerOrNone> {
+export class ReversiState extends PlayerOrNoneGameStateWithTable {
 
     public getNeighboringPawnLike(searchedValue: Player, center: Coord): Coord[] {
         let coord: Coord;
@@ -23,11 +23,9 @@ export class ReversiState extends GameStateWithTable<PlayerOrNone> {
 
     public countScore(): PlayerNumberMap {
         const scores: PlayerNumberMap = PlayerNumberMap.of(0, 0);
-        for (const coordAndContent of this.getCoordsAndContents()) {
-            const spaceOwner: PlayerOrNone = coordAndContent.content;
-            if (spaceOwner.isPlayer()) {
-                scores.add(spaceOwner, 1);
-            }
+        for (const coordAndContent of this.getPlayerCoordsAndContent()) {
+            const spaceOwner: Player = coordAndContent.content;
+            scores.add(spaceOwner, 1);
         }
         return scores;
     }

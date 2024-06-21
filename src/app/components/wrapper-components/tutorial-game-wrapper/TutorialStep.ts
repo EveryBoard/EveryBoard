@@ -1,6 +1,7 @@
 import { Move } from 'src/app/jscaip/Move';
 import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
-import { GameState } from 'src/app/jscaip/GameState';
+import { GameNode } from 'src/app/jscaip/AI/GameNode';
+import { GameState } from 'src/app/jscaip/state/GameState';
 
 export type Click = string;
 
@@ -60,6 +61,7 @@ export abstract class TutorialStep {
     }
 
     public previousMove: MGPOptional<Move> = MGPOptional.empty();
+    public parent: MGPOptional<GameNode<Move, GameState>> = MGPOptional.empty();
 
     protected constructor(public title: string,
                           public instruction: string,
@@ -90,8 +92,11 @@ export abstract class TutorialStep {
         return false;
     }
 
-    public withPreviousMove(previousMove: Move): this {
+    public withPreviousMove(previousMove: Move, previousState?: GameState): this {
         this.previousMove = MGPOptional.of(previousMove);
+        if (previousState != null) {
+            this.parent = MGPOptional.of(new GameNode(previousState));
+        }
         return this;
     }
 

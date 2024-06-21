@@ -11,12 +11,12 @@ export class TrexoAlignmentHeuristic extends Heuristic<TrexoMove, TrexoState> {
     public getBoardValue(node: TrexoNode, _config: NoConfig): BoardValue {
         let score: number = 0;
         const state: TrexoState = node.gameState;
-        for (const coordPiece of state.toMap()) {
+        for (const coordAndContent of state.getCoordsAndContents()) {
             // for every column, starting from the bottom of each column
             // while we haven't reached the top or an empty space
-            const pieceOwner: PlayerOrNone = state.getPieceAt(coordPiece.key).getOwner();
+            const pieceOwner: PlayerOrNone = coordAndContent.content.getOwner();
             if (pieceOwner.isPlayer()) {
-                const squareScore: number = TrexoRules.getSquareScore(state, coordPiece.key);
+                const squareScore: number = TrexoRules.getSquareScore(state, coordAndContent.coord);
                 score += squareScore;
             }
         }

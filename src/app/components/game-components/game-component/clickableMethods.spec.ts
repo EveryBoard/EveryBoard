@@ -84,8 +84,8 @@ export const clickableMethods: { [gameName: string]: { [methodName: string]: unk
         validateCapture: [],
     },
     Quarto: {
-        chooseCoord: [0, 0],
-        choosePiece: [0],
+        clickCoord: [0, 0],
+        clickPiece: [0],
         deselectDroppedPiece: [],
     },
     Quixo: {
@@ -109,6 +109,7 @@ export const clickableMethods: { [gameName: string]: { [methodName: string]: unk
         onPieceClick: [0, 0],
         onNeighborClick: [0, 0],
     },
+    Squarz: { onClick: [0, 0] },
     Tablut: { onClick: [0, 0] },
     Teeko: { onClick: [0, 0] },
     Trexo: {

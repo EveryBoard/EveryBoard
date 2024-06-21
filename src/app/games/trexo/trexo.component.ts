@@ -168,9 +168,9 @@ export class TrexoComponent extends ParallelogramGameComponent<TrexoRules, Trexo
             Table3DUtils.create(1, TrexoState.SIZE, TrexoState.SIZE, TrexoComponent.INITIAL_PIECE_ON_BOARD);
         let maxZ: number = 1;
         for (let z: number = 0; z <= maxZ; z++) {
-            for (const stack of this.getState().toMap()) {
-                const coord: Coord = stack.key;
-                const stackHeight: number = stack.value.getHeight();
+            for (const coordAndContent of this.getState().getCoordsAndContents()) {
+                const coord: Coord = coordAndContent.coord;
+                const stackHeight: number = coordAndContent.content.getHeight();
                 maxZ = Math.max(maxZ, stackHeight);
                 if (z < stackHeight) {
                     const move: TrexoMove = this.extractMoveFromState(coord.x, coord.y, z);

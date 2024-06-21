@@ -2,7 +2,7 @@ import { Table, TableUtils } from 'src/app/jscaip/TableUtils';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { PylosCoord } from './PylosCoord';
 import { PylosMove } from './PylosMove';
-import { GameState } from 'src/app/jscaip/GameState';
+import { GameState } from 'src/app/jscaip/state/GameState';
 import { Utils } from '@everyboard/lib';
 import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 
@@ -66,11 +66,13 @@ export class PylosState extends GameState {
     }
 
     public isLandable(coord: PylosCoord): boolean {
-        if (this.getPieceAt(coord).isPlayer()) return false;
+        if (this.getPieceAt(coord).isPlayer()) {
+            return false;
+        }
         if (coord.z === 0) return true;
         const lowerPieces: PylosCoord[] = coord.getLowerPieces();
         for (const lowerPiece of lowerPieces) {
-            if (this.getPieceAt(lowerPiece) === PlayerOrNone.NONE) {
+            if (this.getPieceAt(lowerPiece).isNone()) {
                 return false;
             }
         }

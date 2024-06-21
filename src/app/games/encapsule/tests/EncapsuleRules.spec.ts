@@ -169,7 +169,7 @@ describe('EncapsuleRules', () => {
         // When trying to drop another piece of the same size
         const move: EncapsuleMove = EncapsuleMove.ofDrop(EncapsulePiece.SMALL_DARK, new Coord(0, 0));
 
-        // Then it should be deemed illegal
+        // Then the move should be illegal
         const reason: string = EncapsuleFailure.INVALID_PLACEMENT();
         RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
     });
@@ -189,6 +189,8 @@ describe('EncapsuleRules', () => {
         ]);
         const move: EncapsuleMove = EncapsuleMove.ofDrop(EncapsulePiece.SMALL_DARK, new Coord(0, 0));
         const reason: string = EncapsuleFailure.INVALID_PLACEMENT();
+
+        // Then the move should be illegal
         RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
     });
 
@@ -204,7 +206,7 @@ describe('EncapsuleRules', () => {
         // When trying to drop one
         const move: EncapsuleMove = EncapsuleMove.ofDrop(EncapsulePiece.SMALL_LIGHT, new Coord(2, 2));
 
-        // Then it should be illegal
+        // Then the move should be illegal
         const reason: string = EncapsuleFailure.PIECE_OUT_OF_STOCK();
         RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
     });
@@ -223,7 +225,7 @@ describe('EncapsuleRules', () => {
         // When trying to put another piece on it
         const move: EncapsuleMove = EncapsuleMove.ofMove(new Coord(0, 0), new Coord(1, 1));
 
-        // Then it should be deemed illegal
+        // Then the move should be illegal
         const reason: string = EncapsuleFailure.INVALID_PLACEMENT();
         RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
     });
@@ -235,7 +237,7 @@ describe('EncapsuleRules', () => {
         // When trying to drop a piece of the opponent
         const move: EncapsuleMove = EncapsuleMove.ofDrop(EncapsulePiece.SMALL_LIGHT, new Coord(2, 2));
 
-        // Then it should be illegal
+        // Then the move should be illegal
         const reason: string = RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT();
         RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
     });
@@ -255,7 +257,7 @@ describe('EncapsuleRules', () => {
         // When trying to move the opponent's piece
         const move: EncapsuleMove = EncapsuleMove.ofMove(new Coord(1, 1), new Coord(2, 2));
 
-        // Then it should be illegal
+        // Then the move should be illegal
         const reason: string = RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT();
         RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
     });
@@ -267,7 +269,7 @@ describe('EncapsuleRules', () => {
         // When trying to drop "nothing"
         const move: EncapsuleMove = EncapsuleMove.ofDrop(EncapsulePiece.NONE, new Coord(2, 2));
 
-        // Then it should be illegal
+        // Then the move should be illegal
         const reason: string = RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY();
         RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
     });
@@ -279,7 +281,7 @@ describe('EncapsuleRules', () => {
         // When trying to drop "nothing"
         const move: EncapsuleMove = EncapsuleMove.ofMove(new Coord(1, 1), new Coord(2, 2));
 
-        // Then it should be illegal
+        // Then the move should be illegal
         const reason: string = RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY();
         RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
     });

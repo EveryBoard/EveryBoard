@@ -52,6 +52,7 @@ describe('SaharaComponent', () => {
             testUtils.expectElementToExist('#possible_landing_5_0');
             testUtils.expectElementToExist('#possible_landing_6_1');
         }));
+
     });
 
     describe('Second click', () => {

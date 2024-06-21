@@ -11,7 +11,7 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { AbstractRules, SuperRules } from 'src/app/jscaip/Rules';
 import { Ordinal } from 'src/app/jscaip/Ordinal';
 import { AbstractGameComponent } from '../../game-components/game-component/GameComponent';
-import { GameState } from 'src/app/jscaip/GameState';
+import { GameState } from 'src/app/jscaip/state/GameState';
 import { Player } from 'src/app/jscaip/Player';
 
 import { ApagosTutorial } from 'src/app/games/apagos/ApagosTutorial';
@@ -74,6 +74,9 @@ import { SaharaMove } from 'src/app/games/sahara/SaharaMove';
 import { SixMove } from 'src/app/games/six/SixMove';
 import { SixRules } from 'src/app/games/six/SixRules';
 import { SixTutorial, SixTutorialMessages } from '../../../games/six/SixTutorial';
+import { SquarzTutorial } from 'src/app/games/squarz/SquarzTutorial';
+import { SquarzRules } from 'src/app/games/squarz/SquarzRules';
+import { SquarzMove } from 'src/app/games/squarz/SquarzMove';
 
 import { TrexoTutorial } from 'src/app/games/trexo/TrexoTutorial';
 import { TrexoRules } from 'src/app/games/trexo/TrexoRules';
@@ -101,7 +104,7 @@ describe('TutorialGameWrapperComponent (games)', () => {
 
     describe('Tutorials', () => {
 
-        it('should make sure that predicate step have healthy behaviors', fakeAsync(async() => {
+        it('should have healthy behavior for predicate steps', fakeAsync(async() => {
             const apagosTutorial: TutorialStep[] = new ApagosTutorial().tutorial;
             const conspirateursTutorial: TutorialStep[] = new ConspirateursTutorial().tutorial;
             const dvonnTutorial: TutorialStep[] = new DvonnTutorial().tutorial;
@@ -116,6 +119,7 @@ describe('TutorialGameWrapperComponent (games)', () => {
             const pylosTutorial: TutorialStep[] = new PylosTutorial().tutorial;
             const saharaTutorial: TutorialStep[] = new SaharaTutorial().tutorial;
             const sixTutorial: TutorialStep[] = new SixTutorial().tutorial;
+            const squarzTutorial: TutorialStep[] = new SquarzTutorial().tutorial;
             const trexoTutorial: TutorialStep[] = new TrexoTutorial().tutorial;
             const yinshTutorial: TutorialStep[] = new YinshTutorial().tutorial;
             const stepExpectations: [AbstractRules, TutorialStep, Move, MGPValidation][] = [
@@ -300,6 +304,26 @@ describe('TutorialGameWrapperComponent (games)', () => {
                     SixMove.ofCut(new Coord(2, 3), new Coord(1, 3), new Coord(3, 2)),
                     MGPValidation.failure(`Failed. You did cut the board in two but you kept the half where you're in minority. Therefore, you lost! Try again.`),
                 ], [
+                    SquarzRules.get(),
+                    squarzTutorial[1],
+                    SquarzMove.from(new Coord(0, 0), new Coord(2, 2)).get(),
+                    MGPValidation.failure(`This was a jump, try to do a duplication.`),
+                ], [
+                    SquarzRules.get(),
+                    squarzTutorial[2],
+                    SquarzMove.from(new Coord(0, 7), new Coord(1, 7)).get(),
+                    MGPValidation.failure(`This was a duplication, try a jump now.`),
+                ], [
+                    SquarzRules.get(),
+                    squarzTutorial[3],
+                    SquarzMove.from(new Coord(2, 5), new Coord(0, 7)).get(),
+                    MGPValidation.failure(TutorialStepMessage.YOU_DID_NOT_CAPTURE_ANY_PIECE()),
+                ], [
+                    SquarzRules.get(),
+                    squarzTutorial[4],
+                    SquarzMove.from(new Coord(5, 5), new Coord(3, 4)).get(),
+                    MGPValidation.failure(`Bad choice, by making this move you allowed the opponent to win.<br/><br/>Try again!`),
+                ], [
                     TrexoRules.get(),
                     trexoTutorial[3],
                     TrexoMove.from(new Coord(0, 0), new Coord(1, 0)).get(),
@@ -318,6 +342,7 @@ describe('TutorialGameWrapperComponent (games)', () => {
                     MGPValidation.failure(YinshTutorialMessages.MUST_CAPTURE_TWO()),
                 ],
             ];
+            let i: number = 0;
             for (const stepExpectation of stepExpectations) {
                 const rules: SuperRules<Move, GameState, RulesConfig, unknown> = stepExpectation[0];
                 const step: TutorialStep = stepExpectation[1];
@@ -330,7 +355,7 @@ describe('TutorialGameWrapperComponent (games)', () => {
                             rules.applyLegalMove(move, step.state, config, moveResult.get());
                         const validation: MGPValidation = stepExpectation[3];
                         expect(Utils.getNonNullable(step.predicate)(move, step.state, resultingState))
-                            .withContext(move.toString())
+                            .withContext(move.toString() + ' for step ' + i + '(' + step.title + ')')
                             .toEqual(validation);
                     } else {
                         const context: string = 'Move should be legal to reach predicate but failed in "' + step.title+ '" because';
@@ -339,11 +364,12 @@ describe('TutorialGameWrapperComponent (games)', () => {
                 } else {
                     throw new Error('This test expects only predicate steps, remove "' + step.title + '"');
                 }
+                i++;
             }
         }));
 
         for (const gameInfo of GameInfo.ALL_GAMES()) {
-            it('should make sure all solutionMove are legal for ' + gameInfo.name, fakeAsync(async() => {
+            it('should make sure all solution moves are legal for ' + gameInfo.name, fakeAsync(async() => {
                 const gameComponent: AbstractGameComponent =
                     (await ComponentTestUtils.forGameWithWrapper(gameInfo.urlName,
                                                                  TutorialGameWrapperComponent))
@@ -372,6 +398,32 @@ describe('TutorialGameWrapperComponent (games)', () => {
                     }
                 }
             }));
+
+            it('should display the step and solution move without error for ' + gameInfo.name, fakeAsync(async() => {
+                const testUtils: ComponentTestUtils<AbstractGameComponent, Comparable> =
+                    await ComponentTestUtils.forGameWithWrapper(gameInfo.urlName, TutorialGameWrapperComponent);
+                const wrapper: TutorialGameWrapperComponent = testUtils.getWrapper() as TutorialGameWrapperComponent;
+                const gameComponent: AbstractGameComponent = testUtils.getGameComponent();
+                for (const step of gameComponent.tutorial) {
+                    // Display the step
+                    try {
+                        await wrapper.startTutorial([step]);
+                        if (step.hasSolution()) {
+                            // Perform the solution
+                            const solution: Move | Click = step.getSolution();
+                            if (solution instanceof Move) {
+                                const validity: MGPValidation = await wrapper.receiveValidMove(solution);
+                                expect(validity).withContext(`step ${step.title} should have a valid solution`).toEqual(MGPValidation.SUCCESS);
+                            } else {
+                                await testUtils.expectClickSuccess(solution, `step ${step.title} should have a valid solution`);
+                            }
+                        }
+                    } catch (e) {
+                        expect(e).withContext(`step ${step.title} has thrown an exception`).toBeUndefined();
+                    }
+                }
+            }));
+
         }
     });
 

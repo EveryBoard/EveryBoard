@@ -57,7 +57,7 @@ module.exports = function(config) {
         colors: true,
         logLevel: config.LOG_INFO,
         autoWatch: true,
-        browsers: ['Chrome'],
+        browsers: ['ChromeHeadless'],
         singleRun: false,
         browserNoActivityTimeout: 15000, // Timeout set to 15s because the tests often time out with 2s
     });

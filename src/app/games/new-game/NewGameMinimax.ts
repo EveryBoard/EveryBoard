@@ -1,9 +1,10 @@
-import { DummyHeuristic, Minimax } from 'src/app/jscaip/AI/Minimax';
+import { Minimax } from 'src/app/jscaip/AI/Minimax';
 import { NewGameMoveGenerator } from './NewGameMoveGenerator';
 import { NewGameMove } from './NewGameMove';
 import { NewGameState } from './NewGameState';
 import { NewGameLegalityInfo, NewGameRules } from './NewGameRules';
 import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { NewGameHeuristic } from './NewGameHeuristic';
 
 /**
  * This is the minimax AI.
@@ -14,7 +15,7 @@ export class NewGameMinimax extends Minimax<NewGameMove, NewGameState, EmptyRule
     public constructor() {
         super('Dummy',
               NewGameRules.get(),
-              new DummyHeuristic(),
+              new NewGameHeuristic(), // Or "new DummyHeuristic()" if you did not create NewGameHeuristic
               new NewGameMoveGenerator(),
         );
     }

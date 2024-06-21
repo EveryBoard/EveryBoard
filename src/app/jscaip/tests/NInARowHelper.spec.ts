@@ -3,14 +3,14 @@ import { NInARowHelper } from '../NInARowHelper';
 import { PlayerOrNone } from '../Player';
 import { Table } from 'src/app/jscaip/TableUtils';
 import { BoardValue } from '../AI/BoardValue';
-import { GameStateWithTable } from '../GameStateWithTable';
 import { GameStatus } from '../GameStatus';
+import { PlayerOrNoneGameStateWithTable } from '../state/PlayerOrNoneGameStateWithTable';
 
 const _: PlayerOrNone = PlayerOrNone.NONE;
 const O: PlayerOrNone = PlayerOrNone.ZERO;
 const X: PlayerOrNone = PlayerOrNone.ONE;
 
-class AbstractState extends GameStateWithTable<PlayerOrNone> {}
+class AbstractState extends PlayerOrNoneGameStateWithTable {}
 
 describe('N In A Row Helper', () => {
 
@@ -31,4 +31,5 @@ describe('N In A Row Helper', () => {
         // Then the value should be victory for player 1
         expect(boardValue).toEqual(GameStatus.ONE_WON.toBoardValue());
     });
+
 });

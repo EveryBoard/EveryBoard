@@ -1,13 +1,13 @@
-import { Comparable, MGPSet, ReversibleMap } from '@everyboard/lib';
+import { MGPSet, ReversibleMap } from '@everyboard/lib';
 import { Coord } from './Coord';
-import { GameState } from './GameState';
+import { GameState } from './state/GameState';
 import { HexagonalUtils } from './HexagonalUtils';
 
 type Scale = {
     width: number,
     height: number,
 }
-export abstract class OpenHexagonalGameState<T extends NonNullable<Comparable>> extends GameState {
+export abstract class OpenHexagonalGameState<T extends NonNullable<unknown>> extends GameState {
 
     public readonly width: number;
 

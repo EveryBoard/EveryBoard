@@ -9,7 +9,7 @@ import { Orthogonal } from 'src/app/jscaip/Orthogonal';
 import { MGPOptional, MGPSet, MGPValidation, Utils } from '@everyboard/lib';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
+import { Player } from 'src/app/jscaip/Player';
 import { SiamFailure } from './SiamFailure';
 import { MCTS } from 'src/app/jscaip/AI/MCTS';
 import { SiamMoveGenerator } from './SiamMoveGenerator';
@@ -90,7 +90,7 @@ export class SiamComponent extends RectangularGameComponent<SiamRules,
     }
 
     public async selectPieceForInsertion(player: Player): Promise<MGPValidation> {
-        const clickValidity: MGPValidation = await this.canUserPlay('#remainingPieces_' + player.getValue());
+        const clickValidity: MGPValidation = await this.canUserPlay('#remainingPieces_' + player.toString());
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }
@@ -160,7 +160,7 @@ export class SiamComponent extends RectangularGameComponent<SiamRules,
             } else {
                 Utils.assert(this.getState().isOnBoard(clickedCoord), 'SiamComponent: user clicked outside of board when it should not be possible');
                 const clickedPiece: SiamPiece = this.board[y][x];
-                if (clickedPiece.getOwner() === PlayerOrNone.NONE) {
+                if (clickedPiece.getOwner().isNone()) {
                     return this.cancelMove(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY());
                 } else if (clickedPiece.getOwner() !== this.getCurrentPlayer()) {
                     return this.cancelMove(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT());

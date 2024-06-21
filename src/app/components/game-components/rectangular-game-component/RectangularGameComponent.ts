@@ -1,6 +1,6 @@
 import { Move } from '../../../jscaip/Move';
 import { Component } from '@angular/core';
-import { GameStateWithTable } from 'src/app/jscaip/GameStateWithTable';
+import { GameStateWithTable } from 'src/app/jscaip/state/GameStateWithTable';
 import { GameComponent } from '../game-component/GameComponent';
 import { Table } from 'src/app/jscaip/TableUtils';
 import { SuperRules } from 'src/app/jscaip/Rules';
@@ -13,7 +13,7 @@ import { ViewBox } from '../GameComponentUtils';
 export abstract class RectangularGameComponent<R extends SuperRules<M, S, C, L>,
                                                M extends Move,
                                                S extends GameStateWithTable<P>,
-                                               P,
+                                               P extends NonNullable<unknown>,
                                                C extends RulesConfig = EmptyRulesConfig,
                                                L = void>
     extends GameComponent<R, M, S, C, L>
@@ -35,7 +35,7 @@ export abstract class RectangularGameComponent<R extends SuperRules<M, S, C, L>,
         const halfStroke: number = 0.5 * this.STROKE_WIDTH;
         return ViewBox
             .fromLimits(0, width, 0, height)
-            .expand(halfStroke, halfStroke, halfStroke, halfStroke);
+            .expandAll(halfStroke);
     }
 
 }

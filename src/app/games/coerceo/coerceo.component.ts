@@ -5,7 +5,7 @@ import { CoerceoMove, CoerceoRegularMove, CoerceoTileExchangeMove } from 'src/ap
 import { CoerceoState } from 'src/app/games/coerceo/CoerceoState';
 import { MGPOptional, MGPValidation } from '@everyboard/lib';
 import { Coord } from 'src/app/jscaip/Coord';
-import { CoerceoNode, CoerceoRules } from 'src/app/games/coerceo/CoerceoRules';
+import { CoerceoConfig, CoerceoNode, CoerceoRules } from 'src/app/games/coerceo/CoerceoRules';
 import { CoerceoFailure } from 'src/app/games/coerceo/CoerceoFailure';
 import { Player } from 'src/app/jscaip/Player';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
@@ -18,6 +18,7 @@ import { CoerceoPiecesThreatsTilesHeuristic } from './CoerceoPiecesThreatsTilesH
 import { CoerceoOrderedMoveGenerator } from './CoerceoOrderedMoveGenerator';
 import { ViewBox } from 'src/app/components/game-components/GameComponentUtils';
 import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
+import { CoerceoPiecesTilesFreedomHeuristic } from './CoerceoPiecesTilesFreedomHeuristic';
 
 @Component({
     selector: 'app-coerceo',
@@ -27,7 +28,8 @@ import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
                                                               CoerceoMove,
                                                               CoerceoState,
-                                                              FourStatePiece>
+                                                              FourStatePiece,
+                                                              CoerceoConfig>
 {
 
     public tiles: PlayerNumberMap = PlayerNumberMap.of(0, 0);
@@ -52,6 +54,10 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
             new Minimax($localize`Captures > Freedom`,
                         this.rules,
                         new CoerceoCapturesAndFreedomHeuristic(),
+                        new CoerceoMoveGenerator()),
+            new Minimax($localize`Pieces > Tiles > Freedom`,
+                        this.rules,
+                        new CoerceoPiecesTilesFreedomHeuristic(),
                         new CoerceoMoveGenerator()),
             new MCTS($localize`MCTS`,
                      new CoerceoMoveGenerator(),
@@ -89,12 +95,11 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
         this.lastEnd = MGPOptional.empty();
     }
 
-    public async onClick(x: number, y: number): Promise<MGPValidation> {
-        const clickValidity: MGPValidation = await this.canUserPlay('#click_' + x + '_' + y);
+    public async onClick(coord: Coord): Promise<MGPValidation> {
+        const clickValidity: MGPValidation = await this.canUserPlay('#click-' + coord.x + '-' + coord.y);
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }
-        const coord: Coord = new Coord(x, y);
         const currentPlayer: Player = this.state.getCurrentPlayer();
         if (this.chosenCoord.equalsValue(coord)) {
             // Deselects the piece
@@ -131,23 +136,23 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
         }
     }
 
-    public isPyramid(x: number, y: number): boolean {
-        const spaceContent: FourStatePiece = this.board[y][x];
-        return spaceContent.isPlayer() || this.wasOpponent(x, y);
+    public isPyramid(coord: Coord): boolean {
+        const spaceContent: FourStatePiece = this.state.getPieceAt(coord);
+        return spaceContent.isPlayer() || this.wasOpponent(coord);
     }
 
-    private wasOpponent(x: number, y: number): boolean {
+    private wasOpponent(coord: Coord): boolean {
         const parent: MGPOptional<CoerceoNode> = this.node.parent;
         if (parent.isPresent()) {
             const opponent: Player = parent.get().gameState.getCurrentOpponent();
-            return parent.get().gameState.getPieceAtXY(x, y).is(opponent);
+            return parent.get().gameState.getPieceAt(coord).is(opponent);
         } else {
             return false;
         }
     }
 
-    public getPyramidClass(x: number, y: number): string {
-        const spaceContent: FourStatePiece = this.board[y][x];
+    public getPyramidClass(coord: Coord): string {
+        const spaceContent: FourStatePiece = this.state.getPieceAt(coord);
         if (spaceContent.isPlayer()) {
             return this.getPlayerClass(spaceContent.getPlayer());
         } else {
@@ -155,22 +160,22 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
         }
     }
 
-    public mustDraw(x: number, y: number): boolean {
-        const spaceContent: FourStatePiece = this.board[y][x];
+    public mustDraw(coord: Coord): boolean {
+        const spaceContent: FourStatePiece = this.state.getPieceAt(coord);
         if (spaceContent === FourStatePiece.UNREACHABLE) {
             // If it was just removed, we want to draw it
-            return this.wasRemoved(x, y);
+            return this.wasRemoved(coord);
         } else {
             // If piece is reachable on the board, we want to draw it
             return true;
         }
     }
 
-    private wasRemoved(x: number, y: number): boolean {
-        const spaceContent: FourStatePiece = this.board[y][x];
+    private wasRemoved(coord: Coord): boolean {
+        const spaceContent: FourStatePiece = this.state.getPieceAt(coord);
         const parent: MGPOptional<CoerceoNode> = this.node.parent;
         if (spaceContent === FourStatePiece.UNREACHABLE && parent.isPresent()) {
-            const previousContent: FourStatePiece = parent.get().gameState.getPieceAtXY(x, y);
+            const previousContent: FourStatePiece = parent.get().gameState.getPieceAt(coord);
             return previousContent === FourStatePiece.EMPTY ||
                    previousContent.is(parent.get().gameState.getCurrentPlayer());
         } else {
@@ -178,11 +183,11 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
         }
     }
 
-    public getSpaceClass(x: number, y: number): string {
-        if (this.wasRemoved(x, y)) {
+    public getSpaceClass(coord: Coord): string {
+        if (this.wasRemoved(coord)) {
             return 'captured-alternate-fill';
         } else {
-            if ((x + y) % 2 === 1) {
+            if ((coord.x + coord.y) % 2 === 1) {
                 return 'background';
             } else {
                 return 'background2';
@@ -191,7 +196,7 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
     }
 
     public getTilesCountCoordinate(): string {
-        const bx: number = -40; const by: number = -40;
+        const bx: number = 0; const by: number = 0;
         const corner0x: number = bx + 25; const corner0y: number = by;
         const corner1x: number = bx + 75; const corner1y: number = by;
         const corner2x: number = bx + 100; const corner2y: number = by + 50;
@@ -223,51 +228,65 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
         return previousTiles > this.tiles.get(player);
     }
 
-    public getIndicatorY(coord: Coord): number {
-        const y: number = this.INDICATOR_SIZE / 2;
-        const center: number = this.SPACE_SIZE / 2;
-        if ((coord.x + coord.y) % 2 === 0) {
-            return y + center;
-        } else {
-            return y + center - 30;
-        }
-    }
-
-    public getTriangleInHexTranslation(x: number, y: number): string {
-        const translation: Coord = this.getTriangleTranslationCoord(x, y);
-        const translationX: number = translation.x + 2 * Math.floor(x / 3) * this.STROKE_WIDTH;
-        let translationY: number = translation.y;
+    public getTriangleInHexTranslation(coord: Coord): string {
+        const x: number = coord.x;
+        const y: number = coord.y;
+        const triangleTranslation: Coord = this.getTriangleTranslationCoord(coord);
+        const xHexagonalPadding: number = 2 * Math.floor(x / 3) * this.STROKE_WIDTH;
+        let yHexagonalPadding: number;
         if (Math.floor(x / 3) % 2 === 0) {
-            translationY += 2 * Math.floor(y / 2) * this.STROKE_WIDTH;
+            yHexagonalPadding = 2 * Math.floor(y / 2) * this.STROKE_WIDTH;
         } else {
-            translationY += 2 * Math.abs(Math.floor((y - 1) / 2)) * this.STROKE_WIDTH;
-            translationY += this.STROKE_WIDTH;
+            yHexagonalPadding = 2 * Math.abs(Math.floor((y - 1) / 2)) * this.STROKE_WIDTH;
+            yHexagonalPadding += this.STROKE_WIDTH;
         }
-        return 'translate(' + translationX + ', ' + translationY + ')';
+        return 'translate(' + (triangleTranslation.x + xHexagonalPadding) + ', ' +
+                              (triangleTranslation.y + yHexagonalPadding) + ')';
     }
 
     public getTilesCountTranslation(player: Player): string {
         let x: number;
         let y: number;
         if (player === Player.ZERO) {
-            x = -0.05;
-            y = -0.10;
+            x = 0;
+            y = 0;
         } else {
-            x = 7.5;
-            y = 9.45;
+            x = this.getWidth() - this.SPACE_SIZE;
+            y = this.getHeight() - this.SPACE_SIZE;
         }
-        x = this.SPACE_SIZE * x;
-        y = this.SPACE_SIZE * y;
         return 'translate(' + x + ', ' + y + ')';
     }
 
     public getViewBox(): ViewBox {
         const left: number = 0;
         const up: number = 0;
-        const width: number = this.SPACE_SIZE * 8.5 + this.STROKE_WIDTH * 2;
-        const height: number = this.SPACE_SIZE * 10.5 + this.STROKE_WIDTH * 2;
+        const width: number = this.getWidth();
+        const height: number = this.getHeight();
         const halfStroke: number = this.STROKE_WIDTH / 2;
-        return new ViewBox(left, up, width, height).expand(halfStroke, halfStroke, halfStroke, halfStroke);
+        return new ViewBox(left, up, width, height).expandAll(halfStroke);
+    }
+
+    private getWidth(): number {
+        const abstractWidth: number = this.getState().getWidth();
+        const blockWidth: number = abstractWidth / 3; // The number of hexagonal blocks horizontally
+        const horizontalInterPiecesSum: number = 2 * (blockWidth - 1) * this.STROKE_WIDTH;
+        return (this.SPACE_SIZE * (0.5 * (abstractWidth + 1))) + horizontalInterPiecesSum;
+    }
+
+    private getHeight(): number {
+        const abstractHeight: number = this.getState().getHeight();
+        const verticalInterPiecesSum: number = (abstractHeight - 2) * this.STROKE_WIDTH;
+        return this.SPACE_SIZE * abstractHeight + verticalInterPiecesSum;
+    }
+
+    public getTilesCountClasses(player: Player): string[] {
+        const classes: string[] = ['base'];
+        if (this.lastTurnWasTilesExchange(player)) {
+            classes.push('captured-fill');
+        } else {
+            classes.push(this.getPlayerClass(player));
+        }
+        return classes;
     }
 
 }

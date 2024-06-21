@@ -88,16 +88,16 @@ export class PenteRules extends ConfigurableRules<PenteMove, PenteState, PenteCo
             let i: number = 1;
             let potentialCapture: Coord = coord.getNext(direction, i);
             const captured: Coord[] = [potentialCapture];
-            while (state.has(potentialCapture, opponent) && i < sizeOfCapture)
+            while (state.hasPieceAt(potentialCapture, opponent) && i < sizeOfCapture)
             {
                 i++;
                 potentialCapture = potentialCapture.getNext(direction, 1);
                 captured.push(potentialCapture);
             }
             const sandwicher: Coord = coord.getNext(direction, sizeOfCapture + 1);
-            if (state.has(potentialCapture, opponent) &&
+            if (state.hasPieceAt(potentialCapture, opponent) &&
                 i === sizeOfCapture &&
-                state.has(sandwicher, player))
+                state.hasPieceAt(sandwicher, player))
             {
                 captures.push(...captured);
             }
@@ -137,7 +137,7 @@ export class PenteRules extends ConfigurableRules<PenteMove, PenteState, PenteCo
         const height: number = state.getHeight();
         for (let y: number = 0; y < height; y++) {
             for (let x: number = 0; x < width; x++) {
-                if (state.board[y][x] === PlayerOrNone.NONE) {
+                if (state.board[y][x].isNone()) {
                     return true;
                 }
             }

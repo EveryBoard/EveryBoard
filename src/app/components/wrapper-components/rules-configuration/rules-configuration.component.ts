@@ -6,7 +6,7 @@ import { ConfigDescriptionType, NamedRulesConfig, RulesConfig } from 'src/app/js
 import { BaseWrapperComponent } from '../../game-components/game-component/GameComponent';
 import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 import { DemoNodeInfo } from '../demo-card-wrapper/demo-card-wrapper.component';
-import { GameState } from 'src/app/jscaip/GameState';
+import { GameState } from 'src/app/jscaip/state/GameState';
 import { AbstractNode, GameNode } from 'src/app/jscaip/AI/GameNode';
 import { RulesConfigDescription } from './RulesConfigDescription';
 

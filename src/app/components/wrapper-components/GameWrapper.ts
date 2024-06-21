@@ -119,7 +119,7 @@ export abstract class GameWrapper<P extends Comparable> extends BaseWrapperCompo
 
     public async setRole(role: PlayerOrNone): Promise<void> {
         this.role = role;
-        if (role === PlayerOrNone.NONE) {
+        if (role.isNone()) {
             this.gameComponent.setPointOfView(Player.ZERO);
         } else {
             this.gameComponent.setPointOfView(role as Player);
@@ -180,7 +180,7 @@ export abstract class GameWrapper<P extends Comparable> extends BaseWrapperCompo
     }
 
     public isPlayerTurn(): boolean {
-        if (this.role === PlayerOrNone.NONE) {
+        if (this.role.isNone()) {
             return false;
         }
         if (this.gameComponent == null) {
@@ -210,7 +210,7 @@ export abstract class GameWrapper<P extends Comparable> extends BaseWrapperCompo
 
     /**
      * Called when there is a need to put the current board to original state, meaning:
-     *     1. ongoing move attempt must be cancelled (cancelMoveAttempt)
+     *     1. ongoing move attempt must be canceled (cancelMoveAttempt)
      *     2. any previous move must be hidden (hideLastMove)
      *     3. after the board is changed, we now show the correct previous move (showLastMove)
      * @param triggerAnimation a boolean set to true if there is a need to trigger the animation of the last move

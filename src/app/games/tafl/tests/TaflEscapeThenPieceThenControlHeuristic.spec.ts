@@ -33,6 +33,7 @@ describe('TaflEscapeThenPieceThenControlMinimax', () => {
         defaultConfig = tafl.get().getDefaultRulesConfig();
 
         it('should be better when king can escape than when he cannot', () => {
+            // Given a state where the king can escape, and one where king can't
             const weakBoard: Table<TaflPawn> = [
                 [_, _, O, _, _, _, _],
                 [_, _, O, _, _, _, _],
@@ -53,6 +54,9 @@ describe('TaflEscapeThenPieceThenControlMinimax', () => {
                 [_, _, _, _, _, _, _],
             ];
             const strongState: TaflState = new TaflState(strongBoard, 1);
+
+            // When comparing them
+            // Then the one where king can escape should be better for defender
             HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(heuristic,
                                                                    weakState, MGPOptional.empty(),
                                                                    strongState, MGPOptional.empty(),
@@ -61,6 +65,7 @@ describe('TaflEscapeThenPieceThenControlMinimax', () => {
         });
 
         it('should be better when king is one step away from winning than two', () => {
+            // Given a state where king could escape in two turn, and one in one
             const weakBoard: Table<TaflPawn> = [
                 [_, _, O, _, _, _, _],
                 [_, _, O, _, _, _, _],
@@ -81,6 +86,9 @@ describe('TaflEscapeThenPieceThenControlMinimax', () => {
                 [_, _, _, _, _, _, _],
             ];
             const strongState: TaflState = new TaflState(strongBoard, 1);
+
+            // When comparing them
+            // Then the one where king can escape in one move should be better for defender
             HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(heuristic,
                                                                    weakState, MGPOptional.empty(),
                                                                    strongState, MGPOptional.empty(),

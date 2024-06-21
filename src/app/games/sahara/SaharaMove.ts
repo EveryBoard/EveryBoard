@@ -1,7 +1,7 @@
 import { MoveCoordToCoord } from 'src/app/jscaip/MoveCoordToCoord';
 import { Coord } from 'src/app/jscaip/Coord';
 import { SaharaState } from './SaharaState';
-import { TriangularCheckerBoard } from 'src/app/jscaip/TriangularCheckerBoard';
+import { TriangularCheckerBoard } from 'src/app/jscaip/state/TriangularCheckerBoard';
 import { Encoder, MGPFallible, MGPValidation, Utils } from '@everyboard/lib';
 import { SaharaFailure } from './SaharaFailure';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';

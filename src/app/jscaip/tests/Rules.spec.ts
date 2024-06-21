@@ -2,7 +2,7 @@
 import { P4Move } from 'src/app/games/p4/P4Move';
 import { GameNode } from '../AI/GameNode';
 import { Rules } from '../Rules';
-import { GameStateWithTable } from '../GameStateWithTable';
+import { GameStateWithTable } from '../state/GameStateWithTable';
 import { GameStatus } from '../GameStatus';
 import { JSONValue, MGPFallible, MGPOptional, MGPValidation } from '@everyboard/lib';
 import { RulesUtils } from './RulesUtils.spec';
@@ -100,7 +100,7 @@ describe('Rules', () => {
 
             // When checking if the move is legal
             const legality: MGPFallible<AbstractNode> = rules.choose(node, illegalMove, defaultConfig);
-            // Then it should be a failure with the expected reason
+            // Then it should fail with the expected reason
             expect(legality.isFailure()).toBeTrue();
             expect(legality.getReason()).toEqual('some reason');
         });

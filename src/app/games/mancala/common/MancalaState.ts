@@ -1,4 +1,4 @@
-import { GameStateWithTable } from 'src/app/jscaip/GameStateWithTable';
+import { GameStateWithTable } from 'src/app/jscaip/state/GameStateWithTable';
 import { Table, TableUtils } from 'src/app/jscaip/TableUtils';
 import { Player } from 'src/app/jscaip/Player';
 import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
@@ -19,8 +19,11 @@ export class MancalaState extends GameStateWithTable<number> {
         super(b, turn);
     }
 
-    public override setPieceAt(coord: Coord, value: number): MancalaState {
-        return super.setPieceAt(coord, value, MancalaState.of) as MancalaState;
+    public setPieceAt(coord: Coord, value: number): MancalaState {
+        return GameStateWithTable.setPieceAt(this,
+                                             coord,
+                                             value,
+                                             MancalaState.of);
     }
 
     public feedStore(player: Player): MancalaState {

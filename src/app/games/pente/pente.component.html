@@ -2,24 +2,23 @@
      width="100%" height="100%"
      [attr.viewBox]="getViewBox().toSVGString()"
      preserveAspectRatio="xMidYMid meet">
-    <g app-blank-goban
+    <g id="blank-goban"
+       app-blank-goban
        [width]="getState().getWidth()"
        [height]="getState().getHeight()"
        (clickCallBack)="onClick($event)">
     </g>
-    <g *ngFor="let coordAndContent of getState().getCoordsAndContents()"
-       id="click_{{ coordAndContent.coord.x }}_{{ coordAndContent.coord.y }}"
-       (click)="onClick(coordAndContent.coord)">
-            <circle *ngIf="coordAndContent.content.isPlayer()"
-                    id="piece_{{ coordAndContent.coord.x }}_{{ coordAndContent.coord.y }}"
-                    [attr.cx]="(SPACE_SIZE * 0.5) + (SPACE_SIZE * coordAndContent.coord.x)"
-                    [attr.cy]="(SPACE_SIZE * 0.5) + (SPACE_SIZE * coordAndContent.coord.y)"
-                    [attr.r]="SPACE_SIZE * 0.44"
-                    [ngClass]="getSpaceClass(coordAndContent.coord)"
-                    class="base" />
-    </g>
+    <circle *ngFor="let coordAndContent of getState().getPlayerCoordsAndContent()"
+            (click)="onClick(coordAndContent.coord)"
+            id="piece-{{ coordAndContent.coord.x }}-{{ coordAndContent.coord.y }}"
+            [attr.cx]="(SPACE_SIZE * 0.5) + (SPACE_SIZE * coordAndContent.coord.x)"
+            [attr.cy]="(SPACE_SIZE * 0.5) + (SPACE_SIZE * coordAndContent.coord.y)"
+            [attr.r]="SPACE_SIZE * 0.44"
+            [ngClass]="getSpaceClass(coordAndContent.coord)"
+            class="base"
+    />
     <circle *ngFor="let capture of captured"
-            id="capture_{{ capture.x }}_{{ capture.y }}"
+            id="capture-{{ capture.x }}-{{ capture.y }}"
             (click)="onClick(capture)"
             [attr.cx]="(SPACE_SIZE * 0.5) + (SPACE_SIZE * capture.x)"
             [attr.cy]="(SPACE_SIZE * 0.5) + (SPACE_SIZE * capture.y)"

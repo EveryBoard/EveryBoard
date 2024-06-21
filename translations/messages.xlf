@@ -248,6 +248,9 @@
       <trans-unit id="5737474371494262748" datatype="html">
         <source>Put your hexagonal pieces next to another one, and create one of the 3 victorious shapes to win!</source>
       </trans-unit>
+      <trans-unit id="7277920626199847666" datatype="html">
+        <source>Duplicate yourself to conquer the board!</source>
+      </trans-unit>
       <trans-unit id="1177593339964527523" datatype="html">
         <source>Lapland version of the Tafl game family! Invaders must capture the king, defender must make him escape!</source>
       </trans-unit>
@@ -370,6 +373,9 @@
       </trans-unit>
       <trans-unit id="1493565703246564578" datatype="html">
         <source>Ba-awa</source>
+      </trans-unit>
+      <trans-unit id="2597247746010343961" datatype="html">
+        <source>Squarz</source>
       </trans-unit>
       <trans-unit id="2218572265318708454" datatype="html">
         <source>Registering</source>
@@ -913,6 +919,9 @@
       <trans-unit id="7341385722923686160" datatype="html">
         <source>You cannot capture from an empty space.</source>
       </trans-unit>
+      <trans-unit id="5853742640794164153" datatype="html">
+        <source>Use small board</source>
+      </trans-unit>
       <trans-unit id="7117895259187122182" datatype="html">
         <source>Board and goal of the game</source>
       </trans-unit>
@@ -996,6 +1005,9 @@
       </trans-unit>
       <trans-unit id="7668715639068435496" datatype="html">
         <source>Captures &gt; Freedom</source>
+      </trans-unit>
+      <trans-unit id="4996962520612005595" datatype="html">
+        <source>Pieces &gt; Tiles &gt; Freedom</source>
       </trans-unit>
       <trans-unit id="8560978883976627945" datatype="html">
         <source>Alignment</source>
@@ -1716,8 +1728,8 @@
       <trans-unit id="4766965064757095472" datatype="html">
         <source>Placing pieces after the second turn</source>
       </trans-unit>
-      <trans-unit id="7211778570517391304" datatype="html">
-        <source>After the second turn, you are still allowed to place pieces any time you want, as long as you respect two conditions: &lt;ol&gt;&lt;li&gt;your piece must be connected to the hive, and&lt;/li&gt;&lt;li&gt;the space on which you drop your piece must not touch a stack of the opponent.&lt;/li&gt;&lt;/ol&gt;&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, drop a piece on the board.</source>
+      <trans-unit id="4687115502403685230" datatype="html">
+        <source>After the second turn, you are still allowed to place pieces any time you want, as long as you respect two conditions: &lt;ol&gt;&lt;li&gt;your piece must be connected to the hive, and&lt;/li&gt;&lt;li&gt;the space on which you drop your piece must not touch a stack of the opponent.&lt;/li&gt;&lt;/ol&gt;&lt;br/&gt;You&apos;re playing Dark, drop a piece on the board.</source>
       </trans-unit>
       <trans-unit id="2751556568646013753" datatype="html">
         <source>Moving pieces: the queen bee</source>
@@ -2218,8 +2230,8 @@
       <trans-unit id="2949583224863920715" datatype="html">
         <source>Sowing</source>
       </trans-unit>
-      <trans-unit id="935549280838012268" datatype="html">
-        <source>The main move in Mancala games is sowing, let&apos;s see how seeds are sown. As you are playing Dark, the 6 houses on the bottom are yours.&lt;br/&gt;&lt;br&gt;Click on the rightmost bottom house to sow the seeds it contains: they will be sown clockwise, one seed per house.&lt;br/&gt;&lt;br/&gt;Click on the rightmost house!</source>
+      <trans-unit id="3369432302159653901" datatype="html">
+        <source>The main move in Mancala games is sowing, let&apos;s see how seeds are sown. As you are playing Dark, the 6 houses on the bottom are yours.&lt;br/&gt;&lt;br/&gt;Click on the rightmost bottom house to sow the seeds it contains: they will be sown clockwise, one seed per house.&lt;br/&gt;&lt;br/&gt;Click on the rightmost house!</source>
       </trans-unit>
       <trans-unit id="8909995708712093055" datatype="html">
         <source>Look at the 4 houses that follow clockwise the one you picked, they now contain one more seed. This is how seeds are sown: one by one from the house next to the one they come from, clockwise.</source>
@@ -2547,9 +2559,8 @@
       <trans-unit id="3444837986058371302" datatype="html">
         <source>Square (2/2)</source>
       </trans-unit>
-      <trans-unit id="4122674190040152445" datatype="html">
-        <source>You&apos;re playing Dark.&lt;br/&gt;&lt;br/&gt;
-        Do like in the previous step, but this time click on two different pieces before validating.</source>
+      <trans-unit id="5218035582670205877" datatype="html">
+        <source>You&apos;re playing Dark.&lt;br/&gt;&lt;br/&gt;Do like in the previous step, but this time click on two different pieces before validating.</source>
       </trans-unit>
       <trans-unit id="8313533670567464817" datatype="html">
         <source>Failed, you only captured one piece.</source>
@@ -2910,6 +2921,39 @@
       </trans-unit>
       <trans-unit id="4274208426593680443" datatype="html">
         <source>Failed. You did cut the board in two but you kept the half where you&apos;re in minority. Therefore, you lost! Try again.</source>
+      </trans-unit>
+      <trans-unit id="6387064828361949367" datatype="html">
+        <source>You jumped too far! The maximum size of a jump is <x id="PH" equiv-text="n"/> step!</source>
+      </trans-unit>
+      <trans-unit id="323770883664351270" datatype="html">
+        <source>Jump Size</source>
+      </trans-unit>
+      <trans-unit id="4941408928262720844" datatype="html">
+        <source>Squarz is board control game. Here is the initial state. The goal is to have the most pieces at the end of the game.</source>
+      </trans-unit>
+      <trans-unit id="6981861179855327687" datatype="html">
+        <source>Duplication</source>
+      </trans-unit>
+      <trans-unit id="3700643537935262310" datatype="html">
+        <source>One of the two kinds of move you can do is the duplication. When you do one, you create a new piece. To do this, select one of your pieces, and click on one of its neighboring space.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, make a duplication.</source>
+      </trans-unit>
+      <trans-unit id="2864359495844920670" datatype="html">
+        <source>This was a jump, try to do a duplication.</source>
+      </trans-unit>
+      <trans-unit id="1771050228270959005" datatype="html">
+        <source>The second type of move you can do is the jump. When you do one, your piece leaves its original space and jumps two spaces further. To do this, select one of your pieces, and click on its landing space two spaces further.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Light, make a jump.</source>
+      </trans-unit>
+      <trans-unit id="4273222196833633277" datatype="html">
+        <source>This was a duplication, try a jump now.</source>
+      </trans-unit>
+      <trans-unit id="831056729992738373" datatype="html">
+        <source>When one of your pieces lands on a square, its adjacent opponent pieces become yours. This is called a capture.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Light, do a capture!</source>
+      </trans-unit>
+      <trans-unit id="9048883519751617241" datatype="html">
+        <source>When one player can no longer play, the game ends, and the player with the most pieces wins. Here, you can do a final move and win.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Light, do it.</source>
+      </trans-unit>
+      <trans-unit id="3808135421251943457" datatype="html">
+        <source>Bad choice, by making this move you allowed the opponent to win.&lt;br/&gt;&lt;br/&gt;Try again!</source>
       </trans-unit>
       <trans-unit id="2976149661707388406" datatype="html">
         <source>Escape &gt; Pieces &gt; Control</source>

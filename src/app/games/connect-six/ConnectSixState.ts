@@ -1,6 +1,5 @@
-import { GameStateWithTable } from 'src/app/jscaip/GameStateWithTable';
-import { PlayerOrNone } from 'src/app/jscaip/Player';
+import { PlayerOrNoneGameStateWithTable } from 'src/app/jscaip/state/PlayerOrNoneGameStateWithTable';
 
-export class ConnectSixState extends GameStateWithTable<PlayerOrNone> {
+export class ConnectSixState extends PlayerOrNoneGameStateWithTable {
 
 }

@@ -13,6 +13,7 @@ import { MCTS } from 'src/app/jscaip/AI/MCTS';
 import { DummyHeuristic, Minimax } from 'src/app/jscaip/AI/Minimax';
 import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 import { EncapsuleMoveGenerator } from './EncapsuleMoveGenerator';
+import { ViewBox } from 'src/app/components/game-components/GameComponentUtils';
 
 @Component({
     selector: 'app-encapsule',
@@ -35,6 +36,7 @@ export class EncapsuleComponent extends RectangularGameComponent<EncapsuleRules,
     private chosenPiece: MGPOptional<EncapsulePiece> = MGPOptional.empty();
     private chosenPieceIndex: MGPOptional<number>;
     public remainingPieceCenterCoords: MGPMap<Player, Coord[]> = new MGPMap();
+    public victoryCoords: Coord[] = [];
 
     public constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
@@ -44,6 +46,11 @@ export class EncapsuleComponent extends RectangularGameComponent<EncapsuleRules,
             new MCTS($localize`MCTS`, new EncapsuleMoveGenerator(), this.rules),
         ];
         this.encoder = EncapsuleMove.encoder;
+    }
+
+    public override getViewBox(): ViewBox {
+        const boardViewBox: ViewBox = super.getViewBox();
+        return boardViewBox.expandAll(this.SPACE_SIZE);
     }
 
     public override async showLastMove(move: EncapsuleMove): Promise<void> {
@@ -60,6 +67,7 @@ export class EncapsuleComponent extends RectangularGameComponent<EncapsuleRules,
         const state: EncapsuleState = this.getState();
         this.board = state.getCopiedBoard();
         this.calculateLeftPieceCoords();
+        this.victoryCoords = EncapsuleRules.get().getVictoriousCoords(state);
     }
 
     public getListPieces(content: EncapsuleSpace): EncapsulePiece[] {
@@ -71,7 +79,7 @@ export class EncapsuleComponent extends RectangularGameComponent<EncapsuleRules,
     }
 
     public async onBoardClick(x: number, y: number): Promise<MGPValidation> {
-        const clickValidity: MGPValidation = await this.canUserPlay('#click_' + x + '_' + y);
+        const clickValidity: MGPValidation = await this.canUserPlay('#click-' + x + '-' + y);
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }
@@ -107,8 +115,8 @@ export class EncapsuleComponent extends RectangularGameComponent<EncapsuleRules,
         this.chosenPieceIndex = MGPOptional.empty();
     }
 
-    public async onPieceClick(player: number, piece: EncapsulePiece, index: number): Promise<MGPValidation> {
-        const clickedId: string = '#piece_' + player + '_' + piece.toString() + '_' + index;
+    public async onPieceClick(player: Player, piece: EncapsulePiece, index: number): Promise<MGPValidation> {
+        const clickedId: string = '#piece-' + player.toString() + '-' + piece.toString() + '-' + index;
         const clickValidity: MGPValidation = await this.canUserPlay(clickedId);
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
@@ -153,13 +161,13 @@ export class EncapsuleComponent extends RectangularGameComponent<EncapsuleRules,
     }
 
     public getPieceCenter(xOrY: number): number {
-        return (this.SPACE_SIZE * xOrY) + this.STROKE_WIDTH + (this.SPACE_SIZE / 2);
+        return (this.SPACE_SIZE * xOrY) + (this.SPACE_SIZE / 2);
     }
 
     private getPieceStrokeClass(piece: EncapsulePiece): string {
         const player: PlayerOrNone = piece.getPlayer();
         Utils.assert(player.isPlayer(), 'EncapsuleComponent.getPieceStrokeClass should only be called with actual pieces!');
-        return 'player' + player.getValue() + '-stroke';
+        return this.getPlayerClass(player, 'stroke');
     }
 
     public getPieceRadius(piece: EncapsulePiece): number {

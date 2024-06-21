@@ -80,6 +80,7 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
         await userDAO.set(UserMocks.OPPONENT_AUTH_USER.id, UserMocks.OPPONENT);
         return Promise.resolve();
     }
+
     async function finishTest(): Promise<void> {
         testUtils.detectChanges();
         tick(0);
@@ -87,7 +88,9 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
         testUtils.detectChanges();
         tick(ConfigRoomMocks.getInitial(MGPOptional.empty()).maximalMoveDuration * 1000);
     }
+
     describe('for creator', () => {
+
         beforeEach(async() => {
             testUtils = await ComponentTestUtils.basic('P4');
             ConnectedUserServiceMock.setUser(UserMocks.CREATOR_AUTH_USER); // Normally, the header does that
@@ -95,6 +98,7 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
             testUtils.prepareFixture(OnlineGameWrapperComponent);
             wrapper = testUtils.getWrapper() as OnlineGameWrapperComponent;
         });
+
         it('Initialization should lead to child component PartCreation to call ConfigRoomService', fakeAsync(async() => {
             // Given a starting component for the creator
             await prepareComponent(ConfigRoomMocks.getInitial(MGPOptional.empty()), PartMocks.INITIAL);
@@ -118,6 +122,7 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
             // finish the game to have no timeout still running
             await finishTest();
         }));
+
         it('Initialization on accepted config should lead to PartCreationComponent to call startGame', fakeAsync(async() => {
             await prepareComponent(ConfigRoomMocks.withAcceptedConfig(MGPOptional.empty()), PartMocks.INITIAL);
             testUtils.detectChanges();
@@ -135,6 +140,7 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
             tick(0);
             tick(wrapper.configRoom.maximalMoveDuration * 1000);
         }));
+
         it('Some tags are needed before initialization', fakeAsync(async() => {
             await prepareComponent(ConfigRoomMocks.getInitial(MGPOptional.empty()), PartMocks.INITIAL);
             expect(wrapper).toBeTruthy();
@@ -149,6 +155,7 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
             // finish the game to have no timeout still running
             await finishTest();
         }));
+
         it('Initialization should make appear PartCreationComponent', fakeAsync(async() => {
             await prepareComponent(ConfigRoomMocks.getInitial(MGPOptional.empty()), PartMocks.INITIAL);
             let partCreationId: DebugElement = testUtils.findElement('#partCreation');
@@ -162,6 +169,7 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
             // finish the game to have no timeout still running
             await finishTest();
         }));
+
         it('StartGame should replace PartCreationComponent by game component', fakeAsync(async() => {
             await prepareComponent(ConfigRoomMocks.withAcceptedConfig(MGPOptional.empty()), PartMocks.INITIAL);
             testUtils.detectChanges();
@@ -179,6 +187,7 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
             expect(p4Tag).withContext('p4Tag id should still be absent after startGame call').toBeNull();
             tick(2);
         }));
+
         it('stage three should make the game component appear at last', fakeAsync(async() => {
             const configRoom: ConfigRoom = {
                 ...ConfigRoomMocks.withAcceptedConfig(MGPOptional.empty()),
@@ -200,7 +209,9 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
                 .toBeTruthy();
             tick(1000);
         }));
+
     });
+
     describe('for ChosenOpponent', () => {
         beforeEach(async() => {
             testUtils = await ComponentTestUtils.basic('P4');
@@ -227,6 +238,7 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
             tick(0);
         }));
     });
+
     it('should redirect to /notFound if part does not exist', fakeAsync(async() => {
         testUtils = await ComponentTestUtils.basic('P4');
         ConnectedUserServiceMock.setUser(UserMocks.OPPONENT_AUTH_USER);
@@ -242,6 +254,7 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
 
         expectValidRouting(router, ['/notFound', OnlineGameWrapperMessages.NO_MATCHING_PART()], NotFoundComponent, { skipLocationChange: true });
     }));
+
     it('should unsubscribe from the part upon destruction', fakeAsync(async() => {
         // Given a started part
         testUtils = await ComponentTestUtils.basic('P4');
@@ -263,4 +276,5 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
         // Then it unsubscribed from the part
         expectUnsubscribeToHaveBeenCalled();
     }));
+
 });

@@ -13,6 +13,10 @@ class PlayerNone implements ComparableObject {
         return false;
     }
 
+    public isNone(): this is PlayerNone {
+        return true;
+    }
+
     public toString(): string {
         return 'PLAYER_NONE';
     }
@@ -55,6 +59,10 @@ export class Player implements ComparableObject {
 
     public isPlayer(): this is Player {
         return true;
+    }
+
+    public isNone(): this is PlayerNone {
+        return false;
     }
 
     public toString(): string {
