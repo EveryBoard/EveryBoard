@@ -49,7 +49,8 @@ class PlayerDriver():
         '''Visit an URL'''
         self.driver.get(url)
         # Make sure the page has fully loaded
-        time.sleep(1)
+        self.wait_for('app-root')
+        #time.sleep(1)
 
     def reload_page(self):
         '''Reload the current page'''
@@ -504,12 +505,12 @@ def can_perform_take_back(user1, user2):
 
     # I can ask for take back
     user1.click('#proposeTakeBack')
-    turnBeforeTakeBack = parse_turn(user1.get_text_of('#data-turn-number'))
+    turnBeforeTakeBack = parse_turn(user1.get_text_of('#turn-number'))
 
     # After take back is accepted, my turn has decreased
     user2.click('#accept')
     time.sleep(1) # make sure we have received the update
-    turnAfterTakeBack = parse_turn(user1.get_text_of('#data-turn-number'))
+    turnAfterTakeBack = parse_turn(user1.get_text_of('#turn-number'))
 
     if not(turnAfterTakeBack < turnBeforeTakeBack):
         print('Turn has not decreased')

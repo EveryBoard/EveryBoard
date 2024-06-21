@@ -38,20 +38,20 @@ export class BackendService {
         } else {
             try {
                 const jsonResponse: JSONValue = await response.json();
-                if (jsonResponse != null) {
+                if (jsonResponse == null || jsonResponse['reason'] == null) {
+                    return MGPFallible.failure('No error message');
+                } else {
                     // eslint-disable-next-line dot-notation
                     return MGPFallible.failure(jsonResponse['reason'] as string);
-                } else {
-                    return MGPFallible.failure('No error message');
                 }
             } catch (err: unknown) {
                 return MGPFallible.failure('Invalid JSON response from the server');
             }
         }
     }
-    private async performRequestWithJSONResponse(
-        method: HTTPMethod,
-        endpoint: string)
+
+    private async performRequestWithJSONResponse(method: HTTPMethod,
+                                                 endpoint: string)
     : Promise<MGPFallible<JSONValue>>
     {
         const response: MGPFallible<Response> = await this.performRequest(method, endpoint);
@@ -64,7 +64,7 @@ export class BackendService {
     }
 
     private isSuccessStatus(status: number): boolean {
-        return status >= 200 && status <= 299;
+        return 200 <= status && status <= 299;
     }
 
     private assertSuccess<T>(result: MGPFallible<T>): void {

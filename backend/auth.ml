@@ -63,29 +63,29 @@ module Make
                 match String.split_on_char ' ' authorization_header with
                 | ["Bearer"; user_token] -> user_token
                 | _ -> raise (AuthError "Authorization header is invalid") in
-             let parsed_token =
-               match Jwt.parse user_token with
-               | None -> raise (AuthError "Authorization token is invalid")
-               | Some token -> token in
+            let parsed_token =
+                match Jwt.parse user_token with
+                | None -> raise (AuthError "Authorization token is invalid")
+                | Some token -> token in
             (* Check the token validity and extract its uid *)
-             let* certificates = GoogleCertificates.get () in
-             let uid =
-               match Jwt.verify_and_get_uid parsed_token (!Options.project_id) certificates with
-               | None -> raise (AuthError "Authorization token is invalid")
-               | Some uid -> uid in
+            let* certificates = GoogleCertificates.get () in
+            let uid =
+                match Jwt.verify_and_get_uid parsed_token (!Options.project_id) certificates with
+                | None -> raise (AuthError "Authorization token is invalid")
+                | Some uid -> uid in
             (* Get the user and check its verification status *)
-             let* user = Firestore.User.get ~request ~id:uid in
-             if user.verified then begin
-                 (* The user has a verified account, so we can finally call the handler *)
-                 Dream.set_field request user_field (uid, user);
-                 Stats.set_user request (Domain.User.to_minimal_user uid user);
-                 handler request
-             end else
-               raise (AuthError "User is not verified") in
-           try check_everything_and_process_request ()
-           with
-           | AuthError reason ->
-               fail `Unauthorized reason
-           | DocumentNotFound _ | DocumentInvalid _ ->
-               fail `Unauthorized "User is invalid"
-  end
+            let* user = Firestore.User.get ~request ~id:uid in
+            if user.verified then begin
+                (* The user has a verified account, so we can finally call the handler *)
+                Dream.set_field request user_field (uid, user);
+                Stats.set_user request (Domain.User.to_minimal_user uid user);
+                handler request
+            end else
+                raise (AuthError "User is not verified") in
+        try check_everything_and_process_request ()
+        with
+        | AuthError reason ->
+            fail `Unauthorized reason
+        | DocumentNotFound _ | DocumentInvalid _ ->
+            fail `Unauthorized "User is invalid"
+end

@@ -12,7 +12,7 @@
     <div class="tile is-parent">
         <div class="tile is-child box has-text-centered">
             <div class="block" id="turnIndicator" *ngIf="currentPart !== null">
-                <p class="subtitle" id="data-turn-number" i18n>Turn n°{{ currentPart.getTurn() + 1 }}</p>
+                <p class="subtitle" id="turn-number" i18n>Turn n°{{ currentPart.getTurn() + 1 }}</p>
                 <p class="subtitle" id="currentPlayerIndicator" *ngIf="endGame === false">
                     <ng-container *ngIf="currentUser?.name === getPlayer().name else opponentsTurn"><span id="playerTurn" i18n>It is your turn.</span></ng-container>
                     <ng-template #opponentsTurn><span id="opponentTurn" i18n>It is {{ currentUser?.name }}'s turn.</span></ng-template>
@@ -25,7 +25,7 @@
                    *ngIf="players[0].isPresent()">{{ players[0].get().name }}</p>
                 <p id="scoreZeroIndicator" *ngIf="currentPart !== null && gameComponent && gameComponent.scores.isPresent()" i18n>{{ gameComponent.scores.get().get(Player.ZERO) }} points</p>
                 <app-count-down #chronoZeroGlobal
-                                id="chronoZeroGlobal"
+                                id="chrono-zero-global"
                                 [dangerTimeLimit]="60*1000"
                                 [active]="(currentPart === null) ? false : currentPart.getTurn() % 2 === 0"
                                 [canAddTime]='role === Player.ONE && endGame === false'
@@ -37,7 +37,7 @@
                 >
                 </app-count-down>
                 <app-count-down #chronoZeroTurn
-                                id="chronoZeroTurn"
+                                id="chrono-zero-turn"
                                 [dangerTimeLimit]="15*1000"
                                 [active]="(currentPart === null) ? false : currentPart.getTurn() % 2 === 0"
                                 [canAddTime]='role === Player.ONE && endGame === false'
@@ -57,7 +57,7 @@
                    *ngIf="players[1].isPresent()">{{ players[1].get().name }}</p>
                 <p id="scoreOneIndicator" *ngIf="currentPart !== null && gameComponent && gameComponent.scores.isPresent()" i18n>{{ gameComponent.scores.get().get(Player.ONE) }} points</p>
                 <app-count-down #chronoOneGlobal
-                                id="chronoOneGlobal"
+                                id="chrono-one-global"
                                 [dangerTimeLimit]="60*1000"
                                 [active]="(currentPart === null) ? false : currentPart.getTurn() % 2 === 1"
                                 [canAddTime]='role === Player.ZERO && endGame === false'
@@ -69,7 +69,7 @@
                 >
                 </app-count-down>
                 <app-count-down #chronoOneTurn
-                                id="chronoOneTurn"
+                                id="chrono-one-turn"
                                 [dangerTimeLimit]="15*1000"
                                 [active]="(currentPart === null) ? false : currentPart.getTurn() % 2 === 1"
                                 [canAddTime]='role === Player.ZERO && endGame === false'

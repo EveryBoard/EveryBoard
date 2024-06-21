@@ -12,6 +12,7 @@ import { createConnectedUser } from 'src/app/services/tests/ConnectedUserService
 import { ChatService } from 'src/app/services/ChatService';
 import { Subscription } from 'rxjs';
 import { expectPermissionToBeDenied, setupEmulators } from 'src/app/utils/tests/TestUtils.spec';
+import { Chat } from 'src/app/domain/Chat';
 
 describe('ChatDAO', () => {
 
@@ -63,6 +64,14 @@ describe('ChatDAO', () => {
             // and a message from the current user, who is able to add messages
             myUser = await createConnectedUser('bar@bar.com', 'user');
             myMessageId = await chatService.addMessage('lobby', { ...message, sender: myUser });
+        });
+        it('should forbid disconnected users to read a chat', async() => {
+            // Given a disconnected user
+            await signOut();
+            // When trying to read a chat
+            const chatRead: Promise<MGPOptional<Chat>> = chatDAO.read('lobby');
+            // Then it fails
+            await expectPermissionToBeDenied(chatRead);
         });
         it('should forbid a user to post a message as another user', async() => {
             // When posting a message as another user
