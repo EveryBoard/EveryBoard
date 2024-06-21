@@ -5,7 +5,7 @@ import { BoardValue } from './BoardValue';
 import { SCORE } from '../SCORE';
 import { Coord } from '../Coord';
 import { Move } from '../Move';
-import { GameState } from '../GameState';
+import { GameState } from '../state/GameState';
 
 export interface BoardInfo {
     status: SCORE,

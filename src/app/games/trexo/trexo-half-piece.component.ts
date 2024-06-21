@@ -57,6 +57,7 @@ export class TrexoHalfPieceComponent {
         ];
         return this.mapCoordToPoints(coords);
     }
+
     private getParallelogramPoints(): [Coord, Coord, Coord, Coord, Coord, Coord, Coord] {
         const parallelogramWidth: number = this.mode.parallelogramHeight * this.mode.horizontalWidthRatio;
         const parallelogramHeight: number = this.mode.parallelogramHeight;
@@ -77,11 +78,13 @@ export class TrexoHalfPieceComponent {
         const p6: Coord = new Coord(x3, y3 + pieceHeight);
         return [p0, p1, p2, p3, p4, p5, p6];
     }
+
     public mapCoordToPoints(coords: Coord[]): string {
         return coords.map((coord: Coord) => {
             return coord.x + ' ' + coord.y;
         }).join(' ');
     }
+
     private getUpperHorizontalLineCoords(): Coord[] { // Stroke from 0 to 1 (inside U)
         const parallelogramPoints: Coord[] = this.getParallelogramPoints();
         const upLeft: Coord = parallelogramPoints[0];
@@ -92,10 +95,12 @@ export class TrexoHalfPieceComponent {
         const downRight: Coord = upRight.getNext(STROKE_VECTOR);
         return [upLeft, upRight, downRight, downLeft];
     }
+
     public getUpperHorizontalLine(): string { // Stroke from 0 to 1 (inside U)
         const coords: Coord[] = this.getUpperHorizontalLineCoords();
         return this.mapCoordToPoints(coords);
     }
+
     private getMiddleHorizontalCoords(): Coord[] { // Stroke from 2 to 3 (inside U)
         const parallelogramPoints: Coord[] = this.getParallelogramPoints();
         const downLeft: Coord = parallelogramPoints[2];
@@ -106,10 +111,12 @@ export class TrexoHalfPieceComponent {
         const upRight: Coord = downRight.getNext(STROKE_VECTOR, -1);
         return [upLeft, upRight, downRight, downLeft];
     }
+
     public getMiddleHorizontalLine(): string { // Stroke from 2 to 3
         const coords: Coord[] = this.getMiddleHorizontalCoords();
         return this.mapCoordToPoints(coords);
     }
+
     public getLowerHorizontalLine(): string { // Stroke from 5 to 6 (inside F)
         const parallelogramPoints: Coord[] = this.getParallelogramPoints();
         const downLeft: Coord = parallelogramPoints[5];
@@ -120,6 +127,7 @@ export class TrexoHalfPieceComponent {
         const coords: Coord[] = [upLeft, upRight, downRight, downLeft];
         return this.mapCoordToPoints(coords);
     }
+
     public getLeftDiagonalLine(): string { // Stroke from 0 to 2 (inside U)
         const parallelogramPoints: Coord[] = this.getParallelogramPoints();
         const upLeft: Coord = parallelogramPoints[0];
@@ -131,6 +139,7 @@ export class TrexoHalfPieceComponent {
         const coords: Coord[] = [upLeft, upRight, downRight, downLeft];
         return this.mapCoordToPoints(coords);
     }
+
     public getMiddleDiagonalLine(): string { // Stroke from 1 to 3 (inside U)
         const parallelogramPoints: Coord[] = this.getParallelogramPoints();
         const upRight: Coord = parallelogramPoints[1];
@@ -142,6 +151,7 @@ export class TrexoHalfPieceComponent {
         const coords: Coord[] = [upLeft, upRight, downRight, downLeft];
         return this.mapCoordToPoints(coords);
     }
+
     public getRighterDiagonalLine(): string { // Stroke from 4 to 6 (inside R)
         const parallelogramPoints: Coord[] = this.getParallelogramPoints();
         const upRight: Coord = parallelogramPoints[4];
@@ -153,6 +163,7 @@ export class TrexoHalfPieceComponent {
         const coords: Coord[] = [upLeft, upRight, downRight, downLeft];
         return this.mapCoordToPoints(coords);
     }
+
     public getLeftVerticalLine(): string { // Stroke from 2 to 5 (inside F)
         const parallelogramPoints: Coord[] = this.getParallelogramPoints();
         const upLeft: Coord = parallelogramPoints[2];
@@ -164,6 +175,7 @@ export class TrexoHalfPieceComponent {
         const coords: Coord[] = [upLeft, upRight, downRight, downLeft];
         return this.mapCoordToPoints(coords);
     }
+
     public getMiddleVerticalLine(): string { // Stroke from 3 to 6 (inside F)
         const parallelogramPoints: Coord[] = this.getParallelogramPoints();
         const upRight: Coord = parallelogramPoints[3];
@@ -175,18 +187,22 @@ export class TrexoHalfPieceComponent {
         const coords: Coord[] = [upLeft, upRight, downRight, downLeft];
         return this.mapCoordToPoints(coords);
     }
+
     public getRighterVerticalLine(): string { // Stroke from 1 to 4 (inside R)
         const parallelogramPoints: Coord[] = this.getParallelogramPoints();
         const upRight: Coord = parallelogramPoints[1];
         const downRight: Coord = parallelogramPoints[4];
         const STROKE_OFFSET_X: number = TrexoComponent.STROKE_WIDTH;
-        const STROKE_OFFSET_Y: number = TrexoComponent.STROKE_WIDTH / this.mode.offsetRatio;
+        const STROKE_OFFSET_Y: number = this.mode.offsetRatio === 0 ?
+            TrexoComponent.STROKE_WIDTH :
+            TrexoComponent.STROKE_WIDTH / this.mode.offsetRatio;
         const STROKE_VECTOR: Vector = new Vector(STROKE_OFFSET_X, - STROKE_OFFSET_Y);
         const upLeft: Coord = upRight.getNext(STROKE_VECTOR, -1);
         const downLeft: Coord = downRight.getNext(STROKE_VECTOR, -1);
         const coords: Coord[] = [upLeft, upRight, downRight, downLeft];
         return this.mapCoordToPoints(coords);
     }
+
     public getOtherCoord(): Coord {
         // If the coord is part of a move there is another coord toward which the shape is oriented
         // It is this coord that we return
@@ -198,6 +214,7 @@ export class TrexoHalfPieceComponent {
             return move.getZero();
         }
     }
+
     public isLeftHalf(): boolean {
         if (this.move == null) {
             return false;
@@ -206,6 +223,7 @@ export class TrexoHalfPieceComponent {
             return this.coord.x === otherCoord.x - 1;
         }
     }
+
     public isRightHalf(): boolean {
         if (this.move == null) {
             return false;
@@ -214,6 +232,7 @@ export class TrexoHalfPieceComponent {
             return this.coord.x === otherCoord.x + 1;
         }
     }
+
     public isTopHalf(): boolean {
         if (this.move == null) {
             return false;
@@ -222,6 +241,7 @@ export class TrexoHalfPieceComponent {
             return this.coord.y === otherCoord.y - 1;
         }
     }
+
     public isBottomHalf(): boolean {
         if (this.move == null) {
             return false;
@@ -230,4 +250,5 @@ export class TrexoHalfPieceComponent {
             return this.coord.y === otherCoord.y + 1;
         }
     }
+
 }

@@ -287,7 +287,7 @@ describe('LascaComponent', () => {
             // When doing that illegal capture
             const move: LascaMove = LascaMove.fromCapture([new Coord(2, 2), new Coord(0, 4)]).get();
 
-            // Then it should fail
+            // Then the move should be illegal
             await testUtils.expectMoveFailure('#coord_0_4', RulesFailure.CANNOT_SELF_CAPTURE(), move);
         }));
     });

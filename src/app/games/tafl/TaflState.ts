@@ -2,7 +2,7 @@ import { Coord } from '../../jscaip/Coord';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { TaflPawn } from './TaflPawn';
 import { RelativePlayer } from 'src/app/jscaip/RelativePlayer';
-import { GameStateWithTable } from 'src/app/jscaip/GameStateWithTable';
+import { GameStateWithTable } from 'src/app/jscaip/state/GameStateWithTable';
 
 export class TaflState extends GameStateWithTable<TaflPawn> {
 

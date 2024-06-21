@@ -55,6 +55,7 @@ describe('GipfRules', () => {
             const placement: GipfPlacement = new GipfPlacement(new Coord(3, 3), MGPOptional.empty());
             const move: GipfMove = new GipfMove(placement, [], []);
 
+            // Then the move should be illegal
             const reason: string = GipfFailure.PLACEMENT_NOT_ON_BORDER();
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
@@ -64,6 +65,7 @@ describe('GipfRules', () => {
             const placement: GipfPlacement = new GipfPlacement(new Coord(3, 0), MGPOptional.empty());
             const move: GipfMove = new GipfMove(placement, [], []);
 
+            // Then the move should be illegal
             const reason: string = GipfFailure.PLACEMENT_WITHOUT_DIRECTION();
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
@@ -141,6 +143,8 @@ describe('GipfRules', () => {
             ];
             for (const placement of invalidPlacements) {
                 const move: GipfMove = new GipfMove(placement, [], []);
+
+                // Then the move should be illegal
                 const reason: string = GipfFailure.PLACEMENT_ON_COMPLETE_LINE();
                 RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
             }
@@ -159,6 +163,8 @@ describe('GipfRules', () => {
             const state: GipfState = new GipfState(board, P0Turn, PlayerNumberMap.of(5, 5), PlayerNumberMap.of(0, 0));
             const placement: GipfPlacement = new GipfPlacement(new Coord(1, 6), MGPOptional.of(HexaDirection.LEFT));
             const move: GipfMove = new GipfMove(placement, [], []);
+
+            // Then the move should be illegal
             const reason: string = GipfFailure.INVALID_PLACEMENT_DIRECTION();
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
@@ -228,6 +234,8 @@ describe('GipfRules', () => {
                                                                MGPOptional.of(HexaDirection.UP_RIGHT));
 
             const moveWithoutCapture: GipfMove = new GipfMove(placement, [], []);
+
+            // Then the move should be illegal
             const reason: string = GipfFailure.MISSING_CAPTURES();
             RulesUtils.expectMoveFailure(rules, resultingState, moveWithoutCapture, reason, defaultConfig);
 
@@ -264,6 +272,8 @@ describe('GipfRules', () => {
             ]);
 
             const moveWithoutCapture: GipfMove = new GipfMove(placement, [], []);
+
+            // Then the move should be illegal
             let reason: string = GipfFailure.MISSING_CAPTURES();
             RulesUtils.expectMoveFailure(rules, state, moveWithoutCapture, reason, defaultConfig);
 
@@ -276,6 +286,8 @@ describe('GipfRules', () => {
             expect(capture2Legality.isSuccess()).toBeTrue();
 
             const moveWithBothCaptures: GipfMove = new GipfMove(placement, [capture1, capture2], []);
+
+            // Then the move should be illegal
             reason = GipfFailure.CAPTURE_MUST_BE_ALIGNED();
             RulesUtils.expectMoveFailure(rules, state, moveWithBothCaptures, reason, defaultConfig);
         });
@@ -297,6 +309,8 @@ describe('GipfRules', () => {
                                                                 MGPOptional.of(HexaDirection.RIGHT));
 
             const moveANoCapture: GipfMove = new GipfMove(placementA, [], []);
+
+            // Then the move should be illegal
             const reason: string = GipfFailure.MISSING_CAPTURES();
             RulesUtils.expectMoveFailure(rules, state, moveANoCapture, reason, defaultConfig);
 
@@ -314,6 +328,8 @@ describe('GipfRules', () => {
             const placementB: GipfPlacement = new GipfPlacement(new Coord(3, 0),
                                                                 MGPOptional.of(HexaDirection.RIGHT));
             const moveBNoCapture: GipfMove = new GipfMove(placementB, [], []);
+
+            // Then the move should be illegal
             RulesUtils.expectMoveFailure(rules, resultingState, moveBNoCapture, reason, defaultConfig);
 
             const captureB: GipfCapture = new GipfCapture([
@@ -343,6 +359,8 @@ describe('GipfRules', () => {
                 new Coord(2, 6), new Coord(2, 5), new Coord(2, 3), new Coord(2, 4),
             ]);
             const move: GipfMove = new GipfMove(placement, [capture], []);
+
+            // Then the move should be illegal
             const reason: string = GipfFailure.INVALID_CAPTURED_PIECES();
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
@@ -366,6 +384,8 @@ describe('GipfRules', () => {
                 new Coord(2, 3), new Coord(2, 4), new Coord(2, 5), new Coord(2, 6),
             ]);
             const move: GipfMove = new GipfMove(placement, [capture], []);
+
+            // Then the move should be illegal
             const reason: string = GipfFailure.CAPTURE_MUST_BE_ALIGNED();
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
@@ -388,6 +408,8 @@ describe('GipfRules', () => {
                 new Coord(2, 6), new Coord(2, 5), new Coord(2, 3), new Coord(2, 4),
             ]);
             const move: GipfMove = new GipfMove(placement, [], [capture]);
+
+            // Then the move should be illegal
             const reason: string = GipfFailure.INVALID_CAPTURED_PIECES();
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });

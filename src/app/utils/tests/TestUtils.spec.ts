@@ -6,7 +6,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { ActivatedRoute, Route, Router } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { GameState } from '../../jscaip/GameState';
+import { GameState } from '../../jscaip/state/GameState';
 import { Move } from '../../jscaip/Move';
 import { AppModule } from '../../app.module';
 import { UserDAO } from '../../dao/UserDAO';
@@ -442,8 +442,12 @@ export class ComponentTestUtils<C extends AbstractGameComponent, P extends Compa
      * @param nameInHtml The real name (id) of the element in the XML
      * @param nameInFunction Its name inside the code
      */
-    public async expectClickSuccessWithAsymmetricNaming(nameInHtml: string, nameInFunction: string): Promise<void> {
-        await this.expectInterfaceClickSuccess(nameInHtml);
+    public async expectClickSuccessWithAsymmetricNaming(nameInHtml: string,
+                                                        nameInFunction: string,
+                                                        context?: string)
+    : Promise<void>
+    {
+        await this.expectInterfaceClickSuccess(nameInHtml, context);
         expect(this.canUserPlaySpy).toHaveBeenCalledOnceWith(nameInFunction);
         this.canUserPlaySpy.calls.reset();
     }
@@ -456,12 +460,14 @@ export class ComponentTestUtils<C extends AbstractGameComponent, P extends Compa
         expect(transform.matrix.f).toBe(y);
     }
 
-    public async expectClickSuccess(elementName: string): Promise<void> {
-        return this.expectClickSuccessWithAsymmetricNaming(elementName, elementName);
+    public async expectClickSuccess(elementName: string, context?: string): Promise<void> {
+        return this.expectClickSuccessWithAsymmetricNaming(elementName, elementName, context);
     }
 
-    public async expectInterfaceClickSuccess(elementName: string, waitInMs?: number): Promise<void> {
-        const context: string = 'expectInterfaceClickSuccess(' + elementName + ')';
+    public async expectInterfaceClickSuccess(elementName: string, context?: string, waitInMs?: number): Promise<void> {
+        if (context == null) {
+            context = 'expectInterfaceClickSuccess(' + elementName + ')';
+        }
         await this.clickElement(elementName, false, waitInMs);
 
         expect(this.cancelMoveSpy).withContext(context).not.toHaveBeenCalledWith();

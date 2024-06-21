@@ -919,6 +919,9 @@
       <trans-unit id="7341385722923686160" datatype="html">
         <source>You cannot capture from an empty space.</source>
       </trans-unit>
+      <trans-unit id="5853742640794164153" datatype="html">
+        <source>Use small board</source>
+      </trans-unit>
       <trans-unit id="7117895259187122182" datatype="html">
         <source>Board and goal of the game</source>
       </trans-unit>
@@ -1002,6 +1005,9 @@
       </trans-unit>
       <trans-unit id="7668715639068435496" datatype="html">
         <source>Captures &gt; Freedom</source>
+      </trans-unit>
+      <trans-unit id="4996962520612005595" datatype="html">
+        <source>Pieces &gt; Tiles &gt; Freedom</source>
       </trans-unit>
       <trans-unit id="8560978883976627945" datatype="html">
         <source>Alignment</source>
@@ -2940,8 +2946,8 @@
       <trans-unit id="4273222196833633277" datatype="html">
         <source>This was a duplication, try a jump now.</source>
       </trans-unit>
-      <trans-unit id="2720829712114022892" datatype="html">
-        <source>When one of your pieces lands on a square, its adjacent opponent pieces become yours.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, do such a move!</source>
+      <trans-unit id="831056729992738373" datatype="html">
+        <source>When one of your pieces lands on a square, its adjacent opponent pieces become yours. This is called a capture.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Light, do a capture!</source>
       </trans-unit>
       <trans-unit id="9048883519751617241" datatype="html">
         <source>When one player can no longer play, the game ends, and the player with the most pieces wins. Here, you can do a final move and win.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Light, do it.</source>

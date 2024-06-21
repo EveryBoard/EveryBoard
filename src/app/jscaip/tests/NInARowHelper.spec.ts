@@ -4,7 +4,7 @@ import { PlayerOrNone } from '../Player';
 import { Table } from 'src/app/jscaip/TableUtils';
 import { BoardValue } from '../AI/BoardValue';
 import { GameStatus } from '../GameStatus';
-import { PlayerOrNoneGameStateWithTable } from '../PlayerOrNoneGameStateWithTable';
+import { PlayerOrNoneGameStateWithTable } from '../state/PlayerOrNoneGameStateWithTable';
 
 const _: PlayerOrNone = PlayerOrNone.NONE;
 const O: PlayerOrNone = PlayerOrNone.ZERO;

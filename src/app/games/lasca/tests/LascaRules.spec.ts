@@ -41,7 +41,7 @@ describe('LascaRules', () => {
             // When doing a move that starts on an empty coord
             const move: LascaMove = LascaMove.fromStep(new Coord(1, 3), new Coord(2, 2)).get();
 
-            // Then it should fail
+            // Then the move should be illegal
             const reason: string = RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY();
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
@@ -53,7 +53,7 @@ describe('LascaRules', () => {
             // When doing a move that starts on an opponent's piece
             const move: LascaMove = LascaMove.fromStep(new Coord(0, 2), new Coord(1, 3)).get();
 
-            // Then it should fail
+            // Then the move should be illegal
             const reason: string = RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT();
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
@@ -73,7 +73,7 @@ describe('LascaRules', () => {
             // When doing a move that moves a normal piece backward
             const move: LascaMove = LascaMove.fromStep(new Coord(1, 5), new Coord(2, 6)).get();
 
-            // Then it should fail
+            // Then the move should be illegal
             const reason: string = LascaFailure.CANNOT_GO_BACKWARD();
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
@@ -85,7 +85,7 @@ describe('LascaRules', () => {
             // When trying to land on an occupied square
             const move: LascaMove = LascaMove.fromStep(new Coord(5, 5), new Coord(4, 4)).get();
 
-            // Then it should fail
+            // Then the move should be illegal
             const reason: string = RulesFailure.MUST_LAND_ON_EMPTY_SPACE();
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
@@ -129,7 +129,7 @@ describe('LascaRules', () => {
             // When doing a move that jump over an empty square after capture
             const move: LascaMove = LascaMove.fromCapture([new Coord(2, 2), new Coord(0, 4), new Coord(2, 6)]).get();
 
-            // Then it should fail
+            // Then the move should be illegal
             const reason: string = LascaFailure.CANNOT_CAPTURE_EMPTY_SPACE();
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
@@ -149,7 +149,7 @@ describe('LascaRules', () => {
             // When doing a non capturing move
             const move: LascaMove = LascaMove.fromStep(new Coord(2, 2), new Coord(3, 3)).get();
 
-            // Then it should fail
+            // Then the move should be illegal
             const reason: string = LascaFailure.CANNOT_SKIP_CAPTURE();
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
@@ -169,7 +169,7 @@ describe('LascaRules', () => {
             // When capturing the first but not the second
             const move: LascaMove = LascaMove.fromCapture([new Coord(1, 1), new Coord(3, 3)]).get();
 
-            // Then it should fail
+            // Then the move should be illegal
             const reason: string = LascaFailure.MUST_FINISH_CAPTURING();
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
@@ -189,7 +189,7 @@ describe('LascaRules', () => {
             // When doing so
             const move: LascaMove = LascaMove.fromCapture([new Coord(1, 1), new Coord(3, 3)]).get();
 
-            // Then it should fail
+            // Then the move should be illegal
             const reason: string = RulesFailure.CANNOT_SELF_CAPTURE();
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
@@ -209,7 +209,7 @@ describe('LascaRules', () => {
             // When doing so
             const move: LascaMove = LascaMove.fromCapture([new Coord(3, 3), new Coord(5, 1)]).get();
 
-            // Then it should fail
+            // Then the move should be illegal
             const reason: string = LascaFailure.CANNOT_GO_BACKWARD();
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });

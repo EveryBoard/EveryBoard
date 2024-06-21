@@ -202,8 +202,8 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
     const FOURTH_MOVE_ENCODED: JSONValue = QuartoMove.encoder.encode(FOURTH_MOVE);
 
     async function doMoveByClicks(move: QuartoMove): Promise<void> {
-        await testUtils.expectClickSuccess(`#chooseCoord_${ move.coord.x }_${ move.coord.y }`);
-        await testUtils.expectMoveSuccess('#choosePiece_' + move.piece.value, move);
+        await testUtils.expectClickSuccess(`#click-coord-${ move.coord.x }-${ move.coord.y }`);
+        await testUtils.expectMoveSuccess('#click-piece-' + move.piece.value, move);
     }
 
     function userFromPlayer(player: Player): MinimalUser {
@@ -634,7 +634,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
 
         // Then the player cannot play
         await testUtils.expectToDisplayGameMessage(GameWrapperMessages.NOT_YOUR_TURN(), async() => {
-            await testUtils.clickElement('#chooseCoord_0_0');
+            await testUtils.clickElement('#click-coord-0-0');
         });
 
         tick(wrapper.configRoom.maximalMoveDuration * 1000);
@@ -928,7 +928,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
 
                 // Then it should fail
                 testUtils.resetSpies();
-                await testUtils.expectClickFailure('#chooseCoord_0_0', reason);
+                await testUtils.expectClickFailure('#click-coord-0-0', reason);
                 tick(wrapper.configRoom.maximalMoveDuration * 1000);
             }));
 
@@ -1205,7 +1205,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             const reason: string = OnlineGameWrapperMessages.MUST_ANSWER_REQUEST();
 
             // Then it should fail
-            await testUtils.expectClickFailure('#chooseCoord_0_0', reason);
+            await testUtils.expectClickFailure('#click-coord-0-0', reason);
             tick(wrapper.configRoom.maximalMoveDuration * 1000);
         }));
 
@@ -1564,7 +1564,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             // When attempting a move
             // Then it should fail
             spyOn(partDAO, 'update').and.callThrough();
-            await testUtils.expectClickFailure('#choosePiece_1', GameWrapperMessages.GAME_HAS_ENDED());
+            await testUtils.expectClickFailure('#click-piece-1', GameWrapperMessages.GAME_HAS_ENDED());
 
             expect(partDAO.update).not.toHaveBeenCalled();
             expectGameToBeOver();
@@ -1620,7 +1620,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             testUtils.expectElementToBeDisabled('#proposeRematch');
 
             // When it is finished
-            await testUtils.expectInterfaceClickSuccess('#resign', 0);
+            await testUtils.expectInterfaceClickSuccess('#resign', undefined, 0);
 
             // Then it should allow to propose rematch
             testUtils.expectElementToBeEnabled('#proposeRematch');

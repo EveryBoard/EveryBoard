@@ -12,7 +12,7 @@ import { GameWrapper, GameWrapperMessages } from '../GameWrapper';
 import { ConfigRoom } from 'src/app/domain/ConfigRoom';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { JSONValue, MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
-import { GameState } from 'src/app/jscaip/GameState';
+import { GameState } from 'src/app/jscaip/state/GameState';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { GameInfo } from '../../normal-component/pick-game/pick-game.component';
 import { Localized } from 'src/app/utils/LocaleUtils';
