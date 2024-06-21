@@ -6,7 +6,6 @@
     <g *ngFor="let line of board; index as y">
         <g *ngFor="let currentSquare of line; index as x"
            id="click-{{ x }}-{{ y }}"
-           class="foo"
            (click)="onClick(x, y)">
             <rect class="base"
                   [attr.x]="SPACE_SIZE * x"
