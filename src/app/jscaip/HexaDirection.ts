@@ -5,27 +5,16 @@ import { Encoder, MGPFallible, Utils } from '@everyboard/lib';
 export class HexaDirection extends Direction {
 
     public static readonly UP: HexaDirection = new HexaDirection(0, -1);
-
     public static readonly UP_UP_RIGHT: HexaDirection = new HexaDirection(1, -2);
-
     public static readonly UP_RIGHT: HexaDirection = new HexaDirection(1, -1);
-
     public static readonly PURE_RIGHT: HexaDirection = new HexaDirection(2, -1);
-
     public static readonly RIGHT: HexaDirection = new HexaDirection(1, 0);
-
     public static readonly DOWN_RIGHT: HexaDirection = new HexaDirection(1, 1);
-
     public static readonly DOWN: HexaDirection = new HexaDirection(0, 1);
-
     public static readonly DOWN_DOWN_LEFT: HexaDirection = new HexaDirection(-1, 2);
-
     public static readonly DOWN_LEFT: HexaDirection = new HexaDirection(-1, 1);
-
     public static readonly PURE_LEFT: HexaDirection = new HexaDirection(-2, 1);
-
     public static readonly LEFT: HexaDirection = new HexaDirection(-1, 0);
-
     public static readonly UP_LEFT: HexaDirection = new HexaDirection(-1, -1);
 
     public static readonly factory: DirectionFactory<HexaDirection> =
@@ -97,6 +86,14 @@ export class HexaDirection extends Direction {
     public getOpposite(): this {
         const opposite: MGPFallible<HexaDirection> = HexaDirection.factory.from(-this.x, -this.y);
         return opposite.get() as this;
+    }
+
+    public override toString(): string {
+        if (this.x === 1 && this.y === -2) return 'UP_UP_RIGHT';
+        if (this.x === 2 && this.y === -1) return 'PURE_RIGHT';
+        if (this.x === -1 && this.y === 2) return 'DOWN_DOWN_RIGHT';
+        if (this.x === -2 && this.y === 1) return 'PURE_RIGHT';
+        else return super.toString();
     }
 
 }

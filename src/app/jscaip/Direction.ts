@@ -5,9 +5,9 @@ import { Localized } from '../utils/LocaleUtils';
 
 export abstract class Direction extends Vector {
 
-    public declare readonly x: 0|1|-1;
+    public declare readonly x: -2|-1|0|1|2;
 
-    public declare readonly y: 0|1|-1;
+    public declare readonly y: -2|-1|0|1|2;
 
     public isDown(): boolean {
         return this.y === 1;

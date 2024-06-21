@@ -76,7 +76,7 @@ export class TestingHexagonalState extends HexagonalGameState<number> {
     }
 }
 
-fdescribe('HexagonalGameState', () => {
+describe('HexagonalGameState', () => {
 
     describe('equals', () => {
 

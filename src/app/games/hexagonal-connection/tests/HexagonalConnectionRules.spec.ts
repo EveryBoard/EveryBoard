@@ -10,7 +10,7 @@ import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
 import { HexaDirection } from 'src/app/jscaip/HexaDirection';
 
-fdescribe('HexagonalConnectionRules', () => {
+describe('HexagonalConnectionRules', () => {
     /**
      * Naming of cases, some of them will be used
      * A. double open: _ _ X X X X _ _
@@ -410,16 +410,29 @@ fdescribe('HexagonalConnectionRules', () => {
 
     });
 
-    describe('victory', () => {
+    fdescribe('victory', () => {
 
-        for (const dir of HexaDirection.directionWithWeirdDiagonals) {
+        for (const dir of HexaDirection.factory.all) {
             it('should include alignment of ' + dir.toString(), () => {
-                // Given a board large enough to have 6 pieces aligned in each direction
+                // Given a board with 6 pieces aligned in <dir> direction
                 const largeConfig: MGPOptional<HexagonalConnectionConfig> = MGPOptional.of({
                     ...defaultConfig.get(),
                     size: 12,
                 });
-                const state: HexagonalConnectionState = rules.getInitialState(largeConfig);
+                const center: Coord = new Coord(12, 12);
+                let state: HexagonalConnectionState = rules
+                    .getInitialState(largeConfig)
+                    .setPieceAt(center, FourStatePiece.ZERO)
+                    .incrementTurn();
+                for (let distance: number = 1; distance <= 6; distance++) {
+                    state = state.setPieceAt(center.getNext(dir, distance), FourStatePiece.ONE);
+                }
+                state = state.incrementTurn();
+                const node: HexagonalConnectionNode = new HexagonalConnectionNode(state);
+
+                // When evaluating its board status
+                // Then it should be a victory
+                RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, largeConfig);
             });
         }
 

@@ -218,6 +218,10 @@
         <source>The oldest strategy game still practiced widely. A territory control game.</source>
         <target>Le plus vieux jeu de stratégie encore joué. Un jeu de contrôle de territoire</target>
       </trans-unit>
+      <trans-unit id="5992184603577753043" datatype="html">
+        <source>An hexagonal alignment game with weird &quot;diagonals&quot;!</source>
+        <target>Un jeu d'alignement hexagonal avec de drôles de &quot;diagonales&quot; !</target>
+      </trans-unit>
       <trans-unit id="4865500405661191388" datatype="html">
         <source>You are in charge of a hive full of insects. Use the abilities of your insects to block the opponent&apos;s queen in order to win!</source>
         <target>Vous contrôlez une colonie d'insectes. Utilisez les capacités de vos insectes pour bloquer la reine de votre adversaire afin de gagner !</target>
@@ -544,6 +548,10 @@
       <trans-unit id="2597247746010343961" datatype="html">
         <source>Squarz</source>
         <target>Squarz</target>
+      </trans-unit>
+      <trans-unit id="5666818274385684580" datatype="html">
+        <source>Hexagonal Connection</source>
+        <target>Connection Hexagonale</target>
       </trans-unit>
       <trans-unit id="1760292529513431093" datatype="html">
         <source>Trexo</source>
@@ -3311,6 +3319,26 @@
         <source>Minimax</source>
         <target>Minimax</target>
       </trans-unit>
+      <trans-unit id="45739481977493163" datatype="html">
+        <source>Size</source>
+        <target>Taille</target>
+      </trans-unit>
+      <trans-unit id="939120921275640096" datatype="html">
+        <source>Hexagonal Connection is played on an hexagonal board, the aim is to be the first to align 6 of yours pieces.</source>
+        <target>Hexagonal Connection se joue sur un plateau hexagonal, le but est d'aligner 6 de vos pièces.</target>
+      </trans-unit>
+      <trans-unit id="6926750930112284347" datatype="html">
+        <source>On the first turn, the first player plays only one piece.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, place your first piece by clicking on a space.</source>
+        <target>Au premier tour, le premier joueur joue une seule pièce.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, placez votre première pièce en cliquant sur une case.</target>
+      </trans-unit>
+      <trans-unit id="3416240052398580752" datatype="html">
+        <source>Hexagonal Diagonals</source>
+        <target>Diagonales Hexagonales</target>
+      </trans-unit>
+      <trans-unit id="6941500287730611395" datatype="html">
+        <source>But an original kind of diagonal also exist in Hexodia. Here, Dark has made alignment in each of those three direction, in only one a victory is still possible.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, do the winning move.</source>
+        <target>Mais un genre original de diagonales existe aussi à Hexodai. Ici, Foncé a fait un alignement dans chacunes de ces trois directions, la victoire ne reste possible que dans une seule.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, faite le coup gagnant.</target>
+      </trans-unit>
       <trans-unit id="5880375817695791500" datatype="html">
         <source>You&apos;re playing Dark.
         Place your piece so that you create a horizontal alignment of 4 of your pieces.</source>
@@ -3382,6 +3410,10 @@
       <trans-unit id="1997992313730455534" datatype="html">
         <source>Number of aligned pieces needed to win</source>
         <target>Nombre de pièces alignées nécessaires pour gagner</target>
+      </trans-unit>
+      <trans-unit id="7673825359518153270" datatype="html">
+        <source>Number of drops by turn</source>
+        <target>Nombre de pièces déposées par tour</target>
       </trans-unit>
       <trans-unit id="2370571702661444910" datatype="html">
         <source>Size of captures</source>

@@ -9,7 +9,7 @@ import { AbstractNInARowHelper } from 'src/app/jscaip/NInARowHelper';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { TableUtils } from 'src/app/jscaip/TableUtils';
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
-import { NumberConfig, RulesConfigDescription } from 'src/app/components/wrapper-components/rules-configuration/RulesConfigDescription';
+import { NumberConfig, RulesConfigDescription, RulesConfigDescriptionLocalizable } from 'src/app/components/wrapper-components/rules-configuration/RulesConfigDescription';
 import { MGPValidators } from 'src/app/utils/MGPValidator';
 import { HexaDirection } from 'src/app/jscaip/HexaDirection';
 
@@ -17,7 +17,7 @@ export type HexagonalConnectionConfig = {
 
     size: number;
 
-    alignmentNeeded: number;
+    nInARow: number;
 
     numberOfDrops: number;
 
@@ -35,9 +35,13 @@ export class HexagonalConnectionRules extends ConfigurableRules<HexagonalConnect
         new RulesConfigDescription<HexagonalConnectionConfig>({
             name: (): string => $localize`Hexagonal Connection`,
             config: {
-                size: new NumberConfig(6, () => $localize`Size`, MGPValidators.range(1, 99)),
-                alignmentNeeded: new NumberConfig(6, () => $localize`Alignement Needed TODO UNIFORMISE`, MGPValidators.range(1, 99)),
-                numberOfDrops: new NumberConfig(2, () => $localize`Number of drops`, MGPValidators.range(1, 99)),
+                size: new NumberConfig(12, () => $localize`Size`, MGPValidators.range(1, 99)),
+                nInARow: new NumberConfig(6,
+                                          RulesConfigDescriptionLocalizable.ALIGNMENT_SIZE,
+                                          MGPValidators.range(1, 99)),
+                numberOfDrops: new NumberConfig(2,
+                                                RulesConfigDescriptionLocalizable.NUMBER_OF_DROPS,
+                                                MGPValidators.range(1, 99)),
             },
         });
 
@@ -54,7 +58,7 @@ export class HexagonalConnectionRules extends ConfigurableRules<HexagonalConnect
         if (config.isPresent()) {
             return new AbstractNInARowHelper<FourStatePiece, HexaDirection>(
                 (piece: FourStatePiece) => piece.getPlayer(),
-                config.get().alignmentNeeded,
+                config.get().nInARow,
                 HexaDirection.factory.all,
             );
         } else {
@@ -62,7 +66,7 @@ export class HexagonalConnectionRules extends ConfigurableRules<HexagonalConnect
                 HexagonalConnectionRules.RULES_CONFIG_DESCRIPTION.getDefaultConfig().config;
             return new AbstractNInARowHelper<FourStatePiece, HexaDirection>(
                 (piece: FourStatePiece) => piece.getPlayer(),
-                defaultConfig.alignmentNeeded,
+                defaultConfig.nInARow,
                 HexaDirection.factory.all,
             );
         }

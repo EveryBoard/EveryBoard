@@ -84,7 +84,6 @@ export class AbstractNInARowHelper<T extends NonNullable<unknown>, D extends Dir
                 score += 2 + lineFreeSpaces - this.N;
             }
         }
-        console.log(score)
         return score;
     }
 

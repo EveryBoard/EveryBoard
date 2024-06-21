@@ -194,8 +194,8 @@
       <trans-unit id="6676975125770922470" datatype="html">
         <source>The oldest strategy game still practiced widely. A territory control game.</source>
       </trans-unit>
-      <trans-unit id="5557430840906225475" datatype="html">
-        <source>An hexagonal version of Connection, pour le moment!</source>
+      <trans-unit id="5992184603577753043" datatype="html">
+        <source>An hexagonal alignment game with weird &quot;diagonals&quot;!</source>
       </trans-unit>
       <trans-unit id="4865500405661191388" datatype="html">
         <source>You are in charge of a hive full of insects. Use the abilities of your insects to block the opponent&apos;s queen in order to win!</source>
@@ -754,6 +754,12 @@
       </trans-unit>
       <trans-unit id="3033623772164647792" datatype="html">
         <source>Height</source>
+      </trans-unit>
+      <trans-unit id="1997992313730455534" datatype="html">
+        <source>Number of aligned pieces needed to win</source>
+      </trans-unit>
+      <trans-unit id="7673825359518153270" datatype="html">
+        <source>Number of drops by turn</source>
       </trans-unit>
       <trans-unit id="5607669932062416162" datatype="html">
         <source>Default</source>
@@ -1674,8 +1680,17 @@
       <trans-unit id="45739481977493163" datatype="html">
         <source>Size</source>
       </trans-unit>
-      <trans-unit id="5279283834763703262" datatype="html">
-        <source>Alignement Needed TODO UNIFORMISE</source>
+      <trans-unit id="939120921275640096" datatype="html">
+        <source>Hexagonal Connection is played on an hexagonal board, the aim is to be the first to align 6 of yours pieces.</source>
+      </trans-unit>
+      <trans-unit id="6926750930112284347" datatype="html">
+        <source>On the first turn, the first player plays only one piece.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, place your first piece by clicking on a space.</source>
+      </trans-unit>
+      <trans-unit id="3416240052398580752" datatype="html">
+        <source>Hexagonal Diagonals</source>
+      </trans-unit>
+      <trans-unit id="6941500287730611395" datatype="html">
+        <source>But an original kind of diagonal also exist in Hexodia. Here, Dark has made alignment in each of those three direction, in only one a victory is still possible.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, do the winning move.</source>
       </trans-unit>
       <trans-unit id="4791280679911297134" datatype="html">
         <source>The queen bee can only move to one of its direct neighbors.</source>
@@ -2470,9 +2485,6 @@
       </trans-unit>
       <trans-unit id="3823427068887903090" datatype="html">
         <source>Captured stones needed to win</source>
-      </trans-unit>
-      <trans-unit id="1997992313730455534" datatype="html">
-        <source>Number of aligned pieces needed to win</source>
       </trans-unit>
       <trans-unit id="2370571702661444910" datatype="html">
         <source>Size of captures</source>

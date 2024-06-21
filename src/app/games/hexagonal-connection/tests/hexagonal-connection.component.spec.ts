@@ -11,7 +11,7 @@ import { MGPOptional } from 'lib/dist';
 import { HexagonalConnectionConfig, HexagonalConnectionRules } from '../HexagonalConnectionRules';
 import { Table } from 'src/app/jscaip/TableUtils';
 
-fdescribe('HexagonalConnectionComponent', () => {
+describe('HexagonalConnectionComponent', () => {
 
     const _: FourStatePiece = FourStatePiece.EMPTY;
     const O: FourStatePiece = FourStatePiece.ZERO;

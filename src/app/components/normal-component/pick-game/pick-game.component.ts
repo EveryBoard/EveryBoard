@@ -176,7 +176,7 @@ class GameDescription {
 
     public static readonly GO: Localized = () => $localize`The oldest strategy game still practiced widely. A territory control game.`;
 
-    public static readonly HEXAGONAL_CONNECTION: Localized = () => $localize`An hexagonal version of Connection, pour le moment!`;
+    public static readonly HEXAGONAL_CONNECTION: Localized = () => $localize`An hexagonal alignment game with weird "diagonals"!`;
 
     public static readonly HIVE: Localized = () => $localize`You are in charge of a hive full of insects. Use the abilities of your insects to block the opponent's queen in order to win!`;
 

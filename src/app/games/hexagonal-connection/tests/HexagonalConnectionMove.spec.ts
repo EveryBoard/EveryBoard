@@ -3,7 +3,7 @@ import { HexagonalConnectionMove } from '../HexagonalConnectionMove';
 import { Coord } from 'src/app/jscaip/Coord';
 import { EncoderTestUtils } from '@everyboard/lib';
 
-fdescribe('HexagonalConnectionMove', () => {
+describe('HexagonalConnectionMove', () => {
 
     describe('of', () => {
 

@@ -218,9 +218,8 @@ export abstract class GameWrapper<P extends Comparable> extends BaseWrapperCompo
     protected async showCurrentState(triggerAnimation: boolean): Promise<void> {
         this.gameComponent.cancelMoveAttempt();
         this.gameComponent.hideLastMove();
-        // Even though its only used in the if, it's required in the else (perhaps) (TODO test)
-        const config: MGPOptional<RulesConfig> = await this.getConfig();
         if (this.gameComponent.node.previousMove.isPresent()) {
+            const config: MGPOptional<RulesConfig> = await this.getConfig();
             await this.gameComponent.updateBoard(triggerAnimation);
             const move: Move = this.gameComponent.node.previousMove.get();
             await this.gameComponent.showLastMove(move, config);
