@@ -808,7 +808,9 @@ export namespace SlowTest {
         if (TestVars.slowTests) {
             regularIt(name, testBody);
         } else {
-            regularXit(name, testBody); // We still want this detected as a test to avoid karma errors
+            // Instead of doing nothing when slow tests are disabled, which would result in a potential karma error
+            // ("describe without it"), we use xit
+            regularXit(name, testBody);
         }
     }
 
