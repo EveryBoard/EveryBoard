@@ -66,8 +66,12 @@
         </fieldset>
     </form>
 
+    <div class="columns is-centered mb-2 mt-2">
     <app-demo-card id="demoCard"
+                   class="columns is-centered mb-2 mt-2"
+                   style="flex: 1; height: 50vh; width: 50vh;"
                    *ngIf="getConfigDemo() !== undefined"
                    [demoNodeInfo]="getConfigDemo()"></app-demo-card>
+    </div>
 
 </div>

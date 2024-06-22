@@ -1,6 +1,5 @@
 <div *ngIf="isConfigSet()"
-     class="tile is-ancestor"
-     style="min-height: 80vh">
+     class="tile is-ancestor">
     <div class="tile is-3 is-vertical is-parent">
         <div *ngIf="gameComponent"
              id="info"
@@ -11,7 +10,7 @@
             </div>
             <div id="playerSelector">
                 <div class="column is-12 is-vcentered">
-                    <p class="mb-2">Player 1</p>
+                    <p class="mb-2" i18n>Player 1</p>
                     <div class="select is-fullwidth">
                         <select id="playerZeroSelect"
                                 (change)="updatePlayer(Player.ZERO)"
@@ -44,7 +43,7 @@
                 </div>
                 <hr/>
                 <div class="column is-12">
-                    <p class="mb-2">Player 2</p>
+                    <p class="mb-2" i18n>Player 2</p>
                     <div class="select is-fullwidth">
                         <select id="playerOneSelect"
                                 (change)="updatePlayer(Player.ONE)"
@@ -126,8 +125,7 @@
 </div>
 
 <div *ngIf="isConfigSet() === false"
-     class="box"
-     style="min-height: 80vh">
+     class="box">
     <app-rules-configuration id="rulesConfigComponent"
                              [stateProvider]="getStateProvider()"
                              [rulesConfigDescriptionOptional]="getRulesConfigDescription()"

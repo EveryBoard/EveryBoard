@@ -17,7 +17,7 @@ export type DemoNodeInfo = {
 
 @Component({
     selector: 'app-demo-card',
-    template: `<div #board></div>`,
+    template: `<div style="flex: 1"><div #board></div></div>`,
 })
 export class DemoCardWrapperComponent extends GameWrapper<string> implements AfterViewInit, OnChanges {
 
