@@ -1,11 +1,9 @@
-<div *ngIf="isConfigSet()"
-     class="grid">
-    <div class="grid is-3 is-horizontal">
+<div *ngIf="isConfigSet()" class="columns is-3 mb-3">
+    <div class="column is-one-quarter has-text-centered">
         <div *ngIf="gameComponent"
              id="info"
-             class="cell is-child box has-text-centered">
-            <div id="turnIndicator"
-                 class="block">
+             class="cell box">
+            <div id="turnIndicator">
                 <p class="subtitle" i18n>Turn n°{{ gameComponent.getTurn() + 1 }}</p>
             </div>
             <div id="playerSelector">
@@ -21,9 +19,9 @@
                                     id="playerZero_ai_{{ ai.name }}"
                                     [value]="ai.name">{{ ai.name }}</option>
                         </select>
-                   </div>
+                    </div>
                     <div *ngIf="players[0].equalsValue('human') === false"
-                        class="select is-fullwidth">
+                         class="select is-fullwidth">
                         <select id="aiZeroOptionSelect"
                                 [(ngModel)]="aiOptions[0]"
                                 (change)="updatePlayer(Player.ZERO)">
@@ -115,20 +113,17 @@
             </div>
         </div>
     </div>
-    <div class="grid is-9 is-vcentered">
-        <div class="cell  p-5"
+    <div class="column">
+        <div class="box p-5"
              [ngClass]="getBoardHighlight()">
-            <div class="box">
-            <div id="board">
+            <div id="board" class="box">
                 <div #board></div>
-            </div>
             </div>
         </div>
     </div>
 </div>
 
-<div *ngIf="isConfigSet() === false"
-     class="box">
+<div *ngIf="isConfigSet() === false" >
     <app-rules-configuration id="rulesConfigComponent"
                              [stateProvider]="getStateProvider()"
                              [rulesConfigDescriptionOptional]="getRulesConfigDescription()"
