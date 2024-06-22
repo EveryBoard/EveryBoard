@@ -245,9 +245,9 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                 ),
             ];
             await wrapper.startTutorial(tutorial);
-            await testUtils.expectClickSuccess('#choosePiece_8');
+            await testUtils.expectClickSuccess('#click-piece-8');
             const move: QuartoMove = new QuartoMove(1, 1, QuartoPiece.BAAA);
-            await testUtils.expectMoveSuccess('#chooseCoord_1_1', move);
+            await testUtils.expectMoveSuccess('#click-coord-1-1', move);
 
             // When clicking retry
             await testUtils.clickElement('#retryButton');
@@ -274,9 +274,9 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             ];
             await wrapper.startTutorial(tutorial);
             // When doing another move, then clicking retry
-            await testUtils.expectClickSuccess('#choosePiece_15');
+            await testUtils.expectClickSuccess('#click-piece-15');
             const move: QuartoMove = new QuartoMove(0, 0, QuartoPiece.BBBB);
-            await testUtils.expectMoveSuccess('#chooseCoord_0_0', move);
+            await testUtils.expectMoveSuccess('#click-coord-0-0', move);
             await testUtils.clickElement('#retryButton');
 
             // expect to see steps instruction message on component and board restarted
@@ -306,12 +306,12 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             ];
             await wrapper.startTutorial(tutorial);
 
-            await testUtils.expectClickSuccess('#chooseCoord_0_0');
+            await testUtils.expectClickSuccess('#click-coord-0-0');
             const move: QuartoMove = new QuartoMove(0, 0, QuartoPiece.BBBB);
-            await testUtils.expectMoveSuccess('#choosePiece_15', move);
+            await testUtils.expectMoveSuccess('#click-piece-15', move);
 
             // When clicking again
-            await testUtils.expectClickForbidden('#chooseCoord_2_2', TutorialFailure.STEP_FINISHED());
+            await testUtils.expectClickForbidden('#click-coord-2-2', TutorialFailure.STEP_FINISHED());
 
             // expect to see still the steps success message on component
             const expectedMessage: string = TutorialStepMessage.CONGRATULATIONS();
@@ -327,16 +327,16 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                     'title',
                     'instruction',
                     QuartoRules.get().getInitialState(),
-                    ['#choosePiece_15'],
+                    ['#click-piece-15'],
                     TutorialStepMessage.CONGRATULATIONS(),
                     'Perdu.',
                 ),
             ];
-            await testUtils.expectClickSuccess('#choosePiece_15');
+            await testUtils.expectClickSuccess('#click-piece-15');
             await testUtils.clickElement('#retryButton');
 
             // When trying again
-            await testUtils.expectClickSuccess('#choosePiece_15');
+            await testUtils.expectClickSuccess('#click-piece-15');
 
             // expect to see success message again
             const currentMessage: string =
@@ -355,7 +355,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                     'title',
                     'Explanation Explanation Explanation.',
                     QuartoRules.get().getInitialState(),
-                    ['chooseCoord_0_0'],
+                    ['choose-coord-0-0'],
                     TutorialStepMessage.CONGRATULATIONS(),
                     'Perdu.',
                 ),
@@ -363,7 +363,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                     'title',
                     'Following Following Following.',
                     QuartoRules.get().getInitialState(),
-                    ['#chooseCoord_0_0'],
+                    ['#click-coord-0-0'],
                     'Fini.',
                     'Reperdu.',
                 ),
@@ -386,7 +386,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                     'title 0',
                     'instruction 0',
                     QuartoRules.get().getInitialState(),
-                    ['#chooseCoord_0_0'],
+                    ['#click-coord-0-0'],
                     TutorialStepMessage.CONGRATULATIONS(),
                     'Perdu.',
                 ),
@@ -394,7 +394,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                     'title 1',
                     'instruction 1',
                     QuartoRules.get().getInitialState(),
-                    ['#chooseCoord_1_1'],
+                    ['#click-coord-1-1'],
                     TutorialStepMessage.CONGRATULATIONS(),
                     'Perdu.',
                 ),
@@ -402,7 +402,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                     'title 2',
                     'instruction 2',
                     QuartoRules.get().getInitialState(),
-                    ['#chooseCoord_2_2'],
+                    ['#click-coord-2-2'],
                     TutorialStepMessage.CONGRATULATIONS(),
                     'Perdu.',
                 ),
@@ -410,7 +410,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             await wrapper.startTutorial(tutorial);
             await testUtils.clickElement('#nextButton');
             await testUtils.clickElement('#nextButton');
-            await testUtils.expectClickSuccess('#chooseCoord_2_2');
+            await testUtils.expectClickSuccess('#click-coord-2-2');
 
             // When clicking next
             await testUtils.clickElement('#nextButton');
@@ -429,7 +429,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                     'title 0',
                     'instruction 0',
                     QuartoRules.get().getInitialState(),
-                    ['#chooseCoord_0_0'],
+                    ['#click-coord-0-0'],
                     TutorialStepMessage.CONGRATULATIONS(),
                     'Perdu.',
                 ),
@@ -437,7 +437,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                     'title 1',
                     'instruction 1',
                     QuartoRules.get().getInitialState(),
-                    ['#chooseCoord_1_1'],
+                    ['#click-coord-1-1'],
                     TutorialStepMessage.CONGRATULATIONS(),
                     'Perdu.',
                 ),
@@ -445,14 +445,14 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                     'title 2',
                     'instruction 2',
                     QuartoRules.get().getInitialState(),
-                    ['#chooseCoord_2_2'],
+                    ['#click-coord-2-2'],
                     TutorialStepMessage.CONGRATULATIONS(),
                     'Perdu.',
                 ),
             ];
             await wrapper.startTutorial(tutorial);
             await testUtils.clickElement('#nextButton'); // Go to 1
-            await testUtils.expectClickSuccess('#chooseCoord_1_1'); // Do 1
+            await testUtils.expectClickSuccess('#click-coord-1-1'); // Do 1
             await testUtils.clickElement('#nextButton'); // Go to 2
             await testUtils.clickElement('#nextButton'); // Go to 0
 
@@ -473,13 +473,13 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                     'title 0',
                     'instruction 0',
                     QuartoRules.get().getInitialState(),
-                    ['#chooseCoord_0_0'],
+                    ['#click-coord-0-0'],
                     TutorialStepMessage.CONGRATULATIONS(),
                     'Perdu.',
                 ),
             ];
             await wrapper.startTutorial(tutorial);
-            await testUtils.expectClickSuccess('#chooseCoord_0_0');
+            await testUtils.expectClickSuccess('#click-coord-0-0');
 
             // When clicking next button
             await testUtils.clickElement('#nextButton');
@@ -587,11 +587,11 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             await wrapper.startTutorial(tutorial);
 
             // When doing that move
-            await testUtils.expectClickSuccess('#chooseCoord_3_3');
+            await testUtils.expectClickSuccess('#click-coord-3-3');
             tick(11);
 
             // expect highlight to be present
-            testUtils.expectElementToExist('#selected');
+            testUtils.expectElementToExist('#dropped-piece-highlight');
         }));
 
         it('should show success message after step success', fakeAsync(async() => {
@@ -614,9 +614,9 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             await wrapper.startTutorial(tutorial);
 
             // When doing that move
-            await testUtils.expectClickSuccess('#chooseCoord_0_0');
+            await testUtils.expectClickSuccess('#click-coord-0-0');
             const move: QuartoMove = new QuartoMove(0, 0, QuartoPiece.BBBB);
-            await testUtils.expectMoveSuccess('#choosePiece_15', move);
+            await testUtils.expectMoveSuccess('#click-piece-15', move);
 
             // expect to see steps success message on component
             const expectedMessage: string = TutorialStepMessage.CONGRATULATIONS();
@@ -645,9 +645,9 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             await wrapper.startTutorial(tutorial);
 
             // When doing another move
-            await testUtils.expectClickSuccess('#chooseCoord_1_1');
+            await testUtils.expectClickSuccess('#click-coord-1-1');
             const move: QuartoMove = new QuartoMove(1, 1, QuartoPiece.BBBB);
-            await testUtils.expectMoveSuccess('#choosePiece_15', move);
+            await testUtils.expectMoveSuccess('#click-piece-15', move);
 
             // expect to see steps success message on component
             const expectedReason: string = 'Perdu.';
@@ -672,9 +672,9 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             // When doing a (virtually) illegal move
             const error: string = 'some error message...';
             spyOn(wrapper.gameComponent.rules, 'isLegal').and.returnValue(MGPFallible.failure(error));
-            await testUtils.expectClickSuccess('#chooseCoord_0_0');
+            await testUtils.expectClickSuccess('#click-coord-0-0');
             const move: QuartoMove = new QuartoMove(0, 0, QuartoPiece.BBBB);
-            await testUtils.expectMoveFailure('#choosePiece_15', error, move);
+            await testUtils.expectMoveFailure('#click-piece-15', error, move);
 
             // expect to see message error
             const expectedReason: string = error;
@@ -701,7 +701,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                 ),
             ];
             await wrapper.startTutorial(tutorial);
-            await testUtils.expectClickFailure('#chooseCoord_0_0', RulesFailure.MUST_CLICK_ON_EMPTY_SPACE());
+            await testUtils.expectClickFailure('#click-coord-0-0', RulesFailure.MUST_CLICK_ON_EMPTY_SPACE());
 
             // expect to see cancelMove reason as message
             const expectedMessage: string = 'instruction 0.';
@@ -712,7 +712,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                 testUtils.findElement('#currentReason').nativeElement.innerHTML;
             expect(currentReason).toBe(RulesFailure.MUST_CLICK_ON_EMPTY_SPACE());
             // expect click to be still possible
-            const chooseCoordLegality: MGPValidation = await testUtils.getComponent().canUserPlay('#chooseCoord_0_0');
+            const chooseCoordLegality: MGPValidation = await testUtils.getComponent().canUserPlay('#click-coord-0-0');
             expect(chooseCoordLegality.isSuccess()).toBeTrue();
         }));
 
@@ -759,9 +759,9 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             testUtils.expectElementNotToExist('#showSolutionButton');
 
             // When doing a move that is not awaited
-            await testUtils.expectClickSuccess('#chooseCoord_1_1');
+            await testUtils.expectClickSuccess('#click-coord-1-1');
             const move: QuartoMove = new QuartoMove(1, 1, QuartoPiece.BAAA);
-            await testUtils.expectMoveSuccess('#choosePiece_8', move);
+            await testUtils.expectMoveSuccess('#click-piece-8', move);
 
             // Then it should have failed
             expect(wrapper.moveAttemptMade).toBeTrue();
@@ -790,9 +790,9 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                 ),
             ];
             await wrapper.startTutorial(tutorial);
-            await testUtils.expectClickSuccess('#chooseCoord_1_1');
+            await testUtils.expectClickSuccess('#click-coord-1-1');
             const move: QuartoMove = new QuartoMove(1, 1, QuartoPiece.BAAA);
-            await testUtils.expectMoveSuccess('#choosePiece_8', move);
+            await testUtils.expectMoveSuccess('#click-piece-8', move);
 
             // When clicking "Show Solution"
             spyOn(testUtils.getGameComponent(), 'updateBoard').and.callThrough();
@@ -832,7 +832,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             spyOn(gameComponent, 'hideLastMove').and.callThrough();
 
             // When doing that move
-            await testUtils.expectClickSuccess('#chooseCoord_0_0');
+            await testUtils.expectClickSuccess('#click-coord-0-0');
 
             // Then hideLastMove should have been called
             expect(gameComponent.hideLastMove).toHaveBeenCalledOnceWith();
@@ -856,9 +856,9 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             await wrapper.startTutorial(tutorial);
 
             // When doing any move
-            await testUtils.expectClickSuccess('#chooseCoord_0_0');
+            await testUtils.expectClickSuccess('#click-coord-0-0');
             const move: QuartoMove = new QuartoMove(0, 0, QuartoPiece.BBBB);
-            await testUtils.expectMoveSuccess('#choosePiece_15', move);
+            await testUtils.expectMoveSuccess('#click-piece-15', move);
 
             // expect to see steps success message on component
             const expectedMessage: string = TutorialStepMessage.CONGRATULATIONS();
@@ -883,7 +883,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             spyOn(gameComponent, 'hideLastMove').and.callThrough();
 
             // When doing that move
-            await testUtils.expectClickSuccess('#chooseCoord_0_0');
+            await testUtils.expectClickSuccess('#click-coord-0-0');
 
             // Then hideLastMove should have been called
             expect(gameComponent.hideLastMove).toHaveBeenCalledOnceWith();
@@ -900,7 +900,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                     'title',
                     'Click on (0, 0) or (3, 3)',
                     QuartoRules.get().getInitialState(),
-                    ['#chooseCoord_0_0', '#chooseCoord_3_3'],
+                    ['#click-coord-0-0', '#click-coord-3-3'],
                     TutorialStepMessage.CONGRATULATIONS(),
                     'Perdu.',
                 ),
@@ -908,7 +908,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             await wrapper.startTutorial(tutorial);
 
             // When doing one of those clicks
-            await testUtils.expectClickSuccess('#chooseCoord_0_0');
+            await testUtils.expectClickSuccess('#click-coord-0-0');
 
             // expect to see steps success message on component
             const expectedMessage: string = TutorialStepMessage.CONGRATULATIONS();
@@ -924,7 +924,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                     'title',
                     'Click on (0, 0) or (3, 3)',
                     QuartoRules.get().getInitialState(),
-                    ['#chooseCoord_0_0', '#chooseCoord_3_3'],
+                    ['#click-coord-0-0', '#click-coord-3-3'],
                     TutorialStepMessage.CONGRATULATIONS(),
                     'Perdu.',
                 ),
@@ -934,7 +934,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             spyOn(gameComponent, 'hideLastMove').and.callThrough();
 
             // When click for the first time
-            await testUtils.expectClickSuccess('#chooseCoord_0_0');
+            await testUtils.expectClickSuccess('#click-coord-0-0');
 
             // Then hideLastMove should have been called
             expect(gameComponent.hideLastMove).toHaveBeenCalledOnceWith();
@@ -947,7 +947,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                     'title',
                     'Click on (0, 0) or (3, 3)',
                     QuartoRules.get().getInitialState(),
-                    ['#chooseCoord_0_0', '#chooseCoord_3_3'],
+                    ['#click-coord-0-0', '#click-coord-3-3'],
                     TutorialStepMessage.CONGRATULATIONS(),
                     'Perdu.',
                 ),
@@ -955,7 +955,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             await wrapper.startTutorial(tutorial);
 
             // When doing another move
-            await testUtils.expectClickSuccess('#chooseCoord_1_1');
+            await testUtils.expectClickSuccess('#click-coord-1-1');
 
             // expect to see steps success message on component
             const expectedMessage: string = 'Perdu.';
@@ -976,7 +976,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                         [QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY],
                         [QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY],
                     ], 0, QuartoPiece.ABBA),
-                    ['#chooseCoord_3_3'],
+                    ['#click-coord-3-3'],
                     TutorialStepMessage.CONGRATULATIONS(),
                     'Perdu.',
                 ),
@@ -984,7 +984,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             await wrapper.startTutorial(tutorial);
 
             // When doing invalid click
-            await testUtils.expectClickFailure('#chooseCoord_0_0', RulesFailure.MUST_CLICK_ON_EMPTY_SPACE());
+            await testUtils.expectClickFailure('#click-coord-0-0', RulesFailure.MUST_CLICK_ON_EMPTY_SPACE());
 
             // Then the failure reason should be shown
             const expectedMessage: string = 'Perdu.';
@@ -1005,21 +1005,21 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                     'title',
                     'Click on (0, 0)',
                     QuartoRules.get().getInitialState(),
-                    ['#chooseCoord_0_0'],
+                    ['#click-coord-0-0'],
                     'Bravo !',
                     'Perdu.',
                 ),
             ];
             await wrapper.startTutorial(tutorial);
             // This click is legal, however it is not the one expected by the tutorial!
-            await testUtils.expectClickSuccess('#chooseCoord_1_1');
+            await testUtils.expectClickSuccess('#click-coord-1-1');
 
             // When clicking on 'see solution'
             await testUtils.clickElement('#showSolutionButton');
             tick(0);
 
             // Then the actual click is performed and the solution message is shown
-            testUtils.expectElementToExist('#selected');
+            testUtils.expectElementToExist('#dropped-piece-highlight');
             const expectedMessage: string = 'Bravo !';
             const currentMessage: string =
                 testUtils.findElement('#currentMessage').nativeElement.innerHTML;
@@ -1038,7 +1038,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                         [QuartoPiece.BABA, QuartoPiece.BBBB, QuartoPiece.ABAA, QuartoPiece.AABA],
                         [QuartoPiece.AAAA, QuartoPiece.ABAB, QuartoPiece.BABB, QuartoPiece.EMPTY],
                     ], 15, QuartoPiece.BAAB),
-                    ['#chooseCoord_3_3'],
+                    ['#click-coord-3-3'],
                     TutorialStepMessage.CONGRATULATIONS(),
                     'Perdu.',
                 ),
@@ -1047,7 +1047,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
 
             // When doing that move
             const move: QuartoMove = new QuartoMove(3, 3, QuartoPiece.EMPTY);
-            await testUtils.expectMoveSuccess('#chooseCoord_3_3', move);
+            await testUtils.expectMoveSuccess('#click-coord-3-3', move);
 
             // expect to see steps success message on component
             const expectedMessage: string = TutorialStepMessage.CONGRATULATIONS();
@@ -1071,7 +1071,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             await wrapper.startTutorial(tutorial);
 
             // When clicking
-            await testUtils.expectClickForbidden('#chooseCoord_2_2', TutorialFailure.INFORMATIONAL_STEP());
+            await testUtils.expectClickForbidden('#click-coord-2-2', TutorialFailure.INFORMATIONAL_STEP());
 
             // expect to see still the steps success message on component
             const expectedMessage: string = 'instruction 0';
@@ -1129,9 +1129,9 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             await wrapper.startTutorial(tutorial);
 
             // When doing a move
-            await testUtils.expectClickSuccess('#chooseCoord_0_0');
+            await testUtils.expectClickSuccess('#click-coord-0-0');
             const move: QuartoMove = new QuartoMove(0, 0, QuartoPiece.BBBB);
-            await testUtils.expectMoveSuccess('#choosePiece_15', move);
+            await testUtils.expectMoveSuccess('#click-piece-15', move);
 
             // expect to see steps success message on component
             const expectedReason: string = 'chocolatine';
@@ -1157,9 +1157,9 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             await wrapper.startTutorial(tutorial);
 
             // When doing a move
-            await testUtils.expectClickSuccess('#chooseCoord_0_0');
+            await testUtils.expectClickSuccess('#click-coord-0-0');
             const move: QuartoMove = new QuartoMove(0, 0, QuartoPiece.BBBB);
-            await testUtils.expectMoveSuccess('#choosePiece_15', move);
+            await testUtils.expectMoveSuccess('#click-piece-15', move);
 
             // expect to see steps success message on component
             const expectedMessage: string = TutorialStepMessage.CONGRATULATIONS();
@@ -1187,7 +1187,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             spyOn(gameComponent, 'hideLastMove').and.callThrough();
 
             // When clicking for the first time
-            await testUtils.expectClickSuccess('#chooseCoord_0_0');
+            await testUtils.expectClickSuccess('#click-coord-0-0');
 
             // Then hideLastMove should have been called
             expect(gameComponent.hideLastMove).toHaveBeenCalledOnceWith();
@@ -1213,9 +1213,9 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                 ),
             ];
             await wrapper.startTutorial(tutorial);
-            await testUtils.expectClickSuccess('#chooseCoord_0_0');
+            await testUtils.expectClickSuccess('#click-coord-0-0');
             const proposedMove: QuartoMove = new QuartoMove(0, 0, QuartoPiece.BBBB);
-            await testUtils.expectMoveSuccess('#choosePiece_15', proposedMove);
+            await testUtils.expectMoveSuccess('#click-piece-15', proposedMove);
 
             // When clicking "Show Solution"
             await testUtils.clickElement('#showSolutionButton');

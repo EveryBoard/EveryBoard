@@ -53,9 +53,9 @@ export class QuartoComponent extends RectangularGameComponent<QuartoRules,
         this.victoriousCoords = this.rules.getVictoriousCoords(state);
     }
 
-    public async chooseCoord(x: number, y: number): Promise<MGPValidation> {
+    public async clickCoord(x: number, y: number): Promise<MGPValidation> {
         // called when the user click on the quarto board
-        const clickValidity: MGPValidation = await this.canUserPlay('#chooseCoord_' + x + '_' + y);
+        const clickValidity: MGPValidation = await this.canUserPlay('#click-coord-' + x + '-' + y);
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }
@@ -80,8 +80,8 @@ export class QuartoComponent extends RectangularGameComponent<QuartoRules,
         }
     }
 
-    public async choosePiece(givenPiece: number): Promise<MGPValidation> {
-        const clickValidity: MGPValidation = await this.canUserPlay('#choosePiece_' + givenPiece);
+    public async clickPiece(givenPiece: number): Promise<MGPValidation> {
+        const clickValidity: MGPValidation = await this.canUserPlay('#click-piece-' + givenPiece);
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }
@@ -115,8 +115,7 @@ export class QuartoComponent extends RectangularGameComponent<QuartoRules,
     public async deselectDroppedPiece(): Promise<MGPValidation> {
         // So it does not throw when there is no chosen piece (used in clickValidity test)
         const chosen: Coord = this.chosen.getOrElse(new Coord(404, 404));
-        const droppedPieceName: string = '#droppedPiece_' + chosen.x + '_' + chosen.y;
-        const clickValidity: MGPValidation = await this.canUserPlay(droppedPieceName);
+        const clickValidity: MGPValidation = await this.canUserPlay(`#dropped-piece-${ chosen.x }-${ chosen.y }`);
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }
