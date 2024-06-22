@@ -1,9 +1,9 @@
 <div *ngIf="isConfigSet()"
-     class="tile is-ancestor">
-    <div class="tile is-3 is-vertical is-parent">
+     class="grid">
+    <div class="grid is-3 is-horizontal">
         <div *ngIf="gameComponent"
              id="info"
-             class="tile is-child box has-text-centered">
+             class="cell is-child box has-text-centered">
             <div id="turnIndicator"
                  class="block">
                 <p class="subtitle" i18n>Turn n°{{ gameComponent.getTurn() + 1 }}</p>
@@ -115,11 +115,14 @@
             </div>
         </div>
     </div>
-    <div class="tile is-parent is-9 is-vcentered"
-         [ngClass]="getBoardHighlight()">
-        <div id="board"
-             class="tile is-child box">
-            <div #board></div>
+    <div class="grid is-9 is-vcentered">
+        <div class="cell  p-5"
+             [ngClass]="getBoardHighlight()">
+            <div class="box">
+            <div id="board">
+                <div #board></div>
+            </div>
+            </div>
         </div>
     </div>
 </div>
