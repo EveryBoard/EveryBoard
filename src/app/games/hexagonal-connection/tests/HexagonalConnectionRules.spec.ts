@@ -410,7 +410,7 @@ describe('HexagonalConnectionRules', () => {
 
     });
 
-    fdescribe('victory', () => {
+    describe('victory', () => {
 
         for (const dir of HexaDirection.factory.all) {
             it('should include alignment of ' + dir.toString(), () => {
