@@ -8,21 +8,16 @@ import { MancalaConfig } from '../MancalaConfig';
 import { KalahRules } from '../../kalah/KalahRules';
 import { AwaleRules } from '../../awale/AwaleRules';
 import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
+import { BaAwaRules } from '../../ba-awa/BaAwaRules';
 
 describe('MancalaScoreHeuristic', () => {
 
-    let heuristic: MancalaScoreHeuristic;
-    let defaultConfig: MGPOptional<MancalaConfig>;
-
-    beforeEach(() => {
-        heuristic = new MancalaScoreHeuristic();
-    });
-
-    for (const mancala of [AwaleRules, KalahRules]) {
+    for (const mancalaRules of [AwaleRules, KalahRules, BaAwaRules]) {
 
         it('should prefer board with better score', () => {
+            const heuristic: MancalaScoreHeuristic = new MancalaScoreHeuristic();
+            const defaultConfig: MGPOptional<MancalaConfig> = mancalaRules.get().getDefaultRulesConfig();
             // Given a board with a big score
-            defaultConfig = mancala.get().getDefaultRulesConfig();
             const board: number[][] = [
                 [0, 0, 0, 3, 2, 1],
                 [1, 2, 3, 0, 0, 0],

@@ -4,7 +4,7 @@ import { MGPOptional } from '@everyboard/lib';
 import { LascaPiece, LascaStack, LascaState } from '../LascaState';
 import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 import { LascaRules } from '../LascaRules';
-import { LascaControlPlusDominationHeuristic } from '../LascaControlAndDominationHeuristic';
+import { LascaControlPlusDominationHeuristic } from '../LascaControlPlusDominationHeuristic';
 import { HeuristicUtils } from 'src/app/jscaip/AI/tests/HeuristicUtils.spec';
 
 describe('LascaControlAndDominationHeuristic', () => {

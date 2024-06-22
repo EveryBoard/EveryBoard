@@ -12,11 +12,10 @@ import { YinshPiece } from './YinshPiece';
 import { YinshLegalityInformation, YinshRules } from './YinshRules';
 import { MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 import { MCTS } from 'src/app/jscaip/AI/MCTS';
-import { Minimax } from 'src/app/jscaip/AI/Minimax';
-import { YinshScoreHeuristic } from './YinshScoreHeuristic';
 import { YinshMoveGenerator } from './YinshMoveGenerator';
 import { PlayerMap, PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { YinshScoreMinimax } from './YinshScoreMinimax';
 
 interface ViewInfo {
     targets: Coord[],
@@ -92,7 +91,7 @@ export class YinshComponent extends HexagonalGameComponent<YinshRules,
         super(messageDisplayer);
         this.setRulesAndNode('Yinsh');
         this.availableAIs = [
-            new Minimax($localize`Score`, this.rules, new YinshScoreHeuristic(), new YinshMoveGenerator()),
+            new YinshScoreMinimax(),
             new MCTS($localize`MCTS`, new YinshMoveGenerator(), this.rules),
         ];
         this.encoder = YinshMove.encoder;

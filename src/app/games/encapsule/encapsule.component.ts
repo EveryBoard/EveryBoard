@@ -10,10 +10,10 @@ import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { EncapsuleFailure } from './EncapsuleFailure';
 import { MGPMap, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 import { MCTS } from 'src/app/jscaip/AI/MCTS';
-import { DummyHeuristic, Minimax } from 'src/app/jscaip/AI/Minimax';
 import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 import { EncapsuleMoveGenerator } from './EncapsuleMoveGenerator';
 import { ViewBox } from 'src/app/components/game-components/GameComponentUtils';
+import { EncapsuleDummyMinimax } from './EncapsuleDummyMinimax';
 
 @Component({
     selector: 'app-encapsule',
@@ -42,7 +42,7 @@ export class EncapsuleComponent extends RectangularGameComponent<EncapsuleRules,
         super(messageDisplayer);
         this.setRulesAndNode('Encapsule');
         this.availableAIs = [
-            new Minimax($localize`Dummy`, this.rules, new DummyHeuristic(), new EncapsuleMoveGenerator()),
+            new EncapsuleDummyMinimax(),
             new MCTS($localize`MCTS`, new EncapsuleMoveGenerator(), this.rules),
         ];
         this.encoder = EncapsuleMove.encoder;

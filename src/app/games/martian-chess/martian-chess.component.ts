@@ -13,9 +13,8 @@ import { Ordinal } from 'src/app/jscaip/Ordinal';
 import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 import { MCTS } from 'src/app/jscaip/AI/MCTS';
 import { MartianChessMoveGenerator } from './MartianChessMoveGenerator';
-import { MartianChessScoreHeuristic } from './MartianChessScoreHeuristic';
 import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
-import { Minimax } from 'src/app/jscaip/AI/Minimax';
+import { MartianChessScoreMinimax } from './MartianChessScoreMinimax';
 
 type SelectedPieceInfo = {
     selectedPiece: Coord,
@@ -164,7 +163,7 @@ export class MartianChessComponent extends RectangularGameComponent<MartianChess
         super(messageDisplayer);
         this.setRulesAndNode('MartianChess');
         this.availableAIs = [
-            new Minimax($localize`Score`, this.rules, new MartianChessScoreHeuristic(), new MartianChessMoveGenerator()),
+            new MartianChessScoreMinimax(),
             new MCTS($localize`MCTS`, new MartianChessMoveGenerator(), this.rules),
         ];
         this.encoder = MartianChessMove.encoder;

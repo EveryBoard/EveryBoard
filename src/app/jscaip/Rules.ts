@@ -77,7 +77,7 @@ export abstract class SuperRules<M extends Move,
         }
     }
 
-    public abstract getGameStatus(node: GameNode<M, S>, config?: MGPOptional<C>): GameStatus;
+    public abstract getGameStatus(node: GameNode<M, S>, config: MGPOptional<C>): GameStatus;
 }
 
 export abstract class ConfigurableRules<M extends Move,

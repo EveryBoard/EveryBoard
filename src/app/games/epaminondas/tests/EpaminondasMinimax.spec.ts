@@ -10,6 +10,7 @@ import { EpaminondasState } from '../EpaminondasState';
 import { EpaminondasNode } from '../EpaminondasRules';
 import { EpaminondasMinimax } from '../EpaminondasMinimax';
 import { MGPOptional } from '@everyboard/lib';
+import { minimaxTest, SlowTest } from 'src/app/utils/tests/TestUtils.spec';
 
 const _: PlayerOrNone = PlayerOrNone.NONE;
 const O: PlayerOrNone = PlayerOrNone.ZERO;
@@ -47,4 +48,13 @@ describe('EpaminondasMinimax', () => {
         expect(bestMove).toEqual(capture);
     });
 
+    SlowTest.it('should be able play against itself', () => {
+        minimaxTest({
+            rules: EpaminondasRules.get(),
+            minimax,
+            options: minimaxOptions,
+            config: defaultConfig,
+            shouldFinish: true,
+        });
+    });
 });

@@ -6,6 +6,7 @@ import { Minimax } from 'src/app/jscaip/AI/Minimax';
 import { ReversiConfig, ReversiLegalityInformation, ReversiNode, ReversiRules } from '../ReversiRules';
 import { ReversiMinimax } from '../ReversiMinimax';
 import { MGPOptional } from '@everyboard/lib';
+import { minimaxTest, SlowTest } from 'src/app/utils/tests/TestUtils.spec';
 
 describe('ReversiMinimax', () => {
 
@@ -24,6 +25,16 @@ describe('ReversiMinimax', () => {
         const node: ReversiNode = rules.getInitialNode(defaultConfig);
         const bestMove: ReversiMove = minimax.chooseNextMove(node, minimaxOptions, defaultConfig);
         expect(rules.isLegal(bestMove, node.gameState, defaultConfig).isSuccess()).toBeTrue();
+    });
+
+    SlowTest.it('should be able to play against itself', () => {
+        minimaxTest({
+            rules,
+            minimax,
+            options: minimaxOptions,
+            config: defaultConfig,
+            shouldFinish: true,
+        });
     });
 
 });

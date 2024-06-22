@@ -6,7 +6,7 @@ import { DiaballikRules } from './DiaballikRules';
 import { MoveGenerator } from 'src/app/jscaip/AI/AI';
 import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 
-export class DiaballikMinimax extends Minimax<DiaballikMove, DiaballikState, EmptyRulesConfig, DiaballikState> {
+export class DiaballikDistanceMinimax extends Minimax<DiaballikMove, DiaballikState, EmptyRulesConfig, DiaballikState> {
 
     public constructor(name: string, moveGenerator: MoveGenerator<DiaballikMove, DiaballikState>) {
         super(name,

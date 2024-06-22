@@ -1,36 +1,26 @@
 import { ConspirateursMove } from '../ConspirateursMove';
 import { AIDepthLimitOptions } from 'src/app/jscaip/AI/AI';
-import { ConspirateursNode, ConspirateursRules } from '../ConspirateursRules';
+import { ConspirateursRules } from '../ConspirateursRules';
 import { Minimax } from 'src/app/jscaip/AI/Minimax';
 import { ConspirateursState } from '../ConspirateursState';
 import { ConspirateursJumpMinimax } from '../ConspirateursJumpMinimax';
 import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { minimaxTest, SlowTest } from 'src/app/utils/tests/TestUtils.spec';
 
 describe('ConspirateursJumpMinimax', () => {
 
-    let rules: ConspirateursRules;
-    let minimax: Minimax<ConspirateursMove, ConspirateursState>;
+    const rules: ConspirateursRules = ConspirateursRules.get();
+    const minimax: Minimax<ConspirateursMove, ConspirateursState> = new ConspirateursJumpMinimax();
     const minimaxOptions: AIDepthLimitOptions = { name: 'Level 1', maxDepth: 1 };
     const defaultConfig: NoConfig = ConspirateursRules.get().getDefaultRulesConfig();
 
-    beforeEach(() => {
-        rules = ConspirateursRules.get();
-        minimax = new ConspirateursJumpMinimax();
+    SlowTest.it('should be able to play against itself', () => {
+        minimaxTest({
+            rules,
+            minimax,
+            options: minimaxOptions,
+            config: defaultConfig,
+            shouldFinish: false, // not a finisher
+        });
     });
-
-    it('should be able to finish when playing with itself', () => {
-        // Given a component where AI plays against AI
-        let node: ConspirateursNode = rules.getInitialNode(defaultConfig);
-
-        // When playing 200 turns
-        let turn: number = 0;
-        while (turn < 200 && rules.getGameStatus(node).isEndGame === false) {
-            const bestMove: ConspirateursMove = minimax.chooseNextMove(node, minimaxOptions, defaultConfig);
-            node = node.getChild(bestMove).get();
-            turn++;
-        }
-        // Then the game should be over
-        expect(rules.getGameStatus(node).isEndGame).toBeTrue();
-    });
-
 });

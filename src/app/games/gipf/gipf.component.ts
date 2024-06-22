@@ -12,7 +12,6 @@ import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 import { MCTS } from 'src/app/jscaip/AI/MCTS';
 import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
-import { Minimax } from 'src/app/jscaip/AI/Minimax';
 import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 
 import { GipfLegalityInformation, GipfRules } from 'src/app/games/gipf/GipfRules';
@@ -20,8 +19,8 @@ import { GipfFailure } from 'src/app/games/gipf/GipfFailure';
 import { GipfMove, GipfPlacement } from 'src/app/games/gipf/GipfMove';
 import { GipfState } from 'src/app/games/gipf/GipfState';
 import { GipfMoveGenerator } from './GipfMoveGenerator';
-import { GipfScoreHeuristic } from './GipfScoreHeuristic';
 import { GipfCapture } from 'src/app/jscaip/GipfProjectHelper';
+import { GipfScoreMinimax } from './GipfScoreMinimax';
 
 @Component({
     selector: 'app-gipf',
@@ -66,7 +65,7 @@ export class GipfComponent extends HexagonalGameComponent<GipfRules,
         super(messageDisplayer);
         this.setRulesAndNode('Gipf');
         this.availableAIs = [
-            new Minimax($localize`Score`, this.rules, new GipfScoreHeuristic(), new GipfMoveGenerator()),
+            new GipfScoreMinimax(),
             new MCTS($localize`MCTS`, new GipfMoveGenerator(), this.rules),
         ];
         this.encoder = GipfMove.encoder;

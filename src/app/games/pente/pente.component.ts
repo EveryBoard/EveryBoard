@@ -9,10 +9,9 @@ import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { GobanGameComponent } from 'src/app/components/game-components/goban-game-component/GobanGameComponent';
 import { MCTS } from 'src/app/jscaip/AI/MCTS';
 import { PenteMoveGenerator } from './PenteMoveGenerator';
-import { PenteAlignmentHeuristic } from './PenteAlignmentHeuristic';
 import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
-import { Minimax } from 'src/app/jscaip/AI/Minimax';
 import { PenteConfig } from './PenteConfig';
+import { PenteAlignmentMinimax } from './PenteAlignmentMinimax';
 
 @Component({
     selector: 'app-new-game',
@@ -34,7 +33,7 @@ export class PenteComponent extends GobanGameComponent<PenteRules,
         super(messageDisplayer);
         this.setRulesAndNode('Pente');
         this.availableAIs = [
-            new Minimax($localize`Alignment`, this.rules, new PenteAlignmentHeuristic(), new PenteMoveGenerator()),
+            new PenteAlignmentMinimax(),
             new MCTS($localize`MCTS`, new PenteMoveGenerator(), this.rules),
         ];
         this.encoder = PenteMove.encoder;

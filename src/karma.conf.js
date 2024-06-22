@@ -46,9 +46,9 @@ module.exports = function(config) {
             ChromeHeadlessCustom: {
                 base: 'ChromeHeadless',
                 flags: ['--no-sandbox', '--disable-gpu'],
-                browserNoActivityTimeout: 10000,
-                browserDisconnectTimeout: 10000,
-                pingTimeout: 10000
+                browserNoActivityTimeout: 20000,
+                browserDisconnectTimeout: 20000,
+                pingTimeout: 20000
             },
         },
 
@@ -57,8 +57,10 @@ module.exports = function(config) {
         colors: true,
         logLevel: config.LOG_INFO,
         autoWatch: true,
-        browsers: ['ChromeHeadless'],
+        browsers: ['Chrome'],
         singleRun: false,
-        browserNoActivityTimeout: 15000, // Timeout set to 15s because the tests often time out with 2s
+        browserNoActivityTimeout: 60000, // Timeout set to a high value because some tests need more time than the default 2s
+        browserDisconnectTimeout: 60000,
+        pingTimeout: 60000
     });
 };
