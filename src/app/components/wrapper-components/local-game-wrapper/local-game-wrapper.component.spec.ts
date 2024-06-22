@@ -11,8 +11,6 @@ import { UserMocks } from 'src/app/domain/UserMocks.spec';
 import { P4State } from 'src/app/games/p4/P4State';
 import { P4Move } from 'src/app/games/p4/P4Move';
 import { P4Component } from 'src/app/games/p4/p4.component';
-import { P4MoveGenerator } from 'src/app/games/p4/P4MoveGenerator';
-import { P4Heuristic } from 'src/app/games/p4/P4Heuristic';
 import { P4Config, P4Rules } from 'src/app/games/p4/P4Rules';
 
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
@@ -30,6 +28,7 @@ import { NotFoundComponent } from '../../normal-component/not-found/not-found.co
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { AIDepthLimitOptions } from 'src/app/jscaip/AI/AI';
 import { Minimax } from 'src/app/jscaip/AI/Minimax';
+import { P4Minimax } from 'src/app/games/p4/P4Minimax';
 
 const _: PlayerOrNone = PlayerOrNone.NONE;
 const O: PlayerOrNone = PlayerOrNone.ZERO;
@@ -350,8 +349,7 @@ describe('LocalGameWrapperComponent (game phase)', () => {
             // Given a board and a buggy AI (that performs an illegal move)
             const localGameWrapper: LocalGameWrapperComponent = testUtils.getWrapper() as LocalGameWrapperComponent;
             spyOn(testUtils.getGameComponent().rules, 'choose').and.returnValue(MGPFallible.failure('illegal'));
-            const minimax: Minimax<P4Move, P4State, P4Config> =
-                new Minimax('Minimax', P4Rules.get(), new P4Heuristic(), new P4MoveGenerator());
+            const minimax: Minimax<P4Move, P4State, P4Config> = new P4Minimax();
             spyOn(minimax, 'chooseNextMove').and.returnValue(P4Move.of(0));
 
             // When it is the turn of the bugged AI

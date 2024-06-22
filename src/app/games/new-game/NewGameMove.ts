@@ -25,6 +25,7 @@ export class NewGameMove extends Move {
         return 'This method is really more debug oriented';
     }
     public equals(other: this): boolean {
-        throw new Error('This method helps the minimaxes avoid creating two times the same move, which would slow its calculations');
+        // This method helps the minimaxes avoid creating two times the same move, which would slow its calculations
+        return true;
     }
 }

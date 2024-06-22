@@ -12,8 +12,8 @@ import { DiamPiece } from './DiamPiece';
 import { DiamRules } from './DiamRules';
 import { DiamState } from './DiamState';
 import { MCTS } from 'src/app/jscaip/AI/MCTS';
-import { DummyHeuristic, Minimax } from 'src/app/jscaip/AI/Minimax';
 import { DiamMoveGenerator } from './DiamMoveGenerator';
+import { DiamDummyMinimax } from './DiamDummyMinimax';
 
 interface ViewInfo {
     boardInfo: SpaceInfo[],
@@ -101,7 +101,7 @@ export class DiamComponent extends GameComponent<DiamRules, DiamMove, DiamState>
         super(messageDisplayer);
         this.setRulesAndNode('Diam');
         this.availableAIs = [
-            new Minimax($localize`Dummy`, this.rules, new DummyHeuristic(), new DiamMoveGenerator()),
+            new DiamDummyMinimax(),
             new MCTS($localize`MCTS`, new DiamMoveGenerator(), this.rules),
         ];
         this.encoder = DiamMoveEncoder;

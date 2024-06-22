@@ -16,12 +16,11 @@ import { AbaloneState } from './AbaloneState';
 import { AbaloneMove } from './AbaloneMove';
 import { AbaloneLegalityInformation, AbaloneRules } from './AbaloneRules';
 import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
-import { AbaloneScoreHeuristic } from './AbaloneScoreHeuristic';
 import { AbaloneMoveGenerator } from './AbaloneMoveGenerator';
 import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 import { Arrow } from 'src/app/components/game-components/arrow-component/Arrow';
-import { Minimax } from 'src/app/jscaip/AI/Minimax';
 import { MCTS } from 'src/app/jscaip/AI/MCTS';
+import { AbaloneScoreMinimax } from './AbaloneScoreMinimax';
 
 type CapturedInfo = {
     coord: Coord,
@@ -67,7 +66,7 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneRules,
         super(messageDisplayer);
         this.setRulesAndNode('Abalone');
         this.availableAIs = [
-            new Minimax($localize`Score`, this.rules, new AbaloneScoreHeuristic(), new AbaloneMoveGenerator()),
+            new AbaloneScoreMinimax(),
             new MCTS($localize`MCTS`, new AbaloneMoveGenerator(), this.rules),
         ];
         this.encoder = AbaloneMove.encoder;

@@ -11,7 +11,7 @@ import { Move } from '../../jscaip/Move';
 import { AppModule } from '../../app.module';
 import { UserDAO } from '../../dao/UserDAO';
 import { ConnectedUserService, AuthUser } from '../../services/ConnectedUserService';
-import { GameNode } from '../../jscaip/AI/GameNode';
+import { GameNode, GameNodeStats } from '../../jscaip/AI/GameNode';
 import { GameWrapper } from '../../components/wrapper-components/GameWrapper';
 import { ConnectedUserServiceMock } from '../../services/tests/ConnectedUserService.spec';
 import { OnlineGameWrapperComponent }
@@ -44,6 +44,10 @@ import { GameInfo } from 'src/app/components/normal-component/pick-game/pick-gam
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { Player } from 'src/app/jscaip/Player';
 import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { TestVars } from 'src/TestVars.spec';
+import { Minimax } from 'src/app/jscaip/AI/Minimax';
+import { AIDepthLimitOptions } from 'src/app/jscaip/AI/AI';
+import { SuperRules } from 'src/app/jscaip/Rules';
 
 @Component({})
 export class BlankComponent {}
@@ -792,4 +796,70 @@ export function prepareUnsubscribeCheck(service: any, subscribeMethod: string): 
             .withContext('Service should have unsubscribed to ' + subscribeMethod + ' method but did not')
             .toBeTrue();
     };
+}
+
+const regularIt: (name: string, testBody: () => void) => void = it;
+const regularFit: (name: string, testBody: () => void) => void = fit;
+const regularXit: (name: string, testBody: () => void) => void = xit;
+export namespace SlowTest {
+
+    // Run a slow test, only if that option is enabled
+    export function it(name: string, testBody: () => void): void {
+        if (TestVars.slowTests) {
+            regularIt(name, testBody);
+        } else {
+            // Instead of doing nothing when slow tests are disabled, which would result in a potential karma error
+            // ("describe without it"), we use xit
+            regularXit(name, testBody);
+        }
+    }
+
+    // Does a focused test (a fit), and ignores the TestVars.slowTests option
+    export function fit(name: string, testBody: () => void): void {
+        regularFit(name, testBody);
+    }
+
+}
+
+export type MinimaxTestOptions<R extends SuperRules<M, S, C, L>,
+                               M extends Move,
+                               S extends GameState,
+                               C extends RulesConfig,
+                               L> = {
+    rules: R,
+    minimax: Minimax<M, S, C, L>,
+    options: AIDepthLimitOptions,
+    config: MGPOptional<C>,
+    shouldFinish: boolean
+}
+
+/* Run a minimax test by battling it against itself for a number of turns */
+export function minimaxTest<R extends SuperRules<M, S, C, L>,
+                            M extends Move,
+                            S extends GameState,
+                            C extends RulesConfig,
+                            L>(options: MinimaxTestOptions<R, M, S, C, L>): void
+{
+    // Given a component where AI plays against AI
+    let node: GameNode<M, S> = options.rules.getInitialNode(options.config);
+    const limit: number = 10000; // Play for 10 seconds at most
+
+    // When playing the needed number of turns
+    // Then it should not throw errors
+    let turn: number = 0;
+    const start: number = performance.now();
+    const nodesBefore: number = GameNodeStats.createdNodes;
+    while (performance.now() < start + limit && options.rules.getGameStatus(node, options.config).isEndGame === false) {
+        const bestMove: M = options.minimax.chooseNextMove(node, options.options, options.config);
+        expect(bestMove).toBeDefined();
+        node = node.getChild(bestMove).get();
+        turn++;
+    }
+    const seconds: number = (performance.now() - start) / 1000;
+    const nodesCreated: number = GameNodeStats.createdNodes - nodesBefore;
+    console.log(`${turn / seconds} turn/s for ${options.minimax.constructor.name} with ${turn} turns in ${seconds} seconds, created ${nodesCreated} nodes, so ${nodesCreated / seconds} nodes/s`);
+    // And maybe the game needs to be over
+    if (options.shouldFinish) {
+        expect(options.rules.getGameStatus(node, options.config).isEndGame).toBeTrue();
+    }
 }
