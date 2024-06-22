@@ -190,7 +190,6 @@ export abstract class GameComponent<R extends SuperRules<M, S, C, L>,
         this.cdr.detectChanges();
     }
 
-
     public abstract updateBoard(triggerAnimation: boolean): Promise<void>;
 
     public async pass(): Promise<MGPValidation> {

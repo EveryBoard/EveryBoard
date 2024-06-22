@@ -212,7 +212,6 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
             this.gameComponent.hideLastMove();
             this.gameComponent.node = nextNode.get();
             await this.applyNewMove();
-            this.cdr.detectChanges();
             return MGPValidation.SUCCESS;
         } else {
             return this.handleAIError(playingAI, aiMove, nextNode.getReason());
@@ -224,6 +223,7 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
         await this.showNewMove(lastMoveWasAI);
         await this.updateWrapper();
         await this.proposeAIToPlay();
+        this.cdr.detectChanges();
     }
 
     private async handleAIError(playingAI: AbstractAI, illegalMove: Move, error: string): Promise<MGPValidation> {
