@@ -44,7 +44,7 @@ export class Set<T extends Comparable> implements ComparableObject {
                 return v.toString();
             }
         });
-        return '[' + result.join(',') + ']';
+        return '[' + result.join(', ') + ']';
     }
 
     public contains(element: T): boolean {
