@@ -2,7 +2,7 @@ import { Table, TableUtils } from 'src/app/jscaip/TableUtils';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { PylosCoord } from './PylosCoord';
 import { PylosMove } from './PylosMove';
-import { ImmutableSet, Utils } from '@everyboard/lib';
+import { Set, Utils } from '@everyboard/lib';
 import { GameState } from 'src/app/jscaip/state/GameState';
 import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 
@@ -122,7 +122,7 @@ export class PylosState extends GameState {
         return this.setBoardAtCoords([addedCoord], this.turn);
     }
 
-    public getFreeToMoves(): ImmutableSet<PylosCoord> {
+    public getFreeToMoves(): Set<PylosCoord> {
         const freeToMove: PylosCoord[] = [];
         const currentPlayer: Player = this.getCurrentPlayer();
         for (let z: number = 0; z <= 2; z++) {
@@ -138,6 +138,6 @@ export class PylosState extends GameState {
                 }
             }
         }
-        return new ImmutableSet(freeToMove);
+        return new Set(freeToMove);
     }
 }

@@ -4,7 +4,7 @@ import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { TableUtils, Table } from 'src/app/jscaip/TableUtils';
 import { SixFailure } from './SixFailure';
 import { SixMove } from './SixMove';
-import { ImmutableSet, MGPOptional, MGPValidation, ReversibleMap, Utils } from '@everyboard/lib';
+import { Set, MGPOptional, MGPValidation, ReversibleMap, Utils } from '@everyboard/lib';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { OpenHexagonalGameState } from 'src/app/jscaip/state/OpenHexagonalGameState';
 import { HexagonalUtils } from 'src/app/jscaip/HexagonalUtils';
@@ -103,9 +103,9 @@ export class SixState extends OpenHexagonalGameState<Player> {
     }
 
     public countPieces(): PlayerNumberMap {
-        const pieces: ReversibleMap<Player, ImmutableSet<Coord>> = this.pieces.reverse();
-        const zeroPieces: ImmutableSet<Coord> = pieces.get(Player.ZERO).getOrElse(new CoordSet());
-        const onePieces: ImmutableSet<Coord> = pieces.get(Player.ONE).getOrElse(new CoordSet());
+        const pieces: ReversibleMap<Player, Set<Coord>> = this.pieces.reverse();
+        const zeroPieces: Set<Coord> = pieces.get(Player.ZERO).getOrElse(new CoordSet());
+        const onePieces: Set<Coord> = pieces.get(Player.ONE).getOrElse(new CoordSet());
         return PlayerNumberMap.of(zeroPieces.size(), onePieces.size());
     }
 

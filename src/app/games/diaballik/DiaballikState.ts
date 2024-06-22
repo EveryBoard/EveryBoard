@@ -20,13 +20,14 @@ export class DiaballikPiece implements ComparableObject {
         return this === other;
     }
     public toString(): string {
-        if (this === DiaballikPiece.NONE) return '__';
-        else if (this === DiaballikPiece.ZERO) return 'O_';
-        else if (this === DiaballikPiece.ZERO_WITH_BALL) return 'Oo';
-        else if (this === DiaballikPiece.ONE) return 'X_';
-        else {
-            Utils.expectToBe(this, DiaballikPiece.ONE_WITH_BALL);
-            return 'Xx';
+        switch (this) {
+            case DiaballikPiece.NONE: return '__';
+            case DiaballikPiece.ZERO: return 'O_';
+            case DiaballikPiece.ZERO_WITH_BALL: return 'Oo';
+            case DiaballikPiece.ONE: return 'X_';
+            default:
+                Utils.expectToBe(this, DiaballikPiece.ONE_WITH_BALL);
+                return 'Xx';
         }
     }
 }

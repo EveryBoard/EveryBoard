@@ -7,7 +7,7 @@ import { QuixoConfig, QuixoState } from './QuixoState';
 import { QuixoMove } from './QuixoMove';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { NInARowHelper } from 'src/app/jscaip/NInARowHelper';
-import { MGPMap, MGPOptional, ImmutableSet, MGPValidation, NumberMap, Utils } from '@everyboard/lib';
+import { MGPMap, MGPOptional, Set, MGPValidation, NumberMap, Utils } from '@everyboard/lib';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { TableUtils } from 'src/app/jscaip/TableUtils';
 import { QuixoFailure } from './QuixoFailure';
@@ -178,7 +178,7 @@ export class QuixoRules extends ConfigurableRules<QuixoMove, QuixoState, QuixoCo
         const state: QuixoState = node.gameState;
         const victoriousCoord: Coord[] = QuixoRules.QUIXO_HELPER.getVictoriousCoord(state);
         const unreducedWinners: PlayerOrNone[] = victoriousCoord.map((coord: Coord) => state.getPieceAt(coord));
-        const winners: ImmutableSet<PlayerOrNone> = new ImmutableSet(unreducedWinners);
+        const winners: Set<PlayerOrNone> = new Set(unreducedWinners);
         if (winners.size() === 0) {
             return GameStatus.ONGOING;
         } else if (winners.size() === 1) {

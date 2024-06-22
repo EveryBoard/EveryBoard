@@ -1,6 +1,6 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { Player } from 'src/app/jscaip/Player';
-import { ImmutableSet, MGPMap } from '@everyboard/lib';
+import { Set, MGPMap } from '@everyboard/lib';
 import { SixState } from './SixState';
 import { SixMove } from './SixMove';
 import { SCORE } from 'src/app/jscaip/SCORE';
@@ -19,9 +19,9 @@ export class SixFilteredMoveGenerator extends SixMoveGenerator {
     }
 
     private getSafelyMovablePieceOrFirstOne(state: SixState): CoordSet {
-        const allPieces: MGPMap<Player, ImmutableSet<Coord>> = state.getPieces().reverse();
+        const allPieces: MGPMap<Player, Set<Coord>> = state.getPieces().reverse();
         const currentPlayer: Player = state.getCurrentPlayer();
-        const playerPieces: ImmutableSet<Coord> = allPieces.get(currentPlayer).get();
+        const playerPieces: Set<Coord> = allPieces.get(currentPlayer).get();
         const firstPiece: Coord = playerPieces.getAnyElement().get();
 
         const safePieces: Coord[] = [];

@@ -116,7 +116,7 @@ export class SiamComponent extends RectangularGameComponent<SiamRules,
                 };
                 this.indicatorArrows.push(arrow);
             }
-            this.clickableCoords = this.clickableCoords.unionElement(target);
+            this.clickableCoords = this.clickableCoords.addElement(target);
         }
         this.insertingPiece = true;
         return MGPValidation.SUCCESS;
@@ -226,7 +226,7 @@ export class SiamComponent extends RectangularGameComponent<SiamRules,
         for (const move of moves) {
             if (move.direction.isPresent()) {
                 const target: Coord = move.coord.getNext(move.direction.get());
-                this.clickableCoords = this.clickableCoords.unionElement(target);
+                this.clickableCoords = this.clickableCoords.addElement(target);
                 if (state.isOnBoard(target) && state.getPieceAt(target) !== SiamPiece.EMPTY) {
                     const arrow: SiamIndicatorArrow = {
                         source: MGPOptional.of({
@@ -240,7 +240,7 @@ export class SiamComponent extends RectangularGameComponent<SiamRules,
                     this.indicatorArrows.push(arrow);
                 }
             } else {
-                this.clickableCoords = this.clickableCoords.unionElement(move.coord);
+                this.clickableCoords = this.clickableCoords.addElement(move.coord);
             }
         }
         return MGPValidation.SUCCESS;

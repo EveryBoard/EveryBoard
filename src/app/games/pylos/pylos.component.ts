@@ -5,7 +5,7 @@ import { PylosState } from 'src/app/games/pylos/PylosState';
 import { PylosRules } from 'src/app/games/pylos/PylosRules';
 import { PylosCoord } from 'src/app/games/pylos/PylosCoord';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { ImmutableSet, MGPOptional, MGPValidation } from '@everyboard/lib';
+import { Set, MGPOptional, MGPValidation } from '@everyboard/lib';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { PylosFailure } from './PylosFailure';
@@ -35,7 +35,7 @@ export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosSt
     public lastSecondCapture: MGPOptional<PylosCoord> = MGPOptional.empty();
     public highCapture: MGPOptional<PylosCoord> = MGPOptional.empty();
 
-    public capturables: ImmutableSet<PylosCoord> = new ImmutableSet();
+    public capturables: Set<PylosCoord> = new Set();
 
     public chosenStartingCoord: MGPOptional<PylosCoord> = MGPOptional.empty();
     public chosenLandingCoord: MGPOptional<PylosCoord> = MGPOptional.empty();
@@ -203,7 +203,7 @@ export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosSt
         this.chosenLandingCoord = MGPOptional.empty();
         this.chosenFirstCapture = MGPOptional.empty();
         this.chosenSecondCapture = MGPOptional.empty();
-        this.capturables = new ImmutableSet();
+        this.capturables = new Set();
     }
 
     public async onDrop(x: number, y: number, z: number): Promise<MGPValidation> {

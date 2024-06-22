@@ -2,7 +2,7 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { MGPOptional, ImmutableSet } from '@everyboard/lib';
+import { MGPOptional, Set } from '@everyboard/lib';
 import { LinesOfActionFailure } from '../LinesOfActionFailure';
 import { LinesOfActionMove } from '../LinesOfActionMove';
 import { LinesOfActionNode, LinesOfActionRules } from '../LinesOfActionRules';
@@ -357,7 +357,7 @@ describe('LinesOfActionRules', () => {
         ];
         const state: LinesOfActionState = new LinesOfActionState(board, 0);
         const targets: CoordSet = LinesOfActionRules.possibleTargets(state, new Coord(2, 2));
-        expect(targets.equals(new ImmutableSet([
+        expect(targets.equals(new Set([
             new Coord(1, 1),
             new Coord(1, 3),
             new Coord(2, 1),

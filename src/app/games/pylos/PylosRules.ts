@@ -7,7 +7,7 @@ import { PylosMove } from './PylosMove';
 import { PylosState } from './PylosState';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { PylosFailure } from './PylosFailure';
-import { MGPOptional, MGPFallible, ImmutableSet, MGPValidation } from '@everyboard/lib';
+import { MGPOptional, MGPFallible, Set, MGPValidation } from '@everyboard/lib';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { TableUtils } from 'src/app/jscaip/TableUtils';
 import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
@@ -101,18 +101,18 @@ export class PylosRules extends Rules<PylosMove, PylosState> {
         return false;
     }
 
-    public static getPossibleCaptures(state: PylosState): ImmutableSet<ImmutableSet<PylosCoord>> {
-        let possiblesCapturesSet: ImmutableSet<ImmutableSet<PylosCoord>> = new ImmutableSet();
+    public static getPossibleCaptures(state: PylosState): Set<Set<PylosCoord>> {
+        let possiblesCapturesSet: Set<Set<PylosCoord>> = new Set();
 
-        const freeToMoveFirsts: ImmutableSet<PylosCoord> = state.getFreeToMoves();
+        const freeToMoveFirsts: Set<PylosCoord> = state.getFreeToMoves();
         for (const freeToMoveFirst of freeToMoveFirsts) {
-            possiblesCapturesSet = possiblesCapturesSet.unionElement(new ImmutableSet([freeToMoveFirst]));
+            possiblesCapturesSet = possiblesCapturesSet.addElement(new Set([freeToMoveFirst]));
 
             const secondState: PylosState = state.removePieceAt(freeToMoveFirst);
-            const freeToMoveThens: ImmutableSet<PylosCoord> = secondState.getFreeToMoves();
+            const freeToMoveThens: Set<PylosCoord> = secondState.getFreeToMoves();
             for (const freeToMoveThen of freeToMoveThens) {
-                const captures: ImmutableSet<PylosCoord> = new ImmutableSet([freeToMoveFirst, freeToMoveThen]);
-                possiblesCapturesSet = possiblesCapturesSet.unionElement(captures);
+                const captures: Set<PylosCoord> = new Set([freeToMoveFirst, freeToMoveThen]);
+                possiblesCapturesSet = possiblesCapturesSet.addElement(captures);
             }
         }
         return possiblesCapturesSet;

@@ -7,7 +7,7 @@ import { SixMove } from './SixMove';
 import { SixFailure } from './SixFailure';
 import { Rules } from 'src/app/jscaip/Rules';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { MGPFallible, MGPOptional, ImmutableSet, MGPValidation } from '@everyboard/lib';
+import { MGPFallible, MGPOptional, Set, MGPValidation } from '@everyboard/lib';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { Table } from 'src/app/jscaip/TableUtils';
 import { Debug } from 'src/app/utils/Debug';
@@ -74,7 +74,7 @@ export class SixRules extends Rules<SixMove, SixState, SixLegalityInformation> {
             for (const dir of HexaDirection.factory.all) {
                 const neighbor: Coord = piece.getNext(dir, 1);
                 if (state.getPieceAt(neighbor).isNone()) {
-                    neighbors = neighbors.unionElement(neighbor);
+                    neighbors = neighbors.addElement(neighbor);
                 }
             }
         }
@@ -97,9 +97,9 @@ export class SixRules extends Rules<SixMove, SixState, SixLegalityInformation> {
             return MGPFallible.failure(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT());
         }
         const stateAfterMove: SixState = state.movePiece(move);
-        const groupsAfterMove: ImmutableSet<CoordSet> = stateAfterMove.getGroups();
+        const groupsAfterMove: Set<CoordSet> = stateAfterMove.getGroups();
         if (SixRules.isSplit(groupsAfterMove)) {
-            const biggerGroups: ImmutableSet<CoordSet> = this.getLargestGroups(groupsAfterMove);
+            const biggerGroups: Set<CoordSet> = this.getLargestGroups(groupsAfterMove);
             if (biggerGroups.size() === 1) {
                 if (move.keep.isPresent()) {
                     return MGPFallible.failure(SixFailure.CANNOT_CHOOSE_TO_KEEP());
@@ -113,25 +113,25 @@ export class SixRules extends Rules<SixMove, SixState, SixLegalityInformation> {
             return MGPFallible.success(new CoordSet());
         }
     }
-    public static isSplit(groups: ImmutableSet<CoordSet>): boolean {
+    public static isSplit(groups: Set<CoordSet>): boolean {
         return groups.size() > 1;
     }
-    public static getLargestGroups(groups: ImmutableSet<CoordSet>): ImmutableSet<CoordSet> {
+    public static getLargestGroups(groups: Set<CoordSet>): Set<CoordSet> {
         let biggerSize: number = 0;
-        let biggerGroups: ImmutableSet<CoordSet> = new ImmutableSet();
+        let biggerGroups: Set<CoordSet> = new Set();
         for (const group of groups) {
             const groupSize: number = group.size();
             if (groupSize > biggerSize) {
                 biggerSize = groupSize;
-                biggerGroups = new ImmutableSet([group]);
+                biggerGroups = new Set([group]);
             } else if (groupSize === biggerSize) {
-                biggerGroups = biggerGroups.unionElement(group);
+                biggerGroups = biggerGroups.addElement(group);
             }
         }
         return biggerGroups;
     }
     public static moveKeepBiggerGroup(keep: MGPOptional<Coord>,
-                                      biggerGroups: ImmutableSet<CoordSet>,
+                                      biggerGroups: Set<CoordSet>,
                                       state: SixState)
     : MGPFallible<SixLegalityInformation>
     {

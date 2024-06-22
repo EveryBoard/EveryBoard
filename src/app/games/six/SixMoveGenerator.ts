@@ -1,6 +1,6 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { Player } from 'src/app/jscaip/Player';
-import { MGPMap, MGPOptional, ImmutableSet } from '@everyboard/lib';
+import { MGPMap, MGPOptional, Set } from '@everyboard/lib';
 import { SixState } from './SixState';
 import { SixMove } from './SixMove';
 import { SixNode, SixRules } from './SixRules';
@@ -21,21 +21,21 @@ export class SixMoveGenerator extends MoveGenerator<SixMove, SixState> {
         }
     }
     protected getMovements(state: SixState, legalLandings: Coord[]): SixMove[] {
-        const allPieces: MGPMap<Player, ImmutableSet<Coord>> = state.getPieces().reverse();
+        const allPieces: MGPMap<Player, Set<Coord>> = state.getPieces().reverse();
         const currentPlayer: Player = state.getCurrentPlayer();
-        const playerPieces: ImmutableSet<Coord> = allPieces.get(currentPlayer).get();
+        const playerPieces: Set<Coord> = allPieces.get(currentPlayer).get();
         return this.getMovementsFrom(state, playerPieces, legalLandings);
     }
-    protected getMovementsFrom(state: SixState, starts: ImmutableSet<Coord>, landings: Coord[]): SixMove[] {
+    protected getMovementsFrom(state: SixState, starts: Set<Coord>, landings: Coord[]): SixMove[] {
         const deplacements: SixMove[] = [];
         for (const start of starts) {
             for (const landing of landings) {
                 const move: SixMove = SixMove.ofMovement(start, landing);
                 if (state.isCoordConnected(landing, MGPOptional.of(start))) {
                     const stateAfterMove: SixState = state.movePiece(move);
-                    const groupsAfterMove: ImmutableSet<CoordSet> = stateAfterMove.getGroups();
+                    const groupsAfterMove: Set<CoordSet> = stateAfterMove.getGroups();
                     if (SixRules.isSplit(groupsAfterMove)) {
-                        const largestGroups: ImmutableSet<CoordSet> =
+                        const largestGroups: Set<CoordSet> =
                             SixRules.getLargestGroups(groupsAfterMove);
                         if (largestGroups.size() === 1) {
                             deplacements.push(SixMove.ofMovement(start, landing));

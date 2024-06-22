@@ -1,9 +1,9 @@
+import { Comparable, ComparableObject, comparableEquals } from './Comparable';
 import { ArrayUtils } from './ArrayUtils';
-import { Comparable, ComparableObject } from './Comparable';
-import { MGPOptional } from './MGPOptional';
 import { Sets } from './Sets';
+import { MGPOptional } from './MGPOptional';
 
-export abstract class AbstractSet<T extends Comparable> implements ComparableObject {
+export class Set<T extends Comparable> implements ComparableObject {
 
     protected values: T[];
 
@@ -20,7 +20,7 @@ export abstract class AbstractSet<T extends Comparable> implements ComparableObj
         return new (<any> this.constructor)(values);
     }
 
-    public equals(other: AbstractSet<T>): boolean {
+    public equals(other: Set<T>): boolean {
         if (other.size() !== this.size()) {
             return false;
         }
@@ -37,15 +37,14 @@ export abstract class AbstractSet<T extends Comparable> implements ComparableObj
     }
 
     public toString(): string {
-        let result: string = '';
-        for (const element of this) {
-            if (element == null) {
-                result += 'null, ';
+        const result: string[] = ArrayUtils.map(this.values, (v: T) => {
+            if (v == null) {
+                return 'null';
             } else {
-                result += element.toString() + ', ';
+                return v.toString();
             }
-        }
-        return '[' + result.slice(0, -2) + ']';
+        });
+        return '[' + result.join(',') + ']';
     }
 
     public contains(element: T): boolean {
@@ -72,7 +71,7 @@ export abstract class AbstractSet<T extends Comparable> implements ComparableObj
         return this.isEmpty() === false;
     }
 
-    public findAnyCommonElement(other: AbstractSet<T>): MGPOptional<T> {
+    public findAnyCommonElement(other: Set<T>): MGPOptional<T> {
         for (const element of other) {
             if (this.contains(element)) {
                 return MGPOptional.of(element);
@@ -85,7 +84,7 @@ export abstract class AbstractSet<T extends Comparable> implements ComparableObj
      * @param other the "reference" set
      * @returns an empty optional is nothing miss in this set; the first element missing as an optional if there is one
      */
-    public getMissingElementFrom(other: AbstractSet<T>): MGPOptional<T> {
+    public getMissingElementFrom(other: Set<T>): MGPOptional<T> {
         for (const element of other) {
             if (this.contains(element) === false) {
                 return MGPOptional.of(element);
@@ -96,6 +95,50 @@ export abstract class AbstractSet<T extends Comparable> implements ComparableObj
 
     [Symbol.iterator](): IterableIterator<T> {
         return this.values.values();
+    }
+
+    public union(otherSet: Set<T>): this {
+        const values: T[] = this.toList().concat(otherSet.toList());
+        return this.provideInstance(values);
+    }
+
+    public unionList(list: T[]): this {
+        return this.provideInstance<T>(list.concat(this.values));
+    }
+
+    public addElement(element: T): this {
+        return this.provideInstance<T>(this.values.concat([element]));
+    }
+
+    public filter(f: (element: T) => boolean): this {
+        return this.provideInstance<T>(this.toList().filter(f));
+    }
+
+    public removeElement(element: T): this {
+        return this.filter((e: T) => comparableEquals(e, element) === false);
+    }
+
+    public map<V extends Comparable>(mapper: (element: T) => V): Set<V> {
+        const result: V[] = ArrayUtils.map(this.values, mapper);
+        return new Set<V>(result);
+    }
+
+    public flatMap<U extends Comparable>(f: (element: T) => Set<U>): Set<U> {
+        let result: Set<U> = new Set();
+        for (const element of this) {
+            result = result.union(f(element));
+        }
+        return result;
+    }
+
+    public intersection(other: Set<T>): this {
+        let result: this = this.provideInstance();
+        for (const element of other) {
+            if (this.contains(element)) {
+                result = result.addElement(element);
+            }
+        }
+        return result;
     }
 
 }

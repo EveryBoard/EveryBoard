@@ -2,7 +2,7 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { Orthogonal } from 'src/app/jscaip/Orthogonal';
 import { BoardValue } from 'src/app/jscaip/AI/BoardValue';
 import { Player } from 'src/app/jscaip/Player';
-import { MGPMap, MGPOptional, ImmutableSet } from '@everyboard/lib';
+import { MGPMap, MGPOptional, Set } from '@everyboard/lib';
 import { TaflPawn } from './TaflPawn';
 import { TaflState } from './TaflState';
 import { SandwichThreat } from '../../jscaip/PieceThreat';
@@ -34,8 +34,8 @@ export class TaflPieceAndControlHeuristic<M extends TaflMove> extends TaflPieceA
     {
         const state: TaflState = node.gameState;
         const pieceMap: MGPMap<Player, CoordSet> = this.getPiecesMap(state);
-        const threatMap: MGPMap<Coord, ImmutableSet<SandwichThreat>> = this.getThreatMap(node, pieceMap);
-        const filteredThreatMap: MGPMap<Coord, ImmutableSet<SandwichThreat>> = this.filterThreatMap(threatMap, state);
+        const threatMap: MGPMap<Coord, Set<SandwichThreat>> = this.getThreatMap(node, pieceMap);
+        const filteredThreatMap: MGPMap<Coord, Set<SandwichThreat>> = this.filterThreatMap(threatMap, state);
         const metrics: TaflPieceAndControlHeuristicMetrics = { safeScore: 0, threatenedScore: 0, controlScore: 0 };
         for (const owner of Player.PLAYERS) {
             let controlledSquares: CoordSet = new CoordSet();
@@ -49,7 +49,7 @@ export class TaflPieceAndControlHeuristic<M extends TaflMove> extends TaflPieceA
                         while (state.isOnBoard(testedCoord) &&
                                state.getPieceAt(testedCoord) === TaflPawn.UNOCCUPIED)
                         {
-                            controlledSquares = controlledSquares.unionElement(testedCoord);
+                            controlledSquares = controlledSquares.addElement(testedCoord);
                             testedCoord = testedCoord.getNext(dir, 1);
                         }
                     }

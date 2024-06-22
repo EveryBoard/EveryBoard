@@ -280,8 +280,10 @@ export class DiaballikRules extends Rules<DiaballikMove, DiaballikState, Diaball
                 // or connected on the left to another player piece for a line to be formed
                 if (this.isConnectedOnTheLeft(coord, state, player)) {
                     // The piece is connected, we count the opponents that it touches
-                    opponentsConnected = this.addConnectedOpponents(coord, opponentsConnected, state, player);
-                    return { coord: MGPOptional.of(coord), opponentsConnected };
+                    return {
+                        coord: MGPOptional.of(coord),
+                        opponentsConnected: this.addConnectedOpponents(coord, opponentsConnected, state, player),
+                    };
                 } else {
                     // This piece is not connected, it is therefore impossible to form a line
                     return { coord: MGPOptional.empty(), opponentsConnected };
@@ -319,7 +321,7 @@ export class DiaballikRules extends Rules<DiaballikMove, DiaballikState, Diaball
             if (state.isOnBoard(neighbor)) {
                 const piece: DiaballikPiece = state.getPieceAt(neighbor);
                 if (piece.owner === player.getOpponent()) {
-                    opponentsConnected = opponentsConnected.unionElement(neighbor);
+                    opponentsConnected = opponentsConnected.addElement(neighbor);
                 }
             }
         }

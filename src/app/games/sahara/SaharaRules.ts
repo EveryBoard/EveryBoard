@@ -129,7 +129,7 @@ export class SaharaRules extends Rules<SaharaMove, SaharaState> {
                 const secondStepNeighbors: Coord[] =
                     TriangularCheckerBoard.getNeighbors(neighbor).filter(isOnBoardAndEmpty);
                 for (const secondStepNeighbor of secondStepNeighbors) {
-                    farLandings = farLandings.unionElement(secondStepNeighbor);
+                    farLandings = farLandings.addElement(secondStepNeighbor);
                 }
             }
             return farLandings.toList();

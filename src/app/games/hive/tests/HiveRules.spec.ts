@@ -4,7 +4,7 @@ import { Player } from 'src/app/jscaip/Player';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { Table } from 'src/app/jscaip/TableUtils';
-import { MGPOptional, ImmutableSet, Utils } from '@everyboard/lib';
+import { MGPOptional, Set, Utils } from '@everyboard/lib';
 import { HiveFailure } from '../HiveFailure';
 import { HiveMove, HiveCoordToCoordMove } from '../HiveMove';
 import { HivePiece } from '../HivePiece';
@@ -973,7 +973,7 @@ describe('HiveRules', () => {
         const state: HiveState = HiveState.fromRepresentation(board, 6);
 
         // When computing the possible moves for the spider
-        const moves: ImmutableSet<HiveCoordToCoordMove> = rules.getPossibleMovesFrom(state, new Coord(1, 0));
+        const moves: Set<HiveCoordToCoordMove> = rules.getPossibleMovesFrom(state, new Coord(1, 0));
         // Then we should have exactly 4 moves
         expect(moves.size()).toBe(4);
     });

@@ -268,7 +268,7 @@ export class QuartoRules extends Rules<QuartoMove, QuartoState> {
                     boardStatus.score = SCORE.PRE_VICTORY;
                 }
                 const coord: Coord = sensitiveCoord.get();
-                boardStatus.sensitiveSquares = boardStatus.sensitiveSquares.unionElement(coord);
+                boardStatus.sensitiveSquares = boardStatus.sensitiveSquares.addElement(coord);
             }
         }
         return boardStatus;

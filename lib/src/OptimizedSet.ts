@@ -1,12 +1,12 @@
 import { Comparable } from './Comparable';
-import { ImmutableSet } from './ImmutableSet';
+import { Set } from './Set';
 
 /**
  * This is an optimized representation of sets.
  * It performs multi-level hashing and is suitable for types
  * that can be decomposed into multiple fields represented by numbers.
  */
-export abstract class ImmutableOptimizedSet<T extends Comparable> extends ImmutableSet<T> {
+export abstract class OptimizedSet<T extends Comparable> extends Set<T> {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     private readonly valueMap: T[];
 

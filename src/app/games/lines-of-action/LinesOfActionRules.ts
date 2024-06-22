@@ -184,7 +184,7 @@ export class LinesOfActionRules extends Rules<LinesOfActionMove, LinesOfActionSt
                 const move: LinesOfActionMove = LinesOfActionMove.from(start, target).get();
                 const legality: MGPValidation = LinesOfActionRules.isLegal(move, state);
                 if (legality.isSuccess()) {
-                    targets = targets.unionElement(target);
+                    targets = targets.addElement(target);
                 }
             }
         }

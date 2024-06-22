@@ -6,7 +6,7 @@ import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Orthogonal } from 'src/app/jscaip/Orthogonal';
 import { Ordinal } from 'src/app/jscaip/Ordinal';
-import { ArrayUtils, ComparableObject, MGPFallible, MGPOptional, ImmutableSet, Utils } from '@everyboard/lib';
+import { ArrayUtils, ComparableObject, MGPFallible, MGPOptional, Set, Utils } from '@everyboard/lib';
 import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 import { CoordSet } from 'src/app/jscaip/CoordSet';
 
@@ -170,7 +170,7 @@ export class DiaballikMoveGenerator extends MoveGenerator<DiaballikMove, Diaball
         const emptyMove: DiaballikMoveInConstruction =
             new DiaballikMoveInConstruction([], node.gameState, node.gameState);
         let movesInConstruction: DiaballikMoveInConstruction[] = [emptyMove];
-        let moves: ImmutableSet<DiaballikMove> = new ImmutableSet();
+        let moves: Set<DiaballikMove> = new Set();
         for (let i: number = 0; i < 3; i++) {
             let nextMovesInConstruction: DiaballikMoveInConstruction[] = [];
             for (const move of movesInConstruction) {
@@ -183,13 +183,13 @@ export class DiaballikMoveGenerator extends MoveGenerator<DiaballikMove, Diaball
         return this.removeDuplicates(node.gameState, moves, config);
     }
 
-    private removeDuplicates(state: DiaballikState, moves: ImmutableSet<DiaballikMove>, config: NoConfig)
+    private removeDuplicates(state: DiaballikState, moves: Set<DiaballikMove>, config: NoConfig)
     : DiaballikMove[]
     {
         if (this.avoidDuplicates === false) {
             return moves.toList();
         }
-        let seenStates: ImmutableSet<DiaballikState> = new ImmutableSet();
+        let seenStates: Set<DiaballikState> = new Set();
         const movesToKeep: DiaballikMove[] = [];
         const rules: DiaballikRules = DiaballikRules.get();
         for (const move of moves) {
@@ -198,7 +198,7 @@ export class DiaballikMoveGenerator extends MoveGenerator<DiaballikMove, Diaball
                 rules.applyLegalMove(move, state, config, legalityInfo.get());
             if (seenStates.contains(stateAfterMove) === false) {
                 movesToKeep.push(move);
-                seenStates = seenStates.unionElement(stateAfterMove);
+                seenStates = seenStates.addElement(stateAfterMove);
             }
         }
         return movesToKeep;

@@ -3,7 +3,7 @@ import { GameNode } from 'src/app/jscaip/AI/GameNode';
 import { Player } from 'src/app/jscaip/Player';
 import { Rules } from 'src/app/jscaip/Rules';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { MGPOptional, ImmutableSet, MGPValidation } from '@everyboard/lib';
+import { MGPOptional, Set, MGPValidation } from '@everyboard/lib';
 import { HiveFailure } from './HiveFailure';
 import { HiveDropMove, HiveMove, HiveCoordToCoordMove } from './HiveMove';
 import { HivePiece, HivePieceStack } from './HivePiece';
@@ -188,7 +188,7 @@ export class HiveRules extends Rules<HiveMove, HiveState> {
                 for (const neighbor of state.emptyNeighbors(coord)) {
                     const move: HiveDropMove = HiveDropMove.of(remainingPiece, neighbor);
                     if (this.isLegalDrop(move, state).isSuccess()) {
-                        locations = locations.unionElement(neighbor);
+                        locations = locations.addElement(neighbor);
                     }
                 }
             }
@@ -196,22 +196,22 @@ export class HiveRules extends Rules<HiveMove, HiveState> {
         return locations;
     }
 
-    public getPossibleMovesFrom(state: HiveState, coord: Coord): ImmutableSet<HiveCoordToCoordMove> {
+    public getPossibleMovesFrom(state: HiveState, coord: Coord): Set<HiveCoordToCoordMove> {
         const player: Player = state.getCurrentPlayer();
-        let moves: ImmutableSet<HiveCoordToCoordMove> = new ImmutableSet();
+        let moves: Set<HiveCoordToCoordMove> = new Set();
         const topPiece: HivePiece = state.getAt(coord).topPiece();
         if (topPiece.owner === player) {
             for (const move of HivePieceRules.of(topPiece).getPotentialMoves(coord, state)) {
                 if (this.isLegalMoveCoordToCoord(move, state).isSuccess()) {
-                    moves = moves.unionElement(move);
+                    moves = moves.addElement(move);
                 }
             }
         }
         return moves;
     }
 
-    public getPossibleMovesOnBoard(state: HiveState): ImmutableSet<HiveCoordToCoordMove> {
-        let moves: ImmutableSet<HiveCoordToCoordMove> = new ImmutableSet();
+    public getPossibleMovesOnBoard(state: HiveState): Set<HiveCoordToCoordMove> {
+        let moves: Set<HiveCoordToCoordMove> = new Set();
         for (const coord of state.occupiedSpaces()) {
             moves = moves.union(this.getPossibleMovesFrom(state, coord));
         }

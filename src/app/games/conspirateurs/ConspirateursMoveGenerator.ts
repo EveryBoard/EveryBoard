@@ -1,6 +1,6 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { Player } from 'src/app/jscaip/Player';
-import { MGPFallible, ImmutableSet } from '@everyboard/lib';
+import { MGPFallible, Set } from '@everyboard/lib';
 import { ConspirateursMove, ConspirateursMoveDrop, ConspirateursMoveJump, ConspirateursMoveSimple } from './ConspirateursMove';
 import { ConspirateursNode, ConspirateursRules } from './ConspirateursRules';
 import { ConspirateursState } from './ConspirateursState';
@@ -65,11 +65,11 @@ export class ConspirateursMoveGenerator extends MoveGenerator<ConspirateursMove,
     }
 
     private getListJumps(state: ConspirateursState, start: Coord): ConspirateursMoveJump[] {
-        let moves: ImmutableSet<ConspirateursMoveJump> = new ImmutableSet();
+        let moves: Set<ConspirateursMoveJump> = new Set();
         for (const firstTarget of ConspirateursRules.get().jumpTargetsFrom(state, start)) {
             const jump: ConspirateursMoveJump = ConspirateursMoveJump.from([start, firstTarget]).get();
             if (ConspirateursRules.get().jumpLegality(jump, state).isSuccess()) {
-                moves = moves.unionElement(jump);
+                moves = moves.addElement(jump);
                 moves = moves.union(this.getListJumpStartingFrom(state, jump));
             }
         }
@@ -77,10 +77,10 @@ export class ConspirateursMoveGenerator extends MoveGenerator<ConspirateursMove,
     }
 
     private getListJumpStartingFrom(state: ConspirateursState, jump: ConspirateursMoveJump)
-    : ImmutableSet<ConspirateursMoveJump>
+    : Set<ConspirateursMoveJump>
     {
         const nextJumps: ConspirateursMoveJump[] = ConspirateursRules.get().nextJumps(jump, state);
-        let jumps: ImmutableSet<ConspirateursMoveJump> = new ImmutableSet(nextJumps);
+        let jumps: Set<ConspirateursMoveJump> = new Set(nextJumps);
         for (const nextJump of nextJumps) {
             jumps = jumps.union(this.getListJumpStartingFrom(state, nextJump));
         }

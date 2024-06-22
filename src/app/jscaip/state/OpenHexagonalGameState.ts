@@ -1,4 +1,4 @@
-import { ImmutableSet, ReversibleMap } from '@everyboard/lib';
+import { Set, ReversibleMap } from '@everyboard/lib';
 import { Coord } from '../Coord';
 import { GameState } from './GameState';
 import { HexagonalUtils } from '../HexagonalUtils';
@@ -52,9 +52,9 @@ export abstract class OpenHexagonalGameState<T extends NonNullable<unknown>> ext
             return this.pieces.get(neighbor).isPresent();
         });
     }
-    public getGroups(): ImmutableSet<CoordSet> {
+    public getGroups(): Set<CoordSet> {
         let visited: CoordSet = new CoordSet();
-        let groups: ImmutableSet<CoordSet> = new ImmutableSet();
+        let groups: Set<CoordSet> = new Set();
         this.pieces.forEach((itemToVisit: {key: Coord, value: T}) => {
             if (visited.contains(itemToVisit.key) === false) {
                 // We will visit all reachable occupied neighbors of this coord
@@ -62,13 +62,13 @@ export abstract class OpenHexagonalGameState<T extends NonNullable<unknown>> ext
                 let toVisit: CoordSet = new CoordSet([itemToVisit.key]);
                 while (toVisit.hasElements()) {
                     const coord: Coord = toVisit.getAnyElement().get();
-                    toVisit = toVisit.filterElement(coord);
-                    visited = visited.unionElement(coord);
-                    group = group.unionElement(coord);
+                    toVisit = toVisit.removeElement(coord);
+                    visited = visited.addElement(coord);
+                    group = group.addElement(coord);
                     toVisit = toVisit.union(this.getOccupiedNeighbors(coord).filter((neighbor: Coord) =>
                         visited.contains(neighbor) === false));
                 }
-                groups = groups.unionElement(group);
+                groups = groups.addElement(group);
             }
         });
         return groups;

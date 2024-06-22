@@ -1,6 +1,6 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { HexaDirection } from 'src/app/jscaip/HexaDirection';
-import { MGPFallible, MGPOptional, ImmutableSet, MGPValidation, Utils } from '@everyboard/lib';
+import { MGPFallible, MGPOptional, Set, MGPValidation, Utils } from '@everyboard/lib';
 import { HiveFailure } from './HiveFailure';
 import { HiveCoordToCoordMove, HiveSpiderMove } from './HiveMove';
 import { HivePiece, HivePieceKind, HivePieceStack } from './HivePiece';
@@ -178,7 +178,7 @@ export class HiveSpiderRules extends HivePieceRules {
             if (visited.contains(coords[i])) {
                 return MGPValidation.failure(HiveFailure.SPIDER_CANNOT_BACKTRACK());
             }
-            visited = visited.unionElement(coords[i]);
+            visited = visited.addElement(coords[i]);
         }
         return MGPValidation.SUCCESS;
     }
@@ -203,7 +203,7 @@ export class HiveSpiderRules extends HivePieceRules {
         function makeMove(move: Coord[]): HiveSpiderMove {
             return HiveSpiderMove.ofCoords(move as [Coord, Coord, Coord, Coord]);
         }
-        const uniqueMoves: ImmutableSet<HiveCoordToCoordMove> = new ImmutableSet(movesSoFar.map(makeMove));
+        const uniqueMoves: Set<HiveCoordToCoordMove> = new Set(movesSoFar.map(makeMove));
         return uniqueMoves.toList();
     }
     private nextMoveStep(state: HiveState, move: Coord[]): Coord[][] {
@@ -244,7 +244,7 @@ export class HiveSoldierAntRules extends HivePieceRules {
             if (visited.contains(coord)) {
                 continue;
             }
-            visited = visited.unionElement(coord);
+            visited = visited.addElement(coord);
 
             if (coord.equals(end)) {
                 return true;
@@ -267,14 +267,14 @@ export class HiveSoldierAntRules extends HivePieceRules {
         return this.checkEmptyDestination(move, state);
     }
     public getPotentialMoves(coord: Coord, state: HiveState): HiveCoordToCoordMove[] {
-        let moves: ImmutableSet<HiveCoordToCoordMove> = new ImmutableSet();
+        let moves: Set<HiveCoordToCoordMove> = new Set();
         for (const occupiedSpace of state.occupiedSpaces()) {
             if (occupiedSpace.equals(coord)) {
                 // We will move so we don't look at this space
                 continue;
             }
             for (const unoccupied of state.emptyNeighbors(occupiedSpace)) {
-                moves = moves.unionElement(HiveCoordToCoordMove.from(coord, unoccupied).get());
+                moves = moves.addElement(HiveCoordToCoordMove.from(coord, unoccupied).get());
             }
         }
         return moves.toList();

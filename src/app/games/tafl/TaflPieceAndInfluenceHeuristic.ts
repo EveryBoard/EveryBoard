@@ -2,7 +2,7 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { Orthogonal } from 'src/app/jscaip/Orthogonal';
 import { BoardValue } from 'src/app/jscaip/AI/BoardValue';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { MGPMap, MGPOptional, ImmutableSet, Utils } from '@everyboard/lib';
+import { MGPMap, MGPOptional, Set, Utils } from '@everyboard/lib';
 import { SandwichThreat } from '../../jscaip/PieceThreat';
 import { TaflPawn } from './TaflPawn';
 import { TaflNode } from './TaflRules';
@@ -31,8 +31,8 @@ export class TaflPieceAndInfluenceHeuristic<M extends TaflMove> extends TaflPiec
         const empty: TaflPawn = TaflPawn.UNOCCUPIED;
 
         const pieceMap: MGPMap<Player, CoordSet> = this.getPiecesMap(state);
-        const threatMap: MGPMap<Coord, ImmutableSet<SandwichThreat>> = this.getThreatMap(node, pieceMap);
-        const filteredThreatMap: MGPMap<Coord, ImmutableSet<SandwichThreat>> = this.filterThreatMap(threatMap, state);
+        const threatMap: MGPMap<Coord, Set<SandwichThreat>> = this.getThreatMap(node, pieceMap);
+        const filteredThreatMap: MGPMap<Coord, Set<SandwichThreat>> = this.filterThreatMap(threatMap, state);
         let threatenedPiece: number = 0;
         let safePiece: number = 0;
         let totalInfluence: number = 0;
@@ -87,14 +87,14 @@ export class TaflPieceAndInfluenceHeuristic<M extends TaflMove> extends TaflPiec
     }
 
     public getThreatMap(node: TaflNode<M>, pieces: MGPMap<Player, CoordSet>)
-    : MGPMap<Coord, ImmutableSet<SandwichThreat>>
+    : MGPMap<Coord, Set<SandwichThreat>>
     {
-        const threatMap: MGPMap<Coord, ImmutableSet<SandwichThreat>> = new MGPMap();
+        const threatMap: MGPMap<Coord, Set<SandwichThreat>> = new MGPMap();
         for (const player of Player.PLAYERS) {
             for (const piece of pieces.get(player).get()) {
                 const threats: SandwichThreat[] = this.getThreats(piece, node.gameState);
                 if (this.isThreatReal(piece, node.gameState, threats)) {
-                    threatMap.set(piece, new ImmutableSet(threats));
+                    threatMap.set(piece, new Set(threats));
                 }
             }
         }
@@ -166,10 +166,10 @@ export class TaflPieceAndInfluenceHeuristic<M extends TaflMove> extends TaflPiec
         }
     }
 
-    public filterThreatMap(threatMap: MGPMap<Coord, ImmutableSet<SandwichThreat>>, state: TaflState)
-    : MGPMap<Coord, ImmutableSet<SandwichThreat>>
+    public filterThreatMap(threatMap: MGPMap<Coord, Set<SandwichThreat>>, state: TaflState)
+    : MGPMap<Coord, Set<SandwichThreat>>
     {
-        const filteredThreatMap: MGPMap<Coord, ImmutableSet<SandwichThreat>> = new MGPMap();
+        const filteredThreatMap: MGPMap<Coord, Set<SandwichThreat>> = new MGPMap();
         const threateneds: Coord[] = threatMap.getKeyList();
         const threatenedPlayerPieces: Coord[] = threateneds.filter((coord: Coord) => {
             return state.getAbsoluteOwner(coord) === state.getCurrentPlayer();
@@ -178,7 +178,7 @@ export class TaflPieceAndInfluenceHeuristic<M extends TaflMove> extends TaflPiec
             return state.getAbsoluteOwner(coord) === state.getCurrentOpponent();
         }));
         for (const threatenedPiece of threatenedPlayerPieces) {
-            const oldThreatSet: ImmutableSet<SandwichThreat> = threatMap.get(threatenedPiece).get();
+            const oldThreatSet: Set<SandwichThreat> = threatMap.get(threatenedPiece).get();
             const newThreatSet: SandwichThreat[] = [];
             for (const threat of oldThreatSet) {
                 if (threatenedOpponentPieces.contains(threat.directThreat) === false) {
@@ -196,11 +196,11 @@ export class TaflPieceAndInfluenceHeuristic<M extends TaflMove> extends TaflPiec
                 }
             }
             if (newThreatSet.length > 0) {
-                filteredThreatMap.set(threatenedPiece, new ImmutableSet(newThreatSet));
+                filteredThreatMap.set(threatenedPiece, new Set(newThreatSet));
             }
         }
         for (const threatenedOpponentPiece of threatenedOpponentPieces) {
-            const threatSet: ImmutableSet<SandwichThreat> = threatMap.get(threatenedOpponentPiece).get();
+            const threatSet: Set<SandwichThreat> = threatMap.get(threatenedOpponentPiece).get();
             filteredThreatMap.set(threatenedOpponentPiece, threatSet);
         }
         return filteredThreatMap;
