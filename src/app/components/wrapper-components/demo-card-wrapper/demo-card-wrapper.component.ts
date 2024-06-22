@@ -67,7 +67,6 @@ export class DemoCardWrapperComponent extends GameWrapper<string> implements Aft
             // When it is, we want to manually update the board with the new infos and display them
             this.gameComponent.node = this.demoNodeInfo.node;
             await this.gameComponent.updateBoardAndRedraw(false);
-            this.cdr.detectChanges();
         }
     }
 

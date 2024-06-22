@@ -235,7 +235,7 @@ export abstract class GameWrapper<P extends Comparable> extends BaseWrapperCompo
      * @param triggerAnimation a boolean set to true if there is a need to trigger the animation of the last move
      */
     protected async showNewMove(triggerAnimation: boolean): Promise<void> {
-        await this.gameComponent.updateBoardAndRedraw(triggerAnimation);
+        await this.gameComponent.updateBoard(triggerAnimation);
         await this.gameComponent.showLastMoveAndRedraw();
     }
 
