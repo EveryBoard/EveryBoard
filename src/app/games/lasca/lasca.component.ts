@@ -5,13 +5,14 @@ import { Vector } from 'src/app/jscaip/Vector';
 import { Player } from 'src/app/jscaip/Player';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
-import { MGPFallible, MGPOptional, MGPSet, MGPValidation, Utils } from '@everyboard/lib';
+import { MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 import { LascaFailure } from './LascaFailure';
 import { LascaMove } from './LascaMove';
 import { LascaRules } from './LascaRules';
 import { LascaPiece, LascaStack, LascaState } from './LascaState';
 import { MCTS } from 'src/app/jscaip/AI/MCTS';
 import { LascaMoveGenerator } from './LascaMoveGenerator';
+import { CoordSet } from 'src/app/jscaip/CoordSet';
 import { LascaControlMinimax } from './LascaControlMinimax';
 import { LascaControlPlusDominationMinimax } from './LascaControlPlusDominationMinimax';
 
@@ -117,7 +118,7 @@ export class LascaComponent extends ParallelogramGameComponent<LascaRules,
     private showLastCapture(move: LascaMove): void {
         this.lastCaptures = [];
         if (move.isStep === false) {
-            const jumpedOverCoord: MGPFallible<MGPSet<Coord>> = move.getCapturedCoords();
+            const jumpedOverCoord: MGPFallible<CoordSet> = move.getCapturedCoords();
             Utils.assert(jumpedOverCoord.isSuccess(), 'Last move is a capture yet has illegal jumps !?');
             for (const coord of jumpedOverCoord.get()) {
                 this.lastCaptures.push(coord);

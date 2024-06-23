@@ -198,7 +198,7 @@ export class DvonnRules extends Rules<DvonnMove, DvonnState> {
         return MGPFallible.success(undefined);
     }
 
-    public getGameStatus(node: DvonnNode): GameStatus {
+    public override getGameStatus(node: DvonnNode): GameStatus {
         return DvonnRules.getGameStatus(node);
     }
 

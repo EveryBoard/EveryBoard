@@ -98,7 +98,7 @@ export class TrexoRules extends Rules<TrexoMove, TrexoState> {
         return zeroSpace.getUpperTileId() === oneSpace.getUpperTileId();
     }
 
-    public getGameStatus(node: TrexoNode): GameStatus {
+    public override getGameStatus(node: TrexoNode): GameStatus {
         const state: TrexoState = node.gameState;
         const lastPlayer: Player = state.getCurrentOpponent();
         let lastPlayerAligned5: boolean = false;
