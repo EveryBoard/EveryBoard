@@ -55,7 +55,7 @@ describe('CoerceoComponent', () => {
             // When rendering it
             await testUtils.setupState(state);
 
-            // THen it should not have a tile count
+            // Then it should not have a tile count
             testUtils.expectElementToExist('#tiles-count-PLAYER_ZERO');
         }));
 
@@ -154,7 +154,7 @@ describe('CoerceoComponent', () => {
             const move: CoerceoMove = CoerceoTileExchangeMove.of(new Coord(6, 9));
 
             // Then it should fail
-            await testUtils.expectMoveFailure('#click-6-9',
+            await testUtils.expectMoveFailure('#pyramid-6-9',
                                               CoerceoFailure.NOT_ENOUGH_TILES_TO_EXCHANGE(),
                                               move);
         }));
@@ -167,7 +167,7 @@ describe('CoerceoComponent', () => {
 
             // When clicking on an opponent piece
             const move: CoerceoMove = CoerceoTileExchangeMove.of(new Coord(6, 9));
-            await testUtils.expectMoveSuccess('#click-6-9', move);
+            await testUtils.expectMoveSuccess('#pyramid-6-9', move);
 
             // Then the highlight should be visible
             testUtils.expectElementToHaveClasses('#pyramid-6-9', ['base', 'mid-stroke', 'captured-fill']);
@@ -177,7 +177,7 @@ describe('CoerceoComponent', () => {
         it('should show possibles destination after choosing your own piece', fakeAsync(async() => {
             // Given any board
             // When clicking on any piece
-            await testUtils.expectClickSuccess('#click-6-2');
+            await testUtils.expectClickSuccess('#pyramid-6-2');
 
             // Then its destinations should be displayed
             testUtils.expectElementToHaveClass('#selected-6-2', 'selected-stroke');
@@ -191,17 +191,17 @@ describe('CoerceoComponent', () => {
             // Given any board
             // When clicking on empty space
             // Then it should fail
-            await testUtils.expectClickFailure('#click-5-5', CoerceoFailure.FIRST_CLICK_SHOULD_NOT_BE_NULL());
+            await testUtils.expectClickFailure('#space-5-5', CoerceoFailure.FIRST_CLICK_SHOULD_NOT_BE_NULL());
         }));
 
         it('should hide last move when selecting first piece', fakeAsync(async() => {
             // Given a state with a last move
-            await testUtils.expectClickSuccess('#click-6-2');
+            await testUtils.expectClickSuccess('#pyramid-6-2');
             const move: CoerceoMove = CoerceoRegularMove.of(new Coord(6, 2), new Coord(7, 3));
-            await testUtils.expectMoveSuccess('#click-7-3', move);
+            await testUtils.expectMoveSuccess('#space-7-3', move);
 
             // When clicking on the piece to move
-            await testUtils.expectClickSuccess('#click-4-3');
+            await testUtils.expectClickSuccess('#pyramid-4-3');
 
             // Then the last move should no longer be displayed
             testUtils.expectElementNotToExist('#last-start-6-2');
@@ -210,25 +210,25 @@ describe('CoerceoComponent', () => {
 
     });
 
-    describe('Second click', () => {
+    describe('second click', () => {
 
         it('should allow simple move', fakeAsync(async() => {
             // Given any board with one selected piece
-            await testUtils.expectClickSuccess('#click-6-2');
+            await testUtils.expectClickSuccess('#pyramid-6-2');
 
             // When clicking on the landing space
             const move: CoerceoMove = CoerceoRegularMove.of(new Coord(6, 2), new Coord(7, 3));
 
             // Then the move should be done
-            await testUtils.expectMoveSuccess('#click-7-3', move);
+            await testUtils.expectMoveSuccess('#space-7-3', move);
         }));
 
         it('should switch of selected piece when clicking another player piece', fakeAsync(async() => {
             // Given a board where a first piece has been selected
-            await testUtils.expectClickSuccess('#click-6-2');
+            await testUtils.expectClickSuccess('#pyramid-6-2');
 
             // When clicking on another piece
-            await testUtils.expectClickSuccess('#click-8-2');
+            await testUtils.expectClickSuccess('#pyramid-8-2');
 
             // Then second piece should be selected
             testUtils.expectElementNotToExist('#selected-6-2');
@@ -237,52 +237,52 @@ describe('CoerceoComponent', () => {
             testUtils.expectElementToExist('#possible-landing-7-3');
             testUtils.expectElementToExist('#possible-landing-10-2');
             testUtils.expectElementToExist('#possible-landing-9-3');
-            testUtils.expectElementNotToExist('possible-landing-5-3');
-            testUtils.expectElementNotToExist('possible-landing-4-2');
+            testUtils.expectElementNotToExist('#possible-landing-5-3');
+            testUtils.expectElementNotToExist('#possible-landing-4-2');
         }));
 
         it('should deselect piece when clicking a second time on it', fakeAsync(async() => {
             // Given a board on which a piece is selected
-            await testUtils.expectClickSuccess('#click-6-2');
+            await testUtils.expectClickSuccess('#pyramid-6-2');
             testUtils.expectElementToExist('#possible-landing-7-3');
 
             // When clicking on it again
-            await testUtils.expectClickFailure('#click-6-2');
+            await testUtils.expectClickFailure('#pyramid-6-2');
 
             // Then the different highlights should be gone since the piece is deselected
             testUtils.expectElementNotToExist('#selected-6-2');
-            testUtils.expectElementNotToExist('possible-landing-7-3');
+            testUtils.expectElementNotToExist('#possible-landing-7-3');
         }));
 
         it('should deselect piece when clicking on its selected highlight', fakeAsync(async() => {
             // Given a board on which a piece is selected
-            await testUtils.expectClickSuccess('#click-6-2');
+            await testUtils.expectClickSuccess('#pyramid-6-2');
             testUtils.expectElementToExist('#possible-landing-7-3');
 
             // When clicking on it again
-            await testUtils.expectClickFailureWithAsymmetricNaming('#selected-6-2', '#click-6-2');
+            await testUtils.expectClickFailureWithAsymmetricNaming('#selected-6-2', '#pyramid-6-2');
 
             // Then the different highlights should be gone since the piece is deselected
             testUtils.expectElementNotToExist('#selected-6-2');
-            testUtils.expectElementNotToExist('possible-landing-7-3');
+            testUtils.expectElementNotToExist('#possible-landing-7-3');
         }));
 
-        it('should refuse invalid movement', fakeAsync(async() => {
+        it('should refuse invalid move', fakeAsync(async() => {
             // Given any board with one selected piece
-            await testUtils.expectClickSuccess('#click-6-2');
+            await testUtils.expectClickSuccess('#pyramid-6-2');
 
             // When clicking too far from the selected piece
             // Then it should fail
-            await testUtils.expectClickFailure('#click-8-4', CoerceoFailure.INVALID_DISTANCE());
+            await testUtils.expectClickFailure('#space-8-4', CoerceoFailure.INVALID_DISTANCE());
         }));
 
         it('should show last move after finishing it', fakeAsync(async() => {
             // Given a state with a move ongoing
-            await testUtils.expectClickSuccess('#click-6-2');
+            await testUtils.expectClickSuccess('#pyramid-6-2');
 
             // When finishing the move
             const move: CoerceoMove = CoerceoRegularMove.of(new Coord(6, 2), new Coord(7, 3));
-            await testUtils.expectMoveSuccess('#click-7-3', move);
+            await testUtils.expectMoveSuccess('#space-7-3', move);
 
             // Then the highlight of the last move should be present
             testUtils.expectElementToHaveClass('#last-start-6-2', 'last-move-stroke');
@@ -314,7 +314,7 @@ describe('CoerceoComponent', () => {
             testUtils.expectElementToHaveClass('#last-start-8-9', 'last-move-stroke');
 
             // When applying a tile exchange
-            await testUtils.expectMoveSuccess('#click-6-9',
+            await testUtils.expectMoveSuccess('#pyramid-6-9',
                                               CoerceoTileExchangeMove.of(new Coord(6, 9)));
 
             // Then the start and end of penultimate move should be gone

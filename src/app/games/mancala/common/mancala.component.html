@@ -13,7 +13,7 @@
     />
     <g *ngFor="let line of board; index as y">
         <g *ngFor="let content of line; index as x">
-            <g id="click_{{ x }}_{{ y }}"
+            <g id="click-{{ x }}-{{ y }}"
                app-numbered-circle
                [attr.transform]="getPieceTransform(x, y)"
                (click)="onClick(x, y)"
@@ -30,7 +30,7 @@
     <line        x1="120"                     y1="0"          x2="120"                     y2="240" class="base"/>
     <line [attr.x1]="getViewBoxWidth() - 120" y1="0"   [attr.x2]="getViewBoxWidth() - 120" y2="240" class="base"/>
 
-    <g id="store_player_0"
+    <g id="store-PLAYER_ZERO"
        (click)="onStoreClick(Player.ZERO)"
        app-numbered-circle
        transform="translate(60 120)"
@@ -41,7 +41,7 @@
        [rotation]="getPieceRotation()"
        [secondaryContent]="getStoreSecondaryContent(Player.ZERO)"
     ></g>
-    <g id="store_player_1"
+    <g id="store-PLAYER_ONE"
        (click)="onStoreClick(Player.ONE)"
        app-numbered-circle
        [attr.transform]="'translate(' + (getViewBoxWidth() - 60) + ' 120)'"

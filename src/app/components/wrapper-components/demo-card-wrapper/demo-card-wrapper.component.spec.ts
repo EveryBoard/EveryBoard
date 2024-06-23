@@ -62,10 +62,10 @@ describe('DemoCardComponent', () => {
         await loadNode({
             name: 'Lodestone',
             node: new LodestoneNode(LodestoneRules.get().getInitialState()),
-            click: MGPOptional.of('#lodestone_push_orthogonal_PLAYER_ZERO'),
+            click: MGPOptional.of('#lodestone-push-orthogonal-PLAYER_ZERO'),
         });
         // Then it should have performed a click
-        testUtils.expectElementToHaveClass('#lodestone_push_orthogonal_PLAYER_ZERO > g > .lodestone_main_circle', 'selected-stroke');
+        testUtils.expectElementToHaveClass('#lodestone-push-orthogonal-PLAYER_ZERO .data-lodestone-main-circle', 'selected-stroke');
     }));
 
     it('should not allow clicks', fakeAsync(async() => {
@@ -82,7 +82,7 @@ describe('DemoCardComponent', () => {
         await testUtils.expectToDisplayGameMessage(
             TutorialGameWrapperMessages.THIS_IS_A_DEMO(),
             async() => {
-                await testUtils.clickElement('#click_2');
+                await testUtils.clickElement('#click-2-0');
             },
         );
 
@@ -105,7 +105,7 @@ describe('DemoCardComponent', () => {
             node: new GameNode(P4Rules.get().getInitialState(defaultConfig)),
             click: MGPOptional.empty(),
         });
-        testUtils.expectElementNotToExist('.player0-fill');
+        testUtils.expectElementNotToExist('#click-0-0 > circle');
 
         // When loading another component, which triggers ngOnChanges
         const boardWithPiece: Table<PlayerOrNone> = TableUtils.create(7, 6, PlayerOrNone.ZERO);
@@ -118,7 +118,7 @@ describe('DemoCardComponent', () => {
         await testUtils.getComponent().ngOnChanges({} as SimpleChanges);
 
         // Then we should see that the component has indeed been changed
-        testUtils.expectElementToExist('.player0-fill');
+        testUtils.expectElementToExist('#click-0-0 > circle');
     }));
 
     it('should not use onLegalUserMove', fakeAsync(async() => {

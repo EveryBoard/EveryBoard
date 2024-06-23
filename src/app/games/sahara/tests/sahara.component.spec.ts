@@ -96,8 +96,8 @@ describe('SaharaComponent', () => {
             testUtils.expectElementToExist('#possible_landing_5_0');
             testUtils.expectElementToExist('#possible_landing_6_1');
             // and obviously previous highlight removed
-            testUtils.expectElementNotToExist('chosen_coord_2_0');
-            testUtils.expectElementNotToExist('possible_landing_2_1');
+            testUtils.expectElementNotToExist('#chosen_coord_2_0');
+            testUtils.expectElementNotToExist('#possible_landing_2_1');
         }));
 
         it('should deselect piece when clicking a second time on it', fakeAsync(async() => {
@@ -110,8 +110,8 @@ describe('SaharaComponent', () => {
             await testUtils.expectClickFailure('#click_2_0');
 
             // Then the piece should no longer be selected
-            testUtils.expectElementNotToExist('chosen_coord_2_0');
-            testUtils.expectElementNotToExist('possible_landing_2_1');
+            testUtils.expectElementNotToExist('#chosen_coord_2_0');
+            testUtils.expectElementNotToExist('#possible_landing_2_1');
         }));
 
         it('should take "false neighbor" as 3-step move', fakeAsync(async() => {

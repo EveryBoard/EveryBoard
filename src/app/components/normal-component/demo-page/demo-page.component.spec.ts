@@ -16,7 +16,7 @@ describe('DemoPageComponent', () => {
     });
 
     it('should display demo nodes', () => {
-        expect(testUtils.findElement('app-demo-card')).withContext('app-demo-card should be present').toBeTruthy();
+        expect(testUtils.findElements('app-demo-card').length).withContext('app-demo-card should be present').toBeGreaterThan(0);
     });
 
     it('should adapt the number of columns upon change', () => {

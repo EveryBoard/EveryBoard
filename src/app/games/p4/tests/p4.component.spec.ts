@@ -24,7 +24,7 @@ describe('P4Component', () => {
 
     it('should accept simple move', fakeAsync(async() => {
         const move: P4Move = P4Move.of(3);
-        await testUtils.expectMoveSuccess('#click_3', move);
+        await testUtils.expectMoveSuccess('#click-3-0', move);
     }));
 
     it('should highlight victory', fakeAsync(async() => {
@@ -43,9 +43,9 @@ describe('P4Component', () => {
         await testUtils.setupState(state);
 
         // Then victorious coords should be shown
-        testUtils.expectElementToHaveClass('#victory_coord_3_2', 'victory-stroke');
-        testUtils.expectElementToHaveClass('#victory_coord_3_3', 'victory-stroke');
-        testUtils.expectElementToHaveClass('#victory_coord_3_4', 'victory-stroke');
-        testUtils.expectElementToHaveClass('#victory_coord_3_5', 'victory-stroke');
+        testUtils.expectElementToHaveClass('#victory-coord-3-2', 'victory-stroke');
+        testUtils.expectElementToHaveClass('#victory-coord-3-3', 'victory-stroke');
+        testUtils.expectElementToHaveClass('#victory-coord-3-4', 'victory-stroke');
+        testUtils.expectElementToHaveClass('#victory-coord-3-5', 'victory-stroke');
     }));
 });

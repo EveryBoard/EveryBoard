@@ -149,7 +149,7 @@ export class LascaComponent extends ParallelogramGameComponent<LascaRules,
     }
 
     public async onClick(x: number, y: number): Promise<MGPValidation> {
-        const clickValidity: MGPValidation = await this.canUserPlay('#coord_' + x + '_' + y);
+        const clickValidity: MGPValidation = await this.canUserPlay('#coord-' + x + '-' + y);
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }

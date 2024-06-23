@@ -104,7 +104,7 @@ describe('LocalGameWrapperComponent (game phase)', () => {
     it('connected user should be able to play', fakeAsync(async() => {
         // Given the initial board
         // When doing a move
-        await testUtils.expectMoveSuccess('#click_4', P4Move.of(4));
+        await testUtils.expectMoveSuccess('#click-4-0', P4Move.of(4));
         // Then the turn should be incremented
         expect(testUtils.getGameComponent().getTurn()).toBe(1);
     }));
@@ -128,7 +128,7 @@ describe('LocalGameWrapperComponent (game phase)', () => {
         const state: P4State = new P4State(board, 41);
         await testUtils.setupState(state);
 
-        await testUtils.expectMoveSuccess('#click_3', P4Move.of(3));
+        await testUtils.expectMoveSuccess('#click-3-0', P4Move.of(3));
         testUtils.expectElementToExist('#draw');
     }));
 
@@ -145,9 +145,9 @@ describe('LocalGameWrapperComponent (game phase)', () => {
         const state: P4State = new P4State(board, 41);
         await testUtils.setupState(state);
         // When finishing the game
-        await testUtils.expectMoveSuccess('#click_0', P4Move.of(0));
+        await testUtils.expectMoveSuccess('#click-0-0', P4Move.of(0));
         // Then it should not be possible to click again
-        await testUtils.expectClickFailure('#click_3', GameWrapperMessages.GAME_HAS_ENDED());
+        await testUtils.expectClickFailure('#click-3-0', GameWrapperMessages.GAME_HAS_ENDED());
     }));
 
     it('should show score if needed', fakeAsync(async() => {
@@ -197,7 +197,7 @@ describe('LocalGameWrapperComponent (game phase)', () => {
             ];
             const state: P4State = new P4State(board, 41);
             await testUtils.setupState(state);
-            await testUtils.expectMoveSuccess('#click_3', P4Move.of(3));
+            await testUtils.expectMoveSuccess('#click-3-0', P4Move.of(3));
 
             // When restarting the game
             await testUtils.expectInterfaceClickSuccess('#restartButton');
@@ -322,7 +322,7 @@ describe('LocalGameWrapperComponent (game phase)', () => {
 
         it('should propose AI 2 to play when selecting her just before her turn', fakeAsync(async() => {
             // Given wrapper on which a first move have been done
-            await testUtils.expectMoveSuccess('#click_4', P4Move.of(4));
+            await testUtils.expectMoveSuccess('#click-4-0', P4Move.of(4));
             // When clicking on AI then its level
             await testUtils.selectChildElementOfDropDown('#playerOneSelect', 'playerOne_ai_Minimax');
             const localGameWrapper: LocalGameWrapperComponent = testUtils.getWrapper() as LocalGameWrapperComponent;
@@ -389,13 +389,13 @@ describe('LocalGameWrapperComponent (game phase)', () => {
 
             // When trying to click
             // Then it should fail
-            await testUtils.expectClickFailure('#click_3', GameWrapperMessages.NOT_YOUR_TURN());
+            await testUtils.expectClickFailure('#click-3-0', GameWrapperMessages.NOT_YOUR_TURN());
         }));
 
         it('should display AI info when parameter is set to true', fakeAsync(async() => {
             // Given a component where we want to show the AI metrics in the middle of a part
             localStorage.setItem('displayAIInfo', 'true');
-            await testUtils.expectMoveSuccess('#click_4', P4Move.of(4));
+            await testUtils.expectMoveSuccess('#click-4-0', P4Move.of(4));
 
             // When displaying it
             testUtils.detectChanges();
@@ -423,7 +423,7 @@ describe('LocalGameWrapperComponent (game phase)', () => {
             await testUtils.setupState(state);
 
             // When player zero does the winning move
-            await testUtils.expectMoveSuccess('#click_3', P4Move.of(3));
+            await testUtils.expectMoveSuccess('#click-3-0', P4Move.of(3));
 
             // Then 'Player 0 won' should be displayed
             const winnerTag: string = testUtils.findElement('#winner').nativeElement.innerHTML;
@@ -442,7 +442,7 @@ describe('LocalGameWrapperComponent (game phase)', () => {
             ];
             const state: P4State = new P4State(board, 37);
             await testUtils.setupState(state);
-            await testUtils.expectMoveSuccess('#click_4', P4Move.of(4));
+            await testUtils.expectMoveSuccess('#click-4-0', P4Move.of(4));
 
             // When selecting AI, and AI then doing winning move
             await testUtils.selectAIPlayer(Player.ZERO);
@@ -460,7 +460,7 @@ describe('LocalGameWrapperComponent (game phase)', () => {
             await testUtils.selectAIPlayer(Player.ZERO);
 
             // When user does the winning move
-            await testUtils.expectMoveSuccess('#click_3', P4Move.of(3));
+            await testUtils.expectMoveSuccess('#click-3-0', P4Move.of(3));
 
             // Then 'You won' should be displayed
             const winnerTag: string = testUtils.findElement('#winner').nativeElement.innerHTML;
@@ -496,7 +496,7 @@ describe('LocalGameWrapperComponent (game phase)', () => {
         it('should showLastMove when there is one', fakeAsync(async() => {
             // Given a component with a last move
             const component: P4Component = testUtils.getGameComponent();
-            await testUtils.expectMoveSuccess('#click_4', P4Move.of(4));
+            await testUtils.expectMoveSuccess('#click-4-0', P4Move.of(4));
             spyOn(component, 'showLastMove').and.callThrough();
 
             // When calling onCancelMove
@@ -526,7 +526,7 @@ describe('LocalGameWrapperComponent (game phase)', () => {
             const state: P4State = testUtils.getGameComponent().getState();
             expect(state.turn).toBe(0);
 
-            await testUtils.expectMoveSuccess('#click_4', P4Move.of(4));
+            await testUtils.expectMoveSuccess('#click-4-0', P4Move.of(4));
             expect(testUtils.getGameComponent().getTurn()).toBe(1);
 
             // When taking back
@@ -540,8 +540,8 @@ describe('LocalGameWrapperComponent (game phase)', () => {
 
         it('should take back two turns when playing against IA', fakeAsync(async() => {
             // Given a game component on which you play against IA, at turn N+2, and it's human turn
-            await testUtils.expectMoveSuccess('#click_3', P4Move.of(3));
-            await testUtils.expectMoveSuccess('#click_3', P4Move.of(3));
+            await testUtils.expectMoveSuccess('#click-3-0', P4Move.of(3));
+            await testUtils.expectMoveSuccess('#click-3-0', P4Move.of(3));
             await testUtils.selectAIPlayer(Player.ONE);
             await testUtils.whenStable();
 
@@ -574,7 +574,7 @@ describe('LocalGameWrapperComponent (game phase)', () => {
 
         it('should cancelMoveAttempt when taking back', fakeAsync(async() => {
             // Given a board where a move could be in construction
-            await testUtils.expectMoveSuccess('#click_4', P4Move.of(4));
+            await testUtils.expectMoveSuccess('#click-4-0', P4Move.of(4));
 
             // When calling take back
             const component: P4Component = testUtils.getGameComponent();

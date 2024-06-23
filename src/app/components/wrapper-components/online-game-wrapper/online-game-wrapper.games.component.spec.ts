@@ -43,7 +43,7 @@ describe('OnlineGameWrapperComponent (games)', () => {
                     await testUtils.expectToDisplayGameMessage(refusal.getReason(), async() => {
                         return wrapper.gameComponent[methodName](...game[methodName]);
                     });
-                // Then it should refused, and claim the reason is that we are observer
+                // Then it should be refused, with the reason being that we are an observer
                 expect(clickResult).withContext(methodName).toEqual(refusal);
             }
             tick(wrapper.configRoom.totalPartDuration * 1000);

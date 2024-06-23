@@ -37,7 +37,7 @@
             </g>
         </g>
     </g>
-    <polygon *ngFor="let coord of selectedCoords.concat(selectedRings)"
+    <polygon *ngFor="let coord of selectedCoords.union(selectedRings)"
              id="selected_{{ coord.x }}_{{ coord.y }}"
              (click)="onClick(coord.x, coord.y)"
              class="base no-fill selected-stroke"

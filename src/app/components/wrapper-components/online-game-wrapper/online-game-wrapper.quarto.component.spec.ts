@@ -383,14 +383,8 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
     it('should no longer have PartCreationComponent and QuartoComponent instead', fakeAsync(async() => {
         // Given an online game being created
         await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER, PreparationOptions.dontWait);
-        const partCreationId: DebugElement = testUtils.findElement('#partCreation');
-        let quartoTag: DebugElement = testUtils.findElement('app-quarto');
-        expect(partCreationId)
-            .withContext('partCreation id should be absent after config accepted')
-            .toBeFalsy();
-        expect(quartoTag)
-            .withContext('quarto tag should be absent before config accepted and async ms finished')
-            .toBeFalsy();
+        testUtils.expectElementNotToExist('#partCreation');
+        testUtils.expectElementNotToExist('app-quarto');
 
         testUtils.expectElementNotToExist('#partCreation');
         expect(testUtils.getGameComponent())
@@ -402,10 +396,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         testUtils.detectChanges();
 
         // Then the game component should become present in the component
-        quartoTag = testUtils.findElement('app-quarto');
-        expect(quartoTag)
-            .withContext('quarto tag should be present after config accepted and async millisec finished')
-            .toBeTruthy();
+        testUtils.expectElementToExist('app-quarto');
         expect(wrapper.gameComponent)
             .withContext('gameComponent field should also be present after config accepted and async millisec finished')
             .toBeTruthy();

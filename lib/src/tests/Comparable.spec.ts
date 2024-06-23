@@ -50,7 +50,7 @@ describe('Comparable', () => {
             const nonComparable: DummyNonComparableObject = new DummyNonComparableObject(5);
             const otherNonComparable: DummyNonComparableObject = new DummyNonComparableObject(5);
             // When comparing them
-            // Then the move should be illegal
+            // Then it should fail
             expect(() => comparableEquals(nonComparable, otherNonComparable)).toThrowError(expectedError);
         });
     });

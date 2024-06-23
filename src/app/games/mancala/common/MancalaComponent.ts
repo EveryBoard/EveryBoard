@@ -110,7 +110,7 @@ export abstract class MancalaComponent<R extends MancalaRules>
     }
 
     public async onClick(x: number, y: number): Promise<MGPValidation> {
-        const clickValidity: MGPValidation = await this.canUserPlay('#click_' + x + '_' + y);
+        const clickValidity: MGPValidation = await this.canUserPlay('#click-' + x + '-' + y);
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }
@@ -350,7 +350,7 @@ export abstract class MancalaComponent<R extends MancalaRules>
     }
 
     public async onStoreClick(owner: Player): Promise<MGPValidation> {
-        const clickValidity: MGPValidation = await this.canUserPlay('#store_player_' + owner.getValue());
+        const clickValidity: MGPValidation = await this.canUserPlay('#store-' + owner.toString());
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }

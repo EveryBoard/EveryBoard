@@ -1,16 +1,16 @@
-<svg:circle id="circle_{{ x }}_{{ y }}"
+<svg:circle id="circle-{{ x }}-{{ y }}"
             [ngClass]="spaceClasses"
             class="base"
             r="45"
 />
-<svg:text id="number_{{ x }}_{{ y }}"
+<svg:text id="number-{{ x }}-{{ y }}"
           [attr.x]="0"
           [attr.y]="16"
           [attr.transform]="rotation"
           class="text-big text-center"
 > {{ content }} </svg:text>
 
-<svg:text id="secondary_message_{{ x }}_{{ y }}"
+<svg:text id="secondary-message-{{ x }}-{{ y }}"
           *ngIf="secondaryContent.isPresent()"
           [attr.x]="15"
           [attr.y]="31"

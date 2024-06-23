@@ -321,8 +321,8 @@ export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, H
         }
     }
 
-    public async selectRemaining(piece: HivePiece): Promise<MGPValidation> {
-        const clickValidity: MGPValidation = await this.canUserPlay(`#remainingPiece_${piece.toString() }`);
+    public async selectRemaining(piece: HivePiece, index: number): Promise<MGPValidation> {
+        const clickValidity: MGPValidation = await this.canUserPlay(`#remaining-piece-${piece.toString()}-${index}`);
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }
@@ -347,21 +347,25 @@ export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, H
         }
     }
 
-    public async selectStack(x: number, y: number): Promise<MGPValidation> {
-        const selectionValidity: MGPValidation = await this.select(new Coord(x, y), 'piece');
+    public async selectPiece(x: number, y: number, z: number): Promise<MGPValidation> {
+        const clickValidity: MGPValidation = await this.canUserPlay(`#piece-${x}-${y}-${z}`);
+        if (clickValidity.isFailure()) {
+            return this.cancelMove(clickValidity.getReason());
+        }
+        const selectionValidity: MGPValidation = await this.select(new Coord(x, y));
         return selectionValidity;
     }
 
     public async selectSpace(x: number, y: number): Promise<MGPValidation> {
-        const selectionValidity: MGPValidation = await this.select(new Coord(x, y), 'space');
-        return selectionValidity;
-    }
-
-    private async select(coord: Coord, selection: 'piece' | 'space'): Promise<MGPValidation> {
-        const clickValidity: MGPValidation = await this.canUserPlay(`#${selection}_${coord.x}_${coord.y}`);
+        const clickValidity: MGPValidation = await this.canUserPlay(`#space-${x}-${y}`);
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }
+        const selectionValidity: MGPValidation = await this.select(new Coord(x, y));
+        return selectionValidity;
+    }
+
+    private async select(coord: Coord): Promise<MGPValidation> {
         const state: HiveState = this.getState();
         const stack: HivePieceStack = state.getAt(coord);
         if (this.selectedRemaining.isPresent()) {

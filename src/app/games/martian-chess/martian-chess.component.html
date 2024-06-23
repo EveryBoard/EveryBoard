@@ -5,11 +5,11 @@
     <g [attr.transform]="getBoardTransformation()">
         <g *ngFor="let line of board; index as y">
             <g *ngFor="let piece of line; index as x"
-               id="click_{{ x }}_{{ y }}"
+               id="click-{{ x }}-{{ y }}"
                (click)="onClick(x, y)"
                [attr.transform]="getPieceTranslation(y)">
                 <!-- Background -->
-                <rect id="square_{{ x }}_{{ y }}"
+                <rect id="square-{{ x }}-{{ y }}"
                       [attr.x]="x * SPACE_SIZE"
                       [attr.y]="y * SPACE_SIZE"
                       [attr.width]="SPACE_SIZE"
@@ -20,49 +20,48 @@
                    [attr.transform]="getPieceLocation(x, y)">
                     <g *ngIf="piece === pieces.PAWN"
                        app-martian-chess-pawn
-                       mainShapeId="pawn_{{ x }}_{{ y }}"
+                       mainShapeId="pawn-{{ x }}-{{ y }}"
                        [pieceClasses]="getPieceClasses(x, y)"
                        [style]="style"/>
                     <g *ngIf="piece === pieces.DRONE"
                        app-martian-chess-drone
                        [pieceClasses]="getPieceClasses(x, y)"
-                       mainShapeId="drone_{{ x }}_{{ y }}"
+                       mainShapeId="drone-{{ x }}-{{ y }}"
                        [style]="style"/>
                     <g *ngIf="piece === pieces.QUEEN"
                        app-martian-chess-queen
-                       mainShapeId="queen_{{ x }}_{{ y }}"
+                       mainShapeId="queen-{{ x }}-{{ y }}"
                        [pieceClasses]="getPieceClasses(x, y)"
                        [style]="style"/>
                 </g>
             </g>
-            <g *ngIf="selectedPieceInfo.isPresent()">
-                <g *ngFor="let possibleLanding of selectedPieceInfo.get().legalLandings">
-                    <rect id="indicator_{{ possibleLanding.x }}_{{ possibleLanding.y }}"
-                          [attr.transform]="getPieceTranslation(possibleLanding.y)"
-                          [attr.x]="possibleLanding.x * SPACE_SIZE + (SPACE_SIZE/2 - INDICATOR_SIZE/2)"
-                          [attr.y]="possibleLanding.y * SPACE_SIZE + (SPACE_SIZE/2 - INDICATOR_SIZE/2)"
-                          [attr.width]="INDICATOR_SIZE"
-                          [attr.height]="INDICATOR_SIZE"
-                          (click)="onClick(possibleLanding.x, possibleLanding.y)"
-                          class="indicator"/>
-                </g>
-            </g>
         </g>
     </g>
-    <g id="clockOrCountDownView"
+    <g *ngIf="selectedPieceInfo.isPresent()">
+        <rect *ngFor="let possibleLanding of selectedPieceInfo.get().legalLandings"
+                id="indicator-{{ possibleLanding.x }}-{{ possibleLanding.y }}"
+                [attr.transform]="getPieceTranslation(possibleLanding.y)"
+                [attr.x]="possibleLanding.x * SPACE_SIZE + (SPACE_SIZE/2 - INDICATOR_SIZE/2)"
+                [attr.y]="possibleLanding.y * SPACE_SIZE + (SPACE_SIZE/2 - INDICATOR_SIZE/2)"
+                [attr.width]="INDICATOR_SIZE"
+                [attr.height]="INDICATOR_SIZE"
+                (click)="onClick(possibleLanding.x, possibleLanding.y)"
+                class="indicator"/>
+    </g>
+    <g id="clock-or-count-down-view"
        (click)="onClockClick()"
        [attr.transform]="'translate(' + (5.25 * SPACE_SIZE) + ', 0)'">
         <rect x="0" y="0"
               class="transparent"
               [attr.width]="SPACE_SIZE"
               [attr.height]="SPACE_SIZE"/>
-        <circle id="clockOrCountDownCircle"
+        <circle id="clock-or-count-down-circle"
                 [attr.cx]="0.5 * SPACE_SIZE"
                 [attr.cy]="0.5 * SPACE_SIZE"
                 [attr.r]="0.4 * SPACE_SIZE"
                 [ngClass]="getClockCircleClasses()"/>
         <text *ngIf="countDown.isPresent()"
-              id="countDownText"
+              id="count-down-text"
               class="text-giant text-center"
               [ngClass]="'player' + getCurrentPlayer().getValue()"
               [attr.x]="0.5 * SPACE_SIZE"
@@ -74,9 +73,9 @@
                   [ngClass]="getClockCircleClasses()"
                   stroke-linecap="round"/>
     </g>
-    <g id="modeCogView"
+    <g id="mode-cog-view"
        [attr.transform]="configViewTranslation">
-        <g id="modeCog"
+        <g id="mode-cog"
            (click)="onModeCogClick()">
             <rect x="0" y="0"
                   class="transparent"
@@ -87,7 +86,7 @@
                   d="M35.497,15.111h-1.656c-0.282-0.924-0.653-1.807-1.102-2.646l1.176-1.175c1.364-1.366,1.366-3.582,0-4.949l-1.258-1.258 c-0.656-0.656-1.548-1.025-2.476-1.025l0,0c-0.93,0-1.818,0.369-2.477,1.025l-1.176,1.175c-0.838-0.446-1.721-0.817-2.645-1.102 V3.501c0-1.934-1.566-3.5-3.5-3.5h-1.778c-1.934,0-3.5,1.566-3.5,3.5v1.655c-0.923,0.282-1.807,0.653-2.645,1.102l-1.174-1.175 c-1.367-1.367-3.584-1.367-4.951,0L5.081,6.34c-1.367,1.366-1.367,3.583,0,4.949l1.174,1.175c-0.446,0.84-0.818,1.723-1.102,2.646 H3.5c-1.934,0-3.5,1.566-3.5,3.5v1.778c0,1.932,1.566,3.5,3.5,3.5h1.654c0.283,0.922,0.654,1.807,1.102,2.645l-1.175,1.176 c-1.366,1.365-1.366,3.582-0.001,4.949l1.258,1.258c0.656,0.654,1.547,1.023,2.475,1.023h0.001c0.929,0,1.818-0.369,2.475-1.023 l1.176-1.176c0.837,0.447,1.722,0.818,2.644,1.102v1.656c0,1.932,1.566,3.5,3.5,3.5h1.778c1.934,0,3.5-1.568,3.5-3.5v-1.656 c0.924-0.283,1.807-0.654,2.645-1.102l1.177,1.176c0.655,0.656,1.547,1.023,2.476,1.023c0.93,0,1.817-0.369,2.477-1.023 l1.256-1.258c1.366-1.367,1.365-3.582,0-4.949l-1.176-1.174c0.447-0.84,0.818-1.725,1.102-2.646h1.656c1.934,0,3.5-1.568,3.5-3.5 v-1.777C38.997,16.679,37.43,15.111,35.497,15.111z M19.499,27.499c-4.41,0-8-3.588-8-8c0-4.411,3.59-8,8-8c4.412,0,8,3.589,8,8 C27.499,23.911,23.911,27.499,19.499,27.499z"/>
             </g>
         <g *ngIf="displayModePanel"
-           id="modePanel">
+           id="mode-panel">
             <rect class="base"
                   [attr.x]="0"
                   [attr.y]="(- listOfStyles.length * SPACE_SIZE)"
@@ -106,7 +105,7 @@
     </g>
     <g id="captures">
         <g *ngFor="let player of Player.PLAYERS">
-            <g id="capture_of_player_{{ player.toString() }}"
+            <g id="capture-of-player-{{ player.toString() }}"
                [attr.transform]="getCapturesTransformation(player)">
                 <g *ngFor="let value of state.getCapturesOf(player); index as piece">
                     <g *ngIf="value > 0"
@@ -117,7 +116,7 @@
                               [attr.x]="SPACE_SIZE / 2"
                               [attr.y]="SPACE_SIZE / 2"
                         >{{ value + ' x ' }}</text>
-                        <g id="piece_{{ piece }}_player_{{ player.toString() }}"
+                        <g id="piece-{{ piece }}-player-{{ player.toString() }}"
                            [attr.transform]="'translate(' + SPACE_SIZE + ', 0)'">
                             <g *ngIf="piece === 0"
                                app-martian-chess-pawn

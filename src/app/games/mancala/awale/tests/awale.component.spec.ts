@@ -91,7 +91,7 @@ describe('AwaleComponent', () => {
             const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(3));
 
             // Then this should trigger a single distribution move
-            await testUtils.expectMoveSuccess('#click_3_1', move, 1400);
+            await testUtils.expectMoveSuccess('#click-3-1', move, 1400);
         }));
 
         it('should allow redistribution if allowed by config', fakeAsync(async() => {
@@ -103,14 +103,14 @@ describe('AwaleComponent', () => {
             });
             const state: MancalaState = AwaleRules.get().getInitialState(customConfig);
             await testUtils.setupState(state, { config: customConfig });
-            await testUtils.expectClickSuccess('#click_3_1');
+            await testUtils.expectClickSuccess('#click-3-1');
             tick(1400);
 
             // When doing the second distribution
             const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(3), [MancalaDistribution.of(0)]);
 
             // Then this should trigger a single distribution move
-            await testUtils.expectMoveSuccess('#click_0_1', move, 1500);
+            await testUtils.expectMoveSuccess('#click-0-1', move, 1500);
             const expectedState: MancalaState = new MancalaState([
                 [5, 5, 5, 5, 4, 4],
                 [0, 5, 5, 0, 4, 4],

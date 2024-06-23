@@ -4,10 +4,10 @@
      preserveAspectRatio="xMidYMid meet">
     <g *ngFor="let line of board; index as y">
         <g *ngFor="let c of line; index as x"
-           id="click_{{ x }}_{{ y }}"
+           id="click-{{ x }}-{{ y }}"
            [attr.transform]="'translate(' + (SPACE_SIZE * x) + ', ' + (SPACE_SIZE * y) + ')'"
            (click)="onClick(x, y)" >
-            <rect id="space_{{ x }}_{{ y }}"
+            <rect id="space-{{ x }}-{{ y }}"
                   x="0" y="0"
                   [attr.width]="SPACE_SIZE"
                   [attr.height]="SPACE_SIZE"
@@ -26,7 +26,7 @@
                 </ng-template>
             </g>
             <g *ngIf="board[y][x] !== EMPTY">
-                <circle id="piece_{{ x }}_{{ y }}"
+                <circle id="piece-{{ x }}-{{ y }}"
                         [attr.r]="(SPACE_SIZE / 2) - STROKE_WIDTH"
                         [attr.cx]="SPACE_SIZE * 0.50"
                         [attr.cy]="SPACE_SIZE * 0.50"
@@ -93,7 +93,7 @@
         </g>
     </g>
     <g *ngFor="let coord of getClickables()">
-        <rect id="click_{{ coord.x }}_{{ coord.y }}"
+        <rect id="stroke-{{ coord.x }}-{{ coord.y }}"
               (click)="onClick(coord.x, coord.y)"
               [attr.x]="SPACE_SIZE * coord.x"
               [attr.y]="SPACE_SIZE * coord.y"
