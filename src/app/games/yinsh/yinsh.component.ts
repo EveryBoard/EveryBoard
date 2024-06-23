@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { HexagonalGameComponent } from 'src/app/components/game-components/game-component/HexagonalGameComponent';
 import { Coord } from 'src/app/jscaip/Coord';
 import { HexaLayout } from 'src/app/jscaip/HexaLayout';
@@ -12,11 +12,10 @@ import { YinshPiece } from './YinshPiece';
 import { YinshLegalityInformation, YinshRules } from './YinshRules';
 import { MGPFallible, MGPOptional, MGPSet, MGPValidation, Utils } from '@everyboard/lib';
 import { MCTS } from 'src/app/jscaip/AI/MCTS';
-import { Minimax } from 'src/app/jscaip/AI/Minimax';
-import { YinshScoreHeuristic } from './YinshScoreHeuristic';
 import { YinshMoveGenerator } from './YinshMoveGenerator';
 import { PlayerMap, PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { YinshScoreMinimax } from './YinshScoreMinimax';
 
 interface ViewInfo {
     targets: Coord[],
@@ -88,11 +87,11 @@ export class YinshComponent extends HexagonalGameComponent<YinshRules,
         sideRingClass: PlayerMap.ofValues('player0-stroke', 'player1-stroke'),
     };
 
-    public constructor(messageDisplayer: MessageDisplayer) {
-        super(messageDisplayer);
+    public constructor(messageDisplayer: MessageDisplayer, cdr: ChangeDetectorRef) {
+        super(messageDisplayer, cdr);
         this.setRulesAndNode('Yinsh');
         this.availableAIs = [
-            new Minimax($localize`Score`, this.rules, new YinshScoreHeuristic(), new YinshMoveGenerator()),
+            new YinshScoreMinimax(),
             new MCTS($localize`MCTS`, new YinshMoveGenerator(), this.rules),
         ];
         this.encoder = YinshMove.encoder;

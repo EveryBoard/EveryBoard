@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { TriangularGameComponent }
     from 'src/app/components/game-components/game-component/TriangularGameComponent';
 import { CoerceoMove, CoerceoRegularMove, CoerceoTileExchangeMove } from 'src/app/games/coerceo/CoerceoMove';
@@ -11,14 +11,12 @@ import { Player } from 'src/app/jscaip/Player';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
 import { MCTS } from 'src/app/jscaip/AI/MCTS';
-import { CoerceoCapturesAndFreedomHeuristic } from './CoerceoCapturesAndFreedomHeuristic';
-import { Minimax } from 'src/app/jscaip/AI/Minimax';
 import { CoerceoMoveGenerator } from './CoerceoMoveGenerator';
-import { CoerceoPiecesThreatsTilesHeuristic } from './CoerceoPiecesThreatsTilesHeuristic';
-import { CoerceoOrderedMoveGenerator } from './CoerceoOrderedMoveGenerator';
 import { ViewBox } from 'src/app/components/game-components/GameComponentUtils';
 import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
-import { CoerceoPiecesTilesFreedomHeuristic } from './CoerceoPiecesTilesFreedomHeuristic';
+import { CoerceoPiecesThreatsTilesMinimax } from './CoerceoPiecesThreatsTilesMinimax';
+import { CoerceoCapturesAndFreedomMinimax } from './CoerceoCapturesAndFreedomMinimax';
+import { CoerceoPiecesTilesFreedomMinimax } from './CoerceoPiecesTilesFreedomMinimax';
 
 @Component({
     selector: 'app-coerceo',
@@ -43,22 +41,13 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
 
     public possibleLandings: Coord[] = [];
 
-    public constructor(messageDisplayer: MessageDisplayer) {
-        super(messageDisplayer);
+    public constructor(messageDisplayer: MessageDisplayer, cdr: ChangeDetectorRef) {
+        super(messageDisplayer, cdr);
         this.setRulesAndNode('Coerceo');
         this.availableAIs = [
-            new Minimax($localize`Pieces > Threats > Tiles`,
-                        this.rules,
-                        new CoerceoPiecesThreatsTilesHeuristic(),
-                        new CoerceoOrderedMoveGenerator()),
-            new Minimax($localize`Captures > Freedom`,
-                        this.rules,
-                        new CoerceoCapturesAndFreedomHeuristic(),
-                        new CoerceoMoveGenerator()),
-            new Minimax($localize`Pieces > Tiles > Freedom`,
-                        this.rules,
-                        new CoerceoPiecesTilesFreedomHeuristic(),
-                        new CoerceoMoveGenerator()),
+            new CoerceoPiecesThreatsTilesMinimax(),
+            new CoerceoCapturesAndFreedomMinimax(),
+            new CoerceoPiecesTilesFreedomMinimax(),
             new MCTS($localize`MCTS`,
                      new CoerceoMoveGenerator(),
                      this.rules),

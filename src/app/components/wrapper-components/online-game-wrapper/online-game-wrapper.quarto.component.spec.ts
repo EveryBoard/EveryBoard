@@ -233,6 +233,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         // In practice, we should receive this from the other player.
         await gameEventService.addAction('configRoomId', userFromPlayer(player), action);
         testUtils.detectChanges();
+        tick(0);
     }
 
     async function receivePartDAOUpdate(update: Partial<Part>, detectChanges: boolean = true): Promise<void> {

@@ -47,9 +47,9 @@ export abstract class MancalaComponent<R extends MancalaRules>
     private opponentMoveIsBeingAnimated: boolean = false;
 
     public constructor(messageDisplayer: MessageDisplayer,
-                       public readonly cdr: ChangeDetectorRef)
+                       cdr: ChangeDetectorRef)
     {
-        super(messageDisplayer);
+        super(messageDisplayer, cdr);
         this.hasAsymmetricBoard = true;
         this.scores = MGPOptional.of(PlayerNumberMap.of(0, 0));
     }
@@ -243,12 +243,7 @@ export abstract class MancalaComponent<R extends MancalaRules>
     }
 
     public override hideLastMove(): void {
-        let width: number;
-        if (this.config.isPresent()) {
-            width = this.config.get().width;
-        } else {
-            width = 6;
-        }
+        const width: number = this.config.get().width;
         this.captured = TableUtils.create(width, 2, 0);
         this.filledCoords = [];
         this.lastDistributedHouses = [];

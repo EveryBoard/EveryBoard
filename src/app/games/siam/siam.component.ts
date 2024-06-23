@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { RectangularGameComponent } from '../../components/game-components/rectangular-game-component/RectangularGameComponent';
 import { SiamMove } from 'src/app/games/siam/SiamMove';
 import { SiamState } from 'src/app/games/siam/SiamState';
@@ -48,8 +48,8 @@ export class SiamComponent extends RectangularGameComponent<SiamRules,
 
     private insertingPiece: boolean = false;
 
-    public constructor(messageDisplayer: MessageDisplayer) {
-        super(messageDisplayer);
+    public constructor(messageDisplayer: MessageDisplayer, cdr: ChangeDetectorRef) {
+        super(messageDisplayer, cdr);
         this.setRulesAndNode('Siam');
         this.availableAIs = [
             new SiamMinimax(),
@@ -270,7 +270,7 @@ export class SiamComponent extends RectangularGameComponent<SiamRules,
         return `rotate(${orientation * 90} ${this.SPACE_SIZE / 2} ${this.SPACE_SIZE / 2})`;
     }
 
-    public getPiceRotation(x: number, y: number): string {
+    public getPieceRotation(x: number, y: number): string {
         const piece: SiamPiece = this.board[y][x];
         const orientation: number = piece.getDirection().toInt() - 2;
         return this.getRotation(orientation);

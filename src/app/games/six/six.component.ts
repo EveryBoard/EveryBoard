@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { SixState } from 'src/app/games/six/SixState';
 import { SixMove } from 'src/app/games/six/SixMove';
 import { SixFailure } from 'src/app/games/six/SixFailure';
@@ -14,11 +14,9 @@ import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { MGPFallible, MGPOptional, MGPSet, MGPValidation } from '@everyboard/lib';
 import { ViewBox } from 'src/app/components/game-components/GameComponentUtils';
 import { MCTS } from 'src/app/jscaip/AI/MCTS';
-import { Minimax } from 'src/app/jscaip/AI/Minimax';
 import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
-import { SixHeuristic } from './SixHeuristic';
 import { SixMoveGenerator } from './SixMoveGenerator';
-import { SixFilteredMoveGenerator } from './SixFilteredMoveGenerator';
+import { SixMinimax } from './SixMinimax';
 
 @Component({
     selector: 'app-six',
@@ -42,11 +40,11 @@ export class SixComponent
 
     private nextClickShouldSelectGroup: boolean = false;
 
-    public constructor(messageDisplayer: MessageDisplayer) {
-        super(messageDisplayer);
+    public constructor(messageDisplayer: MessageDisplayer, cdr: ChangeDetectorRef) {
+        super(messageDisplayer, cdr);
         this.setRulesAndNode('Six');
         this.availableAIs = [
-            new Minimax($localize`Minimax`, this.rules, new SixHeuristic(), new SixFilteredMoveGenerator()),
+            new SixMinimax(),
             new MCTS($localize`MCTS`, new SixMoveGenerator(), this.rules),
         ];
         this.encoder = SixMove.encoder;
