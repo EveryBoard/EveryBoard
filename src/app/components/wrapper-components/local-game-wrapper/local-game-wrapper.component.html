@@ -1,8 +1,8 @@
-<div *ngIf="configIsSet" class="columns is-vcentered">
+<div *ngIf="configIsSet" class="columns is-vcentered is-align-items-stretch">
     <div class="column is-one-quarter has-text-centered">
         <div *ngIf="gameComponent"
              id="info"
-             class="cell box">
+             class="box is-fullheight">
             <div id="turnIndicator" class="mb-5">
                 <p class="title" i18n>{{ getGameName() }}<br/> Turn n°{{ gameComponent.getTurn() + 1 }}</p>
             </div>
@@ -80,9 +80,9 @@
         </div>
     </div>
     <div class="column">
-        <div class="box p-5"
+        <div class="box p-5 is-fullheight"
              [ngClass]="getBoardHighlight()">
-            <div id="board" class="box">
+            <div id="board" class="box is-fullheight">
                 <div #board></div>
             </div>
         </div>
@@ -90,10 +90,10 @@
 </div>
 
 <div *ngIf="configIsSet === false"
-     class="columns is-vcentered">
+     class="columns is-vcentered is-align-items-stretch">
 
     <div class="column is-one-quarter">
-        <div class="box">
+        <div class="box is-fullheight">
             <p class="title" i18n>Configuration of your {{ getGameName() }} game</p>
             <app-rules-configuration id="rulesConfigComponent"
                                      [rulesConfigDescriptionOptional]="getRulesConfigDescription()"
@@ -118,11 +118,13 @@
 
     </div>
 
-    <div class="column is-vcentered">
+    <div class="column">
+        <div class="box is-fullheight">
         <app-demo-card id="demoCard"
-                       class="box"
+                       class="box is-fullheight"
                        *ngIf="getConfigDemo() !== undefined"
                        [demoNodeInfo]="getConfigDemo()"></app-demo-card>
+        </div>
     </div>
 
 </div>

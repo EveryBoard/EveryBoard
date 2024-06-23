@@ -1,7 +1,7 @@
-<div class="columns is-3 mb-3">
+<div class="columns is-vcentered is-align-items-stretch">
     <div class="column is-one-third">
         <div id="infos"
-             class="box">
+             class="box is-fullheight">
             <progress class="progress is-primary" [attr.value]="successfulSteps" [attr.max]="getNumberOfSteps()"></progress>
             <div class="content is-medium">
                 <p class="title">{{ getCurrentStepTitle() }} [{{stepIndex + 1}}/{{ getNumberOfSteps() }}]</p>
@@ -75,9 +75,9 @@
         </div>
     </div>
     <div class="column">
-        <div class="box p-5"
+        <div class="box is-fullheight p-5"
              [ngClass]="getBoardHighlight()">
-            <div id="board" class="box">
+            <div id="board" class="box is-fullheight">
                 <div #board></div>
             </div>
         </div>
