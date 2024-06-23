@@ -1,7 +1,7 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { Ordinal } from 'src/app/jscaip/Ordinal';
 import { Player } from 'src/app/jscaip/Player';
-import { MGPOptional, MGPSet } from '@everyboard/lib';
+import { MGPOptional, Set } from '@everyboard/lib';
 import { MartianChessMove } from './MartianChessMove';
 import { MartianChessState } from './MartianChessState';
 import { MartianChessPiece } from './MartianChessPiece';
@@ -14,7 +14,7 @@ export class MartianChessMoveGenerator extends MoveGenerator<MartianChessMove, M
     public override getListMoves(node: MartianChessNode, _config: NoConfig): MartianChessMove[] {
         const state: MartianChessState = node.gameState;
         const currentPlayer: Player = state.getCurrentPlayer();
-        const playerTerritory: MGPSet<number> = state.getPlayerTerritory(currentPlayer);
+        const playerTerritory: Set<number> = state.getPlayerTerritory(currentPlayer);
         let moves: MartianChessMove[] = [];
         for (const y of playerTerritory) {
             for (let x: number = 0; x < MartianChessState.WIDTH; x++) {

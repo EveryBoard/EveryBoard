@@ -62,7 +62,7 @@ describe('YinshRules', () => {
             // When trying to place a marker
             const move: YinshMove = new YinshMove([], new Coord(3, 3), MGPOptional.of(new Coord(3, 4)), []);
 
-            // Then it should fail
+            // Then the move should be illegal
             const reason: string = YinshFailure.NO_MARKERS_IN_INITIAL_PHASE();
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
@@ -75,7 +75,7 @@ describe('YinshRules', () => {
             // When trying to place a ring
             const move: YinshMove = new YinshMove([], new Coord(3, 3), MGPOptional.empty(), []);
 
-            // Then it should fail
+            // Then the move should be illegal
             const reason: string = YinshFailure.PLACEMENT_AFTER_INITIAL_PHASE();
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
@@ -139,7 +139,7 @@ describe('YinshRules', () => {
             // When placing a marker and trying to move the ring in an invalid direction
             const move: YinshMove = new YinshMove([], new Coord(3, 2), MGPOptional.of(new Coord(5, 8)), []);
 
-            // Then it should fail
+            // Then the move should be illegal
             const reason: string = YinshFailure.MOVE_DIRECTION_INVALID();
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
@@ -164,7 +164,7 @@ describe('YinshRules', () => {
             // When trying to move from an invalid position
             const move: YinshMove = new YinshMove([], new Coord(5, 5), MGPOptional.of(new Coord(3, 3)), []);
 
-            // Then it should fail
+            // Then the move should be illegal
             const reason: string = YinshFailure.SHOULD_SELECT_PLAYER_RING();
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
@@ -261,9 +261,11 @@ describe('YinshRules', () => {
                 [N, _, _, _, _, N, N, N, N, N, N],
             ];
             const state: YinshState = new YinshState(board, PlayerNumberMap.of(0, 0), 10);
+
             // When trying to move further than the first empty spot avec the markers
             const move: YinshMove = new YinshMove([], new Coord(3, 2), MGPOptional.of(new Coord(3, 7)), []);
-            // Then it should fail
+
+            // Then the move should be illegal
             const reason: string = YinshFailure.MOVE_SHOULD_END_AT_FIRST_EMPTY_SPACE_AFTER_MARKERS();
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
@@ -284,9 +286,11 @@ describe('YinshRules', () => {
                 [N, _, _, _, _, N, N, N, N, N, N],
             ];
             const state: YinshState = new YinshState(board, PlayerNumberMap.of(0, 0), 10);
+
             // When trying to move over all groups of markers
             const move: YinshMove = new YinshMove([], new Coord(3, 2), MGPOptional.of(new Coord(3, 8)), []);
-            // Then it should fail
+
+            // Then the move should be illegal
             const reason: string = YinshFailure.MOVE_SHOULD_END_AT_FIRST_EMPTY_SPACE_AFTER_MARKERS();
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
@@ -311,7 +315,7 @@ describe('YinshRules', () => {
             // When trying to move over a ring
             const move: YinshMove = new YinshMove([], new Coord(3, 2), MGPOptional.of(new Coord(3, 6)), []);
 
-            // Then it should fail
+            // Then the move should be illegal
             const reason: string = YinshFailure.MOVE_SHOULD_NOT_PASS_ABOVE_RING();
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
@@ -340,7 +344,7 @@ describe('YinshRules', () => {
                                                   [YinshCapture.of(new Coord(3, 2),
                                                                    new Coord(3, 6),
                                                                    MGPOptional.of(new Coord(6, 3)))]);
-            // Then it should fail
+            // Then the move should be illegal
             const reason: string = YinshFailure.CAPTURE_SHOULD_TAKE_RING();
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
 
@@ -450,7 +454,7 @@ describe('YinshRules', () => {
             // When performing a move, but not capturing anything
             const move: YinshMove = new YinshMove([], new Coord(3, 2), MGPOptional.of(new Coord(4, 2)), []);
 
-            // Then it should fail
+            // Then the move should be illegal
             const reason: string = YinshFailure.MISSING_CAPTURES();
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
@@ -475,7 +479,7 @@ describe('YinshRules', () => {
             // When performing a move that would capture something, but without capturing anything
             const move: YinshMove = new YinshMove([], new Coord(3, 2), MGPOptional.of(new Coord(3, 7)), []);
 
-            // Then it should fail
+            // Then the move should be illegal
             const reason: string = YinshFailure.MISSING_CAPTURES();
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
@@ -504,7 +508,7 @@ describe('YinshRules', () => {
                                                   new Coord(3, 2),
                                                   MGPOptional.of(new Coord(3, 3)),
                                                   []);
-            // Then it should fail
+            // Then the move should be illegal
             const reason: string = YinshFailure.CAN_ONLY_CAPTURE_YOUR_MARKERS();
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
@@ -533,7 +537,7 @@ describe('YinshRules', () => {
                                                   new Coord(3, 2),
                                                   MGPOptional.of(new Coord(4, 2)),
                                                   []);
-            // Then it should fail
+            // Then the move should be illegal
             const reason: string = YinshFailure.CAN_ONLY_CAPTURE_YOUR_MARKERS();
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });

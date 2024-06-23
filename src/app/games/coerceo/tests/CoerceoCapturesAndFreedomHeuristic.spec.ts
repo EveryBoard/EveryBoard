@@ -6,8 +6,7 @@ import { MGPOptional } from '@everyboard/lib';
 import { Player } from 'src/app/jscaip/Player';
 import { CoerceoCapturesAndFreedomHeuristic } from '../CoerceoCapturesAndFreedomHeuristic';
 import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
-import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
-import { CoerceoRules } from '../CoerceoRules';
+import { CoerceoConfig, CoerceoRules } from '../CoerceoRules';
 import { HeuristicUtils } from 'src/app/jscaip/AI/tests/HeuristicUtils.spec';
 
 const _: FourStatePiece = FourStatePiece.EMPTY;
@@ -18,13 +17,14 @@ const X: FourStatePiece = FourStatePiece.ONE;
 describe('CoerceoCapturesAndFreedomHeuristic', () => {
 
     let heuristic: CoerceoCapturesAndFreedomHeuristic;
-    const defaultConfig: NoConfig = CoerceoRules.get().getDefaultRulesConfig();
+    const defaultConfig: MGPOptional<CoerceoConfig> = CoerceoRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         heuristic = new CoerceoCapturesAndFreedomHeuristic();
     });
 
     it('should prefer a board with more freedom', () => {
+        // Given a board with less freedom for Player.ONE, and one with more
         const weakBoard: Table<FourStatePiece> = [
             [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
             [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
@@ -53,6 +53,8 @@ describe('CoerceoCapturesAndFreedomHeuristic', () => {
         ];
         const strongState: CoerceoState =
             new CoerceoState(strongBoard, 1, PlayerNumberMap.of(0, 0), PlayerNumberMap.of(0, 0));
+        // When comparing them
+        // Then the one with more freedom should be considered better for Player.ONE
         HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(heuristic,
                                                                weakState, MGPOptional.empty(),
                                                                strongState, MGPOptional.empty(),

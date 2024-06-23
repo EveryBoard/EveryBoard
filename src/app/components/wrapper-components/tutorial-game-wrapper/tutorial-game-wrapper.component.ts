@@ -1,4 +1,4 @@
-import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { GameWrapper } from 'src/app/components/wrapper-components/GameWrapper';
 import { AbstractNode, GameNode } from 'src/app/jscaip/AI/GameNode';
@@ -7,7 +7,7 @@ import { ConnectedUserService } from 'src/app/services/ConnectedUserService';
 import { MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 import { Click, TutorialStep, TutorialStepClick, TutorialStepMove, TutorialStepWithSolution } from './TutorialStep';
 import { TutorialFailure } from './TutorialFailure';
-import { GameState } from 'src/app/jscaip/GameState';
+import { GameState } from 'src/app/jscaip/state/GameState';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 import { Localized } from 'src/app/utils/LocaleUtils';
@@ -25,7 +25,6 @@ type TutorialPlayer = 'tutorial-player';
 @Component({
     selector: 'app-tutorial-game-wrapper',
     templateUrl: './tutorial-game-wrapper.component.html',
-    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 @Debug.log
 export class TutorialGameWrapperComponent extends GameWrapper<TutorialPlayer> implements AfterViewInit {
@@ -100,7 +99,7 @@ export class TutorialGameWrapperComponent extends GameWrapper<TutorialPlayer> im
         this.currentMessage = currentStep.instruction;
         this.currentReason = MGPOptional.empty();
         this.gameComponent.node = new GameNode(currentStep.state,
-                                               undefined,
+                                               currentStep.parent,
                                                currentStep.previousMove);
         // Set role will update view with showCurrentState
         await this.setRole(this.gameComponent.getCurrentPlayer());
@@ -239,13 +238,13 @@ export class TutorialGameWrapperComponent extends GameWrapper<TutorialPlayer> im
     }
 
     public async playLocally(): Promise<void> {
-        const game: string = this.getGameName();
-        await this.router.navigate(['/local', game]);
+        const urlName: string = this.getGameUrlName();
+        await this.router.navigate(['/local', urlName]);
     }
 
     public async createGame(): Promise<void> {
-        const game: string = this.getGameName();
-        await this.router.navigate(['/play', game]);
+        const urlName: string = this.getGameUrlName();
+        await this.router.navigate(['/play', urlName]);
     }
 
     public override getPlayer(): TutorialPlayer {

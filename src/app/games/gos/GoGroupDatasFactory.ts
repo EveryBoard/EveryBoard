@@ -3,7 +3,7 @@ import { Orthogonal } from 'src/app/jscaip/Orthogonal';
 import { GoGroupDatas } from './GoGroupsDatas';
 import { GoPiece } from './GoPiece';
 import { Coord } from 'src/app/jscaip/Coord';
-import { TriangularCheckerBoard } from 'src/app/jscaip/TriangularCheckerBoard';
+import { TriangularCheckerBoard } from 'src/app/jscaip/state/TriangularCheckerBoard';
 
 export class OrthogonalGoGroupDatasFactory extends GroupDatasFactory<GoPiece> {
 

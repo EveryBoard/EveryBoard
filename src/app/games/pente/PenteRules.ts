@@ -88,16 +88,16 @@ export class PenteRules extends ConfigurableRules<PenteMove, PenteState, PenteCo
             let i: number = 1;
             let potentialCapture: Coord = coord.getNext(direction, i);
             const captured: Coord[] = [potentialCapture];
-            while (state.has(potentialCapture, opponent) && i < sizeOfCapture)
+            while (state.hasPieceAt(potentialCapture, opponent) && i < sizeOfCapture)
             {
                 i++;
                 potentialCapture = potentialCapture.getNext(direction, 1);
                 captured.push(potentialCapture);
             }
             const sandwicher: Coord = coord.getNext(direction, sizeOfCapture + 1);
-            if (state.has(potentialCapture, opponent) &&
+            if (state.hasPieceAt(potentialCapture, opponent) &&
                 i === sizeOfCapture &&
-                state.has(sandwicher, player))
+                state.hasPieceAt(sandwicher, player))
             {
                 captures.push(...captured);
             }
@@ -105,14 +105,14 @@ export class PenteRules extends ConfigurableRules<PenteMove, PenteState, PenteCo
         return captures;
     }
 
-    public getGameStatus(node: PenteNode, config: MGPOptional<PenteConfig>): GameStatus {
+    public override getGameStatus(node: PenteNode, config: MGPOptional<PenteConfig>): GameStatus {
         const state: PenteState = node.gameState;
         const opponent: Player = state.getCurrentOpponent();
         const capturesNeededToWin: number = config.get().capturesNeededToWin;
         if (capturesNeededToWin <= state.captures.get(opponent)) {
             return GameStatus.getVictory(opponent);
         }
-        const victoriousCoord: Coord[] = this.getHelper(config).getVictoriousCoord(state);
+        const victoriousCoord: Coord[] = this.getHelper(config.get()).getVictoriousCoord(state);
         if (victoriousCoord.length > 0) {
             return GameStatus.getVictory(opponent);
         }
@@ -123,13 +123,8 @@ export class PenteRules extends ConfigurableRules<PenteMove, PenteState, PenteCo
         }
     }
 
-    public getHelper(config: MGPOptional<PenteConfig>): NInARowHelper<PlayerOrNone> {
-        if (config.isPresent()) {
-            return new NInARowHelper(Utils.identity, config.get().nInARow);
-        } else {
-            const defaultConfig: PenteConfig = PenteRules.RULES_CONFIG_DESCRIPTION.getDefaultConfig().config;
-            return new NInARowHelper(Utils.identity, defaultConfig.nInARow);
-        }
+    public getHelper(config: PenteConfig): NInARowHelper<PlayerOrNone> {
+        return new NInARowHelper(Utils.identity, config.nInARow);
     }
 
     private stillHaveEmptySquare(state: PenteState): boolean {

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { GoMove } from 'src/app/games/gos/GoMove';
 import { TriGoConfig, TriGoRules } from './TriGoRules';
 import { GoState } from 'src/app/games/gos/GoState';
@@ -42,8 +42,8 @@ export class TriGoComponent extends TriangularGameComponent<TriGoRules,
 
     public GoPiece: typeof GoPiece = GoPiece;
 
-    public constructor(messageDisplayer: MessageDisplayer) {
-        super(messageDisplayer);
+    public constructor(messageDisplayer: MessageDisplayer, cdr: ChangeDetectorRef) {
+        super(messageDisplayer, cdr);
         this.setRulesAndNode('Go');
         this.availableAIs = [
             new Minimax($localize`Minimax`, TriGoRules.get(), new GoHeuristic(), new GoMoveGenerator()),

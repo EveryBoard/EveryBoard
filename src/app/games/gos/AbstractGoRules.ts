@@ -438,7 +438,7 @@ export abstract class AbstractGoRules<C extends RulesConfig>
         }
     }
 
-    public getGameStatus(node: GoNode): GameStatus {
+    public override getGameStatus(node: GoNode): GameStatus {
         return AbstractGoRules.getGameStatus(node);
     }
 

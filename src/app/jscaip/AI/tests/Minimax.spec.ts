@@ -8,7 +8,7 @@ import { AIDepthLimitOptions } from '../AI';
 import { BoardValue } from '../BoardValue';
 import { MCTS } from '../MCTS';
 import { DummyHeuristic, Minimax } from '../Minimax';
-import { ArrayUtils, MGPOptional, MGPSet } from '@everyboard/lib';
+import { ArrayUtils, MGPOptional, Set } from '@everyboard/lib';
 import { PlayerOrNone } from '../../Player';
 
 const defaultConfig: MGPOptional<P4Config> = P4Rules.get().getDefaultRulesConfig();
@@ -99,7 +99,7 @@ describe('Minimax', () => {
             [_, _, _, O, _, _, _],
         ], 6);
         const node: P4Node = new P4Node(symetricState);
-        const possibleMoves: MGPSet<P4Move> = new MGPSet([P4Move.of(0), P4Move.of(6)]);
+        const possibleMoves: Set<P4Move> = new Set([P4Move.of(0), P4Move.of(6)]);
         const boardValue: BoardValue = BoardValue.ofSingle(0, 0);
 
         // When calling getBestChildren on it

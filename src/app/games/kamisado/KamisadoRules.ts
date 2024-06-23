@@ -207,7 +207,7 @@ export class KamisadoRules extends Rules<KamisadoMove, KamisadoState> {
         return KamisadoRules.isLegal(move, state);
     }
 
-    public getGameStatus(node: KamisadoNode): GameStatus {
+    public override getGameStatus(node: KamisadoNode): GameStatus {
         const state: KamisadoState = node.gameState;
         const player: Player = state.getCurrentPlayer();
         if (KamisadoRules.mustPass(state) && state.alreadyPassed) {

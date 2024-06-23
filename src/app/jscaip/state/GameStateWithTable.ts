@@ -1,11 +1,12 @@
-import { MGPOptional, comparableEquals } from '@everyboard/lib';
-import { Coord } from './Coord';
+import { MGPMap, MGPOptional, Utils, comparableEquals } from '@everyboard/lib';
+import { Coord } from '../Coord';
 import { GameState } from './GameState';
-import { Table, TableUtils } from './TableUtils';
+import { Table, TableUtils } from '../TableUtils';
+import { CoordSet } from '../CoordSet';
 
-export abstract class GameStateWithTable<P> extends GameState {
+export abstract class GameStateWithTable<P extends NonNullable<unknown>> extends GameState {
 
-    public static setPieceAt<Q, T extends GameStateWithTable<Q>>(
+    public static setPieceAt<Q extends NonNullable<unknown>, T extends GameStateWithTable<Q>>(
         oldState: T,
         coord: Coord,
         value: Q,
@@ -22,14 +23,12 @@ export abstract class GameStateWithTable<P> extends GameState {
     }
 
     public getPieceAt(coord: Coord): P {
-        if (this.isOnBoard(coord)) {
-            return this.board[coord.y][coord.x];
-        } else {
-            throw new Error('Accessing coord not on board ' + coord + '.');
-        }
+        Utils.assert(this.isOnBoard(coord),
+                     'Accessing coord not on board ' + coord + '.');
+        return this.board[coord.y][coord.x];
     }
 
-    public has(coord: Coord, value: P): boolean {
+    public hasPieceAt(coord: Coord, value: P): boolean {
         return this.isOnBoard(coord) &&
                comparableEquals(this.getPieceAt(coord), value);
     }
@@ -76,7 +75,7 @@ export abstract class GameStateWithTable<P> extends GameState {
         for (let y: number = 0; y < this.getHeight(); y++) {
             for (let x: number = 0; x < this.board[y].length; x++) {
                 const coord: Coord = new Coord(x, y);
-                if (this.isOnBoard(coord)) {
+                if (this.isOnBoard(coord)) { // Could be overriden for unreachable coords
                     coordsAndContents.push({
                         coord,
                         content: this.getPieceAt(coord),
@@ -91,18 +90,19 @@ export abstract class GameStateWithTable<P> extends GameState {
         return TableUtils.copy(this.board);
     }
 
-    public toMap(): {key: Coord, value: P}[] {
-        const elements: {key: Coord, value: P}[] = [];
-        for (let y: number = 0; y < this.getHeight(); y++) {
-            for (let x: number = 0; x < this.getWidth(); x++) {
-                const coord: Coord = new Coord(x, y);
-                elements.push({
-                    key: coord,
-                    value: this.getPieceAt(coord),
-                });
+    public toPieceMap(): MGPMap<P, CoordSet> {
+        const map: MGPMap<P, CoordSet> = new MGPMap();
+        for (const coordAndContent of this.getCoordsAndContents()) {
+            const key: P = coordAndContent.content;
+            const value: Coord = coordAndContent.coord;
+            if (map.containsKey(key)) {
+                const oldValue: CoordSet = map.get(key).get();
+                map.put(key, oldValue.addElement(value));
+            } else {
+                map.set(key, new CoordSet([value]));
             }
         }
-        return elements;
+        return map;
     }
 
     public getWidth(): number {

@@ -75,6 +75,8 @@ describe('DvonnRules', () => {
         }
         const illegalMove: DvonnMove = DvonnMove.from(new Coord(1, 1), new Coord(1, 2)).get();
         const reason: string = DvonnFailure.NOT_PLAYER_PIECE();
+
+        // Then the move should be illegal
         RulesUtils.expectMoveFailure(rules, state, illegalMove, reason, defaultConfig);
     });
 
@@ -82,6 +84,8 @@ describe('DvonnRules', () => {
         const state: DvonnState = DvonnRules.get().getInitialState();
         const move: DvonnMove = DvonnMove.from(new Coord(1, 3), new Coord(1, 2)).get();
         const reason: string = DvonnFailure.TOO_MANY_NEIGHBORS();
+
+        // Then the move should be illegal
         RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
     });
 
@@ -96,6 +100,8 @@ describe('DvonnRules', () => {
         const state: DvonnState = new DvonnState(board, 0, false);
         const move: DvonnMove = DvonnMove.from(new Coord(2, 0), new Coord(2, 1)).get();
         const reason: string = DvonnFailure.EMPTY_STACK();
+
+        // Then the move should be illegal
         RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
     });
 
@@ -110,6 +116,8 @@ describe('DvonnRules', () => {
         const state: DvonnState = new DvonnState(board, 0, false);
         const move: DvonnMove = DvonnMove.from(new Coord(2, 0), new Coord(4, 0)).get();
         const reason: string = DvonnFailure.CANT_REACH_TARGET();
+
+        // Then the move should be illegal
         RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
     });
 
@@ -124,6 +132,8 @@ describe('DvonnRules', () => {
         const state: DvonnState = new DvonnState(board, 0, false);
         const move: DvonnMove = DvonnMove.from(new Coord(2, 0), new Coord(3, 0)).get();
         const reason: string = DvonnFailure.INVALID_MOVE_LENGTH();
+
+        // Then the move should be illegal
         RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
     });
 
@@ -154,6 +164,8 @@ describe('DvonnRules', () => {
         const state: DvonnState = new DvonnState(board, 0, false);
         const move: DvonnMove = DvonnMove.from(new Coord(3, 1), new Coord(3, 2)).get();
         const reason: string = DvonnFailure.EMPTY_TARGET_STACK();
+
+        // Then the move should be illegal
         RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
     });
 
@@ -168,6 +180,8 @@ describe('DvonnRules', () => {
         const state: DvonnState = new DvonnState(board, 0, false);
         const move: DvonnMove = DvonnMove.from(new Coord(2, 0), new Coord(3, 0)).get();
         const reason: string = DvonnFailure.INVALID_MOVE_LENGTH();
+
+        // Then the move should be illegal
         RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
     });
 
@@ -182,6 +196,8 @@ describe('DvonnRules', () => {
         const state: DvonnState = new DvonnState(board, 0, false);
         const move: DvonnMove = DvonnMove.from(new Coord(2, 0), new Coord(2, 4)).get();
         const reason: string = DvonnFailure.INVALID_MOVE_LENGTH();
+
+        // Then the move should be illegal
         RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
     });
 
@@ -189,6 +205,8 @@ describe('DvonnRules', () => {
         const state: DvonnState = DvonnRules.get().getInitialState();
         const move: DvonnMove = DvonnMove.PASS;
         const reason: string = RulesFailure.CANNOT_PASS();
+
+        // Then the move should be illegal
         RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
     });
 
@@ -204,6 +222,8 @@ describe('DvonnRules', () => {
         expect(rules.isLegal(DvonnMove.PASS, state, defaultConfig).isSuccess()).toBeTrue();
         const move: DvonnMove = DvonnMove.from(new Coord(2, 0), new Coord(2, 1)).get();
         const reason: string = RulesFailure.MUST_PASS();
+
+        // Then the move should be illegal
         RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
     });
 

@@ -143,6 +143,7 @@ import { Tutorial } from '../../wrapper-components/tutorial-game-wrapper/Tutoria
 import { RulesConfigDescription } from '../../wrapper-components/rules-configuration/RulesConfigDescription';
 import { MGPOptional, Utils } from '@everyboard/lib';
 import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { GameState } from 'src/app/jscaip/state/GameState';
 
 class GameDescription {
 
@@ -292,6 +293,14 @@ export class GameInfo {
         }
     }
 
+    public static getStateProvider(urlName: string): MGPOptional<(config: MGPOptional<RulesConfig>) => GameState> {
+        return GameInfo.getByUrlName(urlName).map((info: GameInfo) => {
+            return (config: MGPOptional<RulesConfig>) => {
+                return info.rules.getInitialState(config);
+            };
+        });
+    }
+
     public constructor(public readonly name: string,
                        public readonly urlName: string,
                        public readonly component: Type<AbstractGameComponent>,
@@ -315,6 +324,7 @@ export class GameInfo {
             return MGPOptional.empty();
         }
     }
+
 }
 
 @Component({

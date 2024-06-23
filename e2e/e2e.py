@@ -177,15 +177,15 @@ def can_play_tutorial(driver):
     click_button(driver, "#nextButton")
 
     # In the second step I should play something, so I just do it
-    click_button(driver, "#click_3 > rect")
+    click_button(driver, "#click-3-0 > rect")
     click_button(driver, "#nextButton")
 
     # The third step requires me to win, so I do it
-    click_button(driver, "#click_1 > rect")
+    click_button(driver, "#click-1-0 > rect")
     click_button(driver, "#nextButton")
 
     # The final step also requires me to win
-    click_button(driver, "#click_4 > rect")
+    click_button(driver, "#click-4-0 > rect")
     click_button(driver, "#nextButton")
 
     # Now I should have finished the tuto
@@ -206,13 +206,13 @@ def can_play_local_2_players(driver):
     use_default_config(driver)
 
     # Stupid game between player 0 and 1, where 0 wins
-    click_button(driver, "#click_3 > rect")
-    click_button(driver, "#click_2 > rect")
-    click_button(driver, "#click_3 > rect")
-    click_button(driver, "#click_2 > rect")
-    click_button(driver, "#click_3 > rect")
-    click_button(driver, "#click_2 > rect")
-    click_button(driver, "#click_3 > rect")
+    click_button(driver, "#click-3-0 > rect")
+    click_button(driver, "#click-2-0 > rect")
+    click_button(driver, "#click-3-0 > rect")
+    click_button(driver, "#click-2-0 > rect")
+    click_button(driver, "#click-3-0 > rect")
+    click_button(driver, "#click-2-0 > rect")
+    click_button(driver, "#click-3-0 > rect")
 
     # Now 0 won
     winner = driver.find_element(By.ID, "gameResult").text
@@ -238,16 +238,16 @@ def can_play_local_vs_ai(driver):
     select(driver, "#aiOneOptionSelect", "Level 1")
 
     # I play a move
-    click_button(driver, "#click_2 > rect")
+    click_button(driver, "#click-2-0 > rect")
 
     # Let AI play
     time.sleep(2) # Two seconds should be more than enough
 
     # AI should have played a second move, I can play again
-    click_button(driver, "#click_1 > rect")
+    click_button(driver, "#click-1-0 > rect")
 
-    # Now there should be a piece in #click_1
-    wait_for_presence_of(driver, "#click_1 > circle")
+    # Now there should be a piece in #click-1-5
+    wait_for_presence_of(driver, "#click-1-5 > circle")
 
 @scenario("two_drivers")
 def can_create_part_and_play(driver1, username1, driver2, username2):
@@ -281,19 +281,19 @@ def can_create_part_and_play(driver1, username1, driver2, username2):
     time.sleep(1)
     driver1.get(driver1.current_url)
     wait_for_presence_of(driver1, "#playerTurn")
-    click_button(driver1, "#click_3 > rect")
+    click_button(driver1, "#click-3-0 > rect")
     wait_for_presence_of(driver2, "#playerTurn")
-    click_button(driver2, "#click_2 > rect")
+    click_button(driver2, "#click-2-0 > rect")
     wait_for_presence_of(driver1, "#playerTurn")
-    click_button(driver1, "#click_3 > rect")
+    click_button(driver1, "#click-3-0 > rect")
     wait_for_presence_of(driver2, "#playerTurn")
-    click_button(driver2, "#click_2 > rect")
+    click_button(driver2, "#click-2-0 > rect")
     wait_for_presence_of(driver1, "#playerTurn")
-    click_button(driver1, "#click_3 > rect")
+    click_button(driver1, "#click-3-0 > rect")
     wait_for_presence_of(driver2, "#playerTurn")
-    click_button(driver2, "#click_2 > rect")
+    click_button(driver2, "#click-2-0 > rect")
     wait_for_presence_of(driver1, "#playerTurn")
-    click_button(driver1, "#click_3 > rect")
+    click_button(driver1, "#click-3-0 > rect")
 
     # Now player 1 has won
     wait_for_presence_of(driver1, "#youWonIndicator")

@@ -201,8 +201,8 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
     const FOURTH_MOVE_ENCODED: JSONValue = QuartoMove.encoder.encode(FOURTH_MOVE);
 
     async function doMoveByClicks(move: QuartoMove): Promise<void> {
-        await testUtils.expectClickSuccess(`#chooseCoord_${ move.coord.x }_${ move.coord.y }`);
-        await testUtils.expectMoveSuccess('#choosePiece_' + move.piece.value, move);
+        await testUtils.expectClickSuccess(`#click-coord-${ move.coord.x }-${ move.coord.y }`);
+        await testUtils.expectMoveSuccess('#click-piece-' + move.piece.value, move);
     }
 
     function userFromPlayer(player: Player): MinimalUser {
@@ -233,6 +233,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         // In practice, we should receive this from the other player.
         await gameEventService.addAction('configRoomId', userFromPlayer(player), action);
         testUtils.detectChanges();
+        tick(0);
     }
 
     async function receivePartDAOUpdate(update: Partial<Part>, detectChanges: boolean = true): Promise<void> {
@@ -382,14 +383,8 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
     it('should no longer have PartCreationComponent and QuartoComponent instead', fakeAsync(async() => {
         // Given an online game being created
         await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER, PreparationOptions.dontWait);
-        const partCreationId: DebugElement = testUtils.findElement('#partCreation');
-        let quartoTag: DebugElement = testUtils.findElement('app-quarto');
-        expect(partCreationId)
-            .withContext('partCreation id should be absent after config accepted')
-            .toBeFalsy();
-        expect(quartoTag)
-            .withContext('quarto tag should be absent before config accepted and async ms finished')
-            .toBeFalsy();
+        testUtils.expectElementNotToExist('#partCreation');
+        testUtils.expectElementNotToExist('app-quarto');
 
         testUtils.expectElementNotToExist('#partCreation');
         expect(testUtils.getGameComponent())
@@ -401,10 +396,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         testUtils.detectChanges();
 
         // Then the game component should become present in the component
-        quartoTag = testUtils.findElement('app-quarto');
-        expect(quartoTag)
-            .withContext('quarto tag should be present after config accepted and async millisec finished')
-            .toBeTruthy();
+        testUtils.expectElementToExist('app-quarto');
         expect(wrapper.gameComponent)
             .withContext('gameComponent field should also be present after config accepted and async millisec finished')
             .toBeTruthy();
@@ -617,7 +609,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
 
         // Then the player cannot play
         await testUtils.expectToDisplayGameMessage(GameWrapperMessages.NOT_YOUR_TURN(), async() => {
-            await testUtils.clickElement('#chooseCoord_0_0');
+            await testUtils.clickElement('#click-coord-0-0');
         });
 
         tick(wrapper.configRoom.maximalMoveDuration * 1000);
@@ -913,7 +905,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
 
                 // Then it should fail
                 testUtils.resetSpies();
-                await testUtils.expectClickFailure('#chooseCoord_0_0', reason);
+                await testUtils.expectClickFailure('#click-coord-0-0', reason);
                 tick(wrapper.configRoom.maximalMoveDuration * 1000);
             }));
 
@@ -1194,7 +1186,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             const reason: string = OnlineGameWrapperMessages.MUST_ANSWER_REQUEST();
 
             // Then it should fail
-            await testUtils.expectClickFailure('#chooseCoord_0_0', reason);
+            await testUtils.expectClickFailure('#click-coord-0-0', reason);
             tick(wrapper.configRoom.maximalMoveDuration * 1000);
         }));
 
@@ -1556,7 +1548,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             // When attempting a move
             // Then it should fail
             spyOn(partDAO, 'update').and.callThrough();
-            await testUtils.expectClickFailure('#choosePiece_1', GameWrapperMessages.GAME_HAS_ENDED());
+            await testUtils.expectClickFailure('#click-piece-1', GameWrapperMessages.GAME_HAS_ENDED());
 
             expect(partDAO.update).not.toHaveBeenCalled();
             expectGameToBeOver();
@@ -1612,7 +1604,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             testUtils.expectElementToBeDisabled('#proposeRematch');
 
             // When it is finished
-            await testUtils.expectInterfaceClickSuccess('#resign', 0);
+            await testUtils.expectInterfaceClickSuccess('#resign', undefined, 0);
 
             // Then it should allow to propose rematch
             testUtils.expectElementToBeEnabled('#proposeRematch');

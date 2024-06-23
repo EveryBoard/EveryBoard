@@ -1,28 +1,28 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { CoerceoMove, CoerceoRegularMove, CoerceoTileExchangeMove } from './CoerceoMove';
 import { CoerceoState } from './CoerceoState';
-import { CoerceoNode } from './CoerceoRules';
+import { CoerceoConfig, CoerceoNode } from './CoerceoRules';
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
 import { Player } from 'src/app/jscaip/Player';
 import { MoveGenerator } from 'src/app/jscaip/AI/AI';
-import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { MGPOptional } from '@everyboard/lib';
 
-export class CoerceoMoveGenerator extends MoveGenerator<CoerceoMove, CoerceoState> {
+export class CoerceoMoveGenerator extends MoveGenerator<CoerceoMove, CoerceoState, CoerceoConfig> {
 
-    public override getListMoves(node: CoerceoNode, _config: NoConfig): CoerceoMove[] {
+    public override getListMoves(node: CoerceoNode, _config: MGPOptional<CoerceoConfig>): CoerceoMove[] {
         let moves: CoerceoMove[] = this.getListExchanges(node);
         moves = moves.concat(this.getListMovement(node));
         return moves;
     }
 
     public getListExchanges(node: CoerceoNode): CoerceoMove[] {
-        const exchanges: CoerceoMove[] = [];
         const state: CoerceoState = node.gameState;
         const PLAYER: Player = state.getCurrentPlayer();
         const OPPONENT: FourStatePiece = FourStatePiece.ofPlayer(state.getCurrentOpponent());
         if (state.tiles.get(PLAYER) < 2) {
-            return exchanges;
+            return [];
         }
+        const exchanges: CoerceoMove[] = [];
         for (const coordAndContent of state.getCoordsAndContents()) {
             if (coordAndContent.content === OPPONENT) {
                 const move: CoerceoMove = CoerceoTileExchangeMove.of(coordAndContent.coord);

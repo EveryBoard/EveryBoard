@@ -1,6 +1,6 @@
 /* eslint-disable max-lines-per-function */
 import { MGPOptional, MGPValidation } from '@everyboard/lib';
-import { GameState } from '../../GameState';
+import { GameState } from '../../state/GameState';
 import { GameStatus } from '../../GameStatus';
 import { GameNode } from '../GameNode';
 import { Move } from '../../Move';
@@ -52,7 +52,7 @@ class RulesMock extends Rules<MoveMock, GameStateMock> {
         throw new Error('RulesMock.isLegal method not implemented.');
     }
 
-    public getGameStatus(node: MockNode): GameStatus {
+    public override getGameStatus(node: MockNode): GameStatus {
         throw new Error('RulesMock.getGameStatus method not implemented.');
     }
 }
