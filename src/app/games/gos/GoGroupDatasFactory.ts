@@ -8,7 +8,7 @@ import { TriangularCheckerBoard } from 'src/app/jscaip/state/TriangularCheckerBo
 export class OrthogonalGoGroupDatasFactory extends GroupDatasFactory<GoPiece> {
 
     public getNewInstance(color: GoPiece): GoGroupDatas {
-        return new GoGroupDatas(color, [], [], [], [], []);
+        return new GoGroupDatas(color, [], [], [], [], [], []);
     }
     public getDirections(_: Coord): ReadonlyArray<Orthogonal> {
         return Orthogonal.ORTHOGONALS;
@@ -18,7 +18,7 @@ export class OrthogonalGoGroupDatasFactory extends GroupDatasFactory<GoPiece> {
 export class TriangularGoGroupDatasFactory extends GroupDatasFactory<GoPiece> {
 
     public getNewInstance(color: GoPiece): GoGroupDatas {
-        return new GoGroupDatas(color, [], [], [], [], []);
+        return new GoGroupDatas(color, [], [], [], [], [], []);
     }
 
     public getDirections(coord: Coord): ReadonlyArray<Orthogonal> {

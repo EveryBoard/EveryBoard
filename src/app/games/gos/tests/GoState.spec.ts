@@ -2,15 +2,16 @@
 import { Player } from 'src/app/jscaip/Player';
 import { GoState } from '../GoState';
 import { GoPiece } from '../GoPiece';
-import { GoConfig, AbstractGoRules } from '../AbstractGoRules';
+
 import { MGPOptional } from '@everyboard/lib';
 import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
-import { GoPhase } from '../go/GoPhase';
+import { GoPhase } from '../GoPhase';
+import { GoConfig, GoRules } from '../go/GoRules';
 
 const O: GoPiece = GoPiece.DARK;
 const _: GoPiece = GoPiece.EMPTY;
 
-fdescribe('GoPiece', () => {
+describe('GoPiece', () => {
 
     describe('toString', () => {
 
@@ -37,7 +38,7 @@ fdescribe('GoPiece', () => {
 
 });
 
-fdescribe('GoState', () => {
+describe('GoState for Go', () => {
 
     describe('getInitialState', () => {
 
@@ -46,7 +47,7 @@ fdescribe('GoState', () => {
             const customConfig: MGPOptional<GoConfig> = MGPOptional.of({ width: 19, height: 19, handicap: 2 });
 
             // When creating an initialState with it
-            const state: GoState = AbstractGoRules.get().getInitialState(customConfig);
+            const state: GoState = GoRules.get().getInitialState(customConfig);
 
             // Then the board should have handicaps in opposite corners
             const expectedBoard: GoPiece[][] = [
@@ -83,7 +84,7 @@ fdescribe('GoState', () => {
             const customConfig: MGPOptional<GoConfig> = MGPOptional.of({ width: 19, height: 19, handicap: 4 });
 
             // When creating an initialState with it
-            const state: GoState = AbstractGoRules.get().getInitialState(customConfig);
+            const state: GoState = GoRules.get().getInitialState(customConfig);
 
             // Then the board should have handicaps in opposite corners
             const expectedBoard: GoPiece[][] = [
@@ -120,7 +121,7 @@ fdescribe('GoState', () => {
             const customConfig: MGPOptional<GoConfig> = MGPOptional.of({ width: 19, height: 19, handicap: 5 });
 
             // When creating an initialState with it
-            const state: GoState = AbstractGoRules.get().getInitialState(customConfig);
+            const state: GoState = GoRules.get().getInitialState(customConfig);
 
             // Then the board should have handicaps in opposite corners
             const expectedBoard: GoPiece[][] = [
@@ -157,7 +158,7 @@ fdescribe('GoState', () => {
             const customConfig: MGPOptional<GoConfig> = MGPOptional.of({ width: 19, height: 19, handicap: 9 });
 
             // When creating an initialState with it
-            const state: GoState = AbstractGoRules.get().getInitialState(customConfig);
+            const state: GoState = GoRules.get().getInitialState(customConfig);
 
             // Then the board should have handicaps in opposite corners
             const expectedBoard: GoPiece[][] = [

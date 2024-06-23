@@ -5,7 +5,7 @@ import { MGPOptional } from '@everyboard/lib';
 import { Tutorial, TutorialStep } from '../../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 import { TutorialStepMessage } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
-import { GoPhase } from '../go/GoPhase';
+import { GoPhase } from '../GoPhase';
 import { GoConfig, GoRules } from './GoRules';
 
 const X: GoPiece = GoPiece.LIGHT;

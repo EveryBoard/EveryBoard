@@ -9,10 +9,10 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { MGPOptional } from '@everyboard/lib';
 import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
-import { GoPhase } from '../GoPhase';
+import { GoPhase } from '../../GoPhase';
 import { GoConfig, GoRules } from '../GoRules';
 
-fdescribe('GoComponent', () => {
+describe('GoComponent', () => {
 
     let testUtils: ComponentTestUtils<GoComponent>;
 

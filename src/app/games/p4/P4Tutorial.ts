@@ -13,8 +13,6 @@ const defaultConfig: MGPOptional<P4Config> = P4Rules.get().getDefaultRulesConfig
 
 export class P4Tutorial extends Tutorial {
 
-    private TODO_KILL: void = console.log('jajette P4Tutorial => 2 x getInitialState')
-
     public tutorial: TutorialStep[] = [
         TutorialStep.informational(
             $localize`Goal of the game`,

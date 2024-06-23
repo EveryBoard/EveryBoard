@@ -13,7 +13,7 @@ import { GoHeuristic } from '../GoHeuristic';
 import { GoMoveGenerator } from '../GoMoveGenerator';
 import { Debug } from 'src/app/utils/Debug';
 import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
-import { GoPhase } from '../go/GoPhase';
+import { GoPhase } from '../GoPhase';
 import { TriangularGameComponent } from 'src/app/components/game-components/game-component/TriangularGameComponent';
 import { GoLegalityInformation } from '../AbstractGoRules';
 import { ViewBox } from 'src/app/components/game-components/GameComponentUtils';

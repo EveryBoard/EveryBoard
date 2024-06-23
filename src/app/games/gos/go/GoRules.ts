@@ -6,7 +6,7 @@ import { GoPiece } from '../GoPiece';
 import { GobanUtils } from 'src/app/jscaip/GobanUtils';
 import { Coord } from 'src/app/jscaip/Coord';
 import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
-import { GoPhase } from './GoPhase';
+import { GoPhase } from '../GoPhase';
 import { MGPValidators } from 'src/app/utils/MGPValidator';
 import { GobanConfig } from 'src/app/jscaip/GobanConfig';
 import { Direction } from 'src/app/jscaip/Direction';

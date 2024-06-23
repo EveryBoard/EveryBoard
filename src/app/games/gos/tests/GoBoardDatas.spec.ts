@@ -5,9 +5,8 @@ import { GoPiece } from '../GoPiece';
 import { TableUtils, Table } from 'src/app/jscaip/TableUtils';
 import { Coord } from 'src/app/jscaip/Coord';
 import { OrthogonalGoGroupDatasFactory } from '../GoGroupDatasFactory';
-import { GoConfig } from '../AbstractGoRules';
 
-fdescribe('GoBoardDatas', () => {
+describe('GoBoardDatas for Go', () => {
 
     const _: GoPiece = GoPiece.EMPTY;
     const X: GoPiece = GoPiece.LIGHT;
@@ -15,14 +14,9 @@ fdescribe('GoBoardDatas', () => {
 
     const width: number = 5;
     const height: number = 5;
-    const config: GoConfig = {
-        width,
-        height,
-        handicap: 0,
-    };
 
     it('should create one big group for initial board', () => {
-        const board: Table<GoPiece> = GoState.getStartingBoard(config);
+        const board: Table<GoPiece> = GoState.getStartingBoard(width, height);
         const datas: BoardDatas = BoardDatas.ofBoard(board, new OrthogonalGoGroupDatasFactory());
         const allZeroBoard: number[][] = TableUtils.create(width, height, 0);
         expect(datas.groupIndices).toEqual(allZeroBoard);

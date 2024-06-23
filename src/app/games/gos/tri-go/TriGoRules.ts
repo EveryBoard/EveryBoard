@@ -3,7 +3,7 @@ import { AbstractGoRules } from '../AbstractGoRules';
 import { GoState } from '../GoState';
 import { GoPiece } from '../GoPiece';
 import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
-import { GoPhase } from '../go/GoPhase';
+import { GoPhase } from '../GoPhase';
 import { NumberConfig, RulesConfigDescription } from 'src/app/components/wrapper-components/rules-configuration/RulesConfigDescription';
 import { MGPValidators } from 'src/app/utils/MGPValidator';
 import { TableUtils } from 'src/app/jscaip/TableUtils';

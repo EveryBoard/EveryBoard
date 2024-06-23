@@ -13,7 +13,7 @@ import { MCTS } from 'src/app/jscaip/AI/MCTS';
 import { GoMoveGenerator } from '../GoMoveGenerator';
 import { Debug } from 'src/app/utils/Debug';
 import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
-import { GoPhase } from './GoPhase';
+import { GoPhase } from '../GoPhase';
 import { GoMinimax } from '../GoMinimax';
 
 @Component({

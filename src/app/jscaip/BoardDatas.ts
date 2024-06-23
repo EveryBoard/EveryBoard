@@ -91,7 +91,7 @@ export abstract class GroupDatas<T> {
         return ownCoords.some((c: Coord) => c.equals(coord));
     }
 
-    public static insertAsEntryPoint(list: Coord[], coord: Coord): Coord[] {
+    public static insertAsEntryPoint(list: Coord[], coord: Coord): Coord[] { // TODO: bad name eh
         if (list.length === 0) {
             return [coord];
         } else {

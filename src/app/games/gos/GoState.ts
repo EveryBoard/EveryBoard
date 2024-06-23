@@ -4,7 +4,7 @@ import { Table, TableUtils } from 'src/app/jscaip/TableUtils';
 import { MGPOptional } from '@everyboard/lib';
 import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 import { GoPiece } from './GoPiece';
-import { GoPhase } from './go/GoPhase';
+import { GoPhase } from './GoPhase';
 
 export class GoState extends GameStateWithTable<GoPiece> {
 

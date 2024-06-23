@@ -1,6 +1,6 @@
 import { GameNode } from 'src/app/jscaip/AI/GameNode';
 import { GoState } from './GoState';
-import { GoPhase } from './go/GoPhase';
+import { GoPhase } from './GoPhase';
 import { GoPiece } from './GoPiece';
 import { GoMove } from './GoMove';
 import { Player } from 'src/app/jscaip/Player';
@@ -9,7 +9,6 @@ import { MGPFallible, MGPOptional, Utils } from '@everyboard/lib';
 import { Table } from 'src/app/jscaip/TableUtils';
 import { ConfigurableRules } from 'src/app/jscaip/Rules';
 import { Coord } from 'src/app/jscaip/Coord';
-import { OrthogonalGoGroupDatasFactory } from './GoGroupDatasFactory';
 import { GoFailure } from './GoFailure';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { Debug } from 'src/app/utils/Debug';
@@ -35,7 +34,7 @@ export abstract class AbstractGoRules<C extends RulesConfig>
             const captured: Coord = captures[0];
             const capturerCoord: Coord = move.coord;
             const capturer: GoPiece = newBoard[capturerCoord.y][capturerCoord.x];
-            const goGroupDatasFactory: OrthogonalGoGroupDatasFactory = new OrthogonalGoGroupDatasFactory();
+            const goGroupDatasFactory: GroupDatasFactory<GoPiece> = this.getGoGroupDatasFactory();
             const capturersInfo: GoGroupDatas =
                 goGroupDatasFactory.getGroupDatas(capturerCoord, newBoard) as GoGroupDatas;
             const capturersFreedoms: Coord[] = capturersInfo.emptyCoords;
@@ -99,7 +98,7 @@ export abstract class AbstractGoRules<C extends RulesConfig>
         let coord: Coord;
         let group: GoGroupDatas;
         let currentSpace: GoPiece;
-        const goGroupDatasFactory: OrthogonalGoGroupDatasFactory = new OrthogonalGoGroupDatasFactory();
+        const goGroupDatasFactory: GroupDatasFactory<GoPiece> = this.getGoGroupDatasFactory();
         for (let y: number = 0; y < board.length; y++) {
             for (let x: number = 0; x < board[0].length; x++) {
                 coord = new Coord(x, y);
@@ -138,7 +137,7 @@ export abstract class AbstractGoRules<C extends RulesConfig>
         const switchedPiece: GoPiece = switchedBoard[groupCoord.y][groupCoord.x];
         Utils.assert(switchedPiece.isOccupied(), `Can't switch emptyness aliveness`);
 
-        const goGroupDatasFactory: OrthogonalGoGroupDatasFactory = new OrthogonalGoGroupDatasFactory();
+        const goGroupDatasFactory: GroupDatasFactory<GoPiece> = this.getGoGroupDatasFactory();
         const group: GoGroupDatas = goGroupDatasFactory.getGroupDatas(groupCoord, switchedBoard) as GoGroupDatas;
         const captured: PlayerNumberMap = switchedState.getCapturedCopy();
         switch (group.color) {
@@ -198,11 +197,11 @@ export abstract class AbstractGoRules<C extends RulesConfig>
             state = this.resurrectStones(state);
         }
         const captureState: CaptureState = this.getCaptureState(move, state);
-        if (CaptureState.isCapturing(captureState)) {
+        if (captureState.isCapturing()) {
             return MGPFallible.success(captureState.capturedCoords);
         } else {
             boardCopy[move.coord.y][move.coord.x] = state.turn%2 === 0 ? GoPiece.DARK : GoPiece.LIGHT;
-            const goGroupDatasFactory: OrthogonalGoGroupDatasFactory = new OrthogonalGoGroupDatasFactory();
+            const goGroupDatasFactory: GroupDatasFactory<GoPiece> = this.getGoGroupDatasFactory();
             const goGroupsDatas: GoGroupDatas =
                 goGroupDatasFactory.getGroupDatas(move.coord, boardCopy) as GoGroupDatas;
             const isSuicide: boolean = goGroupsDatas.emptyCoords.length === 0;
@@ -444,8 +443,8 @@ class CaptureState {
 
     public capturedCoords: Coord[] = [];
 
-    public static isCapturing(captureState: CaptureState): boolean {
-        return captureState.capturedCoords.length > 0;
+    public isCapturing(): boolean {
+        return this.capturedCoords.length > 0;
     }
 
 }

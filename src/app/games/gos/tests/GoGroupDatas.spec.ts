@@ -6,7 +6,7 @@ import { Utils, TestUtils } from '@everyboard/lib';
 import { ErrorLoggerServiceMock } from 'src/app/services/tests/ErrorLoggerServiceMock.spec';
 import { fakeAsync } from '@angular/core/testing';
 
-fdescribe('GoGroupDatas', () => {
+describe('GoGroupDatas', () => {
 
     const coord: Coord = new Coord(0, 0);
 
@@ -20,6 +20,7 @@ fdescribe('GoGroupDatas', () => {
                                                      [coord, coord],
                                                      [coord, coord],
                                                      [],
+                                                     [],
                                                      []);
         TestUtils.expectToThrowAndLog(
             () => group.getWrapper(),
@@ -29,7 +30,7 @@ fdescribe('GoGroupDatas', () => {
 
     it('should throw when addPawn is called two times with the same coord', fakeAsync(() => {
         // Given any GoGroupDatas containing "coord" already
-        const group: GoGroupDatas = new GoGroupDatas(GoPiece.EMPTY, [], [], [], [], []);
+        const group: GoGroupDatas = new GoGroupDatas(GoPiece.EMPTY, [], [], [], [], [], []);
         group.addPawn(coord, GoPiece.DARK);
 
         // When adding the coord again
@@ -45,12 +46,13 @@ fdescribe('GoGroupDatas', () => {
                                                      [],
                                                      [coord, coord],
                                                      [coord, coord],
+                                                     [],
                                                      []);
         expect(group.getWrapper()).toEqual(GoPiece.LIGHT);
     });
 
     it('should return the mono wrapper when alive', () => {
-        const group: GoGroupDatas = new GoGroupDatas(GoPiece.EMPTY, [coord], [coord, coord], [], [], []);
+        const group: GoGroupDatas = new GoGroupDatas(GoPiece.EMPTY, [coord], [coord, coord], [], [], [], []);
         expect(group.getWrapper()).toEqual(GoPiece.DARK);
     });
 
@@ -60,12 +62,13 @@ fdescribe('GoGroupDatas', () => {
                                                            [coord, coord],
                                                            [],
                                                            [],
-                                                           [coord, coord]);
+                                                           [coord, coord],
+                                                           []);
         expect(deadWrapper.getWrapper()).toEqual(GoPiece.DARK);
     });
 
     it('should count territory as empty', () => {
-        const group: GoGroupDatas = new GoGroupDatas(GoPiece.DARK_TERRITORY, [coord], [coord, coord], [], [], []);
+        const group: GoGroupDatas = new GoGroupDatas(GoPiece.DARK_TERRITORY, [coord], [coord, coord], [], [], [], []);
         expect(group.getWrapper()).toEqual(GoPiece.DARK);
     });
 
@@ -78,7 +81,8 @@ fdescribe('GoGroupDatas', () => {
                                                          [],
                                                          [coord],
                                                          [coord],
-                                                         [coord]);
+                                                         [coord],
+                                                         []);
             // When asking for neighbors entry points
             const neighborsEntryPoint: Coord[] = group.getNeighborsEntryPoints();
 

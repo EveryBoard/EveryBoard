@@ -10,10 +10,12 @@ export class GoGroupDatas extends GroupDatas<GoPiece> {
                        public darkCoords: Coord[],
                        public lightCoords: Coord[],
                        public deadDarkCoords: Coord[],
-                       public deadLightCoords: Coord[])
+                       public deadLightCoords: Coord[],
+                       public unreachableCoords: Coord[])
     {
         super(color);
     }
+
     public getCoords(): Coord[] {
         if (this.color === GoPiece.DARK) {
             return this.darkCoords;
@@ -53,12 +55,14 @@ export class GoGroupDatas extends GroupDatas<GoPiece> {
             case GoPiece.DEAD_LIGHT:
                 this.deadLightCoords = GroupDatas.insertAsEntryPoint(this.deadLightCoords, coord);
                 break;
+            case GoPiece.UNREACHABLE:
+                this.unreachableCoords = GroupDatas.insertAsEntryPoint(this.unreachableCoords, coord);
+                break;
             default:
                 Utils.expectToBeMultiple(color, [
                     GoPiece.EMPTY,
                     GoPiece.DARK_TERRITORY,
                     GoPiece.LIGHT_TERRITORY,
-                    GoPiece.UNREACHABLE,
                 ]);
                 this.emptyCoords = GroupDatas.insertAsEntryPoint(this.emptyCoords, coord);
         }

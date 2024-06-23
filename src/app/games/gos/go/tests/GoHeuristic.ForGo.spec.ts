@@ -1,27 +1,27 @@
 /* eslint-disable max-lines-per-function */
 import { Table } from 'src/app/jscaip/TableUtils';
 import { MGPOptional } from '@everyboard/lib';
-import { GoState } from '../GoState';
-import { GoPhase } from '../go/GoPhase';
-import { GoPiece } from '../GoPiece';
-import { GoNode } from '../AbstractGoRules';
-import { GoHeuristic } from '../GoHeuristic';
+import { GoState } from '../../GoState';
+import { GoPhase } from '../../GoPhase';
+import { GoPiece } from '../../GoPiece';
+import { GoNode } from '../../AbstractGoRules';
+import { GoHeuristic } from '../../GoHeuristic';
 import { HeuristicUtils } from 'src/app/jscaip/AI/tests/HeuristicUtils.spec';
 import { Player } from 'src/app/jscaip/Player';
 import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
-import { GoConfig, GoRules } from '../go/GoRules';
+import { GoConfig, GoRules } from '../GoRules';
 
 const X: GoPiece = GoPiece.LIGHT;
 const O: GoPiece = GoPiece.DARK;
 const _: GoPiece = GoPiece.EMPTY;
 
-fdescribe('GoHeuristic', () => {
+describe('GoHeuristic for Go', () => { // TODO: test for trigo
 
     let heuristic: GoHeuristic;
     const defaultConfig: MGPOptional<GoConfig> = GoRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
-        heuristic = new GoHeuristic();
+        heuristic = new GoHeuristic(GoRules.get());
     });
 
     xit('should getBoardValue according considering alive group who control alone one territory and not considering alive the others', () => {

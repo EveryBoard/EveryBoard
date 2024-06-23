@@ -5,7 +5,7 @@ import { MGPOptional } from '@everyboard/lib';
 import { Tutorial, TutorialStep } from '../../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 import { TutorialStepMessage } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
-import { GoPhase } from '../go/GoPhase';
+import { GoPhase } from '../GoPhase';
 import { TriGoConfig, TriGoRules } from './TriGoRules';
 
 const X: GoPiece = GoPiece.LIGHT;
@@ -18,8 +18,6 @@ const _: GoPiece = GoPiece.EMPTY;
 const defaultConfig: MGPOptional<TriGoConfig> = TriGoRules.get().getDefaultRulesConfig();
 
 export class TriGoTutorial extends Tutorial {
-
-    private TODO_KILL: void = console.log('jajette TriGoTutorial init => getInitialState')
 
     public tutorial: TutorialStep[] = [
         TutorialStep.informational(

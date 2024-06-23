@@ -1,21 +1,21 @@
 /* eslint-disable max-lines-per-function */
-import { GoNode } from '../AbstractGoRules';
+import { AbstractGoRules, GoNode } from '../AbstractGoRules';
 import { GoMove } from '../GoMove';
 import { EncoderTestUtils } from '@everyboard/lib';
 import { GoMoveGenerator } from '../GoMoveGenerator';
-import { GoRules } from '../go/GoRules';
-import { TriGoRules } from '../tri-go/TriGoRules';
+import { GoConfig, GoRules } from '../go/GoRules';
+import { TriGoConfig, TriGoRules } from '../tri-go/TriGoRules';
 
-fdescribe('GoMove', () => {
+describe('GoMove', () => {
 
-    const nodes: GoNode[] = [
-        GoRules.get().getInitialNode(GoRules.get().getDefaultRulesConfig()),
-        TriGoRules.get().getInitialNode(TriGoRules.get().getDefaultRulesConfig()),
+    const nodes: { rules: AbstractGoRules<GoConfig | TriGoConfig>, node: GoNode }[] = [
+        { rules: GoRules.get(), node: GoRules.get().getInitialNode(GoRules.get().getDefaultRulesConfig()) },
+        { rules: TriGoRules.get(), node: TriGoRules.get().getInitialNode(TriGoRules.get().getDefaultRulesConfig()) },
     ];
-    for (const node of nodes) {
+    for (const rulesAndNode of nodes) {
         it('should have a bijective encoder', () => {
-            const moveGenerator: GoMoveGenerator = new GoMoveGenerator();
-            const firstTurnMoves: GoMove[] = moveGenerator.getListMoves(node);
+            const moveGenerator: GoMoveGenerator = new GoMoveGenerator(rulesAndNode.rules);
+            const firstTurnMoves: GoMove[] = moveGenerator.getListMoves(rulesAndNode.node);
             firstTurnMoves.push(GoMove.PASS);
             firstTurnMoves.push(GoMove.ACCEPT);
             for (const move of firstTurnMoves) {

@@ -1,5 +1,5 @@
 import { GoState } from './GoState';
-import { GoPhase } from './go/GoPhase';
+import { GoPhase } from './GoPhase';
 import { GoPiece } from './GoPiece';
 import { GoMove } from './GoMove';
 import { GoLegalityInformation, GoNode, AbstractGoRules } from './AbstractGoRules';

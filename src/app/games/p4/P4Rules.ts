@@ -53,7 +53,6 @@ export class P4Rules extends ConfigurableRules<P4Move, P4State, P4Config> {
     }
 
     public override getInitialState(config: MGPOptional<P4Config>): P4State {
-        console.log('jajette da getInitialState', config.getOrElse({ height: -1, width: -1 }).width)
         const board: PlayerOrNone[][] = TableUtils.create(config.get().width,
                                                           config.get().height,
                                                           PlayerOrNone.NONE);
