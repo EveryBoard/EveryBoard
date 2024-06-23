@@ -1,4 +1,4 @@
-import { MGPMap, MGPSet, Utils } from '@everyboard/lib';
+import { MGPMap, Set, Utils } from '@everyboard/lib';
 import { BoardValue } from './AI/BoardValue';
 import { Coord } from './Coord';
 import { Direction } from './Direction';
@@ -9,7 +9,7 @@ import { Ordinal } from './Ordinal';
 
 export class AbstractNInARowHelper<T extends NonNullable<unknown>, D extends Direction = Ordinal> {
 
-    private readonly halfDirections: MGPSet<D>;
+    private readonly halfDirections: Set<D>;
 
     public constructor(private readonly getOwner: (piece: T, state?: GameStateWithTable<T>) => PlayerOrNone,
                        private readonly N: number,
@@ -27,7 +27,7 @@ export class AbstractNInARowHelper<T extends NonNullable<unknown>, D extends Dir
                 halfDirections.push(direction);
             }
         }
-        this.halfDirections = new MGPSet(halfDirections);
+        this.halfDirections = new Set(halfDirections);
     }
 
     public getBoardValue(state: GameStateWithTable<T>): BoardValue {
