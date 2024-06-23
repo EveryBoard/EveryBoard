@@ -7,10 +7,10 @@
 </app-part-creation>
 
 <div id="game"
-     class="tile is-ancestor"
+     class="columns is-vcentered is-align-items-stretch"
      *ngIf="gameStarted">
-    <div class="tile is-parent">
-        <div class="tile is-child box has-text-centered">
+    <div class="column is-one-quarter has-text-centered">
+        <div class="box is-fullheight">
             <div class="block" id="turnIndicator" *ngIf="currentPart !== null">
                 <p class="subtitle" i18n>Turn n°{{ currentPart.getTurn() + 1 }}</p>
                 <p class="subtitle" id="currentPlayerIndicator" *ngIf="endGame === false">
@@ -75,7 +75,6 @@
             </div>
             <hr/>
             <div class="block" id="winnerIndicator" *ngIf="endGame && currentPart !== null">
-                <hr/>
                 <div *ngIf="currentPart.isHardDraw()">
                     <p class="title" id="hardDrawIndicator" i18n>Draw</p>
                 </div>
@@ -142,13 +141,13 @@
                     </div>
                 </ng-template>
                 <div *ngIf="deniedRequest().isPresent()"
-                        id="requestRejected"
-                        class="notification is-danger">
+                     id="requestRejected"
+                     class="notification is-danger">
                     <p><span i18n>Your {{ requestInfos[deniedRequest().get()].name() }} request has been rejected.&nbsp;&nbsp;<fa-icon [icon]="requestInfos[deniedRequest().get()].icon"></fa-icon></span></p>
                 </div>
                 <div *ngIf="getRequestAwaitingReplyFromOpponent().isPresent()"
-                        id="getRequestAwaitingReply"
-                        class="notification">
+                     id="getRequestAwaitingReply"
+                     class="notification">
                     <p><span i18n>Your request for a {{ requestInfos[getRequestAwaitingReplyFromOpponent().get()].name() }} has been sent.&nbsp;&nbsp;<fa-icon [icon]="requestInfos[getRequestAwaitingReplyFromOpponent().get()].icon"></fa-icon></span></p>
                 </div>
             </ng-container>
@@ -160,12 +159,12 @@
             >Go back to the game list</button>
         </div>
     </div>
-    <div id="board-tile"
-         class="tile is-9 is-parent rounded-div"
-         [ngClass]="getBoardHighlight()">
-        <div id="board"
-             class="tile is-child box">
-            <div #board></div>
+    <div class="column">
+        <div class="box p-5 is-fullheight"
+             [ngClass]="getBoardHighlight()">
+            <div id="board" class="box is-fullheight">
+                <div #board></div>
+            </div>
         </div>
     </div>
 </div>

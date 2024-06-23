@@ -24,6 +24,8 @@ import { GameInfo } from '../../normal-component/pick-game/pick-game.component';
 import { GameState } from 'src/app/jscaip/state/GameState';
 import { RulesConfigDescription } from '../rules-configuration/RulesConfigDescription';
 import { Debug } from 'src/app/utils/Debug';
+import { DemoNodeInfo } from '../demo-card-wrapper/demo-card-wrapper.component';
+import { AbstractNode, GameNode } from 'src/app/jscaip/AI/GameNode';
 
 type PartCreationViewInfo = {
     userIsCreator: boolean;
@@ -110,6 +112,8 @@ export class PartCreationComponent implements OnInit, OnDestroy {
     public allDocDeleted: boolean = false;
 
     protected rulesConfig: MGPOptional<RulesConfig> = MGPOptional.empty(); // Provided by RulesConfigurationComponent
+
+    public configDemo: DemoNodeInfo;
 
     public constructor(private readonly router: Router,
                        private readonly activatedRoute: ActivatedRoute,
@@ -535,6 +539,24 @@ export class PartCreationComponent implements OnInit, OnDestroy {
 
     public saveRulesConfig(rulesConfig: MGPOptional<RulesConfig>): void {
         this.rulesConfig = rulesConfig;
+        this.setConfigDemo(rulesConfig.get());
+    }
+
+    private setConfigDemo(config: RulesConfig): void {
+        const stateProvider: MGPOptional<(config: MGPOptional<RulesConfig>) => GameState> = this.getStateProvider();
+        if (stateProvider.isPresent()) {
+            const node: AbstractNode = new GameNode(stateProvider.get()(MGPOptional.of(config)));
+            this.configDemo = {
+                click: MGPOptional.empty(),
+                name: this.getGameUrlName(),
+                node,
+            };
+            this.cdr.detectChanges();
+        }
+    }
+
+    public getConfigDemo(): DemoNodeInfo {
+        return this.configDemo;
     }
 
     protected getGameUrlName(): string {

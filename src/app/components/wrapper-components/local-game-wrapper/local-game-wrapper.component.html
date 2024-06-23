@@ -4,14 +4,14 @@
              id="info"
              class="box is-fullheight">
             <div id="turnIndicator" class="mb-5">
-                <p class="title" i18n>{{ getGameName() }}<br/> Turn n°{{ gameComponent.getTurn() + 1 }}</p>
+                <p class="title" i18n>{{ getGameName() }}<br/>Turn n°{{ gameComponent.getTurn() + 1 }}</p>
             </div>
             <div id="playerSelector">
                 <div *ngFor="let player of ArrayUtils.range(2)"
                      class="px-2 py-4 mb-4 player{{ player }}-bg">
-                    <p class="mb-2 subtitle player{{ player }}-fg" i18n>Player {{ player+1 }} </p>
+                    <p class="mb-2 subtitle player{{ player }}-fg" i18n>Player {{ player+1 }}</p>
                     <div class="select is-fullwidth">
-                        <select id="playerSelect-{{ player }} "
+                        <select id="playerSelect-{{ player }}"
                                 (change)="updatePlayer(Player.of(player))"
                                 [(ngModel)]="playerSelection[player]">
                             <option selected

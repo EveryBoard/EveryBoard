@@ -39,7 +39,7 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
 
     public configIsSet: boolean = false;
 
-    public configDemo: DemoNodeInfo; // set in onInit
+    public configDemo: DemoNodeInfo;
 
     public rulesConfig: MGPOptional<RulesConfig> = MGPOptional.empty();
 
@@ -312,13 +312,10 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
 
     public updateConfig(rulesConfig: MGPOptional<RulesConfig>): void {
         this.rulesConfig = rulesConfig;
-        console.log('config updated')
-        console.log(rulesConfig.isPresent())
         this.setConfigDemo(rulesConfig.get());
         // If there is no config for this game, then rulesConfig value will be MGPOptional.empty()
         if (rulesConfig.isPresent() && Object.keys(rulesConfig.get()).length === 0) {
             this.markConfigAsFilled();
-            console.log('setting config demo')
         }
     }
 
