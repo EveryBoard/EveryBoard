@@ -1,8 +1,8 @@
 import { ConfigurableRules } from 'src/app/jscaip/Rules';
-import { HexagonalConnectionState } from './HexagonalConnectionState';
+import { HexodiaState } from './HexodiaState';
 import { GameNode } from 'src/app/jscaip/AI/GameNode';
 import { MGPValidation, MGPOptional, Utils } from '@everyboard/lib';
-import { HexagonalConnectionMove } from './HexagonalConnectionMove';
+import { HexodiaMove } from './HexodiaMove';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { Coord, CoordFailure } from 'src/app/jscaip/Coord';
 import { AbstractNInARowHelper } from 'src/app/jscaip/NInARowHelper';
@@ -13,7 +13,7 @@ import { NumberConfig, RulesConfigDescription, RulesConfigDescriptionLocalizable
 import { MGPValidators } from 'src/app/utils/MGPValidator';
 import { DodecaHexaDirection } from 'src/app/jscaip/DodecaHexaDirection';
 
-export type HexagonalConnectionConfig = {
+export type HexodiaConfig = {
 
     size: number;
 
@@ -23,16 +23,16 @@ export type HexagonalConnectionConfig = {
 
 };
 
-export class HexagonalConnectionNode extends GameNode<HexagonalConnectionMove, HexagonalConnectionState> {}
+export class HexodiaNode extends GameNode<HexodiaMove, HexodiaState> {}
 
-export class HexagonalConnectionRules extends ConfigurableRules<HexagonalConnectionMove,
-                                                                HexagonalConnectionState,
-                                                                HexagonalConnectionConfig>
+export class HexodiaRules extends ConfigurableRules<HexodiaMove,
+                                                                HexodiaState,
+                                                                HexodiaConfig>
 {
-    private static singleton: MGPOptional<HexagonalConnectionRules> = MGPOptional.empty();
+    private static singleton: MGPOptional<HexodiaRules> = MGPOptional.empty();
 
-    public static readonly RULES_CONFIG_DESCRIPTION: RulesConfigDescription<HexagonalConnectionConfig> =
-        new RulesConfigDescription<HexagonalConnectionConfig>({
+    public static readonly RULES_CONFIG_DESCRIPTION: RulesConfigDescription<HexodiaConfig> =
+        new RulesConfigDescription<HexodiaConfig>({
             name: (): string => $localize`Hexagonal Connection`,
             config: {
                 size: new NumberConfig(12, () => $localize`Size`, MGPValidators.range(1, 99)),
@@ -45,14 +45,14 @@ export class HexagonalConnectionRules extends ConfigurableRules<HexagonalConnect
             },
         });
 
-    public static get(): HexagonalConnectionRules {
-        if (HexagonalConnectionRules.singleton.isAbsent()) {
-            HexagonalConnectionRules.singleton = MGPOptional.of(new HexagonalConnectionRules());
+    public static get(): HexodiaRules {
+        if (HexodiaRules.singleton.isAbsent()) {
+            HexodiaRules.singleton = MGPOptional.of(new HexodiaRules());
         }
-        return HexagonalConnectionRules.singleton.get();
+        return HexodiaRules.singleton.get();
     }
 
-    public static getHexagonalConnectionHelper(config: MGPOptional<HexagonalConnectionConfig>)
+    public static getHexodiaHelper(config: MGPOptional<HexodiaConfig>)
     : AbstractNInARowHelper<FourStatePiece>
     {
         if (config.isPresent()) {
@@ -62,8 +62,8 @@ export class HexagonalConnectionRules extends ConfigurableRules<HexagonalConnect
                 DodecaHexaDirection.factory.all,
             );
         } else {
-            const defaultConfig: HexagonalConnectionConfig =
-                HexagonalConnectionRules.RULES_CONFIG_DESCRIPTION.getDefaultConfig().config;
+            const defaultConfig: HexodiaConfig =
+                HexodiaRules.RULES_CONFIG_DESCRIPTION.getDefaultConfig().config;
             return new AbstractNInARowHelper<FourStatePiece, DodecaHexaDirection>(
                 (piece: FourStatePiece) => piece.getPlayer(),
                 defaultConfig.nInARow,
@@ -72,17 +72,17 @@ export class HexagonalConnectionRules extends ConfigurableRules<HexagonalConnect
         }
     }
 
-    public static getVictoriousCoords(state: HexagonalConnectionState, config: MGPOptional<HexagonalConnectionConfig>)
+    public static getVictoriousCoords(state: HexodiaState, config: MGPOptional<HexodiaConfig>)
     : Coord[]
     {
-        return HexagonalConnectionRules.getHexagonalConnectionHelper(config).getVictoriousCoord(state);
+        return HexodiaRules.getHexodiaHelper(config).getVictoriousCoord(state);
     }
 
-    public override getRulesConfigDescription(): MGPOptional<RulesConfigDescription<HexagonalConnectionConfig>> {
-        return MGPOptional.of(HexagonalConnectionRules.RULES_CONFIG_DESCRIPTION);
+    public override getRulesConfigDescription(): MGPOptional<RulesConfigDescription<HexodiaConfig>> {
+        return MGPOptional.of(HexodiaRules.RULES_CONFIG_DESCRIPTION);
     }
 
-    public override getInitialState(config: MGPOptional<HexagonalConnectionConfig>): HexagonalConnectionState {
+    public override getInitialState(config: MGPOptional<HexodiaConfig>): HexodiaState {
         const size: number = config.get().size;
         const boardSize: number = 1 + (size * 2);
         const board: FourStatePiece[][] = TableUtils.create(boardSize, boardSize, FourStatePiece.EMPTY);
@@ -94,38 +94,38 @@ export class HexagonalConnectionRules extends ConfigurableRules<HexagonalConnect
                 }
             }
         }
-        return new HexagonalConnectionState(board, 0);
+        return new HexodiaState(board, 0);
     }
 
-    public override applyLegalMove(move: HexagonalConnectionMove,
-                                   state: HexagonalConnectionState)
-    : HexagonalConnectionState
+    public override applyLegalMove(move: HexodiaMove,
+                                   state: HexodiaState)
+    : HexodiaState
     {
         const player: FourStatePiece = FourStatePiece.ofPlayer(state.getCurrentPlayer());
         const newBoard: FourStatePiece[][] = state.getCopiedBoard();
         for (const coord of move.coords) {
             newBoard[coord.y][coord.x] = player;
         }
-        return new HexagonalConnectionState(newBoard, state.turn + 1);
+        return new HexodiaState(newBoard, state.turn + 1);
     }
 
-    public override isLegal(move: HexagonalConnectionMove,
-                            state: HexagonalConnectionState,
-                            config: MGPOptional<HexagonalConnectionConfig>)
+    public override isLegal(move: HexodiaMove,
+                            state: HexodiaState,
+                            config: MGPOptional<HexodiaConfig>)
     : MGPValidation
     {
-        const configuration: HexagonalConnectionConfig = config.get();
+        const configuration: HexodiaConfig = config.get();
         const numberOfDrop: number = move.coords.size();
         if (state.turn === 0) {
-            Utils.assert(numberOfDrop === 1, 'HexagonalConnectionMove should only drop one piece at first turn');
+            Utils.assert(numberOfDrop === 1, 'HexodiaMove should only drop one piece at first turn');
         } else {
             Utils.assert(numberOfDrop === configuration.numberOfDrops,
-                         'HexagonalConnectionMove should have exactly ' + configuration.numberOfDrops+ ' drops (got ' + numberOfDrop + ')');
+                         'HexodiaMove should have exactly ' + configuration.numberOfDrops+ ' drops (got ' + numberOfDrop + ')');
         }
         return this.isLegalDrops(move, state);
     }
 
-    public isLegalDrops(move: HexagonalConnectionMove, state: HexagonalConnectionState): MGPValidation {
+    public isLegalDrops(move: HexodiaMove, state: HexodiaState): MGPValidation {
         for (const coord of move.coords) {
             if (state.isOnBoard(coord) === false) {
                 return MGPValidation.failure(CoordFailure.OUT_OF_RANGE(coord));
@@ -137,12 +137,12 @@ export class HexagonalConnectionRules extends ConfigurableRules<HexagonalConnect
         return MGPValidation.SUCCESS;
     }
 
-    public override getGameStatus(node: HexagonalConnectionNode, config: MGPOptional<HexagonalConnectionConfig>)
+    public override getGameStatus(node: HexodiaNode, config: MGPOptional<HexodiaConfig>)
     : GameStatus
     {
-        const state: HexagonalConnectionState = node.gameState;
-        const victoriousCoord: Coord[] = HexagonalConnectionRules
-            .getHexagonalConnectionHelper(config)
+        const state: HexodiaState = node.gameState;
+        const victoriousCoord: Coord[] = HexodiaRules
+            .getHexodiaHelper(config)
             .getVictoriousCoord(state);
         if (victoriousCoord.length > 0) {
             return GameStatus.getVictory(state.getCurrentOpponent());

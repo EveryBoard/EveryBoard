@@ -1,18 +1,18 @@
-import { HexagonalConnectionState } from './HexagonalConnectionState';
-import { HexagonalConnectionConfig, HexagonalConnectionNode } from './HexagonalConnectionRules';
-import { HexagonalConnectionMove } from './HexagonalConnectionMove';
+import { HexodiaState } from './HexodiaState';
+import { HexodiaConfig, HexodiaNode } from './HexodiaRules';
+import { HexodiaMove } from './HexodiaMove';
 import { Coord } from 'src/app/jscaip/Coord';
 import { TableUtils } from 'src/app/jscaip/TableUtils';
 import { MGPOptional, Set } from '@everyboard/lib';
 import { MoveGenerator } from 'src/app/jscaip/AI/AI';
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
 
-export class HexagonalConnectionMoveGenerator extends MoveGenerator<HexagonalConnectionMove,
-                                                                    HexagonalConnectionState,
-                                                                    HexagonalConnectionConfig>
+export class HexodiaMoveGenerator extends MoveGenerator<HexodiaMove,
+                                                                    HexodiaState,
+                                                                    HexodiaConfig>
 {
-    public override getListMoves(node: HexagonalConnectionNode, _config: MGPOptional<HexagonalConnectionConfig>)
-    : HexagonalConnectionMove[]
+    public override getListMoves(node: HexodiaNode, _config: MGPOptional<HexodiaConfig>)
+    : HexodiaMove[]
     {
         if (node.gameState.turn === 0) {
             return this.getFirstMove(node.gameState);
@@ -21,35 +21,35 @@ export class HexagonalConnectionMoveGenerator extends MoveGenerator<HexagonalCon
         }
     }
 
-    private getFirstMove(state: HexagonalConnectionState): HexagonalConnectionMove[] {
+    private getFirstMove(state: HexodiaState): HexodiaMove[] {
         const width: number = state.getWidth();
         const height: number = state.getHeight();
         const cx: number = Math.floor(width / 2);
         const cy: number = Math.floor(height / 2);
         const center: Coord = new Coord(cx, cy);
         return [
-            HexagonalConnectionMove.of([center]),
+            HexodiaMove.of([center]),
         ];
     }
 
-    private getListDrops(node: HexagonalConnectionNode): HexagonalConnectionMove[] {
+    private getListDrops(node: HexodiaNode): HexodiaMove[] {
         const availableFirstCoords: Coord[] = this.getAvailableCoords(node.gameState);
-        const moves: HexagonalConnectionMove[] = [];
+        const moves: HexodiaMove[] = [];
         for (const firstCoord of availableFirstCoords) {
             const board: FourStatePiece[][] = node.gameState.getCopiedBoard();
             board[firstCoord.y][firstCoord.x] = FourStatePiece.ofPlayer(node.gameState.getCurrentPlayer());
-            const stateAfterFirstDrops: HexagonalConnectionState =
-                new HexagonalConnectionState(board, node.gameState.turn);
+            const stateAfterFirstDrops: HexodiaState =
+                new HexodiaState(board, node.gameState.turn);
             const availableSecondCoords: Coord[] = this.getAvailableCoords(stateAfterFirstDrops);
             for (const secondCoord of availableSecondCoords) {
-                const newMove: HexagonalConnectionMove = HexagonalConnectionMove.of([firstCoord, secondCoord]);
+                const newMove: HexodiaMove = HexodiaMove.of([firstCoord, secondCoord]);
                 moves.push(newMove);
             }
         }
         return new Set(moves).toList(); // Removes duplicates
     }
 
-    private getAvailableCoords(state: HexagonalConnectionState): Coord[] {
+    private getAvailableCoords(state: HexodiaState): Coord[] {
         const usefulCoord: boolean[][] = this.getUsefulCoordsMap(state);
         const availableCoords: Coord[] = [];
         for (const coordAndContent of state.getCoordsAndContents()) {
@@ -65,7 +65,7 @@ export class HexagonalConnectionMoveGenerator extends MoveGenerator<HexagonalCon
      * This function returns a table on which table[y][x] === true only if:
      *     (x, y) is empty but has occupied neighbors
      */
-    private getUsefulCoordsMap(state: HexagonalConnectionState): boolean[][] {
+    private getUsefulCoordsMap(state: HexodiaState): boolean[][] {
         const width: number = state.getWidth();
         const height: number = state.getHeight();
         const usefulCoord: boolean[][] = TableUtils.create(width, height, false);

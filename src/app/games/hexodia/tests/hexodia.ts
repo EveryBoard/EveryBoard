@@ -1,26 +1,26 @@
 /* eslint-disable max-lines-per-function */
 import { fakeAsync } from '@angular/core/testing';
-import { HexagonalConnectionMove } from '../HexagonalConnectionMove';
+import { HexodiaMove } from '../HexodiaMove';
 import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
-import { HexagonalConnectionComponent } from '../hexagonal-connection.component';
-import { HexagonalConnectionState } from '../HexagonalConnectionState';
+import { HexodiaComponent } from '../hexodia.component';
+import { HexodiaState } from '../HexodiaState';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { Coord } from 'src/app/jscaip/Coord';
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
 import { MGPOptional } from 'lib/dist';
-import { HexagonalConnectionConfig, HexagonalConnectionRules } from '../HexagonalConnectionRules';
+import { HexodiaConfig, HexodiaRules } from '../HexodiaRules';
 import { Table } from 'src/app/jscaip/TableUtils';
 
-describe('HexagonalConnectionComponent', () => {
+describe('HexodiaComponent', () => {
 
     const _: FourStatePiece = FourStatePiece.EMPTY;
     const O: FourStatePiece = FourStatePiece.ZERO;
     const X: FourStatePiece = FourStatePiece.ONE;
 
-    let testUtils: ComponentTestUtils<HexagonalConnectionComponent>;
+    let testUtils: ComponentTestUtils<HexodiaComponent>;
 
     beforeEach(fakeAsync(async() => {
-        testUtils = await ComponentTestUtils.forGame<HexagonalConnectionComponent>('HexagonalConnection');
+        testUtils = await ComponentTestUtils.forGame<HexodiaComponent>('Hexodia');
     }));
 
     it('should create', () => {
@@ -33,13 +33,13 @@ describe('HexagonalConnectionComponent', () => {
             // Given the initial state of the component
             // When clicking anywhere
             // Then a first move should be done
-            const move: HexagonalConnectionMove = HexagonalConnectionMove.of([new Coord(9, 9)]);
+            const move: HexodiaMove = HexodiaMove.of([new Coord(9, 9)]);
             await testUtils.expectMoveSuccess('#click-9-9', move);
         }));
 
         it('should cancel move when clicking on occupied stone from previous turns', fakeAsync(async() => {
             // Given a component with pieces on it, from previous turns
-            const state: HexagonalConnectionState = new HexagonalConnectionState([
+            const state: HexodiaState = new HexodiaState([
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
@@ -68,7 +68,7 @@ describe('HexagonalConnectionComponent', () => {
 
         it('should drop the first of two pieces when clicking empty coord', fakeAsync(async() => {
             // Given a component with one move already done
-            const state: HexagonalConnectionState = new HexagonalConnectionState([
+            const state: HexodiaState = new HexodiaState([
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
@@ -100,7 +100,7 @@ describe('HexagonalConnectionComponent', () => {
 
         it('should hide last move when doing first click', fakeAsync(async() => {
             // Given a board with a last move
-            const state: HexagonalConnectionState = new HexagonalConnectionState([
+            const state: HexodiaState = new HexodiaState([
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
@@ -121,7 +121,7 @@ describe('HexagonalConnectionComponent', () => {
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             ], 1);
-            const previousMove: HexagonalConnectionMove = HexagonalConnectionMove.of([new Coord(9, 9)]);
+            const previousMove: HexodiaMove = HexodiaMove.of([new Coord(9, 9)]);
             await testUtils.setupState(state, { previousMove });
 
             // When doing a first click
@@ -137,7 +137,7 @@ describe('HexagonalConnectionComponent', () => {
 
         it('should deselect piece when clicking a second time on it', fakeAsync(async() => {
             // Given a component where you clicked already to drop your first piece
-            const state: HexagonalConnectionState = new HexagonalConnectionState([
+            const state: HexodiaState = new HexodiaState([
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
@@ -170,7 +170,7 @@ describe('HexagonalConnectionComponent', () => {
 
         it('should do move when clicking on a second empty square', fakeAsync(async() => {
             // Given a component where you clicked already to drop your first piece
-            const state: HexagonalConnectionState = new HexagonalConnectionState([
+            const state: HexodiaState = new HexodiaState([
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
@@ -195,7 +195,7 @@ describe('HexagonalConnectionComponent', () => {
             await testUtils.expectClickSuccess('#click-8-8');
 
             // When clicking on a second empty square
-            const move: HexagonalConnectionMove = HexagonalConnectionMove.of([new Coord(8, 8), new Coord(7, 7)]);
+            const move: HexodiaMove = HexodiaMove.of([new Coord(8, 8), new Coord(7, 7)]);
 
             // Then the move should be done
             await testUtils.expectMoveSuccess('#click-7-7', move);
@@ -203,7 +203,7 @@ describe('HexagonalConnectionComponent', () => {
 
         it('should show last move again when cancelling move', fakeAsync(async() => {
             // Given a component with one move already done, and a first click done
-            const state: HexagonalConnectionState = new HexagonalConnectionState([
+            const state: HexodiaState = new HexodiaState([
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
@@ -240,7 +240,7 @@ describe('HexagonalConnectionComponent', () => {
 
         it('should show highlight when victory occur', fakeAsync(async() => {
             // Given a board where current player is about to win
-            const state: HexagonalConnectionState = new HexagonalConnectionState([
+            const state: HexodiaState = new HexodiaState([
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
@@ -265,7 +265,7 @@ describe('HexagonalConnectionComponent', () => {
             await testUtils.expectClickSuccess('#click-6-8');
 
             // When finishing your move
-            const move: HexagonalConnectionMove = HexagonalConnectionMove.of([new Coord(6, 8), new Coord(5, 8)]);
+            const move: HexodiaMove = HexodiaMove.of([new Coord(6, 8), new Coord(5, 8)]);
 
             // Then the victory squares should be highlighted
             await testUtils.expectMoveSuccess('#click-5-8', move);
@@ -279,7 +279,7 @@ describe('HexagonalConnectionComponent', () => {
 
         it('should show previous move (first move)', fakeAsync(async() => {
             // Given a board with a last move
-            const state: HexagonalConnectionState = new HexagonalConnectionState([
+            const state: HexodiaState = new HexodiaState([
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
@@ -302,7 +302,7 @@ describe('HexagonalConnectionComponent', () => {
             ], 1);
 
             // When displaying it
-            const previousMove: HexagonalConnectionMove = HexagonalConnectionMove.of([new Coord(9, 9)]);
+            const previousMove: HexodiaMove = HexodiaMove.of([new Coord(9, 9)]);
             await testUtils.setupState(state, { previousMove });
 
             // Then last piece should have the highlight
@@ -311,7 +311,7 @@ describe('HexagonalConnectionComponent', () => {
 
         it('should show previous move (next moves)', fakeAsync(async() => {
             // Given a board with a last move
-            const state: HexagonalConnectionState = new HexagonalConnectionState([
+            const state: HexodiaState = new HexodiaState([
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
@@ -332,8 +332,8 @@ describe('HexagonalConnectionComponent', () => {
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             ], 1);
-            const previousMove: HexagonalConnectionMove =
-                HexagonalConnectionMove.of([new Coord(10, 9), new Coord(11, 9)]);
+            const previousMove: HexodiaMove =
+                HexodiaMove.of([new Coord(10, 9), new Coord(11, 9)]);
 
             // When displaying it
             await testUtils.setupState(state, { previousMove });
@@ -347,18 +347,18 @@ describe('HexagonalConnectionComponent', () => {
 
     describe('alternative configs', () => {
 
-        const defaultConfig: MGPOptional<HexagonalConnectionConfig> =
-            HexagonalConnectionRules.get().getDefaultRulesConfig();
+        const defaultConfig: MGPOptional<HexodiaConfig> =
+            HexodiaRules.get().getDefaultRulesConfig();
 
         it('should accept more drops', fakeAsync(async() => {
             // Given a board with a config with 3 drops
-            const alternativeConfig: MGPOptional<HexagonalConnectionConfig> = MGPOptional.of({
+            const alternativeConfig: MGPOptional<HexodiaConfig> = MGPOptional.of({
                 ...defaultConfig.get(),
                 numberOfDrops: 3,
             });
             const board: Table<FourStatePiece> =
-                HexagonalConnectionRules.get().getInitialState(alternativeConfig).board;
-            const state: HexagonalConnectionState = new HexagonalConnectionState(board, 1);
+                HexodiaRules.get().getInitialState(alternativeConfig).board;
+            const state: HexodiaState = new HexodiaState(board, 1);
             await testUtils.setupState(state, { config: alternativeConfig });
 
             // When dropping 3 stones
@@ -366,7 +366,7 @@ describe('HexagonalConnectionComponent', () => {
             await testUtils.expectClickSuccess('#click-8-8');
 
             // Then this should constitute a valid move
-            const move: HexagonalConnectionMove = HexagonalConnectionMove.of([
+            const move: HexodiaMove = HexodiaMove.of([
                 new Coord(9, 9),
                 new Coord(8, 8),
                 new Coord(7, 7),

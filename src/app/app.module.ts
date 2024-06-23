@@ -76,6 +76,7 @@ import { EpaminondasComponent } from './games/epaminondas/epaminondas.component'
 import { GipfComponent } from './games/gipf/gipf.component';
 import { GoComponent } from './games/go/go.component';
 
+import { HexodiaComponent } from './games/hexodia/hexodia.component';
 import { HiveComponent } from './games/hive/hive.component';
 import { HivePieceComponent } from './games/hive/hive-piece.component';
 import { HnefataflComponent } from './games/tafl/hnefatafl/hnefatafl.component';
@@ -133,7 +134,6 @@ import { ToggleVisibilityDirective } from './pipes-and-directives/toggle-visibil
 import { RulesConfigurationComponent } from './components/wrapper-components/rules-configuration/rules-configuration.component';
 import { BlankGobanComponent } from './components/game-components/goban-game-component/blank-goban/blank-goban.component';
 import { LocaleUtils } from './utils/LocaleUtils';
-import { HexagonalConnectionComponent } from './games/hexagonal-connection/hexagonal-connection.component';
 
 registerLocaleData(localeFr);
 
@@ -207,7 +207,7 @@ export const routes: Route[] = [
         GipfComponent,
         BlankGobanComponent,
         GoComponent,
-        HexagonalConnectionComponent,
+        HexodiaComponent,
         HiveComponent, HivePieceComponent,
         HnefataflComponent,
         KalahComponent,

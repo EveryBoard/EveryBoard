@@ -1,28 +1,28 @@
 /* eslint-disable max-lines-per-function */
 import { MGPOptional } from '@everyboard/lib';
 import { Coord } from 'src/app/jscaip/Coord';
-import { HexagonalConnectionMove } from '../HexagonalConnectionMove';
-import { HexagonalConnectionConfig, HexagonalConnectionNode, HexagonalConnectionRules } from '../HexagonalConnectionRules';
-import { HexagonalConnectionState } from '../HexagonalConnectionState';
+import { HexodiaMove } from '../HexodiaMove';
+import { HexodiaConfig, HexodiaNode, HexodiaRules } from '../HexodiaRules';
+import { HexodiaState } from '../HexodiaState';
 import { Table } from 'src/app/jscaip/TableUtils';
 import { Minimax } from 'src/app/jscaip/AI/Minimax';
 import { AIDepthLimitOptions } from 'src/app/jscaip/AI/AI';
-import { HexagonalConnectionAlignmentMinimax } from '../HexagonalConnectionAlignmentMinimax';
+import { HexodiaAlignmentMinimax } from '../HexodiaAlignmentMinimax';
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
 
-describe('HexagonalConnectionAlignmentMinimax', () => {
+describe('HexodiaAlignmentMinimax', () => {
 
-    let minimax: Minimax<HexagonalConnectionMove, HexagonalConnectionState, HexagonalConnectionConfig>;
+    let minimax: Minimax<HexodiaMove, HexodiaState, HexodiaConfig>;
     const level1: AIDepthLimitOptions = { name: 'Level 1', maxDepth: 1 };
     const level2: AIDepthLimitOptions = { name: 'Level 2', maxDepth: 2 };
-    const defaultConfig: MGPOptional<HexagonalConnectionConfig> =
-        HexagonalConnectionRules.get().getDefaultRulesConfig();
+    const defaultConfig: MGPOptional<HexodiaConfig> =
+        HexodiaRules.get().getDefaultRulesConfig();
 
     const _: FourStatePiece = FourStatePiece.EMPTY;
     const O: FourStatePiece = FourStatePiece.ZERO;
 
     beforeEach(() => {
-        minimax = new HexagonalConnectionAlignmentMinimax();
+        minimax = new HexodiaAlignmentMinimax();
     });
 
     it('should do winning move when one is possible', () => {
@@ -48,14 +48,14 @@ describe('HexagonalConnectionAlignmentMinimax', () => {
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
         ];
-        const state: HexagonalConnectionState = new HexagonalConnectionState(board, 2);
-        const node: HexagonalConnectionNode = new HexagonalConnectionNode(state);
+        const state: HexodiaState = new HexodiaState(board, 2);
+        const node: HexodiaNode = new HexodiaNode(state);
 
         // When asking what is the best move
-        const bestMove: HexagonalConnectionMove = minimax.chooseNextMove(node, level1, defaultConfig);
+        const bestMove: HexodiaMove = minimax.chooseNextMove(node, level1, defaultConfig);
 
         // Then it should be that victory
-        expect(bestMove).toEqual(HexagonalConnectionMove.of([new Coord(4, 0), new Coord(5, 0)]));
+        expect(bestMove).toEqual(HexodiaMove.of([new Coord(4, 0), new Coord(5, 0)]));
     });
 
     it('should block double-open fives at level two', () => {
@@ -82,14 +82,14 @@ describe('HexagonalConnectionAlignmentMinimax', () => {
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, _, O, O, O, O, O, _, _, _, _, _, _, _, _, _, _, _, _],
         ];
-        const state: HexagonalConnectionState = new HexagonalConnectionState(board, 3);
-        const node: HexagonalConnectionNode = new HexagonalConnectionNode(state);
+        const state: HexodiaState = new HexodiaState(board, 3);
+        const node: HexodiaNode = new HexodiaNode(state);
 
         // When asking what is the best move
-        const bestMove: HexagonalConnectionMove = minimax.chooseNextMove(node, level2, defaultConfig);
+        const bestMove: HexodiaMove = minimax.chooseNextMove(node, level2, defaultConfig);
 
         // Then the minimax level two should block
-        expect(bestMove).toEqual(HexagonalConnectionMove.of([new Coord(1, 18), new Coord(7, 18)]));
+        expect(bestMove).toEqual(HexodiaMove.of([new Coord(1, 18), new Coord(7, 18)]));
     });
 
     it('should block double-open four at level two', () => {
@@ -116,14 +116,14 @@ describe('HexagonalConnectionAlignmentMinimax', () => {
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, _, O, O, O, O, _, _, _, _, _, _, _, _, _, _, _, _, _],
         ];
-        const state: HexagonalConnectionState = new HexagonalConnectionState(board, 3);
-        const node: HexagonalConnectionNode = new HexagonalConnectionNode(state);
+        const state: HexodiaState = new HexodiaState(board, 3);
+        const node: HexodiaNode = new HexodiaNode(state);
 
         // When asking what is the best move
-        const bestMove: HexagonalConnectionMove = minimax.chooseNextMove(node, level2, defaultConfig);
+        const bestMove: HexodiaMove = minimax.chooseNextMove(node, level2, defaultConfig);
 
         // Then the minimax level two should block
-        expect(bestMove).toEqual(HexagonalConnectionMove.of([new Coord(1, 18), new Coord(6, 18)]));
+        expect(bestMove).toEqual(HexodiaMove.of([new Coord(1, 18), new Coord(6, 18)]));
     });
 
 });

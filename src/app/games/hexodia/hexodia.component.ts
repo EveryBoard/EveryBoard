@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { MGPOptional, MGPValidation } from '@everyboard/lib';
 import { HexagonalGameComponent } from 'src/app/components/game-components/game-component/HexagonalGameComponent';
 import { Coord } from 'src/app/jscaip/Coord';
@@ -9,24 +9,24 @@ import { PlayerOrNone } from 'src/app/jscaip/Player';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { Minimax } from 'src/app/jscaip/AI/Minimax';
 import { MCTS } from 'src/app/jscaip/AI/MCTS';
-import { HexagonalConnectionConfig, HexagonalConnectionRules } from './HexagonalConnectionRules';
-import { HexagonalConnectionMove } from './HexagonalConnectionMove';
-import { HexagonalConnectionState } from './HexagonalConnectionState';
-import { HexagonalConnectionAlignmentHeuristic } from './HexagonalConnectionAlignmentHeuristic';
-import { HexagonalConnectionMoveGenerator } from './HexagonalConnectionMoveGenerator';
+import { HexodiaConfig, HexodiaRules } from './HexodiaRules';
+import { HexodiaMove } from './HexodiaMove';
+import { HexodiaState } from './HexodiaState';
+import { HexodiaAlignmentHeuristic } from './HexodiaAlignmentHeuristic';
+import { HexodiaMoveGenerator } from './HexodiaMoveGenerator';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { ViewBox } from 'src/app/components/game-components/GameComponentUtils';
 
 @Component({
-    selector: 'app-hexagonal-connection',
-    templateUrl: './hexagonal-connection.component.html',
+    selector: 'app-hexodia',
+    templateUrl: './hexodia.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
 })
-export class HexagonalConnectionComponent extends HexagonalGameComponent<HexagonalConnectionRules,
-                                                                         HexagonalConnectionMove,
-                                                                         HexagonalConnectionState,
-                                                                         FourStatePiece,
-                                                                         HexagonalConnectionConfig>
+export class HexodiaComponent extends HexagonalGameComponent<HexodiaRules,
+                                                             HexodiaMove,
+                                                             HexodiaState,
+                                                             FourStatePiece,
+                                                             HexodiaConfig>
 {
     public droppedCoords: Coord[] = [];
 
@@ -34,19 +34,19 @@ export class HexagonalConnectionComponent extends HexagonalGameComponent<Hexagon
 
     public victoryCoords: Coord[] = [];
 
-    public constructor(messageDisplayer: MessageDisplayer) {
-        super(messageDisplayer);
-        this.setRulesAndNode('HexagonalConnection');
+    public constructor(messageDisplayer: MessageDisplayer, cdr: ChangeDetectorRef) {
+        super(messageDisplayer, cdr);
+        this.setRulesAndNode('Hexodia');
         this.availableAIs = [
             new Minimax('Alignement Minimax',
                         this.rules,
-                        new HexagonalConnectionAlignmentHeuristic(),
-                        new HexagonalConnectionMoveGenerator()),
+                        new HexodiaAlignmentHeuristic(),
+                        new HexodiaMoveGenerator()),
             new MCTS($localize`MCTS`,
-                     new HexagonalConnectionMoveGenerator(),
+                     new HexodiaMoveGenerator(),
                      this.rules),
         ];
-        this.encoder = HexagonalConnectionMove.encoder;
+        this.encoder = HexodiaMove.encoder;
         this.SPACE_SIZE = 30;
         this.setHexaLayout();
     }
@@ -54,11 +54,12 @@ export class HexagonalConnectionComponent extends HexagonalGameComponent<Hexagon
     private setHexaLayout(): void {
         const halfStroke: number = this.STROKE_WIDTH / 2;
         const configSize: number = Math.floor(this.getState().getWidth() / 2);
+        const hexaLayoutStartX: number =
+            (- this.STROKE_WIDTH * 0.5 * (configSize + 1)) + (Math.sqrt(2) * this.SPACE_SIZE);
+        const hexaLayoutStartY: number = this.SPACE_SIZE + halfStroke;
+        const hexaLayoutStartingCoord: Coord = new Coord(hexaLayoutStartX, hexaLayoutStartY);
         this.hexaLayout = new HexaLayout(this.SPACE_SIZE,
-                                         //  new Coord(0.5 * this.SPACE_SIZE * configSize,
-                                         //    this.SPACE_SIZE + halfStroke),
-                                         new Coord((- this.STROKE_WIDTH * 0.5 * (configSize + 1)) + (Math.sqrt(2) * this.SPACE_SIZE),
-                                                   this.SPACE_SIZE + halfStroke),
+                                         hexaLayoutStartingCoord,
                                          PointyHexaOrientation.INSTANCE);
     }
 
@@ -77,13 +78,13 @@ export class HexagonalConnectionComponent extends HexagonalGameComponent<Hexagon
 
     public async updateBoard(_triggerAnimation: boolean): Promise<void> {
         this.setHexaLayout();
-        const state: HexagonalConnectionState = this.getState();
+        const state: HexodiaState = this.getState();
         this.hexaBoard = state.getCopiedBoard();
-        const config: MGPOptional<HexagonalConnectionConfig> = this.getConfig();
-        this.victoryCoords = HexagonalConnectionRules.getVictoriousCoords(state, config);
+        const config: MGPOptional<HexodiaConfig> = this.getConfig();
+        this.victoryCoords = HexodiaRules.getVictoriousCoords(state, config);
     }
 
-    public override async showLastMove(move: HexagonalConnectionMove): Promise<void> {
+    public override async showLastMove(move: HexodiaMove): Promise<void> {
         this.lastMoved = move.coords.toList();
     }
 
@@ -99,7 +100,7 @@ export class HexagonalConnectionComponent extends HexagonalGameComponent<Hexagon
         const totalDrop: number = this.getConfig().get().numberOfDrops;
         const clickedCoord: Coord = new Coord(x, y);
         if (this.getState().turn === 0) {
-            const move: HexagonalConnectionMove = HexagonalConnectionMove.of([clickedCoord]);
+            const move: HexodiaMove = HexodiaMove.of([clickedCoord]);
             return this.chooseMove(move);
         } else {
             if (this.getState().getPieceAt(clickedCoord).isPlayer()) {
@@ -109,7 +110,7 @@ export class HexagonalConnectionComponent extends HexagonalGameComponent<Hexagon
             } else {
                 this.droppedCoords = this.droppedCoords.concat(clickedCoord);
                 if (this.droppedCoords.length === totalDrop) {
-                    const move: HexagonalConnectionMove = HexagonalConnectionMove.of(this.droppedCoords);
+                    const move: HexodiaMove = HexodiaMove.of(this.droppedCoords);
                     return this.chooseMove(move);
                 } else {
                     return MGPValidation.SUCCESS;
