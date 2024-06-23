@@ -30,6 +30,7 @@ export class ConnectSixMoveGenerator extends MoveGenerator<ConnectSixMove, Conne
             ConnectSixFirstMove.of(center),
         ];
     }
+
     private getListDrops(node: ConnectSixNode): ConnectSixMove[] {
         const availableFirstCoords: Coord[] = this.getAvailableCoords(node.gameState);
         const moves: ConnectSixDrops[] = [];
@@ -45,6 +46,7 @@ export class ConnectSixMoveGenerator extends MoveGenerator<ConnectSixMove, Conne
         }
         return new Set(moves).toList(); // Removes duplicates
     }
+
     private getAvailableCoords(state: ConnectSixState): Coord[] {
         const usefulCoord: boolean[][] = this.getUsefulCoordsMap(state);
         const availableCoords: Coord[] = [];
@@ -56,6 +58,7 @@ export class ConnectSixMoveGenerator extends MoveGenerator<ConnectSixMove, Conne
         }
         return availableCoords;
     }
+
     /**
      * This function returns a table on which table[y][x] === true only if:
      *     (x, y) is empty but has occupied neighbors
@@ -69,6 +72,7 @@ export class ConnectSixMoveGenerator extends MoveGenerator<ConnectSixMove, Conne
         }
         return usefulCoord;
     }
+
     /**
      * mark the space neighboring coord as "space that have an occupied neighbor"
      * @param usefulCoord a map of the board which each space mapped to true if it has an occupied neighbor
@@ -88,4 +92,5 @@ export class ConnectSixMoveGenerator extends MoveGenerator<ConnectSixMove, Conne
             }
         }
     }
+
 }

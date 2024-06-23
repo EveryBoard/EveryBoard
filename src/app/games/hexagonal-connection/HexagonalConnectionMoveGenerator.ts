@@ -3,7 +3,7 @@ import { HexagonalConnectionConfig, HexagonalConnectionNode } from './HexagonalC
 import { HexagonalConnectionMove } from './HexagonalConnectionMove';
 import { Coord } from 'src/app/jscaip/Coord';
 import { TableUtils } from 'src/app/jscaip/TableUtils';
-import { MGPOptional, MGPSet } from '@everyboard/lib';
+import { MGPOptional, Set } from '@everyboard/lib';
 import { MoveGenerator } from 'src/app/jscaip/AI/AI';
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
 
@@ -31,6 +31,7 @@ export class HexagonalConnectionMoveGenerator extends MoveGenerator<HexagonalCon
             HexagonalConnectionMove.of([center]),
         ];
     }
+
     private getListDrops(node: HexagonalConnectionNode): HexagonalConnectionMove[] {
         const availableFirstCoords: Coord[] = this.getAvailableCoords(node.gameState);
         const moves: HexagonalConnectionMove[] = [];
@@ -45,8 +46,9 @@ export class HexagonalConnectionMoveGenerator extends MoveGenerator<HexagonalCon
                 moves.push(newMove);
             }
         }
-        return new MGPSet(moves).toList(); // Removes duplicates
+        return new Set(moves).toList(); // Removes duplicates
     }
+
     private getAvailableCoords(state: HexagonalConnectionState): Coord[] {
         const usefulCoord: boolean[][] = this.getUsefulCoordsMap(state);
         const availableCoords: Coord[] = [];
@@ -58,6 +60,7 @@ export class HexagonalConnectionMoveGenerator extends MoveGenerator<HexagonalCon
         }
         return availableCoords;
     }
+
     /**
      * This function returns a table on which table[y][x] === true only if:
      *     (x, y) is empty but has occupied neighbors
@@ -71,6 +74,7 @@ export class HexagonalConnectionMoveGenerator extends MoveGenerator<HexagonalCon
         }
         return usefulCoord;
     }
+
     /**
      * mark the space neighboring coord as "space that have an occupied neighbor"
      * @param usefulCoord a map of the board which each space mapped to true if it has an occupied neighbor
@@ -90,4 +94,5 @@ export class HexagonalConnectionMoveGenerator extends MoveGenerator<HexagonalCon
             }
         }
     }
+
 }

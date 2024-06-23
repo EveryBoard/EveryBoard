@@ -11,7 +11,7 @@ import { TableUtils } from 'src/app/jscaip/TableUtils';
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
 import { NumberConfig, RulesConfigDescription, RulesConfigDescriptionLocalizable } from 'src/app/components/wrapper-components/rules-configuration/RulesConfigDescription';
 import { MGPValidators } from 'src/app/utils/MGPValidator';
-import { HexaDirection } from 'src/app/jscaip/HexaDirection';
+import { DodecaHexaDirection } from 'src/app/jscaip/DodecaHexaDirection';
 
 export type HexagonalConnectionConfig = {
 
@@ -56,18 +56,18 @@ export class HexagonalConnectionRules extends ConfigurableRules<HexagonalConnect
     : AbstractNInARowHelper<FourStatePiece>
     {
         if (config.isPresent()) {
-            return new AbstractNInARowHelper<FourStatePiece, HexaDirection>(
+            return new AbstractNInARowHelper<FourStatePiece, DodecaHexaDirection>(
                 (piece: FourStatePiece) => piece.getPlayer(),
                 config.get().nInARow,
-                HexaDirection.factory.all,
+                DodecaHexaDirection.factory.all,
             );
         } else {
             const defaultConfig: HexagonalConnectionConfig =
                 HexagonalConnectionRules.RULES_CONFIG_DESCRIPTION.getDefaultConfig().config;
-            return new AbstractNInARowHelper<FourStatePiece, HexaDirection>(
+            return new AbstractNInARowHelper<FourStatePiece, DodecaHexaDirection>(
                 (piece: FourStatePiece) => piece.getPlayer(),
                 defaultConfig.nInARow,
-                HexaDirection.factory.all,
+                DodecaHexaDirection.factory.all,
             );
         }
     }
