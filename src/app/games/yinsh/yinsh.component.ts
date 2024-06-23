@@ -10,12 +10,13 @@ import { YinshState } from './YinshState';
 import { YinshCapture, YinshMove } from './YinshMove';
 import { YinshPiece } from './YinshPiece';
 import { YinshLegalityInformation, YinshRules } from './YinshRules';
-import { MGPFallible, MGPOptional, MGPSet, MGPValidation, Utils } from '@everyboard/lib';
+import { MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 import { MCTS } from 'src/app/jscaip/AI/MCTS';
 import { YinshMoveGenerator } from './YinshMoveGenerator';
 import { PlayerMap, PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 import { YinshScoreMinimax } from './YinshScoreMinimax';
+import { CoordSet } from 'src/app/jscaip/CoordSet';
 
 interface ViewInfo {
     targets: Coord[],
@@ -58,7 +59,7 @@ export class YinshComponent extends HexagonalGameComponent<YinshRules,
                        'FINAL_CAPTURE_SELECT_RING' =
             'MOVE_START';
 
-    public selectableCoords: MGPSet<Coord> = new MGPSet();
+    public selectableCoords: CoordSet = new CoordSet();
 
     // Ongoing move variables
     public removed: Coord[] = [];
@@ -66,8 +67,8 @@ export class YinshComponent extends HexagonalGameComponent<YinshRules,
     private initialCaptures: YinshCapture[] = [];
     private finalCaptures: YinshCapture[] = [];
     private currentCapture: MGPOptional<YinshCapture> = MGPOptional.empty();
-    public readonly selectedCoords: MGPSet<Coord> = new MGPSet();
-    public readonly selectedRings: MGPSet<Coord> = new MGPSet();
+    public selectedCoords: CoordSet = new CoordSet();
+    public selectedRings: CoordSet = new CoordSet();
     private moveStart: MGPOptional<Coord> = MGPOptional.empty();
     private moveEnd: MGPOptional<Coord> = MGPOptional.empty();
     private currentlyMoved: Coord[] = [];
@@ -116,7 +117,7 @@ export class YinshComponent extends HexagonalGameComponent<YinshRules,
         this.showCurrentMoveCaptures();
 
         this.viewInfo.targets = [];
-        this.selectableCoords.clear();
+        this.selectableCoords = new CoordSet();
         const currentPlayer: Player = this.constructedState.getCurrentPlayer();
         switch (this.movePhase) {
             case 'INITIAL_CAPTURE_SELECT_FIRST':
@@ -124,16 +125,18 @@ export class YinshComponent extends HexagonalGameComponent<YinshRules,
             case 'FINAL_CAPTURE_SELECT_FIRST':
             case 'FINAL_CAPTURE_SELECT_LAST':
                 for (const capture of this.possibleCaptures) {
-                    this.selectableCoords.addAll(new MGPSet(capture.capturedSpaces));
+                    this.selectableCoords = this.selectableCoords.unionList(capture.capturedSpaces);
                 }
                 break;
             case 'INITIAL_CAPTURE_SELECT_RING':
             case 'FINAL_CAPTURE_SELECT_RING':
-                this.selectableCoords.addAll(new MGPSet(this.constructedState.getRingCoords(currentPlayer)));
+                this.selectableCoords =
+                    this.selectableCoords.unionList(this.constructedState.getRingCoords(currentPlayer));
                 break;
             case 'MOVE_START':
                 if (this.getState().isInitialPlacementPhase() === false) {
-                    this.selectableCoords.addAll(new MGPSet(this.constructedState.getRingCoords(currentPlayer)));
+                    this.selectableCoords =
+                        this.selectableCoords.unionList(this.constructedState.getRingCoords(currentPlayer));
                 }
                 break;
             case 'MOVE_END':
@@ -144,7 +147,7 @@ export class YinshComponent extends HexagonalGameComponent<YinshRules,
     }
 
     private showCurrentMoveCaptures(): void {
-        this.selectedCoords.clear();
+        this.selectedCoords = new CoordSet();
         if (this.currentCapture.isPresent()) {
             this.markCapture(this.currentCapture.get());
         }
@@ -183,7 +186,7 @@ export class YinshComponent extends HexagonalGameComponent<YinshRules,
     public getPieceGroupClasses(x: number, y: number): string[] {
         const coord: Coord = new Coord(x, y);
         const classes: string[] = [];
-        const allSelected: MGPSet<Coord> = this.selectedCoords.union(this.selectedRings);
+        const allSelected: CoordSet = this.selectedCoords.union(this.selectedRings);
         if (allSelected.contains(coord) || this.isInLastCapture(coord)) {
             return ['semi-transparent'];
         } else {
@@ -256,8 +259,8 @@ export class YinshComponent extends HexagonalGameComponent<YinshRules,
         this.possibleCaptures = [];
         this.initialCaptures = [];
         this.finalCaptures = [];
-        this.selectedCoords.clear();
-        this.selectedRings.clear();
+        this.selectedCoords = new CoordSet();
+        this.selectedRings = new CoordSet();
         this.currentCapture = MGPOptional.empty();
         this.moveStart = MGPOptional.empty();
         this.moveEnd = MGPOptional.empty();
@@ -337,10 +340,10 @@ export class YinshComponent extends HexagonalGameComponent<YinshRules,
     }
 
     private moveToCaptureSelectLast(possibleCaptures: YinshCapture[]): void {
-        this.selectableCoords.clear();
+        this.selectableCoords = new CoordSet();
         this.possibleCaptures = possibleCaptures;
         for (const capture of possibleCaptures) {
-            this.selectableCoords.addAll(new MGPSet(capture.capturedSpaces));
+            this.selectableCoords = this.selectableCoords.unionList(capture.capturedSpaces);
         }
         if (this.movePhase === 'INITIAL_CAPTURE_SELECT_FIRST') {
             this.movePhase = 'INITIAL_CAPTURE_SELECT_LAST';
@@ -387,9 +390,9 @@ export class YinshComponent extends HexagonalGameComponent<YinshRules,
     }
 
     private markCapture(capture: YinshCapture): void {
-        this.selectedCoords.addAll(new MGPSet(capture.capturedSpaces));
+        this.selectedCoords = this.selectedCoords.unionList(capture.capturedSpaces);
         if (capture.ringTaken.isPresent()) {
-            this.selectedRings.add(capture.ringTaken.get());
+            this.selectedRings = this.selectedRings.addElement(capture.ringTaken.get());
         }
     }
 
