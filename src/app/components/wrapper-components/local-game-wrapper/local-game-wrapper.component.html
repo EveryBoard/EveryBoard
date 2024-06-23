@@ -3,78 +3,44 @@
         <div *ngIf="gameComponent"
              id="info"
              class="cell box">
-            <div id="turnIndicator">
-                <p class="subtitle" i18n>Turn n°{{ gameComponent.getTurn() + 1 }}</p>
+            <div id="turnIndicator" class="mb-5">
+                <p class="title" i18n>{{ getGameName() }}<br/> Turn n°{{ gameComponent.getTurn() + 1 }}</p>
             </div>
             <div id="playerSelector">
-                <div class="column is-12 is-vcentered">
-                    <p class="mb-2" i18n>Player 1</p>
+                <div *ngFor="let player of ArrayUtils.range(2)"
+                     class="px-2 py-4 mb-4 player{{ player }}-bg">
+                    <p class="mb-2 subtitle player{{ player }}-fg" i18n>Player {{ player+1 }} </p>
                     <div class="select is-fullwidth">
-                        <select id="playerZeroSelect"
-                                (change)="updatePlayer(Player.ZERO)"
-                                [(ngModel)]="playerSelection[0]">
+                        <select id="playerSelect-{{ player }} "
+                                (change)="updatePlayer(Player.of(player))"
+                                [(ngModel)]="playerSelection[player]">
                             <option selected
                                     value="human" i18n>Human</option>
                             <option *ngFor="let ai of gameComponent.availableAIs"
-                                    id="playerZero_ai_{{ ai.name }}"
+                                    id="player-{{ player }}-ai-{{ ai.name }}"
                                     [value]="ai.name">{{ ai.name }}</option>
                         </select>
                     </div>
-                    <div *ngIf="players[0].equalsValue('human') === false"
+                    <div *ngIf="players[player].equalsValue('human') === false"
                          class="select is-fullwidth">
-                        <select id="aiZeroOptionSelect"
-                                [(ngModel)]="aiOptions[0]"
-                                (change)="updatePlayer(Player.ZERO)">
+                        <select id="aiOptionSelect-{{ player }} "
+                                [(ngModel)]="aiOptions[player]"
+                                (change)="updatePlayer(Player.of(player))">
                             <option selected
                                     value="none"
                                     i18n>Pick the options</option>
-                            <option *ngFor="let option of this.availableAIOptions(0)"
-                                    id="playerZero_option_{{ option.name }}"
+                            <option *ngFor="let option of this.availableAIOptions(player)"
+                                    id="player-{{ player }}-option-{{ option.name }}"
                                     [value]="option.name"
                                     i18n>{{ option.name }}</option>
                         </select>
                     </div>
                     <p *ngIf="gameComponent.scores.isPresent()"
-                       id="scoreZero"
+                       id="score-{{ player }} "
                        class="block"
-                       i18n>{{ gameComponent.scores.get().get(Player.ZERO) }} points</p>
-                </div>
-                <hr/>
-                <div class="column is-12">
-                    <p class="mb-2" i18n>Player 2</p>
-                    <div class="select is-fullwidth">
-                        <select id="playerOneSelect"
-                                (change)="updatePlayer(Player.ONE)"
-                                [(ngModel)]="playerSelection[1]">
-                            <option selected
-                                    value="human"
-                                    i18n>Human</option>
-                            <option *ngFor="let ai of gameComponent.availableAIs"
-                                    id="playerOne_ai_{{ ai.name }}"
-                                    [value]="ai.name">{{ ai.name }}</option>
-                        </select>
-                    </div>
-                    <div *ngIf="players[1].equalsValue('human') === false"
-                         class="select is-fullwidth">
-                        <select id="aiOneOptionSelect"
-                                [(ngModel)]="aiOptions[1]"
-                                (change)="updatePlayer(Player.ONE)">
-                            <option selected
-                                    value="none"
-                                    i18n>Pick the options</option>
-                            <option *ngFor="let option of this.availableAIOptions(1)"
-                                    id="playerOne_option_{{ option.name }}"
-                                    [value]="option.name"
-                                    i18n>{{ option.name }}</option>
-                        </select>
-                    </div>
-                    <p *ngIf="gameComponent.scores.isPresent()"
-                       id="scoreOne"
-                       class="block"
-                       i18n>{{ gameComponent.scores.get().get(Player.ONE) }} points</p>
+                       i18n>{{ gameComponent.scores.get().get(Player.of(player)) }} points</p>
                 </div>
             </div>
-            <hr/>
             <div *ngIf="endGame"
                  id="gameResult"
                  class="block">

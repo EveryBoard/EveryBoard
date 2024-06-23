@@ -18,6 +18,9 @@ import { GameInfo } from '../../normal-component/pick-game/pick-game.component';
 
 abstract class BaseComponent {
 
+    // Make ArrayUtils available in all components
+    public ArrayUtils: typeof ArrayUtils = ArrayUtils;
+
     /**
      * Gets the CSS class for a player color
      */
@@ -45,9 +48,6 @@ export abstract class BaseGameComponent extends BaseComponent {
     public readonly STROKE_WIDTH: number = 8;
 
     public readonly SMALL_STROKE_WIDTH: number = 2;
-
-    // Make ArrayUtils available in game components
-    public ArrayUtils: typeof ArrayUtils = ArrayUtils;
 
     public getSVGTranslation(x: number, y: number): string {
         return 'translate(' + x + ', ' + y + ')';

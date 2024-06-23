@@ -34,8 +34,14 @@ html {
 .player0-bg {
     background-color: var(--player0);
 }
+.player0-fg {
+    color: white;
+}
 .player1-bg {
     background-color: var(--player1);
+}
+.player1-fg {
+    color: black;
 }
 .endgame-bg {
     background-color: grey;
