@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { RectangularGameComponent } from '../../components/game-components/rectangular-game-component/RectangularGameComponent';
 import { EncapsuleLegalityInformation, EncapsuleRules } from 'src/app/games/encapsule/EncapsuleRules';
 import { EncapsuleState, EncapsuleSpace } from 'src/app/games/encapsule/EncapsuleState';
@@ -10,10 +10,10 @@ import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { EncapsuleFailure } from './EncapsuleFailure';
 import { MGPMap, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 import { MCTS } from 'src/app/jscaip/AI/MCTS';
-import { DummyHeuristic, Minimax } from 'src/app/jscaip/AI/Minimax';
 import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 import { EncapsuleMoveGenerator } from './EncapsuleMoveGenerator';
 import { ViewBox } from 'src/app/components/game-components/GameComponentUtils';
+import { EncapsuleDummyMinimax } from './EncapsuleDummyMinimax';
 
 @Component({
     selector: 'app-encapsule',
@@ -38,11 +38,11 @@ export class EncapsuleComponent extends RectangularGameComponent<EncapsuleRules,
     public remainingPieceCenterCoords: MGPMap<Player, Coord[]> = new MGPMap();
     public victoryCoords: Coord[] = [];
 
-    public constructor(messageDisplayer: MessageDisplayer) {
-        super(messageDisplayer);
+    public constructor(messageDisplayer: MessageDisplayer, cdr: ChangeDetectorRef) {
+        super(messageDisplayer, cdr);
         this.setRulesAndNode('Encapsule');
         this.availableAIs = [
-            new Minimax($localize`Dummy`, this.rules, new DummyHeuristic(), new EncapsuleMoveGenerator()),
+            new EncapsuleDummyMinimax(),
             new MCTS($localize`MCTS`, new EncapsuleMoveGenerator(), this.rules),
         ];
         this.encoder = EncapsuleMove.encoder;

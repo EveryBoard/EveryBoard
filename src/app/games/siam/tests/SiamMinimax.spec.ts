@@ -9,6 +9,7 @@ import { Minimax } from 'src/app/jscaip/AI/Minimax';
 import { AIDepthLimitOptions } from 'src/app/jscaip/AI/AI';
 import { SiamMinimax } from '../SiamMinimax';
 import { Table } from 'src/app/jscaip/TableUtils';
+import { minimaxTest, SlowTest } from 'src/app/utils/tests/TestUtils.spec';
 
 const _: SiamPiece = SiamPiece.EMPTY;
 const M: SiamPiece = SiamPiece.MOUNTAIN;
@@ -83,6 +84,16 @@ describe('SiamMinimax', () => {
             expect(chosenMove).toEqual(bestMove);
         });
 
+    });
+
+    SlowTest.it('should be able play against itself', () => {
+        minimaxTest({
+            rules: SiamRules.get(),
+            minimax,
+            options: minimaxOptions,
+            config: defaultConfig,
+            shouldFinish: true,
+        });
     });
 
 });

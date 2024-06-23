@@ -1,18 +1,16 @@
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { HexagonalGameComponent } from 'src/app/components/game-components/game-component/HexagonalGameComponent';
 import { Coord } from 'src/app/jscaip/Coord';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { HexaLayout } from 'src/app/jscaip/HexaLayout';
 import { FlatHexaOrientation } from 'src/app/jscaip/HexaOrientation';
 import { MCTS } from 'src/app/jscaip/AI/MCTS';
-import { Minimax } from 'src/app/jscaip/AI/Minimax';
 import { Player } from 'src/app/jscaip/Player';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { TableWithPossibleNegativeIndices } from 'src/app/jscaip/TableUtils';
-import { ArrayUtils, MGPFallible, MGPOptional, MGPSet, MGPValidation, Utils } from '@everyboard/lib';
+import { ArrayUtils, MGPFallible, MGPOptional, Set, MGPValidation, Utils } from '@everyboard/lib';
 import { HiveFailure } from './HiveFailure';
-import { HiveHeuristic } from './HiveHeuristic';
 import { HiveMove, HiveCoordToCoordMove, HiveDropMove, HiveSpiderMove } from './HiveMove';
 import { HiveMoveGenerator } from './HiveMoveGenerator';
 import { HivePiece, HivePieceStack } from './HivePiece';
@@ -20,6 +18,8 @@ import { HiveSpiderRules } from './HivePieceRules';
 import { HiveRules } from './HiveRules';
 import { HiveState } from './HiveState';
 import { ViewBox } from 'src/app/components/game-components/GameComponentUtils';
+import { CoordSet } from 'src/app/jscaip/CoordSet';
+import { HiveMinimax } from './HiveMinimax';
 
 interface GroundInfo {
     spaceClasses: string[];
@@ -118,11 +118,11 @@ export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, H
     public viewBox: string;
     public inspectedStackTransform: string;
 
-    public constructor(messageDisplayer: MessageDisplayer) {
-        super(messageDisplayer);
+    public constructor(messageDisplayer: MessageDisplayer, cdr: ChangeDetectorRef) {
+        super(messageDisplayer, cdr);
         this.setRulesAndNode('Hive');
         this.availableAIs = [
-            new Minimax($localize`Minimax`, HiveRules.get(), new HiveHeuristic(), new HiveMoveGenerator()),
+            new HiveMinimax(),
             new MCTS($localize`MCTS`, new HiveMoveGenerator(), this.rules),
         ];
         this.encoder = HiveMove.encoder;
@@ -217,8 +217,13 @@ export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, H
         }
     }
 
-    private getPieceCoords(): MGPSet<Coord> {
-        return this.getState().pieces.getKeySet();
+    private getPieceCoords(): CoordSet {
+        const coords: Coord[] = this
+            .getState()
+            .pieces
+            .getKeySet()
+            .toList();
+        return new CoordSet(coords);
     }
 
     private getGround(): Ground {
@@ -229,14 +234,15 @@ export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, H
         return ground;
     }
 
-    private getAllNeighbors(): MGPSet<Coord> {
-        const neighbors: MGPSet<Coord> = new MGPSet();
+    private getAllNeighbors(): CoordSet {
+        let neighbors: CoordSet = new CoordSet();
         for (const piece of this.getPieceCoords()) {
-            neighbors.addAll(new MGPSet(this.getState().emptyNeighbors(piece)));
+            const pieceNeighboors: Coord[] = this.getState().emptyNeighbors(piece);
+            neighbors = neighbors.unionList(pieceNeighboors);
         }
         if (neighbors.isEmpty()) {
             // We need at least one clickable coord to be playable at first turn
-            neighbors.add(new Coord(0, 0));
+            neighbors = neighbors.addElement(new Coord(0, 0));
         }
         return neighbors;
     }
@@ -437,12 +443,12 @@ export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, H
     private getNextPossibleCoords(coord: Coord): Coord[] {
         const state: HiveState = this.getState();
         const topPiece: HivePiece = state.getAt(coord).topPiece();
-        const moves: MGPSet<HiveCoordToCoordMove> = HiveRules.get().getPossibleMovesFrom(state, coord);
+        const moves: Set<HiveCoordToCoordMove> = HiveRules.get().getPossibleMovesFrom(state, coord);
         if (topPiece.kind === 'Spider') {
-            const spiderMoves: MGPSet<HiveSpiderMove> = moves as MGPSet<HiveSpiderMove>;
+            const spiderMoves: Set<HiveSpiderMove> = moves as Set<HiveSpiderMove>;
             return spiderMoves
                 .filter((move: HiveSpiderMove) => ArrayUtils.isPrefix(this.selectedSpiderCoords, move.coords))
-                .map((move: HiveSpiderMove) => move.coords[this.selectedSpiderCoords.length])
+                .map<Coord>((move: HiveSpiderMove) => move.coords[this.selectedSpiderCoords.length])
                 .toList();
         } else {
             return moves.map((move: HiveCoordToCoordMove) => move.getEnd()).toList();

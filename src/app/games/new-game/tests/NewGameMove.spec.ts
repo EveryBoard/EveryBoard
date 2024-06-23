@@ -17,17 +17,8 @@ describe('NewGameMove', () => {
         it('should return true for the same move', () => {
             const move: NewGameMove = new NewGameMove();
             const identical: NewGameMove = new NewGameMove();
-            // Here you should rather test
-            // expect(move.equals(identical)).toBeTrue();
-            expect(() => move.equals(identical)).toThrow();
-        });
-
-        it('should return false for another move', () => {
-            const move: NewGameMove = new NewGameMove();
-            const different: NewGameMove = new NewGameMove();
-            // Here you should rather test
-            // expect(move.equals(different)).toBeTrue();
-            expect(() => move.equals(different)).toThrow();
+            expect(move.equals(identical)).toBeTrue();
+            // On top of that, you should also test that different moves should be different
         });
 
     });
