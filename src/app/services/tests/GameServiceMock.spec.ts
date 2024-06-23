@@ -3,7 +3,7 @@ import { MinimalUser } from 'src/app/domain/MinimalUser';
 import { Action, GameEvent, MGPResult, Part, RequestType } from 'src/app/domain/Part';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
-import { JSONValue, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
+import { JSONValue, MGPOptional, Utils } from '@everyboard/lib';
 import { Injectable } from '@angular/core';
 import { ConnectedUserService } from '../ConnectedUserService';
 import { ConfigRoom, FirstPlayer, PartStatus, PartType } from 'src/app/domain/ConfigRoom';

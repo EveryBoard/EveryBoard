@@ -186,6 +186,3 @@ describe('ChatDAO', () => {
         });
     });
 });
-function createPartAndConfigRoom(user: MinimalUser): string | PromiseLike<string> {
-    throw new Error('Function not implemented.');
-}
