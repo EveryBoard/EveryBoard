@@ -1,6 +1,7 @@
-<div *ngIf="viewInfo"
-     class="box">
-    <div *ngIf="viewInfo.userIsCreator">
+<div *ngIf="viewInfo" >
+    <div *ngIf="viewInfo.userIsCreator"
+         class="columns">
+        <div class="column box">
         <h1 class="title" i18n>Game creation</h1>
         <form [formGroup]="configFormGroup">
             <fieldset [disabled]="!viewInfo.canEditConfig">
@@ -170,6 +171,7 @@
                 </div>
             </div>
         </form>
+        </div>
     </div>
 
     <div *ngIf="viewInfo.userIsChosenOpponent">
