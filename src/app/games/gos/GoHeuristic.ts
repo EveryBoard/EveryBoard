@@ -11,8 +11,12 @@ import { TriGoConfig } from './tri-go/TriGoRules';
 
 export class GoHeuristic extends PlayerMetricHeuristic<GoMove, GoState, GoConfig | TriGoConfig> {
 
+    public constructor(private readonly rules: AbstractGoRules<GoConfig | TriGoConfig>) {
+        super();
+    }
+
     public override getMetrics(node: GoNode): PlayerNumberTable {
-        const goState: GoState = AbstractGoRules.markTerritoryAndCount(node.gameState);
+        const goState: GoState = this.rules.markTerritoryAndCount(node.gameState);
         const goScore: PlayerNumberMap = goState.getCapturedCopy();
         const goKilled: PlayerNumberMap = this.getDeadStones(goState);
         return PlayerNumberTable.ofSingle(

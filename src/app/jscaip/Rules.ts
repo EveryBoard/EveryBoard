@@ -62,6 +62,7 @@ export abstract class SuperRules<M extends Move,
     public abstract getInitialState(config: MGPOptional<C>): S;
 
     public getInitialNode(config: MGPOptional<C>): GameNode<M, S> {
+        console.log('jajette Node.getInitialNode > getInitialState')
         const initialState: S = this.getInitialState(config);
         return new GameNode(initialState);
     }

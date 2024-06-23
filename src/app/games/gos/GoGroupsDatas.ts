@@ -27,6 +27,7 @@ export class GoGroupDatas extends GroupDatas<GoPiece> {
             return this.emptyCoords;
         }
     }
+
     public contains(coord: Coord): boolean {
         const allCoords: Coord[] = this.darkCoords
             .concat(this.lightCoords
@@ -35,6 +36,7 @@ export class GoGroupDatas extends GroupDatas<GoPiece> {
                         .concat(this.deadLightCoords))));
         return allCoords.some((c: Coord) => c.equals(coord));
     }
+
     public addPawn(coord: Coord, color: GoPiece): void {
         Utils.assert(this.contains(coord) === false, 'This group already contains ' + coord.toString());
 
@@ -52,10 +54,16 @@ export class GoGroupDatas extends GroupDatas<GoPiece> {
                 this.deadLightCoords = GroupDatas.insertAsEntryPoint(this.deadLightCoords, coord);
                 break;
             default:
-                Utils.expectToBeMultiple(color, [GoPiece.EMPTY, GoPiece.DARK_TERRITORY, GoPiece.LIGHT_TERRITORY]);
+                Utils.expectToBeMultiple(color, [
+                    GoPiece.EMPTY,
+                    GoPiece.DARK_TERRITORY,
+                    GoPiece.LIGHT_TERRITORY,
+                    GoPiece.UNREACHABLE,
+                ]);
                 this.emptyCoords = GroupDatas.insertAsEntryPoint(this.emptyCoords, coord);
         }
     }
+
     public isMonoWrapped(): boolean {
         // If a group is empty, we assign him 1, else 2
         // If only the group of the group and the group of his wrapper are filled, result will be 2*2*1
@@ -63,6 +71,7 @@ export class GoGroupDatas extends GroupDatas<GoPiece> {
         const lightWrapper: number = (this.lightCoords.length + this.deadDarkCoords.length) === 0 ? 0 : 1;
         return darkWrapper + lightWrapper === 1;
     }
+
     public getWrapper(): GoPiece {
         // If a piece is wrapped by a player and/or by dead pawn of his opponent, it's returning the player
         // If a piece is wrapped by two player, it's throwing
@@ -82,6 +91,7 @@ export class GoGroupDatas extends GroupDatas<GoPiece> {
                      `Can't call getWrapper on non-mono-wrapped group`);
         return nonEmptyWrapper.getAnyPair().get().key;
     }
+
     public getNeighborsEntryPoints(): Coord[] {
         const neighborsEntryPoints: Coord[] = [];
         if (this.color !== GoPiece.EMPTY && this.emptyCoords.length > 0) {
@@ -101,4 +111,5 @@ export class GoGroupDatas extends GroupDatas<GoPiece> {
         }
         return neighborsEntryPoints;
     }
+
 }

@@ -4,11 +4,12 @@ import { MGPOptional } from '@everyboard/lib';
 import { GoState } from '../GoState';
 import { GoPhase } from '../go/GoPhase';
 import { GoPiece } from '../GoPiece';
-import { GoConfig, GoNode, AbstractGoRules } from '../AbstractGoRules';
+import { GoNode } from '../AbstractGoRules';
 import { GoHeuristic } from '../GoHeuristic';
 import { HeuristicUtils } from 'src/app/jscaip/AI/tests/HeuristicUtils.spec';
 import { Player } from 'src/app/jscaip/Player';
 import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
+import { GoConfig, GoRules } from '../go/GoRules';
 
 const X: GoPiece = GoPiece.LIGHT;
 const O: GoPiece = GoPiece.DARK;
@@ -17,7 +18,7 @@ const _: GoPiece = GoPiece.EMPTY;
 fdescribe('GoHeuristic', () => {
 
     let heuristic: GoHeuristic;
-    const defaultConfig: MGPOptional<GoConfig> = AbstractGoRules.get().getDefaultRulesConfig();
+    const defaultConfig: MGPOptional<GoConfig> = GoRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         heuristic = new GoHeuristic();

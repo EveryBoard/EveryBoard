@@ -44,10 +44,10 @@ export class TriGoComponent extends TriangularGameComponent<TriGoRules,
 
     public constructor(messageDisplayer: MessageDisplayer, cdr: ChangeDetectorRef) {
         super(messageDisplayer, cdr);
-        this.setRulesAndNode('Go');
+        this.setRulesAndNode('TriGo');
         this.availableAIs = [
-            new Minimax($localize`Minimax`, TriGoRules.get(), new GoHeuristic(), new GoMoveGenerator()),
-            new MCTS($localize`MCTS`, new GoMoveGenerator(), this.rules),
+            new Minimax($localize`Minimax`, TriGoRules.get(), new GoHeuristic(this.rules), new GoMoveGenerator(this.rules)),
+            new MCTS($localize`MCTS`, new GoMoveGenerator(this.rules), this.rules),
         ];
         this.encoder = GoMove.encoder;
         this.canPass = true;

@@ -19,6 +19,8 @@ const defaultConfig: MGPOptional<TriGoConfig> = TriGoRules.get().getDefaultRules
 
 export class TriGoTutorial extends Tutorial {
 
+    private TODO_KILL: void = console.log('jajette TriGoTutorial init => getInitialState')
+
     public tutorial: TutorialStep[] = [
         TutorialStep.informational(
             $localize`Preliminary information`,

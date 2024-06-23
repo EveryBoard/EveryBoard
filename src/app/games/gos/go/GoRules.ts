@@ -9,6 +9,10 @@ import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 import { GoPhase } from './GoPhase';
 import { MGPValidators } from 'src/app/utils/MGPValidator';
 import { GobanConfig } from 'src/app/jscaip/GobanConfig';
+import { Direction } from 'src/app/jscaip/Direction';
+import { Orthogonal } from 'src/app/jscaip/Orthogonal';
+import { OrthogonalGoGroupDatasFactory } from '../GoGroupDatasFactory';
+import { GroupDatasFactory } from 'src/app/jscaip/BoardDatas';
 
 export type GoConfig = GobanConfig & {
 
@@ -83,6 +87,14 @@ export class GoRules extends AbstractGoRules<GoConfig> {
 
     public override getRulesConfigDescription(): MGPOptional<RulesConfigDescription<GoConfig>> {
         return MGPOptional.of(GoRules.RULES_CONFIG_DESCRIPTION);
+    }
+
+    public override getNeighbors(coord: Coord): Coord[] {
+        return Orthogonal.ORTHOGONALS.map((direction: Direction) => coord.getNext(direction, 1));
+    }
+
+    public override getGoGroupDatasFactory(): GroupDatasFactory<GoPiece> {
+        return new OrthogonalGoGroupDatasFactory();
     }
 
 }

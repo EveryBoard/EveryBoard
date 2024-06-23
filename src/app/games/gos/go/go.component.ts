@@ -44,8 +44,8 @@ export class GoComponent extends GobanGameComponent<GoRules,
         super(messageDisplayer, cdr);
         this.setRulesAndNode('Go');
         this.availableAIs = [
-            new GoMinimax(),
-            new MCTS($localize`MCTS`, new GoMoveGenerator(), this.rules),
+            new GoMinimax(this.rules),
+            new MCTS($localize`MCTS`, new GoMoveGenerator(this.rules), this.rules),
         ];
         this.encoder = GoMove.encoder;
         this.canPass = true;

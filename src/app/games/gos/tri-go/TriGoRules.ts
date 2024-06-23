@@ -7,6 +7,10 @@ import { GoPhase } from '../go/GoPhase';
 import { NumberConfig, RulesConfigDescription } from 'src/app/components/wrapper-components/rules-configuration/RulesConfigDescription';
 import { MGPValidators } from 'src/app/utils/MGPValidator';
 import { TableUtils } from 'src/app/jscaip/TableUtils';
+import { Coord } from 'src/app/jscaip/Coord';
+import { TriangularCheckerBoard } from 'src/app/jscaip/state/TriangularCheckerBoard';
+import { TriangularGoGroupDatasFactory } from '../GoGroupDatasFactory';
+import { GroupDatasFactory } from 'src/app/jscaip/BoardDatas';
 
 export type TriGoConfig = {
     size: number;
@@ -20,7 +24,7 @@ export class TriGoRules extends AbstractGoRules<TriGoConfig> {
         new RulesConfigDescription<TriGoConfig>({
             name: (): string => $localize`Standard`,
             config: {
-                size: new NumberConfig(1, () => $localize`size`, MGPValidators.range(1, 99)),
+                size: new NumberConfig(7, () => $localize`size`, MGPValidators.range(1, 99)),
             },
         });
 
@@ -53,6 +57,14 @@ export class TriGoRules extends AbstractGoRules<TriGoConfig> {
 
     public override getRulesConfigDescription(): MGPOptional<RulesConfigDescription<TriGoConfig>> {
         return MGPOptional.of(TriGoRules.RULES_CONFIG_DESCRIPTION);
+    }
+
+    public override getNeighbors(coord: Coord): Coord[] {
+        return TriangularCheckerBoard.getNeighbors(coord);
+    }
+
+    public override getGoGroupDatasFactory(): GroupDatasFactory<GoPiece> {
+        return new TriangularGoGroupDatasFactory();
     }
 
 }

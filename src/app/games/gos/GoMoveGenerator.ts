@@ -8,9 +8,15 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { MGPFallible } from '@everyboard/lib';
 import { MoveGenerator } from 'src/app/jscaip/AI/AI';
 import { Debug } from 'src/app/utils/Debug';
+import { GoConfig } from './go/GoRules';
+import { TriGoConfig } from './tri-go/TriGoRules';
 
 @Debug.log
 export class GoMoveGenerator extends MoveGenerator<GoMove, GoState> {
+
+    public constructor(private readonly rules: AbstractGoRules<GoConfig | TriGoConfig>) {
+        super();
+    }
 
     public override getListMoves(node: GoNode): GoMove[] {
 
@@ -29,6 +35,7 @@ export class GoMoveGenerator extends MoveGenerator<GoMove, GoState> {
             }
         }
     }
+
     public getPlayingMovesList(state: GoState): GoMove[] {
         const choices: GoMove[] = [];
         let newMove: GoMove;
@@ -38,7 +45,7 @@ export class GoMoveGenerator extends MoveGenerator<GoMove, GoState> {
             const content: GoPiece = coordAndContent.content;
             newMove = new GoMove(coord.x, coord.y);
             if (content === GoPiece.EMPTY) {
-                const legality: MGPFallible<GoLegalityInformation> = AbstractGoRules.isLegal(newMove, state);
+                const legality: MGPFallible<GoLegalityInformation> = this.rules.isLegal(newMove, state);
                 if (legality.isSuccess()) {
                     choices.push(newMove);
                 }
@@ -46,6 +53,7 @@ export class GoMoveGenerator extends MoveGenerator<GoMove, GoState> {
         }
         return choices;
     }
+
     public getCountingMovesList(currentState: GoState): GoMove[] {
         const choices: GoMove[] = [];
 
@@ -59,7 +67,7 @@ export class GoMoveGenerator extends MoveGenerator<GoMove, GoState> {
         const correctBoard: GoPiece[][] = this.getCorrectBoard(currentState).getCopiedBoard();
 
         const groupsData: GoGroupDatas[] =
-            AbstractGoRules.getGroupsDatasWhere(correctBoard, (pawn: GoPiece) => pawn !== GoPiece.EMPTY);
+            this.rules.getGroupsDatasWhere(correctBoard, (pawn: GoPiece) => pawn !== GoPiece.EMPTY);
 
         for (const group of groupsData) {
             const coord: Coord = group.getCoords()[0];
@@ -73,6 +81,7 @@ export class GoMoveGenerator extends MoveGenerator<GoMove, GoState> {
         }
         return choices;
     }
+
     public getCorrectBoard(currentState: GoState): GoState {
         const markAsDead: (pawn: GoPiece) => GoPiece = (pawn: GoPiece) => {
             if (pawn === GoPiece.DARK) return GoPiece.DEAD_DARK;
@@ -89,10 +98,11 @@ export class GoMoveGenerator extends MoveGenerator<GoMove, GoState> {
                                                   currentState.turn,
                                                   currentState.koCoord,
                                                   currentState.phase);
-        const territoryLikeGroups: GoGroupDatas[] = AbstractGoRules.getTerritoryLikeGroup(allDeadState);
+        const territoryLikeGroups: GoGroupDatas[] = this.rules.getTerritoryLikeGroup(allDeadState);
 
         return this.setAliveUniqueWrapper(allDeadState, territoryLikeGroups);
     }
+
     public mapBoard(board: GoPiece[][], mapper: (pawn: GoPiece) => GoPiece): GoPiece[][] {
         const newBoard: GoPiece[][] = [];
         for (let y: number = 0; y < board.length; y++) {
@@ -103,6 +113,7 @@ export class GoMoveGenerator extends MoveGenerator<GoMove, GoState> {
         }
         return newBoard;
     }
+
     public setAliveUniqueWrapper(allDeadState: GoState,
                                  monoWrappedEmptyGroups: GoGroupDatas[])
     : GoState
@@ -113,10 +124,11 @@ export class GoMoveGenerator extends MoveGenerator<GoMove, GoState> {
             aliveCoords = monoWrappedEmptyGroup.deadDarkCoords.concat(monoWrappedEmptyGroup.deadLightCoords);
             for (const aliveCoord of aliveCoords) {
                 if (resultingState.isDead(aliveCoord)) {
-                    resultingState = AbstractGoRules.switchAliveness(aliveCoord, resultingState);
+                    resultingState = this.rules.switchAliveness(aliveCoord, resultingState);
                 }
             }
         }
         return resultingState;
     }
+
 }
