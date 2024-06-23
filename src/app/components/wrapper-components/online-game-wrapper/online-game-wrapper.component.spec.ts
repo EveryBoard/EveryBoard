@@ -156,10 +156,8 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
             // When the game is not started yet
             expect(wrapper.gameStarted).toBeFalse();
             // Then the p4 and chat tags should already be present
-            const p4Tag: DebugElement = testUtils.findElement('app-p4');
-            const chatTag: DebugElement = testUtils.findElement('app-chat');
-            expect(p4Tag).withContext('app-p4 tag should be absent at start').toBeFalsy();
-            expect(chatTag).withContext('app-chat tag should be present at start').toBeTruthy();
+            testUtils.expectElementNotToExist('app-p4');
+            testUtils.expectElementToExist('app-chat');
 
             // Finish the game to have no timeout still running
             await finishTest();
@@ -186,14 +184,10 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
             tick(0);
 
             // Then part creation is removed and game appears
-            const partCreationId: DebugElement = testUtils.findElement('#partCreation');
-            const gameId: DebugElement = testUtils.findElement('#game');
-            const p4Tag: DebugElement = testUtils.findElement('app-p4');
-
             expect(wrapper.gameStarted).withContext('game should be started').toBeTrue();
-            expect(partCreationId).withContext('partCreation id should be absent after startGame call').toBeFalsy();
-            expect(gameId).withContext('game id should be present after startGame call').toBeTruthy();
-            expect(p4Tag).withContext('p4Tag id should still be absent after startGame call').toBeNull();
+            testUtils.expectElementNotToExist('#partCreation');
+            testUtils.expectElementToExist('#game');
+            testUtils.expectElementNotToExist('app-p4');
             tick(2);
         }));
 
@@ -205,16 +199,12 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
             tick(0);
 
             testUtils.detectChanges();
-            expect(testUtils.findElement('app-p4'))
-                .withContext(`p4Tag id should be absent before startGame's async method has complete`)
-                .toBeNull();
+            testUtils.expectElementNotToExist('app-p4');
 
             tick(2);
 
             // Then it should have the real game component
-            expect(testUtils.findElement('app-p4'))
-                .withContext(`p4Tag id should be present after startGame's async method has complete`)
-                .toBeTruthy();
+            testUtils.expectElementToExist('app-p4');
             tick(1000);
         }));
 
