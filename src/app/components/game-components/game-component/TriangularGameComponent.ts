@@ -28,7 +28,11 @@ export abstract class TriangularGameComponent<R extends SuperRules<M, S, C, L>,
         }
     }
 
-    public getTrianglePoints(x: number, y: number): string {
+    public getTrianglePointsAt(coord: Coord): string {
+        return this.getTrianglePointsAtXY(coord.x, coord.y);
+    }
+
+    public getTrianglePointsAtXY(x: number, y: number): string {
         const coords: Coord[] = this.getTriangleCornerCoords(x, y);
         return this.mapCoordsToPoints(coords);
     }
@@ -68,7 +72,11 @@ export abstract class TriangularGameComponent<R extends SuperRules<M, S, C, L>,
         return [leftCorner, middleCorner, rightCorner, leftCorner];
     }
 
-    public getPyramidPoints(x: number, y: number): string {
+    public getPyramidPointsAt(coord: Coord): string {
+        return this.getPyramidPoints(coord.x, coord.y);
+    }
+
+    public getPyramidPoints(x: number, y: number): string { // TODO: AtXY
         if ((x + y) % 2 === 1) {
             return this.getDownwardPyramidPoints();
         } else {

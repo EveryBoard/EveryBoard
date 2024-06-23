@@ -1,8 +1,10 @@
 /* eslint-disable max-lines-per-function */
 import { Table } from 'src/app/jscaip/TableUtils';
 import { MGPOptional } from '@everyboard/lib';
-import { GoState, GoPiece, Phase } from '../GoState';
-import { GoConfig, GoNode, GoRules } from '../GoRules';
+import { GoState } from '../GoState';
+import { GoPhase } from '../go/GoPhase';
+import { GoPiece } from '../GoPiece';
+import { GoConfig, GoNode, AbstractGoRules } from '../AbstractGoRules';
 import { GoHeuristic } from '../GoHeuristic';
 import { HeuristicUtils } from 'src/app/jscaip/AI/tests/HeuristicUtils.spec';
 import { Player } from 'src/app/jscaip/Player';
@@ -12,10 +14,10 @@ const X: GoPiece = GoPiece.LIGHT;
 const O: GoPiece = GoPiece.DARK;
 const _: GoPiece = GoPiece.EMPTY;
 
-describe('GoHeuristic', () => {
+fdescribe('GoHeuristic', () => {
 
     let heuristic: GoHeuristic;
-    const defaultConfig: MGPOptional<GoConfig> = GoRules.get().getDefaultRulesConfig();
+    const defaultConfig: MGPOptional<GoConfig> = AbstractGoRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         heuristic = new GoHeuristic();
@@ -29,7 +31,7 @@ describe('GoHeuristic', () => {
             [O, X, _, O, _],
             [_, X, _, O, _],
         ];
-        const state: GoState = new GoState(board, PlayerNumberMap.of(0, 0), 0, MGPOptional.empty(), Phase.PLAYING);
+        const state: GoState = new GoState(board, PlayerNumberMap.of(0, 0), 0, MGPOptional.empty(), GoPhase.PLAYING);
         const initialNode: GoNode = new GoNode(state);
         const boardValue: readonly number[] = heuristic.getBoardValue(initialNode, defaultConfig).metrics;
         expect(boardValue).toEqual([3]);
@@ -45,7 +47,7 @@ describe('GoHeuristic', () => {
             [_, _, O, X, _],
         ];
         const strongState: GoState =
-            new GoState(strongBoard, PlayerNumberMap.of(10, 1), 0, MGPOptional.empty(), Phase.PLAYING);
+            new GoState(strongBoard, PlayerNumberMap.of(10, 1), 0, MGPOptional.empty(), GoPhase.PLAYING);
         const weakBoard: Table<GoPiece> = [
             [_, O, X, _, _],
             [_, O, X, _, _],
@@ -54,7 +56,7 @@ describe('GoHeuristic', () => {
             [_, O, X, _, _],
         ];
         const weakState: GoState =
-            new GoState(weakBoard, PlayerNumberMap.of(10, 1), 0, MGPOptional.empty(), Phase.PLAYING);
+            new GoState(weakBoard, PlayerNumberMap.of(10, 1), 0, MGPOptional.empty(), GoPhase.PLAYING);
         // When computing their value
         // Then it should prefer having a larger territory
         HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(heuristic,
@@ -75,7 +77,7 @@ describe('GoHeuristic', () => {
             [_, _, O, X, _],
         ];
         const strongState: GoState =
-            new GoState(strongBoard, PlayerNumberMap.of(10, 1), 0, MGPOptional.empty(), Phase.PLAYING);
+            new GoState(strongBoard, PlayerNumberMap.of(10, 1), 0, MGPOptional.empty(), GoPhase.PLAYING);
         const weakBoard: Table<GoPiece> = [
             [_, _, O, X, _],
             [_, _, O, X, _],
@@ -84,7 +86,7 @@ describe('GoHeuristic', () => {
             [_, _, O, X, _],
         ];
         const weakState: GoState =
-            new GoState(weakBoard, PlayerNumberMap.of(10, 1), 0, MGPOptional.empty(), Phase.PLAYING);
+            new GoState(weakBoard, PlayerNumberMap.of(10, 1), 0, MGPOptional.empty(), GoPhase.PLAYING);
         // When computing their value
         // Then it should assign the same value for both
         HeuristicUtils.expectStatesToBeOfEqualValue(heuristic, weakState, strongState, defaultConfig);

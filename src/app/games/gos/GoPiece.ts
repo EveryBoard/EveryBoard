@@ -1,20 +1,7 @@
-import { Coord } from 'src/app/jscaip/Coord';
-import { GameStateWithTable } from 'src/app/jscaip/GameStateWithTable';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { Table, TableUtils } from 'src/app/jscaip/TableUtils';
-import { ComparableObject, MGPOptional, Utils } from '@everyboard/lib';
-import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
-import { GoConfig } from './GoRules';
+import { ComparableObject, Utils } from '@everyboard/lib';
 
-export enum Phase {
-    PLAYING = 'PLAYING',
-    PASSED = 'PASSED',
-    COUNTING = 'COUNTING',
-    ACCEPT = 'ACCEPT',
-    FINISHED = 'FINISHED'
-}
-
-type PieceType = 'alive' | 'dead' | 'territory' | 'empty';
+type PieceType = 'alive' | 'dead' | 'territory' | 'empty' | 'unreachable';
 
 export class GoPiece implements ComparableObject {
 
@@ -32,7 +19,9 @@ export class GoPiece implements ComparableObject {
 
     public static LIGHT_TERRITORY: GoPiece = new GoPiece(Player.ONE, 'territory');
 
-    private constructor(readonly player: PlayerOrNone, public readonly type: PieceType) {}
+    public static UNREACHABLE: GoPiece = new GoPiece(PlayerOrNone.NONE, 'unreachable');
+
+    private constructor(readonly player: PlayerOrNone, public readonly type: PieceType) { }
 
     public equals(other: GoPiece): boolean {
         return other === this;
@@ -52,6 +41,8 @@ export class GoPiece implements ComparableObject {
                 return 'GoPiece.DEAD_LIGHT';
             case GoPiece.DARK_TERRITORY:
                 return 'GoPiece.DARK_TERRITORY';
+            case GoPiece.UNREACHABLE:
+                return 'GoPiece.UNREACHABLE';
             default:
                 Utils.assert(this === GoPiece.LIGHT_TERRITORY, 'Unexisting GoPiece');
                 return 'GoPiece.LIGHT_TERRITORY';
@@ -72,12 +63,12 @@ export class GoPiece implements ComparableObject {
 
     public isOccupied(): boolean {
         return this.type === 'alive' ||
-               this.type === 'dead';
+            this.type === 'dead';
     }
 
     public isEmpty(): boolean {
         return this.type === 'territory' ||
-               this.type === 'empty';
+            this.type === 'empty';
     }
 
     public isDead(): boolean {
@@ -97,50 +88,8 @@ export class GoPiece implements ComparableObject {
         return GoPiece.EMPTY;
     }
 
-}
-
-export class GoState extends GameStateWithTable<GoPiece> {
-
-    public readonly koCoord: MGPOptional<Coord>;
-
-    public readonly captured: PlayerNumberMap;
-
-    public readonly phase: Phase;
-
-    public constructor(board: Table<GoPiece>,
-                       captured: PlayerNumberMap,
-                       turn: number,
-                       koCoord: MGPOptional<Coord>,
-                       phase: Phase)
-    {
-        super(board, turn);
-        this.captured = captured;
-        this.koCoord = koCoord;
-        this.phase = phase;
-    }
-
-    public getCapturedCopy(): PlayerNumberMap {
-        return this.captured.getCopy();
-    }
-
-    public static getStartingBoard(config: GoConfig): GoPiece[][] {
-        return TableUtils.create(config.width, config.height, GoPiece.EMPTY);
-    }
-
-    public copy(): GoState {
-        return new GoState(this.getCopiedBoard(),
-                           this.getCapturedCopy(),
-                           this.turn,
-                           this.koCoord,
-                           this.phase);
-    }
-
-    public isDead(coord: Coord): boolean {
-        return this.getPieceAt(coord).isDead();
-    }
-
-    public isTerritory(coord: Coord): boolean {
-        return this.getPieceAt(coord).isTerritory();
+    public isReachable(): boolean {
+        return this.type !== 'unreachable';
     }
 
 }

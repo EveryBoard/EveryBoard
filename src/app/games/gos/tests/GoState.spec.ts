@@ -1,14 +1,16 @@
 /* eslint-disable max-lines-per-function */
 import { Player } from 'src/app/jscaip/Player';
-import { GoPiece, GoState, Phase } from '../GoState';
-import { GoConfig, GoRules } from '../GoRules';
+import { GoState } from '../GoState';
+import { GoPiece } from '../GoPiece';
+import { GoConfig, AbstractGoRules } from '../AbstractGoRules';
 import { MGPOptional } from '@everyboard/lib';
 import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
+import { GoPhase } from '../go/GoPhase';
 
 const O: GoPiece = GoPiece.DARK;
 const _: GoPiece = GoPiece.EMPTY;
 
-describe('GoPiece', () => {
+fdescribe('GoPiece', () => {
 
     describe('toString', () => {
 
@@ -35,7 +37,7 @@ describe('GoPiece', () => {
 
 });
 
-describe('GoState', () => {
+fdescribe('GoState', () => {
 
     describe('getInitialState', () => {
 
@@ -44,7 +46,7 @@ describe('GoState', () => {
             const customConfig: MGPOptional<GoConfig> = MGPOptional.of({ width: 19, height: 19, handicap: 2 });
 
             // When creating an initialState with it
-            const state: GoState = GoRules.get().getInitialState(customConfig);
+            const state: GoState = AbstractGoRules.get().getInitialState(customConfig);
 
             // Then the board should have handicaps in opposite corners
             const expectedBoard: GoPiece[][] = [
@@ -72,7 +74,7 @@ describe('GoState', () => {
                                                        PlayerNumberMap.of(0, 0),
                                                        1,
                                                        MGPOptional.empty(),
-                                                       Phase.PLAYING);
+                                                       GoPhase.PLAYING);
             expect(expectedState).toEqual(state);
         });
 
@@ -81,7 +83,7 @@ describe('GoState', () => {
             const customConfig: MGPOptional<GoConfig> = MGPOptional.of({ width: 19, height: 19, handicap: 4 });
 
             // When creating an initialState with it
-            const state: GoState = GoRules.get().getInitialState(customConfig);
+            const state: GoState = AbstractGoRules.get().getInitialState(customConfig);
 
             // Then the board should have handicaps in opposite corners
             const expectedBoard: GoPiece[][] = [
@@ -109,7 +111,7 @@ describe('GoState', () => {
                                                        PlayerNumberMap.of(0, 0),
                                                        1,
                                                        MGPOptional.empty(),
-                                                       Phase.PLAYING);
+                                                       GoPhase.PLAYING);
             expect(expectedState).toEqual(state);
         });
 
@@ -118,7 +120,7 @@ describe('GoState', () => {
             const customConfig: MGPOptional<GoConfig> = MGPOptional.of({ width: 19, height: 19, handicap: 5 });
 
             // When creating an initialState with it
-            const state: GoState = GoRules.get().getInitialState(customConfig);
+            const state: GoState = AbstractGoRules.get().getInitialState(customConfig);
 
             // Then the board should have handicaps in opposite corners
             const expectedBoard: GoPiece[][] = [
@@ -146,7 +148,7 @@ describe('GoState', () => {
                                                        PlayerNumberMap.of(0, 0),
                                                        1,
                                                        MGPOptional.empty(),
-                                                       Phase.PLAYING);
+                                                       GoPhase.PLAYING);
             expect(expectedState).toEqual(state);
         });
 
@@ -155,7 +157,7 @@ describe('GoState', () => {
             const customConfig: MGPOptional<GoConfig> = MGPOptional.of({ width: 19, height: 19, handicap: 9 });
 
             // When creating an initialState with it
-            const state: GoState = GoRules.get().getInitialState(customConfig);
+            const state: GoState = AbstractGoRules.get().getInitialState(customConfig);
 
             // Then the board should have handicaps in opposite corners
             const expectedBoard: GoPiece[][] = [
@@ -183,7 +185,7 @@ describe('GoState', () => {
                                                        PlayerNumberMap.of(0, 0),
                                                        1,
                                                        MGPOptional.empty(),
-                                                       Phase.PLAYING);
+                                                       GoPhase.PLAYING);
             expect(expectedState).toEqual(state);
         });
 

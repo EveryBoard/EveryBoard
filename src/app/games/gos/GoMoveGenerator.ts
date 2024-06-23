@@ -1,21 +1,23 @@
-import { GoState, GoPiece, Phase } from './GoState';
+import { GoState } from './GoState';
+import { GoPhase } from './go/GoPhase';
+import { GoPiece } from './GoPiece';
 import { GoMove } from './GoMove';
-import { GoConfig, GoLegalityInformation, GoNode, GoRules } from './GoRules';
+import { GoLegalityInformation, GoNode, AbstractGoRules } from './AbstractGoRules';
 import { GoGroupDatas } from './GoGroupsDatas';
 import { Coord } from 'src/app/jscaip/Coord';
-import { MGPFallible, MGPOptional } from '@everyboard/lib';
+import { MGPFallible } from '@everyboard/lib';
 import { MoveGenerator } from 'src/app/jscaip/AI/AI';
 import { Debug } from 'src/app/utils/Debug';
 
 @Debug.log
-export class GoMoveGenerator extends MoveGenerator<GoMove, GoState, GoConfig> {
+export class GoMoveGenerator extends MoveGenerator<GoMove, GoState> {
 
-    public override getListMoves(node: GoNode, _config: MGPOptional<GoConfig>): GoMove[] {
+    public override getListMoves(node: GoNode): GoMove[] {
 
         const currentState: GoState = node.gameState;
         const playingMoves: GoMove[] = this.getPlayingMovesList(currentState);
-        if (currentState.phase === Phase.PLAYING ||
-            currentState.phase === Phase.PASSED) {
+        if (currentState.phase === GoPhase.PLAYING ||
+            currentState.phase === GoPhase.PASSED) {
             playingMoves.push(GoMove.PASS);
             return playingMoves;
         } else {
@@ -36,7 +38,7 @@ export class GoMoveGenerator extends MoveGenerator<GoMove, GoState, GoConfig> {
             const content: GoPiece = coordAndContent.content;
             newMove = new GoMove(coord.x, coord.y);
             if (content === GoPiece.EMPTY) {
-                const legality: MGPFallible<GoLegalityInformation> = GoRules.isLegal(newMove, state);
+                const legality: MGPFallible<GoLegalityInformation> = AbstractGoRules.isLegal(newMove, state);
                 if (legality.isSuccess()) {
                     choices.push(newMove);
                 }
@@ -57,7 +59,7 @@ export class GoMoveGenerator extends MoveGenerator<GoMove, GoState, GoConfig> {
         const correctBoard: GoPiece[][] = this.getCorrectBoard(currentState).getCopiedBoard();
 
         const groupsData: GoGroupDatas[] =
-            GoRules.getGroupsDatasWhere(correctBoard, (pawn: GoPiece) => pawn !== GoPiece.EMPTY);
+            AbstractGoRules.getGroupsDatasWhere(correctBoard, (pawn: GoPiece) => pawn !== GoPiece.EMPTY);
 
         for (const group of groupsData) {
             const coord: Coord = group.getCoords()[0];
@@ -87,7 +89,7 @@ export class GoMoveGenerator extends MoveGenerator<GoMove, GoState, GoConfig> {
                                                   currentState.turn,
                                                   currentState.koCoord,
                                                   currentState.phase);
-        const territoryLikeGroups: GoGroupDatas[] = GoRules.getTerritoryLikeGroup(allDeadState);
+        const territoryLikeGroups: GoGroupDatas[] = AbstractGoRules.getTerritoryLikeGroup(allDeadState);
 
         return this.setAliveUniqueWrapper(allDeadState, territoryLikeGroups);
     }
@@ -111,7 +113,7 @@ export class GoMoveGenerator extends MoveGenerator<GoMove, GoState, GoConfig> {
             aliveCoords = monoWrappedEmptyGroup.deadDarkCoords.concat(monoWrappedEmptyGroup.deadLightCoords);
             for (const aliveCoord of aliveCoords) {
                 if (resultingState.isDead(aliveCoord)) {
-                    resultingState = GoRules.switchAliveness(aliveCoord, resultingState);
+                    resultingState = AbstractGoRules.switchAliveness(aliveCoord, resultingState);
                 }
             }
         }

@@ -1,12 +1,13 @@
 /* eslint-disable max-lines-per-function */
 import { BoardDatas, GroupInfos } from '../../../jscaip/BoardDatas';
-import { GoState, GoPiece } from '../GoState';
+import { GoState } from '../GoState';
+import { GoPiece } from '../GoPiece';
 import { TableUtils, Table } from 'src/app/jscaip/TableUtils';
 import { Coord } from 'src/app/jscaip/Coord';
-import { GoGroupDatasFactory } from '../GoGroupDatasFactory';
-import { GoConfig } from '../GoRules';
+import { OrthogonalGoGroupDatasFactory } from '../GoGroupDatasFactory';
+import { GoConfig } from '../AbstractGoRules';
 
-describe('GoBoardDatas', () => {
+fdescribe('GoBoardDatas', () => {
 
     const _: GoPiece = GoPiece.EMPTY;
     const X: GoPiece = GoPiece.LIGHT;
@@ -22,7 +23,7 @@ describe('GoBoardDatas', () => {
 
     it('should create one big group for initial board', () => {
         const board: Table<GoPiece> = GoState.getStartingBoard(config);
-        const datas: BoardDatas = BoardDatas.ofBoard(board, new GoGroupDatasFactory());
+        const datas: BoardDatas = BoardDatas.ofBoard(board, new OrthogonalGoGroupDatasFactory());
         const allZeroBoard: number[][] = TableUtils.create(width, height, 0);
         expect(datas.groupIndices).toEqual(allZeroBoard);
         expect(datas.groups.length).toBe(1);
@@ -39,7 +40,7 @@ describe('GoBoardDatas', () => {
             [_, _, O, _, _],
             [_, _, _, _, _],
         ];
-        const datas: BoardDatas = BoardDatas.ofBoard(board, new GoGroupDatasFactory());
+        const datas: BoardDatas = BoardDatas.ofBoard(board, new OrthogonalGoGroupDatasFactory());
         const groupIndices: number[][] = [
             [0, 0, 0, 0, 0],
             [0, 0, 0, 0, 0],

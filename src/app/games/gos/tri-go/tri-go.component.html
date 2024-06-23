@@ -1,0 +1,99 @@
+<svg xmlns="http://www.w3.org/2000/svg"
+     width="100%" height="100%"
+     [attr.viewBox]="getViewBox().toSVGString()"
+     preserveAspectRatio="xMidYMid meet">
+    <rect [attr.x]="getViewBox().left"
+          [attr.y]="getViewBox().up"
+          [attr.width]="getViewBox().width"
+          [attr.height]="getViewBox().height"
+          fill="purple"
+    />
+    <g *ngFor="let coordAndContent of getState().getCoordsAndContents()"
+       id="click-{{ coordAndContent.coord.x }}-{{ coordAndContent.coord.y }}"
+       [attr.transform]="getTriangleTranslation(coordAndContent.coord.x, coordAndContent.coord.y)"
+       (click)="onClick(coordAndContent.coord)">
+        <g *ngIf="coordAndContent.content.isReachable()">
+            <g *ngIf="coordAndContent.content.isOccupied()">
+                <polygon id="pyramid-{{ coordAndContent.coord.x }}-{{ coordAndContent.coord.y }}"
+                         [attr.points]="getPyramidPointsAt(coordAndContent.coord)"
+                         [ngClass]="getPlayerClassAt(coordAndContent.coord)"
+                         class="base mid-stroke"
+                />
+            </g>
+            <g *ngIf="coordAndContent.content.isEmpty()">
+                <polygon *ngIf="(coordAndContent.coord.x + coordAndContent.coord.y) % 2 === 1"
+                         id="triangle-{{ coordAndContent.coord.x }}-{{ coordAndContent.coord.y }}"
+                         [attr.points]="getTrianglePointsAt(coordAndContent.coord)"
+                         class="base mid-stroke"
+                />
+                <polygon *ngIf="(coordAndContent.coord.x + coordAndContent.coord.y) % 2 === 0"
+                         id="triangle-{{ coordAndContent.coord.x }}-{{ coordAndContent.coord.y }}"
+                         [attr.points]="getTrianglePointsAt(coordAndContent.coord)"
+                         class="base mid-stroke background2"
+                />
+            </g>
+        </g>
+    </g>
+</svg>
+
+<!-- <svg xmlns="http://www.w3.org/2000/svg"
+     width="100%" height="100%"
+     [attr.viewBox]="getViewBox().toSVGString()"
+     preserveAspectRatio="xMidYMid meet">
+
+    <g app-blank-goban
+       [width]="getState().getWidth()"
+       [height]="getState().getHeight()"
+       (clickCallBack)="onClick($event)">
+    </g>
+    <g id="piece-ko-territory-markers-and-dead-stones">
+        <g *ngFor="let coordAndContent of getState().getCoordsAndContents()">
+            <g *ngIf="spaceIsFull(coordAndContent.coord) else empty">
+                <circle [attr.cx]="(SPACE_SIZE * 0.5) + (SPACE_SIZE * coordAndContent.coord.x)"
+                        [attr.cy]="(SPACE_SIZE * 0.5) + (SPACE_SIZE * coordAndContent.coord.y)"
+                        [attr.r]="SPACE_SIZE * 0.44"
+                        (click)="onClick(coordAndContent.coord)"
+                        [ngClass]="getSpaceClass(coordAndContent.coord)"
+                        class="base"
+                />
+                <circle *ngIf="isLastSpace(coordAndContent.coord)"
+                        [attr.cx]="(SPACE_SIZE * 0.5) + (SPACE_SIZE * coordAndContent.coord.x)"
+                        [attr.cy]="(SPACE_SIZE * 0.5) + (SPACE_SIZE * coordAndContent.coord.y)"
+                        [attr.r]="SPACE_SIZE * 0.44"
+                        class="base no-fill last-move-stroke"
+                />
+                <line *ngIf="isDead(coordAndContent.coord)"
+                      (click)="onClick(coordAndContent.coord)"
+                      [attr.x1]="SPACE_SIZE * coordAndContent.coord.x"
+                      [attr.y1]="SPACE_SIZE * coordAndContent.coord.y"
+                      [attr.x2]="SPACE_SIZE + (SPACE_SIZE * coordAndContent.coord.x)"
+                      [attr.y2]="SPACE_SIZE + (SPACE_SIZE * coordAndContent.coord.y)"
+                      class="base no-fill captured-stroke"
+                />
+            </g>
+            <ng-template #empty>
+                <circle *ngIf="isTerritory(coordAndContent.coord)"
+                        [attr.cx]="(SPACE_SIZE * 0.5) + (SPACE_SIZE * coordAndContent.coord.x)"
+                        [attr.cy]="(SPACE_SIZE * 0.5) + (SPACE_SIZE * coordAndContent.coord.y)"
+                        [attr.r]="SPACE_SIZE * 0.2"
+                        [attr.class]="coordAndContent.content === GoPiece.LIGHT_TERRITORY ? 'player1-fill' : 'player0-fill'"
+                        (click)="onClick(coordAndContent.coord)"
+                />
+            </ng-template>
+        </g>
+    </g>
+    <rect *ngIf="ko.isPresent()"
+          [attr.width]="SPACE_SIZE * 0.5"
+          [attr.height]="SPACE_SIZE * 0.5"
+          [attr.x]="(SPACE_SIZE * 0.25) + (SPACE_SIZE * ko.get().x)"
+          [attr.y]="(SPACE_SIZE * 0.25) + (SPACE_SIZE * ko.get().y)"
+          class="captured-stroke mid-stroke no-fill"
+    />
+    <circle *ngFor="let capture of captures"
+            (click)="onClick(capture)"
+            [attr.cx]="(SPACE_SIZE * 0.5) + (SPACE_SIZE * capture.x)"
+            [attr.cy]="(SPACE_SIZE * 0.5) + (SPACE_SIZE * capture.y)"
+            [attr.r]="SPACE_SIZE * 0.14"
+            class="captured-fill"
+    />
+</svg> -->

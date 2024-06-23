@@ -1,12 +1,12 @@
 /* eslint-disable max-lines-per-function */
-import { GoPiece } from '../GoState';
+import { GoPiece } from '../GoPiece';
 import { Coord } from 'src/app/jscaip/Coord';
-import { GoGroupDatas } from 'src/app/games/go/GoGroupsDatas';
+import { GoGroupDatas } from 'src/app/games/gos/GoGroupsDatas';
 import { Utils, TestUtils } from '@everyboard/lib';
 import { ErrorLoggerServiceMock } from 'src/app/services/tests/ErrorLoggerServiceMock.spec';
 import { fakeAsync } from '@angular/core/testing';
 
-describe('GoGroupDatas', () => {
+fdescribe('GoGroupDatas', () => {
 
     const coord: Coord = new Coord(0, 0);
 

@@ -1,16 +1,18 @@
 /* eslint-disable max-lines-per-function */
 import { fakeAsync } from '@angular/core/testing';
 import { GoComponent } from '../go.component';
-import { GoMove } from 'src/app/games/go/GoMove';
-import { GoState, GoPiece, Phase } from 'src/app/games/go/GoState';
+import { GoMove } from 'src/app/games/gos/GoMove';
+import { GoState } from 'src/app/games/gos/GoState';
+import { GoPiece } from '../../GoPiece';
 import { TableUtils, Table } from 'src/app/jscaip/TableUtils';
 import { Coord } from 'src/app/jscaip/Coord';
 import { MGPOptional } from '@everyboard/lib';
 import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
+import { GoPhase } from '../GoPhase';
 import { GoConfig, GoRules } from '../GoRules';
 
-describe('GoComponent', () => {
+fdescribe('GoComponent', () => {
 
     let testUtils: ComponentTestUtils<GoComponent>;
 
@@ -42,7 +44,7 @@ describe('GoComponent', () => {
             [_, _, _, _, _],
             [_, _, _, _, _],
         ];
-        const state: GoState = new GoState(board, PlayerNumberMap.of(0, 0), 1, MGPOptional.empty(), Phase.PLAYING);
+        const state: GoState = new GoState(board, PlayerNumberMap.of(0, 0), 1, MGPOptional.empty(), GoPhase.PLAYING);
         await testUtils.setupState(state);
 
         const move: GoMove = new GoMove(0, 1);
@@ -63,7 +65,8 @@ describe('GoComponent', () => {
         it('should be in (3, 3) and other centraly symmetrical coords for 19x19 board', fakeAsync(async() => {
             // Given a 19x19 board
             const board: Table<GoPiece> = TableUtils.create(19, 19, GoPiece.EMPTY);
-            const state: GoState = new GoState(board, PlayerNumberMap.of(0, 0), 0, MGPOptional.empty(), Phase.PLAYING);
+            const state: GoState =
+                new GoState(board, PlayerNumberMap.of(0, 0), 0, MGPOptional.empty(), GoPhase.PLAYING);
 
             // When displaying it
             await testUtils.setupState(state);

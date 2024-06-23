@@ -9,7 +9,7 @@
            (click)="onClick(x, y)">
             <polygon *ngIf="mustDraw(x, y)"
                      id="space_{{ x }}_{{ y }}"
-                     [attr.points]="getTrianglePoints(x, y)"
+                     [attr.points]="getTrianglePointsAtXY(x, y)"
                      [attr.transform]="getTriangleInHexTranslation(x, y)"
                      [ngClass]="getSpaceClass(x, y)"
                      class="base normal-stroke"
@@ -33,7 +33,7 @@
     </g>
     <g *ngIf="chosenCoord.isPresent() else lastMove">
         <polygon id="selected_{{ chosenCoord.get().x }}_{{ chosenCoord.get().y }}"
-                 [attr.points]="getTrianglePoints(chosenCoord.get().x, chosenCoord.get().y)"
+                 [attr.points]="getTrianglePointsAt(chosenCoord.get())"
                  [attr.transform]="getTriangleInHexTranslation(chosenCoord.get().x, chosenCoord.get().y)"
                  class="base no-fill normal-stroke selected-stroke"/>
         <rect *ngFor="let possibleLanding of possibleLandings"
@@ -48,12 +48,12 @@
     <ng-template #lastMove>
         <polygon *ngIf="lastStart.isPresent()"
                  id="last_start_{{ lastStart.get().x }}_{{ lastStart.get().y }}"
-                 [attr.points]="getTrianglePoints(lastStart.get().x, lastStart.get().y)"
+                 [attr.points]="getTrianglePointsAt(lastStart.get())"
                  [attr.transform]="getTriangleInHexTranslation(lastStart.get().x, lastStart.get().y)"
                  class="base no-fill normal-stroke last-move-stroke"/>
         <polygon *ngIf="lastEnd.isPresent()"
                  id="last_end_{{ lastEnd.get().x }}_{{ lastEnd.get().y }}"
-                 [attr.points]="getTrianglePoints(lastEnd.get().x, lastEnd.get().y)"
+                 [attr.points]="getTrianglePointsAt(lastEnd.get())"
                  [attr.transform]="getTriangleInHexTranslation(lastEnd.get().x, lastEnd.get().y)"
                  class="base no-fill normal-stroke last-move-stroke"/>
     </ng-template>

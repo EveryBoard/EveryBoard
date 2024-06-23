@@ -1,16 +1,18 @@
-import { GoState, GoPiece } from './GoState';
+import { GoState } from './GoState';
+import { GoPiece } from './GoPiece';
 import { GoMove } from './GoMove';
 import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 import { Player } from 'src/app/jscaip/Player';
 import { PlayerMetricHeuristic } from 'src/app/jscaip/AI/Minimax';
 import { PlayerNumberTable } from 'src/app/jscaip/PlayerNumberTable';
-import { GoConfig, GoNode, GoRules } from './GoRules';
-import { MGPOptional } from '@everyboard/lib';
+import { GoNode, AbstractGoRules } from './AbstractGoRules';
+import { GoConfig } from './go/GoRules';
+import { TriGoConfig } from './tri-go/TriGoRules';
 
-export class GoHeuristic extends PlayerMetricHeuristic<GoMove, GoState, GoConfig> {
+export class GoHeuristic extends PlayerMetricHeuristic<GoMove, GoState, GoConfig | TriGoConfig> {
 
-    public override getMetrics(node: GoNode, _config: MGPOptional<GoConfig>): PlayerNumberTable {
-        const goState: GoState = GoRules.markTerritoryAndCount(node.gameState);
+    public override getMetrics(node: GoNode): PlayerNumberTable {
+        const goState: GoState = AbstractGoRules.markTerritoryAndCount(node.gameState);
         const goScore: PlayerNumberMap = goState.getCapturedCopy();
         const goKilled: PlayerNumberMap = this.getDeadStones(goState);
         return PlayerNumberTable.ofSingle(

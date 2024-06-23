@@ -1,15 +1,15 @@
 /* eslint-disable max-lines-per-function */
-import { GoConfig, GoNode, GoRules } from '../GoRules';
+import { GoConfig, GoNode, AbstractGoRules } from '../AbstractGoRules';
 import { GoMove } from '../GoMove';
 import { EncoderTestUtils, MGPOptional } from '@everyboard/lib';
 import { GoMoveGenerator } from '../GoMoveGenerator';
 
-const defaultConfig: MGPOptional<GoConfig> = GoRules.get().getDefaultRulesConfig();
+const defaultConfig: MGPOptional<GoConfig> = AbstractGoRules.get().getDefaultRulesConfig();
 
-describe('GoMove', () => {
+fdescribe('GoMove', () => {
 
     it('should have a bijective encoder', () => {
-        const rules: GoRules = GoRules.get();
+        const rules: AbstractGoRules = AbstractGoRules.get();
         const moveGenerator: GoMoveGenerator = new GoMoveGenerator();
         const node: GoNode = rules.getInitialNode(defaultConfig);
         const firstTurnMoves: GoMove[] = moveGenerator.getListMoves(node, defaultConfig);

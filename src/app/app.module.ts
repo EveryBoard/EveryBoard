@@ -74,7 +74,7 @@ import { EncapsuleComponent } from './games/encapsule/encapsule.component';
 import { EpaminondasComponent } from './games/epaminondas/epaminondas.component';
 
 import { GipfComponent } from './games/gipf/gipf.component';
-import { GoComponent } from './games/go/go.component';
+import { GoComponent } from './games/gos/go/go.component';
 
 import { HiveComponent } from './games/hive/hive.component';
 import { HivePieceComponent } from './games/hive/hive-piece.component';
@@ -115,6 +115,7 @@ import { TablutComponent } from './games/tafl/tablut/tablut.component';
 import { TeekoComponent } from './games/teeko/teeko.component';
 import { TrexoComponent } from './games/trexo/trexo.component';
 import { TrexoHalfPieceComponent } from './games/trexo/trexo-half-piece.component';
+import { TriGoComponent } from './games/gos/tri-go/tri-go.component';
 
 import { YinshComponent } from './games/yinsh/yinsh.component';
 
@@ -228,6 +229,7 @@ export const routes: Route[] = [
         TablutComponent,
         TeekoComponent,
         TrexoComponent, TrexoHalfPieceComponent,
+        TriGoComponent,
         YinshComponent,
 
         HumanDurationPipe,

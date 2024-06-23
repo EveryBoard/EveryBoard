@@ -48,11 +48,11 @@ import { EpaminondasTutorial } from 'src/app/games/epaminondas/EpaminondasTutori
 import { EpaminondasRules } from 'src/app/games/epaminondas/EpaminondasRules';
 
 import { GipfComponent } from 'src/app/games/gipf/gipf.component';
-import { GoTutorial } from 'src/app/games/go/GoTutorial';
-import { GoRules } from 'src/app/games/go/GoRules';
-import { GoComponent } from 'src/app/games/go/go.component';
-import { GipfTutorial } from 'src/app/games/gipf/GipfTutorial';
 import { GipfRules } from 'src/app/games/gipf/GipfRules';
+import { GipfTutorial } from 'src/app/games/gipf/GipfTutorial';
+import { GoComponent } from 'src/app/games/gos/go/go.component';
+import { GoRules } from 'src/app/games/gos/go/GoRules';
+import { GoTutorial } from 'src/app/games/gos/go/GoTutorial';
 
 import { HiveComponent } from 'src/app/games/hive/hive.component';
 import { HiveTutorial } from 'src/app/games/hive/HiveTutorial';
@@ -128,6 +128,9 @@ import { TeekoTutorial } from 'src/app/games/teeko/TeekoTutorial';
 import { TrexoComponent } from 'src/app/games/trexo/trexo.component';
 import { TrexoRules } from 'src/app/games/trexo/TrexoRules';
 import { TrexoTutorial } from 'src/app/games/trexo/TrexoTutorial';
+import { TriGoComponent } from 'src/app/games/gos/tri-go/tri-go.component';
+import { TriGoRules } from 'src/app/games/gos/tri-go/TriGoRules';
+import { TriGoTutorial } from 'src/app/games/gos/tri-go/TriGoTutorial';
 
 import { YinshComponent } from 'src/app/games/yinsh/yinsh.component';
 import { YinshTutorial } from 'src/app/games/yinsh/YinshTutorial';
@@ -217,6 +220,8 @@ class GameDescription {
 
     public static readonly TREXO: Localized = () => $localize`Align 5 pieces of your color in a row, but beware, the pieces can be put on top of other pieces!`;
 
+    public static readonly TRI_GO: Localized = () => $localize`A version of Go on triangular spaces!`;
+
     public static readonly YINSH: Localized = () => $localize`Align your pieces to score points, but beware, pieces can flip!`;
 
 }
@@ -224,6 +229,7 @@ class GameDescription {
 export class GameInfo {
 
     // Games sorted by creation date
+    // eslint-disable-next-line max-lines-per-function
     public static ALL_GAMES(): GameInfo[] {
         return [
             new GameInfo($localize`Four in a Row`,   'P4',            P4Component,            new P4Tutorial(),            P4Rules.get(),            new Date('2018-08-28'), GameDescription.P4()             ), //                             * Martin
@@ -270,6 +276,7 @@ export class GameInfo {
 
             new GameInfo($localize`Ba-awa`,          'BaAwa',         BaAwaComponent,         new BaAwaTutorial(),         BaAwaRules.get(),         new Date('2024-01-28'), GameDescription.BA_AWA()         ), //                             * Martin
             new GameInfo($localize`Squarz`,          'Squarz',        SquarzComponent,        new SquarzTutorial(),        SquarzRules.get(),        new Date('2024-05-08'), GameDescription.SQUARZ()         ), //                             * Martin
+            new GameInfo($localize`TriGo`,           'TriGo',         TriGoComponent,         new TriGoTutorial(),         TriGoRules.get(),         new Date('2024-06-21'), GameDescription.TRI_GO()         ), //                             * Martin
         ].sort((a: GameInfo, b: GameInfo) => a.name.localeCompare(b.name));
         // After Apagos: median = 26d; average = 53d
         // 9d 10d 12d 13d 18d - 18d 20d 22d 25d 26d - (26d) - 49d 65d 71d 76d 93d - 94j 4m 4m 7m 11m

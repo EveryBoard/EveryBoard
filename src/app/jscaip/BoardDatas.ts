@@ -49,16 +49,19 @@ export abstract class GroupDatasFactory<T> {
 
     public abstract getNewInstance(color: T): GroupDatas<T>;
 
+    public abstract getDirections(coord: Coord): ReadonlyArray<Ordinal>;
+
     public getGroupDatas(coord: Coord, board: Table<T>): GroupDatas<T> {
         const color: T = board[coord.y][coord.x];
         const groupDatas: GroupDatas<T> = this.getNewInstance(color);
         return this._getGroupDatas(coord, board, groupDatas);
     }
+
     private _getGroupDatas(coord: Coord, board: Table<T>, groupDatas: GroupDatas<T>): GroupDatas<T> {
         const color: T = board[coord.y][coord.x];
         groupDatas.addPawn(coord, color);
         if (color === groupDatas.color) {
-            for (const direction of this.getDirections()) {
+            for (const direction of this.getDirections(coord)) {
                 const nextCoord: Coord = coord.getNext(direction);
                 if (nextCoord.isInRange(board[0].length, board.length)) {
                     if (groupDatas.contains(nextCoord) === false) {
@@ -69,7 +72,6 @@ export abstract class GroupDatasFactory<T> {
         }
         return groupDatas;
     }
-    public abstract getDirections(): ReadonlyArray<Ordinal>;
 }
 
 export abstract class GroupDatas<T> {
@@ -88,6 +90,7 @@ export abstract class GroupDatas<T> {
         const ownCoords: Coord[] = this.getCoords();
         return ownCoords.some((c: Coord) => c.equals(coord));
     }
+
     public static insertAsEntryPoint(list: Coord[], coord: Coord): Coord[] {
         if (list.length === 0) {
             return [coord];
@@ -100,4 +103,5 @@ export abstract class GroupDatas<T> {
             }
         }
     }
+
 }
