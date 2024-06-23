@@ -89,7 +89,7 @@ export class ConnectedUserServiceMock {
         return;
     }
     public async getIdToken(): Promise<string> {
-        throw new Error('ConnectedUserServiceMock.getIdToken not implemented');
+        return 'idToken';
     }
 }
 

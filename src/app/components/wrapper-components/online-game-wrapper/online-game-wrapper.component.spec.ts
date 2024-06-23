@@ -3,7 +3,7 @@ import { TestBed, fakeAsync, tick, discardPeriodicTasks } from '@angular/core/te
 import { DebugElement } from '@angular/core';
 import { Router } from '@angular/router';
 import { OnlineGameWrapperComponent, OnlineGameWrapperMessages } from './online-game-wrapper.component';
-import { ConfigRoomService } from 'src/app/services/ConfigRoomService';
+import { ConfigRoomService, ConfigRoomServiceFailure } from 'src/app/services/ConfigRoomService';
 import { ConfigRoomDAO } from 'src/app/dao/ConfigRoomDAO';
 import { ConfigRoom } from 'src/app/domain/ConfigRoom';
 import { ConfigRoomMocks } from 'src/app/domain/ConfigRoomMocks.spec';
@@ -22,8 +22,8 @@ import { GameWrapperMessages } from '../GameWrapper';
 import { GameService } from 'src/app/services/GameService';
 import { MinimalUser } from 'src/app/domain/MinimalUser';
 import { MGPOptional } from '@everyboard/lib';
-import { BackendFailure } from 'src/app/services/BackendService';
 import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { ConnectedUserService } from 'src/app/services/ConnectedUserService';
 
 describe('OnlineGameWrapper for non-existing game', () => {
 
@@ -104,6 +104,9 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
 
         testUtils.prepareFixture(OnlineGameWrapperComponent);
         wrapper = testUtils.getWrapper() as OnlineGameWrapperComponent;
+        spyOn(TestBed.inject(ConnectedUserService), 'getIdToken').and.callFake(async() => {
+            return 'idToken';
+        });
     });
 
     describe('for creator', () => {
@@ -245,9 +248,11 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
         const router: Router = TestBed.inject(Router);
         spyOn(router, 'navigate').and.callThrough();
         testUtils.detectChanges();
-        await testUtils.expectToDisplayCriticalMessage(BackendFailure.GAME_DOES_NOT_EXIST(), async() => {
-            tick(0);
-        });
+        await testUtils.expectToDisplayCriticalMessage(
+            ConfigRoomServiceFailure.GAME_DOES_NOT_EXIST(),
+            async() => {
+                tick(0);
+            });
 
         expectValidRouting(router, ['/notFound', OnlineGameWrapperMessages.NO_MATCHING_PART()], NotFoundComponent, { skipLocationChange: true });
     }));

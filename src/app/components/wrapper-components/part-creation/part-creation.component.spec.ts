@@ -7,7 +7,7 @@ import { Timestamp } from 'firebase/firestore';
 import { PartCreationComponent } from './part-creation.component';
 import { LobbyComponent } from '../../normal-component/lobby/lobby.component';
 
-import { ConfigRoomService } from 'src/app/services/ConfigRoomService';
+import { ConfigRoomService, ConfigRoomServiceFailure } from 'src/app/services/ConfigRoomService';
 import { GameService } from 'src/app/services/GameService';
 import { ErrorLoggerServiceMock } from 'src/app/services/tests/ErrorLoggerServiceMock.spec';
 import { AuthUser, ConnectedUserService } from 'src/app/services/ConnectedUserService';
@@ -32,7 +32,6 @@ import { FirestoreTime } from 'src/app/domain/Time';
 import { UserService } from 'src/app/services/UserService';
 import { CurrentGameService } from 'src/app/services/CurrentGameService';
 import { addCandidate } from '../online-game-wrapper/online-game-wrapper.quarto.component.spec';
-import { BackendFailure } from 'src/app/services/BackendService';
 
 describe('PartCreationComponent', () => {
 
@@ -161,9 +160,11 @@ describe('PartCreationComponent', () => {
 
                 // When the component is loaded
                 // Then subscribeToChange is not called and a message is displayed
-                await testUtils.expectToDisplayCriticalMessage(BackendFailure.GAME_DOES_NOT_EXIST(), async() => {
-                    awaitComponentInitialization();
-                });
+                await testUtils.expectToDisplayCriticalMessage(
+                    ConfigRoomServiceFailure.GAME_DOES_NOT_EXIST(),
+                    async() => {
+                        awaitComponentInitialization();
+                    });
                 expect(configRoomService.subscribeToChanges).not.toHaveBeenCalled();
             }));
         });
@@ -215,7 +216,7 @@ describe('PartCreationComponent', () => {
                         chosenOpponent: null,
                     });
                 });
-                await configRoomService.removeCandidate('configRoomId', UserMocks.OPPONENT_MINIMAL_USER);
+                await configRoomService.removeCandidate('configRoomId', UserMocks.OPPONENT_MINIMAL_USER.id);
 
                 // Then it is not selected anymore
                 expectElementNotToExist('#selected_' + UserMocks.OPPONENT.username);
@@ -232,7 +233,7 @@ describe('PartCreationComponent', () => {
                 expectElementToExist('#presenceOf_' + UserMocks.OPPONENT.username);
 
                 // When the candidate leaves
-                await configRoomService.removeCandidate('configRoomId', UserMocks.OPPONENT_MINIMAL_USER);
+                await configRoomService.removeCandidate('configRoomId', UserMocks.OPPONENT_MINIMAL_USER.id);
 
                 // Then it is still not selected, configRoom is back to start
                 expectElementNotToExist('#presenceOf_' + UserMocks.OPPONENT.username);
@@ -597,7 +598,7 @@ describe('PartCreationComponent', () => {
                 // Given a part creation
                 awaitComponentInitialization();
 
-                spyOn(gameService, 'deletePart').and.callThrough();
+                spyOn(gameService, 'deleteGame').and.callThrough();
 
                 // When clicking on cancel
 
@@ -606,7 +607,7 @@ describe('PartCreationComponent', () => {
                 });
 
                 // Then the game is deleted
-                expect(gameService.deletePart).toHaveBeenCalledOnceWith('configRoomId');
+                expect(gameService.deleteGame).toHaveBeenCalledOnceWith('configRoomId');
 
                 component.stopSendingPresenceTokensAndObservingUsersIfNeeded();
             }));
@@ -710,7 +711,7 @@ describe('PartCreationComponent', () => {
                 component.stopSendingPresenceTokensAndObservingUsersIfNeeded();
             }));
             it(`should delete part when finding an outdated creator token`, fakeAsync(async() => {
-                spyOn(gameService, 'deletePart').and.callThrough();
+                spyOn(gameService, 'deleteGame').and.callThrough();
 
                 // Given a component where creator has an out of date token
                 const lastUpdateTime: Timestamp = new Timestamp(- PartCreationComponent.TOKEN_TIMEOUT, 0);
@@ -725,7 +726,7 @@ describe('PartCreationComponent', () => {
                 });
 
                 // Then the part and all its related data should be removed
-                expect(gameService.deletePart).toHaveBeenCalledOnceWith('configRoomId');
+                expect(gameService.deleteGame).toHaveBeenCalledOnceWith('configRoomId');
 
                 component.stopSendingPresenceTokensAndObservingUsersIfNeeded();
             }));
@@ -874,7 +875,7 @@ describe('PartCreationComponent', () => {
                 // Then configRoomService.cancelJoining should have been called
                 expect(currentGameService.removeCurrentGame).toHaveBeenCalledOnceWith();
                 expect(configRoomService.removeCandidate)
-                    .toHaveBeenCalledOnceWith('configRoomId', UserMocks.OPPONENT_MINIMAL_USER);
+                    .toHaveBeenCalledOnceWith('configRoomId', UserMocks.OPPONENT_MINIMAL_USER.id);
             }));
             it('should not try to modify DAOs after user logged out', fakeAsync(async() => {
                 // Given a part creation

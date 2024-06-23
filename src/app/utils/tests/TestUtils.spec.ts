@@ -44,12 +44,16 @@ import { GameInfo } from 'src/app/components/normal-component/pick-game/pick-gam
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { Player } from 'src/app/jscaip/Player';
 import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
-import { BackendServiceMock } from 'src/app/services/tests/BackendServiceMock.spec';
-import { BackendService } from 'src/app/services/BackendService';
 import { TestVars } from 'src/TestVars.spec';
 import { Minimax } from 'src/app/jscaip/AI/Minimax';
 import { AIDepthLimitOptions } from 'src/app/jscaip/AI/AI';
 import { SuperRules } from 'src/app/jscaip/Rules';
+import { GameServiceMock } from 'src/app/services/tests/GameServiceMock.spec';
+import { GameService } from 'src/app/services/GameService';
+import { ConfigRoomService } from 'src/app/services/ConfigRoomService';
+import { ServerTimeService } from 'src/app/services/ServerTimeService';
+import { ServerTimeServiceMock } from 'src/app/services/tests/ServerTimeServiceMock.spec';
+import { ConfigRoomServiceMock } from 'src/app/services/tests/ConfigRoomServiceMock.spec';
 
 @Component({})
 export class BlankComponent {}
@@ -631,7 +635,9 @@ export class ConfigureTestingModuleUtils {
                 { provide: ConfigRoomDAO, useClass: ConfigRoomDAOMock },
                 { provide: PartDAO, useClass: PartDAOMock },
                 { provide: ErrorLoggerService, useClass: ErrorLoggerServiceMock },
-                { provide: BackendService, useClass: BackendServiceMock },
+                { provide: GameService, useClass: GameServiceMock },
+                { provide: ConfigRoomService, useClass: ConfigRoomServiceMock },
+                { provide: ServerTimeService, useClass: ServerTimeServiceMock },
             ],
         }).compileComponents();
     }
@@ -665,10 +671,12 @@ export class ConfigureTestingModuleUtils {
                 { provide: ConfigRoomDAO, useClass: ConfigRoomDAOMock },
                 { provide: ChatDAO, useClass: ChatDAOMock },
                 { provide: UserDAO, useClass: UserDAOMock },
-                { provide: BackendService, useClass: BackendServiceMock },
                 { provide: ConnectedUserService, useClass: ConnectedUserServiceMock },
                 { provide: CurrentGameService, useClass: CurrentGameServiceMock },
                 { provide: ErrorLoggerService, useClass: ErrorLoggerServiceMock },
+                { provide: GameService, useClass: GameServiceMock },
+                { provide: ConfigRoomService, useClass: ConfigRoomServiceMock },
+                { provide: ServerTimeService, useClass: ServerTimeServiceMock },
             ],
         }).compileComponents();
     }

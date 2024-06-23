@@ -43,6 +43,7 @@ describe('ChatDAO', () => {
             expect(messagesDAO.observingWhere).toHaveBeenCalledOnceWith([], callback, 'postedTime');
         });
     });
+
     describe('on any chat', () => {
         let myUser: MinimalUser;
         let myMessageId: string;
@@ -65,6 +66,9 @@ describe('ChatDAO', () => {
             myUser = await createConnectedUser('bar@bar.com', 'user');
             myMessageId = await chatService.addMessage('lobby', { ...message, sender: myUser });
         });
+        // In practice, no one can create a chat, but this is not something we can test.
+        // We can't test it because we have allowed chat creation *only* in the tests, to enable
+        // the creation and test of games under play in the emulator (which require a chat).
         it('should forbid disconnected users to read a chat', async() => {
             // Given a disconnected user
             await signOut();
@@ -182,3 +186,6 @@ describe('ChatDAO', () => {
         });
     });
 });
+function createPartAndConfigRoom(user: MinimalUser): string | PromiseLike<string> {
+    throw new Error('Function not implemented.');
+}

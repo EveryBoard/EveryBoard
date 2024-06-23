@@ -1,6 +1,6 @@
 /* eslint-disable max-lines-per-function */
 import { fakeAsync, TestBed } from '@angular/core/testing';
-import { ConfigRoomService } from '../ConfigRoomService';
+import { ConfigRoomService, ConfigRoomServiceFailure } from '../ConfigRoomService';
 import { ConfigRoomDAO } from 'src/app/dao/ConfigRoomDAO';
 import { ConfigRoomDAOMock } from 'src/app/dao/tests/ConfigRoomDAOMock.spec';
 import { ConfigRoomMocks } from 'src/app/domain/ConfigRoomMocks.spec';
@@ -11,7 +11,6 @@ import { ConnectedUserService } from '../ConnectedUserService';
 import { ConnectedUserServiceMock } from './ConnectedUserService.spec';
 import { RouterTestingModule } from '@angular/router/testing';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { BackendService } from '../BackendService';
 import { IFirestoreDAO } from 'src/app/dao/FirestoreDAO';
 import { FirstPlayer, PartStatus, PartType } from 'src/app/domain/ConfigRoom';
 import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
@@ -19,9 +18,22 @@ import { BlankComponent } from 'src/app/utils/tests/TestUtils.spec';
 
 describe('ConfigRoomService', () => {
 
+    function expectedParams(method: 'POST' | 'GET' | 'DELETE'): object {
+        return {
+            method,
+            headers: {
+                Authorization: 'Bearer idToken',
+            },
+        };
+    }
+
+    function endpoint(path: string): string {
+        return 'http://localhost:8081' + path;
+    }
+
+
     let configRoomDAO: ConfigRoomDAO;
     let configRoomService: ConfigRoomService;
-    let backendService: BackendService;
 
     beforeEach(fakeAsync(async() => {
         await TestBed.configureTestingModule({
@@ -39,7 +51,6 @@ describe('ConfigRoomService', () => {
         }).compileComponents();
         configRoomDAO = TestBed.inject(ConfigRoomDAO);
         configRoomService = TestBed.inject(ConfigRoomService);
-        backendService = TestBed.inject(BackendService);
     }));
 
     it('should create', fakeAsync(() => {
@@ -48,51 +59,71 @@ describe('ConfigRoomService', () => {
 
     describe('joinGame', () => {
 
-        it('should delegate to backend', fakeAsync(async() => {
-            // Given a config room we want to join
-            const configRoomId: string = 'configRoomId';
-            spyOn(backendService, 'joinGame').and.callFake(async() => MGPValidation.SUCCESS);
-            // When calling joinGame
-            const result: MGPValidation = await configRoomService.joinGame(configRoomId);
-            // Then it should have delegated to the backend
-            expect(backendService.joinGame).toHaveBeenCalledOnceWith(configRoomId);
-            expect(result).toBe(MGPValidation.SUCCESS);
+        it('should POST to the expected resource', fakeAsync(async() => {
+            // Given a game
+            const response: Response = Response.json({}, { status: 200 });
+            spyOn(window, 'fetch').and.resolveTo(response);
+            const gameId: string = 'game-id';
+            // When joining it
+            const result: MGPValidation = await configRoomService.joinGame(gameId);
+            // Then it should post on the expected resource
+            const expectedEndpoint: string = endpoint(`/config-room/${gameId}/candidates`);
+            expect(window.fetch).toHaveBeenCalledOnceWith(expectedEndpoint, expectedParams('POST'));
+            expect(result).toEqual(MGPValidation.SUCCESS);
         }));
+
+        it('should fail if the game does not exist', fakeAsync(async() => {
+            // Given no game
+            const response: Response = Response.json({ reason: 'not_found' }, { status: 404 });
+            spyOn(window, 'fetch').and.resolveTo(response);
+            const gameId: string = 'game-id';
+            // When joining it
+            const result: MGPValidation = await configRoomService.joinGame(gameId);
+            // Then it should post on the expected resource
+            const expectedEndpoint: string = endpoint(`/config-room/${gameId}/candidates`);
+            expect(window.fetch).toHaveBeenCalledOnceWith(expectedEndpoint, expectedParams('POST'));
+            expect(result).toEqual(MGPValidation.failure(ConfigRoomServiceFailure.GAME_DOES_NOT_EXIST()));
+        }));
+
     });
 
     describe('removeCandidate', () => {
 
-        it('should delegate to backend', fakeAsync(async() => {
-            // Given a config room
-            const configRoomId: string = 'configRoomId';
-            spyOn(backendService, 'removeCandidate').and.callFake(async() => {});
-            // When calling removeCandidate
-            await configRoomService.removeCandidate(configRoomId, UserMocks.CANDIDATE_MINIMAL_USER);
-            // Then it should have delegated to the backend
-            expect(backendService.removeCandidate)
-                .toHaveBeenCalledOnceWith(configRoomId, UserMocks.CANDIDATE_MINIMAL_USER.id);
+        it('should DELETE the expected resource', fakeAsync(async() => {
+            // Given a game with a candidate
+            const response: Response = Response.json({}, { status: 200 });
+            spyOn(window, 'fetch').and.resolveTo(response);
+            const gameId: string = 'game-id';
+            const candidateId: string = 'candidate-id';
+            // When removing the candidate
+            await configRoomService.removeCandidate(gameId, candidateId);
+            // Then it should delete the resource
+            const expectedEndpoint: string = endpoint(`/config-room/${gameId}/candidates/${candidateId}`);
+            expect(window.fetch).toHaveBeenCalledOnceWith(expectedEndpoint, expectedParams('DELETE'));
         }));
+
     });
 
     describe('proposeConfig', () => {
 
-        it('should delegate to backend with JSON config', fakeAsync(async() => {
-            // Given a config room
-            const configRoomId: string = 'configRoomId';
-            spyOn(backendService, 'proposeConfig').and.callFake(async() => {});
-            // When calling proposeConfig
+        it('should POST on the expected resource', fakeAsync(async() => {
+            // Given a game
+            const response: Response = Response.json({}, { status: 200 });
+            spyOn(window, 'fetch').and.resolveTo(response);
+            const gameId: string = 'game-id';
+            // When proposing config
             const partType: PartType = PartType.BLITZ;
             const maximalMoveDuration: number = 30;
             const totalPartDuration: number = 480;
             const firstPlayer: FirstPlayer = FirstPlayer.CREATOR;
             const rulesConfig: MGPOptional<RulesConfig> = MGPOptional.empty();
-            await configRoomService.proposeConfig(configRoomId,
+            await configRoomService.proposeConfig(gameId,
                                                   partType,
                                                   maximalMoveDuration,
                                                   firstPlayer,
                                                   totalPartDuration,
                                                   rulesConfig);
-            // Then it should have delegated to the backend
+            // Then it should post on the expected resource
             const jsonConfig: JSONValue = {
                 partStatus: PartStatus.CONFIG_PROPOSED.value,
                 partType: partType.value,
@@ -101,46 +132,58 @@ describe('ConfigRoomService', () => {
                 firstPlayer: firstPlayer.value,
                 rulesConfig: {},
             };
-            expect(backendService.proposeConfig).toHaveBeenCalledOnceWith(configRoomId, jsonConfig);
+            const config: string = encodeURIComponent(JSON.stringify(jsonConfig));
+            const expectedEndpoint: string = endpoint(`/config-room/${gameId}?action=propose&config=${config}`);
+            expect(window.fetch).toHaveBeenCalledOnceWith(expectedEndpoint, expectedParams('POST'));
         }));
+
     });
 
-    describe('setChosenOpponent', () => {
+    describe('selectOpponent', () => {
 
-        it('should delegate to backend', fakeAsync(async() => {
-            // Given a config room
-            const configRoomId: string = 'configRoomId';
-            spyOn(backendService, 'selectOpponent').and.callFake(async() => {});
-            // When calling removeCandidate
-            await configRoomService.setChosenOpponent(configRoomId, UserMocks.CANDIDATE_MINIMAL_USER);
-            // Then it should have delegated to the backend
-            expect(backendService.selectOpponent)
-                .toHaveBeenCalledOnceWith(configRoomId, UserMocks.CANDIDATE_MINIMAL_USER);
+        it('should POST on the expected resource', fakeAsync(async() => {
+            // Given a game
+            const response: Response = Response.json({}, { status: 200 });
+            spyOn(window, 'fetch').and.resolveTo(response);
+            const gameId: string = 'game-id';
+            // When selecting an opponent
+            const opponent: MinimalUser = UserMocks.OPPONENT_MINIMAL_USER;
+            await configRoomService.selectOpponent(gameId, opponent);
+            // Then it should post on the expected resource
+            const opponentStr: string = encodeURIComponent(JSON.stringify(opponent));
+            const expectedEndpoint: string = endpoint(`/config-room/${gameId}?action=selectOpponent&opponent=${opponentStr}`);
+            expect(window.fetch).toHaveBeenCalledOnceWith(expectedEndpoint, expectedParams('POST'));
         }));
+
     });
+
     describe('reviewConfig', () => {
 
-        it('should delegate to backend', fakeAsync(async() => {
-            // Given a config room we want to review
-            const configRoomId: string = 'configRoomId';
-            spyOn(backendService, 'reviewConfig').and.callFake(async() => {});
-            // When calling reviewConfig
-            await configRoomService.reviewConfig(configRoomId);
-            // Then it should have delegated to the backend
-            expect(backendService.reviewConfig).toHaveBeenCalledOnceWith(configRoomId);
+        it('should POST on the expected resource', fakeAsync(async() => {
+            // Given a game
+            const response: Response = Response.json({}, { status: 200 });
+            spyOn(window, 'fetch').and.resolveTo(response);
+            const gameId: string = 'game-id';
+            // When reviewing config
+            await configRoomService.reviewConfig(gameId);
+            // Then it should post on the expected resource
+            const expectedEndpoint: string = endpoint(`/config-room/${gameId}?action=review`);
+            expect(window.fetch).toHaveBeenCalledOnceWith(expectedEndpoint, expectedParams('POST'));
         }));
     });
 
     describe('reviewConfigAndRemoveChosenOpponent', () => {
 
-        it('should delegate to backend', fakeAsync(async() => {
-            // Given a config room we want to review
-            const configRoomId: string = 'configRoomId';
-            spyOn(backendService, 'reviewConfigAndRemoveChosenOpponent').and.callFake(async() => {});
-            // When calling reviewConfig
-            await configRoomService.reviewConfigAndRemoveChosenOpponent(configRoomId);
-            // Then it should have delegated to the backend
-            expect(backendService.reviewConfigAndRemoveChosenOpponent).toHaveBeenCalledOnceWith(configRoomId);
+        it('should POST on the expected resource', fakeAsync(async() => {
+            // Given a game
+            const response: Response = Response.json({}, { status: 200 });
+            spyOn(window, 'fetch').and.resolveTo(response);
+            const gameId: string = 'game-id';
+            // When reviewing config
+            await configRoomService.reviewConfigAndRemoveChosenOpponent(gameId);
+            // Then it should post on the expected resource
+            const expectedEndpoint: string = endpoint(`/config-room/${gameId}?action=reviewConfigAndRemoveOpponent`);
+            expect(window.fetch).toHaveBeenCalledOnceWith(expectedEndpoint, expectedParams('POST'));
         }));
     });
 

@@ -17,28 +17,15 @@ import { JSONValue, MGPOptional, MGPValidation, MGPValidationTestUtils } from '@
 import { UserMocks } from 'src/app/domain/UserMocks.spec';
 import { Subscription } from 'rxjs';
 import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
-import { BackendService } from '../BackendService';
 import { MinimalUser } from 'src/app/domain/MinimalUser';
 import { BlankComponent } from 'src/app/utils/tests/TestUtils.spec';
+import { PartMocks } from 'src/app/domain/PartMocks.spec';
+import { endpoint, expectedParams } from './BackendService.spec';
 
 describe('GameService', () => {
 
     let gameService: GameService;
     let partDAO: PartDAO;
-    let backendService: BackendService;
-
-    async function expectToDelegateTo<T>(method: keyof BackendService,
-                                         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                                         expectedArgs: any[], returnValue: any,
-                                         call: () => Promise<T>)
-    : Promise<T>
-    {
-        spyOn(backendService, method).and.callFake(async() => returnValue);
-        const result: T = await call();
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        expect(backendService[method]).toHaveBeenCalledOnceWith(...expectedArgs as any);
-        return result;
-    }
 
     beforeEach(fakeAsync(async() => {
         await TestBed.configureTestingModule({
@@ -57,7 +44,6 @@ describe('GameService', () => {
         }).compileComponents();
         gameService = TestBed.inject(GameService);
         partDAO = TestBed.inject(PartDAO);
-        backendService = TestBed.inject(BackendService);
         ConnectedUserServiceMock.setUser(UserMocks.CREATOR_AUTH_USER);
     }));
 
@@ -95,19 +81,47 @@ describe('GameService', () => {
         subscription.unsubscribe();
     }));
 
+    describe('getGameName', () => {
+
+        it('should fetch expected resource and extract game name', fakeAsync(async() => {
+            // Given an existing game
+            const response: Response = Response.json({ gameName: 'P4' });
+            spyOn(window, 'fetch').and.resolveTo(response);
+            const gameId: string = 'game-id';
+            // When calling getGameName
+            const gameName: MGPOptional<string> = await gameService.getGameName(gameId);
+            // Then it should fetch the expected resource and return the game name
+            expect(window.fetch).toHaveBeenCalledOnceWith(endpoint(`/game/${gameId}?onlyGameName`), expectedParams('GET'));
+            expect(gameName).toEqual(MGPOptional.of('P4'));
+        }));
+
+        it('should return MGPOptional.empty if there is no corresponding game', fakeAsync(async() => {
+            // Given a game id corresponding to no game
+            const response: Response = Response.error();
+            spyOn(window, 'fetch').and.resolveTo(response);
+            const gameId: string = 'game-id';
+            // When calling getGameName
+            const gameName: MGPOptional<string> = await gameService.getGameName(gameId);
+            // Then it should fetch the expected resource and return no game name
+            expect(window.fetch).toHaveBeenCalledOnceWith(endpoint(`/game/${gameId}?onlyGameName`), expectedParams('GET'));
+            expect(gameName).toEqual(MGPOptional.empty());
+        }));
+
+    });
+
     describe('getGameValidity', () => {
 
-        it('should delegate to backend', fakeAsync(async() => {
+        it('should succeed with valid game', fakeAsync(async() => {
             // Given an existing game
             const gameId: string = 'gameId';
             const gameName: string = 'P4';
-            spyOn(backendService, 'getGameName').and.callFake(async() => MGPOptional.of(gameName));
+            const response: Response = Response.json({ gameName: 'P4' });
+            spyOn(window, 'fetch').and.resolveTo(response);
 
             // When calling getGameValidity
             const result: MGPValidation = await gameService.getGameValidity(gameId, gameName);
 
-            // Then it should have delegated to the backend
-            expect(backendService.getGameName).toHaveBeenCalledOnceWith(gameId);
+            // Then it should give us a success
             MGPValidationTestUtils.expectToBeSuccess(result);
         }));
 
@@ -115,13 +129,13 @@ describe('GameService', () => {
             // Given a game that does not exist
             const gameId: string = 'gameId';
             const gameName: string = 'P4';
-            spyOn(backendService, 'getGameName').and.callFake(async() => MGPOptional.empty());
+            const response: Response = Response.error();
+            spyOn(window, 'fetch').and.resolveTo(response);
 
             // When calling getGameValidity
             const result: MGPValidation = await gameService.getGameValidity(gameId, gameName);
 
             // Then it should have delegated to the backend and failed
-            expect(backendService.getGameName).toHaveBeenCalledOnceWith(gameId);
             MGPValidationTestUtils.expectToBeFailure(result, 'This game does not exist!');
         }));
 
@@ -129,286 +143,221 @@ describe('GameService', () => {
             // Given a game that is not the one we expect
             const gameId: string = 'gameId';
             const gameName: string = 'P4';
-
-            spyOn(backendService, 'getGameName').and.callFake(async() => MGPOptional.of('Quarto'));
+            const response: Response = Response.json({ gameName: 'Quarto' });
+            spyOn(window, 'fetch').and.resolveTo(response);
 
             // When calling getGameValidity
             const result: MGPValidation = await gameService.getGameValidity(gameId, gameName);
 
             // Then it should have delegated to the backend and failed
-            expect(backendService.getGameName).toHaveBeenCalledOnceWith(gameId);
             MGPValidationTestUtils.expectToBeFailure(result, 'This is the wrong game type!');
         }));
     });
 
-    describe('createPartConfigRoomAndChat', () => {
+    describe('createGame', () => {
 
-        it('should delegate to backend', fakeAsync(async() => {
+        it('should fetch expected resource and extract game id', fakeAsync(async() => {
             // Given a game
-            const gameName: string = 'P4';
-
-            // When creating it
-            // Then it should have delegated to the backend
-            const result: string = await expectToDelegateTo('createGame', [gameName], 'gameId', async() => {
-                return gameService.createPartConfigRoomAndChat(gameName);
-            });
-            expect(result).toBe('gameId');
+            const response: Response = Response.json({ id: 'game-id' });
+            spyOn(window, 'fetch').and.resolveTo(response);
+            // When calling createGame
+            const gameId: string = await gameService.createGame('P4');
+            // Then it should fetch the expected resource and return the game id
+            expect(window.fetch).toHaveBeenCalledOnceWith(endpoint('/game?gameName=P4'), expectedParams('POST'));
+            expect(gameId).toEqual('game-id');
         }));
 
     });
 
-    describe('deletePart', () => {
+    describe('deleteGame', () => {
 
-        it('should delegate to backend', fakeAsync(async() => {
+        it('should delete the expected resource', fakeAsync(async() => {
             // Given a game
-            const gameId: string = 'gameId';
-
-            // When deleting it
-            // Then it should delegate to the backend
-            await expectToDelegateTo('deleteGame', [gameId], undefined, () => {
-                return gameService.deletePart(gameId);
-            });
+            const response: Response = Response.json({}, { status: 200 });
+            spyOn(window, 'fetch').and.resolveTo(response);
+            const gameId: string = 'game-id';
+            // When calling deleteGame
+            await gameService.deleteGame(gameId);
+            // Then it should delete the resource
+            expect(window.fetch).toHaveBeenCalledOnceWith(endpoint(`/game/${gameId}`), expectedParams('DELETE'));
         }));
 
     });
+
 
     describe('acceptConfig', () => {
 
-        it('should delegate to backend', fakeAsync(async() => {
+        it('should POST on the expected resource', fakeAsync(async() => {
             // Given a game
-            const gameId: string = 'gameId';
-            // When accepting its config
-            // Then it should delegate to the backend
-            await expectToDelegateTo('acceptConfig', [gameId], undefined, () => {
-                return gameService.acceptConfig(gameId);
-            });
+            const response: Response = Response.json({}, { status: 200 });
+            spyOn(window, 'fetch').and.resolveTo(response);
+            const gameId: string = 'game-id';
+            // When calling acceptConfig
+            await gameService.acceptConfig(gameId);
+            // Then it should post on the expected resource
+            expect(window.fetch).toHaveBeenCalledOnceWith(endpoint(`/config-room/${gameId}?action=accept`), expectedParams('POST'));
         }));
 
     });
 
     describe('getExistingGame', () => {
 
-        it('should delegate to backend', fakeAsync(async() => {
+        it('should fetch expected resource and extract game name', fakeAsync(async() => {
             // Given a game
-            const gameId: string = 'gameId';
-            const game: Part = {
-                typeGame: 'P4',
-                playerZero: UserMocks.CREATOR_MINIMAL_USER,
-                turn: -1,
-                result: 0,
-            };
-
-            // When getting the game
-            // Then it should delegate to the backend
-            const result: Part = await expectToDelegateTo('getGame', [gameId], game, () => {
-                return gameService.getExistingGame(gameId);
-            });
-            expect(result).toEqual(game);
+            const game: Part = PartMocks.INITIAL;
+            const response: Response = Response.json(game);
+            spyOn(window, 'fetch').and.resolveTo(response);
+            const gameId: string = 'game-id';
+            // When calling getGame
+            const actualGame: Part = await gameService.getExistingGame(gameId);
+            // Then it should fetch the full game
+            expect(window.fetch).toHaveBeenCalledOnceWith(endpoint(`/game/${gameId}`), expectedParams('GET'));
+            expect(actualGame).toEqual(game);
         }));
 
     });
 
     describe('resign', () => {
 
-        it('should delegate to backend', fakeAsync(async() => {
+        it('should POST on the expected resource', fakeAsync(async() => {
             // Given a game
-            const gameId: string = 'gameId';
-            // When resigning
-            // Then it should delegate to the backend
-            await expectToDelegateTo('resign', [gameId], undefined, () => {
-                return gameService.resign(gameId);
-            });
+            const response: Response = Response.json({}, { status: 200 });
+            spyOn(window, 'fetch').and.resolveTo(response);
+            const gameId: string = 'game-id';
+            // When calling resign
+            await gameService.resign(gameId);
+            // Then it should post on the expected resource
+            expect(window.fetch).toHaveBeenCalledOnceWith(endpoint(`/game/${gameId}?action=resign`), expectedParams('POST'));
         }));
 
     });
 
     describe('notifyTimeout', () => {
 
-        it('should delegate to backend', fakeAsync(async() => {
+        it('should POST on the expected resource', fakeAsync(async() => {
             // Given a game
-            const gameId: string = 'gameId';
-            const winner: MinimalUser = UserMocks.CREATOR_MINIMAL_USER;
+            const response: Response = Response.json({}, { status: 200 });
+            spyOn(window, 'fetch').and.resolveTo(response);
+            const gameId: string = 'game-id';
+            // When calling notifyTimeout
+            const winner: MinimalUser = UserMocks.CANDIDATE_MINIMAL_USER;
             const loser: MinimalUser = UserMocks.OPPONENT_MINIMAL_USER;
-            // When notifying a timeout
-            // Then it should delegate to the backend
-            await expectToDelegateTo('notifyTimeout', [gameId, winner, loser], undefined, () => {
-                return gameService.notifyTimeout(gameId, winner, loser);
-            });
-        }));
-    });
-
-    describe('proposeDraw', () => {
-
-        it('should delegate to backend', fakeAsync(async() => {
-            // Given a game
-            const gameId: string = 'gameId';
-            // When proposing a draw
-            // Then it should delegate to the backend
-            await expectToDelegateTo('proposeDraw', [gameId], undefined, () => {
-                return gameService.proposeDraw(gameId);
-            });
-        }));
-    });
-
-    describe('acceptDraw', () => {
-
-        it('should delegate to backend', fakeAsync(async() => {
-            // Given a game
-            const gameId: string = 'gameId';
-            // When accepting a draw
-            // Then it should delegate to the backend
-            await expectToDelegateTo('acceptDraw', [gameId], undefined, () => {
-                return gameService.acceptDraw(gameId);
-            });
-        }));
-    });
-
-    describe('refuseDraw', () => {
-
-        it('should delegate to backend', fakeAsync(async() => {
-            // Given a game
-            const gameId: string = 'gameId';
-            // When refusing a draw
-            // Then it should delegate to the backend
-            await expectToDelegateTo('refuseDraw', [gameId], undefined, () => {
-                return gameService.refuseDraw(gameId);
-            });
-        }));
-    });
-
-    describe('proposeRematch', () => {
-
-        it('should delegate to backend', fakeAsync(async() => {
-            // Given a game
-            const gameId: string = 'gameId';
-            // When proposing a rematch
-            // Then it should delegate to the backend
-            await expectToDelegateTo('proposeRematch', [gameId], undefined, () => {
-                return gameService.proposeRematch(gameId);
-            });
-        }));
-    });
-
-    describe('rejectRematch', () => {
-
-        it('should delegate to backend', fakeAsync(async() => {
-            // Given a game
-            const gameId: string = 'gameId';
-            // When rejecting a rematch
-            // Then it should delegate to the backend
-            await expectToDelegateTo('rejectRematch', [gameId], undefined, () => {
-                return gameService.rejectRematch(gameId);
-            });
-        }));
-    });
-
-    describe('acceptRematch', () => {
-
-        it('should delegate to backend', fakeAsync(async() => {
-            // Given a game
-            const gameId: string = 'gameId';
-            // When accepting a rematch
-            // Then it should delegate to the backend
-            await expectToDelegateTo('acceptRematch', [gameId], undefined, () => {
-                return gameService.acceptRematch(gameId);
-            });
-        }));
-    });
-
-    describe('askTakeBack', () => {
-
-        it('should delegate to backend', fakeAsync(async() => {
-            // Given a game
-            const gameId: string = 'gameId';
-            // When asking a take back
-            // Then it should delegate to the backend
-            await expectToDelegateTo('askTakeBack', [gameId], undefined, () => {
-                return gameService.askTakeBack(gameId);
-            });
-        }));
-    });
-
-    describe('acceptTakeBack', () => {
-
-        it('should delegate to backend', fakeAsync(async() => {
-            // Given a game
-            const gameId: string = 'gameId';
-            // When accepting a take back
-            // Then it should delegate to the backend
-            await expectToDelegateTo('acceptTakeBack', [gameId], undefined, () => {
-                return gameService.acceptTakeBack(gameId);
-            });
+            await gameService.notifyTimeout(gameId, winner, loser);
+            // Then it should post on the expected resource
+            const winnerStr: string = encodeURIComponent(JSON.stringify(winner));
+            const loserStr: string = encodeURIComponent(JSON.stringify(loser));
+            const expectedEndpoint: string = endpoint(`/game/${gameId}?action=notifyTimeout&winner=${winnerStr}&loser=${loserStr}`);
+            expect(window.fetch).toHaveBeenCalledOnceWith(expectedEndpoint, expectedParams('POST'));
         }));
 
     });
 
-    describe('refuseTakeBack', () => {
 
-        it('should delegate to backend', fakeAsync(async() => {
-            // Given a game
-            const gameId: string = 'gameId';
-            // When refusing a take back
-            // Then it should delegate to the backend
-            await expectToDelegateTo('refuseTakeBack', [gameId], undefined, () => {
-                return gameService.refuseTakeBack(gameId);
-            });
-        }));
-    });
+    function testSimpleAction(methodName: string, action: string): void {
+        describe(methodName, () => {
 
-    describe('addGlobalTime', () => {
+            it('should POST on the expected resource', fakeAsync(async() => {
+                // Given a game
+                const response: Response = Response.json({}, { status: 200 });
+                spyOn(window, 'fetch').and.resolveTo(response);
+                const gameId: string = 'game-id';
+                // When doing the action
+                await gameService[methodName](gameId);
+                // Then it should post on the expected resource
+                expect(window.fetch).toHaveBeenCalledOnceWith(endpoint(`/game/${gameId}?action=${action}`), expectedParams('POST'));
+            }));
 
-        it('should delegate to backend', fakeAsync(async() => {
-            // Given a game
-            const gameId: string = 'gameId';
-            // When adding global time
-            // Then it should delegate to the backend
-            await expectToDelegateTo('addGlobalTime', [gameId], undefined, () => {
-                return gameService.addGlobalTime(gameId);
-            });
-        }));
-    });
+        });
+    }
 
-    describe('addTurnTime', () => {
-
-        it('should delegate to backend', fakeAsync(async() => {
-            // Given a game
-            const gameId: string = 'gameId';
-            // When adding turn time
-            // Then it should delegate to the backend
-            await expectToDelegateTo('addTurnTime', [gameId], undefined, () => {
-                return gameService.addTurnTime(gameId);
-            });
-        }));
-    });
+    testSimpleAction('proposeDraw', 'proposeDraw');
+    testSimpleAction('acceptDraw', 'acceptDraw');
+    testSimpleAction('refuseDraw', 'refuseDraw');
+    testSimpleAction('proposeRematch', 'proposeRematch');
+    testSimpleAction('acceptRematch', 'acceptRematch');
+    testSimpleAction('rejectRematch', 'rejectRematch');
+    testSimpleAction('askTakeBack', 'askTakeBack');
+    testSimpleAction('acceptTakeBack', 'acceptTakeBack');
+    testSimpleAction('refuseTakeBack', 'refuseTakeBack');
+    testSimpleAction('addGlobalTime', 'addGlobalTime');
+    testSimpleAction('addTurnTime', 'addTurnTime');
 
     describe('addMove', () => {
 
-        it('should delegate to backend', fakeAsync(async() => {
+        it('should POST on the expected resource', fakeAsync(async() => {
             // Given a game
-            const gameId: string = 'gameId';
-            const move: JSONValue = { x: 0 };
-            const scores: MGPOptional<PlayerNumberMap> = MGPOptional.empty();
-            // When adding move
-            // Then it should delegate to the backend
-            await expectToDelegateTo('move', [gameId, move, scores], undefined, () => {
-                return gameService.addMove(gameId, move, scores);
-            });
+            const response: Response = Response.json({}, { status: 200 });
+            spyOn(window, 'fetch').and.resolveTo(response);
+            const gameId: string = 'game-id';
+            // When doing a move
+            const move: JSONValue = { x: 1 };
+            await gameService.addMove(gameId, move, MGPOptional.empty());
+            // Then it should post on the expected resource
+            const moveStr: string = encodeURIComponent(JSON.stringify(move));
+            const expectedEndpoint: string = endpoint(`/game/${gameId}?action=move&move=${moveStr}`);
+            expect(window.fetch).toHaveBeenCalledOnceWith(expectedEndpoint, expectedParams('POST'));
         }));
+
+        it('should POST on the expected resource (with scores)', fakeAsync(async() => {
+            // Given a game
+            const response: Response = Response.json({}, { status: 200 });
+            spyOn(window, 'fetch').and.resolveTo(response);
+            const gameId: string = 'game-id';
+            // When doing a move (with scores)
+            const move: JSONValue = { x: 1 };
+            const scores: PlayerNumberMap = PlayerNumberMap.of(0, 1);
+            await gameService.addMove(gameId, move, MGPOptional.of(scores));
+            // Then it should post on the expected resource
+            const moveStr: string = encodeURIComponent(JSON.stringify(move));
+            const expectedEndpoint: string = endpoint(`/game/${gameId}?action=move&move=${moveStr}&score0=${scores.get(Player.ZERO)}&score1=${scores.get(Player.ONE)}`);
+            expect(window.fetch).toHaveBeenCalledOnceWith(expectedEndpoint, expectedParams('POST'));
+        }));
+
     });
 
     describe('addMoveAndEndGame', () => {
 
-        it('should delegate to backend', fakeAsync(async() => {
+        it('should POST on the expected resource', fakeAsync(async() => {
             // Given a game
-            const gameId: string = 'gameId';
-            const move: JSONValue = { x: 0 };
-            const scores: MGPOptional<PlayerNumberMap> = MGPOptional.empty();
-            const winner: PlayerOrNone = Player.ZERO;
-            // When adding move and ending game
-            // Then it should delegate to the backend
-            await expectToDelegateTo('moveAndEnd', [gameId, move, scores, winner], undefined, () => {
-                return gameService.addMoveAndEndGame(gameId, move, scores, winner);
-            });
+            const response: Response = Response.json({}, { status: 200 });
+            spyOn(window, 'fetch').and.resolveTo(response);
+            const gameId: string = 'game-id';
+            // When doing a move
+            const move: JSONValue = { x: 1 };
+            await gameService.addMoveAndEndGame(gameId, move, MGPOptional.empty(), PlayerOrNone.NONE);
+            // Then it should post on the expected resource
+            const moveStr: string = encodeURIComponent(JSON.stringify(move));
+            const expectedEndpoint: string = endpoint(`/game/${gameId}?action=moveAndEnd&move=${moveStr}`);
+            expect(window.fetch).toHaveBeenCalledOnceWith(expectedEndpoint, expectedParams('POST'));
+        }));
+
+        it('should POST on the expected resource (with scores)', fakeAsync(async() => {
+            // Given a game
+            const response: Response = Response.json({}, { status: 200 });
+            spyOn(window, 'fetch').and.resolveTo(response);
+            const gameId: string = 'game-id';
+            // When doing a move (with scores)
+            const move: JSONValue = { x: 1 };
+            const scores: PlayerNumberMap = PlayerNumberMap.of(0, 1);
+            await gameService.addMoveAndEndGame(gameId, move, MGPOptional.of(scores), PlayerOrNone.NONE);
+            // Then it should post on the expected resource
+            const moveStr: string = encodeURIComponent(JSON.stringify(move));
+            const expectedEndpoint: string = endpoint(`/game/${gameId}?action=moveAndEnd&move=${moveStr}&score0=${scores.get(Player.ZERO)}&score1=${scores.get(Player.ONE)}`);
+            expect(window.fetch).toHaveBeenCalledOnceWith(expectedEndpoint, expectedParams('POST'));
+        }));
+
+        it('should POST on the expected resource (with winner)', fakeAsync(async() => {
+            // Given a game
+            const response: Response = Response.json({}, { status: 200 });
+            spyOn(window, 'fetch').and.resolveTo(response);
+            const gameId: string = 'game-id';
+            // When doing a move
+            const move: JSONValue = { x: 1 };
+            await gameService.addMoveAndEndGame(gameId, move, MGPOptional.empty(), Player.ZERO);
+            // Then it should post on the expected resource
+            const moveStr: string = encodeURIComponent(JSON.stringify(move));
+            const expectedEndpoint: string = endpoint(`/game/${gameId}?action=moveAndEnd&move=${moveStr}&winner=0`);
+            expect(window.fetch).toHaveBeenCalledOnceWith(expectedEndpoint, expectedParams('POST'));
         }));
     });
 

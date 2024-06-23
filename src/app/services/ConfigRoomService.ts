@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { FirstPlayer, ConfigRoom, PartStatus, PartType } from '../domain/ConfigRoom';
 import { ConfigRoomDAO } from '../dao/ConfigRoomDAO';
-import { FirestoreJSONObject, MGPOptional, MGPValidation } from '@everyboard/lib';
+import { FirestoreJSONObject, MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 import { Subscription } from 'rxjs';
 import { MinimalUser } from '../domain/MinimalUser';
 import { FirestoreCollectionObserver } from '../dao/FirestoreCollectionObserver';
@@ -9,16 +9,24 @@ import { FirestoreDocument, IFirestoreDAO } from '../dao/FirestoreDAO';
 import { RulesConfig } from '../jscaip/RulesConfigUtil';
 import { BackendService } from './BackendService';
 import { Debug } from '../utils/Debug';
+import { ConnectedUserService } from './ConnectedUserService';
+import { Localized } from '../utils/LocaleUtils';
+
+export class ConfigRoomServiceFailure {
+    public static readonly GAME_DOES_NOT_EXIST: Localized = () => $localize`This game does not exist!`;
+}
+
 
 @Injectable({
     providedIn: 'root',
 })
 @Debug.log
-export class ConfigRoomService {
+export class ConfigRoomService extends BackendService {
 
-    public constructor(private readonly configRoomDAO: ConfigRoomDAO,
-                       private readonly backendService: BackendService)
+    public constructor(protected readonly configRoomDAO: ConfigRoomDAO,
+                       connectedUserService: ConnectedUserService)
     {
+        super(connectedUserService);
     }
 
     public subscribeToChanges(gameId: string, callback: (doc: MGPOptional<ConfigRoom>) => void): Subscription {
@@ -59,41 +67,68 @@ export class ConfigRoomService {
         return subCollection.observingWhere([], observer);
     }
 
-    public joinGame(gameId: string): Promise<MGPValidation> {
-        return this.backendService.joinGame(gameId);
+    /** Join a game */
+    public async joinGame(gameId: string): Promise<MGPValidation> {
+        const endpoint: string = `config-room/${gameId}/candidates`;
+        const result: MGPFallible<Response> = await this.performRequest('POST', endpoint);
+        if (result.isSuccess()) {
+            return MGPValidation.SUCCESS;
+        } else {
+            Utils.assert(result.getReason() === 'not_found', `Unexpected failure from backend: ${result.getReason()}`);
+            return MGPValidation.failure(ConfigRoomServiceFailure.GAME_DOES_NOT_EXIST());
+        }
     }
 
-    public removeCandidate(gameId: string, candidate: MinimalUser): Promise<void> {
-        return this.backendService.removeCandidate(gameId, candidate.id);
+    /** Remove a candidate from a config room (it can be ourselves or someone else) */
+    public async removeCandidate(gameId: string, candidateId: string): Promise<void> {
+        const endpoint: string = `config-room/${gameId}/candidates/${candidateId}`;
+        const result: MGPFallible<Response> = await this.performRequest('DELETE', endpoint);
+        this.assertSuccess(result);
     }
 
-    public proposeConfig(gameId: string,
-                         partType: PartType,
-                         maximalMoveDuration: number,
-                         firstPlayer: FirstPlayer,
-                         totalPartDuration: number,
-                         rulesConfig: MGPOptional<RulesConfig>)
+    /** Propose a config to the opponent */
+    public async proposeConfig(gameId: string,
+                               partType: PartType,
+                               maximalMoveDuration: number,
+                               firstPlayer: FirstPlayer,
+                               totalPartDuration: number,
+                               rulesConfig: MGPOptional<RulesConfig>)
     : Promise<void>
     {
-        return this.backendService.proposeConfig(gameId, {
+        const config: Partial<ConfigRoom> = {
             partStatus: PartStatus.CONFIG_PROPOSED.value,
             partType: partType.value,
             maximalMoveDuration,
             totalPartDuration,
             firstPlayer: firstPlayer.value,
             rulesConfig: rulesConfig.getOrElse({}),
-        });
+        };
+        const configEncoded: string = encodeURIComponent(JSON.stringify(config));
+        const endpoint: string = `config-room/${gameId}?action=propose&config=${configEncoded}`;
+        const result: MGPFallible<Response> = await this.performRequest('POST', endpoint);
+        this.assertSuccess(result);
     }
 
-    public setChosenOpponent(gameId: string, chosenOpponent: MinimalUser): Promise<void> {
-        return this.backendService.selectOpponent(gameId, chosenOpponent);
+    /** Select an opponent */
+    public async selectOpponent(gameId: string, opponent: MinimalUser): Promise<void> {
+        const opponentEncoded: string = encodeURIComponent(JSON.stringify(opponent));
+        const endpoint: string = `config-room/${gameId}?action=selectOpponent&opponent=${opponentEncoded}`;
+        const result: MGPFallible<Response> = await this.performRequest('POST', endpoint);
+        this.assertSuccess(result);
     }
 
-    public reviewConfig(gameId: string): Promise<void> {
-        return this.backendService.reviewConfig(gameId);
+    /** Review a config proposed to the opponent */
+    public async reviewConfig(gameId: string): Promise<void> {
+        const endpoint: string = `config-room/${gameId}?action=review`;
+        const result: MGPFallible<Response> = await this.performRequest('POST', endpoint);
+        this.assertSuccess(result);
     }
 
-    public reviewConfigAndRemoveChosenOpponent(gameId: string): Promise<void> {
-        return this.backendService.reviewConfigAndRemoveChosenOpponent(gameId);
+    /** Review a config proposed to the opponent, who just left */
+    public async reviewConfigAndRemoveChosenOpponent(gameId: string): Promise<void> {
+        const endpoint: string = `config-room/${gameId}?action=reviewConfigAndRemoveOpponent`;
+        const result: MGPFallible<Response> = await this.performRequest('POST', endpoint);
+        this.assertSuccess(result);
     }
+
 }

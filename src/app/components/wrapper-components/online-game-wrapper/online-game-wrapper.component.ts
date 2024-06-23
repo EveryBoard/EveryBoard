@@ -25,9 +25,9 @@ import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { OGWCRequestManagerService, RequestInfo } from './OGWCRequestManagerService';
 import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
-import { BackendService } from 'src/app/services/BackendService';
 import { Debug } from 'src/app/utils/Debug';
 import { AbstractRules, SuperRules } from 'src/app/jscaip/Rules';
+import { ServerTimeService } from 'src/app/services/ServerTimeService';
 
 export class OnlineGameWrapperMessages {
 
@@ -87,7 +87,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
                        private readonly gameEventService: GameEventService,
                        private readonly timeManager: OGWCTimeManagerService,
                        private readonly requestManager: OGWCRequestManagerService,
-                       private readonly backendService: BackendService,
+                       private readonly serverTimeService: ServerTimeService,
                        private readonly cdr: ChangeDetectorRef)
     {
         super(activatedRoute, connectedUserService, router, messageDisplayer);
@@ -327,7 +327,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
 
     private async afterEventsBatch(): Promise<void> {
         const player: Player = Player.ofTurn(this.gameComponent.getTurn());
-        const serverTime: number = await this.backendService.getServerTime();
+        const serverTime: number = await this.serverTimeService.getServerTime();
         this.timeManager.afterEventsBatch(this.endGame, player, serverTime);
     }
 

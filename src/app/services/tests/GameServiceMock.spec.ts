@@ -9,17 +9,19 @@ import { ConnectedUserService } from '../ConnectedUserService';
 import { ConfigRoom, FirstPlayer, PartStatus, PartType } from 'src/app/domain/ConfigRoom';
 import { PartDAO } from 'src/app/dao/PartDAO';
 import { ChatDAO } from 'src/app/dao/ChatDAO';
-import { BackendFailure } from '../BackendService';
+import { GameService } from '../GameService';
 
 @Injectable({ providedIn: 'root' })
-export class BackendServiceMock {
+export class GameServiceMock extends GameService {
 
     public constructor(public readonly configRoomDAO: ConfigRoomDAO,
-                       public readonly partDAO: PartDAO,
+                       partDAO: PartDAO,
                        public readonly chatDAO: ChatDAO,
-                       public readonly connectedUserService: ConnectedUserService) {}
+                       connectedUserService: ConnectedUserService) {
+        super(partDAO, connectedUserService);
+    }
 
-    public async createGame(gameName: string): Promise<string> {
+    public override async createGame(gameName: string): Promise<string> {
         const creator: MinimalUser = this.connectedUserService.user.get().toMinimalUser();
         const game: Part = {
             typeGame: gameName,
@@ -47,18 +49,18 @@ export class BackendServiceMock {
         return gameId;
     }
 
-    public async getGameName(gameId: string): Promise<MGPOptional<string>> {
+    public override async getGameName(gameId: string): Promise<MGPOptional<string>> {
         // Read 1: get only the game name
         const game: MGPOptional<Part> = await this.partDAO.read(gameId);
         return game.map((g: Part) => g.typeGame);
     }
 
-    public async getGame(gameId: string): Promise<Part> {
+    public override async getExistingGame(gameId: string): Promise<Part> {
         // Read 1: get the game
         return (await this.partDAO.read(gameId)).get();
     }
 
-    public async deleteGame(gameId: string): Promise<void> {
+    public override async deleteGame(gameId: string): Promise<void> {
         // Write 1: delete the game
         await this.partDAO.delete(gameId);
         // Write 2: delete the chat
@@ -67,7 +69,7 @@ export class BackendServiceMock {
         await this.configRoomDAO.delete(gameId);
     }
 
-    public async acceptConfig(gameId: string): Promise<void> {
+    public override async acceptConfig(gameId: string): Promise<void> {
         // Read 1: retrieve the config room
         const configRoom: ConfigRoom = (await this.configRoomDAO.read(gameId)).get();
         // Write 1: accept the config room
@@ -90,7 +92,7 @@ export class BackendServiceMock {
         await this.partDAO.subCollectionDAO(gameId, 'events').create(start);
     }
 
-    public async resign(gameId: string): Promise<void> {
+    public override async resign(gameId: string): Promise<void> {
         const user: MinimalUser = this.connectedUserService.user.get().toMinimalUser();
         // Read 1: retrieve the game
         const game: Part = (await this.partDAO.read(gameId)).get();
@@ -108,7 +110,7 @@ export class BackendServiceMock {
         await this.action(gameId, 'EndGame');
     }
 
-    public async notifyTimeout(gameId: string, winner: MinimalUser, loser: MinimalUser): Promise<void> {
+    public override async notifyTimeout(gameId: string, winner: MinimalUser, loser: MinimalUser): Promise<void> {
         // Read 1: retrieve the game
         // Not needed here
         // Write 1: end the game
@@ -167,11 +169,11 @@ export class BackendServiceMock {
         await this.partDAO.subCollectionDAO(gameId, 'events').create(event);
     }
 
-    public async proposeDraw(gameId: string): Promise<void> {
+    public override async proposeDraw(gameId: string): Promise<void> {
         return this.request(gameId, 'Draw');
     }
 
-    public async acceptDraw(gameId: string): Promise<void> {
+    public override async acceptDraw(gameId: string): Promise<void> {
         const user: MinimalUser = this.connectedUserService.user.get().toMinimalUser();
         const game: Part = (await this.partDAO.read(gameId)).get();
         // Write 1: add response
@@ -189,39 +191,39 @@ export class BackendServiceMock {
         await this.action(gameId, 'EndGame');
     }
 
-    public async refuseDraw(gameId: string): Promise<void> {
+    public override async refuseDraw(gameId: string): Promise<void> {
         return this.reject(gameId, 'Draw');
     }
 
-    public async proposeRematch(gameId: string): Promise<void> {
+    public override async proposeRematch(gameId: string): Promise<void> {
         return this.request(gameId, 'Rematch');
     }
 
-    public async acceptRematch(gameId: string): Promise<void> {
+    public override async acceptRematch(gameId: string): Promise<void> {
         return this.accept(gameId, 'Rematch');
     }
 
-    public async rejectRematch(gameId: string): Promise<void> {
+    public override async rejectRematch(gameId: string): Promise<void> {
         return this.reject(gameId, 'Rematch');
     }
 
-    public async askTakeBack(gameId: string): Promise<void> {
+    public override async askTakeBack(gameId: string): Promise<void> {
         return this.request(gameId, 'TakeBack');
     }
 
-    public async acceptTakeBack(gameId: string): Promise<void> {
+    public override async acceptTakeBack(gameId: string): Promise<void> {
         return this.accept(gameId, 'TakeBack');
     }
 
-    public async refuseTakeBack(gameId: string): Promise<void> {
+    public override async refuseTakeBack(gameId: string): Promise<void> {
         return this.reject(gameId, 'TakeBack');
     }
 
-    public async addGlobalTime(gameId: string): Promise<void> {
+    public override async addGlobalTime(gameId: string): Promise<void> {
         return this.action(gameId, 'AddGlobalTime');
     }
 
-    public async addTurnTime(gameId: string): Promise<void> {
+    public override async addTurnTime(gameId: string): Promise<void> {
         return this.action(gameId, 'AddTurnTime');
     }
 
@@ -287,58 +289,21 @@ export class BackendServiceMock {
         }
     }
 
-    public async move(gameId: string,
-                      move: JSONValue,
-                      scores: MGPOptional<PlayerNumberMap>)
+    public override async addMove(gameId: string,
+                                  move: JSONValue,
+                                  scores: MGPOptional<PlayerNumberMap>)
     : Promise<void>
     {
         return this.moveAndMaybeEnd(gameId, move, scores, MGPOptional.empty());
     }
 
-    public async moveAndEnd(gameId: string,
-                            move: JSONValue,
-                            scores: MGPOptional<PlayerNumberMap>,
-                            winner: PlayerOrNone)
+    public override async addMoveAndEndGame(gameId: string,
+                                            move: JSONValue,
+                                            scores: MGPOptional<PlayerNumberMap>,
+                                            winner: PlayerOrNone)
     : Promise<void>
     {
         return this.moveAndMaybeEnd(gameId, move, scores, MGPOptional.of(winner));
     }
 
-    public async getServerTime(): Promise<number> {
-        return Date.now();
-    }
-
-    public async joinGame(gameId: string): Promise<MGPValidation> {
-        const configRoom: MGPOptional<ConfigRoom> = await this.configRoomDAO.read(gameId);
-        if (configRoom.isAbsent()) {
-            return MGPValidation.failure(BackendFailure.GAME_DOES_NOT_EXIST());
-        } else {
-            const candidate: MinimalUser = this.connectedUserService.user.get().toMinimalUser();
-            // Creator is not a candidate
-            if (configRoom.get().creator.id !== candidate.id) {
-                await this.configRoomDAO.subCollectionDAO(gameId, 'candidates').set(candidate.id, candidate);
-            }
-            return MGPValidation.SUCCESS;
-        }
-    }
-
-    public async removeCandidate(gameId: string, candidateId: string): Promise<void> {
-        await this.configRoomDAO.subCollectionDAO(gameId, 'candidates').delete(candidateId);
-    }
-
-    public async proposeConfig(gameId: string, config: Partial<ConfigRoom>): Promise<void> {
-        await this.configRoomDAO.update(gameId, config);
-    }
-
-    public async selectOpponent(gameId: string, opponent: MinimalUser): Promise<void> {
-        await this.configRoomDAO.update(gameId, { chosenOpponent: opponent });
-    }
-
-    public async reviewConfig(gameId: string): Promise<void> {
-        await this.configRoomDAO.update(gameId, { partStatus: PartStatus.PART_CREATED.value });
-    }
-
-    public async reviewConfigAndRemoveChosenOpponent(gameId: string): Promise<void> {
-        await this.configRoomDAO.update(gameId, { chosenOpponent: null, partStatus: PartStatus.PART_CREATED.value });
-    }
 }

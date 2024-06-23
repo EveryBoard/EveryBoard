@@ -117,7 +117,6 @@ export class PartCreationComponent implements OnInit, OnDestroy {
                        private readonly currentGameService: CurrentGameService,
                        private readonly gameService: GameService,
                        private readonly configRoomService: ConfigRoomService,
-                       private readonly chatService: ChatService,
                        private readonly userService: UserService,
                        private readonly formBuilder: FormBuilder,
                        private readonly messageDisplayer: MessageDisplayer,
@@ -316,7 +315,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         const opponent: MinimalUser = this.getUserFromName(opponentName);
         await Promise.all([
             this.currentGameService.updateCurrentGame({ opponent }),
-            this.configRoomService.setChosenOpponent(this.partId, opponent),
+            this.configRoomService.selectOpponent(this.partId, opponent),
         ]);
         return;
     }
@@ -346,7 +345,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
     public async cancelGameCreation(): Promise<void> {
         this.allDocDeleted = true;
         await this.currentGameService.removeCurrentGame();
-        await this.gameService.deletePart(this.partId);
+        await this.gameService.deleteGame(this.partId);
     }
 
     private async onCurrentConfigRoomUpdate(configRoomOpt: MGPOptional<ConfigRoom>): Promise<void> {
@@ -485,7 +484,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
             // A message will be displayed once the configRoom has been update
             await this.configRoomService.reviewConfigAndRemoveChosenOpponent(this.partId);
         }
-        return this.configRoomService.removeCandidate(this.partId, user);
+        return this.configRoomService.removeCandidate(this.partId, user.id);
     }
 
     public async startSendingPresenceTokens(): Promise<void> {
@@ -564,8 +563,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         } else {
             Debug.display('PartCreationComponent', 'ngOnDestroy', 'you are about to cancel game joining');
             await this.currentGameService.removeCurrentGame();
-            await this.configRoomService.removeCandidate(this.partId,
-                                                         this.connectedUserService.user.get().toMinimalUser());
+            await this.configRoomService.removeCandidate(this.partId, this.connectedUserService.user.get().id);
         }
     }
 }
