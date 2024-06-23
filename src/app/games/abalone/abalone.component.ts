@@ -184,7 +184,7 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneRules,
 
     private showDirection(): void {
         const state: AbaloneState = this.getState();
-        for (const dir of HexaDirection.factory.all) {
+        for (const dir of HexaDirection.ORTHOGONALS) {
             const startToEnd: AbaloneArrowInfo = this.getArrowPath(dir);
             let theoretical: AbaloneMove;
             if (this.selecteds.length === 1) {

@@ -35,6 +35,15 @@ export class HexaDirection extends Direction {
             ];
         };
 
+    public static readonly ORTHOGONALS: ReadonlyArray<HexaDirection> = [
+        HexaDirection.UP,
+        HexaDirection.UP_RIGHT,
+        HexaDirection.RIGHT,
+        HexaDirection.DOWN,
+        HexaDirection.DOWN_LEFT,
+        HexaDirection.LEFT,
+    ];
+
     public static readonly encoder: Encoder<HexaDirection> = Encoder.fromFunctions(
         (direction: HexaDirection): number => {
             switch (direction) {

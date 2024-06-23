@@ -307,7 +307,7 @@ export class YinshRules extends Rules<YinshMove, YinshState, YinshLegalityInform
 
     public getRingTargets(state: YinshState, start: Coord): Coord[] {
         const targets: Coord[] = [];
-        for (const dir of HexaDirection.factory.all) {
+        for (const dir of HexaDirection.ORTHOGONALS) {
             let pieceSeen: boolean = false;
             for (let cur: Coord = start.getNext(dir); state.isOnBoard(cur); cur = cur.getNext(dir)) {
                 const piece: YinshPiece = state.getPieceAt(cur);

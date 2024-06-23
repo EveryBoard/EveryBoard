@@ -21,14 +21,14 @@ export class AbaloneMoveGenerator extends MoveGenerator<AbaloneMove, AbaloneStat
                 if (state.getPieceAt(first).is(player) === false) {
                     continue;
                 }
-                for (const dir of HexaDirection.factory.all) {
+                for (const dir of HexaDirection.ORTHOGONALS) {
                     const move: AbaloneMove = AbaloneMove.ofSingleCoord(first, dir);
                     if (this.isAcceptablePush(move, state)) {
                         moves.push(move);
                     } else {
                         continue;
                     }
-                    for (const alignement of HexaDirection.factory.all) {
+                    for (const alignement of HexaDirection.ORTHOGONALS) {
                         for (let distance: number = 1; distance <= 2; distance++) {
                             if (alignement.equals(dir)) {
                                 break;

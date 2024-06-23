@@ -104,7 +104,7 @@ export class SixHeuristic extends AlignmentHeuristic<SixMove, SixState, SixVicto
 
     public searchVictoryOnlyForCircle(index: number, lastDrop: Coord, state: SixState): BoardInfo {
         const LAST_PLAYER: Player = state.getCurrentOpponent();
-        const initialDirection: HexaDirection = HexaDirection.factory.all[index];
+        const initialDirection: HexaDirection = HexaDirection.ORTHOGONALS[index];
         const testedCoords: Coord[] = [lastDrop];
         let testCoord: Coord = lastDrop.getNext(initialDirection, 1);
         while (testedCoords.length < 6) {
@@ -119,7 +119,7 @@ export class SixHeuristic extends AlignmentHeuristic<SixMove, SixState, SixVicto
             }
             const dirIndex: number = (index + testedCoords.length) % 6;
             testedCoords.push(testCoord);
-            const dir: HexaDirection = HexaDirection.factory.all[dirIndex];
+            const dir: HexaDirection = HexaDirection.ORTHOGONALS[dirIndex];
             testCoord = testCoord.getNext(dir, 1);
         }
         return {
@@ -132,7 +132,7 @@ export class SixHeuristic extends AlignmentHeuristic<SixMove, SixState, SixVicto
 
     public searchVictoryOnlyForLine(index: number, lastDrop: Coord, state: SixState): BoardInfo {
         const LAST_PLAYER: Player = state.getCurrentOpponent();
-        let dir: HexaDirection = HexaDirection.factory.all[index];
+        let dir: HexaDirection = HexaDirection.ORTHOGONALS[index];
         let testCoord: Coord = lastDrop.getNext(dir, 1);
         const victory: Coord[] = [lastDrop];
         let twoDirectionCovered: boolean = false;
@@ -166,7 +166,7 @@ export class SixHeuristic extends AlignmentHeuristic<SixMove, SixState, SixVicto
 
     public searchVictoryOnlyForTriangleCorner(index: number, lastDrop: Coord, state: SixState): BoardInfo {
         const LAST_PLAYER: Player = state.getCurrentOpponent();
-        let edgeDirection: HexaDirection = HexaDirection.factory.all[index];
+        let edgeDirection: HexaDirection = HexaDirection.ORTHOGONALS[index];
         const testedCoords: Coord[] = [lastDrop];
         let testCoord: Coord = lastDrop.getNext(edgeDirection, 1);
         while (testedCoords.length < 6) {
@@ -183,7 +183,7 @@ export class SixHeuristic extends AlignmentHeuristic<SixMove, SixState, SixVicto
             if (testedCoords.length % 2 === 0) {
                 // reached a corner, let's turn
                 const dirIndex: number = (index + testedCoords.length) % 6;
-                edgeDirection = HexaDirection.factory.all[dirIndex];
+                edgeDirection = HexaDirection.ORTHOGONALS[dirIndex];
             }
             testedCoords.push(testCoord);
             testCoord = testCoord.getNext(edgeDirection, 1);
@@ -198,7 +198,7 @@ export class SixHeuristic extends AlignmentHeuristic<SixMove, SixState, SixVicto
 
     public searchVictoryOnlyForTriangleEdge(index: number, lastDrop: Coord, state: SixState): BoardInfo {
         const LAST_PLAYER: Player = state.getCurrentOpponent();
-        let edgeDirection: HexaDirection = HexaDirection.factory.all[index];
+        let edgeDirection: HexaDirection = HexaDirection.ORTHOGONALS[index];
         const testedCoords: Coord[] = [lastDrop];
         let testCoord: Coord = lastDrop.getNext(edgeDirection, 1);
         while (testedCoords.length < 6) {
@@ -216,7 +216,7 @@ export class SixHeuristic extends AlignmentHeuristic<SixMove, SixState, SixVicto
             if (testedCoords.length % 2 === 0) {
                 // reached a corner, let's turn
                 const dirIndex: number = (index + testedCoords.length) % 6;
-                edgeDirection = HexaDirection.factory.all[dirIndex];
+                edgeDirection = HexaDirection.ORTHOGONALS[dirIndex];
             }
             testCoord = testCoord.getNext(edgeDirection, 1);
         }
@@ -249,7 +249,7 @@ export class SixHeuristic extends AlignmentHeuristic<SixMove, SixState, SixVicto
 
     public getBoardInfoForCircle(index: number, lastDrop: Coord, state: SixState, boardInfo: BoardInfo): BoardInfo {
         const LAST_OPPONENT: Player = state.getCurrentPlayer();
-        const initialDirection: HexaDirection = HexaDirection.factory.all[index];
+        const initialDirection: HexaDirection = HexaDirection.ORTHOGONALS[index];
         const testedCoords: Coord[] = [lastDrop];
         let testCoord: Coord = lastDrop.getNext(initialDirection, 1);
         let subSum: number = 0;
@@ -261,7 +261,7 @@ export class SixHeuristic extends AlignmentHeuristic<SixMove, SixState, SixVicto
             }
             const dirIndex: number = (index + testedCoords.length) % 6;
             testedCoords.push(testCoord);
-            const dir: HexaDirection = HexaDirection.factory.all[dirIndex];
+            const dir: HexaDirection = HexaDirection.ORTHOGONALS[dirIndex];
             if (testedPiece.isNone()) {
                 subSum += 0.16; // roughly 1/6
                 lastEmpty = MGPOptional.of(testCoord);
@@ -309,7 +309,7 @@ export class SixHeuristic extends AlignmentHeuristic<SixMove, SixState, SixVicto
     }
 
     public getBoardInfoForLine(index: number, lastDrop: Coord, state: SixState, boardInfo: BoardInfo): BoardInfo {
-        const dir: HexaDirection = HexaDirection.factory.all[index];
+        const dir: HexaDirection = HexaDirection.ORTHOGONALS[index];
         let testedCoord: Coord = lastDrop.getPrevious(dir, 5);
         let testedCoords: Coord[] = [];
         let encountered: number[] = [];
@@ -383,7 +383,7 @@ export class SixHeuristic extends AlignmentHeuristic<SixMove, SixState, SixVicto
     : BoardInfo
     {
         const LAST_OPPONENT: Player = state.getCurrentPlayer();
-        let edgeDirection: HexaDirection = HexaDirection.factory.all[index];
+        let edgeDirection: HexaDirection = HexaDirection.ORTHOGONALS[index];
         const testedCoords: Coord[] = [lastDrop];
         let testCoord: Coord = lastDrop.getNext(edgeDirection, 1);
         let subSum: number = 0;
@@ -403,7 +403,7 @@ export class SixHeuristic extends AlignmentHeuristic<SixMove, SixState, SixVicto
             if (testedCoords.length % 2 === 0) {
                 // reached a corner, let's turn
                 const dirIndex: number = (index + testedCoords.length) % 6;
-                edgeDirection = HexaDirection.factory.all[dirIndex];
+                edgeDirection = HexaDirection.ORTHOGONALS[dirIndex];
             }
             testedCoords.push(testCoord);
             testCoord = testCoord.getNext(edgeDirection, 1);
@@ -417,7 +417,7 @@ export class SixHeuristic extends AlignmentHeuristic<SixMove, SixState, SixVicto
                                        boardInfo: BoardInfo): BoardInfo {
 
         const LAST_OPPONENT: Player = state.getCurrentPlayer();
-        let edgeDirection: HexaDirection = HexaDirection.factory.all[index];
+        let edgeDirection: HexaDirection = HexaDirection.ORTHOGONALS[index];
         const testedCoords: Coord[] = [lastDrop];
         let testCoord: Coord = lastDrop.getNext(edgeDirection, 1);
         let subSum: number = 0;
@@ -438,7 +438,7 @@ export class SixHeuristic extends AlignmentHeuristic<SixMove, SixState, SixVicto
             if (testedCoords.length % 2 === 0) {
                 // reached a corner, let's turn
                 const dirIndex: number = (index + testedCoords.length) % 6;
-                edgeDirection = HexaDirection.factory.all[dirIndex];
+                edgeDirection = HexaDirection.ORTHOGONALS[dirIndex];
             }
             testCoord = testCoord.getNext(edgeDirection, 1);
         }

@@ -59,7 +59,7 @@ export class HexagonalConnectionRules extends ConfigurableRules<HexagonalConnect
             return new AbstractNInARowHelper<FourStatePiece, HexaDirection>(
                 (piece: FourStatePiece) => piece.getPlayer(),
                 config.get().nInARow,
-                HexaDirection.factory.all,
+                HexaDirection.ORTHOGONALS,
             );
         } else {
             const defaultConfig: HexagonalConnectionConfig =
@@ -67,7 +67,7 @@ export class HexagonalConnectionRules extends ConfigurableRules<HexagonalConnect
             return new AbstractNInARowHelper<FourStatePiece, HexaDirection>(
                 (piece: FourStatePiece) => piece.getPlayer(),
                 defaultConfig.nInARow,
-                HexaDirection.factory.all,
+                HexaDirection.ORTHOGONALS,
             );
         }
     }

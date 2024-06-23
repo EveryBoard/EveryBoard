@@ -15,7 +15,7 @@ describe('HexaDirection', () => {
                 HexaDirection.DOWN_LEFT,
                 HexaDirection.LEFT,
             ];
-            expect(expectedList).toEqual(HexaDirection.factory.all);
+            expect(expectedList).toEqual(HexaDirection.ORTHOGONALS);
         });
 
     });
@@ -31,14 +31,14 @@ describe('HexaDirection', () => {
 
     it('should have a bijective encoder', () => {
         for (let i: number = 0; i < 6; i++) {
-            const dir: HexaDirection = HexaDirection.factory.all[i];
+            const dir: HexaDirection = HexaDirection.ORTHOGONALS[i];
             EncoderTestUtils.expectToBeBijective(HexaDirection.encoder, dir);
         }
     });
 
     it('should map to angle by multiple of 60', () => {
         for (let i: number = 0; i < 6; i++) {
-            const dir: HexaDirection = HexaDirection.factory.all[i];
+            const dir: HexaDirection = HexaDirection.ORTHOGONALS[i];
             expect(dir.getAngle()).toBe(i * 60);
         }
     });
