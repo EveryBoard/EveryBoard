@@ -3,7 +3,7 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { ErrorLoggerServiceMock } from 'src/app/services/tests/ErrorLoggerServiceMock.spec';
 import { Table } from 'src/app/jscaip/TableUtils';
-import { MGPSet, ReversibleMap, Utils } from '@everyboard/lib';
+import { Set, ReversibleMap, Utils } from '@everyboard/lib';
 import { SixState } from '../SixState';
 import { CoordSet } from 'src/app/jscaip/CoordSet';
 
@@ -53,8 +53,8 @@ describe('SixState', () => {
                 [O, _, _, _, _],
             ];
             const state: SixState = SixState.ofRepresentation(representation, 40);
-            const groups: MGPSet<MGPSet<Coord>> = state.getGroups();
-            const expectedGroups: MGPSet<MGPSet<Coord>> = new MGPSet([
+            const groups: Set<CoordSet> = state.getGroups();
+            const expectedGroups: Set<CoordSet> = new Set([
                 new CoordSet([new Coord(2, 0), new Coord(2, 1)]),
                 new CoordSet([new Coord(3, 2), new Coord(4, 2)]),
                 new CoordSet([new Coord(0, 4), new Coord(1, 3)]),

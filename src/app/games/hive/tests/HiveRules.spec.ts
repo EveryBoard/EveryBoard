@@ -4,7 +4,7 @@ import { Player } from 'src/app/jscaip/Player';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { Table } from 'src/app/jscaip/TableUtils';
-import { MGPOptional, MGPSet, Utils } from '@everyboard/lib';
+import { MGPOptional, Set, Utils } from '@everyboard/lib';
 import { HiveFailure } from '../HiveFailure';
 import { HiveMove, HiveCoordToCoordMove } from '../HiveMove';
 import { HivePiece } from '../HivePiece';
@@ -12,6 +12,7 @@ import { HiveNode, HiveRules } from '../HiveRules';
 import { HiveState } from '../HiveState';
 import { ErrorLoggerServiceMock } from 'src/app/services/tests/ErrorLoggerServiceMock.spec';
 import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { CoordSet } from 'src/app/jscaip/CoordSet';
 
 describe('HiveRules', () => {
 
@@ -954,7 +955,7 @@ describe('HiveRules', () => {
         const state: HiveState = HiveState.fromRepresentation(board, 12);
 
         // When computing the possible drop locations
-        const dropLocations: MGPSet<Coord> = rules.getPossibleDropLocations(state);
+        const dropLocations: CoordSet = rules.getPossibleDropLocations(state);
 
         // Then there should be none
         expect(dropLocations.size()).toBe(0);
@@ -972,7 +973,7 @@ describe('HiveRules', () => {
         const state: HiveState = HiveState.fromRepresentation(board, 6);
 
         // When computing the possible moves for the spider
-        const moves: MGPSet<HiveCoordToCoordMove> = rules.getPossibleMovesFrom(state, new Coord(1, 0));
+        const moves: Set<HiveCoordToCoordMove> = rules.getPossibleMovesFrom(state, new Coord(1, 0));
         // Then we should have exactly 4 moves
         expect(moves.size()).toBe(4);
     });
