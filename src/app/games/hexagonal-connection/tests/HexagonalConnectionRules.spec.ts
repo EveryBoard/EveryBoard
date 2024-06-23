@@ -8,7 +8,7 @@ import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { Coord, CoordFailure } from 'src/app/jscaip/Coord';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
-import { HexaDirection } from 'src/app/jscaip/HexaDirection';
+import { DodecaHexaDirection } from 'src/app/jscaip/DodecaHexaDirection';
 
 describe('HexagonalConnectionRules', () => {
     /**
@@ -412,7 +412,7 @@ describe('HexagonalConnectionRules', () => {
 
     describe('victory', () => {
 
-        for (const dir of HexaDirection.factory.all) {
+        for (const dir of DodecaHexaDirection.factory.all) {
             it('should include alignment of ' + dir.toString(), () => {
                 // Given a board with 6 pieces aligned in <dir> direction
                 const largeConfig: MGPOptional<HexagonalConnectionConfig> = MGPOptional.of({

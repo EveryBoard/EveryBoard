@@ -131,7 +131,7 @@ export class HiveGrasshopperRules extends HivePieceRules {
     }
     public getPotentialMoves(coord: Coord, state: HiveState): HiveCoordToCoordMove[] {
         const moves: HiveCoordToCoordMove[] = [];
-        for (const direction of HexaDirection.ORTHOGONALS) {
+        for (const direction of HexaDirection.factory.all) {
             const neighbor: Coord = coord.getNext(direction);
             if (state.getAt(neighbor).hasPieces()) {
                 // We can jump in that direction
