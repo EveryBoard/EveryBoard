@@ -327,8 +327,8 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
 
     private async afterEventsBatch(): Promise<void> {
         const player: Player = Player.ofTurn(this.gameComponent.getTurn());
-        const serverTime: number = await this.serverTimeService.getServerTime();
-        this.timeManager.afterEventsBatch(this.endGame, player, serverTime);
+        const serverTimeMs: number = await this.serverTimeService.getServerTimeInMs();
+        this.timeManager.afterEventsBatch(this.endGame, player, serverTimeMs);
     }
 
     private async takeBackToPreviousPlayerTurn(player: Player): Promise<void> {
@@ -361,7 +361,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
                 return this.canProposeDraw();
             default:
                 Utils.expectToBe(request, 'Rematch');
-                return this.endGame && this.requestManager.canMakeRequest('Rematch');
+                return this.canProposeRematch();
         }
     }
 
@@ -409,6 +409,11 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         // Otherwise, it depends on the request manager
         return this.requestManager.canMakeRequest('Draw');
     }
+
+    private canProposeRematch(): boolean {
+        return this.endGame && this.requestManager.canMakeRequest('Rematch');
+    }
+
 
     public override async canUserPlay(clickedElementName: string): Promise<MGPValidation> {
         if (this.role.isNone()) {

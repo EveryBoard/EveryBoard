@@ -13,7 +13,7 @@ export class ServerTimeService extends BackendService {
     }
 
     /** Retrieve the current time of the server */
-    public async getServerTime(): Promise<number> {
+    public async getServerTimeInMs(): Promise<number> {
         const endpoint: string = `time`;
         const result: MGPFallible<JSONValue> = await this.performRequestWithJSONResponse('GET', endpoint);
         this.assertSuccess(result);
