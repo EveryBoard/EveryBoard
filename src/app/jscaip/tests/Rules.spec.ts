@@ -45,7 +45,7 @@ class AbstractRules extends Rules<P4Move, AbstractState> {
         return MGPValidation.SUCCESS;
     }
 
-    public getGameStatus(_node: AbstractNode): GameStatus {
+    public override getGameStatus(_node: AbstractNode): GameStatus {
         return GameStatus.ONGOING;
     }
 

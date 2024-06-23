@@ -95,7 +95,7 @@ export class ApagosRules extends Rules<ApagosMove, ApagosState> {
         }
         return MGPValidation.SUCCESS;
     }
-    public getGameStatus(node: ApagosNode): GameStatus {
+    public override getGameStatus(node: ApagosNode): GameStatus {
         const state: ApagosState = node.gameState;
         for (let x: number = 0; x < 4; x++) {
             if (state.getPieceAt(ApagosCoord.of(x)).isFull() === false) {

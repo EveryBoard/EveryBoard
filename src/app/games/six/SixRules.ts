@@ -7,7 +7,7 @@ import { SixMove } from './SixMove';
 import { SixFailure } from './SixFailure';
 import { Rules } from 'src/app/jscaip/Rules';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { MGPFallible, MGPOptional, MGPSet, MGPValidation } from '@everyboard/lib';
+import { MGPFallible, MGPOptional, Set, MGPValidation } from '@everyboard/lib';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { Table } from 'src/app/jscaip/TableUtils';
 import { Debug } from 'src/app/utils/Debug';
@@ -15,7 +15,7 @@ import { CoordSet } from 'src/app/jscaip/CoordSet';
 import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 
-export type SixLegalityInformation = MGPSet<Coord>;
+export type SixLegalityInformation = CoordSet;
 
 export class SixNode extends GameNode<SixMove, SixState> {
 }
@@ -69,12 +69,12 @@ export class SixRules extends Rules<SixMove, SixState, SixLegalityInformation> {
         }
     }
     public static getLegalLandings(state: SixState): Coord[] {
-        const neighbors: MGPSet<Coord> = new CoordSet();
+        let neighbors: CoordSet = new CoordSet();
         for (const piece of state.getPieceCoords()) {
             for (const dir of HexaDirection.factory.all) {
                 const neighbor: Coord = piece.getNext(dir, 1);
                 if (state.getPieceAt(neighbor).isNone()) {
-                    neighbors.add(neighbor);
+                    neighbors = neighbors.addElement(neighbor);
                 }
             }
         }
@@ -84,7 +84,7 @@ export class SixRules extends Rules<SixMove, SixState, SixLegalityInformation> {
         if (move.isDrop() === false) {
             return MGPFallible.failure(SixFailure.NO_MOVEMENT_BEFORE_TURN_40());
         }
-        return MGPFallible.success(new MGPSet(state.getPieceCoords()));
+        return MGPFallible.success(new CoordSet(state.getPieceCoords()));
     }
     public static isLegalPhaseTwoMove(move: SixMove, state: SixState): MGPFallible<SixLegalityInformation> {
         if (move.isDrop()) {
@@ -97,9 +97,9 @@ export class SixRules extends Rules<SixMove, SixState, SixLegalityInformation> {
             return MGPFallible.failure(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT());
         }
         const stateAfterMove: SixState = state.movePiece(move);
-        const groupsAfterMove: MGPSet<MGPSet<Coord>> = stateAfterMove.getGroups();
+        const groupsAfterMove: Set<CoordSet> = stateAfterMove.getGroups();
         if (SixRules.isSplit(groupsAfterMove)) {
-            const biggerGroups: MGPSet<MGPSet<Coord>> = this.getLargestGroups(groupsAfterMove);
+            const biggerGroups: Set<CoordSet> = this.getLargestGroups(groupsAfterMove);
             if (biggerGroups.size() === 1) {
                 if (move.keep.isPresent()) {
                     return MGPFallible.failure(SixFailure.CANNOT_CHOOSE_TO_KEEP());
@@ -113,25 +113,25 @@ export class SixRules extends Rules<SixMove, SixState, SixLegalityInformation> {
             return MGPFallible.success(new CoordSet());
         }
     }
-    public static isSplit(groups: MGPSet<MGPSet<Coord>>): boolean {
+    public static isSplit(groups: Set<CoordSet>): boolean {
         return groups.size() > 1;
     }
-    public static getLargestGroups(groups: MGPSet<MGPSet<Coord>>): MGPSet<MGPSet<Coord>> {
+    public static getLargestGroups(groups: Set<CoordSet>): Set<CoordSet> {
         let biggerSize: number = 0;
-        let biggerGroups: MGPSet<MGPSet<Coord>> = new MGPSet();
+        let biggerGroups: Set<CoordSet> = new Set();
         for (const group of groups) {
             const groupSize: number = group.size();
             if (groupSize > biggerSize) {
                 biggerSize = groupSize;
-                biggerGroups = new MGPSet([group]);
+                biggerGroups = new Set([group]);
             } else if (groupSize === biggerSize) {
-                biggerGroups.add(group);
+                biggerGroups = biggerGroups.addElement(group);
             }
         }
         return biggerGroups;
     }
     public static moveKeepBiggerGroup(keep: MGPOptional<Coord>,
-                                      biggerGroups: MGPSet<MGPSet<Coord>>,
+                                      biggerGroups: Set<CoordSet>,
                                       state: SixState)
     : MGPFallible<SixLegalityInformation>
     {
@@ -149,7 +149,7 @@ export class SixRules extends Rules<SixMove, SixState, SixLegalityInformation> {
         }
         return MGPFallible.failure(SixFailure.MUST_CAPTURE_BIGGEST_GROUPS());
     }
-    public getGameStatus(node: SixNode): GameStatus {
+    public override getGameStatus(node: SixNode): GameStatus {
         const state: SixState = node.gameState;
         const LAST_PLAYER: Player = state.getCurrentOpponent();
         let shapeVictory: Coord[] = [];

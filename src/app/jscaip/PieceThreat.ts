@@ -1,10 +1,11 @@
 import { Coord } from 'src/app/jscaip/Coord';
-import { ComparableObject, MGPSet } from '@everyboard/lib';
+import { ComparableObject } from '@everyboard/lib';
+import { CoordSet } from './CoordSet';
 
 export class PieceThreat implements ComparableObject {
 
-    public constructor(public readonly directThreats: MGPSet<Coord>,
-                       public readonly mover: MGPSet<Coord>) {
+    public constructor(public readonly directThreats: CoordSet,
+                       public readonly mover: CoordSet) {
     }
 
     public equals(other: PieceThreat): boolean {
@@ -15,7 +16,7 @@ export class PieceThreat implements ComparableObject {
 
 export class SandwichThreat extends PieceThreat {
 
-    public constructor(public readonly directThreat: Coord, mover: MGPSet<Coord>) {
-        super(new MGPSet([directThreat]), mover);
+    public constructor(public readonly directThreat: Coord, mover: CoordSet) {
+        super(new CoordSet([directThreat]), mover);
     }
 }

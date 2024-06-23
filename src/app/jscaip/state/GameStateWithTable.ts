@@ -97,8 +97,7 @@ export abstract class GameStateWithTable<P extends NonNullable<unknown>> extends
             const value: Coord = coordAndContent.coord;
             if (map.containsKey(key)) {
                 const oldValue: CoordSet = map.get(key).get();
-                oldValue.add(value);
-                map.put(key, oldValue);
+                map.put(key, oldValue.addElement(value));
             } else {
                 map.set(key, new CoordSet([value]));
             }

@@ -3,7 +3,7 @@ import { GameNode } from 'src/app/jscaip/AI/GameNode';
 import { Player } from 'src/app/jscaip/Player';
 import { Rules } from 'src/app/jscaip/Rules';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { MGPOptional, MGPSet, MGPValidation } from '@everyboard/lib';
+import { MGPOptional, Set, MGPValidation } from '@everyboard/lib';
 import { HiveFailure } from './HiveFailure';
 import { HiveDropMove, HiveMove, HiveCoordToCoordMove } from './HiveMove';
 import { HivePiece, HivePieceStack } from './HivePiece';
@@ -14,6 +14,7 @@ import { Table } from 'src/app/jscaip/TableUtils';
 import { HexagonalUtils } from 'src/app/jscaip/HexagonalUtils';
 import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
+import { CoordSet } from 'src/app/jscaip/CoordSet';
 
 export class HiveNode extends GameNode<HiveMove, HiveState> {}
 
@@ -164,30 +165,30 @@ export class HiveRules extends Rules<HiveMove, HiveState> {
         return MGPValidation.SUCCESS;
     }
 
-    public getPossibleDropLocations(state: HiveState): MGPSet<Coord> {
+    public getPossibleDropLocations(state: HiveState): CoordSet {
         const player: Player = state.getCurrentPlayer();
         // At turn 0 and 1, the possible drop locations are already known
         if (state.turn === 0) {
-            return new MGPSet([new Coord(0, 0)]);
+            return new CoordSet([new Coord(0, 0)]);
         }
         if (state.turn === 1) {
-            return new MGPSet(HexagonalUtils.getNeighbors(new Coord(0, 0)));
+            return new CoordSet(HexagonalUtils.getNeighbors(new Coord(0, 0)));
         }
 
         const remainingPieceOpt: MGPOptional<HivePiece> = state.remainingPieces.getAny(player);
         if (remainingPieceOpt.isAbsent()) {
-            return new MGPSet();
+            return new CoordSet();
         }
 
         const remainingPiece: HivePiece = remainingPieceOpt.get();
-        const locations: MGPSet<Coord> = new MGPSet();
+        let locations: CoordSet = new CoordSet();
         // We can only drop next to one of our piece
         for (const coord of state.occupiedSpaces()) {
             if (state.getAt(coord).topPiece().owner === player) {
                 for (const neighbor of state.emptyNeighbors(coord)) {
                     const move: HiveDropMove = HiveDropMove.of(remainingPiece, neighbor);
                     if (this.isLegalDrop(move, state).isSuccess()) {
-                        locations.add(neighbor);
+                        locations = locations.addElement(neighbor);
                     }
                 }
             }
@@ -195,24 +196,24 @@ export class HiveRules extends Rules<HiveMove, HiveState> {
         return locations;
     }
 
-    public getPossibleMovesFrom(state: HiveState, coord: Coord): MGPSet<HiveCoordToCoordMove> {
+    public getPossibleMovesFrom(state: HiveState, coord: Coord): Set<HiveCoordToCoordMove> {
         const player: Player = state.getCurrentPlayer();
-        const moves: MGPSet<HiveCoordToCoordMove> = new MGPSet();
+        let moves: Set<HiveCoordToCoordMove> = new Set();
         const topPiece: HivePiece = state.getAt(coord).topPiece();
         if (topPiece.owner === player) {
             for (const move of HivePieceRules.of(topPiece).getPotentialMoves(coord, state)) {
                 if (this.isLegalMoveCoordToCoord(move, state).isSuccess()) {
-                    moves.add(move);
+                    moves = moves.addElement(move);
                 }
             }
         }
         return moves;
     }
 
-    public getPossibleMovesOnBoard(state: HiveState): MGPSet<HiveCoordToCoordMove> {
-        const moves: MGPSet<HiveCoordToCoordMove> = new MGPSet();
+    public getPossibleMovesOnBoard(state: HiveState): Set<HiveCoordToCoordMove> {
+        let moves: Set<HiveCoordToCoordMove> = new Set();
         for (const coord of state.occupiedSpaces()) {
-            moves.addAll(this.getPossibleMovesFrom(state, coord));
+            moves = moves.union(this.getPossibleMovesFrom(state, coord));
         }
         return moves;
     }
@@ -221,7 +222,7 @@ export class HiveRules extends Rules<HiveMove, HiveState> {
         return this.getPossibleDropLocations(state).size() === 0 && this.getPossibleMovesOnBoard(state).size() === 0;
     }
 
-    public getGameStatus(node: HiveNode): GameStatus {
+    public override getGameStatus(node: HiveNode): GameStatus {
         const state: HiveState = node.gameState;
 
         const neighbors: PlayerNumberMap = PlayerNumberMap.of(0, 0);

@@ -1,5 +1,5 @@
 /* eslint-disable max-lines-per-function */
-import { TestUtils } from 'lib/dist';
+import { TestUtils } from '@everyboard/lib';
 import { Coord } from '../../Coord';
 import { GameStateWithTable } from '../GameStateWithTable';
 

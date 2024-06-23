@@ -230,7 +230,7 @@ export abstract class MancalaRules<C extends MancalaConfig = MancalaConfig>
         return [];
     }
 
-    public getGameStatus(node: MancalaNode, config: MGPOptional<C>): GameStatus {
+    public override getGameStatus(node: MancalaNode, config: MGPOptional<C>): GameStatus {
         const state: MancalaState = node.gameState;
         const width: number = node.gameState.getWidth();
         const seedsByHouse: number = config.get().seedsByHouse;

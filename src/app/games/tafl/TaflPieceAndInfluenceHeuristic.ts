@@ -2,7 +2,7 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { Orthogonal } from 'src/app/jscaip/Orthogonal';
 import { BoardValue } from 'src/app/jscaip/AI/BoardValue';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { MGPMap, MGPOptional, MGPSet, Utils } from '@everyboard/lib';
+import { MGPMap, MGPOptional, Set, Utils } from '@everyboard/lib';
 import { SandwichThreat } from '../../jscaip/PieceThreat';
 import { TaflPawn } from './TaflPawn';
 import { TaflNode } from './TaflRules';
@@ -30,9 +30,9 @@ export class TaflPieceAndInfluenceHeuristic<M extends TaflMove> extends TaflPiec
         const state: TaflState = node.gameState;
         const empty: TaflPawn = TaflPawn.UNOCCUPIED;
 
-        const pieceMap: MGPMap<Player, MGPSet<Coord>> = this.getPiecesMap(state);
-        const threatMap: MGPMap<Coord, MGPSet<SandwichThreat>> = this.getThreatMap(node, pieceMap);
-        const filteredThreatMap: MGPMap<Coord, MGPSet<SandwichThreat>> = this.filterThreatMap(threatMap, state);
+        const pieceMap: MGPMap<Player, CoordSet> = this.getPiecesMap(state);
+        const threatMap: MGPMap<Coord, Set<SandwichThreat>> = this.getThreatMap(node, pieceMap);
+        const filteredThreatMap: MGPMap<Coord, Set<SandwichThreat>> = this.filterThreatMap(threatMap, state);
         let threatenedPiece: number = 0;
         let safePiece: number = 0;
         let totalInfluence: number = 0;
@@ -61,7 +61,7 @@ export class TaflPieceAndInfluenceHeuristic<M extends TaflMove> extends TaflPiec
         ]);
     }
 
-    public getPiecesMap(state: TaflState): MGPMap<Player, MGPSet<Coord>> {
+    public getPiecesMap(state: TaflState): MGPMap<Player, CoordSet> {
         const empty: TaflPawn = TaflPawn.UNOCCUPIED;
         const zeroPieces: Coord[] = [];
         const onePieces: Coord[] = [];
@@ -79,22 +79,22 @@ export class TaflPieceAndInfluenceHeuristic<M extends TaflMove> extends TaflPiec
                 }
             }
         }
-        const map: MGPMap<Player, MGPSet<Coord>> = new MGPMap([
+        const map: MGPMap<Player, CoordSet> = new MGPMap([
             { key: Player.ZERO, value: new CoordSet(zeroPieces) },
             { key: Player.ONE, value: new CoordSet(onePieces) },
         ]);
         return map;
     }
 
-    public getThreatMap(node: TaflNode<M>, pieces: MGPMap<Player, MGPSet<Coord>>)
-    : MGPMap<Coord, MGPSet<SandwichThreat>>
+    public getThreatMap(node: TaflNode<M>, pieces: MGPMap<Player, CoordSet>)
+    : MGPMap<Coord, Set<SandwichThreat>>
     {
-        const threatMap: MGPMap<Coord, MGPSet<SandwichThreat>> = new MGPMap();
+        const threatMap: MGPMap<Coord, Set<SandwichThreat>> = new MGPMap();
         for (const player of Player.PLAYERS) {
             for (const piece of pieces.get(player).get()) {
                 const threats: SandwichThreat[] = this.getThreats(piece, node.gameState);
                 if (this.isThreatReal(piece, node.gameState, threats)) {
-                    threatMap.set(piece, new MGPSet(threats));
+                    threatMap.set(piece, new Set(threats));
                 }
             }
         }
@@ -166,19 +166,19 @@ export class TaflPieceAndInfluenceHeuristic<M extends TaflMove> extends TaflPiec
         }
     }
 
-    public filterThreatMap(threatMap: MGPMap<Coord, MGPSet<SandwichThreat>>, state: TaflState)
-    : MGPMap<Coord, MGPSet<SandwichThreat>>
+    public filterThreatMap(threatMap: MGPMap<Coord, Set<SandwichThreat>>, state: TaflState)
+    : MGPMap<Coord, Set<SandwichThreat>>
     {
-        const filteredThreatMap: MGPMap<Coord, MGPSet<SandwichThreat>> = new MGPMap();
+        const filteredThreatMap: MGPMap<Coord, Set<SandwichThreat>> = new MGPMap();
         const threateneds: Coord[] = threatMap.getKeyList();
         const threatenedPlayerPieces: Coord[] = threateneds.filter((coord: Coord) => {
             return state.getAbsoluteOwner(coord) === state.getCurrentPlayer();
         });
-        const threatenedOpponentPieces: MGPSet<Coord> = new CoordSet(threateneds.filter((coord: Coord) => {
+        const threatenedOpponentPieces: CoordSet = new CoordSet(threateneds.filter((coord: Coord) => {
             return state.getAbsoluteOwner(coord) === state.getCurrentOpponent();
         }));
         for (const threatenedPiece of threatenedPlayerPieces) {
-            const oldThreatSet: MGPSet<SandwichThreat> = threatMap.get(threatenedPiece).get();
+            const oldThreatSet: Set<SandwichThreat> = threatMap.get(threatenedPiece).get();
             const newThreatSet: SandwichThreat[] = [];
             for (const threat of oldThreatSet) {
                 if (threatenedOpponentPieces.contains(threat.directThreat) === false) {
@@ -196,11 +196,11 @@ export class TaflPieceAndInfluenceHeuristic<M extends TaflMove> extends TaflPiec
                 }
             }
             if (newThreatSet.length > 0) {
-                filteredThreatMap.set(threatenedPiece, new MGPSet(newThreatSet));
+                filteredThreatMap.set(threatenedPiece, new Set(newThreatSet));
             }
         }
         for (const threatenedOpponentPiece of threatenedOpponentPieces) {
-            const threatSet: MGPSet<SandwichThreat> = threatMap.get(threatenedOpponentPiece).get();
+            const threatSet: Set<SandwichThreat> = threatMap.get(threatenedOpponentPiece).get();
             filteredThreatMap.set(threatenedOpponentPiece, threatSet);
         }
         return filteredThreatMap;

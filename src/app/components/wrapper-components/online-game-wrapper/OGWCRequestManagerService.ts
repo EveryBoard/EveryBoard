@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 import { faBackwardStep, faFlag, faRepeat, IconDefinition } from '@fortawesome/free-solid-svg-icons';
+import { MGPOptional, Utils, Set } from '@everyboard/lib';
 import { MinimalUser } from 'src/app/domain/MinimalUser';
 import { GameEventReply, GameEventRequest, RequestType } from 'src/app/domain/Part';
 import { ConnectedUserService } from 'src/app/services/ConnectedUserService';
 import { Localized } from 'src/app/utils/LocaleUtils';
-import { MGPOptional, MGPSet, Utils } from '@everyboard/lib';
 
 export interface RequestInfo {
     requestType: RequestType,
@@ -49,7 +49,7 @@ export class OGWCRequestManagerService {
 
     private requestAwaitingReply: MGPOptional<GameEventRequest> = MGPOptional.empty();
     private lastDeniedRequest: MGPOptional<RequestType> = MGPOptional.empty();
-    private forbiddenRequests: MGPSet<RequestType> = new MGPSet();
+    private forbiddenRequests: Set<RequestType> = new Set();
 
     public constructor(private readonly connectedUserService: ConnectedUserService) {
     }
@@ -58,11 +58,11 @@ export class OGWCRequestManagerService {
         // Upon game start, clear out requests
         this.requestAwaitingReply = MGPOptional.empty();
         this.lastDeniedRequest = MGPOptional.empty();
-        this.forbiddenRequests = new MGPSet();
+        this.forbiddenRequests = new Set();
     }
     public onReceivedMove(): void {
         // Upon a new turn, the player can again request anything
-        this.forbiddenRequests = new MGPSet();
+        this.forbiddenRequests = new Set();
         this.lastDeniedRequest = MGPOptional.empty();
     }
     public onReceivedRequest(request: GameEventRequest): void {
@@ -85,7 +85,7 @@ export class OGWCRequestManagerService {
                 if (reply.user.id !== user.id) {
                     // Opponent denied our request
                     this.lastDeniedRequest = MGPOptional.of(reply.requestType);
-                    this.forbiddenRequests.add(reply.requestType);
+                    this.forbiddenRequests = this.forbiddenRequests.addElement(reply.requestType);
                 }
                 return false;
         }

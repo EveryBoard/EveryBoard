@@ -402,7 +402,7 @@ export class GipfRules extends Rules<GipfMove, GipfState, GipfLegalityInformatio
                score1.isAbsent();
     }
 
-    public getGameStatus(node: GipfNode): GameStatus {
+    public override getGameStatus(node: GipfNode): GameStatus {
         const state: GipfState = node.gameState;
         const score0: MGPOptional<number> = GipfRules.getPlayerScore(state, Player.ZERO);
         const score1: MGPOptional<number> = GipfRules.getPlayerScore(state, Player.ONE);

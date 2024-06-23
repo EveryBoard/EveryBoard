@@ -168,7 +168,7 @@ export class MartianChessRules extends Rules<MartianChessMove, MartianChessState
         const endPiece: MartianChessPiece = state.getPieceAt(move.getEnd());
         return MartianChessPiece.tryMerge(startPiece, endPiece);
     }
-    public getGameStatus(node: MartianChessNode): GameStatus {
+    public override getGameStatus(node: MartianChessNode): GameStatus {
         const state: MartianChessState = node.gameState;
         if (state.countDown.equalsValue(0)) {
             return this.getGameStatusScoreVictoryOr(state, GameStatus.DRAW);

@@ -147,7 +147,7 @@ export class ReversiRules extends ConfigurableRules<ReversiMove,
                this.nextPlayerCantOnlyPass(state, config);
     }
 
-    public getGameStatus(node: ReversiNode, config: MGPOptional<ReversiConfig>): GameStatus {
+    public override getGameStatus(node: ReversiNode, config: MGPOptional<ReversiConfig>): GameStatus {
         const state: ReversiState = node.gameState;
         const gameIsEnded: boolean = this.isGameEnded(state, config);
         if (gameIsEnded === false) {

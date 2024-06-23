@@ -1,5 +1,5 @@
 import { Coord } from 'src/app/jscaip/Coord';
-import { MGPSet } from '@everyboard/lib';
+import { Set } from '@everyboard/lib';
 import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 import { PlayerOrNoneGameStateWithTable } from 'src/app/jscaip/state/PlayerOrNoneGameStateWithTable';
 
@@ -16,7 +16,7 @@ export class ConspirateursState extends PlayerOrNoneGameStateWithTable {
     private static readonly SHELTERS_INDICES: readonly number[] = [0, 1, 3, 5, 7, 8, 9, 11, 13, 15, 16];
 
     public static ALL_SHELTERS: Coord[] =
-        new MGPSet(ConspirateursState.SHELTERS_INDICES.flatMap((xOrY: number) => [
+        new Set(ConspirateursState.SHELTERS_INDICES.flatMap((xOrY: number) => [
             new Coord(xOrY, 0),
             new Coord(xOrY, ConspirateursState.HEIGHT-1),
             new Coord(0, xOrY),

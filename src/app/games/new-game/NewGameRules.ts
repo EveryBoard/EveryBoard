@@ -86,7 +86,7 @@ export class NewGameRules extends Rules<NewGameMove, NewGameState, NewGameLegali
      * @param node the node for which we check the game status
      * @returns a GameStatus (ZERO_WON, ONE_WON, DRAW, ONGOING)
      */
-    public getGameStatus(node: NewGameNode, _config: NoConfig): GameStatus {
+    public override getGameStatus(node: NewGameNode, _config: NoConfig): GameStatus {
         if (node.gameState.turn < 42) {
             return GameStatus.ONGOING;
         } else {

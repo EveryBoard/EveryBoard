@@ -1,7 +1,7 @@
 import { MGPValidator, MGPValidators } from 'src/app/utils/MGPValidator';
 
 import { ConfigDescriptionType, DefaultConfigDescription, EmptyRulesConfig, NamedRulesConfig, RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
-import { MGPSet, Utils } from '@everyboard/lib';
+import { Set, Utils } from '@everyboard/lib';
 import { GobanConfig } from 'src/app/jscaip/GobanConfig';
 import { Localized } from 'src/app/utils/LocaleUtils';
 
@@ -55,9 +55,9 @@ export class RulesConfigDescription<R extends RulesConfig = EmptyRulesConfig> {
             name: defaultConfigDescription.name,
             config,
         };
-        const defaultKeys: MGPSet<string> = new MGPSet(Object.keys(defaultConfigDescription.config));
+        const defaultKeys: Set<string> = new Set(Object.keys(defaultConfigDescription.config));
         for (const otherStandardConfig of nonDefaultStandardConfigs) {
-            const key: MGPSet<string> = new MGPSet(Object.keys(otherStandardConfig.config));
+            const key: Set<string> = new Set(Object.keys(otherStandardConfig.config));
             Utils.assert(key.equals(defaultKeys), `Field missing in ${ otherStandardConfig.name() } config!`);
         }
     }

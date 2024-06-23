@@ -6,8 +6,9 @@ import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Orthogonal } from 'src/app/jscaip/Orthogonal';
 import { Ordinal } from 'src/app/jscaip/Ordinal';
-import { ArrayUtils, ComparableObject, MGPFallible, MGPOptional, MGPSet, Utils } from '@everyboard/lib';
+import { ArrayUtils, ComparableObject, MGPFallible, MGPOptional, Set, Utils } from '@everyboard/lib';
 import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { CoordSet } from 'src/app/jscaip/CoordSet';
 
 export class DiaballikMoveInConstruction implements ComparableObject {
 
@@ -68,9 +69,9 @@ export class DiaballikMoveInConstruction implements ComparableObject {
             return;
         }
         const firstTranslation: DiaballikSubMove = subMoves[i];
-        const firstTranslationCoords: MGPSet<Coord> = new MGPSet(firstTranslation.getCoords());
+        const firstTranslationCoords: CoordSet = new CoordSet(firstTranslation.getCoords());
         const secondTranslation: DiaballikSubMove = subMoves[i+1];
-        const secondTranslationCoords: MGPSet<Coord> = new MGPSet(secondTranslation.getCoords());
+        const secondTranslationCoords: CoordSet = new CoordSet(secondTranslation.getCoords());
         const translationIntersect: boolean =
             firstTranslationCoords.intersection(secondTranslationCoords).size() > 0;
         if (translationIntersect) {
@@ -169,12 +170,12 @@ export class DiaballikMoveGenerator extends MoveGenerator<DiaballikMove, Diaball
         const emptyMove: DiaballikMoveInConstruction =
             new DiaballikMoveInConstruction([], node.gameState, node.gameState);
         let movesInConstruction: DiaballikMoveInConstruction[] = [emptyMove];
-        const moves: MGPSet<DiaballikMove> = new MGPSet();
+        let moves: Set<DiaballikMove> = new Set();
         for (let i: number = 0; i < 3; i++) {
             let nextMovesInConstruction: DiaballikMoveInConstruction[] = [];
             for (const move of movesInConstruction) {
                 const newMovesInConstruction: DiaballikMoveInConstruction[] = this.addAllPossibleSubMoves(move);
-                moves.addAll(new MGPSet(newMovesInConstruction.map(DiaballikMoveInConstruction.finalize)));
+                moves = moves.unionList(newMovesInConstruction.map(DiaballikMoveInConstruction.finalize));
                 nextMovesInConstruction = nextMovesInConstruction.concat(newMovesInConstruction);
             }
             movesInConstruction = nextMovesInConstruction;
@@ -182,13 +183,13 @@ export class DiaballikMoveGenerator extends MoveGenerator<DiaballikMove, Diaball
         return this.removeDuplicates(node.gameState, moves, config);
     }
 
-    private removeDuplicates(state: DiaballikState, moves: MGPSet<DiaballikMove>, config: NoConfig)
+    private removeDuplicates(state: DiaballikState, moves: Set<DiaballikMove>, config: NoConfig)
     : DiaballikMove[]
     {
         if (this.avoidDuplicates === false) {
             return moves.toList();
         }
-        const seenStates: MGPSet<DiaballikState> = new MGPSet();
+        let seenStates: Set<DiaballikState> = new Set();
         const movesToKeep: DiaballikMove[] = [];
         const rules: DiaballikRules = DiaballikRules.get();
         for (const move of moves) {
@@ -197,7 +198,7 @@ export class DiaballikMoveGenerator extends MoveGenerator<DiaballikMove, Diaball
                 rules.applyLegalMove(move, state, config, legalityInfo.get());
             if (seenStates.contains(stateAfterMove) === false) {
                 movesToKeep.push(move);
-                seenStates.add(stateAfterMove);
+                seenStates = seenStates.addElement(stateAfterMove);
             }
         }
         return movesToKeep;

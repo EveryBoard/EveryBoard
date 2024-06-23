@@ -107,6 +107,15 @@ export class ArrayUtils {
         return total;
     }
 
+    public static contains<T>(array: T[], value: T): boolean {
+        for (const element of array) {
+            if (comparableEquals(value, element)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     /**
      * Check whether the first argument is strictly smaller than the second, element-wise
      */
@@ -148,6 +157,14 @@ export class ArrayUtils {
         } else {
             return right;
         }
+    }
+
+    public static map<T, V>(list: ReadonlyArray<T>, mapper: (element: T) => V): V[] {
+        const result: V[] = [];
+        for (const element of list) {
+            result.push(mapper(element));
+        }
+        return result;
     }
 
 }

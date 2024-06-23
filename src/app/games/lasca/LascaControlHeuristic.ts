@@ -2,7 +2,7 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { PlayerMetricHeuristic } from 'src/app/jscaip/AI/Minimax';
 import { PlayerNumberTable } from 'src/app/jscaip/PlayerNumberTable';
 import { Player } from 'src/app/jscaip/Player';
-import { MGPSet } from '@everyboard/lib';
+import { CoordSet } from 'src/app/jscaip/CoordSet';
 import { LascaMove } from './LascaMove';
 import { LascaNode, LascaRules } from './LascaRules';
 import { LascaState } from './LascaState';
@@ -26,7 +26,7 @@ export class LascaControlHeuristic extends PlayerMetricHeuristic<LascaMove, Lasc
     public getNumberOfMobileCoords(state: LascaState, player: Player): number {
         const potentialMoves: LascaMove[] = this.getCapturesAndSteps(state, player);
         const firstCoords: Coord[] = potentialMoves.map((move: LascaMove) => move.getStartingCoord());
-        const uniqueFirstCoords: MGPSet<Coord> = new MGPSet(firstCoords);
+        const uniqueFirstCoords: CoordSet = new CoordSet(firstCoords);
         return uniqueFirstCoords.size();
     }
 

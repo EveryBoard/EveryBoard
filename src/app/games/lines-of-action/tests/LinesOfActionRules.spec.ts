@@ -2,7 +2,7 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { MGPOptional, MGPSet } from '@everyboard/lib';
+import { MGPOptional, Set } from '@everyboard/lib';
 import { LinesOfActionFailure } from '../LinesOfActionFailure';
 import { LinesOfActionMove } from '../LinesOfActionMove';
 import { LinesOfActionNode, LinesOfActionRules } from '../LinesOfActionRules';
@@ -10,6 +10,7 @@ import { LinesOfActionState } from '../LinesOfActionState';
 import { Table } from 'src/app/jscaip/TableUtils';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { CoordSet } from 'src/app/jscaip/CoordSet';
 
 describe('LinesOfActionRules', () => {
 
@@ -337,9 +338,10 @@ describe('LinesOfActionRules', () => {
 
     it('should list all possible targets', () => {
         const state: LinesOfActionState = LinesOfActionRules.get().getInitialState();
-        const targets: MGPSet<Coord> = LinesOfActionRules.possibleTargets(state, new Coord(4, 7));
-        const expectedTarget: MGPSet<Coord> = new MGPSet([new Coord(4, 5), new Coord(6, 5), new Coord(2, 5)]);
-        expect(targets.equals(expectedTarget)).toBeTrue();
+        const targets: CoordSet = LinesOfActionRules.possibleTargets(state, new Coord(4, 7));
+        const expectedTargetList: Coord[] = [new Coord(4, 5), new Coord(6, 5), new Coord(2, 5)];
+        const expectedTargetSet: CoordSet = new CoordSet(expectedTargetList);
+        expect(targets.equals(expectedTargetSet)).toBeTrue();
     });
 
     it('should list only legal moves in possible targets', () => {
@@ -354,8 +356,8 @@ describe('LinesOfActionRules', () => {
             [_, _, _, _, _, _, _, _],
         ];
         const state: LinesOfActionState = new LinesOfActionState(board, 0);
-        const targets: MGPSet<Coord> = LinesOfActionRules.possibleTargets(state, new Coord(2, 2));
-        expect(targets.equals(new MGPSet([
+        const targets: CoordSet = LinesOfActionRules.possibleTargets(state, new Coord(2, 2));
+        expect(targets.equals(new Set([
             new Coord(1, 1),
             new Coord(1, 3),
             new Coord(2, 1),

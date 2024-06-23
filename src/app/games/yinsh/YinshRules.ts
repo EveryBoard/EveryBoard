@@ -329,7 +329,7 @@ export class YinshRules extends Rules<YinshMove, YinshState, YinshLegalityInform
         return targets;
     }
 
-    public getGameStatus(node: YinshNode): GameStatus {
+    public override getGameStatus(node: YinshNode): GameStatus {
         if (node.gameState.isInitialPlacementPhase()) {
             return GameStatus.ONGOING;
         }

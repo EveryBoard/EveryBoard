@@ -5,13 +5,14 @@ import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { Rules } from 'src/app/jscaip/Rules';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { TableUtils } from 'src/app/jscaip/TableUtils';
-import { MGPOptional, MGPSet, MGPValidation, Utils } from '@everyboard/lib';
+import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 import { LinesOfActionFailure } from './LinesOfActionFailure';
 import { LinesOfActionMove } from './LinesOfActionMove';
 import { LinesOfActionState } from './LinesOfActionState';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
+import { CoordSet } from 'src/app/jscaip/CoordSet';
 
 export class LinesOfActionNode extends GameNode<LinesOfActionMove, LinesOfActionState> {}
 
@@ -174,8 +175,8 @@ export class LinesOfActionRules extends Rules<LinesOfActionMove, LinesOfActionSt
         }
     }
 
-    public static possibleTargets(state: LinesOfActionState, start: Coord): MGPSet<Coord> {
-        const targets: MGPSet<Coord> = new MGPSet();
+    public static possibleTargets(state: LinesOfActionState, start: Coord): CoordSet {
+        let targets: CoordSet = new CoordSet();
         for (const dir of Ordinal.ORDINALS) {
             const numberOfPiecesOnLine: number = LinesOfActionRules.numberOfPiecesOnLine(state, start, dir);
             const target: Coord = start.getNext(dir, numberOfPiecesOnLine);
@@ -183,14 +184,14 @@ export class LinesOfActionRules extends Rules<LinesOfActionMove, LinesOfActionSt
                 const move: LinesOfActionMove = LinesOfActionMove.from(start, target).get();
                 const legality: MGPValidation = LinesOfActionRules.isLegal(move, state);
                 if (legality.isSuccess()) {
-                    targets.add(target);
+                    targets = targets.addElement(target);
                 }
             }
         }
         return targets;
     }
 
-    public getGameStatus(node: LinesOfActionNode): GameStatus {
+    public override getGameStatus(node: LinesOfActionNode): GameStatus {
         const state: LinesOfActionState = node.gameState;
         const groups: PlayerNumberMap = LinesOfActionRules.getNumberOfGroups(state);
         const zero: number = groups.get(Player.ZERO);

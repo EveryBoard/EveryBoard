@@ -3,7 +3,7 @@ import { Ordinal } from 'src/app/jscaip/Ordinal';
 import { Move } from 'src/app/jscaip/Move';
 import { MoveCoord } from 'src/app/jscaip/MoveCoord';
 import { MoveCoordToCoord } from 'src/app/jscaip/MoveCoordToCoord';
-import { Encoder, ArrayUtils, MGPFallible, MGPSet } from '@everyboard/lib';
+import { Encoder, ArrayUtils, MGPFallible } from '@everyboard/lib';
 import { ConspirateursFailure } from './ConspirateursFailure';
 import { MoveWithTwoCoords } from 'src/app/jscaip/MoveWithTwoCoords';
 import { CoordSet } from 'src/app/jscaip/CoordSet';
@@ -80,7 +80,7 @@ export class ConspirateursMoveJump extends Move {
                 return MGPFallible.failure(ConspirateursFailure.INVALID_JUMP());
             }
         }
-        const uniqueCoords: MGPSet<Coord> = new CoordSet(coords);
+        const uniqueCoords: CoordSet = new CoordSet(coords);
         if (uniqueCoords.size() === coords.length) {
             return MGPFallible.success(new ConspirateursMoveJump(coords));
         } else {

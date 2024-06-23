@@ -170,7 +170,7 @@ export class CoerceoRules extends ConfigurableRules<CoerceoMove, CoerceoState, C
         return MGPValidation.SUCCESS;
     }
 
-    public getGameStatus(node: CoerceoNode): GameStatus {
+    public override getGameStatus(node: CoerceoNode): GameStatus {
         const state: CoerceoState = node.gameState;
         const pieceMap: MGPMap<FourStatePiece, CoordSet> = state.toPieceMap();
         if (pieceMap.get(FourStatePiece.ONE).isAbsent()) {

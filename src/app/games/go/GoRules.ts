@@ -507,7 +507,7 @@ export class GoRules extends ConfigurableRules<GoMove, GoState, GoConfig, GoLega
         }
     }
 
-    public getGameStatus(node: GoNode): GameStatus {
+    public override getGameStatus(node: GoNode): GameStatus {
         return GoRules.getGameStatus(node);
     }
 

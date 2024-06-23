@@ -1,14 +1,14 @@
 import { Comparable } from './Comparable';
-import { MGPSet } from './MGPSet';
+import { Set } from './Set';
 
 /**
  * This is an optimized representation of sets.
  * It performs multi-level hashing and is suitable for types
  * that can be decomposed into multiple fields represented by numbers.
  */
-export abstract class OptimizedSet<T extends Comparable> extends MGPSet<T> {
+export abstract class OptimizedSet<T extends Comparable> extends Set<T> {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    private readonly valueMap: any;
+    private readonly valueMap: T[];
 
     /**
      * This should be defined for each specialization of OptimizedSet.
@@ -29,7 +29,7 @@ export abstract class OptimizedSet<T extends Comparable> extends MGPSet<T> {
         }
     }
 
-    public override add(element: T): boolean {
+    private add(element: T): boolean {
         const fields: [[number], number] = this.toFields(element);
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         let indirection: any = this.valueMap;

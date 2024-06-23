@@ -6,7 +6,7 @@ import { ConnectSixFirstMove } from './ConnectSixMove';
 import { ConnectSixDrops } from './ConnectSixMove';
 import { TableUtils } from 'src/app/jscaip/TableUtils';
 import { PlayerOrNone } from 'src/app/jscaip/Player';
-import { MGPOptional, MGPSet } from '@everyboard/lib';
+import { MGPOptional, Set } from '@everyboard/lib';
 import { GobanConfig } from 'src/app/jscaip/GobanConfig';
 import { MoveGenerator } from 'src/app/jscaip/AI/AI';
 
@@ -43,7 +43,7 @@ export class ConnectSixMoveGenerator extends MoveGenerator<ConnectSixMove, Conne
                 moves.push(newMove);
             }
         }
-        return new MGPSet(moves).toList(); // Removes duplicates
+        return new Set(moves).toList(); // Removes duplicates
     }
     private getAvailableCoords(state: ConnectSixState): Coord[] {
         const usefulCoord: boolean[][] = this.getUsefulCoordsMap(state);

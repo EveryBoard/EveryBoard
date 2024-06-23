@@ -1,6 +1,6 @@
 import { MancalaState } from './MancalaState';
 import { RectangularGameComponent } from 'src/app/components/game-components/rectangular-game-component/RectangularGameComponent';
-import { MGPOptional, MGPSet, MGPValidation, TimeUtils, Utils } from '@everyboard/lib';
+import { MGPOptional, Set, MGPValidation, TimeUtils, Utils } from '@everyboard/lib';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Table, TableUtils } from 'src/app/jscaip/TableUtils';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
@@ -273,12 +273,12 @@ export abstract class MancalaComponent<R extends MancalaRules>
         }
     }
 
-    private getStoreOwner(coord: Coord): MGPOptional<MGPSet<Player>> {
+    private getStoreOwner(coord: Coord): MGPOptional<Set<Player>> {
         return MancalaRules.FAKE_STORE_COORD.reverse().get(coord);
     }
 
     private getSpaceOwner(coord: Coord): Player {
-        const owner: MGPOptional<MGPSet<Player>> = this.getStoreOwner(coord);
+        const owner: MGPOptional<Set<Player>> = this.getStoreOwner(coord);
         if (owner.isPresent()) {
             return owner.get().getAnyElement().get(); // Only one player can be in there
         } else {

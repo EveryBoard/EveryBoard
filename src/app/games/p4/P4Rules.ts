@@ -79,7 +79,7 @@ export class P4Rules extends ConfigurableRules<P4Move, P4State, P4Config> {
         return MGPValidation.SUCCESS;
     }
 
-    public getGameStatus(node: P4Node): GameStatus {
+    public override getGameStatus(node: P4Node): GameStatus {
         const state: P4State = node.gameState;
         const victoriousCoord: Coord[] = this.P4_HELPER.getVictoriousCoord(state);
         if (victoriousCoord.length > 0) {

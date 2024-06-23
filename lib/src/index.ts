@@ -8,7 +8,7 @@ export * from './MathUtils';
 export * from './MGPFallible';
 export * from './MGPMap';
 export * from './MGPOptional';
-export * from './MGPSet';
+export * from './Set';
 export * from './MGPUniqueList';
 export * from './MGPValidation';
 export * from './NumberMap';

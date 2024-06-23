@@ -147,7 +147,7 @@ export class EncapsuleRules extends Rules<EncapsuleMove, EncapsuleState, Encapsu
         return resultingState;
     }
 
-    public getGameStatus(node: EncapsuleNode): GameStatus {
+    public override getGameStatus(node: EncapsuleNode): GameStatus {
         const state: EncapsuleState = node.gameState;
         const winner: MGPOptional<Player> = this.isVictory(state);
         if (winner.isPresent()) {

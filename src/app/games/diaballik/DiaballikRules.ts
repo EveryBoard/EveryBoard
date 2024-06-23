@@ -7,13 +7,14 @@ import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Orthogonal } from 'src/app/jscaip/Orthogonal';
 import { Ordinal } from 'src/app/jscaip/Ordinal';
-import { MGPFallible, MGPOptional, MGPSet, Utils } from '@everyboard/lib';
+import { MGPFallible, MGPOptional, Utils } from '@everyboard/lib';
 import { GameNode } from 'src/app/jscaip/AI/GameNode';
 import { DiaballikFailure } from './DiaballikFailure';
 import { Table } from 'src/app/jscaip/TableUtils';
 import { CoordFailure } from '../../jscaip/Coord';
 import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 import { PlayerMap } from 'src/app/jscaip/PlayerMap';
+import { CoordSet } from 'src/app/jscaip/CoordSet';
 
 export class VictoryOrDefeatCoords {
     protected constructor(public readonly winner: Player) {}
@@ -37,6 +38,14 @@ export type DefeatCoordsIncomplete = {
     allPieces: Coord[],
     piecesInContact: Coord[],
 };
+
+interface ConnectionInfos {
+
+    coord: MGPOptional<Coord>;
+
+    opponentsConnected: CoordSet;
+
+}
 
 export class DiaballikNode extends GameNode<DiaballikMove, DiaballikState> {}
 
@@ -176,7 +185,7 @@ export class DiaballikRules extends Rules<DiaballikMove, DiaballikState, Diaball
         return new DiaballikState(stateAfterSubMoves.board, state.turn + 1);
     }
 
-    public getGameStatus(node: DiaballikNode): GameStatus {
+    public override getGameStatus(node: DiaballikNode): GameStatus {
         const state: DiaballikState = node.gameState;
         const victoryOrDefeat: MGPOptional<VictoryOrDefeatCoords> = this.getVictoryOrDefeatCoords(state);
         if (victoryOrDefeat.isPresent()) {
@@ -224,10 +233,13 @@ export class DiaballikRules extends Rules<DiaballikMove, DiaballikState, Diaball
         if (blocking.get(Player.ZERO).isPresent() && blocking.get(Player.ONE).isPresent()) {
             // Both players form a line, so the current player loses
             return blocking.get(state.getCurrentPlayer());
+        } else if (blocking.get(Player.ZERO).isPresent()) {
+            return blocking.get(Player.ZERO);
+        } else if (blocking.get(Player.ONE).isPresent()) {
+            return blocking.get(Player.ONE);
+        } else {
+            return MGPOptional.empty();
         }
-        if (blocking.get(Player.ZERO).isPresent()) return blocking.get(Player.ZERO);
-        if (blocking.get(Player.ONE).isPresent()) return blocking.get(Player.ONE);
-        return MGPOptional.empty();
     }
 
     private getBlockerCoords(state: DiaballikState, player: Player): MGPOptional<DefeatCoords> {
@@ -235,10 +247,12 @@ export class DiaballikRules extends Rules<DiaballikMove, DiaballikState, Diaball
         //   - there is one player piece in each column
         //   - they are all connected
         //   - at least 3 opponent's pieces are connected
-        const opponentsConnected: MGPSet<Coord> = new MGPSet(); // Needs to be a set to avoid double counting
+        let opponentsConnected: CoordSet = new CoordSet();
         const blockerCoords: Coord[] = [];
         for (let x: number = 0; x < state.getWidth(); x++) {
-            const coord: MGPOptional<Coord> = this.getConnectedPieceCoord(x, opponentsConnected, state, player);
+            const connectionInfos: ConnectionInfos = this.getConnectedPieceCoord(x, opponentsConnected, state, player);
+            opponentsConnected = connectionInfos.opponentsConnected;
+            const coord: MGPOptional<Coord> = connectionInfos.coord;
             if (coord.isPresent()) {
                 blockerCoords.push(coord.get());
             } else {
@@ -254,10 +268,10 @@ export class DiaballikRules extends Rules<DiaballikMove, DiaballikState, Diaball
     }
 
     private getConnectedPieceCoord(x: number,
-                                   opponentsConnected: MGPSet<Coord>,
+                                   opponentsConnected: CoordSet,
                                    state: DiaballikState,
                                    player: Player)
-    : MGPOptional<Coord>
+    : ConnectionInfos
     {
         for (let y: number = 0; y < state.getHeight(); y++) {
             const coord: Coord = new Coord(x, y);
@@ -266,15 +280,17 @@ export class DiaballikRules extends Rules<DiaballikMove, DiaballikState, Diaball
                 // or connected on the left to another player piece for a line to be formed
                 if (this.isConnectedOnTheLeft(coord, state, player)) {
                     // The piece is connected, we count the opponents that it touches
-                    this.addConnectedOpponents(coord, opponentsConnected, state, player);
-                    return MGPOptional.of(coord);
+                    return {
+                        coord: MGPOptional.of(coord),
+                        opponentsConnected: this.addConnectedOpponents(coord, opponentsConnected, state, player),
+                    };
                 } else {
                     // This piece is not connected, it is therefore impossible to form a line
-                    return MGPOptional.empty();
+                    return { coord: MGPOptional.empty(), opponentsConnected };
                 }
             }
         }
-        return MGPOptional.empty(); // No piece found in this column
+        return { coord: MGPOptional.empty(), opponentsConnected }; // No piece found in this column
     }
 
     private isConnectedOnTheLeft(coord: Coord, state: DiaballikState, player: Player): boolean {
@@ -295,19 +311,20 @@ export class DiaballikRules extends Rules<DiaballikMove, DiaballikState, Diaball
     }
 
     private addConnectedOpponents(coord: Coord,
-                                  opponentsConnected: MGPSet<Coord>,
+                                  opponentsConnected: CoordSet,
                                   state: DiaballikState,
                                   player: Player)
-    : void
+    : CoordSet
     {
         for (const direction of Orthogonal.factory.all) {
             const neighbor: Coord = coord.getNext(direction);
             if (state.isOnBoard(neighbor)) {
                 const piece: DiaballikPiece = state.getPieceAt(neighbor);
                 if (piece.owner === player.getOpponent()) {
-                    opponentsConnected.add(neighbor);
+                    opponentsConnected = opponentsConnected.addElement(neighbor);
                 }
             }
         }
+        return opponentsConnected;
     }
 }

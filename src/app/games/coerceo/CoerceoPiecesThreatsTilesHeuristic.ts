@@ -1,16 +1,27 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { PieceThreat } from 'src/app/jscaip/PieceThreat';
 import { Player } from 'src/app/jscaip/Player';
-import { MGPMap, MGPOptional } from '@everyboard/lib';
-import { CoerceoState } from './CoerceoState';
-import { CoerceoConfig, CoerceoNode } from './CoerceoRules';
-import { PlayerNumberTable } from 'src/app/jscaip/PlayerNumberTable';
-import { CoerceoHeuristic } from './CoerceoHeuristic';
-import { CoordSet } from 'src/app/jscaip/CoordSet';
-import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
 import { TriangularCheckerBoard } from 'src/app/jscaip/state/TriangularCheckerBoard';
+import { MGPMap, MGPOptional } from '@everyboard/lib';
 import { CoerceoStep } from './CoerceoMove';
+import { CoerceoState } from './CoerceoState';
+import { CoerceoNode } from './CoerceoRules';
 import { Vector } from 'src/app/jscaip/Vector';
+import { CoordSet } from 'src/app/jscaip/CoordSet';
+import { CoerceoConfig } from './CoerceoRules';
+import { PlayerNumberTable } from 'src/app/jscaip/PlayerNumberTable';
+import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
+import { CoerceoHeuristic } from './CoerceoHeuristic';
+
+interface DirectThreatInfo {
+
+    directThreats: Coord[];
+
+    uniqueFreedom: MGPOptional<Coord>;
+
+    emptiableNeighborTile: MGPOptional<Coord>;
+
+}
 
 export class CoerceoPiecesThreatsTilesHeuristic extends CoerceoHeuristic {
 
@@ -51,12 +62,44 @@ export class CoerceoPiecesThreatsTilesHeuristic extends CoerceoHeuristic {
     }
 
     public getThreat(coord: Coord, state: CoerceoState): MGPOptional<PieceThreat> {
-        const threatenerPlayer: Player = state.getPieceAt(coord).getPlayer() as Player;
-        const opponent: Player = threatenerPlayer.getOpponent();
-        const fourStatePieceOpponent: FourStatePiece = FourStatePiece.ofPlayer(opponent);
+        const directThreatInfo: DirectThreatInfo = this.getDirectThreats(coord, state);
+        let directThreats: Coord[] = directThreatInfo.directThreats;
+        const uniqueFreedom: MGPOptional<Coord> = directThreatInfo.uniqueFreedom;
+        const emptiableNeighborTile: MGPOptional<Coord> = directThreatInfo.emptiableNeighborTile;
+        if (uniqueFreedom.isPresent()) {
+            const movingThreats: Coord[] = [];
+            for (const step of CoerceoStep.STEPS) {
+                const movingThreat: Coord = uniqueFreedom.get().getNext(step.direction, 1);
+                if (this.isMovingThreat(coord, movingThreat, state, directThreats)) {
+                    movingThreats.push(coord);
+                }
+            }
+            if (movingThreats.length > 0) {
+                const pieceThreat: PieceThreat = new PieceThreat(
+                    new CoordSet(directThreats),
+                    new CoordSet(movingThreats),
+                );
+                return MGPOptional.of(pieceThreat);
+            }
+        }
+        if (emptiableNeighborTile.isPresent()) {
+            directThreats = directThreats.filter((c: Coord) => c.equals(emptiableNeighborTile.get()));
+            const directThreatsSet: CoordSet = new CoordSet(directThreats);
+            const pieceThreat: PieceThreat = new PieceThreat(
+                directThreatsSet,
+                new CoordSet([emptiableNeighborTile.get()]),
+            );
+            return MGPOptional.of(pieceThreat);
+        }
+        return MGPOptional.empty();
+    }
+
+    private getDirectThreats(coord: Coord, state: CoerceoState): DirectThreatInfo {
         let uniqueFreedom: MGPOptional<Coord> = MGPOptional.empty();
         let emptiableNeighborTile: MGPOptional<Coord> = MGPOptional.empty();
-        let directThreats: Coord[] = [];
+        const threatenerPlayer: Player = state.getPieceAt(coord).getPlayer() as Player;
+        const opponent: Player = threatenerPlayer.getOpponent();
+        const directThreats: Coord[] = [];
         const neighbors: Coord[] = TriangularCheckerBoard
             .getNeighbors(coord)
             .filter((c: Coord) => state.isOnBoard(c));
@@ -70,32 +113,21 @@ export class CoerceoPiecesThreatsTilesHeuristic extends CoerceoHeuristic {
             } else if (threat === FourStatePiece.EMPTY) {
                 if (uniqueFreedom.isPresent()) {
                     // more than one freedom!
-                    return MGPOptional.empty();
+                    return { directThreats: [], emptiableNeighborTile, uniqueFreedom: MGPOptional.empty() };
                 } else {
                     uniqueFreedom = MGPOptional.of(directThreat);
                 }
             }
         }
-        if (uniqueFreedom.isPresent()) {
-            const movingThreats: Coord[] = [];
-            for (const step of CoerceoStep.STEPS) {
-                const movingThreat: Coord = uniqueFreedom.get().getNext(step.direction, 1);
-                if (state.hasPieceAt(movingThreat, fourStatePieceOpponent) &&
-                    directThreats.some((c: Coord) => c.equals(movingThreat)) === false)
-                {
-                    movingThreats.push(movingThreat);
-                }
-            }
-            if (movingThreats.length > 0) {
-                return MGPOptional.of(new PieceThreat(new CoordSet(directThreats), new CoordSet(movingThreats)));
-            }
-        }
-        if (emptiableNeighborTile.isPresent()) {
-            directThreats = directThreats.filter((c: Coord) => c.equals(emptiableNeighborTile.get()));
-            const directThreatsSet: CoordSet = new CoordSet(directThreats);
-            return MGPOptional.of(new PieceThreat(directThreatsSet, new CoordSet([emptiableNeighborTile.get()])));
-        }
-        return MGPOptional.empty();
+        return { directThreats, emptiableNeighborTile, uniqueFreedom };
+    }
+
+    private isMovingThreat(coord: Coord, movingThreat: Coord, state: CoerceoState, directThreats: Coord[]): boolean {
+        const threatenerPlayer: Player = state.getPieceAt(coord).getPlayer() as Player;
+        const opponent: Player = threatenerPlayer.getOpponent();
+        return state.isOnBoard(movingThreat) &&
+               state.getPieceAt(movingThreat).is(opponent) &&
+               directThreats.some((c: Coord) => c.equals(movingThreat)) === false;
     }
 
     private tileCouldBeRemovedThisTurn(coord: Coord, state: CoerceoState, OPPONENT: Player): boolean {
@@ -162,7 +194,9 @@ export class CoerceoPiecesThreatsTilesHeuristic extends CoerceoHeuristic {
                         }
                     }
                     if (newMover.length > 0) {
-                        newThreat = MGPOptional.of(new PieceThreat(oldThreat.directThreats, new CoordSet(newMover)));
+                        const pieceThreat: PieceThreat =
+                            new PieceThreat(oldThreat.directThreats, new CoordSet(newMover));
+                        newThreat = MGPOptional.of(pieceThreat);
                     }
                 }
             }

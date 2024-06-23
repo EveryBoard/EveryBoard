@@ -330,7 +330,7 @@ export class LodestoneRules extends Rules<LodestoneMove, LodestoneState, Lodesto
         return MGPValidation.SUCCESS;
     }
 
-    public getGameStatus(node: LodestoneNode): GameStatus {
+    public override getGameStatus(node: LodestoneNode): GameStatus {
         const state: LodestoneState = node.gameState;
         const pieces: PlayerNumberMap = state.numberOfPieces();
         const piecesZero: number = pieces.get(Player.ZERO);

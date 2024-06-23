@@ -5,7 +5,7 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { SaharaMove } from './SaharaMove';
 import { SaharaState } from './SaharaState';
 import { TriangularCheckerBoard } from 'src/app/jscaip/state/TriangularCheckerBoard';
-import { MGPOptional, MGPSet, MGPValidation } from '@everyboard/lib';
+import { MGPOptional, MGPValidation } from '@everyboard/lib';
 import { TriangularGameState } from 'src/app/jscaip/state/TriangularGameState';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { SaharaFailure } from './SaharaFailure';
@@ -14,6 +14,7 @@ import { Table } from 'src/app/jscaip/TableUtils';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 import { Debug } from 'src/app/utils/Debug';
+import { CoordSet } from 'src/app/jscaip/CoordSet';
 
 export class SaharaNode extends GameNode<SaharaMove, SaharaState> {}
 
@@ -106,7 +107,7 @@ export class SaharaRules extends Rules<SaharaMove, SaharaState> {
         }
     }
 
-    public getGameStatus(node: SaharaNode): GameStatus {
+    public override getGameStatus(node: SaharaNode): GameStatus {
         const board: FourStatePiece[][] = node.gameState.getCopiedBoard();
         const zeroFreedoms: number[] = SaharaRules.getBoardValuesFor(board, Player.ZERO);
         const oneFreedoms: number[] = SaharaRules.getBoardValuesFor(board, Player.ONE);
@@ -118,17 +119,17 @@ export class SaharaRules extends Rules<SaharaMove, SaharaState> {
             return SaharaState.isOnBoard(c) &&
                    board[c.y][c.x] === FourStatePiece.EMPTY;
         };
-        const landings: MGPSet<Coord> =
-            new MGPSet(TriangularCheckerBoard.getNeighbors(coord).filter(isOnBoardAndEmpty));
+        const landings: CoordSet =
+            new CoordSet(TriangularCheckerBoard.getNeighbors(coord).filter(isOnBoardAndEmpty));
         if (TriangularCheckerBoard.isSpaceDark(coord) === true) {
             return landings.toList();
         } else {
-            const farLandings: MGPSet<Coord> = new MGPSet(landings.toList()); // Deep copy
+            let farLandings: CoordSet = new CoordSet(landings.toList()); // Deep copy
             for (const neighbor of landings) {
                 const secondStepNeighbors: Coord[] =
                     TriangularCheckerBoard.getNeighbors(neighbor).filter(isOnBoardAndEmpty);
                 for (const secondStepNeighbor of secondStepNeighbors) {
-                    farLandings.add(secondStepNeighbor);
+                    farLandings = farLandings.addElement(secondStepNeighbor);
                 }
             }
             return farLandings.toList();

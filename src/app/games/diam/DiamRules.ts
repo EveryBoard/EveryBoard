@@ -114,7 +114,7 @@ export class DiamRules extends Rules<DiamMove, DiamState> {
         return MGPValidation.SUCCESS;
     }
 
-    public getGameStatus(node: DiamNode): GameStatus {
+    public override getGameStatus(node: DiamNode): GameStatus {
         const highestAlignment: MGPOptional<Coord> = this.findHighestAlignment(node.gameState);
         if (highestAlignment.isPresent()) {
             const winningPiece: DiamPiece = node.gameState.getPieceAt(highestAlignment.get());
