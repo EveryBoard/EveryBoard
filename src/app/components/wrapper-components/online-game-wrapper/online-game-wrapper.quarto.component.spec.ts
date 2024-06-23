@@ -251,6 +251,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             action,
         });
         testUtils.detectChanges();
+        tick(0);
     }
 
     async function receivePartDAOUpdate(update: Partial<Part>, detectChanges: boolean = true): Promise<void> {

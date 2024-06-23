@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { QuartoMove } from './QuartoMove';
 import { QuartoState } from './QuartoState';
 import { QuartoRules } from './QuartoRules';
@@ -8,11 +8,10 @@ import { MGPOptional, MGPValidation } from '@everyboard/lib';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { RectangularGameComponent } from 'src/app/components/game-components/rectangular-game-component/RectangularGameComponent';
-import { QuartoHeuristic } from './QuartoHeuristic';
 import { QuartoMoveGenerator } from './QuartoMoveGenerator';
 import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
-import { Minimax } from 'src/app/jscaip/AI/Minimax';
 import { MCTS } from 'src/app/jscaip/AI/MCTS';
+import { QuartoMinimax } from './QuartoMinimax';
 
 @Component({
     selector: 'app-quarto',
@@ -35,11 +34,11 @@ export class QuartoComponent extends RectangularGameComponent<QuartoRules,
     public pieceToGive: MGPOptional<QuartoPiece> = MGPOptional.empty();
     public victoriousCoords: Coord[] = [];
 
-    public constructor(messageDisplayer: MessageDisplayer) {
-        super(messageDisplayer);
+    public constructor(messageDisplayer: MessageDisplayer, cdr: ChangeDetectorRef) {
+        super(messageDisplayer, cdr);
         this.setRulesAndNode('Quarto');
         this.availableAIs = [
-            new Minimax($localize`Minimax`, this.rules, new QuartoHeuristic(), new QuartoMoveGenerator()),
+            new QuartoMinimax(),
             new MCTS($localize`MCTS`, new QuartoMoveGenerator(), this.rules),
         ];
         this.encoder = QuartoMove.encoder;

@@ -9,6 +9,7 @@ import { Minimax } from 'src/app/jscaip/AI/Minimax';
 import { AIDepthLimitOptions } from 'src/app/jscaip/AI/AI';
 import { SixMinimax } from '../SixMinimax';
 import { EmptyRulesConfig, NoConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { minimaxTest, SlowTest } from 'src/app/utils/tests/TestUtils.spec';
 
 const O: PlayerOrNone = Player.ZERO;
 const X: PlayerOrNone = Player.ONE;
@@ -42,4 +43,13 @@ describe('SixMinimax', () => {
         expect(bestMove.start.get()).toEqual(new Coord(1, 0));
     });
 
+    SlowTest.it('should be able to play against itself', () => {
+        minimaxTest({
+            rules: SixRules.get(),
+            minimax,
+            options: minimaxOptions,
+            config: defaultConfig,
+            shouldFinish: true,
+        });
+    });
 });

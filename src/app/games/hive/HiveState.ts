@@ -3,9 +3,10 @@ import { Vector } from 'src/app/jscaip/Vector';
 import { OpenHexagonalGameState } from 'src/app/jscaip/state/OpenHexagonalGameState';
 import { Player } from 'src/app/jscaip/Player';
 import { Table } from 'src/app/jscaip/TableUtils';
-import { ComparableObject, MGPMap, MGPOptional, MGPSet, ReversibleMap, Utils } from '@everyboard/lib';
+import { ComparableObject, MGPMap, MGPOptional, ReversibleMap, Utils } from '@everyboard/lib';
 import { HivePiece, HivePieceStack } from './HivePiece';
 import { HexagonalUtils } from 'src/app/jscaip/HexagonalUtils';
+import { CoordSet } from 'src/app/jscaip/CoordSet';
 
 export class HiveRemainingPieces implements ComparableObject {
 
@@ -211,8 +212,8 @@ export class HiveState extends OpenHexagonalGameState<HivePieceStack> implements
     }
 
     public haveCommonNeighbor(first: Coord, second: Coord): boolean {
-        const occupiedNeighborsOfFirst: MGPSet<Coord> = this.getOccupiedNeighbors(first);
-        const occupiedNeighborsOfSecond: MGPSet<Coord> = this.getOccupiedNeighbors(second);
+        const occupiedNeighborsOfFirst: CoordSet = this.getOccupiedNeighbors(first);
+        const occupiedNeighborsOfSecond: CoordSet = this.getOccupiedNeighbors(second);
         const commonNeighbor: MGPOptional<Coord> =
             occupiedNeighborsOfFirst.findAnyCommonElement(occupiedNeighborsOfSecond);
         return commonNeighbor.isPresent();

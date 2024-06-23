@@ -1,6 +1,6 @@
 import { MoveGenerator } from 'src/app/jscaip/AI/AI';
 import { Coord } from 'src/app/jscaip/Coord';
-import { MGPOptional, MGPSet } from '@everyboard/lib';
+import { MGPOptional, Set } from '@everyboard/lib';
 import { LodestoneCaptures, LodestoneMove } from './LodestoneMove';
 import { LodestoneDirection, LodestoneOrientation, LodestonePiece } from './LodestonePiece';
 import { LodestoneInfos, LodestoneNode, LodestoneRules } from './LodestoneRules';
@@ -28,25 +28,26 @@ export class LodestoneMoveGenerator extends MoveGenerator<LodestoneMove, Lodesto
             return moves;
         });
     }
-    private captureCombinations(state: LodestoneState, numberOfCaptures: number): MGPSet<LodestoneCaptures> {
+    private captureCombinations(state: LodestoneState, numberOfCaptures: number): Set<LodestoneCaptures> {
         if (numberOfCaptures === 0) {
-            return new MGPSet([{ top: 0, bottom: 0, left: 0, right: 0 }]);
+            return new Set([{ top: 0, bottom: 0, left: 0, right: 0 }]);
         } else {
-            const combinations: MGPSet<LodestoneCaptures> = new MGPSet();
+            let combinations: Set<LodestoneCaptures> = new Set();
             const available: LodestoneCaptures = state.remainingSpacesDetails();
-            const subCombinations: MGPSet<LodestoneCaptures> = this.captureCombinations(state, numberOfCaptures-1);
+            const subCombinations: Set<LodestoneCaptures> =
+                this.captureCombinations(state, numberOfCaptures - 1);
             for (const subCombination of subCombinations) {
                 if (subCombination.top + 1 <= available.top) {
-                    combinations.add({ ...subCombination, top: subCombination.top + 1 });
+                    combinations = combinations.addElement({ ...subCombination, top: subCombination.top + 1 });
                 }
                 if (subCombination.bottom + 1 <= available.bottom) {
-                    combinations.add({ ...subCombination, bottom: subCombination.bottom + 1 });
+                    combinations = combinations.addElement({ ...subCombination, bottom: subCombination.bottom + 1 });
                 }
                 if (subCombination.left + 1 <= available.left) {
-                    combinations.add({ ...subCombination, left: subCombination.left + 1 });
+                    combinations = combinations.addElement({ ...subCombination, left: subCombination.left + 1 });
                 }
                 if (subCombination.right + 1 <= available.right) {
-                    combinations.add({ ...subCombination, right: subCombination.right + 1 });
+                    combinations = combinations.addElement({ ...subCombination, right: subCombination.right + 1 });
                 }
             }
             if (combinations.size() === 0) {
