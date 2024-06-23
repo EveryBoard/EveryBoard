@@ -5,9 +5,6 @@ import { ActivatedRoute } from '@angular/router';
 import { ConfigDescriptionType, NamedRulesConfig, RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 import { BaseWrapperComponent } from '../../game-components/game-component/GameComponent';
 import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
-import { DemoNodeInfo } from '../demo-card-wrapper/demo-card-wrapper.component';
-import { GameState } from 'src/app/jscaip/state/GameState';
-import { AbstractNode, GameNode } from 'src/app/jscaip/AI/GameNode';
 import { RulesConfigDescription } from './RulesConfigDescription';
 
 type ConfigFormJSON = {
@@ -19,8 +16,6 @@ type ConfigFormJSON = {
     templateUrl: './rules-configuration.component.html',
 })
 export class RulesConfigurationComponent extends BaseWrapperComponent implements OnInit {
-
-    @Input() stateProvider: MGPOptional<(config: MGPOptional<RulesConfig>) => GameState>;
 
     @Input() rulesConfigDescriptionOptional: MGPOptional<RulesConfigDescription<RulesConfig>>;
     public rulesConfigDescription: RulesConfigDescription<RulesConfig>;
@@ -37,8 +32,6 @@ export class RulesConfigurationComponent extends BaseWrapperComponent implements
      * so that the parent component knows that the situation is not ok
      */
     @Output() updateCallback: EventEmitter<MGPOptional<RulesConfig>> = new EventEmitter<MGPOptional<RulesConfig>>();
-
-    public configDemo: DemoNodeInfo; // set in onInit
 
     public rulesConfigForm: FormGroup = new FormGroup({});
 
@@ -62,32 +55,15 @@ export class RulesConfigurationComponent extends BaseWrapperComponent implements
         if (this.isCustomisable()) {
             const defaultConfig: NamedRulesConfig<RulesConfig> = this.rulesConfigDescription.getDefaultConfig();
             this.setChosenConfig(defaultConfig.name());
-            if (this.userIsCreator) {
-                this.setConfigDemo(defaultConfig.config);
-            } else {
-                const configToDisplay: RulesConfig = Utils.getNonNullable(this.rulesConfigToDisplay);
-                this.setConfigDemo(configToDisplay);
-            }
+            // TODO if (this.userIsCreator) {
+            // TODO     this.setConfigDemo(defaultConfig.config);
+            // TODO } else {
+            // TODO     const configToDisplay: RulesConfig = Utils.getNonNullable(this.rulesConfigToDisplay);
+            // TODO     this.setConfigDemo(configToDisplay);
+            // TODO }
         } else {
             return this.updateCallback.emit(MGPOptional.of({}));
         }
-    }
-
-    private setConfigDemo(config: RulesConfig): void {
-        if (this.stateProvider.isPresent()) {
-            const stateProvider: (config: MGPOptional<RulesConfig>) => GameState = this.stateProvider.get();
-            const node: AbstractNode = new GameNode(stateProvider(MGPOptional.of(config)));
-            this.configDemo = {
-                click: MGPOptional.empty(),
-                name: this.urlName,
-                node,
-            };
-            this.cdr.detectChanges();
-        }
-    }
-
-    public getConfigDemo(): DemoNodeInfo {
-        return this.configDemo;
     }
 
     private generateForm(config: RulesConfig, configurable: boolean): void {
@@ -132,7 +108,7 @@ export class RulesConfigurationComponent extends BaseWrapperComponent implements
 
     public onUpdate(): void {
         Utils.assert(this.userIsCreator, 'Only creator should be able to modify rules config');
-        Utils.assert(this.chosenConfigName === 'Custom', 'Only Customifiable config should be modified!');
+        Utils.assert(this.chosenConfigName === 'Custom', 'Only Customizable config should be modified!');
         const rulesConfig: RulesConfig = {};
         const parameterNames: string[] = this.rulesConfigDescription.getFields();
         for (const parameterName of parameterNames) {
@@ -144,7 +120,7 @@ export class RulesConfigurationComponent extends BaseWrapperComponent implements
                 return; // In order not to send update when form is invalid
             }
         }
-        this.setConfigDemo(rulesConfig);
+        console.log('emitting')
         this.updateCallback.emit(MGPOptional.of(rulesConfig));
     }
 
@@ -200,10 +176,10 @@ export class RulesConfigurationComponent extends BaseWrapperComponent implements
             this.generateForm(config, false);
             this.updateCallback.emit(MGPOptional.of(config)); // As standard config are always legal
         }
-        this.setConfigDemo(config);
     }
 
     public isCustomisable(): boolean {
+        // TODO: is this needed?
         if (this.rulesConfigDescriptionOptional.isAbsent()) {
             return false;
         } else {

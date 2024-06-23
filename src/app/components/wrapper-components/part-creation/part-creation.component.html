@@ -143,12 +143,6 @@
                         </ng-template>
                     </div>
                 </div>
-                <app-rules-configuration id="rulesConfigurationComponent"
-                                         [stateProvider]="getStateProvider()"
-                                         [rulesConfigDescriptionOptional]="rulesConfigDescription"
-                                         [userIsCreator]="true"
-                                         (updateCallback)="saveRulesConfig($event)">
-                </app-rules-configuration>
             </fieldset>
             <div class="field">
                 <div class="buttons has-addons">
@@ -172,6 +166,13 @@
             </div>
         </form>
         </div>
+            <div class="column">
+                <app-rules-configuration id="rulesConfigurationComponent"
+                                         [rulesConfigDescriptionOptional]="rulesConfigDescription"
+                                         [userIsCreator]="true"
+                                         (updateCallback)="saveRulesConfig($event)">
+                </app-rules-configuration>
+            </div>
     </div>
 
     <div *ngIf="viewInfo.userIsChosenOpponent">
@@ -201,7 +202,6 @@
                             <li i18n>the game lasts at most <strong>{{ (viewInfo.totalPartDuration || 0) | humanDuration }} per player</strong></li>
                         </ul>
                         <app-rules-configuration [rulesConfigDescriptionOptional]="rulesConfigDescription"
-                                                 [stateProvider]="getStateProvider()"
                                                  [userIsCreator]="false"
                                                  [rulesConfigToDisplay]="currentConfigRoom?.rulesConfig">
                         </app-rules-configuration>
