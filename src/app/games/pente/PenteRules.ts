@@ -112,7 +112,7 @@ export class PenteRules extends ConfigurableRules<PenteMove, PenteState, PenteCo
         if (capturesNeededToWin <= state.captures.get(opponent)) {
             return GameStatus.getVictory(opponent);
         }
-        const victoriousCoord: Coord[] = this.getHelper(config).getVictoriousCoord(state);
+        const victoriousCoord: Coord[] = this.getHelper(config.get()).getVictoriousCoord(state);
         if (victoriousCoord.length > 0) {
             return GameStatus.getVictory(opponent);
         }
@@ -123,13 +123,8 @@ export class PenteRules extends ConfigurableRules<PenteMove, PenteState, PenteCo
         }
     }
 
-    public getHelper(config: MGPOptional<PenteConfig>): NInARowHelper<PlayerOrNone> {
-        if (config.isPresent()) {
-            return new NInARowHelper(Utils.identity, config.get().nInARow);
-        } else {
-            const defaultConfig: PenteConfig = PenteRules.RULES_CONFIG_DESCRIPTION.getDefaultConfig().config;
-            return new NInARowHelper(Utils.identity, defaultConfig.nInARow);
-        }
+    public getHelper(config: PenteConfig): NInARowHelper<PlayerOrNone> {
+        return new NInARowHelper(Utils.identity, config.nInARow);
     }
 
     private stillHaveEmptySquare(state: PenteState): boolean {

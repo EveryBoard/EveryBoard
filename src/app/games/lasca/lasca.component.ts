@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { ModeConfig, ParallelogramGameComponent } from 'src/app/components/game-components/parallelogram-game-component/ParallelogramGameComponent';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Vector } from 'src/app/jscaip/Vector';
@@ -11,11 +11,10 @@ import { LascaMove } from './LascaMove';
 import { LascaRules } from './LascaRules';
 import { LascaPiece, LascaStack, LascaState } from './LascaState';
 import { MCTS } from 'src/app/jscaip/AI/MCTS';
-import { Minimax } from 'src/app/jscaip/AI/Minimax';
-import { LascaControlHeuristic } from './LascaControlHeuristic';
 import { LascaMoveGenerator } from './LascaMoveGenerator';
-import { LascaControlPlusDominationHeuristic } from './LascaControlAndDominationHeuristic';
 import { CoordSet } from 'src/app/jscaip/CoordSet';
+import { LascaControlMinimax } from './LascaControlMinimax';
+import { LascaControlPlusDominationMinimax } from './LascaControlPlusDominationMinimax';
 
 @Component({
     selector: 'app-lasca',
@@ -55,15 +54,12 @@ export class LascaComponent extends ParallelogramGameComponent<LascaRules,
     private legalMoves: LascaMove[] = [];
     private readonly moveGenerator: LascaMoveGenerator = new LascaMoveGenerator();
 
-    public constructor(messageDisplayer: MessageDisplayer) {
-        super(messageDisplayer);
+    public constructor(messageDisplayer: MessageDisplayer, cdr: ChangeDetectorRef) {
+        super(messageDisplayer, cdr);
         this.setRulesAndNode('Lasca');
         this.availableAIs = [
-            new Minimax($localize`Control`, this.rules, new LascaControlHeuristic(), this.moveGenerator),
-            new Minimax($localize`Control and Domination`,
-                        this.rules,
-                        new LascaControlPlusDominationHeuristic(),
-                        this.moveGenerator),
+            new LascaControlMinimax(),
+            new LascaControlPlusDominationMinimax(),
             new MCTS($localize`MCTS`, this.moveGenerator, this.rules),
         ];
         this.encoder = LascaMove.encoder;

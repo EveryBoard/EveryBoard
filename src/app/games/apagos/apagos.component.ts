@@ -1,8 +1,7 @@
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { GameComponent } from 'src/app/components/game-components/game-component/GameComponent';
 import { Coord } from 'src/app/jscaip/Coord';
 import { MCTS } from 'src/app/jscaip/AI/MCTS';
-import { Minimax } from 'src/app/jscaip/AI/Minimax';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { MGPOptional, MGPValidation } from '@everyboard/lib';
@@ -13,8 +12,8 @@ import { ApagosMoveGenerator } from './ApagosMoveGenerator';
 import { ApagosRules } from './ApagosRules';
 import { ApagosSquare } from './ApagosSquare';
 import { ApagosState } from './ApagosState';
-import { ApagosFullBoardHeuristic } from './ApagosFullBoardHeuristic';
-import { ApagosRightmostHeuristic } from './ApagosRightmostHeuristic';
+import { ApagosFullBoardMinimax } from './ApagosFullBoardMinimax';
+import { ApagosRightmostMinimax } from './ApagosRightmostMinimax';
 
 interface PieceLocation {
 
@@ -22,12 +21,14 @@ interface PieceLocation {
 
     piece: number,
 }
+
 interface DropArrow {
 
     x: number,
 
     player: Player,
 }
+
 @Component({
     selector: 'app-apagos',
     templateUrl: './apagos.component.html',
@@ -72,12 +73,12 @@ export class ApagosComponent extends GameComponent<ApagosRules, ApagosMove, Apag
                lowCenter + ' ' + middleExtremeLeft + ' ' + middleMiddleLeft;
     }
 
-    public constructor(messageDisplayer: MessageDisplayer) {
-        super(messageDisplayer);
+    public constructor(messageDisplayer: MessageDisplayer, cdr: ChangeDetectorRef) {
+        super(messageDisplayer, cdr);
         this.setRulesAndNode('Apagos');
         this.availableAIs = [
-            new Minimax($localize`Rightmost Focus`, this.rules, new ApagosRightmostHeuristic(), new ApagosMoveGenerator()),
-            new Minimax($localize`Full Board`, this.rules, new ApagosFullBoardHeuristic(), new ApagosMoveGenerator()),
+            new ApagosRightmostMinimax(),
+            new ApagosFullBoardMinimax(),
             new MCTS($localize`MCTS`, new ApagosMoveGenerator(), this.rules),
         ];
         this.encoder = ApagosMove.encoder;

@@ -84,8 +84,8 @@ export const clickableMethods: { [gameName: string]: { [methodName: string]: unk
         validateCapture: [],
     },
     Quarto: {
-        chooseCoord: [0, 0],
-        choosePiece: [0],
+        clickCoord: [0, 0],
+        clickPiece: [0],
         deselectDroppedPiece: [],
     },
     Quixo: {

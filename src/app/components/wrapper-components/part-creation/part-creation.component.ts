@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { takeUntil } from 'rxjs/operators';
@@ -23,7 +23,6 @@ import { RulesConfigurationComponent } from '../rules-configuration/rules-config
 import { GameInfo } from '../../normal-component/pick-game/pick-game.component';
 import { GameState } from 'src/app/jscaip/state/GameState';
 import { RulesConfigDescription } from '../rules-configuration/RulesConfigDescription';
-import { AbstractRules } from 'src/app/jscaip/Rules';
 import { Debug } from 'src/app/utils/Debug';
 
 type PartCreationViewInfo = {
@@ -112,16 +111,17 @@ export class PartCreationComponent implements OnInit, OnDestroy {
 
     protected rulesConfig: MGPOptional<RulesConfig> = MGPOptional.empty(); // Provided by RulesConfigurationComponent
 
-    public constructor(public readonly router: Router,
-                       public readonly activatedRoute: ActivatedRoute,
-                       public readonly connectedUserService: ConnectedUserService,
-                       public readonly currentGameService: CurrentGameService,
-                       public readonly gameService: GameService,
-                       public readonly configRoomService: ConfigRoomService,
-                       public readonly chatService: ChatService,
-                       public readonly userService: UserService,
-                       public readonly formBuilder: FormBuilder,
-                       public readonly messageDisplayer: MessageDisplayer)
+    public constructor(private readonly router: Router,
+                       private readonly activatedRoute: ActivatedRoute,
+                       private readonly connectedUserService: ConnectedUserService,
+                       private readonly currentGameService: CurrentGameService,
+                       private readonly gameService: GameService,
+                       private readonly configRoomService: ConfigRoomService,
+                       private readonly chatService: ChatService,
+                       private readonly userService: UserService,
+                       private readonly formBuilder: FormBuilder,
+                       private readonly messageDisplayer: MessageDisplayer,
+                       private readonly cdr: ChangeDetectorRef)
     {
     }
 
@@ -277,6 +277,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
                 this.viewInfo.partTypeName = $localize`standard`;
                 break;
         }
+        this.cdr.detectChanges();
     }
 
     private setDataForCreator(configRoom: ConfigRoom): void {
@@ -364,7 +365,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
 
     private async onCurrentConfigRoomUpdate(configRoomOpt: MGPOptional<ConfigRoom>): Promise<void> {
         if (configRoomOpt.isAbsent()) {
-            Debug.display('PartCreationComponent', 'onCurrentConfigRoomUpdate', 'LAST UPDATE : the game is cancelled');
+            Debug.display('PartCreationComponent', 'onCurrentConfigRoomUpdate', 'LAST UPDATE : the game is canceled');
             return this.onGameCanceled();
         } else {
             const oldConfigRoom: ConfigRoom | null = this.currentConfigRoom;
@@ -541,12 +542,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
     }
 
     public getStateProvider(): MGPOptional<(config: MGPOptional<RulesConfig>) => GameState> {
-        const urlName: string = this.getGameUrlName();
-        const rules: AbstractRules = GameInfo.getByUrlName(urlName).get().rules;
-        const stateProvider: (config: MGPOptional<RulesConfig> ) => GameState = (config: MGPOptional<RulesConfig>) => {
-            return rules.getInitialState(config);
-        };
-        return MGPOptional.of(stateProvider);
+        return GameInfo.getStateProvider(this.getGameUrlName());
     }
 
     public async ngOnDestroy(): Promise<void> {

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { GameComponent } from '../../components/game-components/game-component/GameComponent';
 import { PylosMove, PylosMoveFailure } from 'src/app/games/pylos/PylosMove';
 import { PylosState } from 'src/app/games/pylos/PylosState';
@@ -10,11 +10,9 @@ import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { PylosFailure } from './PylosFailure';
 import { MCTS } from 'src/app/jscaip/AI/MCTS';
-import { PylosOrderedMoveGenerator } from './PylosOrderedMoveGenerator';
 import { PylosMoveGenerator } from './PylosMoveGenerator';
-import { PylosHeuristic } from './PylosHeuristic';
-import { Minimax } from 'src/app/jscaip/AI/Minimax';
 import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
+import { PylosMinimax } from './PylosMinimax';
 
 @Component({
     selector: 'app-pylos',
@@ -47,11 +45,11 @@ export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosSt
 
     private remainingPieces: PlayerNumberMap = PlayerNumberMap.of(15, 15);
 
-    public constructor(messageDisplayer: MessageDisplayer) {
-        super(messageDisplayer);
+    public constructor(messageDisplayer: MessageDisplayer, cdr: ChangeDetectorRef) {
+        super(messageDisplayer, cdr);
         this.setRulesAndNode('Pylos');
         this.availableAIs = [
-            new Minimax($localize`Minimax`, this.rules, new PylosHeuristic(), new PylosOrderedMoveGenerator()),
+            new PylosMinimax(),
             new MCTS($localize`MCTS`, new PylosMoveGenerator(), this.rules),
         ];
         this.encoder = PylosMove.encoder;
