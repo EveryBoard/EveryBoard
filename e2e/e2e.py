@@ -304,15 +304,15 @@ def can_play_tutorial(user):
     user.click('#nextButton')
 
     # In the second step I should play something, so I just do it
-    user.click('#click_3 > rect')
+    user.click('#click-3-0 > rect')
     user.click('#nextButton')
 
     # The third step requires me to win, so I do it
-    user.click('#click_1 > rect')
+    user.click('#click-1-0 > rect')
     user.click('#nextButton')
 
     # The final step also requires me to win
-    user.click('#click_4 > rect')
+    user.click('#click-4-0 > rect')
     user.click('#nextButton')
 
     # Now I should have finished the tuto
@@ -333,13 +333,13 @@ def can_play_local_2_players(user):
     user.use_default_config()
 
     # Stupid game between player 0 and 1, where 0 wins
-    user.click('#click_3 > rect')
-    user.click('#click_2 > rect')
-    user.click('#click_3 > rect')
-    user.click('#click_2 > rect')
-    user.click('#click_3 > rect')
-    user.click('#click_2 > rect')
-    user.click('#click_3 > rect')
+    user.click('#click-3-0 > rect')
+    user.click('#click-2-0 > rect')
+    user.click('#click-3-0 > rect')
+    user.click('#click-2-0 > rect')
+    user.click('#click-3-0 > rect')
+    user.click('#click-2-0 > rect')
+    user.click('#click-3-0 > rect')
 
     # Now 0 ("Player 1") won
     winner = user.get_text_of('#gameResult')
@@ -365,17 +365,17 @@ def can_play_local_vs_ai(user):
     user.select('#aiOneOptionSelect', 'Level 1')
 
     # I play a move
-    user.click('#click_2 > rect')
+    user.click('#click-2-0 > rect')
 
     # Let AI play
     # It's back to us when the background is set to our color
     user.wait_for('.player0-bg')
 
     # AI should have played a second move, I can play again
-    user.click('#click_1 > rect')
+    user.click('#click-1-0 > rect')
 
-    # Now there should be a piece in #click_1
-    user.wait_for('#click_1 > circle')
+    # Now there should be a piece in #click-1-0
+    user.wait_for('#click-1-0 > circle')
 
 @scenario('two_drivers')
 def can_create_part_and_play(user1, user2):
@@ -388,19 +388,19 @@ def can_create_part_and_play(user1, user2):
     # Now we are in the game!
     # Let's play it until the end
     user1.wait_for('#playerTurn')
-    user1.click('#click_3 > rect')
+    user1.click('#click-3-0 > rect')
     user2.wait_for('#playerTurn')
-    user2.click('#click_2 > rect')
+    user2.click('#click-2-0 > rect')
     user1.wait_for('#playerTurn')
-    user1.click('#click_3 > rect')
+    user1.click('#click-3-0 > rect')
     user2.wait_for('#playerTurn')
-    user2.click('#click_2 > rect')
+    user2.click('#click-2-0 > rect')
     user1.wait_for('#playerTurn')
-    user1.click('#click_3 > rect')
+    user1.click('#click-3-0 > rect')
     user2.wait_for('#playerTurn')
-    user2.click('#click_2 > rect')
+    user2.click('#click-2-0 > rect')
     user1.wait_for('#playerTurn')
-    user1.click('#click_3 > rect')
+    user1.click('#click-3-0 > rect')
 
     # Now player 1 has won
     user1.wait_for('#youWonIndicator')
@@ -497,11 +497,11 @@ def can_perform_take_back(user1, user2):
     # A game is being played for a few turns
     user1.create_part(user2)
     user1.wait_for('#playerTurn')
-    user1.click('#click_3 > rect')
+    user1.click('#click-3-0 > rect')
     user2.wait_for('#playerTurn')
-    user2.click('#click_2 > rect')
+    user2.click('#click-2-0 > rect')
     user1.wait_for('#playerTurn')
-    user1.click('#click_3 > rect')
+    user1.click('#click-3-0 > rect')
 
     # I can ask for take back
     user1.click('#proposeTakeBack')
@@ -545,7 +545,7 @@ def can_hard_draw(user1, user2):
     '''
     def play(user, column):
         user.wait_for('#playerTurn')
-        user.click('#click_{} > rect'.format(column))
+        user.click('#click-{}-0 > rect'.format(column))
     # A game is being played
     user1.create_part(user2)
     # We eventually arrive at a draw

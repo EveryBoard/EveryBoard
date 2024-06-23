@@ -57,7 +57,7 @@ export function DoTaflTests<C extends TaflComponent<R, M>,
                 // Given any state
                 // When clicking on an opponent piece
                 // Then it should fail
-                const opponentPiece: string = '#click_' + entries.secondPlayerPiece.x + '_' + entries.secondPlayerPiece.y;
+                const opponentPiece: string = '#click-' + entries.secondPlayerPiece.x + '-' + entries.secondPlayerPiece.y;
                 const reason: string = RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT();
                 await testUtils.expectClickFailure(opponentPiece, reason);
             }));
@@ -66,17 +66,17 @@ export function DoTaflTests<C extends TaflComponent<R, M>,
                 // Given any state
                 // When clicking on an empty space
                 // Then it should fail
-                await testUtils.expectClickFailure('#click_0_0', RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY());
+                await testUtils.expectClickFailure('#click-0-0', RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY());
             }));
 
             it('should highlight selected piece', fakeAsync(async() => {
                 // Given any state
                 // When clicking on one of your piece
-                const playersCoord: string = entries.validFirstCoord.x + '_' + entries.validFirstCoord.y;
-                await testUtils.expectClickSuccess('#click_' + playersCoord);
+                const playersCoord: string = entries.validFirstCoord.x + '-' + entries.validFirstCoord.y;
+                await testUtils.expectClickSuccess('#click-' + playersCoord);
 
                 // Then it should have selected the piece
-                testUtils.expectElementToHaveClass('#piece_' + playersCoord, 'selected-stroke');
+                testUtils.expectElementToHaveClass('#piece-' + playersCoord, 'selected-stroke');
             }));
 
         });
@@ -87,33 +87,33 @@ export function DoTaflTests<C extends TaflComponent<R, M>,
                 // Given a state where first click selected one of your pieces
                 const start: Coord = entries.validFirstCoord;
                 const end: Coord = entries.validSecondCoord;
-                const playersCoord: string = start.x + '_' + start.y;
-                await testUtils.expectClickSuccess('#click_' + playersCoord);
+                const playersCoord: string = start.x + '-' + start.y;
+                await testUtils.expectClickSuccess('#click-' + playersCoord);
 
                 // When moving your piece
                 const move: M = entries.moveProvider(start, end).get();
 
                 // Then the move should be legal
-                const landingSpace: string = '#click_' + end.x + '_' + end.y;
+                const landingSpace: string = '#click-' + end.x + '-' + end.y;
                 await testUtils.expectMoveSuccess(landingSpace, move);
                 // And the square on the way should be highlighted
                 const movedOverCoords: Coord[] = move.getMovedOverCoords();
                 for (const movedOverCoord of movedOverCoords) {
-                    const elementName: string = '#space_' + movedOverCoord.x + '_' + movedOverCoord.y;
+                    const elementName: string = '#space-' + movedOverCoord.x + '-' + movedOverCoord.y;
                     testUtils.expectElementToHaveClass(elementName, 'moved-fill');
                 }
             }));
 
             it('should fail but not throw during diagonal move attempt', fakeAsync(async() => {
                 // Given a state where first click selected one of your pieces
-                const playersCoord: string = entries.validFirstCoord.x + '_' + entries.validFirstCoord.y;
-                await testUtils.expectClickSuccess('#click_' + playersCoord);
+                const playersCoord: string = entries.validFirstCoord.x + '-' + entries.validFirstCoord.y;
+                await testUtils.expectClickSuccess('#click-' + playersCoord);
 
                 // When attempting diagonal move
                 const message: string = TaflFailure.MOVE_MUST_BE_ORTHOGONAL();
 
                 // Then it should not have throwed
-                const secondClick: string = '#click_' + entries.diagonalSecondCoord.x + '_' + entries.diagonalSecondCoord.y;
+                const secondClick: string = '#click-' + entries.diagonalSecondCoord.x + '-' + entries.diagonalSecondCoord.y;
                 expect(async() => await testUtils.expectClickFailure(secondClick, message)).not.toThrow();
             }));
 
@@ -121,11 +121,11 @@ export function DoTaflTests<C extends TaflComponent<R, M>,
                 // Given a board where a capture is ready to be made
                 await testUtils.setupState(entries.stateReadyForCapture);
                 const firstCoord: Coord = entries.capture.getStart();
-                await testUtils.expectClickSuccess('#click_' + firstCoord.x + '_' + firstCoord.y);
+                await testUtils.expectClickSuccess('#click-' + firstCoord.x + '-' + firstCoord.y);
 
                 // When finalizing the capture
                 const secondCoord: Coord = entries.capture.getEnd();
-                await testUtils.expectMoveSuccess('#click_' + secondCoord.x + '_' + secondCoord.y, entries.capture);
+                await testUtils.expectMoveSuccess('#click-' + secondCoord.x + '-' + secondCoord.y, entries.capture);
 
                 // Then captured and move highlight should be shown
                 const component: C = testUtils.getGameComponent();
@@ -136,45 +136,45 @@ export function DoTaflTests<C extends TaflComponent<R, M>,
 
             it('should select other piece when clicking on another piece of the player', fakeAsync(async() => {
                 // Given a state where first click selected one of your pieces
-                const playersCoord: string = entries.validFirstCoord.x + '_' + entries.validFirstCoord.y;
-                await testUtils.expectClickSuccess('#click_' + playersCoord);
+                const playersCoord: string = entries.validFirstCoord.x + '-' + entries.validFirstCoord.y;
+                await testUtils.expectClickSuccess('#click-' + playersCoord);
 
                 // When clicking another piece of yours
-                const otherCoord: string = entries.otherPlayerPiece.x + '_' + entries.otherPlayerPiece.y;
-                await testUtils.expectClickSuccess('#click_' + otherCoord);
+                const otherCoord: string = entries.otherPlayerPiece.x + '-' + entries.otherPlayerPiece.y;
+                await testUtils.expectClickSuccess('#click-' + otherCoord);
 
                 // Then that piece should be selected and the previous unselected
-                testUtils.expectElementToHaveClass('#piece_' + otherCoord, 'selected-stroke');
-                testUtils.expectElementNotToHaveClass('#piece_' + playersCoord, 'selected-stroke');
+                testUtils.expectElementToHaveClass('#piece-' + otherCoord, 'selected-stroke');
+                testUtils.expectElementNotToHaveClass('#piece-' + playersCoord, 'selected-stroke');
             }));
 
             it('should deselect piece when clicking a second time on it', fakeAsync(async() => {
                 // Given a state where first click selected one of your pieces
-                const playersCoord: string = entries.validFirstCoord.x + '_' + entries.validFirstCoord.y;
-                await testUtils.expectClickSuccess('#click_' + playersCoord);
+                const playersCoord: string = entries.validFirstCoord.x + '-' + entries.validFirstCoord.y;
+                await testUtils.expectClickSuccess('#click-' + playersCoord);
 
                 // When clicking on it again
-                await testUtils.expectClickFailure('#click_' + playersCoord);
+                await testUtils.expectClickFailure('#click-' + playersCoord);
 
                 // Then that piece should be deselected
-                testUtils.expectElementNotToHaveClass('#piece_' + playersCoord, 'selected-stroke');
+                testUtils.expectElementNotToHaveClass('#piece-' + playersCoord, 'selected-stroke');
             }));
 
             it('should cancel the move when trying to jump over another piece', fakeAsync(async() => {
                 // Given a state where first click selected one of your pieces
                 await testUtils.setupState(entries.stateReadyForJumpOver);
-                const firstCoord: string = entries.jumpOver.getStart().x + '_' + entries.jumpOver.getStart().y;
-                await testUtils.expectClickSuccess('#click_' + firstCoord);
+                const firstCoord: string = entries.jumpOver.getStart().x + '-' + entries.jumpOver.getStart().y;
+                await testUtils.expectClickSuccess('#click-' + firstCoord);
 
                 // When trying an illegal move
                 const move: M = entries.jumpOver;
 
                 // Then the move should have failed
                 const reason: string = RulesFailure.SOMETHING_IN_THE_WAY();
-                const secondCoord: string = entries.jumpOver.getEnd().x + '_' + entries.jumpOver.getEnd().y;
-                await testUtils.expectMoveFailure('#click_' + secondCoord, reason, move);
+                const secondCoord: string = entries.jumpOver.getEnd().x + '-' + entries.jumpOver.getEnd().y;
+                await testUtils.expectMoveFailure('#click-' + secondCoord, reason, move);
                 // And the piece should be unselected
-                testUtils.expectElementNotToHaveClass('#piece_' + firstCoord, 'selected-stroke');
+                testUtils.expectElementNotToHaveClass('#piece-' + firstCoord, 'selected-stroke');
             }));
 
         });
@@ -199,19 +199,19 @@ export function DoTaflTests<C extends TaflComponent<R, M>,
 
         it('should hide first move when taking back', fakeAsync(async() => {
             // Given a state with a first move done
-            const playersCoord: string = entries.validFirstCoord.x + '_' + entries.validFirstCoord.y;
-            await testUtils.expectClickSuccess('#click_' + playersCoord);
+            const playersCoord: string = entries.validFirstCoord.x + '-' + entries.validFirstCoord.y;
+            await testUtils.expectClickSuccess('#click-' + playersCoord);
             const move: M = entries.moveProvider(entries.validFirstCoord, entries.validSecondCoord).get();
-            const landingCoord: string = entries.validSecondCoord.x + '_' + entries.validSecondCoord.y;
-            const landingSpace: string = '#click_' + landingCoord;
+            const landingCoord: string = entries.validSecondCoord.x + '-' + entries.validSecondCoord.y;
+            const landingSpace: string = '#click-' + landingCoord;
             await testUtils.expectMoveSuccess(landingSpace, move);
 
             // When taking it back
             await testUtils.expectInterfaceClickSuccess('#takeBack');
 
             // Then no highlight should be found
-            testUtils.expectElementNotToHaveClass('#space_' + playersCoord, 'moved-fill');
-            testUtils.expectElementNotToHaveClass('#space_' + landingCoord, 'moved-fill');
+            testUtils.expectElementNotToHaveClass('#space-' + playersCoord, 'moved-fill');
+            testUtils.expectElementNotToHaveClass('#space-' + landingCoord, 'moved-fill');
         }));
 
     });

@@ -343,7 +343,7 @@ describe('YinshComponent', () => {
             testUtils.expectElementToHaveClass('#selectable_3_6', 'capturable-stroke');
         }));
 
-        it('should show selected captures, and remove highlight upon cancelation', fakeAsync(async() => {
+        it('should show selected captures, and remove highlight upon cancellation', fakeAsync(async() => {
             // Given a board with a possible capture
             const board: Table<YinshPiece> = [
                 [N, N, N, N, N, N, _, _, _, _, N],

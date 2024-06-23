@@ -102,7 +102,7 @@ export class Set<T extends Comparable> implements ComparableObject {
         return this.provideInstance(values);
     }
 
-    public unionList(list: T[]): this {
+    public unionList(list: readonly T[]): this {
         return this.provideInstance<T>(list.concat(this.values));
     }
 

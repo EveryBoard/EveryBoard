@@ -32,8 +32,8 @@ export class P4Component extends RectangularGameComponent<P4Rules, P4Move, P4Sta
         this.encoder = P4Move.encoder;
     }
 
-    public async onClick(x: number): Promise<MGPValidation> {
-        const clickValidity: MGPValidation = await this.canUserPlay('#click_' + x);
+    public async onClick(x: number, y: number): Promise<MGPValidation> {
+        const clickValidity: MGPValidation = await this.canUserPlay(`#click-${ x }-${ y }`);
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }

@@ -85,7 +85,7 @@ export class HiveTutorial extends Tutorial {
             HiveState.fromRepresentation([
                 [[b, Q], [q], [B]],
             ], 2),
-            ['#piece_0_0'],
+            ['#piece-0-0-0'],
             TutorialStepMessage.CONGRATULATIONS(),
             TutorialStepMessage.FAILED_TRY_AGAIN(),
         ),
