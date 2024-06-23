@@ -1,4 +1,4 @@
-<div *ngIf="isConfigSet()" class="columns is-3 mb-3">
+<div *ngIf="configIsSet" class="columns is-3 mb-3">
     <div class="column is-one-quarter has-text-centered">
         <div *ngIf="gameComponent"
              id="info"
@@ -123,7 +123,7 @@
     </div>
 </div>
 
-<div *ngIf="isConfigSet() === false" >
+<div *ngIf="configIsSet === false" >
     <app-rules-configuration id="rulesConfigComponent"
                              [stateProvider]="getStateProvider()"
                              [rulesConfigDescriptionOptional]="getRulesConfigDescription()"

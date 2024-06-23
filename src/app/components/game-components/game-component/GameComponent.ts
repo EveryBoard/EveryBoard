@@ -64,6 +64,10 @@ export abstract class BaseWrapperComponent extends BaseComponent {
         return Utils.getNonNullable(this.activatedRoute.snapshot.paramMap.get('compo'));
     }
 
+    protected getGameName(): string {
+        return GameInfo.getByUrlName(this.getGameUrlName()).get().name;
+    }
+
 }
 
 /**
