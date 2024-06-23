@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { GameComponent } from 'src/app/components/game-components/game-component/GameComponent';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Ordinal } from 'src/app/jscaip/Ordinal';
@@ -128,8 +128,8 @@ export class LodestoneComponent
     private lastMoves: Coord[] = [];
     private lastCaptures: Coord[] = [];
 
-    public constructor(messageDisplayer: MessageDisplayer) {
-        super(messageDisplayer);
+    public constructor(messageDisplayer: MessageDisplayer, cdr: ChangeDetectorRef) {
+        super(messageDisplayer, cdr);
         this.setRulesAndNode('Lodestone');
         this.availableAIs = [
             new LodestoneScoreMinimax(),

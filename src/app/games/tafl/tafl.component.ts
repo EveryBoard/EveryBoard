@@ -18,6 +18,7 @@ import { TaflPieceAndInfluenceMinimax } from './TaflPieceAndInfluenceMinimax';
 import { TaflPieceMinimax } from './TaflPieceMinimax';
 import { TaflPieceAndControlMinimax } from './TaflPieceAndControlMinimax';
 import { TaflEscapeThenPieceThenControlMinimax } from './TaflEscapeThenPieceThenControlMinimax';
+import { ChangeDetectorRef } from '@angular/core';
 
 export abstract class TaflComponent<R extends TaflRules<M>, M extends TaflMove>
     extends RectangularGameComponent<R, M, TaflState, TaflPawn, TaflConfig>
@@ -34,9 +35,10 @@ export abstract class TaflComponent<R extends TaflRules<M>, M extends TaflMove>
     public chosen: MGPOptional<Coord> = MGPOptional.empty();
 
     public constructor(messageDisplayer: MessageDisplayer,
+                       cdr: ChangeDetectorRef,
                        public generateMove: (start: Coord, end: Coord) => MGPFallible<M>)
     {
-        super(messageDisplayer);
+        super(messageDisplayer, cdr);
     }
 
     public async updateBoard(_triggerAnimation: boolean): Promise<void> {

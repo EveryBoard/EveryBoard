@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 
 import { RectangularGameComponent } from 'src/app/components/game-components/rectangular-game-component/RectangularGameComponent';
 import { Coord } from 'src/app/jscaip/Coord';
@@ -159,8 +159,8 @@ export class MartianChessComponent extends RectangularGameComponent<MartianChess
         return this.SPACE_SIZE * circle / 10;
     }
 
-    public constructor(messageDisplayer: MessageDisplayer) {
-        super(messageDisplayer);
+    public constructor(messageDisplayer: MessageDisplayer, cdr: ChangeDetectorRef) {
+        super(messageDisplayer, cdr);
         this.setRulesAndNode('MartianChess');
         this.availableAIs = [
             new MartianChessScoreMinimax(),

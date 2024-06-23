@@ -11,7 +11,7 @@ export class PenteAlignmentHeuristic extends Heuristic<PenteMove, PenteState, Bo
     public getBoardValue(node: PenteNode, config: MGPOptional<PenteConfig>): BoardValue {
         return PenteRules
             .get()
-            .getHelper(config)
+            .getHelper(config.get())
             .getBoardValue(node.gameState);
     }
 

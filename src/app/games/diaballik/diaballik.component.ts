@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { DefeatCoords, DiaballikRules, VictoryCoord, VictoryOrDefeatCoords } from './DiaballikRules';
 import { DiaballikMove, DiaballikBallPass, DiaballikSubMove, DiaballikTranslation } from './DiaballikMove';
 import { DiaballikPiece, DiaballikState } from './DiaballikState';
@@ -55,8 +55,8 @@ export class DiaballikComponent extends RectangularGameComponent<DiaballikRules,
 
     private readonly moveGenerator: DiaballikMoveGenerator = new DiaballikMoveGenerator(false);
 
-    public constructor(messageDisplayer: MessageDisplayer) {
-        super(messageDisplayer);
+    public constructor(messageDisplayer: MessageDisplayer, cdr: ChangeDetectorRef) {
+        super(messageDisplayer, cdr);
         this.setRulesAndNode('Diaballik');
         this.hasAsymmetricBoard = true;
         this.WIDTH = this.getState().getWidth();

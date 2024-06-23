@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { HexagonalGameComponent } from 'src/app/components/game-components/game-component/HexagonalGameComponent';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Direction } from 'src/app/jscaip/Direction';
@@ -62,8 +62,8 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneRules,
         .getCoordsAndContents()
         .flatMap((coordAndContent: { coord: Coord }) => coordAndContent.coord.getOrdinalNeighbors());
 
-    public constructor(messageDisplayer: MessageDisplayer) {
-        super(messageDisplayer);
+    public constructor(messageDisplayer: MessageDisplayer, cdr: ChangeDetectorRef) {
+        super(messageDisplayer, cdr);
         this.setRulesAndNode('Abalone');
         this.availableAIs = [
             new AbaloneScoreMinimax(),

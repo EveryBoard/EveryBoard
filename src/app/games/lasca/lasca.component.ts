@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { ModeConfig, ParallelogramGameComponent } from 'src/app/components/game-components/parallelogram-game-component/ParallelogramGameComponent';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Vector } from 'src/app/jscaip/Vector';
@@ -53,8 +53,8 @@ export class LascaComponent extends ParallelogramGameComponent<LascaRules,
     private legalMoves: LascaMove[] = [];
     private readonly moveGenerator: LascaMoveGenerator = new LascaMoveGenerator();
 
-    public constructor(messageDisplayer: MessageDisplayer) {
-        super(messageDisplayer);
+    public constructor(messageDisplayer: MessageDisplayer, cdr: ChangeDetectorRef) {
+        super(messageDisplayer, cdr);
         this.setRulesAndNode('Lasca');
         this.availableAIs = [
             new LascaControlMinimax(),

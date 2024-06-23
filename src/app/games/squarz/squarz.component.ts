@@ -2,7 +2,7 @@ import { MGPOptional, MGPValidation } from '@everyboard/lib';
 import { SquarzConfig, SquarzRules } from './SquarzRules';
 import { SquarzMove as SquarzMove } from './SquarzMove';
 import { SquarzState } from './SquarzState';
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { MCTS } from 'src/app/jscaip/AI/MCTS';
 import { SquarzMoveGenerator } from './SquarzMoveGenerator';
@@ -35,8 +35,8 @@ export class SquarzComponent extends RectangularGameComponent<SquarzRules,
 
     public selected: MGPOptional<Coord> = MGPOptional.empty();
 
-    public constructor(messageDisplayer: MessageDisplayer) {
-        super(messageDisplayer);
+    public constructor(messageDisplayer: MessageDisplayer, cdr: ChangeDetectorRef) {
+        super(messageDisplayer, cdr);
         this.setRulesAndNode('Squarz');
         this.availableAIs = [
             new SquarzMinimax(),

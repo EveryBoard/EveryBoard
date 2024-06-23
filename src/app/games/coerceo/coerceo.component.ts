@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { TriangularGameComponent }
     from 'src/app/components/game-components/game-component/TriangularGameComponent';
 import { CoerceoMove, CoerceoRegularMove, CoerceoTileExchangeMove } from 'src/app/games/coerceo/CoerceoMove';
@@ -41,8 +41,8 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
 
     public possibleLandings: Coord[] = [];
 
-    public constructor(messageDisplayer: MessageDisplayer) {
-        super(messageDisplayer);
+    public constructor(messageDisplayer: MessageDisplayer, cdr: ChangeDetectorRef) {
+        super(messageDisplayer, cdr);
         this.setRulesAndNode('Coerceo');
         this.availableAIs = [
             new CoerceoPiecesThreatsTilesMinimax(),

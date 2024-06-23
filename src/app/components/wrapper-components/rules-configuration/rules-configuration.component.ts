@@ -42,7 +42,7 @@ export class RulesConfigurationComponent extends BaseWrapperComponent implements
 
     public rulesConfigForm: FormGroup = new FormGroup({});
 
-    public gameName: string; // set in onInit
+    public urlName: string; // set in onInit
 
     private chosenConfigName: string = '';
 
@@ -58,7 +58,7 @@ export class RulesConfigurationComponent extends BaseWrapperComponent implements
 
     public ngOnInit(): void {
         this.assertParamsAreCoherent();
-        this.gameName = this.getGameName();
+        this.urlName = this.getGameUrlName();
         if (this.isCustomisable()) {
             const defaultConfig: NamedRulesConfig<RulesConfig> = this.rulesConfigDescription.getDefaultConfig();
             this.setChosenConfig(defaultConfig.name());
@@ -79,7 +79,7 @@ export class RulesConfigurationComponent extends BaseWrapperComponent implements
             const node: AbstractNode = new GameNode(stateProvider(MGPOptional.of(config)));
             this.configDemo = {
                 click: MGPOptional.empty(),
-                name: this.gameName,
+                name: this.urlName,
                 node,
             };
             this.cdr.detectChanges();

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { RectangularGameComponent } from '../../components/game-components/rectangular-game-component/RectangularGameComponent';
 import { EncapsuleLegalityInformation, EncapsuleRules } from 'src/app/games/encapsule/EncapsuleRules';
 import { EncapsuleState, EncapsuleSpace } from 'src/app/games/encapsule/EncapsuleState';
@@ -38,8 +38,8 @@ export class EncapsuleComponent extends RectangularGameComponent<EncapsuleRules,
     public remainingPieceCenterCoords: MGPMap<Player, Coord[]> = new MGPMap();
     public victoryCoords: Coord[] = [];
 
-    public constructor(messageDisplayer: MessageDisplayer) {
-        super(messageDisplayer);
+    public constructor(messageDisplayer: MessageDisplayer, cdr: ChangeDetectorRef) {
+        super(messageDisplayer, cdr);
         this.setRulesAndNode('Encapsule');
         this.availableAIs = [
             new EncapsuleDummyMinimax(),

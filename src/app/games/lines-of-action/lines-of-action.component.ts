@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { RectangularGameComponent } from 'src/app/components/game-components/rectangular-game-component/RectangularGameComponent';
 import { Coord } from 'src/app/jscaip/Coord';
 import { PlayerOrNone } from 'src/app/jscaip/Player';
@@ -30,8 +30,8 @@ export class LinesOfActionComponent extends RectangularGameComponent<LinesOfActi
     private lastMoved: Coord[] = [];
     private captured: MGPOptional<Coord> = MGPOptional.empty();
 
-    public constructor(messageDisplayer: MessageDisplayer) {
-        super(messageDisplayer);
+    public constructor(messageDisplayer: MessageDisplayer, cdr: ChangeDetectorRef) {
+        super(messageDisplayer, cdr);
         this.setRulesAndNode('LinesOfAction');
         this.availableAIs = [
             new LinesOfActionMinimax(),

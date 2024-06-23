@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { HexagonalGameComponent } from 'src/app/components/game-components/game-component/HexagonalGameComponent';
 import { Coord } from 'src/app/jscaip/Coord';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
@@ -117,8 +117,8 @@ export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, H
     public viewBox: string;
     public inspectedStackTransform: string;
 
-    public constructor(messageDisplayer: MessageDisplayer) {
-        super(messageDisplayer);
+    public constructor(messageDisplayer: MessageDisplayer, cdr: ChangeDetectorRef) {
+        super(messageDisplayer, cdr);
         this.setRulesAndNode('Hive');
         this.availableAIs = [
             new HiveMinimax(),

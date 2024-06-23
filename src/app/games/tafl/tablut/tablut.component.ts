@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { TablutMove } from 'src/app/games/tafl/tablut/TablutMove';
 import { TablutRules } from './TablutRules';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
@@ -11,8 +11,8 @@ import { TaflComponent } from '../tafl.component';
 })
 export class TablutComponent extends TaflComponent<TablutRules, TablutMove> {
 
-    public constructor(messageDisplayer: MessageDisplayer) {
-        super(messageDisplayer, TablutMove.from);
+    public constructor(messageDisplayer: MessageDisplayer, cdr: ChangeDetectorRef) {
+        super(messageDisplayer, cdr, TablutMove.from);
         this.setRulesAndNode('Tablut');
         this.availableAIs = this.createAIs();
         this.encoder = TablutMove.encoder;

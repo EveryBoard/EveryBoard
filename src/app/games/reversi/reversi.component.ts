@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { ReversiConfig, ReversiLegalityInformation, ReversiRules } from './ReversiRules';
 import { ReversiState } from './ReversiState';
 import { ReversiMove } from 'src/app/games/reversi/ReversiMove';
@@ -30,8 +30,8 @@ export class ReversiComponent extends RectangularGameComponent<ReversiRules,
 
     private capturedCoords: Coord[] = [];
 
-    public constructor(messageDisplayer: MessageDisplayer) {
-        super(messageDisplayer);
+    public constructor(messageDisplayer: MessageDisplayer, cdr: ChangeDetectorRef) {
+        super(messageDisplayer, cdr);
         this.setRulesAndNode('Reversi');
         this.availableAIs = [
             new ReversiMinimax(),

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { GameComponent } from 'src/app/components/game-components/game-component/GameComponent';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Vector } from 'src/app/jscaip/Vector';
@@ -97,8 +97,8 @@ export class DiamComponent extends GameComponent<DiamRules, DiamMove, DiamState>
         ]),
     };
 
-    public constructor(messageDisplayer: MessageDisplayer) {
-        super(messageDisplayer);
+    public constructor(messageDisplayer: MessageDisplayer, cdr: ChangeDetectorRef) {
+        super(messageDisplayer, cdr);
         this.setRulesAndNode('Diam');
         this.availableAIs = [
             new DiamDummyMinimax(),

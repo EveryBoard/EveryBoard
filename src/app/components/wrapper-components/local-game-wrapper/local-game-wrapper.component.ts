@@ -36,7 +36,7 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
 
     public displayAIMetrics: boolean = false;
 
-    private configIsSet: boolean = false;
+    public configIsSet: boolean = false;
 
     public rulesConfig: MGPOptional<RulesConfig> = MGPOptional.empty();
 
@@ -59,8 +59,8 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
     // Will set it to MGPOptional.empty() if the game doesn't exist, but an error will be handled by another function.
     // ConfiglessRules have MGPOptional.empty() value.
     private setDefaultRulesConfig(): void {
-        const gameName: string = this.getGameName();
-        this.rulesConfig = RulesConfigUtils.getGameDefaultConfig(gameName);
+        const urlName: string = this.getGameUrlName();
+        this.rulesConfig = RulesConfigUtils.getGameDefaultConfig(urlName);
     }
 
     public getCreatedNodes(): number {
@@ -123,6 +123,7 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
                 }
             }
         }
+        this.cdr.detectChanges();
     }
 
     public async proposeAIToPlay(): Promise<void> {
@@ -134,7 +135,6 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
             if (playingAI.isPresent()) {
                 window.setTimeout(async() => {
                     await this.doAIMove(playingAI.get().ai, playingAI.get().options);
-                    this.cdr.detectChanges(); // triggers the rendering of AI move
                 }, LocalGameWrapperComponent.AI_TIMEOUT);
             }
             // If playingAI is absent, that means the user selected an AI without selecting options yet
@@ -197,17 +197,7 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
     }
 
     public getStateProvider(): MGPOptional<(config: MGPOptional<RulesConfig>) => GameState> {
-        const urlName: string = this.getGameName();
-        const gameInfos: MGPOptional<GameInfo> = GameInfo.getByUrlName(urlName);
-        if (gameInfos.isPresent()) {
-            const stateProvider: (config: MGPOptional<RulesConfig>) => GameState =
-                (config: MGPOptional<RulesConfig>) => {
-                    return gameInfos.get().rules.getInitialState(config);
-                };
-            return MGPOptional.of(stateProvider);
-        } else {
-            return MGPOptional.empty();
-        }
+        return GameInfo.getStateProvider(this.getGameUrlName());
     }
 
     public async doAIMove(playingAI: AbstractAI, options: AIOptions): Promise<MGPValidation> {
@@ -233,12 +223,13 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
         await this.showNewMove(lastMoveWasAI);
         await this.updateWrapper();
         await this.proposeAIToPlay();
+        this.cdr.detectChanges();
     }
 
     private async handleAIError(playingAI: AbstractAI, illegalMove: Move, error: string): Promise<MGPValidation> {
         this.messageDisplayer.criticalMessage($localize`The AI chose an illegal move! This is an unexpected situation that we logged, we will try to solve this as soon as possible. In the meantime, consider that you won!`);
         return Utils.logError('LocalGameWrapper', 'AI chose illegal move', {
-            game: this.getGameName(),
+            game: this.getGameUrlName(),
             name: playingAI.name,
             move: illegalMove.toString(),
             reason: error,
@@ -277,7 +268,7 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
         const config: MGPOptional<RulesConfig> = await this.getConfig();
         this.gameComponent.node = this.gameComponent.rules.getInitialNode(config);
         this.gameComponent.hideLastMove();
-        await this.gameComponent.updateBoard(false);
+        await this.gameComponent.updateBoardAndRedraw(false);
         this.endGame = false;
         this.winnerMessage = MGPOptional.empty();
         await this.proposeAIToPlay();
@@ -324,14 +315,10 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
         }
     }
 
-    public isConfigSet(): boolean {
-        return this.configIsSet;
-    }
-
     public markConfigAsFilled(): void {
         this.configIsSet = true;
-        this.cdr.detectChanges();
         this.configBS.next(this.rulesConfig);
+        this.cdr.detectChanges();
     }
 
     public displayAIInfo(): boolean {

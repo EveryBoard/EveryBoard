@@ -24,7 +24,7 @@
                      [ngClass]="getPieceClasses(x, y, c)"
                      (click)="clickSquare(x, y)"
                      xlink:href="#arrow"
-                     [attr.transform]="getPiceRotation(x, y)"/>
+                     [attr.transform]="getPieceRotation(x, y)"/>
                 <use *ngIf="isMountain(c)"
                      xlink:href="#mountain"
                      class="nonplayer-fill"
@@ -90,7 +90,7 @@
     <g app-siam-orientation-arrow
        [orientations]="orientations"
        [currentPlayer]="getCurrentPlayer()"
-       [config]="getConfig().get()"
+       [config]="config.get()"
        (moveEmitter)="selectOrientation($event)"
     />
 </svg>

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { QuartoMove } from './QuartoMove';
 import { QuartoState } from './QuartoState';
 import { QuartoRules } from './QuartoRules';
@@ -34,8 +34,8 @@ export class QuartoComponent extends RectangularGameComponent<QuartoRules,
     public pieceToGive: MGPOptional<QuartoPiece> = MGPOptional.empty();
     public victoriousCoords: Coord[] = [];
 
-    public constructor(messageDisplayer: MessageDisplayer) {
-        super(messageDisplayer);
+    public constructor(messageDisplayer: MessageDisplayer, cdr: ChangeDetectorRef) {
+        super(messageDisplayer, cdr);
         this.setRulesAndNode('Quarto');
         this.availableAIs = [
             new QuartoMinimax(),

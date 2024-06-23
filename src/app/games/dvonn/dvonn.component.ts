@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { Coord } from 'src/app/jscaip/Coord';
 import { DvonnMove } from 'src/app/games/dvonn/DvonnMove';
 import { DvonnState } from 'src/app/games/dvonn/DvonnState';
@@ -27,8 +27,8 @@ export class DvonnComponent extends HexagonalGameComponent<DvonnRules, DvonnMove
     public chosen: MGPOptional<Coord> = MGPOptional.empty();
     public disconnectedSpaces: { coord: Coord, spaceContent: DvonnPieceStack }[] = [];
 
-    public constructor(messageDisplayer: MessageDisplayer) {
-        super(messageDisplayer);
+    public constructor(messageDisplayer: MessageDisplayer, cdr: ChangeDetectorRef) {
+        super(messageDisplayer, cdr);
         this.setRulesAndNode('Dvonn');
         this.availableAIs = [
             new DvonnMaxStacksMinimax(),
