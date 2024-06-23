@@ -16,8 +16,8 @@ export class Set<T extends Comparable> implements ComparableObject {
     }
 
     public provideInstance<U extends Comparable>(values?: readonly U[]): this {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        return new (<any> this.constructor)(values);
+        const { constructor } = Object.getPrototypeOf(this);
+        return new constructor(values);
     }
 
     public equals(other: Set<T>): boolean {
