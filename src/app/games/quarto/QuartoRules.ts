@@ -3,7 +3,7 @@ import { GameNode } from 'src/app/jscaip/AI/GameNode';
 import { QuartoState } from './QuartoState';
 import { QuartoMove } from './QuartoMove';
 import { QuartoPiece } from './QuartoPiece';
-import { MGPOptional, MGPSet, MGPValidation } from '@everyboard/lib';
+import { MGPOptional, MGPValidation } from '@everyboard/lib';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Ordinal } from 'src/app/jscaip/Ordinal';
 import { SCORE } from 'src/app/jscaip/SCORE';
@@ -100,7 +100,7 @@ export interface BoardStatus {
 
     score: SCORE;
 
-    sensitiveSquares: MGPSet<Coord>;
+    sensitiveSquares: CoordSet;
 }
 
 class QuartoLine {
@@ -268,7 +268,7 @@ export class QuartoRules extends Rules<QuartoMove, QuartoState> {
                     boardStatus.score = SCORE.PRE_VICTORY;
                 }
                 const coord: Coord = sensitiveCoord.get();
-                boardStatus.sensitiveSquares.add(coord);
+                boardStatus.sensitiveSquares = boardStatus.sensitiveSquares.addElement(coord);
             }
         }
         return boardStatus;

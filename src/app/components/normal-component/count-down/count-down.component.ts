@@ -1,10 +1,11 @@
-import { Component, EventEmitter, Input, OnDestroy, Output } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, Output } from '@angular/core';
 import { Utils } from '@everyboard/lib';
 import { Debug } from 'src/app/utils/Debug';
 
 @Component({
     selector: 'app-count-down',
     templateUrl: './count-down.component.html',
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 @Debug.log
 export class CountDownComponent implements OnDestroy {
@@ -35,6 +36,8 @@ export class CountDownComponent implements OnDestroy {
 
     public cssClasses: string = CountDownComponent.SAFE_TIME;
 
+    public constructor(private readonly cdr: ChangeDetectorRef) {}
+
     // Set the duration (in ms) for a non-started countdown
     public setDuration(duration: number): void {
         Utils.assert(this.started === false, 'Should not set a chrono that has already been started (' + this.debugName + ')!');
@@ -54,6 +57,7 @@ export class CountDownComponent implements OnDestroy {
         this.displayedSec = this.remainingMs % (60 * 1000);
         this.displayedMinute = (this.remainingMs - this.displayedSec) / (60 * 1000);
         this.displayedSec = Math.floor(this.displayedSec / 1000);
+        this.cdr.detectChanges();
     }
     public start(): void {
         // duration is in ms
@@ -127,9 +131,9 @@ export class CountDownComponent implements OnDestroy {
     private updateShownTime(): void {
         const now: number = Date.now();
         this.remainingMs -= (now - this.startTime);
-        this.displayDuration();
         this.cssClasses = this.getTimeClass();
         this.startTime = now;
+        this.displayDuration();
         if (this.isPaused === false) {
             this.countSeconds();
         }

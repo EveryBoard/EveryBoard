@@ -1,7 +1,7 @@
 import { PenteRules } from './PenteRules';
 import { PenteMove } from './PenteMove';
 import { PenteState } from './PenteState';
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { MGPOptional, MGPValidation } from '@everyboard/lib';
 import { Coord } from 'src/app/jscaip/Coord';
@@ -9,10 +9,9 @@ import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { GobanGameComponent } from 'src/app/components/game-components/goban-game-component/GobanGameComponent';
 import { MCTS } from 'src/app/jscaip/AI/MCTS';
 import { PenteMoveGenerator } from './PenteMoveGenerator';
-import { PenteAlignmentHeuristic } from './PenteAlignmentHeuristic';
 import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
-import { Minimax } from 'src/app/jscaip/AI/Minimax';
 import { PenteConfig } from './PenteConfig';
+import { PenteAlignmentMinimax } from './PenteAlignmentMinimax';
 
 @Component({
     selector: 'app-new-game',
@@ -30,11 +29,11 @@ export class PenteComponent extends GobanGameComponent<PenteRules,
     public victoryCoords: Coord[] = [];
     public captured: Coord[] = [];
 
-    public constructor(messageDisplayer: MessageDisplayer) {
-        super(messageDisplayer);
+    public constructor(messageDisplayer: MessageDisplayer, cdr: ChangeDetectorRef) {
+        super(messageDisplayer, cdr);
         this.setRulesAndNode('Pente');
         this.availableAIs = [
-            new Minimax($localize`Alignment`, this.rules, new PenteAlignmentHeuristic(), new PenteMoveGenerator()),
+            new PenteAlignmentMinimax(),
             new MCTS($localize`MCTS`, new PenteMoveGenerator(), this.rules),
         ];
         this.encoder = PenteMove.encoder;
@@ -46,7 +45,7 @@ export class PenteComponent extends GobanGameComponent<PenteRules,
         this.board = state.board;
         this.scores = MGPOptional.of(this.getState().captures);
         const config: MGPOptional<PenteConfig> = this.getConfig();
-        this.victoryCoords = this.rules.getHelper(config).getVictoriousCoord(state);
+        this.victoryCoords = this.rules.getHelper(config.get()).getVictoriousCoord(state);
         this.createHoshis();
     }
 
