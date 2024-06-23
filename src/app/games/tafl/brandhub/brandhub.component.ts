@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { BrandhubMove } from 'src/app/games/tafl/brandhub/BrandhubMove';
 import { BrandhubRules } from './BrandhubRules';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
@@ -11,8 +11,8 @@ import { TaflComponent } from '../tafl.component';
 })
 export class BrandhubComponent extends TaflComponent<BrandhubRules, BrandhubMove> {
 
-    public constructor(messageDisplayer: MessageDisplayer) {
-        super(messageDisplayer, BrandhubMove.from);
+    public constructor(messageDisplayer: MessageDisplayer, cdr: ChangeDetectorRef) {
+        super(messageDisplayer, cdr, BrandhubMove.from);
         this.setRulesAndNode('Brandhub');
         this.availableAIs = this.createAIs();
         this.encoder = BrandhubMove.encoder;

@@ -49,7 +49,8 @@ describe('LocalGameWrapperComponent for non-existing game', () => {
         tick(1); // Need to tick at least for 1ms due to ngAfterViewInit's setTimeout
 
         // Then it goes to /notFound with the expected error message and displays a toast
-        expectValidRouting(router, ['/notFound', GameWrapperMessages.NO_MATCHING_GAME('invalid-game')], NotFoundComponent, { skipLocationChange: true });
+        const expectedRoute: string[] = ['/notFound', GameWrapperMessages.NO_MATCHING_GAME('invalid-game')];
+        expectValidRouting(router, expectedRoute, NotFoundComponent, { skipLocationChange: true });
     }));
 
 });
@@ -313,8 +314,7 @@ describe('LocalGameWrapperComponent (game phase)', () => {
             const proposeAIToPlay: jasmine.Spy = spyOn(wrapper, 'proposeAIToPlay').and.callThrough();
 
             await testUtils.expectInterfaceClickSuccess('#restartButton');
-            testUtils.detectChanges();
-            await testUtils.whenStable();
+            tick(0);
 
             expect(proposeAIToPlay).toHaveBeenCalledTimes(1);
             tick(LocalGameWrapperComponent.AI_TIMEOUT);

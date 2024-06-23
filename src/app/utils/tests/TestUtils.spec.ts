@@ -417,7 +417,7 @@ export class ComponentTestUtils<C extends AbstractGameComponent, P extends Compa
                 new GameNode(previousState)),
             MGPOptional.ofNullable(params.previousMove),
         );
-        await this.gameComponent.updateBoard(false);
+        await this.gameComponent.updateBoardAndRedraw(false);
         if (params.previousMove !== undefined) {
             await this.gameComponent.showLastMove(params.previousMove, config);
         }

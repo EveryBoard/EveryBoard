@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { GoMove } from 'src/app/games/go/GoMove';
 import { GoConfig, GoLegalityInformation, GoRules } from 'src/app/games/go/GoRules';
 import { GoState, Phase, GoPiece } from 'src/app/games/go/GoState';
@@ -37,8 +37,8 @@ export class GoComponent extends GobanGameComponent<GoRules,
 
     public GoPiece: typeof GoPiece = GoPiece;
 
-    public constructor(messageDisplayer: MessageDisplayer) {
-        super(messageDisplayer);
+    public constructor(messageDisplayer: MessageDisplayer, cdr: ChangeDetectorRef) {
+        super(messageDisplayer, cdr);
         this.setRulesAndNode('Go');
         this.availableAIs = [
             new GoMinimax(),

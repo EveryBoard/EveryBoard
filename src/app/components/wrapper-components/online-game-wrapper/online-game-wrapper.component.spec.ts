@@ -22,14 +22,14 @@ import { GameWrapperMessages } from '../GameWrapper';
 import { GameService } from 'src/app/services/GameService';
 import { MinimalUser } from 'src/app/domain/MinimalUser';
 import { MGPOptional } from '@everyboard/lib';
+import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 describe('OnlineGameWrapper for non-existing game', () => {
 
-    let testUtils: ComponentTestUtils<AbstractGameComponent, MinimalUser>;
-
     it('should redirect to /notFound', fakeAsync(async() => {
         // Given a game wrapper for a game that does not exist
-        testUtils = await ComponentTestUtils.basic('invalid-game');
+        const testUtils: ComponentTestUtils<AbstractGameComponent, MinimalUser> =
+            await ComponentTestUtils.basic('invalid-game');
         ConnectedUserServiceMock.setUser(UserMocks.CONNECTED_AUTH_USER);
         testUtils.prepareFixture(OnlineGameWrapperComponent);
         const router: Router = TestBed.inject(Router);
@@ -39,9 +39,9 @@ describe('OnlineGameWrapper for non-existing game', () => {
         await TestBed.inject(PartDAO).set('configRoomId', { ...PartMocks.INITIAL, typeGame: 'invalid-game' });
         await TestBed.inject(ChatDAO).set('configRoomId', { });
         await TestBed.inject(UserDAO).set(UserMocks.CONNECTED_AUTH_USER.id, UserMocks.CONNECTED);
-        testUtils.detectChanges();
 
         // When loading the component
+        testUtils.detectChanges();
         tick(0);
 
         // Then it goes to /notFound with the expected error message
@@ -69,8 +69,16 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
     let testUtils: ComponentTestUtils<P4Component, MinimalUser>;
     let wrapper: OnlineGameWrapperComponent;
     let configRoomDAO: ConfigRoomDAO;
+    const config: RulesConfig = { width: 7, height: 6 };
 
-    async function prepareComponent(initialConfigRoom: ConfigRoom, initialPart: Part): Promise<void> {
+    async function prepareComponent(accepted: boolean): Promise<void> {
+        let initialConfigRoom: ConfigRoom;
+        if (accepted) {
+            initialConfigRoom = ConfigRoomMocks.withAcceptedConfig(MGPOptional.of(config));
+        } else {
+            initialConfigRoom = ConfigRoomMocks.getInitial(MGPOptional.of(config));
+        }
+        const initialPart: Part = PartMocks.INITIAL;
         configRoomDAO = TestBed.inject(ConfigRoomDAO);
         await configRoomDAO.set('configRoomId', initialConfigRoom);
         await TestBed.inject(PartDAO).set('configRoomId', initialPart);
@@ -84,24 +92,24 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
     async function finishTest(): Promise<void> {
         testUtils.detectChanges();
         tick(0);
-        await configRoomDAO.set('configRoomId', ConfigRoomMocks.withAcceptedConfig(MGPOptional.empty()));
+        await configRoomDAO.set('configRoomId', ConfigRoomMocks.withAcceptedConfig(MGPOptional.of(config)));
         testUtils.detectChanges();
         tick(ConfigRoomMocks.getInitial(MGPOptional.empty()).maximalMoveDuration * 1000);
     }
 
+    beforeEach(async() => {
+        testUtils = await ComponentTestUtils.basic('P4');
+        ConnectedUserServiceMock.setUser(UserMocks.CREATOR_AUTH_USER); // Normally, the header does that
+
+        testUtils.prepareFixture(OnlineGameWrapperComponent);
+        wrapper = testUtils.getWrapper() as OnlineGameWrapperComponent;
+    });
+
     describe('for creator', () => {
 
-        beforeEach(async() => {
-            testUtils = await ComponentTestUtils.basic('P4');
-            ConnectedUserServiceMock.setUser(UserMocks.CREATOR_AUTH_USER); // Normally, the header does that
-
-            testUtils.prepareFixture(OnlineGameWrapperComponent);
-            wrapper = testUtils.getWrapper() as OnlineGameWrapperComponent;
-        });
-
-        it('Initialization should lead to child component PartCreation to call ConfigRoomService', fakeAsync(async() => {
-            // Given a starting component for the creator
-            await prepareComponent(ConfigRoomMocks.getInitial(MGPOptional.empty()), PartMocks.INITIAL);
+        it('should have PartCreation subscribe to ConfigRoomService upon initialization', fakeAsync(async() => {
+            // Given a starting component, with no accepted config yet
+            await prepareComponent(false);
             const configRoomService: ConfigRoomService = TestBed.inject(ConfigRoomService);
 
             spyOn(configRoomService, 'joinGame').and.callThrough();
@@ -123,8 +131,10 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
             await finishTest();
         }));
 
-        it('Initialization on accepted config should lead to PartCreationComponent to call startGame', fakeAsync(async() => {
-            await prepareComponent(ConfigRoomMocks.withAcceptedConfig(MGPOptional.empty()), PartMocks.INITIAL);
+        it('should have PartCreationComponent calling startGame when config accepted', fakeAsync(async() => {
+            // Given a starting component with an accepted config
+            await prepareComponent(true);
+            // When component initializes
             testUtils.detectChanges();
 
             spyOn(wrapper, 'startGame').and.callThrough();
@@ -132,51 +142,50 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
 
             tick(0); // Finish calling async code from PartCreationComponent initialization
 
+            // Then startGame should be called
             expect(wrapper.startGame).toHaveBeenCalledTimes(1);
 
-            testUtils.detectChanges();
-            // Needed so PartCreation is destroyed and game component created
+            testUtils.detectChanges(); // Needed so PartCreation is destroyed and game component created
 
-            tick(0);
             tick(wrapper.configRoom.maximalMoveDuration * 1000);
         }));
 
-        it('Some tags are needed before initialization', fakeAsync(async() => {
-            await prepareComponent(ConfigRoomMocks.getInitial(MGPOptional.empty()), PartMocks.INITIAL);
-            expect(wrapper).toBeTruthy();
+        it('should have some tags before starting', fakeAsync(async() => {
+            // Given a online-game-wrapper component
+            await prepareComponent(false);
+            // When the game is not started yet
+            expect(wrapper.gameStarted).toBeFalse();
+            // Then the p4 and chat tags should already be present
             const p4Tag: DebugElement = testUtils.findElement('app-p4');
             const chatTag: DebugElement = testUtils.findElement('app-chat');
-
-            expect(wrapper.gameStarted).toBeFalse();
-
             expect(p4Tag).withContext('app-p4 tag should be absent at start').toBeFalsy();
             expect(chatTag).withContext('app-chat tag should be present at start').toBeTruthy();
 
-            // finish the game to have no timeout still running
+            // Finish the game to have no timeout still running
             await finishTest();
         }));
 
-        it('Initialization should make appear PartCreationComponent', fakeAsync(async() => {
-            await prepareComponent(ConfigRoomMocks.getInitial(MGPOptional.empty()), PartMocks.INITIAL);
-            let partCreationId: DebugElement = testUtils.findElement('#partCreation');
-
-            testUtils.detectChanges();
-            tick(0);
-
-            partCreationId = testUtils.findElement('#partCreation');
+        it('should have a PartCreationComponent', fakeAsync(async() => {
+            // Given a component without accepted config
+            await prepareComponent(false);
+            // When the game is not started yet
+            expect(wrapper.gameStarted).toBeFalse();
+            // Then part creation should exist
+            const partCreationId: DebugElement = testUtils.findElement('#partCreation');
             expect(partCreationId).withContext('partCreation id should be present after ngOnInit').toBeTruthy();
 
-            // finish the game to have no timeout still running
+            // Finish the game to have no timeout still running
             await finishTest();
         }));
 
-        it('StartGame should replace PartCreationComponent by game component', fakeAsync(async() => {
-            await prepareComponent(ConfigRoomMocks.withAcceptedConfig(MGPOptional.empty()), PartMocks.INITIAL);
+        it('should replace PartCreationComponent by game tag upon game start', fakeAsync(async() => {
+            // Given a component with accepted config
+            await prepareComponent(true);
+            // When it is loaded
             testUtils.detectChanges();
             tick(0);
 
-            testUtils.detectChanges();
-
+            // Then part creation is removed and game appears
             const partCreationId: DebugElement = testUtils.findElement('#partCreation');
             const gameId: DebugElement = testUtils.findElement('#game');
             const p4Tag: DebugElement = testUtils.findElement('app-p4');
@@ -188,12 +197,10 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
             tick(2);
         }));
 
-        it('stage three should make the game component appear at last', fakeAsync(async() => {
-            const configRoom: ConfigRoom = {
-                ...ConfigRoomMocks.withAcceptedConfig(MGPOptional.empty()),
-                rulesConfig: { width: 7, height: 6 },
-            };
-            await prepareComponent(configRoom, PartMocks.INITIAL);
+        it('should make the game component appear in the end', fakeAsync(async() => {
+            // Given a game component with accepted config
+            await prepareComponent(true);
+            // When it is fully loaded
             testUtils.detectChanges();
             tick(0);
 
@@ -204,6 +211,7 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
 
             tick(2);
 
+            // Then it should have the real game component
             expect(testUtils.findElement('app-p4'))
                 .withContext(`p4Tag id should be present after startGame's async method has complete`)
                 .toBeTruthy();
@@ -213,16 +221,9 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
     });
 
     describe('for ChosenOpponent', () => {
-        beforeEach(async() => {
-            testUtils = await ComponentTestUtils.basic('P4');
-            ConnectedUserServiceMock.setUser(UserMocks.OPPONENT_AUTH_USER); // Normally, the header does that
-
-            testUtils.prepareFixture(OnlineGameWrapperComponent);
-            wrapper = testUtils.getWrapper() as OnlineGameWrapperComponent;
-        });
         xit('StartGame should replace PartCreationComponent by game component', fakeAsync(async() => {
             // Given a component loaded with non creator
-            await prepareComponent(ConfigRoomMocks.withAcceptedConfig(MGPOptional.empty()), PartMocks.INITIAL);
+            await prepareComponent(true);
             testUtils.detectChanges();
             tick(0);
 
@@ -240,11 +241,6 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
     });
 
     it('should redirect to /notFound if part does not exist', fakeAsync(async() => {
-        testUtils = await ComponentTestUtils.basic('P4');
-        ConnectedUserServiceMock.setUser(UserMocks.OPPONENT_AUTH_USER);
-
-        testUtils.prepareFixture(OnlineGameWrapperComponent);
-        wrapper = testUtils.getWrapper() as OnlineGameWrapperComponent;
         const router: Router = TestBed.inject(Router);
         spyOn(router, 'navigate').and.callThrough();
         testUtils.detectChanges();
@@ -257,14 +253,9 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
 
     it('should unsubscribe from the part upon destruction', fakeAsync(async() => {
         // Given a started part
-        testUtils = await ComponentTestUtils.basic('P4');
-        ConnectedUserServiceMock.setUser(UserMocks.CREATOR_AUTH_USER); // Normally, the header does that
         const expectUnsubscribeToHaveBeenCalled: () => void = prepareUnsubscribeCheck(TestBed.inject(GameService), 'subscribeToChanges');
 
-        testUtils.prepareFixture(OnlineGameWrapperComponent);
-        wrapper = testUtils.getWrapper() as OnlineGameWrapperComponent;
-
-        await prepareComponent(ConfigRoomMocks.withAcceptedConfig(MGPOptional.empty()), PartMocks.INITIAL);
+        await prepareComponent(true);
         testUtils.detectChanges();
         tick(0);
         testUtils.detectChanges();
