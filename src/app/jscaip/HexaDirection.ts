@@ -55,7 +55,7 @@ export class HexaDirection extends Direction {
         }
     }
 
-    private constructor(x: -2|-1|0|1|2, y: -2|-1|0|1|2) {
+    private constructor(x: number, y: number) {
         super(x, y);
     }
 

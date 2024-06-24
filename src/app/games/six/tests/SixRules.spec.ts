@@ -432,7 +432,7 @@ describe('SixRules', () => {
                 // When playing on the last empty edge of the triangle
                 const move: SixMove = SixMove.ofDrop(new Coord(2, 2));
 
-                // Then the move should be a success and the game should be over
+                // Then the move should succeed and the game should be over
                 const expectedBoard: Table<PlayerOrNone> = [
                     [O, _, _, _, X],
                     [O, X, _, X, _],

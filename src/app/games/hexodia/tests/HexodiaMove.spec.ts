@@ -7,6 +7,10 @@ describe('HexodiaMove', () => {
 
     describe('of', () => {
 
+        it('should create move when inputs are valid', () => {
+            HexodiaMove.of([new Coord(0, 0), new Coord(1, 1)]);
+        });
+
         it('should return duplicate-free instance', () => {
             const badInstance: HexodiaMove =
                 HexodiaMove.of([new Coord(0, 0), new Coord(0, 0)]);
@@ -15,9 +19,6 @@ describe('HexodiaMove', () => {
             expect(badInstance.equals(goodInstance)).toBeTrue();
         });
 
-        it('should create move when inputs are valid', () => {
-            HexodiaMove.of([new Coord(0, 0), new Coord(1, 1)]);
-        });
 
     });
 

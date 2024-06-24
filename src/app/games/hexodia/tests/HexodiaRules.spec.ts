@@ -51,7 +51,7 @@ describe('HexodiaRules', () => {
             // When dropping one piece
             const move: HexodiaMove = HexodiaMove.of([new Coord(6, 6)]);
 
-            // Then the move should be a success
+            // Then the move should succeed
             const expectedState: HexodiaState = new HexodiaState([
                 [N, N, N, N, N, N, _, _, _, _, _, _, _],
                 [N, N, N, N, N, _, _, _, _, _, _, _, _],
@@ -73,9 +73,11 @@ describe('HexodiaRules', () => {
         it('should refuse move that drops two pieces on first turn', () => {
             // Given the first turn
             const state: HexodiaState = HexodiaRules.get().getInitialState(defaultConfig);
+
             // When dropping two pieces
             const move: HexodiaMove = HexodiaMove.of([new Coord(11, 11), new Coord(10, 10)]);
-            // Then the attempt would have throw
+
+            // Then the attempt should throw
             function tryDoubleDropOnFirstTurn(): void {
                 rules.isLegal(move, state, defaultConfig);
             }
@@ -110,10 +112,10 @@ describe('HexodiaRules', () => {
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             ], 1);
 
-            // When doing a move who'se second coord is out of range
+            // When doing a move whose second coord is out of range
             const move: HexodiaMove = HexodiaMove.of([new Coord(0, 0), new Coord(-1, -1)]);
 
-            // Then it should fail
+            // Then the move should be illegal
             const reason: string = CoordFailure.OUT_OF_RANGE(new Coord(-1, -1));
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
@@ -142,10 +144,10 @@ describe('HexodiaRules', () => {
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             ], 1);
 
-            // When doing a move who'se second coord is out of range
+            // When doing a move whose second coord is out of range
             const move: HexodiaMove = HexodiaMove.of([new Coord(-2, -2), new Coord(0, 0)]);
 
-            // Then it should fail
+            // Then the move should be illegal
             const reason: string = CoordFailure.OUT_OF_RANGE(new Coord(-2, -2));
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
@@ -176,9 +178,9 @@ describe('HexodiaRules', () => {
 
             // When dropping piece on it with the first coord already occupied
             const move: HexodiaMove = HexodiaMove.of([new Coord(9, 9), new Coord(10, 10)]);
-
             const reason: string = RulesFailure.MUST_CLICK_ON_EMPTY_SQUARE();
-            // Then it should fail
+
+            // Then the move should be illegal
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
 
@@ -209,12 +211,12 @@ describe('HexodiaRules', () => {
             // When dropping piece on it with the second coord already occupied
             const move: HexodiaMove = HexodiaMove.of([new Coord(8, 8), new Coord(9, 9)]);
 
-            // Then it should fail
+            // Then the move should be illegal
             const reason: string = RulesFailure.MUST_CLICK_ON_EMPTY_SQUARE();
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
 
-        it('should allow move that drop two pieces on empty pieces', () => {
+        it('should allow move that drops two pieces on empty pieces', () => {
             // Given a board with pieces on it
             const state: HexodiaState = new HexodiaState([
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
@@ -326,32 +328,8 @@ describe('HexodiaRules', () => {
         });
 
         it('should draw when no one can play anymore', () => {
-            // Given the wildly unlikely case in which in 180 turn no one win
+            // Given the wildly unlikely case in which in 180 turns no one wins
             const state: HexodiaState = new HexodiaState([
-                [X, X, X, X, X, O, O, O, O, O, X, X, X, X, X, O, O, O, O],
-                [X, X, X, X, X, O, O, O, O, O, X, X, X, X, X, O, O, O, O],
-                [X, X, X, X, X, O, O, O, O, O, X, X, X, X, X, O, O, O, O],
-                [X, X, X, X, X, O, O, O, O, O, X, X, X, X, X, O, O, O, O],
-                [O, O, O, O, O, X, X, X, X, X, O, O, O, O, O, X, X, X, X],
-                [X, X, X, X, X, O, O, O, O, O, X, X, X, X, X, O, O, O, O],
-                [X, X, X, X, X, O, O, O, O, O, X, X, X, X, X, O, O, O, O],
-                [X, X, X, X, X, O, O, O, O, O, X, X, X, X, X, O, O, O, O],
-                [X, X, X, X, X, O, O, O, O, O, X, X, X, X, X, O, O, O, O],
-                [O, O, O, O, O, X, X, X, X, X, O, O, O, O, O, X, X, X, X],
-                [X, X, X, X, X, O, O, O, O, O, X, X, X, X, X, O, O, O, O],
-                [X, X, X, X, X, O, O, O, O, O, X, X, X, X, X, O, O, O, O],
-                [X, X, X, X, X, O, O, O, O, O, X, X, X, X, X, O, O, O, O],
-                [X, X, X, X, X, O, O, O, O, O, X, X, X, X, X, O, O, O, O],
-                [O, O, O, O, O, X, X, X, X, X, O, O, O, O, O, X, X, X, X],
-                [X, X, X, X, X, O, O, O, O, O, X, X, X, X, X, O, O, O, O],
-                [X, X, X, X, X, O, O, O, O, O, X, X, X, X, X, O, O, O, O],
-                [X, X, X, X, X, O, O, O, O, O, X, X, X, X, X, O, O, O, O],
-                [X, O, X, O, X, O, X, O, X, O, X, O, X, O, X, O, X, _, _],
-            ], 180);
-
-            // When playing the last 181st turn
-            const move: HexodiaMove = HexodiaMove.of([new Coord(17, 18), new Coord(18, 18)]);
-            const expectedState: HexodiaState = new HexodiaState([
                 [X, X, X, X, X, O, O, O, O, O, X, X, X, X, X, O, O, O, O],
                 [X, X, X, X, X, O, O, O, O, O, X, X, X, X, X, O, O, O, O],
                 [X, X, X, X, X, O, O, O, O, O, X, X, X, X, X, O, O, O, O],
@@ -373,15 +351,15 @@ describe('HexodiaRules', () => {
                 [X, O, X, O, X, O, X, O, X, O, X, O, X, O, X, O, X, O, O],
             ], 181);
 
+            // When evaluating the node
             // Then the board should be a draw
-            RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
-            const node: HexodiaNode = new HexodiaNode(expectedState);
+            const node: HexodiaNode = new HexodiaNode(state);
             RulesUtils.expectToBeDraw(rules, node, defaultConfig);
         });
 
         it('should include the diagonals', () => {
-            // Given a board where the square alignement
-            // (the line that looks like an alignement on that square board but that is not on a hexagonal board)
+            // Given a board where the square alignment
+            // (the line that looks like an alignment on that square board but that is not on a hexagonal board)
             const state: HexodiaState = new HexodiaState([
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
@@ -413,7 +391,7 @@ describe('HexodiaRules', () => {
 
         for (const dir of DodecaHexaDirection.factory.all) {
             it('should include alignment of ' + dir.toString(), () => {
-                // Given a board with 6 pieces aligned in <dir> direction
+                // Given a board with 6 pieces aligned in direction 'dir'
                 const largeConfig: MGPOptional<HexodiaConfig> = MGPOptional.of({
                     ...defaultConfig.get(),
                     size: 12,

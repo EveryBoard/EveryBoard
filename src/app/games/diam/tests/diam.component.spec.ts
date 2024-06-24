@@ -110,7 +110,7 @@ describe('DiamComponent', () => {
             // When clicking on an opponent piece on the top of a column
             const move: DiamMove = new DiamMoveDrop(0, DiamPiece.ZERO_FIRST);
 
-            // Then the move should be a success and drop player's piece
+            // Then the move should succeed and drop player's piece
             await testUtils.expectMoveSuccess('#click_0_1', move);
         }));
 

@@ -271,7 +271,7 @@ export class GameInfo {
             new GameInfo($localize`Diaballik`,       'Diaballik',            DiaballikComponent,           new DiaballikTutorial(),           DiaballikRules.get(),           new Date('2023-11-18'), GameDescription.DIABALLIK()           ), //                             * Quentin
             new GameInfo($localize`Ba-awa`,          'BaAwa',                BaAwaComponent,               new BaAwaTutorial(),               BaAwaRules.get(),               new Date('2024-01-28'), GameDescription.BA_AWA()              ), //                             * Martin
             new GameInfo($localize`Squarz`,          'Squarz',               SquarzComponent,              new SquarzTutorial(),              SquarzRules.get(),              new Date('2024-05-08'), GameDescription.SQUARZ()              ), //                             * Martin
-            new GameInfo($localize`Hexodia`,         'Hexodia',              HexodiaComponent, new HexodiaTutorial(), HexodiaRules.get(), new Date('2024-05-20'), GameDescription.HEXAGONAL_CONNECTION()), //                             * Martin
+            new GameInfo($localize`Hexodia`,         'Hexodia',              HexodiaComponent,             new HexodiaTutorial(),             HexodiaRules.get(),             new Date('2024-06-25'), GameDescription.HEXAGONAL_CONNECTION()), //                             * Martin
         ].sort((a: GameInfo, b: GameInfo) => a.name.localeCompare(b.name));
         // After Apagos: median = 26d; average = 53d
         // 9d 10d 12d 13d 18d - 18d 20d 22d 25d 26d - (26d) - 49d 65d 71d 76d 93d - 94j 4m 4m 7m 11m

@@ -1362,8 +1362,8 @@
       <trans-unit id="2183903120219891237" datatype="html">
         <source>A phalanx cannot contain a piece of the opponent.</source>
       </trans-unit>
-      <trans-unit id="7849636659728976766" datatype="html">
-        <source>Piece &gt; Row Domination &gt; Alignement &gt; Row Presence</source>
+      <trans-unit id="5986717000369124597" datatype="html">
+        <source>Piece &gt; Row Domination &gt; Alignment &gt; Row Presence</source>
       </trans-unit>
       <trans-unit id="4563771339790181195" datatype="html">
         <source>Positional</source>
@@ -1668,7 +1668,7 @@
       <trans-unit id="3416240052398580752" datatype="html">
         <source>Hexagonal Diagonals</source>
       </trans-unit>
-      <trans-unit id="6941500287730611395" datatype="html">
+      <trans-unit id="25408930270688683" datatype="html">
         <source>But an unusual kind of diagonal also exist in Hexodia. Here, Dark has made alignment in each of those three direction, in only one a victory is still possible.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, do the winning move.</source>
       </trans-unit>
       <trans-unit id="4791280679911297134" datatype="html">

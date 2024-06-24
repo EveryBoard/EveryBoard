@@ -2079,7 +2079,7 @@
         <target>Une phalange ne peut pas contenir de pièce de l'adversaire.</target>
       </trans-unit>
       <trans-unit id="7849636659728976766" datatype="html">
-        <source>Piece &gt; Row Domination &gt; Alignement &gt; Row Presence</source>
+        <source>Piece &gt; Row Domination &gt; Alignment &gt; Row Presence</source>
         <target>Pièce &gt; Domination de colonne &gt; Alignement &gt; Présence en colonne</target>
       </trans-unit>
       <trans-unit id="4563771339790181195" datatype="html">
@@ -3299,7 +3299,7 @@
       </trans-unit>
       <trans-unit id="6941500287730611395" datatype="html">
         <source>But an unusual kind of diagonal also exist in Hexodia. Here, Dark has made alignment in each of those three direction, in only one a victory is still possible.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, do the winning move.</source>
-        <target>Mais un genre original de diagonales existe aussi à Hexodai. Ici, Foncé a fait un alignement dans chacunes de ces trois directions, la victoire ne reste possible que dans une seule.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, faite le coup gagnant.</target>
+        <target>Mais un genre original de diagonales existe aussi à Hexodia. Ici, Foncé a fait un alignement dans chacunes de ces trois directions, la victoire ne reste possible que dans une seule.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, faite le coup gagnant.</target>
       </trans-unit>
       <trans-unit id="5880375817695791500" datatype="html">
         <source>You&apos;re playing Dark.

@@ -123,8 +123,8 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneRules,
 
     private showSideStepMove(move: AbaloneMove): void {
         let last: Coord = move.lastPiece.get();
-        const alignement: HexaDirection = move.coord.getDirectionToward(last).get();
-        last = last.getNext(alignement);
+        const alignment: HexaDirection = move.coord.getDirectionToward(last).get();
+        last = last.getNext(alignment);
         let processed: Coord = move.coord;
         while (processed.equals(last) === false) {
             this.moveds.push(processed);
@@ -139,7 +139,7 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneRules,
                     pieceClasses: [this.getPlayerClass(previousPlayer)],
                 });
             }
-            processed = processed.getNext(alignement);
+            processed = processed.getNext(alignment);
         }
     }
 
@@ -257,10 +257,10 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneRules,
         if (distance > 2) {
             return this.cancelMove(AbaloneFailure.CANNOT_MOVE_MORE_THAN_THREE_PIECES());
         }
-        const alignement: Direction = firstPiece.getDirectionToward(coord).get();
+        const alignment: Direction = firstPiece.getDirectionToward(coord).get();
         this.selecteds = [firstPiece];
         for (let i: number = 0; i < distance; i++) {
-            this.selecteds.push(firstPiece.getNext(alignement, i + 1));
+            this.selecteds.push(firstPiece.getNext(alignment, i + 1));
         }
         if (this.selecteds.length === 3) {
             const middle: Coord = this.selecteds[1];
@@ -291,10 +291,10 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneRules,
     }
 
     private async tryExtension(clicked: Coord, firstPiece: Coord, lastPiece: Coord): Promise<MGPValidation> {
-        const alignement: MGPFallible<Ordinal> = Ordinal.factory.fromMove(firstPiece, clicked);
-        if (alignement.isSuccess()) {
+        const alignment: MGPFallible<Ordinal> = Ordinal.factory.fromMove(firstPiece, clicked);
+        if (alignment.isSuccess()) {
             const secondAlignment: MGPFallible<Ordinal> = Ordinal.factory.fromMove(lastPiece, clicked);
-            if (alignement.equals(secondAlignment)) {
+            if (alignment.equals(secondAlignment)) {
                 // Then it's an extension of the line
                 const firstDistance: number = firstPiece.getLinearDistanceToward(clicked);
                 const secondDistance: number = lastPiece.getLinearDistanceToward(clicked);

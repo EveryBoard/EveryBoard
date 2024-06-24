@@ -9,25 +9,26 @@ import { Ordinal } from './Ordinal';
 
 export class AbstractNInARowHelper<T extends NonNullable<unknown>, D extends Direction = Ordinal> {
 
-    private readonly halfDirections: Set<D>;
+    private readonly doubleDirections: Set<D>;
 
     public constructor(private readonly getOwner: (piece: T, state?: GameStateWithTable<T>) => PlayerOrNone,
                        private readonly N: number,
                        private readonly directions: ReadonlyArray<D>)
     {
-        const halfVectors: Vector[] = [];
-        const halfDirections: D[] = [];
+        // So that left and up are not both encoded as "double direction"
+        const doubleVectors: Vector[] = [];
+        const doubleDirections: D[] = [];
         for (const direction of directions) {
             const vector: Vector = direction.toMinimalVector();
             const reversedVector: Vector = new Vector(- vector.x, - vector.y);
-            if (halfVectors.includes(direction) || halfVectors.includes(reversedVector)) {
+            if (doubleVectors.includes(direction) || doubleVectors.includes(reversedVector)) {
                 continue;
             } else {
-                halfVectors.push(vector);
-                halfDirections.push(direction);
+                doubleVectors.push(vector);
+                doubleDirections.push(direction);
             }
         }
-        this.halfDirections = new Set(halfDirections);
+        this.doubleDirections = new Set(doubleDirections);
     }
 
     public getBoardValue(state: GameStateWithTable<T>): BoardValue {
@@ -69,7 +70,7 @@ export class AbstractNInARowHelper<T extends NonNullable<unknown>, D extends Dir
     : number
     {
         let score: number = 0;
-        for (const dir of this.halfDirections) {
+        for (const dir of this.doubleDirections) {
             // for each pair of opposite directions
             const directionAllies: number = alliesByDirs.get(dir).get();
             const oppositeDirectionAllies: number = alliesByDirs.get(dir.getOpposite()).get();

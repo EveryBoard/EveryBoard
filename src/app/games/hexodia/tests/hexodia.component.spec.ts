@@ -136,7 +136,7 @@ describe('HexodiaComponent', () => {
     describe('second click', () => {
 
         it('should deselect piece when clicking a second time on it', fakeAsync(async() => {
-            // Given a component where you clicked already to drop your first piece
+            // Given a component where you already dropped your first piece
             const state: HexodiaState = new HexodiaState([
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
@@ -164,12 +164,12 @@ describe('HexodiaComponent', () => {
             // When clicking again on this piece
             await testUtils.expectClickFailureWithAsymmetricNaming('#dropped-8-8', '#click-8-8');
 
-            // Then it should deselect it without popup
+            // Then it should deselect it without toast
             testUtils.expectElementNotToExist('#dropped-8-8');
         }));
 
         it('should do move when clicking on a second empty square', fakeAsync(async() => {
-            // Given a component where you clicked already to drop your first piece
+            // Given a component where you already dropped your first piece
             const state: HexodiaState = new HexodiaState([
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
@@ -197,7 +197,7 @@ describe('HexodiaComponent', () => {
             // When clicking on a second empty square
             const move: HexodiaMove = HexodiaMove.of([new Coord(8, 8), new Coord(7, 7)]);
 
-            // Then the move should be done
+            // Then the move should succeed
             await testUtils.expectMoveSuccess('#click-7-7', move);
         }));
 

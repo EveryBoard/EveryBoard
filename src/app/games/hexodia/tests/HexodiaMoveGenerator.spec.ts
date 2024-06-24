@@ -21,7 +21,7 @@ describe('HexodiaMoveGenerator', () => {
         moveGenerator = new HexodiaMoveGenerator();
     });
 
-    it('should propose only one move at first turns', () => {
+    it('should propose only one move at first turn', () => {
         // Given the initial node
         const state: HexodiaState = HexodiaRules.get().getInitialState(defaultConfig);
         const size: number = state.getWidth();
