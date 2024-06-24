@@ -56,11 +56,11 @@ export class AbaloneRules extends Rules<AbaloneMove, AbaloneState, AbaloneLegali
     : MGPFallible<AbaloneLegalityInformation>
     {
         let opponentPieces: number = 0;
-        const OPPONENT: FourStatePiece = FourStatePiece.ofPlayer(state.getCurrentOpponent());
+        const opponent: FourStatePiece = FourStatePiece.ofPlayer(state.getCurrentOpponent());
         const player: FourStatePiece = FourStatePiece.ofPlayer(state.getCurrentPlayer());
         while (opponentPieces < pushingPieces &&
                state.isOnBoard(firstOpponent) &&
-               state.getPieceAt(firstOpponent) === OPPONENT) {
+               state.getPieceAt(firstOpponent) === opponent) {
             opponentPieces++;
             firstOpponent = firstOpponent.getNext(move.dir);
         }
@@ -68,7 +68,7 @@ export class AbaloneRules extends Rules<AbaloneMove, AbaloneState, AbaloneLegali
             return MGPFallible.failure(AbaloneFailure.NOT_ENOUGH_PIECE_TO_PUSH());
         } else if (AbaloneState.isOnBoard(firstOpponent)) {
             if (state.getPieceAt(firstOpponent) === FourStatePiece.EMPTY) {
-                newBoard[firstOpponent.y][firstOpponent.x] = OPPONENT;
+                newBoard[firstOpponent.y][firstOpponent.x] = opponent;
             }
             if (state.getPieceAt(firstOpponent) === player) {
                 return MGPFallible.failure(AbaloneFailure.CANNOT_PUSH_YOUR_OWN_PIECES());
