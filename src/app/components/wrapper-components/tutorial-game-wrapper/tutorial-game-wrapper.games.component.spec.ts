@@ -36,6 +36,11 @@ import { EpaminondasRules } from 'src/app/games/epaminondas/EpaminondasRules';
 import { EpaminondasTutorial } from '../../../games/epaminondas/EpaminondasTutorial';
 import { EpaminondasMove } from 'src/app/games/epaminondas/EpaminondasMove';
 
+import { GipfRules } from 'src/app/games/gipf/GipfRules';
+import { GipfTutorial } from 'src/app/games/gipf/GipfTutorial';
+import { GipfMove, GipfPlacement } from 'src/app/games/gipf/GipfMove';
+import { GipfCapture } from 'src/app/jscaip/GipfProjectHelper';
+
 import { HiveTutorial } from 'src/app/games/hive/HiveTutorial';
 import { HiveRules } from 'src/app/games/hive/HiveRules';
 import { HiveMove } from 'src/app/games/hive/HiveMove';
@@ -110,8 +115,9 @@ describe('TutorialGameWrapperComponent (games)', () => {
             const dvonnTutorial: TutorialStep[] = new DvonnTutorial().tutorial;
             const encapsuleTutorial: TutorialStep[] = new EncapsuleTutorial().tutorial;
             const epaminondasTutorial: TutorialStep[] = new EpaminondasTutorial().tutorial;
-            const kalahTutorial: TutorialStep[] = new KalahTutorial().tutorial;
+            const gipfTutorial: TutorialStep[] = new GipfTutorial().tutorial;
             const hiveTutorial: TutorialStep[] = new HiveTutorial().tutorial;
+            const kalahTutorial: TutorialStep[] = new KalahTutorial().tutorial;
             const linesOfActionTutorial: TutorialStep[] = new LinesOfActionTutorial().tutorial;
             const lodestoneTutorial: TutorialStep[] = new LodestoneTutorial().tutorial;
             const martianChessTutorial: TutorialStep[] = new MartianChessTutorial().tutorial;
@@ -183,6 +189,16 @@ describe('TutorialGameWrapperComponent (games)', () => {
                     epaminondasTutorial[4],
                     new EpaminondasMove(0, 10, 1, 1, Ordinal.UP),
                     MGPValidation.failure(`Failed! You moved only one piece.`),
+                ], [
+                    GipfRules.get(),
+                    gipfTutorial[4],
+                    new GipfMove(new GipfPlacement(new Coord(6, 3), MGPOptional.empty()),
+                                 [new GipfCapture([
+                                     new Coord(6, 0), new Coord(6, 1),
+                                     new Coord(6, 2), new Coord(6, 3),
+                                 ])],
+                                 []),
+                    MGPValidation.failure($localize`Failed, the best capture takes 2 of your opponent's pieces.`),
                 ], [
                     HiveRules.get(),
                     hiveTutorial[8],

@@ -49,7 +49,7 @@ class PlayerDriver():
         '''Visit an URL'''
         self.driver.get(url)
         # Make sure the page has fully loaded
-        self.wait_for('app-root')
+        #self.wait_for('app-root')
         time.sleep(1)
 
     def reload_page(self):
