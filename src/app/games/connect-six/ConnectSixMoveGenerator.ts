@@ -75,20 +75,20 @@ export class ConnectSixMoveGenerator extends MoveGenerator<ConnectSixMove, Conne
 
     /**
      * mark the space neighboring coord as "space that have an occupied neighbor"
-     * @param usefulCoord a map of the board which each space mapped to true if it has an occupied neighbor
+     * @param usefulCoordTable a table of the board which each space mapped to true if it has an occupied neighbor
      * @param coord the coord to add to this map
      */
-    private addNeighboringCoord(usefulCoord: boolean[][], coord: Coord): void {
+    private addNeighboringCoord(usefulCoordTable: boolean[][], coord: Coord): void {
         const usefulDistance: number = 1; // At two, it's already too much calculation for the minimax sadly
-        const width: number = usefulCoord[0].length;
-        const height: number = usefulCoord.length;
+        const width: number = usefulCoordTable[0].length;
+        const height: number = usefulCoordTable.length;
         const minX: number = Math.max(0, coord.x - usefulDistance);
         const minY: number = Math.max(0, coord.y - usefulDistance);
         const maxX: number = Math.min(width - 1, coord.x + usefulDistance);
         const maxY: number = Math.min(height - 1, coord.y + usefulDistance);
         for (let y: number = minY; y <= maxY; y++) {
             for (let x: number = minX; x <= maxX; x++) {
-                usefulCoord[y][x] = true;
+                usefulCoordTable[y][x] = true;
             }
         }
     }

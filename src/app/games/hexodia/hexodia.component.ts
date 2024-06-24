@@ -7,12 +7,11 @@ import { HexaLayout } from 'src/app/jscaip/HexaLayout';
 import { PointyHexaOrientation } from 'src/app/jscaip/HexaOrientation';
 import { PlayerOrNone } from 'src/app/jscaip/Player';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
-import { Minimax } from 'src/app/jscaip/AI/Minimax';
 import { MCTS } from 'src/app/jscaip/AI/MCTS';
 import { HexodiaConfig, HexodiaRules } from './HexodiaRules';
 import { HexodiaMove } from './HexodiaMove';
 import { HexodiaState } from './HexodiaState';
-import { HexodiaAlignmentHeuristic } from './HexodiaAlignmentHeuristic';
+import { HexodiaAlignmentMinimax } from './HexodiaAlignmentMinimax';
 import { HexodiaMoveGenerator } from './HexodiaMoveGenerator';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { ViewBox } from 'src/app/components/game-components/GameComponentUtils';
@@ -38,10 +37,7 @@ export class HexodiaComponent extends HexagonalGameComponent<HexodiaRules,
         super(messageDisplayer, cdr);
         this.setRulesAndNode('Hexodia');
         this.availableAIs = [
-            new Minimax('Alignement Minimax',
-                        this.rules,
-                        new HexodiaAlignmentHeuristic(),
-                        new HexodiaMoveGenerator()),
+            new HexodiaAlignmentMinimax(),
             new MCTS($localize`MCTS`,
                      new HexodiaMoveGenerator(),
                      this.rules),
@@ -92,13 +88,12 @@ export class HexodiaComponent extends HexagonalGameComponent<HexodiaRules,
         this.lastMoved = [];
     }
 
-    public async onClick(x: number, y: number): Promise<MGPValidation> {
-        const clickValidity: MGPValidation = await this.canUserPlay('#click-' + x + '-' + y);
+    public async onClick(clickedCoord: Coord): Promise<MGPValidation> {
+        const clickValidity: MGPValidation = await this.canUserPlay('#click-' + clickedCoord.x + '-' + clickedCoord.y);
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }
         const totalDrop: number = this.getConfig().get().numberOfDrops;
-        const clickedCoord: Coord = new Coord(x, y);
         if (this.getState().turn === 0) {
             const move: HexodiaMove = HexodiaMove.of([clickedCoord]);
             return this.chooseMove(move);
@@ -119,8 +114,7 @@ export class HexodiaComponent extends HexagonalGameComponent<HexodiaRules,
         }
     }
 
-    public getSquareClasses(x: number, y: number): string[] {
-        const coord: Coord = new Coord(x, y);
+    public getSquareClassesAt(coord: Coord): string[] {
         const owner: PlayerOrNone = this.getState().getPieceAt(coord).getPlayer();
         const classes: string[] = [];
         classes.push(this.getPlayerClass(owner));
@@ -135,12 +129,6 @@ export class HexodiaComponent extends HexagonalGameComponent<HexodiaRules,
 
     public override cancelMoveAttempt(): void {
         this.droppedCoords = [];
-    }
-
-    public isPiece(x: number, y: number): boolean {
-        const coord: Coord = new Coord(x, y);
-        const piece: FourStatePiece = this.getState().getPieceAt(coord);
-        return piece.isPlayer();
     }
 
     public isBoard(piece: FourStatePiece): boolean {

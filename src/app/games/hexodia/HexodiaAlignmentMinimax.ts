@@ -5,10 +5,8 @@ import { HexodiaConfig, HexodiaRules } from './HexodiaRules';
 import { HexodiaAlignmentHeuristic } from './HexodiaAlignmentHeuristic';
 import { HexodiaMoveGenerator } from './HexodiaMoveGenerator';
 
-export class HexodiaAlignmentMinimax extends Minimax<HexodiaMove,
-                                                                 HexodiaState,
-                                                                 HexodiaConfig>
-{
+export class HexodiaAlignmentMinimax extends Minimax<HexodiaMove, HexodiaState, HexodiaConfig> {
+
     public constructor() {
         super($localize`Alignment`,
               HexodiaRules.get(),
@@ -16,4 +14,5 @@ export class HexodiaAlignmentMinimax extends Minimax<HexodiaMove,
               new HexodiaMoveGenerator(),
         );
     }
+
 }

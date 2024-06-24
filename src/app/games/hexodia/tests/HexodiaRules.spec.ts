@@ -24,8 +24,7 @@ describe('HexodiaRules', () => {
     const N: FourStatePiece = FourStatePiece.UNREACHABLE;
 
     let rules: HexodiaRules;
-    const defaultConfig: MGPOptional<HexodiaConfig> =
-        HexodiaRules.get().getDefaultRulesConfig();
+    const defaultConfig: MGPOptional<HexodiaConfig> = HexodiaRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         rules = HexodiaRules.get();
@@ -382,7 +381,7 @@ describe('HexodiaRules', () => {
 
         it('should include the diagonals', () => {
             // Given a board where the square alignement
-            // (the line that looks like an alignement on that square board but that is not on an hexagonal board)
+            // (the line that looks like an alignement on that square board but that is not on a hexagonal board)
             const state: HexodiaState = new HexodiaState([
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],

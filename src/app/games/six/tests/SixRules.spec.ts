@@ -447,7 +447,7 @@ describe('SixRules', () => {
             });
 
             it('should consider winner player who draw a circle/hexagon of his pieces (coverage remix)', () => {
-                // Given a board with an hexagon about to be created
+                // Given a board with a hexagon about to be created
                 const board: Table<PlayerOrNone> = [
                     [O, _, _, _, _],
                     [O, _, _, X, _],

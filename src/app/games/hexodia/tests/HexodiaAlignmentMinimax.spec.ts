@@ -15,8 +15,7 @@ describe('HexodiaAlignmentMinimax', () => {
     let minimax: Minimax<HexodiaMove, HexodiaState, HexodiaConfig>;
     const level1: AIDepthLimitOptions = { name: 'Level 1', maxDepth: 1 };
     const level2: AIDepthLimitOptions = { name: 'Level 2', maxDepth: 2 };
-    const defaultConfig: MGPOptional<HexodiaConfig> =
-        HexodiaRules.get().getDefaultRulesConfig();
+    const defaultConfig: MGPOptional<HexodiaConfig> = HexodiaRules.get().getDefaultRulesConfig();
 
     const _: FourStatePiece = FourStatePiece.EMPTY;
     const O: FourStatePiece = FourStatePiece.ZERO;

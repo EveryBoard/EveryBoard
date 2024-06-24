@@ -13,7 +13,7 @@ export class RulesConfigDescriptionLocalizable {
 
     public static readonly ALIGNMENT_SIZE: () => string = () => $localize`Number of aligned pieces needed to win`;
 
-    public static readonly NUMBER_OF_DROPS: () => string = () => $localize`Number of drops by turn`;
+    public static readonly NUMBER_OF_DROPS: () => string = () => $localize`Number of pieces dropped per turn`;
 
 }
 

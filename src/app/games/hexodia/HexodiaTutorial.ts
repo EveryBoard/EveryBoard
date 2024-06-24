@@ -18,20 +18,20 @@ export class HexodiaTutorial extends Tutorial {
 
     public tutorial: TutorialStep[] = [
         TutorialStep.informational(
-            $localize`Initial board and object of the game`,
-            $localize`Hexagonal Connection is played on an hexagonal board, the aim is to be the first to align 6 of yours pieces.`,
+            TutorialStepMessage.INITIAL_BOARD_AND_OBJECT_OF_THE_GAME(),
+            $localize`Hexodia is played on a hexagonal board, your goal is to be the first to align 6 of your pieces.`,
             initialState,
         ),
         TutorialStep.anyMove(
             $localize`First turn`,
-            $localize`On the first turn, the first player plays only one piece.<br/><br/>You're playing Dark, place your first piece by clicking on a space.`,
+            $localize`At the first turn, the first player plays only one piece.<br/><br/>You're playing Dark, place your first piece by clicking on a space.`,
             initialState,
             HexodiaMove.of([new Coord(12, 12)]),
             TutorialStepMessage.CONGRATULATIONS(),
         ),
         TutorialStep.fromMove(
             $localize`Next turns`,
-            $localize`On all following turns, the players play two pieces.<br/><br/>You're playing Light, do the winning move.`,
+            $localize`On all following turns, the players play two pieces, until victory or draw is reached.<br/><br/>You're playing Light, do the winning move.`,
             new HexodiaState([
                 [N, N, N, N, N, N, N, N, N, N, N, N, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [N, N, N, N, N, N, N, N, N, N, N, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
@@ -62,10 +62,10 @@ export class HexodiaTutorial extends Tutorial {
             [HexodiaMove.of([new Coord(10, 16), new Coord(11, 15)])],
             TutorialStepMessage.CONGRATULATIONS(),
             TutorialStepMessage.FAILED_TRY_AGAIN(),
-        ), // TODO FOR REVIEW: NAMING IT HEXODIA ? HEXADIA ?
+        ),
         TutorialStep.fromMove(
             $localize`Hexagonal Diagonals`,
-            $localize`But an original kind of diagonal also exist in Hexodia. Here, Dark has made alignment in each of those three direction, in only one a victory is still possible.<br/><br/>You're playing Dark, do the winning move.`,
+            $localize`But an unusual kind of diagonal also exist in Hexodia. Here, Dark has made alignment in each of those three direction, in only one a victory is still possible.<br/><br/>You're playing Dark, do the winning move.`,
             new HexodiaState([
                 [N, N, N, N, N, N, N, N, N, N, N, N, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [N, N, N, N, N, N, N, N, N, N, N, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
@@ -83,7 +83,7 @@ export class HexodiaTutorial extends Tutorial {
                 [_, _, _, _, _, _, _, _, _, _, O, _, _, O, _, _, _, _, _, _, _, _, _, _, N],
                 [_, _, _, _, _, _, _, _, O, _, _, X, _, _, O, _, _, _, _, _, _, _, _, N, N],
                 [_, _, _, _, _, _, O, _, _, _, _, _, _, _, _, O, _, _, _, _, _, _, N, N, N],
-                [_, _, _, _, O, _, _, _, _, _, _, _, _, _, _, _, O, _, _, _, _, N, N, N, N],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, O, _, _, _, _, N, N, N, N],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, X, _, _, N, N, N, N, N],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, N, N, N, N, N, N],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, N, N, N, N, N, N, N],
@@ -93,7 +93,7 @@ export class HexodiaTutorial extends Tutorial {
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, N, N, N, N, N, N, N, N, N, N, N],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, N, N, N, N, N, N, N, N, N, N, N, N],
             ], 20),
-            [HexodiaMove.of([new Coord(0, 18), new Coord(2, 17)])],
+            [HexodiaMove.of([new Coord(2, 17), new Coord(4, 16)])],
             TutorialStepMessage.CONGRATULATIONS(),
             TutorialStepMessage.FAILED_TRY_AGAIN(),
         ),

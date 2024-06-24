@@ -6,9 +6,9 @@ import { HexodiaConfig, HexodiaNode, HexodiaRules } from './HexodiaRules';
 import { HexodiaState } from './HexodiaState';
 
 export class HexodiaAlignmentHeuristic extends Heuristic<HexodiaMove,
-                                                                     HexodiaState,
-                                                                     BoardValue,
-                                                                     HexodiaConfig>
+                                                         HexodiaState,
+                                                         BoardValue,
+                                                         HexodiaConfig>
 {
     public getBoardValue(node: HexodiaNode, config: MGPOptional<HexodiaConfig>): BoardValue {
         const state: HexodiaState = node.gameState;

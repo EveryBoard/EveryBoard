@@ -2,31 +2,29 @@
      width="100%" height="100%"
      [attr.viewBox]="getViewBox().toSVGString()"
      preserveAspectRatio="xMidYMid meet">
-    <g *ngFor="let line of hexaBoard; index as y">
-        <g *ngFor="let c of line; index as x">
-            <g *ngIf="isBoard(c)"
-               id="click-{{ x }}-{{ y }}"
-               (click)="onClick(x, y)"
-               [attr.transform]="getHexaCenterTranslationAtXY(x, y)">
-                <polygon id="space-{{ x }}-{{ y }}"
-                         class="base"
-                         [attr.points]="getHexaPoints()"
-                         stroke-linecap="round"
-                />
-                <circle *ngIf="isPiece(x, y)"
-                        id="piece-{{ x }}-{{ y }}"
-                        cx="0"
-                        cy="0"
-                        [attr.r]="SPACE_SIZE * 0.5"
-                        [ngClass]="getSquareClasses(x, y)"
-                        class="base"
-                />
-            </g>
+    <g *ngFor="let coordAndContent of getState().getCoordsAndContents()">
+        <g *ngIf="isBoard(coordAndContent.content)"
+           id="click-{{ coordAndContent.coord.x }}-{{ coordAndContent.coord.y }}"
+           (click)="onClick(coordAndContent.coord)"
+           [attr.transform]="getHexaCenterTranslationAt(coordAndContent.coord)">
+            <polygon id="space-{{ coordAndContent.coord.x }}-{{ coordAndContent.coord.y }}"
+                     class="base"
+                     [attr.points]="getHexaPoints()"
+                     stroke-linecap="round"
+            />
+            <circle *ngIf="coordAndContent.content.isPlayer()"
+                    id="piece-{{ coordAndContent.coord.x }}-{{ coordAndContent.coord.y }}"
+                    cx="0"
+                    cy="0"
+                    [attr.r]="SPACE_SIZE * 0.5"
+                    [ngClass]="getSquareClassesAt(coordAndContent.coord)"
+                    class="base"
+            />
         </g>
     </g>
     <g *ngFor="let dropped of droppedCoords">
-        <circle [attr.transform]="getHexaCenterTranslationAtXY(dropped.x, dropped.y)"
-                (click)="onClick(dropped.x, dropped.y)"
+        <circle [attr.transform]="getHexaCenterTranslationAt(dropped)"
+                (click)="onClick(dropped)"
                 id="dropped-{{ dropped.x }}-{{ dropped.y }}"
                 cx="0"
                 cy="0"

@@ -17,20 +17,20 @@ export class ConnectSixTutorial extends Tutorial {
 
     public tutorial: TutorialStep[] = [
         TutorialStep.informational(
-            $localize`Initial board and object of the game`,
-            $localize`Connect Six is played on a 19x19 board, on which stones are put on the intersections. The aim of the game is to align 6 of your pieces.`,
+            TutorialStepMessage.INITIAL_BOARD_AND_OBJECT_OF_THE_GAME(),
+            $localize`Connect Six is played on a 19x19 board, on which stones are put on the intersections. The object of the game is to align 6 of your pieces.`,
             ConnectSixRules.get().getInitialState(defaultConfig),
         ),
         TutorialStep.anyMove(
             $localize`First turn`,
-            $localize`On the first turn, the first player plays only one piece.<br/><br/>You're playing Dark, place your first piece by clicking on an intersection.`,
+            $localize`At the first turn, the first player plays only one piece.<br/><br/>You're playing Dark, place your first piece by clicking on an intersection.`,
             ConnectSixRules.get().getInitialState(defaultConfig),
             ConnectSixFirstMove.of(new Coord(9, 9)),
             TutorialStepMessage.CONGRATULATIONS(),
         ),
         TutorialStep.fromMove(
             $localize`Next turns`,
-            $localize`On all following turns, the players play two pieces.<br/><br/>You're playing Light, do the winning move.`,
+            $localize`On all following turns, the players play two pieces, until victory or draw is reached.<br/><br/>You're playing Light, do the winning move.`,
             new ConnectSixState([
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],

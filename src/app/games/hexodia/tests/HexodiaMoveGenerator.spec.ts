@@ -15,8 +15,7 @@ describe('HexodiaMoveGenerator', () => {
     const _: FourStatePiece = FourStatePiece.EMPTY;
     const O: FourStatePiece = FourStatePiece.ZERO;
 
-    const defaultConfig: MGPOptional<HexodiaConfig> =
-        HexodiaRules.get().getDefaultRulesConfig();
+    const defaultConfig: MGPOptional<HexodiaConfig> = HexodiaRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         moveGenerator = new HexodiaMoveGenerator();

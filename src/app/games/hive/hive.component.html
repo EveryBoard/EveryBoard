@@ -70,7 +70,7 @@
                (click)="selectRemaining(piece)"/>
         </g>
     </g>
-    <g [attr.transform]="getHexaCenterTranslation(ORIGIN)">
+    <g [attr.transform]="getHexaCenterTranslationAt(ORIGIN)">
         <polygon *ngIf="selectedRemaining.isPresent()"
                  id="remaining_highlight"
                  [attr.points]="getHexaPoints()"

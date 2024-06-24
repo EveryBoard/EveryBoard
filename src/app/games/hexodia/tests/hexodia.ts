@@ -347,8 +347,7 @@ describe('HexodiaComponent', () => {
 
     describe('alternative configs', () => {
 
-        const defaultConfig: MGPOptional<HexodiaConfig> =
-            HexodiaRules.get().getDefaultRulesConfig();
+        const defaultConfig: MGPOptional<HexodiaConfig> = HexodiaRules.get().getDefaultRulesConfig();
 
         it('should accept more drops', fakeAsync(async() => {
             // Given a board with a config with 3 drops

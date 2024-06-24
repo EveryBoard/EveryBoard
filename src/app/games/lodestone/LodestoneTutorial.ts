@@ -19,8 +19,8 @@ const allPressurePlates: LodestonePressurePlates = LodestoneState.INITIAL_PRESSU
 export class LodestoneTutorial extends Tutorial {
     public tutorial: TutorialStep[] = [
         TutorialStep.informational(
-            $localize`Board and aim of the game`,
-            $localize`Lodestone is played on a 8x8 board, which contains so-called <i>pressure plates</i> along the board, that will contain captured pieces. The initial board is shown here. The aim of the game is to be the only player with pieces remaining on the board. To do so, you will have to either push your opponent's pieces off the board, or to crush them with your pieces. You will do it by using a lodestone.`,
+            TutorialStepMessage.INITIAL_BOARD_AND_OBJECT_OF_THE_GAME(),
+            $localize`Lodestone is played on a 8x8 board, which contains so-called <i>pressure plates</i> along the board, that will contain captured pieces. The initial board is shown here. The object of the game is to be the only player with pieces remaining on the board. To do so, you will have to either push your opponent's pieces off the board, or to crush them with your pieces. You will do it by using a lodestone.`,
             LodestoneRules.get().getInitialState(),
         ),
         TutorialStep.forClick(

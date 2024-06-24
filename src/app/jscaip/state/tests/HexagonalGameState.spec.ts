@@ -35,7 +35,7 @@ export class TestingHexagonalState extends HexagonalGameState<number> {
     {
         const height: number = table.length;
         if (height === 0) {
-            throw new Error('Cannot create an HexaBoard from an empty table.');
+            throw new Error('Cannot create a HexaBoard from an empty table.');
         }
         const width: number = table[0].length;
         return new TestingHexagonalState(turn, table, width, height, excludedSpaces, empty);
