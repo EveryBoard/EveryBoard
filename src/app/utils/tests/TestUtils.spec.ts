@@ -48,6 +48,12 @@ import { TestVars } from 'src/TestVars.spec';
 import { Minimax } from 'src/app/jscaip/AI/Minimax';
 import { AIDepthLimitOptions } from 'src/app/jscaip/AI/AI';
 import { SuperRules } from 'src/app/jscaip/Rules';
+import { GameServiceMock } from 'src/app/services/tests/GameServiceMock.spec';
+import { GameService } from 'src/app/services/GameService';
+import { ConfigRoomService } from 'src/app/services/ConfigRoomService';
+import { ServerTimeService } from 'src/app/services/ServerTimeService';
+import { ServerTimeServiceMock } from 'src/app/services/tests/ServerTimeServiceMock.spec';
+import { ConfigRoomServiceMock } from 'src/app/services/tests/ConfigRoomServiceMock.spec';
 
 @Component({})
 export class BlankComponent {}
@@ -141,7 +147,7 @@ export class SimpleComponentTestUtils<T> {
 
     private failOn(typeOfMessage: string): (message: string) => void {
         return (message: string) => {
-            fail(`MessageDisplayer: ${typeOfMessage} was called with '${message}' but no toast was expected, use expectToToast!`);
+            fail(`MessageDisplayer: ${typeOfMessage} was called with '${message}' but no toast was expected, use expectToDisplay"!`);
         };
     }
 
@@ -179,10 +185,6 @@ export class SimpleComponentTestUtils<T> {
     : Promise<void>
     {
         const element: DebugElement = this.findElement(elementName);
-        expect(element).withContext(`${elementName} should exist on the page`).toBeTruthy();
-        if (element == null) {
-            return;
-        }
         element.triggerEventHandler('click', null);
         if (awaitStability) {
             await this.whenStable();
@@ -198,9 +200,17 @@ export class SimpleComponentTestUtils<T> {
         this.detectChanges();
     }
 
+    // Find a unique element given a CSS selector
     public findElement(elementName: string): DebugElement {
         this.forceChangeDetection();
-        return this.fixture.debugElement.query(By.css(elementName));
+        const elements: DebugElement[] = this.fixture.debugElement.queryAll(By.css(elementName));
+        expect(elements.length)
+            .withContext(`element should exist but does not: ${elementName}`)
+            .toBeGreaterThan(0);
+        expect(elements.length)
+            .withContext(`findElement with id as argument expects a unique result, but got ${elements.length} results instead for element '${elementName}'`)
+            .toBe(1);
+        return elements[0];
     }
 
     public findElements(elementName: string): DebugElement[] {
@@ -208,23 +218,40 @@ export class SimpleComponentTestUtils<T> {
     }
 
     public findElementByDirective(directive: Type<unknown>): DebugElement {
-        return this.fixture.debugElement.query(By.directive(directive));
+        const element: DebugElement = this.fixture.debugElement.query(By.directive(directive));
+        expect(element)
+            .withContext(`element with directive '${directive}' should exist`)
+            .not.toBeNull();
+        return element;
     }
 
-    public expectElementToHaveClass(elementName: string, cssClass: string): void {
-        const element: DebugElement = this.findElement(elementName);
-        expect(element).withContext(`${elementName} should exist`).toBeTruthy();
-        expect(element.attributes.class).withContext(`${elementName} should have a class attribute`).toBeTruthy();
-        expect(element.attributes.class).withContext(`${elementName} should have a class attribute`).not.toEqual('');
+    public expectElementToHaveClass(elementId: string, cssClass: string): void {
+        const element: DebugElement = this.findElement(elementId);
+        expect(element.attributes.class).withContext(`${elementId} should have a class attribute`).toBeTruthy();
+        expect(element.attributes.class).withContext(`${elementId} should have a class attribute`).not.toEqual('');
         if (element.attributes.class != null && element.attributes.class !== '') {
             const elementClasses: string[] = element.attributes.class.split(' ').sort();
-            expect(elementClasses).withContext(`${elementName} should contain CSS class ${cssClass}`).toContain(cssClass);
+            expect(elementClasses).withContext(`${elementId} should contain CSS class ${cssClass}`).toContain(cssClass);
+        }
+    }
+
+    public expectElementsToHaveClass(selector: string, cssClass: string): void {
+        const elements: DebugElement[] = this.fixture.debugElement.queryAll(By.css(selector));
+        expect(elements.length)
+            .withContext('expectElementsToHaveClass expects to check multiple elements')
+            .toBeGreaterThan(1);
+        for (const element of elements) {
+            expect(element.attributes.class).withContext(`${selector} should have a class attribute`).toBeTruthy();
+            expect(element.attributes.class).withContext(`${selector} should have a class attribute`).not.toEqual('');
+            if (element.attributes.class != null && element.attributes.class !== '') {
+                const elementClasses: string[] = element.attributes.class.split(' ').sort();
+                expect(elementClasses).withContext(`${selector} should contain CSS class ${cssClass}`).toContain(cssClass);
+            }
         }
     }
 
     public expectElementNotToHaveClass(elementName: string, cssClass: string): void {
         const element: DebugElement = this.findElement(elementName);
-        expect(element).withContext(`${elementName} should exist`).toBeTruthy();
         if (element.attributes.class != null) {
             const elementClasses: string[] = element.attributes.class.split(' ').sort();
             expect(elementClasses).withContext(`${elementName} should not contain CSS class ${cssClass}`).not.toContain(cssClass);
@@ -241,37 +268,35 @@ export class SimpleComponentTestUtils<T> {
     }
 
     public expectElementNotToExist(elementName: string): void {
-        const element: DebugElement = this.findElement(elementName);
+        this.forceChangeDetection();
+        const isValidElementName: boolean =
+            elementName.startsWith('#') || elementName.startsWith('.') || elementName.startsWith('app-');
+        expect(isValidElementName).withContext(`${elementName} should be an HTML element name (id, class, or app-)`).toBeTrue();
+        const element: DebugElement | null = this.fixture.debugElement.query(By.css(elementName));
         expect(element).withContext(`${elementName} should not exist`).toBeNull();
     }
 
-    public expectElementToExist(elementName: string): DebugElement {
-        const element: DebugElement = this.findElement(elementName);
-        expect(element).withContext(`${elementName} should exist`).toBeTruthy();
-        return element;
+    public expectElementToExist(elementName: string): void {
+        this.findElement(elementName); // findElement asserts that it should exist (and be unique)
     }
 
     public expectElementToBeEnabled(elementName: string): void {
         const element: DebugElement = this.findElement(elementName);
-        expect(element).withContext(`${elementName} should exist`).toBeTruthy();
-        expect(element.nativeElement.disabled).withContext(elementName + ' should be enabled').toBeFalsy();
+        expect(element.nativeElement.disabled).withContext(`${elementName} should be enabled`).toBeFalsy();
     }
 
     public expectElementToBeDisabled(elementName: string): void {
         const element: DebugElement = this.findElement(elementName);
-        expect(element).withContext(`${elementName} should exist`).toBeTruthy();
         expect(element.nativeElement.disabled).withContext(`${elementName} should be disabled`).toBeTruthy();
     }
 
     public expectTextToBe(elementName: string, expectedText: string): void {
         const element: DebugElement = this.findElement(elementName);
-        expect(element).withContext(`${elementName} should exist`).toBeTruthy();
         expect(element.nativeNode.innerHTML).toEqual(expectedText);
     }
 
     public fillInput(elementName: string, value: string): void {
         const element: DebugElement = this.findElement(elementName);
-        expect(element).withContext(`${elementName} should exist in order to fill its value`).toBeTruthy();
         element.nativeElement.value = value;
         element.nativeElement.dispatchEvent(new Event('input'));
     }
@@ -629,6 +654,9 @@ export class ConfigureTestingModuleUtils {
                 { provide: ConfigRoomDAO, useClass: ConfigRoomDAOMock },
                 { provide: PartDAO, useClass: PartDAOMock },
                 { provide: ErrorLoggerService, useClass: ErrorLoggerServiceMock },
+                { provide: GameService, useClass: GameServiceMock },
+                { provide: ConfigRoomService, useClass: ConfigRoomServiceMock },
+                { provide: ServerTimeService, useClass: ServerTimeServiceMock },
             ],
         }).compileComponents();
     }
@@ -665,6 +693,9 @@ export class ConfigureTestingModuleUtils {
                 { provide: ConnectedUserService, useClass: ConnectedUserServiceMock },
                 { provide: CurrentGameService, useClass: CurrentGameServiceMock },
                 { provide: ErrorLoggerService, useClass: ErrorLoggerServiceMock },
+                { provide: GameService, useClass: GameServiceMock },
+                { provide: ConfigRoomService, useClass: ConfigRoomServiceMock },
+                { provide: ServerTimeService, useClass: ServerTimeServiceMock },
             ],
         }).compileComponents();
     }

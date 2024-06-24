@@ -3,7 +3,7 @@ import { TestBed, fakeAsync, tick, discardPeriodicTasks } from '@angular/core/te
 import { DebugElement } from '@angular/core';
 import { Router } from '@angular/router';
 import { OnlineGameWrapperComponent, OnlineGameWrapperMessages } from './online-game-wrapper.component';
-import { ConfigRoomService } from 'src/app/services/ConfigRoomService';
+import { ConfigRoomService, ConfigRoomServiceFailure } from 'src/app/services/ConfigRoomService';
 import { ConfigRoomDAO } from 'src/app/dao/ConfigRoomDAO';
 import { ConfigRoom } from 'src/app/domain/ConfigRoom';
 import { ConfigRoomMocks } from 'src/app/domain/ConfigRoomMocks.spec';
@@ -23,6 +23,7 @@ import { GameService } from 'src/app/services/GameService';
 import { MinimalUser } from 'src/app/domain/MinimalUser';
 import { MGPOptional } from '@everyboard/lib';
 import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { ConnectedUserService } from 'src/app/services/ConnectedUserService';
 
 describe('OnlineGameWrapper for non-existing game', () => {
 
@@ -55,17 +56,17 @@ describe('OnlineGameWrapper for non-existing game', () => {
 
 describe('OnlineGameWrapperComponent Lifecycle', () => {
 
-    /* Life cycle summary
-     * component construction (beforeEach)
-     * stage 0
-     * ngOnInit (triggered by detectChanges)
-     * stage 1: PartCreationComponent appear
-     * startGame, launched by user if game was not started yet, or automatically (via partCreationComponent)
-     * stage 2: PartCreationComponent disappear, game component appear
-     * tick(0): the async part of startGame is now finished
-     * stage 3: P4Component appear
-     * differents scenarios
-     */
+    // Life cycle summary
+    // component construction (beforeEach)
+    // stage 0
+    // ngOnInit (triggered by detectChanges)
+    // stage 1: PartCreationComponent appear
+    // startGame, launched by user if game was not started yet, or automatically (via partCreationComponent)
+    // stage 2: PartCreationComponent disappear, game component appear
+    // tick(0): the async part of startGame is now finished
+    // stage 3: P4Component appear
+    // differents scenarios
+
     let testUtils: ComponentTestUtils<P4Component, MinimalUser>;
     let wrapper: OnlineGameWrapperComponent;
     let configRoomDAO: ConfigRoomDAO;
@@ -103,6 +104,9 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
 
         testUtils.prepareFixture(OnlineGameWrapperComponent);
         wrapper = testUtils.getWrapper() as OnlineGameWrapperComponent;
+        spyOn(TestBed.inject(ConnectedUserService), 'getIdToken').and.callFake(async() => {
+            return 'idToken';
+        });
     });
 
     describe('for creator', () => {
@@ -156,10 +160,8 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
             // When the game is not started yet
             expect(wrapper.gameStarted).toBeFalse();
             // Then the p4 and chat tags should already be present
-            const p4Tag: DebugElement = testUtils.findElement('app-p4');
-            const chatTag: DebugElement = testUtils.findElement('app-chat');
-            expect(p4Tag).withContext('app-p4 tag should be absent at start').toBeFalsy();
-            expect(chatTag).withContext('app-chat tag should be present at start').toBeTruthy();
+            testUtils.expectElementNotToExist('app-p4');
+            testUtils.expectElementToExist('app-chat');
 
             // Finish the game to have no timeout still running
             await finishTest();
@@ -186,14 +188,10 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
             tick(0);
 
             // Then part creation is removed and game appears
-            const partCreationId: DebugElement = testUtils.findElement('#partCreation');
-            const gameId: DebugElement = testUtils.findElement('#game');
-            const p4Tag: DebugElement = testUtils.findElement('app-p4');
-
             expect(wrapper.gameStarted).withContext('game should be started').toBeTrue();
-            expect(partCreationId).withContext('partCreation id should be absent after startGame call').toBeFalsy();
-            expect(gameId).withContext('game id should be present after startGame call').toBeTruthy();
-            expect(p4Tag).withContext('p4Tag id should still be absent after startGame call').toBeNull();
+            testUtils.expectElementNotToExist('#partCreation');
+            testUtils.expectElementToExist('#game');
+            testUtils.expectElementNotToExist('app-p4');
             tick(2);
         }));
 
@@ -205,16 +203,12 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
             tick(0);
 
             testUtils.detectChanges();
-            expect(testUtils.findElement('app-p4'))
-                .withContext(`p4Tag id should be absent before startGame's async method has complete`)
-                .toBeNull();
+            testUtils.expectElementNotToExist('app-p4');
 
             tick(2);
 
             // Then it should have the real game component
-            expect(testUtils.findElement('app-p4'))
-                .withContext(`p4Tag id should be present after startGame's async method has complete`)
-                .toBeTruthy();
+            testUtils.expectElementToExist('app-p4');
             tick(1000);
         }));
 
@@ -244,9 +238,11 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
         const router: Router = TestBed.inject(Router);
         spyOn(router, 'navigate').and.callThrough();
         testUtils.detectChanges();
-        await testUtils.expectToDisplayCriticalMessage(ConfigRoomService.GAME_DOES_NOT_EXIST(), async() => {
-            tick(0);
-        });
+        await testUtils.expectToDisplayCriticalMessage(
+            ConfigRoomServiceFailure.GAME_DOES_NOT_EXIST(),
+            async() => {
+                tick(0);
+            });
 
         expectValidRouting(router, ['/notFound', OnlineGameWrapperMessages.NO_MATCHING_PART()], NotFoundComponent, { skipLocationChange: true });
     }));
@@ -269,3 +265,4 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
     }));
 
 });
+

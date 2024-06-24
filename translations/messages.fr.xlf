@@ -2078,7 +2078,7 @@
         <source>A phalanx cannot contain a piece of the opponent.</source>
         <target>Une phalange ne peut pas contenir de pièce de l'adversaire.</target>
       </trans-unit>
-      <trans-unit id="7849636659728976766" datatype="html">
+      <trans-unit id="5986717000369124597" datatype="html">
         <source>Piece &gt; Row Domination &gt; Alignment &gt; Row Presence</source>
         <target>Pièce &gt; Domination de colonne &gt; Alignement &gt; Présence en colonne</target>
       </trans-unit>
@@ -3297,7 +3297,7 @@
         <source>Hexagonal Diagonals</source>
         <target>Diagonales Hexagonales</target>
       </trans-unit>
-      <trans-unit id="6941500287730611395" datatype="html">
+      <trans-unit id="25408930270688683" datatype="html">
         <source>But an unusual kind of diagonal also exist in Hexodia. Here, Dark has made alignment in each of those three direction, in only one a victory is still possible.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, do the winning move.</source>
         <target>Mais un genre original de diagonales existe aussi à Hexodia. Ici, Foncé a fait un alignement dans chacunes de ces trois directions, la victoire ne reste possible que dans une seule.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, faite le coup gagnant.</target>
       </trans-unit>
@@ -4507,6 +4507,10 @@
         <source>This username is already in use, please select a different one.</source>
         <target>Ce nom d'utilisateur est déjà utilisé, veuillez en utiliser un autre.</target>
       </trans-unit>
+      <trans-unit id="5527862698509020204" datatype="html">
+        <source>This game does not exist!</source>
+        <target>Cette partie n'existe pas !</target>
+      </trans-unit>
       <trans-unit id="75196759111440200" datatype="html">
         <source>You&apos;re not allowed to send a message here.</source>
         <target>Vous n'êtes pas autorisé à envoyer un message ici.</target>
@@ -4518,6 +4522,10 @@
       <trans-unit id="5968000276977717351" datatype="html">
         <source>An unexpected error was encountered. We have logged it and will try to fix its cause as soon as possible.</source>
         <target>Une erreur inattendue est arrivée. Nous l'avons notée et essayerons de la réparer au plus vite.</target>
+      </trans-unit>
+      <trans-unit id="3878208315329190575" datatype="html">
+        <source>This is the wrong game type!</source>
+        <target>C'est le mauvais type de jeu !</target>
       </trans-unit>
       <trans-unit id="682801679843744749" datatype="html">
         <source><x id="PH" equiv-text="hours"/> hours</source>
@@ -4550,10 +4558,6 @@
       <trans-unit id="5033601776243148314" datatype="html">
         <source><x id="PH" equiv-text="first"/> and <x id="PH_1" equiv-text="second"/></source>
         <target><x id="PH" equiv-text="first"/> et <x id="PH_1" equiv-text="second"/></target>
-      </trans-unit>
-      <trans-unit id="5120671221766405888" datatype="html">
-        <source>Game does not exist</source>
-        <target>Partie inexistante</target>
       </trans-unit>
       <trans-unit id="2025949389316561274" datatype="html">
         <source>You are already playing in another game.</source>

@@ -5,11 +5,11 @@
 
     <g *ngFor="let line of displayedState.board; index as y">
         <g *ngFor="let square of line; index as x">
-            <g id="square_{{ x }}_{{ y }}"
+            <g id="square-{{ x }}-{{ y }}"
                [attr.transform]="getSVGTranslation(SPACE_SIZE * x, SPACE_SIZE * y)"
                (click)="selectCoord(x, y)" >
                 <rect *ngIf="square.isUnreachable() === false"
-                      class="base lodestone_square"
+                      class="base data-lodestone-square"
                       [ngClass]="getSquareClasses(x, y)"
                       [attr.x]="0"
                       [attr.y]="0"
@@ -17,25 +17,27 @@
                       [attr.height]="SPACE_SIZE"
                 />
                 <g *ngIf="square.isUnreachable()"
-                   class="lodestone_crumbled_square">
-                    <polygon points="0,0     42,0    17,25    67,75    42,100   0,100   0,0"
+                   id="square-{{ x }}-{{ y }}-crumbled">
+                    <polygon id="square-{{ x }}-{{ y }}-crumbled-left"
+                             points="0,0     42,0    17,25    67,75    42,100   0,100   0,0"
                              [ngClass]="getSquareClasses(x, y)"
                              class="base"
                     />
-                    <polygon points="100,0   58,0    35,25    85,75    58,100 100,100 100,0"
+                    <polygon id="square-{{ x }}-{{ y }}-crumbled-right"
+                             points="100,0   58,0    35,25    85,75    58,100 100,100 100,0"
                              [ngClass]="getSquareClasses(x, y)"
                              class="base"
                     />
                 </g>
                 <g *ngIf="getLodestoneInfo(x, y).isPresent() else piece"
-                   id="lodestone_{{ x }}_{{ y }}"
+                   id="lodestone-{{ x }}-{{ y }}"
                    [attr.class]="square.isUnreachable() ? 'semi-transparent' : ''"
                    app-lodestone-lodestone
                    [lodestoneInfo]="getLodestoneInfo(x, y).get()"
                 />
                 <ng-template #piece>
                     <circle *ngIf="hasPieceToDraw(x, y)"
-                        id="piece_{{ x }}_{{ y }}"
+                        id="piece-{{ x }}-{{ y }}"
                         class="base"
                         [ngClass]="getPieceClasses(x, y)"
                         [attr.r]="PIECE_RADIUS"
@@ -47,7 +49,7 @@
     </g>
 
     <g *ngFor="let capture of viewInfo.capturesToPlace; index as x"
-       id="capture_{{ x }}"
+       id="capture-{{ x }}"
        [attr.transform]="getCaptureTransform(x)" >
         <circle class="base"
                 [ngClass]="capture.pieceClasses"
@@ -57,9 +59,9 @@
     </g>
 
     <g *ngIf="isInteractive"
-       id="availableLodestones">
+       id="available-lodestones">
         <g *ngFor="let lodestone of viewInfo.availableLodestones; index as x"
-            id="lodestone_{{ lodestone.direction }}_{{ lodestone.orientation }}_{{ lodestone.owner.toString() }}"
+            id="lodestone-{{ lodestone.direction }}-{{ lodestone.orientation }}-{{ lodestone.owner.toString() }}"
             [attr.transform]="getAvailableLodestoneTransform(x)"
             (click)="selectLodestone(lodestone)"
             app-lodestone-lodestone
@@ -67,14 +69,12 @@
         />
     </g>
 
-    <g *ngFor="let groupInfo of viewInfo.pressurePlateGroupInfos"
-       id="pressurePlateGroup_{{ groupInfo.groupPosition }}">
-        <g *ngFor="let plate of groupInfo.plateInfos"
-           id="pressurePlate_{{ groupInfo.groupPosition }}_{{ plate.plateIndex }}">
+    <g *ngFor="let groupInfo of viewInfo.pressurePlateGroupInfos">
+        <g *ngFor="let plate of groupInfo.plateInfos">
             <g *ngFor="let square of plate.coords; index as pieceIndex">
-                <g id="plate_{{ groupInfo.groupPosition }}_{{ plate.plateIndex }}_{{ pieceIndex }}"
+                <g id="plate-{{ groupInfo.groupPosition }}-{{ plate.plateIndex }}-{{ pieceIndex }}"
                    (click)="square.temporary ? onTemporaryPressurePlateClick(groupInfo.groupPosition, plate.plateIndex, pieceIndex) : onPressurePlateClick(groupInfo.groupPosition, plate.plateIndex, pieceIndex)" >
-                    <rect id="plateSquare_{{ groupInfo.groupPosition }}_{{ plate.plateIndex }}_{{ pieceIndex }}"
+                    <rect id="plate-square-{{ groupInfo.groupPosition }}-{{ plate.plateIndex }}-{{ pieceIndex }}"
                           class="base"
                           [ngClass]="square.squareClasses"
                           [attr.x]="SPACE_SIZE * square.coord.x"
@@ -85,7 +85,7 @@
                           [attr.ry]="0.2 * SPACE_SIZE"
                     />
                     <circle *ngIf="square.hasPiece"
-                            id="platePiece_{{ groupInfo.groupPosition }}_{{ plate.plateIndex }}_{{ pieceIndex }}"
+                            id="plate-piece-{{ groupInfo.groupPosition }}-{{ plate.plateIndex }}-{{ pieceIndex }}"
                             class="base"
                             [ngClass]="square.pieceClasses"
                             [attr.r]="PIECE_RADIUS"
@@ -98,7 +98,7 @@
     </g>
 
     <rect *ngIf="selectedCoord.isPresent()"
-          id="selection_{{ selectedCoord.get().x }}_{{ selectedCoord.get().y }}"
+          id="selection-{{ selectedCoord.get().x }}-{{ selectedCoord.get().y }}"
           class="base no-fill selected-stroke"
           [attr.x]="SPACE_SIZE * selectedCoord.get().x"
           [attr.y]="SPACE_SIZE * selectedCoord.get().y"
