@@ -1,53 +1,67 @@
-/* eslint-disable max-lines-per-function */
-import { FirstPlayer, ConfigRoom, ConfigRoomDocument, PartStatus, PartType } from 'src/app/domain/ConfigRoom';
-import { Debug } from 'src/app/utils/Debug';
+import { ConfigRoomDAO } from 'src/app/dao/ConfigRoomDAO';
+import { MinimalUser } from 'src/app/domain/MinimalUser';
+import { MGPOptional, MGPValidation } from '@everyboard/lib';
+import { Injectable } from '@angular/core';
+import { ConnectedUserService } from '../ConnectedUserService';
+import { ConfigRoom, FirstPlayer, PartStatus, PartType } from 'src/app/domain/ConfigRoom';
+import { ConfigRoomService, ConfigRoomServiceFailure } from '../ConfigRoomService';
+import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 
-@Debug.log
-export class ConfigRoomServiceMock {
+@Injectable({ providedIn: 'root' })
+export class ConfigRoomServiceMock extends ConfigRoomService {
 
-    public static emittedsConfigRoom: ConfigRoomDocument[];
+    public constructor(configRoomDAO: ConfigRoomDAO,
+                       connectedUserService: ConnectedUserService) {
+        super(configRoomDAO, connectedUserService);
+    }
 
-    public joinGame(): Promise<void> {
-        return new Promise((resolve: () => void) => {
-            resolve();
-        });
+    public override async joinGame(gameId: string): Promise<MGPValidation> {
+        const configRoom: MGPOptional<ConfigRoom> = await this.configRoomDAO.read(gameId);
+        if (configRoom.isAbsent()) {
+            return MGPValidation.failure(ConfigRoomServiceFailure.GAME_DOES_NOT_EXIST());
+        } else {
+            const candidate: MinimalUser = this.connectedUserService.user.get().toMinimalUser();
+            // Creator is not a candidate
+            if (configRoom.get().creator.id !== candidate.id) {
+                await this.configRoomDAO.subCollectionDAO(gameId, 'candidates').set(candidate.id, candidate);
+            }
+            return MGPValidation.SUCCESS;
+        }
     }
-    public async cancelJoining(): Promise<void> {
-        return new Promise((resolve: () => void) => {
-            resolve();
-        }); // DO REAL MOCK
+
+    public override async removeCandidate(gameId: string, candidateId: string): Promise<void> {
+        await this.configRoomDAO.subCollectionDAO(gameId, 'candidates').delete(candidateId);
     }
-    public readConfigRoomById(partId: string): Promise<ConfigRoom> {
-        return new Promise((resolve: (j: ConfigRoom) => void) => {
-            resolve({
-                creator: { id: 'doc-creator', name: 'creator' },
-                chosenOpponent: { id: 'uniqueCandidate-doc-id', name: 'uniqueCandidate' },
-                firstPlayer: FirstPlayer.CREATOR.value,
-                partType: PartType.STANDARD.value,
-                partStatus: PartStatus.PART_STARTED.value,
-                maximalMoveDuration: 60,
-                totalPartDuration: 300,
-                rulesConfig: {},
-            });
-        });
-    }
-    public async setChosenOpponent(username: string): Promise<void> {
-        return new Promise((resolve: () => void) => {
-            resolve();
-        }); // DO REAL MOCK
-    }
-    public async deleteConfigRoom(): Promise<void> {
-        return new Promise((resolve: () => void) => {
-            resolve();
-        }); // DO REAL MOCK
-    }
-    public async proposeConfig(maximalMoveDuration: number,
-                               firstPlayer: string,
-                               totalPartDuration: number)
+
+    public override async proposeConfig(gameId: string,
+                                        partType: PartType,
+                                        maximalMoveDuration: number,
+                                        firstPlayer: FirstPlayer,
+                                        totalPartDuration: number,
+                                        rulesConfig: MGPOptional<RulesConfig>)
     : Promise<void>
     {
-        return new Promise((resolve: () => void) => {
-            resolve();
-        }); // DO REAL MOCK
+        const config: Partial<ConfigRoom> = {
+            partStatus: PartStatus.CONFIG_PROPOSED.value,
+            partType: partType.value,
+            maximalMoveDuration,
+            totalPartDuration,
+            firstPlayer: firstPlayer.value,
+            rulesConfig: rulesConfig.getOrElse({}),
+        };
+        await this.configRoomDAO.update(gameId, config);
     }
+
+    public override async selectOpponent(gameId: string, opponent: MinimalUser): Promise<void> {
+        await this.configRoomDAO.update(gameId, { chosenOpponent: opponent });
+    }
+
+    public override async reviewConfig(gameId: string): Promise<void> {
+        await this.configRoomDAO.update(gameId, { partStatus: PartStatus.PART_CREATED.value });
+    }
+
+    public override async reviewConfigAndRemoveChosenOpponent(gameId: string): Promise<void> {
+        await this.configRoomDAO.update(gameId, { chosenOpponent: null, partStatus: PartStatus.PART_CREATED.value });
+    }
+
 }

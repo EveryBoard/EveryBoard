@@ -48,6 +48,12 @@ import { TestVars } from 'src/TestVars.spec';
 import { Minimax } from 'src/app/jscaip/AI/Minimax';
 import { AIDepthLimitOptions } from 'src/app/jscaip/AI/AI';
 import { SuperRules } from 'src/app/jscaip/Rules';
+import { GameServiceMock } from 'src/app/services/tests/GameServiceMock.spec';
+import { GameService } from 'src/app/services/GameService';
+import { ConfigRoomService } from 'src/app/services/ConfigRoomService';
+import { ServerTimeService } from 'src/app/services/ServerTimeService';
+import { ServerTimeServiceMock } from 'src/app/services/tests/ServerTimeServiceMock.spec';
+import { ConfigRoomServiceMock } from 'src/app/services/tests/ConfigRoomServiceMock.spec';
 
 @Component({})
 export class BlankComponent {}
@@ -141,7 +147,7 @@ export class SimpleComponentTestUtils<T> {
 
     private failOn(typeOfMessage: string): (message: string) => void {
         return (message: string) => {
-            fail(`MessageDisplayer: ${typeOfMessage} was called with '${message}' but no toast was expected, use expectToToast!`);
+            fail(`MessageDisplayer: ${typeOfMessage} was called with '${message}' but no toast was expected, use expectToDisplay"!`);
         };
     }
 
@@ -648,6 +654,9 @@ export class ConfigureTestingModuleUtils {
                 { provide: ConfigRoomDAO, useClass: ConfigRoomDAOMock },
                 { provide: PartDAO, useClass: PartDAOMock },
                 { provide: ErrorLoggerService, useClass: ErrorLoggerServiceMock },
+                { provide: GameService, useClass: GameServiceMock },
+                { provide: ConfigRoomService, useClass: ConfigRoomServiceMock },
+                { provide: ServerTimeService, useClass: ServerTimeServiceMock },
             ],
         }).compileComponents();
     }
@@ -684,6 +693,9 @@ export class ConfigureTestingModuleUtils {
                 { provide: ConnectedUserService, useClass: ConnectedUserServiceMock },
                 { provide: CurrentGameService, useClass: CurrentGameServiceMock },
                 { provide: ErrorLoggerService, useClass: ErrorLoggerServiceMock },
+                { provide: GameService, useClass: GameServiceMock },
+                { provide: ConfigRoomService, useClass: ConfigRoomServiceMock },
+                { provide: ServerTimeService, useClass: ServerTimeServiceMock },
             ],
         }).compileComponents();
     }
