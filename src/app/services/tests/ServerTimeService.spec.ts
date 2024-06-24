@@ -29,7 +29,7 @@ describe('BackendService', () => {
             const response: Response = Response.json({ time: 42 });
             spyOn(window, 'fetch').and.resolveTo(response);
             // When fetching the server time
-            const time: number = await serverTimeService.getServerTime();
+            const time: number = await serverTimeService.getServerTimeInMs();
             // Then it should fetch the expected resource and return the time
             expect(window.fetch).toHaveBeenCalledOnceWith(endpoint('/time'), expectedParams('GET'));
             expect(time).toEqual(42);
