@@ -6,7 +6,7 @@
      <g *ngFor="let line of board; index as y">
         <g *ngFor="let spaceContent of line; index as x"
            id="click_{{ x }}_{{ y }}"
-           [attr.transform]="getTriangleTranslation(x, y)"
+           [attr.transform]="getTriangleTranslationAtXY(x, y)"
            (click)="onClick(x, y)"
         >
             <g *ngIf="spaceContent.isReachable()">
@@ -37,22 +37,22 @@
         <polygon *ngFor="let possibleLanding of possibleLandings"
                  id="possible_landing_{{ possibleLanding.x }}_{{ possibleLanding.y }}"
                  [attr.points]="getTrianglePointsAt(possibleLanding)"
-                 [attr.transform]="getTriangleTranslation(possibleLanding.x, possibleLanding.y)"
+                 [attr.transform]="getTriangleTranslationAt(possibleLanding)"
                  class="base no-fill mid-stroke selected-stroke"/>
         <polygon *ngIf="chosenCoord.isPresent()"
                  id="chosen_coord_{{ chosenCoord.get().x }}_{{ chosenCoord.get().y }}"
                  [attr.points]="getTrianglePointsAt(chosenCoord.get())"
-                 [attr.transform]="getTriangleTranslation(chosenCoord.get().x, chosenCoord.get().y)"
+                 [attr.transform]="getTriangleTranslationAt(chosenCoord.get())"
                  class="base no-fill mid-stroke selected-stroke"/>
     </ng-container>
 
     <ng-template #lastMove>
         <ng-container *ngIf="lastMoved.isPresent()">
             <polygon [attr.points]="getTrianglePointsAt(lastCoord.get())"
-                     [attr.transform]="getTriangleTranslation(lastCoord.get().x, lastCoord.get().y)"
+                     [attr.transform]="getTriangleTranslationAt(lastCoord.get())"
                      class="base no-fill mid-stroke moved-stroke"/>
             <polygon [attr.points]="getTrianglePointsAt(lastMoved.get())"
-                     [attr.transform]="getTriangleTranslation(lastMoved.get().x, lastMoved.get().y)"
+                     [attr.transform]="getTriangleTranslationAt(lastMoved.get())"
                      class="base no-fill mid-stroke moved-stroke"/>
         </ng-container>
     </ng-template>

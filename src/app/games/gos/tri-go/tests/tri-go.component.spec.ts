@@ -11,7 +11,7 @@ import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 import { GoPhase } from '../../GoPhase';
 
-describe('TriGoComponent', () => {
+fdescribe('TriGoComponent', () => {
 
     let testUtils: ComponentTestUtils<TriGoComponent>;
 
@@ -48,8 +48,7 @@ describe('TriGoComponent', () => {
 
         const move: GoMove = new GoMove(0, 1);
         await testUtils.expectMoveSuccess('#click-0-1', move);
-        const goComponent: TriGoComponent = testUtils.getGameComponent();
-        expect(goComponent.captures).toEqual([new Coord(0, 0)]);
+        testUtils.expectElementToHaveClass('#polygon-0-0', 'captured-fill');
     }));
 
     it('should allow simple clicks', fakeAsync(async() => {

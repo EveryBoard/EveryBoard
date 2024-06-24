@@ -4,28 +4,22 @@
      preserveAspectRatio="xMidYMid meet">
     <g *ngFor="let coordAndContent of getState().getCoordsAndContents()"
        id="click-{{ coordAndContent.coord.x }}-{{ coordAndContent.coord.y }}"
-       [attr.transform]="getTriangleTranslation(coordAndContent.coord.x, coordAndContent.coord.y)"
+       [attr.transform]="getTriangleTranslationAt(coordAndContent.coord)"
        (click)="onClick(coordAndContent.coord)">
-        <g *ngIf="coordAndContent.content.isReachable()">
-            <g *ngIf="coordAndContent.content.isOccupied()">
-                <polygon id="pyramid-{{ coordAndContent.coord.x }}-{{ coordAndContent.coord.y }}"
-                         [attr.points]="getPyramidPointsAt(coordAndContent.coord)"
-                         [ngClass]="getPlayerClassAt(coordAndContent.coord)"
-                         class="base mid-stroke"
-                />
-            </g>
-            <g *ngIf="coordAndContent.content.isEmpty()">
-                <polygon *ngIf="(coordAndContent.coord.x + coordAndContent.coord.y) % 2 === 1"
-                         id="triangle-{{ coordAndContent.coord.x }}-{{ coordAndContent.coord.y }}"
-                         [attr.points]="getTrianglePointsAt(coordAndContent.coord)"
-                         class="base mid-stroke"
-                />
-                <polygon *ngIf="(coordAndContent.coord.x + coordAndContent.coord.y) % 2 === 0"
-                         id="triangle-{{ coordAndContent.coord.x }}-{{ coordAndContent.coord.y }}"
-                         [attr.points]="getTrianglePointsAt(coordAndContent.coord)"
-                         class="base mid-stroke background2"
-                />
-            </g>
-        </g>
+        <polygon *ngIf="coordAndContent.content.isReachable()"
+                 id="polygon-{{ coordAndContent.coord.x }}-{{ coordAndContent.coord.y }}"
+                 [attr.points]="getTrianglePointsAt(coordAndContent.coord)"
+                 [ngClass]="getPlayerClassAt(coordAndContent.coord)"
+                 class="base mid-stroke"
+        />
     </g>
+    <rect *ngIf="ko.isPresent()"
+          [attr.transform]="getTriangleTranslationAt(ko.get())"
+          [attr.width]="SPACE_SIZE * 0.5"
+          [attr.height]="SPACE_SIZE * 0.5"
+          [attr.x]="(SPACE_SIZE * 0.25) + (SPACE_SIZE * ko.get().x)"
+          [attr.y]="(SPACE_SIZE * 0.25) + (SPACE_SIZE * ko.get().y)"
+          class="captured-stroke mid-stroke no-fill"
+    />
+    <!-- TODO TEST KO IN BOTH -->
 </svg>

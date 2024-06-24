@@ -147,71 +147,71 @@ describe('TriGoRules', () => {
         it('should create ko coord when needed (for Player.ONE)', () => {
             // Given a board with an imminent ko creation
             const board: Table<GoPiece> = [
-                [O, _, O, _, _],
-                [X, O, _, _, _],
-                [_, _, _, _, _],
-                [_, _, _, _, _],
-                [_, _, _, _, _],
+                [N, N, N, N, _, N, N, N, N],
+                [N, N, N, _, _, _, N, N, N],
+                [N, N, _, _, _, _, _, N, N],
+                [N, O, _, _, _, _, _, _, N],
+                [_, X, O, _, _, _, _, _, _],
             ];
             const state: GoState =
-                new GoState(board, noCaptures, 1, MGPOptional.empty(), GoPhase.PLAYING);
+                new GoState(board, noCaptures, 2, MGPOptional.empty(), GoPhase.PLAYING);
 
             // When doing the capture
-            const move: GoMove = new GoMove(1, 0);
+            const move: GoMove = new GoMove(0, 4);
 
             // Then move should be a success and create a koCoord on the captured stone
             const expectedBoard: Table<GoPiece> = [
-                [_, X, O, _, _],
-                [X, O, _, _, _],
-                [_, _, _, _, _],
-                [_, _, _, _, _],
-                [_, _, _, _, _],
+                [N, N, N, N, _, N, N, N, N],
+                [N, N, N, _, _, _, N, N, N],
+                [N, N, _, _, _, _, _, N, N],
+                [N, O, _, _, _, _, _, _, N],
+                [O, _, O, _, _, _, _, _, _],
             ];
-            const koCoord: Coord = new Coord(0, 0);
+            const koCoord: Coord = new Coord(1, 4);
             const expectedState: GoState =
-                new GoState(expectedBoard, PlayerNumberMap.of(0, 1), 2, MGPOptional.of(koCoord), GoPhase.PLAYING);
+                new GoState(expectedBoard, PlayerNumberMap.of(1, 0), 3, MGPOptional.of(koCoord), GoPhase.PLAYING);
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         });
 
         it('should create ko coord when needed (for Player.ZERO)', () => {
             // Given a board with an imminent ko creation
             const board: Table<GoPiece> = [
-                [X, _, X, _, _],
-                [O, X, _, _, _],
-                [_, _, _, _, _],
-                [_, _, _, _, _],
-                [_, _, _, _, _],
+                [N, N, N, N, _, N, N, N, N],
+                [N, N, N, _, _, _, N, N, N],
+                [N, N, _, _, _, _, _, N, N],
+                [N, X, _, _, _, _, _, _, N],
+                [_, O, X, _, _, _, _, _, _],
             ];
             const state: GoState =
-                new GoState(board, noCaptures, 2, MGPOptional.empty(), GoPhase.PLAYING);
+                new GoState(board, noCaptures, 3, MGPOptional.empty(), GoPhase.PLAYING);
 
             // When doing the capture
-            const move: GoMove = new GoMove(1, 0);
+            const move: GoMove = new GoMove(0, 4);
 
             // Then move should be a success and create a koCoord on the captured stone
             const expectedBoard: Table<GoPiece> = [
-                [_, O, X, _, _],
-                [O, X, _, _, _],
-                [_, _, _, _, _],
-                [_, _, _, _, _],
-                [_, _, _, _, _],
+                [N, N, N, N, _, N, N, N, N],
+                [N, N, N, _, _, _, N, N, N],
+                [N, N, _, _, _, _, _, N, N],
+                [N, X, _, _, _, _, _, _, N],
+                [X, _, X, _, _, _, _, _, _],
             ];
-            const koCoord: Coord = new Coord(0, 0);
+            const koCoord: Coord = new Coord(1, 4);
             const expectedState: GoState =
-                new GoState(expectedBoard, PlayerNumberMap.of(1, 0), 3, MGPOptional.of(koCoord), GoPhase.PLAYING);
+                new GoState(expectedBoard, PlayerNumberMap.of(0, 1), 4, MGPOptional.of(koCoord), GoPhase.PLAYING);
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         });
 
         it('ko should be illegal', () => {
             // Given a board with a Ko
             const board: Table<GoPiece> = [
-                [_, X, O, _, _],
-                [X, O, _, _, _],
-                [_, _, _, _, _],
-                [_, _, _, _, _],
-                [_, _, _, _, _],
+                [N, N, N, N, _, N, N, N, N],
+                [N, N, N, _, _, _, N, N, N],
+                [N, N, _, _, _, _, _, N, N],
+                [N, X, _, _, _, _, _, _, N],
+                [_, O, X, _, _, _, _, _, _],
             ];
-            const koCoord: Coord = new Coord(0, 0);
+            const koCoord: Coord = new Coord(0, 4);
             const state: GoState =
                 new GoState(board, noCaptures, 0, MGPOptional.of(koCoord), GoPhase.PLAYING);
 
@@ -226,28 +226,28 @@ describe('TriGoRules', () => {
         it('capture via-fake-suicide should be legal', () => {
             // Given a board with a possible capture
             const board: Table<GoPiece> = [
-                [_, _, _, _, _],
-                [_, _, _, _, _],
-                [_, _, _, O, O],
-                [_, _, O, X, X],
-                [_, _, O, X, _], // This could be a pre snap-back board
+                [N, N, N, N, _, N, N, N, N],
+                [N, N, N, _, _, _, N, N, N],
+                [N, N, _, _, _, _, _, N, N],
+                [N, X, _, _, _, _, _, _, N],
+                [_, O, O, X, _, _, _, _, _], // This could be a pre snap-back board
             ];
             const state: GoState =
-                new GoState(board, noCaptures, 0, MGPOptional.empty(), GoPhase.PLAYING);
+                new GoState(board, noCaptures, 1, MGPOptional.empty(), GoPhase.PLAYING);
 
             // When playing in the 0 freedom coord that capture a group
-            const move: GoMove = new GoMove(4, 4);
+            const move: GoMove = new GoMove(0, 4);
 
             // Then the move should be accepted
             const expectedBoard: Table<GoPiece> = [
-                [_, _, _, _, _],
-                [_, _, _, _, _],
-                [_, _, _, O, O],
-                [_, _, O, _, _],
-                [_, _, O, _, O],
+                [N, N, N, N, _, N, N, N, N],
+                [N, N, N, _, _, _, N, N, N],
+                [N, N, _, _, _, _, _, N, N],
+                [N, X, _, _, _, _, _, _, N],
+                [X, _, _, X, _, _, _, _, _],
             ];
             const expectedState: GoState =
-                new GoState(expectedBoard, PlayerNumberMap.of(3, 0), 1, MGPOptional.empty(), GoPhase.PLAYING);
+                new GoState(expectedBoard, PlayerNumberMap.of(0, 2), 2, MGPOptional.empty(), GoPhase.PLAYING);
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         });
 
@@ -271,11 +271,11 @@ describe('TriGoRules', () => {
         it('GoPhase.PLAYING Should forbid accepting', () => {
             // Given a board in playing phase
             const board: Table<GoPiece> = [
-                [_, _, _, _, _],
-                [_, _, _, _, _],
-                [_, _, _, _, _],
-                [X, _, _, _, _],
-                [O, _, _, _, _],
+                [N, N, N, N, _, N, N, N, N],
+                [N, N, N, _, _, _, N, N, N],
+                [N, N, _, _, _, _, _, N, N],
+                [N, X, X, _, _, _, _, _, N],
+                [X, _, _, X, _, _, _, _, _],
             ];
             const state: GoState =
                 new GoState(board, noCaptures, 1, MGPOptional.empty(), GoPhase.PLAYING);

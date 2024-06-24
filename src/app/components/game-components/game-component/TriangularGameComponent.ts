@@ -42,9 +42,13 @@ export abstract class TriangularGameComponent<R extends SuperRules<M, S, C, L>,
         const translationY: number = coord.y * this.SPACE_SIZE;
         return new Coord(translationX, translationY);
     }
-
-    public getTriangleTranslation(x: number, y: number): string {
+// TODO UNIFORMISE AT && ATXY FUNC PATTERN
+    public getTriangleTranslationAtXY(x: number, y: number): string {
         const coord: Coord = new Coord(x, y);
+        return this.getTriangleTranslationAt(coord);
+    }
+
+    public getTriangleTranslationAt(coord: Coord): string {
         const translation: Coord = this.getTriangleTranslationCoord(coord);
         return 'translate(' + translation.x + ', ' + translation.y + ')';
     }

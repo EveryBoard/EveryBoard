@@ -151,7 +151,14 @@ export class TriGoComponent extends TriangularGameComponent<TriGoRules,
 
     public getPlayerClassAt(coord: Coord): string {
         const piece: GoPiece = this.getState().getPieceAt(coord);
-        return this.getPlayerClass(piece.player);
+        if (this.captures.some((c: Coord) => c.equals(coord))) {
+            return 'captured-fill';
+        }
+        if (piece.isOccupied()) {
+            return this.getPlayerClass(piece.player);
+        } else {
+            return '';
+        }
     }
 
 }
