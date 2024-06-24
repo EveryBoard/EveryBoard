@@ -6,7 +6,6 @@ import { EpaminondasState } from '../EpaminondasState';
 import { EpaminondasConfig, EpaminondasNode, EpaminondasRules } from '../EpaminondasRules';
 import { EpaminondasPhalanxSizeAndFilterMoveGenerator } from '../EpaminondasPhalanxSizeAndFilterMoveGenerator';
 import { MGPOptional } from '@everyboard/lib';
-import { GameNode } from 'src/app/jscaip/AI/GameNode';
 
 const _: PlayerOrNone = PlayerOrNone.NONE;
 const O: PlayerOrNone = PlayerOrNone.ZERO;
