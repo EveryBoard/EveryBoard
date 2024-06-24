@@ -6,7 +6,6 @@ import { QuartoPiece } from './QuartoPiece';
 import { MGPOptional, MGPValidation } from '@everyboard/lib';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Ordinal } from 'src/app/jscaip/Ordinal';
-import { Player } from 'src/app/jscaip/Player';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { QuartoFailure } from './QuartoFailure';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
@@ -313,14 +312,6 @@ export class QuartoRules extends Rules<QuartoMove, QuartoState> {
         return { commonCriterion, sensitiveCoord, boardStatus: MGPOptional.empty() };
     }
 
-    public alignmentStatusToGameStatus(status: AlignmentStatus, turn: number): GameStatus {
-        const player: Player = Player.of(turn % 2);
-        if (status === AlignmentStatus.VICTORY) {
-            return GameStatus.getDefeat(player);
-        }
-        return turn === 16 ? GameStatus.DRAW : GameStatus.ONGOING;
-    }
-
     public override getGameStatus(node: QuartoNode): GameStatus {
         const state: QuartoState = node.gameState;
         let boardStatus: BoardStatus = {
@@ -330,10 +321,10 @@ export class QuartoRules extends Rules<QuartoMove, QuartoState> {
         for (const line of this.lines) {
             boardStatus = this.updateBoardStatus(line, state, boardStatus);
             if (boardStatus.status === AlignmentStatus.VICTORY) {
-                return this.alignmentStatusToGameStatus(boardStatus.status, state.turn);
+                return boardStatus.status.toGameStatus(state.turn);
             }
         }
-        return this.alignmentStatusToGameStatus(boardStatus.status, state.turn);
+        return boardStatus.status.toGameStatus(state.turn);
     }
 
     public getVictoriousCoords(state: QuartoState): Coord[] {

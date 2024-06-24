@@ -35,7 +35,7 @@ export class AlignmentStatus {
         }
     }
 
-    public alignmentStatusToGameStatus(turn: number): GameStatus {
+    public toGameStatus(turn: number): GameStatus {
         const loser: Player = Player.of(turn % 2);
         if (this === AlignmentStatus.VICTORY) {
             return GameStatus.getDefeat(loser);
