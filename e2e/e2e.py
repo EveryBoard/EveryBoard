@@ -375,7 +375,7 @@ def can_play_local_vs_ai(user):
     user.click('#click-1-0 > rect')
 
     # Now there should be a piece in #click-1-0
-    user.wait_for('#click-1-0 > circle')
+    user.wait_for('#click-1-5 > circle')
 
 @scenario('two_drivers')
 def can_create_part_and_play(user1, user2):
