@@ -6,6 +6,7 @@ import { EpaminondasState } from '../EpaminondasState';
 import { EpaminondasConfig, EpaminondasNode, EpaminondasRules } from '../EpaminondasRules';
 import { EpaminondasPhalanxSizeAndFilterMoveGenerator } from '../EpaminondasPhalanxSizeAndFilterMoveGenerator';
 import { MGPOptional } from '@everyboard/lib';
+import { GameNode } from 'src/app/jscaip/AI/GameNode';
 
 const _: PlayerOrNone = PlayerOrNone.NONE;
 const O: PlayerOrNone = PlayerOrNone.ZERO;
@@ -51,6 +52,29 @@ describe('EpaminondasPhalanxSizeAndFilterMoveGenerator', () => {
 
         // Then we should have all of them (8)
         expect(moves.length).toBe(8);
+    });
+
+    it('should propose move on a specific board', () => {
+        // Given a specific board (with no capture)
+        const board: PlayerOrNone[][] = [
+            [_, X, _, _, _, _, _, _, _, _, _, _, X, _],
+            [X, _, _, _, _, _, _, _, _, _, _, _, _, O],
+            [_, _, _, _, X, _, _, _, _, _, _, _, O, _],
+            [_, X, _, O, _, _, O, _, _, _, _, _, _, _],
+            [_, O, _, _, _, O, _, _, _, _, _, _, _, _],
+            [_, _, _, _, O, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, O, _, _],
+            [_, _, _, O, _, _, _, _, _, _, _, _, _, _],
+            [_, _, O, _, _, X, _, O, _, _, _, _, _, _],
+            [_, O, _, _, X, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, O, _, _, _, _, _, _, O],
+        ];
+        // When computing the list of moves
+        const state: EpaminondasState = new EpaminondasState(board, 101);
+        const node: EpaminondasNode = new EpaminondasNode(state);
+        // Then it should at least generate one move
+        expect(moveGenerator.getListMoves(node, defaultConfig).length).toBeGreaterThan(0);
+        // This test used to break because of randomness used in the move generator.
     });
 
 });
