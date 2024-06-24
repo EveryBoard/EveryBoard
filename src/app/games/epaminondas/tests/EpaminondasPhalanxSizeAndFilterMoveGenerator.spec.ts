@@ -53,4 +53,29 @@ describe('EpaminondasPhalanxSizeAndFilterMoveGenerator', () => {
         expect(moves.length).toBe(8);
     });
 
+    it('should propose move on a specific board', () => {
+        // Given a specific board (with no possible capture)
+        const board: PlayerOrNone[][] = [
+            [_, X, _, _, _, _, _, _, _, _, _, _, X, _],
+            [X, _, _, _, _, _, _, _, _, _, _, _, _, O],
+            [_, _, _, _, X, _, _, _, _, _, _, _, O, _],
+            [_, X, _, O, _, _, O, _, _, _, _, _, _, _],
+            [_, O, _, _, _, O, _, _, _, _, _, _, _, _],
+            [_, _, _, _, O, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, O, _, _],
+            [_, _, _, O, _, _, _, _, _, _, _, _, _, _],
+            [_, _, O, _, _, X, _, O, _, _, _, _, _, _],
+            [_, O, _, _, X, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, O, _, _, _, _, _, _, O],
+        ];
+
+        // When computing the list of moves
+        const state: EpaminondasState = new EpaminondasState(board, 101);
+        const node: EpaminondasNode = new EpaminondasNode(state);
+
+        // Then it should at least generate one move
+        expect(moveGenerator.getListMoves(node, defaultConfig).length).toBeGreaterThan(0);
+        // This test used to break because of randomness used in the move generator.
+    });
+
 });
