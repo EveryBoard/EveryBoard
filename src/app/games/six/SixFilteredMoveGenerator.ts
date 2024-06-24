@@ -3,11 +3,10 @@ import { Player } from 'src/app/jscaip/Player';
 import { Set, MGPMap } from '@everyboard/lib';
 import { SixState } from './SixState';
 import { SixMove } from './SixMove';
-import { SCORE } from 'src/app/jscaip/SCORE';
 import { SixMoveGenerator } from './SixMoveGenerator';
 import { SixHeuristic } from './SixHeuristic';
 import { CoordSet } from 'src/app/jscaip/CoordSet';
-import { BoardInfo } from 'src/app/jscaip/AI/AlignmentHeuristic';
+import { AlignmentStatus, BoardInfo } from 'src/app/jscaip/AI/AlignmentHeuristic';
 
 export class SixFilteredMoveGenerator extends SixMoveGenerator {
 
@@ -47,7 +46,7 @@ export class SixFilteredMoveGenerator extends SixMoveGenerator {
             const boardInfo: BoardInfo = this.heuristic.searchVictoryOnly(this.heuristic.currentVictorySource,
                                                                           fakeDropMove,
                                                                           hypotheticalState);
-            if (boardInfo.status === SCORE.VICTORY) {
+            if (boardInfo.status === AlignmentStatus.VICTORY) {
                 return true;
             }
         }

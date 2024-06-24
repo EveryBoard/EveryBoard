@@ -6,7 +6,6 @@ import { QuartoPiece } from './QuartoPiece';
 import { MGPOptional, MGPValidation } from '@everyboard/lib';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Ordinal } from 'src/app/jscaip/Ordinal';
-import { SCORE } from 'src/app/jscaip/SCORE';
 import { Player } from 'src/app/jscaip/Player';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { QuartoFailure } from './QuartoFailure';
@@ -15,6 +14,7 @@ import { TableUtils } from 'src/app/jscaip/TableUtils';
 import { CoordSet } from 'src/app/jscaip/CoordSet';
 import { Debug } from 'src/app/utils/Debug';
 import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { AlignmentStatus } from 'src/app/jscaip/AI/AlignmentHeuristic';
 
 /**
  * A criterion is a list of boolean sub-criteria, so three possible values: true, false, null.
@@ -101,14 +101,9 @@ class QuartoCriterion {
     }
 }
 
-export type Score =
-    | 'Nothing' // There's nothing special
-    | 'PreVictory' // The player could win this turn (turn dependent)
-    | 'Victory' // Game is won (independent of the turn);
-
 export interface BoardStatus {
 
-    score: Score;
+    status: AlignmentStatus;
 
     sensitiveSquares: CoordSet;
 }
@@ -210,10 +205,10 @@ export class QuartoRules extends Rules<QuartoMove, QuartoState> {
     }
 
     public updateBoardStatus(line: QuartoLine, state: QuartoState, boardStatus: BoardStatus): BoardStatus {
-        if (boardStatus.score === 'PreVictory') {
+        if (boardStatus.status === AlignmentStatus.PRE_VICTORY) {
             if (this.isThereAVictoriousLine(line, state)) {
                 return {
-                    score: 'Victory',
+                    status: AlignmentStatus.VICTORY,
                     sensitiveSquares: new CoordSet(),
                 };
             } else {
@@ -270,11 +265,11 @@ export class QuartoRules extends Rules<QuartoMove, QuartoState> {
             // this line is not null and has a common criterion between all of its pieces
             if (sensitiveCoord.isAbsent()) {
                 // the line is full
-                return { score: 'Victory', sensitiveSquares: new CoordSet() };
+                return { status: AlignmentStatus.VICTORY, sensitiveSquares: new CoordSet() };
             } else {
                 // if there is only one empty square, then the sensitive square we found is indeed sensitive
                 if (commonCriterion.get().matchPiece(state.pieceInHand)) {
-                    boardStatus.score = 'PreVictory';
+                    boardStatus.status = AlignmentStatus.PRE_VICTORY;
                 }
                 const coord: Coord = sensitiveCoord.get();
                 boardStatus.sensitiveSquares = boardStatus.sensitiveSquares.addElement(coord);
@@ -318,9 +313,9 @@ export class QuartoRules extends Rules<QuartoMove, QuartoState> {
         return { commonCriterion, sensitiveCoord, boardStatus: MGPOptional.empty() };
     }
 
-    public scoreToGameStatus(score: Score, turn: number): GameStatus {
+    public alignmentStatusToGameStatus(status: AlignmentStatus, turn: number): GameStatus {
         const player: Player = Player.of(turn % 2);
-        if (score === 'Victory') {
+        if (status === AlignmentStatus.VICTORY) {
             return GameStatus.getDefeat(player);
         }
         return turn === 16 ? GameStatus.DRAW : GameStatus.ONGOING;
@@ -329,16 +324,16 @@ export class QuartoRules extends Rules<QuartoMove, QuartoState> {
     public override getGameStatus(node: QuartoNode): GameStatus {
         const state: QuartoState = node.gameState;
         let boardStatus: BoardStatus = {
-            score: 'Nothing',
+            status: AlignmentStatus.NOTHING,
             sensitiveSquares: new CoordSet(),
         };
         for (const line of this.lines) {
             boardStatus = this.updateBoardStatus(line, state, boardStatus);
-            if (boardStatus.score === 'Victory') {
-                return this.scoreToGameStatus(boardStatus.score, state.turn);
+            if (boardStatus.status === AlignmentStatus.VICTORY) {
+                return this.alignmentStatusToGameStatus(boardStatus.status, state.turn);
             }
         }
-        return this.scoreToGameStatus(boardStatus.score, state.turn);
+        return this.alignmentStatusToGameStatus(boardStatus.status, state.turn);
     }
 
     public getVictoriousCoords(state: QuartoState): Coord[] {
