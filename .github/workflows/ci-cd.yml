@@ -219,8 +219,13 @@ jobs:
 
   deployment:
     runs-on: ubuntu-latest
-    needs: [ build-front, tests-front, tests-back, linter, images, translations ]
+    needs: [ build-front, tests-front, tests-back, linter, images, translations, e2e ]
     environment: netlify
+    if: github.event_name == 'push' &&
+          contains('
+            refs/heads/master
+            refs/heads/develop
+          ', github.ref)
     steps:
       - name: Checkout the repository
         uses: actions/checkout@v4
