@@ -6,8 +6,6 @@ import { QuartoPiece } from './QuartoPiece';
 import { MGPOptional, MGPValidation } from '@everyboard/lib';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Ordinal } from 'src/app/jscaip/Ordinal';
-import { SCORE } from 'src/app/jscaip/SCORE';
-import { Player } from 'src/app/jscaip/Player';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { QuartoFailure } from './QuartoFailure';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
@@ -15,6 +13,7 @@ import { TableUtils } from 'src/app/jscaip/TableUtils';
 import { CoordSet } from 'src/app/jscaip/CoordSet';
 import { Debug } from 'src/app/utils/Debug';
 import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { AlignmentStatus } from 'src/app/jscaip/AI/AlignmentHeuristic';
 
 /**
  * A criterion is a list of boolean sub-criteria, so three possible values: true, false, null.
@@ -56,10 +55,12 @@ class QuartoCriterion {
         }
         return nonNull > 0;
     }
+
     public mergeWithQuartoPiece(piece: QuartoPiece): boolean {
         const criterion: QuartoCriterion = new QuartoCriterion(piece);
         return this.mergeWith(criterion);
     }
+
     public areAllAbsent(): boolean {
         for (let i: number = 0; i < 4; i++) {
             if (this.subCriterion[i].isPresent()) {
@@ -68,6 +69,7 @@ class QuartoCriterion {
         }
         return true;
     }
+
     // returns true if there is at least one sub-criterion in common between the two
     public match(c: QuartoCriterion): boolean {
         for (let i: number = 0; i < 4; i++) {
@@ -77,9 +79,11 @@ class QuartoCriterion {
         }
         return false;
     }
+
     public matchPiece(piece: QuartoPiece): boolean {
         return this.match(new QuartoCriterion(piece));
     }
+
     public toString(): string {
         return 'Criterion{' +
             this.subCriterion.map((b: MGPOptional<boolean>) => {
@@ -98,7 +102,7 @@ class QuartoCriterion {
 
 export interface BoardStatus {
 
-    score: SCORE;
+    status: AlignmentStatus;
 
     sensitiveSquares: CoordSet;
 }
@@ -141,7 +145,7 @@ export class QuartoRules extends Rules<QuartoMove, QuartoState> {
         return new QuartoState(board, 0, QuartoPiece.AAAA);
     }
 
-    public static readonly lines: ReadonlyArray<QuartoLine> = [
+    public readonly lines: ReadonlyArray<QuartoLine> = [
         // verticals
         new QuartoLine(new Coord(0, 0), Ordinal.DOWN),
         new QuartoLine(new Coord(1, 0), Ordinal.DOWN),
@@ -157,10 +161,10 @@ export class QuartoRules extends Rules<QuartoMove, QuartoState> {
         new QuartoLine(new Coord(0, 3), Ordinal.UP_RIGHT),
     ];
 
-    private static isOccupied(square: QuartoPiece): boolean {
+    private isOccupied(square: QuartoPiece): boolean {
         return (square !== QuartoPiece.EMPTY);
     }
-    private static isLegal(move: QuartoMove, state: QuartoState): MGPValidation {
+    public override isLegal(move: QuartoMove, state: QuartoState): MGPValidation {
         /**
          * pieceInHand is the one to be placed
          * move.piece is the one given to the next player
@@ -170,7 +174,7 @@ export class QuartoRules extends Rules<QuartoMove, QuartoState> {
         const pieceToGive: QuartoPiece = move.piece;
         const board: QuartoPiece[][] = state.getCopiedBoard();
         const pieceInHand: QuartoPiece = state.pieceInHand;
-        if (QuartoRules.isOccupied(board[y][x])) {
+        if (this.isOccupied(board[y][x])) {
             // we can't play on an occupied square
             return MGPValidation.failure(RulesFailure.MUST_LAND_ON_EMPTY_SPACE());
         }
@@ -192,21 +196,18 @@ export class QuartoRules extends Rules<QuartoMove, QuartoState> {
         return MGPValidation.SUCCESS;
     }
 
-    public override isLegal(move: QuartoMove, state: QuartoState): MGPValidation {
-        return QuartoRules.isLegal(move, state);
-    }
-
     public override applyLegalMove(move: QuartoMove, state: QuartoState, _config: NoConfig, _info: void): QuartoState {
         const newBoard: QuartoPiece[][] = state.getCopiedBoard();
         newBoard[move.coord.y][move.coord.x] = state.pieceInHand;
         const resultingState: QuartoState = new QuartoState(newBoard, state.turn + 1, move.piece);
         return resultingState;
     }
-    public static updateBoardStatus(line: QuartoLine, state: QuartoState, boardStatus: BoardStatus): BoardStatus {
-        if (boardStatus.score === SCORE.PRE_VICTORY) {
+
+    public updateBoardStatus(line: QuartoLine, state: QuartoState, boardStatus: BoardStatus): BoardStatus {
+        if (boardStatus.status === AlignmentStatus.PRE_VICTORY) {
             if (this.isThereAVictoriousLine(line, state)) {
                 return {
-                    score: SCORE.VICTORY,
+                    status: AlignmentStatus.VICTORY,
                     sensitiveSquares: new CoordSet(),
                 };
             } else {
@@ -217,7 +218,8 @@ export class QuartoRules extends Rules<QuartoMove, QuartoState> {
             return newStatus;
         }
     }
-    private static isThereAVictoriousLine(line: QuartoLine, state: QuartoState): boolean {
+
+    private isThereAVictoriousLine(line: QuartoLine, state: QuartoState): boolean {
         /**
          * if we found a pre-victory,
          * the only thing that can change the result is a victory
@@ -226,14 +228,14 @@ export class QuartoRules extends Rules<QuartoMove, QuartoState> {
         let c: QuartoPiece = state.getPieceAt(coord);
         const commonCrit: QuartoCriterion = new QuartoCriterion(c);
         for (let i: number = 0; i < 3; i++) {
-            if (QuartoRules.isOccupied(c) === false || commonCrit.areAllAbsent()) {
+            if (this.isOccupied(c) === false || commonCrit.areAllAbsent()) {
                 break;
             }
             coord = coord.getNext(line.direction, 1);
             c = state.getPieceAt(coord);
             commonCrit.mergeWithQuartoPiece(c);
         }
-        if (QuartoRules.isOccupied(c) && commonCrit.areAllAbsent() === false) {
+        if (this.isOccupied(c) && commonCrit.areAllAbsent() === false) {
             /**
              * the last square was occupied, and there was some common criterion on all the four pieces
              * that's what victory is like in Quarto
@@ -243,13 +245,14 @@ export class QuartoRules extends Rules<QuartoMove, QuartoState> {
             return false;
         }
     }
-    private static searchForVictoryOrPreVictoryInLine(line: QuartoLine,
-                                                      state: QuartoState,
-                                                      boardStatus: BoardStatus)
+
+    private searchForVictoryOrPreVictoryInLine(line: QuartoLine,
+                                               state: QuartoState,
+                                               boardStatus: BoardStatus)
     : BoardStatus
     {
         // we're looking for a victory, pre-victory
-        const lineInfos: LineInfos = QuartoRules.getLineInfos(line, state, boardStatus);
+        const lineInfos: LineInfos = this.getLineInfos(line, state, boardStatus);
         if (lineInfos.boardStatus.isPresent()) {
             return lineInfos.boardStatus.get();
         }
@@ -261,11 +264,11 @@ export class QuartoRules extends Rules<QuartoMove, QuartoState> {
             // this line is not null and has a common criterion between all of its pieces
             if (sensitiveCoord.isAbsent()) {
                 // the line is full
-                return { score: SCORE.VICTORY, sensitiveSquares: new CoordSet() };
+                return { status: AlignmentStatus.VICTORY, sensitiveSquares: new CoordSet() };
             } else {
                 // if there is only one empty square, then the sensitive square we found is indeed sensitive
                 if (commonCriterion.get().matchPiece(state.pieceInHand)) {
-                    boardStatus.score = SCORE.PRE_VICTORY;
+                    boardStatus.status = AlignmentStatus.PRE_VICTORY;
                 }
                 const coord: Coord = sensitiveCoord.get();
                 boardStatus.sensitiveSquares = boardStatus.sensitiveSquares.addElement(coord);
@@ -273,7 +276,8 @@ export class QuartoRules extends Rules<QuartoMove, QuartoState> {
         }
         return boardStatus;
     }
-    private static getLineInfos(line: QuartoLine, state: QuartoState, boardStatus: BoardStatus): LineInfos {
+
+    private getLineInfos(line: QuartoLine, state: QuartoState, boardStatus: BoardStatus): LineInfos {
         let sensitiveCoord: MGPOptional<Coord> = MGPOptional.empty(); // the first square is empty
         let commonCriterion: MGPOptional<QuartoCriterion> = MGPOptional.empty();
 
@@ -307,30 +311,25 @@ export class QuartoRules extends Rules<QuartoMove, QuartoState> {
         }
         return { commonCriterion, sensitiveCoord, boardStatus: MGPOptional.empty() };
     }
-    public static scoreToGameStatus(score: SCORE, turn: number): GameStatus {
-        const player: Player = Player.of(turn % 2);
-        if (score === SCORE.VICTORY) {
-            return GameStatus.getDefeat(player);
-        }
-        return turn === 16 ? GameStatus.DRAW : GameStatus.ONGOING;
-    }
+
     public override getGameStatus(node: QuartoNode): GameStatus {
         const state: QuartoState = node.gameState;
         let boardStatus: BoardStatus = {
-            score: SCORE.DEFAULT,
+            status: AlignmentStatus.NOTHING,
             sensitiveSquares: new CoordSet(),
         };
-        for (const line of QuartoRules.lines) {
-            boardStatus = QuartoRules.updateBoardStatus(line, state, boardStatus);
-            if (boardStatus.score === SCORE.VICTORY) {
-                return QuartoRules.scoreToGameStatus(boardStatus.score, state.turn);
+        for (const line of this.lines) {
+            boardStatus = this.updateBoardStatus(line, state, boardStatus);
+            if (boardStatus.status === AlignmentStatus.VICTORY) {
+                return boardStatus.status.toGameStatus(state.turn);
             }
         }
-        return QuartoRules.scoreToGameStatus(boardStatus.score, state.turn);
+        return boardStatus.status.toGameStatus(state.turn);
     }
+
     public getVictoriousCoords(state: QuartoState): Coord[] {
-        for (const line of QuartoRules.lines) {
-            if (QuartoRules.isThereAVictoriousLine(line, state)) {
+        for (const line of this.lines) {
+            if (this.isThereAVictoriousLine(line, state)) {
                 return line.allCoords();
             }
         }
