@@ -164,7 +164,7 @@ export class QuartoRules extends Rules<QuartoMove, QuartoState> {
     private isOccupied(square: QuartoPiece): boolean {
         return (square !== QuartoPiece.EMPTY);
     }
-    public isLegal(move: QuartoMove, state: QuartoState): MGPValidation {
+    public override isLegal(move: QuartoMove, state: QuartoState): MGPValidation {
         /**
          * pieceInHand is the one to be placed
          * move.piece is the one given to the next player

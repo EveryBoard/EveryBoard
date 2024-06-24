@@ -13,7 +13,7 @@ import { GameStatus } from '../GameStatus';
  **/
 export class AlignmentStatus {
 
-    // There's nothing special about this alignment
+    // There's no particular alignment
     public static NOTHING: AlignmentStatus = new AlignmentStatus();
 
     // The player could win at this turn
