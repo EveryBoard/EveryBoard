@@ -50,7 +50,7 @@ class PlayerDriver():
         self.driver.get(url)
         # Make sure the page has fully loaded
         self.wait_for('app-root')
-        #time.sleep(1)
+        time.sleep(1)
 
     def reload_page(self):
         '''Reload the current page'''
