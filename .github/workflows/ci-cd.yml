@@ -286,6 +286,12 @@ jobs:
           fi
         env:
           GH_TOKEN: ${{ secrets.DEPLOY_GH_TOKEN }}
+          SSH_KEY: ${{ secrets.EVERYBOARD_DEPLOY_SSH_KEY }}
+          SSH_USER: ${{ secrets.EVERYBOARD_DEPLOY_SSH_USER }}
+          SSH_SERVER: ${{ secrets.EVERYBOARD_DEPLOY_SSH_SERVER }}
+          SSH_PORT: ${{ secrets.EVERYBOARD_DEPLOY_SSH_PORT }}
+          SSH_KNOWN_HOSTS: ${{ secrets.EVERYBOARD_DEPLOY_KNOWN_HOST }}
+          SERVICE_ACCOUNT: ${{ secrets.EVERYBOARD_DEPLOY_SERVICE_ACCOUNT_MASTER }}
       - name: Deploy develop on push if org member
         if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/develop' }}
         run: |
@@ -308,7 +314,7 @@ jobs:
           SSH_USER: ${{ secrets.EVERYBOARD_DEPLOY_SSH_USER }}
           SSH_SERVER: ${{ secrets.EVERYBOARD_DEPLOY_SSH_SERVER }}
           SSH_PORT: ${{ secrets.EVERYBOARD_DEPLOY_SSH_PORT }}
-          SERVICE_ACCOUNT_MASTER: ${{ secrets.EVERYBOARD_DEPLOY_SERVICE_ACCOUNT_MASTER }}
+          SSH_KNOWN_HOSTS: ${{ secrets.EVERYBOARD_DEPLOY_KNOWN_HOST }}
           SERVICE_ACCOUNT_DEV: ${{ secrets.EVERYBOARD_DEPLOY_SERVICE_ACCOUNT_DEV }}
 
   deployment-netlify:
