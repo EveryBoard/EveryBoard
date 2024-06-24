@@ -477,9 +477,9 @@ def can_perform_time_actions(user1, user2):
     user1.create_part(user2)
 
     # I can add global time
-    check_time_increase('#chronoOneGlobal')
+    check_time_increase('#chrono-one-global')
     # I can add turn time
-    check_time_increase('#chronoOneTurn')
+    check_time_increase('#chrono-one-turn')
 
     # Cleanup
     user1.click('#resign')
