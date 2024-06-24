@@ -418,7 +418,9 @@ def can_reload_part_creation(user):
     user.click('#createOnlineGame')
     user.select('#gameType', 'Four in a Row')
     user.click('#launchGame')
+    print('1')
     user.wait_for('#partCreation')
+    print('2')
 
     # I reload the page
     user.reload_page()
