@@ -19,7 +19,6 @@ export class EpaminondasMoveGenerator extends MoveGenerator<EpaminondasMove, Epa
         for (const coordAndContent of state.getCoordsAndContents()) {
             const firstCoord: Coord = coordAndContent.coord;
             if (coordAndContent.content === player) {
-                let move: EpaminondasMove;
                 for (const direction of Ordinal.ORDINALS) {
                     let phalanxSize: number = 1;
                     let nextCoord: Coord = firstCoord.getNext(direction, 1);
@@ -34,7 +33,8 @@ export class EpaminondasMoveGenerator extends MoveGenerator<EpaminondasMove, Epa
                            stepSize <= phalanxSize &&
                            state.getPieceAt(nextCoord) === empty)
                     {
-                        move = new EpaminondasMove(firstCoord.x, firstCoord.y, phalanxSize, stepSize, direction);
+                        const move: EpaminondasMove =
+                            new EpaminondasMove(firstCoord.x, firstCoord.y, phalanxSize, stepSize, direction);
                         moves = this.addMove(moves, move, state);
                         stepSize++;
                         nextCoord = nextCoord.getNext(direction, 1);
@@ -43,7 +43,8 @@ export class EpaminondasMoveGenerator extends MoveGenerator<EpaminondasMove, Epa
                         stepSize <= phalanxSize &&
                         state.getPieceAt(nextCoord) === opponent)
                     {
-                        move = new EpaminondasMove(firstCoord.x, firstCoord.y, phalanxSize, stepSize, direction);
+                        const move: EpaminondasMove =
+                            new EpaminondasMove(firstCoord.x, firstCoord.y, phalanxSize, stepSize, direction);
                         moves = this.addMove(moves, move, state);
                     }
                 }
