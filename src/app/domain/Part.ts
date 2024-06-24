@@ -25,7 +25,7 @@ type EventType = 'Move' | 'Request' | 'Reply' | 'Action';
 
 export type GameEventBase = {
     readonly eventType: EventType;
-    readonly time: FirestoreTime;
+    readonly time: number;
     readonly user: MinimalUser;
 }
 
@@ -115,9 +115,6 @@ export class PartDocument implements FirestoreDocument<Part> {
     }
     public getLoser(): MGPOptional<MinimalUser> {
         return MGPOptional.ofNullable(this.data.loser);
-    }
-    public setWinnerAndLoser(winner: MinimalUser, loser: MinimalUser): PartDocument {
-        return new PartDocument(this.id, { ...this.data, winner, loser });
     }
 }
 

@@ -4,7 +4,6 @@ import { ActivatedRoute, NavigationEnd, Router, Event } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { ConnectedUserService, AuthUser } from 'src/app/services/ConnectedUserService';
 import { GameService } from 'src/app/services/GameService';
-import { UserService } from 'src/app/services/UserService';
 import { Move } from '../../../jscaip/Move';
 import { Part, PartDocument, GameEvent, GameEventMove, GameEventReply, RequestType } from '../../../domain/Part';
 import { CountDownComponent } from '../../normal-component/count-down/count-down.component';
@@ -21,7 +20,6 @@ import { MinimalUser } from 'src/app/domain/MinimalUser';
 import { CurrentGameService } from 'src/app/services/CurrentGameService';
 import { GameEventService } from 'src/app/services/GameEventService';
 import { AbstractNode, GameNode } from 'src/app/jscaip/AI/GameNode';
-import { Timestamp } from 'firebase/firestore';
 import { OGWCTimeManagerService } from './OGWCTimeManagerService';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { OGWCRequestManagerService, RequestInfo } from './OGWCRequestManagerService';
@@ -29,6 +27,7 @@ import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 import { Debug } from 'src/app/utils/Debug';
 import { AbstractRules, SuperRules } from 'src/app/jscaip/Rules';
+import { ServerTimeService } from 'src/app/services/ServerTimeService';
 
 export class OnlineGameWrapperMessages {
 
@@ -84,11 +83,11 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
                        router: Router,
                        messageDisplayer: MessageDisplayer,
                        private readonly currentGameService: CurrentGameService,
-                       private readonly userService: UserService,
                        private readonly gameService: GameService,
                        private readonly gameEventService: GameEventService,
                        private readonly timeManager: OGWCTimeManagerService,
                        private readonly requestManager: OGWCRequestManagerService,
+                       private readonly serverTimeService: ServerTimeService,
                        private readonly cdr: ChangeDetectorRef)
     {
         super(activatedRoute, connectedUserService, router, messageDisplayer);
@@ -111,7 +110,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         const gameExists: boolean = GameInfo.ALL_GAMES().some((gameInfo: GameInfo) => gameInfo.urlName === urlName);
         if (gameExists) {
             const partValidity: MGPValidation =
-                await this.gameService.getPartValidity(this.currentPartId, urlName);
+                await this.gameService.getGameValidity(this.currentPartId, urlName);
             if (partValidity.isFailure()) {
                 this.routerEventsSubscription.unsubscribe();
                 const message: string = OnlineGameWrapperMessages.NO_MATCHING_PART();
@@ -197,15 +196,15 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
     private async startPart(): Promise<void> {
         // Trigger the first update manually, so that we will have info on the part before receiving any moves
         // This is useful when we join a part in the middle.
-        const partData: Part = (await this.gameService.getPart(this.currentPartId)).get();
-        this.currentPart = new PartDocument(this.currentPartId, partData);
+        const part: Part = await this.gameService.getExistingGame(this.currentPartId);
+        this.currentPart = new PartDocument(this.currentPartId, part);
 
         // We subscribe to the part only at this point.
         // Once we receive the notification that the part started, we will subscribe to the events
         this.partSubscription =
-            this.gameService.subscribeToChanges(this.currentPartId, async(part: MGPOptional<Part>) => {
-                Utils.assert(part.isPresent(), 'OnlineGameWrapper observed a part being deleted, this should not happen');
-                this.currentPart = new PartDocument(this.currentPartId, part.get());
+            this.gameService.subscribeToChanges(this.currentPartId, async(p: MGPOptional<Part>) => {
+                Utils.assert(p.isPresent(), 'OnlineGameWrapper observed a part being deleted, this should not happen');
+                this.currentPart = new PartDocument(this.currentPartId, p.get());
             });
         this.subscribeToEvents();
     }
@@ -227,6 +226,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         // we don't want to apply all clock actions then
         const mutex: Mutex = new Mutex(); // Need to ensure we receive events one at a time
         const callback: (events: GameEvent[]) => Promise<void> = async(events: GameEvent[]): Promise<void> => {
+            if (events.length === 0) return; // Only happens in the test suite
             await mutex.runExclusive(async() => {
                 const numberOfMoves: number = events.filter((g: GameEvent) => g.eventType === 'Move').length;
                 let numberOfMovesDone: number = 0;
@@ -327,8 +327,8 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
 
     private async afterEventsBatch(): Promise<void> {
         const player: Player = Player.ofTurn(this.gameComponent.getTurn());
-        const serverTime: Timestamp = await this.userService.getServerTime(this.connectedUserService.user.get().id);
-        this.timeManager.afterEventsBatch(this.endGame, player, serverTime);
+        const serverTimeMs: number = await this.serverTimeService.getServerTimeInMs();
+        this.timeManager.afterEventsBatch(this.endGame, player, serverTimeMs);
     }
 
     private async takeBackToPreviousPlayerTurn(player: Player): Promise<void> {
@@ -361,7 +361,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
                 return this.canProposeDraw();
             default:
                 Utils.expectToBe(request, 'Rematch');
-                return this.endGame;
+                return this.canProposeRematch();
         }
     }
 
@@ -409,6 +409,11 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         // Otherwise, it depends on the request manager
         return this.requestManager.canMakeRequest('Draw');
     }
+
+    private canProposeRematch(): boolean {
+        return this.endGame && this.requestManager.canMakeRequest('Rematch');
+    }
+
 
     public override async canUserPlay(clickedElementName: string): Promise<MGPValidation> {
         if (this.role.isNone()) {
@@ -466,26 +471,15 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
                                                    MGPOptional.of(oldNode),
                                                    MGPOptional.of(move));
         const gameStatus: GameStatus = rules.getGameStatus(newNode, config);
+
         // To adhere to security rules, we must add the move before updating the part
         const encodedMove: JSONValue = this.gameComponent.encoder.encode(move);
-        const user: MinimalUser = Utils.getNonNullable(this.currentUser);
-        await this.gameEventService.addMove(this.currentPartId, user, encodedMove);
-        return this.updatePartWithStatusAndScores(gameStatus, this.gameComponent.scores);
-    }
-
-    private async updatePartWithStatusAndScores(gameStatus: GameStatus, scores: MGPOptional<PlayerNumberMap>)
-    : Promise<void>
-    {
+        const partId: string = this.currentPartId;
+        const scores: MGPOptional<PlayerNumberMap> = this.gameComponent.scores;
         if (gameStatus.isEndGame) {
-            if (gameStatus === GameStatus.DRAW) {
-                return await this.gameService.drawPart(this.currentPartId, scores);
-            } else {
-                Utils.assert(gameStatus.winner.isPlayer(), 'Non-draw end games should have a winner');
-                const winner: Player = gameStatus.winner as Player;
-                return this.notifyVictory(winner, scores);
-            }
+            return this.gameService.addMoveAndEndGame(partId, encodedMove, scores, gameStatus.winner);
         } else {
-            return this.gameService.updatePartUponMove(this.currentPartId, scores);
+            return this.gameService.addMove(partId, encodedMove, scores);
         }
     }
 
@@ -493,27 +487,9 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         await this.gameService.notifyTimeout(this.currentPartId, victoriousPlayer, loser);
     }
 
-    private async notifyVictory(winner: Player, scores: MGPOptional<PlayerNumberMap>): Promise<void> {
-        const currentPart: PartDocument = Utils.getNonNullable(this.currentPart);
-        const playerZero: MinimalUser = this.players[0].get();
-        const playerOne: MinimalUser = this.players[1].get();
-        if (winner === Player.ONE) {
-            this.currentPart = currentPart.setWinnerAndLoser(playerOne, playerZero);
-        } else {
-            this.currentPart = currentPart.setWinnerAndLoser(playerZero, playerOne);
-        }
-
-        await this.gameService.endPartWithVictory(this.currentPartId,
-                                                  this.currentPart.getWinner().get(),
-                                                  this.currentPart.getLoser().get(),
-                                                  scores);
-    }
-
     // Called by the resign button
     public async resign(): Promise<void> {
-        const resigner: MinimalUser = this.getPlayer();
-        const victoriousOpponent: MinimalUser = this.players[(this.role.getValue() + 1) % 2].get();
-        await this.gameService.resign(this.currentPartId, victoriousOpponent, resigner);
+        await this.gameService.resign(this.currentPartId);
     }
 
     // Called by the clocks
@@ -546,17 +522,15 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
     // Called by the 'accept' button
     public async accept(): Promise<void> {
         Utils.assert(this.role.isPlayer(), 'cannot accept request if not player');
-        const player: Player = this.role as Player;
-        const part: PartDocument = Utils.getNonNullable(this.currentPart);
         const request: RequestType = this.requestManager.getCurrentRequest().get().requestType;
         switch (request) {
             case 'Rematch':
-                return this.gameService.acceptRematch(part);
+                return this.gameService.acceptRematch(this.currentPartId);
             case 'Draw':
-                return this.gameService.acceptDraw(part.id, player);
+                return this.gameService.acceptDraw(this.currentPartId);
             default:
                 Utils.expectToBe(request, 'TakeBack');
-                return this.gameService.acceptTakeBack(part.id, part.data.turn, player);
+                return this.gameService.acceptTakeBack(this.currentPartId);
         }
     }
 

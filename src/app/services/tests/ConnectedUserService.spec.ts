@@ -88,6 +88,9 @@ export class ConnectedUserServiceMock {
     public async sendPresenceToken(): Promise<void> {
         return;
     }
+    public async getIdToken(): Promise<string> {
+        return 'idToken';
+    }
 }
 
 function setupAuthTestModule(): Promise<unknown> {
@@ -686,6 +689,20 @@ describe('ConnectedUserService', () => {
         // When mapping it
         // Then it should throw
         expect(() => connectedUserService['catchFirebaseError'](error)).toThrow(error);
+    });
+
+    describe('getIdToken', () => {
+        it('should retrieve id token of the current user', async() => {
+            // Given a user
+            await connectedUserService.doRegister(username, email, password);
+            const user: FireAuth.User = Utils.getNonNullable(auth.currentUser);
+            spyOn(user, 'getIdToken').and.callFake(async() => 'MyIdToken');
+            // When getting the id token
+            const idToken: string = await connectedUserService.getIdToken();
+            // Then it should fetch the one of the user
+            expect(idToken).toEqual('MyIdToken');
+            expect(user.getIdToken).toHaveBeenCalled();
+        });
     });
 
     afterEach(async() => {

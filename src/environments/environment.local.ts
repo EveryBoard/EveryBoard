@@ -12,4 +12,5 @@ export const environment: Environment = {
         messagingSenderId: 'unknown',
     },
     useEmulators: true,
+    backendURL: 'http://localhost:8081',
 };

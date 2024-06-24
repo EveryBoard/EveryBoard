@@ -33,12 +33,6 @@ export class ChatService {
     public subscribeToMessages(chatId: string, callback: FirestoreCollectionObserver<Message>): Subscription {
         return this.chatDAO.subCollectionDAO<Message>(chatId, 'messages').observingWhere([], callback, 'postedTime');
     }
-    public async deleteChat(chatId: string): Promise<void> {
-        return this.chatDAO.delete(chatId);
-    }
-    public async createNewChat(chatId: string): Promise<void> {
-        return this.chatDAO.set(chatId, {});
-    }
     public async sendMessage(chatId: string, sender: MinimalUser, content: string, currentTurn?: number)
     : Promise<MGPValidation>
     {

@@ -1,0 +1,26 @@
+synopsis: "The EveryBoard backend"
+homepage: "https://github.com/EveryBoard/backend"
+bug-reports: "https://github.com/EveryBoard/backend/issues"
+authors: "The EveryBoard Team"
+maintainer: "quentin.stievenart@gmail.com"
+opam-version: "2.0"
+
+depends: [
+  "ocaml" {>= "4.08.0"}
+  "dream"
+  "dune" {>= "2.7.0"}
+  "ppx_deriving_yojson"
+  "mirage-crypto-pk"
+  "x509"
+  "cohttp"
+  "cohttp-lwt-unix"
+
+  "alcotest" {with-test}
+  "alcotest-lwt" {with-test}
+  "bisect_ppx" {with-test & >= "2.5.0"}
+]
+
+dev-repo: "git+https://github.com/EveryBoard/backend"
+url {
+  src: "git+https://github.com/EveryBoard/backend"
+}

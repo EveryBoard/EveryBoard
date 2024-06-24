@@ -54,7 +54,7 @@ describe('EpaminondasPositionalMinimax', () => {
             minimax,
             options: minimaxOptions,
             config: defaultConfig,
-            shouldFinish: true,
+            shouldFinish: false, // not always a finisher
         });
     });
 

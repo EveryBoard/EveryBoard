@@ -12,6 +12,12 @@ import { CurrentGameServiceMock } from 'src/app/services/tests/CurrentGameServic
 import { ConnectedUserService } from 'src/app/services/ConnectedUserService';
 import { ConnectedUserServiceMock } from 'src/app/services/tests/ConnectedUserService.spec';
 import { UserMocks } from 'src/app/domain/UserMocks.spec';
+import { GameService } from 'src/app/services/GameService';
+import { ConfigRoomService } from 'src/app/services/ConfigRoomService';
+import { ServerTimeService } from 'src/app/services/ServerTimeService';
+import { ServerTimeServiceMock } from 'src/app/services/tests/ServerTimeServiceMock.spec';
+import { ConfigRoomServiceMock } from 'src/app/services/tests/ConfigRoomServiceMock.spec';
+import { GameServiceMock } from 'src/app/services/tests/GameServiceMock.spec';
 
 describe('ExclusiveOnlineGameGuard', () => {
 
@@ -33,6 +39,9 @@ describe('ExclusiveOnlineGameGuard', () => {
             providers: [
                 { provide: CurrentGameService, useClass: CurrentGameServiceMock },
                 { provide: ConnectedUserService, useClass: ConnectedUserServiceMock },
+                { provide: GameService, useClass: GameServiceMock },
+                { provide: ConfigRoomService, useClass: ConfigRoomServiceMock },
+                { provide: ServerTimeService, useClass: ServerTimeServiceMock },
             ],
         }).compileComponents();
         router = TestBed.inject(Router);

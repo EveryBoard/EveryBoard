@@ -12,7 +12,7 @@
     <div class="tile is-parent">
         <div class="tile is-child box has-text-centered">
             <div class="block" id="turnIndicator" *ngIf="currentPart !== null">
-                <p class="subtitle" i18n>Turn n°{{ currentPart.getTurn() + 1 }}</p>
+                <p class="subtitle" id="turn-number" i18n>Turn n°{{ currentPart.getTurn() + 1 }}</p>
                 <p class="subtitle" id="currentPlayerIndicator" *ngIf="endGame === false">
                     <ng-container *ngIf="currentUser?.name === getPlayer().name else opponentsTurn"><span id="playerTurn" i18n>It is your turn.</span></ng-container>
                     <ng-template #opponentsTurn><span id="opponentTurn" i18n>It is {{ currentUser?.name }}'s turn.</span></ng-template>
@@ -25,23 +25,27 @@
                    *ngIf="players[0].isPresent()">{{ players[0].get().name }}</p>
                 <p id="scoreZeroIndicator" *ngIf="currentPart !== null && gameComponent && gameComponent.scores.isPresent()" i18n>{{ gameComponent.scores.get().get(Player.ZERO) }} points</p>
                 <app-count-down #chronoZeroGlobal
+                                id="chrono-zero-global"
                                 [dangerTimeLimit]="60*1000"
                                 [active]="(currentPart === null) ? false : currentPart.getTurn() % 2 === 0"
                                 [canAddTime]='role === Player.ONE && endGame === false'
                                 [timeToAdd]="globalTimeMessage"
-                                debugName="ZERO Global"
+                                [debugName]="'ZERO Global'"
                                 (outOfTimeAction)="reachedOutOfTime(Player.ZERO)"
                                 (addTimeToOpponent)="addGlobalTime()"
+                                class="data-global-time"
                 >
                 </app-count-down>
                 <app-count-down #chronoZeroTurn
+                                id="chrono-zero-turn"
                                 [dangerTimeLimit]="15*1000"
                                 [active]="(currentPart === null) ? false : currentPart.getTurn() % 2 === 0"
                                 [canAddTime]='role === Player.ONE && endGame === false'
                                 [timeToAdd]="turnTimeMessage"
-                                debugName="ZERO Turn"
+                                [debugName]="'ZERO Turn'"
                                 (outOfTimeAction)="reachedOutOfTime(Player.ZERO)"
                                 (addTimeToOpponent)="addTurnTime()"
+                                class="data-turn-time"
                 >
                 </app-count-down>
             </div>
@@ -53,23 +57,27 @@
                    *ngIf="players[1].isPresent()">{{ players[1].get().name }}</p>
                 <p id="scoreOneIndicator" *ngIf="currentPart !== null && gameComponent && gameComponent.scores.isPresent()" i18n>{{ gameComponent.scores.get().get(Player.ONE) }} points</p>
                 <app-count-down #chronoOneGlobal
+                                id="chrono-one-global"
                                 [dangerTimeLimit]="60*1000"
                                 [active]="(currentPart === null) ? false : currentPart.getTurn() % 2 === 1"
                                 [canAddTime]='role === Player.ZERO && endGame === false'
                                 [timeToAdd]="globalTimeMessage"
-                                debugName="ONE Global"
+                                [debugName]="'ONE Global'"
                                 (outOfTimeAction)="reachedOutOfTime(Player.ONE)"
                                 (addTimeToOpponent)="addGlobalTime()"
+                                class="data-global-time"
                 >
                 </app-count-down>
                 <app-count-down #chronoOneTurn
+                                id="chrono-one-turn"
                                 [dangerTimeLimit]="15*1000"
                                 [active]="(currentPart === null) ? false : currentPart.getTurn() % 2 === 1"
                                 [canAddTime]='role === Player.ZERO && endGame === false'
                                 [timeToAdd]="turnTimeMessage"
-                                debugName="ONE Turn"
+                                [debugName]="'ONE Turn'"
                                 (outOfTimeAction)="reachedOutOfTime(Player.ONE)"
                                 (addTimeToOpponent)="addTurnTime()"
+                                class="data-turn-time"
                 >
                 </app-count-down>
             </div>

@@ -1,0 +1,9 @@
+version=0.26.1
+profile=conventional
+doc-comments=before
+ocp-indent-compat=true
+exp-grouping=preserve
+
+function-indent=4
+let-binding-indent=4
+match-indent=2

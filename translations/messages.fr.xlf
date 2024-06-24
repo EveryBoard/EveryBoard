@@ -4525,6 +4525,10 @@
         <source>This username is already in use, please select a different one.</source>
         <target>Ce nom d'utilisateur est déjà utilisé, veuillez en utiliser un autre.</target>
       </trans-unit>
+      <trans-unit id="5527862698509020204" datatype="html">
+        <source>This game does not exist!</source>
+        <target>Cette partie n'existe pas !</target>
+      </trans-unit>
       <trans-unit id="75196759111440200" datatype="html">
         <source>You&apos;re not allowed to send a message here.</source>
         <target>Vous n'êtes pas autorisé à envoyer un message ici.</target>
@@ -4536,6 +4540,10 @@
       <trans-unit id="5968000276977717351" datatype="html">
         <source>An unexpected error was encountered. We have logged it and will try to fix its cause as soon as possible.</source>
         <target>Une erreur inattendue est arrivée. Nous l'avons notée et essayerons de la réparer au plus vite.</target>
+      </trans-unit>
+      <trans-unit id="3878208315329190575" datatype="html">
+        <source>This is the wrong game type!</source>
+        <target>C'est le mauvais type de jeu !</target>
       </trans-unit>
       <trans-unit id="682801679843744749" datatype="html">
         <source><x id="PH" equiv-text="hours"/> hours</source>
@@ -4568,10 +4576,6 @@
       <trans-unit id="5033601776243148314" datatype="html">
         <source><x id="PH" equiv-text="first"/> and <x id="PH_1" equiv-text="second"/></source>
         <target><x id="PH" equiv-text="first"/> et <x id="PH_1" equiv-text="second"/></target>
-      </trans-unit>
-      <trans-unit id="5120671221766405888" datatype="html">
-        <source>Game does not exist</source>
-        <target>Partie inexistante</target>
       </trans-unit>
       <trans-unit id="2025949389316561274" datatype="html">
         <source>You are already playing in another game.</source>

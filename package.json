@@ -14,7 +14,7 @@
     "libtest": "cd lib && npm test",
     "libtest:ci": "cd lib && npm ci && npm test && npm run coverage",
     "lint": "eslint --ext ts ./ --quiet",
-    "e2e": "bash ./e2e/e2e.sh"
+    "e2e": "python ./e2e/launch.py"
   },
   "private": true,
   "dependencies": {

@@ -7,9 +7,8 @@ import { Timestamp } from 'firebase/firestore';
 import { PartCreationComponent } from './part-creation.component';
 import { LobbyComponent } from '../../normal-component/lobby/lobby.component';
 
-import { ConfigRoomService } from 'src/app/services/ConfigRoomService';
+import { ConfigRoomService, ConfigRoomServiceFailure } from 'src/app/services/ConfigRoomService';
 import { GameService } from 'src/app/services/GameService';
-import { ChatService } from 'src/app/services/ChatService';
 import { ErrorLoggerServiceMock } from 'src/app/services/tests/ErrorLoggerServiceMock.spec';
 import { AuthUser, ConnectedUserService } from 'src/app/services/ConnectedUserService';
 import { ConnectedUserServiceMock } from 'src/app/services/tests/ConnectedUserService.spec';
@@ -32,6 +31,7 @@ import { UserMocks } from 'src/app/domain/UserMocks.spec';
 import { FirestoreTime } from 'src/app/domain/Time';
 import { UserService } from 'src/app/services/UserService';
 import { CurrentGameService } from 'src/app/services/CurrentGameService';
+import { addCandidate } from '../online-game-wrapper/online-game-wrapper.quarto.component.spec';
 
 describe('PartCreationComponent', () => {
 
@@ -45,7 +45,6 @@ describe('PartCreationComponent', () => {
     let userService: UserService;
     let configRoomService: ConfigRoomService;
     let gameService: GameService;
-    let chatService: ChatService;
     let connectedUserService: ConnectedUserService;
     let currentGameService: CurrentGameService;
 
@@ -55,7 +54,7 @@ describe('PartCreationComponent', () => {
         if (lastUpdateTime) {
             await userDAO.update(UserMocks.OPPONENT_MINIMAL_USER.id, { lastUpdateTime });
         }
-        return configRoomService.addCandidate('configRoomId', UserMocks.OPPONENT_MINIMAL_USER);
+        return addCandidate(UserMocks.OPPONENT_MINIMAL_USER);
     }
     async function receiveConfigRoomUpdate(update: Partial<ConfigRoom>): Promise<void> {
         // As we are mocking the DAO, we can directly change the config room ourselves
@@ -109,7 +108,6 @@ describe('PartCreationComponent', () => {
         userService = TestBed.inject(UserService);
         configRoomService = TestBed.inject(ConfigRoomService);
         gameService = TestBed.inject(GameService);
-        chatService = TestBed.inject(ChatService);
         connectedUserService = TestBed.inject(ConnectedUserService);
         currentGameService = TestBed.inject(CurrentGameService);
         component = testUtils.getComponent();
@@ -120,6 +118,7 @@ describe('PartCreationComponent', () => {
         await userDAO.set(UserMocks.OPPONENT_AUTH_USER.id, UserMocks.OPPONENT);
         await partDAO.set('configRoomId', PartMocks.INITIAL);
     }));
+
     describe('For creator', () => {
         beforeEach(fakeAsync(async() => {
             // Given a component that is loaded by the creator
@@ -161,9 +160,11 @@ describe('PartCreationComponent', () => {
 
                 // When the component is loaded
                 // Then subscribeToChange is not called and a message is displayed
-                await testUtils.expectToDisplayCriticalMessage(ConfigRoomService.GAME_DOES_NOT_EXIST(), async() => {
-                    awaitComponentInitialization();
-                });
+                await testUtils.expectToDisplayCriticalMessage(
+                    ConfigRoomServiceFailure.GAME_DOES_NOT_EXIST(),
+                    async() => {
+                        awaitComponentInitialization();
+                    });
                 expect(configRoomService.subscribeToChanges).not.toHaveBeenCalled();
             }));
         });
@@ -215,7 +216,7 @@ describe('PartCreationComponent', () => {
                         chosenOpponent: null,
                     });
                 });
-                await configRoomService.removeCandidate('configRoomId', UserMocks.OPPONENT_MINIMAL_USER);
+                await configRoomService.removeCandidate('configRoomId', UserMocks.OPPONENT_MINIMAL_USER.id);
 
                 // Then it is not selected anymore
                 expectElementNotToExist('#selected_' + UserMocks.OPPONENT.username);
@@ -232,7 +233,7 @@ describe('PartCreationComponent', () => {
                 expectElementToExist('#presenceOf_' + UserMocks.OPPONENT.username);
 
                 // When the candidate leaves
-                await configRoomService.removeCandidate('configRoomId', UserMocks.OPPONENT_MINIMAL_USER);
+                await configRoomService.removeCandidate('configRoomId', UserMocks.OPPONENT_MINIMAL_USER.id);
 
                 // Then it is still not selected, configRoom is back to start
                 expectElementNotToExist('#presenceOf_' + UserMocks.OPPONENT.username);
@@ -374,7 +375,6 @@ describe('PartCreationComponent', () => {
                     partType: PartType.CUSTOM.value,
                     maximalMoveDuration: 100,
                     totalPartDuration: 1000,
-                    chosenOpponent: UserMocks.OPPONENT_MINIMAL_USER,
                     firstPlayer: FirstPlayer.RANDOM.value,
                     rulesConfig: {},
                 });
@@ -398,13 +398,12 @@ describe('PartCreationComponent', () => {
                     partType: PartType.BLITZ.value,
                     maximalMoveDuration: 30,
                     totalPartDuration: 900,
-                    chosenOpponent: UserMocks.OPPONENT_MINIMAL_USER,
                     firstPlayer: FirstPlayer.RANDOM.value,
                     rulesConfig: {},
                 });
                 component.stopSendingPresenceTokensAndObservingUsersIfNeeded();
             }));
-            it('should change configRoom doc', fakeAsync(async() => {
+            it('should change configRoom doc stored in component', fakeAsync(async() => {
                 // Given a component where creator selected a config and chose an opponent
                 awaitComponentInitialization();
                 await mockCandidateArrival();
@@ -595,22 +594,20 @@ describe('PartCreationComponent', () => {
             }));
         });
         describe('Canceling part creation and component destruction', () => {
-            it('should delete the game, configRoom and chat', fakeAsync(async() => {
+            it('should delete the game', fakeAsync(async() => {
                 // Given a part creation
                 awaitComponentInitialization();
 
-                spyOn(gameService, 'deletePart').and.callThrough();
-                spyOn(configRoomService, 'deleteConfigRoom').and.resolveTo();
-                spyOn(chatService, 'deleteChat').and.callThrough();
+                spyOn(gameService, 'deleteGame').and.callThrough();
 
                 // When clicking on cancel
-                await clickElement('#cancel');
-                tick(0);
 
-                // Then game, config room, and chat are deleted
-                expect(gameService.deletePart).toHaveBeenCalledOnceWith('configRoomId');
-                expect(configRoomService.deleteConfigRoom).toHaveBeenCalledOnceWith('configRoomId', []);
-                expect(chatService.deleteChat).toHaveBeenCalledOnceWith('configRoomId');
+                await testUtils.expectToDisplayInfoMessage('The game has been canceled!', async() => {
+                    await clickElement('#cancel');
+                });
+
+                // Then the game is deleted
+                expect(gameService.deleteGame).toHaveBeenCalledOnceWith('configRoomId');
 
                 component.stopSendingPresenceTokensAndObservingUsersIfNeeded();
             }));
@@ -670,6 +667,7 @@ describe('PartCreationComponent', () => {
             }));
         });
     });
+
     describe('Candidate', () => {
         beforeEach(fakeAsync(async() => {
             // Given a component where user is a candidate
@@ -678,14 +676,13 @@ describe('PartCreationComponent', () => {
         }));
         describe('Arrival', () => {
             it('should add user to configRoom candidates with service', fakeAsync(() => {
-                spyOn(configRoomService, 'addCandidate').and.callThrough();
+                spyOn(configRoomService, 'joinGame').and.callThrough();
 
                 // When candidate arrives
                 awaitComponentInitialization();
 
                 // Then the candidate is added to the configRoom and the configRoom is updated
-                expect(configRoomService.addCandidate)
-                    .toHaveBeenCalledOnceWith('configRoomId', UserMocks.OPPONENT_MINIMAL_USER);
+                expect(configRoomService.joinGame).toHaveBeenCalledOnceWith('configRoomId');
                 expect(component.currentConfigRoom).toEqual(ConfigRoomMocks.getInitial(MGPOptional.empty()));
                 component.stopSendingPresenceTokensAndObservingUsersIfNeeded();
             }));
@@ -714,9 +711,7 @@ describe('PartCreationComponent', () => {
                 component.stopSendingPresenceTokensAndObservingUsersIfNeeded();
             }));
             it(`should delete part when finding an outdated creator token`, fakeAsync(async() => {
-                spyOn(gameService, 'deletePart').and.callThrough();
-                spyOn(configRoomService, 'deleteConfigRoom').and.callThrough();
-                spyOn(chatService, 'deleteChat').and.callThrough();
+                spyOn(gameService, 'deleteGame').and.callThrough();
 
                 // Given a component where creator has an out of date token
                 const lastUpdateTime: Timestamp = new Timestamp(- PartCreationComponent.TOKEN_TIMEOUT, 0);
@@ -731,9 +726,7 @@ describe('PartCreationComponent', () => {
                 });
 
                 // Then the part and all its related data should be removed
-                expect(gameService.deletePart).toHaveBeenCalledOnceWith('configRoomId');
-                expect(configRoomService.deleteConfigRoom).toHaveBeenCalledOnceWith('configRoomId', [UserMocks.OPPONENT_MINIMAL_USER]);
-                expect(chatService.deleteChat).toHaveBeenCalledOnceWith('configRoomId');
+                expect(gameService.deleteGame).toHaveBeenCalledOnceWith('configRoomId');
 
                 component.stopSendingPresenceTokensAndObservingUsersIfNeeded();
             }));
@@ -838,8 +831,8 @@ describe('PartCreationComponent', () => {
                 // Given a component where user is chosen opponent amongst two candidate
                 awaitComponentInitialization();
                 await receiveConfigRoomUpdate(ConfigRoomMocks.getInitial(MGPOptional.empty()));
-                await configRoomService.addCandidate('configRoomId', UserMocks.OTHER_OPPONENT_MINIMAL_USER);
-                await configRoomService.addCandidate('configRoomId', UserMocks.OPPONENT_MINIMAL_USER);
+                await addCandidate(UserMocks.OTHER_OPPONENT_MINIMAL_USER);
+                await addCandidate(UserMocks.OPPONENT_MINIMAL_USER);
                 await receiveConfigRoomUpdate(ConfigRoomMocks.withChosenOpponent(MGPOptional.empty()));
 
                 // When an update notifies user that the chosen opponent changed
@@ -874,14 +867,15 @@ describe('PartCreationComponent', () => {
 
                 // When leaving the page (tested here by calling ngOnDestroy)
                 spyOn(currentGameService, 'removeCurrentGame').and.callThrough();
-                spyOn(configRoomService, 'cancelJoining').and.callThrough();
+                spyOn(configRoomService, 'removeCandidate').and.callThrough();
                 testUtils.destroy();
                 await testUtils.whenStable();
                 destroyed = true;
 
                 // Then configRoomService.cancelJoining should have been called
-                expect(configRoomService.cancelJoining).toHaveBeenCalledOnceWith('configRoomId');
                 expect(currentGameService.removeCurrentGame).toHaveBeenCalledOnceWith();
+                expect(configRoomService.removeCandidate)
+                    .toHaveBeenCalledOnceWith('configRoomId', UserMocks.OPPONENT_MINIMAL_USER.id);
             }));
             it('should not try to modify DAOs after user logged out', fakeAsync(async() => {
                 // Given a part creation
@@ -889,7 +883,7 @@ describe('PartCreationComponent', () => {
 
                 // When user logs out
                 spyOn(currentGameService, 'removeCurrentGame').and.callThrough();
-                spyOn(configRoomService, 'cancelJoining').and.callThrough();
+                spyOn(configRoomService, 'removeCandidate').and.callThrough();
 
                 ConnectedUserServiceMock.setUser(AuthUser.NOT_CONNECTED);
                 testUtils.destroy();
@@ -897,8 +891,8 @@ describe('PartCreationComponent', () => {
                 destroyed = true;
 
                 // Then it should not call cancelJoining nor removeCurrentGame
-                expect(configRoomService.cancelJoining).not.toHaveBeenCalled();
                 expect(currentGameService.removeCurrentGame).not.toHaveBeenCalled();
+                expect(configRoomService.removeCandidate).not.toHaveBeenCalled();
             }));
         });
     });
@@ -908,13 +902,4 @@ describe('PartCreationComponent', () => {
             await testUtils.whenStable();
         }
     }));
-});
-
-describe('PartType', () => {
-    it('should map correctly with PartType.of', () => {
-        expect(PartType.of('STANDARD').value).toBe('STANDARD');
-        expect(PartType.of('BLITZ').value).toBe('BLITZ');
-        expect(PartType.of('CUSTOM').value).toBe('CUSTOM');
-        expect(() => PartType.of('caca')).toThrowError('Invalid part type: caca.');
-    });
 });

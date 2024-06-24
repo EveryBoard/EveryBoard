@@ -42,4 +42,3 @@ describe('OnlineGameWrapperComponent of Reversable Game:', () => {
         tick(wrapper.configRoom.maximalMoveDuration * 1000);
     }));
 });
-
