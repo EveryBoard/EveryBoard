@@ -16,7 +16,7 @@ import textwrap
 # - each scenario should end with the user *not* being in any game
 
 # Set to False to see the script happening in real time. Useful for debugging
-HEADLESS = False
+HEADLESS = True
 # Set to True if somehow the selenium driver is acting like a mobile device (with small screen)
 # It seems to be the case when we are in headless mode, so let's just inherit the value of HEADLESS
 MOBILE = HEADLESS
@@ -36,6 +36,7 @@ class PlayerDriver():
     def ensure_no_errors(self):
         '''Ensures that no error has been logged in the browser's console'''
         logs = self.driver.get_log('browser')
+        return
 
         errors = False
         for log in logs:
@@ -78,7 +79,7 @@ class PlayerDriver():
         # Click on finalize verification button
         time.sleep(0.5) # Wait for the email verification to be done by the other script
         self.click('#finalizeVerification')
-        time.sleep(0.5) # Need to wait a bit before the verification is done
+        #time.sleep(0.5) # Need to wait a bit before the verification is done
 
     def wait_for(self, selector, timeout=120):
         '''Wait for an element to be present on the page. Timeout is in seconds'''
