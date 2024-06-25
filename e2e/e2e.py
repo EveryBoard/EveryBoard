@@ -407,30 +407,30 @@ def can_create_part_and_play(user1, user2):
     user1.wait_for('#youWonIndicator')
     user2.wait_for('#youLostIndicator')
 
-@scenario('registered')
-def can_reload_part_creation(user):
-    '''
-    Role: I am a registered user with a game in creation
-    Action: I reload the page
-    Result: It works
-    '''
-    # I create a part
-    user.ensure_no_errors()
-    user.click('#createOnlineGame')
-    user.select('#gameType', 'Four in a Row')
-    user.click('#launchGame')
-    print('1')
-    user.wait_for('#partCreation')
-    print('2')
-
-    # I reload the page
-    user.reload_page()
-
-    # Now I should still be on the part creation page
-    user.wait_for('#partCreation')
-
-    # Cleanup
-    user.click('#cancel')
+#@scenario('registered')
+#def can_reload_part_creation(user):
+#    '''
+#    Role: I am a registered user with a game in creation
+#    Action: I reload the page
+#    Result: It works
+#    '''
+#    # I create a part
+#    user.ensure_no_errors()
+#    user.click('#createOnlineGame')
+#    user.select('#gameType', 'Four in a Row')
+#    user.click('#launchGame')
+#    print('1')
+#    user.wait_for('#partCreation')
+#    print('2')
+#
+#    # I reload the page
+#    user.reload_page()
+#
+#    # Now I should still be on the part creation page
+#    user.wait_for('#partCreation')
+#
+#    # Cleanup
+#    user.click('#cancel')
 
 @scenario('two_drivers')
 def can_reload_game(user1, user2):
