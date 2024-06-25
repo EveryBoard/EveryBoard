@@ -36,8 +36,6 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
 
     public displayAIMetrics: boolean = false;
 
-    public playProposal: number = 0; // TODO KILL THE POOP
-
     private configIsSet: boolean = false;
 
     public rulesConfig: MGPOptional<RulesConfig> = MGPOptional.empty();
@@ -128,12 +126,6 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
     }
 
     public async proposeAIToPlay(): Promise<void> {
-        const localProposalIndex: number = this.playProposal;
-        this.playProposal++;
-        console.log('>> proposedAIToPlay', localProposalIndex)
-        const config: MGPOptional<RulesConfig> = await this.getConfig();
-                    const gameIsOngoing: boolean =
-                        this.gameComponent.rules.getGameStatus(this.gameComponent.node, config) === GameStatus.ONGOING;
 
         const currentPlayerIsHuman: boolean = await this.hasSelectedAI() === false;
         await this.setInteractive(currentPlayerIsHuman);
@@ -142,22 +134,18 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
             const playingAI: MGPOptional<{ ai: AbstractAI, options: AIOptions }> = this.getPlayingAI();
             if (playingAI.isPresent()) {
                 window.setTimeout(async() => {
-                    console.log('->-> inside timeout', localProposalIndex);
-                    // const config: MGPOptional<RulesConfig> = await this.getConfig();
-                    // const gameIsOngoing: boolean =
-                        // this.gameComponent.rules.getGameStatus(this.gameComponent.node, config) === GameStatus.ONGOING;
-                    console.log('trying to doAiMove', localProposalIndex)
-                    // if (gameIsOngoing) {            }
-                    await this.doAIMove(playingAI.get().ai, playingAI.get().options);
-                    console.log('<-<- after timeout', localProposalIndex);
-                    // }
+                    const config: MGPOptional<RulesConfig> = await this.getConfig();
+                    const gameIsOngoing: boolean =
+                    this.gameComponent.rules.getGameStatus(this.gameComponent.node, config) === GameStatus.ONGOING;
+                    if (gameIsOngoing) {
+                        await this.doAIMove(playingAI.get().ai, playingAI.get().options);
+                    }
                     this.cdr.detectChanges(); // triggers the rendering of AI move
                 }, LocalGameWrapperComponent.AI_TIMEOUT);
             }
             // If playingAI is absent, that means the user selected an AI without selecting options yet
             // We do nothing in this case.
         }
-        console.log('<< proposedAIToPlay', localProposalIndex)
     }
 
     /**
@@ -238,9 +226,7 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
         const nextNode: MGPFallible<AbstractNode> = ruler.choose(this.gameComponent.node, aiMove, config);
         if (nextNode.isSuccess()) {
             this.gameComponent.hideLastMove();
-            console.log('>> NEXT NODE ??')
             this.gameComponent.node = nextNode.get();
-            console.log('>> NEXT NODE !!')
             await this.applyNewMove();
             return MGPValidation.SUCCESS;
         } else {

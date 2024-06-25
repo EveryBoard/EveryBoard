@@ -107,10 +107,7 @@ implements AI<M, S, AIDepthLimitOptions, C>
         if (depth < 1) {
             return node; // leaf by calculation
         } else if (this.rules.getGameStatus(node, config).isEndGame) {
-            console.log(depth, 'turn', node.gameState.turn, 'is endGamed')
             return node; // rules - leaf or calculation - leaf
-        } else {
-            console.log(depth, 'turn', node.gameState.turn, 'is not the end game')
         }
         const possibleMoves: MGPSet<M> = this.getPossibleMoves(node, config);
         Utils.assert(possibleMoves.size() > 0, 'Minimax ' + this.name + ' should give move, received none!');
