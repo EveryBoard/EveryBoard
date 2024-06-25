@@ -27,7 +27,7 @@ export class LodestoneTutorial extends Tutorial {
             $localize`Selecting a lodestone`,
             $localize`To perform a move, you have to place your lodestone on the board. Your lodestone has two sides: <ul><li>its <i>repelling</i> side with which it will repel the opponent's pieces (indicated by the outward triangles of your opponent's color on the lodestone), and</li><li>its <i>attracting</i> side with which it will attract your pieces (indicated by the inward triangles of your color on the lodestone).</li></ul>Your lodestone can be placed to move pieces orthogonally or diagonally. All available lodestone sides and orientation are shown below the board.<br/><br/>You're playing Dark. Select the lodestone that repels your opponent's pieces diagonally.`,
             LodestoneRules.get().getInitialState(),
-            ['#lodestone_push_diagonal_PLAYER_ZERO'],
+            ['#lodestone-push-diagonal-PLAYER_ZERO'],
             TutorialStepMessage.CONGRATULATIONS(),
             $localize`This is not the right lodestone, try again.`,
         ),

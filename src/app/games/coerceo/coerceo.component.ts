@@ -84,11 +84,23 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
         this.lastEnd = MGPOptional.empty();
     }
 
-    public async onClick(coord: Coord): Promise<MGPValidation> {
-        const clickValidity: MGPValidation = await this.canUserPlay('#click-' + coord.x + '-' + coord.y);
+    public async onPyramidClick(coord: Coord): Promise<MGPValidation> {
+        const clickValidity: MGPValidation = await this.canUserPlay('#pyramid-' + coord.x + '-' + coord.y);
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }
+        return this.onClick(coord);
+    }
+
+    public async onSpaceClick(coord: Coord): Promise<MGPValidation> {
+        const clickValidity: MGPValidation = await this.canUserPlay('#space-' + coord.x + '-' + coord.y);
+        if (clickValidity.isFailure()) {
+            return this.cancelMove(clickValidity.getReason());
+        }
+        return this.onClick(coord);
+    }
+
+    private async onClick(coord: Coord): Promise<MGPValidation> {
         const currentPlayer: Player = this.state.getCurrentPlayer();
         if (this.chosenCoord.equalsValue(coord)) {
             // Deselects the piece

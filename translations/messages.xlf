@@ -3266,14 +3266,14 @@
       <trans-unit id="5033601776243148314" datatype="html">
         <source><x id="PH" equiv-text="first"/> and <x id="PH_1" equiv-text="second"/></source>
       </trans-unit>
+      <trans-unit id="5527862698509020204" datatype="html">
+        <source>This game does not exist!</source>
+      </trans-unit>
       <trans-unit id="75196759111440200" datatype="html">
         <source>You&apos;re not allowed to send a message here.</source>
       </trans-unit>
       <trans-unit id="4052977957517792171" datatype="html">
         <source>This message is forbidden.</source>
-      </trans-unit>
-      <trans-unit id="5120671221766405888" datatype="html">
-        <source>Game does not exist</source>
       </trans-unit>
       <trans-unit id="2025949389316561274" datatype="html">
         <source>You are already playing in another game.</source>
@@ -3325,6 +3325,9 @@
       </trans-unit>
       <trans-unit id="5968000276977717351" datatype="html">
         <source>An unexpected error was encountered. We have logged it and will try to fix its cause as soon as possible.</source>
+      </trans-unit>
+      <trans-unit id="3878208315329190575" datatype="html">
+        <source>This is the wrong game type!</source>
       </trans-unit>
       <trans-unit id="3012694567108651369" datatype="html">
         <source>This value is mandatory</source>
