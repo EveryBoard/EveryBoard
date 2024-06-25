@@ -566,10 +566,25 @@ def can_hard_draw(user1, user2):
             (4, 3), (3, 3), (3, 3),
             (3, 4), (4, 4), (4, 4),
             (5, 5), (5, 5), (5, 5),
-            (6, 6), (6, 6), (6, 6)]
+            #(6, 6), (6, 6), (6, 6)
+            ]
     for cols_to_play in cols:
         play(user1, cols_to_play[0])
         play(user2, cols_to_play[1])
+    print(user.driver.find_element(By.CSS_SELECTOR, 'body').get_attribute('innerHTML'))
+    print('a')
+    play(user1, 6)
+    print('b')
+    play(user2, 6)
+    print('c')
+    play(user1, 6)
+    print('d')
+    play(user2, 6)
+    print('e')
+    play(user1, 6)
+    print('f')
+    play(user2, 6)
+    print('g')
 
     # We see the draw
     user1.wait_for('#hardDrawIndicator')
