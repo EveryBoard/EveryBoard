@@ -3,7 +3,7 @@
      [attr.viewBox]="getViewBox().toSVGString()"
      preserveAspectRatio="xMidYMid meet">
     <g *ngFor="let coordAndContent of getState().getCoordsAndContents()">
-        <g *ngIf="isBoard(coordAndContent.content)"
+        <g *ngIf="isReachable(coordAndContent.content)"
            id="click-{{ coordAndContent.coord.x }}-{{ coordAndContent.coord.y }}"
            (click)="onClick(coordAndContent.coord)"
            [attr.transform]="getHexaCenterTranslationAt(coordAndContent.coord)">

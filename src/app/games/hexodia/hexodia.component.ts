@@ -130,7 +130,7 @@ export class HexodiaComponent extends HexagonalGameComponent<HexodiaRules,
         this.droppedCoords = [];
     }
 
-    public isBoard(piece: FourStatePiece): boolean {
+    public isReachable(piece: FourStatePiece): boolean {
         return piece.isReachable();
     }
 

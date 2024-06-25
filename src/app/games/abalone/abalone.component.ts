@@ -237,7 +237,7 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneRules,
         }
     }
 
-    public isBoard(c: FourStatePiece): boolean {
+    public isReachable(c: FourStatePiece): boolean {
         return c !== FourStatePiece.UNREACHABLE;
     }
 

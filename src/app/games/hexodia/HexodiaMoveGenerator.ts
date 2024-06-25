@@ -80,7 +80,7 @@ export class HexodiaMoveGenerator extends MoveGenerator<HexodiaMove, HexodiaStat
         const maxPossibleX: number = usefulCoordTable[0].length - 1;
         const maxPossibleY: number = usefulCoordTable.length - 1;
         //  The magical value  "1" after this line is used to make the generator only include neighboring coord
-        // Modifying it to 2 could make it included furter moves
+        // Modifying it to 2 could make it include furter moves
         const minX: number = Math.max(0, coord.x - 1);
         const minY: number = Math.max(0, coord.y - 1);
         const maxX: number = Math.min(maxPossibleX, coord.x + 1);

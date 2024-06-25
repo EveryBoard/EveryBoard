@@ -13,7 +13,7 @@
     />
 
     <g *ngFor="let coordAndContent of getState().getCoordsAndContents()">
-        <g *ngIf="isBoard(coordAndContent.content)"
+        <g *ngIf="isReachable(coordAndContent.content)"
            [attr.transform]="getHexaCenterTranslationAt(coordAndContent.coord)">
             <polygon id="space_{{ coordAndContent.coord.x }}_{{ coordAndContent.coord.y }}"
                      (click)="onSpaceClick(coordAndContent.coord)"

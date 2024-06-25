@@ -1,10 +1,9 @@
-import { MGPMap, Set, Utils } from '@everyboard/lib';
+import { MGPMap, Utils } from '@everyboard/lib';
 import { BoardValue } from './AI/BoardValue';
 import { Coord } from './Coord';
 import { Direction } from './Direction';
 import { GameStateWithTable } from './state/GameStateWithTable';
 import { Player, PlayerOrNone } from './Player';
-import { Vector } from './Vector';
 import { Ordinal } from './Ordinal';
 
 export class AbstractNInARowHelper<T extends NonNullable<unknown>, D extends Direction = Ordinal> {
@@ -15,16 +14,13 @@ export class AbstractNInARowHelper<T extends NonNullable<unknown>, D extends Dir
                        private readonly N: number,
                        private readonly directions: ReadonlyArray<D>)
     {
-        // The aim of this coord is to count down and up as only one "double direction"
-        const doubleVectors: Vector[] = [];
+        // The aim of this loop is to count down and up as only one "double direction"
         const doubleDirections: D[] = [];
         for (const direction of directions) {
-            const vector: Vector = direction.toMinimalVector();
-            const reversedVector: Vector = new Vector(- vector.x, - vector.y);
-            if (doubleVectors.includes(direction) || doubleVectors.includes(reversedVector)) {
+            direction.getOpposite();
+            if (doubleDirections.includes(direction) || doubleDirections.includes(direction.getOpposite())) {
                 continue;
             } else {
-                doubleVectors.push(vector);
                 doubleDirections.push(direction);
             }
         }
