@@ -139,6 +139,14 @@ jobs:
           python-version: '3.10'
       - name: Install python dependencies
         run: pip install --upgrade selenium requests killport
+      - name: Setup OCaml
+        uses: ocaml/setup-ocaml@v2
+        with:
+          ocaml-compiler: 5.1
+      - name: Install OCaml dependencies
+        run: cd backend && opam install . --deps-only --with-test
+      - name: Build
+        run: cd backend && make
       - name: Run e2e tests
         run: npm run e2e
 
