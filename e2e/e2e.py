@@ -205,6 +205,11 @@ class PlayerDriver():
         # Player 2 joins the part
         opponent.click('#seeGameList')
         opponent.click('#part-of-{}'.format(self.username))
+        print(opponent.driver.find_element(By.CSS_SELECTOR, 'body').get_attribute('innerHTML'))
+        opponent.ensure_no_errors()
+
+        print(self.driver.find_element(By.CSS_SELECTOR, 'body').get_attribute('innerHTML'))
+        self.ensure_no_errors()
 
         # Player 1 sees player 2 arrive and selects them
         self.click('#presenceOf_{}'.format(opponent.username))
@@ -571,7 +576,7 @@ def can_hard_draw(user1, user2):
     for cols_to_play in cols:
         play(user1, cols_to_play[0])
         play(user2, cols_to_play[1])
-    print(user1.driver.find_element(By.CSS_SELECTOR, 'body').get_attribute('innerHTML'))
+    #print(user1.driver.find_element(By.CSS_SELECTOR, 'body').get_attribute('innerHTML'))
     print('a')
     play(user1, 6)
     print('b')
