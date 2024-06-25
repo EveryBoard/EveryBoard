@@ -81,7 +81,7 @@ module Make (External : External.EXTERNAL) (Jwt : Jwt.JWT) : TOKEN_REFRESHER = s
 
     let middleware = fun (service_account_file : string) : Dream.middleware ->
         let service_account =
-            if !Options.emulator
+            if !Options.emulator = false
             then Some (read_service_account_from_file service_account_file)
             else None in
         let token_ref = ref None in
