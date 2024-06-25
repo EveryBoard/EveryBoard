@@ -204,7 +204,7 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
         return GameInfo.getStateProvider(this.getGameUrlName());
     }
 
-    private async doAIMove(playingAI: AbstractAI, options: AIOptions): Promise<MGPValidation> {
+    public async doAIMove(playingAI: AbstractAI, options: AIOptions): Promise<MGPValidation> {
         // called only when it's AI's Turn
         const ruler: SuperRules<Move, GameState, RulesConfig, unknown> = this.gameComponent.rules;
         const config: MGPOptional<RulesConfig> = await this.getConfig();
