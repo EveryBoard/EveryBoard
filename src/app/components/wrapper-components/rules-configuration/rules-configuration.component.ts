@@ -55,14 +55,15 @@ export class RulesConfigurationComponent extends BaseWrapperComponent implements
         if (this.isCustomisable()) {
             const defaultConfig: NamedRulesConfig<RulesConfig> = this.rulesConfigDescription.getDefaultConfig();
             this.setChosenConfig(defaultConfig.name());
-            // TODO if (this.userIsCreator) {
-            // TODO     this.setConfigDemo(defaultConfig.config);
-            // TODO } else {
-            // TODO     const configToDisplay: RulesConfig = Utils.getNonNullable(this.rulesConfigToDisplay);
-            // TODO     this.setConfigDemo(configToDisplay);
-            // TODO }
         } else {
             return this.updateCallback.emit(MGPOptional.of({}));
+        }
+    }
+
+    private assertParamsAreCoherent(): void {
+        if (this.userIsCreator === false) {
+            Utils.assert(this.rulesConfigToDisplay != null,
+                         'Config should be provided to non-creator in RulesConfigurationComponent');
         }
     }
 
@@ -77,13 +78,6 @@ export class RulesConfigurationComponent extends BaseWrapperComponent implements
             group[parameterName] = this.getFormControl(value, configurable);
         });
         this.rulesConfigForm = new FormGroup(group);
-    }
-
-    private assertParamsAreCoherent(): void {
-        if (this.userIsCreator === false) {
-            Utils.assert(this.rulesConfigToDisplay != null,
-                         'Config should be provided to non-creator in RulesConfigurationComponent');
-        }
     }
 
     private getRulesConfigDescriptionValue(name: string, defaultValue: ConfigDescriptionType): ConfigDescriptionType {
@@ -174,13 +168,14 @@ export class RulesConfigurationComponent extends BaseWrapperComponent implements
         } else {
             config = this.rulesConfigDescription.getConfig(this.chosenConfigName);
             this.generateForm(config, false);
-            this.updateCallback.emit(MGPOptional.of(config)); // As standard config are always legal
+            // Emit the config directly because standard config are always legal
+            this.updateCallback.emit(MGPOptional.of(config));
         }
     }
 
     public isCustomisable(): boolean {
-        // TODO: is this needed?
         if (this.rulesConfigDescriptionOptional.isAbsent()) {
+            // This game has no configurability, so no need to show  this component
             return false;
         } else {
             Utils.assert(this.rulesConfigDescriptionOptional.get().getFields().length > 0,
