@@ -421,6 +421,7 @@ def can_reload_part_creation(user):
     user.click('#launchGame')
     print('1')
     time.sleep(1)
+    user.ensure_no_errors()
     print(user.driver.find_element(By.CSS_SELECTOR, 'body').get_attribute('innerHTML'))
     user.wait_for('#partCreation')
     print('2')
