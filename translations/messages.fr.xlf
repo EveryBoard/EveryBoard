@@ -1617,8 +1617,8 @@
         <source>Next turns</source>
         <target>Les tours suivant</target>
       </trans-unit>
-      <trans-unit id="5093813740736801001" datatype="html">
-        <source>On all following turns, the players play two pieces, until victory or draw is reached.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Light, do the winning move.</source>
+      <trans-unit id="4174912343371620775" datatype="html">
+        <source>On all following turns, the players play two pieces, until a victory or a draw is reached.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Light, do the winning move.</source>
         <target>Pour tous les tours qui suivent, les joueurs placent deux pièces.&lt;br/&gt;&lt;br/&gt;Vous jouez Clair, faites le mouvement gagnant.</target>
       </trans-unit>
       <trans-unit id="4237198021995785268" datatype="html">

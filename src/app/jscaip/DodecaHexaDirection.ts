@@ -79,11 +79,7 @@ export class DodecaHexaDirection extends Direction {
         }
     }
 
-    private constructor(x: number, y: number) {
-        super(x, y);
-    }
-
-    public getOpposite(): this {
+    public override getOpposite(): this {
         const opposite: MGPFallible<DodecaHexaDirection> = DodecaHexaDirection.factory.from(-this.x, -this.y);
         return opposite.get() as this;
     }

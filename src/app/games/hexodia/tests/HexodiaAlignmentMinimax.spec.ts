@@ -9,6 +9,7 @@ import { Minimax } from 'src/app/jscaip/AI/Minimax';
 import { AIDepthLimitOptions } from 'src/app/jscaip/AI/AI';
 import { HexodiaAlignmentMinimax } from '../HexodiaAlignmentMinimax';
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
+import { SlowTest, minimaxTest } from 'src/app/utils/tests/TestUtils.spec';
 
 describe('HexodiaAlignmentMinimax', () => {
 
@@ -123,6 +124,17 @@ describe('HexodiaAlignmentMinimax', () => {
 
         // Then the minimax level two should block
         expect(bestMove).toEqual(HexodiaMove.of([new Coord(1, 18), new Coord(6, 18)]));
+    });
+
+    SlowTest.it('should be able play against itself', () => {
+        const rules: HexodiaRules = HexodiaRules.get();
+        minimaxTest({
+            rules,
+            minimax,
+            options: level1,
+            config: defaultConfig,
+            shouldFinish: true,
+        });
     });
 
 });

@@ -31,7 +31,7 @@ export class HexodiaTutorial extends Tutorial {
         ),
         TutorialStep.fromMove(
             $localize`Next turns`,
-            $localize`On all following turns, the players play two pieces, until victory or draw is reached.<br/><br/>You're playing Light, do the winning move.`,
+            $localize`On all following turns, the players play two pieces, until a victory or a draw is reached.<br/><br/>You're playing Light, do the winning move.`,
             new HexodiaState([
                 [N, N, N, N, N, N, N, N, N, N, N, N, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [N, N, N, N, N, N, N, N, N, N, N, _, _, _, _, _, _, _, _, _, _, _, _, _, _],

@@ -19,7 +19,6 @@ describe('HexodiaMove', () => {
             expect(badInstance.equals(goodInstance)).toBeTrue();
         });
 
-
     });
 
     describe('equals', () => {

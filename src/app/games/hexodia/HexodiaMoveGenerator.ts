@@ -46,11 +46,11 @@ export class HexodiaMoveGenerator extends MoveGenerator<HexodiaMove, HexodiaStat
     }
 
     private getAvailableCoords(state: HexodiaState): Coord[] {
-        const usefulCoord: boolean[][] = this.getUsefulCoordsMap(state);
+        const usefulCoordTable: boolean[][] = this.getUsefulCoordsTable(state);
         const availableCoords: Coord[] = [];
         for (const coordAndContent of state.getCoordsAndContents()) {
             const coord: Coord = coordAndContent.coord;
-            if (usefulCoord[coord.y][coord.x] === true && coordAndContent.content === FourStatePiece.EMPTY) {
+            if (usefulCoordTable[coord.y][coord.x] === true && coordAndContent.content === FourStatePiece.EMPTY) {
                 availableCoords.push(coord);
             }
         }
@@ -61,32 +61,33 @@ export class HexodiaMoveGenerator extends MoveGenerator<HexodiaMove, HexodiaStat
      * This function returns a table on which table[y][x] === true only if:
      *     (x, y) is empty but has occupied neighbors
      */
-    private getUsefulCoordsMap(state: HexodiaState): boolean[][] {
+    private getUsefulCoordsTable(state: HexodiaState): boolean[][] {
         const width: number = state.getWidth();
         const height: number = state.getHeight();
-        const usefulCoord: boolean[][] = TableUtils.create(width, height, false);
+        const usefulCoordTable: boolean[][] = TableUtils.create(width, height, false);
         for (const coordAndContent of state.getPlayerCoordsAndContent()) {
-            this.addNeighboringCoord(usefulCoord, coordAndContent.coord);
+            this.addNeighboringCoord(usefulCoordTable, coordAndContent.coord);
         }
-        return usefulCoord;
+        return usefulCoordTable;
     }
 
     /**
      * mark the space neighboring coord as "space that have an occupied neighbor"
-     * @param usefulCoord a map of the board which each space mapped to true if it has an occupied neighbor
+     * @param usefulCoordTable a map of the board which each space mapped to true if it has an occupied neighbor
      * @param coord the coord to add to this map
      */
-    private addNeighboringCoord(usefulCoord: boolean[][], coord: Coord): void {
-        const usefulDistance: number = 1; // At two, it's already too much calculation for the minimax sadly
-        const width: number = usefulCoord[0].length;
-        const height: number = usefulCoord.length;
-        const minX: number = Math.max(0, coord.x - usefulDistance);
-        const minY: number = Math.max(0, coord.y - usefulDistance);
-        const maxX: number = Math.min(width - 1, coord.x + usefulDistance);
-        const maxY: number = Math.min(height - 1, coord.y + usefulDistance);
+    private addNeighboringCoord(usefulCoordTable: boolean[][], coord: Coord): void {
+        const maxPossibleX: number = usefulCoordTable[0].length - 1;
+        const maxPossibleY: number = usefulCoordTable.length - 1;
+        //  The magical value  "1" after this line is used to make the generator only include neighboring coord
+        // Modifying it to 2 could make it included furter moves
+        const minX: number = Math.max(0, coord.x - 1);
+        const minY: number = Math.max(0, coord.y - 1);
+        const maxX: number = Math.min(maxPossibleX, coord.x + 1);
+        const maxY: number = Math.min(maxPossibleY, coord.y + 1);
         for (let y: number = minY; y <= maxY; y++) {
             for (let x: number = minX; x <= maxX; x++) {
-                usefulCoord[y][x] = true;
+                usefulCoordTable[y][x] = true;
             }
         }
     }

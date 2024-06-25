@@ -15,7 +15,7 @@ export class AbstractNInARowHelper<T extends NonNullable<unknown>, D extends Dir
                        private readonly N: number,
                        private readonly directions: ReadonlyArray<D>)
     {
-        // So that left and up are not both encoded as "double direction"
+        // The aim of this coord is to count down and up as only one "double direction"
         const doubleVectors: Vector[] = [];
         const doubleDirections: D[] = [];
         for (const direction of directions) {
