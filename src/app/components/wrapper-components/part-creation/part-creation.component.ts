@@ -356,11 +356,13 @@ export class PartCreationComponent implements OnInit, OnDestroy {
             Debug.display('PartCreationComponent', 'onCurrentConfigRoomUpdate', 'LAST UPDATE : the game is canceled');
             return this.onGameCanceled();
         } else {
-            const oldConfigRoom: ConfigRoom | null = this.currentConfigRoom;
             const configRoom: ConfigRoom = configRoomOpt.get();
+            const oldConfigRoom: ConfigRoom | null = this.currentConfigRoom;
+            console.log(configRoom)
             this.currentConfigRoom = configRoom;
             console.log(configRoom.rulesConfig)
             if (configRoom.rulesConfig !== undefined) {
+                console.log('updating')
                 this.saveRulesConfig(MGPOptional.of(configRoom.rulesConfig));
             }
             // TODO: I can change config after proposing it, it should not be the case
@@ -525,6 +527,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
 
     public saveRulesConfig(rulesConfig: MGPOptional<RulesConfig>): void {
         console.log('saving rules config')
+        console.log(rulesConfig.get())
         this.rulesConfig = rulesConfig;
         this.setConfigDemo(rulesConfig.get());
     }
