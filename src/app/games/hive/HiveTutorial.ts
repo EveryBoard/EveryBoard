@@ -5,7 +5,7 @@ import { Player } from 'src/app/jscaip/Player';
 import { HiveMove } from './HiveMove';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Move } from 'src/app/jscaip/Move';
-import { GameState } from 'src/app/jscaip/GameState';
+import { GameState } from 'src/app/jscaip/state/GameState';
 import { MGPValidation } from '@everyboard/lib';
 import { HiveRules } from './HiveRules';
 import { TutorialStepMessage } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
@@ -85,7 +85,7 @@ export class HiveTutorial extends Tutorial {
             HiveState.fromRepresentation([
                 [[b, Q], [q], [B]],
             ], 2),
-            ['#piece_0_0'],
+            ['#piece-0-0-0'],
             TutorialStepMessage.CONGRATULATIONS(),
             TutorialStepMessage.FAILED_TRY_AGAIN(),
         ),

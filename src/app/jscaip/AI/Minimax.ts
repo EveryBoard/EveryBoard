@@ -1,8 +1,8 @@
 import { AI, AIDepthLimitOptions, MoveGenerator } from './AI';
 import { Move } from '../Move';
 import { BoardValue } from './BoardValue';
-import { ArrayUtils, MGPFallible, MGPOptional, MGPSet, Utils } from '@everyboard/lib';
-import { GameState } from '../GameState';
+import { ArrayUtils, MGPFallible, MGPOptional, Set, Utils } from '@everyboard/lib';
+import { GameState } from '../state/GameState';
 import { Player } from '../Player';
 import { GameStatus } from '../GameStatus';
 import { SuperRules } from '../Rules';
@@ -107,12 +107,9 @@ implements AI<M, S, AIDepthLimitOptions, C>
         if (depth < 1) {
             return node; // leaf by calculation
         } else if (this.rules.getGameStatus(node, config).isEndGame) {
-            console.log(depth, 'turn', node.gameState.turn, 'is endGamed')
             return node; // rules - leaf or calculation - leaf
-        } else {
-            console.log(depth, 'turn', node.gameState.turn, 'is not the end game')
         }
-        const possibleMoves: MGPSet<M> = this.getPossibleMoves(node, config);
+        const possibleMoves: Set<M> = this.getPossibleMoves(node, config);
         Utils.assert(possibleMoves.size() > 0, 'Minimax ' + this.name + ' should give move, received none!');
         const bestChildren: GameNode<M, S>[] = this.getBestChildren(node, possibleMoves, depth, alpha, beta, config);
         const bestChild: GameNode<M, S> = this.getBestChildAmong(bestChildren);
@@ -121,19 +118,19 @@ implements AI<M, S, AIDepthLimitOptions, C>
         return bestChild;
     }
 
-    private getPossibleMoves(node: GameNode<M, S>, config: MGPOptional<C>): MGPSet<M> {
-        const currentMoves: MGPOptional<MGPSet<M>> = this.getMoves(node);
+    private getPossibleMoves(node: GameNode<M, S>, config: MGPOptional<C>): Set<M> {
+        const currentMoves: MGPOptional<Set<M>> = this.getMoves(node);
         if (currentMoves.isAbsent()) {
             const moves: M[] = this.moveGenerator.getListMoves(node, config);
-            this.setMoves(node, new MGPSet(moves));
-            return new MGPSet(moves);
+            this.setMoves(node, new Set(moves));
+            return new Set(moves);
         } else {
             return currentMoves.get();
         }
     }
 
     private getBestChildren(node: GameNode<M, S>,
-                            possibleMoves: MGPSet<M>,
+                            possibleMoves: Set<M>,
                             depth: number,
                             alpha: BoardValue,
                             beta: BoardValue,
@@ -229,11 +226,11 @@ implements AI<M, S, AIDepthLimitOptions, C>
         }
     }
 
-    private setMoves(node: GameNode<M, S>, moves: MGPSet<M>): void {
+    private setMoves(node: GameNode<M, S>, moves: Set<M>): void {
         node.setCache(this.name + '-moves', moves);
     }
 
-    private getMoves(node: GameNode<M, S>): MGPOptional<MGPSet<M>> {
+    private getMoves(node: GameNode<M, S>): MGPOptional<Set<M>> {
         return node.getCache(this.name + '-moves');
     }
 

@@ -1,7 +1,7 @@
 import { GameNode } from 'src/app/jscaip/AI/GameNode';
 import { Move } from './Move';
 import { MGPFallible, MGPOptional, Utils } from '@everyboard/lib';
-import { GameState } from './GameState';
+import { GameState } from './state/GameState';
 import { GameStatus } from './GameStatus';
 import { EmptyRulesConfig, RulesConfig } from './RulesConfigUtil';
 import { RulesConfigDescription } from '../components/wrapper-components/rules-configuration/RulesConfigDescription';
@@ -77,7 +77,7 @@ export abstract class SuperRules<M extends Move,
         }
     }
 
-    public abstract getGameStatus(node: GameNode<M, S>, config?: MGPOptional<C>): GameStatus;
+    public abstract getGameStatus(node: GameNode<M, S>, config: MGPOptional<C>): GameStatus;
 }
 
 export abstract class ConfigurableRules<M extends Move,

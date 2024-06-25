@@ -209,6 +209,7 @@ describe('SixComponent', () => {
             await testUtils.setupState(state);
             await testUtils.expectClickSuccess('#piece_0_2');
             await testUtils.expectClickSuccess('#neighbor_0_-1');
+
             // When the user clicks on an empty space instead of selecting a group
             // Then it should fail
             await testUtils.expectClickFailure('#neighbor_1_-1', SixFailure.MUST_CUT());

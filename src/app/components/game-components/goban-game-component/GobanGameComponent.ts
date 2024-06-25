@@ -1,6 +1,7 @@
+import { Comparable } from '@everyboard/lib';
 import { Move } from '../../../jscaip/Move';
 import { Component } from '@angular/core';
-import { GameStateWithTable } from 'src/app/jscaip/GameStateWithTable';
+import { GameStateWithTable } from 'src/app/jscaip/state/GameStateWithTable';
 import { SuperRules } from 'src/app/jscaip/Rules';
 import { RectangularGameComponent } from '../rectangular-game-component/RectangularGameComponent';
 import { Coord } from 'src/app/jscaip/Coord';
@@ -17,7 +18,7 @@ import { GobanUtils } from 'src/app/jscaip/GobanUtils';
 export abstract class GobanGameComponent<R extends SuperRules<M, S, C, L>,
                                          M extends Move,
                                          S extends GameStateWithTable<P>,
-                                         P,
+                                         P extends NonNullable<Comparable>,
                                          C extends GobanConfig = GobanConfig,
                                          L = void>
     extends RectangularGameComponent<R, M, S, P, C, L>

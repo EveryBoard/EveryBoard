@@ -2,7 +2,7 @@
 import { P4Move } from 'src/app/games/p4/P4Move';
 import { GameNode } from '../AI/GameNode';
 import { Rules } from '../Rules';
-import { GameStateWithTable } from '../GameStateWithTable';
+import { GameStateWithTable } from '../state/GameStateWithTable';
 import { GameStatus } from '../GameStatus';
 import { JSONValue, MGPFallible, MGPOptional, MGPValidation } from '@everyboard/lib';
 import { RulesUtils } from './RulesUtils.spec';
@@ -45,7 +45,7 @@ class AbstractRules extends Rules<P4Move, AbstractState> {
         return MGPValidation.SUCCESS;
     }
 
-    public getGameStatus(_node: AbstractNode): GameStatus {
+    public override getGameStatus(_node: AbstractNode): GameStatus {
         return GameStatus.ONGOING;
     }
 

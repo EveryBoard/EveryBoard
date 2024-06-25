@@ -38,6 +38,7 @@ describe('NewGameComponent', () => {
      *   - `testUtils.expectElementToHaveClass` to check that an existing HTML element has a given CSS class
      */
     it('this test is only there to cover new-game remaining functions', fakeAsync(async() => {
+        // Note: we do not want to use `getGameComponent` in game components tests
         await testUtils.getGameComponent().showLastMove(new NewGameMove());
         testUtils.getGameComponent().cancelMoveAttempt();
         expect(42).toBeGreaterThan(37);

@@ -1,9 +1,10 @@
 import { Coord, CoordFailure } from 'src/app/jscaip/Coord';
 import { Vector } from 'src/app/jscaip/Vector';
 import { Move } from 'src/app/jscaip/Move';
-import { ArrayUtils, Encoder, MGPFallible, MGPOptional, MGPSet, MGPUniqueList, Utils } from '@everyboard/lib';
+import { ArrayUtils, Encoder, MGPFallible, MGPOptional, MGPUniqueList, Utils } from '@everyboard/lib';
 import { LascaFailure } from './LascaFailure';
 import { LascaState } from './LascaState';
+import { CoordSet } from 'src/app/jscaip/CoordSet';
 
 export class LascaMove extends Move {
 
@@ -12,7 +13,7 @@ export class LascaMove extends Move {
     }
 
     public static fromCapture(coords: Coord[]): MGPFallible<LascaMove> {
-        const jumpsValidity: MGPFallible<MGPSet<Coord>> = LascaMove.getSteppedOverCoords(coords);
+        const jumpsValidity: MGPFallible<CoordSet> = LascaMove.getSteppedOverCoords(coords);
         if (jumpsValidity.isSuccess()) {
             return MGPFallible.success(new LascaMove(coords, false));
         } else {
@@ -20,9 +21,9 @@ export class LascaMove extends Move {
         }
     }
 
-    public static getSteppedOverCoords(steppedOn: Coord[]): MGPFallible<MGPSet<Coord>> {
+    public static getSteppedOverCoords(steppedOn: Coord[]): MGPFallible<CoordSet> {
         let lastCoordOpt: MGPOptional<Coord> = MGPOptional.empty();
-        const jumpedOverCoords: MGPSet<Coord> = new MGPSet();
+        let jumpedOverCoords: CoordSet = new CoordSet();
         for (const coord of steppedOn) {
             if (LascaState.isNotOnBoard(coord)) {
                 return MGPFallible.failure(CoordFailure.OUT_OF_RANGE(coord));
@@ -37,7 +38,7 @@ export class LascaMove extends Move {
                 if (jumpedOverCoords.contains(jumpedOverCoord)) {
                     return MGPFallible.failure(LascaFailure.CANNOT_CAPTURE_TWICE_THE_SAME_COORD());
                 }
-                jumpedOverCoords.add(jumpedOverCoord);
+                jumpedOverCoords = jumpedOverCoords.addElement(jumpedOverCoord);
             }
             lastCoordOpt = MGPOptional.of(coord);
         }
@@ -104,7 +105,7 @@ export class LascaMove extends Move {
         return this.coords.getFromEnd(0);
     }
 
-    public getCapturedCoords(): MGPFallible<MGPSet<Coord>> {
+    public getCapturedCoords(): MGPFallible<CoordSet> {
         return LascaMove.getSteppedOverCoords(this.coords.toList());
     }
 

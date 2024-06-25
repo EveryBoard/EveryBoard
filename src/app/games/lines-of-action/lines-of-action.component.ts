@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { RectangularGameComponent } from 'src/app/components/game-components/rectangular-game-component/RectangularGameComponent';
 import { Coord } from 'src/app/jscaip/Coord';
 import { PlayerOrNone } from 'src/app/jscaip/Player';
@@ -10,12 +10,11 @@ import { LinesOfActionState } from './LinesOfActionState';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { MCTS } from 'src/app/jscaip/AI/MCTS';
-import { LinesOfActionHeuristic } from './LinesOfActionHeuristic';
 import { LinesOfActionMoveGenerator } from './LinesOfActionMoveGenerator';
-import { Minimax } from 'src/app/jscaip/AI/Minimax';
+import { LinesOfActionMinimax } from './LinesOfActionMinimax';
 
 @Component({
-    selector: 'app-linesofaction',
+    selector: 'app-lines-of-action',
     templateUrl: './lines-of-action.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
 })
@@ -31,11 +30,11 @@ export class LinesOfActionComponent extends RectangularGameComponent<LinesOfActi
     private lastMoved: Coord[] = [];
     private captured: MGPOptional<Coord> = MGPOptional.empty();
 
-    public constructor(messageDisplayer: MessageDisplayer) {
-        super(messageDisplayer);
+    public constructor(messageDisplayer: MessageDisplayer, cdr: ChangeDetectorRef) {
+        super(messageDisplayer, cdr);
         this.setRulesAndNode('LinesOfAction');
         this.availableAIs = [
-            new Minimax($localize`Minimax`, this.rules, new LinesOfActionHeuristic(), new LinesOfActionMoveGenerator()),
+            new LinesOfActionMinimax(),
             new MCTS($localize`MCTS`, new LinesOfActionMoveGenerator(), this.rules),
         ];
         this.encoder = LinesOfActionMove.encoder;

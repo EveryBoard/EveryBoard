@@ -39,7 +39,7 @@ describe('SixRules', () => {
             // When dropping a piece on another
             const move: SixMove = SixMove.ofDrop(new Coord(1, 1));
 
-            // Then it should fail
+            // Then the move should be illegal
             const reason: string = RulesFailure.MUST_LAND_ON_EMPTY_SPACE();
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
@@ -56,7 +56,7 @@ describe('SixRules', () => {
             // When dropping a piece on another
             const move: SixMove = SixMove.ofMovement(new Coord(0, 0), new Coord(1, 1));
 
-            // Then it should fail
+            // Then the move should be illegal
             const reason: string = RulesFailure.MUST_LAND_ON_EMPTY_SPACE();
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
@@ -73,7 +73,7 @@ describe('SixRules', () => {
             // When dropping on a legal landing coord
             const move: SixMove = SixMove.ofDrop(new Coord(0, 1));
 
-            // Then it should fail
+            // Then the move should be illegal
             const reason: string = SixFailure.CAN_NO_LONGER_DROP();
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
@@ -110,7 +110,7 @@ describe('SixRules', () => {
             // When dropping a piece on a coord neighbor to no pieces
             const move: SixMove = SixMove.ofDrop(new Coord(0, 0));
 
-            // Then it should fail
+            // Then the move should be illegal
             const reason: string = SixFailure.MUST_DROP_NEXT_TO_OTHER_PIECE();
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
@@ -131,7 +131,7 @@ describe('SixRules', () => {
             // When doing a movement
             const move: SixMove = SixMove.ofMovement(new Coord(1, 2), new Coord(3, 0));
 
-            // Then it should fail
+            // Then the move should be illegal
             const reason: string = SixFailure.NO_MOVEMENT_BEFORE_TURN_40();
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
@@ -148,7 +148,7 @@ describe('SixRules', () => {
             // When trying to move an opponent piece
             const move: SixMove = SixMove.ofMovement(new Coord(0, 2), new Coord(2, 1));
 
-            // Then it should fail
+            // Then the move should be illegal
             const reason: string = RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT();
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
@@ -165,7 +165,7 @@ describe('SixRules', () => {
             // When trying to move empty piece
             const move: SixMove = SixMove.ofMovement(new Coord(0, 0), new Coord(2, 1));
 
-            // Then it should fail
+            // Then the move should be illegal
             const reason: string = RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY();
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
@@ -182,7 +182,7 @@ describe('SixRules', () => {
             // When moving a piece on a space that only that piece neighbored
             const move: SixMove = SixMove.ofMovement(new Coord(1, 2), new Coord(2, 2));
 
-            // Then it should fail
+            // Then the move should be illegal
             const reason: string = SixFailure.MUST_DROP_NEXT_TO_OTHER_PIECE();
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
@@ -231,7 +231,7 @@ describe('SixRules', () => {
             // When doing that move without choosing which half to keep
             const move: SixMove = SixMove.ofMovement(new Coord(2, 2), new Coord(4, 3));
 
-            // Then it should fail
+            // Then the move should be illegal
             const reason: string = SixFailure.MUST_CUT();
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
@@ -250,7 +250,7 @@ describe('SixRules', () => {
             // When doing that cut but mentionning a group to keep
             const move: SixMove = SixMove.ofCut(new Coord(2, 2), new Coord(4, 3), new Coord(0, 0));
 
-            // Then it should fail
+            // Then the move should be illegal
             const reason: string = SixFailure.CANNOT_CHOOSE_TO_KEEP();
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
@@ -269,7 +269,7 @@ describe('SixRules', () => {
             // When doing it and mentionning empty space to keep
             const move: SixMove = SixMove.ofCut(new Coord(2, 2), new Coord(4, 4), new Coord(4, 0));
 
-            // Then it should fail
+            // Then the move should be illegal
             const reason: string = SixFailure.CANNOT_KEEP_EMPTY_COORD();
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
@@ -288,7 +288,7 @@ describe('SixRules', () => {
             // When choosing that small group
             const move: SixMove = SixMove.ofCut(new Coord(2, 2), new Coord(4, 2), new Coord(4, 2));
 
-            // Then it should fail
+            // Then the move should be illegal
             const reason: string = SixFailure.MUST_CAPTURE_BIGGEST_GROUPS();
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });

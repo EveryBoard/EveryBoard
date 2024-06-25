@@ -301,7 +301,7 @@ export abstract class TaflRules<M extends TaflMove> extends ConfigurableRules<M,
         return new TaflState(board, turn + 1);
     }
 
-    public getGameStatus(node: TaflNode<M>, optionalConfig: MGPOptional<TaflConfig>): GameStatus {
+    public override getGameStatus(node: TaflNode<M>, optionalConfig: MGPOptional<TaflConfig>): GameStatus {
         const state: TaflState = node.gameState;
         const config: TaflConfig = optionalConfig.get();
 

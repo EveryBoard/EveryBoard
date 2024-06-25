@@ -6,12 +6,12 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { ActivatedRoute, Route, Router } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { GameState } from '../../jscaip/GameState';
+import { GameState } from '../../jscaip/state/GameState';
 import { Move } from '../../jscaip/Move';
 import { AppModule } from '../../app.module';
 import { UserDAO } from '../../dao/UserDAO';
 import { ConnectedUserService, AuthUser } from '../../services/ConnectedUserService';
-import { GameNode } from '../../jscaip/AI/GameNode';
+import { GameNode, GameNodeStats } from '../../jscaip/AI/GameNode';
 import { GameWrapper } from '../../components/wrapper-components/GameWrapper';
 import { ConnectedUserServiceMock } from '../../services/tests/ConnectedUserService.spec';
 import { OnlineGameWrapperComponent }
@@ -44,6 +44,16 @@ import { GameInfo } from 'src/app/components/normal-component/pick-game/pick-gam
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { Player } from 'src/app/jscaip/Player';
 import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { TestVars } from 'src/TestVars.spec';
+import { Minimax } from 'src/app/jscaip/AI/Minimax';
+import { AIDepthLimitOptions } from 'src/app/jscaip/AI/AI';
+import { SuperRules } from 'src/app/jscaip/Rules';
+import { GameServiceMock } from 'src/app/services/tests/GameServiceMock.spec';
+import { GameService } from 'src/app/services/GameService';
+import { ConfigRoomService } from 'src/app/services/ConfigRoomService';
+import { ServerTimeService } from 'src/app/services/ServerTimeService';
+import { ServerTimeServiceMock } from 'src/app/services/tests/ServerTimeServiceMock.spec';
+import { ConfigRoomServiceMock } from 'src/app/services/tests/ConfigRoomServiceMock.spec';
 
 @Component({})
 export class BlankComponent {}
@@ -137,7 +147,7 @@ export class SimpleComponentTestUtils<T> {
 
     private failOn(typeOfMessage: string): (message: string) => void {
         return (message: string) => {
-            fail(`MessageDisplayer: ${typeOfMessage} was called with '${message}' but no toast was expected, use expectToToast!`);
+            fail(`MessageDisplayer: ${typeOfMessage} was called with '${message}' but no toast was expected, use expectToDisplay"!`);
         };
     }
 
@@ -175,10 +185,6 @@ export class SimpleComponentTestUtils<T> {
     : Promise<void>
     {
         const element: DebugElement = this.findElement(elementName);
-        expect(element).withContext(`${elementName} should exist on the page`).toBeTruthy();
-        if (element == null) {
-            return;
-        }
         element.triggerEventHandler('click', null);
         if (awaitStability) {
             await this.whenStable();
@@ -194,9 +200,17 @@ export class SimpleComponentTestUtils<T> {
         this.detectChanges();
     }
 
+    // Find a unique element given a CSS selector
     public findElement(elementName: string): DebugElement {
         this.forceChangeDetection();
-        return this.fixture.debugElement.query(By.css(elementName));
+        const elements: DebugElement[] = this.fixture.debugElement.queryAll(By.css(elementName));
+        expect(elements.length)
+            .withContext(`element should exist but does not: ${elementName}`)
+            .toBeGreaterThan(0);
+        expect(elements.length)
+            .withContext(`findElement with id as argument expects a unique result, but got ${elements.length} results instead for element '${elementName}'`)
+            .toBe(1);
+        return elements[0];
     }
 
     public findElements(elementName: string): DebugElement[] {
@@ -204,23 +218,40 @@ export class SimpleComponentTestUtils<T> {
     }
 
     public findElementByDirective(directive: Type<unknown>): DebugElement {
-        return this.fixture.debugElement.query(By.directive(directive));
+        const element: DebugElement = this.fixture.debugElement.query(By.directive(directive));
+        expect(element)
+            .withContext(`element with directive '${directive}' should exist`)
+            .not.toBeNull();
+        return element;
     }
 
-    public expectElementToHaveClass(elementName: string, cssClass: string): void {
-        const element: DebugElement = this.findElement(elementName);
-        expect(element).withContext(`${elementName} should exist`).toBeTruthy();
-        expect(element.attributes.class).withContext(`${elementName} should have a class attribute`).toBeTruthy();
-        expect(element.attributes.class).withContext(`${elementName} should have a class attribute`).not.toEqual('');
+    public expectElementToHaveClass(elementId: string, cssClass: string): void {
+        const element: DebugElement = this.findElement(elementId);
+        expect(element.attributes.class).withContext(`${elementId} should have a class attribute`).toBeTruthy();
+        expect(element.attributes.class).withContext(`${elementId} should have a class attribute`).not.toEqual('');
         if (element.attributes.class != null && element.attributes.class !== '') {
             const elementClasses: string[] = element.attributes.class.split(' ').sort();
-            expect(elementClasses).withContext(`${elementName} should contain CSS class ${cssClass}`).toContain(cssClass);
+            expect(elementClasses).withContext(`${elementId} should contain CSS class ${cssClass}`).toContain(cssClass);
+        }
+    }
+
+    public expectElementsToHaveClass(selector: string, cssClass: string): void {
+        const elements: DebugElement[] = this.fixture.debugElement.queryAll(By.css(selector));
+        expect(elements.length)
+            .withContext('expectElementsToHaveClass expects to check multiple elements')
+            .toBeGreaterThan(1);
+        for (const element of elements) {
+            expect(element.attributes.class).withContext(`${selector} should have a class attribute`).toBeTruthy();
+            expect(element.attributes.class).withContext(`${selector} should have a class attribute`).not.toEqual('');
+            if (element.attributes.class != null && element.attributes.class !== '') {
+                const elementClasses: string[] = element.attributes.class.split(' ').sort();
+                expect(elementClasses).withContext(`${selector} should contain CSS class ${cssClass}`).toContain(cssClass);
+            }
         }
     }
 
     public expectElementNotToHaveClass(elementName: string, cssClass: string): void {
         const element: DebugElement = this.findElement(elementName);
-        expect(element).withContext(`${elementName} should exist`).toBeTruthy();
         if (element.attributes.class != null) {
             const elementClasses: string[] = element.attributes.class.split(' ').sort();
             expect(elementClasses).withContext(`${elementName} should not contain CSS class ${cssClass}`).not.toContain(cssClass);
@@ -237,37 +268,35 @@ export class SimpleComponentTestUtils<T> {
     }
 
     public expectElementNotToExist(elementName: string): void {
-        const element: DebugElement = this.findElement(elementName);
+        this.forceChangeDetection();
+        const isValidElementName: boolean =
+            elementName.startsWith('#') || elementName.startsWith('.') || elementName.startsWith('app-');
+        expect(isValidElementName).withContext(`${elementName} should be an HTML element name (id, class, or app-)`).toBeTrue();
+        const element: DebugElement | null = this.fixture.debugElement.query(By.css(elementName));
         expect(element).withContext(`${elementName} should not exist`).toBeNull();
     }
 
-    public expectElementToExist(elementName: string): DebugElement {
-        const element: DebugElement = this.findElement(elementName);
-        expect(element).withContext(`${elementName} should exist`).toBeTruthy();
-        return element;
+    public expectElementToExist(elementName: string): void {
+        this.findElement(elementName); // findElement asserts that it should exist (and be unique)
     }
 
     public expectElementToBeEnabled(elementName: string): void {
         const element: DebugElement = this.findElement(elementName);
-        expect(element).withContext(`${elementName} should exist`).toBeTruthy();
-        expect(element.nativeElement.disabled).withContext(elementName + ' should be enabled').toBeFalsy();
+        expect(element.nativeElement.disabled).withContext(`${elementName} should be enabled`).toBeFalsy();
     }
 
     public expectElementToBeDisabled(elementName: string): void {
         const element: DebugElement = this.findElement(elementName);
-        expect(element).withContext(`${elementName} should exist`).toBeTruthy();
         expect(element.nativeElement.disabled).withContext(`${elementName} should be disabled`).toBeTruthy();
     }
 
     public expectTextToBe(elementName: string, expectedText: string): void {
         const element: DebugElement = this.findElement(elementName);
-        expect(element).withContext(`${elementName} should exist`).toBeTruthy();
         expect(element.nativeNode.innerHTML).toEqual(expectedText);
     }
 
     public fillInput(elementName: string, value: string): void {
         const element: DebugElement = this.findElement(elementName);
-        expect(element).withContext(`${elementName} should exist in order to fill its value`).toBeTruthy();
         element.nativeElement.value = value;
         element.nativeElement.dispatchEvent(new Event('input'));
     }
@@ -413,7 +442,7 @@ export class ComponentTestUtils<C extends AbstractGameComponent, P extends Compa
                 new GameNode(previousState)),
             MGPOptional.ofNullable(params.previousMove),
         );
-        await this.gameComponent.updateBoard(false);
+        await this.gameComponent.updateBoardAndRedraw(false);
         if (params.previousMove !== undefined) {
             await this.gameComponent.showLastMove(params.previousMove, config);
         }
@@ -440,8 +469,12 @@ export class ComponentTestUtils<C extends AbstractGameComponent, P extends Compa
      * @param nameInHtml The real name (id) of the element in the XML
      * @param nameInFunction Its name inside the code
      */
-    public async expectClickSuccessWithAsymmetricNaming(nameInHtml: string, nameInFunction: string): Promise<void> {
-        await this.expectInterfaceClickSuccess(nameInHtml);
+    public async expectClickSuccessWithAsymmetricNaming(nameInHtml: string,
+                                                        nameInFunction: string,
+                                                        context?: string)
+    : Promise<void>
+    {
+        await this.expectInterfaceClickSuccess(nameInHtml, context);
         expect(this.canUserPlaySpy).toHaveBeenCalledOnceWith(nameInFunction);
         this.canUserPlaySpy.calls.reset();
     }
@@ -454,12 +487,14 @@ export class ComponentTestUtils<C extends AbstractGameComponent, P extends Compa
         expect(transform.matrix.f).toBe(y);
     }
 
-    public async expectClickSuccess(elementName: string): Promise<void> {
-        return this.expectClickSuccessWithAsymmetricNaming(elementName, elementName);
+    public async expectClickSuccess(elementName: string, context?: string): Promise<void> {
+        return this.expectClickSuccessWithAsymmetricNaming(elementName, elementName, context);
     }
 
-    public async expectInterfaceClickSuccess(elementName: string, waitInMs?: number): Promise<void> {
-        const context: string = 'expectInterfaceClickSuccess(' + elementName + ')';
+    public async expectInterfaceClickSuccess(elementName: string, context?: string, waitInMs?: number): Promise<void> {
+        if (context == null) {
+            context = 'expectInterfaceClickSuccess(' + elementName + ')';
+        }
         await this.clickElement(elementName, false, waitInMs);
 
         expect(this.cancelMoveSpy).withContext(context).not.toHaveBeenCalledWith();
@@ -619,6 +654,9 @@ export class ConfigureTestingModuleUtils {
                 { provide: ConfigRoomDAO, useClass: ConfigRoomDAOMock },
                 { provide: PartDAO, useClass: PartDAOMock },
                 { provide: ErrorLoggerService, useClass: ErrorLoggerServiceMock },
+                { provide: GameService, useClass: GameServiceMock },
+                { provide: ConfigRoomService, useClass: ConfigRoomServiceMock },
+                { provide: ServerTimeService, useClass: ServerTimeServiceMock },
             ],
         }).compileComponents();
     }
@@ -655,6 +693,9 @@ export class ConfigureTestingModuleUtils {
                 { provide: ConnectedUserService, useClass: ConnectedUserServiceMock },
                 { provide: CurrentGameService, useClass: CurrentGameServiceMock },
                 { provide: ErrorLoggerService, useClass: ErrorLoggerServiceMock },
+                { provide: GameService, useClass: GameServiceMock },
+                { provide: ConfigRoomService, useClass: ConfigRoomServiceMock },
+                { provide: ServerTimeService, useClass: ServerTimeServiceMock },
             ],
         }).compileComponents();
     }
@@ -786,4 +827,70 @@ export function prepareUnsubscribeCheck(service: any, subscribeMethod: string): 
             .withContext('Service should have unsubscribed to ' + subscribeMethod + ' method but did not')
             .toBeTrue();
     };
+}
+
+const regularIt: (name: string, testBody: () => void) => void = it;
+const regularFit: (name: string, testBody: () => void) => void = fit;
+const regularXit: (name: string, testBody: () => void) => void = xit;
+export namespace SlowTest {
+
+    // Run a slow test, only if that option is enabled
+    export function it(name: string, testBody: () => void): void {
+        if (TestVars.slowTests) {
+            regularIt(name, testBody);
+        } else {
+            // Instead of doing nothing when slow tests are disabled, which would result in a potential karma error
+            // ("describe without it"), we use xit
+            regularXit(name, testBody);
+        }
+    }
+
+    // Does a focused test (a fit), and ignores the TestVars.slowTests option
+    export function fit(name: string, testBody: () => void): void {
+        regularFit(name, testBody);
+    }
+
+}
+
+export type MinimaxTestOptions<R extends SuperRules<M, S, C, L>,
+                               M extends Move,
+                               S extends GameState,
+                               C extends RulesConfig,
+                               L> = {
+    rules: R,
+    minimax: Minimax<M, S, C, L>,
+    options: AIDepthLimitOptions,
+    config: MGPOptional<C>,
+    shouldFinish: boolean
+}
+
+/* Run a minimax test by battling it against itself for a number of turns */
+export function minimaxTest<R extends SuperRules<M, S, C, L>,
+                            M extends Move,
+                            S extends GameState,
+                            C extends RulesConfig,
+                            L>(options: MinimaxTestOptions<R, M, S, C, L>): void
+{
+    // Given a component where AI plays against AI
+    let node: GameNode<M, S> = options.rules.getInitialNode(options.config);
+    const limit: number = 10000; // Play for 10 seconds at most
+
+    // When playing the needed number of turns
+    // Then it should not throw errors
+    let turn: number = 0;
+    const start: number = performance.now();
+    const nodesBefore: number = GameNodeStats.createdNodes;
+    while (performance.now() < start + limit && options.rules.getGameStatus(node, options.config).isEndGame === false) {
+        const bestMove: M = options.minimax.chooseNextMove(node, options.options, options.config);
+        expect(bestMove).toBeDefined();
+        node = node.getChild(bestMove).get();
+        turn++;
+    }
+    const seconds: number = (performance.now() - start) / 1000;
+    const nodesCreated: number = GameNodeStats.createdNodes - nodesBefore;
+    console.log(`${turn / seconds} turn/s for ${options.minimax.constructor.name} with ${turn} turns in ${seconds} seconds, created ${nodesCreated} nodes, so ${nodesCreated / seconds} nodes/s`);
+    // And maybe the game needs to be over
+    if (options.shouldFinish) {
+        expect(options.rules.getGameStatus(node, options.config).isEndGame).toBeTrue();
+    }
 }

@@ -96,7 +96,7 @@ describe('SaharaComponent', () => {
             testUtils.expectElementToExist('#possible_landing_5_0');
             testUtils.expectElementToExist('#possible_landing_6_1');
             // and obviously previous highlight removed
-            testUtils.expectElementNotToExist('#chosen_coord_2_0'); // TODO COMMENT IT AT QUENTINZ
+            testUtils.expectElementNotToExist('#chosen_coord_2_0');
             testUtils.expectElementNotToExist('#possible_landing_2_1');
         }));
 

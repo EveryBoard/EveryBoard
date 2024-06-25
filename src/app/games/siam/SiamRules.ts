@@ -584,7 +584,7 @@ export class SiamRules extends ConfigurableRules<SiamMove, SiamState, SiamConfig
         return moves;
     }
 
-    public getGameStatus(node: SiamNode, config: MGPOptional<SiamConfig>): GameStatus {
+    public override getGameStatus(node: SiamNode, config: MGPOptional<SiamConfig>): GameStatus {
         const mountainsInfo: { rows: number[], columns: number[], nbMountain: number } =
             this.getMountainsRowsAndColumns(node.gameState);
 

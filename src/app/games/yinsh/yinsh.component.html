@@ -37,7 +37,7 @@
             </g>
         </g>
     </g>
-    <polygon *ngFor="let coord of selectedCoords.concat(selectedRings)"
+    <polygon *ngFor="let coord of selectedCoords.union(selectedRings)"
              id="selected_{{ coord.x }}_{{ coord.y }}"
              (click)="onClick(coord.x, coord.y)"
              class="base no-fill selected-stroke"
@@ -67,7 +67,7 @@
     <g *ngFor="let player of Player.PLAYERS"
        [attr.transform]="'rotate(' + ((getPointOfView().getValue() + 1) * 180) + ' 532.5 780)'">
         <g *ngFor="let _ of [].constructor(viewInfo.sideRings.get(player)); index as ring">
-            <circle id="player_{{ player.getValue() }}_sideRing_{{ ring + 1 }}"
+            <circle id="{{ player.toString() }}_sideRing_{{ ring + 1 }}"
                     [attr.cx]="(player === Player.ZERO ? 15 : 1050) + (player === Player.ZERO ? 1 : -1) * 1.2 * viewInfo.ringOuterSize * (ring + 1)"
                     [attr.cy]="player === Player.ZERO ? 300 : 1260"
                     [attr.r]="viewInfo.ringOuterSize"

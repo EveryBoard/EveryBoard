@@ -1,8 +1,8 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { GameNode } from 'src/app/jscaip/AI/GameNode';
-import { Rules } from 'src/app/jscaip/Rules';
+import { ConfigurableRules } from 'src/app/jscaip/Rules';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
+import { MGPMap, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 import { CoerceoMove, CoerceoRegularMove, CoerceoTileExchangeMove } from './CoerceoMove';
 import { CoerceoState } from './CoerceoState';
 import { CoerceoFailure } from './CoerceoFailure';
@@ -12,14 +12,27 @@ import { Table } from 'src/app/jscaip/TableUtils';
 import { Debug } from 'src/app/utils/Debug';
 import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 import { Player } from 'src/app/jscaip/Player';
-import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { BooleanConfig, RulesConfigDescription } from 'src/app/components/wrapper-components/rules-configuration/RulesConfigDescription';
+import { CoordSet } from 'src/app/jscaip/CoordSet';
+
+export type CoerceoConfig = {
+    smallBoard: boolean;
+}
 
 export class CoerceoNode extends GameNode<CoerceoMove, CoerceoState> {}
 
 @Debug.log
-export class CoerceoRules extends Rules<CoerceoMove, CoerceoState> {
+export class CoerceoRules extends ConfigurableRules<CoerceoMove, CoerceoState, CoerceoConfig> {
 
     private static singleton: MGPOptional<CoerceoRules> = MGPOptional.empty();
+
+    public static readonly RULES_CONFIG_DESCRIPTION: RulesConfigDescription<CoerceoConfig> =
+        new RulesConfigDescription<CoerceoConfig>({
+            name: (): string => $localize`Coerceo`,
+            config: {
+                smallBoard: new BooleanConfig(false, () => $localize`Use small board`),
+            },
+        });
 
     public static get(): CoerceoRules {
         if (CoerceoRules.singleton.isAbsent()) {
@@ -28,27 +41,48 @@ export class CoerceoRules extends Rules<CoerceoMove, CoerceoState> {
         return CoerceoRules.singleton.get();
     }
 
-    public override getInitialState(): CoerceoState {
+    public override getInitialState(config: MGPOptional<CoerceoConfig>): CoerceoState {
         const _: FourStatePiece = FourStatePiece.EMPTY;
         const N: FourStatePiece = FourStatePiece.UNREACHABLE;
         const O: FourStatePiece = FourStatePiece.ZERO;
         const X: FourStatePiece = FourStatePiece.ONE;
-        const board: Table<FourStatePiece> = [
-            [N, N, N, N, N, N, O, _, O, N, N, N, N, N, N],
-            [N, N, N, _, _, O, _, _, _, O, _, _, N, N, N],
-            [_, X, _, X, _, _, O, _, O, _, _, X, _, X, _],
-            [X, _, _, _, X, _, _, _, _, _, X, _, _, _, X],
-            [_, X, _, X, _, _, _, _, _, _, _, X, _, X, _],
-            [_, O, _, O, _, _, _, _, _, _, _, O, _, O, _],
-            [O, _, _, _, O, _, _, _, _, _, O, _, _, _, O],
-            [_, O, _, O, _, _, X, _, X, _, _, O, _, O, _],
-            [N, N, N, _, _, X, _, _, _, X, _, _, N, N, N],
-            [N, N, N, N, N, N, X, _, X, N, N, N, N, N, N],
-        ];
+        let board: Table<FourStatePiece>;
+        if (config.get().smallBoard) {
+            board = [
+                [N, N, N, N, N, N, N, N, N],
+                [N, N, N, O, _, O, N, N, N],
+                [_, _, O, _, _, _, O, _, _],
+                [_, _, _, O, _, O, _, _, _],
+                [_, _, _, X, _, X, _, _, _],
+                [_, _, X, _, _, _, X, _, _],
+                [N, N, N, X, _, X, N, N, N],
+                [N, N, N, N, N, N, N, N, N],
+            ];
+        } else {
+            board = [
+                [N, N, N, N, N, N, O, _, O, N, N, N, N, N, N],
+                [N, N, N, _, _, O, _, _, _, O, _, _, N, N, N],
+                [_, X, _, X, _, _, O, _, O, _, _, X, _, X, _],
+                [X, _, _, _, X, _, _, _, _, _, X, _, _, _, X],
+                [_, X, _, X, _, _, _, _, _, _, _, X, _, X, _],
+                [_, O, _, O, _, _, _, _, _, _, _, O, _, O, _],
+                [O, _, _, _, O, _, _, _, _, _, O, _, _, _, O],
+                [_, O, _, O, _, _, X, _, X, _, _, O, _, O, _],
+                [N, N, N, _, _, X, _, _, _, X, _, _, N, N, N],
+                [N, N, N, N, N, N, X, _, X, N, N, N, N, N, N],
+            ];
+        }
         return new CoerceoState(board, 0, PlayerNumberMap.of(0, 0), PlayerNumberMap.of(0, 0));
     }
 
-    public override applyLegalMove(move: CoerceoMove, state: CoerceoState, _config: NoConfig, _info: void)
+    public override getRulesConfigDescription(): MGPOptional<RulesConfigDescription<CoerceoConfig>> {
+        return MGPOptional.of(CoerceoRules.RULES_CONFIG_DESCRIPTION);
+    }
+
+    public override applyLegalMove(move: CoerceoMove,
+                                   state: CoerceoState,
+                                   _config: MGPOptional<CoerceoConfig>,
+                                   _info: void)
     : CoerceoState
     {
         if (CoerceoMove.isTileExchange(move)) {
@@ -136,12 +170,13 @@ export class CoerceoRules extends Rules<CoerceoMove, CoerceoState> {
         return MGPValidation.SUCCESS;
     }
 
-    public getGameStatus(node: CoerceoNode): GameStatus {
+    public override getGameStatus(node: CoerceoNode): GameStatus {
         const state: CoerceoState = node.gameState;
-        if (18 <= state.captures.get(Player.ZERO)) {
+        const pieceMap: MGPMap<FourStatePiece, CoordSet> = state.toPieceMap();
+        if (pieceMap.get(FourStatePiece.ONE).isAbsent()) {
             return GameStatus.ZERO_WON;
         }
-        if (18 <= state.captures.get(Player.ONE)) {
+        if (pieceMap.get(FourStatePiece.ZERO).isAbsent()) {
             return GameStatus.ONE_WON;
         }
         return GameStatus.ONGOING;

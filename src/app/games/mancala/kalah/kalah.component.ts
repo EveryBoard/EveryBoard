@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { MancalaMove } from '../common/MancalaMove';
 import { KalahRules } from './KalahRules';
@@ -9,7 +9,6 @@ import { MancalaComponent } from '../common/MancalaComponent';
     selector: 'app-kalah-component',
     templateUrl: './../common/mancala.component.html',
     styleUrls: ['../../../components/game-components/game-component/game-component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class KalahComponent extends MancalaComponent<KalahRules> {
 
