@@ -77,7 +77,7 @@ describe('TrexoRules', () => {
         // When dropping your piece over it
         const move: TrexoMove = TrexoMove.from(new Coord(4, 4), new Coord(4, 3)).get();
 
-        // Then it should fail
+        // Then the move should be illegal
         const reason: string = TrexoFailure.CANNOT_DROP_ON_ONLY_ONE_PIECE();
         RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
     });
@@ -144,7 +144,7 @@ describe('TrexoRules', () => {
         // When trying to drop another piece partially on it, partially on the floor
         const move: TrexoMove = TrexoMove.from(new Coord(4, 4), new Coord(5, 4)).get();
 
-        // Then it should fail
+        // Then the move should be illegal
         const reason: string = TrexoFailure.CANNOT_DROP_PIECE_ON_UNEVEN_GROUNDS();
         RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
     });

@@ -457,7 +457,7 @@ describe('DiaballikComponent', () => {
         await testUtils.setupState(state);
 
         // Then it should display the translation and passes in the color of player 1
-        testUtils.expectElementToHaveClass('#passCountIndicator circle', 'player1-fill');
+        testUtils.expectElementsToHaveClass('#passCountIndicator circle', 'player1-fill');
         testUtils.expectElementToHaveClass('#translationCountIndicator circle', 'player1-fill');
     }));
 

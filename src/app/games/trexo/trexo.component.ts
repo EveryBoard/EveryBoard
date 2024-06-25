@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { TrexoPiece, TrexoPieceStack, TrexoState } from './TrexoState';
 import { TrexoRules } from './TrexoRules';
 import { ModeConfig, ParallelogramGameComponent } from 'src/app/components/game-components/parallelogram-game-component/ParallelogramGameComponent';
@@ -12,10 +12,9 @@ import { Coord3D } from 'src/app/jscaip/Coord3D';
 import { TrexoFailure } from './TrexoFailure';
 import { Ordinal } from 'src/app/jscaip/Ordinal';
 import { MCTS } from 'src/app/jscaip/AI/MCTS';
-import { TrexoAlignmentHeuristic } from './TrexoAlignmentHeuristic';
-import { Minimax } from 'src/app/jscaip/AI/Minimax';
 import { TrexoMoveGenerator } from './TrexoMoveGenerator';
 import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { TrexoAlignmentMinimax } from './TrexoAlignmentMinimax';
 
 interface PieceOnBoard {
 
@@ -80,11 +79,11 @@ export class TrexoComponent extends ParallelogramGameComponent<TrexoRules, Trexo
     public currentOpponentClass: string = 'player1';
     public currentPlayerClass: string = 'player0';
 
-    public constructor(messageDisplayer: MessageDisplayer) {
-        super(messageDisplayer);
+    public constructor(messageDisplayer: MessageDisplayer, cdr: ChangeDetectorRef) {
+        super(messageDisplayer, cdr);
         this.setRulesAndNode('Trexo');
         this.availableAIs = [
-            new Minimax($localize`Alignment`, this.rules, new TrexoAlignmentHeuristic(), new TrexoMoveGenerator()),
+            new TrexoAlignmentMinimax(),
             new MCTS($localize`MCTS`, new TrexoMoveGenerator(), this.rules),
         ];
         this.encoder = TrexoMove.encoder;
@@ -168,9 +167,9 @@ export class TrexoComponent extends ParallelogramGameComponent<TrexoRules, Trexo
             Table3DUtils.create(1, TrexoState.SIZE, TrexoState.SIZE, TrexoComponent.INITIAL_PIECE_ON_BOARD);
         let maxZ: number = 1;
         for (let z: number = 0; z <= maxZ; z++) {
-            for (const stack of this.getState().toMap()) {
-                const coord: Coord = stack.key;
-                const stackHeight: number = stack.value.getHeight();
+            for (const coordAndContent of this.getState().getCoordsAndContents()) {
+                const coord: Coord = coordAndContent.coord;
+                const stackHeight: number = coordAndContent.content.getHeight();
                 maxZ = Math.max(maxZ, stackHeight);
                 if (z < stackHeight) {
                     const move: TrexoMove = this.extractMoveFromState(coord.x, coord.y, z);

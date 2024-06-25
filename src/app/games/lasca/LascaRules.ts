@@ -4,13 +4,14 @@ import { GameNode } from 'src/app/jscaip/AI/GameNode';
 import { Player } from 'src/app/jscaip/Player';
 import { Rules } from 'src/app/jscaip/Rules';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { MGPOptional, MGPSet, MGPValidation } from '@everyboard/lib';
+import { MGPOptional, MGPValidation } from '@everyboard/lib';
 import { LascaMove } from './LascaMove';
 import { LascaFailure } from './LascaFailure';
 import { LascaPiece, LascaStack, LascaState } from './LascaState';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { Table } from 'src/app/jscaip/TableUtils';
 import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { CoordSet } from 'src/app/jscaip/CoordSet';
 
 export class LascaNode extends GameNode<LascaMove, LascaState> {}
 
@@ -184,7 +185,7 @@ export class LascaRules extends Rules<LascaMove, LascaState> {
 
     public isLegalCapture(move: LascaMove, state: LascaState, possibleCaptures: LascaMove[]): MGPValidation {
         const player: Player = state.getCurrentPlayer();
-        const steppedOverCoords: MGPSet<Coord> = move.getCapturedCoords().get();
+        const steppedOverCoords: CoordSet = move.getCapturedCoords().get();
         for (const steppedOverCoord of steppedOverCoords) {
             const steppedOverSpace: LascaStack = state.getPieceAt(steppedOverCoord);
             if (steppedOverSpace.isCommandedBy(player)) {
@@ -201,7 +202,7 @@ export class LascaRules extends Rules<LascaMove, LascaState> {
         }
     }
 
-    public getGameStatus(node: LascaNode): GameStatus {
+    public override getGameStatus(node: LascaNode): GameStatus {
         const state: LascaState = node.gameState;
         const captures: LascaMove[] = this.getCaptures(state);
         if (captures.length > 0 || this.getSteps(state).length > 0) {

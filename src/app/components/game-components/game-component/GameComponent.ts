@@ -2,11 +2,11 @@ import { ActivatedRoute } from '@angular/router';
 
 import { Move } from '../../../jscaip/Move';
 import { SuperRules } from '../../../jscaip/Rules';
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/core';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { TutorialStep } from '../../wrapper-components/tutorial-game-wrapper/TutorialStep';
-import { GameState } from 'src/app/jscaip/GameState';
+import { GameState } from 'src/app/jscaip/state/GameState';
 import { ArrayUtils, Encoder, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 import { GameNode } from 'src/app/jscaip/AI/GameNode';
 import { AI, AIOptions } from 'src/app/jscaip/AI/AI';
@@ -60,7 +60,7 @@ export abstract class BaseWrapperComponent extends BaseComponent {
         super();
     }
 
-    protected getGameName(): string {
+    protected getGameUrlName(): string {
         return Utils.getNonNullable(this.activatedRoute.snapshot.paramMap.get('compo'));
     }
 
@@ -74,6 +74,7 @@ export abstract class BaseWrapperComponent extends BaseComponent {
 @Component({
     template: '',
     styleUrls: ['./game-component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 @Debug.log
 export abstract class GameComponent<R extends SuperRules<M, S, C, L>,
@@ -126,7 +127,7 @@ export abstract class GameComponent<R extends SuperRules<M, S, C, L>,
 
     public state: S;
 
-    public constructor(public readonly messageDisplayer: MessageDisplayer) {
+    public constructor(private readonly messageDisplayer: MessageDisplayer, protected readonly cdr: ChangeDetectorRef) {
         super();
     }
 
@@ -177,6 +178,18 @@ export abstract class GameComponent<R extends SuperRules<M, S, C, L>,
         // Override if move takes more than one click.
     }
 
+    public async updateBoardAndRedraw(triggerAnimation: boolean): Promise<void> {
+        await this.updateBoard(triggerAnimation);
+        this.cdr.detectChanges();
+    }
+
+    public async showLastMoveAndRedraw(): Promise<void> {
+        const move: M = this.node.previousMove.get();
+        const config: MGPOptional<C> = this.getConfig();
+        await this.showLastMove(move, config);
+        this.cdr.detectChanges();
+    }
+
     public abstract updateBoard(triggerAnimation: boolean): Promise<void>;
 
     public async pass(): Promise<MGPValidation> {
@@ -202,6 +215,7 @@ export abstract class GameComponent<R extends SuperRules<M, S, C, L>,
     }
 
     public getPreviousState(): S {
+        Utils.assert(this.node.parent.isPresent(), 'getPreviousState called with no previous state');
         return this.node.parent.get().gameState;
     }
 

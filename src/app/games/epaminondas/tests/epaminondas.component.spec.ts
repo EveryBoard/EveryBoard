@@ -156,8 +156,9 @@ describe('EpaminondasComponent', () => {
             const move: EpaminondasMove = new EpaminondasMove(0, 9, 1, 1, Ordinal.UP);
             await testUtils.expectClickSuccess('#click-0-9');
 
-            // Then it should fail
-            await testUtils.expectMoveFailure('#click-0-8', EpaminondasFailure.PHALANX_SHOULD_BE_GREATER_TO_CAPTURE(), move);
+            // Then the move should be illegal
+            const reason: string = EpaminondasFailure.PHALANX_SHOULD_BE_GREATER_TO_CAPTURE();
+            await testUtils.expectMoveFailure('#click-0-8', reason, move);
         }));
 
         it('should deselect piece when clicking a second time on it', fakeAsync(async() => {
@@ -209,11 +210,11 @@ describe('EpaminondasComponent', () => {
 
     it('should not highlight any piece when observing', fakeAsync(async() => {
         // Given a state with clickable pieces and an observer, i.e., when it is not interactive
-        testUtils.expectElementToExist('.clickable-stroke');
+        testUtils.expectElementToHaveClass('#clickable-0-11', 'clickable-stroke');
         testUtils.getGameComponent().setInteractive(false);
         // When displaying the state
         // Then no coordinate should be clickable
-        testUtils.expectElementNotToExist('.clickable-stroke');
+        testUtils.expectElementNotToExist('#clickable-0-11');
     }));
 
 });

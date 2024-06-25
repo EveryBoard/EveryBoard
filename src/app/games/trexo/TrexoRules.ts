@@ -38,10 +38,10 @@ export class TrexoRules extends Rules<TrexoMove, TrexoState> {
         const victoryOfLastPlayer: Coord[] = [];
         const victoryOfNextPlayer: Coord[] = [];
         const lastPlayer: Player = state.getCurrentOpponent();
-        for (const keyValue of state.toMap()) {
+        for (const coordAndContent of state.getCoordsAndContents()) {
             // for every column, starting from the bottom of each column
             // while we haven't reached the top or an empty space
-            const coord: Coord = keyValue.key;
+            const coord: Coord = coordAndContent.coord;
             const pieceOwner: PlayerOrNone = state.getPieceAt(coord).getOwner();
             if (pieceOwner.isPlayer()) {
                 const squareScore: number = TrexoRules.getSquareScore(state, coord);
@@ -98,15 +98,15 @@ export class TrexoRules extends Rules<TrexoMove, TrexoState> {
         return zeroSpace.getUpperTileId() === oneSpace.getUpperTileId();
     }
 
-    public getGameStatus(node: TrexoNode): GameStatus {
+    public override getGameStatus(node: TrexoNode): GameStatus {
         const state: TrexoState = node.gameState;
         const lastPlayer: Player = state.getCurrentOpponent();
         let lastPlayerAligned5: boolean = false;
-        for (const keyValue of state.toMap()) {
+        for (const coordAndContent of state.getCoordsAndContents()) {
             // for every column, starting from the bottom of each column
             // while we haven't reached the top or an empty space
-            const coord: Coord = keyValue.key;
-            const pieceOwner: PlayerOrNone = state.getPieceAt(coord).getOwner();
+            const coord: Coord = coordAndContent.coord;
+            const pieceOwner: PlayerOrNone = coordAndContent.content.getOwner();
             if (pieceOwner.isPlayer()) {
                 const squareScore: number = TrexoRules.getSquareScore(state, coord);
                 if (BoardValue.isVictory(squareScore)) {
@@ -128,8 +128,8 @@ export class TrexoRules extends Rules<TrexoMove, TrexoState> {
 
     public getLegalMoves(state: TrexoState): TrexoMove[] {
         const moves: TrexoMove[] = [];
-        for (const keyValue of state.toMap()) {
-            const upOrleftCord: Coord = keyValue.key;
+        for (const coordAndContent of state.getCoordsAndContents()) {
+            const upOrleftCord: Coord = coordAndContent.coord;
             if (upOrleftCord.x + 1 < TrexoState.SIZE) {
                 const rightCoord: Coord = new Coord(upOrleftCord.x + 1, upOrleftCord.y);
                 moves.push(...this.getPossiblesMoves(state, upOrleftCord, rightCoord));

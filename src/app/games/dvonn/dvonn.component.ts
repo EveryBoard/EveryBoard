@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { Coord } from 'src/app/jscaip/Coord';
 import { DvonnMove } from 'src/app/games/dvonn/DvonnMove';
 import { DvonnState } from 'src/app/games/dvonn/DvonnState';
@@ -11,11 +11,9 @@ import { HexagonalGameComponent }
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 import { MCTS } from 'src/app/jscaip/AI/MCTS';
-import { Minimax } from 'src/app/jscaip/AI/Minimax';
-import { DvonnScoreHeuristic } from './DvonnScoreHeuristic';
-import { DvonnOrderedMoveGenerator } from './DvonnOrderedMoveGenerator';
-import { DvonnMaxStacksHeuristic } from './DvonnMaxStacksHeuristic';
 import { DvonnMoveGenerator } from './DvonnMoveGenerator';
+import { DvonnMaxStacksMinimax } from './DvonnMaxStacksMinimax';
+import { DvonnScoreMinimax } from './DvonnScoreMinimax';
 
 @Component({
     selector: 'app-dvonn',
@@ -29,12 +27,12 @@ export class DvonnComponent extends HexagonalGameComponent<DvonnRules, DvonnMove
     public chosen: MGPOptional<Coord> = MGPOptional.empty();
     public disconnectedSpaces: { coord: Coord, spaceContent: DvonnPieceStack }[] = [];
 
-    public constructor(messageDisplayer: MessageDisplayer) {
-        super(messageDisplayer);
+    public constructor(messageDisplayer: MessageDisplayer, cdr: ChangeDetectorRef) {
+        super(messageDisplayer, cdr);
         this.setRulesAndNode('Dvonn');
         this.availableAIs = [
-            new Minimax($localize`Stacks`, this.rules, new DvonnMaxStacksHeuristic(), new DvonnOrderedMoveGenerator()),
-            new Minimax($localize`Score`, this.rules, new DvonnScoreHeuristic(), new DvonnOrderedMoveGenerator()),
+            new DvonnMaxStacksMinimax(),
+            new DvonnScoreMinimax(),
             new MCTS($localize`MCTS`, new DvonnMoveGenerator(), this.rules),
         ];
         this.encoder = DvonnMove.encoder;

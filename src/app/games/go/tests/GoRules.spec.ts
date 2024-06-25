@@ -179,7 +179,7 @@ describe('GoRules', () => {
             // When playing on the Ko coord
             const move: GoMove = new GoMove(koCoord.x, koCoord.y);
 
-            // Then it should fail
+            // Then the move should be illegal
             const reason: string = GoFailure.ILLEGAL_KO();
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
@@ -242,7 +242,7 @@ describe('GoRules', () => {
             // When accepting
             const move: GoMove = GoMove.ACCEPT;
 
-            // Then it should fail
+            // Then the move should be illegal
             const reason: string = GoFailure.CANNOT_ACCEPT_BEFORE_COUNTING_PHASE();
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
@@ -261,7 +261,7 @@ describe('GoRules', () => {
             // When playing on another piece
             const move: GoMove = new GoMove(2, 2);
 
-            // Then it should fail
+            // Then the move should be illegal
             const reason: string = GoFailure.OCCUPIED_INTERSECTION();
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
@@ -280,7 +280,7 @@ describe('GoRules', () => {
             // When trying to play in that coord without capturing
             const move: GoMove = new GoMove(0, 4);
 
-            // Then it should fail
+            // Then the move should be illegal
             const reason: string = GoFailure.CANNOT_COMMIT_SUICIDE();
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
@@ -512,7 +512,7 @@ describe('GoRules', () => {
             // When passing
             const move: GoMove = GoMove.PASS;
 
-            // Then it should fail
+            // Then the move should be illegal
             const reason: string = GoFailure.CANNOT_PASS_AFTER_PASSED_PHASE();
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });

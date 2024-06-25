@@ -41,6 +41,8 @@ describe('ConspirateursRules', () => {
             TestUtils.expectToThrowAndLog(() => {
                 const state: ConspirateursState = ConspirateursRules.get().getInitialState();
                 const move: ConspirateursMove = ConspirateursMoveDrop.of(new Coord(-1, -1)) as ConspirateursMove;
+
+                // Then the move should be illegal
                 RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
             }, reason);
         });
@@ -76,9 +78,11 @@ describe('ConspirateursRules', () => {
         it('should forbid drops out of the center zone', () => {
             // Given the initial state
             const state: ConspirateursState = ConspirateursRules.get().getInitialState();
+
             // When dropping a piece out of the center zone
             const move: ConspirateursMove = drop(new Coord(3, 2));
-            // Then it should fail
+
+            // Then the move should be illegal
             const reason: string = ConspirateursFailure.MUST_DROP_IN_CENTRAL_ZONE();
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
@@ -104,9 +108,11 @@ describe('ConspirateursRules', () => {
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             ], 1);
+
             // When dropping a piece on the existing piece
             const move: ConspirateursMove = drop(new Coord(7, 7));
-            // Then it should fail
+
+            // Then the move should be illegal
             const reason: string = RulesFailure.MUST_LAND_ON_EMPTY_SPACE();
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
@@ -132,9 +138,11 @@ describe('ConspirateursRules', () => {
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             ], 42);
+
             // When trying to drop
             const move: ConspirateursMove = drop(new Coord(8, 8));
-            // Then it should fail
+
+            // Then the move should be illegal
             const reason: string = ConspirateursFailure.CANNOT_DROP_WHEN_OUT_OF_PIECE();
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
@@ -149,6 +157,8 @@ describe('ConspirateursRules', () => {
                 const state: ConspirateursState = ConspirateursRules.get().getInitialState();
                 const move: ConspirateursMove =
                     ConspirateursMoveSimple.from(new Coord(-1, 0), new Coord(0, 0)).get() as ConspirateursMove;
+
+                // Then the move should be illegal
                 RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
             }, reason);
         });
@@ -159,6 +169,8 @@ describe('ConspirateursRules', () => {
                 const state: ConspirateursState = ConspirateursRules.get().getInitialState();
                 const move: ConspirateursMove =
                     ConspirateursMoveSimple.from(new Coord(0, 0), new Coord(-1, 0)).get() as ConspirateursMove;
+
+                // Then the move should be illegal
                 RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
             }, reason);
         });
@@ -230,9 +242,11 @@ describe('ConspirateursRules', () => {
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             ], 42);
+
             // When moving the piece
             const move: ConspirateursMove = simpleMove(new Coord(7, 7), new Coord(7, 6));
-            // Then it should fail
+
+            // Then the move should be illegal
             const reason: string = RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT();
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
@@ -258,9 +272,11 @@ describe('ConspirateursRules', () => {
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             ], 42);
+
             // When moving from an empty space
             const move: ConspirateursMove = simpleMove(new Coord(5, 5), new Coord(5, 6));
-            // Then it should fail
+
+            // Then the move should be illegal
             const reason: string = RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY();
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
@@ -286,9 +302,11 @@ describe('ConspirateursRules', () => {
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             ], 42);
+
             // When moving the piece on top of another piece
             const move: ConspirateursMove = simpleMove(new Coord(7, 7), new Coord(7, 6));
-            // Then it should fail
+
+            // Then the move should be illegal
             const reason: string = RulesFailure.MUST_LAND_ON_EMPTY_SPACE();
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
@@ -314,9 +332,11 @@ describe('ConspirateursRules', () => {
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             ], 2);
+
             // When performing a simple move
             const move: ConspirateursMove = simpleMove(new Coord(7, 7), new Coord(7, 6));
-            // Then it should fail
+
+            // Then the move should be illegal
             const reason: string = ConspirateursFailure.CANNOT_MOVE_BEFORE_DROPPING_ALL_PIECES();
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
@@ -336,7 +356,7 @@ describe('ConspirateursRules', () => {
                 outOfRange,
             ]).get() as ConspirateursMove;
 
-            // Then it should fail
+            // Then the move should be illegal
             const reason: string = CoordFailure.OUT_OF_RANGE(outOfRange);
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
@@ -454,9 +474,11 @@ describe('ConspirateursRules', () => {
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             ], 42);
+
             // When moving the wrong piece
             const move: ConspirateursMove = jump([new Coord(7, 6), new Coord(7, 8)]);
-            // Then it should fail
+
+            // Then the move should be illegal
             const reason: string = RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT();
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
@@ -482,9 +504,11 @@ describe('ConspirateursRules', () => {
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             ], 42);
+
             // When jumping from an empty square
             const move: ConspirateursMove = jump([new Coord(5, 5), new Coord(5, 7)]);
-            // Then it should fail
+
+            // Then the move should be illegal
             const reason: string = RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY();
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
@@ -510,9 +534,11 @@ describe('ConspirateursRules', () => {
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             ], 42);
+
             // When jumping over an empty square
             const move: ConspirateursMove = jump([new Coord(7, 7), new Coord(7, 9)]);
-            // Then it should fail
+
+            // Then the move should be illegal
             const reason: string = ConspirateursFailure.MUST_JUMP_OVER_PIECES();
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
@@ -538,9 +564,11 @@ describe('ConspirateursRules', () => {
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             ], 42);
+
             // When jumping over a piece but landing over another piece
             const move: ConspirateursMove = jump([new Coord(7, 7), new Coord(7, 5)]);
-            // Then it should fail
+
+            // Then the move should be illegal
             const reason: string = RulesFailure.MUST_LAND_ON_EMPTY_SPACE();
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
@@ -566,9 +594,11 @@ describe('ConspirateursRules', () => {
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             ], 2);
+
             // When trying to jump
             const move: ConspirateursMove = jump([new Coord(7, 7), new Coord(7, 5)]);
-            // Then it should fail
+
+            // Then the move should be illegal
             const reason: string = ConspirateursFailure.CANNOT_MOVE_BEFORE_DROPPING_ALL_PIECES();
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });

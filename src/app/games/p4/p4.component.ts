@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { P4State } from './P4State';
 import { P4Config, P4Rules } from './P4Rules';
 import { RectangularGameComponent } from '../../components/game-components/rectangular-game-component/RectangularGameComponent';
@@ -19,11 +19,11 @@ import { P4Minimax } from './P4Minimax';
 export class P4Component extends RectangularGameComponent<P4Rules, P4Move, P4State, PlayerOrNone, P4Config> {
 
     public EMPTY: PlayerOrNone = PlayerOrNone.NONE;
-    public last: MGPOptional<Coord>;
+    public last: MGPOptional<Coord> = MGPOptional.empty();
     public victoryCoords: Coord[] = [];
 
-    public constructor(messageDisplayer: MessageDisplayer) {
-        super(messageDisplayer);
+    public constructor(messageDisplayer: MessageDisplayer, cdr: ChangeDetectorRef) {
+        super(messageDisplayer, cdr);
         this.setRulesAndNode('P4');
         this.availableAIs = [
             new P4Minimax(),
@@ -32,8 +32,8 @@ export class P4Component extends RectangularGameComponent<P4Rules, P4Move, P4Sta
         this.encoder = P4Move.encoder;
     }
 
-    public async onClick(x: number): Promise<MGPValidation> {
-        const clickValidity: MGPValidation = await this.canUserPlay('#click_' + x);
+    public async onClick(x: number, y: number): Promise<MGPValidation> {
+        const clickValidity: MGPValidation = await this.canUserPlay(`#click-${ x }-${ y }`);
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }

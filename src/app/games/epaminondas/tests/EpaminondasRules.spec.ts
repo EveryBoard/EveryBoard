@@ -44,7 +44,7 @@ describe('EpaminondasRules', () => {
         // When trying to move a phalanx outside of the board
         const move: EpaminondasMove = new EpaminondasMove(0, 11, 1, 1, Ordinal.DOWN);
 
-        // Then it should fail
+        // Then the move should be illegal
         const reason: string = EpaminondasFailure.PHALANX_IS_LEAVING_BOARD();
         RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
     });
@@ -70,7 +70,7 @@ describe('EpaminondasRules', () => {
         // When trying to move a phalanx (but only its head) outside of the board
         const move: EpaminondasMove = new EpaminondasMove(1, 11, 2, 2, Ordinal.UP_LEFT);
 
-        // Then it should fail
+        // Then the move should be illegal
         const reason: string = EpaminondasFailure.PHALANX_IS_LEAVING_BOARD();
         RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
     });
@@ -96,7 +96,7 @@ describe('EpaminondasRules', () => {
         // When trying to move a phalanx that contains pieces outside of the board
         const move: EpaminondasMove = new EpaminondasMove(0, 11, 2, 1, Ordinal.DOWN);
 
-        // Then it should fail
+        // Then the move should be illegal
         const reason: string = EpaminondasFailure.PHALANX_CANNOT_CONTAIN_PIECES_OUTSIDE_BOARD();
         RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
     });
@@ -118,9 +118,11 @@ describe('EpaminondasRules', () => {
             [O, O, O, O, O, O, O, O, O, O, O, O, O, O],
         ];
         const state: EpaminondasState = new EpaminondasState(board, 0);
+
         // When trying to move over the opponent's piece
         const move: EpaminondasMove = new EpaminondasMove(0, 11, 3, 3, Ordinal.UP);
-        // Then it should fail
+
+        // Then the move should be illegal
         const reason: string = EpaminondasFailure.SOMETHING_IN_PHALANX_WAY();
         RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
     });
@@ -132,7 +134,7 @@ describe('EpaminondasRules', () => {
         // When doing a move starting out of range
         const move: EpaminondasMove = new EpaminondasMove(-1, 0, 1, 1, Ordinal.DOWN_LEFT);
 
-        // Then it should be illegal
+        // Then the move should be illegal
         const reason: string = CoordFailure.OUT_OF_RANGE(new Coord(-1, 0));
         RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
     });
@@ -158,7 +160,7 @@ describe('EpaminondasRules', () => {
         // When trying to capture a greater phalanx
         const move: EpaminondasMove = new EpaminondasMove(0, 10, 1, 1, Ordinal.UP);
 
-        // Then it should fail
+        // Then the move should be illegal
         const reason: string = EpaminondasFailure.PHALANX_SHOULD_BE_GREATER_TO_CAPTURE();
         RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
     });
@@ -184,7 +186,7 @@ describe('EpaminondasRules', () => {
         // When trying to capture a phalanx of the same size
         const move: EpaminondasMove = new EpaminondasMove(0, 11, 2, 2, Ordinal.UP);
 
-        // Then it should fail
+        // Then the move should be illegal
         const reason: string = EpaminondasFailure.PHALANX_SHOULD_BE_GREATER_TO_CAPTURE();
         RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
     });
@@ -210,7 +212,7 @@ describe('EpaminondasRules', () => {
         // When trying to capture one of its own
         const move: EpaminondasMove = new EpaminondasMove(0, 11, 2, 2, Ordinal.UP);
 
-        // Then it should fail
+        // Then the move should be illegal
         const reason: string = RulesFailure.SHOULD_LAND_ON_EMPTY_OR_OPPONENT_SPACE();
         RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
     });
@@ -236,7 +238,7 @@ describe('EpaminondasRules', () => {
         // When trying to move a piece of the opponent
         const move: EpaminondasMove = new EpaminondasMove(0, 10, 1, 1, Ordinal.UP);
 
-        // Then it should fail
+        // Then the move should be illegal
         const reason: string = EpaminondasFailure.PHALANX_CANNOT_CONTAIN_OPPONENT_PIECE();
         RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
     });
@@ -262,7 +264,7 @@ describe('EpaminondasRules', () => {
         // When trying to move a piece of the opponent
         const move: EpaminondasMove = new EpaminondasMove(0, 11, 3, 1, Ordinal.UP);
 
-        // Then it should fail
+        // Then the move should be illegal
         const reason: string = EpaminondasFailure.PHALANX_CANNOT_CONTAIN_EMPTY_SQUARE();
         RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
     });
