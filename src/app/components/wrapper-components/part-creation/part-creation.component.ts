@@ -547,6 +547,10 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         return Utils.getNonNullable(this.activatedRoute.snapshot.paramMap.get('compo'));
     }
 
+    public getGameName(): string {
+        return GameInfo.getByUrlName(this.getGameUrlName()).get().name;
+    }
+
     public getStateProvider(): MGPOptional<(config: MGPOptional<RulesConfig>) => GameState> {
         return GameInfo.getStateProvider(this.getGameUrlName());
     }
