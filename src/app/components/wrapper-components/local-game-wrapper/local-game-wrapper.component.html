@@ -97,7 +97,7 @@
             <p class="title" i18n>Configuration of your {{ getGameName() }} game</p>
             <app-rules-configuration id="rulesConfigComponent"
                                      [rulesConfigDescriptionOptional]="getRulesConfigDescription()"
-                                     [userIsCreator]="true"
+                                     [editable]="true"
                                      (updateCallback)="updateConfig($event)">
             </app-rules-configuration>
 

@@ -4,7 +4,7 @@
         <div class="control">
             <div class="select is-primary is-fullwidth">
                 <select id="ruleSelect"
-                        [disabled]="userIsCreator === false"
+                        [disabled]="editable === false"
                         (change)="onChange($event)">
                     <option [value]="rulesConfigDescription.getDefaultConfig().name()"
                             selected>

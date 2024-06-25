@@ -23,7 +23,7 @@ export class RulesConfigurationComponent extends BaseWrapperComponent implements
     // Only needed for the non-creator
     @Input() rulesConfigToDisplay?: RulesConfig;
 
-    @Input() userIsCreator: boolean;
+    @Input() editable: boolean;
 
     /**
      * notify that the config has been updated
@@ -61,9 +61,9 @@ export class RulesConfigurationComponent extends BaseWrapperComponent implements
     }
 
     private assertParamsAreCoherent(): void {
-        if (this.userIsCreator === false) {
+        if (this.editable === false) {
             Utils.assert(this.rulesConfigToDisplay != null,
-                         'Config should be provided to non-creator in RulesConfigurationComponent');
+                         'Config should be provided to non-editors in RulesConfigurationComponent');
         }
     }
 
@@ -81,7 +81,7 @@ export class RulesConfigurationComponent extends BaseWrapperComponent implements
     }
 
     private getRulesConfigDescriptionValue(name: string, defaultValue: ConfigDescriptionType): ConfigDescriptionType {
-        if (this.userIsCreator) {
+        if (this.editable) {
             return defaultValue;
         } else {
             const configuration: RulesConfig = Utils.getNonNullable(this.rulesConfigToDisplay);
@@ -101,7 +101,7 @@ export class RulesConfigurationComponent extends BaseWrapperComponent implements
     }
 
     public onUpdate(): void {
-        Utils.assert(this.userIsCreator, 'Only creator should be able to modify rules config');
+        Utils.assert(this.editable, 'Only editors should be able to modify rules config');
         Utils.assert(this.chosenConfigName === 'Custom', 'Only Customizable config should be modified!');
         const rulesConfig: RulesConfig = {};
         const parameterNames: string[] = this.rulesConfigDescription.getFields();
@@ -164,7 +164,7 @@ export class RulesConfigurationComponent extends BaseWrapperComponent implements
         let config: RulesConfig;
         if (this.chosenConfigName === 'Custom') {
             config = this.rulesConfigDescription.getDefaultConfig().config;
-            this.generateForm(config, this.userIsCreator);
+            this.generateForm(config, this.editable);
         } else {
             config = this.rulesConfigDescription.getConfig(this.chosenConfigName);
             this.generateForm(config, false);
