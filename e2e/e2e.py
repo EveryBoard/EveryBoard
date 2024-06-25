@@ -421,12 +421,15 @@ def can_reload_part_creation(user):
     # I create a part
     user.ensure_no_errors()
     user.click('#createOnlineGame')
+    user.select('#gameType', 'Four in a Row')
+    user.click('#launchGame')
     print('1')
     user.ensure_no_errors()
-    user.select('#gameType', 'Four in a Row')
-    print('2')
-    user.click('#launchGame')
+    time.sleep(1)
+    print(user.driver.find_element(By.CSS_SELECTOR, 'body').get_attribute('innerHTML'))
+    user.ensure_no_errors()
     user.wait_for('#partCreation')
+    print('2')
 
     # I reload the page
     user.reload_page()
