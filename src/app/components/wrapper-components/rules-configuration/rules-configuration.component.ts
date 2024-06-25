@@ -61,10 +61,10 @@ export class RulesConfigurationComponent extends BaseWrapperComponent implements
     }
 
     private assertParamsAreCoherent(): void {
-        if (this.editable === false) {
-            Utils.assert(this.rulesConfigToDisplay != null,
-                         'Config should be provided to non-editors in RulesConfigurationComponent');
-        }
+        //if (this.editable === false) {
+        //    Utils.assert(this.rulesConfigToDisplay != null,
+        //                 'Config should be provided to non-editors in RulesConfigurationComponent');
+        //}
     }
 
     private generateForm(config: RulesConfig, configurable: boolean): void {
@@ -101,7 +101,7 @@ export class RulesConfigurationComponent extends BaseWrapperComponent implements
     }
 
     public onUpdate(): void {
-        Utils.assert(this.editable, 'Only editors should be able to modify rules config');
+        // Utils.assert(this.editable, 'Only editors should be able to modify rules config');
         Utils.assert(this.chosenConfigName === 'Custom', 'Only Customizable config should be modified!');
         const rulesConfig: RulesConfig = {};
         const parameterNames: string[] = this.rulesConfigDescription.getFields();

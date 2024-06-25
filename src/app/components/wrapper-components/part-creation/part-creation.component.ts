@@ -359,7 +359,10 @@ export class PartCreationComponent implements OnInit, OnDestroy {
             const oldConfigRoom: ConfigRoom | null = this.currentConfigRoom;
             const configRoom: ConfigRoom = configRoomOpt.get();
             this.currentConfigRoom = configRoom;
-            this.saveRulesConfig(MGPOptional.of(configRoom.rulesConfig));
+            console.log(configRoom.rulesConfig)
+            if (configRoom.rulesConfig !== undefined) {
+                this.saveRulesConfig(MGPOptional.of(configRoom.rulesConfig));
+            }
             // TODO: I can change config after proposing it, it should not be the case
             if (this.chosenOpponentJustLeft(oldConfigRoom, configRoom) &&
                 this.userIsCreator(configRoom))
@@ -521,6 +524,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
     }
 
     public saveRulesConfig(rulesConfig: MGPOptional<RulesConfig>): void {
+        console.log('saving rules config')
         this.rulesConfig = rulesConfig;
         this.setConfigDemo(rulesConfig.get());
     }
