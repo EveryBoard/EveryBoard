@@ -6,6 +6,17 @@
             <div id="turnIndicator" class="mb-5">
                 <p class="title" i18n>{{ getGameName() }}<br/>Turn n°{{ gameComponent.getTurn() + 1 }}</p>
             </div>
+            <div *ngIf="endGame"
+                 id="gameResult"
+                 class="block">
+                <p *ngIf="winnerMessage.isPresent()"
+                   id="winner"
+                   class="title">{{ winnerMessage.get() }}</p>
+                <p *ngIf="winnerMessage.isAbsent()"
+                   id="draw"
+                   class="title"
+                   i18n>Draw</p>
+            </div>
             <div id="playerSelector">
                 <div *ngFor="let player of ArrayUtils.range(2)"
                      class="px-2 py-4 mb-4 player{{ player }}-bg">
@@ -40,17 +51,6 @@
                        class="player{{ player }}-fg "
                        i18n>{{ gameComponent.scores.get().get(Player.of(player)) }} points</p>
                 </div>
-            </div>
-            <div *ngIf="endGame"
-                 id="gameResult"
-                 class="block">
-                <p *ngIf="winnerMessage.isPresent()"
-                   id="winner"
-                   class="title">{{ winnerMessage.get() }}</p>
-                <p *ngIf="winnerMessage.isAbsent()"
-                   id="draw"
-                   class="title"
-                   i18n>Draw</p>
             </div>
             <button *ngIf="endGame === false && gameComponent.canPass"
                     id="passButton"
