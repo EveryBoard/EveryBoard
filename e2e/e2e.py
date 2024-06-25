@@ -577,6 +577,8 @@ def can_hard_draw(user1, user2):
         play(user1, cols_to_play[0])
         play(user2, cols_to_play[1])
     #print(user1.driver.find_element(By.CSS_SELECTOR, 'body').get_attribute('innerHTML'))
+    time.sleep(1)
+       # print(self.driver.find_element(By.CSS_SELECTOR, 'body').get_attribute('innerHTML'))
     print('a')
     play(user1, 6)
     print('b')
