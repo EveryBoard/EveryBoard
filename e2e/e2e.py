@@ -571,7 +571,7 @@ def can_hard_draw(user1, user2):
     for cols_to_play in cols:
         play(user1, cols_to_play[0])
         play(user2, cols_to_play[1])
-    print(user.driver.find_element(By.CSS_SELECTOR, 'body').get_attribute('innerHTML'))
+    print(user1.driver.find_element(By.CSS_SELECTOR, 'body').get_attribute('innerHTML'))
     print('a')
     play(user1, 6)
     print('b')
