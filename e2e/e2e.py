@@ -36,6 +36,7 @@ class PlayerDriver():
     def ensure_no_errors(self):
         '''Ensures that no error has been logged in the browser's console'''
         logs = self.driver.get_log('browser')
+        print(logs)
         return
 
         errors = False
@@ -423,7 +424,10 @@ def can_reload_part_creation(user):
     time.sleep(1)
     user.ensure_no_errors()
     print(user.driver.find_element(By.CSS_SELECTOR, 'body').get_attribute('innerHTML'))
-    user.wait_for('#partCreation')
+    try:
+        user.wait_for('#partCreation')
+    finally:
+        user.ensure_no_errors()
     print('2')
 
     # I reload the page
