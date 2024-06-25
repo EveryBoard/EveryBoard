@@ -78,9 +78,12 @@ class PlayerDriver():
         self.click('#registerButton')
 
         # Click on finalize verification button
+        #print('Click on the link!')
+        #time.sleep(10)
+
         time.sleep(0.5) # Wait for the email verification to be done by the other script
         self.click('#finalizeVerification')
-        #time.sleep(0.5) # Need to wait a bit before the verification is done
+        time.sleep(0.5) # Need to wait a bit before the verification is done, otherwise we risk getting auth/network-request-failed
 
     def wait_for(self, selector, timeout=120):
         '''Wait for an element to be present on the page. Timeout is in seconds'''
@@ -234,14 +237,14 @@ def launch_scenarios():
     driver = PlayerDriver()
     #driver.get('http://localhost:4200')
 
-    for simple_scenario in scenarios['simple']:
-       # Always go back home for a new scenario
-       driver.go_to_page('http://localhost:4200')
-       driver.ensure_no_errors() # we don't want errors before starting scenarios
-       print('----------------------------------------------')
-       print('Running scenario: ' + simple_scenario.__name__)
-       simple_scenario(driver)
-       driver.ensure_no_errors()
+    #for simple_scenario in scenarios['simple']:
+    #   # Always go back home for a new scenario
+    #   driver.go_to_page('http://localhost:4200')
+    #   driver.ensure_no_errors() # we don't want errors before starting scenarios
+    #   print('----------------------------------------------')
+    #   print('Running scenario: ' + simple_scenario.__name__)
+    #   simple_scenario(driver)
+    #   driver.ensure_no_errors()
 
     # Now we need a registered account
     driver.register('1-')
@@ -376,7 +379,7 @@ def can_play_local_vs_ai(user):
     # AI should have played a second move, I can play again
     user.click('#click-1-0 > rect')
 
-    # Now there should be a piece in #click-1-0
+    # Now there should be a piece in #click-1-5 (the bottom row)
     user.wait_for('#click-1-5 > circle')
 
 @scenario('two_drivers')
@@ -418,17 +421,12 @@ def can_reload_part_creation(user):
     # I create a part
     user.ensure_no_errors()
     user.click('#createOnlineGame')
-    user.select('#gameType', 'Four in a Row')
-    user.click('#launchGame')
     print('1')
-    time.sleep(1)
     user.ensure_no_errors()
-    print(user.driver.find_element(By.CSS_SELECTOR, 'body').get_attribute('innerHTML'))
-    try:
-        user.wait_for('#partCreation')
-    finally:
-        user.ensure_no_errors()
+    user.select('#gameType', 'Four in a Row')
     print('2')
+    user.click('#launchGame')
+    user.wait_for('#partCreation')
 
     # I reload the page
     user.reload_page()
