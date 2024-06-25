@@ -141,7 +141,6 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
                     if (gameIsOngoing) {
                         await this.doAIMove(playingAI.get().ai, playingAI.get().options);
                     }
-                    // TODO DECIDE this.cdr.detectChanges(); // triggers the rendering of AI move
                 }, LocalGameWrapperComponent.AI_TIMEOUT);
             }
             // If playingAI is absent, that means the user selected an AI without selecting options yet
