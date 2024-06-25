@@ -361,7 +361,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
             console.log(configRoom)
             this.currentConfigRoom = configRoom;
             console.log(configRoom.rulesConfig)
-            if (configRoom.rulesConfig !== undefined) {
+            if (configRoom.rulesConfig !== undefined && Object.keys(configRoom.rulesConfig).length > 0) {
                 console.log('updating')
                 this.saveRulesConfig(MGPOptional.of(configRoom.rulesConfig));
             }
