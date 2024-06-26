@@ -9,6 +9,7 @@ on:
 jobs:
   build-front:
     runs-on: ubuntu-latest
+    needs: e2e # only for debug, don't merge that
     steps:
       - name: Checkout the repository
         uses: actions/checkout@v4
@@ -38,7 +39,7 @@ jobs:
 
   tests-front:
     runs-on: ubuntu-latest
-    needs: build-front
+    needs: [ build-front, e2e ] # only for debug
     steps:
       - name: Checkout the repository
         uses: actions/checkout@v4
@@ -82,6 +83,7 @@ jobs:
 
   tests-back:
     runs-on: ubuntu-latest
+    needs: e2e # debug
     steps:
     - name: Checkout the repository
       uses: actions/checkout@v4
@@ -108,7 +110,7 @@ jobs:
 
   e2e:
     runs-on: ubuntu-latest
-    needs: [ build-front, tests-front, tests-back ]
+    #needs: [ build-front, tests-front, tests-back ]
     steps:
       - name: Checkout the repository
         uses: actions/checkout@v4
@@ -154,7 +156,7 @@ jobs:
 
   linter:
     runs-on: ubuntu-latest
-    needs: build-front
+    needs: [build-front, e2e] # debug
     steps:
       - name: Checkout the repository
         uses: actions/checkout@v4
@@ -184,7 +186,7 @@ jobs:
 
   images:
     runs-on: ubuntu-latest
-    needs: build-front
+    needs: [build-front, e2e] # debug
     steps:
       - name: Checkout the repository
         uses: actions/checkout@v4
@@ -193,7 +195,7 @@ jobs:
 
   translations:
     runs-on: ubuntu-latest
-    needs: build-front
+    needs: [build-front, e2e] # debug
     steps:
       - name: Checkout the repository
         uses: actions/checkout@v4
@@ -334,7 +336,7 @@ jobs:
 
   deployment-netlify:
     runs-on: ubuntu-latest
-    needs: [ build-front ]
+    needs: [ build-front, e2e ] # debug
     environment: netlify
     steps:
       - name: Checkout the repository
