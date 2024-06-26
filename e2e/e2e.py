@@ -205,6 +205,7 @@ class PlayerDriver():
         # Player 2 joins the part
         opponent.click('#seeGameList')
         opponent.click('#part-of-{}'.format(self.username))
+        time.sleep(1)
         print(opponent.driver.find_element(By.CSS_SELECTOR, 'body').get_attribute('innerHTML'))
         opponent.ensure_no_errors()
 
