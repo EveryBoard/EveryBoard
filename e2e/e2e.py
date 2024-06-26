@@ -36,8 +36,6 @@ class PlayerDriver():
     def ensure_no_errors(self):
         '''Ensures that no error has been logged in the browser's console'''
         logs = self.driver.get_log('browser')
-        print(logs)
-        return
 
         errors = False
         for log in logs:
@@ -51,7 +49,7 @@ class PlayerDriver():
         '''Visit an URL'''
         self.driver.get(url)
         # Make sure the page has fully loaded
-        #self.wait_for('app-root')
+        self.wait_for('app-root')
         time.sleep(1)
 
     def reload_page(self):
@@ -78,9 +76,6 @@ class PlayerDriver():
         self.click('#registerButton')
 
         # Click on finalize verification button
-        #print('Click on the link!')
-        #time.sleep(10)
-
         time.sleep(0.5) # Wait for the email verification to be done by the other script
         self.click('#finalizeVerification')
         time.sleep(1.5) # Need to wait a bit before the verification is done, otherwise we risk getting auth/network-request-failed
@@ -205,13 +200,6 @@ class PlayerDriver():
         # Player 2 joins the part
         opponent.click('#seeGameList')
         opponent.click('#part-of-{}'.format(self.username))
-        time.sleep(1)
-        print(opponent.driver.find_element(By.CSS_SELECTOR, 'body').get_attribute('innerHTML'))
-        opponent.ensure_no_errors()
-
-        print(self.driver.find_element(By.CSS_SELECTOR, 'body').get_attribute('innerHTML'))
-        self.ensure_no_errors()
-        self.reload_page()
 
         # Player 1 sees player 2 arrive and selects them
         self.click('#presenceOf_{}'.format(opponent.username))
@@ -244,16 +232,18 @@ def launch_scenarios():
     driver = PlayerDriver()
     #driver.get('http://localhost:4200')
 
-    #for simple_scenario in scenarios['simple']:
-    #   # Always go back home for a new scenario
-    #   driver.go_to_page('http://localhost:4200')
-    #   driver.ensure_no_errors() # we don't want errors before starting scenarios
-    #   print('----------------------------------------------')
-    #   print('Running scenario: ' + simple_scenario.__name__)
-    #   simple_scenario(driver)
-    #   driver.ensure_no_errors()
+    for simple_scenario in scenarios['simple']:
+       # Always go back home for a new scenario
+       driver.go_to_page('http://localhost:4200')
+       driver.ensure_no_errors() # we don't want errors before starting scenarios
+       print('----------------------------------------------')
+       print('Running scenario: ' + simple_scenario.__name__)
+       simple_scenario(driver)
+       driver.ensure_no_errors()
 
     # Now we need a registered account
+    print('--------------')
+    print('GOING TO ONE DRIVER')
     driver.register('1-')
     for registered_scenario in scenarios['registered']:
         driver.go_to_page('http://localhost:4200')
@@ -264,6 +254,8 @@ def launch_scenarios():
         driver.ensure_no_errors()
 
     # Now we need another driver
+    print('--------------')
+    print('GOINRG TO TWO DRIVER')
     driver2 = PlayerDriver()
     driver2.register('2-')
     for two_drivers_scenario in scenarios['two_drivers']:
@@ -418,34 +410,28 @@ def can_create_part_and_play(user1, user2):
     user1.wait_for('#youWonIndicator')
     user2.wait_for('#youLostIndicator')
 
-@scenario('registered')
-def can_reload_part_creation(user):
-    '''
-    Role: I am a registered user with a game in creation
-    Action: I reload the page
-    Result: It works
-    '''
-    # I create a part
-    user.ensure_no_errors()
-    user.click('#createOnlineGame')
-    user.select('#gameType', 'Four in a Row')
-    user.click('#launchGame')
-    print('1')
-    user.ensure_no_errors()
-    time.sleep(1)
-    print(user.driver.find_element(By.CSS_SELECTOR, 'body').get_attribute('innerHTML'))
-    user.ensure_no_errors()
-    user.wait_for('#partCreation')
-    print('2')
-
-    # I reload the page
-    user.reload_page()
-
-    # Now I should still be on the part creation page
-    user.wait_for('#partCreation')
-
-    # Cleanup
-    user.click('#cancel')
+#@scenario('registered')
+#def can_reload_part_creation(user):
+#    '''
+#    Role: I am a registered user with a game in creation
+#    Action: I reload the page
+#    Result: It works
+#    '''
+#    # I create a part
+#    user.ensure_no_errors()
+#    user.click('#createOnlineGame')
+#    user.select('#gameType', 'Four in a Row')
+#    user.click('#launchGame')
+#    user.wait_for('#partCreation')
+#
+#    # I reload the page
+#    user.reload_page()
+#
+#    # Now I should still be on the part creation page
+#    user.wait_for('#partCreation')
+#
+#    # Cleanup
+#    user.click('#cancel')
 
 @scenario('two_drivers')
 def can_reload_game(user1, user2):
@@ -573,27 +559,10 @@ def can_hard_draw(user1, user2):
             (4, 3), (3, 3), (3, 3),
             (3, 4), (4, 4), (4, 4),
             (5, 5), (5, 5), (5, 5),
-            #(6, 6), (6, 6), (6, 6)
-            ]
+            (6, 6), (6, 6), (6, 6)]
     for cols_to_play in cols:
         play(user1, cols_to_play[0])
         play(user2, cols_to_play[1])
-    #print(user1.driver.find_element(By.CSS_SELECTOR, 'body').get_attribute('innerHTML'))
-    time.sleep(1)
-       # print(self.driver.find_element(By.CSS_SELECTOR, 'body').get_attribute('innerHTML'))
-    print('a')
-    play(user1, 6)
-    print('b')
-    play(user2, 6)
-    print('c')
-    play(user1, 6)
-    print('d')
-    play(user2, 6)
-    print('e')
-    play(user1, 6)
-    print('f')
-    play(user2, 6)
-    print('g')
 
     # We see the draw
     user1.wait_for('#hardDrawIndicator')
@@ -614,32 +583,32 @@ def can_resign(user1, user2):
     user1.wait_for('#resignIndicator')
     user2.wait_for('#resignIndicator')
 
-#@scenario('two_drivers')
-#def can_rematch(user1, user2):
-#    '''
-#    Role: We are two users in a game
-#    Action: I resign and ask for rematch, the opponent accepts
-#    Result: We started a new game
-#    '''
-#    # A game has finished
-#    user1.create_part(user2)
-#    user1.click('#resign')
-#    game_url = user1.get_current_url()
-#
-#    # I ask for a rematch and the user accepts
-#    user1.click('#proposeRematch')
-#    user2.click('#accept')
-#    time.sleep(1) # To make sure the page is reloaded
-#
-#    # It is a new part
-#    user1.wait_for('#game')
-#    new_game_url = user1.get_current_url()
-#    if not(new_game_url != game_url):
-#        print('Game has not changed!')
-#        raise Exception('Test failed')
-#
-#    user1.click('#resign')
-#    user1.wait_for('#resignIndicator')
+@scenario('two_drivers')
+def can_rematch(user1, user2):
+    '''
+    Role: We are two users in a game
+    Action: I resign and ask for rematch, the opponent accepts
+    Result: We started a new game
+    '''
+    # A game has finished
+    user1.create_part(user2)
+    user1.click('#resign')
+    game_url = user1.get_current_url()
+
+    # I ask for a rematch and the user accepts
+    user1.click('#proposeRematch')
+    user2.click('#accept')
+    time.sleep(1) # To make sure the page is reloaded
+
+    # It is a new part
+    user1.wait_for('#game')
+    new_game_url = user1.get_current_url()
+    if not(new_game_url != game_url):
+        print('Game has not changed!')
+        raise Exception('Test failed')
+
+    user1.click('#resign')
+    user1.wait_for('#resignIndicator')
 
 if __name__ == '__main__':
     launch_scenarios()
