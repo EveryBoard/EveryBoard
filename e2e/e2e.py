@@ -563,6 +563,7 @@ def can_hard_draw(user1, user2):
     for cols_to_play in cols:
         play(user1, cols_to_play[0])
         play(user2, cols_to_play[1])
+        time.sleep(0.5) # to get it to pass in CI
 
     # We see the draw
     user1.wait_for('#hardDrawIndicator')
