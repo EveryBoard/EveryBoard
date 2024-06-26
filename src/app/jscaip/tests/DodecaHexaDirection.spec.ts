@@ -45,8 +45,7 @@ describe('DodecaHexaDirection', () => {
     });
 
     it('should have a bijective encoder', () => {
-        for (let i: number = 0; i < 12; i++) {
-            const dir: DodecaHexaDirection = DodecaHexaDirection.factory.all[i];
+        for (const dir of DodecaHexaDirection.factory.all) {
             EncoderTestUtils.expectToBeBijective(DodecaHexaDirection.encoder, dir);
         }
     });

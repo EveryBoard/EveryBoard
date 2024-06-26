@@ -53,13 +53,7 @@ export class HexodiaRules extends ConfigurableRules<HexodiaMove, HexodiaState, H
     }
 
     public static getHexodiaHelper(config: MGPOptional<HexodiaConfig>): AbstractNInARowHelper<FourStatePiece> {
-        if (config.isPresent()) {
-            return HexodiaRules.getHexodiaHelperBySize(config.get().nInARow);
-        } else {
-            const defaultConfig: HexodiaConfig =
-                HexodiaRules.RULES_CONFIG_DESCRIPTION.getDefaultConfig().config;
-            return HexodiaRules.getHexodiaHelperBySize(defaultConfig.nInARow);
-        }
+        return HexodiaRules.getHexodiaHelperBySize(config.get().nInARow);
     }
 
     public static getHexodiaHelperBySize(size: number): AbstractNInARowHelper<FourStatePiece> {
@@ -85,13 +79,14 @@ export class HexodiaRules extends ConfigurableRules<HexodiaMove, HexodiaState, H
 
     public override getInitialState(config: MGPOptional<HexodiaConfig>): HexodiaState {
         const size: number = config.get().size;
-        const boardSize: number = 1 + (size * 2);
-        const board: FourStatePiece[][] = TableUtils.create(boardSize, boardSize, FourStatePiece.EMPTY);
-        for (let x: number = 0; x < boardSize; x++) {
-            for (let y: number = 0; y < boardSize; y++) {
-                if ((x + y) < size) {
-                    board[y][x] = FourStatePiece.UNREACHABLE;
-                    board[boardSize - y - 1][boardSize - x - 1] = FourStatePiece.UNREACHABLE;
+        const boardSize: number = (size * 2) - 1;
+        const maximumDiagonalIndex: number = (3 * size) - 2;
+        const board: FourStatePiece[][] = TableUtils.create(boardSize, boardSize, FourStatePiece.UNREACHABLE);
+        for (let y: number = 0; y < boardSize; y++) {
+            for (let x: number = 0; x < boardSize; x++) {
+                const diagonalIndex: number = x + y;
+                if (size - 2 < diagonalIndex && diagonalIndex < maximumDiagonalIndex) {
+                    board[y][x] = FourStatePiece.EMPTY;
                 }
             }
         }
@@ -116,7 +111,9 @@ export class HexodiaRules extends ConfigurableRules<HexodiaMove, HexodiaState, H
         if (state.turn === 0) {
             Utils.assert(numberOfDrops === 1, 'HexodiaMove should only drop one piece at first turn');
         } else {
-            Utils.assert(numberOfDrops === configuration.numberOfDrops,
+            const remainingSpaces: number = TableUtils.count(state.board, FourStatePiece.EMPTY);
+            const requiredDrop: number = Math.min(remainingSpaces, configuration.numberOfDrops);
+            Utils.assert(numberOfDrops === requiredDrop,
                          'HexodiaMove should have exactly ' + configuration.numberOfDrops+ ' drops (got ' + numberOfDrops + ')');
         }
         return this.isLegalDrop(move, state);
@@ -134,17 +131,17 @@ export class HexodiaRules extends ConfigurableRules<HexodiaMove, HexodiaState, H
         return MGPValidation.SUCCESS;
     }
 
-    public override getGameStatus(node: HexodiaNode, config: MGPOptional<HexodiaConfig>)
-    : GameStatus
-    {
+    public override getGameStatus(node: HexodiaNode, config: MGPOptional<HexodiaConfig>): GameStatus {
         const state: HexodiaState = node.gameState;
-        const victoriousCoord: Coord[] = HexodiaRules
-            .getHexodiaHelper(config)
-            .getVictoriousCoord(state);
+        const victoriousCoord: Coord[] = HexodiaRules.getVictoriousCoords(state, config);
         if (victoriousCoord.length > 0) {
             return GameStatus.getVictory(state.getCurrentOpponent());
         }
-        return state.turn === 181 ? GameStatus.DRAW : GameStatus.ONGOING;
+        if (TableUtils.contains(state.board, FourStatePiece.EMPTY)) {
+            return GameStatus.ONGOING;
+        } else {
+            return GameStatus.DRAW;
+        }
     }
 
 }

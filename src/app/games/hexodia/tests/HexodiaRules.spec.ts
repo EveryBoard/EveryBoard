@@ -49,35 +49,33 @@ describe('HexodiaRules', () => {
             const state: HexodiaState = HexodiaRules.get().getInitialState(defaultConfig);
 
             // When dropping one piece
-            const move: HexodiaMove = HexodiaMove.of([new Coord(12, 12)]);
+            const move: HexodiaMove = HexodiaMove.of([new Coord(11, 11)]);
 
             // Then the move should succeed
             const expectedState: HexodiaState = new HexodiaState([
-                [N, N, N, N, N, N, N, N, N, N, N, N, _, _, _, _, _, _, _, _, _, _, _, _, _],
-                [N, N, N, N, N, N, N, N, N, N, N, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-                [N, N, N, N, N, N, N, N, N, N, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-                [N, N, N, N, N, N, N, N, N, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-                [N, N, N, N, N, N, N, N, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-                [N, N, N, N, N, N, N, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-                [N, N, N, N, N, N, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-                [N, N, N, N, N, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-                [N, N, N, N, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-                [N, N, N, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-                [N, N, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-                [N, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _, _, _, O, _, _, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, N],
-                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, N, N],
-                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, N, N, N],
-                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, N, N, N, N],
-                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, N, N, N, N, N],
-                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, N, N, N, N, N, N],
-                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, N, N, N, N, N, N, N],
-                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, N, N, N, N, N, N, N, N],
-                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, N, N, N, N, N, N, N, N, N],
-                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, N, N, N, N, N, N, N, N, N, N],
-                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, N, N, N, N, N, N, N, N, N, N, N],
-                [_, _, _, _, _, _, _, _, _, _, _, _, _, N, N, N, N, N, N, N, N, N, N, N, N],
+                [N, N, N, N, N, N, N, N, N, N, N, _, _, _, _, _, _, _, _, _, _, _, _],
+                [N, N, N, N, N, N, N, N, N, N, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [N, N, N, N, N, N, N, N, N, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [N, N, N, N, N, N, N, N, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [N, N, N, N, N, N, N, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [N, N, N, N, N, N, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [N, N, N, N, N, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [N, N, N, N, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [N, N, N, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [N, N, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [N, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, O, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, N],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, N, N],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, N, N, N],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, N, N, N, N],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, N, N, N, N, N],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, N, N, N, N, N, N],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, N, N, N, N, N, N, N],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, N, N, N, N, N, N, N, N],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, N, N, N, N, N, N, N, N, N],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, N, N, N, N, N, N, N, N, N, N],
+                [_, _, _, _, _, _, _, _, _, _, _, _, N, N, N, N, N, N, N, N, N, N, N],
             ], 1);
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         });
@@ -340,7 +338,7 @@ describe('HexodiaRules', () => {
         });
 
         it('should draw when no one can play anymore', () => {
-            // Given the wildly unlikely case in which in 180 turns no one wins
+            // Given the wildly unlikely case in which in 91 turns no one wins
             const state: HexodiaState = new HexodiaState([
                 [X, X, X, X, X, O, O, O, O, O, X, X, X, X, X, O, O, O, O],
                 [X, X, X, X, X, O, O, O, O, O, X, X, X, X, X, O, O, O, O],
@@ -361,7 +359,7 @@ describe('HexodiaRules', () => {
                 [X, X, X, X, X, O, O, O, O, O, X, X, X, X, X, O, O, O, O],
                 [X, X, X, X, X, O, O, O, O, O, X, X, X, X, X, O, O, O, O],
                 [X, O, X, O, X, O, X, O, X, O, X, O, X, O, X, O, X, O, O],
-            ], 181);
+            ], 91);
 
             // When evaluating the node
             // Then the board should be a draw
@@ -399,21 +397,41 @@ describe('HexodiaRules', () => {
 
     });
 
-    describe('victory', () => {
+    describe('getGameStatus', () => {
+
+        it('should recognize ongoing game', () => {
+            // Given any board with no victory nor space to play
+            const node: HexodiaNode = rules.getInitialNode(defaultConfig);
+
+            // When checking it game status
+            // Then it should be ONGOING
+            RulesUtils.expectToBeOngoing(rules, node, defaultConfig);
+        });
+
+        it('should recognize hard-draw', () => {
+            // Given a board full of pieces
+            const state: HexodiaState = new HexodiaState([
+                [X, X, X, X, X],
+                [X, X, X, X, X],
+                [X, X, X, X, X],
+                [X, X, X, X, X],
+                [X, X, X, X, X],
+            ], 25);
+            const node: HexodiaNode = new HexodiaNode(state);
+            // When checking it game status
+            // Then it should be a draw
+            RulesUtils.expectToBeDraw(rules, node, defaultConfig);
+        });
 
         for (const dir of DodecaHexaDirection.factory.all) {
             it('should include alignment of ' + dir.toString(), () => {
                 // Given a board with 6 pieces aligned in direction 'dir'
-                const largeConfig: MGPOptional<HexodiaConfig> = MGPOptional.of({
-                    ...defaultConfig.get(),
-                    size: 12,
-                });
-                const center: Coord = new Coord(12, 12);
+                const center: Coord = new Coord(11, 11);
                 let state: HexodiaState = rules
-                    .getInitialState(largeConfig)
-                    .setPieceAt(center, FourStatePiece.ZERO)
+                    .getInitialState(defaultConfig)
+                    .setPieceAt(center, FourStatePiece.ONE)
                     .incrementTurn();
-                for (let distance: number = 1; distance <= 6; distance++) {
+                for (let distance: number = 1; distance < 6; distance++) {
                     state = state.setPieceAt(center.getNext(dir, distance), FourStatePiece.ONE);
                 }
                 state = state.incrementTurn();
@@ -421,9 +439,46 @@ describe('HexodiaRules', () => {
 
                 // When evaluating its board status
                 // Then it should be a victory
-                RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, largeConfig);
+                RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, defaultConfig);
             });
         }
+
+    });
+
+    describe('Custom config', () => {
+
+        it('should allow to play only N piece at last turn if there is less than N space remaining', () => {
+            // Given a board with only 4 space remaining but where 5 drop are needed
+            const state: HexodiaState = new HexodiaState([
+                [O, X, O, X, O],
+                [_, X, O, X, O],
+                [_, X, O, X, O],
+                [_, X, O, X, O],
+                [_, X, O, X, O],
+            ], 5);
+            const customConfig: MGPOptional<HexodiaConfig> = MGPOptional.of({
+                ...defaultConfig.get(),
+                numberOfDrops: 5,
+            });
+
+            // When doing a move with one drop only
+            const move: HexodiaMove = HexodiaMove.of([
+                new Coord(0, 1),
+                new Coord(0, 2),
+                new Coord(0, 3),
+                new Coord(0, 4),
+            ]);
+
+            // Then it should be a legal final move
+            const expectedState: HexodiaState = new HexodiaState([
+                [O, X, O, X, O],
+                [X, X, O, X, O],
+                [X, X, O, X, O],
+                [X, X, O, X, O],
+                [X, X, O, X, O],
+            ], 6);
+            RulesUtils.expectMoveSuccess(rules, state, move, expectedState, customConfig);
+        });
 
     });
 

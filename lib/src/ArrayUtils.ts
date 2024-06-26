@@ -97,7 +97,7 @@ export class ArrayUtils {
     /**
      * Counts the number of element in an array that have the provided value
      */
-    public static count<T>(array: T[], value: T): number {
+    public static count<T>(array: ReadonlyArray<T>, value: T): number {
         let total: number = 0;
         for (const element of array) {
             if (comparableEquals(element, value)) {
@@ -107,7 +107,7 @@ export class ArrayUtils {
         return total;
     }
 
-    public static contains<T>(array: T[], value: T): boolean {
+    public static contains<T>(array: ReadonlyArray<T>, value: T): boolean {
         for (const element of array) {
             if (comparableEquals(value, element)) {
                 return true;
