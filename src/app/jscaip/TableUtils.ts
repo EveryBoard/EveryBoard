@@ -45,7 +45,7 @@ export class TableUtils {
         const width: number = left[0].length;
         const height: number = left.length;
         Utils.assert(height === right.length, 'Table should have same height');
-        Utils.assert(width === right[0].length, 'Table should have same width');
+        Utils.assert(width === right[0].length, 'Table should have same width (left.length: ' + width + ', right.length: ' + right[0].length +')');
         const sum: number[][] = TableUtils.create(width, height, 0);
         for (let y: number = 0; y < height; y++) {
             for (let x: number = 0; x < width; x++) {

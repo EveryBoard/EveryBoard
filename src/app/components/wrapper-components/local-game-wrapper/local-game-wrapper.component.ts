@@ -134,7 +134,12 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
             const playingAI: MGPOptional<{ ai: AbstractAI, options: AIOptions }> = this.getPlayingAI();
             if (playingAI.isPresent()) {
                 window.setTimeout(async() => {
-                    await this.doAIMove(playingAI.get().ai, playingAI.get().options);
+                    const config: MGPOptional<RulesConfig> = await this.getConfig();
+                    const gameIsOngoing: boolean =
+                        this.gameComponent.rules.getGameStatus(this.gameComponent.node, config) === GameStatus.ONGOING;
+                    if (gameIsOngoing) {
+                        await this.doAIMove(playingAI.get().ai, playingAI.get().options);
+                    }
                 }, LocalGameWrapperComponent.AI_TIMEOUT);
             }
             // If playingAI is absent, that means the user selected an AI without selecting options yet
