@@ -551,7 +551,7 @@ def can_hard_draw(user1, user2):
     '''
     def play(user, column):
         user.wait_for('#playerTurn')
-        user.click('#click-{}-0 > rect'.format(column))
+        user.click('#click-{}-0'.format(column))
     # A game is being played
     user1.create_part(user2)
     # We eventually arrive at a draw
