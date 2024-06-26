@@ -447,7 +447,7 @@ describe('HexodiaRules', () => {
 
     describe('Custom config', () => {
 
-        it('should allow to play only N piece at last turn if there is less than N space remaining', () => {
+        it('should allow to play only N pieces at last turn if there is less than N spaces remaining', () => {
             // Given a board with only 4 space remaining but where 5 drop are needed
             const state: HexodiaState = new HexodiaState([
                 [O, X, O, X, O],
