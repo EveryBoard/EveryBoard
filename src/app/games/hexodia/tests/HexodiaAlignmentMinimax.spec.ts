@@ -126,7 +126,7 @@ describe('HexodiaAlignmentMinimax', () => {
         expect(bestMove).toEqual(HexodiaMove.of([new Coord(1, 18), new Coord(6, 18)]));
     });
 
-    SlowTest.fit('should be able play against itself', () => {
+    SlowTest.it('should be able play against itself', () => {
         const rules: HexodiaRules = HexodiaRules.get();
         minimaxTest({
             rules,
