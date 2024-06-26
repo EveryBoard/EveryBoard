@@ -17,7 +17,6 @@ export class AbstractNInARowHelper<T extends NonNullable<unknown>, D extends Dir
         // The aim of this loop is to count down and up as only one "double direction"
         const doubleDirections: D[] = [];
         for (const direction of directions) {
-            direction.getOpposite();
             if (doubleDirections.includes(direction) || doubleDirections.includes(direction.getOpposite())) {
                 continue;
             } else {
