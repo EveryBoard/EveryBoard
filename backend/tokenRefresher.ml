@@ -80,7 +80,10 @@ module Make (External : External.EXTERNAL) (Jwt : Jwt.JWT) : TOKEN_REFRESHER = s
         Lwt.return (Cohttp.Header.of_list [DreamUtils.authorization_header token])
 
     let middleware = fun (service_account_file : string) : Dream.middleware ->
-        let service_account = read_service_account_from_file service_account_file in
+        let service_account =
+            if !Options.emulator = false
+            then Some (read_service_account_from_file service_account_file)
+            else None in
         let token_ref = ref None in
         (fun handler request ->
              Dream.set_field request get_token_field (fun () ->
@@ -89,8 +92,8 @@ module Make (External : External.EXTERNAL) (Jwt : Jwt.JWT) : TOKEN_REFRESHER = s
                      Lwt.return "owner"
                  else
                      let* token = match !token_ref with
-                         | Some token -> request_token_if_outdated service_account token
-                         | None -> request_token service_account in
+                         | Some token -> request_token_if_outdated (Option.get service_account) token
+                         | None -> request_token (Option.get service_account) in
                      token_ref := Some token;
                      Lwt.return token.access_token
              );

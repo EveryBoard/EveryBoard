@@ -139,6 +139,16 @@ jobs:
           python-version: '3.10'
       - name: Install python dependencies
         run: pip install --upgrade selenium requests killport
+      - name: Install OS dependencies
+        run: sudo apt-get install -y libev-dev
+      - name: Setup OCaml
+        uses: ocaml/setup-ocaml@v2
+        with:
+          ocaml-compiler: 5.1
+      - name: Install OCaml dependencies
+        run: cd backend && opam install . --deps-only --with-test
+      - name: Build
+        run: cd backend && make
       - name: Run e2e tests
         run: npm run e2e
 
@@ -221,6 +231,11 @@ jobs:
     runs-on: ubuntu-latest
     needs: [ build-front, tests-front, tests-back, linter, images, translations ]
     environment: netlify
+    if: github.event_name == 'push' &&
+          contains('
+            refs/heads/master
+            refs/heads/develop
+          ', github.ref)
     steps:
       - name: Checkout the repository
         uses: actions/checkout@v4
@@ -315,7 +330,7 @@ jobs:
           SSH_SERVER: ${{ secrets.EVERYBOARD_DEPLOY_SSH_SERVER }}
           SSH_PORT: ${{ secrets.EVERYBOARD_DEPLOY_SSH_PORT }}
           SSH_KNOWN_HOSTS: ${{ secrets.EVERYBOARD_DEPLOY_KNOWN_HOST }}
-          SERVICE_ACCOUNT_DEV: ${{ secrets.EVERYBOARD_DEPLOY_SERVICE_ACCOUNT_DEV }}
+          SERVICE_ACCOUNT: ${{ secrets.EVERYBOARD_DEPLOY_SERVICE_ACCOUNT_DEV }}
 
   deployment-netlify:
     runs-on: ubuntu-latest
