@@ -37,6 +37,10 @@ class PlayerDriver():
         '''Ensures that no error has been logged in the browser's console'''
         logs = self.driver.get_log('browser')
 
+        # To debug e2e tests, this is a good place. What is nice to do is:
+        #   - add console.warn into the frontend
+        #   - print(logs) here to see all logs (only warnings and errors are logge)
+
         errors = False
         for log in logs:
             print('[browser]' + textwrap.fill(log['message'], 120))
@@ -50,7 +54,6 @@ class PlayerDriver():
         self.driver.get(url)
         # Make sure the page has fully loaded
         self.wait_for('app-root')
-        time.sleep(1)
 
     def reload_page(self):
         '''Reload the current page'''
@@ -184,6 +187,7 @@ class PlayerDriver():
         except:
             # Games that do not have startGameWithConfig are not configurable so we already use the default config
             pass
+
     def create_part(self, opponent):
         '''
         Create an online game and start it
@@ -242,8 +246,6 @@ def launch_scenarios():
        driver.ensure_no_errors()
 
     # Now we need a registered account
-    print('--------------')
-    print('GOING TO ONE DRIVER')
     driver.register('1-')
     for registered_scenario in scenarios['registered']:
         driver.go_to_page('http://localhost:4200')
@@ -254,8 +256,6 @@ def launch_scenarios():
         driver.ensure_no_errors()
 
     # Now we need another driver
-    print('--------------')
-    print('GOINRG TO TWO DRIVER')
     driver2 = PlayerDriver()
     driver2.register('2-')
     for two_drivers_scenario in scenarios['two_drivers']:
@@ -266,11 +266,6 @@ def launch_scenarios():
         print('----------------------------------------------')
         print('Running scenario: ' + two_drivers_scenario.__name__)
         two_drivers_scenario(driver, driver2)
-        # sleep a bit to be sure that all requests are well handled in the
-        # scenario (it can happen that the last step of the scenario performs a
-        # fetch, and if we directly reload the page for the next scenario, we'd
-        # have a "failed to fetch" error in the browser console)
-        time.sleep(1)
         driver.ensure_no_errors()
         driver2.ensure_no_errors()
 
@@ -436,6 +431,7 @@ def can_reload_part_creation(user):
 
     # Cleanup
     user.click('#cancel')
+    time.sleep(1) # needed to make sure that the request has been well handled, otherwise we receive "failed to fetch" errors
 
 @scenario('two_drivers')
 def can_reload_game(user1, user2):
