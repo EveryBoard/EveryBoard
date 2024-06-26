@@ -106,41 +106,51 @@ jobs:
     - name: Check coverage
       run: cd backend && make check-coverage
 
-  # e2e:
-  #   runs-on: ubuntu-latest
-  #   needs: [ build-front, tests-front, tests-back ]
-  #   steps:
-  #     - name: Checkout the repository
-  #       uses: actions/checkout@v4
-  #     - name: Setup dependencies (cache node modules)
-  #       uses: actions/cache@v4
-  #       env:
-  #         cache-name: cache-node-modules
-  #       with:
-  #         path: ~/.npm
-  #         key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
-  #         restore-keys: |
-  #           ${{ runner.os }}-build-${{ env.cache-name }}-
-  #           ${{ runner.os }}-build-
-  #           ${{ runner.os }}-
-  #     - name: Setup dependencies (setup node)
-  #       uses: actions/setup-node@v4
-  #       with:
-  #         node-version: 18
-  #     - name: Setup dependencies (install dependencies)
-  #       run: npm ci
-  #     - name: Build lib
-  #       run: rm -rf node_modules/@types/glob && cd lib && npm run build
-  #     - name: Setup dependencies (setup dummy Firebase secret)
-  #       run: cp ./src/app/firebaseConfig.ts.dummy ./src/app/firebaseConfig.ts
-  #     - name: Setup python
-  #       uses: actions/setup-python@v5
-  #       with:
-  #         python-version: '3.10'
-  #     - name: Install python dependencies
-  #       run: pip install --upgrade selenium requests killport
-  #     - name: Run e2e tests
-  #       run: npm run e2e
+  e2e:
+    runs-on: ubuntu-latest
+    needs: [ build-front, tests-front, tests-back ]
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@v4
+      - name: Setup dependencies (cache node modules)
+        uses: actions/cache@v4
+        env:
+          cache-name: cache-node-modules
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-build-${{ env.cache-name }}-
+            ${{ runner.os }}-build-
+            ${{ runner.os }}-
+      - name: Setup dependencies (setup node)
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+      - name: Setup dependencies (install dependencies)
+        run: npm ci
+      - name: Build lib
+        run: rm -rf node_modules/@types/glob && cd lib && npm run build
+      - name: Setup dependencies (setup dummy Firebase secret)
+        run: cp ./src/app/firebaseConfig.ts.dummy ./src/app/firebaseConfig.ts
+      - name: Setup python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+      - name: Install python dependencies
+        run: pip install --upgrade selenium requests killport
+      - name: Install OS dependencies
+        run: sudo apt-get install -y libev-dev
+      - name: Setup OCaml
+        uses: ocaml/setup-ocaml@v2
+        with:
+          ocaml-compiler: 5.1
+      - name: Install OCaml dependencies
+        run: cd backend && opam install . --deps-only --with-test
+      - name: Build
+        run: cd backend && make
+      - name: Run e2e tests
+        run: npm run e2e
 
   linter:
     runs-on: ubuntu-latest
@@ -221,6 +231,11 @@ jobs:
     runs-on: ubuntu-latest
     needs: [ build-front, tests-front, tests-back, linter, images, translations ]
     environment: netlify
+    if: github.event_name == 'push' &&
+          contains('
+            refs/heads/master
+            refs/heads/develop
+          ', github.ref)
     steps:
       - name: Checkout the repository
         uses: actions/checkout@v4
@@ -315,7 +330,7 @@ jobs:
           SSH_SERVER: ${{ secrets.EVERYBOARD_DEPLOY_SSH_SERVER }}
           SSH_PORT: ${{ secrets.EVERYBOARD_DEPLOY_SSH_PORT }}
           SSH_KNOWN_HOSTS: ${{ secrets.EVERYBOARD_DEPLOY_KNOWN_HOST }}
-          SERVICE_ACCOUNT_DEV: ${{ secrets.EVERYBOARD_DEPLOY_SERVICE_ACCOUNT_DEV }}
+          SERVICE_ACCOUNT: ${{ secrets.EVERYBOARD_DEPLOY_SERVICE_ACCOUNT_DEV }}
 
   deployment-netlify:
     runs-on: ubuntu-latest

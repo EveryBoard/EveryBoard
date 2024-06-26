@@ -26,7 +26,7 @@ def run_e2e():
     try:
         print('[e2e] Launching processes')
         frontend_process = subprocess.Popen(['npm', 'run', 'start:emulator'], stdout=subprocess.PIPE, universal_newlines=True)
-        backend_process = subprocess.Popen(['make', '-C', 'backend', 'run'], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        backend_process = subprocess.Popen(['make', '-C', 'backend', 'run'])
 
         print('[e2e] Watching URLs')
         watch_thread = threading.Thread(target=open_urls, args=(frontend_process,))
