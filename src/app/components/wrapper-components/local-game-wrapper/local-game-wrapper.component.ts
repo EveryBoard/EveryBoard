@@ -127,7 +127,6 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
     }
 
     public async proposeAIToPlay(): Promise<void> {
-
         const currentPlayerIsHuman: boolean = await this.hasSelectedAI() === false;
         await this.setInteractive(currentPlayerIsHuman);
         if (currentPlayerIsHuman === false) {
@@ -137,7 +136,7 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
                 window.setTimeout(async() => {
                     const config: MGPOptional<RulesConfig> = await this.getConfig();
                     const gameIsOngoing: boolean =
-                    this.gameComponent.rules.getGameStatus(this.gameComponent.node, config) === GameStatus.ONGOING;
+                        this.gameComponent.rules.getGameStatus(this.gameComponent.node, config) === GameStatus.ONGOING;
                     if (gameIsOngoing) {
                         await this.doAIMove(playingAI.get().ai, playingAI.get().options);
                     }
