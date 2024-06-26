@@ -21,16 +21,16 @@ export class DodecaHexaDirection extends Direction {
         new class extends DirectionFactory<DodecaHexaDirection> {
             public all: ReadonlyArray<DodecaHexaDirection> = [
                 DodecaHexaDirection.DIRECTION_000,
-                DodecaHexaDirection.DIRECTION_060,
-                DodecaHexaDirection.DIRECTION_120,
-                DodecaHexaDirection.DIRECTION_180,
-                DodecaHexaDirection.DIRECTION_240,
-                DodecaHexaDirection.DIRECTION_300,
                 DodecaHexaDirection.DIRECTION_030,
+                DodecaHexaDirection.DIRECTION_060,
                 DodecaHexaDirection.DIRECTION_090,
+                DodecaHexaDirection.DIRECTION_120,
                 DodecaHexaDirection.DIRECTION_150,
+                DodecaHexaDirection.DIRECTION_180,
                 DodecaHexaDirection.DIRECTION_210,
+                DodecaHexaDirection.DIRECTION_240,
                 DodecaHexaDirection.DIRECTION_270,
+                DodecaHexaDirection.DIRECTION_300,
                 DodecaHexaDirection.DIRECTION_330,
             ];
         };
@@ -39,16 +39,16 @@ export class DodecaHexaDirection extends Direction {
         (direction: DodecaHexaDirection): number => {
             switch (direction) {
                 case (DodecaHexaDirection.DIRECTION_000): return 0;
-                case (DodecaHexaDirection.DIRECTION_060): return 1;
-                case (DodecaHexaDirection.DIRECTION_120): return 2;
-                case (DodecaHexaDirection.DIRECTION_180): return 3;
-                case (DodecaHexaDirection.DIRECTION_240): return 4;
-                case (DodecaHexaDirection.DIRECTION_300): return 5;
-                case (DodecaHexaDirection.DIRECTION_030): return 6;
-                case (DodecaHexaDirection.DIRECTION_090): return 7;
-                case (DodecaHexaDirection.DIRECTION_150): return 8;
-                case (DodecaHexaDirection.DIRECTION_210): return 9;
-                case (DodecaHexaDirection.DIRECTION_330): return 10;
+                case (DodecaHexaDirection.DIRECTION_030): return 1;
+                case (DodecaHexaDirection.DIRECTION_060): return 2;
+                case (DodecaHexaDirection.DIRECTION_090): return 3;
+                case (DodecaHexaDirection.DIRECTION_120): return 4;
+                case (DodecaHexaDirection.DIRECTION_150): return 5;
+                case (DodecaHexaDirection.DIRECTION_180): return 6;
+                case (DodecaHexaDirection.DIRECTION_210): return 7;
+                case (DodecaHexaDirection.DIRECTION_240): return 8;
+                case (DodecaHexaDirection.DIRECTION_270): return 9;
+                case (DodecaHexaDirection.DIRECTION_300): return 10;
                 default:
                     Utils.expectToBe(direction, DodecaHexaDirection.DIRECTION_330);
                     return 11;
@@ -87,8 +87,8 @@ export class DodecaHexaDirection extends Direction {
     public override toString(): string {
         if (this.x === 1 && this.y === -2) return 'DIRECTION_030';
         if (this.x === 2 && this.y === -1) return 'DIRECTION_090';
-        if (this.x === -1 && this.y === 2) return 'DIRECTION_150';
-        if (this.x === -2 && this.y === 1) return 'DIRECTION_180';
+        if (this.x === -1 && this.y === 2) return 'DIRECTION_210';
+        if (this.x === -2 && this.y === 1) return 'DIRECTION_270';
         else return super.toString();
     }
 
