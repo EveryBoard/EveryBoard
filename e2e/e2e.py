@@ -20,7 +20,7 @@ HEADLESS = True
 # Set to True if somehow the selenium driver is acting like a mobile device (with small screen)
 # It seems to be the case when we are in headless mode, so let's just inherit the value of HEADLESS
 MOBILE = HEADLESS
-USER_RESPONSE_TIME=0.2 # A typical user cannot click faster than once every 200ms
+USER_RESPONSE_TIME=1.2 # A typical user cannot click faster than once every 200ms
 
 class PlayerDriver():
     def __init__(self):
@@ -83,7 +83,7 @@ class PlayerDriver():
 
         time.sleep(0.5) # Wait for the email verification to be done by the other script
         self.click('#finalizeVerification')
-        time.sleep(0.5) # Need to wait a bit before the verification is done, otherwise we risk getting auth/network-request-failed
+        time.sleep(1.5) # Need to wait a bit before the verification is done, otherwise we risk getting auth/network-request-failed
 
     def wait_for(self, selector, timeout=120):
         '''Wait for an element to be present on the page. Timeout is in seconds'''
