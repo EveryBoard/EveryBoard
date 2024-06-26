@@ -46,7 +46,7 @@ class PlayerDriver():
 
         errors = False
         for log in logs:
-            print('[browser]' + textwrap.fill(log['message'], 120))
+            print('[browser]' + log['message'])
             if log['level'] == 'SEVERE':
                 errors = True
         if errors:
@@ -564,9 +564,7 @@ def can_hard_draw(user1, user2):
             (5, 5), (5, 5), (5, 5),
             (6, 6), (6, 6), (6, 6)]
     for cols_to_play in cols:
-        print(user1.driver.find_element(By.CSS_SELECTOR, 'body').get_attribute('innerHTML'))
         play(user1, cols_to_play[0])
-        print(user2.driver.find_element(By.CSS_SELECTOR, 'body').get_attribute('innerHTML'))
         play(user2, cols_to_play[1])
 
     # We see the draw
