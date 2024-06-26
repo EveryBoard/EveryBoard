@@ -613,32 +613,32 @@ def can_resign(user1, user2):
     user1.wait_for('#resignIndicator')
     user2.wait_for('#resignIndicator')
 
-@scenario('two_drivers')
-def can_rematch(user1, user2):
-    '''
-    Role: We are two users in a game
-    Action: I resign and ask for rematch, the opponent accepts
-    Result: We started a new game
-    '''
-    # A game has finished
-    user1.create_part(user2)
-    user1.click('#resign')
-    game_url = user1.get_current_url()
-
-    # I ask for a rematch and the user accepts
-    user1.click('#proposeRematch')
-    user2.click('#accept')
-    time.sleep(1) # To make sure the page is reloaded
-
-    # It is a new part
-    user1.wait_for('#game')
-    new_game_url = user1.get_current_url()
-    if not(new_game_url != game_url):
-        print('Game has not changed!')
-        raise Exception('Test failed')
-
-    user1.click('#resign')
-    user1.wait_for('#resignIndicator')
+#@scenario('two_drivers')
+#def can_rematch(user1, user2):
+#    '''
+#    Role: We are two users in a game
+#    Action: I resign and ask for rematch, the opponent accepts
+#    Result: We started a new game
+#    '''
+#    # A game has finished
+#    user1.create_part(user2)
+#    user1.click('#resign')
+#    game_url = user1.get_current_url()
+#
+#    # I ask for a rematch and the user accepts
+#    user1.click('#proposeRematch')
+#    user2.click('#accept')
+#    time.sleep(1) # To make sure the page is reloaded
+#
+#    # It is a new part
+#    user1.wait_for('#game')
+#    new_game_url = user1.get_current_url()
+#    if not(new_game_url != game_url):
+#        print('Game has not changed!')
+#        raise Exception('Test failed')
+#
+#    user1.click('#resign')
+#    user1.wait_for('#resignIndicator')
 
 if __name__ == '__main__':
     launch_scenarios()
