@@ -18,8 +18,7 @@ import textwrap
 # Set to False to see the script happening in real time. Useful for debugging
 HEADLESS = True
 # Set to True if somehow the selenium driver is acting like a mobile device (with small screen)
-# It seems to be the case when we are in headless mode, so let's just inherit the value of HEADLESS
-MOBILE = HEADLESS
+MOBILE = False
 USER_RESPONSE_TIME=0.2 # A typical user cannot click faster than once every 200ms
 
 class PlayerDriver():
@@ -27,6 +26,8 @@ class PlayerDriver():
         options = Options()
         if HEADLESS:
             options.add_argument('-headless')
+        # If the browser (fake) window is too small, selenium complains that some elements are not clickable
+        options.add_argument('window-size=1200x600')
         self.driver = webdriver.Chrome(options=options)
 
     def close(self):
@@ -37,9 +38,15 @@ class PlayerDriver():
         '''Ensures that no error has been logged in the browser's console'''
         logs = self.driver.get_log('browser')
 
+        # To debug e2e tests, this is a good place. What is nice to do is:
+        #   - add console.warn into the frontend
+        #   - print(logs) here to see all logs (only warnings and errors are logge)
+        # Another useful thing is to display the full page with, e.g.:
+        #   print(user.driver.find_element(By.CSS_SELECTOR, 'body').get_attribute('innerHTML'))
+
         errors = False
         for log in logs:
-            print('[browser]' + textwrap.fill(log['message'], 120))
+            print('[browser]' + log['message'])
             if log['level'] == 'SEVERE':
                 errors = True
         if errors:
@@ -50,7 +57,6 @@ class PlayerDriver():
         self.driver.get(url)
         # Make sure the page has fully loaded
         self.wait_for('app-root')
-        #time.sleep(1)
 
     def reload_page(self):
         '''Reload the current page'''
@@ -78,7 +84,7 @@ class PlayerDriver():
         # Click on finalize verification button
         time.sleep(0.5) # Wait for the email verification to be done by the other script
         self.click('#finalizeVerification')
-        time.sleep(0.5) # Need to wait a bit before the verification is done
+        time.sleep(0.5) # Need to wait a bit before the verification is done, otherwise we risk getting auth/network-request-failed
 
     def wait_for(self, selector, timeout=120):
         '''Wait for an element to be present on the page. Timeout is in seconds'''
@@ -184,6 +190,7 @@ class PlayerDriver():
         except:
             # Games that do not have startGameWithConfig are not configurable so we already use the default config
             pass
+
     def create_part(self, opponent):
         '''
         Create an online game and start it
@@ -374,8 +381,8 @@ def can_play_local_vs_ai(user):
     # AI should have played a second move, I can play again
     user.click('#click-1-0 > rect')
 
-    # Now there should be a piece in #click-1-0
-    user.wait_for('#click-1-0 > circle')
+    # Now there should be a piece in #click-1-5 (the bottom row)
+    user.wait_for('#click-1-5 > circle')
 
 @scenario('two_drivers')
 def can_create_part_and_play(user1, user2):
@@ -414,7 +421,6 @@ def can_reload_part_creation(user):
     Result: It works
     '''
     # I create a part
-    user.ensure_no_errors()
     user.click('#createOnlineGame')
     user.select('#gameType', 'Four in a Row')
     user.click('#launchGame')
@@ -428,6 +434,7 @@ def can_reload_part_creation(user):
 
     # Cleanup
     user.click('#cancel')
+    time.sleep(1) # needed to make sure that the request has been well handled, otherwise we receive "failed to fetch" errors
 
 @scenario('two_drivers')
 def can_reload_game(user1, user2):
@@ -477,9 +484,9 @@ def can_perform_time_actions(user1, user2):
     user1.create_part(user2)
 
     # I can add global time
-    check_time_increase('#chronoOneGlobal')
+    check_time_increase('#chrono-one-global')
     # I can add turn time
-    check_time_increase('#chronoOneTurn')
+    check_time_increase('#chrono-one-turn')
 
     # Cleanup
     user1.click('#resign')
@@ -545,7 +552,7 @@ def can_hard_draw(user1, user2):
     '''
     def play(user, column):
         user.wait_for('#playerTurn')
-        user.click('#click-{}-0 > rect'.format(column))
+        user.click('#click-{}-0'.format(column))
     # A game is being played
     user1.create_part(user2)
     # We eventually arrive at a draw

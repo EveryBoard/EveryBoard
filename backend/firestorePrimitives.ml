@@ -47,9 +47,9 @@ module Make
 
     let get_doc = fun ~(request : Dream.request) ~(path : string) : JSON.t Lwt.t ->
         Stats.read request;
+        logger.info (fun log -> log ~request "Getting %s" path);
         let* headers = TokenRefresher.header request in
         let* (response, body) = External.Http.get ~headers (endpoint path) in
-        logger.info (fun log -> log ~request "Response: %s" body);
         if is_error response
         then raise (DocumentNotFound path)
         else Lwt.return (of_firestore (JSON.from_string body))
@@ -69,7 +69,6 @@ module Make
         let endpoint = endpoint ~params collection in
         (* Note: We *can't* create a doc and retrieve its id in a transaction, so we just ignore whether we are in a transaction *)
         let* (response, body) = External.Http.post_json ~headers firestore_doc endpoint in
-        logger.info (fun log -> log ~request "Response: %s" body);
         if is_error response
         then raise (UnexpectedError (Printf.sprintf "error on document creation for %s: %s" collection body))
         else Lwt.return (get_id_from_firestore_document_name (JSON.from_string body))
@@ -89,7 +88,6 @@ module Make
         let endpoint = endpoint ~params path in
         let* headers = TokenRefresher.header request in
         let* (response, body) = External.Http.patch_json ~headers firestore_update endpoint in
-        logger.info (fun log -> log ~request "Response: %s" body);
         if is_error response
         then raise (UnexpectedError (Printf.sprintf "error on document update for %s: %s" path body))
         else Lwt.return ()
