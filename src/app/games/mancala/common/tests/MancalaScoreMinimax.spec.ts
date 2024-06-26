@@ -1,5 +1,5 @@
 /* eslint-disable max-lines-per-function */
-
+import { MGPOptional } from '@everyboard/lib';
 import { AIDepthLimitOptions } from 'src/app/jscaip/AI/AI';
 import { minimaxTest, SlowTest } from 'src/app/utils/tests/TestUtils.spec';
 import { AwaleRules } from '../../awale/AwaleRules';
@@ -25,6 +25,22 @@ describe('MancalaScoreMinimax', () => {
                 shouldFinish: true,
             });
         });
+
+        SlowTest.it('should be able to play against itself (other config)', () => {
+            const rules: MancalaRules = mancalaRules.get();
+            const minimax: MancalaScoreMinimax = new MancalaScoreMinimax(rules, new MancalaMoveGenerator(rules));
+            minimaxTest({
+                rules,
+                minimax,
+                options: minimaxOptions,
+                config: MGPOptional.of({
+                    ...rules.getDefaultRulesConfig().get(),
+                    width: 4,
+                }),
+                shouldFinish: true,
+            });
+        });
+
     }
 
 });
