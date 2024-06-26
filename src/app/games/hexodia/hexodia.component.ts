@@ -64,9 +64,9 @@ export class HexodiaComponent extends HexagonalGameComponent<HexodiaRules,
         const pieceSize: number = this.SPACE_SIZE * 1.5;
         const size: number = (this.SPACE_SIZE * 0.5) + (abstractSize * pieceSize);
         const configSize: number = Math.floor(abstractSize / 2);
-        const halfStroke: number = (0.5 * this.STROKE_WIDTH);
+        const halfStroke: number = this.STROKE_WIDTH / 2;
         return new ViewBox(
-            halfStroke + (configSize * (this.SPACE_SIZE - halfStroke)),
+            ((configSize - 1) * (this.SPACE_SIZE - halfStroke)) - (1.25 * this.STROKE_WIDTH),
             0,
             size + (1.75 * configSize * this.STROKE_WIDTH),
             size + this.STROKE_WIDTH,
