@@ -40,6 +40,8 @@ class PlayerDriver():
         # To debug e2e tests, this is a good place. What is nice to do is:
         #   - add console.warn into the frontend
         #   - print(logs) here to see all logs (only warnings and errors are logge)
+        # Another useful thing is to display the full page with, e.g.:
+        #   print(user.driver.find_element(By.CSS_SELECTOR, 'body').get_attribute('innerHTML'))
 
         errors = False
         for log in logs:
@@ -81,7 +83,7 @@ class PlayerDriver():
         # Click on finalize verification button
         time.sleep(0.5) # Wait for the email verification to be done by the other script
         self.click('#finalizeVerification')
-        time.sleep(1.5) # Need to wait a bit before the verification is done, otherwise we risk getting auth/network-request-failed
+        time.sleep(0.5) # Need to wait a bit before the verification is done, otherwise we risk getting auth/network-request-failed
 
     def wait_for(self, selector, timeout=120):
         '''Wait for an element to be present on the page. Timeout is in seconds'''
@@ -561,9 +563,10 @@ def can_hard_draw(user1, user2):
             (5, 5), (5, 5), (5, 5),
             (6, 6), (6, 6), (6, 6)]
     for cols_to_play in cols:
+        print(user1.driver.find_element(By.CSS_SELECTOR, 'body').get_attribute('innerHTML'))
         play(user1, cols_to_play[0])
+        print(user2.driver.find_element(By.CSS_SELECTOR, 'body').get_attribute('innerHTML'))
         play(user2, cols_to_play[1])
-        time.sleep(0.5) # to get it to pass in CI
 
     # We see the draw
     user1.wait_for('#hardDrawIndicator')
