@@ -391,6 +391,7 @@ describe('KalahRules', () => {
 
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState, customConfig);
         });
+
     });
 
 });

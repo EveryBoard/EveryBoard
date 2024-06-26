@@ -41,7 +41,7 @@ export class KalahRules extends MancalaRules {
         const distributedState: MancalaState = distributionResult.resultingState;
         const capturelessResult: MancalaCaptureResult = {
             capturedSum: 0,
-            captureMap: TableUtils.create(6, 2, 0),
+            captureMap: TableUtils.create(distributedState.getWidth(), 2, 0),
             resultingState: distributedState,
         };
         if (distributionResult.endsUpInStore) {
