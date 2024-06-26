@@ -211,6 +211,7 @@ class PlayerDriver():
 
         print(self.driver.find_element(By.CSS_SELECTOR, 'body').get_attribute('innerHTML'))
         self.ensure_no_errors()
+        self.reload_page()
 
         # Player 1 sees player 2 arrive and selects them
         self.click('#presenceOf_{}'.format(opponent.username))
