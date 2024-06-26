@@ -20,7 +20,7 @@ HEADLESS = True
 # Set to True if somehow the selenium driver is acting like a mobile device (with small screen)
 # It seems to be the case when we are in headless mode, so let's just inherit the value of HEADLESS
 MOBILE = HEADLESS
-USER_RESPONSE_TIME=1.2 # A typical user cannot click faster than once every 200ms
+USER_RESPONSE_TIME=0.2 # A typical user cannot click faster than once every 200ms
 
 class PlayerDriver():
     def __init__(self):
@@ -266,6 +266,11 @@ def launch_scenarios():
         print('----------------------------------------------')
         print('Running scenario: ' + two_drivers_scenario.__name__)
         two_drivers_scenario(driver, driver2)
+        # sleep a bit to be sure that all requests are well handled in the
+        # scenario (it can happen that the last step of the scenario performs a
+        # fetch, and if we directly reload the page for the next scenario, we'd
+        # have a "failed to fetch" error in the browser console)
+        time.sleep(1)
         driver.ensure_no_errors()
         driver2.ensure_no_errors()
 
@@ -410,28 +415,27 @@ def can_create_part_and_play(user1, user2):
     user1.wait_for('#youWonIndicator')
     user2.wait_for('#youLostIndicator')
 
-#@scenario('registered')
-#def can_reload_part_creation(user):
-#    '''
-#    Role: I am a registered user with a game in creation
-#    Action: I reload the page
-#    Result: It works
-#    '''
-#    # I create a part
-#    user.ensure_no_errors()
-#    user.click('#createOnlineGame')
-#    user.select('#gameType', 'Four in a Row')
-#    user.click('#launchGame')
-#    user.wait_for('#partCreation')
-#
-#    # I reload the page
-#    user.reload_page()
-#
-#    # Now I should still be on the part creation page
-#    user.wait_for('#partCreation')
-#
-#    # Cleanup
-#    user.click('#cancel')
+@scenario('registered')
+def can_reload_part_creation(user):
+    '''
+    Role: I am a registered user with a game in creation
+    Action: I reload the page
+    Result: It works
+    '''
+    # I create a part
+    user.click('#createOnlineGame')
+    user.select('#gameType', 'Four in a Row')
+    user.click('#launchGame')
+    user.wait_for('#partCreation')
+
+    # I reload the page
+    user.reload_page()
+
+    # Now I should still be on the part creation page
+    user.wait_for('#partCreation')
+
+    # Cleanup
+    user.click('#cancel')
 
 @scenario('two_drivers')
 def can_reload_game(user1, user2):

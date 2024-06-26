@@ -10,6 +10,7 @@ export abstract class BackendService {
 
     protected async performRequest(method: HTTPMethod, endpoint: string): Promise<MGPFallible<Response>> {
         const token: string = await this.connectedUserService.getIdToken();
+        console.warn(method + ' ' + endpoint)
         const response: Response =
             await fetch(environment.backendURL + '/' + endpoint, {
                 method,
@@ -17,6 +18,7 @@ export abstract class BackendService {
                     'Authorization': 'Bearer ' + token,
                 },
             });
+        console.warn('OK for ' + method + ' ' + endpoint)
         if (this.isSuccessStatus(response.status)) {
             return MGPFallible.success(response);
         } else {
