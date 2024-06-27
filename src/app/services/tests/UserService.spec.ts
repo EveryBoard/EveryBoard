@@ -2,11 +2,9 @@
 import { UserService } from '../UserService';
 import { UserDAO } from 'src/app/dao/UserDAO';
 import { UserDAOMock } from 'src/app/dao/tests/UserDAOMock.spec';
-import { serverTimestamp, Timestamp } from 'firebase/firestore';
+import { serverTimestamp } from 'firebase/firestore';
 import { fakeAsync, TestBed } from '@angular/core/testing';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { UserMocks } from 'src/app/domain/UserMocks.spec';
-import { FirestoreDAOMock } from 'src/app/dao/tests/FirestoreDAOMock.spec';
 
 describe('UserService', () => {
 
@@ -50,20 +48,5 @@ describe('UserService', () => {
             // Then update should be called
             expect(userDAO.update).toHaveBeenCalledOnceWith('userId', { lastUpdateTime: serverTimestamp() });
         });
-    });
-    describe('getServerTime', () => {
-        it('should return server time of the presence token', fakeAsync(async() => {
-            // Given a user service and some user
-            const id: string = await userDAO.create(UserMocks.CONNECTED);
-            const expectedServerTime: Timestamp = new Timestamp(1, 234);
-            spyOn(FirestoreDAOMock, 'mockServerTime').and.returnValue(expectedServerTime);
-            spyOn(userService, 'updatePresenceToken').and.callThrough();
-
-            // When calling getServerTime
-            const serverTime: Timestamp = await userService.getServerTime(id);
-
-            // Then it should return the timestamp provided by the server
-            expect(serverTime).toBe(expectedServerTime);
-        }));
     });
 });

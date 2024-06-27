@@ -325,15 +325,15 @@ export class LascaComponent extends ParallelogramGameComponent<LascaRules,
     }
 
     public getRightEdge(): string {
-        const WIDTH: number = this.basicWidth * this.mode.horizontalWidthRatio;
-        const OFFSET: number = this.basicWidth * this.mode.offsetRatio;
-        const x0: number = OFFSET + WIDTH;
+        const width: number = this.basicWidth * this.mode.horizontalWidthRatio;
+        const offset: number = this.basicWidth * this.mode.offsetRatio;
+        const x0: number = offset + width;
         const y0: number = 0;
-        const x1: number = OFFSET + WIDTH;
+        const x1: number = offset + width;
         const y1: number = this.THICKNESS;
-        const x2: number = WIDTH;
+        const x2: number = width;
         const y2: number = this.basicWidth + this.THICKNESS;
-        const x3: number = WIDTH;
+        const x3: number = width;
         const y3: number = this.basicWidth;
         return [x0, y0, x1, y1, x2, y2, x3, y3].join(' ');
     }

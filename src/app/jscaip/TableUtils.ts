@@ -45,7 +45,7 @@ export class TableUtils {
         const width: number = left[0].length;
         const height: number = left.length;
         Utils.assert(height === right.length, 'Table should have same height');
-        Utils.assert(width === right[0].length, 'Table should have same width');
+        Utils.assert(width === right[0].length, 'Table should have same width (left.length: ' + width + ', right.length: ' + right[0].length +')');
         const sum: number[][] = TableUtils.create(width, height, 0);
         for (let y: number = 0; y < height; y++) {
             for (let x: number = 0; x < width; x++) {
@@ -55,6 +55,22 @@ export class TableUtils {
         return sum;
     }
 
+    public static contains<T>(table: Table<T>, element: T): boolean {
+        for (const array of table) {
+            if (ArrayUtils.contains(array, element)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static count<T>(table: Table<T>, element: T): number {
+        let total: number = 0;
+        for (const array of table) {
+            total += ArrayUtils.count(array, element);
+        }
+        return total;
+    }
 
 }
 

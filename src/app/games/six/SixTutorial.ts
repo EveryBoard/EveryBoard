@@ -24,9 +24,7 @@ export class SixTutorial extends Tutorial {
     public tutorial: TutorialStep[] = [
         TutorialStep.informational(
             $localize`Six`,
-            $localize`Six is a game without board, where pieces are placed on the side of each other, in a contiguous block.
-        Each player has 21 pieces, with one for each player already on the board.
-        The goal of the game is to form one of the three winning shapes with your pieces.`,
+            $localize`Six is a game without board, where pieces are placed on the side of each other, in a contiguous block. Each player has 21 pieces, with one for each player already on the board. The object of the game is to form one of the three winning shapes with your pieces.`,
             SixRules.get().getInitialState(),
         ),
         TutorialStep.fromMove(

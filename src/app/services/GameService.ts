@@ -1,19 +1,15 @@
 import { Injectable } from '@angular/core';
-import { MGPValidation, MGPOptional, Utils } from '@everyboard/lib';
+import { MGPValidation, MGPOptional, JSONValue, Utils, MGPFallible } from '@everyboard/lib';
 import { PartDAO } from '../dao/PartDAO';
-import { MGPResult, Part, PartDocument } from '../domain/Part';
-import { FirstPlayer, ConfigRoom, PartStatus } from '../domain/ConfigRoom';
-import { ConfigRoomService } from './ConfigRoomService';
-import { ChatService } from './ChatService';
-import { Player } from 'src/app/jscaip/Player';
+import { Part } from '../domain/Part';
 import { Subscription } from 'rxjs';
-import { serverTimestamp } from 'firebase/firestore';
 import { MinimalUser } from '../domain/MinimalUser';
-import { ConnectedUserService } from './ConnectedUserService';
 import { FirestoreTime } from '../domain/Time';
-import { GameEventService } from './GameEventService';
+import { BackendService } from './BackendService';
+import { Player, PlayerOrNone } from '../jscaip/Player';
 import { PlayerNumberMap } from '../jscaip/PlayerMap';
 import { Debug } from '../utils/Debug';
+import { ConnectedUserService } from './ConnectedUserService';
 
 export interface StartingPartConfig extends Partial<Part> {
     playerZero: MinimalUser,
@@ -26,270 +22,183 @@ export interface StartingPartConfig extends Partial<Part> {
     providedIn: 'root',
 })
 @Debug.log
-export class GameService {
+export class GameService extends BackendService {
 
-    public constructor(private readonly partDAO: PartDAO,
-                       private readonly gameEventService: GameEventService,
-                       private readonly connectedUserService: ConnectedUserService,
-                       private readonly configRoomService: ConfigRoomService,
-                       private readonly chatService: ChatService)
+    public constructor(protected readonly partDAO: PartDAO,
+                       connectedUserService: ConnectedUserService)
     {
-    }
-
-    private async update(id: string, update: Partial<Part>): Promise<void> {
-        return this.partDAO.update(id, update);
-    }
-
-    public async getPartValidity(partId: string, gameType: string): Promise<MGPValidation> {
-        const part: MGPOptional<Part> = await this.partDAO.read(partId);
-        if (part.isAbsent()) {
-            return MGPValidation.failure('NONEXISTENT_PART');
-        }
-        if (part.get().typeGame === gameType) {
-            return MGPValidation.SUCCESS;
-        } else {
-            return MGPValidation.failure('WRONG_GAME_TYPE');
-        }
-    }
-
-    private getUser(): MinimalUser {
-        return this.connectedUserService.user.get().toMinimalUser();
-    }
-
-    private createUnstartedPart(typeGame: string): Promise<string> {
-        const playerZero: MinimalUser = this.getUser();
-
-        const newPart: Part = {
-            typeGame,
-            playerZero,
-            turn: -1,
-            result: MGPResult.UNACHIEVED.value,
-        };
-        return this.partDAO.create(newPart);
-    }
-
-    private createChat(chatId: string): Promise<void> {
-        return this.chatService.createNewChat(chatId);
-    }
-
-    public async createPartConfigRoomAndChat(typeGame: string): Promise<string> {
-        const gameId: string = await this.createUnstartedPart(typeGame);
-        await this.configRoomService.createInitialConfigRoom(gameId, typeGame);
-        await this.createChat(gameId);
-        return gameId;
-    }
-
-    public getStartingConfig(configRoom: ConfigRoom): StartingPartConfig {
-        let whoStarts: FirstPlayer = FirstPlayer.of(configRoom.firstPlayer);
-        if (whoStarts === FirstPlayer.RANDOM) {
-            if (Math.random() < 0.5) {
-                whoStarts = FirstPlayer.CREATOR;
-            } else {
-                whoStarts = FirstPlayer.CHOSEN_PLAYER;
-            }
-        }
-        let playerZero: MinimalUser;
-        let playerOne: MinimalUser;
-        if (whoStarts === FirstPlayer.CREATOR) {
-            playerZero = configRoom.creator;
-            playerOne = Utils.getNonNullable(configRoom.chosenOpponent);
-        } else {
-            playerZero = Utils.getNonNullable(configRoom.chosenOpponent);
-            playerOne = configRoom.creator;
-        }
-        return {
-            playerZero,
-            playerOne,
-            turn: 0,
-            beginning: serverTimestamp(),
-        };
-    }
-
-    public deletePart(partId: string): Promise<void> {
-        return this.partDAO.delete(partId);
-    }
-
-    public async acceptConfig(partId: string, configRoom: ConfigRoom): Promise<void> {
-        await this.configRoomService.acceptConfig(partId);
-
-        const update: StartingPartConfig = this.getStartingConfig(configRoom);
-        await this.partDAO.update(partId, update);
-        await this.gameEventService.startGame(partId, this.getUser());
-    }
-
-    public getPart(partId: string): Promise<MGPOptional<Part>> {
-        return this.partDAO.read(partId);
+        super(connectedUserService);
     }
 
     public subscribeToChanges(partId: string, callback: (part: MGPOptional<Part>) => void): Subscription {
         return this.partDAO.subscribeToChanges(partId, callback);
     }
 
-    public async resign(partId: string, winner: MinimalUser, loser: MinimalUser): Promise<void> {
-        const update: Partial<Part> = {
-            winner,
-            loser,
-            result: MGPResult.RESIGN.value,
-        };
-        await this.partDAO.update(partId, update);
-        await this.gameEventService.addAction(partId, this.getUser(), 'EndGame');
+    /** Create a game, its config room and chat. Return the id of the created game. */
+    public async createGame(gameName: string): Promise<string> {
+        const result: MGPFallible<JSONValue> =
+            await this.performRequestWithJSONResponse('POST', `game?gameName=${gameName}`);
+        this.assertSuccess(result);
+        // eslint-disable-next-line dot-notation
+        return Utils.getNonNullable(Utils.getNonNullable(result.get())['id']) as string;
     }
 
-    public async notifyTimeout(partId: string, winner: MinimalUser, loser: MinimalUser): Promise<void> {
-        const update: Partial<Part> = {
-            winner,
-            loser,
-            result: MGPResult.TIMEOUT.value,
-        };
-        await this.partDAO.update(partId, update);
-        await this.gameEventService.addAction(partId, this.getUser(), 'EndGame');
-    }
-
-    public async proposeDraw(partId: string): Promise<void> {
-        await this.gameEventService.addRequest(partId, this.getUser(), 'Draw');
-    }
-
-    public async acceptDraw(partId: string, player: Player): Promise<void> {
-        await this.gameEventService.addReply(partId, this.getUser(), 'Accept', 'Draw');
-        const result: MGPResult = player === Player.ZERO ?
-            MGPResult.AGREED_DRAW_BY_ZERO : MGPResult.AGREED_DRAW_BY_ONE;
-        const update: Partial<Part> = {
-            result: result.value,
-        };
-        await this.partDAO.update(partId, update);
-        await this.gameEventService.addAction(partId, this.getUser(), 'EndGame');
-    }
-
-    public async refuseDraw(partId: string): Promise<void> {
-        await this.gameEventService.addReply(partId, this.getUser(), 'Reject', 'Draw');
-    }
-
-    public async proposeRematch(partId: string): Promise<void> {
-        await this.gameEventService.addRequest(partId, this.getUser(), 'Rematch');
-    }
-
-    public async rejectRematch(partId: string): Promise<void> {
-        await this.gameEventService.addReply(partId, this.getUser(), 'Reject', 'Rematch');
-    }
-
-    public async acceptRematch(partDocument: PartDocument): Promise<void> {
-        const part: Part = Utils.getNonNullable(partDocument.data);
-
-        const configRoom: ConfigRoom = await this.configRoomService.readConfigRoomById(partDocument.id);
-        let firstPlayer: FirstPlayer; // firstPlayer will be switched across rematches
-        // creator is the one who accepts the rematch
-        const creator: MinimalUser = this.getUser();
-        let chosenOpponent: MinimalUser;
-        if (part.playerZero.id === creator.id) {
-            chosenOpponent = Utils.getNonNullable(part.playerOne);
-            firstPlayer = FirstPlayer.CHOSEN_PLAYER;
+    /** Retrieve the name of the game with the given id. If there is no corresponding game, returns an empty option. */
+    public async getGameName(gameId: string): Promise<MGPOptional<string>> {
+        const result: MGPFallible<JSONValue> =
+            await this.performRequestWithJSONResponse('GET', `game/${gameId}?onlyGameName`);
+        if (result.isSuccess()) {
+            // eslint-disable-next-line dot-notation
+            const gameName: string = Utils.getNonNullable(Utils.getNonNullable(result.get())['gameName']) as string;
+            return MGPOptional.of(gameName);
         } else {
-            chosenOpponent = part.playerZero;
-            firstPlayer = FirstPlayer.CREATOR;
+            return MGPOptional.empty();
         }
-        const newConfigRoom: ConfigRoom = {
-            ...configRoom, // unchanged attributes
-            firstPlayer: firstPlayer.value,
-            creator,
-            chosenOpponent,
-            partStatus: PartStatus.PART_STARTED.value, // game ready to start
-        };
-        const startingConfig: StartingPartConfig = this.getStartingConfig(newConfigRoom);
-        const newPart: Part = {
-            typeGame: part.typeGame,
-            result: MGPResult.UNACHIEVED.value,
-            ...startingConfig,
-        };
-
-        const rematchId: string = await this.partDAO.create(newPart);
-        await this.configRoomService.createConfigRoom(rematchId, newConfigRoom);
-        await this.createChat(rematchId);
-        await this.gameEventService.addReply(partDocument.id, this.getUser(), 'Accept', 'Rematch', rematchId);
-        await this.gameEventService.startGame(rematchId, this.getUser());
     }
 
-    public async askTakeBack(partId: string): Promise<void> {
-        await this.gameEventService.addRequest(partId, this.getUser(), 'TakeBack');
+    /** Get a full game description */
+    public async getExistingGame(gameId: string): Promise<Part> {
+        const result: MGPFallible<JSONValue> = await this.performRequestWithJSONResponse('GET', `game/${gameId}`);
+        this.assertSuccess(result);
+        return result.get() as Part;
     }
 
-    public async acceptTakeBack(partId: string, currentTurn: number, player: Player): Promise<void> {
-        let turn: number = currentTurn-1;
-        if (Player.ofTurn(turn).equals(player)) {
-            // We need to take back a second time to let the requester take back their move
-            turn--;
-        }
-        const update: Partial<Part> = {
-            turn,
-        };
-        await this.gameEventService.addReply(partId, this.getUser(), 'Accept', 'TakeBack' );
-        return await this.partDAO.update(partId, update);
+    /** Delete a game */
+    public async deleteGame(gameId: string): Promise<void> {
+        const result: MGPFallible<Response> = await this.performRequest('DELETE', `game/${gameId}`);
+        this.assertSuccess(result);
     }
 
-    public async refuseTakeBack(partId: string): Promise<void> {
-        await this.gameEventService.addReply(partId, this.getUser(), 'Reject', 'TakeBack');
+    /** Perform a specific game action and asserts that it has succeeded */
+    private async gameAction(gameId: string, action: string): Promise<void> {
+        const endpoint: string = `game/${gameId}?action=${action}`;
+        const result: MGPFallible<Response> = await this.performRequest('POST', endpoint);
+        this.assertSuccess(result);
     }
 
-    public async addGlobalTime(partId: string): Promise<void> {
-        await this.gameEventService.addAction(partId, this.getUser(), 'AddGlobalTime');
+    /** Accept a game config */
+    public async acceptConfig(gameId: string): Promise<void> {
+        const endpoint: string = `config-room/${gameId}?action=accept`;
+        const result: MGPFallible<Response> = await this.performRequest('POST', endpoint);
+        this.assertSuccess(result);
     }
 
-    public async addTurnTime(partId: string): Promise<void> {
-        await this.gameEventService.addAction(partId, this.getUser(), 'AddTurnTime');
+    /** Give the current player resignation in a game */
+    public async resign(gameId: string): Promise<void> {
+        return this.gameAction(gameId, 'resign');
     }
 
-    private async preparePartUpdate(partId: string,
-                                    scores: MGPOptional<PlayerNumberMap>)
-    : Promise<Partial<Part>>
-    {
-        const part: Part = (await this.partDAO.read(partId)).get();
-        const turn: number = part.turn + 1;
-        let update: Partial<Part> = {
-            turn,
-        };
-        update = this.updateScore(update, scores);
-        return update;
-    }
-    public async updatePartUponMove(partId: string, scores: MGPOptional<PlayerNumberMap>): Promise<void> {
-        const update: Partial<Part> = await this.preparePartUpdate(partId, scores);
-        await this.update(partId, update);
+    /** Notify the timeout of a player in a game */
+    public async notifyTimeout(gameId: string, winner: MinimalUser, loser: MinimalUser): Promise<void> {
+        const winnerURLEncoded: string = encodeURIComponent(JSON.stringify(winner));
+        const loserURLEncoded: string = encodeURIComponent(JSON.stringify(loser));
+        const endpoint: string = `game/${gameId}?action=notifyTimeout&winner=${winnerURLEncoded}&loser=${loserURLEncoded}`;
+        const result: MGPFallible<Response> = await this.performRequest('POST', endpoint);
+        this.assertSuccess(result);
     }
 
-    public async drawPart(partId: string, scores: MGPOptional<PlayerNumberMap>) : Promise<void> {
-        let update: Partial<Part> = await this.preparePartUpdate(partId, scores);
-        update = {
-            ...update,
-            result: MGPResult.HARD_DRAW.value,
-        };
-        await this.update(partId, update);
-        await this.gameEventService.addAction(partId, this.getUser(), 'EndGame');
+    /** Propose a draw to the opponent */
+    public async proposeDraw(gameId: string): Promise<void> {
+        return this.gameAction(gameId, 'proposeDraw');
     }
 
-    public async endPartWithVictory(partId: string,
-                                    winner: MinimalUser,
-                                    loser: MinimalUser,
-                                    scores: MGPOptional<PlayerNumberMap>)
+    /** Accept the draw request of the opponent */
+    public async acceptDraw(gameId: string): Promise<void> {
+        return this.gameAction(gameId, 'acceptDraw');
+    }
+
+    /** Refuse a draw request from the opponent */
+    public async refuseDraw(gameId: string): Promise<void> {
+        return this.gameAction(gameId, 'refuseDraw');
+    }
+
+    /** Propose a rematch to the opponent */
+    public async proposeRematch(gameId: string): Promise<void> {
+        return this.gameAction(gameId, 'proposeRematch');
+    }
+
+    /** Accept a rematch request from the opponent */
+    public async acceptRematch(gameId: string): Promise<void> {
+        return this.gameAction(gameId, 'acceptRematch');
+    }
+
+    /** Reject a rematch request from the opponent */
+    public async rejectRematch(gameId: string): Promise<void> {
+        return this.gameAction(gameId, 'rejectRematch');
+    }
+
+    /** Ask to take back one of our moves */
+    public async askTakeBack(gameId: string): Promise<void> {
+        return this.gameAction(gameId, 'askTakeBack');
+    }
+
+    /** Accept that opponent takes back a move */
+    public async acceptTakeBack(gameId: string): Promise<void> {
+        return this.gameAction(gameId, 'acceptTakeBack');
+    }
+
+    /** Refuse that opponent takes back a move */
+    public async refuseTakeBack(gameId: string): Promise<void> {
+        return this.gameAction(gameId, 'refuseTakeBack');
+    }
+
+    /** Add global time to the opponent */
+    public async addGlobalTime(gameId: string): Promise<void> {
+        return this.gameAction(gameId, 'addGlobalTime');
+    }
+
+    /** Add turn time to the opponent */
+    public async addTurnTime(gameId: string): Promise<void> {
+        return this.gameAction(gameId, 'addTurnTime');
+    }
+
+    /** Play a move */
+    public async addMove(gameId: string,
+                         move: JSONValue,
+                         scores: MGPOptional<PlayerNumberMap>)
     : Promise<void>
     {
-        let update: Partial<Part> = await this.preparePartUpdate(partId, scores);
-        update = {
-            ...update,
-            winner,
-            loser,
-            result: MGPResult.VICTORY.value,
-        };
-        await this.update(partId, update);
-        await this.gameEventService.addAction(partId, this.getUser(), 'EndGame');
+        const moveURLEncoded: string = encodeURIComponent(JSON.stringify(move));
+        let endpoint: string = `game/${gameId}?action=move&move=${moveURLEncoded}`;
+        if (scores.isPresent()) {
+            const score0: number = scores.get().get(Player.ZERO);
+            const score1: number = scores.get().get(Player.ONE);
+            endpoint += `&score0=${score0}&score1=${score1}`;
+        }
+        const result: MGPFallible<Response> = await this.performRequest('POST', endpoint);
+        this.assertSuccess(result);
     }
 
-    private updateScore(update: Partial<Part>, scores: MGPOptional<PlayerNumberMap>): Partial<Part> {
+    /** Play a final move */
+    public async addMoveAndEndGame(gameId: string,
+                                   move: JSONValue,
+                                   scores: MGPOptional<PlayerNumberMap>,
+                                   winner: PlayerOrNone)
+    : Promise<void>
+    {
+        const moveURLEncoded: string = encodeURIComponent(JSON.stringify(move));
+        let endpoint: string = `game/${gameId}?action=moveAndEnd&move=${moveURLEncoded}`;
         if (scores.isPresent()) {
-            return {
-                ...update,
-                scorePlayerZero: scores.get().get(Player.ZERO),
-                scorePlayerOne: scores.get().get(Player.ONE),
-            };
+            const score0: number = scores.get().get(Player.ZERO);
+            const score1: number = scores.get().get(Player.ONE);
+            endpoint += `&score0=${score0}&score1=${score1}`;
         }
-        return update;
+        if (winner.isPlayer()) {
+            endpoint += `&winner=${winner.getValue()}`;
+        }
+        const result: MGPFallible<Response> = await this.performRequest('POST', endpoint);
+        this.assertSuccess(result);
+    }
+
+    public async getGameValidity(gameId: string, gameName: string): Promise<MGPValidation> {
+        const realGameName: MGPOptional<string> = await this.getGameName(gameId);
+        if (realGameName.isAbsent()) {
+            return MGPValidation.failure($localize`This game does not exist!`);
+        } else if (realGameName.get() !== gameName) {
+            return MGPValidation.failure($localize`This is the wrong game type!`);
+        } else {
+            return MGPValidation.SUCCESS;
+        }
     }
 
 }

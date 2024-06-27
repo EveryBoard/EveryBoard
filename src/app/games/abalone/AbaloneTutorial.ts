@@ -16,8 +16,8 @@ export class AbaloneTutorial extends Tutorial {
 
     public tutorial: TutorialStep[] = [
         TutorialStep.informational(
-            $localize`Initial board and object of the game`,
-            $localize`At Abalone, the goal of the game is to be the first player to push 6 opponent's pieces out of the board. Let us see how!`,
+            TutorialStepMessage.INITIAL_BOARD_AND_OBJECT_OF_THE_GAME(),
+            $localize`At Abalone, the object of the game is to be the first player to push 6 opponent's pieces out of the board. Let us see how!`,
             AbaloneRules.get().getInitialState(),
         ),
         TutorialStep.anyMove(

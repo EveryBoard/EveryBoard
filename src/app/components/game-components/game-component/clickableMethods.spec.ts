@@ -46,6 +46,9 @@ export const clickableMethods: { [gameName: string]: { [methodName: string]: unk
     Go: {
         onClick: [new Coord(0, 0)],
     },
+    Hexodia: {
+        onClick: [0, 0],
+    },
     Hive: {
         selectSpace: [0, 0],
         selectPiece: [0, 0, 0],
