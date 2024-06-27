@@ -4,10 +4,10 @@
      preserveAspectRatio="xMidYMid meet">
     <g *ngFor="let line of board; index as y">
         <g *ngFor="let c of line; index as x"
-           id="click_{{ x }}_{{ y }}"
+           id="click-{{ x }}-{{ y }}"
            (click)="onClick(x, y)"
         >
-            <rect id="space_{{ x }}_{{ y }}"
+            <rect id="space-{{ x }}-{{ y }}"
                   [attr.x]="SPACE_SIZE * x"
                   [attr.y]="SPACE_SIZE * y"
                   [attr.width]="SPACE_SIZE"
@@ -15,7 +15,7 @@
                   [ngClass]="getRectClasses(x, y)"
                   class="base"
             />
-            <circle id="piece_{{ x }}_{{ y }}"
+            <circle id="piece-{{ x }}-{{ y }}"
                     *ngIf="board[y][x] !== EMPTY"
                     [attr.r]="(SPACE_SIZE / 2) - STROKE_WIDTH"
                     [attr.cx]="(SPACE_SIZE * x) + (SPACE_SIZE / 2)"
