@@ -192,7 +192,15 @@
           }
         },
         "deploy": {
-          "builder": "angular-cli-ghpages:deploy"
+          "builder": "angular-cli-ghpages:deploy",
+          "configurations": {
+            "dev": {
+              "buildTarget": "everyboard:build:dev"
+            },
+            "production": {
+              "buildTarget": "everyboard:build:production"
+            }
+          }
         }
       },
       "i18n": {
