@@ -15,7 +15,7 @@ export class PylosTutorial extends Tutorial {
 
     public tutorial: TutorialStep[] = [
         TutorialStep.informational(
-            $localize`Goal of the game`,
+            TutorialStepMessage.OBJECT_OF_THE_GAME(),
             $localize`At Pylos, the goal is to be the last to play.
         To do this, you have to save up your pieces.
         As soon as a player puts its last piece, that player loses the game immediately.

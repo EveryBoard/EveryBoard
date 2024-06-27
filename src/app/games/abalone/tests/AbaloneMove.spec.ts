@@ -59,7 +59,7 @@ describe('AbaloneMove', () => {
         expect(move.equals(otherMove)).toBeFalse();
     });
 
-    it('should not construct when creating move with no HexaDirectionnal alignement', () => {
+    it('should not construct when creating move with no HexaDirectionnal alignment', () => {
         TestUtils.expectToThrowAndLog(
             () => AbaloneMove.ofDoubleCoord(new Coord(0, 0), new Coord(1, 1), HexaDirection.UP),
             'Invalid direction');

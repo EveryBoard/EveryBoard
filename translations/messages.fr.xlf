@@ -218,6 +218,10 @@
         <source>The oldest strategy game still practiced widely. A territory control game.</source>
         <target>Le plus vieux jeu de stratégie encore joué. Un jeu de contrôle de territoire</target>
       </trans-unit>
+      <trans-unit id="7267838821174516266" datatype="html">
+        <source>A hexagonal alignment game with weird &quot;diagonals&quot;!</source>
+        <target>Un jeu d'alignement hexagonal avec de drôles de &quot;diagonales&quot; !</target>
+      </trans-unit>
       <trans-unit id="4865500405661191388" datatype="html">
         <source>You are in charge of a hive full of insects. Use the abilities of your insects to block the opponent&apos;s queen in order to win!</source>
         <target>Vous contrôlez une colonie d'insectes. Utilisez les capacités de vos insectes pour bloquer la reine de votre adversaire afin de gagner !</target>
@@ -544,6 +548,10 @@
       <trans-unit id="2597247746010343961" datatype="html">
         <source>Squarz</source>
         <target>Squarz</target>
+      </trans-unit>
+      <trans-unit id="2686476818050661110" datatype="html">
+        <source>Hexodia</source>
+        <target>Hexodia</target>
       </trans-unit>
       <trans-unit id="1760292529513431093" datatype="html">
         <source>Trexo</source>
@@ -1105,8 +1113,8 @@
         <source>Initial board and object of the game</source>
         <target>Plateau initial et but du jeu</target>
       </trans-unit>
-      <trans-unit id="2613028380797438509" datatype="html">
-        <source>At Abalone, the goal of the game is to be the first player to push 6 opponent&apos;s pieces out of the board. Let us see how!</source>
+      <trans-unit id="5878048397926852057" datatype="html">
+        <source>At Abalone, the object of the game is to be the first player to push 6 opponent&apos;s pieces out of the board. Let us see how!</source>
         <target>À l&apos;Abalone, le but du jeu est d&apos;être le premier joueur à pousser 6 pièces adverses en dehors du plateau. Voyons voir comment !</target>
       </trans-unit>
       <trans-unit id="4612562967450553112" datatype="html">
@@ -1470,23 +1478,9 @@
         <source>You cannot capture your own pieces.</source>
         <target>Vous ne pouvez pas capturer vos propres pièces.</target>
       </trans-unit>
-      <trans-unit id="7117895259187122182" datatype="html">
-        <source>Board and goal of the game</source>
-        <target>Plateau et but du jeu</target>
-      </trans-unit>
-      <trans-unit id="8138522124708860735" datatype="html">
-        <source>Coerceo is played on a board like this, composed of hexagonal tiles, each comprising 6 triangles.
-         The triangles are the spaces on which pieces move during the game.
-         The tiles can be removed from the board (you will see how later).
-         The dark pieces belong to the first player and can only move on the dark spaces,
-         while the light pieces belong to the second player and can only move on the light spaces.
-         The goal of the game is to capture all of the opponent&apos;s pieces.</source>
-        <target>Le Coerceo se joue sur un plateau comme ceci, composé de tuiles hexagonales, comportant chacune 6 triangles.
-         Les triangles sont les cases où les pièces se déplacent tout le long de la partie.
-         Les tuiles sont séparable du reste du plateau (vous verrez comment plus tard).
-         Les pièces foncées appartiennent au premier joueur et ne se déplaceront toute la partie que sur les cases foncées,
-         les pièces claire appartiennent au second joueur et ne se déplaceront également que sur les cases claires.
-         Le but du jeu au Coerceo est de capturer toutes les pièces de l&apos;adversaire.</target>
+      <trans-unit id="8275758037847807394" datatype="html">
+        <source>Coerceo is played on a board like this, composed of hexagonal tiles, each comprising 6 triangles. The triangles are the spaces on which pieces move during the game. The tiles can be removed from the board (you will see how later). The dark pieces belong to the first player and can only move on the dark spaces, while the light pieces belong to the second player and can only move on the light spaces. The object of the game is to capture all of the opponent&apos;s pieces.</source>
+        <target>Le Coerceo se joue sur un plateau comme ceci, composé de tuiles hexagonales, comportant chacune 6 triangles. Les triangles sont les cases où les pièces se déplacent tout le long de la partie. Les tuiles sont séparable du reste du plateau (vous verrez comment plus tard). Les pièces foncées appartiennent au premier joueur et ne se déplaceront toute la partie que sur les cases foncées, les pièces claire appartiennent au second joueur et ne se déplaceront également que sur les cases claires. Le but du jeu au Coerceo est de capturer toutes les pièces de l&apos;adversaire.</target>
       </trans-unit>
       <trans-unit id="2354817630223808522" datatype="html">
         <source>Move</source>
@@ -1607,24 +1601,24 @@
         <source>Alignment</source>
         <target>Alignement</target>
       </trans-unit>
-      <trans-unit id="3987391810258758141" datatype="html">
-        <source>Connect Six is played on a 19x19 board, on which stones are put on the intersections. The aim of the game is to align 6 of your pieces.</source>
+      <trans-unit id="1631778170068001983" datatype="html">
+        <source>Connect Six is played on a 19x19 board, on which stones are put on the intersections. The object of the game is to align 6 of your pieces.</source>
         <target>Connect Six se joue sur un plateau de 19x19, sur lequel des pièces sont placées sur les intersections. Le but du jeu est d'aligner six de vos pièces.</target>
       </trans-unit>
       <trans-unit id="4094188563872795571" datatype="html">
         <source>First turn</source>
         <target>Premier tour</target>
       </trans-unit>
-      <trans-unit id="227061499558746572" datatype="html">
-        <source>On the first turn, the first player plays only one piece.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, place your first piece by clicking on an intersection.</source>
+      <trans-unit id="3956994434107981140" datatype="html">
+        <source>At the first turn, the first player plays only one piece.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, place your first piece by clicking on an intersection.</source>
         <target>Au premier tour, le premier joueur place une seule pièce.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, placez votre première pièce en cliquant sur une intersection.</target>
       </trans-unit>
       <trans-unit id="9212980897131132135" datatype="html">
         <source>Next turns</source>
         <target>Les tours suivant</target>
       </trans-unit>
-      <trans-unit id="6989863591618494423" datatype="html">
-        <source>On all following turns, the players play two pieces.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Light, do the winning move.</source>
+      <trans-unit id="4174912343371620775" datatype="html">
+        <source>On all following turns, the players play two pieces, until a victory or a draw is reached.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Light, do the winning move.</source>
         <target>Pour tous les tours qui suivent, les joueurs placent deux pièces.&lt;br/&gt;&lt;br/&gt;Vous jouez Clair, faites le mouvement gagnant.</target>
       </trans-unit>
       <trans-unit id="4237198021995785268" datatype="html">
@@ -1659,12 +1653,8 @@
         <source>Jump</source>
         <target>Sauts</target>
       </trans-unit>
-      <trans-unit id="9123148140915098130" datatype="html">
-        <source>Board and aim of the game</source>
-        <target>Plateau et but du jeu</target>
-      </trans-unit>
-      <trans-unit id="3408052490903167189" datatype="html">
-        <source>Conspirateurs is played on a 17x17 board. The goal of the game is to place all of your pieces in shelters, which are the special squares on the edge of the board. Note the central zone in the middle of the board, where each player will put their pieces initially.</source>
+      <trans-unit id="2678466693137107679" datatype="html">
+        <source>Conspirateurs is played on a 17x17 board. The object of the game is to place all of your pieces in shelters, which are the special squares on the edge of the board. Note the central zone in the middle of the board, where each player will put their pieces initially.</source>
         <target>Conspirateurs se joue sur un plateau 17x17. Le but du jeu et de placer toutes vos pièces dans des cachettes, qui sont des cases spéciales sur les bords du plateau. Remarquez la zone centrale du plateau, où chaque joueur placera initialement ses pièces.</target>
       </trans-unit>
       <trans-unit id="5390926924373994130" datatype="html">
@@ -2006,10 +1996,6 @@
         <source>You are performing a move, you must select a landing square.</source>
         <target>Vous effectuez un déplacement, choisissez votre case de destination.</target>
       </trans-unit>
-      <trans-unit id="5626639193339311369" datatype="html">
-        <source>Goal of the game</source>
-        <target>But du jeu</target>
-      </trans-unit>
       <trans-unit id="7821413127222759201" datatype="html">
         <source>The goal of Encapsule is to align three of your pieces. Here, Dark wins.</source>
         <target>Le but du jeu à Encapsule est d&apos;aligner trois de vos pièces. Ici, Foncé gagne.</target>
@@ -2092,8 +2078,8 @@
         <source>A phalanx cannot contain a piece of the opponent.</source>
         <target>Une phalange ne peut pas contenir de pièce de l'adversaire.</target>
       </trans-unit>
-      <trans-unit id="7849636659728976766" datatype="html">
-        <source>Piece &gt; Row Domination &gt; Alignement &gt; Row Presence</source>
+      <trans-unit id="5986717000369124597" datatype="html">
+        <source>Piece &gt; Row Domination &gt; Alignment &gt; Row Presence</source>
         <target>Pièce &gt; Domination de colonne &gt; Alignement &gt; Présence en colonne</target>
       </trans-unit>
       <trans-unit id="4563771339790181195" datatype="html">
@@ -2108,17 +2094,9 @@
         <source>This is the initial board of Epaminondas. The top line is the starting line of Light. The bottom line is the starting line of Dark.</source>
         <target>Ceci est le plateau de départ. La ligne tout en haut est la ligne de départ de Clair. La ligne tout en bas est la ligne de départ de Foncé.</target>
       </trans-unit>
-      <trans-unit id="6886026531074912078" datatype="html">
-        <source>Goal of the game (1/2)</source>
-        <target>But du jeu (1/2)</target>
-      </trans-unit>
       <trans-unit id="6716022766676912093" datatype="html">
         <source>After multiple moves, if at the beginning of its turn, a player has more pieces on the opponent&apos;s starting line than the number of pieces the opponent has on the player&apos;s starting line, the player wins. Here, it&apos;s Dark&apos;s turn to play: Dark has therefore won.</source>
         <target>Après plusieurs déplacements, si au début de son tour de jeu, un joueur a plus de pièces sur la ligne de départ de l&apos;adversaire que l&apos;adversaire n&apos;en a sur la ligne de départ du joueur, ce joueur gagne. Ici, c&apos;est au tour de Foncé de jouer, il a donc gagné.</target>
-      </trans-unit>
-      <trans-unit id="5351770434517588207" datatype="html">
-        <source>Goal of the game (2/2)</source>
-        <target>But du jeu (2/2)</target>
       </trans-unit>
       <trans-unit id="2623510393491755816" datatype="html">
         <source>Here, it is Light&apos;s turn. Light wins because they have two pieces on Dark&apos;s starting line, and Dark only has one on Light&apos;s starting line.</source>
@@ -2367,17 +2345,9 @@
         (Pour des parties plus courtes, le 9x9 et 5x5 existent, mais ne sont pas encore disponibles).
         Pour ce tutoriel, nous utiliserons de plus petits plateaux à des fins pédagogiques.</target>
       </trans-unit>
-      <trans-unit id="7863035928636323211" datatype="html">
-        <source>The goal of the game is to have the most points at the end of the game.
-        We call &quot;territories&quot; the intersections that are empty and isolated from the rest of the Goban by the stones of a single player.
-        Here, Dark has 9 territories on the left, and Light has 8 on the right.
-        The top part belongs to no one.
-        Each player&apos;s score at the end of the game is the sum of that player&apos;s territories and captures.</source>
-        <target>Le but du jeu est d&apos;avoir le plus de points en fin de partie.
-        On appelle territoires les intersections inoccupées et isolées du reste du Goban par les pierres d&apos;un seul joueur.
-        Ici, Foncé a 9 territoires à gauche, le joueur clair en a 8 à droite.
-        La zone en haut au milieu n&apos;appartient à personne.
-        Le score d'un joueur en fin de partie correspond à la somme de ses territoires et captures.</target>
+      <trans-unit id="1490005275934813623" datatype="html">
+        <source>The object of the game is to have the most points at the end of the game. We call &quot;territories&quot; the intersections that are empty and isolated from the rest of the Goban by the stones of a single player. Here, Dark has 9 territories on the left, and Light has 8 on the right. The top part belongs to no one. Each player&apos;s score at the end of the game is the sum of that player&apos;s territories and captures.</source>
+        <target>Le but du jeu est d&apos;avoir le plus de points en fin de partie. On appelle territoires les intersections inoccupées et isolées du reste du Goban par les pierres d&apos;un seul joueur. Ici, Foncé a 9 territoires à gauche, le joueur clair en a 8 à droite. La zone en haut au milieu n&apos;appartient à personne. Le score d'un joueur en fin de partie correspond à la somme de ses territoires et captures.</target>
       </trans-unit>
       <trans-unit id="2047079418793425161" datatype="html">
         <source>An isolated stone, like the one in the middle here, has 4 neighboring intersections (not 8, because we do not count diagonals).
@@ -3157,8 +3127,8 @@
         <source>You cannot place any capture now, you must first place your lodestone on the board!</source>
         <target>Vous ne pouvez pas encore placer de captures, vous devez d'abord placer votre pierre magnétique sur le plateau !</target>
       </trans-unit>
-      <trans-unit id="3233989185853354365" datatype="html">
-        <source>Lodestone is played on a 8x8 board, which contains so-called &lt;i&gt;pressure plates&lt;/i&gt; along the board, that will contain captured pieces. The initial board is shown here. The aim of the game is to be the only player with pieces remaining on the board. To do so, you will have to either push your opponent&apos;s pieces off the board, or to crush them with your pieces. You will do it by using a lodestone.</source>
+      <trans-unit id="5605685662838531265" datatype="html">
+        <source>Lodestone is played on a 8x8 board, which contains so-called &lt;i&gt;pressure plates&lt;/i&gt; along the board, that will contain captured pieces. The initial board is shown here. The object of the game is to be the only player with pieces remaining on the board. To do so, you will have to either push your opponent&apos;s pieces off the board, or to crush them with your pieces. You will do it by using a lodestone.</source>
         <target>Lodestone se joue sur un plateau 8x8, qui contient ce qui s'appelle des &lt;i&gt;plaques de pression&lt;/i&gt; sur son pourtour, où les pièces capturées seront placées. Le plateau initial est montré ci-contre. Le but du jeu est d'être le seul joueur restant avec des pièces sur le plateau. Pour y arriver, vous allez devoir pousser les pièces de votre adversaire hors du plateau, ou les écraser avec vos pièces. Vous le ferez avec une pierre magnétique.</target>
       </trans-unit>
       <trans-unit id="2109934310949694886" datatype="html">
@@ -3311,6 +3281,26 @@
         <source>Minimax</source>
         <target>Minimax</target>
       </trans-unit>
+      <trans-unit id="45739481977493163" datatype="html">
+        <source>Size</source>
+        <target>Taille</target>
+      </trans-unit>
+      <trans-unit id="69616505141416052" datatype="html">
+        <source>Hexodia is played on a hexagonal board, your goal is to be the first to align 6 of your pieces.</source>
+        <target>Hexodia se joue sur un plateau hexagonal, votre but est d'aligner 6 de vos pièces.</target>
+      </trans-unit>
+      <trans-unit id="6858407546093916748" datatype="html">
+        <source>At the first turn, the first player plays only one piece.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, place your first piece by clicking on a space.</source>
+        <target>Au premier tour, le premier joueur joue une seule pièce.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, placez votre première pièce en cliquant sur une case.</target>
+      </trans-unit>
+      <trans-unit id="3416240052398580752" datatype="html">
+        <source>Hexagonal Diagonals</source>
+        <target>Diagonales Hexagonales</target>
+      </trans-unit>
+      <trans-unit id="25408930270688683" datatype="html">
+        <source>But an unusual kind of diagonal also exist in Hexodia. Here, Dark has made alignment in each of those three direction, in only one a victory is still possible.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, do the winning move.</source>
+        <target>Mais un genre original de diagonales existe aussi à Hexodia. Ici, Foncé a fait un alignement dans chacunes de ces trois directions, la victoire ne reste possible que dans une seule.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, faite le coup gagnant.</target>
+      </trans-unit>
       <trans-unit id="5880375817695791500" datatype="html">
         <source>You&apos;re playing Dark.
         Place your piece so that you create a horizontal alignment of 4 of your pieces.</source>
@@ -3382,6 +3372,10 @@
       <trans-unit id="1997992313730455534" datatype="html">
         <source>Number of aligned pieces needed to win</source>
         <target>Nombre de pièces alignées nécessaires pour gagner</target>
+      </trans-unit>
+      <trans-unit id="6974294157928395807" datatype="html">
+        <source>Number of pieces dropped per turn</source>
+        <target>Nombre de pièces déposées par tour</target>
       </trans-unit>
       <trans-unit id="2370571702661444910" datatype="html">
         <source>Size of captures</source>
@@ -3622,10 +3616,6 @@
         <source>You must pick a space from the edge of the board.</source>
         <target>Case invalide, cliquez sur une case de l&apos;extérieur du plateau.</target>
       </trans-unit>
-      <trans-unit id="8880269756041921906" datatype="html">
-        <source>Goal of the game.</source>
-        <target>But du jeu.</target>
-      </trans-unit>
       <trans-unit id="1849305746346487286" datatype="html">
         <source>At Quixo, the goal is to align 5 of your pieces.
         The first player plays with dark pieces, the second with light pieces.
@@ -3785,13 +3775,9 @@
         <target>Le Sâhârâ se joue sur un plateau dont chaque case est triangulaire.
         Chaque joueur contrôle six pyramides.</target>
       </trans-unit>
-      <trans-unit id="7077721605915290523" datatype="html">
-        <source>At Sâhârâ, the goal of the game is to immobilize one of the opponent&apos;s pyramids.
-        To do so, you have to occupy all neighboring space of that pyramid.
-        Here, Light has lost because its leftmost pyramid is immobilized.</source>
-        <target>Au Sâhârâ, le but du jeu est d&apos;immobiliser une des pyramides de l&apos;adversaire.
-        Pour ce faire il faut occuper toutes les cases voisines de celle-ci.
-        Ici, le joueur clair a perdu car sa pyramide tout à gauche est immobilisée.</target>
+      <trans-unit id="7604175652954490413" datatype="html">
+        <source>At Sâhârâ, the object of the game is to immobilize one of the opponent&apos;s pyramids. To do so, you have to occupy all neighboring space of that pyramid. Here, Light has lost because its leftmost pyramid is immobilized.</source>
+        <target>Au Sâhârâ, le but du jeu est d&apos;immobiliser une des pyramides de l&apos;adversaire. Pour ce faire il faut occuper toutes les cases voisines de celle-ci. Ici, le joueur clair a perdu car sa pyramide tout à gauche est immobilisée.</target>
       </trans-unit>
       <trans-unit id="1300852626039829767" datatype="html">
         <source>Simple step</source>
@@ -4017,13 +4003,9 @@
         <source>You lost one of your pieces during this move. There is a way to disconnect an opponent&apos;s piece without losing any of yours, try again!</source>
         <target>Vous avez perdu une de vos pièce pendant ce mouvement, il y a un moyen de déconnecter une pièce adversaire sans perdre aucune pièce, recommencez !</target>
       </trans-unit>
-      <trans-unit id="6517565683560801163" datatype="html">
-        <source>Six is a game without board, where pieces are placed on the side of each other, in a contiguous block.
-        Each player has 21 pieces, with one for each player already on the board.
-        The goal of the game is to form one of the three winning shapes with your pieces.</source>
-        <target>Le Six est une jeu sans plateau, où les pièces sont placées les unes à côtés des autres, en un bloc continu.
-        Chaque joueur a 21 pièces à lui, 2 étant déjà placée sur le plateau.
-        Le but principal du jeu est de former l&apos;une des trois formes gagnantes avec vos pièces.</target>
+      <trans-unit id="1815943775702363568" datatype="html">
+        <source>Six is a game without board, where pieces are placed on the side of each other, in a contiguous block. Each player has 21 pieces, with one for each player already on the board. The object of the game is to form one of the three winning shapes with your pieces.</source>
+        <target>Le Six est une jeu sans plateau, où les pièces sont placées les unes à côtés des autres, en un bloc continu. Chaque joueur a 21 pièces à lui, 2 étant déjà placée sur le plateau. Le but principal du jeu est de former l&apos;une des trois formes gagnantes avec vos pièces.</target>
       </trans-unit>
       <trans-unit id="1323662052932112829" datatype="html">
         <source>Victory (line)</source>
@@ -4151,8 +4133,8 @@
         <source>Pieces</source>
         <target>Pièces</target>
       </trans-unit>
-      <trans-unit id="3469374446011769111" datatype="html">
-        <source>Brandhub is the Irish version of the Tafl, Tafl being a family of viking strategy game. The goal of the game is different for each player. The attacker plays first. Their pieces (dark) are close to the edges. Their goal is to capture the king, which is in the center of the board. The defender plays second. Their pieces (light) are in the middle. Their goal is to move the king on one of the 4 thrones in the corners. Note that the square in which the king starts, in the center of the board, is also a throne.</source>
+      <trans-unit id="7559617831371314788" datatype="html">
+        <source>Brandhub is the Irish version of the Tafl, Tafl being a family of viking strategy game. The object of the game is different for each player. The attacker plays first. Their pieces (dark) are close to the edges. Their goal is to capture the king, which is in the center of the board. The defender plays second. Their pieces (light) are in the middle. Their goal is to move the king on one of the 4 thrones in the corners. Note that the square in which the king starts, in the center of the board, is also a throne.</source>
         <target>Brandhub est la version irlandaise du jeu de Tafl, la famille de jeu de stratégie Viking. Le but du jeu est différent pour chaque joueur. Les attaquants jouent en premier. Leurs pièces (foncées) sont près des bords. Leur but est de capturer le roi, qui est au centre du plateau. Les défenseurs jouent en deuxième. Leurs pièces (claires) sont au milieu. Leur but est que le roi atteigne l'un des 4 trônes dans les coins. Notez que la case sur laquelle le roi commence, au centre du plateau, est aussi un trône.</target>
       </trans-unit>
       <trans-unit id="4948014485926272515" datatype="html">
@@ -4227,8 +4209,8 @@
         <source>Another way to capture the king is to immobilize it against an edge of the board. Note that the king cannot be captured next to a throne.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, capture the king.</source>
         <target>Un autre moyen de capturer le roi est de l&apos;immobiliser à 3 contre un bord. Notez qu&apos;un roi n&apos;est pas capturable sur une case voisine à un trône.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, capturez le roi.</target>
       </trans-unit>
-      <trans-unit id="2541472060697733126" datatype="html">
-        <source>Tablut is the lapland version of the Tafl, Tafl being a family of viking strategy game. The goal of the game is different for each player. The attacker plays first. Its pieces (dark) are close to the edges. Its goal is to capture the king, which is in the center of the board. The defender plays second. Its pieces (light) are in the middle. Its goal is to move the king on one of the 4 thrones in the corners. Note that the square in which the king starts, in the center of the board, is also a throne.</source>
+      <trans-unit id="4169759104868172929" datatype="html">
+        <source>Tablut is the lapland version of the Tafl, Tafl being a family of viking strategy game. The object of the game is different for each player. The attacker plays first. Its pieces (dark) are close to the edges. Its goal is to capture the king, which is in the center of the board. The defender plays second. Its pieces (light) are in the middle. Its goal is to move the king on one of the 4 thrones in the corners. Note that the square in which the king starts, in the center of the board, is also a throne.</source>
         <target>Tablut est la version Lapone du jeu de Tafl, une famille de jeu de stratégie. Le but du jeu pour les deux joueurs n&apos;est pas le même. L&apos;attaquant joue en premier, ses pièces (foncées) sont placées proches des bords. Son but est de capturer le roi, qui est tout au centre du plateau. Le défenseur joue en deuxième, ses pièces (claires) sont au centre. Son but est de placer le roi sur l&apos;un des 4 trônes situés dans les coins. Notez que la case où est le roi au début du jeu, au centre du plateau, est également un trône.</target>
       </trans-unit>
       <trans-unit id="1347435830524797455" datatype="html">
@@ -4243,8 +4225,8 @@
         <source>Teleport Teeko</source>
         <target>Teleport Teeko</target>
       </trans-unit>
-      <trans-unit id="6388473964053708590" datatype="html">
-        <source>The goal of the game is to align your 4 pieces, or to form a square with them.</source>
+      <trans-unit id="3648165339236868481" datatype="html">
+        <source>The object of the game is to align your 4 pieces, or to form a square with them.</source>
         <target>Le but du jeu est d'aligner vos 4 pièces, ou de les placer en carré.</target>
       </trans-unit>
       <trans-unit id="5528013857873835184" datatype="html">
@@ -4275,8 +4257,8 @@
         <source>You cannot drop a piece on uneven grounds!</source>
         <target>Vous ne pouvez pas déposer de pièce sur deux piles de hauteurs différentes !</target>
       </trans-unit>
-      <trans-unit id="8777341718687257426" datatype="html">
-        <source>At Trexo, the goal of the game is to align 5 pieces of your color in a vertical, horizontal or diagonal line. However, the players play with tiles that are constituted of two pieces, one from each player!</source>
+      <trans-unit id="1296355206706368557" datatype="html">
+        <source>At Trexo, the object of the game is to align 5 pieces of your color in a vertical, horizontal or diagonal line. However, the players play with tiles that are constituted of two pieces, one from each player!</source>
         <target>Au Trexo, le but du jeu est d'aligner 5 pièces de votre couleur dans une ligne horizontale, verticale, ou diagonale. Mais les joueurs déposent des tuiles constituées de deux pièces, une pour chaque joueur !</target>
       </trans-unit>
       <trans-unit id="6011148802067949079" datatype="html">
@@ -4315,8 +4297,8 @@
         <source>When the king is not on his central throne nor next to it, he can be captured like a soldier.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark. Capture the king.</source>
         <target>Quand le roi n'est ni sur son trône central, ni à côté de celui-ci, il peut être capturé comme un soldat.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé. Capturez le roi.</target>
       </trans-unit>
-      <trans-unit id="2511498870151087692" datatype="html">
-        <source>Hnefatafl is a strategy game that was played by the vikings, it&apos;s part of a larger family of games called Tafl. The goal of the game is different for each player. The attacker plays first. Their pieces (dark) are close to the edges. Their goal is to capture the king, which is in the center of the board. The defender plays second. Their pieces (light) are in the middle. Their goal is to move the king on one of the 4 thrones in the corners. Note that the square in which the king starts, in the center of the board, is also a throne.</source>
+      <trans-unit id="7072625163028579495" datatype="html">
+        <source>Hnefatafl is a strategy game that was played by the vikings, it&apos;s part of a larger family of games called Tafl. The object of the game is different for each player. The attacker plays first. Their pieces (dark) are close to the edges. Their goal is to capture the king, which is in the center of the board. The defender plays second. Their pieces (light) are in the middle. Their goal is to move the king on one of the 4 thrones in the corners. Note that the square in which the king starts, in the center of the board, is also a throne.</source>
         <target>Hnefatafl est la version lapone du jeu de Tafl, la famille de jeu de stratégie Viking. Le but du jeu est différent pour chaque joueur. Les attaquants jouent en premier. Leurs pièces (foncées) sont près des bords. Leur but est de capturer le roi, qui est au centre du plateau. Les défenseurs jouent en deuxième. Leurs pièces (claires) sont au milieu. Leur but est que le roi atteigne l'un des 4 trônes dans les coins. Notez que la case sur laquelle le roi commence, au centre du plateau, est aussi un trône.</target>
       </trans-unit>
       <trans-unit id="439785126864846458" datatype="html">

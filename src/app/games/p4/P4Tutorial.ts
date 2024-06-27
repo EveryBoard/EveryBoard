@@ -4,6 +4,7 @@ import { Tutorial, TutorialStep } from 'src/app/components/wrapper-components/tu
 import { PlayerOrNone } from 'src/app/jscaip/Player';
 import { P4Config, P4Rules } from './P4Rules';
 import { MGPOptional } from '@everyboard/lib';
+import { TutorialStepMessage } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
 
 const _: PlayerOrNone = PlayerOrNone.NONE;
 const O: PlayerOrNone = PlayerOrNone.ZERO;
@@ -15,7 +16,7 @@ export class P4Tutorial extends Tutorial {
 
     public tutorial: TutorialStep[] = [
         TutorialStep.informational(
-            $localize`Goal of the game`,
+            TutorialStepMessage.OBJECT_OF_THE_GAME(),
             $localize`The board at Four in a Row is made of 7 columns and 6 rows, and it is initially empty.
         The first player plays Dark, the second plays Light.
         The goal is to be the first to align 4 of its pieces (horizontally, vertically, or diagonally).`,
