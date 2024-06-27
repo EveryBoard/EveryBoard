@@ -175,18 +175,18 @@ export class ApagosComponent extends GameComponent<ApagosRules, ApagosMove, Apag
         }
     }
 
-    public getCircleCenter(i: number, square: ApagosSquare): Coord {
-        const bx: number = this.SPACE_SIZE / 2;
-        const by: number = this.SPACE_SIZE / 2;
+    public getCircleTransform(i: number, square: ApagosSquare): string {
+        const x: number = this.SPACE_SIZE / 2;
+        const y: number = this.SPACE_SIZE / 2;
         if (square.count(PlayerOrNone.NONE) === 1) {
-            return new Coord(bx, by);
+            return `translate(${x}, ${y})`;
         }
         const nbCircle: number = square.count(PlayerOrNone.NONE);
         const angle: number = (i * 2 * Math.PI / nbCircle) - (Math.PI / 2);
         const radius: number = this.SPACE_SIZE * 0.30;
         const deltaX: number = radius * Math.cos(angle);
         const deltaY: number = radius * Math.sin(angle);
-        return new Coord(bx + deltaX, by + deltaY);
+        return `translate(${x + deltaX}, ${y + deltaY})`;
     }
 
     public canDisplayArrow(x: number, player: Player): boolean {
