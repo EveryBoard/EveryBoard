@@ -35,7 +35,7 @@ export abstract class HexagonalGameComponent<R extends SuperRules<M, S, C, L>,
         return this.hexaLayout.getCenterAt(coord);
     }
 
-    public getHexaCenterTranslation(coord: Coord): string {
+    public getHexaCenterTranslationAt(coord: Coord): string {
         return this.getHexaCenterTranslationAtXY(coord.x, coord.y);
     }
 

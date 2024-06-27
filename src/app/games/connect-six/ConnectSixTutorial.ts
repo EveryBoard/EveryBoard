@@ -17,22 +17,20 @@ export class ConnectSixTutorial extends Tutorial {
 
     public tutorial: TutorialStep[] = [
         TutorialStep.informational(
-            $localize`Initial board and object of the game`,
-            $localize`Connect Six is played on a 19x19 board, on which stones are put on the intersections. The aim of the game is to align 6 of your pieces.`,
+            TutorialStepMessage.INITIAL_BOARD_AND_OBJECT_OF_THE_GAME(),
+            $localize`Connect Six is played on a 19x19 board, on which stones are put on the intersections. The object of the game is to align 6 of your pieces.`,
             ConnectSixRules.get().getInitialState(defaultConfig),
         ),
-        // First turn: you must place only one
         TutorialStep.anyMove(
             $localize`First turn`,
-            $localize`On the first turn, the first player plays only one piece.<br/><br/>You're playing Dark, place your first piece by clicking on an intersection.`,
+            $localize`At the first turn, the first player plays only one piece.<br/><br/>You're playing Dark, place your first piece by clicking on an intersection.`,
             ConnectSixRules.get().getInitialState(defaultConfig),
             ConnectSixFirstMove.of(new Coord(9, 9)),
             TutorialStepMessage.CONGRATULATIONS(),
         ),
-        // Next turn: you must place six, try to win
-        TutorialStep.anyMove(
+        TutorialStep.fromMove(
             $localize`Next turns`,
-            $localize`On all following turns, the players play two pieces.<br/><br/>You're playing Light, do the winning move.`,
+            $localize`On all following turns, the players play two pieces, until a victory or a draw is reached.<br/><br/>You're playing Light, do the winning move.`,
             new ConnectSixState([
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
@@ -40,7 +38,7 @@ export class ConnectSixTutorial extends Tutorial {
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, X, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, O, _, X, O, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, O, O, _, _, X, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, O, O, _, _, X, O, _, _, _, _, _],
                 [_, _, _, _, _, _, _, X, O, O, O, O, X, _, _, _, _, _, _],
                 [_, _, _, _, _, _, X, O, O, O, O, X, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, X, _, X, O, X, X, _, _, _, _, _, _, _],
@@ -53,9 +51,10 @@ export class ConnectSixTutorial extends Tutorial {
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-            ], 20),
-            ConnectSixDrops.of(new Coord(4, 11), new Coord(5, 10)),
+            ], 21),
+            [ConnectSixDrops.of(new Coord(7, 12), new Coord(8, 11))],
             TutorialStepMessage.CONGRATULATIONS(),
+            TutorialStepMessage.FAILED_TRY_AGAIN(),
         ),
     ];
 }

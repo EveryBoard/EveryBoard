@@ -19,7 +19,7 @@ export class GipfTutorial extends Tutorial {
 
     public tutorial: TutorialStep[] = [
         TutorialStep.informational(
-            $localize`Goal of the game`,
+            TutorialStepMessage.OBJECT_OF_THE_GAME(),
             $localize`The goal of Gipf is to capture the opponent's piece so that the opponent can no longer play.
         This is the initial board.
         Each player has 12 pieces on the side and 3 pieces on the board.

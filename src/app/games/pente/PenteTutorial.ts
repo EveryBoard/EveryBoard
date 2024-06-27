@@ -17,7 +17,7 @@ const defaultConfig: MGPOptional<PenteConfig> = PenteRules.get().getDefaultRules
 export class PenteTutorial extends Tutorial {
     public tutorial: TutorialStep[] = [
         TutorialStep.informational(
-            $localize`Initial board and object of the game`,
+            TutorialStepMessage.INITIAL_BOARD_AND_OBJECT_OF_THE_GAME(),
             $localize`Pente is played on a 19x19 board, on which the pieces are put on the intersections of the squares. The object of the game is to align 5 of your pieces, or to capture 10 pieces of your opponent. Initially, a piece of the second player is in the center location of the board.`,
             PenteRules.get().getInitialState(defaultConfig),
         ),

@@ -14,8 +14,8 @@ export class TeekoTutorial extends Tutorial {
 
     public tutorial: TutorialStep[] = [
         TutorialStep.informational(
-            $localize`Goal of the game`,
-            $localize`The goal of the game is to align your 4 pieces, or to form a square with them.`,
+            TutorialStepMessage.OBJECT_OF_THE_GAME(),
+            $localize`The object of the game is to align your 4 pieces, or to form a square with them.`,
             TeekoRules.get().getInitialState(),
         ),
         TutorialStep.anyMove(

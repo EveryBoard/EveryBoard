@@ -3,7 +3,7 @@ import { EpaminondasMove } from './EpaminondasMove';
 import { EpaminondasState } from './EpaminondasState';
 import { EpaminondasConfig, EpaminondasLegalityInformation, EpaminondasRules } from './EpaminondasRules';
 import { EpaminondasPhalanxSizeAndFilterMoveGenerator } from './EpaminondasPhalanxSizeAndFilterMoveGenerator';
-import { EpaminondasPieceThenRowDominationThenAlignementThenRowPresenceHeuristic } from './EpaminondasPieceThenRowDominationThenAlignementThenRowPresenceHeuristic';
+import { EpaminondasPieceThenRowDominationThenAlignmentThenRowPresenceHeuristic } from './EpaminondasPieceThenRowDominationThenAlignmentThenRowPresenceHeuristic';
 
 export class EpaminondasMinimax extends Minimax<EpaminondasMove,
                                                 EpaminondasState,
@@ -12,9 +12,9 @@ export class EpaminondasMinimax extends Minimax<EpaminondasMove,
 {
 
     public constructor() {
-        super($localize`Piece > Row Domination > Alignement > Row Presence`,
+        super($localize`Piece > Row Domination > Alignment > Row Presence`,
               EpaminondasRules.get(),
-              new EpaminondasPieceThenRowDominationThenAlignementThenRowPresenceHeuristic(),
+              new EpaminondasPieceThenRowDominationThenAlignmentThenRowPresenceHeuristic(),
               new EpaminondasPhalanxSizeAndFilterMoveGenerator(),
         );
     }
