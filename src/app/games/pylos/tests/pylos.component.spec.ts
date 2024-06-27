@@ -248,7 +248,7 @@ describe('PylosComponent', () => {
         }));
 
         it('should allow climbing', fakeAsync(async() => {
-            // Given an board where climbing is possible
+            // Given a board where climbing is possible
             await testUtils.setupState(climbableState);
 
             // When clicking the first piece then its landing place

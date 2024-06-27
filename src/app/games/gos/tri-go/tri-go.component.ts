@@ -8,15 +8,15 @@ import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 import { GroupDatas } from 'src/app/jscaip/BoardDatas';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { MCTS } from 'src/app/jscaip/AI/MCTS';
-import { Minimax } from 'src/app/jscaip/AI/Minimax';
-import { GoHeuristic } from '../GoHeuristic';
-import { GoMoveGenerator } from '../GoMoveGenerator';
+import { GoMoveGenerator } from '../go/GoMoveGenerator';
 import { Debug } from 'src/app/utils/Debug';
 import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 import { GoPhase } from '../GoPhase';
 import { TriangularGameComponent } from 'src/app/components/game-components/game-component/TriangularGameComponent';
 import { GoLegalityInformation } from '../AbstractGoRules';
 import { ViewBox } from 'src/app/components/game-components/GameComponentUtils';
+import { TriangularCheckerBoard } from 'src/app/jscaip/state/TriangularCheckerBoard';
+import { TriGoMinimax } from './TriGoMinimax';
 
 @Component({
     selector: 'app-tri-go',
@@ -46,8 +46,8 @@ export class TriGoComponent extends TriangularGameComponent<TriGoRules,
         super(messageDisplayer, cdr);
         this.setRulesAndNode('TriGo');
         this.availableAIs = [
-            new Minimax($localize`Minimax`, TriGoRules.get(), new GoHeuristic(this.rules), new GoMoveGenerator(this.rules)),
-            new MCTS($localize`MCTS`, new GoMoveGenerator(this.rules), this.rules),
+            new TriGoMinimax(),
+            new MCTS($localize`MCTS`, new GoMoveGenerator(), this.rules),
         ];
         this.encoder = GoMove.encoder;
         this.canPass = true;
@@ -66,8 +66,9 @@ export class TriGoComponent extends TriangularGameComponent<TriGoRules,
 
     public getViewBox(): ViewBox {
         const state: GoState = this.getState();
+        const abstractSize: number = state.getWidth() / 2;
         return new ViewBox(
-            0,
+            0.5 * this.SPACE_SIZE * ((abstractSize + 1) % 2),
             0,
             this.SPACE_SIZE * state.getWidth() / 2,
             this.SPACE_SIZE * state.getHeight(),
@@ -125,40 +126,34 @@ export class TriGoComponent extends TriangularGameComponent<TriGoRules,
         return this.onClick(GoMove.ACCEPT.coord);
     }
 
-    public getSpaceClass(coord: Coord): string {
-        const state: GoState = this.getState();
-        const piece: GoPiece = state.getPieceAt(coord);
-        return this.getPlayerClass(piece.getOwner());
-    }
-
-    public spaceIsFull(coord: Coord): boolean {
-        const state: GoState = this.getState();
-        const piece: GoPiece = state.getPieceAt(coord);
-        return piece !== GoPiece.EMPTY && this.isTerritory(coord) === false;
-    }
-
-    public isLastSpace(coord: Coord): boolean {
-        return this.last.equalsValue(coord);
-    }
-
-    public isDead(coord: Coord): boolean {
-        return this.getState().isDead(coord);
-    }
-
-    public isTerritory(coord: Coord): boolean {
-        return this.getState().isTerritory(coord);
-    }
-
-    public getPlayerClassAt(coord: Coord): string {
+    public getPlayerClassAt(coord: Coord): string[] {
         const piece: GoPiece = this.getState().getPieceAt(coord);
+        const classes: string[] = [];
         if (this.captures.some((c: Coord) => c.equals(coord))) {
-            return 'captured-fill';
+            classes.push('captured-fill');
         }
         if (piece.isOccupied()) {
-            return this.getPlayerClass(piece.player);
-        } else {
-            return '';
+            classes.push(this.getPlayerClass(piece.player));
         }
+        return classes;
+    }
+
+    public getTerritoryTriangleTransform(coord: Coord): string {
+        let y: number;
+        if (this.isUpward(coord)) {
+            y = 25;
+        } else {
+            y = 15;
+        }
+        return 'translate(20 ' + y + ') scale(0.6)';
+    }
+
+    public isUpward(coord: Coord): boolean {
+        return TriangularCheckerBoard.isSpaceDark(coord);
+    }
+
+    public isDownward(coord: Coord): boolean {
+        return TriangularCheckerBoard.isSpaceDark(coord) === false;
     }
 
 }

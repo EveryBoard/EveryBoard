@@ -9,7 +9,7 @@ import { GoNode, AbstractGoRules } from './AbstractGoRules';
 import { GoConfig } from './go/GoRules';
 import { TriGoConfig } from './tri-go/TriGoRules';
 
-export class GoHeuristic extends PlayerMetricHeuristic<GoMove, GoState, GoConfig | TriGoConfig> {
+export abstract class AbstractGoHeuristic extends PlayerMetricHeuristic<GoMove, GoState, GoConfig | TriGoConfig> {
 
     public constructor(private readonly rules: AbstractGoRules<GoConfig | TriGoConfig>) {
         super();

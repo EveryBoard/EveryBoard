@@ -1,0 +1,81 @@
+/* eslint-disable max-lines-per-function */
+import { Table } from 'src/app/jscaip/TableUtils';
+import { MGPOptional } from '@everyboard/lib';
+import { GoState } from '../../GoState';
+import { GoPhase } from '../../GoPhase';
+import { GoPiece } from '../../GoPiece';
+import { HeuristicUtils } from 'src/app/jscaip/AI/tests/HeuristicUtils.spec';
+import { Player } from 'src/app/jscaip/Player';
+import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
+import { TriGoConfig, TriGoRules } from '../TriGoRules';
+import { TriGoHeuristic } from '../TriGoHeuristic';
+
+const X: GoPiece = GoPiece.LIGHT;
+const O: GoPiece = GoPiece.DARK;
+const _: GoPiece = GoPiece.EMPTY;
+
+fdescribe('TriGoHeuristic', () => {
+
+    let heuristic: TriGoHeuristic;
+    const defaultConfig: MGPOptional<TriGoConfig> = TriGoRules.get().getDefaultRulesConfig();
+
+    beforeEach(() => {
+        heuristic = new TriGoHeuristic();
+    });
+
+    it('should prefer a larger territory', () => {
+        // Given a board with more territory for ZERO than another
+        const strongBoard: Table<GoPiece> = [
+            [_, _, O, X, _],
+            [_, _, O, X, _],
+            [_, _, O, X, _],
+            [_, _, O, X, _],
+            [_, _, O, X, _],
+        ];
+        const strongState: GoState =
+            new GoState(strongBoard, PlayerNumberMap.of(10, 1), 0, MGPOptional.empty(), GoPhase.PLAYING);
+        const weakBoard: Table<GoPiece> = [
+            [_, O, X, _, _],
+            [_, O, X, _, _],
+            [_, O, X, _, _],
+            [_, O, X, _, _],
+            [_, O, X, _, _],
+        ];
+        const weakState: GoState =
+            new GoState(weakBoard, PlayerNumberMap.of(10, 1), 0, MGPOptional.empty(), GoPhase.PLAYING);
+        // When computing their value
+        // Then it should prefer having a larger territory
+        HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(heuristic,
+                                                               weakState, MGPOptional.empty(),
+                                                               strongState, MGPOptional.empty(),
+                                                               Player.ZERO,
+                                                               defaultConfig);
+    });
+
+    it('should count killed piece as two points', () => {
+        const u: GoPiece = GoPiece.DEAD_DARK;
+        // Given two boards with the same territory, but one with a dead opponent piece
+        const strongBoard: Table<GoPiece> = [
+            [_, _, O, X, u],
+            [_, _, O, X, X],
+            [_, _, O, X, _],
+            [_, _, O, X, _],
+            [_, _, O, X, _],
+        ];
+        const strongState: GoState =
+            new GoState(strongBoard, PlayerNumberMap.of(10, 1), 0, MGPOptional.empty(), GoPhase.PLAYING);
+        const weakBoard: Table<GoPiece> = [
+            [_, _, O, X, _],
+            [_, _, O, X, _],
+            [_, _, O, X, _],
+            [_, _, O, X, _],
+            [_, _, O, X, _],
+        ];
+        const weakState: GoState =
+            new GoState(weakBoard, PlayerNumberMap.of(10, 1), 0, MGPOptional.empty(), GoPhase.PLAYING);
+        // When computing their value
+        // Then it should assign the same value for both
+        HeuristicUtils.expectStatesToBeOfEqualValue(heuristic, weakState, strongState, defaultConfig);
+    });
+
+});

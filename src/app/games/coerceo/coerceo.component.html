@@ -17,7 +17,7 @@
         <polygon *ngIf="isPyramid(coordAndContent.coord)"
                  id="pyramid-{{ coordAndContent.coord.x }}-{{ coordAndContent.coord.y }}"
                  (click)="onPyramidClick(coordAndContent.coord)"
-                 [attr.points]="getPyramidPoints(coordAndContent.coord.x, coordAndContent.coord.y)"
+                 [attr.points]="getPyramidPointsAt(coordAndContent.coord)"
                  [attr.transform]="getTriangleInHexTranslation(coordAndContent.coord)"
                  [ngClass]="getPyramidClass(coordAndContent.coord)"
                  class="base mid-stroke"
@@ -26,7 +26,7 @@
     </g>
     <g *ngIf="chosenCoord.isPresent() else lastMove">
         <polygon id="selected-{{ chosenCoord.get().x }}-{{ chosenCoord.get().y }}"
-                 [attr.points]="getPyramidPoints(chosenCoord.get().x, chosenCoord.get().y)"
+                 [attr.points]="getPyramidPointsAt(chosenCoord.get())"
                  [attr.transform]="getTriangleInHexTranslation(chosenCoord.get())"
                  class="base no-fill mid-stroke selected-stroke"
                  (click)="onPyramidClick(chosenCoord.get())"/>

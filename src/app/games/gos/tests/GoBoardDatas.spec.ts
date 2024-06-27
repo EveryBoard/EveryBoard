@@ -6,7 +6,7 @@ import { TableUtils, Table } from 'src/app/jscaip/TableUtils';
 import { Coord } from 'src/app/jscaip/Coord';
 import { OrthogonalGoGroupDatasFactory } from '../GoGroupDatasFactory';
 
-describe('GoBoardDatas for Go', () => {
+fdescribe('GoBoardDatas for Go', () => {
 
     const _: GoPiece = GoPiece.EMPTY;
     const X: GoPiece = GoPiece.LIGHT;

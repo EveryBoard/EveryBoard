@@ -6,7 +6,7 @@ import { Utils, TestUtils } from '@everyboard/lib';
 import { ErrorLoggerServiceMock } from 'src/app/services/tests/ErrorLoggerServiceMock.spec';
 import { fakeAsync } from '@angular/core/testing';
 
-describe('GoGroupDatas', () => {
+fdescribe('GoGroupDatas', () => {
 
     const coord: Coord = new Coord(0, 0);
 

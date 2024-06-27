@@ -12,7 +12,7 @@
             <g *ngIf="spaceContent.isReachable()">
                 <g *ngIf="spaceContent.isPlayer()">
                     <polygon id="pyramid_{{ x }}_{{ y }}"
-                             [attr.points]="getPyramidPoints(x, y)"
+                             [attr.points]="getPyramidPointsAtXY(x, y)"
                              [ngClass]="getPlayerClassAtXY(x, y)"
                              class="base mid-stroke"
                     />

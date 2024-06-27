@@ -1,15 +1,14 @@
 /* eslint-disable max-lines-per-function */
 import { Table } from 'src/app/jscaip/TableUtils';
 import { MGPOptional } from '@everyboard/lib';
-import { GoMove } from '../GoMove';
-import { GoState } from '../GoState';
-import { GoPhase } from '../GoPhase';
-import { GoPiece } from '../GoPiece';
-import { GoNode } from '../AbstractGoRules';
-import { AbstractGoMoveGenerator } from '../AbstractGoMoveGenerator';
+import { GoMove } from '../../GoMove';
+import { GoState } from '../../GoState';
+import { GoPhase } from '../../GoPhase';
+import { GoPiece } from '../../GoPiece';
+import { GoNode } from '../../AbstractGoRules';
+import { TriGoMoveGenerator } from '../TriGoMoveGenerator';
 import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
-import { GoConfig, GoRules } from '../go/GoRules';
-import { GoMoveGenerator } from '../go/GoMoveGenerator';
+import { TriGoConfig, TriGoRules } from '../TriGoRules';
 
 const X: GoPiece = GoPiece.LIGHT;
 const O: GoPiece = GoPiece.DARK;
@@ -18,15 +17,16 @@ const k: GoPiece = GoPiece.DEAD_LIGHT;
 const w: GoPiece = GoPiece.LIGHT_TERRITORY;
 const b: GoPiece = GoPiece.DARK_TERRITORY;
 const _: GoPiece = GoPiece.EMPTY;
+const N: GoPiece = GoPiece.UNREACHABLE;
 
-fdescribe('GoMoveGenerator', () => { // TODO SAME FOR TRIGO
+fdescribe('TriGoMoveGenerator', () => {
 
-    let moveGenerator: AbstractGoMoveGenerator;
+    let moveGenerator: TriGoMoveGenerator;
 
-    const config: MGPOptional<GoConfig> = MGPOptional.of({ width: 5, height: 5, handicap: 0 });
+    const config: MGPOptional<TriGoConfig> = MGPOptional.of({ size: 2 });
 
     beforeEach(() => {
-        moveGenerator = new GoMoveGenerator();
+        moveGenerator = new TriGoMoveGenerator();
     });
 
     describe('getListMove', () => {
@@ -48,16 +48,19 @@ fdescribe('GoMoveGenerator', () => { // TODO SAME FOR TRIGO
         });
 
         it('should only have GoMove.ACCEPT in ACCEPT GoPhase when agreeing on the result', () => {
-            const initialBoard: GoPiece[][] = GoRules.get().getInitialState(config).getCopiedBoard();
+            const initialBoard: GoPiece[][] = [
+                [N, N, b, N],
+                [N, b, O, b],
+            ];
             const state: GoState =
-                new GoState(initialBoard, PlayerNumberMap.of(0, 0), 0, MGPOptional.empty(), GoPhase.ACCEPT);
+                new GoState(initialBoard, PlayerNumberMap.of(3, 0), 0, MGPOptional.empty(), GoPhase.ACCEPT);
             const initialNode: GoNode = new GoNode(state);
             const moves: GoMove[] = moveGenerator.getListMoves(initialNode);
             expect(moves).toEqual([GoMove.ACCEPT]);
         });
 
         it('should only have GoMove.ACCEPT in COUNTNG GoPhase when agreeing on the result', () => {
-            const initialBoard: GoPiece[][] = GoRules.get().getInitialState(config).getCopiedBoard();
+            const initialBoard: GoPiece[][] = TriGoRules.get().getInitialState(config).getCopiedBoard();
             const state: GoState = new GoState(initialBoard,
                                                PlayerNumberMap.of(0, 0),
                                                0,
@@ -70,7 +73,7 @@ fdescribe('GoMoveGenerator', () => { // TODO SAME FOR TRIGO
         });
 
         it('should only have counting moves in COUNTING GoPhase when not agreeing on the result', () => {
-            const initialBoard: GoPiece[][] = GoRules.get().getInitialState(config).getCopiedBoard();
+            const initialBoard: GoPiece[][] = TriGoRules.get().getInitialState(config).getCopiedBoard();
             const state: GoState =
                 new GoState(initialBoard, PlayerNumberMap.of(0, 0), 0, MGPOptional.empty(), GoPhase.ACCEPT);
             const initialNode: GoNode = new GoNode(state);

@@ -20,7 +20,7 @@ describe('SixMoveGenerator', () => {
     });
 
     it(`should propose all movements`, () => {
-        // Given an board where all pieces are blocked
+        // Given a board where all pieces are blocked
         const board: Table<PlayerOrNone> = [
             [O, X, X, X, X, X, O],
         ];

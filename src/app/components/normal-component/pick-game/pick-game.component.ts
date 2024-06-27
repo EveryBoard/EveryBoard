@@ -277,7 +277,7 @@ export class GameInfo {
 
             new GameInfo($localize`Ba-awa`,          'BaAwa',         BaAwaComponent,         new BaAwaTutorial(),         BaAwaRules.get(),         new Date('2024-01-28'), GameDescription.BA_AWA()         ), //                             * Martin
             new GameInfo($localize`Squarz`,          'Squarz',        SquarzComponent,        new SquarzTutorial(),        SquarzRules.get(),        new Date('2024-05-08'), GameDescription.SQUARZ()         ), //                             * Martin
-            new GameInfo($localize`TriGo`,           'TriGo',         TriGoComponent,         new TriGoTutorial(),         TriGoRules.get(),         new Date('2024-06-21'), GameDescription.TRI_GO()         ), //                             * Martin
+            new GameInfo($localize`TriGo`,           'TriGo',         TriGoComponent,         new TriGoTutorial(),         TriGoRules.get(),         new Date('2024-06-27'), GameDescription.TRI_GO()         ), //                             * Martin
         ].sort((a: GameInfo, b: GameInfo) => a.name.localeCompare(b.name));
         // After Apagos: median = 26d; average = 53d
         // 9d 10d 12d 13d 18d - 18d 20d 22d 25d 26d - (26d) - 49d 65d 71d 76d 93d - 94j 4m 4m 7m 11m

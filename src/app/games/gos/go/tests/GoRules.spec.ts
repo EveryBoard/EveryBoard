@@ -13,7 +13,7 @@ import { Player } from 'src/app/jscaip/Player';
 import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 import { GoNode } from '../../AbstractGoRules';
 
-describe('GoRules', () => {
+fdescribe('GoRules', () => {
 
     let rules: GoRules;
 
@@ -533,7 +533,7 @@ describe('GoRules', () => {
     describe('GoPhase.ACCEPT', () => {
 
         it('GoPhase.ACCEPT + GoMove/play = GoPhase.PLAYING', () => {
-            // Given an board in accept phase
+            // Given a board in accept phase
             const board: Table<GoPiece> = [
                 [b, k, b, O, b],
                 [b, k, b, O, b],
@@ -542,7 +542,7 @@ describe('GoRules', () => {
                 [b, k, b, O, b],
             ];
             const state: GoState =
-                new GoState(board, PlayerNumberMap.of(23, 0), 1, MGPOptional.empty(), GoPhase.COUNTING);
+                new GoState(board, PlayerNumberMap.of(23, 0), 1, MGPOptional.empty(), GoPhase.ACCEPT);
 
             // When playing on an empty square
             const move: GoMove = new GoMove(0, 2);

@@ -12,7 +12,7 @@ import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 import { GoPhase } from '../../GoPhase';
 import { GoConfig, GoRules } from '../GoRules';
 
-describe('GoComponent', () => {
+fdescribe('GoComponent', () => {
 
     let testUtils: ComponentTestUtils<GoComponent>;
 

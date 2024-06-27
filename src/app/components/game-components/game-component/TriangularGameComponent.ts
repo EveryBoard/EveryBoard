@@ -20,7 +20,7 @@ export abstract class TriangularGameComponent<R extends SuperRules<M, S, C, L>,
 
     public board: Table<P>;
 
-    protected getTriangleCornerCoords(x: number, y: number): Coord[] {
+    protected getTriangleCornerCoordsAtXY(x: number, y: number): Coord[] {
         if ((x + y) % 2 === 0) {
             return this.getUpwardCoordinate();
         } else {
@@ -33,7 +33,7 @@ export abstract class TriangularGameComponent<R extends SuperRules<M, S, C, L>,
     }
 
     public getTrianglePointsAtXY(x: number, y: number): string {
-        const coords: Coord[] = this.getTriangleCornerCoords(x, y);
+        const coords: Coord[] = this.getTriangleCornerCoordsAtXY(x, y);
         return this.mapCoordsToPoints(coords);
     }
 
@@ -42,13 +42,13 @@ export abstract class TriangularGameComponent<R extends SuperRules<M, S, C, L>,
         const translationY: number = coord.y * this.SPACE_SIZE;
         return new Coord(translationX, translationY);
     }
-// TODO UNIFORMISE AT && ATXY FUNC PATTERN
-    public getTriangleTranslationAtXY(x: number, y: number): string {
-        const coord: Coord = new Coord(x, y);
-        return this.getTriangleTranslationAt(coord);
-    }
 
     public getTriangleTranslationAt(coord: Coord): string {
+        return this.getTriangleTranslationAtXY(coord.x, coord.y);
+    }
+
+    public getTriangleTranslationAtXY(x: number, y: number): string {
+        const coord: Coord = new Coord(x, y);
         const translation: Coord = this.getTriangleTranslationCoord(coord);
         return 'translate(' + translation.x + ', ' + translation.y + ')';
     }
@@ -78,10 +78,10 @@ export abstract class TriangularGameComponent<R extends SuperRules<M, S, C, L>,
     }
 
     public getPyramidPointsAt(coord: Coord): string {
-        return this.getPyramidPoints(coord.x, coord.y);
+        return this.getPyramidPointsAtXY(coord.x, coord.y);
     }
 
-    public getPyramidPoints(x: number, y: number): string { // TODO: AtXY
+    public getPyramidPointsAtXY(x: number, y: number): string {
         if ((x + y) % 2 === 1) {
             return this.getDownwardPyramidPoints();
         } else {

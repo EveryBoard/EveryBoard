@@ -12,14 +12,48 @@
                  [ngClass]="getPlayerClassAt(coordAndContent.coord)"
                  class="base mid-stroke"
         />
+        <g *ngIf="coordAndContent.content.isDead()"
+           id="dead-{{ coordAndContent.coord.x }}-{{ coordAndContent.coord.y }}">
+            <line *ngIf="isUpward(coordAndContent.coord)"
+                  [attr.x1]="25"
+                  [attr.y1]="50"
+                  [attr.x2]="SPACE_SIZE"
+                  [attr.y2]="SPACE_SIZE"
+                  class="base no-fill captured-stroke"
+            />
+            <line *ngIf="isDownward(coordAndContent.coord)"
+                  [attr.x1]="0"
+                  [attr.y1]="0"
+                  [attr.x2]="75"
+                  [attr.y2]="50"
+                  class="base no-fill captured-stroke"
+            />
+        </g>
+        <polygon *ngIf="coordAndContent.content.isTerritory()"
+                 id="territory-{{ coordAndContent.coord.x }}-{{ coordAndContent.coord.y }}"
+                 [attr.points]="getTrianglePointsAt(coordAndContent.coord)"
+                 [attr.transform]="getTerritoryTriangleTransform(coordAndContent.coord)"
+                 [ngClass]="getPlayerClass(coordAndContent.content.player)"
+        />
     </g>
+
     <rect *ngIf="ko.isPresent()"
+          id="ko-{{ ko.get().x }}-{{ ko.get().y }}"
           [attr.transform]="getTriangleTranslationAt(ko.get())"
-          [attr.width]="SPACE_SIZE * 0.5"
-          [attr.height]="SPACE_SIZE * 0.5"
-          [attr.x]="(SPACE_SIZE * 0.25) + (SPACE_SIZE * ko.get().x)"
-          [attr.y]="(SPACE_SIZE * 0.25) + (SPACE_SIZE * ko.get().y)"
+          [attr.width]="SPACE_SIZE * 0.25"
+          [attr.height]="SPACE_SIZE * 0.25"
+          [attr.x]="SPACE_SIZE * 0.375"
+          [attr.y]="SPACE_SIZE * 0.25"
           class="captured-stroke mid-stroke no-fill"
     />
+
     <!-- TODO TEST KO IN BOTH -->
+    <polyline *ngIf="last.isPresent() && getState().isOnBoard(last.get())"
+              id="last-{{ last.get().x }}-{{ last.get().y }}"
+              [attr.transform]="getTriangleTranslationAt(last.get())"
+              [attr.points]="getTrianglePointsAt(last.get())"
+              [ngClass]="getPlayerClassAt(last.get())"
+              class="last-move-stroke no-fill"
+    />
+
 </svg>

@@ -4,38 +4,23 @@ import { MGPOptional } from '@everyboard/lib';
 import { GoState } from '../../GoState';
 import { GoPhase } from '../../GoPhase';
 import { GoPiece } from '../../GoPiece';
-import { GoNode } from '../../AbstractGoRules';
-import { GoHeuristic } from '../../GoHeuristic';
 import { HeuristicUtils } from 'src/app/jscaip/AI/tests/HeuristicUtils.spec';
 import { Player } from 'src/app/jscaip/Player';
 import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 import { GoConfig, GoRules } from '../GoRules';
+import { GoHeuristic } from '../GoHeuristic';
 
 const X: GoPiece = GoPiece.LIGHT;
 const O: GoPiece = GoPiece.DARK;
 const _: GoPiece = GoPiece.EMPTY;
 
-describe('GoHeuristic for Go', () => { // TODO: test for trigo
+fdescribe('GoHeuristic', () => {
 
     let heuristic: GoHeuristic;
     const defaultConfig: MGPOptional<GoConfig> = GoRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
-        heuristic = new GoHeuristic(GoRules.get());
-    });
-
-    xit('should getBoardValue according considering alive group who control alone one territory and not considering alive the others', () => {
-        const board: Table<GoPiece> = [
-            [_, X, _, _, _],
-            [X, X, _, _, _],
-            [_, X, _, O, O],
-            [O, X, _, O, _],
-            [_, X, _, O, _],
-        ];
-        const state: GoState = new GoState(board, PlayerNumberMap.of(0, 0), 0, MGPOptional.empty(), GoPhase.PLAYING);
-        const initialNode: GoNode = new GoNode(state);
-        const boardValue: readonly number[] = heuristic.getBoardValue(initialNode, defaultConfig).metrics;
-        expect(boardValue).toEqual([3]);
+        heuristic = new GoHeuristic();
     });
 
     it('should prefer a larger territory', () => {

@@ -37,15 +37,16 @@ export class TriGoRules extends AbstractGoRules<TriGoConfig> {
 
     public override getInitialState(optionalConfig: MGPOptional<TriGoConfig>): GoState {
         const config: TriGoConfig = optionalConfig.get();
+        const width: number = config.size * 2;
         const board: GoPiece[][] = TableUtils.create(
-            config.size * 2,
+            width,
             config.size,
             GoPiece.UNREACHABLE,
         );
         const lineStartIndex: number = config.size - (config.size % 2);
         for (let y: number = 0; y < config.size; y++) {
             const lineEndIndex: number = lineStartIndex + (y * 2);
-            for (let x: number = 0; x < config.size * 2; x++) {
+            for (let x: number = 0; x < width; x++) {
                 const diagonalIndex: number = x + y;
                 if (lineStartIndex <= diagonalIndex && diagonalIndex <= lineEndIndex) {
                     board[y][x] = GoPiece.EMPTY;
@@ -57,10 +58,6 @@ export class TriGoRules extends AbstractGoRules<TriGoConfig> {
 
     public override getRulesConfigDescription(): MGPOptional<RulesConfigDescription<TriGoConfig>> {
         return MGPOptional.of(TriGoRules.RULES_CONFIG_DESCRIPTION);
-    }
-
-    public override getNeighbors(coord: Coord): Coord[] {
-        return TriangularCheckerBoard.getNeighbors(coord);
     }
 
     public override getGoGroupDatasFactory(): GroupDatasFactory<GoPiece> {

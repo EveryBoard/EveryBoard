@@ -13,7 +13,7 @@ import { Table, TableUtils } from 'src/app/jscaip/TableUtils';
 describe('BaAwaRules', () => {
 
     const rules: BaAwaRules = BaAwaRules.get();
-    const defaultConfig: MGPOptional<BaAwaConfig> = rules.getDefaultRulesConfig();
+    const defaultConfig: MGPOptional<BaAwaConfig> = BaAwaRules.get().getDefaultRulesConfig();
 
     describe('generic tests', () => {
 

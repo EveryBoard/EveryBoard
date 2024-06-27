@@ -35,7 +35,8 @@ export class GoGroupDatas extends GroupDatas<GoPiece> {
             .concat(this.lightCoords
                 .concat(this.emptyCoords
                     .concat(this.deadDarkCoords
-                        .concat(this.deadLightCoords))));
+                        .concat(this.deadLightCoords
+                            .concat(this.unreachableCoords)))));
         return allCoords.some((c: Coord) => c.equals(coord));
     }
 
@@ -44,19 +45,19 @@ export class GoGroupDatas extends GroupDatas<GoPiece> {
 
         switch (color) {
             case GoPiece.DARK:
-                this.darkCoords = GroupDatas.insertAsEntryPoint(this.darkCoords, coord);
+                this.darkCoords = GroupDatas.insert(this.darkCoords, coord);
                 break;
             case GoPiece.LIGHT:
-                this.lightCoords = GroupDatas.insertAsEntryPoint(this.lightCoords, coord);
+                this.lightCoords = GroupDatas.insert(this.lightCoords, coord);
                 break;
             case GoPiece.DEAD_DARK:
-                this.deadDarkCoords = GroupDatas.insertAsEntryPoint(this.deadDarkCoords, coord);
+                this.deadDarkCoords = GroupDatas.insert(this.deadDarkCoords, coord);
                 break;
             case GoPiece.DEAD_LIGHT:
-                this.deadLightCoords = GroupDatas.insertAsEntryPoint(this.deadLightCoords, coord);
+                this.deadLightCoords = GroupDatas.insert(this.deadLightCoords, coord);
                 break;
             case GoPiece.UNREACHABLE:
-                this.unreachableCoords = GroupDatas.insertAsEntryPoint(this.unreachableCoords, coord);
+                this.unreachableCoords = GroupDatas.insert(this.unreachableCoords, coord);
                 break;
             default:
                 Utils.expectToBeMultiple(color, [
@@ -64,7 +65,7 @@ export class GoGroupDatas extends GroupDatas<GoPiece> {
                     GoPiece.DARK_TERRITORY,
                     GoPiece.LIGHT_TERRITORY,
                 ]);
-                this.emptyCoords = GroupDatas.insertAsEntryPoint(this.emptyCoords, coord);
+                this.emptyCoords = GroupDatas.insert(this.emptyCoords, coord);
         }
     }
 

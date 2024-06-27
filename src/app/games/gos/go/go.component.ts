@@ -10,11 +10,11 @@ import { GroupDatas } from 'src/app/jscaip/BoardDatas';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { GobanGameComponent } from 'src/app/components/game-components/goban-game-component/GobanGameComponent';
 import { MCTS } from 'src/app/jscaip/AI/MCTS';
-import { GoMoveGenerator } from '../GoMoveGenerator';
+import { GoMoveGenerator } from './GoMoveGenerator';
 import { Debug } from 'src/app/utils/Debug';
 import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 import { GoPhase } from '../GoPhase';
-import { GoMinimax } from '../GoMinimax';
+import { GoMinimax } from './GoMinimax';
 
 @Component({
     selector: 'app-go',
@@ -44,8 +44,8 @@ export class GoComponent extends GobanGameComponent<GoRules,
         super(messageDisplayer, cdr);
         this.setRulesAndNode('Go');
         this.availableAIs = [
-            new GoMinimax(this.rules),
-            new MCTS($localize`MCTS`, new GoMoveGenerator(this.rules), this.rules),
+            new GoMinimax(),
+            new MCTS($localize`MCTS`, new GoMoveGenerator(), this.rules),
         ];
         this.encoder = GoMove.encoder;
         this.canPass = true;

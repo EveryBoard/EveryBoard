@@ -25,7 +25,6 @@ export class GoNode extends GameNode<GoMove, GoState> {}
 export abstract class AbstractGoRules<C extends RulesConfig>
     extends ConfigurableRules<GoMove, GoState, C, GoLegalityInformation>
 {
-    protected abstract getNeighbors(coord: Coord): Coord[];
 
     protected abstract getGoGroupDatasFactory(): GroupDatasFactory<GoPiece>;
 

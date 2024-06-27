@@ -13,7 +13,7 @@ import { Player } from 'src/app/jscaip/Player';
 import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 import { GoNode } from '../../AbstractGoRules';
 
-describe('TriGoRules', () => {
+fdescribe('TriGoRules', () => {
 
     let rules: TriGoRules;
 
@@ -25,8 +25,7 @@ describe('TriGoRules', () => {
     const b: GoPiece = GoPiece.DARK_TERRITORY;
     const _: GoPiece = GoPiece.EMPTY;
     const N: GoPiece = GoPiece.UNREACHABLE;
-    // TODO: default in all test should be fetched, not instantiated via MGPOptional.something
-    const defaultConfig: MGPOptional<TriGoConfig> = MGPOptional.of({ size: 7 });
+    const defaultConfig: MGPOptional<TriGoConfig> = TriGoRules.get().getDefaultRulesConfig();
 
     const noCaptures: PlayerNumberMap = PlayerNumberMap.of(0, 0);
 
@@ -362,27 +361,27 @@ describe('TriGoRules', () => {
         it('GoPhase.PASSED + GoMove.PASS = GoPhase.COUNTING', () => {
             // Given a board on passed phase
             const board: Table<GoPiece> = [
-                [_, _, O, X, O],
-                [_, _, O, X, _],
-                [_, _, O, X, _],
-                [_, _, O, X, X],
-                [_, _, O, X, _],
+                [N, N, N, N, _, N, N, N, N],
+                [N, N, N, _, O, _, N, N, N],
+                [N, N, _, _, _, _, _, N, N],
+                [N, _, _, _, _, _, _, _, N],
+                [_, X, _, _, _, _, _, _, _],
             ];
-            const state: GoState = new GoState(board, noCaptures, 0, MGPOptional.empty(), GoPhase.PASSED);
+            const state: GoState = new GoState(board, noCaptures, 3, MGPOptional.empty(), GoPhase.PASSED);
 
             // When passing again
             const move: GoMove = GoMove.PASS;
 
             // Then the move should be legal and the board in counting phase
             const expectedBoard: Table<GoPiece> = [
-                [b, b, O, X, O],
-                [b, b, O, X, _],
-                [b, b, O, X, _],
-                [b, b, O, X, X],
-                [b, b, O, X, w],
+                [N, N, N, N, b, N, N, N, N],
+                [N, N, N, _, O, _, N, N, N],
+                [N, N, _, _, _, _, _, N, N],
+                [N, _, _, _, _, _, _, _, N],
+                [w, X, _, _, _, _, _, _, _],
             ];
             const expectedState: GoState =
-                new GoState(expectedBoard, PlayerNumberMap.of(10, 1), 1, MGPOptional.empty(), GoPhase.COUNTING);
+                new GoState(expectedBoard, PlayerNumberMap.of(1, 1), 4, MGPOptional.empty(), GoPhase.COUNTING);
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         });
 
@@ -418,7 +417,7 @@ describe('TriGoRules', () => {
 
     describe('GoPhase.COUNTING', () => {
 
-        it('should always be GameStatus.ONGOING', () => {
+        it('should be GameStatus.ONGOING', () => {
             // Given a board with a shared territory
             const board: Table<GoPiece> = [
                 [b, b, O, X, u],
@@ -467,56 +466,56 @@ describe('TriGoRules', () => {
         it('should transfer territory when marking group as dead', () => {
             // Given a board where a group own territory
             const board: Table<GoPiece> = [
-                [b, O, X, w, w],
-                [b, O, X, w, w],
-                [b, O, X, w, w],
-                [b, O, X, w, w],
-                [b, O, X, w, w],
+                [N, N, N, N, b, N, N, N, N],
+                [N, N, N, _, O, _, N, N, N],
+                [N, N, _, _, _, _, _, N, N],
+                [N, _, _, _, _, _, _, _, N],
+                [b, O, _, _, _, _, _, X, w],
             ];
             const state: GoState =
-                new GoState(board, PlayerNumberMap.of(5, 10), 0, MGPOptional.empty(), GoPhase.COUNTING);
+                new GoState(board, PlayerNumberMap.of(2, 1), 3, MGPOptional.empty(), GoPhase.COUNTING);
 
             // When marking this group as dead
-            const move: GoMove = new GoMove(2, 2);
+            const move: GoMove = new GoMove(7, 4);
 
             // Then it should transfer its territory to the opponent
             const expectedBoard: GoPiece[][] = [
-                [b, O, k, b, b],
-                [b, O, k, b, b],
-                [b, O, k, b, b],
-                [b, O, k, b, b],
-                [b, O, k, b, b],
+                [N, N, N, N, b, N, N, N, N],
+                [N, N, N, b, O, b, N, N, N],
+                [N, N, b, b, b, b, b, N, N],
+                [N, b, b, b, b, b, b, b, N],
+                [b, O, b, b, b, b, b, k, b],
             ];
             const expectedState: GoState =
-                new GoState(expectedBoard, PlayerNumberMap.of(25, 0), 1, MGPOptional.empty(), GoPhase.COUNTING);
+                new GoState(expectedBoard, PlayerNumberMap.of(24, 0), 4, MGPOptional.empty(), GoPhase.COUNTING);
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         });
 
         it('GoPhase.COUNTING + GoMove/play = GoPhase.PLAYING', () => {
             // Given a board on counting phase (for example, incorrectly marked)
             const board: Table<GoPiece> = [
-                [b, b, b, b, b],
-                [b, b, b, b, b],
-                [b, b, b, b, b],
-                [b, b, b, b, b],
-                [b, b, b, k, O],
+                [N, N, N, N, b, N, N, N, N],
+                [N, N, N, _, O, _, N, N, N],
+                [N, N, _, _, _, _, _, N, N],
+                [N, _, _, _, _, _, _, _, N],
+                [b, O, _, _, _, _, _, X, w],
             ];
             const state: GoState =
-                new GoState(board, PlayerNumberMap.of(25, 0), 1, MGPOptional.empty(), GoPhase.COUNTING);
+                new GoState(board, PlayerNumberMap.of(2, 1), 3, MGPOptional.empty(), GoPhase.COUNTING);
 
             // When playing on an empty square
-            const move: GoMove = new GoMove(4, 3);
+            const move: GoMove = new GoMove(3, 3);
 
             // Then the move should go back to playing phase
             const expectedBoard: Table<GoPiece> = [
-                [_, _, _, _, _],
-                [_, _, _, _, _],
-                [_, _, _, _, _],
-                [_, _, _, _, X],
-                [_, _, _, X, _],
+                [N, N, N, N, _, N, N, N, N],
+                [N, N, N, _, O, _, N, N, N],
+                [N, N, _, _, _, _, _, N, N],
+                [N, _, _, X, _, _, _, _, N],
+                [_, O, _, _, _, _, _, X, _],
             ];
             const expectedState: GoState =
-                new GoState(expectedBoard, PlayerNumberMap.of(0, 1), 2, MGPOptional.empty(), GoPhase.PLAYING);
+                new GoState(expectedBoard, PlayerNumberMap.of(0, 0), 4, MGPOptional.empty(), GoPhase.PLAYING);
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         });
 
@@ -565,58 +564,58 @@ describe('TriGoRules', () => {
     describe('GoPhase.ACCEPT', () => {
 
         it('GoPhase.ACCEPT + GoMove/play = GoPhase.PLAYING', () => {
-            // Given an board in accept phase
+            // Given a board on counting phase (for example, incorrectly marked)
             const board: Table<GoPiece> = [
-                [b, k, b, O, b],
-                [b, k, b, O, b],
-                [b, k, b, O, O],
-                [O, k, b, O, b],
-                [b, k, b, O, b],
+                [N, N, N, N, b, N, N, N, N],
+                [N, N, N, _, O, _, N, N, N],
+                [N, N, _, _, _, _, _, N, N],
+                [N, _, _, _, _, _, _, _, N],
+                [b, O, _, _, _, _, _, X, w],
             ];
             const state: GoState =
-                new GoState(board, PlayerNumberMap.of(23, 0), 1, MGPOptional.empty(), GoPhase.COUNTING);
+                new GoState(board, PlayerNumberMap.of(2, 1), 3, MGPOptional.empty(), GoPhase.ACCEPT);
 
             // When playing on an empty square
-            const move: GoMove = new GoMove(0, 2);
+            const move: GoMove = new GoMove(3, 3);
 
-            // Then the game should move back to Playing GoPhase
+            // Then the move should go back to playing phase
             const expectedBoard: Table<GoPiece> = [
-                [_, X, _, O, _],
-                [_, X, _, O, _],
-                [X, X, _, O, O],
-                [O, X, _, O, _],
-                [_, X, _, O, _],
+                [N, N, N, N, _, N, N, N, N],
+                [N, N, N, _, O, _, N, N, N],
+                [N, N, _, _, _, _, _, N, N],
+                [N, _, _, X, _, _, _, _, N],
+                [_, O, _, _, _, _, _, X, _],
             ];
             const expectedState: GoState =
-                new GoState(expectedBoard, noCaptures, 2, MGPOptional.empty(), GoPhase.PLAYING);
+                new GoState(expectedBoard, PlayerNumberMap.of(0, 0), 4, MGPOptional.empty(), GoPhase.PLAYING);
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         });
 
         it('GoPhase.ACCEPT + GoMove/play should capture', () => {
             // Given a board on accepted phase
             const board: Table<GoPiece> = [
-                [w, w, w, w, w],
-                [w, w, w, w, w],
-                [w, w, w, w, X],
-                [w, w, w, X, w],
-                [w, w, w, X, u],
+                [N, N, N, N, b, N, N, N, N],
+                [N, N, N, _, O, _, N, N, N],
+                [N, N, _, _, _, _, _, N, N],
+                [N, _, _, _, _, _, _, _, N],
+                [O, _, _, _, _, _, _, X, w],
             ];
             const state: GoState =
-                new GoState(board, PlayerNumberMap.of(0, 23), 1, MGPOptional.empty(), GoPhase.ACCEPT);
+                new GoState(board, PlayerNumberMap.of(1, 1), 3, MGPOptional.empty(), GoPhase.ACCEPT);
 
             // When clicking on an empty square that could capture (even if the piece so far is still "dead")
-            const move: GoMove = new GoMove(4, 3);
+            const move: GoMove = new GoMove(1, 4);
 
             // Then the capture should be done and the game back to playing phase
             const expectedBoard: Table<GoPiece> = [
-                [_, _, _, _, _],
-                [_, _, _, _, _],
-                [_, _, _, _, X],
-                [_, _, _, X, X],
-                [_, _, _, X, _],
+                [N, N, N, N, _, N, N, N, N],
+                [N, N, N, _, O, _, N, N, N],
+                [N, N, _, _, _, _, _, N, N],
+                [N, _, _, _, _, _, _, _, N],
+                [_, X, _, _, _, _, _, X, _],
             ];
             const expectedState: GoState =
-                new GoState(expectedBoard, PlayerNumberMap.of(0, 1), 2, MGPOptional.empty(), GoPhase.PLAYING);
+                new GoState(expectedBoard, PlayerNumberMap.of(0, 1), 4, MGPOptional.empty(), GoPhase.PLAYING);
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         });
 

@@ -12,18 +12,18 @@ import { GoConfig } from './go/GoRules';
 import { TriGoConfig } from './tri-go/TriGoRules';
 
 @Debug.log
-export class GoMoveGenerator extends MoveGenerator<GoMove, GoState> {
+export class AbstractGoMoveGenerator extends MoveGenerator<GoMove, GoState> {
 
     public constructor(private readonly rules: AbstractGoRules<GoConfig | TriGoConfig>) {
         super();
     }
 
     public override getListMoves(node: GoNode): GoMove[] {
-
         const currentState: GoState = node.gameState;
         const playingMoves: GoMove[] = this.getPlayingMovesList(currentState);
         if (currentState.phase === GoPhase.PLAYING ||
-            currentState.phase === GoPhase.PASSED) {
+            currentState.phase === GoPhase.PASSED)
+        {
             playingMoves.push(GoMove.PASS);
             return playingMoves;
         } else {
@@ -67,7 +67,9 @@ export class GoMoveGenerator extends MoveGenerator<GoMove, GoState> {
         const correctBoard: GoPiece[][] = this.getCorrectBoard(currentState).getCopiedBoard();
 
         const groupsData: GoGroupDatas[] =
-            this.rules.getGroupsDatasWhere(correctBoard, (pawn: GoPiece) => pawn !== GoPiece.EMPTY);
+            this.rules.getGroupsDatasWhere(
+                correctBoard,
+                (pawn: GoPiece) => pawn !== GoPiece.EMPTY && pawn !== GoPiece.UNREACHABLE);
 
         for (const group of groupsData) {
             const coord: Coord = group.getCoords()[0];

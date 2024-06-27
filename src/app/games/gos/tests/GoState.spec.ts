@@ -11,7 +11,7 @@ import { GoConfig, GoRules } from '../go/GoRules';
 const O: GoPiece = GoPiece.DARK;
 const _: GoPiece = GoPiece.EMPTY;
 
-describe('GoPiece', () => {
+fdescribe('GoPiece', () => {
 
     describe('toString', () => {
 
@@ -38,7 +38,7 @@ describe('GoPiece', () => {
 
 });
 
-describe('GoState for Go', () => {
+fdescribe('GoState for Go', () => {
 
     describe('getInitialState', () => {
 

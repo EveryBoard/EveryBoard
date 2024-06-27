@@ -89,10 +89,6 @@ export class GoRules extends AbstractGoRules<GoConfig> {
         return MGPOptional.of(GoRules.RULES_CONFIG_DESCRIPTION);
     }
 
-    public override getNeighbors(coord: Coord): Coord[] {
-        return Orthogonal.ORTHOGONALS.map((direction: Direction) => coord.getNext(direction, 1));
-    }
-
     public override getGoGroupDatasFactory(): GroupDatasFactory<GoPiece> {
         return new OrthogonalGoGroupDatasFactory();
     }
