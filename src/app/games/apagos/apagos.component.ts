@@ -89,6 +89,7 @@ export class ApagosComponent extends GameComponent<ApagosRules, ApagosMove, Apag
 
     public override cancelMoveAttempt(): void {
         this.selectedPiece = MGPOptional.empty();
+        this.showPossibleDrops();
     }
 
     public async updateBoard(_triggerAnimation: boolean): Promise<void> {
@@ -174,7 +175,7 @@ export class ApagosComponent extends GameComponent<ApagosRules, ApagosMove, Apag
         }
     }
 
-    public getCircleCenter(x: number, i: number, square: ApagosSquare): Coord {
+    public getCircleCenter(i: number, square: ApagosSquare): Coord {
         const bx: number = this.SPACE_SIZE / 2;
         const by: number = this.SPACE_SIZE / 2;
         if (square.count(PlayerOrNone.NONE) === 1) {
@@ -192,7 +193,7 @@ export class ApagosComponent extends GameComponent<ApagosRules, ApagosMove, Apag
         return this.displayableArrow.some((a: DropArrow) => a.x === x && a.player.equals(player));
     }
 
-    public getArrowClasses(x: number, player: Player): string[] {
+    public getArrowClasses(player: Player): string[] {
         const classes: string[] = [this.getPlayerClass(player)];
         return classes;
     }
