@@ -20,7 +20,7 @@
                                 </div>
                                 <ng-template #chooseOpponent>
                                     <ng-container i18n>Click on the opponent against which you would like to play.</ng-container>
-                                    <div class="table-container"
+                                    <div class="table-container mt-2"
                                          id="chooseOpponent">
                                         <table class="table is-fullwidth is-hoverable is-striped">
                                             <thead>
@@ -224,15 +224,15 @@
                                 i18n
                         >Accept and start</button>
                     </div>
+                    <div class="column">
+                        <div class="box is-fullheight">
+                            <app-demo-card id="demoCard"
+                                           class="box is-fullheight"
+                                           *ngIf="getConfigDemo() !== undefined"
+                                           [demoNodeInfo]="getConfigDemo()"></app-demo-card>
+                        </div>
+                    </div>
                 </ng-template>
-            </div>
-        </div>
-        <div class="column">
-            <div class="box is-fullheight">
-                <app-demo-card id="demoCard"
-                               class="box is-fullheight"
-                               *ngIf="getConfigDemo() !== undefined"
-                               [demoNodeInfo]="getConfigDemo()"></app-demo-card>
             </div>
         </div>
     </div>
