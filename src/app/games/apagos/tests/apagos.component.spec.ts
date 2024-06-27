@@ -155,7 +155,7 @@ describe('ApagosComponent', () => {
             await testUtils.expectClickSuccess('#square_1');
         }));
 
-        fit('should show all drop arrows after canceling a transfer', fakeAsync(async() => {
+        it('should show all drop arrows after canceling a transfer', fakeAsync(async() => {
             // Given a board with a selected square
             const state: ApagosState = ApagosState.fromRepresentation(2, [
                 [1, 1, 2, 1],
