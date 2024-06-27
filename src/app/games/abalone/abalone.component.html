@@ -3,44 +3,41 @@
      viewBox="-165 0 470 500"
      preserveAspectRatio="xMidYMid meet"
 >
-
     <polygon *ngFor="let invisibleSpace of boardNeighboringCoords"
              id="invisible_space_{{ invisibleSpace.x }}_{{ invisibleSpace.y }}"
-             [attr.transform]="getHexaCenterTranslationAtXY(invisibleSpace.x, invisibleSpace.y)"
-             (click)="onSpaceClick(invisibleSpace.x, invisibleSpace.y)"
+             [attr.transform]="getHexaCenterTranslationAt(invisibleSpace)"
+             (click)="onSpaceClick(invisibleSpace)"
              class="transparent"
              [attr.points]="getHexaPoints()"
              stroke-linecap="round"
     />
 
-    <g *ngFor="let line of hexaBoard; index as y">
-        <g *ngFor="let c of line; index as x">
-            <g *ngIf="isBoard(c)"
-               [attr.transform]="getHexaCenterTranslationAtXY(x, y)">
-                <polygon id="space_{{ x }}_{{ y }}"
-                         (click)="onSpaceClick(x, y)"
-                         [ngClass]="getSquareClasses(x, y)"
-                         class="base"
-                         [attr.points]="getHexaPoints()"
-                         stroke-linecap="round"
-                />
-                <circle *ngIf="isPiece(c)"
-                        id="piece_{{ x }}_{{ y }}"
-                        (click)="onPieceClick(x, y)"
-                        cx="0"
-                        cy="0"
-                        [attr.r]="SPACE_SIZE * 0.5"
-                        [ngClass]="getPieceClasses(x, y)"
-                        class="base"
-                />
-            </g>
+    <g *ngFor="let coordAndContent of getState().getCoordsAndContents()">
+        <g *ngIf="isReachable(coordAndContent.content)"
+           [attr.transform]="getHexaCenterTranslationAt(coordAndContent.coord)">
+            <polygon id="space_{{ coordAndContent.coord.x }}_{{ coordAndContent.coord.y }}"
+                     (click)="onSpaceClick(coordAndContent.coord)"
+                     [ngClass]="getSquareClassesAt(coordAndContent.coord)"
+                     class="base"
+                     [attr.points]="getHexaPoints()"
+                     stroke-linecap="round"
+            />
+            <circle *ngIf="isPiece(coordAndContent.content)"
+                    id="piece_{{ coordAndContent.coord.x }}_{{ coordAndContent.coord.y }}"
+                    (click)="onPieceClick(coordAndContent.coord)"
+                    cx="0"
+                    cy="0"
+                    [attr.r]="SPACE_SIZE * 0.5"
+                    [ngClass]="getPieceClasses(coordAndContent.coord)"
+                    class="base"
+            />
         </g>
     </g>
 
     <g *ngFor="let captured of captureds"
-       [attr.transform]="getHexaCenterTranslation(captured.coord)">
+       [attr.transform]="getHexaCenterTranslationAt(captured.coord)">
         <polygon id="space_{{ captured.coord.x }}_{{ captured.coord.y }}"
-                 [ngClass]="getSquareClasses(captured.coord.x, captured.coord.y)"
+                 [ngClass]="getSquareClassesAt(captured.coord)"
                  class="base captured-fill"
                  [attr.points]="getHexaPoints()"
                  stroke-linecap="round"

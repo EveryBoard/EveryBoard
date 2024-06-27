@@ -48,6 +48,8 @@ describe('ConnectSixRules', () => {
 
             // When dropping one piece
             const move: ConnectSixMove = ConnectSixFirstMove.of(new Coord(9, 9)) as ConnectSixMove;
+
+            // Then the move should succeed
             const expectedState: ConnectSixState = new ConnectSixState([
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
@@ -69,16 +71,17 @@ describe('ConnectSixRules', () => {
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             ], 1);
-            // Then the move should be a success
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         });
 
         it('should refuse move that drops two pieces on first turn', () => {
             // Given the first turn
             const state: ConnectSixState = ConnectSixRules.get().getInitialState(defaultConfig);
+
             // When dropping two pieces
             const move: ConnectSixMove = ConnectSixDrops.of(new Coord(11, 11), new Coord(10, 10));
-            // Then the attempt would have throw
+
+            // Then the attempt should throw
             function tryDoubleDropOnFirstTurn(): void {
                 rules.isLegal(move, state);
             }

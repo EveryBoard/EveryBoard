@@ -5,9 +5,9 @@ import { Localized } from '../utils/LocaleUtils';
 
 export abstract class Direction extends Vector {
 
-    public declare readonly x: 0|1|-1;
+    public declare readonly x: number;
 
-    public declare readonly y: 0|1|-1;
+    public declare readonly y: number;
 
     public isDown(): boolean {
         return this.y === 1;
@@ -48,6 +48,8 @@ export abstract class Direction extends Vector {
     }
 
     public abstract getAngle(): number;
+
+    public abstract getOpposite(): this;
 
 }
 

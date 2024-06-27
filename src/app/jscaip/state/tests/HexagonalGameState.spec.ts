@@ -35,7 +35,7 @@ export class TestingHexagonalState extends HexagonalGameState<number> {
     {
         const height: number = table.length;
         if (height === 0) {
-            throw new Error('Cannot create an HexaBoard from an empty table.');
+            throw new Error('Cannot create a HexaBoard from an empty table.');
         }
         const width: number = table[0].length;
         return new TestingHexagonalState(turn, table, width, height, excludedSpaces, empty);
@@ -52,7 +52,7 @@ export class TestingHexagonalState extends HexagonalGameState<number> {
             throw new Error('Invalid excluded spaces specification for HexaBoard.');
         }
     }
-    public setAtUnsafe(coord: Coord, value: number): this {
+    public override setAtUnsafe(coord: Coord, value: number): this {
         const newBoard: number[][] = TableUtils.copy(this.board);
         newBoard[coord.y][coord.x] = value;
         return new TestingHexagonalState(this.turn,

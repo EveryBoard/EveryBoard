@@ -6,10 +6,9 @@ import { Table } from 'src/app/jscaip/TableUtils';
 
 export class SquarzState extends GameStateWithTable<PlayerOrNone> {
 
-    public static of: (oldState: SquarzState, newBoard: Table<PlayerOrNone>) => SquarzState =
-        (oldState: SquarzState, newBoard: Table<PlayerOrNone>) => {
-            return new SquarzState(newBoard, oldState.turn);
-        };
+    public static of(oldState: SquarzState, newBoard: Table<PlayerOrNone>): SquarzState {
+        return new SquarzState(newBoard, oldState.turn);
+    }
 
     public getDominantPlayer(): PlayerOrNone {
         const scores: PlayerNumberMap = this.getScores();
