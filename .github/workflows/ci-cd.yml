@@ -290,7 +290,7 @@ jobs:
           if [ $result == true ]; then
             # deploy frontend
             npm install @angular-devkit/architect
-            npx ng deploy --base-href=/ --repo=https://github.com/EveryBoard/master --cname=everyboard.org --message="Deployment from action (commit $GITHUB_SHA)" --name acieroid --email 'everyboard@everyboard.org'
+            npx ng deploy --base-href=/ --repo=https://github.com/EveryBoard/master --cname=everyboard.org --message="Deployment from action (commit $GITHUB_SHA)" --name acieroid --email 'everyboard@everyboard.org' --configuration=production
             # deploy backend
             mkdir -p ~/.ssh/
             cat > ~/.ssh/known_hosts <<< "$SSH_KNOWN_HOSTS"
@@ -314,7 +314,7 @@ jobs:
           if [ $result == true ]; then
             # deploy frontend
             npm install @angular-devkit/architect
-            npx ng deploy --base-href=/ --repo=https://github.com/EveryBoard/develop --cname=dev.everyboard.org --message="Deployment from action (commit $GITHUB_SHA)" --name acieroid --email 'everyboard@everyboard.org'
+            npx ng deploy --base-href=/ --repo=https://github.com/EveryBoard/develop --cname=dev.everyboard.org --message="Deployment from action (commit $GITHUB_SHA)" --name acieroid --email 'everyboard@everyboard.org' --configuration=dev
             # deploy backend
             mkdir -p ~/.ssh/
             cat > ~/.ssh/known_hosts <<< "$SSH_KNOWN_HOSTS"
