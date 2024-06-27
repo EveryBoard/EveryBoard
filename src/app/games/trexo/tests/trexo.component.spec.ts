@@ -168,7 +168,7 @@ describe('TrexoComponent', () => {
                         await testUtils.expectClickSuccess('#space_5_5');
 
                         // When clicking on a valid neighbor coord
-                        // Then the move should be a success, and the first click should be the piece of Player.ONE
+                        // Then the move should succeed, and the first click should be the piece of Player.ONE
                         // Because the opponent piece is dropped first
                         const move: TrexoMove = TrexoMove.from(new Coord(6, 5), new Coord(5, 5)).get();
                         await testUtils.expectMoveSuccess('#space_6_5', move);
@@ -197,7 +197,7 @@ describe('TrexoComponent', () => {
                         // When clicking a second time
                         const move: TrexoMove = TrexoMove.from(new Coord(5, 4), new Coord(4, 4)).get();
 
-                        // Then the move should be a success
+                        // Then the move should succeed
                         await testUtils.expectMoveSuccess('#space_5_4', move);
                     }));
 

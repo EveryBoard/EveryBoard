@@ -21,7 +21,8 @@ export class HiveMoveGenerator extends MoveGenerator<HiveMove, HiveState> {
     private getListOfOnBoardMoves(state: HiveState): HiveMove[] {
         return HiveRules.get().getPossibleMovesOnBoard(state).toList();
     }
-    public getListDrops(state: HiveState): HiveMove[] {
+
+    private getListDrops(state: HiveState): HiveMove[] {
         const drops: HiveMove[] = [];
         const player: Player = state.getCurrentPlayer();
         const queenBee: HivePiece = new HivePiece(player, 'QueenBee');
@@ -36,4 +37,5 @@ export class HiveMoveGenerator extends MoveGenerator<HiveMove, HiveState> {
         }
         return drops;
     }
+
 }

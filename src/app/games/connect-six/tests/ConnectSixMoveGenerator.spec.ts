@@ -22,7 +22,7 @@ describe('ConnectSixMoveGenerator', () => {
         moveGenerator = new ConnectSixMoveGenerator();
     });
 
-    it('should propose only one move at first turns', () => {
+    it('should propose only one move at first turn', () => {
         // Given the initial node
         const width: number = defaultConfig.get().width;
         const height: number = defaultConfig.get().height;

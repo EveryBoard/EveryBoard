@@ -6,7 +6,7 @@
         <g *ngFor="let spaceContent of [state.getPieceAt(coord)]"
            id="click_{{ coord.x }}_{{ coord.y }}"
            (click)="onClick(coord.x, coord.y)"
-           [attr.transform]="getHexaCenterTranslation(coord)">
+           [attr.transform]="getHexaCenterTranslationAt(coord)">
             <!-- Background -->
             <polygon [attr.points]="getHexaPoints()"
                      class="base mid-stroke"/>
@@ -35,7 +35,7 @@
     <g *ngFor="let disconnected of disconnectedSpaces"
         id="disconnected_{{ disconnected.coord.x }}_{{ disconnected.coord.y }}" >
         <polygon [attr.points]="getHexaPoints()"
-                 [attr.transform]="getHexaCenterTranslation(disconnected.coord)"
+                 [attr.transform]="getHexaCenterTranslationAt(disconnected.coord)"
                  class="base mid-stroke captured-fill"/>
         <circle id="captured_{{ disconnected.coord.x }}_{{ disconnected.coord.y }}"
                 [attr.cx]="getCenterAt(disconnected.coord).x"
@@ -52,16 +52,16 @@
     <!-- Highlight last move -->
     <ng-container *ngIf="lastMove.isPresent()">
         <polygon [attr.points]="getHexaPoints()"
-                 [attr.transform]="getHexaCenterTranslation(lastMove.get().getStart())"
+                 [attr.transform]="getHexaCenterTranslationAt(lastMove.get().getStart())"
                  class="base no-fill last-move-stroke"/>
         <polygon [attr.points]="getHexaPoints()"
-                 [attr.transform]="getHexaCenterTranslation(lastMove.get().getEnd())"
+                 [attr.transform]="getHexaCenterTranslationAt(lastMove.get().getEnd())"
                  class="base no-fill last-move-stroke"/>
     </ng-container>
     <!-- Highlight selected piece -->
     <polygon *ngIf="chosen.isPresent()"
              id="chosen_{{ chosen.get().x }}_{{ chosen.get().y }}"
-             [attr.transform]="getHexaCenterTranslation(chosen.get())"
+             [attr.transform]="getHexaCenterTranslationAt(chosen.get())"
              [attr.points]="getHexaPoints()"
              class="base no-fill selected-stroke"/>
 </svg>

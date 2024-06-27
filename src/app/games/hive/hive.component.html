@@ -69,7 +69,7 @@
             [hexaLayout]="hexaLayout"
             (click)="selectRemaining(piece, z)"/>
     </g>
-    <g [attr.transform]="getHexaCenterTranslation(ORIGIN)">
+    <g [attr.transform]="getHexaCenterTranslationAt(ORIGIN)">
         <polygon *ngIf="selectedRemaining.isPresent()"
                  id="remaining-highlight"
                  [attr.points]="getHexaPoints()"

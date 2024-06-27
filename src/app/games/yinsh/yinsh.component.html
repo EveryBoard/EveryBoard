@@ -42,7 +42,7 @@
              (click)="onClick(coord.x, coord.y)"
              class="base no-fill selected-stroke"
              [attr.points]="getHexaPoints()"
-             [attr.transform]="getHexaCenterTranslation(coord)"
+             [attr.transform]="getHexaCenterTranslationAt(coord)"
              pointer-events="fill"
              stroke-linecap="round"/>
     <g *ngIf="isPlayerTurn()">
@@ -51,7 +51,7 @@
                  (click)="onClick(coord.x, coord.y)"
                  class="base no-fill capturable-stroke"
                  [attr.points]="getHexaPoints()"
-                 [attr.transform]="getHexaCenterTranslation(coord)"
+                 [attr.transform]="getHexaCenterTranslationAt(coord)"
                  pointer-events="fill"
                  stroke-linecap="round"/>
     </g>

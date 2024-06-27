@@ -27,12 +27,8 @@ export class GoTutorial extends Tutorial {
             GoRules.get().getInitialState(defaultConfig),
         ),
         TutorialStep.informational(
-            $localize`Goal of the game`,
-            $localize`The goal of the game is to have the most points at the end of the game.
-        We call "territories" the intersections that are empty and isolated from the rest of the Goban by the stones of a single player.
-        Here, Dark has 9 territories on the left, and Light has 8 on the right.
-        The top part belongs to no one.
-        Each player's score at the end of the game is the sum of that player's territories and captures.`,
+            TutorialStepMessage.OBJECT_OF_THE_GAME(),
+            $localize`The object of the game is to have the most points at the end of the game. We call "territories" the intersections that are empty and isolated from the rest of the Goban by the stones of a single player. Here, Dark has 9 territories on the left, and Light has 8 on the right. The top part belongs to no one. Each player's score at the end of the game is the sum of that player's territories and captures.`,
             new GoState([
                 [_, O, _, _, X, X],
                 [_, O, _, _, X, _],

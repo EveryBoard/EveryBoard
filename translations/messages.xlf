@@ -194,6 +194,9 @@
       <trans-unit id="6676975125770922470" datatype="html">
         <source>The oldest strategy game still practiced widely. A territory control game.</source>
       </trans-unit>
+      <trans-unit id="7267838821174516266" datatype="html">
+        <source>A hexagonal alignment game with weird &quot;diagonals&quot;!</source>
+      </trans-unit>
       <trans-unit id="4865500405661191388" datatype="html">
         <source>You are in charge of a hive full of insects. Use the abilities of your insects to block the opponent&apos;s queen in order to win!</source>
       </trans-unit>
@@ -376,6 +379,9 @@
       </trans-unit>
       <trans-unit id="2597247746010343961" datatype="html">
         <source>Squarz</source>
+      </trans-unit>
+      <trans-unit id="2686476818050661110" datatype="html">
+        <source>Hexodia</source>
       </trans-unit>
       <trans-unit id="2218572265318708454" datatype="html">
         <source>Registering</source>
@@ -749,11 +755,17 @@
       <trans-unit id="3033623772164647792" datatype="html">
         <source>Height</source>
       </trans-unit>
+      <trans-unit id="1997992313730455534" datatype="html">
+        <source>Number of aligned pieces needed to win</source>
+      </trans-unit>
+      <trans-unit id="6974294157928395807" datatype="html">
+        <source>Number of pieces dropped per turn</source>
+      </trans-unit>
       <trans-unit id="5607669932062416162" datatype="html">
         <source>Default</source>
       </trans-unit>
       <trans-unit id="7536677055379713952" datatype="html">
-        <source>Configuration of your <x id="INTERPOLATION" equiv-text="{{ gameName }}"/> game</source>
+        <source>Configuration of your <x id="INTERPOLATION" equiv-text="{{ urlName }}"/> game</source>
       </trans-unit>
       <trans-unit id="6594123400599013490" datatype="html">
         <source>Step finished!</source>
@@ -775,6 +787,12 @@
       </trans-unit>
       <trans-unit id="6217706486990855046" datatype="html">
         <source>Failed, try again.</source>
+      </trans-unit>
+      <trans-unit id="4039332567259986532" datatype="html">
+        <source>Object of the game</source>
+      </trans-unit>
+      <trans-unit id="8893431763975992974" datatype="html">
+        <source>Initial board and object of the game</source>
       </trans-unit>
       <trans-unit id="6439401135646542284" datatype="html">
         <source>Failure</source>
@@ -821,11 +839,11 @@
       <trans-unit id="6088417909306773667" datatype="html">
         <source>This space is not aligned with the current line.</source>
       </trans-unit>
-      <trans-unit id="8893431763975992974" datatype="html">
-        <source>Initial board and object of the game</source>
+      <trans-unit id="7123653594948067002" datatype="html">
+        <source>Score</source>
       </trans-unit>
-      <trans-unit id="2613028380797438509" datatype="html">
-        <source>At Abalone, the goal of the game is to be the first player to push 6 opponent&apos;s pieces out of the board. Let us see how!</source>
+      <trans-unit id="5878048397926852057" datatype="html">
+        <source>At Abalone, the object of the game is to be the first player to push 6 opponent&apos;s pieces out of the board. Let us see how!</source>
       </trans-unit>
       <trans-unit id="4612562967450553112" datatype="html">
         <source>Moving a piece</source>
@@ -850,9 +868,6 @@
       <trans-unit id="4948237861189298097" datatype="html">
         <source>Congratulations! You know everything you need to start a game!</source>
       </trans-unit>
-      <trans-unit id="7123653594948067002" datatype="html">
-        <source>Score</source>
-      </trans-unit>
       <trans-unit id="7183112140529419891" datatype="html">
         <source>MCTS</source>
       </trans-unit>
@@ -870,6 +885,12 @@
       </trans-unit>
       <trans-unit id="139135108801629927" datatype="html">
         <source>There is no possible transfer from that square!</source>
+      </trans-unit>
+      <trans-unit id="6180360850656792663" datatype="html">
+        <source>Full Board</source>
+      </trans-unit>
+      <trans-unit id="6434791622277704389" datatype="html">
+        <source>Rightmost Focus</source>
       </trans-unit>
       <trans-unit id="8322338146903087210" datatype="html">
         <source>At Apagos, there are 4 squares, each of them has a fixed number of holes for pieces. Each player starts with 10 pieces. Dark pieces belong to the first player, light pieces belong to the second one. The game ends when no one can play. The player owning the most pieces in the rightmost square wins!</source>
@@ -901,11 +922,8 @@
       <trans-unit id="6535908388530528403" datatype="html">
         <source>Wrong choice, your opponent will win in the next turn no matter which piece is dropped!</source>
       </trans-unit>
-      <trans-unit id="6434791622277704389" datatype="html">
-        <source>Rightmost Focus</source>
-      </trans-unit>
-      <trans-unit id="6180360850656792663" datatype="html">
-        <source>Full Board</source>
+      <trans-unit id="7668715639068435496" datatype="html">
+        <source>Captures &gt; Freedom</source>
       </trans-unit>
       <trans-unit id="6011590532570079359" datatype="html">
         <source>Your piece must land on one of the closest six triangles with the same color as the triangle on which the piece is.</source>
@@ -919,19 +937,17 @@
       <trans-unit id="7341385722923686160" datatype="html">
         <source>You cannot capture from an empty space.</source>
       </trans-unit>
+      <trans-unit id="8182472154276317003" datatype="html">
+        <source>Pieces &gt; Threats &gt; Tiles</source>
+      </trans-unit>
+      <trans-unit id="4996962520612005595" datatype="html">
+        <source>Pieces &gt; Tiles &gt; Freedom</source>
+      </trans-unit>
       <trans-unit id="5853742640794164153" datatype="html">
         <source>Use small board</source>
       </trans-unit>
-      <trans-unit id="7117895259187122182" datatype="html">
-        <source>Board and goal of the game</source>
-      </trans-unit>
-      <trans-unit id="8138522124708860735" datatype="html">
-        <source>Coerceo is played on a board like this, composed of hexagonal tiles, each comprising 6 triangles.
-         The triangles are the spaces on which pieces move during the game.
-         The tiles can be removed from the board (you will see how later).
-         The dark pieces belong to the first player and can only move on the dark spaces,
-         while the light pieces belong to the second player and can only move on the light spaces.
-         The goal of the game is to capture all of the opponent&apos;s pieces.</source>
+      <trans-unit id="8275758037847807394" datatype="html">
+        <source>Coerceo is played on a board like this, composed of hexagonal tiles, each comprising 6 triangles. The triangles are the spaces on which pieces move during the game. The tiles can be removed from the board (you will see how later). The dark pieces belong to the first player and can only move on the dark spaces, while the light pieces belong to the second player and can only move on the light spaces. The object of the game is to capture all of the opponent&apos;s pieces.</source>
       </trans-unit>
       <trans-unit id="2354817630223808522" datatype="html">
         <source>Move</source>
@@ -1000,32 +1016,23 @@
         <source>Congratulations! See, your piece no longer had any empty neighboring space after you have gained the tile, but it stayed on the board as it was your turn.
         However, the opponent&apos;s piece has disappeared because the tile&apos;s capture has removed its last empty neighboring space.</source>
       </trans-unit>
-      <trans-unit id="8182472154276317003" datatype="html">
-        <source>Pieces &gt; Threats &gt; Tiles</source>
-      </trans-unit>
-      <trans-unit id="7668715639068435496" datatype="html">
-        <source>Captures &gt; Freedom</source>
-      </trans-unit>
-      <trans-unit id="4996962520612005595" datatype="html">
-        <source>Pieces &gt; Tiles &gt; Freedom</source>
-      </trans-unit>
       <trans-unit id="8560978883976627945" datatype="html">
         <source>Alignment</source>
       </trans-unit>
-      <trans-unit id="3987391810258758141" datatype="html">
-        <source>Connect Six is played on a 19x19 board, on which stones are put on the intersections. The aim of the game is to align 6 of your pieces.</source>
+      <trans-unit id="1631778170068001983" datatype="html">
+        <source>Connect Six is played on a 19x19 board, on which stones are put on the intersections. The object of the game is to align 6 of your pieces.</source>
       </trans-unit>
       <trans-unit id="4094188563872795571" datatype="html">
         <source>First turn</source>
       </trans-unit>
-      <trans-unit id="227061499558746572" datatype="html">
-        <source>On the first turn, the first player plays only one piece.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, place your first piece by clicking on an intersection.</source>
+      <trans-unit id="3956994434107981140" datatype="html">
+        <source>At the first turn, the first player plays only one piece.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, place your first piece by clicking on an intersection.</source>
       </trans-unit>
       <trans-unit id="9212980897131132135" datatype="html">
         <source>Next turns</source>
       </trans-unit>
-      <trans-unit id="6989863591618494423" datatype="html">
-        <source>On all following turns, the players play two pieces.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Light, do the winning move.</source>
+      <trans-unit id="4174912343371620775" datatype="html">
+        <source>On all following turns, the players play two pieces, until a victory or a draw is reached.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Light, do the winning move.</source>
       </trans-unit>
       <trans-unit id="4237198021995785268" datatype="html">
         <source>Your piece should land on a neighboring square.</source>
@@ -1051,11 +1058,8 @@
       <trans-unit id="4649711232397678200" datatype="html">
         <source>Jump</source>
       </trans-unit>
-      <trans-unit id="9123148140915098130" datatype="html">
-        <source>Board and aim of the game</source>
-      </trans-unit>
-      <trans-unit id="3408052490903167189" datatype="html">
-        <source>Conspirateurs is played on a 17x17 board. The goal of the game is to place all of your pieces in shelters, which are the special squares on the edge of the board. Note the central zone in the middle of the board, where each player will put their pieces initially.</source>
+      <trans-unit id="2678466693137107679" datatype="html">
+        <source>Conspirateurs is played on a 17x17 board. The object of the game is to place all of your pieces in shelters, which are the special squares on the edge of the board. Note the central zone in the middle of the board, where each player will put their pieces initially.</source>
       </trans-unit>
       <trans-unit id="5390926924373994130" datatype="html">
         <source>Initial phase</source>
@@ -1114,9 +1118,6 @@
       <trans-unit id="2023900957694052396" datatype="html">
         <source>You cannot pass the ball to the opponent. You must pick one of your pieces.</source>
       </trans-unit>
-      <trans-unit id="5626639193339311369" datatype="html">
-        <source>Goal of the game</source>
-      </trans-unit>
       <trans-unit id="6598638598311685089" datatype="html">
         <source>The goal of Diaballik is to bring your ball, represented by the small circle, into the home line of the opponent (i.e, its starting position). The ball is currently being held by your center piece.</source>
       </trans-unit>
@@ -1152,6 +1153,9 @@
       </trans-unit>
       <trans-unit id="1337900792840930042" datatype="html">
         <source>Distance (<x id="PH" equiv-text="i"/>)</source>
+      </trans-unit>
+      <trans-unit id="7535479567631818273" datatype="html">
+        <source>Dummy</source>
       </trans-unit>
       <trans-unit id="3460005588993308010" datatype="html">
         <source>You do not have any pieces of this type anymore.</source>
@@ -1198,9 +1202,6 @@
       <trans-unit id="3765076912748475454" datatype="html">
         <source>Failed, try to shift a stack of pieces to the left.</source>
       </trans-unit>
-      <trans-unit id="7535479567631818273" datatype="html">
-        <source>Dummy</source>
-      </trans-unit>
       <trans-unit id="5012524143343727947" datatype="html">
         <source>You must select a piece or a stack of your color.</source>
       </trans-unit>
@@ -1221,6 +1222,9 @@
       </trans-unit>
       <trans-unit id="9221962864929282978" datatype="html">
         <source>A stack must move in a straight line.</source>
+      </trans-unit>
+      <trans-unit id="5456673610183497320" datatype="html">
+        <source>Stacks</source>
       </trans-unit>
       <trans-unit id="5010267418211867946" datatype="html">
         <source>Moving</source>
@@ -1285,9 +1289,6 @@
       </trans-unit>
       <trans-unit id="8876232297721386956" datatype="html">
         <source>Bad idea, by moving on the source you would have won a point.</source>
-      </trans-unit>
-      <trans-unit id="5456673610183497320" datatype="html">
-        <source>Stacks</source>
       </trans-unit>
       <trans-unit id="6059738106874378452" datatype="html">
         <source>You do not have pieces of this type anymore.</source>
@@ -1361,8 +1362,8 @@
       <trans-unit id="2183903120219891237" datatype="html">
         <source>A phalanx cannot contain a piece of the opponent.</source>
       </trans-unit>
-      <trans-unit id="7849636659728976766" datatype="html">
-        <source>Piece &gt; Row Domination &gt; Alignement &gt; Row Presence</source>
+      <trans-unit id="5986717000369124597" datatype="html">
+        <source>Piece &gt; Row Domination &gt; Alignment &gt; Row Presence</source>
       </trans-unit>
       <trans-unit id="4563771339790181195" datatype="html">
         <source>Positional</source>
@@ -1379,14 +1380,8 @@
       <trans-unit id="3763163349245523745" datatype="html">
         <source>This is the initial board of Epaminondas. The top line is the starting line of Light. The bottom line is the starting line of Dark.</source>
       </trans-unit>
-      <trans-unit id="6886026531074912078" datatype="html">
-        <source>Goal of the game (1/2)</source>
-      </trans-unit>
       <trans-unit id="6716022766676912093" datatype="html">
         <source>After multiple moves, if at the beginning of its turn, a player has more pieces on the opponent&apos;s starting line than the number of pieces the opponent has on the player&apos;s starting line, the player wins. Here, it&apos;s Dark&apos;s turn to play: Dark has therefore won.</source>
-      </trans-unit>
-      <trans-unit id="5351770434517588207" datatype="html">
-        <source>Goal of the game (2/2)</source>
       </trans-unit>
       <trans-unit id="2623510393491755816" datatype="html">
         <source>Here, it is Light&apos;s turn. Light wins because they have two pieces on Dark&apos;s starting line, and Dark only has one on Light&apos;s starting line.</source>
@@ -1521,11 +1516,11 @@
         Keep it mind that the most useful in a capture is to take your opponent&apos;s pieces.&lt;br/&gt;&lt;br/&gt;
         You&apos;re playing Dark, capture the most pieces from your opponent.</source>
       </trans-unit>
-      <trans-unit id="2182334345707735267" datatype="html">
-        <source>Congratulations, you have gotten 12 of your pieces back and captured 2 of your opponent&apos;s pieces.</source>
-      </trans-unit>
       <trans-unit id="4244295242962463153" datatype="html">
         <source>Failed, the best capture takes 2 of your opponent&apos;s pieces.</source>
+      </trans-unit>
+      <trans-unit id="2182334345707735267" datatype="html">
+        <source>Congratulations, you have gotten 12 of your pieces back and captured 2 of your opponent&apos;s pieces.</source>
       </trans-unit>
       <trans-unit id="4172293183843503071" datatype="html">
         <source>This move is a ko, you must play somewhere else before you can play in this intersection again.</source>
@@ -1541,6 +1536,9 @@
       </trans-unit>
       <trans-unit id="3878972107071324960" datatype="html">
         <source>You cannot commit suicide.</source>
+      </trans-unit>
+      <trans-unit id="8400174784913655582" datatype="html">
+        <source>Minimax</source>
       </trans-unit>
       <trans-unit id="2969677193390047071" datatype="html">
         <source>19 x 19</source>
@@ -1563,12 +1561,8 @@
         (For shorter parts, 9x9 and 5x5 boards exist, but are not yet available here).
         For this tutorial, we will use a smaller board for pedagogical purposes.</source>
       </trans-unit>
-      <trans-unit id="7863035928636323211" datatype="html">
-        <source>The goal of the game is to have the most points at the end of the game.
-        We call &quot;territories&quot; the intersections that are empty and isolated from the rest of the Goban by the stones of a single player.
-        Here, Dark has 9 territories on the left, and Light has 8 on the right.
-        The top part belongs to no one.
-        Each player&apos;s score at the end of the game is the sum of that player&apos;s territories and captures.</source>
+      <trans-unit id="1490005275934813623" datatype="html">
+        <source>The object of the game is to have the most points at the end of the game. We call &quot;territories&quot; the intersections that are empty and isolated from the rest of the Goban by the stones of a single player. Here, Dark has 9 territories on the left, and Light has 8 on the right. The top part belongs to no one. Each player&apos;s score at the end of the game is the sum of that player&apos;s territories and captures.</source>
       </trans-unit>
       <trans-unit id="6009621890963077533" datatype="html">
         <source>Simple capture</source>
@@ -1662,8 +1656,20 @@
         Light has 8 territories and 1 prisoner.
         The end result is therefore 18 - 9 for Dark.</source>
       </trans-unit>
-      <trans-unit id="8400174784913655582" datatype="html">
-        <source>Minimax</source>
+      <trans-unit id="45739481977493163" datatype="html">
+        <source>Size</source>
+      </trans-unit>
+      <trans-unit id="69616505141416052" datatype="html">
+        <source>Hexodia is played on a hexagonal board, your goal is to be the first to align 6 of your pieces.</source>
+      </trans-unit>
+      <trans-unit id="6858407546093916748" datatype="html">
+        <source>At the first turn, the first player plays only one piece.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, place your first piece by clicking on a space.</source>
+      </trans-unit>
+      <trans-unit id="3416240052398580752" datatype="html">
+        <source>Hexagonal Diagonals</source>
+      </trans-unit>
+      <trans-unit id="25408930270688683" datatype="html">
+        <source>But an unusual kind of diagonal also exist in Hexodia. Here, Dark has made alignment in each of those three direction, in only one a victory is still possible.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, do the winning move.</source>
       </trans-unit>
       <trans-unit id="4791280679911297134" datatype="html">
         <source>The queen bee can only move to one of its direct neighbors.</source>
@@ -1712,9 +1718,6 @@
       </trans-unit>
       <trans-unit id="3008604417903239806" datatype="html">
         <source>Hive is a game without a board, where pieces are placed on the side of each other, in a contiguous block called the hive. Each player has 11 pieces, representing various insects.</source>
-      </trans-unit>
-      <trans-unit id="4039332567259986532" datatype="html">
-        <source>Object of the game</source>
       </trans-unit>
       <trans-unit id="6900505086205524561" datatype="html">
         <source>The object of the game at Hive is to surround the opponent&apos;s queen. Once the queen is surrounded by 6 pieces, no matter the owner of these pieces, the game ends. The player with a queen that is not surrounded wins. In case both queens are fully surrounded at the same turn, it is a draw. Here, Dark won.</source>
@@ -1849,6 +1852,12 @@
          In this case, the last player to have moved a piece loses.
          Here, your opponent will have moved its green piece last, you therefore win!</source>
       </trans-unit>
+      <trans-unit id="318262165361158083" datatype="html">
+        <source>Control</source>
+      </trans-unit>
+      <trans-unit id="7668804973365582935" datatype="html">
+        <source>Control and Domination</source>
+      </trans-unit>
       <trans-unit id="3581037377692107358" datatype="html">
         <source>You cannot go backward with normal pieces!</source>
       </trans-unit>
@@ -1923,12 +1932,6 @@
       </trans-unit>
       <trans-unit id="7994037258587314442" datatype="html">
         <source>You did not move your officer.</source>
-      </trans-unit>
-      <trans-unit id="318262165361158083" datatype="html">
-        <source>Control</source>
-      </trans-unit>
-      <trans-unit id="7668804973365582935" datatype="html">
-        <source>Control and Domination</source>
       </trans-unit>
       <trans-unit id="6387863170048380356" datatype="html">
         <source>Your move should have a length equal to the number of pieces that exist on the same line.</source>
@@ -2011,8 +2014,8 @@
       <trans-unit id="8506636863437595095" datatype="html">
         <source>You cannot place any capture now, you must first place your lodestone on the board!</source>
       </trans-unit>
-      <trans-unit id="3233989185853354365" datatype="html">
-        <source>Lodestone is played on a 8x8 board, which contains so-called &lt;i&gt;pressure plates&lt;/i&gt; along the board, that will contain captured pieces. The initial board is shown here. The aim of the game is to be the only player with pieces remaining on the board. To do so, you will have to either push your opponent&apos;s pieces off the board, or to crush them with your pieces. You will do it by using a lodestone.</source>
+      <trans-unit id="5605685662838531265" datatype="html">
+        <source>Lodestone is played on a 8x8 board, which contains so-called &lt;i&gt;pressure plates&lt;/i&gt; along the board, that will contain captured pieces. The initial board is shown here. The object of the game is to be the only player with pieces remaining on the board. To do so, you will have to either push your opponent&apos;s pieces off the board, or to crush them with your pieces. You will do it by using a lodestone.</source>
       </trans-unit>
       <trans-unit id="2109934310949694886" datatype="html">
         <source>Selecting a lodestone</source>
@@ -2459,9 +2462,6 @@
       <trans-unit id="3823427068887903090" datatype="html">
         <source>Captured stones needed to win</source>
       </trans-unit>
-      <trans-unit id="1997992313730455534" datatype="html">
-        <source>Number of aligned pieces needed to win</source>
-      </trans-unit>
       <trans-unit id="2370571702661444910" datatype="html">
         <source>Size of captures</source>
       </trans-unit>
@@ -2618,9 +2618,6 @@
       <trans-unit id="8819839276456625538" datatype="html">
         <source>You must pick a space from the edge of the board.</source>
       </trans-unit>
-      <trans-unit id="8880269756041921906" datatype="html">
-        <source>Goal of the game.</source>
-      </trans-unit>
       <trans-unit id="1849305746346487286" datatype="html">
         <source>At Quixo, the goal is to align 5 of your pieces.
         The first player plays with dark pieces, the second with light pieces.
@@ -2713,10 +2710,8 @@
         <source>Sâhârâ is played on a board where each space is a triangle.
         Each player has six pyramids.</source>
       </trans-unit>
-      <trans-unit id="7077721605915290523" datatype="html">
-        <source>At Sâhârâ, the goal of the game is to immobilize one of the opponent&apos;s pyramids.
-        To do so, you have to occupy all neighboring space of that pyramid.
-        Here, Light has lost because its leftmost pyramid is immobilized.</source>
+      <trans-unit id="7604175652954490413" datatype="html">
+        <source>At Sâhârâ, the object of the game is to immobilize one of the opponent&apos;s pyramids. To do so, you have to occupy all neighboring space of that pyramid. Here, Light has lost because its leftmost pyramid is immobilized.</source>
       </trans-unit>
       <trans-unit id="1300852626039829767" datatype="html">
         <source>Simple step</source>
@@ -2858,10 +2853,8 @@
       <trans-unit id="6058377963019501239" datatype="html">
         <source>You lost one of your pieces during this move. There is a way to disconnect an opponent&apos;s piece without losing any of yours, try again!</source>
       </trans-unit>
-      <trans-unit id="6517565683560801163" datatype="html">
-        <source>Six is a game without board, where pieces are placed on the side of each other, in a contiguous block.
-        Each player has 21 pieces, with one for each player already on the board.
-        The goal of the game is to form one of the three winning shapes with your pieces.</source>
+      <trans-unit id="1815943775702363568" datatype="html">
+        <source>Six is a game without board, where pieces are placed on the side of each other, in a contiguous block. Each player has 21 pieces, with one for each player already on the board. The object of the game is to form one of the three winning shapes with your pieces.</source>
       </trans-unit>
       <trans-unit id="1323662052932112829" datatype="html">
         <source>Victory (line)</source>
@@ -2994,8 +2987,8 @@
       <trans-unit id="3329390039243374527" datatype="html">
         <source>Invader starts</source>
       </trans-unit>
-      <trans-unit id="3469374446011769111" datatype="html">
-        <source>Brandhub is the Irish version of the Tafl, Tafl being a family of viking strategy game. The goal of the game is different for each player. The attacker plays first. Their pieces (dark) are close to the edges. Their goal is to capture the king, which is in the center of the board. The defender plays second. Their pieces (light) are in the middle. Their goal is to move the king on one of the 4 thrones in the corners. Note that the square in which the king starts, in the center of the board, is also a throne.</source>
+      <trans-unit id="7559617831371314788" datatype="html">
+        <source>Brandhub is the Irish version of the Tafl, Tafl being a family of viking strategy game. The object of the game is different for each player. The attacker plays first. Their pieces (dark) are close to the edges. Their goal is to capture the king, which is in the center of the board. The defender plays second. Their pieces (light) are in the middle. Their goal is to move the king on one of the 4 thrones in the corners. Note that the square in which the king starts, in the center of the board, is also a throne.</source>
       </trans-unit>
       <trans-unit id="4948014485926272515" datatype="html">
         <source>All pieces move the same way. Similarly to a rook in chess, a piece can move: &lt;ol&gt;&lt;li&gt;By as many squares as you want.&lt;/li&gt;&lt;li&gt;Without going over another piece or stopping on another piece.&lt;/li&gt;&lt;li&gt;Horizontally or vertically.&lt;/li&gt;&lt;li&gt;Only the king can land on a corner throne.&lt;/li&gt;&lt;li&gt;Once the king left his central throne, no piece can land on it, but all can pass over it.&lt;/li&gt;&lt;/ol&gt;To move a piece, click on it and then on its landing square.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, do the first move.</source>
@@ -3048,8 +3041,8 @@
       <trans-unit id="1214950240176247246" datatype="html">
         <source>When the king is not on his central throne nor next to it, he can be captured like a soldier.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark. Capture the king.</source>
       </trans-unit>
-      <trans-unit id="2511498870151087692" datatype="html">
-        <source>Hnefatafl is a strategy game that was played by the vikings, it&apos;s part of a larger family of games called Tafl. The goal of the game is different for each player. The attacker plays first. Their pieces (dark) are close to the edges. Their goal is to capture the king, which is in the center of the board. The defender plays second. Their pieces (light) are in the middle. Their goal is to move the king on one of the 4 thrones in the corners. Note that the square in which the king starts, in the center of the board, is also a throne.</source>
+      <trans-unit id="7072625163028579495" datatype="html">
+        <source>Hnefatafl is a strategy game that was played by the vikings, it&apos;s part of a larger family of games called Tafl. The object of the game is different for each player. The attacker plays first. Their pieces (dark) are close to the edges. Their goal is to capture the king, which is in the center of the board. The defender plays second. Their pieces (light) are in the middle. Their goal is to move the king on one of the 4 thrones in the corners. Note that the square in which the king starts, in the center of the board, is also a throne.</source>
       </trans-unit>
       <trans-unit id="439785126864846458" datatype="html">
         <source>All pieces move the same way. Similarly to a rook in chess, a piece can move:&lt;ol&gt;&lt;li&gt;By as many squares as you want.&lt;/li&gt;&lt;li&gt;Without going over another piece or stopping on another piece.&lt;/li&gt;&lt;li&gt;Horizontally or vertically.&lt;/li&gt;&lt;li&gt;Only the king can land on a throne.&lt;/li&gt;&lt;/ol&gt;To move a piece, click on it and then on its landing square.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, do the first move.</source>
@@ -3066,8 +3059,8 @@
       <trans-unit id="8429826787913397956" datatype="html">
         <source>Another way to capture the king is to immobilize it against an edge of the board. Note that the king cannot be captured next to a throne.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, capture the king.</source>
       </trans-unit>
-      <trans-unit id="2541472060697733126" datatype="html">
-        <source>Tablut is the lapland version of the Tafl, Tafl being a family of viking strategy game. The goal of the game is different for each player. The attacker plays first. Its pieces (dark) are close to the edges. Its goal is to capture the king, which is in the center of the board. The defender plays second. Its pieces (light) are in the middle. Its goal is to move the king on one of the 4 thrones in the corners. Note that the square in which the king starts, in the center of the board, is also a throne.</source>
+      <trans-unit id="4169759104868172929" datatype="html">
+        <source>Tablut is the lapland version of the Tafl, Tafl being a family of viking strategy game. The object of the game is different for each player. The attacker plays first. Its pieces (dark) are close to the edges. Its goal is to capture the king, which is in the center of the board. The defender plays second. Its pieces (light) are in the middle. Its goal is to move the king on one of the 4 thrones in the corners. Note that the square in which the king starts, in the center of the board, is also a throne.</source>
       </trans-unit>
       <trans-unit id="1347435830524797455" datatype="html">
         <source>Standard Teeko</source>
@@ -3078,8 +3071,8 @@
       <trans-unit id="560394398723321416" datatype="html">
         <source>Teleport Teeko</source>
       </trans-unit>
-      <trans-unit id="6388473964053708590" datatype="html">
-        <source>The goal of the game is to align your 4 pieces, or to form a square with them.</source>
+      <trans-unit id="3648165339236868481" datatype="html">
+        <source>The object of the game is to align your 4 pieces, or to form a square with them.</source>
       </trans-unit>
       <trans-unit id="55131761932515685" datatype="html">
         <source>During your first four turns, you must drop one piece on any empty space of the board. There is no other restriction.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, put a piece on the board.</source>
@@ -3105,8 +3098,8 @@
       <trans-unit id="4138926893172482803" datatype="html">
         <source>You cannot drop a piece on uneven grounds!</source>
       </trans-unit>
-      <trans-unit id="8777341718687257426" datatype="html">
-        <source>At Trexo, the goal of the game is to align 5 pieces of your color in a vertical, horizontal or diagonal line. However, the players play with tiles that are constituted of two pieces, one from each player!</source>
+      <trans-unit id="1296355206706368557" datatype="html">
+        <source>At Trexo, the object of the game is to align 5 pieces of your color in a vertical, horizontal or diagonal line. However, the players play with tiles that are constituted of two pieces, one from each player!</source>
       </trans-unit>
       <trans-unit id="6011148802067949079" datatype="html">
         <source>Dropping a tile</source>
@@ -3266,14 +3259,14 @@
       <trans-unit id="5033601776243148314" datatype="html">
         <source><x id="PH" equiv-text="first"/> and <x id="PH_1" equiv-text="second"/></source>
       </trans-unit>
-      <trans-unit id="5527862698509020204" datatype="html">
-        <source>This game does not exist!</source>
-      </trans-unit>
       <trans-unit id="75196759111440200" datatype="html">
         <source>You&apos;re not allowed to send a message here.</source>
       </trans-unit>
       <trans-unit id="4052977957517792171" datatype="html">
         <source>This message is forbidden.</source>
+      </trans-unit>
+      <trans-unit id="5527862698509020204" datatype="html">
+        <source>This game does not exist!</source>
       </trans-unit>
       <trans-unit id="2025949389316561274" datatype="html">
         <source>You are already playing in another game.</source>

@@ -76,6 +76,7 @@ import { EpaminondasComponent } from './games/epaminondas/epaminondas.component'
 import { GipfComponent } from './games/gipf/gipf.component';
 import { GoComponent } from './games/go/go.component';
 
+import { HexodiaComponent } from './games/hexodia/hexodia.component';
 import { HiveComponent } from './games/hive/hive.component';
 import { HivePieceComponent } from './games/hive/hive-piece.component';
 import { HnefataflComponent } from './games/tafl/hnefatafl/hnefatafl.component';
@@ -206,6 +207,7 @@ export const routes: Route[] = [
         GipfComponent,
         BlankGobanComponent,
         GoComponent,
+        HexodiaComponent,
         HiveComponent, HivePieceComponent,
         HnefataflComponent,
         KalahComponent,

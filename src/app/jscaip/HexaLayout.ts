@@ -37,7 +37,7 @@ export class HexaLayout {
     }
 
     /**
-     * Returns the points to draw polygons to render an hexagon in an isometric view.
+     * Returns the points to draw polygons to render a hexagon in an isometric view.
      * The first polygon is the one on the bottom left.
      * The second polygon is the one on the bottom and bottom right.
      * The third polygon is the polygon formed by the union of the first two

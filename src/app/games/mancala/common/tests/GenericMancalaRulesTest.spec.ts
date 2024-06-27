@@ -72,7 +72,7 @@ export function DoMancalaRulesTests(entries: MancalaRulesTestEntries): void {
             // When attempting starving move
             const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(4));
 
-            // Then the move should be a success
+            // Then the move should succeed
             const expectedState: MancalaState = new MancalaState(
                 TableUtils.create(6, 2, 0),
                 11,
@@ -96,7 +96,7 @@ export function DoMancalaRulesTests(entries: MancalaRulesTestEntries): void {
             // When doing the last move
             const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(5));
 
-            // Then the move should be a success
+            // Then the move should succeed
             const expectedState: MancalaState = new MancalaState(
                 TableUtils.create(6, 2, 0),
                 12,

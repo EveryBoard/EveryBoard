@@ -224,7 +224,7 @@ describe('AbaloneComponent', () => {
             await testUtils.expectClickSuccess('#piece_2_6');
 
             // When clicking on the space marked by the direction instead of its arrow
-            // Then the move should have been done
+            // Then the move should succeed
             const move: AbaloneMove = AbaloneMove.ofSingleCoord(new Coord(2, 6), HexaDirection.LEFT);
             await testUtils.expectMoveSuccess('#space_1_6', move);
         }));
@@ -234,7 +234,7 @@ describe('AbaloneComponent', () => {
             await testUtils.expectClickSuccess('#piece_0_7');
 
             // When clicking on coord then direction
-            // Then the move should be done
+            // Then the move should succeed
             const move: AbaloneMove = AbaloneMove.ofSingleCoord(new Coord(0, 7), HexaDirection.UP);
             await testUtils.expectMoveSuccessWithAsymmetricNaming('#arrow_0_7_to_0_6', '#direction_UP', move);
         }));
@@ -370,7 +370,7 @@ describe('AbaloneComponent', () => {
             await testUtils.expectClickSuccess('#piece_2_7');
 
             // When clicking on the space marked by the direction instead of its arrow
-            // Then the move should have been done
+            // Then the move should succeed
             const move: AbaloneMove = AbaloneMove.ofSingleCoord(new Coord(2, 7), HexaDirection.UP);
             await testUtils.expectMoveSuccess('#piece_2_5', move);
         }));
@@ -382,7 +382,7 @@ describe('AbaloneComponent', () => {
         await testUtils.expectClickSuccess('#piece_2_6');
 
         // When clicking on the space marked by the direction instead of its arrow
-        // Then the move should have been done
+        // Then the move should succeed
         const move: AbaloneMove = AbaloneMove.ofSingleCoord(new Coord(2, 6), HexaDirection.LEFT);
         await testUtils.expectMoveSuccess('#space_1_6', move);
     }));

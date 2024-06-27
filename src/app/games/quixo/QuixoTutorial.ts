@@ -17,7 +17,7 @@ export class QuixoTutorial extends Tutorial {
 
     public tutorial: TutorialStep[] = [
         TutorialStep.informational(
-            $localize`Goal of the game.`,
+            TutorialStepMessage.OBJECT_OF_THE_GAME(),
             $localize`At Quixo, the goal is to align 5 of your pieces.
         The first player plays with dark pieces, the second with light pieces.
         The board is made of 25 spaces spread over a 5x5 square.

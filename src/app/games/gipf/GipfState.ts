@@ -30,7 +30,7 @@ export class GipfState extends HexagonalGameState<FourStatePiece> {
         return this.capturedPieces.get(player);
     }
 
-    public setAtUnsafe(coord: Coord, v: FourStatePiece): this {
+    public override setAtUnsafe(coord: Coord, v: FourStatePiece): this {
         const newBoard: FourStatePiece[][] = TableUtils.copy(this.board);
         newBoard[coord.y][coord.x] = v;
         return new GipfState(newBoard, this.turn, this.sidePieces, this.capturedPieces) as this;

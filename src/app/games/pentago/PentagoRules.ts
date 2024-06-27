@@ -101,7 +101,7 @@ export class PentagoRules extends Rules<PentagoMove, PentagoState> {
                     }
                 }
                 if (fourAligned) {
-                    // check first alignement
+                    // check first alignment
                     if (state.getPieceAt(testedCoord) === firstValue) {
                         subVictory.push(testedCoord);
                         victoryCoords = victoryCoords.concat(subVictory);

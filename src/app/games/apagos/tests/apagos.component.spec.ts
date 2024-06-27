@@ -38,7 +38,7 @@ describe('ApagosComponent', () => {
             // Given the initial board
 
             // When clicking on the light arrow above the second square
-            // Then the move should have been a success
+            // Then the move should succeed
             const move: ApagosMove = ApagosMove.drop(ApagosCoord.ONE, Player.ONE);
             await testUtils.expectMoveSuccess('#dropArrow_one_1', move);
         }));
@@ -117,7 +117,7 @@ describe('ApagosComponent', () => {
             await testUtils.expectClickSuccess('#square_2');
 
             // When clicking on drop arrow
-            // Then the move should have been done
+            // Then the move should succeed
             const move: ApagosMove = ApagosMove.transfer(ApagosCoord.TWO, ApagosCoord.ONE).get();
             await testUtils.expectMoveSuccess('#dropArrow_zero_1', move);
         }));

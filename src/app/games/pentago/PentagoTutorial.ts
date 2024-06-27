@@ -20,7 +20,7 @@ export class PentagoTutorial {
             PentagoRules.get().getInitialState(),
         ),
         TutorialStep.informational(
-            $localize`Goal of the game`,
+            TutorialStepMessage.OBJECT_OF_THE_GAME(),
             $localize`The goal at Pentago is to align 5 of your pieces. In the following board, Dark wins.`,
             new PentagoState([
                 [O, _, _, O, X, _],

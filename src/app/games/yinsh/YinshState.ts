@@ -58,7 +58,7 @@ export class YinshState extends HexagonalGameState<YinshPiece> {
         return this.board[coord.y][coord.x] !== YinshPiece.UNREACHABLE;
     }
 
-    public setAtUnsafe(coord: Coord, value: YinshPiece): this {
+    public override setAtUnsafe(coord: Coord, value: YinshPiece): this {
         const newBoard: YinshPiece[][] = TableUtils.copy(this.board);
         newBoard[coord.y][coord.x] = value;
         return new YinshState(newBoard, this.sideRings, this.turn) as this;

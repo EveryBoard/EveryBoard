@@ -21,7 +21,7 @@ export class LascaTutorial extends Tutorial {
             LascaRules.get().getInitialState(),
         ),
         TutorialStep.informational(
-            $localize`Goal of the game`,
+            TutorialStepMessage.OBJECT_OF_THE_GAME(),
             $localize`The goal of Lasca is, like for draughts, to render the opponent unable to move, either by capturing all his pieces, either by blocking them.`,
             LascaRules.get().getInitialState(),
         ),

@@ -25,7 +25,7 @@ const defaultConfig: MGPOptional<SiamConfig> = SiamRules.get().getDefaultRulesCo
 export class SiamTutorial extends Tutorial {
     public tutorial: TutorialStep[] = [
         TutorialStep.informational(
-            $localize`Goal of the game`,
+            TutorialStepMessage.OBJECT_OF_THE_GAME(),
             $localize`The goal at Siam is to be the first to push a mountain out of the board. The initial board contains three mountains, and no pieces are initially on the board. During its turn, a player can do one of the following actions:<ol><li>Put a new piece on the board.</li><li>Change the orientation of one of its piece</li><li>Move one of its piece and optionally reorient it.</li><li>Take one of its pieces out of the board.</li></ol>`,
             SiamRules.get().getInitialState(defaultConfig),
         ),

@@ -219,7 +219,7 @@ describe('CoerceoComponent', () => {
             // When clicking on the landing space
             const move: CoerceoMove = CoerceoRegularMove.of(new Coord(6, 2), new Coord(7, 3));
 
-            // Then the move should be done
+            // Then the move should succeed
             await testUtils.expectMoveSuccess('#space-7-3', move);
         }));
 

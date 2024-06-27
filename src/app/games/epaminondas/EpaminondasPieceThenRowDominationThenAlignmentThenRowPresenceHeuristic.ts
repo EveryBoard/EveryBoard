@@ -7,7 +7,7 @@ import { MGPOptional } from '@everyboard/lib';
 import { EpaminondasHeuristic } from './EpaminondasHeuristic';
 import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 
-export class EpaminondasPieceThenRowDominationThenAlignementThenRowPresenceHeuristic extends EpaminondasHeuristic {
+export class EpaminondasPieceThenRowDominationThenAlignmentThenRowPresenceHeuristic extends EpaminondasHeuristic {
 
     public getBoardValue(node: EpaminondasNode, _config: MGPOptional<EpaminondasConfig>): BoardValue {
         const width: number = node.gameState.getWidth();

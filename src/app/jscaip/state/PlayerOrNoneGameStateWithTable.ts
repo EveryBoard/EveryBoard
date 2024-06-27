@@ -1,6 +1,6 @@
-import { Coord } from '../Coord';
 import { GameStateWithTable } from './GameStateWithTable';
 import { Player, PlayerOrNone } from '../Player';
+import { Coord } from '../Coord';
 
 export class PlayerOrNoneGameStateWithTable extends GameStateWithTable<PlayerOrNone> {
 

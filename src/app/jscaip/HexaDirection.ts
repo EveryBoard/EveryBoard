@@ -5,16 +5,11 @@ import { Encoder, MGPFallible, Utils } from '@everyboard/lib';
 export class HexaDirection extends Direction {
 
     public static readonly UP: HexaDirection = new HexaDirection(0, -1);
-
-    public static readonly LEFT: HexaDirection = new HexaDirection(-1, 0);
-
     public static readonly UP_RIGHT: HexaDirection = new HexaDirection(1, -1);
-
-    public static readonly DOWN_LEFT: HexaDirection = new HexaDirection(-1, 1);
-
     public static readonly RIGHT: HexaDirection = new HexaDirection(1, 0);
-
     public static readonly DOWN: HexaDirection = new HexaDirection(0, 1);
+    public static readonly DOWN_LEFT: HexaDirection = new HexaDirection(-1, 1);
+    public static readonly LEFT: HexaDirection = new HexaDirection(-1, 0);
 
     public static readonly factory: DirectionFactory<HexaDirection> =
         new class extends DirectionFactory<HexaDirection> {
@@ -36,7 +31,9 @@ export class HexaDirection extends Direction {
                 case (HexaDirection.RIGHT): return 2;
                 case (HexaDirection.DOWN): return 3;
                 case (HexaDirection.DOWN_LEFT): return 4;
-                default: return 5;
+                default:
+                    Utils.expectToBe(direction, HexaDirection.LEFT);
+                    return 5;
             }
         },
         (encoded: number): HexaDirection => {
@@ -58,11 +55,9 @@ export class HexaDirection extends Direction {
         }
     }
 
-    private constructor(x: 0|1|-1, y: 0|1|-1) {
-        super(x, y);
-    }
-    public getOpposite(): HexaDirection {
+    public override getOpposite(): this {
         const opposite: MGPFallible<HexaDirection> = HexaDirection.factory.from(-this.x, -this.y);
-        return opposite.get();
+        return opposite.get() as this;
     }
+
 }

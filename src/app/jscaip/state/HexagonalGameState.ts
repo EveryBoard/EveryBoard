@@ -17,7 +17,9 @@ export abstract class HexagonalGameState<P extends NonNullable<Comparable>> exte
         super(board, turn);
         Utils.assert(this.excludedSpaces.length < (this.height / 2) + 1, 'Invalid excluded spaces specification for HexagonalGameState.');
     }
-    public abstract setAtUnsafe(coord: Coord, v: P): this
+
+    public abstract setAtUnsafe(coord: Coord, v: P): this;
+
     public setAt(coord: Coord, v: P): this {
         if (this.isOnBoard(coord)) {
             return this.setAtUnsafe(coord, v);
@@ -25,6 +27,7 @@ export abstract class HexagonalGameState<P extends NonNullable<Comparable>> exte
             throw new Error('Setting coord not on board: ' + coord + '.');
         }
     }
+
     public equalsT(other: HexagonalGameState<P>, equal: (a: P, b: P) => boolean): boolean {
         if (this === other) {
             return true;
@@ -53,6 +56,7 @@ export abstract class HexagonalGameState<P extends NonNullable<Comparable>> exte
         }
         return true;
     }
+
     public allCoords(): Coord[] {
         const coords: Coord[] = [];
         this.forEachCoord((coord: Coord) => {
@@ -60,6 +64,7 @@ export abstract class HexagonalGameState<P extends NonNullable<Comparable>> exte
         });
         return coords;
     }
+
     public allLines(): ReadonlyArray<HexaLine> {
         const lines: HexaLine[] = [];
         for (let i: number = 0; i < this.width; i++) {
@@ -73,6 +78,7 @@ export abstract class HexagonalGameState<P extends NonNullable<Comparable>> exte
         }
         return lines;
     }
+
     public getEntranceOnLine(line: HexaLine): Coord {
         let x: number;
         let y: number;
@@ -99,6 +105,7 @@ export abstract class HexagonalGameState<P extends NonNullable<Comparable>> exte
                 }
         }
     }
+
     private findEntranceFrom(line: HexaLine, start: Coord): Coord {
         const dir: HexaDirection = line.getDirection();
         let coord: Coord = start;
@@ -114,4 +121,5 @@ export abstract class HexagonalGameState<P extends NonNullable<Comparable>> exte
                            { start: start.toString(), line: line.toString() });
         throw new Error(failure.getReason());
     }
+
 }

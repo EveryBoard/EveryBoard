@@ -150,7 +150,7 @@ describe('Coord', () => {
             expect(distance).toBe(2);
         });
 
-        it('should throw when checkAlignement = true and provided coord is not aligned', () => {
+        it('should throw when checkAlignment = true and provided coord is not aligned', () => {
             TestUtils.expectToThrowAndLog(
                 () => coord.getDistanceToward(new Coord(1, 2), true),
                 'Cannot calculate distance with non aligned coords.',

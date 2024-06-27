@@ -39,7 +39,7 @@ describe('DiaballikComponent', () => {
                               MGPOptional.empty(),
                               MGPOptional.empty());
 
-        // Then it should succeed
+        // Then the move should succeed
         await testUtils.expectMoveSuccess('#done', move);
     }));
 
@@ -56,7 +56,7 @@ describe('DiaballikComponent', () => {
                               MGPOptional.of(DiaballikTranslation.from(new Coord(1, 6), new Coord(1, 5)).get()),
                               MGPOptional.empty());
 
-        // Then it should succeed
+        // Then the move should succeed
         await testUtils.expectMoveSuccess('#done', move);
     }));
 

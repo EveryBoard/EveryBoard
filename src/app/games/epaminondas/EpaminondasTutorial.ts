@@ -5,6 +5,7 @@ import { PlayerOrNone } from 'src/app/jscaip/Player';
 import { MGPOptional, MGPValidation } from '@everyboard/lib';
 import { Tutorial, TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { EpaminondasConfig, EpaminondasRules } from './EpaminondasRules';
+import { TutorialStepMessage } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
 
 const _: PlayerOrNone = PlayerOrNone.NONE;
 const O: PlayerOrNone = PlayerOrNone.ZERO;
@@ -22,7 +23,7 @@ export class EpaminondasTutorial extends Tutorial {
             EpaminondasRules.get().getInitialState(defaultConfig),
         ),
         TutorialStep.informational(
-            $localize`Goal of the game (1/2)`,
+            TutorialStepMessage.OBJECT_OF_THE_GAME() + ' (1/2)',
             $localize`After multiple moves, if at the beginning of its turn, a player has more pieces on the opponent's starting line than the number of pieces the opponent has on the player's starting line, the player wins. Here, it's Dark's turn to play: Dark has therefore won.`,
             new EpaminondasState([
                 [_, _, _, _, _, O, _, _, X, X, X, X, X, X],
@@ -40,7 +41,7 @@ export class EpaminondasTutorial extends Tutorial {
             ], 0),
         ),
         TutorialStep.informational(
-            $localize`Goal of the game (2/2)`,
+            TutorialStepMessage.OBJECT_OF_THE_GAME() + ' (2/2)',
             $localize`Here, it is Light's turn. Light wins because they have two pieces on Dark's starting line, and Dark only has one on Light's starting line.`,
             new EpaminondasState([
                 [_, _, _, _, _, O, _, _, _, _, X, X, X, X],

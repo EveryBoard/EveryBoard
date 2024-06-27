@@ -28,12 +28,12 @@ export class AbaloneMoveGenerator extends MoveGenerator<AbaloneMove, AbaloneStat
                     } else {
                         continue;
                     }
-                    for (const alignement of HexaDirection.factory.all) {
+                    for (const alignment of HexaDirection.factory.all) {
                         for (let distance: number = 1; distance <= 2; distance++) {
-                            if (alignement.equals(dir)) {
+                            if (alignment.equals(dir)) {
                                 break;
                             }
-                            const second: Coord = first.getNext(alignement, distance);
+                            const second: Coord = first.getNext(alignment, distance);
                             if (AbaloneState.isOnBoard(second)) {
                                 const translation: AbaloneMove = AbaloneMove.ofDoubleCoord(first, second, dir);
                                 if (AbaloneRules.get().isLegal(translation, state).isSuccess()) {

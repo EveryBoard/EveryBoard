@@ -55,6 +55,22 @@ export class TableUtils {
         return sum;
     }
 
+    public static contains<T>(table: Table<T>, element: T): boolean {
+        for (const array of table) {
+            if (ArrayUtils.contains(array, element)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static count<T>(table: Table<T>, element: T): number {
+        let total: number = 0;
+        for (const array of table) {
+            total += ArrayUtils.count(array, element);
+        }
+        return total;
+    }
 
 }
 

@@ -117,7 +117,7 @@ describe('TaflRules', () => {
         // When sacrificing him
         const move: MyTaflMove = MyTaflMove.from(new Coord(3, 0), new Coord(2, 0)).get();
 
-        // Then the move should be a success and the part a victory of Odin's Kin.
+        // Then the move should succeed and the part a victory of Odin's Kin.
         const expectedBoard: Table<TaflPawn> = [
             [_, _, A, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _],
@@ -154,7 +154,7 @@ describe('TaflRules', () => {
         // When sacrificing him
         const move: MyTaflMove = MyTaflMove.from(new Coord(8, 4), new Coord(1, 4)).get();
 
-        // Then the move should be a success and the part a victory of Odin's Kin.
+        // Then the move should succeed and the part a victory of Odin's Kin.
         const expectedBoard: Table<TaflPawn> = [
             [_, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _],

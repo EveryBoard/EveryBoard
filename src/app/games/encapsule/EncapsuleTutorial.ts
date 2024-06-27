@@ -22,7 +22,7 @@ export class EncapsuleTutorial extends Tutorial {
 
     public tutorial: TutorialStep[] = [
         TutorialStep.informational(
-            $localize`Goal of the game`,
+            TutorialStepMessage.OBJECT_OF_THE_GAME(),
             $localize`The goal of Encapsule is to align three of your pieces. Here, Dark wins.`,
             new EncapsuleState([
                 [s, S, B],

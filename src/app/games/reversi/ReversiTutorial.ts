@@ -14,7 +14,7 @@ const defaultConfig: MGPOptional<ReversiConfig> = ReversiRules.get().getDefaultR
 export class ReversiTutorial extends Tutorial {
     public tutorial: TutorialStep[] = [
         TutorialStep.informational(
-            $localize`Goal of the game`,
+            TutorialStepMessage.OBJECT_OF_THE_GAME(),
             $localize`At Reversi, the pieces are double sided: one dark side for the first player, one light side for the second player.
         When one piece is flipped, its owner changes.
         The player owning the most pieces at the end of the game wins.

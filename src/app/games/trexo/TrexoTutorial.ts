@@ -33,8 +33,8 @@ export class TrexoTutorial extends Tutorial {
     public tutorial: TutorialStep[] = [
         // 1. but du jeu et plateau
         TutorialStep.informational(
-            $localize`Goal of the game`,
-            $localize`At Trexo, the goal of the game is to align 5 pieces of your color in a vertical, horizontal or diagonal line. However, the players play with tiles that are constituted of two pieces, one from each player!`,
+            TutorialStepMessage.OBJECT_OF_THE_GAME(),
+            $localize`At Trexo, the object of the game is to align 5 pieces of your color in a vertical, horizontal or diagonal line. However, the players play with tiles that are constituted of two pieces, one from each player!`,
             TrexoRules.get().getInitialState(),
         ),
         TutorialStep.anyMove(

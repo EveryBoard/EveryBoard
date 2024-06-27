@@ -111,7 +111,11 @@ export class ConnectSixRules extends ConfigurableRules<ConnectSixMove, ConnectSi
         if (victoriousCoord.length > 0) {
             return GameStatus.getVictory(state.getCurrentOpponent());
         }
-        return state.turn === 181 ? GameStatus.DRAW : GameStatus.ONGOING;
+        if (TableUtils.contains(state.board, PlayerOrNone.NONE)) {
+            return GameStatus.ONGOING;
+        } else {
+            return GameStatus.DRAW;
+        }
     }
 
 }

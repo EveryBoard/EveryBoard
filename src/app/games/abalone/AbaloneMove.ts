@@ -17,6 +17,7 @@ export class AbaloneMove extends MoveCoord {
         Utils.assert(coord.isInRange(9, 9), CoordFailure.OUT_OF_RANGE(coord));
         return new AbaloneMove(coord, dir, MGPOptional.empty());
     }
+
     public static ofDoubleCoord(first: Coord, second: Coord, dir: HexaDirection): AbaloneMove {
         const coords: Coord[] = [first, second];
         ArrayUtils.sortByDescending(coords, AbaloneMove.sortCoord);

@@ -32,7 +32,7 @@ describe('P4Rules', () => {
         // When playing in column 3
         const move: P4Move = P4Move.of(3);
 
-        // Then the move should be a success
+        // Then the move should succeed
         const expectedBoard: Table<PlayerOrNone> = [
             [_, _, _, _, _, _, _],
             [_, _, _, _, _, _, _],

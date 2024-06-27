@@ -219,7 +219,7 @@ export class DiaballikComponent extends RectangularGameComponent<DiaballikRules,
         return this.onLegalClick(clickedCoord);
     }
 
-    private onLegalClick(clickedCoord: Coord): MGPValidation | PromiseLike<MGPValidation> {
+    private async onLegalClick(clickedCoord: Coord): Promise<MGPValidation> {
         const clickedPiece: DiaballikPiece = this.stateInConstruction.getPieceAt(clickedCoord);
         if (this.currentSelection.isPresent()) {
             const selection: Coord = this.currentSelection.get();

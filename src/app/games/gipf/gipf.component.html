@@ -18,7 +18,7 @@
     <g *ngFor="let space of getAllCoords()"
        (click)="onClick(space)"
        id="click_{{ space.x }}_{{ space.y }}"
-       [attr.transform]="getHexaCenterTranslation(space)">
+       [attr.transform]="getHexaCenterTranslationAt(space)">
 
         <polygon [attr.points]="getHexaPoints()"
                  id="space_{{ space.x }}_{{ space.y }}"
@@ -38,7 +38,7 @@
        class="capturable-stroke">
         <polygon *ngFor="let space of capture.capturedSpaces"
                  [attr.points]="getHexaPoints()"
-                 [attr.transform]="getHexaCenterTranslation(space)"
+                 [attr.transform]="getHexaCenterTranslationAt(space)"
                  (click)="onClick(space)"
                  class="no-fill"
                  stroke-linecap="round"/>

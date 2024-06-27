@@ -18,8 +18,8 @@ const defaultConfig: MGPOptional<TaflConfig> = HnefataflRules.get().getDefaultRu
 export class HnefataflTutorial extends Tutorial {
     public tutorial: TutorialStep[] = [
         TutorialStep.informational(
-            $localize`Goal of the game`,
-            $localize`Hnefatafl is a strategy game that was played by the vikings, it's part of a larger family of games called Tafl. The goal of the game is different for each player. The attacker plays first. Their pieces (dark) are close to the edges. Their goal is to capture the king, which is in the center of the board. The defender plays second. Their pieces (light) are in the middle. Their goal is to move the king on one of the 4 thrones in the corners. Note that the square in which the king starts, in the center of the board, is also a throne.`,
+            TutorialStepMessage.OBJECT_OF_THE_GAME(),
+            $localize`Hnefatafl is a strategy game that was played by the vikings, it's part of a larger family of games called Tafl. The object of the game is different for each player. The attacker plays first. Their pieces (dark) are close to the edges. Their goal is to capture the king, which is in the center of the board. The defender plays second. Their pieces (light) are in the middle. Their goal is to move the king on one of the 4 thrones in the corners. Note that the square in which the king starts, in the center of the board, is also a throne.`,
             HnefataflRules.get().getInitialState(defaultConfig),
         ),
         TutorialStep.anyMove(

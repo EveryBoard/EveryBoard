@@ -2,6 +2,7 @@ import { QuartoMove } from 'src/app/games/quarto/QuartoMove';
 import { QuartoState } from 'src/app/games/quarto/QuartoState';
 import { QuartoPiece } from 'src/app/games/quarto/QuartoPiece';
 import { Tutorial, TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
+import { TutorialStepMessage } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
 
 const AABA: QuartoPiece = QuartoPiece.AABA;
 const AABB: QuartoPiece = QuartoPiece.AABB;
@@ -21,7 +22,7 @@ export class QuartoTutorial extends Tutorial {
 
     public tutorial: TutorialStep[] = [
         TutorialStep.informational(
-            $localize`Goal of the game`,
+            TutorialStepMessage.OBJECT_OF_THE_GAME(),
             $localize`Quarto is an alignment game.
         The goal is to align four pieces that have at least one common aspect:
         <ul>

@@ -20,9 +20,9 @@ export class EpaminondasPositionalHeuristic
         const width: number = state.getWidth();
         const height: number = state.getHeight();
         const MAX_ADVANCEMENT_SCORE_TOTAL: number = 28 * width;
-        const SCORE_BY_ALIGNEMENT: number = MAX_ADVANCEMENT_SCORE_TOTAL + 1; // OLDLY 13
-        const MAX_NUMBER_OF_ALIGNEMENT: number = (24*16) + (4*15);
-        const SCORE_BY_PIECE: number = (MAX_NUMBER_OF_ALIGNEMENT * SCORE_BY_ALIGNEMENT) + 1; // OLDLY 25*13
+        const SCORE_BY_ALIGNMENT: number = MAX_ADVANCEMENT_SCORE_TOTAL + 1; // OLDLY 13
+        const MAX_NUMBER_OF_ALIGNMENT: number = (24*16) + (4*15);
+        const SCORE_BY_PIECE: number = (MAX_NUMBER_OF_ALIGNMENT * SCORE_BY_ALIGNMENT) + 1; // OLDLY 25*13
         let total: number = 0;
         for (const coordAndContent of state.getPlayerCoordsAndContent()) {
             const coord: Coord = coordAndContent.coord;
@@ -44,7 +44,7 @@ export class EpaminondasPositionalHeuristic
                 while (state.isOnBoard(neighbor) &&
                        state.getPieceAt(neighbor) === player)
                 {
-                    total += mod * SCORE_BY_ALIGNEMENT;
+                    total += mod * SCORE_BY_ALIGNMENT;
                     neighbor = neighbor.getNext(dir, 1);
                 }
             }

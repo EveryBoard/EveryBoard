@@ -15,7 +15,7 @@ const _: DiaballikPiece = DiaballikPiece.NONE;
 export class DiaballikTutorial extends Tutorial {
     public tutorial: TutorialStep[] = [
         TutorialStep.informational(
-            $localize`Goal of the game`,
+            TutorialStepMessage.OBJECT_OF_THE_GAME(),
             $localize`The goal of Diaballik is to bring your ball, represented by the small circle, into the home line of the opponent (i.e, its starting position). The ball is currently being held by your center piece.`,
             DiaballikRules.get().getInitialState(),
         ),
