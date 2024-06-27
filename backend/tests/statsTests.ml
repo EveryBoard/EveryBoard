@@ -9,6 +9,9 @@ module Mock : Stats.STATS = struct
     let set_game_id _ _ = ()
     let read _ = ()
     let write _ = ()
+    let new_game _ = ()
+    let end_game _ = ()
+    let new_move _ = ()
     let summary _ = Dream.empty `OK
 end
 

@@ -55,7 +55,7 @@ module User = struct
         username: string option;
         last_update_time: string option [@default None] [@key "lastUpdateTime"];
         verified: bool;
-        current_game: CurrentGame.t option [@key "currentGame"];
+        current_game: CurrentGame.t option [@default None] [@key "currentGame"];
     }
     [@@deriving yojson]
 
