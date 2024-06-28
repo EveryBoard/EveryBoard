@@ -22,7 +22,7 @@
             <polygon *ngIf="canDisplayArrow(x, PlayerOrNone.ZERO)"
                      id="dropArrow_zero_{{ x }}"
                      class="base mid-stroke"
-                     [ngClass]="getArrowClasses(x, PlayerOrNone.ZERO)"
+                     [ngClass]="getArrowClasses(PlayerOrNone.ZERO)"
                      (click)="onArrowClick(x, PlayerOrNone.ZERO)"
                      [attr.points]="ARROW_COORD"
                      [attr.transform]="'translate(' + (SPACE_SIZE / 2) + ' ' + (-SPACE_SIZE / 2) + ')'"
@@ -30,7 +30,7 @@
             <polygon *ngIf="canDisplayArrow(x, PlayerOrNone.ONE)"
                      id="dropArrow_one_{{ x }}"
                      class="base mid-stroke"
-                     [ngClass]="getArrowClasses(x, PlayerOrNone.ONE)"
+                     [ngClass]="getArrowClasses(PlayerOrNone.ONE)"
                      (click)="onArrowClick(x, PlayerOrNone.ONE)"
                      [attr.points]="ARROW_COORD"
                      [attr.transform]="'translate(0 ' + (-SPACE_SIZE / 2) + ')'"
@@ -46,9 +46,8 @@
             />
             <ng-container *ngFor="let i of ArrayUtils.range(square.count(PlayerOrNone.NONE))">
                 <circle id="square_{{ x }}_piece_{{ i }}_out_of_{{ square.count(PlayerOrNone.NONE) }}"
+                        [attr.transform]="getCircleTransform(i, square)"
                         (click)="onSquareClick(x)"
-                        [attr.cx]="getCircleCenter(x, i, square).x"
-                        [attr.cy]="getCircleCenter(x, i, square).y"
                         r="10"
                         [ngClass]="getPieceClasses(x, i, square)"
                         class="base mid-stroke"

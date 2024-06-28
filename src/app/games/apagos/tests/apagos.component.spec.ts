@@ -155,6 +155,28 @@ describe('ApagosComponent', () => {
             await testUtils.expectClickSuccess('#square_1');
         }));
 
+        it('should show all drop arrows after canceling a transfer', fakeAsync(async() => {
+            // Given a board with a selected square
+            const state: ApagosState = ApagosState.fromRepresentation(2, [
+                [1, 1, 2, 1],
+                [5, 1, 0, 0],
+                [7, 5, 3, 1],
+            ], 5, 5);
+            await testUtils.setupState(state);
+            testUtils.expectElementToExist('#dropArrow_zero_0');
+            testUtils.expectElementToExist('#dropArrow_one_0');
+            await testUtils.expectClickSuccess('#square_2');
+            testUtils.expectElementToExist('#dropArrow_zero_0');
+            testUtils.expectElementNotToExist('#dropArrow_one_0');
+
+            // When clicking a second time on the selected square to cancel the move
+            await testUtils.expectClickFailure('#square_2');
+
+            // Then we should see all drop arrows
+            testUtils.expectElementToExist('#dropArrow_zero_0');
+            testUtils.expectElementToExist('#dropArrow_one_0');
+        }));
+
     });
 
     describe('show last move', () => {
