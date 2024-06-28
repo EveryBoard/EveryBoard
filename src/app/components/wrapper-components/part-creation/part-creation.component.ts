@@ -220,12 +220,13 @@ export class PartCreationComponent implements OnInit, OnDestroy {
                 this.viewInfo.candidateClasses[opponent] = ['is-selected'];
                 this.viewInfo.chosenOpponent = opponent;
                 const partStatus: IPartStatus = Utils.getNonNullable(this.currentConfigRoom).partStatus;
-                this.viewInfo.canProposeConfig = partStatus !== PartStatus.CONFIG_PROPOSED.value && opponent !== '';
+                const configProposed: boolean = partStatus === PartStatus.CONFIG_PROPOSED.value;
+                this.viewInfo.canProposeConfig = configProposed === false && opponent !== '';
                 console.log('setting editable to ' + this.viewInfo.canProposeConfig)
                 console.log('rulesConfigurationComponent')
                 console.log(this.rulesConfigurationComponent)
                 if (this.rulesConfigurationComponent != null) {
-                    this.rulesConfigurationComponent.setEditable(this.viewInfo.canProposeConfig);
+                    this.rulesConfigurationComponent.setEditable(configProposed === false);
                 }
             });
         this.getForm('partType').valueChanges

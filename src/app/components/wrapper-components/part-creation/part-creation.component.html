@@ -156,7 +156,6 @@
                     <div class="mt-2">
                         <app-rules-configuration #rulesConfigurationComponent
                                                  id="rulesConfigurationComponent"
-                                                 class="mt-2"
                                                  [rulesConfigDescriptionOptional]="rulesConfigDescription"
                                                  [editable]="viewInfo.canEditConfig || false"
                                                  (updateCallback)="saveRulesConfig($event)">
@@ -196,8 +195,7 @@
         </div>
     </div>
 
-    <div *ngIf="viewInfo.userIsChosenOpponent"
-         class="columns is-vcentered is-align-items-stretch">
+    <div *ngIf="viewInfo.userIsChosenOpponent">
         <div *ngIf="viewInfo.creatorIsModifyingConfig else configProposal">
             <div class="box is-fullheight">
                 <p class="title" i18n>Configuration proposal</p>
@@ -206,39 +204,41 @@
             </div>
         </div>
         <ng-template #configProposal>
-            <div class="column">
-                <div class="box is-fullheight">
-                    <p class="title" i18n>Configuration proposal</p>
-                    <div class="content">
-                        <p i18n>{{ viewInfo.creator }} proposes to play a {{ viewInfo.partTypeName }} game</p>
-                        <ul>
-                            <li>
-                                <span *ngIf="viewInfo.firstPlayer === 'CREATOR'" i18n>{{ viewInfo.creator }} plays first</span>
-                                <span *ngIf="viewInfo.firstPlayer === 'CHOSEN_PLAYER'" i18n>you play first</span>
-                                <span *ngIf="viewInfo.firstPlayer === 'RANDOM'" i18n>the first player is selected randomly</span>
-                            </li>
-                            <li i18n>a turn lasts at most <strong>{{ (viewInfo.maximalMoveDuration || 0) | humanDuration }} </strong></li>
-                            <li i18n>the game lasts at most <strong>{{ (viewInfo.totalPartDuration || 0) | humanDuration }} per player</strong></li>
-                        </ul>
-                        <app-rules-configuration #rulesConfigurationComponent
-                                                 [rulesConfigDescriptionOptional]="rulesConfigDescription"
-                                                 [editable]="false"
-                                                 [rulesConfigToDisplay]="currentConfigRoom?.rulesConfig">
-                        </app-rules-configuration>
-                        <button class="button is-primary"
-                                (click)="acceptConfig()"
-                                id="acceptConfig"
-                                i18n
-                        >Accept and start</button>
+            <div class="columns is-vcentered is-align-items-stretch">
+                <div class="column">
+                    <div class="box is-fullheight">
+                        <p class="title" i18n>Configuration proposal</p>
+                        <div class="content">
+                            <p i18n>{{ viewInfo.creator }} proposes to play a {{ viewInfo.partTypeName }} game</p>
+                            <ul>
+                                <li>
+                                    <span *ngIf="viewInfo.firstPlayer === 'CREATOR'" i18n>{{ viewInfo.creator }} plays first</span>
+                                    <span *ngIf="viewInfo.firstPlayer === 'CHOSEN_PLAYER'" i18n>you play first</span>
+                                    <span *ngIf="viewInfo.firstPlayer === 'RANDOM'" i18n>the first player is selected randomly</span>
+                                </li>
+                                <li i18n>a turn lasts at most <strong>{{ (viewInfo.maximalMoveDuration || 0) | humanDuration }} </strong></li>
+                                <li i18n>the game lasts at most <strong>{{ (viewInfo.totalPartDuration || 0) | humanDuration }} per player</strong></li>
+                            </ul>
+                            <app-rules-configuration #rulesConfigurationComponent
+                                                     [rulesConfigDescriptionOptional]="rulesConfigDescription"
+                                                     [editable]="false"
+                                                     [rulesConfigToDisplay]="currentConfigRoom?.rulesConfig">
+                            </app-rules-configuration>
+                            <button class="button is-primary"
+                                    (click)="acceptConfig()"
+                                    id="acceptConfig"
+                                    i18n
+                            >Accept and start</button>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="column">
-                <div class="box is-fullheight">
-                    <app-demo-card id="demoCard"
-                                   class="box is-fullheight"
-                                   *ngIf="getConfigDemo() !== undefined"
-                                   [demoNodeInfo]="getConfigDemo()"></app-demo-card>
+                <div class="column">
+                    <div class="box is-fullheight">
+                        <app-demo-card id="demoCard"
+                                       class="box is-fullheight"
+                                       *ngIf="getConfigDemo() !== undefined"
+                                       [demoNodeInfo]="getConfigDemo()"></app-demo-card>
+                    </div>
                 </div>
             </div>
         </ng-template>
