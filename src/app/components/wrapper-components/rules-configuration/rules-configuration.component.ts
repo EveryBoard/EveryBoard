@@ -95,7 +95,6 @@ export class RulesConfigurationComponent extends BaseWrapperComponent implements
             formControl.disable();
         }
         formControl.valueChanges.subscribe(() => {
-            console.log('form control has changed!')
             this.onUpdate();
         });
         return formControl;
@@ -115,7 +114,6 @@ export class RulesConfigurationComponent extends BaseWrapperComponent implements
                 return; // In order not to send update when form is invalid
             }
         }
-        console.log('emitting')
         this.updateCallback.emit(MGPOptional.of(rulesConfig));
     }
 

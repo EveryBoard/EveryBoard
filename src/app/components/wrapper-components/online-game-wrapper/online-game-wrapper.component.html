@@ -11,7 +11,7 @@
      *ngIf="gameStarted">
     <div class="column is-one-quarter has-text-centered">
         <div class="box is-fullheight">
-            <div class="block" id="turnIndicator" *ngIf="currentPart !== null">
+            <div class="block" *ngIf="currentPart !== null">
                 <p class="title">{{ getGameName().getOrElse('') }}</p>
                 <p class="subtitle" id="turn-number" i18n>Turn n°{{ currentPart.getTurn() + 1 }}</p>
                 <p class="subtitle" id="currentPlayerIndicator" *ngIf="endGame === false">
@@ -170,6 +170,7 @@
     </div>
     <div class="column">
         <div class="box p-5 is-fullheight"
+             id="board-highlight"
              [ngClass]="getBoardHighlight()">
             <div id="board" class="box is-fullheight">
                 <div #board></div>

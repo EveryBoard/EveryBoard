@@ -3,7 +3,7 @@
          class="columns is-vcentered is-align-items-stretch">
         <div class="column">
             <div class="box is-fullheight">
-                <h1 class="title" i18n>Creation of a game of {{ getGameName() }} </h1>
+                <h1 class="title" i18n>Creation of a game of {{ getGameName().getOrElse('') }} </h1>
                 <form [formGroup]="configFormGroup">
                     <fieldset [disabled]="!viewInfo.canEditConfig">
                         <div class="field">

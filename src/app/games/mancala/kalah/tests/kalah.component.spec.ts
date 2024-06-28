@@ -21,7 +21,7 @@ import { KalahMoveGenerator } from '../KalahMoveGenerator';
 import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 import { MGPOptional } from '@everyboard/lib';
 
-fdescribe('KalahComponent', () => {
+describe('KalahComponent', () => {
 
     let mancalaTestUtils: MancalaComponentTestUtils<KalahComponent, KalahRules>;
     const defaultConfig: MGPOptional<MancalaConfig> = KalahRules.get().getDefaultRulesConfig();

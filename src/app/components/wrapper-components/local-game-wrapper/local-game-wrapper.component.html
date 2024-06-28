@@ -3,8 +3,9 @@
         <div *ngIf="gameComponent"
              id="info"
              class="box is-fullheight">
-            <div id="turnIndicator" class="mb-5">
-                <p class="title" i18n>{{ getGameName() }}<br/>Turn n°{{ gameComponent.getTurn() + 1 }}</p>
+            <div class="mb-5">
+                <p class="title" i18n>{{ getGameName().getOrElse('') }}</p>
+                <p class="subtitle" i18n>Turn n°{{ gameComponent.getTurn() + 1 }}</p>
             </div>
             <div *ngIf="endGame"
                  id="game-result"
@@ -33,7 +34,7 @@
                 </div>
                 <div *ngIf="players[player].equalsValue('human') === false"
                      class="select is-fullwidth">
-                    <select id="ai-option-select-{{ player }} "
+                    <select id="ai-option-select-{{ player }}"
                             [(ngModel)]="aiOptions[player]"
                             (change)="updatePlayer(Player.of(player))">
                         <option selected
@@ -46,8 +47,8 @@
                     </select>
                 </div>
                 <p *ngIf="gameComponent.scores.isPresent()"
-                   id="score-{{ player }} "
-                   class="player{{ player }}-fg "
+                   id="score-{{ player }}"
+                   class="player{{ player }}-fg"
                    i18n>{{ gameComponent.scores.get().get(Player.of(player)) }} points</p>
             </div>
             <button *ngIf="endGame === false && gameComponent.canPass"
@@ -79,6 +80,7 @@
     </div>
     <div class="column">
         <div class="box p-5 is-fullheight"
+             id="board-highlight"
              [ngClass]="getBoardHighlight()">
             <div id="board" class="box is-fullheight">
                 <div #board></div>
@@ -93,7 +95,7 @@
     <div class="column is-one-quarter">
         <div class="box is-fullheight">
             <p class="title">{{ getGameName().getOrElse('') }}</p>
-            <app-rules-configuration id="rules-config-conmponent"
+            <app-rules-configuration id="rules-config-component"
                                      [rulesConfigDescriptionOptional]="getRulesConfigDescription()"
                                      [editable]="true"
                                      (updateCallback)="updateConfig($event)">

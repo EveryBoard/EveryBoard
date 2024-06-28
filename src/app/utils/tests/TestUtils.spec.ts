@@ -622,8 +622,8 @@ export class ComponentTestUtils<C extends AbstractGameComponent, P extends Compa
     }
 
     public async choosingAILevel(player: Player): Promise<void> {
-        const dropDownName: string = player === Player.ZERO ? '#aiZeroOptionSelect' : '#aiOneOptionSelect';
-        const childrenName: string = player === Player.ZERO ? 'playerZero_option_Level 1' : 'playerOne_option_Level 1';
+        const dropDownName: string = player === Player.ZERO ? '#ai-option-select-0' : '#ai-option-select-1';
+        const childrenName: string = player === Player.ZERO ? 'player-0-option-Level 1' : 'player-1-option-Level 1';
         await this.selectChildElementOfDropDown(dropDownName, childrenName);
         const selectDepth: HTMLSelectElement = this.findElement(dropDownName).nativeElement;
         const aiDepth: string = selectDepth.options[selectDepth.selectedIndex].label;

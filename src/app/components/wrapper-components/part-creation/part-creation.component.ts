@@ -222,9 +222,6 @@ export class PartCreationComponent implements OnInit, OnDestroy {
                 const partStatus: IPartStatus = Utils.getNonNullable(this.currentConfigRoom).partStatus;
                 const configProposed: boolean = partStatus === PartStatus.CONFIG_PROPOSED.value;
                 this.viewInfo.canProposeConfig = configProposed === false && opponent !== '';
-                console.log('setting editable to ' + this.viewInfo.canProposeConfig)
-                console.log('rulesConfigurationComponent')
-                console.log(this.rulesConfigurationComponent)
                 if (this.rulesConfigurationComponent != null) {
                     this.rulesConfigurationComponent.setEditable(configProposed === false);
                 }
@@ -367,7 +364,6 @@ export class PartCreationComponent implements OnInit, OnDestroy {
             const oldConfigRoom: ConfigRoom | null = this.currentConfigRoom;
             this.currentConfigRoom = configRoom;
             if (configRoom.rulesConfig !== undefined && Object.keys(configRoom.rulesConfig).length > 0) {
-                console.log('updating')
                 this.saveRulesConfig(MGPOptional.of(configRoom.rulesConfig));
             }
             if (this.chosenOpponentJustLeft(oldConfigRoom, configRoom) &&
@@ -530,8 +526,6 @@ export class PartCreationComponent implements OnInit, OnDestroy {
     }
 
     public saveRulesConfig(rulesConfig: MGPOptional<RulesConfig>): void {
-        console.log('saving rules config')
-        console.log(rulesConfig.get())
         this.rulesConfig = rulesConfig;
         this.setConfigDemo(rulesConfig.get());
     }
@@ -557,8 +551,9 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         return Utils.getNonNullable(this.activatedRoute.snapshot.paramMap.get('compo'));
     }
 
-    public getGameName(): string {
-        return GameInfo.getByUrlName(this.getGameUrlName()).get().name;
+    public getGameName(): MGPOptional<string> {
+        // TODO FOR REVIEW: same reasoning as in LGWC, see comment there
+        return GameInfo.getByUrlName(this.getGameUrlName()).map((info: GameInfo) => info.name);
     }
 
     public getStateProvider(): MGPOptional<(config: MGPOptional<RulesConfig>) => GameState> {
