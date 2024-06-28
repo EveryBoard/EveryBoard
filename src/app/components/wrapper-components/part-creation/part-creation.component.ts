@@ -129,7 +129,6 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         // TODO: the "look for other games" and "play locally" button should cancel current game
         // TODO: play locally should get directly to the same game
         // TODO: apagos online, joiner doesn't see the board
-        // TODO: height of controller on ogwcis too big
     }
 
     public async ngOnInit(): Promise<void> {

@@ -11,11 +11,16 @@
                             <div class="control">
                                 <div *ngIf="viewInfo.candidates.length === 0 else chooseOpponent"
                                      class="message">
-                                    <div class="message-body py-2" i18n>Potential opponents that join the game will appear here.<br/>Wait for an opponent to join, so that you can pick one.<br/>If no opponents join, you can :
-                                        <ul>
-                                            <li><a class="button" href="/lobby">Look for other games waiting for opponents</a></li>
-                                            <li><a class="button" href="/local">play against an AI</a></li>
-                                        </ul>
+                                    <div class="message-body">
+                                        <p i18n>Potential opponents will appear here. If no one comes, you can:</p>
+                                    <div class="columns is-gapless mt-2">
+                                        <div class="column">
+                                            <button class="button is-fullwidth" i18n>Look for other games</button>
+                                        </div>
+                                        <div class="column">
+                                            <button class="button is-fullwidth" i18n>Play against AI</button>
+                                        </div>
+                                    </div>
                                     </div>
                                 </div>
                                 <ng-template #chooseOpponent>
@@ -50,39 +55,41 @@
                                 </ng-template>
                             </div>
                         </div>
-                        <div class="field">
-                            <label class="label" for="firstPlayer" i18n>First player</label>
-                            <div class="buttons has-addons">
-                                <button class="button"
+                        <div class="columns is-gapless mb-2">
+                            <div class="column">
+                                <button class="button is-fullwidth"
                                         id="firstPlayerRandom"
                                         [ngClass]="viewInfo.firstPlayerClasses['RANDOM']"
                                         (click)="selectFirstPlayer('RANDOM')"
-                                        i18n>Random</button>
-                                <button class="button"
+                                        i18n>Random first player</button>
+                            </div>
+                            <div class="column">
+                                <button class="button is-fullwidth"
                                         id="firstPlayerCreator"
                                         [ngClass]="viewInfo.firstPlayerClasses['CREATOR']"
                                         (click)="selectFirstPlayer('CREATOR')"
-                                        i18n>You</button>
-                                <button class="button"
+                                        i18n>You start</button>
+                            </div>
+                            <div class="column">
+                                <button class="button is-fullwidth"
                                         id="firstPlayerOpponent"
                                         [ngClass]="viewInfo.firstPlayerClasses['CHOSEN_PLAYER']"
                                         (click)="selectFirstPlayer('CHOSEN_PLAYER')"
                                 >
                                     <ng-container *ngIf="viewInfo.chosenOpponent else opponentWithoutName">{{ viewInfo.chosenOpponent }}</ng-container>
-                                    <ng-template #opponentWithoutName i18n>The opponent</ng-template>
+                                    <ng-template #opponentWithoutName i18n>The opponent starts</ng-template>
                                 </button>
                             </div>
                         </div>
-                        <div class="field">
-                            <label class="label" for="firstPlayer" i18n>Game type</label>
-                            <div class="buttons has-addons">
-                                <div class="button dropdown is-hoverable"
+                        <div class="columns is-gapless">
+                            <div class="column">
+                                <div class="button is-fullwidth dropdown is-hoverable"
                                      id="partTypeStandard"
                                      [ngClass]="viewInfo.partTypeClasses['STANDARD']"
                                      (click)="selectPartType('STANDARD')"
                                 >
                                     <div class="dropdown-trigger">
-                                        <span i18n>Standard</span>
+                                        <span i18n>Standard time</span>
                                     </div>
                                     <div class="dropdown-menu" role="menu">
                                         <div class="dropdown-content">
@@ -90,14 +97,15 @@
                                                 <p>
                                                     <ng-container i18n>Maximal turn duration: </ng-container>
                                                     <strong>{{ partType.NORMAL_MOVE_DURATION | humanDuration }}</strong><br/>
-
                                                     <ng-container i18n>Maximal game duration: <strong>{{ partType.NORMAL_PART_DURATION | humanDuration }} per player</strong></ng-container>
                                                 </p>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="button dropdown is-hoverable"
+                            </div>
+                            <div class="column">
+                                <div class="button is-fullwidth dropdown is-hoverable"
                                      id="partTypeBlitz"
                                      [ngClass]="viewInfo.partTypeClasses['BLITZ']"
                                      (click)="selectPartType('BLITZ')">
@@ -110,45 +118,43 @@
                                                 <p>
                                                     <ng-container i18n>Maximal turn duration: </ng-container>
                                                     <strong>{{ partType.BLITZ_MOVE_DURATION | humanDuration }}</strong><br/>
-
                                                     <ng-container i18n>Maximal game duration: <strong>{{ partType.BLITZ_PART_DURATION | humanDuration }} per player</strong></ng-container>
                                                 </p>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                                <button class="button"
+                            </div>
+                            <div class="column">
+                                <button class="button is-fullwidth"
                                         id="partTypeCustom"
                                         [ngClass]="viewInfo.partTypeClasses['CUSTOM']"
                                         (click)="selectPartType('CUSTOM')"
-                                        i18n>Custom</button>
+                                        i18n>Custom time</button>
                             </div>
-                        </div>
-                        <div id="customTime"
-                             *ngIf="viewInfo.showCustomTime"
-                        >
-                            <div class="field">
-                                <label class="label" for="maximalMoveDuration">
-                                    <ng-container i18n>Maximal turn duration: </ng-container>
-                                    <output>{{ (viewInfo.maximalMoveDuration || 0) | humanDuration }}</output>
-                                </label>
-                                <div class="control">
-                                    <input class="slider is-circle is-primary"
-                                           step="10"
-                                           min="10" max="300"
-                                           name="maximalMoveDuration"
-                                           formControlName="maximalMoveDuration" type="range">
+                            <div id="customTime"
+                                 *ngIf="viewInfo.showCustomTime">
+                                <div class="field">
+                                    <label class="label" for="maximalMoveDuration">
+                                        <ng-container i18n>Maximal turn duration: </ng-container>
+                                        <output>{{ (viewInfo.maximalMoveDuration || 0) | humanDuration }}</output>
+                                    </label>
+                                    <div class="control">
+                                        <input class="slider is-circle is-primary"
+                                               step="10" min="10" max="300"
+                                               name="maximalMoveDuration"
+                                               formControlName="maximalMoveDuration" type="range">
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="field">
-                                <label class="label" for="totalPartDuration" i18n>Maximal game duration: <output>{{ (viewInfo.totalPartDuration || 0) | humanDuration }} per player</output></label>
-                                <div class="control">
-                                    <input class="slider is-circle is-primary"
-                                           step="10"
-                                           min="10" max="3600"
-                                           name="totalPartDuration"
-                                           formControlName="totalPartDuration"
-                                           type="range">
+                                <div class="field">
+                                    <label class="label" for="totalPartDuration" i18n>Maximal game duration: <output>{{ (viewInfo.totalPartDuration || 0) | humanDuration }} per player</output></label>
+                                    <div class="control">
+                                        <input class="slider is-circle is-primary"
+                                               step="10" min="10" max="3600"
+                                               name="totalPartDuration"
+                                               formControlName="totalPartDuration"
+                                               type="range">
+                                    </div>
                                 </div>
                             </div>
                         </div>

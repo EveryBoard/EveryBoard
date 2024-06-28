@@ -1,6 +1,9 @@
 <div *ngIf="isCustomisable()" class="">
-    <div class="field">
-        <label class="label" i18n>Configuration</label>
+    <div class="field columns is-gapless mb-0">
+        <div class="field-label column">
+        <label class="label has-text-left" i18n>Configuration</label>
+        </div>
+        <div class="field-body column has-text-right">
         <div class="control">
             <div class="select is-primary is-fullwidth">
                 <select id="ruleSelect"
@@ -19,40 +22,48 @@
                 </select>
             </div>
         </div>
+        </div>
     </div>
 
     <form [formGroup]="rulesConfigForm"
           id="{{ getChosenConfigName() }}_values">
-        <fieldset>
+        <fieldset class="left-border" >
             <div *ngFor="let configParameter of getFields()"
                  id="{{ configParameter }}_config"
                  class="mb-2">
-                <label *ngIf="isBoolean(configParameter) else notBoolean"
-                       class="label checkbox">
-                    <input id="{{ configParameter }}_boolean_config_input"
-                           [formControlName]="configParameter"
-                           type="checkbox"
-                           class="checkbox"
-                           required />
-                    {{ rulesConfigDescription.getI18nName(configParameter) }}
-                </label>
-                <ng-template #notBoolean>
-                    <label class="label">{{ rulesConfigDescription.getI18nName(configParameter) }}</label>
-                    <div *ngIf="isNumber(configParameter)"
-                         class="control">
-                        <input id="{{ configParameter }}_number_config_input"
-                               [formControlName]="configParameter"
-                               type="number"
-                               class="input"
-                               required
-                               placeholder="{{ rulesConfigDescription.getI18nName(configParameter) }}" />
+                <div class="field is-horizontal columns is-gapless">
+                    <div class="field-label column is-three-quarters">
+                        <label class="label has-text-left">{{ rulesConfigDescription.getI18nName(configParameter) }}</label>
                     </div>
-                </ng-template>
-                <div *ngIf="isValid(configParameter) === false"
-                     class="message is-danger"
-                     role="alert">
-                    <div id="{{ configParameter }}_number_config_error"
-                         class="message-header">{{ getErrorMessage(configParameter) }}</div>
+                    <div class="field-body column has-text-right">
+                        <div class="field is-narrow">
+                            <div class="control">
+                                <label *ngIf="isBoolean(configParameter) else notBoolean"
+                                       class="checkbox">
+                                    <input id="{{ configParameter }}_boolean_config_input"
+                                           [formControlName]="configParameter"
+                                           type="checkbox"
+                                           class="checkbox"
+                                           required />
+                                </label>
+                                <ng-template #notBoolean>
+                                    <div *ngIf="isNumber(configParameter)"
+                                         class="control">
+                                        <input id="{{ configParameter }}_number_config_input"
+                                               [formControlName]="configParameter"
+                                               type="number"
+                                               class="input is-small"
+                                               [ngClass]="isValid(configParameter) === false ? 'is-danger' : ''"
+                                               required
+                                               placeholder="{{ rulesConfigDescription.getI18nName(configParameter) }}" />
+                                    </div>
+                                    <div *ngIf="isValid(configParameter) === false"
+                                         class="help is-danger"
+                                         role="alert">{{ getErrorMessage(configParameter) }}</div>
+                                </ng-template>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </fieldset>
