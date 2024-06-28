@@ -39,6 +39,8 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
 
     public configIsSet: boolean = false;
 
+    public configurable: boolean = false;
+
     public configDemo: DemoNodeInfo;
 
     public rulesConfig: MGPOptional<RulesConfig> = MGPOptional.empty();
@@ -76,8 +78,11 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
 
     public ngAfterViewInit(): void {
         window.setTimeout(async() => {
+           console.log('OK')
             const createdSuccessfully: boolean = await this.createMatchingGameComponent();
+           console.log('OK2')
             if (createdSuccessfully) {
+                this.configurable = true;
                 await this.restartGame();
                 this.cdr.detectChanges();
             }
@@ -295,32 +300,35 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
         }
     }
 
-    public override async getConfig(): Promise<MGPOptional<RulesConfig>> {
-        let subcription: MGPOptional<Subscription> = MGPOptional.empty();
-        const rulesConfigPromise: Promise<RulesConfig> =
-            new Promise((resolve: (value: RulesConfig) => void) => {
-                subcription = MGPOptional.of(
-                    this.configObs.subscribe((response: MGPOptional<RulesConfig>) => {
-                        if (response.isPresent()) {
-                            resolve(response.get());
-                        }
-                    }),
-                );
-            });
-        const rulesConfig: RulesConfig = await rulesConfigPromise;
-        // Subscription will never be empty at this point
-        // but this is needed to prevent linter from complaining that:
-        // "subscription is used before it is set"
-        subcription.get().unsubscribe();
-        return MGPOptional.of(rulesConfig);
-    }
+    // public override async getConfig(): Promise<MGPOptional<RulesConfig>> {
+    //     let subcription: MGPOptional<Subscription> = MGPOptional.empty();
+    //     const rulesConfigPromise: Promise<RulesConfig> =
+    //         new Promise((resolve: (value: RulesConfig) => void) => {
+    //             subcription = MGPOptional.of(
+    //                 this.configObs.subscribe((response: MGPOptional<RulesConfig>) => {
+    //                     if (response.isPresent()) {
+    //                         resolve(response.get());
+    //                     }
+    //                 }),
+    //             );
+    //         });
+    //     const rulesConfig: RulesConfig = await rulesConfigPromise;
+    //     // Subscription will never be empty at this point
+    //     // but this is needed to prevent linter from complaining that:
+    //     // "subscription is used before it is set"
+    //     subcription.get().unsubscribe();
+    //     return MGPOptional.of(rulesConfig);
+    // }
 
     public updateConfig(rulesConfig: MGPOptional<RulesConfig>): void {
         this.rulesConfig = rulesConfig;
         this.setConfigDemo(rulesConfig.get());
         // If there is no config for this game, then rulesConfig value will be MGPOptional.empty()
         if (rulesConfig.isPresent() && Object.keys(rulesConfig.get()).length === 0) {
+            this.configurable = false;
             this.markConfigAsFilled();
+        } else {
+            this.configurable = true;
         }
     }
 

@@ -34,7 +34,7 @@ const _: PlayerOrNone = PlayerOrNone.NONE;
 const O: PlayerOrNone = PlayerOrNone.ZERO;
 const X: PlayerOrNone = PlayerOrNone.ONE;
 
-describe('LocalGameWrapperComponent for non-existing game', () => {
+fdescribe('LocalGameWrapperComponent for non-existing game', () => {
 
     it('should redirect to /notFound', fakeAsync(async() => {
         // Given a game wrapper for a game that does not exist

@@ -68,7 +68,9 @@ export abstract class GameWrapper<P extends Comparable> extends BaseWrapperCompo
     protected async createMatchingGameComponent(): Promise<boolean> {
         const componentType: MGPOptional<Type<AbstractGameComponent>> =
             await this.getMatchingComponentAndNavigateOutIfAbsent();
+        console.log('jaj1')
         if (componentType.isPresent()) {
+            console.log('present')
             // This waits for the config to be chosen
             const config: MGPOptional<RulesConfig> = await this.getConfig();
             await this.createGameComponent(componentType.get());
@@ -78,17 +80,22 @@ export abstract class GameWrapper<P extends Comparable> extends BaseWrapperCompo
             await this.gameComponent.updateBoardAndRedraw(false);
             return true;
         } else {
+            console.log('not present')
             return false;
         }
     }
 
     private async getMatchingComponentAndNavigateOutIfAbsent(): Promise<MGPOptional<Type<AbstractGameComponent>>> {
         const urlName: string = this.getGameUrlName();
+        console.log(urlName)
         const component: MGPOptional<Type<AbstractGameComponent>> = this.getMatchingComponent(urlName);
+        console.log('got matching')
         if (component.isAbsent()) {
+            console.log('not found')
             await this.router.navigate(['/notFound', GameWrapperMessages.NO_MATCHING_GAME(urlName)], { skipLocationChange: true });
             return MGPOptional.empty();
         } else {
+            console.log('found')
             return component;
         }
     }
