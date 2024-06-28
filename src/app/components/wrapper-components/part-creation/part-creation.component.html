@@ -198,7 +198,7 @@
     <div *ngIf="viewInfo.userIsChosenOpponent">
         <div *ngIf="viewInfo.creatorIsModifyingConfig else configProposal">
             <div class="box is-fullheight">
-                <p class="title" i18n>Configuration proposal for {{ getGameName() }}</p>
+                <p class="title" i18n>Configuration proposal for {{ getGameName().getOrElse('') }}</p>
                 <p i18n>You have been selected as the opponent.<br/>
                     {{ viewInfo.creator }} is modifying the configuration.</p>
             </div>
@@ -207,7 +207,7 @@
             <div class="columns is-vcentered is-align-items-stretch">
                 <div class="column">
                     <div class="box is-fullheight">
-                        <p class="title" i18n>Configuration proposal for {{ getGameName() }}</p>
+                        <p class="title" i18n>Configuration proposal for {{ getGameName().getOrElse('') }}</p>
                         <div class="content">
                             <p i18n>{{ viewInfo.creator }} proposes to play a {{ viewInfo.partTypeName }} game</p>
                             <ul>

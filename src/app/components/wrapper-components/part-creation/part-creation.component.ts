@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { takeUntil } from 'rxjs/operators';
@@ -126,6 +126,10 @@ export class PartCreationComponent implements OnInit, OnDestroy {
                        private readonly messageDisplayer: MessageDisplayer,
                        private readonly cdr: ChangeDetectorRef)
     {
+        // TODO: the "look for other games" and "play locally" button should cancel current game
+        // TODO: play locally should get directly to the same game
+        // TODO: apagos online, joiner doesn't see the board
+        // TODO: height of controller on ogwcis too big
     }
 
     public async ngOnInit(): Promise<void> {
