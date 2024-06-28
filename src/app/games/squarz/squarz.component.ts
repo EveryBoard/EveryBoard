@@ -84,13 +84,13 @@ export class SquarzComponent extends RectangularGameComponent<SquarzRules,
     }
 
     public async onClick(x: number, y: number): Promise<MGPValidation> {
-        const clickValidity: MGPValidation = await this.canUserPlay('#click_' + x + '_' + y);
+        const clickValidity: MGPValidation = await this.canUserPlay('#click-' + x + '-' + y);
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }
         const clicked: Coord = new Coord(x, y);
         if (this.selected.equalsValue(clicked)) {
-            this.cancelMoveAttempt();
+            await this.cancelMove();
             return MGPValidation.SUCCESS;
         }
         if (this.selected.isAbsent() ||
