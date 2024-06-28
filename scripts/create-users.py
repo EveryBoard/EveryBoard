@@ -51,7 +51,6 @@ with open('users.json', 'w') as users_file:
     users_file.write(json.dumps(users_json))
 
 # Import all the users
-# TODO: there seems to be a problem with md5, check again tomorrow
 print('Importing users')
 app = firebase_admin.initialize_app()
 print(firebase_admin.auth.import_users(users_to_import, hash_alg=auth.UserImportHash.md5(rounds=0), app=None))
