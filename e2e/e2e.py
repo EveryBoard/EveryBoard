@@ -185,10 +185,10 @@ class PlayerDriver():
         '''Pick the default config on a game, if there is one'''
         try:
             # Click on 'accept config' for configurable games
-            accept_config_button = self.driver.find_element(By.ID, 'startGameWithConfig')
+            accept_config_button = self.driver.find_element(By.ID, 'start-game-with-config')
             accept_config_button.click()
         except:
-            # Games that do not have startGameWithConfig are not configurable so we already use the default config
+            # Games that do not have start-game-with-config are not configurable so we already use the default config
             pass
 
     def create_part(self, opponent):
@@ -349,7 +349,7 @@ def can_play_local_2_players(user):
     user.click('#click-3-0 > rect')
 
     # Now 0 ("Player 1") won
-    winner = user.get_text_of('#gameResult')
+    winner = user.get_text_of('#game-result')
     if winner != 'Player 1 won':
         raise Exception('failed: text should be {}'.format(winner))
 

@@ -7,7 +7,7 @@
                 <p class="title" i18n>{{ getGameName() }}<br/>Turn n°{{ gameComponent.getTurn() + 1 }}</p>
             </div>
             <div *ngIf="endGame"
-                 id="gameResult"
+                 id="game-result"
                  class="block">
                 <p *ngIf="winnerMessage.isPresent()"
                    id="winner"
@@ -17,60 +17,58 @@
                    class="title"
                    i18n>Draw</p>
             </div>
-            <div id="playerSelector">
-                <div *ngFor="let player of ArrayUtils.range(2)"
-                     class="px-2 py-4 mb-4 player{{ player }}-bg">
-                    <p class="mb-2 subtitle player{{ player }}-fg" i18n>Player {{ player+1 }}</p>
-                    <div class="select is-fullwidth">
-                        <select id="playerSelect-{{ player }}"
-                                (change)="updatePlayer(Player.of(player))"
-                                [(ngModel)]="playerSelection[player]">
-                            <option selected
-                                    value="human" i18n>Human</option>
-                            <option *ngFor="let ai of gameComponent.availableAIs"
-                                    id="player-{{ player }}-ai-{{ ai.name }}"
-                                    [value]="ai.name">{{ ai.name }}</option>
-                        </select>
-                    </div>
-                    <div *ngIf="players[player].equalsValue('human') === false"
-                         class="select is-fullwidth">
-                        <select id="aiOptionSelect-{{ player }} "
-                                [(ngModel)]="aiOptions[player]"
-                                (change)="updatePlayer(Player.of(player))">
-                            <option selected
-                                    value="none"
-                                    i18n>Pick the options</option>
-                            <option *ngFor="let option of this.availableAIOptions(player)"
-                                    id="player-{{ player }}-option-{{ option.name }}"
-                                    [value]="option.name"
-                                    i18n>{{ option.name }}</option>
-                        </select>
-                    </div>
-                    <p *ngIf="gameComponent.scores.isPresent()"
-                       id="score-{{ player }} "
-                       class="player{{ player }}-fg "
-                       i18n>{{ gameComponent.scores.get().get(Player.of(player)) }} points</p>
+            <div *ngFor="let player of ArrayUtils.range(2)"
+                 class="px-2 py-4 mb-4 player{{ player }}-bg">
+                <p class="mb-2 subtitle player{{ player }}-fg" i18n>Player {{ player+1 }}</p>
+                <div class="select is-fullwidth">
+                    <select id="player-select-{{ player }}"
+                            (change)="updatePlayer(Player.of(player))"
+                            [(ngModel)]="playerSelection[player]">
+                        <option selected
+                                value="human" i18n>Human</option>
+                        <option *ngFor="let ai of gameComponent.availableAIs"
+                                id="player-{{ player }}-ai-{{ ai.name }}"
+                                [value]="ai.name">{{ ai.name }}</option>
+                    </select>
                 </div>
+                <div *ngIf="players[player].equalsValue('human') === false"
+                     class="select is-fullwidth">
+                    <select id="ai-option-select-{{ player }} "
+                            [(ngModel)]="aiOptions[player]"
+                            (change)="updatePlayer(Player.of(player))">
+                        <option selected
+                                value="none"
+                                i18n>Pick the options</option>
+                        <option *ngFor="let option of this.availableAIOptions(player)"
+                                id="player-{{ player }}-option-{{ option.name }}"
+                                [value]="option.name"
+                                i18n>{{ option.name }}</option>
+                    </select>
+                </div>
+                <p *ngIf="gameComponent.scores.isPresent()"
+                   id="score-{{ player }} "
+                   class="player{{ player }}-fg "
+                   i18n>{{ gameComponent.scores.get().get(Player.of(player)) }} points</p>
             </div>
             <button *ngIf="endGame === false && gameComponent.canPass"
-                    id="passButton"
+                    id="pass-button"
                     class="button is-primary is-fullwidth mb-1"
                     (click)="gameComponent.pass()"
                     i18n
             >Pass a turn</button>
             <button *ngIf="canTakeBack()"
-                    id="takeBack"
+                    id="take-back"
                     class="button is-fullwidth mb-1"
                     (click)="takeBack()"
                     i18n
             >Take back move</button>
-            <button id="restartButton"
+            <button id="restart-button"
                     class="button is-fullwidth"
                     (click)="restartGame()"
                     i18n
             >Start a new game</button>
             <div *ngIf="gameComponent.node.previousMove.isPresent() && displayAIInfo()"
-                 id="AIInfo">
+                 id="ai-info">
                 <ng-container *ngFor="let ai of gameComponent.availableAIs">
                     {{ ai.name + ': ' + ai.getInfo(gameComponent.node, gameComponent.config) }} <br/>
                 </ng-container>
@@ -94,8 +92,8 @@
 
     <div class="column is-one-quarter">
         <div class="box is-fullheight">
-            <p class="title" i18n>Configuration of your {{ getGameName() }} game</p>
-            <app-rules-configuration id="rulesConfigComponent"
+            <p class="title">{{ getGameName().getOrElse('') }}</p>
+            <app-rules-configuration id="rules-config-conmponent"
                                      [rulesConfigDescriptionOptional]="getRulesConfigDescription()"
                                      [editable]="true"
                                      (updateCallback)="updateConfig($event)">
@@ -105,7 +103,7 @@
                 <div class="field-body">
                     <div class="field">
                         <div class="control">
-                            <button id="startGameWithConfig"
+                            <button id="start-game-with-config"
                                     class="button is-primary is-fullwidth"
                                     [disabled]="rulesConfig.isAbsent()"
                                     (click)="markConfigAsFilled()"
@@ -120,7 +118,7 @@
 
     <div class="column">
         <div class="box is-fullheight">
-        <app-demo-card id="demoCard"
+        <app-demo-card id="demo-card"
                        class="box is-fullheight"
                        *ngIf="getConfigDemo() !== undefined"
                        [demoNodeInfo]="getConfigDemo()"></app-demo-card>

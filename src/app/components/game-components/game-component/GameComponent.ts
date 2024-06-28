@@ -64,8 +64,11 @@ export abstract class BaseWrapperComponent extends BaseComponent {
         return Utils.getNonNullable(this.activatedRoute.snapshot.paramMap.get('compo'));
     }
 
-    protected getGameName(): string {
-        return GameInfo.getByUrlName(this.getGameUrlName()).get().name;
+    protected getGameName(): MGPOptional<string> {
+        // May be empty if the game does not actually exist
+        // TODO FOR REVIEW: changé en optionnel car si on charge un LGWC sur un jeu inexistant, on obtient désormais une erreur, d'où le getOrElse('') qui est fait dans LGWC maintenant
+        // TODO FOR REVIEW: je propose de ticketter "clean up LGWC lifecycle", car le lifecycle de LGWC est un medrier pas possible à cleaner pour pouvoir fixer ça proprement
+        return GameInfo.getByUrlName(this.getGameUrlName()) .map((info: GameInfo) => info.name);
     }
 
 }

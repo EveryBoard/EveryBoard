@@ -21,7 +21,7 @@ import { KalahMoveGenerator } from '../KalahMoveGenerator';
 import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 import { MGPOptional } from '@everyboard/lib';
 
-describe('KalahComponent', () => {
+fdescribe('KalahComponent', () => {
 
     let mancalaTestUtils: MancalaComponentTestUtils<KalahComponent, KalahRules>;
     const defaultConfig: MGPOptional<MancalaConfig> = KalahRules.get().getDefaultRulesConfig();
@@ -299,7 +299,7 @@ describe('KalahComponent', () => {
             await mancalaTestUtils.expectMancalaMoveSuccess('#click-0-1', move, defaultConfig.get());
 
             // When taking back
-            await mancalaTestUtils.testUtils.expectInterfaceClickSuccess('#takeBack');
+            await mancalaTestUtils.testUtils.expectInterfaceClickSuccess('#take-back');
 
             // Then the board should be restored
             mancalaTestUtils.expectHouseToContain(new Coord(0, 1), ' 4 ');

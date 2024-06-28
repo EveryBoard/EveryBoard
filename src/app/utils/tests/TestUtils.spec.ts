@@ -384,7 +384,7 @@ export class ComponentTestUtils<C extends AbstractGameComponent, P extends Compa
     }
 
     public async acceptDefaultConfig(): Promise<void> {
-        await this.clickElement('#startGameWithConfig');
+        await this.clickElement('#start-game-with-config');
         tick(1);
     }
 
@@ -596,11 +596,11 @@ export class ComponentTestUtils<C extends AbstractGameComponent, P extends Compa
     }
 
     public expectPassToBeForbidden(): void {
-        this.expectElementNotToExist('#passButton');
+        this.expectElementNotToExist('#pass-button');
     }
 
     public async expectPassSuccess(move: Move): Promise<void> {
-        await this.clickElement('#passButton', true, 0);
+        await this.clickElement('#pass-button', true, 0);
         expect(this.chooseMoveSpy).toHaveBeenCalledOnceWith(move);
         this.chooseMoveSpy.calls.reset();
         expect(this.onLegalUserMoveSpy).toHaveBeenCalledOnceWith(move);
@@ -613,7 +613,7 @@ export class ComponentTestUtils<C extends AbstractGameComponent, P extends Compa
     }
 
     public async choosingAIOrHuman(player: Player, aiOrHuman: 'AI' | 'human'): Promise<void> {
-        const dropDownName: string = player === Player.ZERO ? '#playerZeroSelect' : '#playerOneSelect';
+        const dropDownName: string = player === Player.ZERO ? '#player-select-0' : '#player-select-1';
         const selectAI: HTMLSelectElement = this.findElement(dropDownName).nativeElement;
         selectAI.value = aiOrHuman === 'AI' ? selectAI.options[1].value : selectAI.options[0].value;
         selectAI.dispatchEvent(new Event('change'));

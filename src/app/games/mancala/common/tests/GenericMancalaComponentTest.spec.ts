@@ -351,7 +351,7 @@ export function doMancalaComponentTests<C extends MancalaComponent<R>,
             await mancalaTestUtils.expectMancalaMoveSuccess('#click-5-1', move, defaultConfig.get());
 
             // When taking back
-            await mancalaTestUtils.testUtils.expectInterfaceClickSuccess('#takeBack');
+            await mancalaTestUtils.testUtils.expectInterfaceClickSuccess('#take-back');
 
             // Then the last-move highlight should be removed
             mancalaTestUtils.testUtils.expectElementToHaveClasses('#circle-5-1', ['base', 'player0-fill']);
