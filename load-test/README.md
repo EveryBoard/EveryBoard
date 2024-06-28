@@ -5,6 +5,7 @@ To create 100 users, use the script `scripts/create-users.py`, which creates a `
 
 From the EveryBoard directory:
 ``` sh
+export GOOGLE_APPLICATION_CREDENTIALS=/path/to/service-account.json
 python ./scripts/create-users.py
 npx firebase -P everyboard-loadtest auth:import users.json --hash-algo=MD5 --rounds=0
 ```
@@ -12,6 +13,7 @@ npx firebase -P everyboard-loadtest auth:import users.json --hash-algo=MD5 --rou
 # Launch load-testing interface
 
 ``` sh
+export FIREBASE_API_KEY=your-api-key-here
 python -u ./load-test/launch.py
 ```
 

@@ -3,7 +3,8 @@ import json
 import urllib
 import requests
 
-FIREBASE_API_KEY = 'AIzaSyCijJ3RHuT48fFIjl_61dUHydfSyrl9BH4'
+# Set this as an environment variable. It is the apiKey field of firebaseConfig
+FIREBASE_API_KEY = os.getenv('FIREBASE_API_KEY')
 
 users = []
 with open('load-test/users.json') as f:
@@ -114,3 +115,4 @@ class TwoPlayers(FastHttpUser):
             self.user1.play(game_id, [0])
             self.user2.play(game_id, [1])
             self.user1.play_last_move(game_id, [0], 0)
+            # instead of playing a minimal p4, we could extract a bunch of real games and replay them

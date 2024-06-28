@@ -35,11 +35,9 @@ def run_load_test():
         input('Press ^C when done to kill everything')
 
         print('[load-test] load tests done with success')
-        # TODO: useful stats to add:
-        # - number of games started
-        # - number of games finished
-        # - number of moves
-        print(json.dumps(json.loads(requests.get('http://localhost:8081/stats').content), indent=2))
+        with open('stats.json', 'w') as stats_file:
+            stats_file.write(json.dumps(json.loads(requests.get('http://localhost:8081/stats').content), indent=2))
+        print('[load-test] backend stats saved in stats.json')
         return True
 
     except Exception as e:
