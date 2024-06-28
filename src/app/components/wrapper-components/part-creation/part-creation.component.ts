@@ -365,15 +365,11 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         } else {
             const configRoom: ConfigRoom = configRoomOpt.get();
             const oldConfigRoom: ConfigRoom | null = this.currentConfigRoom;
-            console.log(configRoom)
             this.currentConfigRoom = configRoom;
-            console.log(configRoom.rulesConfig)
             if (configRoom.rulesConfig !== undefined && Object.keys(configRoom.rulesConfig).length > 0) {
                 console.log('updating')
                 this.saveRulesConfig(MGPOptional.of(configRoom.rulesConfig));
             }
-            // TODO: I can change config after proposing it, it should not be the case
-            // TODO: bug when reloading page after having proposed config
             if (this.chosenOpponentJustLeft(oldConfigRoom, configRoom) &&
                 this.userIsCreator(configRoom))
             {
