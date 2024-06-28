@@ -19,6 +19,15 @@ module type STATS = sig
     (** [write request] records a write operation *)
     val write : Dream.request -> unit
 
+    (** [new_game] records the creation of a new game *)
+    val new_game : unit -> unit
+
+    (** [end_game] records the end of a game *)
+    val end_game : unit -> unit
+
+    (** [new_move] records a move *)
+    val new_move : unit -> unit
+
     (** Endpoint to access the statistics *)
     val summary : Dream.handler
 end
@@ -59,6 +68,9 @@ module Impl : STATS = struct
         per_action : (string, rw_info) Hashtbl.t;
         per_user : (string, rw_info) Hashtbl.t;
         per_game : (string, rw_info) Hashtbl.t;
+        games_started : int ref;
+        games_ended : int ref;
+        moves : int ref;
     }
 
     let to_yojson = fun (stats : t) : JSON.t ->
@@ -69,6 +81,11 @@ module Impl : STATS = struct
             "per_action", hashtbl_to_yojson stats.per_action;
             "per_user", hashtbl_to_yojson stats.per_user;
             "per_game", hashtbl_to_yojson stats.per_game;
+            "games", `Assoc [
+                "started", `Int !(stats.games_started);
+                "ended", `Int !(stats.games_ended);
+                "moves", `Int !(stats.moves);
+            ]
         ]
 
     let update_hashtbl = fun (h : (string, rw_info) Hashtbl.t) (key : string) (update : rw_info -> rw_info) : unit ->
@@ -82,6 +99,9 @@ module Impl : STATS = struct
         per_action = Hashtbl.create 100;
         per_user = Hashtbl.create 100;
         per_game = Hashtbl.create 100;
+        games_started = ref 0;
+        games_ended = ref 0;
+        moves = ref 0;
     }
 
     let get_field = fun (request : Dream.request) (field : 'a Dream.field) (default : 'a) : 'a ->
@@ -105,6 +125,15 @@ module Impl : STATS = struct
     let read = update add_read
 
     let write = update add_write
+
+    let new_game = fun (_ : unit) : unit ->
+        state.games_started := !(state.games_started) + 1
+
+    let end_game = fun (_ : unit) : unit ->
+        state.games_ended := !(state.games_ended) + 1
+
+    let new_move = fun (_ : unit) : unit ->
+        state.moves := !(state.moves) + 1
 
     let summary : Dream.handler = fun _ ->
         Dream.json ~status:`OK (JSON.to_string (to_yojson state))

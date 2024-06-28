@@ -71,7 +71,7 @@ module DreamUtils = struct
 
     let get_json_param = fun (request : Dream.request) (field : string) : (Yojson.Safe.t, string) result ->
         match Dream.query request field with
-        | None -> Error "parameter missing"
+        | None -> Error (Printf.sprintf "parameter missing: %s" field)
         | Some value ->
             try Ok (Yojson.Safe.from_string value)
             with Yojson.Json_error error -> Error error

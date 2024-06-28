@@ -65,6 +65,7 @@ module Make
 
     (** Route to accept a config-room and start the game. Perform 1 read and 3 writes. *)
     let accept_config = fun (request : Dream.request) (game_id : string) ->
+        Stats.new_game ();
         (* Read 1: retrieve the config room *)
         let* config_room = Firestore.ConfigRoom.get ~request ~id:game_id in
         (* Write 1: accept the config room *)

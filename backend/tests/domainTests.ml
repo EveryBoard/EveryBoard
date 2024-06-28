@@ -112,7 +112,6 @@ let tests = [
                 "username", `String "foo";
                 "lastUpdateTime", `String "24 September 2023 at 11:02:56 UTC-4";
                 "verified", `Bool true;
-                "currentGame", `Null;
             ] in
             (* When converting it to and from JSON *)
             (* Then it should work *)
@@ -124,6 +123,25 @@ let tests = [
             let user_json = `Assoc [
                 "verified", `Bool true;
                 "currentGame", `Null;
+                "username", `String "foo";
+            ] in
+            (* When converting it to a user *)
+            let actual = Result.get_ok (User.of_yojson user_json) in
+            (* Then it should give the expected user *)
+            (* (we can't rely on test_json_conversion here as it would include last update time in one way) *)
+            let expected = User.{
+                username = Some "foo";
+                last_update_time = None;
+                verified = true;
+                current_game = None;
+            } in
+            check user_eq "success" expected actual
+        );
+
+        test "should work when user has no current game field" (fun () ->
+            (* Given a user JSON without last update time *)
+            let user_json = `Assoc [
+                "verified", `Bool true;
                 "username", `String "foo";
             ] in
             (* When converting it to a user *)
