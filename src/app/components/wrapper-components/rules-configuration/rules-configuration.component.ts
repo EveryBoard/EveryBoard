@@ -81,10 +81,10 @@ export class RulesConfigurationComponent extends BaseWrapperComponent implements
     }
 
     private getRulesConfigDescriptionValue(name: string, defaultValue: ConfigDescriptionType): ConfigDescriptionType {
-        if (this.editable) {
+        if (this.editable || this.rulesConfigToDisplay === undefined) {
             return defaultValue;
         } else {
-            const configuration: RulesConfig = Utils.getNonNullable(this.rulesConfigToDisplay);
+            const configuration: RulesConfig = this.rulesConfigToDisplay;
             return configuration[name];
         }
     }
@@ -95,6 +95,7 @@ export class RulesConfigurationComponent extends BaseWrapperComponent implements
             formControl.disable();
         }
         formControl.valueChanges.subscribe(() => {
+            console.log('form control has changed!')
             this.onUpdate();
         });
         return formControl;
@@ -102,7 +103,7 @@ export class RulesConfigurationComponent extends BaseWrapperComponent implements
 
     public onUpdate(): void {
         // Utils.assert(this.editable, 'Only editors should be able to modify rules config');
-        Utils.assert(this.chosenConfigName === 'Custom', 'Only Customizable config should be modified!');
+        // Utils.assert(this.chosenConfigName === 'Custom', 'Only Customizable config should be modified!');
         const rulesConfig: RulesConfig = {};
         const parameterNames: string[] = this.rulesConfigDescription.getFields();
         for (const parameterName of parameterNames) {
@@ -187,6 +188,11 @@ export class RulesConfigurationComponent extends BaseWrapperComponent implements
 
     public setEditable(editable: boolean): void {
         this.editable = editable;
+        if (editable && this.chosenConfigName === 'Custom') {
+            this.rulesConfigForm.enable();
+        } else {
+            this.rulesConfigForm.disable();
+        }
     }
 
 }

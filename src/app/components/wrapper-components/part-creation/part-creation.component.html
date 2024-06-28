@@ -153,12 +153,15 @@
                             </div>
                         </div>
                     </fieldset>
-                    <app-rules-configuration id="rulesConfigurationComponent"
-                                             class="mt-2"
-                                             [rulesConfigDescriptionOptional]="rulesConfigDescription"
-                                             [editable]="viewInfo.canEditConfig || false"
-                                             (updateCallback)="saveRulesConfig($event)">
-                    </app-rules-configuration>
+                    <div class="mt-2">
+                        <app-rules-configuration #rulesConfigurationComponent
+                                                 id="rulesConfigurationComponent"
+                                                 class="mt-2"
+                                                 [rulesConfigDescriptionOptional]="rulesConfigDescription"
+                                                 [editable]="viewInfo.canEditConfig || false"
+                                                 (updateCallback)="saveRulesConfig($event)">
+                        </app-rules-configuration>
+                    </div>
                     <div class="field mt-2">
                         <div class="buttons has-addons">
                             <button class="button is-fullwidth is-success"
@@ -195,14 +198,17 @@
 
     <div *ngIf="viewInfo.userIsChosenOpponent"
          class="columns is-vcentered is-align-items-stretch">
-        <div class="column">
+        <div *ngIf="viewInfo.creatorIsModifyingConfig else configProposal">
             <div class="box is-fullheight">
                 <p class="title" i18n>Configuration proposal</p>
-                <div *ngIf="viewInfo.creatorIsModifyingConfig else configProposal">
-                    <p i18n>You have been selected as the opponent.<br/>
-                        {{ viewInfo.creator }} is modifying the configuration.</p>
-                </div>
-                <ng-template #configProposal>
+                <p i18n>You have been selected as the opponent.<br/>
+                    {{ viewInfo.creator }} is modifying the configuration.</p>
+            </div>
+        </div>
+        <ng-template #configProposal>
+            <div class="column">
+                <div class="box is-fullheight">
+                    <p class="title" i18n>Configuration proposal</p>
                     <div class="content">
                         <p i18n>{{ viewInfo.creator }} proposes to play a {{ viewInfo.partTypeName }} game</p>
                         <ul>
@@ -214,7 +220,8 @@
                             <li i18n>a turn lasts at most <strong>{{ (viewInfo.maximalMoveDuration || 0) | humanDuration }} </strong></li>
                             <li i18n>the game lasts at most <strong>{{ (viewInfo.totalPartDuration || 0) | humanDuration }} per player</strong></li>
                         </ul>
-                        <app-rules-configuration [rulesConfigDescriptionOptional]="rulesConfigDescription"
+                        <app-rules-configuration #rulesConfigurationComponent
+                                                 [rulesConfigDescriptionOptional]="rulesConfigDescription"
                                                  [editable]="false"
                                                  [rulesConfigToDisplay]="currentConfigRoom?.rulesConfig">
                         </app-rules-configuration>
@@ -224,17 +231,17 @@
                                 i18n
                         >Accept and start</button>
                     </div>
-                    <div class="column">
-                        <div class="box is-fullheight">
-                            <app-demo-card id="demoCard"
-                                           class="box is-fullheight"
-                                           *ngIf="getConfigDemo() !== undefined"
-                                           [demoNodeInfo]="getConfigDemo()"></app-demo-card>
-                        </div>
-                    </div>
-                </ng-template>
+                </div>
             </div>
-        </div>
+            <div class="column">
+                <div class="box is-fullheight">
+                    <app-demo-card id="demoCard"
+                                   class="box is-fullheight"
+                                   *ngIf="getConfigDemo() !== undefined"
+                                   [demoNodeInfo]="getConfigDemo()"></app-demo-card>
+                </div>
+            </div>
+        </ng-template>
     </div>
 
     <div *ngIf="viewInfo.userIsObserver"
