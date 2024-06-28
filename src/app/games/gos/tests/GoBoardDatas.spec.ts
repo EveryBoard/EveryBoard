@@ -1,12 +1,12 @@
 /* eslint-disable max-lines-per-function */
-import { BoardDatas, GroupInfos } from '../../../jscaip/BoardDatas';
+import { BoardData, GroupInfos } from '../../../jscaip/BoardData';
 import { GoState } from '../GoState';
 import { GoPiece } from '../GoPiece';
 import { TableUtils, Table } from 'src/app/jscaip/TableUtils';
 import { Coord } from 'src/app/jscaip/Coord';
-import { OrthogonalGoGroupDatasFactory } from '../GoGroupDatasFactory';
+import { OrthogonalGoGroupDataFactory } from '../GoGroupDataFactory';
 
-fdescribe('GoBoardDatas for Go', () => {
+describe('GoBoardData for Go', () => {
 
     const _: GoPiece = GoPiece.EMPTY;
     const X: GoPiece = GoPiece.LIGHT;
@@ -17,11 +17,11 @@ fdescribe('GoBoardDatas for Go', () => {
 
     it('should create one big group for initial board', () => {
         const board: Table<GoPiece> = GoState.getStartingBoard(width, height);
-        const datas: BoardDatas = BoardDatas.ofBoard(board, new OrthogonalGoGroupDatasFactory());
+        const data: BoardData = BoardData.ofBoard(board, new OrthogonalGoGroupDataFactory());
         const allZeroBoard: number[][] = TableUtils.create(width, height, 0);
-        expect(datas.groupIndices).toEqual(allZeroBoard);
-        expect(datas.groups.length).toBe(1);
-        const groupInfos: GroupInfos = datas.groups[0];
+        expect(data.groupIndices).toEqual(allZeroBoard);
+        expect(data.groups.length).toBe(1);
+        const groupInfos: GroupInfos = data.groups[0];
         expect(groupInfos.coords.length).toBe(width * height);
         expect(groupInfos.neighborsEntryPoints.length).toBe(0);
     });
@@ -34,7 +34,7 @@ fdescribe('GoBoardDatas for Go', () => {
             [_, _, O, _, _],
             [_, _, _, _, _],
         ];
-        const datas: BoardDatas = BoardDatas.ofBoard(board, new OrthogonalGoGroupDatasFactory());
+        const data: BoardData = BoardData.ofBoard(board, new OrthogonalGoGroupDataFactory());
         const groupIndices: number[][] = [
             [0, 0, 0, 0, 0],
             [0, 0, 0, 0, 0],
@@ -42,18 +42,18 @@ fdescribe('GoBoardDatas for Go', () => {
             [0, 0, 2, 0, 0],
             [0, 0, 0, 0, 0],
         ];
-        expect(datas.groupIndices).toEqual(groupIndices);
-        expect(datas.groups.length).toBe(3);
+        expect(data.groupIndices).toEqual(groupIndices);
+        expect(data.groups.length).toBe(3);
 
-        const emptyGroupInfos: GroupInfos = datas.groups[0];
+        const emptyGroupInfos: GroupInfos = data.groups[0];
         expect(emptyGroupInfos.coords.length).toBe(22);
         expect(emptyGroupInfos.neighborsEntryPoints).toEqual([new Coord(2, 3), new Coord(2, 2)]);
 
-        const lightGroupInfos: GroupInfos = datas.groups[1];
+        const lightGroupInfos: GroupInfos = data.groups[1];
         expect(lightGroupInfos.coords.length).toBe(2, 'Light group is composed of two stones');
         expect(lightGroupInfos.neighborsEntryPoints).toEqual([new Coord(2, 1), new Coord(2, 3)]);
 
-        const darkGroupInfos: GroupInfos = datas.groups[2];
+        const darkGroupInfos: GroupInfos = data.groups[2];
         expect(darkGroupInfos.coords.length).toBe(1, 'Dark group is composed of two stones');
         expect(darkGroupInfos.neighborsEntryPoints).toEqual([new Coord(1, 3), new Coord(2, 2)]);
     });

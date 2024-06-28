@@ -5,7 +5,7 @@ import { minimaxTest, SlowTest } from 'src/app/utils/tests/TestUtils.spec';
 import { MGPOptional } from '@everyboard/lib';
 import { GoMinimax } from '../GoMinimax';
 
-fdescribe('GoMinimax', () => {
+describe('GoMinimax', () => {
 
     const rules: GoRules = GoRules.get();
     const minimax: GoMinimax = new GoMinimax();

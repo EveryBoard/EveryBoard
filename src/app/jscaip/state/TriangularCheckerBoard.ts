@@ -6,17 +6,15 @@ import { Orthogonal } from '../Orthogonal';
 export class TriangularCheckerBoard {
 
     public static getDirections(c: Coord): Orthogonal[] {
-        let neighbors: Orthogonal[];
         const left: Orthogonal = Orthogonal.LEFT;
         const right: Orthogonal = Orthogonal.RIGHT;
         if ((c.x + c.y) % 2 === 1) {
             const up: Orthogonal = Orthogonal.UP;
-            neighbors = [left, right, up];
+            return [left, right, up];
         } else {
             const down: Orthogonal = Orthogonal.DOWN;
-            neighbors = [left, right, down];
+            return [left, right, down];
         }
-        return neighbors;
     }
 
     public static getNeighbors(c: Coord): Coord[] {

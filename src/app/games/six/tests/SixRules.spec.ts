@@ -89,7 +89,7 @@ describe('SixRules', () => {
             // When playing on a coord that is outside of the representation board
             const move: SixMove = SixMove.ofDrop(new Coord(-1, 1));
 
-            // Then the move should be legal
+            // Then the move should succeed
             const expectedBoard: Table<PlayerOrNone> = [
                 [_, O],
                 [O, X],

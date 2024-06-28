@@ -48,12 +48,12 @@
     />
 
     <!-- TODO TEST KO IN BOTH -->
-    <polyline *ngIf="last.isPresent() && getState().isOnBoard(last.get())"
-              id="last-{{ last.get().x }}-{{ last.get().y }}"
-              [attr.transform]="getTriangleTranslationAt(last.get())"
-              [attr.points]="getTrianglePointsAt(last.get())"
-              [ngClass]="getPlayerClassAt(last.get())"
-              class="last-move-stroke no-fill"
+    <polygon *ngIf="last.isPresent() && getState().isOnBoard(last.get())"
+             id="last-{{ last.get().x }}-{{ last.get().y }}"
+             [attr.transform]="getTriangleTranslationAt(last.get())"
+             [attr.points]="getTrianglePointsAt(last.get())"
+             [ngClass]="getPlayerClassAt(last.get())"
+             class="last-move-stroke big-stroke no-fill"
     />
 
 </svg>

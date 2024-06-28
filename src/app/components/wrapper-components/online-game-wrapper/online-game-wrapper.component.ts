@@ -210,7 +210,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
     }
 
     private async onGameStart(): Promise<void> {
-        await this.initializePlayersDatas(this.currentPart as PartDocument);
+        await this.initializePlayersData(this.currentPart as PartDocument);
         const turn: number = this.gameComponent.getTurn();
         Utils.assert(turn === 0, 'turn should always be 0 upon game start');
         this.timeManager.onGameStart(this.configRoom, this.players);
@@ -430,12 +430,12 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         }
     }
 
-    private async initializePlayersDatas(part: PartDocument): Promise<void> {
+    private async initializePlayersData(part: PartDocument): Promise<void> {
         this.players = [
             MGPOptional.of(part.data.playerZero),
             MGPOptional.ofNullable(part.data.playerOne),
         ];
-        Utils.assert(part.data.playerOne != null, 'should not initializePlayersDatas when players data is not received');
+        Utils.assert(part.data.playerOne != null, 'should not initializePlayersData when players data is not received');
         await this.setCurrentPlayerAccordingToCurrentTurn();
         await this.setRealObserverRole();
     }

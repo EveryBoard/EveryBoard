@@ -3,7 +3,6 @@ import { Table } from 'src/app/jscaip/TableUtils';
 import { MGPOptional } from '@everyboard/lib';
 import { GoMove } from '../GoMove';
 import { GoState } from '../GoState';
-import { GoPhase } from '../GoPhase';
 import { GoPiece } from '../GoPiece';
 import { GoNode } from '../AbstractGoRules';
 import { AbstractGoMoveGenerator } from '../AbstractGoMoveGenerator';
@@ -19,7 +18,7 @@ const w: GoPiece = GoPiece.LIGHT_TERRITORY;
 const b: GoPiece = GoPiece.DARK_TERRITORY;
 const _: GoPiece = GoPiece.EMPTY;
 
-fdescribe('GoMoveGenerator', () => { // TODO SAME FOR TRIGO
+describe('GoMoveGenerator', () => {
 
     let moveGenerator: AbstractGoMoveGenerator;
 
@@ -31,7 +30,7 @@ fdescribe('GoMoveGenerator', () => { // TODO SAME FOR TRIGO
 
     describe('getListMove', () => {
 
-        it('should count as many move as empty space in GoPhase.PLAYING turn, + PASS', () => {
+        it('should count as many moves as empty spaces in GoPhase.PLAYING turn, + PASS', () => {
             const board: Table<GoPiece> = [
                 [_, X, _, _, _],
                 [X, _, _, _, _],
@@ -40,7 +39,7 @@ fdescribe('GoMoveGenerator', () => { // TODO SAME FOR TRIGO
                 [_, _, _, _, _],
             ];
             const state: GoState =
-                new GoState(board, PlayerNumberMap.of(0, 0), 0, MGPOptional.empty(), GoPhase.PLAYING);
+                new GoState(board, PlayerNumberMap.of(0, 0), 0, MGPOptional.empty(), 'PLAYING');
             const initialNode: GoNode = new GoNode(state);
             const moves: GoMove[] = moveGenerator.getListMoves(initialNode);
             expect(moves.length).toBe(23);
@@ -50,7 +49,7 @@ fdescribe('GoMoveGenerator', () => { // TODO SAME FOR TRIGO
         it('should only have GoMove.ACCEPT in ACCEPT GoPhase when agreeing on the result', () => {
             const initialBoard: GoPiece[][] = GoRules.get().getInitialState(config).getCopiedBoard();
             const state: GoState =
-                new GoState(initialBoard, PlayerNumberMap.of(0, 0), 0, MGPOptional.empty(), GoPhase.ACCEPT);
+                new GoState(initialBoard, PlayerNumberMap.of(0, 0), 0, MGPOptional.empty(), 'ACCEPT');
             const initialNode: GoNode = new GoNode(state);
             const moves: GoMove[] = moveGenerator.getListMoves(initialNode);
             expect(moves).toEqual([GoMove.ACCEPT]);
@@ -62,24 +61,24 @@ fdescribe('GoMoveGenerator', () => { // TODO SAME FOR TRIGO
                                                PlayerNumberMap.of(0, 0),
                                                0,
                                                MGPOptional.empty(),
-                                               GoPhase.COUNTING);
+                                               'COUNTING');
             const initialNode: GoNode = new GoNode(state);
             spyOn(moveGenerator, 'getCountingMovesList').and.returnValue([]);
             const moves: GoMove[] = moveGenerator.getListMoves(initialNode);
             expect(moves).toEqual([GoMove.ACCEPT]);
         });
 
-        it('should only have counting moves in COUNTING GoPhase when not agreeing on the result', () => {
+        it('should only have counting moves in GoPhase.COUNTING when not agreeing on the result', () => {
             const initialBoard: GoPiece[][] = GoRules.get().getInitialState(config).getCopiedBoard();
             const state: GoState =
-                new GoState(initialBoard, PlayerNumberMap.of(0, 0), 0, MGPOptional.empty(), GoPhase.ACCEPT);
+                new GoState(initialBoard, PlayerNumberMap.of(0, 0), 0, MGPOptional.empty(), 'ACCEPT');
             const initialNode: GoNode = new GoNode(state);
             spyOn(moveGenerator, 'getCountingMovesList').and.returnValue([new GoMove(1, 1)]);
             const moves: GoMove[] = moveGenerator.getListMoves(initialNode);
             expect(moves).toEqual([new GoMove(1, 1)]);
         });
 
-        it('should switch dead piece when it consider those pieces alive (Player.ZERO)', () => {
+        it('should switch dead pieces when it considers those pieces alive (Player.ZERO)', () => {
             const board: Table<GoPiece> = [
                 [u, w, w, X, w],
                 [X, X, X, X, X],
@@ -88,14 +87,14 @@ fdescribe('GoMoveGenerator', () => { // TODO SAME FOR TRIGO
                 [_, _, _, _, _],
             ];
             const state: GoState =
-                new GoState(board, PlayerNumberMap.of(0, 0), 0, MGPOptional.empty(), GoPhase.COUNTING);
+                new GoState(board, PlayerNumberMap.of(0, 0), 0, MGPOptional.empty(), 'COUNTING');
             const initialNode: GoNode = new GoNode(state);
             const moves: GoMove[] = moveGenerator.getListMoves(initialNode);
             expect(moves.length).toBe(1);
             expect(moves.some((m: GoMove) => m.equals(new GoMove(3, 3)))).toBeTrue();
         });
 
-        it('should switch dead piece when it consider those pieces alive (Player.ONE)', () => {
+        it('should switch dead pieces when it considers those pieces alive (Player.ONE)', () => {
             const board: Table<GoPiece> = [
                 [k, b, b, O, b],
                 [O, O, O, O, O],
@@ -104,7 +103,7 @@ fdescribe('GoMoveGenerator', () => { // TODO SAME FOR TRIGO
                 [_, _, _, _, _],
             ];
             const state: GoState =
-                new GoState(board, PlayerNumberMap.of(0, 0), 1, MGPOptional.empty(), GoPhase.COUNTING);
+                new GoState(board, PlayerNumberMap.of(0, 0), 1, MGPOptional.empty(), 'COUNTING');
             const initialNode: GoNode = new GoNode(state);
             const moves: GoMove[] = moveGenerator.getListMoves(initialNode);
             expect(moves.length).toBe(1);

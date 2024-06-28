@@ -6,7 +6,7 @@ import { GoState } from 'src/app/games/gos/GoState';
 import { GoPiece } from '../GoPiece';
 import { Coord } from 'src/app/jscaip/Coord';
 import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
-import { GroupDatas } from 'src/app/jscaip/BoardDatas';
+import { GroupData } from 'src/app/jscaip/BoardData';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { GobanGameComponent } from 'src/app/components/game-components/goban-game-component/GobanGameComponent';
 import { MCTS } from 'src/app/jscaip/AI/MCTS';
@@ -30,7 +30,7 @@ export class GoComponent extends GobanGameComponent<GoRules,
                                                     GoLegalityInformation>
 {
 
-    public boardInfo: GroupDatas<GoPiece>;
+    public boardInfo: GroupData<GoPiece>;
 
     public ko: MGPOptional<Coord> = MGPOptional.empty();
 
@@ -69,8 +69,6 @@ export class GoComponent extends GobanGameComponent<GoRules,
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }
-        this.last = MGPOptional.empty(); // now that the user stopped trying to do a move
-        // we stop showing the user the last move
         const resultlessMove: GoMove = new GoMove(x, y);
         return this.chooseMove(resultlessMove);
     }
@@ -83,7 +81,7 @@ export class GoComponent extends GobanGameComponent<GoRules,
         this.scores = MGPOptional.of(state.getCapturedCopy());
 
         this.ko = state.koCoord;
-        this.canPass = phase !== GoPhase.FINISHED;
+        this.canPass = phase !== 'FINISHED';
         this.createHoshis();
     }
 
@@ -105,10 +103,10 @@ export class GoComponent extends GobanGameComponent<GoRules,
 
     public override async pass(): Promise<MGPValidation> {
         const phase: GoPhase = this.getState().phase;
-        if (phase === GoPhase.PLAYING || phase === GoPhase.PASSED) {
+        if (phase === 'PLAYING' || phase === 'PASSED') {
             return this.onClick(GoMove.PASS.coord);
         }
-        Utils.assert(phase === GoPhase.COUNTING || phase === GoPhase.ACCEPT,
+        Utils.assert(phase === 'COUNTING' || phase === 'ACCEPT',
                      'GoComponent: pass() must be called only in playing, passed, counting, or accept phases');
         return this.onClick(GoMove.ACCEPT.coord);
     }

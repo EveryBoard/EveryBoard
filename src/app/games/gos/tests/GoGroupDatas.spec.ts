@@ -1,12 +1,12 @@
 /* eslint-disable max-lines-per-function */
 import { GoPiece } from '../GoPiece';
 import { Coord } from 'src/app/jscaip/Coord';
-import { GoGroupDatas } from 'src/app/games/gos/GoGroupsDatas';
+import { GoGroupData } from 'src/app/games/gos/GoGroupsData';
 import { Utils, TestUtils } from '@everyboard/lib';
 import { ErrorLoggerServiceMock } from 'src/app/services/tests/ErrorLoggerServiceMock.spec';
 import { fakeAsync } from '@angular/core/testing';
 
-fdescribe('GoGroupDatas', () => {
+describe('GoGroupData', () => {
 
     const coord: Coord = new Coord(0, 0);
 
@@ -15,7 +15,7 @@ fdescribe('GoGroupDatas', () => {
     // two alive wrapping => error
 
     it('should throw when getWrapped is called on a multi wrapped group', () => {
-        const group: GoGroupDatas = new GoGroupDatas(GoPiece.EMPTY,
+        const group: GoGroupData = new GoGroupData(GoPiece.EMPTY,
                                                      [coord, coord],
                                                      [coord, coord],
                                                      [coord, coord],
@@ -29,8 +29,8 @@ fdescribe('GoGroupDatas', () => {
     });
 
     it('should throw when addPawn is called two times with the same coord', fakeAsync(() => {
-        // Given any GoGroupDatas containing "coord" already
-        const group: GoGroupDatas = new GoGroupDatas(GoPiece.EMPTY, [], [], [], [], [], []);
+        // Given any GoGroupData containing "coord" already
+        const group: GoGroupData = new GoGroupData(GoPiece.EMPTY, [], [], [], [], [], []);
         group.addPawn(coord, GoPiece.DARK);
 
         // When adding the coord again
@@ -41,7 +41,7 @@ fdescribe('GoGroupDatas', () => {
     }));
 
     it('should not throw when getWrapped is called on a multi wrapped group where one is the alive opposite of the other', () => {
-        const group: GoGroupDatas = new GoGroupDatas(GoPiece.EMPTY,
+        const group: GoGroupData = new GoGroupData(GoPiece.EMPTY,
                                                      [coord, coord],
                                                      [],
                                                      [coord, coord],
@@ -52,12 +52,12 @@ fdescribe('GoGroupDatas', () => {
     });
 
     it('should return the mono wrapper when alive', () => {
-        const group: GoGroupDatas = new GoGroupDatas(GoPiece.EMPTY, [coord], [coord, coord], [], [], [], []);
+        const group: GoGroupData = new GoGroupData(GoPiece.EMPTY, [coord], [coord, coord], [], [], [], []);
         expect(group.getWrapper()).toEqual(GoPiece.DARK);
     });
 
     it('should return the alive version of the monowrapper when dead', () => {
-        const deadWrapper: GoGroupDatas = new GoGroupDatas(GoPiece.EMPTY,
+        const deadWrapper: GoGroupData = new GoGroupData(GoPiece.EMPTY,
                                                            [coord],
                                                            [coord, coord],
                                                            [],
@@ -68,7 +68,7 @@ fdescribe('GoGroupDatas', () => {
     });
 
     it('should count territory as empty', () => {
-        const group: GoGroupDatas = new GoGroupDatas(GoPiece.DARK_TERRITORY, [coord], [coord, coord], [], [], [], []);
+        const group: GoGroupData = new GoGroupData(GoPiece.DARK_TERRITORY, [coord], [coord, coord], [], [], [], []);
         expect(group.getWrapper()).toEqual(GoPiece.DARK);
     });
 
@@ -76,7 +76,7 @@ fdescribe('GoGroupDatas', () => {
 
         it('should give entry points for each neighbor groups', () => {
             // Given a group with all kind of neighbors
-            const group: GoGroupDatas = new GoGroupDatas(GoPiece.DARK_TERRITORY,
+            const group: GoGroupData = new GoGroupData(GoPiece.DARK_TERRITORY,
                                                          [coord],
                                                          [],
                                                          [coord],

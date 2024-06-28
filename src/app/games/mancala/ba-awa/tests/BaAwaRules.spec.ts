@@ -77,7 +77,7 @@ describe('BaAwaRules', () => {
             ];
             const expectedState: MancalaState = new MancalaState(expectedBoard, 2, PlayerNumberMap.of(19, 20));
 
-            // Then the move should be legal
+            // Then the move should succeed
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         });
 

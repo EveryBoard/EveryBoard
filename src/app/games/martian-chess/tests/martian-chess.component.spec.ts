@@ -148,7 +148,7 @@ describe('MartianChessComponent', () => {
         // When cliking on an invalid second coord
         const move: MartianChessMove = MartianChessMove.from(new Coord(1, 5), new Coord(0, 4)).get();
 
-        // Then the move should be legal and the board changed
+        // Then the move should succeed and the board changed
         await testUtils.expectMoveSuccess('#click-0-4', move);
     }));
 

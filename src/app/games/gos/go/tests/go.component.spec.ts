@@ -9,10 +9,9 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { MGPOptional } from '@everyboard/lib';
 import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
-import { GoPhase } from '../../GoPhase';
 import { GoConfig, GoRules } from '../GoRules';
 
-fdescribe('GoComponent', () => {
+describe('GoComponent', () => {
 
     let testUtils: ComponentTestUtils<GoComponent>;
 
@@ -44,7 +43,7 @@ fdescribe('GoComponent', () => {
             [_, _, _, _, _],
             [_, _, _, _, _],
         ];
-        const state: GoState = new GoState(board, PlayerNumberMap.of(0, 0), 1, MGPOptional.empty(), GoPhase.PLAYING);
+        const state: GoState = new GoState(board, PlayerNumberMap.of(0, 0), 1, MGPOptional.empty(), 'PLAYING');
         await testUtils.setupState(state);
 
         const move: GoMove = new GoMove(0, 1);
@@ -60,13 +59,32 @@ fdescribe('GoComponent', () => {
         await testUtils.expectMoveSuccess('#click-2-2', secondMove);
     }));
 
+    it('should show ko coord', fakeAsync(async() => {
+        // Given a board in counting phase with dead and territory
+        const board: Table<GoPiece> = [
+            [_, X, O, _, _],
+            [X, O, _, _, _],
+            [_, _, _, _, _],
+            [_, _, _, _, _],
+            [_, _, _, _, _],
+        ];
+        const state: GoState =
+            new GoState(board, PlayerNumberMap.of(2, 1), 3, MGPOptional.of(new Coord(0, 0)), 'COUNTING');
+
+        // When rendering it
+        await testUtils.setupState(state, { config: MGPOptional.of({ size: 5 }) });
+
+        // Then it should render the dead
+        testUtils.expectElementToExist('#ko-0-0');
+    }));
+
     describe('hoshi', () => {
 
         it('should be in (3, 3) and other centraly symmetrical coords for 19x19 board', fakeAsync(async() => {
             // Given a 19x19 board
             const board: Table<GoPiece> = TableUtils.create(19, 19, GoPiece.EMPTY);
             const state: GoState =
-                new GoState(board, PlayerNumberMap.of(0, 0), 0, MGPOptional.empty(), GoPhase.PLAYING);
+                new GoState(board, PlayerNumberMap.of(0, 0), 0, MGPOptional.empty(), 'PLAYING');
 
             // When displaying it
             await testUtils.setupState(state);

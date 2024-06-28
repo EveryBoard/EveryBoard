@@ -5,10 +5,10 @@ import { GoState } from 'src/app/games/gos/GoState';
 import { GoPiece } from '../GoPiece';
 import { Coord } from 'src/app/jscaip/Coord';
 import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
-import { GroupDatas } from 'src/app/jscaip/BoardDatas';
+import { GroupData } from 'src/app/jscaip/BoardData';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { MCTS } from 'src/app/jscaip/AI/MCTS';
-import { GoMoveGenerator } from '../go/GoMoveGenerator';
+import { TriGoMoveGenerator } from './TriGoMoveGenerator';
 import { Debug } from 'src/app/utils/Debug';
 import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 import { GoPhase } from '../GoPhase';
@@ -32,7 +32,7 @@ export class TriGoComponent extends TriangularGameComponent<TriGoRules,
                                                             GoLegalityInformation>
 {
 
-    public boardInfo: GroupDatas<GoPiece>;
+    public boardInfo: GroupData<GoPiece>;
 
     public ko: MGPOptional<Coord> = MGPOptional.empty();
 
@@ -47,7 +47,7 @@ export class TriGoComponent extends TriangularGameComponent<TriGoRules,
         this.setRulesAndNode('TriGo');
         this.availableAIs = [
             new TriGoMinimax(),
-            new MCTS($localize`MCTS`, new GoMoveGenerator(), this.rules),
+            new MCTS($localize`MCTS`, new TriGoMoveGenerator(), this.rules),
         ];
         this.encoder = GoMove.encoder;
         this.canPass = true;
@@ -67,10 +67,12 @@ export class TriGoComponent extends TriangularGameComponent<TriGoRules,
     public getViewBox(): ViewBox {
         const state: GoState = this.getState();
         const abstractSize: number = state.getWidth() / 2;
+        const oddnessOffset: number = 0.5 * this.SPACE_SIZE * (state.getWidth() % 2);
+        const evennessOffset: number = 0.5 * this.SPACE_SIZE * ((state.getWidth() + 1) % 2);
         return new ViewBox(
-            0.5 * this.SPACE_SIZE * ((abstractSize + 1) % 2),
+            evennessOffset,
             0,
-            this.SPACE_SIZE * state.getWidth() / 2,
+            (this.SPACE_SIZE * abstractSize) + oddnessOffset,
             this.SPACE_SIZE * state.getHeight(),
         ).expandAll(this.STROKE_WIDTH / 2);
     }
@@ -82,8 +84,6 @@ export class TriGoComponent extends TriangularGameComponent<TriGoRules,
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }
-        this.last = MGPOptional.empty(); // now that the user stopped trying to do a move
-        // we stop showing the user the last move
         const resultlessMove: GoMove = new GoMove(x, y);
         return this.chooseMove(resultlessMove);
     }
@@ -96,33 +96,30 @@ export class TriGoComponent extends TriangularGameComponent<TriGoRules,
         this.scores = MGPOptional.of(state.getCapturedCopy());
 
         this.ko = state.koCoord;
-        this.canPass = phase !== GoPhase.FINISHED;
-        // this.createHoshis();
+        this.canPass = phase !== 'FINISHED';
     }
 
     private showCaptures(): void {
         const previousState: GoState = this.getPreviousState();
         this.captures = [];
-        for (let y: number = 0; y < this.getState().getHeight(); y++) {
-            for (let x: number = 0; x < this.getState().getWidth(); x++) {
-                const coord: Coord = new Coord(x, y);
-                const wasOccupied: boolean = previousState.getPieceAt(coord).isOccupied();
-                const isEmpty: boolean = this.board[y][x] === GoPiece.EMPTY;
-                const isNotKo: boolean = this.ko.equalsValue(coord) === false;
-                if (wasOccupied && isEmpty && isNotKo) {
-                    this.captures.push(coord);
-                }
+        for (const coordAndContent of this.getState().getCoordsAndContents()) {
+            const coord: Coord = coordAndContent.coord;
+            const wasOccupied: boolean = previousState.getPieceAt(coord).isOccupied();
+            const isEmpty: boolean = this.board[coord.y][coord.x] === GoPiece.EMPTY;
+            const isNotKo: boolean = this.ko.equalsValue(coord) === false;
+            if (wasOccupied && isEmpty && isNotKo) {
+                this.captures.push(coord);
             }
         }
     }
 
     public override async pass(): Promise<MGPValidation> {
         const phase: GoPhase = this.getState().phase;
-        if (phase === GoPhase.PLAYING || phase === GoPhase.PASSED) {
+        if (phase === 'PLAYING' || phase === 'PASSED') {
             return this.onClick(GoMove.PASS.coord);
         }
-        Utils.assert(phase === GoPhase.COUNTING || phase === GoPhase.ACCEPT,
-                     'GoComponent: pass() must be called only in playing, passed, counting, or accept phases');
+        Utils.assert(phase === 'COUNTING' || phase === 'ACCEPT',
+                     'TriGoComponent: pass() must be called only in playing, passed, counting, or accept phases');
         return this.onClick(GoMove.ACCEPT.coord);
     }
 

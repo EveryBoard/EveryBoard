@@ -8,6 +8,8 @@ import { Player } from '../Player';
 import { EmptyRulesConfig, RulesConfig } from '../RulesConfigUtil';
 import { SuperRules } from '../Rules';
 import { Debug } from 'src/app/utils/Debug';
+import { Table, TableUtils } from '../TableUtils';
+import { GoPiece } from 'src/app/games/gos/GoPiece';
 
 type NodeAndPath<M extends Move, S extends GameState> = {
     node: GameNode<M, S>,
@@ -208,7 +210,7 @@ implements AI<M, S, AITimeLimitOptions, C>
      */
     private play(node: GameNode<M, S>, move: M, config: MGPOptional<C>): GameNode<M, S> {
         const legality: MGPFallible<L> = this.rules.isLegal(move, node.gameState, config);
-        Utils.assert(legality.isSuccess(), 'heuristic returned illegal move');
+        Utils.assert(legality.isSuccess(), 'heuristic returned illegal move', { move: move.toString() });
         const childState: S = this.rules.applyLegalMove(move, node.gameState, config, legality.get());
         const childNode: GameNode<M, S> = new GameNode(childState,
                                                        MGPOptional.of(node),

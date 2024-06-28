@@ -3,22 +3,22 @@ import { Ordinal } from './Ordinal';
 import { Table, TableUtils } from './TableUtils';
 import { Debug } from '../utils/Debug';
 
-export class BoardDatas {
+export class BoardData {
 
     private constructor(readonly groupIndices: Table<number>,
                         readonly groups: ReadonlyArray<GroupInfos>)
     {
     }
 
-    public static ofBoard<T>(board: Table<T>, groupDatasFactory: GroupDatasFactory<T>): BoardDatas {
+    public static ofBoard<T>(board: Table<T>, groupDatasFactory: GroupDataFactory<T>): BoardData {
         const groupIndices: number[][] = TableUtils.create(board[0].length, board.length, -1);
-        const groupsDatas: GroupDatas<T>[] = [];
+        const groupsDatas: GroupData<T>[] = [];
         for (let y: number = 0; y < board.length; y++) {
             for (let x: number = 0; x < board[0].length; x++) {
                 if (groupIndices[y][x] === -1) {
                     const newGroupEntryPoint: Coord = new Coord(x, y);
-                    const newGroupDatas: GroupDatas<T> =
-                        groupDatasFactory.getGroupDatas(newGroupEntryPoint, board);
+                    const newGroupDatas: GroupData<T> =
+                        groupDatasFactory.getGroupData(newGroupEntryPoint, board);
                     const groupCoords: Coord[] = newGroupDatas.getCoords();
                     const newGroupIndex: number = groupsDatas.length;
                     for (const coord of groupCoords) {
@@ -35,7 +35,7 @@ export class BoardDatas {
             const groupInfos: GroupInfos = new GroupInfos(coords, neighborsEntryPoints);
             groupsInfos.push(groupInfos);
         }
-        return new BoardDatas(groupIndices, groupsInfos);
+        return new BoardData(groupIndices, groupsInfos);
     }
 }
 
@@ -45,19 +45,19 @@ export class GroupInfos {
 }
 
 @Debug.log
-export abstract class GroupDatasFactory<T> {
+export abstract class GroupDataFactory<T> {
 
-    public abstract getNewInstance(color: T): GroupDatas<T>;
+    public abstract getNewInstance(color: T): GroupData<T>;
 
     public abstract getDirections(coord: Coord): ReadonlyArray<Ordinal>;
 
-    public getGroupDatas(coord: Coord, board: Table<T>): GroupDatas<T> {
+    public getGroupData(coord: Coord, board: Table<T>): GroupData<T> {
         const color: T = board[coord.y][coord.x];
-        const groupDatas: GroupDatas<T> = this.getNewInstance(color);
+        const groupDatas: GroupData<T> = this.getNewInstance(color);
         return this._getGroupDatas(coord, board, groupDatas);
     }
 
-    private _getGroupDatas(coord: Coord, board: Table<T>, groupDatas: GroupDatas<T>): GroupDatas<T> {
+    private _getGroupDatas(coord: Coord, board: Table<T>, groupDatas: GroupData<T>): GroupData<T> {
         const color: T = board[coord.y][coord.x];
         groupDatas.addPawn(coord, color);
         if (color === groupDatas.color) {
@@ -74,7 +74,7 @@ export abstract class GroupDatasFactory<T> {
     }
 }
 
-export abstract class GroupDatas<T> {
+export abstract class GroupData<T> {
 
     public constructor(public readonly color: T) {}
 

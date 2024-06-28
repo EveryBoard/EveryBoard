@@ -1,9 +1,9 @@
-import { GroupDatas } from 'src/app/jscaip/BoardDatas';
+import { GroupData } from 'src/app/jscaip/BoardData';
 import { Coord } from 'src/app/jscaip/Coord';
 import { MGPMap, Utils } from '@everyboard/lib';
 import { GoPiece } from './GoPiece';
 
-export class GoGroupDatas extends GroupDatas<GoPiece> {
+export class GoGroupData extends GroupData<GoPiece> {
 
     public constructor(color: GoPiece,
                        public emptyCoords: Coord[],
@@ -32,11 +32,11 @@ export class GoGroupDatas extends GroupDatas<GoPiece> {
 
     public contains(coord: Coord): boolean {
         const allCoords: Coord[] = this.darkCoords
-            .concat(this.lightCoords
-                .concat(this.emptyCoords
-                    .concat(this.deadDarkCoords
-                        .concat(this.deadLightCoords
-                            .concat(this.unreachableCoords)))));
+            .concat(this.lightCoords)
+            .concat(this.emptyCoords)
+            .concat(this.deadDarkCoords)
+            .concat(this.deadLightCoords)
+            .concat(this.unreachableCoords);
         return allCoords.some((c: Coord) => c.equals(coord));
     }
 
@@ -45,19 +45,19 @@ export class GoGroupDatas extends GroupDatas<GoPiece> {
 
         switch (color) {
             case GoPiece.DARK:
-                this.darkCoords = GroupDatas.insert(this.darkCoords, coord);
+                this.darkCoords = GroupData.insert(this.darkCoords, coord);
                 break;
             case GoPiece.LIGHT:
-                this.lightCoords = GroupDatas.insert(this.lightCoords, coord);
+                this.lightCoords = GroupData.insert(this.lightCoords, coord);
                 break;
             case GoPiece.DEAD_DARK:
-                this.deadDarkCoords = GroupDatas.insert(this.deadDarkCoords, coord);
+                this.deadDarkCoords = GroupData.insert(this.deadDarkCoords, coord);
                 break;
             case GoPiece.DEAD_LIGHT:
-                this.deadLightCoords = GroupDatas.insert(this.deadLightCoords, coord);
+                this.deadLightCoords = GroupData.insert(this.deadLightCoords, coord);
                 break;
             case GoPiece.UNREACHABLE:
-                this.unreachableCoords = GroupDatas.insert(this.unreachableCoords, coord);
+                this.unreachableCoords = GroupData.insert(this.unreachableCoords, coord);
                 break;
             default:
                 Utils.expectToBeMultiple(color, [
@@ -65,7 +65,7 @@ export class GoGroupDatas extends GroupDatas<GoPiece> {
                     GoPiece.DARK_TERRITORY,
                     GoPiece.LIGHT_TERRITORY,
                 ]);
-                this.emptyCoords = GroupDatas.insert(this.emptyCoords, coord);
+                this.emptyCoords = GroupData.insert(this.emptyCoords, coord);
         }
     }
 

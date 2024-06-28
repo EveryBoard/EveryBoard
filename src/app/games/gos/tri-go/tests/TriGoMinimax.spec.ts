@@ -5,7 +5,7 @@ import { TriGoConfig, TriGoRules } from '../TriGoRules';
 import { minimaxTest, SlowTest } from 'src/app/utils/tests/TestUtils.spec';
 import { TriGoMinimax } from '../TriGoMinimax';
 
-fdescribe('TriGoMinimax', () => {
+describe('TriGoMinimax', () => {
 
     const rules: TriGoRules = TriGoRules.get();
     const minimax: TriGoMinimax = new TriGoMinimax();

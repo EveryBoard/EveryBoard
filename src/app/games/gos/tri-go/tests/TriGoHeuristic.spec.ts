@@ -2,7 +2,6 @@
 import { Table } from 'src/app/jscaip/TableUtils';
 import { MGPOptional } from '@everyboard/lib';
 import { GoState } from '../../GoState';
-import { GoPhase } from '../../GoPhase';
 import { GoPiece } from '../../GoPiece';
 import { HeuristicUtils } from 'src/app/jscaip/AI/tests/HeuristicUtils.spec';
 import { Player } from 'src/app/jscaip/Player';
@@ -14,7 +13,7 @@ const X: GoPiece = GoPiece.LIGHT;
 const O: GoPiece = GoPiece.DARK;
 const _: GoPiece = GoPiece.EMPTY;
 
-fdescribe('TriGoHeuristic', () => {
+describe('TriGoHeuristic', () => {
 
     let heuristic: TriGoHeuristic;
     const defaultConfig: MGPOptional<TriGoConfig> = TriGoRules.get().getDefaultRulesConfig();
@@ -24,7 +23,7 @@ fdescribe('TriGoHeuristic', () => {
     });
 
     it('should prefer a larger territory', () => {
-        // Given a board with more territory for ZERO than another
+        // Given a board with more territory for Player.ZERO than for Player.ONE
         const strongBoard: Table<GoPiece> = [
             [_, _, O, X, _],
             [_, _, O, X, _],
@@ -33,7 +32,7 @@ fdescribe('TriGoHeuristic', () => {
             [_, _, O, X, _],
         ];
         const strongState: GoState =
-            new GoState(strongBoard, PlayerNumberMap.of(10, 1), 0, MGPOptional.empty(), GoPhase.PLAYING);
+            new GoState(strongBoard, PlayerNumberMap.of(10, 1), 0, MGPOptional.empty(), 'PLAYING');
         const weakBoard: Table<GoPiece> = [
             [_, O, X, _, _],
             [_, O, X, _, _],
@@ -42,7 +41,8 @@ fdescribe('TriGoHeuristic', () => {
             [_, O, X, _, _],
         ];
         const weakState: GoState =
-            new GoState(weakBoard, PlayerNumberMap.of(10, 1), 0, MGPOptional.empty(), GoPhase.PLAYING);
+            new GoState(weakBoard, PlayerNumberMap.of(10, 1), 0, MGPOptional.empty(), 'PLAYING');
+
         // When computing their value
         // Then it should prefer having a larger territory
         HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(heuristic,
@@ -63,7 +63,7 @@ fdescribe('TriGoHeuristic', () => {
             [_, _, O, X, _],
         ];
         const strongState: GoState =
-            new GoState(strongBoard, PlayerNumberMap.of(10, 1), 0, MGPOptional.empty(), GoPhase.PLAYING);
+            new GoState(strongBoard, PlayerNumberMap.of(10, 1), 0, MGPOptional.empty(), 'PLAYING');
         const weakBoard: Table<GoPiece> = [
             [_, _, O, X, _],
             [_, _, O, X, _],
@@ -72,7 +72,7 @@ fdescribe('TriGoHeuristic', () => {
             [_, _, O, X, _],
         ];
         const weakState: GoState =
-            new GoState(weakBoard, PlayerNumberMap.of(10, 1), 0, MGPOptional.empty(), GoPhase.PLAYING);
+            new GoState(weakBoard, PlayerNumberMap.of(10, 1), 0, MGPOptional.empty(), 'PLAYING');
         // When computing their value
         // Then it should assign the same value for both
         HeuristicUtils.expectStatesToBeOfEqualValue(heuristic, weakState, strongState, defaultConfig);

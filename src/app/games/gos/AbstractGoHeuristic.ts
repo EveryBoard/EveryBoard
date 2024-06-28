@@ -6,12 +6,11 @@ import { Player } from 'src/app/jscaip/Player';
 import { PlayerMetricHeuristic } from 'src/app/jscaip/AI/Minimax';
 import { PlayerNumberTable } from 'src/app/jscaip/PlayerNumberTable';
 import { GoNode, AbstractGoRules } from './AbstractGoRules';
-import { GoConfig } from './go/GoRules';
-import { TriGoConfig } from './tri-go/TriGoRules';
+import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 
-export abstract class AbstractGoHeuristic extends PlayerMetricHeuristic<GoMove, GoState, GoConfig | TriGoConfig> {
+export abstract class AbstractGoHeuristic<C extends RulesConfig> extends PlayerMetricHeuristic<GoMove, GoState, C> {
 
-    public constructor(private readonly rules: AbstractGoRules<GoConfig | TriGoConfig>) {
+    public constructor(private readonly rules: AbstractGoRules<C>) {
         super();
     }
 

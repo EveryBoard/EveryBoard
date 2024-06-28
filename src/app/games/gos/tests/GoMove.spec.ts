@@ -6,7 +6,7 @@ import { AbstractGoMoveGenerator } from '../AbstractGoMoveGenerator';
 import { GoConfig, GoRules } from '../go/GoRules';
 import { TriGoConfig, TriGoRules } from '../tri-go/TriGoRules';
 
-fdescribe('GoMove', () => {
+describe('GoMove', () => {
 
     const rules: AbstractGoRules<GoConfig | TriGoConfig>[] = [
         GoRules.get(),

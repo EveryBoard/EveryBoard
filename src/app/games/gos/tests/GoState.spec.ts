@@ -2,16 +2,14 @@
 import { Player } from 'src/app/jscaip/Player';
 import { GoState } from '../GoState';
 import { GoPiece } from '../GoPiece';
-
 import { MGPOptional } from '@everyboard/lib';
 import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
-import { GoPhase } from '../GoPhase';
 import { GoConfig, GoRules } from '../go/GoRules';
 
 const O: GoPiece = GoPiece.DARK;
 const _: GoPiece = GoPiece.EMPTY;
 
-fdescribe('GoPiece', () => {
+describe('GoPiece', () => {
 
     describe('toString', () => {
 
@@ -38,7 +36,7 @@ fdescribe('GoPiece', () => {
 
 });
 
-fdescribe('GoState for Go', () => {
+describe('GoState for Go', () => {
 
     describe('getInitialState', () => {
 
@@ -75,7 +73,7 @@ fdescribe('GoState for Go', () => {
                                                        PlayerNumberMap.of(0, 0),
                                                        1,
                                                        MGPOptional.empty(),
-                                                       GoPhase.PLAYING);
+                                                       'PLAYING');
             expect(expectedState).toEqual(state);
         });
 
@@ -112,7 +110,7 @@ fdescribe('GoState for Go', () => {
                                                        PlayerNumberMap.of(0, 0),
                                                        1,
                                                        MGPOptional.empty(),
-                                                       GoPhase.PLAYING);
+                                                       'PLAYING');
             expect(expectedState).toEqual(state);
         });
 
@@ -149,7 +147,7 @@ fdescribe('GoState for Go', () => {
                                                        PlayerNumberMap.of(0, 0),
                                                        1,
                                                        MGPOptional.empty(),
-                                                       GoPhase.PLAYING);
+                                                       'PLAYING');
             expect(expectedState).toEqual(state);
         });
 
@@ -186,7 +184,7 @@ fdescribe('GoState for Go', () => {
                                                        PlayerNumberMap.of(0, 0),
                                                        1,
                                                        MGPOptional.empty(),
-                                                       GoPhase.PLAYING);
+                                                       'PLAYING');
             expect(expectedState).toEqual(state);
         });
 

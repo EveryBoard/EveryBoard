@@ -47,7 +47,7 @@ export class Utils {
             // we don't want to execute the code after the assertion.
             // Otherwise, this could result in potentially very serious issues.
             Utils.logError('Assertion failure', message, data);
-            throw new Error(`Assertion failure: ${message}`);
+            throw new Error(`Assertion failure: ${message} (${ JSON.stringify(data) })`);
         }
     }
 

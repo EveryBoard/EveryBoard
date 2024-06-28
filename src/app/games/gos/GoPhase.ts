@@ -1,8 +1,6 @@
 
-export enum GoPhase {
-    PLAYING = 'PLAYING',
-    PASSED = 'PASSED',
-    COUNTING = 'COUNTING',
-    ACCEPT = 'ACCEPT',
-    FINISHED = 'FINISHED'
-}
+export type GoPhase = 'PLAYING'
+                    | 'PASSED'
+                    | 'COUNTING'
+                    | 'ACCEPT'
+                    | 'FINISHED';

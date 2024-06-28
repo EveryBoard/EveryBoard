@@ -6,13 +6,10 @@ import { GoPiece } from '../GoPiece';
 import { GobanUtils } from 'src/app/jscaip/GobanUtils';
 import { Coord } from 'src/app/jscaip/Coord';
 import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
-import { GoPhase } from '../GoPhase';
 import { MGPValidators } from 'src/app/utils/MGPValidator';
 import { GobanConfig } from 'src/app/jscaip/GobanConfig';
-import { Direction } from 'src/app/jscaip/Direction';
-import { Orthogonal } from 'src/app/jscaip/Orthogonal';
-import { OrthogonalGoGroupDatasFactory } from '../GoGroupDatasFactory';
-import { GroupDatasFactory } from 'src/app/jscaip/BoardDatas';
+import { OrthogonalGoGroupDataFactory } from '../GoGroupDataFactory';
+import { GroupDataFactory } from 'src/app/jscaip/BoardData';
 
 export type GoConfig = GobanConfig & {
 
@@ -82,15 +79,15 @@ export class GoRules extends AbstractGoRules<GoConfig> {
             const handicapToPut: Coord = orderedHandicaps[i];
             board[handicapToPut.y][handicapToPut.x] = GoPiece.DARK;
         }
-        return new GoState(board, PlayerNumberMap.of(0, 0), turn, MGPOptional.empty(), GoPhase.PLAYING);
+        return new GoState(board, PlayerNumberMap.of(0, 0), turn, MGPOptional.empty(), 'PLAYING');
     }
 
     public override getRulesConfigDescription(): MGPOptional<RulesConfigDescription<GoConfig>> {
         return MGPOptional.of(GoRules.RULES_CONFIG_DESCRIPTION);
     }
 
-    public override getGoGroupDatasFactory(): GroupDatasFactory<GoPiece> {
-        return new OrthogonalGoGroupDatasFactory();
+    public override getGoGroupDataFactory(): GroupDataFactory<GoPiece> {
+        return new OrthogonalGoGroupDataFactory();
     }
 
 }

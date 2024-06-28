@@ -8,9 +8,9 @@ import { Table } from 'src/app/jscaip/TableUtils';
 import { MGPOptional } from '@everyboard/lib';
 import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
-import { GoPhase } from '../../GoPhase';
+import { Coord } from 'src/app/jscaip/Coord';
 
-fdescribe('TriGoComponent', () => {
+describe('TriGoComponent', () => {
 
     let testUtils: ComponentTestUtils<TriGoComponent>;
 
@@ -19,7 +19,6 @@ fdescribe('TriGoComponent', () => {
     const N: GoPiece = GoPiece.UNREACHABLE;
     const X: GoPiece = GoPiece.LIGHT;
     const k: GoPiece = GoPiece.DEAD_LIGHT;
-    const u: GoPiece = GoPiece.DEAD_DARK;
     const w: GoPiece = GoPiece.LIGHT_TERRITORY;
     const b: GoPiece = GoPiece.DARK_TERRITORY;
 
@@ -48,7 +47,7 @@ fdescribe('TriGoComponent', () => {
             [N, _, _, _, _, _, _, _, N],
             [_, _, _, _, _, _, _, _, _],
         ];
-        const state: GoState = new GoState(board, PlayerNumberMap.of(0, 0), 1, MGPOptional.empty(), GoPhase.PLAYING);
+        const state: GoState = new GoState(board, PlayerNumberMap.of(0, 0), 1, MGPOptional.empty(), 'PLAYING');
         await testUtils.setupState(state, { config: MGPOptional.of({ size: 5 }) });
 
         const move: GoMove = new GoMove(4, 1);
@@ -73,7 +72,7 @@ fdescribe('TriGoComponent', () => {
             [b, k, O, _, _, _, _, X, w],
         ];
         const state: GoState =
-            new GoState(board, PlayerNumberMap.of(2, 1), 3, MGPOptional.empty(), GoPhase.COUNTING);
+            new GoState(board, PlayerNumberMap.of(2, 1), 3, MGPOptional.empty(), 'COUNTING');
 
         // When rendering it
         await testUtils.setupState(state, { config: MGPOptional.of({ size: 5 }) });
@@ -81,6 +80,25 @@ fdescribe('TriGoComponent', () => {
         // Then it should render the dead
         testUtils.expectElementToExist('#dead-1-4');
         testUtils.expectElementToExist('#territory-0-4');
+    }));
+
+    it('should show ko coord', fakeAsync(async() => {
+        // Given a board in counting phase with dead and territory
+        const board: Table<GoPiece> = [
+            [N, N, N, N, _, N, N, N, N],
+            [N, N, N, _, O, _, N, N, N],
+            [N, N, _, _, _, _, _, N, N],
+            [N, O, _, _, _, _, _, _, N],
+            [O, _, O, _, _, _, _, X, _],
+        ];
+        const state: GoState =
+            new GoState(board, PlayerNumberMap.of(2, 1), 3, MGPOptional.of(new Coord(1, 4)), 'COUNTING');
+
+        // When rendering it
+        await testUtils.setupState(state, { config: MGPOptional.of({ size: 5 }) });
+
+        // Then it should render the dead
+        testUtils.expectElementToExist('#ko-1-4');
     }));
 
 });
