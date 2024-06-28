@@ -52,7 +52,7 @@ describe('SquarzComponent', () => {
             // Given any state
             // When clicking on an empty space
             // Then it should fail
-            await testUtils.expectClickFailure('#click_2_2', RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY());
+            await testUtils.expectClickFailure('#click-2-2', RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY());
         }));
 
         it('should hide previous move', fakeAsync(async() => {
@@ -137,13 +137,13 @@ describe('SquarzComponent', () => {
             testUtils.expectElementToHaveClasses('#piece-0-0', ['base', 'player0-fill', 'selected-stroke']);
 
             // When clicking that piece again
-            await testUtils.expectClickSuccess('#click-0-0');
+            await testUtils.expectClickFailure('#click-0-0');
 
             // Then the piece should not be highlighted
             testUtils.expectElementToHaveClasses('#piece-0-0', ['base', 'player0-fill']);
         }));
 
-        it('should previous move again clicking on piece again', fakeAsync(async() => {
+        it('should show previous move when clicking on piece again', fakeAsync(async() => {
             // Given a board with a previous move and a selected piece
             const previousMove: SquarzMove = new SquarzMove(new Coord(0, 0), new Coord(0, 2));
             const state: SquarzState = new SquarzState([

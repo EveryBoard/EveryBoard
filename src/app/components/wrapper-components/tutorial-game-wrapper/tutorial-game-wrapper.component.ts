@@ -71,12 +71,10 @@ export class TutorialGameWrapperComponent extends GameWrapper<TutorialPlayer> im
     }
 
     public override async onCancelMove(reason?: string): Promise<void> {
-        console.log('TGWC.onCancelMove')
         await super.onCancelMove(reason);
         if (reason !== undefined) {
             this.currentReason = MGPOptional.of(reason);
         }
-        // await this.showCurrentState(false);
         this.cdr.detectChanges();
     }
 
