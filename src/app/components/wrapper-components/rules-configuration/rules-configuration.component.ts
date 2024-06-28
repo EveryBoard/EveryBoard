@@ -185,4 +185,8 @@ export class RulesConfigurationComponent extends BaseWrapperComponent implements
         }
     }
 
+    public setEditable(editable: boolean): void {
+        this.editable = editable;
+    }
+
 }

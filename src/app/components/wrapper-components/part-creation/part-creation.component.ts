@@ -221,6 +221,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
                 this.viewInfo.chosenOpponent = opponent;
                 const partStatus: IPartStatus = Utils.getNonNullable(this.currentConfigRoom).partStatus;
                 this.viewInfo.canProposeConfig = partStatus !== PartStatus.CONFIG_PROPOSED.value && opponent !== '';
+                this.rulesConfigurationComponent.setEditable(this.viewInfo.canProposeConfig);
             });
         this.getForm('partType').valueChanges
             .pipe(takeUntil(this.ngUnsubscribe)).subscribe((partType: IPartType) => {
