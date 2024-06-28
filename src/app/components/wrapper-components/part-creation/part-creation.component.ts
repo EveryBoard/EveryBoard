@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { takeUntil } from 'rxjs/operators';
@@ -78,7 +78,8 @@ export class PartCreationComponent implements OnInit, OnDestroy {
     // notify that the game has started, a thing evaluated with the configRoom doc game status
     @Output() gameStartNotification: EventEmitter<ConfigRoom> = new EventEmitter<ConfigRoom>();
 
-    @ViewChild('rulesConfigurationComponent') public rulesConfigurationComponent: RulesConfigurationComponent;
+    @ViewChild(RulesConfigurationComponent)
+    public rulesConfigurationComponent: RulesConfigurationComponent | undefined;
 
     public gameStarted: boolean = false;
 
@@ -527,7 +528,9 @@ export class PartCreationComponent implements OnInit, OnDestroy {
 
     public saveRulesConfig(rulesConfig: MGPOptional<RulesConfig>): void {
         this.rulesConfig = rulesConfig;
-        this.setConfigDemo(rulesConfig.get());
+        if (rulesConfig.isPresent()) {
+            this.setConfigDemo(rulesConfig.get());
+        }
     }
 
     private setConfigDemo(config: RulesConfig): void {

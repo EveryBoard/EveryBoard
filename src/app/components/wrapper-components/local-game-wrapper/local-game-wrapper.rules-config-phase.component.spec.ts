@@ -7,7 +7,7 @@ import { ConnectedUserServiceMock } from 'src/app/services/tests/ConnectedUserSe
 import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
 import { LocalGameWrapperComponent } from './local-game-wrapper.component';
 
-fdescribe('LocalGameWrapperComponent (rules config phase)', () => {
+describe('LocalGameWrapperComponent (rules config phase)', () => {
 
     let testUtils: ComponentTestUtils<P4Component>;
 
