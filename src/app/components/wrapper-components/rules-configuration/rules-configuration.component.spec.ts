@@ -31,7 +31,6 @@ describe('RulesConfigurationComponent', () => {
         const stateProvider: (_: MGPOptional<RulesConfig>) => KamisadoState = (_: MGPOptional<RulesConfig>) => {
             return KamisadoRules.get().getInitialState();
         };
-        component.stateProvider = MGPOptional.of(stateProvider); // A game needing no config
     });
 
     it('should create', () => {
@@ -67,7 +66,7 @@ describe('RulesConfigurationComponent', () => {
     describe('creator behavior', () => {
 
         beforeEach(() => {
-            component.userIsCreator = true;
+            component.editable = true;
             component.rulesConfigDescriptionOptional = MGPOptional.of(rulesConfigDescriptionWithNumber);
         });
 
@@ -91,7 +90,6 @@ describe('RulesConfigurationComponent', () => {
 
         it('should not throw when stateProvider is missing due to unexisting game', fakeAsync(async() => {
             // Given any component from creator point of view
-            component.stateProvider = MGPOptional.empty();
 
             // When displaying it
             testUtils.detectChanges();
@@ -310,7 +308,7 @@ describe('RulesConfigurationComponent', () => {
     describe('non-creator behavior', () => {
 
         beforeEach(() => {
-            component.userIsCreator = false;
+            component.editable = false;
             component.rulesConfigDescriptionOptional = MGPOptional.of(rulesConfigDescriptionWithNumber);
             // Mandatory even if it's a configless game
             component.rulesConfigToDisplay = rulesConfigDescriptionWithNumber.getDefaultConfig().config;
