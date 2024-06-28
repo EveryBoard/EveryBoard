@@ -8,7 +8,7 @@ import { SquarzHeuristic } from './SquarzHeuristic';
 export class SquarzMinimax extends Minimax<SquarzMove, SquarzState, SquarzConfig> {
 
     public constructor() {
-        super('Dummy',
+        super('Score',
               SquarzRules.get(),
               new SquarzHeuristic(),
               new SquarzMoveGenerator(),
