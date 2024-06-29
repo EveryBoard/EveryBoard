@@ -82,6 +82,7 @@ export class RulesConfigurationComponent extends BaseWrapperComponent implements
                 name: this.urlName,
                 node,
             };
+            console.log('detectChanges')
             this.cdr.detectChanges();
         }
     }

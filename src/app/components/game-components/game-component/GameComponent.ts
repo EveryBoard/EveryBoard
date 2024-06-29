@@ -179,6 +179,7 @@ export abstract class GameComponent<R extends SuperRules<M, S, C, L>,
     }
 
     public async updateBoardAndRedraw(triggerAnimation: boolean): Promise<void> {
+        console.log('updateBoardAndRedraw')
         await this.updateBoard(triggerAnimation);
         this.cdr.detectChanges();
     }

@@ -59,6 +59,14 @@ export class ApagosState extends GameState {
         return this.remaining.get(piece);
     }
 
+    public getMaxPiecesPerPlayer(): number {
+        let numberOfPieces: number = 0; // number of piece should be just enough to have the majority everywhere
+        for (const square of this.board) {
+            numberOfPieces += Math.floor(square.getCapacity() / 2) + 1; // works both for even or odd sizes
+        }
+        return numberOfPieces;
+    }
+
     public equals(other: ApagosState): boolean {
         return this.turn === other.turn &&
                ArrayUtils.equals(other.board, this.board) &&

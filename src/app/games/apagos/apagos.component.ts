@@ -47,6 +47,8 @@ export class ApagosComponent extends GameComponent<ApagosRules, ApagosMove, Apag
 
     public PIECE_RADIUS: number;
 
+    public PIECE_DELTA: number;
+
     public BOARD_WIDTH: number;
 
     public BOARD_HEIGHT: number;
@@ -86,6 +88,7 @@ export class ApagosComponent extends GameComponent<ApagosRules, ApagosMove, Apag
         this.hasAsymmetricBoard = true;
 
         this.PIECE_RADIUS = (2 * this.SPACE_SIZE) / (10 + 0.5);
+        // TODO: ticketter l'ajout d'un onConfigUpdate ainsi que la mise à jour des config dans le rules-config (ou alors s'assurer d'avoir la config à la construction du composant)
     }
 
     public getViewBox(): ViewBox {
@@ -99,12 +102,13 @@ export class ApagosComponent extends GameComponent<ApagosRules, ApagosMove, Apag
 
     public async updateBoard(_triggerAnimation: boolean): Promise<void> {
         const state: ApagosState = this.getState();
-        console.log(state);
         this.board = state.board;
-        console.log('updateBoard')
-        console.log(this.board.toString())
         this.BOARD_WIDTH = this.board.length * this.SPACE_SIZE;
         this.BOARD_HEIGHT = (this.board.length + 0.5) * this.SPACE_SIZE;
+        console.log('width: ' + this.board.length)
+        console.log('max pieces: ' + state.getMaxPiecesPerPlayer());
+        this.PIECE_DELTA =
+            ((this.board.length-1) * this.SPACE_SIZE - this.PIECE_RADIUS) / state.getMaxPiecesPerPlayer();
         this.remainingZero = state.remaining.get(Player.ZERO);
         this.remainingOne = state.remaining.get(Player.ONE);
         this.showPossibleDrops();
@@ -118,17 +122,18 @@ export class ApagosComponent extends GameComponent<ApagosRules, ApagosMove, Apag
 
     public override async showLastMove(move: ApagosMove): Promise<void> {
         if (move.isDrop()) {
-            this.showLastDrop(move, this.getConfig().get());
+            this.showLastDrop(move);
         } else {
             this.showLastTransfer(move);
         }
     }
 
-    public showLastDrop(lastMove: ApagosMove, config: ApagosConfig): void {
+    public showLastDrop(lastMove: ApagosMove): void {
+        const width: number = this.getConfig().get().width;
         const piece: Player = lastMove.piece.get();
         let higherIndex: number = lastMove.landing;
         this.lastMoveSquares = [higherIndex];
-        if (lastMove.landing !== config.width - 1) {
+        if (lastMove.landing !== width - 1) {
             higherIndex += 1;
             this.lastMoveSquares.push(higherIndex);
         }
@@ -319,7 +324,9 @@ export class ApagosComponent extends GameComponent<ApagosRules, ApagosMove, Apag
     }
 
     public getRemainingPieceCx(x: number): number {
-        return (x + 0.5) * this.PIECE_RADIUS * 1.5;
+        console.log('PIECE_DELTA GETREMAINING: ' + this.PIECE_DELTA);
+        return (0.5 + x) * this.PIECE_DELTA;
+        // return (x + 0.5) * this.PIECE_RADIUS * 1.5;
     }
 
 }

@@ -30,6 +30,10 @@ export class ApagosSquare {
         return this.containing.get(player).get();
     }
 
+    public getCapacity(): number {
+        return this.count(PlayerOrNone.NONE);
+    }
+
     public addPiece(piece: Player): ApagosSquare {
         let nbZero: number = this.count(Player.ZERO);
         let nbOne: number = this.count(Player.ONE);

@@ -23,6 +23,7 @@ export class ApagosRules extends ConfigurableRules<ApagosMove, ApagosState, Apag
 
     private static singleton: MGPOptional<ApagosRules> = MGPOptional.empty();
 
+    // TODO: configurability enhancement 2.0, pour celui qui trouve le ticket: rajouter la possibiliter de restreindre des config multi-paramètres (genre width*increment < X))
     public static readonly RULES_CONFIG_DESCRIPTION: RulesConfigDescription<ApagosConfig> =
         new RulesConfigDescription<ApagosConfig>({
             name: (): string => $localize`Apagos`,
@@ -51,14 +52,14 @@ export class ApagosRules extends ConfigurableRules<ApagosMove, ApagosState, Apag
         const onePieces: number[] = [];
         const sizes: number[] = [];
         let currentSize: number = 1; // the first square will always be 1
+        let numberOfPieces: number = 0;
         for (let x: number = 0; x < width; x++) {
             zeroPieces.push(0);
             onePieces.push(0);
             sizes.push(currentSize);
+            numberOfPieces += Math.floor(currentSize / 2) + 1;
             currentSize += increment;
         }
-
-        const numberOfPieces: number = this.getNumberOfPiecesFor(config.get());
 
         return ApagosState.fromRepresentation(0, [
             zeroPieces,
@@ -78,16 +79,6 @@ export class ApagosRules extends ConfigurableRules<ApagosMove, ApagosState, Apag
         } else {
             return this.applyLegalTransfer(move, state);
         }
-    }
-
-    public getNumberOfPiecesFor(config: ApagosConfig): number {
-        let numberOfPieces: number = 0; // number of piece should be just enough to have the majority everywhere
-        let currentSize: number = 1; // the first square will always be 1
-        for (let x: number = 0; x < config.width; x++) {
-            numberOfPieces += Math.floor(currentSize / 2) + 1; // works both for even or odd sizes
-            currentSize += config.increment;
-        }
-        return numberOfPieces;
     }
 
     private applyLegalDrop(move: ApagosMove, state: ApagosState, config: ApagosConfig): ApagosState {
