@@ -2,10 +2,14 @@ import { GameComponent } from 'src/app/components/game-components/game-component
 import { NewGameLegalityInfo, NewGameRules } from './NewGameRules';
 import { NewGameMove } from './NewGameMove';
 import { NewGameState } from './NewGameState';
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
-import { NewGameDummyMinimax } from './NewGameDummyMinimax';
-import { NewGameTutorial } from './NewGameTutorial';
+import { MCTS } from 'src/app/jscaip/AI/MCTS';
+import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { NewGameMoveGenerator } from './NewGameMoveGenerator';
+import { NewGameMinimax } from './NewGameMinimax';
+import { MGPOptional } from '@everyboard/lib';
+import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 
 /**
  * This is an Angular directive to specify that this is a component of the app.
@@ -24,6 +28,7 @@ import { NewGameTutorial } from './NewGameTutorial';
 export class NewGameComponent extends GameComponent<NewGameRules,
                                                     NewGameMove,
                                                     NewGameState,
+                                                    RulesConfig,
                                                     NewGameLegalityInfo>
 {
     /**
@@ -31,42 +36,53 @@ export class NewGameComponent extends GameComponent<NewGameRules,
      * It must set up the `rules`, `encoder`, `node`, `encoder`, and `availableMinimaxes` fields.
      * The minimax list can remain empty.
      */
-    public constructor(messageDisplayer: MessageDisplayer) {
-        super(messageDisplayer);
-        // If the board you draw must be rotated of 180° when you play the second player, enable the following:
-        // this.hasAsymetricBoard = true;
-        // If your game has scores in-game, enable the following:
-        // this.scores = MGPOptional.of([0, 0]);
-        this.rules = NewGameRules.get();
-        this.node = this.rules.getInitialNode();
-        this.encoder = NewGameMove.encoder;
-        this.tutorial = new NewGameTutorial().tutorial;
-        this.availableMinimaxes = [
-            new NewGameDummyMinimax(this.rules, 'New Game Dummy Minimax'),
+    public constructor(messageDisplayer: MessageDisplayer, cdr: ChangeDetectorRef) {
+        super(messageDisplayer, cdr);
+        this.setRulesAndNode('NewGame');
+        this.availableAIs = [
+            new NewGameMinimax(),
+            new MCTS($localize`MCTS`, new NewGameMoveGenerator(), this.rules),
         ];
+        this.encoder = NewGameMove.encoder;
+
+        // If the board you draw must not be rotated of 180° when you play the second player, disable the following:
+        this.hasAsymmetricBoard = true;
+
+        // If your game has no scores in-game, disable the following:
+        this.scores = MGPOptional.of(PlayerNumberMap.of(0, 0));
     }
+
     /**
      * This method updates the displayed board.
      */
-    public updateBoard(): void {
+    public async updateBoard(_triggerAnimation: boolean): Promise<void> {
     }
+
     /**
      * This method should display the last move in the component
      */
-    public override showLastMove(move: NewGameMove): void {
+    public override async showLastMove(move: NewGameMove): Promise<void> {
+        return;
     }
+
+    /**
+     * This method has the role to hide the last move
+     */
+    public override hideLastMove(): void {
+        return;
+    }
+
     /**
      * This method should clear out any data coming from a move attempt
      */
     public override cancelMoveAttempt(): void {
     }
 
-
     /**
      * In the component's HTML, you will likely set onClick elements.
      * You can call back to the component, and call `this.chooseMove` to apply a move.
      * In case you want to cancel a move, you can call `this.cancelMove`.
-     * It takes an optional parameter, being a toast to show to the user upon the move cancellation.
+     * It takes an optional parameter, being a toast to show to the user upon the move cancelation.
      */
 
 }

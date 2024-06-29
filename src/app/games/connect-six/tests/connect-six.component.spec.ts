@@ -19,17 +19,21 @@ describe('ConnectSixComponent', () => {
     beforeEach(fakeAsync(async() => {
         testUtils = await ComponentTestUtils.forGame<ConnectSixComponent>('ConnectSix');
     }));
+
     it('should create', () => {
         testUtils.expectToBeCreated();
     });
+
     describe('first click', () => {
+
         it('should do the first move immediately after first click at first turn', fakeAsync(async() => {
             // Given the initial state of the component
             // When clicking anywhere
             // Then a first move should be done
-            const move: ConnectSixMove = ConnectSixFirstMove.from(new Coord(9, 9));
-            await testUtils.expectMoveSuccess('#click_9_9', move);
+            const move: ConnectSixMove = ConnectSixFirstMove.of(new Coord(9, 9));
+            await testUtils.expectMoveSuccess('#click-9-9', move);
         }));
+
         it('should cancel move when clicking on occupied stone from previous turns', fakeAsync(async() => {
             // Given a component with pieces on it, from previous turns
             const state: ConnectSixState = new ConnectSixState([
@@ -53,11 +57,12 @@ describe('ConnectSixComponent', () => {
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             ], 1);
-            testUtils.setupState(state);
+            await testUtils.setupState(state);
             // When clicking on them
-            // Then the move should be cancelled
-            await testUtils.expectClickFailure('#click_9_9', RulesFailure.MUST_CLICK_ON_EMPTY_SQUARE());
+            // Then it should fail
+            await testUtils.expectClickFailure('#click-9-9', RulesFailure.MUST_CLICK_ON_EMPTY_SQUARE());
         }));
+
         it('should drop the first of two pieces when clicking empty coord', fakeAsync(async() => {
             // Given a component with one move already done
             const state: ConnectSixState = new ConnectSixState([
@@ -81,18 +86,17 @@ describe('ConnectSixComponent', () => {
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             ], 1);
-            testUtils.setupState(state);
+            await testUtils.setupState(state);
 
             // When clicking on an empty square
-            await testUtils.expectClickSuccess('#click_8_8');
+            await testUtils.expectClickSuccess('#click-8-8');
 
             // Then the dropped piece should be displayed
             testUtils.expectElementToHaveClass('#dropped', 'moved-stroke');
         }));
-    });
-    describe('second click', () => {
-        it('should deselect piece from ongoing turn when clicking on it again', fakeAsync(async() => {
-            // Given a component where you clicked already to drop your first piece
+
+        it('should hide last move when doing first click', fakeAsync(async() => {
+            // Given a board with a last move
             const state: ConnectSixState = new ConnectSixState([
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
@@ -114,17 +118,55 @@ describe('ConnectSixComponent', () => {
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             ], 1);
-            testUtils.setupState(state);
-            await testUtils.expectClickSuccess('#click_8_8');
+            const previousMove: ConnectSixMove = ConnectSixFirstMove.of(new Coord(9, 9));
+            await testUtils.setupState(state, { previousMove });
+
+            // When doing a first click
+            await testUtils.expectClickSuccess('#click-8-8');
+
+            // Then the highlights from last turn should be hidden
+            testUtils.expectElementNotToHaveClass('#piece-9-9', 'last-move-stroke');
+        }));
+
+    });
+
+    describe('second click', () => {
+
+        it('should deselect piece when clicking a second time on it', fakeAsync(async() => {
+            // Given a component where you already dropped your first piece
+            const state: ConnectSixState = new ConnectSixState([
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, O, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            ], 1);
+            await testUtils.setupState(state);
+            await testUtils.expectClickSuccess('#click-8-8');
 
             // When clicking again on this piece
-            await testUtils.expectClickSuccessWithAsymmetricNaming('#dropped', '#click_8_8');
+            await testUtils.expectClickFailureWithAsymmetricNaming('#dropped', '#click-8-8');
 
-            // Then it should deselect it without popup
+            // Then it should deselect it without toast
             testUtils.expectElementNotToExist('#dropped');
         }));
+
         it('should do move when clicking on a second empty square', fakeAsync(async() => {
-            // Given a component where you clicked already to drop your first piece
+            // Given a component where you already dropped your first piece
             const state: ConnectSixState = new ConnectSixState([
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
@@ -146,17 +188,53 @@ describe('ConnectSixComponent', () => {
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             ], 1);
-            testUtils.setupState(state);
-            await testUtils.expectClickSuccess('#click_8_8');
+            await testUtils.setupState(state);
+            await testUtils.expectClickSuccess('#click-8-8');
 
             // When clicking on a second empty square
-            const move: ConnectSixMove = ConnectSixDrops.from(new Coord(8, 8), new Coord(7, 7)).get();
+            const move: ConnectSixMove = ConnectSixDrops.of(new Coord(8, 8), new Coord(7, 7));
 
-            // Then the move should be done
-            await testUtils.expectMoveSuccess('#click_7_7', move);
+            // Then the move should succeed
+            await testUtils.expectMoveSuccess('#click-7-7', move);
         }));
+
+        it('should show last move again when cancelling move', fakeAsync(async() => {
+            // Given a component with one move already done, and a first click done
+            const state: ConnectSixState = new ConnectSixState([
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, O, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            ], 1);
+            await testUtils.setupState(state);
+            await testUtils.expectClickSuccess('#click-8-8');
+
+            // When clicking on an empty square
+            await testUtils.expectClickFailure('#click-8-8');
+
+            // Then the dropped piece should be displayed
+            testUtils.expectElementToHaveClasses('#piece-9-9', ['base', 'player0-fill']);
+        }));
+
     });
+
     describe('view', () => {
+
         it('should show highlight when victory occur', fakeAsync(async() => {
             // Given a board where current player is about to win
             const state: ConnectSixState = new ConnectSixState([
@@ -180,21 +258,22 @@ describe('ConnectSixComponent', () => {
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             ], 7);
-            testUtils.setupState(state);
-            await testUtils.expectClickSuccess('#click_6_8');
+            await testUtils.setupState(state);
+            await testUtils.expectClickSuccess('#click-6-8');
 
             // When finishing your move
-            const move: ConnectSixMove = ConnectSixDrops.from(new Coord(6, 8), new Coord(5, 8)).get() as ConnectSixMove;
+            const move: ConnectSixMove = ConnectSixDrops.of(new Coord(6, 8), new Coord(5, 8));
 
             // Then the victory squares should be highlighted
-            await testUtils.expectMoveSuccess('#click_5_8', move);
-            testUtils.expectElementToHaveClass('#piece_5_8', 'victory-stroke');
-            testUtils.expectElementToHaveClass('#piece_6_8', 'victory-stroke');
-            testUtils.expectElementToHaveClass('#piece_7_8', 'victory-stroke');
-            testUtils.expectElementToHaveClass('#piece_8_8', 'victory-stroke');
-            testUtils.expectElementToHaveClass('#piece_9_8', 'victory-stroke');
-            testUtils.expectElementToHaveClass('#piece_10_8', 'victory-stroke');
+            await testUtils.expectMoveSuccess('#click-5-8', move);
+            testUtils.expectElementToHaveClass('#piece-5-8', 'victory-stroke');
+            testUtils.expectElementToHaveClass('#piece-6-8', 'victory-stroke');
+            testUtils.expectElementToHaveClass('#piece-7-8', 'victory-stroke');
+            testUtils.expectElementToHaveClass('#piece-8-8', 'victory-stroke');
+            testUtils.expectElementToHaveClass('#piece-9-8', 'victory-stroke');
+            testUtils.expectElementToHaveClass('#piece-10-8', 'victory-stroke');
         }));
+
         it('should show previous move (first move)', fakeAsync(async() => {
             // Given a board with a last move
             const state: ConnectSixState = new ConnectSixState([
@@ -220,11 +299,13 @@ describe('ConnectSixComponent', () => {
             ], 1);
 
             // When displaying it
-            testUtils.setupState(state, undefined, ConnectSixFirstMove.from(new Coord(9, 9)));
+            const previousMove: ConnectSixMove = ConnectSixFirstMove.of(new Coord(9, 9));
+            await testUtils.setupState(state, { previousMove });
 
             // Then last piece should have the highlight
-            testUtils.expectElementToHaveClass('#piece_9_9', 'last-move-stroke');
+            testUtils.expectElementToHaveClass('#piece-9-9', 'last-move-stroke');
         }));
+
         it('should show previous move (next moves)', fakeAsync(async() => {
             // Given a board with a last move
             const state: ConnectSixState = new ConnectSixState([
@@ -248,13 +329,16 @@ describe('ConnectSixComponent', () => {
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             ], 1);
+            const previousMove: ConnectSixMove = ConnectSixDrops.of(new Coord(10, 9), new Coord(11, 9));
 
             // When displaying it
-            testUtils.setupState(state, undefined, ConnectSixDrops.from(new Coord(10, 9), new Coord(11, 9)).get());
+            await testUtils.setupState(state, { previousMove });
 
             // Then last piece should have the highlight
-            testUtils.expectElementToHaveClass('#piece_10_9', 'last-move-stroke');
-            testUtils.expectElementToHaveClass('#piece_11_9', 'last-move-stroke');
+            testUtils.expectElementToHaveClass('#piece-10-9', 'last-move-stroke');
+            testUtils.expectElementToHaveClass('#piece-11-9', 'last-move-stroke');
         }));
+
     });
+
 });

@@ -1,31 +1,17 @@
 import { Coord } from 'src/app/jscaip/Coord';
-import { assert } from '../utils/assert';
-import { Encoder } from '../utils/Encoder';
-import { JSONObject, JSONValue, JSONValueWithoutArray } from '../utils/utils';
+import { Encoder } from '@everyboard/lib';
 
 export class Coord3D extends Coord {
 
-    public static getEncoder<T extends Coord3D>(generateMove: (x: number, y: number, z: number) => T): Encoder<T> {
-        return new class extends Encoder<T> {
-
-            public encode(coord: T): JSONValueWithoutArray {
-                return {
-                    x: coord.x,
-                    y: coord.y,
-                    z: coord.z,
-                };
-            }
-            public decode(encoded: JSONValue): T {
-                const casted: JSONObject = encoded as JSONObject;
-                assert(casted.x != null && typeof casted.x === 'number' &&
-                       casted.y != null && typeof casted.y === 'number' &&
-                       casted.z != null && typeof casted.z === 'number',
-                       'Invalid encoded Coord3D');
-                return generateMove(casted.x as number, casted.y as number, casted.z as number);
-            }
-        };
+    public static getCoord3DEncoder<T extends Coord3D>(generate: (x: number, y: number, z: number) => T)
+    : Encoder<T>
+    {
+        return Encoder.tuple(
+            [Encoder.identity<number>(), Encoder.identity<number>(), Encoder.identity<number>()],
+            (coord: T): [number, number, number] => [coord.x, coord.y, coord.z],
+            (fields: [number, number, number]): T => generate(fields[0], fields[1], fields[2]),
+        );
     }
-
     public static of(x: number, y: number, z: number): Coord3D {
         return new Coord3D(x, y, z);
     }

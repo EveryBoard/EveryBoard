@@ -1,13 +1,14 @@
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
-import { display, Utils } from 'src/app/utils/utils';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, Output } from '@angular/core';
+import { Utils } from '@everyboard/lib';
+import { Debug } from 'src/app/utils/Debug';
 
 @Component({
     selector: 'app-count-down',
     templateUrl: './count-down.component.html',
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CountDownComponent implements OnInit, OnDestroy {
-
-    public static VERBOSE: boolean = false;
+@Debug.log
+export class CountDownComponent implements OnDestroy {
 
     @Input() debugName: string;
     @Input() timeToAdd: string;
@@ -35,12 +36,10 @@ export class CountDownComponent implements OnInit, OnDestroy {
 
     public cssClasses: string = CountDownComponent.SAFE_TIME;
 
-    public ngOnInit(): void {
-        display(CountDownComponent.VERBOSE, 'CountDownComponent.ngOnInit (' + this.debugName + ')');
-    }
+    public constructor(private readonly cdr: ChangeDetectorRef) {}
+
     // Set the duration (in ms) for a non-started countdown
     public setDuration(duration: number): void {
-        display(CountDownComponent.VERBOSE, this.debugName + '.set(' + duration + 'ms)');
         Utils.assert(this.started === false, 'Should not set a chrono that has already been started (' + this.debugName + ')!');
 
         this.isSet = true;
@@ -58,10 +57,10 @@ export class CountDownComponent implements OnInit, OnDestroy {
         this.displayedSec = this.remainingMs % (60 * 1000);
         this.displayedMinute = (this.remainingMs - this.displayedSec) / (60 * 1000);
         this.displayedSec = Math.floor(this.displayedSec / 1000);
+        this.cdr.detectChanges();
     }
     public start(): void {
         // duration is in ms
-        display(CountDownComponent.VERBOSE, this.debugName + '.start(' + this.remainingMs + 'ms);');
         Utils.assert(this.isSet, 'Should not start a chrono that has not been set!');
         Utils.assert(this.started === false, 'Should not start chrono that has already been started (' + this.debugName + ')');
 
@@ -69,7 +68,6 @@ export class CountDownComponent implements OnInit, OnDestroy {
         this.resume();
     }
     public resume(): void {
-        display(CountDownComponent.VERBOSE, this.debugName + '.resume(' + this.remainingMs + 'ms)');
         Utils.assert(this.isPaused && this.started, 'Should only resume chrono that are started and paused!');
 
         this.startTime = Date.now();
@@ -81,8 +79,6 @@ export class CountDownComponent implements OnInit, OnDestroy {
         this.countSeconds();
     }
     private onEndReached(): void {
-        display(CountDownComponent.VERBOSE, this.debugName + '.onEndReached');
-
         this.isPaused = true;
         this.started = false;
         this.clearTimeouts();
@@ -99,7 +95,6 @@ export class CountDownComponent implements OnInit, OnDestroy {
         return isUnstarted || this.isPaused;
     }
     public pause(): void {
-        display(CountDownComponent.VERBOSE, this.debugName + '.pause(' + this.remainingMs + 'ms)');
         Utils.assert(this.started, 'Should not pause not started chrono (' + this.debugName + ')');
         Utils.assert(this.isPaused === false, 'Should not pause already paused chrono (' + this.debugName + ')');
 
@@ -108,7 +103,6 @@ export class CountDownComponent implements OnInit, OnDestroy {
         this.updateShownTime();
     }
     public stop(): void {
-        display(CountDownComponent.VERBOSE, this.debugName + '.stop(' + this.remainingMs + 'ms)');
         Utils.assert(this.started, 'Should only stop chrono that are started!');
 
         if (this.isPaused === false) {
@@ -137,15 +131,14 @@ export class CountDownComponent implements OnInit, OnDestroy {
     private updateShownTime(): void {
         const now: number = Date.now();
         this.remainingMs -= (now - this.startTime);
-        this.displayDuration();
         this.cssClasses = this.getTimeClass();
         this.startTime = now;
+        this.displayDuration();
         if (this.isPaused === false) {
             this.countSeconds();
         }
     }
     private clearTimeouts(): void {
-        display(CountDownComponent.VERBOSE, this.debugName + '.clearTimeouts');
 
         if (this.timeoutHandleSec != null) {
             window.clearTimeout(this.timeoutHandleSec);

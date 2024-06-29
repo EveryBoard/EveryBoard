@@ -3,14 +3,10 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ConnectedUserService, AuthUser } from 'src/app/services/ConnectedUserService';
 import { GameService } from 'src/app/services/GameService';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
-import { Utils } from 'src/app/utils/utils';
-import { assert } from 'src/app/utils/assert';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 import { GameInfo } from '../pick-game/pick-game.component';
 import { GameWrapperMessages } from '../../wrapper-components/GameWrapper';
-import { MGPValidation } from 'src/app/utils/MGPValidation';
-import { ObservedPartService } from 'src/app/services/ObservedPartService';
-
+import { CurrentGameService } from 'src/app/services/CurrentGameService';
 
 @Component({
     selector: 'app-online-game-creation',
@@ -21,7 +17,7 @@ export class OnlineGameCreationComponent implements OnInit {
     public constructor(private readonly route: ActivatedRoute,
                        private readonly router: Router,
                        private readonly connectedUserService: ConnectedUserService,
-                       private readonly observedPartService: ObservedPartService,
+                       private readonly currentGameService: CurrentGameService,
                        private readonly messageDisplayer: MessageDisplayer,
                        private readonly gameService: GameService) {
     }
@@ -33,14 +29,14 @@ export class OnlineGameCreationComponent implements OnInit {
     }
     private async createGameAndRedirectOrShowError(game: string): Promise<boolean> {
         const authUser: AuthUser = this.connectedUserService.user.get();
-        assert(authUser.isConnected(), 'User must be connected and have a username to reach this page');
+        Utils.assert(authUser.isConnected(), 'User must be connected and have a username to reach this page');
         if (this.gameExists(game) === false) {
             await this.router.navigate(['/notFound', GameWrapperMessages.NO_MATCHING_GAME(game)], { skipLocationChange: true });
             return false;
         }
-        const canCreateOnlineGame: MGPValidation = this.observedPartService.canUserCreate();
+        const canCreateOnlineGame: MGPValidation = this.currentGameService.canUserCreate();
         if (canCreateOnlineGame.isSuccess()) {
-            const gameId: string = await this.gameService.createPartConfigRoomAndChat(game);
+            const gameId: string = await this.gameService.createGame(game);
             await this.router.navigate(['/play', game, gameId]);
             return true;
         } else {
@@ -50,8 +46,8 @@ export class OnlineGameCreationComponent implements OnInit {
         }
     }
     private gameExists(gameName: string): boolean {
-        const gameInfo: MGPOptional<GameInfo> =
+        const optionalGameInfo: MGPOptional<GameInfo> =
             MGPOptional.ofNullable(GameInfo.ALL_GAMES().find((gameInfo: GameInfo) => gameInfo.urlName === gameName));
-        return gameInfo.isPresent();
+        return optionalGameInfo.isPresent();
     }
 }

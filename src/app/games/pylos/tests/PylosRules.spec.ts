@@ -4,19 +4,16 @@ import { PylosCoord } from '../PylosCoord';
 import { PylosMove } from '../PylosMove';
 import { PylosState } from '../PylosState';
 import { PylosNode, PylosRules } from '../PylosRules';
-import { PylosMinimax } from '../PylosMinimax';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { PylosFailure } from '../PylosFailure';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { MGPOptional, MGPValidation } from '@everyboard/lib';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
-import { MGPValidation } from 'src/app/utils/MGPValidation';
-import { Minimax } from 'src/app/jscaip/Minimax';
-import { PylosOrderedMinimax } from '../PylosOrderedMinimax';
+import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 describe('PylosRules', () => {
 
     let rules: PylosRules;
-    let minimaxes: Minimax<PylosMove, PylosState>[];
+    const defaultConfig: NoConfig = PylosRules.get().getDefaultRulesConfig();
 
     const _: PlayerOrNone = PlayerOrNone.NONE;
     const O: PlayerOrNone = PlayerOrNone.ZERO;
@@ -24,11 +21,8 @@ describe('PylosRules', () => {
 
     beforeEach(() => {
         rules = PylosRules.get();
-        minimaxes = [
-            new PylosMinimax(rules, 'Pylos Minimax'),
-            new PylosOrderedMinimax(rules, 'Pylos Ordered Minimax'),
-        ];
     });
+
     it(`should forbid move who'se landing coord is not empty`, () => {
         const board: PlayerOrNone[][][] = [
             [
@@ -49,10 +43,13 @@ describe('PylosRules', () => {
         ];
 
         const state: PylosState = new PylosState(board, 0);
-        const move: PylosMove = PylosMove.fromDrop(new PylosCoord(0, 0, 0), []);
+        const move: PylosMove = PylosMove.ofDrop(new PylosCoord(0, 0, 0), []);
+
+        // Then the move should be illegal
         const reason: string = RulesFailure.MUST_LAND_ON_EMPTY_SPACE();
-        RulesUtils.expectMoveFailure(rules, state, move, reason);
+        RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
     });
+
     it('should forbid move starting by an empty piece', () => {
         const board: PlayerOrNone[][][] = [
             [
@@ -73,10 +70,13 @@ describe('PylosRules', () => {
         ];
 
         const state: PylosState = new PylosState(board, 0);
-        const move: PylosMove = PylosMove.fromClimb(new PylosCoord(0, 0, 0), new PylosCoord(2, 2, 1), []);
+        const move: PylosMove = PylosMove.ofClimb(new PylosCoord(0, 0, 0), new PylosCoord(2, 2, 1), []);
+
+        // Then the move should be illegal
         const reason: string = RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY();
-        RulesUtils.expectMoveFailure(rules, state, move, reason);
+        RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
     });
+
     it('should forbid move starting by an opponent piece', () => {
         const board: PlayerOrNone[][][] = [
             [
@@ -97,10 +97,13 @@ describe('PylosRules', () => {
         ];
 
         const state: PylosState = new PylosState(board, 0);
-        const move: PylosMove = PylosMove.fromClimb(new PylosCoord(0, 0, 0), new PylosCoord(2, 2, 1), []);
-        const reason: string = RulesFailure.CANNOT_CHOOSE_OPPONENT_PIECE();
-        RulesUtils.expectMoveFailure(rules, state, move, reason);
+        const move: PylosMove = PylosMove.ofClimb(new PylosCoord(0, 0, 0), new PylosCoord(2, 2, 1), []);
+
+        // Then the move should be illegal
+        const reason: string = RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT();
+        RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
     });
+
     it(`should forbid move who'se landing coord is not landable (not on the floor, not over 4 lower pieces)`, () => {
         const board: PlayerOrNone[][][] = [
             [
@@ -121,10 +124,13 @@ describe('PylosRules', () => {
         ];
 
         const state: PylosState = new PylosState(board, 0);
-        const move: PylosMove = PylosMove.fromDrop(new PylosCoord(0, 0, 1), []);
+        const move: PylosMove = PylosMove.ofDrop(new PylosCoord(0, 0, 1), []);
+
+        // Then the move should be illegal
         const reason: string = PylosFailure.SHOULD_HAVE_SUPPORTING_PIECES();
-        RulesUtils.expectMoveFailure(rules, state, move, reason);
+        RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
     });
+
     it('should forbid move who capture without having formed a squared', () => {
         const board: PlayerOrNone[][][] = [
             [
@@ -146,10 +152,13 @@ describe('PylosRules', () => {
 
         const state: PylosState = new PylosState(board, 0);
         const move: PylosMove =
-            PylosMove.fromDrop(new PylosCoord(0, 3, 0), [new PylosCoord(0, 0, 0), new PylosCoord(3, 3, 0)]);
+            PylosMove.ofDrop(new PylosCoord(0, 3, 0), [new PylosCoord(0, 0, 0), new PylosCoord(3, 3, 0)]);
+
+        // Then the move should be illegal
         const reason: string = PylosFailure.CANNOT_CAPTURE();
-        RulesUtils.expectMoveFailure(rules, state, move, reason);
+        RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
     });
+
     it('should forbid move who capture non-player piece or supporting-piece', () => {
         const board: PlayerOrNone[][][] = [
             [
@@ -171,14 +180,19 @@ describe('PylosRules', () => {
 
         const state: PylosState = new PylosState(board, 0);
 
-        const move: PylosMove = PylosMove.fromDrop(new PylosCoord(0, 0, 0), [new PylosCoord(2, 2, 0)]);
-        const reason: string = PylosFailure.INVALID_FIRST_CAPTURE();
-        RulesUtils.expectMoveFailure(rules, state, move, reason);
+        const move: PylosMove = PylosMove.ofDrop(new PylosCoord(0, 0, 0), [new PylosCoord(2, 2, 0)]);
 
-        const otherMove: PylosMove = PylosMove.fromDrop(new PylosCoord(0, 0, 0),
-                                                        [new PylosCoord(0, 0, 0), new PylosCoord(1, 0, 0)]);
-        RulesUtils.expectMoveFailure(rules, state, otherMove, PylosFailure.INVALID_SECOND_CAPTURE());
+        // Then the move should be illegal
+        let reason: string = PylosFailure.INVALID_FIRST_CAPTURE();
+        RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
+
+        const otherMove: PylosMove = PylosMove.ofDrop(new PylosCoord(0, 0, 0),
+                                                      [new PylosCoord(0, 0, 0), new PylosCoord(1, 0, 0)]);
+        // Then the move should be illegal
+        reason = PylosFailure.INVALID_SECOND_CAPTURE();
+        RulesUtils.expectMoveFailure(rules, state, otherMove, reason, defaultConfig);
     });
+
     it('should forbid move who capture a piece that became supporting during the same move', () => {
         // Given a board where a capture is about to happend
         const board: PlayerOrNone[][][] = [
@@ -202,10 +216,13 @@ describe('PylosRules', () => {
 
         // When trying to capture a piece below the landed piece
         // Then the move should be illegal
-        const move: PylosMove = PylosMove.fromDrop(new PylosCoord(1, 1, 1), [new PylosCoord(2, 2, 0)]);
+        const move: PylosMove = PylosMove.ofDrop(new PylosCoord(1, 1, 1), [new PylosCoord(2, 2, 0)]);
+
+        // Then the move should be illegal
         const reason: string = PylosFailure.INVALID_FIRST_CAPTURE();
-        RulesUtils.expectMoveFailure(rules, state, move, reason);
+        RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
     });
+
     it('should allow legal capture to include landing piece', () => {
         const board: PlayerOrNone[][][] = [
             [
@@ -226,10 +243,11 @@ describe('PylosRules', () => {
         ];
 
         const state: PylosState = new PylosState(board, 0);
-        const move: PylosMove = PylosMove.fromDrop(new PylosCoord(0, 0, 0), [new PylosCoord(0, 0, 0)]);
+        const move: PylosMove = PylosMove.ofDrop(new PylosCoord(0, 0, 0), [new PylosCoord(0, 0, 0)]);
         const status: MGPValidation = rules.isLegal(move, state);
         expect(status.isSuccess()).toBeTrue();
     });
+
     it('should forbid piece to climb over itself', () => {
         const board: PlayerOrNone[][][] = [
             [
@@ -250,10 +268,13 @@ describe('PylosRules', () => {
         ];
 
         const state: PylosState = new PylosState(board, 0);
-        const move: PylosMove = PylosMove.fromClimb(new PylosCoord(1, 1, 0), new PylosCoord(0, 0, 1), []);
+        const move: PylosMove = PylosMove.ofClimb(new PylosCoord(1, 1, 0), new PylosCoord(0, 0, 1), []);
+
+        // Then the move should be illegal
         const reason: string = PylosFailure.SHOULD_HAVE_SUPPORTING_PIECES();
-        RulesUtils.expectMoveFailure(rules, state, move, reason);
+        RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
     });
+
     it('should forbid piece to climb when supporting', () => {
         const board: PlayerOrNone[][][] = [
             [
@@ -274,10 +295,13 @@ describe('PylosRules', () => {
         ];
 
         const state: PylosState = new PylosState(board, 0);
-        const move: PylosMove = PylosMove.fromClimb(new PylosCoord(1, 0, 0), new PylosCoord(0, 1, 1), []);
+        const move: PylosMove = PylosMove.ofClimb(new PylosCoord(1, 0, 0), new PylosCoord(0, 1, 1), []);
+
+        // Then the move should be illegal
         const reason: string = PylosFailure.CANNOT_MOVE_SUPPORTING_PIECE();
-        RulesUtils.expectMoveFailure(rules, state, move, reason);
+        RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
     });
+
     it('should allow legal capture to include piece supporting previously captured stone', () => {
         const board: PlayerOrNone[][][] = [
             [
@@ -298,12 +322,13 @@ describe('PylosRules', () => {
         ];
 
         const state: PylosState = new PylosState(board, 0);
-        const move: PylosMove = PylosMove.fromClimb(new PylosCoord(0, 3, 0),
-                                                    new PylosCoord(0, 0, 1),
-                                                    [new PylosCoord(1, 0, 2), new PylosCoord(1, 0, 1)]);
+        const move: PylosMove = PylosMove.ofClimb(new PylosCoord(0, 3, 0),
+                                                  new PylosCoord(0, 0, 1),
+                                                  [new PylosCoord(1, 0, 2), new PylosCoord(1, 0, 1)]);
         const status: MGPValidation = rules.isLegal(move, state);
         expect(status.isSuccess()).toBeTrue();
     });
+
     it('should declare loser Player.ZERO when he put his 15th ball', () => {
         const board: PlayerOrNone[][][] = [
             [
@@ -324,7 +349,7 @@ describe('PylosRules', () => {
         ];
 
         const state: PylosState = new PylosState(board, 0);
-        const move: PylosMove = PylosMove.fromDrop(new PylosCoord(2, 2, 1), []);
+        const move: PylosMove = PylosMove.ofDrop(new PylosCoord(2, 2, 1), []);
         const expectedBoard: PlayerOrNone[][][] = [
             [
                 [X, O, X, O],
@@ -344,10 +369,11 @@ describe('PylosRules', () => {
         ];
 
         const expectedState: PylosState = new PylosState(expectedBoard, 1);
-        RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+        RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         const node: PylosNode = new PylosNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
-        RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, minimaxes);
+        RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, defaultConfig);
     });
+
     it('should declare loser Player.ONE when he put his 15th ball', () => {
         const board: PlayerOrNone[][][] = [
             [
@@ -368,7 +394,7 @@ describe('PylosRules', () => {
         ];
 
         const state: PylosState = new PylosState(board, 1);
-        const move: PylosMove = PylosMove.fromDrop(new PylosCoord(2, 2, 1), []);
+        const move: PylosMove = PylosMove.ofDrop(new PylosCoord(2, 2, 1), []);
         const expectedBoard: PlayerOrNone[][][] = [
             [
                 [O, X, O, X],
@@ -387,8 +413,9 @@ describe('PylosRules', () => {
             ],
         ];
         const expectedState: PylosState = new PylosState(expectedBoard, 2);
-        RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+        RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         const node: PylosNode = new PylosNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
-        RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, minimaxes);
+        RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, defaultConfig);
     });
+
 });

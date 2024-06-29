@@ -1,20 +1,20 @@
 import { Coord } from './Coord';
-import { MoveEncoder } from '../utils/Encoder';
+import { Encoder, MGPFallible } from '@everyboard/lib';
 import { Move } from './Move';
-import { MGPFallible } from '../utils/MGPFallible';
 
 export abstract class MoveWithTwoCoords extends Move {
 
     public static getFallibleEncoder<M extends MoveWithTwoCoords>(
         generator: (first: Coord, second: Coord) => MGPFallible<M>)
-    : MoveEncoder<M>
+    : Encoder<M>
     {
-        return MoveWithTwoCoords.getEncoder((first: Coord, second: Coord): M => generator(first, second).get());
+        return Encoder.tuple(
+            [Coord.encoder, Coord.encoder],
+            (move: M): [Coord, Coord] => [move.first, move.second],
+            (fields: [Coord, Coord]): M => generator(fields[0], fields[1]).get());
     }
-    public static getEncoder<M extends MoveWithTwoCoords>(generator: (first: Coord, second: Coord) => M)
-    : MoveEncoder<M>
-    {
-        return MoveEncoder.tuple(
+    public static getEncoder<M extends MoveWithTwoCoords>(generator: (first: Coord, second: Coord) => M): Encoder<M> {
+        return Encoder.tuple(
             [Coord.encoder, Coord.encoder],
             (move: M): [Coord, Coord] => [move.first, move.second],
             (fields: [Coord, Coord]): M => generator(fields[0], fields[1]));
@@ -27,5 +27,8 @@ export abstract class MoveWithTwoCoords extends Move {
     }
     public getSecond(): Coord {
         return this.second;
+    }
+    public getCoords(): [Coord, Coord] {
+        return [this.first, this.second];
     }
 }

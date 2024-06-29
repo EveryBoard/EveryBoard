@@ -3,7 +3,7 @@ import { ReversiComponent } from '../reversi.component';
 import { ReversiMove } from 'src/app/games/reversi/ReversiMove';
 import { ReversiState } from 'src/app/games/reversi/ReversiState';
 import { PlayerOrNone } from 'src/app/jscaip/Player';
-import { Table } from 'src/app/utils/ArrayUtils';
+import { Table } from 'src/app/jscaip/TableUtils';
 import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { fakeAsync } from '@angular/core/testing';
 
@@ -18,9 +18,11 @@ describe('ReversiComponent', () => {
     beforeEach(fakeAsync(async() => {
         testUtils = await ComponentTestUtils.forGame<ReversiComponent>('Reversi');
     }));
+
     it('should create', () => {
         testUtils.expectToBeCreated();
     });
+
     it('should show last move and captures', fakeAsync(async() => {
         const board: Table<PlayerOrNone> = [
             [_, _, _, _, X, _, _, _],
@@ -32,13 +34,13 @@ describe('ReversiComponent', () => {
             [_, _, X, _, _, _, _, _],
             [_, _, _, O, _, _, _, _],
         ];
-        const initialState: ReversiState = new ReversiState(board, 0);
-        testUtils.setupState(initialState);
+        const state: ReversiState = new ReversiState(board, 0);
+        await testUtils.setupState(state);
 
         const move: ReversiMove = new ReversiMove(0, 4);
-        await testUtils.expectMoveSuccess('#click_0_4', move, undefined, [2, 7]);
+        await testUtils.expectMoveSuccess('#click_0_4', move);
 
-        const tablutGameComponent: ReversiComponent = testUtils.getComponent();
+        const tablutGameComponent: ReversiComponent = testUtils.getGameComponent();
         expect(tablutGameComponent.getRectClasses(1, 3)).not.toContain('captured-fill');
         expect(tablutGameComponent.getRectClasses(2, 2)).not.toContain('captured-fill');
         expect(tablutGameComponent.getRectClasses(3, 1)).not.toContain('captured-fill');
@@ -51,6 +53,7 @@ describe('ReversiComponent', () => {
 
         expect(tablutGameComponent.getRectClasses(0, 4)).toEqual(['moved-fill']);
     }));
+
     it('should fake a click on ReversiMove.PASS.coord to pass', fakeAsync(async() => {
         // Given a fictitious board on which player can only pass
         const state: ReversiState = new ReversiState([
@@ -65,9 +68,9 @@ describe('ReversiComponent', () => {
         ], 1);
 
         // When displaying the board
-        testUtils.setupState(state);
+        await testUtils.setupState(state);
 
         // Then the player can pass
-        await testUtils.expectPassSuccess(ReversiMove.PASS, [1, 1]);
+        await testUtils.expectPassSuccess(ReversiMove.PASS);
     }));
 });

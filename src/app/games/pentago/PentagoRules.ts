@@ -1,17 +1,19 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { Vector } from 'src/app/jscaip/Vector';
-import { MGPNode } from 'src/app/jscaip/MGPNode';
-import { PlayerOrNone } from 'src/app/jscaip/Player';
+import { GameNode } from 'src/app/jscaip/AI/GameNode';
+import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { Rules } from 'src/app/jscaip/Rules';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { MGPValidation } from 'src/app/utils/MGPValidation';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { MGPOptional, MGPValidation } from '@everyboard/lib';
 import { PentagoFailure } from './PentagoFailure';
 import { PentagoMove } from './PentagoMove';
 import { PentagoState } from './PentagoState';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
+import { Table, TableUtils } from 'src/app/jscaip/TableUtils';
+import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { PlayerMap } from 'src/app/jscaip/PlayerMap';
 
-export class PentagoNode extends MGPNode<PentagoRules, PentagoMove, PentagoState> {}
+export class PentagoNode extends GameNode<PentagoMove, PentagoState> {}
 
 export class PentagoRules extends Rules<PentagoMove, PentagoState> {
 
@@ -23,9 +25,14 @@ export class PentagoRules extends Rules<PentagoMove, PentagoState> {
         }
         return PentagoRules.singleton.get();
     }
-    private constructor() {
-        super(PentagoState);
+
+    public override getInitialState(): PentagoState {
+        const initialBoard: Table<PlayerOrNone> = TableUtils.create(PentagoState.SIZE,
+                                                                    PentagoState.SIZE,
+                                                                    PlayerOrNone.NONE);
+        return new PentagoState(initialBoard, 0);
     }
+
     public static VICTORY_SOURCE: [Coord, Vector, boolean][] = [
         // [ firstCoordToTest, directionToTest, shouldLookTheSpaceBeforeAsWellAsSpaceAfter]
         [new Coord(1, 0), new Vector(1, 1), false], // 4 short diagonals
@@ -50,10 +57,14 @@ export class PentagoRules extends Rules<PentagoMove, PentagoState> {
         [new Coord(1, 4), new Vector(1, 0), true],
         [new Coord(1, 5), new Vector(1, 0), true],
     ];
-    public applyLegalMove(move: PentagoMove, state: PentagoState, _info: void): PentagoState {
+
+    public override applyLegalMove(move: PentagoMove, state: PentagoState, _config: NoConfig, _info: void)
+    : PentagoState
+    {
         return state.applyLegalMove(move);
     }
-    public isLegal(move: PentagoMove, state: PentagoState): MGPValidation {
+
+    public override isLegal(move: PentagoMove, state: PentagoState): MGPValidation {
         if (state.getPieceAt(move.coord).isPlayer()) {
             return MGPValidation.failure(RulesFailure.MUST_LAND_ON_EMPTY_SPACE());
         }
@@ -72,6 +83,7 @@ export class PentagoRules extends Rules<PentagoMove, PentagoState> {
         }
         return MGPValidation.SUCCESS;
     }
+
     public getVictoryCoords(state: PentagoState): Coord[] {
         let victoryCoords: Coord[] = [];
         for (const maybeVictory of PentagoRules.VICTORY_SOURCE) {
@@ -89,7 +101,7 @@ export class PentagoRules extends Rules<PentagoMove, PentagoState> {
                     }
                 }
                 if (fourAligned) {
-                    // check first alignement
+                    // check first alignment
                     if (state.getPieceAt(testedCoord) === firstValue) {
                         subVictory.push(testedCoord);
                         victoryCoords = victoryCoords.concat(subVictory);
@@ -106,27 +118,29 @@ export class PentagoRules extends Rules<PentagoMove, PentagoState> {
         }
         return victoryCoords;
     }
-    public getGameStatus(node: PentagoNode): GameStatus {
+
+    public override getGameStatus(node: PentagoNode): GameStatus {
         const state: PentagoState = node.gameState;
         const victoryCoords: Coord[] = this.getVictoryCoords(state);
-        const victoryFound: [boolean, boolean] = [false, false];
+        const victoryFound: PlayerMap<boolean> = PlayerMap.ofValues(false, false);
         for (let i: number = 0; i < victoryCoords.length; i += 5) {
-            victoryFound[state.getPieceAt(victoryCoords[i]).value] = true;
+            victoryFound.put(state.getPieceAt(victoryCoords[i]) as Player, true);
         }
-        if (victoryFound[0] === true) {
-            if (victoryFound[1] === true) {
+        if (victoryFound.get(Player.ZERO) === true) {
+            if (victoryFound.get(Player.ONE) === true) {
                 return GameStatus.DRAW;
             } else {
                 return GameStatus.ZERO_WON;
             }
         }
-        if (victoryFound[1] === true) {
+        if (victoryFound.get(Player.ONE) === true) {
             return GameStatus.ONE_WON;
         }
-        if (state.turn === 36) {
+        if (state.turn === PentagoState.SIZE * PentagoState.SIZE) {
             return GameStatus.DRAW;
         } else {
             return GameStatus.ONGOING;
         }
     }
+
 }

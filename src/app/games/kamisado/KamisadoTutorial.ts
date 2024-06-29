@@ -3,8 +3,10 @@ import { KamisadoColor } from 'src/app/games/kamisado/KamisadoColor';
 import { KamisadoState } from 'src/app/games/kamisado/KamisadoState';
 import { KamisadoPiece } from 'src/app/games/kamisado/KamisadoPiece';
 import { Coord } from 'src/app/jscaip/Coord';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { MGPOptional } from '@everyboard/lib';
 import { Tutorial, TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
+import { KamisadoRules } from './KamisadoRules';
+import { TutorialStepMessage } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
 
 const __: KamisadoPiece = KamisadoPiece.EMPTY;
 const or: KamisadoPiece = KamisadoPiece.ZERO.ORANGE;
@@ -24,12 +26,11 @@ const Gr: KamisadoPiece = KamisadoPiece.ONE.GREEN;
 const br: KamisadoPiece = KamisadoPiece.ZERO.BROWN;
 const Br: KamisadoPiece = KamisadoPiece.ONE.BROWN;
 
-
 export class KamisadoTutorial extends Tutorial {
 
     public tutorial: TutorialStep[] = [
         TutorialStep.informational(
-            $localize`Goal of the game`,
+            TutorialStepMessage.OBJECT_OF_THE_GAME(),
             $localize`At Kamisado, there are two ways to win the game:
         either by moving one of your pieces on the opponent's starting line,
         or by forcing the opponent to make a move that blocks the entire game.
@@ -51,7 +52,7 @@ export class KamisadoTutorial extends Tutorial {
         At Kamisado, pieces can only move forward, vertically or diagonally.
         You're playing first, with dark pieces, you can make your first move.<br/><br/>
         You're playing Dark, click on the piece of your choice and click on a landing square.`,
-            KamisadoState.getInitialState(),
+            KamisadoRules.get().getInitialState(),
             KamisadoMove.of(new Coord(7, 7), new Coord(3, 3)),
             $localize`Perfect! Note that each of your piece has a different color.`,
         ),
@@ -77,7 +78,7 @@ export class KamisadoTutorial extends Tutorial {
                 KamisadoMove.of(new Coord(3, 0), new Coord(3, 6)),
                 KamisadoMove.of(new Coord(3, 0), new Coord(4, 1)),
             ],
-            $localize`Congratulations!`,
+            TutorialStepMessage.CONGRATULATIONS(),
             $localize`You have not moved your pink piece on a blue square!`,
         ).withPreviousMove(KamisadoMove.of(new Coord(6, 7), new Coord(6, 5))),
         TutorialStep.informational(
@@ -120,7 +121,7 @@ export class KamisadoTutorial extends Tutorial {
          Your opponent will have to pass its turn too because its orange piece is also stuck: the game is completely stuck.
          In this case, the last player to have moved a piece loses.
          Here, your opponent will have moved its green piece last, you therefore win!`,
-            $localize`Failed. Try again.`,
+            TutorialStepMessage.FAILED_TRY_AGAIN(),
         ).withPreviousMove(KamisadoMove.of(new Coord(4, 0), new Coord(3, 1))),
     ];
 }

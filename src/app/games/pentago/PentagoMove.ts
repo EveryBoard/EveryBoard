@@ -1,50 +1,27 @@
 import { Coord } from 'src/app/jscaip/Coord';
-import { MoveEncoder } from 'src/app/utils/Encoder';
+import { MGPOptional, Encoder, Utils } from '@everyboard/lib';
 import { MoveCoord } from 'src/app/jscaip/MoveCoord';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { JSONObject, JSONValueWithoutArray } from 'src/app/utils/utils';
+import { PentagoState } from './PentagoState';
+
+type PentagoMoveFields = [Coord, MGPOptional<number>, boolean];
 
 export class PentagoMove extends MoveCoord {
 
-    public static encoder: MoveEncoder<PentagoMove> = new class extends MoveEncoder<PentagoMove> {
-        public encodeMove(move: PentagoMove): JSONValueWithoutArray {
-            const encoded: JSONValueWithoutArray = {
-                coord: Coord.encoder.encode(move.coord),
-            };
-            if (move.blockTurned.isPresent()) {
-                encoded.blockTurned = move.blockTurned.get();
-                encoded.turnedClockwise = move.turnedClockwise;
-            }
-
-            return encoded;
-        }
-        public decodeMove(encoded: JSONValueWithoutArray): PentagoMove {
-            const casted: JSONObject = encoded as JSONObject;
-
-            const coord: Coord = Coord.encoder.decode(casted.coord);
-            const nullableBlockTurned: MGPOptional<number> =
-                MGPOptional.ofNullable(casted.blockTurned as number | null);
-            if (nullableBlockTurned.isPresent()) {
-                const turnedClockwise: boolean = casted.turnedClockwise as boolean;
-                return PentagoMove.withRotation(coord.x,
-                                                coord.y,
-                                                nullableBlockTurned.get(),
-                                                turnedClockwise);
-            } else {
-                return PentagoMove.rotationless(coord.x, coord.y);
-            }
-        }
-    };
-
+    public static encoder: Encoder<PentagoMove> = Encoder.tuple(
+        [Coord.encoder, MGPOptional.getEncoder(Encoder.identity<number>()), Encoder.identity<boolean>()],
+        (move: PentagoMove): PentagoMoveFields => [move.coord, move.blockTurned, move.turnedClockwise],
+        (fields: PentagoMoveFields): PentagoMove => PentagoMove.of(fields[0], fields[1], fields[2]),
+    );
+    public static of(coord: Coord, blockTurned: MGPOptional<number>, turnedClockwise: boolean): PentagoMove {
+        return new PentagoMove(coord.x, coord.y, blockTurned, turnedClockwise);
+    }
     public static withRotation(x: number,
                                y: number,
                                blockTurned: number,
                                turnedClockwise: boolean)
     : PentagoMove
     {
-        if (blockTurned < 0 || 3 < blockTurned) {
-            throw new Error('This block do not exist: ' + blockTurned);
-        }
+        Utils.assert(0 <= blockTurned && blockTurned <= 3, 'This block does not exist: ' + blockTurned);
         return new PentagoMove(x, y, MGPOptional.of(blockTurned), turnedClockwise);
     }
     public static rotationless(x: number, y: number): PentagoMove {
@@ -56,9 +33,8 @@ export class PentagoMove extends MoveCoord {
                         public readonly turnedClockwise: boolean = false)
     {
         super(x, y);
-        if (this.coord.isNotInRange(6, 6)) {
-            throw new Error('The board is a 6 cas wide square, invalid coord: ' + this.coord.toString());
-        }
+        Utils.assert(PentagoState.isOnBoard(this.coord),
+                     'The board is a ' + PentagoState.SIZE + ' space wide square, invalid coord: ' + this.coord.toString());
     }
     public override toString(): string {
         if (this.blockTurned.isPresent()) {

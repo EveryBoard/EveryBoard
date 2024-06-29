@@ -1,5 +1,5 @@
 /* eslint-disable max-lines-per-function */
-import { MGPFallible } from 'src/app/utils/MGPFallible';
+import { MGPFallible } from '@everyboard/lib';
 import { ApagosSquare } from '../ApagosSquare';
 
 describe('ApagosSquare', () => {
@@ -8,4 +8,5 @@ describe('ApagosSquare', () => {
         const reason: string = 'invalid starting space';
         expect(ApagosSquare.from(1, 0, 0)).toEqual(MGPFallible.failure(reason));
     });
+
 });

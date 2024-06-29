@@ -1,12 +1,12 @@
 <svg xmlns="http://www.w3.org/2000/svg"
      width="100%" height="100%"
-     viewBox="-4 -4 708 608"
+     [attr.viewBox]="getViewBox().toSVGString()"
      preserveAspectRatio="xMidYMid meet"
 >
     <g *ngFor="let line of board; index as y">
         <g *ngFor="let currentSquare of line; index as x"
-           id="click_{{ x }}"
-           (click)="onClick(x)">
+           id="click-{{ x }}-{{ y }}"
+           (click)="onClick(x, y)">
             <rect class="base"
                   [attr.x]="SPACE_SIZE * x"
                   [attr.y]="SPACE_SIZE * y"
@@ -31,7 +31,7 @@
           [attr.height]="SPACE_SIZE"
     />
     <rect *ngFor="let coord of victoryCoords"
-          id="victory_coord_{{ coord.x }}_{{ coord.y }}"
+          id="victory-coord-{{ coord.x }}-{{ coord.y }}"
           class="base no-fill victory-stroke mid-stroke"
           [attr.x]="SPACE_SIZE * coord.x"
           [attr.y]="SPACE_SIZE * coord.y"

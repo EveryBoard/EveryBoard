@@ -1,48 +1,39 @@
-import { Coord } from 'src/app/jscaip/Coord';
-import { Direction } from 'src/app/jscaip/Direction';
-import { MoveEncoder } from 'src/app/utils/Encoder';
+import { Coord, CoordFailure } from 'src/app/jscaip/Coord';
+import { Ordinal } from 'src/app/jscaip/Ordinal';
+import { ArrayUtils, Encoder, MGPFallible, MGPOptional, Utils } from '@everyboard/lib';
 import { HexaDirection } from 'src/app/jscaip/HexaDirection';
 import { MoveCoord } from 'src/app/jscaip/MoveCoord';
-import { ArrayUtils } from 'src/app/utils/ArrayUtils';
-import { MGPFallible } from 'src/app/utils/MGPFallible';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 type AbaloneMoveFields = [Coord, HexaDirection, MGPOptional<Coord>];
 
 export class AbaloneMove extends MoveCoord {
 
-    public static encoder: MoveEncoder<AbaloneMove> = MoveEncoder.tuple(
+    public static encoder: Encoder<AbaloneMove> = Encoder.tuple(
         [Coord.encoder, HexaDirection.encoder, MGPOptional.getEncoder(Coord.encoder)],
         (m: AbaloneMove): AbaloneMoveFields => [m.coord, m.dir, m.lastPiece],
         (fields: AbaloneMoveFields): AbaloneMove => new AbaloneMove(fields[0], fields[1], fields[2]));
 
-    public static fromSingleCoord(coord: Coord, dir: HexaDirection): MGPFallible<AbaloneMove> {
-        try {
-            return MGPFallible.success(new AbaloneMove(coord, dir, MGPOptional.empty()));
-        } catch (e) {
-            return MGPFallible.failure(e.message);
-        }
+    public static ofSingleCoord(coord: Coord, dir: HexaDirection): AbaloneMove {
+        Utils.assert(coord.isInRange(9, 9), CoordFailure.OUT_OF_RANGE(coord));
+        return new AbaloneMove(coord, dir, MGPOptional.empty());
     }
-    public static fromDoubleCoord(first: Coord, second: Coord, dir: HexaDirection): MGPFallible<AbaloneMove> {
+
+    public static ofDoubleCoord(first: Coord, second: Coord, dir: HexaDirection): AbaloneMove {
         const coords: Coord[] = [first, second];
         ArrayUtils.sortByDescending(coords, AbaloneMove.sortCoord);
-        const direction: Direction = coords[1].getDirectionToward(coords[0]).get();
+        const direction: Ordinal = coords[1].getDirectionToward(coords[0]).get();
         const hexaDirectionOptional: MGPFallible<HexaDirection> =
             HexaDirection.factory.fromDelta(direction.x, direction.y);
-        if (hexaDirectionOptional.isFailure()) {
-            return MGPFallible.failure('Invalid direction');
-        }
+        Utils.assert(hexaDirectionOptional.isSuccess(), 'Invalid direction'); // Should be ensured by component
         const hexaDirection: HexaDirection = hexaDirectionOptional.get();
-        const distance: number = coords[1].getDistance(coords[0]);
-        if (distance > 2) {
-            return MGPFallible.failure('Distance between first coord and last coord is too big');
-        }
+        const distance: number = coords[1].getLinearDistanceToward(coords[0]);
+        Utils.assert(distance <= 2, 'Distance between first coord and last coord is too big');
         if (hexaDirection.equals(dir)) {
-            return AbaloneMove.fromSingleCoord(coords[1], dir);
+            return AbaloneMove.ofSingleCoord(coords[1], dir);
         } else if (hexaDirection.getOpposite().equals(dir)) {
-            return AbaloneMove.fromSingleCoord(coords[0], dir);
+            return AbaloneMove.ofSingleCoord(coords[0], dir);
         }
-        return MGPFallible.success(new AbaloneMove(coords[1], dir, MGPOptional.of(coords[0])));
+        return new AbaloneMove(coords[1], dir, MGPOptional.of(coords[0]));
     }
     public static sortCoord(coord: Coord): number {
         return coord.y * 9 + coord.x;
@@ -52,9 +43,6 @@ export class AbaloneMove extends MoveCoord {
                         public lastPiece: MGPOptional<Coord>)
     {
         super(coord.x, coord.y);
-        if (coord.isNotInRange(9, 9)) {
-            throw new Error('Coord ' + coord.toString() + ' out of range, invalid move!');
-        }
     }
     public toString(): string {
         if (this.isSingleCoord()) {

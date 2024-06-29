@@ -1,8 +1,7 @@
 /* eslint-disable max-lines-per-function */
-import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { Orthogonal } from 'src/app/jscaip/Direction';
+import { Orthogonal } from 'src/app/jscaip/Orthogonal';
+import { EncoderTestUtils, MGPOptional, TestUtils } from '@everyboard/lib';
 import { PylosCoord } from '../PylosCoord';
-import { EncoderTestUtils } from 'src/app/utils/tests/Encoder.spec';
 
 describe('PylosCoord', () => {
 
@@ -17,11 +16,32 @@ describe('PylosCoord', () => {
         }
     });
 
-    it('should forbid invalid coord creation', () => {
-        expect(() => new PylosCoord(-1, 0, 0)).toThrowError('PylosCoord: Invalid X: -1.');
-        expect(() => new PylosCoord(0, -1, 0)).toThrowError('PylosCoord: Invalid Y: -1.');
-        expect(() => new PylosCoord(0, 0, -1)).toThrowError('PylosCoord: Invalid Z: -1.');
-        expect(() => new PylosCoord(3, 3, 3)).toThrowError('PylosCoord(3, 3, 3) is not in range.');
+    it('should forbid invalid X in coord creation', () => {
+        function createCoordWithInvalidX(): void {
+            new PylosCoord(-1, 0, 0);
+        }
+        TestUtils.expectToThrowAndLog(createCoordWithInvalidX, 'PylosCoord: Invalid X: -1.');
+    });
+
+    it('should forbid invalid Y in coord creation', () => {
+        function createCoordWithInvalidY(): void {
+            new PylosCoord( 0, -1, 0);
+        }
+        TestUtils.expectToThrowAndLog(createCoordWithInvalidY, 'PylosCoord: Invalid Y: -1.');
+    });
+
+    it('should forbid invalid Z in coord creation', () => {
+        function createCoordWithInvalidZ(): void {
+            new PylosCoord( 0, 0, -1);
+        }
+        TestUtils.expectToThrowAndLog(createCoordWithInvalidZ, 'PylosCoord: Invalid Z: -1.');
+    });
+
+    it('should forbid invalid out of range coord creation', () => {
+        function createCoordWithInvalidOutOfRangeCoord(): void {
+            new PylosCoord( 3, 3, 3);
+        }
+        TestUtils.expectToThrowAndLog(createCoordWithInvalidOutOfRangeCoord, 'PylosCoord(3, 3, 3) is not in range.');
     });
 
     it('should override equals correctly', () => {
@@ -74,4 +94,5 @@ describe('PylosCoord', () => {
         expect(piece.getNextValid(Orthogonal.LEFT)).toEqual(MGPOptional.empty());
         expect(piece.getNextValid(Orthogonal.RIGHT)).toEqual(MGPOptional.of(right));
     });
+
 });

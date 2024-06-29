@@ -1,19 +1,22 @@
-import { Coord } from 'src/app/jscaip/Coord';
+import { Coord, CoordFailure } from 'src/app/jscaip/Coord';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
-import { MGPNode } from 'src/app/jscaip/MGPNode';
+import { GameNode } from 'src/app/jscaip/AI/GameNode';
 import { PlayerOrNone } from 'src/app/jscaip/Player';
 import { Rules } from 'src/app/jscaip/Rules';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { MGPFallible } from 'src/app/utils/MGPFallible';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { MGPValidation } from '../../utils/MGPValidation';
+import { MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 import { ConspirateursFailure } from './ConspirateursFailure';
 import { ConspirateursMove, ConspirateursMoveDrop, ConspirateursMoveJump, ConspirateursMoveSimple } from './ConspirateursMove';
 import { ConspirateursState } from './ConspirateursState';
+import { TableUtils } from 'src/app/jscaip/TableUtils';
+import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 
-export class ConspirateursNode extends MGPNode<ConspirateursRules, ConspirateursMove, ConspirateursState> { }
+export class ConspirateursNode extends GameNode<ConspirateursMove, ConspirateursState> {}
 
 export class ConspirateursRules extends Rules<ConspirateursMove, ConspirateursState> {
+
+    public static readonly NUMBER_OF_PIECES: number = 40;
 
     private static singleton: MGPOptional<ConspirateursRules> = MGPOptional.empty();
 
@@ -23,14 +26,21 @@ export class ConspirateursRules extends Rules<ConspirateursMove, ConspirateursSt
         }
         return ConspirateursRules.singleton.get();
     }
-    private constructor() {
-        super(ConspirateursState);
+
+    public override getInitialState(): ConspirateursState {
+        const board: PlayerOrNone[][] = TableUtils.create(ConspirateursState.WIDTH,
+                                                          ConspirateursState.HEIGHT,
+                                                          PlayerOrNone.NONE);
+        return new ConspirateursState(board, 0);
     }
-    public applyLegalMove(move: ConspirateursMove, state: ConspirateursState, _info: void): ConspirateursState {
+
+    public override applyLegalMove(move: ConspirateursMove, state: ConspirateursState, _config: NoConfig, _info: void)
+    : ConspirateursState
+    {
         const updatedBoard: PlayerOrNone[][] = state.getCopiedBoard();
-        if (move.isDrop()) {
+        if (ConspirateursMove.isDrop(move)) {
             updatedBoard[move.coord.y][move.coord.x] = state.getCurrentPlayer();
-        } else if (move.isSimple()) {
+        } else if (ConspirateursMove.isSimple(move)) {
             updatedBoard[move.getStart().y][move.getStart().x] = PlayerOrNone.NONE;
             updatedBoard[move.getEnd().y][move.getEnd().x] = state.getCurrentPlayer();
         } else {
@@ -41,18 +51,21 @@ export class ConspirateursRules extends Rules<ConspirateursMove, ConspirateursSt
         }
         return new ConspirateursState(updatedBoard, state.turn + 1);
     }
-    public isLegal(move: ConspirateursMove, state: ConspirateursState): MGPValidation {
-        if (move.isDrop()) {
+
+    public override isLegal(move: ConspirateursMove, state: ConspirateursState): MGPValidation {
+        if (ConspirateursMove.isDrop(move)) {
             return this.dropLegality(move, state);
-        } else if (move.isSimple()) {
+        } else if (ConspirateursMove.isSimple(move)) {
             return this.simpleMoveLegality(move, state);
         } else {
             return this.jumpLegality(move, state);
         }
     }
+
     public dropLegality(move: ConspirateursMoveDrop, state: ConspirateursState): MGPValidation {
-        if (state.turn >= 40) {
-            return MGPValidation.failure(ConspirateursFailure.CANNOT_DROP_AFTER_TURN_40());
+        Utils.assert(state.isOnBoard(move.coord), 'Move out of board');
+        if (ConspirateursRules.NUMBER_OF_PIECES <= state.turn) {
+            return MGPValidation.failure(ConspirateursFailure.CANNOT_DROP_WHEN_OUT_OF_PIECE());
         }
         if (state.getPieceAt(move.coord).isPlayer()) {
             return MGPValidation.failure(RulesFailure.MUST_LAND_ON_EMPTY_SPACE());
@@ -62,27 +75,45 @@ export class ConspirateursRules extends Rules<ConspirateursMove, ConspirateursSt
         }
         return MGPValidation.SUCCESS;
     }
+
     public simpleMoveLegality(move: ConspirateursMoveSimple, state: ConspirateursState): MGPValidation {
-        if (state.turn < 40) {
-            return MGPValidation.failure(ConspirateursFailure.CANNOT_MOVE_BEFORE_TURN_40());
+        const startInRange: boolean = state.isOnBoard(move.getStart());
+        const endInRange: boolean = state.isOnBoard(move.getEnd());
+        Utils.assert(startInRange && endInRange, 'Move out of board');
+        if (state.turn < ConspirateursRules.NUMBER_OF_PIECES) {
+            return MGPValidation.failure(ConspirateursFailure.CANNOT_MOVE_BEFORE_DROPPING_ALL_PIECES());
         }
-        if (state.getPieceAt(move.getStart()) !== state.getCurrentPlayer()) {
-            return MGPValidation.failure(RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
+        const startPiece: PlayerOrNone = state.getPieceAt(move.getStart());
+        if (startPiece.isNone()) {
+            return MGPValidation.failure(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY());
+        }
+        if (startPiece === state.getCurrentOpponent()) {
+            return MGPValidation.failure(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT());
         }
         if (state.getPieceAt(move.getEnd()).isPlayer()) {
             return MGPValidation.failure(RulesFailure.MUST_LAND_ON_EMPTY_SPACE());
         }
         return MGPValidation.SUCCESS;
     }
+
     public jumpLegality(move: ConspirateursMoveJump, state: ConspirateursState): MGPValidation {
-        if (state.turn < 40) {
-            return MGPValidation.failure(ConspirateursFailure.CANNOT_MOVE_BEFORE_TURN_40());
+        for (const coord of move.coords) {
+            if (state.isOnBoard(coord) === false) {
+                return MGPFallible.failure(CoordFailure.OUT_OF_RANGE(coord));
+            }
         }
-        if (state.getPieceAt(move.getStartingCoord()) !== state.getCurrentPlayer()) {
-            return MGPValidation.failure(RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
+        if (state.turn < ConspirateursRules.NUMBER_OF_PIECES) {
+            return MGPValidation.failure(ConspirateursFailure.CANNOT_MOVE_BEFORE_DROPPING_ALL_PIECES());
+        }
+        const startPiece: PlayerOrNone = state.getPieceAt(move.getStartingCoord());
+        if (startPiece.isNone()) {
+            return MGPValidation.failure(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY());
+        }
+        if (startPiece === state.getCurrentOpponent()) {
+            return MGPValidation.failure(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT());
         }
         for (const jumpedOver of move.getJumpedOverCoords()) {
-            if (state.getPieceAt(jumpedOver) === PlayerOrNone.NONE) {
+            if (state.getPieceAt(jumpedOver).isNone()) {
                 return MGPValidation.failure(ConspirateursFailure.MUST_JUMP_OVER_PIECES());
             }
         }
@@ -93,7 +124,8 @@ export class ConspirateursRules extends Rules<ConspirateursMove, ConspirateursSt
         }
         return MGPValidation.SUCCESS;
     }
-    public jumpTargetsFrom(start: Coord): Coord[] {
+
+    public jumpTargetsFrom(state: ConspirateursState, start: Coord): Coord[] {
         const targets: Coord[] = [
             new Coord(start.x + 2, start.y),
             new Coord(start.x - 2, start.y),
@@ -106,17 +138,20 @@ export class ConspirateursRules extends Rules<ConspirateursMove, ConspirateursSt
         ];
         const validTargets: Coord[] = [];
         for (const target of targets) {
-            const move: MGPFallible<ConspirateursMoveJump> = ConspirateursMoveJump.from([start, target]);
-            if (move.isSuccess()) {
-                validTargets.push(target);
+            if (state.isOnBoard(target)) {
+                const move: MGPFallible<ConspirateursMoveJump> = ConspirateursMoveJump.from([start, target]);
+                if (move.isSuccess()) {
+                    validTargets.push(target);
+                }
             }
         }
         return validTargets;
     }
+
     public nextJumps(jump: ConspirateursMoveJump, state: ConspirateursState): ConspirateursMoveJump[] {
         const ending: Coord = jump.getEndingCoord();
         const nextJumps: ConspirateursMoveJump[] = [];
-        for (const target of this.jumpTargetsFrom(ending)) {
+        for (const target of this.jumpTargetsFrom(state, ending)) {
             const move: MGPFallible<ConspirateursMoveJump> = jump.addJump(target);
             if (move.isSuccess() && this.jumpLegality(move.get(), state).isSuccess()) {
                 nextJumps.push(move.get());
@@ -124,21 +159,24 @@ export class ConspirateursRules extends Rules<ConspirateursMove, ConspirateursSt
         }
         return nextJumps;
     }
+
     public jumpHasPossibleNextTargets(jump: ConspirateursMoveJump, state: ConspirateursState): boolean {
         return this.nextJumps(jump, state).length > 0;
     }
-    public getGameStatus(node: ConspirateursNode): GameStatus {
+
+    public override getGameStatus(node: ConspirateursNode): GameStatus {
         const state: ConspirateursState = node.gameState;
-        const protectedPawns: [number, number] = [0, 0];
+        const protectedPawns: PlayerNumberMap = PlayerNumberMap.of(0, 0);
         for (const shelter of ConspirateursState.ALL_SHELTERS) {
             const content: PlayerOrNone = state.getPieceAt(shelter);
             if (content.isPlayer()) {
-                protectedPawns[content.value] += 1;
-                if (protectedPawns[content.value] === 20) {
+                protectedPawns.add(content, 1);
+                if (protectedPawns.get(content) === 20) {
                     return GameStatus.getVictory(content);
                 }
             }
         }
         return GameStatus.ONGOING;
     }
+
 }

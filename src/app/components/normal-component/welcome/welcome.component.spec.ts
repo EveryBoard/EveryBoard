@@ -2,8 +2,8 @@
 import { DebugElement } from '@angular/core';
 import { fakeAsync, TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
-import { ObservedPartService } from 'src/app/services/ObservedPartService';
-import { MGPValidation } from 'src/app/utils/MGPValidation';
+import { CurrentGameService } from 'src/app/services/CurrentGameService';
+import { MGPValidation } from '@everyboard/lib';
 import { expectValidRouting, expectValidRoutingLink, SimpleComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { LocalGameWrapperComponent } from '../../wrapper-components/local-game-wrapper/local-game-wrapper.component';
 import { TutorialGameWrapperComponent } from '../../wrapper-components/tutorial-game-wrapper/tutorial-game-wrapper.component';
@@ -26,8 +26,8 @@ describe('WelcomeComponent', () => {
     it('should redirect to online game creation when clicking on the corresponding button', fakeAsync(async() => {
         // Given a welcome component
         // where ConnectedUserService tells us user can join a game
-        const observedPartService: ObservedPartService = TestBed.inject(ObservedPartService);
-        spyOn(observedPartService, 'canUserCreate').and.returnValue(MGPValidation.SUCCESS);
+        const currentGameService: CurrentGameService = TestBed.inject(CurrentGameService);
+        spyOn(currentGameService, 'canUserCreate').and.returnValue(MGPValidation.SUCCESS);
         const router: Router = TestBed.inject(Router);
         spyOn(router, 'navigate').and.callThrough();
 
@@ -41,20 +41,18 @@ describe('WelcomeComponent', () => {
     it('should not redirect to online game creation when clicking on the corresponding button while in a game', fakeAsync(async() => {
         // Given a welcome component
         // where ConnectedUserService tells us user cannot join a game
-        const observedPartService: ObservedPartService = TestBed.inject(ObservedPartService);
+        const currentGameService: CurrentGameService = TestBed.inject(CurrentGameService);
         const error: string = `j'ai dit non!`;
-        spyOn(observedPartService, 'canUserCreate').and.returnValue(MGPValidation.failure(error));
+        spyOn(currentGameService, 'canUserCreate').and.returnValue(MGPValidation.failure(error));
         const router: Router = TestBed.inject(Router);
         spyOn(router, 'navigate').and.callThrough();
 
         // When clicking on the online-button of one game
-        const component: WelcomeComponent = testUtils.getComponent();
-        spyOn(component.messageDisplayer, 'criticalMessage').and.resolveTo(); // Skip 3000ms of toast
-        await testUtils.clickElement('#playOnline_Awale');
-
         // Then the component should not have changed page and should toast the reason
+        await testUtils.expectToDisplayCriticalMessage(error, async() => {
+            await testUtils.clickElement('#playOnline_Awale');
+        });
         expect(router.navigate).not.toHaveBeenCalled();
-        expect(component.messageDisplayer.criticalMessage).toHaveBeenCalledOnceWith(error);
     }));
     it('should redirect to local game when clicking on the corresponding button', fakeAsync(async() => {
         const router: Router = TestBed.inject(Router);
@@ -88,20 +86,18 @@ describe('WelcomeComponent', () => {
     it('should not redirect to part selection when clicking on the corresponding button while already playing', fakeAsync(async() => {
         // Given a welcome component
         // where ConnectedUserService tells us user cannot join a game
-        const observedPartService: ObservedPartService = TestBed.inject(ObservedPartService);
+        const currentGameService: CurrentGameService = TestBed.inject(CurrentGameService);
         const error: string = `j'ai dit non!`;
-        spyOn(observedPartService, 'canUserCreate').and.returnValue(MGPValidation.failure(error));
+        spyOn(currentGameService, 'canUserCreate').and.returnValue(MGPValidation.failure(error));
         const router: Router = TestBed.inject(Router);
         spyOn(router, 'navigate').and.callThrough();
 
         // When clicking on the online-button of one game
-        const component: WelcomeComponent = testUtils.getComponent();
-        spyOn(component.messageDisplayer, 'criticalMessage').and.resolveTo(); // Skip 3000ms of toast
-        await testUtils.clickElement('#createOnlineGame');
-
         // Then the component should not have changed page and should toast the reason
+        await testUtils.expectToDisplayCriticalMessage(error, async() => {
+            await testUtils.clickElement('#createOnlineGame');
+        });
         expect(router.navigate).not.toHaveBeenCalled();
-        expect(component.messageDisplayer.criticalMessage).toHaveBeenCalledOnceWith(error);
     }));
     describe('game list', () => {
         it('should open a modal dialog when clicking on a game image', fakeAsync(async() => {

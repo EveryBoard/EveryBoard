@@ -1,44 +1,26 @@
 import { Coord } from 'src/app/jscaip/Coord';
-import { MoveEncoder } from 'src/app/utils/Encoder';
+import { Encoder, MGPOptional, Utils } from '@everyboard/lib';
 import { Move } from 'src/app/jscaip/Move';
-import { JSONObject, JSONValueWithoutArray } from 'src/app/utils/utils';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
+
+type SixMoveFields = [MGPOptional<Coord>, Coord, MGPOptional<Coord>];
 
 export class SixMove extends Move {
 
-    public static encoder: MoveEncoder<SixMove> = new class extends MoveEncoder<SixMove> {
-        public encodeMove(move: SixMove): JSONValueWithoutArray {
-            return {
-                start: move.start.isPresent() ? Coord.encoder.encode(move.start.get()) : null,
-                landing: Coord.encoder.encode(move.landing),
-                keep: move.keep.isPresent() ? Coord.encoder.encode(move.keep.get()) : null,
-            };
-        }
-        public decodeMove(encoded: JSONValueWithoutArray): SixMove {
-            const casted: JSONObject = encoded as JSONObject;
-            if (typeof encoded !== 'object') {
-                throw new Error('Invalid encodedMove of type ' + typeof encoded + '!');
-            }
-            const decodedLanding: Coord = Coord.encoder.decode(casted.landing);
-            if (casted.start == null) {
-                return SixMove.fromDrop(decodedLanding);
-            }
-            const decodedStart: Coord = Coord.encoder.decode(casted.start);
-            if (casted.keep == null) {
-                return SixMove.fromMovement(decodedStart, decodedLanding);
-            } else {
-                const decodedKeep: Coord = Coord.encoder.decode(casted.keep);
-                return SixMove.fromCut(decodedStart, decodedLanding, decodedKeep);
-            }
-        }
-    };
-    public static fromDrop(landing: Coord): SixMove {
+    public static encoder: Encoder<SixMove> = Encoder.tuple(
+        [MGPOptional.getEncoder(Coord.encoder), Coord.encoder, MGPOptional.getEncoder(Coord.encoder)],
+        (move: SixMove): SixMoveFields => [move.start, move.landing, move.keep],
+        (fields: SixMoveFields): SixMove => SixMove.of(fields[0], fields[1], fields[2]),
+    );
+    private static of(start: MGPOptional<Coord>, landing: Coord, keep: MGPOptional<Coord>): SixMove {
+        return new SixMove(start, landing, keep);
+    }
+    public static ofDrop(landing: Coord): SixMove {
         return new SixMove(MGPOptional.empty(), landing, MGPOptional.empty());
     }
-    public static fromMovement(start: Coord, landing: Coord): SixMove {
+    public static ofMovement(start: Coord, landing: Coord): SixMove {
         return new SixMove(MGPOptional.of(start), landing, MGPOptional.empty());
     }
-    public static fromCut(start: Coord, landing: Coord, keep: Coord): SixMove {
+    public static ofCut(start: Coord, landing: Coord, keep: Coord): SixMove {
         return new SixMove(MGPOptional.of(start), landing, MGPOptional.of(keep));
     }
     private constructor(public readonly start: MGPOptional<Coord>,
@@ -46,12 +28,9 @@ export class SixMove extends Move {
                         public readonly keep: MGPOptional<Coord>)
     {
         super();
-        if (start.equalsValue(landing)) {
-            throw new Error('Deplacement cannot be static!');
-        }
-        if (start.isPresent() && start.equals(keep)) {
-            throw new Error('Cannot keep starting coord, since it will always be empty after move!');
-        }
+        Utils.assert(start.equalsValue(landing) === false, 'Deplacement cannot be static!');
+        Utils.assert(start.isAbsent() || start.equals(keep) === false,
+                     'Cannot keep starting coord, since it will always be empty after move!');
     }
     public isDrop(): boolean {
         return this.start.isAbsent();

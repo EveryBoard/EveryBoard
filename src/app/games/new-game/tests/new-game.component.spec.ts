@@ -18,6 +18,7 @@ describe('NewGameComponent', () => {
         // This `testUtils` will be used throughout the test suites as a matcher for various test conditions
         testUtils = await ComponentTestUtils.forGame<NewGameComponent>('NewGame');
     }));
+
     it('should create', () => {
         // This test is done in all games to ensure that their initialization works as expected
         testUtils.expectToBeCreated();
@@ -36,9 +37,10 @@ describe('NewGameComponent', () => {
      *   - `testUtils.expectElementNotToExist` to check the absence of an HTML element on the component, given its id
      *   - `testUtils.expectElementToHaveClass` to check that an existing HTML element has a given CSS class
      */
-    it('this test is only there to cover new-game remaining functions', () => {
-        testUtils.getComponent().showLastMove(new NewGameMove());
-        testUtils.getComponent().cancelMoveAttempt();
+    it('this test is only there to cover new-game remaining functions', fakeAsync(async() => {
+        // Note: we do not want to use `getGameComponent` in game components tests
+        await testUtils.getGameComponent().showLastMove(new NewGameMove());
+        testUtils.getGameComponent().cancelMoveAttempt();
         expect(42).toBeGreaterThan(37);
-    });
+    }));
 });

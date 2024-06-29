@@ -3,9 +3,7 @@ import { Router } from '@angular/router';
 import { serverTimestamp } from 'firebase/firestore';
 import { ErrorDAO, ErrorDocument, MGPError } from '../dao/ErrorDAO';
 import { FirestoreDocument } from '../dao/FirestoreDAO';
-import { MGPOptional } from '../utils/MGPOptional';
-import { MGPValidation } from '../utils/MGPValidation';
-import { JSONValue } from '../utils/utils';
+import { JSONValue, MGPOptional, MGPValidation } from '@everyboard/lib';
 import { MessageDisplayer } from './MessageDisplayer';
 
 @Injectable({
@@ -15,13 +13,6 @@ export class ErrorLoggerService {
 
     private static singleton: MGPOptional<ErrorLoggerService> = MGPOptional.empty();
 
-    public static setSingletonInstance(service: ErrorLoggerService): void {
-        ErrorLoggerService.singleton = MGPOptional.of(service);
-    }
-    public static logErrorAndFail(component: string, message: string, data?: JSONValue): never {
-        ErrorLoggerService.logError(component, message, data);
-        throw new Error(`${component}: ${message} (extra data: ${JSON.stringify(data)})`);
-    }
     public static logError(component: string, message: string, data?: JSONValue): MGPValidation {
         if (this.singleton.isAbsent()) {
             // The error logger service has not been initialized, so we cannot log the error.
@@ -34,12 +25,14 @@ export class ErrorLoggerService {
         this.singleton.get().logError(component, message, data);
         return MGPValidation.failure(component + ': ' + message);
     }
-    public constructor(private readonly errorDAO: ErrorDAO,
-                       private readonly router: Router,
-                       private readonly messageDisplayer: MessageDisplayer)
+
+    private constructor(private readonly errorDAO: ErrorDAO,
+                        private readonly router: Router,
+                        private readonly messageDisplayer: MessageDisplayer)
     {
-        ErrorLoggerService.setSingletonInstance(this);
+        ErrorLoggerService.singleton = MGPOptional.of(this);
     }
+
     public findErrors(component: string, route: string, message: string, data?: JSONValue): Promise<ErrorDocument[]> {
         if (data === undefined) {
             return this.errorDAO.findWhere([['component', '==', component], ['route', '==', route], ['message', '==', message]]);
@@ -47,6 +40,7 @@ export class ErrorLoggerService {
             return this.errorDAO.findWhere([['component', '==', component], ['route', '==', route], ['message', '==', message], ['data', '==', data]]);
         }
     }
+
     public async logError(component: string, message: string, data?: JSONValue): Promise<void> {
         this.messageDisplayer.criticalMessage($localize`An unexpected error was encountered. We have logged it and will try to fix its cause as soon as possible.`);
         const route: string = this.router.url;

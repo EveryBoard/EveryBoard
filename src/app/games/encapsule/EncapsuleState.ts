@@ -1,45 +1,38 @@
-import { GameStateWithTable } from 'src/app/jscaip/GameStateWithTable';
+import { GameStateWithTable } from 'src/app/jscaip/state/GameStateWithTable';
 import { EncapsulePiece, Size } from 'src/app/games/encapsule/EncapsulePiece';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { ArrayUtils } from 'src/app/utils/ArrayUtils';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { Utils } from 'src/app/utils/utils';
-import { assert } from 'src/app/utils/assert';
+import { Table } from 'src/app/jscaip/TableUtils';
+import { ArrayUtils, MGPOptional, Utils } from '@everyboard/lib';
 
 export class EncapsuleState extends GameStateWithTable<EncapsuleSpace> {
 
     private readonly remainingPieces: ReadonlyArray<EncapsulePiece>;
 
-    public constructor(board: EncapsuleSpace[][], turn: number, remainingPieces: EncapsulePiece[]) {
+    public constructor(board: Table<EncapsuleSpace>, turn: number, remainingPieces: EncapsulePiece[]) {
         super(board, turn);
         this.remainingPieces = remainingPieces;
     }
-    public static getInitialState(): EncapsuleState {
-        const _: EncapsuleSpace = new EncapsuleSpace(PlayerOrNone.NONE, PlayerOrNone.NONE, PlayerOrNone.NONE);
-        const startingBoard: EncapsuleSpace[][] = ArrayUtils.createTable(3, 3, _);
-        const initialPieces: EncapsulePiece[] = [
-            EncapsulePiece.BIG_DARK, EncapsulePiece.BIG_DARK, EncapsulePiece.BIG_LIGHT,
-            EncapsulePiece.BIG_LIGHT, EncapsulePiece.MEDIUM_DARK, EncapsulePiece.MEDIUM_DARK,
-            EncapsulePiece.MEDIUM_LIGHT, EncapsulePiece.MEDIUM_LIGHT, EncapsulePiece.SMALL_DARK,
-            EncapsulePiece.SMALL_DARK, EncapsulePiece.SMALL_LIGHT, EncapsulePiece.SMALL_LIGHT,
-        ];
-        return new EncapsuleState(startingBoard, 0, initialPieces);
-    }
+
     public getRemainingPieces(): EncapsulePiece[] {
-        return ArrayUtils.copyImmutableArray(this.remainingPieces);
+        return ArrayUtils.copy(this.remainingPieces);
     }
+
     public getRemainingPiecesOfPlayer(player: Player): EncapsulePiece[] {
         return this.getRemainingPieces().filter((piece: EncapsulePiece) => piece.getPlayer() === player);
     }
+
     public pieceBelongsToCurrentPlayer(piece: EncapsulePiece): boolean {
         return piece.belongsTo(this.getCurrentPlayer());
     }
+
     public isDroppable(piece: EncapsulePiece): boolean {
         return this.pieceBelongsToCurrentPlayer(piece) && this.isInRemainingPieces(piece);
     }
+
     public isInRemainingPieces(piece: EncapsulePiece): boolean {
         return this.remainingPieces.some((p: EncapsulePiece) => p === piece);
     }
+
     public getPlayerRemainingPieces(): EncapsulePiece[] {
         return this.remainingPieces.filter((piece: EncapsulePiece) => this.pieceBelongsToCurrentPlayer(piece));
     }
@@ -55,9 +48,11 @@ export class EncapsuleSpace {
                        public readonly big: PlayerOrNone)
     {
     }
+
     public isEmpty(): boolean {
-        return this.small === PlayerOrNone.NONE && this.medium === PlayerOrNone.NONE && this.big === PlayerOrNone.NONE;
+        return this.small.isNone() && this.medium.isNone() && this.big.isNone();
     }
+
     public toList(): EncapsulePiece[] {
         const l: EncapsulePiece[] = [];
         if (this.small.isPlayer()) l.push(EncapsulePiece.ofSizeAndPlayer(Size.SMALL, this.small));
@@ -65,12 +60,14 @@ export class EncapsuleSpace {
         if (this.big.isPlayer()) l.push(EncapsulePiece.ofSizeAndPlayer(Size.BIG, this.big));
         return l;
     }
+
     public toOrderedPieceNames(): string[] {
         const smallPiece: EncapsulePiece = EncapsulePiece.ofSizeAndPlayer(Size.SMALL, this.small);
         const mediumPiece: EncapsulePiece = EncapsulePiece.ofSizeAndPlayer(Size.MEDIUM, this.medium);
         const bigPiece: EncapsulePiece = EncapsulePiece.ofSizeAndPlayer(Size.BIG, this.big);
         return [smallPiece.toString(), mediumPiece.toString(), bigPiece.toString()];
     }
+
     public getBiggest(): EncapsulePiece {
         if (this.big === Player.ZERO) return EncapsulePiece.BIG_DARK;
         if (this.big === Player.ONE) return EncapsulePiece.BIG_LIGHT;
@@ -80,6 +77,7 @@ export class EncapsuleSpace {
         if (this.small === Player.ONE) return EncapsulePiece.SMALL_LIGHT;
         return EncapsulePiece.NONE;
     }
+
     public tryToSuperposePiece(piece: EncapsulePiece): MGPOptional<EncapsuleSpace> {
         const biggestPresent: Size = this.getBiggest().getSize();
         if (piece === EncapsulePiece.NONE) {
@@ -91,6 +89,7 @@ export class EncapsuleSpace {
             return MGPOptional.empty();
         }
     }
+
     public removeBiggest(): {removedSpace: EncapsuleSpace, removedPiece: EncapsulePiece} {
         const removedPiece: EncapsulePiece = this.getBiggest();
         if (removedPiece === EncapsulePiece.NONE) {
@@ -111,6 +110,7 @@ export class EncapsuleSpace {
         }
         return { removedSpace: removedSpace, removedPiece };
     }
+
     public put(piece: EncapsulePiece): EncapsuleSpace {
         if (piece === EncapsulePiece.NONE) throw new Error('Cannot put NONE on space');
         const piecePlayer: PlayerOrNone = piece.getPlayer();
@@ -119,23 +119,20 @@ export class EncapsuleSpace {
             case Size.BIG:
                 return new EncapsuleSpace(this.small, this.medium, piecePlayer);
             case Size.MEDIUM:
-                assert(this.big === PlayerOrNone.NONE, 'Cannot put a piece on top of a bigger one');
+                Utils.assert(this.big.isNone(), 'Cannot put a piece on top of a bigger one');
                 return new EncapsuleSpace(this.small, piecePlayer, this.big);
             default:
                 Utils.expectToBe(size, Size.SMALL);
-                assert(this.big === PlayerOrNone.NONE, 'Cannot put a piece on top of a bigger one');
-                assert(this.medium === PlayerOrNone.NONE, 'Cannot put a piece on top of a bigger one');
+                Utils.assert(this.big.isNone(), 'Cannot put a piece on top of a bigger one');
+                Utils.assert(this.medium.isNone(), 'Cannot put a piece on top of a bigger one');
                 return new EncapsuleSpace(piecePlayer, this.medium, this.big);
         }
     }
-    public encode(): number {
-        return this.small.value +
-               this.medium.value*3 +
-               this.big.value*9;
-    }
+
     public belongsTo(player: Player): boolean {
         return this.getBiggest().getPlayer() === player;
     }
+
     public toString(): string {
         const pieceNames: string[] = this.toOrderedPieceNames();
         return '(' + pieceNames[0] + ', ' + pieceNames[1] + ', ' + pieceNames[2] + ')';

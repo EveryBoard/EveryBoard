@@ -1,29 +1,19 @@
 import { Coord } from 'src/app/jscaip/Coord';
-import { Direction } from 'src/app/jscaip/Direction';
-import { MoveEncoder } from 'src/app/utils/Encoder';
+import { Ordinal } from 'src/app/jscaip/Ordinal';
 import { Move } from 'src/app/jscaip/Move';
 import { MoveCoord } from 'src/app/jscaip/MoveCoord';
 import { MoveCoordToCoord } from 'src/app/jscaip/MoveCoordToCoord';
-import { ArrayUtils } from 'src/app/utils/ArrayUtils';
-import { MGPFallible } from 'src/app/utils/MGPFallible';
-import { MGPSet } from 'src/app/utils/MGPSet';
-import { CoordSet } from 'src/app/utils/OptimizedSet';
-import { JSONValue, JSONValueWithoutArray, Utils } from 'src/app/utils/utils';
-import { assert } from 'src/app/utils/assert';
+import { Encoder, ArrayUtils, MGPFallible } from '@everyboard/lib';
 import { ConspirateursFailure } from './ConspirateursFailure';
-import { ConspirateursState } from './ConspirateursState';
 import { MoveWithTwoCoords } from 'src/app/jscaip/MoveWithTwoCoords';
+import { CoordSet } from 'src/app/jscaip/CoordSet';
 
 export class ConspirateursMoveDrop extends MoveCoord {
-    public static encoder: MoveEncoder<ConspirateursMoveDrop> =
-        MoveCoord.getFallibleEncoder(ConspirateursMoveDrop.from);
 
-    public static from(coord: Coord): MGPFallible<ConspirateursMoveDrop> {
-        if (coord.isInRange(ConspirateursState.WIDTH, ConspirateursState.HEIGHT)) {
-            return MGPFallible.success(new ConspirateursMoveDrop(coord));
-        } else {
-            return MGPFallible.failure('Move out of board');
-        }
+    public static encoder: Encoder<ConspirateursMoveDrop> = MoveCoord.getEncoder(ConspirateursMoveDrop.of);
+
+    public static of(coord: Coord): ConspirateursMoveDrop {
+        return new ConspirateursMoveDrop(coord);
     }
     private constructor(coord: Coord) {
         super(coord.x, coord.y);
@@ -32,143 +22,112 @@ export class ConspirateursMoveDrop extends MoveCoord {
         return `ConspirateursMoveDrop(${this.coord.toString()})`;
     }
     public override equals(other: ConspirateursMove): boolean {
-        if (other.isDrop()) {
+        if (ConspirateursMove.isDrop(other)) {
             return this.coord.equals(other.coord);
         } else {
             return false;
         }
     }
-    public isDrop(): this is ConspirateursMoveDrop {
-        return true;
-    }
-    public isSimple(): this is ConspirateursMoveSimple {
-        return false;
-    }
-    public isJump(): this is ConspirateursMoveJump {
-        return false;
-    }
 }
 
 export class ConspirateursMoveSimple extends MoveCoordToCoord {
 
-    public static encoder: MoveEncoder<ConspirateursMoveSimple> =
+    public static encoder: Encoder<ConspirateursMoveSimple> =
         MoveWithTwoCoords.getFallibleEncoder(ConspirateursMoveSimple.from);
 
     public static from(start: Coord, end: Coord): MGPFallible<ConspirateursMoveSimple> {
-        if (start.isInRange(ConspirateursState.WIDTH, ConspirateursState.HEIGHT) &&
-            end.isInRange(ConspirateursState.WIDTH, ConspirateursState.HEIGHT)) {
-            if (start.isAlignedWith(end) && start.getDistance(end) === 1) {
-                return MGPFallible.success(new ConspirateursMoveSimple(start, end));
-            } else {
-                return MGPFallible.failure(ConspirateursFailure.SIMPLE_MOVE_SHOULD_BE_OF_ONE_STEP());
-            }
+        if (start.isAlignedWith(end) && start.getLinearDistanceToward(end) === 1) {
+            return MGPFallible.success(new ConspirateursMoveSimple(start, end));
         } else {
-            return MGPFallible.failure('Move out of board');
+            return MGPFallible.failure(ConspirateursFailure.SIMPLE_MOVE_SHOULD_BE_OF_ONE_STEP());
         }
     }
 
     private constructor(start: Coord, end: Coord) {
         super(start, end);
     }
-    public toString(): string {
+    public override toString(): string {
         return `ConspirateursMoveSimple(${this.getStart().toString()} -> ${this.getEnd().toString()})`;
     }
-    public equals(other: ConspirateursMove): boolean {
-        if (other.isSimple()) {
-            if (other === this) return true;
-            if (other.getStart().equals(this.getStart()) === false) return false;
-            if (other.getEnd().equals(this.getEnd()) === false) return false;
-            return true;
+    public override equals(other: ConspirateursMove): boolean {
+        if (ConspirateursMove.isSimple(other)) {
+            return super.equals(other as this);
         } else {
             return false;
         }
     }
-    public isDrop(): this is ConspirateursMoveDrop {
-        return false;
-    }
-    public isSimple(): this is ConspirateursMoveSimple {
-        return true;
-    }
-    public isJump(): this is ConspirateursMoveJump {
-        return false;
-    }
 }
 
 export class ConspirateursMoveJump extends Move {
-    public static encoder: MoveEncoder<ConspirateursMoveJump> = new class extends MoveEncoder<ConspirateursMoveJump> {
-        public encodeMove(move: ConspirateursMoveJump): JSONValueWithoutArray {
-            return {
-                coords: move.coords.map(Coord.encoder.encodeMove),
-            };
-        }
-        public decodeMove(encoded: JSONValue): ConspirateursMoveJump {
-            // eslint-disable-next-line dot-notation
-            assert(Utils.getNonNullable(encoded)['coords'] != null, 'Encoded ConspirateursMoveJump should contain coords');
-            // eslint-disable-next-line dot-notation
-            const coords: number[] = Utils.getNonNullable(encoded)['coords'] as number[];
-            const decoded: Coord[] = coords.map(Coord.encoder.decodeMove);
-            return ConspirateursMoveJump.from(decoded).get();
-        }
-    };
+
+    public static encoder: Encoder<ConspirateursMoveJump> = Encoder.tuple(
+        [Encoder.list<Coord>(Coord.encoder)],
+        (move: ConspirateursMoveJump): [Coord[]] => [ArrayUtils.copy(move.coords)],
+        (fields: [Coord[]]): ConspirateursMoveJump => ConspirateursMoveJump.from(fields[0]).get(),
+    );
+
     public static from(coords: readonly Coord[]): MGPFallible<ConspirateursMoveJump> {
         if (coords.length < 2) {
             return MGPFallible.failure('ConspirateursMoveJump requires at least one jump, so two coords');
         }
-        for (const coord of coords) {
-            if (coord.isNotInRange(ConspirateursState.WIDTH, ConspirateursState.HEIGHT)) {
-                return MGPFallible.failure('Move out of board');
-            }
-        }
         for (let i: number = 1; i < coords.length; i++) {
-            const jumpDirection: MGPFallible<Direction> = coords[i - 1].getDirectionToward(coords[i]);
+            const jumpDirection: MGPFallible<Ordinal> = coords[i - 1].getDirectionToward(coords[i]);
             if (jumpDirection.isFailure()) {
                 return MGPFallible.failure(ConspirateursFailure.INVALID_JUMP());
             }
-            const jumpDistance: number = coords[i-1].getDistance(coords[i]);
+            const jumpDistance: number = coords[i-1].getLinearDistanceToward(coords[i]);
             if (jumpDistance !== 2) {
                 return MGPFallible.failure(ConspirateursFailure.INVALID_JUMP());
             }
         }
-        const uniqueCoords: MGPSet<Coord> = new CoordSet(coords);
+        const uniqueCoords: CoordSet = new CoordSet(coords);
         if (uniqueCoords.size() === coords.length) {
             return MGPFallible.success(new ConspirateursMoveJump(coords));
         } else {
             return MGPFallible.failure(ConspirateursFailure.SAME_LOCATION_VISITED_IN_JUMP());
         }
     }
+
     private constructor(public coords: readonly Coord[]) {
         super();
     }
+
     public addJump(target: Coord): MGPFallible<ConspirateursMoveJump> {
-        const coords: Coord[] = ArrayUtils.copyImmutableArray(this.coords);
+        const coords: Coord[] = ArrayUtils.copy(this.coords);
         coords.push(target);
         return ConspirateursMoveJump.from(coords);
     }
+
     public getStartingCoord(): Coord {
         return this.coords[0];
     }
+
     public getEndingCoord(): Coord {
         return this.coords[this.coords.length-1];
     }
+
     public getLandingCoords(): Coord[] {
         return this.coords.slice(1);
     }
+
     public getJumpedOverCoords(): Coord[] {
         const jumpedOver: Coord[] = [];
         for (let i: number = 1; i < this.coords.length; i++) {
-            const jumpDirection: Direction = this.coords[i-1].getDirectionToward(this.coords[i]).get();
+            const jumpDirection: Ordinal = this.coords[i-1].getDirectionToward(this.coords[i]).get();
             jumpedOver.push(this.coords[i-1].getNext(jumpDirection, 1));
         }
         return jumpedOver;
     }
+
     public toString(): string {
         const jumps: string = this.coords
             .map((coord: Coord) => coord.toString())
             .reduce((coord1: string, coord2: string) => coord1 + ' -> ' + coord2);
         return `ConspirateursMoveJump(${jumps})`;
     }
+
     public equals(other: ConspirateursMove): boolean {
-        if (other.isSimple() || other.isDrop()) {
+        if (ConspirateursMove.isSimple(other) || ConspirateursMove.isDrop(other)) {
             return false;
         } else {
             if (other === this) return true;
@@ -178,22 +137,28 @@ export class ConspirateursMoveJump extends Move {
             return true;
         }
     }
-    public isDrop(): this is ConspirateursMoveDrop {
-        return false;
-    }
-    public isSimple(): this is ConspirateursMoveSimple {
-        return false;
-    }
-    public isJump(): this is ConspirateursMoveJump {
-        return true;
-    }
+
 }
 
 export type ConspirateursMove = ConspirateursMoveDrop | ConspirateursMoveSimple | ConspirateursMoveJump;
 
-export const ConspirateursMoveEncoder: MoveEncoder<ConspirateursMove> =
-    MoveEncoder.disjunction3(ConspirateursMoveDrop.encoder,
-                             ConspirateursMoveSimple.encoder,
-                             ConspirateursMoveJump.encoder,
-                             (value: ConspirateursMove): value is ConspirateursMoveDrop => value.isDrop(),
-                             (value: ConspirateursMove): value is ConspirateursMoveSimple => value.isSimple());
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export namespace ConspirateursMove {
+
+    export function isDrop(move: ConspirateursMove): move is ConspirateursMoveDrop {
+        return move instanceof ConspirateursMoveDrop;
+    }
+
+    export function isSimple(move: ConspirateursMove): move is ConspirateursMoveSimple {
+        return move instanceof ConspirateursMoveSimple;
+    }
+
+    export function isJump(move: ConspirateursMove): move is ConspirateursMoveJump {
+        return move instanceof ConspirateursMoveJump;
+    }
+
+    export const encoder: Encoder<ConspirateursMove> =
+        Encoder.disjunction(
+            [ConspirateursMove.isDrop, ConspirateursMove.isSimple, ConspirateursMove.isJump],
+            [ConspirateursMoveDrop.encoder, ConspirateursMoveSimple.encoder, ConspirateursMoveJump.encoder]);
+}

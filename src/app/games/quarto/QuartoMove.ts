@@ -1,10 +1,11 @@
 import { Coord } from 'src/app/jscaip/Coord';
-import { MoveEncoder } from 'src/app/utils/Encoder';
+import { Encoder } from '@everyboard/lib';
 import { MoveCoord } from '../../jscaip/MoveCoord';
 import { QuartoPiece } from './QuartoPiece';
 
 export class QuartoMove extends MoveCoord {
-    public static encoder: MoveEncoder<QuartoMove> = MoveEncoder.tuple(
+
+    public static encoder: Encoder<QuartoMove> = Encoder.tuple(
         [Coord.encoder, QuartoPiece.encoder],
         (m: QuartoMove): [Coord, QuartoPiece] => [m.coord, m.piece],
         (fields: [Coord, QuartoPiece]): QuartoMove => new QuartoMove(fields[0].x, fields[0].y, fields[1]));

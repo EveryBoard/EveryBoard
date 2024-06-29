@@ -1,19 +1,15 @@
-import { FirebaseError } from '@angular/fire/app';
-import * as FireAuth from '@angular/fire/auth';
+import { FirebaseError } from '@firebase/app';
+import * as FireAuth from '@firebase/auth';
 import { Injectable, OnDestroy } from '@angular/core';
 import { Observable, ReplaySubject, Subscription } from 'rxjs';
 
-import { display, Utils } from 'src/app/utils/utils';
-import { assert } from 'src/app/utils/assert';
-import { MGPValidation } from '../utils/MGPValidation';
-import { MGPFallible } from '../utils/MGPFallible';
+import { MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 import { UserDAO } from '../dao/UserDAO';
 import { User } from '../domain/User';
-import { MGPOptional } from '../utils/MGPOptional';
-import { ErrorLoggerService } from './ErrorLoggerService';
 import { MinimalUser } from '../domain/MinimalUser';
-import { Localized } from '../utils/LocaleUtils';
 import { UserService } from './UserService';
+import { Debug } from '../utils/Debug';
+import { Localized } from '../utils/LocaleUtils';
 
 export class GameActionFailure {
 
@@ -99,9 +95,8 @@ export class AuthUser {
 @Injectable({
     providedIn: 'root',
 })
+@Debug.log
 export class ConnectedUserService implements OnDestroy {
-
-    public static VERBOSE: boolean = false;
 
     private readonly authSubscription: Subscription;
 
@@ -114,30 +109,29 @@ export class ConnectedUserService implements OnDestroy {
     private readonly userRS: ReplaySubject<AuthUser>;
     private readonly userObs: Observable<AuthUser>;
     private userSubscription: Subscription = new Subscription();
+    public readonly auth: FireAuth.Auth;
 
     public constructor(private readonly userDAO: UserDAO,
-                       private readonly userService: UserService,
-                       private readonly auth: FireAuth.Auth)
+                       private readonly userService: UserService)
     {
-        display(ConnectedUserService.VERBOSE, 'ConnectedUserService constructor');
-
+        this.auth = FireAuth.getAuth();
         this.userRS = new ReplaySubject<AuthUser>(1);
         this.userObs = this.userRS.asObservable();
         this.authSubscription =
             new Subscription(FireAuth.onAuthStateChanged(this.auth, async(user: FireAuth.User | null) => {
                 if (user == null) { // user logged out
-                    display(ConnectedUserService.VERBOSE, 'User is not connected');
+                    Debug.display('ConnectedUserService', 'subscription', 'User is not connected');
                     this.userSubscription.unsubscribe();
                     this.userRS.next(AuthUser.NOT_CONNECTED);
                     this.user = MGPOptional.empty();
                 } else { // new user logged in
-                    assert(this.user.isAbsent(), 'ConnectedUserService received a double update for an user, this is unexpected');
+                    Utils.assert(this.user.isAbsent(), 'ConnectedUserService received a double update for an user, this is unexpected');
                     this.userSubscription =
                         this.userDAO.subscribeToChanges(user.uid, (docOpt: MGPOptional<User>) => {
                             if (docOpt.isPresent()) {
                                 const doc: User = docOpt.get();
                                 const username: string | undefined = doc.username;
-                                display(ConnectedUserService.VERBOSE, `User ${username} is connected, and the verified status is ${this.emailVerified(user)}`);
+                                Debug.display('ConnectedUserService', 'subscription', `User ${username} is connected, and the verified status is ${this.emailVerified(user)}`);
                                 const userHasFinalizedVerification: boolean =
                                     this.emailVerified(user) === true && username != null;
                                 if (userHasFinalizedVerification === true && doc.verified === false) {
@@ -167,7 +161,7 @@ export class ConnectedUserService implements OnDestroy {
             await Auth.sendPasswordResetEmail(this.auth, email);
             return MGPValidation.SUCCESS;
         } catch (e) {
-            return MGPValidation.failure(this.mapFirebaseError(e));
+            return this.catchFirebaseError(e);
         }
     }
     /**
@@ -175,7 +169,6 @@ export class ConnectedUserService implements OnDestroy {
      * Returns the firebase user upon success, or a failure otherwise.
      */
     public async doRegister(username: string, email: string, password: string): Promise<MGPFallible<FireAuth.User>> {
-        display(ConnectedUserService.VERBOSE, 'ConnectedUserService.doRegister(' + email + ')');
         if (await this.userService.usernameIsAvailable(username)) {
             return this.registerAfterUsernameCheck(username, email, password);
         } else {
@@ -194,7 +187,16 @@ export class ConnectedUserService implements OnDestroy {
             await this.createUser(user.uid, username);
             return MGPFallible.success(user);
         } catch (e) {
+            return this.catchFirebaseError(e);
+        }
+    }
+
+    private catchFirebaseError<V>(e: unknown): MGPFallible<V> {
+        // Errors have an unknown type. We only want to catch firebase error, and keep throwing the rest.
+        if (e instanceof FirebaseError) {
             return MGPFallible.failure(this.mapFirebaseError(e));
+        } else {
+            throw e;
         }
     }
     public mapFirebaseError(error: FirebaseError): string {
@@ -218,27 +220,26 @@ export class ConnectedUserService implements OnDestroy {
             case 'auth/popup-blocked':
                 return $localize`The authentication popup was blocked. Try again after disabling popup blocking.`;
             default:
-                ErrorLoggerService.logError('ConnectedUserService', 'Unsupported firebase error', { errorCode: error.code, errorMessage: error.message });
+                Utils.logError('ConnectedUserService', 'Unsupported firebase error', { errorCode: error.code, errorMessage: error.message });
                 return error.message;
         }
     }
     public async sendEmailVerification(): Promise<MGPValidation> {
-        display(ConnectedUserService.VERBOSE, 'ConnectedUserService.sendEmailVerification()');
         const user: MGPOptional<FireAuth.User> = MGPOptional.ofNullable(this.auth.currentUser);
         if (user.isPresent()) {
             if (this.emailVerified(user.get())) {
                 // This should not be reachable from a component
-                return ErrorLoggerService.logError('ConnectedUserService', 'Verified users should not ask email verification after being verified');
+                return Utils.logError('ConnectedUserService', 'Verified users should not ask email verification after being verified');
             }
             try {
                 await Auth.sendEmailVerification(user.get());
                 return MGPValidation.SUCCESS;
             } catch (e) {
-                return MGPValidation.failure(this.mapFirebaseError(e));
+                return this.catchFirebaseError(e);
             }
         } else {
             // This should not be reachable from a component
-            return ErrorLoggerService.logError('ConnectedUserService', 'Unlogged users cannot request for email verification');
+            return Utils.logError('ConnectedUserService', 'Unlogged users cannot request for email verification');
         }
     }
     /**
@@ -246,13 +247,12 @@ export class ConnectedUserService implements OnDestroy {
      * either success, or failure with a specific error.
      */
     public async doEmailLogin(email: string, password: string): Promise<MGPValidation> {
-        display(ConnectedUserService.VERBOSE, 'ConnectedUserService.doEmailLogin(' + email + ')');
         try {
             // Login through firebase. If the login is incorrect or fails for some reason, an error is thrown.
             await Auth.signInWithEmailAndPassword(this.auth, email, password);
             return MGPValidation.SUCCESS;
         } catch (e) {
-            return MGPValidation.failure(this.mapFirebaseError(e));
+            return this.catchFirebaseError(e);
         }
     }
     /**
@@ -260,9 +260,9 @@ export class ConnectedUserService implements OnDestroy {
      */
     public async createUser(uid: string, username?: string): Promise<void> {
         if (username == null) {
-            await this.userDAO.set(uid, { verified: false });
+            await this.userDAO.set(uid, { verified: false, currentGame: null });
         } else {
-            await this.userDAO.set(uid, { username, verified: false });
+            await this.userDAO.set(uid, { username, verified: false, currentGame: null });
         }
     }
     public async doGoogleLogin(): Promise<MGPValidation> {
@@ -280,7 +280,7 @@ export class ConnectedUserService implements OnDestroy {
             }
             return MGPFallible.success(user);
         } catch (e) {
-            return MGPFallible.failure(this.mapFirebaseError(e));
+            return this.catchFirebaseError(e);
         }
 
     }
@@ -314,7 +314,7 @@ export class ConnectedUserService implements OnDestroy {
             await this.reloadUser();
             return MGPValidation.SUCCESS;
         } catch (e) {
-            return MGPValidation.failure(this.mapFirebaseError(e));
+            return this.catchFirebaseError(e);
         }
     }
     public async setPicture(url: string): Promise<MGPValidation> {
@@ -323,7 +323,7 @@ export class ConnectedUserService implements OnDestroy {
             await Auth.updateProfile(currentUser, { photoURL: url });
             return MGPValidation.SUCCESS;
         } catch (e) {
-            return MGPValidation.failure(this.mapFirebaseError(e));
+            return this.catchFirebaseError(e);
         }
     }
     public async reloadUser(): Promise<void> {
@@ -332,8 +332,12 @@ export class ConnectedUserService implements OnDestroy {
         await currentUser.reload();
     }
     public sendPresenceToken(): Promise<void> {
-        assert(this.user.isPresent(), 'Should not call sendPresenceToken when not connected');
+        Utils.assert(this.user.isPresent(), 'Should not call sendPresenceToken when not connected');
         return this.userService.updatePresenceToken(this.user.get().id);
+    }
+    public getIdToken(): Promise<string> {
+        const currentUser: FireAuth.User = Utils.getNonNullable(this.auth.currentUser);
+        return currentUser.getIdToken();
     }
     public ngOnDestroy(): void {
         this.userSubscription.unsubscribe();

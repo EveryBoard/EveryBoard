@@ -1,10 +1,9 @@
 /* eslint-disable max-lines-per-function */
 import { DebugElement } from '@angular/core';
 import { fakeAsync, tick } from '@angular/core/testing';
-import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
 import { ErrorLoggerServiceMock } from 'src/app/services/tests/ErrorLoggerServiceMock.spec';
 import { SimpleComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
-import { Utils } from 'src/app/utils/utils';
+import { Utils } from '@everyboard/lib';
 import { CountDownComponent } from './count-down.component';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 
@@ -25,37 +24,37 @@ describe('CountDownComponent', () => {
         it('should throw when setting chrono already started', () => {
             component.setDuration(1250);
             component.start();
-            spyOn(ErrorLoggerService, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
+            spyOn(Utils, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
             const error: string = 'Should not set a chrono that has already been started (undefined)!';
 
             expect(() => component.setDuration(1250)).toThrowError('Assertion failure: ' + error);
 
-            expect(ErrorLoggerService.logError).toHaveBeenCalledOnceWith('Assertion failure', error);
+            expect(Utils.logError).toHaveBeenCalledOnceWith('Assertion failure', error, undefined);
         });
     });
     describe('start', () => {
         it('should throw when starting without having been set', () => {
             const error: string = 'Should not start a chrono that has not been set!';
-            spyOn(ErrorLoggerService, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
+            spyOn(Utils, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
 
             expect(() => component.start()).toThrowError('Assertion failure: ' + error);
 
-            expect(ErrorLoggerService.logError).toHaveBeenCalledOnceWith('Assertion failure', error);
+            expect(Utils.logError).toHaveBeenCalledOnceWith('Assertion failure', error, undefined);
         });
         it('should throw when starting twice', () => {
             component.setDuration(1250);
             component.start();
             const error: string = 'Should not start chrono that has already been started (undefined)';
-            spyOn(ErrorLoggerService, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
+            spyOn(Utils, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
 
             expect(() => component.start()).toThrowError('Assertion failure: ' + error);
 
-            expect(ErrorLoggerService.logError).toHaveBeenCalledOnceWith('Assertion failure', error);
+            expect(Utils.logError).toHaveBeenCalledOnceWith('Assertion failure', error, undefined);
         });
         it('should show remaining time once set', () => {
             component.setDuration(62000);
             testUtils.detectChanges();
-            const element: DebugElement = testUtils.findElement('#remainingTime');
+            const element: DebugElement = testUtils.findElement('.data-remaining-time');
             const timeText: string = element.nativeElement.innerText;
             expect(timeText).toBe('1:02');
         });
@@ -65,11 +64,11 @@ describe('CountDownComponent', () => {
             expect(component.isStarted()).toBeTrue();
             component.stop();
             const error: string = 'Should not start a chrono that has not been set!';
-            spyOn(ErrorLoggerService, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
+            spyOn(Utils, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
 
             expect(() => component.start()).toThrowError('Assertion failure: ' + error);
 
-            expect(ErrorLoggerService.logError).toHaveBeenCalledOnceWith('Assertion failure', error);
+            expect(Utils.logError).toHaveBeenCalledOnceWith('Assertion failure', error, undefined);
         });
     });
     describe('pause', () => {
@@ -78,11 +77,11 @@ describe('CountDownComponent', () => {
             component.start();
             component.pause();
             const error: string = 'Should not pause already paused chrono (undefined)';
-            spyOn(ErrorLoggerService, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
+            spyOn(Utils, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
 
             expect(() => component.pause()).toThrowError('Assertion failure: ' + error);
 
-            expect(ErrorLoggerService.logError).toHaveBeenCalledOnceWith('Assertion failure', error);
+            expect(Utils.logError).toHaveBeenCalledOnceWith('Assertion failure', error, undefined);
         });
         it('should throw when pausing not started chrono', () => {
             function pausingWhenChronoDidNotStart(): void {
@@ -140,11 +139,11 @@ describe('CountDownComponent', () => {
         component.start();
         tick(1000);
         testUtils.detectChanges();
-        let timeText: string = testUtils.findElement('#remainingTime').nativeElement.innerText;
+        let timeText: string = testUtils.findElement('.data-remaining-time').nativeElement.innerText;
         expect(timeText).toBe('0:02');
         tick(1000);
         testUtils.detectChanges();
-        timeText = testUtils.findElement('#remainingTime').nativeElement.innerText;
+        timeText = testUtils.findElement('.data-remaining-time').nativeElement.innerText;
         expect(timeText).toBe('0:01');
         component.stop();
     }));
@@ -152,21 +151,21 @@ describe('CountDownComponent', () => {
         spyOn(component.outOfTimeAction, 'emit').and.callThrough();
         component.setDuration((9 * 60 + 59) * 1000 + 501); // 9 minutes 59 sec 501 ms
         testUtils.detectChanges();
-        let timeText: string = testUtils.findElement('#remainingTime').nativeElement.innerText;
+        let timeText: string = testUtils.findElement('.data-remaining-time').nativeElement.innerText;
         expect(timeText).toBe('9:59');
         component.start();
 
         tick(401); // 9 min 59.501s -> 9 min 59.1 (9:59)
         component.pause();
         testUtils.detectChanges();
-        timeText = testUtils.findElement('#remainingTime').nativeElement.innerText;
+        timeText = testUtils.findElement('.data-remaining-time').nativeElement.innerText;
         expect(timeText).toBe('9:59');
 
         component.resume();
         tick(200); // 9 min 59.1 -> 9 min 58.9 (9:58)
         component.pause();
         testUtils.detectChanges();
-        timeText = testUtils.findElement('#remainingTime').nativeElement.innerText;
+        timeText = testUtils.findElement('.data-remaining-time').nativeElement.innerText;
         expect(timeText).toBe('9:58');
     }));
     it('should emit when timeout reached', fakeAsync(() => {
@@ -187,7 +186,7 @@ describe('CountDownComponent', () => {
 
             // When clicking the add time button
             spyOn(component.addTimeToOpponent, 'emit').and.callThrough();
-            await testUtils.clickElement('#addTimeButton');
+            await testUtils.clickElement('.data-add-time');
 
             // Then the component should have called addTimeToOpponent
             expect(component.addTimeToOpponent.emit).toHaveBeenCalledOnceWith();
@@ -198,7 +197,7 @@ describe('CountDownComponent', () => {
             testUtils.detectChanges();
 
             // Then the component should not have that button
-            testUtils.expectElementNotToExist('#addTimeButton');
+            testUtils.expectElementNotToExist('.data-add-time');
         }));
     });
     describe('Style depending of remaining time', () => {

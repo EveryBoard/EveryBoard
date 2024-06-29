@@ -1,8 +1,11 @@
 import { TutorialStep } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { PlayerOrNone } from 'src/app/jscaip/Player';
-import { MGPValidation } from 'src/app/utils/MGPValidation';
+import { MGPOptional, MGPValidation } from '@everyboard/lib';
 import { PentagoMove } from './PentagoMove';
 import { PentagoState } from './PentagoState';
+import { PentagoRules } from './PentagoRules';
+import { TutorialStepMessage } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
+import { Coord } from 'src/app/jscaip/Coord';
 
 const _: PlayerOrNone = PlayerOrNone.NONE;
 const O: PlayerOrNone = PlayerOrNone.ZERO;
@@ -14,10 +17,10 @@ export class PentagoTutorial {
         TutorialStep.informational(
             $localize`Initial board`,
             $localize`The initial Pentago board is made of 6x6 spaces, subdivided in 4 quadrants, which can each rotate.`,
-            PentagoState.getInitialState(),
+            PentagoRules.get().getInitialState(),
         ),
         TutorialStep.informational(
-            $localize`Goal of the game`,
+            TutorialStepMessage.OBJECT_OF_THE_GAME(),
             $localize`The goal at Pentago is to align 5 of your pieces. In the following board, Dark wins.`,
             new PentagoState([
                 [O, _, _, O, X, _],
@@ -30,10 +33,7 @@ export class PentagoTutorial {
         ).withPreviousMove(PentagoMove.withRotation(0, 0, 0, false)),
         TutorialStep.fromPredicate(
             $localize`Simple move`,
-            $localize`At their turn, players put a piece on the board and possibly rotate one quadrant.
-        As long as there are neutral quadrants, i.e., quadrants that would not change after being rotated, a player may skip rotating a quadrant.
-        To do this, you have to click on the crossed circle that appears at the center of the board when it is possible.<br/><br/>
-        You're playing dark, do a simple move.`,
+            $localize`At their turn, players put a piece on the board and possibly rotate one quadrant. As long as there are neutral quadrants, i.e., quadrants that would not change after being rotated, a player may skip rotating a quadrant. To do this, you have to click on the crossed circle that appears at the center of the board when it is possible.<br/><br/>You're playing Dark, do a simple move.`,
             new PentagoState([
                 [_, _, _, _, _, _],
                 [_, O, _, _, X, _],
@@ -50,8 +50,8 @@ export class PentagoTutorial {
                     return MGPValidation.SUCCESS;
                 }
             },
-            $localize`Congratulations!`,
-        ),
+            TutorialStepMessage.CONGRATULATIONS(),
+        ).withPreviousMove(PentagoMove.of(new Coord(1, 4), MGPOptional.empty(), false)),
         TutorialStep.fromPredicate(
             $localize`Move with rotation`,
             $localize`After putting a piece, arrows will appear on non-neutral quadrants.<br/><br/>
@@ -73,6 +73,6 @@ export class PentagoTutorial {
                 }
             },
             $localize`Congratulations! Note that if all quadrants are neutral after you have put your piece, there will be no rotation.`,
-        ),
+        ).withPreviousMove(PentagoMove.of(new Coord(1, 4), MGPOptional.empty(), false)),
     ];
 }

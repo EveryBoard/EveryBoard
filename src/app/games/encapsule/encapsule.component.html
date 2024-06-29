@@ -1,13 +1,13 @@
 <svg xmlns="http://www.w3.org/2000/svg"
      width="100%" height="100%"
-     [attr.viewBox]="UPLEFT + ' ' + UPLEFT + ' ' + WIDTH + ' ' + WIDTH"
+     [attr.viewBox]="getViewBox().toSVGString()"
      preserveAspectRatio="xMidYMid meet">
     <g #remainingPieces
        *ngFor="let player of Player.PLAYERS">
         <g *ngFor="let piece of getRemainingPieces(player); index as pieceIdx">
-            <circle id="piece_{{ player.value }}_{{ piece.toString() }}_{{ pieceIdx }}"
-                    (click)="onPieceClick(player.value, piece, pieceIdx)"
-                    [attr.transform]="'rotate(' + ((this.role.value + player.value) * 180) + ' ' + CENTER + ' ' + CENTER + ')'"
+            <circle id="piece-{{ player.toString() }}-{{ piece.toString() }}-{{ pieceIdx }}"
+                    (click)="onPieceClick(player, piece, pieceIdx)"
+                    [attr.transform]="'rotate(' + ((this.getPointOfView().getValue() + player.getValue()) * 180) + ' ' + CENTER + ' ' + CENTER + ')'"
                     [attr.r]="getPieceRadius(piece)"
                     [attr.cx]="getRemainingPieceCenterCoord(player, pieceIdx).x"
                     [attr.cy]="getRemainingPieceCenterCoord(player, pieceIdx).y"
@@ -20,10 +20,10 @@
     <g #boardDiv>
         <g *ngFor="let line of board; index as y">
             <g *ngFor="let spaceContent of line; index as x">
-                <rect id="click_{{ x }}_{{ y }}"
+                <rect id="click-{{ x }}-{{ y }}"
                       (click)="onBoardClick(x, y)"
-                      [attr.x]="(SPACE_SIZE * x) + STROKE_WIDTH"
-                      [attr.y]="(SPACE_SIZE * y) + STROKE_WIDTH"
+                      [attr.x]="SPACE_SIZE * x"
+                      [attr.y]="SPACE_SIZE * y"
                       [attr.width]="SPACE_SIZE"
                       [attr.height]="SPACE_SIZE"
                       [ngClass]="getRectClasses(x, y)"
@@ -40,14 +40,22 @@
             </g>
         </g>
         <rect *ngIf="chosenCoord.isPresent()"
-              id="chosenCoord_{{ chosenCoord.get().x }}_{{ chosenCoord.get().y }}"
+              id="chosen-{{ chosenCoord.get().x }}-{{ chosenCoord.get().y }}"
               (click)="onBoardClick(chosenCoord.get().x, chosenCoord.get().y)"
-              [attr.x]="(SPACE_SIZE * chosenCoord.get().x) + STROKE_WIDTH"
-              [attr.y]="(SPACE_SIZE * chosenCoord.get().y) + STROKE_WIDTH"
+              [attr.x]="SPACE_SIZE * chosenCoord.get().x"
+              [attr.y]="SPACE_SIZE * chosenCoord.get().y"
               [attr.width]="SPACE_SIZE"
               [attr.height]="SPACE_SIZE"
               class="base no-fill selected-stroke"
               pointer-events="fill"
+        />
+        <rect *ngFor="let coord of victoryCoords"
+              id="victory-{{ coord.x }}-{{ coord.y }}"
+              class="base no-fill victory-stroke mid-stroke"
+              [attr.x]="SPACE_SIZE * coord.x"
+              [attr.y]="SPACE_SIZE * coord.y"
+              [attr.width]="SPACE_SIZE"
+              [attr.height]="SPACE_SIZE"
         />
     </g>
 </svg>

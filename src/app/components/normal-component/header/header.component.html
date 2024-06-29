@@ -30,22 +30,22 @@
             <div class="navbar-item has-dropdown is-hoverable">
                 <a id="playOffline" class="navbar-link" i18n>Play offline</a>
                 <div class="navbar-dropdown">
-                    <a id="playLocally"  class="navbar-item" [routerLink]="['/local']" i18n>Create a game</a>
+                    <a id="playLocally" class="navbar-item" [routerLink]="['/local']" i18n>Create a game</a>
                     <a id="tutorial" class="navbar-item" [routerLink]="['/tutorial']" i18n>Learn the rules</a>
                 </div>
             </div>
         </div>
 
         <div class="navbar-end">
-            <a *ngIf="observedPart.isPresent()"
-               id="observedPartLink"
+            <a *ngIf="currentGame.isPresent()"
+               id="currentGameLink"
                class="navbar-item"
                (click)="navigateToPart()">
-                <ng-container *ngIf="observedPart.get().role === 'Observer' || observedPart.get().role === 'Candidate' else activeUser" i18n>{{ observedPart.get().typeGame }} by {{ observedPart.get().opponent?.name }}</ng-container>
+                <ng-container *ngIf="currentGame.get().role === 'Observer' || currentGame.get().role === 'Candidate' else activeUser" i18n>{{ getCurrentGameName() }} by {{ currentGame.get().opponent?.name }}</ng-container>
                 <ng-template #activeUser>
-                    <ng-container *ngIf="observedPart.get().opponent else waitingForOpponent" i18n>{{ observedPart.get().typeGame }} against {{ observedPart.get().opponent?.name }}</ng-container>
+                    <ng-container *ngIf="currentGame.get().opponent else waitingForOpponent" i18n>{{ getCurrentGameName() }} against {{ currentGame.get().opponent?.name }}</ng-container>
                     <ng-template #waitingForOpponent>
-                        <ng-container i18n>{{ observedPart.get().typeGame }} (waiting for opponent)</ng-container>
+                        <ng-container i18n>{{ getCurrentGameName() }} (waiting for opponent)</ng-container>
                     </ng-template>
                 </ng-template>
             </a>

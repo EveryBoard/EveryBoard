@@ -1,8 +1,7 @@
 /* eslint-disable max-lines-per-function */
 import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { Router } from '@angular/router';
-import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
-import { MGPValidation } from 'src/app/utils/MGPValidation';
+import { MGPValidation } from '@everyboard/lib';
 import { expectValidRouting, SimpleComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { OnlineGameCreationComponent } from '../online-game-creation/online-game-creation.component';
 import { OnlineGameSelectionComponent } from './online-game-selection.component';
@@ -23,7 +22,7 @@ describe('OnlineGameSelectionComponent', () => {
 
         // When clicking on 'play'
         await testUtils.clickElement('#launchGame');
-        tick();
+        tick(0);
 
         // Then the user is redirected to the game
         expectValidRouting(router, ['/play', 'whateverGame'], OnlineGameCreationComponent);
@@ -34,17 +33,15 @@ describe('OnlineGameSelectionComponent', () => {
         testUtils.getComponent().pickGame('whateverGame');
         const router: Router = TestBed.inject(Router);
         spyOn(router, 'navigate').and.callThrough();
-        const messageDisplayer: MessageDisplayer = TestBed.inject(MessageDisplayer);
-        spyOn(messageDisplayer, 'criticalMessage').and.callFake((m: string) => null);
         const reason: string = 'some refusal reason from the service';
-        spyOn(component.observedPartService, 'canUserCreate').and.returnValue(MGPValidation.failure(reason));
+        spyOn(component.currentGameService, 'canUserCreate').and.returnValue(MGPValidation.failure(reason));
 
         // When clicking on 'play'
-        await testUtils.clickElement('#launchGame');
-        tick();
-
         // Then refusal should be toasted and router not called
+        await testUtils.expectToDisplayCriticalMessage(reason, async() => {
+            await testUtils.clickElement('#launchGame');
+        });
+        tick(0);
         expect(router.navigate).not.toHaveBeenCalled();
-        expect(messageDisplayer.criticalMessage).toHaveBeenCalledOnceWith(reason);
     }));
 });

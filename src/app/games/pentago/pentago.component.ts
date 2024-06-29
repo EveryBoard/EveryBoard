@@ -1,22 +1,22 @@
-import { Component } from '@angular/core';
-import { RectangularGameComponent }
-    from 'src/app/components/game-components/rectangular-game-component/RectangularGameComponent';
+import { ChangeDetectorRef, Component } from '@angular/core';
+import { RectangularGameComponent } from 'src/app/components/game-components/rectangular-game-component/RectangularGameComponent';
 import { Coord } from 'src/app/jscaip/Coord';
 import { PlayerOrNone } from 'src/app/jscaip/Player';
-import { MGPValidation } from 'src/app/utils/MGPValidation';
-import { PentagoMinimax } from './PentagoMinimax';
+import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 import { PentagoMove } from './PentagoMove';
 import { PentagoRules } from './PentagoRules';
 import { PentagoState } from './PentagoState';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
-import { PentagoTutorial } from './PentagoTutorial';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { Utils } from 'src/app/utils/utils';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
+import { MCTS } from 'src/app/jscaip/AI/MCTS';
+import { PentagoMoveGenerator } from './PentagoMoveGenerator';
+import { ViewBox } from 'src/app/components/game-components/GameComponentUtils';
+import { PentagoDummyMinimax } from './PentagoDummyMinimax';
 
 interface ArrowInfo {
     path: string;
+    coord: Coord;
     blockIndex: number;
     clockwise: boolean;
 }
@@ -33,7 +33,9 @@ export class PentagoComponent extends RectangularGameComponent<PentagoRules,
 {
     public readonly BLOCK_WIDTH: number;
     public readonly BLOCK_SEPARATION: number;
+    public readonly PIECE_SEPARATION: number;
     public readonly DIAGONAL_BAR_OFFSET: number;
+    public readonly ARROW_WIDTH: number;
 
     public arrows: ArrowInfo[] = [];
     public victoryCoords: Coord[] = [];
@@ -46,29 +48,47 @@ export class PentagoComponent extends RectangularGameComponent<PentagoRules,
 
     public ARROWS: ArrowInfo[];
 
-    public constructor(messageDisplayer: MessageDisplayer) {
-        super(messageDisplayer);
-        this.rules = PentagoRules.get();
-        this.node = this.rules.getInitialNode();
-        this.availableMinimaxes = [
-            new PentagoMinimax(this.rules, 'PentagoMinimax'),
+    public constructor(messageDisplayer: MessageDisplayer, cdr: ChangeDetectorRef) {
+        super(messageDisplayer, cdr);
+        this.setRulesAndNode('Pentago');
+        this.availableAIs = [
+            new PentagoDummyMinimax(),
+            new MCTS($localize`MCTS`, new PentagoMoveGenerator(), this.rules),
         ];
         this.encoder = PentagoMove.encoder;
-        this.tutorial = new PentagoTutorial().tutorial;
-        this.BLOCK_WIDTH = (3 * this.SPACE_SIZE) + (2 * this.STROKE_WIDTH);
-        this.BLOCK_SEPARATION = (this.BLOCK_WIDTH + 2 * this.STROKE_WIDTH);
+        this.PIECE_SEPARATION = 4 * this.STROKE_WIDTH;
+        const blockPadding: number = this.STROKE_WIDTH;
+        this.BLOCK_WIDTH = (2 * blockPadding) + (3 * this.SPACE_SIZE) + (2 * this.PIECE_SEPARATION);
+        this.BLOCK_SEPARATION = 2 * this.STROKE_WIDTH;
         this.DIAGONAL_BAR_OFFSET = Math.cos(Math.PI / 4) * 0.75 * this.SPACE_SIZE;
+        this.ARROW_WIDTH = this.SPACE_SIZE + this.PIECE_SEPARATION;
         this.ARROWS = this.generateArrowsCoord();
-        this.updateBoard();
     }
-    public updateBoard(): void {
-        this.board = this.getState().getCopiedBoard();
+
+    public override getViewBox(): ViewBox {
+        const stroke: number = 2 * this.STROKE_WIDTH + 75;
+        return new ViewBox(
+            0,
+            0,
+            2 * this.BLOCK_WIDTH + this.PIECE_SEPARATION,
+            2 * this.BLOCK_WIDTH + this.PIECE_SEPARATION,
+        ).expand(stroke + 8, stroke -8, stroke + 8, stroke - 8);
+    }
+
+    public getPieceTranslate(coord: Coord): string {
+        let xTranslate: number = (this.SPACE_SIZE + this.PIECE_SEPARATION) * coord.x;
+        let yTranslate: number = (this.SPACE_SIZE + this.PIECE_SEPARATION) * coord.y;
+        xTranslate += this.STROKE_WIDTH;
+        yTranslate += this.STROKE_WIDTH;
+        return 'translate(' + xTranslate + ', ' + yTranslate + ')';
+    }
+
+    public async updateBoard(_triggerAnimation: boolean): Promise<void> {
+        this.state = this.getState();
         this.victoryCoords = this.rules.getVictoryCoords(this.getState());
-        this.lastDrop = MGPOptional.empty();
-        this.lastRotation = MGPOptional.empty();
     }
-    public override showLastMove(move: PentagoMove): void {
-        this.cancelMoveAttempt();
+
+    public override async showLastMove(move: PentagoMove): Promise<void> {
         this.movedBlock = move.blockTurned;
         const localCoord: Coord = new Coord(move.coord.x % 3 - 1, move.coord.y % 3 - 1);
         if (move.blockTurned.isPresent()) {
@@ -79,6 +99,7 @@ export class PentagoComponent extends RectangularGameComponent<PentagoRules,
         }
         this.lastDrop = MGPOptional.of(move.coord);
     }
+
     private showLastRotation(lastMove: PentagoMove): void {
         if (lastMove.blockTurned.isPresent()) {
             const blockIndex: number = lastMove.blockTurned.get();
@@ -89,6 +110,7 @@ export class PentagoComponent extends RectangularGameComponent<PentagoRules,
             this.lastRotation = MGPOptional.of(lastArrow);
         }
     }
+
     private showLastDrop(lastMove: PentagoMove, localCoord: Coord): void {
         // This half will calculate the new coordinate of last turn dropped coord
         // (which is encoded in its pre-rotation coord)
@@ -112,74 +134,77 @@ export class PentagoComponent extends RectangularGameComponent<PentagoRules,
         postRotation = postRotation.getNext(turnedBlockCenterCoord, 1);
         this.lastDrop = MGPOptional.of(postRotation);
     }
+
     private coordBelongToBlock(lastMove: PentagoMove): boolean {
         const lastMoveBlockY: number = lastMove.coord.y < 3 ? 0 : 1;
         const lastMoveBlockX: number = lastMove.coord.x < 3 ? 0 : 1;
         const lastMoveBlockIndex: number = lastMoveBlockY * 2 + lastMoveBlockX;
         return lastMove.blockTurned.equalsValue(lastMoveBlockIndex);
     }
-    public hidePreviousMove(): void {
+
+    public override hideLastMove(): void {
         this.lastDrop = MGPOptional.empty();
         this.movedBlock = MGPOptional.empty();
         this.lastRotation = MGPOptional.empty();
         this.victoryCoords = [];
     }
+
     private generateArrowsCoord(): ArrowInfo[] {
-        const B2: number = 2 * this.BLOCK_SEPARATION;
-        const z0: number = 0;
-        const C2: number = this.SPACE_SIZE;
-        const D1: number = B2 - C2;
+        const B2: number = 2 * this.BLOCK_WIDTH + this.PIECE_SEPARATION;
+        const z0: number = 0.5 * this.PIECE_SEPARATION;
+        const C2: number = this.ARROW_WIDTH;
+        const D1: number = B2 - this.SPACE_SIZE + this.PIECE_SEPARATION;
         const C4: number = 2 * C2;
         const C1: number = 0.5 * this.SPACE_SIZE;
-        const path0: string = 'M ' + C1 + ' ' + z0 + ' q  ' + C2 + ' -' + C2 + '  ' + C4 + '  ' + z0;
-        const path1: string = 'M ' + z0 + ' ' + C1 + ' q -' + C2 + '  ' + C2 + '  ' + z0 + '  ' + C4;
-        const path2: string = 'M ' + B2 + ' ' + C1 + ' q  ' + C2 + '  ' + C2 + '  ' + z0 + '  ' + C4;
-        const path3: string = 'M ' + D1 + ' ' + z0 + ' q -' + C2 + ' -' + C2 + ' -' + C4 + '  ' + z0;
-        const path4: string = 'M ' + z0 + ' ' + D1 + ' q -' + C2 + ' -' + C2 + '  ' + z0 + ' -' + C4;
-        const path5: string = 'M ' + C1 + ' ' + B2 + ' q  ' + C2 + '  ' + C2 + '  ' + C4 + '  ' + z0;
-        const path6: string = 'M ' + D1 + ' ' + B2 + ' q -' + C2 + '  ' + C2 + ' -' + C4 + '  ' + z0;
-        const path7: string = 'M ' + B2 + ' ' + D1 + ' q  ' + C2 + ' -' + C2 + '  ' + z0 + ' -' + C4;
+        const path0: string = 'M  ' + C1 + ' -' + z0 + ' q  ' + C2 + ' -' + C2 + '  ' + C4 + ' -' + z0;
+        const path1: string = 'M -' + z0 + '  ' + C1 + ' q -' + C2 + '  ' + C2 + ' -' + z0 + '  ' + C4;
+        const path2: string = 'M  ' + B2 + '  ' + C1 + ' q  ' + C2 + '  ' + C2 + '  ' + z0 + '  ' + C4;
+        const path3: string = 'M  ' + D1 + ' -' + z0 + ' q -' + C2 + ' -' + C2 + ' -' + C4 + ' -' + z0;
+        const path4: string = 'M -' + z0 + '  ' + D1 + ' q -' + C2 + ' -' + C2 + ' -' + z0 + ' -' + C4;
+        const path5: string = 'M  ' + C1 + '  ' + B2 + ' q  ' + C2 + '  ' + C2 + '  ' + C4 + '  ' + z0;
+        const path6: string = 'M  ' + D1 + '  ' + B2 + ' q -' + C2 + '  ' + C2 + ' -' + C4 + '  ' + z0;
+        const path7: string = 'M  ' + B2 + '  ' + D1 + ' q  ' + C2 + ' -' + C2 + '  ' + z0 + ' -' + C4;
         return [
-            { path: path0, blockIndex: 0, clockwise: true },
-            { path: path1, blockIndex: 0, clockwise: false },
-            { path: path2, blockIndex: 1, clockwise: true },
-            { path: path3, blockIndex: 1, clockwise: false },
-            { path: path4, blockIndex: 2, clockwise: true },
-            { path: path5, blockIndex: 2, clockwise: false },
-            { path: path6, blockIndex: 3, clockwise: true },
-            { path: path7, blockIndex: 3, clockwise: false },
+            { path: path0, coord: new Coord(+C1, +z0), blockIndex: 0, clockwise: true },
+            { path: path1, coord: new Coord(-z0, +C1), blockIndex: 0, clockwise: false },
+            { path: path2, coord: new Coord(+B2, +C1), blockIndex: 1, clockwise: true },
+            { path: path3, coord: new Coord(+D1, -z0), blockIndex: 1, clockwise: false },
+            { path: path4, coord: new Coord(-z0, +D1), blockIndex: 2, clockwise: true },
+            { path: path5, coord: new Coord(+C1, +B2), blockIndex: 2, clockwise: false },
+            { path: path6, coord: new Coord(+D1, +B2), blockIndex: 3, clockwise: true },
+            { path: path7, coord: new Coord(+B2, +D1), blockIndex: 3, clockwise: false },
         ];
     }
+
     public override cancelMoveAttempt(): void {
         this.arrows = [];
         this.currentDrop = MGPOptional.empty();
         this.canSkipRotation = false;
     }
-    public async onClick(x: number, y: number): Promise<MGPValidation> {
-        const clickValidity: MGPValidation = this.canUserPlay('#click_' + x + '_' + y);
+
+    public async onClick(coord: Coord): Promise<MGPValidation> {
+        const x: number = coord.x;
+        const y: number = coord.y;
+        const clickValidity: MGPValidation = await this.canUserPlay('#click-' + x + '-' + y);
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }
-        this.hidePreviousMove();
-        if (this.board[y][x].isPlayer()) {
+        if (this.state.board[y][x].isPlayer()) {
             return this.cancelMove(RulesFailure.MUST_LAND_ON_EMPTY_SPACE());
         }
         const drop: PentagoMove = PentagoMove.rotationless(x, y);
         const state: PentagoState = this.getState();
         const postDropState: PentagoState = state.applyLegalDrop(drop);
         if (postDropState.neutralBlocks.length === 4) {
-            return this.chooseMove(drop, state);
+            return this.chooseMove(drop);
         }
         const gameStatus: GameStatus = this.rules.getGameStatus(this.node);
         this.canSkipRotation = postDropState.neutralBlocks.length > 0 && gameStatus.isEndGame === false;
-        this.currentDrop = MGPOptional.of(new Coord(x, y));
+        this.currentDrop = MGPOptional.of(coord);
         this.displayArrows(postDropState.neutralBlocks);
         return MGPValidation.SUCCESS;
     }
-    public getCenter(xOrY: number): number {
-        const block: number = xOrY < 3 ? 0 : this.BLOCK_SEPARATION;
-        return block + (2 * this.STROKE_WIDTH) + (((xOrY % 3) + 0.5) * this.SPACE_SIZE);
-    }
+
     public displayArrows(neutralBlocks: number[]): void {
         this.arrows = [];
         for (let blockIndex: number = 0; blockIndex < 4; blockIndex++) {
@@ -191,6 +216,7 @@ export class PentagoComponent extends RectangularGameComponent<PentagoRules,
             }
         }
     }
+
     public getBlockClasses(x: number, y: number): string[] {
         const blockIndex: number = x + 2 * y;
         if (this.movedBlock.equalsValue(blockIndex)) {
@@ -198,33 +224,44 @@ export class PentagoComponent extends RectangularGameComponent<PentagoRules,
         }
         return [];
     }
-    public getSquareClasses(x: number, y: number): string[] {
+
+    public getSquareClasses(coord: Coord): string[] {
+        const x: number = coord.x;
+        const y: number = coord.y;
         const classes: string[] = [];
-        const player: string = this.getPlayerClass(this.board[y][x]);
+        const player: string = this.getPlayerClass(this.state.board[y][x]);
         classes.push(player);
-        if (this.lastDrop.equalsValue(new Coord(x, y))) {
+        if (this.lastDrop.equalsValue(coord)) {
             classes.push('last-move-stroke');
         }
         return classes;
     }
+
     public async rotate(arrow: ArrowInfo): Promise<MGPValidation> {
         const clockwise: string = arrow.clockwise ? 'clockwise' : 'counterclockwise';
-        const clickValidity: MGPValidation = this.canUserPlay('#rotate_' + arrow.blockIndex + '_' + clockwise);
+        const clickValidity: MGPValidation = await this.canUserPlay('#rotate-' + arrow.blockIndex + '-' + clockwise);
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }
         const currentDrop: Coord = this.currentDrop.get();
         const move: PentagoMove =
             PentagoMove.withRotation(currentDrop.x, currentDrop.y, arrow.blockIndex, arrow.clockwise);
-        return this.chooseMove(move, this.getState());
+        return this.chooseMove(move);
     }
+
     public async skipRotation(): Promise<MGPValidation> {
-        const clickValidity: MGPValidation = this.canUserPlay('#skipRotation');
+        const clickValidity: MGPValidation = await this.canUserPlay('#skip-rotation');
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }
         const currentDrop: Coord = this.currentDrop.get();
         const drop: PentagoMove = PentagoMove.rotationless(currentDrop.x, currentDrop.y);
-        return this.chooseMove(drop, this.getState());
+        return this.chooseMove(drop);
     }
+
+    public getSkipRotationCircleTranslate(): string {
+        const translate: number = this.BLOCK_WIDTH + (this.PIECE_SEPARATION / 2) - this.STROKE_WIDTH;
+        return `translate(${ translate } ${ translate })`;
+    }
+
 }

@@ -1,21 +1,19 @@
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { Coord } from 'src/app/jscaip/Coord';
 import { DvonnMove } from 'src/app/games/dvonn/DvonnMove';
 import { DvonnState } from 'src/app/games/dvonn/DvonnState';
 import { DvonnRules } from 'src/app/games/dvonn/DvonnRules';
-import { DvonnMinimax } from 'src/app/games/dvonn/DvonnMinimax';
 import { DvonnPieceStack } from 'src/app/games/dvonn/DvonnPieceStack';
-import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { HexaLayout } from 'src/app/jscaip/HexaLayout';
 import { PointyHexaOrientation } from 'src/app/jscaip/HexaOrientation';
 import { HexagonalGameComponent }
     from 'src/app/components/game-components/game-component/HexagonalGameComponent';
-import { MaxStacksDvonnMinimax } from './MaxStacksDvonnMinimax';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
-import { DvonnTutorial } from './DvonnTutorial';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { assert } from 'src/app/utils/assert';
-import { MGPFallible } from 'src/app/utils/MGPFallible';
+import { MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
+import { MCTS } from 'src/app/jscaip/AI/MCTS';
+import { DvonnMoveGenerator } from './DvonnMoveGenerator';
+import { DvonnMaxStacksMinimax } from './DvonnMaxStacksMinimax';
+import { DvonnScoreMinimax } from './DvonnScoreMinimax';
 
 @Component({
     selector: 'app-dvonn',
@@ -27,69 +25,71 @@ export class DvonnComponent extends HexagonalGameComponent<DvonnRules, DvonnMove
 
     public lastMove: MGPOptional<DvonnMove> = MGPOptional.empty();
     public chosen: MGPOptional<Coord> = MGPOptional.empty();
-    public disconnecteds: { coord: Coord, spaceContent: DvonnPieceStack }[] = [];
-    public state: DvonnState;
+    public disconnectedSpaces: { coord: Coord, spaceContent: DvonnPieceStack }[] = [];
 
-    public constructor(messageDisplayer: MessageDisplayer) {
-        super(messageDisplayer);
-        this.rules = DvonnRules.get();
-        this.node = this.rules.getInitialNode();
-        this.availableMinimaxes = [
-            new DvonnMinimax(this.rules, 'DvonnMinimax'),
-            new MaxStacksDvonnMinimax(this.rules, 'DvonnMinimaxMaximizeStacks'),
+    public constructor(messageDisplayer: MessageDisplayer, cdr: ChangeDetectorRef) {
+        super(messageDisplayer, cdr);
+        this.setRulesAndNode('Dvonn');
+        this.availableAIs = [
+            new DvonnMaxStacksMinimax(),
+            new DvonnScoreMinimax(),
+            new MCTS($localize`MCTS`, new DvonnMoveGenerator(), this.rules),
         ];
         this.encoder = DvonnMove.encoder;
-        this.tutorial = new DvonnTutorial().tutorial;
-        this.SPACE_SIZE = 30;
-        this.canPass = false;
         this.scores = MGPOptional.of(DvonnRules.getScores(this.getState()));
+
+        this.SPACE_SIZE = 30;
         this.hexaLayout = new HexaLayout(this.SPACE_SIZE * 1.50,
                                          new Coord(-this.SPACE_SIZE, this.SPACE_SIZE * 2),
                                          PointyHexaOrientation.INSTANCE);
         this.state = this.getState();
         this.hexaBoard = this.getState().board;
     }
-    public hideLastMove(): void {
+
+    public override hideLastMove(): void {
         this.lastMove = MGPOptional.empty();
+        this.disconnectedSpaces = [];
     }
-    public updateBoard(): void {
-        this.cancelMoveAttempt();
+
+    public async updateBoard(_triggerAnimation: boolean): Promise<void> {
         this.state = this.getState();
-        this.disconnecteds = [];
-        this.hideLastMove();
         this.canPass = this.rules.canOnlyPass(this.state);
         this.scores = MGPOptional.of(DvonnRules.getScores(this.state));
     }
-    public override showLastMove(move: DvonnMove): void {
+
+    public override async showLastMove(move: DvonnMove): Promise<void> {
         this.lastMove = MGPOptional.of(move);
         const previousState: DvonnState = this.getPreviousState();
         const state: DvonnState = this.getState();
-        for (let y: number = 0; y < state.board.length; y++) {
+        for (let y: number = 0; y < state.getHeight(); y++) {
             for (let x: number = 0; x < state.board[y].length; x++) {
                 const coord: Coord = new Coord(x, y);
                 if (state.isOnBoard(coord) === true &&
-                    coord.equals(this.lastMove.get().getStart()) === false) {
+                    coord.equals(this.lastMove.get().getStart()) === false)
+                {
                     const stack: DvonnPieceStack = state.getPieceAt(coord);
                     const previousStack: DvonnPieceStack = previousState.getPieceAt(coord);
-                    if (stack.isEmpty() && !previousStack.isEmpty()) {
-                        const coord: Coord = new Coord(x, y);
+                    if (stack.isEmpty() && previousStack.hasPieces()) {
                         const disconnected: { coord: Coord, spaceContent: DvonnPieceStack } =
                             { coord, spaceContent: previousStack };
-                        this.disconnecteds.push(disconnected);
+                        this.disconnectedSpaces.push(disconnected);
                     }
                 }
             }
         }
     }
+
     public override cancelMoveAttempt(): void {
         this.chosen = MGPOptional.empty();
     }
+
     public override async pass(): Promise<MGPValidation> {
-        assert(this.canPass, 'DvonnComponent: pass() can only be called if canPass is true');
-        return await this.chooseMove(DvonnMove.PASS, this.getState());
+        Utils.assert(this.canPass, 'DvonnComponent: pass() can only be called if canPass is true');
+        return await this.chooseMove(DvonnMove.PASS);
     }
+
     public async onClick(x: number, y: number): Promise<MGPValidation> {
-        const clickValidity: MGPValidation = this.canUserPlay('#click_' + x + '_' + y);
+        const clickValidity: MGPValidation = await this.canUserPlay('#click_' + x + '_' + y);
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }
@@ -97,13 +97,13 @@ export class DvonnComponent extends HexagonalGameComponent<DvonnRules, DvonnMove
             return this.choosePiece(x, y);
         } else if (this.chosen.equalsValue(new Coord(x, y))) {
             // Deselects the piece
-            this.cancelMoveAttempt();
-            return MGPValidation.SUCCESS;
+            return this.cancelMove();
         } else {
             return await this.chooseDestination(x, y);
         }
     }
-    public choosePiece(x: number, y: number): MGPValidation {
+
+    public async choosePiece(x: number, y: number): Promise<MGPValidation> {
         const coord: Coord = new Coord(x, y);
         const legal: MGPValidation = this.rules.isMovablePiece(this.getState(), coord);
         if (legal.isSuccess()) {
@@ -113,6 +113,7 @@ export class DvonnComponent extends HexagonalGameComponent<DvonnRules, DvonnMove
             return this.cancelMove(legal.getReason());
         }
     }
+
     private async chooseDestination(x: number, y: number): Promise<MGPValidation> {
         const state: DvonnState = this.getState();
         const chosenPiece: Coord = this.chosen.get();
@@ -127,14 +128,15 @@ export class DvonnComponent extends HexagonalGameComponent<DvonnRules, DvonnMove
             }
         } else {
             // The only way to know whether we can select the other piece is to check the move legality
-            const legality: MGPValidation = this.rules.isLegal(move.get(), state);
+            const legality: MGPValidation = this.rules.isLegal(move.get(), state, this.config);
             if (legality.isFailure() && this.rules.isMovablePiece(state, chosenDestination).isSuccess()) {
                 return this.choosePiece(x, y);
             } else {
-                return this.chooseMove(move.get(), state);
+                return this.chooseMove(move.get());
             }
         }
     }
+
     public getPieceClasses(stack: DvonnPieceStack): string[] {
         if (stack.containsSource() && stack.getSize() === 1) {
             return ['nonplayer-fill', 'dashed-stroke'];
@@ -145,4 +147,5 @@ export class DvonnComponent extends HexagonalGameComponent<DvonnRules, DvonnMove
         }
         return [playerColor];
     }
+
 }

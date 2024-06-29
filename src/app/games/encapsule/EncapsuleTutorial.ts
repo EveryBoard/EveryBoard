@@ -3,8 +3,10 @@ import { EncapsulePiece } from 'src/app/games/encapsule/EncapsulePiece';
 import { EncapsuleSpace, EncapsuleState } from 'src/app/games/encapsule/EncapsuleState';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { MGPValidation } from 'src/app/utils/MGPValidation';
+import { MGPValidation } from '@everyboard/lib';
 import { Tutorial, TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
+import { EncapsuleRules } from './EncapsuleRules';
+import { TutorialStepMessage } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
 
 const _: EncapsuleSpace = new EncapsuleSpace(PlayerOrNone.NONE, PlayerOrNone.NONE, PlayerOrNone.NONE);
 const s: EncapsuleSpace = new EncapsuleSpace(Player.ZERO, PlayerOrNone.NONE, PlayerOrNone.NONE);
@@ -20,9 +22,8 @@ export class EncapsuleTutorial extends Tutorial {
 
     public tutorial: TutorialStep[] = [
         TutorialStep.informational(
-            $localize`Goal of the game`,
-            $localize`The goal of Encapsule is to align three of your pieces.
-        Here, we have a victory of the dark player.`,
+            TutorialStepMessage.OBJECT_OF_THE_GAME(),
+            $localize`The goal of Encapsule is to align three of your pieces. Here, Dark wins.`,
             new EncapsuleState([
                 [s, S, B],
                 [_, m, _],
@@ -36,9 +37,9 @@ export class EncapsuleTutorial extends Tutorial {
             $localize`Putting a piece`,
             $localize`This is the initial board.<br/><br/>
         You're playing Dark. Pick one of your piece on the side of the board and put it on the board.`,
-            EncapsuleState.getInitialState(),
-            EncapsuleMove.fromDrop(EncapsulePiece.SMALL_DARK, new Coord(1, 1)),
-            $localize`Congratulations!`),
+            EncapsuleRules.get().getInitialState(),
+            EncapsuleMove.ofDrop(EncapsulePiece.SMALL_DARK, new Coord(1, 1)),
+            TutorialStepMessage.CONGRATULATIONS()),
         TutorialStep.fromMove(
             $localize`Moving`,
             $localize`Another possible action is to move one of your pieces that is already on the board.<br/><br/>
@@ -49,16 +50,17 @@ export class EncapsuleTutorial extends Tutorial {
                 [_, _, _],
             ], 0, []),
             [
-                EncapsuleMove.fromMove(new Coord(0, 0), new Coord(2, 0)),
-                EncapsuleMove.fromMove(new Coord(0, 0), new Coord(0, 1)),
-                EncapsuleMove.fromMove(new Coord(0, 0), new Coord(1, 1)),
-                EncapsuleMove.fromMove(new Coord(0, 0), new Coord(2, 1)),
-                EncapsuleMove.fromMove(new Coord(0, 0), new Coord(0, 2)),
-                EncapsuleMove.fromMove(new Coord(0, 0), new Coord(1, 2)),
-                EncapsuleMove.fromMove(new Coord(0, 0), new Coord(2, 2)),
+                EncapsuleMove.ofMove(new Coord(0, 0), new Coord(2, 0)),
+                EncapsuleMove.ofMove(new Coord(0, 0), new Coord(0, 1)),
+                EncapsuleMove.ofMove(new Coord(0, 0), new Coord(1, 1)),
+                EncapsuleMove.ofMove(new Coord(0, 0), new Coord(2, 1)),
+                EncapsuleMove.ofMove(new Coord(0, 0), new Coord(0, 2)),
+                EncapsuleMove.ofMove(new Coord(0, 0), new Coord(1, 2)),
+                EncapsuleMove.ofMove(new Coord(0, 0), new Coord(2, 2)),
             ],
-            $localize`Congratulations!`,
-            $localize`Failed. Try again.`),
+            TutorialStepMessage.CONGRATULATIONS(),
+            TutorialStepMessage.FAILED_TRY_AGAIN(),
+        ),
         TutorialStep.fromPredicate(
             $localize`Particularity`,
             $localize`At Encapsule, pieces encapsulate each other.
@@ -77,7 +79,7 @@ export class EncapsuleTutorial extends Tutorial {
                 EncapsulePiece.MEDIUM_DARK, EncapsulePiece.BIG_DARK,
                 EncapsulePiece.MEDIUM_LIGHT, EncapsulePiece.MEDIUM_LIGHT,
             ]),
-            EncapsuleMove.fromMove(new Coord(0, 1), new Coord(0, 2)),
+            EncapsuleMove.ofMove(new Coord(0, 1), new Coord(0, 2)),
             (move: EncapsuleMove, _previous: EncapsuleState, _result: EncapsuleState) => {
                 const isCorrectLandingCoord: boolean = move.landingCoord.equals(new Coord(0, 2));
                 if (isCorrectLandingCoord) {
@@ -87,8 +89,8 @@ export class EncapsuleTutorial extends Tutorial {
                         return MGPValidation.SUCCESS;
                     }
                 }
-                return MGPValidation.failure($localize`Failed. Try again.`);
+                return MGPValidation.failure(TutorialStepMessage.FAILED_TRY_AGAIN());
             },
-            $localize`Congratulations!`),
+            TutorialStepMessage.CONGRATULATIONS()),
     ];
 }

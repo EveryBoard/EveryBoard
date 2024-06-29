@@ -1,0 +1,23 @@
+{
+  "name": "@everyboard/lib",
+  "version": "1.0.0",
+  "description": "EveryBoard's library",
+  "private": "true",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc --build",
+    "watch": "tsc --watch",
+    "test": "nyc -x '**/*.spec.ts' --reporter=lcov --reporter=text --reporter=text-summary npx jasmine --config=jasmine.json",
+    "coverage": "nyc --branches 100 --lines 100 --statements 100 --functions 100 check-coverage"
+  },
+  "devDependencies": {
+    "jasmine": "^5.1.0",
+    "nyc": "^15.1.0",
+    "ts-node": "^10.9.2"
+  }
+}

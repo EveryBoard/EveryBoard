@@ -1,7 +1,10 @@
 import { GoMove } from 'src/app/games/go/GoMove';
 import { GoState, GoPiece, Phase } from 'src/app/games/go/GoState';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { MGPOptional } from '@everyboard/lib';
 import { Tutorial, TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
+import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
+import { GoConfig, GoRules } from './GoRules';
+import { TutorialStepMessage } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
 
 const X: GoPiece = GoPiece.LIGHT;
 const O: GoPiece = GoPiece.DARK;
@@ -9,6 +12,8 @@ const k: GoPiece = GoPiece.DEAD_LIGHT;
 const w: GoPiece = GoPiece.LIGHT_TERRITORY;
 const b: GoPiece = GoPiece.DARK_TERRITORY;
 const _: GoPiece = GoPiece.EMPTY;
+
+const defaultConfig: MGPOptional<GoConfig> = GoRules.get().getDefaultRulesConfig();
 
 export class GoTutorial extends Tutorial {
 
@@ -19,15 +24,11 @@ export class GoTutorial extends Tutorial {
         The traditional board is made of 19x19 intersections, but on this website we have the 13x13 board.
         (For shorter parts, 9x9 and 5x5 boards exist, but are not yet available here).
         For this tutorial, we will use a smaller board for pedagogical purposes.`,
-            GoState.getInitialState(),
+            GoRules.get().getInitialState(defaultConfig),
         ),
         TutorialStep.informational(
-            $localize`Goal of the game`,
-            $localize`The goal of the game is to have the most points at the end of the game.
-        We call "territories" the intersections that are empty and isolated from the rest of the Goban by the stones of a single player.
-        Here, Dark has 9 territories on the left, and Light has 8 on the right.
-        The top part belongs to no one.
-        Each player's score at the end of the game is the sum of that player's territories and captures.`,
+            TutorialStepMessage.OBJECT_OF_THE_GAME(),
+            $localize`The object of the game is to have the most points at the end of the game. We call "territories" the intersections that are empty and isolated from the rest of the Goban by the stones of a single player. Here, Dark has 9 territories on the left, and Light has 8 on the right. The top part belongs to no one. Each player's score at the end of the game is the sum of that player's territories and captures.`,
             new GoState([
                 [_, O, _, _, X, X],
                 [_, O, _, _, X, _],
@@ -35,7 +36,7 @@ export class GoTutorial extends Tutorial {
                 [_, _, O, X, _, _],
                 [_, _, O, X, _, _],
                 [_, _, O, X, _, _],
-            ], [0, 0], 0, MGPOptional.empty(), Phase.PLAYING),
+            ], PlayerNumberMap.of(0, 0), 0, MGPOptional.empty(), Phase.PLAYING),
         ),
         TutorialStep.fromMove(
             $localize`Simple capture`,
@@ -49,7 +50,7 @@ export class GoTutorial extends Tutorial {
                 [_, O, X, _, _],
                 [_, _, O, _, _],
                 [_, _, _, _, _],
-            ], [0, 0], 0, MGPOptional.empty(), Phase.PLAYING),
+            ], PlayerNumberMap.of(0, 0), 0, MGPOptional.empty(), Phase.PLAYING),
             [new GoMove(3, 2)],
             $localize`Congratulations, you have earned one point.`,
             $localize`Failed, try again by playing on one of the intersections directly next to the light stone.`,
@@ -64,7 +65,7 @@ export class GoTutorial extends Tutorial {
                 [O, X, X, O, _],
                 [_, O, O, _, _],
                 [_, _, _, _, _],
-            ], [0, 0], 0, MGPOptional.empty(), Phase.PLAYING),
+            ], PlayerNumberMap.of(0, 0), 0, MGPOptional.empty(), Phase.PLAYING),
             [new GoMove(2, 1)],
             $localize`Congratulations, you have earned three points and formed a territory.`,
             $localize`Failed, you have not captured the group. Play on the last liberty of that group.`,
@@ -81,7 +82,7 @@ export class GoTutorial extends Tutorial {
                 [O, _, _, _, X],
                 [X, O, _, X, _],
                 [_, X, _, X, O],
-            ], [0, 0], 0, MGPOptional.empty(), Phase.PLAYING),
+            ], PlayerNumberMap.of(0, 0), 0, MGPOptional.empty(), Phase.PLAYING),
         ),
         TutorialStep.informational(
             $localize`Life and death (death)`,
@@ -97,7 +98,7 @@ export class GoTutorial extends Tutorial {
                 [X, X, O, _, _],
                 [_, X, O, _, _],
                 [X, X, O, _, _],
-            ], [0, 0], 0, MGPOptional.empty(), Phase.PLAYING),
+            ], PlayerNumberMap.of(0, 0), 0, MGPOptional.empty(), Phase.PLAYING),
         ),
         TutorialStep.informational(
             $localize`Life and death (eyes)`,
@@ -110,7 +111,7 @@ export class GoTutorial extends Tutorial {
                 [O, O, X, _, _],
                 [X, O, X, _, _],
                 [_, O, X, _, _],
-            ], [0, 0], 0, MGPOptional.empty(), Phase.PLAYING),
+            ], PlayerNumberMap.of(0, 0), 0, MGPOptional.empty(), Phase.PLAYING),
         ),
         TutorialStep.informational(
             $localize`Seki`,
@@ -126,7 +127,7 @@ export class GoTutorial extends Tutorial {
                 [_, X, O, X, X, O, _],
                 [_, X, O, X, X, O, _],
                 [_, X, O, _, X, O, _],
-            ], [0, 0], 0, MGPOptional.empty(), Phase.PLAYING),
+            ], PlayerNumberMap.of(0, 0), 0, MGPOptional.empty(), Phase.PLAYING),
         ),
         TutorialStep.fromMove(
             $localize`Ko`,
@@ -140,16 +141,16 @@ export class GoTutorial extends Tutorial {
                 [_, _, _, O, X, _, _],
                 [_, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _],
-            ], [0, 0], 0, MGPOptional.empty(), Phase.PLAYING),
+            ], PlayerNumberMap.of(0, 0), 0, MGPOptional.empty(), Phase.PLAYING),
             [new GoMove(4, 3)],
             $localize`Now, if Light tries to recapture the stone that Dark has just put on the Goban, this one would go back to its previous state, opening the door for an endless game.
         This intersection is therefore marked with a red square, to remind the players that this intersection is forbidden.
         This rule is called the Ko.
         The trick for Light is to try to create a big enough threat so that Dark must answer immediately, and does not have the time to protect its last stone, so that Light can capture it right after.`,
-            $localize`Failed. Try again.`,
+            TutorialStepMessage.FAILED_TRY_AGAIN(),
         ),
         TutorialStep.fromMove(
-            $localize`End of the game`,
+            TutorialStepMessage.END_OF_THE_GAME(),
             $localize`When a player feels that there is no advantage to putting a new stone, that player can pass a turn.
         The game phase stops when both players pass consecutively, and we move on to the counting phase.
         The dead groups are then marked by clicking on them.
@@ -166,13 +167,13 @@ export class GoTutorial extends Tutorial {
                 [X, X, O, O, O, X, X, O, X],
                 [O, O, O, X, X, X, w, X, X],
                 [b, b, O, O, O, X, X, w, w],
-            ], [0, 0], 0, MGPOptional.empty(), Phase.COUNTING),
+            ], PlayerNumberMap.of(0, 0), 0, MGPOptional.empty(), Phase.COUNTING),
             [new GoMove(0, 3)],
             $localize`Congratulations, Dark has 15 territories and 3 light stones still present, called prisoners at the end of the game.
         The intersections where the prisoners are count as Dark's territory
         Light has 8 territories and 1 prisoner.
         The end result is therefore 18 - 9 for Dark.`,
-            $localize`Failed, try again.`,
+            TutorialStepMessage.FAILED_TRY_AGAIN(),
         ),
     ];
 }

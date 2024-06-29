@@ -1,10 +1,14 @@
-import { GipfCapture, GipfMove, GipfPlacement } from 'src/app/games/gipf/GipfMove';
+import { GipfMove, GipfPlacement } from 'src/app/games/gipf/GipfMove';
 import { GipfState } from 'src/app/games/gipf/GipfState';
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
 import { Coord } from 'src/app/jscaip/Coord';
 import { HexaDirection } from 'src/app/jscaip/HexaDirection';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { MGPOptional, MGPValidation } from '@everyboard/lib';
 import { Tutorial, TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
+import { GipfCapture } from 'src/app/jscaip/GipfProjectHelper';
+import { GipfRules } from './GipfRules';
+import { TutorialStepMessage } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
+import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 
 const N: FourStatePiece = FourStatePiece.UNREACHABLE;
 const _: FourStatePiece = FourStatePiece.EMPTY;
@@ -15,13 +19,13 @@ export class GipfTutorial extends Tutorial {
 
     public tutorial: TutorialStep[] = [
         TutorialStep.informational(
-            $localize`Goal of the game`,
+            TutorialStepMessage.OBJECT_OF_THE_GAME(),
             $localize`The goal of Gipf is to capture the opponent's piece so that the opponent can no longer play.
         This is the initial board.
         Each player has 12 pieces on the side and 3 pieces on the board.
         When, at its turn, a player has no more pieces on the side, that player cannot play anymore and loses the game.
         The first player plays with the dark pieces, the second player plays with the light pieces.`,
-            GipfState.getInitialState(),
+            GipfRules.get().getInitialState(),
         ),
         TutorialStep.anyMove(
             $localize`Pushing`,
@@ -32,12 +36,12 @@ export class GipfTutorial extends Tutorial {
         </ol>
         You cannot push when a line is full.<br/><br/>
         You're playing Dark, insert a piece.`,
-            GipfState.getInitialState(),
+            GipfRules.get().getInitialState(),
             new GipfMove(new GipfPlacement(new Coord(3, 0), MGPOptional.of(HexaDirection.DOWN)), [], []),
-            $localize`Congratulations!`,
+            TutorialStepMessage.CONGRATULATIONS(),
         ),
         TutorialStep.fromMove(
-            $localize`Capture (1/3)`,
+            $localize`Captures (1/3)`,
             $localize`To capture, you must align 4 of your own pieces, which will be the first 4 captured pieces.
         There are multiple important aspects of a capture:
         <ol>
@@ -63,7 +67,7 @@ export class GipfTutorial extends Tutorial {
                 [X, _, _, _, _, _, N],
                 [_, _, _, X, _, N, N],
                 [_, _, _, X, N, N, N],
-            ], 42, [8, 8], [0, 0]),
+            ], 42, PlayerNumberMap.of(8, 8), PlayerNumberMap.of(0, 0)),
             [new GipfMove(
                 new GipfPlacement(new Coord(0, 3), MGPOptional.of(HexaDirection.RIGHT)),
                 [],
@@ -76,10 +80,10 @@ export class GipfTutorial extends Tutorial {
             )],
             $localize`Congratulations, you have gotten 4 of your pieces back. This is not the most useful capture.
         Let's now see how captures can really be useful.`,
-            $localize`Failed. Try again.`,
+            TutorialStepMessage.FAILED_TRY_AGAIN(),
         ),
         TutorialStep.fromMove(
-            $localize`Capture (2/3)`,
+            $localize`Captures (2/3)`,
             $localize`Here, there are three different ways for Dark to capture.
         <ol>
           <li>One way does not capture any of your opponent's pieces.</li>
@@ -96,7 +100,7 @@ export class GipfTutorial extends Tutorial {
                 [_, _, _, O, _, _, N],
                 [_, _, _, O, _, N, N],
                 [_, _, _, X, N, N, N],
-            ], 42, [8, 4], [2, 3]),
+            ], 42, PlayerNumberMap.of(8, 4), PlayerNumberMap.of(2, 3)),
             [new GipfMove(
                 new GipfPlacement(new Coord(0, 3), MGPOptional.of(HexaDirection.RIGHT)),
                 [],
@@ -113,8 +117,8 @@ export class GipfTutorial extends Tutorial {
         The most you can get is 3 per capture.`,
             $localize`Failed, the best capture was taking 2 of your opponent's pieces`,
         ),
-        TutorialStep.fromMove(
-            $localize`Capture (3/3)`,
+        TutorialStep.fromPredicate(
+            $localize`Captures (3/3)`,
             $localize`Here, you must capture at the beginning of your turn.
         This is due to a move of your opponent at the previous turn
         (even though this is a fictitious board for pedagogical purpose).
@@ -129,86 +133,38 @@ export class GipfTutorial extends Tutorial {
                 [_, _, _, O, _, _, N],
                 [O, O, O, X, X, N, N],
                 [_, _, _, O, N, N, N],
-            ], 42, [3, 4], [2, 3]),
-            [
-                new GipfMove(
-                    new GipfPlacement(new Coord(3, 6), MGPOptional.of(HexaDirection.UP)),
-                    [new GipfCapture([
-                        new Coord(6, 0),
-                        new Coord(6, 1),
-                        new Coord(6, 2),
-                        new Coord(6, 3),
-                    ])],
-                    [
-                        new GipfCapture([
-                            new Coord(0, 5),
-                            new Coord(1, 5),
-                            new Coord(2, 5),
-                            new Coord(3, 5),
-                            new Coord(4, 5),
-                        ]),
-                        new GipfCapture([
-                            new Coord(1, 2),
-                            new Coord(2, 2),
-                            new Coord(3, 2),
-                            new Coord(4, 2),
-                            new Coord(5, 2),
-                        ]),
-                    ],
-                ),
-                new GipfMove(
-                    new GipfPlacement(new Coord(4, 6), MGPOptional.of(HexaDirection.UP)),
-                    [new GipfCapture([
-                        new Coord(6, 0),
-                        new Coord(6, 1),
-                        new Coord(6, 2),
-                        new Coord(6, 3),
-                    ])],
-                    [
-                        new GipfCapture([
-                            new Coord(0, 5),
-                            new Coord(1, 5),
-                            new Coord(2, 5),
-                            new Coord(3, 5),
-                            new Coord(4, 5),
-                        ]),
-                        new GipfCapture([
-                            new Coord(3, 0),
-                            new Coord(3, 1),
-                            new Coord(3, 2),
-                            new Coord(3, 3),
-                            new Coord(3, 4),
-                        ]),
-                    ],
-                ),
-                new GipfMove(
-                    new GipfPlacement(new Coord(3, 6), MGPOptional.of(HexaDirection.UP)),
-                    [new GipfCapture([
-                        new Coord(6, 0),
-                        new Coord(6, 1),
-                        new Coord(6, 2),
-                        new Coord(6, 3),
-                    ])],
-                    [
-                        new GipfCapture([
-                            new Coord(1, 2),
-                            new Coord(2, 2),
-                            new Coord(3, 2),
-                            new Coord(4, 2),
-                            new Coord(5, 2),
-                        ]),
-                        new GipfCapture([
-                            new Coord(0, 5),
-                            new Coord(1, 5),
-                            new Coord(2, 5),
-                            new Coord(3, 5),
-                            new Coord(4, 5),
-                        ]),
-                    ],
-                ),
-            ],
+            ], 42, PlayerNumberMap.of(3, 4), PlayerNumberMap.of(2, 3)),
+            new GipfMove(new GipfPlacement(new Coord(3, 6), MGPOptional.of(HexaDirection.UP)),
+                         [new GipfCapture([
+                             new Coord(6, 0),
+                             new Coord(6, 1),
+                             new Coord(6, 2),
+                             new Coord(6, 3),
+                         ])],
+                         [
+                             new GipfCapture([
+                                 new Coord(0, 5),
+                                 new Coord(1, 5),
+                                 new Coord(2, 5),
+                                 new Coord(3, 5),
+                                 new Coord(4, 5),
+                             ]),
+                             new GipfCapture([
+                                 new Coord(1, 2),
+                                 new Coord(2, 2),
+                                 new Coord(3, 2),
+                                 new Coord(4, 2),
+                                 new Coord(5, 2),
+                             ]),
+                         ]),
+            (move: GipfMove, _previous: GipfState, _result: GipfState) => {
+                if (move.finalCaptures.length === 2) {
+                    return MGPValidation.SUCCESS;
+                } else {
+                    return MGPValidation.failure($localize`Failed, the best capture takes 2 of your opponent's pieces.`);
+                }
+            },
             $localize`Congratulations, you have gotten 12 of your pieces back and captured 2 of your opponent's pieces.`,
-            $localize`Failed, the best capture takes 2 of your opponent's pieces.`,
         ),
     ];
 }

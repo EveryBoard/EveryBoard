@@ -1,9 +1,10 @@
 import { Component } from '@angular/core';
 import { RectangularGameComponent } from '../rectangular-game-component/RectangularGameComponent';
-import { Rules } from 'src/app/jscaip/Rules';
+import { SuperRules } from 'src/app/jscaip/Rules';
 import { Move } from 'src/app/jscaip/Move';
-import { GameStateWithTable } from 'src/app/jscaip/GameStateWithTable';
+import { GameStateWithTable } from 'src/app/jscaip/state/GameStateWithTable';
 import { Coord } from 'src/app/jscaip/Coord';
+import { EmptyRulesConfig, RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 export interface ModeConfig {
 
@@ -21,12 +22,13 @@ export interface ModeConfig {
 @Component({
     template: '',
 })
-export abstract class ParallelogramGameComponent<R extends Rules<M, S, L>,
+export abstract class ParallelogramGameComponent<R extends SuperRules<M, S, C, L>,
                                                  M extends Move,
                                                  S extends GameStateWithTable<P>,
-                                                 P,
+                                                 P extends NonNullable<unknown>,
+                                                 C extends RulesConfig = EmptyRulesConfig,
                                                  L = void>
-    extends RectangularGameComponent<R, M, S, P, L>
+    extends RectangularGameComponent<R, M, S, P, C, L>
 {
     public getParallelogramCoords(mode: ModeConfig): Coord[] {
         const parallelogramHeight: number = mode.parallelogramHeight;
@@ -52,7 +54,7 @@ export abstract class ParallelogramGameComponent<R extends Rules<M, S, L>,
      * @param mode the mode in which the component is to be drawn
      * @returns the coord(x, y) of the upper left parallelogram to draw on the SVG;
      */
-    protected getCoordTranslate(x: number, y: number, z: number, mode: ModeConfig): Coord {
+    protected getCoordTranslation(x: number, y: number, z: number, mode: ModeConfig): Coord {
         const spaceHeight: number = mode.parallelogramHeight;
         const spaceWidth: number = spaceHeight * mode.horizontalWidthRatio;
         const spaceOffset: number = mode.offsetRatio * spaceHeight;

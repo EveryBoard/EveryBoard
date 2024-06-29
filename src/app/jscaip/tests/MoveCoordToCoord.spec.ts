@@ -1,37 +1,29 @@
 /* eslint-disable max-lines-per-function */
-import { MGPFallible } from 'src/app/utils/MGPFallible';
-import { EncoderTestUtils } from 'src/app/utils/tests/Encoder.spec';
+import { EncoderTestUtils, MGPFallible } from '@everyboard/lib';
 import { Coord } from '../Coord';
-import { Direction } from '../Direction';
+import { Ordinal } from '../Ordinal';
 import { MoveCoordToCoord } from '../MoveCoordToCoord';
 import { MoveWithTwoCoords } from '../MoveWithTwoCoords';
 
-class ConcreteMoveCoordToCoord extends MoveCoordToCoord {
-    public toString(): string {
-        return 'lel';
-    }
-    public equals(other: ConcreteMoveCoordToCoord): boolean {
-        return this.getStart().equals(other.getStart()) && this.getEnd().equals(other.getEnd());
-    }
-}
+class ConcreteMoveCoordToCoord extends MoveCoordToCoord {}
 
 describe('MoveCoordToCoord', () => {
-    function myMoveConstructor(start: Coord, end: Coord): ConcreteMoveCoordToCoord {
-        return new ConcreteMoveCoordToCoord(start, end);
+    function myMoveConstructor(start: Coord, end: Coord): MGPFallible<ConcreteMoveCoordToCoord> {
+        return MGPFallible.success(new ConcreteMoveCoordToCoord(start, end));
     }
 
     describe('getDirection', () => {
         it('should return the direction of the move', () => {
             const source: Coord = new Coord(0, 0);
-            const allDestsAndDirs: [Coord, Direction][] = [
-                [new Coord(0, 1), Direction.DOWN],
-                [new Coord(0, -1), Direction.UP],
-                [new Coord(1, 0), Direction.RIGHT],
-                [new Coord(-1, 0), Direction.LEFT],
-                [new Coord(-1, -1), Direction.UP_LEFT],
-                [new Coord(-1, 1), Direction.DOWN_LEFT],
-                [new Coord(1, -1), Direction.UP_RIGHT],
-                [new Coord(1, 1), Direction.DOWN_RIGHT],
+            const allDestsAndDirs: [Coord, Ordinal][] = [
+                [new Coord(0, 1), Ordinal.DOWN],
+                [new Coord(0, -1), Ordinal.UP],
+                [new Coord(1, 0), Ordinal.RIGHT],
+                [new Coord(-1, 0), Ordinal.LEFT],
+                [new Coord(-1, -1), Ordinal.UP_LEFT],
+                [new Coord(-1, 1), Ordinal.DOWN_LEFT],
+                [new Coord(1, -1), Ordinal.UP_RIGHT],
+                [new Coord(1, 1), Ordinal.DOWN_RIGHT],
             ];
             for (const [destination, direction] of allDestsAndDirs) {
                 expect(new ConcreteMoveCoordToCoord(source, destination).getDirection())
@@ -48,7 +40,7 @@ describe('MoveCoordToCoord', () => {
     describe('encoder', () => {
         it('should have a bijective encoder', () => {
             EncoderTestUtils.expectToBeBijective(
-                MoveWithTwoCoords.getEncoder(myMoveConstructor),
+                MoveWithTwoCoords.getFallibleEncoder(myMoveConstructor),
                 new ConcreteMoveCoordToCoord(new Coord(2, 3), new Coord(5, 9)));
         });
     });

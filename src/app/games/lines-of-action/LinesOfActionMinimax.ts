@@ -1,17 +1,17 @@
-import { PlayerMetricsMinimax } from 'src/app/jscaip/Minimax';
+import { Minimax } from 'src/app/jscaip/AI/Minimax';
 import { LinesOfActionMove } from './LinesOfActionMove';
+import { LinesOfActionMoveGenerator } from './LinesOfActionMoveGenerator';
+import { LinesOfActionRules } from './LinesOfActionRules';
+import { LinesOfActionHeuristic } from './LinesOfActionHeuristic';
 import { LinesOfActionState } from './LinesOfActionState';
-import { LinesOfActionNode, LinesOfActionRules } from './LinesOfActionRules';
 
-export class LinesOfActionMinimax extends PlayerMetricsMinimax<LinesOfActionMove, LinesOfActionState> {
+export class LinesOfActionMinimax extends Minimax<LinesOfActionMove, LinesOfActionState> {
 
-    public getListMoves(node: LinesOfActionNode): LinesOfActionMove[] {
-        return LinesOfActionRules.getListMovesFromState(node.gameState);
+    public constructor() {
+        super($localize`Minimax`,
+              LinesOfActionRules.get(),
+              new LinesOfActionHeuristic(),
+              new LinesOfActionMoveGenerator());
     }
-    public getMetrics(node: LinesOfActionNode): [number, number] {
-        const state: LinesOfActionState = node.gameState;
-        const [zero, one]: [number, number] = LinesOfActionRules.getNumberOfGroups(state);
-        // More groups = less score
-        return [100 / zero, 100 / one];
-    }
+
 }

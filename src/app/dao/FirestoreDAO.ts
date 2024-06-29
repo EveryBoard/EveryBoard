@@ -1,8 +1,8 @@
-import { display, FirestoreJSONObject, Utils } from 'src/app/utils/utils';
-import { MGPOptional } from '../utils/MGPOptional';
-import * as Firestore from '@angular/fire/firestore';
+import { FirestoreJSONObject, MGPOptional, Utils } from '@everyboard/lib';
+import * as Firestore from '@firebase/firestore';
 import { FirestoreCollectionObserver } from './FirestoreCollectionObserver';
 import { Subscription } from 'rxjs';
+import { Debug } from '../utils/Debug';
 
 export interface FirestoreDocument<T> {
     id: string
@@ -36,20 +36,16 @@ export interface IFirestoreDAO<T extends FirestoreJSONObject> {
 
     findWhere(conditions: FirestoreCondition[], order?: string, limit?: number): Promise<FirestoreDocument<T>[]>
 
-    subCollectionDAO<T extends FirestoreJSONObject>(id: string, name: string): IFirestoreDAO<T>;
+    subCollectionDAO<U extends FirestoreJSONObject>(id: string, name: string): IFirestoreDAO<U>;
 }
 
 export abstract class FirestoreDAO<T extends FirestoreJSONObject> implements IFirestoreDAO<T> {
-
-    public static VERBOSE: boolean = false;
 
     public readonly collection: Firestore.CollectionReference<T>;
 
     private readonly subDAOs: Record<string, IFirestoreDAO<FirestoreJSONObject>> = {};
 
-    constructor(public readonly collectionName: string,
-                protected readonly firestore: Firestore.Firestore)
-    {
+    public constructor(public readonly collectionName: string) {
         const genericConverter: Firestore.FirestoreDataConverter<T> = {
             fromFirestore(snapshot: Firestore.QueryDocumentSnapshot): T {
                 return snapshot.data() as T;
@@ -58,15 +54,14 @@ export abstract class FirestoreDAO<T extends FirestoreJSONObject> implements IFi
                 return data;
             },
         };
+        const firestore: Firestore.Firestore = Firestore.getFirestore();
         this.collection = Firestore.collection(firestore, this.collectionName).withConverter<T>(genericConverter);
     }
     public async create(newElement: T): Promise<string> {
-        display(FirestoreDAO.VERBOSE, { called: this.collectionName + '.create', newElement });
         const docRef: Firestore.DocumentReference = await Firestore.addDoc(this.collection, newElement);
         return docRef.id;
     }
     public async read(id: string): Promise<MGPOptional<T>> {
-        display(FirestoreDAO.VERBOSE, { called: this.collectionName + '.read', id });
         const docSnapshot: Firestore.DocumentSnapshot<T> = await Firestore.getDoc(Firestore.doc(this.collection, id));
         if (docSnapshot.exists()) {
             return MGPOptional.of(Utils.getNonNullable(docSnapshot.data()));
@@ -75,19 +70,15 @@ export abstract class FirestoreDAO<T extends FirestoreJSONObject> implements IFi
         }
     }
     public async exists(id: string): Promise<boolean> {
-        display(FirestoreDAO.VERBOSE, { called: this.collectionName + '.exists', id });
         return (await this.read(id)).isPresent();
     }
     public async update(id: string, update: Firestore.UpdateData<T>): Promise<void> {
-        display(FirestoreDAO.VERBOSE, { called: this.collectionName + '.update', id, update });
         return Firestore.updateDoc(Firestore.doc(this.collection, id), update);
     }
     public delete(id: string): Promise<void> {
-        display(FirestoreDAO.VERBOSE, { called: this.collectionName + '.delete', id });
         return Firestore.deleteDoc(Firestore.doc(this.collection, id));
     }
     public set(id: string, element: T): Promise<void> {
-        display(FirestoreDAO.VERBOSE, { called: this.collectionName + '.set', id, element });
         return Firestore.setDoc(Firestore.doc(this.collection, id), element);
     }
     public subscribeToChanges(id: string, callback: (doc: MGPOptional<T>) => void): Subscription {
@@ -119,7 +110,6 @@ export abstract class FirestoreDAO<T extends FirestoreJSONObject> implements IFi
                           order?: string)
     : Subscription
     {
-        display(FirestoreDAO.VERBOSE, { called: this.collectionName + '.observingWhere' });
         const query: Firestore.Query<T> = this.constructQuery(conditions, order);
         return new Subscription(Firestore.onSnapshot(query, (snapshot: Firestore.QuerySnapshot<T>) => {
             const createdDocs: FirestoreDocument<T>[] = [];
@@ -144,18 +134,18 @@ export abstract class FirestoreDAO<T extends FirestoreJSONObject> implements IFi
                     }
                 });
             if (createdDocs.length > 0) {
-                display(FirestoreDAO.VERBOSE,
-                        'firebase gave us ' + createdDocs.length + ' NEW ' + this.collectionName);
+                Debug.display('FirestoreDAO', 'subscription',
+                              'firebase gave us ' + createdDocs.length + ' NEW ' + this.collectionName);
                 callback.onDocumentCreated(createdDocs);
             }
             if (modifiedDocs.length > 0) {
-                display(FirestoreDAO.VERBOSE,
-                        'firebase gave us ' + modifiedDocs.length + ' MODIFIED ' + this.collectionName);
+                Debug.display('FirestoreDAO', 'subscription',
+                              'firebase gave us ' + modifiedDocs.length + ' MODIFIED ' + this.collectionName);
                 callback.onDocumentModified(modifiedDocs);
             }
             if (deletedDocs.length > 0) {
-                display(FirestoreDAO.VERBOSE,
-                        'firebase gave us ' + deletedDocs.length + ' DELETED ' + this.collectionName);
+                Debug.display('FirestoreDAO', 'subscription',
+                              'firebase gave us ' + deletedDocs.length + ' DELETED ' + this.collectionName);
                 callback.onDocumentDeleted(deletedDocs);
             }
         }));
@@ -173,16 +163,16 @@ export abstract class FirestoreDAO<T extends FirestoreJSONObject> implements IFi
         }
         return query;
     }
-    public subCollectionDAO<T extends FirestoreJSONObject>(id: string, name: string): IFirestoreDAO<T> {
+    public subCollectionDAO<U extends FirestoreJSONObject>(id: string, name: string): IFirestoreDAO<U> {
         const fullPath: string = `${this.collection.path}/${id}/${name}`;
         if (fullPath in this.subDAOs) {
-            return this.subDAOs[fullPath] as IFirestoreDAO<T>;
+            return this.subDAOs[fullPath] as IFirestoreDAO<U>;
         } else {
-            const subDAO: FirestoreDAO<T> = new class extends FirestoreDAO<T> {
-                public constructor(firestore: Firestore.Firestore) {
-                    super(fullPath, firestore);
+            const subDAO: FirestoreDAO<U> = new class extends FirestoreDAO<U> {
+                public constructor() {
+                    super(fullPath);
                 }
-            }(this.firestore);
+            }();
             this.subDAOs[fullPath] = subDAO;
             return subDAO;
         }

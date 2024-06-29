@@ -1,22 +1,18 @@
 /* eslint-disable max-lines-per-function */
 import { P4Move } from 'src/app/games/p4/P4Move';
-import { MGPNode } from '../MGPNode';
+import { GameNode } from '../AI/GameNode';
 import { Rules } from '../Rules';
-import { GameStateWithTable } from '../GameStateWithTable';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { MGPValidation } from '../../utils/MGPValidation';
+import { GameStateWithTable } from '../state/GameStateWithTable';
 import { GameStatus } from '../GameStatus';
+import { JSONValue, MGPFallible, MGPOptional, MGPValidation } from '@everyboard/lib';
+import { RulesUtils } from './RulesUtils.spec';
+import { NoConfig, RulesConfig } from '../RulesConfigUtil';
 
-class MyAbstractState extends GameStateWithTable<number> {
+class AbstractState extends GameStateWithTable<number> {}
 
-    public static getInitialState(): MyAbstractState {
-        return new MyAbstractState([[]], 0);
-    }
-}
+class AbstractNode extends GameNode<P4Move, AbstractState> {}
 
-class AbstractNode extends MGPNode<Rules<P4Move, MyAbstractState>, P4Move, MyAbstractState> {}
-
-class AbstractRules extends Rules<P4Move, MyAbstractState> {
+class AbstractRules extends Rules<P4Move, AbstractState> {
 
     private static singleton: MGPOptional<AbstractRules> = MGPOptional.empty();
 
@@ -26,64 +22,89 @@ class AbstractRules extends Rules<P4Move, MyAbstractState> {
         }
         return AbstractRules.singleton.get();
     }
+
     private constructor() {
-        super(MyAbstractState);
+        super();
     }
-    public applyLegalMove(move: P4Move, state: MyAbstractState, _legality: void): MyAbstractState {
+
+    public override getInitialState(_config: MGPOptional<RulesConfig>): AbstractState {
+        return new AbstractState([[]], 0);
+    }
+
+    public override applyLegalMove(move: P4Move,
+                                   state: AbstractState,
+                                   _config: MGPOptional<RulesConfig>,
+                                   _legality: void)
+    : AbstractState
+    {
         const board: readonly number[] = state.board[0];
-        return new MyAbstractState([board.concat([move.x])], state.turn + 1);
+        return new AbstractState([board.concat([move.x])], state.turn + 1);
     }
-    public isLegal(move: P4Move, state: MyAbstractState): MGPValidation {
+
+    public override isLegal(_move: P4Move, _state: AbstractState): MGPValidation {
         return MGPValidation.SUCCESS;
     }
-    public getGameStatus(node: AbstractNode): GameStatus {
+
+    public override getGameStatus(_node: AbstractNode): GameStatus {
         return GameStatus.ONGOING;
     }
+
 }
 
 describe('Rules', () => {
 
     let rules: AbstractRules;
+    const defaultConfig: NoConfig = AbstractRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         rules = AbstractRules.get();
     });
+
     it('should create child to already calculated node which did not include this legal child yet', () => {
-        // Given a node with sons
-        const node: AbstractNode = rules.getInitialNode();
-        spyOn(node, 'hasMoves').and.returnValue(true);
-        spyOn(node, 'getSonByMove').and.returnValue(MGPOptional.empty());
+        // Given a node with children but not the one that will be calculated
+        const node: AbstractNode = rules.getInitialNode(defaultConfig);
+        spyOn(node, 'getChild').and.returnValue(MGPOptional.empty());
 
         // When choosing another one
-        const resultingNode: MGPOptional<AbstractNode> = rules.choose(node, P4Move.ZERO);
+        const resultingNode: MGPFallible<AbstractNode> = rules.choose(node, P4Move.of(0), defaultConfig);
 
-        // he should be created and chosen
-        expect(resultingNode.isPresent()).toBeTrue();
+        // Then the node should be created and chosen
+        expect(resultingNode.isSuccess()).toBeTrue();
         expect(resultingNode.get().gameState.turn).toBe(1);
     });
+
     it('should allow dev to go back to specific starting board based on encodedMoveList', () => {
         // Given an initial list of encoded moves and an initial state
-        const initialState: MyAbstractState = MyAbstractState.getInitialState();
-        const encodedMoveList: number[] = [0, 1, 2, 3];
+        const initialState: AbstractState = AbstractRules.get().getInitialState(MGPOptional.empty());
+        const moveValues: number[] = [0, 1, 2, 3];
+        const encodedMoveList: JSONValue[] = moveValues.map((n: number) => P4Move.encoder.encode(P4Move.of(n)));
 
         // When calling applyMoves
-        const state: MyAbstractState = rules.applyMoves(encodedMoveList, initialState, P4Move.encoder.decodeMove);
+        const state: AbstractState = RulesUtils.applyMoves(rules,
+                                                           encodedMoveList,
+                                                           initialState,
+                                                           P4Move.encoder.decode);
 
         // Then last move should be the last one encoded and state should be adapted
-        expect(state.board).toEqual([encodedMoveList]);
+        expect(state.board).toEqual([moveValues]);
         expect(state.turn).toBe(4);
     });
+
     describe('choose', () => {
+
         it('should return MGPOptional.empty() when the move was illegal', () => {
             // Given a node and a move that will be deemed illegal
-            const node: AbstractNode = rules.getInitialNode();
-            const illegalMove: P4Move = P4Move.FIVE;
-            spyOn(rules, 'isLegal').and.returnValue(MGPValidation.failure(''));
+            const node: AbstractNode = rules.getInitialNode(defaultConfig);
+            const illegalMove: P4Move = P4Move.of(5);
+            spyOn(rules, 'isLegal').and.returnValue(MGPValidation.failure('some reason'));
 
             // When checking if the move is legal
-            const legality: MGPOptional<AbstractNode> = rules.choose(node, illegalMove);
-            // Then it should be an empty optional
-            expect(legality).toEqual(MGPOptional.empty());
+            const legality: MGPFallible<AbstractNode> = rules.choose(node, illegalMove, defaultConfig);
+            // Then it should fail with the expected reason
+            expect(legality.isFailure()).toBeTrue();
+            expect(legality.getReason()).toEqual('some reason');
         });
+
     });
+
 });

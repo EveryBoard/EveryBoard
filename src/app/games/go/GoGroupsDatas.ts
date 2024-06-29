@@ -1,8 +1,6 @@
 import { GroupDatas } from 'src/app/jscaip/BoardDatas';
 import { Coord } from 'src/app/jscaip/Coord';
-import { assert } from 'src/app/utils/assert';
-import { MGPMap } from 'src/app/utils/MGPMap';
-import { Utils } from 'src/app/utils/utils';
+import { MGPMap, Utils } from '@everyboard/lib';
 import { GoPiece } from './GoState';
 
 export class GoGroupDatas extends GroupDatas<GoPiece> {
@@ -38,7 +36,7 @@ export class GoGroupDatas extends GroupDatas<GoPiece> {
         return allCoords.some((c: Coord) => c.equals(coord));
     }
     public addPawn(coord: Coord, color: GoPiece): void {
-        assert(this.contains(coord) === false, 'This group already contains ' + coord.toString());
+        Utils.assert(this.contains(coord) === false, 'This group already contains ' + coord.toString());
 
         switch (color) {
             case GoPiece.DARK:
@@ -80,11 +78,9 @@ export class GoGroupDatas extends GroupDatas<GoPiece> {
         wrapperSizes.put(this.color.nonTerritory(), 0);
         const nonEmptyWrapper: MGPMap<GoPiece, number> =
             wrapperSizes.filter((_key: GoPiece, value: number) => value > 0);
-        if (nonEmptyWrapper.size() === 1) {
-            return nonEmptyWrapper.getAnyPair().get().key;
-        } else {
-            throw new Error(`Can't call getWrapper on non-mono-wrapped group`);
-        }
+        Utils.assert(nonEmptyWrapper.size() === 1,
+                     `Can't call getWrapper on non-mono-wrapped group`);
+        return nonEmptyWrapper.getAnyPair().get().key;
     }
     public getNeighborsEntryPoints(): Coord[] {
         const neighborsEntryPoints: Coord[] = [];

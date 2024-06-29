@@ -2,22 +2,23 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { HexaDirection } from 'src/app/jscaip/HexaDirection';
 import { HexaLine } from 'src/app/jscaip/HexaLine';
 import { FlatHexaOrientation } from 'src/app/jscaip/HexaOrientation';
-import { MGPNode } from 'src/app/jscaip/MGPNode';
+import { GameNode } from 'src/app/jscaip/AI/GameNode';
 import { Player } from 'src/app/jscaip/Player';
 import { Rules } from 'src/app/jscaip/Rules';
-import { assert } from 'src/app/utils/assert';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { MGPValidation } from 'src/app/utils/MGPValidation';
-import { GipfCapture, GipfMove, GipfPlacement } from './GipfMove';
+import { MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
+import { GipfMove, GipfPlacement } from './GipfMove';
 import { GipfState } from './GipfState';
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
 import { GipfFailure } from './GipfFailure';
-import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
+import { GipfCapture } from 'src/app/jscaip/GipfProjectHelper';
+import { Table } from 'src/app/jscaip/TableUtils';
+import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 
 export type GipfLegalityInformation = GipfState
 
-export class GipfNode extends MGPNode<GipfRules, GipfMove, GipfState, GipfLegalityInformation> {}
+export class GipfNode extends GameNode<GipfMove, GipfState> {}
 
 export class GipfRules extends Rules<GipfMove, GipfState, GipfLegalityInformation> {
 
@@ -29,15 +30,36 @@ export class GipfRules extends Rules<GipfMove, GipfState, GipfLegalityInformatio
         }
         return GipfRules.singleton.get();
     }
-    private constructor() {
-        super(GipfState);
+
+    public override getInitialState(): GipfState {
+        const _: FourStatePiece = FourStatePiece.EMPTY;
+        const N: FourStatePiece = FourStatePiece.UNREACHABLE;
+        const O: FourStatePiece = FourStatePiece.ZERO;
+        const X: FourStatePiece = FourStatePiece.ONE;
+        const board: Table<FourStatePiece> = [
+            [N, N, N, X, _, _, O],
+            [N, N, _, _, _, _, _],
+            [N, _, _, _, _, _, _],
+            [O, _, _, _, _, _, X],
+            [_, _, _, _, _, _, N],
+            [_, _, _, _, _, N, N],
+            [X, _, _, O, N, N, N],
+        ];
+        return new GipfState(board, 0, PlayerNumberMap.of(12, 12), PlayerNumberMap.of(0, 0));
     }
-    public applyLegalMove(_move: GipfMove, _state: GipfState, computedState: GipfLegalityInformation): GipfState {
+
+    public override applyLegalMove(_move: GipfMove,
+                                   _state: GipfState,
+                                   _config: NoConfig,
+                                   computedState: GipfLegalityInformation)
+    : GipfState
+    {
         return new GipfState(computedState.board,
                              computedState.turn + 1,
                              computedState.sidePieces,
                              computedState.capturedPieces);
     }
+
     public static applyCaptures(captures: ReadonlyArray<GipfCapture>, state: GipfState)
     : GipfState
     {
@@ -47,22 +69,24 @@ export class GipfRules extends Rules<GipfMove, GipfState, GipfLegalityInformatio
         });
         return computedState;
     }
+
     public static applyCapture(capture: GipfCapture, state: GipfState): GipfState {
         const player: Player = state.getCurrentPlayer();
         let newState: GipfState = state;
-        const sidePieces: [number, number] = [state.sidePieces[0], state.sidePieces[1]];
-        const capturedPieces: [number, number] = [state.capturedPieces[0], state.capturedPieces[1]];
+        const sidePieces: PlayerNumberMap = state.sidePieces.getCopy();
+        const capturedPieces: PlayerNumberMap = state.capturedPieces.getCopy();
         capture.forEach((coord: Coord) => {
             const piece: FourStatePiece = state.getPieceAt(coord);
             newState = newState.setAt(coord, FourStatePiece.EMPTY);
             if (piece.is(player)) {
-                sidePieces[player.value] += 1;
+                sidePieces.add(player, 1);
             } else {
-                capturedPieces[player.value] += 1;
+                capturedPieces.add(player, 1);
             }
         });
         return new GipfState(newState.board, state.turn, sidePieces, capturedPieces);
     }
+
     public static getPlacements(state: GipfState): GipfPlacement[] {
         const placements: GipfPlacement[] = [];
         FlatHexaOrientation.INSTANCE.getAllBorders(state).forEach((entrance: Coord) => {
@@ -78,9 +102,11 @@ export class GipfRules extends Rules<GipfMove, GipfState, GipfLegalityInformatio
         });
         return placements;
     }
+
     public static isLineComplete(state: GipfState, start: Coord, dir: HexaDirection): boolean {
         return GipfRules.nextGapInLine(state, start, dir).isAbsent();
     }
+
     private static nextGapInLine(state: GipfState, start: Coord, dir: HexaDirection): MGPOptional<Coord> {
         for (let cur: Coord = start; state.isOnBoard(cur); cur = cur.getNext(dir)) {
             if (state.getPieceAt(cur) === FourStatePiece.EMPTY) {
@@ -89,6 +115,7 @@ export class GipfRules extends Rules<GipfMove, GipfState, GipfLegalityInformatio
         }
         return MGPOptional.empty();
     }
+
     public static applyPlacement(placement: GipfPlacement, state: GipfState): GipfState {
         const player: Player = state.getCurrentPlayer();
         let newState: GipfState = state;
@@ -109,10 +136,11 @@ export class GipfRules extends Rules<GipfMove, GipfState, GipfLegalityInformatio
                 prevPiece = curPiece;
             }
         }
-        const sidePieces: [number, number] = [state.sidePieces[0], state.sidePieces[1]];
-        sidePieces[player.value] -= 1;
+        const sidePieces: PlayerNumberMap = state.sidePieces.getCopy();
+        sidePieces.add(player, -1);
         return new GipfState(newState.board, state.turn, sidePieces, state.capturedPieces);
     }
+
     public getPiecesMoved(state: GipfState,
                           initialCaptures: ReadonlyArray<GipfCapture>,
                           placement: GipfPlacement): Coord[] {
@@ -129,14 +157,15 @@ export class GipfRules extends Rules<GipfMove, GipfState, GipfLegalityInformatio
                 moved.push(cur);
                 cur = cur.getNext(dir);
             }
-            assert(stateAfterCapture.isOnBoard(cur) &&
-                   stateAfterCapture.getPieceAt(cur) === FourStatePiece.EMPTY,
-                   'getPiecesMoved called with an invalid placement performed on a full line');
+            Utils.assert(stateAfterCapture.isOnBoard(cur) &&
+                         stateAfterCapture.getPieceAt(cur) === FourStatePiece.EMPTY,
+                         'getPiecesMoved called with an invalid placement performed on a full line');
             // This is the space filled by the last pushed piece
             moved.push(cur);
             return moved;
         }
     }
+
     public static getAllDirectionsForEntrance(state: GipfState, entrance: Coord): HexaDirection[] {
         if (FlatHexaOrientation.INSTANCE.isTopLeftCorner(state, entrance)) {
             return [HexaDirection.RIGHT, HexaDirection.DOWN, HexaDirection.UP_RIGHT];
@@ -166,7 +195,8 @@ export class GipfRules extends Rules<GipfMove, GipfState, GipfLegalityInformatio
             throw new Error('not a border');
         }
     }
-    public isLegal(move: GipfMove, state: GipfState): MGPFallible<GipfLegalityInformation> {
+
+    public override isLegal(move: GipfMove, state: GipfState): MGPFallible<GipfLegalityInformation> {
         const initialCapturesValidity: MGPValidation = this.capturesValidity(state, move.initialCaptures);
         if (initialCapturesValidity.isFailure()) {
             return initialCapturesValidity.toOtherFallible();
@@ -202,6 +232,7 @@ export class GipfRules extends Rules<GipfMove, GipfState, GipfLegalityInformatio
 
         return MGPFallible.success(stateAfterFinalCaptures);
     }
+
     private capturesValidity(state: GipfState, captures: ReadonlyArray<GipfCapture>)
     : MGPValidation
     {
@@ -215,6 +246,7 @@ export class GipfRules extends Rules<GipfMove, GipfState, GipfLegalityInformatio
         }
         return MGPValidation.SUCCESS;
     }
+
     public captureValidity(state: GipfState, capture: GipfCapture): MGPValidation {
         const player: Player = state.getCurrentPlayer();
         const linePortionOpt: MGPOptional<{ 0: Coord, 1: Coord, 2: HexaDirection}> =
@@ -232,6 +264,7 @@ export class GipfRules extends Rules<GipfMove, GipfState, GipfLegalityInformatio
             return MGPValidation.failure(GipfFailure.INVALID_CAPTURED_PIECES());
         }
     }
+
     public static getLinePortionsWithFourPiecesOfPlayer(state: GipfState, player: Player):
     ReadonlyArray<{ 0: Coord, 1: Coord, 2: HexaDirection}> {
         const linePortions: { 0: Coord, 1: Coord, 2: HexaDirection}[] = [];
@@ -244,6 +277,7 @@ export class GipfRules extends Rules<GipfMove, GipfState, GipfLegalityInformatio
         });
         return linePortions;
     }
+
     public static getLinePortionWithFourPiecesOfPlayer(state: GipfState, player: Player, line: HexaLine)
     : MGPOptional<{ 0: Coord, 1: Coord, 2: HexaDirection}>
     {
@@ -266,6 +300,7 @@ export class GipfRules extends Rules<GipfMove, GipfState, GipfLegalityInformatio
         }
         return MGPOptional.empty();
     }
+
     private noMoreCapturesValidity(state: GipfState): MGPValidation {
         const player: Player = state.getCurrentPlayer();
         const linePortions: ReadonlyArray<{ 0: Coord, 1: Coord, 2: HexaDirection}> =
@@ -276,6 +311,7 @@ export class GipfRules extends Rules<GipfMove, GipfState, GipfLegalityInformatio
             return MGPValidation.failure(GipfFailure.MISSING_CAPTURES());
         }
     }
+
     public placementValidity(state: GipfState, placement: GipfPlacement): MGPValidation {
         const coordValidity: MGPValidation = this.placementCoordValidity(state, placement.coord);
         if (coordValidity.isFailure()) {
@@ -297,6 +333,7 @@ export class GipfRules extends Rules<GipfMove, GipfState, GipfLegalityInformatio
         }
         return MGPValidation.SUCCESS;
     }
+
     public placementCoordValidity(state: GipfState, coord: Coord): MGPValidation {
         if (FlatHexaOrientation.INSTANCE.isOnBorder(state, coord)) {
             return MGPValidation.SUCCESS;
@@ -304,6 +341,7 @@ export class GipfRules extends Rules<GipfMove, GipfState, GipfLegalityInformatio
             return MGPValidation.failure(GipfFailure.PLACEMENT_NOT_ON_BORDER());
         }
     }
+
     public static getCapturable(state: GipfState,
                                 linePortion: { 0: Coord, 1: Coord, 2: HexaDirection})
     : GipfCapture
@@ -320,19 +358,20 @@ export class GipfRules extends Rules<GipfMove, GipfState, GipfLegalityInformatio
             capturable.push(cur);
             cur = cur.getNext(oppositeDir);
         }
-        for (let cur: Coord = start; !cur.equals(end); cur = cur.getNext(dir)) {
+        for (let coord: Coord = start; coord.equals(end) === false; coord = coord.getNext(dir)) {
             // The 4 pieces are capturable
-            capturable.push(cur);
+            capturable.push(coord);
         }
-        for (let cur: Coord = end;
-            state.isOnBoard(cur) && state.getPieceAt(cur) !== FourStatePiece.EMPTY;
-            cur = cur.getNext(dir))
+        for (let coord: Coord = end;
+            state.isOnBoard(coord) && state.getPieceAt(coord) !== FourStatePiece.EMPTY;
+            coord = coord.getNext(dir))
         {
             // Go forward to identify capturable pieces after the 4 aligned pieces
-            capturable.push(cur);
+            capturable.push(coord);
         }
         return new GipfCapture(capturable);
     }
+
     public static getPossibleCaptures(state: GipfState): GipfCapture[] {
         const player: Player = state.getCurrentPlayer();
         const captures: GipfCapture[] = [];
@@ -342,6 +381,7 @@ export class GipfRules extends Rules<GipfMove, GipfState, GipfLegalityInformatio
             });
         return captures;
     }
+
     public static getPlayerScore(state: GipfState, player: Player): MGPOptional<number> {
         const piecesToPlay: number = state.getNumberOfPiecesToPlace(player);
         if (piecesToPlay === 0) {
@@ -354,13 +394,15 @@ export class GipfRules extends Rules<GipfMove, GipfState, GipfLegalityInformatio
         const captured: number = state.getNumberOfPiecesCaptured(player);
         return MGPOptional.of(piecesToPlay + captured * 3);
     }
+
     public static isGameOver(state: GipfState): boolean {
         const score0: MGPOptional<number> = GipfRules.getPlayerScore(state, Player.ZERO);
         const score1: MGPOptional<number> = GipfRules.getPlayerScore(state, Player.ONE);
         return score0.isAbsent() ||
                score1.isAbsent();
     }
-    public getGameStatus(node: GipfNode): GameStatus {
+
+    public override getGameStatus(node: GipfNode): GameStatus {
         const state: GipfState = node.gameState;
         const score0: MGPOptional<number> = GipfRules.getPlayerScore(state, Player.ZERO);
         const score1: MGPOptional<number> = GipfRules.getPlayerScore(state, Player.ONE);
@@ -372,4 +414,5 @@ export class GipfRules extends Rules<GipfMove, GipfState, GipfLegalityInformatio
             return GameStatus.ONGOING;
         }
     }
+
 }

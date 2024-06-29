@@ -1,11 +1,5 @@
-import { GameStateWithTable } from '../../jscaip/GameStateWithTable';
-import { PlayerOrNone } from 'src/app/jscaip/Player';
-import { ArrayUtils } from 'src/app/utils/ArrayUtils';
+import { PlayerOrNoneGameStateWithTable } from 'src/app/jscaip/state/PlayerOrNoneGameStateWithTable';
 
-export class P4State extends GameStateWithTable<PlayerOrNone> {
+export class P4State extends PlayerOrNoneGameStateWithTable {
 
-    public static getInitialState(): P4State {
-        const board: PlayerOrNone[][] = ArrayUtils.createTable(7, 6, PlayerOrNone.NONE);
-        return new P4State(board, 0);
-    }
 }

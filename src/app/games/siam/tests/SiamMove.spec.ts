@@ -1,21 +1,19 @@
 /* eslint-disable max-lines-per-function */
-import { SiamNode, SiamRules } from '../SiamRules';
-import { SiamMinimax } from '../SiamMinimax';
+import { SiamConfig, SiamNode, SiamRules } from '../SiamRules';
 import { SiamMove } from '../SiamMove';
 import { SiamState } from '../SiamState';
-import { Orthogonal } from 'src/app/jscaip/Direction';
+import { Orthogonal } from 'src/app/jscaip/Orthogonal';
 import { SiamPiece } from '../SiamPiece';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { EncoderTestUtils } from 'src/app/utils/tests/Encoder.spec';
-import { Table } from 'src/app/utils/ArrayUtils';
-import { MGPFallible } from 'src/app/utils/MGPFallible';
+import { EncoderTestUtils, MGPOptional } from '@everyboard/lib';
+import { Table } from 'src/app/jscaip/TableUtils';
+import { SiamMoveGenerator } from '../SiamMoveGenerator';
 
 describe('SiamMove', () => {
 
     const _: SiamPiece = SiamPiece.EMPTY;
     const M: SiamPiece = SiamPiece.MOUNTAIN;
-
     const D: SiamPiece = SiamPiece.LIGHT_DOWN;
+    const defaultConfig: MGPOptional<SiamConfig> = SiamRules.get().getDefaultRulesConfig();
 
     it('should have a bijective encoder', () => {
         const board: Table<SiamPiece> = [
@@ -25,41 +23,28 @@ describe('SiamMove', () => {
             [_, _, _, _, _],
             [_, _, _, _, _],
         ];
-        const move: SiamMove = SiamMove.of(0, 0, MGPOptional.of(Orthogonal.DOWN), Orthogonal.UP).get();
+        const move: SiamMove = SiamMove.of(0, 0, MGPOptional.of(Orthogonal.DOWN), Orthogonal.UP);
         const state: SiamState = new SiamState(board, 0);
-        const node: SiamNode = new SiamNode(state, MGPOptional.empty(), MGPOptional.of(move));
-        const rules: SiamRules = SiamRules.get();
-        const minimax: SiamMinimax = new SiamMinimax(rules, 'SiamMinimax');
-        const moves: SiamMove[] = minimax.getListMoves(node);
-        for (const move of moves) {
-            EncoderTestUtils.expectToBeBijective(SiamMove.encoder, move);
+        const node: SiamNode =
+            new SiamNode(state, undefined, MGPOptional.of(move));
+        const moveGenerator: SiamMoveGenerator = new SiamMoveGenerator();
+        const moves: SiamMove[] = moveGenerator.getListMoves(node, defaultConfig);
+        for (const firstMove of moves) {
+            EncoderTestUtils.expectToBeBijective(SiamMove.encoder, firstMove);
         }
-    });
-    it('should ensure move ends inside the board', () => {
-        const move: MGPFallible<SiamMove> = SiamMove.of(-1, 2, MGPOptional.of(Orthogonal.UP), Orthogonal.UP);
-        expect(move).toEqual(MGPFallible.failure('SiamMove should end or start on the board: SiamMove(-1, 2, UP, UP)'));
-    });
-
-    it('should forbid rotation outside the board', () => {
-        const move: MGPFallible<SiamMove> = SiamMove.of(-1, 2, MGPOptional.empty(), Orthogonal.UP);
-        expect(move).toEqual(MGPFallible.failure('Cannot rotate piece outside the board: SiamMove(-1, 2, -, UP)'));
-    });
-
-    it('should forbid invalid SiamMove creation', () => {
-        const move: MGPFallible<SiamMove> = SiamMove.of(0, 0, MGPOptional.of(Orthogonal.UP), Orthogonal.DOWN);
-        expect(move).toEqual(MGPFallible.failure('SiamMove should have moveDirection and landingOrientation matching when a piece goes out of the board: SiamMove(0, 0, UP, DOWN)'));
     });
 
     it('should override equals correctly', () => {
-        const moveA: SiamMove = SiamMove.of(2, 2, MGPOptional.of(Orthogonal.UP), Orthogonal.RIGHT).get();
-        const twin: SiamMove = SiamMove.of(2, 2, MGPOptional.of(Orthogonal.UP), Orthogonal.RIGHT).get();
-        const neighbor: SiamMove = SiamMove.of(3, 3, MGPOptional.of(Orthogonal.UP), Orthogonal.RIGHT).get();
-        const cousin: SiamMove = SiamMove.of(2, 2, MGPOptional.of(Orthogonal.DOWN), Orthogonal.RIGHT).get();
-        const stranger: SiamMove = SiamMove.of(2, 2, MGPOptional.of(Orthogonal.UP), Orthogonal.LEFT).get();
+        const moveA: SiamMove = SiamMove.of(2, 2, MGPOptional.of(Orthogonal.UP), Orthogonal.RIGHT);
+        const twin: SiamMove = SiamMove.of(2, 2, MGPOptional.of(Orthogonal.UP), Orthogonal.RIGHT);
+        const neighbor: SiamMove = SiamMove.of(3, 3, MGPOptional.of(Orthogonal.UP), Orthogonal.RIGHT);
+        const cousin: SiamMove = SiamMove.of(2, 2, MGPOptional.of(Orthogonal.DOWN), Orthogonal.RIGHT);
+        const stranger: SiamMove = SiamMove.of(2, 2, MGPOptional.of(Orthogonal.UP), Orthogonal.LEFT);
         expect(moveA.equals(moveA)).toBeTrue();
         expect(moveA.equals(twin)).toBeTrue();
         expect(moveA.equals(neighbor)).toBeFalse();
         expect(moveA.equals(cousin)).toBeFalse();
         expect(moveA.equals(stranger)).toBeFalse();
     });
+
 });

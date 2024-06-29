@@ -13,7 +13,7 @@
 </div>
 
 <div *ngIf="currentTab === 'games'"
-     id="actualGames"
+     id="game-list-tab"
      class="box">
     <div class="table-container">
         <table class="table is-fullwidth is-hoverable is-striped">
@@ -27,17 +27,17 @@
             </thead>
             <tbody>
                 <tr *ngFor="let part of activeParts; index as i"
-                    id="part_{{ i }}"
+                    id="part-{{ i }}"
                     (click)="joinGame(part)">
-                    <td class="td">{{ part.data.typeGame }}</td>
-                    <td class="td">{{ part.data.playerZero.name + ' (' + part.data.playerZeroElo + ')' }}</td>
+                    <td class="td data-game-name">{{ part.getGameName() }}</td>
+                    <td class="td" id="part-of-{{ part.data.playerZero.name}}">{{ part.data.playerZero.name + ' (' + part.data.playerZeroElo + ')' }}</td>
                     <td class="td">
                         <ng-container *ngIf="part.data.playerOne else waitingForOpponent">{{ part.data.playerOne.name + ' (' + part.data.playerOneElo + ')' }}</ng-container>
                         <ng-template #waitingForOpponent>
                             <ng-container i18n>Waiting for opponent</ng-container>
                         </ng-template>
                     </td>
-                    <td class="td turn">{{ part.data.turn+1 }}</td>
+                    <td class="td data-turn">{{ part.data.turn+1 }}</td>
                 </tr>
             </tbody>
         </table>
@@ -45,29 +45,17 @@
 </div>
 
 <div *ngIf="currentTab === 'create'"
-     id="gameCreator"
+     id="game-creator-tab"
      class="box">
     <app-online-game-selection id="online-game-selection"></app-online-game-selection>
 </div>
 
 <div *ngIf="currentTab === 'chat'"
-     id="chatTab"
+     id="chat-tab"
      class="columns">
-    <div id="chatContainerDiv" class="column is-12">
+    <div class="column is-12">
         <div id="chat" class="box">
             <app-chat chatId="server" [turn]="-1"></app-chat>
-        </div>
-    </div>
-    <div class="column is-3 is-hidden">
-        <div id="onlineUsers" class="box">
-            <p i18n>Connected users:</p>
-            <ul id="activeUsersList">
-                <ng-container *ngFor="let user of activeUsers">
-                    <li id="{{ user.data.username }}"
-                        *ngIf="user.data.lastUpdateTime"
-                    >{{ user.data.username }}: {{ user.data.lastUpdateTime | firebaseDate }}</li>
-                </ng-container>
-            </ul>
         </div>
     </div>
 </div>

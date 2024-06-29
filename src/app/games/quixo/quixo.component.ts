@@ -1,29 +1,32 @@
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { RectangularGameComponent } from '../../components/game-components/rectangular-game-component/RectangularGameComponent';
 import { Coord } from 'src/app/jscaip/Coord';
-import { Orthogonal } from 'src/app/jscaip/Direction';
+import { Orthogonal } from 'src/app/jscaip/Orthogonal';
 import { QuixoMove } from 'src/app/games/quixo/QuixoMove';
-import { QuixoState } from 'src/app/games/quixo/QuixoState';
+import { QuixoConfig, QuixoState } from 'src/app/games/quixo/QuixoState';
 import { QuixoRules } from 'src/app/games/quixo/QuixoRules';
-import { QuixoMinimax } from 'src/app/games/quixo/QuixoMinimax';
-import { GameComponentUtils } from 'src/app/components/game-components/GameComponentUtils';
-import { MGPValidation } from 'src/app/utils/MGPValidation';
+import { MGPOptional, MGPValidation } from '@everyboard/lib';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { PlayerOrNone } from 'src/app/jscaip/Player';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
-import { QuixoTutorial } from './QuixoTutorial';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { MCTS } from 'src/app/jscaip/AI/MCTS';
+import { QuixoMoveGenerator } from './QuixoMoveGenerator';
+import { GameComponentUtils } from 'src/app/components/game-components/GameComponentUtils';
+import { QuixoMinimax } from './QuixoMinimax';
 
 @Component({
     selector: 'app-quixo',
     templateUrl: './quixo.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
 })
-export class QuixoComponent extends RectangularGameComponent<QuixoRules, QuixoMove, QuixoState, PlayerOrNone> {
+export class QuixoComponent extends RectangularGameComponent<QuixoRules,
+                                                             QuixoMove,
+                                                             QuixoState,
+                                                             PlayerOrNone,
+                                                             QuixoConfig>
+{
 
-    public static VERBOSE: boolean = false;
-
-    public state: QuixoState;
+    public QuixoState: typeof QuixoState = QuixoState;
 
     public lastMoveCoord: MGPOptional<Coord> = MGPOptional.empty();
 
@@ -33,26 +36,34 @@ export class QuixoComponent extends RectangularGameComponent<QuixoRules, QuixoMo
 
     public victoriousCoords: Coord[] = [];
 
-    public constructor(messageDisplayer: MessageDisplayer) {
-        super(messageDisplayer);
-        this.rules = QuixoRules.get();
-        this.node = this.rules.getInitialNode();
-        this.availableMinimaxes = [
-            new QuixoMinimax(this.rules, 'QuixoMinimax'),
+    public constructor(messageDisplayer: MessageDisplayer, cdr: ChangeDetectorRef) {
+        super(messageDisplayer, cdr);
+        this.setRulesAndNode('Quixo');
+        this.availableAIs = [
+            new QuixoMinimax(),
+            new MCTS($localize`MCTS`, new QuixoMoveGenerator(), this.rules),
         ];
         this.encoder = QuixoMove.encoder;
-        this.tutorial = new QuixoTutorial().tutorial;
-        this.updateBoard();
     }
-    public updateBoard(): void {
+
+    public override async showLastMove(move: QuixoMove): Promise<void> {
+        this.lastMoveCoord = MGPOptional.of(move.coord);
+    }
+
+    public override hideLastMove(): void {
+        this.lastMoveCoord = MGPOptional.empty();
+    }
+
+    public async updateBoard(_triggerAnimation: boolean): Promise<void> {
         this.state = this.getState();
         this.board = this.state.board;
-        this.lastMoveCoord = this.node.move.map((move: QuixoMove) => move.coord);
         this.victoriousCoords = QuixoRules.getVictoriousCoords(this.state);
     }
+
     public override cancelMoveAttempt(): void {
         this.chosenCoord = MGPOptional.empty();
     }
+
     public getPieceClasses(x: number, y: number): string[] {
         const coord: Coord = new Coord(x, y);
         const player: PlayerOrNone = this.board[y][x];
@@ -64,55 +75,63 @@ export class QuixoComponent extends RectangularGameComponent<QuixoRules, QuixoMo
         if (this.victoriousCoords.some((c: Coord): boolean => c.equals(coord))) classes.push('victory-stroke');
         return classes;
     }
-    public onBoardClick(x: number, y: number): MGPValidation {
-        const clickValidity: MGPValidation = this.canUserPlay('#click_' + x + '_' + y);
+
+    public async onBoardClick(x: number, y: number): Promise<MGPValidation> {
+        const clickValidity: MGPValidation = await this.canUserPlay('#click_' + x + '_' + y);
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }
         const clickedCoord: Coord = new Coord(x, y);
-        const coordLegality: MGPValidation = QuixoMove.isValidCoord(clickedCoord);
+        const state: QuixoState = this.getState();
+        const coordLegality: MGPValidation = this.rules.isValidCoord(state, clickedCoord);
         if (coordLegality.isFailure()) {
             return this.cancelMove(coordLegality.getReason());
         }
         if (this.board[y][x] === this.state.getCurrentOpponent()) {
-            return this.cancelMove(RulesFailure.CANNOT_CHOOSE_OPPONENT_PIECE());
+            return this.cancelMove(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT());
         } else {
             if (this.chosenCoord.equalsValue(clickedCoord)) {
-                this.cancelMoveAttempt();
+                return this.cancelMove();
             } else {
                 this.chosenCoord = MGPOptional.of(clickedCoord);
+                return MGPValidation.SUCCESS;
             }
-            return MGPValidation.SUCCESS;
         }
     }
+
     public getPossiblesDirections(): Orthogonal[] {
         const directions: Orthogonal[] = [];
         const chosenCoord: Coord = this.chosenCoord.get();
-        if (chosenCoord.x !== 4) directions.push(Orthogonal.RIGHT);
-        if (chosenCoord.x !== 0) directions.push(Orthogonal.LEFT);
-        if (chosenCoord.y !== 4) directions.push(Orthogonal.DOWN);
-        if (chosenCoord.y !== 0) directions.push(Orthogonal.UP);
+        const state: QuixoState = this.getState();
+        if (chosenCoord.x < state.getWidth() - 1) directions.push(Orthogonal.RIGHT);
+        if (0 < chosenCoord.x) directions.push(Orthogonal.LEFT);
+        if (chosenCoord.y < state.getHeight() - 1) directions.push(Orthogonal.DOWN);
+        if (0 < chosenCoord.y) directions.push(Orthogonal.UP);
         return directions;
     }
+
     public async chooseDirection(direction: Orthogonal): Promise<MGPValidation> {
-        const clickValidity: MGPValidation = this.canUserPlay('#chooseDirection_' + direction.toString());
+        const clickValidity: MGPValidation = await this.canUserPlay('#chooseDirection_' + direction.toString());
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }
         this.chosenDirection = direction;
         return await this.tryMove();
     }
+
     public async tryMove(): Promise<MGPValidation> {
         const chosenCoord: Coord = this.chosenCoord.get();
         const move: QuixoMove = new QuixoMove(chosenCoord.x,
                                               chosenCoord.y,
                                               this.chosenDirection);
-        this.cancelMove();
-        return this.chooseMove(move, this.getState());
+        return this.chooseMove(move);
     }
+
     public getArrowTransform(orientation: Orthogonal): string {
-        return GameComponentUtils.getArrowTransform(5 * this.SPACE_SIZE,
-                                                    new Coord(0, 0),
-                                                    orientation);
+        const state: QuixoState = this.getState();
+        const boardWidth: number = state.getWidth() * this.SPACE_SIZE;
+        const boardHeight: number = state.getHeight() * this.SPACE_SIZE;
+        return GameComponentUtils.getArrowTransform(boardWidth, boardHeight, orientation);
     }
+
 }

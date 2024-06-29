@@ -1,16 +1,15 @@
 import { MoveCoordToCoord } from 'src/app/jscaip/MoveCoordToCoord';
 import { Coord } from 'src/app/jscaip/Coord';
 import { SaharaState } from './SaharaState';
-import { TriangularCheckerBoard } from 'src/app/jscaip/TriangularCheckerBoard';
-import { MoveEncoder } from 'src/app/utils/Encoder';
+import { TriangularCheckerBoard } from 'src/app/jscaip/state/TriangularCheckerBoard';
+import { Encoder, MGPFallible, MGPValidation, Utils } from '@everyboard/lib';
 import { SaharaFailure } from './SaharaFailure';
-import { MGPFallible } from 'src/app/utils/MGPFallible';
-import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { MoveWithTwoCoords } from 'src/app/jscaip/MoveWithTwoCoords';
 
 export class SaharaMove extends MoveCoordToCoord {
-    public static encoder: MoveEncoder<SaharaMove> = MoveWithTwoCoords.getFallibleEncoder(SaharaMove.from);
+
+    public static encoder: Encoder<SaharaMove> = MoveWithTwoCoords.getFallibleEncoder(SaharaMove.from);
 
     public static checkDistanceAndLocation(start: Coord, end: Coord): MGPValidation {
         const distance: number = start.getOrthogonalDistance(end);
@@ -34,12 +33,10 @@ export class SaharaMove extends MoveCoordToCoord {
         return MGPValidation.SUCCESS;
     }
     public static from(start: Coord, end: Coord): MGPFallible<SaharaMove> {
-        if (!start.isInRange(SaharaState.WIDTH, SaharaState.HEIGHT)) {
-            throw new Error('Move must start inside the board not at ' + start.toString() + '.');
-        }
-        if (!end.isInRange(SaharaState.WIDTH, SaharaState.HEIGHT)) {
-            throw new Error('Move must end inside the board not at ' + end.toString() + '.');
-        }
+        Utils.assert(SaharaState.isOnBoard(start),
+                     'Move must start inside the board not at ' + start.toString() + '.');
+        Utils.assert(SaharaState.isOnBoard(end),
+                     'Move must end inside the board not at ' + end.toString() + '.');
         const validity: MGPValidation = SaharaMove.checkDistanceAndLocation(start, end);
         if (validity.isFailure()) {
             return validity.toOtherFallible();
@@ -55,12 +52,7 @@ export class SaharaMove extends MoveCoordToCoord {
         const dy: number = Math.abs(this.getStart().y - this.getEnd().y);
         return dx + dy === 1;
     }
-    public equals(other: SaharaMove): boolean {
-        if (other === this) return true;
-        if (other.getStart().equals(this.getStart()) === false) return false;
-        return other.getEnd().equals(this.getEnd());
-    }
-    public toString(): string {
+    public override toString(): string {
         return 'SaharaMove(' + this.getStart() + '->' + this.getEnd() + ')';
     }
 }

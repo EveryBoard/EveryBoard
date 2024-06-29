@@ -1,31 +1,31 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { MoveCoordToCoord } from 'src/app/jscaip/MoveCoordToCoord';
-import { Direction } from 'src/app/jscaip/Direction';
+import { Ordinal } from 'src/app/jscaip/Ordinal';
 import { TaflFailure } from './TaflFailure';
-import { MGPFallible } from 'src/app/utils/MGPFallible';
+import { MGPFallible, MGPValidation, Utils } from '@everyboard/lib';
 
 export abstract class TaflMove extends MoveCoordToCoord {
 
+    public static isValidDirection(start: Coord, end: Coord): MGPValidation {
+        const dir: MGPFallible<Ordinal> = start.getDirectionToward(end);
+        if (dir.isFailure() || dir.get().isDiagonal()) {
+            return MGPValidation.failure(TaflFailure.MOVE_MUST_BE_ORTHOGONAL());
+        }
+        return MGPValidation.SUCCESS;
+    }
+
     protected constructor(start: Coord, end: Coord) {
         super(start, end);
-        if (start.isNotInRange(this.getMaximalDistance(), this.getMaximalDistance())) {
-            throw new Error('Starting coord of TaflMove must be on the board, not at ' + start.toString() + '.');
-        }
-        if (end.isNotInRange(this.getMaximalDistance(), this.getMaximalDistance())) {
-            throw new Error('Landing coord of TaflMove must be on the board, not at ' + end.toString() + '.');
-        }
-        const dir: MGPFallible<Direction> = start.getDirectionToward(end);
-        if (dir.isFailure() || dir.get().isDiagonal()) {
-            throw new Error(TaflFailure.MOVE_MUST_BE_ORTHOGONAL());
-        }
+        const maximalDistance: number = this.getMaximalDistance();
+        Utils.assert(start.isInRange(maximalDistance, maximalDistance),
+                     'Starting coord of TaflMove must be on the board, not at ' + start.toString() + '.');
+        Utils.assert(end.isInRange(maximalDistance, maximalDistance),
+                     'Landing coord of TaflMove must be on the board, not at ' + end.toString() + '.');
     }
-    public equals(other: TaflMove): boolean {
-        if (other === this) return true;
-        if (other.getStart().equals(this.getStart()) === false) return false;
-        return other.getEnd().equals(this.getEnd());
-    }
+
     public override toString(): string {
         return 'TaflMove(' + this.getStart() + '->' + this.getEnd() + ')';
     }
+
     public abstract getMaximalDistance(): number;
 }

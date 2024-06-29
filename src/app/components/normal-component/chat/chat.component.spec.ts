@@ -84,6 +84,7 @@ describe('ChatComponent', () => {
             testUtils.expectElementNotToExist('#chatDiv');
             testUtils.expectElementNotToExist('#chatForm');
         }));
+
         it('should propose to show chat when chat is hidden, and work', fakeAsync(async() => {
             ConnectedUserServiceMock.setUser(UserMocks.CONNECTED_AUTH_USER);
             testUtils.detectChanges();
@@ -92,9 +93,8 @@ describe('ChatComponent', () => {
 
             // Given that the chat is hidden
             let switchButton: DebugElement = testUtils.findElement('#switchChatVisibilityButton');
-            let chat: DebugElement = testUtils.findElement('#chatForm');
             expect(switchButton.nativeElement.innerText).toEqual('Show chat (no new message)'.toUpperCase());
-            expect(chat).withContext('Chat should be hidden').toBeFalsy();
+            testUtils.expectElementNotToExist('#chatForm');
 
             // When showing the chat
             await testUtils.clickElement('#switchChatVisibilityButton');
@@ -102,9 +102,8 @@ describe('ChatComponent', () => {
 
             // Then the chat is shown
             switchButton = testUtils.findElement('#switchChatVisibilityButton');
-            chat = testUtils.findElement('#chatForm');
             expect(switchButton.nativeElement.innerText).toEqual('Hide chat'.toUpperCase());
-            expect(chat).withContext('Chat should be visible after calling show').toBeTruthy();
+            testUtils.expectElementToExist('#chatForm');
         }));
         it('should show how many messages where sent since you hid the chat', fakeAsync(async() => {
             // Given a hidden chat with no message
@@ -154,7 +153,7 @@ describe('ChatComponent', () => {
 
             // Then the scroll value did not change
             expect(chatDiv.nativeElement.scrollTop).toBe(SCROLL);
-            // and the indicator shows t hat there is a new message
+            // and the indicator shows that there is a new message
             const indicator: DebugElement = testUtils.findElement('#scrollToBottomIndicator');
             expect(indicator.nativeElement.innerHTML).toEqual('1 new message ↓');
         }));
@@ -252,14 +251,14 @@ describe('ChatComponent', () => {
             // Given a chat component
             const userDAO: UserDAO = TestBed.inject(UserDAO);
             await userDAO.set(UserMocks.CREATOR_MINIMAL_USER.id, UserMocks.CREATOR);
-            tick();
+            tick(0);
             ConnectedUserServiceMock.setUser(UserMocks.CREATOR_AUTH_USER, true);
             testUtils.detectChanges();
 
             // When the user's lastUpdateTime is updated
             spyOn(component, 'loadChatContent').and.callThrough();
             ConnectedUserServiceMock.setUser(UserMocks.CREATOR_AUTH_USER, true);
-            tick();
+            tick(0);
 
             // Then loadChatContent should not have been called
             expect(component.loadChatContent).not.toHaveBeenCalled();

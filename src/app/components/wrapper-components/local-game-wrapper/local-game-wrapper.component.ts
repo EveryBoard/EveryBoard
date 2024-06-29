@@ -1,92 +1,114 @@
 import { Component, AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { AbstractNode, MGPNodeStats } from 'src/app/jscaip/MGPNode';
+
+import { BehaviorSubject, Observable, Subscription } from 'rxjs';
+
+import { AbstractNode, GameNodeStats } from 'src/app/jscaip/AI/GameNode';
 import { ConnectedUserService } from 'src/app/services/ConnectedUserService';
 import { GameWrapper } from 'src/app/components/wrapper-components/GameWrapper';
 import { Move } from 'src/app/jscaip/Move';
-import { display } from 'src/app/utils/utils';
-import { assert } from 'src/app/utils/assert';
-import { GameState } from 'src/app/jscaip/GameState';
-import { AbstractMinimax } from 'src/app/jscaip/Minimax';
-import { Rules } from 'src/app/jscaip/Rules';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { MGPValidation } from 'src/app/utils/MGPValidation';
-import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
+import { MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
+import { GameState } from 'src/app/jscaip/state/GameState';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { Player } from 'src/app/jscaip/Player';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
+import { Debug } from 'src/app/utils/Debug';
+import { RulesConfig, RulesConfigUtils } from 'src/app/jscaip/RulesConfigUtil';
+import { AIOptions, AIStats, AbstractAI } from 'src/app/jscaip/AI/AI';
+import { GameInfo } from '../../normal-component/pick-game/pick-game.component';
+import { SuperRules } from 'src/app/jscaip/Rules';
 
 @Component({
     selector: 'app-local-game-wrapper',
     templateUrl: './local-game-wrapper.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
+@Debug.log
 export class LocalGameWrapperComponent extends GameWrapper<string> implements AfterViewInit {
 
-    public static override VERBOSE: boolean = false;
+    public static readonly AI_TIMEOUT: number = 1500;
 
-    public aiDepths: [string, string] = ['0', '0'];
+    public aiOptions: [string, string] = ['none', 'none'];
 
     public playerSelection: [string, string] = ['human', 'human'];
 
     public winnerMessage: MGPOptional<string> = MGPOptional.empty();
 
-    public botTimeOut: number = 1000;
-
     public displayAIMetrics: boolean = false;
 
-    public constructor(actRoute: ActivatedRoute,
+    public configIsSet: boolean = false;
+
+    public rulesConfig: MGPOptional<RulesConfig> = MGPOptional.empty();
+
+    private readonly configBS: BehaviorSubject<MGPOptional<RulesConfig>> = new BehaviorSubject(MGPOptional.empty());
+    private readonly configObs: Observable<MGPOptional<RulesConfig>> = this.configBS.asObservable();
+
+    public constructor(activatedRoute: ActivatedRoute,
                        connectedUserService: ConnectedUserService,
                        router: Router,
                        messageDisplayer: MessageDisplayer,
                        private readonly cdr: ChangeDetectorRef)
     {
-        super(actRoute, connectedUserService, router, messageDisplayer);
+        super(activatedRoute, connectedUserService, router, messageDisplayer);
         this.players = [MGPOptional.of(this.playerSelection[0]), MGPOptional.of(this.playerSelection[1])];
         this.role = Player.ZERO; // The user is playing, not observing
-        display(LocalGameWrapperComponent.VERBOSE, 'LocalGameWrapper.constructor');
+        this.setDefaultRulesConfig();
     }
+
+    // Will set the default rules config.
+    // Will set it to MGPOptional.empty() if the game doesn't exist, but an error will be handled by another function.
+    // ConfiglessRules have MGPOptional.empty() value.
+    private setDefaultRulesConfig(): void {
+        const urlName: string = this.getGameUrlName();
+        this.rulesConfig = RulesConfigUtils.getGameDefaultConfig(urlName);
+    }
+
     public getCreatedNodes(): number {
-        return MGPNodeStats.createdNodes;
+        return GameNodeStats.createdNodes;
     }
+
     public getMinimaxTime(): number {
-        return MGPNodeStats.minimaxTime;
+        return AIStats.aiTime;
     }
+
     public ngAfterViewInit(): void {
-        setTimeout(async() => {
-            const createdSuccessfully: boolean = await this.afterViewInit();
+        window.setTimeout(async() => {
+            const createdSuccessfully: boolean = await this.createMatchingGameComponent();
             if (createdSuccessfully) {
-                this.restartGame();
+                await this.restartGame();
                 this.cdr.detectChanges();
             }
         }, 1);
     }
-    public updatePlayer(player: Player): void {
-        this.players[player.value] = MGPOptional.of(this.playerSelection[player.value]);
-        if (this.playerSelection[1] === 'human' && this.playerSelection[0] !== 'human') {
-            this.setRole(Player.ONE);
-        } else {
-            this.setRole(Player.ZERO);
-        }
-        this.proposeAIToPlay();
-    }
-    public async onLegalUserMove(move: Move): Promise<void> {
-        display(LocalGameWrapperComponent.VERBOSE, 'LocalGameWrapperComponent.onLegalUserMove');
 
-        this.gameComponent.node = this.gameComponent.rules.choose(this.gameComponent.node, move).get();
-        this.updateBoard();
-        this.proposeAIToPlay();
+    public async updatePlayer(player: Player): Promise<void> {
+        this.players[player.getValue()] = MGPOptional.of(this.playerSelection[player.getValue()]);
+        if (this.playerSelection[1] === 'human' && this.playerSelection[0] !== 'human') {
+            await this.setInteractive(false);
+            await this.setRole(Player.ONE);
+        } else {
+            await this.setInteractive(true);
+            await this.setRole(Player.ZERO);
+        }
+        await this.proposeAIToPlay();
     }
-    public updateBoard(): void {
-        this.updateBoardAndShowLastMove();
-        const gameStatus: GameStatus = this.gameComponent.rules.getGameStatus(this.gameComponent.node);
+
+    public async onLegalUserMove(move: Move): Promise<void> {
+        const config: MGPOptional<RulesConfig> = await this.getConfig();
+        this.gameComponent.node = this.gameComponent.rules.choose(this.gameComponent.node, move, config).get();
+        await this.applyNewMove();
+    }
+
+    private async updateWrapper(): Promise<void> {
+        const config: MGPOptional<RulesConfig> = await this.getConfig();
+        const gameStatus: GameStatus = this.gameComponent.rules.getGameStatus(this.gameComponent.node, config);
         if (gameStatus.isEndGame === true) {
             this.endGame = true;
             if (gameStatus.winner.isPlayer()) {
-                const winner: string = $localize`Player ${gameStatus.winner.value + 1}`;
+                const winner: string = $localize`Player ${gameStatus.winner.getValue() + 1}`;
                 const loser: Player = gameStatus.winner.getOpponent();
-                const loserValue: number = loser.value;
-                if (this.players[gameStatus.winner.value].equalsValue('human')) { // When human win
+                const loserValue: number = loser.getValue();
+                if (this.players[gameStatus.winner.getValue()].equalsValue('human')) { // When human win
                     if (this.players[loserValue].equalsValue('human')) {
                         this.winnerMessage = MGPOptional.of($localize`${ winner } won`);
                     } else {
@@ -96,85 +118,215 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
                     if (this.players[loserValue].equalsValue('human')) {
                         this.winnerMessage = MGPOptional.of($localize`You lost`);
                     } else {
-                        this.winnerMessage = MGPOptional.of($localize`${this.players[gameStatus.winner.value].get()} (Player ${gameStatus.winner.value + 1}) won`);
+                        this.winnerMessage = MGPOptional.of($localize`${this.players[gameStatus.winner.getValue()].get()} (Player ${gameStatus.winner.getValue() + 1}) won`);
                     }
                 }
             }
+        }
+        this.cdr.detectChanges();
+    }
 
+    public async proposeAIToPlay(): Promise<void> {
+        const currentPlayerIsHuman: boolean = await this.hasSelectedAI() === false;
+        await this.setInteractive(currentPlayerIsHuman);
+        if (currentPlayerIsHuman === false) {
+            // It is AI's turn, let it play after a small delay
+            const playingAI: MGPOptional<{ ai: AbstractAI, options: AIOptions }> = this.getPlayingAI();
+            if (playingAI.isPresent()) {
+                window.setTimeout(async() => {
+                    const config: MGPOptional<RulesConfig> = await this.getConfig();
+                    const gameIsOngoing: boolean =
+                        this.gameComponent.rules.getGameStatus(this.gameComponent.node, config) === GameStatus.ONGOING;
+                    if (gameIsOngoing) {
+                        await this.doAIMove(playingAI.get().ai, playingAI.get().options);
+                    }
+                }, LocalGameWrapperComponent.AI_TIMEOUT);
+            }
+            // If playingAI is absent, that means the user selected an AI without selecting options yet
+            // We do nothing in this case.
         }
     }
-    public proposeAIToPlay(): void {
-        // check if ai's turn has come, if so, make her start after a delay
-        const playingMinimax: MGPOptional<AbstractMinimax> = this.getPlayingAI();
-        if (playingMinimax.isPresent()) {
-            // bot's turn
-            window.setTimeout(async() => {
-                await this.doAIMove(playingMinimax.get());
-            }, this.botTimeOut);
-        }
-    }
-    private getPlayingAI(): MGPOptional<AbstractMinimax> {
-        if (this.gameComponent.rules.getGameStatus(this.gameComponent.node).isEndGame) {
+
+    /**
+     * @returns false if the game is finished
+     *          false if no AI is selected
+     *          true if an AI is selected even if its option is not selected yet
+     */
+    private async hasSelectedAI(): Promise<boolean> {
+        const config: MGPOptional<RulesConfig> = await this.getConfig();
+        if (this.gameComponent.rules.getGameStatus(this.gameComponent.node, config).isEndGame) {
             // No AI is playing when the game is finished
-            return MGPOptional.empty();
+            return false;
         }
+
         const playerIndex: number = this.gameComponent.getTurn() % 2;
-        if (this.aiDepths[playerIndex] === '0') {
-            // No AI is playing if its level is set to 0
+        return this.playerSelection[playerIndex] !== 'human';
+    }
+
+    private lastMoveWasAI(): boolean {
+        const playerIndex: number = (this.gameComponent.getTurn() - 1) % 2;
+        return this.playerSelection[playerIndex] !== 'human';
+    }
+
+    private getPlayingAI(): MGPOptional<{ ai: AbstractAI, options: AIOptions }> {
+        const playerIndex: number = this.gameComponent.getTurn() % 2;
+        const aiOpt: MGPOptional<AbstractAI> = this.getAI(playerIndex);
+        if (aiOpt.isPresent()) {
+            const ai: AbstractAI = aiOpt.get();
+            const optionsName: string = this.aiOptions[playerIndex];
+            const matchingOptions: MGPOptional<AIOptions> =
+                MGPOptional.ofNullable(ai.availableOptions.find((options: AIOptions) => {
+                    return options.name === optionsName;
+                }));
+            // If the option is not selected
+            // then it is not a PLAYING AI yet, just a selected AI
+            // and user must still select the AI's options
+            return matchingOptions.map((options: AIOptions) => {
+                return { ai, options };
+            });
+        } else {
             return MGPOptional.empty();
         }
+    }
+
+    /**
+     * @param playerIndex 0 or 1 (the index of the current player)
+     * @returns MGPOptional.empty() if no AI is selected
+     *          MGPOptional.of(some AI) if an AI is selected, even if AI has its options unchosen
+     */
+    private getAI(playerIndex: number): MGPOptional<AbstractAI> {
         return MGPOptional.ofNullable(
-            this.gameComponent.availableMinimaxes.find((a: AbstractMinimax) => {
+            this.gameComponent.availableAIs.find((a: AbstractAI) => {
                 return this.players[playerIndex].equalsValue(a.name);
             }));
     }
-    public async doAIMove(playingMinimax: AbstractMinimax): Promise<MGPValidation> {
+
+    public getStateProvider(): MGPOptional<(config: MGPOptional<RulesConfig>) => GameState> {
+        return GameInfo.getStateProvider(this.getGameUrlName());
+    }
+
+    public async doAIMove(playingAI: AbstractAI, options: AIOptions): Promise<MGPValidation> {
         // called only when it's AI's Turn
-        const ruler: Rules<Move, GameState, unknown> = this.gameComponent.rules;
-        const gameStatus: GameStatus = ruler.getGameStatus(this.gameComponent.node);
-        assert(gameStatus === GameStatus.ONGOING, 'AI should not try to play when game is over!');
-        const turn: number = this.gameComponent.node.gameState.turn % 2;
-        const currentAiDepth: number = Number.parseInt(this.aiDepths[turn % 2]);
-        const aiMove: Move = this.gameComponent.node.findBestMove(currentAiDepth, playingMinimax, true);
-        const nextNode: MGPOptional<AbstractNode> = ruler.choose(this.gameComponent.node, aiMove);
-        if (nextNode.isPresent()) {
+        const ruler: SuperRules<Move, GameState, RulesConfig, unknown> = this.gameComponent.rules;
+        const config: MGPOptional<RulesConfig> = await this.getConfig();
+        const gameStatus: GameStatus = ruler.getGameStatus(this.gameComponent.node, config);
+        Utils.assert(gameStatus === GameStatus.ONGOING, 'AI should not try to play when game is over!');
+        const aiMove: Move = playingAI.chooseNextMove(this.gameComponent.node, options, config);
+        const nextNode: MGPFallible<AbstractNode> = ruler.choose(this.gameComponent.node, aiMove, config);
+        if (nextNode.isSuccess()) {
+            this.gameComponent.hideLastMove();
             this.gameComponent.node = nextNode.get();
-            this.updateBoard();
-            this.cdr.detectChanges();
-            this.proposeAIToPlay();
+            await this.applyNewMove();
             return MGPValidation.SUCCESS;
         } else {
-            this.messageDisplayer.criticalMessage($localize`The AI chose an illegal move! This is an unexpected situation that we logged, we will try to solve this as soon as possible. In the meantime, consider that you won!`);
-            return ErrorLoggerService.logError('LocalGameWrapper', 'AI chose illegal move', { name: playingMinimax.name, move: aiMove.toString() });
+            return this.handleAIError(playingAI, aiMove, nextNode.getReason());
         }
     }
+
+    private async applyNewMove(): Promise<void> {
+        const lastMoveWasAI: boolean = this.lastMoveWasAI();
+        await this.showNewMove(lastMoveWasAI);
+        await this.updateWrapper();
+        await this.proposeAIToPlay();
+        this.cdr.detectChanges();
+    }
+
+    private async handleAIError(playingAI: AbstractAI, illegalMove: Move, error: string): Promise<MGPValidation> {
+        this.messageDisplayer.criticalMessage($localize`The AI chose an illegal move! This is an unexpected situation that we logged, we will try to solve this as soon as possible. In the meantime, consider that you won!`);
+        return Utils.logError('LocalGameWrapper', 'AI chose illegal move', {
+            game: this.getGameUrlName(),
+            name: playingAI.name,
+            move: illegalMove.toString(),
+            reason: error,
+        });
+    }
+
+    public availableAIOptions(player: number): AIOptions[] {
+        return this.getAI(player).get().availableOptions;
+    }
+
     public canTakeBack(): boolean {
-        return this.gameComponent.getTurn() > 0;
-    }
-    public takeBack(): void {
-        this.gameComponent.node = this.gameComponent.node.mother.get();
-        if (this.isAITurn()) {
-            this.gameComponent.node = this.gameComponent.node.mother.get();
+        if (this.players[0].equalsValue('human')) {
+            return this.gameComponent.getTurn() > 0;
+        } else if (this.players[1].equalsValue('human')) {
+            return this.gameComponent.getTurn() > 1;
+        } else {
+            return false;
         }
-        this.updateBoardAndShowLastMove();
     }
-    private isAITurn(): boolean {
+
+    public async takeBack(): Promise<void> {
+        this.gameComponent.node = this.gameComponent.node.parent.get();
+        if (this.isTurnOfPlayingAI()) {
+            Utils.assert(this.gameComponent.node.parent.isPresent(),
+                         'Cannot take back in first turn when AI is Player.ZERO');
+            this.gameComponent.node = this.gameComponent.node.parent.get();
+        }
+        await this.showCurrentState(false);
+    }
+
+    private isTurnOfPlayingAI(): boolean {
         return this.getPlayingAI().isPresent();
     }
-    public restartGame(): void {
-        this.gameComponent.node = this.gameComponent.rules.getInitialNode();
-        this.gameComponent.updateBoard();
+
+    public async restartGame(): Promise<void> {
+        const config: MGPOptional<RulesConfig> = await this.getConfig();
+        this.gameComponent.node = this.gameComponent.rules.getInitialNode(config);
+        this.gameComponent.hideLastMove();
+        await this.gameComponent.updateBoardAndRedraw(false);
         this.endGame = false;
         this.winnerMessage = MGPOptional.empty();
-        this.proposeAIToPlay();
+        await this.proposeAIToPlay();
     }
-    public getPlayer(): string {
+
+    public override getPlayer(): string {
         return 'human';
     }
-    public onCancelMove(reason?: string): void {
-        if (this.gameComponent.node.move.isPresent()) {
-            const move: Move = this.gameComponent.node.move.get();
-            this.gameComponent.showLastMove(move);
+
+    public override async onCancelMove(reason?: string): Promise<void> {
+        await super.onCancelMove(reason);
+        if (this.gameComponent.node.previousMove.isPresent()) {
+            const move: Move = this.gameComponent.node.previousMove.get();
+            const config: MGPOptional<RulesConfig> = await this.getConfig();
+            await this.gameComponent.showLastMove(move, config);
         }
+    }
+
+    public override async getConfig(): Promise<MGPOptional<RulesConfig>> {
+        let subcription: MGPOptional<Subscription> = MGPOptional.empty();
+        const rulesConfigPromise: Promise<RulesConfig> =
+            new Promise((resolve: (value: RulesConfig) => void) => {
+                subcription = MGPOptional.of(
+                    this.configObs.subscribe((response: MGPOptional<RulesConfig>) => {
+                        if (response.isPresent()) {
+                            resolve(response.get());
+                        }
+                    }),
+                );
+            });
+        const rulesConfig: RulesConfig = await rulesConfigPromise;
+        // Subscription will never be empty at this point
+        // but this is needed to prevent linter from complaining that:
+        // "subscription is used before it is set"
+        subcription.get().unsubscribe();
+        return MGPOptional.of(rulesConfig);
+    }
+
+    public updateConfig(rulesConfig: MGPOptional<RulesConfig>): void {
+        this.rulesConfig = rulesConfig;
+        // If there is no config for this game, then rulesConfig value will be MGPOptional.empty()
+        if (rulesConfig.isPresent() && Object.keys(rulesConfig.get()).length === 0) {
+            this.markConfigAsFilled();
+        }
+    }
+
+    public markConfigAsFilled(): void {
+        this.configIsSet = true;
+        this.configBS.next(this.rulesConfig);
+        this.cdr.detectChanges();
+    }
+
+    public displayAIInfo(): boolean {
+        return localStorage.getItem('displayAIInfo') === 'true';
     }
 }

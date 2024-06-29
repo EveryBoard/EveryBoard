@@ -35,16 +35,15 @@ describe('TrexoHalfSquareComponent', () => {
 
     let component: TrexoHalfPieceComponent;
 
-    /**
-      * Thoses are all the points, and line_A_to_B is the name of the line going from point A to point B
-      * Pretty complex notation right ?
-      *     0------1
-      *    /      /|
-      *   2------3 |
-      *   |      | 4
-      *   |      |/
-      *   5------6
-      */
+    /** Those are all the points, and line_A_to_B is the name of the line going from point A to point B
+     * Pretty complex notation right ?
+     *     0------1
+     *    /      /|
+     *   2------3 |
+     *   |      | 4
+     *   |      |/
+     *   5------6
+     */
 
     beforeEach(fakeAsync(async() => {
         testUtils = await SimpleComponentTestUtils.create(TrexoHalfPieceComponent);
@@ -97,7 +96,7 @@ describe('TrexoHalfSquareComponent', () => {
         testUtils.expectElementNotToExist('#line_3_to_6');
     });
 
-    it(`should display parallelogram as open to the left when it is the righter part of the tile`, () => {
+    it(`should display parallelogram as open to the left when it is the rightmost part of the tile`, () => {
         // Given a component on which the move and coord indicate that the coord is on the right part of the tile
         component.move = TrexoMove.from(new Coord(1, 1), new Coord(0, 1)).get();
         component.pieceClasses = [];
@@ -257,4 +256,5 @@ describe('TrexoHalfSquareComponent', () => {
         // Then all lines should be displayed
         expectAllLinesToBeDisplayed();
     });
+
 });

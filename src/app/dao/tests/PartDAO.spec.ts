@@ -1,126 +1,19 @@
-/* eslint-disable max-lines-per-function */
+import { setupEmulators } from 'src/app/utils/tests/TestUtils.spec';
 import { TestBed } from '@angular/core/testing';
-import { GameEvent, RequestType, Reply, Part, MGPResult } from 'src/app/domain/Part';
-import { PartMocks } from 'src/app/domain/PartMocks.spec';
-import { Player } from 'src/app/jscaip/Player';
-import { createConnectedUser, createUnverifiedUser, signOut, reconnectUser, createDisconnectedUser } from 'src/app/services/tests/ConnectedUserService.spec';
-import { expectPermissionToBeDenied, setupEmulators } from 'src/app/utils/tests/TestUtils.spec';
 import { PartDAO } from '../PartDAO';
-import { UserDAO } from '../UserDAO';
-import { serverTimestamp, Timestamp } from 'firebase/firestore';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { ConfigRoomDAO } from '../ConfigRoomDAO';
-import { MinimalUser } from 'src/app/domain/MinimalUser';
-import { ConfigRoomMocks } from 'src/app/domain/ConfigRoomMocks.spec';
-import { UserMocks } from 'src/app/domain/UserMocks.spec';
-import { ConfigRoom, PartStatus } from 'src/app/domain/ConfigRoom';
-import { FocusedPart } from 'src/app/domain/User';
-import { FocusedPartMocks } from 'src/app/domain/mocks/FocusedPartMocks.spec';
-import { ConfigRoomService } from 'src/app/services/ConfigRoomService';
-import { GameEventService } from '../../services/GameEventService';
-import { IFirestoreDAO } from '../FirestoreDAO';
-import { UserService } from 'src/app/services/UserService';
-import { Utils } from 'src/app/utils/utils';
 
-type PartInfo = {
-    id: string,
-    part: Part,
-    creator: MinimalUser,
-    candidate: MinimalUser,
-}
-
-xdescribe('PartDAO security', () => {
+describe('PartDAO', () => {
 
     let partDAO: PartDAO;
-    let gameEventService: GameEventService;
-    let userService: UserService;
-    let userDAO: UserDAO;
-    let configRoomDAO: ConfigRoomDAO;
-    let configRoomService: ConfigRoomService;
 
-    const CREATOR_EMAIL: string = UserMocks.CREATOR_AUTH_USER.email.get();
-    const CREATOR_NAME: string = UserMocks.CREATOR_AUTH_USER.username.get();
-
-    const CANDIDATE_EMAIL: string = UserMocks.CANDIDATE_AUTH_USER.email.get();
-    const CANDIDATE_NAME: string = UserMocks.CANDIDATE_AUTH_USER.username.get();
-
-    const OPPONENT_EMAIL: string = UserMocks.OPPONENT_AUTH_USER.email.get();
-    const OPPONENT_NAME: string = UserMocks.OPPONENT_AUTH_USER.username.get();
-
-    const MALICIOUS_EMAIL: string = 'm@licio.us';
-    const MALICIOUS_NAME: string = 'malicious';
-
-    async function addCandidate(partId: string, signOutUser: boolean = true): Promise<MinimalUser> {
-        const candidate: MinimalUser = await createConnectedUser(CANDIDATE_EMAIL, CANDIDATE_NAME);
-        await configRoomService.addCandidate(partId, candidate);
-        if (signOutUser) {
-            await signOut();
-        }
-        return candidate;
-    }
-    async function preparePart(): Promise<PartInfo> {
-        // Given a part, an accepted config, and a user who is the chosen opponent in the configRoom
-        // Creator creates the configRoom
-        const creator: MinimalUser = await createConnectedUser(CREATOR_EMAIL, CREATOR_NAME);
-        const part: Part = { ...PartMocks.INITIAL, playerZero: creator };
-        const partId: string = await partDAO.create(part);
-        await configRoomDAO.set(partId, { ...ConfigRoomMocks.INITIAL, creator });
-        await signOut();
-
-        // A candidate adds themself to the candidates list
-        const candidate: MinimalUser = await addCandidate(partId);
-
-        // The creator then selects candidates as the chosen opponent and proposes the config
-        await reconnectUser(CREATOR_EMAIL);
-        const update: Partial<ConfigRoom> = {
-            chosenOpponent: candidate,
-            partStatus: PartStatus.CONFIG_PROPOSED.value,
-        };
-        await expectAsync(configRoomDAO.update(partId, update)).toBeResolvedTo();
-        await signOut();
-
-        // And the candidate accepts the config
-        await reconnectUser(CANDIDATE_EMAIL);
-        await configRoomDAO.update(partId, { partStatus: PartStatus.PART_STARTED.value });
-
-        return { id: partId, part, creator, candidate };
-    }
-    async function setupStartedPartAsPlayerZero(): Promise<string> {
-        const playerOne: MinimalUser = await createDisconnectedUser(OPPONENT_EMAIL, OPPONENT_NAME);
-        const playerZero: MinimalUser = await createConnectedUser(CREATOR_EMAIL, CREATOR_NAME);
-
-        const part: Part = { ...PartMocks.STARTED, playerZero, playerOne, turn: 0 };
-        const partId: string = await partDAO.create(part);
-        return partId;
-    }
-    async function setupFinishedPartAsPlayerZero(): Promise<string> {
-        const playerOne: MinimalUser = await createDisconnectedUser(OPPONENT_EMAIL, OPPONENT_NAME);
-        const playerZero: MinimalUser = await createConnectedUser(CREATOR_EMAIL, CREATOR_NAME);
-        const part: Part = { ...PartMocks.STARTED, playerZero, playerOne, turn: 0 };
-        const partId: string = await partDAO.create(part);
-        await expectAsync(partDAO.update(partId, {
-            turn: 1,
-            result: MGPResult.VICTORY.value,
-            winner: playerZero,
-            loser: playerOne,
-        })).toBeResolved();
-        return partId;
-    }
     beforeEach(async() => {
         await setupEmulators();
         partDAO = TestBed.inject(PartDAO);
-        gameEventService = TestBed.inject(GameEventService);
-        userDAO = TestBed.inject(UserDAO);
-        userService = TestBed.inject(UserService);
-        configRoomDAO = TestBed.inject(ConfigRoomDAO);
-        configRoomService = TestBed.inject(ConfigRoomService);
     });
-    function events(partId: string): IFirestoreDAO<GameEvent> {
-        return partDAO.subCollectionDAO<GameEvent>(partId, 'events');
-    }
     it('should be created', () => {
         expect(partDAO).toBeTruthy();
     });
+<<<<<<< HEAD
     describe('for verified user', () => {
         it('should allow creating a part', async() => {
             // Given a verified user
@@ -1098,4 +991,6 @@ xdescribe('PartDAO security', () => {
             });
         });
     });
+=======
+>>>>>>> e34d7296a163d7906fd00fe6e790d362377a34fd
 });

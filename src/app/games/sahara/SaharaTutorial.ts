@@ -2,8 +2,10 @@ import { SaharaMove } from 'src/app/games/sahara/SaharaMove';
 import { SaharaState } from 'src/app/games/sahara/SaharaState';
 import { Coord } from 'src/app/jscaip/Coord';
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
-import { MGPValidation } from 'src/app/utils/MGPValidation';
+import { MGPValidation } from '@everyboard/lib';
 import { Tutorial, TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
+import { SaharaRules } from './SaharaRules';
+import { TutorialStepMessage } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
 
 const N: FourStatePiece = FourStatePiece.UNREACHABLE;
 const O: FourStatePiece = FourStatePiece.ZERO;
@@ -16,13 +18,11 @@ export class SaharaTutorial extends Tutorial {
             $localize`Initial board`,
             $localize`Sâhârâ is played on a board where each space is a triangle.
         Each player has six pyramids.`,
-            SaharaState.getInitialState(),
+            SaharaRules.get().getInitialState(),
         ),
         TutorialStep.informational(
-            $localize`Goal of the game`,
-            $localize`At Sâhârâ, the goal of the game is to immobilize one of the opponent's pyramids.
-        To do so, you have to occupy all neighboring space of that pyramid.
-        Here, Light has lost because its leftmost pyramid is immobilized.`,
+            TutorialStepMessage.OBJECT_OF_THE_GAME(),
+            $localize`At Sâhârâ, the object of the game is to immobilize one of the opponent's pyramids. To do so, you have to occupy all neighboring space of that pyramid. Here, Light has lost because its leftmost pyramid is immobilized.`,
             new SaharaState([
                 [N, N, _, _, X, _, _, O, X, N, N],
                 [N, _, _, _, _, _, _, _, _, _, N],
@@ -42,7 +42,7 @@ export class SaharaTutorial extends Tutorial {
             <li>Click on one of its two or three neighboring spaces in order to move your pyramid there.</li>
         </ol><br/>
         You're playing Dark, do any simple step.`,
-            SaharaState.getInitialState(),
+            SaharaRules.get().getInitialState(),
             SaharaMove.from(new Coord(2, 0), new Coord(2, 1)).get(),
             (move: SaharaMove, _previous: SaharaState, _result: SaharaState) => {
                 if (move.isSimpleStep()) {
@@ -51,7 +51,7 @@ export class SaharaTutorial extends Tutorial {
                     return MGPValidation.failure($localize`You have made a double step, which is good but it is the next exercise!`);
                 }
             },
-            $localize`Congratulations!`,
+            TutorialStepMessage.CONGRATULATIONS(),
         ),
         TutorialStep.fromPredicate(
             $localize`Double step`,
@@ -63,7 +63,7 @@ export class SaharaTutorial extends Tutorial {
                  the 6 neighboring light spaces of the 3 dark spaces that are neighbors of your pyramid.
         </ol><br/>
         You're playing Dark, do a double step.`,
-            SaharaState.getInitialState(),
+            SaharaRules.get().getInitialState(),
             SaharaMove.from(new Coord(7, 0), new Coord(5, 0)).get(),
             (move: SaharaMove, _previous: SaharaState, _result: SaharaState) => {
                 if (move.isSimpleStep()) {
@@ -72,7 +72,7 @@ export class SaharaTutorial extends Tutorial {
                     return MGPValidation.SUCCESS;
                 }
             },
-            $localize`Congratulations!`,
+            TutorialStepMessage.CONGRATULATIONS(),
         ),
     ];
 }

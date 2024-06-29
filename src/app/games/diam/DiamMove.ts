@@ -1,11 +1,22 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { Move } from 'src/app/jscaip/Move';
 import { DiamPiece } from './DiamPiece';
-import { MoveEncoder } from '../../utils/Encoder';
+import { Encoder } from '@everyboard/lib';
 
-export class DiamMoveDrop extends Move {
-    public static encoder: MoveEncoder<DiamMoveDrop> = MoveEncoder.tuple(
-        [MoveEncoder.identity<number>(), DiamPiece.encoder],
+export abstract class DiamMove extends Move {
+
+    public isDrop(): this is DiamMoveDrop {
+        return this instanceof DiamMoveDrop;
+    }
+    public isShift(): this is DiamMoveShift {
+        return this instanceof DiamMoveShift;
+    }
+}
+
+export class DiamMoveDrop extends DiamMove {
+
+    public static encoder: Encoder<DiamMoveDrop> = Encoder.tuple(
+        [Encoder.identity<number>(), DiamPiece.encoder],
         (drop: DiamMoveDrop): [number, DiamPiece] => [drop.target, drop.piece],
         (fields: [number, DiamPiece]): DiamMoveDrop => new DiamMoveDrop(fields[0], fields[1]),
     );
@@ -16,9 +27,6 @@ export class DiamMoveDrop extends Move {
         if (piece === DiamPiece.EMPTY) {
             throw new Error('Cannot drop an empty piece');
         }
-    }
-    public isDrop(): this is DiamMoveDrop {
-        return true;
     }
     public getTarget(): number {
         return this.target;
@@ -38,22 +46,20 @@ export class DiamMoveDrop extends Move {
 
 type DiamShiftDirection = 'clockwise' | 'counterclockwise';
 
-export class DiamMoveShift extends Move {
-    public static encoder: MoveEncoder<DiamMoveShift> = MoveEncoder.tuple(
-        [Coord.encoder, MoveEncoder.identity<boolean>()],
+export class DiamMoveShift extends DiamMove {
+
+    public static encoder: Encoder<DiamMoveShift> = Encoder.tuple(
+        [Coord.encoder, Encoder.identity<boolean>()],
         (shift: DiamMoveShift): [Coord, boolean] => [shift.start, shift.moveDirection === 'clockwise'],
         (fields: [Coord, boolean]): DiamMoveShift => new DiamMoveShift(fields[0], fields[1] ? 'clockwise' : 'counterclockwise'),
     );
-    public static fromRepresentation(representationStart: Coord, moveDirection: DiamShiftDirection): DiamMoveShift {
+    public static ofRepresentation(representationStart: Coord, moveDirection: DiamShiftDirection): DiamMoveShift {
         // In the representation, the y axis is reverted, so 3 - y gives the real y on board
         return new DiamMoveShift(new Coord(representationStart.x, 3 - representationStart.y), moveDirection);
     }
     public constructor(public readonly start: Coord,
                        public readonly moveDirection: DiamShiftDirection) {
         super();
-    }
-    public isDrop(): this is DiamMoveDrop {
-        return false;
     }
     public getTarget(): number {
         if (this.moveDirection === 'clockwise') {
@@ -76,11 +82,10 @@ export class DiamMoveShift extends Move {
     }
 }
 
-export type DiamMove = DiamMoveDrop | DiamMoveShift
-
-export const DiamMoveEncoder: MoveEncoder<DiamMove> =
-    MoveEncoder.disjunction(DiamMoveDrop.encoder,
-                            DiamMoveShift.encoder,
-                            (value: DiamMove): value is DiamMoveDrop => {
-                                return value.isDrop();
-                            });
+export const DiamMoveEncoder: Encoder<DiamMove> = Encoder.disjunction(
+    [
+        (move: DiamMove): move is DiamMoveDrop => move.isDrop(),
+        (move: DiamMove): move is DiamMoveShift => move.isShift(),
+    ],
+    [DiamMoveDrop.encoder, DiamMoveShift.encoder],
+);

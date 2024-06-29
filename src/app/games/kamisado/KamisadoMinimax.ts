@@ -1,20 +1,17 @@
+import { Minimax } from 'src/app/jscaip/AI/Minimax';
 import { KamisadoMove } from './KamisadoMove';
+import { KamisadoMoveGenerator } from './KamisadoMoveGenerator';
+import { KamisadoRules } from './KamisadoRules';
+import { KamisadoHeuristic } from './KamisadoHeuristic';
 import { KamisadoState } from './KamisadoState';
-import { PlayerMetricsMinimax } from 'src/app/jscaip/Minimax';
-import { KamisadoNode, KamisadoRules } from './KamisadoRules';
-import { ArrayUtils } from 'src/app/utils/ArrayUtils';
 
-export class KamisadoMinimax extends PlayerMetricsMinimax<KamisadoMove, KamisadoState> {
+export class KamisadoMinimax extends Minimax<KamisadoMove, KamisadoState> {
 
-    public getListMoves(node: KamisadoNode): KamisadoMove[] {
-        const moves: KamisadoMove[] = KamisadoRules.getListMovesFromState(node.gameState);
-        ArrayUtils.sortByDescending(moves, (move: KamisadoMove): number => move.length());
-        return moves;
+    public constructor() {
+        super($localize`Minimax`,
+              KamisadoRules.get(),
+              new KamisadoHeuristic(),
+              new KamisadoMoveGenerator());
     }
-    public getMetrics(node: KamisadoNode): [number, number] {
-        const state: KamisadoState = node.gameState;
-        // Metric is how far a player's piece is from the end line
-        const [furthest0, furthest1]: [number, number] = KamisadoRules.getFurthestPiecePositions(state);
-        return [7 - furthest0, furthest1];
-    }
+
 }

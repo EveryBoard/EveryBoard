@@ -31,10 +31,10 @@ xdescribe('UserService', () => {
             spyOn(userDAO, 'update').and.resolveTo();
 
             // When the username of a user set
-            await userService.setUsername('uid', 'foo');
+            await userService.setUsername('userId', 'foo');
 
             // Then the username is updated through the DAO
-            expect(userDAO.update).toHaveBeenCalledWith('uid', { username: 'foo' });
+            expect(userDAO.update).toHaveBeenCalledWith('userId', { username: 'foo' });
         });
     });
     describe('updatePresenceToken', () => {
@@ -43,10 +43,10 @@ xdescribe('UserService', () => {
             spyOn(userDAO, 'update').and.resolveTo();
 
             // When calling updatePresenceToken
-            await userService.updatePresenceToken('joserId');
+            await userService.updatePresenceToken('userId');
 
             // Then update should be called
-            expect(userDAO.update).toHaveBeenCalledOnceWith('joserId', { lastUpdateTime: serverTimestamp() });
+            expect(userDAO.update).toHaveBeenCalledOnceWith('userId', { lastUpdateTime: serverTimestamp() });
         });
     });
 });

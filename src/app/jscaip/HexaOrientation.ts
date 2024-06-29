@@ -1,5 +1,6 @@
+import { Comparable } from '@everyboard/lib';
 import { Coord } from './Coord';
-import { HexagonalGameState } from './HexagonalGameState';
+import { HexagonalGameState } from './state/HexagonalGameState';
 
 export abstract class HexaOrientation {
     public readonly startAngle: number;
@@ -30,10 +31,12 @@ export class FlatHexaOrientation extends HexaOrientation {
 
     public override readonly inverseConversionMatrix: [number, number, number, number] =
         [2/3, 0, -1/3, Math.sqrt(3)/3];
+
     private constructor() {
         super();
     }
-    public isOnBorder<T>(state: HexagonalGameState<T>, coord: Coord): boolean {
+
+    public isOnBorder<T extends NonNullable<Comparable>>(state: HexagonalGameState<T>, coord: Coord): boolean {
         return this.isOnTopRightBorder(state, coord) ||
             this.isOnRightBorder(state, coord) ||
             this.isOnBottomRightBorder(state, coord) ||
@@ -41,19 +44,26 @@ export class FlatHexaOrientation extends HexaOrientation {
             this.isOnLeftBorder(state, coord) ||
             this.isOnTopLeftBorder(state, coord);
     }
-    public isOnTopRightBorder<T>(board: HexagonalGameState<T>, coord: Coord): boolean {
+
+    public isOnTopRightBorder<T extends NonNullable<Comparable>>(board: HexagonalGameState<T>, coord: Coord): boolean {
         return coord.y === 0;
     }
-    public isOnRightBorder<T>(board: HexagonalGameState<T>, coord: Coord): boolean {
+
+    public isOnRightBorder<T extends NonNullable<Comparable>>(board: HexagonalGameState<T>, coord: Coord): boolean {
         return coord.x === board.width-1;
     }
-    public isOnLeftBorder<T>(board: HexagonalGameState<T>, coord: Coord): boolean {
+
+    public isOnLeftBorder<T extends NonNullable<Comparable>>(board: HexagonalGameState<T>, coord: Coord): boolean {
         return coord.x === 0;
     }
-    public isOnBottomLeftBorder<T>(board: HexagonalGameState<T>, coord: Coord): boolean {
+
+    public isOnBottomLeftBorder<T extends NonNullable<Comparable>>(board: HexagonalGameState<T>, coord: Coord)
+    : boolean
+    {
         return coord.y === board.height-1;
     }
-    public isOnTopLeftBorder<T>(board: HexagonalGameState<T>, coord: Coord): boolean {
+
+    public isOnTopLeftBorder<T extends NonNullable<Comparable>>(board: HexagonalGameState<T>, coord: Coord): boolean {
         if (board.excludedSpaces[coord.y] != null) {
             return coord.x === board.excludedSpaces[coord.y];
         } else if (coord.y === board.excludedSpaces.length) {
@@ -62,7 +72,10 @@ export class FlatHexaOrientation extends HexaOrientation {
             return false;
         }
     }
-    public isOnBottomRightBorder<T>(board: HexagonalGameState<T>, coord: Coord): boolean {
+
+    public isOnBottomRightBorder<T extends NonNullable<Comparable>>(board: HexagonalGameState<T>, coord: Coord)
+    : boolean
+    {
         if (board.excludedSpaces[board.height-1 - coord.y] != null) {
             return board.width-1 - coord.x === board.excludedSpaces[board.height-1 - coord.y];
         } else if (board.height-1 - coord.y === board.excludedSpaces.length) {
@@ -71,7 +84,8 @@ export class FlatHexaOrientation extends HexaOrientation {
             return false;
         }
     }
-    public getAllBorders<T>(state: HexagonalGameState<T>): Coord[] {
+
+    public getAllBorders<T extends NonNullable<Comparable>>(state: HexagonalGameState<T>): Coord[] {
         const coords: Coord[] = [];
         state.forEachCoord((coord: Coord, _content: T) => {
             if (this.isOnBorder(state, coord)) {
@@ -80,22 +94,29 @@ export class FlatHexaOrientation extends HexaOrientation {
         });
         return coords;
     }
-    public isTopCorner<T>(board: HexagonalGameState<T>, coord: Coord): boolean {
+
+    public isTopCorner<T extends NonNullable<Comparable>>(board: HexagonalGameState<T>, coord: Coord): boolean {
         return this.isOnTopLeftBorder(board, coord) && this.isOnTopRightBorder(board, coord);
     }
-    public isTopLeftCorner<T>(board: HexagonalGameState<T>, coord: Coord): boolean {
+
+    public isTopLeftCorner<T extends NonNullable<Comparable>>(board: HexagonalGameState<T>, coord: Coord): boolean {
         return this.isOnTopLeftBorder(board, coord) && this.isOnLeftBorder(board, coord);
     }
-    public isTopRightCorner<T>(board: HexagonalGameState<T>, coord: Coord): boolean {
+
+    public isTopRightCorner<T extends NonNullable<Comparable>>(board: HexagonalGameState<T>, coord: Coord): boolean {
         return this.isOnTopRightBorder(board, coord) && this.isOnRightBorder(board, coord);
     }
-    public isBottomCorner<T>(board: HexagonalGameState<T>, coord: Coord): boolean {
+
+    public isBottomCorner<T extends NonNullable<Comparable>>(board: HexagonalGameState<T>, coord: Coord): boolean {
         return this.isOnBottomLeftBorder(board, coord) && this.isOnBottomRightBorder(board, coord);
     }
-    public isBottomLeftCorner<T>(board: HexagonalGameState<T>, coord: Coord): boolean {
+
+    public isBottomLeftCorner<T extends NonNullable<Comparable>>(board: HexagonalGameState<T>, coord: Coord): boolean {
         return this.isOnBottomLeftBorder(board, coord) && this.isOnLeftBorder(board, coord);
     }
-    public isBottomRightCorner<T>(board: HexagonalGameState<T>, coord: Coord): boolean {
+
+    public isBottomRightCorner<T extends NonNullable<Comparable>>(board: HexagonalGameState<T>, coord: Coord): boolean {
         return this.isOnBottomRightBorder(board, coord) && this.isOnRightBorder(board, coord);
     }
+
 }

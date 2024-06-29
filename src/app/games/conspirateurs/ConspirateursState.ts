@@ -1,10 +1,9 @@
 import { Coord } from 'src/app/jscaip/Coord';
-import { GameStateWithTable } from 'src/app/jscaip/GameStateWithTable';
-import { PlayerOrNone } from 'src/app/jscaip/Player';
-import { ArrayUtils } from 'src/app/utils/ArrayUtils';
-import { MGPSet } from 'src/app/utils/MGPSet';
+import { Set } from '@everyboard/lib';
+import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
+import { PlayerOrNoneGameStateWithTable } from 'src/app/jscaip/state/PlayerOrNoneGameStateWithTable';
 
-export class ConspirateursState extends GameStateWithTable<PlayerOrNone> {
+export class ConspirateursState extends PlayerOrNoneGameStateWithTable {
 
     public static readonly WIDTH: number = 17;
 
@@ -17,44 +16,46 @@ export class ConspirateursState extends GameStateWithTable<PlayerOrNone> {
     private static readonly SHELTERS_INDICES: readonly number[] = [0, 1, 3, 5, 7, 8, 9, 11, 13, 15, 16];
 
     public static ALL_SHELTERS: Coord[] =
-        new MGPSet(ConspirateursState.SHELTERS_INDICES.flatMap((xOrY: number) => [
+        new Set(ConspirateursState.SHELTERS_INDICES.flatMap((xOrY: number) => [
             new Coord(xOrY, 0),
             new Coord(xOrY, ConspirateursState.HEIGHT-1),
             new Coord(0, xOrY),
             new Coord(ConspirateursState.WIDTH-1, xOrY),
         ])).toList();
 
-    public static getInitialState(): ConspirateursState {
-        const board: PlayerOrNone[][] = ArrayUtils.createTable(ConspirateursState.WIDTH,
-                                                               ConspirateursState.HEIGHT,
-                                                               PlayerOrNone.NONE);
-        return new ConspirateursState(board, 0);
-    }
     public isShelter(coord: Coord): boolean {
-        if (coord.x === 0 || coord.x === ConspirateursState.WIDTH-1) {
+        if (this.isVerticalEdge(coord)) {
             return ConspirateursState.SHELTERS_INDICES.some((y: number) => coord.y === y);
-        } else if (coord.y === 0 || coord.y === ConspirateursState.HEIGHT-1) {
+        } else if (this.isHorizontalEdge(coord)) {
             return ConspirateursState.SHELTERS_INDICES.some((x: number) => coord.x === x);
         } else {
             return false;
         }
     }
+
     public isCentralZone(coord: Coord): boolean {
-        return coord.x >= ConspirateursState.CENTRAL_ZONE_TOP_LEFT.x &&
+        return ConspirateursState.CENTRAL_ZONE_TOP_LEFT.x <= coord.x &&
             coord.x <= ConspirateursState.CENTRAL_ZONE_BOTTOM_RIGHT.x &&
-            coord.y >= ConspirateursState.CENTRAL_ZONE_TOP_LEFT.y &&
+            ConspirateursState.CENTRAL_ZONE_TOP_LEFT.y <= coord.y &&
             coord.y <= ConspirateursState.CENTRAL_ZONE_BOTTOM_RIGHT.y;
     }
+
     public isDropPhase(): boolean {
         return this.turn < 40;
     }
 
-    public getSidePieces(): [number, number] {
+    public getSidePieces(): PlayerNumberMap {
         if (this.turn % 2 === 0) {
-            return [20 - (this.turn / 2), 20 - (this.turn / 2)];
+            return PlayerNumberMap.of(
+                20 - (this.turn / 2),
+                20 - (this.turn / 2),
+            );
         } else {
             // Player 0 plays on even turn, so has one less piece on odd turns
-            return [20 - ((this.turn - 1) / 2) - 1, 20 - ((this.turn - 1) / 2)];
+            return PlayerNumberMap.of(
+                20 - ((this.turn - 1) / 2) - 1,
+                20 - ((this.turn - 1) / 2),
+            );
         }
     }
 }

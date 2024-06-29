@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg"
+     width="100%" height="100%"
+     [attr.viewBox]="getViewBox().toSVGString()"
+     preserveAspectRatio="xMidYMid meet">
+    <g *ngFor="let line of board; index as y">
+        <g *ngFor="let square of line; index as x"
+           id="click_{{ x }}_{{ y }}"
+           (click)="onClick(x, y)">
+            <rect id="space_{{ x }}_{{ y }}"
+                  class="base"
+                  [ngClass]="getSpaceClasses(x, y)"
+                  [attr.x]="SPACE_SIZE * x"
+                  [attr.y]="SPACE_SIZE * y"
+                  [attr.width]="SPACE_SIZE"
+                  [attr.height]="SPACE_SIZE"
+            />
+            <circle *ngIf="square.isPlayer()"
+                    id="piece_{{ x }}_{{ y }}"
+                    class="base"
+                    [ngClass]="getPieceClasses(x, y)"
+                    [attr.r]="42"
+                    [attr.cx]="(SPACE_SIZE * x) + (SPACE_SIZE / 2)"
+                    [attr.cy]="(SPACE_SIZE * y) + (SPACE_SIZE / 2)"
+            />
+        </g>
+    </g>
+</svg>

@@ -1,5 +1,4 @@
-import { ComparableObject } from 'src/app/utils/Comparable';
-import { MoveEncoder } from 'src/app/utils/Encoder';
+import { ComparableObject, Encoder } from '@everyboard/lib';
 
 export class QuartoPiece implements ComparableObject {
 
@@ -41,11 +40,11 @@ export class QuartoPiece implements ComparableObject {
         QuartoPiece.BBBB,
     ];
 
-    public static encoder: MoveEncoder<QuartoPiece> = MoveEncoder.fromFunctions(
+    public static encoder: Encoder<QuartoPiece> = Encoder.fromFunctions(
         (p: QuartoPiece) => p.value,
-        QuartoPiece.fromInt);
+        QuartoPiece.ofInt);
 
-    public static fromInt(piece: number): QuartoPiece {
+    public static ofInt(piece: number): QuartoPiece {
         if (0 <= piece && piece <= 15) {
             return QuartoPiece.pieces[piece];
         } else if ( piece === 16) {
@@ -54,7 +53,7 @@ export class QuartoPiece implements ComparableObject {
             throw new Error('Invalid piece (' + piece + ')');
         }
     }
-    private constructor(public value: number) { }
+    private constructor(public value: number) {}
 
     public equals(other: QuartoPiece): boolean {
         return this === other;

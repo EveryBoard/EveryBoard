@@ -1,11 +1,10 @@
-import { FirestoreJSONObject, JSONValue, Utils } from 'src/app/utils/utils';
-import { assert } from '../utils/assert';
+import { JSONValue, MGPOptional, Utils } from '@everyboard/lib';
 import { FirestoreTime } from './Time';
 import { MinimalUser } from './MinimalUser';
 import { FirestoreDocument } from '../dao/FirestoreDAO';
-import { MGPOptional } from '../utils/MGPOptional';
+import { GameInfo } from '../components/normal-component/pick-game/pick-game.component';
 
-export interface Part extends FirestoreJSONObject {
+export type Part = {
     readonly typeGame: string; // the type of game
     readonly playerZero: MinimalUser; // the first player
     readonly playerZeroElo: number, // the elo of the first player at the beginning of the part
@@ -26,13 +25,13 @@ export interface Part extends FirestoreJSONObject {
 
 type EventType = 'Move' | 'Request' | 'Reply' | 'Action';
 
-export interface GameEvent extends FirestoreJSONObject {
+export type GameEventBase = {
     readonly eventType: EventType;
-    readonly time: FirestoreTime;
-    readonly player: 0 | 1;
+    readonly time: number;
+    readonly user: MinimalUser;
 }
 
-export interface GameEventMove extends GameEvent {
+export type GameEventMove = GameEventBase & {
     readonly eventType: 'Move';
     readonly move: JSONValue;
 }
@@ -40,24 +39,26 @@ export interface GameEventMove extends GameEvent {
 // The StartGame action is a dummy action to ensure that at least one event occurs at game start.
 // This is required because the clock logic relies on at least one event happening at the start of the game.
 export type Action = 'AddTurnTime' | 'AddGlobalTime' | 'StartGame' | 'EndGame';
-export interface GameEventAction extends GameEvent {
+export type GameEventAction = GameEventBase & {
     readonly eventType: 'Action';
     readonly action: Action;
 }
 
 export type RequestType = 'Draw' | 'Rematch' | 'TakeBack';
-export interface GameEventRequest extends GameEvent {
+export type GameEventRequest = GameEventBase & {
     readonly eventType: 'Request';
     readonly requestType: RequestType;
 }
 
 export type Reply = 'Accept' | 'Reject';
-export interface GameEventReply extends GameEvent {
+export type GameEventReply = GameEventBase & {
     readonly eventType: 'Reply';
     readonly reply: Reply;
     readonly requestType: RequestType;
-    readonly data: JSONValue;
+    readonly data?: JSONValue;
 }
+
+export type GameEvent = GameEventReply | GameEventRequest | GameEventAction | GameEventMove;
 
 export class MGPResult {
     public static readonly HARD_DRAW: MGPResult = new MGPResult(0);
@@ -86,6 +87,9 @@ export class PartDocument implements FirestoreDocument<Part> {
     public getTurn(): number {
         return this.data.turn;
     }
+    public getGameName(): string {
+        return GameInfo.getByUrlName(this.data.typeGame).get().name;
+    }
     public isHardDraw(): boolean {
         return this.data.result === MGPResult.HARD_DRAW.value;
     }
@@ -97,7 +101,7 @@ export class PartDocument implements FirestoreDocument<Part> {
         if (this.data.result === MGPResult.AGREED_DRAW_BY_ZERO.value) {
             return this.data.playerZero;
         } else {
-            assert(this.data.result === MGPResult.AGREED_DRAW_BY_ONE.value, 'should not access getDrawAccepter when no draw accepted!');
+            Utils.assert(this.data.result === MGPResult.AGREED_DRAW_BY_ONE.value, 'should not access getDrawAccepter when no draw accepted!');
             return Utils.getNonNullable(this.data.playerOne);
         }
     }
@@ -115,9 +119,6 @@ export class PartDocument implements FirestoreDocument<Part> {
     }
     public getLoser(): MGPOptional<MinimalUser> {
         return MGPOptional.ofNullable(this.data.loser);
-    }
-    public setWinnerAndLoser(winner: MinimalUser, loser: MinimalUser): PartDocument {
-        return new PartDocument(this.id, { ...this.data, winner, loser });
     }
 }
 

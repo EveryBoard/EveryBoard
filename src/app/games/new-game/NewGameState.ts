@@ -1,4 +1,4 @@
-import { GameState } from 'src/app/jscaip/GameState';
+import { GameState } from 'src/app/jscaip/state/GameState';
 
 /**
  * This class represent the state of the game at a specific turn.
@@ -15,10 +15,4 @@ import { GameState } from 'src/app/jscaip/GameState';
  */
 export class NewGameState extends GameState {
 
-    /**
-     * This static method should create the initial state of the game.
-     */
-    public static getInitialState(): GameState {
-        return new NewGameState(0);
-    }
 }

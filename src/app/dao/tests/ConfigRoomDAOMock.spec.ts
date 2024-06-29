@@ -1,26 +1,22 @@
 /* eslint-disable max-lines-per-function */
 import { ConfigRoom, ConfigRoomDocument } from 'src/app/domain/ConfigRoom';
-import { MGPMap } from 'src/app/utils/MGPMap';
-import { ObservableSubject } from 'src/app/utils/tests/ObservableSubject.spec';
-import { display } from 'src/app/utils/utils';
+import { MGPMap, MGPOptional, ObservableSubject } from '@everyboard/lib';
 import { FirestoreDAOMock } from './FirestoreDAOMock.spec';
 import { ConfigRoomMocks } from 'src/app/domain/ConfigRoomMocks.spec';
 import { fakeAsync } from '@angular/core/testing';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { UserMocks } from 'src/app/domain/UserMocks.spec';
 import { Subscription } from 'rxjs';
+import { Debug } from 'src/app/utils/Debug';
 
-type ConfigRoomOS = ObservableSubject<MGPOptional<ConfigRoomDocument>>
+type ConfigRoomOS = ObservableSubject<MGPOptional<ConfigRoomDocument>>;
 
+@Debug.log
 export class ConfigRoomDAOMock extends FirestoreDAOMock<ConfigRoom> {
-
-    public static override VERBOSE: boolean = false;
 
     private static configRoomDB: MGPMap<string, ConfigRoomOS>;
 
     public constructor() {
-        super('ConfigRoomDAOMock', ConfigRoomDAOMock.VERBOSE);
-        display(this.VERBOSE, 'ConfigRoomDAOMock.constructor');
+        super('ConfigRoomDAOMock');
     }
     public getStaticDB(): MGPMap<string, ConfigRoomOS> {
         return ConfigRoomDAOMock.configRoomDB;
@@ -45,7 +41,7 @@ xdescribe('ConfigRoomDAOMock', () => {
     });
     it('Total update should update', fakeAsync(async() => {
         // Given an initial configRoom to which we subscribed
-        await configRoomDAOMock.set('configRoomId', ConfigRoomMocks.INITIAL);
+        await configRoomDAOMock.set('configRoomId', ConfigRoomMocks.getInitial(MGPOptional.empty()));
 
         expect(lastConfigRoom).toEqual(MGPOptional.empty());
         expect(callCount).toBe(0);
@@ -57,19 +53,19 @@ xdescribe('ConfigRoomDAOMock', () => {
         });
 
         expect(callCount).toEqual(1);
-        expect(lastConfigRoom.get()).toEqual(ConfigRoomMocks.INITIAL);
+        expect(lastConfigRoom.get()).toEqual(ConfigRoomMocks.getInitial(MGPOptional.empty()));
 
         // When it is updated
-        await configRoomDAOMock.update('configRoomId', ConfigRoomMocks.WITH_CHOSEN_OPPONENT);
+        await configRoomDAOMock.update('configRoomId', ConfigRoomMocks.withChosenOpponent(MGPOptional.empty()));
 
         // Then we should have seen the update
         expect(callCount).toEqual(2);
-        expect(lastConfigRoom.get()).toEqual(ConfigRoomMocks.WITH_CHOSEN_OPPONENT);
+        expect(lastConfigRoom.get()).toEqual(ConfigRoomMocks.withChosenOpponent(MGPOptional.empty()));
         subscription.unsubscribe();
     }));
     it('Partial update should update', fakeAsync(async() => {
         // Given an initial configRoom to which we subscribed
-        await configRoomDAOMock.set('configRoomId', ConfigRoomMocks.INITIAL);
+        await configRoomDAOMock.set('configRoomId', ConfigRoomMocks.getInitial(MGPOptional.empty()));
 
         expect(callCount).toEqual(0);
         expect(lastConfigRoom).toEqual(MGPOptional.empty());
@@ -81,14 +77,14 @@ xdescribe('ConfigRoomDAOMock', () => {
         });
 
         expect(callCount).toEqual(1);
-        expect(lastConfigRoom.get()).toEqual(ConfigRoomMocks.INITIAL);
+        expect(lastConfigRoom.get()).toEqual(ConfigRoomMocks.getInitial(MGPOptional.empty()));
 
         // When it is updated
         await configRoomDAOMock.update('configRoomId', { chosenOpponent: UserMocks.OPPONENT_MINIMAL_USER });
 
         // Then we should see the update
         expect(callCount).toEqual(2);
-        expect(lastConfigRoom.get()).toEqual(ConfigRoomMocks.WITH_CHOSEN_OPPONENT);
+        expect(lastConfigRoom.get()).toEqual(ConfigRoomMocks.withChosenOpponent(MGPOptional.empty()));
         subscription.unsubscribe();
     }));
 });

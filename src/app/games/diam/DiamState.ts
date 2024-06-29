@@ -1,25 +1,15 @@
-import { GameStateWithTable } from 'src/app/jscaip/GameStateWithTable';
-import { Table } from 'src/app/utils/ArrayUtils';
-import { Utils } from 'src/app/utils/utils';
-import { assert } from 'src/app/utils/assert';
+import { GameStateWithTable } from 'src/app/jscaip/state/GameStateWithTable';
+import { Table } from 'src/app/jscaip/TableUtils';
+import { Utils } from '@everyboard/lib';
 import { DiamPiece } from './DiamPiece';
 
 export class DiamState extends GameStateWithTable<DiamPiece> {
+
     public static WIDTH: number = 8;
 
     public static HEIGHT: number = 4;
 
-    public static getInitialState(): DiamState {
-        const _: DiamPiece = DiamPiece.EMPTY;
-        const board: Table<DiamPiece> = [
-            [_, _, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _, _],
-        ];
-        return new DiamState(board, [4, 4, 4, 4], 0);
-    }
-    public static fromRepresentation(representation: DiamPiece[][], turn: number): DiamState {
+    public static ofRepresentation(representation: DiamPiece[][], turn: number): DiamState {
         const board: Table<DiamPiece> = representation.reverse();
         const pieces: [number, number, number, number] = [4, 4, 4, 4];
         for (let y: number = 0; y < DiamState.HEIGHT; y++) {
@@ -30,8 +20,8 @@ export class DiamState extends GameStateWithTable<DiamPiece> {
                 }
             }
         }
-        assert(pieces.every((remaining: number) => remaining >= 0),
-               'Invalid DiamState representation uses too many pieces');
+        Utils.assert(pieces.every((remaining: number) => 0 <= remaining),
+                     'Invalid DiamState representation uses too many pieces');
         return new DiamState(board, pieces, turn);
     }
     public static pieceIndex(piece: DiamPiece): number {

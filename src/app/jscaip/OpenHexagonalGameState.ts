@@ -1,15 +1,14 @@
-import { Comparable } from '../utils/Comparable';
-import { ReversibleMap } from '../utils/MGPMap';
-import { MGPSet } from '../utils/MGPSet';
+import { Set, ReversibleMap } from '@everyboard/lib';
 import { Coord } from './Coord';
-import { GameState } from './GameState';
+import { GameState } from './state/GameState';
 import { HexagonalUtils } from './HexagonalUtils';
+import { CoordSet } from './CoordSet';
 
 type Scale = {
     width: number,
     height: number,
 }
-export abstract class OpenHexagonalGameState<T extends NonNullable<Comparable>> extends GameState {
+export abstract class OpenHexagonalGameState<T extends NonNullable<unknown>> extends GameState {
 
     public readonly width: number;
 
@@ -26,14 +25,14 @@ export abstract class OpenHexagonalGameState<T extends NonNullable<Comparable>> 
         return this.pieces;
     }
     public getPieceCoords(): Coord[] {
-        return this.pieces.listKeys();
+        return this.pieces.getKeyList();
     }
     public computeScale(): Scale {
         let minWidth: number = Number.MAX_SAFE_INTEGER;
         let maxWidth: number = Number.MIN_SAFE_INTEGER;
         let minHeight: number = Number.MAX_SAFE_INTEGER;
         let maxHeight: number = Number.MIN_SAFE_INTEGER;
-        for (const coord of this.pieces.listKeys()) {
+        for (const coord of this.pieces.getKeyList()) {
             minWidth = Math.min(coord.x, minWidth);
             maxWidth = Math.max(coord.x, maxWidth);
             minHeight = Math.min(coord.y, minHeight);
@@ -47,29 +46,31 @@ export abstract class OpenHexagonalGameState<T extends NonNullable<Comparable>> 
     public isOnBoard(coord: Coord): boolean {
         return this.pieces.containsKey(coord);
     }
-    public getOccupiedNeighbors(coord: Coord): MGPSet<Coord> {
-        const neighbors: MGPSet<Coord> = new MGPSet(HexagonalUtils.getNeighbors(coord));
+    public getOccupiedNeighbors(coord: Coord): CoordSet {
+        const neighbors: CoordSet = new CoordSet(HexagonalUtils.getNeighbors(coord));
         return neighbors.filter((neighbor: Coord) => {
             return this.pieces.get(neighbor).isPresent();
         });
     }
-    public getGroups(): MGPSet<MGPSet<Coord>> {
-        const visited: MGPSet<Coord> = new MGPSet();
-        const groups: MGPSet<MGPSet<Coord>> = new MGPSet();
+    public getGroups(): Set<CoordSet> {
+        let visited: CoordSet = new CoordSet();
+        let groups: Set<CoordSet> = new Set();
         this.pieces.forEach((itemToVisit: {key: Coord, value: T}) => {
             if (visited.contains(itemToVisit.key) === false) {
                 // We will visit all reachable occupied neighbors of this coord
-                const group: MGPSet<Coord> = new MGPSet();
-                const toVisit: MGPSet<Coord> = new MGPSet([itemToVisit.key]);
+                let group: CoordSet = new CoordSet();
+                let toVisit: CoordSet = new CoordSet([itemToVisit.key]);
                 while (toVisit.hasElements()) {
                     const coord: Coord = toVisit.getAnyElement().get();
-                    toVisit.remove(coord);
-                    visited.add(coord);
-                    group.add(coord);
-                    toVisit.addAll(this.getOccupiedNeighbors(coord).filter((neighbor: Coord) =>
-                        visited.contains(neighbor) === false));
+                    toVisit = toVisit.removeElement(coord);
+                    visited = visited.addElement(coord);
+                    group = group.addElement(coord);
+                    const occupiedNeighboors: CoordSet = this.getOccupiedNeighbors(coord);
+                    const unvisitedOccupiedNeighboors: CoordSet = occupiedNeighboors
+                        .filter((neighbor: Coord) => visited.contains(neighbor) === false);
+                    toVisit = toVisit.union(unvisitedOccupiedNeighboors);
                 }
-                groups.add(group);
+                groups = groups.addElement(group);
             }
         });
         return groups;

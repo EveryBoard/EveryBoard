@@ -1,13 +1,13 @@
 import { Move } from 'src/app/jscaip/Move';
 import { Coord } from 'src/app/jscaip/Coord';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { Encoder, MGPOptional, Utils } from '@everyboard/lib';
 import { EncapsulePiece } from './EncapsulePiece';
-import { MoveEncoder } from 'src/app/utils/Encoder';
 
 type EncapsuleMoveFields = [MGPOptional<Coord>, Coord, MGPOptional<EncapsulePiece>];
 
 export class EncapsuleMove extends Move {
-    public static encoder: MoveEncoder<EncapsuleMove> = MoveEncoder.tuple(
+
+    public static encoder: Encoder<EncapsuleMove> = Encoder.tuple(
         [MGPOptional.getEncoder(Coord.encoder), Coord.encoder, MGPOptional.getEncoder(EncapsulePiece.encoder)],
         (move: EncapsuleMove): EncapsuleMoveFields => [move.startingCoord, move.landingCoord, move.piece],
         (fields: EncapsuleMoveFields): EncapsuleMove => new EncapsuleMove(fields[0], fields[1], fields[2]));
@@ -18,13 +18,11 @@ export class EncapsuleMove extends Move {
     {
         super();
     }
-    public static fromMove(startingCoord: Coord, landingCoord: Coord): EncapsuleMove {
-        if (startingCoord.equals(landingCoord)) {
-            throw new Error('Starting coord and landing coord must be separate coords');
-        }
+    public static ofMove(startingCoord: Coord, landingCoord: Coord): EncapsuleMove {
+        Utils.assert(startingCoord.equals(landingCoord) === false, 'Starting coord and landing coord must be separate coords');
         return new EncapsuleMove(MGPOptional.of(startingCoord), landingCoord, MGPOptional.empty());
     }
-    public static fromDrop(piece: EncapsulePiece, landingCoord: Coord): EncapsuleMove {
+    public static ofDrop(piece: EncapsulePiece, landingCoord: Coord): EncapsuleMove {
         return new EncapsuleMove(MGPOptional.empty(), landingCoord, MGPOptional.of(piece));
     }
     public isDropping(): boolean {

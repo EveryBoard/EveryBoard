@@ -1,40 +1,39 @@
 import { Injectable } from '@angular/core';
 import { FirstPlayer, ConfigRoom, PartStatus, PartType } from '../domain/ConfigRoom';
 import { ConfigRoomDAO } from '../dao/ConfigRoomDAO';
-import { display, FirestoreJSONObject } from 'src/app/utils/utils';
-import { MGPOptional } from '../utils/MGPOptional';
+import { FirestoreJSONObject, MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 import { Subscription } from 'rxjs';
-import { MGPValidation } from '../utils/MGPValidation';
 import { MinimalUser } from '../domain/MinimalUser';
-import { Localized } from '../utils/LocaleUtils';
-import { ConnectedUserService } from './ConnectedUserService';
 import { FirestoreCollectionObserver } from '../dao/FirestoreCollectionObserver';
 import { FirestoreDocument, IFirestoreDAO } from '../dao/FirestoreDAO';
+import { RulesConfig } from '../jscaip/RulesConfigUtil';
+import { BackendService } from './BackendService';
+import { Debug } from '../utils/Debug';
+import { ConnectedUserService } from './ConnectedUserService';
+import { Localized } from '../utils/LocaleUtils';
+
+export class ConfigRoomServiceFailure {
+    public static readonly GAME_DOES_NOT_EXIST: Localized = () => $localize`This game does not exist!`;
+}
+
 
 @Injectable({
     providedIn: 'root',
 })
-export class ConfigRoomService {
+@Debug.log
+export class ConfigRoomService extends BackendService {
 
-    public static VERBOSE: boolean = false;
-
-    public static readonly GAME_DOES_NOT_EXIST: Localized = () => $localize`Game does not exist`;
-
-    public constructor(private readonly configRoomDAO: ConfigRoomDAO,
-                       private readonly connectedUserService: ConnectedUserService)
+    public constructor(protected readonly configRoomDAO: ConfigRoomDAO,
+                       connectedUserService: ConnectedUserService)
     {
-        display(ConfigRoomService.VERBOSE, 'ConfigRoomService.constructor');
+        super(connectedUserService);
     }
-    public addCandidate(partId: string, candidate: MinimalUser): Promise<void> {
-        return this.configRoomDAO.subCollectionDAO(partId, 'candidates').set(candidate.id, candidate);
+
+    public subscribeToChanges(gameId: string, callback: (doc: MGPOptional<ConfigRoom>) => void): Subscription {
+        return this.configRoomDAO.subscribeToChanges(gameId, callback);
     }
-    public removeCandidate(partId: string, candidate: MinimalUser): Promise<void> {
-        return this.configRoomDAO.subCollectionDAO(partId, 'candidates').delete(candidate.id);
-    }
-    public subscribeToChanges(configRoomId: string, callback: (doc: MGPOptional<ConfigRoom>) => void): Subscription {
-        return this.configRoomDAO.subscribeToChanges(configRoomId, callback);
-    }
-    public subscribeToCandidates(configRoomId: string, callback: (candidates: MinimalUser[]) => void): Subscription {
+
+    public subscribeToCandidates(gameId: string, callback: (candidates: MinimalUser[]) => void): Subscription {
         let candidates: MinimalUser[] = [];
         const observer: FirestoreCollectionObserver<MinimalUser> = new FirestoreCollectionObserver(
             (created: FirestoreDocument<MinimalUser>[]) => {
@@ -63,129 +62,73 @@ export class ConfigRoomService {
                 }
                 callback(candidates);
             });
-        const subCollection: IFirestoreDAO<FirestoreJSONObject> = this.configRoomDAO.subCollectionDAO(configRoomId, 'candidates');
+        const subCollection: IFirestoreDAO<FirestoreJSONObject> =
+            this.configRoomDAO.subCollectionDAO(gameId, 'candidates');
         return subCollection.observingWhere([], observer);
     }
-    public async createInitialConfigRoom(configRoomId: string, typeGame: string): Promise<void> {
-        display(ConfigRoomService.VERBOSE, 'ConfigRoomService.createInitialConfigRoom(' + configRoomId + ')');
 
-        const creator: MinimalUser = this.connectedUserService.user.get().toMinimalUser();
-        const newConfigRoom: ConfigRoom = {
-            chosenOpponent: null,
-            firstPlayer: FirstPlayer.RANDOM.value,
-            partType: PartType.STANDARD.value,
-            partStatus: PartStatus.PART_CREATED.value,
-            typeGame,
-            maximalMoveDuration: PartType.NORMAL_MOVE_DURATION,
-            totalPartDuration: PartType.NORMAL_PART_DURATION,
-            creator,
-        };
-        return this.configRoomDAO.set(configRoomId, newConfigRoom);
-    }
-    public async joinGame(configRoomId: string): Promise<MGPValidation> {
-        display(ConfigRoomService.VERBOSE, 'ConfigRoomService.joinGame(' + configRoomId + ')');
-
-        const user: MinimalUser = this.connectedUserService.user.get().toMinimalUser();
-        const configRoom: MGPOptional<ConfigRoom> = await this.configRoomDAO.read(configRoomId);
-        if (configRoom.isAbsent()) {
-            return MGPValidation.failure(ConfigRoomService.GAME_DOES_NOT_EXIST());
-        } else {
-            if (configRoom.get().creator.id !== user.id) {
-                // Only add actual candidates to the game, not the creator
-                await this.addCandidate(configRoomId, user);
-            }
+    /** Join a game */
+    public async joinGame(gameId: string): Promise<MGPValidation> {
+        const endpoint: string = `config-room/${gameId}/candidates`;
+        const result: MGPFallible<Response> = await this.performRequest('POST', endpoint);
+        if (result.isSuccess()) {
             return MGPValidation.SUCCESS;
-        }
-    }
-    public async cancelJoining(configRoomId: string): Promise<void> {
-        display(ConfigRoomService.VERBOSE, `ConfigRoomService.cancelJoining(${configRoomId})`);
-
-        const user: MinimalUser = this.connectedUserService.user.get().toMinimalUser();
-        const configRoomOpt: MGPOptional<ConfigRoom> = await this.configRoomDAO.read(configRoomId);
-        if (configRoomOpt.isAbsent()) {
-            // The part does not exist, so we can consider that we succesfully cancelled joining
-            return;
         } else {
-            const configRoom: ConfigRoom = configRoomOpt.get();
-            const configRoomUpdates: Promise<void>[] = [this.removeCandidate(configRoomId, user)];
-            if (configRoom.chosenOpponent?.id === user.id) {
-                // if the chosenOpponent leave, we're back to initial part creation
-                const update: Partial<ConfigRoom> = {
-                    chosenOpponent: null,
-                    partStatus: PartStatus.PART_CREATED.value,
-                };
-
-                configRoomUpdates.push(this.configRoomDAO.update(configRoomId, update));
-            }
-            await Promise.all(configRoomUpdates);
+            Utils.assert(result.getReason() === 'not_found', `Unexpected failure from backend: ${result.getReason()}`);
+            return MGPValidation.failure(ConfigRoomServiceFailure.GAME_DOES_NOT_EXIST());
         }
     }
-    public async deleteConfigRoom(configRoomId: string, candidates: MinimalUser[]): Promise<void> {
-        display(ConfigRoomService.VERBOSE, `ConfigRoomService.deleteConfigRoom(${configRoomId}`);
-        // We need to delete the candidates before the actual configRoom,
-        // for the security rules to check that we are allowed to delete the configRoom
-        await Promise.all(candidates.map((candidate: MinimalUser): Promise<void> =>
-            this.removeCandidate(configRoomId, candidate)));
-        await this.configRoomDAO.delete(configRoomId);
+
+    /** Remove a candidate from a config room (it can be ourselves or someone else) */
+    public async removeCandidate(gameId: string, candidateId: string): Promise<void> {
+        const endpoint: string = `config-room/${gameId}/candidates/${candidateId}`;
+        const result: MGPFallible<Response> = await this.performRequest('DELETE', endpoint);
+        this.assertSuccess(result);
     }
-    public async proposeConfig(configRoomId: string,
-                               chosenOpponent: MinimalUser,
+
+    /** Propose a config to the opponent */
+    public async proposeConfig(gameId: string,
                                partType: PartType,
                                maximalMoveDuration: number,
                                firstPlayer: FirstPlayer,
-                               totalPartDuration: number)
+                               totalPartDuration: number,
+                               rulesConfig: MGPOptional<RulesConfig>)
     : Promise<void>
     {
-        display(ConfigRoomService.VERBOSE, { configRoomService_proposeConfig: {
-            configRoomId, maximalMoveDuration, firstPlayer, totalPartDuration,
-        } });
-
-        return this.configRoomDAO.update(configRoomId, {
+        const config: Partial<ConfigRoom> = {
             partStatus: PartStatus.CONFIG_PROPOSED.value,
-            chosenOpponent: chosenOpponent,
             partType: partType.value,
             maximalMoveDuration,
             totalPartDuration,
             firstPlayer: firstPlayer.value,
-        });
+            rulesConfig: rulesConfig.getOrElse({}),
+        };
+        const configEncoded: string = encodeURIComponent(JSON.stringify(config));
+        const endpoint: string = `config-room/${gameId}?action=propose&config=${configEncoded}`;
+        const result: MGPFallible<Response> = await this.performRequest('POST', endpoint);
+        this.assertSuccess(result);
     }
-    public setChosenOpponent(configRoomId: string, chosenOpponent: MinimalUser): Promise<void> {
-        display(ConfigRoomService.VERBOSE, `ConfigRoomService.setChosenOpponent(${configRoomId}, ${chosenOpponent.name})`);
 
-        return this.configRoomDAO.update(configRoomId, {
-            chosenOpponent: chosenOpponent,
-        });
+    /** Select an opponent */
+    public async selectOpponent(gameId: string, opponent: MinimalUser): Promise<void> {
+        const opponentEncoded: string = encodeURIComponent(JSON.stringify(opponent));
+        const endpoint: string = `config-room/${gameId}?action=selectOpponent&opponent=${opponentEncoded}`;
+        const result: MGPFallible<Response> = await this.performRequest('POST', endpoint);
+        this.assertSuccess(result);
     }
-    public async reviewConfig(configRoomId: string): Promise<void> {
-        display(ConfigRoomService.VERBOSE, `ConfigRoomService.reviewConfig(${configRoomId})`);
 
-        return this.configRoomDAO.update(configRoomId, {
-            partStatus: PartStatus.PART_CREATED.value,
-        });
+    /** Review a config proposed to the opponent */
+    public async reviewConfig(gameId: string): Promise<void> {
+        const endpoint: string = `config-room/${gameId}?action=review`;
+        const result: MGPFallible<Response> = await this.performRequest('POST', endpoint);
+        this.assertSuccess(result);
     }
-    public async reviewConfigAndRemoveChosenOpponent(configRoomId: string): Promise<void> {
-        display(ConfigRoomService.VERBOSE, `ConfigRoomService.reviewConfigAndRemoveChosenOpponent(${configRoomId})`);
 
-        return this.configRoomDAO.update(configRoomId, {
-            partStatus: PartStatus.PART_CREATED.value,
-            chosenOpponent: null,
-        });
+    /** Review a config proposed to the opponent, who just left */
+    public async reviewConfigAndRemoveChosenOpponent(gameId: string): Promise<void> {
+        const endpoint: string = `config-room/${gameId}?action=reviewConfigAndRemoveOpponent`;
+        const result: MGPFallible<Response> = await this.performRequest('POST', endpoint);
+        this.assertSuccess(result);
     }
-    public acceptConfig(configRoomId: string): Promise<void> {
-        display(ConfigRoomService.VERBOSE, `ConfigRoomService.acceptConfig(${configRoomId}`);
 
-        return this.configRoomDAO.update(configRoomId, {
-            partStatus: PartStatus.PART_STARTED.value,
-        });
-    }
-    public async createConfigRoom(configRoomId: string, configRoom: ConfigRoom): Promise<void> {
-        display(ConfigRoomService.VERBOSE, `ConfigRoomService.create(${configRoomId}` + JSON.stringify(configRoom) + ')');
-
-        return this.configRoomDAO.set(configRoomId, configRoom);
-    }
-    public async readConfigRoomById(configRoomId: string): Promise<ConfigRoom> {
-        display(ConfigRoomService.VERBOSE, `ConfigRoomService.readConfigRoomById(${configRoomId})`);
-
-        return (await this.configRoomDAO.read(configRoomId)).get();
-    }
 }

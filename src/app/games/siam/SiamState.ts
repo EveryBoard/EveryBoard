@@ -1,28 +1,20 @@
-import { GameStateWithTable } from 'src/app/jscaip/GameStateWithTable';
+import { GameStateWithTable } from 'src/app/jscaip/state/GameStateWithTable';
 import { SiamPiece } from './SiamPiece';
-import { ArrayUtils } from 'src/app/utils/ArrayUtils';
+import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
+import { Player } from 'src/app/jscaip/Player';
 
 export class SiamState extends GameStateWithTable<SiamPiece> {
 
-    public static getInitialState(): SiamState {
-        const board: SiamPiece[][] = ArrayUtils.createTable(5, 5, SiamPiece.EMPTY);
-
-        board[2][1] = SiamPiece.MOUNTAIN;
-        board[2][2] = SiamPiece.MOUNTAIN;
-        board[2][3] = SiamPiece.MOUNTAIN;
-
-        return new SiamState(board, 0);
-    }
     public countCurrentPlayerPawn(): number {
-        return this.countPlayersPawn()[this.getCurrentPlayer().value];
+        const currentPlayer: Player = this.getCurrentPlayer();
+        return this.countPlayersPawn().get(currentPlayer);
     }
-    public countPlayersPawn(): [number, number] {
-        const counts: [number, number] = [0, 0];
-        for (let y: number = 0; y < 5; y++) {
-            for (let x: number = 0; x < 5; x++) {
-                if (this.board[y][x] !== SiamPiece.EMPTY) {
-                    counts[this.getPieceAtXY(x, y).getOwner().value]++;
-                }
+
+    public countPlayersPawn(): PlayerNumberMap {
+        const counts: PlayerNumberMap = PlayerNumberMap.of(0, 0);
+        for (const coordAndContent of this.getCoordsAndContents()) {
+            if (coordAndContent.content.getOwner().isPlayer()) {
+                counts.add(coordAndContent.content.getOwner() as Player, 1);
             }
         }
         return counts;

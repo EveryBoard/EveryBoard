@@ -1,30 +1,31 @@
 /* eslint-disable max-lines-per-function */
-import { Table } from 'src/app/utils/ArrayUtils';
-import { Direction } from 'src/app/jscaip/Direction';
-import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
+import { Ordinal } from 'src/app/jscaip/Ordinal';
+import { AIDepthLimitOptions } from 'src/app/jscaip/AI/AI';
+import { Minimax } from 'src/app/jscaip/AI/Minimax';
+import { PlayerOrNone } from 'src/app/jscaip/Player';
+import { Table } from 'src/app/jscaip/TableUtils';
+import { EpaminondasConfig, EpaminondasLegalityInformation, EpaminondasRules } from '../EpaminondasRules';
 import { EpaminondasMove } from '../EpaminondasMove';
 import { EpaminondasState } from '../EpaminondasState';
-import { EpaminondasNode, EpaminondasRules } from '../EpaminondasRules';
+import { EpaminondasNode } from '../EpaminondasRules';
 import { EpaminondasMinimax } from '../EpaminondasMinimax';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
+import { MGPOptional } from '@everyboard/lib';
+import { minimaxTest, SlowTest } from 'src/app/utils/tests/TestUtils.spec';
+
+const _: PlayerOrNone = PlayerOrNone.NONE;
+const O: PlayerOrNone = PlayerOrNone.ZERO;
+const X: PlayerOrNone = PlayerOrNone.ONE;
 
 describe('EpaminondasMinimax', () => {
 
-    let rules: EpaminondasRules;
-    let minimax: EpaminondasMinimax;
-    const _: PlayerOrNone = PlayerOrNone.NONE;
-    const O: PlayerOrNone = PlayerOrNone.ZERO;
-    const X: PlayerOrNone = PlayerOrNone.ONE;
+    let minimax: Minimax<EpaminondasMove, EpaminondasState, EpaminondasConfig, EpaminondasLegalityInformation>;
+    const minimaxOptions: AIDepthLimitOptions = { name: 'Level 1', maxDepth: 1 };
+    const defaultConfig: MGPOptional<EpaminondasConfig> = EpaminondasRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
-        rules = EpaminondasRules.get();
-        minimax = new EpaminondasMinimax(rules, 'EpaminondasMinimax');
+        minimax = new EpaminondasMinimax();
     });
-    it('should propose 114 moves at first turn', () => {
-        const node: EpaminondasNode = rules.getInitialNode();
-        expect(minimax.getListMoves(node).length).toBe(114);
-    });
+
     it('should consider possible capture the best move', () => {
         const board: Table<PlayerOrNone> = [
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
@@ -42,42 +43,18 @@ describe('EpaminondasMinimax', () => {
         ];
         const state: EpaminondasState = new EpaminondasState(board, 0);
         const node: EpaminondasNode = new EpaminondasNode(state);
-        const capture: EpaminondasMove = new EpaminondasMove(4, 9, 2, 1, Direction.UP);
-        const bestMove: EpaminondasMove = node.findBestMove(1, minimax);
+        const capture: EpaminondasMove = new EpaminondasMove(4, 9, 2, 1, Ordinal.UP);
+        const bestMove: EpaminondasMove = minimax.chooseNextMove(node, minimaxOptions, defaultConfig);
         expect(bestMove).toEqual(capture);
     });
-    it('should consider two neighbor piece better than two separated piece', () => {
-        const weakerState: EpaminondasState = new EpaminondasState([
-            [_, _, _, _, _, _, _, _, _, X, _, X, _, _],
-            [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
-            [_, O, O, _, _, _, _, _, _, _, _, _, _, _],
-        ], 1);
-        const strongerState: EpaminondasState = new EpaminondasState([
-            [_, _, _, _, _, _, _, _, _, X, _, _, _, _],
-            [_, _, _, _, _, _, _, _, _, X, _, _, _, _],
-            [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
-            [_, O, O, _, _, _, _, _, _, _, _, _, _, _],
-        ], 1);
-        RulesUtils.expectSecondStateToBeBetterThanFirstFor(minimax,
-                                                           weakerState, MGPOptional.empty(),
-                                                           strongerState, MGPOptional.empty(),
-                                                           Player.ONE);
+
+    SlowTest.it('should be able play against itself', () => {
+        minimaxTest({
+            rules: EpaminondasRules.get(),
+            minimax,
+            options: minimaxOptions,
+            config: defaultConfig,
+            shouldFinish: true,
+        });
     });
 });

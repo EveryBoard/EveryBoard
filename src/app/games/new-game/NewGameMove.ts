@@ -1,5 +1,5 @@
 import { Move } from 'src/app/jscaip/Move';
-import { MoveEncoder } from 'src/app/utils/Encoder';
+import { Encoder } from '@everyboard/lib';
 
 /**
   * This class represents the moves of your game.
@@ -15,15 +15,17 @@ export class NewGameMove extends Move {
      * There are multiple helpers to create encoders.
      * You'll likely be interested in:
      *   - `MoveCoord.getEncoder` and `MoveWithTwoCoords` to get an encoder for a move of the corresponding type.
-     *   - `MoveEncoder.tuple` to get an encoder for a move that has multiple fields
-     *   - `MoveEncoder.disjunction` to get an encoder for a move that may be of different types
+     *   - `Encoder.tuple` to get an encoder for a move that has multiple fields
+     *   - `Encoder.disjunction` to get an encoder for a move that may be of different types
      */
-    public static encoder: MoveEncoder<NewGameMove> = undefined as any;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    public static encoder: Encoder<NewGameMove> = undefined as any;
 
     public toString(): string {
-        throw new Error('This method is really more debug oriented');
+        return 'This method is really more debug oriented';
     }
     public equals(other: this): boolean {
-        throw new Error('This method helps the minimaxes avoid creating two times the same move, which would slow its calculations');
+        // This method helps the minimaxes avoid creating two times the same move, which would slow its calculations
+        return true;
     }
 }

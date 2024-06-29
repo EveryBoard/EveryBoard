@@ -1,12 +1,11 @@
 import { Coord } from 'src/app/jscaip/Coord';
-import { Direction } from 'src/app/jscaip/Direction';
-import { MoveEncoder } from 'src/app/utils/Encoder';
+import { Ordinal } from 'src/app/jscaip/Ordinal';
+import { Encoder, MGPFallible, MGPOptional } from '@everyboard/lib';
 import { MoveCoordToCoord } from 'src/app/jscaip/MoveCoordToCoord';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { Localized } from 'src/app/utils/LocaleUtils';
-import { MGPFallible } from 'src/app/utils/MGPFallible';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { Vector } from 'src/app/jscaip/Vector';
+import { MartianChessState } from './MartianChessState';
 
 export class MartianChessMoveFailure {
 
@@ -21,22 +20,22 @@ export class MartianChessMoveFailure {
 
 export class MartianChessMove extends MoveCoordToCoord {
 
-    public static encoder: MoveEncoder<MartianChessMove> = MoveEncoder.tuple(
-        [Coord.encoder, Coord.encoder, MoveEncoder.identity<boolean>()],
+    public static encoder: Encoder<MartianChessMove> = Encoder.tuple(
+        [Coord.encoder, Coord.encoder, Encoder.identity<boolean>()],
         (move: MartianChessMove): [Coord, Coord, boolean] => [move.getStart(), move.getEnd(), move.calledTheClock],
         (f: [Coord, Coord, boolean]): MartianChessMove => MartianChessMove.from(f[0], f[1], f[2]).get(),
     );
     public static from(start: Coord, end: Coord, calledTheClock: boolean = false): MGPFallible<MartianChessMove> {
-        if (start.isNotInRange(4, 8)) {
+        if (MartianChessState.isOnBoard(start) === false) {
             return MGPFallible.failure(MartianChessMoveFailure.START_COORD_OUT_OF_RANGE());
         }
-        if (end.isNotInRange(4, 8)) {
+        if (MartianChessState.isOnBoard(end) === false) {
             return MGPFallible.failure(MartianChessMoveFailure.END_COORD_OUT_OF_RANGE());
         }
         if (end.equals(start)) {
             return MGPFallible.failure(RulesFailure.MOVE_CANNOT_BE_STATIC());
         }
-        const dir: MGPFallible<Direction> = Direction.factory.fromDelta(end.x - start.x, end.y - start.y);
+        const dir: MGPFallible<Ordinal> = Ordinal.factory.fromDelta(end.x - start.x, end.y - start.y);
         if (dir.isFailure()) {
             return MGPFallible.failure(dir.getReason());
         }
@@ -51,17 +50,19 @@ export class MartianChessMove extends MoveCoordToCoord {
                                       this.getEnd().x + ', ' + this.getEnd().y + ')' +
                                       ending + ')';
     }
-    public equals(other: MartianChessMove): boolean {
-        if (this.getStart().equals(other.getStart()) === false) return false;
-        if (this.getEnd().equals(other.getEnd()) === false) return false;
-        return this.calledTheClock === other.calledTheClock;
+    public override equals(other: MartianChessMove): boolean {
+        if (super.equals(other as this) === false) {
+            return false;
+        } else {
+            return this.calledTheClock === other.calledTheClock;
+        }
     }
     public isValidForPawn(): boolean {
         const vector: Vector = this.getStart().getVectorToward(this.getEnd());
         return vector.isDiagonalOfLength(1);
     }
     public isValidForDrone(): boolean {
-        const distance: number = this.getStart().getDistance(this.getEnd());
+        const distance: number = this.getStart().getLinearDistanceToward(this.getEnd());
         return distance <= 2;
     }
     public isUndoneBy(moveOpt: MGPOptional<MartianChessMove>): boolean {

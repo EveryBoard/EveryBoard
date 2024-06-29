@@ -12,4 +12,5 @@ export type Environment = {
     root: string
     firebaseConfig: FirebaseConfig,
     useEmulators: boolean,
+    backendURL: string,
 }

@@ -1,36 +1,45 @@
 <svg xmlns="http://www.w3.org/2000/svg"
      width="100%" height="100%"
-     viewBox="0 0 1410 1210"
+     [attr.viewBox]="getViewBox().toSVGString()"
      [attr.transform]="rotation"
      preserveAspectRatio="xMidYMid meet">
+
     <g *ngFor="let line of board; index as y">
-        <g *ngFor="let c of line; index as x">
-            <rect id="click_{{ x }}_{{ y }}"
-                  (click)="onClick(x, y)"
-                  [attr.x] = "(SPACE_SIZE * x) + STROKE_WIDTH"
-                  [attr.y] = "(SPACE_SIZE * y) + STROKE_WIDTH"
+        <g *ngFor="let c of line; index as x"
+           [attr.transform]="getTranslationXY(x, y)"
+           id="click-{{ x }}-{{ y }}"
+           (click)="onClick(x, y)">
+            <rect id="space-{{ x }}-{{ y }}"
+                  x="0"
+                  y="0"
                   [attr.width]="SPACE_SIZE"
                   [attr.height]="SPACE_SIZE"
                   [ngClass]="getRectClasses(x, y)"
                   class="base"
             />
             <circle *ngIf="board[y][x] !== NONE"
-                    (click)="onClick(x, y)"
-                    [attr.cx]="(SPACE_SIZE * x) + STROKE_WIDTH + (SPACE_SIZE / 2)"
-                    [attr.cy]="(SPACE_SIZE * y) + STROKE_WIDTH + (SPACE_SIZE / 2)"
+                    id="piece-{{ x }}-{{ y }}"
+                    [attr.cx]="SPACE_SIZE / 2"
+                    [attr.cy]="SPACE_SIZE / 2"
                     [attr.r]="(SPACE_SIZE / 2) - STROKE_WIDTH"
                     [ngClass]="getPieceClasses(x, y)"
                     class="base"
             />
         </g>
     </g>
-    <g *ngFor="let coord of getHighlightedCoords()">
-        <rect (click)="onClick(coord.x, coord.y)"
-              [attr.x] = "(SPACE_SIZE * coord.x) + STROKE_WIDTH"
-              [attr.y] = "(SPACE_SIZE * coord.y) + STROKE_WIDTH"
-              [attr.width]="SPACE_SIZE"
-              [attr.height]="SPACE_SIZE"
-              class="no-fill mid-stroke clickable-stroke"
-        />
-    </g>
+
+    <rect *ngFor="let coord of getHighlightedCoords()"
+          id="clickable-{{ coord.x }}-{{ coord.y }}"
+          (click)="onClick(coord.x, coord.y)"
+          [attr.x] = "SPACE_SIZE * coord.x"
+          [attr.y] = "SPACE_SIZE * coord.y"
+          [attr.width]="SPACE_SIZE"
+          [attr.height]="SPACE_SIZE"
+          class="no-fill mid-stroke clickable-stroke"
+    />
+    <g *ngFor="let possibleMove of possibleMoves"
+       id="arrow-{{ possibleMove.arrow.start.x }}-{{ possibleMove.arrow.start.y }}-to-{{ possibleMove.arrow.landing.x }}-{{ possibleMove.arrow.landing.y }}"
+       app-dir-arrow
+       [arrow]="possibleMove.arrow"
+    />
 </svg>

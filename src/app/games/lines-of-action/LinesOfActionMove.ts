@@ -1,18 +1,17 @@
 import { Coord } from 'src/app/jscaip/Coord';
-import { Direction } from 'src/app/jscaip/Direction';
-import { MoveEncoder } from 'src/app/utils/Encoder';
+import { Ordinal } from 'src/app/jscaip/Ordinal';
+import { Encoder, MGPFallible } from '@everyboard/lib';
 import { MoveCoordToCoord } from 'src/app/jscaip/MoveCoordToCoord';
-import { MGPFallible } from 'src/app/utils/MGPFallible';
-import { JSONValue } from 'src/app/utils/utils';
 import { LinesOfActionState } from './LinesOfActionState';
 import { MoveWithTwoCoords } from 'src/app/jscaip/MoveWithTwoCoords';
 
 export class LinesOfActionMove extends MoveCoordToCoord {
-    public static encoder: MoveEncoder<LinesOfActionMove> =
+
+    public static encoder: Encoder<LinesOfActionMove> =
         MoveWithTwoCoords.getFallibleEncoder<LinesOfActionMove>(LinesOfActionMove.from);
 
     public static from(start: Coord, end: Coord): MGPFallible<LinesOfActionMove> {
-        const directionOptional: MGPFallible<Direction> = Direction.factory.fromMove(start, end);
+        const directionOptional: MGPFallible<Ordinal> = Ordinal.factory.fromMove(start, end);
         if (directionOptional.isFailure()) {
             return MGPFallible.failure(directionOptional.getReason());
         }
@@ -24,23 +23,11 @@ export class LinesOfActionMove extends MoveCoordToCoord {
         }
         return MGPFallible.success(new LinesOfActionMove(start, end, directionOptional.get()));
     }
-    private constructor(start: Coord, end: Coord, public readonly direction: Direction) {
+    private constructor(start: Coord, end: Coord, public readonly direction: Ordinal) {
         super(start, end);
-        this.direction = Direction.factory.fromMove(start, end).get();
-    }
-    public equals(other: LinesOfActionMove): boolean {
-        if (other === this) return true;
-        if (!other.getStart().equals(this.getStart())) return false;
-        return other.getEnd().equals(this.getEnd());
+        this.direction = Ordinal.factory.fromMove(start, end).get();
     }
     public override toString(): string {
         return 'LinesOfActionMove(' + this.getStart() + '->' + this.getEnd() + ')';
     }
-    public encode(): JSONValue {
-        return LinesOfActionMove.encoder.encode(this);
-    }
-    public decode(encodedMove: JSONValue): LinesOfActionMove {
-        return LinesOfActionMove.encoder.decode(encodedMove);
-    }
-
 }

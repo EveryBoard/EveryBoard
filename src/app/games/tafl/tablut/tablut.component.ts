@@ -1,34 +1,20 @@
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { TablutMove } from 'src/app/games/tafl/tablut/TablutMove';
-import { TablutState } from './TablutState';
 import { TablutRules } from './TablutRules';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
-import { TablutTutorial } from './TablutTutorial';
 import { TaflComponent } from '../tafl.component';
-import { TaflMinimax } from '../TaflMinimax';
-import { TaflPieceAndInfluenceMinimax } from '../TaflPieceAndInfluenceMinimax';
-import { TaflPieceAndControlMinimax } from '../TaflPieceAndControlMinimax';
-import { TaflEscapeThenPieceThenControlMinimax } from '../TaflEscapeThenPieceThenControlMinimax';
 
 @Component({
     selector: 'app-tablut',
     templateUrl: '../tafl.component.html',
     styleUrls: ['../../../components/game-components/game-component/game-component.scss'],
 })
-export class TablutComponent extends TaflComponent<TablutRules, TablutMove, TablutState> {
+export class TablutComponent extends TaflComponent<TablutRules, TablutMove> {
 
-    public constructor(messageDisplayer: MessageDisplayer) {
-        super(messageDisplayer, false, TablutMove.from);
-        this.rules = TablutRules.get();
-        this.node = this.rules.getInitialNode();
-        this.availableMinimaxes = [
-            new TaflMinimax(this.rules, 'DummyBot'),
-            new TaflPieceAndInfluenceMinimax(this.rules, 'Piece > Influence'),
-            new TaflPieceAndControlMinimax(this.rules, 'Piece > Control'),
-            new TaflEscapeThenPieceThenControlMinimax(this.rules, 'Escape > Piece > Control'),
-        ];
+    public constructor(messageDisplayer: MessageDisplayer, cdr: ChangeDetectorRef) {
+        super(messageDisplayer, cdr, TablutMove.from);
+        this.setRulesAndNode('Tablut');
+        this.availableAIs = this.createAIs();
         this.encoder = TablutMove.encoder;
-        this.tutorial = new TablutTutorial().tutorial;
-        this.updateBoard();
     }
 }

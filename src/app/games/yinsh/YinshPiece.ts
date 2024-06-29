@@ -1,14 +1,12 @@
-import { MoveEncoder } from 'src/app/utils/Encoder';
+import { ComparableObject, Encoder, Utils } from '@everyboard/lib';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { ComparableObject } from 'src/app/utils/Comparable';
-import { Utils } from 'src/app/utils/utils';
-import { assert } from 'src/app/utils/assert';
+import { PlayerMap } from 'src/app/jscaip/PlayerMap';
 
 export class YinshPiece implements ComparableObject {
 
-    public static encoder: MoveEncoder<YinshPiece> =
-        MoveEncoder.tuple<YinshPiece, [PlayerOrNone, boolean]>(
-            [PlayerOrNone.encoder, MoveEncoder.identity<boolean>()],
+    public static encoder: Encoder<YinshPiece> =
+        Encoder.tuple<YinshPiece, [PlayerOrNone, boolean]>(
+            [PlayerOrNone.encoder, Encoder.identity<boolean>()],
             (piece: YinshPiece): [PlayerOrNone, boolean] => [piece.player, piece.isRing],
             (fields: [PlayerOrNone, boolean]): YinshPiece => YinshPiece.of(fields[0], fields[1]));
 
@@ -17,20 +15,21 @@ export class YinshPiece implements ComparableObject {
 
     public static MARKER_ZERO: YinshPiece = new YinshPiece(Player.ZERO, false);
     public static MARKER_ONE: YinshPiece = new YinshPiece(Player.ONE, false);
-    public static MARKERS: [YinshPiece, YinshPiece] = [YinshPiece.MARKER_ZERO, YinshPiece.MARKER_ONE];
+    public static MARKERS: PlayerMap<YinshPiece> = PlayerMap.ofValues(YinshPiece.MARKER_ZERO, YinshPiece.MARKER_ONE);
 
     public static RING_ZERO: YinshPiece = new YinshPiece(Player.ZERO, true);
     public static RING_ONE: YinshPiece = new YinshPiece(Player.ONE, true);
-    public static RINGS: [YinshPiece, YinshPiece] = [YinshPiece.RING_ZERO, YinshPiece.RING_ONE];
+    public static RINGS: PlayerMap<YinshPiece> = PlayerMap.ofValues(YinshPiece.RING_ZERO, YinshPiece.RING_ONE);
 
-    public static of(player: PlayerOrNone, isRing: boolean): YinshPiece {
-        if (player === PlayerOrNone.NONE) {
+    public static of(playerOrNone: PlayerOrNone, isRing: boolean): YinshPiece {
+        if (playerOrNone.isNone()) {
             return YinshPiece.EMPTY;
         } else {
+            const player: Player = playerOrNone;
             if (isRing) {
-                return YinshPiece.RINGS[player.value];
+                return YinshPiece.RINGS.get(player);
             } else {
-                return YinshPiece.MARKERS[player.value];
+                return YinshPiece.MARKERS.get(player);
             }
         }
     }
@@ -40,12 +39,14 @@ export class YinshPiece implements ComparableObject {
     public equals(piece: YinshPiece): boolean {
         return this === piece;
     }
+
     public flip(): YinshPiece {
-        assert(this.isRing === false, 'cannot flip a ring (it should never happen)');
-        assert(this.player.isPlayer(), 'cannot flip a non-player piece');
+        Utils.assert(this.isRing === false, 'cannot flip a ring (it should never happen)');
+        Utils.assert(this.player.isPlayer(), 'cannot flip a non-player piece');
         const player: Player = this.player as Player;
         return YinshPiece.of(player.getOpponent(), this.isRing);
     }
+
     public toString(): string {
         switch (this) {
             case YinshPiece.UNREACHABLE: return 'NONE';
@@ -58,4 +59,14 @@ export class YinshPiece implements ComparableObject {
                 return 'RING_ONE';
         }
     }
+
+    public isReachable(): boolean {
+        return this !== YinshPiece.UNREACHABLE;
+    }
+
+    public isMarker(): boolean {
+        return this === YinshPiece.MARKER_ZERO ||
+               this === YinshPiece.MARKER_ONE;
+    }
+
 }

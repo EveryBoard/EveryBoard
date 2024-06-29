@@ -1,10 +1,10 @@
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { MoveEncoder } from 'src/app/utils/Encoder';
+import { Encoder } from '@everyboard/lib';
 
 export class DvonnPieceStack {
 
-    public static encoder: MoveEncoder<DvonnPieceStack> = MoveEncoder.tuple(
-        [MoveEncoder.identity<boolean>(), Player.encoder, MoveEncoder.identity<number>()],
+    public static encoder: Encoder<DvonnPieceStack> = Encoder.tuple(
+        [Encoder.identity<boolean>(), Player.encoder, Encoder.identity<number>()],
         (stack: DvonnPieceStack): [boolean, PlayerOrNone, number] => [stack.source, stack.owner, stack.size],
         (fields: [boolean, Player, number]): DvonnPieceStack => {
             return new DvonnPieceStack(fields[1], fields[2], fields[0]);

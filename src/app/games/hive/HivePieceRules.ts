@@ -1,21 +1,18 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { HexaDirection } from 'src/app/jscaip/HexaDirection';
-import { HexagonalUtils } from 'src/app/jscaip/HexagonalUtils';
-import { MGPValidation } from 'src/app/utils/MGPValidation';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { MGPSet } from 'src/app/utils/MGPSet';
-import { Utils } from 'src/app/utils/utils';
+import { MGPFallible, MGPOptional, Set, MGPValidation, Utils } from '@everyboard/lib';
 import { HiveFailure } from './HiveFailure';
-import { HiveMoveCoordToCoord, HiveMoveSpider } from './HiveMove';
+import { HiveCoordToCoordMove, HiveSpiderMove } from './HiveMove';
 import { HivePiece, HivePieceKind, HivePieceStack } from './HivePiece';
 import { HiveState } from './HiveState';
-import { MGPFallible } from '../../utils/MGPFallible';
+import { HexagonalUtils } from 'src/app/jscaip/HexagonalUtils';
+import { CoordSet } from 'src/app/jscaip/CoordSet';
 
 export abstract class HivePieceRules {
 
     private static INSTANCES: MGPOptional<Record<HivePieceKind, HivePieceRules>> = MGPOptional.empty();
 
-    public static from(piece: HivePiece): HivePieceRules {
+    public static of(piece: HivePiece): HivePieceRules {
         if (HivePieceRules.INSTANCES.isAbsent()) {
             HivePieceRules.INSTANCES = MGPOptional.of({
                 'QueenBee': HiveQueenBeeRules.get(),
@@ -27,7 +24,7 @@ export abstract class HivePieceRules {
         }
         return HivePieceRules.INSTANCES.get()[piece.kind];
     }
-    protected checkEmptyDestination(move: HiveMoveCoordToCoord, state: HiveState): MGPValidation {
+    protected checkEmptyDestination(move: HiveCoordToCoordMove, state: HiveState): MGPValidation {
         if (state.getAt(move.getEnd()).hasPieces()) {
             return MGPValidation.failure(HiveFailure.THIS_PIECE_CANNOT_CLIMB());
         }
@@ -36,9 +33,9 @@ export abstract class HivePieceRules {
     protected canSlideBetweenNeighbors(state: HiveState, start: Coord, end: Coord): boolean {
         // For the piece to slide from start to end,
         // one of the two common neighbors of start and end coord should be empty
-        const startNeighbors: MGPSet<Coord> = new MGPSet(HexagonalUtils.getNeighbors(start));
-        const endNeighbors: MGPSet<Coord> = new MGPSet(HexagonalUtils.getNeighbors(end));
-        const commonNeighbors: MGPSet<Coord> = startNeighbors.intersection(endNeighbors);
+        const startNeighbors: CoordSet = new CoordSet(HexagonalUtils.getNeighbors(start));
+        const endNeighbors: CoordSet = new CoordSet(HexagonalUtils.getNeighbors(end));
+        const commonNeighbors: CoordSet = startNeighbors.intersection(endNeighbors);
         for (const neighbor of commonNeighbors) {
             if (state.getAt(neighbor).isEmpty()) {
                 return true;
@@ -46,9 +43,9 @@ export abstract class HivePieceRules {
         }
         return false;
     }
-    public abstract moveValidity(move: HiveMoveCoordToCoord, state: HiveState): MGPValidation;
+    public abstract moveValidity(move: HiveCoordToCoordMove, state: HiveState): MGPValidation;
 
-    public abstract getPotentialMoves(coord: Coord, state: HiveState): HiveMoveCoordToCoord[];
+    public abstract getPotentialMoves(coord: Coord, state: HiveState): HiveCoordToCoordMove[];
 }
 
 export class HiveQueenBeeRules extends HivePieceRules {
@@ -61,7 +58,7 @@ export class HiveQueenBeeRules extends HivePieceRules {
         }
         return this.INSTANCE.get();
     }
-    public moveValidity(move: HiveMoveCoordToCoord, state: HiveState): MGPValidation {
+    public moveValidity(move: HiveCoordToCoordMove, state: HiveState): MGPValidation {
         if (HexagonalUtils.areNeighbors(move.getStart(), move.getEnd()) === false) {
             return MGPValidation.failure(HiveFailure.QUEEN_BEE_CAN_ONLY_MOVE_TO_DIRECT_NEIGHBORS());
         }
@@ -70,11 +67,11 @@ export class HiveQueenBeeRules extends HivePieceRules {
         }
         return this.checkEmptyDestination(move, state);
     }
-    public getPotentialMoves(coord: Coord, state: HiveState): HiveMoveCoordToCoord[] {
-        const moves: HiveMoveCoordToCoord[] = [];
+    public getPotentialMoves(coord: Coord, state: HiveState): HiveCoordToCoordMove[] {
+        const moves: HiveCoordToCoordMove[] = [];
         for (const neighbor of HexagonalUtils.getNeighbors(coord)) {
             if (state.getAt(neighbor).isEmpty()) {
-                moves.push(HiveMoveCoordToCoord.from(coord, neighbor).get());
+                moves.push(HiveCoordToCoordMove.from(coord, neighbor).get());
             }
         }
         return moves;
@@ -91,16 +88,16 @@ export class HiveBeetleRules extends HivePieceRules {
         }
         return this.INSTANCE.get();
     }
-    public moveValidity(move: HiveMoveCoordToCoord, state: HiveState): MGPValidation {
+    public moveValidity(move: HiveCoordToCoordMove, state: HiveState): MGPValidation {
         if (HexagonalUtils.areNeighbors(move.getStart(), move.getEnd()) === false) {
             return MGPValidation.failure(HiveFailure.BEETLE_CAN_ONLY_MOVE_TO_DIRECT_NEIGHBORS());
         }
         return MGPValidation.SUCCESS;
     }
-    public getPotentialMoves(coord: Coord, state: HiveState): HiveMoveCoordToCoord[] {
-        const moves: HiveMoveCoordToCoord[] = [];
+    public getPotentialMoves(coord: Coord, state: HiveState): HiveCoordToCoordMove[] {
+        const moves: HiveCoordToCoordMove[] = [];
         for (const neighbor of HexagonalUtils.getNeighbors(coord)) {
-            moves.push(HiveMoveCoordToCoord.from(coord, neighbor).get());
+            moves.push(HiveCoordToCoordMove.from(coord, neighbor).get());
         }
         return moves;
     }
@@ -116,7 +113,7 @@ export class HiveGrasshopperRules extends HivePieceRules {
         }
         return this.INSTANCE.get();
     }
-    public moveValidity(move: HiveMoveCoordToCoord, state: HiveState): MGPValidation {
+    public moveValidity(move: HiveCoordToCoordMove, state: HiveState): MGPValidation {
 
         const direction: MGPFallible<HexaDirection> = HexaDirection.factory.fromMove(move.getStart(), move.getEnd());
         if (direction.isFailure()) {
@@ -133,8 +130,8 @@ export class HiveGrasshopperRules extends HivePieceRules {
         }
         return this.checkEmptyDestination(move, state);
     }
-    public getPotentialMoves(coord: Coord, state: HiveState): HiveMoveCoordToCoord[] {
-        const moves: HiveMoveCoordToCoord[] = [];
+    public getPotentialMoves(coord: Coord, state: HiveState): HiveCoordToCoordMove[] {
+        const moves: HiveCoordToCoordMove[] = [];
         for (const direction of HexaDirection.factory.all) {
             const neighbor: Coord = coord.getNext(direction);
             if (state.getAt(neighbor).hasPieces()) {
@@ -143,7 +140,7 @@ export class HiveGrasshopperRules extends HivePieceRules {
                 while (state.getAt(end).hasPieces()) {
                     end = end.getNext(direction);
                 }
-                moves.push(HiveMoveCoordToCoord.from(coord, end).get());
+                moves.push(HiveCoordToCoordMove.from(coord, end).get());
             }
         }
         return moves;
@@ -161,7 +158,7 @@ export class HiveSpiderRules extends HivePieceRules {
         return this.INSTANCE.get();
     }
     public prefixLegality(coords: Coord[], state: HiveState): MGPValidation {
-        const visited: MGPSet<Coord> = new MGPSet();
+        let visited: CoordSet = new CoordSet();
         const stateWithoutMovedSpider: HiveState = state.update()
             .setAt(coords[0], HivePieceStack.EMPTY)
             .increaseTurnAndFinalizeUpdate();
@@ -181,20 +178,20 @@ export class HiveSpiderRules extends HivePieceRules {
             if (visited.contains(coords[i])) {
                 return MGPValidation.failure(HiveFailure.SPIDER_CANNOT_BACKTRACK());
             }
-            visited.add(coords[i]);
+            visited = visited.addElement(coords[i]);
         }
         return MGPValidation.SUCCESS;
     }
-    public moveValidity(move: HiveMoveCoordToCoord, state: HiveState): MGPValidation {
-        Utils.assert(move instanceof HiveMoveSpider, 'HiveSpiderRules: move should be a spider move');
-        const spiderMove: HiveMoveSpider = move as HiveMoveSpider;
+    public moveValidity(move: HiveCoordToCoordMove, state: HiveState): MGPValidation {
+        Utils.assert(move instanceof HiveSpiderMove, 'HiveSpiderRules: move should be a spider move');
+        const spiderMove: HiveSpiderMove = move as HiveSpiderMove;
         const prefixLegality: MGPValidation = this.prefixLegality(spiderMove.coords, state);
         if (prefixLegality.isFailure()) {
             return prefixLegality;
         }
         return this.checkEmptyDestination(move, state);
     }
-    public getPotentialMoves(coord: Coord, state: HiveState): HiveMoveCoordToCoord[] {
+    public getPotentialMoves(coord: Coord, state: HiveState): HiveCoordToCoordMove[] {
         const stateWithoutMovedSpider: HiveState = state.update()
             .setAt(coord, HivePieceStack.EMPTY)
             .increaseTurnAndFinalizeUpdate();
@@ -203,10 +200,10 @@ export class HiveSpiderRules extends HivePieceRules {
         for (let i: number = 0; i < 3; i++) {
             movesSoFar = movesSoFar.flatMap((move: Coord[]) => this.nextMoveStep(stateWithoutMovedSpider, move));
         }
-        function makeMove(move: Coord[]): HiveMoveSpider {
-            return HiveMoveSpider.fromCoords(move as [Coord, Coord, Coord, Coord]);
+        function makeMove(move: Coord[]): HiveSpiderMove {
+            return HiveSpiderMove.ofCoords(move as [Coord, Coord, Coord, Coord]);
         }
-        const uniqueMoves: MGPSet<HiveMoveCoordToCoord> = new MGPSet(movesSoFar.map(makeMove));
+        const uniqueMoves: Set<HiveCoordToCoordMove> = new Set(movesSoFar.map(makeMove));
         return uniqueMoves.toList();
     }
     private nextMoveStep(state: HiveState, move: Coord[]): Coord[][] {
@@ -223,8 +220,8 @@ export class HiveSpiderRules extends HivePieceRules {
             // Must have a common neighbor with the previous coord
             return state.haveCommonNeighbor(coord, lastCoord);
         }
-        const possibleNeighbors: MGPSet<Coord> =
-            new MGPSet(HexagonalUtils.getNeighbors(lastCoord)).filter(neighborsFilter);
+        const possibleNeighbors: CoordSet =
+            new CoordSet(HexagonalUtils.getNeighbors(lastCoord)).filter(neighborsFilter);
         return possibleNeighbors.toList().map((coord: Coord): Coord[] => [...move, coord]);
     }
 }
@@ -240,14 +237,14 @@ export class HiveSoldierAntRules extends HivePieceRules {
         return this.INSTANCE.get();
     }
     public pathExists(state: HiveState, start: Coord, end: Coord): boolean {
-        const visited: MGPSet<Coord> = new MGPSet();
+        let visited: CoordSet = new CoordSet();
         const worklist: Coord[] = [start];
         while (worklist.length > 0) {
             const coord: Coord = worklist.pop() as Coord;
             if (visited.contains(coord)) {
                 continue;
             }
-            visited.add(coord);
+            visited = visited.addElement(coord);
 
             if (coord.equals(end)) {
                 return true;
@@ -263,21 +260,21 @@ export class HiveSoldierAntRules extends HivePieceRules {
         }
         return false;
     }
-    public moveValidity(move: HiveMoveCoordToCoord, state: HiveState): MGPValidation {
+    public moveValidity(move: HiveCoordToCoordMove, state: HiveState): MGPValidation {
         if (this.pathExists(state, move.getStart(), move.getEnd()) === false) {
             return MGPValidation.failure(HiveFailure.MUST_BE_ABLE_TO_SLIDE());
         }
         return this.checkEmptyDestination(move, state);
     }
-    public getPotentialMoves(coord: Coord, state: HiveState): HiveMoveCoordToCoord[] {
-        const moves: MGPSet<HiveMoveCoordToCoord> = new MGPSet();
+    public getPotentialMoves(coord: Coord, state: HiveState): HiveCoordToCoordMove[] {
+        let moves: Set<HiveCoordToCoordMove> = new Set();
         for (const occupiedSpace of state.occupiedSpaces()) {
             if (occupiedSpace.equals(coord)) {
                 // We will move so we don't look at this space
                 continue;
             }
             for (const unoccupied of state.emptyNeighbors(occupiedSpace)) {
-                moves.add(HiveMoveCoordToCoord.from(coord, unoccupied).get());
+                moves = moves.addElement(HiveCoordToCoordMove.from(coord, unoccupied).get());
             }
         }
         return moves.toList();

@@ -1,7 +1,7 @@
 import { Coord } from 'src/app/jscaip/Coord';
-import { Orthogonal } from 'src/app/jscaip/Direction';
+import { Orthogonal } from 'src/app/jscaip/Orthogonal';
 import { HexaLayout } from 'src/app/jscaip/HexaLayout';
-import { Utils } from 'src/app/utils/utils';
+import { Utils } from '@everyboard/lib';
 
 interface Limits {
     minX: number;
@@ -11,13 +11,15 @@ interface Limits {
 }
 
 export class ViewBox {
-    public static fromLimits(left: number, right: number, up: number, down: number): ViewBox {
-        const width: number = right - left;
-        const height: number = down - up;
-        return new ViewBox(left, up, width, height);
+
+    public static fromLimits(minX: number, maxX: number, minY: number, maxY: number): ViewBox {
+        const width: number = maxX - minX;
+        const height: number = maxY - minY;
+        return new ViewBox(minX, minY, width, height);
     }
+
     public static fromHexa(coords: Coord[], hexaLayout: HexaLayout, strokeWidth: number): ViewBox {
-        const points: Coord[] = coords.flatMap((coord: Coord) => hexaLayout.getHexaPointsListAt(coord));
+        const points: Coord[] = coords.flatMap((coord: Coord) => hexaLayout.getCenterAt(coord));
         const limits: Limits = ViewBox.getLimits(points);
         const left: number = limits.minX - (strokeWidth / 2);
         const up: number = limits.minY - (strokeWidth / 2);
@@ -25,6 +27,7 @@ export class ViewBox {
         const height: number = strokeWidth + limits.maxY - limits.minY;
         return new ViewBox(left, up, width, height);
     }
+
     private static getLimits(coords: Coord[]): Limits {
         let maxX: number = Number.MIN_SAFE_INTEGER;
         let maxY: number = Number.MIN_SAFE_INTEGER;
@@ -58,8 +61,33 @@ export class ViewBox {
         return this.left + this.width;
     }
 
+    public expandAbove(above: number): ViewBox {
+        return this.expand(0, 0, above, 0);
+    }
+
+    public expandBelow(below: number): ViewBox {
+        return this.expand(0, 0, 0, below);
+    }
+
+    public expandLeft(left: number): ViewBox {
+        return this.expand(left, 0, 0, 0);
+    }
+
+    public expandRight(right: number): ViewBox {
+        return this.expand(0, right, 0, 0);
+    }
+
     public expand(left: number, right: number, above: number, below: number): ViewBox {
-        return new ViewBox(this.left - left, this.up - above, this.width + left + right, this.height + above + below);
+        return new ViewBox(
+            this.left - left,
+            this.up - above,
+            this.width + left + right,
+            this.height + above + below,
+        );
+    }
+
+    public expandAll(offset: number): ViewBox {
+        return this.expand(offset, offset, offset, offset);
     }
 
     public containingAtLeast(viewBox: ViewBox): ViewBox {
@@ -77,40 +105,37 @@ export class ViewBox {
 
 export class GameComponentUtils {
 
-    public static getArrowTransform(boardWidth: number, coord: Coord, direction: Orthogonal): string {
+    public static getArrowTransform(boardWidth: number, boardHeight: number, orthogonal: Orthogonal): string {
         // The triangle will be wrapped inside a square
         // The board will be considered in this example as a 3x3 on which we place the triangle in (tx, ty)
         let tx: number;
         let ty: number;
-        let angle: number;
-        switch (direction) {
+        switch (orthogonal) {
             case Orthogonal.UP:
                 tx = 1;
                 ty = 0;
-                angle = -90;
                 break;
             case Orthogonal.DOWN:
                 tx = 1;
                 ty = 2;
-                angle = 90;
                 break;
             case Orthogonal.LEFT:
                 tx = 0;
                 ty = 1;
-                angle = 180;
                 break;
             default:
-                Utils.expectToBe(direction, Orthogonal.RIGHT);
+                Utils.expectToBe(orthogonal, Orthogonal.RIGHT);
                 tx = 2;
                 ty = 1;
-                angle = 0;
                 break;
         }
-        const scale: string = 'scale(' + (boardWidth / 300) + ')';
+        const scale: string = `scale( ${ boardWidth / 300} ${ boardHeight / 300 } )`;
         const realX: number = tx * 100;
         const realY: number = ty * 100;
         const translation: string = `translate(${realX} ${realY})`;
+        const angle: number = orthogonal.getAngle();
         const rotation: string = 'rotate(' + angle + ' 50 50)';
         return [scale, translation, rotation].join(' ');
     }
+
 }

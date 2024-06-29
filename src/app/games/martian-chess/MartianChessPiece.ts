@@ -1,7 +1,4 @@
-import { assert } from 'src/app/utils/assert';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { Utils } from 'src/app/utils/utils';
-
+import { MGPOptional, Utils } from '@everyboard/lib';
 
 export class MartianChessPiece {
 
@@ -12,15 +9,15 @@ export class MartianChessPiece {
 
     public static tryMerge(left: MartianChessPiece, right: MartianChessPiece): MGPOptional<MartianChessPiece> {
         const noEmptyPieces: boolean = left !== MartianChessPiece.EMPTY && right !== MartianChessPiece.EMPTY;
-        assert(noEmptyPieces, 'tryMerge cannot be called with empty pieces');
+        Utils.assert(noEmptyPieces, 'tryMerge cannot be called with empty pieces');
         const totalValue: number = left.value + right.value;
         if (totalValue === 2 || totalValue === 3) {
-            return MGPOptional.of(MartianChessPiece.from(totalValue));
+            return MGPOptional.of(MartianChessPiece.of(totalValue));
         } else {
             return MGPOptional.empty();
         }
     }
-    private static from(value: 0 | 1 | 2 | 3): MartianChessPiece {
+    private static of(value: 0 | 1 | 2 | 3): MartianChessPiece {
         switch (value) {
             case MartianChessPiece.DRONE.value: return MartianChessPiece.DRONE;
             default:
@@ -28,7 +25,7 @@ export class MartianChessPiece {
                 return MartianChessPiece.QUEEN;
         }
     }
-    private constructor(private readonly value: number) { }
+    private constructor(private readonly value: number) {}
 
     public getValue(): number {
         return this.value;

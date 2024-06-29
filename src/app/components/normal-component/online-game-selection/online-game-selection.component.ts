@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
-import { ObservedPartService } from 'src/app/services/ObservedPartService';
-import { MGPValidation } from 'src/app/utils/MGPValidation';
+import { CurrentGameService } from 'src/app/services/CurrentGameService';
+import { MGPValidation } from '@everyboard/lib';
 
 @Component({
     selector: 'app-online-game-selection',
@@ -13,14 +13,14 @@ export class OnlineGameSelectionComponent {
     public selectedGame: string;
 
     public constructor(public readonly router: Router,
-                       public readonly observedPartService: ObservedPartService,
+                       public readonly currentGameService: CurrentGameService,
                        public readonly messageDisplayer: MessageDisplayer) {
     }
     public pickGame(pickedGame: string): void {
         this.selectedGame = pickedGame;
     }
     public async navigateToOnlineGameCreation(): Promise<void> {
-        const canUserJoin: MGPValidation = this.observedPartService.canUserCreate();
+        const canUserJoin: MGPValidation = this.currentGameService.canUserCreate();
         if (canUserJoin.isSuccess()) {
             await this.router.navigate(['/play', this.selectedGame]);
         } else {

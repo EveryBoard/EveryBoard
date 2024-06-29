@@ -1,6 +1,8 @@
-<app-part-creation id="partCreation" #partCreation
+<app-part-creation id="partCreation"
+                   #partCreation
                    *ngIf="gameStarted === false"
                    [partId]="currentPartId"
+                   [rulesConfigDescription]="getRulesConfigDescription()"
                    (gameStartNotification)="startGame($event)">
 </app-part-creation>
 
@@ -10,10 +12,10 @@
     <div class="tile is-parent">
         <div class="tile is-child box has-text-centered">
             <div class="block" id="turnIndicator" *ngIf="currentPart !== null">
-                <p class="subtitle" i18n>Turn n°{{ currentPart.getTurn() + 1 }}</p>
+                <p class="subtitle" id="turn-number" i18n>Turn n°{{ currentPart.getTurn() + 1 }}</p>
                 <p class="subtitle" id="currentPlayerIndicator" *ngIf="endGame === false">
-                    <ng-container *ngIf="currentPlayer?.name === getPlayer().name else opponentsTurn"><span id="playerTurn" i18n>It is your turn.</span></ng-container>
-                    <ng-template #opponentsTurn><span id="opponentTurn" i18n>It is {{ currentPlayer?.name }}'s turn.</span></ng-template>
+                    <ng-container *ngIf="currentUser?.name === getPlayer().name else opponentsTurn"><span id="playerTurn" i18n>It is your turn.</span></ng-container>
+                    <ng-template #opponentsTurn><span id="opponentTurn" i18n>It is {{ currentUser?.name }}'s turn.</span></ng-template>
                 </p>
             </div>
             <div class="block">
@@ -21,25 +23,29 @@
                    [ngClass]="getPlayerNameClass(Player.ZERO)"
                    class="player0-bg"
                    *ngIf="players[0].isPresent()">{{ players[0].get().name }}</p>
-                <p id="scoreZeroIndicator" *ngIf="currentPart !== null && gameComponent && gameComponent.scores.isPresent()" i18n>{{ gameComponent.scores.get()[0] }} points</p>
+                <p id="scoreZeroIndicator" *ngIf="currentPart !== null && gameComponent && gameComponent.scores.isPresent()" i18n>{{ gameComponent.scores.get().get(Player.ZERO) }} points</p>
                 <app-count-down #chronoZeroGlobal
+                                id="chrono-zero-global"
                                 [dangerTimeLimit]="60*1000"
                                 [active]="(currentPart === null) ? false : currentPart.getTurn() % 2 === 0"
                                 [canAddTime]='role === Player.ONE && endGame === false'
                                 [timeToAdd]="globalTimeMessage"
-                                debugName="ZERO Global"
+                                [debugName]="'ZERO Global'"
                                 (outOfTimeAction)="reachedOutOfTime(Player.ZERO)"
                                 (addTimeToOpponent)="addGlobalTime()"
+                                class="data-global-time"
                 >
                 </app-count-down>
                 <app-count-down #chronoZeroTurn
+                                id="chrono-zero-turn"
                                 [dangerTimeLimit]="15*1000"
                                 [active]="(currentPart === null) ? false : currentPart.getTurn() % 2 === 0"
                                 [canAddTime]='role === Player.ONE && endGame === false'
                                 [timeToAdd]="turnTimeMessage"
-                                debugName="ZERO Turn"
+                                [debugName]="'ZERO Turn'"
                                 (outOfTimeAction)="reachedOutOfTime(Player.ZERO)"
                                 (addTimeToOpponent)="addTurnTime()"
+                                class="data-turn-time"
                 >
                 </app-count-down>
             </div>
@@ -49,80 +55,33 @@
                    [ngClass]="getPlayerNameClass(Player.ONE)"
                    class="player1-bg"
                    *ngIf="players[1].isPresent()">{{ players[1].get().name }}</p>
-                <p id="scoreOneIndicator" *ngIf="currentPart !== null && gameComponent && gameComponent.scores.isPresent()" i18n>{{ gameComponent.scores.get()[1] }} points</p>
+                <p id="scoreOneIndicator" *ngIf="currentPart !== null && gameComponent && gameComponent.scores.isPresent()" i18n>{{ gameComponent.scores.get().get(Player.ONE) }} points</p>
                 <app-count-down #chronoOneGlobal
+                                id="chrono-one-global"
                                 [dangerTimeLimit]="60*1000"
                                 [active]="(currentPart === null) ? false : currentPart.getTurn() % 2 === 1"
                                 [canAddTime]='role === Player.ZERO && endGame === false'
                                 [timeToAdd]="globalTimeMessage"
-                                debugName="ONE Global"
+                                [debugName]="'ONE Global'"
                                 (outOfTimeAction)="reachedOutOfTime(Player.ONE)"
                                 (addTimeToOpponent)="addGlobalTime()"
+                                class="data-global-time"
                 >
                 </app-count-down>
                 <app-count-down #chronoOneTurn
+                                id="chrono-one-turn"
                                 [dangerTimeLimit]="15*1000"
                                 [active]="(currentPart === null) ? false : currentPart.getTurn() % 2 === 1"
                                 [canAddTime]='role === Player.ZERO && endGame === false'
                                 [timeToAdd]="turnTimeMessage"
-                                debugName="ONE Turn"
+                                [debugName]="'ONE Turn'"
                                 (outOfTimeAction)="reachedOutOfTime(Player.ONE)"
                                 (addTimeToOpponent)="addTurnTime()"
+                                class="data-turn-time"
                 >
                 </app-count-down>
             </div>
             <hr/>
-            <ng-container *ngIf="isPlaying()">
-                <button class="button is-fullwidth mb-1"
-                        id="resignButton"
-                        *ngIf="canResign()"
-                        (click)="resign()"
-                        i18n
-                >Resign</button>
-                <button class="button is-fullwidth mb-1"
-                        id="proposeDrawButton"
-                        *ngIf="canProposeDraw()"
-                        (click)="proposeDraw()"
-                        i18n
-                >Propose a draw</button>
-                <button class="button is-warning is-fullwidth mb-1"
-                        *ngIf="endGame === false && isOpponentWaitingForDrawResponse()"
-                        id="acceptDrawButton"
-                        (click)="acceptDraw()"
-                        i18n
-                >Accept draw</button>
-                <button class="button is-warning is-fullwidth mb-1"
-                        *ngIf="endGame === false && isOpponentWaitingForDrawResponse()"
-                        id="refuseDrawButton"
-                        (click)="refuseDraw()"
-                        i18n
-                >Reject draw</button>
-                <button class="button is-fullwidth mb-1"
-                        *ngIf="endGame === false && isPlaying() && gameComponent.canPass && (currentPlayer?.name === getPlayer().name)"
-                        id="passButton"
-                        (click)="gameComponent.pass()"
-                        i18n
-                >Pass a turn</button>
-                <button class="button is-warning is-fullwidth mb-1"
-                        *ngIf="endGame === false && isOpponentWaitingForTakeBackResponse()"
-                        id="acceptTakeBackButton"
-                        (click)="acceptTakeBack()"
-                        i18n
-                >Accept take back</button>
-                <button class="button is-warning is-fullwidth mb-1"
-                        *ngIf="endGame === false && isOpponentWaitingForTakeBackResponse()"
-                        color="warn"
-                        id="refuseTakeBackButton"
-                        (click)="refuseTakeBack()"
-                        i18n
-                >Reject take back</button>
-                <button class="button is-fullwidth"
-                        *ngIf="endGame === false && isOpponentWaitingForTakeBackResponse() === false && canAskTakeBack()"
-                        id="askTakeBackButton"
-                        (click)="askTakeBack()"
-                        i18n
-                >Ask to take back one move</button>
-            </ng-container>
             <div class="block" id="winnerIndicator" *ngIf="endGame && currentPart !== null">
                 <hr/>
                 <div *ngIf="currentPart.isHardDraw()">
@@ -149,26 +108,64 @@
                     <p class="title" id="resignIndicator"
                        *ngIf="isPlaying() === false || currentPart.getWinner().get().name === getPlayer().name" i18n>{{ currentPart.getLoser().get().name }} has resigned.</p>
                 </div>
-
             </div>
+            <ng-container *ngIf="isPlaying()">
+                <ng-container *ngIf="mustReply() === false else replyButtons">
+                    <button id="resign"
+                            class="button is-fullwidth mb-1 is-danger"
+                            (click)="resign()"
+                            [disabled]="canResign() === false"
+                            i18n
+                    >Resign</button>
+                    <button id="pass"
+                            class="button is-fullwidth mb-1 is-success"
+                            (click)="gameComponent.pass()"
+                            [disabled]="canPass() === false"
+                            i18n
+                    >Pass a turn</button>
+                    <ng-container *ngFor="let request of allRequests">
+                        <button id="propose{{ request }}"
+                                class="button is-fullwidth mb-1"
+                                (click)="propose(request)"
+                                [disabled]="requestAvailable(request) === false"
+                        >{{ requestInfos[request].textForRequest() }}&nbsp;&nbsp;<fa-icon [icon]="requestInfos[request].icon"></fa-icon></button>
+                    </ng-container>
+                </ng-container>
+                <ng-template #replyButtons>
+                    <div class="notification">
+                        <p>
+                            {{ requestInfos[getRequestAwaitingReplyFromUs().get()].textForReply() }}&nbsp;&nbsp;
+                            <fa-icon [icon]="requestInfos[getRequestAwaitingReplyFromUs().get()].icon"></fa-icon>
+                        </p>
+                        <button class="button is-fullwidth mb-1 is-success"
+                                id="accept"
+                                (click)="accept()"
+                                i18n
+                        >Accept</button>
+                        <button class="button is-fullwidth mb-1 is-danger"
+                                id="reject"
+                                (click)="reject()"
+                                i18n
+                        >Reject</button>
+                    </div>
+                </ng-template>
+                <div *ngIf="deniedRequest().isPresent()"
+                        id="requestRejected"
+                        class="notification is-danger">
+                    <p><span i18n>Your {{ requestInfos[deniedRequest().get()].name() }} request has been rejected.&nbsp;&nbsp;<fa-icon [icon]="requestInfos[deniedRequest().get()].icon"></fa-icon></span></p>
+                </div>
+                <div *ngIf="getRequestAwaitingReplyFromOpponent().isPresent()"
+                        id="getRequestAwaitingReply"
+                        class="notification">
+                    <p><span i18n>Your request for a {{ requestInfos[getRequestAwaitingReplyFromOpponent().get()].name() }} has been sent.&nbsp;&nbsp;<fa-icon [icon]="requestInfos[getRequestAwaitingReplyFromOpponent().get()].icon"></fa-icon></span></p>
+                </div>
+            </ng-container>
             <button class="button is-primary is-fullwidth mb-1"
                     *ngIf="endGame"
                     id="backToServerButton"
                     routerLink="/lobby"
                     i18n
             >Go back to the game list</button>
-            <button id="proposeRematchButton"
-                    class="button is-fullwidth mb-1"
-                    *ngIf="canProposeRematch()"
-                    (click)="proposeRematch()"
-                    i18n
-            >Propose to play again</button>
-            <button class="button is-fullwidth is-warning"
-                    id="acceptRematchButton"
-                    *ngIf="canAcceptRematch()"
-                    (click)="acceptRematch()"
-                    i18n
-             >Accept to play again</button>
         </div>
     </div>
     <div id="board-tile"

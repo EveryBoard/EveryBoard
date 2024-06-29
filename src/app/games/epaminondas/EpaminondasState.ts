@@ -1,46 +1,35 @@
-import { Table } from 'src/app/utils/ArrayUtils';
-import { GameStateWithTable } from 'src/app/jscaip/GameStateWithTable';
-import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
+import { Player } from 'src/app/jscaip/Player';
+import { PlayerOrNoneGameStateWithTable } from 'src/app/jscaip/state/PlayerOrNoneGameStateWithTable';
 
-export class EpaminondasState extends GameStateWithTable<PlayerOrNone> {
+export class EpaminondasState extends PlayerOrNoneGameStateWithTable {
 
-    public static getInitialState(): EpaminondasState {
-        const _: PlayerOrNone = PlayerOrNone.NONE;
-        const O: PlayerOrNone = PlayerOrNone.ZERO;
-        const X: PlayerOrNone = PlayerOrNone.ONE;
-        const board: Table<PlayerOrNone> = [
-            [X, X, X, X, X, X, X, X, X, X, X, X, X, X],
-            [X, X, X, X, X, X, X, X, X, X, X, X, X, X],
-            [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
-            [O, O, O, O, O, O, O, O, O, O, O, O, O, O],
-            [O, O, O, O, O, O, O, O, O, O, O, O, O, O],
-        ];
-        return new EpaminondasState(board, 0);
-    }
-    public count(piece: Player, row: number): number {
+    public countRow(player: Player, row: number): number {
         let result: number = 0;
-        for (let x: number = 0; x < 14; x++) {
-            if (this.board[row][x] === piece) {
+        for (let x: number = 0; x < this.getWidth(); x++) {
+            if (this.board[row][x] === player) {
                 result++;
             }
         }
         return result;
     }
+
+    public count(player: Player): number {
+        let result: number = 0;
+        for (const coordAndContent of this.getCoordsAndContents()) {
+            if (coordAndContent.content === player) {
+                result++;
+            }
+        }
+        return result;
+    }
+
     public doesOwnPiece(player: Player): boolean {
-        for (let y: number = 0; y < 12; y++) {
-            for (let x: number = 0; x < 14; x++) {
-                if (this.board[y][x] === player) {
-                    return true;
-                }
+        for (const coordAndContent of this.getCoordsAndContents()) {
+            if (coordAndContent.content === player) {
+                return true;
             }
         }
         return false;
     }
+
 }

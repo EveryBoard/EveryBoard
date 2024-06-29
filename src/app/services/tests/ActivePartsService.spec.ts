@@ -1,10 +1,10 @@
 /* eslint-disable max-lines-per-function */
 import { ActivePartsService } from '../ActivePartsService';
 import { PartDAO } from 'src/app/dao/PartDAO';
-import { fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { fakeAsync, TestBed } from '@angular/core/testing';
 import { MGPResult, Part, PartDocument } from 'src/app/domain/Part';
 import { PartDAOMock } from 'src/app/dao/tests/PartDAOMock.spec';
-import { Utils } from 'src/app/utils/utils';
+import { Utils } from '@everyboard/lib';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { FirestoreCollectionObserver } from 'src/app/dao/FirestoreCollectionObserver';
 import { UserMocks } from 'src/app/domain/UserMocks.spec';
@@ -37,10 +37,13 @@ xdescribe('ActivePartsService', () => {
         partDAO = TestBed.inject(PartDAO);
         activePartsService = TestBed.inject(ActivePartsService);
     }));
+
     it('should create', () => {
         expect(activePartsService).toBeTruthy();
     });
+
     describe('subscribeToActiveParts', () => {
+
         it('should notify about new parts', fakeAsync(async() => {
             // Given a service where we are observing active parts
             let seenActiveParts: PartDocument[] = [];
@@ -55,9 +58,13 @@ xdescribe('ActivePartsService', () => {
             // Then the new part should have been observed
             expect(seenActiveParts.length).toBe(1);
             expect(seenActiveParts[0].data).toEqual(part);
+            // And it should really be a PartDocument, not just a FirestoreDocument<Part>
+            // hence, it has methods such as getGameName()
+            expect(seenActiveParts[0].getGameName).toBeDefined();
 
             activePartsSubscription.unsubscribe();
         }));
+
         it('should not notify about new parts when we unsubscribe', fakeAsync(async() => {
             // Given a service where we were observing active parts, but have unsubscribed
             let seenActiveParts: PartDocument[] = [];
@@ -66,7 +73,6 @@ xdescribe('ActivePartsService', () => {
                     seenActiveParts = activeParts;
                 });
             activePartsSubscription.unsubscribe();
-            tick(3000);
 
             // When a new part is added
             await partDAO.create(part);
@@ -74,6 +80,7 @@ xdescribe('ActivePartsService', () => {
             // Then the new part should not have been observed
             expect(seenActiveParts.length).toBe(0);
         }));
+
         it('should notify about deleted parts', fakeAsync(async() => {
             // Given that we are observing active parts, and there is already one part
             const partId: string = await partDAO.create(part);
@@ -91,6 +98,7 @@ xdescribe('ActivePartsService', () => {
 
             activePartsSubscription.unsubscribe();
         }));
+
         it('should preserve non-deleted upon a deletion', fakeAsync(async() => {
             // Given a service observing active parts, and there are already multiple parts
             const partToBeDeleted: string = await partDAO.create(part);
@@ -110,6 +118,7 @@ xdescribe('ActivePartsService', () => {
 
             activePartsSubscription.unsubscribe();
         }));
+
         it('should update when a part is modified', fakeAsync(async() => {
             // Given that we are observing active parts, and there is already one part
             const partId: string = await partDAO.create(part);
@@ -128,6 +137,7 @@ xdescribe('ActivePartsService', () => {
 
             activePartsSubscription.unsubscribe();
         }));
+
         it('should update only the modified part', fakeAsync(async() => {
             // Given that we are observing active parts, and there is already one part
             const partToBeModified: string = await partDAO.create(part);
@@ -143,18 +153,19 @@ xdescribe('ActivePartsService', () => {
 
             // Then the part should have been updated
             expect(seenActiveParts.length).toBe(2);
-            const newPart1: PartDocument = Utils.getNonNullable(seenActiveParts.find((part: PartDocument) =>
-                part.id === partToBeModified));
-            const newPart2: PartDocument = Utils.getNonNullable(seenActiveParts.find((part: PartDocument) =>
-                part.id === partThatWontChange));
+            const newPart1: PartDocument = Utils.getNonNullable(seenActiveParts.find((p: PartDocument) =>
+                p.id === partToBeModified));
+            const newPart2: PartDocument = Utils.getNonNullable(seenActiveParts.find((p: PartDocument) =>
+                p.id === partThatWontChange));
             expect(Utils.getNonNullable(newPart1.data).turn).toBe(1);
             // and the other one should still be there and still be the same
             expect(Utils.getNonNullable(newPart2.data).turn).toBe(0);
 
             activePartsSubscription.unsubscribe();
         }));
+
         it('should call observingWhere with the right condition', () => {
-            // Given an ActiveUsersService
+            // Given an ActivePartsService
             spyOn(partDAO, 'observingWhere').and.callFake(
                 (query: FirestoreCondition[], callback: FirestoreCollectionObserver<Part>): Subscription => {
                     const expectedParameters: FirestoreCondition[] = [
@@ -170,6 +181,7 @@ xdescribe('ActivePartsService', () => {
             expect(partDAO.observingWhere).toHaveBeenCalledTimes(1);
             subscription.unsubscribe();
         });
+
         it('should not duplicate parts when we subscribe a second time', fakeAsync(async() => {
             // Given an active part service where we subscribed in the past
             await partDAO.create(part);
@@ -190,5 +202,7 @@ xdescribe('ActivePartsService', () => {
             expect(seenActiveParts.length).toBe(1);
             activePartsSubscription.unsubscribe();
         }));
+
     });
+
 });

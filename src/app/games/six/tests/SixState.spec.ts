@@ -1,13 +1,11 @@
 /* eslint-disable max-lines-per-function */
 import { Coord } from 'src/app/jscaip/Coord';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
 import { ErrorLoggerServiceMock } from 'src/app/services/tests/ErrorLoggerServiceMock.spec';
-import { Table } from 'src/app/utils/ArrayUtils';
-import { ReversibleMap } from 'src/app/utils/MGPMap';
-import { MGPSet } from 'src/app/utils/MGPSet';
-import { CoordSet } from 'src/app/utils/OptimizedSet';
+import { Table } from 'src/app/jscaip/TableUtils';
+import { Set, ReversibleMap, Utils } from '@everyboard/lib';
 import { SixState } from '../SixState';
+import { CoordSet } from 'src/app/jscaip/CoordSet';
 
 describe('SixState', () => {
 
@@ -16,6 +14,7 @@ describe('SixState', () => {
     const X: PlayerOrNone = Player.ONE;
 
     describe('toRepresentation/fromRepresentation', () => {
+
         it('should represent correctly board', () => {
             const pieces: ReversibleMap<Coord, Player> = new ReversibleMap<Coord, Player>();
             pieces.put(new Coord(0, 0), Player.ONE);
@@ -27,6 +26,7 @@ describe('SixState', () => {
             ];
             expect(state.toRepresentation()).toEqual(expectedRepresentation);
         });
+
         it('should create correctly from representation', () => {
             const representation: Table<PlayerOrNone> = [
                 [X, _],
@@ -36,11 +36,14 @@ describe('SixState', () => {
             expectedPieces.put(new Coord(0, 0), Player.ONE);
             expectedPieces.put(new Coord(1, 1), Player.ZERO);
             expectedPieces.makeImmutable();
-            const state: SixState = SixState.fromRepresentation(representation, 0);
+            const state: SixState = SixState.ofRepresentation(representation, 0);
             expect(state.pieces).toEqual(expectedPieces);
         });
+
     });
+
     describe('getGroups', () => {
+
         it('when a piece has been removed, the board might be separated in several sub-groups', () => {
             const representation: Table<PlayerOrNone> = [
                 [_, _, X, _, _],
@@ -49,17 +52,20 @@ describe('SixState', () => {
                 [_, O, _, _, _],
                 [O, _, _, _, _],
             ];
-            const state: SixState = SixState.fromRepresentation(representation, 40);
-            const groups: MGPSet<MGPSet<Coord>> = state.getGroups();
-            const expectedGroups: MGPSet<MGPSet<Coord>> = new MGPSet([
+            const state: SixState = SixState.ofRepresentation(representation, 40);
+            const groups: Set<CoordSet> = state.getGroups();
+            const expectedGroups: Set<CoordSet> = new Set([
                 new CoordSet([new Coord(2, 0), new Coord(2, 1)]),
                 new CoordSet([new Coord(3, 2), new Coord(4, 2)]),
                 new CoordSet([new Coord(0, 4), new Coord(1, 3)]),
             ]);
             expect(groups.equals(expectedGroups)).toBeTrue();
         });
+
     });
+
     describe('switchPiece', () => {
+
         it('should throw when trying to switch a piece that does not exist', () => {
             // Given a state with some pieces
             const representation: Table<PlayerOrNone> = [
@@ -69,13 +75,15 @@ describe('SixState', () => {
                 [_, O, _, _, _],
                 [O, _, _, _, _],
             ];
-            const state: SixState = SixState.fromRepresentation(representation, 40);
+            const state: SixState = SixState.ofRepresentation(representation, 40);
             // When trying to switch an empty coord
             // Then it should throw and call logError
-            spyOn(ErrorLoggerService, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
+            spyOn(Utils, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
             const errorMessage: string = 'Cannot switch piece if there is no piece!';
-            expect(() => state.switchPiece(new Coord(0, 0))).toThrowError('SixState: ' + errorMessage + ' (extra data: {"coord":"(0, 0)"})');
-            expect(ErrorLoggerService.logError).toHaveBeenCalledWith('SixState', errorMessage, { coord: '(0, 0)' });
+            expect(() => state.switchPiece(new Coord(0, 0))).toThrowError('Assertion failure: ' + errorMessage);
+            expect(Utils.logError).toHaveBeenCalledWith('Assertion failure', errorMessage, { coord: '(0, 0)' });
         });
+
     });
+
 });

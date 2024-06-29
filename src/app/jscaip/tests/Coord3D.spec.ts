@@ -1,8 +1,6 @@
 /* eslint-disable max-lines-per-function */
-import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { Encoder, EncoderTestUtils, MGPOptional } from '@everyboard/lib';
 import { Coord3D } from '../Coord3D';
-import { EncoderTestUtils } from 'src/app/utils/tests/Encoder.spec';
-import { Encoder } from 'src/app/utils/Encoder';
 
 describe('Coord3D', () => {
 
@@ -12,7 +10,8 @@ describe('Coord3D', () => {
             MGPOptional.empty(),
             MGPOptional.of(new Coord3D(0, 0, 0)),
         ];
-        const encoder: Encoder<MGPOptional<Coord3D>> = MGPOptional.getEncoder(Coord3D.getEncoder(Coord3D.of));
+        const encoder: Encoder<MGPOptional<Coord3D>> =
+            MGPOptional.getEncoder(Coord3D.getCoord3DEncoder(Coord3D.of));
         for (const value of values) {
             EncoderTestUtils.expectToBeBijective(encoder, value);
         }

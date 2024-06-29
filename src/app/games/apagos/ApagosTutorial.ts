@@ -3,15 +3,17 @@ import { ApagosState } from 'src/app/games/apagos/ApagosState';
 import { Tutorial, TutorialStep } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { ApagosCoord } from './ApagosCoord';
 import { Player } from 'src/app/jscaip/Player';
-import { MGPValidation } from 'src/app/utils/MGPValidation';
+import { MGPValidation } from '@everyboard/lib';
+import { ApagosRules } from './ApagosRules';
+import { TutorialStepMessage } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
 
 export class ApagosTutorial extends Tutorial {
 
     public tutorial: TutorialStep[] = [
         TutorialStep.informational(
-            $localize`Initial board and object of the game`,
+            TutorialStepMessage.INITIAL_BOARD_AND_OBJECT_OF_THE_GAME(),
             $localize`At Apagos, there are 4 squares, each of them has a fixed number of holes for pieces. Each player starts with 10 pieces. Dark pieces belong to the first player, light pieces belong to the second one. The game ends when no one can play. The player owning the most pieces in the rightmost square wins!`,
-            ApagosState.getInitialState(),
+            ApagosRules.get().getInitialState(),
         ),
         TutorialStep.anyMove(
             $localize`Drop`,
@@ -22,7 +24,7 @@ export class ApagosTutorial extends Tutorial {
                 [7, 5, 3, 1],
             ], 9, 10),
             ApagosMove.drop(ApagosCoord.ZERO, Player.ZERO),
-            $localize`Congratulations!`,
+            TutorialStepMessage.CONGRATULATIONS(),
         ),
         TutorialStep.fromPredicate(
             $localize`Transfer`,
@@ -40,7 +42,7 @@ export class ApagosTutorial extends Tutorial {
                 }
                 return MGPValidation.SUCCESS;
             },
-            $localize`Congratulations!`,
+            TutorialStepMessage.CONGRATULATIONS(),
         ),
         TutorialStep.fromPredicate(
             $localize`Victory`,
@@ -63,7 +65,7 @@ export class ApagosTutorial extends Tutorial {
                     return MGPValidation.failure($localize`Wrong choice, your opponent will win in the next turn no matter which piece is dropped!`);
                 }
             },
-            $localize`Congratulations!`,
+            TutorialStepMessage.CONGRATULATIONS(),
         ),
     ];
 }

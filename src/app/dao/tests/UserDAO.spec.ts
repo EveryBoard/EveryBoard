@@ -1,12 +1,12 @@
 /* eslint-disable max-lines-per-function */
 import { TestBed } from '@angular/core/testing';
-import * as FireAuth from '@angular/fire/auth';
+import * as FireAuth from '@firebase/auth';
 import { User } from 'src/app/domain/User';
 import { UserDAO } from '../UserDAO';
-import { expectPermissionToBeDenied, setupEmulators } from 'src/app/utils/tests/TestUtils.spec';
 import { createConnectedGoogleUser, createDisconnectedGoogleUser } from 'src/app/services/tests/ConnectedUserService.spec';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { MGPOptional } from '@everyboard/lib';
 import { UserService } from 'src/app/services/UserService';
+import { expectPermissionToBeDenied, setupEmulators } from 'src/app/utils/tests/TestUtils.spec';
 
 xdescribe('UserDAO', () => {
 
@@ -47,10 +47,10 @@ xdescribe('UserDAO', () => {
             // Given an authenticated visitor without the corresponding user in DB
             const token: string = '{"sub": "foo@bar.com", "email": "foo@bar.com", "email_verified": true}';
             const credential: FireAuth.UserCredential =
-                await FireAuth.signInWithCredential(TestBed.inject(FireAuth.Auth),
+                await FireAuth.signInWithCredential(FireAuth.getAuth(),
                                                     FireAuth.GoogleAuthProvider.credential(token));
             // When setting the user in DB
-            const result: Promise<void> = userDAO.set(credential.user.uid, { verified: false });
+            const result: Promise<void> = userDAO.set(credential.user.uid, { verified: false, currentGame: null });
             // Then it should succeed
             await expectAsync(result).toBeResolvedTo();
         });
@@ -58,7 +58,7 @@ xdescribe('UserDAO', () => {
             // Given an existing, logged in user
             await createConnectedGoogleUser('foo@bar.com', 'user');
             // When trying to set another user in the DB
-            const result: Promise<void> = userDAO.set('some-other-uid', { verified: false });
+            const result: Promise<void> = userDAO.set('some-other-uid', { verified: false, currentGame: null });
             // Then it should fail
             await expectPermissionToBeDenied(result);
         });
@@ -82,9 +82,9 @@ xdescribe('UserDAO', () => {
             // Given a non-verified user, with a username
             const token: string = '{"sub": "foo@bar.com", "email": "foo@bar.com", "email_verified": true}';
             const credential: FireAuth.UserCredential =
-                await FireAuth.signInWithCredential(TestBed.inject(FireAuth.Auth),
+                await FireAuth.signInWithCredential(FireAuth.getAuth(),
                                                     FireAuth.GoogleAuthProvider.credential(token));
-            await userDAO.set(credential.user.uid, { verified: false, username: 'user' });
+            await userDAO.set(credential.user.uid, { verified: false, username: 'user', currentGame: null });
 
             // When marking the user as verified
             const result: Promise<void> = userService.markAsVerified(credential.user.uid);
@@ -95,9 +95,9 @@ xdescribe('UserDAO', () => {
             // Given a non-verified user, without a username
             const token: string = '{"sub": "foo@bar.com", "email": "foo@bar.com", "email_verified": true}';
             const credential: FireAuth.UserCredential =
-                await FireAuth.signInWithCredential(TestBed.inject(FireAuth.Auth),
+                await FireAuth.signInWithCredential(FireAuth.getAuth(),
                                                     FireAuth.GoogleAuthProvider.credential(token));
-            await userDAO.set(credential.user.uid, { verified: false });
+            await userDAO.set(credential.user.uid, { verified: false, currentGame: null });
 
             // When marking the user as verified
             const result: Promise<void> = userService.markAsVerified(credential.user.uid);
@@ -107,10 +107,10 @@ xdescribe('UserDAO', () => {
         it('should forbid setting the user to verified if it has no verified email', async() => {
             // Given a email user that has not verified its email
             const credential: FireAuth.UserCredential =
-                await FireAuth.createUserWithEmailAndPassword(TestBed.inject(FireAuth.Auth),
+                await FireAuth.createUserWithEmailAndPassword(FireAuth.getAuth(),
                                                               'foo@bar.com',
                                                               'jeanjaja123');
-            await userDAO.set(credential.user.uid, { verified: false, username: 'foo' });
+            await userDAO.set(credential.user.uid, { verified: false, username: 'foo', currentGame: null });
 
             // When marking the user as verified
             const result: Promise<void> = userService.markAsVerified(credential.user.uid);

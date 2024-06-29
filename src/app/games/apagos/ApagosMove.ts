@@ -1,9 +1,6 @@
-import { MoveEncoder } from 'src/app/utils/Encoder';
+import { Encoder, MGPFallible, MGPOptional, Utils } from '@everyboard/lib';
 import { Move } from 'src/app/jscaip/Move';
 import { Player } from 'src/app/jscaip/Player';
-import { MGPFallible } from 'src/app/utils/MGPFallible';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { Utils } from 'src/app/utils/utils';
 import { ApagosCoord } from './ApagosCoord';
 import { ApagosFailure } from './ApagosFailure';
 
@@ -27,7 +24,7 @@ export class ApagosMove extends Move {
         new ApagosMove(ApagosCoord.ZERO, MGPOptional.empty(), MGPOptional.of(ApagosCoord.TWO)),
         new ApagosMove(ApagosCoord.ZERO, MGPOptional.empty(), MGPOptional.of(ApagosCoord.ONE)),
     ];
-    public static encoder: MoveEncoder<ApagosMove> = MoveEncoder.tuple(
+    public static encoder: Encoder<ApagosMove> = Encoder.tuple(
         [ApagosCoord.encoder, MGPOptional.getEncoder(Player.encoder), MGPOptional.getEncoder(ApagosCoord.encoder)],
         (m: ApagosMove): ApagosMoveFields => [m.landing, m.piece, m.starting],
         (fields: ApagosMoveFields): ApagosMove => new ApagosMove(fields[0], fields[1], fields[2]));

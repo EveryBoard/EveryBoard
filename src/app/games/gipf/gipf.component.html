@@ -17,16 +17,17 @@
 
     <g *ngFor="let space of getAllCoords()"
        (click)="onClick(space)"
-       id="click_{{ space.x }}_{{ space.y }}">
+       id="click_{{ space.x }}_{{ space.y }}"
+       [attr.transform]="getHexaCenterTranslationAt(space)">
 
-        <polygon [attr.points]="getHexaPointsAt(space)"
+        <polygon [attr.points]="getHexaPoints()"
                  id="space_{{ space.x }}_{{ space.y }}"
                  [ngClass]="getSpaceClass(space)"
                  class="base"
                  stroke-linecap="round"/>
         <circle *ngIf="isPiece(space)"
-                [attr.cx]="getCenterAt(space).x"
-                [attr.cy]="getCenterAt(space).y"
+                cx="0"
+                cy="0"
                 [attr.r]="SPACE_SIZE"
                 [ngClass]="getPieceClass(space)"
                 class="base"/>
@@ -36,24 +37,24 @@
        pointer-events="fill"
        class="capturable-stroke">
         <polygon *ngFor="let space of capture.capturedSpaces"
-                 [attr.points]="getHexaPointsAt(space)"
+                 [attr.points]="getHexaPoints()"
+                 [attr.transform]="getHexaCenterTranslationAt(space)"
                  (click)="onClick(space)"
                  class="no-fill"
                  stroke-linecap="round"/>
     </g>
 
     <line *ngFor="let arrow of arrows"
-          [attr.x1]="arrow.x1"
-          [attr.y1]="arrow.y1"
-          [attr.x2]="arrow.x2"
-          [attr.y2]="arrow.y2"
-          class="arrow"
-          marker-end="url(#arrowhead)"
-          (click)="onClick(arrow.destination)"/>
+          [attr.x1]="arrow.startCenter.x"
+          [attr.y1]="arrow.startCenter.y"
+          [attr.x2]="arrow.landingCenter.x"
+          [attr.y2]="arrow.landingCenter.y"
+          class="arrow click-delegator"
+          marker-end="url(#arrowhead)"/>
 
     <g *ngFor="let player of Player.PLAYERS">
         <g *ngFor="let p of getPlayerSidePieces(player)">
-            <circle id="piece_{{ player.value }}_{{ p }}"
+            <circle id="piece_{{ player.toString() }}_{{ p }}"
                     [attr.cx]="getRemainingPieceCx(player, p)"
                     [attr.cy]="getRemainingPieceCy(player)"
                     [attr.r]="SPACE_SIZE * 0.5"
@@ -64,11 +65,11 @@
     </g>
 
     <line *ngIf="inserted.isPresent()"
-          [attr.x1]="inserted.get().x1"
-          [attr.y1]="inserted.get().y1"
-          [attr.x2]="inserted.get().x2"
-          [attr.y2]="inserted.get().y2"
-          class="arrow moved-stroke"
+          [attr.x1]="inserted.get().startCenter.x"
+          [attr.y1]="inserted.get().startCenter.y"
+          [attr.x2]="inserted.get().landingCenter.x"
+          [attr.y2]="inserted.get().landingCenter.y"
+          class="arrow moved-stroke click-delegator"
           marker-end="url(#arrowhead-moved)"
     />
 </svg>

@@ -1,53 +1,25 @@
-import { PlayerOrNone } from 'src/app/jscaip/Player';
-import { Table } from 'src/app/utils/ArrayUtils';
+/* eslint-disable max-lines-per-function */
+import { AIDepthLimitOptions } from 'src/app/jscaip/AI/AI';
+import { LinesOfActionRules } from '../LinesOfActionRules';
+import { minimaxTest, SlowTest } from 'src/app/utils/tests/TestUtils.spec';
+import { MGPOptional } from '@everyboard/lib';
 import { LinesOfActionMinimax } from '../LinesOfActionMinimax';
-import { LinesOfActionNode, LinesOfActionRules } from '../LinesOfActionRules';
-import { LinesOfActionState } from '../LinesOfActionState';
+import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 describe('LinesOfActionMinimax', () => {
 
-    let minimax: LinesOfActionMinimax;
-    const _: PlayerOrNone = PlayerOrNone.NONE;
-    const O: PlayerOrNone = PlayerOrNone.ZERO;
-    const X: PlayerOrNone = PlayerOrNone.ONE;
+    const rules: LinesOfActionRules = LinesOfActionRules.get();
+    const minimax: LinesOfActionMinimax = new LinesOfActionMinimax();
+    const minimaxOptions: AIDepthLimitOptions = { name: 'Level 1', maxDepth: 1 };
+    const defaultConfig: MGPOptional<EmptyRulesConfig> = LinesOfActionRules.get().getDefaultRulesConfig();
 
-    beforeEach(() => {
-        const rules: LinesOfActionRules = LinesOfActionRules.get();
-        minimax = new LinesOfActionMinimax(rules, 'Lines Of Action Minimax');
-    });
-    it('should have 36 moves on the initial state', () => {
-        const state: LinesOfActionState = LinesOfActionState.getInitialState();
-        const node: LinesOfActionNode = new LinesOfActionNode(state);
-        expect(minimax.getListMoves(node).length).toBe(6 * 3 * 2);
-    });
-    it('should have 0 moves on a victory state (for Player.ZERO)', () => {
-        const board: Table<PlayerOrNone> = [
-            [_, _, _, _, _, _, _, _],
-            [X, _, _, _, O, _, _, X],
-            [_, _, O, O, X, _, _, _],
-            [_, _, _, O, _, _, _, _],
-            [_, _, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _, _],
-        ];
-        const state: LinesOfActionState = new LinesOfActionState(board, 0);
-        const node: LinesOfActionNode = new LinesOfActionNode(state);
-        expect(minimax.getListMoves(node).length).toBe(0);
-    });
-    it('should have 0 moves on a victory state (for Player.ONE)', () => {
-        const board: Table<PlayerOrNone> = [
-            [_, _, _, _, _, _, _, _],
-            [O, _, _, _, X, _, _, O],
-            [_, _, X, X, O, _, _, _],
-            [_, _, _, X, _, _, _, _],
-            [_, _, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _, _],
-        ];
-        const state: LinesOfActionState = new LinesOfActionState(board, 1);
-        const node: LinesOfActionNode = new LinesOfActionNode(state);
-        expect(minimax.getListMoves(node).length).toBe(0);
+    SlowTest.it('should be able play against itself', () => {
+        minimaxTest({
+            rules,
+            minimax,
+            options: minimaxOptions,
+            config: defaultConfig,
+            shouldFinish: false, // not a finisher
+        });
     });
 });

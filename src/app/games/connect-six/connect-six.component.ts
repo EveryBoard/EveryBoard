@@ -1,15 +1,16 @@
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { ConnectSixRules } from './ConnectSixRules';
-import { ConnectSixDrops, ConnectSixFirstMove, ConnectSixMove, ConnectSixMoveEncoder } from './ConnectSixMove';
+import { ConnectSixDrops, ConnectSixFirstMove, ConnectSixMove } from './ConnectSixMove';
 import { ConnectSixState } from './ConnectSixState';
 import { PlayerOrNone } from 'src/app/jscaip/Player';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
-import { ConnectSixTutorial } from './ConnectSixTutorial.spec';
-import { MGPValidation } from 'src/app/utils/MGPValidation';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { MGPOptional, MGPValidation } from '@everyboard/lib';
 import { Coord } from 'src/app/jscaip/Coord';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { GobanGameComponent } from 'src/app/components/game-components/goban-game-component/GobanGameComponent';
+import { MCTS } from 'src/app/jscaip/AI/MCTS';
+import { ConnectSixMoveGenerator } from './ConnectSixMoveGenerator';
+import { ConnectSixAlignmentMinimax } from './ConnectSixAlignmentMinimax';
 
 @Component({
     selector: 'app-connect-six',
@@ -21,52 +22,62 @@ export class ConnectSixComponent extends GobanGameComponent<ConnectSixRules,
                                                             ConnectSixState,
                                                             PlayerOrNone>
 {
+
     public droppedCoord: MGPOptional<Coord> = MGPOptional.empty();
 
     public lastMoved: Coord[] = [];
 
     public victoryCoords: Coord[] = [];
 
-    public constructor(messageDisplayer: MessageDisplayer) {
-        super(messageDisplayer);
-        this.rules = ConnectSixRules.get();
-        this.node = this.rules.getInitialNode();
-        this.availableMinimaxes = [
+    public constructor(messageDisplayer: MessageDisplayer, cdr: ChangeDetectorRef) {
+        super(messageDisplayer, cdr);
+        this.setRulesAndNode('ConnectSix');
+        this.availableAIs = [
+            new ConnectSixAlignmentMinimax(),
+            new MCTS($localize`MCTS`, new ConnectSixMoveGenerator(), this.rules),
         ];
-        this.encoder = ConnectSixMoveEncoder;
-        this.tutorial = new ConnectSixTutorial().tutorial;
+        this.encoder = ConnectSixMove.encoder;
     }
-    public updateBoard(): void {
+
+    public async updateBoard(_triggerAnimation: boolean): Promise<void> {
         const state: ConnectSixState = this.getState();
         this.board = state.getCopiedBoard();
         this.victoryCoords = ConnectSixRules.getVictoriousCoords(state);
         this.createHoshis();
     }
-    public override showLastMove(move: ConnectSixMove): void {
+
+    public override async showLastMove(move: ConnectSixMove): Promise<void> {
         if (move instanceof ConnectSixFirstMove) {
             this.lastMoved = [move.coord];
         } else {
             this.lastMoved = [move.getFirst(), move.getSecond()];
         }
     }
-    public async onClick(x: number, y: number): Promise<MGPValidation> {
-        const clickValidity: MGPValidation = this.canUserPlay('#click_' + x + '_' + y);
+
+    public override hideLastMove(): void {
+        this.lastMoved = [];
+    }
+
+    public async onClick(coord: Coord): Promise<MGPValidation> {
+        const x: number = coord.x;
+        const y: number = coord.y;
+        const clickValidity: MGPValidation = await this.canUserPlay('#click-' + x + '-' + y);
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }
         const clickedCoord: Coord = new Coord(x, y);
         if (this.getState().turn === 0) {
-            return this.chooseMove(ConnectSixFirstMove.from(clickedCoord), this.getState());
+            const move: ConnectSixMove = ConnectSixFirstMove.of(clickedCoord);
+            return this.chooseMove(move);
         } else {
             if (this.getState().getPieceAt(clickedCoord).isPlayer()) {
                 return this.cancelMove(RulesFailure.MUST_CLICK_ON_EMPTY_SQUARE());
             } else if (this.droppedCoord.isPresent()) {
                 if (this.droppedCoord.equalsValue(clickedCoord)) {
-                    this.droppedCoord = MGPOptional.empty();
-                    return MGPValidation.SUCCESS;
+                    return this.cancelMove();
                 } else {
-                    const move: ConnectSixMove = ConnectSixDrops.from(this.droppedCoord.get(), clickedCoord).get();
-                    return this.chooseMove(move, this.getState());
+                    const move: ConnectSixMove = ConnectSixDrops.of(this.droppedCoord.get(), clickedCoord);
+                    return this.chooseMove(move);
                 }
             } else {
                 this.droppedCoord = MGPOptional.of(clickedCoord);
@@ -74,6 +85,7 @@ export class ConnectSixComponent extends GobanGameComponent<ConnectSixRules,
             }
         }
     }
+
     public getSpaceClass(x: number, y: number): string[] {
         const coord: Coord = new Coord(x, y);
         const owner: PlayerOrNone = this.getState().getPieceAt(coord);
@@ -92,7 +104,9 @@ export class ConnectSixComponent extends GobanGameComponent<ConnectSixRules,
         }
         return classes;
     }
+
     public override cancelMoveAttempt(): void {
         this.droppedCoord = MGPOptional.empty();
     }
+
 }

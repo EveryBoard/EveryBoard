@@ -1,17 +1,15 @@
 import { FirestoreDAOMock } from 'src/app/dao/tests/FirestoreDAOMock.spec';
-import { MGPMap } from 'src/app/utils/MGPMap';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { ObservableSubject } from 'src/app/utils/tests/ObservableSubject.spec';
-import { JSONValue } from 'src/app/utils/utils';
+import { JSONValue, MGPMap, MGPOptional, ObservableSubject } from '@everyboard/lib';
 import { ErrorDocument, MGPError } from '../ErrorDAO';
 
-type ErrorOS = ObservableSubject<MGPOptional<ErrorDocument>>
+type ErrorOS = ObservableSubject<MGPOptional<ErrorDocument>>;
+
 export class ErrorDAOMock extends FirestoreDAOMock<MGPError> {
 
     public static errorDB: MGPMap<string, ErrorOS>;
 
     public constructor() {
-        super('ErrorDAOMock', false);
+        super('ErrorDAOMock');
     }
     public findErrors(component: string, route: string, message: string, data?: JSONValue): Promise<ErrorDocument[]> {
         if (data === undefined) {

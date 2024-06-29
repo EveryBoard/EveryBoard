@@ -1,6 +1,5 @@
-import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { Orthogonal } from 'src/app/jscaip/Direction';
-import { MGPNode } from 'src/app/jscaip/MGPNode';
+import { Orthogonal } from 'src/app/jscaip/Orthogonal';
+import { GameNode } from 'src/app/jscaip/AI/GameNode';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { Rules } from 'src/app/jscaip/Rules';
 import { PylosCoord } from './PylosCoord';
@@ -8,12 +7,13 @@ import { PylosMove } from './PylosMove';
 import { PylosState } from './PylosState';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { PylosFailure } from './PylosFailure';
-import { MGPValidation } from 'src/app/utils/MGPValidation';
-import { MGPSet } from 'src/app/utils/MGPSet';
-import { MGPFallible } from '../../utils/MGPFallible';
+import { MGPOptional, MGPFallible, Set, MGPValidation } from '@everyboard/lib';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
+import { TableUtils } from 'src/app/jscaip/TableUtils';
+import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 
-export class PylosNode extends MGPNode<PylosRules, PylosMove, PylosState> {}
+export class PylosNode extends GameNode<PylosMove, PylosState> {}
 
 export class PylosRules extends Rules<PylosMove, PylosState> {
 
@@ -25,9 +25,16 @@ export class PylosRules extends Rules<PylosMove, PylosState> {
         }
         return PylosRules.singleton.get();
     }
-    private constructor() {
-        super(PylosState);
+
+    public override getInitialState(): PylosState {
+        const board0: PlayerOrNone[][] = TableUtils.create(4, 4, PlayerOrNone.NONE);
+        const board1: PlayerOrNone[][] = TableUtils.create(3, 3, PlayerOrNone.NONE);
+        const board2: PlayerOrNone[][] = TableUtils.create(2, 2, PlayerOrNone.NONE);
+        const board3: PlayerOrNone[][] = [[PlayerOrNone.NONE]];
+        const turn: number = 0;
+        return new PylosState([board0, board1, board2, board3], turn);
     }
+
     public static getStateInfo(state: PylosState): { freeToMove: PylosCoord[], landable: PylosCoord[] } {
         const freeToMove: PylosCoord[] = [];
         const landable: PylosCoord[] = [];
@@ -48,27 +55,30 @@ export class PylosRules extends Rules<PylosMove, PylosState> {
         }
         return { freeToMove, landable };
     }
+
     public static getClimbingMoves(stateInfo: { freeToMove: PylosCoord[], landable: PylosCoord[] }): PylosMove[] {
         const moves: PylosMove[] = [];
         for (const startingCoord of stateInfo.freeToMove) {
             for (const landingCoord of stateInfo.landable) {
                 if (landingCoord.isHigherThan(startingCoord) &&
                     landingCoord.getLowerPieces().some((c: PylosCoord) => startingCoord.equals(c)) === false) {
-                    const newMove: PylosMove = PylosMove.fromClimb(startingCoord, landingCoord, []);
+                    const newMove: PylosMove = PylosMove.ofClimb(startingCoord, landingCoord, []);
                     moves.push(newMove);
                 }
             }
         }
         return moves;
     }
+
     public static getDropMoves(stateInfo: { freeToMove: PylosCoord[], landable: PylosCoord[] }): PylosMove[] {
         const drops: PylosMove[] = [];
         for (const landableCoord of stateInfo.landable) {
-            const newMove: PylosMove = PylosMove.fromDrop(landableCoord, []);
+            const newMove: PylosMove = PylosMove.ofDrop(landableCoord, []);
             drops.push(newMove);
         }
         return drops;
     }
+
     public static canCapture(state: PylosState, landingCoord: PylosCoord): boolean {
         const currentPlayer: Player = state.getCurrentPlayer();
         for (const vertical of [Orthogonal.UP, Orthogonal.DOWN]) {
@@ -90,28 +100,27 @@ export class PylosRules extends Rules<PylosMove, PylosState> {
         }
         return false;
     }
-    public static getPossibleCaptures(state: PylosState): MGPSet<MGPSet<PylosCoord>> {
-        const possiblesCapturesSet: MGPSet<MGPSet<PylosCoord>> = new MGPSet();
 
-        const freeToMoveFirsts: PylosCoord[] = state.getFreeToMoves();
+    public static getPossibleCaptures(state: PylosState): Set<Set<PylosCoord>> {
+        let possiblesCapturesSet: Set<Set<PylosCoord>> = new Set();
+
+        const freeToMoveFirsts: Set<PylosCoord> = state.getFreeToMoves();
         for (const freeToMoveFirst of freeToMoveFirsts) {
-            possiblesCapturesSet.add(new MGPSet([freeToMoveFirst]));
+            possiblesCapturesSet = possiblesCapturesSet.addElement(new Set([freeToMoveFirst]));
 
             const secondState: PylosState = state.removePieceAt(freeToMoveFirst);
-            const freeToMoveThens: PylosCoord[] = secondState.getFreeToMoves();
+            const freeToMoveThens: Set<PylosCoord> = secondState.getFreeToMoves();
             for (const freeToMoveThen of freeToMoveThens) {
-                const captures: MGPSet<PylosCoord> = new MGPSet([freeToMoveFirst, freeToMoveThen]);
-                possiblesCapturesSet.add(captures);
+                const captures: Set<PylosCoord> = new Set([freeToMoveFirst, freeToMoveThen]);
+                possiblesCapturesSet = possiblesCapturesSet.addElement(captures);
             }
         }
         return possiblesCapturesSet;
     }
-    public static applyLegalMove(move: PylosMove, state: PylosState, _info: void): PylosState {
-        return state.applyLegalMove(move);
-    }
+
     public static isValidCapture(state: PylosState, move: PylosMove, capture: PylosCoord): boolean {
         const currentPlayer: Player = state.getCurrentPlayer();
-        if (!capture.equals(move.landingCoord) &&
+        if (capture.equals(move.landingCoord) === false &&
             state.getPieceAt(capture) !== currentPlayer)
         {
             return false;
@@ -121,21 +130,23 @@ export class PylosRules extends Rules<PylosMove, PylosState> {
                                            coord.equals(move.firstCapture.get()) === false);
         return supportedPieces.length === 0;
     }
+
     public static getGameStatus(node: PylosNode): GameStatus {
-        const state: PylosState = node.gameState;
-        const ownershipMap: { [owner: number]: number } = state.getPiecesRepartition();
-        if (ownershipMap[Player.ZERO.value] === 15) {
+        const ownershipMap: PlayerNumberMap = node.gameState.getPiecesRepartition();
+        if (ownershipMap.get(Player.ZERO) === 15) {
             return GameStatus.ONE_WON;
-        } else if (ownershipMap[Player.ONE.value] === 15) {
+        } else if (ownershipMap.get(Player.ONE) === 15) {
             return GameStatus.ZERO_WON;
         } else {
             return GameStatus.ONGOING;
         }
     }
-    public applyLegalMove(move: PylosMove, state: PylosState, status: void): PylosState {
-        return PylosRules.applyLegalMove(move, state, status);
+
+    public override applyLegalMove(move: PylosMove, state: PylosState, _config: NoConfig, _info: void): PylosState {
+        return state.applyLegalMove(move);
     }
-    public isLegal(move: PylosMove, state: PylosState): MGPValidation {
+
+    public override isLegal(move: PylosMove, state: PylosState): MGPValidation {
         const startingCoordLegality: MGPFallible<PylosState> = this.isLegalStartingCoord(move, state);
         if (startingCoordLegality.isFailure()) {
             return startingCoordLegality.toOtherFallible();
@@ -159,8 +170,8 @@ export class PylosRules extends Rules<PylosMove, PylosState> {
             const startingCoord: PylosCoord = move.startingCoord.get();
             const startingPiece: PlayerOrNone = initialState.getPieceAt(startingCoord);
             if (startingPiece === opponent) {
-                return MGPFallible.failure(RulesFailure.CANNOT_CHOOSE_OPPONENT_PIECE());
-            } else if (startingPiece === PlayerOrNone.NONE) {
+                return MGPFallible.failure(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT());
+            } else if (startingPiece.isNone()) {
                 return MGPFallible.failure(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY());
             }
             const supportedPieces: PylosCoord[] = startingCoord.getHigherCoords()
@@ -205,7 +216,7 @@ export class PylosRules extends Rules<PylosMove, PylosState> {
             return MGPValidation.failure(PylosFailure.INVALID_FIRST_CAPTURE());
         }
     }
-    public getGameStatus(node: PylosNode): GameStatus {
+    public override getGameStatus(node: PylosNode): GameStatus {
         return PylosRules.getGameStatus(node);
     }
 }

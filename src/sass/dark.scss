@@ -23,6 +23,7 @@
     --spaces-fill: #888;
     --tab-highlight-on-hover: #4a4a4a;
     --victory: green;
+    --defeat: red;
 }
 
 $primary: #994d00;
@@ -33,7 +34,6 @@ $footer-padding:1rem;
 @import "../../node_modules/bulmaswatch/cyborg/bulmaswatch.scss";
 @import "../../node_modules/@creativebulma/bulma-tooltip/dist/bulma-tooltip.css";
 @import "./mystyles.scss";
-
 
 .hero {
     background-color: #000;

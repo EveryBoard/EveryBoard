@@ -1,38 +1,41 @@
 /* eslint-disable max-lines-per-function */
-import { SaharaNode, SaharaRules } from '../SaharaRules';
-import { SaharaMinimax } from '../SaharaMinimax';
+import { SaharaRules } from '../SaharaRules';
 import { SaharaMove } from '../SaharaMove';
 import { Coord } from 'src/app/jscaip/Coord';
-import { EncoderTestUtils } from 'src/app/utils/tests/Encoder.spec';
 import { SaharaFailure } from '../SaharaFailure';
-import { MGPFallible } from 'src/app/utils/MGPFallible';
+import { MGPFallible, TestUtils } from '@everyboard/lib';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
+import { MoveTestUtils } from 'src/app/jscaip/tests/Move.spec';
+import { SaharaMoveGenerator } from '../SaharaMoveGenerator';
 
 describe('SaharaMoves', () => {
 
     it('should have a bijective encoder', () => {
         const rules: SaharaRules = SaharaRules.get();
-        const minimax: SaharaMinimax = new SaharaMinimax(rules, 'SaharaMinimax');
-        const node: SaharaNode = rules.getInitialNode();
-        expect(rules).toBeTruthy();
-        const moves: SaharaMove[] = minimax.getListMoves(node);
-        expect(moves.length).toEqual(12);
-        for (const move of moves) {
-            EncoderTestUtils.expectToBeBijective(SaharaMove.encoder, move);
-        }
+        const moveGenerator: SaharaMoveGenerator = new SaharaMoveGenerator();
+        MoveTestUtils.testFirstTurnMovesBijectivity(rules, moveGenerator, SaharaMove.encoder);
     });
+
     it('should throw error when starting coord is outside the board', () => {
         const start: Coord = new Coord(-1, 0);
-        const end: Coord = new Coord(0, 0);
-        const expectedError: string = 'Move must start inside the board not at '+ start.toString() + '.';
-        expect(() => SaharaMove.from(start, end)).toThrowError(expectedError);
+        function createMoveWithOutOfRangeStart(): void {
+            const end: Coord = new Coord(0, 0);
+            SaharaMove.from(start, end);
+        }
+        const error: string = 'Move must start inside the board not at '+ start.toString() + '.';
+        TestUtils.expectToThrowAndLog(createMoveWithOutOfRangeStart, error);
     });
+
     it('should throw error when move end outside the board', () => {
-        const start: Coord = new Coord(0, 0);
         const end: Coord = new Coord(-1, 0);
-        const expectedError: string = 'Move must end inside the board not at '+ end.toString() + '.';
-        expect(() => SaharaMove.from(start, end)).toThrowError(expectedError);
+        function createMoveWithOutOfRangeEnd(): void {
+            const start: Coord = new Coord(0, 0);
+            SaharaMove.from(start, end);
+        }
+        const error: string = 'Move must end inside the board not at '+ end.toString() + '.';
+        TestUtils.expectToThrowAndLog(createMoveWithOutOfRangeEnd, error);
     });
+
     it('should throw error when start and end are too far away', () => {
         const start: Coord = new Coord(0, 0);
         const end: Coord = new Coord(0, 3);
@@ -40,6 +43,7 @@ describe('SaharaMoves', () => {
         const failure: MGPFallible<SaharaMove> = MGPFallible.failure(error);
         expect(SaharaMove.from(start, end)).toEqual(failure);
     });
+
     it('should throw error when distance is 1 but start and end arent neighbors', () => {
         const start: Coord = new Coord(0, 1);
         const end: Coord = new Coord(0, 2);
@@ -47,6 +51,7 @@ describe('SaharaMoves', () => {
         const failure: MGPFallible<SaharaMove> = MGPFallible.failure(expectedError);
         expect(SaharaMove.from(start, end)).toEqual(failure);
     });
+
     it('should fail when trying to bounce on white triangle', () => {
         const start: Coord = new Coord(0, 0);
         const end: Coord = new Coord(2, 0);
@@ -54,6 +59,7 @@ describe('SaharaMoves', () => {
         const failure: MGPFallible<SaharaMove> = MGPFallible.failure(error);
         expect(SaharaMove.from(start, end)).toEqual(failure);
     });
+
     it('should fail when distance is 2 but common neighbors is the fake neighbors', () => {
         const start: Coord = new Coord(1, 0);
         const end: Coord = new Coord(1, 2);
@@ -61,20 +67,26 @@ describe('SaharaMoves', () => {
         const failure: MGPFallible<SaharaMove> = MGPFallible.failure(expectedError);
         expect(SaharaMove.from(start, end)).toEqual(failure);
     });
+
     it('should throw when called with static move', () => {
         const error: string = RulesFailure.MOVE_CANNOT_BE_STATIC();
         const failure: MGPFallible<SaharaMove> = MGPFallible.failure(error);
         expect(SaharaMove.from(new Coord(0, 0), new Coord(0, 0))).toEqual(failure);
     });
+
     describe('equals', () => {
+
         it('should be equal to itself', () => {
             const move: SaharaMove = SaharaMove.from(new Coord(0, 0), new Coord(1, 0)).get();
             expect(move.equals(move)).toBeTrue();
         });
+
         it('should be different if start is different', () => {
             const move: SaharaMove = SaharaMove.from(new Coord(0, 0), new Coord(1, 0)).get();
             const otherStart: SaharaMove = SaharaMove.from(new Coord(2, 0), new Coord(1, 0)).get();
             expect(move.equals(otherStart)).toBeFalse();
         });
+
     });
+
 });

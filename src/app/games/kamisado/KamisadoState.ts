@@ -1,12 +1,16 @@
-import { ArrayUtils, Table } from 'src/app/utils/ArrayUtils';
+import { Table, TableUtils } from 'src/app/jscaip/TableUtils';
 import { Coord } from 'src/app/jscaip/Coord';
-import { GameStateWithTable } from 'src/app/jscaip/GameStateWithTable';
+import { GameStateWithTable } from 'src/app/jscaip/state/GameStateWithTable';
 import { KamisadoBoard } from './KamisadoBoard';
 import { KamisadoColor } from './KamisadoColor';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { MGPOptional } from '@everyboard/lib';
 import { KamisadoPiece } from './KamisadoPiece';
 
 export class KamisadoState extends GameStateWithTable<KamisadoPiece> {
+
+    public static isOnBoard(coord: Coord): boolean {
+        return coord.isInRange(KamisadoBoard.SIZE, KamisadoBoard.SIZE);
+    }
 
     public constructor(turn: number,
                        // The color that needs to be played next
@@ -17,13 +21,6 @@ export class KamisadoState extends GameStateWithTable<KamisadoPiece> {
                        public readonly alreadyPassed: boolean,
                        board: Table<KamisadoPiece>)
     {
-        super(ArrayUtils.copyBiArray(board), turn);
-    }
-    public static getInitialState(): KamisadoState {
-        return new KamisadoState(0,
-                                 KamisadoColor.ANY,
-                                 MGPOptional.empty(),
-                                 false,
-                                 KamisadoBoard.INITIAL);
+        super(TableUtils.copy(board), turn);
     }
 }

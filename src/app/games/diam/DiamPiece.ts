@@ -1,9 +1,9 @@
-import { MoveEncoder } from 'src/app/utils/Encoder';
+import { Encoder } from '@everyboard/lib';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 
 export class DiamPiece {
-    public static encoder: MoveEncoder<DiamPiece> = MoveEncoder.tuple(
-        [PlayerOrNone.encoder, MoveEncoder.identity<boolean>()],
+    public static encoder: Encoder<DiamPiece> = Encoder.tuple(
+        [PlayerOrNone.encoder, Encoder.identity<boolean>()],
         (piece: DiamPiece): [PlayerOrNone, boolean] => [piece.owner, piece.otherPieceType],
         (fields: [PlayerOrNone, boolean]): DiamPiece => DiamPiece.of(fields[0], fields[1]),
     );

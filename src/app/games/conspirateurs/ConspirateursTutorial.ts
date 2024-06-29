@@ -1,9 +1,11 @@
 import { Tutorial, TutorialStep } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { Coord } from 'src/app/jscaip/Coord';
 import { PlayerOrNone } from 'src/app/jscaip/Player';
-import { MGPValidation } from 'src/app/utils/MGPValidation';
+import { MGPValidation } from '@everyboard/lib';
 import { ConspirateursMove, ConspirateursMoveDrop, ConspirateursMoveJump, ConspirateursMoveSimple } from './ConspirateursMove';
 import { ConspirateursState } from './ConspirateursState';
+import { ConspirateursRules } from './ConspirateursRules';
+import { TutorialStepMessage } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
 
 const _: PlayerOrNone = PlayerOrNone.NONE;
 const O: PlayerOrNone = PlayerOrNone.ZERO;
@@ -13,16 +15,16 @@ export class ConspirateursTutorial extends Tutorial {
 
     public tutorial: TutorialStep[] = [
         TutorialStep.informational(
-            $localize`Board and aim of the game`,
-            $localize`Conspirateurs is played on a 17x17 board. The goal of the game is to place all of your pieces in shelters, which are the special squares on the edge of the board. Note the central zone in the middle of the board, where each player will put their pieces initially.`,
-            ConspirateursState.getInitialState(),
+            TutorialStepMessage.INITIAL_BOARD_AND_OBJECT_OF_THE_GAME(),
+            $localize`Conspirateurs is played on a 17x17 board. The object of the game is to place all of your pieces in shelters, which are the special squares on the edge of the board. Note the central zone in the middle of the board, where each player will put their pieces initially.`,
+            ConspirateursRules.get().getInitialState(),
         ),
         TutorialStep.anyMove(
             $localize`Initial phase`,
             $localize`In the initial phase of the game, each player drop their 20 pieces, one per turn consecutively, in the central zone of the board. This phase does not allow any other kind of move.<br/><br/>You're playing Dark, drop one of your piece in the central zone.`,
-            ConspirateursState.getInitialState(),
-            ConspirateursMoveDrop.from(new Coord(7, 7)).get(),
-            $localize`Congratulations!`,
+            ConspirateursRules.get().getInitialState(),
+            ConspirateursMoveDrop.of(new Coord(7, 7)),
+            TutorialStepMessage.CONGRATULATIONS(),
         ),
         TutorialStep.fromPredicate(
             $localize`Simple move`,
@@ -48,14 +50,14 @@ export class ConspirateursTutorial extends Tutorial {
             ], 40),
             ConspirateursMoveSimple.from(new Coord(4, 6), new Coord(3, 5)).get(),
             (move: ConspirateursMove, _previous: ConspirateursState, _result: ConspirateursState) => {
-                if (move.isSimple()) {
+                if (ConspirateursMove.isSimple(move)) {
                     return MGPValidation.SUCCESS;
                 } else {
                     return MGPValidation.failure($localize`You have made a jump, not a simple move. Try again!`);
                 }
 
             },
-            $localize`Congratulations!`,
+            TutorialStepMessage.CONGRATULATIONS(),
         ),
         TutorialStep.fromPredicate(
             $localize`Jumps`,
@@ -81,13 +83,13 @@ export class ConspirateursTutorial extends Tutorial {
             ], 40),
             ConspirateursMoveJump.from([new Coord(6, 7), new Coord(6, 5)]).get(),
             (move: ConspirateursMove, _previous: ConspirateursState, _result: ConspirateursState) => {
-                if (move.isJump()) {
+                if (ConspirateursMove.isJump(move)) {
                     return MGPValidation.SUCCESS;
                 } else {
                     return MGPValidation.failure($localize`You have not performed a jump. Try again!`);
                 }
             },
-            $localize`Congratulations!`,
+            TutorialStepMessage.CONGRATULATIONS(),
         ),
         TutorialStep.fromMove(
             $localize`Chaining jumps in a single move`,

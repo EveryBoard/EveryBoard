@@ -3,25 +3,25 @@
      [attr.viewBox]="'0 0 ' + boardWidth + ' ' + boardHeight"
      preserveAspectRatio="xMidYMid meet">
 
-    <g [attr.transform]="'rotate(' + (this.role.value * 180) + ' ' + (boardWidth / 2) + ' ' + (boardHeight / 2) + ')'">
+    <g [attr.transform]="'rotate(' + (getPointOfView().getValue() * 180) + ' ' + (boardWidth / 2) + ' ' + (boardHeight / 2) + ')'">
         <g *ngFor="let player of Player.PLAYERS">
             <circle *ngFor="let p of getPlayerSidePieces(player)"
-                    id="piece_{{ player.value }}_{{ p }}"
+                    id="piece_{{ player.toString() }}_{{ p }}"
                     [attr.cx]="(SPACE_SIZE / 4) + ((boardWidth - (SPACE_SIZE / 4)) * (p / 15))"
                     [attr.cy]="getPiecesCyForPlayer(player)"
                     [attr.r]="(SPACE_SIZE / 4) - STROKE_WIDTH"
                     [ngClass]="getPlayerClass(player)"
-                    class="base small-stroke"/>
+                    class="base mid-stroke"/>
         </g>
     </g>
 
     <g #boardInItself
        [attr.transform]="'translate(' + (STROKE_WIDTH / 2) + ' ' + ((STROKE_WIDTH / 2) + pieceRowHeight) + ')'">
-        <rect x="0"
-              y="0"
-              [attr.width]="4 * SPACE_SIZE"
-              [attr.height]="4 * SPACE_SIZE"
-              class="base small-stroke"
+        <rect x="-3"
+              y="-3"
+              [attr.width]="(4 * SPACE_SIZE) + 6"
+              [attr.height]="(4 * SPACE_SIZE) + 6"
+              class="base mid-stroke"
         />
         <g *ngFor="let z of [0, 1, 2]">
             <g *ngFor="let y of getLevelRange(z)">
@@ -34,7 +34,7 @@
                                 [attr.cx]="getPieceCx(x, y, z)"
                                 [attr.cy]="getPieceCy(x, y, z)"
                                 [ngClass]="getPieceClasses(x, y, z)"
-                                class="base small-stroke"
+                                class="base mid-stroke"
                         />
                         <ng-template #onlyRect>
                             <rect id="drop_{{ x }}_{{ y }}_{{ z }}"
@@ -45,7 +45,7 @@
                                   [attr.x]="getPieceCx(x, y, z) - getPieceRadius(z)"
                                   [attr.y]="getPieceCy(x, y, z) - getPieceRadius(z)"
                                   [ngClass]="getSquareClasses(x, y, z)"
-                                  class="base small-stroke"
+                                  class="base mid-stroke"
                             />
                         </ng-template>
                     </ng-container>
@@ -58,7 +58,7 @@
               [attr.height]="getPieceRadius(highCapture.get().z) * 2"
               [attr.x]="getPieceCxByCoord(highCapture.get()) - getPieceRadius(highCapture.get().z)"
               [attr.y]="getPieceCyByCoord(highCapture.get()) - getPieceRadius(highCapture.get().z)"
-              class="base captured-fill small-stroke"/>
+              class="base captured-fill mid-stroke"/>
         <g *ngIf="chosenLandingCoord.isPresent()"
            id="capture_validation"
            (click)="validateCapture()"
@@ -67,11 +67,11 @@
                     [attr.cy]="STROKE_WIDTH / 2"
                     [attr.r]="SPACE_SIZE / 2"
                     fill="red"
-                    class="base-no-fill small-stroke"
+                    class="base-no-fill mid-stroke"
                     [ngClass]="getCaptureValidationButtonClasses()"/>
             <polygon points="-32.5,-2.5 -32.5,12.5 -10,35 -2.5,35 35,-21.25 25,-21.275 -5,25 -32.5,-2.5"
                      fill="green"
-                     class="base-no-fill small-stroke"/>
+                     class="base-no-fill mid-stroke"/>
         </g>
         <g *ngFor="let capturable of capturables"
            (click)="onPieceClick(capturable.x, capturable.y, capturable.z)"

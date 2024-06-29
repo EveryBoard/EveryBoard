@@ -1,9 +1,11 @@
 import { TutorialStep } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { Coord } from 'src/app/jscaip/Coord';
 import { PlayerOrNone } from 'src/app/jscaip/Player';
-import { MGPValidation } from 'src/app/utils/MGPValidation';
+import { MGPValidation } from '@everyboard/lib';
 import { LinesOfActionMove } from './LinesOfActionMove';
 import { LinesOfActionState } from './LinesOfActionState';
+import { LinesOfActionRules } from './LinesOfActionRules';
+import { TutorialStepMessage } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
 
 const _: PlayerOrNone = PlayerOrNone.NONE;
 const O: PlayerOrNone = PlayerOrNone.ZERO;
@@ -13,7 +15,7 @@ export class LinesOfActionTutorial {
 
     public tutorial: TutorialStep[] = [
         TutorialStep.informational(
-            $localize`Goal of the game`,
+            TutorialStepMessage.OBJECT_OF_THE_GAME(),
             $localize`At Lines of Actions, the goal is to group your pieces contiguously, orthogonally and/or diagonally.
         Here, Dark wins the game:
         Dark's pieces are forming a single group, while Light's pieces form three groups.`,
@@ -35,9 +37,9 @@ export class LinesOfActionTutorial {
          The length of a move is equal to the number of pieces that are on the line of the move.
          Note that there is a helping indicator to let you know where a piece can land when you select it.<br/><br/>
          You're playing Dark, make the first move!`,
-            LinesOfActionState.getInitialState(),
+            LinesOfActionRules.get().getInitialState(),
             LinesOfActionMove.from(new Coord(1, 7), new Coord(1, 5)).get(),
-            $localize`Congratulations!`,
+            TutorialStepMessage.CONGRATULATIONS(),
         ),
         TutorialStep.fromMove(
             $localize`Jumping`,
@@ -55,7 +57,7 @@ export class LinesOfActionTutorial {
                 [_, _, _, _, _, _, _, O],
             ], 0),
             [LinesOfActionMove.from(new Coord(3, 1), new Coord(6, 1)).get()],
-            $localize`Congratulations!`,
+            TutorialStepMessage.CONGRATULATIONS(),
             $localize`Failed. You did not jump over one of your pieces.`,
         ),
         TutorialStep.fromMove(
@@ -87,11 +89,11 @@ export class LinesOfActionTutorial {
                 LinesOfActionMove.from(new Coord(3, 3), new Coord(2, 3)).get(),
                 LinesOfActionMove.from(new Coord(3, 3), new Coord(4, 3)).get(),
             ],
-            $localize`Congratulations!`,
+            TutorialStepMessage.CONGRATULATIONS(),
             $localize`Failed. This was not one of the expected moves.`,
         ),
         TutorialStep.fromPredicate(
-            $localize`Capturing`,
+            $localize`Captures`,
             $localize`If a move ends on an opponent's piece, it is captured and removed from the board.
         However, a move cannot end on one of the player's pieces.
         Watch out, having less pieces at Lines of Action makes a victory easier, as there are less pieces to regroup!
@@ -112,10 +114,10 @@ export class LinesOfActionTutorial {
                 if (previous.getPieceAt(move.getEnd()) === PlayerOrNone.ONE) {
                     return MGPValidation.SUCCESS;
                 } else {
-                    return MGPValidation.failure($localize`Failed. Try again.`);
+                    return MGPValidation.failure(TutorialStepMessage.FAILED_TRY_AGAIN());
                 }
             },
-            $localize`Congratulations!`,
+            TutorialStepMessage.CONGRATULATIONS(),
         ),
         TutorialStep.fromMove(
             $localize`Tie`,
@@ -133,8 +135,8 @@ export class LinesOfActionTutorial {
                 [_, _, _, _, _, _, _, _],
             ], 0),
             [LinesOfActionMove.from(new Coord(0, 2), new Coord(4, 2)).get()],
-            $localize`Congratulations!`,
-            $localize`Failed. Try again.`,
+            TutorialStepMessage.CONGRATULATIONS(),
+            TutorialStepMessage.FAILED_TRY_AGAIN(),
         ),
     ];
 }

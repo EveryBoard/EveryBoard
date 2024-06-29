@@ -2,20 +2,19 @@ import { Component, Input, OnDestroy, ElementRef, ViewChild, OnInit, AfterViewCh
 import { ChatService } from '../../../services/ChatService';
 import { Message, MessageDocument } from '../../../domain/Message';
 import { ConnectedUserService } from 'src/app/services/ConnectedUserService';
-import { display } from 'src/app/utils/utils';
-import { assert } from 'src/app/utils/assert';
 import { faReply, IconDefinition } from '@fortawesome/free-solid-svg-icons';
 import { FirestoreCollectionObserver } from 'src/app/dao/FirestoreCollectionObserver';
 import { MinimalUser } from 'src/app/domain/MinimalUser';
 import { Subscription } from 'rxjs';
+import { Debug } from 'src/app/utils/Debug';
+import { Utils } from '@everyboard/lib';
 
 @Component({
     selector: 'app-chat',
     templateUrl: './chat.component.html',
 })
+@Debug.log
 export class ChatComponent implements OnInit, AfterViewChecked, OnDestroy {
-
-    public static VERBOSE: boolean = false;
 
     @Input() public chatId!: string;
     @Input() public turn?: number;
@@ -41,12 +40,9 @@ export class ChatComponent implements OnInit, AfterViewChecked, OnDestroy {
     public constructor(private readonly chatService: ChatService,
                        private readonly connectedUserService: ConnectedUserService)
     {
-        display(ChatComponent.VERBOSE, 'ChatComponent constructor');
     }
     public ngOnInit(): void {
-        display(ChatComponent.VERBOSE, `ChatComponent.ngOnInit for chat ${this.chatId}`);
-
-        assert(this.chatId != null && this.chatId !== '', 'No chat to join mentionned');
+        Utils.assert(this.chatId != null && this.chatId !== '', 'No chat to join mentionned');
         this.loadChatContent();
     }
     public ngAfterViewChecked(): void {

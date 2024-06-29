@@ -30,9 +30,6 @@
 .white-background {
     fill: white;
 }
-.white-stroke {
-    stroke: white;
-}
 .background {
     fill: var(--spaces-fill);
 }
@@ -127,6 +124,12 @@
 .victory-stroke.manual-stroke {
     fill: var(--victory);
 }
+.defeat-fill {
+    fill: var(--defeat);
+}
+.defeat-stroke {
+    stroke: var(--defeat);
+}
 .selected-fill {
     fill: var(--selected);
 }
@@ -164,8 +167,11 @@
 .mid-stroke {
     stroke-width: 5;
 }
-.normal-stroke {
+.big-stroke {
     stroke-width: 8;
+}
+.huge-stroke {
+    stroke-width: 12;
 }
 .semi-transparent {
     fill-opacity: 0.5;
@@ -206,4 +212,7 @@
 }
 svg {
     max-height: calc(100vh - 10rem); /* Full height minus the navbar */
+}
+.click-delegator {
+    pointer-events: none;
 }

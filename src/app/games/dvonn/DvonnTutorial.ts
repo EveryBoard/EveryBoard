@@ -4,8 +4,9 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { Tutorial, TutorialStep } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { DvonnPieceStack } from 'src/app/games/dvonn/DvonnPieceStack';
 import { Player } from 'src/app/jscaip/Player';
-import { MGPValidation } from 'src/app/utils/MGPValidation';
-import { assert } from 'src/app/utils/assert';
+import { MGPValidation, Utils } from '@everyboard/lib';
+import { DvonnRules } from './DvonnRules';
+import { TutorialStepMessage } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
 
 const __: DvonnPieceStack = DvonnPieceStack.EMPTY;
 const NN: DvonnPieceStack = DvonnPieceStack.UNREACHABLE;
@@ -33,9 +34,9 @@ export class DvonnTutorial extends Tutorial {
         Therefore, there are six possible directions.
         The player with dark pieces starts.<br/><br/>
         You're playing Dark, click on a stack and move it by one space.`,
-            DvonnState.getInitialState(),
+            DvonnRules.get().getInitialState(),
             DvonnMove.from(new Coord(2, 0), new Coord(3, 0)).get(),
-            $localize`Congratulations!`,
+            TutorialStepMessage.CONGRATULATIONS(),
         ),
         TutorialStep.fromPredicate(
             $localize`Disconnection`,
@@ -54,7 +55,7 @@ export class DvonnTutorial extends Tutorial {
                 if (move.getEnd().equals(new Coord(3, 0))) {
                     return MGPValidation.failure($localize`You have successfully disconnected the stack of 4 pieces of your opponent, but on the next move your opponent will be able to move on your new stack, and to win the game! There exists a better outcome of this situation, try to find it.`);
                 } else {
-                    assert(move.getEnd().equals(new Coord(2, 0)), 'player made an impossible move'); // this is the only valid move remaining
+                    Utils.assert(move.getEnd().equals(new Coord(2, 0)), 'player made an impossible move'); // this is the only valid move remaining
                     return MGPValidation.SUCCESS;
                 }
             },
@@ -99,7 +100,7 @@ export class DvonnTutorial extends Tutorial {
             ], 0, false),
         ),
         TutorialStep.fromMove(
-            $localize`End of the game`,
+            TutorialStepMessage.END_OF_THE_GAME(),
             $localize`When no more move is possible for both players, the game ends and the player with the most points wins.<br/><br/>You're playing Dark, make your last move.`,
             new DvonnState([
                 [NN, NN, SO, __, __, __, __, __, __, __, __],
