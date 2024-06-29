@@ -1,6 +1,6 @@
 /* eslint-disable max-lines-per-function */
 import { Player } from 'src/app/jscaip/Player';
-import { EncoderTestUtils, MGPFallible } from '@everyboard/lib';
+import { MGPFallible } from '@everyboard/lib';
 import { ApagosFailure } from '../ApagosFailure';
 import { ApagosMove } from '../ApagosMove';
 import { ApagosMoveGenerator } from '../ApagosMoveGenerator';

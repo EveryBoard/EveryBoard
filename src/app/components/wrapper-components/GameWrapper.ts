@@ -76,7 +76,6 @@ export abstract class GameWrapper<P extends Comparable> extends BaseWrapperCompo
             // This waits for the config to be chosen
             const config: MGPOptional<RulesConfig> = await this.getConfig();
             await this.createGameComponent(componentType.get());
-            console.log('setting config')
             this.gameComponent.config = config;
             this.gameComponent.node = this.gameComponent.rules.getInitialNode(config);
             await this.setRole(this.role);
@@ -236,7 +235,6 @@ export abstract class GameWrapper<P extends Comparable> extends BaseWrapperCompo
      * @param triggerAnimation a boolean set to true if there is a need to trigger the animation of the last move
      */
     protected async showNewMove(triggerAnimation: boolean): Promise<void> {
-        console.log('updateBoard for showNewMove')
         await this.gameComponent.updateBoard(triggerAnimation);
         await this.gameComponent.showLastMoveAndRedraw();
     }

@@ -9,7 +9,6 @@ import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { RectangularGameComponent } from 'src/app/components/game-components/rectangular-game-component/RectangularGameComponent';
 import { QuartoMoveGenerator } from './QuartoMoveGenerator';
-import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 import { MCTS } from 'src/app/jscaip/AI/MCTS';
 import { QuartoMinimax } from './QuartoMinimax';
 

@@ -105,8 +105,6 @@ export class ApagosComponent extends GameComponent<ApagosRules, ApagosMove, Apag
         this.board = state.board;
         this.BOARD_WIDTH = this.board.length * this.SPACE_SIZE;
         this.BOARD_HEIGHT = (this.board.length + 0.5) * this.SPACE_SIZE;
-        console.log('width: ' + this.board.length)
-        console.log('max pieces: ' + state.getMaxPiecesPerPlayer());
         this.PIECE_DELTA =
             ((this.board.length-1) * this.SPACE_SIZE - this.PIECE_RADIUS) / state.getMaxPiecesPerPlayer();
         this.remainingZero = state.remaining.get(Player.ZERO);

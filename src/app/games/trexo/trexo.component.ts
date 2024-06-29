@@ -13,7 +13,6 @@ import { TrexoFailure } from './TrexoFailure';
 import { Ordinal } from 'src/app/jscaip/Ordinal';
 import { MCTS } from 'src/app/jscaip/AI/MCTS';
 import { TrexoMoveGenerator } from './TrexoMoveGenerator';
-import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 import { TrexoAlignmentMinimax } from './TrexoAlignmentMinimax';
 
 interface PieceOnBoard {
