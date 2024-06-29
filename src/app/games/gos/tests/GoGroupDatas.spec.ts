@@ -1,8 +1,8 @@
 /* eslint-disable max-lines-per-function */
+import { Utils, TestUtils } from '@everyboard/lib';
 import { GoPiece } from '../GoPiece';
 import { Coord } from 'src/app/jscaip/Coord';
 import { GoGroupData } from 'src/app/games/gos/GoGroupsData';
-import { Utils, TestUtils } from '@everyboard/lib';
 import { ErrorLoggerServiceMock } from 'src/app/services/tests/ErrorLoggerServiceMock.spec';
 import { fakeAsync } from '@angular/core/testing';
 

@@ -47,7 +47,6 @@
           class="captured-stroke mid-stroke no-fill"
     />
 
-    <!-- TODO TEST KO IN BOTH -->
     <polygon *ngIf="last.isPresent() && getState().isOnBoard(last.get())"
              id="last-{{ last.get().x }}-{{ last.get().y }}"
              [attr.transform]="getTriangleTranslationAt(last.get())"

@@ -1,7 +1,7 @@
 /* eslint-disable max-lines-per-function */
+import { EncoderTestUtils } from '@everyboard/lib';
 import { AbstractGoRules } from '../AbstractGoRules';
 import { GoMove } from '../GoMove';
-import { EncoderTestUtils } from '@everyboard/lib';
 import { AbstractGoMoveGenerator } from '../AbstractGoMoveGenerator';
 import { GoConfig, GoRules } from '../go/GoRules';
 import { TrigoConfig, TrigoRules } from '../trigo/TrigoRules';

@@ -1,13 +1,12 @@
 import { ActivatedRoute } from '@angular/router';
-
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/core';
+import { ArrayUtils, Encoder, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 import { Move } from '../../../jscaip/Move';
 import { SuperRules } from '../../../jscaip/Rules';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/core';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { TutorialStep } from '../../wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { GameState } from 'src/app/jscaip/state/GameState';
-import { ArrayUtils, Encoder, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 import { GameNode } from 'src/app/jscaip/AI/GameNode';
 import { AI, AIOptions } from 'src/app/jscaip/AI/AI';
 import { EmptyRulesConfig, RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
