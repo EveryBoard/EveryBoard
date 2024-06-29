@@ -36,7 +36,7 @@ import { CurrentGameService } from 'src/app/services/CurrentGameService';
 import { CurrentGameServiceMock } from 'src/app/services/tests/CurrentGameService.spec';
 import { OGWCTimeManagerService } from './OGWCTimeManagerService';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
-import { EmptyRulesConfig, RulesConfig, RulesConfigUtils } from 'src/app/jscaip/RulesConfigUtil';
+import { RulesConfig, RulesConfigUtils } from 'src/app/jscaip/RulesConfigUtil';
 import { IFirestoreDAO } from 'src/app/dao/FirestoreDAO';
 
 export type PreparationResult<T extends AbstractGameComponent> = {
@@ -1935,7 +1935,6 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             await testUtils.getWrapper().onCancelMove();
 
             // Then showLastMove should have been called
-            const defaultConfig: MGPOptional<EmptyRulesConfig> = MGPOptional.of({});
             expect(component.showLastMove).toHaveBeenCalledOnceWith(FIRST_MOVE);
         }));
 

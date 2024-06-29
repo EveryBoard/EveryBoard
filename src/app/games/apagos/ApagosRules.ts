@@ -20,15 +20,13 @@ export class ApagosNode extends GameNode<ApagosMove, ApagosState> {}
 
 export class ApagosRules extends ConfigurableRules<ApagosMove, ApagosState, ApagosConfig> {
 
-
     private static singleton: MGPOptional<ApagosRules> = MGPOptional.empty();
 
-    // TODO: configurability enhancement 2.0, pour celui qui trouve le ticket: rajouter la possibiliter de restreindre des config multi-paramètres (genre width*increment < X))
     public static readonly RULES_CONFIG_DESCRIPTION: RulesConfigDescription<ApagosConfig> =
         new RulesConfigDescription<ApagosConfig>({
             name: (): string => $localize`Apagos`,
             config: {
-                width: new NumberConfig(4, RulesConfigDescriptionLocalizable.WIDTH, MGPValidators.range(2, 10)),
+                width: new NumberConfig(4, RulesConfigDescriptionLocalizable.WIDTH, MGPValidators.range(2, 7)),
                 increment: new NumberConfig(2, () => $localize`Increment`, MGPValidators.range(0, 3)),
             },
         });

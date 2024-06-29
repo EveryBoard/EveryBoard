@@ -43,11 +43,9 @@ export class ApagosComponent extends GameComponent<ApagosRules, ApagosMove, Apag
 
     public ARROW_COORD: string = ApagosComponent.getArrowCoord();
 
-    // public PIECES_PER_PLAYER: number = ApagosRules.PIECES_PER_PLAYER;
-
     public PIECE_RADIUS: number;
 
-    public PIECE_DELTA: number;
+    public PIECE_DELTA: number = 0;
 
     public BOARD_WIDTH: number;
 
@@ -86,9 +84,6 @@ export class ApagosComponent extends GameComponent<ApagosRules, ApagosMove, Apag
         ];
         this.encoder = ApagosMove.encoder;
         this.hasAsymmetricBoard = true;
-
-        this.PIECE_RADIUS = (2 * this.SPACE_SIZE) / (10 + 0.5);
-        // TODO: ticketter l'ajout d'un onConfigUpdate ainsi que la mise à jour des config dans le rules-config (ou alors s'assurer d'avoir la config à la construction du composant)
     }
 
     public getViewBox(): ViewBox {
@@ -103,10 +98,12 @@ export class ApagosComponent extends GameComponent<ApagosRules, ApagosMove, Apag
     public async updateBoard(_triggerAnimation: boolean): Promise<void> {
         const state: ApagosState = this.getState();
         this.board = state.board;
-        this.BOARD_WIDTH = this.board.length * this.SPACE_SIZE;
-        this.BOARD_HEIGHT = (this.board.length + 0.5) * this.SPACE_SIZE;
-        this.PIECE_DELTA =
-            ((this.board.length-1) * this.SPACE_SIZE - this.PIECE_RADIUS) / state.getMaxPiecesPerPlayer();
+        const width: number = this.board.length;
+        this.BOARD_WIDTH = width * this.SPACE_SIZE;
+        this.BOARD_HEIGHT = (width + 0.5) * this.SPACE_SIZE;
+        const nPieces: number = state.getMaxPiecesPerPlayer();
+        this.PIECE_RADIUS = ((width - 1) * this.SPACE_SIZE) / (nPieces + 1);
+        this.PIECE_DELTA = this.PIECE_RADIUS;
         this.remainingZero = state.remaining.get(Player.ZERO);
         this.remainingOne = state.remaining.get(Player.ONE);
         this.showPossibleDrops();
@@ -322,9 +319,7 @@ export class ApagosComponent extends GameComponent<ApagosRules, ApagosMove, Apag
     }
 
     public getRemainingPieceCx(x: number): number {
-        console.log('PIECE_DELTA GETREMAINING: ' + this.PIECE_DELTA);
         return (0.5 + x) * this.PIECE_DELTA;
-        // return (x + 0.5) * this.PIECE_RADIUS * 1.5;
     }
 
 }
