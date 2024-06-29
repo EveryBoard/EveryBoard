@@ -116,7 +116,7 @@ export class CountDownComponent implements OnDestroy {
     public isStarted(): boolean {
         return this.started;
     }
-    private getTimeClass(): string {
+    public getTimeClass(): string {
         if (this.active === false) {
             return CountDownComponent.PASSIVE_STYLE;
         }
@@ -129,11 +129,6 @@ export class CountDownComponent implements OnDestroy {
         } else {
             return CountDownComponent.SAFE_TIME;
         }
-    }
-    public getCountdownClasses(): string[] {
-        return [
-            this.getTimeClass(),
-        ];
     }
     private updateShownTime(): void {
         const now: number = Date.now();

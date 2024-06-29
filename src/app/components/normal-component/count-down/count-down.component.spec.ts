@@ -3,10 +3,10 @@ import { DebugElement } from '@angular/core';
 import { fakeAsync, tick } from '@angular/core/testing';
 import { ErrorLoggerServiceMock } from 'src/app/services/tests/ErrorLoggerServiceMock.spec';
 import { SimpleComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
-import { Utils } from '@everyboard/lib';
+import { TestUtils, Utils } from '@everyboard/lib';
 import { CountDownComponent } from './count-down.component';
 
-describe('CountDownComponent', () => {
+fdescribe('CountDownComponent', () => {
 
     let testUtils: SimpleComponentTestUtils<CountDownComponent>;
 
@@ -75,20 +75,16 @@ describe('CountDownComponent', () => {
             component.setDuration(1250);
             component.start();
             component.pause();
+
             const error: string = 'Should not pause already paused chrono (undefined)';
-            spyOn(Utils, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
-
-            expect(() => component.pause()).toThrowError('Assertion failure: ' + error);
-
-            expect(Utils.logError).toHaveBeenCalledOnceWith('Assertion failure', error, undefined);
+            TestUtils.expectToThrowAndLog(() => component.pause(),
+                                          'Assertion failure: ' + error);
         });
         it('should throw when pausing not started chrono', () => {
-            spyOn(Utils, 'assert').and.callFake((b: boolean, s: string) => {throw new Error('prout');});
             const error: string = 'Should not pause not started chrono (undefined)';
 
-            expect(() => component.pause()).toThrowError('prout');
-
-            expect(Utils.assert).toHaveBeenCalledOnceWith(false, error);
+            TestUtils.expectToThrowAndLog(() => component.pause(),
+                                          'Assertion failure: ' + error);
         });
     });
     describe('resume', () => {

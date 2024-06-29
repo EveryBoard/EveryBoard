@@ -1354,7 +1354,6 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             await doMoveByClicks(FIRST_MOVE);
             spyOn(wrapper, 'reachedOutOfTime').and.callThrough();
             spyOn(wrapper.chronoOneGlobal, 'stop').and.callThrough();
-            spyOn(wrapper, 'opponentIsOffline').and.returnValue(true);
             spyOn(partDAO, 'update').and.callThrough();
 
             // When opponent reach time out locally

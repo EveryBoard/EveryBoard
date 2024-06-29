@@ -1,12 +1,11 @@
-<div [ngClass]="getCountdownClasses()"
+<div [ngClass]="getTimerClass()"
      class="level columns is-gapless player{{player.getValue()}}-bg">
         <div class="level-item column">
             <span class="player{{player.getValue()}}-fg is-size-3 has-text-weight-bold data-remaining-time">{{ displayedMinute }}:{{ displayedSec | number:'2.0-0' }}</span>
         </div>
         <div class="level-item column"
-                *ngIf="canAddTime"
-        >
-        <button class="button is-medium data-add-time player{{player.getValue()}}-bg-darker has-text-black my-2"
+             *ngIf="canAddTime">
+            <button class="button is-medium data-add-time player{{player.getValue()}}-bg-darker has-text-black my-2"
                 style="width: 6em"
                 (click)="addTime()"
                 i18n>
