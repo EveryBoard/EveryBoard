@@ -1,19 +1,18 @@
+import { MGPFallible } from '@everyboard/lib';
 import { GoState } from './GoState';
 import { GoPiece } from './GoPiece';
 import { GoMove } from './GoMove';
 import { GoLegalityInformation, GoNode, AbstractGoRules } from './AbstractGoRules';
 import { GoGroupData } from './GoGroupsData';
 import { Coord } from 'src/app/jscaip/Coord';
-import { MGPFallible } from '@everyboard/lib';
 import { MoveGenerator } from 'src/app/jscaip/AI/AI';
 import { Debug } from 'src/app/utils/Debug';
-import { GoConfig } from './go/GoRules';
-import { TrigoConfig } from './trigo/TrigoRules';
+import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 @Debug.log
-export class AbstractGoMoveGenerator extends MoveGenerator<GoMove, GoState> {
+export class AbstractGoMoveGenerator<C extends RulesConfig> extends MoveGenerator<GoMove, GoState, C> {
 
-    public constructor(private readonly rules: AbstractGoRules<GoConfig | TrigoConfig>) {
+    public constructor(private readonly rules: AbstractGoRules<C>) {
         super();
     }
 

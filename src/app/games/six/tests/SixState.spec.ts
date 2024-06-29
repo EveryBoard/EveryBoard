@@ -1,9 +1,9 @@
 /* eslint-disable max-lines-per-function */
+import { Set, ReversibleMap, Utils } from '@everyboard/lib';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { ErrorLoggerServiceMock } from 'src/app/services/tests/ErrorLoggerServiceMock.spec';
 import { Table } from 'src/app/jscaip/TableUtils';
-import { Set, ReversibleMap, Utils } from '@everyboard/lib';
 import { SixState } from '../SixState';
 import { CoordSet } from 'src/app/jscaip/CoordSet';
 

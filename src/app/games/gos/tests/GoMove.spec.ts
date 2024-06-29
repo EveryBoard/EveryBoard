@@ -3,19 +3,20 @@ import { EncoderTestUtils } from '@everyboard/lib';
 import { AbstractGoRules } from '../AbstractGoRules';
 import { GoMove } from '../GoMove';
 import { AbstractGoMoveGenerator } from '../AbstractGoMoveGenerator';
-import { GoConfig, GoRules } from '../go/GoRules';
-import { TrigoConfig, TrigoRules } from '../trigo/TrigoRules';
+import { GoRules } from '../go/GoRules';
+import { TrigoRules } from '../trigo/TrigoRules';
 import { MoveTestUtils } from 'src/app/jscaip/tests/Move.spec';
+import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 describe('GoMove', () => {
 
-    const rules: AbstractGoRules<GoConfig | TrigoConfig>[] = [
+    const rules: AbstractGoRules<RulesConfig>[] = [
         GoRules.get(),
         TrigoRules.get(),
     ];
     for (const rule of rules) {
         it('should have a bijective encoder', () => {
-            const moveGenerator: AbstractGoMoveGenerator = new AbstractGoMoveGenerator(rule);
+            const moveGenerator: AbstractGoMoveGenerator<RulesConfig> = new AbstractGoMoveGenerator(rule);
             const passAndAccept: GoMove[] = [
                 GoMove.PASS,
                 GoMove.ACCEPT,

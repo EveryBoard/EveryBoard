@@ -1,5 +1,6 @@
 /* eslint-disable no-multi-spaces */
 import { Component, EventEmitter, Output, Type } from '@angular/core';
+import { MGPOptional, Utils } from '@everyboard/lib';
 
 import { ApagosTutorial } from 'src/app/games/apagos/ApagosTutorial';
 import { ApagosRules } from 'src/app/games/apagos/ApagosRules';
@@ -144,7 +145,6 @@ import { AbstractRules } from 'src/app/jscaip/Rules';
 import { Localized } from 'src/app/utils/LocaleUtils';
 import { Tutorial } from '../../wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { RulesConfigDescription } from '../../wrapper-components/rules-configuration/RulesConfigDescription';
-import { MGPOptional, Utils } from '@everyboard/lib';
 import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 import { GameState } from 'src/app/jscaip/state/GameState';
 
@@ -283,7 +283,7 @@ export class GameInfo {
             new GameInfo($localize`Ba-awa`,          'BaAwa',                BaAwaComponent,               new BaAwaTutorial(),               BaAwaRules.get(),               new Date('2024-01-28'), GameDescription.BA_AWA()         ), //                             * Martin
             new GameInfo($localize`Squarz`,          'Squarz',               SquarzComponent,              new SquarzTutorial(),              SquarzRules.get(),              new Date('2024-05-08'), GameDescription.SQUARZ()         ), //                             * Martin
             new GameInfo($localize`Hexodia`,         'Hexodia',              HexodiaComponent,             new HexodiaTutorial(),             HexodiaRules.get(),             new Date('2024-06-26'), GameDescription.HEXODIA()        ), //                             * Martin
-            new GameInfo($localize`Trigo`,           'Trigo',                TrigoComponent,               new TrigoTutorial(),               TrigoRules.get(),               new Date('2024-06-27'), GameDescription.TRI_GO()         ), //                             * Martin
+            new GameInfo($localize`Trigo`,           'Trigo',                TrigoComponent,               new TrigoTutorial(),               TrigoRules.get(),               new Date('2024-06-29'), GameDescription.TRI_GO()         ), //                             * Martin
         ].sort((a: GameInfo, b: GameInfo) => a.name.localeCompare(b.name));
         // After Apagos: median = 26d; average = 53d
         // 9d 10d 12d 13d 18d - 18d 20d 22d 25d 26d - (26d) - 49d 65d 71d 76d 93d - 94j 4m 4m 7m 11m

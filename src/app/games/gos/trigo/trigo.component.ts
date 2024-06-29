@@ -1,10 +1,10 @@
+import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 import { ChangeDetectorRef, Component } from '@angular/core';
 import { GoMove } from 'src/app/games/gos/GoMove';
 import { TrigoConfig, TrigoRules } from './TrigoRules';
 import { GoState } from 'src/app/games/gos/GoState';
 import { GoPiece } from '../GoPiece';
 import { Coord } from 'src/app/jscaip/Coord';
-import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 import { GroupData } from 'src/app/jscaip/BoardData';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { MCTS } from 'src/app/jscaip/AI/MCTS';

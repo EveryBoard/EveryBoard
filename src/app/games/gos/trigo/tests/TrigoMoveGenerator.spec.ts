@@ -46,7 +46,7 @@ describe('TrigoMoveGenerator', () => {
             // When listing the moves
             const moves: GoMove[] = moveGenerator.getListMoves(initialNode);
 
-            // Then it should include one move by empty space (25) + the move PASS
+            // Then it should include one move per empty space (25) + the move PASS
             expect(moves.length).toBe(25 + 1);
             expect(moves.some((m: GoMove) => m.equals(GoMove.PASS))).toBeTrue();
         });

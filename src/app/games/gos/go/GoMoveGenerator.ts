@@ -1,7 +1,7 @@
 import { AbstractGoMoveGenerator } from '../AbstractGoMoveGenerator';
-import { GoRules } from './GoRules';
+import { GoConfig, GoRules } from './GoRules';
 
-export class GoMoveGenerator extends AbstractGoMoveGenerator {
+export class GoMoveGenerator extends AbstractGoMoveGenerator<GoConfig> {
 
     constructor() {
         super(GoRules.get());
