@@ -1,7 +1,13 @@
-<div [ngClass]="getTimeClass()">
-    <p class="data-remaining-time">{{ displayedMinute }}:{{ displayedSec | number:'2.0-0' }}</p>
-    <button class="button is-small is-fullwidth data-add-time"
-            *ngIf="canAddTime"
-            (click)="addTime()"
-            i18n>Add {{ timeToAdd }}</button>
+<div [ngClass]="getCountdownClasses()"
+     class="level player0-bg">
+        <div class="level-item">
+            <span class="player0-fg is-size-3 has-text-weight-bold data-remaining-time">{{ displayedMinute }}:{{ displayedSec | number:'2.0-0' }}</span>
+        </div>
+        <div class="level-item"
+                *ngIf="canAddTime"
+        >
+        <button class="button is-fullwidth data-add-time player0-fg"
+                (click)="addTime()"
+                i18n>+ {{ timeToAdd }} </button>
+        </div>
 </div>

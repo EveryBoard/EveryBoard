@@ -72,8 +72,8 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
 
     public readonly OFFLINE_FONT_COLOR: { [key: string]: string } = { color: 'lightgrey' };
 
-    public readonly globalTimeMessage: string = $localize`5 minutes`;
-    public readonly turnTimeMessage: string = $localize`30 seconds`;
+    public readonly globalTimeMessage: string = $localize`05:00`;
+    public readonly turnTimeMessage: string = $localize`00:30`;
 
     public readonly requestInfos: Record<RequestType, RequestInfo> = OGWCRequestManagerService.requestInfos;
     public readonly allRequests: RequestType[] = ['TakeBack', 'Draw', 'Rematch'];

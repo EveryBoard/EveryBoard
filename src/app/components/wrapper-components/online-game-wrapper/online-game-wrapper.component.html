@@ -19,10 +19,9 @@
                     <ng-template #opponentsTurn><span id="opponentTurn" i18n>It is {{ currentUser?.name }}'s turn.</span></ng-template>
                 </p>
             </div>
-            <div class="block">
+            <div class="block player0-bg">
                 <p id="playerZeroIndicator"
                    [ngClass]="getPlayerNameClass(Player.ZERO)"
-                   class="player0-bg"
                    *ngIf="players[0].isPresent()">{{ players[0].get().name }}</p>
                 <p id="scoreZeroIndicator" *ngIf="currentPart !== null && gameComponent && gameComponent.scores.isPresent()" i18n>{{ gameComponent.scores.get().get(Player.ZERO) }} points</p>
                 <app-count-down #chronoZeroGlobal
@@ -32,6 +31,7 @@
                                 [canAddTime]='role === Player.ONE && endGame === false'
                                 [timeToAdd]="globalTimeMessage"
                                 [debugName]="'ZERO Global'"
+                                [player]="Player.ZERO"
                                 (outOfTimeAction)="reachedOutOfTime(Player.ZERO)"
                                 (addTimeToOpponent)="addGlobalTime()"
                                 class="data-global-time"
@@ -44,14 +44,14 @@
                                 [canAddTime]='role === Player.ONE && endGame === false'
                                 [timeToAdd]="turnTimeMessage"
                                 [debugName]="'ZERO Turn'"
+                                [player]="Player.ZERO"
                                 (outOfTimeAction)="reachedOutOfTime(Player.ZERO)"
                                 (addTimeToOpponent)="addTurnTime()"
                                 class="data-turn-time"
                 >
                 </app-count-down>
             </div>
-            <p class="is-size-3" i18n>vs.</p>
-            <div class="block">
+            <div class="block player1-bg">
                 <p id="playerOneIndicator"
                    [ngClass]="getPlayerNameClass(Player.ONE)"
                    class="player1-bg"
@@ -64,6 +64,7 @@
                                 [canAddTime]='role === Player.ZERO && endGame === false'
                                 [timeToAdd]="globalTimeMessage"
                                 [debugName]="'ONE Global'"
+                                [player]="Player.ONE"
                                 (outOfTimeAction)="reachedOutOfTime(Player.ONE)"
                                 (addTimeToOpponent)="addGlobalTime()"
                                 class="data-global-time"
@@ -76,6 +77,7 @@
                                 [canAddTime]='role === Player.ZERO && endGame === false'
                                 [timeToAdd]="turnTimeMessage"
                                 [debugName]="'ONE Turn'"
+                                [player]="Player.ONE"
                                 (outOfTimeAction)="reachedOutOfTime(Player.ONE)"
                                 (addTimeToOpponent)="addTurnTime()"
                                 class="data-turn-time"

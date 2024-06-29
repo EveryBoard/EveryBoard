@@ -35,7 +35,8 @@ html {
     background-color: var(--player0);
 }
 .player0-fg {
-    color: white;
+    color: var(--player0);
+    filter: brightness(50%);
 }
 .player1-bg {
     background-color: var(--player1);
