@@ -10,6 +10,7 @@ import { MinimalUser } from '../domain/MinimalUser';
 import { EloCalculationService, EloEntry, EloInfoPair } from './EloCalculationService';
 import { EloInfo } from '../domain/EloInfo';
 import { UserEloService } from './UserEloService';
+import { PlayerMap } from '../jscaip/PlayerMap';
 
 /**
   * The aim of this service is to:
@@ -28,16 +29,20 @@ export class UserService {
                        private readonly userEloService: UserEloService)
     {
     }
+
     public async usernameIsAvailable(username: string): Promise<boolean> {
         const usersWithSameUsername: FirestoreDocument<User>[] = await this.userDAO.findWhere([['username', '==', username]]);
         return usersWithSameUsername.length === 0;
     }
+
     public async setUsername(uid: string, username: string): Promise<void> {
         await this.userDAO.update(uid, { username: username });
     }
+
     public async markAsVerified(uid: string): Promise<void> {
         await this.userDAO.update(uid, { verified: true });
     }
+
     /**
      * Observes an user, ignoring local updates.
      */
@@ -51,6 +56,7 @@ export class UserService {
             callback(user);
         });
     }
+
     public async getUserLastUpdateTime(id: string): Promise<MGPOptional<FirestoreTime>> {
         const user: MGPOptional<User> = await this.userDAO.read(id);
         if (user.isAbsent()) {
@@ -61,11 +67,13 @@ export class UserService {
             return MGPOptional.of(lastUpdateTime as FirestoreTime);
         }
     }
+
     public updatePresenceToken(userId: string): Promise<void> {
         return this.userDAO.update(userId, {
             lastUpdateTime: serverTimestamp(),
         });
     }
+
     public async updateElo(gameName: string, zero: MinimalUser, one: MinimalUser, winner: 'ZERO' | 'ONE' | 'DRAW')
     : Promise<void>
     {
@@ -74,7 +82,7 @@ export class UserService {
         const playerOne: EloInfo = await this.getPlayerInfo(one, gameName);
         // Calculate the game result
         const eloEntry: EloEntry = {
-            eloInfoPair: [playerZero, playerOne],
+            eloInfoPair: PlayerMap.ofValues(playerZero, playerOne),
             winner,
         };
         const result: EloInfoPair = EloCalculationService.getNewElos(eloEntry);
@@ -82,6 +90,7 @@ export class UserService {
         await this.updatePlayerElo(zero, gameName, result[0]);
         await this.updatePlayerElo(one, gameName, result[1]);
     }
+
     public async getPlayerInfo(player: MinimalUser, gameName: string): Promise<EloInfo> {
         console.log('getPlayerInfo', player, gameName)
         const subCollection: IFirestoreDAO<EloInfo> = this.userDAO.subCollectionDAO<EloInfo>(player.id, 'elos');
@@ -93,7 +102,9 @@ export class UserService {
             numberOfGamePlayed: 0,
         });
     }
+
     private async updatePlayerElo(player: MinimalUser, gameName: string, newEloInfo: EloInfo): Promise<void> {
         return this.userEloService.update(player.id, gameName, newEloInfo);
     }
+
 }

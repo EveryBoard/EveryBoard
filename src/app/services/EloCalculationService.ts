@@ -2,10 +2,12 @@ import { Injectable } from '@angular/core';
 import { Player } from '../jscaip/Player';
 import { Utils } from '../utils/utils';
 import { EloInfo } from '../domain/EloInfo';
+import { PlayerMap } from '../jscaip/PlayerMap';
+import { MGPMap } from 'lib/dist';
 
-export type EloInfoPair = [EloInfo, EloInfo];
+export type EloInfoPair = PlayerMap<EloInfo>;
 
-export type EloDifferences = [number, number];
+export type EloDifferences = PlayerMap<number>;
 
 export interface EloEntry {
     eloInfoPair: EloInfoPair,
@@ -19,35 +21,37 @@ export class EloCalculationService {
 
     public static getNewElos(eloEntry: EloEntry): EloInfoPair {
         const normalEloDifferences: EloDifferences = EloCalculationService.getNormalEloDifferences(eloEntry);
-        const eloInfos: EloInfo[] = [];
+        const eloInfos: MGPMap<Player, EloInfo> = new MGPMap();
         for (const player of Player.PLAYERS) {
             const currentElo: number =
-                EloCalculationService.getActualNewElo(eloEntry.eloInfoPair[player.value].currentElo,
-                                                      normalEloDifferences[player.value]);
-            eloInfos[player.value] = {
+                EloCalculationService.getActualNewElo(eloEntry.eloInfoPair.get(player).currentElo,
+                                                      normalEloDifferences.get(player));
+            eloInfos.set(player, {
                 currentElo,
-                numberOfGamePlayed: eloEntry.eloInfoPair[player.value].numberOfGamePlayed + 1,
-            };
+                numberOfGamePlayed: eloEntry.eloInfoPair.get(player).numberOfGamePlayed + 1,
+            });
         }
-        return eloInfos as EloInfoPair;
+        return PlayerMap.ofValues(eloInfos.get(Player.ZERO).get(), eloInfos.get(Player.ONE).get());
     }
+
     /**
       * The normal difference don't take into account that we don't let player lose elo when they're weaker that 100 elo
       */
     public static getNormalEloDifferences(eloEntry: EloEntry): EloDifferences {
-        const eloDifferences: [number, number] = [0, 0];
+        const eloDifferences: PlayerMap<number> = PlayerMap.ofValues(0, 0);
         for (const player of Player.PLAYERS) {
-            const playerInfo: EloInfo = eloEntry.eloInfoPair[player.value];
+            const playerInfo: EloInfo = eloEntry.eloInfoPair.get(player);
             const K: number = EloCalculationService.getKFrom(playerInfo.numberOfGamePlayed);
             const W: number = EloCalculationService.getWFrom(eloEntry.winner, player);
             const eloPlayer: number = playerInfo.currentElo;
-            const opponentInfo: EloInfo = eloEntry.eloInfoPair[player.getOpponent().value];
+            const opponentInfo: EloInfo = eloEntry.eloInfoPair.get(player.getOpponent());
             const eloOpponent: number = opponentInfo.currentElo;
             const P: number = this.getWinningProbability(eloPlayer, eloOpponent);
-            eloDifferences[player.value] = EloCalculationService.getNormalEloDifference(K, W, P);
+            eloDifferences.put(player, EloCalculationService.getNormalEloDifference(K, W, P));
         }
         return eloDifferences;
     }
+
     /**
       * Calculate the normal difference of level (excluding special rules)
       * @param K a coefficient depending on how much the player a played game
@@ -59,6 +63,7 @@ export class EloCalculationService {
     public static getNormalEloDifference(K: number, W: number, P: number): number {
         return K * (W - P);
     }
+
     /**
       * Calculate the effective change of Elo that will happens
       */
@@ -74,6 +79,7 @@ export class EloCalculationService {
         const newElo: number = oldElo + eloDifference;
         return Math.max(minimumFinalElo, newElo);
     }
+
     public static getWFrom(winner: 'ZERO' | 'ONE' | 'DRAW', player: Player): number {
         if (winner === 'DRAW') {
             return 0.5;
@@ -92,6 +98,7 @@ export class EloCalculationService {
             }
         }
     }
+
     public static getKFrom(numberOfGamePlayed: number): number {
         if (numberOfGamePlayed < 20) {
             return 60;
@@ -101,9 +108,11 @@ export class EloCalculationService {
             return 20;
         }
     }
+
     public static getWinningProbability(eloWinner: number, eloLoser: number): number {
         const differenceInEloPoints: number = eloWinner - eloLoser;
         const result: number = 1 / (1 + (10 ** (- differenceInEloPoints / 400)));
         return result;
     }
+
 }
