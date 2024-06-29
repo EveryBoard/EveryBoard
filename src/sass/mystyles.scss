@@ -34,12 +34,19 @@ html {
 .player0-bg {
     background-color: var(--player0);
 }
+.player0-bg-darker {
+    background-color: var(--player0);
+    filter: brightness(80%);
+}
 .player0-fg {
-    color: var(--player0);
-    filter: brightness(50%);
+    color: black;
 }
 .player1-bg {
     background-color: var(--player1);
+}
+.player1-bg-darker {
+    background-color: var(--player1);
+    filter: brightness(80%);
 }
 .player1-fg {
     color: black;

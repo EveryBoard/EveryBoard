@@ -549,22 +549,6 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         }
     }
 
-    public getPlayerNameClass(player: Player): string {
-        if (this.opponentIsOffline()) {
-            return 'has-text-grey-light';
-        } else {
-            if (player === Player.ZERO) {
-                return 'has-text-white';
-            } else {
-                return 'has-text-black';
-            }
-        }
-    }
-
-    public opponentIsOffline(): boolean {
-        return false;
-    }
-
     // Called by the 'AddGlobalTime' button
     public addGlobalTime(): Promise<void> {
         return this.gameService.addGlobalTime(this.currentPartId);
