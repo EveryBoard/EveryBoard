@@ -10,7 +10,7 @@ import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { Timestamp } from 'firebase/firestore';
 import { Subscription } from 'rxjs';
 
-xdescribe('ActiveUsersService', () => {
+describe('ActiveUsersService', () => {
 
     let activeUsersService: ActiveUsersService;
 
@@ -33,7 +33,6 @@ xdescribe('ActiveUsersService', () => {
     it('should update list of users when one change', fakeAsync(async() => {
         await activeUsersService.userDAO.set('playerDocId', {
             username: 'premier',
-            state: 'online',
             verified: true,
         });
         let observerCalls: number = 0;
@@ -43,7 +42,6 @@ xdescribe('ActiveUsersService', () => {
                     id: 'playerDocId',
                     data: {
                         username: 'nouveau',
-                        state: 'online',
                         verified: true,
                     },
                 }]);
@@ -113,7 +111,6 @@ xdescribe('ActiveUsersService', () => {
             // Given an active users service where we subscribed in the past
             await userDAO.set('userId', {
                 username: 'premier',
-                state: 'online',
                 verified: true,
             });
             let seenActiveUsers: UserDocument[] = [];

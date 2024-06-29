@@ -16,7 +16,7 @@ import { FirstPlayer, PartStatus, PartType } from 'src/app/domain/ConfigRoom';
 import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 import { BlankComponent } from 'src/app/utils/tests/TestUtils.spec';
 
-xdescribe('ConfigRoomService', () => {
+describe('ConfigRoomService', () => {
 
     function expectedParams(method: 'POST' | 'GET' | 'DELETE'): object {
         return {

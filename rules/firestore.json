@@ -82,13 +82,6 @@ service cloud.firestore {
             // This is because before user creation, we need to check if the username is free.
             allow read: if true;
         }
-        match /users/{userId}/elos/{gameId} {
-            allow create: if true; // on est le finisseur de l'une partie de ce jeu
-            // et que cet utilisateur là l'est bien aussi
-            // et qu'on a aussi modifié notre document
-            allow update: if true; // same
-            allow read: if true; // TODO TODOTODO: implement it
-        }
         function authenticatedUserCreatesUnverifiedUser(userId, update) {
             // Only an authenticated account can create its own user, and they cannot directly be verified
             return isAuthenticated() && request.auth.uid == userId && update.verified == false;

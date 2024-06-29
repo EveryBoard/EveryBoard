@@ -2,7 +2,7 @@ import { setupEmulators } from 'src/app/utils/tests/TestUtils.spec';
 import { TestBed } from '@angular/core/testing';
 import { ConfigRoomDAO } from '../ConfigRoomDAO';
 
-xdescribe('ConfigRoomDAO', () => {
+describe('ConfigRoomDAO', () => {
 
     let configRoomDAO: ConfigRoomDAO;
 

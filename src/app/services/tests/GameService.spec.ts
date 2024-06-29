@@ -21,8 +21,10 @@ import { MinimalUser } from 'src/app/domain/MinimalUser';
 import { BlankComponent } from 'src/app/utils/tests/TestUtils.spec';
 import { PartMocks } from 'src/app/domain/PartMocks.spec';
 import { endpoint, expectedParams } from './BackendService.spec';
+import { UserDAO } from 'src/app/dao/UserDAO';
+import { UserDAOMock } from 'src/app/dao/tests/UserDAOMock.spec';
 
-xdescribe('GameService', () => {
+describe('GameService', () => {
 
     let gameService: GameService;
     let partDAO: PartDAO;

@@ -1,7 +1,7 @@
 /* eslint-disable max-lines-per-function */
 import { EloCalculationService, EloDifferences, EloEntry, EloInfoPair } from '../EloCalculationService';
 
-xdescribe('EloCalculationService', () => {
+describe('EloCalculationService', () => {
     describe('getNormalEloDifference', () => {
         it('should add less points to weaker player drawing against stronger', () => {
             // Given a match where a weak player wins against a stronger
