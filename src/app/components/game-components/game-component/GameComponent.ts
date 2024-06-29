@@ -159,7 +159,7 @@ export abstract class GameComponent<R extends SuperRules<M, S, C, L>,
         this.cancelMoveAttempt();
         this.cancelMoveOnWrapper(reason);
         if (this.node.previousMove.isPresent()) {
-            await this.showLastMove(this.node.previousMove.get(), this.getConfig());
+            await this.showLastMove(this.node.previousMove.get());
         }
         if (reason == null) {
             return MGPValidation.SUCCESS;
@@ -185,8 +185,7 @@ export abstract class GameComponent<R extends SuperRules<M, S, C, L>,
 
     public async showLastMoveAndRedraw(): Promise<void> {
         const move: M = this.node.previousMove.get();
-        const config: MGPOptional<C> = this.getConfig();
-        await this.showLastMove(move, config);
+        await this.showLastMove(move);
         this.cdr.detectChanges();
     }
 
@@ -219,7 +218,7 @@ export abstract class GameComponent<R extends SuperRules<M, S, C, L>,
         return this.node.parent.get().gameState;
     }
 
-    public abstract showLastMove(move: M, config: MGPOptional<C>): Promise<void>;
+    public abstract showLastMove(move: M): Promise<void>;
 
     public abstract hideLastMove(): void;
 

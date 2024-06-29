@@ -98,7 +98,7 @@ export class QuartoComponent extends RectangularGameComponent<QuartoRules,
         }
     }
 
-    public override async showLastMove(move: QuartoMove, _config: MGPOptional<EmptyRulesConfig>): Promise<void> {
+    public override async showLastMove(move: QuartoMove): Promise<void> {
         this.lastMove = MGPOptional.of(move.coord);
     }
 

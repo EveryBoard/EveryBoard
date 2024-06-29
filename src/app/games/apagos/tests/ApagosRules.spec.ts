@@ -1,17 +1,16 @@
 /* eslint-disable max-lines-per-function */
+import { MGPOptional } from '@everyboard/lib';
 import { Player } from 'src/app/jscaip/Player';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
-import { ApagosCoord } from '../ApagosCoord';
 import { ApagosFailure } from '../ApagosFailure';
 import { ApagosMove } from '../ApagosMove';
-import { ApagosNode, ApagosRules } from '../ApagosRules';
+import { ApagosConfig, ApagosNode, ApagosRules } from '../ApagosRules';
 import { ApagosState } from '../ApagosState';
-import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 describe('ApagosRules', () => {
 
     let rules: ApagosRules;
-    const defaultConfig: NoConfig = ApagosRules.get().getDefaultRulesConfig();
+    const defaultConfig: MGPOptional<ApagosConfig> = ApagosRules.get().getDefaultRulesConfig();
 
     let stateWithOneFullSquare: ApagosState;
 
@@ -20,7 +19,7 @@ describe('ApagosRules', () => {
             [0, 0, 2, 0],
             [0, 0, 1, 0],
             [7, 5, 3, 1],
-        ], ApagosRules.PIECES_PER_PLAYER - 2, ApagosRules.PIECES_PER_PLAYER - 1);
+        ], 8, 9);
     });
     beforeEach(() => {
         rules = ApagosRules.get();
@@ -31,7 +30,7 @@ describe('ApagosRules', () => {
         const state: ApagosState = stateWithOneFullSquare;
 
         // When dropping on that full square
-        const move: ApagosMove = ApagosMove.drop(ApagosCoord.TWO, Player.ONE);
+        const move: ApagosMove = ApagosMove.drop(2, Player.ONE);
 
         // Then the move should be illegal
         const reason: string = ApagosFailure.CANNOT_LAND_ON_A_FULL_SQUARE();
@@ -40,10 +39,10 @@ describe('ApagosRules', () => {
 
     it('should refuse slide down from a square not containing piece to slide', () => {
         // Given the initial board
-        const state: ApagosState = ApagosRules.get().getInitialState();
+        const state: ApagosState = ApagosRules.get().getInitialState(defaultConfig);
 
         // When doing a slide down
-        const move: ApagosMove = ApagosMove.transfer(ApagosCoord.ONE, ApagosCoord.ZERO).get();
+        const move: ApagosMove = ApagosMove.transfer(1, 0).get();
 
         // Then the move should be illegal
         const reason: string = ApagosFailure.NO_PIECE_OF_YOU_IN_CHOSEN_SQUARE();
@@ -56,10 +55,10 @@ describe('ApagosRules', () => {
             [0, 0, 2, 0],
             [0, 0, 1, 1],
             [7, 5, 3, 1],
-        ], ApagosRules.PIECES_PER_PLAYER - 2, ApagosRules.PIECES_PER_PLAYER - 2);
+        ], 8, 8);
 
         // When moving a piece on it
-        const move: ApagosMove = ApagosMove.transfer(ApagosCoord.THREE, ApagosCoord.TWO).get();
+        const move: ApagosMove = ApagosMove.transfer(3, 2).get();
 
         // Then the move should be illegal
         const reason: string = ApagosFailure.CANNOT_LAND_ON_A_FULL_SQUARE();
@@ -70,13 +69,13 @@ describe('ApagosRules', () => {
         // Given a board with a movable piece
         const state: ApagosState = stateWithOneFullSquare;
         // When sliding it
-        const move: ApagosMove = ApagosMove.transfer(ApagosCoord.TWO, ApagosCoord.ONE).get();
+        const move: ApagosMove = ApagosMove.transfer(2, 1).get();
         // Then it should have been moved down
         const expectedState: ApagosState = ApagosState.fromRepresentation(4, [
             [0, 0, 2, 0],
             [0, 1, 0, 0],
             [7, 5, 3, 1],
-        ], ApagosRules.PIECES_PER_PLAYER - 2, ApagosRules.PIECES_PER_PLAYER - 1);
+        ], 8, 9);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
     });
 
@@ -86,10 +85,10 @@ describe('ApagosRules', () => {
             [6, 0, 3, 1],
             [0, 0, 0, 0],
             [7, 5, 3, 1],
-        ], 0, ApagosRules.PIECES_PER_PLAYER);
+        ], 0, 10);
 
         // When dropping a Player.ZERO piece
-        const move: ApagosMove = ApagosMove.drop(ApagosCoord.ONE, Player.ZERO);
+        const move: ApagosMove = ApagosMove.drop(1, Player.ZERO);
 
         // Then the move should be illegal
         const reason: string = ApagosFailure.NO_PIECE_REMAINING_TO_DROP();
@@ -98,29 +97,29 @@ describe('ApagosRules', () => {
 
     it('should drop piece when on low square', () => {
         // Given the initial board
-        const state: ApagosState = ApagosRules.get().getInitialState();
+        const state: ApagosState = ApagosRules.get().getInitialState(defaultConfig);
         // When dropping piece on one of the 3 low squares
-        const move: ApagosMove = ApagosMove.drop(ApagosCoord.ONE, Player.ZERO);
+        const move: ApagosMove = ApagosMove.drop(1, Player.ZERO);
         // Then the square should climb one place up
         const expectedState: ApagosState = ApagosState.fromRepresentation(1, [
             [0, 0, 1, 0],
             [0, 0, 0, 0],
             [7, 3, 5, 1],
-        ], ApagosRules.PIECES_PER_PLAYER - 1, ApagosRules.PIECES_PER_PLAYER);
+        ], 9, 10);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
     });
 
     it('should drop piece when on higher square', () => {
         // Given the initial board
-        const state: ApagosState = ApagosRules.get().getInitialState();
+        const state: ApagosState = ApagosRules.get().getInitialState(defaultConfig);
         // When dropping piece on one of the 3 low squares
-        const move: ApagosMove = ApagosMove.drop(ApagosCoord.THREE, Player.ZERO);
+        const move: ApagosMove = ApagosMove.drop(3, Player.ZERO);
         // Then the square should not move
         const expectedState: ApagosState = ApagosState.fromRepresentation(1, [
             [0, 0, 0, 1],
             [0, 0, 0, 0],
             [7, 5, 3, 1],
-        ], ApagosRules.PIECES_PER_PLAYER - 1, ApagosRules.PIECES_PER_PLAYER);
+        ], 9, 10);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
     });
 

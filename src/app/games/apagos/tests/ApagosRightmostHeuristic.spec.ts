@@ -3,14 +3,13 @@ import { Player } from 'src/app/jscaip/Player';
 import { MGPOptional } from '@everyboard/lib';
 import { ApagosRightmostHeuristic } from '../ApagosRightmostHeuristic';
 import { ApagosState } from '../ApagosState';
-import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
-import { ApagosRules } from '../ApagosRules';
+import { ApagosConfig, ApagosRules } from '../ApagosRules';
 import { HeuristicUtils } from 'src/app/jscaip/AI/tests/HeuristicUtils.spec';
 
 describe('ApagosRightmostHeuristic', () => {
 
     let heuristic: ApagosRightmostHeuristic;
-    const defaultConfig: NoConfig = ApagosRules.get().getDefaultRulesConfig();
+    const defaultConfig: MGPOptional<ApagosConfig> = ApagosRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         heuristic = new ApagosRightmostHeuristic();

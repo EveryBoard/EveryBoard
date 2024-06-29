@@ -69,4 +69,11 @@ export class ApagosSquare {
     public equals(other: ApagosSquare): boolean {
         return this.containing.equals(other.containing);
     }
+
+    public toString(): string {
+        const zero: number = this.containing.get(PlayerOrNone.ZERO).get();
+        const one: number = this.containing.get(PlayerOrNone.ONE).get();
+        const none: number = this.containing.get(PlayerOrNone.NONE).get();
+        return `(${zero}, ${one}, ${none})`;
+    }
 }

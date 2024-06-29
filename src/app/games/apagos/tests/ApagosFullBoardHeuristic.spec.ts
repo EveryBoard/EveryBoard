@@ -4,13 +4,12 @@ import { HeuristicUtils } from 'src/app/jscaip/AI/tests/HeuristicUtils.spec';
 import { MGPOptional } from '@everyboard/lib';
 import { ApagosFullBoardHeuristic } from '../ApagosFullBoardHeuristic';
 import { ApagosState } from '../ApagosState';
-import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
-import { ApagosRules } from '../ApagosRules';
+import { ApagosConfig, ApagosRules } from '../ApagosRules';
 
 describe('ApagosFullBoardHeuristic', () => {
 
     let heuristic: ApagosFullBoardHeuristic;
-    const defaultConfig: NoConfig = ApagosRules.get().getDefaultRulesConfig();
+    const defaultConfig: MGPOptional<ApagosConfig> = ApagosRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         heuristic = new ApagosFullBoardHeuristic();
