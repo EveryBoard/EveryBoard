@@ -1936,7 +1936,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
 
             // Then showLastMove should have been called
             const defaultConfig: MGPOptional<EmptyRulesConfig> = MGPOptional.of({});
-            expect(component.showLastMove).toHaveBeenCalledOnceWith(FIRST_MOVE, defaultConfig);
+            expect(component.showLastMove).toHaveBeenCalledOnceWith(FIRST_MOVE);
         }));
 
         it('should not call gameComponent.showLastMove if there is no move', fakeAsync(async() => {
