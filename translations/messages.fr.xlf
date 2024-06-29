@@ -2503,19 +2503,19 @@
         <target>Libertés</target>
       </trans-unit>
       <trans-unit id="801375955405548279" datatype="html">
-        <source>Since it is triangular, pieces have only one freedom in the corners.</source>
+        <source>Since the board is triangular, pieces have only one freedom in the corners.</source>
         <target>Étant donné que le plateau est triangulaire, les pièces n'ont qu'une liberté dans les coins.</target>
       </trans-unit>
       <trans-unit id="4046748311465266171" datatype="html">
-        <source>Since it is triangular, pieces have only two freedoms on the edges.&lt;br/&gt; When pieces touch the board&apos;s edge with their corner only, like the pieces on the right, they&apos;re not really on the edges.</source>
+        <source>Since the board is triangular, pieces have only two freedoms on the edges.&lt;br/&gt; When pieces touch the board&apos;s edge with their corner only, like the pieces on the right, they&apos;re not really on the edges.</source>
         <target>Étant donné que le plateau est triangulaire, les pièces on seulement deux libertés sur les bords.&lt;br/&gt; Quand les pièces touchent les bords avec seulement leurs coins, comme celles sur la droite, elles ne sont pas vraiment sur les bords</target>
       </trans-unit>
       <trans-unit id="8091608734389488844" datatype="html">
-        <source>Since it is triangular, pieces have three freedoms when they don&apos;t touch the edge.</source>
+        <source>Since the board is triangular, pieces have three freedoms when they don&apos;t touch the edge.</source>
         <target>Étant donné que le plateau est triangulaire, les pièces on trois libertés quand elles ne touchent pas les bords.</target>
       </trans-unit>
       <trans-unit id="6975964838030574157" datatype="html">
-        <source>Since it is triangular, groups of two pieces have only one more freedom (making an atari a shisho by default).</source>
+        <source>Since the board is triangular, groups of two pieces have only one more freedom (making an atari a shisho by default).</source>
         <target>Étant donné que le plateau est trianguliare, les groupes de deux pièces n'ont qu'une liberté en plus (faisant d'un atari un shisho par défaut).</target>
       </trans-unit>
       <trans-unit id="6217706486990855046" datatype="html">
