@@ -1,6 +1,6 @@
 /* eslint-disable max-lines-per-function */
-import { Table } from 'src/app/jscaip/TableUtils';
 import { MGPOptional } from '@everyboard/lib';
+import { Table } from 'src/app/jscaip/TableUtils';
 import { GoMove } from '../GoMove';
 import { GoState } from '../GoState';
 import { GoPiece } from '../GoPiece';

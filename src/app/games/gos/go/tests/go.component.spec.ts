@@ -1,12 +1,12 @@
 /* eslint-disable max-lines-per-function */
 import { fakeAsync } from '@angular/core/testing';
+import { MGPOptional } from '@everyboard/lib';
 import { GoComponent } from '../go.component';
 import { GoMove } from 'src/app/games/gos/GoMove';
 import { GoState } from 'src/app/games/gos/GoState';
 import { GoPiece } from '../../GoPiece';
 import { TableUtils, Table } from 'src/app/jscaip/TableUtils';
 import { Coord } from 'src/app/jscaip/Coord';
-import { MGPOptional } from '@everyboard/lib';
 import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 import { GoConfig, GoRules } from '../GoRules';
@@ -77,6 +77,7 @@ describe('GoComponent', () => {
         // Then it should render the dead
         testUtils.expectElementToExist('#ko-0-0');
     }));
+
 
     describe('hoshi', () => {
 

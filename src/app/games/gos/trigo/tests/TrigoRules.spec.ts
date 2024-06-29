@@ -1,10 +1,10 @@
 /* eslint-disable max-lines-per-function */
+import { MGPOptional } from '@everyboard/lib';
 import { GoMove } from '../../GoMove';
 import { GoState } from '../../GoState';
 import { GoPiece } from '../../GoPiece';
 import { Table } from 'src/app/jscaip/TableUtils';
 import { Coord } from 'src/app/jscaip/Coord';
-import { MGPOptional } from '@everyboard/lib';
 import { TrigoConfig, TrigoRules } from '../TrigoRules';
 import { GoFailure } from '../../GoFailure';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
