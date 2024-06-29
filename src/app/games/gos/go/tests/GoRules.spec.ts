@@ -126,7 +126,7 @@ describe('GoRules', () => {
             // When doing the capture
             const move: GoMove = new GoMove(1, 0);
 
-            // Then move should succeed and create a koCoord on the captured stone
+            // Then move should succeed and create a koCoord on the captured space
             const expectedBoard: Table<GoPiece> = [
                 [_, X, O, _, _],
                 [X, O, _, _, _],
@@ -155,7 +155,7 @@ describe('GoRules', () => {
             // When doing the capture
             const move: GoMove = new GoMove(1, 0);
 
-            // Then move should succeed and create a koCoord on the captured stone
+            // Then move should succeed and create a koCoord on the captured space
             const expectedBoard: Table<GoPiece> = [
                 [_, O, X, _, _],
                 [O, X, _, _, _],
@@ -202,7 +202,7 @@ describe('GoRules', () => {
             const state: GoState =
                 new GoState(board, noCaptures, 0, MGPOptional.empty(), 'PLAYING');
 
-            // When playing in the 0 freedom coord that capture a group
+            // When playing in the 0 freedom coord that captures a group
             const move: GoMove = new GoMove(4, 4);
 
             // Then the move should succeed
@@ -353,8 +353,8 @@ describe('GoRules', () => {
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         });
 
-        it('simply shared board should be simple to calculate', () => {
-            // Given a simply shared board on which one player passed
+        it('simply split board should be simple to calculate', () => {
+            // Given a simply split board on which one player passed
             const previousBoard: Table<GoPiece> = [
                 [_, _, O, X, _],
                 [_, _, O, X, _],

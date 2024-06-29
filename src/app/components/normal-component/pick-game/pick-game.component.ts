@@ -131,9 +131,9 @@ import { TeekoTutorial } from 'src/app/games/teeko/TeekoTutorial';
 import { TrexoComponent } from 'src/app/games/trexo/trexo.component';
 import { TrexoRules } from 'src/app/games/trexo/TrexoRules';
 import { TrexoTutorial } from 'src/app/games/trexo/TrexoTutorial';
-import { TriGoComponent } from 'src/app/games/gos/tri-go/tri-go.component';
-import { TriGoRules } from 'src/app/games/gos/tri-go/TriGoRules';
-import { TriGoTutorial } from 'src/app/games/gos/tri-go/TriGoTutorial';
+import { TrigoComponent } from 'src/app/games/gos/trigo/trigo.component';
+import { TrigoRules } from 'src/app/games/gos/trigo/TrigoRules';
+import { TrigoTutorial } from 'src/app/games/gos/trigo/TrigoTutorial';
 
 import { YinshComponent } from 'src/app/games/yinsh/yinsh.component';
 import { YinshTutorial } from 'src/app/games/yinsh/YinshTutorial';
@@ -283,7 +283,7 @@ export class GameInfo {
             new GameInfo($localize`Ba-awa`,          'BaAwa',                BaAwaComponent,               new BaAwaTutorial(),               BaAwaRules.get(),               new Date('2024-01-28'), GameDescription.BA_AWA()         ), //                             * Martin
             new GameInfo($localize`Squarz`,          'Squarz',               SquarzComponent,              new SquarzTutorial(),              SquarzRules.get(),              new Date('2024-05-08'), GameDescription.SQUARZ()         ), //                             * Martin
             new GameInfo($localize`Hexodia`,         'Hexodia',              HexodiaComponent,             new HexodiaTutorial(),             HexodiaRules.get(),             new Date('2024-06-26'), GameDescription.HEXODIA()        ), //                             * Martin
-            new GameInfo($localize`TriGo`,           'TriGo',                TriGoComponent,               new TriGoTutorial(),               TriGoRules.get(),               new Date('2024-06-27'), GameDescription.TRI_GO()         ), //                             * Martin
+            new GameInfo($localize`Trigo`,           'Trigo',                TrigoComponent,               new TrigoTutorial(),               TrigoRules.get(),               new Date('2024-06-27'), GameDescription.TRI_GO()         ), //                             * Martin
         ].sort((a: GameInfo, b: GameInfo) => a.name.localeCompare(b.name));
         // After Apagos: median = 26d; average = 53d
         // 9d 10d 12d 13d 18d - 18d 20d 22d 25d 26d - (26d) - 49d 65d 71d 76d 93d - 94j 4m 4m 7m 11m

@@ -122,7 +122,7 @@ export const clickableMethods: { [gameName: string]: { [methodName: string]: unk
     Trexo: {
         onClick: [0, 0],
     },
-    TriGo: {
+    Trigo: {
         onClick: [new Coord(0, 0)],
     },
     Yinsh: { onClick: [0, 0] },

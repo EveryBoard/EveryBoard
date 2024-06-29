@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component } from '@angular/core';
 import { GoMove } from 'src/app/games/gos/GoMove';
-import { TriGoConfig, TriGoRules } from './TriGoRules';
+import { TrigoConfig, TrigoRules } from './TrigoRules';
 import { GoState } from 'src/app/games/gos/GoState';
 import { GoPiece } from '../GoPiece';
 import { Coord } from 'src/app/jscaip/Coord';
@@ -8,7 +8,7 @@ import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 import { GroupData } from 'src/app/jscaip/BoardData';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { MCTS } from 'src/app/jscaip/AI/MCTS';
-import { TriGoMoveGenerator } from './TriGoMoveGenerator';
+import { TrigoMoveGenerator } from './TrigoMoveGenerator';
 import { Debug } from 'src/app/utils/Debug';
 import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 import { GoPhase } from '../GoPhase';
@@ -16,19 +16,19 @@ import { TriangularGameComponent } from 'src/app/components/game-components/game
 import { GoLegalityInformation } from '../AbstractGoRules';
 import { ViewBox } from 'src/app/components/game-components/GameComponentUtils';
 import { TriangularCheckerBoard } from 'src/app/jscaip/state/TriangularCheckerBoard';
-import { TriGoMinimax } from './TriGoMinimax';
+import { TrigoMinimax } from './TrigoMinimax';
 
 @Component({
-    selector: 'app-tri-go',
-    templateUrl: './tri-go.component.html',
+    selector: 'app-trigo',
+    templateUrl: './trigo.component.html',
     styleUrls: ['../../../components/game-components/game-component/game-component.scss'],
 })
 @Debug.log
-export class TriGoComponent extends TriangularGameComponent<TriGoRules,
+export class TrigoComponent extends TriangularGameComponent<TrigoRules,
                                                             GoMove,
                                                             GoState,
                                                             GoPiece,
-                                                            TriGoConfig,
+                                                            TrigoConfig,
                                                             GoLegalityInformation>
 {
 
@@ -44,10 +44,10 @@ export class TriGoComponent extends TriangularGameComponent<TriGoRules,
 
     public constructor(messageDisplayer: MessageDisplayer, cdr: ChangeDetectorRef) {
         super(messageDisplayer, cdr);
-        this.setRulesAndNode('TriGo');
+        this.setRulesAndNode('Trigo');
         this.availableAIs = [
-            new TriGoMinimax(),
-            new MCTS($localize`MCTS`, new TriGoMoveGenerator(), this.rules),
+            new TrigoMinimax(),
+            new MCTS($localize`MCTS`, new TrigoMoveGenerator(), this.rules),
         ];
         this.encoder = GoMove.encoder;
         this.canPass = true;
@@ -119,7 +119,7 @@ export class TriGoComponent extends TriangularGameComponent<TriGoRules,
             return this.onClick(GoMove.PASS.coord);
         }
         Utils.assert(phase === 'COUNTING' || phase === 'ACCEPT',
-                     'TriGoComponent: pass() must be called only in playing, passed, counting, or accept phases');
+                     'TrigoComponent: pass() must be called only in playing, passed, counting, or accept phases');
         return this.onClick(GoMove.ACCEPT.coord);
     }
 

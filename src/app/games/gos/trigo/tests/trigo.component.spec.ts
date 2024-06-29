@@ -1,6 +1,6 @@
 /* eslint-disable max-lines-per-function */
 import { fakeAsync } from '@angular/core/testing';
-import { TriGoComponent } from '../tri-go.component';
+import { TrigoComponent } from '../trigo.component';
 import { GoMove } from 'src/app/games/gos/GoMove';
 import { GoState } from 'src/app/games/gos/GoState';
 import { GoPiece } from '../../GoPiece';
@@ -10,9 +10,9 @@ import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 import { Coord } from 'src/app/jscaip/Coord';
 
-describe('TriGoComponent', () => {
+describe('TrigoComponent', () => {
 
-    let testUtils: ComponentTestUtils<TriGoComponent>;
+    let testUtils: ComponentTestUtils<TrigoComponent>;
 
     const _: GoPiece = GoPiece.EMPTY;
     const O: GoPiece = GoPiece.DARK;
@@ -23,7 +23,7 @@ describe('TriGoComponent', () => {
     const b: GoPiece = GoPiece.DARK_TERRITORY;
 
     beforeEach(fakeAsync(async() => {
-        testUtils = await ComponentTestUtils.forGame<TriGoComponent>('TriGo');
+        testUtils = await ComponentTestUtils.forGame<TrigoComponent>('Trigo');
     }));
 
     it('should create', () => {

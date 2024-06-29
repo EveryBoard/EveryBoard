@@ -20,7 +20,7 @@ export class TaflPieceHeuristic<M extends TaflMove> extends PlayerMetricHeuristi
         const nbPlayerZeroPawns: number = this.rules.getPlayerListPawns(Player.ZERO, state).length;
         const nbPlayerOnePawns: number = this.rules.getPlayerListPawns(Player.ONE, state).length;
         const invader: Player = this.rules.getInvader(config);
-        const zeroMult: number = [1, 2][invader.getValue()]; // invaders pawn are twice as numerous
+        const zeroMult: number = [1, 2][invader.getValue()]; // invaders piece are twice as numerous
         const oneMult: number = [2, 1][invader.getValue()]; // so they're twice less valuable
         const scoreZero: number = nbPlayerZeroPawns * zeroMult;
         const scoreOne: number = nbPlayerOnePawns * oneMult;

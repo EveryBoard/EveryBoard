@@ -139,7 +139,7 @@ export class ReversiRules extends ConfigurableRules<ReversiMove,
             sandwichedsCoord.push(testedCoord); // we add it
             testedCoord = testedCoord.getNext(direction); // next loop will observe the next
         }
-        return []; // we found the end of the board before we found     the newt pawn like 'searchedPawn'
+        return []; // we found the end of the board before we found     the newt piece like 'searchedPawn'
     }
 
     public isGameEnded(state: ReversiState, config: MGPOptional<ReversiConfig>): boolean {

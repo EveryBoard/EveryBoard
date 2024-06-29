@@ -386,8 +386,8 @@
       <trans-unit id="2686476818050661110" datatype="html">
         <source>Hexodia</source>
       </trans-unit>
-      <trans-unit id="6994992847471813367" datatype="html">
-        <source>TriGo</source>
+      <trans-unit id="6233664534580457703" datatype="html">
+        <source>Trigo</source>
       </trans-unit>
       <trans-unit id="2218572265318708454" datatype="html">
         <source>Registering</source>
@@ -1664,6 +1664,24 @@
         The intersections where the prisoners are count as Dark&apos;s territory
         Light has 8 territories and 1 prisoner.
         The end result is therefore 18 - 9 for Dark.</source>
+      </trans-unit>
+      <trans-unit id="3703970382094035606" datatype="html">
+        <source>The game of Trigo is a triangular adaptation of the game of Go. Go is present on the website, you can go learn it here. This tutorial will only review the small differences that this experimental adaptation induced.</source>
+      </trans-unit>
+      <trans-unit id="3616229206195726198" datatype="html">
+        <source>Freedom</source>
+      </trans-unit>
+      <trans-unit id="801375955405548279" datatype="html">
+        <source>Since it is triangular, pieces have only one freedom in the corners.</source>
+      </trans-unit>
+      <trans-unit id="4046748311465266171" datatype="html">
+        <source>Since it is triangular, pieces have only two freedoms on the edges.&lt;br/&gt; When pieces touch the board&apos;s edge with their corner only, like the pieces on the right, they&apos;re not really on the edges.</source>
+      </trans-unit>
+      <trans-unit id="8091608734389488844" datatype="html">
+        <source>Since it is triangular, pieces have three freedoms when they don&apos;t touch the edge.</source>
+      </trans-unit>
+      <trans-unit id="6975964838030574157" datatype="html">
+        <source>Since it is triangular, groups of two pieces have only one more freedom (making an atari a shisho by default).</source>
       </trans-unit>
       <trans-unit id="69616505141416052" datatype="html">
         <source>Hexodia is played on a hexagonal board, your goal is to be the first to align 6 of your pieces.</source>

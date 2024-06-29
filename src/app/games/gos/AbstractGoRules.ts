@@ -89,10 +89,10 @@ export abstract class AbstractGoRules<C extends RulesConfig>
     }
 
     private getEmptyZones(deadlessState: GoState): GoGroupData[] {
-        return this.getGroupsDataWhere(deadlessState.getCopiedBoard(), (pawn: GoPiece) => pawn.isEmpty());
+        return this.getGroupsDataWhere(deadlessState.getCopiedBoard(), (piece: GoPiece) => piece.isEmpty());
     }
 
-    public getGroupsDataWhere(board: GoPiece[][], condition: (pawn: GoPiece) => boolean): GoGroupData[] {
+    public getGroupsDataWhere(board: GoPiece[][], condition: (piece: GoPiece) => boolean): GoGroupData[] {
         const groups: GoGroupData[] = [];
         let coord: Coord;
         let group: GoGroupData;

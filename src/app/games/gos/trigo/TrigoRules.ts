@@ -9,16 +9,16 @@ import { TableUtils } from 'src/app/jscaip/TableUtils';
 import { TriangularGoGroupDataFactory } from '../GoGroupDataFactory';
 import { GroupDataFactory } from 'src/app/jscaip/BoardData';
 
-export type TriGoConfig = {
+export type TrigoConfig = {
     size: number;
 };
 
-export class TriGoRules extends AbstractGoRules<TriGoConfig> {
+export class TrigoRules extends AbstractGoRules<TrigoConfig> {
 
-    private static singleton: MGPOptional<TriGoRules> = MGPOptional.empty();
+    private static singleton: MGPOptional<TrigoRules> = MGPOptional.empty();
 
-    public static readonly RULES_CONFIG_DESCRIPTION: RulesConfigDescription<TriGoConfig> =
-        new RulesConfigDescription<TriGoConfig>({
+    public static readonly RULES_CONFIG_DESCRIPTION: RulesConfigDescription<TrigoConfig> =
+        new RulesConfigDescription<TrigoConfig>({
             name: (): string => $localize`Standard`,
             config: {
                 size: new NumberConfig(7,
@@ -27,15 +27,15 @@ export class TriGoRules extends AbstractGoRules<TriGoConfig> {
             },
         });
 
-    public static get(): TriGoRules {
-        if (TriGoRules.singleton.isAbsent()) {
-            TriGoRules.singleton = MGPOptional.of(new TriGoRules());
+    public static get(): TrigoRules {
+        if (TrigoRules.singleton.isAbsent()) {
+            TrigoRules.singleton = MGPOptional.of(new TrigoRules());
         }
-        return TriGoRules.singleton.get();
+        return TrigoRules.singleton.get();
     }
 
-    public override getInitialState(optionalConfig: MGPOptional<TriGoConfig>): GoState {
-        const config: TriGoConfig = optionalConfig.get();
+    public override getInitialState(optionalConfig: MGPOptional<TrigoConfig>): GoState {
+        const config: TrigoConfig = optionalConfig.get();
         const width: number = (config.size * 2) - (config.size % 2);
         const board: GoPiece[][] = TableUtils.create(
             width,
@@ -55,8 +55,8 @@ export class TriGoRules extends AbstractGoRules<TriGoConfig> {
         return new GoState(board, PlayerNumberMap.of(0, 0), 0, MGPOptional.empty(), 'PLAYING');
     }
 
-    public override getRulesConfigDescription(): MGPOptional<RulesConfigDescription<TriGoConfig>> {
-        return MGPOptional.of(TriGoRules.RULES_CONFIG_DESCRIPTION);
+    public override getRulesConfigDescription(): MGPOptional<RulesConfigDescription<TrigoConfig>> {
+        return MGPOptional.of(TrigoRules.RULES_CONFIG_DESCRIPTION);
     }
 
     public override getGoGroupDataFactory(): GroupDataFactory<GoPiece> {

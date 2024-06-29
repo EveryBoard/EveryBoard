@@ -5,9 +5,9 @@ import { GoMove } from '../../GoMove';
 import { GoState } from '../../GoState';
 import { GoPiece } from '../../GoPiece';
 import { GoNode } from '../../AbstractGoRules';
-import { TriGoMoveGenerator } from '../TriGoMoveGenerator';
+import { TrigoMoveGenerator } from '../TrigoMoveGenerator';
 import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
-import { TriGoConfig, TriGoRules } from '../TriGoRules';
+import { TrigoConfig, TrigoRules } from '../TrigoRules';
 
 const X: GoPiece = GoPiece.LIGHT;
 const O: GoPiece = GoPiece.DARK;
@@ -18,14 +18,14 @@ const b: GoPiece = GoPiece.DARK_TERRITORY;
 const _: GoPiece = GoPiece.EMPTY;
 const N: GoPiece = GoPiece.UNREACHABLE;
 
-describe('TriGoMoveGenerator', () => {
+describe('TrigoMoveGenerator', () => {
 
-    let moveGenerator: TriGoMoveGenerator;
+    let moveGenerator: TrigoMoveGenerator;
 
-    const config: MGPOptional<TriGoConfig> = MGPOptional.of({ size: 2 });
+    const config: MGPOptional<TrigoConfig> = MGPOptional.of({ size: 2 });
 
     beforeEach(() => {
-        moveGenerator = new TriGoMoveGenerator();
+        moveGenerator = new TrigoMoveGenerator();
     });
 
     describe('getListMove', () => {
@@ -46,13 +46,13 @@ describe('TriGoMoveGenerator', () => {
             // When listing the moves
             const moves: GoMove[] = moveGenerator.getListMoves(initialNode);
 
-            // Then it should include one by legal moves (25) + the move PASS
+            // Then it should include one move by empty space (25) + the move PASS
             expect(moves.length).toBe(25 + 1);
             expect(moves.some((m: GoMove) => m.equals(GoMove.PASS))).toBeTrue();
         });
 
         it('should only have GoMove.ACCEPT in ACCEPT GoPhase when agreeing on the result', () => {
-            // Given a board in 'accept' phase when minimax agrees with the rest
+            // Given a board in 'accept' phase when minimax agrees with the state
             const initialBoard: GoPiece[][] = [
                 [N, N, b, N],
                 [N, b, O, b],
@@ -70,7 +70,7 @@ describe('TriGoMoveGenerator', () => {
 
         it('should only have GoMove.ACCEPT in COUNTNG GoPhase when agreeing on the result', () => {
             // Given a board in counting phase when minimax agrees with the result
-            const initialBoard: GoPiece[][] = TriGoRules.get().getInitialState(config).getCopiedBoard();
+            const initialBoard: GoPiece[][] = TrigoRules.get().getInitialState(config).getCopiedBoard();
             const state: GoState = new GoState(initialBoard,
                                                PlayerNumberMap.of(0, 0),
                                                0,
@@ -88,7 +88,7 @@ describe('TriGoMoveGenerator', () => {
 
         it('should only have counting moves in GoPhase.COUNTING when not agreeing on the result', () => {
             // Given a board in ACCEPT phase but having a disagreement on the final state
-            const initialBoard: GoPiece[][] = TriGoRules.get().getInitialState(config).getCopiedBoard();
+            const initialBoard: GoPiece[][] = TrigoRules.get().getInitialState(config).getCopiedBoard();
             const state: GoState =
                 new GoState(initialBoard, PlayerNumberMap.of(0, 0), 0, MGPOptional.empty(), 'ACCEPT');
             const initialNode: GoNode = new GoNode(state);
@@ -117,7 +117,7 @@ describe('TriGoMoveGenerator', () => {
             // When listing the moves
             const moves: GoMove[] = moveGenerator.getListMoves(initialNode);
 
-            // Then it should include the moves than put them back alive
+            // Then it should include the moves that puts them back alive
             expect(moves.length).toBe(1);
             expect(moves.some((m: GoMove) => m.equals(new GoMove(3, 3)))).toBeTrue();
         });
@@ -138,7 +138,7 @@ describe('TriGoMoveGenerator', () => {
             // When listing the moves
             const moves: GoMove[] = moveGenerator.getListMoves(initialNode);
 
-            // Then it should include the moves than put them back alive
+            // Then it should include the moves that puts them back alive
             expect(moves.length).toBe(1);
             expect(moves.some((m: GoMove) => m.equals(new GoMove(3, 3)))).toBeTrue();
         });

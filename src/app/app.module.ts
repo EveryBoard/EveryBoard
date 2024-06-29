@@ -116,7 +116,7 @@ import { TablutComponent } from './games/tafl/tablut/tablut.component';
 import { TeekoComponent } from './games/teeko/teeko.component';
 import { TrexoComponent } from './games/trexo/trexo.component';
 import { TrexoHalfPieceComponent } from './games/trexo/trexo-half-piece.component';
-import { TriGoComponent } from './games/gos/tri-go/tri-go.component';
+import { TrigoComponent } from './games/gos/trigo/trigo.component';
 
 import { YinshComponent } from './games/yinsh/yinsh.component';
 
@@ -231,7 +231,7 @@ export const routes: Route[] = [
         TablutComponent,
         TeekoComponent,
         TrexoComponent, TrexoHalfPieceComponent,
-        TriGoComponent,
+        TrigoComponent,
         YinshComponent,
 
         HumanDurationPipe,

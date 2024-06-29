@@ -78,9 +78,9 @@ export class GoGroupData extends GroupData<GoPiece> {
     }
 
     public getWrapper(): GoPiece {
-        // If a piece is wrapped by a player and/or by dead pawn of his opponent, it's returning the player
+        // If a piece is wrapped by a player and/or by dead piece of his opponent, it's returning the player
         // If a piece is wrapped by two player, it's throwing
-        // If a piece is wrapped by a player and dead pawn of this player, it's throwing
+        // If a piece is wrapped by a player and dead piece of this player, it's throwing
         // color, [empty, dark, light, deadDark, deadLight]
         // empty, [ 0(2),    0,     4,        2,         0] => LIGHT
         // empty, [ 0(2),    2,     2,        0,         0] => throw

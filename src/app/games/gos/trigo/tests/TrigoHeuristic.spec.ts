@@ -6,20 +6,20 @@ import { GoPiece } from '../../GoPiece';
 import { HeuristicUtils } from 'src/app/jscaip/AI/tests/HeuristicUtils.spec';
 import { Player } from 'src/app/jscaip/Player';
 import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
-import { TriGoConfig, TriGoRules } from '../TriGoRules';
-import { TriGoHeuristic } from '../TriGoHeuristic';
+import { TrigoConfig, TrigoRules } from '../TrigoRules';
+import { TrigoHeuristic } from '../TrigoHeuristic';
 
 const X: GoPiece = GoPiece.LIGHT;
 const O: GoPiece = GoPiece.DARK;
 const _: GoPiece = GoPiece.EMPTY;
 
-describe('TriGoHeuristic', () => {
+describe('TrigoHeuristic', () => {
 
-    let heuristic: TriGoHeuristic;
-    const defaultConfig: MGPOptional<TriGoConfig> = TriGoRules.get().getDefaultRulesConfig();
+    let heuristic: TrigoHeuristic;
+    const defaultConfig: MGPOptional<TrigoConfig> = TrigoRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
-        heuristic = new TriGoHeuristic();
+        heuristic = new TrigoHeuristic();
     });
 
     it('should prefer a larger territory', () => {

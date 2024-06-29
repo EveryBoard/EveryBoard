@@ -239,14 +239,14 @@ export abstract class GameComponent<R extends SuperRules<M, S, C, L>,
     /**
      * Gives the translation transform for coordinate x, y, based on SPACE_SIZE
      */
-    public getTranslation(coord: Coord): string {
-        return this.getTranslationXY(coord.x, coord.y);
+    public getTranslationAt(coord: Coord): string {
+        return this.getTranslationAtXY(coord.x, coord.y);
     }
 
-    public getTranslationXY(coordX: number, coordY: number): string {
-        const svgX: number = coordX * this.SPACE_SIZE;
-        const svgY: number = coordY * this.SPACE_SIZE;
-        return `translate(${svgX} ${svgY})`;
+    public getTranslationAtXY(x: number, y: number): string {
+        const svgX: number = x * this.SPACE_SIZE;
+        const svgY: number = y * this.SPACE_SIZE;
+        return this.getSVGTranslation(svgX, svgY);
     }
 
 }

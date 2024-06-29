@@ -45,16 +45,19 @@
         </g>
     </g>
     <rect *ngIf="ko.isPresent()"
+          id="ko-{{ ko.get().x }}-{{ ko.get().y }}"
+          [attr.transform]="getTranslationAt(ko.get())"
           [attr.width]="SPACE_SIZE * 0.5"
           [attr.height]="SPACE_SIZE * 0.5"
-          [attr.x]="(SPACE_SIZE * 0.25) + (SPACE_SIZE * ko.get().x)"
-          [attr.y]="(SPACE_SIZE * 0.25) + (SPACE_SIZE * ko.get().y)"
+          [attr.x]="SPACE_SIZE * 0.25"
+          [attr.y]="SPACE_SIZE * 0.25"
           class="captured-stroke mid-stroke no-fill"
     />
     <circle *ngFor="let capture of captures"
             (click)="onClick(capture)"
-            [attr.cx]="(SPACE_SIZE * 0.5) + (SPACE_SIZE * capture.x)"
-            [attr.cy]="(SPACE_SIZE * 0.5) + (SPACE_SIZE * capture.y)"
+            [attr.transform]="getTranslationAt(capture)"
+            [attr.cx]="SPACE_SIZE * 0.5"
+            [attr.cy]="SPACE_SIZE * 0.5"
             [attr.r]="SPACE_SIZE * 0.14"
             class="captured-fill"
     />

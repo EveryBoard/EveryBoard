@@ -19,7 +19,7 @@ export class GoPiece implements ComparableObject {
 
     public static LIGHT_TERRITORY: GoPiece = new GoPiece(Player.ONE, 'territory');
 
-    public static UNREACHABLE: GoPiece = new GoPiece(PlayerOrNone.NONE, 'unreachable'); // For TriGo
+    public static UNREACHABLE: GoPiece = new GoPiece(PlayerOrNone.NONE, 'unreachable'); // For Trigo
 
     private constructor(readonly player: PlayerOrNone, public readonly type: PieceType) { }
 

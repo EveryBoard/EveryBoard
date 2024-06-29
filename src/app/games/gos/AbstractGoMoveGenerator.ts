@@ -8,13 +8,12 @@ import { MGPFallible } from '@everyboard/lib';
 import { MoveGenerator } from 'src/app/jscaip/AI/AI';
 import { Debug } from 'src/app/utils/Debug';
 import { GoConfig } from './go/GoRules';
-import { TriGoConfig } from './tri-go/TriGoRules';
-import { TableUtils } from 'src/app/jscaip/TableUtils';
+import { TrigoConfig } from './trigo/TrigoRules';
 
 @Debug.log
 export class AbstractGoMoveGenerator extends MoveGenerator<GoMove, GoState> {
 
-    public constructor(private readonly rules: AbstractGoRules<GoConfig | TriGoConfig>) {
+    public constructor(private readonly rules: AbstractGoRules<GoConfig | TrigoConfig>) {
         super();
     }
 
@@ -67,7 +66,7 @@ export class AbstractGoMoveGenerator extends MoveGenerator<GoMove, GoState> {
         const groupsData: GoGroupData[] =
             this.rules.getGroupsDataWhere(
                 correctBoard,
-                (pawn: GoPiece) => pawn !== GoPiece.EMPTY && pawn !== GoPiece.UNREACHABLE);
+                (piece: GoPiece) => piece !== GoPiece.EMPTY && piece !== GoPiece.UNREACHABLE);
 
         for (const group of groupsData) {
             const coord: Coord = group.getCoords()[0];
@@ -83,13 +82,13 @@ export class AbstractGoMoveGenerator extends MoveGenerator<GoMove, GoState> {
     }
 
     public getCorrectBoard(currentState: GoState): GoState {
-        const markAsDead: (pawn: GoPiece) => GoPiece = (pawn: GoPiece) => {
-            if (pawn === GoPiece.DARK) return GoPiece.DEAD_DARK;
-            if (pawn === GoPiece.LIGHT) return GoPiece.DEAD_LIGHT;
-            if (pawn.isTerritory()) {
+        const markAsDead: (piece: GoPiece) => GoPiece = (piece: GoPiece) => {
+            if (piece === GoPiece.DARK) return GoPiece.DEAD_DARK;
+            if (piece === GoPiece.LIGHT) return GoPiece.DEAD_LIGHT;
+            if (piece.isTerritory()) {
                 return GoPiece.EMPTY;
             } else {
-                return pawn;
+                return piece;
             }
         };
         const allDeadBoard: GoPiece[][] = this.mapBoard(currentState.getCopiedBoard(), markAsDead);
@@ -103,7 +102,7 @@ export class AbstractGoMoveGenerator extends MoveGenerator<GoMove, GoState> {
         return this.setAliveUniqueWrapper(allDeadState, territoryLikeGroups);
     }
 
-    public mapBoard(board: GoPiece[][], mapper: (pawn: GoPiece) => GoPiece): GoPiece[][] {
+    public mapBoard(board: GoPiece[][], mapper: (piece: GoPiece) => GoPiece): GoPiece[][] {
         const newBoard: GoPiece[][] = [];
         for (let y: number = 0; y < board.length; y++) {
             newBoard[y] = [];

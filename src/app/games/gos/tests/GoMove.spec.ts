@@ -1,28 +1,29 @@
 /* eslint-disable max-lines-per-function */
-import { AbstractGoRules, GoNode } from '../AbstractGoRules';
+import { AbstractGoRules } from '../AbstractGoRules';
 import { GoMove } from '../GoMove';
-import { EncoderTestUtils, MGPOptional } from '@everyboard/lib';
+import { EncoderTestUtils } from '@everyboard/lib';
 import { AbstractGoMoveGenerator } from '../AbstractGoMoveGenerator';
 import { GoConfig, GoRules } from '../go/GoRules';
-import { TriGoConfig, TriGoRules } from '../tri-go/TriGoRules';
+import { TrigoConfig, TrigoRules } from '../trigo/TrigoRules';
+import { MoveTestUtils } from 'src/app/jscaip/tests/Move.spec';
 
 describe('GoMove', () => {
 
-    const rules: AbstractGoRules<GoConfig | TriGoConfig>[] = [
+    const rules: AbstractGoRules<GoConfig | TrigoConfig>[] = [
         GoRules.get(),
-        TriGoRules.get(),
+        TrigoRules.get(),
     ];
     for (const rule of rules) {
         it('should have a bijective encoder', () => {
             const moveGenerator: AbstractGoMoveGenerator = new AbstractGoMoveGenerator(rule);
-            const defaultConfig: MGPOptional<GoConfig | TriGoConfig> = rule.getDefaultRulesConfig();
-            const node: GoNode = rule.getInitialNode(defaultConfig);
-            const firstTurnMoves: GoMove[] = moveGenerator.getListMoves(node);
-            firstTurnMoves.push(GoMove.PASS);
-            firstTurnMoves.push(GoMove.ACCEPT);
-            for (const move of firstTurnMoves) {
+            const passAndAccept: GoMove[] = [
+                GoMove.PASS,
+                GoMove.ACCEPT,
+            ];
+            for (const move of passAndAccept) {
                 EncoderTestUtils.expectToBeBijective(GoMove.encoder, move);
             }
+            MoveTestUtils.testFirstTurnMovesBijectivity(rule, moveGenerator, GoMove.encoder);
         });
     }
 

@@ -347,7 +347,7 @@ describe('EpaminondasRules', () => {
 
     describe('Victories', () => {
 
-        it('should declare first player winner if their pawn survives one turn on last line', () => {
+        it('should declare first player winner if their piece survives one turn on last line', () => {
             // Given a board where first player wins
             const board: Table<PlayerOrNone> = [
                 [O, _, _, _, _, _, _, _, _, _, _, _, _, _],
@@ -370,7 +370,7 @@ describe('EpaminondasRules', () => {
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, defaultConfig);
         });
 
-        it('should declare second player winner if their pawn survive one turn on first line', () => {
+        it('should declare second player winner if their piece survive one turn on first line', () => {
             // Given a board where second player wins
             const board: Table<PlayerOrNone> = [
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
