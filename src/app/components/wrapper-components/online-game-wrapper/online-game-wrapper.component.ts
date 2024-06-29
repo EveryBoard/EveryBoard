@@ -1,7 +1,9 @@
-import { Mutex } from 'async-mutex';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router, Event } from '@angular/router';
+import { Mutex } from 'async-mutex';
 import { Subscription } from 'rxjs';
+
+import { JSONValue, MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 import { ConnectedUserService, AuthUser } from 'src/app/services/ConnectedUserService';
 import { GameService } from 'src/app/services/GameService';
 import { Move } from '../../../jscaip/Move';
@@ -11,12 +13,12 @@ import { CurrentGame } from '../../../domain/User';
 import { GameWrapper, GameWrapperMessages } from '../GameWrapper';
 import { ConfigRoom } from 'src/app/domain/ConfigRoom';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { JSONValue, MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 import { GameState } from 'src/app/jscaip/state/GameState';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { GameInfo } from '../../normal-component/pick-game/pick-game.component';
 import { Localized } from 'src/app/utils/LocaleUtils';
 import { MinimalUser } from 'src/app/domain/MinimalUser';
+import { EloInfo } from 'src/app/domain/EloInfo';
 import { CurrentGameService } from 'src/app/services/CurrentGameService';
 import { GameEventService } from 'src/app/services/GameEventService';
 import { AbstractNode, GameNode } from 'src/app/jscaip/AI/GameNode';
@@ -135,8 +137,15 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
                 await this.setCurrentPartIdOrRedirect();
             }
         });
-        this.userSubscription = this.connectedUserService.subscribeToUser((user: AuthUser) => {
+        this.userSubscription = this.connectedUserService.subscribeToUser(async(user: AuthUser) => {
             // player should be authenticated and have a username to be here
+            if (this.authUser == null) { // If the user was not set on this component yet
+                console.log('auth user était nul, récupérons les donnée du logged user')
+                const gameName: string = this.getGameUrlName();
+                console.log('il joue au', gameName)
+                // const eloInfo: EloInfo = await this.userService.getPlayerInfo(user.toMinimalUser(), gameName);
+                // console.log('ELO INFO:', eloInfo);
+            }
             this.authUser = user;
         });
 
@@ -210,7 +219,8 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
     }
 
     private async onGameStart(): Promise<void> {
-        await this.initializePlayersDatas(this.currentPart as PartDocument);
+        const currentPart: PartDocument = Utils.getNonNullable(this.currentPart);
+        await this.initializePlayersDatas(currentPart);
         const turn: number = this.gameComponent.getTurn();
         Utils.assert(turn === 0, 'turn should always be 0 upon game start');
         this.timeManager.onGameStart(this.configRoom, this.players);

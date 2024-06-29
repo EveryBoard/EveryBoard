@@ -90,6 +90,7 @@ module Make (FirestorePrimitives : FirestorePrimitives.FIRESTORE_PRIMITIVES) : F
 
         let get = fun ~(request : Dream.request) ~(id : string) : Domain.User.t Lwt.t ->
             get request ("users/" ^ id) Domain.User.of_yojson
+        let
     end
 
     module Game = struct

@@ -144,4 +144,101 @@ describe('UserDAO', () => {
             await expectPermissionToBeDenied(result);
         });
     });
+    describe('elo security', () => {
+        // Step 2: encoding loser elo
+        it('should allow the last player to write loser elo', async() => {
+            // Given a part in 'pre-finished' state and a loser playing its 15th game
+            // And a user doc
+            // When
+            // Then
+        });
+        it(`should reject loser's elo update if part is not marked as "pre-finished"`, async() => {
+            // Given a part in another state than 'pre-finished'
+            // And with the loser at his 15th part of this game
+            // And a user link to this part who encoded 14 game for this game
+
+            // When updating this user's elo
+
+            // Then the modification should have been rejected
+        });
+        it(`should reject loser's elo update if this part has already been counted`, async() => {
+            // Given a part in 'pre-finished' state
+            // And with the loser at his 15th part of this game
+            // And a user link to this part who encdoed 15 game already for this game
+
+            // When updating this user's elo
+
+            // Then the modification should have been rejected
+        });
+        // Step 3: encoding winner elo
+        it('should allow the last player to write winner elo', async() => {
+            // Given
+            // When
+            // Then
+        });
+        it(`should reject winner's elo update if part is not marked as "pre-finished"`, async() => {
+            // Given
+            // When
+            // Then the modification should have been rejected
+        });
+        it(`should reject winner's elo updates if loser change aren't written`, async() => {
+            // Given
+            // When
+            // Then the modification should have been rejected
+        });
+        it(`should reject winner's elo update if this part has already been counted`, async() => {
+            // Given
+            // When
+            // Then the modification should have been rejected
+        });
+
+        // Step 4: marking the game as finished
+        it('should allow the last player to mark the game as "finished"', async() => {
+            // Given
+            // When
+            // Then
+        });
+        it('should reject update to "finished" if the ame was not marked as "pre-finished"', async() => {
+            // Given
+            // When
+            // Then the modification should have been rejected
+        });
+        it(`should reject update if winner's elo update hasn't been counted`, async() => {
+            // Given
+            // When
+            // Then the modification should have been rejected
+        });
+        it(`should reject update if loser's elo update hasn't been counted`, async() => {
+            // Given
+            // When
+            // Then the modification should have been rejected
+        });
+
+        // Valable for every steps:
+        it(`should reject non player's update`, async() => {
+            // Given
+            // When
+            // Then the modification should have been rejected
+        });
+        it(`should reject penultian player's update`, async() => {
+            // Given
+            // When
+            // Then the modification should have been rejected
+        });
+        it(`should reject non player's doc creation`, async() => {
+            // Given
+            // When
+            // Then the modification should have been rejected
+        });
+        it(`should reject penultian player's doc creation`, async() => {
+            // Given
+            // When
+            // Then the modification should have been rejected
+        });
+        it('should reject elo modification that does not match the calculation used on server', async() => {
+            // Given
+            // When
+            // Then the modification should have been rejected
+        });
+    });
 });

@@ -89,7 +89,6 @@ service cloud.firestore {
         function isAuthenticated() {
             return request != null && request.auth != null;
         }
-
         function authenticatedUserUpdatesUser(userId, user, update) {
             // Only the user can change its fields
             // Moreover, the username cannot be changed once set

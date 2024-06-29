@@ -26,7 +26,6 @@ class KamisadoPassMove extends Move {
         return 'KamisadoMove(PASS)';
     }
 }
-
 export class KamisadoPieceMove extends MoveCoordToCoord {
 
     public static readonly encoder: Encoder<KamisadoPieceMove> = MoveWithTwoCoords.getEncoder(KamisadoPieceMove.of);

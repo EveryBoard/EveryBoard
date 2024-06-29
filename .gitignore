@@ -31,12 +31,14 @@
 /.sass-cache
 /connect.lock
 /typings
-./nx
 *.log
 
 # System Files
 .DS_Store
 Thumbs.db
+
+# firebase emulator files
+/data
 
 # Coverage data
 /coverage
@@ -69,3 +71,4 @@ games.txt
 
 # sensitive files
 /service-accounts/*.json
+./nx/
