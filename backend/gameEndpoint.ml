@@ -98,6 +98,7 @@ module Make
         match game.player_one with
         | None -> raise (BadInput "game has no opponent")
         | Some player_one ->
+            Stats.end_game ();
             let winner = if minimal_user = game.player_zero then player_one else player_zero in
             let loser = minimal_user in
             let update = Game.Updates.End.get ~winner ~loser Game.GameResult.Resign in
@@ -112,6 +113,7 @@ module Make
 
     (** End the game by a timeout from one player. Perform 1 read and 2 writes. *)
     let notify_timeout = fun (request : Dream.request) (game_id : string) (winner : MinimalUser.t) (loser : MinimalUser.t) ->
+        Stats.end_game ();
         (* Read 1: retrieve the game *)
         let update = Game.Updates.End.get ~winner ~loser Game.GameResult.Timeout in
         (* Write 1: end the game *)
@@ -143,6 +145,7 @@ module Make
 
     (** Accept a draw request from the opponent. Perform 1 read and 3 writes. *)
     let accept_draw = fun (request : Dream.request) (game_id : string) ->
+        Stats.end_game ();
         (* Read 1: retrieve the game *)
         let* game = Firestore.Game.get ~request ~id:game_id in
         let user = Auth.get_minimal_user request in
@@ -161,6 +164,7 @@ module Make
 
     (** Accept a rematch request from the opponent. Perform 2 read and 3 writes. *)
     let accept_rematch = fun (request : Dream.request) (game_id : string) ->
+        Stats.new_game ();
         (* Read 1: retrieve the game *)
         let* game = Firestore.Game.get ~request ~id:game_id in
         (* Read 2: retrieve the config room *)
@@ -225,6 +229,7 @@ module Make
 
     (** Perform a move. Perform 1 read and 2 writes. *)
     let move = fun (request : Dream.request) (game_id : string) (move : Yojson.Safe.t) ->
+        Stats.new_move ();
         (* Read 1: retrieve the game for the current turn *)
         let* game = Firestore.Game.get ~request ~id:game_id in
         let user = Auth.get_minimal_user request in
@@ -240,6 +245,8 @@ module Make
 
     (** Similar to [move], but also ends the game. Perform 1 read and 3 writes *)
     let move_and_end = fun (request : Dream.request) (game_id : string) (move : Yojson.Safe.t) ->
+        Stats.new_move ();
+        Stats.end_game ();
         (* Read 1: retrieve the game to have the current turn *)
         let* game = Firestore.Game.get ~request ~id:game_id in
         let user = Auth.get_minimal_user request in
