@@ -69,7 +69,7 @@ describe('EpaminondasPhalanxSizeAndFilterMoveGenerator', () => {
             [_, _, _, _, _, _, O, _, _, _, _, _, _, O],
         ];
 
-        // When computing the list of moves
+        // When listing the moves
         const state: EpaminondasState = new EpaminondasState(board, 101);
         const node: EpaminondasNode = new EpaminondasNode(state);
 

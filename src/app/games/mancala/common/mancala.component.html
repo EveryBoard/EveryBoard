@@ -44,7 +44,7 @@
     <g id="store-PLAYER_ONE"
        (click)="onStoreClick(Player.ONE)"
        app-numbered-circle
-       [attr.transform]="'translate(' + (getViewBoxWidth() - 60) + ' 120)'"
+       [attr.transform]="getSVGTranslation(getViewBoxWidth() - 60, 120)"
        [x]="2"
        [y]="2"
        [content]="getStoreContent(Player.ONE)"

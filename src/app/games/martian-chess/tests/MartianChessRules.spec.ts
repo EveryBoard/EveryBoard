@@ -142,7 +142,7 @@ describe('MartianChessRules', () => {
         // When moving diagonally of one step one pawn
         const move: MartianChessMove = MartianChessMove.from(new Coord(1, 5), new Coord(0, 4)).get();
 
-        // Then the move should be legal and the board changed
+        // Then the move should succeed and the board changed
         const expectedBoard: Table<MartianChessPiece> = [
             [C, C, B, _],
             [C, B, A, _],
@@ -164,7 +164,7 @@ describe('MartianChessRules', () => {
         // When moving horizontally of one step one drone
         const move: MartianChessMove = MartianChessMove.from(new Coord(1, 7), new Coord(0, 7)).get();
 
-        // Then the move should be legal and the board changed
+        // Then the move should succeed and the board changed
         const expectedBoard: Table<MartianChessPiece> = [
             [C, C, B, _],
             [C, B, A, _],
@@ -196,7 +196,7 @@ describe('MartianChessRules', () => {
         // When moving vertically of two step one drone
         const move: MartianChessMove = MartianChessMove.from(new Coord(0, 7), new Coord(0, 5)).get();
 
-        // Then the move should be legal and the board changed
+        // Then the move should succeed and the board changed
         const expectedBoard: Table<MartianChessPiece> = [
             [C, C, B, _],
             [C, B, A, _],
@@ -228,7 +228,7 @@ describe('MartianChessRules', () => {
         // When moving a drone of one diagonal step
         const move: MartianChessMove = MartianChessMove.from(new Coord(0, 0), new Coord(1, 1)).get();
 
-        // Then the move should be legal
+        // Then the move should succeed
         const expectedBoard: Table<MartianChessPiece> = [
             [_, A, _, _],
             [A, B, _, _],
@@ -250,7 +250,7 @@ describe('MartianChessRules', () => {
         // When moving a drone of two diagonal steps
         const move: MartianChessMove = MartianChessMove.from(new Coord(3, 5), new Coord(1, 3)).get();
 
-        // Then the move should be legal
+        // Then the move should succeed
         const expectedBoard: Table<MartianChessPiece> = [
             [C, C, B, _],
             [C, B, A, _],
@@ -282,7 +282,7 @@ describe('MartianChessRules', () => {
         // When moving queen a long line
         const move: MartianChessMove = MartianChessMove.from(new Coord(0, 0), new Coord(0, 7)).get();
 
-        // Then the move should be legal and the board changed
+        // Then the move should succeed and the board changed
         const expectedBoard: Table<MartianChessPiece> = [
             [_, C, B, _],
             [_, _, _, _],
@@ -351,7 +351,7 @@ describe('MartianChessRules', () => {
             // When moving a piece
             const move: MartianChessMove = MartianChessMove.from(new Coord(1, 5), new Coord(0, 4)).get();
 
-            // Then the move should be legal and saved in the state
+            // Then the move should succeed and saved in the state
             const expectedBoard: Table<MartianChessPiece> = [
                 [C, C, B, _],
                 [C, B, A, _],
@@ -419,7 +419,7 @@ describe('MartianChessRules', () => {
             // When moving a pawn on a drone
             const move: MartianChessMove = MartianChessMove.from(new Coord(1, 7), new Coord(2, 6)).get();
 
-            // Then the move should be legal and a queen created
+            // Then the move should succeed and a queen created
             const expectedBoard: Table<MartianChessPiece> = [
                 [A, _, _, _],
                 [_, _, _, _],
@@ -451,7 +451,7 @@ describe('MartianChessRules', () => {
             // When moving a pawn on a drone
             const move: MartianChessMove = MartianChessMove.from(new Coord(1, 7), new Coord(2, 6)).get();
 
-            // Then the move should be legal and a queen created
+            // Then the move should succeed and a queen created
             const expectedBoard: Table<MartianChessPiece> = [
                 [A, _, _, _],
                 [_, _, _, _],
@@ -483,7 +483,7 @@ describe('MartianChessRules', () => {
             // When moving a pawn on a drone
             const move: MartianChessMove = MartianChessMove.from(new Coord(1, 7), new Coord(2, 6)).get();
 
-            // Then the move should be legal and a queen created
+            // Then the move should succeed and a queen created
             const reason: string = MartianChessFailure.CANNOT_CAPTURE_YOUR_OWN_PIECE_NOR_PROMOTE_IT();
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
@@ -505,7 +505,7 @@ describe('MartianChessRules', () => {
             // When moving a pawn on another
             const move: MartianChessMove = MartianChessMove.from(new Coord(1, 7), new Coord(2, 6)).get();
 
-            // Then the move should be legal and a queen created
+            // Then the move should succeed and a queen created
             const reason: string = MartianChessFailure.CANNOT_CAPTURE_YOUR_OWN_PIECE_NOR_PROMOTE_IT();
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
@@ -541,7 +541,7 @@ describe('MartianChessRules', () => {
                 // When moving the last piece out of your territory
                 const move: MartianChessMove = MartianChessMove.from(new Coord(1, 0), new Coord(1, 7)).get();
 
-                // Then the move should be legal and a queen captured
+                // Then the move should succeed and a queen captured
                 const expectedBoard: Table<MartianChessPiece> = [
                     [_, _, _, _],
                     [_, _, _, _],
@@ -585,7 +585,7 @@ describe('MartianChessRules', () => {
                 // When moving the last piece out of your territory
                 const move: MartianChessMove = MartianChessMove.from(new Coord(1, 7), new Coord(1, 0)).get();
 
-                // Then the move should be legal and a queen captured
+                // Then the move should succeed and a queen captured
                 const expectedBoard: Table<MartianChessPiece> = [
                     [C, C, B, _],
                     [_, _, _, _],
@@ -651,7 +651,7 @@ describe('MartianChessRules', () => {
                 // When calling the clock
                 const move: MartianChessMove = MartianChessMove.from(new Coord(1, 7), new Coord(0, 7), true).get();
 
-                // Then the move should be legal and a queen created
+                // Then the move should succeed and a queen created
                 const expectedBoard: Table<MartianChessPiece> = [
                     [C, C, B, _],
                     [C, B, A, _],

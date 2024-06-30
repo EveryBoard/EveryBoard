@@ -95,7 +95,7 @@ describe('ConnectSixAlignmentMinimax', () => {
 
     it('should block double-open four at level two', () => {
         // Given a minimax at level two
-        // And an board where current opponent could win if current player does not block them (..XXXX..)
+        // And a board where current opponent could win if current player does not block them (..XXXX..)
         const board: Table<PlayerOrNone> = [
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],

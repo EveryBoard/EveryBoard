@@ -146,13 +146,13 @@ export class QuixoRules extends ConfigurableRules<QuixoMove, QuixoState, QuixoCo
         const y: number = move.coord.y;
         const direction: Orthogonal = move.direction;
         Utils.assert(x !== (state.getWidth() - 1) || direction !== Orthogonal.RIGHT,
-                     `Invalid direction: pawn on the right side can't be moved to the right.`);
+                     `Invalid direction: piece on the right side can't be moved to the right.`);
         Utils.assert(y !== (state.getHeight() - 1) || direction !== Orthogonal.DOWN,
-                     `Invalid direction: pawn on the bottom side can't be moved down.`);
+                     `Invalid direction: piece on the bottom side can't be moved down.`);
         Utils.assert(x !== 0 || direction !== Orthogonal.LEFT,
-                     `Invalid direction: pawn on the left side can't be moved to the left.`);
+                     `Invalid direction: piece on the left side can't be moved to the left.`);
         Utils.assert(y !== 0 || direction !== Orthogonal.UP,
-                     `Invalid direction: pawn on the top side can't be moved up.`);
+                     `Invalid direction: piece on the top side can't be moved up.`);
     }
 
     public override applyLegalMove(move: QuixoMove, state: QuixoState, _config: MGPOptional<QuixoConfig>, _info: void)

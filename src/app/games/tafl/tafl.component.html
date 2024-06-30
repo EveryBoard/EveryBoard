@@ -5,7 +5,7 @@
     <g *ngFor="let line of board; index as y">
         <g *ngFor="let c of line; index as x"
            id="click-{{ x }}-{{ y }}"
-           [attr.transform]="'translate(' + (SPACE_SIZE * x) + ', ' + (SPACE_SIZE * y) + ')'"
+           [attr.transform]="getTranslationAtXY(x, y)"
            (click)="onClick(x, y)" >
             <rect id="space-{{ x }}-{{ y }}"
                   x="0" y="0"

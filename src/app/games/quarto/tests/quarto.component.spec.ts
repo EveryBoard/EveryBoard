@@ -70,7 +70,7 @@ describe('QuartoComponent', () => {
             await testUtils.expectClickSuccess('#click-piece-1');
 
             // When clicking on a square
-            // Then the move should be accepted
+            // Then the move should succeed
             const move: QuartoMove = new QuartoMove(0, 0, QuartoPiece.AAAB);
             await testUtils.expectMoveSuccess('#click-coord-0-0', move);
         }));
@@ -80,7 +80,7 @@ describe('QuartoComponent', () => {
             await testUtils.expectClickSuccess('#click-coord-0-0');
 
             // When clicking on a piece
-            // Then the move should be accepted
+            // Then the move should succeed
             const move: QuartoMove = new QuartoMove(0, 0, QuartoPiece.AAAB);
             await testUtils.expectMoveSuccess('#click-piece-1', move);
         }));
@@ -98,7 +98,7 @@ describe('QuartoComponent', () => {
             await testUtils.setupState(state);
 
             // When clicking on the last empty square
-            // Then the move should be accepted
+            // Then the move should succeed
             const move: QuartoMove = new QuartoMove(3, 3, QuartoPiece.EMPTY);
             await testUtils.expectMoveSuccess('#click-coord-3-3', move);
         }));

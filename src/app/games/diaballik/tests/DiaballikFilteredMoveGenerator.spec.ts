@@ -41,7 +41,7 @@ describe('DiaballikFilteredMoveGenerator of length 3', () => {
         // Given the initial node
         const node: DiaballikNode = new DiaballikNode(DiaballikRules.get().getInitialState());
 
-        // When computing the list of moves
+        // When listing the moves
         const moves: DiaballikMove[] = moveGenerator.getListMoves(node, defaultConfig);
 
         // Then it should have all interesting move options, which is 138 moves
@@ -63,7 +63,7 @@ describe('DiaballikFilteredMoveGenerator', () => {
             // Given a node
             const node: DiaballikNode = new DiaballikNode(DiaballikRules.get().getInitialState());
 
-            // When computing the list of moves
+            // When listing the moves
             const moves: DiaballikMove[] = moveGenerator.getListMoves(node, defaultConfig);
 
             // Then it should have only n-step moves

@@ -125,8 +125,8 @@ export class QuartoComponent extends RectangularGameComponent<QuartoRules,
         this.chosen = MGPOptional.of(new Coord(x, y));
     }
 
-    public isRemaining(pawn: number): boolean {
-        return QuartoState.isGivable(QuartoPiece.ofInt(pawn), this.board, this.pieceInHand);
+    public isRemaining(piece: number): boolean {
+        return QuartoState.isGivable(QuartoPiece.ofInt(piece), this.board, this.pieceInHand);
     }
 
     public getSquareClasses(x: number, y: number): string[] {
