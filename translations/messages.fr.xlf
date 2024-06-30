@@ -3305,6 +3305,10 @@
         <source>Rightmost Focus</source>
         <target>Priorité de droite</target>
       </trans-unit>
+      <trans-unit id="529510153551286303" datatype="html">
+        <source>Increment</source>
+        <target>Incrémentation</target>
+      </trans-unit>
       <trans-unit id="6180360850656792663" datatype="html">
         <source>Full Board</source>
         <target>Plateau complet</target>

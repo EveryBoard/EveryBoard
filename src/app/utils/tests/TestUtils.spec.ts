@@ -444,7 +444,7 @@ export class ComponentTestUtils<C extends AbstractGameComponent, P extends Compa
         );
         await this.gameComponent.updateBoardAndRedraw(false);
         if (params.previousMove !== undefined) {
-            await this.gameComponent.showLastMove(params.previousMove, config);
+            await this.gameComponent.showLastMove(params.previousMove);
         }
         this.forceChangeDetection();
     }

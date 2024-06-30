@@ -579,8 +579,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         await super.onCancelMove(reason);
         if (this.gameComponent.node.previousMove.isPresent()) {
             const move: Move = this.gameComponent.node.previousMove.get();
-            const config: MGPOptional<RulesConfig> = await this.getConfig();
-            await this.gameComponent.showLastMove(move, config);
+            await this.gameComponent.showLastMove(move);
         }
         this.cdr.detectChanges();
     }

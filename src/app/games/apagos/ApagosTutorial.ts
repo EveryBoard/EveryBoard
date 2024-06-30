@@ -1,11 +1,12 @@
 import { ApagosMove } from 'src/app/games/apagos/ApagosMove';
 import { ApagosState } from 'src/app/games/apagos/ApagosState';
 import { Tutorial, TutorialStep } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStep';
-import { ApagosCoord } from './ApagosCoord';
 import { Player } from 'src/app/jscaip/Player';
-import { MGPValidation } from '@everyboard/lib';
-import { ApagosRules } from './ApagosRules';
+import { MGPOptional, MGPValidation } from '@everyboard/lib';
+import { ApagosConfig, ApagosRules } from './ApagosRules';
 import { TutorialStepMessage } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
+
+const defaultConfig: MGPOptional<ApagosConfig> = ApagosRules.get().getDefaultRulesConfig();
 
 export class ApagosTutorial extends Tutorial {
 
@@ -13,7 +14,7 @@ export class ApagosTutorial extends Tutorial {
         TutorialStep.informational(
             TutorialStepMessage.INITIAL_BOARD_AND_OBJECT_OF_THE_GAME(),
             $localize`At Apagos, there are 4 squares, each of them has a fixed number of holes for pieces. Each player starts with 10 pieces. Dark pieces belong to the first player, light pieces belong to the second one. The game ends when no one can play. The player owning the most pieces in the rightmost square wins!`,
-            ApagosRules.get().getInitialState(),
+            ApagosRules.get().getInitialState(defaultConfig),
         ),
         TutorialStep.anyMove(
             $localize`Drop`,
@@ -23,7 +24,7 @@ export class ApagosTutorial extends Tutorial {
                 [0, 0, 0, 0],
                 [7, 5, 3, 1],
             ], 9, 10),
-            ApagosMove.drop(ApagosCoord.ZERO, Player.ZERO),
+            ApagosMove.drop(0, Player.ZERO),
             TutorialStepMessage.CONGRATULATIONS(),
         ),
         TutorialStep.fromPredicate(
@@ -34,7 +35,7 @@ export class ApagosTutorial extends Tutorial {
                 [0, 1, 0, 0],
                 [7, 5, 3, 1],
             ], 9, 9),
-            ApagosMove.transfer(ApagosCoord.TWO, ApagosCoord.ZERO).get(),
+            ApagosMove.transfer(2, 0).get(),
 
             (move: ApagosMove, _previous: ApagosState, _result: ApagosState) => {
                 if (move.isDrop()) {
@@ -52,7 +53,7 @@ export class ApagosTutorial extends Tutorial {
                 [2, 1, 3, 1],
                 [3, 1, 7, 5],
             ], 2, 3),
-            ApagosMove.drop(ApagosCoord.TWO, Player.ONE),
+            ApagosMove.drop(2, Player.ONE),
 
             (move: ApagosMove, _previous: ApagosState, _result: ApagosState) => {
                 if (move.isDrop()) {

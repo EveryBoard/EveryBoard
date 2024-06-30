@@ -13,7 +13,6 @@ import { TrexoFailure } from './TrexoFailure';
 import { Ordinal } from 'src/app/jscaip/Ordinal';
 import { MCTS } from 'src/app/jscaip/AI/MCTS';
 import { TrexoMoveGenerator } from './TrexoMoveGenerator';
-import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 import { TrexoAlignmentMinimax } from './TrexoAlignmentMinimax';
 
 interface PieceOnBoard {
@@ -151,7 +150,7 @@ export class TrexoComponent extends ParallelogramGameComponent<TrexoRules, Trexo
         this.up = this.getViewBoxUp();
     }
 
-    public override async showLastMove(move: TrexoMove, config: MGPOptional<EmptyRulesConfig>): Promise<void> {
+    public override async showLastMove(move: TrexoMove): Promise<void> {
         this.lastMoved = [
             move.getZero(),
             move.getOne(),

@@ -4,15 +4,15 @@ import { MCTS } from 'src/app/jscaip/AI/MCTS';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { MGPOptional, MGPValidation } from '@everyboard/lib';
-import { ApagosCoord } from './ApagosCoord';
 import { ApagosFailure } from './ApagosFailure';
 import { ApagosMove } from './ApagosMove';
 import { ApagosMoveGenerator } from './ApagosMoveGenerator';
-import { ApagosRules } from './ApagosRules';
+import { ApagosConfig, ApagosRules } from './ApagosRules';
 import { ApagosSquare } from './ApagosSquare';
 import { ApagosState } from './ApagosState';
 import { ApagosFullBoardMinimax } from './ApagosFullBoardMinimax';
 import { ApagosRightmostMinimax } from './ApagosRightmostMinimax';
+import { ViewBox } from 'src/app/components/game-components/GameComponentUtils';
 
 interface PieceLocation {
 
@@ -33,11 +33,9 @@ interface DropArrow {
     templateUrl: './apagos.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
 })
-export class ApagosComponent extends GameComponent<ApagosRules, ApagosMove, ApagosState> {
+export class ApagosComponent extends GameComponent<ApagosRules, ApagosMove, ApagosState, ApagosConfig> {
     public PlayerOrNone: typeof PlayerOrNone = PlayerOrNone;
 
-    public readonly BOARD_WIDTH: number = 4 * this.SPACE_SIZE;
-    public readonly BOARD_HEIGHT: number = 4.5 * this.SPACE_SIZE;
     public board: readonly ApagosSquare[];
 
     public remainingZero: number;
@@ -45,9 +43,13 @@ export class ApagosComponent extends GameComponent<ApagosRules, ApagosMove, Apag
 
     public ARROW_COORD: string = ApagosComponent.getArrowCoord();
 
-    public PIECES_PER_PLAYER: number = ApagosRules.PIECES_PER_PLAYER;
-
     public PIECE_RADIUS: number;
+
+    public PIECE_DELTA: number = 0;
+
+    public BOARD_WIDTH: number;
+
+    public BOARD_HEIGHT: number;
 
     public lastMoveSquares: number[];
 
@@ -82,8 +84,10 @@ export class ApagosComponent extends GameComponent<ApagosRules, ApagosMove, Apag
         ];
         this.encoder = ApagosMove.encoder;
         this.hasAsymmetricBoard = true;
+    }
 
-        this.PIECE_RADIUS = (2 * this.SPACE_SIZE) / (this.PIECES_PER_PLAYER + 0.5);
+    public getViewBox(): ViewBox {
+        return new ViewBox(0, 0, this.BOARD_WIDTH, this.BOARD_HEIGHT).expandAll(this.STROKE_WIDTH / 2);
     }
 
     public override cancelMoveAttempt(): void {
@@ -94,6 +98,12 @@ export class ApagosComponent extends GameComponent<ApagosRules, ApagosMove, Apag
     public async updateBoard(_triggerAnimation: boolean): Promise<void> {
         const state: ApagosState = this.getState();
         this.board = state.board;
+        const width: number = this.board.length;
+        this.BOARD_WIDTH = width * this.SPACE_SIZE;
+        this.BOARD_HEIGHT = (width + 0.5) * this.SPACE_SIZE;
+        const nPieces: number = state.getMaxPiecesPerPlayer();
+        this.PIECE_RADIUS = ((width - 1) * this.SPACE_SIZE) / (nPieces + 1);
+        this.PIECE_DELTA = this.PIECE_RADIUS;
         this.remainingZero = state.remaining.get(Player.ZERO);
         this.remainingOne = state.remaining.get(Player.ONE);
         this.showPossibleDrops();
@@ -114,10 +124,11 @@ export class ApagosComponent extends GameComponent<ApagosRules, ApagosMove, Apag
     }
 
     public showLastDrop(lastMove: ApagosMove): void {
+        const width: number = this.getConfig().get().width;
         const piece: Player = lastMove.piece.get();
-        let higherIndex: number = lastMove.landing.x;
+        let higherIndex: number = lastMove.landing;
         this.lastMoveSquares = [higherIndex];
-        if (lastMove.landing.x !== 3) {
+        if (lastMove.landing !== width - 1) {
             higherIndex += 1;
             this.lastMoveSquares.push(higherIndex);
         }
@@ -142,7 +153,7 @@ export class ApagosComponent extends GameComponent<ApagosRules, ApagosMove, Apag
     public showLastTransfer(lastMove: ApagosMove): void {
         const previousState: ApagosState = this.getPreviousState();
         const previousPlayer: Player = previousState.getCurrentPlayer();
-        const leftSquare: number = lastMove.starting.get().x;
+        const leftSquare: number = lastMove.starting.get();
         const previousSquare: ApagosSquare = previousState.board[leftSquare];
         const leftPieceIndex: number = this.getLowestPlayerPiece(previousSquare, previousPlayer);
         this.leftPiece = MGPOptional.of({
@@ -150,7 +161,7 @@ export class ApagosComponent extends GameComponent<ApagosRules, ApagosMove, Apag
             piece: leftPieceIndex,
         });
 
-        const landingCoord: number = lastMove.landing.x;
+        const landingCoord: number = lastMove.landing;
         const landedSquare: ApagosSquare = this.board[landingCoord];
         const landedPieceIndex: number = this.getLowestPlayerPiece(landedSquare, previousPlayer);
         this.lastMoveDrop = MGPOptional.of({
@@ -162,7 +173,7 @@ export class ApagosComponent extends GameComponent<ApagosRules, ApagosMove, Apag
     private showPossibleDrops(): void {
         this.displayableArrow = [];
         const state: ApagosState = this.getState();
-        for (let x: number = 0; x < 4; x++) {
+        for (let x: number = 0; x < state.board.length; x++) {
             if (state.board[x].isFull() === false) {
                 if (state.remaining.get(Player.ZERO) > 0) {
                     this.displayableArrow.push({ x, player: Player.ZERO });
@@ -198,7 +209,7 @@ export class ApagosComponent extends GameComponent<ApagosRules, ApagosMove, Apag
     }
 
     public getBlockTransform(x: number): string {
-        const yOffset: number = ((3 - x) * this.SPACE_SIZE) + (0.5 * this.SPACE_SIZE);
+        const yOffset: number = ((this.board.length - 1 - x) * this.SPACE_SIZE) + (0.5 * this.SPACE_SIZE);
         const xOffset: number = x * this.SPACE_SIZE;
         return 'translate(' + xOffset + ', ' + yOffset + ')';
     }
@@ -219,13 +230,12 @@ export class ApagosComponent extends GameComponent<ApagosRules, ApagosMove, Apag
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }
-        const clicked: ApagosCoord = ApagosCoord.of(x);
         if (this.selectedPiece.isPresent()) {
             const square: number = this.selectedPiece.get().square;
-            const move: ApagosMove = ApagosMove.transfer(ApagosCoord.of(square), clicked).get();
+            const move: ApagosMove = ApagosMove.transfer(square, x).get();
             return this.chooseMove(move);
         } else {
-            const move: ApagosMove = ApagosMove.drop(clicked, player);
+            const move: ApagosMove = ApagosMove.drop(x, player);
             return this.chooseMove(move);
         }
     }
@@ -309,7 +319,7 @@ export class ApagosComponent extends GameComponent<ApagosRules, ApagosMove, Apag
     }
 
     public getRemainingPieceCx(x: number): number {
-        return (x + 0.5) * this.PIECE_RADIUS * 1.5;
+        return (1 + x) * this.PIECE_DELTA;
     }
 
 }
