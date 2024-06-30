@@ -15,10 +15,14 @@
                                         <p i18n>Potential opponents will appear here. If no one comes, you can:</p>
                                     <div class="columns is-gapless mt-2">
                                         <div class="column">
-                                            <button class="button is-fullwidth" i18n>Look for other games</button>
+                                            <button class="button is-fullwidth"
+                                                    (click)="goToLobby()"
+                                                    i18n>Look for other games</button>
                                         </div>
                                         <div class="column">
-                                            <button class="button is-fullwidth" i18n>Play against AI</button>
+                                            <button class="button is-fullwidth"
+                                                    (click)="playLocally()"
+                                                    i18n>Play against AI</button>
                                         </div>
                                     </div>
                                     </div>
@@ -167,19 +171,23 @@
                                                  (updateCallback)="saveRulesConfig($event)">
                         </app-rules-configuration>
                     </div>
-                    <div class="field mt-2">
-                        <div class="buttons has-addons">
+                    <div class="columns is-gapless mt-2">
+                        <div class="column">
                             <button class="button is-fullwidth is-success"
                                     [disabled]="!(viewInfo.canProposeConfig && rulesConfig.isPresent())"
                                     (click)="proposeConfig()"
                                     id="proposeConfig"
                                     i18n>Propose configuration</button>
+                        </div>
+                        <div class="column">
                             <button class="button is-fullwidth"
                                     id="reviewConfig"
                                     *ngIf="viewInfo.canReviewConfig"
                                     (click)="changeConfig()"
                                     i18n
                             >Change configuration</button>
+                        </div>
+                        <div class="column">
                             <button class="button is-fullwidth is-danger"
                                     id="cancel"
                                     (click)="cancelGameCreation()"
@@ -230,7 +238,7 @@
                                                      [editable]="false"
                                                      [rulesConfigToDisplay]="currentConfigRoom?.rulesConfig">
                             </app-rules-configuration>
-                            <button class="button is-primary"
+                            <button class="button is-primary is-fullwidth mt-2"
                                     (click)="acceptConfig()"
                                     id="acceptConfig"
                                     i18n

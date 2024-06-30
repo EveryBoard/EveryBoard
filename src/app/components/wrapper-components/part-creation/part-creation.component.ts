@@ -126,10 +126,6 @@ export class PartCreationComponent implements OnInit, OnDestroy {
                        private readonly messageDisplayer: MessageDisplayer,
                        private readonly cdr: ChangeDetectorRef)
     {
-        // TODO: the "look for other games" and "play locally" button should cancel current game
-        // TODO: play locally should get directly to the same game
-        // TODO: apagos online, joiner doesn't see the board
-        // TODO: voir si il y a moyen de rendre les checkbox plus visible, en particulier sous chrome
     }
 
     public async ngOnInit(): Promise<void> {
@@ -343,12 +339,12 @@ export class PartCreationComponent implements OnInit, OnDestroy {
 
     public async proposeConfig(): Promise<void> {
         const partType: string = this.getForm('partType').value;
-        const maxMoveDur: number = this.getForm('maximalMoveDuration').value;
+        const maxMoveDuration: number = this.getForm('maximalMoveDuration').value;
         const firstPlayer: string = this.getForm('firstPlayer').value;
         const totalPartDuration: number = this.getForm('totalPartDuration').value;
         return this.configRoomService.proposeConfig(this.partId,
                                                     PartType.of(partType),
-                                                    maxMoveDur,
+                                                    maxMoveDuration,
                                                     FirstPlayer.of(firstPlayer),
                                                     totalPartDuration,
                                                     this.rulesConfig);
@@ -368,7 +364,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
             const configRoom: ConfigRoom = configRoomOpt.get();
             const oldConfigRoom: ConfigRoom | null = this.currentConfigRoom;
             this.currentConfigRoom = configRoom;
-            if (configRoom.rulesConfig !== undefined && Object.keys(configRoom.rulesConfig).length > 0) {
+            if (configRoom.rulesConfig !== undefined) {
                 this.saveRulesConfig(MGPOptional.of(configRoom.rulesConfig));
             }
             if (this.chosenOpponentJustLeft(oldConfigRoom, configRoom) &&
@@ -602,5 +598,16 @@ export class PartCreationComponent implements OnInit, OnDestroy {
             await this.currentGameService.removeCurrentGame();
             await this.configRoomService.removeCandidate(this.partId, this.connectedUserService.user.get().id);
         }
+    }
+
+    public async goToLobby(): Promise<void> {
+        await this.cancelGameCreation();
+        await this.router.navigate(['/lobby']);
+    }
+
+    public async playLocally(): Promise<void> {
+        await this.cancelGameCreation();
+        const urlName: string = this.getGameUrlName();
+        await this.router.navigate(['/local', urlName]);
     }
 }
