@@ -130,9 +130,6 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         // TODO: play locally should get directly to the same game
         // TODO: apagos online, joiner doesn't see the board
         // TODO: voir si il y a moyen de rendre les checkbox plus visible, en particulier sous chrome
-        // TODO: OGWC bouton "add 5 minutes" à côté du temps, même "add 30 secondes"
-        // TODO: gros rectangle de couleur comme en local
-        // TODO: enlever le mot clé "vs."
     }
 
     public async ngOnInit(): Promise<void> {

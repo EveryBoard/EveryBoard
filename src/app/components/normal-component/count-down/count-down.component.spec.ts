@@ -6,7 +6,7 @@ import { TestUtils } from '@everyboard/lib';
 import { CountDownComponent } from './count-down.component';
 import { Player } from 'src/app/jscaip/Player';
 
-fdescribe('CountDownComponent', () => {
+describe('CountDownComponent', () => {
 
     let testUtils: SimpleComponentTestUtils<CountDownComponent>;
 

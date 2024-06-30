@@ -1867,7 +1867,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
     });
 
     describe('Visuals', () => {
-        it('should highlight each player name in their respective color', fakeAsync(async() => {
+        fit('should highlight each player name in their respective color', fakeAsync(async() => {
             // Given a game that has been started
             await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER, PreparationOptions.dontWait);
 
@@ -1876,8 +1876,8 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             testUtils.detectChanges();
 
             // Then it should highlight the player's names
-            testUtils.expectElementToHaveClass('#playerZeroIndicator', 'player0-bg');
-            testUtils.expectElementToHaveClass('#playerOneIndicator', 'player1-bg');
+            testUtils.expectElementToHaveClass('#playerZeroIndicator', 'player0-bg-darker');
+            testUtils.expectElementToHaveClass('#playerOneIndicator', 'player1-bg-darker');
             tick(wrapper.configRoom.maximalMoveDuration * 1000);
         }));
 

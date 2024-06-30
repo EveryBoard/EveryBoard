@@ -33,7 +33,7 @@ import { UserService } from 'src/app/services/UserService';
 import { CurrentGameService } from 'src/app/services/CurrentGameService';
 import { addCandidate } from '../online-game-wrapper/online-game-wrapper.quarto.component.spec';
 
-fdescribe('PartCreationComponent', () => {
+describe('PartCreationComponent', () => {
 
     let testUtils: SimpleComponentTestUtils<PartCreationComponent>;
     let component: PartCreationComponent;
@@ -311,7 +311,7 @@ fdescribe('PartCreationComponent', () => {
             }));
         });
         describe('Chosing Opponent', () => {
-            fit('should modify config room, make proposal possible, and select opponent when choosing opponent', fakeAsync(async() => {
+            it('should modify config room, make proposal possible, and select opponent when choosing opponent', fakeAsync(async() => {
                 // Given a component with candidate present but not selected
                 awaitComponentInitialization();
                 await mockCandidateArrival();
