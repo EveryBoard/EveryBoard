@@ -140,8 +140,12 @@ export class ApagosRules extends ConfigurableRules<ApagosMove, ApagosState, Apag
                 return GameStatus.ONGOING;
             }
         }
-        const winner: PlayerOrNone = state.getPieceAt(width-1).getDominatingPlayer();
-        Utils.assert(winner.isPlayer(), 'winner can only be a player if the game is finished');
-        return GameStatus.getVictory(winner as Player);
+        for (let x: number = width - 1; x >= 0; x--) {
+            const dominating: PlayerOrNone = state.getPieceAt(x).getDominatingPlayer();
+            if (dominating.isPlayer()) {
+                return GameStatus.getVictory(dominating);
+            }
+        }
+        return GameStatus.DRAW;
     }
 }

@@ -123,28 +123,68 @@ describe('ApagosRules', () => {
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
     });
 
-    it('should know who is winning (Player.ZERO)', () => {
-        // Given a ended part state
-        const state: ApagosState = ApagosState.fromRepresentation(20, [
-            [7, 0, 0, 1],
-            [0, 5, 3, 0],
-            [7, 5, 3, 1],
-        ], 0, 0);
-        // Then we should know who won
-        const node: ApagosNode = new ApagosNode(state);
-        RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, defaultConfig);
-    });
+    describe('game status', () => {
 
-    it('should know who is winning (Player.ONE)', () => {
-        // Given a ended part state
-        const state: ApagosState = ApagosState.fromRepresentation(20, [
-            [7, 0, 1, 0],
-            [0, 5, 2, 1],
-            [7, 5, 3, 1],
-        ], 0, 0);
-        // Then we should know who won
-        const node: ApagosNode = new ApagosNode(state);
-        RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, defaultConfig);
+        it('should be ongoing if there are still non-full squares', () => {
+            // Given a state with non-full squares
+            const state: ApagosState = ApagosRules.get().getInitialState(defaultConfig);
+            const node: ApagosNode = new ApagosNode(state);
+            // When checking the game status
+            // Then it should be ongoing
+            RulesUtils.expectToBeOngoing(rules, node, defaultConfig);
+        });
+
+        it('should detect victory for Player.ZERO', () => {
+            // Given a ended state with victory from Player.ZERO
+            const state: ApagosState = ApagosState.fromRepresentation(20, [
+                [7, 0, 0, 1],
+                [0, 5, 3, 0],
+                [7, 5, 3, 1],
+            ], 0, 0);
+            const node: ApagosNode = new ApagosNode(state);
+            // When checking the game status
+            // Then it should be a victory for Player.ZERO
+            RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, defaultConfig);
+        });
+
+        it('should detect victory for Player.ONE', () => {
+            // Given a ended state with victory from Player.ONE
+            const state: ApagosState = ApagosState.fromRepresentation(20, [
+                [7, 0, 1, 0],
+                [0, 5, 2, 1],
+                [7, 5, 3, 1],
+            ], 0, 0);
+            const node: ApagosNode = new ApagosNode(state);
+            // When checking the game status
+            // Then it should be a victory for Player.ONE
+            RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, defaultConfig);
+        });
+
+        it('should detect victory in case where the last square is evenly divided', () => {
+            // Given a ended state with victory not on the last square
+            const state: ApagosState = ApagosState.fromRepresentation(20, [
+                [7, 0, 1, 1],
+                [0, 5, 2, 1],
+                [7, 5, 3, 2],
+            ], 0, 0);
+            const node: ApagosNode = new ApagosNode(state);
+            // When checking the game status
+            // Then it should still be a victory
+            RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, defaultConfig);
+        });
+
+        it('should detect draw', () => {
+            // Given a ended state that is a full draw
+            const state: ApagosState = ApagosState.fromRepresentation(20, [
+                [4, 3, 2, 1],
+                [4, 3, 2, 1],
+                [8, 6, 4, 2],
+            ], 0, 0);
+            const node: ApagosNode = new ApagosNode(state);
+            // When checking the game status
+            // Then it should be detected as a draw
+            RulesUtils.expectToBeDraw(rules, node, defaultConfig);
+        });
     });
 
 });
