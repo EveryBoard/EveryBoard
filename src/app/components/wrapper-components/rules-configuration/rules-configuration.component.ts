@@ -88,12 +88,13 @@ export class RulesConfigurationComponent extends BaseWrapperComponent implements
             formControl.disable();
         }
         formControl.valueChanges.subscribe(() => {
+            console.log('value changed')
             this.onUpdate();
         });
         return formControl;
     }
 
-    public onUpdate(): void {
+    private onUpdate(): void {
         // Utils.assert(this.editable, 'Only editors should be able to modify rules config');
         Utils.assert(this.chosenConfigName === 'Custom', 'Only customizable config should be modified!');
         const rulesConfig: RulesConfig = {};
