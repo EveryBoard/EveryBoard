@@ -35,7 +35,9 @@ export class HexodiaRules extends ConfigurableRules<HexodiaMove, HexodiaState, H
         new RulesConfigDescription<HexodiaConfig>({
             name: (): string => $localize`Hexodia`,
             config: {
-                size: new NumberConfig(12, () => $localize`Size`, MGPValidators.range(1, 99)),
+                size: new NumberConfig(12,
+                                       RulesConfigDescriptionLocalizable.SIZE,
+                                       MGPValidators.range(1, 99)),
                 nInARow: new NumberConfig(6,
                                           RulesConfigDescriptionLocalizable.ALIGNMENT_SIZE,
                                           MGPValidators.range(1, 99)),

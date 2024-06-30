@@ -57,7 +57,7 @@ describe('KamisadoRules', () => {
             // When moving one piece up vertically
             const move: KamisadoMove = KamisadoMove.of(new Coord(0, 7), new Coord(0, 6));
 
-            // Then the move should be legal
+            // Then the move should succeed
             const expectedBoard: Table<KamisadoPiece> = [
                 [_, o, p, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _],
@@ -125,7 +125,7 @@ describe('KamisadoRules', () => {
             // When passing
             const move: KamisadoMove = KamisadoMove.PASS;
 
-            // Then the move should be legal
+            // Then the move should succeed
             const expectedState: KamisadoState =
                 new KamisadoState(7, KamisadoColor.RED, MGPOptional.of(new Coord(1, 6)), true, board);
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);

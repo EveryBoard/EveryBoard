@@ -15,7 +15,7 @@ import { MancalaNode, MancalaRules } from '../../common/MancalaRules';
 describe('AwaleRules', () => {
 
     const rules: MancalaRules = AwaleRules.get();
-    const defaultConfig: MGPOptional<MancalaConfig> = rules.getDefaultRulesConfig();
+    const defaultConfig: MGPOptional<MancalaConfig> = AwaleRules.get().getDefaultRulesConfig();
 
     describe('generic tests', () => {
 
@@ -79,7 +79,7 @@ describe('AwaleRules', () => {
             ];
             const expectedState: MancalaState = new MancalaState(expectedBoard, 2, PlayerNumberMap.of(23, 23));
 
-            // Then the move should be legal
+            // Then the move should succeed
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         });
 
@@ -114,7 +114,7 @@ describe('AwaleRules', () => {
             // When current player player gives its last seed
             const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(5));
 
-            // Then the move should be legal and no monsoon should be done
+            // Then the move should succeed and no monsoon should be done
             const expectedBoard: Table<number> = [
                 [0, 0, 0, 0, 0, 0],
                 [0, 2, 0, 0, 0, 1],
@@ -281,7 +281,7 @@ describe('AwaleRules', () => {
             // When doing simple distribution from the leftmost house
             const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(0));
 
-            // Then the move should be legal and the store should contain one (so, the score)
+            // Then the move should succeed and the store should contain one (so, the score)
             const expectedBoard: Table<number> = [
                 [5, 5, 5, 4, 4, 4],
                 [0, 4, 4, 4, 4, 4],
@@ -301,7 +301,7 @@ describe('AwaleRules', () => {
             // When doing simple distribution ending in store
             const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(3));
 
-            // Then the move should be legal and the store should contain one (so, the score)
+            // Then the move should succeed and the store should contain one (so, the score)
             const expectedBoard: Table<number> = [
                 [4, 4, 4, 4, 4, 4],
                 [5, 5, 5, 0, 4, 4],
@@ -322,7 +322,7 @@ describe('AwaleRules', () => {
             // When doing a double distribution
             const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(3), [MancalaDistribution.of(0)]);
 
-            // Then the move should be legal and the store should contain one (so, the score)
+            // Then the move should succeed and the store should contain one (so, the score)
             const expectedState: MancalaState = new MancalaState([
                 [5, 5, 5, 5, 4, 4],
                 [0, 5, 5, 0, 4, 4],

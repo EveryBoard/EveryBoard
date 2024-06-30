@@ -16,7 +16,6 @@ import { Player } from 'src/app/jscaip/Player';
 import { ApagosTutorial } from 'src/app/games/apagos/ApagosTutorial';
 import { ApagosRules } from 'src/app/games/apagos/ApagosRules';
 import { ApagosMove } from 'src/app/games/apagos/ApagosMove';
-import { ApagosCoord } from 'src/app/games/apagos/ApagosCoord';
 import { ConspirateursTutorial } from 'src/app/games/conspirateurs/ConspirateursTutorial';
 import { ConspirateursRules } from 'src/app/games/conspirateurs/ConspirateursRules';
 import { ConspirateursMoveSimple, ConspirateursMoveJump } from 'src/app/games/conspirateurs/ConspirateursMove';
@@ -76,6 +75,7 @@ import { YinshTutorial, YinshTutorialMessages } from 'src/app/games/yinsh/YinshT
 import { YinshCapture, YinshMove } from 'src/app/games/yinsh/YinshMove';
 import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 import { TutorialStepMessage } from './TutorialStepMessage';
+
 describe('TutorialGameWrapperComponent (games)', () => {
     describe('Game should load correctly', () => {
         for (const gameInfo of GameInfo.ALL_GAMES()) {
@@ -111,17 +111,17 @@ describe('TutorialGameWrapperComponent (games)', () => {
                 [
                     ApagosRules.get(),
                     apagosTutorial[2],
-                    ApagosMove.drop(ApagosCoord.ZERO, Player.ZERO),
+                    ApagosMove.drop(0, Player.ZERO),
                     MGPValidation.failure(`This move is a drop, please do a transfer!`),
                 ], [
                     ApagosRules.get(),
                     apagosTutorial[3],
-                    ApagosMove.drop(ApagosCoord.TWO, Player.ZERO),
+                    ApagosMove.drop(2, Player.ZERO),
                     MGPValidation.failure(`You actively made your opponent win!`),
                 ], [
                     ApagosRules.get(),
                     apagosTutorial[3],
-                    ApagosMove.transfer(ApagosCoord.THREE, ApagosCoord.TWO).get(),
+                    ApagosMove.transfer(3, 2).get(),
                     MGPValidation.failure(`Wrong choice, your opponent will win in the next turn no matter which piece is dropped!`),
                 ], [
                     ConspirateursRules.get(),

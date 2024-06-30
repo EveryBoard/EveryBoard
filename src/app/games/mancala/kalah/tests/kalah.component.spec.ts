@@ -247,7 +247,7 @@ describe('KalahComponent', () => {
             const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(0),
                                                      [MancalaDistribution.of(4), MancalaDistribution.of(1)]);
 
-            // Then the move should be legal
+            // Then the move should succeed
             await mancalaTestUtils.expectMancalaMoveSuccess('#click-1-0', move, defaultConfig.get());
         }));
 
@@ -265,7 +265,7 @@ describe('KalahComponent', () => {
             const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(4),
                                                      [MancalaDistribution.of(0), MancalaDistribution.of(5)]);
 
-            // Then the move should be legal
+            // Then the move should succeed
             await mancalaTestUtils.expectMancalaMoveSuccess('#click-5-1', move, defaultConfig.get());
         }));
 

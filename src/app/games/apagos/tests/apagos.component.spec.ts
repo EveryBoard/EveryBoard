@@ -3,15 +3,16 @@ import { fakeAsync } from '@angular/core/testing';
 import { Player } from 'src/app/jscaip/Player';
 import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { ApagosComponent } from '../apagos.component';
-import { ApagosCoord } from '../ApagosCoord';
 import { ApagosFailure } from '../ApagosFailure';
 import { ApagosMove } from '../ApagosMove';
 import { ApagosState } from '../ApagosState';
-import { ApagosRules } from '../ApagosRules';
+import { ApagosConfig, ApagosRules } from '../ApagosRules';
+import { MGPOptional } from '@everyboard/lib';
 
 describe('ApagosComponent', () => {
 
     let testUtils: ComponentTestUtils<ApagosComponent>;
+    const defaultConfig: MGPOptional<ApagosConfig> = ApagosRules.get().getDefaultRulesConfig();
 
     beforeEach(fakeAsync(async() => {
         testUtils = await ComponentTestUtils.forGame<ApagosComponent>('Apagos');
@@ -39,7 +40,7 @@ describe('ApagosComponent', () => {
 
             // When clicking on the light arrow above the second square
             // Then the move should succeed
-            const move: ApagosMove = ApagosMove.drop(ApagosCoord.ONE, Player.ONE);
+            const move: ApagosMove = ApagosMove.drop(1, Player.ONE);
             await testUtils.expectMoveSuccess('#dropArrow_one_1', move);
         }));
 
@@ -86,8 +87,8 @@ describe('ApagosComponent', () => {
 
         it('should hide last move when doing first click', fakeAsync(async() => {
             //  Given a board with a last move
-            const previousState: ApagosState = ApagosRules.get().getInitialState();
-            const previousMove: ApagosMove = ApagosMove.drop(ApagosCoord.THREE, Player.ZERO);
+            const previousState: ApagosState = ApagosRules.get().getInitialState(defaultConfig);
+            const previousMove: ApagosMove = ApagosMove.drop(3, Player.ZERO);
             const state: ApagosState = ApagosState.fromRepresentation(1, [
                 [0, 0, 0, 1],
                 [0, 0, 1, 0],
@@ -118,7 +119,7 @@ describe('ApagosComponent', () => {
 
             // When clicking on drop arrow
             // Then the move should succeed
-            const move: ApagosMove = ApagosMove.transfer(ApagosCoord.TWO, ApagosCoord.ONE).get();
+            const move: ApagosMove = ApagosMove.transfer(2, 1).get();
             await testUtils.expectMoveSuccess('#dropArrow_zero_1', move);
         }));
 
@@ -212,7 +213,7 @@ describe('ApagosComponent', () => {
                 [5, 0, 0, 0],
                 [7, 3, 5, 1],
             ], 5, 5);
-            const previousMove: ApagosMove = ApagosMove.drop(ApagosCoord.ONE, Player.ZERO);
+            const previousMove: ApagosMove = ApagosMove.drop(1, Player.ZERO);
             const state: ApagosState = ApagosState.fromRepresentation(2, [
                 [2, 0, 2, 0],
                 [5, 0, 0, 0],
@@ -234,7 +235,7 @@ describe('ApagosComponent', () => {
                 [1, 0, 0, 2],
                 [7, 3, 1, 5],
             ], 6, 5);
-            const previousMove: ApagosMove = ApagosMove.transfer(ApagosCoord.THREE, ApagosCoord.ZERO).get();
+            const previousMove: ApagosMove = ApagosMove.transfer(3, 0).get();
             const state: ApagosState = ApagosState.fromRepresentation(3, [
                 [1, 0, 0, 2],
                 [1, 0, 0, 2],
@@ -259,7 +260,7 @@ describe('ApagosComponent', () => {
                 [1, 0, 0, 2],
                 [7, 3, 1, 5],
             ], 6, 5);
-            const previousMove: ApagosMove = ApagosMove.transfer(ApagosCoord.THREE, ApagosCoord.ZERO).get();
+            const previousMove: ApagosMove = ApagosMove.transfer(3, 0).get();
             const state: ApagosState = ApagosState.fromRepresentation(2, [
                 [1, 0, 0, 1],
                 [2, 0, 0, 1],
@@ -277,8 +278,8 @@ describe('ApagosComponent', () => {
 
         it('should show last dropped piece (from drop by Player.ZERO)', fakeAsync(async() => {
             // Given a board with a previous drop by Player.ZERO
-            const previousState: ApagosState = ApagosRules.get().getInitialState();
-            const previousMove: ApagosMove = ApagosMove.drop(ApagosCoord.ONE, Player.ONE);
+            const previousState: ApagosState = ApagosRules.get().getInitialState(defaultConfig);
+            const previousMove: ApagosMove = ApagosMove.drop(1, Player.ONE);
             const state: ApagosState = ApagosState.fromRepresentation(1, [
                 [0, 0, 0, 1],
                 [0, 0, 0, 0],
@@ -294,8 +295,8 @@ describe('ApagosComponent', () => {
 
         it('should show last dropped piece (from drop on righmost coord)', fakeAsync(async() => {
             // Given a board with a previous drop by Player.ZERO
-            const previousState: ApagosState = ApagosRules.get().getInitialState();
-            const previousMove: ApagosMove = ApagosMove.drop(ApagosCoord.THREE, Player.ZERO);
+            const previousState: ApagosState = ApagosRules.get().getInitialState(defaultConfig);
+            const previousMove: ApagosMove = ApagosMove.drop(3, Player.ZERO);
             const state: ApagosState = ApagosState.fromRepresentation(1, [
                 [0, 0, 0, 1],
                 [0, 0, 0, 0],
@@ -316,7 +317,7 @@ describe('ApagosComponent', () => {
                 [0, 0, 0, 1],
                 [7, 5, 3, 1],
             ], 9, 10);
-            const previousMove: ApagosMove = ApagosMove.transfer(ApagosCoord.THREE, ApagosCoord.ONE).get();
+            const previousMove: ApagosMove = ApagosMove.transfer(3, 1).get();
             const state: ApagosState = ApagosState.fromRepresentation(2, [
                 [0, 0, 0, 0],
                 [0, 1, 0, 0],

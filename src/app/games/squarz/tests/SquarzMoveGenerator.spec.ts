@@ -45,7 +45,7 @@ describe('SquarzMoveGenerator', () => {
         ], 100);
         const node: SquarzNode = new SquarzNode(state);
 
-        // When calling getListMoves
+        // When listing the moves
         const moves: SquarzMove[] = moveGenerator.getListMoves(node, defaultConfig);
 
         // Then there should be 4 moves (all jumps)
@@ -66,7 +66,7 @@ describe('SquarzMoveGenerator', () => {
         ], 100);
         const node: SquarzNode = new SquarzNode(state);
 
-        // When calling getListMoves
+        // When listing the moves
         const moves: SquarzMove[] = moveGenerator.getListMoves(node, defaultConfig);
 
         // Then there should be only one duplication by landing coord
