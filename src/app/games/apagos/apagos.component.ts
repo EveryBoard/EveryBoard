@@ -319,7 +319,7 @@ export class ApagosComponent extends GameComponent<ApagosRules, ApagosMove, Apag
     }
 
     public getRemainingPieceCx(x: number): number {
-        return (0.5 + x) * this.PIECE_DELTA;
+        return (1 + x) * this.PIECE_DELTA;
     }
 
 }
