@@ -11,6 +11,8 @@ export class RulesConfigDescriptionLocalizable {
 
     public static readonly HEIGHT: () => string = (): string => $localize`Height`;
 
+    public static readonly SIZE: () => string = (): string => $localize`Size`;
+
     public static readonly ALIGNMENT_SIZE: () => string = () => $localize`Number of aligned pieces needed to win`;
 
     public static readonly NUMBER_OF_DROPS: () => string = () => $localize`Number of pieces dropped per turn`;
@@ -34,6 +36,7 @@ export class NumberConfig extends ConfigLine {
     {
         super(value, title, validator);
     }
+
 }
 
 export class BooleanConfig extends ConfigLine {
@@ -42,6 +45,7 @@ export class BooleanConfig extends ConfigLine {
     {
         super(value, title);
     }
+
 }
 
 export class RulesConfigDescription<R extends RulesConfig = EmptyRulesConfig> {
@@ -108,4 +112,5 @@ export class RulesConfigDescriptions {
             height: new NumberConfig(19, RulesConfigDescriptionLocalizable.HEIGHT, MGPValidators.range(1, 99)),
         },
     });
+
 }

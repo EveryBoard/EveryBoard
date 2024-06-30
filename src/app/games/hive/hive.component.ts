@@ -22,8 +22,11 @@ import { CoordSet } from 'src/app/jscaip/CoordSet';
 import { HiveMinimax } from './HiveMinimax';
 
 interface GroundInfo {
+
     spaceClasses: string[];
+
     strokeClasses: string[];
+
     selected: boolean;
 }
 
@@ -200,7 +203,9 @@ export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, H
         const boardAndRemainingViewBox: ViewBox = this.boardViewBox
             .containingAtLeast(minimalViewBox)
             .expandAbove(spaceForZero)
-            .expandBelow(spaceForOne);
+            .expandBelow(spaceForOne)
+            .expandLeft(2 * this.SPACE_SIZE)
+            .expandRight(-1.5 * this.SPACE_SIZE);
         if (this.inspectedStack.isPresent()) {
             const inspectedStackPosition: Coord =
                 new Coord(boardAndRemainingViewBox.right() + this.SPACE_SIZE,

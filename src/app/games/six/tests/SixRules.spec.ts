@@ -89,7 +89,7 @@ describe('SixRules', () => {
             // When playing on a coord that is outside of the representation board
             const move: SixMove = SixMove.ofDrop(new Coord(-1, 1));
 
-            // Then the move should be legal
+            // Then the move should succeed
             const expectedBoard: Table<PlayerOrNone> = [
                 [_, O],
                 [O, X],
@@ -275,7 +275,7 @@ describe('SixRules', () => {
         });
 
         it('should refuse deconnection where captured coord is in a smaller group', () => {
-            // Given a board with three group splitted, one of them beeing too small to be chosen
+            // Given a board with three group split, one of them beeing too small to be chosen
             const board: Table<PlayerOrNone> = [
                 [_, X, X, _],
                 [_, X, X, _],

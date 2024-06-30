@@ -147,7 +147,8 @@ describe('DiamComponent', () => {
             await testUtils.expectClickSuccess('#click_7_0');
 
             const move: DiamMove = DiamMoveShift.ofRepresentation(new Coord(7, 3), 'clockwise');
-            // Then the move should be legal
+
+            // Then the move should succeed
             await testUtils.expectMoveSuccess('#click_0', move);
         }));
 
@@ -162,7 +163,7 @@ describe('DiamComponent', () => {
             await testUtils.setupState(state);
 
             // When clicking on A1 and then on the last column
-            // Then the move should be legal
+            // Then the move should succeed
             await testUtils.expectClickSuccess('#click_0_1');
             const move: DiamMove = DiamMoveShift.ofRepresentation(new Coord(0, 2), 'counterclockwise');
             await testUtils.expectMoveSuccess('#click_7', move);

@@ -47,7 +47,8 @@ describe('GipfComponent', () => {
             // Given a board on which some external space is empty
             // When clicking on that piece
             const move: GipfMove = new GipfMove(new GipfPlacement(new Coord(0, 4), MGPOptional.empty()), [], []);
-            // Then the move should be legal and insert immediately the piece on that space
+
+            // Then the move should succeed and insert immediately the piece on that space
             await testUtils.expectMoveSuccess('#click_0_4', move);
         }));
 

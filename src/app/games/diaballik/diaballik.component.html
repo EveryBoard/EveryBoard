@@ -13,7 +13,7 @@
             <g *ngFor="let square of line; index as x"
                id="click_{{ x }}_{{ y }}"
                (click)="onClick(x, y)"
-               [attr.transform]="getTranslationXY(x, y)">
+               [attr.transform]="getTranslationAtXY(x, y)">
                 <rect id="space_{{ x }}_{{ y }}"
                       class="base"
                       [ngClass]="getSpaceClasses(x, y)"
@@ -47,7 +47,7 @@
               [attr.y2]="line.y2"
               class="defeat-stroke normal-stroke" />
         <rect *ngFor="let coord of indicators"
-              [attr.transform]="getTranslation(coord)"
+              [attr.transform]="getTranslationAt(coord)"
               id="indicator_{{ coord.x }}_{{ coord.y }}"
               [attr.x]="SPACE_SIZE/2 - INDICATOR_SIZE/2"
               [attr.y]="SPACE_SIZE/2 - INDICATOR_SIZE/2"
@@ -58,7 +58,7 @@
     </g>
     <g *ngIf="isInteractive()">
         <g id="translationCountIndicator"
-           [attr.transform]="getTranslationXY(0, HEIGHT + 0.3) + ' scale(0.5)'">
+           [attr.transform]="getTranslationAtXY(0, HEIGHT + 0.3) + ' scale(0.5)'">
             <rect class="base"
                   [attr.x]="0"
                   [attr.y]="0"
@@ -91,7 +91,7 @@
             >{{ translationsMade }}</text>
         </g>
         <g id="passCountIndicator"
-           [attr.transform]="getTranslationXY(WIDTH - 1, HEIGHT + 0.3) + ' scale(0.5)'">
+           [attr.transform]="getTranslationAtXY(WIDTH - 1, HEIGHT + 0.3) + ' scale(0.5)'">
             <rect class="base"
                   [attr.x]="0"
                   [attr.y]="0"
@@ -140,7 +140,7 @@
     <g *ngIf="showDoneButton()"
        id="done"
        (click)="done()"
-       [attr.transform]="getTranslationXY(WIDTH / 2, HEIGHT + 0.5)">
+       [attr.transform]="getTranslationAtXY(WIDTH / 2, HEIGHT + 0.5)">
         <circle [attr.cx]="STROKE_WIDTH / 2"
                 [attr.cy]="STROKE_WIDTH / 2"
                 [attr.r]="SPACE_SIZE / 2.5"

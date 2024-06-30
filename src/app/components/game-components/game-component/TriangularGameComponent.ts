@@ -20,7 +20,7 @@ export abstract class TriangularGameComponent<R extends SuperRules<M, S, C, L>,
 
     public board: Table<P>;
 
-    protected getTriangleCornerCoords(x: number, y: number): Coord[] {
+    protected getTriangleCornerCoordsAtXY(x: number, y: number): Coord[] {
         if ((x + y) % 2 === 0) {
             return this.getUpwardCoordinate();
         } else {
@@ -28,8 +28,12 @@ export abstract class TriangularGameComponent<R extends SuperRules<M, S, C, L>,
         }
     }
 
-    public getTrianglePoints(x: number, y: number): string {
-        const coords: Coord[] = this.getTriangleCornerCoords(x, y);
+    public getTrianglePointsAt(coord: Coord): string {
+        return this.getTrianglePointsAtXY(coord.x, coord.y);
+    }
+
+    public getTrianglePointsAtXY(x: number, y: number): string {
+        const coords: Coord[] = this.getTriangleCornerCoordsAtXY(x, y);
         return this.mapCoordsToPoints(coords);
     }
 
@@ -39,7 +43,11 @@ export abstract class TriangularGameComponent<R extends SuperRules<M, S, C, L>,
         return new Coord(translationX, translationY);
     }
 
-    public getTriangleTranslation(x: number, y: number): string {
+    public getTriangleTranslationAt(coord: Coord): string {
+        return this.getTriangleTranslationAtXY(coord.x, coord.y);
+    }
+
+    public getTriangleTranslationAtXY(x: number, y: number): string {
         const coord: Coord = new Coord(x, y);
         const translation: Coord = this.getTriangleTranslationCoord(coord);
         return 'translate(' + translation.x + ', ' + translation.y + ')';
@@ -69,7 +77,11 @@ export abstract class TriangularGameComponent<R extends SuperRules<M, S, C, L>,
         return [leftCorner, middleCorner, rightCorner, leftCorner];
     }
 
-    public getPyramidPoints(x: number, y: number): string {
+    public getPyramidPointsAt(coord: Coord): string {
+        return this.getPyramidPointsAtXY(coord.x, coord.y);
+    }
+
+    public getPyramidPointsAtXY(x: number, y: number): string {
         if ((x + y) % 2 === 1) {
             return this.getDownwardPyramidPoints();
         } else {

@@ -13,7 +13,7 @@ import { Table, TableUtils } from 'src/app/jscaip/TableUtils';
 describe('BaAwaRules', () => {
 
     const rules: BaAwaRules = BaAwaRules.get();
-    const defaultConfig: MGPOptional<BaAwaConfig> = rules.getDefaultRulesConfig();
+    const defaultConfig: MGPOptional<BaAwaConfig> = BaAwaRules.get().getDefaultRulesConfig();
 
     describe('generic tests', () => {
 
@@ -77,7 +77,7 @@ describe('BaAwaRules', () => {
             ];
             const expectedState: MancalaState = new MancalaState(expectedBoard, 2, PlayerNumberMap.of(19, 20));
 
-            // Then the move should be legal
+            // Then the move should succeed
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         });
 

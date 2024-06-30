@@ -73,10 +73,10 @@ describe('QuixoRules', () => {
         new QuixoMove(2, 4, Orthogonal.DOWN),
     ];
     const errorByDirection: string [] = [
-        `Invalid direction: pawn on the left side can't be moved to the left.`,
-        `Invalid direction: pawn on the right side can't be moved to the right.`,
-        `Invalid direction: pawn on the top side can't be moved up.`,
-        `Invalid direction: pawn on the bottom side can't be moved down.`,
+        `Invalid direction: piece on the left side can't be moved to the left.`,
+        `Invalid direction: piece on the right side can't be moved to the right.`,
+        `Invalid direction: piece on the top side can't be moved up.`,
+        `Invalid direction: piece on the bottom side can't be moved down.`,
     ];
 
     for (let i: number = 0; i < 4; i++) {
