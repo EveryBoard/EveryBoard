@@ -44,3 +44,8 @@ $footer-padding:2rem 1rem 2rem;
 html, body {
     display: block;
 }
+
+.left-border {
+    border-left: 2px solid $primary;
+    padding-left: 1em;
+}
