@@ -58,6 +58,7 @@
                                                placeholder="{{ rulesConfigDescription.getI18nName(configParameter) }}" />
                                     </div>
                                     <div *ngIf="isValid(configParameter) === false"
+                                         id="{{configParameter}}-error"
                                          class="help is-danger"
                                          role="alert">{{ getErrorMessage(configParameter) }}</div>
                                 </ng-template>

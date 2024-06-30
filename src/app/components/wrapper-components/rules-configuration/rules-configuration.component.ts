@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 
@@ -23,6 +23,7 @@ export class RulesConfigurationComponent extends BaseWrapperComponent implements
     // Only needed for the non-creator
     @Input() rulesConfigToDisplay?: RulesConfig;
 
+    // Whether this config can be edited or not
     @Input() editable: boolean;
 
     /**
@@ -39,8 +40,7 @@ export class RulesConfigurationComponent extends BaseWrapperComponent implements
 
     private chosenConfigName: string = '';
 
-    public constructor(activatedRoute: ActivatedRoute,
-                       private readonly cdr: ChangeDetectorRef)
+    public constructor(activatedRoute: ActivatedRoute)
     {
         super(activatedRoute);
     }
@@ -73,10 +73,11 @@ export class RulesConfigurationComponent extends BaseWrapperComponent implements
     }
 
     private getRulesConfigDescriptionValue(name: string, defaultValue: ConfigDescriptionType): ConfigDescriptionType {
-        if (this.editable || this.rulesConfigToDisplay === undefined) {
+        if (this.editable) {
             return defaultValue;
         } else {
-            const configuration: RulesConfig = this.rulesConfigToDisplay;
+            Utils.assert(this.rulesConfigToDisplay !== undefined, 'Config should be provided if RulesConfigurationComponent is not editable');
+            const configuration: RulesConfig = Utils.getNonNullable(this.rulesConfigToDisplay);
             return configuration[name];
         }
     }
@@ -94,7 +95,7 @@ export class RulesConfigurationComponent extends BaseWrapperComponent implements
 
     public onUpdate(): void {
         // Utils.assert(this.editable, 'Only editors should be able to modify rules config');
-        // Utils.assert(this.chosenConfigName === 'Custom', 'Only Customizable config should be modified!');
+        Utils.assert(this.chosenConfigName === 'Custom', 'Only customizable config should be modified!');
         const rulesConfig: RulesConfig = {};
         const parameterNames: string[] = this.rulesConfigDescription.getFields();
         for (const parameterName of parameterNames) {

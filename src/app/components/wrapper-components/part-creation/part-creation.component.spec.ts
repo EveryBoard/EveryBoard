@@ -322,10 +322,6 @@ describe('PartCreationComponent', () => {
 
                 // When choosing the opponent
                 await chooseOpponent();
-                  testUtils.detectChanges();
-                tick(1)
-                tick();
-                tick(1000)
                 testUtils.detectChanges();
 
                 // Then current config room doc should be updated
