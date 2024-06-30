@@ -30,6 +30,10 @@ export class ApagosSquare {
         return this.containing.get(player).get();
     }
 
+    public getCapacity(): number {
+        return this.count(PlayerOrNone.NONE);
+    }
+
     public addPiece(piece: Player): ApagosSquare {
         let nbZero: number = this.count(Player.ZERO);
         let nbOne: number = this.count(Player.ONE);
@@ -68,5 +72,12 @@ export class ApagosSquare {
 
     public equals(other: ApagosSquare): boolean {
         return this.containing.equals(other.containing);
+    }
+
+    public toString(): string {
+        const zero: number = this.containing.get(PlayerOrNone.ZERO).get();
+        const one: number = this.containing.get(PlayerOrNone.ONE).get();
+        const none: number = this.containing.get(PlayerOrNone.NONE).get();
+        return `(${zero}, ${one}, ${none})`;
     }
 }

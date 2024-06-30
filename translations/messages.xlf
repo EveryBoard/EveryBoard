@@ -901,6 +901,9 @@
       <trans-unit id="6434791622277704389" datatype="html">
         <source>Rightmost Focus</source>
       </trans-unit>
+      <trans-unit id="529510153551286303" datatype="html">
+        <source>Increment</source>
+      </trans-unit>
       <trans-unit id="8322338146903087210" datatype="html">
         <source>At Apagos, there are 4 squares, each of them has a fixed number of holes for pieces. Each player starts with 10 pieces. Dark pieces belong to the first player, light pieces belong to the second one. The game ends when no one can play. The player owning the most pieces in the rightmost square wins!</source>
       </trans-unit>

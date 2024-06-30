@@ -287,8 +287,7 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
         await super.onCancelMove(reason);
         if (this.gameComponent.node.previousMove.isPresent()) {
             const move: Move = this.gameComponent.node.previousMove.get();
-            const config: MGPOptional<RulesConfig> = await this.getConfig();
-            await this.gameComponent.showLastMove(move, config);
+            await this.gameComponent.showLastMove(move);
         }
     }
 
