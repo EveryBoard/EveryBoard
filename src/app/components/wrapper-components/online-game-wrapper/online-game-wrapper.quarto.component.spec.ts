@@ -1867,7 +1867,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
     });
 
     describe('Visuals', () => {
-        fit('should highlight each player name in their respective color', fakeAsync(async() => {
+        it('should highlight each player name in their respective color', fakeAsync(async() => {
             // Given a game that has been started
             await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER, PreparationOptions.dontWait);
 

@@ -50,7 +50,6 @@ export class RulesConfigurationComponent extends BaseWrapperComponent implements
     }
 
     public ngOnInit(): void {
-        this.assertParamsAreCoherent();
         this.urlName = this.getGameUrlName();
         if (this.isCustomisable()) {
             const defaultConfig: NamedRulesConfig<RulesConfig> = this.rulesConfigDescription.getDefaultConfig();
@@ -58,13 +57,6 @@ export class RulesConfigurationComponent extends BaseWrapperComponent implements
         } else {
             return this.updateCallback.emit(MGPOptional.of({}));
         }
-    }
-
-    private assertParamsAreCoherent(): void {
-        //if (this.editable === false) {
-        //    Utils.assert(this.rulesConfigToDisplay != null,
-        //                 'Config should be provided to non-editors in RulesConfigurationComponent');
-        //}
     }
 
     private generateForm(config: RulesConfig, configurable: boolean): void {

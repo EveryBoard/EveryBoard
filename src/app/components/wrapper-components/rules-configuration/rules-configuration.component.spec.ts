@@ -5,12 +5,10 @@ import { RulesConfigurationComponent } from './rules-configuration.component';
 import { ActivatedRouteStub, SimpleComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { MGPOptional, Utils, TestUtils } from '@everyboard/lib';
 import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
-import { KamisadoState } from 'src/app/games/kamisado/KamisadoState';
 import { MGPValidators } from 'src/app/utils/MGPValidator';
 import { RulesConfigDescription, NumberConfig, BooleanConfig } from './RulesConfigDescription';
-import { KamisadoRules } from 'src/app/games/kamisado/KamisadoRules';
 
-describe('RulesConfigurationComponent', () => {
+fdescribe('RulesConfigurationComponent', () => {
 
     let testUtils: SimpleComponentTestUtils<RulesConfigurationComponent>;
 
@@ -28,9 +26,6 @@ describe('RulesConfigurationComponent', () => {
         const activatedRoute: ActivatedRouteStub = new ActivatedRouteStub('whatever-game');
         testUtils = await SimpleComponentTestUtils.create(RulesConfigurationComponent, activatedRoute);
         component = testUtils.getComponent();
-        const stateProvider: (_: MGPOptional<RulesConfig>) => KamisadoState = (_: MGPOptional<RulesConfig>) => {
-            return KamisadoRules.get().getInitialState();
-        };
     });
 
     it('should create', () => {
