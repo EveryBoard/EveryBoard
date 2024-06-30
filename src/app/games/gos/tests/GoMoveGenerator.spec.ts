@@ -9,6 +9,7 @@ import { AbstractGoMoveGenerator } from '../AbstractGoMoveGenerator';
 import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 import { GoConfig, GoRules } from '../go/GoRules';
 import { GoMoveGenerator } from '../go/GoMoveGenerator';
+import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 const X: GoPiece = GoPiece.LIGHT;
 const O: GoPiece = GoPiece.DARK;
@@ -20,7 +21,7 @@ const _: GoPiece = GoPiece.EMPTY;
 
 describe('GoMoveGenerator', () => {
 
-    let moveGenerator: AbstractGoMoveGenerator;
+    let moveGenerator: AbstractGoMoveGenerator<RulesConfig>;
 
     const config: MGPOptional<GoConfig> = MGPOptional.of({ width: 5, height: 5, handicap: 0 });
 

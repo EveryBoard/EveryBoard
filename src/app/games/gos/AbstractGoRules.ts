@@ -1,3 +1,4 @@
+import { MGPFallible, MGPOptional, Utils } from '@everyboard/lib';
 import { GameNode } from 'src/app/jscaip/AI/GameNode';
 import { GoState } from './GoState';
 import { GoPhase } from './GoPhase';
@@ -5,7 +6,6 @@ import { GoPiece } from './GoPiece';
 import { GoMove } from './GoMove';
 import { Player } from 'src/app/jscaip/Player';
 import { GoGroupData } from './GoGroupsData';
-import { MGPFallible, MGPOptional, Utils } from '@everyboard/lib';
 import { Table } from 'src/app/jscaip/TableUtils';
 import { ConfigurableRules } from 'src/app/jscaip/Rules';
 import { Coord } from 'src/app/jscaip/Coord';

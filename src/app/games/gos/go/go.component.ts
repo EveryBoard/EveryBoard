@@ -1,3 +1,4 @@
+import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 import { ChangeDetectorRef, Component } from '@angular/core';
 import { GoMove } from 'src/app/games/gos/GoMove';
 import { GoConfig, GoRules } from 'src/app/games/gos/go/GoRules';
@@ -5,7 +6,6 @@ import { GoLegalityInformation } from '../AbstractGoRules';
 import { GoState } from 'src/app/games/gos/GoState';
 import { GoPiece } from '../GoPiece';
 import { Coord } from 'src/app/jscaip/Coord';
-import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 import { GroupData } from 'src/app/jscaip/BoardData';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { GobanGameComponent } from 'src/app/components/game-components/goban-game-component/GobanGameComponent';

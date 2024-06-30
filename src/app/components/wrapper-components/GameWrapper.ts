@@ -54,6 +54,10 @@ export abstract class GameWrapper<P extends Comparable> extends BaseWrapperCompo
         super(activatedRoute);
     }
 
+    public abstract onLegalUserMove(move: Move, scores?: [number, number]): Promise<void>;
+
+    public abstract getPlayer(): P;
+
     private getMatchingComponent(gameName: string): MGPOptional<Type<AbstractGameComponent>> {
         const optionalGameInfo: MGPOptional<GameInfo> =
             MGPOptional.ofNullable(GameInfo.ALL_GAMES().find((gameInfo: GameInfo) => gameInfo.urlName === gameName));
@@ -152,13 +156,9 @@ export abstract class GameWrapper<P extends Comparable> extends BaseWrapperCompo
         return MGPValidation.SUCCESS;
     }
 
-    public abstract onLegalUserMove(move: Move, scores?: [number, number]): Promise<void>;
-
     public async onCancelMove(_reason?: string): Promise<void> {
         this.isMoveAttemptOngoing = false;
     }
-
-    public abstract getPlayer(): P;
 
     public async getConfig(): Promise<MGPOptional<RulesConfig>> {
         const urlName: string = this.getGameUrlName();

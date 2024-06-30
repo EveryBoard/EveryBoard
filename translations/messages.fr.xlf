@@ -2494,28 +2494,28 @@
          Clair a 8 territoires et 1 prisonnier.
          Le résultat est donc 18 - 9 en faveur de Foncé.</target>
       </trans-unit>
-      <trans-unit id="3703970382094035606" datatype="html">
-        <source>The game of Trigo is a triangular adaptation of the game of Go. Go is present on the website, you can go learn it here. This tutorial will only review the small differences that this experimental adaptation induced.</source>
-        <target>Trigo est une adaptation triangulaire du jeu de Go. Le Go est présent sur ce site, vous pouvez aller en apprendre les règles ici. Ce tutorial ne va que montrer les petites différences que cette expérimentation introduit.</target>
+      <trans-unit id="5525890868343399241" datatype="html">
+        <source>The game of Trigo is a triangular adaptation of the game of Go. Go is present on Everyboard, you can go learn it &lt;a href=&quot;/tutorial/Go&quot;&gt;here&lt;a/&gt;. This tutorial will only review the small differences that this experimental adaptation induced.</source>
+        <target>Trigo est une adaptation triangulaire du jeu de Go. Le Go est présent sur Everyboard, vous pouvez aller en apprendre les règles &lt;a href=&quot;/tutorial/Go&quot;&gt;here&lt;a/&gt;. Ce tutorial ne va que montrer les petites différences que cette expérimentation introduit.</target>
       </trans-unit>
       <trans-unit id="3616229206195726198" datatype="html">
         <source>Freedom</source>
         <target>Libertés</target>
       </trans-unit>
-      <trans-unit id="801375955405548279" datatype="html">
-        <source>Since it is triangular, pieces have only one freedom in the corners.</source>
+      <trans-unit id="8074559405875826310" datatype="html">
+        <source>Since the board is triangular, pieces have only one freedom in the corners.</source>
         <target>Étant donné que le plateau est triangulaire, les pièces n'ont qu'une liberté dans les coins.</target>
       </trans-unit>
-      <trans-unit id="4046748311465266171" datatype="html">
-        <source>Since it is triangular, pieces have only two freedoms on the edges.&lt;br/&gt; When pieces touch the board&apos;s edge with their corner only, like the pieces on the right, they&apos;re not really on the edges.</source>
+      <trans-unit id="5242120872569966381" datatype="html">
+        <source>Since the board is triangular, pieces have only two freedoms on the edges.&lt;br/&gt; When pieces touch the board&apos;s edge with their corner only, like the pieces on the right, they&apos;re not really on the edges.</source>
         <target>Étant donné que le plateau est triangulaire, les pièces on seulement deux libertés sur les bords.&lt;br/&gt; Quand les pièces touchent les bords avec seulement leurs coins, comme celles sur la droite, elles ne sont pas vraiment sur les bords</target>
       </trans-unit>
-      <trans-unit id="8091608734389488844" datatype="html">
-        <source>Since it is triangular, pieces have three freedoms when they don&apos;t touch the edge.</source>
+      <trans-unit id="7135410296040646228" datatype="html">
+        <source>Since the board is triangular, pieces have three freedoms when they don&apos;t touch the edge.</source>
         <target>Étant donné que le plateau est triangulaire, les pièces on trois libertés quand elles ne touchent pas les bords.</target>
       </trans-unit>
-      <trans-unit id="6975964838030574157" datatype="html">
-        <source>Since it is triangular, groups of two pieces have only one more freedom (making an atari a shisho by default).</source>
+      <trans-unit id="9089012671848915244" datatype="html">
+        <source>Since the board is triangular, groups of two pieces have only one more freedom (making an atari a shisho by default).</source>
         <target>Étant donné que le plateau est trianguliare, les groupes de deux pièces n'ont qu'une liberté en plus (faisant d'un atari un shisho par défaut).</target>
       </trans-unit>
       <trans-unit id="6217706486990855046" datatype="html">

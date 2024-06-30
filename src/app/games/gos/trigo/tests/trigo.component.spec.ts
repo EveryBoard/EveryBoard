@@ -68,18 +68,19 @@ describe('TrigoComponent', () => {
             [N, N, N, N, b, N, N, N, N],
             [N, N, N, _, O, _, N, N, N],
             [N, N, _, _, _, _, _, N, N],
-            [N, O, _, _, _, _, _, _, N],
-            [b, k, O, _, _, _, _, X, w],
+            [N, b, O, _, _, _, _, X, N],
+            [k, b, b, O, _, _, X, w, w],
         ];
         const state: GoState =
-            new GoState(board, PlayerNumberMap.of(2, 1), 3, MGPOptional.empty(), 'COUNTING');
+            new GoState(board, PlayerNumberMap.of(2, 4), 3, MGPOptional.empty(), 'COUNTING');
 
         // When rendering it
         await testUtils.setupState(state, { config: MGPOptional.of({ size: 5 }) });
 
         // Then it should render the dead
-        testUtils.expectElementToExist('#dead-1-4');
-        testUtils.expectElementToExist('#territory-0-4');
+        testUtils.expectElementToExist('#dead-0-4');
+        testUtils.expectElementToExist('#territory-1-4');
+        testUtils.expectElementToExist('#territory-2-4');
     }));
 
     it('should show ko coord', fakeAsync(async() => {

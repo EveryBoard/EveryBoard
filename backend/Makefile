@@ -10,6 +10,10 @@ run: gamelist
 	GAMES=$$(cat games.txt)
 	opam exec -- dune exec -- ./main.exe
 
+run-load-test: gamelist
+	GAMES=$$(cat games.txt)
+	opam exec -- dune exec -- ./main.exe -no-emulator -endpoint https://firestore.googleapis.com -show-errors -project everyboard-loadtest -origin '*' -service-account ../service-accounts/loadtest.json
+
 test: bin gamelist
 	find . -name '*.coverage' | xargs rm -f
 	GAMES=$$(cat games.txt) \

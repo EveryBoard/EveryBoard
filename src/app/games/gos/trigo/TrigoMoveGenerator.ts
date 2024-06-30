@@ -1,7 +1,7 @@
 import { AbstractGoMoveGenerator } from '../AbstractGoMoveGenerator';
-import { TrigoRules } from './TrigoRules';
+import { TrigoConfig, TrigoRules } from './TrigoRules';
 
-export class TrigoMoveGenerator extends AbstractGoMoveGenerator {
+export class TrigoMoveGenerator extends AbstractGoMoveGenerator<TrigoConfig> {
 
     constructor() {
         super(TrigoRules.get());
