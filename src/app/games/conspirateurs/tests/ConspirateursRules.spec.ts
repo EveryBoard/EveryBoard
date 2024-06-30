@@ -50,9 +50,11 @@ describe('ConspirateursRules', () => {
         it('should allow drops within the center zone', () => {
             // Given the initial state
             const state: ConspirateursState = ConspirateursRules.get().getInitialState();
+
             // When dropping a piece in the center zone
             const move: ConspirateursMove = drop(new Coord(7, 7));
-            // Then the move should be legal and the piece should be put at the expected position
+
+            // Then the move should succeed and the piece should be put at the expected position
             const expectedState: ConspirateursState = new ConspirateursState([
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
@@ -384,7 +386,7 @@ describe('ConspirateursRules', () => {
             ], 42);
             // When performing a jump
             const move: ConspirateursMove = jump([new Coord(7, 7), new Coord(7, 5)]);
-            // Then the move should be legal and the piece should be moved
+            // Then the move should succeed and the piece should be moved
             const expectedState: ConspirateursState = new ConspirateursState([
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
@@ -428,9 +430,11 @@ describe('ConspirateursRules', () => {
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             ], 42);
+
             // When performing multiple jumps
             const move: ConspirateursMove = jump([new Coord(7, 7), new Coord(7, 5), new Coord(9, 3), new Coord(11, 3)]);
-            // Then the move should be legal and the piece should be moved
+
+            // Then the move should succeed and the piece should be moved
             const expectedState: ConspirateursState = new ConspirateursState([
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],

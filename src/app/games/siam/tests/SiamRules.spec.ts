@@ -29,7 +29,7 @@ describe('SiamRules', () => {
     const r: SiamPiece = SiamPiece.DARK_RIGHT;
     const d: SiamPiece = SiamPiece.DARK_DOWN;
 
-    const defaultConfig: MGPOptional<SiamConfig> = rules.getDefaultRulesConfig();
+    const defaultConfig: MGPOptional<SiamConfig> = SiamRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         rules = SiamRules.get();
@@ -547,7 +547,7 @@ describe('SiamRules', () => {
         const state: SiamState = SiamRules.get().getInitialState(defaultConfig);
         const start: Coord = new Coord(0, 0);
         const end: Coord = new Coord(2, 2);
-        // When computing the list of moves between these coords
+        // When listing the moves between these coords
         const moves: SiamMove[] = rules.getMovesBetween(state, SiamPiece.LIGHT_UP, start, end);
         // Then there should be no moves
         expect(moves).toEqual([]);
@@ -558,7 +558,7 @@ describe('SiamRules', () => {
         const state: SiamState = SiamRules.get().getInitialState(defaultConfig);
         const start: Coord = new Coord(0, 0);
         const end: Coord = new Coord(2, 0);
-        // When computing the list of moves between these coords
+        // When listing the moves between these coords
         const moves: SiamMove[] = rules.getMovesBetween(state, SiamPiece.LIGHT_UP, start, end);
         // Then there should be no moves
         expect(moves).toEqual([]);

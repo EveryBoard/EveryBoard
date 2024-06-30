@@ -25,25 +25,25 @@ describe('PylosOrderedMoveGenerator', () => {
 
     describe('orderMoves', () => {
 
-        it('should order move from lowest stone use to highest', () => {
+        it('should order move from lowest piece use to highest', () => {
             const moves: PylosMove[] = [
-                PylosMove.ofClimb(coord0, coord1, [coord1]), // -1 stone used
-                PylosMove.ofClimb(coord0, coord1, [coord1, coord2]), // -2 stone used
-                PylosMove.ofClimb(coord0, coord1, []), // 0 stone used
-                PylosMove.ofDrop(coord0, [coord0, coord1]), // -1 stone used
-                PylosMove.ofDrop(coord0, []), // 1 stone used
-                PylosMove.ofDrop(coord0, [coord1]), // 0 stone used
+                PylosMove.ofClimb(coord0, coord1, [coord1]), // -1 piece used
+                PylosMove.ofClimb(coord0, coord1, [coord1, coord2]), // -2 piece used
+                PylosMove.ofClimb(coord0, coord1, []), // 0 piece used
+                PylosMove.ofDrop(coord0, [coord0, coord1]), // -1 piece used
+                PylosMove.ofDrop(coord0, []), // 1 piece used
+                PylosMove.ofDrop(coord0, [coord1]), // 0 piece used
             ].sort(() => Math.random() - 0.5);
 
             const orderedMoves: PylosMove[] = moveGenerator['orderMoves'](moves);
 
             const expectedOrderedMoves: PylosMove[] = [
-                PylosMove.ofClimb(coord0, coord1, [coord1, coord2]), // -2 stone used
-                PylosMove.ofDrop(coord0, [coord0, coord1]), // -1 stone used
-                PylosMove.ofClimb(coord0, coord1, [coord1]), // -1 stone used
-                PylosMove.ofDrop(coord0, [coord1]), // 0 stone used
-                PylosMove.ofClimb(coord0, coord1, []), // 0 stone used
-                PylosMove.ofDrop(coord0, []), // 1 stone used
+                PylosMove.ofClimb(coord0, coord1, [coord1, coord2]), // -2 piece used
+                PylosMove.ofDrop(coord0, [coord0, coord1]), // -1 piece used
+                PylosMove.ofClimb(coord0, coord1, [coord1]), // -1 piece used
+                PylosMove.ofDrop(coord0, [coord1]), // 0 piece used
+                PylosMove.ofClimb(coord0, coord1, []), // 0 piece used
+                PylosMove.ofDrop(coord0, []), // 1 piece used
             ];
 
             expect(orderedMoves).toEqual(expectedOrderedMoves);

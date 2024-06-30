@@ -66,6 +66,13 @@ describe('Utils', () => {
             expect(() => Utils.assert(false, 'error')).toThrowError('Assertion failure: error');
             expect(Utils.logError).toHaveBeenCalledWith('Assertion failure', 'error', undefined);
         });
+
+        it('should log error and throw when condition is false (with data)', () => {
+            spyOn(Utils, 'logError').and.callThrough();
+            expect(() => Utils.assert(false, 'error', 'jajette')).toThrowError('Assertion failure: error ("jajette")');
+            expect(Utils.logError).toHaveBeenCalledWith('Assertion failure', 'error', 'jajette');
+        });
+
     });
 
     describe('identity', () => {

@@ -1,25 +1,32 @@
 import { Coord } from '../Coord';
 import { MGPOptional } from '@everyboard/lib';
+import { Orthogonal } from '../Orthogonal';
+
 
 export class TriangularCheckerBoard {
 
-    public static getNeighbors(c: Coord): Coord[] {
-        let neighbors: Coord[];
-        const left: Coord = new Coord(c.x - 1, c.y);
-        const right: Coord = new Coord(c.x + 1, c.y);
-        if ((c.x + c.y)%2 === 1) {
-            const up: Coord = new Coord(c.x, c.y - 1);
-            neighbors = [left, right, up];
+    public static getDirections(c: Coord): Orthogonal[] {
+        const left: Orthogonal = Orthogonal.LEFT;
+        const right: Orthogonal = Orthogonal.RIGHT;
+        if ((c.x + c.y) % 2 === 1) {
+            const up: Orthogonal = Orthogonal.UP;
+            return [left, right, up];
         } else {
-            const down: Coord = new Coord(c.x, c.y + 1);
-            neighbors = [left, right, down];
+            const down: Orthogonal = Orthogonal.DOWN;
+            return [left, right, down];
         }
-        return neighbors;
     }
+
+    public static getNeighbors(c: Coord): Coord[] {
+        return TriangularCheckerBoard.getDirections(c)
+            .map((direction: Orthogonal) => c.getNext(direction));
+    }
+
     public static getFakeNeighbors(c: Coord): Coord {
         if ((c.x + c.y)%2 === 1) return new Coord(c.x, c.y + 1); // DOWN
         return new Coord(c.x, c.y - 1); // UP
     }
+
     public static getCommonNeighbor(a: Coord, b: Coord): MGPOptional<Coord> {
         const aNeighbors: Coord[] = TriangularCheckerBoard.getNeighbors(a);
         const bNeighbors: Coord[] = TriangularCheckerBoard.getNeighbors(b);
@@ -38,7 +45,9 @@ export class TriangularCheckerBoard {
         }
         return MGPOptional.empty();
     }
+
     public static isSpaceDark(coord: Coord): boolean {
         return (coord.x + coord.y) % 2 === 0;
     }
+
 }

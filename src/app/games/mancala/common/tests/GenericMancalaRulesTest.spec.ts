@@ -117,7 +117,7 @@ export function DoMancalaRulesTests(entries: MancalaRulesTestEntries): void {
             // When attempting a store-ending single distribution
             const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(3));
 
-            // Then the move should be legal and the store should contain one (so, the score)
+            // Then the move should succeed and the store should contain one (so, the score)
             const reason: string = 'Must continue playing after kalah move';
             TestUtils.expectToThrowAndLog(
                 () => RulesUtils.expectMoveFailure(rules, state, move, reason, customConfig),

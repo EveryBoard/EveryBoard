@@ -50,7 +50,7 @@
     </g>
     <g id="clock-or-count-down-view"
        (click)="onClockClick()"
-       [attr.transform]="'translate(' + (5.25 * SPACE_SIZE) + ', 0)'">
+       [attr.transform]="getTranslationAtXY(5.25, 0)">
         <rect x="0" y="0"
               class="transparent"
               [attr.width]="SPACE_SIZE"
@@ -97,7 +97,7 @@
                 <g [id]="proposedStyle.name"
                    app-martian-chess-queen
                    (click)="chooseStyle(y)"
-                   [attr.transform]="'translate(0, ' + (- (y + 1) * SPACE_SIZE) + ')'"
+                   [attr.transform]="getTranslationAtXY(0, - y - 1)"
                    [pieceClasses]="['player' + getCurrentPlayer().getValue() + '-fill']"
                    [style]="proposedStyle.style"/>
             </ng-container>
@@ -109,7 +109,7 @@
                [attr.transform]="getCapturesTransformation(player)">
                 <g *ngFor="let value of state.getCapturesOf(player); index as piece">
                     <g *ngIf="value > 0"
-                       [attr.transform]="'translate(0, ' + (2 * piece * SPACE_SIZE) + ')'">
+                       [attr.transform]="getTranslationAtXY(0, 2 * piece)">
                         <text *ngIf="value > 1"
                               class="text-giant text-center"
                               [ngClass]="getPlayerClass(player)"
@@ -117,7 +117,7 @@
                               [attr.y]="SPACE_SIZE / 2"
                         >{{ value + ' x ' }}</text>
                         <g id="piece-{{ piece }}-player-{{ player.toString() }}"
-                           [attr.transform]="'translate(' + SPACE_SIZE + ', 0)'">
+                           [attr.transform]="getTranslationAtXY(1, 0)">
                             <g *ngIf="piece === 0"
                                app-martian-chess-pawn
                                [pieceClasses]="[getPlayerClass(player)]"

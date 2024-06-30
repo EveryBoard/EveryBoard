@@ -37,7 +37,7 @@ describe('ReversiRules', () => {
         // When doing a legal move
         const move: ReversiMove = new ReversiMove(2, 4);
 
-        // Then the move should be accepted and the score changed
+        // Then the move should succeed and the score changed
         const expectedBoard: Table<PlayerOrNone> = [
             [_, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _],

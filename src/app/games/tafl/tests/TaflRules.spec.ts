@@ -63,11 +63,11 @@ describe('TaflRules', () => {
         RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
     });
 
-    it('should be illegal to move an opponent pawn', () => {
+    it('should be illegal to move an opponent piece', () => {
         // Given the initial board
         const state: TaflState = MyTaflRules.get().getInitialState(defaultConfig);
 
-        // When trying to move an opponent pawn
+        // When trying to move an opponent piece
         const move: MyTaflMove = MyTaflMove.from(new Coord(4, 2), new Coord(4, 3)).get();
 
         // Then the move should be illegal
@@ -75,7 +75,7 @@ describe('TaflRules', () => {
         RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
     });
 
-    it('should be illegal to land on a pawn', () => {
+    it('should be illegal to land on a piece', () => {
         // Given the initial board
         const state: TaflState = MyTaflRules.get().getInitialState(defaultConfig);
 
@@ -87,7 +87,7 @@ describe('TaflRules', () => {
         RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
     });
 
-    it('should be illegal to pass through a pawn', () => {
+    it('should be illegal to pass through a piece', () => {
         // Given the initial board
         const state: TaflState = MyTaflRules.get().getInitialState(defaultConfig);
 

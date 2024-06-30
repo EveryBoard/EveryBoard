@@ -29,8 +29,8 @@ export class TaflState extends GameStateWithTable<TaflPawn> {
     }
 
     public getAbsoluteOwner(coord: Coord): PlayerOrNone {
-        const pawn: TaflPawn = this.getPieceAt(coord);
-        return pawn.getOwner();
+        const piece: TaflPawn = this.getPieceAt(coord);
+        return piece.getOwner();
     }
 
     public getSize(): number {

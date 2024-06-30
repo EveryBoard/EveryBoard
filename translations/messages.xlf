@@ -263,6 +263,9 @@
       <trans-unit id="265614119354246271" datatype="html">
         <source>Align 5 pieces of your color in a row, but beware, the pieces can be put on top of other pieces!</source>
       </trans-unit>
+      <trans-unit id="387599343584202424" datatype="html">
+        <source>A version of Go on triangular spaces!</source>
+      </trans-unit>
       <trans-unit id="7926456268600574942" datatype="html">
         <source>Align your pieces to score points, but beware, pieces can flip!</source>
       </trans-unit>
@@ -382,6 +385,9 @@
       </trans-unit>
       <trans-unit id="2686476818050661110" datatype="html">
         <source>Hexodia</source>
+      </trans-unit>
+      <trans-unit id="6233664534580457703" datatype="html">
+        <source>Trigo</source>
       </trans-unit>
       <trans-unit id="2218572265318708454" datatype="html">
         <source>Registering</source>
@@ -754,6 +760,9 @@
       </trans-unit>
       <trans-unit id="3033623772164647792" datatype="html">
         <source>Height</source>
+      </trans-unit>
+      <trans-unit id="45739481977493163" datatype="html">
+        <source>Size</source>
       </trans-unit>
       <trans-unit id="1997992313730455534" datatype="html">
         <source>Number of aligned pieces needed to win</source>
@@ -1398,8 +1407,8 @@
       <trans-unit id="3060866055407923547" datatype="html">
         <source>Moving a phalanx</source>
       </trans-unit>
-      <trans-unit id="8694316311666575180" datatype="html">
-        <source>A line of several piece is called a phalanx. Let us now see how to move a phalanx along a line:&lt;ol&gt;&lt;li&gt;Click on the first piece of the phalanx.&lt;/li&gt;&lt;li&gt;Click on one of the squares highlighted in yellow; you can move your phalanx up to a distance equal to its length.&lt;/li&gt;&lt;/ol&gt;&lt;br/&gt;You&apos;re playing Dark, move a phalanx!</source>
+      <trans-unit id="6553475319799851486" datatype="html">
+        <source>A line of several pieces is called a phalanx. Let us now see how to move a phalanx along a line:&lt;ol&gt;&lt;li&gt;Click on the first piece of the phalanx.&lt;/li&gt;&lt;li&gt;Click on one of the squares highlighted in yellow; you can move your phalanx up to a distance equal to its length.&lt;/li&gt;&lt;/ol&gt;&lt;br/&gt;You&apos;re playing Dark, move a phalanx!</source>
       </trans-unit>
       <trans-unit id="108222118450000526" datatype="html">
         <source>Failed! You moved only one piece.</source>
@@ -1522,6 +1531,9 @@
       <trans-unit id="2182334345707735267" datatype="html">
         <source>Congratulations, you have gotten 12 of your pieces back and captured 2 of your opponent&apos;s pieces.</source>
       </trans-unit>
+      <trans-unit id="8400174784913655582" datatype="html">
+        <source>Minimax</source>
+      </trans-unit>
       <trans-unit id="4172293183843503071" datatype="html">
         <source>This move is a ko, you must play somewhere else before you can play in this intersection again.</source>
       </trans-unit>
@@ -1536,9 +1548,6 @@
       </trans-unit>
       <trans-unit id="3878972107071324960" datatype="html">
         <source>You cannot commit suicide.</source>
-      </trans-unit>
-      <trans-unit id="8400174784913655582" datatype="html">
-        <source>Minimax</source>
       </trans-unit>
       <trans-unit id="2969677193390047071" datatype="html">
         <source>19 x 19</source>
@@ -1656,8 +1665,23 @@
         Light has 8 territories and 1 prisoner.
         The end result is therefore 18 - 9 for Dark.</source>
       </trans-unit>
-      <trans-unit id="45739481977493163" datatype="html">
-        <source>Size</source>
+      <trans-unit id="5525890868343399241" datatype="html">
+        <source>The game of Trigo is a triangular adaptation of the game of Go. Go is present on Everyboard, you can go learn it &lt;a href=&quot;/tutorial/Go&quot;&gt;here&lt;a/&gt;. This tutorial will only review the small differences that this experimental adaptation induced.</source>
+      </trans-unit>
+      <trans-unit id="3616229206195726198" datatype="html">
+        <source>Freedom</source>
+      </trans-unit>
+      <trans-unit id="8074559405875826310" datatype="html">
+        <source>Since the board is triangular, pieces have only one freedom in the corners.</source>
+      </trans-unit>
+      <trans-unit id="5242120872569966381" datatype="html">
+        <source>Since the board is triangular, pieces have only two freedoms on the edges.&lt;br/&gt; When pieces touch the board&apos;s edge with their corner only, like the pieces on the right, they&apos;re not really on the edges.</source>
+      </trans-unit>
+      <trans-unit id="7135410296040646228" datatype="html">
+        <source>Since the board is triangular, pieces have three freedoms when they don&apos;t touch the edge.</source>
+      </trans-unit>
+      <trans-unit id="9089012671848915244" datatype="html">
+        <source>Since the board is triangular, groups of two pieces have only one more freedom (making an atari a shisho by default).</source>
       </trans-unit>
       <trans-unit id="69616505141416052" datatype="html">
         <source>Hexodia is played on a hexagonal board, your goal is to be the first to align 6 of your pieces.</source>

@@ -21,13 +21,13 @@ describe('CoerceoState', () => {
             expect(state.isDeconnectable(dummyCoord)).toBeTrue();
         });
 
-        it('should not deconnect when 3 splitted neighbor (v v _ v _ _)', () => {
+        it('should not deconnect when 3 split neighbor (v v _ v _ _)', () => {
             const state: CoerceoState = new CoerceoState([], 0, PlayerNumberMap.of(0, 0), PlayerNumberMap.of(0, 0));
             spyOn(state, 'getPresentNeighborTilesRelativeIndices').and.returnValue([0, 1, 3]);
             expect(state.isDeconnectable(dummyCoord)).toBeFalse();
         });
 
-        it('should not deconnect when 3 splitted neighbor (v _ v v _ _)', () => {
+        it('should not deconnect when 3 split neighbor (v _ v v _ _)', () => {
             const state: CoerceoState = new CoerceoState([], 0, PlayerNumberMap.of(0, 0), PlayerNumberMap.of(0, 0));
             spyOn(state, 'getPresentNeighborTilesRelativeIndices').and.returnValue([0, 2, 3]);
             expect(state.isDeconnectable(dummyCoord)).toBeFalse();

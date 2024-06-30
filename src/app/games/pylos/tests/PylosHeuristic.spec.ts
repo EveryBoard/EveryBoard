@@ -21,7 +21,7 @@ describe('PylosHeuristic', () => {
         heuristic = new PylosHeuristic();
     });
 
-    it('should calculate board value according to number of pawn of each player', () => {
+    it('should calculate board value according to number of piece of each player', () => {
         const board: PlayerOrNone[][][] = [
             [
                 [O, X, O, X],

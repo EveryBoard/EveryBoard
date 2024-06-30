@@ -31,7 +31,7 @@
 /.sass-cache
 /connect.lock
 /typings
-./nx
+./nx/
 *.log
 
 # System Files

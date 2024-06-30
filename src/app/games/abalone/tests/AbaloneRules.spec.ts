@@ -194,7 +194,7 @@ describe('AbaloneRules', () => {
     });
 
     it('should make pushed piece get of the board', () => {
-        // Given an board where 3 can push 1 out of 2 aligned pieces out of the board
+        // Given a board where 3 can push 1 out of 2 aligned pieces out of the board
         const board: FourStatePiece[][] = [
             [N, N, N, N, _, _, _, _, _],
             [N, N, N, _, _, _, _, _, _],

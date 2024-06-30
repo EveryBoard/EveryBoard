@@ -357,7 +357,7 @@ describe('KalahRules', () => {
             // When doing simple distribution ending in store
             const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(3));
 
-            // Then the move should be legal and the store should contain one (so, the score)
+            // Then the move should succeed and the store should contain one (so, the score)
             const expectedBoard: Table<number> = [
                 [4, 4, 4, 4, 4, 4],
                 [5, 5, 5, 0, 4, 4],

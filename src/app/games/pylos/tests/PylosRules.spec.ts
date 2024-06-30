@@ -302,7 +302,7 @@ describe('PylosRules', () => {
         RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
     });
 
-    it('should allow legal capture to include piece supporting previously captured stone', () => {
+    it('should allow legal capture to include piece supporting previously captured piece', () => {
         const board: PlayerOrNone[][][] = [
             [
                 [X, O, X, O],

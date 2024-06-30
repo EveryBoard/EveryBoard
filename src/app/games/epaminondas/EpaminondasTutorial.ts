@@ -74,7 +74,7 @@ export class EpaminondasTutorial extends Tutorial {
         ),
         TutorialStep.fromPredicate(
             $localize`Moving a phalanx`,
-            $localize`A line of several piece is called a phalanx. Let us now see how to move a phalanx along a line:<ol><li>Click on the first piece of the phalanx.</li><li>Click on one of the squares highlighted in yellow; you can move your phalanx up to a distance equal to its length.</li></ol><br/>You're playing Dark, move a phalanx!`,
+            $localize`A line of several pieces is called a phalanx. Let us now see how to move a phalanx along a line:<ol><li>Click on the first piece of the phalanx.</li><li>Click on one of the squares highlighted in yellow; you can move your phalanx up to a distance equal to its length.</li></ol><br/>You're playing Dark, move a phalanx!`,
             EpaminondasRules.get().getInitialState(defaultConfig),
             new EpaminondasMove(0, 11, 2, 1, Ordinal.UP),
             (move: EpaminondasMove, _previous: EpaminondasState, _result: EpaminondasState) => {

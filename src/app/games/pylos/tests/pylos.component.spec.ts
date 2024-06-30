@@ -66,7 +66,7 @@ describe('PylosComponent', () => {
         it('should allow dropping piece on occupable space', fakeAsync(async() => {
             // Given a board where a drop is possible
             // When clicking on it
-            // Then the move should be accepted
+            // Then the move should succeed
             const move: PylosMove = PylosMove.ofDrop(new PylosCoord(0, 0, 0), []);
             await testUtils.expectMoveSuccess('#drop_0_0_0', move);
         }));
@@ -248,7 +248,7 @@ describe('PylosComponent', () => {
         }));
 
         it('should allow climbing', fakeAsync(async() => {
-            // Given an board where climbing is possible
+            // Given a board where climbing is possible
             await testUtils.setupState(climbableState);
 
             // When clicking the first piece then its landing place
@@ -563,7 +563,7 @@ describe('PylosComponent', () => {
             await testUtils.expectClickSuccess('#piece_0_0_1');
 
             // When clicking on the newly capturable piece then validating the capture
-            // Then the move should be legal
+            // Then the move should succeed
             const captures: PylosCoord[] = [new PylosCoord(0, 0, 1), new PylosCoord(0, 0, 0)];
             const move: PylosMove = PylosMove.ofClimb(new PylosCoord(3, 3, 0), new PylosCoord(1, 1, 1), captures);
             await testUtils.expectClickSuccess('#piece_0_0_0');

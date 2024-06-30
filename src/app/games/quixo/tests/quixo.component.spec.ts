@@ -87,7 +87,7 @@ describe('QuixoComponent', () => {
             // When choosing a direction and finalising the move
             await testUtils.expectMoveSuccess('#chooseDirection_LEFT', new QuixoMove(4, 0, Orthogonal.LEFT));
 
-            // Then the move should be accepted and displayed
+            // Then the move should succeed and displayed
             testUtils.expectElementToHaveClass('#click_4_0', 'last-move-stroke');
         }));
 

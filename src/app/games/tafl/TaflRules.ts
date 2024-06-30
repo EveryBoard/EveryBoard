@@ -97,7 +97,7 @@ export abstract class TaflRules<M extends TaflMove> extends ConfigurableRules<M,
          * 1. the threatened square doesn't exist      -> no capture
          * 2: the threatened square is not an opponent -> no capture
          * 3: the threatened square is a king          -> delegate calculation
-         * 4: the threatened square is a pawn          -> delegate calculation
+         * 4: the threatened square is a piece         -> delegate calculation
          */
         const threatened: Coord = landingPawn.getNext(d);
         if (state.isOnBoard(threatened) === false) {
@@ -207,7 +207,7 @@ export abstract class TaflRules<M extends TaflMove> extends ConfigurableRules<M,
 
     private capturePawn(player: Player, coord: Coord, direction: Orthogonal, state: TaflState): MGPOptional<Coord> {
         /**
-         * the captured pawn is on the next coord after 'coord' (in direction 'direction')
+         * the captured piece is on the next coord after 'coord' (in direction 'direction')
          * coord partipate in the capture
          *
          * So these are the different capture ways :
@@ -225,27 +225,27 @@ export abstract class TaflRules<M extends TaflMove> extends ConfigurableRules<M,
         if (back === RelativePlayer.NONE) {
             if (this.isThrone(state, backCoord) === false) {
                 Debug.display('TaflRules', 'capturePawn',
-                              'cannot capture a pawn without an ally; ' +
-                              threatenedPieceCoord + 'threatened by ' + player + `'s pawn in ` + coord +
+                              'cannot capture a piece without an ally; ' +
+                              threatenedPieceCoord + 'threatened by ' + player + `'s piece in ` + coord +
                               ' coming from this direction (' + direction.x + ', ' + direction.y + ')' +
-                              'cannot capture a pawn without an ally behind');
+                              'cannot capture a piece without an ally behind');
                 return MGPOptional.empty();
             } // here, back is an empty throne
             Debug.display('TaflRules', 'capturePawn',
-                          'pawn captured by 1 opponent and 1 throne; ' +
-                          threatenedPieceCoord + 'threatened by ' + player + `'s pawn in ` + coord +
+                          'piece captured by 1 opponent and 1 throne; ' +
+                          threatenedPieceCoord + 'threatened by ' + player + `'s piece in ` + coord +
                           ' coming from this direction (' + direction.x + ', ' + direction.y + ')');
-            return MGPOptional.of(threatenedPieceCoord); // pawn captured by 1 opponent and 1 throne
+            return MGPOptional.of(threatenedPieceCoord); // piece captured by 1 opponent and 1 throne
         }
         if (back === RelativePlayer.PLAYER) {
             Debug.display('TaflRules', 'capturePawn',
-                          'pawn captured by 2 opponents; ' + threatenedPieceCoord +
-                          'threatened by ' + player + `'s pawn in ` + coord +
+                          'piece captured by 2 opponents; ' + threatenedPieceCoord +
+                          'threatened by ' + player + `'s piece in ` + coord +
                           ' coming from this direction (' + direction.x + ', ' + direction.y + ')');
-            return MGPOptional.of(threatenedPieceCoord); // pawn captured by two opponents
+            return MGPOptional.of(threatenedPieceCoord); // piece captured by two opponents
         }
         Debug.display('TaflRules', 'capturePawn',
-                      'no captures; ' + threatenedPieceCoord + 'threatened by ' + player + `'s pawn in ` + coord +
+                      'no captures; ' + threatenedPieceCoord + 'threatened by ' + player + `'s piece in ` + coord +
                       ' coming from this direction (' + direction.x + ', ' + direction.y + ')');
         return MGPOptional.empty();
     }
@@ -365,10 +365,10 @@ export abstract class TaflRules<M extends TaflMove> extends ConfigurableRules<M,
         const listMoves: M[] = [];
         const listPawns: Coord[] = this.getPlayerListPawns(player, state);
 
-        for (const pawn of listPawns) {
-            const pawnDestinations: Coord[] = this.getPossibleDestinations(pawn, state, config);
+        for (const piece of listPawns) {
+            const pawnDestinations: Coord[] = this.getPossibleDestinations(piece, state, config);
             for (const destination of pawnDestinations) {
-                const newMove: M = this.generateMove(pawn, destination).get();
+                const newMove: M = this.generateMove(piece, destination).get();
                 listMoves.push(newMove);
             }
         }
@@ -381,10 +381,10 @@ export abstract class TaflRules<M extends TaflMove> extends ConfigurableRules<M,
         for (let y: number = 0; y < size; y++) {
             for (let x: number = 0; x < size; x++) {
                 // for each square
-                const pawn: Coord = new Coord(x, y);
-                const owner: PlayerOrNone = state.getAbsoluteOwner(pawn);
+                const piece: Coord = new Coord(x, y);
+                const owner: PlayerOrNone = state.getAbsoluteOwner(piece);
                 if (owner === player) {
-                    listPawn.push(pawn);
+                    listPawn.push(piece);
                 }
             }
         }
@@ -392,7 +392,7 @@ export abstract class TaflRules<M extends TaflMove> extends ConfigurableRules<M,
     }
 
     public getPossibleDestinations(start: Coord, state: TaflState, config: TaflConfig): Coord[] {
-        // search the possible destinations for the pawn at "start"
+        // search the possible destinations for the piece at "start"
         const destinations: Coord[] = [];
         let foundDestination: Coord;
         for (const dir of Orthogonal.ORTHOGONALS) {

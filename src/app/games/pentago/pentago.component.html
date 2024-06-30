@@ -31,7 +31,7 @@
               id="block-{{ bx }}-{{ by }}"
               x="0"
               y="0"
-              [attr.transform]="'translate(' + blockX + ', ' + blockY + ')'"
+              [attr.transform]="getSVGTranslation(blockX, blockY)"
               [attr.rx]="3 * STROKE_WIDTH"
               [attr.ry]="3 * STROKE_WIDTH"
               [attr.width]="BLOCK_WIDTH"

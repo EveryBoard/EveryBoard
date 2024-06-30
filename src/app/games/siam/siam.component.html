@@ -9,7 +9,7 @@
     <g id="siamBoard">
         <g *ngFor="let line of board; index as y">
             <g *ngFor="let c of line; index as x"
-               [attr.transform]="'translate(' + (x * SPACE_SIZE) + ' ' + (y * SPACE_SIZE) + ')'">
+               [attr.transform]="getTranslationAtXY(x, y)">
                 <rect id="square_{{ x }}_{{ y }}"
                       (click)="clickSquare(x, y)"
                       [attr.x]="SPACE_SIZE * x * 0"

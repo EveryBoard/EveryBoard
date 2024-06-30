@@ -113,7 +113,7 @@ describe('DiaballikMoveGenerator', () => {
         // Given the initial node
         const node: DiaballikNode = new DiaballikNode(DiaballikRules.get().getInitialState());
 
-        // When computing the list of moves
+        // When listing the moves
         const moves: DiaballikMove[] = moveGenerator.getListMoves(node, defaultConfig);
 
         // Then it should have all move options containing 1-step moves (8 exactly, 6 translations and 2 passes),
@@ -153,7 +153,7 @@ describe('DiaballikMoveGenerator', () => {
         ], 0);
         const node: DiaballikNode = new DiaballikNode(state);
 
-        // When computing the list of moves
+        // When listing the moves
         const moves: DiaballikMove[] = moveGenerator.getListMoves(node, defaultConfig);
 
         // Then it should not have "no-op" translations
@@ -177,7 +177,7 @@ describe('DiaballikMoveGenerator', () => {
         ], 0);
         const node: DiaballikNode = new DiaballikNode(state);
 
-        // When computing the list of moves
+        // When listing the moves
         const moves: DiaballikMove[] = moveGenerator.getListMoves(node, defaultConfig);
 
         // Then it should only have one of each 2-translation option
@@ -204,7 +204,7 @@ describe('DiaballikMoveGenerator (not avoiding duplicates)', () => {
         // Given the initial node
         const node: DiaballikNode = new DiaballikNode(DiaballikRules.get().getInitialState());
 
-        // When computing the list of moves
+        // When listing the moves
         const moves: DiaballikMove[] = moveGenerator.getListMoves(node, defaultConfig);
 
         // Then it should have all move options containing 1-step moves (8 exactly, 6 translations and 2 passes),

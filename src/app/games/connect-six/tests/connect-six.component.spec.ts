@@ -34,7 +34,7 @@ describe('ConnectSixComponent', () => {
             await testUtils.expectMoveSuccess('#click-9-9', move);
         }));
 
-        it('should cancel move when clicking on occupied stone from previous turns', fakeAsync(async() => {
+        it('should cancel move when clicking on occupied piece from previous turns', fakeAsync(async() => {
             // Given a component with pieces on it, from previous turns
             const state: ConnectSixState = new ConnectSixState([
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
