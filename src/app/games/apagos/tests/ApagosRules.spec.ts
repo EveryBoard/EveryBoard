@@ -161,7 +161,7 @@ describe('ApagosRules', () => {
         });
 
         it('should detect victory in case where the last square is evenly divided', () => {
-            // Given a ended state with victory not on the last square
+            // Given a full board with highest space evenly split but second square dominated by Player ONE
             const state: ApagosState = ApagosState.fromRepresentation(20, [
                 [7, 0, 1, 1],
                 [0, 5, 2, 1],
@@ -169,7 +169,7 @@ describe('ApagosRules', () => {
             ], 0, 0);
             const node: ApagosNode = new ApagosNode(state);
             // When checking the game status
-            // Then it should still be a victory
+            // Then it should be a victory for Player.ONE
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, defaultConfig);
         });
 
