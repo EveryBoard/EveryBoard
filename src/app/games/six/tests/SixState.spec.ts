@@ -79,8 +79,8 @@ describe('SixState', () => {
             // When trying to switch an empty coord
             // Then it should throw and call logError
             spyOn(Utils, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
-            const errorMessage: string = 'Cannot switch piece if there is no piece! ({"coord":"(0, 0)"})';
-            expect(() => state.switchPiece(new Coord(0, 0))).toThrowError('Assertion failure: ' + errorMessage);
+            const errorMessage: string = 'Cannot switch piece if there is no piece!';
+            expect(() => state.switchPiece(new Coord(0, 0))).toThrowError('Assertion failure: ' + errorMessage + ' ({"coord":"(0, 0)"})');
             expect(Utils.logError).toHaveBeenCalledWith('Assertion failure', errorMessage, { coord: '(0, 0)' });
         });
 
