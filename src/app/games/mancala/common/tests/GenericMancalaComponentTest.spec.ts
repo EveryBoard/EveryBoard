@@ -237,7 +237,12 @@ export function doMancalaComponentTests<C extends MancalaComponent<R>,
     describe(entries.gameName + ' component generic tests', () => {
 
         function awaitEndOfMove(): void {
-            tick(6600); // 26 seeds drop and 4 sub-distribution for ba-awa, longest game to distribute
+            // Wait for the longest possible game (Ba-Awa: 4 laps with 26 drops)
+            // eslint-disable-next-line dot-notation
+            const seedDropsTime: number = entries.component['TIMEOUT_BETWEEN_SEEDS'] * 26;
+            // eslint-disable-next-line dot-notation
+            const lapsTime: number = entries.component['TIMEOUT_BETWEEN_LAPS'] * 4;
+            tick(seedDropsTime + lapsTime);
         }
 
         beforeEach(fakeAsync(async() => {

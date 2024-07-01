@@ -140,7 +140,9 @@ describe('BaAwaComponent', () => {
             const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(3));
 
             // Then this should trigger a single distribution move
-            await testUtils.expectMoveSuccess('#click-3-1', move, 1400);
+            await testUtils.expectMoveSuccess('#click-3-1', move,
+                                              BaAwaComponent.TIMEOUT_BETWEEN_LAPS +
+                                              BaAwaComponent.TIMEOUT_BETWEEN_SEEDS * 4);
         }));
 
         it('should allow redistribution if allowed by config', fakeAsync(async() => {
@@ -156,13 +158,13 @@ describe('BaAwaComponent', () => {
             ], 10, PlayerNumberMap.of(0, 0));
             await testUtils.setupState(state, { config: customConfig });
             await testUtils.expectClickSuccess('#click-0-1');
-            tick(100);
+            tick(BaAwaComponent.TIMEOUT_BETWEEN_SEEDS);
 
             // When doing the second distribution
             const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(0), [MancalaDistribution.of(2)]);
 
             // Then this should trigger a single distribution move
-            await testUtils.expectMoveSuccess('#click-2-1', move, 100);
+            await testUtils.expectMoveSuccess('#click-2-1', move, BaAwaComponent.TIMEOUT_BETWEEN_SEEDS);
             const expectedState: MancalaState = new MancalaState([
                 [0, 0, 8, 0, 0, 0],
                 [0, 1, 0, 1, 1, 0],

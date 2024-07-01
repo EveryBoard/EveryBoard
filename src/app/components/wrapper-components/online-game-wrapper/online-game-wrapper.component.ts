@@ -452,7 +452,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
 
     public async onLegalUserMove(move: Move): Promise<void> {
         // First, show the move in the component
-        await this.applyMove(move, true);
+        await this.applyMove(move, false); // Move was already animated by its game component, no need to animate again
         // Then, send the move
         const config: MGPOptional<RulesConfig> = await this.getConfig();
         const gameStatus: GameStatus = this.gameComponent.rules.getGameStatus(this.gameComponent.node, config);

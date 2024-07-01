@@ -129,19 +129,19 @@ describe('KalahComponent', () => {
                 tick(5 * MancalaComponent.TIMEOUT_BETWEEN_SEEDS);
             }));
 
-            it('should wait one sec between each sub-distribution when receiving move', fakeAsync(async() => {
+            it('should wait TIMEOUT_BETWEEN_LAPS between each sub-distribution when receiving move', fakeAsync(async() => {
                 // Given a board where AI move is sure to be two distributions (here, the initial state)
                 // When AI play
                 await mancalaTestUtils.testUtils.selectAIPlayer(Player.ZERO);
 
-                // Then the 1000ms pause of the AI should be done first
+                // Then the pause of the AI should be done first
                 tick(LocalGameWrapperComponent.AI_TIMEOUT);
                 // Then it should take TIMEOUT_BETWEEN_SEED ms to empty the initial house
                 tick(MancalaComponent.TIMEOUT_BETWEEN_SEEDS);
                 // Then 4 * TIMEOUT_BETWEEN_SEED ms to sow the 4 seeds
                 tick(4 * MancalaComponent.TIMEOUT_BETWEEN_SEEDS);
 
-                // Then second turn start, 1000ms pause that this test is about
+                // Then second turn start, pause that this test is about
                 tick(MancalaComponent.TIMEOUT_BETWEEN_LAPS);
                 // and to optimise gain, AI will still play a move that pass through the Kalah
                 // hence a move in column 0 1 or 2, which will all be of 5 seeds now
@@ -315,7 +315,7 @@ describe('KalahComponent', () => {
 
             // When giving turn to AI to play and waiting for move
             await mancalaTestUtils.testUtils.selectAIPlayer(Player.ZERO);
-            // 1000ms for AI to take action + 1000 for the distribution
+            // time for AI to take action + time for the distribution
             tick(LocalGameWrapperComponent.AI_TIMEOUT + (5 * MancalaComponent.TIMEOUT_BETWEEN_SEEDS));
 
             // Then the " +1 " in Kalah secondary message should have disappeared

@@ -25,7 +25,7 @@ export type SeedDropResult = {
 export abstract class MancalaComponent<R extends MancalaRules>
     extends RectangularGameComponent<R, MancalaMove, MancalaState, number, MancalaConfig>
 {
-    public static readonly TIMEOUT_BETWEEN_SEEDS: number = 100;
+    public static readonly TIMEOUT_BETWEEN_SEEDS: number = 1000;
 
     // The awaited time between two laps or distributions
     public static readonly TIMEOUT_BETWEEN_LAPS: number = 1000;
