@@ -26,7 +26,7 @@ import { OGWCRequestManagerService, RequestInfo } from './OGWCRequestManagerServ
 import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 import { Debug } from 'src/app/utils/Debug';
-import { AbstractRules, SuperRules } from 'src/app/jscaip/Rules';
+import { SuperRules } from 'src/app/jscaip/Rules';
 import { ServerTimeService } from 'src/app/services/ServerTimeService';
 
 export class OnlineGameWrapperMessages {
@@ -289,8 +289,6 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
     }
 
     private async onReceivedMove(moveEvent: GameEventMove, isLastMoveOfBatch: boolean): Promise<void> {
-        const rules: SuperRules<Move, GameState, RulesConfig, unknown> = this.gameComponent.rules;
-        const currentTurn: number = this.gameComponent.getTurn();
         if (this.moveSentButNotReceivedYet) {
             // This is our move, we have already have shown it
             // So we do nothing to show it again.
