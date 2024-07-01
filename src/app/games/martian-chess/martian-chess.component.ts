@@ -232,10 +232,9 @@ export class MartianChessComponent extends RectangularGameComponent<MartianChess
         this.promoted = MGPOptional.empty();
     }
 
-    public getPieceClasses(x: number, y: number): string[] {
-        const coord: Coord = new Coord(x, y);
+    public getPieceClasses(coord: Coord): string[] {
         const classes: string[] = [];
-        classes.push(y > 3 ? 'player0-fill' : 'player1-fill');
+        classes.push(coord.y > 3 ? 'player0-fill' : 'player1-fill');
         if (this.selectedPieceInfo.isPresent() && this.selectedPieceInfo.get().selectedPiece.equals(coord)) {
             classes.push('selected-stroke');
         }
@@ -245,17 +244,16 @@ export class MartianChessComponent extends RectangularGameComponent<MartianChess
         return classes;
     }
 
-    public async onClick(x: number, y: number): Promise<MGPValidation> {
+    public async onClick(coord: Coord): Promise<MGPValidation> {
         this.displayModePanel = false;
-        const clickValidity: MGPValidation = await this.canUserPlay('#click-' + x + '-' + y);
+        const clickValidity: MGPValidation = await this.canUserPlay('#click-' + coord.x + '-' + coord.y);
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }
-        const clickedCoord: Coord = new Coord(x, y);
         if (this.selectedPieceInfo.isPresent()) {
-            return this.secondClick(clickedCoord);
+            return this.secondClick(coord);
         } else {
-            return this.firstClick(clickedCoord);
+            return this.firstClick(coord);
         }
     }
 
@@ -371,8 +369,7 @@ export class MartianChessComponent extends RectangularGameComponent<MartianChess
         return classes;
     }
 
-    public getSquareClasses(x: number, y: number): string[] {
-        const square: Coord = new Coord(x, y);
+    public getSquareClasses(square: Coord): string[] {
         const classes: string[] = ['base'];
         if (this.captured.equalsValue(square)) {
             classes.push('captured-fill');
@@ -391,14 +388,14 @@ export class MartianChessComponent extends RectangularGameComponent<MartianChess
         this.displayModePanel = false;
     }
 
-    public getPieceTranslation(x: number, y: number): string {
-        const cx: number = this.SPACE_SIZE * x;
-        let cy: number = this.SPACE_SIZE * y;
-        if (y > 3) {
+    public getPieceTranslation(coord: Coord): string {
+        const cx: number = coord.x * this.SPACE_SIZE;
+        let cy: number = coord.y * this.SPACE_SIZE;
+        if (coord.y > 3) {
             // Need to take into account the double stroke of the middle of the board
             cy += 2 * this.STROKE_WIDTH;
         }
-        return `translate(${cx}, ${cy})`;
+        return this.getSVGTranslation(cx, cy);
     }
 
     public getBoardTransformation(): string {
