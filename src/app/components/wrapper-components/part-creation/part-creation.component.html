@@ -182,7 +182,7 @@
                         <div class="column">
                             <button class="button is-fullwidth"
                                     id="reviewConfig"
-                                    *ngIf="viewInfo.canReviewConfig"
+                                    [disabled]="viewInfo.canReviewConfig === false"
                                     (click)="changeConfig()"
                                     i18n
                             >Change configuration</button>

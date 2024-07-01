@@ -25,6 +25,7 @@ import { RulesConfigDescription } from '../rules-configuration/RulesConfigDescri
 import { Debug } from 'src/app/utils/Debug';
 import { DemoNodeInfo } from '../demo-card-wrapper/demo-card-wrapper.component';
 import { AbstractNode, GameNode } from 'src/app/jscaip/AI/GameNode';
+import { BaseWrapperComponent } from '../../game-components/game-component/GameComponent';
 
 type PartCreationViewInfo = {
     userIsCreator: boolean;
@@ -54,7 +55,7 @@ type PartCreationViewInfo = {
     templateUrl: './part-creation.component.html',
 })
 @Debug.log
-export class PartCreationComponent implements OnInit, OnDestroy {
+export class PartCreationComponent extends BaseWrapperComponent implements OnInit, OnDestroy {
     /*
      * Lifecycle:
      * 1. Creator chooses config and opponent
@@ -115,8 +116,8 @@ export class PartCreationComponent implements OnInit, OnDestroy {
 
     public configDemo: DemoNodeInfo;
 
-    public constructor(private readonly router: Router,
-                       private readonly activatedRoute: ActivatedRoute,
+    public constructor(activatedRoute: ActivatedRoute,
+                       private readonly router: Router,
                        private readonly connectedUserService: ConnectedUserService,
                        private readonly currentGameService: CurrentGameService,
                        private readonly gameService: GameService,
@@ -126,6 +127,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
                        private readonly messageDisplayer: MessageDisplayer,
                        private readonly cdr: ChangeDetectorRef)
     {
+        super(activatedRoute);
     }
 
     public async ngOnInit(): Promise<void> {
@@ -548,15 +550,6 @@ export class PartCreationComponent implements OnInit, OnDestroy {
 
     public getConfigDemo(): DemoNodeInfo {
         return this.configDemo;
-    }
-
-    protected getGameUrlName(): string {
-        return Utils.getNonNullable(this.activatedRoute.snapshot.paramMap.get('compo'));
-    }
-
-    public getGameName(): MGPOptional<string> {
-        // TODO FOR REVIEW: same reasoning as in LGWC, see comment there
-        return GameInfo.getByUrlName(this.getGameUrlName()).map((info: GameInfo) => info.name);
     }
 
     public getStateProvider(): MGPOptional<(config: MGPOptional<RulesConfig>) => GameState> {
