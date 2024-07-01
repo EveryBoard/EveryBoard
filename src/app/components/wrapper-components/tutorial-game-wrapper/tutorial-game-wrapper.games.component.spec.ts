@@ -78,7 +78,7 @@ import { TutorialStepMessage } from './TutorialStepMessage';
 
 describe('TutorialGameWrapperComponent (games)', () => {
     describe('Game should load correctly', () => {
-        for (const gameInfo of GameInfo.ALL_GAMES()) {
+        for (const gameInfo of GameInfo.getAllGames()) {
             it(gameInfo.urlName, fakeAsync(async() => {
                 const wrapper: GameWrapper<Comparable> =
                     (await ComponentTestUtils.forGameWithWrapper(gameInfo.urlName, TutorialGameWrapperComponent))
@@ -362,7 +362,7 @@ describe('TutorialGameWrapperComponent (games)', () => {
                 i++;
             }
         }));
-        for (const gameInfo of GameInfo.ALL_GAMES()) {
+        for (const gameInfo of GameInfo.getAllGames()) {
             it('should make sure all solution moves are legal for ' + gameInfo.name, fakeAsync(async() => {
                 const gameComponent: AbstractGameComponent =
                     (await ComponentTestUtils.forGameWithWrapper(gameInfo.urlName,
