@@ -31,7 +31,7 @@ export class DemoPageComponent {
     }
 
     public fillColumns(numberOfColumns: number): void {
-        const allGames: GameInfo[] = GameInfo.ALL_GAMES();
+        const allGames: GameInfo[] = GameInfo.getAllGames();
         let column: number = 0;
         let i: number = 0;
         this.columns = [];

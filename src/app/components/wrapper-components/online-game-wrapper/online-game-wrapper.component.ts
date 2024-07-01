@@ -107,7 +107,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
 
     private async redirectIfPartOrGameIsInvalid(): Promise<void> {
         const urlName: string = this.getGameUrlName();
-        const gameExists: boolean = GameInfo.ALL_GAMES().some((gameInfo: GameInfo) => gameInfo.urlName === urlName);
+        const gameExists: boolean = GameInfo.getByUrlName(urlName).isPresent();
         if (gameExists) {
             const partValidity: MGPValidation =
                 await this.gameService.getGameValidity(this.currentPartId, urlName);

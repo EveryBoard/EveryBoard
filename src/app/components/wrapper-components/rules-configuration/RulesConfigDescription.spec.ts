@@ -5,7 +5,7 @@ import { DefaultConfigDescription, RulesConfig } from 'src/app/jscaip/RulesConfi
 
 describe(`RulesConfigDescriptions`, () => {
 
-    for (const gameInfo of GameInfo.ALL_GAMES()) {
+    for (const gameInfo of GameInfo.getAllGames()) {
 
         const rulesConfigDescription: MGPOptional<RulesConfigDescription<RulesConfig>> =
             gameInfo.rules.getRulesConfigDescription();

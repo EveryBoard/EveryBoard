@@ -27,7 +27,7 @@ export class WelcomeComponent {
                        themeService: ThemeService)
     {
         this.theme = themeService.getTheme();
-        const allGames: GameInfo[] = GameInfo.ALL_GAMES();
+        const allGames: GameInfo[] = GameInfo.getAllGames();
         let column: number = 0;
         for (let i: number = 0; i < allGames.length; i++) {
             if (i < this.numberOfColumns) {

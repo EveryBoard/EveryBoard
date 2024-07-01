@@ -39,7 +39,7 @@ describe('GameComponent', () => {
         expect(Utils.logError).toHaveBeenCalledWith('GameComponent', errorMessage, errorData);
     }));
 
-    for (const gameInfo of GameInfo.ALL_GAMES()) {
+    for (const gameInfo of GameInfo.getAllGames()) {
         it(`should have an encoder, tutorial and AI for ${ gameInfo.name }`, fakeAsync(async() => {
             // Given a game
             activatedRouteStub.setRoute('compo', gameInfo.urlName);

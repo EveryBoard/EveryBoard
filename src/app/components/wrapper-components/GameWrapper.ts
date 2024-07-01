@@ -59,8 +59,7 @@ export abstract class GameWrapper<P extends Comparable> extends BaseWrapperCompo
     public abstract getPlayer(): P;
 
     private getMatchingComponent(gameName: string): MGPOptional<Type<AbstractGameComponent>> {
-        const optionalGameInfo: MGPOptional<GameInfo> =
-            MGPOptional.ofNullable(GameInfo.ALL_GAMES().find((gameInfo: GameInfo) => gameInfo.urlName === gameName));
+        const optionalGameInfo: MGPOptional<GameInfo> = GameInfo.getByUrlName(gameName);
         return optionalGameInfo.map((gameInfo: GameInfo) => gameInfo.component);
     }
 
