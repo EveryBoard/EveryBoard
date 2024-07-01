@@ -232,12 +232,6 @@ export class MartianChessComponent extends RectangularGameComponent<MartianChess
         this.promoted = MGPOptional.empty();
     }
 
-    public getPieceLocation(x: number, y: number): string {
-        const cx: number = this.SPACE_SIZE * x;
-        const cy: number = this.SPACE_SIZE * y;
-        return 'translate(' + cx + ', ' + cy + ')';
-    }
-
     public getPieceClasses(x: number, y: number): string[] {
         const coord: Coord = new Coord(x, y);
         const classes: string[] = [];
@@ -397,8 +391,14 @@ export class MartianChessComponent extends RectangularGameComponent<MartianChess
         this.displayModePanel = false;
     }
 
-    public getPieceTranslation(y: number): string {
-        return 'translate(0, ' + (y <= 3 ? 0 : (2 * this.STROKE_WIDTH)) + ')';
+    public getPieceTranslation(x: number, y: number): string {
+        const cx: number = this.SPACE_SIZE * x;
+        let cy: number = this.SPACE_SIZE * y;
+        if (y > 3) {
+            // Need to take into account the double stroke of the middle of the board
+            cy += 2 * this.STROKE_WIDTH;
+        }
+        return `translate(${cx}, ${cy})`;
     }
 
     public getBoardTransformation(): string {

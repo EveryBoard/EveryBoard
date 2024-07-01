@@ -7,17 +7,16 @@
             <g *ngFor="let piece of line; index as x"
                id="click-{{ x }}-{{ y }}"
                (click)="onClick(x, y)"
-               [attr.transform]="getPieceTranslation(y)">
+               [attr.transform]="getPieceTranslation(x, y)">
                 <!-- Background -->
                 <rect id="square-{{ x }}-{{ y }}"
-                      [attr.x]="x * SPACE_SIZE"
-                      [attr.y]="y * SPACE_SIZE"
+                      [attr.x]="0"
+                      [attr.y]="0"
                       [attr.width]="SPACE_SIZE"
                       [attr.height]="SPACE_SIZE"
                       [ngClass]="getSquareClasses(x, y)"/>
                 <!-- Pieces -->
-                <g *ngIf="piece !== pieces.EMPTY"
-                   [attr.transform]="getPieceLocation(x, y)">
+                <g *ngIf="piece !== pieces.EMPTY" >
                     <g *ngIf="piece === pieces.PAWN"
                        app-martian-chess-pawn
                        mainShapeId="pawn-{{ x }}-{{ y }}"
@@ -39,9 +38,9 @@
         <g *ngIf="selectedPieceInfo.isPresent()">
             <rect *ngFor="let possibleLanding of selectedPieceInfo.get().legalLandings"
                     id="indicator-{{ possibleLanding.x }}-{{ possibleLanding.y }}"
-                    [attr.transform]="getPieceTranslation(possibleLanding.y)"
-                    [attr.x]="possibleLanding.x * SPACE_SIZE + (SPACE_SIZE/2 - INDICATOR_SIZE/2)"
-                    [attr.y]="possibleLanding.y * SPACE_SIZE + (SPACE_SIZE/2 - INDICATOR_SIZE/2)"
+                    [attr.transform]="getPieceTranslation(possibleLanding.x, possibleLanding.y)"
+                    [attr.x]="SPACE_SIZE/2 - INDICATOR_SIZE/2"
+                    [attr.y]="SPACE_SIZE/2 - INDICATOR_SIZE/2"
                     [attr.width]="INDICATOR_SIZE"
                     [attr.height]="INDICATOR_SIZE"
                     (click)="onClick(possibleLanding.x, possibleLanding.y)"
