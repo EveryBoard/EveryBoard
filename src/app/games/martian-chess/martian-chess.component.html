@@ -36,17 +36,17 @@
                 </g>
             </g>
         </g>
-    </g>
-    <g *ngIf="selectedPieceInfo.isPresent()">
-        <rect *ngFor="let possibleLanding of selectedPieceInfo.get().legalLandings"
-                id="indicator-{{ possibleLanding.x }}-{{ possibleLanding.y }}"
-                [attr.transform]="getPieceTranslation(possibleLanding.y)"
-                [attr.x]="possibleLanding.x * SPACE_SIZE + (SPACE_SIZE/2 - INDICATOR_SIZE/2)"
-                [attr.y]="possibleLanding.y * SPACE_SIZE + (SPACE_SIZE/2 - INDICATOR_SIZE/2)"
-                [attr.width]="INDICATOR_SIZE"
-                [attr.height]="INDICATOR_SIZE"
-                (click)="onClick(possibleLanding.x, possibleLanding.y)"
-                class="indicator"/>
+        <g *ngIf="selectedPieceInfo.isPresent()">
+            <rect *ngFor="let possibleLanding of selectedPieceInfo.get().legalLandings"
+                    id="indicator-{{ possibleLanding.x }}-{{ possibleLanding.y }}"
+                    [attr.transform]="getPieceTranslation(possibleLanding.y)"
+                    [attr.x]="possibleLanding.x * SPACE_SIZE + (SPACE_SIZE/2 - INDICATOR_SIZE/2)"
+                    [attr.y]="possibleLanding.y * SPACE_SIZE + (SPACE_SIZE/2 - INDICATOR_SIZE/2)"
+                    [attr.width]="INDICATOR_SIZE"
+                    [attr.height]="INDICATOR_SIZE"
+                    (click)="onClick(possibleLanding.x, possibleLanding.y)"
+                    class="indicator"/>
+        </g>
     </g>
     <g id="clock-or-count-down-view"
        (click)="onClockClick()"
