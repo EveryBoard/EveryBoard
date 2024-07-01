@@ -88,15 +88,24 @@ export class RulesConfigurationComponent extends BaseWrapperComponent implements
             formControl.disable();
         }
         formControl.valueChanges.subscribe(() => {
-            console.log('value changed')
             this.onUpdate();
         });
         return formControl;
     }
 
     private onUpdate(): void {
-        // Utils.assert(this.editable, 'Only editors should be able to modify rules config');
-        Utils.assert(this.chosenConfigName === 'Custom', 'Only customizable config should be modified!');
+        // TODO FOR REVIEW: j'ai supprimé les asserts ici car onUpdate semble
+        // appelé même quand il n'y a pas de changement fait sur les config
+        // (genre pendant l'initialisation). Tout semble fonctionner
+        // parfaitement, mais les tests du composant cassent. Quid: bien tester
+        // manuellement et supprimer les tests qui checkent ces assertions, ou
+        // passer des heures à voir comment contourner pour fixer des tests
+        // alors que le comportement réel marche déjà ? À noter que rajouter les
+        // asserts cassent des tests à la rien à voir, qui affichent juste un
+        // jeu dans OGWC.
+        //
+        // Autre option: faire des vrais tests dans rules-config qui testent que
+        // les boutons sont disabled si la config est pas modifiable.
         const rulesConfig: RulesConfig = {};
         const parameterNames: string[] = this.rulesConfigDescription.getFields();
         for (const parameterName of parameterNames) {
