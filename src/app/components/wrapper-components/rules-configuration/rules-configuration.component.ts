@@ -43,6 +43,13 @@ export class RulesConfigurationComponent extends BaseWrapperComponent implements
     public constructor(activatedRoute: ActivatedRoute)
     {
         super(activatedRoute);
+        this.checkInputs();
+    }
+
+    private checkInputs(): void {
+        if (this.editable) {
+            Utils.assert(this.rulesConfigToDisplay !== undefined, 'Config should be provided if RulesConfigurationComponent is not editable');
+        }
     }
 
     public getChosenConfigName(): string {
@@ -76,7 +83,6 @@ export class RulesConfigurationComponent extends BaseWrapperComponent implements
         if (this.editable) {
             return defaultValue;
         } else {
-            Utils.assert(this.rulesConfigToDisplay !== undefined, 'Config should be provided if RulesConfigurationComponent is not editable');
             const configuration: RulesConfig = Utils.getNonNullable(this.rulesConfigToDisplay);
             return configuration[name];
         }
@@ -94,18 +100,9 @@ export class RulesConfigurationComponent extends BaseWrapperComponent implements
     }
 
     private onUpdate(): void {
-        // TODO FOR REVIEW: j'ai supprimé les asserts ici car onUpdate semble
-        // appelé même quand il n'y a pas de changement fait sur les config
-        // (genre pendant l'initialisation). Tout semble fonctionner
-        // parfaitement, mais les tests du composant cassent. Quid: bien tester
-        // manuellement et supprimer les tests qui checkent ces assertions, ou
-        // passer des heures à voir comment contourner pour fixer des tests
-        // alors que le comportement réel marche déjà ? À noter que rajouter les
-        // asserts cassent des tests à la rien à voir, qui affichent juste un
-        // jeu dans OGWC.
-        //
-        // Autre option: faire des vrais tests dans rules-config qui testent que
-        // les boutons sont disabled si la config est pas modifiable.
+        console.log({editable: this.editable, chosenCnofig: this.chosenConfigName})
+        Utils.assert(this.editable, 'Only editable config should be modified');
+        //Utils.assert(this.chosenConfigName === 'Custom', 'Only Customifiable config should be modified!');
         const rulesConfig: RulesConfig = {};
         const parameterNames: string[] = this.rulesConfigDescription.getFields();
         for (const parameterName of parameterNames) {
@@ -162,6 +159,7 @@ export class RulesConfigurationComponent extends BaseWrapperComponent implements
     }
 
     private setChosenConfig(configName: string): void {
+        console.log('setChosenConfig ' + configName)
         this.chosenConfigName = configName;
         let config: RulesConfig;
         if (this.chosenConfigName === 'Custom') {

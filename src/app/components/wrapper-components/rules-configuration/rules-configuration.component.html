@@ -26,6 +26,7 @@
     </div>
 
     <form [formGroup]="rulesConfigForm"
+          class="mt-2"
           id="{{ getChosenConfigName() }}_values">
         <fieldset class="left-border" >
             <div *ngFor="let configParameter of getFields()"
