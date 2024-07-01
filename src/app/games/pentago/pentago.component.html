@@ -41,14 +41,14 @@
         />
     </ng-container>
 
-    <circle *ngFor="let cac of state.getCoordsAndContents()"
-            id="click-{{ cac.coord.x }}-{{ cac.coord.y }}"
-            [attr.transform]="getPieceTranslate(cac.coord)"
-            (click)="onClick(cac.coord)"
+    <circle *ngFor="let coordAndContent of state.getCoordsAndContents()"
+            id="click-{{ coordAndContent.coord.x }}-{{ coordAndContent.coord.y }}"
+            [attr.transform]="getPieceTranslate(coordAndContent.coord)"
+            (click)="onClick(coordAndContent.coord)"
             [attr.cx]="0.5 * SPACE_SIZE"
             [attr.cy]="0.5 * SPACE_SIZE"
             [attr.r]="(SPACE_SIZE - STROKE_WIDTH) / 2"
-            [ngClass]="getSquareClasses(cac.coord)"
+            [ngClass]="getSquareClasses(coordAndContent.coord)"
             class="base"
             pointer-events="fill"
     />

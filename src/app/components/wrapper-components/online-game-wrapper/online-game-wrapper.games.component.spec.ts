@@ -17,8 +17,8 @@ describe('OnlineGameWrapperComponent (games)', () => {
     const refusal: MGPValidation = MGPValidation.failure(OnlineGameWrapperMessages.CANNOT_PLAY_AS_OBSERVER());
     let testUtils: ComponentTestUtils<AbstractGameComponent, MinimalUser>;
 
-    for (const gameInfo of GameInfo.ALL_GAMES()) {
-        fit(`click methods should refuse when observer clicks (${gameInfo.urlName})`, fakeAsync(async() => {
+    for (const gameInfo of GameInfo.getAllGames()) {
+        it(`click methods should refuse when observer clicks (${gameInfo.urlName})`, fakeAsync(async() => {
             // Given a online game
             const game: { [methodName: string]: unknown[] } | undefined = clickableMethods[gameInfo.urlName];
             if (game == null) {

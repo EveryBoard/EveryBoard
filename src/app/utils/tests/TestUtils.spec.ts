@@ -328,9 +328,9 @@ export class ComponentTestUtils<C extends AbstractGameComponent, P extends Compa
     : Promise<ComponentTestUtils<Component>>
     {
         const optionalGameInfo: MGPOptional<GameInfo> =
-            MGPOptional.ofNullable(GameInfo.ALL_GAMES().find((gameInfo: GameInfo) => gameInfo.urlName === game));
+            MGPOptional.ofNullable(GameInfo.getAllGames().find((gameInfo: GameInfo) => gameInfo.urlName === game));
         if (optionalGameInfo.isAbsent()) {
-            throw new Error(game + ' is not a game developped on MGP, check if its name is in the second param of GameInfo');
+            throw new Error(game + ' is not a game developed on EveryBoard, check if its name is in the second param of GameInfo');
         }
         return ComponentTestUtils.forGameWithWrapper(game,
                                                      LocalGameWrapperComponent,

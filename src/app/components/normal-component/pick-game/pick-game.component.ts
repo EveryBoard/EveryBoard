@@ -234,10 +234,19 @@ class GameDescription {
 
 export class GameInfo {
 
+    private static ALL_GAMES: GameInfo[] = []; // Initialized like a singleton
+
     // Games sorted by creation date
+    public static getAllGames(): GameInfo[] {
+        if (GameInfo.ALL_GAMES.length === 0) {
+            GameInfo.fillAllGames();
+        }
+        return GameInfo.ALL_GAMES;
+    }
+
     // eslint-disable-next-line max-lines-per-function
-    public static ALL_GAMES(): GameInfo[] {
-        return [
+    private static fillAllGames(): void {
+        GameInfo.ALL_GAMES = [
             new GameInfo($localize`Four in a Row`,   'P4',                   P4Component,                  new P4Tutorial(),                  P4Rules.get(),                  new Date('2018-08-28'), GameDescription.P4()             ), //                             * Martin
             new GameInfo($localize`Awalé`,           'Awale',                AwaleComponent,               new AwaleTutorial(),               AwaleRules.get(),               new Date('2018-11-29'), GameDescription.AWALE()          ), // 93 days after P4            * Martin
             new GameInfo($localize`Quarto`,          'Quarto',               QuartoComponent,              new QuartoTutorial(),              QuartoRules.get(),              new Date('2018-12-09'), GameDescription.QUARTO()         ), // 10 days after Awale         * Martin
@@ -290,7 +299,7 @@ export class GameInfo {
     }
 
     public static getByUrlName(urlName: string): MGPOptional<GameInfo> {
-        const games: GameInfo[] = GameInfo.ALL_GAMES().filter((gameInfo: GameInfo) => gameInfo.urlName === urlName);
+        const games: GameInfo[] = GameInfo.getAllGames().filter((gameInfo: GameInfo) => gameInfo.urlName === urlName);
         Utils.assert(games.length <= 1, `There should only be one game matching $urlName!`);
         if (games.length === 0) {
             return MGPOptional.empty();
@@ -339,7 +348,7 @@ export class GameInfo {
 })
 export class PickGameComponent {
 
-    public readonly games: GameInfo[] = GameInfo.ALL_GAMES();
+    public readonly games: GameInfo[] = GameInfo.getAllGames();
 
     @Output() pickGame: EventEmitter<string> = new EventEmitter<string>();
 
