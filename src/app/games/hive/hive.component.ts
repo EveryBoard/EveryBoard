@@ -203,9 +203,7 @@ export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, H
         const boardAndRemainingViewBox: ViewBox = this.boardViewBox
             .containingAtLeast(minimalViewBox)
             .expandAbove(spaceForZero)
-            .expandBelow(spaceForOne)
-            .expandLeft(2 * this.SPACE_SIZE)
-            .expandRight(-1.5 * this.SPACE_SIZE);
+            .expandBelow(spaceForOne);
         if (this.inspectedStack.isPresent()) {
             const inspectedStackPosition: Coord =
                 new Coord(boardAndRemainingViewBox.right() + this.SPACE_SIZE,
