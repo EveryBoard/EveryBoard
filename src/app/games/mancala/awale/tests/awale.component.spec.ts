@@ -1,16 +1,17 @@
 /* eslint-disable max-lines-per-function */
-import { fakeAsync, tick } from '@angular/core/testing';
+import { fakeAsync } from '@angular/core/testing';
 
 import { AwaleComponent } from '../awale.component';
 import { AwaleRules } from '../AwaleRules';
 import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 import { MancalaState } from 'src/app/games/mancala/common/MancalaState';
-import { doMancalaComponentTests as doMancalaComponentTests } from '../../common/tests/GenericMancalaComponentTest.spec';
+import { doMancalaComponentTests as doMancalaComponentTests, MancalaComponentTestUtils } from '../../common/tests/GenericMancalaComponentTest.spec';
 import { AwaleMoveGenerator } from '../AwaleMoveGenerator';
 import { MancalaConfig } from '../../common/MancalaConfig';
 import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { MancalaDistribution, MancalaMove } from '../../common/MancalaMove';
 import { MGPOptional } from '@everyboard/lib';
+import { Coord } from 'src/app/jscaip/Coord';
 
 const defaultConfig: MGPOptional<MancalaConfig> = AwaleRules.get().getDefaultRulesConfig();
 
@@ -73,9 +74,11 @@ describe('AwaleComponent', () => {
     describe('Custom configuration', () => {
 
         let testUtils: ComponentTestUtils<AwaleComponent>;
+        let mancalaTestUtils: MancalaComponentTestUtils<AwaleComponent, AwaleRules>;
 
         beforeEach(fakeAsync(async() => {
             testUtils = await ComponentTestUtils.forGame<AwaleComponent>('Awale');
+            mancalaTestUtils = new MancalaComponentTestUtils(testUtils, new AwaleMoveGenerator());
         }));
 
         it('should not require additional click when ending distribution in store', fakeAsync(async() => {
@@ -91,9 +94,7 @@ describe('AwaleComponent', () => {
             const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(3));
 
             // Then this should trigger a single distribution move
-            await testUtils.expectMoveSuccess('#click-3-1', move,
-                                              AwaleComponent.TIMEOUT_BETWEEN_LAPS +
-                                              4 * AwaleComponent.TIMEOUT_BETWEEN_SEEDS);
+            await mancalaTestUtils.expectMoveSuccess('#click-3-1', move, customConfig.get());
         }));
 
         it('should allow redistribution if allowed by config', fakeAsync(async() => {
@@ -105,16 +106,13 @@ describe('AwaleComponent', () => {
             });
             const state: MancalaState = AwaleRules.get().getInitialState(customConfig);
             await testUtils.setupState(state, { config: customConfig });
-            await testUtils.expectClickSuccess('#click-3-1');
-            tick(AwaleComponent.TIMEOUT_BETWEEN_LAPS + 4 * AwaleComponent.TIMEOUT_BETWEEN_SEEDS);
+            await mancalaTestUtils.expectClickSuccess('#click-3-1');
 
             // When doing the second distribution
             const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(3), [MancalaDistribution.of(0)]);
 
             // Then this should trigger a single distribution move
-            await testUtils.expectMoveSuccess('#click-0-1', move,
-                                              AwaleComponent.TIMEOUT_BETWEEN_LAPS +
-                                              5 * AwaleComponent.TIMEOUT_BETWEEN_SEEDS);
+            await mancalaTestUtils.expectMoveSuccess('#click-0-1', move, customConfig.get());
             const expectedState: MancalaState = new MancalaState([
                 [5, 5, 5, 5, 4, 4],
                 [0, 5, 5, 0, 4, 4],

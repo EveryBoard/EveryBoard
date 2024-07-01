@@ -289,7 +289,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
 
     private async onReceivedMove(moveEvent: GameEventMove, isLastMoveOfBatch: boolean): Promise<void> {
         if (this.moveSentButNotReceivedYet) {
-            // This is our move, we have already have shown it
+            // This is our move, we have already shown it
             // So we do nothing to show it again.
             this.moveSentButNotReceivedYet = false;
         } else {
