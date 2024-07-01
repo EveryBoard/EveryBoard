@@ -1,5 +1,6 @@
 /* eslint-disable max-lines-per-function */
 import { fakeAsync, TestBed } from '@angular/core/testing';
+import { RouterTestingModule } from '@angular/router/testing';
 import { GameService } from '../GameService';
 import { PartDAO } from 'src/app/dao/PartDAO';
 import { Part, MGPResult } from 'src/app/domain/Part';
@@ -9,7 +10,6 @@ import { ChatDAOMock } from 'src/app/dao/tests/ChatDAOMock.spec';
 import { ChatDAO } from 'src/app/dao/ChatDAO';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { ConfigRoomDAO } from 'src/app/dao/ConfigRoomDAO';
-import { RouterTestingModule } from '@angular/router/testing';
 import { ConnectedUserService } from '../ConnectedUserService';
 import { ConnectedUserServiceMock } from './ConnectedUserService.spec';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';

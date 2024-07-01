@@ -78,8 +78,8 @@ export class UserService {
     : Promise<void>
     {
         // For both user: increment the number of game played
-        const playerZero: EloInfo = await this.getPlayerInfo(zero, gameName);
-        const playerOne: EloInfo = await this.getPlayerInfo(one, gameName);
+        const playerZero: EloInfo = await this.getPlayerEloInfo(zero, gameName);
+        const playerOne: EloInfo = await this.getPlayerEloInfo(one, gameName);
         // Calculate the game result
         const eloEntry: EloEntry = {
             eloInfoPair: PlayerMap.ofValues(playerZero, playerOne),
@@ -91,15 +91,15 @@ export class UserService {
         await this.updatePlayerElo(one, gameName, result[1]);
     }
 
-    public async getPlayerInfo(player: MinimalUser, gameName: string): Promise<EloInfo> {
-        console.log('getPlayerInfo', player, gameName)
+    public async getPlayerEloInfo(player: MinimalUser, gameName: string): Promise<EloInfo> {
+        console.log('getPlayerEloInfo', player, gameName)
         const subCollection: IFirestoreDAO<EloInfo> = this.userDAO.subCollectionDAO<EloInfo>(player.id, 'elos');
         console.log('subco, on est bon !')
         const optionalInfo: MGPOptional<EloInfo> = await subCollection.read(gameName);
         console.log('lu!')
         return optionalInfo.getOrElse({
             currentElo: 0,
-            numberOfGamePlayed: 0,
+            numberOfGamesPlayed: 0,
         });
     }
 

@@ -159,7 +159,7 @@ describe('UserDAO', () => {
 
             // When updating this user's elo
 
-            // Then the modification should have been rejected
+            // Then the update should have been rejected
         });
         it(`should reject loser's elo update if this part has already been counted`, async() => {
             // Given a part in 'pre-finished' state
@@ -168,7 +168,7 @@ describe('UserDAO', () => {
 
             // When updating this user's elo
 
-            // Then the modification should have been rejected
+            // Then the update should have been rejected
         });
         // Step 3: encoding winner elo
         it('should allow the last player to write winner elo', async() => {
@@ -179,17 +179,17 @@ describe('UserDAO', () => {
         it(`should reject winner's elo update if part is not marked as "pre-finished"`, async() => {
             // Given
             // When
-            // Then the modification should have been rejected
+            // Then the update should have been rejected
         });
         it(`should reject winner's elo updates if loser change aren't written`, async() => {
             // Given
             // When
-            // Then the modification should have been rejected
+            // Then the update should have been rejected
         });
         it(`should reject winner's elo update if this part has already been counted`, async() => {
             // Given
             // When
-            // Then the modification should have been rejected
+            // Then the update should have been rejected
         });
 
         // Step 4: marking the game as finished
@@ -198,47 +198,47 @@ describe('UserDAO', () => {
             // When
             // Then
         });
-        it('should reject update to "finished" if the ame was not marked as "pre-finished"', async() => {
+        it('should reject update to "finished" if the game was not marked as "pre-finished"', async() => {
             // Given
             // When
-            // Then the modification should have been rejected
+            // Then the update should have been rejected
         });
         it(`should reject update if winner's elo update hasn't been counted`, async() => {
             // Given
             // When
-            // Then the modification should have been rejected
+            // Then the update should have been rejected
         });
         it(`should reject update if loser's elo update hasn't been counted`, async() => {
             // Given
             // When
-            // Then the modification should have been rejected
+            // Then the update should have been rejected
         });
 
         // Valable for every steps:
         it(`should reject non player's update`, async() => {
             // Given
             // When
-            // Then the modification should have been rejected
+            // Then the update should have been rejected
         });
-        it(`should reject penultian player's update`, async() => {
+        it(`should reject penultimate player's update`, async() => {
             // Given
             // When
-            // Then the modification should have been rejected
+            // Then the update should have been rejected
         });
         it(`should reject non player's doc creation`, async() => {
             // Given
             // When
-            // Then the modification should have been rejected
+            // Then the update should have been rejected
         });
-        it(`should reject penultian player's doc creation`, async() => {
+        it(`should reject penultimate player's doc creation`, async() => {
             // Given
             // When
-            // Then the modification should have been rejected
+            // Then the update should have been rejected
         });
-        it('should reject elo modification that does not match the calculation used on server', async() => {
+        it('should reject elo update that does not match the calculation used on server', async() => {
             // Given
             // When
-            // Then the modification should have been rejected
+            // Then the update should have been rejected
         });
     });
 });

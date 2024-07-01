@@ -1,4 +1,5 @@
 /* eslint-disable max-lines-per-function */
+import { PlayerMap } from 'src/app/jscaip/PlayerMap';
 import { EloCalculationService, EloDifferences, EloEntry, EloInfoPair } from '../EloCalculationService';
 
 describe('EloCalculationService', () => {
@@ -8,24 +9,24 @@ describe('EloCalculationService', () => {
             const playerZeroElo: number = 150;
             const playerOneElo: number = 350;
             const eloEntryWin: EloEntry = {
-                eloInfoPair: [{
+                eloInfoPair: PlayerMap.ofValues({
                     currentElo: playerZeroElo,
-                    numberOfGamePlayed: 100,
+                    numberOfGamesPlayed: 100,
                 }, {
                     currentElo: playerOneElo,
-                    numberOfGamePlayed: 100,
-                }],
+                    numberOfGamesPlayed: 100,
+                }),
                 winner: 'ZERO',
             };
             // And another match between the same players where they draw
             const eloEntryDraw: EloEntry = {
-                eloInfoPair: [{
+                eloInfoPair: PlayerMap.ofValues({
                     currentElo: playerZeroElo,
-                    numberOfGamePlayed: 100,
+                    numberOfGamesPlayed: 100,
                 }, {
                     currentElo: playerOneElo,
-                    numberOfGamePlayed: 100,
-                }],
+                    numberOfGamesPlayed: 100,
+                }),
                 winner: 'DRAW',
             };
             // When calculating the two winning/losing
@@ -40,13 +41,13 @@ describe('EloCalculationService', () => {
             // Given a player with less than 20 games, hence a K of 60,
             // Winning againt with more than 40 games, hence a K of 20, with the same Elo
             const eloEntry: EloEntry = {
-                eloInfoPair: [{
+                eloInfoPair: PlayerMap.ofValues({
                     currentElo: 200,
-                    numberOfGamePlayed: 10,
+                    numberOfGamesPlayed: 10,
                 }, {
                     currentElo: 200,
-                    numberOfGamePlayed: 100,
-                }],
+                    numberOfGamesPlayed: 100,
+                }),
                 winner: 'ZERO',
             };
             // When calculating the two winnings/losings
@@ -54,30 +55,30 @@ describe('EloCalculationService', () => {
 
             // Then the point won by the big K should be thrice as much as the one with the small K
             // hence 20 and 10 since they're on the same level
-            expect(eloResult).toEqual([30, -10]);
+            expect(eloResult).toEqual(PlayerMap.ofValues(30, -10));
         });
         it('should make the win/lose proportional to the difference in elo (at equal K)', () => {
             // Given two set of players with all the same K
             // and with each set having the loser 100 elo below its opponent
             // but one set being for higher in elo
             const lowEloEntry: EloEntry = {
-                eloInfoPair: [{
+                eloInfoPair: PlayerMap.ofValues({
                     currentElo: 100,
-                    numberOfGamePlayed: 100,
+                    numberOfGamesPlayed: 100,
                 }, {
                     currentElo: 200,
-                    numberOfGamePlayed: 100,
-                }],
+                    numberOfGamesPlayed: 100,
+                }),
                 winner: 'ZERO',
             };
             const highEloEntry: EloEntry = {
-                eloInfoPair: [{
+                eloInfoPair: PlayerMap.ofValues({
                     currentElo: 800,
-                    numberOfGamePlayed: 100,
+                    numberOfGamesPlayed: 100,
                 }, {
                     currentElo: 900,
-                    numberOfGamePlayed: 100,
-                }],
+                    numberOfGamesPlayed: 100,
+                }),
                 winner: 'ZERO',
             };
             // When comparing the wins and losts
@@ -95,13 +96,13 @@ describe('EloCalculationService', () => {
             // Given a Player.ZERO with less than 100 elo lose against
             // a Player.ONE with elo more than 100
             const eloEntry: EloEntry = {
-                eloInfoPair: [{
+                eloInfoPair: PlayerMap.ofValues({
                     currentElo: 50,
-                    numberOfGamePlayed: 100,
+                    numberOfGamesPlayed: 100,
                 }, {
                     currentElo: 150,
-                    numberOfGamePlayed: 100,
-                }],
+                    numberOfGamesPlayed: 100,
+                }),
                 winner: 'ONE',
             };
 
@@ -115,13 +116,13 @@ describe('EloCalculationService', () => {
             // Given a Player.ONE with less than 100 elo losing against
             // a Player.ZERO with elo more than 100
             const eloEntry: EloEntry = {
-                eloInfoPair: [{
+                eloInfoPair: PlayerMap.ofValues({
                     currentElo: 150,
-                    numberOfGamePlayed: 100,
+                    numberOfGamesPlayed: 100,
                 }, {
                     currentElo: 50,
-                    numberOfGamePlayed: 100,
-                }],
+                    numberOfGamesPlayed: 100,
+                }),
                 winner: 'ZERO',
             };
             // When calculating the two winning/losing
@@ -133,13 +134,13 @@ describe('EloCalculationService', () => {
         it('should give a symbolic elo point when losing your first part', () => {
             // Given a player with a 0 elo losing
             const eloEntry: EloEntry = {
-                eloInfoPair: [{
+                eloInfoPair: PlayerMap.ofValues({
                     currentElo: 0,
-                    numberOfGamePlayed: 0, // The user is at its first game
+                    numberOfGamesPlayed: 0, // The user is at its first game
                 }, {
                     currentElo: 150,
-                    numberOfGamePlayed: 100,
-                }],
+                    numberOfGamesPlayed: 100,
+                }),
                 winner: 'ONE',
             };
 
@@ -153,13 +154,13 @@ describe('EloCalculationService', () => {
             // Given a player slightly over 100 losing againt
             // another player of the same level and K
             const eloEntry: EloEntry = {
-                eloInfoPair: [{
+                eloInfoPair: PlayerMap.ofValues({
                     currentElo: 105,
-                    numberOfGamePlayed: 100,
+                    numberOfGamesPlayed: 100,
                 }, {
                     currentElo: 105,
-                    numberOfGamePlayed: 100,
-                }],
+                    numberOfGamesPlayed: 100,
+                }),
                 winner: 'ONE',
             };
             // When calculating the two winnings/losings

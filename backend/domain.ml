@@ -61,6 +61,20 @@ module User = struct
 
     let to_minimal_user = fun (uid : string) (user : t) : MinimalUser.t ->
         { id = uid; name = Option.get user.username }
+
+    module EloInfo = struct
+        type t = {
+            current_elo : float [@key "currentElo"];
+            number_of_games_played : int [@key "numberOfGamesPlayed"];
+        }
+        [@@deriving yojson]
+
+        let empty : t = {
+            current_elo = 0.0;
+            number_of_games_played = 0;
+        }
+    end
+
 end
 
 (** The config room document in Firestore *)
@@ -240,10 +254,12 @@ module Game = struct
     type t = {
         type_game: string [@key "typeGame"];
         player_zero: MinimalUser.t [@key "playerZero"];
+        player_zero_elo: float [@key "playerZeroElo"];
         turn: int;
         result: GameResult.t;
 
         player_one: MinimalUser.t option [@key "playerOne"];
+        player_one_elo: float [@key "playerOneElo"];
         beginning: int option;
         winner: MinimalUser.t option;
         loser: MinimalUser.t option;

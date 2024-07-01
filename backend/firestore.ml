@@ -13,6 +13,8 @@ module type FIRESTORE = sig
     module User : sig
         (** Retrieve an user from its id *)
         val get : Domain.User.t getter
+        val get_elo : request:Dream.request -> user_id:string -> type_game:string -> EloInfo.t Lwt.t
+        val update_elo : request:Dream.request -> user_id:string -> type_game:string -> new_elo:EloInfo.t -> unit Lwt.t
     end
 
     module Game : sig
@@ -24,7 +26,7 @@ module type FIRESTORE = sig
             @raise [DocumentInvalid _] if it exist but is invalid *)
         val get_name : string getter
 
-        (** Create a game  *)
+        (** Create a game *)
         val create : request:Dream.request -> game:Domain.Game.t -> string Lwt.t
 
         (** Delete a game *)
@@ -90,7 +92,17 @@ module Make (FirestorePrimitives : FirestorePrimitives.FIRESTORE_PRIMITIVES) : F
 
         let get = fun ~(request : Dream.request) ~(id : string) : Domain.User.t Lwt.t ->
             get request ("users/" ^ id) Domain.User.of_yojson
-        let
+
+        let update_elo = fun ~(request : Dream.request) ~(user_id : string) ~(type_game : id) ~(new_elo : Domain.User.EloInfo.t) : unit Lwt.t ->
+            let new_elo_json: JSON.t = Domain.User.EloInfo.to_yojson new_elo in
+            let* _ = FirestorePrimitives.update_doc ~request ~collection:("users/" ^ user_id ^ "/elos/" ^ type_game) ~doc:new_elo_json in
+            Lwt.return ()
+
+        let get_elo = fun ~(request : Dream.request) ~(user_id : string) ~(type_game : string) : EloInfo.t Lwt.t ->
+            let* doc : EloInfo.t opt = FirestorePrimitives.get ~request  ~collection:("users/" ^ user_id ^ "/elos/" ^ type_game) in
+            match doc with
+                | None -> FirestorePrimitives.create_doc ~request ~collection:("users/" ^ user_id ^ "/elos/" ^ type_game) ~doc:Domain.User.EloInfo.empty
+                | Some doc -> doc
     end
 
     module Game = struct

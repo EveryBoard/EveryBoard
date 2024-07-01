@@ -9,5 +9,5 @@ export interface EloInfo extends FirestoreJSONObject {
 
     currentElo: number; // elo of player for a certain game
 
-    numberOfGamePlayed: number; // the number of game played is needed to calculate the K
+    numberOfGamesPlayed: number; // the number of games played is needed to calculate the K
 }

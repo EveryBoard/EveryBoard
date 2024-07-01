@@ -30,6 +30,7 @@ import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 import { Debug } from 'src/app/utils/Debug';
 import { AbstractRules, SuperRules } from 'src/app/jscaip/Rules';
 import { ServerTimeService } from 'src/app/services/ServerTimeService';
+import { UserService } from 'src/app/services/UserService';
 
 export class OnlineGameWrapperMessages {
 
@@ -90,6 +91,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
                        private readonly timeManager: OGWCTimeManagerService,
                        private readonly requestManager: OGWCRequestManagerService,
                        private readonly serverTimeService: ServerTimeService,
+                       private readonly userService: UserService,
                        private readonly cdr: ChangeDetectorRef)
     {
         super(activatedRoute, connectedUserService, router, messageDisplayer);
@@ -143,8 +145,8 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
                 console.log('auth user était nul, récupérons les donnée du logged user')
                 const gameName: string = this.getGameUrlName();
                 console.log('il joue au', gameName)
-                // const eloInfo: EloInfo = await this.userService.getPlayerInfo(user.toMinimalUser(), gameName);
-                // console.log('ELO INFO:', eloInfo);
+                const eloInfo: EloInfo = await this.userService.getPlayerEloInfo(user.toMinimalUser(), gameName);
+                console.log('ELO INFO:', eloInfo);
             }
             this.authUser = user;
         });
