@@ -125,6 +125,7 @@ describe('BaAwaComponent', () => {
 
         beforeEach(fakeAsync(async() => {
             testUtils = await ComponentTestUtils.forGame<BaAwaComponent>('BaAwa');
+            mancalaTestUtils = new MancalaComponentTestUtils(testUtils, new BaAwaMoveGenerator());
         }));
 
         it('should not require additional click when ending distribution in store', fakeAsync(async() => {
