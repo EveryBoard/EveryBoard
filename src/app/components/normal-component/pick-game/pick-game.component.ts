@@ -341,10 +341,17 @@ export class PickGameComponent {
 
     public readonly games: GameInfo[] = GameInfo.ALL_GAMES();
 
+    public matchingGames: GameInfo[] = this.games;
+
     @Output() pickGame: EventEmitter<string> = new EventEmitter<string>();
 
     public onChange(event: Event): void {
-        const select: HTMLSelectElement = event.target as HTMLSelectElement;
-        this.pickGame.emit(select.value);
+        const searchTerm: string = (event.target as HTMLSelectElement).value;
+        this.matchingGames = this.games.filter((info: GameInfo) =>
+            info.name.includes(searchTerm));
+    }
+
+    public select(gameName: string): void {
+        this.pickGame.emit(gameName);
     }
 }

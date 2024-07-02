@@ -1,9 +1,1 @@
-<div class="select is-primary is-fullwidth">
-    <select id="gameType" (change)="onChange($event)">
-        <option value=""
-                selected
-                i18n>Pick a game</option>
-        <option *ngFor="let game of games"
-                [value]="game.urlName">{{ game.name }}</option>
-    </select>
-</div>
+<input class="input is-fullwidth" placeholder="Search game" i18n-placeholder/>
