@@ -162,7 +162,7 @@ describe('BaAwaComponent', () => {
             const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(0), [MancalaDistribution.of(2)]);
 
             // Then this should trigger a single distribution move
-            await testUtils.expectMoveSuccess('#click-2-1', move, BaAwaComponent.TIMEOUT_BETWEEN_SEEDS);
+            await mancalaTestUtils.expectMoveSuccess('#click-2-1', move, customConfig.get());
             const expectedState: MancalaState = new MancalaState([
                 [0, 0, 8, 0, 0, 0],
                 [0, 1, 0, 1, 1, 0],
