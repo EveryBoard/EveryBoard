@@ -94,7 +94,7 @@ export class MartianChessTutorial extends Tutorial {
             TutorialStepMessage.YOU_DID_NOT_CAPTURE_ANY_PIECE(),
         ),
         TutorialStep.fromMove(
-            $localize`Field Promotion (1/2)`,
+            $localize`Field Promotion` + ' (1/2)',
             $localize`It is sometimes possible to perform what is called a field promotion. If you are out of one type of piece, you can merge two pieces to add their value and get a new piece. For example, if you have no drones, you can merge two pawns into a drone. To merge two pawns, move one of your pawns on another.<br/><br/>Such a move is possible for Light. Do it.`,
             new MartianChessState([
                 [_, _, _, C],
@@ -114,7 +114,7 @@ export class MartianChessTutorial extends Tutorial {
             $localize`This is not a field promotion!`,
         ),
         TutorialStep.fromPredicate(
-            $localize`Field Promotion (2/2)`,
+            $localize`Field Promotion` + ' (2/2)',
             $localize`The other kind of field promotion is to merge a drone and a pawn to obtain a queen.<br/><br/>Such a move is possible for Light. Do it.`,
             new MartianChessState([
                 [A, _, _, _],
