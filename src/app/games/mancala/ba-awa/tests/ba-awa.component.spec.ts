@@ -122,11 +122,9 @@ describe('BaAwaComponent', () => {
     describe('Custom Config', () => {
 
         let testUtils: ComponentTestUtils<BaAwaComponent>;
-        let mancalaTestUtils: MancalaComponentTestUtils<BaAwaComponent, BaAwaRules>;
 
         beforeEach(fakeAsync(async() => {
             testUtils = await ComponentTestUtils.forGame<BaAwaComponent>('BaAwa');
-            mancalaTestUtils = new MancalaComponentTestUtils(testUtils, new BaAwaMoveGenerator());
         }));
 
         it('should not require additional click when ending distribution in store', fakeAsync(async() => {

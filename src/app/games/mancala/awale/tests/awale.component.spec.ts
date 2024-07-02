@@ -11,7 +11,6 @@ import { MancalaConfig } from '../../common/MancalaConfig';
 import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { MancalaDistribution, MancalaMove } from '../../common/MancalaMove';
 import { MGPOptional } from '@everyboard/lib';
-import { Coord } from 'src/app/jscaip/Coord';
 
 const defaultConfig: MGPOptional<MancalaConfig> = AwaleRules.get().getDefaultRulesConfig();
 
