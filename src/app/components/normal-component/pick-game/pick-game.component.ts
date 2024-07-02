@@ -361,6 +361,19 @@ export class PickGameComponent {
     public search(input: EventTarget | null): void {
         const searchTerm: string = (input as HTMLInputElement).value;
         this.matchingGames = this.games.filter((info: GameInfo) =>
-            info.name.toLowerCase().includes(searchTerm.toLowerCase()));
+            this.normalize(info.name).includes(this.normalize(searchTerm)));
+    }
+
+    private normalize(term: string): string {
+        return term.toLowerCase() // we want to be case insensitive
+            .replace(/ /g, '') // we want to be space insensitive
+            // we also want to be diacritic-insensitive, but we have to resort to black magic incantations for that
+            .normalize('NFKD').replace(/[^\w]/g, '');
+        // Explanation: normalize('NFKD') performs "compatibility
+        // decomposition", basically splitting the diacritic from the character
+        // into two different code points, e.g., é is split between ´ and e, at
+        // the Unicode level. The replace part removes the code points that are
+        // not characters, thereby removing all diacritics. This is not the work
+        // of Morgoth as one may think, but regular Unicode manipulation.
     }
 }
