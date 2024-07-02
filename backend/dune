@@ -4,7 +4,7 @@
  (modules Utils External
           TokenRefresher Jwt Auth GoogleCertificates Cors
           Firestore FirestorePrimitives
-          Domain GameEndpoint ConfigRoomEndpoint
+          Domain GameEndpoint ConfigRoomEndpoint Elo
           Stats Server ServerUtils Options)
  (instrumentation (backend bisect_ppx))
  (preprocess (pps lwt_ppx ppx_deriving_yojson ppx_deriving.show)))

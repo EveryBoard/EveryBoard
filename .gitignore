@@ -72,3 +72,4 @@ games.txt
 # sensitive files
 /service-accounts/*.json
 ./nx/
+.vscode/settings.json

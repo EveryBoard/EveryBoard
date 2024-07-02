@@ -128,6 +128,7 @@ module ConfigRoom = struct
     (** The config room itself *)
     type t = {
         creator: MinimalUser.t;
+        creator_elo: float;
         chosen_opponent: MinimalUser.t option [@key "chosenOpponent"];
         game_status: GameStatus.t [@key "partStatus"];
         first_player: FirstPlayer.t [@key "firstPlayer"];
@@ -139,8 +140,9 @@ module ConfigRoom = struct
     [@@deriving yojson]
 
     (** The initial config room that we create when creating a new game *)
-    let initial = fun (creator : MinimalUser.t) : t -> {
+    let initial = fun (creator : MinimalUser.t) (creator_elo : float) : t -> {
         creator;
+        creator_elo;
         first_player = FirstPlayer.Random;
         chosen_opponent = None;
         game_status = GameStatus.Created;
@@ -259,7 +261,7 @@ module Game = struct
         result: GameResult.t;
 
         player_one: MinimalUser.t option [@key "playerOne"];
-        player_one_elo: float [@key "playerOneElo"];
+        player_one_elo: float option [@key "playerOneElo"];
         beginning: int option;
         winner: MinimalUser.t option;
         loser: MinimalUser.t option;
@@ -367,12 +369,14 @@ module Game = struct
     end
 
     (** Constructor for the initial game from its name and the creator *)
-    let initial = fun (game_name : string) (creator : MinimalUser.t) : t -> {
+    let initial = fun (game_name : string) (creator : MinimalUser.t) (creator_elo : float) : t -> {
         type_game = game_name;
         player_zero = creator;
+        player_zero_elo = creator_elo;
         turn = -1;
         result = GameResult.Unachieved;
         player_one = None;
+        player_one_elo = None;
         beginning = None;
         winner = None;
         loser = None;
@@ -382,8 +386,8 @@ module Game = struct
 
     (** Constructor for a rematch, given the config room *)
     let rematch = fun (game_name : string) (config_room : ConfigRoom.t) (now : int) (rand_bool : unit -> bool) : t ->
-        let starting = Updates.Start.get config_room now rand_bool in
-        let initial_game = initial game_name config_room.creator in
+        let starting : Updates.Start.t = Updates.Start.get config_room now rand_bool in
+        let initial_game : t = initial game_name config_room.creator config_room.creator_elo  in
         {
             initial_game with
             player_zero = starting.player_zero;
@@ -391,7 +395,6 @@ module Game = struct
             turn = starting.turn;
             beginning = starting.beginning;
         }
-
 
 end
 
