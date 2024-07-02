@@ -116,7 +116,7 @@ describe('KalahComponent', () => {
 
             it('should feed the Kalah twice during animation of double-distribution-move', fakeAsync(async() => {
                 // Given a board where a first distribution has been done and the second started
-                await mancalaTestUtils.expectMancalaClickSuccess(new Coord(3, 1));
+                await mancalaTestUtils.expectClickSuccess('#click-3-1');
                 const element: DebugElement = mancalaTestUtils.testUtils.findElement('#click-0-1');
                 element.triggerEventHandler('click', null);
                 mancalaTestUtils.expectStoreContentToBe(Player.ZERO, ' 1 ', ' +1 ');
@@ -129,21 +129,21 @@ describe('KalahComponent', () => {
                 tick(5 * MancalaComponent.TIMEOUT_BETWEEN_SEEDS);
             }));
 
-            it('should wait one sec between each sub-distribution when receiving move', fakeAsync(async() => {
+            it('should wait TIMEOUT_BETWEEN_LAPS between each sub-distribution when receiving move', fakeAsync(async() => {
                 // Given a board where AI move is sure to be two distributions (here, the initial state)
                 // When AI play
                 await mancalaTestUtils.testUtils.selectAIPlayer(Player.ZERO);
 
-                // Then the 1000ms pause of the AI should be done first
+                // Then the pause of the AI should be done first
                 tick(LocalGameWrapperComponent.AI_TIMEOUT);
                 // Then it should take TIMEOUT_BETWEEN_SEED ms to empty the initial house
                 tick(MancalaComponent.TIMEOUT_BETWEEN_SEEDS);
                 // Then 4 * TIMEOUT_BETWEEN_SEED ms to sow the 4 seeds
                 tick(4 * MancalaComponent.TIMEOUT_BETWEEN_SEEDS);
 
-                // Then second turn start, 1000ms pause that this test is about
+                // Then second turn start, pause that this test is about
                 tick(MancalaComponent.TIMEOUT_BETWEEN_LAPS);
-                // and to optimise gain, AI will still play a move that pass through the Kalah
+                // and to optimize gain, AI will still play a move that pass through the Kalah
                 // hence a move in column 0 1 or 2, which will all be of 5 seeds now
                 // so again TIMEOUT_BETWEEN_SEED ms to empty the second initial house
                 tick(MancalaComponent.TIMEOUT_BETWEEN_SEEDS);
@@ -172,7 +172,7 @@ describe('KalahComponent', () => {
             it('should hide capture of previous turn in opponent store (animation)', fakeAsync(async() => {
                 // Given a state where there has been a point-won last turn
                 const moveZero: MancalaMove = mancalaTestUtils.testUtils.getGameComponent().generateMove(0);
-                await mancalaTestUtils.expectMancalaMoveSuccess('#click-0-1', moveZero, defaultConfig.get());
+                await mancalaTestUtils.expectMoveSuccess('#click-0-1', moveZero, defaultConfig.get());
                 mancalaTestUtils.expectStoreContentToBe(Player.ZERO, ' 1 ', ' +1 ');
 
                 // When starting the second turn
@@ -190,7 +190,7 @@ describe('KalahComponent', () => {
             // Given any board where first distribution has been done
 
             // When doing the first part of the move
-            await mancalaTestUtils.expectMancalaClickSuccess(new Coord(3, 1));
+            await mancalaTestUtils.expectClickSuccess('#click-3-1');
 
             // Then it should already been displayed
             mancalaTestUtils.expectHouseToContain(new Coord(2, 1), ' 5 ', ' +1 ');
@@ -204,16 +204,16 @@ describe('KalahComponent', () => {
 
         it('should allow double distribution move', fakeAsync(async() => {
             // Given any board where first distribution has been done
-            await mancalaTestUtils.expectMancalaClickSuccess(new Coord(3, 1));
+            await mancalaTestUtils.expectClickSuccess('#click-3-1');
             // When doing double distribution move
             const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(3), [MancalaDistribution.of(0)]);
             // Then it should be a success
-            await mancalaTestUtils.expectMancalaMoveSuccess('#click-0-1', move, defaultConfig.get());
+            await mancalaTestUtils.expectMoveSuccess('#click-0-1', move, defaultConfig.get());
         }));
 
         it('should hide last move when doing illegal click during complex move', fakeAsync(async() => {
             // Given a distribution that just ended up in the Kalah
-            await mancalaTestUtils.expectMancalaClickSuccess(new Coord(3, 1));
+            await mancalaTestUtils.expectClickSuccess('#click-3-1');
 
             // When doing an illegal click
             const reason: string = MancalaFailure.MUST_CHOOSE_NON_EMPTY_HOUSE();
@@ -242,13 +242,13 @@ describe('KalahComponent', () => {
             await mancalaTestUtils.testUtils.setupState(state);
 
             // When doing the complex move
-            await mancalaTestUtils.expectMancalaClickSuccess(new Coord(0, 0));
-            await mancalaTestUtils.expectMancalaClickSuccess(new Coord(4, 0));
+            await mancalaTestUtils.expectClickSuccess('#click-0-0');
+            await mancalaTestUtils.expectClickSuccess('#click-4-0');
             const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(0),
                                                      [MancalaDistribution.of(4), MancalaDistribution.of(1)]);
 
             // Then the move should succeed
-            await mancalaTestUtils.expectMancalaMoveSuccess('#click-1-0', move, defaultConfig.get());
+            await mancalaTestUtils.expectMoveSuccess('#click-1-0', move, defaultConfig.get());
         }));
 
         it('should allow triple distribution move (player zero)', fakeAsync(async() => {
@@ -260,13 +260,13 @@ describe('KalahComponent', () => {
             await mancalaTestUtils.testUtils.setupState(state);
 
             // When doing the complex move
-            await mancalaTestUtils.expectMancalaClickSuccess(new Coord(4, 1));
-            await mancalaTestUtils.expectMancalaClickSuccess(new Coord(0, 1));
+            await mancalaTestUtils.expectClickSuccess('#click-4-1');
+            await mancalaTestUtils.expectClickSuccess('#click-0-1');
             const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(4),
                                                      [MancalaDistribution.of(0), MancalaDistribution.of(5)]);
 
             // Then the move should succeed
-            await mancalaTestUtils.expectMancalaMoveSuccess('#click-5-1', move, defaultConfig.get());
+            await mancalaTestUtils.expectMoveSuccess('#click-5-1', move, defaultConfig.get());
         }));
 
         it('should hide previous capture when starting multiple distribution move', fakeAsync(async() => {
@@ -286,7 +286,7 @@ describe('KalahComponent', () => {
                                                         { previousState, previousMove, config: defaultConfig });
 
             // When starting a multiple-capture move
-            await mancalaTestUtils.expectMancalaClickSuccess(new Coord(2, 0));
+            await mancalaTestUtils.expectClickSuccess('#click-2-0');
 
             // Then the capture should no longer be displayed
             mancalaTestUtils.testUtils.expectElementNotToHaveClass('#circle-1-1', 'captured-fill');
@@ -296,7 +296,7 @@ describe('KalahComponent', () => {
         it('should get back to original board when taking back move', fakeAsync(async() => {
             // Given a board where a first move has been done
             const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(0));
-            await mancalaTestUtils.expectMancalaMoveSuccess('#click-0-1', move, defaultConfig.get());
+            await mancalaTestUtils.expectMoveSuccess('#click-0-1', move, defaultConfig.get());
 
             // When taking back
             await mancalaTestUtils.testUtils.expectInterfaceClickSuccess('#takeBack');
@@ -315,7 +315,7 @@ describe('KalahComponent', () => {
 
             // When giving turn to AI to play and waiting for move
             await mancalaTestUtils.testUtils.selectAIPlayer(Player.ZERO);
-            // 1000ms for AI to take action + 1000 for the distribution
+            // time for AI to take action + time for the distribution
             tick(LocalGameWrapperComponent.AI_TIMEOUT + (5 * MancalaComponent.TIMEOUT_BETWEEN_SEEDS));
 
             // Then the " +1 " in Kalah secondary message should have disappeared
@@ -334,17 +334,17 @@ describe('KalahComponent', () => {
             const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(0));
 
             // Then that normally-illegal move should be accepted
-            await mancalaTestUtils.expectMancalaMoveSuccess('#click-0-1', move, defaultConfig.get());
+            await mancalaTestUtils.expectMoveSuccess('#click-0-1', move, defaultConfig.get());
         }));
 
         it('should hide capture of previous turn in opponent store (move)', fakeAsync(async() => {
             // Given a state where there has been a point-won last turn
             const moveZero: MancalaMove = mancalaTestUtils.testUtils.getGameComponent().generateMove(0);
-            await mancalaTestUtils.expectMancalaMoveSuccess('#click-0-1', moveZero, defaultConfig.get());
+            await mancalaTestUtils.expectMoveSuccess('#click-0-1', moveZero, defaultConfig.get());
             mancalaTestUtils.expectStoreContentToBe(Player.ZERO, ' 1 ', ' +1 ');
 
             // When doing second turn
-            await mancalaTestUtils.expectMancalaMoveSuccess('#click-0-0', moveZero, defaultConfig.get());
+            await mancalaTestUtils.expectMoveSuccess('#click-0-0', moveZero, defaultConfig.get());
 
             // Then the capture of last turn should be hidden
             mancalaTestUtils.expectStoreContentToBe(Player.ZERO, ' 1 '); // no longer +1
