@@ -125,9 +125,10 @@ describe('BaAwaComponent', () => {
 
         beforeEach(fakeAsync(async() => {
             testUtils = await ComponentTestUtils.forGame<BaAwaComponent>('BaAwa');
+            mancalaTestUtils = new MancalaComponentTestUtils(testUtils, new BaAwaMoveGenerator());
         }));
 
-        it('should not require additionnal click when ending distribution in store', fakeAsync(async() => {
+        it('should not require additional click when ending distribution in store', fakeAsync(async() => {
             // Given a Ba-awa state with a config with passByPlayerStore set to true
             const customConfig: MGPOptional<BaAwaConfig> = MGPOptional.of({
                 ...defaultConfig.get(),
@@ -140,7 +141,7 @@ describe('BaAwaComponent', () => {
             const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(3));
 
             // Then this should trigger a single distribution move
-            await testUtils.expectMoveSuccess('#click-3-1', move, 1400);
+            await mancalaTestUtils.expectMoveSuccess('#click-3-1', move, customConfig.get());
         }));
 
         it('should allow redistribution if allowed by config', fakeAsync(async() => {
@@ -155,14 +156,13 @@ describe('BaAwaComponent', () => {
                 [1, 0, 1, 1, 1, 0],
             ], 10, PlayerNumberMap.of(0, 0));
             await testUtils.setupState(state, { config: customConfig });
-            await testUtils.expectClickSuccess('#click-0-1');
-            tick(100);
+            await mancalaTestUtils.expectClickSuccess('#click-0-1');
 
             // When doing the second distribution
             const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(0), [MancalaDistribution.of(2)]);
 
             // Then this should trigger a single distribution move
-            await testUtils.expectMoveSuccess('#click-2-1', move, 100);
+            await mancalaTestUtils.expectMoveSuccess('#click-2-1', move, customConfig.get());
             const expectedState: MancalaState = new MancalaState([
                 [0, 0, 8, 0, 0, 0],
                 [0, 1, 0, 1, 1, 0],
