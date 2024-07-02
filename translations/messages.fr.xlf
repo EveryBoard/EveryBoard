@@ -1221,9 +1221,9 @@
         <source>Bonus fact: Kalah has been created in the U.S.A in 1940 by William Julius Champion Jr.</source>
         <target>Info bonus : Kalah a été crée aux U.S.A en 1940 par William Julius Champion Jr.</target>
       </trans-unit>
-      <trans-unit id="7111322038810092184" datatype="html">
-        <source>The Kalah (1/2)</source>
-        <target>Le Kalah (1/2)</target>
+      <trans-unit id="3167543473532430011" datatype="html">
+        <source>The Kalah</source>
+        <target>Le Kalah</target>
       </trans-unit>
       <trans-unit id="3586015705184533702" datatype="html">
         <source>The houses on the extreme left and right, unaligned with the others, are the Kalah. Yours is on the left, the opponent&apos;s on the right. When sowing, before passing from your leftmost house to the leftmost house of the opponent, you must drop one seed in your Kalah, but you won&apos;t have to drop seed in your opponent&apos;s Kalah. When you make a capture, the captured seeds are put in your Kalah.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark. Make a move that passes through your Kalah then feeds opponent&apos;s houses.</source>
@@ -1236,10 +1236,6 @@
       <trans-unit id="7327320572157893918" datatype="html">
         <source>Failed. Choose the three leftmost house on the bottom.</source>
         <target>Raté. Distribuez une des trois maisons du bas les plus à gauche.</target>
-      </trans-unit>
-      <trans-unit id="6340571023242332704" datatype="html">
-        <source>The Kalah (2/2)</source>
-        <target>Le Kalah (2/2)</target>
       </trans-unit>
       <trans-unit id="5657099545651336771" datatype="html">
         <source>When ending in the Kalah, you must distribute again.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, play the house that ends up in the Kalah then do a second distribution!</source>
@@ -1422,9 +1418,9 @@
         <source>So, after landing in the house with 2 seeds (then 3), a second lap has been started.</source>
         <target>Donc, après atterissage dans la maison avec 2 graines (puis 3), un second tour a commencé.</target>
       </trans-unit>
-      <trans-unit id="3067825694318214397" datatype="html">
-        <source>Captures during distribution (1/2)</source>
-        <target>Captures pendant la distribution (1/2)</target>
+      <trans-unit id="6145120372687543421" datatype="html">
+        <source>Captures during distribution</source>
+        <target>Captures pendant la distribution</target>
       </trans-unit>
       <trans-unit id="3249311152250368197" datatype="html">
         <source>If, during some distribution, you pass by one of your houses that contains 3 seeds, and drop a fourth seed, you capture the house immediately, then continue the distribution!&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, do such a move!</source>
@@ -1433,10 +1429,6 @@
       <trans-unit id="9198664076697170304" datatype="html">
         <source>Congratulations, you captured 4 seeds.</source>
         <target>Félicitations, vous capturez 4 graines.</target>
-      </trans-unit>
-      <trans-unit id="8936894363705168622" datatype="html">
-        <source>Captures during distribution (2/2)</source>
-        <target>Captures pendant la distribution (2/2)</target>
       </trans-unit>
       <trans-unit id="5715964665371191258" datatype="html">
         <source>If, during some distribution, you pass by one house of the opponent that contains 3 seeds, and drop a fourth seed, the opponent captures the house immediately, while you continue to distribute.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, do such a move!</source>
@@ -2215,10 +2207,6 @@
         Une poussée est interdite dans une rangée complète.&lt;br/&gt;&lt;br/&gt;
         Vous jouez Foncé, insérez une pièce.</target>
       </trans-unit>
-      <trans-unit id="3073611604547170859" datatype="html">
-        <source>Captures (1/3)</source>
-        <target>Captures (1/3)</target>
-      </trans-unit>
       <trans-unit id="7511966090954669277" datatype="html">
         <source>To capture, you must align 4 of your own pieces, which will be the first 4 captured pieces.
         There are multiple important aspects of a capture:
@@ -2261,10 +2249,6 @@
         <target>Bravo, vous avez récupéré 4 de vos pièces, mais ce n&apos;est pas la capture la plus utile.
         Voyons maintenant la vraie utilité d&apos;une capture.</target>
       </trans-unit>
-      <trans-unit id="3205566995766748513" datatype="html">
-        <source>Captures (2/3)</source>
-        <target>Captures (2/3)</target>
-      </trans-unit>
       <trans-unit id="624120683333042102" datatype="html">
         <source>Here, there are three different ways for Dark to capture.
         &lt;ol&gt;
@@ -2292,10 +2276,6 @@
       <trans-unit id="3200525134996933550" datatype="html">
         <source>Failed, the best capture was taking 2 of your opponent&apos;s pieces</source>
         <target>Raté, la capture optimale capture 2 pièces adverses.</target>
-      </trans-unit>
-      <trans-unit id="6179417983395316464" datatype="html">
-        <source>Captures (3/3)</source>
-        <target>Captures (3/3)</target>
       </trans-unit>
       <trans-unit id="1160906405303068410" datatype="html">
         <source>Here, you must capture at the beginning of your turn.
@@ -3067,9 +3047,9 @@
         <source>Congratulations! By capturing that pawn, you won one point.</source>
         <target>Bravo ! En capturant ce pion, vous gagnez un point.</target>
       </trans-unit>
-      <trans-unit id="7827243981380355367" datatype="html">
-        <source>Field Promotion (1/2)</source>
-        <target>Promotion (1/2)</target>
+      <trans-unit id="2144586366556831652" datatype="html">
+        <source>Field Promotion</source>
+        <target>Promotion</target>
       </trans-unit>
       <trans-unit id="9082504092683509261" datatype="html">
         <source>It is sometimes possible to perform what is called a field promotion. If you are out of one type of piece, you can merge two pieces to add their value and get a new piece. For example, if you have no drones, you can merge two pawns into a drone. To merge two pawns, move one of your pawns on another.&lt;br/&gt;&lt;br/&gt;Such a move is possible for Light. Do it.</source>
@@ -3078,10 +3058,6 @@
       <trans-unit id="8941261285468529448" datatype="html">
         <source>This is not a field promotion!</source>
         <target>Ce n'est pas une promotion !</target>
-      </trans-unit>
-      <trans-unit id="5120415661423244234" datatype="html">
-        <source>Field Promotion (2/2)</source>
-        <target>Promotion (2/2)</target>
       </trans-unit>
       <trans-unit id="1012300757521682008" datatype="html">
         <source>The other kind of field promotion is to merge a drone and a pawn to obtain a queen.&lt;br/&gt;&lt;br/&gt;Such a move is possible for Light. Do it.</source>
@@ -3533,9 +3509,9 @@
             &lt;li&gt;Un déplacement ne peut se faire que quand la case d&apos;arrivée est plus haute que la case de départ.&lt;/li&gt;
         &lt;/ol&gt;</target>
       </trans-unit>
-      <trans-unit id="2195961423433457989" datatype="html">
-        <source>Square (1/2)</source>
-        <target>Carré (1/2)</target>
+      <trans-unit id="8336049305072615544" datatype="html">
+        <source>Square</source>
+        <target>Carré</target>
       </trans-unit>
       <trans-unit id="517712097339838490" datatype="html">
         <source>When the piece you just moved or dropped is the fourth one of a square of your color,
@@ -3554,10 +3530,6 @@
       <trans-unit id="4722414845520402682" datatype="html">
         <source>Congratulations, you have saved up one piece. Note, you can cancel your selection by clicking again on the piece.</source>
         <target>Bravo, vous avez économisé une pièce. Note, vous pouvez annuler la sélection en cliquant à nouveau sur la pièce.</target>
-      </trans-unit>
-      <trans-unit id="3444837986058371302" datatype="html">
-        <source>Square (2/2)</source>
-        <target>Carré (2/2)</target>
       </trans-unit>
       <trans-unit id="5218035582670205877" datatype="html">
         <source>You&apos;re playing Dark.&lt;br/&gt;&lt;br/&gt;Do like in the previous step, but this time click on two different pieces before validating.</source>
@@ -3742,10 +3714,6 @@
         Le joueur possédant le plus de pièces en fin de partie gagne.
         Ici, Foncé a 28 points et le joueur clair en a 36, le joueur clair a donc gagné.</target>
       </trans-unit>
-      <trans-unit id="3656469467006851761" datatype="html">
-        <source>Captures (1/2)</source>
-        <target>Captures (1/2)</target>
-      </trans-unit>
       <trans-unit id="5285597397338861824" datatype="html">
         <source>At the beginning of the game, pieces are placed as shown here.
         For a move to be legal, it must sandwich at least one piece of the opponent between the piece you&apos;re putting and another of your pieces.&lt;br/&gt;&lt;br/&gt;
@@ -3754,10 +3722,6 @@
         <target>Au début de la partie, les pièces sont placées comme ceci.
         Pour qu&apos;un coup soit légal il faut qu&apos;il prenne en sandwich minimum une pièce adverse entre la pièce que vous posez et une de vos pièces.&lt;br/&gt;&lt;br/&gt;
         Foncé joue en premier, faites n&apos;importe quel mouvement en cliquant pour déposer votre pièce.</target>
-      </trans-unit>
-      <trans-unit id="4590681633219539758" datatype="html">
-        <source>Captures (2/2)</source>
-        <target>Captures (2/2)</target>
       </trans-unit>
       <trans-unit id="7280078972566788741" datatype="html">
         <source>A move can also capture a bigger line, and more than one line at a time&lt;br/&gt;&lt;br/&gt;You&apos;re playing Light here. Play on the bottom left to see a capture.</source>
@@ -3975,17 +3939,9 @@
         <source>Failed, the piece is still on the board.</source>
         <target>Raté, la pièce est encore sur le plateau.</target>
       </trans-unit>
-      <trans-unit id="8483955670337077136" datatype="html">
-        <source>Pushing (1/2)</source>
-        <target>Pousser (1/2)</target>
-      </trans-unit>
       <trans-unit id="1863585492531844895" datatype="html">
         <source>When the landing square of your move is occupied, we use the term &quot;push&quot;. In order to push player pieces, the following conditions must hold:&lt;ol&gt;&lt;li&gt;Your piece must already be oriented in the direction of the push.&lt;/li&gt;&lt;li&gt;Along the line that you are pushing, the number of pieces (yours or your opponent&apos;s) that are oriented in the same way as the push should be strictly greater than the number of pieces oriented in the opposite way.&lt;/li&gt;&lt;/ol&gt;Look closely at the board. On the first row, you cannot push as there is exactly one piece in the opposite direction. On the second row, you can push because there are two pieces against one.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark. Vertically, you can push using your piece in the center, as there is no resistance on that axis. Do it.</source>
         <target>Quand la case d&apos;arrivée de votre déplacement est occupée, on parle de &quot;pousser&quot;. Pour pousser des pièces d'un joueur, plusieurs critères doivent être vérifiés :&lt;ol&gt;&lt;li&gt;Votre pièce doit déjà être orientée dans le sens de la poussée.&lt;/li&gt;&lt;li&gt;Dans la ligne que vous poussez, le nombre de pièces (à vous et à l'adversaire) orientée dans le sens de la poussée doit être strictement supérieur au nombre de pièces qui y font face.&lt;/li&gt;&lt;/ol&gt;Regardez attentivement le plateau. Sur la première ligne, vous ne pouvez pas pousser car il y a exactement une pièce dans la direction opposée. Sur la deuxième ligne, vous pouvez pousser car il y a deux pièces contre une.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé. Verticalement, vous pouvez pousser avec votre pièce au centre, car il n'y a pas de résistance sur cet axe. Faites-le.</target>
-      </trans-unit>
-      <trans-unit id="6284799875777459303" datatype="html">
-        <source>Pushing (2/2)</source>
-        <target>Pousser (2/2)</target>
       </trans-unit>
       <trans-unit id="1762973675800865905" datatype="html">
         <source>To be able to push a mountain, you need at least one pusher per mountain. Each resistant (pieces in the opposite way) cancel the force of one pusher. In short, if there is no mountain, you need strictly more pushers than resistants. If there is a mountain, you need at least as much pushers than there are resistants and mountains. On the following board, as Dark, you can push the mountain on the first row. On the second and third row, because of the resisting forces, you cannot push. On the fourth row, you can push as there is one more pusher than resistant pieces.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, push on the fourth row it.</source>
@@ -4177,9 +4133,9 @@
         <source>All pieces move the same way. Similarly to a rook in chess, a piece can move: &lt;ol&gt;&lt;li&gt;By as many squares as you want.&lt;/li&gt;&lt;li&gt;Without going over another piece or stopping on another piece.&lt;/li&gt;&lt;li&gt;Horizontally or vertically.&lt;/li&gt;&lt;li&gt;Only the king can land on a corner throne.&lt;/li&gt;&lt;li&gt;Once the king left his central throne, no piece can land on it, but all can pass over it.&lt;/li&gt;&lt;/ol&gt;To move a piece, click on it and then on its landing square.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, do the first move.</source>
         <target>Toutes les pièces se déplacent de la même façon. Comme la tour aux échecs, une pièce peut bouger : &lt;ol&gt;&lt;li&gt;D'autant de cases que souhaité ;&lt;/li&gt;&lt;li&gt;Sans passer par dessus une autre pièce ni s'arrêter sur une autre pièce ;&lt;/li&gt;&lt;li&gt;Horizontalement ou verticalement ;&lt;/li&gt;&lt;li&gt;Seul le roi peut s'arrêter sur l'un des coins ;&lt;/li&gt;&lt;li&gt;Une fois que le roi a quitté le trône central, plus aucunes pièces ne peut s'arrêter dessus, mais toutes peuvent le survoler.&lt;/li&gt;&lt;/ol&gt;Pour déplacer une pièce, cliquez dessus puis sur sa destination.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, faites le premier coup.</target>
       </trans-unit>
-      <trans-unit id="6012770625680782650" datatype="html">
-        <source>Capturing a soldier (1/2)</source>
-        <target>Capturer un simple soldat (1/2)</target>
+      <trans-unit id="7366607587345821534" datatype="html">
+        <source>Capturing a soldier</source>
+        <target>Capturer un simple soldat</target>
       </trans-unit>
       <trans-unit id="4542556047957483359" datatype="html">
         <source>All pieces, attackers and defenders, except the king, are soldiers. To capture them, they have to be sandwiched between two of your pieces. By getting too close, an attacker&apos;s soldier is in danger.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Light. Capture the soldier.</source>
@@ -4192,10 +4148,6 @@
       <trans-unit id="9035153077895210009" datatype="html">
         <source>Failed, you missed an opportunity to capture a piece of the opponent.</source>
         <target>Raté, vous avez manqué une occasion de capturer une pièce adverse.</target>
-      </trans-unit>
-      <trans-unit id="4346619065189143436" datatype="html">
-        <source>Capturing a soldier (2/2)</source>
-        <target>Capturer un simple soldat (2/2)</target>
       </trans-unit>
       <trans-unit id="1349136475821045956" datatype="html">
         <source>A second way to capture a soldier is to sandwich it against an empty throne. The king has moved and endangered one of its soldiers.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark. Capture the soldier.</source>
@@ -4217,9 +4169,9 @@
         <source>To capture the king when he sits on his throne, the four squares neighbor to the king (horizontally and vertically) must be occupied by your soldiers.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark. Capture the king.</source>
         <target>Pour capturer le roi quand il est sur son trône, les 4 cases voisines au roi (horizontalement et verticalement) doivent être occupées par vos pions.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé. Capturez le roi.</target>
       </trans-unit>
-      <trans-unit id="2222427678565473040" datatype="html">
-        <source>Capturing the king (1/2)</source>
-        <target>Capturer le roi (1/2)</target>
+      <trans-unit id="3068385624186077540" datatype="html">
+        <source>Capturing the king</source>
+        <target>Capturer le roi</target>
       </trans-unit>
       <trans-unit id="6006281576137172714" datatype="html">
         <source>To capture the king, two soldiers are not enough. For the first solution, the four squares neighbor to the king (horizontally and vertically) must be occupied by your soldiers. This also works if the king is on the throne.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, capture the king.</source>
@@ -4236,10 +4188,6 @@
       <trans-unit id="8145627268762433482" datatype="html">
         <source>Another way to capture the king is to use three soldier plus the central throne to surround the king on four sides.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark. Capture the king.</source>
         <target>Un autre moyen de capturer le roi est d'utiliser trois soldats plus le trône central pour entourer le roi des 4 côtés.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé. Capturez le roi.</target>
-      </trans-unit>
-      <trans-unit id="2262651303124763617" datatype="html">
-        <source>Capturing the king (2/2)</source>
-        <target>Capturer le roi (2/2)</target>
       </trans-unit>
       <trans-unit id="8429826787913397956" datatype="html">
         <source>Another way to capture the king is to immobilize it against an edge of the board. Note that the king cannot be captured next to a throne.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, capture the king.</source>
