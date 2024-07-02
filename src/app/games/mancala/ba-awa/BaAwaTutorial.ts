@@ -42,7 +42,7 @@ export class BaAwaTutorial extends Tutorial {
             TutorialStepMessage.FAILED_TRY_AGAIN(),
         ),
         TutorialStep.fromMove(
-            $localize`Captures during distribution (1/2)`,
+            $localize`Captures during distribution` + ' (1/2)',
             $localize`If, during some distribution, you pass by one of your houses that contains 3 seeds, and drop a fourth seed, you capture the house immediately, then continue the distribution!<br/><br/>You're playing Dark, do such a move!`,
             new MancalaState([
                 [0, 8, 0, 0, 0, 0],
@@ -53,7 +53,7 @@ export class BaAwaTutorial extends Tutorial {
             MancalaTutorial.YOU_DID_NOT_CAPTURE_ANY_SEEDS(),
         ),
         TutorialStep.fromMove(
-            $localize`Captures during distribution (2/2)`,
+            $localize`Captures during distribution` + ' (2/2)',
             $localize`If, during some distribution, you pass by one house of the opponent that contains 3 seeds, and drop a fourth seed, the opponent captures the house immediately, while you continue to distribute.<br/><br/>You're playing Dark, do such a move!`,
             new MancalaState([
                 [0, 3, 0, 0, 8, 0],
