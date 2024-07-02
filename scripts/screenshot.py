@@ -20,7 +20,7 @@ for game in games:
     driver.get('http://localhost:4200/local/' + game)
     try:
         # Click on "accept config" for configurable games
-        accept_config_button = driver.find_element(By.ID, "startGameWithConfig")
+        accept_config_button = driver.find_element(By.ID, "start-game-with-config")
         accept_config_button.click()
     except NoSuchElementException:
         # No accept config button, the game is not configurable so we are directly on the right page

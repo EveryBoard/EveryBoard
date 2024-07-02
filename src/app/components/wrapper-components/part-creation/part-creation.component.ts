@@ -23,6 +23,9 @@ import { GameInfo } from '../../normal-component/pick-game/pick-game.component';
 import { GameState } from 'src/app/jscaip/state/GameState';
 import { RulesConfigDescription } from '../rules-configuration/RulesConfigDescription';
 import { Debug } from 'src/app/utils/Debug';
+import { DemoNodeInfo } from '../demo-card-wrapper/demo-card-wrapper.component';
+import { AbstractNode, GameNode } from 'src/app/jscaip/AI/GameNode';
+import { BaseWrapperComponent } from '../../game-components/game-component/GameComponent';
 
 type PartCreationViewInfo = {
     userIsCreator: boolean;
@@ -52,7 +55,7 @@ type PartCreationViewInfo = {
     templateUrl: './part-creation.component.html',
 })
 @Debug.log
-export class PartCreationComponent implements OnInit, OnDestroy {
+export class PartCreationComponent extends BaseWrapperComponent implements OnInit, OnDestroy {
     /*
      * Lifecycle:
      * 1. Creator chooses config and opponent
@@ -76,7 +79,8 @@ export class PartCreationComponent implements OnInit, OnDestroy {
     // notify that the game has started, a thing evaluated with the configRoom doc game status
     @Output() gameStartNotification: EventEmitter<ConfigRoom> = new EventEmitter<ConfigRoom>();
 
-    @ViewChild('rulesConfigurationComponent') public rulesConfigurationComponent: RulesConfigurationComponent;
+    @ViewChild(RulesConfigurationComponent)
+    public rulesConfigurationComponent: RulesConfigurationComponent | undefined;
 
     public gameStarted: boolean = false;
 
@@ -110,8 +114,10 @@ export class PartCreationComponent implements OnInit, OnDestroy {
 
     protected rulesConfig: MGPOptional<RulesConfig> = MGPOptional.empty(); // Provided by RulesConfigurationComponent
 
-    public constructor(private readonly router: Router,
-                       private readonly activatedRoute: ActivatedRoute,
+    public configDemo: DemoNodeInfo;
+
+    public constructor(activatedRoute: ActivatedRoute,
+                       private readonly router: Router,
                        private readonly connectedUserService: ConnectedUserService,
                        private readonly currentGameService: CurrentGameService,
                        private readonly gameService: GameService,
@@ -121,6 +127,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
                        private readonly messageDisplayer: MessageDisplayer,
                        private readonly cdr: ChangeDetectorRef)
     {
+        super(activatedRoute);
     }
 
     public async ngOnInit(): Promise<void> {
@@ -216,7 +223,11 @@ export class PartCreationComponent implements OnInit, OnDestroy {
                 this.viewInfo.candidateClasses[opponent] = ['is-selected'];
                 this.viewInfo.chosenOpponent = opponent;
                 const partStatus: IPartStatus = Utils.getNonNullable(this.currentConfigRoom).partStatus;
-                this.viewInfo.canProposeConfig = partStatus !== PartStatus.CONFIG_PROPOSED.value && opponent !== '';
+                const configProposed: boolean = partStatus === PartStatus.CONFIG_PROPOSED.value;
+                this.viewInfo.canProposeConfig = configProposed === false && opponent !== '';
+                if (this.rulesConfigurationComponent != null) {
+                    this.rulesConfigurationComponent.setEditable(configProposed === false);
+                }
             });
         this.getForm('partType').valueChanges
             .pipe(takeUntil(this.ngUnsubscribe)).subscribe((partType: IPartType) => {
@@ -330,12 +341,12 @@ export class PartCreationComponent implements OnInit, OnDestroy {
 
     public async proposeConfig(): Promise<void> {
         const partType: string = this.getForm('partType').value;
-        const maxMoveDur: number = this.getForm('maximalMoveDuration').value;
+        const maxMoveDuration: number = this.getForm('maximalMoveDuration').value;
         const firstPlayer: string = this.getForm('firstPlayer').value;
         const totalPartDuration: number = this.getForm('totalPartDuration').value;
         return this.configRoomService.proposeConfig(this.partId,
                                                     PartType.of(partType),
-                                                    maxMoveDur,
+                                                    maxMoveDuration,
                                                     FirstPlayer.of(firstPlayer),
                                                     totalPartDuration,
                                                     this.rulesConfig);
@@ -352,11 +363,11 @@ export class PartCreationComponent implements OnInit, OnDestroy {
             Debug.display('PartCreationComponent', 'onCurrentConfigRoomUpdate', 'LAST UPDATE : the game is canceled');
             return this.onGameCanceled();
         } else {
-            const oldConfigRoom: ConfigRoom | null = this.currentConfigRoom;
             const configRoom: ConfigRoom = configRoomOpt.get();
+            const oldConfigRoom: ConfigRoom | null = this.currentConfigRoom;
             this.currentConfigRoom = configRoom;
-            if (this.rulesConfig.isAbsent()) {
-                this.rulesConfig = MGPOptional.of(configRoom.rulesConfig);
+            if (configRoom.rulesConfig !== undefined) {
+                this.saveRulesConfig(MGPOptional.of(configRoom.rulesConfig));
             }
             if (this.chosenOpponentJustLeft(oldConfigRoom, configRoom) &&
                 this.userIsCreator(configRoom))
@@ -519,10 +530,26 @@ export class PartCreationComponent implements OnInit, OnDestroy {
 
     public saveRulesConfig(rulesConfig: MGPOptional<RulesConfig>): void {
         this.rulesConfig = rulesConfig;
+        if (rulesConfig.isPresent()) {
+            this.setConfigDemo(rulesConfig.get());
+        }
     }
 
-    protected getGameUrlName(): string {
-        return Utils.getNonNullable(this.activatedRoute.snapshot.paramMap.get('compo'));
+    private setConfigDemo(config: RulesConfig): void {
+        const stateProvider: MGPOptional<(config: MGPOptional<RulesConfig>) => GameState> = this.getStateProvider();
+        if (stateProvider.isPresent()) {
+            const node: AbstractNode = new GameNode(stateProvider.get()(MGPOptional.of(config)));
+            this.configDemo = {
+                click: MGPOptional.empty(),
+                name: this.getGameUrlName(),
+                node,
+            };
+            this.cdr.detectChanges();
+        }
+    }
+
+    public getConfigDemo(): DemoNodeInfo {
+        return this.configDemo;
     }
 
     public getStateProvider(): MGPOptional<(config: MGPOptional<RulesConfig>) => GameState> {
@@ -564,5 +591,16 @@ export class PartCreationComponent implements OnInit, OnDestroy {
             await this.currentGameService.removeCurrentGame();
             await this.configRoomService.removeCandidate(this.partId, this.connectedUserService.user.get().id);
         }
+    }
+
+    public async goToLobby(): Promise<void> {
+        await this.cancelGameCreation();
+        await this.router.navigate(['/lobby']);
+    }
+
+    public async playLocally(): Promise<void> {
+        await this.cancelGameCreation();
+        const urlName: string = this.getGameUrlName();
+        await this.router.navigate(['/local', urlName]);
     }
 }

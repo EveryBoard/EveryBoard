@@ -322,6 +322,7 @@ describe('PartCreationComponent', () => {
 
                 // When choosing the opponent
                 await chooseOpponent();
+                testUtils.detectChanges();
 
                 // Then current config room doc should be updated
                 expect(component.currentConfigRoom).toEqual(ConfigRoomMocks.withChosenOpponent(MGPOptional.empty()));
@@ -480,30 +481,6 @@ describe('PartCreationComponent', () => {
 
         });
         describe('Form interaction', () => {
-            it('should modify configRoom, make proposal possible, and select opponent when choosing opponent', fakeAsync(async() => {
-                // Given a component with candidate present but not selected
-                awaitComponentInitialization();
-                await mockCandidateArrival();
-                expectElementToExist('#presenceOf_firstCandidate');
-
-                const contextBefore: string = 'Proposing config should be impossible before there is a ChosenOpponent';
-                expect(findElement('#proposeConfig').nativeElement.disabled).withContext(contextBefore).toBeTruthy();
-
-                // When choosing the opponent
-                await chooseOpponent();
-
-                // Then configRoom doc should be updated
-                expect(component.currentConfigRoom).toEqual(ConfigRoomMocks.withChosenOpponent(MGPOptional.empty()));
-
-                // and proposal should now be possible
-                const proposeConfigDisabled: boolean = findElement('#proposeConfig').nativeElement.disabled;
-                const contextAfter: string = 'Proposing config should become possible after ChosenOpponent is set';
-                expect(proposeConfigDisabled).withContext(contextAfter).toBeFalse();
-
-                // and opponent should be selected
-                expectElementToExist('#selected_' + UserMocks.OPPONENT.username);
-                component.stopSendingPresenceTokensAndObservingUsersIfNeeded();
-            }));
             it('should update the form data when changing first player', fakeAsync(async() => {
                 // Given a part being created
                 awaitComponentInitialization();

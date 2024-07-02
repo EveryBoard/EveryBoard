@@ -17,6 +17,9 @@ import { GameInfo } from '../../normal-component/pick-game/pick-game.component';
 
 abstract class BaseComponent {
 
+    // Make ArrayUtils available in all components
+    public ArrayUtils: typeof ArrayUtils = ArrayUtils;
+
     /**
      * Gets the CSS class for a player color
      */
@@ -45,9 +48,6 @@ export abstract class BaseGameComponent extends BaseComponent {
 
     public readonly SMALL_STROKE_WIDTH: number = 2;
 
-    // Make ArrayUtils available in game components
-    public ArrayUtils: typeof ArrayUtils = ArrayUtils;
-
     public getSVGTranslation(x: number, y: number): string {
         return 'translate(' + x + ', ' + y + ')';
     }
@@ -61,6 +61,13 @@ export abstract class BaseWrapperComponent extends BaseComponent {
 
     protected getGameUrlName(): string {
         return Utils.getNonNullable(this.activatedRoute.snapshot.paramMap.get('compo'));
+    }
+
+    protected getGameName(): MGPOptional<string> {
+        // May be empty if the game does not actually exist
+        // TODO FOR REVIEW: changé en optionnel car si on charge un LGWC sur un jeu inexistant, on obtient désormais une erreur, d'où le getOrElse('') qui est fait dans LGWC maintenant
+        // TODO FOR REVIEW: je propose de ticketter "clean up LGWC lifecycle", car le lifecycle de LGWC est beau bouzin qui mériterait d'être cleané (notamment avec les config)
+        return GameInfo.getByUrlName(this.getGameUrlName()) .map((info: GameInfo) => info.name);
     }
 
 }

@@ -152,14 +152,14 @@ describe('LocalGameWrapperComponent (game phase)', () => {
 
     it('should show score if needed', fakeAsync(async() => {
         testUtils.getGameComponent().scores = MGPOptional.empty();
-        testUtils.expectElementNotToExist('#scoreZero');
-        testUtils.expectElementNotToExist('#scoreOne');
+        testUtils.expectElementNotToExist('#score-0');
+        testUtils.expectElementNotToExist('#score-1');
 
         testUtils.getGameComponent().scores = MGPOptional.of(PlayerNumberMap.of(0, 0));
         testUtils.forceChangeDetection();
 
-        testUtils.expectElementToExist('#scoreZero');
-        testUtils.expectElementToExist('#scoreOne');
+        testUtils.expectElementToExist('#score-0');
+        testUtils.expectElementToExist('#score-1');
     }));
 
     describe('restarting games', () => {
@@ -178,7 +178,7 @@ describe('LocalGameWrapperComponent (game phase)', () => {
             expect(state.turn).toBe(2);
 
             // When clicking on restart button
-            await testUtils.expectInterfaceClickSuccess('#restartButton');
+            await testUtils.expectInterfaceClickSuccess('#restart-button');
 
             // Then it should go back to first turn
             state = testUtils.getGameComponent().getState();
@@ -200,7 +200,7 @@ describe('LocalGameWrapperComponent (game phase)', () => {
             await testUtils.expectMoveSuccess('#click-3-0', P4Move.of(3));
 
             // When restarting the game
-            await testUtils.expectInterfaceClickSuccess('#restartButton');
+            await testUtils.expectInterfaceClickSuccess('#restart-button');
             tick(0);
 
             // Then the draw indication should be removed and we should be back at turn 0
@@ -224,7 +224,7 @@ describe('LocalGameWrapperComponent (game phase)', () => {
 
             // When restarting the game
             spyOn(testUtils.getGameComponent(), 'hideLastMove').and.callThrough();
-            await testUtils.expectInterfaceClickSuccess('#restartButton');
+            await testUtils.expectInterfaceClickSuccess('#restart-button');
 
             // Then it should go back to first turn
             expect(testUtils.getGameComponent().hideLastMove).toHaveBeenCalledOnceWith();
@@ -236,32 +236,32 @@ describe('LocalGameWrapperComponent (game phase)', () => {
         it('should disable interactivity when AI is selected without level', fakeAsync(async() => {
             // Given a game which is initially interactive, with a background showing it
             expect(testUtils.getGameComponent().isInteractive()).toBeTrue();
-            testUtils.expectElementToExist('.tile .player0-bg');
+            testUtils.expectElementToHaveClass('#board-highlight', 'player0-bg');
 
             // When selecting only the AI without the depth for the current player
-            await testUtils.selectChildElementOfDropDown('#playerZeroSelect', 'playerZero_ai_Minimax');
+            await testUtils.selectChildElementOfDropDown('#player-select-0', 'player-0-ai-Minimax');
 
             // Then the game should not be interactive anymore
             expect(testUtils.getGameComponent().isInteractive())
                 .withContext('Interactivity should be false')
                 .toBeFalse();
             // nor should it show the current player background
-            testUtils.expectElementNotToExist('.tile .player0-bg');
+            testUtils.expectElementNotToHaveClass('#board-highlight', 'player0-bg');
         }));
 
         it('should show level when non-human player is selected', fakeAsync(async() => {
             // Given a board where human are playing human
-            testUtils.expectElementNotToExist('#aiZeroOptionSelect');
+            testUtils.expectElementNotToExist('#ai-option-select-0');
 
             // When selecting an AI for player ZERO
-            const aiName: string = '#playerZeroSelect';
-            await testUtils.selectChildElementOfDropDown(aiName, 'playerZero_ai_Minimax');
+            const aiName: string = '#player-select-0';
+            await testUtils.selectChildElementOfDropDown(aiName, 'player-0-ai-Minimax');
 
             // Then AI name should be diplayed and the level selectable
             const selectedAI: HTMLSelectElement = testUtils.findElement(aiName).nativeElement;
             const chosenAiName: string = selectedAI.options[selectedAI.selectedIndex].label;
             expect(chosenAiName).toBe('Minimax');
-            testUtils.expectElementToExist('#aiZeroOptionSelect');
+            testUtils.expectElementToExist('#ai-option-select-0');
         }));
 
         it('should show level when non-human player is selected, and propose AI to play', fakeAsync(async() => {
@@ -313,7 +313,7 @@ describe('LocalGameWrapperComponent (game phase)', () => {
 
             const proposeAIToPlay: jasmine.Spy = spyOn(wrapper, 'proposeAIToPlay').and.callThrough();
 
-            await testUtils.expectInterfaceClickSuccess('#restartButton');
+            await testUtils.expectInterfaceClickSuccess('#restart-button');
             tick(0);
 
             expect(proposeAIToPlay).toHaveBeenCalledTimes(1);
@@ -324,7 +324,7 @@ describe('LocalGameWrapperComponent (game phase)', () => {
             // Given wrapper on which a first move have been done
             await testUtils.expectMoveSuccess('#click-4-0', P4Move.of(4));
             // When clicking on AI then its level
-            await testUtils.selectChildElementOfDropDown('#playerOneSelect', 'playerOne_ai_Minimax');
+            await testUtils.selectChildElementOfDropDown('#player-select-1', 'player-1-ai-Minimax');
             const localGameWrapper: LocalGameWrapperComponent = testUtils.getWrapper() as LocalGameWrapperComponent;
             spyOn(localGameWrapper, 'proposeAIToPlay').and.callThrough();
             const gameComponent: AbstractGameComponent = testUtils.getGameComponent();
@@ -332,7 +332,7 @@ describe('LocalGameWrapperComponent (game phase)', () => {
             expect(gameComponent.getState().turn)
                 .withContext('after we did one move')
                 .toEqual(1);
-            await testUtils.selectChildElementOfDropDown('#aiOneOptionSelect', 'playerOne_option_Level 1');
+            await testUtils.selectChildElementOfDropDown('#ai-option-select-1', 'player-1-option-Level 1');
             tick(LocalGameWrapperComponent.AI_TIMEOUT);
 
             // Then it should have proposed AI to play
@@ -374,8 +374,8 @@ describe('LocalGameWrapperComponent (game phase)', () => {
             spyOn(testUtils.getGameComponent().rules, 'getGameStatus').and.returnValue(GameStatus.ZERO_WON);
 
             // When selecting an AI for the current player
-            await testUtils.selectChildElementOfDropDown('#playerZeroSelect', 'playerZero_ai_Minimax');
-            await testUtils.selectChildElementOfDropDown('#aiZeroOptionSelect', 'playerZero_option_Level 1');
+            await testUtils.selectChildElementOfDropDown('#player-select-0', 'player-0-ai-Minimax');
+            await testUtils.selectChildElementOfDropDown('#ai-option-select-0', 'player-0-option-Level 1');
 
             // Then it should not try to play
             expect(localGameWrapper.doAIMove).not.toHaveBeenCalled();
@@ -401,7 +401,7 @@ describe('LocalGameWrapperComponent (game phase)', () => {
             testUtils.detectChanges();
 
             // Then the AI metrics are shown
-            testUtils.expectElementToExist('#AIInfo');
+            testUtils.expectElementToExist('#ai-info');
             localStorage.clear();
         }));
 
@@ -530,7 +530,7 @@ describe('LocalGameWrapperComponent (game phase)', () => {
 
             // When taking back
             spyOn(testUtils.getGameComponent(), 'updateBoard').and.callThrough();
-            await testUtils.expectInterfaceClickSuccess('#takeBack');
+            await testUtils.expectInterfaceClickSuccess('#take-back');
 
             // Then we should be back on turn 0 and board should have been updated
             expect(testUtils.getGameComponent().getTurn()).toBe(0);
@@ -546,7 +546,7 @@ describe('LocalGameWrapperComponent (game phase)', () => {
 
             // When user take back
             expect(testUtils.getGameComponent().getTurn()).toBe(2);
-            await testUtils.expectInterfaceClickSuccess('#takeBack');
+            await testUtils.expectInterfaceClickSuccess('#take-back');
 
             // Then it should take back to user turn, hence back to turn N
             expect(testUtils.getGameComponent().getTurn()).toBe(0);
@@ -560,7 +560,7 @@ describe('LocalGameWrapperComponent (game phase)', () => {
 
             // When searching for takeBack button
             // Then it should not be visible
-            testUtils.expectElementNotToExist('#takeBack');
+            testUtils.expectElementNotToExist('#take-back');
         }));
 
         it('should not allow to take back when no move has been made', fakeAsync(async() => {
@@ -568,7 +568,7 @@ describe('LocalGameWrapperComponent (game phase)', () => {
 
             // When searching for takeBack button
             // Then it should not be visible
-            testUtils.expectElementNotToExist('#takeBack');
+            testUtils.expectElementNotToExist('#take-back');
         }));
 
         it('should cancelMoveAttempt when taking back', fakeAsync(async() => {
@@ -578,7 +578,7 @@ describe('LocalGameWrapperComponent (game phase)', () => {
             // When calling take back
             const component: P4Component = testUtils.getGameComponent();
             spyOn(component, 'cancelMoveAttempt').and.callThrough();
-            await testUtils.expectInterfaceClickSuccess('#takeBack');
+            await testUtils.expectInterfaceClickSuccess('#take-back');
 
             // Then gameComponent.cancelMoveAttempt should have been called
             // And hence the potentially move in construction undone from the board
@@ -589,17 +589,17 @@ describe('LocalGameWrapperComponent (game phase)', () => {
             // Given a board on which AI plays against AI
             await testUtils.selectAIPlayer(Player.ZERO);
             expect(testUtils.getGameComponent().getState().turn).toBe(0);
-            testUtils.expectElementNotToExist('#takeBack');
+            testUtils.expectElementNotToExist('#take-back');
             tick( LocalGameWrapperComponent.AI_TIMEOUT);
             expect(testUtils.getGameComponent().getState().turn).toBe(1);
-            testUtils.expectElementNotToExist('#takeBack');
+            testUtils.expectElementNotToExist('#take-back');
 
             // When searching for takeBack button
             // Then it should not be visible
             await testUtils.selectAIPlayer(Player.ONE);
             tick(LocalGameWrapperComponent.AI_TIMEOUT);
             expect(testUtils.getGameComponent().getState().turn).toBe(2);
-            testUtils.expectElementNotToExist('#takeBack');
+            testUtils.expectElementNotToExist('#take-back');
             // disactivate AI to stop timeout generation
             tick(40 * LocalGameWrapperComponent.AI_TIMEOUT);
         }));
