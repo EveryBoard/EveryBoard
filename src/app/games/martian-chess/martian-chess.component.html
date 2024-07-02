@@ -3,50 +3,47 @@
      [attr.viewBox]="LEFT + ' ' + UP + ' ' + WIDTH + ' ' + HEIGHT"
      preserveAspectRatio="xMidYMid meet">
     <g [attr.transform]="getBoardTransformation()">
-        <g *ngFor="let line of board; index as y">
-            <g *ngFor="let piece of line; index as x"
-               id="click-{{ x }}-{{ y }}"
-               (click)="onClick(x, y)"
-               [attr.transform]="getPieceTranslation(y)">
-                <!-- Background -->
-                <rect id="square-{{ x }}-{{ y }}"
-                      [attr.x]="x * SPACE_SIZE"
-                      [attr.y]="y * SPACE_SIZE"
-                      [attr.width]="SPACE_SIZE"
-                      [attr.height]="SPACE_SIZE"
-                      [ngClass]="getSquareClasses(x, y)"/>
-                <!-- Pieces -->
-                <g *ngIf="piece !== pieces.EMPTY"
-                   [attr.transform]="getPieceLocation(x, y)">
-                    <g *ngIf="piece === pieces.PAWN"
-                       app-martian-chess-pawn
-                       mainShapeId="pawn-{{ x }}-{{ y }}"
-                       [pieceClasses]="getPieceClasses(x, y)"
-                       [style]="style"/>
-                    <g *ngIf="piece === pieces.DRONE"
-                       app-martian-chess-drone
-                       [pieceClasses]="getPieceClasses(x, y)"
-                       mainShapeId="drone-{{ x }}-{{ y }}"
-                       [style]="style"/>
-                    <g *ngIf="piece === pieces.QUEEN"
-                       app-martian-chess-queen
-                       mainShapeId="queen-{{ x }}-{{ y }}"
-                       [pieceClasses]="getPieceClasses(x, y)"
-                       [style]="style"/>
-                </g>
+        <g *ngFor="let coordAndContent of state.getCoordsAndContents()"
+           id="click-{{ coordAndContent.coord.x }}-{{ coordAndContent.coord.y }}"
+           (click)="onClick(coordAndContent.coord)"
+           [attr.transform]="getPieceTranslation(coordAndContent.coord)">
+            <!-- Background -->
+            <rect id="square-{{ coordAndContent.coord.x }}-{{ coordAndContent.coord.y }}"
+                  x="0"
+                  y="0"
+                  [attr.width]="SPACE_SIZE"
+                  [attr.height]="SPACE_SIZE"
+                  [ngClass]="getSquareClasses(coordAndContent.coord)"/>
+            <!-- Pieces -->
+            <g *ngIf="coordAndContent.content !== pieces.EMPTY" >
+                <g *ngIf="coordAndContent.content === pieces.PAWN"
+                   app-martian-chess-pawn
+                   mainShapeId="pawn-{{ coordAndContent.coord.x }}-{{ coordAndContent.coord.y }}"
+                   [pieceClasses]="getPieceClasses(coordAndContent.coord)"
+                   [style]="style"/>
+                <g *ngIf="coordAndContent.content === pieces.DRONE"
+                   app-martian-chess-drone
+                   [pieceClasses]="getPieceClasses(coordAndContent.coord)"
+                   mainShapeId="drone-{{ coordAndContent.coord.x }}-{{ coordAndContent.coord.y }}"
+                   [style]="style"/>
+                <g *ngIf="coordAndContent.content === pieces.QUEEN"
+                   app-martian-chess-queen
+                   mainShapeId="queen-{{ coordAndContent.coord.x }}-{{ coordAndContent.coord.y }}"
+                   [pieceClasses]="getPieceClasses(coordAndContent.coord)"
+                   [style]="style"/>
             </g>
         </g>
-    </g>
-    <g *ngIf="selectedPieceInfo.isPresent()">
-        <rect *ngFor="let possibleLanding of selectedPieceInfo.get().legalLandings"
-                id="indicator-{{ possibleLanding.x }}-{{ possibleLanding.y }}"
-                [attr.transform]="getPieceTranslation(possibleLanding.y)"
-                [attr.x]="possibleLanding.x * SPACE_SIZE + (SPACE_SIZE/2 - INDICATOR_SIZE/2)"
-                [attr.y]="possibleLanding.y * SPACE_SIZE + (SPACE_SIZE/2 - INDICATOR_SIZE/2)"
-                [attr.width]="INDICATOR_SIZE"
-                [attr.height]="INDICATOR_SIZE"
-                (click)="onClick(possibleLanding.x, possibleLanding.y)"
-                class="indicator"/>
+        <g *ngIf="selectedPieceInfo.isPresent()">
+            <rect *ngFor="let possibleLanding of selectedPieceInfo.get().legalLandings"
+                    id="indicator-{{ possibleLanding.x }}-{{ possibleLanding.y }}"
+                    [attr.transform]="getPieceTranslation(possibleLanding)"
+                    [attr.x]="SPACE_SIZE/2 - INDICATOR_SIZE/2"
+                    [attr.y]="SPACE_SIZE/2 - INDICATOR_SIZE/2"
+                    [attr.width]="INDICATOR_SIZE"
+                    [attr.height]="INDICATOR_SIZE"
+                    (click)="onClick(possibleLanding)"
+                    class="indicator"/>
+        </g>
     </g>
     <g id="clock-or-count-down-view"
        (click)="onClockClick()"
@@ -88,7 +85,7 @@
         <g *ngIf="displayModePanel"
            id="mode-panel">
             <rect class="base"
-                  [attr.x]="0"
+                  x="0"
                   [attr.y]="(- listOfStyles.length * SPACE_SIZE)"
                   [attr.width]="1 * SPACE_SIZE"
                   [attr.height]="listOfStyles.length * SPACE_SIZE"

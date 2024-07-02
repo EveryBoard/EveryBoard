@@ -71,7 +71,7 @@ export class PylosTutorial extends Tutorial {
             TutorialStepMessage.FAILED_TRY_AGAIN(),
         ),
         TutorialStep.fromMove(
-            $localize`Square (1/2)`,
+            $localize`Square` + ' (1/2)',
             $localize`When the piece you just moved or dropped is the fourth one of a square of your color,
         you can choose anywhere on the board one or two of your pieces.
         These pieces will be removed from the board, allowing you to save up one or two pieces.
@@ -105,7 +105,7 @@ export class PylosTutorial extends Tutorial {
             TutorialStepMessage.FAILED_TRY_AGAIN(),
         ),
         TutorialStep.fromPredicate(
-            $localize`Square (2/2)`,
+            $localize`Square` + ' (2/2)',
             $localize`You're playing Dark.<br/><br/>Do like in the previous step, but this time click on two different pieces before validating.`,
             new PylosState([
                 [
