@@ -147,6 +147,8 @@ import { Tutorial } from '../../wrapper-components/tutorial-game-wrapper/Tutoria
 import { RulesConfigDescription } from '../../wrapper-components/rules-configuration/RulesConfigDescription';
 import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 import { GameState } from 'src/app/jscaip/state/GameState';
+import { ThemeService } from 'src/app/services/ThemeService';
+import { FormControl } from '@angular/forms';
 
 class GameDescription {
 
@@ -341,17 +343,24 @@ export class PickGameComponent {
 
     public readonly games: GameInfo[] = GameInfo.ALL_GAMES();
 
+    public readonly theme: 'dark' | 'light';
+
     public matchingGames: GameInfo[] = this.games;
 
     @Output() pickGame: EventEmitter<string> = new EventEmitter<string>();
 
-    public onChange(event: Event): void {
-        const searchTerm: string = (event.target as HTMLSelectElement).value;
-        this.matchingGames = this.games.filter((info: GameInfo) =>
-            info.name.includes(searchTerm));
+    public constructor(themeService: ThemeService)
+    {
+        this.theme = themeService.getTheme();
     }
 
-    public select(gameName: string): void {
+    public selectGame(gameName: string): void {
         this.pickGame.emit(gameName);
+    }
+
+    public search(input: EventTarget | null): void {
+        const searchTerm: string = (input as HTMLInputElement).value;
+        this.matchingGames = this.games.filter((info: GameInfo) =>
+            info.name.toLowerCase().includes(searchTerm.toLowerCase()));
     }
 }

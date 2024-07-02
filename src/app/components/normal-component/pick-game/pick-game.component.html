@@ -1,1 +1,22 @@
-<input class="input is-fullwidth" placeholder="Search game" i18n-placeholder/>
+<input class="input is-fullwidth mb-2 is-large"
+       placeholder="Search game" i18n-placeholder
+       (input)="search($event.target)"
+       [autofocus]/>
+<div class="columns is-multiline">
+    <div *ngFor="let game of matchingGames"
+         class="column is-one-fifth">
+        <div class="card">
+            <div class="card-header">
+                <p class="card-header-title">{{ game.name }}</p>
+            </div>
+            <div class="card-image game-card">
+                <figure class="image">
+                    <img id="image-{{ game.urlName }}"
+                         class="is-clickable"
+                         src="assets/images/{{ theme }}/{{ game.urlName }}.png"
+                         (click)="selectGame(game.urlName)"/>
+                </figure>
+            </div>
+        </div>
+    </div>
+</div>
