@@ -68,7 +68,9 @@ games.txt
 /backend/_build
 /backend/_coverage
 /backend/games.txt
-backend/*.coverage
+/backend/*.coverage
+/backend/service-account.json
+/backend/service-account.json.gpg
 
 # sensitive files
 /service-accounts/*.json
