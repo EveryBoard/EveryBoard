@@ -80,7 +80,7 @@
                                         [ngClass]="viewInfo.firstPlayerClasses['CHOSEN_PLAYER']"
                                         (click)="selectFirstPlayer('CHOSEN_PLAYER')"
                                 >
-                                    <ng-container *ngIf="viewInfo.chosenOpponent else opponentWithoutName">{{ viewInfo.chosenOpponent }}</ng-container>
+                                    <ng-container *ngIf="viewInfo.chosenOpponent else opponentWithoutName" i18n>{{ viewInfo.chosenOpponent }} starts</ng-container>
                                     <ng-template #opponentWithoutName i18n>The opponent starts</ng-template>
                                 </button>
                             </div>

@@ -33,7 +33,7 @@ import { UserService } from 'src/app/services/UserService';
 import { CurrentGameService } from 'src/app/services/CurrentGameService';
 import { addCandidate } from '../online-game-wrapper/online-game-wrapper.quarto.component.spec';
 
-describe('PartCreationComponent', () => {
+fdescribe('PartCreationComponent', () => {
 
     let testUtils: SimpleComponentTestUtils<PartCreationComponent>;
     let component: PartCreationComponent;
@@ -330,6 +330,8 @@ describe('PartCreationComponent', () => {
                 // and proposal should now be possible
                 const proposeConfigDisabled: boolean = findElement('#proposeConfig').nativeElement.disabled;
                 const contextAfter: string = 'Proposing config should become possible after ChosenOpponent is set';
+                console.log(findElement('#proposeConfig').nativeElement)
+                console.log(findElement('#proposeConfig').nativeElement.disabled)
                 expect(proposeConfigDisabled).withContext(contextAfter).toBeFalse();
 
                 // and opponent should be selected

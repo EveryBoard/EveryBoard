@@ -225,6 +225,7 @@ export class PartCreationComponent extends BaseWrapperComponent implements OnIni
                 const partStatus: IPartStatus = Utils.getNonNullable(this.currentConfigRoom).partStatus;
                 const configProposed: boolean = partStatus === PartStatus.CONFIG_PROPOSED.value;
                 this.viewInfo.canProposeConfig = configProposed === false && opponent !== '';
+                console.log('setting viewInfo.proposeConfig to ' + this.viewInfo.canProposeConfig);
                 if (this.rulesConfigurationComponent != null) {
                     this.rulesConfigurationComponent.setEditable(configProposed === false);
                 }
@@ -366,8 +367,9 @@ export class PartCreationComponent extends BaseWrapperComponent implements OnIni
             const configRoom: ConfigRoom = configRoomOpt.get();
             const oldConfigRoom: ConfigRoom | null = this.currentConfigRoom;
             this.currentConfigRoom = configRoom;
-            console.log(configRoom.rulesConfig)
-            if (Object.keys(configRoom.rulesConfig).length > 0) {
+            console.log('updating rules config to ' + JSON.stringify(configRoom.rulesConfig))
+            if (configRoom.rulesConfig !== null) {
+                // Not null means that there was already a rule config saved in the config room
                 this.saveRulesConfig(MGPOptional.of(configRoom.rulesConfig));
             }
             if (this.chosenOpponentJustLeft(oldConfigRoom, configRoom) &&
@@ -529,11 +531,20 @@ export class PartCreationComponent extends BaseWrapperComponent implements OnIni
         return this.gameService.acceptConfig(this.partId);
     }
 
+    // Only public because of tests
     public saveRulesConfig(rulesConfig: MGPOptional<RulesConfig>): void {
-        this.rulesConfig = rulesConfig;
+        console.log('setting rules config to ')
         if (rulesConfig.isPresent()) {
-            this.setConfigDemo(rulesConfig.get());
+            console.log('non empty:')
+            console.log(rulesConfig.get())
+        } else {
+            console.log('empty')
         }
+        this.rulesConfig = rulesConfig;
+        if (this.rulesConfig.isPresent()) {
+            this.setConfigDemo(this.rulesConfig.get());
+        }
+        console.log({canPropose: this.viewInfo.canProposeConfig, present: this.rulesConfig.isPresent()})
     }
 
     private setConfigDemo(config: RulesConfig): void {
