@@ -52,7 +52,7 @@ module Make
                 let* creator_elo_info : Domain.User.EloInfo.t = Firestore.User.get_elo ~request ~user_id:uid ~type_game:game_name in
                 let creator_elo : float = creator_elo_info.current_elo in
                 (* Create the game, then the config room, then the chat room *)
-                let game : Game.t = Game.initial game_name creator creator_elo in
+                let game : Domain.Game.t = Game.initial game_name creator creator_elo in
                 (* Write 1: create the game *)
                 let* game_id : string = Firestore.Game.create ~request ~game in
                 Stats.set_game_id request game_id;

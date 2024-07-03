@@ -18,7 +18,7 @@ module Make
 
     (** Route to join a config-room. Perform 1 read and up to 1 write *)
     let join_game : Dream.route = Dream.post "config-room/:game_id/candidates" @@ fun (request : Dream.request) ->
-        let game_id = Dream.param request "game_id" in
+        let game_id : string = Dream.param request "game_id" in
         Stats.set_action request (Printf.sprintf "POST config-room/candidates");
         Stats.set_game_id request game_id;
         let user = Auth.get_minimal_user request in
@@ -36,7 +36,7 @@ module Make
 
     (** Route to remove a candidate (usually ourselves) from a config-room. Perform 1 read and up to 2 writes. *)
     let remove_candidate : Dream.route = Dream.delete "config-room/:game_id/candidates/:candidate_id" @@ fun (request : Dream.request) ->
-        let game_id = Dream.param request "game_id" in
+        let game_id : string = Dream.param request "game_id" in
         let candidate_id = Dream.param request "candidate_id" in
         Stats.set_action request (Printf.sprintf "DELETE config-room/candidates");
         Stats.set_game_id request game_id;
@@ -109,7 +109,7 @@ module Make
         match Dream.query request "action" with
         | None -> raise (BadInput "Missing action")
         | Some action ->
-            let game_id = Dream.param request "game_id" in
+            let game_id : string = Dream.param request "game_id" in
             Stats.set_action request (Printf.sprintf "POST config-room %s" action);
             Stats.set_game_id request game_id;
             match action with
