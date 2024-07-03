@@ -8,7 +8,7 @@ import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 import { MGPValidators } from 'src/app/utils/MGPValidator';
 import { RulesConfigDescription, NumberConfig, BooleanConfig } from './RulesConfigDescription';
 
-describe('RulesConfigurationComponent', () => {
+fdescribe('RulesConfigurationComponent', () => {
 
     let testUtils: SimpleComponentTestUtils<RulesConfigurationComponent>;
 
@@ -299,10 +299,11 @@ describe('RulesConfigurationComponent', () => {
 
         describe('modifying custom configuration', () => {
 
-            it('should throw at creation if rulesConfigToDisplay is missing', fakeAsync(async() => {
+            it('should throw at initialization if rulesConfigToDisplay is missing', fakeAsync(async() => {
                 // Given a component intended for non-creator user with no config to display
                 component.rulesConfigToDisplay = undefined;
 
+                console.log('in test')
                 TestUtils.expectToThrowAndLog(() => {
                     // When rendering it
                     testUtils.detectChanges();
@@ -334,7 +335,7 @@ describe('RulesConfigurationComponent', () => {
                     // When modifying config
                     // (not expected to happen in practice,
                     // and unit testing that this should not be doable is actually more future proof)
-                    const error: string = 'Only customizable config should be modified!';
+                    const error: string = 'Only editable config should be modified';
                     TestUtils.expectToThrowAndLog(() => {
                         component.rulesConfigForm.get('nombre')?.setValue(80);
                         tick(0);
@@ -398,7 +399,7 @@ describe('RulesConfigurationComponent', () => {
                     // When modifying config
                     // (not expected to happen in practice,
                     // and unit testing that this should not be doable is actually more future proof)
-                    const error: string = 'Only customizable config should be modified!';
+                    const error: string = 'Only editable config should be modified';
                     TestUtils.expectToThrowAndLog(() => {
                         component.rulesConfigForm.get('booleen')?.setValue(false);
                         tick(0);

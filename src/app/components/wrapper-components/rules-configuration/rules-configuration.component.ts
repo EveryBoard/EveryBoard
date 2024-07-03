@@ -43,11 +43,10 @@ export class RulesConfigurationComponent extends BaseWrapperComponent implements
     public constructor(activatedRoute: ActivatedRoute)
     {
         super(activatedRoute);
-        this.checkInputs();
     }
 
     private checkInputs(): void {
-        if (this.editable) {
+        if (this.editable === false) {
             Utils.assert(this.rulesConfigToDisplay !== undefined, 'Config should be provided if RulesConfigurationComponent is not editable');
         }
     }
@@ -57,6 +56,7 @@ export class RulesConfigurationComponent extends BaseWrapperComponent implements
     }
 
     public ngOnInit(): void {
+        this.checkInputs();
         this.urlName = this.getGameUrlName();
         if (this.isCustomisable()) {
             const defaultConfig: NamedRulesConfig<RulesConfig> = this.rulesConfigDescription.getDefaultConfig();
@@ -101,7 +101,7 @@ export class RulesConfigurationComponent extends BaseWrapperComponent implements
 
     private onUpdate(): void {
         Utils.assert(this.editable, 'Only editable config should be modified');
-        Utils.assert(this.chosenConfigName === 'Custom', 'Only Customifiable config should be modified!');
+        Utils.assert(this.chosenConfigName === 'Custom', 'Only customizable config should be modified!');
         const rulesConfig: RulesConfig = {};
         const parameterNames: string[] = this.rulesConfigDescription.getFields();
         for (const parameterName of parameterNames) {
