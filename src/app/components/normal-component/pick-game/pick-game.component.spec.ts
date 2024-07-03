@@ -24,4 +24,59 @@ describe('PickGameComponent', () => {
             .toHaveBeenCalledWith('P4');
     }));
 
+    it('should filter results based on typed characters', fakeAsync(async() => {
+        // Given a pick-game page with games
+        testUtils.detectChanges();
+        const gamesBeforeFiltering: number = testUtils.findElements('.card').length;
+
+        // When entering a letter, e.g., an A
+        testUtils.fillInput('#search-term', 'A');
+        testUtils.detectChanges();
+
+        // Then it should have filtered the games, and still contain e.g., Awale
+        const gamesAfterFiltering: number = testUtils.findElements('.card').length;
+        expect(gamesAfterFiltering).toBeLessThan(gamesBeforeFiltering);
+        testUtils.expectElementToExist('#image-Awale');
+        // but not e.g., Coerceo
+        testUtils.expectElementNotToExist('#image-Coerceo');
+    }));
+
+    it('should be insensitive to case', fakeAsync(async() => {
+        // Given a pick-game page with games including Awale
+        testUtils.expectElementToExist('#image-Awale');
+        testUtils.detectChanges();
+
+        // When entering a search with specific case
+        testUtils.fillInput('#search-term', 'aWalE');
+        testUtils.detectChanges();
+
+        // Then it should not filter based on case
+        testUtils.expectElementToExist('#image-Awale');
+    }));
+
+    it('should be insensitive to spaces', fakeAsync(async() => {
+        // Given a pick-game page with games including Awale
+        testUtils.expectElementToExist('#image-Awale');
+        testUtils.detectChanges();
+
+        // When entering a search with extra spaces
+        testUtils.fillInput('#search-term', 'A wa le');
+        testUtils.detectChanges();
+
+        // Then it should not filter based on spaces
+        testUtils.expectElementToExist('#image-Awale');
+    }));
+    it('should be insensitive to diacritics', fakeAsync(async() => {
+        // Given a pick-game page with games including Awale
+        testUtils.expectElementToExist('#image-Awale');
+        testUtils.detectChanges();
+
+        // When entering a search with diacritics
+        testUtils.fillInput('#search-term', 'Àẃàlé');
+        testUtils.detectChanges();
+
+        // Then it should not filter based on spaces
+        testUtils.expectElementToExist('#image-Awale');
+    }));
+
 });
