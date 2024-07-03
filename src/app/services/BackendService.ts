@@ -9,6 +9,7 @@ export abstract class BackendService {
     }
 
     protected async performRequest(method: HTTPMethod, endpoint: string): Promise<MGPFallible<Response>> {
+        console.log("perform", method, endpoint)
         const token: string = await this.connectedUserService.getIdToken();
         const response: Response =
             await fetch(environment.backendURL + '/' + endpoint, {

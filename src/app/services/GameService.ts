@@ -34,7 +34,7 @@ export class GameService extends BackendService {
     {
         super(connectedUserService);
     }
-// TODO: this comment code serve as TODO as it has to be moved inside the backend
+// TODO: this comment code serve as  as it has to be moved inside the backend
     // private async createUnstartedPart(typeGame: string): Promise<string> {
     //     display(GameService.VERBOSE, 'GameService.createUnstartedPart(' + typeGame + ')');
 

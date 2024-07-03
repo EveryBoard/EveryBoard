@@ -94,9 +94,9 @@ export class UserService {
     public async getPlayerEloInfo(player: MinimalUser, gameName: string): Promise<EloInfo> {
         console.log('getPlayerEloInfo', player, gameName)
         const subCollection: IFirestoreDAO<EloInfo> = this.userDAO.subCollectionDAO<EloInfo>(player.id, 'elos');
-        console.log('subco, on est bon !')
+        console.log('on a la sub co !')
         const optionalInfo: MGPOptional<EloInfo> = await subCollection.read(gameName);
-        console.log('lu!')
+        console.log('on sais la lire !')
         return optionalInfo.getOrElse({
             currentElo: 0,
             numberOfGamesPlayed: 0,

@@ -16,6 +16,7 @@ export class UserEloService {
      * @returns a promise
      */
     public async update(userId: string, gameName: string, newEloInfo: EloInfo): Promise<void> {
+        console.log("====== UserEloService.update(", userId, gameName, newEloInfo, ")")
         return this.userDAO.subCollectionDAO<EloInfo>(userId, 'elos').set(gameName, newEloInfo);
     }
 }

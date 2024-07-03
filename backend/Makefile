@@ -10,6 +10,10 @@ run: gamelist
 	GAMES=$$(cat games.txt)
 	opam exec -- dune exec -- ./main.exe
 
+run-local: gamelist
+	GAMES=$$(cat games.txt)
+	opam exec -- dune exec -- ./main.exe -no-emulator -project everyboard-test -origin '*' -endpoint 'https://firestore.googleapis.com' -show-errors
+
 run-load-test: gamelist
 	GAMES=$$(cat games.txt)
 	opam exec -- dune exec -- ./main.exe -no-emulator -endpoint https://firestore.googleapis.com -show-errors -project everyboard-loadtest -origin '*' -service-account ../service-accounts/loadtest.json
