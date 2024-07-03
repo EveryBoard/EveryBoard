@@ -17,7 +17,9 @@ describe('ConnectSixMove', () => {
             });
 
             it('should create move when inputs are valid', () => {
-                ConnectSixDrops.of(new Coord(0, 0), new Coord(1, 1));
+                expect(() => {
+                    ConnectSixDrops.of(new Coord(0, 0), new Coord(1, 1));
+                }).not.toThrow();
             });
 
         });

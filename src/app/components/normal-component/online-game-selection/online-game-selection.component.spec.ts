@@ -14,34 +14,33 @@ describe('OnlineGameSelectionComponent', () => {
         testUtils = await SimpleComponentTestUtils.create(OnlineGameSelectionComponent);
         testUtils.detectChanges();
     }));
-    it('should redirect to OnlineGameCreation to create chosen game', fakeAsync(async() => {
-        // Given a chosen game
-        testUtils.getComponent().pickGame('whateverGame');
-        const router: Router = TestBed.inject(Router);
-        spyOn(router, 'navigate').and.callThrough();
 
-        // When clicking on 'play'
-        await testUtils.clickElement('#launchGame');
-        tick(0);
+    it('should redirect to OnlineGameCreation to create chosen game', fakeAsync(async() => {
+        // Given a selection component
+        const router: Router = TestBed.inject(Router);
+        spyOn(router, 'navigate').and.resolveTo(true);
+
+        // When picking a game
+        await testUtils.getComponent().pickGame('whateverGame');
 
         // Then the user is redirected to the game
         expectValidRouting(router, ['/play', 'whateverGame'], OnlineGameCreationComponent);
     }));
+
     it('should display refusal reason when user cannot join game', fakeAsync(async() => {
-        // Given a chosen game and a user that cannot join game
+        // Given a selection component and a game that the user is not allowed to join
         const component: OnlineGameSelectionComponent = testUtils.getComponent();
-        testUtils.getComponent().pickGame('whateverGame');
         const router: Router = TestBed.inject(Router);
-        spyOn(router, 'navigate').and.callThrough();
+        spyOn(router, 'navigate').and.resolveTo(true);
+
+        // When picking a game
+        // Then refusal should be toasted and router not called
         const reason: string = 'some refusal reason from the service';
         spyOn(component.currentGameService, 'canUserCreate').and.returnValue(MGPValidation.failure(reason));
-
-        // When clicking on 'play'
-        // Then refusal should be toasted and router not called
         await testUtils.expectToDisplayCriticalMessage(reason, async() => {
-            await testUtils.clickElement('#launchGame');
+            await testUtils.getComponent().pickGame('whateverGame');
         });
-        tick(0);
         expect(router.navigate).not.toHaveBeenCalled();
     }));
+
 });

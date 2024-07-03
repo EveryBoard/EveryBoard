@@ -92,10 +92,14 @@ export class SimpleComponentTestUtils<T> {
     private criticalMessageSpy: jasmine.Spy;
     protected gameMessageSpy: jasmine.Spy;
 
-    public static async create<U>(componentType: Type<U>, activatedRouteStub?: ActivatedRouteStub)
+    public static async create<U>(componentType: Type<U>,
+                                  activatedRouteStub?: ActivatedRouteStub,
+                                  configureTestModule: boolean = true)
     : Promise<SimpleComponentTestUtils<U>>
     {
-        await ConfigureTestingModuleUtils.configureTestingModule(componentType, activatedRouteStub);
+        if (configureTestModule) {
+            await ConfigureTestingModuleUtils.configureTestingModule(componentType, activatedRouteStub);
+        }
         ConnectedUserServiceMock.setUser(UserMocks.CONNECTED_AUTH_USER);
         const testUtils: SimpleComponentTestUtils<U> = new SimpleComponentTestUtils<U>();
         testUtils.prepareFixture(componentType);
@@ -678,7 +682,6 @@ export class ConfigureTestingModuleUtils {
                 componentType,
                 FirestoreTimePipe,
                 HumanDurationPipe,
-                AutofocusDirective,
                 ToggleVisibilityDirective,
             ],
             schemas: [

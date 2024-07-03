@@ -234,6 +234,7 @@ class GameDescription {
 
 }
 
+// TODO: move to GameInfo.ts
 export class GameInfo {
 
     private static ALL_GAMES: GameInfo[] = []; // Initialized like a singleton
@@ -358,8 +359,7 @@ export class PickGameComponent {
 
     @Output() pickGame: EventEmitter<string> = new EventEmitter<string>();
 
-    public constructor(themeService: ThemeService)
-    {
+    public constructor(themeService: ThemeService) {
         this.theme = themeService.getTheme();
     }
 

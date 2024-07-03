@@ -14,6 +14,7 @@ export class OnlineGameSelectionComponent {
                        public readonly currentGameService: CurrentGameService,
                        public readonly messageDisplayer: MessageDisplayer) {
     }
+
     public async pickGame(pickedGame: string): Promise<void> {
         const canUserJoin: MGPValidation = this.currentGameService.canUserCreate();
         if (canUserJoin.isSuccess()) {

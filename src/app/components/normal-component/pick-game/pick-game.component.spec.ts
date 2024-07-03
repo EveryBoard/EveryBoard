@@ -1,5 +1,5 @@
 /* eslint-disable max-lines-per-function */
-import { fakeAsync } from '@angular/core/testing';
+import { fakeAsync, flush, tick } from '@angular/core/testing';
 import { SimpleComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { PickGameComponent } from './pick-game.component';
 
@@ -9,20 +9,19 @@ describe('PickGameComponent', () => {
 
     beforeEach(fakeAsync(async() => {
         testUtils = await SimpleComponentTestUtils.create(PickGameComponent);
-        testUtils.detectChanges();
     }));
-    it('should create', () => {
+
+    it('should create', fakeAsync(async() => {
         expect(testUtils.getComponent()).toBeTruthy();
-    });
+    }));
+
     it('should emit an event when a game has been selected', fakeAsync(async() => {
-        spyOn(testUtils.getComponent().pickGame, 'emit').and.callThrough();
+        spyOn(testUtils.getComponent().pickGame, 'emit').and.returnValue();
 
-        const gameSelection: HTMLSelectElement = testUtils.findElement('#gameType').nativeElement;
-        gameSelection.value = gameSelection.options[2].value;
-        gameSelection.dispatchEvent(new Event('change'));
-        testUtils.detectChanges();
+        await testUtils.clickElement('#image-P4');
 
-        expect(testUtils.getComponent().pickGame.emit).toHaveBeenCalledWith(gameSelection.options[2].innerText);
+        expect(testUtils.getComponent().pickGame.emit)
+            .toHaveBeenCalledWith('P4');
     }));
 
 });
