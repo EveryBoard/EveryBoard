@@ -148,7 +148,6 @@ import { RulesConfigDescription } from '../../wrapper-components/rules-configura
 import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 import { GameState } from 'src/app/jscaip/state/GameState';
 import { ThemeService } from 'src/app/services/ThemeService';
-import { FormControl } from '@angular/forms';
 
 class GameDescription {
 
@@ -234,7 +233,6 @@ class GameDescription {
 
 }
 
-// TODO: move to GameInfo.ts
 export class GameInfo {
 
     private static ALL_GAMES: GameInfo[] = []; // Initialized like a singleton

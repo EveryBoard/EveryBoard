@@ -99,7 +99,7 @@ describe('WelcomeComponent', () => {
 
             // When clicking on the online-button of one game
             // Then the component should not have changed page and should toast the reason
-            testUtils.getComponent().pickGame('Awale')
+            testUtils.getComponent().pickGame('Awale');
             await testUtils.expectToDisplayCriticalMessage(error, async() => {
                 await testUtils.clickElement('#play-online');
             });
