@@ -48,6 +48,7 @@ export class SquarzRules extends ConfigurableRules<SquarzMove, SquarzState, Squa
 
     public override getInitialState(optionalConfig: MGPOptional<SquarzConfig>): SquarzState {
         const config: SquarzConfig = optionalConfig.get();
+        console.log(config)
         const width: number = config.width;
         const height: number = config.height;
         const board: PlayerOrNone[][] = TableUtils.create(width, height, PlayerOrNone.NONE);

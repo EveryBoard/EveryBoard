@@ -366,7 +366,8 @@ export class PartCreationComponent extends BaseWrapperComponent implements OnIni
             const configRoom: ConfigRoom = configRoomOpt.get();
             const oldConfigRoom: ConfigRoom | null = this.currentConfigRoom;
             this.currentConfigRoom = configRoom;
-            if (configRoom.rulesConfig !== undefined) {
+            console.log(configRoom.rulesConfig)
+            if (Object.keys(configRoom.rulesConfig).length > 0) {
                 this.saveRulesConfig(MGPOptional.of(configRoom.rulesConfig));
             }
             if (this.chosenOpponentJustLeft(oldConfigRoom, configRoom) &&

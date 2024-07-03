@@ -100,9 +100,8 @@ export class RulesConfigurationComponent extends BaseWrapperComponent implements
     }
 
     private onUpdate(): void {
-        console.log({editable: this.editable, chosenCnofig: this.chosenConfigName})
         Utils.assert(this.editable, 'Only editable config should be modified');
-        //Utils.assert(this.chosenConfigName === 'Custom', 'Only Customifiable config should be modified!');
+        Utils.assert(this.chosenConfigName === 'Custom', 'Only Customifiable config should be modified!');
         const rulesConfig: RulesConfig = {};
         const parameterNames: string[] = this.rulesConfigDescription.getFields();
         for (const parameterName of parameterNames) {
@@ -186,12 +185,16 @@ export class RulesConfigurationComponent extends BaseWrapperComponent implements
     }
 
     public setEditable(editable: boolean): void {
-        this.editable = editable;
         if (editable && this.chosenConfigName === 'Custom') {
+            this.editable = editable;
             this.rulesConfigForm.enable();
-        } else {
-            this.rulesConfigForm.disable();
+        } else if (this.editable === true) {
+            console.log('disabling')
+            this.editable = editable;
         }
+        // Otherwise, editable was already false. We don't set it to false,
+        // otherwise this triggers form updates and will yield bugs because of
+        // too much defensive programming.
     }
 
 }
