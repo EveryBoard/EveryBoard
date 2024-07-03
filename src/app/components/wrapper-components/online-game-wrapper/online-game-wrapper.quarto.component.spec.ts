@@ -421,7 +421,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         // Then the game component should become present in the component
         testUtils.expectElementToExist('app-quarto');
         expect(wrapper.gameComponent)
-            .withContext('gameComponent field should also be present after config accepted and async millisec finished')
+            .withContext('gameComponent field should also be present after config accepted and async millisecond finished')
             .toBeTruthy();
         tick(wrapper.configRoom.maximalMoveDuration * 1000);
     }));

@@ -31,7 +31,7 @@ export class ReversiTutorial extends Tutorial {
             ], 60),
         ),
         TutorialStep.anyMove(
-            $localize`Captures (1/2)`,
+            $localize`Captures` + ' (1/2)',
             $localize`At the beginning of the game, pieces are placed as shown here.
         For a move to be legal, it must sandwich at least one piece of the opponent between the piece you're putting and another of your pieces.<br/><br/>
         Do any move by clicking to put your piece
@@ -41,7 +41,7 @@ export class ReversiTutorial extends Tutorial {
             TutorialStepMessage.CONGRATULATIONS(),
         ),
         TutorialStep.fromMove(
-            $localize`Captures (2/2)`,
+            $localize`Captures` + ' (2/2)',
             $localize`A move can also capture a bigger line, and more than one line at a time<br/><br/>You're playing Light here. Play on the bottom left to see a capture.`,
             new ReversiState([
                 [_, _, _, _, _, _, _, _],

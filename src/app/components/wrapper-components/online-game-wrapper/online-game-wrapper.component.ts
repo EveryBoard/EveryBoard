@@ -26,7 +26,6 @@ import { OGWCRequestManagerService, RequestInfo } from './OGWCRequestManagerServ
 import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 import { Debug } from 'src/app/utils/Debug';
-import { AbstractRules, SuperRules } from 'src/app/jscaip/Rules';
 import { ServerTimeService } from 'src/app/services/ServerTimeService';
 
 export class OnlineGameWrapperMessages {
@@ -77,6 +76,8 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
 
     public readonly requestInfos: Record<RequestType, RequestInfo> = OGWCRequestManagerService.requestInfos;
     public readonly allRequests: RequestType[] = ['TakeBack', 'Draw', 'Rematch'];
+
+    private moveSentButNotReceivedYet: boolean = false;
 
     public constructor(activatedRoute: ActivatedRoute,
                        connectedUserService: ConnectedUserService,
@@ -182,7 +183,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
 
         this.gameStarted = true;
         window.setTimeout(async() => {
-            // the small waiting is there to make sure that the chronos are charged by view
+            // the small waiting is there to make sure that the chronos are loaded by view
             const createdSuccessfully: boolean = await this.createMatchingGameComponent();
             this.timeManager.setClocks([this.chronoZeroTurn, this.chronoOneTurn],
                                        [this.chronoZeroGlobal, this.chronoOneGlobal]);
@@ -287,26 +288,17 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
     }
 
     private async onReceivedMove(moveEvent: GameEventMove, isLastMoveOfBatch: boolean): Promise<void> {
-        const rules: SuperRules<Move, GameState, RulesConfig, unknown> = this.gameComponent.rules;
-        const currentPartTurn: number = this.gameComponent.getTurn();
-        const chosenMove: Move = this.gameComponent.encoder.decode(moveEvent.move);
-        const state: GameState = this.gameComponent.node.gameState;
-        const config: MGPOptional<RulesConfig> = await this.getConfig();
-        const legality: MGPFallible<unknown> = this.gameComponent.rules.isLegal(chosenMove, state, config);
-        const message: string = 'We received an incorrect db move: ' + chosenMove.toString() +
-            ' at turn ' + currentPartTurn +
-            'because "' + legality.getReasonOr('') + '"';
-        Utils.assert(legality.isSuccess(), message);
-        const success: MGPFallible<AbstractNode> = rules.choose(this.gameComponent.node, chosenMove, config);
-        Utils.assert(success.isSuccess(), 'Chosen move should be legal after all checks, but it is not! Reason: ' + success.getReasonOr(''));
-        this.gameComponent.node = success.get();
-        if (this.role.isNone()) {
-            await this.showNewMove(isLastMoveOfBatch);
+        if (this.moveSentButNotReceivedYet) {
+            // This is our move, we have already shown it
+            // So we do nothing to show it again.
+            this.moveSentButNotReceivedYet = false;
         } else {
-            // We only animate the move of opponent, because the users move has already been animated before sending it
-            const triggerAnimation: boolean = currentPartTurn % 2 !== this.role.getValue();
-            await this.showNewMove(triggerAnimation && isLastMoveOfBatch);
+            // This is not our move, it is either the move of the opponent, or we are observing.
+            // In any case, we have to show and animate it.
+            const move: Move = this.gameComponent.encoder.decode(moveEvent.move);
+            await this.applyMove(move, isLastMoveOfBatch);
         }
+        // Need to handle the rest irrespective of which move we received
         await this.setCurrentPlayerAccordingToCurrentTurn();
         this.timeManager.onReceivedMove(moveEvent);
         this.requestManager.onReceivedMove();
@@ -414,7 +406,6 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         return this.endGame && this.requestManager.canMakeRequest('Rematch');
     }
 
-
     public override async canUserPlay(clickedElementName: string): Promise<MGPValidation> {
         if (this.role.isNone()) {
             const message: string = OnlineGameWrapperMessages.CANNOT_PLAY_AS_OBSERVER();
@@ -457,30 +448,31 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
     }
 
     public async onLegalUserMove(move: Move): Promise<void> {
-        // We will update the part with new scores and game status (if needed)
-        // We have to compute the game status before adding the move to avoid
-        // risking receiving the move before computing the game status (thereby adding twice the same move)
-        const oldNode: AbstractNode = this.gameComponent.node;
-        const rules: AbstractRules = this.gameComponent.rules;
-        const state: GameState = oldNode.gameState;
+        // First, show the move in the component
+        await this.applyMove(move, false); // Move was already animated by its game component, no need to animate again
+        // Then, send the move
         const config: MGPOptional<RulesConfig> = await this.getConfig();
-        const legality: MGPFallible<unknown> = this.gameComponent.rules.isLegal(move, state, config);
-        Utils.assert(legality.isSuccess(), 'onLegalUserMove called with an illegal move');
-        const stateAfterMove: GameState = rules.applyLegalMove(move, state, config, legality.get());
-        const newNode: AbstractNode = new GameNode(stateAfterMove,
-                                                   MGPOptional.of(oldNode),
-                                                   MGPOptional.of(move));
-        const gameStatus: GameStatus = rules.getGameStatus(newNode, config);
-
-        // To adhere to security rules, we must add the move before updating the part
+        const gameStatus: GameStatus = this.gameComponent.rules.getGameStatus(this.gameComponent.node, config);
         const encodedMove: JSONValue = this.gameComponent.encoder.encode(move);
         const partId: string = this.currentPartId;
         const scores: MGPOptional<PlayerNumberMap> = this.gameComponent.scores;
+        this.moveSentButNotReceivedYet = true;
         if (gameStatus.isEndGame) {
-            return this.gameService.addMoveAndEndGame(partId, encodedMove, scores, gameStatus.winner);
+            await this.gameService.addMoveAndEndGame(partId, encodedMove, scores, gameStatus.winner);
         } else {
-            return this.gameService.addMove(partId, encodedMove, scores);
+            await this.gameService.addMove(partId, encodedMove, scores);
         }
+    }
+
+    private async applyMove(move: Move, triggerAnimation: boolean): Promise<void> {
+        const oldNode: AbstractNode = this.gameComponent.node;
+        const state: GameState = oldNode.gameState;
+        const config: MGPOptional<RulesConfig> = await this.getConfig();
+        const legality: MGPFallible<unknown> = this.gameComponent.rules.isLegal(move, state, config);
+        Utils.assert(legality.isSuccess(), 'OGWC.applyMove called with an illegal move');
+        const stateAfterMove: GameState = this.gameComponent.rules.applyLegalMove(move, state, config, legality.get());
+        this.gameComponent.node = new GameNode(stateAfterMove, MGPOptional.of(oldNode), MGPOptional.of(move));
+        await this.showNewMove(triggerAnimation);
     }
 
     private async notifyTimeoutVictory(victoriousPlayer: MinimalUser, loser: MinimalUser): Promise<void> {
