@@ -15,8 +15,8 @@ let tests = [
             FirestoreTests.Mock.clear_calls ();
             AuthTests.Mock.set DomainTests.a_minimal_user.id DomainTests.a_user;
             (* Given a game with a config room already existing *)
-            let game_id = "game-id" in
-            let config_room = ConfigRoom.initial DomainTests.another_minimal_user in
+            let game_id : string = "game-id" in
+            let config_room : Domain.ConfigRoom.t = ConfigRoom.initial DomainTests.another_minimal_user DomainTests.another_minimal_user_current_elo in
             FirestoreTests.Mock.ConfigRoom.set config_room;
 
             (* When joining the game *)
@@ -35,8 +35,8 @@ let tests = [
             FirestoreTests.Mock.clear_calls ();
             AuthTests.Mock.set DomainTests.a_minimal_user.id DomainTests.a_user;
             (* Given a game with a config room already existing *)
-            let game_id = "game-id" in
-            let config_room = ConfigRoom.initial DomainTests.a_minimal_user in
+            let game_id : string = "game-id" in
+            let config_room : Domain.ConfigRoom.t = ConfigRoom.initial DomainTests.a_minimal_user DomainTests.a_minimal_user_current_elo in
             FirestoreTests.Mock.ConfigRoom.set config_room;
 
             (* When joining the game as creator *)
@@ -58,8 +58,8 @@ let tests = [
             FirestoreTests.Mock.clear_calls ();
             AuthTests.Mock.set DomainTests.a_minimal_user.id DomainTests.a_user;
             (* Given a game with a config room already existing, and where we are candidate *)
-            let game_id = "game-id" in
-            let config_room = ConfigRoom.initial DomainTests.a_minimal_user in
+            let game_id : string = "game-id" in
+            let config_room : Domain.ConfigRoom.t = ConfigRoom.initial DomainTests.a_minimal_user DomainTests.a_minimal_user_current_elo in
             FirestoreTests.Mock.ConfigRoom.set config_room;
             let uid = DomainTests.a_minimal_user.id in
 
@@ -79,9 +79,9 @@ let tests = [
             FirestoreTests.Mock.clear_calls ();
             AuthTests.Mock.set DomainTests.a_minimal_user.id DomainTests.a_user;
             (* Given a game with a config room already existing, and where we are the selected opponent *)
-            let game_id = "game-id" in
-            let config_room = {
-                (ConfigRoom.initial DomainTests.another_minimal_user) with
+            let game_id : string = "game-id" in
+            let config_room : Domain.ConfigRoom.t = {
+                (ConfigRoom.initial DomainTests.another_minimal_user DomainTests.another_minimal_user_current_elo) with
                 chosen_opponent = Some DomainTests.a_minimal_user
             } in
             FirestoreTests.Mock.ConfigRoom.set config_room;
@@ -108,9 +108,9 @@ let tests = [
             FirestoreTests.Mock.clear_calls ();
             AuthTests.Mock.set DomainTests.a_minimal_user.id DomainTests.a_user;
             (* Given a game with a config room already existing, with a selected opponent, and where we are creator *)
-            let game_id = "game-id" in
-            let config_room = {
-                (ConfigRoom.initial DomainTests.a_minimal_user) with
+            let game_id : string = "game-id" in
+            let config_room : Domain.ConfigRoom.t = {
+                (ConfigRoom.initial DomainTests.a_minimal_user DomainTests.a_minimal_user_current_elo) with
                 chosen_opponent = Some DomainTests.another_minimal_user
             } in
             FirestoreTests.Mock.ConfigRoom.set config_room;
@@ -140,9 +140,9 @@ let tests = [
             FirestoreTests.Mock.clear_calls ();
             AuthTests.Mock.set DomainTests.a_minimal_user.id DomainTests.a_user;
             (* Given a game with a config room already existing, with a selected opponent, and where we are creator *)
-            let game_id = "game-id" in
-            let config_room = {
-                (ConfigRoom.initial DomainTests.a_minimal_user) with
+            let game_id : string = "game-id" in
+            let config_room : Domain.ConfigRoom.t = {
+                (ConfigRoom.initial DomainTests.a_minimal_user DomainTests.a_minimal_user_current_elo) with
                 chosen_opponent = Some DomainTests.another_minimal_user
             } in
             FirestoreTests.Mock.ConfigRoom.set config_room;
@@ -163,9 +163,9 @@ let tests = [
             FirestoreTests.Mock.clear_calls ();
             AuthTests.Mock.set DomainTests.a_minimal_user.id DomainTests.a_user;
             (* Given a game with a config room already existing, with a selected opponent, and where we are creator *)
-            let game_id = "game-id" in
-            let config_room = {
-                (ConfigRoom.initial DomainTests.a_minimal_user) with
+            let game_id : string = "game-id" in
+            let config_room : Domain.ConfigRoom.t = {
+                (ConfigRoom.initial DomainTests.a_minimal_user DomainTests.a_minimal_user_current_elo) with
                 chosen_opponent = Some DomainTests.another_minimal_user
             } in
             FirestoreTests.Mock.ConfigRoom.set config_room;
@@ -186,9 +186,9 @@ let tests = [
             FirestoreTests.Mock.clear_calls ();
             AuthTests.Mock.set DomainTests.a_minimal_user.id DomainTests.a_user;
             (* Given a game with a config room already existing, with a selected opponent, and where we are creator *)
-            let game_id = "game-id" in
-            let config_room = {
-                (ConfigRoom.initial DomainTests.a_minimal_user) with
+            let game_id : string = "game-id" in
+            let config_room : Domain.ConfigRoom.t = {
+                (ConfigRoom.initial DomainTests.a_minimal_user DomainTests.a_minimal_user_current_elo) with
                 chosen_opponent = Some DomainTests.another_minimal_user
             } in
             FirestoreTests.Mock.ConfigRoom.set config_room;
@@ -221,9 +221,9 @@ let tests = [
             ExternalTests.Mock.current_time_seconds := now;
 
             (* Given a game proposed to us *)
-            let game_id = "game_id" in
-            let config_room = {
-                (ConfigRoom.initial DomainTests.another_minimal_user) with
+            let game_id : string = "game_id" in
+            let config_room : Domain.ConfigRoom.t = {
+                (ConfigRoom.initial DomainTests.another_minimal_user DomainTests.another_minimal_user_current_elo) with
                 chosen_opponent = Some DomainTests.a_minimal_user
             } in
             FirestoreTests.Mock.ConfigRoom.set config_room;
@@ -252,9 +252,9 @@ let tests = [
             ExternalTests.Mock.current_time_seconds := now;
 
             (* Given a game proposed to us *)
-            let game_id = "game_id" in
-            let config_room = {
-                (ConfigRoom.initial DomainTests.another_minimal_user) with
+            let game_id : string = "game_id" in
+            let config_room : Domain.ConfigRoom.t = {
+                (ConfigRoom.initial DomainTests.another_minimal_user DomainTests.another_minimal_user_current_elo) with
                 chosen_opponent = Some DomainTests.a_minimal_user
             } in
             FirestoreTests.Mock.ConfigRoom.set config_room;
@@ -288,8 +288,8 @@ let tests = [
             AuthTests.Mock.set DomainTests.a_minimal_user.id DomainTests.a_user;
 
             (* Given a game *)
-            let game_id = "game_id" in
-            let config_room = ConfigRoom.initial DomainTests.a_minimal_user in
+            let game_id : string = "game_id" in
+            let config_room : Domain.ConfigRoom.t = ConfigRoom.initial DomainTests.a_minimal_user DomainTests.a_minimal_user_current_elo in
             FirestoreTests.Mock.ConfigRoom.set config_room;
 
             (* When selecting a candidate *)
@@ -314,8 +314,8 @@ let tests = [
             AuthTests.Mock.set DomainTests.a_minimal_user.id DomainTests.a_user;
 
             (* Given a game *)
-            let game_id = "game_id" in
-            let config_room = ConfigRoom.initial DomainTests.a_minimal_user in
+            let game_id : string = "game_id" in
+            let config_room : Domain.ConfigRoom.t = ConfigRoom.initial DomainTests.a_minimal_user DomainTests.a_minimal_user_current_elo in
             FirestoreTests.Mock.ConfigRoom.set config_room;
 
             (* When selecting a candidate without specifying opponent *)
@@ -336,8 +336,8 @@ let tests = [
             AuthTests.Mock.set DomainTests.a_minimal_user.id DomainTests.a_user;
 
             (* Given a game *)
-            let game_id = "game_id" in
-            let config_room = ConfigRoom.initial DomainTests.a_minimal_user in
+            let game_id : string = "game_id" in
+            let config_room : Domain.ConfigRoom.t = ConfigRoom.initial DomainTests.a_minimal_user DomainTests.a_minimal_user_current_elo in
             FirestoreTests.Mock.ConfigRoom.set config_room;
 
             (* When selecting a candidate without specifying opponent *)
@@ -359,9 +359,9 @@ let tests = [
             AuthTests.Mock.set DomainTests.a_minimal_user.id DomainTests.a_user;
 
             (* Given a game with a proposed config *)
-            let game_id = "game_id" in
-            let config_room = {
-                (ConfigRoom.initial DomainTests.another_minimal_user) with
+            let game_id : string = "game_id" in
+            let config_room : Domain.ConfigRoom.t = {
+                (ConfigRoom.initial DomainTests.another_minimal_user DomainTests.another_minimal_user_current_elo) with
                 chosen_opponent = Some DomainTests.a_minimal_user;
                 game_status = ConfigRoom.GameStatus.ConfigProposed;
             } in
@@ -388,9 +388,9 @@ let tests = [
             AuthTests.Mock.set DomainTests.a_minimal_user.id DomainTests.a_user;
 
             (* Given a game with a proposed config *)
-            let game_id = "game_id" in
-            let config_room = {
-                (ConfigRoom.initial DomainTests.another_minimal_user) with
+            let game_id : string = "game_id" in
+            let config_room : Domain.ConfigRoom.t = {
+                (ConfigRoom.initial DomainTests.another_minimal_user DomainTests.another_minimal_user_current_elo) with
                 chosen_opponent = Some DomainTests.a_minimal_user;
                 game_status = ConfigRoom.GameStatus.ConfigProposed;
             } in
@@ -414,7 +414,7 @@ let tests = [
     "ConfigRoomEndpoint.routes POST config-room/:game-id", [
         lwt_test "should fail if no action is provided" (fun () ->
             (* Given a game *)
-            let game_id = "game_id" in
+            let game_id : string = "game_id" in
             (* When making a POST request without action *)
             (* Then it should fail *)
             lwt_check_raises "failure" ((=) (BadInput "Missing action")) (fun () ->
@@ -426,7 +426,7 @@ let tests = [
 
         lwt_test "should fail if an unknown action is provided" (fun () ->
             (* Given a game *)
-            let game_id = "game_id" in
+            let game_id : string = "game_id" in
             (* When making a POST request without action *)
             (* Then it should fail *)
             lwt_check_raises "failure" ((=) (BadInput "Unknown action")) (fun () ->

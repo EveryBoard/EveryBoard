@@ -70,8 +70,8 @@ let tests = [
             (* Then it should succeed and create the game, config room, and chat *)
             check status "response status" `Created (Dream.status result);
             let expected = [
-                FirestoreTests.CreateGame Game.(to_yojson (initial "P4" DomainTests.a_minimal_user));
-                FirestoreTests.CreateConfigRoom ("game_id", ConfigRoom.(to_yojson (initial DomainTests.a_minimal_user)));
+                FirestoreTests.CreateGame Game.(to_yojson (initial "P4" DomainTests.a_minimal_user DomainTests.a_minimal_user_current_elo));
+                FirestoreTests.CreateConfigRoom ("game_id", ConfigRoom.(to_yojson (initial DomainTests.a_minimal_user DomainTests.a_minimal_user_current_elo)));
                 FirestoreTests.CreateChat "game_id";
             ] in
             check (list FirestoreTests.call) "calls" expected !FirestoreTests.Mock.calls;
@@ -85,8 +85,8 @@ let tests = [
             AuthTests.Mock.set DomainTests.a_minimal_user.id DomainTests.a_user;
 
             (* Given a game *)
-            let game_id = "game_id" in
-            let game = Game.initial "P4" DomainTests.a_minimal_user in
+            let game_id : string = "game_id" in
+            let game : Domain.Game.t = Game.initial "P4" DomainTests.a_minimal_user DomainTests.a_minimal_user_current_elo in
             FirestoreTests.Mock.Game.set game;
 
             (* When getting it *)
@@ -107,7 +107,7 @@ let tests = [
             AuthTests.Mock.set DomainTests.a_minimal_user.id DomainTests.a_user;
 
             (* Given a game *)
-            let game = Game.initial "P4" DomainTests.a_minimal_user in
+            let game : Domain.Game.t = Game.initial "P4" DomainTests.a_minimal_user DomainTests.a_minimal_user_current_elo in
             FirestoreTests.Mock.Game.set game;
 
             (* When getting it *)
@@ -132,8 +132,8 @@ let tests = [
             AuthTests.Mock.set DomainTests.a_minimal_user.id DomainTests.a_user;
 
             (* Given a game *)
-            let game_id = "game_id" in
-            let game = Game.initial "P4" DomainTests.a_minimal_user in
+            let game_id : string = "game_id" in
+            let game : Domain.Game.t = Game.initial "P4" DomainTests.a_minimal_user DomainTests.a_minimal_user_current_elo in
             FirestoreTests.Mock.Game.set game;
 
             (* When deleting it *)
@@ -156,7 +156,7 @@ let tests = [
     "GameEndpoint.routes POST game/:game-id", [
         lwt_test "should fail if no action is provided" (fun () ->
             (* Given a game *)
-            let game_id = "game_id" in
+            let game_id : string = "game_id" in
             (* When making a POST request without action *)
             (* Then it should fail *)
             lwt_check_raises "failure" ((=) (BadInput "Missing action")) (fun () ->
@@ -168,7 +168,7 @@ let tests = [
 
         lwt_test "should fail if an unknown action is provided" (fun () ->
             (* Given a game *)
-            let game_id = "game_id" in
+            let game_id : string = "game_id" in
             (* When making a POST request without action *)
             (* Then it should fail *)
             lwt_check_raises "failure" ((=) (BadInput "Unknown action")) (fun () ->
@@ -187,9 +187,9 @@ let tests = [
             ExternalTests.Mock.current_time_seconds := now;
 
             (* Given a game with an opponent *)
-            let game_id = "game_id" in
-            let game = {
-                (Game.initial "P4" DomainTests.a_minimal_user) with
+            let game_id : string = "game_id" in
+            let game : Domain.Game.t = {
+                (Game.initial "P4" DomainTests.a_minimal_user DomainTests.a_minimal_user_current_elo) with
                 player_one = Some DomainTests.another_minimal_user
             } in
             FirestoreTests.Mock.Game.set game;
@@ -220,9 +220,9 @@ let tests = [
             ExternalTests.Mock.current_time_seconds := now;
 
             (* Given a game with an opponent *)
-            let game_id = "game_id" in
-            let game = {
-                (Game.initial "P4" DomainTests.another_minimal_user) with
+            let game_id : string = "game_id" in
+            let game : Domain.Game.t = {
+                (Game.initial "P4" DomainTests.another_minimal_user DomainTests.another_minimal_user_current_elo) with
                 player_one = Some DomainTests.a_minimal_user
             } in
             FirestoreTests.Mock.Game.set game;
@@ -251,8 +251,8 @@ let tests = [
             AuthTests.Mock.set DomainTests.a_minimal_user.id DomainTests.a_user;
 
             (* Given a game without an opponent *)
-            let game_id = "game_id" in
-            let game = Game.initial "P4" DomainTests.a_minimal_user in
+            let game_id : string = "game_id" in
+            let game : Domain.Game.t = Game.initial "P4" DomainTests.a_minimal_user DomainTests.a_minimal_user_current_elo in
             FirestoreTests.Mock.Game.set game;
 
             (* When resigning from it *)
@@ -274,9 +274,9 @@ let tests = [
             ExternalTests.Mock.current_time_seconds := now;
 
             (* Given a game with an opponent *)
-            let game_id = "game_id" in
-            let game = {
-                (Game.initial "P4" DomainTests.a_minimal_user) with
+            let game_id : string = "game_id" in
+            let game : Domain.Game.t = {
+                (Game.initial "P4" DomainTests.a_minimal_user DomainTests.a_minimal_user_current_elo) with
                 player_one = Some DomainTests.another_minimal_user;
             } in
             FirestoreTests.Mock.Game.set game;
@@ -307,7 +307,7 @@ let tests = [
             AuthTests.Mock.set DomainTests.a_minimal_user.id DomainTests.a_user;
 
             (* Given a game *)
-            let game_id = "game_id" in
+            let game_id : string = "game_id" in
 
             (* When notifying a timeout but without giving a winner/loser *)
             (* Then it should fail *)
@@ -323,7 +323,7 @@ let tests = [
             AuthTests.Mock.set DomainTests.a_minimal_user.id DomainTests.a_user;
 
             (* Given a game *)
-            let game_id = "game_id" in
+            let game_id : string = "game_id" in
 
             (* When notifying a timeout but without giving a valid winner/loser *)
             (* Then it should fail *)
@@ -343,9 +343,9 @@ let tests = [
             ExternalTests.Mock.current_time_seconds := now;
 
             (* Given a game with an opponent *)
-            let game_id = "game_id" in
-            let game = {
-                (Game.initial "P4" DomainTests.a_minimal_user) with
+            let game_id : string = "game_id" in
+            let game : Domain.Game.t = {
+                (Game.initial "P4" DomainTests.a_minimal_user DomainTests.a_minimal_user_current_elo) with
                 player_one = Some DomainTests.another_minimal_user;
             } in
             FirestoreTests.Mock.Game.set game;
@@ -374,9 +374,9 @@ let tests = [
             ExternalTests.Mock.current_time_seconds := now;
 
             (* Given a game with an opponent *)
-            let game_id = "game_id" in
-            let game = {
-                (Game.initial "P4" DomainTests.a_minimal_user) with
+            let game_id : string = "game_id" in
+            let game : Domain.Game.t = {
+                (Game.initial "P4" DomainTests.a_minimal_user DomainTests.a_minimal_user_current_elo) with
                 player_one = Some DomainTests.another_minimal_user;
             } in
             FirestoreTests.Mock.Game.set game;
@@ -407,9 +407,9 @@ let tests = [
             ExternalTests.Mock.current_time_seconds := now;
 
             (* Given a game with an opponent *)
-            let game_id = "game_id" in
-            let game = {
-                (Game.initial "P4" DomainTests.another_minimal_user) with
+            let game_id : string = "game_id" in
+            let game : Domain.Game.t = {
+                (Game.initial "P4" DomainTests.another_minimal_user DomainTests.another_minimal_user_current_elo) with
                 player_one = Some DomainTests.a_minimal_user;
             } in
             FirestoreTests.Mock.Game.set game;
@@ -442,9 +442,9 @@ let tests = [
             ExternalTests.Mock.current_time_seconds := now;
 
             (* Given a game with an opponent *)
-            let game_id = "game_id" in
-            let game = {
-                (Game.initial "P4" DomainTests.a_minimal_user) with
+            let game_id : string = "game_id" in
+            let game : Domain.Game.t = {
+                (Game.initial "P4" DomainTests.a_minimal_user DomainTests.a_minimal_user_current_elo) with
                 player_one = Some DomainTests.another_minimal_user;
             } in
             FirestoreTests.Mock.Game.set game;
@@ -473,9 +473,9 @@ let tests = [
             ExternalTests.Mock.current_time_seconds := now;
 
             (* Given a game with an opponent *)
-            let game_id = "game_id" in
-            let game = {
-                (Game.initial "P4" DomainTests.a_minimal_user) with
+            let game_id : string = "game_id" in
+            let game : Domain.Game.t = {
+                (Game.initial "P4" DomainTests.a_minimal_user DomainTests.a_minimal_user_current_elo) with
                 player_one = Some DomainTests.another_minimal_user;
             } in
             FirestoreTests.Mock.Game.set game;
@@ -504,13 +504,13 @@ let tests = [
             ExternalTests.Mock.current_time_seconds := now;
 
             (* Given a game with an opponent *)
-            let game_id = "game_id" in
-            let config_room = {
-                (ConfigRoom.initial DomainTests.another_minimal_user)
+            let game_id : string = "game_id" in
+            let config_room : Domain.ConfigRoom.t = {
+                (ConfigRoom.initial DomainTests.another_minimal_user DomainTests.another_minimal_user_current_elo)
                 with chosen_opponent = Some DomainTests.a_minimal_user;
             } in
-            let game = {
-                (Game.initial "P4" DomainTests.a_minimal_user) with
+            let game : Domain.Game.t = {
+                (Game.initial "P4" DomainTests.a_minimal_user DomainTests.a_minimal_user_current_elo) with
                 player_one = Some DomainTests.another_minimal_user;
             } in
             FirestoreTests.Mock.Game.set game;
@@ -545,13 +545,13 @@ let tests = [
             ExternalTests.Mock.current_time_seconds := now;
 
             (* Given a game with an opponent *)
-            let game_id = "game_id" in
-            let config_room = {
-                (ConfigRoom.initial DomainTests.another_minimal_user)
+            let game_id : string = "game_id" in
+            let config_room : Domain.ConfigRoom.t = {
+                (ConfigRoom.initial DomainTests.another_minimal_user DomainTests.another_minimal_user_current_elo)
                 with chosen_opponent = Some DomainTests.a_minimal_user;
             } in
-            let game = {
-                (Game.initial "P4" DomainTests.another_minimal_user) with
+            let game : Domain.Game.t = {
+                (Game.initial "P4" DomainTests.another_minimal_user DomainTests.another_minimal_user_current_elo) with
                 player_one = Some DomainTests.a_minimal_user;
             } in
             FirestoreTests.Mock.Game.set game;
@@ -588,9 +588,9 @@ let tests = [
             ExternalTests.Mock.current_time_seconds := now;
 
             (* Given a game with an opponent *)
-            let game_id = "game_id" in
-            let game = {
-                (Game.initial "P4" DomainTests.a_minimal_user) with
+            let game_id : string = "game_id" in
+            let game : Domain.Game.t = {
+                (Game.initial "P4" DomainTests.a_minimal_user DomainTests.a_minimal_user_current_elo) with
                 player_one = Some DomainTests.another_minimal_user;
             } in
             FirestoreTests.Mock.Game.set game;
@@ -619,9 +619,9 @@ let tests = [
             ExternalTests.Mock.current_time_seconds := now;
 
             (* Given a game with an opponent *)
-            let game_id = "game_id" in
-            let game = {
-                (Game.initial "P4" DomainTests.a_minimal_user) with
+            let game_id : string = "game_id" in
+            let game : Domain.Game.t = {
+                (Game.initial "P4" DomainTests.a_minimal_user DomainTests.a_minimal_user_current_elo) with
                 player_one = Some DomainTests.another_minimal_user;
             } in
             FirestoreTests.Mock.Game.set game;
@@ -650,9 +650,9 @@ let tests = [
             ExternalTests.Mock.current_time_seconds := now;
 
             (* Given a game with an opponent (on our turn) *)
-            let game_id = "game_id" in
-            let game = {
-                (Game.initial "P4" DomainTests.a_minimal_user) with
+            let game_id : string = "game_id" in
+            let game : Domain.Game.t = {
+                (Game.initial "P4" DomainTests.a_minimal_user DomainTests.a_minimal_user_current_elo) with
                 player_one = Some DomainTests.another_minimal_user;
                 turn = 2;
             } in
@@ -682,9 +682,9 @@ let tests = [
             ExternalTests.Mock.current_time_seconds := now;
 
             (* Given a game with an opponent (on their turn) *)
-            let game_id = "game_id" in
-            let game = {
-                (Game.initial "P4" DomainTests.a_minimal_user) with
+            let game_id : string = "game_id" in
+            let game : Domain.Game.t = {
+                (Game.initial "P4" DomainTests.a_minimal_user DomainTests.a_minimal_user_current_elo) with
                 player_one = Some DomainTests.another_minimal_user;
                 turn = 3;
             } in
@@ -714,9 +714,9 @@ let tests = [
             ExternalTests.Mock.current_time_seconds := now;
 
             (* Given a game with an opponent (on our turn) *)
-            let game_id = "game_id" in
-            let game = {
-                (Game.initial "P4" DomainTests.another_minimal_user) with
+            let game_id : string = "game_id" in
+            let game : Domain.Game.t = {
+                (Game.initial "P4" DomainTests.another_minimal_user DomainTests.another_minimal_user_current_elo) with
                 player_one = Some DomainTests.a_minimal_user;
                 turn = 2;
             } in
@@ -748,9 +748,9 @@ let tests = [
             ExternalTests.Mock.current_time_seconds := now;
 
             (* Given a game with an opponent *)
-            let game_id = "game_id" in
-            let game = {
-                (Game.initial "P4" DomainTests.a_minimal_user) with
+            let game_id : string = "game_id" in
+            let game : Domain.Game.t = {
+                (Game.initial "P4" DomainTests.a_minimal_user DomainTests.a_minimal_user_current_elo) with
                 player_one = Some DomainTests.another_minimal_user;
             } in
             FirestoreTests.Mock.Game.set game;
@@ -779,9 +779,9 @@ let tests = [
             ExternalTests.Mock.current_time_seconds := now;
 
             (* Given a game with an opponent *)
-            let game_id = "game_id" in
-            let game = {
-                (Game.initial "P4" DomainTests.a_minimal_user) with
+            let game_id : string = "game_id" in
+            let game : Domain.Game.t = {
+                (Game.initial "P4" DomainTests.a_minimal_user DomainTests.a_minimal_user_current_elo) with
                 player_one = Some DomainTests.another_minimal_user;
             } in
             FirestoreTests.Mock.Game.set game;
@@ -810,9 +810,9 @@ let tests = [
             ExternalTests.Mock.current_time_seconds := now;
 
             (* Given a game with an opponent *)
-            let game_id = "game_id" in
-            let game = {
-                (Game.initial "P4" DomainTests.a_minimal_user) with
+            let game_id : string = "game_id" in
+            let game : Domain.Game.t = {
+                (Game.initial "P4" DomainTests.a_minimal_user DomainTests.a_minimal_user_current_elo) with
                 player_one = Some DomainTests.another_minimal_user;
             } in
             FirestoreTests.Mock.Game.set game;
@@ -841,9 +841,9 @@ let tests = [
             ExternalTests.Mock.current_time_seconds := now;
 
             (* Given a game with an opponent *)
-            let game_id = "game_id" in
-            let game = {
-                (Game.initial "P4" DomainTests.a_minimal_user) with
+            let game_id : string = "game_id" in
+            let game : Domain.Game.t = {
+                (Game.initial "P4" DomainTests.a_minimal_user DomainTests.a_minimal_user_current_elo) with
                 player_one = Some DomainTests.another_minimal_user;
                 turn = 0;
             } in
@@ -875,9 +875,9 @@ let tests = [
             ExternalTests.Mock.current_time_seconds := now;
 
             (* Given a game with an opponent *)
-            let game_id = "game_id" in
-            let game = {
-                (Game.initial "P4" DomainTests.a_minimal_user) with
+            let game_id : string = "game_id" in
+            let game : Domain.Game.t = {
+                (Game.initial "P4" DomainTests.a_minimal_user DomainTests.a_minimal_user_current_elo) with
                 player_one = Some DomainTests.another_minimal_user;
                 turn = 0;
             } in
@@ -906,7 +906,7 @@ let tests = [
 
         lwt_test "should fail if no move is provided" (fun () ->
             (* Given a game *)
-            let game_id = "game_id" in
+            let game_id : string = "game_id" in
             (* When making a POST request without action *)
             (* Then it should fail *)
             lwt_check_raises "failure" ((=) (BadInput "Missing or invalid move parameter")) (fun () ->
@@ -925,9 +925,9 @@ let tests = [
             ExternalTests.Mock.current_time_seconds := now;
 
             (* Given a game with an opponent *)
-            let game_id = "game_id" in
-            let game = {
-                (Game.initial "P4" DomainTests.a_minimal_user) with
+            let game_id : string = "game_id" in
+            let game : Domain.Game.t = {
+                (Game.initial "P4" DomainTests.a_minimal_user DomainTests.a_minimal_user_current_elo) with
                 player_one = Some DomainTests.another_minimal_user;
                 turn = 0;
             } in
@@ -961,9 +961,9 @@ let tests = [
             ExternalTests.Mock.current_time_seconds := now;
 
             (* Given a game with an opponent *)
-            let game_id = "game_id" in
-            let game = {
-                (Game.initial "P4" DomainTests.a_minimal_user) with
+            let game_id : string = "game_id" in
+            let game : Domain.Game.t = {
+                (Game.initial "P4" DomainTests.a_minimal_user DomainTests.a_minimal_user_current_elo) with
                 player_one = Some DomainTests.another_minimal_user;
                 turn = 0;
             } in
@@ -999,9 +999,9 @@ let tests = [
             ExternalTests.Mock.current_time_seconds := now;
 
             (* Given a game with an opponent *)
-            let game_id = "game_id" in
-            let game = {
-                (Game.initial "P4" DomainTests.a_minimal_user) with
+            let game_id : string = "game_id" in
+            let game : Domain.Game.t = {
+                (Game.initial "P4" DomainTests.a_minimal_user DomainTests.a_minimal_user_current_elo) with
                 player_one = Some DomainTests.another_minimal_user;
                 turn = 0;
             } in
@@ -1037,9 +1037,9 @@ let tests = [
             ExternalTests.Mock.current_time_seconds := now;
 
             (* Given a game with an opponent *)
-            let game_id = "game_id" in
-            let game = {
-                (Game.initial "P4" DomainTests.a_minimal_user) with
+            let game_id : string = "game_id" in
+            let game : Domain.Game.t = {
+                (Game.initial "P4" DomainTests.a_minimal_user DomainTests.a_minimal_user_current_elo) with
                 player_one = Some DomainTests.another_minimal_user;
                 turn = 0;
             } in
@@ -1073,7 +1073,7 @@ let tests = [
 
         lwt_test "should fail if no move is provided" (fun () ->
             (* Given a game *)
-            let game_id = "game_id" in
+            let game_id : string = "game_id" in
             (* When making a POST request without action *)
             (* Then it should fail *)
             lwt_check_raises "failure" ((=) (BadInput "Missing or invalid move parameter")) (fun () ->
@@ -1085,7 +1085,7 @@ let tests = [
 
         lwt_test "should fail if invalid winner is provided" (fun () ->
             (* Given a game *)
-            let game_id = "game_id" in
+            let game_id : string = "game_id" in
             (* When making a POST request with valid move but invalid winner/loser *)
             (* Then it should fail *)
             lwt_check_raises "failure" ((=) (BadInput "Invalid winner")) (fun () ->
