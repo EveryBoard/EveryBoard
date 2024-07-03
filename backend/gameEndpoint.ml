@@ -324,8 +324,8 @@ module Make
             match action with
             | "resign" -> resign request game_id
             | "notifyTimeout" ->
-                let winner = get_json_param request "winner" >>= MinimalUser.of_yojson in (* TODO *)
-                let loser = get_json_param request "loser" >>= MinimalUser.of_yojson in (* TODO *)
+                let winner : (MinimalUser.t, string) result = get_json_param request "winner" >>= MinimalUser.of_yojson in
+                let loser : (MinimalUser.t, string) result = get_json_param request "loser" >>= MinimalUser.of_yojson in
                 begin match (winner, loser) with
                     | (Ok winner, Ok loser) -> notify_timeout request game_id winner loser
                     | _ -> raise (BadInput "Missing or invalid winner or loser parameter")
