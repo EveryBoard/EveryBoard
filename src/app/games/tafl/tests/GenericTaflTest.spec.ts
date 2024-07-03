@@ -93,7 +93,7 @@ export function DoTaflTests<C extends TaflComponent<R, M>,
                 // When moving your piece
                 const move: M = entries.moveProvider(start, end).get();
 
-                // Then the move should be legal
+                // Then the move should succeed
                 const landingSpace: string = '#click-' + end.x + '-' + end.y;
                 await testUtils.expectMoveSuccess(landingSpace, move);
                 // And the square on the way should be highlighted

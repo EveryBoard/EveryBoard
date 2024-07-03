@@ -1,14 +1,14 @@
 /* eslint-disable max-lines-per-function */
+import { MGPOptional } from '@everyboard/lib';
 import { ApagosMove } from '../ApagosMove';
 import { ApagosMoveGenerator } from '../ApagosMoveGenerator';
-import { ApagosNode, ApagosRules } from '../ApagosRules';
+import { ApagosConfig, ApagosNode, ApagosRules } from '../ApagosRules';
 import { ApagosState } from '../ApagosState';
-import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 describe('ApagosMoveGenerator', () => {
 
     let moveGenerator: ApagosMoveGenerator;
-    const defaultConfig: NoConfig = ApagosRules.get().getDefaultRulesConfig();
+    const defaultConfig: MGPOptional<ApagosConfig> = ApagosRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         moveGenerator = new ApagosMoveGenerator();
@@ -16,7 +16,7 @@ describe('ApagosMoveGenerator', () => {
 
     it('should have all 8 drop as possible move at first turn', () => {
         // Given initial node
-        const initialState: ApagosState = ApagosRules.get().getInitialState();
+        const initialState: ApagosState = ApagosRules.get().getInitialState(defaultConfig);
         const node: ApagosNode = new ApagosNode(initialState);
 
         // When listing the moves

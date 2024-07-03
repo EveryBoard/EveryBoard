@@ -6,7 +6,7 @@
         <polygon *ngIf="mustDraw(coordAndContent.coord)"
                  id="space-{{ coordAndContent.coord.x }}-{{ coordAndContent.coord.y }}"
                  (click)="onSpaceClick(coordAndContent.coord)"
-                 [attr.points]="getTrianglePoints(coordAndContent.coord.x, coordAndContent.coord.y)"
+                 [attr.points]="getTrianglePointsAt(coordAndContent.coord)"
                  [attr.transform]="getTriangleInHexTranslation(coordAndContent.coord)"
                  [ngClass]="getSpaceClass(coordAndContent.coord)"
                  class="base big-stroke"
@@ -17,7 +17,7 @@
         <polygon *ngIf="isPyramid(coordAndContent.coord)"
                  id="pyramid-{{ coordAndContent.coord.x }}-{{ coordAndContent.coord.y }}"
                  (click)="onPyramidClick(coordAndContent.coord)"
-                 [attr.points]="getPyramidPoints(coordAndContent.coord.x, coordAndContent.coord.y)"
+                 [attr.points]="getPyramidPointsAt(coordAndContent.coord)"
                  [attr.transform]="getTriangleInHexTranslation(coordAndContent.coord)"
                  [ngClass]="getPyramidClass(coordAndContent.coord)"
                  class="base mid-stroke"
@@ -26,14 +26,14 @@
     </g>
     <g *ngIf="chosenCoord.isPresent() else lastMove">
         <polygon id="selected-{{ chosenCoord.get().x }}-{{ chosenCoord.get().y }}"
-                 [attr.points]="getPyramidPoints(chosenCoord.get().x, chosenCoord.get().y)"
+                 [attr.points]="getPyramidPointsAt(chosenCoord.get())"
                  [attr.transform]="getTriangleInHexTranslation(chosenCoord.get())"
                  class="base no-fill mid-stroke selected-stroke"
                  (click)="onPyramidClick(chosenCoord.get())"/>
         <polygon *ngFor="let possibleLanding of possibleLandings"
                  id="possible-landing-{{ possibleLanding.x }}-{{ possibleLanding.y }}"
                  class="base no-fill mid-stroke clickable-stroke"
-                 [attr.points]="getTrianglePoints(possibleLanding.x, possibleLanding.y)"
+                 [attr.points]="getTrianglePointsAt(possibleLanding)"
                  [attr.transform]="getTriangleInHexTranslation(possibleLanding)"
                  (click)="onSpaceClick(possibleLanding)"
         />
@@ -41,12 +41,12 @@
     <ng-template #lastMove>
         <polygon *ngIf="lastStart.isPresent()"
                  id="last-start-{{ lastStart.get().x }}-{{ lastStart.get().y }}"
-                 [attr.points]="getTrianglePoints(lastStart.get().x, lastStart.get().y)"
+                 [attr.points]="getTrianglePointsAt(lastStart.get())"
                  [attr.transform]="getTriangleInHexTranslation(lastStart.get())"
                  class="base no-fill mid-stroke last-move-stroke"/>
         <polygon *ngIf="lastEnd.isPresent()"
                  id="last-end-{{ lastEnd.get().x }}-{{ lastEnd.get().y }}"
-                 [attr.points]="getTrianglePoints(lastEnd.get().x, lastEnd.get().y)"
+                 [attr.points]="getTrianglePointsAt(lastEnd.get())"
                  [attr.transform]="getTriangleInHexTranslation(lastEnd.get())"
                  class="base no-fill mid-stroke last-move-stroke"/>
     </ng-template>

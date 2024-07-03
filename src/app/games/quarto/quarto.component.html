@@ -6,7 +6,7 @@
     <g transform="translate(5 5)">
         <g *ngFor="let line of board; index as y" >
             <g *ngFor="let spaceContent of line; index as x"
-               [attr.transform]="getSVGTranslation(SPACE_SIZE * x, SPACE_SIZE * y)">
+               [attr.transform]="getTranslationAtXY(x, y)">
                 <rect id="click-coord-{{ x }}-{{ y }}"
                       (click)="clickCoord(x, y)"
                       x="0"
@@ -52,7 +52,7 @@
         <g *ngIf="chosen.isPresent()"
            id="dropped-piece-{{ chosen.get().x }}-{{ chosen.get().y }}"
            (click)="deselectDroppedPiece()"
-           [attr.transform]="'translate(' + (chosen.get().x * SPACE_SIZE) + ' ' + (chosen.get().y * SPACE_SIZE) + ')'"
+           [attr.transform]="getTranslationAt(chosen.get())"
         >
             <rect id="dropped-piece-highlight"
                   x="0" y="0"
@@ -88,15 +88,15 @@
                   x="0" y="0"
                   [attr.width]="SPACE_SIZE"
                   [attr.height]="SPACE_SIZE"
-                  [attr.transform]="'translate(' + (coord.x * SPACE_SIZE) + ' ' + (coord.y * SPACE_SIZE) + ')'"
+                  [attr.transform]="getTranslationAt(coord)"
                   class="base no-fill victory-stroke"
             />
         </g>
-        <g [attr.transform]="'translate(' + (2 * SPACE_SIZE) + ', ' + (4.5 * SPACE_SIZE) + ')'" >
+        <g [attr.transform]="getTranslationAtXY(2, 4.5)" >
             <rect x="0" y="0"
                   [attr.width]="1.5 * SPACE_SIZE"
                   [attr.height]="1.5 * SPACE_SIZE"
-                  [attr.transform]="'translate(' + (-0.75 * SPACE_SIZE) + ', 0)'"
+                  [attr.transform]="getTranslationAtXY(-0.75, 0)"
                   class="base no-fill"
             />
             <g *ngIf="chosen.isAbsent() && pieceInHand !== EMPTY"
@@ -104,7 +104,7 @@
                 <rect *ngIf="pieceInHand.isRectangle() else circle"
                       [attr.x]="0"
                       [attr.y]="SPACE_SIZE * 0.75"
-                      [attr.transform]="'translate(' + (- getPieceSize(pieceInHand.value)) + ', ' + (- getPieceSize(pieceInHand.value)) + ')'"
+                      [attr.transform]="getSVGTranslation(- getPieceSize(pieceInHand.value), - getPieceSize(pieceInHand.value))"
                       [attr.width]="getPieceSize(pieceInHand.value) * 2"
                       [attr.height]="getPieceSize(pieceInHand.value) * 2"
                       [ngClass]="getPieceClasses(pieceInHand.value)"
@@ -126,7 +126,7 @@
             </g>
         </g>
         <g *ngFor="let line of board; index as y"
-           [attr.transform]="'translate(0 ' + (SPACE_SIZE * 6.5) + ')'"
+           [attr.transform]="getTranslationAtXY(0, 6.5)"
         >
             <rect [attr.x]="-0.125 * SPACE_SIZE"
                   [attr.y]="-0.125 * SPACE_SIZE"

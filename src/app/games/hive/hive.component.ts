@@ -22,8 +22,11 @@ import { CoordSet } from 'src/app/jscaip/CoordSet';
 import { HiveMinimax } from './HiveMinimax';
 
 interface GroundInfo {
+
     spaceClasses: string[];
+
     strokeClasses: string[];
+
     selected: boolean;
 }
 

@@ -28,7 +28,7 @@ export class QuartoState extends GameStateWithTable<QuartoPiece> {
     }
 
     public getRemainingPieces(): Array<QuartoPiece> {
-        // return the pawn that are nor on the board nor the one that you have in your hand
+        // return the piece that are nor on the board nor the one that you have in your hand
         // (hence, the one that your about to put on the board)
         const allPawn: ReadonlyArray<QuartoPiece> = QuartoPiece.pieces;
         const remainingPawns: Array<QuartoPiece> = [];

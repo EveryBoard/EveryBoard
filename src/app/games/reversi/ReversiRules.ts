@@ -1,3 +1,4 @@
+import { MGPFallible, MGPOptional, Utils } from '@everyboard/lib';
 import { GameNode } from 'src/app/jscaip/AI/GameNode';
 import { ConfigurableRules } from '../../jscaip/Rules';
 import { ReversiState } from './ReversiState';
@@ -5,7 +6,6 @@ import { Coord } from '../../jscaip/Coord';
 import { Ordinal } from 'src/app/jscaip/Ordinal';
 import { ReversiMove } from './ReversiMove';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { MGPFallible, MGPOptional, Utils } from '@everyboard/lib';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { ReversiFailure } from './ReversiFailure';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
@@ -139,7 +139,7 @@ export class ReversiRules extends ConfigurableRules<ReversiMove,
             sandwichedsCoord.push(testedCoord); // we add it
             testedCoord = testedCoord.getNext(direction); // next loop will observe the next
         }
-        return []; // we found the end of the board before we found     the newt pawn like 'searchedPawn'
+        return []; // we found the end of the board before we found the new piece like 'searchedPawn'
     }
 
     public isGameEnded(state: ReversiState, config: MGPOptional<ReversiConfig>): boolean {

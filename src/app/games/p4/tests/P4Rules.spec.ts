@@ -62,7 +62,7 @@ describe('P4Rules', () => {
             // When aligning a fourth piece
             const move: P4Move = P4Move.of(3);
 
-            // Then the move should be legal and player zero winner
+            // Then the move should succeed and player zero winner
             const expectedBoard: Table<PlayerOrNone> = [
                 [_, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _],
@@ -92,7 +92,7 @@ describe('P4Rules', () => {
             // When aligning a fourth piece
             const move: P4Move = P4Move.of(3);
 
-            // Then the move should be legal and player zero winner
+            // Then the move should succeed and player zero winner
             const expectedBoard: Table<PlayerOrNone> = [
                 [_, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _],

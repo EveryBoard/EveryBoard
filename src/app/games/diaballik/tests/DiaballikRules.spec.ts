@@ -1,9 +1,9 @@
 /* eslint-disable max-lines-per-function */
+import { MGPOptional, TestUtils } from '@everyboard/lib';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { DiaballikMove, DiaballikBallPass, DiaballikTranslation, DiaballikSubMove } from '../DiaballikMove';
 import { DiaballikNode, DiaballikRules } from '../DiaballikRules';
 import { DiaballikPiece, DiaballikState } from '../DiaballikState';
-import { MGPOptional, TestUtils } from '@everyboard/lib';
 import { Coord } from 'src/app/jscaip/Coord';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { Player } from 'src/app/jscaip/Player';
@@ -24,7 +24,7 @@ describe('DiaballikRules', () => {
 
     const empty: MGPOptional<DiaballikSubMove> = MGPOptional.empty();
 
-    function getTranslation(from: Coord, to: Coord): DiaballikMove {
+    function getTranslationMove(from: Coord, to: Coord): DiaballikMove {
         const translation: DiaballikSubMove = DiaballikTranslation.from(from, to).get();
         return new DiaballikMove(translation, empty, empty);
     }
@@ -45,7 +45,7 @@ describe('DiaballikRules', () => {
             const state: DiaballikState = DiaballikRules.get().getInitialState();
 
             // When doing a move out of board
-            const move: DiaballikMove = getTranslation(new Coord(-1, 0), new Coord(0, 0));
+            const move: DiaballikMove = getTranslationMove(new Coord(-1, 0), new Coord(0, 0));
 
             // Then the move should be illegal
             const reason: string = CoordFailure.OUT_OF_RANGE(new Coord(-1, 0));
@@ -57,7 +57,7 @@ describe('DiaballikRules', () => {
             const state: DiaballikState = DiaballikRules.get().getInitialState();
 
             // When doing a move out of board
-            const move: DiaballikMove = getTranslation(new Coord(0, 0), new Coord(-1, 0));
+            const move: DiaballikMove = getTranslationMove(new Coord(0, 0), new Coord(-1, 0));
 
             // Then the move should be illegal
             const reason: string = CoordFailure.OUT_OF_RANGE(new Coord(-1, 0));
@@ -210,7 +210,7 @@ describe('DiaballikRules', () => {
         const state: DiaballikState = DiaballikRules.get().getInitialState();
 
         // When doing a move containing one translation and no pass
-        const move: DiaballikMove = getTranslation(new Coord(1, 6), new Coord(1, 5));
+        const move: DiaballikMove = getTranslationMove(new Coord(1, 6), new Coord(1, 5));
 
         // Then it should succeed
         const expectedState: DiaballikState = new DiaballikState([
@@ -253,7 +253,7 @@ describe('DiaballikRules', () => {
         const state: DiaballikState = DiaballikRules.get().getInitialState();
 
         // When trying to move with the ball
-        const move: DiaballikMove = getTranslation(new Coord(3, 6), new Coord(3, 5));
+        const move: DiaballikMove = getTranslationMove(new Coord(3, 6), new Coord(3, 5));
 
         // Then the move should be illegal
         const reason: string = DiaballikFailure.CANNOT_MOVE_WITH_BALL();
@@ -265,7 +265,7 @@ describe('DiaballikRules', () => {
         const state: DiaballikState = DiaballikRules.get().getInitialState();
 
         // When trying to move from an empty space
-        const move: DiaballikMove = getTranslation(new Coord(3, 3), new Coord(3, 4));
+        const move: DiaballikMove = getTranslationMove(new Coord(3, 3), new Coord(3, 4));
 
         // Then the move should be illegal
         const reason: string = RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY();
@@ -277,7 +277,7 @@ describe('DiaballikRules', () => {
         const state: DiaballikState = DiaballikRules.get().getInitialState();
 
         // When trying to move a piece of the opponent
-        const move: DiaballikMove = getTranslation(new Coord(0, 0), new Coord(0, 1));
+        const move: DiaballikMove = getTranslationMove(new Coord(0, 0), new Coord(0, 1));
 
         // Then the move should be illegal
         const reason: string = RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT();
@@ -336,7 +336,7 @@ describe('DiaballikRules', () => {
         const state: DiaballikState = DiaballikRules.get().getInitialState();
 
         // When trying to move to an occupied space
-        const move: DiaballikMove = getTranslation(new Coord(1, 6), new Coord(2, 6));
+        const move: DiaballikMove = getTranslationMove(new Coord(1, 6), new Coord(2, 6));
 
         // Then the move should be illegal
         const reason: string = RulesFailure.MUST_LAND_ON_EMPTY_SPACE();
