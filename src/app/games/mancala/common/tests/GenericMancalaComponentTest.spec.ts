@@ -2,7 +2,7 @@
 import { DebugElement, Type } from '@angular/core';
 import { fakeAsync, tick } from '@angular/core/testing';
 import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
-import { Encoder, MGPOptional } from '@everyboard/lib';
+import { Encoder, MGPOptional, Utils } from '@everyboard/lib';
 import { MoveGenerator } from 'src/app/jscaip/AI/AI';
 import { MancalaConfig } from '../MancalaConfig';
 import { RulesConfigUtils } from 'src/app/jscaip/RulesConfigUtil';
@@ -27,7 +27,7 @@ export class MancalaComponentTestUtils<C extends MancalaComponent<R>,
                        public readonly moveGenerator: MoveGenerator<MancalaMove, MancalaState, MancalaConfig>) {
     }
 
-    public async expectMancalaMoveSuccess(click: string, move: MancalaMove, config: MancalaConfig): Promise<void> {
+    public async expectMoveSuccess(click: string, move: MancalaMove, config: MancalaConfig): Promise<void> {
         const component: C = this.testUtils.getGameComponent();
         const state: MancalaState = component.constructedState;
         const playerY: number = state.getCurrentPlayerY();
@@ -113,10 +113,14 @@ export class MancalaComponentTestUtils<C extends MancalaComponent<R>,
         return { seedDropResult: nextSeedDropResult, awaitedTime };
     }
 
-    public async expectMancalaClickSuccess(coord: Coord): Promise<void> {
+    public async expectClickSuccess(click: string): Promise<void> {
+        // This function requires a string and has the same name as the one in TestUtils, to optimize greppability
+        const matches: RegExpMatchArray | null = click.match(/#click-([0-9]+)-([0-9]+)/);
+        Utils.assert(matches !== null, 'MancalaTestUtils.expectClickSuccess should be called with a coord string, but was called with' + click);
+        const coord: Coord = new Coord(Number(Utils.getNonNullable(matches)[1]),
+                                       Number(Utils.getNonNullable(matches)[2]));
         const pieceInHouse: number = this.testUtils.getGameComponent().constructedState.getPieceAt(coord);
         const timeToWait: number = (pieceInHouse + 1) * MancalaComponent.TIMEOUT_BETWEEN_SEEDS;
-        const click: string = '#click-' + coord.x + '-' + coord.y;
         await this.testUtils.expectClickSuccess(click);
         tick(timeToWait);
     }
@@ -237,7 +241,12 @@ export function doMancalaComponentTests<C extends MancalaComponent<R>,
     describe(entries.gameName + ' component generic tests', () => {
 
         function awaitEndOfMove(): void {
-            tick(6600); // 26 seeds drop and 4 sub-distribution for ba-awa, longest game to distribute
+            // Wait for the longest possible game (Ba-Awa: 4 laps with 26 drops)
+            // eslint-disable-next-line dot-notation
+            const seedDropsTime: number = entries.component['TIMEOUT_BETWEEN_SEEDS'] * 26;
+            // eslint-disable-next-line dot-notation
+            const lapsTime: number = entries.component['TIMEOUT_BETWEEN_LAPS'] * 4;
+            tick(seedDropsTime + lapsTime);
         }
 
         beforeEach(fakeAsync(async() => {
@@ -256,7 +265,7 @@ export function doMancalaComponentTests<C extends MancalaComponent<R>,
             // When doing single distribution move
             const move: MancalaMove = entries.distribution.move;
             const suffix: string = mancalaTestUtils.getSuffix(entries.distribution);
-            await mancalaTestUtils.expectMancalaMoveSuccess('#click-' + suffix, move, defaultConfig.get());
+            await mancalaTestUtils.expectMoveSuccess('#click-' + suffix, move, defaultConfig.get());
 
             // Then it should be a success
             mancalaTestUtils.expectToBeFed(entries.distribution, defaultConfig.get());
@@ -271,7 +280,7 @@ export function doMancalaComponentTests<C extends MancalaComponent<R>,
             const suffix: string = mancalaTestUtils.getSuffix(entries.capture);
 
             // When doing single distribution capture move
-            await mancalaTestUtils.expectMancalaMoveSuccess('#click-' + suffix, move, defaultConfig.get());
+            await mancalaTestUtils.expectMoveSuccess('#click-' + suffix, move, defaultConfig.get());
 
             // Then the store should contain newScore +difference
             const newState: MancalaState = mancalaTestUtils.testUtils.getGameComponent().getState();
@@ -285,14 +294,14 @@ export function doMancalaComponentTests<C extends MancalaComponent<R>,
             await mancalaTestUtils.testUtils.setupState(entries.distribution.state);
             let move: MancalaMove = entries.distribution.move;
             let suffix: string = mancalaTestUtils.getSuffix(entries.distribution);
-            await mancalaTestUtils.expectMancalaMoveSuccess('#click-' + suffix, move, defaultConfig.get());
+            await mancalaTestUtils.expectMoveSuccess('#click-' + suffix, move, defaultConfig.get());
 
             // When doing second single distribution move
             move = entries.secondDistribution.move;
 
             // Then it should be a success too
             suffix = mancalaTestUtils.getSuffix(entries.secondDistribution);
-            await mancalaTestUtils.expectMancalaMoveSuccess('#click-' + suffix, move, defaultConfig.get());
+            await mancalaTestUtils.expectMoveSuccess('#click-' + suffix, move, defaultConfig.get());
 
             // Then it should be a success
             mancalaTestUtils.expectToBeFed(entries.secondDistribution, defaultConfig.get());
@@ -303,7 +312,7 @@ export function doMancalaComponentTests<C extends MancalaComponent<R>,
 
             // When player performs a move
             const move: MancalaMove = mancalaTestUtils.testUtils.getGameComponent().generateMove(5);
-            await mancalaTestUtils.expectMancalaMoveSuccess('#click-5-1', move, defaultConfig.get());
+            await mancalaTestUtils.expectMoveSuccess('#click-5-1', move, defaultConfig.get());
 
             // Then the moved spaces should be shown
             // Initial element
@@ -348,7 +357,7 @@ export function doMancalaComponentTests<C extends MancalaComponent<R>,
         it('should hide last move when taking move back', fakeAsync(async() => {
             // Given a board with a last move
             const move: MancalaMove = mancalaTestUtils.testUtils.getGameComponent().generateMove(5);
-            await mancalaTestUtils.expectMancalaMoveSuccess('#click-5-1', move, defaultConfig.get());
+            await mancalaTestUtils.expectMoveSuccess('#click-5-1', move, defaultConfig.get());
 
             // When taking back
             await mancalaTestUtils.testUtils.expectInterfaceClickSuccess('#takeBack');
@@ -377,7 +386,7 @@ export function doMancalaComponentTests<C extends MancalaComponent<R>,
 
             // When doing the capturing move
             const suffix: string = mancalaTestUtils.getSuffix(entries.monsoon);
-            await mancalaTestUtils.expectMancalaMoveSuccess('#click-' + suffix, entries.monsoon.move, defaultConfig.get());
+            await mancalaTestUtils.expectMoveSuccess('#click-' + suffix, entries.monsoon.move, defaultConfig.get());
 
             // Then the space in question should be marked as "captured"
             mancalaTestUtils.expectToBeCaptured(entries.monsoon.result);
@@ -389,7 +398,7 @@ export function doMancalaComponentTests<C extends MancalaComponent<R>,
 
             // When player zero clicks on a house to distribute
             const suffix: string = mancalaTestUtils.getSuffix(entries.capture);
-            await mancalaTestUtils.expectMancalaMoveSuccess('#click-' + suffix, entries.capture.move, defaultConfig.get());
+            await mancalaTestUtils.expectMoveSuccess('#click-' + suffix, entries.capture.move, defaultConfig.get());
 
             // Then the moved spaces should be shown
             // Initial element
@@ -403,7 +412,7 @@ export function doMancalaComponentTests<C extends MancalaComponent<R>,
             await mancalaTestUtils.testUtils.setupState(entries.fillThenCapture.state);
             // When doing the capturing move
             const suffix: string = mancalaTestUtils.getSuffix(entries.fillThenCapture);
-            await mancalaTestUtils.expectMancalaMoveSuccess('#click-' + suffix, entries.fillThenCapture.move, defaultConfig.get());
+            await mancalaTestUtils.expectMoveSuccess('#click-' + suffix, entries.fillThenCapture.move, defaultConfig.get());
 
             // Then the space in question should be marked as "captured"
             mancalaTestUtils.expectToBeCaptured(entries.fillThenCapture.result);
