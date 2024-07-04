@@ -8,7 +8,7 @@ import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 import { MGPValidators } from 'src/app/utils/MGPValidator';
 import { RulesConfigDescription, NumberConfig, BooleanConfig } from './RulesConfigDescription';
 
-fdescribe('RulesConfigurationComponent', () => {
+describe('RulesConfigurationComponent', () => {
 
     let testUtils: SimpleComponentTestUtils<RulesConfigurationComponent>;
 
