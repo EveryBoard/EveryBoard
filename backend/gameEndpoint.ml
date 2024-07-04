@@ -91,11 +91,12 @@ module Make
         let* _ = Firestore.Chat.delete ~request ~id:game_id in
         Dream.empty `OK
 
-    let end_game_elo_update = fun ~(request : Dream.request) ~(game_id : string) ~(game : Domain.Game.t) ~(winner_enum : Elo.Winner.t): unit Lwt.t ->
-        let* player_zero_info : Domain.User.EloInfo.t = Firestore.User.get_elo ~request ~user_id:game.player_zero.id ~type_game:game_id in
+    let end_game_elo_update = fun ~(request : Dream.request)  ~(game : Domain.Game.t) ~(winner_enum : Elo.Winner.t): unit Lwt.t ->
+        let type_game : string = game.type_game in
+        let* player_zero_info : Domain.User.EloInfo.t = Firestore.User.get_elo ~request ~user_id:game.player_zero.id ~type_game in
         let game_player_one : MinimalUser.t = Option.get game.player_one in
         let game_player_one_id : string = game_player_one.id in
-        let* player_one_info : Domain.User.EloInfo.t = Firestore.User.get_elo ~request ~user_id:game_player_one_id ~type_game:game_id in
+        let* player_one_info : Domain.User.EloInfo.t = Firestore.User.get_elo ~request ~user_id:game_player_one_id ~type_game in
         let elo_entry : Elo.EloEntry.t = {
             elo_info_pair = { player_zero_info; player_one_info };
             winner = winner_enum;
@@ -107,15 +108,15 @@ module Make
         let* _ = Firestore.User.update_elo ~request ~user_id:game_player_one_id ~type_game:game.type_game ~new_elo:new_elo_one in
         Lwt.return ()
 
-    let end_game_elo_update_win = fun ~(request : Dream.request) ~(game_id : string) ~(game : Domain.Game.t) ~(winner : MinimalUser.t) : unit Lwt.t ->
+    let end_game_elo_update_win = fun ~(request : Dream.request) ~(game : Domain.Game.t) ~(winner : MinimalUser.t) : unit Lwt.t ->
         let winner_enum : Elo.Winner.t =
             if winner = game.player_zero then Player Zero
             else Player One in
-        end_game_elo_update ~request ~game_id ~game ~winner_enum
+        end_game_elo_update ~request ~game ~winner_enum
 
-    let end_game_elo_update_draw = fun ~(request : Dream.request) ~(game_id : string) ~(game : Domain.Game.t): unit Lwt.t ->
+    let end_game_elo_update_draw = fun ~(request : Dream.request) ~(game : Domain.Game.t): unit Lwt.t ->
         let winner_enum : Elo.Winner.t = Draw in
-        end_game_elo_update ~request ~game_id ~game ~winner_enum
+        end_game_elo_update ~request ~game ~winner_enum
 
     (** Resign from a game. Perform 1 read and 2 writes. *)
     let resign = fun (request : Dream.request) (game_id : string) ->
@@ -138,7 +139,7 @@ module Make
             let* _ = Firestore.Game.add_event ~request ~id:game_id ~event:game_end in
             (* Write 3 & 4: update the elo of players *)
             (* Read 1 & 2 *)
-            let* _ = end_game_elo_update_win ~request ~game_id ~game ~winner in
+            let* _ = end_game_elo_update_win ~request ~game ~winner in
             Dream.empty `OK
 
     (** End the game by a timeout from one player. Perform 1 read and 2 writes. *)
@@ -156,7 +157,7 @@ module Make
         (* Write 3 & 4 update the elos *)
         (* Read 2 & 3 & 4 *)
         let* game : Domain.Game.t = Firestore.Game.get ~request ~id:game_id in
-        let* _ = end_game_elo_update_win ~request ~game_id ~game ~winner in
+        let* _ = end_game_elo_update_win ~request ~game ~winner in
         Dream.empty `OK
 
     (** Propose something to the opponent in-game. Perform 1 write. *)
@@ -196,7 +197,7 @@ module Make
         let* _ = Firestore.Game.add_event ~request ~id:game_id ~event:game_end in
         (* Write 4 & 5 update the elos *)
         (* Read 2 & 3 *)
-        let* _ = end_game_elo_update_draw ~request ~game_id ~game in
+        let* _ = end_game_elo_update_draw ~request ~game in
         Dream.empty `OK
 
     (** Accept a rematch request from the opponent. Perform 2 read and 3 writes. *)
@@ -307,9 +308,9 @@ module Make
         (* Read 2 & 3 *)
         let* _ =
             if result = Game.GameResult.Victory then
-                end_game_elo_update_win ~request ~game_id ~game ~winner:(Option.get winner)
+                end_game_elo_update_win ~request ~game ~winner:(Option.get winner)
             else
-                end_game_elo_update_draw ~request ~game_id ~game
+                end_game_elo_update_draw ~request ~game
             in
         Dream.empty `OK
 
