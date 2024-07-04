@@ -111,7 +111,8 @@ export class GameNode<M extends Move, S extends GameState> {
         const currentPlayer: Player = this.gameState.getCurrentPlayer();
         let onlyLosses: boolean = true;
         if (max === undefined || level < max) {
-            for (const child of this.children.getValueList()) {
+            const children: GameNode<M, S>[] = this.children.getValueList();
+            for (const child of children) {
                 const playerColor: string = this.getPlayerDotColor(this.gameState.getCurrentPlayer());
                 buffer += `    node_${id} -> node_${nextId} [label="${child.previousMove.get()}"; color="${playerColor}"];\n`;
                 const result: { dot: string, nextId: number, winner: PlayerOrNone } =
@@ -128,6 +129,10 @@ export class GameNode<M extends Move, S extends GameState> {
                 if (result.winner !== currentPlayer.getOpponent()) {
                     onlyLosses = false;
                 }
+            }
+            if (onlyLosses && gameStatus === GameStatus.ONGOING && children.length === 0) {
+                // This means we aren't at an end game, but at not fully-explored node
+                onlyLosses = false;
             }
         }
         if (gameStatus === GameStatus.ONGOING && onlyLosses) {
