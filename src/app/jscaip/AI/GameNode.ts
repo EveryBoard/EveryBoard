@@ -2,7 +2,7 @@ import { MGPMap, MGPOptional, Utils } from '@everyboard/lib';
 import { Move } from '../Move';
 import { GameState } from '../state/GameState';
 import { GameStatus } from '../GameStatus';
-import { Player } from '../Player';
+import { Player, PlayerOrNone } from '../Player';
 import { RulesConfig } from '../RulesConfigUtil';
 import { AbstractRules } from '../Rules';
 import { Debug } from 'src/app/utils/Debug';
@@ -87,49 +87,77 @@ export class GameNode<M extends Move, S extends GameState> {
      * You can view the DOT graph with a tool like xdot,
      * or by pasting it on a website like https://dreampuf.github.io/GraphvizOnline/
      */
-    public printDot(rules: AbstractRules,
-                    labelFn?: (node: GameNode<M, S>) => string,
-                    max?: number,
-                    level: number = 0,
-                    id: number = 0,
-                    config: MGPOptional<RulesConfig> = MGPOptional.empty())
-    : number
+    public showDot(rules: AbstractRules,
+                   config: MGPOptional<RulesConfig>,
+                   labelFn?: (node: GameNode<M, S>) => string,
+                   max?: number,
+                   level: number = 0,
+                   id: number = 0)
+    : { dot: string, nextId: number, winner: PlayerOrNone }
     {
+        console.log(this.id)
+        let buffer: string = '';
         if (level === 0) {
-            console.log('digraph G {');
+            buffer += 'digraph G {\n';
         }
         const gameStatus: GameStatus = rules.getGameStatus(this, config);
-        let color: string = 'white';
+
+        let winner: PlayerOrNone = PlayerOrNone.NONE;
         if (gameStatus.isEndGame) {
-            switch (gameStatus.winner) {
-                case Player.ZERO:
-                    color = '#994d00';
-                    break;
-                case Player.ONE:
-                    color = '#ffc34d';
-                    break;
-                default:
-                    color = 'grey';
-                    break;
+            winner = gameStatus.winner;
+        }
+
+        let nextId: number = id+1;
+        const currentPlayer: Player = this.gameState.getCurrentPlayer();
+        let onlyLosses: boolean = true;
+        if (max === undefined || level < max) {
+            for (const child of this.children.getValueList()) {
+                const playerColor: string = this.getPlayerDotColor(this.gameState.getCurrentPlayer());
+                buffer += `    node_${id} -> node_${nextId} [label="${child.previousMove.get()}"; color="${playerColor}"];\n`;
+                const result: { dot: string, nextId: number, winner: PlayerOrNone } =
+                    child.showDot(rules, config, labelFn, max, level+1, nextId);
+                nextId = result.nextId;
+                buffer += result.dot;
+                // If current player has a guaranteed win with this move, color the node with player's color
+                console.log(`[${this.id}] subWinner: ${result.winner.toString()}, current: ${currentPlayer.toString()}`)
+                if (result.winner === currentPlayer) {
+                    console.log(`[${this.id}] setting winner to ${result.winner.toString()}`)
+                    winner = result.winner;
+                    onlyLosses = false;
+                }
+                if (result.winner !== currentPlayer.getOpponent()) {
+                    onlyLosses = false;
+                }
             }
         }
+        if (gameStatus === GameStatus.ONGOING && onlyLosses) {
+            winner = currentPlayer.getOpponent();
+            console.log(`[${this.id}] only loses, setting winner to ${winner}`)
+        }
+
+        let color: string = 'white';
+        if (winner.isPlayer()) {
+            color = this.getPlayerDotColor(winner);
+            console.log(`[${this.id}] winner is ${winner.toString()}, updating color to ${color}`)
+        }
+
         let label: string = `#${this.gameState.turn}: ${this.id}`;
         if (labelFn) {
             label += ` - ${labelFn(this)}`;
         }
-        console.log(`    node_${id} [label="${label}", style=filled, fillcolor="${color}"];`);
-
-        let nextId: number = id+1;
-        if (max === undefined || level < max) {
-            for (const child of this.children.getValueList()) {
-                console.log(`    node_${id} -> node_${nextId} [label="${child.previousMove.get()}"];`);
-                nextId = child.printDot(rules, labelFn, max, level+1, nextId);
-            }
-        }
+        buffer += `    node_${id} [label="${label}", style=filled, fillcolor="${color}"];\n`;
         if (level === 0) {
-            console.log('}');
+            buffer += '}\n';
         }
-        return nextId;
+        return { dot: buffer, nextId, winner };
+    }
+
+    private getPlayerDotColor(player: PlayerOrNone): string {
+        switch (player) {
+            case Player.ZERO: return '#994d00';
+            case Player.ONE: return '#ffc34d';
+            default: return 'grey';
+        }
     }
 
     /**

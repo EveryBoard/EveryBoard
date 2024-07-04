@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 
-import { AbstractNode, GameNodeStats } from 'src/app/jscaip/AI/GameNode';
+import { AbstractNode, GameNode, GameNodeStats } from 'src/app/jscaip/AI/GameNode';
 import { ConnectedUserService } from 'src/app/services/ConnectedUserService';
 import { GameWrapper } from 'src/app/components/wrapper-components/GameWrapper';
 import { Move } from 'src/app/jscaip/Move';
@@ -329,11 +329,17 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
         return localStorage.getItem('displayAIInfo') === 'true';
     }
 
-    public printDotFromCurrentNode(): void {
-        this.gameComponent.node.printDot(this.gameComponent.rules);
+    public viewTreeFromCurrentNode(): void {
+        this.viewTreeFrom(this.gameComponent.node);
     }
 
-    public printDotFromRoot(): void {
-        this.gameComponent.node.root().printDot(this.gameComponent.rules);
+    public viewTreeFromRoot(): void {
+        this.viewTreeFrom(this.gameComponent.node.root());
     }
+
+    private viewTreeFrom(node: GameNode<Move, GameState>): void {
+        const result: { dot: string, nextId: number} = node.showDot(this.gameComponent.rules, this.rulesConfig);
+        window.open('https://dreampuf.github.io/GraphvizOnline/#' + encodeURI(result.dot));
+    }
+
 }

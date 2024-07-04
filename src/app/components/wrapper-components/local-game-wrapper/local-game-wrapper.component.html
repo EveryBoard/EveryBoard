@@ -110,10 +110,10 @@
                     </ng-container>
                     Created {{ getCreatedNodes() }} nodes since the beginning.<br/>
                     Minimax time: {{ getMinimaxTime() }}ms since the beginning.<br/>
-                    <button (click)="printDotFromCurrentNode()"
+                    <button (click)="viewTreeFromCurrentNode()"
                             class="button is-medium is-fullwidth is-primary mb-1">
                         Print DOT from current node</button>
-                    <button (click)="printDotFromRoot()"
+                    <button (click)="viewTreeFromRoot()"
                             class="button is-medium is-fullwidth is-primary mb-1">
                         Print DOT from root</button>
                 </div>
