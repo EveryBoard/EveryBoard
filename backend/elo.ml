@@ -35,11 +35,6 @@ end
 
 module CalculationService = struct
 
-    let opponent_of = fun (player : Player.t) : Player.t ->
-        match player with
-            | Zero -> One
-            | One -> Zero
-
     let w_from = fun (winner : Winner.t) (player : Player.t) : float ->
         match winner with
             | Draw -> 0.5
@@ -101,13 +96,10 @@ module CalculationService = struct
         let normal_elo_differences : EloDifferences.t = get_normal_elo_differences elo_entry in
         {
             player_zero_info = begin
-                let player : Player.t = Zero in
                 let current_elo : float =
                     get_actual_new_elo
                         elo_entry.elo_info_pair.player_zero_info.current_elo
-                        (match player with
-                         | Zero -> normal_elo_differences.player_zero
-                         | One -> normal_elo_differences.player_one)
+                        normal_elo_differences.player_zero
                 in
                 {
                     current_elo;
@@ -115,13 +107,10 @@ module CalculationService = struct
                         elo_entry.elo_info_pair.player_zero_info.number_of_games_played + 1;
                 } end;
             player_one_info = begin
-                let player : Player.t = One in
                 let current_elo : float =
                     get_actual_new_elo
                         elo_entry.elo_info_pair.player_one_info.current_elo
-                        (match player with
-                         | Zero -> normal_elo_differences.player_zero
-                         | One -> normal_elo_differences.player_one)
+                        normal_elo_differences.player_one
                 in
                 {
                     current_elo;

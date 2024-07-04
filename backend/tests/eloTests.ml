@@ -206,7 +206,7 @@ let elo_info_pair_eq : Elo.EloInfoPair.t testable =
 
             (* Then it should remove only 5 points to looser so that its elo does not drop below 105 *)
             check elo_info_pair_eq "success" expected_info_pair actual_info_pair
-      );
+        );
 
     ];
 

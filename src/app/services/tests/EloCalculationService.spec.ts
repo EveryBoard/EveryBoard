@@ -112,6 +112,7 @@ describe('EloCalculationService', () => {
             // Then zero should lose 0 elo
             expect(eloResult[0].currentElo).toEqual(eloEntry.eloInfoPair[0].currentElo);
         });
+        // TODO après avoir 30 d'elo il est mis sur la partie que j'ai crée que j'ai 0
         it('should not deduce elo to a Player.ONE below 100', () => {
             // Given a Player.ONE with less than 100 elo losing against
             // a Player.ZERO with elo more than 100
