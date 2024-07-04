@@ -4,7 +4,7 @@
              id="info"
              class="box is-fullheight">
             <div class="mb-5">
-                <p class="title" i18n>{{ getGameName().getOrElse('') }}</p>
+                <p class="title">{{ getGameName().getOrElse('') }}</p>
                 <p class="subtitle" i18n>Turn n°{{ gameComponent.getTurn() + 1 }}</p>
             </div>
             <div *ngIf="endGame"
@@ -43,7 +43,7 @@
                         <option *ngFor="let option of this.availableAIOptions(player)"
                                 id="player-{{ player }}-option-{{ option.name }}"
                                 [value]="option.name"
-                                i18n>{{ option.name }}</option>
+                                >{{ option.name }}</option>
                     </select>
                 </div>
                 <p *ngIf="gameComponent.scores.isPresent()"

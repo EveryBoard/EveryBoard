@@ -225,7 +225,6 @@ export class PartCreationComponent extends BaseWrapperComponent implements OnIni
                 const partStatus: IPartStatus = Utils.getNonNullable(this.currentConfigRoom).partStatus;
                 const configProposed: boolean = partStatus === PartStatus.CONFIG_PROPOSED.value;
                 this.viewInfo.canProposeConfig = configProposed === false && opponent !== '';
-                console.log('setting viewInfo.proposeConfig to ' + this.viewInfo.canProposeConfig);
                 if (this.rulesConfigurationComponent != null) {
                     this.rulesConfigurationComponent.setEditable(configProposed === false);
                 }
