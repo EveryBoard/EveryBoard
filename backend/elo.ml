@@ -83,16 +83,19 @@ module CalculationService = struct
     }
 
     let get_actual_new_elo = fun (old_elo : float) (normal_elo_difference : float) : float ->
-        let minimum_final_elo : float = 1.0 in
-        let elo_difference: float =
-            if normal_elo_difference < 0.0 && old_elo < 100.0 then
-                0.0 (* Not removing Elo from player below 100 *)
-            else if normal_elo_difference < 0.0 then
-                minimum_final_elo (* Not making a player fall back below 100 *)
+        if normal_elo_difference < 0.0 then
+            (* when you loose *)
+            if old_elo = 0.0 then
+                1.0 (* when loosing your first match you still win 1 points *)
+            else if old_elo < 100.0 then
+                old_elo (* not loosing point when you are below 100 elo *)
+            else if old_elo +. normal_elo_difference < 100.0 then
+                100.0 (* not dropping below 100 elo *)
             else
-                normal_elo_difference
-        in
-        max minimum_final_elo (old_elo +. elo_difference)
+                old_elo +. normal_elo_difference
+        else
+            (* when you win *)
+            old_elo +. normal_elo_difference
 
     let new_elos = fun (elo_entry : EloEntry.t) : EloInfoPair.t ->
         let normal_elo_differences : EloDifferences.t = get_normal_elo_differences elo_entry in
