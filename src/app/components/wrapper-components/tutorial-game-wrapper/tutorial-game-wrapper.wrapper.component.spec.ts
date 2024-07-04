@@ -535,7 +535,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             await testUtils.clickElement('#nextButton');
 
             // When clicking play locally
-            spyOn(router, 'navigate').and.callThrough();
+            spyOn(router, 'navigate').and.resolveTo(true);
             await testUtils.clickElement('#playLocallyButton');
 
             // expect navigator to have been called

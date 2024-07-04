@@ -158,13 +158,9 @@
         <source>Creating online game, please wait, it should not take long.</source>
         <target>Création d'une partie en ligne. Veuillez attendre, cela ne devrait pas prendre longtemps.</target>
       </trans-unit>
-      <trans-unit id="2009811124619716606" datatype="html">
-        <source>Create an online game</source>
-        <target>Créer une partie en ligne</target>
-      </trans-unit>
-      <trans-unit id="7016831866762941443" datatype="html">
-        <source>Pick a game</source>
-        <target>Choisissez un jeu</target>
+      <trans-unit id="7680170577317084701" datatype="html">
+        <source>Search game</source>
+        <target>Chercher un jeu</target>
       </trans-unit>
       <trans-unit id="5561648955936795459" datatype="html">
         <source>Use simple mechanics to push 6 of the opponent&apos;s pieces out of the board!</source>
@@ -713,9 +709,13 @@
         <source>You have not verified your email! Click on the link in the verification email.</source>
         <target>Vous n'avez pas vérifié votre email ! Cliquez sur le lien dans l'email de vérification.</target>
       </trans-unit>
-      <trans-unit id="7079545056368231407" datatype="html">
-        <source>See the game list</source>
-        <target>Voir la liste des parties</target>
+      <trans-unit id="2009811124619716606" datatype="html">
+        <source>Create an online game</source>
+        <target>Créer un jeu en ligne</target>
+      </trans-unit>
+      <trans-unit id="7868391487776969346" datatype="html">
+        <source>See all online games</source>
+        <target>Voir toutes les parties en ligne</target>
       </trans-unit>
       <trans-unit id="8564202903947049539" datatype="html">
         <source>Play</source>

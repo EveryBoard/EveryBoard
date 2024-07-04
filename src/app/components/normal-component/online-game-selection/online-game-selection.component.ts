@@ -10,19 +10,15 @@ import { MGPValidation } from '@everyboard/lib';
 })
 export class OnlineGameSelectionComponent {
 
-    public selectedGame: string;
-
     public constructor(public readonly router: Router,
                        public readonly currentGameService: CurrentGameService,
                        public readonly messageDisplayer: MessageDisplayer) {
     }
-    public pickGame(pickedGame: string): void {
-        this.selectedGame = pickedGame;
-    }
-    public async navigateToOnlineGameCreation(): Promise<void> {
+
+    public async pickGame(pickedGame: string): Promise<void> {
         const canUserJoin: MGPValidation = this.currentGameService.canUserCreate();
         if (canUserJoin.isSuccess()) {
-            await this.router.navigate(['/play', this.selectedGame]);
+            await this.router.navigate(['/play', pickedGame]);
         } else {
             this.messageDisplayer.criticalMessage(canUserJoin.getReason());
         }

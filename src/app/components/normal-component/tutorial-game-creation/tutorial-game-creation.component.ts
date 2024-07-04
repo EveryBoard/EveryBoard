@@ -7,14 +7,10 @@ import { Router } from '@angular/router';
 })
 export class TutorialGameCreationComponent {
 
-    public selectedGame: string;
-
     public constructor(public router: Router) {
     }
-    public pickGame(pickedGame: string): void {
-        this.selectedGame = pickedGame;
-    }
-    public async launchTutorial(): Promise<void> {
-        await this.router.navigate(['/tutorial/', this.selectedGame]);
+
+    public async pickGame(pickedGame: string): Promise<void> {
+        await this.router.navigate(['/tutorial/', pickedGame]);
     }
 }

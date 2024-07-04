@@ -734,7 +734,7 @@ describe('PartCreationComponent', () => {
         describe('Not chosen yet', () => {
             it('should reroute to server when game is cancelled', fakeAsync(async() => {
                 const router: Router = TestBed.inject(Router);
-                spyOn(router, 'navigate').and.callThrough();
+                spyOn(router, 'navigate').and.resolveTo(true);
 
                 // Given component that has loaded
                 awaitComponentInitialization();

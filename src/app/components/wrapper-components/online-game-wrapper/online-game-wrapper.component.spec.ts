@@ -236,7 +236,7 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
 
     it('should redirect to /notFound if part does not exist', fakeAsync(async() => {
         const router: Router = TestBed.inject(Router);
-        spyOn(router, 'navigate').and.callThrough();
+        spyOn(router, 'navigate').and.resolveTo(true);
         testUtils.detectChanges();
         await testUtils.expectToDisplayCriticalMessage(
             ConfigRoomServiceFailure.GAME_DOES_NOT_EXIST(),

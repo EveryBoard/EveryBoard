@@ -34,7 +34,6 @@ describe('RegisterComponent', () => {
 
     beforeEach(fakeAsync(async() => {
         testUtils = await SimpleComponentTestUtils.create(RegisterComponent);
-        testUtils.detectChanges();
         router = TestBed.inject(Router);
         connectedUserService = TestBed.inject(ConnectedUserService);
     }));
@@ -44,7 +43,7 @@ describe('RegisterComponent', () => {
     });
 
     it('should register, send email verification, and navigate to verification page upon success', fakeAsync(async() => {
-        spyOn(router, 'navigate').and.callThrough();
+        spyOn(router, 'navigate').and.resolveTo(true);
         spyOn(connectedUserService, 'doRegister').and.resolveTo(MGPFallible.success(user));
         spyOn(connectedUserService, 'sendEmailVerification').and.resolveTo(MGPValidation.SUCCESS);
 
@@ -61,7 +60,7 @@ describe('RegisterComponent', () => {
     }));
 
     it('should show a message upon registration failure', fakeAsync(async() => {
-        spyOn(router, 'navigate').and.callThrough();
+        spyOn(router, 'navigate').and.resolveTo(true);
 
         // Given some user
         fillInUserDetails();
@@ -78,7 +77,7 @@ describe('RegisterComponent', () => {
     }));
 
     it('should show a message if verification email fails to be sent', fakeAsync(async() => {
-        spyOn(router, 'navigate').and.callThrough();
+        spyOn(router, 'navigate').and.resolveTo(true);
 
         // Given some user
         fillInUserDetails();
@@ -96,7 +95,7 @@ describe('RegisterComponent', () => {
     }));
 
     it('should fail if the email is not given', fakeAsync(async() => {
-        spyOn(router, 'navigate').and.callThrough();
+        spyOn(router, 'navigate').and.resolveTo(true);
 
         // Given some user that does not provide an email address
         testUtils.fillInput('#username', username);
@@ -112,7 +111,7 @@ describe('RegisterComponent', () => {
     }));
 
     it('should fail if the username is not given', fakeAsync(async() => {
-        spyOn(router, 'navigate').and.callThrough();
+        spyOn(router, 'navigate').and.resolveTo(true);
 
         // Given some user that does not provide a username
         testUtils.fillInput('#email', email);
@@ -128,7 +127,7 @@ describe('RegisterComponent', () => {
     }));
 
     it('should fail if the password is not given', fakeAsync(async() => {
-        spyOn(router, 'navigate').and.callThrough();
+        spyOn(router, 'navigate').and.resolveTo(true);
 
         // Given some user that does not provide a password
         testUtils.fillInput('#email', email);

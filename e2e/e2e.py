@@ -198,8 +198,7 @@ class PlayerDriver():
 
         # Player 1 creates the part
         self.click('#createOnlineGame')
-        self.select('#gameType', 'Four in a Row')
-        self.click('#launchGame')
+        self.click('#image-P4')
 
         # Player 1 configures the part
         self.click('#firstPlayerCreator') # Player 1 will start
@@ -304,8 +303,7 @@ def can_play_tutorial(user):
     '''
     # Launch the tutorial
     user.click_menu_button('#playOffline', '#tutorial')
-    user.select('#gameType', 'Four in a Row')
-    user.click('#launchTutorial')
+    user.click('#image-P4')
 
     # First step does not require any move, so just click ok
     user.click('#nextButton')
@@ -335,8 +333,7 @@ def can_play_local_2_players(user):
     '''
     # Launch a game of four in a row
     user.click_menu_button('#playOffline', '#playLocally')
-    user.select('#gameType', 'Four in a Row')
-    user.click('#launchGame')
+    user.click('#image-P4')
     user.use_default_config()
 
     # Stupid game between player 0 and 1, where 0 wins
@@ -363,8 +360,7 @@ def can_play_local_vs_ai(user):
 
     # Launch a game of four in a row
     user.click_menu_button('#playOffline', '#playLocally')
-    user.select('#gameType', 'Four in a Row')
-    user.click('#launchGame')
+    user.click('#image-P4')
     user.use_default_config()
 
     # Select the AI as second player
@@ -422,8 +418,7 @@ def can_reload_part_creation(user):
     '''
     # I create a part
     user.click('#createOnlineGame')
-    user.select('#gameType', 'Four in a Row')
-    user.click('#launchGame')
+    user.click('#image-P4')
     user.wait_for('#partCreation')
 
     # I reload the page
