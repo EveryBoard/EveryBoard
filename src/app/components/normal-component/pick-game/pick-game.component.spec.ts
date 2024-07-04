@@ -46,7 +46,7 @@ describe('PickGameComponent', () => {
         testUtils.expectElementToExist('#image-Awale');
         testUtils.detectChanges();
 
-        // When entering a search with specific case
+        // When entering a search mixing uppercase and lowercase
         testUtils.fillInput('#search-term', 'aWalE');
         testUtils.detectChanges();
 
