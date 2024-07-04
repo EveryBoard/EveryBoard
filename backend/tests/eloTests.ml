@@ -76,38 +76,71 @@ let elo_info_pair_eq : Elo.EloInfoPair.t testable =
             check elo_info_pair_eq "success" expected_info_pair actual_info_pair
         );
 
-        test "second part should end in in 1-60 when player zero wins again" (fun () ->
-          (* Given an entry of two second player that just fought each other *)
-          let elo_entry : Elo.EloEntry.t = {
-              elo_info_pair = {
-                  player_zero_info = {
-                      current_elo = 30.0;
-                      number_of_games_played = 1;
-                  };
-                  player_one_info = {
-                      current_elo = 1.0;
-                      number_of_games_played = 1;
-                  };
-              };
-              winner = Player Zero;
-          } in
-          let expected_info_pair : Elo.EloInfoPair.t = {
-              player_zero_info = {
-                  current_elo = 57.50173783711419;
-                  number_of_games_played = 2;
-              };
-              player_one_info = {
-                  current_elo = 1.0;
-                  number_of_games_played = 2;
-              };
-          } in
+        test "second part should end in in 1-57 when player zero wins again" (fun () ->
+            (* Given an entry of two second player that just fought each other *)
+            let elo_entry : Elo.EloEntry.t = {
+                elo_info_pair = {
+                    player_zero_info = {
+                        current_elo = 30.0;
+                        number_of_games_played = 1;
+                    };
+                    player_one_info = {
+                        current_elo = 1.0;
+                        number_of_games_played = 1;
+                    };
+                };
+                winner = Player Zero;
+            } in
+            let expected_info_pair : Elo.EloInfoPair.t = {
+                player_zero_info = {
+                    current_elo = 57.50173783711419;
+                    number_of_games_played = 2;
+                };
+                player_one_info = {
+                    current_elo = 1.0;
+                    number_of_games_played = 2;
+                };
+            } in
 
-          (* When evaluating it *)
-          let actual_info_pair : Elo.EloInfoPair.t = Elo.CalculationService.new_elos elo_entry in
+            (* When evaluating it *)
+            let actual_info_pair : Elo.EloInfoPair.t = Elo.CalculationService.new_elos elo_entry in
 
-          (* Then it should give 1 symbolic point to losers for their first game and 30 to winners *)
-          check elo_info_pair_eq "success" expected_info_pair actual_info_pair
-      );
+            (* Then it should give 1 symbolic point to losers for their first game and 30 to winners *)
+            check elo_info_pair_eq "success" expected_info_pair actual_info_pair
+        );
+
+        test "part should make win only 20 points after 20" (fun () ->
+            (* Given an entry of two second player that just fought each other *)
+            let elo_entry : Elo.EloEntry.t = {
+                elo_info_pair = {
+                    player_zero_info = {
+                        current_elo = 1.0;
+                        number_of_games_played = 20;
+                    };
+                    player_one_info = {
+                        current_elo = 1.0;
+                        number_of_games_played = 1;
+                    };
+                };
+                winner = Player Zero;
+            } in
+            let expected_info_pair : Elo.EloInfoPair.t = {
+                player_zero_info = {
+                    current_elo = 21.0;
+                    number_of_games_played = 21;
+                };
+                player_one_info = {
+                    current_elo = 1.0;
+                    number_of_games_played = 2;
+                };
+            } in
+
+            (* When evaluating it *)
+            let actual_info_pair : Elo.EloInfoPair.t = Elo.CalculationService.new_elos elo_entry in
+
+            (* Then it should give 1 symbolic point to losers for their first game and 30 to winners *)
+            check elo_info_pair_eq "success" expected_info_pair actual_info_pair
+        );
 
     ];
 
