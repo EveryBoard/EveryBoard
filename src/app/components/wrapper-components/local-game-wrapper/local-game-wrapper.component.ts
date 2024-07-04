@@ -10,7 +10,7 @@ import { Move } from 'src/app/jscaip/Move';
 import { MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 import { GameState } from 'src/app/jscaip/state/GameState';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
-import { Player } from 'src/app/jscaip/Player';
+import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { Debug } from 'src/app/utils/Debug';
 import { RulesConfig, RulesConfigUtils } from 'src/app/jscaip/RulesConfigUtil';
@@ -338,7 +338,13 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
     }
 
     private viewTreeFrom(node: GameNode<Move, GameState>): void {
-        const result: { dot: string, nextId: number} = node.showDot(this.gameComponent.rules, this.rulesConfig);
+        function mctsLabel(nodeToLabel: GameNode<Move, GameState>): string {
+            const wins: number = nodeToLabel.getCache('wins').getOrElse(0) as number;
+            const simulations: number = nodeToLabel.getCache('simulations').getOrElse(0) as number;
+            return `${wins}/${simulations}`;
+        }
+        const result: { dot: string, nextId: number, winner: PlayerOrNone} =
+            node.showDot(this.gameComponent.rules, this.rulesConfig, mctsLabel);
         window.open('https://dreampuf.github.io/GraphvizOnline/#' + encodeURI(result.dot));
     }
 
