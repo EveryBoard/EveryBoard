@@ -100,8 +100,8 @@ export class RulesConfigurationComponent extends BaseWrapperComponent implements
     }
 
     private onUpdate(): void {
-        Utils.assert(this.editable, 'Only editable config should be modified');
-        Utils.assert(this.chosenConfigName === 'Custom', 'Only customizable config should be modified!');
+        // Note: we may receive updates just because the form has changed from "editable" to "non editable"
+        // (e.g., due to proposing to the opponent or clicking on "changing configuration").
         const rulesConfig: RulesConfig = {};
         const parameterNames: string[] = this.rulesConfigDescription.getFields();
         for (const parameterName of parameterNames) {
@@ -158,7 +158,6 @@ export class RulesConfigurationComponent extends BaseWrapperComponent implements
     }
 
     private setChosenConfig(configName: string): void {
-        console.log('setChosenConfig ' + configName)
         this.chosenConfigName = configName;
         let config: RulesConfig;
         if (this.chosenConfigName === 'Custom') {
@@ -185,16 +184,12 @@ export class RulesConfigurationComponent extends BaseWrapperComponent implements
     }
 
     public setEditable(editable: boolean): void {
-        if (editable && this.chosenConfigName === 'Custom') {
-            this.editable = editable;
+        this.editable = editable;
+        if (this.editable && this.chosenConfigName === 'Custom') {
             this.rulesConfigForm.enable();
-        } else if (this.editable === true) {
-            console.log('disabling')
-            this.editable = editable;
+        } else {
+            this.rulesConfigForm.disable();
         }
-        // Otherwise, editable was already false. We don't set it to false,
-        // otherwise this triggers form updates and will yield bugs because of
-        // too much defensive programming.
     }
 
 }

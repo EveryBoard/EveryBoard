@@ -367,7 +367,6 @@ export class PartCreationComponent extends BaseWrapperComponent implements OnIni
             const configRoom: ConfigRoom = configRoomOpt.get();
             const oldConfigRoom: ConfigRoom | null = this.currentConfigRoom;
             this.currentConfigRoom = configRoom;
-            console.log('updating rules config to ' + JSON.stringify(configRoom.rulesConfig))
             if (configRoom.rulesConfig !== null) {
                 // Not null means that there was already a rule config saved in the config room
                 this.saveRulesConfig(MGPOptional.of(configRoom.rulesConfig));
@@ -533,18 +532,10 @@ export class PartCreationComponent extends BaseWrapperComponent implements OnIni
 
     // Only public because of tests
     public saveRulesConfig(rulesConfig: MGPOptional<RulesConfig>): void {
-        console.log('setting rules config to ')
-        if (rulesConfig.isPresent()) {
-            console.log('non empty:')
-            console.log(rulesConfig.get())
-        } else {
-            console.log('empty')
-        }
         this.rulesConfig = rulesConfig;
         if (this.rulesConfig.isPresent()) {
             this.setConfigDemo(this.rulesConfig.get());
         }
-        console.log({canPropose: this.viewInfo.canProposeConfig, present: this.rulesConfig.isPresent()})
     }
 
     private setConfigDemo(config: RulesConfig): void {

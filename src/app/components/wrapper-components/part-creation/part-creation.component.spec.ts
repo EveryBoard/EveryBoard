@@ -330,8 +330,6 @@ describe('PartCreationComponent', () => {
                 // and proposal should now be possible
                 const proposeConfigDisabled: boolean = findElement('#proposeConfig').nativeElement.disabled;
                 const contextAfter: string = 'Proposing config should become possible after ChosenOpponent is set';
-                console.log(findElement('#proposeConfig').nativeElement)
-                console.log(findElement('#proposeConfig').nativeElement.disabled)
                 expect(proposeConfigDisabled).withContext(contextAfter).toBeFalse();
 
                 // and opponent should be selected
