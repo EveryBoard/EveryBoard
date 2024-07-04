@@ -328,4 +328,12 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
     public displayAIInfo(): boolean {
         return localStorage.getItem('displayAIInfo') === 'true';
     }
+
+    public printDotFromCurrentNode(): void {
+        this.gameComponent.node.printDot(this.gameComponent.rules);
+    }
+
+    public printDotFromRoot(): void {
+        this.gameComponent.node.root().printDot(this.gameComponent.rules);
+    }
 }

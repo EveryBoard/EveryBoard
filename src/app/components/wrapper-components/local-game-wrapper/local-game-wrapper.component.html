@@ -108,8 +108,14 @@
                     <ng-container *ngFor="let ai of gameComponent.availableAIs">
                         {{ ai.name + ': ' + ai.getInfo(gameComponent.node, gameComponent.config) }} <br/>
                     </ng-container>
-                    Created {{ getCreatedNodes() }} nodes.<br/>
-                    Minimax time: {{ getMinimaxTime() }}ms.<br/>
+                    Created {{ getCreatedNodes() }} nodes since the beginning.<br/>
+                    Minimax time: {{ getMinimaxTime() }}ms since the beginning.<br/>
+                    <button (click)="printDotFromCurrentNode()"
+                            class="button is-medium is-fullwidth is-primary mb-1">
+                        Print DOT from current node</button>
+                    <button (click)="printDotFromRoot()"
+                            class="button is-medium is-fullwidth is-primary mb-1">
+                        Print DOT from root</button>
                 </div>
             </div>
         </div>

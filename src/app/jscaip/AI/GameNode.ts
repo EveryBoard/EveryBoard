@@ -44,6 +44,14 @@ export class GameNode<M extends Move, S extends GameState> {
         GameNodeStats.createdNodes++;
     }
 
+    public root(): GameNode<M, S> {
+        if (this.parent.isPresent()) {
+            return this.parent.get().root();
+        } else {
+            return this;
+        }
+    }
+
     /**
      * Returns the child corresponding to applying the given move to the current state,
      * or empty if it has not yet been calculated.

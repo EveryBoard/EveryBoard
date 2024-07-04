@@ -31,7 +31,7 @@ implements AI<M, S, AITimeLimitOptions, C>
     public explorationParameter: number = Math.sqrt(2);
 
     // The longest a game can be before we decide to stop simulating it
-    public maxGameLength: number = 8;
+    public maxGameLength: number = 7*6;
 
     public readonly availableOptions: AITimeLimitOptions[] = [];
 
@@ -77,7 +77,7 @@ implements AI<M, S, AITimeLimitOptions, C>
         switch (gameStatus) {
             case GameStatus.DRAW:
             case GameStatus.ONGOING:
-                return 0.5;
+                return 0.01; // Prefer ongoing/draw to loss
             default:
                 if (gameStatus.winner === player) return 1;
                 else return 0;
