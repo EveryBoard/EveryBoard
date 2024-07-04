@@ -145,6 +145,9 @@ export class GameNode<M extends Move, S extends GameState> {
             color = this.getPlayerDotColor(winner);
             console.log(`[${this.id}] winner is ${winner.toString()}, updating color to ${color}`)
         }
+        if (gameStatus === GameStatus.DRAW) {
+            color = 'gray';
+        }
 
         let label: string = `#${this.gameState.turn}: ${this.id}`;
         if (labelFn) {
