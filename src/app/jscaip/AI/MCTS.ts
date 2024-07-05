@@ -27,11 +27,13 @@ export class MCTS<M extends Move,
 implements AI<M, S, AITimeLimitOptions, C>
 {
     // The exploration parameter influences the MCTS results.
-    // It is chosen "empirically" (this is the "generally recommended value" from Wikipedia)
-    public explorationParameter: number = Math.sqrt(2);
+    // It is chosen "empirically". The generally recommended value from Wikipedia is Math.sqrt(2),
+    // but in our case it seems to work much better with a higher exploration parameter.
+    // A higher exploration parameter steers MCTS towards exploring more unexplored playouts, vs. exploring its wins.
+    public explorationParameter: number = 80;
 
     // The longest a game can be before we decide to stop simulating it
-    public maxGameLength: number = 7*6;
+    public maxGameLength: number = 7*6; // Set to the number of moves in connect 4
 
     public readonly availableOptions: AITimeLimitOptions[] = [];
 
@@ -198,7 +200,9 @@ implements AI<M, S, AITimeLimitOptions, C>
      * @returns the state after the move
      */
     private playRandomStep(node: GameNode<M, S>, config: MGPOptional<C>): GameNode<M, S> {
-        const move: M = ArrayUtils.getRandomElement(this.moveGenerator.getListMoves(node, config));
+        const moves: M[] = this.moveGenerator.getListMoves(node, config);
+        Utils.assert(moves.length > 0, 'MoveGenerator gave empty list of moves for ongoing game to MCTS');
+        const move: M = ArrayUtils.getRandomElement(moves);
         return this.play(node, move, config);
     }
 

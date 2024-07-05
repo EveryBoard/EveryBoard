@@ -333,18 +333,21 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
         this.viewTreeFrom(this.gameComponent.node);
     }
 
-    public viewTreeFromRoot(): void {
-        this.viewTreeFrom(this.gameComponent.node.root());
+    public viewTreeFromPreviousNode(): void {
+        // Useful to explain why an AI has selected a particular node
+        this.viewTreeFrom(this.gameComponent.node.parent.get());
     }
 
     private viewTreeFrom(node: GameNode<Move, GameState>): void {
+        // We will annotate the trees with data from MCTS
         function mctsLabel(nodeToLabel: GameNode<Move, GameState>): string {
             const wins: number = nodeToLabel.getCache('wins').getOrElse(0) as number;
             const simulations: number = nodeToLabel.getCache('simulations').getOrElse(0) as number;
-            return `${wins}/${simulations}`;
+            return `${wins}/${simulations} = ${Math.round(wins/simulations * 100)}%`;
         }
         const result: { dot: string, nextId: number, winner: PlayerOrNone} =
-            node.showDot(this.gameComponent.rules, this.rulesConfig, mctsLabel);
+            node.showDot(this.gameComponent.rules, this.rulesConfig, mctsLabel, 1);
+        // Shows the graph on an online tool by opening a new tab
         window.open('https://dreampuf.github.io/GraphvizOnline/#' + encodeURI(result.dot));
     }
 
