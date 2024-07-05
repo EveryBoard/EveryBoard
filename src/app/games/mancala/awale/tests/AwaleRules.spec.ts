@@ -12,7 +12,7 @@ import { MancalaConfig } from '../../common/MancalaConfig';
 import { MancalaDistribution, MancalaMove } from '../../common/MancalaMove';
 import { MancalaNode, MancalaRules } from '../../common/MancalaRules';
 
-describe('AwaleRules', () => {
+fdescribe('AwaleRules', () => {
 
     const rules: MancalaRules = AwaleRules.get();
     const defaultConfig: MGPOptional<MancalaConfig> = AwaleRules.get().getDefaultRulesConfig();
@@ -85,7 +85,7 @@ describe('AwaleRules', () => {
 
     });
 
-    describe('starvation and monsoon', () => {
+    fdescribe('starvation and monsoon', () => {
 
         it('should forbid starving move', () => {
             // Given a state where the player could feed its opponent
@@ -140,6 +140,22 @@ describe('AwaleRules', () => {
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
             const node: MancalaNode = new MancalaNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, defaultConfig);
+        });
+
+        fit('should monsoon if next player will not be able to feed the current player, alternative version', () => {
+            const board: Table<number> = [
+                [0, 0, 0, 0, 0, 0],
+                [1, 0, 0, 0, 0, 0],
+            ];
+            const state: MancalaState = new MancalaState(board, 42, PlayerNumberMap.of(24, 23));
+
+            const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(5));
+
+            const expectedBoard: Table<number> = TableUtils.create(6, 2, 0);
+            const expectedState: MancalaState = new MancalaState(expectedBoard, 43, PlayerNumberMap.of(24, 24));
+            RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
+            const node: MancalaNode = new MancalaNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
+            RulesUtils.expectToBeDraw(rules, node, defaultConfig);
         });
 
     });

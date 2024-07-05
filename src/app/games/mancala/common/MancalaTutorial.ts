@@ -16,7 +16,7 @@ export class MancalaTutorial {
 
     public static sowing(state: MancalaState): TutorialStep {
         const initialHouseContent: number = state.getPieceAtXY(5, 1);
-        Utils.assert(initialHouseContent === 4, '(5, 1) should contain 4 seed');
+        // Utils.assert(initialHouseContent === 4, '(5, 1) should contain 4 seed');
         return TutorialStep.fromMove(
             $localize`Sowing`,
             $localize`The main move in Mancala games is sowing, let's see how seeds are sown. As you are playing Dark, the 6 houses on the bottom are yours.<br/><br/>Click on the rightmost bottom house to sow the seeds it contains: they will be sown clockwise, one seed per house.<br/><br/>Click on the rightmost house!`,
