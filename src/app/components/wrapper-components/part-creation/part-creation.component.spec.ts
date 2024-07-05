@@ -32,6 +32,7 @@ import { FirestoreTime } from 'src/app/domain/Time';
 import { UserService } from 'src/app/services/UserService';
 import { CurrentGameService } from 'src/app/services/CurrentGameService';
 import { addCandidate } from '../online-game-wrapper/online-game-wrapper.quarto.component.spec';
+import { LocalGameWrapperComponent } from '../local-game-wrapper/local-game-wrapper.component';
 
 describe('PartCreationComponent', () => {
 
@@ -140,6 +141,7 @@ describe('PartCreationComponent', () => {
                 expect(component).withContext('PartCreationComponent should have been created').toBeTruthy();
                 component.stopSendingPresenceTokensAndObservingUsersIfNeeded();
             }));
+
             it('should add currentGame to user doc', fakeAsync(() => {
                 // Given a partCreation
                 spyOn(currentGameService, 'updateCurrentGame').and.callFake(async() => {});
@@ -152,6 +154,7 @@ describe('PartCreationComponent', () => {
                 expect(currentGameService.updateCurrentGame).toHaveBeenCalledOnceWith(expectedCurrentGame);
                 component.stopSendingPresenceTokensAndObservingUsersIfNeeded();
             }));
+
             it('should not start observing configRoom if part does not exist', fakeAsync(async() => {
                 // Given a part that does not exist
                 component.partId = 'does not exist';
@@ -167,7 +170,42 @@ describe('PartCreationComponent', () => {
                     });
                 expect(configRoomService.subscribeToChanges).not.toHaveBeenCalled();
             }));
+
+            it('should have button to go to lobby and cancel game', fakeAsync(async() => {
+                // Given a part creation component with no opponent
+                spyOn(gameService, 'deleteGame').and.callThrough();
+                const router: Router = TestBed.inject(Router);
+                spyOn(router, 'navigate').and.resolveTo(true);
+                awaitComponentInitialization();
+
+                // When clicking on the "go to lobby" button
+                const infoMessage: string = 'The game has been canceled!';
+                await testUtils.expectToDisplayInfoMessage(infoMessage, async() => {
+                    await clickElement('#go-to-lobby');
+                });
+                // Then it should cancel game and navigate to lobby
+                expect(gameService.deleteGame).toHaveBeenCalledOnceWith('configRoomId');
+                expectValidRouting(router, ['/lobby'], LobbyComponent);
+            }));
+
+            it('should have button to play against AI and cancel game', fakeAsync(async() => {
+                // Given a part creation component with no opponent
+                spyOn(gameService, 'deleteGame').and.callThrough();
+                const router: Router = TestBed.inject(Router);
+                spyOn(router, 'navigate').and.resolveTo(true);
+                awaitComponentInitialization();
+
+                // When clicking on the "play against AI" button
+                const infoMessage: string = 'The game has been canceled!';
+                await testUtils.expectToDisplayInfoMessage(infoMessage, async() => {
+                    await clickElement('#play-against-ai');
+                });
+                // Then it should cancel game and navigate to local game
+                expect(gameService.deleteGame).toHaveBeenCalledOnceWith('configRoomId');
+                expectValidRouting(router, ['/local', 'P4'], LocalGameWrapperComponent);
+            }));
         });
+
         describe('Candidate arrival', () => {
             it('should make candidate choice possible for creator when candidate arrives', fakeAsync(async() => {
                 // Given a component that is loaded and there is no candidate

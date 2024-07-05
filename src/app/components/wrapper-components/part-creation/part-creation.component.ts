@@ -353,6 +353,7 @@ export class PartCreationComponent extends BaseWrapperComponent implements OnIni
     }
 
     public async cancelGameCreation(): Promise<void> {
+        this.stopSendingPresenceTokensAndObservingUsersIfNeeded();
         this.allDocDeleted = true;
         await this.currentGameService.removeCurrentGame();
         await this.gameService.deleteGame(this.partId);

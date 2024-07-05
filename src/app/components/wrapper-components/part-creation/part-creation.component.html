@@ -13,18 +13,20 @@
                                      class="message">
                                     <div class="message-body">
                                         <p i18n>Potential opponents will appear here. If no one comes, you can:</p>
-                                    <div class="columns is-gapless mt-2">
-                                        <div class="column">
-                                            <button class="button is-fullwidth"
-                                                    (click)="goToLobby()"
-                                                    i18n>Look for other games</button>
+                                        <div class="columns is-gapless mt-2">
+                                            <div class="column">
+                                                <button id="go-to-lobby"
+                                                        class="button is-fullwidth"
+                                                        (click)="goToLobby()"
+                                                        i18n>Look for other games</button>
+                                            </div>
+                                            <div class="column">
+                                                <button id="play-against-ai"
+                                                        class="button is-fullwidth"
+                                                        (click)="playLocally()"
+                                                        i18n>Play against AI</button>
+                                            </div>
                                         </div>
-                                        <div class="column">
-                                            <button class="button is-fullwidth"
-                                                    (click)="playLocally()"
-                                                    i18n>Play against AI</button>
-                                        </div>
-                                    </div>
                                     </div>
                                 </div>
                                 <ng-template #chooseOpponent>
