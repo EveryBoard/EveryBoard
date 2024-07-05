@@ -21,7 +21,7 @@ module Make
         let game_id : string = Dream.param request "game_id" in
         Stats.set_action request (Printf.sprintf "POST config-room/candidates");
         Stats.set_game_id request game_id;
-        let user = Auth.get_minimal_user request in
+        let user : MinimalUser.t = Auth.get_minimal_user request in
         (* Check if game exists, if it does not this will throw Not_found *)
         (* Read 1: retrieve the config room *)
         let* config_room = Firestore.ConfigRoom.get ~request ~id:game_id in
@@ -70,9 +70,9 @@ module Make
         let* config_room = Firestore.ConfigRoom.get ~request ~id:game_id in
         (* Write 1: accept the config room *)
         let* _ = Firestore.ConfigRoom.accept ~request ~id:game_id in
-        let now = External.now_ms () in
+        let now : int = External.now_ms () in
         let starting_config = Game.Updates.Start.get config_room now External.rand_bool in
-        let accepter = Auth.get_minimal_user request in
+        let accepter : MinimalUser.t = Auth.get_minimal_user request in
         (* Write 2: start the game *)
         let* _ = Firestore.Game.update ~request ~id:game_id ~update:(Game.Updates.Start.to_yojson starting_config) in
         let event = GameEvent.(Action (Action.start_game accepter now)) in

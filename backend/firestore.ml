@@ -99,22 +99,13 @@ module Make (FirestorePrimitives : FirestorePrimitives.FIRESTORE_PRIMITIVES) : F
             Lwt.return ()
 
         let get_elo = fun ~(request : Dream.request) ~(user_id : string) ~(type_game : string) : Domain.User.EloInfo.t Lwt.t ->
-            let logger : Dream.sub_log = Dream.sub_log "firestore" in
-            logger.info (fun log -> log ~request "============== GET_ELO of %s " (type_game));
             try%lwt
                 let* doc : JSON.t = FirestorePrimitives.get_doc ~request ~path:("users/" ^ user_id ^ "/elos/" ^ type_game) in
-                logger.info (fun log -> log ~request "============== USER_ID %s " (user_id));
-                logger.info (fun log -> log ~request "============== TYPE_GAME %s " (type_game));
-                logger.info (fun log -> log ~request "============== DOC %s " (JSON.to_string doc));
                 match Domain.User.EloInfo.of_yojson doc with
-                    | Error e ->
-                        logger.info (fun log -> log ~request "============== ERROR %s " e);
-                        raise (UnexpectedError e)
+                    | Error e -> raise (UnexpectedError e)
                     | Ok elo -> Lwt.return elo
             with _ ->
-                    logger.info (fun log -> log ~request "============== LUI IL NAVAIS PAS DELO ");
-                    Lwt.return Domain.User.EloInfo.empty
-
+                Lwt.return Domain.User.EloInfo.empty
                     (* TODO : ELO DANS LES CANDIDADES *)
 
     end

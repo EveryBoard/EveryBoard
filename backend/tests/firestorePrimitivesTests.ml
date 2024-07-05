@@ -64,11 +64,11 @@ let tests = [
     "FirestorePrimitives.get_doc", [
 
         lwt_test "should retrieve the document returned by firestore" (fun () ->
-            let request = Dream.request "/" in
+            let request : Dream.request = Dream.request "/" in
             (* Given a document that exists *)
-            let path = "collection/some-id" in
+            let path : string = "collection/some-id" in
             let doc = `Assoc [("foo", `String "bar")] in
-            let body = JSON.to_string (to_firestore ~path doc) in
+            let body : string = JSON.to_string (to_firestore ~path doc) in
             let _ = ExternalTests.Mock.Http.mock_response (response `OK, body) in
             (* When retrieving the document *)
             let* actual = FirestorePrimitives.get_doc ~request ~path in
@@ -79,7 +79,7 @@ let tests = [
         );
 
         lwt_test "should fail if firebase returns an error" (fun () ->
-            let request = Dream.request "/" in
+            let request : Dream.request = Dream.request "/" in
             (* Given a document that does not exist *)
             let _ = ExternalTests.Mock.Http.mock_response (response `Not_found, "") in
             (* When retrieving the document *)
@@ -94,16 +94,16 @@ let tests = [
     "FirestorePrimitives.create_doc", [
 
         lwt_test "should make a POST request if we don't ask for a specific id, and return the id" (fun () ->
-            let request = Dream.request "/" in
+            let request : Dream.request = Dream.request "/" in
             (* Given a document that we want to create *)
-            let collection = "collection" in
-            let id = "some-id" in
-            let path = collection ^ "/" ^ id in
+            let collection : string = "collection" in
+            let id : string = "some-id" in
+            let path : string = collection ^ "/" ^ id in
             let doc = `Assoc [("foo", `String "bar")] in
             (* When we create it *)
-            let body = JSON.to_string (`Assoc [("name", `String path)]) in
+            let body : string = JSON.to_string (`Assoc [("name", `String path)]) in
             let mock = ExternalTests.Mock.Http.mock_response (response `OK, body) in
-            let* actual_id = FirestorePrimitives.create_doc ~request ~collection ~doc in
+            let* actual_id : string = FirestorePrimitives.create_doc ~request ~collection ~doc in
             (* Then it should have made a POST request with the doc, and should return the document id*)
             let firestore_doc = to_firestore doc in
             check (list http_query) "query" [(`POST, endpoint ~params:[("mask.fieldPaths", "_")] collection, Some firestore_doc)] !(mock.calls);
@@ -113,7 +113,7 @@ let tests = [
 
 
         lwt_test "should fail if the document cannot be created" (fun () ->
-            let request = Dream.request "/" in
+            let request : Dream.request = Dream.request "/" in
             (* Given a document we want to create *)
             let doc = `Assoc [("foo", `String "bar")] in
             (* When we try to create it but firestore will not accept it *)
@@ -128,14 +128,14 @@ let tests = [
 
     "FirestorePrimitives.set_doc", [
         lwt_test "should make a PATCH request" (fun () ->
-            let request = Dream.request "/" in
+            let request : Dream.request = Dream.request "/" in
             (* Given a document that we want to create, along with a specific id *)
             let collection = "collection" in
-            let id = "some-id" in
-            let path = collection ^ "/" ^ id in
+            let id : string = "some-id" in
+            let path : string = collection ^ "/" ^ id in
             let doc = `Assoc [("foo", `String "bar")] in
             (* When we create it (with set_doc) *)
-            let body = JSON.to_string (`Assoc [("name", `String path)]) in
+            let body : string = JSON.to_string (`Assoc [("name", `String path)]) in
             let mock = ExternalTests.Mock.Http.mock_response (response `OK, body) in
             let* _ = FirestorePrimitives.set_doc ~request ~collection:"collection" ~id ~doc in
             (* Then it should have made a PATCH request with the doc *)
@@ -148,10 +148,10 @@ let tests = [
     "FirestorePrimitives.update_doc", [
 
         lwt_test "should make a PATCH request on the document with only the update" (fun () ->
-            let request = Dream.request "/" in
+            let request : Dream.request = Dream.request "/" in
             (* Given an update that we want to apply to some document *)
             let update = `Assoc [("foo", `String "bli")] in
-            let path = "collection/some-id" in
+            let path : string = "collection/some-id" in
             (* When we update it *)
             let mock = ExternalTests.Mock.Http.mock_response (response `OK, "") in
             let* _ = FirestorePrimitives.update_doc ~request ~path ~update in
@@ -164,7 +164,7 @@ let tests = [
         );
 
         lwt_test "should fail if the update failed" (fun () ->
-            let request = Dream.request "/" in
+            let request : Dream.request = Dream.request "/" in
             (* Given an update that we want to apply to some document *)
             let update = `Assoc [("foo", `String "bli")] in
             (* When we update it and the update fails*)
@@ -176,9 +176,9 @@ let tests = [
         );
 
         lwt_test "should fail if provided an invalid update" (fun () ->
-            let request = Dream.request "/" in
+            let request : Dream.request = Dream.request "/" in
             (* Given an update that is not an Assoc, hence is invalid *)
-            let update = `String "I am illegal" in
+            let update : string = `String "I am illegal" in
             (* When we try to perform the update *)
             (* Then it should fail *)
             lwt_check_raises "failure" ((=) (UnexpectedError "invalid update: should be a Assoc")) (fun () ->
@@ -190,9 +190,9 @@ let tests = [
     "FirestorePrimitives.delete_doc", [
 
         lwt_test "should make a DELETE request on the document" (fun () ->
-            let request = Dream.request "/" in
+            let request : Dream.request = Dream.request "/" in
             (* Given a document we want to delete *)
-            let path = "collection/some-id" in
+            let path : string = "collection/some-id" in
             (* When we update it *)
             let mock = ExternalTests.Mock.Http.mock_response (response `OK, "") in
             let* _ = FirestorePrimitives.delete_doc ~request ~path in
@@ -202,9 +202,9 @@ let tests = [
         );
 
         lwt_test "should fail if the deletion failed" (fun () ->
-            let request = Dream.request "/" in
+            let request : Dream.request = Dream.request "/" in
             (* Given a document we want to delete *)
-            let path = "collection/some-id" in
+            let path : string = "collection/some-id" in
             (* When we update it *)
             let _ = ExternalTests.Mock.Http.mock_response (response `Bad_request, "") in
             (* Then it should fail *)

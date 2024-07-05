@@ -142,13 +142,6 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         });
         this.userSubscription = this.connectedUserService.subscribeToUser(async(user: AuthUser) => {
             // player should be authenticated and have a username to be here
-            if (this.authUser == null) { // If the user was not set on this component yet
-                console.log('auth user était nul, récupérons les donnée du logged user')
-                const gameName: string = this.getGameUrlName();
-                console.log('il joue au', gameName)
-                const eloInfo: EloInfo = await this.userService.getPlayerEloInfo(user.toMinimalUser(), gameName);
-                console.log('ELO INFO:', eloInfo);
-            }
             this.authUser = user;
         });
 

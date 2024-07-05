@@ -21,7 +21,7 @@ let tests = [
 
             (* When joining the game *)
             let target = Printf.sprintf "config-room/%s/candidates" game_id in
-            let request = Dream.request ~method_:`POST ~target "" in
+            let request : Dream.request = Dream.request ~method_:`POST ~target "" in
             let* result = handler request in
 
             (* Then it should return OK and have added the candidate to the config room *)
@@ -41,7 +41,7 @@ let tests = [
 
             (* When joining the game as creator *)
             let target = Printf.sprintf "config-room/%s/candidates" game_id in
-            let request = Dream.request ~method_:`POST ~target "" in
+            let request : Dream.request = Dream.request ~method_:`POST ~target "" in
             let* result = handler request in
 
             (* Then it should return OK and have not added the candidate to the config room *)
@@ -65,7 +65,7 @@ let tests = [
 
             (* When removing ourselves from the game *)
             let target = Printf.sprintf "config-room/%s/candidates/%s" game_id uid in
-            let request = Dream.request ~method_:`DELETE ~target "" in
+            let request : Dream.request = Dream.request ~method_:`DELETE ~target "" in
             let* result = handler request in
 
             (* Then it should return OK and have removed the candidate to the config room *)
@@ -89,7 +89,7 @@ let tests = [
 
             (* When removing ourselves from the game *)
             let target = Printf.sprintf "config-room/%s/candidates/%s" game_id uid in
-            let request = Dream.request ~method_:`DELETE ~target "" in
+            let request : Dream.request = Dream.request ~method_:`DELETE ~target "" in
             let* result = handler request in
 
             (* Then it should return OK and have removed the candidate to the config room *)
@@ -126,7 +126,7 @@ let tests = [
             } in
             let update_str = Dream.to_percent_encoded (JSON.to_string update) in
             let target = Printf.sprintf "config-room/%s?action=propose&config=%s" game_id update_str  in
-            let request = Dream.request ~method_:`POST ~target "" in
+            let request : Dream.request = Dream.request ~method_:`POST ~target "" in
             let* result = handler request in
 
             (* Then it should update the config accordingly *)
@@ -151,7 +151,7 @@ let tests = [
             (* Then it should fail with a BadInput exception *)
             let* _ = lwt_check_raises "failure" ((=) (BadInput "Invalid config proposal")) (fun () ->
                 let target = Printf.sprintf "config-room/%s?action=propose" game_id in
-                let request = Dream.request ~method_:`POST ~target "" in
+                let request : Dream.request = Dream.request ~method_:`POST ~target "" in
                 let* _ = handler request in
                 Lwt.return ()) in
             (* and it should not have made any changes *)
@@ -174,7 +174,7 @@ let tests = [
             (* Then it should fail with a BadInput exception *)
             let* _ = lwt_check_raises "failure" ((=) (BadInput "Invalid config proposal")) (fun () ->
                 let target = Printf.sprintf "config-room/%s?action=propose&config={}" game_id in
-                let request = Dream.request ~method_:`POST ~target "" in
+                let request : Dream.request = Dream.request ~method_:`POST ~target "" in
                 let* _ = handler request in
                 Lwt.return ()) in
             (* and it should not have made any changes *)
@@ -206,7 +206,7 @@ let tests = [
                 ] in
                 let update_str = Dream.to_percent_encoded (JSON.to_string update) in
                 let target = Printf.sprintf "config-room/%s?action=propose&config=%s" game_id update_str  in
-                let request = Dream.request ~method_:`POST ~target "" in
+                let request : Dream.request = Dream.request ~method_:`POST ~target "" in
                 let* _ = handler request in
                 Lwt.return ())
         );
@@ -230,7 +230,7 @@ let tests = [
 
             (* When accepting it *)
             let target = Printf.sprintf "config-room/%s?action=accept" game_id in
-            let request = Dream.request ~method_:`POST ~target "" in
+            let request : Dream.request = Dream.request ~method_:`POST ~target "" in
             let* result = handler request in
 
             (* Then it should update the config room, game, and send an action *)
@@ -261,7 +261,7 @@ let tests = [
 
             (* When accepting it *)
             let target = Printf.sprintf "config-room/%s?action=accept" game_id in
-            let request = Dream.request ~method_:`POST ~target "" in
+            let request : Dream.request = Dream.request ~method_:`POST ~target "" in
             let* result = handler request in
 
             (* Then it should be able to select chosen player as starter *)
@@ -297,7 +297,7 @@ let tests = [
             let opponent_json = MinimalUser.to_yojson opponent in
             let opponent_str = Dream.to_percent_encoded (JSON.to_string opponent_json) in
             let target = Printf.sprintf "config-room/%s?action=selectOpponent&opponent=%s" game_id opponent_str in
-            let request = Dream.request ~method_:`POST ~target "" in
+            let request : Dream.request = Dream.request ~method_:`POST ~target "" in
             let* result = handler request in
 
             (* Then it should update the config room *)
@@ -322,7 +322,7 @@ let tests = [
             (* Then it should fail with a BadInput exception *)
             let* _ = lwt_check_raises "failure" ((=) (BadInput "Invalid opponent")) (fun () ->
                 let target = Printf.sprintf "config-room/%s?action=selectOpponent" game_id in
-                let request = Dream.request ~method_:`POST ~target "" in
+                let request : Dream.request = Dream.request ~method_:`POST ~target "" in
                 let* _ = handler request in
                 Lwt.return ()) in
             (* and it should not have made any changes *)
@@ -344,7 +344,7 @@ let tests = [
             (* Then it should fail with a BadInput exception *)
             let* _ = lwt_check_raises "failure" ((=) (BadInput "Invalid opponent")) (fun () ->
                 let target = Printf.sprintf "config-room/%s?action=selectOpponent&opponent=oulala" game_id in
-                let request = Dream.request ~method_:`POST ~target "" in
+                let request : Dream.request = Dream.request ~method_:`POST ~target "" in
                 let* _ = handler request in
                 Lwt.return ()) in
             (* and it should not have made any changes *)
@@ -369,7 +369,7 @@ let tests = [
 
             (* When reviewing the config *)
             let target = Printf.sprintf "config-room/%s?action=review" game_id in
-            let request = Dream.request ~method_:`POST ~target "" in
+            let request : Dream.request = Dream.request ~method_:`POST ~target "" in
             let* result = handler request in
 
             (* Then it should update the config room accordingly *)
@@ -398,7 +398,7 @@ let tests = [
 
             (* When reviewing the config and removing the opponent *)
             let target = Printf.sprintf "config-room/%s?action=reviewConfigAndRemoveOpponent" game_id in
-            let request = Dream.request ~method_:`POST ~target "" in
+            let request : Dream.request = Dream.request ~method_:`POST ~target "" in
             let* result = handler request in
 
             (* Then it should update the config room accordingly *)
@@ -419,7 +419,7 @@ let tests = [
             (* Then it should fail *)
             lwt_check_raises "failure" ((=) (BadInput "Missing action")) (fun () ->
                 let target = Printf.sprintf "config-room/%s" game_id in
-                let request = Dream.request ~method_:`POST ~target "" in
+                let request : Dream.request = Dream.request ~method_:`POST ~target "" in
                 let* _ = handler request in
                 Lwt.return ())
         );
@@ -431,7 +431,7 @@ let tests = [
             (* Then it should fail *)
             lwt_check_raises "failure" ((=) (BadInput "Unknown action")) (fun () ->
                 let target = Printf.sprintf "config-room/%s?action=doTheRoar" game_id in
-                let request = Dream.request ~method_:`POST ~target "" in
+                let request : Dream.request = Dream.request ~method_:`POST ~target "" in
                 let* _ = handler request in
                 Lwt.return ())
         );

@@ -48,6 +48,21 @@ let another_user : User.t = {
     current_game = None;
 }
 
+let first_game_is_lost : User.EloInfo.t = {
+    current_elo = 1.0;
+    number_of_games_played = 1;
+}
+
+let first_game_is_won : User.EloInfo.t = {
+    current_elo = 30.0;
+    number_of_games_played = 1;
+}
+
+let first_game_is_draw : User.EloInfo.t = {
+    current_elo = 1.0;
+    number_of_games_played = 1;
+}
+
 let tests = [
 
     "Domain.MinimalUser show", [
@@ -217,7 +232,7 @@ let tests = [
                 current_game = None;
             } in
             (* When converting it to a minimal user *)
-            let actual = User.to_minimal_user "some-id" user in
+            let actual : Domain.MinimalUser.t = User.to_minimal_user "some-id" user in
             (* Then it should keep its name and add the uid *)
             let expected = MinimalUser.{
                 id = "some-id";

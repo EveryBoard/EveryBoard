@@ -4,7 +4,10 @@ open Backend
 open Utils
 
 let elo_info_pair_eq : Elo.EloInfoPair.t testable =
-  let pp ppf json = Fmt.pf ppf "%s" (JSON.to_string (Elo.EloInfoPair.to_yojson json)) in
+    let pp ppf (elo_info_pair : Elo.EloInfoPair.t) =
+        Fmt.pf ppf "%s %s"
+            (JSON.to_string (Domain.User.EloInfo.to_yojson elo_info_pair.player_zero_info))
+            (JSON.to_string (Domain.User.EloInfo.to_yojson elo_info_pair.player_one_info)) in
   testable pp (=)
 
   let tests = [
@@ -198,6 +201,39 @@ let elo_info_pair_eq : Elo.EloInfoPair.t testable =
                 player_one_info = {
                     current_elo = 100.0;
                     number_of_games_played = 16;
+                };
+            } in
+
+            (* When evaluating it *)
+            let actual_info_pair : Elo.EloInfoPair.t = Elo.CalculationService.new_elos elo_entry in
+
+            (* Then it should remove only 5 points to looser so that its elo does not drop below 105 *)
+            check elo_info_pair_eq "success" expected_info_pair actual_info_pair
+        );
+
+        test "should give one symbolic first point to both drawing player as their first part" (fun () ->
+            (* Given an entry of two player with 105 elo *)
+            let elo_entry : Elo.EloEntry.t = {
+                elo_info_pair = {
+                    player_zero_info = {
+                        current_elo = 0.0;
+                        number_of_games_played = 0;
+                    };
+                    player_one_info = {
+                        current_elo = 0.0;
+                        number_of_games_played = 0;
+                    };
+                };
+                winner = Draw;
+            } in
+            let expected_info_pair : Elo.EloInfoPair.t = {
+                player_zero_info = {
+                    current_elo = 1.0;
+                    number_of_games_played = 1;
+                };
+                player_one_info = {
+                    current_elo = 1.0;
+                    number_of_games_played = 1;
                 };
             } in
 

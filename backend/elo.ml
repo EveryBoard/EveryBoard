@@ -1,12 +1,7 @@
 (* Define types *)
-module Player = struct
-    type t = Zero | One
-    [@@deriving yojson]
-end
 
 module Winner = struct
-    type t = Player of Player.t | Draw
-    [@@deriving yojson]
+    type t = Player of Domain.Player.t | Draw
 end
 
 module EloInfoPair = struct
@@ -14,7 +9,6 @@ module EloInfoPair = struct
         player_zero_info : Domain.User.EloInfo.t;
         player_one_info : Domain.User.EloInfo.t;
     }
-    [@@deriving yojson]
 end
 
 module EloDifferences = struct
@@ -22,7 +16,6 @@ module EloDifferences = struct
         player_zero : float;
         player_one : float;
     }
-    [@@deriving yojson]
 end
 
 module EloEntry = struct
@@ -30,12 +23,11 @@ module EloEntry = struct
         elo_info_pair : EloInfoPair.t;
         winner : Winner.t;
     }
-    [@@deriving yojson]
 end
 
 module CalculationService = struct
 
-    let w_from = fun (winner : Winner.t) (player : Player.t) : float ->
+    let w_from = fun (winner : Winner.t) (player : Domain.Player.t) : float ->
         match winner with
             | Draw -> 0.5
             | Player Zero when player = Zero -> 1.0
@@ -56,7 +48,7 @@ module CalculationService = struct
 
     let get_normal_elo_differences = fun (elo_entry : EloEntry.t) : EloDifferences.t -> {
         player_zero = begin
-            let player : Player.t = Zero in
+            let player : Domain.Player.t = Zero in
             let player_info : Domain.User.EloInfo.t = elo_entry.elo_info_pair.player_zero_info in
             let k : float = k_from player_info.number_of_games_played in
             let w : float = w_from elo_entry.winner player in
@@ -66,7 +58,7 @@ module CalculationService = struct
             let p : float = winning_probability elo_player elo_opponent in
             normal_elo_difference k w p end;
         player_one = begin
-            let player : Player.t = One in
+            let player : Domain.Player.t = One in
             let player_info : Domain.User.EloInfo.t = elo_entry.elo_info_pair.player_one_info in
             let k : float = k_from player_info.number_of_games_played in
             let w : float = w_from elo_entry.winner player in
@@ -78,7 +70,7 @@ module CalculationService = struct
     }
 
     let get_actual_new_elo = fun (old_elo : float) (normal_elo_difference : float) : float ->
-        if normal_elo_difference < 0.0 then
+        if normal_elo_difference <= 0.0 then
             (* when you loose *)
             if old_elo = 0.0 then
                 1.0 (* when loosing your first match you still win 1 points *)
