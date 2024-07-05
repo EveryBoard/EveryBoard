@@ -12,9 +12,11 @@ describe('LocalGameCreationComponent', () => {
         testUtils.detectChanges();
     });
     it('should create and redirect to chosen game', fakeAsync(async() => {
-        testUtils.getComponent().pickGame('whateverGame');
+        // Given a local game creation component
         spyOn(testUtils.getComponent().router, 'navigate');
-        await testUtils.clickElement('#launchGame');
+        // When picking a game
+        await testUtils.getComponent().pickGame('whateverGame');
+        // Then we should navigate to that game
         expect(testUtils.getComponent().router.navigate).toHaveBeenCalledOnceWith(['local/whateverGame']);
     }));
 });
