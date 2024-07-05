@@ -59,14 +59,11 @@ export abstract class FirestoreDAO<T extends FirestoreJSONObject> implements IFi
     }
 
     public async create(newElement: T): Promise<string> {
-        // await TimeUtils.sleep(1000)
-// console.log("===========", this.collection, 'create', newElement)
         const docRef: Firestore.DocumentReference = await Firestore.addDoc(this.collection, newElement);
         return docRef.id;
     }
 
     public async read(id: string): Promise<MGPOptional<T>> {
-console.log("===========", this.collection, 'read', id)
         const docSnapshot: Firestore.DocumentSnapshot<T> = await Firestore.getDoc(Firestore.doc(this.collection, id));
         if (docSnapshot.exists()) {
             return MGPOptional.of(Utils.getNonNullable(docSnapshot.data()));
@@ -76,31 +73,22 @@ console.log("===========", this.collection, 'read', id)
     }
 
     public async exists(id: string): Promise<boolean> {
-        // await TimeUtils.sleep(1000)
-// console.log("===========", this.collection, 'exists', id)
         return (await this.read(id)).isPresent();
     }
 
     public async update(id: string, update: Firestore.UpdateData<T>): Promise<void> {
-        // await TimeUtils.sleep(1000)
-// console.log("===========", this.collection, 'update', id)
         return Firestore.updateDoc(Firestore.doc(this.collection, id), update);
     }
 
     public async delete(id: string): Promise<void> {
-        // await TimeUtils.sleep(1000)
-// console.log("===========", this.collection, 'delete', id)
         return Firestore.deleteDoc(Firestore.doc(this.collection, id));
     }
 
     public async set(id: string, element: T): Promise<void> {
-        // await TimeUtils.sleep(1000)
-// console.log("===========", this.collection, 'set', id, element)
         return Firestore.setDoc(Firestore.doc(this.collection, id), element);
     }
 
     public subscribeToChanges(id: string, callback: (doc: MGPOptional<T>) => void): Subscription {
-// console.log("===========", this.collection, 'subscribeToChanges', id)
         return new Subscription(Firestore.onSnapshot(Firestore.doc(this.collection, id),
                                                      (doc: Firestore.DocumentSnapshot<T>) => {
                                                          callback(MGPOptional.ofNullable(doc.data()));
@@ -110,8 +98,6 @@ console.log("===========", this.collection, 'read', id)
     public async findWhere(conditions: FirestoreCondition[], order?: string, limit?: number)
     : Promise<FirestoreDocument<T>[]>
     {
-        // await TimeUtils.sleep(1000)
-// console.log("===========", this.collection, 'findWhere', conditions, order, limit)
         const query: Firestore.Query<T> = this.constructQuery(conditions, order, limit);
         const snapshot: Firestore.QuerySnapshot<T> = await Firestore.getDocs(query);
         return snapshot.docs.map((doc: Firestore.QueryDocumentSnapshot<T>) => {
@@ -133,7 +119,6 @@ console.log("===========", this.collection, 'read', id)
                           order?: string)
     : Subscription
     {
-// console.log("===========", this.collection, 'observingWhere', conditions, order)
         const query: Firestore.Query<T> = this.constructQuery(conditions, order);
         return new Subscription(Firestore.onSnapshot(query, (snapshot: Firestore.QuerySnapshot<T>) => {
             const createdDocs: FirestoreDocument<T>[] = [];
@@ -176,7 +161,6 @@ console.log("===========", this.collection, 'read', id)
     }
 
     private constructQuery(conditions: FirestoreCondition[], order?: string, limit?: number): Firestore.Query<T> {
-// console.log("===========", this.collection, 'constructQuery', conditions, order, limit)
         let query: Firestore.Query<T> = Firestore.query(this.collection);
         if (order != null) {
             query = Firestore.query(query, Firestore.orderBy(order));
@@ -191,7 +175,6 @@ console.log("===========", this.collection, 'read', id)
     }
 
     public subCollectionDAO<U extends FirestoreJSONObject>(id: string, name: string): IFirestoreDAO<U> {
-// console.log("===========", this.collection, 'subCollectionDAO', id, name)
         const fullPath: string = `${this.collection.path}/${id}/${name}`;
         if (fullPath in this.subDAOs) {
             return this.subDAOs[fullPath] as IFirestoreDAO<U>;

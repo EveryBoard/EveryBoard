@@ -178,7 +178,7 @@ let tests = [
         lwt_test "should fail if provided an invalid update" (fun () ->
             let request : Dream.request = Dream.request "/" in
             (* Given an update that is not an Assoc, hence is invalid *)
-            let update : string = `String "I am illegal" in
+            let update = `String "I am illegal" in
             (* When we try to perform the update *)
             (* Then it should fail *)
             lwt_check_raises "failure" ((=) (UnexpectedError "invalid update: should be a Assoc")) (fun () ->

@@ -52,10 +52,9 @@ module Make
         let* (response, body) = External.Http.get ~headers (endpoint path) in
         if is_error response
         then begin
-            logger.info (fun log -> log ~request "Error %s" body);
-            logger.info (fun log -> log ~request "Status Code %s" (Cohttp.Code.string_of_status response.status));
-            raise (DocumentNotFound path)
-        end else Lwt.return (of_firestore (JSON.from_string body))
+            raise (DocumentNotFound path) end
+        else
+            Lwt.return (of_firestore (JSON.from_string body))
 
     let create_doc = fun ~(request : Dream.request) ~(collection : string) ~(doc : JSON.t) : string Lwt.t ->
         let get_id_from_firestore_document_name (doc : JSON.t) : string =

@@ -34,7 +34,6 @@ export class ConfigRoomService extends BackendService {
     }
 
     public subscribeToCandidates(gameId: string, callback: (candidates: MinimalUser[]) => void): Subscription {
-        console.log("SUBSCRIBE TO CANDIDATEZ")
         let candidates: MinimalUser[] = [];
         const observer: FirestoreCollectionObserver<MinimalUser> = new FirestoreCollectionObserver(
             (created: FirestoreDocument<MinimalUser>[]) => {

@@ -22,7 +22,7 @@ export type User = {
     currentGame?: CurrentGame | null,
 
     // Extra fields as sub-collections:
-    // elos: subcollection of EloInfo
+    // elos: subcollection of EloInfo (elos)
 };
 
 export type UserDocument = FirestoreDocument<User>;

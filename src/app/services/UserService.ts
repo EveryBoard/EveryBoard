@@ -6,7 +6,6 @@ import { User } from '../domain/User';
 import { FirestoreTime } from '../domain/Time';
 import { FirestoreDocument } from '../dao/FirestoreDAO';
 import { serverTimestamp } from 'firebase/firestore';
-import { UserEloService } from './UserEloService';
 
 /**
   * The aim of this service is to:
@@ -21,8 +20,7 @@ import { UserEloService } from './UserEloService';
 })
 export class UserService {
 
-    public constructor(private readonly userDAO: UserDAO,
-                       private readonly userEloService: UserEloService)
+    public constructor(private readonly userDAO: UserDAO)
     {
     }
 

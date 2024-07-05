@@ -18,7 +18,6 @@ export class GameEventService {
     }
 
     public subscribeToEvents(partId: string, callback: (events: GameEvent[]) => void): Subscription {
-        console.log("GameEventService.subscribeToEvents", partId)
         const internalCallback: FirestoreCollectionObserver<GameEvent> = new FirestoreCollectionObserver(
             (events: FirestoreDocument<GameEvent>[]) => {
                 // Events can only be created.

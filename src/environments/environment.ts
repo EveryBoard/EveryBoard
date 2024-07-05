@@ -7,5 +7,5 @@ export const environment: Environment = {
     root: '/',
     firebaseConfig: firebaseConfig,
     useEmulators: false,
-    backendURL: 'https://server-test.everyboard.org',
+    backendURL: 'http://localhost:8081',
 };

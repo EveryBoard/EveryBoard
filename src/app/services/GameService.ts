@@ -5,9 +5,6 @@ import { Part } from '../domain/Part';
 import { Subscription } from 'rxjs';
 import { MinimalUser } from '../domain/MinimalUser';
 import { FirestoreTime } from '../domain/Time';
-import { UserService } from './UserService';
-import { EloInfo } from '../domain/EloInfo';
-import { GameEventService } from './GameEventService';
 import { BackendService } from './BackendService';
 import { Player, PlayerOrNone } from '../jscaip/Player';
 import { PlayerNumberMap } from '../jscaip/PlayerMap';
@@ -34,87 +31,6 @@ export class GameService extends BackendService {
     {
         super(connectedUserService);
     }
-// TODO: this comment code serve as  as it has to be moved inside the backend
-    // private async createUnstartedPart(typeGame: string): Promise<string> {
-    //     display(GameService.VERBOSE, 'GameService.createUnstartedPart(' + typeGame + ')');
-
-    //     const playerZero: MinimalUser = this.connectedUserService.user.get().toMinimalUser();
-    //     console.log("c'est chiantous qu'on m'attindou")
-    //     const playerZeroElo: number = (await this.userService.getPlayerInfo(playerZero, typeGame)).currentElo;
-    //     console.log("mazis j'aistu finitos!")
-
-    //     const newPart: Part = {
-    //         typeGame,
-    //         playerZero,
-    //         playerZeroElo,
-    //         turn: -1,
-    //         result: MGPResult.UNACHIEVED.value,
-    //     };
-    //     return this.partDAO.create(newPart);
-    // }
-    // public async getStartingConfig(configRoom: ConfigRoom): Promise<StartingPartConfig> {
-    //     let whoStarts: FirstPlayer = FirstPlayer.of(configRoom.firstPlayer);
-    //     if (whoStarts === FirstPlayer.RANDOM) {
-    //         if (Math.random() < 0.5) {
-    //             whoStarts = FirstPlayer.CREATOR;
-    //         } else {
-    //             whoStarts = FirstPlayer.CHOSEN_PLAYER;
-    //         }
-    //     }
-    //     let playerZero: MinimalUser;
-    //     let playerOne: MinimalUser;
-    //     if (whoStarts === FirstPlayer.CREATOR) {
-    //         playerZero = configRoom.creator;
-    //         playerOne = Utils.getNonNullable(configRoom.chosenOpponent);
-    //     } else {
-    //         playerZero = Utils.getNonNullable(configRoom.chosenOpponent);
-    //         playerOne = configRoom.creator;
-    //     }
-    //     const playerZeroInfo: EloInfo = await this.userService.getPlayerInfo(playerZero, configRoom.typeGame);
-    //     const playerZeroElo: number = playerZeroInfo.currentElo;
-    //     const playerOneInfo: EloInfo = await this.userService.getPlayerInfo(playerOne, configRoom.typeGame);
-    //     const playerOneElo: number = playerOneInfo.currentElo;
-    //     // TODO: TODOTODO round low the elo, so elo are 158.75896 but displayed as 158 !
-    //     console.log('getStartingConfig', playerZeroElo, ' vs ', playerOneElo)
-    //     return {
-    //         playerZero,
-    //         playerZeroElo,
-    //         playerOne,
-    //         playerOneElo,
-    //         turn: 0,
-    //         beginning: serverTimestamp(),
-    //     };
-    // }
-    // public async notifyTimeout(part: PartDocument, player: Player, winner: MinimalUser, loser: MinimalUser)
-    // : Promise<void>
-    // {
-    //     const update: Partial<Part> = {
-    //         winner,
-    //         loser,
-    //         result: MGPResult.TIMEOUT.value,
-    //     };
-    //     const winningPlayer: 'ZERO' |'ONE' = part.data.playerZero.id === winner.id ? 'ZERO' : 'ONE';
-    //     await this.userService.updateElo(part.data.typeGame,
-    //                                      part.data.playerZero,
-    //                                      part.data.playerOne as MinimalUser,
-    //                                      winningPlayer);
-    //     await this.partDAO.update(part.id, update);
-    //     await this.gameEventService.addAction(part.id, player, 'EndGame');
-    // }
-    // public async acceptDraw(part: PartDocument, player: Player): Promise<void> {
-    //     await this.gameEventService.addReply(part.id, player, 'Accept', 'Draw');
-    //     const result: MGPResult = player === Player.ZERO ?
-    //         MGPResult.AGREED_DRAW_BY_ZERO : MGPResult.AGREED_DRAW_BY_ONE;
-    //     const update: Partial<Part> = {
-    //         result: result.value,
-    //     };
-    //     await this.userService.updateElo(part.data.typeGame,
-    //                                      part.data.playerZero,
-    //                                      part.data.playerOne as MinimalUser,
-    //                                      'DRAW');
-    //     await this.partDAO.update(part.id, update);
-    //     await this.gameEventService.addAction(part.id, player, 'EndGame');
-    // }
 
     public subscribeToChanges(partId: string, callback: (part: MGPOptional<Part>) => void): Subscription {
         return this.partDAO.subscribeToChanges(partId, callback);
@@ -254,40 +170,6 @@ export class GameService extends BackendService {
         const result: MGPFallible<Response> = await this.performRequest('POST', endpoint);
         this.assertSuccess(result);
     }
-// TODO: move that in the backed
-    // public async drawPart(part: PartDocument, player: Player, scores?: [number, number]): Promise<void> {
-    //     let update: Partial<Part> = await this.preparePartUpdate(part.id, scores);
-    //     update = {
-    //         ...update,
-    //         result: MGPResult.HARD_DRAW.value,
-    //     };
-    //     await this.userService.updateElo(part.data.typeGame,
-    //                                      part.data.playerZero,
-    //                                      part.data.playerOne as MinimalUser,
-    //                                      'DRAW');
-    //     await this.update(part.id, update);
-    //     await this.gameEventService.addAction(part.id, player, 'EndGame');
-    // }
-    // public async endPartWithVictory(part: PartDocument,
-    //                                 player: Player,
-    //                                 winner: MinimalUser,
-    //                                 loser: MinimalUser,
-    //                                 scores?: [number, number]): Promise<void> {
-    //     let update: Partial<Part> = await this.preparePartUpdate(part.id, scores);
-    //     update = {
-    //         ...update,
-    //         winner,
-    //         loser,
-    //         result: MGPResult.VICTORY.value,
-    //     };
-    //     const winningPlayer: 'ZERO' |'ONE' = part.data.playerZero.id === winner.id ? 'ZERO' : 'ONE';
-    //     await this.userService.updateElo(part.data.typeGame,
-    //                                      part.data.playerZero,
-    //                                      part.data.playerOne as MinimalUser,
-    //                                      winningPlayer);
-    //     await this.update(part.id, update);
-    //     await this.gameEventService.addAction(part.id, player, 'EndGame');
-    // }
 
     /** Play a final move */
     public async addMoveAndEndGame(gameId: string,

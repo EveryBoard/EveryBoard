@@ -12,14 +12,14 @@ describe('TrexoHalfSquareComponent', () => {
 
     function expectAllLinesToBeDisplayed(): void {
         /**
-          * Then all those lines should be displayed:
-          *     0------1
-          *    /      /|
-          *   2------3 |
-          *   |      | 4
-          *   |      |/
-          *   5------6
-          */
+         * Then all those lines should be displayed:
+         *     0------1
+         *    /      /|
+         *   2------3 |
+         *   |      | 4
+         *   |      |/
+         *   5------6
+         */
         testUtils.expectElementToExist('#line_0_to_1');
         testUtils.expectElementToExist('#line_2_to_3');
         testUtils.expectElementToExist('#line_5_to_6');
@@ -77,14 +77,14 @@ describe('TrexoHalfSquareComponent', () => {
         testUtils.detectChanges();
 
         /**
-          * Then all those lines should be displayed:
-          *     0------1
-          *    /
-          *   2------3
-          *   |
-          *   |
-          *   5------6
-          */
+         * Then all those lines should be displayed:
+         *     0------1
+         *    /
+         *   2------3
+         *   |
+         *   |
+         *   5------6
+         */
         testUtils.expectElementToExist('#line_0_to_1');
         testUtils.expectElementToExist('#line_2_to_3');
         testUtils.expectElementToExist('#line_5_to_6');
@@ -105,14 +105,14 @@ describe('TrexoHalfSquareComponent', () => {
         testUtils.detectChanges();
 
         /**
-          * Then all those lines should be displayed:
-          *     0------1
-          *           /|
-          *   2------3 |
-          *          | 4
-          *          |/
-          *   5------6
-          */
+         * Then all those lines should be displayed:
+         *     0------1
+         *           /|
+         *   2------3 |
+         *          | 4
+         *          |/
+         *   5------6
+         */
         testUtils.expectElementToExist('#line_0_to_1');
         testUtils.expectElementToExist('#line_2_to_3');
         testUtils.expectElementToExist('#line_5_to_6');
@@ -133,14 +133,14 @@ describe('TrexoHalfSquareComponent', () => {
         testUtils.detectChanges();
 
         /**
-          * Then all those lines should be displayed:
-          *     0------1
-          *    /      /|
-          *   2      3 |
-          *            4
-          *           /
-          *          6
-          */
+         * Then all those lines should be displayed:
+         *     0------1
+         *    /      /|
+         *   2      3 |
+         *            4
+         *           /
+         *          6
+         */
         testUtils.expectElementToExist('#line_0_to_1');
         testUtils.expectElementToExist('#line_0_to_2');
         testUtils.expectElementToExist('#line_1_to_3');
@@ -161,14 +161,14 @@ describe('TrexoHalfSquareComponent', () => {
         testUtils.detectChanges();
 
         /**
-          * Then all those lines should be displayed:
-          *     0      1
-          *    /      /
-          *   2------3
-          *   |      | 4
-          *   |      |/
-          *   5------6
-          */
+         * Then all those lines should be displayed:
+         *     0      1
+         *    /      /
+         *   2------3
+         *   |      | 4
+         *   |      |/
+         *   5------6
+         */
         testUtils.expectElementToExist('#line_2_to_3');
         testUtils.expectElementToExist('#line_5_to_6');
         testUtils.expectElementToExist('#line_0_to_2');
@@ -189,14 +189,14 @@ describe('TrexoHalfSquareComponent', () => {
         testUtils.detectChanges();
 
         /**
-          * Then all those lines should be displayed:
-          *     0      1
-          *    /      /
-          *   2------3
-          *   |      | 4
-          *   |      |/
-          *   5------6
-          */
+         * Then all those lines should be displayed:
+         *     0      1
+         *    /      /
+         *   2------3
+         *   |      | 4
+         *   |      |/
+         *   5------6
+         */
         testUtils.expectElementToExist('#line_2_to_3');
         testUtils.expectElementToExist('#line_5_to_6');
         testUtils.expectElementToExist('#line_0_to_2');

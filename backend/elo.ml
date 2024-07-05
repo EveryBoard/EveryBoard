@@ -30,8 +30,7 @@ module CalculationService = struct
     let w_from = fun (winner : Winner.t) (player : Domain.Player.t) : float ->
         match winner with
             | Draw -> 0.5
-            | Player Zero when player = Zero -> 1.0
-            | Player One when player = One -> 1.0
+            | Player p when player = p -> 1.0
             | _ -> 0.0
 
     let k_from = fun(number_of_games_played : int) : float ->
@@ -40,8 +39,8 @@ module CalculationService = struct
         else 20.0
 
     let winning_probability = fun (elo_winner : float) (elo_loser : float) : float ->
-        let difference_in_elo_points : float = elo_winner -. elo_loser in
-        1.0 /. (1.0 +. (10.0 ** (-. difference_in_elo_points /. 400.0)))
+        let difference_in_elo : float = elo_winner -. elo_loser in
+        1.0 /. (1.0 +. (10.0 ** (-. difference_in_elo /. 400.0)))
 
     let normal_elo_difference = fun (k : float) (w : float) (p : float) : float ->
         k *. (w -. p)
@@ -71,11 +70,11 @@ module CalculationService = struct
 
     let get_actual_new_elo = fun (old_elo : float) (normal_elo_difference : float) : float ->
         if normal_elo_difference <= 0.0 then
-            (* when you loose *)
+            (* when you lose *)
             if old_elo = 0.0 then
-                1.0 (* when loosing your first match you still win 1 points *)
+                1.0 (* when losing your first match you still win 1 elo *)
             else if old_elo < 100.0 then
-                old_elo (* not loosing point when you are below 100 elo *)
+                old_elo (* not losing elo when you are below 100 *)
             else if old_elo +. normal_elo_difference < 100.0 then
                 100.0 (* not dropping below 100 elo *)
             else

@@ -42,7 +42,6 @@ describe('GameService', () => {
                 { provide: PartDAO, useClass: PartDAOMock },
                 { provide: ConfigRoomDAO, useClass: ConfigRoomDAOMock },
                 { provide: ChatDAO, useClass: ChatDAOMock },
-                { provide: UserDAO, useClass: UserDAOMock },
             ],
         }).compileComponents();
         gameService = TestBed.inject(GameService);
@@ -274,24 +273,6 @@ describe('GameService', () => {
         });
     }
 
-    // describe('resign', () => {
-        //     it('should update elo', fakeAsync(async() => {
-            //         // Given any state of service
-            //         spyOn(userService, 'updateElo').and.callThrough();
-            //         spyOn(partDAO, 'update').and.resolveTo();
-
-            //         // When calling resign method
-            //         await gameService.resign(partDocument,
-            //                                  Player.ZERO,
-            //                                  UserMocks.OPPONENT_MINIMAL_USER, // By resigning, user set the other as winner
-            //                                  UserMocks.CREATOR_MINIMAL_USER);
-            //         // Then UserService should have been called with the appropriate EloHistory
-            //         expect(userService.updateElo).toHaveBeenCalledWith('Quarto',
-            //                                                            UserMocks.CREATOR_MINIMAL_USER,
-            //                                                            UserMocks.OPPONENT_MINIMAL_USER,
-            //                                                            'ONE');
-            //     }));
-            // });
     testSimpleAction('proposeDraw', 'proposeDraw');
     testSimpleAction('acceptDraw', 'acceptDraw');
     testSimpleAction('refuseDraw', 'refuseDraw');
