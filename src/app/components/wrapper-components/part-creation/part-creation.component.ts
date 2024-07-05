@@ -25,7 +25,7 @@ import { RulesConfigDescription } from '../rules-configuration/RulesConfigDescri
 import { Debug } from 'src/app/utils/Debug';
 import { DemoNodeInfo } from '../demo-card-wrapper/demo-card-wrapper.component';
 import { AbstractNode, GameNode } from 'src/app/jscaip/AI/GameNode';
-import { BaseWrapperComponent } from '../../game-components/game-component/GameComponent';
+import { BaseWrapperComponent } from '../BaseWrapperComponent';
 
 type PartCreationViewInfo = {
     userIsCreator: boolean;

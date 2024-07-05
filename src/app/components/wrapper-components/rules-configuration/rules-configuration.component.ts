@@ -3,9 +3,9 @@ import { FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 
 import { ConfigDescriptionType, NamedRulesConfig, RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
-import { BaseWrapperComponent } from '../../game-components/game-component/GameComponent';
 import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 import { RulesConfigDescription } from './RulesConfigDescription';
+import { BaseWrapperComponent } from '../BaseWrapperComponent';
 
 type ConfigFormJSON = {
     [member: string]: FormControl<ConfigDescriptionType>;
