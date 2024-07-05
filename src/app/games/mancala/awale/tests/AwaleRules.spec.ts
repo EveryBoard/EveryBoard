@@ -142,14 +142,14 @@ fdescribe('AwaleRules', () => {
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, defaultConfig);
         });
 
-        fit('should monsoon if next player will not be able to feed the current player, alternative version', () => {
+        it('should monsoon if next player will not be able to feed the current player, alternative version', () => {
             const board: Table<number> = [
                 [0, 0, 0, 0, 0, 0],
                 [1, 0, 0, 0, 0, 0],
             ];
             const state: MancalaState = new MancalaState(board, 42, PlayerNumberMap.of(24, 23));
 
-            const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(5));
+            const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(0));
 
             const expectedBoard: Table<number> = TableUtils.create(6, 2, 0);
             const expectedState: MancalaState = new MancalaState(expectedBoard, 43, PlayerNumberMap.of(24, 24));

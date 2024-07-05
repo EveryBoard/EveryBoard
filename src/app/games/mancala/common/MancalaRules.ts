@@ -220,12 +220,6 @@ export abstract class MancalaRules<C extends MancalaConfig = MancalaConfig>
         const player: Player = postCaptureState.getCurrentPlayer();
         if (config.mustFeed) {
             console.log('mustFeed is true')
-            //console.log({player: player.toString(),
-            //             playerStarving: MancalaRules.isStarving(player, postCaptureBoard),
-            //             theyCanDistribute: this.canDistribute(opponent, postCaptureState, config),
-            //             opponentStarving: MancalaRules.isStarving(opponent, postCaptureBoard),
-            //             iCanDistribute: this.canDistribute(player, postCaptureState, config)});
-
             if (MancalaRules.isStarving(player, postCaptureBoard) &&
                 this.canDistribute(opponent, postCaptureState, config) === false)
             {
@@ -413,8 +407,6 @@ export abstract class MancalaRules<C extends MancalaConfig = MancalaConfig>
     public canDistribute(player: Player, state: MancalaState, config: MancalaConfig): boolean {
         for (let x: number = 0; x < state.getWidth(); x++) {
             if (this.doesDistribute(x, player.getOpponent().getValue(), state, config)) {
-                console.log({x, y: player.getOpponent().getValue()})
-                console.table(state.board)
                 return true;
             }
         }

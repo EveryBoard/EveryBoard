@@ -27,7 +27,7 @@ export class RulesUtils {
             if (isComparableObject(resultingState)) {
                 const equals: boolean = comparableEquals(resultingState, expectedState);
                 if (equals === false) {
-                    console.log(expectedState, resultingState);
+                    console.log(JSON.stringify(expectedState), JSON.stringify(resultingState));
                 }
                 expect(equals).withContext('comparable states should be equal').toBeTrue();
             } else {
