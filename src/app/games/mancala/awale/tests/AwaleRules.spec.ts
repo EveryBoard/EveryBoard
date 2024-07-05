@@ -12,7 +12,7 @@ import { MancalaConfig } from '../../common/MancalaConfig';
 import { MancalaDistribution, MancalaMove } from '../../common/MancalaMove';
 import { MancalaNode, MancalaRules } from '../../common/MancalaRules';
 
-fdescribe('AwaleRules', () => {
+describe('AwaleRules', () => {
 
     const rules: MancalaRules = AwaleRules.get();
     const defaultConfig: MGPOptional<MancalaConfig> = AwaleRules.get().getDefaultRulesConfig();
@@ -85,7 +85,7 @@ fdescribe('AwaleRules', () => {
 
     });
 
-    fdescribe('starvation and monsoon', () => {
+    describe('starvation and monsoon', () => {
 
         it('should forbid starving move', () => {
             // Given a state where the player could feed its opponent
