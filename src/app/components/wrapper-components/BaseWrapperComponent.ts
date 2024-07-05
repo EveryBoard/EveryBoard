@@ -15,7 +15,7 @@ export abstract class BaseWrapperComponent extends BaseComponent {
 
     protected getGameName(): MGPOptional<string> {
         // May be empty if the game does not actually exist
-        return GameInfo.getByUrlName(this.getGameUrlName()) .map((info: GameInfo) => info.name);
+        return GameInfo.getByUrlName(this.getGameUrlName()).map((info: GameInfo) => info.name);
     }
 
 }

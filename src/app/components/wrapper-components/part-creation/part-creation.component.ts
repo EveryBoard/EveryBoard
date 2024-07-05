@@ -108,6 +108,8 @@ export class PartCreationComponent extends BaseWrapperComponent implements OnIni
     private configRoomSubscription: Subscription = Subscription.EMPTY;
     private candidatesSubscription: Subscription = Subscription.EMPTY;
 
+    private navigateThereAfterGameCanceled: string[] = ['/lobby'];
+
     public configFormGroup: FormGroup;
 
     public allDocDeleted: boolean = false;
@@ -423,7 +425,7 @@ export class PartCreationComponent extends BaseWrapperComponent implements OnIni
 
     private async onGameCanceled(): Promise<void> {
         this.messageDisplayer.infoMessage($localize`The game has been canceled!`);
-        await this.router.navigate(['/lobby']);
+        await this.router.navigate(this.navigateThereAfterGameCanceled);
     }
 
     private isGameStarted(configRoom: ConfigRoom | null): boolean {
@@ -597,13 +599,12 @@ export class PartCreationComponent extends BaseWrapperComponent implements OnIni
     }
 
     public async goToLobby(): Promise<void> {
-        await this.cancelGameCreation();
-        await this.router.navigate(['/lobby']);
+        await this.cancelGameCreation(); // game cancelation will go to /lobby
     }
 
     public async playLocally(): Promise<void> {
-        await this.cancelGameCreation();
         const urlName: string = this.getGameUrlName();
-        await this.router.navigate(['/local', urlName]);
+        this.navigateThereAfterGameCanceled = ['/local', urlName];
+        await this.cancelGameCreation();
     }
 }
