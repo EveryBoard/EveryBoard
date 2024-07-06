@@ -85,14 +85,9 @@ export abstract class MancalaRules<C extends MancalaConfig = MancalaConfig>
     }
 
     public static getInitialState(optionalConfig: MGPOptional<MancalaConfig>): MancalaState {
-       // const config: MancalaConfig = optionalConfig.get();
-       // const board: number[][] = TableUtils.create(config.width, 2, config.seedsByHouse);
-       // return new MancalaState(board, 0, PlayerNumberMap.of(0, 0));
-            const board: Table<number> = [
-                [0, 0, 0, 0, 0, 0],
-                [1, 0, 0, 0, 0, 0],
-            ];
-        return new MancalaState(board, 42, PlayerNumberMap.of(24, 23));
+        const config: MancalaConfig = optionalConfig.get();
+        const board: number[][] = TableUtils.create(config.width, 2, config.seedsByHouse);
+        return new MancalaState(board, 0, PlayerNumberMap.of(0, 0));
     }
 
     protected constructor(private readonly capturableValues: number[]) {
@@ -219,18 +214,12 @@ export abstract class MancalaRules<C extends MancalaConfig = MancalaConfig>
         const opponent: Player = postCaptureState.getCurrentOpponent();
         const player: Player = postCaptureState.getCurrentPlayer();
         if (config.mustFeed) {
-            console.log('mustFeed is true')
             if (MancalaRules.isStarving(player, postCaptureBoard) &&
                 this.canDistribute(opponent, postCaptureState, config) === false)
             {
                 // We are starving, and opponent can't feed us.
                 // Opponent takes all their last piece for themselves
                 return [opponent];
-            } else if (MancalaRules.isStarving(opponent, postCaptureBoard) &&
-                       this.canDistribute(player, postCaptureState, config) === false)
-            {
-                // Same situation, but for opponent: they starve and we can't feed them
-                return [player];
             }
         } else {
             if (MancalaRules.isStarving(opponent, postCaptureBoard)) {
@@ -265,16 +254,10 @@ export abstract class MancalaRules<C extends MancalaConfig = MancalaConfig>
     public override applyLegalMove(move: MancalaMove, state: MancalaState, config: MGPOptional<MancalaConfig>, _: void)
     : MancalaState
     {
-        if (MancalaRules.DEBUG) console.log('applying move for ' + state.getCurrentPlayer());
         const distributionsResult: MancalaDistributionResult = this.distributeMove(move, state, config.get());
         const captureResult: MancalaCaptureResult = this.applyCapture(distributionsResult, config.get());
         let resultingState: MancalaState = captureResult.resultingState;
-        if (MancalaRules.DEBUG) {
-            console.log('resultingState:')
-            console.table(captureResult.resultingState.board);
-        }
         const playerToMonsoon: Player[] = this.mustMonsoon(resultingState, config.get());
-        if (MancalaRules.DEBUG) console.log({playerToMonsoon})
         if (playerToMonsoon.length === 1) {
             // if the player distributed their last seeds and the opponent could not give them seeds
             const monsoonResult: MancalaCaptureResult = this.monsoon(playerToMonsoon[0], captureResult);
@@ -400,7 +383,6 @@ export abstract class MancalaRules<C extends MancalaConfig = MancalaConfig>
         }
         const storeOffset: number = config.passByPlayerStore ? 1 : 0;
         const pieceNeededToFeedOpponent: number = pieceNeededToFeedStore + storeOffset;
-        console.log({x, y, pieceNeededToFeedOpponent, cell: board[y][x]})
         return pieceNeededToFeedOpponent <= board[y][x]; // distribution from right to left
     }
 

@@ -4,8 +4,6 @@ import { MancalaDistribution, MancalaMove } from '../common/MancalaMove';
 import { MancalaDistributionResult, MancalaNode, MancalaRules } from '../common/MancalaRules';
 import { MancalaConfig } from './MancalaConfig';
 import { MGPOptional, MGPValidation } from '@everyboard/lib';
-import { AwaleRules } from '../awale/AwaleRules';
-import { Player } from 'src/app/jscaip/Player';
 
 export class MancalaMoveGenerator extends MoveGenerator<MancalaMove, MancalaState, MancalaConfig> {
 
@@ -30,25 +28,6 @@ export class MancalaMoveGenerator extends MoveGenerator<MancalaMove, MancalaStat
                     }
                 }
             }
-        }
-        if (moves.length === 0) {
-            // Print full state
-            console.log(node.gameState.getCurrentPlayer().toString())
-            console.table(node.gameState.board);
-            console.log(this.rules.getGameStatus(node, config));
-            console.log(node.gameState.turn);
-            // Print parent state
-            console.log(node.parent.get().gameState.getCurrentPlayer().toString())
-            console.table(node.parent.get().gameState.board);
-            console.log(this.rules.getGameStatus(node.parent.get(), config));
-            // Reproduce last move application
-            MancalaRules.DEBUG = true;
-            const legality = this.rules.isLegal(node.previousMove.get(), node.parent.get().gameState, config);
-            console.log('legality: ' + legality);
-            const child = this.rules.applyLegalMove(node.previousMove.get(), node.parent.get().gameState, config, legality.get());
-            console.table(child.board)
-            MancalaRules.DEBUG = false;
-
         }
         return moves;
     }
