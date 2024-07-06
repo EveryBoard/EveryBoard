@@ -12,7 +12,6 @@ export type Part = {
     readonly result: IMGPResult;
 
     readonly playerOne?: MinimalUser; // the second player
-    readonly playerOneElo?: number, // must be modified/set whenever playerOne is modified/set
     readonly beginning?: FirestoreTime; // beginning of the part
     readonly winner?: MinimalUser;
     readonly loser?: MinimalUser;
@@ -128,6 +127,10 @@ export class PartDocument implements FirestoreDocument<Part> {
 
     public getLoser(): MGPOptional<MinimalUser> {
         return MGPOptional.ofNullable(this.data.loser);
+    }
+
+    public getPlayerZeroFloorElo(): number {
+        return Math.floor(this.data.playerZeroElo);
     }
 
 }

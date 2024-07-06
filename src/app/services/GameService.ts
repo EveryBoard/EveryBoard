@@ -15,7 +15,6 @@ export interface StartingPartConfig extends Partial<Part> {
     playerZero: MinimalUser,
     playerZeroElo: number,
     playerOne: MinimalUser,
-    playerOneElo: number,
     turn: number,
     beginning?: FirestoreTime,
 }

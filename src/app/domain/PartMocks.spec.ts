@@ -28,7 +28,6 @@ export class PartMocks {
         turn: 0,
         result: MGPResult.UNACHIEVED.value,
         playerOne: UserMocks.OPPONENT_MINIMAL_USER,
-        playerOneElo: 0,
         beginning: serverTimestamp(),
     };
 
@@ -39,7 +38,6 @@ export class PartMocks {
         turn: 0,
         result: MGPResult.UNACHIEVED.value,
         playerOne: UserMocks.OTHER_OPPONENT_MINIMAL_USER,
-        playerOneElo: 0,
         beginning: serverTimestamp(),
     };
 
@@ -48,7 +46,6 @@ export class PartMocks {
         playerZero: UserMocks.OPPONENT_MINIMAL_USER,
         playerZeroElo: 0,
         playerOne: UserMocks.CREATOR_MINIMAL_USER,
-        playerOneElo: 0,
         result: MGPResult.VICTORY.value,
         turn: 2,
         beginning: serverTimestamp(),
