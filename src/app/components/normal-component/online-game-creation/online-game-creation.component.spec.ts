@@ -46,7 +46,7 @@ describe('OnlineGameCreationComponent', () => {
     it('should create and redirect to the game upon success', fakeAsync(async() => {
         // Given a page that is loaded for a specific game by an online user that can create a game
         const router: Router = TestBed.inject(Router);
-        spyOn(router, 'navigate').and.callThrough();
+        spyOn(router, 'navigate').and.resolveTo(true);
         ConnectedUserServiceMock.setUser(UserMocks.CONNECTED_AUTH_USER);
 
         // When the page is rendered
@@ -63,7 +63,7 @@ describe('OnlineGameCreationComponent', () => {
         const currentGameService: CurrentGameService = TestBed.inject(CurrentGameService);
         const refusalReason: string = 'whatever reason the service has';
         spyOn(currentGameService, 'canUserCreate').and.returnValue(MGPValidation.failure(refusalReason));
-        spyOn(router, 'navigate').and.callThrough();
+        spyOn(router, 'navigate').and.resolveTo(true);
         ConnectedUserServiceMock.setUser(UserMocks.CONNECTED_AUTH_USER);
 
         // When the page is rendered

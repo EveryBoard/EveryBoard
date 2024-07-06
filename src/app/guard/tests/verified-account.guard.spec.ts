@@ -28,7 +28,7 @@ describe('VerifiedAccountGuard', () => {
             ],
         }).compileComponents();
         router = TestBed.inject(Router);
-        spyOn(router, 'navigate').and.callThrough();
+        spyOn(router, 'navigate').and.resolveTo(true);
         connectedUserService = TestBed.inject(ConnectedUserService);
         guard = new VerifiedAccountGuard(connectedUserService, router);
     }));

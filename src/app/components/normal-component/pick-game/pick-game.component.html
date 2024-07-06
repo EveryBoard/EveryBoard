@@ -1,9 +1,23 @@
-<div class="select is-primary is-fullwidth">
-    <select id="gameType" (change)="onChange($event)">
-        <option value=""
-                selected
-                i18n>Pick a game</option>
-        <option *ngFor="let game of games"
-                [value]="game.urlName">{{ game.name }}</option>
-    </select>
+<input id="search-term"
+       class="input is-fullwidth mb-4 is-large"
+       placeholder="Search game" i18n-placeholder
+       (input)="search($event.target)"
+       autofocus/>
+<div class="columns is-multiline">
+    <div *ngFor="let game of matchingGames"
+         class="column is-one-fifth">
+        <div class="card mb-0">
+            <div class="card-header">
+                <p class="card-header-title">{{ game.name }}</p>
+            </div>
+            <div class="card-image game-card">
+                <figure class="image">
+                    <img id="image-{{ game.urlName }}"
+                         class="is-clickable"
+                         src="assets/images/{{ theme }}/{{ game.urlName }}.png"
+                         (click)="selectGame(game.urlName)"/>
+                </figure>
+            </div>
+        </div>
+    </div>
 </div>

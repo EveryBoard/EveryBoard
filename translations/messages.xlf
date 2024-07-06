@@ -143,11 +143,8 @@
       <trans-unit id="7017932994058745268" datatype="html">
         <source>Creating online game, please wait, it should not take long.</source>
       </trans-unit>
-      <trans-unit id="2009811124619716606" datatype="html">
-        <source>Create an online game</source>
-      </trans-unit>
-      <trans-unit id="7016831866762941443" datatype="html">
-        <source>Pick a game</source>
+      <trans-unit id="7680170577317084701" datatype="html">
+        <source>Search game</source>
       </trans-unit>
       <trans-unit id="5561648955936795459" datatype="html">
         <source>Use simple mechanics to push 6 of the opponent&apos;s pieces out of the board!</source>
@@ -476,8 +473,11 @@
       <trans-unit id="6808393327735679948" datatype="html">
         <source>EveryBoard is a website to play and learn the rules of various abstract strategy games with perfect information.<x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br/&gt;"/> Such games are games that do not include any randomness, agility, or hidden information. These games are played by two players, turn by turn.</source>
       </trans-unit>
-      <trans-unit id="7079545056368231407" datatype="html">
-        <source>See the game list</source>
+      <trans-unit id="2009811124619716606" datatype="html">
+        <source>Create an online game</source>
+      </trans-unit>
+      <trans-unit id="7868391487776969346" datatype="html">
+        <source>See all online games</source>
       </trans-unit>
       <trans-unit id="8564202903947049539" datatype="html">
         <source>Play</source>

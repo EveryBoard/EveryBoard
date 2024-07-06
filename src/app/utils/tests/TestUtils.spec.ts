@@ -32,7 +32,6 @@ import { ErrorLoggerServiceMock } from 'src/app/services/tests/ErrorLoggerServic
 import { AbstractGameComponent } from 'src/app/components/game-components/game-component/GameComponent';
 import { findMatchingRoute } from 'src/app/app.module.spec';
 import { HumanDurationPipe } from 'src/app/pipes-and-directives/human-duration.pipe';
-import { AutofocusDirective } from 'src/app/pipes-and-directives/autofocus.directive';
 import { ToggleVisibilityDirective } from 'src/app/pipes-and-directives/toggle-visibility.directive';
 import { FirestoreTimePipe } from 'src/app/pipes-and-directives/firestore-time.pipe';
 import { UserMocks } from 'src/app/domain/UserMocks.spec';
@@ -92,10 +91,14 @@ export class SimpleComponentTestUtils<T> {
     private criticalMessageSpy: jasmine.Spy;
     protected gameMessageSpy: jasmine.Spy;
 
-    public static async create<U>(componentType: Type<U>, activatedRouteStub?: ActivatedRouteStub)
+    public static async create<U>(componentType: Type<U>,
+                                  activatedRouteStub?: ActivatedRouteStub,
+                                  configureTestModule: boolean = true)
     : Promise<SimpleComponentTestUtils<U>>
     {
-        await ConfigureTestingModuleUtils.configureTestingModule(componentType, activatedRouteStub);
+        if (configureTestModule) {
+            await ConfigureTestingModuleUtils.configureTestingModule(componentType, activatedRouteStub);
+        }
         ConnectedUserServiceMock.setUser(UserMocks.CONNECTED_AUTH_USER);
         const testUtils: SimpleComponentTestUtils<U> = new SimpleComponentTestUtils<U>();
         testUtils.prepareFixture(componentType);
@@ -678,7 +681,6 @@ export class ConfigureTestingModuleUtils {
                 componentType,
                 FirestoreTimePipe,
                 HumanDurationPipe,
-                AutofocusDirective,
                 ToggleVisibilityDirective,
             ],
             schemas: [
