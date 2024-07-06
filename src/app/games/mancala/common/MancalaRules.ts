@@ -64,7 +64,7 @@ export abstract class MancalaRules<C extends MancalaConfig = MancalaConfig>
 
     public static isStarving(player: Player, board: Table<number>): boolean {
         let i: number = 0;
-        const playerY: number = player.getOpponent().getValue(); // For player 0 has row 1
+        const playerY: number = player.getOpponent().getValue(); // player 0 has row 1
         while (i < board[0].length) {
             if (board[playerY][i++] > 0) {
                 return false; // found some food there, so not starving
@@ -217,6 +217,7 @@ export abstract class MancalaRules<C extends MancalaConfig = MancalaConfig>
             if (MancalaRules.isStarving(player, postCaptureBoard) &&
                 this.canDistribute(opponent, postCaptureState, config) === false)
             {
+                // We are starving, and opponent can't feed us.
                 // Opponent takes all their last piece for themselves
                 return [opponent];
             }
@@ -255,12 +256,12 @@ export abstract class MancalaRules<C extends MancalaConfig = MancalaConfig>
         const distributionsResult: MancalaDistributionResult = this.distributeMove(move, state, config.get());
         const captureResult: MancalaCaptureResult = this.applyCapture(distributionsResult, config.get());
         let resultingState: MancalaState = captureResult.resultingState;
-        const playerTomonsoon: Player[] = this.mustMonsoon(resultingState, config.get());
-        if (playerTomonsoon.length === 1) {
+        const playerToMonsoon: Player[] = this.mustMonsoon(resultingState, config.get());
+        if (playerToMonsoon.length === 1) {
             // if the player distributed their last seeds and the opponent could not give them seeds
-            const monsoonResult: MancalaCaptureResult = this.monsoon(playerTomonsoon[0], captureResult);
+            const monsoonResult: MancalaCaptureResult = this.monsoon(playerToMonsoon[0], captureResult);
             resultingState = monsoonResult.resultingState;
-        } else if (playerTomonsoon.length === 2) {
+        } else if (playerToMonsoon.length === 2) {
             // if the player distributed their last seeds and the opponent could not give them seeds
             const monsoonResult: MancalaCaptureResult = this.sharedMonsoon(captureResult);
             resultingState = monsoonResult.resultingState;
@@ -375,7 +376,7 @@ export abstract class MancalaRules<C extends MancalaConfig = MancalaConfig>
         const board: Table<number> = state.board;
         let pieceNeededToFeedStore: number;
         if (y === 0) {
-            pieceNeededToFeedStore = state.getWidth() - (x + 1);
+            pieceNeededToFeedStore = state.getWidth() - x;
         } else {
             pieceNeededToFeedStore = x + 1;
         }
