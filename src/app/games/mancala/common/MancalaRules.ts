@@ -250,7 +250,6 @@ export abstract class MancalaRules<C extends MancalaConfig = MancalaConfig>
         return GameStatus.ONGOING;
     }
 
-    public static DEBUG: boolean = true;
     public override applyLegalMove(move: MancalaMove, state: MancalaState, config: MGPOptional<MancalaConfig>, _: void)
     : MancalaState
     {
