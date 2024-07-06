@@ -16,10 +16,10 @@ import textwrap
 # - each scenario should end with the user *not* being in any game
 
 # Set to False to see the script happening in real time. Useful for debugging
-HEADLESS = True
+HEADLESS = False
 # Set to True if somehow the selenium driver is acting like a mobile device (with small screen)
 MOBILE = False
-USER_RESPONSE_TIME=0.2 # A typical user cannot click faster than once every 200ms
+USER_RESPONSE_TIME=0.4 # A typical user cannot click faster than once every 200ms, and we may need some more time for displaying some components
 
 class PlayerDriver():
     def __init__(self):
@@ -364,8 +364,8 @@ def can_play_local_vs_ai(user):
     user.use_default_config()
 
     # Select the AI as second player
-    user.select('#playerOneSelect', 'Minimax')
-    user.select('#aiOneOptionSelect', 'Level 1')
+    user.select('#player-select-1', 'Minimax')
+    user.select('#ai-option-select-1', 'Level 1')
 
     # I play a move
     user.click('#click-2-0 > rect')
