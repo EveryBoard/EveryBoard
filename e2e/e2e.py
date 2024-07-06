@@ -464,14 +464,14 @@ def can_perform_time_actions(user1, user2):
         return int(minutes) * 60 + int(seconds)
 
     def check_time_increase(chrono_name):
-        remainingTimeBeforeAddition = parse_time(user1.get_text_of('{} p'.format(chrono_name)))
+        remainingTimeBeforeAddition = parse_time(user1.get_text_of('{} span'.format(chrono_name)))
 
         # I add time to the opponent
         user1.click('{} .button'.format(chrono_name))
         time.sleep(1) # wait a bit to receive the update
 
         # I can see they have more time now
-        remainingTimeAfterAddition = parse_time(user1.get_text_of('{} p'.format(chrono_name)))
+        remainingTimeAfterAddition = parse_time(user1.get_text_of('{} span'.format(chrono_name)))
         if not(remainingTimeAfterAddition > remainingTimeBeforeAddition):
             print('Time was not added!')
             raise Exception('Test failed')
