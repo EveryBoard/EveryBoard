@@ -18,13 +18,6 @@ run-load-test: gamelist
 	GAMES=$$(cat games.txt)
 	opam exec -- dune exec -- ./main.exe -no-emulator -endpoint https://firestore.googleapis.com -show-errors -project everyboard-loadtest -origin '*' -service-account ../service-accounts/loadtest.json
 
-test-ci: bin gamelist
-	find . -name '*.coverage' | xargs rm -f
-	GAMES=$$(cat games.txt) \
-	opam exec -- dune exec --instrument-with bisect_ppx --force -- ./tests.exe test $(match) $(test-number)
-	opam exec -- bisect-ppx-report html
-	echo 'Coverage produced in _coverage/index.html'
-
 test: bin gamelist
 	find . -name '*.coverage' | xargs rm -f
 	GAMES=$$(cat games.txt) \
@@ -53,7 +46,7 @@ docker: gamelist
 	docker save "backend-$(target)" > "backend-$(target).tar"
 
 deploy: docker
-	ssh -p "$(port)" "$(user)@$(server)" "(docker stop \$$(docker ps -q --filter publish=$(listen-port)) ; docker load && docker container prune -f && docker image prune -f && docker run -d -p $(listen-port):8081 backend-$(target) /main.static.exe $(args)" < "backend-$(target).tar"
+	ssh -p "$(port)" "$(user)@$(server)" "docker stop \$$(docker ps -q --filter publish=$(listen-port)) ; docker load && docker container prune -f && docker image prune -f && docker run -d -p $(listen-port):8081 backend-$(target) /main.static.exe $(args)" < "backend-$(target).tar"
 
 clean:
 	opam exec -- dune clean

@@ -96,7 +96,7 @@ jobs:
     - name: Build
       run: cd backend && make
     - name: Test
-      run: cd backend && make test-ci
+      run: cd backend && make test
     - name: Archive code coverage results
       if: always()
       uses: actions/upload-artifact@v3
