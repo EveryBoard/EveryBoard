@@ -50,9 +50,8 @@ module Make
         logger.info (fun log -> log ~request "Getting %s" path);
         let* headers = TokenRefresher.header request in
         let* (response, body) = External.Http.get ~headers (endpoint path) in
-        if is_error response
-        then begin
-            raise (DocumentNotFound path) end
+        if is_error response then
+            raise (DocumentNotFound path)
         else
             Lwt.return (of_firestore (JSON.from_string body))
 

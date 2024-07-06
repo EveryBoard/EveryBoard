@@ -261,7 +261,6 @@ module Game = struct
         result: GameResult.t;
 
         player_one: MinimalUser.t option [@key "playerOne"];
-        player_one_elo: float option [@key "playerOneElo"];
         beginning: int option;
         winner: MinimalUser.t option;
         loser: MinimalUser.t option;
@@ -376,7 +375,6 @@ module Game = struct
         turn = -1;
         result = GameResult.Unachieved;
         player_one = None;
-        player_one_elo = None;
         beginning = None;
         winner = None;
         loser = None;

@@ -318,7 +318,6 @@ let tests = [
                 "turn", `Int (-1);
                 "result", `Int 5;
                 "playerOne", `Null;
-                "playerOneElo", `Null;
                 "beginning", `Null;
                 "winner", `Null;
                 "loser", `Null;
@@ -335,7 +334,6 @@ let tests = [
             let game : Domain.Game.t = {
                 (Game.initial "P4" a_minimal_user a_minimal_user_current_elo) with
                 player_one = Some another_minimal_user;
-                player_one_elo = Some another_minimal_user_current_elo;
                 turn = 0;
                 beginning = Some 42;
             } in
@@ -346,7 +344,6 @@ let tests = [
                 "turn", `Int 0;
                 "result", `Int 5;
                 "playerOne", another_minimal_user_json;
-                "playerOneElo", `Float another_minimal_user_current_elo;
                 "beginning", `Int 42;
                 "winner", `Null;
                 "loser", `Null;
@@ -363,7 +360,6 @@ let tests = [
             let game : Domain.Game.t = {
                 (Game.initial "P4" a_minimal_user a_minimal_user_current_elo) with
                 player_one = Some another_minimal_user;
-                player_one_elo = Some another_minimal_user_current_elo;
                 turn = 8;
                 result = Game.GameResult.Victory;
                 beginning = Some 42;
@@ -379,7 +375,6 @@ let tests = [
                 "turn", `Int 8;
                 "result", `Int 3;
                 "playerOne", another_minimal_user_json;
-                "playerOneElo", `Float another_minimal_user_current_elo;
                 "beginning", `Int 42;
                 "winner", a_minimal_user_json;
                 "loser", another_minimal_user_json;
