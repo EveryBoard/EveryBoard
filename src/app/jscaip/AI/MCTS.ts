@@ -14,7 +14,7 @@ type NodeAndPath<M extends Move, S extends GameState> = {
     path: GameNode<M, S>[],
 }
 
-/*
+/**
  * Implement Monte-Carlo Tree Search
  * Useful resources to understand MCTS:
  *   - https://www.analyticsvidhya.com/blog/2019/01/monte-carlo-tree-search-introduction-algorithm-deepmind-alphago/
