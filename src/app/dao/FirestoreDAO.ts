@@ -1,4 +1,4 @@
-import { FirestoreJSONObject, MGPOptional, TimeUtils, Utils } from '@everyboard/lib';
+import { FirestoreJSONObject, MGPOptional, Utils } from '@everyboard/lib';
 import * as Firestore from '@firebase/firestore';
 import { FirestoreCollectionObserver } from './FirestoreCollectionObserver';
 import { Subscription } from 'rxjs';

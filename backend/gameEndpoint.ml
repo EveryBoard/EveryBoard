@@ -32,7 +32,7 @@ module Make
         let headers = [("Content-Type", "application/json")] in
         Dream.respond ~headers ~status (JSON.to_string response)
 
-    (** Create a game. Perform 3 writes. *)
+    (** Create a game. Perform 1 read and 3 writes. *)
     let create : Dream.route = Dream.post "game" @@ fun request ->
         Stats.set_action request "CREATE game";
         (* Does the game name correspond to a game we have? *)
@@ -49,6 +49,7 @@ module Make
             | None ->
                 let uid : string = Auth.get_uid request in
                 let creator : MinimalUser.t = User.to_minimal_user uid user in
+                (* Read 1: retrieve elo *)
                 let* creator_elo_info : Domain.User.EloInfo.t = Firestore.User.get_elo ~request ~user_id:uid ~type_game:game_name in
                 let creator_elo : float = creator_elo_info.current_elo in
                 (* Create the game, then the config room, then the chat room *)
@@ -91,11 +92,14 @@ module Make
         let* _ = Firestore.Chat.delete ~request ~id:game_id in
         Dream.empty `OK
 
+    (** update the elo of the two Players. Performs 2 read and 2 write *)
     let end_game_elo_update = fun ~(request : Dream.request)  ~(game : Domain.Game.t) ~(winner_enum : Elo.Winner.t): unit Lwt.t ->
         let type_game : string = game.type_game in
+        (* Read 1 *)
         let* player_zero_info : Domain.User.EloInfo.t = Firestore.User.get_elo ~request ~user_id:game.player_zero.id ~type_game in
         let game_player_one : MinimalUser.t = Option.get game.player_one in
         let game_player_one_id : string = game_player_one.id in
+        (* Read 2 *)
         let* player_one_info : Domain.User.EloInfo.t = Firestore.User.get_elo ~request ~user_id:game_player_one_id ~type_game in
         let elo_entry : Elo.EloEntry.t = {
             elo_info_pair = { player_zero_info; player_one_info };
@@ -104,7 +108,9 @@ module Make
         let new_elos : Elo.EloInfoPair.t = Elo.CalculationService.new_elos elo_entry in
         let new_elo_zero : Domain.User.EloInfo.t = new_elos.player_zero_info in
         let new_elo_one : Domain.User.EloInfo.t = new_elos.player_one_info in
+        (* Write 1 *)
         let* _ = Firestore.User.update_elo ~request ~user_id:game.player_zero.id ~type_game:game.type_game ~new_elo:new_elo_zero in
+        (* Write 2 *)
         let* _ = Firestore.User.update_elo ~request ~user_id:game_player_one_id ~type_game:game.type_game ~new_elo:new_elo_one in
         Lwt.return ()
 

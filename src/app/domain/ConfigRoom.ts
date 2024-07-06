@@ -11,7 +11,6 @@ export type ConfigRoom = {
 
     readonly firstPlayer: IFirstPlayer;
     readonly partType: IPartType;
-    // readonly typeGame: string;
     readonly maximalMoveDuration: number;
     readonly totalPartDuration: number;
     readonly rulesConfig: RulesConfig; // It is in the ConfigRoom in PartCreationComponent that this is set

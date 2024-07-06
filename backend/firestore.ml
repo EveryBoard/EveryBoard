@@ -13,7 +13,7 @@ module type FIRESTORE = sig
     module User : sig
         (** Retrieve an user from its id *)
         val get : Domain.User.t getter
-        (** Retrieve the elo (if present) of an user and a certain game *)
+        (** Retrieve the elo (if present) of an user and a certain game, return [Domain.User.EloInfo.empty] if absent *)
         val get_elo : request:Dream.request -> user_id:string -> type_game:string -> Domain.User.EloInfo.t Lwt.t
         (** Update the elo of the document for an user and a certain game *)
         val update_elo : request:Dream.request -> user_id:string -> type_game:string -> new_elo:Domain.User.EloInfo.t -> unit Lwt.t
@@ -107,7 +107,6 @@ module Make (FirestorePrimitives : FirestorePrimitives.FIRESTORE_PRIMITIVES) : F
                     | Ok elo -> Lwt.return elo
             with _ ->
                 Lwt.return Domain.User.EloInfo.empty
-                    (* TODO : ELO DANS LES CANDIDADES *)
 
     end
 

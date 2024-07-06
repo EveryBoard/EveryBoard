@@ -264,11 +264,10 @@ let tests = [
 
         test "should work with a config room that has a chosen opponent" (fun () ->
             (* Given a config room with a chosen opponent *)
-            let config_room : Domain.ConfigRoom.t =
-                {
-                    (ConfigRoom.initial a_minimal_user a_minimal_user_current_elo)
-                    with chosen_opponent = Some another_minimal_user
-                } in
+            let config_room : Domain.ConfigRoom.t ={
+                (ConfigRoom.initial a_minimal_user a_minimal_user_current_elo)
+                with chosen_opponent = Some another_minimal_user
+            } in
             let config_room_json = `Assoc [
                 "creator", a_minimal_user_json;
                 "creator_elo", `Float a_minimal_user_current_elo;

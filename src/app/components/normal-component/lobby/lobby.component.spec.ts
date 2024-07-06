@@ -422,6 +422,22 @@ describe('LobbyComponent', () => {
         expect(gameName.nativeElement.innerText).toEqual('Four in a Row');
     }));
 
+    it('should display creator elo has a floor version', fakeAsync(async() => {
+        // Given a server with an existing part
+        setLobbyPartList([new PartDocument('started', {
+            ...PartMocks.STARTED,
+            typeGame: 'P4', // A game whose name is different from "type game"
+            playerZeroElo: 12.67865,
+        })]);
+
+        // When displaying it
+        testUtils.detectChanges();
+
+        // Then it should show the turn, starting at turn 0 instead of -1
+        const gameName: DebugElement = testUtils.findElement('#part-of-creator');
+        expect(gameName.nativeElement.innerText).toEqual('creator (12)');
+    }));
+
     it('should show the chat when clicking on the corresponding tab', fakeAsync(async() => {
         // Given a lobby
 
