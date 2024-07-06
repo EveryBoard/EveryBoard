@@ -19,7 +19,7 @@ import textwrap
 HEADLESS = True
 # Set to True if somehow the selenium driver is acting like a mobile device (with small screen)
 MOBILE = False
-USER_RESPONSE_TIME=0.4 # A typical user cannot click faster than once every 200ms, and we may need some more time for displaying some components
+USER_RESPONSE_TIME=0.2 # A typical user cannot click faster than once every 200ms, and we may need some more time for displaying some components
 
 class PlayerDriver():
     def __init__(self):
@@ -372,7 +372,8 @@ def can_play_local_vs_ai(user):
 
     # Let AI play
     # It's back to us when the background is set to our color
-    user.wait_for('.player0-bg')
+    # (it's important to have no space between the CSS class and the id)
+    user.wait_for('.player0-bg#board-highlight')
 
     # AI should have played a second move, I can play again
     user.click('#click-1-0 > rect')
