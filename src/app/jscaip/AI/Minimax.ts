@@ -23,7 +23,7 @@ export abstract class Heuristic<M extends Move,
     public abstract getBoardValue(node: GameNode<M, S>, config: MGPOptional<C>): B;
 
     // When there exists a maximal value for a heuristic, it is useful to know it.
-    public maxValue(config: MGPOptional<C>): MGOptional<number> {
+    public getMaxValue(config: MGPOptional<C>): MGPOptional<B> {
         return MGPOptional.empty();
     }
 }

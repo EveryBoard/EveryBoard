@@ -60,7 +60,7 @@ implements AI<M, S, AITimeLimitOptions, C>
             const expansionResult: NodeAndPath<M, S> = this.expand(
                 this.select({ node: root, path: [root] }), config);
             const gameStatus: GameStatus = this.simulate(expansionResult.node, endTime, config);
-            this.backpropagate(expansionResult.path, this.winScore(gameStatus, player));
+            this.backpropagate(expansionResult.path, this.winScore(expansionResult.node, config, gameStatus, player));
             iterations++;
         }
         Debug.display('MCTS', 'chooseNextMove', 'root winRatio: ' + this.winRatio(root));
@@ -75,7 +75,13 @@ implements AI<M, S, AITimeLimitOptions, C>
         return bestChild.previousMove.get();
     }
 
-    private winScore(gameStatus: GameStatus, player: Player): number {
+    /**
+     * Returns 1 for win, 0 for losses. Must return a result between 0 and 1 otherwise.
+     */
+    protected winScore(_node: GameNode<M, S>,
+                       _config: MGPOptional<RulesConfig>,
+                       gameStatus: GameStatus,
+                       player: Player): number {
         switch (gameStatus) {
             case GameStatus.DRAW:
             case GameStatus.ONGOING:
