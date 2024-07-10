@@ -96,8 +96,8 @@ module Make (FirestorePrimitives : FirestorePrimitives.FIRESTORE_PRIMITIVES) : F
             get request ("users/" ^ id) Domain.User.of_yojson
 
         let update_elo = fun ~(request : Dream.request) ~(user_id : string) ~(type_game : string) ~(new_elo : Domain.User.EloInfo.t) : unit Lwt.t ->
-            let new_elo_json: JSON.t = Domain.User.EloInfo.to_yojson new_elo in
-            FirestorePrimitives.update_doc ~request ~path:("users/" ^ user_id ^ "/elos/" ^ type_game) ~update:new_elo_json
+            let update: JSON.t = Domain.User.EloInfo.to_yojson new_elo in
+            FirestorePrimitives.update_doc ~request ~path:("users/" ^ user_id ^ "/elos/" ^ type_game) ~update
 
         let get_elo = fun ~(request : Dream.request) ~(user_id : string) ~(type_game : string) : Domain.User.EloInfo.t Lwt.t ->
             try%lwt

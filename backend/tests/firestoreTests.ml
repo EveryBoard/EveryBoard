@@ -8,17 +8,14 @@ type call =
     | DeleteGame of string
     | UpdateGame of string * JSON.t
     | AddEvent of string * JSON.t
-
     | CreateConfigRoom of string * JSON.t
     | DeleteConfigRoom of string
     | AddCandidate of string * Domain.MinimalUser.t
     | RemoveCandidate of string * string
     | UpdateConfigRoom of string * JSON.t
     | AcceptConfig of string
-
     | CreateChat of string
     | DeleteChat of string
-
     | UpdateElo of string * string * JSON.t
 [@@deriving show]
 
@@ -198,13 +195,13 @@ let tests = [
     "Firestore.User.update_elo", [
         lwt_test "should update/create an elo document when no elo" (fun () ->
             let request : Dream.request = Dream.request "/" in
-            FirestorePrimitivesTests.Mock.created_docs := [];
+            FirestorePrimitivesTests.Mock.created_docs := []; (* TODO FOR REVIEW: c'pas dégoldur que ceci ne soit pas fait automatiquement, ça a ça place dans du afterEach/beforeEach ça *)
 
-            (* Given an event we want to create in a game *)
+            (* Given a player who had never played a game and win one *)
             let type_game : string = "P4" in
             let user : Domain.MinimalUser.t = Domain.User.to_minimal_user "uid" verified_user in
             let user_id : string = user.id in
-            let new_elo : Domain.User.EloInfo.t = DomainTests.first_game_is_won in
+            let new_elo : Domain.User.EloInfo.t = DomainTests.elo_result_after_first_game_is_won in
 
             (* When calling update_elo *)
             let* _ = Firestore.User.update_elo ~request ~user_id ~type_game ~new_elo in
@@ -223,7 +220,7 @@ let tests = [
             let request : Dream.request = Dream.request "/" in
             FirestorePrimitivesTests.Mock.updated_docs := [];
 
-            (* Given an pair user/type_game not linked to an elo *)
+            (* Given a user/type_game not linked to an elo *)
             let type_game : string = "P4" in
             let user : Domain.MinimalUser.t = Domain.User.to_minimal_user "uid" verified_user in
             let user_id : string = user.id in
@@ -232,7 +229,7 @@ let tests = [
             let* initial_elo : Domain.User.EloInfo.t = Firestore.User.get_elo ~request ~user_id ~type_game in
             let json_actual : JSON.t = Domain.User.EloInfo.to_yojson initial_elo in
 
-            (* Then it should have created no elo document and return initial value *)
+            (* Then it should not have created no elo document and it should return initial value *)
             let updated = !FirestorePrimitivesTests.Mock.updated_docs in
             let json_expected : JSON.t = Domain.User.EloInfo.to_yojson Domain.User.EloInfo.empty in
             check (list (pair string json_eq)) "updates" [] updated;
@@ -244,8 +241,8 @@ let tests = [
             let request : Dream.request = Dream.request "/" in
             FirestorePrimitivesTests.Mock.updated_docs := [];
 
-            (* Given an pair user/type_game not linked to an existing elo document *)
-            FirestorePrimitivesTests.Mock.doc_to_return := Some (Domain.User.EloInfo.to_yojson DomainTests.first_game_is_won);
+            (* Given a pair user/type_game not linked to an existing elo document *)
+            FirestorePrimitivesTests.Mock.doc_to_return := Some (Domain.User.EloInfo.to_yojson DomainTests.elo_result_after_first_game_is_won);
             let type_game : string = "P4" in
             let user : Domain.MinimalUser.t = Domain.User.to_minimal_user "uid" verified_user in
             let user_id : string = user.id in
@@ -254,9 +251,9 @@ let tests = [
             let* initial_elo : Domain.User.EloInfo.t = Firestore.User.get_elo ~request ~user_id ~type_game in
             let json_actual : JSON.t = Domain.User.EloInfo.to_yojson initial_elo in
 
-            (* Then it should have created no elo document and return initial value *)
+            (* Then it should have created no elo document and it should return initial value *)
             let updated = !FirestorePrimitivesTests.Mock.updated_docs in
-            let json_expected : JSON.t = Domain.User.EloInfo.to_yojson DomainTests.first_game_is_won in
+            let json_expected : JSON.t = Domain.User.EloInfo.to_yojson DomainTests.elo_result_after_first_game_is_won in
             check (list (pair string json_eq)) "updates" [] updated;
             check json_eq "should be initial value" json_expected json_actual;
             Lwt.return ()

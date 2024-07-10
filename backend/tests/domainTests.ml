@@ -48,17 +48,17 @@ let another_user : User.t = {
     current_game = None;
 }
 
-let first_game_is_lost : User.EloInfo.t = {
+let elo_result_after_first_game_is_lost : User.EloInfo.t = {
     current_elo = 1.0;
     number_of_games_played = 1;
 }
 
-let first_game_is_won : User.EloInfo.t = {
+let elo_result_after_first_game_is_won : User.EloInfo.t = {
     current_elo = 30.0;
     number_of_games_played = 1;
 }
 
-let first_game_is_draw : User.EloInfo.t = {
+let elo_result_after_first_game_is_draw : User.EloInfo.t = {
     current_elo = 1.0;
     number_of_games_played = 1;
 }

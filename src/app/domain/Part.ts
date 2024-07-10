@@ -7,7 +7,7 @@ import { GameInfo } from '../components/normal-component/pick-game/pick-game.com
 export type Part = {
     readonly typeGame: string; // the type of game
     readonly playerZero: MinimalUser; // the first player
-    readonly playerZeroElo: number, // the elo of the first player at the beginning of the part
+    readonly playerZeroElo: number; // the elo of the first player at the beginning of the game
     readonly turn: number; // -1 means the part has not started, 0 is the initial turn
     readonly result: IMGPResult;
 

@@ -12,9 +12,9 @@ let elo_info_pair_eq : Elo.EloInfoPair.t testable =
 
   let tests = [
 
-    "EloCalculationService", [
-        test "first part should end in 30-1 when player zero wins" (fun () ->
-            (* Given an entry of two first-playing users and player zero won *)
+    "EloCalculation", [
+        test "first game should end in 30-1 when player zero wins" (fun () ->
+            (* Given an entry of two first-playing users and a player zero who won *)
             let elo_entry : Elo.EloEntry.t = {
                 elo_info_pair = {
                     player_zero_info = {
@@ -27,7 +27,12 @@ let elo_info_pair_eq : Elo.EloInfoPair.t testable =
                     };
                 };
                 winner = Player Zero;
-            } in
+                } in
+
+            (* When evaluating it *)
+            let actual_info_pair : Elo.EloInfoPair.t = Elo.CalculationService.new_elos elo_entry in
+
+            (* Then it should give 1 symbolic point to losers for their first game and 30 to winners *)
             let expected_info_pair : Elo.EloInfoPair.t = {
                 player_zero_info = {
                     current_elo = 30.0;
@@ -38,15 +43,10 @@ let elo_info_pair_eq : Elo.EloInfoPair.t testable =
                     number_of_games_played = 1;
                 };
             } in
-
-            (* When evaluating it *)
-            let actual_info_pair : Elo.EloInfoPair.t = Elo.CalculationService.new_elos elo_entry in
-
-            (* Then it should give 1 symbolic point to losers for their first game and 30 to winners *)
             check elo_info_pair_eq "success" expected_info_pair actual_info_pair
         );
 
-        test "first part should end in 1-30 when player one wins" (fun () ->
+        test "first game should end in 1-30 when player one wins" (fun () ->
             (* Given an entry of two first-playing users and player one won *)
             let elo_entry : Elo.EloEntry.t = {
                 elo_info_pair = {
@@ -61,6 +61,11 @@ let elo_info_pair_eq : Elo.EloInfoPair.t testable =
                 };
                 winner = Player One;
             } in
+
+            (* When evaluating it *)
+            let actual_info_pair : Elo.EloInfoPair.t = Elo.CalculationService.new_elos elo_entry in
+
+            (* Then it should give 1 symbolic point to losers for their first game and 30 to winners *)
             let expected_info_pair : Elo.EloInfoPair.t = {
                 player_zero_info = {
                     current_elo = 1.0;
@@ -71,15 +76,10 @@ let elo_info_pair_eq : Elo.EloInfoPair.t testable =
                     number_of_games_played = 1;
                 };
             } in
-
-            (* When evaluating it *)
-            let actual_info_pair : Elo.EloInfoPair.t = Elo.CalculationService.new_elos elo_entry in
-
-            (* Then it should give 1 symbolic point to losers for their first game and 30 to winners *)
             check elo_info_pair_eq "success" expected_info_pair actual_info_pair
         );
 
-        test "second part should end in in 1-57 when player zero wins again" (fun () ->
+        test "second game should end in in 1-57 when player zero wins again" (fun () ->
             (* Given an entry of two second player that just fought each other *)
             let elo_entry : Elo.EloEntry.t = {
                 elo_info_pair = {
@@ -94,6 +94,11 @@ let elo_info_pair_eq : Elo.EloInfoPair.t testable =
                 };
                 winner = Player Zero;
             } in
+
+            (* When evaluating it *)
+            let actual_info_pair : Elo.EloInfoPair.t = Elo.CalculationService.new_elos elo_entry in
+
+            (* Then it should give no point to loser and a bit less than 30 points to winner *)
             let expected_info_pair : Elo.EloInfoPair.t = {
                 player_zero_info = {
                     current_elo = 57.50173783711419;
@@ -105,15 +110,11 @@ let elo_info_pair_eq : Elo.EloInfoPair.t testable =
                 };
             } in
 
-            (* When evaluating it *)
-            let actual_info_pair : Elo.EloInfoPair.t = Elo.CalculationService.new_elos elo_entry in
-
-            (* Then it should give no point to loser and a bit less than 30 points to winner *)
             check elo_info_pair_eq "success" expected_info_pair actual_info_pair
         );
 
-        test "part should make win only 20 points between 20th game and 39th included" (fun () ->
-            (* Given an entry of of equal level player having played between 20 and 39 parts *)
+        test "victory should give only 20 points between 20th game and 39th included" (fun () ->
+            (* Given an entry of equal level player having played between 20 and 39 games *)
             let elo_entry : Elo.EloEntry.t = {
                 elo_info_pair = {
                     player_zero_info = {
@@ -127,6 +128,11 @@ let elo_info_pair_eq : Elo.EloInfoPair.t testable =
                 };
                 winner = Player Zero;
             } in
+
+            (* When evaluating it *)
+            let actual_info_pair : Elo.EloInfoPair.t = Elo.CalculationService.new_elos elo_entry in
+
+            (* Then it should add and remove 20 points to players *)
             let expected_info_pair : Elo.EloInfoPair.t = {
                 player_zero_info = {
                     current_elo = 220.0;
@@ -138,15 +144,11 @@ let elo_info_pair_eq : Elo.EloInfoPair.t testable =
                 };
             } in
 
-            (* When evaluating it *)
-            let actual_info_pair : Elo.EloInfoPair.t = Elo.CalculationService.new_elos elo_entry in
-
-            (* Then it should add and remove 20 points to players *)
             check elo_info_pair_eq "success" expected_info_pair actual_info_pair
         );
 
-        test "part should make win only 10 points 40th part" (fun () ->
-            (* Given an entry of of equal level player having played between 20 and 39 parts *)
+        test "victory should give only 10 points 40th game" (fun () ->
+            (* Given an entry of equal level player having played between 20 and 39 games *)
             let elo_entry : Elo.EloEntry.t = {
                 elo_info_pair = {
                     player_zero_info = {
@@ -160,6 +162,11 @@ let elo_info_pair_eq : Elo.EloInfoPair.t testable =
                 };
                 winner = Player Zero;
             } in
+
+            (* When evaluating it *)
+            let actual_info_pair : Elo.EloInfoPair.t = Elo.CalculationService.new_elos elo_entry in
+
+            (* Then it should add and remove 20 points to players *)
             let expected_info_pair : Elo.EloInfoPair.t = {
                 player_zero_info = {
                     current_elo = 210.0;
@@ -171,14 +178,10 @@ let elo_info_pair_eq : Elo.EloInfoPair.t testable =
                 };
             } in
 
-            (* When evaluating it *)
-            let actual_info_pair : Elo.EloInfoPair.t = Elo.CalculationService.new_elos elo_entry in
-
-            (* Then it should add and remove 20 points to players *)
             check elo_info_pair_eq "success" expected_info_pair actual_info_pair
         );
 
-        test "should not drop players elo below 100" (fun () ->
+        test "should not decrease players elo below 100" (fun () ->
             (* Given an entry of two player with 105 elo *)
             let elo_entry : Elo.EloEntry.t = {
                 elo_info_pair = {
@@ -193,6 +196,11 @@ let elo_info_pair_eq : Elo.EloInfoPair.t testable =
                 };
                 winner = Player Zero;
             } in
+
+            (* When evaluating it *)
+            let actual_info_pair : Elo.EloInfoPair.t = Elo.CalculationService.new_elos elo_entry in
+
+            (* Then it should remove only 5 points to looser so that its elo does not decrease below 105 *)
             let expected_info_pair : Elo.EloInfoPair.t = {
                 player_zero_info = {
                     current_elo = 135.0;
@@ -204,15 +212,11 @@ let elo_info_pair_eq : Elo.EloInfoPair.t testable =
                 };
             } in
 
-            (* When evaluating it *)
-            let actual_info_pair : Elo.EloInfoPair.t = Elo.CalculationService.new_elos elo_entry in
-
-            (* Then it should remove only 5 points to looser so that its elo does not drop below 105 *)
             check elo_info_pair_eq "success" expected_info_pair actual_info_pair
         );
 
-        test "should give one symbolic first point to both drawing player as their first part" (fun () ->
-            (* Given an entry of two player with 105 elo *)
+        test "should give one symbolic first point to both drawing player as their first game" (fun () ->
+            (* Given an entry of two players at their first game, drawing *)
             let elo_entry : Elo.EloEntry.t = {
                 elo_info_pair = {
                     player_zero_info = {
@@ -226,6 +230,11 @@ let elo_info_pair_eq : Elo.EloInfoPair.t testable =
                 };
                 winner = Draw;
             } in
+
+            (* When evaluating it *)
+            let actual_info_pair : Elo.EloInfoPair.t = Elo.CalculationService.new_elos elo_entry in
+
+            (* Then it should give one symbolic elo to both *)
             let expected_info_pair : Elo.EloInfoPair.t = {
                 player_zero_info = {
                     current_elo = 1.0;
@@ -237,10 +246,6 @@ let elo_info_pair_eq : Elo.EloInfoPair.t testable =
                 };
             } in
 
-            (* When evaluating it *)
-            let actual_info_pair : Elo.EloInfoPair.t = Elo.CalculationService.new_elos elo_entry in
-
-            (* Then it should remove only 5 points to looser so that its elo does not drop below 105 *)
             check elo_info_pair_eq "success" expected_info_pair actual_info_pair
         );
 

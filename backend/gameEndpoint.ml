@@ -114,17 +114,19 @@ module Make
         let* _ = Firestore.User.update_elo ~request ~user_id:game_player_one_id ~type_game:game.type_game ~new_elo:new_elo_one in
         Lwt.return ()
 
+    (* Performs 2 reads and 2 writes *)
     let end_game_elo_update_win = fun ~(request : Dream.request) ~(game : Domain.Game.t) ~(winner : MinimalUser.t) : unit Lwt.t ->
         let winner_enum : Elo.Winner.t =
             if winner = game.player_zero then Player Zero
             else Player One in
         end_game_elo_update ~request ~game ~winner_enum
 
+    (* Performs 2 reads and 2 writes *)
     let end_game_elo_update_draw = fun ~(request : Dream.request) ~(game : Domain.Game.t): unit Lwt.t ->
         let winner_enum : Elo.Winner.t = Draw in
         end_game_elo_update ~request ~game ~winner_enum
 
-    (** Resign from a game. Perform 1 read and 2 writes. *)
+    (** Resign from a game. Perform 3 read and 4 writes. *)
     let resign = fun (request : Dream.request) (game_id : string) ->
         (* Read 1: retrieve the game *)
         let* game : Domain.Game.t = Firestore.Game.get ~request ~id:game_id in
@@ -143,15 +145,15 @@ module Make
             let now : int = External.now_ms () in
             let game_end = GameEvent.Action (GameEvent.Action.end_game resigner now) in
             let* _ = Firestore.Game.add_event ~request ~id:game_id ~event:game_end in
-            (* Write 3 & 4: update the elo of players *)
-            (* Read 1 & 2 *)
+            (* Read 2 & 3: reads the elos *)
+            (* Write 3 & 4: update the elos *)
             let* _ = end_game_elo_update_win ~request ~game ~winner in
             Dream.empty `OK
 
-    (** End the game by a timeout from one player. Perform 1 read and 2 writes. *)
+    (** End the game by a timeout from one player. Perform 4 read and 4 writes. *)
     let notify_timeout = fun (request : Dream.request) (game_id : string) (winner : MinimalUser.t) (loser : MinimalUser.t) ->
         Stats.end_game ();
-        (* Read 1: retrieve the game *)
+        (* Read 1: TODO FOR REVIEW : ça fait quoi ça ? j'crois que ça retrieve pas le game non non *)
         let update : Game.Updates.End.t = Game.Updates.End.get ~winner ~loser Game.GameResult.Timeout in
         (* Write 1: end the game *)
         let* _ = Firestore.Game.update ~request ~id:game_id ~update:(Game.Updates.End.to_yojson update) in
@@ -160,9 +162,10 @@ module Make
         let game_end : GameEvent.t = GameEvent.Action (GameEvent.Action.end_game requester now) in
         (* Write 2: add the end action *)
         let* _ = Firestore.Game.add_event ~request ~id:game_id ~event:game_end in
-        (* Write 3 & 4 update the elos *)
-        (* Read 2 & 3 & 4 *)
+        (* Read 2: retrieve the game *)
         let* game : Domain.Game.t = Firestore.Game.get ~request ~id:game_id in
+        (* Read 3 & 4: reads the elos *)
+        (* Write 3 & 4: update the elos *)
         let* _ = end_game_elo_update_win ~request ~game ~winner in
         Dream.empty `OK
 
@@ -184,7 +187,7 @@ module Make
         let* _ = Firestore.Game.add_event ~request ~id:game_id ~event in
         Dream.empty `OK
 
-    (** Accept a draw request from the opponent. Perform 1 read and 3 writes. *)
+    (** Accept a draw request from the opponent. Perform 3 read and 5 writes. *)
     let accept_draw = fun (request : Dream.request) (game_id : string) ->
         Stats.end_game ();
         (* Read 1: retrieve the game *)
@@ -201,8 +204,8 @@ module Make
         let game_end : GameEvent.t = GameEvent.Action (GameEvent.Action.end_game user now) in
         (* Write 3: add the end event *)
         let* _ = Firestore.Game.add_event ~request ~id:game_id ~event:game_end in
-        (* Write 4 & 5 update the elos *)
-        (* Read 2 & 3 *)
+        (* Read 2 & 3: read the elos *)
+        (* Write 4 & 5: update the elos *)
         let* _ = end_game_elo_update_draw ~request ~game in
         Dream.empty `OK
 
@@ -287,7 +290,13 @@ module Make
         let* _ = Firestore.Game.update ~request ~id:game_id ~update:(Game.Updates.EndTurn.to_yojson update) in
         Dream.empty `OK
 
-    (** Similar to [move], but also ends the game. Perform 1 read and 3 writes *)
+    let call_adequat_elo_updater = fun ~(request : Dream.request) ~(game : Game.t) ~(result : Game.GameResult.t) ~(winner : MinimalUser.t option) : unit Lwt.t ->
+        if result = Game.GameResult.Victory then
+            end_game_elo_update_win ~request ~game ~winner:(Option.get winner)
+        else
+            end_game_elo_update_draw ~request ~game
+
+    (** Similar to [move], but also ends the game. Perform 3 read and 5 writes *)
     let move_and_end = fun (request : Dream.request) (game_id : string) (move : Yojson.Safe.t) ->
         Stats.new_move ();
         Stats.end_game ();
@@ -310,14 +319,9 @@ module Make
         (* Write 3: add the game end action *)
         let game_end : GameEvent.t = Domain.GameEvent.Action (Domain.GameEvent.Action.end_game user now) in
         let* _ = Firestore.Game.add_event ~request ~id:game_id ~event:game_end in
-        (* Write 4 & 5 update the elos *)
-        (* Read 2 & 3 *)
-        let* _ =
-            if result = Game.GameResult.Victory then
-                end_game_elo_update_win ~request ~game ~winner:(Option.get winner)
-            else
-                end_game_elo_update_draw ~request ~game
-            in
+        (* Read 2 & 3: read the elos *)
+        (* Write 4 & 5: update the elos *)
+        let* _ = call_adequat_elo_updater ~request ~game ~result ~winner in
         Dream.empty `OK
 
     let change : Dream.route = Dream.post "game/:game_id" @@ fun request ->

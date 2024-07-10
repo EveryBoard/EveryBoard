@@ -410,7 +410,7 @@ describe('LobbyComponent', () => {
         // Given a server with an existing part
         setLobbyPartList([new PartDocument('started', {
             ...PartMocks.STARTED,
-            typeGame: 'P4', // A game whose name is different from "type game"
+            typeGame: 'P4', // A game whose name is different from their URL name
         })]);
 
         // When displaying it
@@ -426,7 +426,7 @@ describe('LobbyComponent', () => {
         // Given a server with an existing part
         setLobbyPartList([new PartDocument('started', {
             ...PartMocks.STARTED,
-            typeGame: 'P4', // A game whose name is different from "type game"
+            typeGame: 'P4', // A game whose name is different from their URL name
             playerZeroElo: 12.67865,
         })]);
 

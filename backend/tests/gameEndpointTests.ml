@@ -211,13 +211,13 @@ let tests = [
             let loser : MinimalUser.t = DomainTests.a_minimal_user in
             let end_game : Yojson.Safe.t = Game.Updates.End.to_yojson (Game.Updates.End.get ~winner ~loser Game.GameResult.Resign) in
             let end_game_event = GameEvent.(to_yojson (Action (Action.end_game DomainTests.a_minimal_user (now * 1000)))) in
-            let first_game_is_lost : JSON.t = Domain.User.EloInfo.to_yojson DomainTests.first_game_is_lost in
-            let first_game_is_won : JSON.t = Domain.User.EloInfo.to_yojson DomainTests.first_game_is_won in
+            let elo_result_after_first_game_is_lost : JSON.t = Domain.User.EloInfo.to_yojson DomainTests.elo_result_after_first_game_is_lost in
+            let elo_result_after_first_game_is_won : JSON.t = Domain.User.EloInfo.to_yojson DomainTests.elo_result_after_first_game_is_won in
             let expected = [
                 FirestoreTests.UpdateGame (game_id, end_game);
                 FirestoreTests.AddEvent (game_id, end_game_event);
-                FirestoreTests.UpdateElo (loser.id, type_game, first_game_is_lost);
-                FirestoreTests.UpdateElo (winner.id, type_game, first_game_is_won);
+                FirestoreTests.UpdateElo (loser.id, type_game, elo_result_after_first_game_is_lost);
+                FirestoreTests.UpdateElo (winner.id, type_game, elo_result_after_first_game_is_won);
             ] in
             check (list FirestoreTests.call) "calls" expected !FirestoreTests.Mock.calls;
             Lwt.return ()
@@ -249,13 +249,13 @@ let tests = [
             let loser : MinimalUser.t = DomainTests.a_minimal_user in
             let end_game = Game.Updates.End.to_yojson (Game.Updates.End.get ~winner ~loser Game.GameResult.Resign) in
             let end_game_event = GameEvent.to_yojson (GameEvent.Action (GameEvent.Action.end_game DomainTests.a_minimal_user (now * 1000))) in
-            let first_game_is_lost : JSON.t = Domain.User.EloInfo.to_yojson DomainTests.first_game_is_lost in
-            let first_game_is_won : JSON.t = Domain.User.EloInfo.to_yojson DomainTests.first_game_is_won in
+            let elo_result_after_first_game_is_lost : JSON.t = Domain.User.EloInfo.to_yojson DomainTests.elo_result_after_first_game_is_lost in
+            let elo_result_after_first_game_is_won : JSON.t = Domain.User.EloInfo.to_yojson DomainTests.elo_result_after_first_game_is_won in
             let expected = [
                 FirestoreTests.UpdateGame (game_id, end_game);
                 FirestoreTests.AddEvent (game_id, end_game_event);
-                FirestoreTests.UpdateElo (loser.id, type_game, first_game_is_lost);
-                FirestoreTests.UpdateElo (winner.id, type_game, first_game_is_won);
+                FirestoreTests.UpdateElo (loser.id, type_game, elo_result_after_first_game_is_lost);
+                FirestoreTests.UpdateElo (winner.id, type_game, elo_result_after_first_game_is_won);
             ] in
             check (list FirestoreTests.call) "calls" expected !FirestoreTests.Mock.calls;
             Lwt.return ()
@@ -287,13 +287,13 @@ let tests = [
             let loser : MinimalUser.t = DomainTests.a_minimal_user in
             let end_game : Yojson.Safe.t = Game.Updates.End.to_yojson (Game.Updates.End.get ~winner ~loser Game.GameResult.Resign) in
             let end_game_event = GameEvent.(to_yojson (Action (Action.end_game DomainTests.a_minimal_user (now * 1000)))) in
-            let first_game_is_lost : JSON.t = Domain.User.EloInfo.to_yojson DomainTests.first_game_is_lost in
-            let first_game_is_won : JSON.t = Domain.User.EloInfo.to_yojson DomainTests.first_game_is_won in
+            let elo_result_after_first_game_is_lost : JSON.t = Domain.User.EloInfo.to_yojson DomainTests.elo_result_after_first_game_is_lost in
+            let elo_result_after_first_game_is_won : JSON.t = Domain.User.EloInfo.to_yojson DomainTests.elo_result_after_first_game_is_won in
             let expected = [
                 FirestoreTests.UpdateGame (game_id, end_game);
                 FirestoreTests.AddEvent (game_id, end_game_event);
-                FirestoreTests.UpdateElo (winner.id, type_game, first_game_is_won);
-                FirestoreTests.UpdateElo (loser.id, type_game, first_game_is_lost);
+                FirestoreTests.UpdateElo (winner.id, type_game, elo_result_after_first_game_is_won);
+                FirestoreTests.UpdateElo (loser.id, type_game, elo_result_after_first_game_is_lost);
             ] in
             check (list FirestoreTests.call) "calls" expected !FirestoreTests.Mock.calls;
             Lwt.return ()
@@ -349,13 +349,13 @@ let tests = [
             check status "response status" `OK (Dream.status result);
             let end_game : Yojson.Safe.t = Game.Updates.End.to_yojson (Game.Updates.End.get ~winner ~loser Game.GameResult.Timeout) in
             let end_game_event : JSON.t = GameEvent.to_yojson (GameEvent.Action (GameEvent.Action.end_game DomainTests.a_minimal_user (now * 1000))) in
-            let first_game_is_lost : JSON.t = Domain.User.EloInfo.to_yojson DomainTests.first_game_is_lost in
-            let first_game_is_won : JSON.t = Domain.User.EloInfo.to_yojson DomainTests.first_game_is_won in
+            let elo_result_after_first_game_is_lost : JSON.t = Domain.User.EloInfo.to_yojson DomainTests.elo_result_after_first_game_is_lost in
+            let elo_result_after_first_game_is_won : JSON.t = Domain.User.EloInfo.to_yojson DomainTests.elo_result_after_first_game_is_won in
             let expected = [
                 FirestoreTests.UpdateGame (game_id, end_game);
                 FirestoreTests.AddEvent (game_id, end_game_event);
-                FirestoreTests.UpdateElo (loser.id, type_game, first_game_is_lost);
-                FirestoreTests.UpdateElo (winner.id, type_game, first_game_is_won);
+                FirestoreTests.UpdateElo (loser.id, type_game, elo_result_after_first_game_is_lost);
+                FirestoreTests.UpdateElo (winner.id, type_game, elo_result_after_first_game_is_won);
             ] in
             check (list FirestoreTests.call) "calls" expected !FirestoreTests.Mock.calls;
             Lwt.return ()
@@ -452,13 +452,13 @@ let tests = [
             let accept_event = GameEvent.(to_yojson (Reply (Reply.make DomainTests.a_minimal_user "Accept" "Draw" (now * 1000)))) in
             let update = Game.Updates.End.(to_yojson (get (Game.GameResult.AgreedDrawBy Player.Zero))) in
             let end_game_event = GameEvent.(to_yojson (Action (Action.end_game DomainTests.a_minimal_user (now * 1000)))) in
-            let first_game_is_draw : JSON.t = Domain.User.EloInfo.to_yojson DomainTests.first_game_is_draw in
+            let elo_result_after_first_game_is_draw : JSON.t = Domain.User.EloInfo.to_yojson DomainTests.elo_result_after_first_game_is_draw in
             let expected = [
                 FirestoreTests.AddEvent (game_id, accept_event);
                 FirestoreTests.UpdateGame (game_id, update);
                 FirestoreTests.AddEvent (game_id, end_game_event);
-                FirestoreTests.UpdateElo (DomainTests.a_minimal_user.id, type_game, first_game_is_draw);
-                FirestoreTests.UpdateElo (DomainTests.another_minimal_user.id, type_game, first_game_is_draw);
+                FirestoreTests.UpdateElo (DomainTests.a_minimal_user.id, type_game, elo_result_after_first_game_is_draw);
+                FirestoreTests.UpdateElo (DomainTests.another_minimal_user.id, type_game, elo_result_after_first_game_is_draw);
             ] in
             check (list FirestoreTests.call) "calls" expected !FirestoreTests.Mock.calls;
             Lwt.return ()
@@ -489,13 +489,13 @@ let tests = [
             let accept_event = GameEvent.(to_yojson (Reply (Reply.make DomainTests.a_minimal_user "Accept" "Draw" (now * 1000)))) in
             let update = Game.Updates.End.(to_yojson (get (Game.GameResult.AgreedDrawBy Player.One))) in
             let end_game_event = GameEvent.(to_yojson (Action (Action.end_game DomainTests.a_minimal_user (now * 1000)))) in
-            let first_game_is_draw : JSON.t = Domain.User.EloInfo.to_yojson DomainTests.first_game_is_draw in
+            let elo_result_after_first_game_is_draw : JSON.t = Domain.User.EloInfo.to_yojson DomainTests.elo_result_after_first_game_is_draw in
             let expected = [
                 FirestoreTests.AddEvent (game_id, accept_event);
                 FirestoreTests.UpdateGame (game_id, update);
                 FirestoreTests.AddEvent (game_id, end_game_event);
-                FirestoreTests.UpdateElo (DomainTests.another_minimal_user.id, type_game, first_game_is_draw);
-                FirestoreTests.UpdateElo (DomainTests.a_minimal_user.id, type_game, first_game_is_draw);
+                FirestoreTests.UpdateElo (DomainTests.another_minimal_user.id, type_game, elo_result_after_first_game_is_draw);
+                FirestoreTests.UpdateElo (DomainTests.a_minimal_user.id, type_game, elo_result_after_first_game_is_draw);
             ] in
             check (list FirestoreTests.call) "calls" expected !FirestoreTests.Mock.calls;
             Lwt.return ()
@@ -1028,13 +1028,13 @@ let tests = [
             let update = Game.Updates.EndWithMove.(to_yojson (get Game.GameResult.HardDraw 1)) in
             let move_event : JSON.t = GameEvent.to_yojson (GameEvent.Move (GameEvent.Move.of_json DomainTests.a_minimal_user move (now * 1000))) in
             let end_game : JSON.t = GameEvent.to_yojson (GameEvent.Action (GameEvent.Action.end_game DomainTests.a_minimal_user (now * 1000))) in
-            let first_game_is_draw : JSON.t = Domain.User.EloInfo.to_yojson DomainTests.first_game_is_draw in
+            let elo_result_after_first_game_is_draw : JSON.t = Domain.User.EloInfo.to_yojson DomainTests.elo_result_after_first_game_is_draw in
             let expected = [
                 FirestoreTests.AddEvent (game_id, move_event);
                 FirestoreTests.UpdateGame (game_id, update);
                 FirestoreTests.AddEvent (game_id, end_game);
-                FirestoreTests.UpdateElo (DomainTests.a_minimal_user.id, type_game, first_game_is_draw);
-                FirestoreTests.UpdateElo (DomainTests.another_minimal_user.id, type_game, first_game_is_draw);
+                FirestoreTests.UpdateElo (DomainTests.a_minimal_user.id, type_game, elo_result_after_first_game_is_draw);
+                FirestoreTests.UpdateElo (DomainTests.another_minimal_user.id, type_game, elo_result_after_first_game_is_draw);
             ] in
             check (list FirestoreTests.call) "calls" expected !FirestoreTests.Mock.calls;
             Lwt.return ()
@@ -1070,14 +1070,14 @@ let tests = [
             let update = Game.Updates.EndWithMove.(to_yojson (get ~winner ~loser Game.GameResult.Victory 1)) in
             let move_event : JSON.t = GameEvent.to_yojson (GameEvent.Move (GameEvent.Move.of_json DomainTests.a_minimal_user move (now * 1000))) in
             let end_game : JSON.t = GameEvent.to_yojson (GameEvent.Action (GameEvent.Action.end_game DomainTests.a_minimal_user (now * 1000))) in
-            let first_game_is_lost : JSON.t = Domain.User.EloInfo.to_yojson DomainTests.first_game_is_lost in
-            let first_game_is_won : JSON.t = Domain.User.EloInfo.to_yojson DomainTests.first_game_is_won in
+            let elo_result_after_first_game_is_lost : JSON.t = Domain.User.EloInfo.to_yojson DomainTests.elo_result_after_first_game_is_lost in
+            let elo_result_after_first_game_is_won : JSON.t = Domain.User.EloInfo.to_yojson DomainTests.elo_result_after_first_game_is_won in
             let expected = [
                 FirestoreTests.AddEvent (game_id, move_event);
                 FirestoreTests.UpdateGame (game_id, update);
                 FirestoreTests.AddEvent (game_id, end_game);
-                FirestoreTests.UpdateElo (DomainTests.a_minimal_user.id, type_game, first_game_is_won);
-                FirestoreTests.UpdateElo (DomainTests.another_minimal_user.id, type_game, first_game_is_lost);
+                FirestoreTests.UpdateElo (DomainTests.a_minimal_user.id, type_game, elo_result_after_first_game_is_won);
+                FirestoreTests.UpdateElo (DomainTests.another_minimal_user.id, type_game, elo_result_after_first_game_is_lost);
             ] in
             check (list FirestoreTests.call) "calls" expected !FirestoreTests.Mock.calls;
             Lwt.return ()
@@ -1113,14 +1113,14 @@ let tests = [
             let update = Game.Updates.EndWithMove.(to_yojson (get ~winner ~loser Game.GameResult.Victory 1)) in
             let move_event : JSON.t = GameEvent.to_yojson (GameEvent.Move (GameEvent.Move.of_json DomainTests.a_minimal_user move (now * 1000))) in
             let end_game : JSON.t = GameEvent.to_yojson (GameEvent.Action (GameEvent.Action.end_game DomainTests.a_minimal_user (now * 1000))) in
-            let first_game_is_lost : JSON.t = Domain.User.EloInfo.to_yojson DomainTests.first_game_is_lost in
-            let first_game_is_won : JSON.t = Domain.User.EloInfo.to_yojson DomainTests.first_game_is_won in
+            let elo_result_after_first_game_is_lost : JSON.t = Domain.User.EloInfo.to_yojson DomainTests.elo_result_after_first_game_is_lost in
+            let elo_result_after_first_game_is_won : JSON.t = Domain.User.EloInfo.to_yojson DomainTests.elo_result_after_first_game_is_won in
             let expected = [
                 FirestoreTests.AddEvent (game_id, move_event);
                 FirestoreTests.UpdateGame (game_id, update);
                 FirestoreTests.AddEvent (game_id, end_game);
-                FirestoreTests.UpdateElo (DomainTests.a_minimal_user.id, type_game, first_game_is_lost);
-                FirestoreTests.UpdateElo (DomainTests.another_minimal_user.id, type_game, first_game_is_won);
+                FirestoreTests.UpdateElo (DomainTests.a_minimal_user.id, type_game, elo_result_after_first_game_is_lost);
+                FirestoreTests.UpdateElo (DomainTests.another_minimal_user.id, type_game, elo_result_after_first_game_is_won);
             ] in
             check (list FirestoreTests.call) "calls" expected !FirestoreTests.Mock.calls;
             Lwt.return ()
@@ -1159,14 +1159,14 @@ let tests = [
             let update = Game.Updates.EndWithMove.(to_yojson (get ~winner ~loser ~scores Game.GameResult.Victory 1)) in
             let move_event : JSON.t = GameEvent.to_yojson (GameEvent.Move (GameEvent.Move.of_json DomainTests.a_minimal_user move (now * 1000))) in
             let end_game : JSON.t = GameEvent.to_yojson (GameEvent.Action (GameEvent.Action.end_game DomainTests.a_minimal_user (now * 1000))) in
-            let first_game_is_lost : JSON.t = Domain.User.EloInfo.to_yojson DomainTests.first_game_is_lost in
-            let first_game_is_won : JSON.t = Domain.User.EloInfo.to_yojson DomainTests.first_game_is_won in
+            let elo_result_after_first_game_is_lost : JSON.t = Domain.User.EloInfo.to_yojson DomainTests.elo_result_after_first_game_is_lost in
+            let elo_result_after_first_game_is_won : JSON.t = Domain.User.EloInfo.to_yojson DomainTests.elo_result_after_first_game_is_won in
             let expected = [
                 FirestoreTests.AddEvent (game_id, move_event);
                 FirestoreTests.UpdateGame (game_id, update);
                 FirestoreTests.AddEvent (game_id, end_game);
-                FirestoreTests.UpdateElo (DomainTests.a_minimal_user.id, type_game, first_game_is_won);
-                FirestoreTests.UpdateElo (DomainTests.another_minimal_user.id, type_game, first_game_is_lost);
+                FirestoreTests.UpdateElo (DomainTests.a_minimal_user.id, type_game, elo_result_after_first_game_is_won);
+                FirestoreTests.UpdateElo (DomainTests.another_minimal_user.id, type_game, elo_result_after_first_game_is_lost);
             ] in
             check (list FirestoreTests.call) "calls" expected !FirestoreTests.Mock.calls;
             Lwt.return ()

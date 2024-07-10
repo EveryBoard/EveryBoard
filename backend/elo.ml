@@ -78,10 +78,9 @@ module CalculationService = struct
             else if old_elo +. normal_elo_difference < 100.0 then
                 100.0 (* not dropping below 100 elo *)
             else
-                old_elo +. normal_elo_difference
+                old_elo +. normal_elo_difference (* normal defeat *)
         else
-            (* when you win *)
-            old_elo +. normal_elo_difference
+            old_elo +. normal_elo_difference (* any victory *)
 
     let new_elos = fun (elo_entry : EloEntry.t) : EloInfoPair.t ->
         let normal_elo_differences : EloDifferences.t = get_normal_elo_differences elo_entry in
