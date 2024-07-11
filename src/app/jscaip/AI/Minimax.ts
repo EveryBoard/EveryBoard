@@ -10,6 +10,11 @@ import { EmptyRulesConfig, RulesConfig } from '../RulesConfigUtil';
 import { GameNode } from './GameNode';
 import { PlayerNumberTable } from '../PlayerNumberTable';
 
+type HeuristicBounds<B> = {
+    player0Max: B,
+    player1Max: B,
+}
+
 /**
  * A heuristic assigns a specific value for a node.
  * This is used for example by minimax-based AIs.
@@ -22,8 +27,8 @@ export abstract class Heuristic<M extends Move,
 {
     public abstract getBoardValue(node: GameNode<M, S>, config: MGPOptional<C>): B;
 
-    // When there exists a maximal value for a heuristic, it is useful to know it.
-    public getMaxValue(config: MGPOptional<C>): MGPOptional<B> {
+    // When there exists a minimal/maximal value for a heuristic, it is useful to know it.
+    public getBounds(_config: MGPOptional<C>): MGPOptional<HeuristicBounds<B>> {
         return MGPOptional.empty();
     }
 }

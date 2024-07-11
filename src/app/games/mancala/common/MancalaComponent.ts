@@ -371,7 +371,7 @@ export abstract class MancalaComponent<R extends MancalaRules>
         return [
             new MancalaScoreMinimax(this.rules, moveGenerator),
             new MCTS($localize`MCTS`, moveGenerator, this.rules),
-            new MCTSWithHeuristic($localize`MCTS`, moveGenerator, this.rules, new MancalaScoreHeuristic()),
+            new MCTSWithHeuristic($localize`MCTS with heuristic`, moveGenerator, this.rules, new MancalaScoreHeuristic()),
         ];
     }
 

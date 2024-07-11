@@ -37,10 +37,14 @@ implements AI<M, S, AITimeLimitOptions, C>
 
     public readonly availableOptions: AITimeLimitOptions[] = [];
 
+    // A id unique to this MCTS, used to store/retrieve cached value in nodes without clashing with other AIs
+    private readonly uniqueId: string;
+
     public constructor(public readonly name: string,
                        private readonly moveGenerator: MoveGenerator<M, S, C>,
                        private readonly rules: SuperRules<M, S, C, L>)
     {
+        this.uniqueId = Math.random().toString(36).substring(2, 8);
         for (let i: number = 1; i < 10; i++) {
             this.availableOptions.push({ name: `${i*i} seconds`, maxSeconds: i*i });
         }
@@ -125,11 +129,11 @@ implements AI<M, S, AITimeLimitOptions, C>
     }
 
     private getCounterFromCache(node: GameNode<M, S>, name: string): number {
-        const cachedValue: MGPOptional<number> = node.getCache(name);
+        const cachedValue: MGPOptional<number> = node.getCache(this.uniqueId + name);
         if (cachedValue.isPresent()) {
             return cachedValue.get();
         } else {
-            node.setCache(name, 0);
+            node.setCache(this.uniqueId + name, 0);
             return 0;
         }
     }
@@ -240,8 +244,8 @@ implements AI<M, S, AITimeLimitOptions, C>
     private addSimulationResult(node: GameNode<M, S>, winScore: number): void {
         const simulations: number = this.simulations(node) + 1;
         const wins: number = this.wins(node) + winScore;
-        node.setCache('wins', wins);
-        node.setCache('simulations', simulations);
+        node.setCache(this.uniqueId + 'wins', wins);
+        node.setCache(this.uniqueId + 'simulations', simulations);
     }
 
     public getInfo(node: GameNode<M, S>): string {

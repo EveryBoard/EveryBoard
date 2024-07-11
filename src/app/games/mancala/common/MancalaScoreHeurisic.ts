@@ -14,9 +14,13 @@ export class MancalaScoreHeuristic extends PlayerMetricHeuristic<MancalaMove, Ma
         return node.gameState.getScoresCopy().toTable();
     }
 
-    public override getMaxValue(config: MGPOptional<MancalaConfig>): MGPOptional<BoardValue> {
+    public override getBounds(config: MGPOptional<MancalaConfig>): MGPOptional<{min: BoardValue, max: BoardValue}> {
         const maxScore: number = config.get().width * config.get().seedsByHouse;
-        return MGPOptional.of(BoardValue.ofMultiple([maxScore], [maxScore]));
+        return MGPOptional.of({
+            // TODO: maybe rename player0 max and player1 max
+            min: BoardValue.ofSingle(maxScore, 0),
+            max: BoardValue.ofSingle(0, maxScore),
+        });
     }
 
 }
