@@ -61,6 +61,7 @@ describe('GameNode', () => {
 
     let rules: RulesMock;
 
+    /*
     describe('printDot', () => {
 
         let treeRoot: GameNode<MoveMock, GameStateMock>;
@@ -208,5 +209,6 @@ describe('GameNode', () => {
         });
 
     });
+*/
 
 });

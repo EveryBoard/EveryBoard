@@ -3,14 +3,14 @@ import { ActivatedRoute, Router } from '@angular/router';
 
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 
-import { AbstractNode, GameNodeStats } from 'src/app/jscaip/AI/GameNode';
+import { AbstractNode, GameNode, GameNodeStats } from 'src/app/jscaip/AI/GameNode';
 import { ConnectedUserService } from 'src/app/services/ConnectedUserService';
 import { GameWrapper } from 'src/app/components/wrapper-components/GameWrapper';
 import { Move } from 'src/app/jscaip/Move';
 import { MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 import { GameState } from 'src/app/jscaip/state/GameState';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
-import { Player } from 'src/app/jscaip/Player';
+import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { Debug } from 'src/app/utils/Debug';
 import { RulesConfig, RulesConfigUtils } from 'src/app/jscaip/RulesConfigUtil';
@@ -328,4 +328,27 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
     public displayAIInfo(): boolean {
         return localStorage.getItem('displayAIInfo') === 'true';
     }
+
+    public viewTreeFromCurrentNode(): void {
+        this.viewTreeFrom(this.gameComponent.node);
+    }
+
+    public viewTreeFromPreviousNode(): void {
+        // Useful to explain why an AI has selected a particular node
+        this.viewTreeFrom(this.gameComponent.node.parent.get());
+    }
+
+    private viewTreeFrom(node: GameNode<Move, GameState>): void {
+        // We will annotate the trees with data from MCTS
+        function mctsLabel(nodeToLabel: GameNode<Move, GameState>): string {
+            const wins: number = nodeToLabel.getCache('wins').getOrElse(0) as number;
+            const simulations: number = nodeToLabel.getCache('simulations').getOrElse(0) as number;
+            return `${wins}/${simulations} = ${Math.round(wins/simulations * 100)}%`;
+        }
+        const result: { dot: string, nextId: number, winner: PlayerOrNone} =
+            node.showDot(this.gameComponent.rules, this.rulesConfig, mctsLabel, 1);
+        // Shows the graph on an online tool by opening a new tab
+        window.open('https://dreampuf.github.io/GraphvizOnline/#' + encodeURI(result.dot));
+    }
+
 }
