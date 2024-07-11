@@ -18,38 +18,41 @@
                    class="title"
                    i18n>Draw</p>
             </div>
-            <div *ngFor="let player of ArrayUtils.range(2)"
-                 class="px-2 py-4 mb-4 player{{ player }}-bg">
-                <p class="mb-2 subtitle player{{ player }}-fg" i18n>Player {{ player+1 }}</p>
+            <div *ngFor="let player of [Player.of(0), Player.of(1)]"
+                 class="px-2 py-4 mb-4"
+                 [ngClass]="player.getHTMLClass('-bg')">
+                <p class="mb-2 subtitle"
+                   [ngClass]="player.getHTMLClass('-fg')"
+                   i18n>Player {{ player.getValue()+1 }}</p>
                 <div class="select is-fullwidth">
-                    <select id="player-select-{{ player }}"
-                            (change)="updatePlayer(Player.of(player))"
-                            [(ngModel)]="playerSelection[player]">
+                    <select id="player-select-{{ player.getValue() }}"
+                            (change)="updatePlayer(player)"
+                            [(ngModel)]="playerSelection[player.getValue()]">
                         <option selected
                                 value="human" i18n>Human</option>
                         <option *ngFor="let ai of gameComponent.availableAIs"
-                                id="player-{{ player }}-ai-{{ ai.name }}"
+                                id="player-{{ player.getValue() }}-ai-{{ ai.name }}"
                                 [value]="ai.name">{{ ai.name }}</option>
                     </select>
                 </div>
-                <div *ngIf="players[player].equalsValue('human') === false"
+                <div *ngIf="players[player.getValue()].equalsValue('human') === false"
                      class="select is-fullwidth">
-                    <select id="ai-option-select-{{ player }}"
-                            [(ngModel)]="aiOptions[player]"
-                            (change)="updatePlayer(Player.of(player))">
+                    <select id="ai-option-select-{{ player.getValue() }}"
+                            [(ngModel)]="aiOptions[player.getValue()]"
+                            (change)="updatePlayer(player)">
                         <option selected
                                 value="none"
                                 i18n>Pick the options</option>
-                        <option *ngFor="let option of this.availableAIOptions(player)"
-                                id="player-{{ player }}-option-{{ option.name }}"
+                        <option *ngFor="let option of this.availableAIOptions(player.getValue())"
+                                id="player-{{ player.getValue() }}-option-{{ option.name }}"
                                 [value]="option.name"
                                 >{{ option.name }}</option>
                     </select>
                 </div>
                 <p *ngIf="gameComponent.scores.isPresent()"
-                   id="score-{{ player }}"
-                   class="player{{ player }}-fg"
-                   i18n>{{ gameComponent.scores.get().get(Player.of(player)) }} points</p>
+                   id="score-{{ player.getValue() }}"
+                   [ngClass]="player.getHTMLClass('-fg')"
+                   i18n>{{ gameComponent.scores.get().get(player) }} points</p>
             </div>
             <button *ngIf="endGame === false && gameComponent.canPass"
                     id="pass-button"

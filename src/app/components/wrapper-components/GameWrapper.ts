@@ -202,8 +202,8 @@ export abstract class GameWrapper<P extends Comparable> extends BaseWrapperCompo
         if (this.endGame) {
             return ['endgame-bg'];
         } else if (this.isPlayerTurn()) {
-            const turn: number = this.gameComponent.getTurn();
-            return ['player' + (turn % 2) + '-bg'];
+            const player: Player = this.role as Player;
+            return [player.getHTMLClass('-bg')];
         } else {
             return [];
         }
