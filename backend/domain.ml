@@ -12,13 +12,31 @@ module Player = struct
             Zero, `Int 0;
             One, `Int 1;
         ]
+
+    let opponent_of = fun (player : t) : t ->
+        match player with
+        | Zero -> One
+        | One -> Zero
+end
+
+(** It is sometimes useful to represent player maps *)
+module PlayerMap = struct
+    type 'a t = {
+        zero : 'a;
+        one : 'a;
+    }
+
+    let get = fun (map : 'a t) (player : Player.t) ->
+        match player with
+        | Zero -> map.zero
+        | One -> map.one
 end
 
 (** The role a user may have in a config-room *)
 module Role = struct
     type t = Player | Observer | Creator | ChosenOpponent | Candidate
 
-    (* Roles are represented as strings in the database *)
+    (** Roles are represented as strings in the database *)
     let (to_yojson, of_yojson) =
         JSON.for_enum [
             Player, `String "Player";
@@ -62,6 +80,8 @@ module User = struct
     let to_minimal_user = fun (uid : string) (user : t) : MinimalUser.t ->
         { id = uid; name = Option.get user.username }
 
+    (** The user contains a sub-collection containing its elo score for each game.
+        Each game therefore has an EloInfo.t *)
     module EloInfo = struct
         type t = {
             current_elo : float [@key "currentElo"];

@@ -93,7 +93,7 @@ module Make
         Dream.empty `OK
 
     (** update the elo of the two Players. Performs 2 reads and 2 writes *)
-    let end_game_elo_update = fun ~(request : Dream.request)  ~(game : Domain.Game.t) ~(winner_enum : Elo.Winner.t): unit Lwt.t ->
+    let end_game_elo_update = fun ~(request : Dream.request)  ~(game : Domain.Game.t) ~(winner : Elo.Winner.t): unit Lwt.t ->
         let type_game : string = game.type_game in
         (* Read 1: read the player zero elo *)
         let* player_zero_info : Domain.User.EloInfo.t = Firestore.User.get_elo ~request ~user_id:game.player_zero.id ~type_game in
@@ -101,13 +101,10 @@ module Make
         let game_player_one_id : string = game_player_one.id in
         (* Read 2: read the player one elo *)
         let* player_one_info : Domain.User.EloInfo.t = Firestore.User.get_elo ~request ~user_id:game_player_one_id ~type_game in
-        let elo_entry : Elo.EloEntry.t = {
-            elo_info_pair = { player_zero_info; player_one_info };
-            winner = winner_enum;
-        } in
-        let new_elos : Elo.EloInfoPair.t = Elo.CalculationService.new_elos elo_entry in
-        let new_elo_zero : Domain.User.EloInfo.t = new_elos.player_zero_info in
-        let new_elo_one : Domain.User.EloInfo.t = new_elos.player_one_info in
+        let elo_info_pair = PlayerMap.{ zero = player_zero_info; one = player_one_info } in
+        let new_elos : Elo.EloInfoPair.t = Elo.Calculation.new_elos elo_info_pair winner in
+        let new_elo_zero : Domain.User.EloInfo.t = new_elos.zero in
+        let new_elo_one : Domain.User.EloInfo.t = new_elos.one in
         (* Write 1: update the player zero elo *)
         let* _ = Firestore.User.update_elo ~request ~user_id:game.player_zero.id ~type_game:game.type_game ~new_elo:new_elo_zero in
         (* Write 2: update the player zero elo *)
@@ -117,14 +114,15 @@ module Make
     (* Performs 2 reads and 2 writes *)
     let end_game_elo_update_win = fun ~(request : Dream.request) ~(game : Domain.Game.t) ~(winner : MinimalUser.t) : unit Lwt.t ->
         let winner_enum : Elo.Winner.t =
-            if winner = game.player_zero then Player Zero
+            if winner = game.player_zero
+            then Player Zero
             else Player One in
-        end_game_elo_update ~request ~game ~winner_enum
+        end_game_elo_update ~request ~game ~winner:winner_enum
 
     (* Performs 2 reads and 2 writes *)
     let end_game_elo_update_draw = fun ~(request : Dream.request) ~(game : Domain.Game.t): unit Lwt.t ->
         let winner_enum : Elo.Winner.t = Draw in
-        end_game_elo_update ~request ~game ~winner_enum
+        end_game_elo_update ~request ~game ~winner:winner_enum
 
     (** Resign from a game. Perform 3 read and 4 writes. *)
     let resign = fun (request : Dream.request) (game_id : string) ->
