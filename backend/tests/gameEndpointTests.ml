@@ -205,50 +205,12 @@ let tests = [
             let request : Dream.request = Dream.request ~method_:`POST ~target "" in
             let* result = handler request in
 
-            (* Then it should resign from the game *)
+            (* Then it should resign from the game, end the game, and update the elos *)
             check status "response status" `OK (Dream.status result);
             let winner : MinimalUser.t = DomainTests.another_minimal_user in
             let loser : MinimalUser.t = DomainTests.a_minimal_user in
             let end_game : JSON.t = Game.Updates.End.to_yojson (Game.Updates.End.get ~winner ~loser Game.GameResult.Resign) in
             let end_game_event = GameEvent.(to_yojson (Action (Action.end_game DomainTests.a_minimal_user (now * 1000)))) in
-            let elo_result_after_first_game_is_lost : JSON.t = Domain.User.EloInfo.to_yojson DomainTests.elo_result_after_first_game_is_lost in
-            let elo_result_after_first_game_is_won : JSON.t = Domain.User.EloInfo.to_yojson DomainTests.elo_result_after_first_game_is_won in
-            let expected = [
-                FirestoreTests.UpdateGame (game_id, end_game);
-                FirestoreTests.AddEvent (game_id, end_game_event);
-                FirestoreTests.UpdateElo (loser.id, type_game, elo_result_after_first_game_is_lost);
-                FirestoreTests.UpdateElo (winner.id, type_game, elo_result_after_first_game_is_won);
-            ] in
-            check (list FirestoreTests.call) "calls" expected !FirestoreTests.Mock.calls;
-            Lwt.return ()
-        );
-
-        lwt_test "should update elo when resigning" (fun () ->
-            FirestoreTests.Mock.clear_calls ();
-            AuthTests.Mock.set DomainTests.a_minimal_user.id DomainTests.a_user;
-            let now : int = 42 in
-            let type_game : string = "P4" in
-            ExternalTests.Mock.current_time_seconds := now;
-
-            (* Given a game with an opponent *)
-            let game_id : string = "game_id" in
-            let game : Domain.Game.t = {
-                (Game.initial type_game DomainTests.a_minimal_user DomainTests.a_minimal_user_current_elo) with
-                player_one = Some DomainTests.another_minimal_user
-            } in
-            FirestoreTests.Mock.Game.set game;
-
-            (* When resigning from it *)
-            let target = Printf.sprintf "game/%s?action=resign" game_id in
-            let request : Dream.request = Dream.request ~method_:`POST ~target "" in
-            let* result = handler request in
-
-            (* Then it should resign from the game *)
-            check status "response status" `OK (Dream.status result);
-            let winner : MinimalUser.t = DomainTests.another_minimal_user in
-            let loser : MinimalUser.t = DomainTests.a_minimal_user in
-            let end_game = Game.Updates.End.to_yojson (Game.Updates.End.get ~winner ~loser Game.GameResult.Resign) in
-            let end_game_event = GameEvent.to_yojson (GameEvent.Action (GameEvent.Action.end_game DomainTests.a_minimal_user (now * 1000))) in
             let elo_result_after_first_game_is_lost : JSON.t = Domain.User.EloInfo.to_yojson DomainTests.elo_result_after_first_game_is_lost in
             let elo_result_after_first_game_is_won : JSON.t = Domain.User.EloInfo.to_yojson DomainTests.elo_result_after_first_game_is_won in
             let expected = [
@@ -281,7 +243,7 @@ let tests = [
             let request : Dream.request = Dream.request ~method_:`POST ~target "" in
             let* result = handler request in
 
-            (* Then it should resign from the game *)
+            (* Then it should resign from the game, end the game, and update the elos *)
             check status "response status" `OK (Dream.status result);
             let winner : MinimalUser.t = DomainTests.another_minimal_user in
             let loser : MinimalUser.t = DomainTests.a_minimal_user in
@@ -345,7 +307,7 @@ let tests = [
             let request : Dream.request = Dream.request ~method_:`POST ~target "" in
             let* result = handler request in
 
-            (* Then it should end the game *)
+            (* Then it should end the game and update the elos *)
             check status "response status" `OK (Dream.status result);
             let end_game : JSON.t = Game.Updates.End.to_yojson (Game.Updates.End.get ~winner ~loser Game.GameResult.Timeout) in
             let end_game_event : JSON.t = GameEvent.to_yojson (GameEvent.Action (GameEvent.Action.end_game DomainTests.a_minimal_user (now * 1000))) in
@@ -447,7 +409,7 @@ let tests = [
             let request : Dream.request = Dream.request ~method_:`POST ~target "" in
             let* result = handler request in
 
-            (* Then it should add the event and end the game *)
+            (* Then it should add the event, end the game, and update the elos *)
             check status "response status" `OK (Dream.status result);
             let accept_event = GameEvent.(to_yojson (Reply (Reply.make DomainTests.a_minimal_user "Accept" "Draw" (now * 1000)))) in
             let update = Game.Updates.End.(to_yojson (get (Game.GameResult.AgreedDrawBy Player.Zero))) in
@@ -484,7 +446,7 @@ let tests = [
             let request : Dream.request = Dream.request ~method_:`POST ~target "" in
             let* result = handler request in
 
-            (* Then it should add the event and end the game *)
+            (* Then it should add the event, end the game, and update the elos *)
             check status "response status" `OK (Dream.status result);
             let accept_event = GameEvent.(to_yojson (Reply (Reply.make DomainTests.a_minimal_user "Accept" "Draw" (now * 1000)))) in
             let update = Game.Updates.End.(to_yojson (get (Game.GameResult.AgreedDrawBy Player.One))) in
@@ -1023,7 +985,7 @@ let tests = [
             let request : Dream.request = Dream.request ~method_:`POST ~target "" in
             let* result = handler request in
 
-            (* Then it should add the event and end the game *)
+            (* Then it should add the event, end the game, and update the elos *)
             check status "response status" `OK (Dream.status result);
             let update = Game.Updates.EndWithMove.(to_yojson (get Game.GameResult.HardDraw 1)) in
             let move_event : JSON.t = GameEvent.to_yojson (GameEvent.Move (GameEvent.Move.of_json DomainTests.a_minimal_user move (now * 1000))) in
@@ -1063,7 +1025,7 @@ let tests = [
             let request : Dream.request = Dream.request ~method_:`POST ~target "" in
             let* result = handler request in
 
-            (* Then it should add the event and end the game *)
+            (* Then it should add the event, end the game, and update the elos *)
             check status "response status" `OK (Dream.status result);
             let winner : MinimalUser.t = DomainTests.a_minimal_user in
             let loser : MinimalUser.t = DomainTests.another_minimal_user in
@@ -1106,7 +1068,7 @@ let tests = [
             let request : Dream.request = Dream.request ~method_:`POST ~target "" in
             let* result = handler request in
 
-            (* Then it should add the event and end the game *)
+            (* Then it should add the event, end the game, and update the elos *)
             check status "response status" `OK (Dream.status result);
             let winner : MinimalUser.t = DomainTests.another_minimal_user in
             let loser : MinimalUser.t = DomainTests.a_minimal_user in
@@ -1151,7 +1113,7 @@ let tests = [
             let request : Dream.request = Dream.request ~method_:`POST ~target "" in
             let* result = handler request in
 
-            (* Then it should add the event and end the game *)
+            (* Then it should add the event, end the game and update the elos *)
             check status "response status" `OK (Dream.status result);
             let winner : MinimalUser.t = DomainTests.a_minimal_user in
             let loser : MinimalUser.t = DomainTests.another_minimal_user in
