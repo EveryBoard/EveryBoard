@@ -273,7 +273,7 @@ module Make
         | _ -> None
 
     (** Perform a move. Perform 1 read and 2 writes. *)
-    let move = fun (request : Dream.request) (game_id : string) (move : Yojson.Safe.t) ->
+    let move = fun (request : Dream.request) (game_id : string) (move : JSON.t) ->
         Stats.new_move ();
         (* Read 1: retrieve the game for the current turn *)
         let* game : Game.t = Firestore.Game.get ~request ~id:game_id in
@@ -295,7 +295,7 @@ module Make
             end_game_elo_update_draw ~request ~game
 
     (** Similar to [move], but also ends the game. Perform 3 read and 5 writes *)
-    let move_and_end = fun (request : Dream.request) (game_id : string) (move : Yojson.Safe.t) ->
+    let move_and_end = fun (request : Dream.request) (game_id : string) (move : JSON.t) ->
         Stats.new_move ();
         Stats.end_game ();
         (* Read 1: retrieve the game to have the current turn *)

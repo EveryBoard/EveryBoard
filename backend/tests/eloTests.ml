@@ -52,7 +52,7 @@ let elo_info_pair_eq : Elo.EloInfoPair.t testable =
                 zero = first_game_elo;
                 one = first_game_elo;
             } in
-            let winner : Elo.Winner.t = Player Zero in
+            let winner : Elo.Winner.t = Player One in
 
             (* When computing the elo after the game it *)
             let actual : Elo.EloInfoPair.t = Elo.Calculation.new_elos elo_pair winner in

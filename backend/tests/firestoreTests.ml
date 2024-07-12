@@ -195,7 +195,7 @@ let tests = [
     "Firestore.User.update_elo", [
         lwt_test "should update/create an elo document when no elo" (fun () ->
             let request : Dream.request = Dream.request "/" in
-            FirestorePrimitivesTests.Mock.created_docs := []; (* TODO FOR REVIEW: c'pas dégoldur que ceci ne soit pas fait automatiquement, ça a ça place dans du afterEach/beforeEach ça *)
+            FirestorePrimitivesTests.Mock.created_docs := [];
 
             (* Given a player who had never played a game and win one *)
             let type_game : string = "P4" in
@@ -224,6 +224,7 @@ let tests = [
             let type_game : string = "P4" in
             let user : Domain.MinimalUser.t = Domain.User.to_minimal_user "uid" verified_user in
             let user_id : string = user.id in
+            FirestorePrimitivesTests.Mock.doc_to_return := None;
 
             (* When calling get_elo *)
             let* initial_elo : Domain.User.EloInfo.t = Firestore.User.get_elo ~request ~user_id ~type_game in
@@ -259,6 +260,22 @@ let tests = [
             Lwt.return ()
         );
 
+        lwt_test "should fail if the elo info is incorrect" (fun () ->
+            let request : Dream.request = Dream.request "/" in
+
+            (* Given a pair user/type_game with an invalid elo document *)
+            FirestorePrimitivesTests.Mock.doc_to_return := Some (`Assoc [("not-a-valid", `String "elo")]);
+            let type_game : string = "P4" in
+            let user : Domain.MinimalUser.t = Domain.User.to_minimal_user "uid" verified_user in
+            let user_id : string = user.id in
+
+            (* When calling get_elo *)
+            (* Then it should fail *)
+            lwt_check_raises "failure" ((=) (UnexpectedError "Invalid EloInfo for uid/P4: {\"not-a-valid\":\"elo\"}")) (fun () ->
+                let* _ = Firestore.User.get_elo ~request ~user_id ~type_game in
+                Lwt.return ())
+        );
+
     ];
 
     "Firestore.Game.get", test_get game_eq Firestore.Game.get "parts" unstarted_game unstarted_game Domain.Game.to_yojson;
@@ -274,7 +291,7 @@ let tests = [
             (* When creating it *)
             let* id : string = Firestore.Game.create ~request ~game  in
             (* Then it should have called create_doc on /parts and return the game id *)
-            let game_json : Yojson.Safe.t = Domain.Game.to_yojson game in
+            let game_json : JSON.t = Domain.Game.to_yojson game in
             check string "id" id "created-id";
             let created = !FirestorePrimitivesTests.Mock.created_docs in
             check creations_type "creations" [("parts", game_json)] created;

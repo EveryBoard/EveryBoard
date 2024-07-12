@@ -209,7 +209,7 @@ let tests = [
             check status "response status" `OK (Dream.status result);
             let winner : MinimalUser.t = DomainTests.another_minimal_user in
             let loser : MinimalUser.t = DomainTests.a_minimal_user in
-            let end_game : Yojson.Safe.t = Game.Updates.End.to_yojson (Game.Updates.End.get ~winner ~loser Game.GameResult.Resign) in
+            let end_game : JSON.t = Game.Updates.End.to_yojson (Game.Updates.End.get ~winner ~loser Game.GameResult.Resign) in
             let end_game_event = GameEvent.(to_yojson (Action (Action.end_game DomainTests.a_minimal_user (now * 1000)))) in
             let elo_result_after_first_game_is_lost : JSON.t = Domain.User.EloInfo.to_yojson DomainTests.elo_result_after_first_game_is_lost in
             let elo_result_after_first_game_is_won : JSON.t = Domain.User.EloInfo.to_yojson DomainTests.elo_result_after_first_game_is_won in
@@ -285,7 +285,7 @@ let tests = [
             check status "response status" `OK (Dream.status result);
             let winner : MinimalUser.t = DomainTests.another_minimal_user in
             let loser : MinimalUser.t = DomainTests.a_minimal_user in
-            let end_game : Yojson.Safe.t = Game.Updates.End.to_yojson (Game.Updates.End.get ~winner ~loser Game.GameResult.Resign) in
+            let end_game : JSON.t = Game.Updates.End.to_yojson (Game.Updates.End.get ~winner ~loser Game.GameResult.Resign) in
             let end_game_event = GameEvent.(to_yojson (Action (Action.end_game DomainTests.a_minimal_user (now * 1000)))) in
             let elo_result_after_first_game_is_lost : JSON.t = Domain.User.EloInfo.to_yojson DomainTests.elo_result_after_first_game_is_lost in
             let elo_result_after_first_game_is_won : JSON.t = Domain.User.EloInfo.to_yojson DomainTests.elo_result_after_first_game_is_won in
@@ -347,7 +347,7 @@ let tests = [
 
             (* Then it should end the game *)
             check status "response status" `OK (Dream.status result);
-            let end_game : Yojson.Safe.t = Game.Updates.End.to_yojson (Game.Updates.End.get ~winner ~loser Game.GameResult.Timeout) in
+            let end_game : JSON.t = Game.Updates.End.to_yojson (Game.Updates.End.get ~winner ~loser Game.GameResult.Timeout) in
             let end_game_event : JSON.t = GameEvent.to_yojson (GameEvent.Action (GameEvent.Action.end_game DomainTests.a_minimal_user (now * 1000))) in
             let elo_result_after_first_game_is_lost : JSON.t = Domain.User.EloInfo.to_yojson DomainTests.elo_result_after_first_game_is_lost in
             let elo_result_after_first_game_is_won : JSON.t = Domain.User.EloInfo.to_yojson DomainTests.elo_result_after_first_game_is_won in
