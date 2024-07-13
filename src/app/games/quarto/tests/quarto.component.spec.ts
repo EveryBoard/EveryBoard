@@ -7,7 +7,8 @@ import { QuartoState } from 'src/app/games/quarto/QuartoState';
 import { Table } from 'src/app/jscaip/TableUtils';
 import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { QuartoRules } from '../QuartoRules';
+import { QuartoConfig, QuartoRules } from '../QuartoRules';
+import { MGPOptional } from 'lib/dist';
 
 describe('QuartoComponent', () => {
 
@@ -15,6 +16,7 @@ describe('QuartoComponent', () => {
 
     const NULL: QuartoPiece = QuartoPiece.EMPTY;
     const AAAA: QuartoPiece = QuartoPiece.AAAA;
+    const defaultConfig: MGPOptional<QuartoConfig> = QuartoRules.get().getDefaultRulesConfig();
 
     beforeEach(fakeAsync(async() => {
         testUtils = await ComponentTestUtils.forGame<QuartoComponent>('Quarto');
@@ -160,7 +162,7 @@ describe('QuartoComponent', () => {
             [NULL, NULL, NULL, NULL],
         ];
         const state: QuartoState = new QuartoState(board, 1, QuartoPiece.AAAB);
-        const previousState: QuartoState = QuartoRules.get().getInitialState();
+        const previousState: QuartoState = QuartoRules.get().getInitialState(defaultConfig);
         const previousMove: QuartoMove = new QuartoMove(0, 0, QuartoPiece.AAAA);
 
         // When displaying it
@@ -170,4 +172,5 @@ describe('QuartoComponent', () => {
         testUtils.expectElementToExist('#last-move-0-0');
         testUtils.expectElementToHaveClasses('#last-move-0-0', ['base', 'no-fill', 'last-move-stroke', 'mid-stroke']);
     }));
+
 });

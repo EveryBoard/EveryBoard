@@ -1,4 +1,5 @@
 /* eslint-disable max-lines-per-function */
+import { MGPOptional } from '@everyboard/lib';
 import { QuartoPiece } from '../QuartoPiece';
 import { QuartoState } from '../QuartoState';
 import { Table } from 'src/app/jscaip/TableUtils';
@@ -6,14 +7,13 @@ import { QuartoMove } from '../QuartoMove';
 import { HeuristicUtils } from 'src/app/jscaip/AI/tests/HeuristicUtils.spec';
 import { Player } from 'src/app/jscaip/Player';
 import { QuartoHeuristic } from '../QuartoHeuristic';
+import { QuartoConfig, QuartoNode, QuartoRules } from '../QuartoRules';
 import { BoardValue } from 'src/app/jscaip/AI/BoardValue';
-import { QuartoNode, QuartoRules } from '../QuartoRules';
-import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 describe('QuartoHeuristic', () => {
 
     let heuristic: QuartoHeuristic;
-    const defaultConfig: NoConfig = QuartoRules.get().getDefaultRulesConfig();
+    const defaultConfig: MGPOptional<QuartoConfig> = QuartoRules.get().getDefaultRulesConfig();
 
     const NULL: QuartoPiece = QuartoPiece.EMPTY;
     const AAAA: QuartoPiece = QuartoPiece.AAAA;

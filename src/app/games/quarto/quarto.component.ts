@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component } from '@angular/core';
 import { QuartoMove } from './QuartoMove';
 import { QuartoState } from './QuartoState';
-import { QuartoRules } from './QuartoRules';
+import { QuartoConfig, QuartoRules } from './QuartoRules';
 import { QuartoPiece } from './QuartoPiece';
 import { Coord } from 'src/app/jscaip/Coord';
 import { MGPOptional, MGPValidation } from '@everyboard/lib';
@@ -20,7 +20,8 @@ import { QuartoMinimax } from './QuartoMinimax';
 export class QuartoComponent extends RectangularGameComponent<QuartoRules,
                                                               QuartoMove,
                                                               QuartoState,
-                                                              QuartoPiece>
+                                                              QuartoPiece,
+                                                              QuartoConfig>
 {
     public EMPTY: QuartoPiece = QuartoPiece.EMPTY;
     public QuartoPiece: typeof QuartoPiece = QuartoPiece;
@@ -48,7 +49,8 @@ export class QuartoComponent extends RectangularGameComponent<QuartoRules,
         const state: QuartoState = this.getState();
         this.board = state.getCopiedBoard();
         this.pieceInHand = state.pieceInHand;
-        this.victoriousCoords = this.rules.getVictoriousCoords(state);
+        const config: QuartoConfig = this.getConfig().get();
+        this.victoriousCoords = this.rules.getVictoriousCoords(state, config);
     }
 
     public async clickCoord(x: number, y: number): Promise<MGPValidation> {

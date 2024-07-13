@@ -1,19 +1,26 @@
-import { Rules } from '../../jscaip/Rules';
+import { MGPOptional, MGPValidation, Set, Utils } from '@everyboard/lib';
+import { ConfigurableRules } from '../../jscaip/Rules';
 import { GameNode } from 'src/app/jscaip/AI/GameNode';
 import { QuartoState } from './QuartoState';
 import { QuartoMove } from './QuartoMove';
 import { QuartoPiece } from './QuartoPiece';
-import { MGPOptional, MGPValidation } from '@everyboard/lib';
 import { Coord } from 'src/app/jscaip/Coord';
-import { Ordinal } from 'src/app/jscaip/Ordinal';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { QuartoFailure } from './QuartoFailure';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { TableUtils } from 'src/app/jscaip/TableUtils';
 import { CoordSet } from 'src/app/jscaip/CoordSet';
 import { Debug } from 'src/app/utils/Debug';
-import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 import { AlignmentStatus } from 'src/app/jscaip/AI/AlignmentHeuristic';
+import { NumberConfig, RulesConfigDescription } from 'src/app/components/wrapper-components/rules-configuration/RulesConfigDescription';
+import { MGPValidators } from 'src/app/utils/MGPValidator';
+import { Orthogonal } from 'src/app/jscaip/Orthogonal';
+import { Player } from 'src/app/jscaip/Player';
+
+export type QuartoConfig = {
+    playerZeroLevel: number;
+    playerOneLevel: number;
+};
 
 /**
  * A criterion is a list of boolean sub-criteria, so three possible values: true, false, null.
@@ -38,7 +45,7 @@ class QuartoCriterion {
      * This will keep what both have in common
      * Returns true if at least one criterion is common, false otherwise
      */
-    public mergeWith(other: QuartoCriterion): boolean {
+    private mergeWith(other: QuartoCriterion): boolean {
         let nonNull: number = 4;
         for (let i: number = 0; i < 4; i++) {
             if (this.subCriterion[i].equals(other.subCriterion[i]) === false) {
@@ -71,7 +78,7 @@ class QuartoCriterion {
     }
 
     // returns true if there is at least one sub-criterion in common between the two
-    public match(c: QuartoCriterion): boolean {
+    private match(c: QuartoCriterion): boolean {
         for (let i: number = 0; i < 4; i++) {
             if (this.subCriterion[i].equals(c.subCriterion[i])) {
                 return true;
@@ -105,19 +112,12 @@ export interface BoardStatus {
     status: AlignmentStatus;
 
     sensitiveSquares: CoordSet;
+
+    // Use 0 for "no victory"
+    victoryLevel: number;
+
 }
 
-class QuartoLine {
-    public constructor(public readonly initialCoord: Coord,
-                       public readonly direction: Ordinal) {}
-    public allCoords(): Coord[] {
-        const coords: Coord[] = [];
-        for (let i: number = 0; i < 4; i++) {
-            coords.push(this.initialCoord.getNext(this.direction, i));
-        }
-        return coords;
-    }
-}
 export class QuartoNode extends GameNode<QuartoMove, QuartoState> {}
 
 interface LineInfos {
@@ -129,9 +129,154 @@ interface LineInfos {
     boardStatus: MGPOptional<BoardStatus>;
 }
 
-export class QuartoRules extends Rules<QuartoMove, QuartoState> {
+abstract class VictoryPattern {
+
+    protected constructor(public readonly level: number,
+                          public readonly coordPattern: CoordSet,
+                          public readonly initialCoord: Coord,
+                          public readonly remaining: number,
+    ) {}
+
+    public abstract getNextPattern(): VictoryPattern;
+
+    public getCoords(): Set<Coord> {
+        return this.coordPattern.map((element: Coord) => element.getNext(this.initialCoord));
+    }
+}
+
+class VerticalVictoryPattern extends VictoryPattern {
+
+    private static readonly VERTICAL: CoordSet = new CoordSet([
+        new Coord(0, 0),
+        new Coord(0, 1),
+        new Coord(0, 2),
+        new Coord(0, 3),
+    ]);
+
+    public constructor(initialCoord: Coord, remaining: number) {
+        super(1,
+              VerticalVictoryPattern.VERTICAL,
+              initialCoord,
+              remaining);
+    }
+
+    public override getNextPattern(): VerticalVictoryPattern {
+        const newCoord: Coord = this.initialCoord.getNext(Orthogonal.RIGHT, 1);
+        const newRemaining: number = this.remaining - 1;
+        return new VerticalVictoryPattern(newCoord, newRemaining);
+    }
+
+}
+
+class HorizontalVictoryPattern extends VictoryPattern {
+
+    private static readonly HORIZONTAL: CoordSet = new CoordSet([
+        new Coord(0, 0),
+        new Coord(1, 0),
+        new Coord(2, 0),
+        new Coord(3, 0),
+    ]);
+
+    public constructor(initialCoord: Coord, remaining: number) {
+        super(1,
+              HorizontalVictoryPattern.HORIZONTAL,
+              initialCoord,
+              remaining);
+    }
+
+    public override getNextPattern(): HorizontalVictoryPattern {
+        const newCoord: Coord = this.initialCoord.getNext(Orthogonal.DOWN, 1);
+        const newRemaining: number = this.remaining - 1;
+        return new HorizontalVictoryPattern(newCoord, newRemaining);
+    }
+
+}
+
+class DescendingDiagonalVictoryPattern extends VictoryPattern {
+
+    private static readonly DESCENDING_DIAGONAL: CoordSet = new CoordSet([
+        new Coord(0, 0),
+        new Coord(1, 1),
+        new Coord(2, 2),
+        new Coord(3, 3),
+    ]);
+
+    public constructor(initialCoord: Coord, remaining: number) {
+        super(1,
+              DescendingDiagonalVictoryPattern.DESCENDING_DIAGONAL,
+              initialCoord,
+              remaining);
+    }
+
+    public override getNextPattern(): DescendingDiagonalVictoryPattern {
+        Utils.assert(false, 'there is only one descending diagonal on normal quarto board');
+        return this;
+    }
+
+}
+
+class AscendingDiagonalVictoryPattern extends VictoryPattern {
+
+    private static readonly ASCENDING_DIAGONAL: CoordSet = new CoordSet([
+        new Coord(0, 0),
+        new Coord(1, -1),
+        new Coord(2, -2),
+        new Coord(3, -3),
+    ]);
+
+    public constructor(initialCoord: Coord, remaining: number) {
+        super(1,
+              AscendingDiagonalVictoryPattern.ASCENDING_DIAGONAL,
+              initialCoord,
+              remaining);
+    }
+
+    public override getNextPattern(): AscendingDiagonalVictoryPattern {
+        Utils.assert(false, 'there is only one descending diagonal on normal quarto board');
+        return this;
+    }
+
+}
+
+class SquareVictoryPattern extends VictoryPattern {
+
+    private static readonly SQUARE: CoordSet = new CoordSet([
+        new Coord(0, 0),
+        new Coord(0, 1),
+        new Coord(1, 0),
+        new Coord(1, 1),
+    ]);
+
+    public constructor(initialCoord: Coord, remaining: number) {
+        super(2,
+              SquareVictoryPattern.SQUARE,
+              initialCoord,
+              remaining);
+    }
+
+    public override getNextPattern(): SquareVictoryPattern {
+        const index: number = 8 - this.remaining;
+        const cx: number = index % 3;
+        const cy: number = Math.floor(index / 3);
+        const newCoord: Coord = new Coord(cx, cy);
+        const newRemaining: number = this.remaining - 1;
+        return new SquareVictoryPattern(newCoord, newRemaining);
+    }
+
+}
+
+export class QuartoRules extends ConfigurableRules<QuartoMove, QuartoState, QuartoConfig> {
 
     private static singleton: MGPOptional<QuartoRules> = MGPOptional.empty();
+
+    private static readonly RULES_CONFIG_DESCRIPTION: RulesConfigDescription<QuartoConfig> =
+        new RulesConfigDescription<QuartoConfig>({
+            name: (): string => $localize`Quarto`,
+            config: {
+                playerZeroLevel: new NumberConfig(1, () => $localize`Player One Level`, MGPValidators.range(1, 2)),
+                playerOneLevel: new NumberConfig(1, () => $localize`Player Two Level`, MGPValidators.range(1, 2)),
+            },
+        });
 
     public static get(): QuartoRules {
         if (QuartoRules.singleton.isAbsent()) {
@@ -140,30 +285,19 @@ export class QuartoRules extends Rules<QuartoMove, QuartoState> {
         return QuartoRules.singleton.get();
     }
 
-    public override getInitialState(): QuartoState {
+    public override getRulesConfigDescription(): MGPOptional<RulesConfigDescription<QuartoConfig>> {
+        return MGPOptional.of(QuartoRules.RULES_CONFIG_DESCRIPTION);
+    }
+
+    public override getInitialState(_: MGPOptional<QuartoConfig>): QuartoState {
         const board: QuartoPiece[][] = TableUtils.create(4, 4, QuartoPiece.EMPTY);
         return new QuartoState(board, 0, QuartoPiece.AAAA);
     }
 
-    public readonly lines: ReadonlyArray<QuartoLine> = [
-        // verticals
-        new QuartoLine(new Coord(0, 0), Ordinal.DOWN),
-        new QuartoLine(new Coord(1, 0), Ordinal.DOWN),
-        new QuartoLine(new Coord(2, 0), Ordinal.DOWN),
-        new QuartoLine(new Coord(3, 0), Ordinal.DOWN),
-        // horizontals
-        new QuartoLine(new Coord(0, 0), Ordinal.RIGHT),
-        new QuartoLine(new Coord(0, 1), Ordinal.RIGHT),
-        new QuartoLine(new Coord(0, 2), Ordinal.RIGHT),
-        new QuartoLine(new Coord(0, 3), Ordinal.RIGHT),
-        // diagonals
-        new QuartoLine(new Coord(0, 0), Ordinal.DOWN_RIGHT),
-        new QuartoLine(new Coord(0, 3), Ordinal.UP_RIGHT),
-    ];
-
     private isOccupied(square: QuartoPiece): boolean {
         return (square !== QuartoPiece.EMPTY);
     }
+
     public override isLegal(move: QuartoMove, state: QuartoState): MGPValidation {
         /**
          * pieceInHand is the one to be placed
@@ -196,42 +330,47 @@ export class QuartoRules extends Rules<QuartoMove, QuartoState> {
         return MGPValidation.SUCCESS;
     }
 
-    public override applyLegalMove(move: QuartoMove, state: QuartoState, _config: NoConfig, _info: void): QuartoState {
+    public override applyLegalMove(move: QuartoMove,
+                                   state: QuartoState,
+                                   _config: MGPOptional<QuartoConfig>,
+                                   _info: void)
+    : QuartoState
+    {
         const newBoard: QuartoPiece[][] = state.getCopiedBoard();
         newBoard[move.coord.y][move.coord.x] = state.pieceInHand;
         const resultingState: QuartoState = new QuartoState(newBoard, state.turn + 1, move.piece);
         return resultingState;
     }
 
-    public updateBoardStatus(line: QuartoLine, state: QuartoState, boardStatus: BoardStatus): BoardStatus {
+    public updateBoardStatus(pattern: VictoryPattern, state: QuartoState, boardStatus: BoardStatus): BoardStatus {
         if (boardStatus.status === AlignmentStatus.PRE_VICTORY) {
-            if (this.isThereAVictoriousLine(line, state)) {
+            if (this.isPatternVictorious(pattern, state)) {
                 return {
                     status: AlignmentStatus.VICTORY,
                     sensitiveSquares: new CoordSet(),
+                    victoryLevel: pattern.level,
                 };
             } else {
                 return boardStatus;
             }
         } else {
-            const newStatus: BoardStatus = this.searchForVictoryOrPreVictoryInLine(line, state, boardStatus);
+            const newStatus: BoardStatus = this.searchForVictoryOrPreVictoryInPattern(pattern, state, boardStatus);
             return newStatus;
         }
     }
 
-    private isThereAVictoriousLine(line: QuartoLine, state: QuartoState): boolean {
+    private isPatternVictorious(pattern: VictoryPattern, state: QuartoState): boolean {
         /**
          * if we found a pre-victory,
          * the only thing that can change the result is a victory
          */
-        let coord: Coord = line.initialCoord;
-        let c: QuartoPiece = state.getPieceAt(coord);
+        const initialCoord: Coord = new Coord(pattern.initialCoord.x, pattern.initialCoord.y);
+        let c: QuartoPiece = state.getPieceAt(initialCoord);
         const commonCrit: QuartoCriterion = new QuartoCriterion(c);
-        for (let i: number = 0; i < 3; i++) {
+        for (const coord of pattern.getCoords()) {
             if (this.isOccupied(c) === false || commonCrit.areAllAbsent()) {
                 break;
             }
-            coord = coord.getNext(line.direction, 1);
             c = state.getPieceAt(coord);
             commonCrit.mergeWithQuartoPiece(c);
         }
@@ -246,13 +385,13 @@ export class QuartoRules extends Rules<QuartoMove, QuartoState> {
         }
     }
 
-    private searchForVictoryOrPreVictoryInLine(line: QuartoLine,
-                                               state: QuartoState,
-                                               boardStatus: BoardStatus)
+    private searchForVictoryOrPreVictoryInPattern(pattern: VictoryPattern,
+                                                  state: QuartoState,
+                                                  boardStatus: BoardStatus)
     : BoardStatus
     {
         // we're looking for a victory, pre-victory
-        const lineInfos: LineInfos = this.getLineInfos(line, state, boardStatus);
+        const lineInfos: LineInfos = this.getPatternInfos(pattern, state, boardStatus);
         if (lineInfos.boardStatus.isPresent()) {
             return lineInfos.boardStatus.get();
         }
@@ -264,7 +403,10 @@ export class QuartoRules extends Rules<QuartoMove, QuartoState> {
             // this line is not null and has a common criterion between all of its pieces
             if (sensitiveCoord.isAbsent()) {
                 // the line is full
-                return { status: AlignmentStatus.VICTORY, sensitiveSquares: new CoordSet() };
+                return {
+                    status: AlignmentStatus.VICTORY,
+                    sensitiveSquares: new CoordSet(),
+                    victoryLevel: pattern.level };
             } else {
                 // if there is only one empty square, then the sensitive square we found is indeed sensitive
                 if (commonCriterion.get().matchPiece(state.pieceInHand)) {
@@ -277,12 +419,11 @@ export class QuartoRules extends Rules<QuartoMove, QuartoState> {
         return boardStatus;
     }
 
-    private getLineInfos(line: QuartoLine, state: QuartoState, boardStatus: BoardStatus): LineInfos {
+    private getPatternInfos(pattern: VictoryPattern, state: QuartoState, boardStatus: BoardStatus): LineInfos {
         let sensitiveCoord: MGPOptional<Coord> = MGPOptional.empty(); // the first square is empty
         let commonCriterion: MGPOptional<QuartoCriterion> = MGPOptional.empty();
 
-        let coord: Coord = line.initialCoord;
-        for (let i: number = 0; i < 4; i++) {
+        for (const coord of pattern.getCoords()) {
             const c: QuartoPiece = state.getPieceAt(coord);
             // we look through the entire line
             if (c === QuartoPiece.EMPTY) {
@@ -307,32 +448,102 @@ export class QuartoRules extends Rules<QuartoMove, QuartoState> {
                     Debug.display('QuartoRules', 'getLineInfos', 'update commonCrit: ' + commonCriterion.toString());
                 }
             }
-            coord = coord.getNext(line.direction, 1);
         }
         return { commonCriterion, sensitiveCoord, boardStatus: MGPOptional.empty() };
     }
 
-    public override getGameStatus(node: QuartoNode): GameStatus {
+    public override getGameStatus(node: QuartoNode, config: MGPOptional<QuartoConfig>): GameStatus {
         const state: QuartoState = node.gameState;
         let boardStatus: BoardStatus = {
             status: AlignmentStatus.NOTHING,
             sensitiveSquares: new CoordSet(),
+            victoryLevel: 0,
         };
-        for (const line of this.lines) {
-            boardStatus = this.updateBoardStatus(line, state, boardStatus);
+        const maxLevel: number = Math.max(config.get().playerZeroLevel, config.get().playerOneLevel);
+        const patterns: VictoryPattern[] = this.getPatterns(maxLevel);
+        const currentPlayer: Player = state.getCurrentPlayer();
+        let currentPlayerMadeAVictory: boolean = false;
+        for (const pattern of patterns) {
+            boardStatus = this.updateBoardStatus(pattern, state, boardStatus);
             if (boardStatus.status === AlignmentStatus.VICTORY) {
-                return boardStatus.status.toGameStatus(state.turn);
+                if (this.isOnlyCurrentOpponentVictory(pattern, config.get(), currentPlayer)) {
+                    return GameStatus.getVictory(currentPlayer);
+                } else if (this.isCurrentPlayerVictory(pattern, config.get(), currentPlayer)) {
+                    currentPlayerMadeAVictory = true;
+                }
             }
+        }
+        if (currentPlayerMadeAVictory) {
+            return GameStatus.getDefeat(currentPlayer);
         }
         return boardStatus.status.toGameStatus(state.turn);
     }
 
-    public getVictoriousCoords(state: QuartoState): Coord[] {
-        for (const line of this.lines) {
-            if (this.isThereAVictoriousLine(line, state)) {
-                return line.allCoords();
+    private isCurrentPlayerVictory(pattern: VictoryPattern, config: QuartoConfig, currentPlayer: Player): boolean {
+        const playerLevel: number = currentPlayer === Player.ZERO ? config.playerZeroLevel : config.playerOneLevel;
+        if (pattern.level <= playerLevel) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    private isOnlyCurrentOpponentVictory(pattern: VictoryPattern, config: QuartoConfig, currentPlayer: Player)
+    : boolean
+    {
+        const opponentLevel: number = currentPlayer === Player.ZERO ? config.playerZeroLevel : config.playerOneLevel;
+        const playerLevel: number = currentPlayer === Player.ZERO ? config.playerOneLevel : config.playerZeroLevel;
+        console.log("this patter here: ", opponentLevel, pattern.level, playerLevel)
+        if (pattern.level <= opponentLevel) {
+            // It is a victory pattern allowed for opponent
+            if (playerLevel < pattern.level) {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
+    }
+
+    public getPatterns(level: number): VictoryPattern[] {
+        const verticalInitialPattern: VerticalVictoryPattern =
+            new VerticalVictoryPattern(new Coord(0, 0), 3);
+        const horizontalInitialPattern: HorizontalVictoryPattern =
+            new HorizontalVictoryPattern(new Coord(0, 0), 3);
+        const descendingDiagonalPattern: DescendingDiagonalVictoryPattern =
+            new DescendingDiagonalVictoryPattern(new Coord(0, 0), 0);
+        const ascendingDiagonalPattern: AscendingDiagonalVictoryPattern =
+            new AscendingDiagonalVictoryPattern(new Coord(0, 3), 0);
+        const initialPatterns: VictoryPattern[] = [
+            verticalInitialPattern,
+            horizontalInitialPattern,
+            descendingDiagonalPattern,
+            ascendingDiagonalPattern,
+        ];
+        if (level >= 2) {
+            const squareInitialPattern: SquareVictoryPattern = new SquareVictoryPattern(new Coord(0, 0), 8);
+            initialPatterns.push(squareInitialPattern);
+        }
+        return initialPatterns.flatMap((pattern: VictoryPattern) => {
+            const patterns: VictoryPattern[] = [pattern];
+            while (pattern.remaining > 0) {
+                pattern = pattern.getNextPattern();
+                patterns.push(pattern);
+            }
+            return patterns;
+        });
+    }
+
+    public getVictoriousCoords(state: QuartoState, config: QuartoConfig): Coord[] {
+        const patterns: VictoryPattern[] = this.getPatterns(config.playerOneLevel); // TODO MAX OF LEVEL ?
+        for (const pattern of patterns) {
+            if (this.isPatternVictorious(pattern, state)) {
+                return pattern.getCoords().toList(); // TODO not toList if can avoid it
             }
         }
+        // TODO Test it
         return [];
     }
+
 }

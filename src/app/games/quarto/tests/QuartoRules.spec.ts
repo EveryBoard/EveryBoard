@@ -1,5 +1,5 @@
 /* eslint-disable max-lines-per-function */
-import { QuartoNode, QuartoRules } from '../QuartoRules';
+import { QuartoConfig, QuartoNode, QuartoRules } from '../QuartoRules';
 import { QuartoMove } from '../QuartoMove';
 import { QuartoPiece } from '../QuartoPiece';
 import { QuartoState } from '../QuartoState';
@@ -9,12 +9,11 @@ import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { Player } from 'src/app/jscaip/Player';
 import { QuartoFailure } from '../QuartoFailure';
 import { MGPOptional } from '@everyboard/lib';
-import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 describe('QuartoRules', () => {
 
     let rules: QuartoRules;
-    const defaultConfig: NoConfig = QuartoRules.get().getDefaultRulesConfig();
+    const defaultConfig: MGPOptional<QuartoConfig> = QuartoRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         rules = QuartoRules.get();
@@ -26,7 +25,7 @@ describe('QuartoRules', () => {
 
     it('should forbid not to give a piece when not last turn', () => {
         // Given a board that is not on last turn
-        const state: QuartoState = QuartoRules.get().getInitialState();
+        const state: QuartoState = QuartoRules.get().getInitialState(defaultConfig);
 
         // When giving no piece to next player
         const move: QuartoMove = new QuartoMove(0, 0, QuartoPiece.EMPTY);
@@ -82,7 +81,7 @@ describe('QuartoRules', () => {
 
     it('should forbid to give the piece that you had in your hand', () => {
         // Given any board
-        const state: QuartoState = QuartoRules.get().getInitialState();
+        const state: QuartoState = QuartoRules.get().getInitialState(defaultConfig);
 
         // When giving the piece you had in hand
         const move: QuartoMove = new QuartoMove(0, 0, QuartoPiece.AAAA);
@@ -112,7 +111,7 @@ describe('QuartoRules', () => {
 
     it('should allow simple move', () => {
         // Given a board
-        const state: QuartoState = QuartoRules.get().getInitialState();
+        const state: QuartoState = QuartoRules.get().getInitialState(defaultConfig);
 
         // When doing a simple move
         const move: QuartoMove = new QuartoMove(2, 2, QuartoPiece.AAAB);
@@ -128,7 +127,7 @@ describe('QuartoRules', () => {
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
     });
 
-    it('should consider Player.ZERO winner when doing a full line', () => {
+    it('should consider Player.ZERO winner when doing a full line (horizontal)', () => {
         // Given a board with 3 piece aligned with common criterion
         const board: Table<QuartoPiece> = [
             [QuartoPiece.BBBB, QuartoPiece.BBBA, QuartoPiece.BBAB, QuartoPiece.EMPTY],
@@ -155,7 +154,7 @@ describe('QuartoRules', () => {
         RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, defaultConfig);
     });
 
-    it('should consider Player.ONE winner when doing a full line', () => {
+    it('should consider Player.ONE winner when doing a full line (descending diagonal)', () => {
         // Given a board with 3 piece with common criterion aligned
         const board: Table<QuartoPiece> = [
             [QuartoPiece.ABAB, QuartoPiece.EMPTY, QuartoPiece.AABB, QuartoPiece.EMPTY],
@@ -196,6 +195,70 @@ describe('QuartoRules', () => {
         // When evaluating board value
         // Then it should be considered as ongoing
         RulesUtils.expectToBeOngoing(rules, node, defaultConfig);
+    });
+
+    describe('Level Two Config', () => {
+
+        it('should allow player to make victory by strong level victory (square)', () => {
+            // Given a config where two both player are level two and one made a square
+            const alternateConfig: MGPOptional<QuartoConfig> = MGPOptional.of({
+                playerZeroLevel: 2,
+                playerOneLevel: 2,
+            });
+            const board: Table<QuartoPiece> = [
+                [QuartoPiece.AAAA, QuartoPiece.AAAB, QuartoPiece.EMPTY, QuartoPiece.EMPTY],
+                [QuartoPiece.AABA, QuartoPiece.AABB, QuartoPiece.EMPTY, QuartoPiece.EMPTY],
+                [QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY],
+                [QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY],
+            ];
+            const state: QuartoState = new QuartoState(board, 4, QuartoPiece.BAAA);
+            const node: QuartoNode = new QuartoNode(state);
+
+            // When evaluating board value
+            // Then that player should win
+            RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, alternateConfig);
+        });
+
+        it('should give victory to player with stronger level when weaker level make a strong level victory (square)', () => {
+            // Given a config where player zero is level two and player one is not but make a square anyway
+            const alternateConfig: MGPOptional<QuartoConfig> = MGPOptional.of({
+                playerZeroLevel: 2,
+                playerOneLevel: 1,
+            });
+            const board: Table<QuartoPiece> = [
+                [QuartoPiece.AAAA, QuartoPiece.AAAB, QuartoPiece.EMPTY, QuartoPiece.EMPTY],
+                [QuartoPiece.AABA, QuartoPiece.AABB, QuartoPiece.EMPTY, QuartoPiece.EMPTY],
+                [QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY],
+                [QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY],
+            ];
+            const state: QuartoState = new QuartoState(board, 4, QuartoPiece.BAAA);
+            const node: QuartoNode = new QuartoNode(state);
+
+            // When evaluating board value
+            // Then player zero should win
+            RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, alternateConfig);
+        });
+
+        it('shoud give victory to stronger level when weaker level make both a strong and weak victory at the same turn', () => {
+            // Given a config where player one is level two and player one is level one and make a square and a line
+            const alternateConfig: MGPOptional<QuartoConfig> = MGPOptional.of({
+                playerZeroLevel: 1,
+                playerOneLevel: 2,
+            });
+            const board: Table<QuartoPiece> = [
+                [QuartoPiece.AAAA, QuartoPiece.AAAB, QuartoPiece.EMPTY, QuartoPiece.EMPTY],
+                [QuartoPiece.AABA, QuartoPiece.AABB, QuartoPiece.EMPTY, QuartoPiece.EMPTY],
+                [QuartoPiece.ABAA, QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY],
+                [QuartoPiece.ABAB, QuartoPiece.EMPTY, QuartoPiece.EMPTY, QuartoPiece.EMPTY],
+            ];
+            const state: QuartoState = new QuartoState(board, 6, QuartoPiece.BAAA);
+            const node: QuartoNode = new QuartoNode(state);
+
+            // When evaluating board value
+            // Then player one should win
+            RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, alternateConfig);
+        });
+
     });
 
 });
