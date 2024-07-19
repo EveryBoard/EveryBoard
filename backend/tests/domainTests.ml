@@ -235,7 +235,7 @@ let tests = [
                 "partType", `String "STANDARD";
                 "maximalMoveDuration", `Int (2*60);
                 "totalPartDuration", `Int (30*60);
-                "rulesConfig", `Assoc [];
+                "rulesConfig", `Null;
             ] in
             (* When converting it to and from JSON *)
             (* Then it should work *)
@@ -253,7 +253,7 @@ let tests = [
                 "partType", `String "STANDARD";
                 "maximalMoveDuration", `Int (2*60);
                 "totalPartDuration", `Int (30*60);
-                "rulesConfig", `Assoc [];
+                "rulesConfig", `Null;
             ] in
             (* When converting it to and from JSON *)
             (* Then it should work *)

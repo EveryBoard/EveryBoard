@@ -38,7 +38,7 @@ docker: gamelist
 	docker save "backend-$(target)" > "backend-$(target).tar"
 
 deploy: docker
-	ssh -p "$(port)" "$(user)@$(server)" "(docker stop \$$(docker ps -q --filter ancestor=backend-$(target)) || echo 'container not running yet') && docker load && docker container prune -f && docker image prune -f && docker run -d -p $(listen-port):8081 backend-$(target) /main.static.exe $(args)" < "backend-$(target).tar"
+	ssh -p "$(port)" "$(user)@$(server)" "docker stop \$$(docker ps -q --filter publish=$(listen-port)) ; docker load && docker container prune -f && docker image prune -f && docker run -d -p $(listen-port):8081 backend-$(target) /main.static.exe $(args)" < "backend-$(target).tar"
 
 clean:
 	opam exec -- dune clean

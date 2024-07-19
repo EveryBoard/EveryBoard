@@ -1,9 +1,8 @@
-import { ActivatedRoute } from '@angular/router';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/core';
-import { ArrayUtils, Encoder, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
+import { Encoder, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 import { Move } from '../../../jscaip/Move';
 import { SuperRules } from '../../../jscaip/Rules';
-import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
+import { Player } from 'src/app/jscaip/Player';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { TutorialStep } from '../../wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { GameState } from 'src/app/jscaip/state/GameState';
@@ -14,23 +13,7 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 import { Debug } from 'src/app/utils/Debug';
 import { GameInfo } from '../../normal-component/pick-game/pick-game.component';
-
-abstract class BaseComponent {
-
-    /**
-     * Gets the CSS class for a player color
-     */
-    public getPlayerClass(player: PlayerOrNone, suffix: string = 'fill'): string {
-        switch (player) {
-            case Player.ZERO: return 'player0-' + suffix;
-            case Player.ONE: return 'player1-' + suffix;
-            default:
-                Utils.expectToBe(player, PlayerOrNone.NONE);
-                return '';
-        }
-    }
-
-}
+import { BaseComponent } from '../../BaseComponent';
 
 /**
  * Define some methods that are useful to have in game components.
@@ -45,24 +28,9 @@ export abstract class BaseGameComponent extends BaseComponent {
 
     public readonly SMALL_STROKE_WIDTH: number = 2;
 
-    // Make ArrayUtils available in game components
-    public ArrayUtils: typeof ArrayUtils = ArrayUtils;
-
     public getSVGTranslation(x: number, y: number): string {
         return 'translate(' + x + ', ' + y + ')';
     }
-}
-
-export abstract class BaseWrapperComponent extends BaseComponent {
-
-    public constructor(public readonly activatedRoute: ActivatedRoute) {
-        super();
-    }
-
-    protected getGameUrlName(): string {
-        return Utils.getNonNullable(this.activatedRoute.snapshot.paramMap.get('compo'));
-    }
-
 }
 
 /**

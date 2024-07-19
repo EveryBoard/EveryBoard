@@ -211,7 +211,7 @@
     filter: brightness(110%);
 }
 svg {
-    max-height: calc(100vh - 10rem); /* Full height minus the navbar */
+    max-height: calc(100vh - 15rem); /* Full height minus the navbar */
 }
 .click-delegator {
     pointer-events: none;

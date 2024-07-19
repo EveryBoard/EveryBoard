@@ -34,8 +34,22 @@ html {
 .player0-bg {
     background-color: var(--player0);
 }
+.player0-bg-darker {
+    background-color: var(--player0);
+    filter: brightness(80%);
+}
+.player0-fg {
+    color: black;
+}
 .player1-bg {
     background-color: var(--player1);
+}
+.player1-bg-darker {
+    background-color: var(--player1);
+    filter: brightness(80%);
+}
+.player1-fg {
+    color: black;
 }
 .endgame-bg {
     background-color: grey;
@@ -75,3 +89,8 @@ html {
     background-color: rgb(0, 0, 0, 0) !important;
     border-color: var(--tab-highlight-on-hover) !important;
 }
+
+.is-fullheight {
+    height: 100%;
+}
+

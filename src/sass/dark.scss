@@ -83,10 +83,6 @@ $footer-padding:1rem;
   }
 }
 
-.modal-card-head, .is-primary {
-    background-color: $primary;
-}
-
 .button.is-primary.is-light {
     color: white;
 }
@@ -102,4 +98,9 @@ $footer-padding:1rem;
 /* Show the page only after the CSS has been loaded */
 html, body {
     display: block;
+}
+
+.left-border {
+    border-left: 0.15em solid $primary;
+    padding-left: 1em;
 }

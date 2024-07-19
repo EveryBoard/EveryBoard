@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg"
      width="100%" height="100%"
-     [attr.viewBox]="'0 0 ' + (4.25 * SPACE_SIZE) + ' ' + (10.75 * SPACE_SIZE)"
+     [attr.viewBox]="'0 0 ' + (4 * SPACE_SIZE + STROKE_WIDTH) + ' ' + (10.75 * SPACE_SIZE + STROKE_WIDTH)"
      preserveAspectRatio="xMidYMid meet"
 >
     <g transform="translate(5 5)">
@@ -128,10 +128,10 @@
         <g *ngFor="let line of board; index as y"
            [attr.transform]="getTranslationAtXY(0, 6.5)"
         >
-            <rect [attr.x]="-0.125 * SPACE_SIZE"
-                  [attr.y]="-0.125 * SPACE_SIZE"
-                  [attr.width]="SPACE_SIZE * 4.25"
-                  [attr.height]="SPACE_SIZE * 4.25"
+            <rect [attr.x]="0"
+                  [attr.y]="0"
+                  [attr.width]="SPACE_SIZE * 4"
+                  [attr.height]="SPACE_SIZE * 4"
                   stroke-dasharray="10, 10"
                   class="base no-fill"
             />
