@@ -1,6 +1,6 @@
 import { MancalaState } from './MancalaState';
 import { RectangularGameComponent } from 'src/app/components/game-components/rectangular-game-component/RectangularGameComponent';
-import { MGPOptional, Set, MGPValidation, TimeUtils, Utils } from '@everyboard/lib';
+import { MGPOptional, Set, MGPValidation, TimeUtils, Utils, MGPFallible } from '@everyboard/lib';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Table, TableUtils } from 'src/app/jscaip/TableUtils';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
@@ -137,11 +137,15 @@ export abstract class MancalaComponent<R extends MancalaRules>
     }
 
     protected async continueMoveConstruction(x: number): Promise<MGPValidation> {
+        const config: MGPOptional<MancalaConfig> = this.getConfig();
+        const moveValidity: MGPValidation = await this.isDistributionCausingIllegalMove(x, config);
+        if (moveValidity.isFailure()) {
+            return this.cancelMove(moveValidity.getReason());
+        }
         const distributionResult: MancalaDistributionResult =
             await this.showSimpleDistribution(MancalaDistribution.of(x));
-        const config: MancalaConfig = this.getConfig().get();
         if (distributionResult.endsUpInStore &&
-            config.mustContinueDistributionAfterStore)
+            config.get().mustContinueDistributionAfterStore)
         {
             const player: Player = this.constructedState.getCurrentPlayer();
             if (MancalaRules.isStarving(player, distributionResult.resultingState.board)) {
@@ -156,13 +160,38 @@ export abstract class MancalaComponent<R extends MancalaRules>
         }
     }
 
-    protected async showSimpleDistribution(distribution: MancalaDistribution): Promise<MancalaDistributionResult> {
+    private async isDistributionCausingIllegalMove(x: number, config: MGPOptional<MancalaConfig>)
+    : Promise<MGPValidation>
+    {
+        const distributionResult: MancalaDistributionResult =
+            await this.showSimpleDistribution(MancalaDistribution.of(x), false);
+        if (distributionResult.endsUpInStore &&
+            config.get().mustContinueDistributionAfterStore)
+        {
+            const player: Player = this.constructedState.getCurrentPlayer();
+            if (MancalaRules.isStarving(player, distributionResult.resultingState.board)) {
+                // Player has no more seed to distribute
+                return this.rules.isLegal(this.currentMove.get(), this.getState(), config);
+            } else {
+                // Player can still distribute
+                return MGPValidation.SUCCESS;
+            }
+        } else {
+            return this.rules.isLegal(this.currentMove.get(), this.getState(), config);
+        }
+    }
+
+    protected async showSimpleDistribution(distribution: MancalaDistribution, showSeedBySeed: boolean = true)
+    : Promise<MancalaDistributionResult>
+    {
         const state: MancalaState = this.constructedState;
         const playerY: number = state.getCurrentPlayerY();
         const coord: Coord = new Coord(distribution.x, playerY);
         this.lastDistributedHouses.push(coord);
         const config: MancalaConfig = this.getConfig().get();
-        await this.showSeedBySeed(coord, state, config);
+        if (showSeedBySeed) {
+            await this.showSeedBySeed(coord, state, config);
+        }
         const previousDistributionResult: MancalaDistributionResult = MancalaRules.getEmptyDistributionResult(state);
         const distributionResult: MancalaDistributionResult =
             this.rules.distributeHouse(distribution.x, playerY, previousDistributionResult, config);
