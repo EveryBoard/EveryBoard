@@ -538,12 +538,6 @@ export function doMancalaComponentTests<C extends MancalaComponent<R>,
                 awaitEndOfMove();
             }));
 
-            it('should not animate distribution that are illegal', fakeAsync(async() => {
-                // Given a board on which an illegal distribution is possible
-                // When clicking on its starting space
-                // Then it should not have taken time to animate it
-            }));
-
         });
 
         it('should have a bijective encoder', () => {
