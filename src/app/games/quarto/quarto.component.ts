@@ -4,7 +4,7 @@ import { QuartoState } from './QuartoState';
 import { QuartoConfig, QuartoRules } from './QuartoRules';
 import { QuartoPiece } from './QuartoPiece';
 import { Coord } from 'src/app/jscaip/Coord';
-import { MGPOptional, MGPValidation } from '@everyboard/lib';
+import { MGPOptional, MGPValidation, Set } from '@everyboard/lib';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { RectangularGameComponent } from 'src/app/components/game-components/rectangular-game-component/RectangularGameComponent';
@@ -32,7 +32,7 @@ export class QuartoComponent extends RectangularGameComponent<QuartoRules,
     public pieceInHand: QuartoPiece = QuartoPiece.EMPTY;
     // the piece that the user wants to give to the opponent
     public pieceToGive: MGPOptional<QuartoPiece> = MGPOptional.empty();
-    public victoriousCoords: Coord[] = [];
+    public victoriousCoords: Set<Coord> = new Set();
 
     public constructor(messageDisplayer: MessageDisplayer, cdr: ChangeDetectorRef) {
         super(messageDisplayer, cdr);
