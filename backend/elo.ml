@@ -24,7 +24,9 @@ module EloEntry = struct
         winner : Winner.t;
     }
 end
-
+(** In Elo Calculation we call "normal" the calculation that follow the elo standard calculation rules
+    But EveryBoard uses a special rules so that weakest user tend not to be bellow 100 elos
+*)
 module CalculationService = struct
 
     let w_from = fun (winner : Winner.t) (player : Domain.Player.t) : float ->
