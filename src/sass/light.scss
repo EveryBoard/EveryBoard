@@ -37,14 +37,15 @@ $footer-padding:2rem 1rem 2rem;
     justify-content: center;
 }
 
-.modal-card-head, .is-primary {
-    background-color: $primary;
-}
-
 .has-text-passive {
     color: #AAA;
 }
 /* Show the page only after the CSS has been loaded */
 html, body {
     display: block;
+}
+
+.left-border {
+    border-left: 0.15em solid $primary;
+    padding-left: 1em;
 }
