@@ -195,18 +195,18 @@ let tests = [
     "Firestore.User.update_elo", [
         lwt_test "should update/create an elo document when no elo" (fun () ->
             let request : Dream.request = Dream.request "/" in
-            FirestorePrimitivesTests.Mock.created_docs := []; (* TODO FOR REVIEW: c'pas dégoldur que ceci ne soit pas fait automatiquement, ça a ça place dans du afterEach/beforeEach ça *)
+            FirestorePrimitivesTests.Mock.created_docs := [];
 
-            (* Given a player who had never played a game and win one *)
+            (* Given a player who had never played a game and just won one *)
             let type_game : string = "P4" in
             let user : Domain.MinimalUser.t = Domain.User.to_minimal_user "uid" verified_user in
             let user_id : string = user.id in
             let new_elo : Domain.User.EloInfo.t = DomainTests.elo_result_after_first_game_is_won in
 
-            (* When calling update_elo *)
+            (* When updating its elo *)
             let* _ = Firestore.User.update_elo ~request ~user_id ~type_game ~new_elo in
 
-            (* Then it should have created an elo document *)
+            (* Then it should create an elo document *)
             let new_elo_json : JSON.t = Domain.User.EloInfo.to_yojson new_elo in
             let updated = !FirestorePrimitivesTests.Mock.updated_docs in
             check (list (pair string json_eq)) "updates" [("users/" ^ user_id ^ "/elos/" ^ type_game, new_elo_json)] updated;
@@ -224,12 +224,13 @@ let tests = [
             let type_game : string = "P4" in
             let user : Domain.MinimalUser.t = Domain.User.to_minimal_user "uid" verified_user in
             let user_id : string = user.id in
+            FirestorePrimitivesTests.Mock.doc_to_return := None;
 
-            (* When calling get_elo *)
+            (* When getting the elo *)
             let* initial_elo : Domain.User.EloInfo.t = Firestore.User.get_elo ~request ~user_id ~type_game in
             let json_actual : JSON.t = Domain.User.EloInfo.to_yojson initial_elo in
 
-            (* Then it should not have created no elo document and it should return initial value *)
+            (* Then it should not have created an elo document, and it should return the initial value *)
             let updated = !FirestorePrimitivesTests.Mock.updated_docs in
             let json_expected : JSON.t = Domain.User.EloInfo.to_yojson Domain.User.EloInfo.empty in
             check (list (pair string json_eq)) "updates" [] updated;
@@ -241,22 +242,38 @@ let tests = [
             let request : Dream.request = Dream.request "/" in
             FirestorePrimitivesTests.Mock.updated_docs := [];
 
-            (* Given a pair user/type_game not linked to an existing elo document *)
+            (* Given a user/type_game not linked to an existing elo document *)
             FirestorePrimitivesTests.Mock.doc_to_return := Some (Domain.User.EloInfo.to_yojson DomainTests.elo_result_after_first_game_is_won);
             let type_game : string = "P4" in
             let user : Domain.MinimalUser.t = Domain.User.to_minimal_user "uid" verified_user in
             let user_id : string = user.id in
 
-            (* When calling get_elo *)
+            (* When getting the elo *)
             let* initial_elo : Domain.User.EloInfo.t = Firestore.User.get_elo ~request ~user_id ~type_game in
             let json_actual : JSON.t = Domain.User.EloInfo.to_yojson initial_elo in
 
-            (* Then it should have created no elo document and it should return initial value *)
+            (* Then it should not create an elo document and it should return the current value *)
             let updated = !FirestorePrimitivesTests.Mock.updated_docs in
             let json_expected : JSON.t = Domain.User.EloInfo.to_yojson DomainTests.elo_result_after_first_game_is_won in
             check (list (pair string json_eq)) "updates" [] updated;
-            check json_eq "should be initial value" json_expected json_actual;
+            check json_eq "should be stored value" json_expected json_actual;
             Lwt.return ()
+        );
+
+        lwt_test "should fail if the elo info is incorrect" (fun () ->
+            let request : Dream.request = Dream.request "/" in
+
+            (* Given a user/type_game with an invalid elo document *)
+            FirestorePrimitivesTests.Mock.doc_to_return := Some (`Assoc [("not-a-valid", `String "elo")]);
+            let type_game : string = "P4" in
+            let user : Domain.MinimalUser.t = Domain.User.to_minimal_user "uid" verified_user in
+            let user_id : string = user.id in
+
+            (* When calling getting the elo *)
+            (* Then it should fail *)
+            lwt_check_raises "failure" ((=) (UnexpectedError "Invalid EloInfo for uid/P4: {\"not-a-valid\":\"elo\"}")) (fun () ->
+                let* _ = Firestore.User.get_elo ~request ~user_id ~type_game in
+                Lwt.return ())
         );
 
     ];
@@ -274,7 +291,7 @@ let tests = [
             (* When creating it *)
             let* id : string = Firestore.Game.create ~request ~game  in
             (* Then it should have called create_doc on /parts and return the game id *)
-            let game_json : Yojson.Safe.t = Domain.Game.to_yojson game in
+            let game_json : JSON.t = Domain.Game.to_yojson game in
             check string "id" id "created-id";
             let created = !FirestorePrimitivesTests.Mock.created_docs in
             check creations_type "creations" [("parts", game_json)] created;

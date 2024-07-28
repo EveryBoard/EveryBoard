@@ -100,13 +100,14 @@ module Make (FirestorePrimitives : FirestorePrimitives.FIRESTORE_PRIMITIVES) : F
             FirestorePrimitives.update_doc ~request ~path:("users/" ^ user_id ^ "/elos/" ^ type_game) ~update
 
         let get_elo = fun ~(request : Dream.request) ~(user_id : string) ~(type_game : string) : Domain.User.EloInfo.t Lwt.t ->
-            try%lwt
-                let* doc : JSON.t = FirestorePrimitives.get_doc ~request ~path:("users/" ^ user_id ^ "/elos/" ^ type_game) in
-                match Domain.User.EloInfo.of_yojson doc with
-                    | Error e -> raise (UnexpectedError e)
+            let* doc : JSON.t Option.t = FirestorePrimitives.try_get_doc ~request ~path:("users/" ^ user_id ^ "/elos/" ^ type_game) in
+            match doc with
+            | None -> Lwt.return Domain.User.EloInfo.empty
+            | Some json ->
+                begin match Domain.User.EloInfo.of_yojson json with
+                    | Error _ -> raise (UnexpectedError (Printf.sprintf "Invalid EloInfo for %s/%s: %s" user_id type_game (JSON.to_string json)))
                     | Ok elo -> Lwt.return elo
-            with _ ->
-                Lwt.return Domain.User.EloInfo.empty
+                end
 
     end
 

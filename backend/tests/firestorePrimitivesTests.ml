@@ -34,9 +34,13 @@ module Mock : MOCK = struct
 
     let doc_to_return = ref None
 
-    let get_doc ~request:_ ~path =
+    let try_get_doc ~request:_ ~path =
         read_docs := path :: !read_docs;
-        match !doc_to_return with
+        Lwt.return !doc_to_return
+
+    let get_doc ~request ~path =
+        let* doc = try_get_doc ~request ~path in
+        match doc with
         | Some doc -> Lwt.return doc
         | None -> raise (DocumentNotFound path)
 
@@ -61,6 +65,37 @@ end
 module FirestorePrimitives = FirestorePrimitives.Make(ExternalTests.Mock)(TokenRefresherTests.Mock)(StatsTests.Mock)
 
 let tests = [
+    "FirestorePrimitives.try_get_doc", [
+
+        lwt_test "should retrieve the document returned by firestore if there is one" (fun () ->
+            let request : Dream.request = Dream.request "/" in
+            (* Given a document that exists *)
+            let path : string = "collection/some-id" in
+            let doc = `Assoc [("foo", `String "bar")] in
+            let body : string = JSON.to_string (to_firestore ~path doc) in
+            let _ = ExternalTests.Mock.Http.mock_response (response `OK, body) in
+            (* When retrieving the document *)
+            let* actual = FirestorePrimitives.try_get_doc ~request ~path in
+            (* Then it should be the same document *)
+            let expected = Some doc in
+            check (option json_eq) "success" expected actual;
+            Lwt.return ()
+        );
+
+        lwt_test "should return None if there is no document" (fun () ->
+            let request : Dream.request = Dream.request "/" in
+            (* Given a document that does not exist *)
+            let path : string = "collection/some-id" in
+            let _ = ExternalTests.Mock.Http.mock_response (response `Not_found, "") in
+            (* When retrieving the document *)
+            let* actual = FirestorePrimitives.try_get_doc ~request ~path in
+            (* Then it should return None *)
+            let expected = None in
+            check (option json_eq) "missing document" expected actual;
+            Lwt.return ()
+        );
+    ];
+
     "FirestorePrimitives.get_doc", [
 
         lwt_test "should retrieve the document returned by firestore" (fun () ->
