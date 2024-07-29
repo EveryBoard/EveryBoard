@@ -30,7 +30,7 @@ export class BrandhubTutorial extends Tutorial {
             TutorialStepMessage.CONGRATULATIONS(),
         ),
         TutorialStep.fromMove(
-            $localize`Capturing a soldier (1/2)`,
+            $localize`Capturing a soldier` + ' (1/2)',
             $localize`All pieces, attackers and defenders, except the king, are soldiers. To capture them, they have to be sandwiched between two of your pieces. By getting too close, an attacker's soldier is in danger.<br/><br/>You're playing Light. Capture the soldier.`,
             new TaflState([
                 [_, _, _, O, _, _, _],
@@ -48,7 +48,7 @@ export class BrandhubTutorial extends Tutorial {
             $localize`Failed, you missed an opportunity to capture a piece of the opponent.`,
         ),
         TutorialStep.fromMove(
-            $localize`Capturing a soldier (2/2)`,
+            $localize`Capturing a soldier` + ' (2/2)',
             $localize`A second way to capture a soldier is to sandwich it against an empty throne. The king has moved and endangered one of its soldiers.<br/><br/>You're playing Dark. Capture the soldier.`,
             new TaflState([
                 [_, _, _, O, _, _, _],

@@ -133,7 +133,7 @@ module ConfigRoom = struct
         game_type = GameType.Standard;
         maximal_move_duration = GameType.standard_move_duration;
         total_part_duration = GameType.standard_game_duration;
-        rules_config = `Assoc [];
+        rules_config = `Null;
     }
 
     (** A config room with similar characteristics as the [config_room] parameter, but for its rematch *)

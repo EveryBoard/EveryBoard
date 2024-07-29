@@ -45,7 +45,7 @@ describe('ExclusiveOnlineGameGuard', () => {
             ],
         }).compileComponents();
         router = TestBed.inject(Router);
-        spyOn(router, 'navigate').and.callThrough();
+        spyOn(router, 'navigate').and.resolveTo(true);
         currentGameService = TestBed.inject(CurrentGameService);
         exclusiveOnlineGameGuard = new ExclusiveOnlineGameGuard(currentGameService, router);
     }));

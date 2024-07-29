@@ -65,7 +65,7 @@ export class SiamTutorial extends Tutorial {
             $localize`Failed, the piece is still on the board.`,
         ),
         TutorialStep.fromMove(
-            $localize`Pushing (1/2)`,
+            $localize`Pushing` + ' (1/2)',
             $localize`When the landing square of your move is occupied, we use the term "push". In order to push player pieces, the following conditions must hold:<ol><li>Your piece must already be oriented in the direction of the push.</li><li>Along the line that you are pushing, the number of pieces (yours or your opponent's) that are oriented in the same way as the push should be strictly greater than the number of pieces oriented in the opposite way.</li></ol>Look closely at the board. On the first row, you cannot push as there is exactly one piece in the opposite direction. On the second row, you can push because there are two pieces against one.<br/><br/>You're playing Dark. Vertically, you can push using your piece in the center, as there is no resistance on that axis. Do it.`,
             new SiamState([
                 [_, r, L, _, _],
@@ -79,7 +79,7 @@ export class SiamTutorial extends Tutorial {
             TutorialStepMessage.FAILED_TRY_AGAIN(),
         ),
         TutorialStep.fromMove(
-            $localize`Pushing (2/2)`,
+            $localize`Pushing` + ' (2/2)',
             $localize`To be able to push a mountain, you need at least one pusher per mountain. Each resistant (pieces in the opposite way) cancel the force of one pusher. In short, if there is no mountain, you need strictly more pushers than resistants. If there is a mountain, you need at least as much pushers than there are resistants and mountains. On the following board, as Dark, you can push the mountain on the first row. On the second and third row, because of the resisting forces, you cannot push. On the fourth row, you can push as there is one more pusher than resistant pieces.<br/><br/>You're playing Dark, push on the fourth row it.`,
             new SiamState([
                 [_, _, r, M, _],

@@ -94,6 +94,7 @@ describe('TutorialGameWrapperComponent (games)', () => {
             }));
         }
     });
+
     describe('Tutorials', () => {
         it('should have healthy behavior for predicate steps', fakeAsync(async() => {
             const apagosTutorial: TutorialStep[] = new ApagosTutorial().tutorial;
