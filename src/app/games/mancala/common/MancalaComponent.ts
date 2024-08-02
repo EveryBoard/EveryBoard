@@ -187,7 +187,7 @@ export abstract class MancalaComponent<R extends MancalaRules>
         return this.getSimpleDistributionResult(distribution, true);
     }
 
-    private async getSimpleDistributionResult(distribution: MancalaDistribution, showSeedBySeed: boolean = true)
+    private async getSimpleDistributionResult(distribution: MancalaDistribution, showSeedBySeed: boolean)
     : Promise<MancalaDistributionResult>
     {
         const state: MancalaState = this.constructedState;
