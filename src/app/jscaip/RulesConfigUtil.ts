@@ -20,7 +20,7 @@ export type RulesConfig = {
     [member: string]: ConfigDescriptionType;
 }
 
-export type EmptyRulesConfig = Record<string, never>; // TODO: unformise with NoConfig ?
+export type EmptyRulesConfig = Record<string, never>;
 
 export type NoConfig = MGPOptional<EmptyRulesConfig>;
 

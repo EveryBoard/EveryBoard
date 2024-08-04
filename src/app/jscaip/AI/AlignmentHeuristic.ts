@@ -14,15 +14,15 @@ import { GameStatus } from '../GameStatus';
 export class AlignmentStatus {
 
     // There's no particular alignment
-    public static NOTHING: AlignmentStatus = new AlignmentStatus();
+    public static NOTHING: AlignmentStatus = new AlignmentStatus('NOTHING');
 
     // The player could win at this turn
-    public static PRE_VICTORY: AlignmentStatus = new AlignmentStatus();
+    public static PRE_VICTORY: AlignmentStatus = new AlignmentStatus('PRE_VICTORY');
 
     // The game is finished with a victory
-    public static VICTORY: AlignmentStatus = new AlignmentStatus();
+    public static VICTORY: AlignmentStatus = new AlignmentStatus('VICTORY');
 
-    private constructor() {}
+    private constructor(public readonly name: string) {}
 
     // Convert to a board value (only for heuristics, will not consider victories)
     public toBoardValue(turn: number): BoardValue {

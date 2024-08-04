@@ -19,7 +19,7 @@ export class QuartoHeuristic extends Heuristic<QuartoMove, QuartoState, BoardVal
         const maxLevel: number = Math.max(config.playerZeroLevel, config.playerOneLevel);
         const patterns: VictoryPattern[] = QuartoRules.get().getPatterns(maxLevel, state);
         for (const pattern of patterns) {
-            boardStatus = QuartoRules.get().updateBoardStatus(pattern, state, boardStatus);
+            boardStatus = QuartoRules.get().updateBoardStatus(pattern, state, boardStatus).boardStatus;
         }
         return boardStatus.status.toBoardValue(state.turn);
     }

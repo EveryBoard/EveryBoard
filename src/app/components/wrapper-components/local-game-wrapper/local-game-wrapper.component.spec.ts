@@ -29,7 +29,6 @@ import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { AIDepthLimitOptions } from 'src/app/jscaip/AI/AI';
 import { Minimax } from 'src/app/jscaip/AI/Minimax';
 import { P4Minimax } from 'src/app/games/p4/P4Minimax';
-import { GipfCapture } from 'src/app/jscaip/GipfProjectHelper';
 import { GipfComponent } from 'src/app/games/gipf/gipf.component';
 
 const _: PlayerOrNone = PlayerOrNone.NONE;

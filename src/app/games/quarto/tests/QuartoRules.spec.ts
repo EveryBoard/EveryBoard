@@ -145,74 +145,68 @@ describe('QuartoRules', () => {
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
     });
 
-    it('should consider Player.ZERO winner when doing a full line (horizontal)', () => {
-        // Given a board with 3 piece aligned with common criterion
-        const board: Table<QuartoPiece> = [
-            [BBBB, BBBA, BBAB, ____],
-            [____, ____, ____, ____],
-            [____, ____, ____, ____],
-            [AAAA, ____, ____, ____],
-        ];
-        const state: QuartoState = new QuartoState(board, 4, BBAA);
+    describe('victory', () => {
 
-        // When aligning a fourth one
-        const move: QuartoMove = new QuartoMove(3, 0, AAAB);
+        it('should consider Player.ZERO winner when doing a full line (horizontal)', () => {
+            // Given a board with 3 piece aligned with common criterion
+            const board: Table<QuartoPiece> = [
+                [BBBB, BBBA, BBAB, ____],
+                [____, ____, ____, ____],
+                [____, ____, ____, ____],
+                [AAAA, ____, ____, ____],
+            ];
+            const state: QuartoState = new QuartoState(board, 4, BBAA);
 
-        // Then the game should be a victory for Player.ZERO
-        const expectedBoard: Table<QuartoPiece> = [
-            [BBBB, BBBA, BBAB, BBAA],
-            [____, ____, ____, ____],
-            [____, ____, ____, ____],
-            [AAAA, ____, ____, ____],
-        ];
-        const expectedState: QuartoState = new QuartoState(expectedBoard, 5, AAAB);
-        const node: QuartoNode = new QuartoNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
+            // When aligning a fourth one
+            const move: QuartoMove = new QuartoMove(3, 0, AAAB);
 
-        RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
-        RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, defaultConfig);
-    });
+            // Then the game should be a victory for Player.ZERO
+            const expectedBoard: Table<QuartoPiece> = [
+                [BBBB, BBBA, BBAB, BBAA],
+                [____, ____, ____, ____],
+                [____, ____, ____, ____],
+                [AAAA, ____, ____, ____],
+            ];
+            const expectedState: QuartoState = new QuartoState(expectedBoard, 5, AAAB);
+            const node: QuartoNode = new QuartoNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
 
-    it('should consider Player.ONE winner when doing a full line (descending diagonal)', () => {
-        // Given a board with 3 piece with common criterion aligned
-        const board: Table<QuartoPiece> = [
-            [ABAB, ____, AABB, ____],
-            [____, AAAB, BABB, ____],
-            [____, AAAA, BBAA, BBBA],
-            [ABBB, ____, BAAB, ____],
-        ];
-        const state: QuartoState = new QuartoState(board, 9, BBAB);
+            RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
+            RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, defaultConfig);
+        });
 
-        // When aligning a fourth one
-        const move: QuartoMove = new QuartoMove(3, 3, AABA);
+        it('should consider Player.ONE winner when doing a full line (descending diagonal)', () => {
+            // Given a board with 4 piece with common criterion aligned
+            const board: Table<QuartoPiece> = [
+                [AAAA, BAAA, BBAA, ____],
+                [____, AAAB, ____, ____],
+                [____, ____, AABB, ____],
+                [____, ____, ____, AABA],
+            ];
+            const state: QuartoState = new QuartoState(board, 10, AABA);
 
-        // Then it should be a victory for Player.ONE
-        const expectedBoard: Table<QuartoPiece> = [
-            [ABAB, ____, AABB, ____],
-            [____, AAAB, BABB, ____],
-            [____, AAAA, BBAA, BBBA],
-            [ABBB, ____, BAAB, BBAB],
-        ];
-        const expectedState: QuartoState = new QuartoState(expectedBoard, 10, AABA);
-        const node: QuartoNode = new QuartoNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
+            // When evaluating it's board status
+            // Then it should be a victory for Player.ONE
+            const node: QuartoNode = new QuartoNode(state);
 
-        RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
-        RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, defaultConfig);
-    });
+            RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, defaultConfig);
+        });
 
-    it('should recognize ongoing games', () => {
-        // Given an ongoing game
-        const board: Table<QuartoPiece> = [
-            [AAAA, ABBB, ABBB, ____],
-            [____, ____, ____, BBBB],
-            [____, ____, ____, AAAB],
-            [____, ____, ____, AAAB],
-        ];
-        const state: QuartoState = new QuartoState(board, 9, BAAA);
-        const node: QuartoNode = new QuartoNode(state);
+        it('should recognize ongoing games', () => {
+            // Given an ongoing game
+            const board: Table<QuartoPiece> = [
+                [AAAA, ABBB, ABBB, ____],
+                [____, ____, ____, BBBB],
+                [____, ____, ____, AAAB],
+                [____, ____, ____, AAAB],
+            ];
+            const state: QuartoState = new QuartoState(board, 9, BAAA);
+            const node: QuartoNode = new QuartoNode(state);
 
-        // When evaluating board value
-        // Then it should be considered as ongoing
-        RulesUtils.expectToBeOngoing(rules, node, defaultConfig);
+            // When evaluating board value
+            // Then it should be considered as ongoing
+            RulesUtils.expectToBeOngoing(rules, node, defaultConfig);
+        });
+
     });
 
     describe('Level Two Config', () => {
@@ -250,6 +244,26 @@ describe('QuartoRules', () => {
                 [____, ____, ____, ____],
             ];
             const state: QuartoState = new QuartoState(board, 4, BAAA);
+            const node: QuartoNode = new QuartoNode(state);
+
+            // When evaluating board value
+            // Then Player.ZERO should win
+            RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, alternateConfig);
+        });
+
+        it('should give victory to player with stronger level when they do a strong level victory (square)', () => {
+            // Given a config where Player.ONE is level 1 and Player.ZERO is level 2 and made a square
+            const alternateConfig: MGPOptional<QuartoConfig> = MGPOptional.of({
+                playerZeroLevel: 2,
+                playerOneLevel: 1,
+            });
+            const board: Table<QuartoPiece> = [
+                [AAAA, AAAB, ____, ____],
+                [AABA, AABB, ____, ____],
+                [____, ____, BBBB, ____],
+                [____, ____, ____, ____],
+            ];
+            const state: QuartoState = new QuartoState(board, 5, BAAA);
             const node: QuartoNode = new QuartoNode(state);
 
             // When evaluating board value

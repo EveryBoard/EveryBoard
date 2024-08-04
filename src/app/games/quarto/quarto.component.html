@@ -84,7 +84,7 @@
             />
         </g>
         <g *ngFor="let coord of victoriousCoords" >
-            <rect id="victory"
+            <rect id="victory-{{ coord.x }}-{{ coord.y }}"
                   x="0" y="0"
                   [attr.width]="SPACE_SIZE"
                   [attr.height]="SPACE_SIZE"

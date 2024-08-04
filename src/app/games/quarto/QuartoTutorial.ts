@@ -13,7 +13,6 @@ const AABB: QuartoPiece = QuartoPiece.AABB;
 const ABAA: QuartoPiece = QuartoPiece.ABAA;
 const ABAB: QuartoPiece = QuartoPiece.ABAB;
 const ABBA: QuartoPiece = QuartoPiece.ABBA;
-const ABBB: QuartoPiece = QuartoPiece.ABBB;
 const BAAA: QuartoPiece = QuartoPiece.BAAA;
 const BAAB: QuartoPiece = QuartoPiece.BAAB;
 const BABB: QuartoPiece = QuartoPiece.BABB;

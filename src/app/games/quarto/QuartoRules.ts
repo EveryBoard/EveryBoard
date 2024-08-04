@@ -25,7 +25,7 @@ export type QuartoConfig = {
  * A criterion is a list of boolean sub-criteria, so three possible values: true, false, null.
  * false means that we need a specific value (e.g., big), true is the opposite (e.g., small)
  * null means that this criterion has been neutralized
- * (if a line contains a big and a small piece, for example).
+ * (if a pattern contains a big and a small piece, for example).
  */
 class QuartoCriterion {
 
@@ -114,9 +114,17 @@ export interface BoardStatus {
 
 }
 
+interface BoardStatusUpdate {
+
+    boardStatus: BoardStatus;
+
+    isUpdated: boolean;
+
+}
+
 export class QuartoNode extends GameNode<QuartoMove, QuartoState> {}
 
-interface LineInfos {
+interface PatternInfos {
 
     commonCriterion: MGPOptional<QuartoCriterion>;
 
@@ -353,19 +361,21 @@ export class QuartoRules extends ConfigurableRules<QuartoMove, QuartoState, Quar
         return resultingState;
     }
 
-    public updateBoardStatus(pattern: VictoryPattern, state: QuartoState, boardStatus: BoardStatus): BoardStatus {
+    public updateBoardStatus(pattern: VictoryPattern, state: QuartoState, boardStatus: BoardStatus): BoardStatusUpdate {
         if (boardStatus.status === AlignmentStatus.PRE_VICTORY) {
             if (this.isPatternVictorious(pattern, state)) {
                 return {
-                    status: AlignmentStatus.VICTORY,
-                    sensitiveSquares: new CoordSet(),
+                    boardStatus: {
+                        status: AlignmentStatus.VICTORY,
+                        sensitiveSquares: new CoordSet(),
+                    },
+                    isUpdated: true,
                 };
             } else {
-                return boardStatus;
+                return { boardStatus, isUpdated: false };
             }
         } else {
-            const newStatus: BoardStatus = this.searchForVictoryOrPreVictoryInPattern(pattern, state, boardStatus);
-            return newStatus;
+            return this.searchForVictoryOrPreVictoryInPattern(pattern, state, boardStatus);
         }
     }
 
@@ -398,51 +408,57 @@ export class QuartoRules extends ConfigurableRules<QuartoMove, QuartoState, Quar
     private searchForVictoryOrPreVictoryInPattern(pattern: VictoryPattern,
                                                   state: QuartoState,
                                                   boardStatus: BoardStatus)
-    : BoardStatus
+    : BoardStatusUpdate
     {
         // we're looking for a victory, pre-victory
-        const lineInfos: LineInfos = this.getPatternInfos(pattern, state, boardStatus);
-        if (lineInfos.boardStatus.isPresent()) {
-            return lineInfos.boardStatus.get();
+        const patternInfos: PatternInfos = this.getPatternInfos(pattern, state, boardStatus);
+        if (patternInfos.boardStatus.isPresent()) {
+            return { boardStatus: patternInfos.boardStatus.get(), isUpdated: false };
         }
-        const commonCriterion: MGPOptional<QuartoCriterion> = lineInfos.commonCriterion;
-        const sensitiveCoord: MGPOptional<Coord> = lineInfos.sensitiveCoord;
+        const commonCriterion: MGPOptional<QuartoCriterion> = patternInfos.commonCriterion;
+        const sensitiveCoord: MGPOptional<Coord> = patternInfos.sensitiveCoord;
+        let isUpdated: boolean = false;
 
-        // we now have looked through the entire line, we summarize everything
+        // we now have looked through the entire pattern, we summarize everything
         if (commonCriterion.isPresent() && (commonCriterion.get().areAllAbsent() === false)) {
-            // this line is not null and has a common criterion between all of its pieces
+            // this pattern is not null and has a common criterion between all of its pieces
             if (sensitiveCoord.isAbsent()) {
-                // the line is full
+                // the pattern is full
                 return {
-                    status: AlignmentStatus.VICTORY,
-                    sensitiveSquares: new CoordSet(),
+                    boardStatus: {
+                        status: AlignmentStatus.VICTORY,
+                        sensitiveSquares: new CoordSet(),
+                    },
+                    isUpdated: true,
                 };
             } else {
                 // if there is only one empty square, then the sensitive square we found is indeed sensitive
                 if (commonCriterion.get().matchPiece(state.pieceInHand)) {
                     boardStatus.status = AlignmentStatus.PRE_VICTORY;
+                    isUpdated = true;
                 }
                 const coord: Coord = sensitiveCoord.get();
                 boardStatus.sensitiveSquares = boardStatus.sensitiveSquares.addElement(coord);
+                // TODO: should be moved in the if ???
             }
         }
-        return boardStatus;
+        return { boardStatus, isUpdated };
     }
 
-    private getPatternInfos(pattern: VictoryPattern, state: QuartoState, boardStatus: BoardStatus): LineInfos {
+    private getPatternInfos(pattern: VictoryPattern, state: QuartoState, boardStatus: BoardStatus): PatternInfos {
         let sensitiveCoord: MGPOptional<Coord> = MGPOptional.empty(); // the first square is empty
         let commonCriterion: MGPOptional<QuartoCriterion> = MGPOptional.empty();
 
         const coords: Set<Coord> = pattern.getCoords();
         for (const coord of coords) {
             const c: QuartoPiece = state.getPieceAt(coord);
-            // we look through the entire line
+            // we look through the entire pattern
             if (c === QuartoPiece.EMPTY) {
                 // if c is unoccupied
                 if (sensitiveCoord.isAbsent()) {
                     sensitiveCoord = MGPOptional.of(coord);
                 } else {
-                    // 2 empty square: no victory or pre-victory, or new criterion
+                    // 2 empty spaces: no victory or pre-victory, or new criterion
                     return {
                         sensitiveCoord: MGPOptional.of(coord),
                         commonCriterion,
@@ -453,10 +469,10 @@ export class QuartoRules extends ConfigurableRules<QuartoMove, QuartoState, Quar
                 // if c is occupied
                 if (commonCriterion.isAbsent()) {
                     commonCriterion = MGPOptional.of(new QuartoCriterion(c));
-                    Debug.display('QuartoRules', 'getLineInfos', 'set commonCrit to ' + commonCriterion.toString());
+                    Debug.display('QuartoRules', 'getPatternInfos', 'set commonCrit to ' + commonCriterion.toString());
                 } else {
                     commonCriterion.get().mergeWithQuartoPiece(c);
-                    Debug.display('QuartoRules', 'getLineInfos', 'update commonCrit: ' + commonCriterion.toString());
+                    Debug.display('QuartoRules', 'getPatternInfos', 'update commonCrit: ' + commonCriterion.toString());
                 }
             }
         }
@@ -474,14 +490,13 @@ export class QuartoRules extends ConfigurableRules<QuartoMove, QuartoState, Quar
         const currentPlayer: Player = state.getCurrentPlayer();
         let currentPlayerMadeAVictory: boolean = false;
         for (const pattern of patterns) {
-            if (this.isPatternVictorious(pattern, state)) {
-                boardStatus = this.updateBoardStatus(pattern, state, boardStatus);
-                if (boardStatus.status === AlignmentStatus.VICTORY) {
-                    if (this.isOnlyCurrentOpponentVictory(pattern, config.get(), currentPlayer)) {
-                        return GameStatus.getVictory(currentPlayer);
-                    } else if (this.isCurrentPlayerVictory(pattern, config.get(), currentPlayer)) {
-                        currentPlayerMadeAVictory = true;
-                    }
+            const boardStatusUpdate: BoardStatusUpdate = this.updateBoardStatus(pattern, state, boardStatus);
+            boardStatus = boardStatusUpdate.boardStatus;
+            if (boardStatusUpdate.isUpdated && boardStatus.status === AlignmentStatus.VICTORY) {
+                if (this.isOnlyCurrentOpponentVictory(pattern, config.get(), currentPlayer)) {
+                    return GameStatus.getVictory(currentPlayer);
+                } else if (this.isCurrentPlayerVictory(pattern, config.get(), currentPlayer)) {
+                    currentPlayerMadeAVictory = true;
                 }
             }
         }
