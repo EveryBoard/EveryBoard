@@ -495,7 +495,7 @@
         <source>Draw</source>
       </trans-unit>
       <trans-unit id="2993214884777755957" datatype="html">
-        <source>Player <x id="INTERPOLATION" equiv-text="{{ player+1 }}"/></source>
+        <source>Player <x id="INTERPOLATION" equiv-text="{{ player.getValue()+1 }}"/></source>
       </trans-unit>
       <trans-unit id="7800061171704298797" datatype="html">
         <source>Human</source>
@@ -504,7 +504,7 @@
         <source>Pick the options</source>
       </trans-unit>
       <trans-unit id="3272612818120648715" datatype="html">
-        <source><x id="INTERPOLATION" equiv-text="gameComponent.scores.get().get(Player.of(player)) }}"/> points</source>
+        <source><x id="INTERPOLATION" equiv-text="gameComponent.scores.get().get(player) }}"/> points</source>
       </trans-unit>
       <trans-unit id="6267418979719843573" datatype="html">
         <source>Pass a turn</source>
