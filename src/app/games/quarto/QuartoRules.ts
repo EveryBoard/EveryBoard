@@ -434,12 +434,11 @@ export class QuartoRules extends ConfigurableRules<QuartoMove, QuartoState, Quar
             } else {
                 // if there is only one empty square, then the sensitive square we found is indeed sensitive
                 if (commonCriterion.get().matchPiece(state.pieceInHand)) {
-                    boardStatus.status = AlignmentStatus.PRE_VICTORY;
                     isUpdated = true;
+                    const coord: Coord = sensitiveCoord.get();
+                    boardStatus.sensitiveSquares = boardStatus.sensitiveSquares.addElement(coord);
+                    boardStatus.status = AlignmentStatus.PRE_VICTORY;
                 }
-                const coord: Coord = sensitiveCoord.get();
-                boardStatus.sensitiveSquares = boardStatus.sensitiveSquares.addElement(coord);
-                // TODO: should be moved in the if ???
             }
         }
         return { boardStatus, isUpdated };
