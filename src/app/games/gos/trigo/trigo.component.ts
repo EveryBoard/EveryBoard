@@ -153,4 +153,17 @@ export class TrigoComponent extends TriangularGameComponent<TrigoRules,
         return TriangularCheckerBoard.isSpaceDark(coord) === false;
     }
 
+    public getKoTranslationAt(koCoord: Coord): string {
+        const koTranslationCoord: Coord = this.getKoTranslationCoordAt(koCoord);
+        return this.getSVGTranslationAt(koTranslationCoord);
+    }
+
+    private getKoTranslationCoordAt(koCoord: Coord): Coord {
+        if (this.isUpward(koCoord)) {
+            return this.getTriangleTranslationCoord(koCoord).getNext(new Coord(0, 25));
+        } else {
+            return this.getTriangleTranslationCoord(koCoord);
+        }
+    }
+
 }
