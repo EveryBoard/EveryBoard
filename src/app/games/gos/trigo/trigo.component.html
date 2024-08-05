@@ -39,7 +39,7 @@
 
     <rect *ngIf="ko.isPresent()"
           id="ko-{{ ko.get().x }}-{{ ko.get().y }}"
-          [attr.transform]="getTriangleTranslationAt(ko.get())"
+          [attr.transform]="getKoTranslationAt(ko.get())"
           [attr.width]="SPACE_SIZE * 0.25"
           [attr.height]="SPACE_SIZE * 0.25"
           [attr.x]="SPACE_SIZE * 0.375"
