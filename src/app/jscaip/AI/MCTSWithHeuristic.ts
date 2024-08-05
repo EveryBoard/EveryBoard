@@ -9,7 +9,7 @@ import { MoveGenerator } from './AI';
 import { BoardValue } from './BoardValue';
 import { GameNode } from './GameNode';
 import { MCTS } from './MCTS';
-import { Heuristic } from './Minimax';
+import { Heuristic, HeuristicBounds } from './Minimax';
 
 /**
  * Like MCTS, but uses a heuristic function to evaluate non-terminated states.
@@ -40,12 +40,12 @@ export class MCTSWithHeuristic<M extends Move,
                                 player: Player): number {
         if (gameStatus === GameStatus.ONGOING) {
             const boardValue: B = this.heuristic.getBoardValue(node, config);
-            const optionalBounds: MGPOptional<{min: B, max: B}> = this.heuristic.getBounds(config);
+            const optionalBounds: MGPOptional<HeuristicBounds<B>> = this.heuristic.getBounds(config);
             Utils.assert(optionalBounds.isPresent(),
                          'MCTSWithHeuristic used with a heuristic that has no max value, please define getMaxValue');
-            const bounds: {min: B, max: B} = optionalBounds.get();
-            Utils.assert(boardValue.metrics.length === bounds.min.metrics.length &&
-                         boardValue.metrics.length === bounds.max.metrics.length,
+            const bounds: HeuristicBounds<B> = optionalBounds.get();
+            Utils.assert(boardValue.metrics.length === bounds.player0Max.metrics.length &&
+                         boardValue.metrics.length === bounds..metrics.length,
                          'Metrics and bound values should have the same shape');
             let value: number = 0;
             for (let i: number = 0; i < boardValue.metrics.length; i++) {

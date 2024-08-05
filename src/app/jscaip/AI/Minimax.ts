@@ -10,7 +10,7 @@ import { EmptyRulesConfig, RulesConfig } from '../RulesConfigUtil';
 import { GameNode } from './GameNode';
 import { PlayerNumberTable } from '../PlayerNumberTable';
 
-type HeuristicBounds<B> = {
+export type HeuristicBounds<B> = {
     player0Max: B,
     player1Max: B,
 }
