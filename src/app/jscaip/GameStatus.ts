@@ -1,3 +1,4 @@
+import { Utils } from '@everyboard/lib';
 import { BoardValue } from './AI/BoardValue';
 import { Player, PlayerOrNone } from './Player';
 
@@ -36,10 +37,6 @@ export class GameStatus {
         } else {
             return BoardValue.of(0);
         }
-    }
-
-    public isVictoryOfCurrentPlayer(currentPlayer: Player): boolean {
-        return this.isEndGame && this.winner === currentPlayer;
     }
 
 }
