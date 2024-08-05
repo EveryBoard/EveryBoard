@@ -15,8 +15,6 @@ module type CALCULATION = sig
     val new_elos : EloInfoPair.t -> Winner.t -> EloInfoPair.t
 end
 
-(** In Elo Calculation we call "normal" the calculation that follow the elo standard calculation rules
-    But EveryBoard uses a special rules so that weakest user tend not to be bellow 100 elos *)
 module Calculation : CALCULATION = struct
 
     let w_from = fun (winner : Winner.t) (player : Domain.Player.t) : float ->
@@ -34,6 +32,7 @@ module Calculation : CALCULATION = struct
         let difference_in_elo : float = elo_winner -. elo_loser in
         1.0 /. (1.0 +. (10.0 ** (-. difference_in_elo /. 400.0)))
 
+    (* This is the standard Elo difference, according to the standard rules *)
     let elo_difference = fun (k : float) (w : float) (p : float) : float ->
         k *. (w -. p)
 
@@ -47,6 +46,7 @@ module Calculation : CALCULATION = struct
         let p : float = winning_probability elo_player elo_opponent in
         elo_difference k w p
 
+    (** We use special rules so that weakest users do not get stuck below a score of 100 *)
     let new_player_elo = fun (old_elo : float) (elo_difference : float) : float ->
         if elo_difference <= 0.0 then
             (* when you lose *)
