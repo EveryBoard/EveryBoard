@@ -31,6 +31,10 @@ export abstract class BaseGameComponent extends BaseComponent {
     public getSVGTranslation(x: number, y: number): string {
         return 'translate(' + x + ', ' + y + ')';
     }
+
+    public getSVGTranslationAt(coord: Coord): string {
+        return this.getSVGTranslation(coord.x, coord.y);
+    }
 }
 
 /**
