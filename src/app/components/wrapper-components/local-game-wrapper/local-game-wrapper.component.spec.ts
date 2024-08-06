@@ -208,7 +208,7 @@ describe('LocalGameWrapperComponent (game phase)', () => {
             testUtils.expectElementNotToExist('#draw');
         }));
 
-        it('should call hideLastMove', fakeAsync(async() => {
+        it('should call cancelMoveAttempt and hideLastMove', fakeAsync(async() => {
             // Given the board at any moment
             const advancedState: P4State = new P4State([
                 [_, _, _, _, _, _, _],
@@ -224,10 +224,12 @@ describe('LocalGameWrapperComponent (game phase)', () => {
 
             // When restarting the game
             spyOn(testUtils.getGameComponent(), 'hideLastMove').and.callThrough();
+            spyOn(testUtils.getGameComponent(), 'cancelMoveAttempt').and.callThrough();
             await testUtils.expectInterfaceClickSuccess('#restart-button');
 
             // Then it should go back to first turn
             expect(testUtils.getGameComponent().hideLastMove).toHaveBeenCalledOnceWith();
+            expect(testUtils.getGameComponent().cancelMoveAttempt).toHaveBeenCalledOnceWith();
         }));
     });
 

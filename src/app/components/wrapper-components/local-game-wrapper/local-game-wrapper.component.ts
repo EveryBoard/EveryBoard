@@ -277,6 +277,7 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
     public async restartGame(): Promise<void> {
         const config: MGPOptional<RulesConfig> = await this.getConfig();
         this.gameComponent.node = this.gameComponent.rules.getInitialNode(config);
+        this.gameComponent.cancelMoveAttempt();
         this.gameComponent.hideLastMove();
         await this.gameComponent.updateBoardAndRedraw(false);
         this.endGame = false;
