@@ -69,7 +69,7 @@ module DreamUtils = struct
     let authorization_header = fun (access_token : string) : (string * string) ->
         ("Authorization", "Bearer " ^ access_token)
 
-    let get_json_param = fun (request : Dream.request) (field : string) : (Yojson.Safe.t, string) result ->
+    let get_json_param = fun (request : Dream.request) (field : string) : (JSON.t, string) result ->
         match Dream.query request field with
         | None -> Error (Printf.sprintf "parameter missing: %s" field)
         | Some value ->

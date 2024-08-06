@@ -1,7 +1,9 @@
-import { Mutex } from 'async-mutex';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router, Event } from '@angular/router';
+import { Mutex } from 'async-mutex';
 import { Subscription } from 'rxjs';
+
+import { JSONValue, MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 import { ConnectedUserService, AuthUser } from 'src/app/services/ConnectedUserService';
 import { GameService } from 'src/app/services/GameService';
 import { Move } from '../../../jscaip/Move';
@@ -11,7 +13,6 @@ import { CurrentGame } from '../../../domain/User';
 import { GameWrapper, GameWrapperMessages } from '../GameWrapper';
 import { ConfigRoom } from 'src/app/domain/ConfigRoom';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { JSONValue, MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 import { GameState } from 'src/app/jscaip/state/GameState';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { GameInfo } from '../../normal-component/pick-game/pick-game.component';
@@ -27,6 +28,7 @@ import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 import { Debug } from 'src/app/utils/Debug';
 import { ServerTimeService } from 'src/app/services/ServerTimeService';
+import { UserService } from 'src/app/services/UserService';
 
 export class OnlineGameWrapperMessages {
 
@@ -89,6 +91,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
                        private readonly timeManager: OGWCTimeManagerService,
                        private readonly requestManager: OGWCRequestManagerService,
                        private readonly serverTimeService: ServerTimeService,
+                       private readonly userService: UserService,
                        private readonly cdr: ChangeDetectorRef)
     {
         super(activatedRoute, connectedUserService, router, messageDisplayer);
@@ -136,7 +139,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
                 await this.setCurrentPartIdOrRedirect();
             }
         });
-        this.userSubscription = this.connectedUserService.subscribeToUser((user: AuthUser) => {
+        this.userSubscription = this.connectedUserService.subscribeToUser(async(user: AuthUser) => {
             // player should be authenticated and have a username to be here
             this.authUser = user;
         });

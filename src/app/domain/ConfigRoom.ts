@@ -10,7 +10,7 @@ export type ConfigRoom = {
     readonly partStatus: IPartStatus;
 
     readonly firstPlayer: IFirstPlayer;
-    readonly partType: IPartType
+    readonly partType: IPartType;
     readonly maximalMoveDuration: number;
     readonly totalPartDuration: number;
     readonly rulesConfig: RulesConfig;
