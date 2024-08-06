@@ -18,6 +18,7 @@ export class GameStatus {
             return GameStatus.ONE_WON;
         }
     }
+
     public static getDefeat(nonNonePlayer: Player): GameStatus {
         if (nonNonePlayer === Player.ZERO) {
             return GameStatus.ONE_WON;
@@ -25,8 +26,10 @@ export class GameStatus {
             return GameStatus.ZERO_WON;
         }
     }
+
     private constructor(public readonly isEndGame: boolean, public readonly winner: PlayerOrNone) {
     }
+
     public toBoardValue(): BoardValue {
         if (this.winner.isPlayer()) {
             return BoardValue.of(this.winner.getVictoryValue());
@@ -34,4 +37,5 @@ export class GameStatus {
             return BoardValue.of(0);
         }
     }
+
 }
