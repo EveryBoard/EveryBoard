@@ -10,6 +10,10 @@ run: gamelist
 	GAMES=$$(cat games.txt)
 	opam exec -- dune exec -- ./main.exe
 
+run-local: gamelist
+	GAMES=$$(cat games.txt)
+	opam exec -- dune exec -- ./main.exe -no-emulator -project everyboard-test -origin '*' -endpoint 'https://firestore.googleapis.com' -show-errors
+
 run-load-test: gamelist
 	GAMES=$$(cat games.txt)
 	opam exec -- dune exec -- ./main.exe -no-emulator -endpoint https://firestore.googleapis.com -show-errors -project everyboard-loadtest -origin '*' -service-account ../service-accounts/loadtest.json
@@ -18,6 +22,10 @@ test: bin gamelist
 	find . -name '*.coverage' | xargs rm -f
 	GAMES=$$(cat games.txt) \
 	opam exec -- dune exec --instrument-with bisect_ppx --force -- ./tests.exe test $(match) $(test-number)
+	opam exec -- bisect-ppx-report html
+	echo 'Coverage produced in _coverage/index.html'
+
+generate-coverage:
 	opam exec -- bisect-ppx-report html
 	echo 'Coverage produced in _coverage/index.html'
 

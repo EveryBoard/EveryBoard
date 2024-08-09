@@ -208,7 +208,7 @@ describe('LocalGameWrapperComponent (game phase)', () => {
             testUtils.expectElementNotToExist('#draw');
         }));
 
-        it('should call hideLastMove', fakeAsync(async() => {
+        it('should call cancelMoveAttempt and hideLastMove', fakeAsync(async() => {
             // Given the board at any moment
             const advancedState: P4State = new P4State([
                 [_, _, _, _, _, _, _],
@@ -224,10 +224,12 @@ describe('LocalGameWrapperComponent (game phase)', () => {
 
             // When restarting the game
             spyOn(testUtils.getGameComponent(), 'hideLastMove').and.callThrough();
+            spyOn(testUtils.getGameComponent(), 'cancelMoveAttempt').and.callThrough();
             await testUtils.expectInterfaceClickSuccess('#restart-button');
 
             // Then it should go back to first turn
             expect(testUtils.getGameComponent().hideLastMove).toHaveBeenCalledOnceWith();
+            expect(testUtils.getGameComponent().cancelMoveAttempt).toHaveBeenCalledOnceWith();
         }));
     });
 
@@ -603,5 +605,26 @@ describe('LocalGameWrapperComponent (game phase)', () => {
             // disactivate AI to stop timeout generation
             tick(40 * LocalGameWrapperComponent.AI_TIMEOUT);
         }));
+    });
+
+    describe('view', () => {
+
+        it('should highlight board in player 0 color when it is player 0 turn', () => {
+            // Given a game which is initially interactive
+            expect(testUtils.getGameComponent().isInteractive()).toBeTrue();
+
+            // Then the game should have background for player 0
+            testUtils.expectElementToHaveClass('#board-highlight', 'player0-bg');
+        });
+
+        it('should highlight board in player 1 color when it is player 1 turn', fakeAsync(async() => {
+            // Given a game which is initially interactive and it is Player.ONE's turn
+            expect(testUtils.getGameComponent().isInteractive()).toBeTrue();
+            await testUtils.expectMoveSuccess('#click-4-0', P4Move.of(4));
+
+            // Then the game should have background for player 1
+            testUtils.expectElementToHaveClass('#board-highlight', 'player1-bg');
+        }));
+
     });
 });
