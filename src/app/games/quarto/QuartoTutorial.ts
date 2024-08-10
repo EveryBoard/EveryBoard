@@ -3,7 +3,7 @@ import { QuartoState } from 'src/app/games/quarto/QuartoState';
 import { QuartoPiece } from 'src/app/games/quarto/QuartoPiece';
 import { Tutorial, TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { TutorialStepMessage } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
-import { MGPValidation } from 'lib/dist';
+import { MGPValidation } from '@everyboard/lib';
 import { Coord } from 'src/app/jscaip/Coord';
 
 const AAAA: QuartoPiece = QuartoPiece.AAAA;
@@ -62,7 +62,7 @@ export class QuartoTutorial extends Tutorial {
         ),
         TutorialStep.fromPredicate(
             TutorialStepMessage.ADVANCED_RULES(),
-            $localize`Quarto has advanced setup to make games more complicated for one, or both players.<br/>When you create a game and you want to change the original configuration, you can add level to one player. When your level increases, it becomes easier for you to win, so if first player is weaker at this game, make first player level two and the game will be more even and interresting.<br/>The level two rules correspond to added 2x2 squared.<br/>In this board, Light can win by making a square.<br/><br/>You're playing Light, win.`,
+            $localize`A game of Quarto can be configured to make it more complicated for one or both players.<br/>When you create a game and you want to change the original configuration, you can add level to one player. When your level increases, it becomes easier for you to win, so if the first player is weaker at this game, make the first player play at level two and the game will be more even and interresting.<br/>The level two rules correspond to added 2x2 squared.<br/>In this board, Light can win by making a square.<br/><br/>You're playing Light, win.`,
             new QuartoState([
                 [AAAA, AAAB, ____, ____],
                 [AABA, ____, ____, ____],

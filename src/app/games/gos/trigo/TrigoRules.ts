@@ -1,4 +1,4 @@
-import { MGPOptional } from 'lib/dist';
+import { MGPOptional } from '@everyboard/lib';
 import { AbstractGoRules } from '../AbstractGoRules';
 import { GoState } from '../GoState';
 import { GoPiece } from '../GoPiece';

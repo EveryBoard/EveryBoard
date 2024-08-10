@@ -148,7 +148,7 @@ describe('QuartoRules', () => {
     describe('victory', () => {
 
         it('should consider Player.ZERO winner when doing a full line (horizontal)', () => {
-            // Given a board with 3 piece aligned with common criterion
+            // Given a board with 3 pieces aligned with common criterion
             const board: Table<QuartoPiece> = [
                 [BBBB, BBBA, BBAB, ____],
                 [____, ____, ____, ____],
@@ -202,7 +202,7 @@ describe('QuartoRules', () => {
             const state: QuartoState = new QuartoState(board, 9, BAAA);
             const node: QuartoNode = new QuartoNode(state);
 
-            // When evaluating board value
+            // When evaluating the board status
             // Then it should be considered as ongoing
             RulesUtils.expectToBeOngoing(rules, node, defaultConfig);
         });
@@ -212,7 +212,7 @@ describe('QuartoRules', () => {
     describe('Level Two Config', () => {
 
         it('should allow player to make victory by strong level victory (square)', () => {
-            // Given a config where two both player are level 2 and Player.ONE made a square
+            // Given a config where both player are level 2 and Player.ONE made a square
             const alternateConfig: MGPOptional<QuartoConfig> = MGPOptional.of({
                 playerZeroLevel: 2,
                 playerOneLevel: 2,
@@ -226,7 +226,7 @@ describe('QuartoRules', () => {
             const state: QuartoState = new QuartoState(board, 4, BAAA);
             const node: QuartoNode = new QuartoNode(state);
 
-            // When evaluating board value
+            // When evaluating the board status
             // Then that player should win
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, alternateConfig);
         });
@@ -246,7 +246,7 @@ describe('QuartoRules', () => {
             const state: QuartoState = new QuartoState(board, 4, BAAA);
             const node: QuartoNode = new QuartoNode(state);
 
-            // When evaluating board value
+            // When evaluating the board status
             // Then Player.ZERO should win
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, alternateConfig);
         });
@@ -266,7 +266,7 @@ describe('QuartoRules', () => {
             const state: QuartoState = new QuartoState(board, 5, BAAA);
             const node: QuartoNode = new QuartoNode(state);
 
-            // When evaluating board value
+            // When evaluating the board status
             // Then Player.ZERO should win
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, alternateConfig);
         });
@@ -286,7 +286,7 @@ describe('QuartoRules', () => {
             const state: QuartoState = new QuartoState(board, 7, BAAA);
             const node: QuartoNode = new QuartoNode(state);
 
-            // When evaluating board value
+            // When evaluating the board status
             // Then Player.ONE should win
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, alternateConfig);
         });
@@ -306,7 +306,7 @@ describe('QuartoRules', () => {
             const state: QuartoState = new QuartoState(board, 5, BAAA);
             const node: QuartoNode = new QuartoNode(state);
 
-            // When evaluating board value
+            // When evaluating the board status
             // Then Player.ZERO should win
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, alternateConfig);
         });

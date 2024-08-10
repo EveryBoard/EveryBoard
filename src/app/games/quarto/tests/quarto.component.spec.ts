@@ -8,7 +8,7 @@ import { Table } from 'src/app/jscaip/TableUtils';
 import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { QuartoConfig, QuartoRules } from '../QuartoRules';
-import { MGPOptional } from 'lib/dist';
+import { MGPOptional } from '@everyboard/lib';
 
 describe('QuartoComponent', () => {
 

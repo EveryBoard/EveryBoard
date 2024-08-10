@@ -1121,9 +1121,9 @@
         <source>Initial board and object of the game</source>
         <target>Plateau initial et but du jeu</target>
       </trans-unit>
-      <trans-unit id="3853680352512576957" datatype="html">
-        <source>Advanced rules</source>
-        <target>Règles avancées</target>
+      <trans-unit id="4780631467843839550" datatype="html">
+        <source>Rules configuration</source>
+        <target>Configuration des règles</target>
       </trans-unit>
       <trans-unit id="5878048397926852057" datatype="html">
         <source>At Abalone, the object of the game is to be the first player to push 6 opponent&apos;s pieces out of the board. Let us see how!</source>
@@ -3608,9 +3608,9 @@
         <source>Failed! Your opponent can either align:&lt;ul&gt;&lt;li&gt;the squares horizontally on the third line or vertically on the third column,&lt;/li&gt;&lt;li&gt;small pieces horizontally on the first line or vertically on the second or third column,&lt;/li&gt;&lt;li&gt;empty pieces horizontally on the first line or vertically on the first column,&lt;/li&gt;&lt;li&gt;clear pieces diagonally.&lt;/li&gt;&lt;/ul&gt;</source>
         <target>Raté ! Votre adversaire peut soit aligner:&lt;ul&gt;&lt;li&gt;les carrés horizontalement sur la troisième ligne ou verticalement sur la troisième colonne ;&lt;/li&gt;&lt;li&gt;les petites pièces horizontalement sur la première ligne ou verticalement sur la deuxième ou troisième colonne ;&lt;/li&gt;&lt;li&gt;les pièces vides horizontalement sur la première ligne ou verticalement sur la première colonne ;&lt;/li&gt;&lt;li&gt;les pièces claires diagonalement.&lt;/li&gt;&lt;/ul&gt;</target>
       </trans-unit>
-      <trans-unit id="5907953721133415944" datatype="html">
-        <source>Quarto has advanced setup to make games more complicated for one, or both players.&lt;br/&gt;When you create a game and you want to change the original configuration, you can add level to one player. When your level increases, it becomes easier for you to win, so if first player is weaker at this game, make first player level two and the game will be more even and interresting.&lt;br/&gt;The level two rules correspond to added 2x2 squared.&lt;br/&gt;In this board, Light can win by making a square.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Light, win.</source>
-        <target>Quarto a des règles avancée pour rendre le jeu plus compliqué pour l'un ou pour les deux joueurs.&lt;br/&gt;Quand vous créez une partie et que vous voulez changer la configuration originale, you pouvez ajouter un niveau à un ou plusieurs joueurs.</target>
+      <trans-unit id="5439308053684781033" datatype="html">
+        <source>A game of Quarto can be configured to make it more complicated for one or both players.&lt;br/&gt;When you create a game and you want to change the original configuration, you can add level to one player. When your level increases, it becomes easier for you to win, so if the first player is weaker at this game, make the first player play at level two and the game will be more even and interresting.&lt;br/&gt;The level two rules correspond to added 2x2 squared.&lt;br/&gt;In this board, Light can win by making a square.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Light, win.</source>
+        <target>Une partie de Quarto peut être configurée pour la rendre plus compliqué pour un ou deux des joueurs.&lt;br/&gt;Quand vous créez une partie et que vous voulez changer la configuration originale, you pouvez ajouter un niveau à un ou plusieurs joueurs.</target>
       </trans-unit>
       <trans-unit id="8777433543637888557" datatype="html">
         <source>Wrong, you could have won by making a square</source>

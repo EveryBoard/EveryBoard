@@ -62,7 +62,7 @@ describe('QuartoHeuristic', () => {
     });
 
     it('should recognize "3 3" as pre-victory', () => {
-        // Given a board where 3 piece are aligned with a common criterion
+        // Given a board where 3 pieces are aligned with a common criterion
         // and another line of 3 matching another criterion
         const board: Table<QuartoPiece> = [
             [AAAA, ABBB, AAAB, ____],
@@ -72,7 +72,7 @@ describe('QuartoHeuristic', () => {
         ];
         const state: QuartoState = new QuartoState(board, 10, QuartoPiece.BBBB);
 
-        // When evaluating board value
+        // When evaluating the board status
         // Then it should be evaluated as Ongoing
         const move: QuartoMove = new QuartoMove(0, 0, QuartoPiece.BBBB);
         HeuristicUtils.expectStateToBePreVictory(state, move, Player.ZERO, [heuristic], defaultConfig);
