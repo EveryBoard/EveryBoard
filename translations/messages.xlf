@@ -495,7 +495,7 @@
         <source>Draw</source>
       </trans-unit>
       <trans-unit id="2993214884777755957" datatype="html">
-        <source>Player <x id="INTERPOLATION" equiv-text="{{ player+1 }}"/></source>
+        <source>Player <x id="INTERPOLATION" equiv-text="{{ player.getValue()+1 }}"/></source>
       </trans-unit>
       <trans-unit id="7800061171704298797" datatype="html">
         <source>Human</source>
@@ -504,7 +504,7 @@
         <source>Pick the options</source>
       </trans-unit>
       <trans-unit id="3272612818120648715" datatype="html">
-        <source><x id="INTERPOLATION" equiv-text="gameComponent.scores.get().get(Player.of(player)) }}"/> points</source>
+        <source><x id="INTERPOLATION" equiv-text="gameComponent.scores.get().get(player) }}"/> points</source>
       </trans-unit>
       <trans-unit id="6267418979719843573" datatype="html">
         <source>Pass a turn</source>
@@ -2251,8 +2251,8 @@
       <trans-unit id="2949583224863920715" datatype="html">
         <source>Sowing</source>
       </trans-unit>
-      <trans-unit id="3369432302159653901" datatype="html">
-        <source>The main move in Mancala games is sowing, let&apos;s see how seeds are sown. As you are playing Dark, the 6 houses on the bottom are yours.&lt;br/&gt;&lt;br/&gt;Click on the rightmost bottom house to sow the seeds it contains: they will be sown clockwise, one seed per house.&lt;br/&gt;&lt;br/&gt;Click on the rightmost house!</source>
+      <trans-unit id="8108647656025671310" datatype="html">
+        <source>The main move in Mancala games is sowing, let&apos;s see how seeds are sown. As you are playing Dark, the 6 houses on the bottom are yours.&lt;br/&gt;&lt;br/&gt;When you sow a house, the seeds it contains are sown clockwise, one seed per house.&lt;br/&gt;&lt;br/&gt;Click on the rightmost house!</source>
       </trans-unit>
       <trans-unit id="8909995708712093055" datatype="html">
         <source>Look at the 4 houses that follow clockwise the one you picked, they now contain one more seed. This is how seeds are sown: one by one from the house next to the one they come from, clockwise.</source>
