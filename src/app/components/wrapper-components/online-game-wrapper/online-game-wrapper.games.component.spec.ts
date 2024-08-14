@@ -31,7 +31,6 @@ describe('OnlineGameWrapperComponent (games)', () => {
             tick(2);
             testUtils.detectChanges();
 
-            // Then the svg component should have no rotation
             const wrapper: OnlineGameWrapperComponent = testUtils.getWrapper() as OnlineGameWrapperComponent;
             expect(wrapper.gameComponent).toBeDefined();
             await testUtils.getWrapper().setRole(PlayerOrNone.NONE);

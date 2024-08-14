@@ -157,7 +157,6 @@ export class SimpleComponentTestUtils<T> {
     public async expectToDisplayGameMessage<U>(message: string, fn: () => Promise<U>): Promise<U> {
         this.gameMessageSpy.and.returnValue(undefined);
         const result: U = await fn();
-        await this.whenStable();
         expect(this.gameMessageSpy).toHaveBeenCalledOnceWith(message);
         this.gameMessageSpy.calls.reset();
         this.gameMessageSpy.and.callFake(this.failOn('gameMessage')); // Restore previous spy behavior
