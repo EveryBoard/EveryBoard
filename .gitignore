@@ -65,6 +65,7 @@ games.txt
 # Backend build and coverage files
 /backend/_build
 /backend/_coverage
+/backend/*.coverage
 /backend/games.txt
 
 # sensitive files

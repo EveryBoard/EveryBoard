@@ -24,15 +24,19 @@ module Make
         let user = Auth.get_minimal_user request in
         (* Check if game exists, if it does not this will throw Not_found *)
         (* Read 1: retrieve the config room *)
-        let* config_room = Firestore.ConfigRoom.get ~request ~id:game_id in
-        let* _ =
-            if config_room.creator.id <> user.id then
-                (* Write 1: User is candidate, add it to candidate list *)
-                Firestore.ConfigRoom.add_candidate ~request ~id:game_id ~candidate:user
-            else
-                (* If the user is creator, they should not be added to the candidate list *)
-                Lwt.return () in
-        Dream.empty `OK
+        try
+            let* config_room = Firestore.ConfigRoom.get ~request ~id:game_id in
+            let* _ =
+                if config_room.creator.id <> user.id then
+                    (* Write 1: User is candidate, add it to candidate list *)
+                    Firestore.ConfigRoom.add_candidate ~request ~id:game_id ~candidate:user
+                else
+                    (* If the user is creator, they should not be added to the candidate list *)
+                    Lwt.return () in
+            Dream.empty `OK
+        with
+        | Invalid_argument _->
+            Dream.empty `Not_Found
 
     (** Route to remove a candidate (usually ourselves) from a config-room. Perform 1 read and up to 2 writes. *)
     let remove_candidate : Dream.route = Dream.delete "config-room/:game_id/candidates/:candidate_id" @@ fun (request : Dream.request) ->
