@@ -2619,8 +2619,8 @@
       <trans-unit id="8424758512320418629" datatype="html">
         <source>Failed! Your opponent can either align:&lt;ul&gt;&lt;li&gt;the squares horizontally on the third line or vertically on the third column,&lt;/li&gt;&lt;li&gt;small pieces horizontally on the first line or vertically on the second or third column,&lt;/li&gt;&lt;li&gt;empty pieces horizontally on the first line or vertically on the first column,&lt;/li&gt;&lt;li&gt;clear pieces diagonally.&lt;/li&gt;&lt;/ul&gt;</source>
       </trans-unit>
-      <trans-unit id="5439308053684781033" datatype="html">
-        <source>A game of Quarto can be configured to make it more complicated for one or both players.&lt;br/&gt;When you create a game and you want to change the original configuration, you can add level to one player. When your level increases, it becomes easier for you to win, so if the first player is weaker at this game, make the first player play at level two and the game will be more even and interresting.&lt;br/&gt;The level two rules correspond to added 2x2 squared.&lt;br/&gt;In this board, Light can win by making a square.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Light, win.</source>
+      <trans-unit id="4859304380690720659" datatype="html">
+        <source>A game of Quarto can be configured to make it more complicated for one or both players.&lt;br/&gt;When you create a game and you want to change the original configuration, you can add a level to one or two players. When your level increases, it becomes easier for you to win, so, if the first player is weaker at this game, make the first player play at level two and the game will be more even and interesting.&lt;br/&gt;At level two, a player can win by grouping pieces with a common criterion on a 2x2 square.&lt;br/&gt;In this board, Light can win by making a square.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Light, win.</source>
       </trans-unit>
       <trans-unit id="8777433543637888557" datatype="html">
         <source>Wrong, you could have won by making a square</source>

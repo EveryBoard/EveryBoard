@@ -61,8 +61,8 @@ export class QuartoTutorial extends Tutorial {
             $localize`Failed! Your opponent can either align:<ul><li>the squares horizontally on the third line or vertically on the third column,</li><li>small pieces horizontally on the first line or vertically on the second or third column,</li><li>empty pieces horizontally on the first line or vertically on the first column,</li><li>clear pieces diagonally.</li></ul>`,
         ),
         TutorialStep.fromPredicate(
-            TutorialStepMessage.ADVANCED_RULES(),
-            $localize`A game of Quarto can be configured to make it more complicated for one or both players.<br/>When you create a game and you want to change the original configuration, you can add level to one player. When your level increases, it becomes easier for you to win, so if the first player is weaker at this game, make the first player play at level two and the game will be more even and interresting.<br/>The level two rules correspond to added 2x2 squared.<br/>In this board, Light can win by making a square.<br/><br/>You're playing Light, win.`,
+            TutorialStepMessage.RULES_CONFIGURATION(),
+            $localize`A game of Quarto can be configured to make it more complicated for one or both players.<br/>When you create a game and you want to change the original configuration, you can add a level to one or two players. When your level increases, it becomes easier for you to win, so, if the first player is weaker at this game, make the first player play at level two and the game will be more even and interesting.<br/>At level two, a player can win by grouping pieces with a common criterion on a 2x2 square.<br/>In this board, Light can win by making a square.<br/><br/>You're playing Light, win.`,
             new QuartoState([
                 [AAAA, AAAB, ____, ____],
                 [AABA, ____, ____, ____],

@@ -220,8 +220,7 @@ class DescendingDiagonalVictoryPattern extends VictoryPattern {
         return state
             .getCoordsAndContents()
             .map((coordAndContent: { coord: Coord; content: QuartoPiece}) => coordAndContent.coord)
-            .filter((coord: Coord) => coord.x <= maxX)
-            .filter((coord: Coord) => coord.y <= maxY)
+            .filter((coord: Coord) => coord.x <= maxX && coord.y <= maxY)
             .map((coord: Coord) => new DescendingDiagonalVictoryPattern(coord));
     }
 
@@ -249,8 +248,7 @@ class AscendingDiagonalVictoryPattern extends VictoryPattern {
         return state
             .getCoordsAndContents()
             .map((coordAndContent: { coord: Coord; content: QuartoPiece}) => coordAndContent.coord)
-            .filter((coord: Coord) => coord.x <= maxX)
-            .filter((coord: Coord) => minY <= coord.y && coord.y <= maxY)
+            .filter((coord: Coord) => coord.x <= maxX && minY <= coord.y && coord.y <= maxY)
             .map((coord: Coord) => new AscendingDiagonalVictoryPattern(coord));
     }
 
@@ -277,8 +275,7 @@ class SquareVictoryPattern extends VictoryPattern {
         return state
             .getCoordsAndContents()
             .map((coordAndContent: { coord: Coord; content: QuartoPiece}) => coordAndContent.coord)
-            .filter((coord: Coord) => coord.x <= maxX)
-            .filter((coord: Coord) => coord.y <= maxY)
+            .filter((coord: Coord) => coord.x <= maxX &&coord.y <= maxY)
             .map((coord: Coord) => new SquareVictoryPattern(coord));
     }
 
