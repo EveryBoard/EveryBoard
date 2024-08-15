@@ -1996,4 +1996,3 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
     });
 
 });
-
