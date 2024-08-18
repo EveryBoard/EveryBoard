@@ -483,46 +483,38 @@ export class QuartoRules extends ConfigurableRules<QuartoMove, QuartoState, Quar
         };
         const maxLevel: number = Math.max(config.get().playerZeroLevel, config.get().playerOneLevel);
         const patterns: VictoryPattern[] = this.getPatterns(maxLevel, state);
-        const currentPlayer: Player = state.getCurrentPlayer();
-        let currentPlayerMadeAVictory: boolean = false;
+        // at turn N, the previous opponent is the current player at turn N+1
+        const opponent: Player = state.getCurrentPlayer();
+        const player: Player = opponent.getOpponent();
+        let playerMadeAVictory: boolean = false;
         for (const pattern of patterns) {
             const boardStatusUpdate: BoardStatusUpdate = this.updateBoardStatus(pattern, state, boardStatus);
             boardStatus = boardStatusUpdate.boardStatus;
             if (boardStatusUpdate.isUpdated && boardStatus.status === AlignmentStatus.VICTORY) {
-                if (this.isOnlyCurrentOpponentVictory(pattern, config.get(), currentPlayer)) {
-                    return GameStatus.getVictory(currentPlayer);
-                } else if (this.isCurrentPlayerVictory(pattern, config.get(), currentPlayer)) {
-                    currentPlayerMadeAVictory = true;
+                if (this.isOnlyPlayerVictory(pattern, config.get(), opponent)) {
+                    return GameStatus.getVictory(opponent);
+                } else if (this.isPlayerVictory(pattern, config.get(), player)) {
+                    playerMadeAVictory = true;
                 }
             }
         }
-        if (currentPlayerMadeAVictory) {
-            return GameStatus.getDefeat(currentPlayer);
+        if (playerMadeAVictory) {
+            return GameStatus.getVictory(player);
         }
         return boardStatus.status.toGameStatus(state.turn);
     }
 
-    private isCurrentPlayerVictory(pattern: VictoryPattern, config: QuartoConfig, currentPlayer: Player): boolean {
-        const playerLevel: number = currentPlayer === Player.ZERO ? config.playerZeroLevel : config.playerOneLevel;
-        if (pattern.level <= playerLevel) {
-            return true;
+    private isPlayerVictory(pattern: VictoryPattern, config: QuartoConfig, player: Player): boolean {
+        if (player === Player.ZERO) {
+            return pattern.level <= config.playerZeroLevel;
         } else {
-            return false;
+            return pattern.level <= config.playerOneLevel;
         }
     }
 
-    private isOnlyCurrentOpponentVictory(pattern: VictoryPattern, config: QuartoConfig, currentPlayer: Player)
-    : boolean
-    {
-        const opponentLevel: number = currentPlayer === Player.ZERO ? config.playerZeroLevel : config.playerOneLevel;
-        const playerLevel: number = currentPlayer === Player.ZERO ? config.playerOneLevel : config.playerZeroLevel;
-        if (playerLevel < pattern.level) {
-            if (pattern.level <= opponentLevel) {
-                // It is a victory pattern only allowed for opponent
-                return true;
-            }
-        }
-        return false;
+    private isOnlyPlayerVictory(pattern: VictoryPattern, config: QuartoConfig, player: Player): boolean {
+        return this.isPlayerVictory(pattern, config, player) &&
+               this.isPlayerVictory(pattern, config, player.getOpponent()) === false;
     }
 
     public getPatterns(level: number, state: QuartoState): VictoryPattern[] {

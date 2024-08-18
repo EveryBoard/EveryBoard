@@ -62,7 +62,7 @@ export class QuartoTutorial extends Tutorial {
         ),
         TutorialStep.fromPredicate(
             TutorialStepMessage.RULES_CONFIGURATION(),
-            $localize`A game of Quarto can be configured to make it more complicated for one or both players.<br/>When you create a game and you want to change the original configuration, you can add a level to one or two players. When your level increases, it becomes easier for you to win, so, if the first player is weaker at this game, make the first player play at level two and the game will be more even and interesting.<br/>At level two, a player can win by grouping pieces with a common criterion on a 2x2 square.<br/>In this board, Light can win by making a square.<br/><br/>You're playing Light, win.`,
+            $localize`A game of Quarto can be configured to make it more complicated for one or both players.<br/>When you create a game and you want to change the original configuration, you can add a level to one or both players. When your level increases, it becomes easier for you to win. So, if the first player is weaker at this game, make the first player play at level two and the game will be more even and interesting.<br/>At level two, a player can win by grouping pieces with a common criterion on a 2x2 square.<br/>In this board, Light can win by making a square.<br/><br/>You're playing Light, win.`,
             new QuartoState([
                 [AAAA, AAAB, ____, ____],
                 [AABA, ____, ____, ____],
