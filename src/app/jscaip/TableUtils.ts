@@ -72,17 +72,17 @@ export class TableUtils {
         return total;
     }
 
-    public static getLefterMatch<T>(table: Table<T>, predicate: (element: T) => boolean): number {
+    public static getLeftestMatch<T>(table: Table<T>, predicate: (element: T) => boolean): MGPOptional<number> {
         const width: number = table[0].length;
         const height: number = table.length;
         for (let x: number = 0; x < width; x++) {
             for (let y: number = 0; y < height; y++) {
                 if (predicate(table[y][x])) {
-                    return x;
+                    return MGPOptional.of(x);
                 }
             }
         }
-        return -1;
+        return MGPOptional.empty();
     }
 
 }

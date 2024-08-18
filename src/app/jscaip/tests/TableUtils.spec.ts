@@ -73,28 +73,28 @@ describe('TableUtils', () => {
 
     });
 
-    describe('getLefterMatch', () => {
+    describe('getLeftestMatch', () => {
 
-        it('should return -1 when there is no match', () => {
+        it('should return empty optional when there is no match', () => {
             // Given a board without 0
             const table: Table<number> = [[1, 1, 1]];
 
-            // When asking lefter match of value 0
-            const result: number = TableUtils.getLefterMatch(table, (element: number) => element === 0);
+            // When asking the index of the leftest value matching 0
+            const result: MGPOptional<number> = TableUtils.getLeftestMatch(table, (element: number) => element === 0);
 
             // Then the result should be -1
-            expect(result).toBe(-1);
+            expect(result).toBe(MGPOptional.empty());
         });
 
-        it('should return index when there is a match', () => {
+        it('should return an optional of the index of the match when there is one', () => {
             // Given a board with a 0 in index 0
             const table: Table<number> = [[0, 1, 1]];
 
-            // When asking lefter match of value 0
-            const result: number = TableUtils.getLefterMatch(table, (element: number) => element === 0);
+            // When asking the index of the leftest value matching 0
+            const result: MGPOptional<number> = TableUtils.getLeftestMatch(table, (element: number) => element === 0);
 
             // Then the result should be 0 (since it is the first index)
-            expect(result).toBe(0);
+            expect(result.get()).toBe(0);
         });
 
     });
