@@ -72,6 +72,19 @@ export class TableUtils {
         return total;
     }
 
+    public static getLefterMatch<T>(table: Table<T>, predicate: (element: T) => boolean): number {
+        const width: number = table[0].length;
+        const height: number = table.length;
+        for (let x: number = 0; x < width; x++) {
+            for (let y: number = 0; y < height; y++) {
+                if (predicate(table[y][x])) {
+                    return x;
+                }
+            }
+        }
+        return -1;
+    }
+
 }
 
 export type Cell<T> = {
