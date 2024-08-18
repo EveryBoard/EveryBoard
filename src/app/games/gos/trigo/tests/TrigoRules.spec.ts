@@ -782,7 +782,7 @@ describe('TrigoRules', () => {
         expect(score).withContext('Score should be 2 vs 4').toEqual(expectedScore);
     });
 
-    fdescribe('alternative configs', () => {
+    describe('alternative configs', () => {
 
         it('should make valid shape on hexagonal mode (size 1)', () => {
             // Given an alternative config, hexagonal of size 1
