@@ -83,7 +83,7 @@ describe('TableUtils', () => {
             const result: MGPOptional<number> = TableUtils.getLeftestMatch(table, (element: number) => element === 0);
 
             // Then the result should be -1
-            expect(result).toBe(MGPOptional.empty());
+            expect(result.isAbsent()).toBeTrue();
         });
 
         it('should return an optional of the index of the match when there is one', () => {
