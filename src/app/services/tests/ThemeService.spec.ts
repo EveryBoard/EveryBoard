@@ -20,6 +20,7 @@ describe('ThemeService', () => {
         themeService = TestBed.inject(ThemeService);
     }
 
+    // TODO: investigate remaining whenStable and possibly remove all of them
     describe('without stored theme nor preferred color scheme', () => {
         beforeEach(fakeAsync(async() => {
             await prepare();
