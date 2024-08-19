@@ -20,7 +20,6 @@ describe('ThemeService', () => {
         themeService = TestBed.inject(ThemeService);
     }
 
-    // TODO: investigate remaining whenStable and possibly remove all of them
     describe('without stored theme nor preferred color scheme', () => {
         beforeEach(fakeAsync(async() => {
             await prepare();
@@ -29,7 +28,6 @@ describe('ThemeService', () => {
         it('should load some theme at construction', fakeAsync(async() => {
             // When the page loads
             testUtils.detectChanges();
-            await testUtils.whenStable();
             tick(1000);
             // Then the CSS is set to an existing theme
             expect(getThemeElement().href).toMatch('/(light|dark).css$');

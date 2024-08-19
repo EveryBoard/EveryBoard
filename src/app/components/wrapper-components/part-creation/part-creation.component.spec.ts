@@ -77,7 +77,7 @@ describe('PartCreationComponent', () => {
     async function clickElement(elementName: string): Promise<void> {
         // [W] [medium] PartCreationComponent & TestUtils refactor
         testUtils.detectChanges();
-        await testUtils.clickElement(elementName, false);
+        await testUtils.clickElement(elementName);
     }
     function expectElementToExist(elementName: string): void {
         // [W] [medium] PartCreationComponent & TestUtils refactor
@@ -638,7 +638,7 @@ describe('PartCreationComponent', () => {
                 // When the component is destroyed
                 spyOn(component, 'cancelGameCreation').and.callThrough();
                 testUtils.destroy();
-                await testUtils.whenStable();
+                tick(1);
                 destroyed = true;
 
                 // Then it should not delete anything
