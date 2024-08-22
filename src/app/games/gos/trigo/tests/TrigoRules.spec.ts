@@ -794,7 +794,7 @@ describe('TrigoRules', () => {
             // When getting initial board
             const board: Table<GoPiece> = rules.getInitialState(alternateConfig).board;
 
-            // Then it should have
+            // Then it should have a correct table (trailing N because sizes are even)
             const expectedBoard: Table<GoPiece> = [
                 [_, _, _, N],
                 [_, _, _, N],
@@ -812,7 +812,7 @@ describe('TrigoRules', () => {
             // When getting initial board
             const board: Table<GoPiece> = rules.getInitialState(alternateConfig).board;
 
-            // Then it should have ()
+            // Then it should have a correct table
             const expectedBoard: Table<GoPiece> = [
                 [N, N, _, _, _, _, _, N],
                 [N, _, _, _, _, _, _, _],

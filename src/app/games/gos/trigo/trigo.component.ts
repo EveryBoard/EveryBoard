@@ -67,12 +67,12 @@ export class TrigoComponent extends TriangularGameComponent<TrigoRules,
 
     public getViewBox(): ViewBox {
         const state: GoState = this.getState();
-        const leftestOccupiedX: number = TableUtils.getLeftestMatch(state.board, GoPiece.isReachable).get();
+        const leftmostOccupiedX: number = TableUtils.getLeftmostMatchIndex(state.board, GoPiece.isReachable).get();
         const width: number = state.board[0].length;
-        const occupiedWidth: number = width - leftestOccupiedX;
+        const occupiedWidth: number = width - leftmostOccupiedX;
         const abstractSize: number = occupiedWidth / 2;
         const oddnessOffset: number = 0.5 * this.SPACE_SIZE * (occupiedWidth % 2);
-        const evennessOffset: number = leftestOccupiedX * 0.5 * this.SPACE_SIZE;
+        const evennessOffset: number = leftmostOccupiedX * 0.5 * this.SPACE_SIZE;
         return new ViewBox(
             evennessOffset,
             0,
