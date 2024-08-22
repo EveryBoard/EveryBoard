@@ -6,7 +6,6 @@ import { Coord } from '../Coord';
 import { Move } from '../Move';
 import { GameState } from '../state/GameState';
 import { Player } from '../Player';
-import { GameStatus } from '../GameStatus';
 
 /**
  * Represents possible alignment configurations
