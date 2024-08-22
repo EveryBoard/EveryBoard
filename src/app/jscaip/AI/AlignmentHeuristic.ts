@@ -35,14 +35,6 @@ export class AlignmentStatus {
         }
     }
 
-    public toGameStatus(turn: number): GameStatus {
-        const loser: Player = Player.of(turn % 2);
-        if (this === AlignmentStatus.VICTORY) {
-            return GameStatus.getDefeat(loser);
-        }
-        return turn === 16 ? GameStatus.DRAW : GameStatus.ONGOING;
-    }
-
 }
 
 export interface BoardInfo {
@@ -86,6 +78,7 @@ export abstract class AlignmentHeuristic<M extends Move,
         }
         return boardInfo;
     }
+
     public abstract startSearchingVictorySources(): void;
 
     public abstract hasNextVictorySource(): boolean;

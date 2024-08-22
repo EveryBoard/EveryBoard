@@ -501,7 +501,11 @@ export class QuartoRules extends ConfigurableRules<QuartoMove, QuartoState, Quar
         if (playerMadeAVictory) {
             return GameStatus.getVictory(player);
         }
-        return boardStatus.status.toGameStatus(state.turn);
+        if (state.turn === 16) {
+            return GameStatus.DRAW;
+        } else {
+            return GameStatus.ONGOING;
+        }
     }
 
     private isPlayerVictory(pattern: VictoryPattern, config: QuartoConfig, player: Player): boolean {
