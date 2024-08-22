@@ -221,8 +221,8 @@ export abstract class GameComponent<R extends SuperRules<M, S, C, L>,
     }
 
     public getArrowTransform(boardWidth: number, boardHeight: number, orthogonal: Orthogonal): string {
-        // The triangle will be wrapped inside a square
-        // The board will be considered in this example as a 3x3 on which we place the triangle in (tx, ty)
+        // The triangle that forms the arrow head will be wrapped inside a square
+        // The board will be considered here as a 3x3 on which we place the triangle in (tx, ty)
         let tx: number;
         let ty: number;
         switch (orthogonal) {
