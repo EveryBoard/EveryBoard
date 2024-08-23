@@ -142,7 +142,7 @@ export class TrigoComponent extends TriangularGameComponent<TrigoRules,
         } else {
             y = 15;
         }
-        return 'translate(20 ' + y + ') scale(0.6)';
+        return this.getSVGTranslation(20, y) + ' scale(0.6)';
     }
 
     public isUpward(coord: Coord): boolean {

@@ -14,6 +14,7 @@ import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 import { Debug } from 'src/app/utils/Debug';
 import { GameInfo } from '../../normal-component/pick-game/pick-game.component';
 import { BaseComponent } from '../../BaseComponent';
+import { Orthogonal } from 'src/app/jscaip/Orthogonal';
 
 /**
  * Define some methods that are useful to have in game components.
@@ -217,6 +218,39 @@ export abstract class GameComponent<R extends SuperRules<M, S, C, L>,
         const svgX: number = x * this.SPACE_SIZE;
         const svgY: number = y * this.SPACE_SIZE;
         return this.getSVGTranslation(svgX, svgY);
+    }
+
+    public getArrowTransform(boardWidth: number, boardHeight: number, orthogonal: Orthogonal): string {
+        // The triangle that forms the arrow head will be wrapped inside a square
+        // The board will be considered here as a 3x3 on which we place the triangle in (tx, ty)
+        let tx: number;
+        let ty: number;
+        switch (orthogonal) {
+            case Orthogonal.UP:
+                tx = 1;
+                ty = 0;
+                break;
+            case Orthogonal.DOWN:
+                tx = 1;
+                ty = 2;
+                break;
+            case Orthogonal.LEFT:
+                tx = 0;
+                ty = 1;
+                break;
+            default:
+                Utils.expectToBe(orthogonal, Orthogonal.RIGHT);
+                tx = 2;
+                ty = 1;
+                break;
+        }
+        const scale: string = `scale( ${ boardWidth / 300} ${ boardHeight / 300 } )`;
+        const realX: number = tx * 100;
+        const realY: number = ty * 100;
+        const translation: string = this.getSVGTranslation(realX, realY);
+        const angle: number = orthogonal.getAngle();
+        const rotation: string = 'rotate(' + angle + ' 50 50)';
+        return [scale, translation, rotation].join(' ');
     }
 
 }
