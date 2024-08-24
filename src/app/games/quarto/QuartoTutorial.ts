@@ -74,7 +74,7 @@ export class QuartoTutorial extends Tutorial {
                 if (move.coord.equals(new Coord(1, 1))) {
                     return MGPValidation.SUCCESS;
                 } else {
-                    return MGPValidation.failure($localize`Wrong, you could have won by making a square`);
+                    return MGPValidation.failure($localize`Wrong, you could have won by making a square.`);
                 }
             },
             $localize`Well done!`,

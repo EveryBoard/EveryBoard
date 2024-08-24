@@ -2044,7 +2044,7 @@
       </trans-unit>
       <trans-unit id="6204412729347708092" datatype="html">
         <source>You won, but the exercise is to win while moving a piece!</source>
-        <target>Vous avez gagné, mais le but de l'exercice est de gagner en faisant un déplacmement !</target>
+        <target>Vous avez gagné, mais le but de l'exercice est de gagner en formant un déplacmement !</target>
       </trans-unit>
       <trans-unit id="360730166369316579" datatype="html">
         <source>Attack</source>
@@ -3610,11 +3610,11 @@
       </trans-unit>
       <trans-unit id="5648428630068792235" datatype="html">
         <source>A game of Quarto can be configured to make it more complicated for one or both players.&lt;br/&gt;When you create a game and you want to change the original configuration, you can add a level to one or both players. When your level increases, it becomes easier for you to win. So, if the first player is weaker at this game, make the first player play at level two and the game will be more even and interesting.&lt;br/&gt;At level two, a player can win by grouping pieces with a common criterion on a 2x2 square.&lt;br/&gt;In this board, Light can win by making a square.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Light, win.</source>
-        <target>Une partie de Quarto peut être configurée pour la rendre plus compliquée pour un ou deux des joueurs.&lt;br/&gt;Quand vous créez une partie et que vous voulez changer la configuration originale, vous pouvez ajouter un niveau à un ou plusieurs joueurs. Quand votre niveau augmente, cela devient plus facile pour vous de gagner. Donc, si le premier joueur est plus faible à ce jeu, faites le jouer au niveau deux et la partie sera plus intéréssante.&lt;br/&gt;Au niveau deux, un joueur peut gagner en groupant des pièces avec un critère commun sur un carré de 2x2.&lt;br/&gt;Sur ce plateau, Clair peu gagner en faisant un carré.&lt;br/&gt;&lt;br/&gt;Vous jouez Clair, gagnez.</target>
+        <target>Une partie de Quarto peut être configurée pour la rendre plus compliquée pour un ou deux des joueurs.&lt;br/&gt;Quand vous créez une partie et que vous voulez changer la configuration originale, vous pouvez ajouter un niveau à un ou plusieurs joueurs. Quand votre niveau augmente, cela devient plus facile pour vous de gagner. Donc, si le premier joueur est plus faible à ce jeu, faites le jouer au niveau deux et la partie sera plus intéréssante.&lt;br/&gt;Au niveau deux, un joueur peut gagner en groupant des pièces avec un critère commun sur un carré de 2x2.&lt;br/&gt;Sur ce plateau, Clair peu gagner en formant un carré.&lt;br/&gt;&lt;br/&gt;Vous jouez Clair, gagnez.</target>
       </trans-unit>
-      <trans-unit id="8777433543637888557" datatype="html">
-        <source>Wrong, you could have won by making a square</source>
-        <target>Raté, vous auriez pu gagner en faisant un carré</target>
+      <trans-unit id="2467449610168621115" datatype="html">
+        <source>Wrong, you could have won by making a square.</source>
+        <target>Raté, vous auriez pu gagner en formant un carré.</target>
       </trans-unit>
       <trans-unit id="8819839276456625538" datatype="html">
         <source>You must pick a space from the edge of the board.</source>

@@ -276,7 +276,7 @@ describe('TutorialGameWrapperComponent (games)', () => {
                     QuartoRules.get(),
                     quartoTutorial[3],
                     new QuartoMove(2, 2, QuartoPiece.AABB),
-                    MGPValidation.failure($localize`Wrong, you could have won by making a square`),
+                    MGPValidation.failure($localize`Wrong, you could have won by making a square.`),
                 ], [
                     SaharaRules.get(),
                     saharaTutorial[2],
