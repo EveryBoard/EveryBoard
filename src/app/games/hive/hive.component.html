@@ -49,7 +49,7 @@
             <polygon *ngIf="pieceInfo.content.strokeClasses.length > 0"
                      id="piece-stroke-{{ pieceInfo.x }}-{{ pieceInfo.y }}-{{ z }}"
                      [attr.points]="getHexaPoints()"
-                     [attr.transform]="'translate(0 ' + -(z+1) * PIECE_HEIGHT + ')'"
+                     [attr.transform]="getSVGTranslation(0, -(z+1) * PIECE_HEIGHT)"
                      class="base no-fill small-stroke"
                      [ngClass]="pieceInfo.content.strokeClasses"
                      (click)="selectPiece(pieceInfo.x, pieceInfo.y, z)"/>
