@@ -41,7 +41,7 @@ export class Debug {
             return verbosity[name] as [boolean, boolean];
         }
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        catch (e) {
+        catch (e: unknown) {
             // Verbosity is not proper JSON
             throw new Error(`malformed verbosity object: ${verbosityJSON}`);
         }
