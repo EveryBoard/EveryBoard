@@ -331,7 +331,9 @@ export abstract class MancalaComponent<R extends MancalaRules>
     }
 
     public getPieceTransform(x: number, y: number): string {
-        return 'translate(' + this.getPieceCx(x) + ', ' + this.getPieceCy(y) + ')';
+        const cx: number = this.getPieceCx(x);
+        const cy: number = this.getPieceCy(y);
+        return this.getSVGTranslation(cx, cy);
     }
 
     public getPieceRotation(): string {

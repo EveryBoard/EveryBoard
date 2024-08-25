@@ -272,8 +272,7 @@ export class LascaComponent extends ParallelogramGameComponent<LascaRules,
     public getTranslationAtXYZ(x: number, y: number, z: number): string {
         const adaptedCoord: Coord = this.adaptXY(x, y);
         const coordTransform: Coord = this.getCoordTranslation(adaptedCoord.x, adaptedCoord.y, z, this.mode);
-        const translation: string = 'translate(' + coordTransform.x + ' ' + coordTransform.y + ')';
-        return translation;
+        return this.getSVGTranslationAt(coordTransform);
     }
 
     private adaptXY(x: number, y: number): Coord {
@@ -350,7 +349,7 @@ export class LascaComponent extends ParallelogramGameComponent<LascaRules,
         const offsetY: number = cy - pieceCy;
         // Each piece on the Z axis will be higher, here is how much (see the define to confirm)
         const pieceHeight: number = this.SPACE_SIZE * 0.15;
-        return 'translate(' + 0 + ' ' + (offsetY - (z * pieceHeight)) + ')';
+        return this.getSVGTranslation(0, offsetY - (z * pieceHeight));
     }
 
 }
