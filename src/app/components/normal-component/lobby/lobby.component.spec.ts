@@ -46,7 +46,6 @@ describe('LobbyComponent', () => {
 
             // When clicking on the 'create game' tab
             await testUtils.clickElement('#tab-create');
-            await testUtils.whenStable();
 
             // Then online-game-selection component should be on the page
             testUtils.expectElementToExist('#online-game-selection');
@@ -66,7 +65,6 @@ describe('LobbyComponent', () => {
                 await testUtils.clickElement('#tab-create');
             });
 
-            await testUtils.whenStable();
             testUtils.expectElementNotToExist('#online-game-selection');
         }));
 

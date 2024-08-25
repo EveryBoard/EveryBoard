@@ -19,7 +19,6 @@ describe('RulesConfigurationComponent', () => {
         selectAI.value = selectAI.options[configIndex].value;
         selectAI.dispatchEvent(new Event('change'));
         testUtils.detectChanges();
-        await testUtils.whenStable();
     }
 
     beforeEach(async() => {
