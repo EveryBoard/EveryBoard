@@ -67,7 +67,7 @@ export class TrigoComponent extends TriangularGameComponent<TrigoRules,
 
     public getViewBox(): ViewBox {
         const state: GoState = this.getState();
-        const leftmostOccupiedX: number = TableUtils.getLeftmostMatchIndex(state.board, GoPiece.isReachable).get();
+        const leftmostOccupiedX: number = TableUtils.getLeftmostMatchColumn(state.board, GoPiece.isReachable).get();
         const width: number = state.board[0].length;
         const occupiedWidth: number = width - leftmostOccupiedX;
         const abstractSize: number = occupiedWidth / 2;

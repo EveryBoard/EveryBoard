@@ -73,10 +73,9 @@ export class TableUtils {
     }
 
     /**
-     * We will consider than in each sub array of this tile, index 0 is the leftmost index
-     * Hence amongst all the match of the predicate inside sur array of table, the lower index is returned
+     * Return the column of the leftmost match in each line of this table
      */
-    public static getLeftmostMatchIndex<T>(table: Table<T>, predicate: (element: T) => boolean): MGPOptional<number> {
+    public static getLeftmostMatchColumn<T>(table: Table<T>, predicate: (element: T) => boolean): MGPOptional<number> {
         const width: number = table[0].length;
         const height: number = table.length;
         for (let x: number = 0; x < width; x++) {
