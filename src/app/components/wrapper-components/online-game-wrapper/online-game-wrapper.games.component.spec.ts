@@ -27,7 +27,6 @@ describe('OnlineGameWrapperComponent (games)', () => {
             testUtils = (await prepareStartedGameFor<AbstractGameComponent>(UserMocks.CREATOR_AUTH_USER,
                                                                             gameInfo.urlName,
                                                                             PreparationOptions.dontWait)).testUtils;
-            // When displaying the component
             tick(2);
             testUtils.detectChanges();
 
