@@ -544,7 +544,6 @@ describe('LocalGameWrapperComponent (game phase)', () => {
             await testUtils.expectMoveSuccess('#click-3-0', P4Move.of(3));
             await testUtils.expectMoveSuccess('#click-3-0', P4Move.of(3));
             await testUtils.selectAIPlayer(Player.ONE);
-            await testUtils.whenStable();
 
             // When user take back
             expect(testUtils.getGameComponent().getTurn()).toBe(2);
