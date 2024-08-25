@@ -292,12 +292,14 @@ jobs:
             npm install @angular-devkit/architect
             npx ng deploy --base-href=/ --repo=https://github.com/EveryBoard/master --cname=everyboard.org --message="Deployment from action (commit $GITHUB_SHA)" --name acieroid --email 'everyboard@everyboard.org' --configuration=production
             # deploy backend
-            mkdir -p ~/.ssh/
-            cat > ~/.ssh/known_hosts <<< "$SSH_KNOWN_HOSTS"
-            cat > ~/.ssh/id_rsa <<< "$SSH_KEY"
-            chmod u+rw,go-rw,a-x ~/.ssh/id_rsa
-            cat > backend/service-account.json <<< "$SERVICE_ACCOUNT"
-            cd backend && make deploy target=master user=$SSH_USER server=$SSH_SERVER port=$SSH_PORT listen-port=8003 args="-no-emulator -project everyboard -origin 'https://everyboard.org' -endpoint 'https://firestore.googleapis.com'"
+            if ./scripts/backend_needs_deployment.sh server.everyboard.org; then
+                mkdir -p ~/.ssh/
+                cat > ~/.ssh/known_hosts <<< "$SSH_KNOWN_HOSTS"
+                cat > ~/.ssh/id_rsa <<< "$SSH_KEY"
+                chmod u+rw,go-rw,a-x ~/.ssh/id_rsa
+                cat > backend/service-account.json <<< "$SERVICE_ACCOUNT"
+                cd backend && make deploy target=master user=$SSH_USER server=$SSH_SERVER port=$SSH_PORT listen-port=8003 args="-no-emulator -project everyboard -origin 'https://everyboard.org' -endpoint 'https://firestore.googleapis.com'"
+              fi
           fi
         env:
           GH_TOKEN: ${{ secrets.DEPLOY_GH_TOKEN }}
@@ -316,12 +318,14 @@ jobs:
             npm install @angular-devkit/architect
             npx ng deploy --base-href=/ --repo=https://github.com/EveryBoard/develop --cname=dev.everyboard.org --message="Deployment from action (commit $GITHUB_SHA)" --name acieroid --email 'everyboard@everyboard.org' --configuration=dev
             # deploy backend
-            mkdir -p ~/.ssh/
-            cat > ~/.ssh/known_hosts <<< "$SSH_KNOWN_HOSTS"
-            cat > ~/.ssh/id_rsa <<< "$SSH_KEY"
-            chmod u+rw,go-rw,a-x ~/.ssh/id_rsa
-            cat > backend/service-account.json <<< "$SERVICE_ACCOUNT"
-            cd backend && make deploy target=dev user=$SSH_USER server=$SSH_SERVER port=$SSH_PORT listen-port=8002 args="-no-emulator -project everyboard-dev -origin 'https://dev.everyboard.org' -endpoint 'https://firestore.googleapis.com'"
+            if ./scripts/backend_needs_deployment.sh server-dev.everyboard.org; then
+                mkdir -p ~/.ssh/
+                cat > ~/.ssh/known_hosts <<< "$SSH_KNOWN_HOSTS"
+                cat > ~/.ssh/id_rsa <<< "$SSH_KEY"
+                chmod u+rw,go-rw,a-x ~/.ssh/id_rsa
+                cat > backend/service-account.json <<< "$SERVICE_ACCOUNT"
+                cd backend && make deploy target=dev user=$SSH_USER server=$SSH_SERVER port=$SSH_PORT listen-port=8002 args="-no-emulator -project everyboard-dev -origin 'https://dev.everyboard.org' -endpoint 'https://firestore.googleapis.com'"
+            fi
           fi
         env:
           GH_TOKEN: ${{ secrets.DEPLOY_GH_TOKEN }}
@@ -385,12 +389,15 @@ jobs:
             npm run build:netlify
             npm install netlify-cli
             netlify deploy --dir=dist/everyboard --alias="$GITHUB_HEAD_REF" --message="Deployment from github ($GITHUB_HEAD_REF, commit $GITHUB_SHA)"
-            mkdir -p ~/.ssh/
-            cat > ~/.ssh/known_hosts <<< "$SSH_KNOWN_HOSTS"
-            cat > ~/.ssh/id_rsa <<< "$SSH_KEY"
-            chmod u+rw,go-rw,a-x ~/.ssh/id_rsa
-            cat > backend/service-account.json <<< "$SERVICE_ACCOUNT"
-            cd backend && make deploy target=test user=$SSH_USER server=$SSH_SERVER port=$SSH_PORT listen-port=8001 args="-no-emulator -project everyboard-test -origin '*' -endpoint 'https://firestore.googleapis.com' -show-errors"
+            # deploy backend
+            if ./scripts/backend_needs_deployment.sh server-test.everyboard.org; then
+                mkdir -p ~/.ssh/
+                cat > ~/.ssh/known_hosts <<< "$SSH_KNOWN_HOSTS"
+                cat > ~/.ssh/id_rsa <<< "$SSH_KEY"
+                chmod u+rw,go-rw,a-x ~/.ssh/id_rsa
+                cat > backend/service-account.json <<< "$SERVICE_ACCOUNT"
+                cd backend && make deploy target=test user=$SSH_USER server=$SSH_SERVER port=$SSH_PORT listen-port=8001 args="-no-emulator -project everyboard-test -origin '*' -endpoint 'https://firestore.googleapis.com' -show-errors"
+            fi
           fi
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
