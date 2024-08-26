@@ -260,10 +260,10 @@ export class SiamComponent extends RectangularGameComponent<SiamRules,
         return piece === SiamPiece.MOUNTAIN;
     }
 
-    public getArrowTransform(x: number, y: number, direction: Orthogonal): string {
+    public getSiamArrowTransform(x: number, y: number, direction: Orthogonal): string {
         const orientation: number = direction.toInt() - 2;
         const rotation: string = this.getRotation(orientation);
-        const translation: string = 'translate(' + x * this.SPACE_SIZE + ', ' + y * this.SPACE_SIZE + ')';
+        const translation: string = this.getSVGTranslation(x * this.SPACE_SIZE, y * this.SPACE_SIZE);
         return [translation, rotation].join(' ');
     }
 
@@ -279,12 +279,12 @@ export class SiamComponent extends RectangularGameComponent<SiamRules,
 
     public getPieceTransform(x: number, y: number): string {
         const piece: SiamPiece = this.board[y][x];
-        return this.getArrowTransform(x, y, piece.getDirection());
+        return this.getSiamArrowTransform(x, y, piece.getDirection());
     }
 
     public getIndicatorTransform(arrow: SiamIndicatorArrow): string {
         const startingAt: Coord = arrow.target.getPrevious(arrow.direction, 0.5);
-        return this.getArrowTransform(startingAt.x, startingAt.y, arrow.direction);
+        return this.getSiamArrowTransform(startingAt.x, startingAt.y, arrow.direction);
     }
 
     public getRemainingPieceTransform(piece: number, player: Player): string {
@@ -307,7 +307,7 @@ export class SiamComponent extends RectangularGameComponent<SiamRules,
             y = -1;
             orientation = Orthogonal.RIGHT;
         }
-        return this.getArrowTransform(x, y, orientation);
+        return this.getSiamArrowTransform(x, y, orientation);
     }
 
     public getPieceClasses(x: number, y: number, c: SiamPiece): string[] {

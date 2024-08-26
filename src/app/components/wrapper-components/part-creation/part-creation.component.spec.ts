@@ -77,7 +77,7 @@ describe('PartCreationComponent', () => {
     async function clickElement(elementName: string): Promise<void> {
         // [W] [medium] PartCreationComponent & TestUtils refactor
         testUtils.detectChanges();
-        await testUtils.clickElement(elementName, false);
+        await testUtils.clickElement(elementName);
     }
     function expectElementToExist(elementName: string): void {
         // [W] [medium] PartCreationComponent & TestUtils refactor
@@ -638,7 +638,7 @@ describe('PartCreationComponent', () => {
                 // When the component is destroyed
                 spyOn(component, 'cancelGameCreation').and.callThrough();
                 testUtils.destroy();
-                await testUtils.whenStable();
+                tick(1);
                 destroyed = true;
 
                 // Then it should not delete anything
@@ -779,7 +779,7 @@ describe('PartCreationComponent', () => {
             }));
         });
         describe('Chosen opponent', () => {
-            it('each 5 second a presence token should be sent', fakeAsync(async() => {
+            it('should send a presence token every 5 second', fakeAsync(async() => {
                 // Given a partCreation were you are already chosen as candidate
                 awaitComponentInitialization();
                 await receiveConfigRoomUpdate(ConfigRoomMocks.withChosenOpponent(MGPOptional.empty()));
@@ -884,7 +884,7 @@ describe('PartCreationComponent', () => {
                 spyOn(currentGameService, 'removeCurrentGame').and.callThrough();
                 spyOn(configRoomService, 'removeCandidate').and.callThrough();
                 testUtils.destroy();
-                await testUtils.whenStable();
+                tick(1);
                 destroyed = true;
 
                 // Then configRoomService.cancelJoining should have been called
@@ -902,7 +902,7 @@ describe('PartCreationComponent', () => {
 
                 ConnectedUserServiceMock.setUser(AuthUser.NOT_CONNECTED);
                 testUtils.destroy();
-                await testUtils.whenStable();
+                tick(1);
                 destroyed = true;
 
                 // Then it should not call cancelJoining nor removeCurrentGame
@@ -914,7 +914,6 @@ describe('PartCreationComponent', () => {
     afterEach(fakeAsync(async() => {
         if (destroyed === false) {
             testUtils.destroy();
-            await testUtils.whenStable();
         }
     }));
 });
