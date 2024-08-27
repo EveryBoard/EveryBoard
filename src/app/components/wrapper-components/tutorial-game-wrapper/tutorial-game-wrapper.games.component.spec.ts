@@ -425,7 +425,7 @@ describe('TutorialGameWrapperComponent (games)', () => {
                                 await testUtils.expectClickSuccess(solution, `step ${step.title} should have a valid solution`);
                             }
                         }
-                    } catch (e) {
+                    } catch (e: unknown) {
                         expect(e).withContext(`step ${step.title} has thrown an exception`).toBeUndefined();
                     }
                 }
