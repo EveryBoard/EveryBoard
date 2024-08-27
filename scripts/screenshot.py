@@ -1,4 +1,5 @@
 #!/usr/bin/python3
+import sys
 from selenium import webdriver
 from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.common.by import By
@@ -7,9 +8,9 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 options = Options()
-options.add_argument('--headless')
 options.add_argument('--window-size=1920,1200')
 driver = webdriver.Chrome(options=options)
+driver.execute_cdp_cmd("Emulation.setEmulatedMedia", {"features": [{"name": "prefers-color-scheme", "value": sys.argv[1]}]})
 driver.maximize_window()
 games = []
 with open('scripts/games.txt') as f:

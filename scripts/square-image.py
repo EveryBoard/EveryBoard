@@ -18,8 +18,8 @@ new_size = tuple([int(x*ratio) for x in old_size])
 # resize the image so that it is square
 im = im.resize(new_size, resample=Image.Resampling.LANCZOS)
 
-# we pad with the color present in (0, 0), which is supposed to be the background color
-color = im.getpixel((3, 3))
+# we pad with the color present in a corner which is supposed to be the background color
+color = im.getpixel((5, 5))
 new_im = Image.new("RGB", (desired_size, desired_size), color)
 new_im.paste(im, ((desired_size-new_size[0])//2,
                     (desired_size-new_size[1])//2))

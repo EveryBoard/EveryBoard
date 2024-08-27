@@ -37,13 +37,14 @@ $primary: #ffc34d;
     --defeat: red;
 }
 
-// $primary: #ffc34d;
-// $footer-padding:2rem 1rem 2rem;
-// @import "../../node_modules/@creativebulma/bulma-tooltip/dist/bulma-tooltip.css";
-//
-// .has-text-passive {
-//     color: #AAA;
-// }
+.board {
+    width: 100%;
+    height: 100%;
+}
+
+.has-text-passive {
+    color: #AAA;
+}
 
 /* Show the page only after the CSS has been loaded */
 html, body {

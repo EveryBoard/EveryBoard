@@ -3,7 +3,7 @@ import { Inject, Injectable } from '@angular/core';
 import { UserSettingsService } from './UserSettingsService';
 import { MGPOptional } from '@everyboard/lib';
 
-type Theme = 'dark' | 'light';
+export type Theme = 'dark' | 'light';
 
 @Injectable({
     providedIn: 'root',
@@ -38,6 +38,8 @@ export class ThemeService {
         return MGPOptional.empty();
     }
     public loadTheme(theme: Theme): void {
+        const htmlElement: HTMLElement = this.document.getElementsByTagName('html')[0];
+        htmlElement.setAttribute('data-theme', theme);
         this.loadStyle(theme + '.css');
         this.theme = theme;
     }
