@@ -10,6 +10,7 @@ $primary: #ffc34d;
 @use "./mystyles.scss";
 
 :root {
+    --primary: $primary;
     --alt-alt-background-fill: dimgray;
     --alt-background-fill: gray;
     --alt-captured: #990000;
@@ -37,21 +38,7 @@ $primary: #ffc34d;
     --defeat: red;
 }
 
-.board {
-    width: 100%;
-    height: 100%;
-}
-
 .has-text-passive {
     color: #AAA;
 }
 
-/* Show the page only after the CSS has been loaded */
-html, body {
-    display: block;
-}
-
-.left-border {
-    border-left: 0.15em solid $primary;
-    padding-left: 1em;
-}

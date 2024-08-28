@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { ErrorLoggerService } from './services/ErrorLoggerService';
-import { Theme, ThemeService } from './services/ThemeService';
+import { ThemeService } from './services/ThemeService';
 import { faTwitter, faFacebook, faGithub, IconDefinition } from '@fortawesome/free-brands-svg-icons';
 
 @Component({
@@ -13,10 +13,6 @@ export class AppComponent {
     public faFacebook: IconDefinition = faFacebook;
     public faGithub: IconDefinition = faGithub;
 
-    public constructor(private readonly themeService: ThemeService,
+    public constructor(private readonly _themeService: ThemeService,
                        private readonly _errorLoggerService: ErrorLoggerService) {}
-
-    public getTheme(): Theme {
-        return this.themeService.getTheme();
-    }
 }

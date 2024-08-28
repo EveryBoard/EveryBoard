@@ -8,8 +8,12 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 options = Options()
+options.add_argument('--headless')
 options.add_argument('--window-size=1920,1200')
 driver = webdriver.Chrome(options=options)
+if len(sys.argv) != 2:
+    print(f"usage: {sys.argv[0]} [dark|light]")
+# Set color scheme to what is asked
 driver.execute_cdp_cmd("Emulation.setEmulatedMedia", {"features": [{"name": "prefers-color-scheme", "value": sys.argv[1]}]})
 driver.maximize_window()
 games = []
@@ -27,8 +31,8 @@ for game in games:
         # No accept config button, the game is not configurable so we are directly on the right page
         pass
     wait = WebDriverWait(driver, 5)
-    wait.until(EC.presence_of_element_located((By.ID, "board")))
-    image = driver.find_element(By.ID, "board").screenshot_as_png
+    wait.until(EC.presence_of_element_located((By.CLASS_NAME, "board")))
+    image = driver.find_element(By.CLASS_NAME, "board").screenshot_as_png
     f = open(game + '.png', 'wb')
     f.write(image)
     f.close()

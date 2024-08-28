@@ -1,5 +1,5 @@
 #!/bin/sh
-#
+
 # Get the list of games
 grep "new GameInfo" src/app/components/normal-component/pick-game/pick-game.component.ts | sed -E "s/.*new GameInfo\([^,]+, +'([^']+)'.*/\1/" > scripts/games.txt
 
@@ -11,7 +11,7 @@ mv ./*.png src/assets/images/light/
 python scripts/screenshot.py dark || exit
 mv ./*.png src/assets/images/dark/
 
-# Restore both CSS and remove temp files
+# Remove game list
 rm scripts/games.txt
 
 # And finally, square the images
