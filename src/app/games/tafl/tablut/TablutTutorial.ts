@@ -18,8 +18,8 @@ const defaultConfig: MGPOptional<TaflConfig> = TablutRules.get().getDefaultRules
 export class TablutTutorial extends Tutorial {
     public tutorial: TutorialStep[] = [
         TutorialStep.informational(
-            $localize`Goal of the game`,
-            $localize`Tablut is the lapland version of the Tafl, Tafl being a family of viking strategy game. The goal of the game is different for each player. The attacker plays first. Its pieces (dark) are close to the edges. Its goal is to capture the king, which is in the center of the board. The defender plays second. Its pieces (light) are in the middle. Its goal is to move the king on one of the 4 thrones in the corners. Note that the square in which the king starts, in the center of the board, is also a throne.`,
+            TutorialStepMessage.OBJECT_OF_THE_GAME(),
+            $localize`Tablut is the lapland version of the Tafl, Tafl being a family of viking strategy game. The object of the game is different for each player. The attacker plays first. Its pieces (dark) are close to the edges. Its goal is to capture the king, which is in the center of the board. The defender plays second. Its pieces (light) are in the middle. Its goal is to move the king on one of the 4 thrones in the corners. Note that the square in which the king starts, in the center of the board, is also a throne.`,
             TablutRules.get().getInitialState(defaultConfig),
         ),
         TutorialStep.anyMove(
@@ -30,7 +30,7 @@ export class TablutTutorial extends Tutorial {
             TutorialStepMessage.CONGRATULATIONS(),
         ),
         TutorialStep.fromMove(
-            $localize`Capturing a soldier (1/2)`,
+            $localize`Capturing a soldier` + ' (1/2)',
             $localize`All pieces, attackers and defenders, except the king, are soldiers. To capture them, they have to be sandwiched between two of your pieces. By getting too close, an attacker's soldier is in danger.<br/><br/>You're playing Light. Capture the soldier.`,
             new TaflState([
                 [_, _, _, x, x, x, _, _, _],
@@ -51,7 +51,7 @@ export class TablutTutorial extends Tutorial {
             $localize`Failed, you missed an opportunity to capture a piece of the opponent.`,
         ),
         TutorialStep.fromMove(
-            $localize`Capturing a soldier (2/2)`,
+            $localize`Capturing a soldier` + ' (2/2)',
             $localize`A second way to capture a soldier is to sandwich it against an empty throne. The king has moved and endangered one of its soldiers.<br/><br/>You're playing Dark. Capture the soldier.`,
             new TaflState([
                 [_, _, _, x, x, x, _, _, _],
@@ -69,7 +69,7 @@ export class TablutTutorial extends Tutorial {
             $localize`Failed, you did not do the expected move.`,
         ),
         TutorialStep.fromMove(
-            $localize`Capturing the king (1/2)`,
+            $localize`Capturing the king` + ' (1/2)',
             $localize`To capture the king, two soldiers are not enough. For the first solution, the four squares neighbor to the king (horizontally and vertically) must be occupied by your soldiers. This also works if the king is on the throne.<br/><br/>You're playing Dark, capture the king.`,
             new TaflState([
                 [_, _, _, _, _, _, _, _, _],
@@ -87,7 +87,7 @@ export class TablutTutorial extends Tutorial {
             $localize`Failed, you let the king run away.`,
         ),
         TutorialStep.fromMove(
-            $localize`Capturing the king (2/2)`,
+            $localize`Capturing the king` + ' (2/2)',
             $localize`Another way to capture the king is to immobilize it against an edge of the board. Note that the king cannot be captured next to a throne.<br/><br/>You're playing Dark, capture the king.`,
             new TaflState([
                 [_, _, x, A, x, _, _, _, _],

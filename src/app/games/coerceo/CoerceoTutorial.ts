@@ -1,3 +1,4 @@
+import { MGPOptional } from '@everyboard/lib';
 import { CoerceoRegularMove, CoerceoTileExchangeMove } from 'src/app/games/coerceo/CoerceoMove';
 import { Tutorial, TutorialStep } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { CoerceoState } from 'src/app/games/coerceo/CoerceoState';
@@ -6,7 +7,6 @@ import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
 import { CoerceoConfig, CoerceoRules } from './CoerceoRules';
 import { TutorialStepMessage } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
 import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
-import { MGPOptional } from 'lib/dist';
 
 const _: FourStatePiece = FourStatePiece.EMPTY;
 const N: FourStatePiece = FourStatePiece.UNREACHABLE;
@@ -18,13 +18,8 @@ export class CoerceoTutorial extends Tutorial {
 
     public tutorial: TutorialStep[] = [
         TutorialStep.informational(
-            $localize`Board and goal of the game`,
-            $localize`Coerceo is played on a board like this, composed of hexagonal tiles, each comprising 6 triangles.
-         The triangles are the spaces on which pieces move during the game.
-         The tiles can be removed from the board (you will see how later).
-         The dark pieces belong to the first player and can only move on the dark spaces,
-         while the light pieces belong to the second player and can only move on the light spaces.
-         The goal of the game is to capture all of the opponent's pieces.`,
+            TutorialStepMessage.INITIAL_BOARD_AND_OBJECT_OF_THE_GAME(),
+            $localize`Coerceo is played on a board like this, composed of hexagonal tiles, each comprising 6 triangles. The triangles are the spaces on which pieces move during the game. The tiles can be removed from the board (you will see how later). The dark pieces belong to the first player and can only move on the dark spaces, while the light pieces belong to the second player and can only move on the light spaces. The object of the game is to capture all of the opponent's pieces.`,
             CoerceoRules.get().getInitialState(defaultConfig),
         ),
         TutorialStep.anyMove(

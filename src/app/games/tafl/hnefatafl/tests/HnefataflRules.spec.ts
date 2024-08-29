@@ -216,7 +216,7 @@ describe('HnefataflRules', () => {
         // When trying to sandwich
         const move: HnefataflMove = HnefataflMove.from(new Coord(2, 2), new Coord(4, 2)).get();
 
-        // Then the move should be legal but the king alive
+        // Then the move should succeed but the king alive
         const expectedBoard: Table<TaflPawn> = [
             [_, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _],
@@ -257,7 +257,7 @@ describe('HnefataflRules', () => {
         // When attempting to surround him
         const move: HnefataflMove = HnefataflMove.from(new Coord(2, 2), new Coord(4, 2)).get();
 
-        // Then the move should be legal but the king not captured, and the part ongoing
+        // Then the move should succeed but the king not captured, and the part ongoing
         const expectedBoard: Table<TaflPawn> = [
             [_, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _],
@@ -297,7 +297,7 @@ describe('HnefataflRules', () => {
         // When moving the king back to his throne
         const move: HnefataflMove = HnefataflMove.from(new Coord(4, 3), new Coord(4, 4)).get();
 
-        // Then the move should be legal
+        // Then the move should succeed
         const expectedBoard: TaflPawn[][] = [
             [_, _, O, _, _, _, _, _, _, _, _],
             [_, _, O, _, O, _, _, _, _, _, _],
@@ -360,7 +360,7 @@ describe('HnefataflRules', () => {
         // When trying to sandwiching the king
         const move: HnefataflMove = HnefataflMove.from(new Coord(0, 4), new Coord(0, 6)).get();
 
-        // Then the move should be legal
+        // Then the move should succeed
         const expectedBoard: TaflPawn[][] = [
             [_, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _],

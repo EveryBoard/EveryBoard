@@ -56,11 +56,11 @@ export class AbaloneRules extends Rules<AbaloneMove, AbaloneState, AbaloneLegali
     : MGPFallible<AbaloneLegalityInformation>
     {
         let opponentPieces: number = 0;
-        const OPPONENT: FourStatePiece = FourStatePiece.ofPlayer(state.getCurrentOpponent());
+        const opponent: FourStatePiece = FourStatePiece.ofPlayer(state.getCurrentOpponent());
         const player: FourStatePiece = FourStatePiece.ofPlayer(state.getCurrentPlayer());
         while (opponentPieces < pushingPieces &&
                state.isOnBoard(firstOpponent) &&
-               state.getPieceAt(firstOpponent) === OPPONENT) {
+               state.getPieceAt(firstOpponent) === opponent) {
             opponentPieces++;
             firstOpponent = firstOpponent.getNext(move.dir);
         }
@@ -68,7 +68,7 @@ export class AbaloneRules extends Rules<AbaloneMove, AbaloneState, AbaloneLegali
             return MGPFallible.failure(AbaloneFailure.NOT_ENOUGH_PIECE_TO_PUSH());
         } else if (AbaloneState.isOnBoard(firstOpponent)) {
             if (state.getPieceAt(firstOpponent) === FourStatePiece.EMPTY) {
-                newBoard[firstOpponent.y][firstOpponent.x] = OPPONENT;
+                newBoard[firstOpponent.y][firstOpponent.x] = opponent;
             }
             if (state.getPieceAt(firstOpponent) === player) {
                 return MGPFallible.failure(AbaloneFailure.CANNOT_PUSH_YOUR_OWN_PIECES());
@@ -131,8 +131,8 @@ export class AbaloneRules extends Rules<AbaloneMove, AbaloneState, AbaloneLegali
     }
     private isLegalSideStep(move: AbaloneMove, state: AbaloneState): MGPFallible<AbaloneLegalityInformation> {
         let last: Coord = move.lastPiece.get();
-        const alignement: Ordinal = move.coord.getDirectionToward(last).get();
-        last = last.getNext(alignement); // to include lastPiece as well
+        const alignment: Ordinal = move.coord.getDirectionToward(last).get();
+        last = last.getNext(alignment); // to include lastPiece as well
         let tested: Coord = move.coord;
         const player: FourStatePiece = FourStatePiece.ofPlayer(state.getCurrentPlayer());
         const newBoard: FourStatePiece[][] = state.getCopiedBoard();
@@ -150,11 +150,11 @@ export class AbaloneRules extends Rules<AbaloneMove, AbaloneState, AbaloneLegali
                     newBoard[landing.y][landing.x] = player;
                 }
             }
-            tested = tested.getNext(alignement);
+            tested = tested.getNext(alignment);
         }
         return MGPFallible.success(newBoard);
     }
-    public getGameStatus(node: AbaloneNode): GameStatus {
+    public override getGameStatus(node: AbaloneNode): GameStatus {
         const scores: PlayerNumberMap = node.gameState.getScores();
         if (5 < scores.get(Player.ZERO)) {
             return GameStatus.ZERO_WON;

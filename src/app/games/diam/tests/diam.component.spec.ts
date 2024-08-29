@@ -110,7 +110,7 @@ describe('DiamComponent', () => {
             // When clicking on an opponent piece on the top of a column
             const move: DiamMove = new DiamMoveDrop(0, DiamPiece.ZERO_FIRST);
 
-            // Then the move should be a success and drop player's piece
+            // Then the move should succeed and drop player's piece
             await testUtils.expectMoveSuccess('#click_0_1', move);
         }));
 
@@ -147,7 +147,8 @@ describe('DiamComponent', () => {
             await testUtils.expectClickSuccess('#click_7_0');
 
             const move: DiamMove = DiamMoveShift.ofRepresentation(new Coord(7, 3), 'clockwise');
-            // Then the move should be legal
+
+            // Then the move should succeed
             await testUtils.expectMoveSuccess('#click_0', move);
         }));
 
@@ -162,7 +163,7 @@ describe('DiamComponent', () => {
             await testUtils.setupState(state);
 
             // When clicking on A1 and then on the last column
-            // Then the move should be legal
+            // Then the move should succeed
             await testUtils.expectClickSuccess('#click_0_1');
             const move: DiamMove = DiamMoveShift.ofRepresentation(new Coord(0, 2), 'counterclockwise');
             await testUtils.expectMoveSuccess('#click_7', move);

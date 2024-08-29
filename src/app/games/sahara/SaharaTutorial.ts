@@ -21,10 +21,8 @@ export class SaharaTutorial extends Tutorial {
             SaharaRules.get().getInitialState(),
         ),
         TutorialStep.informational(
-            $localize`Goal of the game`,
-            $localize`At Sâhârâ, the goal of the game is to immobilize one of the opponent's pyramids.
-        To do so, you have to occupy all neighboring space of that pyramid.
-        Here, Light has lost because its leftmost pyramid is immobilized.`,
+            TutorialStepMessage.OBJECT_OF_THE_GAME(),
+            $localize`At Sâhârâ, the object of the game is to immobilize one of the opponent's pyramids. To do so, you have to occupy all neighboring space of that pyramid. Here, Light has lost because its leftmost pyramid is immobilized.`,
             new SaharaState([
                 [N, N, _, _, X, _, _, O, X, N, N],
                 [N, _, _, _, _, _, _, _, _, _, N],

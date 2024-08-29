@@ -2,7 +2,7 @@ import { MoveGenerator } from 'src/app/jscaip/AI/AI';
 import { Coord } from 'src/app/jscaip/Coord';
 import { HexaDirection } from 'src/app/jscaip/HexaDirection';
 import { Player } from 'src/app/jscaip/Player';
-import { MGPFallible, MGPSet } from '@everyboard/lib';
+import { MGPFallible, Set } from '@everyboard/lib';
 import { AbaloneMove } from './AbaloneMove';
 import { AbaloneLegalityInformation, AbaloneNode, AbaloneRules } from './AbaloneRules';
 import { AbaloneState } from './AbaloneState';
@@ -28,12 +28,12 @@ export class AbaloneMoveGenerator extends MoveGenerator<AbaloneMove, AbaloneStat
                     } else {
                         continue;
                     }
-                    for (const alignement of HexaDirection.factory.all) {
+                    for (const alignment of HexaDirection.factory.all) {
                         for (let distance: number = 1; distance <= 2; distance++) {
-                            if (alignement.equals(dir)) {
+                            if (alignment.equals(dir)) {
                                 break;
                             }
-                            const second: Coord = first.getNext(alignement, distance);
+                            const second: Coord = first.getNext(alignment, distance);
                             if (AbaloneState.isOnBoard(second)) {
                                 const translation: AbaloneMove = AbaloneMove.ofDoubleCoord(first, second, dir);
                                 if (AbaloneRules.get().isLegal(translation, state).isSuccess()) {
@@ -47,7 +47,7 @@ export class AbaloneMoveGenerator extends MoveGenerator<AbaloneMove, AbaloneStat
                 }
             }
         }
-        return new MGPSet(moves).toList();
+        return new Set(moves).toList();
     }
 
     private isAcceptablePush(move: AbaloneMove, state: AbaloneState): boolean {

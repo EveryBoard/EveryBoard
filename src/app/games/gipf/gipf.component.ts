@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 
 import { Coord } from 'src/app/jscaip/Coord';
 import { HexaLayout } from 'src/app/jscaip/HexaLayout';
@@ -12,7 +12,6 @@ import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 import { MCTS } from 'src/app/jscaip/AI/MCTS';
 import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
-import { Minimax } from 'src/app/jscaip/AI/Minimax';
 import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 
 import { GipfLegalityInformation, GipfRules } from 'src/app/games/gipf/GipfRules';
@@ -20,8 +19,8 @@ import { GipfFailure } from 'src/app/games/gipf/GipfFailure';
 import { GipfMove, GipfPlacement } from 'src/app/games/gipf/GipfMove';
 import { GipfState } from 'src/app/games/gipf/GipfState';
 import { GipfMoveGenerator } from './GipfMoveGenerator';
-import { GipfScoreHeuristic } from './GipfScoreHeuristic';
 import { GipfCapture } from 'src/app/jscaip/GipfProjectHelper';
+import { GipfScoreMinimax } from './GipfScoreMinimax';
 
 @Component({
     selector: 'app-gipf',
@@ -62,11 +61,11 @@ export class GipfComponent extends HexagonalGameComponent<GipfRules,
     private placementEntrance: MGPOptional<Coord> = MGPOptional.empty();
     private finalCaptures: GipfCapture[] = [];
 
-    public constructor(messageDisplayer: MessageDisplayer) {
-        super(messageDisplayer);
+    public constructor(messageDisplayer: MessageDisplayer, cdr: ChangeDetectorRef) {
+        super(messageDisplayer, cdr);
         this.setRulesAndNode('Gipf');
         this.availableAIs = [
-            new Minimax($localize`Score`, this.rules, new GipfScoreHeuristic(), new GipfMoveGenerator()),
+            new GipfScoreMinimax(),
             new MCTS($localize`MCTS`, new GipfMoveGenerator(), this.rules),
         ];
         this.encoder = GipfMove.encoder;

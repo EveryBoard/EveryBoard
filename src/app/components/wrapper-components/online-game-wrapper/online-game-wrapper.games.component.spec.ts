@@ -17,8 +17,8 @@ describe('OnlineGameWrapperComponent (games)', () => {
     const refusal: MGPValidation = MGPValidation.failure(OnlineGameWrapperMessages.CANNOT_PLAY_AS_OBSERVER());
     let testUtils: ComponentTestUtils<AbstractGameComponent, MinimalUser>;
 
-    for (const gameInfo of GameInfo.ALL_GAMES()) {
-        it(`click methods should refuse when observer clicks (${ gameInfo.urlName})`, fakeAsync(async() => {
+    for (const gameInfo of GameInfo.getAllGames()) {
+        it(`click methods should refuse when observer clicks (${gameInfo.urlName})`, fakeAsync(async() => {
             // Given a online game
             const game: { [methodName: string]: unknown[] } | undefined = clickableMethods[gameInfo.urlName];
             if (game == null) {
@@ -27,11 +27,9 @@ describe('OnlineGameWrapperComponent (games)', () => {
             testUtils = (await prepareStartedGameFor<AbstractGameComponent>(UserMocks.CREATOR_AUTH_USER,
                                                                             gameInfo.urlName,
                                                                             PreparationOptions.dontWait)).testUtils;
-            // When displaying the component
             tick(2);
             testUtils.detectChanges();
 
-            // Then the svg component should have no rotation
             const wrapper: OnlineGameWrapperComponent = testUtils.getWrapper() as OnlineGameWrapperComponent;
             expect(wrapper.gameComponent).toBeDefined();
             await testUtils.getWrapper().setRole(PlayerOrNone.NONE);
@@ -43,7 +41,7 @@ describe('OnlineGameWrapperComponent (games)', () => {
                     await testUtils.expectToDisplayGameMessage(refusal.getReason(), async() => {
                         return wrapper.gameComponent[methodName](...game[methodName]);
                     });
-                // Then it should refused, and claim the reason is that we are observer
+                // Then it should be refused, with the reason being that we are an observer
                 expect(clickResult).withContext(methodName).toEqual(refusal);
             }
             tick(wrapper.configRoom.totalPartDuration * 1000);

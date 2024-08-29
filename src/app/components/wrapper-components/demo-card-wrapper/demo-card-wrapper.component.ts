@@ -17,7 +17,7 @@ export type DemoNodeInfo = {
 
 @Component({
     selector: 'app-demo-card',
-    template: `<div #board></div>`,
+    template: `<div class="is-fullheight"><div #board></div></div>`,
 })
 export class DemoCardWrapperComponent extends GameWrapper<string> implements AfterViewInit, OnChanges {
 
@@ -66,12 +66,11 @@ export class DemoCardWrapperComponent extends GameWrapper<string> implements Aft
         if (this.gameComponent != null) {
             // When it is, we want to manually update the board with the new infos and display them
             this.gameComponent.node = this.demoNodeInfo.node;
-            await this.gameComponent.updateBoard(false);
-            this.cdr.detectChanges();
+            await this.gameComponent.updateBoardAndRedraw(false);
         }
     }
 
-    protected override getGameName(): string {
+    protected override getGameUrlName(): string {
         // Unlike all other BaseWrapperComponent those will share one page: everyboard.org/demo
         // Hence we cannot read the name of the game via the URL
         return this.demoNodeInfo.name;

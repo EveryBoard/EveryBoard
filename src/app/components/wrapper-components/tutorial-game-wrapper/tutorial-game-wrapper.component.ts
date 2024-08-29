@@ -1,4 +1,4 @@
-import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { GameWrapper } from 'src/app/components/wrapper-components/GameWrapper';
 import { AbstractNode, GameNode } from 'src/app/jscaip/AI/GameNode';
@@ -25,7 +25,6 @@ type TutorialPlayer = 'tutorial-player';
 @Component({
     selector: 'app-tutorial-game-wrapper',
     templateUrl: './tutorial-game-wrapper.component.html',
-    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 @Debug.log
 export class TutorialGameWrapperComponent extends GameWrapper<TutorialPlayer> implements AfterViewInit {
@@ -48,6 +47,87 @@ export class TutorialGameWrapperComponent extends GameWrapper<TutorialPlayer> im
         super(activatedRoute, connectedUserService, router, messageDisplayer);
     }
 
+    public override async canUserPlay(elementName: string): Promise<MGPValidation> {
+        this.currentReason = MGPOptional.empty();
+        if (this.stepFinished[this.stepIndex] || this.moveAttemptMade) {
+            return MGPValidation.failure(TutorialFailure.STEP_FINISHED());
+        }
+        const currentStep: TutorialStep = this.steps[this.stepIndex];
+        if (currentStep.isClick()) {
+            this.gameComponent.hideLastMove();
+            this.moveAttemptMade = true;
+            if (Utils.getNonNullable(currentStep.acceptedClicks).some((m: string) => m === elementName)) {
+                this.showStepSuccess(currentStep.getSuccessMessage());
+            } else {
+                this.currentMessage = currentStep.getFailureMessage();
+            }
+            return MGPValidation.SUCCESS;
+        } else if (currentStep.isMove() || currentStep.isPredicate() || currentStep.isAnyMove()) {
+            this.gameComponent.hideLastMove();
+            return MGPValidation.SUCCESS;
+        } else {
+            return MGPValidation.failure(TutorialFailure.INFORMATIONAL_STEP());
+        }
+    }
+
+    public override async onCancelMove(reason?: string): Promise<void> {
+        await super.onCancelMove(reason);
+        if (reason !== undefined) {
+            this.currentReason = MGPOptional.of(reason);
+        }
+        this.cdr.detectChanges();
+    }
+
+    public override async onLegalUserMove(move: Move): Promise<void> {
+        const currentStep: TutorialStep = this.steps[this.stepIndex];
+        const config: MGPOptional<RulesConfig> = await this.getConfig();
+        const node: MGPFallible<AbstractNode> = this.gameComponent.rules.choose(this.gameComponent.node, move, config);
+        Utils.assert(node.isSuccess(), 'It should be impossible to call onLegalUserMove with an illegal move, but got ' + node.getReasonOr(''));
+        this.gameComponent.node = node.get();
+
+        await this.showNewMove(false);
+        this.moveAttemptMade = true;
+        if (currentStep.isPredicate()) {
+            const previousState: GameState = this.gameComponent.getPreviousState();
+            const resultingState: GameState = this.gameComponent.getState();
+            const moveValidity: MGPValidation =
+                Utils.getNonNullable(currentStep.predicate)(move, previousState, resultingState);
+            if (moveValidity.isSuccess()) {
+                this.showStepSuccess(currentStep.getSuccessMessage());
+            } else {
+                this.currentReason = MGPOptional.of(moveValidity.getReason());
+            }
+        } else if (currentStep.isAnyMove()) {
+            Debug.display('TutorialGameWrapperComponent', 'onLegalUserMove', 'awaited move!');
+            this.showStepSuccess(currentStep.getSuccessMessage());
+        } else if (currentStep.isMove()) {
+            const currentStepMove: TutorialStepMove = currentStep;
+            if (currentStepMove.acceptedMoves.some((m: Move) => m.equals(move))) {
+                Debug.display('TutorialGameWrapperComponent', 'onLegalUserMove', 'awaited move!');
+                this.showStepSuccess(currentStepMove.getSuccessMessage());
+            } else {
+                Debug.display('TutorialGameWrapperComponent', 'onLegalUserMove', 'not the move that was awaited.');
+                this.currentReason = MGPOptional.of(currentStepMove.getFailureMessage());
+            }
+        } else {
+            // No need to do anything there, canUserPlay did it
+            Utils.assert(currentStep.isClick(), 'Here, we should have a click');
+        }
+        // We don't cover the click case here, it is covered in canUserPlay
+        this.cdr.detectChanges();
+    }
+
+    public override getPlayer(): TutorialPlayer {
+        return 'tutorial-player';
+    }
+
+    public async ngAfterViewInit(): Promise<void> {
+        const createdSuccessfully: boolean = await this.createMatchingGameComponent();
+        if (createdSuccessfully) {
+            await this.start();
+        }
+    }
+
     public getNumberOfSteps(): number {
         return this.steps.length;
     }
@@ -57,13 +137,6 @@ export class TutorialGameWrapperComponent extends GameWrapper<TutorialPlayer> im
             return this.steps[this.stepIndex].title;
         } else {
             return '';
-        }
-    }
-
-    public async ngAfterViewInit(): Promise<void> {
-        const createdSuccessfully: boolean = await this.createMatchingGameComponent();
-        if (createdSuccessfully) {
-            await this.start();
         }
     }
 
@@ -109,79 +182,9 @@ export class TutorialGameWrapperComponent extends GameWrapper<TutorialPlayer> im
         this.cdr.detectChanges();
     }
 
-    public async onLegalUserMove(move: Move): Promise<void> {
-        const currentStep: TutorialStep = this.steps[this.stepIndex];
-        const config: MGPOptional<RulesConfig> = await this.getConfig();
-        const node: MGPFallible<AbstractNode> = this.gameComponent.rules.choose(this.gameComponent.node, move, config);
-        Utils.assert(node.isSuccess(), 'It should be impossible to call onLegalUserMove with an illegal move, but got ' + node.getReasonOr(''));
-        this.gameComponent.node = node.get();
-
-        await this.showNewMove(false);
-        this.moveAttemptMade = true;
-        if (currentStep.isPredicate()) {
-            const previousState: GameState = this.gameComponent.getPreviousState();
-            const resultingState: GameState = this.gameComponent.getState();
-            const moveValidity: MGPValidation =
-                Utils.getNonNullable(currentStep.predicate)(move, previousState, resultingState);
-            if (moveValidity.isSuccess()) {
-                this.showStepSuccess(currentStep.getSuccessMessage());
-            } else {
-                this.currentReason = MGPOptional.of(moveValidity.getReason());
-            }
-        } else if (currentStep.isAnyMove()) {
-            Debug.display('TutorialGameWrapperComponent', 'onLegalUserMove', 'awaited move!');
-            this.showStepSuccess(currentStep.getSuccessMessage());
-        } else if (currentStep.isMove()) {
-            const currentStepMove: TutorialStepMove = currentStep;
-            if (currentStepMove.acceptedMoves.some((m: Move) => m.equals(move))) {
-                Debug.display('TutorialGameWrapperComponent', 'onLegalUserMove', 'awaited move!');
-                this.showStepSuccess(currentStepMove.getSuccessMessage());
-            } else {
-                Debug.display('TutorialGameWrapperComponent', 'onLegalUserMove', 'not the move that was awaited.');
-                this.currentReason = MGPOptional.of(currentStepMove.getFailureMessage());
-            }
-        } else {
-            // No need to do anything there, canUserPlay did it
-            Utils.assert(currentStep.isClick(), 'Here, we should have a click');
-        }
-        // We don't cover the click case here, it is covered in canUserPlay
-        this.cdr.detectChanges();
-    }
-
     public async retry(): Promise<void> {
         this.moveAttemptMade = false;
         await this.showStep(this.stepIndex);
-    }
-
-    public override async canUserPlay(elementName: string): Promise<MGPValidation> {
-        this.currentReason = MGPOptional.empty();
-        if (this.stepFinished[this.stepIndex] || this.moveAttemptMade) {
-            return MGPValidation.failure(TutorialFailure.STEP_FINISHED());
-        }
-        const currentStep: TutorialStep = this.steps[this.stepIndex];
-        if (currentStep.isClick()) {
-            this.gameComponent.hideLastMove();
-            this.moveAttemptMade = true;
-            if (Utils.getNonNullable(currentStep.acceptedClicks).some((m: string) => m === elementName)) {
-                this.showStepSuccess(currentStep.getSuccessMessage());
-            } else {
-                this.currentMessage = currentStep.getFailureMessage();
-            }
-            return MGPValidation.SUCCESS;
-        } else if (currentStep.isMove() || currentStep.isPredicate() || currentStep.isAnyMove()) {
-            this.gameComponent.hideLastMove();
-            return MGPValidation.SUCCESS;
-        } else {
-            return MGPValidation.failure(TutorialFailure.INFORMATIONAL_STEP());
-        }
-    }
-
-    public override async onCancelMove(reason?: string): Promise<void> {
-        await super.onCancelMove(reason);
-        if (reason !== undefined) {
-            this.currentReason = MGPOptional.of(reason);
-        }
-        this.cdr.detectChanges();
     }
 
     private showStepSuccess(successMessage: string): void {
@@ -239,17 +242,13 @@ export class TutorialGameWrapperComponent extends GameWrapper<TutorialPlayer> im
     }
 
     public async playLocally(): Promise<void> {
-        const game: string = this.getGameName();
-        await this.router.navigate(['/local', game]);
+        const urlName: string = this.getGameUrlName();
+        await this.router.navigate(['/local', urlName]);
     }
 
     public async createGame(): Promise<void> {
-        const game: string = this.getGameName();
-        await this.router.navigate(['/play', game]);
-    }
-
-    public override getPlayer(): TutorialPlayer {
-        return 'tutorial-player';
+        const urlName: string = this.getGameUrlName();
+        await this.router.navigate(['/play', urlName]);
     }
 
 }

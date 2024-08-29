@@ -1,6 +1,6 @@
 import { MancalaState } from './MancalaState';
 import { RectangularGameComponent } from 'src/app/components/game-components/rectangular-game-component/RectangularGameComponent';
-import { MGPOptional, MGPSet, MGPValidation, TimeUtils, Utils } from '@everyboard/lib';
+import { MGPOptional, Set, MGPValidation, TimeUtils, Utils } from '@everyboard/lib';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Table, TableUtils } from 'src/app/jscaip/TableUtils';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
@@ -47,9 +47,9 @@ export abstract class MancalaComponent<R extends MancalaRules>
     private opponentMoveIsBeingAnimated: boolean = false;
 
     public constructor(messageDisplayer: MessageDisplayer,
-                       public readonly cdr: ChangeDetectorRef)
+                       cdr: ChangeDetectorRef)
     {
-        super(messageDisplayer);
+        super(messageDisplayer, cdr);
         this.hasAsymmetricBoard = true;
         this.scores = MGPOptional.of(PlayerNumberMap.of(0, 0));
     }
@@ -101,7 +101,7 @@ export abstract class MancalaComponent<R extends MancalaRules>
             let indexDistribution: number = 0;
             const move: MancalaMove = this.node.previousMove.get();
             for (const distributions of move) {
-                await this.showSimpleDistribution(distributions);
+                await this.showSeedBySeedDistribution(distributions);
                 if (indexDistribution + 1 < move.distributions.length) {
                     // This prevent to wait 1sec at the end of the animation for nothing
                     await TimeUtils.sleepForAnimation(MancalaComponent.TIMEOUT_BETWEEN_LAPS);
@@ -120,7 +120,7 @@ export abstract class MancalaComponent<R extends MancalaRules>
     }
 
     public async onClick(x: number, y: number): Promise<MGPValidation> {
-        const clickValidity: MGPValidation = await this.canUserPlay('#click_' + x + '_' + y);
+        const clickValidity: MGPValidation = await this.canUserPlay('#click-' + x + '-' + y);
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }
@@ -147,11 +147,14 @@ export abstract class MancalaComponent<R extends MancalaRules>
     }
 
     protected async continueMoveConstruction(x: number): Promise<MGPValidation> {
+        const moveValidity: MGPValidation = await this.isDistributionLegal(x);
+        if (moveValidity.isFailure()) {
+            return this.cancelMove(moveValidity.getReason());
+        }
         const distributionResult: MancalaDistributionResult =
-            await this.showSimpleDistribution(MancalaDistribution.of(x));
-        const config: MancalaConfig = this.getConfig().get();
+            await this.showSeedBySeedDistribution(MancalaDistribution.of(x));
         if (distributionResult.endsUpInStore &&
-            config.mustContinueDistributionAfterStore)
+            this.getConfig().get().mustContinueDistributionAfterStore)
         {
             const player: Player = this.constructedState.getCurrentPlayer();
             if (MancalaRules.isStarving(player, distributionResult.resultingState.board)) {
@@ -166,20 +169,53 @@ export abstract class MancalaComponent<R extends MancalaRules>
         }
     }
 
-    protected async showSimpleDistribution(distribution: MancalaDistribution): Promise<MancalaDistributionResult> {
+    private async isDistributionLegal(x: number): Promise<MGPValidation> {
+        const config: MGPOptional<MancalaConfig> = this.getConfig();
+        const distributionResult: MancalaDistributionResult =
+            await this.getDistributionResult(MancalaDistribution.of(x));
+        if (distributionResult.endsUpInStore &&
+            config.get().mustContinueDistributionAfterStore)
+        {
+            const player: Player = this.constructedState.getCurrentPlayer();
+            if (MancalaRules.isStarving(player, distributionResult.resultingState.board)) {
+                // Player has no more seed to distribute
+                return this.rules.isLegal(this.currentMove.get(), this.getState(), config);
+            } else {
+                // Player can still distribute
+                return MGPValidation.SUCCESS;
+            }
+        } else {
+            return this.rules.isLegal(this.currentMove.get(), this.getState(), config);
+        }
+    }
+
+    private async getDistributionResult(distribution: MancalaDistribution): Promise<MancalaDistributionResult> {
+        return this.getSimpleDistributionResult(distribution, false);
+    }
+
+    private async showSeedBySeedDistribution(distribution: MancalaDistribution): Promise<MancalaDistributionResult> {
+        return this.getSimpleDistributionResult(distribution, true);
+    }
+
+    private async getSimpleDistributionResult(distribution: MancalaDistribution, showSeedBySeed: boolean)
+    : Promise<MancalaDistributionResult>
+    {
         const state: MancalaState = this.constructedState;
         const playerY: number = state.getCurrentPlayerY();
         const coord: Coord = new Coord(distribution.x, playerY);
         this.lastDistributedHouses.push(coord);
         const config: MancalaConfig = this.getConfig().get();
-        await this.showSeedBySeed(coord, state, config);
+        if (showSeedBySeed) {
+            await this.showSeedBySeed(coord, state);
+        }
         const previousDistributionResult: MancalaDistributionResult = MancalaRules.getEmptyDistributionResult(state);
         const distributionResult: MancalaDistributionResult =
             this.rules.distributeHouse(distribution.x, playerY, previousDistributionResult, config);
         return distributionResult;
     }
 
-    private async showSeedBySeed(coord: Coord, state: MancalaState, config: MancalaConfig): Promise<void> {
+    private async showSeedBySeed(coord: Coord, state: MancalaState): Promise<void> {
+        const config: MancalaConfig = this.getConfig().get();
         const initial: Coord = coord; // to remember in order not to sow in the starting space if we make a full turn
         let mustDoOneMoreLap: boolean = true;
         let seedDropResult: SeedDropResult = {
@@ -253,12 +289,7 @@ export abstract class MancalaComponent<R extends MancalaRules>
     }
 
     public override hideLastMove(): void {
-        let width: number;
-        if (this.config.isPresent()) {
-            width = this.config.get().width;
-        } else {
-            width = 6;
-        }
+        const width: number = this.config.get().width;
         this.captured = TableUtils.create(width, 2, 0);
         this.filledCoords = [];
         this.lastDistributedHouses = [];
@@ -288,12 +319,12 @@ export abstract class MancalaComponent<R extends MancalaRules>
         }
     }
 
-    private getStoreOwner(coord: Coord): MGPOptional<MGPSet<Player>> {
+    private getStoreOwner(coord: Coord): MGPOptional<Set<Player>> {
         return MancalaRules.FAKE_STORE_COORD.reverse().get(coord);
     }
 
     private getSpaceOwner(coord: Coord): Player {
-        const owner: MGPOptional<MGPSet<Player>> = this.getStoreOwner(coord);
+        const owner: MGPOptional<Set<Player>> = this.getStoreOwner(coord);
         if (owner.isPresent()) {
             return owner.get().getAnyElement().get(); // Only one player can be in there
         } else {
@@ -310,7 +341,9 @@ export abstract class MancalaComponent<R extends MancalaRules>
     }
 
     public getPieceTransform(x: number, y: number): string {
-        return 'translate(' + this.getPieceCx(x) + ', ' + this.getPieceCy(y) + ')';
+        const cx: number = this.getPieceCx(x);
+        const cy: number = this.getPieceCy(y);
+        return this.getSVGTranslation(cx, cy);
     }
 
     public getPieceRotation(): string {
@@ -365,7 +398,7 @@ export abstract class MancalaComponent<R extends MancalaRules>
     }
 
     public async onStoreClick(owner: Player): Promise<MGPValidation> {
-        const clickValidity: MGPValidation = await this.canUserPlay('#store_player_' + owner.getValue());
+        const clickValidity: MGPValidation = await this.canUserPlay('#store-' + owner.toString());
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }

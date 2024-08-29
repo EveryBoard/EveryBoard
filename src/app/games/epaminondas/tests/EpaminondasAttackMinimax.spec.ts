@@ -9,6 +9,7 @@ import { Minimax } from 'src/app/jscaip/AI/Minimax';
 import { EpaminondasConfig, EpaminondasLegalityInformation, EpaminondasNode, EpaminondasRules } from '../EpaminondasRules';
 import { EpaminondasAttackMinimax } from '../EpaminondasAttackMinimax';
 import { MGPOptional } from '@everyboard/lib';
+import { minimaxTest, SlowTest } from 'src/app/utils/tests/TestUtils.spec';
 
 const _: PlayerOrNone = PlayerOrNone.NONE;
 const O: PlayerOrNone = PlayerOrNone.ZERO;
@@ -44,6 +45,16 @@ describe('EpaminondasAttackMinimax', () => {
         const expectedMove: EpaminondasMove = new EpaminondasMove(9, 1, 4, 4, Ordinal.LEFT);
         const bestMove: EpaminondasMove = minimax.chooseNextMove(node, minimaxOptions, defaultConfig);
         expect(bestMove).toEqual(expectedMove);
+    });
+
+    SlowTest.it('should be able play against itself', () => {
+        minimaxTest({
+            rules: EpaminondasRules.get(),
+            minimax,
+            options: minimaxOptions,
+            config: defaultConfig,
+            shouldFinish: false, // not always a finisher
+        });
     });
 
 });

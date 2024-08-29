@@ -10,15 +10,13 @@
         </g>
     </defs>
     <!-- Empty board -->
-    <g *ngFor="let coordAndContent of constructedState.getCoordsAndContents()"
-       id="coord_{{ coordAndContent.coord.x }}_{{ coordAndContent.coord.y }}"
-       [attr.transform]="getTranslationAtXYZ(coordAndContent.coord.x, coordAndContent.coord.y, 0)"
-       (click)="onClick(coordAndContent.coord.x, coordAndContent.coord.y)">
-        <polygon id="square_{{ coordAndContent.coord.x }}_{{ coordAndContent.coord.y }}"
-                 [attr.points]="getParallelogramPoints()"
-                 [ngClass]="getSquareClass(coordAndContent.coord.x, coordAndContent.coord.y)"
-                 class="base" />
-    </g>
+    <polygon *ngFor="let coordAndContent of constructedState.getCoordsAndContents()"
+             id="square-{{ coordAndContent.coord.x }}-{{ coordAndContent.coord.y }}"
+             [attr.transform]="getTranslationAtXYZ(coordAndContent.coord.x, coordAndContent.coord.y, 0)"
+             (click)="onClick(coordAndContent.coord.x, coordAndContent.coord.y)"
+             [attr.points]="getParallelogramPoints()"
+             [ngClass]="getSquareClass(coordAndContent.coord.x, coordAndContent.coord.y)"
+             class="base"/>
     <rect id="bottomEdge"
           x="0"
           [attr.y]="basicWidth"
@@ -31,18 +29,18 @@
 
     <!-- Pieces -->
     <g *ngFor="let coordAndContent of constructedState.getCoordsAndContents()"
-       id="coord_{{ coordAndContent.coord.x }}_{{ coordAndContent.coord.y }}"
+       id="coord-{{ coordAndContent.coord.x }}-{{ coordAndContent.coord.y }}"
        [attr.transform]="getTranslationAtXYZ(coordAndContent.coord.x, coordAndContent.coord.y, 0)"
        (click)="onClick(coordAndContent.coord.x, coordAndContent.coord.y)">
         <g *ngFor="let pieceInfo of coordAndContent.content.pieces; index as z"
            pointer-events="fill"
            [attr.transform]="getPieceTranslation(z)"
            class="base mid-small-stroke">
-            <use id="square_{{ coordAndContent.coord.x }}_{{ coordAndContent.coord.y }}_piece_{{ z }}"
+            <use id="square-{{ coordAndContent.coord.x }}-{{ coordAndContent.coord.y }}-piece-{{ z }}"
                  xlink:href="#piece"
                  [ngClass]="getPieceClasses(coordAndContent.coord.x, coordAndContent.coord.y, z)"
                  class="base mid-stroke"/>
-            <circle id="square_{{ coordAndContent.coord.x }}_{{ coordAndContent.coord.y }}_piece_{{ z }}_officer_symbol"
+            <circle id="square-{{ coordAndContent.coord.x }}-{{ coordAndContent.coord.y }}-piece-{{ z }}-officer-symbol"
                     *ngIf="isPieceOfficer(coordAndContent.coord.x, coordAndContent.coord.y, z)"
                     [attr.cx]="SPACE_SIZE * 0.4"
                     [attr.cy]="SPACE_SIZE * 0.575"

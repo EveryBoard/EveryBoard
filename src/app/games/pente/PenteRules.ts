@@ -26,7 +26,9 @@ export class PenteRules extends ConfigurableRules<PenteMove, PenteState, PenteCo
                 width: new NumberConfig(19, RulesConfigDescriptionLocalizable.WIDTH, MGPValidators.range(1, 99)),
                 height: new NumberConfig(19, RulesConfigDescriptionLocalizable.HEIGHT, MGPValidators.range(1, 99)),
                 capturesNeededToWin: new NumberConfig(10, () => $localize`Captured stones needed to win`, MGPValidators.range(1, 123456)),
-                nInARow: new NumberConfig(5, () => $localize`Number of aligned pieces needed to win`, MGPValidators.range(3, 99)),
+                nInARow: new NumberConfig(5,
+                                          RulesConfigDescriptionLocalizable.ALIGNMENT_SIZE,
+                                          MGPValidators.range(3, 99)),
                 sizeOfSandwich: new NumberConfig(2, () => $localize`Size of captures`, MGPValidators.range(1, 99)),
             },
         });
@@ -105,14 +107,14 @@ export class PenteRules extends ConfigurableRules<PenteMove, PenteState, PenteCo
         return captures;
     }
 
-    public getGameStatus(node: PenteNode, config: MGPOptional<PenteConfig>): GameStatus {
+    public override getGameStatus(node: PenteNode, config: MGPOptional<PenteConfig>): GameStatus {
         const state: PenteState = node.gameState;
         const opponent: Player = state.getCurrentOpponent();
         const capturesNeededToWin: number = config.get().capturesNeededToWin;
         if (capturesNeededToWin <= state.captures.get(opponent)) {
             return GameStatus.getVictory(opponent);
         }
-        const victoriousCoord: Coord[] = this.getHelper(config).getVictoriousCoord(state);
+        const victoriousCoord: Coord[] = this.getHelper(config.get()).getVictoriousCoord(state);
         if (victoriousCoord.length > 0) {
             return GameStatus.getVictory(opponent);
         }
@@ -123,13 +125,8 @@ export class PenteRules extends ConfigurableRules<PenteMove, PenteState, PenteCo
         }
     }
 
-    public getHelper(config: MGPOptional<PenteConfig>): NInARowHelper<PlayerOrNone> {
-        if (config.isPresent()) {
-            return new NInARowHelper(Utils.identity, config.get().nInARow);
-        } else {
-            const defaultConfig: PenteConfig = PenteRules.RULES_CONFIG_DESCRIPTION.getDefaultConfig().config;
-            return new NInARowHelper(Utils.identity, defaultConfig.nInARow);
-        }
+    public getHelper(config: PenteConfig): NInARowHelper<PlayerOrNone> {
+        return new NInARowHelper(Utils.identity, config.nInARow);
     }
 
     private stillHaveEmptySquare(state: PenteState): boolean {

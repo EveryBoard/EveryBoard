@@ -105,13 +105,17 @@ export class ConnectSixRules extends ConfigurableRules<ConnectSixMove, ConnectSi
         }
     }
 
-    public getGameStatus(node: ConnectSixNode): GameStatus {
+    public override getGameStatus(node: ConnectSixNode): GameStatus {
         const state: ConnectSixState = node.gameState;
         const victoriousCoord: Coord[] = ConnectSixRules.CONNECT_SIX_HELPER.getVictoriousCoord(state);
         if (victoriousCoord.length > 0) {
             return GameStatus.getVictory(state.getCurrentOpponent());
         }
-        return state.turn === 181 ? GameStatus.DRAW : GameStatus.ONGOING;
+        if (TableUtils.contains(state.board, PlayerOrNone.NONE)) {
+            return GameStatus.ONGOING;
+        } else {
+            return GameStatus.DRAW;
+        }
     }
 
 }

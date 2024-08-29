@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { RectangularGameComponent } from '../../components/game-components/rectangular-game-component/RectangularGameComponent';
 import { Coord } from 'src/app/jscaip/Coord';
 import { KamisadoBoard } from 'src/app/games/kamisado/KamisadoBoard';
@@ -13,9 +13,8 @@ import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { MCTS } from 'src/app/jscaip/AI/MCTS';
-import { Minimax } from 'src/app/jscaip/AI/Minimax';
-import { KamisadoHeuristic } from './KamisadoHeuristic';
 import { KamisadoMoveGenerator } from './KamisadoMoveGenerator';
+import { KamisadoMinimax } from './KamisadoMinimax';
 
 @Component({
     selector: 'app-kamisado',
@@ -33,11 +32,11 @@ export class KamisadoComponent extends RectangularGameComponent<KamisadoRules,
     public chosen: MGPOptional<Coord> = MGPOptional.empty();
     public chosenAutomatically: boolean = false;
 
-    public constructor(messageDisplayer: MessageDisplayer) {
-        super(messageDisplayer);
+    public constructor(messageDisplayer: MessageDisplayer, cdr: ChangeDetectorRef) {
+        super(messageDisplayer, cdr);
         this.setRulesAndNode('Kamisado');
         this.availableAIs = [
-            new Minimax($localize`Minimax`, KamisadoRules.get(), new KamisadoHeuristic(), new KamisadoMoveGenerator()),
+            new KamisadoMinimax(),
             new MCTS($localize`MCTS`, new KamisadoMoveGenerator(), this.rules),
         ];
         this.encoder = KamisadoMove.encoder;

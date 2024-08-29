@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { GameComponent } from 'src/app/components/game-components/game-component/GameComponent';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Ordinal } from 'src/app/jscaip/Ordinal';
@@ -14,10 +14,9 @@ import { LodestonePositions, LodestonePressurePlate, LodestonePressurePlateGroup
 import { MCTS } from 'src/app/jscaip/AI/MCTS';
 import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 import { LodestoneMoveGenerator } from './LodestoneMoveGenerator';
-import { LodestoneScoreHeuristic } from './LodestoneScoreHeuristic';
 import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
-import { Minimax } from 'src/app/jscaip/AI/Minimax';
 import { ViewBox } from 'src/app/components/game-components/GameComponentUtils';
+import { LodestoneScoreMinimax } from './LodestoneScoreMinimax';
 
 export type LodestoneInfo = {
     direction: LodestoneDirection,
@@ -129,11 +128,11 @@ export class LodestoneComponent
     private lastMoves: Coord[] = [];
     private lastCaptures: Coord[] = [];
 
-    public constructor(messageDisplayer: MessageDisplayer) {
-        super(messageDisplayer);
+    public constructor(messageDisplayer: MessageDisplayer, cdr: ChangeDetectorRef) {
+        super(messageDisplayer, cdr);
         this.setRulesAndNode('Lodestone');
         this.availableAIs = [
-            new Minimax($localize`Score`, this.rules, new LodestoneScoreHeuristic(), new LodestoneMoveGenerator()),
+            new LodestoneScoreMinimax(),
             new MCTS($localize`MCTS`, new LodestoneMoveGenerator(), this.rules),
         ];
         this.encoder = LodestoneMove.encoder;
@@ -152,7 +151,7 @@ export class LodestoneComponent
 
     public async selectCoord(x: number, y: number): Promise<MGPValidation> {
         const coord: Coord = new Coord(x, y);
-        const clickValidity: MGPValidation = await this.canUserPlay('#square_' + coord.x + '_' + coord.y);
+        const clickValidity: MGPValidation = await this.canUserPlay('#square-' + coord.x + '-' + coord.y);
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }
@@ -177,7 +176,7 @@ export class LodestoneComponent
 
     public async selectLodestone(lodestone: LodestoneDescription): Promise<MGPValidation> {
         const owner: string = this.getCurrentPlayer().toString();
-        const clickedElement: string = '#lodestone_' + lodestone.direction + '_' + lodestone.orientation + '_' + owner;
+        const clickedElement: string = '#lodestone-' + lodestone.direction + '-' + lodestone.orientation + '-' + owner;
         const clickValidity: MGPValidation = await this.canUserPlay(clickedElement);
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
@@ -240,7 +239,7 @@ export class LodestoneComponent
                                       pieceIndex: number)
     : Promise<MGPValidation>
     {
-        const squareName: string = '#plate_' + position + '_' + plateIndex + '_' + pieceIndex;
+        const squareName: string = '#plate-' + position + '-' + plateIndex + '-' + pieceIndex;
         const clickValidity: MGPValidation = await this.canUserPlay(squareName);
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
@@ -253,7 +252,7 @@ export class LodestoneComponent
                                                pieceIndex: number)
     : Promise<MGPValidation>
     {
-        const squareName: string = '#plate_' + position + '_' + plateIndex + '_' + pieceIndex;
+        const squareName: string = '#plate-' + position + '-' + plateIndex + '-' + pieceIndex;
         const clickValidity: MGPValidation = await this.canUserPlay(squareName);
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
@@ -672,14 +671,14 @@ export class LodestoneComponent
         const dx: number = (x + (halfSize - this.viewInfo.capturesToPlace.length / 2)) * this.SPACE_SIZE +
             this.SPACE_SIZE / 2;
         const dy: number = - (this.platesGroupSize + 0.5 * this.SPACE_SIZE + this.STROKE_WIDTH);
-        return `translate(${ dx }, ${ dy })`;
+        return this.getSVGTranslation(dx, dy);
     }
 
     public getAvailableLodestoneTransform(x: number): string {
         const halfSize: number = LodestoneState.SIZE / 2;
         const dx: number = (x + (halfSize - this.viewInfo.availableLodestones.length / 2)) * this.SPACE_SIZE;
         const dy: number = this.boardSize + this.platesGroupSize + this.STROKE_WIDTH;
-        return `translate(${dx}, ${dy})`;
+        return this.getSVGTranslation(dx, dy);
     }
 
 }

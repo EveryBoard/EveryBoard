@@ -27,7 +27,7 @@ export class WelcomeComponent {
                        themeService: ThemeService)
     {
         this.theme = themeService.getTheme();
-        const allGames: GameInfo[] = GameInfo.ALL_GAMES();
+        const allGames: GameInfo[] = GameInfo.getAllGames();
         let column: number = 0;
         for (let i: number = 0; i < allGames.length; i++) {
             if (i < this.numberOfColumns) {
@@ -37,6 +37,7 @@ export class WelcomeComponent {
             column = (column + 1) % this.numberOfColumns;
         }
     }
+
     public async createGame(game?: string): Promise<boolean> {
         const canCreateGame: MGPValidation = this.currentGameService.canUserCreate();
         if (canCreateGame.isSuccess()) {
@@ -50,15 +51,19 @@ export class WelcomeComponent {
             return false;
         }
     }
+
     public async createLocalGame(game: string): Promise<boolean> {
         return this.router.navigate(['/local', game]);
     }
+
     public createTutorial(game: string): Promise<boolean> {
         return this.router.navigate(['/tutorial', game]);
     }
-    public openInfo(gameInfo: GameInfo): void {
-        this.gameInfoDetails = MGPOptional.of(gameInfo);
+
+    public pickGame(game: string): void {
+        this.gameInfoDetails = GameInfo.getByUrlName(game);
     }
+
     public closeInfo(): void {
         this.gameInfoDetails = MGPOptional.empty();
     }

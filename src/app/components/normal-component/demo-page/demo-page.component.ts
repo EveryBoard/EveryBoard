@@ -19,8 +19,6 @@ export class DemoPageComponent {
 
     public numberOfColumns: FormControl = new FormControl(5);
 
-    public squared: FormControl = new FormControl(true);
-
     public columns: DemoNodeInfo[][] = [];
 
     public constructor() {
@@ -31,7 +29,7 @@ export class DemoPageComponent {
     }
 
     public fillColumns(numberOfColumns: number): void {
-        const allGames: GameInfo[] = GameInfo.ALL_GAMES();
+        const allGames: GameInfo[] = GameInfo.getAllGames();
         let column: number = 0;
         let i: number = 0;
         this.columns = [];

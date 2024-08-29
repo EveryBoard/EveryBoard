@@ -7,14 +7,10 @@ import { Router } from '@angular/router';
 })
 export class LocalGameCreationComponent {
 
-    public selectedGame: string;
-
     public constructor(public router: Router) {
     }
-    public pickGame(pickedGame: string): void {
-        this.selectedGame = pickedGame;
-    }
-    public async playLocally(): Promise<void> {
-        await this.router.navigate(['local/' + this.selectedGame]);
+
+    public async pickGame(pickedGame: string): Promise<void> {
+        await this.router.navigate(['local/' + pickedGame]);
     }
 }

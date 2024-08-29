@@ -89,7 +89,7 @@ describe('SixRules', () => {
             // When playing on a coord that is outside of the representation board
             const move: SixMove = SixMove.ofDrop(new Coord(-1, 1));
 
-            // Then the move should be legal
+            // Then the move should succeed
             const expectedBoard: Table<PlayerOrNone> = [
                 [_, O],
                 [O, X],
@@ -275,7 +275,7 @@ describe('SixRules', () => {
         });
 
         it('should refuse deconnection where captured coord is in a smaller group', () => {
-            // Given a board with three group splitted, one of them beeing too small to be chosen
+            // Given a board with three group split, one of them beeing too small to be chosen
             const board: Table<PlayerOrNone> = [
                 [_, X, X, _],
                 [_, X, X, _],
@@ -432,7 +432,7 @@ describe('SixRules', () => {
                 // When playing on the last empty edge of the triangle
                 const move: SixMove = SixMove.ofDrop(new Coord(2, 2));
 
-                // Then the move should be a success and the game should be over
+                // Then the move should succeed and the game should be over
                 const expectedBoard: Table<PlayerOrNone> = [
                     [O, _, _, _, X],
                     [O, X, _, X, _],
@@ -447,7 +447,7 @@ describe('SixRules', () => {
             });
 
             it('should consider winner player who draw a circle/hexagon of his pieces (coverage remix)', () => {
-                // Given a board with an hexagon about to be created
+                // Given a board with a hexagon about to be created
                 const board: Table<PlayerOrNone> = [
                     [O, _, _, _, _],
                     [O, _, _, X, _],

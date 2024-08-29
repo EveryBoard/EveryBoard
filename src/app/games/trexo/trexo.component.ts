@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { TrexoPiece, TrexoPieceStack, TrexoState } from './TrexoState';
 import { TrexoRules } from './TrexoRules';
 import { ModeConfig, ParallelogramGameComponent } from 'src/app/components/game-components/parallelogram-game-component/ParallelogramGameComponent';
@@ -12,10 +12,8 @@ import { Coord3D } from 'src/app/jscaip/Coord3D';
 import { TrexoFailure } from './TrexoFailure';
 import { Ordinal } from 'src/app/jscaip/Ordinal';
 import { MCTS } from 'src/app/jscaip/AI/MCTS';
-import { TrexoAlignmentHeuristic } from './TrexoAlignmentHeuristic';
-import { Minimax } from 'src/app/jscaip/AI/Minimax';
 import { TrexoMoveGenerator } from './TrexoMoveGenerator';
-import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { TrexoAlignmentMinimax } from './TrexoAlignmentMinimax';
 
 interface PieceOnBoard {
 
@@ -80,11 +78,11 @@ export class TrexoComponent extends ParallelogramGameComponent<TrexoRules, Trexo
     public currentOpponentClass: string = 'player1';
     public currentPlayerClass: string = 'player0';
 
-    public constructor(messageDisplayer: MessageDisplayer) {
-        super(messageDisplayer);
+    public constructor(messageDisplayer: MessageDisplayer, cdr: ChangeDetectorRef) {
+        super(messageDisplayer, cdr);
         this.setRulesAndNode('Trexo');
         this.availableAIs = [
-            new Minimax($localize`Alignment`, this.rules, new TrexoAlignmentHeuristic(), new TrexoMoveGenerator()),
+            new TrexoAlignmentMinimax(),
             new MCTS($localize`MCTS`, new TrexoMoveGenerator(), this.rules),
         ];
         this.encoder = TrexoMove.encoder;
@@ -152,7 +150,7 @@ export class TrexoComponent extends ParallelogramGameComponent<TrexoRules, Trexo
         this.up = this.getViewBoxUp();
     }
 
-    public override async showLastMove(move: TrexoMove, config: MGPOptional<EmptyRulesConfig>): Promise<void> {
+    public override async showLastMove(move: TrexoMove): Promise<void> {
         this.lastMoved = [
             move.getZero(),
             move.getOne(),
@@ -327,7 +325,7 @@ export class TrexoComponent extends ParallelogramGameComponent<TrexoRules, Trexo
     public getTranslationAtXYZ(x: number, y: number, z: number): string {
         const mode: ModeConfig = TrexoComponent.modeMap[this.chosenMode];
         const coordTransform: Coord = this.getCoordTranslation(x, y, z, mode);
-        const translation: string = 'translate(' + coordTransform.x + ' ' + coordTransform.y + ')';
+        const translation: string = this.getSVGTranslationAt(coordTransform);
         return translation;
     }
 
@@ -353,7 +351,7 @@ export class TrexoComponent extends ParallelogramGameComponent<TrexoRules, Trexo
         const verticalUnWideness: number = (1 - (1 / widness)) / 2;
         const translationX: number = (10 + mode3D.offsetRatio) * mode3D.parallelogramHeight;
         const translationY: number = (9 + verticalUnWideness) * mode3D.parallelogramHeight;
-        const translation: string = 'translate(' + translationX + ', ' + translationY + ')';
+        const translation: string = this.getSVGTranslation(translationX, translationY);
         return translation + scale;
     }
 

@@ -1,3 +1,4 @@
+import { MGPOptional } from '@everyboard/lib';
 import { DiamPiece } from 'src/app/games/diam/DiamPiece';
 import { EncapsulePiece } from 'src/app/games/encapsule/EncapsulePiece';
 import { HivePiece } from 'src/app/games/hive/HivePiece';
@@ -6,12 +7,12 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { Orthogonal } from 'src/app/jscaip/Orthogonal';
 import { Ordinal } from 'src/app/jscaip/Ordinal';
 import { Player } from 'src/app/jscaip/Player';
-import { MGPOptional } from '@everyboard/lib';
 
 export const clickableMethods: { [gameName: string]: { [methodName: string]: unknown[]; }; } = {
     Abalone: {
-        onPieceClick: [0, 0],
-        onSpaceClick: [0, 0],
+        onPieceClick: [new Coord(0, 0)],
+        onSpaceClick: [new Coord(0, 0)],
+        onInvisibleSpaceClick: [new Coord(0, 0)],
         chooseDirection: [Ordinal.UP],
     },
     Apagos: {
@@ -21,7 +22,10 @@ export const clickableMethods: { [gameName: string]: { [methodName: string]: unk
     Awale: { onClick: [0, 0] },
     BaAwa: { onClick: [0, 0] },
     Brandhub: { onClick: [0, 0] },
-    Coerceo: { onClick: [0, 0] },
+    Coerceo: {
+        onPyramidClick: [new Coord(0, 0)],
+        onSpaceClick: [new Coord(0, 0)],
+    },
     ConnectSix: { onClick: [0, 0] },
     Conspirateurs: { onClick: [new Coord(0, 0)] },
     Diaballik: {
@@ -43,8 +47,12 @@ export const clickableMethods: { [gameName: string]: { [methodName: string]: unk
     Go: {
         onClick: [new Coord(0, 0)],
     },
+    Hexodia: {
+        onClick: [0, 0],
+    },
     Hive: {
-        selectSpace: [new Coord(0, 0), 'space'],
+        selectSpace: [0, 0],
+        selectPiece: [0, 0, 0],
         selectRemaining: [new HivePiece(Player.ZERO, 'QueenBee')],
     },
     Hnefatafl: { onClick: [0, 0] },
@@ -84,8 +92,8 @@ export const clickableMethods: { [gameName: string]: { [methodName: string]: unk
         validateCapture: [],
     },
     Quarto: {
-        chooseCoord: [0, 0],
-        choosePiece: [0],
+        clickCoord: [0, 0],
+        clickPiece: [0],
         deselectDroppedPiece: [],
     },
     Quixo: {
@@ -114,6 +122,9 @@ export const clickableMethods: { [gameName: string]: { [methodName: string]: unk
     Teeko: { onClick: [0, 0] },
     Trexo: {
         onClick: [0, 0],
+    },
+    Trigo: {
+        onClick: [new Coord(0, 0)],
     },
     Yinsh: { onClick: [0, 0] },
 };

@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg"
      width="100%" height="100%"
-     [attr.viewBox]="(- STROKE_WIDTH / 2) + ' ' + (- STROKE_WIDTH / 2) + ' ' + (BOARD_WIDTH + STROKE_WIDTH) + ' ' + (BOARD_HEIGHT + STROKE_WIDTH)"
+     [attr.viewBox]="getViewBox().toSVGString()"
      preserveAspectRatio="xMidYMid meet"
 >
     <g [attr.transform]="'rotate(' + getPointOfView().getValue() * 180 + ' ' + (BOARD_WIDTH / 2) + ' ' + (BOARD_HEIGHT / 2) + ')'">
@@ -22,18 +22,18 @@
             <polygon *ngIf="canDisplayArrow(x, PlayerOrNone.ZERO)"
                      id="dropArrow_zero_{{ x }}"
                      class="base mid-stroke"
-                     [ngClass]="getArrowClasses(x, PlayerOrNone.ZERO)"
+                     [ngClass]="getArrowClasses(PlayerOrNone.ZERO)"
                      (click)="onArrowClick(x, PlayerOrNone.ZERO)"
                      [attr.points]="ARROW_COORD"
-                     [attr.transform]="'translate(' + (SPACE_SIZE / 2) + ' ' + (-SPACE_SIZE / 2) + ')'"
+                     [attr.transform]="getSVGTranslation(SPACE_SIZE / 2, -SPACE_SIZE / 2)"
             />
             <polygon *ngIf="canDisplayArrow(x, PlayerOrNone.ONE)"
                      id="dropArrow_one_{{ x }}"
                      class="base mid-stroke"
-                     [ngClass]="getArrowClasses(x, PlayerOrNone.ONE)"
+                     [ngClass]="getArrowClasses(PlayerOrNone.ONE)"
                      (click)="onArrowClick(x, PlayerOrNone.ONE)"
                      [attr.points]="ARROW_COORD"
-                     [attr.transform]="'translate(0 ' + (-SPACE_SIZE / 2) + ')'"
+                     [attr.transform]="getSVGTranslation(0, -SPACE_SIZE / 2)"
             />
             <rect id="square_{{ x }}"
                   (click)="onSquareClick(x)"
@@ -46,9 +46,8 @@
             />
             <ng-container *ngFor="let i of ArrayUtils.range(square.count(PlayerOrNone.NONE))">
                 <circle id="square_{{ x }}_piece_{{ i }}_out_of_{{ square.count(PlayerOrNone.NONE) }}"
+                        [attr.transform]="getCircleTransform(i, square)"
                         (click)="onSquareClick(x)"
-                        [attr.cx]="getCircleCenter(x, i, square).x"
-                        [attr.cy]="getCircleCenter(x, i, square).y"
                         r="10"
                         [ngClass]="getPieceClasses(x, i, square)"
                         class="base mid-stroke"

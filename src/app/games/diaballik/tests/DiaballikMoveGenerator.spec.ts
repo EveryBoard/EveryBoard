@@ -1,5 +1,5 @@
 /* eslint-disable max-lines-per-function */
-import { MGPFallible, MGPOptional, MGPSet } from '@everyboard/lib';
+import { MGPFallible, MGPOptional, Set } from '@everyboard/lib';
 import { DiaballikBallPass, DiaballikMove, DiaballikSubMove, DiaballikTranslation } from '../DiaballikMove';
 import { DiaballikMoveGenerator, DiaballikMoveInConstruction } from '../DiaballikMoveGenerator';
 import { DiaballikNode, DiaballikRules } from '../DiaballikRules';
@@ -69,7 +69,7 @@ describe('DiaballikMoveInConstruction', () => {
             new DiaballikMoveInConstruction([firstTranslation, secondTranslation], state, state);
 
         // When putting them in a set
-        const set: MGPSet<DiaballikMoveInConstruction> = new MGPSet([move, equalMove]);
+        const set: Set<DiaballikMoveInConstruction> = new Set([move, equalMove]);
 
         // Then there should be only one move
         expect(set.size()).toBe(1);
@@ -113,7 +113,7 @@ describe('DiaballikMoveGenerator', () => {
         // Given the initial node
         const node: DiaballikNode = new DiaballikNode(DiaballikRules.get().getInitialState());
 
-        // When computing the list of moves
+        // When listing the moves
         const moves: DiaballikMove[] = moveGenerator.getListMoves(node, defaultConfig);
 
         // Then it should have all move options containing 1-step moves (8 exactly, 6 translations and 2 passes),
@@ -134,7 +134,7 @@ describe('DiaballikMoveGenerator', () => {
             const legalityInfo: MGPFallible<DiaballikState> = DiaballikRules.get().isLegal(move, node.gameState);
             return DiaballikRules.get().applyLegalMove(move, node.gameState, defaultConfig, legalityInfo.get());
         }
-        const states: DiaballikState[] = new MGPSet(moves.map(applyMove)).toList();
+        const states: DiaballikState[] = new Set(moves.map(applyMove)).toList();
 
         // Then we should have as many states as there are moves
         expect(states.length).toBe(moves.length);
@@ -153,7 +153,7 @@ describe('DiaballikMoveGenerator', () => {
         ], 0);
         const node: DiaballikNode = new DiaballikNode(state);
 
-        // When computing the list of moves
+        // When listing the moves
         const moves: DiaballikMove[] = moveGenerator.getListMoves(node, defaultConfig);
 
         // Then it should not have "no-op" translations
@@ -177,7 +177,7 @@ describe('DiaballikMoveGenerator', () => {
         ], 0);
         const node: DiaballikNode = new DiaballikNode(state);
 
-        // When computing the list of moves
+        // When listing the moves
         const moves: DiaballikMove[] = moveGenerator.getListMoves(node, defaultConfig);
 
         // Then it should only have one of each 2-translation option
@@ -204,7 +204,7 @@ describe('DiaballikMoveGenerator (not avoiding duplicates)', () => {
         // Given the initial node
         const node: DiaballikNode = new DiaballikNode(DiaballikRules.get().getInitialState());
 
-        // When computing the list of moves
+        // When listing the moves
         const moves: DiaballikMove[] = moveGenerator.getListMoves(node, defaultConfig);
 
         // Then it should have all move options containing 1-step moves (8 exactly, 6 translations and 2 passes),

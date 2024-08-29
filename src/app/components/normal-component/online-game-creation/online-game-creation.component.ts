@@ -36,7 +36,7 @@ export class OnlineGameCreationComponent implements OnInit {
         }
         const canCreateOnlineGame: MGPValidation = this.currentGameService.canUserCreate();
         if (canCreateOnlineGame.isSuccess()) {
-            const gameId: string = await this.gameService.createPartConfigRoomAndChat(game);
+            const gameId: string = await this.gameService.createGame(game);
             await this.router.navigate(['/play', game, gameId]);
             return true;
         } else {
@@ -46,8 +46,7 @@ export class OnlineGameCreationComponent implements OnInit {
         }
     }
     private gameExists(gameName: string): boolean {
-        const optionalGameInfo: MGPOptional<GameInfo> =
-            MGPOptional.ofNullable(GameInfo.ALL_GAMES().find((gameInfo: GameInfo) => gameInfo.urlName === gameName));
+        const optionalGameInfo: MGPOptional<GameInfo> = GameInfo.getByUrlName(gameName);
         return optionalGameInfo.isPresent();
     }
 }

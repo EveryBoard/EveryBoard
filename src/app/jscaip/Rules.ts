@@ -19,7 +19,7 @@ export abstract class SuperRules<M extends Move,
      * the board
      * the turn
      * the extra data that might be score of each player
-     * the remaining pawn that you can put on the board...
+     * the remaining piece that you can put on the board...
      */
 
     public choose(node: GameNode<M, S>, move: M, config: MGPOptional<C>) : MGPFallible<GameNode<M, S>> {
@@ -77,7 +77,7 @@ export abstract class SuperRules<M extends Move,
         }
     }
 
-    public abstract getGameStatus(node: GameNode<M, S>, config?: MGPOptional<C>): GameStatus;
+    public abstract getGameStatus(node: GameNode<M, S>, config: MGPOptional<C>): GameStatus;
 }
 
 export abstract class ConfigurableRules<M extends Move,

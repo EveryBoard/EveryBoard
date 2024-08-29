@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { RectangularGameComponent } from '../../components/game-components/rectangular-game-component/RectangularGameComponent';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Orthogonal } from 'src/app/jscaip/Orthogonal';
@@ -11,9 +11,7 @@ import { PlayerOrNone } from 'src/app/jscaip/Player';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { MCTS } from 'src/app/jscaip/AI/MCTS';
 import { QuixoMoveGenerator } from './QuixoMoveGenerator';
-import { Minimax } from 'src/app/jscaip/AI/Minimax';
-import { QuixoHeuristic } from './QuixoHeuristic';
-import { GameComponentUtils } from 'src/app/components/game-components/GameComponentUtils';
+import { QuixoMinimax } from './QuixoMinimax';
 
 @Component({
     selector: 'app-quixo',
@@ -37,11 +35,11 @@ export class QuixoComponent extends RectangularGameComponent<QuixoRules,
 
     public victoriousCoords: Coord[] = [];
 
-    public constructor(messageDisplayer: MessageDisplayer) {
-        super(messageDisplayer);
+    public constructor(messageDisplayer: MessageDisplayer, cdr: ChangeDetectorRef) {
+        super(messageDisplayer, cdr);
         this.setRulesAndNode('Quixo');
         this.availableAIs = [
-            new Minimax($localize`Minimax`, this.rules, new QuixoHeuristic(), new QuixoMoveGenerator()),
+            new QuixoMinimax(),
             new MCTS($localize`MCTS`, new QuixoMoveGenerator(), this.rules),
         ];
         this.encoder = QuixoMove.encoder;
@@ -128,11 +126,11 @@ export class QuixoComponent extends RectangularGameComponent<QuixoRules,
         return this.chooseMove(move);
     }
 
-    public getArrowTransform(orientation: Orthogonal): string {
+    public getQuixoArrowTransform(orientation: Orthogonal): string {
         const state: QuixoState = this.getState();
         const boardWidth: number = state.getWidth() * this.SPACE_SIZE;
         const boardHeight: number = state.getHeight() * this.SPACE_SIZE;
-        return GameComponentUtils.getArrowTransform(boardWidth, boardHeight, orientation);
+        return this.getArrowTransform(boardWidth, boardHeight, orientation);
     }
 
 }

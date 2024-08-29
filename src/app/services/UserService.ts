@@ -1,11 +1,11 @@
+import { Utils, MGPOptional } from '@everyboard/lib';
 import { Injectable } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { UserDAO } from '../dao/UserDAO';
 import { User } from '../domain/User';
 import { FirestoreTime } from '../domain/Time';
 import { FirestoreDocument } from '../dao/FirestoreDAO';
-import { serverTimestamp, Timestamp } from 'firebase/firestore';
-import { Utils, MGPOptional } from '@everyboard/lib';
+import { serverTimestamp } from 'firebase/firestore';
 
 /**
   * The aim of this service is to:
@@ -20,18 +20,23 @@ import { Utils, MGPOptional } from '@everyboard/lib';
 })
 export class UserService {
 
-    public constructor(private readonly userDAO: UserDAO) {
+    public constructor(private readonly userDAO: UserDAO)
+    {
     }
+
     public async usernameIsAvailable(username: string): Promise<boolean> {
         const usersWithSameUsername: FirestoreDocument<User>[] = await this.userDAO.findWhere([['username', '==', username]]);
         return usersWithSameUsername.length === 0;
     }
+
     public async setUsername(uid: string, username: string): Promise<void> {
         await this.userDAO.update(uid, { username: username });
     }
+
     public async markAsVerified(uid: string): Promise<void> {
         await this.userDAO.update(uid, { verified: true });
     }
+
     /**
      * Observes an user, ignoring local updates.
      */
@@ -45,6 +50,7 @@ export class UserService {
             callback(user);
         });
     }
+
     public async getUserLastUpdateTime(id: string): Promise<MGPOptional<FirestoreTime>> {
         const user: MGPOptional<User> = await this.userDAO.read(id);
         if (user.isAbsent()) {
@@ -55,31 +61,11 @@ export class UserService {
             return MGPOptional.of(lastUpdateTime as FirestoreTime);
         }
     }
+
     public updatePresenceToken(userId: string): Promise<void> {
         return this.userDAO.update(userId, {
             lastUpdateTime: serverTimestamp(),
         });
     }
-    /**
-     * Gets the server time by relying on the presence token of the user.
-     * Can only be called if there is a logged in user.
-     * @returns the "current" time of the server
-     */
-    public async getServerTime(userId: string): Promise<Timestamp> {
-        // We force the presence token update, and once we receive it, check the time written by firebase
-        return new Promise((resolve: (result: Timestamp) => void) => {
-            let updateSent: boolean = false;
-            const callback: (user: MGPOptional<User>) => void = (user: MGPOptional<User>): void => {
-                if (user.get().lastUpdateTime == null) {
-                    // We know that the update has been sent when we actually see a null here
-                    updateSent = true;
-                } else if (updateSent) {
-                    subscription.unsubscribe();
-                    resolve(user.get().lastUpdateTime as Timestamp);
-                }
-            };
-            const subscription: Subscription = this.userDAO.subscribeToChanges(userId, callback);
-            void this.updatePresenceToken(userId);
-        });
-    }
+
 }

@@ -101,7 +101,7 @@ export class PentagoRules extends Rules<PentagoMove, PentagoState> {
                     }
                 }
                 if (fourAligned) {
-                    // check first alignement
+                    // check first alignment
                     if (state.getPieceAt(testedCoord) === firstValue) {
                         subVictory.push(testedCoord);
                         victoryCoords = victoryCoords.concat(subVictory);
@@ -119,7 +119,7 @@ export class PentagoRules extends Rules<PentagoMove, PentagoState> {
         return victoryCoords;
     }
 
-    public getGameStatus(node: PentagoNode): GameStatus {
+    public override getGameStatus(node: PentagoNode): GameStatus {
         const state: PentagoState = node.gameState;
         const victoryCoords: Coord[] = this.getVictoryCoords(state);
         const victoryFound: PlayerMap<boolean> = PlayerMap.ofValues(false, false);

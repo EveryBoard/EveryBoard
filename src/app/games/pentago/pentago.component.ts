@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { RectangularGameComponent } from 'src/app/components/game-components/rectangular-game-component/RectangularGameComponent';
 import { Coord } from 'src/app/jscaip/Coord';
 import { PlayerOrNone } from 'src/app/jscaip/Player';
@@ -10,9 +10,9 @@ import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { MCTS } from 'src/app/jscaip/AI/MCTS';
-import { DummyHeuristic, Minimax } from 'src/app/jscaip/AI/Minimax';
 import { PentagoMoveGenerator } from './PentagoMoveGenerator';
 import { ViewBox } from 'src/app/components/game-components/GameComponentUtils';
+import { PentagoDummyMinimax } from './PentagoDummyMinimax';
 
 interface ArrowInfo {
     path: string;
@@ -48,11 +48,11 @@ export class PentagoComponent extends RectangularGameComponent<PentagoRules,
 
     public ARROWS: ArrowInfo[];
 
-    public constructor(messageDisplayer: MessageDisplayer) {
-        super(messageDisplayer);
+    public constructor(messageDisplayer: MessageDisplayer, cdr: ChangeDetectorRef) {
+        super(messageDisplayer, cdr);
         this.setRulesAndNode('Pentago');
         this.availableAIs = [
-            new Minimax($localize`Dummy`, this.rules, new DummyHeuristic(), new PentagoMoveGenerator()),
+            new PentagoDummyMinimax(),
             new MCTS($localize`MCTS`, new PentagoMoveGenerator(), this.rules),
         ];
         this.encoder = PentagoMove.encoder;
@@ -80,7 +80,7 @@ export class PentagoComponent extends RectangularGameComponent<PentagoRules,
         let yTranslate: number = (this.SPACE_SIZE + this.PIECE_SEPARATION) * coord.y;
         xTranslate += this.STROKE_WIDTH;
         yTranslate += this.STROKE_WIDTH;
-        return 'translate(' + xTranslate + ', ' + yTranslate + ')';
+        return this.getSVGTranslation(xTranslate, yTranslate);
     }
 
     public async updateBoard(_triggerAnimation: boolean): Promise<void> {
@@ -261,7 +261,7 @@ export class PentagoComponent extends RectangularGameComponent<PentagoRules,
 
     public getSkipRotationCircleTranslate(): string {
         const translate: number = this.BLOCK_WIDTH + (this.PIECE_SEPARATION / 2) - this.STROKE_WIDTH;
-        return `translate(${ translate } ${ translate })`;
+        return this.getSVGTranslation(translate, translate);
     }
 
 }

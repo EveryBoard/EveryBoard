@@ -16,7 +16,7 @@
     </g>
 
     <g #boardInItself
-       [attr.transform]="'translate(' + (STROKE_WIDTH / 2) + ' ' + ((STROKE_WIDTH / 2) + pieceRowHeight) + ')'">
+       [attr.transform]="getSVGTranslation(STROKE_WIDTH / 2, (STROKE_WIDTH / 2) + pieceRowHeight)">
         <rect x="-3"
               y="-3"
               [attr.width]="(4 * SPACE_SIZE) + 6"
@@ -62,7 +62,7 @@
         <g *ngIf="chosenLandingCoord.isPresent()"
            id="capture_validation"
            (click)="validateCapture()"
-           [attr.transform]="'translate(' + (4 * SPACE_SIZE) + ' ' + (4 * SPACE_SIZE) + ')'">
+           [attr.transform]="getTranslationAtXY(4, 4)">
             <circle [attr.cx]="STROKE_WIDTH / 2"
                     [attr.cy]="STROKE_WIDTH / 2"
                     [attr.r]="SPACE_SIZE / 2"
@@ -76,7 +76,7 @@
         <g *ngFor="let capturable of capturables"
            (click)="onPieceClick(capturable.x, capturable.y, capturable.z)"
            id="capturable_{{ capturable.x }}_{{ capturable.y }}_{{ capturable.z }}"
-           [attr.transform]="'translate(' + getPieceCxByCoord(capturable) + ' ' + getPieceCyByCoord(capturable) + ')'">
+           [attr.transform]="getSVGTranslation(getPieceCxByCoord(capturable), getPieceCyByCoord(capturable))">
             <line [attr.x1]="-0.25 * getPieceRadius(capturable.z)"
                   [attr.y1]="-0.25 * getPieceRadius(capturable.z)"
                   [attr.x2]="+0.25 * getPieceRadius(capturable.z)"

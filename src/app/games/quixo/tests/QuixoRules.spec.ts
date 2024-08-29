@@ -8,8 +8,9 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { Table } from 'src/app/jscaip/TableUtils';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
-import { MGPOptional, MGPSet, TestUtils } from '@everyboard/lib';
+import { MGPOptional, TestUtils } from '@everyboard/lib';
 import { QuixoFailure } from '../QuixoFailure';
+import { CoordSet } from 'src/app/jscaip/CoordSet';
 
 describe('QuixoRules', () => {
 
@@ -72,10 +73,10 @@ describe('QuixoRules', () => {
         new QuixoMove(2, 4, Orthogonal.DOWN),
     ];
     const errorByDirection: string [] = [
-        `Invalid direction: pawn on the left side can't be moved to the left.`,
-        `Invalid direction: pawn on the right side can't be moved to the right.`,
-        `Invalid direction: pawn on the top side can't be moved up.`,
-        `Invalid direction: pawn on the bottom side can't be moved down.`,
+        `Invalid direction: piece on the left side can't be moved to the left.`,
+        `Invalid direction: piece on the right side can't be moved to the right.`,
+        `Invalid direction: piece on the top side can't be moved up.`,
+        `Invalid direction: piece on the bottom side can't be moved down.`,
     ];
 
     for (let i: number = 0; i < 4; i++) {
@@ -258,9 +259,14 @@ describe('QuixoRules', () => {
                 [O, _, _, _, _],
             ];
             const state: QuixoState = new QuixoState(board, 1);
-            const victoriousCoord: MGPSet<Coord> = new MGPSet(QuixoRules.getVictoriousCoords(state));
-            const expectedVictoriousCoord: MGPSet<Coord> =
-                new MGPSet([new Coord(0, 4), new Coord(1, 3), new Coord(2, 2), new Coord(3, 1), new Coord(4, 0)]);
+            const victoriousCoord: CoordSet = new CoordSet(QuixoRules.getVictoriousCoords(state));
+            const expectedVictoriousCoord: CoordSet = new CoordSet([
+                new Coord(0, 4),
+                new Coord(1, 3),
+                new Coord(2, 2),
+                new Coord(3, 1),
+                new Coord(4, 0),
+            ]);
             expect(victoriousCoord.equals(expectedVictoriousCoord)).toBeTrue();
         });
 
@@ -274,8 +280,8 @@ describe('QuixoRules', () => {
                 [_, _, _, _, _, _, O],
             ];
             const state: QuixoState = new QuixoState(board, 1);
-            const victoriousCoord: MGPSet<Coord> = new MGPSet(QuixoRules.getVictoriousCoords(state));
-            const expectedVictoriousCoord: MGPSet<Coord> = new MGPSet([
+            const victoriousCoord: CoordSet = new CoordSet(QuixoRules.getVictoriousCoords(state));
+            const expectedVictoriousCoord: CoordSet = new CoordSet([
                 new Coord(2, 0),
                 new Coord(3, 1),
                 new Coord(4, 2),

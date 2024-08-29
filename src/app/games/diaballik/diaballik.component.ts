@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { DefeatCoords, DiaballikRules, VictoryCoord, VictoryOrDefeatCoords } from './DiaballikRules';
 import { DiaballikMove, DiaballikBallPass, DiaballikSubMove, DiaballikTranslation } from './DiaballikMove';
 import { DiaballikPiece, DiaballikState } from './DiaballikState';
@@ -6,7 +6,7 @@ import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 import { Coord } from 'src/app/jscaip/Coord';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { DiaballikMinimax } from './DiaballikMinimax';
+import { DiaballikDistanceMinimax } from './DiaballikDistanceMinimax';
 import { DiaballikMoveGenerator } from './DiaballikMoveGenerator';
 import { MCTS } from 'src/app/jscaip/AI/MCTS';
 import { RectangularGameComponent } from 'src/app/components/game-components/rectangular-game-component/RectangularGameComponent';
@@ -55,22 +55,22 @@ export class DiaballikComponent extends RectangularGameComponent<DiaballikRules,
 
     private readonly moveGenerator: DiaballikMoveGenerator = new DiaballikMoveGenerator(false);
 
-    public constructor(messageDisplayer: MessageDisplayer) {
-        super(messageDisplayer);
+    public constructor(messageDisplayer: MessageDisplayer, cdr: ChangeDetectorRef) {
+        super(messageDisplayer, cdr);
         this.setRulesAndNode('Diaballik');
         this.hasAsymmetricBoard = true;
         this.WIDTH = this.getState().getWidth();
         this.HEIGHT = this.getState().getHeight();
         this.encoder = DiaballikMove.encoder;
         this.availableAIs = [
-            new DiaballikMinimax($localize`AllMoves`, new DiaballikMoveGenerator(true)),
+            new DiaballikDistanceMinimax($localize`AllMoves`, new DiaballikMoveGenerator(true)),
             new MCTS($localize`MCTS`, this.moveGenerator, this.rules),
             new MCTS($localize`MCTS (3 only)`, new DiaballikFilteredMoveGenerator(3, false), this.rules),
             new MCTS($localize`MCTS (without dups)`, new DiaballikMoveGenerator(true), this.rules),
             new MCTS($localize`MCTS (3, no dups)`, new DiaballikFilteredMoveGenerator(3, false), this.rules),
         ];
         for (let i: number = 1; i <= 3; i++) {
-            this.availableAIs.push(new DiaballikMinimax($localize`Distance (${i})`, new DiaballikFilteredMoveGenerator(i)));
+            this.availableAIs.push(new DiaballikDistanceMinimax($localize`Distance (${i})`, new DiaballikFilteredMoveGenerator(i)));
         }
     }
 
@@ -219,7 +219,7 @@ export class DiaballikComponent extends RectangularGameComponent<DiaballikRules,
         return this.onLegalClick(clickedCoord);
     }
 
-    private onLegalClick(clickedCoord: Coord): MGPValidation | PromiseLike<MGPValidation> {
+    private async onLegalClick(clickedCoord: Coord): Promise<MGPValidation> {
         const clickedPiece: DiaballikPiece = this.stateInConstruction.getPieceAt(clickedCoord);
         if (this.currentSelection.isPresent()) {
             const selection: Coord = this.currentSelection.get();
