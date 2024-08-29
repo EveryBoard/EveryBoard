@@ -2044,7 +2044,7 @@
       </trans-unit>
       <trans-unit id="6204412729347708092" datatype="html">
         <source>You won, but the exercise is to win while moving a piece!</source>
-        <target>Vous avez gagné, mais le but de l'exercice est de gagner en formant un déplacement !</target>
+        <target>Vous avez gagné, mais le but de l'exercice est de gagner en faisant un déplacement !</target>
       </trans-unit>
       <trans-unit id="360730166369316579" datatype="html">
         <source>Attack</source>
