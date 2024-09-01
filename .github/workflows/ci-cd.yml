@@ -26,7 +26,7 @@ jobs:
       - name: Setup dependencies (setup node)
         uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: 20
       - name: Setup dependencies (install dependencies)
         run: npm ci
       - name: Build lib
@@ -56,7 +56,7 @@ jobs:
       - name: Setup dependencies (setup node)
         uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: 20
       - name: Setup dependencies (install dependencies)
         run: npm ci
       - name: Build lib
@@ -126,7 +126,7 @@ jobs:
       - name: Setup dependencies (setup node)
         uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: 20
       - name: Setup dependencies (install dependencies)
         run: npm ci
       - name: Build lib
@@ -172,7 +172,7 @@ jobs:
       - name: Setup dependencies (setup node)
         uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: 20
       - name: Setup dependencies (install dependencies)
         run: npm ci
       - name: Build lib
@@ -253,7 +253,7 @@ jobs:
       - name: Setup dependencies (setup node)
         uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: 20
       - name: Setup dependencies (install JS dependencies)
         run: npm ci
       - name: Build lib
@@ -357,7 +357,7 @@ jobs:
       - name: Setup dependencies (setup node)
         uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: 20
       - name: Setup dependencies (install dependencies)
         run: npm ci
       - name: Build lib
