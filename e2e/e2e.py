@@ -16,7 +16,7 @@ import textwrap
 # - each scenario should end with the user *not* being in any game
 
 # Set to False to see the script happening in real time. Useful for debugging
-HEADLESS = True
+HEADLESS = False
 # Set to True if somehow the selenium driver is acting like a mobile device (with small screen)
 MOBILE = False
 USER_RESPONSE_TIME=0.2 # A typical user cannot click faster than once every 200ms, and we may need some more time for displaying some components
@@ -49,8 +49,8 @@ class PlayerDriver():
             print('[browser]' + log['message'])
             if log['level'] == 'SEVERE':
                 errors = True
-        #if errors:
-        #    raise Exception('Errors encountered, stopping here.')
+        if errors:
+            raise Exception('Errors encountered, stopping here.')
 
     def go_to_page(self, url):
         '''Visit an URL'''
