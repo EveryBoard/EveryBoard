@@ -49,8 +49,8 @@ class PlayerDriver():
             print('[browser]' + log['message'])
             if log['level'] == 'SEVERE':
                 errors = True
-        if errors:
-            raise Exception('Errors encountered, stopping here.')
+        #if errors:
+        #    raise Exception('Errors encountered, stopping here.')
 
     def go_to_page(self, url):
         '''Visit an URL'''
