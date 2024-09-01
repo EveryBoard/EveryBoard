@@ -83,6 +83,7 @@ export class GipfComponent extends HexagonalGameComponent<GipfRules,
 
     public override async updateBoard(_triggerAnimation: boolean): Promise<void> {
         this.constructedState = this.getState();
+        this.scores = MGPOptional.of(this.constructedState.getScores());
         this.moveToInitialCaptureOrPlacementPhase();
     }
 
@@ -118,10 +119,8 @@ export class GipfComponent extends HexagonalGameComponent<GipfRules,
     }
 
     private markCapture(capture: GipfCapture, constructedState: GipfState): void {
-        console.log(capture, constructedState)
         capture.forEach((coord: Coord) => {
             const capturedPiece: Player = constructedState.getPieceAt(coord).getPlayer() as Player;
-            console.log('marking capture of', coord.toString(), capturedPiece.toString())
             this.captured.put(coord, capturedPiece);
         });
     }
