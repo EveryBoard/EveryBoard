@@ -18,10 +18,14 @@ export class AnimationTimer {
                        private readonly rejectPromise: (error: Error) => void) {
     }
     public cancel(): void {
+        try {
         console.log('canceling')
         this.rejectPromise(new AnimationCancelled());
         console.log('clearing timeout')
         window.clearTimeout(this.timerId);
+        } catch (e) {
+            console.log('error: ' + e)
+        }
     }
 }
 
@@ -51,6 +55,7 @@ export class TimeUtils {
     public static cancelAnimations(): void {
         if (this.animationTimer.isPresent()) {
             this.animationTimer.get().cancel();
+            console.log('after having cancelled')
             // Need also to fail the promise!!
             this.animationTimer = MGPOptional.empty();
         }
