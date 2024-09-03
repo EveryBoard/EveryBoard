@@ -12,7 +12,7 @@ import { MGPOptional, TestUtils } from '@everyboard/lib';
 import { QuixoFailure } from '../QuixoFailure';
 import { CoordSet } from 'src/app/jscaip/CoordSet';
 
-fdescribe('QuixoRules', () => {
+describe('QuixoRules', () => {
 
     let rules: QuixoRules;
     const defaultConfig: MGPOptional<QuixoConfig> = QuixoRules.get().getDefaultRulesConfig();
