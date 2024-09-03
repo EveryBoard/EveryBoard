@@ -90,7 +90,29 @@ export class QuixoRules extends ConfigurableRules<QuixoMove, QuixoState, QuixoCo
     }
 
     public static getVictoriousCoords(state: QuixoState): Coord[] {
-        return QuixoRules.QUIXO_HELPER.getVictoriousCoord(state);
+        const victoriousCoord: Coord[] = QuixoRules.QUIXO_HELPER.getVictoriousCoord(state);
+        // TODO FOR REVIEW: quand on fait ce genre de case y a toujours le stuut de l'inversion (vu que currentOpponent est le previousPlayer)
+        // Du coup on ajouterais pas une fonction "getPreviousPlayer" et "getPreviousOpponent" pour avoir une lecture plus sympa et cette explanation centralisée ?
+        const opponentCoords: Coord[] = QuixoRules.getPlayersCoords(victoriousCoord, state, state.getCurrentPlayer());
+        const playerCoords: Coord[] = QuixoRules.getPlayersCoords(victoriousCoord, state, state.getCurrentOpponent());
+        if (opponentCoords.length === 0) {
+            if (playerCoords.length === 0) {
+                return []; // Nobody won
+            } else {
+                return playerCoords; // Player won
+            }
+        } else {
+            // if there is no player coords, then opponent won
+            // if there is both player coords,
+            // Then player made opponent win by making two victories
+            return opponentCoords;
+        }
+    }
+
+    public static getPlayersCoords(coords: Coord[], state: QuixoState, player: Player): Coord[] {
+        return coords.filter((coord: Coord) => {
+            return state.getPieceAt(coord).equals(player);
+        });
     }
 
     public static getFullestLine(playerLinesInfo: MGPMap<string, NumberMap<number>>): number {
