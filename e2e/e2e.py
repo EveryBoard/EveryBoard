@@ -125,8 +125,10 @@ class PlayerDriver():
                 print("2")
                 actions = ActionChains(self.driver)
                 print("3")
-                actions.move_to_element(hover).perform()
+                wip = actions.move_to_element(hover)
                 print("4")
+                wip.perform()
+                print("5")
             self.click(button_selector)
         except Exception as e:
             print('Failed when hovering over "{}" and clicking on button "{}"'.format(hover_selector, button_selector))
