@@ -126,6 +126,7 @@ class PlayerDriver():
                 actions = ActionChains(self.driver)
                 print("3")
                 actions.move_to_element(hover).perform()
+                print("4")
             self.click(button_selector)
         except Exception as e:
             print('Failed when hovering over "{}" and clicking on button "{}"'.format(hover_selector, button_selector))
