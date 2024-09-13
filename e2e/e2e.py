@@ -120,8 +120,11 @@ class PlayerDriver():
             if MOBILE:
                 self.click('.navbar-burger')
             else:
+                print("1")
                 hover = self.wait_for(hover_selector)
+                print("2")
                 actions = ActionChains(self.driver)
+                print("3")
                 actions.move_to_element(hover).perform()
             self.click(button_selector)
         except Exception as e:
