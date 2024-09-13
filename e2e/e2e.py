@@ -308,7 +308,7 @@ def can_play_tutorial(user):
     Result: I can complete it fully
     '''
     # Launch the tutorial
-    user.click_menu_button('#playOffline', '#tutorial')
+    user.go_to_page('https://localhost:4200/tutorial')
     user.click('#image-P4')
 
     # First step does not require any move, so just click ok
@@ -338,7 +338,7 @@ def can_play_local_2_players(user):
     Result: I can go until the end of the game
     '''
     # Launch a game of four in a row
-    user.click_menu_button('#playOffline', '#playLocally')
+    user.go_to_page('https://localhost:4200/local')
     user.click('#image-P4')
     user.use_default_config()
 
@@ -365,7 +365,7 @@ def can_play_local_vs_ai(user):
     '''
 
     # Launch a game of four in a row
-    user.click_menu_button('#playOffline', '#playLocally')
+    user.go_to_page('https://localhost:4200/local')
     user.click('#image-P4')
     user.use_default_config()
 
