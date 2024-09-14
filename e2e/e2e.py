@@ -75,7 +75,6 @@ class PlayerDriver():
             self.click('.navbar-burger')
         self.click('#register')
 
-
         # Fill in registration form
         self.fill('#email', self.email)
         self.fill('#username', self.username)
@@ -102,7 +101,6 @@ class PlayerDriver():
             # Force a small wait to mimick a real user. This is to stabilize these tests a bit more
             time.sleep(USER_RESPONSE_TIME)
             button = self.wait_for(selector)
-            print(button)
             button.click()
         except Exception as e:
             print('Failed when clicking on button "{}": {}'.format(selector, e))
@@ -126,7 +124,7 @@ class PlayerDriver():
             else:
                 hover = self.wait_for(hover_selector)
                 actions = ActionChains(self.driver)
-                wip = actions.move_to_element(hover).perform()
+                actions.move_to_element(hover).perform()
             self.click(button_selector)
         except Exception as e:
             print('Failed when hovering over "{}" and clicking on button "{}"'.format(hover_selector, button_selector))

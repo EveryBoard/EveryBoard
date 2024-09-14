@@ -108,7 +108,7 @@ jobs:
 
   e2e:
     runs-on: ubuntu-latest
-#    needs: [ build-front, tests-front, tests-back ]
+    needs: [ build-front, tests-front, tests-back ]
     steps:
       - name: Checkout the repository
         uses: actions/checkout@v4
