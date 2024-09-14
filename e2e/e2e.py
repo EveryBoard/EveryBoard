@@ -30,8 +30,12 @@ class PlayerDriver():
         options.add_argument('--window-size=1920x1080')
         self.driver = webdriver.Chrome(options=options)
 
-    def dump_page(self):
-        print(self.driver.page_source.encode("utf-8"))
+    def dump_element(self, name):
+        element = self.wait_for(name)
+        print('inner:')
+        print(element.get_attribute('innerHTML'))
+        print('outer:')
+        print(element.get_attribute('outerHTML'))
 
     def close(self):
         '''Close the browser'''
@@ -74,7 +78,7 @@ class PlayerDriver():
         # Access registration page
         if MOBILE:
             self.click('.navbar-burger')
-        self.dump_page()
+        self.dump_element('#register')
         self.click('#register')
 
         # Fill in registration form
@@ -103,6 +107,7 @@ class PlayerDriver():
             # Force a small wait to mimick a real user. This is to stabilize these tests a bit more
             time.sleep(USER_RESPONSE_TIME)
             button = self.wait_for(selector)
+            print(button)
             button.click()
         except Exception as e:
             print('Failed when clicking on button "{}": {}'.format(selector, e))
