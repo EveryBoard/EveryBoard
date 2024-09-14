@@ -85,13 +85,8 @@ export abstract class MancalaComponent<R extends MancalaRules>
         this.changeVisibleState(this.getState());
     }
 
-    private count: number = 0;
     public async updateBoard(triggerAnimation: boolean): Promise<void> {
-        try {
         TimeUtils.cancelAnimations();
-        const currentCount = this.count;
-        this.count++;
-        console.log('> updateBoard ' + currentCount)
         const state: MancalaState = this.getState();
         if (triggerAnimation) {
             this.opponentMoveIsBeingAnimated = true;
@@ -101,10 +96,10 @@ export abstract class MancalaComponent<R extends MancalaRules>
             let indexDistribution: number = 0;
             const move: MancalaMove = this.node.previousMove.get();
             for (const distributions of move) {
-                await this.showSeedBySeedDistribution(distributions).catch(() => { console.log('1'); throw new Error('reject1') });
+                await this.showSeedBySeedDistribution(distributions);
                 if (indexDistribution + 1 < move.distributions.length) {
                     // This prevent to wait 1sec at the end of the animation for nothing
-                    await TimeUtils.sleepForAnimation(MancalaComponent.TIMEOUT_BETWEEN_LAPS).catch(() => { console.log('1'); throw new Error('reject1') });
+                    await TimeUtils.sleepForAnimation(MancalaComponent.TIMEOUT_BETWEEN_LAPS);
                 }
                 indexDistribution++;
             }
@@ -113,10 +108,6 @@ export abstract class MancalaComponent<R extends MancalaRules>
         }
         this.scores = MGPOptional.of(state.getScoresCopy());
         this.changeVisibleState(state);
-        console.log('< updateBoard ' + currentCount);
-        } catch (e) {
-            console.error('got error: ' + e)
-        }
     }
 
     public async onClick(x: number, y: number): Promise<MGPValidation> {

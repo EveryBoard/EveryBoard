@@ -18,14 +18,10 @@ export class AnimationTimer {
                        private readonly rejectPromise: (error: Error) => void) {
     }
     public cancel(): void {
-        try {
-        console.log('canceling')
+        // This will reject the promise, making sleepForAnimation fail (which is what we want)
         this.rejectPromise(new AnimationCancelled());
-        console.log('clearing timeout')
+        // We also want to cancel the timeout
         window.clearTimeout(this.timerId);
-        } catch (e) {
-            console.log('error: ' + e)
-        }
     }
 }
 
@@ -34,18 +30,14 @@ export class TimeUtils {
     private static animationTimer: MGPOptional<AnimationTimer> = MGPOptional.empty();
 
     public static async sleepForAnimation(ms: number): Promise<void> {
-        console.log('sleeping for: ' + ms);
         return new Promise((resolve: (result: void) => void, reject: (reason: Error) => void): void => {
             Utils.assert(this.animationTimer.isAbsent(), 'An animation has been started before the end of another animation. Is it really what you want?');
             this.animationTimer = MGPOptional.of(new AnimationTimer(window.setTimeout(() => {
-                console.log('resolving')
                 if (this.animationTimer.isAbsent()) {
-                    // The animation has been cancelled already, do nothing!
-                    console.log('cancelled already')
+                    // The animation has been canceled already, do nothing!
                 } else {
                     // The timer has finished, let's forget about it and resolve the promise
                     this.animationTimer = MGPOptional.empty();
-                    console.log('resolving for real')
                     resolve();
                 }
             }, ms), reject));
@@ -54,9 +46,8 @@ export class TimeUtils {
 
     public static cancelAnimations(): void {
         if (this.animationTimer.isPresent()) {
+            // Cancel the timer and forget it
             this.animationTimer.get().cancel();
-            console.log('after having cancelled')
-            // Need also to fail the promise!!
             this.animationTimer = MGPOptional.empty();
         }
     }
