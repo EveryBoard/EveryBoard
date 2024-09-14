@@ -4,14 +4,14 @@
      preserveAspectRatio="xMidYMid meet">
     <g #remainingPieces
        *ngFor="let player of Player.PLAYERS">
-        <g *ngFor="let piece of getRemainingPieces(player); index as pieceIdx">
-            <circle id="piece-{{ player.toString() }}-{{ piece.toString() }}-{{ pieceIdx }}"
-                    (click)="onPieceClick(player, piece, pieceIdx)"
-                    [attr.transform]="'rotate(' + ((this.getPointOfView().getValue() + player.getValue()) * 180) + ' ' + CENTER + ' ' + CENTER + ')'"
+        <g *ngFor="let piece of getRemainingPiecesTypeOfPlayer(player); index as pieceIdX">
+            <circle id="piece-{{ piece.toString() }}"
+                    (click)="onPieceClick(piece)"
+                    [attr.transform]="getRemainingPieceTransform(player, pieceIdX)"
                     [attr.r]="getPieceRadius(piece)"
-                    [attr.cx]="getRemainingPieceCenterCoord(player, pieceIdx).x"
-                    [attr.cy]="getRemainingPieceCenterCoord(player, pieceIdx).y"
-                    [ngClass]="getSidePieceClasses(piece, pieceIdx)"
+                    [attr.cx]="0"
+                    [attr.cy]="0"
+                    [ngClass]="getSidePieceClasses(piece)"
                     class="base no-fill"
                     pointer-events="fill"
             />

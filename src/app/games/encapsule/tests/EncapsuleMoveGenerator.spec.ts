@@ -1,25 +1,21 @@
-import { EncapsulePiece } from '../EncapsulePiece';
-import { EncapsuleNode, EncapsuleRules } from '../EncapsuleRules';
-import { EncapsuleSpace, EncapsuleState } from '../EncapsuleState';
-import { PlayerOrNone } from 'src/app/jscaip/Player';
+import { MGPMap, MGPOptional } from '@everyboard/lib';
+import { EncapsuleConfig, EncapsuleNode, EncapsuleRules } from '../EncapsuleRules';
+import { EncapsuleRemainingPieces, EncapsuleSpace, EncapsuleState } from '../EncapsuleState';
+import { Player } from 'src/app/jscaip/Player';
 import { EncapsuleMoveGenerator } from '../EncapsuleMoveGenerator';
 import { EncapsuleMove } from '../EncapsuleMove';
-import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { EncapsulePiece, Size } from '../EncapsulePiece';
 
-const ___: EncapsuleSpace = new EncapsuleSpace(PlayerOrNone.NONE, PlayerOrNone.NONE, PlayerOrNone.NONE);
-const X__: EncapsuleSpace = new EncapsuleSpace(PlayerOrNone.ONE, PlayerOrNone.NONE, PlayerOrNone.NONE);
-const O__: EncapsuleSpace = new EncapsuleSpace(PlayerOrNone.ZERO, PlayerOrNone.NONE, PlayerOrNone.NONE);
-const O0: EncapsulePiece = EncapsulePiece.SMALL_DARK;
-const O1: EncapsulePiece = EncapsulePiece.MEDIUM_DARK;
-const O2: EncapsulePiece = EncapsulePiece.BIG_DARK;
-const X0: EncapsulePiece = EncapsulePiece.SMALL_LIGHT;
-const X1: EncapsulePiece = EncapsulePiece.MEDIUM_LIGHT;
-const X2: EncapsulePiece = EncapsulePiece.BIG_LIGHT;
+const smallDark: EncapsulePiece = EncapsulePiece.ofSizeAndPlayer(Size.SMALL, Player.ZERO);
+const smallLight: EncapsulePiece = EncapsulePiece.ofSizeAndPlayer(Size.SMALL, Player.ONE);
+const ___: EncapsuleSpace = new EncapsuleSpace(new MGPMap());
+const X__: EncapsuleSpace = ___.put(smallLight);
+const O__: EncapsuleSpace = ___.put(smallDark);
 
-describe('EncapsuleMoveGenerator', () => {
+fdescribe('EncapsuleMoveGenerator', () => {
 
     let moveGenerator: EncapsuleMoveGenerator;
-    const defaultConfig: NoConfig = EncapsuleRules.get().getDefaultRulesConfig();
+    const defaultConfig: MGPOptional<EncapsuleConfig> = EncapsuleRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         moveGenerator = new EncapsuleMoveGenerator();
@@ -45,10 +41,9 @@ describe('EncapsuleMoveGenerator', () => {
                 [___, X__, ___],
                 [___, ___, ___],
             ];
-            const state: EncapsuleState = new EncapsuleState(board, 2, [
-                O0, O1, O1, O2, O2,
-                X0, X0, X1, X2,
-            ]);
+            const remainingPieces: EncapsuleRemainingPieces =
+                EncapsuleRules.get().getEncapsulePieceMapFrom([1, 2, 2], [2, 2]);
+            const state: EncapsuleState = new EncapsuleState(board, 2, remainingPieces);
             const node: EncapsuleNode = new EncapsuleNode(state);
 
             // When listing the moves

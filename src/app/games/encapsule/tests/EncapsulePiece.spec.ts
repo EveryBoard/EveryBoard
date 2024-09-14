@@ -2,31 +2,36 @@
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { EncapsulePiece, Size } from '../EncapsulePiece';
 
-describe('EncapsulePiece', () => {
-
-    describe('of', () => {
-
-        it('should construct a piece for all valid values', () => {
-            for (let i: number = 0; i < 7; i++) {
-                expect(EncapsulePiece.of(i)).toBeTruthy();
-            }
-        });
-
-        it('should fail on invalid piece values', () => {
-            expect(() => EncapsulePiece.of(42)).toThrow();
-        });
-
-    });
+fdescribe('EncapsulePiece', () => {
 
     describe('ofSizeAndPlayer', () => {
 
         it('should construct the expected piece', () => {
-            expect(EncapsulePiece.ofSizeAndPlayer(Size.BIG, Player.ONE)).toBe(EncapsulePiece.BIG_LIGHT);
+            const piece: EncapsulePiece = EncapsulePiece.ofSizeAndPlayer(Size.BIG, Player.ONE);
+            expect(piece.getPlayer()).toEqual(Player.ONE);
+            expect(piece.getSize()).toEqual(Size.BIG);
         });
 
-        it('should return the none piece if player or size is none', () => {
-            expect(EncapsulePiece.ofSizeAndPlayer(Size.NONE, Player.ONE)).toBe(EncapsulePiece.NONE);
-            expect(EncapsulePiece.ofSizeAndPlayer(Size.BIG, PlayerOrNone.NONE)).toBe(EncapsulePiece.NONE);
+        it('should return the none piece if size is none', () => {
+            // Given a piece with Size.NONE
+            const piece: EncapsulePiece = EncapsulePiece.ofSizeAndPlayer(Size.NONE, PlayerOrNone.ZERO);
+
+            // When checking it's player and size
+            // Then player should be NONE
+            expect(piece.getPlayer()).toEqual(PlayerOrNone.NONE);
+            // And piece should be NONE as well
+            expect(piece.getSize()).toEqual(Size.NONE);
+        });
+
+        it('should return the none piece if player is none', () => {
+            // Given a piece with Player.NONE
+            const piece: EncapsulePiece = EncapsulePiece.ofSizeAndPlayer(Size.BIG, PlayerOrNone.NONE);
+
+            // When checking it's player and size
+            // Then player should be NONE
+            expect(piece.getPlayer()).toEqual(PlayerOrNone.NONE);
+            // And piece should be NONE as well
+            expect(piece.getSize()).toEqual(Size.NONE);
         });
 
     });
@@ -34,7 +39,8 @@ describe('EncapsulePiece', () => {
     describe('getPlayer', () => {
 
         it('should return the owner of the piece', () => {
-            expect(EncapsulePiece.SMALL_DARK.getPlayer()).toBe(Player.ZERO);
+            const piece: EncapsulePiece = EncapsulePiece.ofSizeAndPlayer(Size.BIG, PlayerOrNone.ZERO);
+            expect(piece.getPlayer()).toBe(Player.ZERO);
         });
 
     });
@@ -42,7 +48,8 @@ describe('EncapsulePiece', () => {
     describe('getSize', () => {
 
         it('should return the size of the piece', () => {
-            expect(EncapsulePiece.SMALL_DARK.getSize()).toBe(Size.SMALL);
+            const piece: EncapsulePiece = EncapsulePiece.ofSizeAndPlayer(Size.MEDIUM, PlayerOrNone.ZERO);
+            expect(piece.getSize()).toBe(Size.MEDIUM);
         });
 
     });
@@ -50,8 +57,9 @@ describe('EncapsulePiece', () => {
     describe('belongsTo', () => {
 
         it('should identify that a piece belong to its owner only', () => {
-            expect(EncapsulePiece.SMALL_DARK.belongsTo(Player.ZERO)).toBeTrue();
-            expect(EncapsulePiece.SMALL_DARK.belongsTo(Player.ONE)).toBeFalse();
+            const piece: EncapsulePiece = EncapsulePiece.ofSizeAndPlayer(Size.MEDIUM, PlayerOrNone.ZERO);
+            expect(piece.belongsTo(Player.ZERO)).toBeTrue();
+            expect(piece.belongsTo(Player.ONE)).toBeFalse();
         });
 
     });

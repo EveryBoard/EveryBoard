@@ -1,27 +1,27 @@
-import { EncapsuleState, EncapsuleSpace } from './EncapsuleState';
+import { EncapsuleState, EncapsuleSpace, EncapsuleSizeToNumberMap } from './EncapsuleState';
+import { MGPFallible, MGPOptional } from '@everyboard/lib';
 import { Coord } from 'src/app/jscaip/Coord';
-import { MGPFallible, Sets } from '@everyboard/lib';
 import { Player } from 'src/app/jscaip/Player';
 import { Table } from 'src/app/jscaip/TableUtils';
 import { EncapsuleMove } from './EncapsuleMove';
-import { EncapsulePiece } from './EncapsulePiece';
-import { EncapsuleRules, EncapsuleNode, EncapsuleLegalityInformation } from './EncapsuleRules';
+import { EncapsuleRules, EncapsuleNode, EncapsuleLegalityInformation, EncapsuleConfig } from './EncapsuleRules';
 import { MoveGenerator } from 'src/app/jscaip/AI/AI';
-import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { EncapsulePiece, Size } from './EncapsulePiece';
 
-export class EncapsuleMoveGenerator extends MoveGenerator<EncapsuleMove, EncapsuleState> {
+export class EncapsuleMoveGenerator extends MoveGenerator<EncapsuleMove, EncapsuleState, EncapsuleConfig> {
 
-    public override getListMoves(node: EncapsuleNode, _config: NoConfig): EncapsuleMove[] {
+    public override getListMoves(node: EncapsuleNode, _config: MGPOptional<EncapsuleConfig>): EncapsuleMove[] {
         const moves: EncapsuleMove[] = [];
         const state: EncapsuleState = node.gameState;
         const board: Table<EncapsuleSpace> = state.getCopiedBoard();
         const currentPlayer: Player = state.getCurrentPlayer();
-        const puttablePieces: EncapsulePiece[] = Sets.toComparableObjectSet(state.getPlayerRemainingPieces());
+        const puttablePieces: Size[] = state.getRemainingPiecesOfPlayer(currentPlayer).getKeyList();
         for (let y: number = 0; y < 3; y++) {
-            for (let x: number = 0; x < 3; x++) {
+            for (let x: number = 0; x < 3; x++) { // TODO: test that this work dependless of the board size eh !
                 const coord: Coord = new Coord(x, y);
                 // each drop
-                for (const piece of puttablePieces) {
+                for (const pieceSize of puttablePieces) {
+                    const piece: EncapsulePiece = EncapsulePiece.ofSizeAndPlayer(pieceSize, currentPlayer);
                     const move: EncapsuleMove = EncapsuleMove.ofDrop(piece, coord);
                     const status: MGPFallible<EncapsuleLegalityInformation> = EncapsuleRules.get().isLegal(move, state);
                     if (status.isSuccess()) {
