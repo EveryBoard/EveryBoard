@@ -79,7 +79,10 @@ class PlayerDriver():
         if MOBILE:
             self.click('.navbar-burger')
         self.dump_element('#register')
+        print(self.driver.get_window_size())
+        ActionChains(self.driver).move_to_element(self.driver.find_element(By.CSS_SELECTOR, '#register')).perform()
         self.click('#register')
+
 
         # Fill in registration form
         self.fill('#email', self.email)
