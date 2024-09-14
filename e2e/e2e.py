@@ -27,8 +27,11 @@ class PlayerDriver():
         if HEADLESS:
             options.add_argument('-headless')
         # If the browser (fake) window is too small, selenium complains that some elements are not clickable
-        options.add_argument('window-size=1920x1080')
+        options.add_argument('--window-size=1920x1080')
         self.driver = webdriver.Chrome(options=options)
+
+    def dump_page(self):
+        print(self.driver.page_source.encode("utf-8"))
 
     def close(self):
         '''Close the browser'''
@@ -71,6 +74,7 @@ class PlayerDriver():
         # Access registration page
         if MOBILE:
             self.click('.navbar-burger')
+        self.dump_page()
         self.click('#register')
 
         # Fill in registration form
