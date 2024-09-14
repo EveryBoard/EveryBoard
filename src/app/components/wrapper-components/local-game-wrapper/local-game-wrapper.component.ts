@@ -7,7 +7,7 @@ import { AbstractNode, GameNode, GameNodeStats } from 'src/app/jscaip/AI/GameNod
 import { ConnectedUserService } from 'src/app/services/ConnectedUserService';
 import { GameWrapper } from 'src/app/components/wrapper-components/GameWrapper';
 import { Move } from 'src/app/jscaip/Move';
-import { MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
+import { MGPFallible, MGPOptional, MGPValidation, TimeUtils, Utils } from '@everyboard/lib';
 import { GameState } from 'src/app/jscaip/state/GameState';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { Player } from 'src/app/jscaip/Player';
@@ -277,12 +277,13 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
     public async restartGame(): Promise<void> {
         const config: MGPOptional<RulesConfig> = await this.getConfig();
         this.gameComponent.node = this.gameComponent.rules.getInitialNode(config);
+        TimeUtils.cancelAnimations();
         this.gameComponent.cancelMoveAttempt();
         this.gameComponent.hideLastMove();
         await this.gameComponent.updateBoardAndRedraw(false);
         this.endGame = false;
         this.winnerMessage = MGPOptional.empty();
-        await this.proposeAIToPlay();
+        // await this.proposeAIToPlay();
     }
 
     public override getPlayer(): string {

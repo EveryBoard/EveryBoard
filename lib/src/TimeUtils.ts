@@ -17,6 +17,7 @@ export class AnimationTimer {
     public constructor(private readonly timerId: number,
                        private readonly rejectPromise: (error: Error) => void) {
     }
+
     public cancel(): void {
         // This will reject the promise, making sleepForAnimation fail (which is what we want)
         this.rejectPromise(new AnimationCancelled());

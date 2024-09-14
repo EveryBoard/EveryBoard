@@ -86,28 +86,42 @@ export abstract class MancalaComponent<R extends MancalaRules>
     }
 
     public async updateBoard(triggerAnimation: boolean): Promise<void> {
-        TimeUtils.cancelAnimations();
         const state: MancalaState = this.getState();
         if (triggerAnimation) {
-            this.opponentMoveIsBeingAnimated = true;
-            this.animationOngoing = true;
-            Utils.assert(this.node.parent.isPresent(), 'triggerAnimation in store should be false at first turn');
-            this.changeVisibleState(this.node.parent.get().gameState);
-            let indexDistribution: number = 0;
-            const move: MancalaMove = this.node.previousMove.get();
-            for (const distributions of move) {
-                await this.showSeedBySeedDistribution(distributions);
-                if (indexDistribution + 1 < move.distributions.length) {
-                    // This prevent to wait 1sec at the end of the animation for nothing
-                    await TimeUtils.sleepForAnimation(MancalaComponent.TIMEOUT_BETWEEN_LAPS);
+            //this.opponentMoveIsBeingAnimated = true; // TODO: put it back to false in case we cancel animation
+            //this.animationOngoing = true; // TODO: same
+            await this.animateOpponentMove().catch((e: unknown) => {
+                // We need to catch promise failure here so that we stop any ongoing animation
+                if (e instanceof AnimationCancelled) {
+                    console.log('cancelled!')
+                    this.opponentMoveIsBeingAnimated = false;
+                    this.animationOngoing = false;
+                    throw e;
+                } else {
+                    // Something else failed, we want to be aware of this!
+                    throw e;
                 }
-                indexDistribution++;
-            }
+            });
             this.opponentMoveIsBeingAnimated = false;
             this.animationOngoing = false;
         }
         this.scores = MGPOptional.of(state.getScoresCopy());
         this.changeVisibleState(state);
+    }
+
+    private async animateOpponentMove(): Promise<void> {
+        Utils.assert(this.node.parent.isPresent(), 'triggerAnimation in store should be false at first turn');
+        this.changeVisibleState(this.node.parent.get().gameState);
+        let indexDistribution: number = 0;
+        const move: MancalaMove = this.node.previousMove.get();
+        for (const distributions of move) {
+            await this.showSeedBySeedDistribution(distributions);
+            if (indexDistribution + 1 < move.distributions.length) {
+                // Sleep between each lap, except after the last one
+                await TimeUtils.sleepForAnimation(MancalaComponent.TIMEOUT_BETWEEN_LAPS);
+            }
+            indexDistribution++;
+        }
     }
 
     public async onClick(x: number, y: number): Promise<MGPValidation> {
@@ -119,7 +133,16 @@ export abstract class MancalaComponent<R extends MancalaRules>
             return MGPValidation.SUCCESS;
         } else {
             this.animationOngoing = true;
-            const result: MGPValidation = await this.onLegalClick(x, y);
+            const result: MGPValidation = await this.onLegalClick(x, y).catch((e: unknown) => {
+                // We need to catch promise failure here so that we stop any ongoing animation
+                if (e instanceof AnimationCancelled) {
+                    this.animationOngoing = false;
+                    return MGPValidation.failure('Animation has been canceled');
+                } else {
+                    // Something else failed, we want to be aware of this!
+                    throw e;
+                }
+            });
             this.animationOngoing = false;
             return result;
         }
@@ -133,16 +156,7 @@ export abstract class MancalaComponent<R extends MancalaRules>
         if (this.constructedState.getPieceAtXY(x, y) === 0) {
             return this.cancelMove(MancalaFailure.MUST_CHOOSE_NON_EMPTY_HOUSE());
         } else {
-            return this.continueMoveConstruction(x).catch((e: unknown) => {
-                // We need to catch promise failure here so that we stop any ongoing animation
-                if (e instanceof AnimationCancelled) {
-                    return MGPValidation.failure('Animation has been cancelled');
-                } else {
-                    // Something else failed, we want to be aware of this!
-                    throw e;
-                }
-            });
-        }
+            return this.continueMoveConstruction(x)        }
     }
 
     protected async continueMoveConstruction(x: number): Promise<MGPValidation> {
