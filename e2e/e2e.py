@@ -26,17 +26,11 @@ class PlayerDriver():
         options = Options()
         if HEADLESS:
             options.add_argument('-headless')
-        # If the browser (fake) window is too small, selenium complains that some elements are not clickable
-        options.add_argument('window-size=1920x1080') # does not seem to do anything
         self.driver = webdriver.Chrome(options=options)
-        self.driver.set_window_size(1920, 1080) # maybe this helps?
-
-    def dump_element(self, name):
-        element = self.wait_for(name)
-        print('inner:')
-        print(element.get_attribute('innerHTML'))
-        print('outer:')
-        print(element.get_attribute('outerHTML'))
+        # If the browser (fake) window is too small, selenium complains that some elements are not clickable, so make sure it's big enough
+        self.driver.set_window_size(1920, 1080)
+        # Print the window size so that we can detect from the logs if it's done correctly
+        print(self.driver.get_window_size())
 
     def close(self):
         '''Close the browser'''
@@ -79,9 +73,6 @@ class PlayerDriver():
         # Access registration page
         if MOBILE:
             self.click('.navbar-burger')
-        self.dump_element('#register')
-        print(self.driver.get_window_size())
-        ActionChains(self.driver).move_to_element(self.driver.find_element(By.CSS_SELECTOR, '#register')).perform()
         self.click('#register')
 
 
@@ -133,15 +124,9 @@ class PlayerDriver():
             if MOBILE:
                 self.click('.navbar-burger')
             else:
-                print("1")
                 hover = self.wait_for(hover_selector)
-                print("2")
                 actions = ActionChains(self.driver)
-                print("3")
-                wip = actions.move_to_element(hover)
-                print("4")
-                wip.perform()
-                print("5")
+                wip = actions.move_to_element(hover).perform()
             self.click(button_selector)
         except Exception as e:
             print('Failed when hovering over "{}" and clicking on button "{}"'.format(hover_selector, button_selector))
@@ -321,7 +306,7 @@ def can_play_tutorial(user):
     Result: I can complete it fully
     '''
     # Launch the tutorial
-    user.go_to_page('http://localhost:4200/tutorial')
+    user.click_menu_button('#playOffline', '#tutorial')
     user.click('#image-P4')
 
     # First step does not require any move, so just click ok
@@ -351,7 +336,7 @@ def can_play_local_2_players(user):
     Result: I can go until the end of the game
     '''
     # Launch a game of four in a row
-    user.go_to_page('http://localhost:4200/local')
+    user.click_menu_button('#playOffline', '#playLocally')
     user.click('#image-P4')
     user.use_default_config()
 
@@ -378,7 +363,7 @@ def can_play_local_vs_ai(user):
     '''
 
     # Launch a game of four in a row
-    user.go_to_page('http://localhost:4200/local')
+    user.click_menu_button('#playOffline', '#playLocally')
     user.click('#image-P4')
     user.use_default_config()
 
