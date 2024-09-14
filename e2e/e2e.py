@@ -27,7 +27,7 @@ class PlayerDriver():
         if HEADLESS:
             options.add_argument('-headless')
         # If the browser (fake) window is too small, selenium complains that some elements are not clickable
-        options.add_argument('--window-size=1920x1080')
+        options.add_argument('window-size=1920x1080') # not adding -- in from of the argument is done on purpose
         self.driver = webdriver.Chrome(options=options)
 
     def dump_element(self, name):
