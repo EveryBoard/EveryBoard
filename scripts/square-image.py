@@ -19,7 +19,7 @@ new_size = tuple([int(x*ratio) for x in old_size])
 im = im.resize(new_size, resample=Image.Resampling.LANCZOS)
 
 # we pad with the color present in a corner which is supposed to be the background color
-color = im.getpixel((5, 5))
+color = im.getpixel((3, 3))
 new_im = Image.new("RGB", (desired_size, desired_size), color)
 new_im.paste(im, ((desired_size-new_size[0])//2,
                     (desired_size-new_size[1])//2))
