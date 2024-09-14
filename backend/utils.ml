@@ -50,7 +50,7 @@ module CryptoUtils = struct
         PEM string that represents a certificate. Raises [UnexpectedError] in case
         of failure. *)
     let public_key_of_certificate_string = fun (pem : string) : public_key ->
-        let public_key = pem |> Cstruct.of_string |> X509.Certificate.decode_pem in
+        let public_key = pem |> X509.Certificate.decode_pem in
         match public_key with
         | Error _ -> raise (UnexpectedError "Invalid certificate")
         | Ok cert -> match X509.Certificate.public_key cert with
