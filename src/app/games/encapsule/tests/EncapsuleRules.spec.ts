@@ -4,24 +4,24 @@ import { EncapsuleMove } from '../EncapsuleMove';
 import { Coord } from 'src/app/jscaip/Coord';
 import { EncapsuleRemainingPieces, EncapsuleSpace, EncapsuleState } from '../EncapsuleState';
 import { Player } from 'src/app/jscaip/Player';
-import { EncapsulePiece, Size } from '../EncapsulePiece';
+import { EncapsulePiece } from '../EncapsulePiece';
 import { MGPMap, MGPOptional } from '@everyboard/lib';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { EncapsuleFailure } from '../EncapsuleFailure';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { Table } from 'src/app/jscaip/TableUtils';
 
-fdescribe('EncapsuleRules', () => {
+describe('EncapsuleRules', () => {
 
     let rules: EncapsuleRules;
     const defaultConfig: MGPOptional<EncapsuleConfig> = EncapsuleRules.get().getDefaultRulesConfig();
 
-    const smallDark: EncapsulePiece = EncapsulePiece.ofSizeAndPlayer(Size.SMALL, Player.ZERO);
-    const mediumDark: EncapsulePiece = EncapsulePiece.ofSizeAndPlayer(Size.MEDIUM, Player.ZERO);
-    const bigDark: EncapsulePiece = EncapsulePiece.ofSizeAndPlayer(Size.BIG, Player.ZERO);
-    const smallLight: EncapsulePiece = EncapsulePiece.ofSizeAndPlayer(Size.SMALL, Player.ONE);
-    const mediumLight: EncapsulePiece = EncapsulePiece.ofSizeAndPlayer(Size.MEDIUM, Player.ONE);
-    const bigLight: EncapsulePiece = EncapsulePiece.ofSizeAndPlayer(Size.BIG, Player.ONE);
+    const smallDark: EncapsulePiece = EncapsulePiece.ofSizeAndPlayer(1, Player.ZERO);
+    const mediumDark: EncapsulePiece = EncapsulePiece.ofSizeAndPlayer(2, Player.ZERO);
+    const bigDark: EncapsulePiece = EncapsulePiece.ofSizeAndPlayer(3, Player.ZERO);
+    const smallLight: EncapsulePiece = EncapsulePiece.ofSizeAndPlayer(1, Player.ONE);
+    const mediumLight: EncapsulePiece = EncapsulePiece.ofSizeAndPlayer(2, Player.ONE);
+    const bigLight: EncapsulePiece = EncapsulePiece.ofSizeAndPlayer(3, Player.ONE);
     const ___: EncapsuleSpace = new EncapsuleSpace(new MGPMap());
     const X__: EncapsuleSpace = ___.put(smallLight);
     const _X_: EncapsuleSpace = ___.put(mediumLight);
@@ -47,7 +47,7 @@ fdescribe('EncapsuleRules', () => {
             [___, ___, __O],
         ];
         const remainingPieces: EncapsuleRemainingPieces = rules.getEncapsulePieceMapFrom([2, 2, 2], [0, 1, 2]);
-        const state: EncapsuleState = new EncapsuleState(board, 2, remainingPieces);
+        const state: EncapsuleState = new EncapsuleState(board, 2, remainingPieces, 3);
         const node: EncapsuleNode = new EncapsuleNode(state);
         // When evaluating it
         // Then it should be a victory
@@ -62,7 +62,7 @@ fdescribe('EncapsuleRules', () => {
             [___, ___, __X],
         ];
         const remainingPieces: EncapsuleRemainingPieces = rules.getEncapsulePieceMapFrom([1, 2, 2], [2, 1, 1]);
-        const state: EncapsuleState = new EncapsuleState(board, 2, remainingPieces);
+        const state: EncapsuleState = new EncapsuleState(board, 2, remainingPieces, 3);
         const node: EncapsuleNode = new EncapsuleNode(state);
 
         // When evaluating it
@@ -78,7 +78,7 @@ fdescribe('EncapsuleRules', () => {
             [___, ___, __X],
         ];
         const remainingPieces: EncapsuleRemainingPieces = rules.getEncapsulePieceMapFrom([2, 1, 2], [1, 1, 1]);
-        const state: EncapsuleState = new EncapsuleState(board, 2, remainingPieces);
+        const state: EncapsuleState = new EncapsuleState(board, 2, remainingPieces, 3);
 
         // When doing that "actively losing move"
         const move: EncapsuleMove = EncapsuleMove.ofMove(new Coord(0, 0), new Coord(1, 0));
@@ -89,7 +89,7 @@ fdescribe('EncapsuleRules', () => {
             [___, _X_, ___],
             [___, ___, __X],
         ];
-        const expectedState: EncapsuleState = new EncapsuleState(expectedBoard, 3, remainingPieces);
+        const expectedState: EncapsuleState = new EncapsuleState(expectedBoard, 3, remainingPieces, 3);
 
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         const node: EncapsuleNode = new EncapsuleNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
@@ -104,7 +104,7 @@ fdescribe('EncapsuleRules', () => {
             [___, ___, ___],
         ];
         const remainingPieces: EncapsuleRemainingPieces = rules.getEncapsulePieceMapFrom([1, 2, 2], [1, 2, 2]);
-        const state: EncapsuleState = new EncapsuleState(board, 2, remainingPieces);
+        const state: EncapsuleState = new EncapsuleState(board, 2, remainingPieces, 3);
 
         // When moving a single piece elsewhere
         const move: EncapsuleMove = EncapsuleMove.ofMove(new Coord(0, 0), new Coord(2, 2));
@@ -115,7 +115,7 @@ fdescribe('EncapsuleRules', () => {
             [___, X__, ___],
             [___, ___, O__],
         ];
-        const expectedState: EncapsuleState = new EncapsuleState(expectedBoard, 3, remainingPieces);
+        const expectedState: EncapsuleState = new EncapsuleState(expectedBoard, 3, remainingPieces, 3);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
     });
 
@@ -127,7 +127,7 @@ fdescribe('EncapsuleRules', () => {
             [___, ___, X__],
         ];
         const remainingPieces: EncapsuleRemainingPieces = rules.getEncapsulePieceMapFrom([2, 2, 2], [1, 2, 2]);
-        const state: EncapsuleState = new EncapsuleState(board, 2, remainingPieces);
+        const state: EncapsuleState = new EncapsuleState(board, 2, remainingPieces, 3);
 
         // When moving a single piece elsewhere
         const move: EncapsuleMove = EncapsuleMove.ofMove(new Coord(0, 0), new Coord(2, 2));
@@ -138,7 +138,7 @@ fdescribe('EncapsuleRules', () => {
             [___, ___, ___],
             [___, ___, XO_],
         ];
-        const expectedState: EncapsuleState = new EncapsuleState(expectedBoard, 3, remainingPieces);
+        const expectedState: EncapsuleState = new EncapsuleState(expectedBoard, 3, remainingPieces, 3);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
     });
 
@@ -150,10 +150,10 @@ fdescribe('EncapsuleRules', () => {
             [___, ___, ___],
         ];
         const remainingPieces: EncapsuleRemainingPieces = rules.getEncapsulePieceMapFrom([1, 2, 2], [2, 1, 1]);
-        const state: EncapsuleState = new EncapsuleState(board, 2, remainingPieces);
+        const state: EncapsuleState = new EncapsuleState(board, 2, remainingPieces, 3);
 
         // When trying to drop another piece of the same size
-        const piece: EncapsulePiece = EncapsulePiece.ofSizeAndPlayer(Size.SMALL, Player.ZERO);
+        const piece: EncapsulePiece = EncapsulePiece.ofSizeAndPlayer(1, Player.ZERO);
         const move: EncapsuleMove = EncapsuleMove.ofDrop(piece, new Coord(0, 0));
 
         // Then the move should be illegal
@@ -168,8 +168,8 @@ fdescribe('EncapsuleRules', () => {
             [___, ___, ___],
         ];
         const remainingPieces: EncapsuleRemainingPieces = rules.getEncapsulePieceMapFrom([1, 1, 1], [2, 2, 2]);
-        const state: EncapsuleState = new EncapsuleState(board, 2, remainingPieces);
-        const piece: EncapsulePiece = EncapsulePiece.ofSizeAndPlayer(Size.SMALL, Player.ZERO);
+        const state: EncapsuleState = new EncapsuleState(board, 2, remainingPieces, 3);
+        const piece: EncapsulePiece = EncapsulePiece.ofSizeAndPlayer(1, Player.ZERO);
         const move: EncapsuleMove = EncapsuleMove.ofDrop(piece, new Coord(0, 0));
         const reason: string = EncapsuleFailure.INVALID_PLACEMENT();
 
@@ -185,10 +185,10 @@ fdescribe('EncapsuleRules', () => {
             [___, ___, ___],
         ];
         const remainingPieces: EncapsuleRemainingPieces = rules.getEncapsulePieceMapFrom([], []);
-        const state: EncapsuleState = new EncapsuleState(board, 3, remainingPieces);
+        const state: EncapsuleState = new EncapsuleState(board, 3, remainingPieces, 3);
 
         // When trying to drop one
-        const piece: EncapsulePiece = EncapsulePiece.ofSizeAndPlayer(Size.SMALL, Player.ONE);
+        const piece: EncapsulePiece = EncapsulePiece.ofSizeAndPlayer(1, Player.ONE);
         const move: EncapsuleMove = EncapsuleMove.ofDrop(piece, new Coord(2, 2));
 
         // Then the move should be illegal
@@ -204,7 +204,7 @@ fdescribe('EncapsuleRules', () => {
             [___, ___, ___],
         ];
         const remainingPieces: EncapsuleRemainingPieces = rules.getEncapsulePieceMapFrom([1, 2, 2], [2, 1, 2]);
-        const state: EncapsuleState = new EncapsuleState(board, 2, remainingPieces);
+        const state: EncapsuleState = new EncapsuleState(board, 2, remainingPieces, 3);
         // When trying to put another piece on it
         const move: EncapsuleMove = EncapsuleMove.ofMove(new Coord(0, 0), new Coord(1, 1));
 
@@ -218,7 +218,7 @@ fdescribe('EncapsuleRules', () => {
         const state: EncapsuleState = EncapsuleRules.get().getInitialState(defaultConfig);
 
         // When trying to drop a piece of the opponent
-        const piece: EncapsulePiece = EncapsulePiece.ofSizeAndPlayer(Size.SMALL, Player.ONE);
+        const piece: EncapsulePiece = EncapsulePiece.ofSizeAndPlayer(1, Player.ONE);
         const move: EncapsuleMove = EncapsuleMove.ofDrop(piece, new Coord(2, 2));
 
         // Then the move should be illegal
@@ -234,7 +234,7 @@ fdescribe('EncapsuleRules', () => {
             [___, ___, ___],
         ];
         const remainingPieces: EncapsuleRemainingPieces = rules.getEncapsulePieceMapFrom([1, 2, 2], [2, 1, 2]);
-        const state: EncapsuleState = new EncapsuleState(board, 2, remainingPieces);
+        const state: EncapsuleState = new EncapsuleState(board, 2, remainingPieces, 3);
 
         // When trying to move the opponent's piece
         const move: EncapsuleMove = EncapsuleMove.ofMove(new Coord(1, 1), new Coord(2, 2));
@@ -285,7 +285,7 @@ fdescribe('EncapsuleRules', () => {
                 [___, ___, ___, ___, __O],
             ];
             const remainingPieces: EncapsuleRemainingPieces = rules.getEncapsulePieceMapFrom([1, 1, 1], [1, 2, 2]);
-            const state: EncapsuleState = new EncapsuleState(board, 2, remainingPieces);
+            const state: EncapsuleState = new EncapsuleState(board, 2, remainingPieces, 3);
             const node: EncapsuleNode = new EncapsuleNode(state);
             // When evaluating it
             // Then it should be a victory

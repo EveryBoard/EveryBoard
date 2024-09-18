@@ -24,7 +24,7 @@ export type EncapsuleConfig = {
 
     height: number,
 
-    pieceSize: number,
+    nbOfSizes: number,
 
     nbOfEachPiece: number,
 }
@@ -45,11 +45,16 @@ export class EncapsuleRules extends ConfigurableRules<EncapsuleMove,
         new RulesConfigDescription<EncapsuleConfig>({
             name: (): string => $localize`Encapsule`,
             config: {
-                nInARow: new NumberConfig(3, RulesConfigDescriptionLocalizable.ALIGNMENT_SIZE, MGPValidators.range(1, 99)),
-                width: new NumberConfig(3, RulesConfigDescriptionLocalizable.WIDTH, MGPValidators.range(1, 99)),
-                height: new NumberConfig(3, RulesConfigDescriptionLocalizable.HEIGHT, MGPValidators.range(1, 99)),
-                nbOfEachPiece: new NumberConfig(2, () => "Number of each pieces", MGPValidators.range(1, 99)),
-                pieceSize: new NumberConfig(3, () => "Number of different piece size", MGPValidators.range(1, 8)),
+                nInARow:
+                    new NumberConfig(3, RulesConfigDescriptionLocalizable.ALIGNMENT_SIZE, MGPValidators.range(1, 99)),
+                width:
+                    new NumberConfig(3, RulesConfigDescriptionLocalizable.WIDTH, MGPValidators.range(1, 99)),
+                height:
+                    new NumberConfig(3, RulesConfigDescriptionLocalizable.HEIGHT, MGPValidators.range(1, 99)),
+                nbOfSizes:
+                    new NumberConfig(3, () => $localize`Number of different piece sizes`, MGPValidators.range(1, 10)),
+                nbOfEachPiece:
+                    new NumberConfig(2, () => $localize`Number of pieces for each size`, MGPValidators.range(1, 99)),
             },
         });
 
@@ -65,7 +70,7 @@ export class EncapsuleRules extends ConfigurableRules<EncapsuleMove,
         const _: EncapsuleSpace = new EncapsuleSpace(new MGPMap());
         const startingBoard: EncapsuleSpace[][] = TableUtils.create(config.width, config.height, _);
         const initialPieces: EncapsuleRemainingPieces = this.getInitialEncapsulePieceMap(config);
-        return new EncapsuleState(startingBoard, 0, initialPieces);
+        return new EncapsuleState(startingBoard, 0, initialPieces, config.nbOfSizes);
     }
 
     public override getRulesConfigDescription(): MGPOptional<RulesConfigDescription<EncapsuleConfig>> {
@@ -73,8 +78,8 @@ export class EncapsuleRules extends ConfigurableRules<EncapsuleMove,
     }
 
     private getInitialEncapsulePieceMap(config: EncapsuleConfig): EncapsuleRemainingPieces {
-        const playerZeroPiecesNumber: number[] = ArrayUtils.create(config.pieceSize, config.nbOfEachPiece);
-        const playerOnePiecesNumber: number[] = ArrayUtils.create(config.pieceSize, config.nbOfEachPiece);
+        const playerZeroPiecesNumber: number[] = ArrayUtils.create(config.nbOfSizes, config.nbOfEachPiece);
+        const playerOnePiecesNumber: number[] = ArrayUtils.create(config.nbOfSizes, config.nbOfEachPiece);
         return this.getEncapsulePieceMapFrom(playerZeroPiecesNumber, playerOnePiecesNumber);
     }
 
@@ -156,18 +161,15 @@ export class EncapsuleRules extends ConfigurableRules<EncapsuleMove,
     {
         const newBoard: EncapsuleSpace[][] = state.getCopiedBoard();
         const currentPlayer: Player = state.getCurrentPlayer();
-        const newRemainingPiecesMap: EncapsuleRemainingPieces = state.getRemainingPieces(); // TODO immutable
-        const newRemainingPiece: EncapsuleSizeToNumberMap = newRemainingPiecesMap.get(currentPlayer);
+        const newRemainingPiecesMap: EncapsuleRemainingPieces = state.getRemainingPiecesCopy();
+        const newRemainingPiece: EncapsuleSizeToNumberMap = newRemainingPiecesMap.get(currentPlayer).getCopy();
         const newTurn: number = state.turn + 1;
         newBoard[move.landingCoord.y][move.landingCoord.x] = newLandingSpace;
         let movingPiece: EncapsulePiece;
         if (move.isDropping()) {
             movingPiece = move.piece.get();
-            newRemainingPiece.add(movingPiece.size, -1); // TODO check that this does not affect original map
+            newRemainingPiece.add(movingPiece.size, -1);
             newRemainingPiecesMap.put(currentPlayer, newRemainingPiece);
-            // const indexBiggest: number = newRemainingPiece.get(movingPiece).get();
-            // newRemainingPiece = newRemainingPiece.slice(0, indexBiggest)
-            //    .concat(newRemainingPiece.slice(indexBiggest + 1));
         } else {
             const startingCoord: Coord = move.startingCoord.get();
             const oldStartingSpace: EncapsuleSpace = newBoard[startingCoord.y][startingCoord.x];
@@ -176,7 +178,7 @@ export class EncapsuleRules extends ConfigurableRules<EncapsuleMove,
             newBoard[startingCoord.y][startingCoord.x] = removalResult.removedSpace;
             movingPiece = removalResult.removedPiece;
         }
-        return new EncapsuleState(newBoard, newTurn, newRemainingPiecesMap);
+        return new EncapsuleState(newBoard, newTurn, newRemainingPiecesMap, state.nbOfPieceSize);
     }
 
     public override getGameStatus(node: EncapsuleNode, config: MGPOptional<EncapsuleConfig>): GameStatus {

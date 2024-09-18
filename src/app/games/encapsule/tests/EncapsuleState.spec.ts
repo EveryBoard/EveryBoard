@@ -1,18 +1,18 @@
 /* eslint-disable max-lines-per-function */
+import { MGPOptional } from '@everyboard/lib';
 import { Player } from 'src/app/jscaip/Player';
 import { TableUtils } from 'src/app/jscaip/TableUtils';
-import { MGPOptional } from '@everyboard/lib';
-import { EncapsulePiece, Size } from 'src/app/games/encapsule/EncapsulePiece';
+import { EncapsulePiece } from 'src/app/games/encapsule/EncapsulePiece';
 import { EncapsuleRemainingPieces, EncapsuleSizeToNumberMap, EncapsuleSpace, EncapsuleState } from '../EncapsuleState';
 import { PlayerMap } from 'src/app/jscaip/PlayerMap';
 import { EncapsuleRules } from '../EncapsuleRules';
 
 const _: EncapsuleSpace = EncapsuleSpace.EMPTY;
-const smallDark: EncapsulePiece = EncapsulePiece.ofSizeAndPlayer(Size.SMALL, Player.ZERO);
-const mediumDark: EncapsulePiece = EncapsulePiece.ofSizeAndPlayer(Size.MEDIUM, Player.ZERO);
-const bigDark: EncapsulePiece = EncapsulePiece.ofSizeAndPlayer(Size.BIG, Player.ZERO);
-const smallLight: EncapsulePiece = EncapsulePiece.ofSizeAndPlayer(Size.SMALL, Player.ONE);
-const mediumLight: EncapsulePiece = EncapsulePiece.ofSizeAndPlayer(Size.MEDIUM, Player.ONE);
+const smallDark: EncapsulePiece = EncapsulePiece.ofSizeAndPlayer(1, Player.ZERO);
+const mediumDark: EncapsulePiece = EncapsulePiece.ofSizeAndPlayer(2, Player.ZERO);
+const bigDark: EncapsulePiece = EncapsulePiece.ofSizeAndPlayer(3, Player.ZERO);
+const smallLight: EncapsulePiece = EncapsulePiece.ofSizeAndPlayer(1, Player.ONE);
+const mediumLight: EncapsulePiece = EncapsulePiece.ofSizeAndPlayer(2, Player.ONE);
 const noMorePiece: EncapsuleRemainingPieces =
     PlayerMap.ofValues(new EncapsuleSizeToNumberMap(), new EncapsuleSizeToNumberMap());
 
@@ -29,7 +29,7 @@ const noMorePiece: EncapsuleRemainingPieces =
                 [_, _, _],
                 [someSpace, _, _],
                 [_, _, _]];
-            const state: EncapsuleState = new EncapsuleState(board, 0, noMorePiece);
+            const state: EncapsuleState = new EncapsuleState(board, 0, noMorePiece, 3);
             expect(state.getPieceAtXY(0, 1)).toEqual(someSpace);
         });
 
@@ -40,19 +40,19 @@ const noMorePiece: EncapsuleRemainingPieces =
         it('should not consider pieces of the opponent as droppable', () => {
             const remainingPieces: EncapsuleRemainingPieces =
                 EncapsuleRules.get().getEncapsulePieceMapFrom([0], [1]);
-            const state: EncapsuleState = new EncapsuleState(emptyBoard, 0, remainingPieces);
+            const state: EncapsuleState = new EncapsuleState(emptyBoard, 0, remainingPieces, 3);
             expect(state.isDroppable(smallLight)).toBeFalse();
         });
 
         it('should not consider pieces not remaining as droppable', () => {
-            const state: EncapsuleState = new EncapsuleState(emptyBoard, 0, noMorePiece);
+            const state: EncapsuleState = new EncapsuleState(emptyBoard, 0, noMorePiece, 3);
             expect(state.isDroppable(smallDark)).toBeFalse();
         });
 
         it('should only consider a piece that is remaining and of the current player as droppable', () => {
             const remainingPieces: EncapsuleRemainingPieces =
                 EncapsuleRules.get().getEncapsulePieceMapFrom([1], [0]);
-            const state: EncapsuleState = new EncapsuleState(emptyBoard, 0, remainingPieces);
+            const state: EncapsuleState = new EncapsuleState(emptyBoard, 0, remainingPieces, 3);
             expect(state.isDroppable(smallDark)).toBeTrue();
         });
 
@@ -60,7 +60,7 @@ const noMorePiece: EncapsuleRemainingPieces =
 
 });
 
-fdescribe('EncapsuleSpace', () => {
+describe('EncapsuleSpace', () => {
 
     describe('isEmpty', () => {
 
@@ -97,7 +97,7 @@ fdescribe('EncapsuleSpace', () => {
 
         it('should return the biggest piece of the space', () => {
             const c: EncapsuleSpace = _.put(smallDark).put(mediumLight).put(bigDark);
-            expect(c.getBiggest()).toEqual(EncapsulePiece.ofSizeAndPlayer(Size.BIG, Player.ZERO));
+            expect(c.getBiggest()).toEqual(EncapsulePiece.ofSizeAndPlayer(3, Player.ZERO));
         });
 
     });

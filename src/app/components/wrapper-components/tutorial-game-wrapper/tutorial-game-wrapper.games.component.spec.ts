@@ -25,7 +25,7 @@ import { DvonnMove } from 'src/app/games/dvonn/DvonnMove';
 import { EncapsuleRules } from 'src/app/games/encapsule/EncapsuleRules';
 import { EncapsuleTutorial } from 'src/app/games/encapsule/EncapsuleTutorial';
 import { EncapsuleMove } from 'src/app/games/encapsule/EncapsuleMove';
-import { EncapsulePiece, Size } from 'src/app/games/encapsule/EncapsulePiece';
+import { EncapsulePiece } from 'src/app/games/encapsule/EncapsulePiece';
 import { EpaminondasRules } from 'src/app/games/epaminondas/EpaminondasRules';
 import { EpaminondasTutorial } from '../../../games/epaminondas/EpaminondasTutorial';
 import { EpaminondasMove } from 'src/app/games/epaminondas/EpaminondasMove';
@@ -147,7 +147,7 @@ describe('TutorialGameWrapperComponent (games)', () => {
                 ], [
                     EncapsuleRules.get(),
                     encapsuleTutorial[3],
-                    EncapsuleMove.ofDrop(EncapsulePiece.ofSizeAndPlayer(Size.BIG, PlayerOrNone.ZERO), new Coord(0, 2)),
+                    EncapsuleMove.ofDrop(EncapsulePiece.ofSizeAndPlayer(3, PlayerOrNone.ZERO), new Coord(0, 2)),
                     MGPValidation.failure(`You won, but the exercise is to win while moving a piece!`),
                 ], [
                     EncapsuleRules.get(),

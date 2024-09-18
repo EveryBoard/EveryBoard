@@ -1,6 +1,6 @@
 import { MGPOptional } from '@everyboard/lib';
 import { DiamPiece } from 'src/app/games/diam/DiamPiece';
-import { EncapsulePiece, Size } from 'src/app/games/encapsule/EncapsulePiece';
+import { EncapsulePiece } from 'src/app/games/encapsule/EncapsulePiece';
 import { HivePiece } from 'src/app/games/hive/HivePiece';
 import { SiamMove } from 'src/app/games/siam/SiamMove';
 import { Coord } from 'src/app/jscaip/Coord';
@@ -40,7 +40,7 @@ export const clickableMethods: { [gameName: string]: { [methodName: string]: unk
     Dvonn: { onClick: [0, 0] },
     Encapsule: {
         onBoardClick: [0, 0],
-        onPieceClick: [0, EncapsulePiece.ofSizeAndPlayer(Size.BIG, PlayerOrNone.ONE), 0],
+        onPieceClick: [0, EncapsulePiece.ofSizeAndPlayer(3, PlayerOrNone.ONE), 0],
     },
     Epaminondas: { onClick: [0, 0] },
     Gipf: { onClick: [0, 0] },

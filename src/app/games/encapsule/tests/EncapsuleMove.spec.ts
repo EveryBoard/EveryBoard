@@ -1,16 +1,16 @@
 /* eslint-disable max-lines-per-function */
 import { EncapsuleRules } from '../EncapsuleRules';
 import { Coord } from 'src/app/jscaip/Coord';
-import { EncapsulePiece, Size } from '../EncapsulePiece';
+import { EncapsulePiece } from '../EncapsulePiece';
 import { EncapsuleMove } from '../EncapsuleMove';
 import { EncoderTestUtils } from '@everyboard/lib';
 import { MoveTestUtils } from 'src/app/jscaip/tests/Move.spec';
 import { EncapsuleMoveGenerator } from '../EncapsuleMoveGenerator';
 import { Player } from 'src/app/jscaip/Player';
 
-fdescribe('EncapsuleMove', () => {
+describe('EncapsuleMove', () => {
 
-    const piece: EncapsulePiece = EncapsulePiece.ofSizeAndPlayer(Size.SMALL, Player.ZERO);
+    const piece: EncapsulePiece = EncapsulePiece.ofSizeAndPlayer(1, Player.ZERO);
 
     it('should construct valid moves with success', () => {
         expect(EncapsuleMove.ofDrop(piece, new Coord(2, 1))).toBeTruthy();
@@ -58,7 +58,7 @@ fdescribe('EncapsuleMove', () => {
         });
 
         it('should consider moves different due to different piece', () => {
-            const otherPiece: EncapsulePiece = EncapsulePiece.ofSizeAndPlayer(Size.MEDIUM, Player.ZERO);
+            const otherPiece: EncapsulePiece = EncapsulePiece.ofSizeAndPlayer(2, Player.ZERO);
             const moveA: EncapsuleMove = EncapsuleMove.ofDrop(piece, new Coord(0, 0));
             const moveB: EncapsuleMove = EncapsuleMove.ofDrop(otherPiece, new Coord(0, 1));
             expect(moveA.equals(moveB)).toBeFalse();

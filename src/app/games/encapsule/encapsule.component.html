@@ -4,17 +4,23 @@
      preserveAspectRatio="xMidYMid meet">
     <g #remainingPieces
        *ngFor="let player of Player.PLAYERS">
-        <g *ngFor="let piece of getRemainingPiecesTypeOfPlayer(player); index as pieceIdX">
-            <circle id="piece-{{ piece.toString() }}"
-                    (click)="onPieceClick(piece)"
-                    [attr.transform]="getRemainingPieceTransform(player, pieceIdX)"
-                    [attr.r]="getPieceRadius(piece)"
+        <g *ngFor="let piece of getRemainingPiecesTypeOfPlayer(player); index as pieceIdX"
+           id="remaining-piece-{{ piece.toString() }}"
+           (click)="onPieceClick(piece)"
+           [attr.transform]="getRemainingPieceTranslate(player, pieceIdX)">
+            <circle [attr.r]="getPieceRadius(piece)"
                     [attr.cx]="0"
                     [attr.cy]="0"
                     [ngClass]="getSidePieceClasses(piece)"
-                    class="base no-fill"
+                    [attr.stroke-width]="pieceStrokeWidth"
+                    class="no-fill"
                     pointer-events="fill"
             />
+            <text id="player-zero-tiles-count"
+                  class="text-medium"
+                  x="-5"
+                  y="5"
+            >{{ state.remainingPieces.get(player).get(piece.getSize()).getOrElse(-1) }}</text>
         </g>
     </g>
     <g #boardDiv>
@@ -32,10 +38,10 @@
                 <circle *ngFor="let piece of getListPieces(spaceContent)"
                         (click)="onBoardClick(x, y)"
                         [attr.r]="getPieceRadius(piece)"
-                        [attr.cx]="getPieceCenter(x)"
-                        [attr.cy]="getPieceCenter(y)"
+                        [attr.transform]="getPieceTranslate(x, y)"
                         [ngClass]="getPieceClasses(piece)"
-                        class='base no-fill'
+                        [attr.stroke-width]="pieceStrokeWidth"
+                        class='no-fill'
                 />
             </g>
         </g>

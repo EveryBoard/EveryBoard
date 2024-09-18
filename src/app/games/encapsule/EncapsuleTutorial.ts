@@ -1,5 +1,5 @@
 import { EncapsuleMove } from 'src/app/games/encapsule/EncapsuleMove';
-import { EncapsulePiece, Size } from 'src/app/games/encapsule/EncapsulePiece';
+import { EncapsulePiece } from 'src/app/games/encapsule/EncapsulePiece';
 import { EncapsuleRemainingPieces, EncapsuleSizeToNumberMap, EncapsuleSpace, EncapsuleState } from 'src/app/games/encapsule/EncapsuleState';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Player } from 'src/app/jscaip/Player';
@@ -11,11 +11,11 @@ import { PlayerMap } from 'src/app/jscaip/PlayerMap';
 
 
 const _: EncapsuleSpace = EncapsuleSpace.EMPTY;
-const smallDark: EncapsulePiece = EncapsulePiece.ofSizeAndPlayer(Size.SMALL, Player.ZERO);
-const mediumDark: EncapsulePiece = EncapsulePiece.ofSizeAndPlayer(Size.MEDIUM, Player.ZERO);
-const bigDark: EncapsulePiece = EncapsulePiece.ofSizeAndPlayer(Size.BIG, Player.ZERO);
-const smallLight: EncapsulePiece = EncapsulePiece.ofSizeAndPlayer(Size.SMALL, Player.ONE);
-const bigLight: EncapsulePiece = EncapsulePiece.ofSizeAndPlayer(Size.BIG, Player.ONE);
+const smallDark: EncapsulePiece = EncapsulePiece.ofSizeAndPlayer(1, Player.ZERO);
+const mediumDark: EncapsulePiece = EncapsulePiece.ofSizeAndPlayer(2, Player.ZERO);
+const bigDark: EncapsulePiece = EncapsulePiece.ofSizeAndPlayer(3, Player.ZERO);
+const smallLight: EncapsulePiece = EncapsulePiece.ofSizeAndPlayer(1, Player.ONE);
+const bigLight: EncapsulePiece = EncapsulePiece.ofSizeAndPlayer(3, Player.ONE);
 const s: EncapsuleSpace = _.put(smallDark);
 const m: EncapsuleSpace = _.put(mediumDark);
 const b: EncapsuleSpace = _.put(bigDark);
@@ -42,6 +42,7 @@ export class EncapsuleTutorial extends Tutorial {
                 ],
                 0,
                 EncapsuleRules.get().getEncapsulePieceMapFrom([1, 1, 1], [1, 2, 1]),
+                3,
             )),
         TutorialStep.anyMove(
             $localize`Putting a piece`,
@@ -58,7 +59,7 @@ export class EncapsuleTutorial extends Tutorial {
                 [s, B, _],
                 [_, _, _],
                 [_, _, _],
-            ], 0, noMorePieces),
+            ], 0, noMorePieces, 3),
             [
                 EncapsuleMove.ofMove(new Coord(0, 0), new Coord(2, 0)),
                 EncapsuleMove.ofMove(new Coord(0, 0), new Coord(0, 1)),
@@ -89,6 +90,7 @@ export class EncapsuleTutorial extends Tutorial {
                 ],
                 0,
                 EncapsuleRules.get().getEncapsulePieceMapFrom([0, 1, 1], [0, 2, 0]),
+                3,
             ),
             EncapsuleMove.ofMove(new Coord(0, 1), new Coord(0, 2)),
             (move: EncapsuleMove, _previous: EncapsuleState, _result: EncapsuleState) => {
@@ -103,5 +105,6 @@ export class EncapsuleTutorial extends Tutorial {
                 return MGPValidation.failure(TutorialStepMessage.FAILED_TRY_AGAIN());
             },
             TutorialStepMessage.CONGRATULATIONS()),
+
     ];
 }

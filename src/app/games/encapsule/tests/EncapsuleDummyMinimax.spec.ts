@@ -5,7 +5,7 @@ import { minimaxTest, SlowTest } from 'src/app/utils/tests/TestUtils.spec';
 import { MGPOptional } from '@everyboard/lib';
 import { EncapsuleDummyMinimax } from '../EncapsuleDummyMinimax';
 
-fdescribe('EncapsuleDummyMinimax', () => {
+describe('EncapsuleDummyMinimax', () => {
 
     const rules: EncapsuleRules = EncapsuleRules.get();
     const minimax: EncapsuleDummyMinimax = new EncapsuleDummyMinimax();

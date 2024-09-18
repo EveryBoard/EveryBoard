@@ -4,7 +4,7 @@ import { RectangularGameComponent } from '../../components/game-components/recta
 import { EncapsuleConfig, EncapsuleLegalityInformation, EncapsuleRules } from 'src/app/games/encapsule/EncapsuleRules';
 import { EncapsuleState, EncapsuleSpace, EncapsuleSizeToNumberMap } from 'src/app/games/encapsule/EncapsuleState';
 import { EncapsuleMove } from 'src/app/games/encapsule/EncapsuleMove';
-import { EncapsulePiece, Size } from 'src/app/games/encapsule/EncapsulePiece';
+import { EncapsulePiece } from 'src/app/games/encapsule/EncapsulePiece';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
@@ -27,10 +27,9 @@ export class EncapsuleComponent extends RectangularGameComponent<EncapsuleRules,
                                                                  EncapsuleConfig,
                                                                  EncapsuleLegalityInformation>
 {
-    public readonly UPLEFT: number = - (this.SPACE_SIZE + (this.STROKE_WIDTH * 0.5));
-    public readonly WIDTH: number = (5 * this.SPACE_SIZE) + (3 * this.STROKE_WIDTH);
     private lastLandingCoord: MGPOptional<Coord> = MGPOptional.empty();
     private lastStartingCoord: MGPOptional<Coord> = MGPOptional.empty();
+    public pieceStrokeWidth: number = this.STROKE_WIDTH;
     public chosenCoord: MGPOptional<Coord> = MGPOptional.empty();
     private chosenPiece: MGPOptional<EncapsulePiece> = MGPOptional.empty();
     public remainingPieceCenterCoords: MGPMap<Player, Coord[]> = new MGPMap();
@@ -67,6 +66,13 @@ export class EncapsuleComponent extends RectangularGameComponent<EncapsuleRules,
         this.board = this.state.getCopiedBoard();
         this.calculateLeftPieceCoords();
         this.victoryCoords = EncapsuleRules.get().getVictoriousCoords(this.state, config.get());
+        this.setPieceStrokeWidth();
+    }
+
+    private setPieceStrokeWidth(): void {
+        const configSize: number = this.state.nbOfPieceSize;
+        // 46 is the 50 - half a stroke width from the squares
+        this.pieceStrokeWidth = (2 * 46) / (configSize * 3);
     }
 
     public getListPieces(content: EncapsuleSpace): EncapsulePiece[] {
@@ -75,10 +81,10 @@ export class EncapsuleComponent extends RectangularGameComponent<EncapsuleRules,
 
     public getRemainingPiecesTypeOfPlayer(player: Player): Set<EncapsulePiece> {
         const pieceMap: EncapsuleSizeToNumberMap = this.getState().getRemainingPiecesOfPlayer(player);
-        const remainingSizeToNumber: MGPMap<Size, number> =
-            pieceMap.filter((_key: Size, value: number) => value > 0);
-        const remainingPieceSet: Set<Size> = remainingSizeToNumber.getKeySet();
-        return remainingPieceSet.map((size: Size) => EncapsulePiece.ofSizeAndPlayer(size, player));
+        const remainingSizeToNumber: MGPMap<number, number> =
+            pieceMap.filter((_key: number, value: number) => value > 0);
+        const remainingPieceSet: Set<number> = remainingSizeToNumber.getKeySet();
+        return remainingPieceSet.map((size: number) => EncapsulePiece.ofSizeAndPlayer(size, player));
     }
 
     public async onBoardClick(x: number, y: number): Promise<MGPValidation> {
@@ -118,7 +124,7 @@ export class EncapsuleComponent extends RectangularGameComponent<EncapsuleRules,
     }
 
     public async onPieceClick(piece: EncapsulePiece): Promise<MGPValidation> {
-        const clickedId: string = '#piece-' + piece.toString();
+        const clickedId: string = '#remaining-piece-' + piece.toString();
         const clickValidity: MGPValidation = await this.canUserPlay(clickedId);
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
@@ -158,10 +164,12 @@ export class EncapsuleComponent extends RectangularGameComponent<EncapsuleRules,
     }
 
     public getPieceClasses(piece: EncapsulePiece): string[] {
-        return [this.getPieceStrokeClass(piece)];
+        return [
+            this.getPieceStrokeClass(piece),
+        ];
     }
 
-    public getPieceCenter(xOrY: number): number {
+    private getPieceCenter(xOrY: number): number {
         return (this.SPACE_SIZE * xOrY) + (this.SPACE_SIZE / 2);
     }
 
@@ -172,15 +180,12 @@ export class EncapsuleComponent extends RectangularGameComponent<EncapsuleRules,
     }
 
     public getPieceRadius(piece: EncapsulePiece): number {
-        switch (piece.getSize()) {
-            case Size.BIG:
-                return (this.SPACE_SIZE / 2) - (1 * this.STROKE_WIDTH);
-            case Size.MEDIUM:
-                return (this.SPACE_SIZE / 2) - (2 * this.STROKE_WIDTH) - 3;
-            default:
-                Utils.expectToBe(piece.getSize(), Size.SMALL);
-                return (this.SPACE_SIZE / 2) - (3 * this.STROKE_WIDTH) - 6;
-        }
+        const size: number = piece.getSize();
+        // The aim is that the inter-piece space is half a piece stroke
+        // And the the radius is used like this (from center to outside):
+        // empty - stroke - stroke - empty - stroke - stroke
+        // And stick to the square's inner-edge
+        return ((3 * size) - 1) * this.pieceStrokeWidth * 0.5;
     }
 
     public getSidePieceClasses(piece: EncapsulePiece): string[] {
@@ -200,43 +205,48 @@ export class EncapsuleComponent extends RectangularGameComponent<EncapsuleRules,
          * Must have the maximum of piece below the board (for current player)
          * And the rest of them on the left of the board (for current player)
          * Aimed pattern (for current player):
-         * 0 . . .
          * 1 . . .
          * 2 . . .
-         *   3 4 5
+         * 3 . . .
+         * 4 5 6 7
          */
         this.remainingPieceCenterCoords = new MGPMap();
         const height: number = this.state.getHeight();
+        const maxX: number = this.state.getWidth() - 1;
+        const maxY: number = height - 1;
         for (const player of Player.PLAYERS) {
             const playersRemainingPieceLeftPieceCoords: Coord[] = [];
             const remainingPiecesSet: Set<EncapsulePiece> = this.getRemainingPiecesTypeOfPlayer(player);
-            let abstractCoord: Coord = new Coord(-1, -2);
+            let abstractCoord: Coord = new Coord(-1, -1);
             for (let index: number = 0; index < remainingPiecesSet.size(); index++) {
-                if (index <= height + 1) {
+                if (index < height + 1) {
                     abstractCoord = abstractCoord.getNext(Orthogonal.DOWN);
                 } else {
                     abstractCoord = abstractCoord.getNext(Orthogonal.RIGHT);
                 }
-                const realX: number = this.getPieceCenter(abstractCoord.x);
-                const realY: number = this.getPieceCenter(abstractCoord.y);
+                let rotatedAbstractCoord: Coord;
+                if (player.equals(Player.ZERO)) {
+                    rotatedAbstractCoord = abstractCoord;
+                } else {
+                    rotatedAbstractCoord = new Coord(maxX - abstractCoord.x, maxY - abstractCoord.y);
+                }
+                const realX: number = this.getPieceCenter(rotatedAbstractCoord.x);
+                const realY: number = this.getPieceCenter(rotatedAbstractCoord.y);
                 playersRemainingPieceLeftPieceCoords.push(new Coord(realX, realY));
             }
             this.remainingPieceCenterCoords.set(player, playersRemainingPieceLeftPieceCoords);
         }
     }
 
-    public getRemainingPieceTransform(player: Player, pieceIdX: number): string {
-        const centerX: number = this.getPieceCenter(Math.floor(this.state.getWidth() / 2));
-        const centerY: number = this.getPieceCenter(Math.floor(this.state.getHeight() / 2));
-        const angle: number = (this.getPointOfView().getValue() + player.getValue()) * 180;
-        const rotate: string = 'rotate(' + angle + ' ' + centerX + ' ' + centerY + ')';
-        const translate: string = this.getRemainingPieceTranslate(player, pieceIdX);
-        return rotate + ' ' + translate;
-    }
-
-    private getRemainingPieceTranslate(player: Player, pieceIdX: number): string {
+    public getRemainingPieceTranslate(player: Player, pieceIdX: number): string {
         const coord: Coord = this.remainingPieceCenterCoords.get(player).get()[pieceIdX];
         return this.getSVGTranslationAt(coord);
+    }
+
+    public getPieceTranslate(x: number, y: number): string {
+        const xCenter: number = this.getPieceCenter(x);
+        const yCenter: number = this.getPieceCenter(y);
+        return 'translate(' + xCenter + ', ' + yCenter + ')';
     }
 
 }

@@ -4,17 +4,20 @@ import { EncapsuleMove } from 'src/app/games/encapsule/EncapsuleMove';
 import { Coord } from 'src/app/jscaip/Coord';
 import { EncapsuleRemainingPieces, EncapsuleSizeToNumberMap, EncapsuleSpace, EncapsuleState } from 'src/app/games/encapsule/EncapsuleState';
 import { Player } from 'src/app/jscaip/Player';
-import { EncapsulePiece, Size } from 'src/app/games/encapsule/EncapsulePiece';
+import { EncapsulePiece } from 'src/app/games/encapsule/EncapsulePiece';
 import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { fakeAsync } from '@angular/core/testing';
 import { EncapsuleFailure } from '../EncapsuleFailure';
 import { PlayerMap } from 'src/app/jscaip/PlayerMap';
-import { EncapsuleRules } from '../EncapsuleRules';
+import { EncapsuleConfig, EncapsuleRules } from '../EncapsuleRules';
+import { MGPOptional } from 'lib/dist';
+import { DebugElement } from '@angular/core';
 
-fdescribe('EncapsuleComponent', () => {
+describe('EncapsuleComponent', () => {
 
     let testUtils: ComponentTestUtils<EncapsuleComponent>;
     const rules: EncapsuleRules = EncapsuleRules.get();
+    const defaultConfig: MGPOptional<EncapsuleConfig> = rules.getDefaultRulesConfig();
 
     const _: EncapsuleSpace = EncapsuleSpace.EMPTY;
     const emptyBoard: EncapsuleSpace[][] = [
@@ -24,10 +27,10 @@ fdescribe('EncapsuleComponent', () => {
     ];
     const noMorePieces: EncapsuleRemainingPieces =
         PlayerMap.ofValues(new EncapsuleSizeToNumberMap(), new EncapsuleSizeToNumberMap());
-    const mediumDark: EncapsulePiece = EncapsulePiece.ofSizeAndPlayer(Size.MEDIUM, Player.ZERO);
-    const bigDark: EncapsulePiece = EncapsulePiece.ofSizeAndPlayer(Size.BIG, Player.ZERO);
-    const smallLight: EncapsulePiece = EncapsulePiece.ofSizeAndPlayer(Size.SMALL, Player.ONE);
-    const mediumLight: EncapsulePiece = EncapsulePiece.ofSizeAndPlayer(Size.MEDIUM, Player.ONE);
+    const mediumDark: EncapsulePiece = EncapsulePiece.ofSizeAndPlayer(2, Player.ZERO);
+    const bigDark: EncapsulePiece = EncapsulePiece.ofSizeAndPlayer(3, Player.ZERO);
+    const smallLight: EncapsulePiece = EncapsulePiece.ofSizeAndPlayer(1, Player.ONE);
+    const mediumLight: EncapsulePiece = EncapsulePiece.ofSizeAndPlayer(2, Player.ONE);
     const P0Turn: number = 6;
 
     beforeEach(fakeAsync(async() => {
@@ -45,16 +48,16 @@ fdescribe('EncapsuleComponent', () => {
         }));
 
         it('should forbid selecting a piece that is not remaining', fakeAsync(async() => {
-            await testUtils.setupState(new EncapsuleState(emptyBoard, P0Turn, noMorePieces));
+            await testUtils.setupState(new EncapsuleState(emptyBoard, P0Turn, noMorePieces, 3));
 
-            testUtils.expectElementNotToExist('#piece-size-1-PLAYER_ZERO');
+            testUtils.expectElementNotToExist('#remaining-piece-size-1-PLAYER_ZERO');
         }));
 
         it('should forbid selecting a piece from the other player', fakeAsync(async() => {
             const remainingPieces: EncapsuleRemainingPieces = rules.getEncapsulePieceMapFrom([0], [1]);
-            await testUtils.setupState(new EncapsuleState(emptyBoard, P0Turn, remainingPieces));
+            await testUtils.setupState(new EncapsuleState(emptyBoard, P0Turn, remainingPieces, 3));
 
-            await testUtils.expectClickFailure('#piece-size-1-PLAYER_ONE', EncapsuleFailure.NOT_DROPPABLE());
+            await testUtils.expectClickFailure('#remaining-piece-size-1-PLAYER_ONE', EncapsuleFailure.NOT_DROPPABLE());
         }));
 
         it('should forbid moving from a space that the player is not controlling', fakeAsync(async() => {
@@ -64,7 +67,7 @@ fdescribe('EncapsuleComponent', () => {
                 [x, _, _],
                 [_, _, _],
             ];
-            await testUtils.setupState(new EncapsuleState(board, P0Turn, noMorePieces));
+            await testUtils.setupState(new EncapsuleState(board, P0Turn, noMorePieces, 3));
 
             await testUtils.expectClickFailure('#click-0-1', EncapsuleFailure.INVALID_PIECE_SELECTED());
         }));
@@ -72,10 +75,10 @@ fdescribe('EncapsuleComponent', () => {
         it('should select remaining piece that you clicked', fakeAsync(async() => {
             // Given any state with remaining pieces
             // When clicking on one of them
-            await testUtils.expectClickSuccess('#piece-size-1-PLAYER_ZERO');
+            await testUtils.expectClickSuccess('#remaining-piece-size-1-PLAYER_ZERO');
 
             // Then that piece should be selected
-            testUtils.expectElementToHaveClass('#piece-size-1-PLAYER_ZERO', 'selected-stroke');
+            testUtils.expectElementToHaveClass('#remaining-piece-size-1-PLAYER_ZERO > circle', 'selected-stroke');
         }));
 
         it('should select starting coord when clicking on occupied coord', fakeAsync(async() => {
@@ -86,7 +89,7 @@ fdescribe('EncapsuleComponent', () => {
                 [x, _, _],
                 [_, _, _],
             ];
-            await testUtils.setupState(new EncapsuleState(board, 1, noMorePieces));
+            await testUtils.setupState(new EncapsuleState(board, 1, noMorePieces, 3));
 
             // When clicking on this coord
             await testUtils.expectClickSuccess('#click-0-1');
@@ -100,9 +103,9 @@ fdescribe('EncapsuleComponent', () => {
     describe('Second click', () => {
 
         it('should drop a piece on the board when selecting it and dropping it', fakeAsync(async() => {
-            await testUtils.expectClickSuccess('#piece-size-1-PLAYER_ZERO');
+            await testUtils.expectClickSuccess('#remaining-piece-size-1-PLAYER_ZERO');
 
-            const piece: EncapsulePiece = EncapsulePiece.ofSizeAndPlayer(Size.SMALL, Player.ZERO);
+            const piece: EncapsulePiece = EncapsulePiece.ofSizeAndPlayer(1, Player.ZERO);
             const move: EncapsuleMove = EncapsuleMove.ofDrop(piece, new Coord(0, 0));
             await testUtils.expectMoveSuccess('#click-0-0', move);
         }));
@@ -115,10 +118,10 @@ fdescribe('EncapsuleComponent', () => {
                 [_, _, _],
             ];
             const remainingPieces: EncapsuleRemainingPieces = rules.getEncapsulePieceMapFrom([0, 1], []);
-            await testUtils.setupState(new EncapsuleState(board, P0Turn, remainingPieces));
-            await testUtils.expectClickSuccess('#piece-size-2-PLAYER_ZERO');
+            await testUtils.setupState(new EncapsuleState(board, P0Turn, remainingPieces, 3));
+            await testUtils.expectClickSuccess('#remaining-piece-size-2-PLAYER_ZERO');
 
-            const piece: EncapsulePiece = EncapsulePiece.ofSizeAndPlayer(Size.MEDIUM, Player.ZERO);
+            const piece: EncapsulePiece = EncapsulePiece.ofSizeAndPlayer(2, Player.ZERO);
             const move: EncapsuleMove = EncapsuleMove.ofDrop(piece, new Coord(0, 1));
             await testUtils.expectMoveSuccess('#click-0-1', move);
         }));
@@ -131,10 +134,10 @@ fdescribe('EncapsuleComponent', () => {
                 [_, _, _],
             ];
             const remainingPieces: EncapsuleRemainingPieces = rules.getEncapsulePieceMapFrom([1], []);
-            await testUtils.setupState(new EncapsuleState(board, P0Turn, remainingPieces));
-            await testUtils.expectClickSuccess('#piece-size-1-PLAYER_ZERO');
+            await testUtils.setupState(new EncapsuleState(board, P0Turn, remainingPieces, 3));
+            await testUtils.expectClickSuccess('#remaining-piece-size-1-PLAYER_ZERO');
 
-            const piece: EncapsulePiece = EncapsulePiece.ofSizeAndPlayer(Size.SMALL, Player.ZERO);
+            const piece: EncapsulePiece = EncapsulePiece.ofSizeAndPlayer(1, Player.ZERO);
             const move: EncapsuleMove = EncapsuleMove.ofDrop(piece, new Coord(0, 1));
             await testUtils.expectMoveFailure('#click-0-1', EncapsuleFailure.INVALID_PLACEMENT(), move);
         }));
@@ -146,7 +149,7 @@ fdescribe('EncapsuleComponent', () => {
                 [x, _, _],
                 [_, _, _],
             ];
-            await testUtils.setupState(new EncapsuleState(board, P0Turn, noMorePieces));
+            await testUtils.setupState(new EncapsuleState(board, P0Turn, noMorePieces, 3));
 
             await testUtils.expectClickSuccess('#click-0-1');
 
@@ -163,7 +166,7 @@ fdescribe('EncapsuleComponent', () => {
                 [x, X, _],
                 [_, _, _],
             ];
-            await testUtils.setupState(new EncapsuleState(board, P0Turn, noMorePieces));
+            await testUtils.setupState(new EncapsuleState(board, P0Turn, noMorePieces, 3));
             await testUtils.expectClickSuccess('#click-1-1');
 
             // When moving the big piece atop the small one
@@ -183,7 +186,7 @@ fdescribe('EncapsuleComponent', () => {
                 [x, X, _],
                 [_, _, _],
             ];
-            await testUtils.setupState(new EncapsuleState(board, P0Turn, noMorePieces));
+            await testUtils.setupState(new EncapsuleState(board, P0Turn, noMorePieces, 3));
 
             await testUtils.expectClickSuccess('#click-0-1');
 
@@ -199,34 +202,34 @@ fdescribe('EncapsuleComponent', () => {
                 [_, _, _],
             ];
             const remainingPieces: EncapsuleRemainingPieces = rules.getEncapsulePieceMapFrom([1], []);
-            await testUtils.setupState(new EncapsuleState(board, P0Turn, remainingPieces));
+            await testUtils.setupState(new EncapsuleState(board, P0Turn, remainingPieces, 3));
 
             await testUtils.expectClickSuccess('#click-0-1');
 
-            await testUtils.expectClickFailure('#piece-size-1-PLAYER_ZERO', EncapsuleFailure.END_YOUR_MOVE());
+            await testUtils.expectClickFailure('#remaining-piece-size-1-PLAYER_ZERO', EncapsuleFailure.END_YOUR_MOVE());
         }));
 
         it('should deselect piece when clicking a second time on it', fakeAsync(async() => {
             // Given any state with a remaining pieces selected
-            await testUtils.expectClickSuccess('#piece-size-1-PLAYER_ZERO');
+            await testUtils.expectClickSuccess('#remaining-piece-size-1-PLAYER_ZERO');
 
             // When clicking on it again
-            await testUtils.expectClickFailure('#piece-size-1-PLAYER_ZERO');
+            await testUtils.expectClickFailure('#remaining-piece-size-1-PLAYER_ZERO');
 
             // Then that piece should be selected no more
-            testUtils.expectElementNotToHaveClass('#piece-size-1-PLAYER_ZERO', 'selected-stroke');
+            testUtils.expectElementNotToHaveClass('#remaining-piece-size-1-PLAYER_ZERO', 'selected-stroke');
         }));
 
         it('should change select piece when clicking another', fakeAsync(async() => {
             // Given any state with a remaining pieces selected
-            await testUtils.expectClickSuccess('#piece-size-1-PLAYER_ZERO');
+            await testUtils.expectClickSuccess('#remaining-piece-size-1-PLAYER_ZERO');
 
             // When clicking on another one
-            await testUtils.expectClickSuccess('#piece-size-2-PLAYER_ZERO');
+            await testUtils.expectClickSuccess('#remaining-piece-size-2-PLAYER_ZERO');
 
             // Then that other piece should be selected
-            testUtils.expectElementNotToHaveClass('#piece-size-1-PLAYER_ZERO', 'selected-stroke');
-            testUtils.expectElementToHaveClass('#piece-size-2-PLAYER_ZERO', 'selected-stroke');
+            testUtils.expectElementNotToHaveClass('#remaining-piece-size-1-PLAYER_ZERO > circle', 'selected-stroke');
+            testUtils.expectElementToHaveClass('#remaining-piece-size-2-PLAYER_ZERO > circle', 'selected-stroke');
         }));
 
         it('should deselect starting coord when clicking on it again', fakeAsync(async() => {
@@ -237,7 +240,7 @@ fdescribe('EncapsuleComponent', () => {
                 [x, _, _],
                 [_, _, _],
             ];
-            await testUtils.setupState(new EncapsuleState(board, 1, noMorePieces));
+            await testUtils.setupState(new EncapsuleState(board, 1, noMorePieces, 3));
             await testUtils.expectClickSuccess('#click-0-1');
 
             // When clicking on this coord again
@@ -259,7 +262,7 @@ fdescribe('EncapsuleComponent', () => {
         ];
         // When displaying it
 
-        await testUtils.setupState(new EncapsuleState(board, 1, noMorePieces));
+        await testUtils.setupState(new EncapsuleState(board, 1, noMorePieces, 3));
 
         // Then the victory coords should be highlighted
         testUtils.expectElementToExist('#victory-0-0');
@@ -273,5 +276,29 @@ fdescribe('EncapsuleComponent', () => {
         testUtils.expectElementNotToExist('#victory-0-2');
         testUtils.expectElementNotToExist('#victory-1-2');
     }));
+
+    describe('Custom Config', () => {
+
+        it('should put remaining pieces around the board', fakeAsync(async() => {
+            // Given a board with more size of pieces
+            const customConfig: MGPOptional<EncapsuleConfig> = MGPOptional.of({
+                ...defaultConfig.get(),
+                nbOfSizes: 5,
+            });
+            const state: EncapsuleState = rules.getInitialState(customConfig);
+            await testUtils.setupState(state, { config: customConfig });
+
+            // When checking where is the biggest remaining piece
+            const debugElement: DebugElement = testUtils.findElement('#remaining-piece-size-5-PLAYER_ZERO');
+            const transform: string | null = debugElement.attributes.transform;
+
+            // Then it should be below the board
+            const abstractCenter: Coord = new Coord(0.5, 3.5); // So the piece coord would be (1, 4), right below the 3x3 board
+            const concreteCenter: Coord = new Coord(0, 0).getNext(abstractCenter, 100);
+            const concreteCenterString: string = concreteCenter.toString();
+            expect(transform).toEqual('translate' + concreteCenterString);
+        }));
+
+    });
 
 });
