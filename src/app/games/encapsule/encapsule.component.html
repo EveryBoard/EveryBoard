@@ -20,7 +20,7 @@
                   class="text-medium"
                   x="-5"
                   y="5"
-            >{{ state.remainingPieces.get(player).get(piece.getSize()).getOrElse(-1) }}</text>
+            >{{ getRemainingPieceQuantity(piece) }}</text>
         </g>
     </g>
     <g #boardDiv>

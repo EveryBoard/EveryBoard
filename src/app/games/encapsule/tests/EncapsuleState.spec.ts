@@ -129,8 +129,7 @@ describe('EncapsuleSpace', () => {
     describe('removeBiggest', () => {
 
         it('should forbid to remove a piece from the empty space', () => {
-            const c: EncapsuleSpace = _;
-            expect(() => c.removeBiggest()).toThrow();
+            expect(() => _.removeBiggest()).toThrow();
         });
 
         it('should remove the biggest piece of the space', () => {
@@ -152,8 +151,7 @@ describe('EncapsuleSpace', () => {
     describe('put', () => {
 
         it('should forbid putting an empty piece', () => {
-            const c: EncapsuleSpace = _;
-            expect(() => c.put(EncapsulePiece.NONE)).toThrow();
+            expect(() => _.put(EncapsulePiece.NONE)).toThrow();
         });
 
         it('should put on top of smaller pieces', () => {

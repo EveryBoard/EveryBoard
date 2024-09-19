@@ -35,7 +35,7 @@ describe('EncapsuleMoveGenerator', () => {
             // When listing the moves
             const moves: EncapsuleMove[] = moveGenerator.getListMoves(node, defaultConfig);
 
-            // Then the should be 3 pieces x 9 coords = 27 moves
+            // Then there should be 3 pieces x 9 coords = 27 moves
             expect(moves.length).toBe(27);
         });
 
@@ -46,7 +46,7 @@ describe('EncapsuleMoveGenerator', () => {
             // When listing the moves
             const moves: EncapsuleMove[] = moveGenerator.getListMoves(node, customConfig);
 
-            // Then the should be 3 pieces x 12 coords = 36 moves
+            // Then there should be 3 pieces x 12 coords = 36 moves
             expect(moves.length).toBe(36);
         });
 

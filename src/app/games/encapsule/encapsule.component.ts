@@ -182,7 +182,7 @@ export class EncapsuleComponent extends RectangularGameComponent<EncapsuleRules,
     public getPieceRadius(piece: EncapsulePiece): number {
         const size: number = piece.getSize();
         // The aim is that the inter-piece space is half a piece stroke
-        // And the the radius is used like this (from center to outside):
+        // And the radius is used like this (from center to outside):
         // empty - stroke - stroke - empty - stroke - stroke
         // And stick to the square's inner-edge
         return ((3 * size) - 1) * this.pieceStrokeWidth * 0.5;
@@ -246,7 +246,15 @@ export class EncapsuleComponent extends RectangularGameComponent<EncapsuleRules,
     public getPieceTranslate(x: number, y: number): string {
         const xCenter: number = this.getPieceCenter(x);
         const yCenter: number = this.getPieceCenter(y);
-        return 'translate(' + xCenter + ', ' + yCenter + ')';
+        return this.getSVGTranslation(xCenter, yCenter);
+    }
+
+    public getRemainingPieceQuantity(piece: EncapsulePiece): number {
+        const player: Player = piece.getPlayer() as Player;
+        return this.state.remainingPieces
+            .get(player)
+            .get(piece.getSize())
+            .getOrElse(-1);
     }
 
 }

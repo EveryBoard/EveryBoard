@@ -289,14 +289,15 @@ describe('EncapsuleComponent', () => {
             await testUtils.setupState(state, { config: customConfig });
 
             // When checking where is the biggest remaining piece
-            const debugElement: DebugElement = testUtils.findElement('#remaining-piece-size-5-PLAYER_ZERO');
-            const transform: string | null = debugElement.attributes.transform;
+            const biggestRemainingPiece: DebugElement = testUtils.findElement('#remaining-piece-size-5-PLAYER_ZERO');
+            const transform: string | null = biggestRemainingPiece.attributes.transform;
 
             // Then it should be below the board
-            const abstractCenter: Coord = new Coord(0.5, 3.5); // So the piece coord would be (1, 4), right below the 3x3 board
+            // (0.5, 3.5) -> so the piece coord would be (1, 4), right below the 3x3 board
+            const abstractCenter: Coord = new Coord(0.5, 3.5);
             const concreteCenter: Coord = new Coord(0, 0).getNext(abstractCenter, 100);
-            const concreteCenterString: string = concreteCenter.toString();
-            expect(transform).toEqual('translate' + concreteCenterString);
+            const concreteCenterString: string = testUtils.getGameComponent().getSVGTranslationAt(concreteCenter);
+            expect(transform).toEqual(concreteCenterString);
         }));
 
     });
