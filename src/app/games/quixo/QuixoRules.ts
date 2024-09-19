@@ -91,10 +91,9 @@ export class QuixoRules extends ConfigurableRules<QuixoMove, QuixoState, QuixoCo
 
     public static getVictoriousCoords(state: QuixoState): Coord[] {
         const victoriousCoord: Coord[] = QuixoRules.QUIXO_HELPER.getVictoriousCoord(state);
-        // TODO FOR REVIEW: quand on fait ce genre de case y a toujours le stuut de l'inversion (vu que currentOpponent est le previousPlayer)
-        // Du coup on ajouterais pas une fonction "getPreviousPlayer" et "getPreviousOpponent" pour avoir une lecture plus sympa et cette explanation centralisée ?
-        const opponentCoords: Coord[] = QuixoRules.getPlayersCoords(victoriousCoord, state, state.getCurrentPlayer());
-        const playerCoords: Coord[] = QuixoRules.getPlayersCoords(victoriousCoord, state, state.getCurrentOpponent());
+        const opponentCoords: Coord[] =
+            QuixoRules.getPlayersCoords(victoriousCoord, state, state.getPreviousOpponent());
+        const playerCoords: Coord[] = QuixoRules.getPlayersCoords(victoriousCoord, state, state.getPreviousPlayer());
         if (opponentCoords.length === 0) {
             if (playerCoords.length === 0) {
                 return []; // Nobody won
