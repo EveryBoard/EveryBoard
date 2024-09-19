@@ -796,7 +796,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
 
             // When clicking "Show Solution"
             spyOn(testUtils.getGameComponent(), 'updateBoard').and.callThrough();
-            await testUtils.clickElement('#showSolutionButton', true, 0);
+            await testUtils.clickElement('#showSolutionButton', 0);
 
             // Then the first awaited move should have been done
             expect(testUtils.getGameComponent().node.previousMove.get()).toEqual(awaitedMove);
