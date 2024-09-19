@@ -74,14 +74,7 @@ export class EncapsuleTutorial extends Tutorial {
         ),
         TutorialStep.fromPredicate(
             $localize`Particularity`,
-            $localize`At Encapsule, pieces encapsulate each other.
-        It is therefore possible to have up to three pieces per square!
-        However, only the biggest piece of each square counts:
-        you cannot win with a piece that is "hidden" by a bigger piece.
-        Similarly, you cannot move a piece if it is encapsulated by a bigger piece.
-        Finally, you cannot encapsulate a piece with a smaller piece.
-        Here, Dark can win now in various ways.<br/><br/>
-        You're playing Dark, try to win by making a move, and not by putting a new piece on the board.`,
+            $localize`At Encapsule, pieces encapsulate each other. It is therefore possible to have up to three pieces per square! However, only the biggest piece of each square counts: you cannot win with a piece that is "hidden" by a bigger piece. Similarly, you cannot move a piece if it is encapsulated by a bigger piece. Finally, you cannot encapsulate a piece with a smaller piece. Here, Dark can win now in various ways.<br/><br/> You're playing Dark, try to win by making a move, and not by putting a new piece on the board.`,
             new EncapsuleState(
                 [
                     [Sm, _, S],
@@ -104,7 +97,7 @@ export class EncapsuleTutorial extends Tutorial {
                 }
                 return MGPValidation.failure(TutorialStepMessage.FAILED_TRY_AGAIN());
             },
-            TutorialStepMessage.CONGRATULATIONS()),
-
+            TutorialStepMessage.CONGRATULATIONS(),
+        ),
     ];
 }

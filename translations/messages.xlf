@@ -1317,6 +1317,12 @@
       <trans-unit id="2209428336874697936" datatype="html">
         <source>You are performing a move, you must select a landing square.</source>
       </trans-unit>
+      <trans-unit id="3734443501087651549" datatype="html">
+        <source>Number of different piece sizes</source>
+      </trans-unit>
+      <trans-unit id="893013149323570447" datatype="html">
+        <source>Number of pieces for each size</source>
+      </trans-unit>
       <trans-unit id="7821413127222759201" datatype="html">
         <source>The goal of Encapsule is to align three of your pieces. Here, Dark wins.</source>
       </trans-unit>

@@ -16,7 +16,7 @@ const mediumLight: EncapsulePiece = EncapsulePiece.ofSizeAndPlayer(2, Player.ONE
 const noMorePiece: EncapsuleRemainingPieces =
     PlayerMap.ofValues(new EncapsuleSizeToNumberMap(), new EncapsuleSizeToNumberMap());
 
-    describe('EncapsuleState', () => {
+describe('EncapsuleState', () => {
 
 
     const emptyBoard: EncapsuleSpace[][] = TableUtils.create(3, 3, _);
