@@ -1665,6 +1665,9 @@
       <trans-unit id="2798807656507405918" datatype="html">
         <source>Standard</source>
       </trans-unit>
+      <trans-unit id="35620818119550087" datatype="html">
+        <source>Hexagonal</source>
+      </trans-unit>
       <trans-unit id="5525890868343399241" datatype="html">
         <source>The game of Trigo is a triangular adaptation of the game of Go. Go is present on Everyboard, you can go learn it &lt;a href=&quot;/tutorial/Go&quot;&gt;here&lt;a/&gt;. This tutorial will only review the small differences that this experimental adaptation induced.</source>
       </trans-unit>
