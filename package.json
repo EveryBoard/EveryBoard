@@ -32,7 +32,7 @@
     "@fortawesome/free-brands-svg-icons": "^6.6.0",
     "@fortawesome/free-solid-svg-icons": "^6.6.0",
     "async-mutex": "^0.5.0",
-    "bulma": "^0.9.4",
+    "bulma": "^1.0.2",
     "bulma-toast": "^2.4.4",
     "bulmaswatch": "^0.8.1",
     "core-js": "^3.38.0",
@@ -60,9 +60,9 @@
     "eslint-config-google": "^0.14.0",
     "eslint-config-standard": "^17.1.0",
     "eslint-plugin-import": "^2.29.1",
+    "eslint-plugin-jasmine": "^4.2.0",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^6.1.1",
-    "eslint-plugin-jasmine": "^4.2.0",
     "karma": "^6.4.4",
     "karma-chrome-launcher": "^3.2.0",
     "karma-coverage": "^2.2.1",
@@ -72,7 +72,7 @@
     "netlify-plugin-chromium": "^1.1.4",
     "nyc": "^17.0.0",
     "protractor": "^7.0.0",
-    "sass": "^1.77.8",
+    "sass": "^1.78.0",
     "ts-node": "^10.9.1",
     "typescript": "^5.5.4"
   }
