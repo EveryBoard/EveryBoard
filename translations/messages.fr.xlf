@@ -2482,6 +2482,10 @@
         <source>Standard</source>
         <target>Standard</target>
       </trans-unit>
+      <trans-unit id="35620818119550087" datatype="html">
+        <source>Hexagonal</source>
+        <target>Hexagonal</target>
+      </trans-unit>
       <trans-unit id="5525890868343399241" datatype="html">
         <source>The game of Trigo is a triangular adaptation of the game of Go. Go is present on Everyboard, you can go learn it &lt;a href=&quot;/tutorial/Go&quot;&gt;here&lt;a/&gt;. This tutorial will only review the small differences that this experimental adaptation induced.</source>
         <target>Trigo est une adaptation triangulaire du jeu de Go. Le Go est présent sur Everyboard, vous pouvez aller en apprendre les règles &lt;a href=&quot;/tutorial/Go&quot;&gt;here&lt;a/&gt;. Ce tutorial ne va que montrer les petites différences que cette expérimentation introduit.</target>
