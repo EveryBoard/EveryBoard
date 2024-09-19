@@ -82,7 +82,7 @@
         </div>
     </div>
     <div class="column">
-        <div class="box p-5 is-fullheight"
+        <div class="p-5 is-fullheight"
              id="board-highlight"
              [ngClass]="getBoardHighlight()">
             <div id="board" class="box is-fullheight">
@@ -123,10 +123,9 @@
 
     <div class="column">
         <div class="box is-fullheight">
-        <app-demo-card id="demo-card"
-                       class="box is-fullheight"
-                       *ngIf="getConfigDemo() !== undefined"
-                       [demoNodeInfo]="getConfigDemo()"></app-demo-card>
+            <app-demo-card id="demo-card"
+                           *ngIf="getConfigDemo() !== undefined"
+                           [demoNodeInfo]="getConfigDemo()"></app-demo-card>
         </div>
     </div>
 
