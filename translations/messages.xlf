@@ -830,8 +830,8 @@
       <trans-unit id="1930146585049479552" datatype="html">
         <source>You cannot click, this is a demo.</source>
       </trans-unit>
-      <trans-unit id="6050846802280051862" datatype="html">
-        <source>You cannot move more than 3 of your pieces!</source>
+      <trans-unit id="2467835697178117742" datatype="html">
+        <source>You cannot move more than <x id="PH" equiv-text="n"/> of your pieces!</source>
       </trans-unit>
       <trans-unit id="4278049889323552316" datatype="html">
         <source>You don&apos;t have enough pieces to push that group!</source>
@@ -847,6 +847,12 @@
       </trans-unit>
       <trans-unit id="6088417909306773667" datatype="html">
         <source>This space is not aligned with the current line.</source>
+      </trans-unit>
+      <trans-unit id="6143015419857143046" datatype="html">
+        <source>Number of pieces to capture</source>
+      </trans-unit>
+      <trans-unit id="1103013531201615772" datatype="html">
+        <source>Maximum pushing group size</source>
       </trans-unit>
       <trans-unit id="7123653594948067002" datatype="html">
         <source>Score</source>

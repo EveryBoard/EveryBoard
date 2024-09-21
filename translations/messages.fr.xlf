@@ -1093,9 +1093,9 @@
         <source>See solution</source>
         <target>Voir la solution</target>
       </trans-unit>
-      <trans-unit id="6050846802280051862" datatype="html">
-        <source>You cannot move more than 3 of your pieces!</source>
-        <target>Vous ne pouvez pas déplacer plus de 3 de vos pièces !</target>
+      <trans-unit id="2467835697178117742" datatype="html">
+        <source>You cannot move more than <x id="PH" equiv-text="n"/> of your pieces!</source>
+        <target>Vous ne pouvez pas déplacer plus de <x id="PH" equiv-text="n"/> de vos pièces !</target>
       </trans-unit>
       <trans-unit id="4278049889323552316" datatype="html">
         <source>You don&apos;t have enough pieces to push that group!</source>
@@ -1116,6 +1116,14 @@
       <trans-unit id="6088417909306773667" datatype="html">
         <source>This space is not aligned with the current line.</source>
         <target>Cette case n&apos;est pas alignée avec la ligne actuellement formée.</target>
+      </trans-unit>
+      <trans-unit id="6143015419857143046" datatype="html">
+        <source>Number of pieces to capture</source>
+        <target>Nombre de pièces à capturer</target>
+      </trans-unit>
+      <trans-unit id="1103013531201615772" datatype="html">
+        <source>Maximum pushing group size</source>
+        <target>Taille maximum d'un groupe poussant</target>
       </trans-unit>
       <trans-unit id="8893431763975992974" datatype="html">
         <source>Initial board and object of the game</source>

@@ -14,8 +14,7 @@ import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { AbaloneFailure } from './AbaloneFailure';
 import { AbaloneState } from './AbaloneState';
 import { AbaloneMove } from './AbaloneMove';
-import { AbaloneLegalityInformation, AbaloneRules } from './AbaloneRules';
-import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { AbaloneConfig, AbaloneLegalityInformation, AbaloneRules } from './AbaloneRules';
 import { AbaloneMoveGenerator } from './AbaloneMoveGenerator';
 import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 import { Arrow } from 'src/app/components/game-components/arrow-component/Arrow';
@@ -45,7 +44,7 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneRules,
                                                              AbaloneMove,
                                                              AbaloneState,
                                                              FourStatePiece,
-                                                             EmptyRulesConfig,
+                                                             AbaloneConfig,
                                                              AbaloneLegalityInformation>
 {
     public moveds: Coord[] = [];
@@ -187,6 +186,7 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneRules,
 
     private showDirection(): void {
         const state: AbaloneState = this.getState();
+        const config: MGPOptional<AbaloneConfig> = this.getConfig();
         for (const dir of HexaDirection.factory.all) {
             const startToEnd: AbaloneArrowInfo = this.getArrowPath(dir);
             let theoretical: AbaloneMove;
@@ -195,7 +195,7 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneRules,
             } else {
                 theoretical = AbaloneMove.ofDoubleCoord(startToEnd.start, startToEnd.end, dir);
             }
-            const isLegal: MGPFallible<AbaloneLegalityInformation> = this.rules.isLegal(theoretical, state);
+            const isLegal: MGPFallible<AbaloneLegalityInformation> = this.rules.isLegal(theoretical, state, config);
             if (isLegal.isSuccess()) {
                 const arrow: Arrow<HexaDirection> =
                     new Arrow<HexaDirection>(startToEnd.start,
@@ -255,7 +255,7 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneRules,
         }
         const distance: number = coord.getLinearDistanceToward(firstPiece);
         if (distance > 2) {
-            return this.cancelMove(AbaloneFailure.CANNOT_MOVE_MORE_THAN_THREE_PIECES());
+            return this.cancelMove(AbaloneFailure.CANNOT_MOVE_MORE_THAN_N_PIECES(3));
         }
         const alignment: Direction = firstPiece.getDirectionToward(coord).get();
         this.selecteds = [firstPiece];
@@ -304,7 +304,7 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneRules,
                     this.showPossibleDirections();
                     return MGPValidation.SUCCESS;
                 } else {
-                    return this.cancelMove(AbaloneFailure.CANNOT_MOVE_MORE_THAN_THREE_PIECES());
+                    return this.cancelMove(AbaloneFailure.CANNOT_MOVE_MORE_THAN_N_PIECES(3));
                 }
             }
         }

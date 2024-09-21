@@ -1,4 +1,5 @@
 /* eslint-disable max-lines-per-function */
+import { MGPOptional } from '@everyboard/lib';
 import { Coord } from 'src/app/jscaip/Coord';
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
 import { HexaDirection } from 'src/app/jscaip/HexaDirection';
@@ -8,9 +9,8 @@ import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { AbaloneFailure } from '../AbaloneFailure';
 import { AbaloneState } from '../AbaloneState';
 import { AbaloneMove } from '../AbaloneMove';
-import { AbaloneNode, AbaloneRules } from '../AbaloneRules';
+import { AbaloneConfig, AbaloneNode, AbaloneRules } from '../AbaloneRules';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
-import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 describe('AbaloneRules', () => {
 
@@ -19,7 +19,7 @@ describe('AbaloneRules', () => {
     const O: FourStatePiece = FourStatePiece.ZERO;
     const X: FourStatePiece = FourStatePiece.ONE;
     let rules: AbaloneRules;
-    const defaultConfig: NoConfig = AbaloneRules.get().getDefaultRulesConfig();
+    const defaultConfig: MGPOptional<AbaloneConfig> = AbaloneRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         rules = AbaloneRules.get();
@@ -28,7 +28,7 @@ describe('AbaloneRules', () => {
     it('should start with an ongoing board status', () => {
         const state: AbaloneState = AbaloneRules.get().getInitialState();
         const node: AbaloneNode = new AbaloneNode(state);
-        expect(rules.getGameStatus(node)).toBe(GameStatus.ONGOING);
+        expect(rules.getGameStatus(node, defaultConfig)).toBe(GameStatus.ONGOING);
     });
 
     it('should move simple piece in provided direction', () => {
@@ -120,7 +120,7 @@ describe('AbaloneRules', () => {
         const move: AbaloneMove = AbaloneMove.ofSingleCoord(new Coord(1, 4), HexaDirection.RIGHT);
 
         // Then the move should be illegal
-        const reason: string = AbaloneFailure.CANNOT_MOVE_MORE_THAN_THREE_PIECES();
+        const reason: string = AbaloneFailure.CANNOT_MOVE_MORE_THAN_N_PIECES(3);
         RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
     });
 
@@ -419,6 +419,72 @@ describe('AbaloneRules', () => {
         ];
         const expectedState: AbaloneState = new AbaloneState(expectedBoard, 1);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
+    });
+
+    describe('custom config', () => {
+
+        it('should allow part to end earlier when configured so', () => {
+            // Given a part that is configured with only one stone captured for victory
+            const customConfig: MGPOptional<AbaloneConfig> = MGPOptional.of({
+                ...defaultConfig.get(),
+                nbToCapture: 1,
+            });
+            const winningBoard: FourStatePiece[][] = [
+                [N, N, N, N, X, X, X, X, X],
+                [N, N, N, X, X, X, X, X, X],
+                [N, N, _, _, X, X, X, _, _],
+                [N, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, N],
+                [_, _, _, O, O, _, _, N, N],
+                [O, O, O, O, O, O, N, N, N],
+                [O, O, O, O, O, N, N, N, N],
+            ];
+            const winningState: AbaloneState = new AbaloneState(winningBoard, 1);
+            const node: AbaloneNode = new AbaloneNode(winningState);
+
+            // When evaluating the state status
+            // Then it should be a victory for Player.ONE
+            RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, customConfig);
+        });
+
+        it('should allow to push with 5 stone if config allows it', () => {
+            // Given a board with 5 piece aligned, and a config allowing to push them
+            const customConfig: MGPOptional<AbaloneConfig> = MGPOptional.of({
+                ...defaultConfig.get(),
+                maximumPushingGroupSize: 5,
+            });
+            const board: FourStatePiece[][] = [
+                [N, N, N, N, X, X, X, X, X],
+                [N, N, N, X, X, X, X, X, X],
+                [N, N, _, _, X, X, X, _, _],
+                [N, _, _, _, _, _, _, _, _],
+                [_, O, O, O, O, O, _, _, _],
+                [_, _, _, _, _, _, _, _, N],
+                [_, _, _, _, _, _, _, N, N],
+                [O, O, O, O, O, O, N, N, N],
+                [_, O, O, O, O, N, N, N, N],
+            ];
+            const state: AbaloneState = new AbaloneState(board, 0);
+
+            // When moving four piece
+            const move: AbaloneMove = AbaloneMove.ofSingleCoord(new Coord(1, 4), HexaDirection.RIGHT);
+
+            // Then the move should be legal
+            const expectedBoard: FourStatePiece[][] = [
+                [N, N, N, N, X, X, X, X, X],
+                [N, N, N, X, X, X, X, X, X],
+                [N, N, _, _, X, X, X, _, _],
+                [N, _, _, _, _, _, _, _, _],
+                [_, _, O, O, O, O, O, _, _],
+                [_, _, _, _, _, _, _, _, N],
+                [_, _, _, _, _, _, _, N, N],
+                [O, O, O, O, O, O, N, N, N],
+                [_, O, O, O, O, N, N, N, N],
+            ];
+            const expectedState: AbaloneState = new AbaloneState(expectedBoard, 1);
+            RulesUtils.expectMoveSuccess(rules, state, move, expectedState, customConfig);
+        });
     });
 
 });
