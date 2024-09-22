@@ -148,4 +148,43 @@ export class DvonnComponent extends HexagonalGameComponent<DvonnRules, DvonnMove
         return [playerColor];
     }
 
+    public getTextSizeClass(spaceContent: DvonnPieceStack): string {
+        if (spaceContent.containsSource()) {
+            if (spaceContent.size <= 9) {
+                return 'text-medium';
+            } else {
+                return 'text-28';
+            }
+        } else {
+            return 'text-38';
+        }
+    }
+
+    public getSourceSymbolTransform(spaceContent: DvonnPieceStack): string {
+        if (spaceContent.size === 1) { // 1 -> no number written
+            return 'translate(-18, -16) scale(0.10)';
+        } else if (spaceContent.size <= 9) { // 2 to 9 written
+            return 'translate(-3, -12) scale(0.07)';
+        } else { // [10, 49] written
+            return 'translate(3, -12) scale(0.06)';
+        }
+    }
+
+    public getTextTransform(spaceContent: DvonnPieceStack): string {
+        const containsSource: boolean = spaceContent.containsSource();
+        if (spaceContent.size <= 9) {
+            if (containsSource) { // X Z ou Z
+                return 'translate(-7, 0)';
+            } else { // X or ""
+                return 'translate(0, 0)';
+            }
+        } else {
+            if (containsSource) { // X X Z
+                return 'translate(-9, -3)';
+            } else { // X X
+                return 'translate(0, 0)';
+            }
+        }
+    }
+
 }
