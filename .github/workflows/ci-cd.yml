@@ -298,7 +298,7 @@ jobs:
                 cat > ~/.ssh/id_rsa <<< "$SSH_KEY"
                 chmod u+rw,go-rw,a-x ~/.ssh/id_rsa
                 cat > backend/service-account.json <<< "$SERVICE_ACCOUNT"
-                cd backend && make deploy target=master user=$SSH_USER server=$SSH_SERVER port=$SSH_PORT listen-port=8003 args="-no-emulator -project everyboard -origin 'https://everyboard.org' -endpoint 'https://firestore.googleapis.com'"
+                cd backend && make deploy target=master user=$SSH_USER server=$SSH_SERVER port=$SSH_PORT listen-port=8003 args="-no-emulator -project firestore-c9d47 -origin 'https://everyboard.org' -endpoint 'https://firestore.googleapis.com'"
               fi
           fi
         env:
