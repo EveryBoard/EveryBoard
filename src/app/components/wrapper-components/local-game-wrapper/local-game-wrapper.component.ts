@@ -283,7 +283,7 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
         await this.gameComponent.updateBoardAndRedraw(false);
         this.endGame = false;
         this.winnerMessage = MGPOptional.empty();
-        // await this.proposeAIToPlay();
+        await this.proposeAIToPlay();
     }
 
     public override getPlayer(): string {

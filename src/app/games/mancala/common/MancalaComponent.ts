@@ -88,12 +88,9 @@ export abstract class MancalaComponent<R extends MancalaRules>
     public async updateBoard(triggerAnimation: boolean): Promise<void> {
         const state: MancalaState = this.getState();
         if (triggerAnimation) {
-            //this.opponentMoveIsBeingAnimated = true; // TODO: put it back to false in case we cancel animation
-            //this.animationOngoing = true; // TODO: same
             await this.animateOpponentMove().catch((e: unknown) => {
                 // We need to catch promise failure here so that we stop any ongoing animation
                 if (e instanceof AnimationCancelled) {
-                    console.log('cancelled!')
                     this.opponentMoveIsBeingAnimated = false;
                     this.animationOngoing = false;
                     throw e;
@@ -156,7 +153,8 @@ export abstract class MancalaComponent<R extends MancalaRules>
         if (this.constructedState.getPieceAtXY(x, y) === 0) {
             return this.cancelMove(MancalaFailure.MUST_CHOOSE_NON_EMPTY_HOUSE());
         } else {
-            return this.continueMoveConstruction(x)        }
+            return this.continueMoveConstruction(x)
+        }
     }
 
     protected async continueMoveConstruction(x: number): Promise<MGPValidation> {
