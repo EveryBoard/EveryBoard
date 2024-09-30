@@ -153,7 +153,7 @@ export abstract class MancalaComponent<R extends MancalaRules>
         if (this.constructedState.getPieceAtXY(x, y) === 0) {
             return this.cancelMove(MancalaFailure.MUST_CHOOSE_NON_EMPTY_HOUSE());
         } else {
-            return this.continueMoveConstruction(x)
+            return this.continueMoveConstruction(x);
         }
     }
 
