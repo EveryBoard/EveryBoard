@@ -21,6 +21,13 @@ describe('RulesConfigurationComponent', () => {
         testUtils.detectChanges();
     }
 
+    function expectConfigToBeSelected(selectedConfigName: string, notSelectedNames: string[]): void {
+        testUtils.expectDropDownOptionToBeSelected('#config-drop-down-' + selectedConfigName);
+        for (const notSelectedName of notSelectedNames) {
+            testUtils.expectDropDownOptionNotToBeSelected('#config-drop-down-' + notSelectedName);
+        }
+    }
+
     beforeEach(async() => {
         const activatedRoute: ActivatedRouteStub = new ActivatedRouteStub('whatever-game');
         testUtils = await SimpleComponentTestUtils.create(RulesConfigurationComponent, activatedRoute);
@@ -49,7 +56,7 @@ describe('RulesConfigurationComponent', () => {
 
     const rulesConfigDescriptionWithBooleans: RulesConfigDescription<RulesConfig> = new RulesConfigDescription(
         {
-            name: (): string => 'config name',
+            name: (): string => 'config_name',
             config: {
                 booleen: new BooleanConfig(false, () => 'booleen'),
                 truth: new BooleanConfig(false, () => 'veritaserum'),
@@ -95,6 +102,7 @@ describe('RulesConfigurationComponent', () => {
             // When changing the chosen config
             await chooseConfig(1);
             expect(component.updateCallback.emit).toHaveBeenCalledOnceWith(MGPOptional.of(secondConfig));
+            expectConfigToBeSelected('the_other_config_name', ['custom', 'the_default_config_name']);
         }));
 
         it('should immediately emit on initialization when there is no config to fill', fakeAsync(async() => {
@@ -124,6 +132,7 @@ describe('RulesConfigurationComponent', () => {
                 canailleDeBoule: 12,
             });
             expect(component.updateCallback.emit).toHaveBeenCalledOnceWith(expectedValue);
+            expectConfigToBeSelected('the_default_config_name', ['custom', 'the_other_config_name']);
         }));
 
         describe('modifying custom configuration', () => {
@@ -155,6 +164,8 @@ describe('RulesConfigurationComponent', () => {
                     // Then the resulting value should be updated
                     const expectedValue: MGPOptional<RulesConfig> = MGPOptional.of({ nombre: 80, canailleDeBoule: 12 });
                     expect(component.updateCallback.emit).toHaveBeenCalledOnceWith(expectedValue);
+                    // And the name of the config should be to 'custom'
+                    expectConfigToBeSelected('custom', ['the_other_config_name', 'the_default_config_name']);
                 }));
 
                 it('should emit default value of the non modified fields when modifying another field', fakeAsync(async() => {
@@ -170,6 +181,8 @@ describe('RulesConfigurationComponent', () => {
                     // Then the resulting value should be the default, for the unmodified one
                     const expectedValue: MGPOptional<RulesConfig> = MGPOptional.of({ nombre: 5, canailleDeBoule: 80 });
                     expect(component.updateCallback.emit).toHaveBeenCalledOnceWith(expectedValue);
+                    // And the name of the config should be to 'custom'
+                    expectConfigToBeSelected('custom', ['the_other_config_name', 'the_default_config_name']);
                 }));
 
                 it('should emit an empty optional when applying invalid change', fakeAsync(async() => {
@@ -184,6 +197,7 @@ describe('RulesConfigurationComponent', () => {
 
                     // Then an optional should have been emitted to inform parent that child is failing math class !
                     expect(component.updateCallback.emit).toHaveBeenCalledOnceWith(MGPOptional.empty());
+                    expectConfigToBeSelected('custom', ['the_default_config_name', 'the_other_config_name']);
                 }));
 
                 describe('MGPValidators.range', () => {
@@ -202,6 +216,7 @@ describe('RulesConfigurationComponent', () => {
                         expect(testUtils.findElement('#nombre-error').nativeElement.innerHTML).toEqual('0 is too small, the minimum is 1');
                         // and the component should have emitted an empty optional
                         expect(component.updateCallback.emit).toHaveBeenCalledOnceWith(MGPOptional.empty());
+                        expectConfigToBeSelected('custom', ['the_default_config_name', 'the_other_config_name']);
                     }));
 
                     it('should display custom validation error when making the value too big', fakeAsync(async() => {
@@ -218,6 +233,7 @@ describe('RulesConfigurationComponent', () => {
                         expect(testUtils.findElement('#nombre-error').nativeElement.innerHTML).toEqual('100 is too big, the maximum is 99');
                         // and the component should have emitted an empty optional
                         expect(component.updateCallback.emit).toHaveBeenCalledOnceWith(MGPOptional.empty());
+                        expectConfigToBeSelected('custom', ['the_default_config_name', 'the_other_config_name']);
                     }));
 
                     it('should display custom validation error when erasing value', fakeAsync(async() => {
@@ -234,6 +250,7 @@ describe('RulesConfigurationComponent', () => {
                         expect(testUtils.findElement('#nombre-error').nativeElement.innerHTML).toEqual('This value is mandatory');
                         // and the component should have emitted an empty optional
                         expect(component.updateCallback.emit).toHaveBeenCalledOnceWith(MGPOptional.empty());
+                        expectConfigToBeSelected('custom', ['the_default_config_name', 'the_other_config_name']);
                     }));
 
                 });
@@ -267,6 +284,7 @@ describe('RulesConfigurationComponent', () => {
                     // Then the resulting value should be updated
                     const expectedValue: MGPOptional<RulesConfig> = MGPOptional.of({ booleen: false, truth: false });
                     expect(component.updateCallback.emit).toHaveBeenCalledOnceWith(expectedValue);
+                    expectConfigToBeSelected('custom', ['config_name']);
                 }));
 
                 it('should emit default value of the non modified fields when modifying another field', fakeAsync(async() => {
@@ -281,6 +299,7 @@ describe('RulesConfigurationComponent', () => {
                     // Then the resulting value should be the default, from the unmodified one
                     const expectedValue: MGPOptional<RulesConfig> = MGPOptional.of({ booleen: false, truth: true });
                     expect(component.updateCallback.emit).toHaveBeenCalledOnceWith(expectedValue);
+                    expectConfigToBeSelected('custom', ['config_name']);
                 }));
 
             });
@@ -337,6 +356,36 @@ describe('RulesConfigurationComponent', () => {
                 }, 'Config should be provided if RulesConfigurationComponent is not editable');
             }));
 
+            it('should recognize default config even when custom', () => {
+                // Given a displayed "custom" config that match a standard config named 'the_other_config_name'
+                component.rulesConfigToDisplay = {
+                    nombre: 42,
+                    canailleDeBoule: 42,
+                };
+                component.rulesConfigDescriptionOptional = MGPOptional.of(rulesConfigDescriptionWithNumber);
+
+                // When rendering component
+                testUtils.detectChanges();
+
+                // Then the name of the config should still be to 'the_other_config_name'
+                expectConfigToBeSelected('the_other_config_name', ['custom', 'the_default_config_name']);
+            });
+
+            it('should recognize real custom config', () => {
+                // Given a displayed config that match no other config
+                component.rulesConfigToDisplay = {
+                    nombre: 1,
+                    canailleDeBoule: 99,
+                };
+                component.rulesConfigDescriptionOptional = MGPOptional.of(rulesConfigDescriptionWithNumber);
+
+                // When rendering component
+                testUtils.detectChanges();
+
+                // Then the name of the config should be 'Custom'
+                expectConfigToBeSelected('custom', ['the_other_config_name', 'the_default_config_name']);
+            });
+
             describe('number config', () => {
 
                 it('should propose a disabled number input', fakeAsync(async() => {
@@ -353,7 +402,6 @@ describe('RulesConfigurationComponent', () => {
                     // Then there should be a fieldset, but disabled
                     testUtils.expectElementToBeDisabled('#nombre_number_config_input');
                 }));
-
 
             });
 

@@ -9,15 +9,20 @@
                 <select id="ruleSelect"
                         [disabled]="editable === false"
                         (change)="onChange($event)">
-                    <option [value]="rulesConfigDescription.getDefaultConfig().name()"
-                            selected>
+                    <option id="config-drop-down-{{ rulesConfigDescription.getDefaultConfig().name() }}"
+                            [value]="rulesConfigDescription.getDefaultConfig().name()"
+                            [selected]="isSelectedConfig(rulesConfigDescription.getDefaultConfig().name())">
                         {{ rulesConfigDescription.getDefaultConfig().name() }}
                     </option>
                     <option *ngFor="let standardConfig of rulesConfigDescription.getNonDefaultStandardConfigs()"
-                            [value]="standardConfig.name()">
+                            id="config-drop-down-{{ standardConfig.name() }}"
+                            [value]="standardConfig.name()"
+                            [selected]="isSelectedConfig(standardConfig.name())">
                         {{ standardConfig.name() }}
                     </option>
                     <option value="Custom"
+                            id="config-drop-down-custom"
+                            [selected]="isSelectedConfig('Custom')"
                             i18n>Custom</option>
                 </select>
             </div>
