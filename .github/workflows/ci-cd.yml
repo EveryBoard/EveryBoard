@@ -70,7 +70,11 @@ jobs:
         with:
           python-version: '3.10'
       - name: Install python dependencies
-        run: pip install lxml pandas
+        run: |
+          python -m venv venv
+          source venv/bin/activate
+          pip install --upgrade pip
+          pip install lxml pandas
       - name: Archive code coverage results
         if: always()
         uses: actions/upload-artifact@v3
@@ -138,7 +142,11 @@ jobs:
         with:
           python-version: '3.10'
       - name: Install python dependencies
-        run: pip install --upgrade selenium requests killport
+        run: |
+          python -m venv venv
+          source venv/bin/activate
+          pip install --upgrade pip
+          pip install selenium requests killport
       - name: Install OS dependencies
         run: sudo apt-get install -y libev-dev
       - name: Setup OCaml
@@ -219,7 +227,11 @@ jobs:
       - name: Setup dependencies (setup dummy Firebase secret)
         run: cp ./src/app/firebaseConfig.ts.dummy ./src/app/firebaseConfig.ts
       - name: Install python dependencies
-        run: pip install lxml
+        run: |
+          python -m venv venv
+          source venv/bin/activate
+          pip install --upgrade pip
+          pip install selenium requests killport
       - name: Update translations
         run: ./scripts/update-translations.sh
       - name: Check completeness of translations
