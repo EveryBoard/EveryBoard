@@ -82,7 +82,9 @@ jobs:
           name: code-coverage-report
           path: coverage/
       - name: Check coverage
-        run: python ./scripts/coverage.py check
+        run: |
+          source venv/bin/activate
+          python ./scripts/coverage.py check
 
   tests-back:
     runs-on: ubuntu-latest
@@ -158,7 +160,9 @@ jobs:
       - name: Build
         run: cd backend && make
       - name: Run e2e tests
-        run: npm run e2e
+        run: |
+          source venv/bin/activate
+          npm run e2e
 
   linter:
     runs-on: ubuntu-latest
@@ -233,9 +237,13 @@ jobs:
           pip install --upgrade pip
           pip install selenium requests killport
       - name: Update translations
-        run: ./scripts/update-translations.sh
+        run: |
+          source venv/bin/activate
+          ./scripts/update-translations.sh
       - name: Check completeness of translations
-        run: ./scripts/check-translations.sh
+        run: |
+          source venv/bin/activate
+          ./scripts/check-translations.sh
 
   deployment:
     runs-on: ubuntu-latest
