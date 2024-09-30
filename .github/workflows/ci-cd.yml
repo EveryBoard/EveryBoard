@@ -8,7 +8,7 @@ on:
 
 jobs:
   build-front:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
       - name: Checkout the repository
         uses: actions/checkout@v4
@@ -37,7 +37,7 @@ jobs:
         run: npm run build
 
   tests-front:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     needs: build-front
     steps:
       - name: Checkout the repository
@@ -87,7 +87,7 @@ jobs:
           python ./scripts/coverage.py check
 
   tests-back:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
     - name: Checkout the repository
       uses: actions/checkout@v4
@@ -113,7 +113,7 @@ jobs:
       run: cd backend && make check-coverage
 
   e2e:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     needs: [ build-front, tests-front, tests-back ]
     steps:
       - name: Checkout the repository
@@ -165,7 +165,7 @@ jobs:
           npm run e2e
 
   linter:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     needs: build-front
     steps:
       - name: Checkout the repository
@@ -195,7 +195,7 @@ jobs:
         run: npm run lint
 
   images:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     needs: build-front
     steps:
       - name: Checkout the repository
@@ -204,7 +204,7 @@ jobs:
         run: ./scripts/check-images.sh
 
   translations:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     needs: build-front
     steps:
       - name: Checkout the repository
@@ -246,7 +246,7 @@ jobs:
           ./scripts/check-translations.sh
 
   deployment:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     needs: [ build-front, tests-front, tests-back, linter, images, translations ]
     environment: netlify
     if: github.event_name == 'push' &&
@@ -355,7 +355,7 @@ jobs:
           SERVICE_ACCOUNT: ${{ secrets.EVERYBOARD_DEPLOY_SERVICE_ACCOUNT_DEV }}
 
   deployment-netlify:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     needs: [ build-front ]
     environment: netlify
     steps:
