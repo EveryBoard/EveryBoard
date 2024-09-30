@@ -17,9 +17,9 @@
                     pointer-events="fill"
             />
             <text id="player-zero-tiles-count"
-                  class="text-medium"
-                  x="-5"
-                  y="5"
+                  class="backgrounded-text"
+                  [attr.transform]="getRemainingPieceQuantityTransform(piece)"
+                  [attr.font-size]="getRemainingPieceQuantityStrokeWidth(piece) + 'px'"
             >{{ getRemainingPieceQuantity(piece) }}</text>
         </g>
     </g>
