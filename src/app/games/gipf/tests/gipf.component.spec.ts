@@ -49,11 +49,7 @@ describe('GipfComponent', () => {
             const move: GipfMove = new GipfMove(new GipfPlacement(new Coord(0, 4), MGPOptional.empty()), [], []);
 
             // Then the move should succeed and insert immediately the piece on that space
-<<<<<<< HEAD
             await testUtils.expectMoveSuccess('#click-0-4', move);
-=======
-            await testUtils.expectMoveSuccess('#click_0_4', move);
->>>>>>> cf13be49bd141762f359efdd4ab65ecb6de21e28
         }));
 
         it('should not accept selecting a non-border coord for placement', fakeAsync(async() => {
