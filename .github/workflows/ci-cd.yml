@@ -235,7 +235,7 @@ jobs:
           python -m venv venv
           source venv/bin/activate
           pip install --upgrade pip
-          pip install selenium requests killport
+          pip install lxml selenium requests killport
       - name: Update translations
         run: |
           source venv/bin/activate
