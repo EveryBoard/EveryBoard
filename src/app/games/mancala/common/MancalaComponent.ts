@@ -1,6 +1,6 @@
 import { MancalaState } from './MancalaState';
 import { RectangularGameComponent } from 'src/app/components/game-components/rectangular-game-component/RectangularGameComponent';
-import { MGPOptional, Set, MGPValidation, TimeUtils, Utils } from '@everyboard/lib';
+import { MGPOptional, Set, MGPValidation, TimeUtils, Utils, AnimationCancelled } from '@everyboard/lib';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Table, TableUtils } from 'src/app/jscaip/TableUtils';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
@@ -88,25 +88,37 @@ export abstract class MancalaComponent<R extends MancalaRules>
     public async updateBoard(triggerAnimation: boolean): Promise<void> {
         const state: MancalaState = this.getState();
         if (triggerAnimation) {
-            this.opponentMoveIsBeingAnimated = true;
-            this.animationOngoing = true;
-            Utils.assert(this.node.parent.isPresent(), 'triggerAnimation in store should be false at first turn');
-            this.changeVisibleState(this.node.parent.get().gameState);
-            let indexDistribution: number = 0;
-            const move: MancalaMove = this.node.previousMove.get();
-            for (const distributions of move) {
-                await this.showSeedBySeedDistribution(distributions);
-                if (indexDistribution + 1 < move.distributions.length) {
-                    // This prevent to wait 1sec at the end of the animation for nothing
-                    await TimeUtils.sleep(MancalaComponent.TIMEOUT_BETWEEN_LAPS);
+            await this.animateOpponentMove().catch((e: unknown) => {
+                // We need to catch promise failure here so that we stop any ongoing animation
+                if (e instanceof AnimationCancelled) {
+                    this.opponentMoveIsBeingAnimated = false;
+                    this.animationOngoing = false;
+                    throw e;
+                } else {
+                    // Something else failed, we want to be aware of this!
+                    throw e;
                 }
-                indexDistribution++;
-            }
+            });
             this.opponentMoveIsBeingAnimated = false;
             this.animationOngoing = false;
         }
         this.scores = MGPOptional.of(state.getScoresCopy());
         this.changeVisibleState(state);
+    }
+
+    private async animateOpponentMove(): Promise<void> {
+        Utils.assert(this.node.parent.isPresent(), 'triggerAnimation in store should be false at first turn');
+        this.changeVisibleState(this.node.parent.get().gameState);
+        let indexDistribution: number = 0;
+        const move: MancalaMove = this.node.previousMove.get();
+        for (const distributions of move) {
+            await this.showSeedBySeedDistribution(distributions);
+            if (indexDistribution + 1 < move.distributions.length) {
+                // Sleep between each lap, except after the last one
+                await TimeUtils.sleepForAnimation(MancalaComponent.TIMEOUT_BETWEEN_LAPS);
+            }
+            indexDistribution++;
+        }
     }
 
     public async onClick(x: number, y: number): Promise<MGPValidation> {
@@ -118,7 +130,16 @@ export abstract class MancalaComponent<R extends MancalaRules>
             return MGPValidation.SUCCESS;
         } else {
             this.animationOngoing = true;
-            const result: MGPValidation = await this.onLegalClick(x, y);
+            const result: MGPValidation = await this.onLegalClick(x, y).catch((e: unknown) => {
+                // We need to catch promise failure here so that we stop any ongoing animation
+                if (e instanceof AnimationCancelled) {
+                    this.animationOngoing = false;
+                    return MGPValidation.failure('Animation has been canceled');
+                } else {
+                    // Something else failed, we want to be aware of this!
+                    throw e;
+                }
+            });
             this.animationOngoing = false;
             return result;
         }
@@ -221,7 +242,7 @@ export abstract class MancalaComponent<R extends MancalaRules>
                 seedDropResult.resultingState.setPieceAt(seedDropResult.houseToDistribute, 0);
             // Changing immediately the chosen house
             this.changeVisibleState(seedDropResult.resultingState);
-            await TimeUtils.sleep(MancalaComponent.TIMEOUT_BETWEEN_SEEDS);
+            await TimeUtils.sleepForAnimation(MancalaComponent.TIMEOUT_BETWEEN_SEEDS);
             while (seedDropResult.seedsInHand > 0) {
                 seedDropResult = await this.showSeedDrop(seedDropResult,
                                                          config,
@@ -234,7 +255,7 @@ export abstract class MancalaComponent<R extends MancalaRules>
                     seedDropResult.resultingState.getPieceAt(seedDropResult.houseToDistribute);
                 mustDoOneMoreLap = lastHouseContent !== 1 && lastHouseContent !== 4;
                 if (mustDoOneMoreLap) {
-                    await TimeUtils.sleep(MancalaComponent.TIMEOUT_BETWEEN_LAPS);
+                    await TimeUtils.sleepForAnimation(MancalaComponent.TIMEOUT_BETWEEN_LAPS);
                 }
             }
         }
@@ -273,7 +294,7 @@ export abstract class MancalaComponent<R extends MancalaRules>
         }
         this.changeVisibleState(resultingState);
         if (seedsInHand > 0) {
-            await TimeUtils.sleep(MancalaComponent.TIMEOUT_BETWEEN_SEEDS);
+            await TimeUtils.sleepForAnimation(MancalaComponent.TIMEOUT_BETWEEN_SEEDS);
         }
         return { houseToDistribute, currentDropIsStore, seedsInHand, resultingState };
     }
