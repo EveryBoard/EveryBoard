@@ -19,6 +19,7 @@ fdescribe('RulesConfigurationComponent', () => {
         selectAI.value = selectAI.options[configIndex].value;
         selectAI.dispatchEvent(new Event('change'));
         testUtils.detectChanges();
+<<<<<<< HEAD
     }
 
     function expectConfigToBeSelected(selectedConfigName: string, notSelectedNames: string[]): void {
@@ -26,6 +27,8 @@ fdescribe('RulesConfigurationComponent', () => {
         for (const notSelectedName of notSelectedNames) {
             testUtils.expectDropDownOptionNotToBeSelected('#config-drop-down-' + notSelectedName);
         }
+=======
+>>>>>>> cf13be49bd141762f359efdd4ab65ecb6de21e28
     }
 
     beforeEach(async() => {
@@ -65,7 +68,10 @@ fdescribe('RulesConfigurationComponent', () => {
     );
 
     describe('editable behavior', () => {
+<<<<<<< HEAD
 
+=======
+>>>>>>> cf13be49bd141762f359efdd4ab65ecb6de21e28
         beforeEach(fakeAsync(async() => {
             // Given an editable component
             component.editable = true;
@@ -404,6 +410,10 @@ fdescribe('RulesConfigurationComponent', () => {
                     testUtils.expectElementToBeDisabled('#nombre_number_config_input');
                 }));
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> cf13be49bd141762f359efdd4ab65ecb6de21e28
             });
 
             describe('boolean config', () => {

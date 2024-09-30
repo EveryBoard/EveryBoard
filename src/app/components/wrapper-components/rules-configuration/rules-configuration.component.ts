@@ -163,10 +163,10 @@ export class RulesConfigurationComponent extends BaseWrapperComponent implements
             const defaultConfig: RulesConfig = this.rulesConfigDescription.getDefaultConfig().config;
             this.generateForm(defaultConfig, this.editable);
         } else {
-            const config: RulesConfig = this.rulesConfigDescription.getConfig(this.chosenConfigName);
-            this.generateForm(config, false);
+            const chosenConfig: RulesConfig = this.rulesConfigDescription.getConfig(this.chosenConfigName);
+            this.generateForm(chosenConfig, false);
             // Emit the config directly because standard config are always legal
-            this.updateCallback.emit(MGPOptional.of(config));
+            this.updateCallback.emit(MGPOptional.of(chosenConfig));
         }
     }
 
