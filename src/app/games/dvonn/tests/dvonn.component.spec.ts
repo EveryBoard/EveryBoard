@@ -15,9 +15,11 @@ describe('DvonnComponent', () => {
     let testUtils: ComponentTestUtils<DvonnComponent>;
 
     const __: DvonnPieceStack = DvonnPieceStack.EMPTY;
-    const D_: DvonnPieceStack = DvonnPieceStack.SOURCE;
-    const W_: DvonnPieceStack = DvonnPieceStack.PLAYER_ZERO;
-    const WW: DvonnPieceStack = new DvonnPieceStack(Player.ZERO, 2, false);
+    const S_: DvonnPieceStack = DvonnPieceStack.SOURCE;
+    const O_: DvonnPieceStack = DvonnPieceStack.PLAYER_ZERO;
+    const OO: DvonnPieceStack = new DvonnPieceStack(Player.ZERO, 2, false);
+    const OK: DvonnPieceStack = new DvonnPieceStack(Player.ZERO, 10, false);
+    const OS: DvonnPieceStack = DvonnPieceStack.append(OK, S_);
 
     beforeEach(fakeAsync(async() => {
         testUtils = await ComponentTestUtils.forGame<DvonnComponent>('Dvonn');
@@ -45,11 +47,11 @@ describe('DvonnComponent', () => {
     it('should allow to pass if stuck position', fakeAsync(async() => {
         // Given a state where the player can't make a move
         const board: Table<DvonnPieceStack> = [
-            [__, __, WW, __, __, __, __, __, __, __, __],
-            [__, __, D_, __, __, __, __, __, __, __, __],
+            [__, __, OO, __, __, __, __, __, __, __, __],
+            [__, __, S_, __, __, __, __, __, __, __, __],
             [__, __, __, __, __, __, __, __, __, __, __],
             [__, __, __, __, __, __, __, __, __, __, __],
-            [__, __, __, __, __, __, __, __, __, __, __],
+            [__, __, __, __, __, __, __, OS, OK, __, __],
         ];
         const state: DvonnState = new DvonnState(board, 0, false);
         // When it is displayed
@@ -67,8 +69,8 @@ describe('DvonnComponent', () => {
     it('should show disconnection precisely', fakeAsync(async() => {
         // Given board with pieces in danger of being disconnected
         const board: Table<DvonnPieceStack> = [
-            [__, __, WW, __, __, __, __, __, __, __, __],
-            [__, __, D_, W_, W_, __, __, __, __, __, __],
+            [__, __, OO, __, __, __, __, __, __, __, __],
+            [__, __, S_, O_, O_, __, __, __, __, __, __],
             [__, __, __, __, __, __, __, __, __, __, __],
             [__, __, __, __, __, __, __, __, __, __, __],
             [__, __, __, __, __, __, __, __, __, __, __],
@@ -88,8 +90,8 @@ describe('DvonnComponent', () => {
     it('should show disconnection with the right font size', fakeAsync(async() => {
         // Given a board with with pieces in danger of being disconnected
         const board: Table<DvonnPieceStack> = [
-            [__, __, WW, __, __, __, __, __, __, __, __],
-            [__, __, D_, W_, WW, __, __, __, __, __, __],
+            [__, __, OO, __, __, __, __, __, __, __, __],
+            [__, __, S_, O_, OO, __, __, __, __, __, __],
             [__, __, __, __, __, __, __, __, __, __, __],
             [__, __, __, __, __, __, __, __, __, __, __],
             [__, __, __, __, __, __, __, __, __, __, __],
@@ -131,9 +133,9 @@ describe('DvonnComponent', () => {
     it('should allow selecting another piece when one is already selected (invalid move)', fakeAsync(async() => {
         // Given a board where the user has selected a piece
         const board: Table<DvonnPieceStack> = [
-            [__, __, W_, __, __, __, __, __, __, __, __],
-            [__, __, D_, W_, W_, __, __, __, __, __, __],
-            [__, __, W_, __, __, __, __, __, __, __, __],
+            [__, __, O_, __, __, __, __, __, __, __, __],
+            [__, __, S_, O_, O_, __, __, __, __, __, __],
+            [__, __, O_, __, __, __, __, __, __, __, __],
             [__, __, __, __, __, __, __, __, __, __, __],
             [__, __, __, __, __, __, __, __, __, __, __],
         ];
@@ -150,9 +152,9 @@ describe('DvonnComponent', () => {
     it('should allow selecting another piece when one is already selected (illegal move)', fakeAsync(async() => {
         // Given a board where the user has selected a piece
         const board: Table<DvonnPieceStack> = [
-            [__, __, W_, __, __, __, __, __, __, __, __],
-            [__, __, D_, W_, W_, __, __, __, __, __, __],
-            [__, __, W_, __, __, __, __, __, __, __, __],
+            [__, __, O_, __, __, __, __, __, __, __, __],
+            [__, __, S_, O_, O_, __, __, __, __, __, __],
+            [__, __, O_, __, __, __, __, __, __, __, __],
             [__, __, __, __, __, __, __, __, __, __, __],
             [__, __, __, __, __, __, __, __, __, __, __],
         ];

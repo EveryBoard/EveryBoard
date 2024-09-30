@@ -18,15 +18,16 @@
                     [attr.r]="SPACE_SIZE"
                     [ngClass]="getPieceClasses(spaceContent)"
                     class="base mid-stroke"/>
-            <polygon *ngIf="spaceContent.containsSource()"
+            <polygon id="source-symbol-{{ coord.x }}-{{ coord.y }}"
+                     *ngIf="spaceContent.containsSource()"
                      class="nonplayer-light-fill"
                      points="157.055,0 90.798,196.319 164.417,196.319 88.344,400 289.571,159.509 218.405,159.509 311.656,0"
-                     [attr.transform]="spaceContent.getSize() === 1 ? 'translate(-18, -16) scale(0.10)' : 'translate(-3, -12) scale(0.07)'"/>
+                     [attr.transform]="getSourceSymbolTransform(spaceContent)"/>
             <text *ngIf="spaceContent.getSize() > 1"
                   (click)="onClick(coord.x, coord.y)"
-                  [attr.x]="spaceContent.containsSource() ? -7 : 0"
-                  y="0"
-                  class="text-center text-medium"
+                  [attr.transform]="getTextTransform(spaceContent)"
+                  class="text-center"
+                  [ngClass]="getTextSizeClass(spaceContent)"
                   dy="13">{{ spaceContent.getSize() }}</text>
 
         </g>
