@@ -1117,9 +1117,9 @@
         <source>This space is not aligned with the current line.</source>
         <target>Cette case n&apos;est pas alignée avec la ligne actuellement formée.</target>
       </trans-unit>
-      <trans-unit id="6143015419857143046" datatype="html">
-        <source>Number of pieces to capture</source>
-        <target>Nombre de pièces à capturer</target>
+      <trans-unit id="7060616157443124451" datatype="html">
+        <source>Number of pieces to capture in order to win</source>
+        <target>Nombre de pièces à capturer pour gagner</target>
       </trans-unit>
       <trans-unit id="1103013531201615772" datatype="html">
         <source>Maximum pushing group size</source>

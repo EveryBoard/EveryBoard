@@ -848,8 +848,8 @@
       <trans-unit id="6088417909306773667" datatype="html">
         <source>This space is not aligned with the current line.</source>
       </trans-unit>
-      <trans-unit id="6143015419857143046" datatype="html">
-        <source>Number of pieces to capture</source>
+      <trans-unit id="7060616157443124451" datatype="html">
+        <source>Number of pieces to capture in order to win</source>
       </trans-unit>
       <trans-unit id="1103013531201615772" datatype="html">
         <source>Maximum pushing group size</source>

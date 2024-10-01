@@ -36,9 +36,9 @@ export class AbaloneRules extends ConfigurableRules<AbaloneMove,
 
     public static readonly RULES_CONFIG_DESCRIPTION: RulesConfigDescription<AbaloneConfig> =
         new RulesConfigDescription<AbaloneConfig>({
-            name: (): string => $localize`Apagos`,
+            name: (): string => $localize`Abalone`,
             config: {
-                nbToCapture: new NumberConfig(6, () => $localize`Number of pieces to capture`, MGPValidators.range(1, 14)),
+                nbToCapture: new NumberConfig(6, () => $localize`Number of pieces to capture in order to win`, MGPValidators.range(1, 14)),
                 maximumPushingGroupSize: new NumberConfig(3, () => $localize`Maximum pushing group size`, MGPValidators.range(1, 9)),
             },
         });

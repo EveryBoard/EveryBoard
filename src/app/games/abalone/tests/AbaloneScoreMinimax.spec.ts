@@ -4,6 +4,7 @@ import { AbaloneConfig, AbaloneRules } from '../AbaloneRules';
 import { minimaxTest, SlowTest } from 'src/app/utils/tests/TestUtils.spec';
 import { MGPOptional } from '@everyboard/lib';
 import { AbaloneScoreMinimax } from '../AbaloneScoreMinimax';
+
 describe('AbaloneScoreMinimax', () => {
 
     const rules: AbaloneRules = AbaloneRules.get();

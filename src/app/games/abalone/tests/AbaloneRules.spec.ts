@@ -102,7 +102,7 @@ describe('AbaloneRules', () => {
     });
 
     it('should refuse moving group of piece greater than 3', () => {
-        // Given a board with 4 piece aligned
+        // Given a board with 4 pieces aligned
         const board: FourStatePiece[][] = [
             [N, N, N, N, _, _, _, _, _],
             [N, N, N, _, _, _, _, _, _],
@@ -116,7 +116,7 @@ describe('AbaloneRules', () => {
         ];
         const state: AbaloneState = new AbaloneState(board, 0);
 
-        // When moving four piece
+        // When moving four pieces
         const move: AbaloneMove = AbaloneMove.ofSingleCoord(new Coord(1, 4), HexaDirection.RIGHT);
 
         // Then the move should be illegal
@@ -125,7 +125,7 @@ describe('AbaloneRules', () => {
     });
 
     it(`should refuse moving group of piece smaller than the opponent's group`, () => {
-        // Given a board with 4 piece aligned
+        // Given a board with 4 pieces aligned
         const board: FourStatePiece[][] = [
             [N, N, N, N, _, _, _, _, _],
             [N, N, N, _, _, _, _, _, _],
@@ -148,7 +148,7 @@ describe('AbaloneRules', () => {
     });
 
     it('should refuse moving a group of piece of equal size to the opponent', () => {
-        // Given a board with 4 piece aligned
+        // Given a board with 4 pieces aligned
         const board: FourStatePiece[][] = [
             [N, N, N, N, _, _, _, _, _],
             [N, N, N, _, _, _, _, _, _],
@@ -308,7 +308,7 @@ describe('AbaloneRules', () => {
     });
 
     it('should refuse to translate a group containing non player piece', () => {
-        // Given a board with 2 aligned piece separated by a hole
+        // Given a board with 2 aligned pieces separated by a hole
         const board: FourStatePiece[][] = [
             [N, N, N, N, _, _, _, _, _],
             [N, N, N, _, _, _, _, _, _],
@@ -354,7 +354,7 @@ describe('AbaloneRules', () => {
     });
 
     it('should do sidestep landing on UNREACHABLE the same way as outside the array board', () => {
-        // Given a state allowing to translate two piece, one of them going to UNREACHABLE
+        // Given a state allowing to translate two pieces, one of them going to UNREACHABLE
         const board: FourStatePiece[][] = [
             [N, N, N, N, X, X, X, X, X],
             [N, N, N, X, X, X, X, X, X],
@@ -424,7 +424,7 @@ describe('AbaloneRules', () => {
     describe('custom config', () => {
 
         it('should allow part to end earlier when configured so', () => {
-            // Given a part that is configured with only one stone captured for victory
+            // Given a part that is configured with only one piece captured for victory
             const customConfig: MGPOptional<AbaloneConfig> = MGPOptional.of({
                 ...defaultConfig.get(),
                 nbToCapture: 1,
@@ -448,8 +448,8 @@ describe('AbaloneRules', () => {
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, customConfig);
         });
 
-        it('should allow to push with 5 stone if config allows it', () => {
-            // Given a board with 5 piece aligned, and a config allowing to push them
+        it('should allow to push with 5 pieces if config allows it', () => {
+            // Given a board with 5 pieces aligned, and a config allowing to push them
             const customConfig: MGPOptional<AbaloneConfig> = MGPOptional.of({
                 ...defaultConfig.get(),
                 maximumPushingGroupSize: 5,
@@ -467,7 +467,7 @@ describe('AbaloneRules', () => {
             ];
             const state: AbaloneState = new AbaloneState(board, 0);
 
-            // When moving four piece
+            // When moving fives pieces
             const move: AbaloneMove = AbaloneMove.ofSingleCoord(new Coord(1, 4), HexaDirection.RIGHT);
 
             // Then the move should be legal
