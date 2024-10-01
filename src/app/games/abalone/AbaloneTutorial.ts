@@ -22,22 +22,14 @@ export class AbaloneTutorial extends Tutorial {
         ),
         TutorialStep.anyMove(
             $localize`Moving a piece`,
-            $localize`At each turn, move one, two, or three pieces either along their line, or on their side.
-        For your moves you can therefore choose between up to 6 directions.
-        The pieces you move must be aligned and consecutive, and the move should land on an empty space (except to push, we will see that later).
-        To make a move, click on one of your pieces, then click on an arrow to choose the move direction.<br/><br/>
-        You're playing Dark, make any move!`,
+            $localize`At each turn, move one, two, or three pieces either along their line, or on their side. For your moves you can therefore choose between up to 6 directions. The pieces you move must be aligned and consecutive, and the move should land on an empty space (except to push, we will see that later). To make a move, click on one of your pieces, then click on an arrow to choose the move direction.<br/><br/> You're playing Dark, make any move!`,
             AbaloneRules.get().getInitialState(),
             AbaloneMove.ofSingleCoord(new Coord(2, 6), HexaDirection.UP),
             TutorialStepMessage.CONGRATULATIONS(),
         ),
         TutorialStep.fromMove(
             $localize`Pushing`,
-            $localize`To push one opponent piece, you must move at least two of your pieces.
-        To push two opponent pieces, you must move three of your pieces.
-        If one of your pieces is in the way, it will be impossible to push.
-        You cannot move more than three pieces.<br/><br/>
-        Only one push towards the right is possible here, find it. (You're playing Dark).`,
+            $localize`To push one opponent piece, you must move at least two of your pieces. To push two opponent pieces, you must move three of your pieces. If one of your pieces is in the way, it will be impossible to push. You cannot move more than three pieces.<br/><br/> Only one push towards the right is possible here, find it. (You're playing Dark).`,
             new AbaloneState([
                 [N, N, N, N, _, O, O, X, X],
                 [N, N, N, _, _, _, _, _, _],

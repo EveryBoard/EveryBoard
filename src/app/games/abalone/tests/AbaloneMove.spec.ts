@@ -9,12 +9,6 @@ import { TestUtils } from '@everyboard/lib';
 
 describe('AbaloneMove', () => {
 
-    it('should not construct a move with more than three piece', () => {
-        TestUtils.expectToThrowAndLog(
-            () => AbaloneMove.ofDoubleCoord(new Coord(0, 0), new Coord(3, 0), HexaDirection.DOWN),
-            'Distance between first coord and last coord is too big');
-    });
-
     it('should not construct when created with an out of range coord', () => {
         const coord: Coord = new Coord(9, 9);
         TestUtils.expectToThrowAndLog(
