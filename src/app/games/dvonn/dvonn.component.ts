@@ -153,10 +153,10 @@ export class DvonnComponent extends HexagonalGameComponent<DvonnRules, DvonnMove
             if (spaceContent.size <= 9) {
                 return 'text-medium';
             } else {
-                return 'text-28';
+                return 'text-small-plus';
             }
         } else {
-            return 'text-38';
+            return 'text-medium-plus';
         }
     }
 
