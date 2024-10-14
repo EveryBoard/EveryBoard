@@ -47,6 +47,10 @@ export abstract class GameStateWithTable<P extends NonNullable<unknown>> extends
         return coord.isInRange(width, height);
     }
 
+    public isNotOnBoard(coord: Coord): boolean {
+        return this.isOnBoard(coord) === false; // TODO reuse
+    }
+
     public getPieceAtXY(x: number, y: number): P {
         return this.getPieceAt(new Coord(x, y));
     }

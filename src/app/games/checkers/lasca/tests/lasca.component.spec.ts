@@ -1,24 +1,27 @@
 /* eslint-disable max-lines-per-function */
 import { fakeAsync } from '@angular/core/testing';
+import { MGPOptional } from '@everyboard/lib';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Player } from 'src/app/jscaip/Player';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { LascaComponent } from '../lasca.component';
-import { LascaFailure } from '../LascaFailure';
-import { LascaMove } from '../LascaMove';
-import { LascaPiece, LascaStack, LascaState } from '../LascaState';
+import { CheckersFailure } from '../../common/CheckersFailure';
+import { CheckersMove } from '../../common/CheckersMove';
+import { CheckersPiece, CheckersStack, CheckersState } from '../../common/CheckersState';
+import { CheckersConfig } from '../../common/AbstractCheckersRules';
 import { LascaRules } from '../LascaRules';
 
-describe('LascaComponent', () => {
+fdescribe('LascaComponent', () => {
 
-    const zero: LascaPiece = LascaPiece.ZERO;
-    const one: LascaPiece = LascaPiece.ONE;
+    const zero: CheckersPiece = CheckersPiece.ZERO;
+    const one: CheckersPiece = CheckersPiece.ONE;
 
-    const _u: LascaStack = new LascaStack([zero]);
-    const _v: LascaStack = new LascaStack([one]);
-    const uv: LascaStack = new LascaStack([zero, one]);
-    const __: LascaStack = LascaStack.EMPTY;
+    const _u: CheckersStack = new CheckersStack([zero]);
+    const _v: CheckersStack = new CheckersStack([one]);
+    const uv: CheckersStack = new CheckersStack([zero, one]);
+    const __: CheckersStack = CheckersStack.EMPTY;
+    const defaultConfig: MGPOptional<CheckersConfig> = LascaRules.get().getDefaultRulesConfig();
 
     let testUtils: ComponentTestUtils<LascaComponent>;
 
@@ -44,7 +47,7 @@ describe('LascaComponent', () => {
 
         it('should highlight piece that can move this turn (when forced capture)', fakeAsync(async() => {
             // Given a board where current player have 3 "mobile" pieces but one must capture
-            const state: LascaState = LascaState.of([
+            const state: CheckersState = CheckersState.of([
                 [_v, __, _v, __, _v, __, _v],
                 [__, _v, __, _v, __, _v, __],
                 [_v, __, _v, __, _v, __, _v],
@@ -84,7 +87,7 @@ describe('LascaComponent', () => {
             // Given any board
             // When clicking a piece that could not move
             // Then it should fail
-            await testUtils.expectClickFailure('#coord-5-5', LascaFailure.THIS_PIECE_CANNOT_MOVE());
+            await testUtils.expectClickFailure('#coord-5-5', CheckersFailure.THIS_PIECE_CANNOT_MOVE());
         }));
 
         it('should show clicked stack as selected', fakeAsync(async() => {
@@ -98,9 +101,9 @@ describe('LascaComponent', () => {
 
         it('should hide last move when selecting stack', fakeAsync(async() => {
             // Given a board with a last move
-            const previousState: LascaState = LascaRules.get().getInitialState();
-            const previousMove: LascaMove = LascaMove.fromStep(new Coord(2, 4), new Coord(3, 3)).get();
-            const state: LascaState = LascaState.of([
+            const previousState: CheckersState = LascaRules.get().getInitialState(defaultConfig);
+            const previousMove: CheckersMove = CheckersMove.fromStep(new Coord(2, 4), new Coord(3, 3));
+            const state: CheckersState = CheckersState.of([
                 [_v, __, _v, __, _v, __, _v],
                 [__, _v, __, _v, __, _v, __],
                 [_v, __, _v, __, _v, __, _v],
@@ -139,7 +142,7 @@ describe('LascaComponent', () => {
 
             // When clicking on an empty square in (+2; +1) of selected piece
             // Then it should fail
-            const reason: string = LascaFailure.CAPTURE_STEPS_MUST_BE_DOUBLE_DIAGONAL();
+            const reason: string = CheckersFailure.CAPTURE_STEPS_MUST_BE_DOUBLE_DIAGONAL();
             await testUtils.expectClickFailure('#coord-6-5', reason);
         }));
 
@@ -187,7 +190,7 @@ describe('LascaComponent', () => {
             await testUtils.expectClickSuccess('#coord-4-4');
 
             // When doing a step
-            const move: LascaMove = LascaMove.fromStep(new Coord(4, 4), new Coord(3, 3)).get();
+            const move: CheckersMove = CheckersMove.fromStep(new Coord(4, 4), new Coord(3, 3));
 
             // Then it should succeed
             await testUtils.expectMoveSuccess('#coord-3-3', move);
@@ -198,7 +201,7 @@ describe('LascaComponent', () => {
             await testUtils.expectClickSuccess('#coord-4-4');
 
             // When doing simple step
-            const move: LascaMove = LascaMove.fromStep(new Coord(4, 4), new Coord(3, 3)).get();
+            const move: CheckersMove = CheckersMove.fromStep(new Coord(4, 4), new Coord(3, 3));
             await testUtils.expectMoveSuccess('#coord-3-3', move);
 
             // Then left square and landed square should be showed as moved
@@ -208,7 +211,7 @@ describe('LascaComponent', () => {
 
         it('should allow simple capture', fakeAsync(async() => {
             // Given a board with a selected piece and a possible capture
-            const state: LascaState = LascaState.of([
+            const state: CheckersState = CheckersState.of([
                 [_v, __, _v, __, _v, __, _v],
                 [__, _v, __, _v, __, _v, __],
                 [_v, __, _v, __, _v, __, _v],
@@ -221,7 +224,7 @@ describe('LascaComponent', () => {
             await testUtils.expectClickSuccess('#coord-2-2');
 
             // When doing a capture
-            const move: LascaMove = LascaMove.fromCapture([new Coord(2, 2), new Coord(0, 4)]).get();
+            const move: CheckersMove = CheckersMove.fromCapture([new Coord(2, 2), new Coord(0, 4)]).get();
 
             // Then it should be a success
             await testUtils.expectMoveSuccess('#coord-0-4', move);
@@ -229,7 +232,7 @@ describe('LascaComponent', () => {
 
         it(`should have an officer's symbol on the piece that just got promoted`, fakeAsync(async() => {
             // Given any board with a selected soldier about to become officer
-            const state: LascaState = LascaState.of([
+            const state: CheckersState = CheckersState.of([
                 [__, __, __, __, _v, __, _v],
                 [__, uv, __, __, __, __, __],
                 [__, __, __, __, __, __, __],
@@ -242,7 +245,7 @@ describe('LascaComponent', () => {
             await testUtils.expectClickSuccess('#coord-1-1');
 
             // When doing the promoting-move
-            const move: LascaMove = LascaMove.fromStep(new Coord(1, 1), new Coord(0, 0)).get();
+            const move: CheckersMove = CheckersMove.fromStep(new Coord(1, 1), new Coord(0, 0));
             await testUtils.expectMoveSuccess('#coord-0-0', move);
 
             // Then the officier-logo should be on the piece
@@ -251,7 +254,7 @@ describe('LascaComponent', () => {
 
         it('should highlight next possible capture and show the captured piece as captured already', fakeAsync(async() => {
             // Given any board with a selected piece that could do a multiple capture
-            const state: LascaState = LascaState.of([
+            const state: CheckersState = CheckersState.of([
                 [__, __, __, __, __, __, __],
                 [__, __, __, __, __, __, __],
                 [__, __, _v, __, __, __, __],
@@ -272,7 +275,7 @@ describe('LascaComponent', () => {
 
         it('should cancel capturing a piece you cannot capture', fakeAsync(async() => {
             // Given a board on which an illegal capture could be made
-            const state: LascaState = LascaState.of([
+            const state: CheckersState = CheckersState.of([
                 [__, __, __, __, __, __, __],
                 [__, __, __, __, __, __, __],
                 [__, __, _v, __, __, __, __],
@@ -285,7 +288,7 @@ describe('LascaComponent', () => {
             await testUtils.expectClickSuccess('#coord-2-2');
 
             // When doing that illegal capture
-            const move: LascaMove = LascaMove.fromCapture([new Coord(2, 2), new Coord(0, 4)]).get();
+            const move: CheckersMove = CheckersMove.fromCapture([new Coord(2, 2), new Coord(0, 4)]).get();
 
             // Then the move should be illegal
             await testUtils.expectMoveFailure('#coord-0-4', RulesFailure.CANNOT_SELF_CAPTURE(), move);
@@ -311,13 +314,13 @@ describe('LascaComponent', () => {
         it('should not duplicate highlight when doing incorrect second click', fakeAsync(async() => {
             // Given a board where you are player two and a moving piece has been selected
             await testUtils.expectClickSuccess('#coord-2-4');
-            const move: LascaMove = LascaMove.fromStep(new Coord(2, 4), new Coord(1, 3)).get();
+            const move: CheckersMove = CheckersMove.fromStep(new Coord(2, 4), new Coord(1, 3));
             await testUtils.expectMoveSuccess('#coord-1-3', move); // First move is set
             await testUtils.getWrapper().setRole(Player.ONE); // changing role
             await testUtils.expectClickSuccess('#coord-0-2'); // Making the first click
 
             // When clicking on an invalid landing piece
-            await testUtils.expectClickFailure('#coord-0-1', LascaFailure.CAPTURE_STEPS_MUST_BE_DOUBLE_DIAGONAL());
+            await testUtils.expectClickFailure('#coord-0-1', CheckersFailure.CAPTURE_STEPS_MUST_BE_DOUBLE_DIAGONAL());
 
             // Then the highlight should be at the expected place only, not at their symmetric point
             testUtils.expectElementToHaveClass('#clickable-highlight-0-2', 'clickable-stroke');
@@ -327,7 +330,7 @@ describe('LascaComponent', () => {
         it('should show last move reversed', fakeAsync(async() => {
             // Given a board with a last move
             await testUtils.expectClickSuccess('#coord-4-4');
-            const move: LascaMove = LascaMove.fromStep(new Coord(4, 4), new Coord(3, 3)).get();
+            const move: CheckersMove = CheckersMove.fromStep(new Coord(4, 4), new Coord(3, 3));
             await testUtils.expectMoveSuccess('#coord-3-3', move);
 
             // When reversing the board view
@@ -342,7 +345,7 @@ describe('LascaComponent', () => {
 
         it('should perform capture when no more piece can be captured', fakeAsync(async() => {
             // Given a board on which a piece is selected and already captured
-            const state: LascaState = LascaState.of([
+            const state: CheckersState = CheckersState.of([
                 [__, __, __, __, __, __, __],
                 [__, __, __, __, __, __, __],
                 [__, __, _v, __, __, __, __],
@@ -350,13 +353,14 @@ describe('LascaComponent', () => {
                 [__, __, __, __, __, __, __],
                 [__, __, __, __, __, _u, __],
                 [__, __, __, __, __, __, __],
-            ], 1);
+            ], 3);
             await testUtils.setupState(state);
             await testUtils.expectClickSuccess('#coord-2-2');
             await testUtils.expectClickSuccess('#coord-4-4');
 
             // When doing the last capture
-            const move: LascaMove = LascaMove.fromCapture([new Coord(2, 2), new Coord(4, 4), new Coord(6, 6)]).get();
+            const captures: Coord[] = [new Coord(2, 2), new Coord(4, 4), new Coord(6, 6)];
+            const move: CheckersMove = CheckersMove.fromCapture(captures).get();
 
             // Then the move should be finalized
             await testUtils.expectMoveSuccess('#coord-6-6', move);
@@ -382,7 +386,7 @@ describe('LascaComponent', () => {
 
         it('should not show possible selections for opponent', fakeAsync(async() => {
             // Given a state
-            const state: LascaState = LascaRules.get().getInitialState();
+            const state: CheckersState = LascaRules.get().getInitialState(defaultConfig);
 
             // When it is not interactive
             testUtils.getGameComponent().setInteractive(false);

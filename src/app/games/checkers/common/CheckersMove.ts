@@ -1,21 +1,19 @@
-import { Coord, CoordFailure } from 'src/app/jscaip/Coord';
-import { Vector } from 'src/app/jscaip/Vector';
+import { Coord } from 'src/app/jscaip/Coord';
 import { Move } from 'src/app/jscaip/Move';
 import { ArrayUtils, Encoder, MGPFallible, MGPOptional, MGPUniqueList, Utils } from '@everyboard/lib';
-import { LascaFailure } from './LascaFailure';
-import { LascaState } from './LascaState';
+import { CheckersFailure } from './CheckersFailure';
 import { CoordSet } from 'src/app/jscaip/CoordSet';
 
-export class LascaMove extends Move {
+export class CheckersMove extends Move {
 
-    public static of(coords: Coord[], isStep: boolean): LascaMove {
-        return new LascaMove(coords, isStep);
+    private static of(coords: Coord[], isStep: boolean): CheckersMove {
+        return new CheckersMove(coords, isStep);
     }
 
-    public static fromCapture(coords: Coord[]): MGPFallible<LascaMove> {
-        const jumpsValidity: MGPFallible<CoordSet> = LascaMove.getSteppedOverCoords(coords);
+    public static fromCapture(coords: Coord[]): MGPFallible<CheckersMove> {
+        const jumpsValidity: MGPFallible<CoordSet> = CheckersMove.getSteppedOverCoords(coords);
         if (jumpsValidity.isSuccess()) {
-            return MGPFallible.success(new LascaMove(coords, false));
+            return MGPFallible.success(new CheckersMove(coords, false));
         } else {
             return MGPFallible.failure(jumpsValidity.getReason());
         }
@@ -25,18 +23,15 @@ export class LascaMove extends Move {
         let lastCoordOpt: MGPOptional<Coord> = MGPOptional.empty();
         let jumpedOverCoords: CoordSet = new CoordSet();
         for (const coord of steppedOn) {
-            if (LascaState.isNotOnBoard(coord)) {
-                return MGPFallible.failure(CoordFailure.OUT_OF_RANGE(coord));
-            }
             if (lastCoordOpt.isPresent()) {
                 const lastCoord: Coord = lastCoordOpt.get();
-                const vector: Vector = lastCoord.getVectorToward(coord);
-                if (vector.isDiagonalOfLength(2) === false) {
-                    return MGPFallible.failure(LascaFailure.CAPTURE_STEPS_MUST_BE_DOUBLE_DIAGONAL());
-                }
+                // const vector: Vector = lastCoord.getVectorToward(coord);
+                // if (vector.isDiagonalOfLength(2) === false) {
+                //     return MGPFallible.failure(CheckersFailure.CAPTURE_STEPS_MUST_BE_DOUBLE_DIAGONAL());
+                // } // TODO check that this is still illegal in rules
                 const jumpedOverCoord: Coord = lastCoord.getCoordsToward(coord)[0];
                 if (jumpedOverCoords.contains(jumpedOverCoord)) {
-                    return MGPFallible.failure(LascaFailure.CANNOT_CAPTURE_TWICE_THE_SAME_COORD());
+                    return MGPFallible.failure(CheckersFailure.CANNOT_CAPTURE_TWICE_THE_SAME_COORD());
                 }
                 jumpedOverCoords = jumpedOverCoords.addElement(jumpedOverCoord);
             }
@@ -45,24 +40,14 @@ export class LascaMove extends Move {
         return MGPFallible.success(jumpedOverCoords);
     }
 
-    public static fromStep(start: Coord, end: Coord): MGPFallible<LascaMove> {
-        if (LascaState.isNotOnBoard(start)) {
-            return MGPFallible.failure(CoordFailure.OUT_OF_RANGE(start));
-        }
-        if (LascaState.isNotOnBoard(end)) {
-            return MGPFallible.failure(CoordFailure.OUT_OF_RANGE(end));
-        }
-        const vector: Vector = start.getVectorToward(end);
-        if (vector.isDiagonalOfLength(1) === false) {
-            return MGPFallible.failure(LascaFailure.MOVE_STEPS_MUST_BE_SINGLE_DIAGONAL());
-        }
-        return MGPFallible.success(new LascaMove([start, end], true));
+    public static fromStep(start: Coord, end: Coord): CheckersMove {
+        return new CheckersMove([start, end], true);
     }
 
-    public static encoder: Encoder<LascaMove> = Encoder.tuple(
+    public static encoder: Encoder<CheckersMove> = Encoder.tuple(
         [Encoder.list(Coord.encoder), Encoder.identity<boolean>()],
-        (move: LascaMove) => [move.coords.toList(), move.isStep],
-        (fields: [Coord[], boolean]) => LascaMove.of(fields[0], fields[1]),
+        (move: CheckersMove) => [move.coords.toList(), move.isStep],
+        (fields: [Coord[], boolean]) => CheckersMove.of(fields[0], fields[1]),
     );
 
     public readonly coords: MGPUniqueList<Coord>;
@@ -75,10 +60,10 @@ export class LascaMove extends Move {
     public override toString(): string {
         const coordStrings: string[] = this.coords.toList().map((coord: Coord) => coord.toString());
         const coordString: string = coordStrings.join(', ');
-        return 'LascaMove(' + coordString + ')';
+        return 'CheckersMove(' + coordString + ')';
     }
 
-    private getRelation(other: LascaMove): 'EQUALITY' | 'PREFIX' | 'INEQUALITY' {
+    private getRelation(other: CheckersMove): 'EQUALITY' | 'PREFIX' | 'INEQUALITY' {
         const thisLength: number = this.coords.size();
         const otherLength: number = other.coords.size();
         const minimalLength: number = Math.min(thisLength, otherLength);
@@ -89,11 +74,11 @@ export class LascaMove extends Move {
         else return 'PREFIX';
     }
 
-    public equals(other: LascaMove): boolean {
+    public equals(other: CheckersMove): boolean {
         return this.getRelation(other) === 'EQUALITY';
     }
 
-    public isPrefix(other: LascaMove): boolean {
+    public isPrefix(other: CheckersMove): boolean {
         return this.getRelation(other) === 'PREFIX';
     }
 
@@ -106,10 +91,10 @@ export class LascaMove extends Move {
     }
 
     public getCapturedCoords(): MGPFallible<CoordSet> {
-        return LascaMove.getSteppedOverCoords(this.coords.toList());
+        return CheckersMove.getSteppedOverCoords(this.coords.toList());
     }
 
-    public concatenate(move: LascaMove): LascaMove {
+    public concatenate(move: CheckersMove): CheckersMove {
         const lastLandingOfFirstMove: Coord = this.getEndingCoord();
         const startOfSecondMove: Coord = move.coords.toList()[0];
         Utils.assert(lastLandingOfFirstMove.equals(startOfSecondMove), 'should not concatenate non-touching move');
@@ -117,7 +102,7 @@ export class LascaMove extends Move {
         const firstPart: Coord[] = ArrayUtils.copy(thisCoordList);
         const otherCoordList: Coord[] = move.coords.toList();
         const secondPart: Coord[] = ArrayUtils.copy(otherCoordList).slice(1);
-        return LascaMove.fromCapture(firstPart.concat(secondPart)).get();
+        return CheckersMove.fromCapture(firstPart.concat(secondPart)).get();
     }
 
 }

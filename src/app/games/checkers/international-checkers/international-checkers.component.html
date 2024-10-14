@@ -1,0 +1,63 @@
+<!-- <svg xmlns="http://www.w3.org/2000/svg"
+     class="board"
+     [attr.viewBox]="getViewBox().toSVGString()"
+     preserveAspectRatio="xMidYMid meet">
+
+    <defs>
+        <g id="piece">
+            <path d="M 0 25 v 15 a 40 25, 0, 0, 0, 80 0 v -15 a 40 25, 0, 0, 0, -80 0 Z"/>
+            <ellipse cx="40" cy="25" rx="40" ry="25"/>
+        </g>
+    </defs> -->
+
+    <!-- Empty board -->
+    <!-- <polygon *ngFor="let coordAndContent of constructedState.getCoordsAndContents()"
+             id="square-{{ coordAndContent.coord.x }}-{{ coordAndContent.coord.y }}"
+             [attr.transform]="getTranslationAtXYZ(coordAndContent.coord.x, coordAndContent.coord.y, 0)"
+             (click)="onClick(coordAndContent.coord.x, coordAndContent.coord.y)"
+             [attr.points]="getParallelogramPoints()"
+             [ngClass]="getSquareClass(coordAndContent.coord.x, coordAndContent.coord.y)"
+             class="base"/>
+
+    <rect id="bottomEdge"
+          x="0"
+          [attr.y]="basicHeight"
+          [attr.width]="basicWidth * mode.horizontalWidthRatio"
+          [attr.height]="THICKNESS"
+          class="base"/>
+    <polygon id="rightEdge"
+             [attr.points]="getRightEdge()"
+             class="base"/> -->
+
+    <!-- Pieces -->
+    <!-- <g *ngFor="let coordAndContent of constructedState.getCoordsAndContents()"
+       id="coord-{{ coordAndContent.coord.x }}-{{ coordAndContent.coord.y }}"
+       [attr.transform]="getTranslationAtXYZ(coordAndContent.coord.x, coordAndContent.coord.y, 0)"
+       (click)="onClick(coordAndContent.coord.x, coordAndContent.coord.y)">
+        <g *ngFor="let pieceInfo of coordAndContent.content.pieces; index as z"
+           pointer-events="fill"
+           [attr.transform]="getPieceTranslation(z)"
+           class="base mid-small-stroke">
+            <use id="square-{{ coordAndContent.coord.x }}-{{ coordAndContent.coord.y }}-piece-{{ z }}"
+                 xlink:href="#piece"
+                 [ngClass]="getPieceClasses(coordAndContent.coord.x, coordAndContent.coord.y, z)"
+                 class="base mid-stroke"/>
+            <circle id="square-{{ coordAndContent.coord.x }}-{{ coordAndContent.coord.y }}-piece-{{ z }}-officer-symbol"
+                    *ngIf="isPieceOfficer(coordAndContent.coord.x, coordAndContent.coord.y, z)"
+                    [attr.cx]="SPACE_SIZE * 0.4"
+                    [attr.cy]="SPACE_SIZE * 0.575"
+                    [attr.r]="SPACE_SIZE * 0.045"
+                    [ngClass]="getPieceClasses(coordAndContent.coord.x, coordAndContent.coord.y, z)"/>
+        </g>
+    </g> -->
+
+    <!-- Clickable highlights -->
+    <!-- <polygon *ngFor="let coord of possibleClicks"
+             id="clickable-highlight-{{ coord.x }}-{{ coord.y }}"
+             [attr.transform]="getTranslationAtXYZ(coord.x, coord.y, 0)"
+             (click)="onClick(coord.x, coord.y)"
+             [attr.points]="getParallelogramPoints()"
+             [ngClass]="getSquareClass(coord.x, coord.y)"
+             class="base no-fill clickable-stroke small-stroke"
+    />
+</svg> -->

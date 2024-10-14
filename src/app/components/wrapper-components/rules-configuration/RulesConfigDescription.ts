@@ -17,6 +17,10 @@ export class RulesConfigDescriptionLocalizable {
 
     public static readonly NUMBER_OF_DROPS: () => string = () => $localize`Number of pieces dropped per turn`;
 
+    public static readonly NUMBER_OF_EMPTY_ROWS: () => string = () => $localize`Number of empty rows`;
+
+    public static readonly NUMBER_OF_PIECES_ROWS: () => string = () => $localize`Number of pieces rows`;
+
 }
 
 export class ConfigLine {

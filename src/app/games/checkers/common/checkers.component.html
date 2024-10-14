@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg"
      class="board"
-     [attr.viewBox]="LEFT + ' ' + UP + ' ' + WIDTH + ' ' + HEIGHT"
+     [attr.viewBox]="getViewBox().toSVGString()"
      preserveAspectRatio="xMidYMid meet">
 
     <defs>
@@ -21,7 +21,7 @@
 
     <rect id="bottomEdge"
           x="0"
-          [attr.y]="basicWidth"
+          [attr.y]="basicHeight"
           [attr.width]="basicWidth * mode.horizontalWidthRatio"
           [attr.height]="THICKNESS"
           class="base"/>
