@@ -34,8 +34,10 @@ export class EpaminondasRules extends ConfigurableRules<EpaminondasMove,
             name: (): string => $localize`Epaminondas`,
             config: {
                 width: new NumberConfig(14, RulesConfigDescriptionLocalizable.WIDTH, MGPValidators.range(1, 99)),
-                emptyRows: new NumberConfig(8, () => $localize`Number of empty rows`, MGPValidators.range(1, 99)),
-                rowsOfSoldiers: new NumberConfig(2, () => $localize`Number of soldier rows`, MGPValidators.range(1, 99)),
+                emptyRows: new NumberConfig(8,
+                                            RulesConfigDescriptionLocalizable.NUMBER_OF_EMPTY_ROWS,
+                                            MGPValidators.range(1, 99)),
+                rowsOfSoldiers: new NumberConfig(2, () => $localize`Number of pieces rows`, MGPValidators.range(1, 99)),
             },
         });
 

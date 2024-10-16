@@ -4,45 +4,50 @@ import { Player } from 'src/app/jscaip/Player';
 import { Table } from 'src/app/jscaip/TableUtils';
 import { Utils } from '@everyboard/lib';
 
-export class LascaPiece {
+export class CheckersPiece {
 
-    public static readonly ZERO: LascaPiece = new LascaPiece(Player.ZERO, false);
-    public static readonly ONE: LascaPiece = new LascaPiece(Player.ONE, false);
-    public static readonly ZERO_OFFICER: LascaPiece = new LascaPiece(Player.ZERO, true);
-    public static readonly ONE_OFFICER: LascaPiece = new LascaPiece(Player.ONE, true);
+    public static readonly ZERO: CheckersPiece = new CheckersPiece(Player.ZERO, false);
+    public static readonly ONE: CheckersPiece = new CheckersPiece(Player.ONE, false);
+    public static readonly ZERO_PROMOTED: CheckersPiece = new CheckersPiece(Player.ZERO, true);
+    public static readonly ONE_PROMOTED: CheckersPiece = new CheckersPiece(Player.ONE, true);
 
-    public static getPlayerOfficer(player: Player): LascaPiece {
+    public static getPlayerOfficer(player: Player): CheckersPiece {
         if (player === Player.ZERO) {
-            return LascaPiece.ZERO_OFFICER;
+            return CheckersPiece.ZERO_PROMOTED;
         } else {
-            return LascaPiece.ONE_OFFICER;
+            return CheckersPiece.ONE_PROMOTED;
         }
     }
 
-    private constructor(public readonly player: Player, public readonly isOfficer: boolean) {}
+    private constructor(public readonly player: Player, public readonly isPromoted: boolean) {}
 
     public toString(): string {
         switch (this) {
-            case LascaPiece.ZERO: return 'u';
-            case LascaPiece.ONE: return 'v';
-            case LascaPiece.ZERO_OFFICER: return 'O';
+            case CheckersPiece.ZERO: return 'u';
+            case CheckersPiece.ONE: return 'v';
+            case CheckersPiece.ZERO_PROMOTED: return 'O';
             default:
-                Utils.expectToBe(this, LascaPiece.ONE_OFFICER);
+                Utils.expectToBe(this, CheckersPiece.ONE_PROMOTED);
                 return 'X';
         }
     }
-    public equals(other: LascaPiece): boolean {
+    public equals(other: CheckersPiece): boolean {
         return this === other;
     }
 }
-export class LascaStack {
+export class CheckersStack {
 
-    public static EMPTY: LascaStack = new LascaStack([]);
+    public static EMPTY: CheckersStack = new CheckersStack([]);
 
-    public constructor(public readonly pieces: ReadonlyArray<LascaPiece>) {}
+    // The list of pieces is from top to bottom, hence [commander, its allies, its prisonner, more prisonner]
+    public constructor(public readonly pieces: ReadonlyArray<CheckersPiece>) {}
 
     public isEmpty(): boolean {
         return this.pieces.length === 0;
+    }
+
+    public isOccupied(): boolean {
+        return this.pieces.length > 0;
     }
 
     public isCommandedBy(player: Player): boolean {
@@ -52,21 +57,21 @@ export class LascaStack {
         return this.getCommander().player === player;
     }
 
-    public getCommander(): LascaPiece {
+    public getCommander(): CheckersPiece {
         return this.pieces[0];
     }
 
-    public getPiecesUnderCommander(): LascaStack {
-        return new LascaStack(this.pieces.slice(1));
+    public getPiecesUnderCommander(): CheckersStack {
+        return new CheckersStack(this.pieces.slice(1));
     }
 
-    public capturePiece(piece: LascaPiece): LascaStack {
-        return new LascaStack(this.pieces.concat(piece));
+    public capturePiece(piece: CheckersPiece): CheckersStack {
+        return new CheckersStack(this.pieces.concat(piece));
     }
 
-    public addStackBelow(stack: LascaStack): LascaStack {
+    public addStackBelow(stack: CheckersStack): CheckersStack {
         // eslint-disable-next-line @typescript-eslint/no-this-alias
-        let resultingStack: LascaStack = this;
+        let resultingStack: CheckersStack = this;
         for (const piece of stack.pieces) {
             resultingStack = resultingStack.capturePiece(piece);
         }
@@ -77,19 +82,19 @@ export class LascaStack {
         return this.pieces.length;
     }
 
-    public promoteCommander(): LascaStack {
-        let commander: LascaPiece = this.getCommander();
-        if (commander.isOfficer) {
+    public promoteCommander(): CheckersStack {
+        let commander: CheckersPiece = this.getCommander();
+        if (commander.isPromoted) {
             return this;
         } else {
-            commander = LascaPiece.getPlayerOfficer(commander.player);
-            const remainingStack: LascaStack = this.getPiecesUnderCommander();
-            const commandingStack: LascaStack = new LascaStack([commander]);
+            commander = CheckersPiece.getPlayerOfficer(commander.player);
+            const remainingStack: CheckersStack = this.getPiecesUnderCommander();
+            const commandingStack: CheckersStack = new CheckersStack([commander]);
             return commandingStack.addStackBelow(remainingStack);
         }
     }
 
-    public get(index: number): LascaPiece {
+    public get(index: number): CheckersPiece {
         return this.pieces[index];
     }
 
@@ -107,16 +112,12 @@ export class LascaStack {
     }
 }
 
-export class LascaState extends GameStateWithTable<LascaStack> {
+export class CheckersState extends GameStateWithTable<CheckersStack> {
 
     public static readonly SIZE: number = 7;
 
-    public static of(board: Table<LascaStack>, turn: number): LascaState {
-        return new LascaState(board, turn);
-    }
-
-    public static isNotOnBoard(coord: Coord): boolean {
-        return coord.isNotInRange(LascaState.SIZE, LascaState.SIZE);
+    public static of(board: Table<CheckersStack>, turn: number): CheckersState {
+        return new CheckersState(board, turn);
     }
 
     public getStacksOf(player: Player): Coord[] {
@@ -133,18 +134,18 @@ export class LascaState extends GameStateWithTable<LascaStack> {
         return stackCoords;
     }
 
-    public set(coord: Coord, value: LascaStack): LascaState {
-        const newBoard: LascaStack[][] = this.getCopiedBoard();
+    public set(coord: Coord, value: CheckersStack): CheckersState {
+        const newBoard: CheckersStack[][] = this.getCopiedBoard();
         newBoard[coord.y][coord.x] = value;
-        return new LascaState(newBoard, this.turn);
+        return new CheckersState(newBoard, this.turn);
     }
 
-    public remove(coord: Coord): LascaState {
-        return this.set(coord, LascaStack.EMPTY);
+    public remove(coord: Coord): CheckersState {
+        return this.set(coord, CheckersStack.EMPTY);
     }
 
-    public incrementTurn(): LascaState {
-        return new LascaState(this.getCopiedBoard(), this.turn + 1);
+    public incrementTurn(): CheckersState {
+        return new CheckersState(this.getCopiedBoard(), this.turn + 1);
     }
 
     public getFinishLineOf(player: Player): number {

@@ -453,9 +453,9 @@
         <source>Number of empty rows</source>
         <target>Nombre de rangées vides</target>
       </trans-unit>
-      <trans-unit id="7516610645583911732" datatype="html">
-        <source>Number of soldier rows</source>
-        <target>Nombre de rangées de soldats</target>
+      <trans-unit id="4053624367526659457" datatype="html">
+        <source>Number of pieces rows</source>
+        <target>Nombre de rangées de pièces</target>
       </trans-unit>
       <trans-unit id="2969677193390047071" datatype="html">
         <source>19 x 19</source>
