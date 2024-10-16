@@ -156,6 +156,7 @@ export abstract class CheckersComponent<R extends AbstractCheckersRules>
     }
 
     public override cancelMoveAttempt(): void {
+        this.constructedState = this.getState();
         this.currentMoveClicks = [];
         this.capturedCoords = [];
         this.selectedStack = MGPOptional.empty();
@@ -191,13 +192,13 @@ export abstract class CheckersComponent<R extends AbstractCheckersRules>
         const lastCoord: Coord = this.currentMoveClicks[numberOfClicks - 1];
         const delta: Vector = lastCoord.getVectorToward(clicked);
         if (delta.isDiagonal() === false) {
-            return this.cancelMove(CheckersFailure.CAPTURE_STEPS_MUST_BE_DOUBLE_DIAGONAL()); // TODO: rectify this message "should be diagonal"
+            // TODO: rectify this message "should be diagonal"
+            return this.cancelMove(CheckersFailure.CAPTURE_STEPS_MUST_BE_DOUBLE_DIAGONAL());
         } else {
             for (const flyiedOver of lastCoord.getCoordsToward(clicked)) {
                 if (this.constructedState.getPieceAt(flyiedOver).isOccupied()) {
                     this.capturedCoords.push(flyiedOver);
                 }
-                // TODO: else: some moved-fill
             }
             this.currentMoveClicks.push(clicked);
             const currentMove: CheckersMove = CheckersMove.fromCapture(this.currentMoveClicks).get();

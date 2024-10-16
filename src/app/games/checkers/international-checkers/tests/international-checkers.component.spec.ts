@@ -25,11 +25,10 @@ fdescribe('InternationalCheckersComponent', () => {
 
     let testUtils: ComponentTestUtils<InternationalCheckersComponent>;
 // TODO: when I can still capture with selected piece: HIGHLIGHT POSSIBLE NEXT CAPTURE
-// TODO: not show stack of piece when not stacking !!
-// TODO: Check that if I pass by last line, the go backward to capture, I don't get promoted
-// TODO: when piece that must move now is a tower higher than the square, make it not be couper en deux par le highlight square
-// TODO: when commander can move, don't highlight a flying deplacement since it can not fly (in lasca & configs)
-// TODO: "look at the green indicator to help you" well not correct message anymore
+// TODO: when clicking on the second part of the capture with a horse-step, the move should be cancelled correctly
+// TODO: not show stack of piece when not stacking ??
+// TODO: test in LascaRules that piece don't go twice over the same stack (1-2-1)
+
     beforeEach(fakeAsync(async() => {
         testUtils = await ComponentTestUtils.forGame<InternationalCheckersComponent>('InternationalCheckers');
     }));
@@ -40,7 +39,7 @@ fdescribe('InternationalCheckersComponent', () => {
 
     describe('first click', () => {
 
-        it('should highlight possible step-landing after selecting piece', fakeAsync(async() => {
+        it('should highlight possible step-landing after selecting normal piece', fakeAsync(async() => {
             // Given any board where steps are possible (initial board)
             // When selecting a piece
             await testUtils.expectClickSuccess('#coord-6-6');
@@ -48,6 +47,37 @@ fdescribe('InternationalCheckersComponent', () => {
             // Then its landing coord should be landable
             testUtils.expectElementToHaveClass('#clickable-highlight-5-5', 'clickable-stroke');
             testUtils.expectElementToHaveClass('#clickable-highlight-7-5', 'clickable-stroke');
+        }));
+
+        it('should highlight possible step-landing after selecting queen', fakeAsync(async() => {
+            // Given any board where long steps are possible for a queen
+            const state: CheckersState = CheckersState.of([
+                [_, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _],
+                [V, _, _, _, _, _, _, _, _, O],
+            ], 10);
+            await testUtils.setupState(state);
+
+            // When selecting a piece
+            await testUtils.expectClickSuccess('#coord-9-9');
+
+            // Then its landing coord should be landable
+            testUtils.expectElementToHaveClass('#clickable-highlight-0-0', 'clickable-stroke');
+            testUtils.expectElementToHaveClass('#clickable-highlight-1-1', 'clickable-stroke');
+            testUtils.expectElementToHaveClass('#clickable-highlight-2-2', 'clickable-stroke');
+            testUtils.expectElementToHaveClass('#clickable-highlight-3-3', 'clickable-stroke');
+            testUtils.expectElementToHaveClass('#clickable-highlight-4-4', 'clickable-stroke');
+            testUtils.expectElementToHaveClass('#clickable-highlight-5-5', 'clickable-stroke');
+            testUtils.expectElementToHaveClass('#clickable-highlight-6-6', 'clickable-stroke');
+            testUtils.expectElementToHaveClass('#clickable-highlight-7-7', 'clickable-stroke');
+            testUtils.expectElementToHaveClass('#clickable-highlight-8-8', 'clickable-stroke');
         }));
 
         it('should highlight piece that can move this turn (when forced capture)', fakeAsync(async() => {
@@ -493,6 +523,32 @@ fdescribe('InternationalCheckersComponent', () => {
             // Then the stack of captured pieces should not exist
             testUtils.expectElementToExist('#square-6-6-piece-0');
             testUtils.expectElementNotToExist('#square-6-6-piece-1');
+        }));
+
+        it('should cancel move when trying non-ordinal move mid-capture', fakeAsync(async() => {
+            // Given a board on which a piece is selected and already captured
+            const state: CheckersState = CheckersState.of([
+                [_, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _],
+                [_, _, V, _, _, _, _, _, _, _],
+                [_, U, _, U, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, U, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _],
+            ], 1);
+            await testUtils.setupState(state);
+            await testUtils.expectClickSuccess('#coord-2-2');
+            await testUtils.expectClickSuccess('#coord-4-4');
+
+            // When doing the last clic that make an illegal step
+            const reason: string = CheckersFailure.CAPTURE_STEPS_MUST_BE_DOUBLE_DIAGONAL();
+            await testUtils.expectClickFailure('#coord-6-5', reason);
+
+            // Then the move should be cancelled and stack should be back in place
+            testUtils.expectElementNotToExist('#square-4-4-piece-0');
         }));
 
     });

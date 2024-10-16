@@ -29,6 +29,16 @@
              [attr.points]="getRightEdge()"
              class="base"/>
 
+    <!-- Clickable highlights -->
+    <polygon *ngFor="let coord of possibleClicks"
+             id="clickable-highlight-{{ coord.x }}-{{ coord.y }}"
+             [attr.transform]="getTranslationAtXYZ(coord.x, coord.y, 0)"
+             (click)="onClick(coord.x, coord.y)"
+             [attr.points]="getParallelogramPoints()"
+             [ngClass]="getSquareClass(coord.x, coord.y)"
+             class="base no-fill clickable-stroke small-stroke"
+    />
+
     <!-- Pieces -->
     <g *ngFor="let coordAndContent of constructedState.getCoordsAndContents()"
        id="coord-{{ coordAndContent.coord.x }}-{{ coordAndContent.coord.y }}"
@@ -51,13 +61,4 @@
         </g>
     </g>
 
-    <!-- Clickable highlights -->
-    <polygon *ngFor="let coord of possibleClicks"
-             id="clickable-highlight-{{ coord.x }}-{{ coord.y }}"
-             [attr.transform]="getTranslationAtXYZ(coord.x, coord.y, 0)"
-             (click)="onClick(coord.x, coord.y)"
-             [attr.points]="getParallelogramPoints()"
-             [ngClass]="getSquareClass(coord.x, coord.y)"
-             class="base no-fill clickable-stroke small-stroke"
-    />
 </svg>

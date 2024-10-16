@@ -307,6 +307,32 @@ fdescribe('LascaRules', () => {
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
 
+        it('should forbid backward complexe capture', () => {
+            // Given a board on which a backward complexe capture is possible
+            const state: CheckersState = CheckersState.of([
+                [___, ___, ___, ___, ___, ___, ___],
+                [___, ___, ___, ___, ___, ___, ___],
+                [___, __U, ___, __U, ___, __U, ___],
+                [__V, ___, ___, ___, ___, ___, ___],
+                [___, ___, ___, ___, ___, ___, ___],
+                [___, ___, ___, ___, ___, ___, ___],
+                [___, ___, ___, ___, ___, ___, ___],
+            ], 1);
+
+            // When doing so
+            const captures: Coord[] = [
+                new Coord(0, 3),
+                new Coord(2, 1),
+                new Coord(4, 3),
+                new Coord(6, 1),
+            ];
+            const move: CheckersMove = CheckersMove.fromCapture(captures).get();
+
+            // Then the move should be illegal
+            const reason: string = CheckersFailure.CANNOT_GO_BACKWARD();
+            RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
+        });
+
         it('should allow backward capture with officer', () => {
             // Given a board on which an officer can capture backward
             const state: CheckersState = CheckersState.of([

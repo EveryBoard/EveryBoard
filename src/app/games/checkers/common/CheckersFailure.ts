@@ -16,8 +16,6 @@ export class CheckersFailure {
 
     public static readonly NORMAL_PIECES_CANNOT_MOVE_LIKE_THIS: Localized = () => $localize`NORMAL_PIECES_CANNOT_MOVE_LIKE_THIS`;
 
-    public static readonly MOVE_STEPS_MUST_BE_SINGLE_DIAGONAL: Localized = () => $localize`You must move in a single diagonal step!`;
-
     public static readonly CANNOT_DO_ORTHOGONAL_MOVE: Localized = () => $localize`CANNOT_DO_ORTHOGONAL_CAPTURE`;
 
     public static readonly CANNOT_CAPTURE_TWICE_THE_SAME_COORD: Localized = () => $localize`You cannot jump over the same square several times!`;

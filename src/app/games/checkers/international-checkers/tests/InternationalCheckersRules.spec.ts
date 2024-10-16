@@ -312,7 +312,7 @@ fdescribe('InternationalCheckersRules', () => {
                 RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
             });
 
-            it('should allow backward capture', () => {
+            it('should allow backward simple capture', () => {
                 // Given a board on which a backward capture is possible
                 const state: CheckersState = CheckersState.of([
                     [_, _, _, _, _, _, _, _, _, _],
@@ -334,6 +334,46 @@ fdescribe('InternationalCheckersRules', () => {
                 const expectedState: CheckersState = CheckersState.of([
                     [_, _, _, _, _, _, _, _, _, _],
                     [_, _, _, _, _, V, _, _, _, _],
+                    [_, _, _, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _, _, _],
+                ], 2);
+                RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
+            });
+
+            it('should allow backward complexe capture', () => {
+                // Given a board on which a backward complexe capture is possible
+                const state: CheckersState = CheckersState.of([
+                    [_, _, _, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _, _, _],
+                    [_, _, _, _, U, _, U, _, U, _],
+                    [_, _, _, V, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _, _, _],
+                ], 1);
+
+                // When doing so
+                const captures: Coord[] = [
+                    new Coord(3, 3),
+                    new Coord(5, 1),
+                    new Coord(7, 3),
+                    new Coord(9, 1),
+                ];
+                const move: CheckersMove = CheckersMove.fromCapture(captures).get();
+
+                // Then the piece should be captured
+                const expectedState: CheckersState = CheckersState.of([
+                    [_, _, _, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _, _, V],
                     [_, _, _, _, _, _, _, _, _, _],
                     [_, _, _, _, _, _, _, _, _, _],
                     [_, _, _, _, _, _, _, _, _, _],
@@ -676,6 +716,41 @@ fdescribe('InternationalCheckersRules', () => {
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         });
 
+        it('should not promote piece that reached last line but came back to capture', () => {
+            // Given a board where a single piece is about to reach final line then go backward
+            const state: CheckersState = CheckersState.of([
+                [_, _, _, _, _, _, _, _, V, _],
+                [_, _, _, V, _, V, _, V, _, _],
+                [_, _, U, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, V, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _],
+            ], 0);
+
+            // When doing that move
+            const captures: Coord[] = [new Coord(2, 2), new Coord(4, 0), new Coord(6, 2)];
+            const move: CheckersMove = CheckersMove.fromCapture(captures).get();
+
+            // Then the piece should be promoted
+            const expectedState: CheckersState = CheckersState.of([
+                [_, _, _, _, _, _, _, _, V, _],
+                [_, _, _, _, _, _, _, V, _, _],
+                [_, _, _, _, _, _, U, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, V, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _],
+            ], 1);
+            RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
+        });
+
     });
 
     describe('End Game', () => {
@@ -715,7 +790,7 @@ fdescribe('InternationalCheckersRules', () => {
         });
 
     });
-// TODO: test in LascaRules that piece don't go twice over the same stack (1-2-1)
+
     describe('getLegalCaptures', () => {
 
         it('should forbid to pass over the same coord several times', () => {

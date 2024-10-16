@@ -57,45 +57,7 @@ export abstract class AbstractCheckersRules extends ConfigurableRules<CheckersMo
                 }
             }
         }
-        // if (config.width > 7) {
-        //     const O: CheckersStack = new CheckersStack([CheckersPiece.ZERO_PROMOTED]);
-        //     board[2][4]=V;
-        //     board[3][1]=V;
-        //     board[5][3]=V;
-        //     board[7][5]=V;
-        //     board[8][6]=O;
-        //     board[7][9]=V;
-        //     board[8][8]=O;
-        // }
-
         return new CheckersState(board, 0);
-
-        // const O: CheckersStack = new CheckersStack([CheckersPiece.ZERO_PROMOTED]);
-        // return new CheckersState([
-        //     [_, _, _, _, _, _, _, _, _, _],
-        //     [_, _, _, _, _, _, _, _, _, _],
-        //     [_, _, _, _, _, _, _, _, _, _],
-        //     [_, _, _, _, _, _, _, _, _, _],
-        //     [_, _, _, _, _, _, _, _, _, _],
-        //     [_, _, _, _, _, V, _, _, _, _],
-        //     [_, _, _, _, _, _, V, _, V, _],
-        //     [_, _, _, _, _, _, _, _, _, O],
-        //     [_, _, _, _, V, _, V, _, _, _],
-        //     [_, _, _, _, _, _, _, _, _, _],
-        // ], 20);
-
-        // return CheckersState.of([
-        //     [_, _, _, _, _, _, _, _, _, _],
-        //     [_, V, _, _, _, _, _, _, _, _],
-        //     [_, _, _, _, V, _, _, _, _, _],
-        //     [_, _, _, _, _, _, _, _, _, _],
-        //     [_, _, _, _, V, _, _, _, _, _],
-        //     [_, _, _, _, _, _, _, _, _, _],
-        //     [_, _, _, _, _, _, O, _, _, _],
-        //     [_, _, _, _, _, _, _, _, _, _],
-        //     [_, _, _, _, _, _, _, _, _, _],
-        //     [_, _, _, _, _, _, _, _, _, _],
-        // ], 0);
     }
 
     /**
@@ -381,11 +343,7 @@ export abstract class AbstractCheckersRules extends ConfigurableRules<CheckersMo
     private isLegalMoveForPromotedPiece(move: CheckersMove, state: CheckersState)
     : MGPValidation
     {
-        let moveIsNotACapture: boolean = false;
         for (let i: number = 1; i < move.coords.size(); i++) {
-            if (moveIsNotACapture) {
-                return MGPValidation.failure('Cannot continue move after non-capture move');
-            }
             const previousCoord: Coord = move.coords.get(i - 1);
             const landingCoord: Coord = move.coords.get(i);
             const landingPiece: CheckersStack = state.getPieceAt(landingCoord);
@@ -398,7 +356,9 @@ export abstract class AbstractCheckersRules extends ConfigurableRules<CheckersMo
             }
             const flyiedOverPlayer: Player[] = this.getFlyiedOverPlayers(previousCoord, landingCoord, state);
             if (flyiedOverPlayer.length === 0) {
-                moveIsNotACapture = true;
+                if (i + 1 < move.coords.size()) { // The moves continue illegally
+                    return MGPValidation.failure('Move cannot continue after non-capture move');
+                }
             } else if (flyiedOverPlayer.length > 1) {
                 return MGPValidation.failure(CheckersFailure.CANNOT_JUMP_OVER_SEVERAL_PIECES());
             } else if (flyiedOverPlayer.some((player: Player) => player.equals(state.getCurrentPlayer()))) {

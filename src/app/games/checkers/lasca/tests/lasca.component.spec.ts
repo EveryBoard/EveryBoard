@@ -17,9 +17,9 @@ fdescribe('LascaComponent', () => {
     const zero: CheckersPiece = CheckersPiece.ZERO;
     const one: CheckersPiece = CheckersPiece.ONE;
 
-    const _u: CheckersStack = new CheckersStack([zero]);
-    const _v: CheckersStack = new CheckersStack([one]);
-    const uv: CheckersStack = new CheckersStack([zero, one]);
+    const _U: CheckersStack = new CheckersStack([zero]);
+    const _V: CheckersStack = new CheckersStack([one]);
+    const UV: CheckersStack = new CheckersStack([zero, one]);
     const __: CheckersStack = CheckersStack.EMPTY;
     const defaultConfig: MGPOptional<CheckersConfig> = LascaRules.get().getDefaultRulesConfig();
 
@@ -48,13 +48,13 @@ fdescribe('LascaComponent', () => {
         it('should highlight piece that can move this turn (when forced capture)', fakeAsync(async() => {
             // Given a board where current player have 3 "mobile" pieces but one must capture
             const state: CheckersState = CheckersState.of([
-                [_v, __, _v, __, _v, __, _v],
-                [__, _v, __, _v, __, _v, __],
-                [_v, __, _v, __, _v, __, _v],
-                [__, _u, __, __, __, __, __],
-                [_u, __, __, __, _u, __, _u],
-                [__, _u, __, _u, __, _u, __],
-                [_u, __, _u, __, _u, __, _u],
+                [_V, __, _V, __, _V, __, _V],
+                [__, _V, __, _V, __, _V, __],
+                [_V, __, _V, __, _V, __, _V],
+                [__, _U, __, __, __, __, __],
+                [_U, __, __, __, _U, __, _U],
+                [__, _U, __, _U, __, _U, __],
+                [_U, __, _U, __, _U, __, _U],
             ], 1);
 
             // When displaying the board
@@ -104,13 +104,13 @@ fdescribe('LascaComponent', () => {
             const previousState: CheckersState = LascaRules.get().getInitialState(defaultConfig);
             const previousMove: CheckersMove = CheckersMove.fromStep(new Coord(2, 4), new Coord(3, 3));
             const state: CheckersState = CheckersState.of([
-                [_v, __, _v, __, _v, __, _v],
-                [__, _v, __, _v, __, _v, __],
-                [_v, __, _v, __, _v, __, _v],
-                [__, __, __, _u, __, __, __],
-                [_u, __, __, __, _u, __, _u],
-                [__, _u, __, _u, __, _u, __],
-                [_u, __, _u, __, _u, __, _u],
+                [_V, __, _V, __, _V, __, _V],
+                [__, _V, __, _V, __, _V, __],
+                [_V, __, _V, __, _V, __, _V],
+                [__, __, __, _U, __, __, __],
+                [_U, __, __, __, _U, __, _U],
+                [__, _U, __, _U, __, _U, __],
+                [_U, __, _U, __, _U, __, _U],
             ], 1);
             await testUtils.setupState(state, { previousState, previousMove });
 
@@ -149,13 +149,13 @@ fdescribe('LascaComponent', () => {
         it('should fail when doing impossible click (ordinal direction)', fakeAsync(async() => {
             // Given any board with a selected piece
             const state: CheckersState = CheckersState.of([
-                [_v, __, _v, __, _v, __, _v],
-                [__, _v, __, _v, __, _v, __],
-                [_v, __, _v, __, _v, __, _v],
+                [_V, __, _V, __, _V, __, _V],
+                [__, _V, __, _V, __, _V, __],
+                [_V, __, _V, __, _V, __, _V],
                 [__, __, __, __, __, __, __],
                 [__, __, __, __, __, __, __],
-                [__, _u, __, _u, __, _u, __],
-                [_u, __, _u, __, _u, __, _u],
+                [__, _U, __, _U, __, _U, __],
+                [_U, __, _U, __, _U, __, _U],
             ], 0);
             await testUtils.setupState(state);
             await testUtils.expectClickSuccess('#coord-5-5');
@@ -232,13 +232,13 @@ fdescribe('LascaComponent', () => {
         it('should allow simple capture', fakeAsync(async() => {
             // Given a board with a selected piece and a possible capture
             const state: CheckersState = CheckersState.of([
-                [_v, __, _v, __, _v, __, _v],
-                [__, _v, __, _v, __, _v, __],
-                [_v, __, _v, __, _v, __, _v],
-                [__, uv, __, __, __, __, __],
-                [__, __, _u, __, _u, __, _u],
-                [__, __, __, _u, __, _u, __],
-                [_u, __, __, __, _u, __, _u],
+                [_V, __, _V, __, _V, __, _V],
+                [__, _V, __, _V, __, _V, __],
+                [_V, __, _V, __, _V, __, _V],
+                [__, UV, __, __, __, __, __],
+                [__, __, _U, __, _U, __, _U],
+                [__, __, __, _U, __, _U, __],
+                [_U, __, __, __, _U, __, _U],
             ], 1);
             await testUtils.setupState(state);
             await testUtils.expectClickSuccess('#coord-2-2');
@@ -253,13 +253,13 @@ fdescribe('LascaComponent', () => {
         it(`should have a promotion's symbol on the piece that just got promoted`, fakeAsync(async() => {
             // Given any board with a selected soldier about to become promoted
             const state: CheckersState = CheckersState.of([
-                [__, __, __, __, _v, __, _v],
-                [__, uv, __, __, __, __, __],
+                [__, __, __, __, _V, __, _V],
+                [__, UV, __, __, __, __, __],
                 [__, __, __, __, __, __, __],
                 [__, __, __, __, __, __, __],
                 [__, __, __, __, __, __, __],
                 [__, __, __, __, __, __, __],
-                [_u, __, _u, __, _u, __, _u],
+                [_U, __, _U, __, _U, __, _U],
             ], 0);
             await testUtils.setupState(state);
             await testUtils.expectClickSuccess('#coord-1-1');
@@ -277,10 +277,10 @@ fdescribe('LascaComponent', () => {
             const state: CheckersState = CheckersState.of([
                 [__, __, __, __, __, __, __],
                 [__, __, __, __, __, __, __],
-                [__, __, _v, __, __, __, __],
-                [__, _u, __, _u, __, __, __],
+                [__, __, _V, __, __, __, __],
+                [__, _U, __, _U, __, __, __],
                 [__, __, __, __, __, __, __],
-                [__, __, __, __, __, _u, __],
+                [__, __, __, __, __, _U, __],
                 [__, __, __, __, __, __, __],
             ], 1);
             await testUtils.setupState(state);
@@ -298,10 +298,10 @@ fdescribe('LascaComponent', () => {
             const state: CheckersState = CheckersState.of([
                 [__, __, __, __, __, __, __],
                 [__, __, __, __, __, __, __],
-                [__, __, _v, __, __, __, __],
-                [__, _v, __, _u, __, __, __],
+                [__, __, _V, __, __, __, __],
+                [__, _V, __, _U, __, __, __],
                 [__, __, __, __, __, __, __],
-                [__, __, __, __, __, _u, __],
+                [__, __, __, __, __, _U, __],
                 [__, __, __, __, __, __, __],
             ], 1);
             await testUtils.setupState(state);
@@ -368,10 +368,10 @@ fdescribe('LascaComponent', () => {
             const state: CheckersState = CheckersState.of([
                 [__, __, __, __, __, __, __],
                 [__, __, __, __, __, __, __],
-                [__, __, _v, __, __, __, __],
-                [__, _u, __, _u, __, __, __],
+                [__, __, _V, __, __, __, __],
+                [__, _U, __, _U, __, __, __],
                 [__, __, __, __, __, __, __],
-                [__, __, __, __, __, _u, __],
+                [__, __, __, __, __, _U, __],
                 [__, __, __, __, __, __, __],
             ], 3);
             await testUtils.setupState(state);
@@ -389,6 +389,30 @@ fdescribe('LascaComponent', () => {
             testUtils.expectElementToExist('#square-6-6-piece-1');
             testUtils.expectElementToExist('#square-6-6-piece-2');
         }));
+
+        it('should cancel move when trying non-ordinal move mid-capture', fakeAsync(async() => {
+            // Given a board on which a piece is selected and already captured
+            const state: CheckersState = CheckersState.of([
+                [__, __, __, __, __, __, __],
+                [__, __, __, __, __, __, __],
+                [__, __, _V, __, __, __, __],
+                [__, _U, __, _U, __, __, __],
+                [__, __, __, __, __, __, __],
+                [__, __, __, __, __, _U, __],
+                [__, __, __, __, __, __, __],
+            ], 1);
+            await testUtils.setupState(state);
+            await testUtils.expectClickSuccess('#coord-2-2');
+            await testUtils.expectClickSuccess('#coord-4-4');
+
+            // When doing the last clic that make an illegal step
+            const reason: string = CheckersFailure.CAPTURE_STEPS_MUST_BE_DOUBLE_DIAGONAL();
+            await testUtils.expectClickFailure('#coord-6-5', reason);
+
+            // Then the move should be cancelled and stack should be back in place
+            testUtils.expectElementNotToExist('#square-4-4-piece-0');
+        }));
+
     });
 
     describe('interactivity', () => {
