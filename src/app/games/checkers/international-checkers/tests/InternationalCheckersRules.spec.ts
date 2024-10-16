@@ -231,7 +231,7 @@ fdescribe('InternationalCheckersRules', () => {
                 const move: CheckersMove = CheckersMove.fromCapture(capture).get();
 
                 // Then the move should be illegal
-                const reason: string = CheckersFailure.CANNOT_CAPTURE_EMPTY_SPACE();
+                const reason: string = 'Move cannot continue after non-capture move'; // not doable with UX, so not i18ned
                 RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
             });
 
@@ -513,7 +513,7 @@ fdescribe('InternationalCheckersRules', () => {
                 RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
             });
 
-            it('should forbid too long move', () => {
+            it('should forbid long capture for normal piece', () => {
                 // Given a board where a normal piece could try a capture with a longer jump
                 const state: CheckersState = CheckersState.of([
                     [_, _, V, _, _, _, _, _, _, _],
@@ -532,7 +532,7 @@ fdescribe('InternationalCheckersRules', () => {
                 const move: CheckersMove = CheckersMove.fromCapture([new Coord(0, 6), new Coord(3, 3)]).get();
 
                 // Then it should fail
-                const reason: string = CheckersFailure.CAPTURE_STEPS_MUST_BE_DOUBLE_DIAGONAL();
+                const reason: string = CheckersFailure.NORMAL_PIECES_CANNOT_CAPTURE_LIKE_THIS();
                 RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
             });
 

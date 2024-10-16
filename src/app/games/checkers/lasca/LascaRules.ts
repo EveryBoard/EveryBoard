@@ -24,11 +24,8 @@ export class LascaRules extends AbstractCheckersRules {
                     new BooleanConfig(false, CheckersLocalizable.MAXIMAL_CAPTURE),
                 simplePieceCanCaptureBackwards:
                     new BooleanConfig(false, CheckersLocalizable.SIMPLE_PIECE_CAN_CAPTURE_BACKWARDS),
-                promotedPiecesCanTravelLongDistances:
+                promotedPiecesCanFly:
                     new BooleanConfig(false, CheckersLocalizable.PROMOTED_PIECES_CAN_TRAVEL_LONG_DISTANCES),
-                promotedPiecesCanLandWhereTheyWantAfterCapture:
-                    new BooleanConfig(false,
-                                      CheckersLocalizable.PROMOTED_PIECES_CAN_LAND_WHERE_THEY_WANT_AFTER_CAPTURE),
             },
         });
 

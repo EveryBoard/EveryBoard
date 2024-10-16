@@ -20,8 +20,7 @@ export type CheckersConfig = {
     stackPiece: boolean;
     maximalCapture: boolean;
     simplePieceCanCaptureBackwards: boolean;
-    promotedPiecesCanTravelLongDistances: boolean;
-    promotedPiecesCanLandWhereTheyWantAfterCapture: boolean;
+    promotedPiecesCanFly: boolean;
 }
 
 export class CheckersLocalizable {
@@ -33,8 +32,6 @@ export class CheckersLocalizable {
     public static readonly SIMPLE_PIECE_CAN_CAPTURE_BACKWARDS: Localized = () => $localize`Simple piece can back-capture`;
 
     public static readonly PROMOTED_PIECES_CAN_TRAVEL_LONG_DISTANCES: Localized = () => $localize`Promoted pieces can travel long distance`;
-
-    public static readonly PROMOTED_PIECES_CAN_LAND_WHERE_THEY_WANT_AFTER_CAPTURE: Localized = () => $localize`Promoted pieces can travel long distance after capture`;
 
 }
 
@@ -128,7 +125,8 @@ export abstract class AbstractCheckersRules extends ConfigurableRules<CheckersMo
                                     config: CheckersConfig)
     : MGPOptional<Coord>
     {
-        if (config.promotedPiecesCanTravelLongDistances && state.getPieceAt(coord).getCommander().isPromoted) {
+        const isPromotedPiece: boolean = state.getPieceAt(coord).getCommander().isPromoted;
+        if (config.promotedPiecesCanFly && isPromotedPiece) {
             return this.getFirstCapturableCoordForFlyingCapture(state, coord, direction, flyiedOvers);
         } else {
             const nextCoord: Coord = coord.getNext(direction, 1);
@@ -158,9 +156,8 @@ export abstract class AbstractCheckersRules extends ConfigurableRules<CheckersMo
             flyiedOvers.some((c: Coord) => c.equals(possibleLanding)) === false)
         {
             possibleLandings.push(possibleLanding);
-            if (config.promotedPiecesCanLandWhereTheyWantAfterCapture &&
-                state.getPieceAt(coord).getCommander().isPromoted)
-            {
+            const isPromotedPiece: boolean = state.getPieceAt(coord).getCommander().isPromoted;
+            if (config.promotedPiecesCanFly && isPromotedPiece) {
                 possibleLanding = possibleLanding.getNext(direction, 1);
                 while (state.isOnBoard(possibleLanding) &&
                        state.getPieceAt(possibleLanding).isEmpty() &&
@@ -235,7 +232,8 @@ export abstract class AbstractCheckersRules extends ConfigurableRules<CheckersMo
         const pieceMoves: CheckersMove[] = [];
         const directions: Ordinal[] = this.getPieceDirections(state, coord, false, config);
         for (const direction of directions) {
-            if (state.getPieceAt(coord).getCommander().isPromoted && config.promotedPiecesCanTravelLongDistances) {
+            const isPromotedPiece: boolean = state.getPieceAt(coord).getCommander().isPromoted;
+            if (config.promotedPiecesCanFly && isPromotedPiece) {
                 let landing: Coord = coord;
                 let previousJumpWasPossible: boolean = true;
                 while (previousJumpWasPossible) {
@@ -309,18 +307,9 @@ export abstract class AbstractCheckersRules extends ConfigurableRules<CheckersMo
         if (movedStack.isCommandedBy(opponent)) {
             return MGPValidation.failure(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT());
         }
-        if (movedStack.getCommander().isPromoted) {
-            const promotedPieceMoveValidity: MGPValidation =
-                this.isLegalMoveForPromotedPiece(move, state);
-            if (promotedPieceMoveValidity.isFailure()) {
-                return promotedPieceMoveValidity;
-            }
-        } else {
-            const normalPieceMoveValidity: MGPValidation =
-                this.isLegalMoveForNormalPiece(move, state, config.get());
-            if (normalPieceMoveValidity.isFailure()) {
-                return normalPieceMoveValidity;
-            }
+        const moveValidity: MGPValidation = this.isLegalSubMoveList(move, state, config.get());
+        if (moveValidity.isFailure()) {
+            return moveValidity;
         }
         const possibleCaptures: CheckersMove[] = this.getCompleteCaptures(state, config.get());
         if (possibleCaptures.length === 0) {
@@ -340,9 +329,7 @@ export abstract class AbstractCheckersRules extends ConfigurableRules<CheckersMo
         return MGPOptional.empty();
     }
 
-    private isLegalMoveForPromotedPiece(move: CheckersMove, state: CheckersState)
-    : MGPValidation
-    {
+    private isLegalSubMoveList(move: CheckersMove, state: CheckersState, config: CheckersConfig): MGPValidation {
         for (let i: number = 1; i < move.coords.size(); i++) {
             const previousCoord: Coord = move.coords.get(i - 1);
             const landingCoord: Coord = move.coords.get(i);
@@ -353,19 +340,44 @@ export abstract class AbstractCheckersRules extends ConfigurableRules<CheckersMo
             const direction: MGPFallible<Ordinal> = previousCoord.getDirectionToward(landingCoord);
             if (direction.isFailure()) {
                 return direction.toOtherFallible();
+            } else if (direction.get().isOrthogonal()) {
+                return MGPValidation.failure(CheckersFailure.CANNOT_DO_ORTHOGONAL_MOVE());
             }
             const flyiedOverPlayer: Player[] = this.getFlyiedOverPlayers(previousCoord, landingCoord, state);
-            if (flyiedOverPlayer.length === 0) {
-                if (i + 1 < move.coords.size()) { // The moves continue illegally
+            let isCapture: boolean;
+            if (flyiedOverPlayer.length === 0) { // No Capture
+                if (this.isMisplacedStep(move)) { // The moves continue illegally
                     return MGPValidation.failure('Move cannot continue after non-capture move');
                 }
-            } else if (flyiedOverPlayer.length > 1) {
+                isCapture = false;
+            } else if (flyiedOverPlayer.length > 1) { // Capturing 2+ pieces
                 return MGPValidation.failure(CheckersFailure.CANNOT_JUMP_OVER_SEVERAL_PIECES());
-            } else if (flyiedOverPlayer.some((player: Player) => player.equals(state.getCurrentPlayer()))) {
-                return MGPValidation.failure(RulesFailure.CANNOT_SELF_CAPTURE());
+            } else { // Single Capture
+                if (flyiedOverPlayer.some((player: Player) => player.equals(state.getCurrentPlayer()))) {
+                    return MGPValidation.failure(RulesFailure.CANNOT_SELF_CAPTURE());
+                }
+                isCapture = true;
+            }
+            if (this.isNormalPieceGoingBackwardIllegaly(move, previousCoord, landingCoord, state, config)) {
+                return MGPValidation.failure(CheckersFailure.CANNOT_GO_BACKWARD());
+            }
+            const flyLegality: MGPValidation =
+                this.getFlyLegality(move, previousCoord, landingCoord, state, isCapture, config);
+            if (flyLegality.isFailure()) {
+                return flyLegality;
             }
         }
         return MGPValidation.SUCCESS;
+    }
+
+    private isMisplacedStep(move: CheckersMove): boolean {
+        if (move.coords.size() === 2) {
+            // This is a simple jump without capture, must be a promoted piece (this part is checked later)
+            return false;
+        } else {
+            // We've been this far with capture but this step has no capture, this is misplaced !
+            return true;
+        }
     }
 
     private getFlyiedOverPlayers(start: Coord, end: Coord, state: CheckersState): Player[] {
@@ -376,99 +388,65 @@ export abstract class AbstractCheckersRules extends ConfigurableRules<CheckersMo
         return flyiedOverOccupiedStacks.map((stack: CheckersStack) => stack.getCommander().player);
     }
 
-    private isLegalMoveForNormalPiece(move: CheckersMove, state: CheckersState, config: CheckersConfig)
-    : MGPValidation
-    {
-        if (this.isMoveStep(move)) {
-            return this.isLegalStepForNormalPiece(move, state);
-        } else {
-            return this.isLegalCaptureForNormalPiece(move, state, config);
-        }
-    }
-
-    private isLegalStepForNormalPiece(move: CheckersMove, state: CheckersState)
-    : MGPValidation
-    {
-        const landing: Coord = move.getEndingCoord();
-        if (state.getPieceAt(landing).isEmpty() === false) {
-            return MGPValidation.failure(RulesFailure.MUST_LAND_ON_EMPTY_SPACE());
-        } else {
-            const moveStart: Coord = move.getStartingCoord();
-            const moveDirection: number = moveStart.getDirectionToward(landing).get().y;
-            const opponent: Player = state.getCurrentOpponent();
-            if (moveDirection === opponent.getScoreModifier()) {
-                return MGPValidation.failure(CheckersFailure.CANNOT_GO_BACKWARD());
-            } else {
-                return MGPValidation.SUCCESS;
-            }
-        }
-    }
-
-    private isLegalCaptureForNormalPiece(move: CheckersMove, state: CheckersState, config: CheckersConfig)
-    : MGPValidation
-    {
-        let i: number = 1;
-        const opponent: Player = state.getCurrentOpponent();
-        while (i < move.coords.size()) {
-            // TODO: check sub-capture that goes backward, not only start-end
-            const previousCoord: Coord = move.coords.get(i - 1);
-            const coord: Coord = move.coords.get(i);
-            const moveDirection: Ordinal = previousCoord.getDirectionToward(coord).get();
-            const moveVerticalDirection: number = moveDirection.y;
-            if (moveDirection.isOrthogonal()) {
-                return MGPValidation.failure(CheckersFailure.CANNOT_DO_ORTHOGONAL_MOVE());
-            } else if (moveVerticalDirection === opponent.getScoreModifier() &&
-                config.simplePieceCanCaptureBackwards === false)
-            { // TODO change to *capture* illegally
-                return MGPValidation.failure(CheckersFailure.CANNOT_GO_BACKWARD());
-            }
-            const flyiedOverPlayers: Player[] = this.getFlyiedOverPlayers(previousCoord, coord, state);
-            const moveDistance: number = previousCoord.getDistanceToward(coord);
-            if (flyiedOverPlayers.length === 0) {
-                if (moveDistance > 2) {
-                    return MGPValidation.failure(CheckersFailure.NORMAL_PIECES_CANNOT_MOVE_LIKE_THIS());
-                } else {
-                    return MGPValidation.failure(CheckersFailure.CANNOT_CAPTURE_EMPTY_SPACE());
-                }
-            } else if (flyiedOverPlayers.length > 1) {
-                return MGPValidation.failure(CheckersFailure.CANNOT_JUMP_OVER_SEVERAL_PIECES());
-            }
-            if (moveDistance !== 2) {
-                return MGPValidation.failure(CheckersFailure.CAPTURE_STEPS_MUST_BE_DOUBLE_DIAGONAL());
-            }
-            const flyiedOverPlayer: Player = flyiedOverPlayers[0];
-            if (flyiedOverPlayer.equals(state.getCurrentPlayer())) {
-                return MGPValidation.failure(RulesFailure.CANNOT_SELF_CAPTURE());
-            }
-            i++;
-        }
-        const possibleCaptures: CheckersMove[] = this.getCompleteCaptures(state, config);
-        return this.isLegalCaptureChoice(move, possibleCaptures, config);
-    }
-
-    private isNormalPieceCapturingBackwardIllegaly(move: CheckersMove, state: CheckersState, config: CheckersConfig)
+    /**
+     * @param move a simple move, (start/end, nothing more)
+     */
+    private isNormalPieceGoingBackwardIllegaly(move: CheckersMove,
+                                               stepStart: Coord,
+                                               stepEnd: Coord,
+                                               state: CheckersState,
+                                               config: CheckersConfig)
     : boolean
     {
-        if (this.isMoveStep(move)) {
-            return false;
-        }
         const movingPiece: CheckersPiece = state.getPieceAt(move.getStartingCoord()).getCommander();
         if (movingPiece.isPromoted) {
             return false;
-        }
-        let i: number = 1;
+        } // Here: we check a normal piece
         const opponent: Player = state.getCurrentOpponent();
-        while (i < move.coords.size()) {
-            // TODO: check sub-capture that goes backward, not only start-end
-            const previousCoord: Coord = move.coords.get(i - 1);
-            const coord: Coord = move.coords.get(i);
-            const moveDirection: number = previousCoord.getDirectionToward(coord).get().y;
-            if (moveDirection === opponent.getScoreModifier() && config.simplePieceCanCaptureBackwards === false) {
-                return true;
+        const moveDirection: number = stepStart.getDirectionToward(stepEnd).get().y;
+        const distance: number = stepStart.getDistanceToward(stepEnd);
+        const isBackward: boolean = moveDirection === opponent.getScoreModifier();
+        if (isBackward) {
+            if (distance === 1) {
+                return true; // Piece is stepping backward illegally
+            } else if (config.simplePieceCanCaptureBackwards === false) {
+                return true; // Piece is backcapturing illegally
+            } else {
+                return false; // Legal backward
             }
-            i++;
+        } else {
+            return false; // Legal forward
         }
-        return false;
+    }
+
+    private getFlyLegality(move: CheckersMove,
+                           stepStart: Coord,
+                           stepEnd: Coord,
+                           state: CheckersState,
+                           isCapture: boolean,
+                           config: CheckersConfig)
+    : MGPValidation
+    {
+        const distance: number = stepStart.getDistanceToward(stepEnd);
+        if (distance === 1 && isCapture === false) {
+            return MGPValidation.SUCCESS;
+        }
+        if (distance === 2 && isCapture) {
+            return MGPValidation.SUCCESS;
+        }
+        if (config.promotedPiecesCanFly) {
+            if (state.getPieceAt(move.getStartingCoord()).getCommander().isPromoted) {
+                return MGPValidation.SUCCESS; // Legal promoted fly
+            } else { // Normal piece cannot fly
+                if (isCapture) {
+                    return MGPValidation.failure(CheckersFailure.NORMAL_PIECES_CANNOT_CAPTURE_LIKE_THIS());
+                } else {
+                    return MGPValidation.failure(CheckersFailure.NORMAL_PIECES_CANNOT_MOVE_LIKE_THIS());
+                }
+            }
+        } else { // No piece are allow flying
+            return MGPValidation.failure(CheckersFailure.NO_PIECE_CAN_FLY());
+        }
     }
 
     public isMoveStep(move: CheckersMove): boolean {
@@ -480,29 +458,6 @@ export abstract class AbstractCheckersRules extends ConfigurableRules<CheckersMo
         } else {
             return false;
         }
-    }
-
-    public isLegalCapture(move: CheckersMove,
-                          state: CheckersState,
-                          possibleCaptures: CheckersMove[],
-                          config: CheckersConfig)
-    : MGPValidation
-    {
-        const player: Player = state.getCurrentPlayer();
-        const steppedOverCoords: CoordSet = move.getSteppedOverCoords().get();
-        for (const steppedOverCoord of steppedOverCoords) {
-            const steppedOverSpace: CheckersStack = state.getPieceAt(steppedOverCoord);
-            if (steppedOverSpace.isCommandedBy(player)) {
-                return MGPValidation.failure(RulesFailure.CANNOT_SELF_CAPTURE());
-            }
-            if (steppedOverSpace.isEmpty()) {
-                return MGPValidation.failure(CheckersFailure.CANNOT_CAPTURE_EMPTY_SPACE());
-            }
-        }
-        if (this.isNormalPieceCapturingBackwardIllegaly(move, state, config)) {
-            return MGPValidation.failure(CheckersFailure.CANNOT_GO_BACKWARD()); // TODO change to "capture"
-        }
-        return this.isLegalCaptureChoice(move, possibleCaptures, config);
     }
 
     /**

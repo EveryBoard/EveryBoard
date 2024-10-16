@@ -148,7 +148,7 @@ fdescribe('LascaRules', () => {
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
 
-        it('should forbid too long step', () => {
+        it('should forbid long step', () => {
             // Given any board
             const state: CheckersState = CheckersState.of([
                 [__V, ___, ___, ___, ___, ___, ___],
@@ -164,11 +164,11 @@ fdescribe('LascaRules', () => {
             const move: CheckersMove = CheckersMove.fromStep(new Coord(6, 6), new Coord(3, 3));
 
             // Then it should be illegal
-            const reason: string = CheckersFailure.NORMAL_PIECES_CANNOT_MOVE_LIKE_THIS();
+            const reason: string = CheckersFailure.NO_PIECE_CAN_FLY();
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
 
-        it('should forbid long move for queen that jump over allies', () => {
+        it('should forbid jump over allies', () => {
             // Given any board
             const state: CheckersState = CheckersState.of([
                 [__V, ___, ___, ___, ___, ___, ___],
@@ -209,7 +209,7 @@ fdescribe('LascaRules', () => {
             const move: CheckersMove = CheckersMove.fromCapture(capture).get();
 
             // Then the move should be illegal
-            const reason: string = CheckersFailure.CANNOT_CAPTURE_EMPTY_SPACE();
+            const reason: string = 'Move cannot continue after non-capture move'; // not doable with UX, so not i18ned
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
 
