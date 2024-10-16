@@ -22,7 +22,8 @@ export class CheckersControlHeuristic extends PlayerMetricHeuristic<CheckersMove
         const state: CheckersState = node.gameState;
         const controlScores: PlayerNumberTable = PlayerNumberTable.of([0], [0]);
         for (const player of Player.PLAYERS) {
-            controlScores.add(player, 0, this.getNumberOfMobileCoords(state, player, config));
+            const numberOfMobileCoords: number = this.getNumberOfMobileCoords(state, player, config);
+            controlScores.add(player, 0, numberOfMobileCoords);
         }
         return controlScores;
     }

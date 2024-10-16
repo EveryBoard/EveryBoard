@@ -11,7 +11,7 @@ export class CheckersMoveGenerator extends MoveGenerator<CheckersMove, CheckersS
     }
 
     public override getListMoves(node: CheckersNode, config: MGPOptional<CheckersConfig>): CheckersMove[] {
-        const possiblesCaptures: CheckersMove[] = this.rules.getCaptures(node.gameState, config.get());
+        const possiblesCaptures: CheckersMove[] = this.rules.getLegalCaptures(node.gameState, config.get());
         if (possiblesCaptures.length > 0) {
             return possiblesCaptures;
         } else {

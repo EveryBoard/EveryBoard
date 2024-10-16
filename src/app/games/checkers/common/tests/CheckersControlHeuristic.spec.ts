@@ -19,7 +19,7 @@ const rules: AbstractCheckersRules[] = [
 
 for (const rule of rules) {
 
-    describe('CheckersControlHeuristic for ' + rule.constructor.name, () => {
+    fdescribe('CheckersControlHeuristic for ' + rule.constructor.name, () => {
 
         let heuristic: CheckersControlHeuristic;
         const defaultConfig: MGPOptional<CheckersConfig> = rule.getDefaultRulesConfig();
@@ -83,7 +83,7 @@ for (const rule of rules) {
 
             // When comparing them
             // Then the two should be of equal value:
-            //     the number of non-blocked stacks times the number of piece (which is 11)
+            // the number of non-blocked stacks
             HeuristicUtils.expectStatesToBeOfEqualValue(heuristic, forcedState, freeState, defaultConfig);
         });
 

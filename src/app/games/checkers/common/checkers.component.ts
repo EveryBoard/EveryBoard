@@ -49,18 +49,6 @@ export abstract class CheckersComponent<R extends AbstractCheckersRules>
     private legalMoves: CheckersMove[] = [];
     protected moveGenerator: CheckersMoveGenerator;
 
-    // public constructor(messageDisplayer: MessageDisplayer, cdr: ChangeDetectorRef) {
-    //     super(messageDisplayer, cdr);
-    //     this.setRulesAndNode('Lasca');
-    //     this.availableAIs = [
-    //         new CheckersControlMinimax(this.rules),
-    //         new CheckersControlPlusDominationMinimax(this.rules),
-    //         new MCTS($localize`MCTS`, this.moveGenerator, this.rules),
-    //     ];
-    //     this.encoder = CheckersMove.encoder;
-    //     this.hasAsymmetricBoard = true;
-    // }
-
     public override getViewBox(): ViewBox {
         this.LEFT = 0;
         this.UP = - this.SPACE_SIZE;
@@ -113,29 +101,24 @@ export abstract class CheckersComponent<R extends AbstractCheckersRules>
         const square: CheckersStack = this.constructedState.getPieceAt(coord);
         const max: number = square.getStackSize() - 1;
         const piece: CheckersPiece = square.get(max - z);
-        return piece.isOfficer;
+        return piece.isPromoted;
     }
 
     public override async showLastMove(move: CheckersMove): Promise<void> {
-        this.showLastCapture(move);
-        this.showSteppedOnCoord(move);
-    }
-
-    private showLastCapture(move: CheckersMove): void {
         this.lastCaptures = [];
-        if (this.rules.isMoveStep(move) === false) {
-            const jumpedOverCoord: MGPFallible<CoordSet> = move.getCapturedCoords();
+        this.lastMoveds = [move.getStartingCoord()];
+        if (this.rules.isMoveStep(move)) {
+            this.lastMoveds.push(move.getEndingCoord());
+        } else {
+            const jumpedOverCoord: MGPFallible<CoordSet> = move.getSteppedOverCoords();
             Utils.assert(jumpedOverCoord.isSuccess(), 'Last move is a capture yet has illegal jumps !?');
-            for (const coord of jumpedOverCoord.get()) {
-                this.lastCaptures.push(coord);
+            for (const coord of jumpedOverCoord.get().toList().slice(1)) {
+                if (this.getPreviousState().getPieceAt(coord).isOccupied()) {
+                    this.lastCaptures.push(coord);
+                } else {
+                    this.lastMoveds.push(coord);
+                }
             }
-        }
-    }
-
-    private showSteppedOnCoord(move: CheckersMove): void {
-        this.lastMoveds = [];
-        for (const steppedCoord of move.coords) {
-            this.lastMoveds.push(steppedCoord);
         }
     }
 
@@ -207,9 +190,15 @@ export abstract class CheckersComponent<R extends AbstractCheckersRules>
         const numberOfClicks: number = this.currentMoveClicks.length;
         const lastCoord: Coord = this.currentMoveClicks[numberOfClicks - 1];
         const delta: Vector = lastCoord.getVectorToward(clicked);
-        if (delta.isDiagonalOfLength(2)) {
-            const captured: Coord = new Coord(lastCoord.x + (delta.x / 2), lastCoord.y + (delta.y / 2));
-            this.capturedCoords.push(captured);
+        if (delta.isDiagonal() === false) {
+            return this.cancelMove(CheckersFailure.CAPTURE_STEPS_MUST_BE_DOUBLE_DIAGONAL()); // TODO: rectify this message "should be diagonal"
+        } else {
+            for (const flyiedOver of lastCoord.getCoordsToward(clicked)) {
+                if (this.constructedState.getPieceAt(flyiedOver).isOccupied()) {
+                    this.capturedCoords.push(flyiedOver);
+                }
+                // TODO: else: some moved-fill
+            }
             this.currentMoveClicks.push(clicked);
             const currentMove: CheckersMove = CheckersMove.fromCapture(this.currentMoveClicks).get();
             if (this.legalMoves.some((capture: CheckersMove) => capture.isPrefix(currentMove))) {
@@ -217,8 +206,6 @@ export abstract class CheckersComponent<R extends AbstractCheckersRules>
             } else {
                 return this.chooseMove(currentMove);
             }
-        } else {
-            return this.cancelMove(CheckersFailure.CAPTURE_STEPS_MUST_BE_DOUBLE_DIAGONAL());
         }
     }
 

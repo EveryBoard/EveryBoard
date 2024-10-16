@@ -12,7 +12,7 @@ const one: CheckersPiece = CheckersPiece.ONE;
 const _u: CheckersStack = new CheckersStack([zero]);
 const _v: CheckersStack = new CheckersStack([one]);
 const uv: CheckersStack = new CheckersStack([zero, one]);
-const Uv: CheckersStack = new CheckersStack([CheckersPiece.ZERO_OFFICER, one]);
+const Uv: CheckersStack = new CheckersStack([CheckersPiece.ZERO_PROMOTED, one]);
 const __: CheckersStack = CheckersStack.EMPTY;
 const defaultConfig: MGPOptional<CheckersConfig> = LascaRules.get().getDefaultRulesConfig();
 

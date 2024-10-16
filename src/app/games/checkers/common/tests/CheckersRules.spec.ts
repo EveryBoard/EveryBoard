@@ -13,8 +13,8 @@
 
 //     const zero: CheckersPiece = CheckersPiece.ZERO;
 //     const one: CheckersPiece = CheckersPiece.ONE;
-//     const zeroOfficer: CheckersPiece = CheckersPiece.ZERO_OFFICER;
-//     const oneOfficer: CheckersPiece = CheckersPiece.ONE_OFFICER;
+//     const zeroPromoted: CheckersPiece = CheckersPiece.ZERO_OFFICER;
+//     const onePromoted: CheckersPiece = CheckersPiece.ONE_OFFICER;
 
 //     const __u: CheckersStack = new CheckersStack([zero]);
 //     const __O: CheckersStack = new CheckersStack([zeroOfficer]);
@@ -215,8 +215,8 @@
 //             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
 //         });
 
-//         it('should allow backward capture with officer', () => {
-//             // Given a board on which an officer can capture backward
+//         it('should allow backward capture with promoted', () => {
+//             // Given a board on which an promoted can capture backward
 //             const state: CheckersState = CheckersState.of([
 //                 [___, ___, ___, ___, ___, ___, ___],
 //                 [___, ___, ___, ___, ___, __v, ___],

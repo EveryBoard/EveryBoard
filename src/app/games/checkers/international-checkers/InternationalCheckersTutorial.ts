@@ -12,7 +12,7 @@ const one: CheckersPiece = CheckersPiece.ONE;
 const _u: CheckersStack = new CheckersStack([zero]);
 const _v: CheckersStack = new CheckersStack([one]);
 const uv: CheckersStack = new CheckersStack([zero, one]);
-const Uv: CheckersStack = new CheckersStack([CheckersPiece.ZERO_OFFICER, one]);
+const Uv: CheckersStack = new CheckersStack([CheckersPiece.ZERO_PROMOTED, one]);
 const __: CheckersStack = CheckersStack.EMPTY;
 const defaultConfig: MGPOptional<CheckersConfig> = InternationalCheckersRules.get().getDefaultRulesConfig();
 
@@ -80,7 +80,7 @@ export class InternationalCheckersTutorial extends Tutorial {
         ),
         TutorialStep.fromMove(
             $localize`Promotion`,
-            $localize`When a stack reaches the last line, its commander becomes an officer, and gains the ability to go backward, which is illegal for the other pieces! One of your piece could be promoted now.<br/><br/>You're playing Dark. Do it.`,
+            $localize`When a stack reaches the last line, its commander becomes an promoted, and gains the ability to go backward, which is illegal for the other pieces! One of your piece could be promoted now.<br/><br/>You're playing Dark. Do it.`,
             CheckersState.of([
                 [__, __, __, __, __, __, _v],
                 [__, __, __, uv, __, _v, __],
@@ -114,7 +114,7 @@ export class InternationalCheckersTutorial extends Tutorial {
                 CheckersMove.fromStep(new Coord(4, 0), new Coord(5, 1)),
             ],
             TutorialStepMessage.CONGRATULATIONS(),
-            $localize`You did not move your officer.`,
+            $localize`You did not move your queen.`,
         ),
     ];
 }

@@ -14,13 +14,13 @@ fdescribe('LascaRules', () => {
 
     const zero: CheckersPiece = CheckersPiece.ZERO;
     const one: CheckersPiece = CheckersPiece.ONE;
-    const zeroOfficer: CheckersPiece = CheckersPiece.ZERO_OFFICER;
-    const oneOfficer: CheckersPiece = CheckersPiece.ONE_OFFICER;
+    const zeroOfficer: CheckersPiece = CheckersPiece.ZERO_PROMOTED;
+    const oneOfficer: CheckersPiece = CheckersPiece.ONE_PROMOTED;
 
     const __U: CheckersStack = new CheckersStack([zero]);
     const __O: CheckersStack = new CheckersStack([zeroOfficer]);
     const __V: CheckersStack = new CheckersStack([one]);
-    const _VU: CheckersStack = new CheckersStack([one, zero]); // TODO check if UV is not better
+    const _VU: CheckersStack = new CheckersStack([one, zero]);
     const _UV: CheckersStack = new CheckersStack([zero, one]);
     const _OV: CheckersStack = new CheckersStack([zeroOfficer, one]);
     const __X: CheckersStack = new CheckersStack([oneOfficer]);
@@ -380,7 +380,7 @@ fdescribe('LascaRules', () => {
             const move: CheckersMove = CheckersMove.fromCapture(capture).get();
 
             // Then it should succeed
-            const stack: CheckersPiece[] = [CheckersPiece.ONE_OFFICER, CheckersPiece.ZERO, CheckersPiece.ZERO];
+            const stack: CheckersPiece[] = [CheckersPiece.ONE_PROMOTED, CheckersPiece.ZERO, CheckersPiece.ZERO];
             const Xoo: CheckersStack = new CheckersStack(stack);
             const expectedState: CheckersState = CheckersState.of([
                 [___, ___, ___, ___, ___, ___, ___],

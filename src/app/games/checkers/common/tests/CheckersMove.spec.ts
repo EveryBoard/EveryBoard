@@ -1,14 +1,14 @@
 /* eslint-disable max-lines-per-function */
-import { Coord } from 'src/app/jscaip/Coord';
 import { JSONValue, MGPFallible } from '@everyboard/lib';
-import { CheckersFailure } from '../CheckersFailure';
+import { Coord } from 'src/app/jscaip/Coord';
 import { CheckersMove } from '../CheckersMove';
+import { CheckersFailure } from '../CheckersFailure';
 
 fdescribe('CheckersMove', () => {
 
     describe('Move', () => {
 
-        it('should allow simple move', () => {
+        it('should allow simple step', () => {
             // When trying to create a simple move
             const move: CheckersMove = CheckersMove.fromStep(new Coord(0, 0), new Coord(1, 1));
 
@@ -32,6 +32,15 @@ fdescribe('CheckersMove', () => {
         it('should allow simple capture', () => {
             // When trying to create a simple move
             const move: MGPFallible<CheckersMove> = CheckersMove.fromCapture([new Coord(0, 0), new Coord(2, 2)]);
+
+            // Then it should succeed
+            expect(move.isSuccess()).toBeTrue();
+        });
+
+        it('should allow complexe capture', () => {
+            // When trying to create a simple move
+            const captures: Coord[] = [new Coord(0, 0), new Coord(3, 3), new Coord(1, 5)];
+            const move: MGPFallible<CheckersMove> = CheckersMove.fromCapture(captures);
 
             // Then it should succeed
             expect(move.isSuccess()).toBeTrue();
@@ -148,17 +157,17 @@ fdescribe('CheckersMove', () => {
 
     });
 
-    describe('getCapturedCoords', () => {
+    describe('getSteppedOverCoords', () => {
 
         it('should return the coords between move.coords', () => {
             // Given a capture
             const move: CheckersMove = CheckersMove.fromCapture([new Coord(2, 2), new Coord(4, 4)]).get();
 
-            // When calling getCapturedCoords
-            const steppedOverCoords: Coord[] = move.getCapturedCoords().get().toList();
+            // When calling getSteppedOverCoords
+            const steppedOverCoords: Coord[] = move.getSteppedOverCoords().get().toList();
 
             // Then the piece should be the stepped over coords
-            expect(steppedOverCoords).toEqual([new Coord(3, 3)]);
+            expect(steppedOverCoords).toEqual([new Coord(2, 2), new Coord(3, 3), new Coord(4, 4)]);
         });
 
     });

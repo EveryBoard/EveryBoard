@@ -4,8 +4,8 @@ fdescribe('CheckersState', () => {
 
     const zero: CheckersPiece = CheckersPiece.ZERO;
     const one: CheckersPiece = CheckersPiece.ONE;
-    const zeroOfficer: CheckersPiece = CheckersPiece.ZERO_OFFICER;
-    const oneOfficer: CheckersPiece = CheckersPiece.ONE_OFFICER;
+    const zeroOfficer: CheckersPiece = CheckersPiece.ZERO_PROMOTED;
+    const oneOfficer: CheckersPiece = CheckersPiece.ONE_PROMOTED;
     const __u: CheckersStack = new CheckersStack([zero]);
     const __O: CheckersStack = new CheckersStack([zeroOfficer]);
     const __v: CheckersStack = new CheckersStack([one]);

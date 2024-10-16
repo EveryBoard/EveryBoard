@@ -2,18 +2,18 @@ import { CheckersPiece } from '../CheckersState';
 
 fdescribe('CheckersPiece ', () => {
 
-    const X: CheckersPiece = CheckersPiece.ONE_OFFICER;
-    const O: CheckersPiece = CheckersPiece.ZERO_OFFICER;
-    const v: CheckersPiece = CheckersPiece.ONE;
-    const u: CheckersPiece = CheckersPiece.ZERO;
+    const X: CheckersPiece = CheckersPiece.ONE_PROMOTED;
+    const O: CheckersPiece = CheckersPiece.ZERO_PROMOTED;
+    const V: CheckersPiece = CheckersPiece.ONE;
+    const U: CheckersPiece = CheckersPiece.ZERO;
 
     describe('toString', () => {
 
-        it('should display officer piece as the player owning them and non officer as half of it', () => {
+        it('should display promoted pieces as the player owning them and non promoted as half of it', () => {
             expect(X.toString()).toBe('X');
             expect(O.toString()).toBe('O');
-            expect(v.toString()).toBe('v');
-            expect(u.toString()).toBe('u');
+            expect(V.toString()).toBe('v');
+            expect(U.toString()).toBe('u');
         });
 
     });

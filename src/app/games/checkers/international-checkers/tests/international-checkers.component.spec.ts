@@ -17,16 +17,19 @@ fdescribe('InternationalCheckersComponent', () => {
     const zero: CheckersPiece = CheckersPiece.ZERO;
     const one: CheckersPiece = CheckersPiece.ONE;
 
-    const u: CheckersStack = new CheckersStack([zero]);
-    const v: CheckersStack = new CheckersStack([one]);
-    const uv: CheckersStack = new CheckersStack([zero, one]);
+    const U: CheckersStack = new CheckersStack([zero]);
+    const O: CheckersStack = new CheckersStack([CheckersPiece.ZERO_PROMOTED]);
+    const V: CheckersStack = new CheckersStack([one]);
     const _: CheckersStack = CheckersStack.EMPTY;
     const defaultConfig: MGPOptional<CheckersConfig> = InternationalCheckersRules.get().getDefaultRulesConfig();
 
     let testUtils: ComponentTestUtils<InternationalCheckersComponent>;
+// TODO: when I can still capture with selected piece: HIGHLIGHT POSSIBLE NEXT CAPTURE
 // TODO: not show stack of piece when not stacking !!
-// TODO: not show small capture highlight
-// TODO: put components in common haha
+// TODO: Check that if I pass by last line, the go backward to capture, I don't get promoted
+// TODO: when piece that must move now is a tower higher than the square, make it not be couper en deux par le highlight square
+// TODO: when commander can move, don't highlight a flying deplacement since it can not fly (in lasca & configs)
+// TODO: "look at the green indicator to help you" well not correct message anymore
     beforeEach(fakeAsync(async() => {
         testUtils = await ComponentTestUtils.forGame<InternationalCheckersComponent>('InternationalCheckers');
     }));
@@ -50,13 +53,13 @@ fdescribe('InternationalCheckersComponent', () => {
         it('should highlight piece that can move this turn (when forced capture)', fakeAsync(async() => {
             // Given a board where current player have 3 "mobile" pieces but one must capture
             const state: CheckersState = CheckersState.of([
-                [v, _, v, _, v, _, v],
-                [_, v, _, v, _, v, _],
-                [v, _, v, _, v, _, v],
-                [_, u, _, _, _, _, _],
-                [u, _, _, _, u, _, u],
-                [_, u, _, u, _, u, _],
-                [u, _, u, _, u, _, u],
+                [V, _, V, _, V, _, V],
+                [_, V, _, V, _, V, _],
+                [V, _, V, _, V, _, V],
+                [_, U, _, _, _, _, _],
+                [U, _, _, _, U, _, U],
+                [_, U, _, U, _, U, _],
+                [U, _, U, _, U, _, U],
             ], 1);
 
             // When displaying the board
@@ -106,13 +109,13 @@ fdescribe('InternationalCheckersComponent', () => {
             const previousState: CheckersState = InternationalCheckersRules.get().getInitialState(defaultConfig);
             const previousMove: CheckersMove = CheckersMove.fromStep(new Coord(2, 4), new Coord(3, 3));
             const state: CheckersState = CheckersState.of([
-                [v, _, v, _, v, _, v],
-                [_, v, _, v, _, v, _],
-                [v, _, v, _, v, _, v],
-                [_, _, _, u, _, _, _],
-                [u, _, _, _, u, _, u],
-                [_, u, _, u, _, u, _],
-                [u, _, u, _, u, _, u],
+                [V, _, V, _, V, _, V],
+                [_, V, _, V, _, V, _],
+                [V, _, V, _, V, _, V],
+                [_, _, _, U, _, _, _],
+                [U, _, _, _, U, _, U],
+                [_, U, _, U, _, U, _],
+                [U, _, U, _, U, _, U],
             ], 1);
             await testUtils.setupState(state, { previousState, previousMove });
 
@@ -138,7 +141,7 @@ fdescribe('InternationalCheckersComponent', () => {
             await testUtils.expectClickFailure('#coord-3-3', reason);
         }));
 
-        it('should fail when doing impossible click', fakeAsync(async() => {
+        it('should fail when doing impossible click (non ordinal direction)', fakeAsync(async() => {
             // Given any board with a selected piece
             await testUtils.expectClickSuccess('#coord-4-6');
 
@@ -146,6 +149,16 @@ fdescribe('InternationalCheckersComponent', () => {
             // Then it should fail
             const reason: string = CheckersFailure.CAPTURE_STEPS_MUST_BE_DOUBLE_DIAGONAL();
             await testUtils.expectClickFailure('#coord-6-7', reason);
+        }));
+
+        it('should fail when doing impossible click (ordinal direction)', fakeAsync(async() => {
+            // Given any board with a selected piece
+            await testUtils.expectClickSuccess('#coord-6-6');
+
+            // When clicking on an empty square in (+0; -2) of selected piece
+            // Then it should fail
+            const reason: string = CheckersFailure.CAPTURE_STEPS_MUST_BE_DOUBLE_DIAGONAL();
+            await testUtils.expectClickFailure('#coord-6-4', reason);
         }));
 
         it('should deselect piece when clicking a second time on it', fakeAsync(async() => {
@@ -214,13 +227,13 @@ fdescribe('InternationalCheckersComponent', () => {
         it('should allow simple capture', fakeAsync(async() => {
             // Given a board with a selected piece and a possible capture
             const state: CheckersState = CheckersState.of([
-                [v, _, v, _, v, _, v],
-                [_, v, _, v, _, v, _],
-                [v, _, v, _, v, _, v],
-                [_, uv, _, _, _, _, _],
-                [_, _, u, _, u, _, u],
-                [_, _, _, u, _, u, _],
-                [u, _, _, _, u, _, u],
+                [V, _, V, _, V, _, V],
+                [_, V, _, V, _, V, _],
+                [V, _, V, _, V, _, V],
+                [_, U, _, _, _, _, _],
+                [_, _, U, _, U, _, U],
+                [_, _, _, U, _, U, _],
+                [U, _, _, _, U, _, U],
             ], 1);
             await testUtils.setupState(state);
             await testUtils.expectClickSuccess('#coord-2-2');
@@ -232,16 +245,16 @@ fdescribe('InternationalCheckersComponent', () => {
             await testUtils.expectMoveSuccess('#coord-0-4', move);
         }));
 
-        it(`should have an officer's symbol on the piece that just got promoted`, fakeAsync(async() => {
-            // Given any board with a selected soldier about to become officer
+        it(`should have a promotion's symbol on the piece that just got promoted`, fakeAsync(async() => {
+            // Given any board with a selected soldier about to become promoted
             const state: CheckersState = CheckersState.of([
-                [_, _, _, _, v, _, v],
-                [_, uv, _, _, _, _, _],
+                [_, _, _, _, V, _, V],
+                [_, U, _, _, _, _, _],
                 [_, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _],
-                [u, _, u, _, u, _, u],
+                [U, _, U, _, U, _, U],
             ], 0);
             await testUtils.setupState(state);
             await testUtils.expectClickSuccess('#coord-1-1');
@@ -251,7 +264,7 @@ fdescribe('InternationalCheckersComponent', () => {
             await testUtils.expectMoveSuccess('#coord-0-0', move);
 
             // Then the officier-logo should be on the piece
-            testUtils.expectElementToExist('#square-0-0-piece-1-officer-symbol');
+            testUtils.expectElementToExist('#square-0-0-piece-0-promoted-symbol');
         }));
 
         it('should highlight next possible capture and show the captured piece as captured already', fakeAsync(async() => {
@@ -259,10 +272,10 @@ fdescribe('InternationalCheckersComponent', () => {
             const state: CheckersState = CheckersState.of([
                 [_, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _],
-                [_, _, v, _, _, _, _],
-                [_, u, _, u, _, _, _],
+                [_, _, V, _, _, _, _],
+                [_, U, _, U, _, _, _],
                 [_, _, _, _, _, _, _],
-                [_, _, _, _, _, u, _],
+                [_, _, _, _, _, U, _],
                 [_, _, _, _, _, _, _],
             ], 1);
             await testUtils.setupState(state);
@@ -280,10 +293,10 @@ fdescribe('InternationalCheckersComponent', () => {
             const state: CheckersState = CheckersState.of([
                 [_, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _],
-                [_, _, v, _, _, _, _],
-                [_, v, _, u, _, _, _],
+                [_, _, V, _, _, _, _],
+                [_, V, _, U, _, _, _],
                 [_, _, _, _, _, _, _],
-                [_, _, _, _, _, u, _],
+                [_, _, _, _, _, U, _],
                 [_, _, _, _, _, _, _],
             ], 1);
             await testUtils.setupState(state);
@@ -294,6 +307,85 @@ fdescribe('InternationalCheckersComponent', () => {
 
             // Then the move should be illegal
             await testUtils.expectMoveFailure('#coord-0-4', RulesFailure.CANNOT_SELF_CAPTURE(), move);
+        }));
+
+        it('should allow doing flying capture with queen with close-landing', fakeAsync(async() => {
+            // Given a board with a selected queen and a possible capture
+            const state: CheckersState = CheckersState.of([
+                [_, _, _, _, _, _, _, _, _, _],
+                [_, V, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, O, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _],
+            ], 0);
+            await testUtils.setupState(state);
+            await testUtils.expectClickSuccess('#coord-4-4');
+
+            // When doing a capture
+            const move: CheckersMove = CheckersMove.fromCapture([new Coord(4, 4), new Coord(0, 0)]).get();
+
+            // Then it should be a success
+            await testUtils.expectMoveSuccess('#coord-0-0', move);
+        }));
+
+        it('should allow doing flying multiple-capture with queen with far-landing', fakeAsync(async() => {
+            // Given a board with a selected queen and a possible multiple-capture
+            const state: CheckersState = CheckersState.of([
+                [_, _, _, _, _, _, _, _, _, _],
+                [_, V, _, _, _, _, _, _, _, _],
+                [_, _, _, _, V, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, V, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, O, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _],
+            ], 0);
+            await testUtils.setupState(state);
+            await testUtils.expectClickSuccess('#coord-6-6');
+            await testUtils.expectClickSuccess('#coord-2-2');
+
+            // When doing a capture
+            const captures: Coord[] = [new Coord(6, 6), new Coord(2, 2), new Coord(0, 0)];
+            const move: CheckersMove = CheckersMove.fromCapture(captures).get();
+
+            // Then it should be a success
+            await testUtils.expectMoveSuccess('#coord-0-0', move);
+        }));
+
+        it('should only highlight captured piece when doing flying capture with queen', fakeAsync(async() => {
+            // Given a board with a selected queen and a possible capture
+            const state: CheckersState = CheckersState.of([
+                [_, _, _, _, _, _, _, _, _, _],
+                [_, V, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, O, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _],
+            ], 0);
+            await testUtils.setupState(state);
+            await testUtils.expectClickSuccess('#coord-4-4');
+
+            // When doing a capture
+            const move: CheckersMove = CheckersMove.fromCapture([new Coord(4, 4), new Coord(0, 0)]).get();
+            await testUtils.expectMoveSuccess('#coord-0-0', move);
+
+            // Then only captured space should be captured-fill
+            testUtils.expectElementToHaveClass('#square-1-1', 'captured-fill');
+            testUtils.expectElementNotToHaveClass('#square-0-0', 'captured-fill');
+            testUtils.expectElementNotToHaveClass('#square-2-2', 'captured-fill');
+            testUtils.expectElementNotToHaveClass('#square-3-3', 'captured-fill');
+            testUtils.expectElementNotToHaveClass('#square-4-4', 'captured-fill');
         }));
 
     });
@@ -313,7 +405,7 @@ fdescribe('InternationalCheckersComponent', () => {
             testUtils.expectTranslationYToBe('#coord-0-0', 900);
             testUtils.expectTranslationYToBe('#coord-9-9', 0);
         }));
-// TODO "look at the green indicator to help you" well not correct message anymore
+
         it('should not duplicate highlight when doing incorrect second click', fakeAsync(async() => {
             // Given a board where you are player two and a moving piece has been selected
             await testUtils.expectClickSuccess('#coord-2-6');
@@ -345,6 +437,33 @@ fdescribe('InternationalCheckersComponent', () => {
 
     });
 
+    describe('design', () => {
+
+        it('should not show minoritary capture options', fakeAsync(async() => {
+            // Given a board with a illegal minoritary option
+            const state: CheckersState = CheckersState.of([
+                [_, _, _, _, _, _, _, _, _, _],
+                [_, V, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _],
+                [_, _, _, V, _, _, _, V, _, _],
+                [_, _, _, _, U, _, U, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _],
+            ], 0);
+
+            // When displaying the board
+            await testUtils.setupState(state);
+
+            // Then the majoritary capturer should be highlighted and the minortary capturer should not
+            testUtils.expectElementToHaveClass('#clickable-highlight-4-4', 'clickable-stroke');
+            testUtils.expectElementNotToExist('#clickable-highlight-6-4');
+        }));
+
+    });
+
     describe('multiple capture', () => {
 
         it('should perform capture when no more piece can be captured', fakeAsync(async() => {
@@ -352,10 +471,10 @@ fdescribe('InternationalCheckersComponent', () => {
             const state: CheckersState = CheckersState.of([
                 [_, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _],
-                [_, _, v, _, _, _, _, _, _, _],
-                [_, u, _, u, _, _, _, _, _, _],
+                [_, _, V, _, _, _, _, _, _, _],
+                [_, U, _, U, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, u, _, _, _, _],
+                [_, _, _, _, _, U, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _],

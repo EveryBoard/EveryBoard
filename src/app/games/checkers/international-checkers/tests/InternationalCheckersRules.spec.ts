@@ -14,8 +14,8 @@ fdescribe('InternationalCheckersRules', () => {
 
     const zero: CheckersPiece = CheckersPiece.ZERO;
     const one: CheckersPiece = CheckersPiece.ONE;
-    const zeroQueen: CheckersPiece = CheckersPiece.ZERO_OFFICER;
-    const oneQueen: CheckersPiece = CheckersPiece.ONE_OFFICER;
+    const zeroQueen: CheckersPiece = CheckersPiece.ZERO_PROMOTED;
+    const oneQueen: CheckersPiece = CheckersPiece.ONE_PROMOTED;
 
     const U: CheckersStack = new CheckersStack([zero]);
     const O: CheckersStack = new CheckersStack([zeroQueen]);
@@ -147,9 +147,8 @@ fdescribe('InternationalCheckersRules', () => {
             const reason: string = CoordFailure.OUT_OF_RANGE(outOfBoardCoord);
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
-// TODO: when piece that must move now is a tower higher than the square, make it not be couper en deux par le highlight square
-// TODO: when commander can move, don't highlight a flying deplacement since it can not fly (in lasca & configs)
-        it('should forbid too long step', () => {
+
+        it('should forbid long step for normal piece', () => {
             // Given any board
             const state: CheckersState = CheckersState.of([
                 [V, _, _, _, _, _, _, _, _, _],
@@ -206,355 +205,443 @@ fdescribe('InternationalCheckersRules', () => {
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         });
 
-        it('should forbid long move for queen that jump over allies', () => {
-            // Given any board
-            const state: CheckersState = CheckersState.of([
-                [V, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, U, _, _, _],
-                [_, _, _, _, _, _, _, U, _, _],
-                [_, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, O],
-            ], 0);
-
-            // When trying a move starting outside of the board
-            const move: CheckersMove = CheckersMove.fromStep(new Coord(9, 9), new Coord(3, 3));
-
-            // Then it should be illegal
-            const reason: string = CheckersFailure.CANNOT_JUMP_OVER_SEVERAL_PIECES();
-            RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
-        });
-
     });
 
     describe('Capture', () => {
 
-        it('should forbid continuing move after last capture', () => {
-            // Given a board with a possible capture
-            const state: CheckersState = CheckersState.of([
-                [V, _, V, _, V, _, V, _, _, _],
-                [_, V, _, V, _, V, _, _, _, _],
-                [V, _, V, _, V, _, V, _, _, _],
-                [_, U, _, _, _, _, _, _, _, _],
-                [_, _, U, _, U, _, U, _, _, _],
-                [_, _, _, U, _, U, _, _, _, _],
-                [U, _, _, _, U, _, U, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _],
-            ], 1);
+        describe('Normal Pieces', () => {
 
-            // When doing a move that jump over an empty square after capture
-            const capture: Coord[] = [new Coord(2, 2), new Coord(0, 4), new Coord(2, 6)];
-            const move: CheckersMove = CheckersMove.fromCapture(capture).get();
+            it('should forbid continuing move after last capture', () => {
+                // Given a board with a possible capture
+                const state: CheckersState = CheckersState.of([
+                    [V, _, V, _, V, _, V, _, _, _],
+                    [_, V, _, V, _, V, _, _, _, _],
+                    [V, _, V, _, V, _, V, _, _, _],
+                    [_, U, _, _, _, _, _, _, _, _],
+                    [_, _, U, _, U, _, U, _, _, _],
+                    [_, _, _, U, _, U, _, _, _, _],
+                    [U, _, _, _, U, _, U, _, _, _],
+                    [_, _, _, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _, _, _],
+                ], 1);
 
-            // Then the move should be illegal
-            const reason: string = CheckersFailure.CANNOT_CAPTURE_EMPTY_SPACE();
-            RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
-        });
-// TODO Check that if I pass by last line, the go backward to capture, I don't get promoted
-        it('should forbid to pass out of the board', () => {
-            // Given any board
-            const state: CheckersState = rules.getInitialState(defaultConfig);
+                // When doing a move that jump over an empty square after capture
+                const capture: Coord[] = [new Coord(2, 2), new Coord(0, 4), new Coord(2, 6)];
+                const move: CheckersMove = CheckersMove.fromCapture(capture).get();
 
-            // When trying a move going outside of the board
-            const outOfBoardCoord: Coord = new Coord(-2, 4);
-            const captures: Coord[] = [new Coord(0, 6), outOfBoardCoord, new Coord(0, 2)];
-            const move: CheckersMove = CheckersMove.fromCapture(captures).get();
+                // Then the move should be illegal
+                const reason: string = CheckersFailure.CANNOT_CAPTURE_EMPTY_SPACE();
+                RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
+            });
 
-            // Then it should be illegal
-            const reason: string = CoordFailure.OUT_OF_RANGE(outOfBoardCoord);
-            RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
-        });
+            it('should forbid to pass out of the board', () => {
+                // Given any board
+                const state: CheckersState = rules.getInitialState(defaultConfig);
 
-        it('should forbid skipping capture', () => {
-            // Given a board with a possible capture
-            const state: CheckersState = CheckersState.of([
-                [V, _, V, _, V, _, V],
-                [_, V, _, V, _, V, _],
-                [V, _, V, _, V, _, V],
-                [_, U, _, _, _, _, _],
-                [_, _, U, _, U, _, U],
-                [_, _, _, U, _, U, _],
-                [U, _, _, _, U, _, U],
-            ], 1);
+                // When trying a move going outside of the board
+                const outOfBoardCoord: Coord = new Coord(-2, 4);
+                const captures: Coord[] = [new Coord(0, 6), outOfBoardCoord, new Coord(0, 2)];
+                const move: CheckersMove = CheckersMove.fromCapture(captures).get();
 
-            // When doing a non capturing move
-            const move: CheckersMove = CheckersMove.fromStep(new Coord(2, 2), new Coord(3, 3));
+                // Then it should be illegal
+                const reason: string = CoordFailure.OUT_OF_RANGE(outOfBoardCoord);
+                RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
+            });
 
-            // Then the move should be illegal
-            const reason: string = CheckersFailure.CANNOT_SKIP_CAPTURE();
-            RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
-        });
+            it('should forbid skipping capture', () => {
+                // Given a board with a possible capture
+                const state: CheckersState = CheckersState.of([
+                    [V, _, V, _, V, _, V],
+                    [_, V, _, V, _, V, _],
+                    [V, _, V, _, V, _, V],
+                    [_, U, _, _, _, _, _],
+                    [_, _, U, _, U, _, U],
+                    [_, _, _, U, _, U, _],
+                    [U, _, _, _, U, _, U],
+                ], 1);
 
-        it('should forbid partial-capture', () => {
-            // Given a board on which a capture of two pieces is possible
-            const state: CheckersState = CheckersState.of([
-                [V, _, V, _, V, _, V, _, _, _],
-                [_, V, _, V, _, V, _, _, _, _],
-                [V, _, U, _, V, _, V, _, _, _],
-                [_, U, _, _, _, _, _, _, _, _],
-                [_, _, U, _, U, _, U, _, _, _],
-                [_, _, _, U, _, U, _, _, _, _],
-                [U, _, _, _, U, _, U, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _],
-            ], 1);
+                // When doing a non capturing move
+                const move: CheckersMove = CheckersMove.fromStep(new Coord(2, 2), new Coord(3, 3));
 
-            // When capturing the first but not the second
-            const move: CheckersMove = CheckersMove.fromCapture([new Coord(1, 1), new Coord(3, 3)]).get();
+                // Then the move should be illegal
+                const reason: string = CheckersFailure.CANNOT_SKIP_CAPTURE();
+                RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
+            });
 
-            // Then the move should be illegal
-            const reason: string = CheckersFailure.MUST_FINISH_CAPTURING();
-            RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
-        });
+            it('should forbid partial-capture', () => {
+                // Given a board on which a capture of two pieces is possible
+                const state: CheckersState = CheckersState.of([
+                    [V, _, V, _, V, _, V, _, _, _],
+                    [_, V, _, V, _, V, _, _, _, _],
+                    [V, _, U, _, V, _, V, _, _, _],
+                    [_, U, _, _, _, _, _, _, _, _],
+                    [_, _, U, _, U, _, U, _, _, _],
+                    [_, _, _, U, _, U, _, _, _, _],
+                    [U, _, _, _, U, _, U, _, _, _],
+                    [_, _, _, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _, _, _],
+                ], 1);
 
-        it('should forbid self-capturing', () => {
-            // Given a board on which a piece could try to capture its ally
-            const state: CheckersState = CheckersState.of([
-                [_, _, _, _, _, _, _],
-                [_, V, _, _, _, _, _],
-                [_, _, V, _, _, _, _],
-                [_, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _],
-                [_, _, _, _, _, U, _],
-                [_, _, _, _, _, _, _],
-            ], 1);
+                // When capturing the first but not the second
+                const move: CheckersMove = CheckersMove.fromCapture([new Coord(1, 1), new Coord(3, 3)]).get();
 
-            // When doing so
-            const move: CheckersMove = CheckersMove.fromCapture([new Coord(1, 1), new Coord(3, 3)]).get();
+                // Then the move should be illegal
+                const reason: string = CheckersFailure.MUST_FINISH_CAPTURING();
+                RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
+            });
 
-            // Then the move should be illegal
-            const reason: string = RulesFailure.CANNOT_SELF_CAPTURE();
-            RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
-        });
+            it('should forbid self-capturing', () => {
+                // Given a board on which a piece could try to capture its ally
+                const state: CheckersState = CheckersState.of([
+                    [_, _, _, _, _, _, _],
+                    [_, V, _, _, _, _, _],
+                    [_, _, V, _, _, _, _],
+                    [_, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _],
+                    [_, _, _, _, _, U, _],
+                    [_, _, _, _, _, _, _],
+                ], 1);
 
-        it('should allow backward capture', () => {
-            // Given a board on which a backward capture is possible
-            const state: CheckersState = CheckersState.of([
-                [_, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, U, _, _, _, _, _],
-                [_, _, _, V, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _],
-            ], 1);
+                // When doing so
+                const move: CheckersMove = CheckersMove.fromCapture([new Coord(1, 1), new Coord(3, 3)]).get();
 
-            // When doing so
-            const move: CheckersMove = CheckersMove.fromCapture([new Coord(3, 3), new Coord(5, 1)]).get();
+                // Then the move should be illegal
+                const reason: string = RulesFailure.CANNOT_SELF_CAPTURE();
+                RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
+            });
 
-            // Then the piece should be captured
-            const expectedState: CheckersState = CheckersState.of([
-                [_, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, V, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _],
-            ], 2);
-            RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
-        });
+            it('should allow backward capture', () => {
+                // Given a board on which a backward capture is possible
+                const state: CheckersState = CheckersState.of([
+                    [_, _, _, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _, _, _],
+                    [_, _, _, _, U, _, _, _, _, _],
+                    [_, _, _, V, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _, _, _],
+                ], 1);
 
-        it('should allow backward capture with queen', () => {
-            // Given a board on which an queen can capture backward
-            const state: CheckersState = CheckersState.of([
-                [_, _, _, _, _, _, _],
-                [_, _, _, _, _, V, _],
-                [_, _, _, _, O, _, _],
-                [_, _, _, _, _, _, _],
-                [_, _, V, _, _, _, _],
-                [_, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _],
-            ], 2);
+                // When doing so
+                const move: CheckersMove = CheckersMove.fromCapture([new Coord(3, 3), new Coord(5, 1)]).get();
 
-            // When doing it
-            const move: CheckersMove = CheckersMove.fromCapture([new Coord(4, 2), new Coord(6, 0)]).get();
+                // Then the piece should be captured
+                const expectedState: CheckersState = CheckersState.of([
+                    [_, _, _, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, V, _, _, _, _],
+                    [_, _, _, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _, _, _],
+                ], 2);
+                RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
+            });
 
-            // Then it should be a success
-            const expectedState: CheckersState = CheckersState.of([
-                [_, _, _, _, _, _, O],
-                [_, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _],
-                [_, _, V, _, _, _, _],
-                [_, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _],
-            ], 3);
-            RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
-        });
+            it('should forbid to do small capture when big capture available', () => {
+                // Given a board where two different sized captures are possible
+                const state: CheckersState = CheckersState.of([
+                    [_, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _],
+                    [_, _, V, _, _, _, _],
+                    [_, U, _, U, _, _, _],
+                    [_, _, _, _, _, _, _],
+                    [_, _, _, _, _, U, _],
+                    [_, _, _, _, _, _, _],
+                ], 1);
 
-        it('should forbid to do small capture when big capture available', () => {
-            // Given a board where two different sized captures are possible
-            const state: CheckersState = CheckersState.of([
-                [_, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _],
-                [_, _, V, _, _, _, _],
-                [_, U, _, U, _, _, _],
-                [_, _, _, _, _, _, _],
-                [_, _, _, _, _, U, _],
-                [_, _, _, _, _, _, _],
-            ], 1);
+                // When doing the small capture
+                const move: CheckersMove = CheckersMove.fromCapture([new Coord(2, 2), new Coord(0, 4)]).get();
 
-            // When doing the small capture
-            const move: CheckersMove = CheckersMove.fromCapture([new Coord(2, 2), new Coord(0, 4)]).get();
+                // Then it should be illegal
+                const reason: string = CheckersFailure.MUST_DO_BIGGEST_CAPTURE();
+                RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
+            });
 
-            // Then it should be illegal
-            const reason: string = CheckersFailure.MUST_DO_BIGGEST_CAPTURE();
-            RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
-        });
+            it('should allow to do big capture when small capture available', () => {
+                // Given a board where two different sized captures are possible
+                const state: CheckersState = CheckersState.of([
+                    [_, _, _, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, V, _, _, _, _],
+                    [_, _, _, _, U, _, U, _, _, _],
+                    [_, _, _, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _, U, _],
+                    [_, _, _, _, _, _, _, _, _, _],
+                ], 1);
 
-        it('should allow to do big capture when small capture available', () => {
-            // Given a board where two different sized captures are possible
-            const state: CheckersState = CheckersState.of([
-                [_, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, V, _, _, _, _],
-                [_, _, _, _, U, _, U, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, U, _],
-                [_, _, _, _, _, _, _, _, _, _],
-            ], 1);
+                // When doing the big capture
+                const capture: Coord[] = [new Coord(5, 5), new Coord(7, 7), new Coord(9, 9)];
+                const move: CheckersMove = CheckersMove.fromCapture(capture).get();
 
-            // When doing the big capture
-            const capture: Coord[] = [new Coord(5, 5), new Coord(7, 7), new Coord(9, 9)];
-            const move: CheckersMove = CheckersMove.fromCapture(capture).get();
+                // Then it should succeed
+                const expectedState: CheckersState = CheckersState.of([
+                    [_, _, _, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _, _, _],
+                    [_, _, _, _, U, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _, _, X],
+                ], 2);
+                RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
+            });
 
-            // Then it should succeed
-            const expectedState: CheckersState = CheckersState.of([
-                [_, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, U, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, X],
-            ], 2);
-            RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
-        });
+            it('should allow capturing standalone opponent piece', () => {
+                // Given a board with a possible single-capture
+                const state: CheckersState = CheckersState.of([
+                    [_, _, _, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, V, _, _, _],
+                    [_, _, _, _, _, _, _, _, _, _],
+                    [_, _, _, _, V, _, _, _, _, _],
+                    [_, _, _, _, _, U, _, _, _, _],
+                    [_, _, _, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _, _, _],
+                ], 2);
 
-        it('should allow capturing standalone opponent piece', () => {
-            // Given a board with a possible single-capture
-            const state: CheckersState = CheckersState.of([
-                [_, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, V, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, V, _, _, _, _, _],
-                [_, _, _, _, _, U, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _],
-            ], 2);
+                // When capturing the single piece
+                const move: CheckersMove = CheckersMove.fromCapture([new Coord(5, 5), new Coord(3, 3)]).get();
 
-            // When capturing the single piece
-            const move: CheckersMove = CheckersMove.fromCapture([new Coord(5, 5), new Coord(3, 3)]).get();
+                // Then it should succeed
+                const expectedState: CheckersState = CheckersState.of([
+                    [_, _, _, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, V, _, _, _],
+                    [_, _, _, U, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _, _, _],
+                ], 3);
+                RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
+            });
 
-            // Then it should succeed
-            const expectedState: CheckersState = CheckersState.of([
-                [_, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, V, _, _, _],
-                [_, _, _, U, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _],
-            ], 3);
-            RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
-        });
+            it('should allow multiple-capture', () => {
+                // Given a board where a multiple captures is possible
+                const state: CheckersState = CheckersState.of([
+                    [_, _, V, _, _, _, _, _, _, _],
+                    [_, _, _, U, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, U, _, _, _, _],
+                    [_, _, _, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _, _, _],
+                    [U, _, _, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _, _, _],
+                ], 1);
 
-        it('should allow multiple-capture', () => {
-            // Given a board where a multiple captures is possible
-            const state: CheckersState = CheckersState.of([
-                [_, _, V, _, _, _, _, _, _, _],
-                [_, _, _, U, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, U, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _],
-                [U, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _],
-            ], 1);
+                // When doing the multiple capture
+                const move: CheckersMove = CheckersMove.fromCapture([
+                    new Coord(2, 0),
+                    new Coord(4, 2),
+                    new Coord(6, 4),
+                ]).get();
 
-            // When doing the multiple capture
-            const move: CheckersMove = CheckersMove.fromCapture([
-                new Coord(2, 0),
-                new Coord(4, 2),
-                new Coord(6, 4)]).get();
+                // Then it should succeed
+                const expectedState: CheckersState = CheckersState.of([
+                    [_, _, _, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, V, _, _, _],
+                    [_, _, _, _, _, _, _, _, _, _],
+                    [U, _, _, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _, _, _],
+                ], 2);
+                RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
+            });
 
-            // Then it should succeed
-            const expectedState: CheckersState = CheckersState.of([
-                [_, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, V, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _],
-                [U, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _],
-            ], 2);
-            RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
-        });
+            it('should forbid too long move', () => {
+                // Given a board where a normal piece could try a capture with a longer jump
+                const state: CheckersState = CheckersState.of([
+                    [_, _, V, _, _, _, _, _, _, _],
+                    [_, _, _, U, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, U, _, _, _, _],
+                    [_, _, V, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _, _, _],
+                    [U, _, _, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _, _, _],
+                ], 0);
 
-        it('should forbid too long move', () => {
-            // Given a board where a normal piece could try a capture with a longer jump
-            const state: CheckersState = CheckersState.of([
-                [_, _, V, _, _, _, _, _, _, _],
-                [_, _, _, U, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, U, _, _, _, _],
-                [_, _, V, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _],
-                [U, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _],
-            ], 0);
+                // When trying to do a capture that does too long step
+                const move: CheckersMove = CheckersMove.fromCapture([new Coord(0, 6), new Coord(3, 3)]).get();
 
-            // When trying to do a capture that does too long step
-            const move: CheckersMove = CheckersMove.fromCapture([new Coord(0, 6), new Coord(3, 3)]).get();
+                // Then it should fail
+                const reason: string = CheckersFailure.CAPTURE_STEPS_MUST_BE_DOUBLE_DIAGONAL();
+                RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
+            });
 
-            // Then it should fail
-            const reason: string = CheckersFailure.CAPTURE_STEPS_MUST_BE_DOUBLE_DIAGONAL();
-            RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
 
-        it('should forbid long jump for queen that jump over two allies', () => {
-            // TODO
-        });
+        describe('Queen', () => {
 
-        it('should allow queen capture to land just after capture', () => {
-            // TODO
-        });
+            it('should allow backward capture with queen', () => {
+                // Given a board on which an queen can capture backward
+                const state: CheckersState = CheckersState.of([
+                    [_, _, _, _, _, _, _],
+                    [_, _, _, _, _, V, _],
+                    [_, _, _, _, O, _, _],
+                    [_, V, _, _, _, _, _],
+                    [_, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _],
+                ], 2);
 
-        it('should allow queen capture to land far after capture', () => {
-            // TODO
+                // When doing it
+                const move: CheckersMove = CheckersMove.fromCapture([new Coord(4, 2), new Coord(6, 0)]).get();
+
+                // Then it should be a success
+                const expectedState: CheckersState = CheckersState.of([
+                    [_, _, _, _, _, _, O],
+                    [_, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _],
+                    [_, V, _, _, _, _, _],
+                    [_, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _],
+                ], 3);
+                RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
+            });
+
+            it('should forbid capturing two allies in one jump', () => {
+                // Given any board
+                const state: CheckersState = CheckersState.of([
+                    [V, _, _, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, U, _, _, _],
+                    [_, _, _, _, _, _, _, U, _, _],
+                    [_, _, _, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _, _, O],
+                ], 0);
+
+                // When trying a move starting outside of the board
+                const move: CheckersMove = CheckersMove.fromStep(new Coord(9, 9), new Coord(3, 3));
+
+                // Then it should be illegal
+                const reason: string = CheckersFailure.CANNOT_JUMP_OVER_SEVERAL_PIECES();
+                RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
+            });
+
+            it('should forbid capturing two ennemies in one jump', () => {
+                // Given any board
+                const state: CheckersState = CheckersState.of([
+                    [V, _, _, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, V, _, _, _],
+                    [_, _, _, _, _, _, _, V, _, _],
+                    [_, _, _, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _, _, O],
+                ], 0);
+
+                // When trying a move starting outside of the board
+                const move: CheckersMove = CheckersMove.fromStep(new Coord(9, 9), new Coord(3, 3));
+
+                // Then it should be illegal
+                const reason: string = CheckersFailure.CANNOT_JUMP_OVER_SEVERAL_PIECES();
+                RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
+            });
+
+            it('should allow queen capture to land just after capture', () => {
+                // Given a board where a queen could capture with a longer jump
+                const state: CheckersState = CheckersState.of([
+                    [_, _, _, _, _, _, _, _, _, _],
+                    [_, _, _, U, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, U, _, _, _, _],
+                    [_, _, V, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _, _, _],
+                    [O, _, _, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _, _, V],
+                    [_, _, _, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _, _, _],
+                ], 0);
+
+                // When trying to do a capture with "right after" landing
+                const move: CheckersMove = CheckersMove.fromCapture([new Coord(0, 6), new Coord(3, 3)]).get();
+
+                // Then it should succeed
+                const expectedState: CheckersState = CheckersState.of([
+                    [_, _, _, _, _, _, _, _, _, _],
+                    [_, _, _, U, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _, _, _],
+                    [_, _, _, O, _, U, _, _, _, _],
+                    [_, _, _, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _, _, V],
+                    [_, _, _, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _, _, _],
+                ], 1);
+                RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
+            });
+
+            it('should allow queen capture to land far after capture', () => {
+                // Given a board where a queen could capture with a longer jump
+                const state: CheckersState = CheckersState.of([
+                    [_, _, _, _, _, _, _, _, _, _],
+                    [_, _, _, U, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, U, _, _, _, _],
+                    [_, _, V, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _, _, _],
+                    [O, _, _, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _, _, V],
+                    [_, _, _, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _, _, _],
+                ], 0);
+
+                // When trying to do a capture with a "further" landing
+                const move: CheckersMove = CheckersMove.fromCapture([new Coord(0, 6), new Coord(4, 2)]).get();
+
+                // Then it should succeed
+                const expectedState: CheckersState = CheckersState.of([
+                    [_, _, _, _, _, _, _, _, _, _],
+                    [_, _, _, U, _, _, _, _, _, _],
+                    [_, _, _, _, O, _, _, _, _, _],
+                    [_, _, _, _, _, U, _, _, _, _],
+                    [_, _, _, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _, _, V],
+                    [_, _, _, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _, _, _],
+                ], 1);
+                RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
+            });
+
         });
 
     });
@@ -625,6 +712,40 @@ fdescribe('InternationalCheckersRules', () => {
             ], 2);
             const node: CheckersNode = new CheckersNode(expectedState);
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, defaultConfig);
+        });
+
+    });
+// TODO: test in LascaRules that piece don't go twice over the same stack (1-2-1)
+    describe('getLegalCaptures', () => {
+
+        it('should forbid to pass over the same coord several times', () => {
+            // TODO: test the ux of this on component
+            // Given a board with only one possible capture
+            const state: CheckersState = new CheckersState([
+                [_, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, V, _, _, _, _],
+                [_, _, _, _, _, _, V, _, V, _],
+                [_, _, _, _, _, _, _, _, _, O],
+                [_, _, _, _, V, _, V, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _],
+            ], 20);
+
+            // When checking the legal list of captures
+            const legalCaptures: CheckersMove[] = rules.getLegalCaptures(state, defaultConfig.get());
+            // Then it should be this one, the bigger not to fly over same coord twice
+            const coords: Coord[] = [
+                new Coord(9, 7),
+                new Coord(6, 4),
+                new Coord(3, 7),
+                new Coord(5, 9),
+                new Coord(7, 7),
+            ];
+            const move: CheckersMove = CheckersMove.fromCapture(coords).get();
+            expect(legalCaptures).toEqual([move]);
         });
 
     });

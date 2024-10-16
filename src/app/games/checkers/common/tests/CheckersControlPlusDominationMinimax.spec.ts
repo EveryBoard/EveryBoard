@@ -14,7 +14,7 @@ const rules: AbstractCheckersRules[] = [
 
 for (const rule of rules) {
 
-    describe('CheckersControlPlusDominationMinimax for ' + rule.constructor.name, () => {
+    fdescribe('CheckersControlPlusDominationMinimax for ' + rule.constructor.name, () => {
         const minimax: CheckersControlPlusDominationMinimax = new CheckersControlPlusDominationMinimax(rule);
         const minimaxOptions: AIDepthLimitOptions = { name: 'Level 1', maxDepth: 1 };
         const defaultConfig: MGPOptional<CheckersConfig> = rule.getDefaultRulesConfig();

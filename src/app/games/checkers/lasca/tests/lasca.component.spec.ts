@@ -136,7 +136,7 @@ fdescribe('LascaComponent', () => {
             await testUtils.expectClickFailure('#coord-2-2', reason);
         }));
 
-        it('should fail when doing impossible click', fakeAsync(async() => {
+        it('should fail when doing impossible click (non ordinal direction)', fakeAsync(async() => {
             // Given any board with a selected piece
             await testUtils.expectClickSuccess('#coord-4-4');
 
@@ -144,6 +144,26 @@ fdescribe('LascaComponent', () => {
             // Then it should fail
             const reason: string = CheckersFailure.CAPTURE_STEPS_MUST_BE_DOUBLE_DIAGONAL();
             await testUtils.expectClickFailure('#coord-6-5', reason);
+        }));
+
+        it('should fail when doing impossible click (ordinal direction)', fakeAsync(async() => {
+            // Given any board with a selected piece
+            const state: CheckersState = CheckersState.of([
+                [_v, __, _v, __, _v, __, _v],
+                [__, _v, __, _v, __, _v, __],
+                [_v, __, _v, __, _v, __, _v],
+                [__, __, __, __, __, __, __],
+                [__, __, __, __, __, __, __],
+                [__, _u, __, _u, __, _u, __],
+                [_u, __, _u, __, _u, __, _u],
+            ], 0);
+            await testUtils.setupState(state);
+            await testUtils.expectClickSuccess('#coord-5-5');
+
+            // When clicking on an empty square in (+0; -2) of selected piece
+            // Then it should fail
+            const reason: string = CheckersFailure.CAPTURE_STEPS_MUST_BE_DOUBLE_DIAGONAL();
+            await testUtils.expectClickFailure('#coord-5-3', reason);
         }));
 
         it('should deselect piece when clicking a second time on it', fakeAsync(async() => {
@@ -230,8 +250,8 @@ fdescribe('LascaComponent', () => {
             await testUtils.expectMoveSuccess('#coord-0-4', move);
         }));
 
-        it(`should have an officer's symbol on the piece that just got promoted`, fakeAsync(async() => {
-            // Given any board with a selected soldier about to become officer
+        it(`should have a promotion's symbol on the piece that just got promoted`, fakeAsync(async() => {
+            // Given any board with a selected soldier about to become promoted
             const state: CheckersState = CheckersState.of([
                 [__, __, __, __, _v, __, _v],
                 [__, uv, __, __, __, __, __],
@@ -249,7 +269,7 @@ fdescribe('LascaComponent', () => {
             await testUtils.expectMoveSuccess('#coord-0-0', move);
 
             // Then the officier-logo should be on the piece
-            testUtils.expectElementToExist('#square-0-0-piece-1-officer-symbol');
+            testUtils.expectElementToExist('#square-0-0-piece-1-promoted-symbol');
         }));
 
         it('should highlight next possible capture and show the captured piece as captured already', fakeAsync(async() => {

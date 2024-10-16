@@ -21,19 +21,17 @@ export class CheckersMove extends Move {
 
     public static getSteppedOverCoords(steppedOn: Coord[]): MGPFallible<CoordSet> {
         let lastCoordOpt: MGPOptional<Coord> = MGPOptional.empty();
-        let jumpedOverCoords: CoordSet = new CoordSet();
+        let jumpedOverCoords: CoordSet = new CoordSet([steppedOn[0]]);
         for (const coord of steppedOn) {
             if (lastCoordOpt.isPresent()) {
                 const lastCoord: Coord = lastCoordOpt.get();
-                // const vector: Vector = lastCoord.getVectorToward(coord);
-                // if (vector.isDiagonalOfLength(2) === false) {
-                //     return MGPFallible.failure(CheckersFailure.CAPTURE_STEPS_MUST_BE_DOUBLE_DIAGONAL());
-                // } // TODO check that this is still illegal in rules
-                const jumpedOverCoord: Coord = lastCoord.getCoordsToward(coord)[0];
-                if (jumpedOverCoords.contains(jumpedOverCoord)) {
-                    return MGPFallible.failure(CheckersFailure.CANNOT_CAPTURE_TWICE_THE_SAME_COORD());
+                const subJumpedOverCoords: Coord[] = lastCoord.getCoordsToward(coord).concat([coord]);
+                for (const jumpedOverCoord of subJumpedOverCoords) {
+                    if (jumpedOverCoords.contains(jumpedOverCoord)) {
+                        return MGPFallible.failure(CheckersFailure.CANNOT_CAPTURE_TWICE_THE_SAME_COORD());
+                    }
+                    jumpedOverCoords = jumpedOverCoords.addElement(jumpedOverCoord);
                 }
-                jumpedOverCoords = jumpedOverCoords.addElement(jumpedOverCoord);
             }
             lastCoordOpt = MGPOptional.of(coord);
         }
@@ -90,7 +88,7 @@ export class CheckersMove extends Move {
         return this.coords.getFromEnd(0);
     }
 
-    public getCapturedCoords(): MGPFallible<CoordSet> {
+    public getSteppedOverCoords(): MGPFallible<CoordSet> {
         return CheckersMove.getSteppedOverCoords(this.coords.toList());
     }
 

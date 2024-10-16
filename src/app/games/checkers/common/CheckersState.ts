@@ -8,26 +8,26 @@ export class CheckersPiece {
 
     public static readonly ZERO: CheckersPiece = new CheckersPiece(Player.ZERO, false);
     public static readonly ONE: CheckersPiece = new CheckersPiece(Player.ONE, false);
-    public static readonly ZERO_OFFICER: CheckersPiece = new CheckersPiece(Player.ZERO, true);
-    public static readonly ONE_OFFICER: CheckersPiece = new CheckersPiece(Player.ONE, true);
+    public static readonly ZERO_PROMOTED: CheckersPiece = new CheckersPiece(Player.ZERO, true);
+    public static readonly ONE_PROMOTED: CheckersPiece = new CheckersPiece(Player.ONE, true);
 
     public static getPlayerOfficer(player: Player): CheckersPiece {
         if (player === Player.ZERO) {
-            return CheckersPiece.ZERO_OFFICER;
+            return CheckersPiece.ZERO_PROMOTED;
         } else {
-            return CheckersPiece.ONE_OFFICER;
+            return CheckersPiece.ONE_PROMOTED;
         }
     }
 
-    private constructor(public readonly player: Player, public readonly isOfficer: boolean) {}
+    private constructor(public readonly player: Player, public readonly isPromoted: boolean) {}
 
     public toString(): string {
         switch (this) {
             case CheckersPiece.ZERO: return 'u';
             case CheckersPiece.ONE: return 'v';
-            case CheckersPiece.ZERO_OFFICER: return 'O';
+            case CheckersPiece.ZERO_PROMOTED: return 'O';
             default:
-                Utils.expectToBe(this, CheckersPiece.ONE_OFFICER);
+                Utils.expectToBe(this, CheckersPiece.ONE_PROMOTED);
                 return 'X';
         }
     }
@@ -39,6 +39,7 @@ export class CheckersStack {
 
     public static EMPTY: CheckersStack = new CheckersStack([]);
 
+    // The list of pieces is from top to bottom, hence [commander, its allies, its prisonner, more prisonner]
     public constructor(public readonly pieces: ReadonlyArray<CheckersPiece>) {}
 
     public isEmpty(): boolean {
@@ -83,7 +84,7 @@ export class CheckersStack {
 
     public promoteCommander(): CheckersStack {
         let commander: CheckersPiece = this.getCommander();
-        if (commander.isOfficer) {
+        if (commander.isPromoted) {
             return this;
         } else {
             commander = CheckersPiece.getPlayerOfficer(commander.player);
