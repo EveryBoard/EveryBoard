@@ -12,7 +12,7 @@ import { CheckersPiece, CheckersStack, CheckersState } from '../../common/Checke
 import { CheckersConfig } from '../../common/AbstractCheckersRules';
 import { LascaRules } from '../LascaRules';
 
-fdescribe('LascaComponent', () => {
+describe('LascaComponent', () => {
 
     const zero: CheckersPiece = CheckersPiece.ZERO;
     const one: CheckersPiece = CheckersPiece.ONE;

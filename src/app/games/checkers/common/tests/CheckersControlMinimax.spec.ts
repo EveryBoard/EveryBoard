@@ -14,7 +14,7 @@ const rules: AbstractCheckersRules[] = [
 
 for (const rule of rules) {
 
-    fdescribe('CheckersControlMinimax for ' + rule.constructor.name, () => {
+    describe('CheckersControlMinimax for ' + rule.constructor.name, () => {
 
         const minimax: CheckersControlMinimax = new CheckersControlMinimax(rule);
         const minimaxOptions: AIDepthLimitOptions = { name: 'Level 1', maxDepth: 1 };

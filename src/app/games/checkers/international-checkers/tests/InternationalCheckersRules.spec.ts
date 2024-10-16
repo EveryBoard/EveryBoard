@@ -10,7 +10,7 @@ import { CheckersFailure } from '../../common/CheckersFailure';
 import { CheckersPiece, CheckersStack, CheckersState } from '../../common/CheckersState';
 import { InternationalCheckersRules } from '../InternationalCheckersRules';
 
-fdescribe('InternationalCheckersRules', () => {
+describe('InternationalCheckersRules', () => {
 
     const zero: CheckersPiece = CheckersPiece.ZERO;
     const one: CheckersPiece = CheckersPiece.ONE;

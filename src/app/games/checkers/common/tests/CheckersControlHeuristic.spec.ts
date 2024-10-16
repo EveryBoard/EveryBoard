@@ -19,7 +19,7 @@ const rules: AbstractCheckersRules[] = [
 
 for (const rule of rules) {
 
-    fdescribe('CheckersControlHeuristic for ' + rule.constructor.name, () => {
+    describe('CheckersControlHeuristic for ' + rule.constructor.name, () => {
 
         let heuristic: CheckersControlHeuristic;
         const defaultConfig: MGPOptional<CheckersConfig> = rule.getDefaultRulesConfig();

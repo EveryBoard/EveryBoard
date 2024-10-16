@@ -12,7 +12,7 @@ import { CheckersPiece, CheckersStack, CheckersState } from '../../common/Checke
 import { CheckersConfig } from '../../common/AbstractCheckersRules';
 import { InternationalCheckersRules } from '../InternationalCheckersRules';
 
-fdescribe('InternationalCheckersComponent', () => {
+describe('InternationalCheckersComponent', () => {
 
     const zero: CheckersPiece = CheckersPiece.ZERO;
     const one: CheckersPiece = CheckersPiece.ONE;

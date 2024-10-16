@@ -1,6 +1,6 @@
 import { CheckersPiece, CheckersStack, CheckersState } from '../CheckersState';
 
-fdescribe('CheckersState', () => {
+describe('CheckersState', () => {
 
     const zero: CheckersPiece = CheckersPiece.ZERO;
     const one: CheckersPiece = CheckersPiece.ONE;

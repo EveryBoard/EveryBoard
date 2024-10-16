@@ -18,7 +18,7 @@ const rules: AbstractCheckersRules[] = [
 
 for (const rule of rules) {
 
-    fdescribe('CheckersMoveGenerator for ' + rule.constructor.name, () => {
+    describe('CheckersMoveGenerator for ' + rule.constructor.name, () => {
 
         let moveGenerator: CheckersMoveGenerator;
         const defaultConfig: MGPOptional<CheckersConfig> = rule.getDefaultRulesConfig();
@@ -43,7 +43,7 @@ for (const rule of rules) {
 
 }
 
-fdescribe('CheckersMoveGenerator for International Checkers', () => {
+describe('CheckersMoveGenerator for International Checkers', () => {
 
     let moveGenerator: CheckersMoveGenerator;
     const defaultConfig: MGPOptional<CheckersConfig> = InternationalCheckersRules.get().getDefaultRulesConfig();
@@ -74,7 +74,7 @@ fdescribe('CheckersMoveGenerator for International Checkers', () => {
 
 });
 
-fdescribe('CheckersMoveGenerator for Lasca', () => {
+describe('CheckersMoveGenerator for Lasca', () => {
 
     let moveGenerator: CheckersMoveGenerator;
     const defaultConfig: MGPOptional<CheckersConfig> = LascaRules.get().getDefaultRulesConfig();

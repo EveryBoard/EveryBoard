@@ -1,6 +1,6 @@
 import { CheckersPiece } from '../CheckersState';
 
-fdescribe('CheckersPiece ', () => {
+describe('CheckersPiece ', () => {
 
     const X: CheckersPiece = CheckersPiece.ONE_PROMOTED;
     const O: CheckersPiece = CheckersPiece.ZERO_PROMOTED;

@@ -4,7 +4,7 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { CheckersMove } from '../CheckersMove';
 import { CheckersFailure } from '../CheckersFailure';
 
-fdescribe('CheckersMove', () => {
+describe('CheckersMove', () => {
 
     describe('Move', () => {
 
