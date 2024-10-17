@@ -255,7 +255,7 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneRules,
             return this.firstClick(coord);
         }
         const distance: number = coord.getLinearDistanceToward(firstPiece);
-        if ((maxGroup - 1) < distance) {
+        if (maxGroup <= distance) {
             return this.cancelMove(AbaloneFailure.CANNOT_MOVE_MORE_THAN_N_PIECES(maxGroup));
         }
         const alignment: Direction = firstPiece.getDirectionToward(coord).get();

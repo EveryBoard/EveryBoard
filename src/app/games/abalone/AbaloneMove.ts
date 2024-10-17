@@ -26,8 +26,6 @@ export class AbaloneMove extends MoveCoord {
             HexaDirection.factory.fromDelta(direction.x, direction.y);
         Utils.assert(hexaDirectionOptional.isSuccess(), 'Invalid direction'); // Should be ensured by component
         const hexaDirection: HexaDirection = hexaDirectionOptional.get();
-        // const distance: number = coords[1].getLinearDistanceToward(coords[0]);
-        // Utils.assert(distance <= 2, 'Distance between first coord and last coord is too big');
         if (hexaDirection.equals(dir)) {
             return AbaloneMove.ofSingleCoord(coords[1], dir);
         } else if (hexaDirection.getOpposite().equals(dir)) {
@@ -63,6 +61,11 @@ export class AbaloneMove extends MoveCoord {
         return other.coord.equals(this.coord) &&
                other.dir.equals(this.dir) &&
                other.lastPiece.equals(this.lastPiece);
+    }
+
+    public isTranslation(): boolean {
+        return this.lastPiece.isPresent() &&
+               this.coord.getDirectionToward(this.lastPiece.get()).get().equals(this.dir) === false;
     }
 
 }

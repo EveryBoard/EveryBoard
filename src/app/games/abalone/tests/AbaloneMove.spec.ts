@@ -65,4 +65,34 @@ describe('AbaloneMove', () => {
         MoveTestUtils.testFirstTurnMovesBijectivity(rules, moveGenerator, AbaloneMove.encoder);
     });
 
+    describe('isTranslation', () => {
+
+        it('should return false for single piece move', () => {
+            const move: AbaloneMove = AbaloneMove.ofSingleCoord(new Coord(0, 0), HexaDirection.UP);
+            expect(move.isTranslation()).toBeFalse();
+        });
+
+        it('should return false for linear push', () => {
+            const firstCoord: Coord = new Coord(0, 0);
+            const direction: HexaDirection = HexaDirection.UP;
+            const move: AbaloneMove = AbaloneMove.ofDoubleCoord(
+                firstCoord,
+                firstCoord.getNext(direction, 2),
+                direction);
+            expect(move.isTranslation()).toBeFalse();
+        });
+
+        it('should return true for big group moving sideways', () => {
+            const firstCoord: Coord = new Coord(0, 0);
+            const direction: HexaDirection = HexaDirection.UP;
+            const otherDirection: HexaDirection = HexaDirection.LEFT;
+            const move: AbaloneMove = AbaloneMove.ofDoubleCoord(
+                firstCoord,
+                firstCoord.getNext(direction, 2),
+                otherDirection);
+            expect(move.isTranslation()).toBeTrue();
+        });
+
+    });
+
 });

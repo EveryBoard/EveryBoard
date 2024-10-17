@@ -467,7 +467,7 @@ describe('AbaloneRules', () => {
             ];
             const state: AbaloneState = new AbaloneState(board, 0);
 
-            // When moving fives pieces
+            // When moving five pieces
             const move: AbaloneMove = AbaloneMove.ofSingleCoord(new Coord(1, 4), HexaDirection.RIGHT);
 
             // Then the move should be legal
