@@ -277,6 +277,16 @@ export class SimpleComponentTestUtils<T> {
         expect(element.nativeElement.disabled).withContext(`${elementName} should be enabled`).toBeFalsy();
     }
 
+    public expectDropDownOptionToBeSelected(elementName: string): void {
+        const element: DebugElement = this.findElement(elementName);
+        expect(element.nativeElement.selected).withContext(`${elementName} should be selected`).toBeTrue();
+    }
+
+    public expectDropDownOptionNotToBeSelected(elementName: string): void {
+        const element: DebugElement = this.findElement(elementName);
+        expect(element.nativeElement.selected).withContext(`${elementName} should not be selected`).toBeFalse();
+    }
+
     public expectElementToBeDisabled(elementName: string): void {
         const element: DebugElement = this.findElement(elementName);
         expect(element.nativeElement.disabled).withContext(`${elementName} should be disabled`).toBeTruthy();

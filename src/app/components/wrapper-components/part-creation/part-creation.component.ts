@@ -114,7 +114,8 @@ export class PartCreationComponent extends BaseWrapperComponent implements OnIni
 
     public allDocDeleted: boolean = false;
 
-    protected rulesConfig: MGPOptional<RulesConfig> = MGPOptional.empty(); // Provided by RulesConfigurationComponent
+    // Provided by RulesConfigurationComponent
+    protected rulesConfig: MGPOptional<RulesConfig> = MGPOptional.empty();
 
     public configDemo: DemoNodeInfo;
 
@@ -371,7 +372,9 @@ export class PartCreationComponent extends BaseWrapperComponent implements OnIni
             this.currentConfigRoom = configRoom;
             if (configRoom.rulesConfig !== null) {
                 // Not null means that there was already a rule config saved in the config room
-                this.saveRulesConfig(MGPOptional.of(configRoom.rulesConfig));
+                this.saveRulesConfig(
+                    MGPOptional.of(configRoom.rulesConfig),
+                );
             }
             if (this.chosenOpponentJustLeft(oldConfigRoom, configRoom) &&
                 this.userIsCreator(configRoom))
@@ -606,5 +609,9 @@ export class PartCreationComponent extends BaseWrapperComponent implements OnIni
         const urlName: string = this.getGameUrlName();
         this.navigateThereAfterGameCanceled = ['/local', urlName];
         await this.cancelGameCreation();
+    }
+
+    public getRulesConfigToDisplay(): RulesConfig | undefined {
+        return this.currentConfigRoom?.rulesConfig;
     }
 }
