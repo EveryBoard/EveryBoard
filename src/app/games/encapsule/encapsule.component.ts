@@ -71,8 +71,8 @@ export class EncapsuleComponent extends RectangularGameComponent<EncapsuleRules,
 
     private setPieceStrokeWidth(): void {
         const configSize: number = this.state.nbOfPieceSize;
-        // 46 is the 50 - half a stroke width from the squares
-        this.pieceStrokeWidth = (2 * 46) / (configSize * 3);
+        const innerRadius: number = this.SPACE_SIZE - this.STROKE_WIDTH;
+        this.pieceStrokeWidth = innerRadius / (configSize * 3);
     }
 
     public getListPieces(content: EncapsuleSpace): EncapsulePiece[] {

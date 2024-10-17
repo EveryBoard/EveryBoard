@@ -52,9 +52,9 @@ export class EncapsuleRules extends ConfigurableRules<EncapsuleMove,
                 height:
                     new NumberConfig(3, RulesConfigDescriptionLocalizable.HEIGHT, MGPValidators.range(1, 99)),
                 nbOfSizes:
-                    new NumberConfig(9, () => $localize`Number of different piece sizes`, MGPValidators.range(1, 10)),
+                    new NumberConfig(3, () => $localize`Number of different piece sizes`, MGPValidators.range(1, 10)),
                 nbOfEachPiece:
-                    new NumberConfig(2, () => $localize`Number of pieces for each size`, MGPValidators.range(1, 99)),
+                    new NumberConfig(2, () => $localize`Number of pieces for each size`, MGPValidators.range(1, 9)),
             },
         });
 

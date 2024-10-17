@@ -50,7 +50,7 @@ describe('EncapsuleMoveGenerator', () => {
             expect(moves.length).toBe(36);
         });
 
-        it('should have XX moves on a specific third turn', () => {
+        it('should have the expected number of moves on a specific custom state', () => {
             // Given a board like this
             const board: EncapsuleSpace[][] = [
                 [O__, ___, ___, ___],
@@ -66,13 +66,16 @@ describe('EncapsuleMoveGenerator', () => {
             const moves: EncapsuleMove[] = moveGenerator.getListMoves(node, customConfig);
 
             // Then there should be:
-            // Drops medium = 12, drops big = 12, drops small = 10
-            // Moving the piece on board = 10 possible landing space
-            // Total: 44
+            // Drops medium              = 12
+            // drops big                 = 12
+            // drops small               = 10
+            // Moving the piece on board = 10
+            // ------------------------------
+            // Total                     = 44
             expect(moves.length).toBe(44);
         });
 
-        it('should have XX moves on a specific third turn (custom config)', () => {
+        it('should have the expected number of moves on a specific custom state (custom config)', () => {
             // Given a board like this
             const board: EncapsuleSpace[][] = [
                 [O__, ___, ___],
@@ -88,9 +91,12 @@ describe('EncapsuleMoveGenerator', () => {
             const moves: EncapsuleMove[] = moveGenerator.getListMoves(node, defaultConfig);
 
             // Then there should be:
-            // Drops medium = 9, drops big = 9, drops small = 7
-            // Moving the piece on board = 7 possible landing space
-            // Total: 32
+            // Drops medium              =  9
+            // drops big                 =  9
+            // drops small               =  7
+            // Moving the piece on board =  7
+            // ------------------------------
+            // Total                     = 32
             expect(moves.length).toBe(32);
         });
 
