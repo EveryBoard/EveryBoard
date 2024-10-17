@@ -61,7 +61,7 @@ export class AbaloneTutorial extends Tutorial {
             $localize`Congratulations! You know everything you need to start a game!`,
         ),
         TutorialStep.informational(
-            TutorialStepMessage.ALTERNATIVE_CONFIG(),
+            TutorialStepMessage.RULES_CONFIGURATION(),
             $localize`You will see when creating a game that you can configure two things.<br/><br/>First, the number of capture needed to win, this help create shorter game if wanted.<br/><br/>Last, the maximum size of a moved group. The default is 3 but if you want more chaotic and fun game, you could bump that limit up and play a "powerfull" alternative version of the game!`,
             AbaloneRules.get().getInitialState(),
         ),

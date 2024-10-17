@@ -75,6 +75,11 @@ import { PylosMove } from 'src/app/games/pylos/PylosMove';
 import { PylosRules } from 'src/app/games/pylos/PylosRules';
 import { PylosTutorial } from 'src/app/games/pylos/PylosTutorial';
 
+import { QuartoMove } from 'src/app/games/quarto/QuartoMove';
+import { QuartoPiece } from 'src/app/games/quarto/QuartoPiece';
+import { QuartoRules } from 'src/app/games/quarto/QuartoRules';
+import { QuartoTutorial } from 'src/app/games/quarto/QuartoTutorial';
+
 import { SaharaMove } from 'src/app/games/sahara/SaharaMove';
 import { SaharaRules } from 'src/app/games/sahara/SaharaRules';
 import { SaharaTutorial } from '../../../games/sahara/SaharaTutorial';
@@ -127,6 +132,7 @@ describe('TutorialGameWrapperComponent (games)', () => {
             const martianChessTutorial: TutorialStep[] = new MartianChessTutorial().tutorial;
             const pentagoTutorial: TutorialStep[] = new PentagoTutorial().tutorial;
             const pylosTutorial: TutorialStep[] = new PylosTutorial().tutorial;
+            const quartoTutorial: TutorialStep[] = new QuartoTutorial().tutorial;
             const saharaTutorial: TutorialStep[] = new SaharaTutorial().tutorial;
             const sixTutorial: TutorialStep[] = new SixTutorial().tutorial;
             const squarzTutorial: TutorialStep[] = new SquarzTutorial().tutorial;
@@ -293,6 +299,11 @@ describe('TutorialGameWrapperComponent (games)', () => {
                     pylosTutorial[4],
                     PylosMove.ofDrop(new PylosCoord(0, 1, 0), [new PylosCoord(0, 0, 0)]),
                     MGPValidation.failure(`Failed, you only captured one piece.`),
+                ], [
+                    QuartoRules.get(),
+                    quartoTutorial[3],
+                    new QuartoMove(2, 2, QuartoPiece.AABB),
+                    MGPValidation.failure($localize`Wrong, you could have won by making a square.`),
                 ], [
                     SaharaRules.get(),
                     saharaTutorial[2],

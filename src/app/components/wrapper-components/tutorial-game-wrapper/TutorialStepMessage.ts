@@ -16,7 +16,8 @@ export class TutorialStepMessage {
 
     public static readonly INITIAL_BOARD_AND_OBJECT_OF_THE_GAME: Localized = () => $localize`Initial board and object of the game`;
 
-    public static readonly ALTERNATIVE_CONFIG: Localized = () => $localize`Alternative config`;
-
     public static readonly TRANSLATIONS: Localized = () => $localize`Translations`;
+
+    public static readonly RULES_CONFIGURATION: Localized = () => $localize`Rules configuration`;
+
 }
