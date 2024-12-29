@@ -1,4 +1,5 @@
 /* eslint-disable max-lines-per-function */
+import { MGPOptional } from '../MGPOptional';
 import { Utils } from '../Utils';
 
 describe('Utils', () => {
@@ -76,8 +77,25 @@ describe('Utils', () => {
     });
 
     describe('identity', () => {
+
         it('should return its argument', () => {
             expect(Utils.identity(5)).toBe(5);
+        });
+    });
+
+    describe('parseJSONSafely', () => {
+
+        it('should succeed with valid JSON data', () => {
+            const json: unknown = { 'foo': 5, 'bar': 42 };
+            const result: MGPOptional<unknown> = Utils.parseJSONSafely(JSON.stringify(json));
+            expect(result.isPresent()).toBeTrue();
+            expect(result.get()).toEqual(json);
+        });
+
+        it('should fail safely on invalid JSON', () => {
+            const invalidJSONString: string = '{"foo": lol}';
+            const result: MGPOptional<unknown> = Utils.parseJSONSafely(invalidJSONString);
+            expect(result.isAbsent()).toBeTrue();
         });
     });
 });

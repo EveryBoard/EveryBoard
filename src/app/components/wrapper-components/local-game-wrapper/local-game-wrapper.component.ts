@@ -89,9 +89,9 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
             const rulesConfigDescription: RulesConfigDescription<RulesConfig> = this.getRulesConfigDescription().get();
             const config: RulesConfig = {};
             for (const key of params.keys) {
-                const value: unknown = JSON.parse(Utils.getNonNullable(params.get(key)));
-                if (rulesConfigDescription.isValid(key, value)) {
-                    config[key] = value as ConfigDescriptionType;
+                const value: MGPOptional<unknown> = Utils.parseJSONSafely(Utils.getNonNullable(params.get(key)));
+                if (value.isPresent() && rulesConfigDescription.isValid(key, value.get())) {
+                    config[key] = value.get() as ConfigDescriptionType;
                 } else {
                     // If anything is invalid, go back to configuration page
                     return this.redirectToConfiguration();

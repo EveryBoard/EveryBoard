@@ -157,7 +157,7 @@ export const routes: Route[] = [
     { path: 'local/:game/config', component: LocalGameConfigurationComponent },
     { path: 'local/:game', component: LocalGameWrapperComponent },
     { path: 'tutorial', component: TutorialGameCreationComponent },
-    { path: 'tutorial/:compo', component: TutorialGameWrapperComponent },
+    { path: 'tutorial/:game', component: TutorialGameWrapperComponent },
     { path: '', component: WelcomeComponent },
     { path: 'demo', component: DemoPageComponent },
     { path: '**', component: NotFoundComponent },

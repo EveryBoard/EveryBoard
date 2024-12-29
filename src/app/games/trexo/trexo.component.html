@@ -41,7 +41,7 @@
            id="switchTo3D"
            mgp-trexo-half-piece
            (click)="switchToMode('3D')"
-           [mode]="TrexoComponent.modeMap['3D']"
+           [mode]="modeMap['3D']"
            [attr.transform]="get3DSwitcherTransform()"
            [coord]="Coord3D.of(10.5, 8.5, 0)"
            [pieceClasses]="['player0-fill']"/>
@@ -49,7 +49,7 @@
             <g mgp-trexo-half-piece
                id="switchTo2D"
                (click)="switchToMode('2D')"
-               [mode]="TrexoComponent.modeMap['2D']"
+               [mode]="modeMap['2D']"
                [attr.transform]="getTranslationAtXYZ(12, 9, 0)"
                [coord]="Coord3D.of(12, 9, 0)"
                [pieceClasses]="[currentPlayerClass]"/>

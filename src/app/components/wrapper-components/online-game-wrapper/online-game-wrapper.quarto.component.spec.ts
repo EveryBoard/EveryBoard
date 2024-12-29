@@ -76,7 +76,7 @@ export type PreparationOptions = {
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export namespace PreparationOptions {
 
-    export const def: PreparationOptions = {
+    export const defaultOptions: PreparationOptions = {
         shorterGlobalClock: false,
         waitForPartToStart: true,
         runClocks: true,
@@ -84,17 +84,17 @@ export namespace PreparationOptions {
     };
 
     export const dontWait: PreparationOptions = {
-        ...def,
+        ...defaultOptions,
         waitForPartToStart: false,
     };
 
     export const shortGlobalClock: PreparationOptions = {
-        ...def,
+        ...defaultOptions,
         shorterGlobalClock: true,
     };
 
     export const withoutClocks: PreparationOptions = {
-        ...def,
+        ...defaultOptions,
         runClocks: false,
     };
 
@@ -113,7 +113,7 @@ export async function addCandidate(candidate: MinimalUser): Promise<void> {
 export async function prepareStartedGameFor<T extends AbstractGameComponent>(
     user: AuthUser,
     game: string,
-    preparationOptions: PreparationOptions = PreparationOptions.def)
+    preparationOptions: PreparationOptions = PreparationOptions.defaultOptions)
 : Promise<PreparationResult<T>>
 {
     const defaultConfig: MGPOptional<RulesConfig> = RulesConfigUtils.getGameDefaultConfig(game);
@@ -694,7 +694,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             CurrentGameServiceMock.setCurrentGame(MGPOptional.empty());
 
             // Then nothing special should have happened, including no redirection
-            // Though compo.currentGame should have been locally changed
+            // Though currentGame should have been locally changed
             expect(router.navigate).not.toHaveBeenCalled();
             expect(wrapper['currentGame']).toEqual(MGPOptional.empty());
             tick(wrapper.configRoom.maximalMoveDuration * 1000);

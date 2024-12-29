@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/
 import { Encoder, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 import { Move } from '../../../jscaip/Move';
 import { SuperRules } from '../../../jscaip/Rules';
-import { Player } from 'src/app/jscaip/Player';
+import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { TutorialStep } from '../../wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { GameState } from 'src/app/jscaip/state/GameState';
@@ -15,6 +15,7 @@ import { Debug } from 'src/app/utils/Debug';
 import { GameInfo } from '../../normal-component/pick-game/pick-game.component';
 import { BaseComponent } from '../../BaseComponent';
 import { Orthogonal } from 'src/app/jscaip/Orthogonal';
+import { Coord3D } from 'src/app/jscaip/Coord3D';
 
 /**
  * Define some methods that are useful to have in game components.
@@ -59,6 +60,10 @@ export abstract class GameComponent<R extends SuperRules<M, S, C, L>,
     public encoder: Encoder<M>;
 
     public Player: typeof Player = Player;
+
+    public PlayerOrNone: typeof PlayerOrNone = PlayerOrNone;
+
+    public Coord3D: typeof Coord3D = Coord3D;
 
     public rules: R;
 

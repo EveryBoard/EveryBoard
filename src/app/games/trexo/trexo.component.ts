@@ -41,7 +41,7 @@ export class TrexoComponent extends ParallelogramGameComponent<TrexoRules, Trexo
         move: MGPOptional.empty(),
     };
 
-    public static modeMap: Record<ModeType, ModeConfig> = {
+    public readonly modeMap: Record<ModeType, ModeConfig> = {
         '2D': {
             offsetRatio: 0,
             horizontalWidthRatio: 1,
@@ -58,9 +58,7 @@ export class TrexoComponent extends ParallelogramGameComponent<TrexoRules, Trexo
         },
     };
 
-    public TrexoComponent: typeof TrexoComponent = TrexoComponent;
     public readonly left: number = - this.STROKE_WIDTH / 2;
-    public Coord3D: typeof Coord3D = Coord3D;
     public up: number = 0;
     public width: number;
     public height: number;
@@ -95,11 +93,11 @@ export class TrexoComponent extends ParallelogramGameComponent<TrexoRules, Trexo
         this.width = this.getViewBoxWidth();
         this.up = this.getViewBoxUp();
         this.height = this.getViewBoxHeight();
-        this.mode = TrexoComponent.modeMap[mode];
+        this.mode = this.modeMap[mode];
     }
 
     private getViewBoxWidth(): number {
-        const mode3D: ModeConfig = TrexoComponent.modeMap['3D'];
+        const mode3D: ModeConfig = this.modeMap['3D'];
         const boardWidth: number = TrexoState.SIZE;
         const widification: number = mode3D.horizontalWidthRatio + mode3D.offsetRatio;
         const spaceWidth3D: number = this.SPACE_SIZE * widification;
@@ -132,7 +130,7 @@ export class TrexoComponent extends ParallelogramGameComponent<TrexoRules, Trexo
     }
 
     private getHigherStackHeight(): number {
-        const mode: ModeConfig = TrexoComponent.modeMap[this.chosenMode];
+        const mode: ModeConfig = this.modeMap[this.chosenMode];
         const maxZ: number = this.pieceOnBoard.length + 1;
         const pieceBonus: number = maxZ * mode.pieceHeightRatio * this.SPACE_SIZE;
         return pieceBonus;
@@ -323,7 +321,7 @@ export class TrexoComponent extends ParallelogramGameComponent<TrexoRules, Trexo
     }
 
     public getTranslationAtXYZ(x: number, y: number, z: number): string {
-        const mode: ModeConfig = TrexoComponent.modeMap[this.chosenMode];
+        const mode: ModeConfig = this.modeMap[this.chosenMode];
         const coordTransform: Coord = this.getCoordTranslation(x, y, z, mode);
         const translation: string = this.getSVGTranslationAt(coordTransform);
         return translation;
@@ -340,12 +338,12 @@ export class TrexoComponent extends ParallelogramGameComponent<TrexoRules, Trexo
      * @returns a list of concrete coord for the parallelogram, with (0, 0) as left and upper coord
      */
     private getParallelogramCoordsForTrexo(): Coord[] {
-        const mode: ModeConfig = TrexoComponent.modeMap[this.chosenMode];
+        const mode: ModeConfig = this.modeMap[this.chosenMode];
         return this.getParallelogramCoords(mode);
     }
 
     public get3DSwitcherTransform(): string {
-        const mode3D: ModeConfig = TrexoComponent.modeMap['3D'];
+        const mode3D: ModeConfig = this.modeMap['3D'];
         const widness: number = mode3D.horizontalWidthRatio + mode3D.offsetRatio;
         const scale: string = ' scale(' + (1 / widness) + ')';
         const verticalUnWideness: number = (1 - (1 / widness)) / 2;
