@@ -694,7 +694,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             CurrentGameServiceMock.setCurrentGame(MGPOptional.empty());
 
             // Then nothing special should have happened, including no redirection
-            // Though compo.currentGame should have been locally changed
+            // Though wrapper.currentGame should have been locally changed
             expect(router.navigate).not.toHaveBeenCalled();
             expect(wrapper['currentGame']).toEqual(MGPOptional.empty());
             tick(wrapper.configRoom.maximalMoveDuration * 1000);
