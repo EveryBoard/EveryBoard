@@ -18,22 +18,35 @@ export class TaflPieceHeuristic<M extends TaflMove> extends PlayerMetricHeuristi
     public override getMetrics(node: TaflNode<M>, config: MGPOptional<TaflConfig>): PlayerNumberTable {
         const state: TaflState = node.gameState;
         // We just count the pawns
-        const nPawnsZero: number = this.rules.getPlayerListPawns(Player.ZERO, state).length;
-        const nPawnsOne: number = this.rules.getPlayerListPawns(Player.ONE, state).length;
-        return this.getHeuristicValue(config.get(), nPawnsZero, nPawnsOne).toTable();
+        const zeroPawnsCount: number = this.rules.getPlayerListPawns(Player.ZERO, state).length;
+        const onePawnsCount: number = this.rules.getPlayerListPawns(Player.ONE, state).length;
+        return this.getHeuristicValue(config.get(), zeroPawnsCount, onePawnsCount).toTable();
     }
 
-    private getHeuristicValue(config: TaflConfig, nPawnsZero: number, nPawnsOne: number): PlayerNumberMap {
+    private getHeuristicValue(config: TaflConfig, zeroPawnsCount: number, onePawnsCount: number): PlayerNumberMap {
         const invader: Player = this.rules.getInvader(config);
-        const scoreZero: number = this.getScoreFor(Player.ZERO, invader, nPawnsZero);
-        const scoreOne: number = this.getScoreFor(Player.ZERO, invader, nPawnsOne);
+        const scoreZero: number = this.getScoreFor(Player.ZERO, invader, zeroPawnsCount);
+        const scoreOne: number = this.getScoreFor(Player.ZERO, invader, onePawnsCount);
         return PlayerNumberMap.of(scoreZero, scoreOne);
     }
 
-    private getScoreFor(player: Player, invader: Player, nPawns: number): number {
+    private getScoreFor(player: Player, invader: Player, pawnsCount: number): number {
         // Invaders pieces are twice as numerous, so they are twice  less valuable
-        const mult: number = [[1, 2], [2, 1]][player.getValue()][invader.getValue()];
-        return nPawns * mult;
+        let mult: number;
+        if (player === Player.ZERO) {
+            if (invader === Player.ZERO) {
+                mult = 1;
+            } else {
+                mult = 2;
+            }
+        } else {
+            if (invader === Player.ZERO) {
+                mult = 2;
+            } else {
+                mult = 1;
+            }
+        }
+        return pawnsCount * mult;
     }
 
     public override getBounds(config: MGPOptional<TaflConfig>): HeuristicBounds<BoardValue> {
@@ -42,12 +55,12 @@ export class TaflPieceHeuristic<M extends TaflMove> extends PlayerMetricHeuristi
         // In the end, what we care about is "bigger metric = better", not that it is 100% accurate
         const maxPawns: [number, number] = [24, 13];
         const invader: Player = this.rules.getInvader(config.get());
-        const nPawnsZero: number = maxPawns[invader.getValue()];
-        const nPawnsOne: number = maxPawns[invader.getOpponent().getValue()];
-        const player0Best: BoardValue =
-            BoardValue.ofPlayerNumberMap(this.getHeuristicValue(config.get(), nPawnsZero, 0));
-        const player1Best: BoardValue =
-            BoardValue.ofPlayerNumberMap(this.getHeuristicValue(config.get(), 0, nPawnsOne));
+        const zeroPawnsCount: number = maxPawns[invader.getValue()];
+        const onePawnsCount: number = maxPawns[invader.getOpponent().getValue()];
+        const player0HeuristicValue: PlayerNumberMap = this.getHeuristicValue(config.get(), zeroPawnsCount, 0);
+        const player0Best: BoardValue = BoardValue.ofPlayerNumberMap(player0HeuristicValue);
+        const player1HeuristicValue: PlayerNumberMap = this.getHeuristicValue(config.get(), 0, onePawnsCount);
+        const player1Best: BoardValue = BoardValue.ofPlayerNumberMap(player1HeuristicValue);
         return { player0Best, player1Best };
     }
 
