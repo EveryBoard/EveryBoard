@@ -1,4 +1,4 @@
-import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, Type } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
@@ -9,9 +9,10 @@ import { Click, TutorialStep, TutorialStepClick, TutorialStepMove, TutorialStepW
 import { TutorialFailure } from './TutorialFailure';
 import { GameState } from 'src/app/jscaip/state/GameState';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
-import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { RulesConfig, RulesConfigUtils } from 'src/app/jscaip/RulesConfigUtil';
 import { Localized } from 'src/app/utils/LocaleUtils';
 import { Debug } from 'src/app/utils/Debug';
+import { AbstractGameComponent } from '../../game-components/game-component/GameComponent';
 
 export class TutorialGameWrapperMessages {
 
@@ -225,7 +226,7 @@ export class TutorialGameWrapperComponent extends GameWrapper<TutorialPlayer> im
         const solutionStep: TutorialStepWithSolution | TutorialStepClick =
             step as TutorialStepWithSolution | TutorialStepClick;
         const solution: Move | Click = solutionStep.getSolution();
-        const config: MGPOptional<RulesConfig> = await this.getConfig();
+        const config: MGPOptional<RulesConfig> = this.getConfig();
         if (solution instanceof Move) {
             await this.showStep(this.stepIndex);
             this.gameComponent.node = this.gameComponent.rules.choose(this.gameComponent.node, solution, config).get();
