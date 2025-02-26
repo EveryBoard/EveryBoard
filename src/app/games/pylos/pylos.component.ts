@@ -324,7 +324,7 @@ export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosSt
         this.scores = MGPOptional.of(this.remainingPieces);
     }
 
-    public override getScoreName(): ScoreName {
+    protected override getScoreName(): ScoreName {
         return ScoreName.REMAINING_PIECES;
     }
 

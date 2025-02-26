@@ -84,7 +84,7 @@ export class ConspirateursComponent extends GameComponent<ConspirateursRules, Co
         this.scores = MGPOptional.of(this.rules.getProtectedPieces(this.getState()));
     }
 
-    public override getScoreName(): ScoreName {
+    protected override getScoreName(): ScoreName {
         return ScoreName.PROTECTED_PIECES;
     }
 

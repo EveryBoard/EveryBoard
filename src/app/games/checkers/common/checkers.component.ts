@@ -79,7 +79,7 @@ export abstract class CheckersComponent<R extends AbstractCheckersRules>
         this.hasAsymmetricBoard = true;
     }
 
-    public override getScoreName(): ScoreName {
+    protected override getScoreName(): ScoreName {
         return ScoreName.PIECES_UNDER_CONTROL;
     }
 

@@ -171,9 +171,13 @@ export abstract class GameComponent<R extends SuperRules<M, S, C, L>,
         return this.scores.get().get(player);
     }
 
-    public getScoreName(): ScoreName {
+    protected getScoreName(): ScoreName {
         // This can be redefined in games where we don't talk about points
         return ScoreName.POINTS;
+    }
+
+    public getScoreString(player: Player): string {
+        return this.getScoreName().getString(this.getScore(player));
     }
 
     public getPointOfView(): Player {

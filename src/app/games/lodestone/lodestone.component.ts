@@ -141,7 +141,7 @@ export class LodestoneComponent
         this.scores = MGPOptional.of(PlayerNumberMap.of(0, 0));
     }
 
-    public override getScoreName(): ScoreName {
+    protected override getScoreName(): ScoreName {
         return ScoreName.CAPTURES;
     }
 

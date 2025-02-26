@@ -90,7 +90,7 @@ export class GoComponent extends GobanGameComponent<GoRules,
         this.scores = MGPOptional.of(this.getState().captured);
     }
 
-    public override getScoreName(): ScoreName {
+    protected override getScoreName(): ScoreName {
         return this.getState().phase.getScoreName();
     }
 

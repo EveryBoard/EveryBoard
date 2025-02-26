@@ -61,7 +61,7 @@ export class SixComponent
                                          FlatHexaOrientation.INSTANCE);
     }
 
-    public override getScoreName(): ScoreName {
+    protected override getScoreName(): ScoreName {
         if (this.rules.isInDropPhase(this.getState(), this.getConfig())) {
             return ScoreName.PIECES_TO_DROP;
         } else {

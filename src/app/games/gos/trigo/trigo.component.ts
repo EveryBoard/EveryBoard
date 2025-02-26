@@ -108,7 +108,7 @@ export class TrigoComponent extends TriangularGameComponent<TrigoRules,
         this.scores = MGPOptional.of(this.getState().captured);
     }
 
-    public override getScoreName(): ScoreName {
+    protected override getScoreName(): ScoreName {
         return this.getState().phase.getScoreName();
     }
 

@@ -66,7 +66,7 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
         this.hasAsymmetricBoard = true;
     }
 
-    public override getScoreName(): ScoreName {
+    protected override getScoreName(): ScoreName {
         return ScoreName.REMAINING_PIECES;
     }
 

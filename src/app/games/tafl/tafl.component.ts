@@ -56,7 +56,7 @@ export abstract class TaflComponent<R extends TaflRules<M>, M extends TaflMove>
         this.scores = MGPOptional.of(PlayerNumberMap.of(scoreZero, scoreOne));
     }
 
-    public override getScoreName(): ScoreName {
+    protected override getScoreName(): ScoreName {
         return ScoreName.REMAINING_PIECES;
     }
 
