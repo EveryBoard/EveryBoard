@@ -31,7 +31,6 @@ let start = fun () : unit ->
     let api = [
         Dream.scope "/" [TokenRefresher.middleware !Options.service_account_file !Options.emulator; Auth.middleware !Options.project_id]
         @@ List.concat [
-            [Dream.get "/time" ServerUtils.server_time];
             [Dream.get "/ws" WebSocketServer.handle];
         ];
     ] in

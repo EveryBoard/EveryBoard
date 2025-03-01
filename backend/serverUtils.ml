@@ -1,20 +1,11 @@
 open Utils
 
 module type SERVER_UTILS = sig
-    (** [server_time] is an handler that answers [{"time": n}] where [n] is the server time in ms *)
-    val server_time : Dream.handler
-
     (** [error_handler] is an error handler that catches exception and puts them in a nice JSON *)
     val error_handler : Dream.error_handler
 end
 
 module Make (External : External.EXTERNAL) : SERVER_UTILS = struct
-
-    (** A specific endpoint to know the current time of the server *)
-    let server_time : Dream.handler = fun _ ->
-        let now = External.now_ms () in
-        let response = `Assoc ["time", `Int now] in
-        Dream.json ~status:`OK (JSON.to_string response)
 
     (** Catches errors and transforms them before sending them back *)
     let error_handler : Dream.error_handler =

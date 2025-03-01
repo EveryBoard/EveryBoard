@@ -5,8 +5,8 @@ module type EXTERNAL = sig
     (** Provide the current timestamp in seconds *)
     val now : unit -> int
 
-    (** Provide the current timestamp in miliseconds *)
-    val now_ms : unit -> int
+    (** Provide the current timestamp as a float *)
+    val now_float : unit -> float
 
     (** Provide a random boolean *)
     val rand_bool : unit -> bool
@@ -32,11 +32,11 @@ end
 
 module Impl : EXTERNAL = struct
 
-    let now = fun () : int ->
-        int_of_float (Unix.time ())
+    let now_float = fun () : float ->
+        Unix.time ()
 
-    let now_ms = fun () : int ->
-        int_of_float (Unix.time () *. 1000.)
+    let now = fun () : int ->
+        int_of_float (now_float ())
 
     let rand_bool = fun () : bool ->
         Random.bool ()

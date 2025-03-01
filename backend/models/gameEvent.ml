@@ -79,7 +79,7 @@ end
 type t = {
     time : int;
     user : MinimalUser.t;
-    data: EventData.t;
+    data : EventData.t;
 }
 
 let to_yojson = fun (event: t) : JSON.t ->

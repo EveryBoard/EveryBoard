@@ -85,7 +85,7 @@ module WebSocketOutgoingMessage = struct
         | ConfigRoomDeleted of { game_id : GameId.t [@key "gameId"] }
 
         (** Game messages *)
-        | GameEvent of { event : GameEvent.t }
+        | GameEvent of { event : GameEvent.t; server_time: float [@key "serverTime"] }
         | GameUpdate of { game : Game.t }
         | GameMove of { move : JSON.t }
 

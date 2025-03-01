@@ -129,11 +129,12 @@ module Make
             (* Update config room *)
             let* () = ConfigRoom.finish ~request game_id in
             let config_room = { config_room with status = Models.ConfigRoom.Status.Finished } in
+            let server_time = External.now_float () in
             (* Notify subscribers and do other stuff needed by the caller *)
             Lwt.join ([
                 (* Game watchers get the game update + new event *)
                 broadcast Game game_id (WebSocketOutgoingMessage.GameUpdate { game });
-                broadcast Game game_id (WebSocketOutgoingMessage.GameEvent { event });
+                broadcast Game game_id (WebSocketOutgoingMessage.GameEvent { event; server_time });
                 (* Lobby watchers get the config room update *)
                 broadcast Lobby GameId.lobby (WebSocketOutgoingMessage.ConfigRoomUpdate { game_id; config_room });
             ] @ (other_work ()))
@@ -212,13 +213,14 @@ module Make
                      events *)
                     SubscriptionManager.subscribe ~client_id user game_id Game;
                     let* () = send_to client_id (GameUpdate { game }) in
+                    let server_time = External.now_float () in
                     let* () = Lwt.join [
                         send_chat_messages ~request ~client_id game_id;
-                        Game.iter_events ~request game_id (fun event -> send_to client_id (GameEvent { event }))
+                        Game.iter_events ~request game_id (fun event -> send_to client_id (GameEvent { event; server_time }))
                     ] in
                     (* Finally, send the sync event to let them know they're up to date *)
                     let event : Models.GameEvent.t = { time = External.now (); user; data = Action Models.GameEvent.Action.sync } in
-                    send_to client_id (GameEvent { event })
+                    send_to client_id (GameEvent { event; server_time })
             end
         | Unsubscribe ->
             unsubscribe ~request user client_id
@@ -350,7 +352,8 @@ module Make
                 data = EventData.Request { request_type = proposition };
             } in
             let* () = Game.add_event ~request game_id event in
-            broadcast Game game_id (WebSocketOutgoingMessage.GameEvent { event });
+            let server_time = External.now_float () in
+            broadcast Game game_id (WebSocketOutgoingMessage.GameEvent { event; server_time });
         | Reject { proposition } ->
             let _, game_id = SubscriptionManager.subscription_of ~client_id in
             let event = Models.GameEvent.{
@@ -359,7 +362,8 @@ module Make
                 data = EventData.Reply { request_type = proposition; accept = false };
             } in
             let* () = Game.add_event ~request game_id event in
-            broadcast Game game_id (WebSocketOutgoingMessage.GameEvent { event });
+            let server_time = External.now_float () in
+            broadcast Game game_id (WebSocketOutgoingMessage.GameEvent { event; server_time });
         | Accept { proposition } ->
             let _, game_id = SubscriptionManager.subscription_of ~client_id in
             let event = Models.GameEvent.{
@@ -368,7 +372,8 @@ module Make
                 data = EventData.Reply { request_type = proposition; accept = true };
             } in
             let* () = Game.add_event ~request game_id event in
-            let send_event = broadcast Game game_id (WebSocketOutgoingMessage.GameEvent { event }) in
+            let server_time = External.now_float () in
+            let send_event = broadcast Game game_id (WebSocketOutgoingMessage.GameEvent { event; server_time }) in
             begin match proposition with
                 | TakeBack ->
                     (* nothing to do for take back, players will take it into account when receiving the event *)
@@ -389,7 +394,8 @@ module Make
                 data = EventData.Action (Action.add_time kind);
             } in
             let* () = Game.add_event ~request game_id event in
-            broadcast Game game_id (WebSocketOutgoingMessage.GameEvent { event })
+            let server_time = External.now_float () in
+            broadcast Game game_id (WebSocketOutgoingMessage.GameEvent { event; server_time })
         | Move { move } ->
             let _, game_id = SubscriptionManager.subscription_of ~client_id in
             let event = Models.GameEvent.{
@@ -398,7 +404,8 @@ module Make
                 data = EventData.Move { move };
             } in
             let* () = Game.add_event ~request game_id event in
-            broadcast Game game_id (WebSocketOutgoingMessage.GameEvent { event })
+            let server_time = External.now_float () in
+            broadcast Game game_id (WebSocketOutgoingMessage.GameEvent { event; server_time })
 
 
     (** The main handler *)

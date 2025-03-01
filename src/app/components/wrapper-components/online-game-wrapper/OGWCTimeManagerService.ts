@@ -89,7 +89,7 @@ export class OGWCTimeManagerService {
         return this.configRoom.get().maximalMoveDuration * 1000;
     }
 
-    public onReceivedAction(currentPlayer: Player, action: GameEventAction): void {
+    public onReceivedAction(currentPlayer: Player, action: GameEventAction, serverTime: number): void {
         console.log(action)
         this.beforeEvent();
         switch (action.action) {
@@ -107,7 +107,7 @@ export class OGWCTimeManagerService {
                 this.onSync();
                 break;
         }
-        this.afterEvent(currentPlayer, action.time);
+        this.afterEvent(currentPlayer, serverTime);
     }
 
     public playerOfMinimalUser(user: MinimalUser): Player {
@@ -120,7 +120,7 @@ export class OGWCTimeManagerService {
         }
     }
 
-    public onReceivedMove(move: GameEventMove): void {
+    public onReceivedMove(move: GameEventMove, serverTime: number): void {
         this.beforeEvent();
         const player: Player = this.playerOfMinimalUser(move.user);
 
@@ -137,11 +137,11 @@ export class OGWCTimeManagerService {
         const nextPlayerTakenGlobalTime: number = this.takenGlobalTime.get(nextPlayer);
         const nextPlayerAdaptedGlobalTime: number = this.getPartDurationInMs() - nextPlayerTakenGlobalTime;
         this.globalClocks[nextPlayer.getValue()].changeDuration(nextPlayerAdaptedGlobalTime);
-        this.afterEvent(nextPlayer, move.time);
+        this.afterEvent(nextPlayer, serverTime);
     }
 
-    private getMsElapsedSinceLastMoveStart(moveTimeMs: number): number {
-        return moveTimeMs - this.lastMoveStartMs.get();
+    private getMsElapsedSinceLastMoveStart(currentTimeMs: number): number {
+        return currentTimeMs - this.lastMoveStartMs.get();
     }
 
     // Stops all clocks that are running
@@ -165,8 +165,9 @@ export class OGWCTimeManagerService {
     private beforeEvent(): void {
         this.pauseAllClocks();
     }
+
     // Continue the current player clock after receiving events
-    private afterEvent(currentPlayer: Player, currentTimeMs: number): void {
+    private afterEvent(currentPlayer: Player, currentTime: number): void {
         if (this.synchronized === false) {
             // We'll wait until we are synchronized to do anything
             return;
@@ -175,10 +176,10 @@ export class OGWCTimeManagerService {
         if (this.gameEnd === false) {
             // The drift is how long has passed since the last event occurred
             // It can be only a few ms, or a much longer time in case we join mid-game
-            const driftMs: number = this.getMsElapsedSinceLastMoveStart(currentTimeMs);
+            const drift: number = this.getMsElapsedSinceLastMoveStart(currentTime);
             // We need to subtract the time to take the drift into account
-            this.turnClocks[currentPlayer.getValue()].subtract(driftMs);
-            this.globalClocks[currentPlayer.getValue()].subtract(driftMs);
+            this.turnClocks[currentPlayer.getValue()].subtract(drift * 1000);
+            this.globalClocks[currentPlayer.getValue()].subtract(drift * 1000);
             this.resumeClocks(currentPlayer);
         }
     }

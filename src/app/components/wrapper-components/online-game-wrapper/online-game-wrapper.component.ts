@@ -158,9 +158,9 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
                                                        await this.onGameUpdate(game);
                                                    });
                                                },
-                                               (event: GameEvent) => {
+                                               (event: GameEvent, serverTime: number) => {
                                                    return mutex.runExclusive(async() => {
-                                                       await this.onGameEvent(event);
+                                                       await this.onGameEvent(event, serverTime);
                                                    });
                                                });
     }
@@ -184,11 +184,11 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         this.requestManager.onGameStart();
     }
 
-    private async onGameEvent(event: GameEvent): Promise<void> {
+    private async onGameEvent(event: GameEvent, serverTime: number): Promise<void> {
         console.log('OGWC.onGameEvent: ' + JSON.stringify(event))
         switch (event.eventType) {
             case 'Move':
-                await this.onReceivedMove(event);
+                await this.onReceivedMove(event, serverTime);
                 break;
             case 'Request':
                 this.requestManager.onReceivedRequest(event);
@@ -201,7 +201,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
                 break;
             default:
                 Utils.expectToBe(event.eventType, 'Action', 'Event should be an action');
-                this.timeManager.onReceivedAction(Player.ofTurn(this.gameComponent.getTurn()), event);
+                this.timeManager.onReceivedAction(Player.ofTurn(this.gameComponent.getTurn()), event, serverTime);
                 // if (event.action === 'EndGame') await this.onGameEnd();
                 if (event.action === 'Sync') this.isSynced = true;
                 break;
@@ -233,7 +233,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         this.endGame = true;
     }
 
-    private async onReceivedMove(moveEvent: GameEventMove): Promise<void> {
+    private async onReceivedMove(moveEvent: GameEventMove, serverTime): Promise<void> {
         if (this.moveSentButNotReceivedYet) {
             // This is our move, we have already shown it
             // So we do nothing to show it again.
@@ -246,7 +246,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         }
         // Need to handle the rest irrespective of which move we received
         await this.setCurrentPlayerAccordingToCurrentTurn();
-        this.timeManager.onReceivedMove(moveEvent);
+        this.timeManager.onReceivedMove(moveEvent, serverTime);
         this.requestManager.onReceivedMove();
     }
 

@@ -17,17 +17,15 @@ export class GameService {
 
     public async subscribeTo(gameId: string,
                              gameUpdate: (game: Game) => Promise<void>,
-                             gameEvent: (event: GameEvent) => Promise<void>)
+                             gameEvent: (event: GameEvent, serverTime: number) => Promise<void>)
     : Promise<Subscription> {
         const gameUpdateSubscription: Subscription =
             this.webSocketManager.setCallback('GameUpdate', (message: WebSocketMessage): void => {
-                console.log('gameUpdate')
                 void gameUpdate(message.getArgument('game'));
             });
         const gameEventSubscription: Subscription =
             this.webSocketManager.setCallback('GameEvent', (message: WebSocketMessage): void => {
-                console.log('gameEvent')
-                void gameEvent(message.getArgument('event'));
+                void gameEvent(message.getArgument('event'), message.getArgument('serverTime'));
             });
         const gameSubscription: Subscription = await this.webSocketManager.subscribeToGame(gameId);
         return new Subscription(() => {
@@ -55,8 +53,8 @@ export class GameService {
     }
 
     /** Notify the timeout of a player in a game */
-    public async notifyTimeout(winner: Player): Promise<void> {
-        return this.gameAction(['NotifyTimeout', { winner: winner.getValue() }]);
+    public async notifyTimeout(loser: Player): Promise<void> {
+        return this.gameAction(['NotifyTimeout', { timeoutedPlayer: loser.getValue() }]);
     }
 
     private async propose(proposition: 'TakeBack' | 'Draw' | 'Rematch'): Promise<void> {
