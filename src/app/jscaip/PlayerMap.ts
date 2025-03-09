@@ -47,6 +47,11 @@ export class PlayerNumberMap extends PlayerMap<number> {
         return this.map.put(player, oldValue + value);
     }
 
+    public subtract(player: Player, value: number): MGPOptional<number> {
+        const oldValue: number = this.get(player);
+        return this.map.put(player, oldValue - value);
+    }
+
     public toTable(): PlayerNumberTable {
         return PlayerNumberTable.ofSingle(
             this.get(Player.ZERO),

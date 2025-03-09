@@ -19,11 +19,11 @@ export class CountDownComponent implements OnDestroy {
     @Input() active: boolean;
     @Input() canAddTime: boolean;
 
-    public remainingMs: number;
+    public remainingSeconds: number;
     public displayedSec: number;
     public displayedMinute: number;
-    private timeoutHandleGlobal: number | null = null;
-    private timeoutHandleSec: number | null = null;
+    private timeoutHandle: number | null = null;
+    private updateHandle: number | null = null;
     private isPaused: boolean = true;
     private isSet: boolean = false;
     private started: boolean = false;
@@ -41,46 +41,52 @@ export class CountDownComponent implements OnDestroy {
 
     public constructor(private readonly cdr: ChangeDetectorRef) {}
 
-    // Set the duration (in ms) for a non-started countdown
+    // Set the duration (in seconds, floating number) for a non-started countdown
     public setDuration(duration: number): void {
         Utils.assert(this.started === false, 'Should not set a chrono that has already been started (' + this.debugName + ')!');
 
         this.isSet = true;
         this.changeDuration(duration);
     }
-    public changeDuration(ms: number): void {
+
+    public changeDuration(seconds: number): void {
         Utils.assert(this.isPaused, 'Should not change duration of a clock while it is running');
-        this.remainingMs = ms;
+        this.remainingSeconds = seconds;
         this.displayDuration();
     }
-    public subtract(ms: number): void {
-        this.changeDuration(this.remainingMs - ms);
+
+    public subtract(seconds: number): void {
+        this.changeDuration(this.remainingSeconds - seconds);
     }
+
     private displayDuration(): void {
-        this.displayedSec = this.remainingMs % (60 * 1000);
-        this.displayedMinute = (this.remainingMs - this.displayedSec) / (60 * 1000);
-        this.displayedSec = Math.floor(this.displayedSec / 1000);
+        this.displayedSec = Math.floor(this.remainingSeconds % 60);
+        this.displayedMinute = Math.floor((this.remainingSeconds - this.displayedSec) / 60);
         this.cdr.detectChanges();
     }
+
     public start(): void {
         // duration is in ms
         Utils.assert(this.isSet, 'Should not start a chrono that has not been set!');
         Utils.assert(this.started === false, 'Should not start chrono that has already been started (' + this.debugName + ')');
 
+        console.log(`${this.debugName} STARTING at ${this.remainingSeconds}`);
         this.started = true;
         this.resume();
     }
+
     public resume(): void {
         Utils.assert(this.isPaused && this.started, 'Should only resume chrono that are started and paused!');
 
-        this.startTime = Date.now();
-        const remainingTimeOnResume: number = this.remainingMs;
+        this.startTime = Date.now() / 1000;
+        const remainingTimeOnResume: number = this.remainingSeconds;
         this.isPaused = false;
-        this.timeoutHandleGlobal = window.setTimeout(() => {
+        this.timeoutHandle = window.setTimeout(() => {
             this.onEndReached();
-        }, remainingTimeOnResume);
+        }, remainingTimeOnResume * 1000);
         this.countSeconds();
     }
+
     private onEndReached(): void {
         this.isPaused = true;
         this.started = false;
@@ -88,15 +94,18 @@ export class CountDownComponent implements OnDestroy {
         this.changeDuration(0);
         this.outOfTimeAction.emit();
     }
+
     private countSeconds(): void {
-        this.timeoutHandleSec = window.setTimeout(() => {
+        this.updateHandle = window.setTimeout(() => {
             this.updateShownTime();
-        }, 1000);
+        }, 300); // update a bit more frequently than every second to account for drifts
     }
+
     public isIdle(): boolean {
         const isUnstarted: boolean = this.started === false;
         return isUnstarted || this.isPaused;
     }
+
     public pause(): void {
         Utils.assert(this.started, 'Should not pause not started chrono (' + this.debugName + ')');
         Utils.assert(this.isPaused === false, 'Should not pause already paused chrono (' + this.debugName + ')');
@@ -105,6 +114,7 @@ export class CountDownComponent implements OnDestroy {
         this.isPaused = true;
         this.updateShownTime();
     }
+
     public stop(): void {
         Utils.assert(this.started, 'Should only stop chrono that are started!');
 
@@ -114,15 +124,17 @@ export class CountDownComponent implements OnDestroy {
         this.started = false;
         this.isSet = false;
     }
+
     public isStarted(): boolean {
         return this.started;
     }
+
     public getTimeClass(): string {
         if (this.active === false) {
             return CountDownComponent.PASSIVE_STYLE;
         }
-        if (this.remainingMs < this.dangerTimeLimit) {
-            if (this.remainingMs % 2000 < 1000) {
+        if (this.remainingSeconds < this.dangerTimeLimit) {
+            if (this.remainingSeconds % 2 < 1) {
                 return CountDownComponent.DANGER_TIME_ODD;
             } else {
                 return CountDownComponent.DANGER_TIME_EVEN;
@@ -131,32 +143,37 @@ export class CountDownComponent implements OnDestroy {
             return CountDownComponent.SAFE_TIME;
         }
     }
+
     private updateShownTime(): void {
-        const now: number = Date.now();
-        this.remainingMs -= (now - this.startTime);
+        const nowSeconds: number = Date.now() / 1000;
+        console.log(`${this.debugName} UPDATE: removing ${nowSeconds - this.startTime} from ${this.remainingSeconds}`);
+        this.remainingSeconds -= (nowSeconds - this.startTime);
         this.cssClasses = this.getTimeClass();
-        this.startTime = now;
+        this.startTime = nowSeconds;
         this.displayDuration();
         if (this.isPaused === false) {
             this.countSeconds();
         }
     }
-    private clearTimeouts(): void {
 
-        if (this.timeoutHandleSec != null) {
-            window.clearTimeout(this.timeoutHandleSec);
-            this.timeoutHandleSec = null;
+    private clearTimeouts(): void {
+        if (this.updateHandle != null) {
+            window.clearTimeout(this.updateHandle);
+            this.updateHandle = null;
         }
 
-        if (this.timeoutHandleGlobal != null) {
-            window.clearTimeout(this.timeoutHandleGlobal);
-            this.timeoutHandleGlobal = null;
+        if (this.timeoutHandle != null) {
+            window.clearTimeout(this.timeoutHandle);
+            this.timeoutHandle = null;
         }
     }
+
     public addTime(): void {
         this.addTimeToOpponent.emit();
     }
+
     public ngOnDestroy(): void {
         this.clearTimeouts();
     }
+
 }
