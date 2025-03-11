@@ -53,10 +53,10 @@ export class TaflPieceHeuristic<M extends TaflMove> extends PlayerMetricHeuristi
         // For the maximum, we consider the game of hnefatafl which has 24 pieces and 13
         // Another option would be to define a heuristic that is mostly copy-pasted from this, but in each tafl games
         // In the end, what we care about is "bigger metric = better", not that it is 100% accurate
-        const maxPawns: [number, number] = [24, 13];
+        const maxPawns: PlayerNumberMap = PlayerNumberMap.of(24, 13);
         const invader: Player = this.rules.getInvader(config.get());
-        const zeroPawnsCount: number = maxPawns[invader.getValue()];
-        const onePawnsCount: number = maxPawns[invader.getOpponent().getValue()];
+        const zeroPawnsCount: number = maxPawns.get(invader);
+        const onePawnsCount: number = maxPawns.get(invader.getOpponent());
         const player0HeuristicValue: PlayerNumberMap = this.getHeuristicValue(config.get(), zeroPawnsCount, 0);
         const player0Best: BoardValue = BoardValue.ofPlayerNumberMap(player0HeuristicValue);
         const player1HeuristicValue: PlayerNumberMap = this.getHeuristicValue(config.get(), 0, onePawnsCount);

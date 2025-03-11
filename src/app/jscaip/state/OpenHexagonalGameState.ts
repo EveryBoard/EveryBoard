@@ -28,10 +28,10 @@ export abstract class OpenHexagonalGameState<T extends NonNullable<unknown>> ext
         return this.pieces.getKeyList();
     }
     public computeScale(): Scale {
-        let minWidth: number = Number.MAX_SAFE_INTEGER;
-        let maxWidth: number = Number.MIN_SAFE_INTEGER;
-        let minHeight: number = Number.MAX_SAFE_INTEGER;
-        let maxHeight: number = Number.MIN_SAFE_INTEGER;
+        let minWidth: number = Infinity;
+        let maxWidth: number = -Infinity;
+        let minHeight: number = Infinity;
+        let maxHeight: number = -Infinity;
         for (const coord of this.pieces.getKeyList()) {
             minWidth = Math.min(coord.x, minWidth);
             maxWidth = Math.max(coord.x, maxWidth);

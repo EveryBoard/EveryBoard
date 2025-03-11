@@ -671,7 +671,8 @@ describe('LocalGameWrapperComponent (game phase)', () => {
             const dot: string = `digraph G {
     node_0 [label="#1: 0 - ", style=filled, fillcolor="white"];
 }`;
-            expect(window.open).toHaveBeenCalledOnceWith('https://dreampuf.github.io/GraphvizOnline/#' + encodeURI(dot));
+            const expectedURL: string = 'https://dreampuf.github.io/GraphvizOnline/#' + encodeURI(dot);
+            expect(window.open).toHaveBeenCalledOnceWith(expectedURL);
         }));
 
         it('should show MCTS info when playing against MCTS', fakeAsync(async() => {
@@ -699,7 +700,8 @@ describe('LocalGameWrapperComponent (game phase)', () => {
             const dot: string = `digraph G {
     node_0 [label="#1: 0 - 1/1 = 100%", style=filled, fillcolor="white"];
 }`;
-            expect(window.open).toHaveBeenCalledOnceWith('https://dreampuf.github.io/GraphvizOnline/#' + encodeURI(dot));
+            const expectedURL: string = 'https://dreampuf.github.io/GraphvizOnline/#' + encodeURI(dot);
+            expect(window.open).toHaveBeenCalledOnceWith(expectedURL);
         }));
 
         it('should show game tree from previous node when clicking on the corresponding button', fakeAsync(async() => {
@@ -714,7 +716,8 @@ describe('LocalGameWrapperComponent (game phase)', () => {
             const dot: string = `digraph G {
     node_0 [label="#1: 0 - ", style=filled, fillcolor="white"];
 }`;
-            expect(window.open).toHaveBeenCalledOnceWith('https://dreampuf.github.io/GraphvizOnline/#' + encodeURI(dot));
+            const expectedURL: string = 'https://dreampuf.github.io/GraphvizOnline/#' + encodeURI(dot);
+            expect(window.open).toHaveBeenCalledOnceWith(expectedURL);
         }));
 
         afterEach(() => {

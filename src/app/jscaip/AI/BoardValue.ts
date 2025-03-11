@@ -15,13 +15,14 @@ export class BoardValue {
     }
 
     public static VICTORIES: number[] = [Number.MIN_SAFE_INTEGER, Number.MAX_SAFE_INTEGER];
+    public static PRE_VICTORIES: number[] = [Number.MIN_SAFE_INTEGER + 1, Number.MAX_SAFE_INTEGER - 1];
 
     public static isVictory(score: number): boolean {
-        return score === Number.MAX_SAFE_INTEGER || score === Number.MIN_SAFE_INTEGER;
+        return score === BoardValue.VICTORIES[0] || score === BoardValue.VICTORIES[1];
     }
 
     public static isPreVictory(score: number): boolean {
-        return score === Number.MAX_SAFE_INTEGER - 1 || score === Number.MIN_SAFE_INTEGER + 1;
+        return score === BoardValue.PRE_VICTORIES[0] || score === BoardValue.PRE_VICTORIES[1];
     }
 
     /**
@@ -79,13 +80,13 @@ export class BoardValue {
 
     public toMaximum(): BoardValue {
         const size: number = this.metrics.length;
-        const maximums: number[] = ArrayUtils.create(size, Number.MAX_SAFE_INTEGER);
+        const maximums: number[] = ArrayUtils.create(size, BoardValue.VICTORIES[1]);
         return BoardValue.multiMetric(maximums);
     }
 
     public toMinimum(): BoardValue {
         const size: number = this.metrics.length;
-        const minimums: number[] = ArrayUtils.create(size, Number.MIN_SAFE_INTEGER);
+        const minimums: number[] = ArrayUtils.create(size, BoardValue.VICTORIES[0]);
         return BoardValue.multiMetric(minimums);
     }
 

@@ -52,11 +52,13 @@ export class MCTSWithHeuristic<M extends Move,
                 const player1Best: number = bounds.player1Best.metrics[i];
                 // It can be the case sometimes that the metric is out of range from the bounds.
                 // In such cases, we treat this as an extreme value, and cap it to the best available value
-                const cappedValue: number = Math.max(Math.min(metric, player1Best), player0Best);
-                if (cappedValue !== metric && Math.abs(cappedValue - metric) < 1000) {
-                    // Our metric is somewhat close to the bounds, it is likely an error in the metric.
-                    // We can warn the user about it.
-                    console.warn(`MCTSWithHeuristic capped a value close to the bounds: ${metric} has been capped to ${cappedValue}, bounds are [${player0Best}, ${player1Best}]`);
+                const isOutOfBounds: boolean = metric < player0Best || player1Best < metric;
+                const isPreVictory: boolean = metric === BoardValue.PRE_VICTORIES[0] ||
+                    metric === BoardValue.PRE_VICTORIES[1];
+                if (isOutOfBounds && (isPreVictory === false)) {
+                    // Our metric is outside of the bounds!
+                    // We can warn the user about it. (except for pre-victories)
+                    console.warn(`MCTSWithHeuristic[${this.name}] got a value outside its bounds: ${metric} is outside of [${player0Best}, ${player1Best}]`);
                 }
                 value += (Math.min(metric, player1Best) - player0Best) / (player1Best - player0Best);
             }
