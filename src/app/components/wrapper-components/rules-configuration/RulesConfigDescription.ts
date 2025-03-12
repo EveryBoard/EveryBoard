@@ -1,4 +1,4 @@
-import { Set, Utils } from '@everyboard/lib';
+import { MGPValidation, Set, Utils } from '@everyboard/lib';
 
 import { MGPValidator, MGPValidators } from 'src/app/utils/MGPValidator';
 import { ConfigDescriptionType, DefaultConfigDescription, EmptyRulesConfig, NamedRulesConfig, RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
@@ -43,6 +43,17 @@ export class NumberConfig<R extends RulesConfig = EmptyRulesConfig> extends Conf
         super(value, title, validator);
     }
 
+}
+
+export class EnumConfig<R extends RulesConfig = EmptyRulesConfig> extends ConfigLine<R> {
+
+    public constructor(value: string,
+                       title: Localized,
+                       public readonly possibleValue: Set<string>,
+                       validator: MGPValidator<R> = () => MGPValidation.SUCCESS)
+    {
+        super(value, title, validator);
+    }
 }
 
 export class BooleanConfig<R extends RulesConfig = EmptyRulesConfig> extends ConfigLine<R> {

@@ -101,8 +101,8 @@ export class Coord extends Vector {
         return Math.abs(this.x - c.x) + Math.abs(this.y - c.y);
     }
 
-    public getLinearDistanceToward(c: Coord): number {
-        return this.getDistanceToward(c, true);
+    public getLinearDistanceToward(c: Coord, checkAlignment: boolean = true): number {
+        return this.getDistanceToward(c, checkAlignment);
     }
 
     // If asked not to check alignment, a knight move would count as 2

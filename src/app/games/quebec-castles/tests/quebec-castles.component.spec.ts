@@ -1,11 +1,11 @@
 /* eslint-disable max-lines-per-function */
-import { fakeAsync } from '@angular/core/testing';
+import { fakeAsync, tick } from '@angular/core/testing';
 
 import { ActivatedRouteStub, ComponentTestUtils, SimpleComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { QuebecCastlesComponent } from '../quebec-castles.component';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { MGPOptional } from 'lib/dist';
-import { QuebecCastlesConfig, QuebecCastlesFailure, QuebecCastlesRules } from '../QuebecCastlesRules';
+import { DropMode, QuebecCastlesConfig, QuebecCastlesFailure, QuebecCastlesRules } from '../QuebecCastlesRules';
 import { QuebecCastlesMove } from '../QuebecCastlesMove';
 import { Coord } from 'src/app/jscaip/Coord';
 import { QuebecCastlesState } from '../QuebecCastlesState';
@@ -18,7 +18,7 @@ const _: PlayerOrNone = PlayerOrNone.NONE;
 const O: PlayerOrNone = PlayerOrNone.ZERO;
 const X: PlayerOrNone = PlayerOrNone.ONE;
 
-fdescribe('QuebecCastlesComponent', () => {
+describe('QuebecCastlesComponent', () => {
 
     let testUtils: ComponentTestUtils<QuebecCastlesComponent>;
     const rules: QuebecCastlesRules = QuebecCastlesRules.get();
@@ -140,7 +140,7 @@ fdescribe('QuebecCastlesComponent', () => {
                 // Given any board with a dropped piece
                 const customConfig: MGPOptional<QuebecCastlesConfig> = MGPOptional.of({
                     ...defaultConfig.get(),
-                    dropPieceYourself: true,
+                    dropMode: DropMode.BY_BATCH,
                 });
                 await testUtils.setupState(rules.getInitialState(customConfig), { config: customConfig });
                 await testUtils.expectClickSuccess('#square-7-7');
@@ -163,7 +163,7 @@ fdescribe('QuebecCastlesComponent', () => {
                 // Given any board in drop phase
                 const customConfig: MGPOptional<QuebecCastlesConfig> = MGPOptional.of({
                     ...defaultConfig.get(),
-                    dropPieceYourself: true,
+                    dropMode: DropMode.BY_BATCH,
                 });
                 await testUtils.setupState(rules.getInitialState(customConfig), { config: customConfig });
 
@@ -178,7 +178,7 @@ fdescribe('QuebecCastlesComponent', () => {
                 // Given a board when it is not your turn to play
                 const customConfig: MGPOptional<QuebecCastlesConfig> = MGPOptional.of({
                     ...defaultConfig.get(),
-                    dropPieceYourself: true,
+                    dropMode: DropMode.BY_BATCH,
                 });
                 await testUtils.setupState(rules.getInitialState(customConfig), { config: customConfig });
                 await testUtils.getComponent().setInteractive(false);
@@ -192,7 +192,7 @@ fdescribe('QuebecCastlesComponent', () => {
                 // Given a board where it is your turn to play
                 const customConfig: MGPOptional<QuebecCastlesConfig> = MGPOptional.of({
                     ...defaultConfig.get(),
-                    dropPieceYourself: true,
+                    dropMode: DropMode.BY_BATCH,
                 });
                 await testUtils.setupState(rules.getInitialState(customConfig), { config: customConfig });
 
@@ -206,7 +206,7 @@ fdescribe('QuebecCastlesComponent', () => {
                 // Given a board where it is your turn to play
                 const customConfig: MGPOptional<QuebecCastlesConfig> = MGPOptional.of({
                     ...defaultConfig.get(),
-                    dropPieceYourself: true,
+                    dropMode: DropMode.BY_BATCH,
                     defender: 2,
                 });
                 await testUtils.setupState(rules.getInitialState(customConfig), { config: customConfig });
@@ -223,7 +223,7 @@ fdescribe('QuebecCastlesComponent', () => {
                 // Given any board on which a piece is already dropped
                 const customConfig: MGPOptional<QuebecCastlesConfig> = MGPOptional.of({
                     ...defaultConfig.get(),
-                    dropPieceYourself: true,
+                    dropMode: DropMode.BY_BATCH,
                 });
                 await testUtils.setupState(rules.getInitialState(customConfig), { config: customConfig });
                 await testUtils.expectClickSuccess('#square-7-7');
@@ -237,14 +237,16 @@ fdescribe('QuebecCastlesComponent', () => {
                 // Given any board in drop phase with only one piece left to drop
                 const customConfig: MGPOptional<QuebecCastlesConfig> = MGPOptional.of({
                     ...defaultConfig.get(),
-                    dropPieceYourself: true,
+                    dropMode: DropMode.BY_BATCH,
                     defender: 3,
                 });
                 await testUtils.setupState(rules.getInitialState(customConfig), { config: customConfig });
                 await testUtils.expectClickSuccess('#square-7-7');
                 await testUtils.expectClickSuccess('#square-6-6');
+
                 // When dropping the last one
                 await testUtils.expectClickSuccess('#square-5-5');
+
                 // Then the validation button should be visible
                 testUtils.expectElementToHaveClass('#piece-7-7', 'selected-stroke');
             }));
@@ -253,7 +255,7 @@ fdescribe('QuebecCastlesComponent', () => {
                 // Given a board in drop phase, with all drop done but one
                 const customConfig: MGPOptional<QuebecCastlesConfig> = MGPOptional.of({
                     ...defaultConfig.get(),
-                    dropPieceYourself: true,
+                    dropMode: DropMode.BY_BATCH,
                     defender: 3,
                 });
                 await testUtils.setupState(rules.getInitialState(customConfig), { config: customConfig });
@@ -264,18 +266,16 @@ fdescribe('QuebecCastlesComponent', () => {
                 await testUtils.expectClickSuccess('#square-5-8');
 
                 // Then the validator should be clickable
-                testUtils.expectElementNotToHaveClass('#drop-validator', 'semi-transparent');
+                testUtils.expectElementNotToHaveClass('#drop-validator', 'opacity-80');
             }));
 
             it('should show last dropped after all dropped', fakeAsync(async() => {
                 // Given a board on which all piece has been dropped
                 const customConfig: MGPOptional<QuebecCastlesConfig> = MGPOptional.of({
                     ...defaultConfig.get(),
-                    dropPieceYourself: true,
+                    dropMode: DropMode.BY_BATCH,
                     defender: 3,
                 });
-                // TODO: not show BOTH territory as one
-                // TODO: la couleur du trone est weird en drop phase
                 await testUtils.setupState(rules.getInitialState(customConfig), { config: customConfig });
                 await testUtils.expectClickSuccess('#square-7-8');
                 await testUtils.expectClickSuccess('#square-6-8');
@@ -286,20 +286,20 @@ fdescribe('QuebecCastlesComponent', () => {
                 const move: QuebecCastlesMove = QuebecCastlesMove.drop(coords);
                 await testUtils.expectMoveSuccess('#drop-validator', move);
 
-                // Then the dropped should be marked as last-moved
-                testUtils.expectElementToHaveClasses('#square-7-8', ['base', 'player0-fill', 'moved-fill', 'semi-transparent']);
-                testUtils.expectElementToHaveClasses('#square-6-8', ['base', 'player0-fill', 'moved-fill', 'semi-transparent']);
-                testUtils.expectElementToHaveClasses('#square-5-8', ['base', 'player0-fill', 'moved-fill', 'semi-transparent']);
-                testUtils.expectElementToHaveClasses('#piece-7-8', ['base', 'player0-fill']);
-                testUtils.expectElementToHaveClasses('#piece-6-8', ['base', 'player0-fill']);
-                testUtils.expectElementToHaveClasses('#piece-5-8', ['base', 'player0-fill']);
+                // Then the dropped piece should be marked as moved-stroke
+                testUtils.expectElementToHaveClasses('#square-7-8', ['base', 'player0-fill', 'opacity-80']);
+                testUtils.expectElementToHaveClasses('#square-6-8', ['base', 'player0-fill', 'opacity-80']);
+                testUtils.expectElementToHaveClasses('#square-5-8', ['base', 'player0-fill', 'opacity-80']);
+                testUtils.expectElementToHaveClasses('#piece-7-8', ['base', 'player0-fill', 'moved-stroke']);
+                testUtils.expectElementToHaveClasses('#piece-6-8', ['base', 'player0-fill', 'moved-stroke']);
+                testUtils.expectElementToHaveClasses('#piece-5-8', ['base', 'player0-fill', 'moved-stroke']);
             }));
 
             it('should display last drop for player one', fakeAsync(async() => {
                 // Given a board on which all piece has been dropped for Player.ONE
                 const customConfig: MGPOptional<QuebecCastlesConfig> = MGPOptional.of({
                     ...defaultConfig.get(),
-                    dropPieceYourself: true,
+                    dropMode: DropMode.BY_BATCH,
                     defender: 3,
                     invader: 3,
                 });
@@ -327,7 +327,7 @@ fdescribe('QuebecCastlesComponent', () => {
                 // Given any board with a dropped piece
                 const customConfig: MGPOptional<QuebecCastlesConfig> = MGPOptional.of({
                     ...defaultConfig.get(),
-                    dropPieceYourself: true,
+                    dropMode: DropMode.BY_BATCH,
                 });
                 await testUtils.setupState(rules.getInitialState(customConfig), { config: customConfig });
                 await testUtils.expectClickSuccess('#square-7-7');
@@ -346,8 +346,7 @@ fdescribe('QuebecCastlesComponent', () => {
                 // Given any drop in a "drop yourself & piece by piece"
                 const customConfig: MGPOptional<QuebecCastlesConfig> = MGPOptional.of({
                     ...defaultConfig.get(),
-                    dropPieceYourself: true,
-                    dropPieceByPiece: true,
+                    dropMode: DropMode.PIECE_BY_PIECE,
                 });
                 await testUtils.setupState(rules.getInitialState(customConfig), { config: customConfig });
 
@@ -355,6 +354,69 @@ fdescribe('QuebecCastlesComponent', () => {
                 // Then it should drop
                 const move: QuebecCastlesMove = QuebecCastlesMove.drop([new Coord(7, 7)]);
                 await testUtils.expectMoveSuccess('#square-7-7', move);
+            }));
+
+            it('should allow player to drop all its remaining soldier once opponent is out of soldier to drop', fakeAsync(async() => {
+                // Given a board on which current player is the only one that has piece to drop
+                // and a drop piece by piece config
+                const customConfig: MGPOptional<QuebecCastlesConfig> = MGPOptional.of({
+                    ...defaultConfig.get(),
+                    dropMode: DropMode.PIECE_BY_PIECE,
+                    defender: 3,
+                    invader: 5,
+                });
+                const state: QuebecCastlesState = new QuebecCastlesState([
+                    [_, X, _, _, _, _, _, _, _],
+                    [X, _, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, O, O],
+                    [_, _, _, _, _, _, _, O, _],
+                ], 5, defaultThrones);
+                await testUtils.setupState(state, { config: customConfig });
+
+                // When dropping all its remaining piece at once
+                const coords: Coord[] = [new Coord(0, 2), new Coord(2, 0), new Coord(2, 2)];
+                const move: QuebecCastlesMove = QuebecCastlesMove.drop(coords);
+                await testUtils.expectClickSuccess('#square-0-2');
+                await testUtils.expectClickSuccess('#square-2-0');
+                await testUtils.expectClickSuccess('#square-2-2');
+
+                // Then the move should succeed
+                await testUtils.expectMoveSuccess('#drop-validator', move);
+            }));
+
+            it('should allow player to play normally after last batch-drop', fakeAsync(async() => {
+                // Given a board on which current player is to do the first move (after drop phase)
+                // and a drop piece by piece config
+                const customConfig: MGPOptional<QuebecCastlesConfig> = MGPOptional.of({
+                    ...defaultConfig.get(),
+                    dropMode: DropMode.PIECE_BY_PIECE,
+                    defender: 3,
+                    invader: 5,
+                });
+                const state: QuebecCastlesState = new QuebecCastlesState([
+                    [_, X, X, _, _, _, _, _, _],
+                    [X, X, _, _, _, _, _, _, _],
+                    [X, _, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, O, O],
+                    [_, _, _, _, _, _, _, O, _],
+                ], 6, defaultThrones);
+                await testUtils.setupState(state, { config: customConfig });
+
+                // When doing the first move
+                const move: QuebecCastlesMove = QuebecCastlesMove.translation(new Coord(7, 7), new Coord(6, 6));
+                await testUtils.expectClickSuccess('#square-7-7');
+
+                // Then the move should succeed
+                await testUtils.expectMoveSuccess('#square-6-6', move);
             }));
 
         });
@@ -365,18 +427,22 @@ fdescribe('QuebecCastlesComponent', () => {
                 // Given the initial board in "drop king yourself" config
                 const customConfig: MGPOptional<QuebecCastlesConfig> = MGPOptional.of({
                     ...defaultConfig.get(),
+                    width: 7,
+                    height: 7,
                     placeThroneYourself: true,
                 });
                 const state: QuebecCastlesState = rules.getInitialState(customConfig);
                 await testUtils.setupState(state, { config: customConfig });
 
                 // When clicking inside territory
-                const throne: Coord = new Coord(7, 7);
+                const throne: Coord = new Coord(6, 6);
                 const move: QuebecCastlesMove = QuebecCastlesMove.drop([throne]);
-                await testUtils.expectMoveSuccess('#square-7-7', move);
+                await testUtils.expectMoveSuccess('#square-6-6', move);
 
                 // Then the throne should be drawn there now
-                testUtils.expectElementToExist('#throne-PLAYER_ZERO-7-7');
+                testUtils.expectElementToExist('#throne-PLAYER_ZERO-6-6');
+                // Also, even if the default config must be used, the new configurated size must remain
+                testUtils.expectElementNotToExist('#square-7-7');
             }));
 
         });
@@ -392,12 +458,13 @@ describe('QuebecCastles Custom Configs', () => {
     const rules: QuebecCastlesRules = QuebecCastlesRules.get();
     const defaultConfig: MGPOptional<QuebecCastlesConfig> = rules.getDefaultRulesConfig();
 
-    async function setCustomConfigTags(tags: { [key : string]: number | boolean }): Promise<void> {
+    async function setCustomConfigTags(tags: { [key : string]: number | boolean | string }): Promise<void> {
         await testUtils.chooseConfig('Custom');
         testUtils.detectChanges();
         for (const key of Object.keys(tags)) {
-            const value: number | boolean = tags[key];
+            const value: number | boolean | string = tags[key];
             component.rulesConfigForm.get(key)?.setValue(value);
+            tick(1);
         }
     }
 

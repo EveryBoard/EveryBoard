@@ -43,8 +43,9 @@
                     </div>
                     <div class="field-body column has-text-right">
                         <div class="field is-narrow">
-                            <div class="control">
-                                <label *ngIf="isBoolean(configParameter) else notBoolean"
+                            <div class="control"
+                                 [ngSwitch]="typeOfConfig(configParameter)">
+                                <label *ngSwitchCase="'boolean'"
                                        class="checkbox">
                                     <input id="{{ configParameter }}_boolean_config_input"
                                            [formControlName]="configParameter"
@@ -52,23 +53,33 @@
                                            class="checkbox"
                                            required />
                                 </label>
-                                <ng-template #notBoolean>
-                                    <div *ngIf="isNumber(configParameter)"
-                                         class="control">
-                                        <input id="{{ configParameter }}_number_config_input"
-                                               [formControlName]="configParameter"
-                                               type="number"
-                                               class="input is-small"
-                                               [ngClass]="isValid(configParameter) === false ? 'is-danger' : ''"
-                                               required
-                                               placeholder="{{ rulesConfigDescription.getI18nName(configParameter) }}" />
+                                <div *ngSwitchCase="'number'"
+                                     class="control">
+                                    <input id="{{ configParameter }}_number_config_input"
+                                           [formControlName]="configParameter"
+                                           type="number"
+                                           class="input is-small"
+                                           [ngClass]="isValid(configParameter) === false ? 'is-danger' : ''"
+                                           required
+                                           placeholder="{{ rulesConfigDescription.getI18nName(configParameter) }}" />
+                                </div>
+                                <label *ngSwitchCase="'string'"
+                                       class="checkbox">
+                                    <div class="select is-primary is-fullwidth">
+                                        <select id="{{ configParameter }}_enum_config_input"
+                                                [disabled]="isEditable() === false"
+                                                (change)="onEnumChange(configParameter, $event)">
+                                            <option *ngFor="let value of getEnumValues(configParameter)" id="{{ configParameter }}_value_{{ value }}" [value]="value">
+                                                {{ value }}
+                                            </option>
+                                        </select>
                                     </div>
-                                    <div *ngIf="isValid(configParameter) === false"
-                                         id="{{configParameter}}-error"
-                                         class="help is-danger"
-                                         role="alert">{{ getErrorMessage(configParameter) }}</div>
-                                </ng-template>
+                                </label>
                             </div>
+                            <div *ngIf="isValid(configParameter) === false"
+                                 id="{{configParameter}}-error"
+                                 class="help is-danger"
+                                 role="alert">{{ getErrorMessage(configParameter) }}</div>
                         </div>
                     </div>
                 </div>

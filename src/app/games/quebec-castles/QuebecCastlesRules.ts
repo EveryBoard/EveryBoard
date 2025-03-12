@@ -1,4 +1,4 @@
-import { ArrayUtils, MGPFallible, MGPOptional, MGPValidation } from '@everyboard/lib';
+import { MGPFallible, MGPOptional, MGPValidation, Set, Utils } from '@everyboard/lib';
 
 import { GameNode } from 'src/app/jscaip/AI/GameNode';
 import { QuebecCastlesDrop, QuebecCastlesMove, QuebecCastlesTranslation } from './QuebecCastlesMove';
@@ -6,7 +6,7 @@ import { QuebecCastlesState } from './QuebecCastlesState';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { ConfigurableRules } from 'src/app/jscaip/Rules';
 import { Table, TableUtils } from 'src/app/jscaip/TableUtils';
-import { BooleanConfig, NumberConfig, RulesConfigDescription, RulesConfigDescriptionLocalizable } from 'src/app/components/wrapper-components/rules-configuration/RulesConfigDescription';
+import { BooleanConfig, EnumConfig, NumberConfig, RulesConfigDescription, RulesConfigDescriptionLocalizable } from 'src/app/components/wrapper-components/rules-configuration/RulesConfigDescription';
 import { MGPValidators } from 'src/app/utils/MGPValidator';
 import { Coord, CoordFailure } from 'src/app/jscaip/Coord';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
@@ -45,8 +45,19 @@ export class QuebecCastlesFailure {
 
     public static readonly TOO_MUCH_LINES_FOR_TERRITORY: Localized = () => $localize`Too much lines for territory, your opponent lines would merged with yours!`;
 }
+
+export enum DropMode {
+    AUTO = 'AUTO',
+    PIECE_BY_PIECE = 'PIECE_BY_PIECE',
+    BY_BATCH = 'BY_BATCH',
+}
+export const DropModes: Set<string> = new Set([
+    DropMode.AUTO.valueOf(),
+    DropMode.PIECE_BY_PIECE.valueOf(),
+    DropMode.BY_BATCH.valueOf(),
+]);
+
 // TODO show score
-// TODO meilleur trone en cas de victoire
 export type QuebecCastlesConfig = {
 
     width: number;
@@ -63,10 +74,7 @@ export type QuebecCastlesConfig = {
 
     placeThroneYourself: boolean;
 
-    // TODO: 5 and is rhombic in config choice: error not displayed but bug happen
-    // TODO should be choices "drop batch | drop piece-by-piece | drop-auto"
-    dropPieceByPiece: boolean;
-    dropPieceYourself: boolean
+    dropMode: DropMode;
 
 }
 
@@ -104,19 +112,9 @@ export class QuebecCastlesRules extends ConfigurableRules<QuebecCastlesMove, Que
                     }),
                     isRhombic: new BooleanConfig(true, () => $localize`Is Rhombic`),
                     placeThroneYourself: new BooleanConfig(false, () => $localize`Place throne yourself`),
-                    dropPieceByPiece: new BooleanConfig(false, () => $localize`Drop piece by piece`),
-                    dropPieceYourself: new BooleanConfig(false, () => $localize`Drop piece yourself`),
+                    dropMode: new EnumConfig(DropMode.AUTO.valueOf(), () => $localize`Drop mode`, DropModes),
                 },
             },
-            [
-                // {
-                //     name: (): string => $localize`Deadly Abalone`,
-                //     config: {
-                //         width: 10,
-                //         height: 10,
-                //     },
-                // },
-            ],
         );
 
     public static get(): QuebecCastlesRules {
@@ -148,7 +146,7 @@ export class QuebecCastlesRules extends ConfigurableRules<QuebecCastlesMove, Que
         const thrones: PlayerMap<MGPOptional<Coord>> = this.getThrones(config);
         const board: Table<PlayerOrNone> = TableUtils.create(config.width, config.height, PlayerOrNone.NONE);
         let state: QuebecCastlesState = new QuebecCastlesState(board, 0, thrones);
-        if (config.dropPieceYourself === false && config.placeThroneYourself === false) {
+        if (config.dropMode === DropMode.AUTO && config.placeThroneYourself === false) {
             state = this.fillBoard(state, config);
         }
         return state;
@@ -253,18 +251,7 @@ export class QuebecCastlesRules extends ConfigurableRules<QuebecCastlesMove, Que
     }
 
     public isDropPhase(state: QuebecCastlesState, config: QuebecCastlesConfig): boolean {
-        let lastDropTurn: number = 0;
-        if (config.placeThroneYourself) {
-            lastDropTurn += 2;
-        }
-        if (config.dropPieceYourself) {
-            if (config.dropPieceByPiece) {
-                lastDropTurn += config.defender + config.invader;
-            } else {
-                lastDropTurn += 2;
-            }
-        }
-        return state.turn < lastDropTurn;
+        return this.getExpectedDropThisTurn(state, config) > 0;
     }
 
     public override isLegal(move: QuebecCastlesMove,
@@ -280,17 +267,81 @@ export class QuebecCastlesRules extends ConfigurableRules<QuebecCastlesMove, Que
         }
     }
 
+    public getExpectedDropThisTurn(state: QuebecCastlesState, config: QuebecCastlesConfig): number {
+        switch (config.dropMode) {
+            case DropMode.PIECE_BY_PIECE:
+                return this.getExpectedDropThisTurnForPieceByPiece(state, config);
+            case DropMode.BY_BATCH:
+                return this.getExpectedDropThisTurnForBatch(state, config);
+            default:
+                if (this.mustPlaceThrone(state, config)) {
+                    return 1;
+                } else {
+                    return 0;
+                }
+        }
+    }
+
+    private getExpectedDropThisTurnForPieceByPiece(state: QuebecCastlesState, config: QuebecCastlesConfig): number {
+        if (this.mustPlaceThrone(state, config)) {
+            return 1;
+        }
+        const totalPieceToDrop: number = config.defender + config.invader;
+        const totalPieceDropped: number = state.count(Player.ZERO) + state.count(Player.ONE);
+        if (totalPieceDropped === totalPieceToDrop) {
+            return 0;
+        }
+        Utils.assert(state.turn < totalPieceToDrop, 'getExpectedDropThisTurnForPieceByPiece should not be called after drop phase');
+        // This turn is when the other player has dropped all its pieces
+        // First player: 3; second player: 5 => turn 5 ==> drop 3
+        // First player: 5; second player: 3 => turn 6 ==> drop 2
+        let turnOfLastDrop: number = Math.min(config.defender, config.invader) * 2;
+        if (config.placeThroneYourself) {
+            turnOfLastDrop += 2;
+        }
+        let dropBonus: number = 0;
+        if (config.defender < config.invader) {
+            turnOfLastDrop--;
+            dropBonus = 1;
+        }
+        if (state.turn === turnOfLastDrop) {
+            return Math.abs(config.defender - config.invader) + dropBonus;
+        } else {
+            return 1;
+        }
+    }
+
+    private getExpectedDropThisTurnForBatch(state: QuebecCastlesState, config: QuebecCastlesConfig): number {
+        const toDrop: number = state.getCurrentPlayer() === Player.ZERO ? config.defender : config.invader;
+        if (state.turn < 2) {
+            if (config.placeThroneYourself) {
+                return 1;
+            } else {
+                return toDrop;
+            }
+        } else if (state.turn < 4) {
+            if (config.placeThroneYourself) {
+                return toDrop;
+            }
+        }
+        return 0;
+    }
+
     public isLegalDrop(move: QuebecCastlesMove, state: QuebecCastlesState, config: QuebecCastlesConfig)
     : MGPValidation
     {
         if (QuebecCastlesMove.isTranslation(move)) {
             return MGPValidation.failure(QuebecCastlesFailure.CANNOT_MOVE_IN_DROP_PHASE());
         }
-        if (state.turn <= 2 && config.placeThroneYourself ) {
+        if (this.mustPlaceThrone(state, config)) {
             return this.isLegalThronePlacement(move, state, config);
         } else {
             return this.isLegalPieceDrop(move, state, config);
         }
+    }
+
+    public mustPlaceThrone(state: QuebecCastlesState, config: QuebecCastlesConfig): boolean {
+        return state.turn < 2 && config.placeThroneYourself;
     }
 
     private isLegalThronePlacement(move: QuebecCastlesDrop, state: QuebecCastlesState, config: QuebecCastlesConfig)
@@ -304,31 +355,30 @@ export class QuebecCastlesRules extends ConfigurableRules<QuebecCastlesMove, Que
     }
 
     private isLegalPieceDrop(move: QuebecCastlesDrop, state: QuebecCastlesState, config: QuebecCastlesConfig)
-    : MGPValidation {
-        if (config.dropPieceYourself) {
-            if (config.dropPieceByPiece) { // TODO: unify with enumConfig
-                if (this.isLastDrop(state, config)) {
-                    const player: Player = state.getCurrentPlayer();
-                    const playerCount: number = state.count(player);
-                    const playerTotal: number = player === Player.ZERO ? config.defender : config.invader;
-                    const remainToDrop: number = playerTotal - playerCount;
-                    if (move.coords.size() !== remainToDrop) {
-                        return MGPFallible.failure(QuebecCastlesFailure.MUST_DROP_ALL_YOUR_REMAINING_PIECES());
-                    }
-                } else {
-                    if (move.coords.size() > 1) {
-                        return MGPFallible.failure(QuebecCastlesFailure.MUST_DROP_ONE_BY_ONE());
-                    }
+    : MGPValidation
+    {
+        if (config.dropMode === DropMode.PIECE_BY_PIECE) {
+            if (this.isLastDrop(state, config)) {
+                const player: Player = state.getCurrentPlayer();
+                const playerCount: number = state.count(player);
+                const playerTotal: number = player === Player.ZERO ? config.defender : config.invader;
+                const remainToDrop: number = playerTotal - playerCount;
+                if (move.coords.size() !== remainToDrop) {
+                    return MGPFallible.failure(QuebecCastlesFailure.MUST_DROP_ALL_YOUR_REMAINING_PIECES());
                 }
             } else {
-                const numberToDrop: number =
-                    state.getCurrentPlayer() === Player.ZERO ? config.defender : config.invader;
-                if (move.coords.size() > numberToDrop) {
-                    return MGPFallible.failure(QuebecCastlesFailure.CANNOT_DROP_THAT_MUCH());
+                if (move.coords.size() > 1) {
+                    return MGPFallible.failure(QuebecCastlesFailure.MUST_DROP_ONE_BY_ONE());
                 }
-                if (move.coords.size() < numberToDrop) {
-                    return MGPFallible.failure(QuebecCastlesFailure.MUST_DROP_ALL_YOUR_PIECES());
-                }
+            }
+        } else if (config.dropMode === DropMode.BY_BATCH) {
+            const numberToDrop: number =
+                state.getCurrentPlayer() === Player.ZERO ? config.defender : config.invader;
+            if (move.coords.size() > numberToDrop) {
+                return MGPFallible.failure(QuebecCastlesFailure.CANNOT_DROP_THAT_MUCH());
+            }
+            if (move.coords.size() < numberToDrop) {
+                return MGPFallible.failure(QuebecCastlesFailure.MUST_DROP_ALL_YOUR_PIECES());
             }
         }
         for (const coord of move.coords) {
@@ -508,18 +558,22 @@ export class QuebecCastlesRules extends ConfigurableRules<QuebecCastlesMove, Que
     {
         const config: QuebecCastlesConfig = optionalConfig.get();
         const currentPlayer: Player = state.getCurrentPlayer();
-        if (config.placeThroneYourself && state.turn < 2) {
+        if (this.mustPlaceThrone(state, config)) {
             const thrones: PlayerMap<MGPOptional<Coord>> = PlayerMap.ofValues(
                 state.thrones.get(Player.ZERO),
                 state.thrones.get(Player.ONE),
             );
-            // TODO: then expect exactly one drop
             const throneCoord: Coord = move.coords.getAnyElement().get();
             thrones.put(currentPlayer, MGPOptional.of(throneCoord));
-            if (config.dropPieceYourself === false) {
-                const defaultConfig: MGPOptional<QuebecCastlesConfig> = this.getDefaultRulesConfig();
-                let newState: QuebecCastlesState = this.getInitialState(defaultConfig);
-                newState = this.placeThronesAndMovePiece(state, thrones);
+            if (config.dropMode === DropMode.AUTO) {
+                const adaptedDefaultConfig: MGPOptional<QuebecCastlesConfig> = MGPOptional.of({
+                    ...this.getDefaultRulesConfig().get(),
+                    width: config.width,
+                    height: config.height,
+                    isRhombic: config.isRhombic,
+                });
+                let newState: QuebecCastlesState = this.getInitialState(adaptedDefaultConfig);
+                newState = this.placeThronesAndMovePiece(state, thrones, adaptedDefaultConfig);
                 return new QuebecCastlesState(newState.board, state.turn + 1, thrones);
             } else {
                 return new QuebecCastlesState(state.board, state.turn + 1, thrones);
@@ -534,11 +588,11 @@ export class QuebecCastlesRules extends ConfigurableRules<QuebecCastlesMove, Que
     }
 
     private placeThronesAndMovePiece(state: QuebecCastlesState,
-                                     thrones: PlayerMap<MGPOptional<Coord>>)
+                                     thrones: PlayerMap<MGPOptional<Coord>>,
+                                     adaptedDefaultConfig: MGPOptional<QuebecCastlesConfig>)
     : QuebecCastlesState
     {
-        const defaultConfig: MGPOptional<QuebecCastlesConfig> = this.getDefaultRulesConfig();
-        const initialState: QuebecCastlesState = this.getInitialState(defaultConfig);
+        const initialState: QuebecCastlesState = this.getInitialState(adaptedDefaultConfig);
         let newState: QuebecCastlesState = this.doThronePlacement(initialState, thrones, Player.ZERO);
         if (state.getCurrentPlayer() === Player.ZERO) {
             initialState.forEachCoord((coord: Coord, content: PlayerOrNone) => {
@@ -580,7 +634,7 @@ export class QuebecCastlesRules extends ConfigurableRules<QuebecCastlesMove, Que
         }
         const invader: MGPOptional<Coord> = state.thrones.get(Player.ZERO);
         if (invader.isPresent() && state.getPieceAt(invader.get()).equals(PlayerOrNone.ONE)) {
-            return GameStatus.ONE_WON; // Defender weird victory that I might want to rule out ? TODO
+            return GameStatus.ONE_WON;
         }
         const playerZero: number = state.count(Player.ZERO);
         if (this.isDropPhase(state, config.get()) === false) {

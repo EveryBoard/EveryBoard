@@ -1,7 +1,8 @@
 import { MGPValidation } from '@everyboard/lib';
 import { EmptyRulesConfig, RulesConfig } from '../jscaip/RulesConfigUtil';
 
-export type MGPValidator<R extends RulesConfig = EmptyRulesConfig> = (v: number | null, config: R) => MGPValidation;
+export type MGPValidator<R extends RulesConfig = EmptyRulesConfig> =
+    (v: number | string | null, config: R) => MGPValidation;
 
 export class MGPValidators {
 
@@ -13,7 +14,7 @@ export class MGPValidators {
             if (value < min) {
                 return MGPValidation.failure(MGPValidatorsFailure.VALUE_IS_TOO_SMALL(value, min));
             } else if (max < value) {
-                return MGPValidation.failure(MGPValidatorsFailure.VALUE_IS_TOO_HIGH(value, min));
+                return MGPValidation.failure(MGPValidatorsFailure.VALUE_IS_TOO_HIGH(value, max));
             } else {
                 return MGPValidation.SUCCESS;
             }

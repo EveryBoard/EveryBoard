@@ -12,7 +12,7 @@ export abstract class MoveCoordToCoord extends MoveWithTwoCoords {
     }
 
     public getDistance(): number {
-        return this.getStart().getLinearDistanceToward(this.getEnd());
+        return this.getStart().getLinearDistanceToward(this.getEnd(), false);
     }
 
     public getDirection(): MGPFallible<Ordinal> {
@@ -33,7 +33,6 @@ export abstract class MoveCoordToCoord extends MoveWithTwoCoords {
 
     public getJumpedOverCoords(): Coord[] {
         return this.getStart().getCoordsToward(this.getEnd());
-        // TODO, reuse that method with [], wherever it is in branch
     }
 
     public equals(other: this): boolean {

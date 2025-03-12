@@ -27,7 +27,7 @@ export abstract class MoveCoord extends Move {
     }
 }
 
-export class TMPMoveCoord extends MoveCoord {
+export class TMPMoveCoord extends MoveCoord { // TODO:cover entirely
 
     public static of(coord: Coord): TMPMoveCoord {
         return new TMPMoveCoord(coord.x, coord.y);

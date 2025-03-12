@@ -2,7 +2,7 @@ import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
 import { Move } from 'src/app/jscaip/Move';
 import { GameNode } from 'src/app/jscaip/AI/GameNode';
-import { GameState } from 'src/app/jscaip/state/GameState';
+import { GameState, GameStateAndConfig } from 'src/app/jscaip/state/GameState';
 
 export type Click = string;
 
@@ -12,7 +12,7 @@ export abstract class TutorialStep {
 
     public static fromMove(title: string,
                            instruction: string,
-                           state: GameState,
+                           state: GameStateAndConfig,
                            acceptedMoves: ReadonlyArray<Move>,
                            successMessage: string,
                            failureMessage: string)
@@ -23,7 +23,7 @@ export abstract class TutorialStep {
 
     public static forClick(title: string,
                            instruction: string,
-                           state: GameState,
+                           state: GameStateAndConfig,
                            acceptedClicks: ReadonlyArray<string>,
                            successMessage: string,
                            failureMessage: string)
@@ -34,7 +34,7 @@ export abstract class TutorialStep {
 
     public static anyMove(title: string,
                           instruction: string,
-                          state: GameState,
+                          state: GameStateAndConfig,
                           solutionMove: Move,
                           successMessage: string)
     : TutorialStep
@@ -44,7 +44,7 @@ export abstract class TutorialStep {
 
     public static fromPredicate(title: string,
                                 instruction: string,
-                                state: GameState,
+                                state: GameStateAndConfig,
                                 solutionMove: Move,
                                 predicate: TutorialPredicate,
                                 successMessage: string)
@@ -55,7 +55,7 @@ export abstract class TutorialStep {
 
     public static informational(title: string,
                                 instruction: string,
-                                state: GameState)
+                                state: GameStateAndConfig)
     : TutorialStep
     {
         return new TutorialStepInformational(title, instruction, state);
@@ -66,7 +66,7 @@ export abstract class TutorialStep {
 
     protected constructor(public title: string,
                           public instruction: string,
-                          public state: GameState) {
+                          public state: GameStateAndConfig) {
     }
 
     public isMove(): this is TutorialStepMove {
@@ -107,7 +107,7 @@ export abstract class TutorialStepWithSolution extends TutorialStep {
 
     public constructor(title: string,
                        instruction: string,
-                       state: GameState,
+                       state: GameStateAndConfig,
                        private readonly successMessage: string)
     {
         super(title, instruction, state);
@@ -129,7 +129,7 @@ export class TutorialStepMove extends TutorialStepWithSolution {
 
     public constructor(title: string,
                        instruction: string,
-                       state: GameState,
+                       state: GameStateAndConfig,
                        public readonly acceptedMoves: ReadonlyArray<Move>,
                        successMessage: string,
                        private readonly failureMessage: string)
@@ -156,7 +156,7 @@ export class TutorialStepAnyMove extends TutorialStepWithSolution {
 
     public constructor(title: string,
                        instruction: string,
-                       state: GameState,
+                       state: GameStateAndConfig,
                        private readonly solutionMove: Move,
                        successMessage: string) {
         super(title, instruction, state, successMessage);
@@ -176,7 +176,7 @@ export class TutorialStepClick extends TutorialStepWithSolution {
 
     public constructor(title: string,
                        instruction: string,
-                       state: GameState,
+                       state: GameStateAndConfig,
                        public readonly acceptedClicks: ReadonlyArray<string>,
                        successMessage: string,
                        private readonly failureMessage: string)
@@ -202,7 +202,7 @@ export class TutorialStepPredicate extends TutorialStepWithSolution {
 
     public constructor(title: string,
                        instruction: string,
-                       state: GameState,
+                       state: GameStateAndConfig,
                        private readonly solutionMove: Move,
                        public readonly predicate: TutorialPredicate,
                        successMessage: string)

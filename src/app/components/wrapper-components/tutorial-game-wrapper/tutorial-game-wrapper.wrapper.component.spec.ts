@@ -1268,7 +1268,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
 
     describe('getConfig', () => {
 
-        it('should provide initial default config to game component', fakeAsync(async() => {
+        it('should provide initial default config to game component when not providen a config', fakeAsync(async() => {
             // Given any tutorial for a game that has a specific default config
             const defaultRulesConfig: MGPOptional<RulesConfig> =
                 MGPOptional.of({ mais_quelles_belles_chaussettes: 42 });
@@ -1279,6 +1279,32 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
 
             // Then the return should be the default game config
             expect(actualDefaultRulesConfig).toBe(defaultRulesConfig);
+        }));
+
+        it('should provide custom config to game component when providen', fakeAsync(async() => {
+            // Given any tutorial for a game that has a specific default config
+            const customConfig: MGPOptional<QuartoConfig> =
+                MGPOptional.of({ playerOneLevel: 2, playerZeroLevel: 2 });
+            spyOn(RulesConfigUtils, 'getGameDefaultConfig').and.returnValue(customConfig);
+            const state: QuartoState = QuartoRules.get().getInitialState(customConfig);
+            const tutorial: TutorialStep[] = [
+                TutorialStep.forClick(
+                    'title',
+                    'instruction',
+                    { state, config: customConfig.get() },
+                    ['#click_0_0'],
+                    TutorialStepMessage.CONGRATULATIONS(),
+                    'Perdu.',
+                ),
+            ];
+            // When starting tutorial
+            await wrapper.startTutorial(tutorial);
+
+            // When calling getConfig
+            const actualDefaultRulesConfig: MGPOptional<RulesConfig> = await testUtils.getComponent().getConfig();
+
+            // Then the return should be the default game config
+            expect(actualDefaultRulesConfig).toEqual(customConfig);
         }));
 
     });

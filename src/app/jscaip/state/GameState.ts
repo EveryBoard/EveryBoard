@@ -1,6 +1,17 @@
 import { Player } from '../Player';
+import { RulesConfig } from '../RulesConfigUtil';
+
+export type GameStateAndConfig = GameState | { state: GameState; config: RulesConfig };
 
 export abstract class GameState {
+
+    public static getStateAndNotConfig(stateOrConfig: GameStateAndConfig): GameState {
+        if (stateOrConfig instanceof GameState) {
+            return stateOrConfig;
+        } else {
+            return stateOrConfig.state;
+        }
+    }
 
     public constructor(public readonly turn: number) {
     }

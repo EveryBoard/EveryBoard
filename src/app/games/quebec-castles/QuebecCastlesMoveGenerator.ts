@@ -2,7 +2,7 @@ import { MGPOptional } from '@everyboard/lib';
 
 import { MoveGenerator } from 'src/app/jscaip/AI/AI';
 import { QuebecCastlesDrop, QuebecCastlesMove } from './QuebecCastlesMove';
-import { QuebecCastlesConfig, QuebecCastlesNode, QuebecCastlesRules } from './QuebecCastlesRules';
+import { DropMode, QuebecCastlesConfig, QuebecCastlesNode, QuebecCastlesRules } from './QuebecCastlesRules';
 import { QuebecCastlesState } from './QuebecCastlesState';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { Coord } from 'src/app/jscaip/Coord';
@@ -23,18 +23,30 @@ export class QuebecCastlesMoveGenerator extends MoveGenerator<QuebecCastlesMove,
             return this.getNormalMoves(state, config);
         }
     }
+
     public getDropMoves(state: QuebecCastlesState, config: QuebecCastlesConfig): QuebecCastlesMove[] {
         const player: Player = state.getCurrentPlayer();
         const moves: QuebecCastlesMove[] = [];
-        if (config.dropPieceByPiece && config.dropPieceYourself) {
+        const rules: QuebecCastlesRules = QuebecCastlesRules.get();
+        const nbOfDropAwaited: number = rules.getExpectedDropThisTurn(state, config);
+        const mustPlaceThrone: boolean = rules.mustPlaceThrone(state, config);
+        if (config.dropMode === DropMode.PIECE_BY_PIECE || mustPlaceThrone) {
+            const coords: Coord[] = [];
             for (const dropCoord of QuebecCastlesRules.get().getValidDropCoords(player, config)) {
                 const piece: PlayerOrNone = state.getPieceAt(dropCoord);
                 if (piece.isNone() && state.thrones.get(player).equalsValue(dropCoord) === false) {
-                    moves.push(QuebecCastlesDrop.of([dropCoord]));
+                    if (nbOfDropAwaited === 1) {
+                        moves.push(QuebecCastlesDrop.of([dropCoord]));
+                    } else {
+                        coords.push(dropCoord);
+                        if (nbOfDropAwaited === coords.length) {
+                            return [QuebecCastlesDrop.of(coords)];
+                        }
+                    }
                 }
             }
         } else {
-            const initialCoords: Coord[] = QuebecCastlesRules.get().getInitialCoords(player, state, config)
+            const initialCoords: Coord[] = QuebecCastlesRules.get().getInitialCoords(player, state, config);
             const move: QuebecCastlesMove = QuebecCastlesMove.drop(initialCoords);
             moves.push(move);
         }

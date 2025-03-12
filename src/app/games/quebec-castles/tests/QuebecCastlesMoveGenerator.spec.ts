@@ -1,9 +1,9 @@
 /* eslint-disable max-lines-per-function */
 import { MGPOptional } from '@everyboard/lib';
 
-import { QuebecCastlesMove } from '../QuebecCastlesMove';
+import { QuebecCastlesDrop, QuebecCastlesMove } from '../QuebecCastlesMove';
 import { QuebecCastlesMoveGenerator } from '../QuebecCastlesMoveGenerator';
-import { QuebecCastlesConfig, QuebecCastlesNode, QuebecCastlesRules } from '../QuebecCastlesRules';
+import { DropMode, QuebecCastlesConfig, QuebecCastlesNode, QuebecCastlesRules } from '../QuebecCastlesRules';
 import { QuebecCastlesState } from '../QuebecCastlesState';
 import { PlayerOrNone } from 'src/app/jscaip/Player';
 import { Coord } from 'src/app/jscaip/Coord';
@@ -62,16 +62,14 @@ describe('QuebecCastlesMoveGenerator', () => {
 
             describe('drop piece by piece', () => {
 
-                const customConfig: MGPOptional<QuebecCastlesConfig> = MGPOptional.of({
-                    ...defaultConfig.get(),
-                    dropPieceByPiece: true,
-                    dropPieceYourself: true,
-                    defender: 3,
-                    invader: 5,
-                });
-
                 it('should allow putting soldier in first turn', () => {
                     // Given a node in drop phase (hence a custom config)
+                    const customConfig: MGPOptional<QuebecCastlesConfig> = MGPOptional.of({
+                        ...defaultConfig.get(),
+                        dropMode: DropMode.PIECE_BY_PIECE,
+                        defender: 3,
+                        invader: 5,
+                    });
                     const state: QuebecCastlesState = new QuebecCastlesState([
                         [_, _, _, _, _, _, _, _, _],
                         [_, _, _, _, _, _, _, _, _],
@@ -92,20 +90,117 @@ describe('QuebecCastlesMoveGenerator', () => {
                     expect(moves.length).toBe(14);
                 });
 
+                it('should drop last pieces by batch (first player has less piece)', () => {
+                    // Given a board in  piece-by-piece mode
+                    const customConfig: MGPOptional<QuebecCastlesConfig> = MGPOptional.of({
+                        ...defaultConfig.get(),
+                        dropMode: DropMode.PIECE_BY_PIECE,
+                        defender: 3,
+                        invader: 5,
+                    });
+
+                    // where current player is the last player with pieces to drop
+                    const state: QuebecCastlesState = new QuebecCastlesState([
+                        [_, _, _, _, _, _, _, _, _],
+                        [X, _, _, _, _, _, _, _, _],
+                        [_, _, _, _, _, _, _, _, _],
+                        [X, _, _, _, _, _, _, _, _],
+                        [_, _, _, _, _, _, _, _, _],
+                        [_, _, _, _, _, _, _, _, _],
+                        [_, _, _, _, _, _, _, _, _],
+                        [_, _, _, _, _, _, _, O, O],
+                        [_, _, _, _, _, _, _, O, _],
+                    ], 5, defaultThrones);
+                    const node: QuebecCastlesNode = new QuebecCastlesNode(state);
+
+                    // When listing the possible move of generator
+                    const moves: QuebecCastlesMove[] = moveGenerator.getListMoves(node, customConfig);
+
+                    // Then it should only propose one move including all remaining drops
+                    expect(moves.length).toBe(1);
+                    const move: QuebecCastlesDrop = moves[0] as QuebecCastlesDrop;
+                    expect(move.coords.size()).toEqual(3);
+                });
+
+                it('should drop last pieces by batch (first player has more piece)', () => {
+                    // Given a board in  piece-by-piece mode where first player has more piece
+                    const customConfig: MGPOptional<QuebecCastlesConfig> = MGPOptional.of({
+                        ...defaultConfig.get(),
+                        dropMode: DropMode.PIECE_BY_PIECE,
+                        defender: 5,
+                        invader: 3,
+                    });
+                    // where current player is the last player with pieces to drop
+                    const state: QuebecCastlesState = new QuebecCastlesState([
+                        [_, _, X, _, _, _, _, _, _],
+                        [X, _, _, _, _, _, _, _, _],
+                        [_, _, _, _, _, _, _, _, _],
+                        [X, _, _, _, _, _, _, _, _],
+                        [_, _, _, _, _, _, _, _, _],
+                        [_, _, _, _, _, _, _, _, _],
+                        [_, _, _, _, _, _, _, _, _],
+                        [_, _, _, _, _, _, _, O, O],
+                        [_, _, _, _, _, _, _, O, _],
+                    ], 6, defaultThrones);
+                    const node: QuebecCastlesNode = new QuebecCastlesNode(state);
+
+                    // When listing the possible move of generator
+                    const moves: QuebecCastlesMove[] = moveGenerator.getListMoves(node, customConfig);
+
+                    // Then it should only propose one move including all remaining drops
+                    expect(moves.length).toBe(1);
+                    const move: QuebecCastlesDrop = moves[0] as QuebecCastlesDrop;
+                    expect(move.coords.size()).toEqual(2);
+                });
+
             });
 
-            describe('drop by batch', () => {
+            describe('drop piece by piece & place throne', () => {
 
                 const customConfig: MGPOptional<QuebecCastlesConfig> = MGPOptional.of({
                     ...defaultConfig.get(),
-                    dropPieceByPiece: false,
-                    dropPieceYourself: true,
+                    dropMode: DropMode.PIECE_BY_PIECE,
+                    placeThroneYourself: true,
                     defender: 3,
                     invader: 5,
                 });
 
+                it('should drop last pieces by batch (invader has more piece)', () => {
+                    // Given a board in  piece-by-piece mode where invader has more piece
+                    // and where you must place throne yourself
+                    // where current player is the last player with pieces to drop
+                    const state: QuebecCastlesState = new QuebecCastlesState([
+                        [_, _, _, _, _, _, _, _, _],
+                        [X, _, _, _, _, _, _, _, _],
+                        [_, _, _, _, _, _, _, _, _],
+                        [_, _, _, _, _, _, _, _, _],
+                        [_, _, _, _, _, _, _, _, _],
+                        [_, _, _, _, _, _, _, _, _],
+                        [_, _, _, _, _, _, _, _, _],
+                        [_, _, _, _, _, _, _, _, O],
+                        [_, _, _, _, _, _, _, O, _],
+                    ], 5, defaultThrones);
+                    const node: QuebecCastlesNode = new QuebecCastlesNode(state);
+
+                    // When listing the possible move of generator
+                    const moves: QuebecCastlesMove[] = moveGenerator.getListMoves(node, customConfig);
+
+                    // Then it should only propose piece drop
+                    expect(moves.every((move: QuebecCastlesDrop) => move.coords.size() === 1)).toBeTrue();
+                });
+
+            });
+
+            describe('drop by batch', () => {
+
                 it('should drop like default config does', () => {
                     // Given a first turn in drop-by-batch config
+                    const customConfig: MGPOptional<QuebecCastlesConfig> = MGPOptional.of({
+                        ...defaultConfig.get(),
+                        dropMode: DropMode.BY_BATCH,
+                        defender: 3,
+                        invader: 5,
+                    });
                     const node: QuebecCastlesNode = QuebecCastlesRules.get().getInitialNode(customConfig);
 
                     // When listing the moves
@@ -116,6 +211,24 @@ describe('QuebecCastlesMoveGenerator', () => {
                     const coords: Coord[] = [new Coord(7, 8), new Coord(8, 7), new Coord(7, 7)];
                     const expectedMove: QuebecCastlesMove = QuebecCastlesMove.drop(coords);
                     expect(moves[0]).toEqual(expectedMove);
+                });
+
+                it('should drop king first when required', () => {
+                    // Given a first turn when you need to place the throne
+                    const customConfig: MGPOptional<QuebecCastlesConfig> = MGPOptional.of({
+                        ...defaultConfig.get(),
+                        dropMode: DropMode.BY_BATCH,
+                        placeThroneYourself: true,
+                        defender: 3,
+                        invader: 5,
+                    });
+                    const node: QuebecCastlesNode = QuebecCastlesRules.get().getInitialNode(customConfig);
+
+                    // When listing the moves
+                    const moves: QuebecCastlesMove[] = moveGenerator.getListMoves(node, customConfig);
+
+                    // Then there should be single drops
+                    expect(moves.every((v: QuebecCastlesDrop) => v.coords.size() === 1)).toBeTrue();
                 });
 
             });

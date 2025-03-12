@@ -4,7 +4,7 @@ import { GameInfo } from '../components/normal-component/pick-game/pick-game.com
 import { ConfigLine } from '../components/wrapper-components/rules-configuration/RulesConfigDescription';
 import { Localized } from '../utils/LocaleUtils';
 
-export type ConfigDescriptionType = number | boolean;
+export type ConfigDescriptionType = number | boolean | string;
 
 export type NamedRulesConfig<R extends RulesConfig = EmptyRulesConfig> = {
     config: R;

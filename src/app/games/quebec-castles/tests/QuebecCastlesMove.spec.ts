@@ -31,12 +31,67 @@ describe('QuebecCastlesMove', () => {
         expect(moves[0].toString()).toBe('QuebecCastlesTranslation((0, 0) -> (1, 1))');
         expect(moves[1].toString()).toBe('QuebecCastlesDrop([(0, 0), (1, 1), (2, 2)])');
     });
-
+    // TODO: enum not modifiable when config aint custom !
+// TODO: show territory AND last drop ?
     describe('equals', () => {
 
-        it('should return true for equal moves');
+        it('should return true for identic drop', () => {
+            // Given some drop
+            const drop: QuebecCastlesMove = QuebecCastlesMove.drop([new Coord(0, 0)]);
 
-        it('should return false for equal moves');
+            // When comparing it to another identic drop
+            const identicDrop: QuebecCastlesMove = QuebecCastlesMove.drop([new Coord(0, 0)]);
+
+            // Then it should be equals
+            expect(drop.equals(identicDrop)).toBeTrue();
+        });
+
+        it('should return true for identic translation', () => {
+            // Given some translation
+            const translation: QuebecCastlesMove = QuebecCastlesMove.translation(new Coord(0, 0), new Coord(1, 1));
+
+            // When comparing it to another identic translation
+            const identicTranslation: QuebecCastlesMove =
+                QuebecCastlesMove.translation(new Coord(0, 0), new Coord(1, 1));
+
+            // Then it should be equals
+            expect(translation.equals(identicTranslation)).toBeTrue();
+        });
+
+        it('should return false for drop vs translation', () => {
+            // Given some drop
+            const drop: QuebecCastlesMove = QuebecCastlesMove.drop([new Coord(0, 0), new Coord(1, 1)]);
+
+            // When comparing it to a a translation
+            const translation: QuebecCastlesMove = QuebecCastlesMove.translation(new Coord(0, 0), new Coord(1, 1));
+
+            // Then it should be equals
+            expect(drop.equals(translation)).toBeFalse();
+            expect(translation.equals(drop)).toBeFalse();
+        });
+
+        it('should return false vs different drops', () => {
+            // Given some drop
+            const drop: QuebecCastlesMove = QuebecCastlesMove.drop([new Coord(0, 0)]);
+
+            // When comparing it to another different drop
+            const differentDrop: QuebecCastlesMove = QuebecCastlesMove.drop([new Coord(1, 1)]);
+
+            // Then it should be equals
+            expect(drop.equals(differentDrop)).toBeFalse();
+        });
+
+        it('should return false vs different translations', () => {
+            // Given some translation
+            const translation: QuebecCastlesMove = QuebecCastlesMove.translation(new Coord(0, 0), new Coord(1, 1));
+
+            // When comparing it to another different translation
+            const otherTranslation: QuebecCastlesMove =
+                QuebecCastlesMove.translation(new Coord(1, 1), new Coord(0, 0));
+
+            // Then it should be equals
+            expect(translation.equals(otherTranslation)).toBeFalse();
+        });
 
     });
 

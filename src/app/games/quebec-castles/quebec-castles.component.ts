@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component } from '@angular/core';
 import { MGPOptional, MGPValidation, Set, Utils } from '@everyboard/lib';
 
-import { QuebecCastlesConfig, QuebecCastlesRules } from './QuebecCastlesRules';
+import { DropMode, QuebecCastlesConfig, QuebecCastlesRules } from './QuebecCastlesRules';
 import { QuebecCastlesDrop, QuebecCastlesMove, QuebecCastlesTranslation } from './QuebecCastlesMove';
 import { QuebecCastlesState } from './QuebecCastlesState';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
@@ -15,7 +15,6 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { ViewBox } from 'src/app/components/game-components/GameComponentUtils';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 
-// TODO: if available space === number of soldier to put --> autofill
 @Component({
     selector: 'app-quebec-castles',
     templateUrl: './quebec-castles.component.html',
@@ -113,8 +112,6 @@ export class QuebecCastlesComponent extends RectangularGameComponent<QuebecCastl
             config.defender - nbDefender,
             config.invader - nbInvader,
         );
-        // this.isDroppingGroup = this.missingPieces.get(Player.ZERO) > 0 ||
-        //                        this.missingPieces.get(Player.ONE) > 0;
         this.isDroppingGroup = this.rules.isDropPhase(this.constructedState, config);
     }
 
@@ -132,8 +129,10 @@ export class QuebecCastlesComponent extends RectangularGameComponent<QuebecCastl
     }
 
     private async onDrop(coord: Coord, config: QuebecCastlesConfig): Promise<MGPValidation> {
-        Utils.assert(config.dropPieceYourself || config.placeThroneYourself, 'enterred "onDrop" on a non-dropping-config');
-        if (config.dropPieceByPiece || config.placeThroneYourself) {
+        Utils.assert(config.dropMode !== DropMode.AUTO || config.placeThroneYourself, 'enterred "onDrop" on a non-dropping-config');
+        const expectedDropThisTurn: number =
+            this.rules.getExpectedDropThisTurn(this.getState(), this.getConfig().get());
+        if (expectedDropThisTurn === 1) {
             const chosenMove: QuebecCastlesDrop = QuebecCastlesDrop.of([coord]);
             return await this.chooseMove(chosenMove);
         } else {
@@ -157,7 +156,7 @@ export class QuebecCastlesComponent extends RectangularGameComponent<QuebecCastl
     private async onMove(coord: Coord): Promise<MGPValidation> {
         if (this.selected.isPresent()) {
             if (this.selected.equalsValue(coord)) {
-                return this.cancelMove(); // TODO test ?
+                return this.cancelMove();
             } else {
                 return this.chooseMove(QuebecCastlesTranslation.of(this.selected.get(), coord));
             }
@@ -220,21 +219,20 @@ export class QuebecCastlesComponent extends RectangularGameComponent<QuebecCastl
         const config: QuebecCastlesConfig = this.getConfig().get();
         if (this.rules.isDropPhase(this.constructedState, config)) {
             if (this.rules.isValidDropCoord(coord, Player.ZERO, config)) {
-                classes.push(Player.ZERO.getHTMLClass('-fill'), 'semi-transparent');
+                classes.push(Player.ZERO.getHTMLClass('-fill'), 'opacity-80');
             } else if (this.rules.isValidDropCoord(coord, Player.ONE, config)) {
-                classes.push(Player.ONE.getHTMLClass('-fill'), 'semi-transparent');
+                classes.push(Player.ONE.getHTMLClass('-fill'), 'opacity-80');
             }
-        }
-        if (this.leftSquare.equalsValue(coord) ||
-            this.lastDropped.some((c: Coord) => coord.equals(c)))
-        {
-            classes.push('moved-fill');
-        }
-        if (this.landingSquare.equalsValue(coord)) {
-            if (this.isCaptured) {
-                classes.push('captured-fill');
-            } else {
+        } else {
+            if (this.leftSquare.equalsValue(coord) ||
+                this.lastDropped.some((c: Coord) => coord.equals(c)))
+            {
                 classes.push('moved-fill');
+            }
+            if (this.landingSquare.equalsValue(coord)) {
+                if (this.isCaptured) {
+                    classes.push('captured-fill');
+                }
             }
         }
         return classes;
@@ -244,8 +242,16 @@ export class QuebecCastlesComponent extends RectangularGameComponent<QuebecCastl
         const classes: string[] = [
             this.getPlayerClass(this.constructedState.getPieceAt(coord)),
         ];
+        const config: QuebecCastlesConfig = this.getConfig().get();
         if (this.selected.equalsValue(coord) || this.dropped.contains(coord)) {
             classes.push('selected-stroke');
+        }
+        if (this.rules.isDropPhase(this.constructedState, config)) {
+            if (this.leftSquare.equalsValue(coord) ||
+                this.lastDropped.some((c: Coord) => coord.equals(c)))
+            {
+                classes.push('moved-stroke');
+            }
         }
         return classes;
     }
@@ -262,12 +268,7 @@ export class QuebecCastlesComponent extends RectangularGameComponent<QuebecCastl
     }
 
     public getGroupDropValidationButtonClasses(): string[] {
-        const numberToDrop: number = this.getNumberOfAwaitedDrop();
-        const classes: string[] = ['capturable-fill'];
-        if (this.dropped.size() < numberToDrop) {
-            classes.push('semi-transparent');
-        }
-        return classes;
+        return ['capturable-fill'];
     }
 
     private getTotalPieceToDrop(): number {
@@ -283,7 +284,6 @@ export class QuebecCastlesComponent extends RectangularGameComponent<QuebecCastl
         const player: Player = this.constructedState.getCurrentPlayer();
         const totalPieceToDrop: number = this.getTotalPieceToDrop();
         return totalPieceToDrop - this.constructedState.count(player);
-
     }
 
     public getRemainingCx(i: number): number {

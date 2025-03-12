@@ -97,6 +97,10 @@ export const clickableMethods: { [gameName: string]: { [methodName: string]: unk
         clickCoord: [0, 0],
         clickPiece: [0],
     },
+    QuebecCastles: {
+        onClick: [new Coord(0, 0)],
+        validateGroupDrop: [],
+    },
     Quixo: {
         onBoardClick: [0, 0],
         chooseDirection: [0],

@@ -296,7 +296,7 @@ export class SimpleComponentTestUtils<T> {
         const dropdown: DebugElement = this.findElement(dropdownId);
         expect(dropdown.nativeElement.value)
             .withContext(`${dropdownId} should not have value ${optionValue}`)
-            .not.toBe(optionValue);
+            .not.toEqual(optionValue);
     }
 
     public expectElementToBeDisabled(elementName: string): void {
@@ -316,9 +316,9 @@ export class SimpleComponentTestUtils<T> {
     }
 
     public async selectChildElementOfDropDown(dropDownName: string, childName: string): Promise<void> {
-        const selectedDropDOwn: HTMLSelectElement = this.findElement(dropDownName).nativeElement;
-        selectedDropDOwn.value = selectedDropDOwn.options[childName].value;
-        selectedDropDOwn.dispatchEvent(new Event('change'));
+        const selectedDropDown: HTMLSelectElement = this.findElement(dropDownName).nativeElement;
+        selectedDropDown.value = selectedDropDown.options[childName].value;
+        selectedDropDown.dispatchEvent(new Event('change'));
         this.detectChanges();
         tick();
     }
@@ -766,7 +766,7 @@ export function expectValidRouting(router: Router,
                                    options?: { otherRoutes?: boolean, skipLocationChange?: boolean})
 : void
 {
-    expect(path[0][0]).withContext('Routings should start with /').toBe('/');
+    expect(path[0][0]).withContext('Routings should start with /').toEqual('/');
     for (const pathPart of path) {
         expect(pathPart[pathPart.length-1]).withContext('Routing should not include superfluous / at the end').not.toBe('/');
     }

@@ -59,7 +59,7 @@ export class AbaloneTutorial extends Tutorial {
                     return MGPValidation.failure($localize`This is not a translation, this is a "pushing move", try a translation.`);
                 }
             },
-            $localize`Congratulations! You know everything you need to start a game!`,
+            TutorialStepMessage.CONGRATULATIONS_YOU_KNOW_EVERYTHING(),
         ),
         TutorialStep.informational(
             TutorialStepMessage.RULES_CONFIGURATION(),

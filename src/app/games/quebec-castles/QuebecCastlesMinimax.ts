@@ -1,9 +1,8 @@
-import { Minimax } from 'src/app/jscaip/AI/Minimax';
+import { DummyHeuristic, Minimax } from 'src/app/jscaip/AI/Minimax';
 import { QuebecCastlesMoveGenerator } from './QuebecCastlesMoveGenerator';
 import { QuebecCastlesMove } from './QuebecCastlesMove';
 import { QuebecCastlesState } from './QuebecCastlesState';
 import { QuebecCastlesConfig, QuebecCastlesRules } from './QuebecCastlesRules';
-import { QuebecCastlesHeuristic } from './QuebecCastlesHeuristic';
 
 /**
  * This is the minimax AI.
@@ -14,7 +13,7 @@ export class QuebecCastlesMinimax extends Minimax<QuebecCastlesMove, QuebecCastl
     public constructor() {
         super('Dummy',
               QuebecCastlesRules.get(),
-              new QuebecCastlesHeuristic(),
+              new DummyHeuristic(),
               new QuebecCastlesMoveGenerator(),
         );
         this.random = true; // TODO FOR REVIEW: sang de baise en jaaj, why is it not done more ? on change que dans la classe mère hahahah

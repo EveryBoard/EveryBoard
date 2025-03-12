@@ -8,7 +8,7 @@ import { Move } from 'src/app/jscaip/Move';
 import { ConnectedUserService } from 'src/app/services/ConnectedUserService';
 import { Click, TutorialStep, TutorialStepClick, TutorialStepMove, TutorialStepWithSolution } from './TutorialStep';
 import { TutorialFailure } from './TutorialFailure';
-import { GameState } from 'src/app/jscaip/state/GameState';
+import { GameState, GameStateAndConfig } from 'src/app/jscaip/state/GameState';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 import { Localized } from 'src/app/utils/LocaleUtils';
@@ -176,7 +176,8 @@ export class TutorialGameWrapperComponent extends GameWrapper<TutorialPlayer> im
         const currentStep: TutorialStep = this.steps[this.stepIndex];
         this.currentMessage = currentStep.instruction;
         this.currentReason = MGPOptional.empty();
-        this.gameComponent.node = new GameNode(currentStep.state,
+        const state: GameState = GameState.getStateAndNotConfig(currentStep.state);
+        this.gameComponent.node = new GameNode(state,
                                                currentStep.parent,
                                                currentStep.previousMove);
         // Set role will update view with showCurrentState
@@ -253,6 +254,28 @@ export class TutorialGameWrapperComponent extends GameWrapper<TutorialPlayer> im
     public async createGame(): Promise<void> {
         const urlName: string = this.getGameUrlName();
         await this.router.navigate(['/play', urlName]);
+    }
+
+    public override async getConfig(): Promise<MGPOptional<RulesConfig>> {
+        if (this.stepIndex < 0) {
+            return super.getConfig();
+        }
+        const step: TutorialStep = this.steps[this.stepIndex];
+        const stateOrConfig: GameStateAndConfig = step.state;
+        const config: MGPOptional<RulesConfig> = this.getRulesConfigNotState(stateOrConfig);
+        if (config.isPresent()) {
+            return config;
+        } else {
+            return super.getConfig();
+        }
+    }
+
+    private getRulesConfigNotState(stateAndConfig: GameStateAndConfig): MGPOptional<RulesConfig> {
+        if (stateAndConfig instanceof GameState) {
+            return MGPOptional.empty();
+        } else {
+            return MGPOptional.of(stateAndConfig.config);
+        }
     }
 
 }

@@ -1,4 +1,4 @@
-import { Encoder, MGPFallible, Set } from '@everyboard/lib';
+import { Encoder, Set } from '@everyboard/lib';
 
 import { Coord } from 'src/app/jscaip/Coord';
 import { Move } from 'src/app/jscaip/Move';
@@ -20,6 +20,15 @@ export class QuebecCastlesTranslation extends MoveCoordToCoord {
     public override toString(): string {
         return 'QuebecCastlesTranslation(' + this.getStart().toString() + ' -> ' + this.getEnd().toString() + ')';
     }
+
+    public override equals(other: QuebecCastlesMove): boolean {
+        if (other instanceof QuebecCastlesTranslation) {
+            return super.equals(other as this);
+        } else {
+            return false;
+        }
+    }
+
 }
 export class QuebecCastlesDrop extends Move {
 
@@ -42,8 +51,12 @@ export class QuebecCastlesDrop extends Move {
         return 'QuebecCastlesDrop(' + this.coords.toString() + ')';
     }
 
-    public override equals(other: QuebecCastlesDrop): boolean {
-        return this.coords.equals(other.coords);
+    public override equals(other: QuebecCastlesMove): boolean {
+        if (other instanceof QuebecCastlesDrop) {
+            return this.coords.equals(other.coords);
+        } else {
+            return false;
+        }
     }
 
 }
