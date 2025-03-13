@@ -1,7 +1,9 @@
 import { AfterViewInit, ChangeDetectorRef, Component, Input, OnChanges, SimpleChanges, ViewChild, ViewContainerRef } from '@angular/core';
-import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
-import { GameWrapper } from '../../wrapper-components/GameWrapper';
 import { ActivatedRoute, Router } from '@angular/router';
+
+import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
+
+import { GameWrapper } from '../../wrapper-components/GameWrapper';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { Move } from 'src/app/jscaip/Move';
 import { PlayerOrNone } from 'src/app/jscaip/Player';

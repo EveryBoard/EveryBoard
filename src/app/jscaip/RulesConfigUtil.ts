@@ -1,5 +1,6 @@
 /* eslint-disable no-multi-spaces */
-import { MGPOptional, Utils } from '@everyboard/lib';
+import { MGPOptional } from '@everyboard/lib';
+
 import { GameInfo } from '../components/normal-component/pick-game/pick-game.component';
 import { ConfigLine } from '../components/wrapper-components/rules-configuration/RulesConfigDescription';
 import { Localized } from '../utils/LocaleUtils';
@@ -32,7 +33,6 @@ export class RulesConfigUtils {
      */
     public static getGameDefaultConfig<C extends RulesConfig>(gameName: string): MGPOptional<C> {
         const gameInfos: MGPOptional<GameInfo> = GameInfo.getByUrlName(gameName);
-        Utils.assert(gameInfos.isPresent(), `getGameDefaultConfig called with unexisting game: ${gameName}`);
         return gameInfos.get().getRulesConfig() as MGPOptional<C>;
     }
 

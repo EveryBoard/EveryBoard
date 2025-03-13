@@ -64,6 +64,8 @@ export class Utils {
         try {
             return JSON.parse(json);
         } catch (_) {
+            // TODO: comment gérer le cas de "variable _ définie mais non utilisée" ?
+            // C'est clairement une erreur fournie par l'utilisateur, il nous a donné du JSON poubelle, donc on veut pas logger ça me semble
             return MGPOptional.empty();
         }
     }

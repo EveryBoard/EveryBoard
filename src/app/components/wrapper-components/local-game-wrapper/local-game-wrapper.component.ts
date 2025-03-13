@@ -1,10 +1,11 @@
-import { Component, AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
+import { Component, AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Type } from '@angular/core';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
+
+import { MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
 import { AbstractNode, GameNodeStats } from 'src/app/jscaip/AI/GameNode';
 import { GameWrapper } from 'src/app/components/wrapper-components/GameWrapper';
 import { Move } from 'src/app/jscaip/Move';
-import { MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 import { GameState } from 'src/app/jscaip/state/GameState';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { Player } from 'src/app/jscaip/Player';
@@ -14,6 +15,7 @@ import { ConfigDescriptionType, RulesConfig, RulesConfigUtils } from 'src/app/js
 import { AIOptions, AIStats, AbstractAI } from 'src/app/jscaip/AI/AI';
 import { SuperRules } from 'src/app/jscaip/Rules';
 import { RulesConfigDescription } from '../rules-configuration/RulesConfigDescription';
+import { AbstractGameComponent } from '../../game-components/game-component/GameComponent';
 
 @Component({
     selector: 'app-local-game-wrapper',
@@ -41,15 +43,6 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
         super(activatedRoute, router, messageDisplayer);
         this.players = [MGPOptional.of(this.playerSelection[0]), MGPOptional.of(this.playerSelection[1])];
         this.role = Player.ZERO; // The user is playing, not observing
-        this.setDefaultRulesConfig();
-    }
-
-    // Will set the default rules config.
-    // Will set it to MGPOptional.empty() if the game doesn't exist, but an error will be handled by another function.
-    // ConfiglessRules have MGPOptional.empty() value.
-    private setDefaultRulesConfig(): void {
-        const urlName: string = this.getGameUrlName();
-        this.rulesConfig = RulesConfigUtils.getGameDefaultConfig(urlName);
     }
 
     public getCreatedNodes(): number {
@@ -61,7 +54,6 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
     }
 
     public async ngAfterViewInit(): Promise<void> {
-        await this.setConfigFromParams();
         window.setTimeout(async() => {
             const createdSuccessfully: boolean = await this.createMatchingGameComponent();
             if (createdSuccessfully) {
@@ -71,11 +63,19 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
         }, 1);
     }
 
+    protected override async createGameComponentAndSetConfig(componentType: Type<AbstractGameComponent>)
+    : Promise<void>
+    {
+        await this.setConfigFromParams();
+        await super.createGameComponentAndSetConfig(componentType);
+    }
+
     /**
      * Reads the URL to get the config from query parameters (e.g., /P4?width=5&height=5)
-     * If the config is invalid, redirect to page that lets the user select the config
+     * If the config is invalid, redirect to page that lets the user select the config.
+     * Public for being able to trigger it from tests.
      */
-    private async setConfigFromParams(): Promise<void> {
+    public async setConfigFromParams(): Promise<void> {
         const params: ParamMap = this.activatedRoute.snapshot.queryParamMap;
         const noConfigIsProvided: boolean = params.keys.length === 0;
 

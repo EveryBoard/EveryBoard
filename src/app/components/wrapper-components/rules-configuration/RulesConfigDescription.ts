@@ -1,7 +1,7 @@
-import { MGPValidator, MGPValidators } from 'src/app/utils/MGPValidator';
-
-import { ConfigDescriptionType, DefaultConfigDescription, EmptyRulesConfig, NamedRulesConfig, RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 import { MGPValidation, Set, Utils } from '@everyboard/lib';
+
+import { MGPValidator, MGPValidators } from 'src/app/utils/MGPValidator';
+import { ConfigDescriptionType, DefaultConfigDescription, EmptyRulesConfig, NamedRulesConfig, RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 import { GobanConfig } from 'src/app/jscaip/GobanConfig';
 import { Localized } from 'src/app/utils/LocaleUtils';
 
@@ -18,6 +18,10 @@ export class RulesConfigDescriptionLocalizable {
     public static readonly ALIGNMENT_SIZE: () => string = () => $localize`Number of aligned pieces needed to win`;
 
     public static readonly NUMBER_OF_DROPS: () => string = () => $localize`Number of pieces dropped per turn`;
+
+    public static readonly NUMBER_OF_EMPTY_ROWS: () => string = () => $localize`Number of empty rows`;
+
+    public static readonly NUMBER_OF_PIECES_ROWS: () => string = () => $localize`Number of pieces rows`;
 
 }
 
@@ -43,8 +47,11 @@ export class NumberConfig extends ConfigLine {
     }
 
     public checkValidity(value: unknown): MGPValidation {
-        Utils.assert(typeof value === 'number', 'NumberConfig expects a number value');
-        return this.validator(value);
+        if (typeof(value) === 'number') {
+            return this.validator(value);
+        } else {
+            return MGPValidation.failure('NumberConfig expects a number value');
+        }
     }
 
 }
@@ -57,8 +64,11 @@ export class BooleanConfig extends ConfigLine {
     }
 
     public checkValidity(value: unknown): MGPValidation {
-        Utils.assert(typeof value === 'boolean', 'BooleanConfig expects a boolean value');
-        return MGPValidation.SUCCESS;
+        if (typeof(value) === 'boolean') {
+            return MGPValidation.SUCCESS;
+        } else {
+            return MGPValidation.failure('BooleanConfig expects a boolean value');
+        }
     }
 
 }
@@ -112,10 +122,16 @@ export class RulesConfigDescription<R extends RulesConfig = EmptyRulesConfig> {
     }
 
     public isValid(fieldName: string, value: unknown): boolean {
-        const defaultConfig: Record<keyof R, ConfigLine> = this.defaultConfigDescription.config;
-        return value != null &&
-            fieldName in defaultConfig &&
-            defaultConfig[fieldName].checkValidity(value).isSuccess();
+        if (value == null) {
+            // no value was provided, it is invalid
+            return false;
+        }
+        const configLine: ConfigLine = this.defaultConfigDescription.config[fieldName];
+        if (configLine == null) {
+            // this does not match an element from the config, it is invalid
+            return false;
+        }
+        return configLine.checkValidity(value).isSuccess();
     }
 
     public getValidityError(fieldName: string, value: unknown): string {
