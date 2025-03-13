@@ -5,6 +5,7 @@
             everyboard.models
             everyboard.persistence
             everyboard.firestore
+            httpun
             dream)
  (modules WebSocketMessage WebSocketServer SubscriptionManager)
  (preprocess (pps lwt_ppx ppx_deriving_yojson)))

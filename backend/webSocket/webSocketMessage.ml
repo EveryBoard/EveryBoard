@@ -74,7 +74,7 @@ module WebSocketOutgoingMessage = struct
         | ChatMessage of { message : Message.t }
 
         (** Config room messages *)
-        | GameCreated of { game_id : GameId.t [@key "gameId"] } (* TODO: Rename, it is an "ack" type of message *)
+        | GameCreated of { game_id : GameId.t [@key "gameId"] }
         | GameName of { game_name : string option [@key "gameName"] }
         | CandidateJoined of { candidate : MinimalUser.t }
         | CandidateLeft of { candidate : MinimalUser.t }

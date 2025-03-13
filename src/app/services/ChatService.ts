@@ -1,12 +1,11 @@
 import { Injectable } from '@angular/core';
 
-import { MGPValidation, JSONValue, Utils } from '@everyboard/lib';
+import { MGPValidation } from '@everyboard/lib';
 
 import { Localized } from '../utils/LocaleUtils';
 import { Debug } from '../utils/Debug';
-import { ConnectedUserService } from './ConnectedUserService';
 import { Message } from '../domain/Message';
-import { BackendService, WebSocketManagerService, WebSocketMessage } from './BackendService';
+import { WebSocketManagerService, WebSocketMessage } from './BackendService';
 import { Subscription } from 'rxjs';
 
 export class ChatMessages {
@@ -19,11 +18,9 @@ export class ChatMessages {
     providedIn: 'root',
 })
 @Debug.log
-export class ChatService extends BackendService {
+export class ChatService {
 
-    public constructor(private readonly webSocketManager: WebSocketManagerService,
-                       connectedUserService: ConnectedUserService) {
-        super(connectedUserService);
+    public constructor(private readonly webSocketManager: WebSocketManagerService) {
     }
 
     public async addMessage(message: string): Promise<void> {

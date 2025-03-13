@@ -151,6 +151,25 @@ module Make
         Chat.iter_messages request game_id (fun message ->
             send_to client_id (ChatMessage { message }))
 
+    let create_config_room = fun ~(request : Dream.request) (creator : Models.MinimalUser.t) (game_name : string)
+                                  : (GameId.t * Models.ConfigRoom.t) Lwt.t ->
+        (* Retrieve elo of the creator *)
+        let* creator_elo_info : Models.Elo.t = Elo.get ~request ~user_id:creator.id ~game_name in
+        let creator_elo : float = creator_elo_info.current_elo in
+        (* Create the config room *)
+        let config_room : Models.ConfigRoom.t = Models.ConfigRoom.initial creator creator_elo game_name in
+        let* game_id : GameId.t = ConfigRoom.create ~request config_room in
+        Lwt.return (game_id, config_room)
+
+
+    let create_game = fun ~(request : Dream.request)
+                           (game_id : GameId.t)
+                           (config_room : Models.ConfigRoom.t)
+                           : Models.Game.t Lwt.t ->
+        let game = Models.Game.initial config_room (External.now ()) External.rand_bool in
+        let* () = Game.create ~request game_id game in
+        Lwt.return game
+
     (** Handle a message on a WebSocket *)
     let handle_message = fun (request : Dream.request)
                              (client_id : int)
@@ -236,12 +255,8 @@ module Make
             raise (Errors.BadInput "gameName does not correspond to an existing game")
         | Create { game_name } ->
             (** Someone is creating a new game [game_name] *)
-            (* Retrieve elo of the creator *)
-            let* creator_elo_info : Models.Elo.t = Elo.get ~request ~user_id:user.id ~game_name in
-            let creator_elo : float = creator_elo_info.current_elo in
             (* Create the config room *)
-            let config_room : Models.ConfigRoom.t = Models.ConfigRoom.initial user creator_elo game_name in
-            let* game_id : GameId.t = ConfigRoom.create ~request config_room in
+            let* game_id, config_room = create_config_room ~request user game_name in
             (* Send the id to the creator, and the config room to the observers of the lobby *)
             Lwt.join [
                 send_to client_id (GameCreated { game_id });
@@ -319,11 +334,14 @@ module Make
                                        config_room = { config_room with
                                                        status = Started; } } in
                 (* Also, start the game! *)
-                let game = Models.Game.initial config_room (External.now ()) External.rand_bool in
-                let* () = Game.create ~request game_id game in
+                let* _ = create_game ~request game_id config_room in
                 Lwt.join [
                     broadcast ConfigRoom game_id config_room_update;
                     broadcast Lobby GameId.lobby config_room_update;
+                    (* Note: we don't send the game yet. Players and observers
+                       will be redirected to a different page once the game
+                       starts. They will then receive the game when subscribing
+                       to an already started game. *)
                 ]
             | _ ->
                 send_to client_id (Error { reason = WebSocketOutgoingMessage.NotAllowed })
@@ -359,7 +377,7 @@ module Make
             let event = Models.GameEvent.{
                 time = External.now ();
                 user;
-                data = EventData.Reply { request_type = proposition; accept = false };
+                data = EventData.Reply (Models.GameEvent.Reply.refuse proposition);
             } in
             let* () = Game.add_event ~request game_id event in
             let server_time = External.now_float () in
@@ -369,7 +387,7 @@ module Make
             let event = Models.GameEvent.{
                 time = External.now ();
                 user;
-                data = EventData.Reply { request_type = proposition; accept = true };
+                data = EventData.Reply (Models.GameEvent.Reply.accept proposition);
             } in
             let* () = Game.add_event ~request game_id event in
             let server_time = External.now_float () in
@@ -383,8 +401,33 @@ module Make
                         (fun game -> Models.Game.Result.AgreedDrawBy (Models.Game.player_of game user))
                         (fun () -> [send_event])
                 | Rematch ->
-                    (* TODO: create a config room + game and send it to the lobby / players *)
-                    failwith "TODO: rematch"
+                    begin match%lwt ConfigRoom.get ~request game_id with
+                    | None -> send_to client_id (Error { reason = WebSocketOutgoingMessage.ConfigRoomDoesNotExist })
+                    | Some config_room ->
+                        (* create the config room *)
+                        let* rematch_id, config_room = create_config_room ~request user config_room.game_name in
+                        let* () = ConfigRoom.accept ~request rematch_id in (* directly accept it *)
+                        let config_room_update : WebSocketOutgoingMessage.t =
+                            ConfigRoomUpdate { game_id = rematch_id;
+                                               config_room = { config_room with
+                                                               status = Started; } } in
+                        (* create the game *)
+                        let* _ = create_game ~request game_id config_room in
+                        (* and add a reply event *)
+                        let event = Models.GameEvent.{
+                            time = External.now ();
+                            user;
+                            data = EventData.Reply { request_type = proposition;
+                                                     accept = true;
+                                                     data = Some (GameId.to_string rematch_id) }
+                        } in
+                        let* () = Game.add_event ~request game_id event in
+                        (* we send: the config room to the lobby and the rematch id to the players/observers  *)
+                        Lwt.join [
+                            broadcast Lobby GameId.lobby config_room_update;
+                            broadcast ConfigRoom game_id (WebSocketOutgoingMessage.GameEvent { event; server_time });
+                        ]
+                    end
             end
         | AddTime { kind } ->
             let _, game_id = SubscriptionManager.subscription_of ~client_id in

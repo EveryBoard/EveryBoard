@@ -3,6 +3,7 @@ import { environment } from 'src/environments/environment';
 import { JSONValue, MGPFallible, MGPMap, MGPOptional, Utils } from '@everyboard/lib';
 import { Injectable } from '@angular/core';
 import { Subscription } from 'rxjs';
+import { MessageDisplayer } from './MessageDisplayer';
 
 type HTTPMethod = 'POST' | 'GET' | 'PATCH' | 'HEAD' | 'DELETE';
 
@@ -43,12 +44,15 @@ export class WebSocketManagerService {
     private webSocket: MGPOptional<WebSocket> = MGPOptional.empty();
     private readonly callbacks: MGPMap<string, Callback> = new MGPMap();
 
-    public constructor(private readonly connectedUserService: ConnectedUserService) {
+    private nextConnectionAttemptTime: number = 1;
+
+    public constructor(private readonly connectedUserService: ConnectedUserService,
+                       private readonly messageDisplayer: MessageDisplayer)
+    {
         console.log('WebSocketManagerService created (should happen only once');
     }
 
     private async connect(): Promise<void> {
-        // TODO: let user know we're trying to connect to the server somehow visually?
         Utils.assert(this.webSocket.isAbsent(), 'Should not connect twice to WebSocket!');
         const token: string = await this.connectedUserService.getIdToken();
 
@@ -57,14 +61,23 @@ export class WebSocketManagerService {
 
             ws.onopen = (): void => {
                 console.log('WS: connected');
+                this.messageDisplayer.infoMessage($localize`Connection to server successful!`);
                 this.webSocket = MGPOptional.of(ws);
+                this.nextConnectionAttemptTime = 1; // reset it
                 resolve();
             };
             ws.onerror = (error: Event): void => {
-                console.log('WS: connection failed');
-                reject(error);
+                this.messageDisplayer.criticalMessage($localize`Connection to server failed, trying again in ${this.nextConnectionAttemptTime} seconds...`);
+                window.setTimeout(async() => {
+                    await this.connect();
+                    resolve();
+                }, this.nextConnectionAttemptTime * 1000);
+                this.nextConnectionAttemptTime *= 2;
+                // reject(error);
             };
             ws.onclose = (): void => {
+                // If the connection closed because of an error, we have onerror that will try to reconnect
+                // Otherwise, the connection is probably best kept closed
                 console.log('WS: closed');
             };
             ws.onmessage = (ev: MessageEvent<unknown>): void => {

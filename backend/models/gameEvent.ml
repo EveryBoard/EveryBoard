@@ -31,13 +31,14 @@ module Reply = struct
     type t = {
         request_type: Proposition.t [@key "requestType"];
         accept: bool;
+        data: string option; [@default None]
     }
     [@@deriving yojson]
 
-    let accept = fun (proposition : Proposition.t) : t ->
-        { request_type = proposition; accept = true }
+    let accept = fun ?(data : string option) (proposition : Proposition.t) : t ->
+        { request_type = proposition; accept = true; data }
     let refuse = fun (proposition : Proposition.t) : t ->
-        { request_type = proposition; accept = false }
+        { request_type = proposition; accept = false; data = None }
 end
 
 (** An action event, such as adding time *)

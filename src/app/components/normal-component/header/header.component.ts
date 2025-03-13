@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
-import { faCog, faSpinner, IconDefinition } from '@fortawesome/free-solid-svg-icons';
+import { faCheckCircle, faCog, faSpinner, faXmark, faXmarkCircle, IconDefinition } from '@fortawesome/free-solid-svg-icons';
 import { Subscription } from 'rxjs';
 import { MGPOptional } from '@everyboard/lib';
 
@@ -21,6 +21,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
     public faCog: IconDefinition = faCog;
     public faSpinner: IconDefinition = faSpinner;
+    public faCheckCircle: IconDefinition = faCheckCircle;
+    public faXmarkCircle: IconDefinition = faXmarkCircle;
 
     private userSubscription: Subscription;
     private currentGameSubscription: Subscription;
@@ -35,6 +37,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
                        public userService: UserService)
     {
     }
+
     public ngOnInit(): void {
         this.userSubscription = this.connectedUserService.subscribeToUser((user: AuthUser) => {
             this.loading = false;
