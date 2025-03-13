@@ -8,7 +8,6 @@ import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { MGPOptional, MGPValidation } from '@everyboard/lib';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { Table3DUtils, TableUtils } from 'src/app/jscaip/TableUtils';
-import { Coord3D } from 'src/app/jscaip/Coord3D';
 import { TrexoFailure } from './TrexoFailure';
 import { Ordinal } from 'src/app/jscaip/Ordinal';
 import { MCTS } from 'src/app/jscaip/AI/MCTS';
