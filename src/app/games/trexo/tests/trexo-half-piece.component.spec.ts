@@ -49,7 +49,7 @@ describe('TrexoHalfSquareComponent', () => {
         testUtils = await SimpleComponentTestUtils.create(TrexoHalfPieceComponent);
         component = testUtils.getComponent();
         component.coord = new Coord3D(1, 1, 0);
-        component.mode = component.modeMap['3D'];
+        component.mode = TrexoComponent.modeMap['3D'];
     }));
 
     it('should create', fakeAsync(async() => {
