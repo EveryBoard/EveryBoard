@@ -10,7 +10,7 @@ $primary: #ffc34d;
 @use "./mystyles.scss";
 
 :root {
-    --primary: $primary;
+    --primary: var($primary);
     --alt-alt-background-fill: dimgray;
     --alt-background-fill: gray;
     --alt-captured: #990000;

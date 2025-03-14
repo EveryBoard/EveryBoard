@@ -2,7 +2,6 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnIni
 import { ActivatedRoute, Router } from '@angular/router';
 import { Mutex } from 'async-mutex';
 import { Subscription } from 'rxjs';
-import { faCog, IconDefinition } from '@fortawesome/free-solid-svg-icons';
 
 import { JSONValue, MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
@@ -81,7 +80,6 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
 
     private moveSentButNotReceivedYet: boolean = false;
 
-    public faCog: IconDefinition = faCog;
     public viewConfig: boolean = false;
 
     public constructor(activatedRoute: ActivatedRoute,
