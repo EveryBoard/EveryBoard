@@ -41,4 +41,22 @@ describe('LocalGameWrapperComponent (rules config phase)', () => {
         expectValidRouting(router, expectedRoute, LocalGameConfigurationComponent);
     }));
 
+    it('should redirect to configuration if the provided config is missing elements', fakeAsync(async() => {
+        // Given a game configured with a config where all provided elements are valid, but some are missing
+        const config: MGPOptional<RulesConfig> = MGPOptional.of({
+            width: 4,
+        });
+        const state: P4State = P4Rules.get().getInitialState(P4Rules.get().getDefaultRulesConfig());
+
+        const router: Router = TestBed.inject(Router);
+        spyOn(router, 'navigate').and.resolveTo();
+
+        // When displaying it
+        await testUtils.setupState(state, { config });
+
+        // Then it should redirect to the configuration page
+        const expectedRoute: string[] = ['/local', 'P4', 'config'];
+        expectValidRouting(router, expectedRoute, LocalGameConfigurationComponent);
+    }));
+
 });
