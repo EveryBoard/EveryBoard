@@ -80,7 +80,11 @@ export abstract class CheckersComponent<R extends AbstractCheckersRules>
     }
 
     protected override getScoreName(): ScoreName {
-        return ScoreName.PIECES_UNDER_CONTROL;
+        if (this.config.get().canStackPieces) {
+            return ScoreName.STACKS_UNDER_CONTROL;
+        } else {
+            return ScoreName.PIECES_UNDER_CONTROL;
+        }
     }
 
     public async updateBoard(_triggerAnimation: boolean): Promise<void> {

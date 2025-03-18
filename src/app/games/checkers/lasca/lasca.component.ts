@@ -16,8 +16,4 @@ export class LascaComponent extends CheckersComponent<LascaRules> {
         this.setRulesAndNode('Lasca');
     }
 
-    protected override getScoreName(): ScoreName {
-        return ScoreName.STACKS_UNDER_CONTROL;
-    }
-
 }
