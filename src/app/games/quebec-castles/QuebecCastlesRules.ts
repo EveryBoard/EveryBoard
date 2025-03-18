@@ -1,4 +1,4 @@
-import { MGPFallible, MGPOptional, MGPValidation, Set, Utils } from '@everyboard/lib';
+import { MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
 import { GameNode } from 'src/app/jscaip/AI/GameNode';
 import { QuebecCastlesDrop, QuebecCastlesMove, QuebecCastlesTranslation } from './QuebecCastlesMove';
@@ -46,16 +46,21 @@ export class QuebecCastlesFailure {
     public static readonly TOO_MUCH_LINES_FOR_TERRITORY: Localized = () => $localize`Too much lines for territory, your opponent lines would merged with yours!`;
 }
 
-export enum DropMode {
+export enum DropModeEnum {
     AUTO = 'AUTO',
     PIECE_BY_PIECE = 'PIECE_BY_PIECE',
     BY_BATCH = 'BY_BATCH',
 }
-export const DropModes: Set<string> = new Set([
-    DropMode.AUTO.valueOf(),
-    DropMode.PIECE_BY_PIECE.valueOf(),
-    DropMode.BY_BATCH.valueOf(),
-]);
+export class DropMode {
+    public static readonly AUTO: Localized = () => $localize`Automatic`;
+    public static readonly PIECE_BY_PIECE: Localized = () => $localize`Piece by piece`;
+    public static readonly BY_BATCH: Localized = () => $localize`By batch`;
+}
+export const DropModes: { [key: string]: Localized } = {
+    'AUTO': DropMode.AUTO,
+    'PIECE_BY_PIECE': DropMode.PIECE_BY_PIECE,
+    'BY_BATCH': DropMode.BY_BATCH,
+};
 
 // TODO show score
 export type QuebecCastlesConfig = {
@@ -74,7 +79,7 @@ export type QuebecCastlesConfig = {
 
     placeThroneYourself: boolean;
 
-    dropMode: DropMode;
+    dropMode: DropModeEnum;
 
 }
 
@@ -112,7 +117,7 @@ export class QuebecCastlesRules extends ConfigurableRules<QuebecCastlesMove, Que
                     }),
                     isRhombic: new BooleanConfig(true, () => $localize`Is Rhombic`),
                     placeThroneYourself: new BooleanConfig(false, () => $localize`Place throne yourself`),
-                    dropMode: new EnumConfig(DropMode.AUTO.valueOf(), () => $localize`Drop mode`, DropModes),
+                    dropMode: new EnumConfig(DropModeEnum.AUTO.valueOf(), () => $localize`Drop mode`, DropModes),
                 },
             },
         );
@@ -146,7 +151,7 @@ export class QuebecCastlesRules extends ConfigurableRules<QuebecCastlesMove, Que
         const thrones: PlayerMap<MGPOptional<Coord>> = this.getThrones(config);
         const board: Table<PlayerOrNone> = TableUtils.create(config.width, config.height, PlayerOrNone.NONE);
         let state: QuebecCastlesState = new QuebecCastlesState(board, 0, thrones);
-        if (config.dropMode === DropMode.AUTO && config.placeThroneYourself === false) {
+        if (config.dropMode === DropModeEnum.AUTO && config.placeThroneYourself === false) {
             state = this.fillBoard(state, config);
         }
         return state;
@@ -269,9 +274,9 @@ export class QuebecCastlesRules extends ConfigurableRules<QuebecCastlesMove, Que
 
     public getExpectedDropThisTurn(state: QuebecCastlesState, config: QuebecCastlesConfig): number {
         switch (config.dropMode) {
-            case DropMode.PIECE_BY_PIECE:
+            case DropModeEnum.PIECE_BY_PIECE:
                 return this.getExpectedDropThisTurnForPieceByPiece(state, config);
-            case DropMode.BY_BATCH:
+            case DropModeEnum.BY_BATCH:
                 return this.getExpectedDropThisTurnForBatch(state, config);
             default:
                 if (this.mustPlaceThrone(state, config)) {
@@ -357,7 +362,7 @@ export class QuebecCastlesRules extends ConfigurableRules<QuebecCastlesMove, Que
     private isLegalPieceDrop(move: QuebecCastlesDrop, state: QuebecCastlesState, config: QuebecCastlesConfig)
     : MGPValidation
     {
-        if (config.dropMode === DropMode.PIECE_BY_PIECE) {
+        if (config.dropMode === DropModeEnum.PIECE_BY_PIECE) {
             if (this.isLastDrop(state, config)) {
                 const player: Player = state.getCurrentPlayer();
                 const playerCount: number = state.count(player);
@@ -371,7 +376,7 @@ export class QuebecCastlesRules extends ConfigurableRules<QuebecCastlesMove, Que
                     return MGPFallible.failure(QuebecCastlesFailure.MUST_DROP_ONE_BY_ONE());
                 }
             }
-        } else if (config.dropMode === DropMode.BY_BATCH) {
+        } else if (config.dropMode === DropModeEnum.BY_BATCH) {
             const numberToDrop: number =
                 state.getCurrentPlayer() === Player.ZERO ? config.defender : config.invader;
             if (move.coords.size() > numberToDrop) {
@@ -565,7 +570,7 @@ export class QuebecCastlesRules extends ConfigurableRules<QuebecCastlesMove, Que
             );
             const throneCoord: Coord = move.coords.getAnyElement().get();
             thrones.put(currentPlayer, MGPOptional.of(throneCoord));
-            if (config.dropMode === DropMode.AUTO) {
+            if (config.dropMode === DropModeEnum.AUTO) {
                 const adaptedDefaultConfig: MGPOptional<QuebecCastlesConfig> = MGPOptional.of({
                     ...this.getDefaultRulesConfig().get(),
                     width: config.width,

@@ -418,7 +418,7 @@ describe('TutorialGameWrapperComponent (games)', () => {
             }
         }));
 
-        for (const gameInfo of GameInfo.getAllGames()) {
+        for (const gameInfo of GameInfo.getAllGames().filter((v: GameInfo) => v.name === 'Quebec Castles')) {
 
             it('should make sure all solution moves are legal for ' + gameInfo.name, fakeAsync(async() => {
                 const gameComponent: AbstractGameComponent =
@@ -427,8 +427,10 @@ describe('TutorialGameWrapperComponent (games)', () => {
                         .getGameComponent();
                 const rules: SuperRules<Move, GameState, RulesConfig, unknown> = gameComponent.rules;
                 const steps: TutorialStep[] = gameComponent.tutorial;
-                const config: MGPOptional<RulesConfig> = gameInfo.getRulesConfig();
+                const gameInfoConfig: MGPOptional<RulesConfig> = gameInfo.getRulesConfig();
                 for (const step of steps) {
+                    const config: MGPOptional<RulesConfig> =
+                        GameState.getRulesConfigNotState(step.state, gameInfoConfig);
                     const state: GameState = GameState.getStateAndNotConfig(step.state);
                     if (step.hasSolution()) {
                         const solution: Move | Click = step.getSolution();

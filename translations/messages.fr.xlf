@@ -3782,13 +3782,25 @@
         <source>Too much lines for territory, your opponent lines would merged with yours!</source>
         <target>Trop de lignes pour le territoire, les lignes adverses et les vôtres se chevauchent!</target>
       </trans-unit>
+      <trans-unit id="810888510148304696" datatype="html">
+        <source>Automatic</source>
+        <target>Automatique</target>
+      </trans-unit>
+      <trans-unit id="5830114547747897795" datatype="html">
+        <source>Piece by piece</source>
+        <target>Pièces par pièces</target>
+      </trans-unit>
+      <trans-unit id="410841679211120323" datatype="html">
+        <source>By batch</source>
+        <target>Par groupe</target>
+      </trans-unit>
       <trans-unit id="7732765787483081988" datatype="html">
         <source>Lines for territory</source>
         <target>Lignes pour le territoire</target>
       </trans-unit>
       <trans-unit id="2486177343036470230" datatype="html">
         <source>Number of invader</source>
-        <target>Nombre d'envahisseur</target>
+        <target>Nombre d&apos;envahisseur</target>
       </trans-unit>
       <trans-unit id="6786719847987867536" datatype="html">
         <source>Number of defender</source>
@@ -3806,17 +3818,65 @@
         <source>Drop mode</source>
         <target>Mode de placement</target>
       </trans-unit>
-      <trans-unit id="171463941190981369" datatype="html">
-        <source>Quebec Castles is the first board game invented by EveryBoard Team.&lt;br/&gt;The goal of the game is to capture all opponent piece, or to step on the opponent throne.</source>
-        <target>Chateaux Québecquois est le premier jeu inventé par l'équipe EveryBoard.&lt;br/&gt;Le but du jeu est de captruer toutes les pièces adverses, ou d'atteindre le trône adverse.</target>
+      <trans-unit id="5488997593887097957" datatype="html">
+        <source>Quebec Castles is the first board game invented by the EveryBoard Team.&lt;br/&gt;The goal of the game is to capture all opponent piece, or to step on the opponent&apos;s throne. The thrones are by default on the corners.</source>
+        <target>Chateaux Québecquois est le premier jeu inventé par l&apos;équipe EveryBoard.&lt;br/&gt;Le but du jeu est de captruer toutes les pièces adverses, ou d&apos;atteindre le trône adverse. Les trônes sont par défaut dans les coins.</target>
       </trans-unit>
-      <trans-unit id="259564981194593684" datatype="html">
-        <source>Drop piece by piece</source>
-        <target>Déposer pièce par pièce</target>
+      <trans-unit id="5230748384162383195" datatype="html">
+        <source>Defender&apos;s move</source>
+        <target>Déplacement du défenseur</target>
       </trans-unit>
-      <trans-unit id="2483425139774462991" datatype="html">
-        <source>Drop piece yourself</source>
-        <target>Déposer les pièces vous-même</target>
+      <trans-unit id="7313658612994755267" datatype="html">
+        <source>The defenders have the Dark pieces, they play first by selecting one of their pieces and moving it on a neighbor square.&lt;br/&gt;You&apos;re playing Light, move a defender piece.</source>
+        <target>Les défenseurs ont les pièces claires, ils jouent en sélectionnant une de leurs pièces et en la déplaçant sur une case voisine.&lt;br/&gt;Vous jouez les clairs, déplacez une pièce du défenseur.</target>
+      </trans-unit>
+      <trans-unit id="2155198865476397918" datatype="html">
+        <source>Invader&apos;s move</source>
+        <target>Déplacement de l&apos;envahisseur</target>
+      </trans-unit>
+      <trans-unit id="4709902951321456173" datatype="html">
+        <source>The invaders have the Light piece, they play second by selecting one of their piece and moving them two step in a straight line. The piece cannot jump over another piece.&lt;br/&gt;Move an invader piece.</source>
+        <target>Les envahisseurs ont les pièces Claires, ils jouent en deuxième en sélectionnant leurs pièces et les déplaçant de deux pas dans une ligne droite. Les pièces ne peuvent sauter par dessus d&apos;autres.&lt;br/&gt;Déplacez une pièce de l&apos;envahisseur.</target>
+      </trans-unit>
+      <trans-unit id="8548139072476073438" datatype="html">
+        <source>Custom config: Rhombic, width, height</source>
+        <target>Configuration alternative: Losange, largeur, hauteur</target>
+      </trans-unit>
+      <trans-unit id="2002655185364987666" datatype="html">
+        <source>You have the option to change the shape of the board, if it&apos;s not rhombic, it&apos;s rectangular. You also can change the size</source>
+        <target>Vous avez l&apos;option de changer la forme du plateau, si il n&apos;est pas losange, il sera rectangulaire. Vous Vous pouvez aussi en changer la taille.</target>
+      </trans-unit>
+      <trans-unit id="1462347051222352728" datatype="html">
+        <source>Custom config: place throne yourself</source>
+        <target>Configuration alternative: placez le trône vous même</target>
+      </trans-unit>
+      <trans-unit id="6899433685815559010" datatype="html">
+        <source>You have the option to change decide yourself where you place the throne. If you don&apos;t change anything else the piece placement will be automatically done right after.&lt;br/&gt;You&apos;re playing Dark/Defender, place your throne.</source>
+        <target>Vous avez l&apos;option de choisir vous même où placer le trône. Si vous ne changez rien d&apos;autres, le placement des pièces ce fera automatiquement juste après.&lt;br/&gt;Vous jouez Foncé/Défenseur, placez votre trône.</target>
+      </trans-unit>
+      <trans-unit id="7761290276414807914" datatype="html">
+        <source>Custom config: Drop Mode: By Batch</source>
+        <target>Configuration alternative: Mode de placement: par groupe</target>
+      </trans-unit>
+      <trans-unit id="4109163222082818733" datatype="html">
+        <source>You have the option to decide yourself where you place your pieces.</source>
+        <target>Vous avez l&apos;option de décider vous même ou placer vos pièces.</target>
+      </trans-unit>
+      <trans-unit id="5304732373611529036" datatype="html">
+        <source>Custom config: Drop Mode: Piece by piece</source>
+        <target>Configuration alternative: Mode de placement: Pièces par pièces</target>
+      </trans-unit>
+      <trans-unit id="4736909054602504853" datatype="html">
+        <source>You have the option to decide yourself where you place your pieces, one per turn. Once one player has no more piece to drop, the other player drop all its piece in one turn.</source>
+        <target>Vous avez l&apos;option de décider vous même ou placer vos pièces, une par tour. Une fois qu&apos;un des joueurs n&apos;as plus de pièces à déposer, l&apos;autre joueur dépose toutes ses pièces en un tour.</target>
+      </trans-unit>
+      <trans-unit id="2804461591757192500" datatype="html">
+        <source>Custom config: Number of piece &amp; territory size</source>
+        <target>Configuration alternative: Nombre de pièces &amp; taille du territoire</target>
+      </trans-unit>
+      <trans-unit id="7017903359617000794" datatype="html">
+        <source>You have the option to change territory size, which is the number of line on which you can drop your pieces, it&apos;s indicated by a semi-transparent color. You can also change how many pieces each player control.</source>
+        <target>Vous avez l&apos;option de changer la taille du territoire, qui est le nombre de lignes sur lesquelles vous pouvez déposer vos pièces, c&apos;est indiqué par une couleur semi-transparente. Vous pouvez aussi changer combien de pièces chaque joueur contrôle.</target>
       </trans-unit>
       <trans-unit id="8819839276456625538" datatype="html">
         <source>You must pick a space from the edge of the board.</source>

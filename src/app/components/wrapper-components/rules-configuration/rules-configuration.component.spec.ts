@@ -1,7 +1,7 @@
 /* eslint-disable max-lines-per-function */
 import { fakeAsync, tick } from '@angular/core/testing';
 import { DebugElement } from '@angular/core';
-import { MGPOptional, Utils, TestUtils, Set, MGPValidation } from '@everyboard/lib';
+import { MGPOptional, Utils, TestUtils, MGPValidation } from '@everyboard/lib';
 
 import { RulesConfigurationComponent } from './rules-configuration.component';
 import { ActivatedRouteStub, SimpleComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
@@ -77,12 +77,12 @@ describe('RulesConfigurationComponent', () => {
         {
             name: (): string => 'config name',
             config: {
-                difficulty: new EnumConfig('EASY', () => 'difficulty', new Set(['EASY', 'MEDIUM']), (_: string | number | null) => {
+                difficulty: new EnumConfig('EASY', () => 'difficulty', { 'EASY': () => 'EASY', 'MEDIUM': () => 'MEDIUM' }, (_: string | number | null) => {
                     // TODO FOR REVIEW: ux question: si la validité d'un champs N dépend de la validité d'un champ M,
                     //  ---> alors l'inverse devrais être vrai également pour des raisons UX ?
                     return MGPValidation.SUCCESS;
                 }),
-                harderDifficulty: new EnumConfig('MEDIUM', () => 'difficulty', new Set(['MEDIUM', 'HARD']), (v: string | number | null, r: RulesConfig) => {
+                harderDifficulty: new EnumConfig('MEDIUM', () => 'difficulty', { 'MEDIUM': () => 'MEDIUM', 'HARD': () => 'HARD' }, (v: string | number | null, r: RulesConfig) => {
                     if (v === r.difficulty) {
                         return MGPValidation.failure('harder difficulty should be harder than difficulty, who would guess');
                     } else {

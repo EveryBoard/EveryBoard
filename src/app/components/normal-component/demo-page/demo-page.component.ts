@@ -35,7 +35,7 @@ export class DemoPageComponent {
         let i: number = 0;
         this.columns = [];
         // Create a game card for each demo node of each game
-        for (const gameInfo of allGames.filter((v: GameInfo) => v.urlName === 'QuebecCastles')) {
+        for (const gameInfo of allGames) {
             const demoNodes: { node: AbstractNode, click: MGPOptional<string> }[] = [];
             const rules: AbstractRules = gameInfo.rules;
             const steps: TutorialStep[] = gameInfo.tutorial.tutorial;
@@ -63,28 +63,37 @@ export class DemoPageComponent {
     }
 
     private getNodeFromStep(step: TutorialStep, rules: AbstractRules, config: MGPOptional<RulesConfig>)
-    : { node: AbstractNode, click: MGPOptional<string> }
+    : { node: AbstractNode, config: MGPOptional<RulesConfig>, click: MGPOptional<string> }
     {
         const state: GameState = GameState.getStateAndNotConfig(step.state);
+        const stepConfig: MGPOptional<RulesConfig> = GameState.getRulesConfigNotState(step.state, config);
         if (step.hasSolution()) {
             const solution: Move | string = step.getSolution();
             if (typeof solution === 'string') {
                 return {
                     node: new GameNode(state),
+                    config: stepConfig,
                     click: MGPOptional.of(solution),
                 };
             } else {
                 const move: Move = solution;
-                const legalityStatus: MGPFallible<unknown> = rules.isLegal(move, state, config);
-                const resultingState: GameState = rules.applyLegalMove(move, state, config, legalityStatus.get());
+                const legalityStatus: MGPFallible<unknown> = rules.isLegal(move, state, stepConfig);
+                const resultingState: GameState = rules.applyLegalMove(move, state, stepConfig, legalityStatus.get());
                 const parent: AbstractNode = new GameNode(resultingState);
-                const node: AbstractNode =
-                    new GameNode(resultingState, MGPOptional.of(parent), MGPOptional.of(move));
-                return { node, click: MGPOptional.empty() };
+                const node: AbstractNode = new GameNode(resultingState,
+                                                        MGPOptional.of(parent),
+                                                        MGPOptional.of(move),
+                );
+                return {
+                    node,
+                    config: stepConfig,
+                    click: MGPOptional.empty(),
+                };
             }
         } else {
             return {
                 node: new GameNode(state),
+                config: stepConfig,
                 click: MGPOptional.empty(),
             };
         }

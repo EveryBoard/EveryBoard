@@ -2,7 +2,7 @@ import { MGPOptional } from '@everyboard/lib';
 
 import { MoveGenerator } from 'src/app/jscaip/AI/AI';
 import { QuebecCastlesDrop, QuebecCastlesMove } from './QuebecCastlesMove';
-import { DropMode, QuebecCastlesConfig, QuebecCastlesNode, QuebecCastlesRules } from './QuebecCastlesRules';
+import { DropModeEnum, QuebecCastlesConfig, QuebecCastlesNode, QuebecCastlesRules } from './QuebecCastlesRules';
 import { QuebecCastlesState } from './QuebecCastlesState';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { Coord } from 'src/app/jscaip/Coord';
@@ -30,7 +30,7 @@ export class QuebecCastlesMoveGenerator extends MoveGenerator<QuebecCastlesMove,
         const rules: QuebecCastlesRules = QuebecCastlesRules.get();
         const nbOfDropAwaited: number = rules.getExpectedDropThisTurn(state, config);
         const mustPlaceThrone: boolean = rules.mustPlaceThrone(state, config);
-        if (config.dropMode === DropMode.PIECE_BY_PIECE || mustPlaceThrone) {
+        if (config.dropMode === DropModeEnum.PIECE_BY_PIECE || mustPlaceThrone) {
             const coords: Coord[] = [];
             for (const dropCoord of QuebecCastlesRules.get().getValidDropCoords(player, config)) {
                 const piece: PlayerOrNone = state.getPieceAt(dropCoord);

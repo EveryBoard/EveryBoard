@@ -2,11 +2,9 @@ import { MGPOptional } from '@everyboard/lib';
 
 import { Tutorial, TutorialStep } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { TutorialStepMessage } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
-import { DropMode, QuebecCastlesConfig, QuebecCastlesRules } from './QuebecCastlesRules';
+import { DropModeEnum, QuebecCastlesConfig, QuebecCastlesRules } from './QuebecCastlesRules';
 import { QuebecCastlesMove } from './QuebecCastlesMove';
 import { Coord } from 'src/app/jscaip/Coord';
-import { QuebecCastlesState } from './QuebecCastlesState';
-import { PlayerOrNone } from 'src/app/jscaip/Player';
 import { PlayerMap } from 'src/app/jscaip/PlayerMap';
 
 const defaultConfig: MGPOptional<QuebecCastlesConfig> = QuebecCastlesRules.get().getDefaultRulesConfig();
@@ -27,16 +25,16 @@ const placeThroneYourselfConfig: MGPOptional<QuebecCastlesConfig> = MGPOptional.
 });
 const dropByBatchConfig: MGPOptional<QuebecCastlesConfig> = MGPOptional.of({
     ...defaultConfig.get(),
-    dropMode: DropMode.BY_BATCH,
+    dropMode: DropModeEnum.BY_BATCH,
 });
 const dropPieceByPieceConfig: MGPOptional<QuebecCastlesConfig> = MGPOptional.of({
     ...defaultConfig.get(),
-    dropMode: DropMode.PIECE_BY_PIECE,
+    dropMode: DropModeEnum.PIECE_BY_PIECE,
 });
 const numberOfPieceAndTerritorySizeConfig: MGPOptional<QuebecCastlesConfig> = MGPOptional.of({
     ...defaultConfig.get(),
     linesForTerritory: 3,
-    dropMode: DropMode.PIECE_BY_PIECE,
+    dropMode: DropModeEnum.PIECE_BY_PIECE,
     defender: 2,
     invader: 5,
 });
@@ -70,30 +68,47 @@ export class QuebecCastlesTutorial extends Tutorial {
                 state: QuebecCastlesRules.get().getInitialState(rectangularWidthHeightConfig),
                 config: rectangularWidthHeightConfig.get(),
             },
-        ),
-        TutorialStep.informational(
+        ), // TODO: highlight landing square again
+        // TODO: why is there capture style in /demo
+        TutorialStep.anyMove(
             $localize`Custom config: place throne yourself`,
-            $localize`You have the option to change decide yourself where you place the throne. If you don't change anything else the piece placement will be automatically done right after.`,
+            $localize`You have the option to change decide yourself where you place the throne. If you don't change anything else the piece placement will be automatically done right after.<br/>You're playing Dark/Defender, place your throne.`,
             {
                 state: QuebecCastlesRules.get().getInitialState(placeThroneYourselfConfig),
                 config: placeThroneYourselfConfig.get(),
-            },// TODO: make them place the throne
+            },
+            QuebecCastlesMove.drop([new Coord(7, 7)]),
+            TutorialStepMessage.CONGRATULATIONS(),
         ),
-        TutorialStep.informational(
+        TutorialStep.anyMove(
             $localize`Custom config: Drop Mode: By Batch`,
             $localize`You have the option to decide yourself where you place your pieces.`,
             {
                 state: QuebecCastlesRules.get().getInitialState(dropByBatchConfig),
                 config: dropByBatchConfig.get(),
-            },// TODO: make them place their pieces
+            },
+            QuebecCastlesMove.drop([
+                new Coord(4, 8),
+                new Coord(5, 7),
+                new Coord(6, 6),
+                new Coord(7, 5),
+                new Coord(8, 4),
+                new Coord(5, 8),
+                new Coord(6, 7),
+                new Coord(7, 6),
+                new Coord(8, 5),
+            ]),
+            TutorialStepMessage.CONGRATULATIONS(),
         ),
-        TutorialStep.informational(
+        TutorialStep.anyMove(
             $localize`Custom config: Drop Mode: Piece by piece`,
-            $localize`You have the option to decide yourself where you place your pieces, one per turn. Once one player has no more piece to drop, the other player drop all its piece in one turn.`,
+            $localize`You have the option to decide yourself where you place your pieces, one per turn. Once one player has no more piece to drop, the other player drop all its piece in one turn.<br/>You're playing Dark/Defender, drop a piece.`,
             {
                 state: QuebecCastlesRules.get().getInitialState(dropPieceByPieceConfig),
                 config: dropPieceByPieceConfig.get(),
-            },// TODO: make them drop one piece
+            },
+            QuebecCastlesMove.drop([new Coord(7, 7)]),
+            TutorialStepMessage.CONGRATULATIONS(),
         ),
         TutorialStep.informational(
             $localize`Custom config: Number of piece & territory size`,

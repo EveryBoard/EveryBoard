@@ -5,7 +5,7 @@ import { ActivatedRouteStub, ComponentTestUtils, SimpleComponentTestUtils } from
 import { QuebecCastlesComponent } from '../quebec-castles.component';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { MGPOptional } from 'lib/dist';
-import { DropMode, QuebecCastlesConfig, QuebecCastlesFailure, QuebecCastlesRules } from '../QuebecCastlesRules';
+import { DropModeEnum, QuebecCastlesConfig, QuebecCastlesFailure, QuebecCastlesRules } from '../QuebecCastlesRules';
 import { QuebecCastlesMove } from '../QuebecCastlesMove';
 import { Coord } from 'src/app/jscaip/Coord';
 import { QuebecCastlesState } from '../QuebecCastlesState';
@@ -140,7 +140,7 @@ describe('QuebecCastlesComponent', () => {
                 // Given any board with a dropped piece
                 const customConfig: MGPOptional<QuebecCastlesConfig> = MGPOptional.of({
                     ...defaultConfig.get(),
-                    dropMode: DropMode.BY_BATCH,
+                    dropMode: DropModeEnum.BY_BATCH,
                 });
                 await testUtils.setupState(rules.getInitialState(customConfig), { config: customConfig });
                 await testUtils.expectClickSuccess('#square-7-7');
@@ -163,7 +163,7 @@ describe('QuebecCastlesComponent', () => {
                 // Given any board in drop phase
                 const customConfig: MGPOptional<QuebecCastlesConfig> = MGPOptional.of({
                     ...defaultConfig.get(),
-                    dropMode: DropMode.BY_BATCH,
+                    dropMode: DropModeEnum.BY_BATCH,
                 });
                 await testUtils.setupState(rules.getInitialState(customConfig), { config: customConfig });
 
@@ -178,7 +178,7 @@ describe('QuebecCastlesComponent', () => {
                 // Given a board when it is not your turn to play
                 const customConfig: MGPOptional<QuebecCastlesConfig> = MGPOptional.of({
                     ...defaultConfig.get(),
-                    dropMode: DropMode.BY_BATCH,
+                    dropMode: DropModeEnum.BY_BATCH,
                 });
                 await testUtils.setupState(rules.getInitialState(customConfig), { config: customConfig });
                 await testUtils.getComponent().setInteractive(false);
@@ -192,7 +192,7 @@ describe('QuebecCastlesComponent', () => {
                 // Given a board where it is your turn to play
                 const customConfig: MGPOptional<QuebecCastlesConfig> = MGPOptional.of({
                     ...defaultConfig.get(),
-                    dropMode: DropMode.BY_BATCH,
+                    dropMode: DropModeEnum.BY_BATCH,
                 });
                 await testUtils.setupState(rules.getInitialState(customConfig), { config: customConfig });
 
@@ -206,7 +206,7 @@ describe('QuebecCastlesComponent', () => {
                 // Given a board where it is your turn to play
                 const customConfig: MGPOptional<QuebecCastlesConfig> = MGPOptional.of({
                     ...defaultConfig.get(),
-                    dropMode: DropMode.BY_BATCH,
+                    dropMode: DropModeEnum.BY_BATCH,
                     defender: 2,
                 });
                 await testUtils.setupState(rules.getInitialState(customConfig), { config: customConfig });
@@ -223,7 +223,7 @@ describe('QuebecCastlesComponent', () => {
                 // Given any board on which a piece is already dropped
                 const customConfig: MGPOptional<QuebecCastlesConfig> = MGPOptional.of({
                     ...defaultConfig.get(),
-                    dropMode: DropMode.BY_BATCH,
+                    dropMode: DropModeEnum.BY_BATCH,
                 });
                 await testUtils.setupState(rules.getInitialState(customConfig), { config: customConfig });
                 await testUtils.expectClickSuccess('#square-7-7');
@@ -237,7 +237,7 @@ describe('QuebecCastlesComponent', () => {
                 // Given any board in drop phase with only one piece left to drop
                 const customConfig: MGPOptional<QuebecCastlesConfig> = MGPOptional.of({
                     ...defaultConfig.get(),
-                    dropMode: DropMode.BY_BATCH,
+                    dropMode: DropModeEnum.BY_BATCH,
                     defender: 3,
                 });
                 await testUtils.setupState(rules.getInitialState(customConfig), { config: customConfig });
@@ -255,7 +255,7 @@ describe('QuebecCastlesComponent', () => {
                 // Given a board in drop phase, with all drop done but one
                 const customConfig: MGPOptional<QuebecCastlesConfig> = MGPOptional.of({
                     ...defaultConfig.get(),
-                    dropMode: DropMode.BY_BATCH,
+                    dropMode: DropModeEnum.BY_BATCH,
                     defender: 3,
                 });
                 await testUtils.setupState(rules.getInitialState(customConfig), { config: customConfig });
@@ -273,7 +273,7 @@ describe('QuebecCastlesComponent', () => {
                 // Given a board on which all piece has been dropped
                 const customConfig: MGPOptional<QuebecCastlesConfig> = MGPOptional.of({
                     ...defaultConfig.get(),
-                    dropMode: DropMode.BY_BATCH,
+                    dropMode: DropModeEnum.BY_BATCH,
                     defender: 3,
                 });
                 await testUtils.setupState(rules.getInitialState(customConfig), { config: customConfig });
@@ -299,7 +299,7 @@ describe('QuebecCastlesComponent', () => {
                 // Given a board on which all piece has been dropped for Player.ONE
                 const customConfig: MGPOptional<QuebecCastlesConfig> = MGPOptional.of({
                     ...defaultConfig.get(),
-                    dropMode: DropMode.BY_BATCH,
+                    dropMode: DropModeEnum.BY_BATCH,
                     defender: 3,
                     invader: 3,
                 });
@@ -327,7 +327,7 @@ describe('QuebecCastlesComponent', () => {
                 // Given any board with a dropped piece
                 const customConfig: MGPOptional<QuebecCastlesConfig> = MGPOptional.of({
                     ...defaultConfig.get(),
-                    dropMode: DropMode.BY_BATCH,
+                    dropMode: DropModeEnum.BY_BATCH,
                 });
                 await testUtils.setupState(rules.getInitialState(customConfig), { config: customConfig });
                 await testUtils.expectClickSuccess('#square-7-7');
@@ -346,7 +346,7 @@ describe('QuebecCastlesComponent', () => {
                 // Given any drop in a "drop yourself & piece by piece"
                 const customConfig: MGPOptional<QuebecCastlesConfig> = MGPOptional.of({
                     ...defaultConfig.get(),
-                    dropMode: DropMode.PIECE_BY_PIECE,
+                    dropMode: DropModeEnum.PIECE_BY_PIECE,
                 });
                 await testUtils.setupState(rules.getInitialState(customConfig), { config: customConfig });
 
@@ -361,7 +361,7 @@ describe('QuebecCastlesComponent', () => {
                 // and a drop piece by piece config
                 const customConfig: MGPOptional<QuebecCastlesConfig> = MGPOptional.of({
                     ...defaultConfig.get(),
-                    dropMode: DropMode.PIECE_BY_PIECE,
+                    dropMode: DropModeEnum.PIECE_BY_PIECE,
                     defender: 3,
                     invader: 5,
                 });
@@ -394,7 +394,7 @@ describe('QuebecCastlesComponent', () => {
                 // and a drop piece by piece config
                 const customConfig: MGPOptional<QuebecCastlesConfig> = MGPOptional.of({
                     ...defaultConfig.get(),
-                    dropMode: DropMode.PIECE_BY_PIECE,
+                    dropMode: DropModeEnum.PIECE_BY_PIECE,
                     defender: 3,
                     invader: 5,
                 });

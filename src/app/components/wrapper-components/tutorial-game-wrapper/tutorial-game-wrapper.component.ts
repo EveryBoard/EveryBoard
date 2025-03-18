@@ -180,6 +180,8 @@ export class TutorialGameWrapperComponent extends GameWrapper<TutorialPlayer> im
         this.gameComponent.node = new GameNode(state,
                                                currentStep.parent,
                                                currentStep.previousMove);
+        const defaultConfig: MGPOptional<RulesConfig> = this.gameComponent.rules.getDefaultRulesConfig();
+        this.gameComponent.config = GameState.getRulesConfigNotState(currentStep.state, defaultConfig); // TODO: UT
         // Set role will update view with showCurrentState
         await this.setRole(this.gameComponent.getCurrentPlayer());
         // All steps but informational ones are interactive
@@ -262,19 +264,11 @@ export class TutorialGameWrapperComponent extends GameWrapper<TutorialPlayer> im
         }
         const step: TutorialStep = this.steps[this.stepIndex];
         const stateOrConfig: GameStateAndConfig = step.state;
-        const config: MGPOptional<RulesConfig> = this.getRulesConfigNotState(stateOrConfig);
+        const config: MGPOptional<RulesConfig> = GameState.getRulesConfigNotState(stateOrConfig, MGPOptional.empty());
         if (config.isPresent()) {
             return config;
         } else {
             return super.getConfig();
-        }
-    }
-
-    private getRulesConfigNotState(stateAndConfig: GameStateAndConfig): MGPOptional<RulesConfig> {
-        if (stateAndConfig instanceof GameState) {
-            return MGPOptional.empty();
-        } else {
-            return MGPOptional.of(stateAndConfig.config);
         }
     }
 

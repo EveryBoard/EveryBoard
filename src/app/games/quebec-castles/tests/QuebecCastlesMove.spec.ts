@@ -31,8 +31,7 @@ describe('QuebecCastlesMove', () => {
         expect(moves[0].toString()).toBe('QuebecCastlesTranslation((0, 0) -> (1, 1))');
         expect(moves[1].toString()).toBe('QuebecCastlesDrop([(0, 0), (1, 1), (2, 2)])');
     });
-    // TODO: enum not modifiable when config aint custom !
-// TODO: show territory AND last drop ?
+
     describe('equals', () => {
 
         it('should return true for identic drop', () => {

@@ -1,3 +1,5 @@
+import { MGPOptional } from '@everyboard/lib';
+
 import { Player } from '../Player';
 import { RulesConfig } from '../RulesConfigUtil';
 
@@ -10,6 +12,16 @@ export abstract class GameState {
             return stateOrConfig;
         } else {
             return stateOrConfig.state;
+        }
+    }
+
+    public static getRulesConfigNotState(stateAndConfig: GameStateAndConfig, config: MGPOptional<RulesConfig>)
+    : MGPOptional<RulesConfig>
+    {
+        if (stateAndConfig instanceof GameState) {
+            return config;
+        } else {
+            return MGPOptional.of(stateAndConfig.config);
         }
     }
 

@@ -7,6 +7,7 @@ import { ConfigDescriptionType, DefaultConfigDescription, NamedRulesConfig, Rule
 import { EnumConfig, RulesConfigDescription, RulesConfigDescriptionLocalizable } from './RulesConfigDescription';
 import { BaseWrapperComponent } from '../BaseWrapperComponent';
 import { MGPValidator } from 'src/app/utils/MGPValidator';
+import { Localized } from 'src/app/utils/LocaleUtils';
 
 type ConfigFormJSON = {
     [member: string]: FormControl<ConfigDescriptionType>;
@@ -74,7 +75,6 @@ export class RulesConfigurationComponent extends BaseWrapperComponent implements
             const value: ConfigDescriptionType =
                 this.getRulesConfigDescriptionValue(parameterName,
                                                     config[parameterName]);
-            if (config[parameterName] !== value) console.log('TODO JAAJ WHAT IS THE FUCKESQUE ?')
             group[parameterName] = this.getFormControl(value, configurable);
         });
         this.rulesConfigForm = new FormGroup(group);
@@ -158,10 +158,15 @@ export class RulesConfigurationComponent extends BaseWrapperComponent implements
         this.setChosenConfig(select.value);
     }
 
-    public getEnumValues(field: string): string[] {
+    public getEnumValues(field: string): { enumValue: string, localized: Localized }[] {
         const defaultConfig: DefaultConfigDescription = this.rulesConfigDescription.defaultConfigDescription;
         const config: EnumConfig<RulesConfig> = defaultConfig.config[field] as EnumConfig<RulesConfig>;
-        return config.possibleValue.toList();
+        return Object.keys(config.possibleValue).map((key: string) => {
+            return {
+                enumValue: key,
+                localized: config.possibleValue[key],
+            };
+        });
     }
 
     public onEnumChange(field: string, event: Event): void {
