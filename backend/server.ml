@@ -29,7 +29,8 @@ let version_handler : Dream.handler = fun _ ->
 let start = fun () : unit ->
     FirestorePrimitives.set_config !Options.project_name !Options.database_name !Options.base_endpoint;
     let api = [
-        Dream.scope "/" [TokenRefresher.middleware !Options.service_account_file !Options.emulator; Auth.middleware !Options.project_id]
+        Dream.scope "/" [TokenRefresher.middleware !Options.service_account_file !Options.emulator;
+                         Auth.middleware !Options.project_id]
         @@ List.concat [
             [Dream.get "/ws" WebSocketServer.handle];
         ];

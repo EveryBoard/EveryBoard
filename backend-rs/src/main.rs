@@ -1,11 +1,13 @@
 use tokio::net::TcpListener;
 use tokio_tungstenite::accept_hdr_async;
-use tokio_tungstenite::tungstenite::http::StatusCode;
+use tokio_tungstenite::tungstenite::http::{HeaderValue, StatusCode};
 use tokio_tungstenite::tungstenite::protocol::Message;
 use anyhow::Result;
 use futures_util::{SinkExt, StreamExt};
 use tokio_tungstenite::tungstenite::handshake::server::{Request, Response, ErrorResponse};
 use tokio_tungstenite::tungstenite::http::header::SEC_WEBSOCKET_PROTOCOL;
+
+mod auth;
 
 #[tokio::main]
 async fn main() -> Result<()> {
@@ -23,13 +25,21 @@ async fn main() -> Result<()> {
 async fn handle_connection(stream: tokio::net::TcpStream) -> Result<()> {
     println!("Got connection!");
     let callback = |request: &Request, mut response: Response| -> Result<Response, ErrorResponse> {
-        if request.headers().contains_key(SEC_WEBSOCKET_PROTOCOL) == false {
-            let mut response: ErrorResponse = ErrorResponse::default();
-            *response.status_mut() = StatusCode::UNAUTHORIZED;
-            return Err(response);
-        }
 
-        Ok(response)
+        let result = request.headers().get(SEC_WEBSOCKET_PROTOCOL).ok_or("Invalid header").and_then(auth::check);
+        match result {
+            Ok(user) => {
+                println!("OK! {:?}", user);
+                // response.headers_mut().insert(SEC_WEBSOCKET_PROTOCOL, HeaderValue::from_static("Authorization"));
+                return Ok(response);
+            },
+            Err(err) => {
+                println!("ERR: {:?}", err);
+                let mut unauthorized: ErrorResponse = ErrorResponse::default();
+                *unauthorized.status_mut() = StatusCode::UNAUTHORIZED;
+                return Err(unauthorized);
+            }
+        }
     };
 
     let mut ws_stream = accept_hdr_async(stream, callback).await?;

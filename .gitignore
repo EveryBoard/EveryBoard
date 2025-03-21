@@ -72,7 +72,12 @@ games.txt
 /backend/service-account.json
 /backend/service-account.json.gpg
 
+/backend/target
+/backend/Cargo.lock
+
 # sensitive files
 /service-accounts/*.json
 ./nx/
 .vscode/settings.json
+/backend-rs/target/
+/backend-rs/Cargo.lock
