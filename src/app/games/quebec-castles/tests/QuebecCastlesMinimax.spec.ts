@@ -8,10 +8,6 @@ import { QuebecCastlesMinimax } from '../QuebecCastlesMinimax';
 import { AIDepthLimitOptions } from 'src/app/jscaip/AI/AI';
 import { minimaxTest, SlowTest } from 'src/app/utils/tests/TestUtils.spec';
 
-/**
- * These are the tests for the minimax.
- * We want to test that it selects a certain move on a specific board.
- */
 describe('QuebecCastlesMinimax', () => {
 
     let minimax: Minimax<QuebecCastlesMove, QuebecCastlesState, QuebecCastlesConfig>;
