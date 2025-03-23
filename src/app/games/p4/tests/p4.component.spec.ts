@@ -82,6 +82,7 @@ describe('P4Component', () => {
                 height: 4,
             });
             const state: P4State = P4Rules.get().getInitialState(config);
+            // When displaying it
             await testUtils.setupState(state, { config });
 
             // Then invalid moves (that are valid on the default board) should not be available

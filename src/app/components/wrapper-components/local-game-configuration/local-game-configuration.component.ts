@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component } from '@angular/core';
 
-import { MGPOptional, Utils } from '@everyboard/lib';
+import { comparableEquals, MGPOptional, Utils } from '@everyboard/lib';
 
 import { BaseWrapperComponent } from '../BaseWrapperComponent';
 import { DemoNodeInfo } from '../demo-card-wrapper/demo-card-wrapper.component';
@@ -69,7 +69,7 @@ export class LocalGameConfigurationComponent extends BaseWrapperComponent {
             return this.router.navigate(['/local', this.getGameUrlName()]);
         }
         const defaultConfig: RulesConfig = this.getRulesConfigDescription().get().getDefaultConfig().config;
-        if (JSON.stringify(rulesConfig) === JSON.stringify(defaultConfig)) {
+        if (comparableEquals(rulesConfig, defaultConfig)) {
             // This is the default config, no need to specify it in the parameters
             return this.router.navigate(['/local', this.getGameUrlName()]);
         } else {
