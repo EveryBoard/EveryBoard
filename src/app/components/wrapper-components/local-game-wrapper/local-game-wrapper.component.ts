@@ -88,13 +88,25 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
             // Extract the configuration from the query parameters and validate it
             const rulesConfigDescription: RulesConfigDescription<RulesConfig> = this.getRulesConfigDescription().get();
             const config: RulesConfig = {};
-            for (const key of params.keys) {
-                const value: MGPOptional<unknown> = Utils.parseJSONSafely(Utils.getNonNullable(params.get(key)));
-                if (value.isPresent() && rulesConfigDescription.isValid(key, value.get())) {
-                    config[key] = value.get() as ConfigDescriptionType;
-                } else {
-                    // If anything is invalid, go back to configuration page
+
+            // We set the config to preserve the invariant that rulesConfig should be set when returning.
+            // In case where a valid config is provided, this.rulesConfig will be updated.
+            // If no valid config is provided, it is important to still have a valid this.rulesConfig to avoid errors
+            // before the redirection
+            this.rulesConfig = defaultConfig;
+            for (const key of rulesConfigDescription.getFields()) {
+                const paramValue: string | null = params.get(key);
+                if (paramValue == null) {
+                    // Config element has not been provided
                     return this.redirectToConfiguration();
+                } else {
+                    const value: MGPOptional<unknown> = Utils.parseJSONSafely(paramValue);
+                    if (value.isPresent() && rulesConfigDescription.isValid(key, value.get())) {
+                        config[key] = value.get() as ConfigDescriptionType;
+                    } else {
+                        // Config element is not valid
+                        return this.redirectToConfiguration();
+                    }
                 }
             }
             this.rulesConfig = MGPOptional.of(config);
