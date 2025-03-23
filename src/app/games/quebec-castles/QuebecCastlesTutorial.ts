@@ -68,8 +68,7 @@ export class QuebecCastlesTutorial extends Tutorial {
                 state: QuebecCastlesRules.get().getInitialState(rectangularWidthHeightConfig),
                 config: rectangularWidthHeightConfig.get(),
             },
-        ), // TODO: highlight landing square again
-        // TODO: why is there capture style in /demo
+        ),
         TutorialStep.anyMove(
             $localize`Custom config: place throne yourself`,
             $localize`You have the option to change decide yourself where you place the throne. If you don't change anything else the piece placement will be automatically done right after.<br/>You're playing Dark/Defender, place your throne.`,

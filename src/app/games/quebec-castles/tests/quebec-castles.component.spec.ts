@@ -52,6 +52,18 @@ describe('QuebecCastlesComponent', () => {
         await testUtils.expectMoveSuccess('#square-6-6', move);
     }));
 
+    it('should show landing space as moved', fakeAsync(async() => {
+        // Given any board in move phase where a piece is selected
+        await testUtils.expectClickSuccess('#square-7-7');
+
+        // When clicking on a case next to it
+        const move: QuebecCastlesMove = QuebecCastlesMove.translation(new Coord(7, 7), new Coord(6, 6));
+        await testUtils.expectMoveSuccess('#square-6-6', move);
+
+        // Then the move should succeed
+        testUtils.expectElementToHaveClasses('#square-6-6', ['base', 'moved-fill']);
+    }));
+
     it('should show last capture', fakeAsync(async() => {
         // Given any board in move phase where a piece is about to be captured
         const state: QuebecCastlesState = new QuebecCastlesState([

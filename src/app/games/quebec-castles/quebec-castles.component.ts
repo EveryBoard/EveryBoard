@@ -14,6 +14,7 @@ import { RectangularGameComponent } from 'src/app/components/game-components/rec
 import { Coord } from 'src/app/jscaip/Coord';
 import { ViewBox } from 'src/app/components/game-components/GameComponentUtils';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
+import { TableUtils } from 'src/app/jscaip/TableUtils';
 
 @Component({
     selector: 'app-quebec-castles',
@@ -214,7 +215,7 @@ export class QuebecCastlesComponent extends RectangularGameComponent<QuebecCastl
         this.selected = MGPOptional.empty();
     }
 
-    public getRectClasses(coord: Coord): string[] {
+    public getSquareClasses(coord: Coord): string[] {
         const classes: string[] = [];
         const config: QuebecCastlesConfig = this.getConfig().get();
         if (this.rules.isDropPhase(this.constructedState, config)) {
@@ -232,6 +233,8 @@ export class QuebecCastlesComponent extends RectangularGameComponent<QuebecCastl
             if (this.landingSquare.equalsValue(coord)) {
                 if (this.isCaptured) {
                     classes.push('captured-fill');
+                } else {
+                    classes.push('moved-fill');
                 }
             }
         }

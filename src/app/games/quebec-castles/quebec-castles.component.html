@@ -12,7 +12,7 @@
                   y="0"
                   [attr.width]="SPACE_SIZE"
                   [attr.height]="SPACE_SIZE"
-                  [ngClass]="getRectClasses(coordAndContent.coord)"
+                  [ngClass]="getSquareClasses(coordAndContent.coord)"
                   class="base"
             />
             <circle *ngIf="coordAndContent.content !== PlayerOrNone.NONE"

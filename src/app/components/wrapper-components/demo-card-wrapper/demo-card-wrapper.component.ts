@@ -9,11 +9,16 @@ import { Move } from 'src/app/jscaip/Move';
 import { PlayerOrNone } from 'src/app/jscaip/Player';
 import { TutorialGameWrapperMessages } from '../tutorial-game-wrapper/tutorial-game-wrapper.component';
 import { AbstractNode } from 'src/app/jscaip/AI/GameNode';
+import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 export type DemoNodeInfo = {
     name: string, // The name of the game
     node: AbstractNode, // The demo node
     click: MGPOptional<string>, // An element to click
+}
+
+export type DemoNodeWithConfig = DemoNodeInfo & {
+    config: MGPOptional<RulesConfig>,
 }
 
 @Component({
@@ -74,7 +79,7 @@ export class DemoCardWrapperComponent extends GameWrapper<string> implements Aft
     protected override getGameUrlName(): string {
         // Unlike all other BaseWrapperComponent those will share one page: everyboard.org/demo
         // Hence we cannot read the name of the game via the URL
-        return this.demoNodeInfo.name;
+        return this.demoNodeInfo.name.split('-')[0];
     }
 
     public async onLegalUserMove(_move: Move, _scores?: [number, number] | undefined): Promise<void> {

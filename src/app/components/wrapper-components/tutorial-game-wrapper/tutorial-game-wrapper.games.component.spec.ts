@@ -418,7 +418,7 @@ describe('TutorialGameWrapperComponent (games)', () => {
             }
         }));
 
-        for (const gameInfo of GameInfo.getAllGames().filter((v: GameInfo) => v.name === 'Quebec Castles')) {
+        for (const gameInfo of GameInfo.getAllGames()) {
 
             it('should make sure all solution moves are legal for ' + gameInfo.name, fakeAsync(async() => {
                 const gameComponent: AbstractGameComponent =
