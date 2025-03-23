@@ -1,10 +1,11 @@
 /* eslint-disable max-lines-per-function */
 import { fakeAsync, tick } from '@angular/core/testing';
 
+import { MGPOptional } from '@everyboard/lib';
+
 import { ActivatedRouteStub, ComponentTestUtils, SimpleComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { QuebecCastlesComponent } from '../quebec-castles.component';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { MGPOptional } from 'lib/dist';
 import { DropModeEnum, QuebecCastlesConfig, QuebecCastlesFailure, QuebecCastlesRules } from '../QuebecCastlesRules';
 import { QuebecCastlesMove } from '../QuebecCastlesMove';
 import { Coord } from 'src/app/jscaip/Coord';
