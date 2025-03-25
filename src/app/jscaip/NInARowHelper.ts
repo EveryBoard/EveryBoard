@@ -33,7 +33,7 @@ export class AbstractNInARowHelper<T extends NonNullable<unknown>, D extends Dir
             const coord: Coord = coordAndContent.coord;
             if (this.getOwner(piece, state).isPlayer()) {
                 const squareScore: number = this.getSquareScore(state, coord);
-                if (BoardValue.VICTORIES.some((victory: number) => victory === squareScore)) {
+                if (BoardValue.isVictoryValue(squareScore)) {
                     return BoardValue.of(squareScore);
                 } else {
                     score += squareScore;
@@ -128,12 +128,8 @@ export class AbstractNInARowHelper<T extends NonNullable<unknown>, D extends Dir
             if (this.getOwner(coordAndContents.content, state).isPlayer()) {
                 const coord: Coord = coordAndContents.coord;
                 const squareScore: number = this.getSquareScore(state, coord);
-                if (BoardValue.isVictory(squareScore)) {
-                    if (squareScore === Player.ZERO.getVictoryValue() ||
-                        squareScore === Player.ONE.getVictoryValue())
-                    {
-                        coords.push(coord);
-                    }
+                if (BoardValue.isVictoryValue(squareScore)) {
+                    coords.push(coord);
                 }
             }
         }

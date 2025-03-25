@@ -14,15 +14,30 @@ export class BoardValue {
         return BoardValue.multiMetric(min);
     }
 
-    public static VICTORIES: number[] = [Number.MIN_SAFE_INTEGER, Number.MAX_SAFE_INTEGER];
-    public static PRE_VICTORIES: number[] = [Number.MIN_SAFE_INTEGER + 1, Number.MAX_SAFE_INTEGER - 1];
-
-    public static isVictory(score: number): boolean {
-        return score === BoardValue.VICTORIES[0] || score === BoardValue.VICTORIES[1];
+    public static getVictoryValueOf(player: Player): number {
+        if (player === Player.ZERO) {
+            return Number.MIN_SAFE_INTEGER;
+        } else {
+            return Number.MAX_SAFE_INTEGER;
+        }
     }
 
-    public static isPreVictory(score: number): boolean {
-        return score === BoardValue.PRE_VICTORIES[0] || score === BoardValue.PRE_VICTORIES[1];
+    public static getPreVictoryValueOf(player: Player): number {
+        if (player === Player.ZERO) {
+            return Number.MIN_SAFE_INTEGER + 1;
+        } else {
+            return Number.MAX_SAFE_INTEGER - 1;
+        }
+    }
+
+    public static isVictoryValue(score: number): boolean {
+        return score === BoardValue.getVictoryValueOf(Player.ZERO) ||
+               score === BoardValue.getVictoryValueOf(Player.ONE);
+    }
+
+    public static isPreVictoryValue(score: number): boolean {
+        return score === BoardValue.getPreVictoryValueOf(Player.ZERO) ||
+               score === BoardValue.getPreVictoryValueOf(Player.ONE);
     }
 
     /**
@@ -80,13 +95,13 @@ export class BoardValue {
 
     public toMaximum(): BoardValue {
         const size: number = this.metrics.length;
-        const maximums: number[] = ArrayUtils.create(size, BoardValue.VICTORIES[1]);
+        const maximums: number[] = ArrayUtils.create(size, BoardValue.getVictoryValueOf(Player.ONE));
         return BoardValue.multiMetric(maximums);
     }
 
     public toMinimum(): BoardValue {
         const size: number = this.metrics.length;
-        const minimums: number[] = ArrayUtils.create(size, BoardValue.VICTORIES[0]);
+        const minimums: number[] = ArrayUtils.create(size, BoardValue.getVictoryValueOf(Player.ZERO));
         return BoardValue.multiMetric(minimums);
     }
 

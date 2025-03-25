@@ -53,8 +53,7 @@ export class MCTSWithHeuristic<M extends Move,
                 // It can be the case sometimes that the metric is out of range from the bounds.
                 // In such cases, we treat this as an extreme value, and cap it to the best available value
                 const isOutOfBounds: boolean = metric < player0Best || player1Best < metric;
-                const isPreVictory: boolean = metric === BoardValue.PRE_VICTORIES[0] ||
-                    metric === BoardValue.PRE_VICTORIES[1];
+                const isPreVictory: boolean = BoardValue.isPreVictoryValue(metric);
                 if (isOutOfBounds && (isPreVictory === false)) {
                     // Our metric is outside of the bounds!
                     // We can warn the user about it. (except for pre-victories)

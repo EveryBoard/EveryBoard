@@ -1,5 +1,4 @@
 import { ComparableObject, Encoder, JSONValueWithoutArray, Utils } from '@everyboard/lib';
-import { BoardValue } from './AI/BoardValue';
 
 class PlayerNone implements ComparableObject {
 
@@ -93,14 +92,6 @@ export class Player implements ComparableObject {
 
     public getYDirection(): number {
         return this.getScoreModifier();
-    }
-
-    public getPreVictory(): number {
-        return BoardValue.PRE_VICTORIES[this.value];
-    }
-
-    public getVictoryValue(): number {
-        return BoardValue.VICTORIES[this.value];
     }
 
     public getOpponent(): Player {
