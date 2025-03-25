@@ -4,6 +4,7 @@ use std::collections::HashMap;
 use std::sync::{RwLock, OnceLock};
 use std::time::{Duration, Instant};
 use jsonwebtoken::{Algorithm, DecodingKey, Validation};
+use base64::{engine::general_purpose::URL_SAFE_NO_PAD, Engine};
 use serde::{Deserialize, Serialize};
 use thiserror::Error;
 
@@ -76,11 +77,29 @@ struct Claims {
     auth_time: usize,
 }
 
+fn get_uid_of_emulator_token(token: &str) -> Result<String, ServerError> {
+    fn b64_decode<T: AsRef<[u8]>>(input: T) -> Result<Vec<u8>, ServerError> {
+        URL_SAFE_NO_PAD.decode(input).map_err(|e| ServerError::Auth(AuthError::InvalidToken(e.to_string())))
+    }
+    let parts: Vec<&str> = token.split('.').collect();
+    let data: Vec<u8> = b64_decode(parts[1])?;
+    println!("data: {}", String::from_utf8(data.clone()).unwrap());
+    let claims: Claims = serde_json::from_slice(&data).map_err(|e| ServerError::Auth(AuthError::InvalidToken(e.to_string())))?;
+    return Ok(claims.sub);
+}
+
+
 pub async fn verify_and_get_uid(token: &str) -> Result<String, ServerError> {
+    println!("verify");
+    if config::with_emulator() {
+        println!("with emulator");
+        return get_uid_of_emulator_token(token);
+    }
+    println!("without emulator");
     let error = |reason: &str| ServerError::Auth(AuthError::InvalidToken(reason.to_string()));
     let project_id = config::get_project_id()?;
     let certs = get_certs().await?;
-    let header = jsonwebtoken::decode_header(token).map_err(|_| error("cannot decode token"))?;
+    let header = jsonwebtoken::decode_header(token).map_err(|e| error(&e.to_string()))?;
     let kid = header.kid.ok_or(error("token is missing kid"))?;
 
     let pem_cert = certs.get(&kid).ok_or(error("no key matches kid"))?;

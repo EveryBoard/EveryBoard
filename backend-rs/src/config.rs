@@ -14,3 +14,10 @@ pub fn check_config() -> Result<(), ConfigError> {
 pub fn get_project_id() -> Result<String, ConfigError> {
     return env::var("PROJECT_ID").map_err(|_| ConfigError("PROJECT_ID".to_string()));
 }
+
+pub fn with_emulator() -> bool {
+    match env::var("WITH_EMULATOR") {
+        Ok(_) => true,
+        Err(_) => false,
+    }
+}

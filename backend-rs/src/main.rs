@@ -72,6 +72,7 @@ async fn handle_connection(stream: tokio::net::TcpStream) -> Result<()> {
         return Err(anyhow::Error::msg(error));
     }
 
+    println!("uid is {}", uid_result?);
     while let Some(msg) = ws_stream.next().await {
         let msg = msg?;
         if msg.is_text() {
