@@ -2,7 +2,6 @@ import { ChangeDetectorRef, Component } from '@angular/core';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { LascaRules } from './LascaRules';
 import { CheckersComponent } from '../common/checkers.component';
-import { ScoreName } from 'src/app/components/game-components/game-component/GameComponent';
 
 @Component({
     selector: 'app-lasca',
