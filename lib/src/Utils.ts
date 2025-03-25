@@ -1,5 +1,4 @@
 import { JSONValue } from './JSON';
-import { MGPOptional } from './MGPOptional';
 import { MGPValidation } from './MGPValidation';
 
 export class Utils {
@@ -58,13 +57,5 @@ export class Utils {
 
     public static identity<T>(thing: T): T {
         return thing;
-    }
-
-    public static parseJSONSafely(json: string): MGPOptional<unknown> {
-        try {
-            return MGPOptional.of(JSON.parse(json));
-        } catch {
-            return MGPOptional.empty();
-        }
     }
 }
