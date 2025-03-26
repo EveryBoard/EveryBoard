@@ -91,6 +91,11 @@ describe('MGPOptional', () => {
             const optional: MGPOptional<number> = MGPOptional.of(42);
             expect(optional.equalsValue(42)).toBeTrue();
         });
+
+        it('should consider empty different', () => {
+            const optional: MGPOptional<number> = MGPOptional.empty();
+            expect(optional.equalsValue(42)).toBeFalse();
+        });
     });
 
     describe('toString', () => {

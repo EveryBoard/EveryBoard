@@ -19,6 +19,7 @@ describe('isJSONPrimitive', () => {
 describe('JSONParser', () => {
     function assertSuccess(json: JSONValue): void {
         const result: MGPOptional<JSONValue> = JSONParser.parseJSONSafely(JSON.stringify(json));
+        console.log(result)
         expect(result.isPresent()).toBeTrue();
         expect(result.get()).toEqual(json);
     }
@@ -43,7 +44,7 @@ describe('JSONParser', () => {
 
     it('should parse nested objects and arrays', () => {
         assertSuccess([1, { 0: 1, 2: 3 }, 2, 3]);
-        assertSuccess({ foo: [42, { hello: 37 }], bar: { baz: 'hello' }});
+        assertSuccess({ foo: [42, { hello: 37 }], bar: { baz: 'hello' } });
     });
 
     it('should fail with nested arrays', () => {

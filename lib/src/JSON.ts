@@ -5,7 +5,7 @@ import { MGPOptional } from './MGPOptional';
 // supported, but arrays containing objects containing arrays are, which is what
 // is encoded in these types.
 
-export type JSONPrimitive = string | number | boolean | null | undefined;
+export type JSONPrimitive = string | number | boolean | null;
 // Nothing really prevents us from dealing with arrays of arrays, except for TypeScript's type system.
 export type JSONValue = JSONPrimitive | JSONObject | Array<JSONValueWithoutArray>;
 export type JSONValueWithoutArray = JSONPrimitive | JSONObject;
@@ -15,7 +15,6 @@ export function isJSONPrimitive(value: unknown): value is JSONPrimitive {
     if (typeof value === 'string') return true;
     if (typeof value === 'number') return true;
     if (typeof value === 'boolean') return true;
-    if (typeof value === 'undefined') return true;
     if (value === null) return true; // null if of type 'object', so we check for equality instead
     return false;
 }
@@ -23,6 +22,7 @@ export function isJSONPrimitive(value: unknown): value is JSONPrimitive {
 export class JSONParser {
 
     private static toJSONValue(v: unknown): JSONValue {
+        console.log('toJSONValue', v)
         if (isJSONPrimitive(v)) return v;
         if (Array.isArray(v)) {
             const array: Array<JSONValueWithoutArray> = [];

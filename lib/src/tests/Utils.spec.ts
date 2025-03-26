@@ -1,5 +1,4 @@
 /* eslint-disable max-lines-per-function */
-import { MGPOptional } from '../MGPOptional';
 import { Utils } from '../Utils';
 
 describe('Utils', () => {
