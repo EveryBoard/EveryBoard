@@ -82,6 +82,12 @@ describe('Encoder', () => {
                 EncoderTestUtils.expectToBeBijective(encoder, disjunctedValue);
             }
         });
+
+        it('should fail if no matcher matches', () => {
+            const value: number | boolean = 4;
+            const wrongEncoder : Encoder<number | boolean> = Encoder.disjunction([is2, is2], [encoder1, encoder2]);
+            expect(() => wrongEncoder.encode(value)).toThrowError('cannot encode value: 4');
+        });
     });
 
     describe('list', () => {
