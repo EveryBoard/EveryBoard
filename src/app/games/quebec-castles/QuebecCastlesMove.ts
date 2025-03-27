@@ -30,6 +30,7 @@ export class QuebecCastlesTranslation extends MoveCoordToCoord {
     }
 
 }
+
 export class QuebecCastlesDrop extends Move {
 
     public static readonly encoder: Encoder<QuebecCastlesDrop> = Encoder.tuple(

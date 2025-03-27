@@ -95,6 +95,7 @@ export class RulesConfigurationComponent extends BaseWrapperComponent implements
             formControl.disable();
         }
         formControl.valueChanges.subscribe(() => {
+            // TODO: comment why
             setTimeout(() => this.onUpdate(), 1);
         });
         return formControl;

@@ -69,7 +69,9 @@
                                         <select id="{{ configParameter }}_enum_config_input"
                                                 [disabled]="isEditable() === false"
                                                 (change)="onEnumChange(configParameter, $event)">
-                                            <option *ngFor="let value of getEnumValues(configParameter)" id="{{ configParameter }}_value_{{ value.enumValue }}" [value]="value.enumValue">
+                                            <option *ngFor="let value of getEnumValues(configParameter)"
+                                                    id="{{ configParameter }}_value_{{ value.enumValue }}"
+                                                    [value]="value.enumValue">
                                                 {{ value.localized() }}
                                             </option>
                                         </select>

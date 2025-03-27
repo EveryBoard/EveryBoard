@@ -1,4 +1,5 @@
-import { MGPOptional } from 'lib/dist';
+import { MGPOptional } from '@everyboard/lib';
+
 import { Coord } from 'src/app/jscaip/Coord';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { PlayerMap } from 'src/app/jscaip/PlayerMap';

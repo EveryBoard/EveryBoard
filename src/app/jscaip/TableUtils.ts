@@ -88,7 +88,7 @@ export class TableUtils {
         return MGPOptional.empty();
     }
 
-    public static find<T>(table: Table<T>, predicate: (element: T) => boolean): MGPOptional<T> {
+    public static find<T>(table: Table<T>, predicate: (element: T) => boolean): MGPOptional<T> { // TODO UT
         for (const line of table) {
             for (const element of line) {
                 if (predicate(element)) {

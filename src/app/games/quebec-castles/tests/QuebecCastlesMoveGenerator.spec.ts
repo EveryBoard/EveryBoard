@@ -17,11 +17,6 @@ const defaultThrones: PlayerMap<MGPOptional<Coord>> = PlayerMap.ofValues(
     MGPOptional.of(new Coord(0, 0)),
 );
 
-/**
- * These are the tests for the move generator.
- * We want to test that it gives us the expected moves.
- * Typically, this can be done by checking the number of moves available on the first turn of a game.
- */
 describe('QuebecCastlesMoveGenerator', () => {
 
     let moveGenerator: QuebecCastlesMoveGenerator;

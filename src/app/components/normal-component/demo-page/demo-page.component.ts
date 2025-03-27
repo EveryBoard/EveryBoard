@@ -23,7 +23,7 @@ export class DemoPageComponent {
 
     public columns: DemoNodeInfo[][] = [];
 
-    public constructor(protected readonly cdr: ChangeDetectorRef) {
+    public constructor(private readonly cdr: ChangeDetectorRef) {
         this.fillColumns(this.numberOfColumns.value);
         this.numberOfColumns.valueChanges.subscribe((columns: number) => {
             this.fillColumns(columns);
