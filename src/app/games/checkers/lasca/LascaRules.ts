@@ -18,7 +18,7 @@ export class LascaRules extends AbstractCheckersRules {
                                             RulesConfigDescriptionLocalizable.NUMBER_OF_EMPTY_ROWS,
                                             MGPValidators.range(1, 99)),
                 width: new NumberConfig(7, RulesConfigDescriptionLocalizable.WIDTH, MGPValidators.range(2, 99)),
-                canStackPiece:
+                canStackPieces:
                     new BooleanConfig(true, CheckersOptionLocalizable.STACK_PIECES),
                 mustMakeMaximalCapture:
                     new BooleanConfig(false, CheckersOptionLocalizable.MAXIMAL_CAPTURE),
