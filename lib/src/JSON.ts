@@ -22,7 +22,6 @@ export function isJSONPrimitive(value: unknown): value is JSONPrimitive {
 export class JSONParser {
 
     private static toJSONValue(v: unknown): JSONValue {
-        console.log('toJSONValue', v)
         if (isJSONPrimitive(v)) return v;
         if (Array.isArray(v)) {
             const array: Array<JSONValueWithoutArray> = [];

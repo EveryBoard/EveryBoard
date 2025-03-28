@@ -19,7 +19,6 @@ describe('isJSONPrimitive', () => {
 describe('JSONParser', () => {
     function assertSuccess(json: JSONValue): void {
         const result: MGPOptional<JSONValue> = JSONParser.parseJSONSafely(JSON.stringify(json));
-        console.log(result)
         expect(result.isPresent()).toBeTrue();
         expect(result.get()).toEqual(json);
     }
