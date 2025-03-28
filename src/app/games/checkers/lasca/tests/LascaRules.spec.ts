@@ -659,7 +659,7 @@ describe('LascaRules', () => {
             // And a config requesting to do capture instead of kill
             const alternateConfig: MGPOptional<CheckersConfig> = MGPOptional.of({
                 ...defaultConfig.get(),
-                canStackPiece: false,
+                canStackPieces: false,
             });
             const state: CheckersState = CheckersState.of([
                 [___, ___, ___, ___, ___, ___, ___],

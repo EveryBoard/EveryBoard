@@ -10,6 +10,7 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 import { GoConfig, GoRules } from '../GoRules';
+import { GoPhase } from '../../GoPhase';
 
 describe('GoComponent', () => {
 
@@ -44,7 +45,7 @@ describe('GoComponent', () => {
             [_, _, _, _, _],
             [_, _, _, _, _],
         ];
-        const state: GoState = new GoState(board, PlayerNumberMap.of(0, 0), 1, MGPOptional.empty(), 'PLAYING');
+        const state: GoState = new GoState(board, PlayerNumberMap.of(0, 0), 1, MGPOptional.empty(), GoPhase.PLAYING);
         await testUtils.setupState(state);
 
         const move: GoMove = new GoMove(0, 1);
@@ -70,7 +71,7 @@ describe('GoComponent', () => {
             [_, _, _, _, _],
         ];
         const state: GoState =
-            new GoState(board, PlayerNumberMap.of(2, 1), 3, MGPOptional.of(new Coord(0, 0)), 'COUNTING');
+            new GoState(board, PlayerNumberMap.of(2, 1), 3, MGPOptional.of(new Coord(0, 0)), GoPhase.COUNTING);
         const config: MGPOptional<GoConfig> = MGPOptional.of({
             ...defaultConfig.get(),
             width: 5,
@@ -91,7 +92,7 @@ describe('GoComponent', () => {
             // Given a 19x19 board
             const board: Table<GoPiece> = TableUtils.create(19, 19, GoPiece.EMPTY);
             const state: GoState =
-                new GoState(board, PlayerNumberMap.of(0, 0), 0, MGPOptional.empty(), 'PLAYING');
+                new GoState(board, PlayerNumberMap.of(0, 0), 0, MGPOptional.empty(), GoPhase.PLAYING);
 
             // When displaying it
             await testUtils.setupState(state);
