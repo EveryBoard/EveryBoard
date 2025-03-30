@@ -71,6 +71,7 @@
                                                 (change)="onEnumChange(configParameter, $event)">
                                             <option *ngFor="let value of getEnumValues(configParameter)"
                                                     id="{{ configParameter }}_value_{{ value.enumValue }}"
+                                                    [selected]="isSelectedEnum(configParameter, value.enumValue)"
                                                     [value]="value.enumValue">
                                                 {{ value.localized() }}
                                             </option>

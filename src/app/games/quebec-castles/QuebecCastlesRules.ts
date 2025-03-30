@@ -437,6 +437,13 @@ export class QuebecCastlesRules extends ConfigurableRules<QuebecCastlesMove, Que
         return drops;
     }
 
+    public isValidDrop(state: QuebecCastlesState, coord: Coord, player: Player, config: QuebecCastlesConfig): boolean {
+        if (this.isValidDropCoord(coord, player, config) === false) {
+            return false;
+        }
+        return state.getPieceAt(coord).isNone();
+    }
+
     public isValidDropCoord(coord: Coord, player: Player, config: QuebecCastlesConfig): boolean {
         const y: number = coord.y;
         let metric: number = 0;

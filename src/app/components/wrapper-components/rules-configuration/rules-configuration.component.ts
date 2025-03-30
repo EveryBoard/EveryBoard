@@ -95,8 +95,8 @@ export class RulesConfigurationComponent extends BaseWrapperComponent implements
             formControl.disable();
         }
         formControl.valueChanges.subscribe(() => {
-            // TODO: comment why
-            setTimeout(() => this.onUpdate(), 1);
+            // Since the value is not update yet
+            setTimeout(() => this.onUpdate(), 1); // TODO: UT
         });
         return formControl;
     }
@@ -170,8 +170,13 @@ export class RulesConfigurationComponent extends BaseWrapperComponent implements
         });
     }
 
+    public isSelectedEnum(configParameter: string, enumValue: string): boolean {
+        return enumValue === this.rulesConfigForm.controls[configParameter].getRawValue(); // TODO UT
+    }
+
     public onEnumChange(field: string, event: Event): void {
         const select: HTMLSelectElement = event.target as HTMLSelectElement;
+        console.log('changing', field, 'to', select.value);
         this.rulesConfigForm.controls[field].setValue(select.value);
     }
 

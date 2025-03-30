@@ -14,7 +14,6 @@ import { RectangularGameComponent } from 'src/app/components/game-components/rec
 import { Coord } from 'src/app/jscaip/Coord';
 import { ViewBox } from 'src/app/components/game-components/GameComponentUtils';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { TableUtils } from 'src/app/jscaip/TableUtils';
 
 @Component({
     selector: 'app-quebec-castles',
@@ -143,7 +142,7 @@ export class QuebecCastlesComponent extends RectangularGameComponent<QuebecCastl
                 this.dropped = this.dropped.removeElement(coord);
             } else {
                 if (0 < this.getNumberOfAwaitedDrop()) {
-                    const dropValidity: boolean = this.rules.isValidDropCoord(coord, currentPlayer, config);
+                    const dropValidity: boolean = this.rules.isValidDrop(this.getState(), coord, currentPlayer, config);
                     if (dropValidity) {
                         this.constructedState = this.constructedState.setPieceAt(coord, currentPlayer);
                         this.dropped = this.dropped.addElement(coord);
@@ -152,6 +151,11 @@ export class QuebecCastlesComponent extends RectangularGameComponent<QuebecCastl
             }
             return MGPValidation.SUCCESS;
         }
+    }
+
+    public isPlayerThrone(player: Player, coord: Coord): boolean {
+        const throne: MGPOptional<Coord> = this.getState().thrones.get(player);
+        return throne.equalsValue(coord);
     }
 
     private async onMove(coord: Coord): Promise<MGPValidation> {
@@ -186,6 +190,7 @@ export class QuebecCastlesComponent extends RectangularGameComponent<QuebecCastl
     }
 
     public async updateBoard(_triggerAnimation: boolean): Promise<void> {
+        console.log(this.getConfig().get().dropMode)
         const state: QuebecCastlesState = this.getState();
         this.constructedState = state;
         this.board = state.getCopiedBoard();
@@ -260,14 +265,14 @@ export class QuebecCastlesComponent extends RectangularGameComponent<QuebecCastl
     }
 
     public getBoardTransform(): string {
+        const state: QuebecCastlesState = this.constructedState;
+        const cx: number = (state.getWidth() / 2) * this.SPACE_SIZE;
+        const cy: number = (state.getHeight() / 2) * this.SPACE_SIZE;
+        let angle: number = this.getPointOfView().getValue() * 180;
         if (this.getConfig().get().isRhombic) {
-            const state: QuebecCastlesState = this.constructedState;
-            const cx: number = (state.getWidth() / 2) * this.SPACE_SIZE;
-            const cy: number = (state.getHeight() / 2) * this.SPACE_SIZE;
-            return `rotate(45, ${ cx }, ${ cy })`;
-        } else {
-            return '';
+            angle += 45;
         }
+        return `rotate(${ angle }, ${ cx }, ${ cy })`;
     }
 
     public getGroupDropValidationButtonClasses(): string[] {
@@ -307,9 +312,14 @@ export class QuebecCastlesComponent extends RectangularGameComponent<QuebecCastl
     }
 
     public getGroupValidatorTransform(): string {
-        const y: number = this.getRemainingCy();
-        const x: number = (this.maxX + this.minX) / 2;
-        return 'translate(' + x + ', ' + y + ')';
+        if (this.getConfig().get().isRhombic) {
+            return '';
+        } else {
+            return this.getSVGTranslation(0, 0);
+        }
+        // const y: number = this.getRemainingCy();
+        // const x: number = (this.maxX + this.minX) / 2;
+        // return 'translate(' + x + ', ' + y + ')';
     }
 
     public getRemainingCy(): number {

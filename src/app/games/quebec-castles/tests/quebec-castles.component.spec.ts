@@ -18,7 +18,7 @@ const _: PlayerOrNone = PlayerOrNone.NONE;
 const O: PlayerOrNone = PlayerOrNone.ZERO;
 const X: PlayerOrNone = PlayerOrNone.ONE;
 
-describe('QuebecCastlesComponent', () => {
+fdescribe('QuebecCastlesComponent', () => {
 
     let testUtils: ComponentTestUtils<QuebecCastlesComponent>;
     const rules: QuebecCastlesRules = QuebecCastlesRules.get();
@@ -141,7 +141,7 @@ describe('QuebecCastlesComponent', () => {
                 // Then it should not have a transform on the board
                 const board: DebugElement = testUtils.findElement('#quebec');
                 const boardTransform: string = board.attributes.transform as string;
-                expect(boardTransform).toBe('');
+                expect(boardTransform).toBe('rotate(0, 450, 450)');
             }));
 
         });
@@ -429,6 +429,34 @@ describe('QuebecCastlesComponent', () => {
 
                 // Then the move should succeed
                 await testUtils.expectMoveSuccess('#square-6-6', move);
+            }));
+
+            it('should forbid player to change aleady-dropped piece', fakeAsync(async() => {
+                // Given a final drop where user drop all its remaining pieces
+                const customConfig: MGPOptional<QuebecCastlesConfig> = MGPOptional.of({
+                    ...defaultConfig.get(),
+                    dropMode: DropModeEnum.PIECE_BY_PIECE,
+                    defender: 3,
+                    invader: 5,
+                });
+                const state: QuebecCastlesState = new QuebecCastlesState([
+                    [_, X, _, _, _, _, _, _, _],
+                    [X, _, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, O, O],
+                    [_, _, _, _, _, _, _, O, _],
+                ], 5, defaultThrones);
+                await testUtils.setupState(state, { config: customConfig });
+
+                // When attempting to move a piece that was already dropped
+                await testUtils.expectClickSuccess('#square-0-1');
+
+                // Then the clicked piece should not be selected
+                testUtils.expectElementNotToHaveClass('#piece-0-1', 'selected-stroke');
             }));
 
         });

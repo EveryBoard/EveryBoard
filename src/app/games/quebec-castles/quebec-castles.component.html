@@ -15,6 +15,14 @@
                   [ngClass]="getSquareClasses(coordAndContent.coord)"
                   class="base"
             />
+            <ng-container *ngFor="let player of Player.PLAYERS">
+                <g *ngIf="isPlayerThrone(player, coordAndContent.coord)"
+                   id="throne-{{ player.toString() }}-{{ getState().thrones.get(player).get().x }}-{{ getState().thrones.get(player).get().y }}"
+                   style="pointer-events: none">
+                    <polyline points="0 0, 100 100, 50 50, 100 0, 0, 100, 50 50, 0 50, 100 50, 50 50, 50 0, 50 100, 50 50"
+                              class="base-no-fill"/>
+                </g>
+            </ng-container>
             <circle *ngIf="coordAndContent.content !== PlayerOrNone.NONE"
                     id="piece-{{ coordAndContent.coord.x }}-{{ coordAndContent.coord.y }}"
                     (click)="onClick(coordAndContent.coord)"
@@ -25,15 +33,6 @@
                     class="base"
             />
         </g>
-        <ng-container *ngFor="let player of Player.PLAYERS">
-            <g *ngIf="getState().thrones.get(player).isPresent()"
-               id="throne-{{ player.toString() }}-{{ getState().thrones.get(player).get().x }}-{{ getState().thrones.get(player).get().y }}"
-               style="pointer-events: none">
-                <polyline [attr.transform]="getTranslationAt(getState().thrones.get(player).get())"
-                          points="0 0, 100 100, 50 50, 100 0, 0, 100, 50 50, 0 50, 100 50, 50 50, 50 0, 50 100, 50 50"
-                          class="base-no-fill"/>
-            </g>
-        </ng-container>
     </g>
     <g *ngIf="isPlayerDropping()">
         <g id="drop-validator"
