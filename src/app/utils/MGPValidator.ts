@@ -1,6 +1,6 @@
-import { MGPValidation } from '@everyboard/lib';
+import { JSONValue, MGPValidation } from '@everyboard/lib';
 
-export type MGPValidator = (v: unknown) => MGPValidation;
+export type MGPValidator = (v: JSONValue) => MGPValidation;
 
 export class MGPValidators {
 

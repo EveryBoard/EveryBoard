@@ -1,7 +1,7 @@
 import { Component, AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Type } from '@angular/core';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 
-import { MGPFallible, MGPOptional, MGPValidation, Utils, JSONParser } from '@everyboard/lib';
+import { MGPFallible, MGPOptional, MGPValidation, Utils, JSONParser, JSONValue } from '@everyboard/lib';
 
 import { AbstractNode, GameNodeStats } from 'src/app/jscaip/AI/GameNode';
 import { GameWrapper } from 'src/app/components/wrapper-components/GameWrapper';
@@ -100,7 +100,7 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
                     // Config element has not been provided
                     return this.redirectToConfiguration();
                 } else {
-                    const value: MGPOptional<unknown> = JSONParser.parseJSONSafely(paramValue);
+                    const value: MGPOptional<JSONValue> = JSONParser.parseJSONSafely(paramValue);
                     if (value.isPresent() && rulesConfigDescription.isValid(key, value.get())) {
                         config[key] = value.get() as ConfigDescriptionType;
                     } else {
