@@ -117,7 +117,7 @@ export class RulesConfigDescription<R extends RulesConfig = EmptyRulesConfig> {
         return Object.keys(this.defaultConfigDescription.config);
     }
 
-    public getFieldI18NName(field: string): string {
+    public getFieldLocalizedName(field: string): string {
         return this.defaultConfigDescription.config[field].title();
     }
 

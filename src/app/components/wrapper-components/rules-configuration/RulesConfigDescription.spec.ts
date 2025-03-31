@@ -151,7 +151,7 @@ describe('RulesConfigDescription', () => {
     it('should be able to retrieve a field name', () => {
         // Given a rules config description
         // When retrieving its fields
-        const fieldName: string = rulesConfigDescription.getFieldI18NName('width');
+        const fieldName: string = rulesConfigDescription.getFieldLocalizedName('width');
         // Then it should get all fields
         expect(fieldName).toEqual(RulesConfigDescriptionLocalizable.WIDTH());
     });
