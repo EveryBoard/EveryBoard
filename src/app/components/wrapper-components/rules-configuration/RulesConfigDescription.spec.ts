@@ -35,7 +35,7 @@ describe(`RulesConfigDescriptions`, () => {
 
 });
 
-fdescribe('ConfigLine', () => {
+describe('ConfigLine', () => {
 
     describe('NumberConfig', () => {
 
@@ -90,7 +90,7 @@ export type ConfigMock = {
     width: number;
 }
 
-fdescribe('RulesConfigDescription', () => {
+describe('RulesConfigDescription', () => {
 
     const rulesConfigDescription: RulesConfigDescription<ConfigMock> =
         new RulesConfigDescription<ConfigMock>({
