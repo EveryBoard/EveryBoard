@@ -406,6 +406,10 @@
         <source>This value is mandatory</source>
         <target>Cette valeur est obligatoire</target>
       </trans-unit>
+      <trans-unit id="4231579860680569680" datatype="html">
+        <source>There is no such configuration element</source>
+        <target>Il n'y a pas de tel élément de configuration</target>
+      </trans-unit>
       <trans-unit id="4408456168772857996" datatype="html">
         <source><x id="PH" equiv-text="value"/> is too small, the minimum is <x id="PH_1" equiv-text="min"/></source>
         <target><x id="PH" equiv-text="value"/> est trop petit, le minimum est <x id="PH_1" equiv-text="min"/></target>

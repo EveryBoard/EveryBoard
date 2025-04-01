@@ -121,24 +121,25 @@ export class RulesConfigDescription<R extends RulesConfig = EmptyRulesConfig> {
         return this.defaultConfigDescription.config[field].title();
     }
 
-    public isValid(fieldName: string, value: JSONValue): boolean {
+    private getFieldValidity(field: string, value: JSONValue): MGPValidation {
         if (value == null) {
             // no value was provided, it is invalid
-            return false;
+            return MGPValidation.failure($localize`This value is mandatory`);
         }
-        const configLine: ConfigLine = this.defaultConfigDescription.config[fieldName];
+        const configLine: ConfigLine | null = this.defaultConfigDescription.config[field];
         if (configLine == null) {
             // this does not match an element from the config, it is invalid
-            return false;
+            return MGPValidation.failure($localize`There is no such configuration element`);
         }
-        return configLine.checkValidity(value).isSuccess();
+        return configLine.checkValidity(value);
     }
 
-    public getValidityError(fieldName: string, value: JSONValue): string {
-        if (value === null) {
-            return $localize`This value is mandatory`;
-        }
-        return this.defaultConfigDescription.config[fieldName].checkValidity(value).getReason();
+    public isValid(field: string, value: JSONValue): boolean {
+        return this.getFieldValidity(field, value).isSuccess();
+    }
+
+    public getValidityError(field: string, value: JSONValue): string {
+        return this.getFieldValidity(field, value).getReason();
     }
 
 }

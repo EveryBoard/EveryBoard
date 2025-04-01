@@ -171,6 +171,14 @@ describe('RulesConfigDescription', () => {
         expect(rulesConfigDescription.getValidityError('width', null)).toEqual('This value is mandatory');
     });
 
+    it('should detect the invalidity of an unknown config field', () => {
+        // Given a rules config description
+        // When checking the validity of an unknown field
+        // Then it should be invalid
+        expect(rulesConfigDescription.isValid('bli', 42)).toBeFalse();
+        expect(rulesConfigDescription.getValidityError('bli', 42)).toEqual('There is no such configuration element');
+    });
+
     it('should detect the invalidity of an illegal config field', () => {
         // Given a rules config description
         // When checking the validity of an illegal field
