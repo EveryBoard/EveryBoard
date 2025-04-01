@@ -71,6 +71,9 @@ async fn handle_connection(stream: tokio::net::TcpStream) -> Result<()> {
         ws_stream.send(Message::Close(Some(close_frame))).await?;
         return Err(anyhow::Error::msg(error));
     }
+    // TODO: get firebase user (do we need to?!) probably for minimal user (uid+name)
+    // -> need a tokenrefresher to manage admin token
+    // -> need to do a get request
 
     println!("uid is {}", uid_result?);
     while let Some(msg) = ws_stream.next().await {

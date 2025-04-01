@@ -88,7 +88,6 @@ fn get_uid_of_emulator_token(token: &str) -> Result<String, ServerError> {
     return Ok(claims.sub);
 }
 
-
 pub async fn verify_and_get_uid(token: &str) -> Result<String, ServerError> {
     println!("verify");
     if config::with_emulator() {
