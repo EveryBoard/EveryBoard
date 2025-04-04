@@ -47,7 +47,7 @@ async fn handle_connection(stream: tokio::net::TcpStream) -> Result<()> {
         }
         match request.headers().get(SEC_WEBSOCKET_PROTOCOL) {
             Some(authorization_header) => {
-                auth::extract_user_token(authorization_header)
+                auth::jwt::extract_user_token(authorization_header)
                     .map(|token| {
                         user_token = token.to_string();
                         // response.headers_mut().insert(SEC_WEBSOCKET_PROTOCOL, HeaderValue::from_static("Authorization"));
@@ -62,7 +62,7 @@ async fn handle_connection(stream: tokio::net::TcpStream) -> Result<()> {
     let mut ws_stream = accept_hdr_async(stream, callback).await?;
     println!("WebSocket connection established with token {:?}", user_token);
 
-    let uid_result = auth::verify_and_get_uid(&user_token).await;
+    let uid_result = auth::jwt::verify_and_get_uid(&user_token).await;
     if let Err(error) = uid_result {
         let close_frame = CloseFrame {
             code: CloseCode::Normal,

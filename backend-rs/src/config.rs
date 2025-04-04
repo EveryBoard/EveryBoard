@@ -1,18 +1,17 @@
-use thiserror::Error;
 use std::env;
 
-#[derive(Debug, Error)]
-#[error("Missing configuration element: {0}")]
-pub struct ConfigError(pub String);
-
-// Ensure that all required settings are in place
-pub fn check_config() -> Result<(), ConfigError> {
-    let _project_id = get_project_id()?;
-    return Ok(())
+// Ensure that all required settings are in place. Fail if it is not the case.
+pub fn check_config() -> () {
+    let _project_id = get_project_id();
+    let _firebase_endpoint = get_firebase_endpoint();
 }
 
-pub fn get_project_id() -> Result<String, ConfigError> {
-    return env::var("PROJECT_ID").map_err(|_| ConfigError("PROJECT_ID".to_string()));
+pub fn get_project_id() -> String {
+    return env::var("PROJECT_ID").expect("retrieve PROJECT_ID config");
+}
+
+pub fn get_firebase_endpoint() -> String {
+    return env::var("FIREBASE_ENDPOINT").expect("retrieve FIREBASE_ENDPOINT config");
 }
 
 pub fn with_emulator() -> bool {
