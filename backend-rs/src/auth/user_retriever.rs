@@ -1,11 +1,10 @@
-use std::collections::HashMap;
 use std::fs;
 use std::sync::RwLock;
 use std::time::{Duration, Instant};
 use reqwest::header::AUTHORIZATION;
 use reqwest::Client;
 use serde::{Deserialize, Serialize};
-use serde_json::{from_str, Map, Value};
+use serde_json::{from_str, Value};
 use thiserror::Error; // For error handling
 use jsonwebtoken::{Algorithm, EncodingKey, Header};
 
@@ -51,7 +50,7 @@ struct User {
     current_game: Option<CurrentGame>,
 }
 
-trait UserRetriever {
+pub trait UserRetriever {
     async fn get_user(&self, uid: &str) -> Result<User, UserRetrieverError>;
 }
 
@@ -180,13 +179,13 @@ fn convert_firestore(json: &Value) -> Result<Value, UserRetrieverError> {
     }
 }
 
-struct FirebaseUserRetriever {
+pub struct FirebaseUserRetriever {
     service_account: ServiceAccount,
     token: RwLock<AdminToken>,
 }
 
 impl FirebaseUserRetriever {
-    async fn new(service_account_file: &str) -> Result<Self, UserRetrieverError> {
+    pub async fn new(service_account_file: &str) -> Result<Self, UserRetrieverError> {
         let service_account = read_service_account_from_file(service_account_file)?;
         let token = request_token(&service_account).await?;
         return Ok (Self { service_account, token: RwLock::new(token) })

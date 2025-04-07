@@ -1,2 +1,2 @@
 pub mod jwt;
-pub mod admin_token;
+pub mod user_retriever;

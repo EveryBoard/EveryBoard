@@ -1,3 +1,6 @@
+use std::sync::Arc;
+
+use auth::user_retriever::{FirebaseUserRetriever, UserRetriever};
 use tokio::net::TcpListener;
 use tokio_tungstenite::accept_hdr_async;
 use tokio_tungstenite::tungstenite::http::StatusCode;
@@ -14,19 +17,22 @@ pub mod error;
 
 #[tokio::main]
 async fn main() -> Result<()> {
-    let addr = "127.0.0.1:8081".to_string();
+    config::check_config();
+    let addr = config::get_addr();
     let listener = TcpListener::bind(&addr).await?;
+    let service_account_file = config::get_service_account_file();
+    let user_retriever = Arc::new(FirebaseUserRetriever::new(&service_account_file));
     println!("WebSocket server started on ws://{}", addr);
 
     while let Ok((stream, _)) = listener.accept().await {
-        tokio::spawn(handle_connection_show_error(stream));
+        tokio::spawn(handle_connection_show_error(stream, Arc::clone(&user_retriever)));
     }
 
     Ok(())
 }
 
-async fn handle_connection_show_error(stream: tokio::net::TcpStream) -> Result<()> {
-    let result = handle_connection(stream).await;
+async fn handle_connection_show_error(stream: tokio::net::TcpStream, user_retriever: Arc<dyn UserRetriever + Send + Sync>) -> Result<()> {
+    let result = handle_connection(stream, user_retriever).await;
     match result {
         Ok(ok) => Ok(ok),
         Err(error) => {
@@ -36,7 +42,7 @@ async fn handle_connection_show_error(stream: tokio::net::TcpStream) -> Result<(
     }
 }
 
-async fn handle_connection(stream: tokio::net::TcpStream) -> Result<()> {
+async fn handle_connection<U: UserRetriever>(stream: tokio::net::TcpStream, user_retriever: U) -> Result<()> {
     println!("Got connection!");
     let mut user_token = String::new();
     let callback = |request: &Request, response: Response| -> Result<Response, ErrorResponse> {
@@ -71,6 +77,8 @@ async fn handle_connection(stream: tokio::net::TcpStream) -> Result<()> {
         ws_stream.send(Message::Close(Some(close_frame))).await?;
         return Err(anyhow::Error::msg(error));
     }
+
+
     // TODO: get firebase user (do we need to?!) probably for minimal user (uid+name)
     // -> need a tokenrefresher to manage admin token
     // -> need to do a get request
