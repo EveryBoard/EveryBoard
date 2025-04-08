@@ -8,7 +8,6 @@ import (
 	"fmt"
 	"encoding/base64"
 	"encoding/json"
-
 )
 
 type User struct {

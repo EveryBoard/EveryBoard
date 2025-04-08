@@ -73,14 +73,17 @@ func HandleWebSocket(w http.ResponseWriter, r *http.Request) {
 	for {
 		_, msg, err := connection.ReadMessage()
 		if err != nil {
-			log.Println("error?")
 			if err == io.EOF || websocket.IsUnexpectedCloseError(err) {
-				log.Println("client closed connection")
 				break
 			}
-			log.Println("Read error:", err)
 			continue
 		}
+		messageType, messageData, err := everyboard.DecodeIncomingMessage(msg)
+		switch (messageType) {
+		case "SubscribeLobby":
+
+		}
+
 		log.Printf("Message from %s: %s", user.Username, msg)
 	}
 }
