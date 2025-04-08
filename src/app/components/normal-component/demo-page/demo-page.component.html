@@ -17,9 +17,9 @@
     <div *ngFor="let column of columns" class="column">
         <div *ngFor="let game of column" class="card">
             <div class="card-header">
-                <p class="card-header-title">{{ game.name }}</p>
+                <p class="card-header-title">{{ game.title }}</p>
             </div>
-            <div class="card-image game-card"><!-- TODO FOR REVIEW: si card-image n'est utilisé que dans des fichier HTML, alors il ne sert à rien right?-->
+            <div class="card-image game-card">
                 <figure class="image">
                     <app-demo-card [demoNodeInfo]="game"></app-demo-card>
                 </figure>

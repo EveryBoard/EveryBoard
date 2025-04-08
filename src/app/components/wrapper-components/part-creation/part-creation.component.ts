@@ -550,6 +550,7 @@ export class PartCreationComponent extends BaseWrapperComponent implements OnIni
             this.configDemo = {
                 click: MGPOptional.empty(),
                 name: this.getGameUrlName(),
+                title: this.getGameUrlName(),
                 node,
             };
             this.cdr.detectChanges();

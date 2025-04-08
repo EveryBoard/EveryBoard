@@ -5,9 +5,10 @@
     <g id="quebec"
        [attr.transform]="getBoardTransform()">
         <g *ngFor="let coordAndContent of constructedState.getCoordsAndContents()"
-           [attr.transform]="getTranslationAt(coordAndContent.coord)">
+           id="click-{{ coordAndContent.coord.x }}-{{ coordAndContent.coord.y }}"
+           [attr.transform]="getTranslationAt(coordAndContent.coord)"
+           (click)="onClick(coordAndContent.coord)">
             <rect id="square-{{ coordAndContent.coord.x }}-{{ coordAndContent.coord.y }}"
-                  (click)="onClick(coordAndContent.coord)"
                   x="0"
                   y="0"
                   [attr.width]="SPACE_SIZE"
@@ -25,12 +26,19 @@
             </ng-container>
             <circle *ngIf="coordAndContent.content !== PlayerOrNone.NONE"
                     id="piece-{{ coordAndContent.coord.x }}-{{ coordAndContent.coord.y }}"
-                    (click)="onClick(coordAndContent.coord)"
                     [attr.r]="(SPACE_SIZE / 2) - STROKE_WIDTH"
                     [attr.cx]="SPACE_SIZE / 2"
                     [attr.cy]="SPACE_SIZE / 2"
                     [ngClass]="getPieceClasses(coordAndContent.coord)"
                     class="base"
+            />
+            <rect *ngIf="possibleLanding.contains(coordAndContent.coord)"
+                  id="landing-{{ coordAndContent.coord.x }}-{{ coordAndContent.coord.y }}"
+                  [attr.x]="SPACE_SIZE * 0.4"
+                  [attr.y]="SPACE_SIZE * 0.4"
+                  [attr.width]="SPACE_SIZE * 0.2"
+                  [attr.height]="SPACE_SIZE * 0.2"
+                  class="indicator"
             />
         </g>
     </g>

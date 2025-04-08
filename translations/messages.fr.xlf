@@ -3946,9 +3946,9 @@
         <source>Custom config: Drop Mode: Piece by piece</source>
         <target>Configuration alternative: Mode de placement: Pièces par pièces</target>
       </trans-unit>
-      <trans-unit id="4736909054602504853" datatype="html">
-        <source>You have the option to decide yourself where you place your pieces, one per turn. Once one player has no more piece to drop, the other player drop all its piece in one turn.</source>
-        <target>Vous avez l&apos;option de décider vous même ou placer vos pièces, une par tour. Une fois qu&apos;un des joueurs n&apos;as plus de pièces à déposer, l&apos;autre joueur dépose toutes ses pièces en un tour.</target>
+      <trans-unit id="1101312112289316650" datatype="html">
+        <source>You have the option to decide yourself where you place your pieces, one per turn. Once one player has no more piece to drop, the other player drop all its piece in one turn.&lt;br/&gt;You&apos;re playing Dark/Defender, drop a piece.</source>
+        <target>Vous avez l&apos;option de décider vous même ou placer vos pièces, une par tour. Une fois qu&apos;un des joueurs n&apos;as plus de pièces à déposer, l&apos;autre joueur dépose toutes ses pièces en un tour.&lt;br/&gt;Vous jouez Foncé/Défenseur, déposez une pièce.</target>
       </trans-unit>
       <trans-unit id="2804461591757192500" datatype="html">
         <source>Custom config: Number of piece &amp; territory size</source>

@@ -16,6 +16,6 @@ export class QuebecCastlesMinimax extends Minimax<QuebecCastlesMove, QuebecCastl
               new DummyHeuristic(),
               new QuebecCastlesMoveGenerator(),
         );
-        this.random = true; // TODO FOR REVIEW: sang de baise en jaaj, why is it not done more ? on change que dans la classe mère hahahah
+        this.random = true;
     }
 }

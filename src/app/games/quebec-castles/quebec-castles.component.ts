@@ -35,6 +35,7 @@ export class QuebecCastlesComponent extends RectangularGameComponent<QuebecCastl
 
     // Current Move Attempt
     private dropped: Set<Coord> = new Set();
+    public possibleLanding: Set<Coord> = new Set();
     private selected: MGPOptional<Coord> = MGPOptional.empty();
 
     // Board
@@ -42,6 +43,8 @@ export class QuebecCastlesComponent extends RectangularGameComponent<QuebecCastl
     public missingPieces: PlayerNumberMap;
     public isDroppingGroup: boolean = false;
     public unextendedHeight: number = 0;
+    private lowerCorner: Coord;
+    private upperCorner: Coord;
     private minX: number = 0;
     private maxX: number = 0;
     private minY: number = 0;
@@ -73,10 +76,12 @@ export class QuebecCastlesComponent extends RectangularGameComponent<QuebecCastl
                 width * 0.5 * this.SPACE_SIZE,
                 height * 0.5 * this.SPACE_SIZE,
             );
-            const minY: number = this.getRotated(upperCoord, rotationCenter, rotationInRadius).y;
+            this.upperCorner = this.getRotated(upperCoord, rotationCenter, rotationInRadius);
+            const minY: number = this.upperCorner.y;
             const minX: number = this.getRotated(leftCoord, rotationCenter, rotationInRadius).x;
             const maxX: number = this.getRotated(rightCoord, rotationCenter, rotationInRadius).x;
-            const maxY: number = this.getRotated(lowerCoord, rotationCenter, rotationInRadius).y;
+            this.lowerCorner = this.getRotated(lowerCoord, rotationCenter, rotationInRadius);
+            const maxY: number = this.lowerCorner.y;
             viewBox = ViewBox.fromLimits(minX, maxX, minY, maxY);
             this.unextendedHeight = maxY;
             this.maxX = maxX;
@@ -87,7 +92,7 @@ export class QuebecCastlesComponent extends RectangularGameComponent<QuebecCastl
             viewBox = viewBox.expandAbove(this.SPACE_SIZE);
             viewBox = viewBox.expandBelow(this.SPACE_SIZE);
         }
-        return viewBox;
+        return viewBox.expandAll(this.STROKE_WIDTH);
     }
 
     public isPlayerDropping(): boolean {
@@ -116,7 +121,7 @@ export class QuebecCastlesComponent extends RectangularGameComponent<QuebecCastl
     }
 
     public async onClick(coord: Coord): Promise<MGPValidation> {
-        const clickValidity: MGPValidation = await this.canUserPlay('#square-' + coord.x + '-' + coord.y);
+        const clickValidity: MGPValidation = await this.canUserPlay('#click-' + coord.x + '-' + coord.y);
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }
@@ -159,14 +164,19 @@ export class QuebecCastlesComponent extends RectangularGameComponent<QuebecCastl
     }
 
     private async onMove(coord: Coord): Promise<MGPValidation> {
+        const state: QuebecCastlesState = this.constructedState;
         if (this.selected.isPresent()) {
+            const currentPlayer: Player = state.getCurrentPlayer();
             if (this.selected.equalsValue(coord)) {
                 return this.cancelMove();
+            } else if (state.getPieceAt(coord).equals(currentPlayer)) {
+                this.cancelMoveAttempt();
+                this.selectedCoord(coord);
+                return MGPValidation.SUCCESS;
             } else {
                 return this.chooseMove(QuebecCastlesTranslation.of(this.selected.get(), coord));
             }
         } else {
-            const state: QuebecCastlesState = this.constructedState;
             const opponent: Player = state.getCurrentOpponent();
             const clickedPiece: PlayerOrNone = state.getPieceAt(coord);
             if (clickedPiece === opponent) {
@@ -174,10 +184,19 @@ export class QuebecCastlesComponent extends RectangularGameComponent<QuebecCastl
             } else if (clickedPiece === PlayerOrNone.NONE) {
                 return this.cancelMove(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY());
             } else {
-                this.selected = MGPOptional.of(coord);
+                this.cancelMoveAttempt(); // TODO NEEDED ?
+                this.selectedCoord(coord);
                 return MGPValidation.SUCCESS;
             }
         }
+    }
+
+    private selectedCoord(coord: Coord): void {
+        this.selected = MGPOptional.of(coord);
+        const possibleLanding: Coord[] = this.rules
+            .getPossibleMoveFor(coord, this.getState())
+            .map((move: QuebecCastlesTranslation) => move.getEnd());
+        this.possibleLanding = new Set(possibleLanding);
     }
 
     public async validateGroupDrop(): Promise<MGPValidation> {
@@ -190,7 +209,6 @@ export class QuebecCastlesComponent extends RectangularGameComponent<QuebecCastl
     }
 
     public async updateBoard(_triggerAnimation: boolean): Promise<void> {
-        console.log(this.getConfig().get().dropMode)
         const state: QuebecCastlesState = this.getState();
         this.constructedState = state;
         this.board = state.getCopiedBoard();
@@ -217,6 +235,7 @@ export class QuebecCastlesComponent extends RectangularGameComponent<QuebecCastl
 
     public override cancelMoveAttempt(): void {
         this.dropped = new Set();
+        this.possibleLanding = new Set();
         this.selected = MGPOptional.empty();
     }
 
@@ -225,9 +244,9 @@ export class QuebecCastlesComponent extends RectangularGameComponent<QuebecCastl
         const config: QuebecCastlesConfig = this.getConfig().get();
         if (this.rules.isDropPhase(this.constructedState, config)) {
             if (this.rules.isValidDropCoord(coord, Player.ZERO, config)) {
-                classes.push(Player.ZERO.getHTMLClass('-fill'), 'opacity-80');
+                classes.push(Player.ZERO.getHTMLClass('-fill'), 'territory-opacity');
             } else if (this.rules.isValidDropCoord(coord, Player.ONE, config)) {
-                classes.push(Player.ONE.getHTMLClass('-fill'), 'opacity-80');
+                classes.push(Player.ONE.getHTMLClass('-fill'), 'territory-opacity');
             }
         } else {
             if (this.leftSquare.equalsValue(coord) ||
@@ -312,14 +331,26 @@ export class QuebecCastlesComponent extends RectangularGameComponent<QuebecCastl
     }
 
     public getGroupValidatorTransform(): string {
+        let x: number;
+        let y: number;
+        const halfRadius: number = this.SPACE_SIZE / 2;
         if (this.getConfig().get().isRhombic) {
-            return '';
+            if (this.getCurrentPlayer() === Player.ZERO) {
+                x = this.lowerCorner.x;
+                y = this.lowerCorner.y + halfRadius;
+            } else {
+                x = this.upperCorner.x;
+                y = this.upperCorner.y - halfRadius;
+            }
         } else {
-            return this.getSVGTranslation(0, 0);
+            x = this.getState().getWidth() * 0.5 * this.SPACE_SIZE;
+            if (this.getCurrentPlayer() === Player.ZERO) {
+                y = -halfRadius;
+            } else {
+                y = (this.getState().getHeight() + 0.5) * this.SPACE_SIZE;
+            }
         }
-        // const y: number = this.getRemainingCy();
-        // const x: number = (this.maxX + this.minX) / 2;
-        // return 'translate(' + x + ', ' + y + ')';
+        return 'translate(' + x + ', ' + y + ')';
     }
 
     public getRemainingCy(): number {

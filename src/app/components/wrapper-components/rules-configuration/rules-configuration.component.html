@@ -53,16 +53,14 @@
                                            class="checkbox"
                                            required />
                                 </label>
-                                <div *ngSwitchCase="'number'"
-                                     class="control">
-                                    <input id="{{ configParameter }}_number_config_input"
-                                           [formControlName]="configParameter"
-                                           type="number"
-                                           class="input is-small"
-                                           [ngClass]="isValid(configParameter) === false ? 'is-danger' : ''"
-                                           required
-                                           placeholder="{{ rulesConfigDescription.getI18nName(configParameter) }}" />
-                                </div>
+                                <input *ngSwitchCase="'number'"
+                                       id="{{ configParameter }}_number_config_input"
+                                       [formControlName]="configParameter"
+                                       type="number"
+                                       class="input is-small"
+                                       [ngClass]="isValid(configParameter) === false ? 'is-danger' : ''"
+                                       required
+                                       placeholder="{{ rulesConfigDescription.getI18nName(configParameter) }}" />
                                 <label *ngSwitchCase="'string'"
                                        class="checkbox">
                                     <div class="select is-primary is-fullwidth">

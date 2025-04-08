@@ -345,6 +345,7 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
             this.configDemo = {
                 click: MGPOptional.empty(),
                 name: this.getGameUrlName(),
+                title: this.getGameUrlName(),
                 node,
             };
             this.cdr.detectChanges();

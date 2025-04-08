@@ -1,29 +1,12 @@
-import { MGPOptional } from '@everyboard/lib';
-
 import { Player } from '../Player';
 import { RulesConfig } from '../RulesConfigUtil';
 
-export type GameStateAndConfig = GameState | { state: GameState; config: RulesConfig };
+export type GameStateAndConfig = {
+    state: GameState;
+    config: RulesConfig
+};
 
 export abstract class GameState {
-
-    public static getStateAndNotConfig(stateOrConfig: GameStateAndConfig): GameState {
-        if (stateOrConfig instanceof GameState) {
-            return stateOrConfig;
-        } else {
-            return stateOrConfig.state;
-        }
-    }
-
-    public static getRulesConfigNotState(stateAndConfig: GameStateAndConfig, config: MGPOptional<RulesConfig>)
-    : MGPOptional<RulesConfig>
-    {
-        if (stateAndConfig instanceof GameState) {
-            return config;
-        } else {
-            return MGPOptional.of(stateAndConfig.config);
-        }
-    }
 
     public constructor(public readonly turn: number) {
     }

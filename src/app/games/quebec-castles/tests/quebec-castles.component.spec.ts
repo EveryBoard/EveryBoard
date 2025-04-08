@@ -18,7 +18,7 @@ const _: PlayerOrNone = PlayerOrNone.NONE;
 const O: PlayerOrNone = PlayerOrNone.ZERO;
 const X: PlayerOrNone = PlayerOrNone.ONE;
 
-fdescribe('QuebecCastlesComponent', () => {
+describe('QuebecCastlesComponent', () => {
 
     let testUtils: ComponentTestUtils<QuebecCastlesComponent>;
     const rules: QuebecCastlesRules = QuebecCastlesRules.get();
@@ -37,28 +37,28 @@ fdescribe('QuebecCastlesComponent', () => {
     it('should highlight first selected piece', fakeAsync(async() => {
         // Given any board in move phase
         // When clicking on a piece of current player
-        await testUtils.expectClickSuccess('#square-7-7');
+        await testUtils.expectClickSuccess('#click-7-7');
         // Then first coord should be selected
         testUtils.expectElementToHaveClass('#piece-7-7', 'selected-stroke');
     }));
 
     it('should apply move on second click', fakeAsync(async() => {
         // Given any board in move phase where a piece is selected
-        await testUtils.expectClickSuccess('#square-7-7');
+        await testUtils.expectClickSuccess('#click-7-7');
 
         // When clicking on a case next to it
         // Then the move should succeed
         const move: QuebecCastlesMove = QuebecCastlesMove.translation(new Coord(7, 7), new Coord(6, 6));
-        await testUtils.expectMoveSuccess('#square-6-6', move);
+        await testUtils.expectMoveSuccess('#click-6-6', move);
     }));
 
     it('should show landing space as moved', fakeAsync(async() => {
         // Given any board in move phase where a piece is selected
-        await testUtils.expectClickSuccess('#square-7-7');
+        await testUtils.expectClickSuccess('#click-7-7');
 
         // When clicking on a case next to it
         const move: QuebecCastlesMove = QuebecCastlesMove.translation(new Coord(7, 7), new Coord(6, 6));
-        await testUtils.expectMoveSuccess('#square-6-6', move);
+        await testUtils.expectMoveSuccess('#click-6-6', move);
 
         // Then the move should succeed
         testUtils.expectElementToHaveClasses('#square-6-6', ['base', 'moved-fill']);
@@ -78,11 +78,11 @@ fdescribe('QuebecCastlesComponent', () => {
             [_, _, _, _, _, O, O, O, _],
         ], 3, defaultThrones);
         await testUtils.setupState(state);
-        await testUtils.expectClickSuccess('#square-2-2');
+        await testUtils.expectClickSuccess('#click-2-2');
 
         // When doign the capture
         const move: QuebecCastlesMove = QuebecCastlesMove.translation(new Coord(2, 2), new Coord(4, 4));
-        await testUtils.expectMoveSuccess('#square-4-4', move);
+        await testUtils.expectMoveSuccess('#click-4-4', move);
 
         // Then the move capture should be highlighted
         testUtils.expectElementToHaveClass('#square-4-4', 'captured-fill');
@@ -91,7 +91,7 @@ fdescribe('QuebecCastlesComponent', () => {
     it('should not select opponent piece', fakeAsync(async() => {
         // Given any board in move phase
         // When clicking on an opponent piece
-        await testUtils.expectClickFailure('#square-2-2', RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT());
+        await testUtils.expectClickFailure('#click-2-2', RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT());
         // Then opponent piece should not be selected
         testUtils.expectElementNotToHaveClass('#piece-2-2', 'selected-stroke');
     }));
@@ -100,18 +100,41 @@ fdescribe('QuebecCastlesComponent', () => {
         // Given any board in move phase
         // When clicking on an empty space
         // Then it should fail
-        await testUtils.expectClickFailure('#square-5-5', RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY());
+        await testUtils.expectClickFailure('#click-5-5', RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY());
     }));
 
     it('should deselect when clicking on same piece again', fakeAsync(async() => {
         // Given any board with a selected piece
-        await testUtils.expectClickSuccess('#square-7-7');
+        await testUtils.expectClickSuccess('#click-7-7');
 
         // When clicking on the piece again
-        await testUtils.expectClickFailure('#square-7-7');
+        await testUtils.expectClickFailure('#click-7-7');
 
         // Then the piece should no longer be selected
         testUtils.expectElementNotToHaveClass('#piece-7-7', 'selected-stroke');
+    }));
+
+    it('should change selected piece when clicking on other piece', fakeAsync(async() => {
+        // Given any board with a selected piece
+        await testUtils.expectClickSuccess('#click-7-7');
+
+        // When clicking on another
+        await testUtils.expectClickSuccess('#click-6-7');
+
+        // Then the piece should no longer be selected and the new one should
+        testUtils.expectElementNotToHaveClass('#piece-7-7', 'selected-stroke');
+        testUtils.expectElementToHaveClass('#piece-6-7', 'selected-stroke');
+    }));
+
+    it('should show possible landings', fakeAsync(async() => {
+        // Given a board in move phase
+        // When selecting a player piece that can move
+        await testUtils.expectClickSuccess('#click-6-7');
+
+        // Then it should show its possible landing square
+        testUtils.expectElementToExist('#landing-5-7');
+        testUtils.expectElementToExist('#landing-6-6');
+        testUtils.expectElementToExist('#landing-5-6');
     }));
 
     it('should rotate', fakeAsync(async() => {
@@ -155,10 +178,10 @@ fdescribe('QuebecCastlesComponent', () => {
                     dropMode: DropModeEnum.BY_BATCH,
                 });
                 await testUtils.setupState(rules.getInitialState(customConfig), { config: customConfig });
-                await testUtils.expectClickSuccess('#square-7-7');
+                await testUtils.expectClickSuccess('#click-7-7');
 
                 // When dropping another one
-                await testUtils.expectClickSuccess('#square-6-6');
+                await testUtils.expectClickSuccess('#click-6-6');
 
                 // Then the other piece should be dropped
                 testUtils.expectElementToHaveClasses('#piece-7-7', ['base', 'player0-fill', 'selected-stroke']);
@@ -180,7 +203,7 @@ fdescribe('QuebecCastlesComponent', () => {
                 await testUtils.setupState(rules.getInitialState(customConfig), { config: customConfig });
 
                 // When dropping outside territory
-                await testUtils.expectClickSuccess('#square-3-8');
+                await testUtils.expectClickSuccess('#click-3-8');
 
                 // Then no piece should have been dropped
                 testUtils.expectElementNotToExist('#piece-3-8');
@@ -222,8 +245,8 @@ fdescribe('QuebecCastlesComponent', () => {
                     defender: 2,
                 });
                 await testUtils.setupState(rules.getInitialState(customConfig), { config: customConfig });
-                await testUtils.expectClickSuccess('#square-7-8');
-                await testUtils.expectClickSuccess('#square-8-7');
+                await testUtils.expectClickSuccess('#click-7-8');
+                await testUtils.expectClickSuccess('#click-8-7');
 
                 // When displaying board
                 // Then it should not have drop-validator
@@ -238,11 +261,11 @@ fdescribe('QuebecCastlesComponent', () => {
                     dropMode: DropModeEnum.BY_BATCH,
                 });
                 await testUtils.setupState(rules.getInitialState(customConfig), { config: customConfig });
-                await testUtils.expectClickSuccess('#square-7-7');
+                await testUtils.expectClickSuccess('#click-7-7');
 
                 // When clicking on it again
                 // Then the other piece should be dropped
-                await testUtils.expectClickSuccess('#square-7-7');
+                await testUtils.expectClickSuccess('#click-7-7');
             }));
 
             it('should show validation button when last piece is dropped', fakeAsync(async() => {
@@ -253,11 +276,11 @@ fdescribe('QuebecCastlesComponent', () => {
                     defender: 3,
                 });
                 await testUtils.setupState(rules.getInitialState(customConfig), { config: customConfig });
-                await testUtils.expectClickSuccess('#square-7-7');
-                await testUtils.expectClickSuccess('#square-6-6');
+                await testUtils.expectClickSuccess('#click-7-7');
+                await testUtils.expectClickSuccess('#click-6-6');
 
                 // When dropping the last one
-                await testUtils.expectClickSuccess('#square-5-5');
+                await testUtils.expectClickSuccess('#click-5-5');
 
                 // Then the validation button should be visible
                 testUtils.expectElementToHaveClass('#piece-7-7', 'selected-stroke');
@@ -271,14 +294,14 @@ fdescribe('QuebecCastlesComponent', () => {
                     defender: 3,
                 });
                 await testUtils.setupState(rules.getInitialState(customConfig), { config: customConfig });
-                await testUtils.expectClickSuccess('#square-7-8');
-                await testUtils.expectClickSuccess('#square-6-8');
+                await testUtils.expectClickSuccess('#click-7-8');
+                await testUtils.expectClickSuccess('#click-6-8');
 
                 // When dropping last piece
-                await testUtils.expectClickSuccess('#square-5-8');
+                await testUtils.expectClickSuccess('#click-5-8');
 
                 // Then the validator should be clickable
-                testUtils.expectElementNotToHaveClass('#drop-validator', 'opacity-80');
+                testUtils.expectElementNotToHaveClass('#drop-validator', 'opacity-70');
             }));
 
             it('should show last dropped after all dropped', fakeAsync(async() => {
@@ -289,9 +312,9 @@ fdescribe('QuebecCastlesComponent', () => {
                     defender: 3,
                 });
                 await testUtils.setupState(rules.getInitialState(customConfig), { config: customConfig });
-                await testUtils.expectClickSuccess('#square-7-8');
-                await testUtils.expectClickSuccess('#square-6-8');
-                await testUtils.expectClickSuccess('#square-5-8');
+                await testUtils.expectClickSuccess('#click-7-8');
+                await testUtils.expectClickSuccess('#click-6-8');
+                await testUtils.expectClickSuccess('#click-5-8');
 
                 // When validating the drop
                 const coords: Coord[] = [new Coord(7, 8), new Coord(6, 8), new Coord(5, 8)];
@@ -299,9 +322,9 @@ fdescribe('QuebecCastlesComponent', () => {
                 await testUtils.expectMoveSuccess('#drop-validator', move);
 
                 // Then the dropped piece should be marked as moved-stroke
-                testUtils.expectElementToHaveClasses('#square-7-8', ['base', 'player0-fill', 'opacity-80']);
-                testUtils.expectElementToHaveClasses('#square-6-8', ['base', 'player0-fill', 'opacity-80']);
-                testUtils.expectElementToHaveClasses('#square-5-8', ['base', 'player0-fill', 'opacity-80']);
+                testUtils.expectElementToHaveClasses('#square-7-8', ['base', 'player0-fill', 'territory-opacity']);
+                testUtils.expectElementToHaveClasses('#square-6-8', ['base', 'player0-fill', 'territory-opacity']);
+                testUtils.expectElementToHaveClasses('#square-5-8', ['base', 'player0-fill', 'territory-opacity']);
                 testUtils.expectElementToHaveClasses('#piece-7-8', ['base', 'player0-fill', 'moved-stroke']);
                 testUtils.expectElementToHaveClasses('#piece-6-8', ['base', 'player0-fill', 'moved-stroke']);
                 testUtils.expectElementToHaveClasses('#piece-5-8', ['base', 'player0-fill', 'moved-stroke']);
@@ -317,9 +340,9 @@ fdescribe('QuebecCastlesComponent', () => {
                 });
                 const initialState: QuebecCastlesState = rules.getInitialState(customConfig).incrementTurn();
                 await testUtils.setupState(initialState, { config: customConfig });
-                await testUtils.expectClickSuccess('#square-1-1');
-                await testUtils.expectClickSuccess('#square-2-1');
-                await testUtils.expectClickSuccess('#square-1-2');
+                await testUtils.expectClickSuccess('#click-1-1');
+                await testUtils.expectClickSuccess('#click-2-1');
+                await testUtils.expectClickSuccess('#click-1-2');
 
                 // // When validating the drop
                 const coords: Coord[] = [new Coord(1, 1), new Coord(2, 1), new Coord(1, 2)];
@@ -342,9 +365,9 @@ fdescribe('QuebecCastlesComponent', () => {
                     dropMode: DropModeEnum.BY_BATCH,
                 });
                 await testUtils.setupState(rules.getInitialState(customConfig), { config: customConfig });
-                await testUtils.expectClickSuccess('#square-7-7');
+                await testUtils.expectClickSuccess('#click-7-7');
                 // When dropping another one
-                await testUtils.expectClickSuccess('#square-6-6');
+                await testUtils.expectClickSuccess('#click-6-6');
                 // Then the other piece should be dropped
                 testUtils.expectElementToHaveClasses('#piece-7-7', ['base', 'player0-fill', 'selected-stroke']);
                 testUtils.expectElementToHaveClasses('#piece-6-6', ['base', 'player0-fill', 'selected-stroke']);
@@ -365,7 +388,7 @@ fdescribe('QuebecCastlesComponent', () => {
                 // When doing single click
                 // Then it should drop
                 const move: QuebecCastlesMove = QuebecCastlesMove.drop([new Coord(7, 7)]);
-                await testUtils.expectMoveSuccess('#square-7-7', move);
+                await testUtils.expectMoveSuccess('#click-7-7', move);
             }));
 
             it('should allow player to drop all its remaining soldier once opponent is out of soldier to drop', fakeAsync(async() => {
@@ -393,9 +416,9 @@ fdescribe('QuebecCastlesComponent', () => {
                 // When dropping all its remaining piece at once
                 const coords: Coord[] = [new Coord(0, 2), new Coord(2, 0), new Coord(2, 2)];
                 const move: QuebecCastlesMove = QuebecCastlesMove.drop(coords);
-                await testUtils.expectClickSuccess('#square-0-2');
-                await testUtils.expectClickSuccess('#square-2-0');
-                await testUtils.expectClickSuccess('#square-2-2');
+                await testUtils.expectClickSuccess('#click-0-2');
+                await testUtils.expectClickSuccess('#click-2-0');
+                await testUtils.expectClickSuccess('#click-2-2');
 
                 // Then the move should succeed
                 await testUtils.expectMoveSuccess('#drop-validator', move);
@@ -425,10 +448,10 @@ fdescribe('QuebecCastlesComponent', () => {
 
                 // When doing the first move
                 const move: QuebecCastlesMove = QuebecCastlesMove.translation(new Coord(7, 7), new Coord(6, 6));
-                await testUtils.expectClickSuccess('#square-7-7');
+                await testUtils.expectClickSuccess('#click-7-7');
 
                 // Then the move should succeed
-                await testUtils.expectMoveSuccess('#square-6-6', move);
+                await testUtils.expectMoveSuccess('#click-6-6', move);
             }));
 
             it('should forbid player to change aleady-dropped piece', fakeAsync(async() => {
@@ -453,7 +476,7 @@ fdescribe('QuebecCastlesComponent', () => {
                 await testUtils.setupState(state, { config: customConfig });
 
                 // When attempting to move a piece that was already dropped
-                await testUtils.expectClickSuccess('#square-0-1');
+                await testUtils.expectClickSuccess('#click-0-1');
 
                 // Then the clicked piece should not be selected
                 testUtils.expectElementNotToHaveClass('#piece-0-1', 'selected-stroke');
@@ -477,12 +500,12 @@ fdescribe('QuebecCastlesComponent', () => {
                 // When clicking inside territory
                 const throne: Coord = new Coord(6, 6);
                 const move: QuebecCastlesMove = QuebecCastlesMove.drop([throne]);
-                await testUtils.expectMoveSuccess('#square-6-6', move);
+                await testUtils.expectMoveSuccess('#click-6-6', move);
 
                 // Then the throne should be drawn there now
                 testUtils.expectElementToExist('#throne-PLAYER_ZERO-6-6');
                 // Also, even if the default config must be used, the new configurated size must remain
-                testUtils.expectElementNotToExist('#square-7-7');
+                testUtils.expectElementNotToExist('#click-7-7');
             }));
 
         });

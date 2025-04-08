@@ -396,7 +396,7 @@ describe('TutorialGameWrapperComponent (games)', () => {
                 if (step.isPredicate()) {
                     const config: MGPOptional<RulesConfig> = rules.getDefaultRulesConfig();
                     const move: Move = stepExpectation[2];
-                    const state: GameState = GameState.getStateAndNotConfig(step.state);
+                    const state: GameState = step.state;
                     const moveResult: MGPFallible<unknown> = rules.isLegal(move, state, config);
                     if (moveResult.isSuccess()) {
                         const resultingState: GameState =
@@ -429,9 +429,8 @@ describe('TutorialGameWrapperComponent (games)', () => {
                 const steps: TutorialStep[] = gameComponent.tutorial;
                 const gameInfoConfig: MGPOptional<RulesConfig> = gameInfo.getRulesConfig();
                 for (const step of steps) {
-                    const config: MGPOptional<RulesConfig> =
-                        GameState.getRulesConfigNotState(step.state, gameInfoConfig);
-                    const state: GameState = GameState.getStateAndNotConfig(step.state);
+                    const config: MGPOptional<RulesConfig> = gameInfoConfig.orElse(step.config);
+                    const state: GameState = step.state;
                     if (step.hasSolution()) {
                         const solution: Move | Click = step.getSolution();
                         if (solution instanceof Move) {

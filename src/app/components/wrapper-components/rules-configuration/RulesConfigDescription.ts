@@ -49,7 +49,7 @@ export class EnumConfig<R extends RulesConfig = EmptyRulesConfig> extends Config
 
     public constructor(value: string,
                        title: Localized,
-                       public readonly possibleValue: { [key: string]: Localized },
+                       public readonly possibleValues: { [key: string]: Localized },
                        validator: MGPValidator<R> = () => MGPValidation.SUCCESS)
     {
         super(value, title, validator);

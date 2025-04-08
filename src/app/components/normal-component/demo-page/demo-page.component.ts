@@ -71,8 +71,8 @@ export class DemoPageComponent {
                             name: string)
     : DemoNodeWithConfig
     {
-        const state: GameState = GameState.getStateAndNotConfig(step.state);
-        const stepConfig: MGPOptional<RulesConfig> = GameState.getRulesConfigNotState(step.state, config);
+        const state: GameState = step.state;
+        const stepConfig: MGPOptional<RulesConfig> = config.orElse(step.config);
         if (step.hasSolution()) {
             const solution: Move | string = step.getSolution();
             if (typeof solution === 'string') {
@@ -80,7 +80,8 @@ export class DemoPageComponent {
                     node: new GameNode(state),
                     config: stepConfig,
                     click: MGPOptional.of(solution),
-                    name: name + '-' + step.title,
+                    title: step.title,
+                    name,
                 };
             } else {
                 const move: Move = solution;
@@ -95,7 +96,8 @@ export class DemoPageComponent {
                     node,
                     config: stepConfig,
                     click: MGPOptional.empty(),
-                    name: name + '-' + step.title,
+                    title: step.title,
+                    name,
                 };
             }
         } else {
@@ -103,7 +105,8 @@ export class DemoPageComponent {
                 node: new GameNode(state),
                 config: stepConfig,
                 click: MGPOptional.empty(),
-                name: name + '-' + step.title,
+                title: step.title,
+                name,
             };
         }
     }

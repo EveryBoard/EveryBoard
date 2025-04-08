@@ -96,7 +96,9 @@ export class RulesConfigurationComponent extends BaseWrapperComponent implements
         }
         formControl.valueChanges.subscribe(() => {
             // Since the value is not update yet
-            setTimeout(() => this.onUpdate(), 1); // TODO: UT
+            // Must be called after 1ms otherwise this.rulesConfigForm has not changed value yet
+            // This imply that validators are called with the old config
+            setTimeout(() => this.onUpdate(), 1);
         });
         return formControl;
     }
@@ -162,10 +164,10 @@ export class RulesConfigurationComponent extends BaseWrapperComponent implements
     public getEnumValues(field: string): { enumValue: string, localized: Localized }[] {
         const defaultConfig: DefaultConfigDescription = this.rulesConfigDescription.defaultConfigDescription;
         const config: EnumConfig<RulesConfig> = defaultConfig.config[field] as EnumConfig<RulesConfig>;
-        return Object.keys(config.possibleValue).map((key: string) => {
+        return Object.keys(config.possibleValues).map((key: string) => {
             return {
                 enumValue: key,
-                localized: config.possibleValue[key],
+                localized: config.possibleValues[key],
             };
         });
     }
@@ -176,7 +178,6 @@ export class RulesConfigurationComponent extends BaseWrapperComponent implements
 
     public onEnumChange(field: string, event: Event): void {
         const select: HTMLSelectElement = event.target as HTMLSelectElement;
-        console.log('changing', field, 'to', select.value);
         this.rulesConfigForm.controls[field].setValue(select.value);
     }
 

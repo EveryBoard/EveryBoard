@@ -8,7 +8,7 @@ import { Move } from 'src/app/jscaip/Move';
 import { ConnectedUserService } from 'src/app/services/ConnectedUserService';
 import { Click, TutorialStep, TutorialStepClick, TutorialStepMove, TutorialStepWithSolution } from './TutorialStep';
 import { TutorialFailure } from './TutorialFailure';
-import { GameState, GameStateAndConfig } from 'src/app/jscaip/state/GameState';
+import { GameState } from 'src/app/jscaip/state/GameState';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 import { Localized } from 'src/app/utils/LocaleUtils';
@@ -176,12 +176,12 @@ export class TutorialGameWrapperComponent extends GameWrapper<TutorialPlayer> im
         const currentStep: TutorialStep = this.steps[this.stepIndex];
         this.currentMessage = currentStep.instruction;
         this.currentReason = MGPOptional.empty();
-        const state: GameState = GameState.getStateAndNotConfig(currentStep.state);
+        const state: GameState = currentStep.state;
         this.gameComponent.node = new GameNode(state,
                                                currentStep.parent,
                                                currentStep.previousMove);
         const defaultConfig: MGPOptional<RulesConfig> = this.gameComponent.rules.getDefaultRulesConfig();
-        this.gameComponent.config = GameState.getRulesConfigNotState(currentStep.state, defaultConfig);
+        this.gameComponent.config = currentStep.config.orElse(defaultConfig);
         // Set role will update view with showCurrentState
         await this.setRole(this.gameComponent.getCurrentPlayer());
         // All steps but informational ones are interactive
@@ -263,8 +263,7 @@ export class TutorialGameWrapperComponent extends GameWrapper<TutorialPlayer> im
             return super.getConfig();
         }
         const step: TutorialStep = this.steps[this.stepIndex];
-        const stateOrConfig: GameStateAndConfig = step.state;
-        const config: MGPOptional<RulesConfig> = GameState.getRulesConfigNotState(stateOrConfig, MGPOptional.empty());
+        const config: MGPOptional<RulesConfig> = step.config;
         if (config.isPresent()) {
             return config;
         } else {

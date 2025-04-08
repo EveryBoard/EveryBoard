@@ -12,7 +12,8 @@ import { AbstractNode } from 'src/app/jscaip/AI/GameNode';
 import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 export type DemoNodeInfo = {
-    name: string, // The name of the game
+    name: string; // The url name of the game
+    title: string, // The title of the step
     node: AbstractNode, // The demo node
     click: MGPOptional<string>, // An element to click
 }
@@ -79,7 +80,7 @@ export class DemoCardWrapperComponent extends GameWrapper<string> implements Aft
     protected override getGameUrlName(): string {
         // Unlike all other BaseWrapperComponent those will share one page: everyboard.org/demo
         // Hence we cannot read the name of the game via the URL
-        return this.demoNodeInfo.name.split('-')[0];
+        return this.demoNodeInfo.name;
     }
 
     public async onLegalUserMove(_move: Move, _scores?: [number, number] | undefined): Promise<void> {
