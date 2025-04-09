@@ -81,6 +81,8 @@ func HandleWebSocket(w http.ResponseWriter, r *http.Request) {
 		messageType, messageData, err := everyboard.DecodeIncomingMessage(msg)
 		switch (messageType) {
 		case "SubscribeLobby":
+			// TODO: initialize subscription manager
+
 
 		}
 
