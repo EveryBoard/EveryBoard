@@ -95,6 +95,7 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
             // before the redirection
             this.rulesConfig = defaultConfig;
             for (const key of rulesConfigDescription.getFields()) {
+                console.log(key)
                 const paramValue: string | null = params.get(key);
                 if (paramValue == null) {
                     // Config element has not been provided

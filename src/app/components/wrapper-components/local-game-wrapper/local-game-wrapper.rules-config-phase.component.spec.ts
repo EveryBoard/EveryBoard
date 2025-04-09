@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 
 import { MGPOptional } from '@everyboard/lib';
 
-import { ComponentTestUtils, expectValidRouting } from 'src/app/utils/tests/TestUtils.spec';
+import { ActivatedRouteStub, ComponentTestUtils, expectValidRouting } from 'src/app/utils/tests/TestUtils.spec';
 import { UserMocks } from 'src/app/domain/UserMocks.spec';
 import { P4Component } from 'src/app/games/p4/p4.component';
 import { ConnectedUserServiceMock } from 'src/app/services/tests/ConnectedUserService.spec';
@@ -81,7 +81,7 @@ describe('LocalGameWrapperComponent (rules config phase)', () => {
     }));
 
     it('should redirect to configuration if the provided config is nesting JSON objects', fakeAsync(async() => {
-        // Given a game configured with a config where all provided elements are valid, but some are missing
+        // Given a game configured with a config where a config element is nested JSON
         const config: MGPOptional<RulesConfig> = MGPOptional.of({
             width: 4,
             height: {
@@ -89,6 +89,27 @@ describe('LocalGameWrapperComponent (rules config phase)', () => {
             },
         } as unknown as RulesConfig /* we are lying to typescript for the test */);
         const state: P4State = P4Rules.get().getInitialState(P4Rules.get().getDefaultRulesConfig());
+
+        const router: Router = TestBed.inject(Router);
+        spyOn(router, 'navigate').and.resolveTo();
+
+        // When displaying it
+        await testUtils.setupState(state, { config });
+
+        // Then it should redirect to the configuration page
+        const expectedRoute: string[] = ['/local', 'P4', 'config'];
+        expectValidRouting(router, expectedRoute, LocalGameConfigurationComponent);
+    }));
+
+    it('should redirect to configuration if the provided config is not valid JSON', fakeAsync(async() => {
+        // Given a game configured with a config that is not parsable JSON
+        const config: MGPOptional<RulesConfig> = MGPOptional.of({
+            width: 4,
+            // height will be set manually in the route
+        });
+        const state: P4State = P4Rules.get().getInitialState(P4Rules.get().getDefaultRulesConfig());
+        const extraInvalidConfigElement: string = 'I\'m not Jason, not JSON :}}{';
+        TestBed.inject(ActivatedRouteStub).setParam('height', extraInvalidConfigElement);
 
         const router: Router = TestBed.inject(Router);
         spyOn(router, 'navigate').and.resolveTo();
