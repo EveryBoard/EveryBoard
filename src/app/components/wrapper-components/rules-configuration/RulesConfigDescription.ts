@@ -1,4 +1,4 @@
-import { JSONValue, MGPValidation, Set, Utils } from '@everyboard/lib';
+import { JSONPrimitive, MGPValidation, Set, Utils } from '@everyboard/lib';
 
 import { MGPValidator, MGPValidators } from 'src/app/utils/MGPValidator';
 import { ConfigDescriptionType, DefaultConfigDescription, EmptyRulesConfig, NamedRulesConfig, RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
@@ -33,7 +33,7 @@ export abstract class ConfigLine {
     }
 
     // Should check if the value is valid
-    public abstract checkValidity(value: JSONValue): MGPValidation;
+    public abstract checkValidity(value: JSONPrimitive): MGPValidation;
 
 }
 
@@ -41,12 +41,12 @@ export class NumberConfig extends ConfigLine {
 
     public constructor(defaultValue: number,
                        title: Localized,
-                       private readonly validator: MGPValidator)
+                       private readonly validator: MGPValidator<number>)
     {
         super(defaultValue, title);
     }
 
-    public checkValidity(value: JSONValue): MGPValidation {
+    public checkValidity(value: JSONPrimitive): MGPValidation {
         if (typeof(value) === 'number') {
             return this.validator(value);
         } else {
@@ -63,7 +63,7 @@ export class BooleanConfig extends ConfigLine {
         super(defaultValue, title);
     }
 
-    public checkValidity(value: JSONValue): MGPValidation {
+    public checkValidity(value: JSONPrimitive): MGPValidation {
         if (typeof(value) === 'boolean') {
             return MGPValidation.SUCCESS;
         } else {
@@ -121,7 +121,7 @@ export class RulesConfigDescription<R extends RulesConfig = EmptyRulesConfig> {
         return this.defaultConfigDescription.config[field].title();
     }
 
-    private getFieldValidity(field: string, value: JSONValue): MGPValidation {
+    private getFieldValidity(field: string, value: JSONPrimitive): MGPValidation {
         if (value == null) {
             // no value was provided, it is invalid
             return MGPValidation.failure($localize`This value is mandatory`);
@@ -134,11 +134,11 @@ export class RulesConfigDescription<R extends RulesConfig = EmptyRulesConfig> {
         return configLine.checkValidity(value);
     }
 
-    public isValid(field: string, value: JSONValue): boolean {
+    public isValid(field: string, value: JSONPrimitive): boolean {
         return this.getFieldValidity(field, value).isSuccess();
     }
 
-    public getValidityError(field: string, value: JSONValue): string {
+    public getValidityError(field: string, value: JSONPrimitive): string {
         return this.getFieldValidity(field, value).getReason();
     }
 

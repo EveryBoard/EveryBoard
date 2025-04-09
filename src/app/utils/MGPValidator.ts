@@ -1,10 +1,10 @@
-import { JSONValue, MGPValidation } from '@everyboard/lib';
+import { MGPValidation } from '@everyboard/lib';
 
-export type MGPValidator = (v: JSONValue) => MGPValidation;
+export type MGPValidator<T> = (v: T) => MGPValidation;
 
 export class MGPValidators {
 
-    public static range(min: number, max: number): MGPValidator {
+    public static range(min: number, max: number): MGPValidator<number> {
         return (value: number) => {
             if (value < min) {
                 return MGPValidation.failure($localize`${ value } is too small, the minimum is ${ min }`);

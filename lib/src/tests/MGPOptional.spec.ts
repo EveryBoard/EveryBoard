@@ -123,4 +123,16 @@ describe('MGPOptional', () => {
             expect(optional.map(addOne)).toEqual(MGPOptional.of(42));
         });
     });
+
+    it('should be able to get on an else branch of isAbsent', () => {
+        function f(v: MGPOptional<number>): number {
+            if (v.isAbsent()) {
+                return 0;
+            } else {
+                return v.get();
+            }
+        }
+        expect(f(MGPOptional.of(5))).toBe(5);
+    });
+
 });
