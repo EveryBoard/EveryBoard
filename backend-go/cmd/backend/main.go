@@ -60,7 +60,7 @@ func ReadConfiguration() {
 
 func SendChatMessages(connection *websocket.Conn, gameId string) {
 	everyboard.ApplyToMessagesOfGame(gameId, func (message *everyboard.Message) {
-		everyboard.SendMessage(connection, message)
+		everyboard.SendMessage(connection, "ChatMessage", everyboard.ChatMessage{ Message: *message })
 	})
 }
 
@@ -151,7 +151,7 @@ func HandleWebSocket(w http.ResponseWriter, r *http.Request) {
 						Content: content,
 					}
 					everyboard.AddChatMessage(gameId, &message)
-					subscriptionManager.Broadcast(kind, gameId, everyboard.ChatMessage{ Message: message })
+					subscriptionManager.Broadcast(kind, gameId, "ChatMessage", everyboard.ChatMessage{ Message: message })
 				}
 			}
 		default:

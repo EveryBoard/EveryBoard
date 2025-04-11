@@ -81,17 +81,18 @@ export class WebSocketManagerService {
                 console.log('WS: closed');
             };
             ws.onmessage = (ev: MessageEvent<unknown>): void => {
-                Utils.assert(typeof(ev.data) === 'string', `Received malformed WebSocket message: ${ev.data}`);
+                Utils.assert(typeof(ev.data) === 'string', `Received malformed WebSocket message (not a string): ${JSON.stringify(ev.data)}`);
                 const json: NonNullable<JSONValue> = Utils.getNonNullable(JSON.parse(ev.data as string));
                 console.log('%cWS: <<< ' + JSON.stringify(json), 'color: green');
                 Utils.assert(typeof(json) === 'object', // i.e., an array
-                             `Received malformed WebSocket message: ${json}`);
+                             `Received malformed WebSocket message (not an object): ${JSON.stringify(json)}`);
                 const tag: unknown = json[0]; // the tag is the first element of the array
                 const args: JSONValue = json[1]; // the arguments is an object being the second element
-                Utils.assert(tag != null && typeof(tag) === 'string', `Received malformed WebSocket message: ${json}`);
+                Utils.assert(tag != null && typeof(tag) === 'string',
+                             `Received malformed WebSocket message (missing tag): ${JSON.stringify(json)}`);
                 // each callback is associated to a tag
                 const callback: MGPOptional<Callback> = this.callbacks.get(tag as string);
-                Utils.assert(callback.isPresent(), `Received a message with no callback registered: ${json}`);
+                Utils.assert(callback.isPresent(), `Received a message with no callback registered: ${JSON.stringify(json)}`);
                 // NOTE: in case we need async for callbacks, use void to not wait for the async here.
                 callback.get()(new WebSocketMessage(tag as string, args));
             };

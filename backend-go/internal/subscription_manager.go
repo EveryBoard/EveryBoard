@@ -124,8 +124,8 @@ func (this *SubscriptionManager) SubscriptionOf(client *websocket.Conn) (Subscri
 }
 
 // Broadcast sends a message to all clients subscribed to kind, gameId
-func (this *SubscriptionManager) Broadcast(kind SubscriptionKind, gameId string, message interface{}) {
+func (this *SubscriptionManager) Broadcast(kind SubscriptionKind, gameId string, messageType string, messageData interface{}) {
 	for connection := range(this.SubscriptionsTo(kind, gameId)) {
-		SendMessage(connection, message)
+		SendMessage(connection, messageType, messageData)
 	}
 }
