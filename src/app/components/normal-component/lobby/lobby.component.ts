@@ -47,6 +47,7 @@ export class LobbyComponent implements OnInit, OnDestroy {
     public async ngOnInit(): Promise<void> {
         this.activeConfigRoomsSubscription = this.activeConfigRoomsService.subscribe(
             (rooms: MGPMap<string, ConfigRoom>) => {
+                console.log('GOT ROOMS')
                 this.activeConfigRooms = rooms;
             });
         this.currentGameSubscription = this.currentGameService.subscribeToCurrentGame(
@@ -69,6 +70,7 @@ export class LobbyComponent implements OnInit, OnDestroy {
     public getActiveConfigRooms(): WithId<ConfigRoom>[] {
         // TODO: either generalize this pattern in library code (if it appears again), or don't use mgpmap in activeConfigRoomService?
         const all: WithId<ConfigRoom>[] = [];
+        return all; // TODO: just remove this return and check iterability of config rooms
         for (const [id, data] of this.activeConfigRooms) {
             all.push({ id, data });
         }

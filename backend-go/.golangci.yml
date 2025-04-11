@@ -1,9 +1,0 @@
-linters:
-  enable:
-    - golint
-    - govet
-    - errcheck
-    - staticcheck
-    - ineffassign
-    - deadcode
-

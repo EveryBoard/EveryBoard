@@ -76,7 +76,8 @@ func (this *SubscriptionManager) Unsubscribe(client *websocket.Conn) {
 	this.lock.Lock()
 	defer this.lock.Unlock()
 
-	if subscription, ok := this.clientToGame[client]; ok {
+	subscription, exists := this.clientToGame[client];
+	if exists {
 		clients, exists := this.gameToClients[subscription];
 		if exists {
 			delete(clients, client)
@@ -96,11 +97,11 @@ func (this *SubscriptionManager) Unsubscribe(client *websocket.Conn) {
 }
 
 // SubscriptionsTo returns the clients subscribed to the game
-func (this *SubscriptionManager) SubscriptionsTo(gameID string, kind SubscriptionKind) Set[*websocket.Conn] {
+func (this *SubscriptionManager) SubscriptionsTo(kind SubscriptionKind, gameId string) Set[*websocket.Conn] {
 	this.lock.RLock()
 	defer this.lock.RUnlock()
 
-	subscriptionAndGameId := SubscriptionKindAndGameId{kind, gameID}
+	subscriptionAndGameId := SubscriptionKindAndGameId{kind, gameId}
 
 	return this.gameToClients[subscriptionAndGameId]
 }
@@ -120,4 +121,11 @@ func (this *SubscriptionManager) SubscriptionOf(client *websocket.Conn) (Subscri
 
 	sub, exists := this.clientToGame[client]
 	return sub.kind, sub.gameID, exists
+}
+
+// Broadcast sends a message to all clients subscribed to kind, gameId
+func (this *SubscriptionManager) Broadcast(kind SubscriptionKind, gameId string, message interface{}) {
+	for connection := range(this.SubscriptionsTo(kind, gameId)) {
+		SendMessage(connection, message)
+	}
 }
