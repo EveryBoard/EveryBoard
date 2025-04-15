@@ -6,7 +6,6 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"time"
 
 	"github.com/gorilla/websocket"
 
@@ -58,17 +57,8 @@ func ReadConfiguration() {
 	}
 }
 
-func SendChatMessages(connection *websocket.Conn, gameId string) {
-	everyboard.ApplyToMessagesOfGame(gameId, func (message *everyboard.Message) {
-		everyboard.SendMessage(connection, "ChatMessage", everyboard.ChatMessage{ Message: *message })
-	})
-}
 
-func Now() int64 {
-	return time.Now().Unix()
-}
-
-func GetStringData(messageData map[string]interface{}, key string) (string, error) {
+func GetStringMessageArgument(messageData map[string]interface{}, key string) (string, error) {
 	v, ok := messageData[key]
 	if ok == false {
 		return "", fmt.Errorf("Missing data")
@@ -94,7 +84,7 @@ func HandleWebSocket(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Invalid token", http.StatusUnauthorized)
 		return
 	}
-	minimalUser := everyboard.MinimalUser{
+	minimalUser := &everyboard.MinimalUser{
 		Id: uid,
 		Name: user.Username,
 	}
@@ -105,6 +95,8 @@ func HandleWebSocket(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	defer connection.Close()
+
+	handlers := everyboard.NewHandlers(connection, subscriptionManager, minimalUser)
 
 	for {
 		_, msg, err := connection.ReadMessage()
@@ -127,32 +119,22 @@ func HandleWebSocket(w http.ResponseWriter, r *http.Request) {
 		}
 		switch (messageType) {
 		case "SubscribeLobby":
-			if subscriptionManager.IsSubscribed(uid) {
-				everyboard.SendError(connection, everyboard.AlreadySubscribed)
-			} else {
-				subscriptionManager.Subscribe(connection, uid, "lobby", everyboard.Lobby)
-				SendChatMessages(connection, "lobby")
-				// TODO: send active rooms
-			}
+			handlers.SubscribeToLobby()
 		case "Unsubscribe":
 			subscriptionManager.Unsubscribe(connection)
 		case "ChatSend":
-			content, err := GetStringData(messageData, "message")
+			content, err := GetStringMessageArgument(messageData, "message")
 			if err != nil {
 				everyboard.SendError(connection, everyboard.UnknownMessage)
 			} else {
-				kind, gameId, subscribed := subscriptionManager.SubscriptionOf(connection)
-				if subscribed == false {
-					everyboard.SendError(connection, everyboard.UnknownMessage)
-				} else {
-					message := everyboard.Message{
-						Sender: minimalUser,
-						Timestamp: Now(),
-						Content: content,
-					}
-					everyboard.AddChatMessage(gameId, &message)
-					subscriptionManager.Broadcast(kind, gameId, "ChatMessage", everyboard.ChatMessage{ Message: message })
-				}
+				handlers.ChatSend(content)
+			}
+		case "Create":
+			gameName, err := GetStringMessageArgument(messageData, "gameName")
+			if err != nil {
+				everyboard.SendError(connection, everyboard.UnknownMessage)
+			} else {
+				handlers.CreateGame(gameName)
 			}
 		default:
 			everyboard.SendError(connection, everyboard.UnknownMessage)

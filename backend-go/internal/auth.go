@@ -80,7 +80,6 @@ func VerifyTokenAndGetUserFromHeader(r *http.Request) (string, *User, error) {
 		uid = sub
 	}
 
-	// TODO: most of the time, we likely don't need the user document, maybe only fetch it when needed? Also, we could cache them as the username cannot change
 	user, err := FetchUserDocument(uid)
 	return uid, user, err
 }

@@ -9,9 +9,9 @@ import (
 type SubscriptionKind int
 
 const (
-	Lobby SubscriptionKind = iota
-	ConfigRoom
-	Game
+	SubscriptionToLobby SubscriptionKind = iota
+	SubscriptionToConfigRoom
+	SubscriptionToGame
 )
 
 type SubscriptionKindAndGameId struct {

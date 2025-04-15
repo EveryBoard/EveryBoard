@@ -32,23 +32,3 @@ func DecodeIncomingMessage(message []byte) (string, map[string]interface{}, erro
 		return "", nil, fmt.Errorf("Improperly formatted message: %v", message)
 	}
 }
-
-type SubscribeConfigRoom struct {
-	GameID string `json:"gameId"`
-}
-
-type SubscribeGame struct {
-	GameID string `json:"gameId"`
-}
-
-type SubscribeLobby struct {}
-
-type Unsubscribe struct {}
-
-type ChatSend struct {
-	Message string `json:"message"`
-}
-
-type Create struct {
-	GameName string `json:"gameName"`
-}
