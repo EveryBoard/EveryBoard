@@ -49,28 +49,46 @@ func InitDatabase(dbPath string) {
 	if err != nil {
 		log.Fatal("Cannot initialize DB: %v", err)
 	}
+
+	err = db.AutoMigrate(&Elo{})
+	if err != nil {
+		log.Fatal("Cannot initialize DB: %v", err)
+	}
 }
 
 func GetElo(user *MinimalUser, gameName string) (*Elo, error) {
-	var entry *Elo
-	result := db.First(entry, "user = ? AND game_name = ?", user, gameName)
+	var entry Elo
+	result := db.First(&entry, "user_id = ? AND game_name = ?", user.ID, gameName)
 
 	if errors.Is(result.Error, gorm.ErrRecordNotFound) {
-		entry = &Elo{
+		entry = Elo{
 			User: *user,
 			GameName: gameName,
 		}
-		result = db.Create(entry)
+		result = db.Create(&entry)
 	}
 
-	return entry, result.Error
+	return &entry, result.Error
+}
+
+// Retrieve a config room. Returns nil without error if there is none.
+func GetConfigRoom(gameId GameID) (*ConfigRoom, error) {
+	var configRoom ConfigRoom
+	result := db.First(&configRoom, "game_id = ?", gameId)
+
+	if errors.Is(result.Error, gorm.ErrRecordNotFound) {
+		return nil, nil
+	}
+	return &configRoom, result.Error
 }
 
 func CreateConfigRoom(creator *MinimalUser, gameName string) (*ConfigRoom, error) {
+	log.Println("CreateConfigRoom")
 	creatorElo, error := GetElo(creator, gameName)
 	if error != nil {
 		return nil, error
 	}
+	log.Println("CreateConfigRoom: after elo")
 	configRoom := ConfigRoom{
 		Creator: *creator,
 		CreatorElo: creatorElo.CurrentElo,
@@ -84,8 +102,36 @@ func CreateConfigRoom(creator *MinimalUser, gameName string) (*ConfigRoom, error
 		GameName: gameName,
 	}
 
-	result := db.Create(configRoom)
+	result := db.Create(&configRoom)
 	return &configRoom, result.Error
+}
+
+func ApplyToQueryResult[T interface{}](tx *gorm.DB, action func(*T) error) error {
+	rows, err := tx.Rows()
+	if err != nil {
+		return err
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var element T
+		err := db.ScanRows(rows, &element)
+		if err != nil {
+			return err
+		}
+
+		err = action(&element)
+		if err != nil {
+			return err
+		}
+	}
+
+	return rows.Err()
+}
+
+func ApplyToConfigRooms(action func(*ConfigRoom) error) error {
+	query := db.Model(&ConfigRoom{}).Where("status != ?", StatusFinished)
+	return ApplyToQueryResult(query, action)
 }
 
 func AddChatMessage(gameId GameID, message *Message) error {
@@ -94,33 +140,20 @@ func AddChatMessage(gameId GameID, message *Message) error {
 	return result.Error
 }
 
-func ApplyToMessagesOfGame(gameId string, action func(*Message)) error {
-	id, err := DecodeId(gameId)
-	if err != nil {
-		return err
-	}
+func ApplyToMessagesOfGame(gameId GameID, action func(*Message) error) error {
+	query := db.Model(&Message{}).Where("game_id = ?", gameId)
+	return ApplyToQueryResult(query, action)
+}
 
-	rows, err := db.Model(&ChatMessage{}).Where("game_id = ?", id).Rows()
-	if err != nil {
-		return err
-	}
-	defer rows.Close()
+func AddCandidate(gameId GameID, user *MinimalUser) error {
+	result := db.Create(&Candidate{
+		GameID: gameId,
+		User: *user,
+	})
+	return result.Error
 
-	for rows.Next() {
-		var message Message
-		err := db.ScanRows(rows, &message)
-		if err != nil {
-			return err
-		}
-
-		// Apply the action to the message
-		action(&message)
-	}
-
-	err = rows.Err()
-	if err != nil {
-		return err
-	}
-
-	return nil
+}
+func ApplyToCandidates(gameId GameID, action func(*Candidate) error) error {
+	query := db.Model(&Candidate{}).Where("game_id = ?", gameId)
+	return ApplyToQueryResult(query, action)
 }

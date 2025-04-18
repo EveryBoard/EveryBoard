@@ -42,11 +42,11 @@ export class MGPMap<K extends NonNullable<Comparable>, V extends NonNullable<unk
         }
     }
 
-    public forEach(callback: (item: {key: K, value: V}) => void): void {
-        for (const element of this.map) {
-            callback(element);
-        }
-    }
+    // public forEach(callback: (item: {key: K, value: V}) => void): void {
+    //     for (const element of this.map) {
+    //         callback(element);
+    //     }
+    // }
 
     // TODO: remove forEach and use this!
     [Symbol.iterator](): IterableIterator<[K, V]> {

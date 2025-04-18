@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"io"
 	"log"
 	"net/http"
@@ -58,18 +57,6 @@ func ReadConfiguration() {
 }
 
 
-func GetStringMessageArgument(messageData map[string]interface{}, key string) (string, error) {
-	v, ok := messageData[key]
-	if ok == false {
-		return "", fmt.Errorf("Missing data")
-	}
-	asString, ok := v.(string)
-	if ok == false {
-		return "", fmt.Errorf("Invalid data")
-	}
-	return asString, nil
-}
-
 var upgrader = websocket.Upgrader{
 	CheckOrigin:  func(r *http.Request) bool { return true },
 	Subprotocols: []string{"access_token"},
@@ -117,27 +104,9 @@ func HandleWebSocket(w http.ResponseWriter, r *http.Request) {
 			everyboard.SendError(connection, everyboard.ErrorUnknownMessage)
 			continue
 		}
-		switch (messageType) {
-		case "SubscribeLobby":
-			handlers.SubscribeToLobby()
-		case "Unsubscribe":
-			subscriptionManager.Unsubscribe(connection)
-		case "ChatSend":
-			content, err := GetStringMessageArgument(messageData, "message")
-			if err != nil {
-				everyboard.SendError(connection, everyboard.ErrorUnknownMessage)
-			} else {
-				handlers.ChatSend(content)
-			}
-		case "Create":
-			gameName, err := GetStringMessageArgument(messageData, "gameName")
-			if err != nil {
-				everyboard.SendError(connection, everyboard.ErrorUnknownMessage)
-			} else {
-				handlers.CreateGame(gameName)
-			}
-		default:
-			everyboard.SendError(connection, everyboard.ErrorUnknownMessage)
+		err = handlers.Handle(messageType, messageData)
+		if err != nil {
+			log.Printf("Error when handling %v (%v) message: %v", messageType, messageData, err)
 		}
 
 	}
@@ -147,6 +116,7 @@ func main() {
 	ReadConfiguration()
 	everyboard.InitFirebase(useEmulator, serviceAccountFile, projectId)
 	everyboard.InitDatabase("everyboard.db")
+	everyboard.InitIdEncoder()
 	subscriptionManager = everyboard.NewSubscriptionManager()
 	http.HandleFunc("/ws", HandleWebSocket)
 	log.Println("Listening on", listenAddr)

@@ -8,25 +8,20 @@ import (
 )
 
 type OutgoingMessage interface {
-	MarshalJSON() ([]byte, error)
 	Tag() string
 }
 
 type Error string
 
 const (
-	// TODO: use ErrorMessage
 	ErrorAlreadySubscribed Error = "already-subscribed"
+	ErrorNotSubscribed     Error = "not-subscribed"
 	ErrorUnknownMessage    Error = "unknown-message"
 	ErrorGameDoesNotExist  Error = "game-does-not-exist"
 )
 
 type ErrorMessage struct {
 	Reason Error `json:"reason"`
-}
-
-func (m ErrorMessage) MarshalJSON() ([]byte, error) {
-	return json.Marshal([]any{m.Tag(), m})
 }
 
 func (m ErrorMessage) Tag() string {
@@ -37,10 +32,6 @@ type ChatMessage struct {
 	Message Message `json:"message"`
 }
 
-func (m ChatMessage) MarshalJSON() ([]byte, error) {
-	return json.Marshal([]any{m.Tag(), m})
-}
-
 func (m ChatMessage) Tag() string {
 	return "ChatMessage"
 }
@@ -49,37 +40,46 @@ type GameCreatedMessage struct {
 	GameId string `json:"gameId"`
 }
 
-func (m GameCreatedMessage) MarshalJSON() ([]byte, error) {
-	return json.Marshal([]any{m.Tag(), m})
-}
-
 func (m GameCreatedMessage) Tag() string {
 	return "GameCreated"
 }
 
 type ConfigRoomUpdateMessage struct {
-	GameId string `json:"gameId"`
+	GameID     string     `json:"gameId"`
 	ConfigRoom ConfigRoom `json:"configRoom"`
-}
-
-func (m ConfigRoomUpdateMessage) MarshalJSON() ([]byte, error) {
-	return json.Marshal([]any{m.Tag(), m})
 }
 
 func (m ConfigRoomUpdateMessage) Tag() string {
 	return "ConfigRoomUpdate"
 }
 
-func SendMessage[T OutgoingMessage](connection *websocket.Conn, msg T) error {
-	toSend, err := msg.MarshalJSON()
+type CandidateJoinedMessage struct {
+	Candidate MinimalUser `json:"candidate"`
+}
+
+func (m CandidateJoinedMessage) Tag() string {
+	return "CandidateJoined"
+}
+
+type CandidateLeftMessage struct {
+	Candidate MinimalUser `json:"candidate"`
+}
+
+func (m CandidateLeftMessage) Tag() string {
+	return "CandidateLeft"
+}
+
+func SendMessage(connection *websocket.Conn, msg OutgoingMessage) error {
+	log.Println("Marshaling", msg)
+	toSend, err := json.Marshal([]any{msg.Tag(), msg})
 	if err != nil {
 		return err
 	}
 
-	log.Printf(">>> %v %v", string(toSend))
+	log.Printf(">>> %v", string(toSend))
 	return connection.WriteMessage(websocket.TextMessage, toSend)
 }
 
 func SendError(connection *websocket.Conn, reason Error) error {
-	return SendMessage(connection, ErrorMessage{ Reason: reason })
+	return SendMessage(connection, ErrorMessage{Reason: reason})
 }
