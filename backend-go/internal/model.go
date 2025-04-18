@@ -6,22 +6,24 @@ import (
 )
 
 type MinimalUser struct {
-	Id   string `json:"id"`
+	ID   string `json:"id"`
 	Name string `json:"name"`
 }
 
 type Message struct {
-	Sender    MinimalUser `json:"sender"`
-	Timestamp int64       `json:"timestamp"`
-	Content   string      `json:"content"`
+	ID        uint64      `gorm:"primaryKey;autoIncrement" json:"-"`
+	GameID    GameID      `gorm:"index;not null" json:"-"`
+	Sender    MinimalUser `gorm:"embedded;not null" json:"sender"`
+	Timestamp int64       `gorm:"not null" json:"timestamp"`
+	Content   string      `gorm:"not null" json:"content"`
 }
 
 type FirstPlayer string
 
 const (
-	Random       FirstPlayer = "RANDOM"
-	ChosenPlayer FirstPlayer = "CHOSEN_PLAYER"
-	Creator      FirstPlayer = "CREATOR"
+	FirstPlayerRandom       FirstPlayer = "RANDOM"
+	FirstPlayerChosenPlayer FirstPlayer = "CHOSEN_PLAYER"
+	FirstPlayerCreator      FirstPlayer = "CREATOR"
 )
 
 func (fp *FirstPlayer) UnmarshalJSON(data []byte) error {
@@ -41,10 +43,10 @@ func (fp *FirstPlayer) UnmarshalJSON(data []byte) error {
 type Status string
 
 const (
-	Created        Status = "Created"
-	ConfigProposed Status = "ConfigProposed"
-	Started        Status = "Started"
-	Finished       Status = "Finished"
+	StatusCreated        Status = "Created"
+	StatusConfigProposed Status = "ConfigProposed"
+	StatusStarted        Status = "Started"
+	StatusFinished       Status = "Finished"
 )
 
 func (status *Status) UnmarshalJSON(data []byte) error {
@@ -64,10 +66,13 @@ func (status *Status) UnmarshalJSON(data []byte) error {
 type GameType string
 
 const (
-	Standard GameType = "STANDARD"
-	Blitz    GameType = "BLITZ"
-	Custom   GameType = "CUSTOM"
+	GameTypeStandard GameType = "STANDARD"
+	GameTypeBlitz    GameType = "BLITZ"
+	GameTypeCustom   GameType = "CUSTOM"
 )
+
+const StandardMoveDuration = 2 * 60
+const StandardGameDuration = 30 * 60
 
 func (gt *GameType) UnmarshalJSON(data []byte) error {
 	var s string
@@ -83,15 +88,25 @@ func (gt *GameType) UnmarshalJSON(data []byte) error {
 	}
 }
 
+type Elo struct {
+	ID          uint64      `gorm:"primaryKey;autoincrement" json:"-"`
+	User        MinimalUser `gorm:"embedded;not null" json:"-"`
+	GameName    string      `gorm:"not null" json:"-"`
+	CurrentElo  float64     `gorm:"not null" json:"currentElo"`
+	GamesPlayed uint        `goorm:"not null" json:"gamesPlayed"`
+}
+
 type ConfigRoom struct {
-	Creator             MinimalUser     `json:"creator"`
-	CreatorElo          float64         `json:"creatorElo"` // TODO: get rid of this here
-	ChosenOpponent      *MinimalUser    `json:"chosenOpponent,omitempty"`
-	Status              Status          `json:"partStatus"`
-	FirstPlayer         FirstPlayer     `json:"firstPlayer"`
-	GameType            GameType        `json:"partType"`
-	MaximalMoveDuration int             `json:"maximalMoveDuration"`
-	TotalPartDuration   int             `json:"totalPartDuration"`
-	RulesConfig         json.RawMessage `json:"rulesConfig"`
-	GameName            string          `json:"gameName"`
+	ID                  GameID       `gorm:"primaryKey;autoIncrement" json:"-"`
+	Creator             MinimalUser  `gorm:"embedded;not null" json:"creator"`
+	CreatorElo          float64      `gorm:"not null" json:"creatorElo"`
+	ChosenOpponent      *MinimalUser `gorm:"embedded" json:"chosenOpponent,omitempty"`
+	Status              Status       `gorm:"not null" json:"partStatus"`
+	FirstPlayer         FirstPlayer  `gorm:"not null" json"firstPlayer"`
+	GameType            GameType     `gorm:"not null" json:"partType"`
+	MaximalMoveDuration int          `gorm:"not null" json:"maximalMoveDuration"`
+	// TODO: rename json to totalGameDuration
+	TotalGameDuration int             `gorm:"not null" json:"totalPartDuration"`
+	RulesConfig       json.RawMessage `json:"rulesConfig"`
+	GameName          string          `gorm:"not null" json:"gameName"`
 }

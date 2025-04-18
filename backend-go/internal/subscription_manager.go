@@ -16,13 +16,7 @@ const (
 
 type SubscriptionKindAndGameId struct {
 	kind   SubscriptionKind
-	gameID string
-}
-
-type Set[T comparable] map[T]struct{}
-
-func (this Set[T]) Add(value T) {
-	this[value] = struct{}{}
+	gameID GameID
 }
 
 type SubscriptionManager struct {
@@ -51,7 +45,7 @@ func NewSubscriptionManager() *SubscriptionManager {
 
 // Subscribe subscribes a client and its corresponding user to a game
 // Assumes that the client is not yet subscribed to a game
-func (this *SubscriptionManager) Subscribe(client *websocket.Conn, user string, gameID string, kind SubscriptionKind) {
+func (this *SubscriptionManager) Subscribe(client *websocket.Conn, user string, gameID GameID, kind SubscriptionKind) {
 	this.lock.Lock()
 	defer this.lock.Unlock()
 
@@ -65,7 +59,8 @@ func (this *SubscriptionManager) Subscribe(client *websocket.Conn, user string, 
 		this.gameToClients[subscriptionKindAndGameId] = make(Set[*websocket.Conn])
 	}
 	// Add the value to the set
-	this.gameToClients[subscriptionKindAndGameId].Add(client)
+	set := this.gameToClients[subscriptionKindAndGameId]
+	set.Add(client)
 
 	this.clientToUser[client] = user
 	this.userToClient[user] = client
@@ -97,7 +92,7 @@ func (this *SubscriptionManager) Unsubscribe(client *websocket.Conn) {
 }
 
 // SubscriptionsTo returns the clients subscribed to the game
-func (this *SubscriptionManager) SubscriptionsTo(kind SubscriptionKind, gameId string) Set[*websocket.Conn] {
+func (this *SubscriptionManager) SubscriptionsTo(kind SubscriptionKind, gameId GameID) Set[*websocket.Conn] {
 	this.lock.RLock()
 	defer this.lock.RUnlock()
 
@@ -114,8 +109,8 @@ func (this *SubscriptionManager) IsSubscribed(user string) bool {
 	return exists
 }
 
-// SubscriptionOf returns the subscription type and game ID of a client, as well as whethere there exists one.
-func (this *SubscriptionManager) SubscriptionOf(client *websocket.Conn) (SubscriptionKind, string, bool) {
+// SubscriptionOf returns the subscription type and game ID of a client, as well as whether there exists one.
+func (this *SubscriptionManager) SubscriptionOf(client *websocket.Conn) (SubscriptionKind, GameID, bool) {
 	this.lock.Lock()
 	defer this.lock.Unlock()
 
@@ -124,8 +119,12 @@ func (this *SubscriptionManager) SubscriptionOf(client *websocket.Conn) (Subscri
 }
 
 // Broadcast sends a message to all clients subscribed to kind, gameId
-func (this *SubscriptionManager) Broadcast(kind SubscriptionKind, gameId string, messageType string, messageData interface{}) {
+func (this *SubscriptionManager) Broadcast(kind SubscriptionKind, gameId GameID, msg OutgoingMessage) error {
 	for connection := range(this.SubscriptionsTo(kind, gameId)) {
-		SendMessage(connection, messageType, messageData)
+		err := SendMessage(connection, msg)
+		if err != nil {
+			return err
+		}
 	}
+	return nil
 }

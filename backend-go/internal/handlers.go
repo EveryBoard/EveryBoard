@@ -25,45 +25,61 @@ func NewHandlers(connection *websocket.Conn, subscriptionManager *SubscriptionMa
 	}
 }
 
-func (h *Handlers) SendChatMessages(gameId string) {
-	ApplyToMessagesOfGame(gameId, func (message *Message) {
-		SendMessage(h.connection, "ChatMessage", ChatMessage{ Message: *message })
+func (h *Handlers) SendChatMessages(gameId string) error {
+	return ApplyToMessagesOfGame(gameId, func (message *Message) {
+		SendMessage(h.connection, ChatMessage{ Message: *message })
 	})
 }
 
-func (h *Handlers) SubscribeToLobby() {
-	uid := h.user.Id
+func (h *Handlers) SubscribeToLobby() error {
+	uid := h.user.ID
 	if h.subscriptionManager.IsSubscribed(uid) {
-		SendError(h.connection, AlreadySubscribed)
+		return SendError(h.connection, ErrorAlreadySubscribed)
 	} else {
-		h.subscriptionManager.Subscribe(h.connection, uid, "lobby", Lobby)
-		h.SendChatMessages("lobby")
+		h.subscriptionManager.Subscribe(h.connection, uid, GameIDLobby, SubscriptionToLobby)
+		return h.SendChatMessages("lobby")
 		// TODO: send active rooms
 	}
 }
 
-func (h *Handlers) ChatSend(content string) {
+func (h *Handlers) ChatSend(content string) error {
 	kind, gameId, subscribed := h.subscriptionManager.SubscriptionOf(h.connection)
 	if subscribed == false {
-		SendError(h.connection, UnknownMessage)
+		return SendError(h.connection, ErrorUnknownMessage)
 	} else {
 		message := Message{
 			Sender: *h.user,
 			Timestamp: Now(),
 			Content: content,
 		}
-		AddChatMessage(gameId, &message)
-		h.subscriptionManager.Broadcast(kind, gameId, "ChatMessage", ChatMessage{ Message: message })
+		err := AddChatMessage(gameId, &message)
+		if err != nil {
+			return err
+		}
+		return h.subscriptionManager.Broadcast(kind, gameId, ChatMessage{ Message: message })
 	}
 }
 
-func (h *Handlers) CreateGame(connection *websocket.Conn, subscriptionManager *SubscriptionManager, gameName string) {
+func (h *Handlers) CreateGame(gameName string) error {
 	if !GameExists(gameName) {
-		SendError(connection, GameDoesNotExist)
+		return SendError(h.connection, ErrorGameDoesNotExist)
 	} else {
-		gameId, configRoom := CreateConfigRoom()
+		configRoom, err := CreateConfigRoom(h.user, gameName)
+		if err != nil {
+			return err
+		}
+		gameId, err := EncodeId(configRoom.ID)
+		if err != nil {
+			return err
+		}
+
 		// Send the id to the creator, and the config room to the lobby observers
-		SendMessage(h.connection, "GameCreated", GameCreatedMessage{ GameId: gameId })
-		h.subscriptionManager.Broadcast(Lobby, LobbyId, ConfigRoomUpdate{ GameId: gameId, ConfigRoom: configRoom })
+		err = SendMessage(h.connection, GameCreatedMessage{ GameId: gameId })
+		if err != nil {
+			return err
+		}
+
+		return h.subscriptionManager.Broadcast(SubscriptionToLobby, GameIDLobby,
+			ConfigRoomUpdateMessage{ GameId: gameId, ConfigRoom: *configRoom })
 	}
 }

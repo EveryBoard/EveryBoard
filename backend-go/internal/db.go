@@ -2,27 +2,11 @@ package internal
 
 import (
 	"log"
+	"errors"
 
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 )
-
-type DBChatMessage struct {
-	ID         uint64 `gorm:"primaryKey;autoIncrement"`
-	GameID     uint64 `gorm:"index;not null"`
-	AuthorID   string `gorm:"not null"`
-	AuthorName string `gorm:"not null"`
-	Timestamp  int64  `gorm:"not null"`
-	Content    string `gorm:"not null"`
-}
-
-func (this *DBChatMessage) ToMessage() *Message {
-	return &Message{
-		Sender:    MinimalUser{Id: this.AuthorID, Name: this.AuthorName},
-		Timestamp: this.Timestamp,
-		Content:   this.Content,
-	}
-}
 
 // The connection to the db itself
 var db *gorm.DB
@@ -32,25 +16,81 @@ func InitDatabase(dbPath string) {
 
 	db, err = gorm.Open(sqlite.Open(dbPath), &gorm.Config{})
 	if err != nil {
-		log.Fatal("Failed to connect database:", err)
+		log.Fatalf("Failed to connect to DB: %v", err)
 	}
 
-	db.AutoMigrate(&DBChatMessage{})
+	err = db.AutoMigrate(&ConfigRoom{})
+	if err != nil {
+		log.Fatal("Cannot initialize DB: %v", err)
+	}
+
+	// Create first config room, which is actually the lobby
+	var lobby ConfigRoom
+	result := db.First(&lobby, "id = ?", GameIDLobby)
+
+	if errors.Is(result.Error, gorm.ErrRecordNotFound) {
+		lobby = ConfigRoom{
+			ID: GameIDLobby,
+			Creator: MinimalUser{ Name: "", ID: "" },
+			CreatorElo: 0,
+			Status: StatusFinished,
+			FirstPlayer: FirstPlayerRandom,
+			GameType: GameTypeStandard,
+			RulesConfig: nil,
+			GameName: "lobby",
+		}
+		result := db.Create(&lobby)
+		if result.Error != nil {
+			log.Fatalf("Cannot initialize DB: %v", err)
+		}
+	}
+
+	err = db.AutoMigrate(&Message{})
+	if err != nil {
+		log.Fatal("Cannot initialize DB: %v", err)
+	}
 }
 
-func AddChatMessage(gameId string, message *Message) error {
-	id, err := DecodeId(gameId)
-	if err != nil {
-		return err
+func GetElo(user *MinimalUser, gameName string) (*Elo, error) {
+	var entry *Elo
+	result := db.First(entry, "user = ? AND game_name = ?", user, gameName)
+
+	if errors.Is(result.Error, gorm.ErrRecordNotFound) {
+		entry = &Elo{
+			User: *user,
+			GameName: gameName,
+		}
+		result = db.Create(entry)
 	}
 
-	result := db.Create(&DBChatMessage{
-		GameID:     id,
-		AuthorID:   message.Sender.Id,
-		AuthorName: message.Sender.Name,
-		Timestamp:  message.Timestamp,
-		Content:    message.Content,
-	})
+	return entry, result.Error
+}
+
+func CreateConfigRoom(creator *MinimalUser, gameName string) (*ConfigRoom, error) {
+	creatorElo, error := GetElo(creator, gameName)
+	if error != nil {
+		return nil, error
+	}
+	configRoom := ConfigRoom{
+		Creator: *creator,
+		CreatorElo: creatorElo.CurrentElo,
+		FirstPlayer: FirstPlayerRandom,
+		ChosenOpponent: nil,
+		Status: StatusCreated,
+		GameType: GameTypeStandard,
+		MaximalMoveDuration: StandardMoveDuration,
+		TotalGameDuration: StandardGameDuration,
+		RulesConfig: nil,
+		GameName: gameName,
+	}
+
+	result := db.Create(configRoom)
+	return &configRoom, result.Error
+}
+
+func AddChatMessage(gameId GameID, message *Message) error {
+	message.GameID = gameId
+	result := db.Create(message)
 	return result.Error
 }
 
@@ -60,21 +100,21 @@ func ApplyToMessagesOfGame(gameId string, action func(*Message)) error {
 		return err
 	}
 
-	rows, err := db.Model(&DBChatMessage{}).Where("game_id = ?", id).Rows()
+	rows, err := db.Model(&ChatMessage{}).Where("game_id = ?", id).Rows()
 	if err != nil {
 		return err
 	}
 	defer rows.Close()
 
 	for rows.Next() {
-		var message DBChatMessage
+		var message Message
 		err := db.ScanRows(rows, &message)
 		if err != nil {
 			return err
 		}
 
 		// Apply the action to the message
-		action(message.ToMessage())
+		action(&message)
 	}
 
 	err = rows.Err()

@@ -85,7 +85,7 @@ func HandleWebSocket(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	minimalUser := &everyboard.MinimalUser{
-		Id: uid,
+		ID: uid,
 		Name: user.Username,
 	}
 
@@ -114,7 +114,7 @@ func HandleWebSocket(w http.ResponseWriter, r *http.Request) {
 		log.Printf("<<< [%v] %v", user.Username, messageType)
 		if err != nil {
 			log.Printf("Cannot decode: %v", err)
-			everyboard.SendError(connection, everyboard.UnknownMessage)
+			everyboard.SendError(connection, everyboard.ErrorUnknownMessage)
 			continue
 		}
 		switch (messageType) {
@@ -125,19 +125,19 @@ func HandleWebSocket(w http.ResponseWriter, r *http.Request) {
 		case "ChatSend":
 			content, err := GetStringMessageArgument(messageData, "message")
 			if err != nil {
-				everyboard.SendError(connection, everyboard.UnknownMessage)
+				everyboard.SendError(connection, everyboard.ErrorUnknownMessage)
 			} else {
 				handlers.ChatSend(content)
 			}
 		case "Create":
 			gameName, err := GetStringMessageArgument(messageData, "gameName")
 			if err != nil {
-				everyboard.SendError(connection, everyboard.UnknownMessage)
+				everyboard.SendError(connection, everyboard.ErrorUnknownMessage)
 			} else {
 				handlers.CreateGame(gameName)
 			}
 		default:
-			everyboard.SendError(connection, everyboard.UnknownMessage)
+			everyboard.SendError(connection, everyboard.ErrorUnknownMessage)
 		}
 
 	}

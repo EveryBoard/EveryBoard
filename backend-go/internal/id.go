@@ -6,10 +6,12 @@ import (
 	"github.com/sqids/sqids-go"
 )
 
+type GameID uint64
+
 // Encoder for game ids, so that they are easily human readable
 var idEncoder *sqids.Sqids
 
-const IdLobby = 0
+const GameIDLobby = 1
 
 func InitIdEncoder() {
 	var err error
@@ -21,23 +23,23 @@ func InitIdEncoder() {
 	}
 }
 
-func EncodeId(gameId uint64) (string, error) {
-	if gameId == IdLobby {
+func EncodeId(gameId GameID) (string, error) {
+	if gameId == GameIDLobby {
 		return "lobby", nil
 	} else {
-		id, error := idEncoder.Encode([]uint64{gameId})
+		id, error := idEncoder.Encode([]uint64{uint64(gameId)})
 		return id, error
 	}
 }
 
-func DecodeId(gameId string) (uint64, error) {
+func DecodeId(gameId string) (GameID, error) {
 	if gameId == "lobby" {
-		return IdLobby, nil
+		return GameIDLobby, nil
 	} else {
 		ids := idEncoder.Decode(gameId)
 		if len(ids) != 1 {
 			return 0, fmt.Errorf("Invalid id: %v", gameId)
 		}
-		return ids[0], nil
+		return GameID(ids[0]), nil
 	}
 }
