@@ -5,9 +5,17 @@ import (
 	"fmt"
 )
 
+type ConfigProposal struct {
+	GameType     GameType        `json:"partType"`
+	MoveDuration uint32          `json:"maximalMoveDuration"`
+	GameDuration uint32          `json:"totalPartDuration"`
+	FirstPlayer  FirstPlayer     `json:"firstPlayer"`
+	RulesConfig  json.RawMessage `json:"rulesConfig"`
+}
+
 func DecodeIncomingMessage(message []byte) (string, map[string]json.RawMessage, error) {
 	var array []json.RawMessage
-	err := json.Unmarshal(message, &array);
+	err := json.Unmarshal(message, &array)
 	if err != nil {
 		return "", nil, err
 	}

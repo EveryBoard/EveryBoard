@@ -111,9 +111,9 @@ type ConfigRoom struct {
 	Status              Status       `gorm:"not null" json:"partStatus"`
 	FirstPlayer         FirstPlayer  `gorm:"not null" json:"firstPlayer"`
 	GameType            GameType     `gorm:"not null" json:"partType"`
-	MaximalMoveDuration int          `gorm:"not null" json:"maximalMoveDuration"`
-	// TODO: rename json to totalGameDuration
-	TotalGameDuration int             `gorm:"not null" json:"totalPartDuration"`
+	MoveDuration uint32          `gorm:"not null" json:"maximalMoveDuration"`
+	// TODO: rename json to gameDuration/moveDuration (why "part" + why "maximal" vs. "total")
+	GameDuration uint32             `gorm:"not null" json:"totalPartDuration"`
 	RulesConfig       json.RawMessage `json:"rulesConfig"`
 	GameName          string          `gorm:"not null" json:"gameName"`
 }

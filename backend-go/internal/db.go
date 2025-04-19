@@ -100,8 +100,8 @@ func CreateConfigRoom(creator *MinimalUser, gameName string) (*ConfigRoom, error
 		ChosenOpponent: nil,
 		Status: StatusCreated,
 		GameType: GameTypeStandard,
-		MaximalMoveDuration: StandardMoveDuration,
-		TotalGameDuration: StandardGameDuration,
+		MoveDuration: StandardMoveDuration,
+		GameDuration: StandardGameDuration,
 		RulesConfig: nil,
 		GameName: gameName,
 	}
@@ -116,7 +116,18 @@ func DeleteConfigRoom(gameId GameID) error {
 
 func ConfigRoomSelectOpponent(configRoom *ConfigRoom, opponent *MinimalUser) error {
 	result := db.Model(&configRoom).Updates(ConfigRoom{ChosenOpponent: opponent})
-	configRoom.ChosenOpponent = opponent
+	return result.Error
+}
+
+func ConfigRoomPropose(configRoom *ConfigRoom, proposal *ConfigProposal) error {
+	result := db.Model(&configRoom).Updates(ConfigRoom{
+		GameType: proposal.GameType,
+		MoveDuration: proposal.MoveDuration,
+		GameDuration: proposal.GameDuration,
+		FirstPlayer: proposal.FirstPlayer,
+		RulesConfig: proposal.RulesConfig,
+		Status: StatusConfigProposed,
+	})
 	return result.Error
 }
 

@@ -253,6 +253,31 @@ func (h *Handlers) SelectOpponent(opponent *MinimalUser) error {
 	return h.BroadcastToLobby(update)
 }
 
+func (h *Handlers) ProposeConfig(config *ConfigProposal) error {
+	_, gameId, subscribed := h.subscriptionManager.SubscriptionOf(h.connection)
+	if !subscribed {
+		return h.Error(ErrorNotSubscribed)
+	}
+
+	configRoom, err := GetConfigRoom(gameId)
+	if err != nil {
+		return err
+	}
+	if configRoom == nil {
+		return h.Error(ErrorUnknownGame)
+	}
+	if configRoom.Creator.ID != h.user.ID || configRoom.ChosenOpponent == nil {
+		return h.Error(ErrorNotAllowed)
+	}
+
+	err = ConfigRoomPropose(configRoom, config)
+	if err != nil {
+		return err
+	}
+
+	return h.BroadcastToConfigRoom(gameId, ConfigRoomUpdateMessage{ GameID: gameId, ConfigRoom: *configRoom })
+}
+
 func GetMessageArgument[T interface{}](messageData map[string]json.RawMessage, key string) (*T, error) {
 	arg, ok := messageData[key]
 	if !ok {
@@ -299,6 +324,12 @@ func (h *Handlers) Handle(messageType string, messageData map[string]json.RawMes
 			return h.Error(ErrorInvalidData)
 		}
 		return h.SelectOpponent(opponent)
+	case "ProposeConfig":
+		config, err := GetMessageArgument[ConfigProposal](messageData, "config")
+		if err != nil {
+			return h.Error(ErrorInvalidData)
+		}
+		return h.ProposeConfig(config)
 
 	default:
 		return h.Error(ErrorUnknownMessage)
