@@ -21,6 +21,7 @@ const (
 	ErrorUnknownMessage    Error = "unknown-message"
 	ErrorUnknownGame       Error = "unknown-game"
 	ErrorGameDoesNotExist  Error = "game-does-not-exist"
+	ErrorNotAllowed        Error = "not-allowed"
 )
 
 type ErrorMessage struct {

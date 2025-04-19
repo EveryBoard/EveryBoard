@@ -88,12 +88,11 @@ func GetConfigRoom(gameId GameID) (*ConfigRoom, error) {
 }
 
 func CreateConfigRoom(creator *MinimalUser, gameName string) (*ConfigRoom, error) {
-	log.Println("CreateConfigRoom")
 	creatorElo, error := GetElo(creator, gameName)
 	if error != nil {
 		return nil, error
 	}
-	log.Println("CreateConfigRoom: after elo")
+
 	configRoom := ConfigRoom{
 		Creator: *creator,
 		CreatorElo: creatorElo.CurrentElo,
@@ -113,6 +112,12 @@ func CreateConfigRoom(creator *MinimalUser, gameName string) (*ConfigRoom, error
 
 func DeleteConfigRoom(gameId GameID) error {
 	return db.Where("id = ?", gameId).Delete(&ConfigRoom{}).Error
+}
+
+func ConfigRoomSelectOpponent(configRoom *ConfigRoom, opponent *MinimalUser) error {
+	result := db.Model(&configRoom).Updates(ConfigRoom{ChosenOpponent: opponent})
+	configRoom.ChosenOpponent = opponent
+	return result.Error
 }
 
 func ApplyToQueryResult[T interface{}](tx *gorm.DB, action func(*T) error) error {

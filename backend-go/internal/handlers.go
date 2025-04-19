@@ -60,20 +60,17 @@ func (h *Handlers) SendActiveConfigRooms() error {
 }
 
 func (h *Handlers) SubscribeToLobby() error {
-	log.Println("1")
 	uid := h.user.ID
 	if h.subscriptionManager.IsSubscribed(uid) {
 		log.Println("already subscribed 2")
 		return h.Error(ErrorAlreadySubscribed)
 	}
 
-	log.Println("2")
 	h.subscriptionManager.Subscribe(h.connection, uid, GameIDLobby, SubscriptionToLobby)
 	err := h.SendChatMessages(GameIDLobby)
 	if err != nil {
 		return err
 	}
-	log.Println("3")
 
 	return h.SendActiveConfigRooms()
 }
@@ -132,6 +129,7 @@ func (h *Handlers) SubscribeToConfigRoom(gameId GameID) error {
 		return h.Error(ErrorGameDoesNotExist)
 	}
 
+	h.subscriptionManager.Subscribe(h.connection, h.user.ID, gameId, SubscriptionToConfigRoom)
 	switch configRoom.Status {
 	case StatusCreated, StatusConfigProposed:
 		// This is a config room in progress
@@ -180,14 +178,21 @@ func (h *Handlers) Unsubscribe() error {
 		// Leaving the lobby or a game is easy: there's nothing to do
 		return nil
 	case SubscriptionToConfigRoom:
+		log.Println("Subscribed to config room")
 		// Leaving a config room means we may need to remove the candidate or cancel the game entirely
 		configRoom, err := GetConfigRoom(gameId)
 		if err != nil {
 			return err
 		}
+		if configRoom == nil {
+			// Config room has been deleted already, nothing else to do
+			return nil
+		}
 
 		if configRoom.Status.IsUnstarted() {
+			log.Println("Game is unstarted")
 			if configRoom.Creator.ID == h.user.ID {
+				log.Println("it is creator")
 				// Creator is leaving its unstarted game, remove it
 				err = DeleteConfigRoom(configRoom.ID)
 				if err != nil {
@@ -195,6 +200,7 @@ func (h *Handlers) Unsubscribe() error {
 				}
 
 				update := ConfigRoomDeletedMessage{ GameID: configRoom.ID }
+				log.Println("will broadcast now")
 				err = h.BroadcastToConfigRoom(configRoom.ID, update)
 				if err != nil {
 					return err
@@ -214,34 +220,50 @@ func (h *Handlers) Unsubscribe() error {
 		// If the game has started, we don't remove it
 	}
 	return fmt.Errorf("Unsubscribe: fell through all switch cases, which shouldn't happen.")
-
 }
 
-func GetStringMessageArgument(messageData map[string]json.RawMessage, key string) (string, error) {
-	v, ok := messageData[key]
-	if !ok {
-		return "", fmt.Errorf("Missing data")
+func (h *Handlers) SelectOpponent(opponent *MinimalUser) error {
+	_, gameId, subscribed := h.subscriptionManager.SubscriptionOf(h.connection)
+	if !subscribed {
+		return h.Error(ErrorNotSubscribed)
 	}
-	var str string
-	err := json.Unmarshal(v, &str)
+
+	configRoom, err := GetConfigRoom(gameId)
 	if err != nil {
-		return "", fmt.Errorf("Invalid data")
+		return err
 	}
-	return str, nil
+	if configRoom == nil {
+		return h.Error(ErrorUnknownGame)
+	}
+	if configRoom.Creator.ID != h.user.ID {
+		return h.Error(ErrorNotAllowed)
+	}
+
+	err = ConfigRoomSelectOpponent(configRoom, opponent)
+	if err != nil {
+		return err
+	}
+
+	update := ConfigRoomUpdateMessage{ GameID: gameId, ConfigRoom: *configRoom }
+	err = h.BroadcastToConfigRoom(gameId, update)
+	if err != nil {
+		return err
+	}
+
+	return h.BroadcastToLobby(update)
 }
 
-func GetGameIdArgument(messageData map[string]json.RawMessage) (*GameID, error) {
-	v, ok := messageData["gameId"]
+func GetMessageArgument[T interface{}](messageData map[string]json.RawMessage, key string) (*T, error) {
+	arg, ok := messageData[key]
 	if !ok {
 		return nil, fmt.Errorf("Missing data")
 	}
-	var gameId GameID
-	err := json.Unmarshal(v, &gameId)
+	var extracted T
+	err := json.Unmarshal(arg, &extracted)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("Invalid data")
 	}
-
-	return &gameId, nil
+	return &extracted, nil
 }
 
 func (h *Handlers) Handle(messageType string, messageData map[string]json.RawMessage) error {
@@ -249,30 +271,35 @@ func (h *Handlers) Handle(messageType string, messageData map[string]json.RawMes
 	case "SubscribeLobby":
 		log.Println("subscribe to lobby")
 		return h.SubscribeToLobby()
+	case "SubscribeConfigRoom":
+		gameId, err := GetMessageArgument[GameID](messageData, "gameId")
+		if err != nil {
+			return h.Error(ErrorInvalidData)
+		}
+		return h.SubscribeToConfigRoom(*gameId)
 	case "Unsubscribe":
 		return h.Unsubscribe()
+
 	case "ChatSend":
-		content, err := GetStringMessageArgument(messageData, "message")
+		content, err := GetMessageArgument[string](messageData, "message")
 		if err != nil {
 			return h.Error(ErrorInvalidData)
-		} else {
-			return h.ChatSend(content)
 		}
+		return h.ChatSend(*content)
+
 	case "Create":
-		gameName, err := GetStringMessageArgument(messageData, "gameName")
+		gameName, err := GetMessageArgument[string](messageData, "gameName")
 		if err != nil {
 			return h.Error(ErrorInvalidData)
-		} else {
-			return h.CreateGame(gameName)
 		}
-	case "SubscribeConfigRoom":
-		gameId, err := GetGameIdArgument(messageData)
+		return h.CreateGame(*gameName)
+	case "SelectOpponent":
+		opponent, err := GetMessageArgument[MinimalUser](messageData, "opponent")
 		if err != nil {
-			log.Println(err)
 			return h.Error(ErrorInvalidData)
-		} else {
-			return h.SubscribeToConfigRoom(*gameId)
 		}
+		return h.SelectOpponent(opponent)
+
 	default:
 		return h.Error(ErrorUnknownMessage)
 	}
