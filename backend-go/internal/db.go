@@ -54,6 +54,11 @@ func InitDatabase(dbPath string) {
 	if err != nil {
 		log.Fatal("Cannot initialize DB: %v", err)
 	}
+
+	err = db.AutoMigrate(&Candidate{})
+	if err != nil {
+		log.Fatal("Cannot initialize DB: %v", err)
+	}
 }
 
 func GetElo(user *MinimalUser, gameName string) (*Elo, error) {
@@ -74,7 +79,7 @@ func GetElo(user *MinimalUser, gameName string) (*Elo, error) {
 // Retrieve a config room. Returns nil without error if there is none.
 func GetConfigRoom(gameId GameID) (*ConfigRoom, error) {
 	var configRoom ConfigRoom
-	result := db.First(&configRoom, "game_id = ?", gameId)
+	result := db.First(&configRoom, "id = ?", gameId)
 
 	if errors.Is(result.Error, gorm.ErrRecordNotFound) {
 		return nil, nil
@@ -104,6 +109,10 @@ func CreateConfigRoom(creator *MinimalUser, gameName string) (*ConfigRoom, error
 
 	result := db.Create(&configRoom)
 	return &configRoom, result.Error
+}
+
+func DeleteConfigRoom(gameId GameID) error {
+	return db.Where("id = ?", gameId).Delete(&ConfigRoom{}).Error
 }
 
 func ApplyToQueryResult[T interface{}](tx *gorm.DB, action func(*T) error) error {
@@ -153,6 +162,11 @@ func AddCandidate(gameId GameID, user *MinimalUser) error {
 	return result.Error
 
 }
+
+func DeleteCandidate(gameId GameID, uid string) error {
+	return db.Where("game_id = ? and user_id = ?", gameId, uid).Delete(&ConfigRoom{}).Error
+}
+
 func ApplyToCandidates(gameId GameID, action func(*Candidate) error) error {
 	query := db.Model(&Candidate{}).Where("game_id = ?", gameId)
 	return ApplyToQueryResult(query, action)

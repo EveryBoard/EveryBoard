@@ -2,7 +2,7 @@ package internal
 
 import (
 	"sync"
-
+	"log"
 	"github.com/gorilla/websocket"
 )
 
@@ -103,7 +103,9 @@ func (this *SubscriptionManager) SubscriptionsTo(kind SubscriptionKind, gameId G
 
 // IsSubscribed checks if a user is already subscribed to a game.
 func (this *SubscriptionManager) IsSubscribed(user string) bool {
+	log.Println("getting the lock")
 	this.lock.RLock()
+	log.Println("got it")
 	defer this.lock.RUnlock()
 	_, exists := this.userToClient[user]
 	return exists
@@ -111,8 +113,8 @@ func (this *SubscriptionManager) IsSubscribed(user string) bool {
 
 // SubscriptionOf returns the subscription type and game ID of a client, as well as whether there exists one.
 func (this *SubscriptionManager) SubscriptionOf(client *websocket.Conn) (SubscriptionKind, GameID, bool) {
-	this.lock.Lock()
-	defer this.lock.Unlock()
+	this.lock.RLock()
+	defer this.lock.RUnlock()
 
 	sub, exists := this.clientToGame[client]
 	return sub.kind, sub.gameID, exists

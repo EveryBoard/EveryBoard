@@ -3,11 +3,9 @@ package internal
 import (
 	"encoding/json"
 	"fmt"
-	"log"
 )
 
-func DecodeIncomingMessage(message []byte) (string, map[string]interface{}, error) {
-	log.Printf("Decoding [%v]", string(message))
+func DecodeIncomingMessage(message []byte) (string, map[string]json.RawMessage, error) {
 	var array []json.RawMessage
 	err := json.Unmarshal(message, &array);
 	if err != nil {
@@ -20,7 +18,7 @@ func DecodeIncomingMessage(message []byte) (string, map[string]interface{}, erro
 			return "", nil, err
 		}
 
-		var messagePayload map[string]interface{} = nil
+		var messagePayload map[string]json.RawMessage = nil
 		if len(array) == 2 {
 			err := json.Unmarshal(array[1], &messagePayload)
 			if err != nil {

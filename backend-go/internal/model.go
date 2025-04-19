@@ -28,7 +28,8 @@ const (
 
 func (fp *FirstPlayer) UnmarshalJSON(data []byte) error {
 	var s string
-	if err := json.Unmarshal(data, &s); err != nil {
+	err := json.Unmarshal(data, &s)
+	if err != nil {
 		return err
 	}
 	switch s {
@@ -51,7 +52,8 @@ const (
 
 func (status *Status) UnmarshalJSON(data []byte) error {
 	var s string
-	if err := json.Unmarshal(data, &s); err != nil {
+	err := json.Unmarshal(data, &s)
+	if err != nil {
 		return err
 	}
 	switch s {
@@ -61,6 +63,10 @@ func (status *Status) UnmarshalJSON(data []byte) error {
 	default:
 		return fmt.Errorf("invalid Status: %s", s)
 	}
+}
+
+func (status Status) IsUnstarted() bool {
+	return status == StatusCreated || status == StatusConfigProposed
 }
 
 type GameType string
@@ -76,7 +82,8 @@ const StandardGameDuration = 30 * 60
 
 func (gt *GameType) UnmarshalJSON(data []byte) error {
 	var s string
-	if err := json.Unmarshal(data, &s); err != nil {
+	err := json.Unmarshal(data, &s)
+	if err != nil {
 		return err
 	}
 	switch s {
@@ -100,7 +107,7 @@ type ConfigRoom struct {
 	ID                  GameID       `gorm:"primaryKey;autoIncrement" json:"-"`
 	Creator             MinimalUser  `gorm:"embedded;embeddedPrefix:creator_;not null" json:"creator"`
 	CreatorElo          float64      `gorm:"not null" json:"creatorElo"`
-	ChosenOpponent      *MinimalUser `gorm:"embedded;embeddedPrefix:chosen_opponent_" json:"chosenOpponent,omitempty"`
+	ChosenOpponent      *MinimalUser `gorm:"embedded;embeddedPrefix:chosen_opponent_" json:"chosenOpponent"`
 	Status              Status       `gorm:"not null" json:"partStatus"`
 	FirstPlayer         FirstPlayer  `gorm:"not null" json:"firstPlayer"`
 	GameType            GameType     `gorm:"not null" json:"partType"`
@@ -114,5 +121,5 @@ type ConfigRoom struct {
 type Candidate struct {
 	ID     uint64      `gorm:"primaryKey;autoincrement" json:"-"`
 	GameID GameID      `gorm:"index;not null;foreignKey:ConfigRoom" json:"-"`
-	User   MinimalUser `gorm:"embedded"`
+	User   MinimalUser `gorm:"embedded;embeddedPrefix:user_;not null"`
 }

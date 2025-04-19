@@ -64,7 +64,12 @@ var upgrader = websocket.Upgrader{
 
 var subscriptionManager *everyboard.SubscriptionManager
 
+var count = 0
+
 func HandleWebSocket(w http.ResponseWriter, r *http.Request) {
+	current := count
+	count = count + 1
+	log.Println("got new client")
 	uid, user, err := everyboard.VerifyTokenAndGetUserFromHeader(r)
 	if err != nil {
 		log.Println(err)
@@ -86,29 +91,33 @@ func HandleWebSocket(w http.ResponseWriter, r *http.Request) {
 	handlers := everyboard.NewHandlers(connection, subscriptionManager, minimalUser)
 
 	for {
+		log.Printf("[%v,%v] waiting for message", user.Username, current)
 		_, msg, err := connection.ReadMessage()
 		if err != nil {
+			log.Printf("[%v,%v] error: %v", user.Username, current, err)
 			if err == io.EOF || websocket.IsUnexpectedCloseError(err) {
 				// WebSocket closed, stop this handler after disconnecting client
-				log.Printf("[%v] Disconnect", user.Username)
-				subscriptionManager.Unsubscribe(connection)
+				log.Printf("[%v,%v] Disconnect", user.Username, current)
+				handlers.ClientLeft()
 				break
 			}
 			// Not a major error, continue receiving messages after ignoring this one
 			continue
 		}
+		log.Printf("<<< [%v,%v] %v", user.Username, current, string(msg))
 		messageType, messageData, err := everyboard.DecodeIncomingMessage(msg)
-		log.Printf("<<< [%v] %v", user.Username, messageType)
+		log.Printf("<<< [%v] %v %v", user.Username, messageType, messageData)
 		if err != nil {
 			log.Printf("Cannot decode: %v", err)
 			everyboard.SendError(connection, everyboard.ErrorUnknownMessage)
 			continue
 		}
+		log.Printf("%v,%v dealin with message", user.Username, current)
 		err = handlers.Handle(messageType, messageData)
+		log.Printf("%v,%v done", user.Username, current)
 		if err != nil {
 			log.Printf("Error when handling %v (%v) message: %v", messageType, messageData, err)
 		}
-
 	}
 }
 

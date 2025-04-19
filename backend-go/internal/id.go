@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"github.com/sqids/sqids-go"
+	"encoding/json"
 )
 
 type GameID uint64
@@ -42,4 +43,26 @@ func DecodeId(gameId string) (GameID, error) {
 		}
 		return GameID(ids[0]), nil
 	}
+}
+
+func (id GameID) MarshalJSON() ([]byte, error) {
+	stringId, err := EncodeId(id)
+	if err != nil {
+		return nil, err
+	}
+	return json.Marshal(stringId)
+}
+
+func (id *GameID) UnmarshalJSON(data []byte) error {
+	var s string
+	err := json.Unmarshal(data, &s)
+	if err != nil {
+		return err
+	}
+	*id, err = DecodeId(s)
+	if err != nil {
+		return err
+	}
+	return nil
+
 }

@@ -14,9 +14,12 @@ type OutgoingMessage interface {
 type Error string
 
 const (
+	ErrorInternal          Error = "internal-error"
+	ErrorInvalidData       Error = "invalid-data"
 	ErrorAlreadySubscribed Error = "already-subscribed"
 	ErrorNotSubscribed     Error = "not-subscribed"
 	ErrorUnknownMessage    Error = "unknown-message"
+	ErrorUnknownGame       Error = "unknown-game"
 	ErrorGameDoesNotExist  Error = "game-does-not-exist"
 )
 
@@ -37,7 +40,7 @@ func (m ChatMessage) Tag() string {
 }
 
 type GameCreatedMessage struct {
-	GameId string `json:"gameId"`
+	GameId GameID `json:"gameId"`
 }
 
 func (m GameCreatedMessage) Tag() string {
@@ -45,12 +48,20 @@ func (m GameCreatedMessage) Tag() string {
 }
 
 type ConfigRoomUpdateMessage struct {
-	GameID     string     `json:"gameId"`
+	GameID     GameID     `json:"gameId"`
 	ConfigRoom ConfigRoom `json:"configRoom"`
 }
 
 func (m ConfigRoomUpdateMessage) Tag() string {
 	return "ConfigRoomUpdate"
+}
+
+type ConfigRoomDeletedMessage struct {
+	GameID GameID `json:"gameId"`
+}
+
+func (m ConfigRoomDeletedMessage) Tag() string {
+	return "ConfigRoomDeleted"
 }
 
 type CandidateJoinedMessage struct {
@@ -70,7 +81,6 @@ func (m CandidateLeftMessage) Tag() string {
 }
 
 func SendMessage(connection *websocket.Conn, msg OutgoingMessage) error {
-	log.Println("Marshaling", msg)
 	toSend, err := json.Marshal([]any{msg.Tag(), msg})
 	if err != nil {
 		return err
