@@ -47,17 +47,27 @@ func InitDatabase(dbPath string) {
 
 	err = db.AutoMigrate(&Message{})
 	if err != nil {
-		log.Fatal("Cannot initialize DB: %v", err)
+		log.Fatalf("Cannot initialize DB: %v", err)
 	}
 
 	err = db.AutoMigrate(&Elo{})
 	if err != nil {
-		log.Fatal("Cannot initialize DB: %v", err)
+		log.Fatalf("Cannot initialize DB: %v", err)
 	}
 
 	err = db.AutoMigrate(&Candidate{})
 	if err != nil {
-		log.Fatal("Cannot initialize DB: %v", err)
+		log.Fatalf("Cannot initialize DB: %v", err)
+	}
+
+	err = db.AutoMigrate(&Game{})
+	if err != nil {
+		log.Fatalf("Cannot initialize DB: %v", err)
+	}
+
+	err = db.AutoMigrate(&GameEvent{})
+	if err != nil {
+		log.Fatalf("Cannot initialize DB: %v", err)
 	}
 }
 
@@ -87,6 +97,16 @@ func GetConfigRoom(gameId GameID) (*ConfigRoom, error) {
 	return &configRoom, result.Error
 }
 
+func GetGame(gameId GameID) (*Game, error) {
+	var game Game
+	result := db.First(&game, "game_id = ?", gameId)
+
+	if errors.Is(result.Error, gorm.ErrRecordNotFound) {
+		return nil, nil
+	}
+	return &game, result.Error
+}
+
 func CreateConfigRoom(creator *MinimalUser, gameName string) (*ConfigRoom, error) {
 	creatorElo, error := GetElo(creator, gameName)
 	if error != nil {
@@ -110,23 +130,37 @@ func CreateConfigRoom(creator *MinimalUser, gameName string) (*ConfigRoom, error
 	return &configRoom, result.Error
 }
 
-func DeleteConfigRoom(gameId GameID) error {
-	return db.Where("id = ?", gameId).Delete(&ConfigRoom{}).Error
+func (cr *ConfigRoom) Delete() error {
+	return db.Model(&cr).Delete(&ConfigRoom{}).Error
 }
 
-func ConfigRoomSelectOpponent(configRoom *ConfigRoom, opponent *MinimalUser) error {
-	result := db.Model(&configRoom).Updates(ConfigRoom{ChosenOpponent: opponent})
+func (cr *ConfigRoom) SelectOpponent(opponent *MinimalUser) error {
+	result := db.Model(&cr).Updates(ConfigRoom{ChosenOpponent: opponent})
 	return result.Error
 }
 
-func ConfigRoomPropose(configRoom *ConfigRoom, proposal *ConfigProposal) error {
-	result := db.Model(&configRoom).Updates(ConfigRoom{
+func (cr *ConfigRoom) Propose(proposal *ConfigProposal) error {
+	result := db.Model(&cr).Updates(ConfigRoom{
 		GameType: proposal.GameType,
 		MoveDuration: proposal.MoveDuration,
 		GameDuration: proposal.GameDuration,
 		FirstPlayer: proposal.FirstPlayer,
 		RulesConfig: proposal.RulesConfig,
 		Status: StatusConfigProposed,
+	})
+	return result.Error
+}
+
+func (cr *ConfigRoom) Review() error {
+	result := db.Model(&cr).Updates(ConfigRoom{
+		Status: StatusCreated,
+	})
+	return result.Error
+}
+
+func (cr *ConfigRoom) Start() error {
+	result := db.Model(&cr).Updates(ConfigRoom{
+		Status: StatusStarted,
 	})
 	return result.Error
 }
@@ -170,20 +204,57 @@ func ApplyToMessagesOfGame(gameId GameID, action func(*Message) error) error {
 	return ApplyToQueryResult(query, action)
 }
 
-func AddCandidate(gameId GameID, user *MinimalUser) error {
+func ApplyToGameEvents(gameId GameID, action func(*GameEvent) error) error {
+	query := db.Model(&GameEvent{}).Where("game_id = ?", gameId)
+	return ApplyToQueryResult(query, action)
+}
+
+func (cr *ConfigRoom) AddCandidate(user *MinimalUser) error {
 	result := db.Create(&Candidate{
-		GameID: gameId,
+		GameID: cr.ID,
 		User: *user,
 	})
 	return result.Error
 
 }
 
-func DeleteCandidate(gameId GameID, uid string) error {
-	return db.Where("game_id = ? and user_id = ?", gameId, uid).Delete(&ConfigRoom{}).Error
+func (cr *ConfigRoom) DeleteCandidate(uid string) error {
+	return db.Where("game_id = ? and user_id = ?", cr.ID, uid).Delete(&Candidate{}).Error
 }
 
 func ApplyToCandidates(gameId GameID, action func(*Candidate) error) error {
 	query := db.Model(&Candidate{}).Where("game_id = ?", gameId)
 	return ApplyToQueryResult(query, action)
+}
+
+func (cr *ConfigRoom) CreateGame(now int64, rand_bool bool) (*Game, error) {
+	starter := cr.FirstPlayer
+	if starter == FirstPlayerRandom {
+		if rand_bool {
+			starter = FirstPlayerCreator
+		} else {
+			starter = FirstPlayerChosenPlayer
+		}
+	}
+
+	var playerZero MinimalUser
+	var playerOne MinimalUser
+	if starter == FirstPlayerCreator {
+		playerZero = cr.Creator
+		playerOne = *cr.ChosenOpponent
+	} else {
+		playerZero = *cr.ChosenOpponent
+		playerOne = cr.Creator
+	}
+
+	game := Game{
+		GameID: cr.ID,
+		GameName: cr.GameName,
+		PlayerZero: playerZero,
+		PlayerOne: playerOne,
+		Result: ResultInProgress,
+		Beginning: now,
+	}
+	result := db.Create(&game)
+	return &game, result.Error
 }

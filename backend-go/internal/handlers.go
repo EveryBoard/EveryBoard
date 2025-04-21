@@ -5,6 +5,7 @@ import (
 	"log"
 	"time"
 	"encoding/json"
+	"math/rand"
 
 	"github.com/gorilla/websocket"
 )
@@ -12,6 +13,10 @@ import (
 // TODO: parameterize for tests
 func Now() int64 {
 	return time.Now().Unix()
+}
+
+func NowFloat() float64 {
+	return float64(time.Now().UnixNano()) / 1e9
 }
 
 type Handlers struct {
@@ -47,6 +52,12 @@ func (h *Handlers) BroadcastToLobby(message OutgoingMessage) error {
 func (h *Handlers) SendChatMessages(gameId GameID) error {
 	return ApplyToMessagesOfGame(gameId, func(message *Message) error {
 		return h.Send(ChatMessage{Message: *message})
+	})
+}
+
+func (h *Handlers) SendGameEvents(gameId GameID) error {
+	return ApplyToGameEvents(gameId, func(event *GameEvent) error {
+		return h.Send(GameEventMessage{Event: *event, ServerTime: NowFloat()})
 	})
 }
 
@@ -117,7 +128,6 @@ func (h *Handlers) CreateGame(gameName string) error {
 func (h *Handlers) SubscribeToConfigRoom(gameId GameID) error {
 	uid := h.user.ID
 	if h.subscriptionManager.IsSubscribed(uid) {
-		log.Println("already subscribed 1")
 		return h.Error(ErrorAlreadySubscribed)
 	}
 
@@ -136,7 +146,7 @@ func (h *Handlers) SubscribeToConfigRoom(gameId GameID) error {
 		// Either we have a new candidate, or the creator
 		if uid != configRoom.Creator.ID {
 			// A new candidate appears!
-			err = AddCandidate(gameId, h.user)
+			err = configRoom.AddCandidate(h.user)
 			if err != nil {
 				return err;
 			}
@@ -165,11 +175,50 @@ func (h *Handlers) SubscribeToConfigRoom(gameId GameID) error {
 	return fmt.Errorf("SubscribeConfigRoom fell through the end of the switch while it shouldn't. Game status was %v", configRoom.Status)
 }
 
+func (h *Handlers) SubscribeToGame(gameId GameID) error {
+	if h.subscriptionManager.IsSubscribed(h.user.ID) {
+		return h.Error(ErrorAlreadySubscribed)
+	}
+
+	game, err := GetGame(gameId)
+	if err != nil {
+		return err
+	}
+	if game == nil {
+		return h.Error(ErrorGameDoesNotExist)
+	}
+
+	h.subscriptionManager.Subscribe(h.connection, h.user.ID, gameId, SubscriptionToGame)
+	// It is important to send the game first and then the events so that the
+	// client knows about the game before receiving events
+	err = h.Send(GameUpdateMessage{ Game: *game })
+	if err != nil {
+		return err
+	}
+
+	err = h.SendChatMessages(gameId)
+	if err != nil {
+		return err
+	}
+
+	err = h.SendGameEvents(gameId)
+	if err != nil {
+		return err
+	}
+
+	syncEvent := GameEvent{
+		Time: Now(),
+		User: *h.user,
+		Data: EventDataSync,
+	}
+	return h.Send(GameEventMessage{ Event: syncEvent, ServerTime: NowFloat() })
+}
+
 func (h *Handlers) Unsubscribe() error {
-	subscriptionKind, gameId, subscribed := h.subscriptionManager.SubscriptionOf(h.connection)
-	if !subscribed {
-		// They're not subscribed, there's nothing to do
-		return nil
+ 	subscriptionKind, gameId, subscribed := h.subscriptionManager.SubscriptionOf(h.connection)
+ 	if !subscribed {
+ 		// They're not subscribed, there's nothing to do
+ 		return nil
 	}
 	h.subscriptionManager.Unsubscribe(h.connection)
 
@@ -178,7 +227,6 @@ func (h *Handlers) Unsubscribe() error {
 		// Leaving the lobby or a game is easy: there's nothing to do
 		return nil
 	case SubscriptionToConfigRoom:
-		log.Println("Subscribed to config room")
 		// Leaving a config room means we may need to remove the candidate or cancel the game entirely
 		configRoom, err := GetConfigRoom(gameId)
 		if err != nil {
@@ -190,17 +238,14 @@ func (h *Handlers) Unsubscribe() error {
 		}
 
 		if configRoom.Status.IsUnstarted() {
-			log.Println("Game is unstarted")
 			if configRoom.Creator.ID == h.user.ID {
-				log.Println("it is creator")
 				// Creator is leaving its unstarted game, remove it
-				err = DeleteConfigRoom(configRoom.ID)
+				err = configRoom.Delete()
 				if err != nil {
 					return err
 				}
 
 				update := ConfigRoomDeletedMessage{ GameID: configRoom.ID }
-				log.Println("will broadcast now")
 				err = h.BroadcastToConfigRoom(configRoom.ID, update)
 				if err != nil {
 					return err
@@ -208,16 +253,16 @@ func (h *Handlers) Unsubscribe() error {
 				return h.BroadcastToLobby(update)
 			} else {
 				// Candidate has left
-				err = DeleteCandidate(configRoom.ID, h.user.ID)
+				err = configRoom.DeleteCandidate(h.user.ID)
 				if err != nil {
 					return err
 				}
 				return h.BroadcastToConfigRoom(configRoom.ID, CandidateLeftMessage{ Candidate: *h.user })
-
 			}
-
+		} else {
+			// If the game has started, we don't remove it and don't have anything else to do
+			return nil
 		}
-		// If the game has started, we don't remove it
 	}
 	return fmt.Errorf("Unsubscribe: fell through all switch cases, which shouldn't happen.")
 }
@@ -239,7 +284,7 @@ func (h *Handlers) SelectOpponent(opponent *MinimalUser) error {
 		return h.Error(ErrorNotAllowed)
 	}
 
-	err = ConfigRoomSelectOpponent(configRoom, opponent)
+	err = configRoom.SelectOpponent(opponent)
 	if err != nil {
 		return err
 	}
@@ -270,12 +315,78 @@ func (h *Handlers) ProposeConfig(config *ConfigProposal) error {
 		return h.Error(ErrorNotAllowed)
 	}
 
-	err = ConfigRoomPropose(configRoom, config)
+	err = configRoom.Propose(config)
 	if err != nil {
 		return err
 	}
 
 	return h.BroadcastToConfigRoom(gameId, ConfigRoomUpdateMessage{ GameID: gameId, ConfigRoom: *configRoom })
+}
+
+func (h *Handlers) ReviewConfig() error {
+	_, gameId, subscribed := h.subscriptionManager.SubscriptionOf(h.connection)
+	if !subscribed {
+		return h.Error(ErrorNotSubscribed)
+	}
+
+	configRoom, err := GetConfigRoom(gameId)
+	if err != nil {
+		return err
+	}
+	if configRoom == nil {
+		return h.Error(ErrorUnknownGame)
+	}
+	if configRoom.Creator.ID != h.user.ID {
+		return h.Error(ErrorNotAllowed)
+	}
+
+	err = configRoom.Review()
+	if err != nil {
+		return err
+	}
+
+	return h.BroadcastToConfigRoom(gameId, ConfigRoomUpdateMessage{ GameID: gameId, ConfigRoom: *configRoom })
+}
+
+func (h *Handlers) AcceptConfig() error {
+	_, gameId, subscribed := h.subscriptionManager.SubscriptionOf(h.connection)
+	if !subscribed {
+		return h.Error(ErrorNotSubscribed)
+	}
+
+	configRoom, err := GetConfigRoom(gameId)
+	if err != nil {
+		return err
+	}
+	if configRoom == nil {
+		return h.Error(ErrorUnknownGame)
+	}
+	if configRoom.ChosenOpponent == nil ||
+		configRoom.ChosenOpponent.ID != h.user.ID ||
+		configRoom.Status != StatusConfigProposed {
+		return h.Error(ErrorNotAllowed)
+	}
+
+	// Change the config room status to "started"
+	err = configRoom.Start()
+	if err != nil {
+		return err
+	}
+
+	// Create the game
+	_, err = configRoom.CreateGame(Now(), rand.Intn(2) == 1)
+	if err != nil {
+		return err
+	}
+
+	// And notify everyone
+	update := ConfigRoomUpdateMessage{ GameID: gameId, ConfigRoom: *configRoom }
+	err = h.BroadcastToConfigRoom(gameId, update)
+	if err != nil {
+		return err
+	}
+
+	return h.BroadcastToLobby(update)
 }
 
 func GetMessageArgument[T interface{}](messageData map[string]json.RawMessage, key string) (*T, error) {
@@ -302,6 +413,12 @@ func (h *Handlers) Handle(messageType string, messageData map[string]json.RawMes
 			return h.Error(ErrorInvalidData)
 		}
 		return h.SubscribeToConfigRoom(*gameId)
+	case "SubscribeGame":
+		gameId, err := GetMessageArgument[GameID](messageData, "gameId")
+		if err != nil {
+			return h.Error(ErrorInvalidData)
+		}
+		return h.SubscribeToGame(*gameId)
 	case "Unsubscribe":
 		return h.Unsubscribe()
 
@@ -330,6 +447,10 @@ func (h *Handlers) Handle(messageType string, messageData map[string]json.RawMes
 			return h.Error(ErrorInvalidData)
 		}
 		return h.ProposeConfig(config)
+	case "ReviewConfig":
+		return h.ReviewConfig()
+	case "AcceptConfig":
+		return h.AcceptConfig()
 
 	default:
 		return h.Error(ErrorUnknownMessage)

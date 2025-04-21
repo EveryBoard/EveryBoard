@@ -99,7 +99,6 @@ func HandleWebSocket(w http.ResponseWriter, r *http.Request) {
 		}
 		log.Printf("<<< [%v] %v", user.Username, string(msg))
 		messageType, messageData, err := everyboard.DecodeIncomingMessage(msg)
-		log.Printf("<<< [%v] %v %v", user.Username, messageType, messageData)
 		if err != nil {
 			log.Printf("Cannot decode: %v", err)
 			everyboard.SendError(connection, everyboard.ErrorUnknownMessage)

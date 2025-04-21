@@ -81,6 +81,23 @@ func (m CandidateLeftMessage) Tag() string {
 	return "CandidateLeft"
 }
 
+type GameUpdateMessage struct {
+	Game Game `json:"game"`
+}
+
+func (m GameUpdateMessage) Tag() string {
+	return "GameUpdate"
+}
+
+type GameEventMessage struct {
+	Event GameEvent `json:"event"`
+	ServerTime float64 `json:"serverTime"`
+}
+
+func (m GameEventMessage) Tag() string {
+	return "GameEvent"
+}
+
 func SendMessage(connection *websocket.Conn, msg OutgoingMessage) error {
 	toSend, err := json.Marshal([]any{msg.Tag(), msg})
 	if err != nil {

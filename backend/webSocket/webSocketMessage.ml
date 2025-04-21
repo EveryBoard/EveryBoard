@@ -75,7 +75,7 @@ module WebSocketOutgoingMessage = struct
 
         (** Config room messages *)
         | GameCreated of { game_id : GameId.t [@key "gameId"] }
-        | GameName of { game_name : string option [@key "gameName"] }
+        (* | GameName of { game_name : string option [@key "gameName"] } *)
         | CandidateJoined of { candidate : MinimalUser.t }
         | CandidateLeft of { candidate : MinimalUser.t }
         | ConfigRoomUpdate of {
@@ -87,7 +87,7 @@ module WebSocketOutgoingMessage = struct
         (** Game messages *)
         | GameEvent of { event : GameEvent.t; server_time: float [@key "serverTime"] }
         | GameUpdate of { game : Game.t }
-        | GameMove of { move : JSON.t }
+                          (* | GameMove of { move : JSON.t } *)
 
     [@@deriving to_yojson]
 end
