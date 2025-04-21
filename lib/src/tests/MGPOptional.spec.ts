@@ -55,6 +55,21 @@ describe('MGPOptional', () => {
         });
     });
 
+    describe('orElse', () => {
+        it('should return itself if value is present', () => {
+            const optional: MGPOptional<number> = MGPOptional.of(42);
+            expect(optional.orElse(MGPOptional.empty())).toBe(optional);
+            expect(optional.orElse(MGPOptional.of(3.14))).toBe(optional);
+        });
+
+        it('should return the optional if value is absent', () => {
+            const optional: MGPOptional<number> = MGPOptional.empty();
+            const present: MGPOptional<number> = MGPOptional.of(3.14);
+            expect(optional.orElse(MGPOptional.empty())).toBe(optional);
+            expect(optional.orElse(present)).toBe(present);
+        });
+    });
+
     describe('equals', () => {
         it('should consider the same optional equal', () => {
             const optional: MGPOptional<number> = MGPOptional.of(42);

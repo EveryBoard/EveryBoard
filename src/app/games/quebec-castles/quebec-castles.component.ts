@@ -111,11 +111,11 @@ export class QuebecCastlesComponent extends RectangularGameComponent<QuebecCastl
 
     private updateMissingPieces(): void {
         const config: QuebecCastlesConfig = this.getConfig().get();
-        const nbDefender: number = this.constructedState.count(Player.ZERO);
-        const nbInvader: number = this.constructedState.count(Player.ONE);
+        const nbDefender: number = this.constructedState.countPieceOnBoard(Player.ZERO);
+        const nbInvader: number = this.constructedState.countPieceOnBoard(Player.ONE);
         this.missingPieces = PlayerNumberMap.of(
-            config.defender - nbDefender,
-            config.invader - nbInvader,
+            config.defenders - nbDefender,
+            config.invaders - nbInvader,
         );
         this.isDroppingGroup = this.rules.isDropPhase(this.constructedState, config);
     }
@@ -136,7 +136,7 @@ export class QuebecCastlesComponent extends RectangularGameComponent<QuebecCastl
     private async onDrop(coord: Coord, config: QuebecCastlesConfig): Promise<MGPValidation> {
         Utils.assert(config.dropMode !== DropModeEnum.AUTO || config.placeThroneYourself, 'enterred "onDrop" on a non-dropping-config');
         const expectedDropThisTurn: number =
-            this.rules.getExpectedDropThisTurn(this.getState(), this.getConfig().get());
+            this.rules.getExpectedDropsThisTurn(this.getState(), this.getConfig().get());
         if (expectedDropThisTurn === 1) {
             const chosenMove: QuebecCastlesDrop = QuebecCastlesDrop.of([coord]);
             return await this.chooseMove(chosenMove);
@@ -194,7 +194,7 @@ export class QuebecCastlesComponent extends RectangularGameComponent<QuebecCastl
     private selectedCoord(coord: Coord): void {
         this.selected = MGPOptional.of(coord);
         const possibleLanding: Coord[] = this.rules
-            .getPossibleMoveFor(coord, this.getState())
+            .getPossibleMovesFor(coord, this.getState())
             .map((move: QuebecCastlesTranslation) => move.getEnd());
         this.possibleLanding = new Set(possibleLanding);
     }
@@ -301,16 +301,16 @@ export class QuebecCastlesComponent extends RectangularGameComponent<QuebecCastl
     private getTotalPieceToDrop(): number {
         const player: Player = this.constructedState.getCurrentPlayer();
         if (player === Player.ZERO) {
-            return this.getConfig().get().defender;
+            return this.getConfig().get().defenders;
         } else {
-            return this.getConfig().get().invader;
+            return this.getConfig().get().invaders;
         }
     }
 
     public getNumberOfAwaitedDrop(): number {
         const player: Player = this.constructedState.getCurrentPlayer();
         const totalPieceToDrop: number = this.getTotalPieceToDrop();
-        return totalPieceToDrop - this.constructedState.count(player);
+        return totalPieceToDrop - this.constructedState.countPieceOnBoard(player);
     }
 
     public getRemainingCx(i: number): number {
@@ -343,6 +343,7 @@ export class QuebecCastlesComponent extends RectangularGameComponent<QuebecCastl
                 y = this.upperCorner.y - halfRadius;
             }
         } else {
+            // TODO: UT
             x = this.getState().getWidth() * 0.5 * this.SPACE_SIZE;
             if (this.getCurrentPlayer() === Player.ZERO) {
                 y = -halfRadius;

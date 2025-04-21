@@ -48,14 +48,14 @@ export class QuebecCastlesTutorial extends Tutorial {
         ),
         TutorialStep.anyMove(
             $localize`Defender's move`,
-            $localize`The defenders have the Dark pieces, they play first by selecting one of their pieces and moving it on a neighbor square.<br/>You're playing Light, move a defender piece.`,
+            $localize`The defenders have the Dark pieces, they play first by selecting one of their pieces and moving it on a neighbor square.<br/><br/>You're playing Light, move a defender piece.`,
             QuebecCastlesRules.get().getInitialState(defaultConfig),
             QuebecCastlesMove.translation(new Coord(7, 7), new Coord(6, 6)),
             TutorialStepMessage.CONGRATULATIONS(),
         ),
         TutorialStep.anyMove(
             $localize`Invader's move`,
-            $localize`The invaders have the Light piece, they play second by selecting one of their piece and moving them two step in a straight line. The piece cannot jump over another piece.<br/>Move an invader piece.`,
+            $localize`The invaders have the Light piece, they play second by selecting one of their piece and moving them two step in a straight line. The piece cannot jump over another piece.<br/><br/>Move an invader piece.`,
             QuebecCastlesRules.get().getInitialState(defaultConfig).incrementTurn(),
             QuebecCastlesMove.translation(new Coord(2, 2), new Coord(4, 4)),
             TutorialStepMessage.CONGRATULATIONS_YOU_KNOW_EVERYTHING(),
@@ -69,7 +69,7 @@ export class QuebecCastlesTutorial extends Tutorial {
         ),
         TutorialStep.anyMove(
             $localize`Custom config: place throne yourself`,
-            $localize`You have the option to change decide yourself where you place the throne. If you don't change anything else the piece placement will be automatically done right after.<br/>You're playing Dark/Defender, place your throne.`,
+            $localize`You have the option to change decide yourself where you place the throne. If you don't change anything else the piece placement will be automatically done right after.<br/><br/>You're playing Dark/Defender, place your throne.`,
             QuebecCastlesRules.get().getInitialState(placeThroneYourselfConfig),
             QuebecCastlesMove.drop([new Coord(7, 7)]),
             TutorialStepMessage.CONGRATULATIONS(),
@@ -95,7 +95,7 @@ export class QuebecCastlesTutorial extends Tutorial {
         ),
         TutorialStep.anyMove(
             $localize`Custom config: Drop Mode: Piece by piece`,
-            $localize`You have the option to decide yourself where you place your pieces, one per turn. Once one player has no more piece to drop, the other player drop all its piece in one turn.<br/>You're playing Dark/Defender, drop a piece.`,
+            $localize`You have the option to decide yourself where you place your pieces, one per turn. Once one player has no more piece to drop, the other player drop all its piece in one turn.<br/><br/>You're playing Dark/Defender, drop a piece.`,
             QuebecCastlesRules.get().getInitialState(dropPieceByPieceConfig),
             QuebecCastlesMove.drop([new Coord(7, 7)]),
             TutorialStepMessage.CONGRATULATIONS(),
@@ -109,3 +109,5 @@ export class QuebecCastlesTutorial extends Tutorial {
         ),
     ];
 }
+// TODO FOR REVIEW: quand il faut placer le trône, faudrait voir le trône "hors du plateau"
+//     pas les pièces, right ?

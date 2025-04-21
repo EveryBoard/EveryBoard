@@ -1,6 +1,10 @@
 import { MGPValidation } from '@everyboard/lib';
 import { EmptyRulesConfig, RulesConfig } from '../jscaip/RulesConfigUtil';
 
+// This type of validator include a second param: the new global config
+// Allowing us to check that the change to field "v" is
+// 1. valid isolately (not too big, not too small, not even, things like that)
+// 2. valid globally (v and thoses two other fields cannot have the same value, their sum must be 10, things like that)
 export type MGPValidator<R extends RulesConfig = EmptyRulesConfig> =
     (v: number | string | null, config: R) => MGPValidation;
 

@@ -1,14 +1,15 @@
 import { Component, Input } from '@angular/core';
+import { Utils } from '@everyboard/lib';
+
 import { Coord } from 'src/app/jscaip/Coord';
 import { Coord3D } from 'src/app/jscaip/Coord3D';
 import { Vector } from 'src/app/jscaip/Vector';
-import { Utils } from '@everyboard/lib';
 import { TrexoComponent } from './trexo.component';
 import { TrexoMove } from './TrexoMove';
 import { ModeConfig } from 'src/app/components/game-components/parallelogram-game-component/ParallelogramGameComponent';
 
 @Component({
-    selector: '[mgp-trexo-half-piece]',
+    selector: '[mgp-trexo-half-piece]', // TODO FOR REVIEW: on remarque que c'est le seul composant à commencer par MGP et non "app"
     templateUrl: './trexo-half-piece.component.svg',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
 })

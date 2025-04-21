@@ -157,7 +157,7 @@ export abstract class GameStateWithTable<P extends NonNullable<unknown>> extends
                this.isVerticalEdge(coord);
     }
 
-    public countRow(piece: P, row: number): number {
+    public countPieceInRow(piece: P, row: number): number {
         let result: number = 0;
         for (let x: number = 0; x < this.getWidth(); x++) {
             if (comparableEquals(this.board[row][x], piece)) {
@@ -167,7 +167,7 @@ export abstract class GameStateWithTable<P extends NonNullable<unknown>> extends
         return result;
     }
 
-    public count(piece: P): number {
+    public countPieceOnBoard(piece: P): number {
         let result: number = 0;
         for (const coordAndContent of this.getCoordsAndContents()) {
             if (comparableEquals(coordAndContent.content, piece)) {

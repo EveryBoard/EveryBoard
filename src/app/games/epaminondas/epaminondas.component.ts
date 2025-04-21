@@ -78,8 +78,8 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
     private getScores(): MGPOptional<PlayerNumberMap> {
         const state: EpaminondasState = this.getState();
         const playerMap: PlayerNumberMap = PlayerNumberMap.of(
-            state.count(Player.ZERO),
-            state.count(Player.ONE),
+            state.countPieceOnBoard(Player.ZERO),
+            state.countPieceOnBoard(Player.ONE),
         );
         return MGPOptional.of(playerMap);
     }

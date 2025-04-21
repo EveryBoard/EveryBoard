@@ -549,14 +549,14 @@ describe('QuebecCastles Custom Configs', () => {
         // Given a config with too little room for defender piece
         const customConfig: QuebecCastlesConfig = {
             ...defaultConfig.get(),
-            defender: 15, // There won't be enough room for that many pieces
+            defenders: 15, // There won't be enough room for that many pieces
         };
 
         // When setting up that invalid config
         await setCustomConfigTags(customConfig);
 
         // Then there should be an error eh!
-        const error: string = QuebecCastlesFailure.CANNOT_PUT_THAT_MUCH_PIECE_IN_THERE(14, 4);
+        const error: string = QuebecCastlesFailure.CANNOT_PUT_THAT_MANY_PIECE_IN_THERE(14, 4);
         expectElementToHaveError('defender', error);
     }));
 
@@ -571,7 +571,7 @@ describe('QuebecCastles Custom Configs', () => {
         await setCustomConfigTags(customConfig);
 
         // Then there should be an error eh!
-        const error: string = QuebecCastlesFailure.TOO_MUCH_LINES_FOR_TERRITORY();
+        const error: string = QuebecCastlesFailure.TOO_MANY_LINES_FOR_TERRITORY();
         expectElementToHaveError('linesForTerritory', error);
     }));
 
@@ -587,7 +587,7 @@ describe('QuebecCastles Custom Configs', () => {
         await setCustomConfigTags(customConfig);
 
         // Then there should be an error eh!
-        const error: string = QuebecCastlesFailure.TOO_MUCH_LINES_FOR_TERRITORY();
+        const error: string = QuebecCastlesFailure.TOO_MANY_LINES_FOR_TERRITORY();
         expectElementToHaveError('linesForTerritory', error);
     }));
 

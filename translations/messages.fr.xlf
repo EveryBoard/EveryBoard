@@ -3830,6 +3830,10 @@
         <source>Cannot drop in move phase</source>
         <target>Vous ne pouvez pas déposer de pièce dans la phase de déplacement</target>
       </trans-unit>
+      <trans-unit id="2217807164571312113" datatype="html">
+        <source>Cannot move in drop phase</source>
+        <target>Vous ne pouvez pas déplacer de pièce en phrase de dépose</target>
+      </trans-unit>
       <trans-unit id="404272838313740209" datatype="html">
         <source>Must drop all your pieces</source>
         <target>Vous devez déposer toutes vos pièces</target>
@@ -3838,8 +3842,8 @@
         <source>Must drop all your remaining pieces, not more not less</source>
         <target>Vous devez déposez toutes vos pièces restantes, ni plus ni moins</target>
       </trans-unit>
-      <trans-unit id="5322605018323433422" datatype="html">
-        <source>Cannot drop that much pieces</source>
+      <trans-unit id="190045616212498032" datatype="html">
+        <source>Cannot drop that many pieces</source>
         <target>Vous ne pouvez déposer autant de pièces</target>
       </trans-unit>
       <trans-unit id="5513539435671245592" datatype="html">
@@ -3854,12 +3858,12 @@
         <source>You must only place your throne</source>
         <target>Vous devez seulement placer votre trône</target>
       </trans-unit>
-      <trans-unit id="8315714596123969207" datatype="html">
-        <source>If you have <x id="PH" equiv-text="line"/> line, you can only have <x id="PH_1" equiv-text="max"/> pieces</source>
+      <trans-unit id="3075088676962429588" datatype="html">
+        <source>If you have <x id="PH" equiv-text="line"/> line(s), you can only have <x id="PH_1" equiv-text="max"/> pieces</source>
         <target>Si vous avez <x id="PH" equiv-text="line"/> lignes, vous ne pouvez avoir que <x id="PH_1" equiv-text="max"/> pièces</target>
       </trans-unit>
-      <trans-unit id="8286688479132880016" datatype="html">
-        <source>Too much lines for territory, your opponent lines would merged with yours!</source>
+      <trans-unit id="2740099122933909931" datatype="html">
+        <source>Too many lines for territory, your opponent lines would merge with yours!</source>
         <target>Trop de lignes pour le territoire, les lignes adverses et les vôtres se chevauchent!</target>
       </trans-unit>
       <trans-unit id="810888510148304696" datatype="html">
@@ -3906,16 +3910,16 @@
         <source>Defender&apos;s move</source>
         <target>Déplacement du défenseur</target>
       </trans-unit>
-      <trans-unit id="7313658612994755267" datatype="html">
-        <source>The defenders have the Dark pieces, they play first by selecting one of their pieces and moving it on a neighbor square.&lt;br/&gt;You&apos;re playing Light, move a defender piece.</source>
+      <trans-unit id="2667803404667416417" datatype="html">
+        <source>The defenders have the Dark pieces, they play first by selecting one of their pieces and moving it on a neighbor square.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Light, move a defender piece.</source>
         <target>Les défenseurs ont les pièces claires, ils jouent en sélectionnant une de leurs pièces et en la déplaçant sur une case voisine.&lt;br/&gt;Vous jouez les clairs, déplacez une pièce du défenseur.</target>
       </trans-unit>
       <trans-unit id="2155198865476397918" datatype="html">
         <source>Invader&apos;s move</source>
         <target>Déplacement de l&apos;envahisseur</target>
       </trans-unit>
-      <trans-unit id="4709902951321456173" datatype="html">
-        <source>The invaders have the Light piece, they play second by selecting one of their piece and moving them two step in a straight line. The piece cannot jump over another piece.&lt;br/&gt;Move an invader piece.</source>
+      <trans-unit id="7921385624477842024" datatype="html">
+        <source>The invaders have the Light piece, they play second by selecting one of their piece and moving them two step in a straight line. The piece cannot jump over another piece.&lt;br/&gt;&lt;br/&gt;Move an invader piece.</source>
         <target>Les envahisseurs ont les pièces Claires, ils jouent en deuxième en sélectionnant leurs pièces et les déplaçant de deux pas dans une ligne droite. Les pièces ne peuvent sauter par dessus d&apos;autres.&lt;br/&gt;Déplacez une pièce de l&apos;envahisseur.</target>
       </trans-unit>
       <trans-unit id="8548139072476073438" datatype="html">
@@ -3930,8 +3934,8 @@
         <source>Custom config: place throne yourself</source>
         <target>Configuration alternative: placez le trône vous même</target>
       </trans-unit>
-      <trans-unit id="6899433685815559010" datatype="html">
-        <source>You have the option to change decide yourself where you place the throne. If you don&apos;t change anything else the piece placement will be automatically done right after.&lt;br/&gt;You&apos;re playing Dark/Defender, place your throne.</source>
+      <trans-unit id="412010597484544366" datatype="html">
+        <source>You have the option to change decide yourself where you place the throne. If you don&apos;t change anything else the piece placement will be automatically done right after.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark/Defender, place your throne.</source>
         <target>Vous avez l&apos;option de choisir vous même où placer le trône. Si vous ne changez rien d&apos;autres, le placement des pièces ce fera automatiquement juste après.&lt;br/&gt;Vous jouez Foncé/Défenseur, placez votre trône.</target>
       </trans-unit>
       <trans-unit id="7761290276414807914" datatype="html">
@@ -3946,8 +3950,8 @@
         <source>Custom config: Drop Mode: Piece by piece</source>
         <target>Configuration alternative: Mode de placement: Pièces par pièces</target>
       </trans-unit>
-      <trans-unit id="1101312112289316650" datatype="html">
-        <source>You have the option to decide yourself where you place your pieces, one per turn. Once one player has no more piece to drop, the other player drop all its piece in one turn.&lt;br/&gt;You&apos;re playing Dark/Defender, drop a piece.</source>
+      <trans-unit id="3173152046401939537" datatype="html">
+        <source>You have the option to decide yourself where you place your pieces, one per turn. Once one player has no more piece to drop, the other player drop all its piece in one turn.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark/Defender, drop a piece.</source>
         <target>Vous avez l&apos;option de décider vous même ou placer vos pièces, une par tour. Une fois qu&apos;un des joueurs n&apos;as plus de pièces à déposer, l&apos;autre joueur dépose toutes ses pièces en un tour.&lt;br/&gt;Vous jouez Foncé/Défenseur, déposez une pièce.</target>
       </trans-unit>
       <trans-unit id="2804461591757192500" datatype="html">

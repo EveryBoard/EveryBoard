@@ -55,10 +55,10 @@ export class DemoPageComponent {
         for (const gameInfo of allGames) {
             const steps: TutorialStep[] = gameInfo.tutorial.tutorial;
             const rules: AbstractRules = gameInfo.rules;
-            const config: MGPOptional<RulesConfig> = gameInfo.getRulesConfig();
+            const defaultConfig: MGPOptional<RulesConfig> = gameInfo.getRulesConfig();
             for (const step of steps) {
                 const nodeFromStep: DemoNodeWithConfig =
-                    this.getNodeFromStep(step, rules, config, gameInfo.urlName);
+                    this.getNodeFromStep(step, rules, defaultConfig, gameInfo.urlName);
                 demoNodes.push(nodeFromStep);
             }
         }
@@ -67,12 +67,12 @@ export class DemoPageComponent {
 
     private getNodeFromStep(step: TutorialStep,
                             rules: AbstractRules,
-                            config: MGPOptional<RulesConfig>,
+                            defaultConfig: MGPOptional<RulesConfig>,
                             name: string)
     : DemoNodeWithConfig
     {
         const state: GameState = step.state;
-        const stepConfig: MGPOptional<RulesConfig> = config.orElse(step.config);
+        const stepConfig: MGPOptional<RulesConfig> = step.config.orElse(defaultConfig);
         if (step.hasSolution()) {
             const solution: Move | string = step.getSolution();
             if (typeof solution === 'string') {

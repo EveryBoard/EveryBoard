@@ -28,7 +28,7 @@ export class QuebecCastlesMoveGenerator extends MoveGenerator<QuebecCastlesMove,
         const player: Player = state.getCurrentPlayer();
         const moves: QuebecCastlesMove[] = [];
         const rules: QuebecCastlesRules = QuebecCastlesRules.get();
-        const nbOfDropAwaited: number = rules.getExpectedDropThisTurn(state, config);
+        const nbOfDropAwaited: number = rules.getExpectedDropsThisTurn(state, config);
         const mustPlaceThrone: boolean = rules.mustPlaceThrone(state, config);
         if (config.dropMode === DropModeEnum.PIECE_BY_PIECE || mustPlaceThrone) {
             const coords: Coord[] = [];
@@ -59,7 +59,7 @@ export class QuebecCastlesMoveGenerator extends MoveGenerator<QuebecCastlesMove,
         for (const coordAndContent of state.getCoordsAndContents()) {
             if (coordAndContent.content.equals(player)) {
                 const movesForCoord: QuebecCastlesMove[] =
-                    QuebecCastlesRules.get().getPossibleMoveFor(coordAndContent.coord, state);
+                    QuebecCastlesRules.get().getPossibleMovesFor(coordAndContent.coord, state);
                 moves.push(...movesForCoord);
             }
         }
