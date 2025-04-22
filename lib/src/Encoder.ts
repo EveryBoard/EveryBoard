@@ -81,6 +81,7 @@ export abstract class Encoder<T> {
                     }
                     indexClass++;
                 }
+                throw new Error(`cannot encode value: ${value}`);
             }
             public decode(encoded: JSONValueWithoutArray): U {
                 // eslint-disable-next-line dot-notation

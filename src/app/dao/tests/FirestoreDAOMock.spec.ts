@@ -49,9 +49,8 @@ export abstract class FirestoreDAOMock<T extends FirestoreJSONObject> implements
         await this.set(elemName, element);
         return elemName;
     }
-    private replaceFieldValueWith<N extends FirestoreJSONObject>(elementWithFieldValue: N,
-                                                                 replacement: FirestoreJSONValue)
-    : N
+    private replaceFieldValueWith<V extends object>(elementWithFieldValue: V, replacement: FirestoreJSONValue)
+    : V
     {
         const elementWithReplacement: FirestoreJSONObject = {};
         for (const key of Object.keys(elementWithFieldValue)) {
@@ -61,13 +60,13 @@ export abstract class FirestoreDAOMock<T extends FirestoreJSONObject> implements
                 elementWithReplacement[key] = elementWithFieldValue[key];
             }
         }
-        return elementWithReplacement as N;
+        return elementWithReplacement as V;
     }
-    private updateFieldValueWith<N extends FirestoreJSONObject>(element: N,
-                                                                replacement: FirestoreJSONValue)
+    private updateFieldValueWith<N extends object>(element: N,
+                                                   replacement: FirestoreJSONValue)
     : UpdateData<N>
     {
-        const update: FirestoreJSONObject = {};
+        const update: object = {};
         for (const key of Object.keys(element)) {
             if (element[key] instanceof FieldValue) {
                 update[key] = replacement;
@@ -76,7 +75,7 @@ export abstract class FirestoreDAOMock<T extends FirestoreJSONObject> implements
         return update as UpdateData<N>;
     }
 
-    private hasFieldValue(element: FirestoreJSONObject): boolean {
+    private hasFieldValue(element: object): boolean {
         for (const key of Object.keys(element)) {
             if (element[key] instanceof FieldValue) {
                 return true;
