@@ -238,6 +238,7 @@ type EventData struct {
 
 var (
 	EventDataSync = EventData{Type: EventTypeAction, Payload: ActionSync}
+	EventDataEndGame = EventData{Type: EventTypeAction, Payload: ActionEndGame}
 )
 
 func (e EventData) MarshalJSON() ([]byte, error) {

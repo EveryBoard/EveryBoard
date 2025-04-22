@@ -71,7 +71,7 @@ func InitDatabase(dbPath string) {
 	}
 }
 
-func GetElo(user *MinimalUser, gameName string) (*Elo, error) {
+func GetElo(gameName string, user *MinimalUser) (*Elo, error) {
 	var entry Elo
 	result := db.First(&entry, "user_id = ? AND game_name = ?", user.ID, gameName)
 
@@ -108,7 +108,7 @@ func GetGame(gameId GameID) (*Game, error) {
 }
 
 func CreateConfigRoom(creator *MinimalUser, gameName string) (*ConfigRoom, error) {
-	creatorElo, error := GetElo(creator, gameName)
+	creatorElo, error := GetElo(gameName, creator)
 	if error != nil {
 		return nil, error
 	}
@@ -151,18 +151,23 @@ func (cr *ConfigRoom) Propose(proposal *ConfigProposal) error {
 	return result.Error
 }
 
-func (cr *ConfigRoom) Review() error {
-	result := db.Model(&cr).Updates(ConfigRoom{
-		Status: StatusCreated,
+func (cr *ConfigRoom) SetStatus(status Status) error {
+	result := db.Model(cr).Updates(ConfigRoom{
+		Status: status,
 	})
 	return result.Error
 }
 
+func (cr *ConfigRoom) Review() error {
+	return cr.SetStatus(StatusCreated)
+}
+
 func (cr *ConfigRoom) Start() error {
-	result := db.Model(&cr).Updates(ConfigRoom{
-		Status: StatusStarted,
-	})
-	return result.Error
+	return cr.SetStatus(StatusStarted)
+}
+
+func (cr *ConfigRoom) Finish() error {
+	return cr.SetStatus(StatusFinished)
 }
 
 func ApplyToQueryResult[T interface{}](tx *gorm.DB, action func(*T) error) error {
@@ -257,4 +262,16 @@ func (cr *ConfigRoom) CreateGame(now int64, rand_bool bool) (*Game, error) {
 	}
 	result := db.Create(&game)
 	return &game, result.Error
+}
+
+func (game *Game) SetResult(gameResult Result) error {
+	result := db.Model(game).Updates(Game{
+		Result: gameResult,
+	})
+	return result.Error
+}
+
+func (g *Game) AddEvent(event GameEvent) error {
+	event.GameID = g.GameID
+	return db.Create(&event).Error
 }

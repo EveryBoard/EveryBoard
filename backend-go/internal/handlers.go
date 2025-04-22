@@ -49,6 +49,10 @@ func (h *Handlers) BroadcastToLobby(message OutgoingMessage) error {
 	return h.subscriptionManager.Broadcast(SubscriptionToLobby, GameIDLobby, message)
 }
 
+func (h *Handlers) BroadcastToGame(gameId GameID, message OutgoingMessage) error {
+	return h.subscriptionManager.Broadcast(SubscriptionToGame, gameId, message)
+}
+
 func (h *Handlers) SendChatMessages(gameId GameID) error {
 	return ApplyToMessagesOfGame(gameId, func(message *Message) error {
 		return h.Send(ChatMessage{Message: *message})
@@ -267,13 +271,21 @@ func (h *Handlers) Unsubscribe() error {
 	return fmt.Errorf("Unsubscribe: fell through all switch cases, which shouldn't happen.")
 }
 
-func (h *Handlers) SelectOpponent(opponent *MinimalUser) error {
+func (h *Handlers) GetSubscribedConfigRoom() (*ConfigRoom, error) {
 	_, gameId, subscribed := h.subscriptionManager.SubscriptionOf(h.connection)
 	if !subscribed {
-		return h.Error(ErrorNotSubscribed)
+		return nil, h.Error(ErrorNotSubscribed)
 	}
 
 	configRoom, err := GetConfigRoom(gameId)
+	if err != nil {
+		return nil, err
+	}
+	return configRoom, nil
+}
+
+func (h *Handlers) SelectOpponent(opponent *MinimalUser) error {
+	configRoom, err := h.GetSubscribedConfigRoom()
 	if err != nil {
 		return err
 	}
@@ -289,8 +301,8 @@ func (h *Handlers) SelectOpponent(opponent *MinimalUser) error {
 		return err
 	}
 
-	update := ConfigRoomUpdateMessage{ GameID: gameId, ConfigRoom: *configRoom }
-	err = h.BroadcastToConfigRoom(gameId, update)
+	update := ConfigRoomUpdateMessage{ GameID: configRoom.ID, ConfigRoom: *configRoom }
+	err = h.BroadcastToConfigRoom(configRoom.ID, update)
 	if err != nil {
 		return err
 	}
@@ -299,12 +311,7 @@ func (h *Handlers) SelectOpponent(opponent *MinimalUser) error {
 }
 
 func (h *Handlers) ProposeConfig(config *ConfigProposal) error {
-	_, gameId, subscribed := h.subscriptionManager.SubscriptionOf(h.connection)
-	if !subscribed {
-		return h.Error(ErrorNotSubscribed)
-	}
-
-	configRoom, err := GetConfigRoom(gameId)
+	configRoom, err := h.GetSubscribedConfigRoom()
 	if err != nil {
 		return err
 	}
@@ -320,16 +327,11 @@ func (h *Handlers) ProposeConfig(config *ConfigProposal) error {
 		return err
 	}
 
-	return h.BroadcastToConfigRoom(gameId, ConfigRoomUpdateMessage{ GameID: gameId, ConfigRoom: *configRoom })
+	return h.BroadcastToConfigRoom(configRoom.ID, ConfigRoomUpdateMessage{ GameID: configRoom.ID, ConfigRoom: *configRoom })
 }
 
 func (h *Handlers) ReviewConfig() error {
-	_, gameId, subscribed := h.subscriptionManager.SubscriptionOf(h.connection)
-	if !subscribed {
-		return h.Error(ErrorNotSubscribed)
-	}
-
-	configRoom, err := GetConfigRoom(gameId)
+	configRoom, err := h.GetSubscribedConfigRoom()
 	if err != nil {
 		return err
 	}
@@ -345,16 +347,11 @@ func (h *Handlers) ReviewConfig() error {
 		return err
 	}
 
-	return h.BroadcastToConfigRoom(gameId, ConfigRoomUpdateMessage{ GameID: gameId, ConfigRoom: *configRoom })
+	return h.BroadcastToConfigRoom(configRoom.ID, ConfigRoomUpdateMessage{ GameID: configRoom.ID, ConfigRoom: *configRoom })
 }
 
 func (h *Handlers) AcceptConfig() error {
-	_, gameId, subscribed := h.subscriptionManager.SubscriptionOf(h.connection)
-	if !subscribed {
-		return h.Error(ErrorNotSubscribed)
-	}
-
-	configRoom, err := GetConfigRoom(gameId)
+	configRoom, err := h.GetSubscribedConfigRoom()
 	if err != nil {
 		return err
 	}
@@ -380,13 +377,80 @@ func (h *Handlers) AcceptConfig() error {
 	}
 
 	// And notify everyone
-	update := ConfigRoomUpdateMessage{ GameID: gameId, ConfigRoom: *configRoom }
-	err = h.BroadcastToConfigRoom(gameId, update)
+	update := ConfigRoomUpdateMessage{ GameID: configRoom.ID, ConfigRoom: *configRoom }
+	err = h.BroadcastToConfigRoom(configRoom.ID, update)
 	if err != nil {
 		return err
 	}
 
 	return h.BroadcastToLobby(update)
+}
+
+func (h *Handlers) GetSubscribedConfigRoomAndGame() (*ConfigRoom, *Game, error) {
+	// TODO
+	return nil, nil, nil
+}
+
+func (h *Handlers) Resign() error {
+	configRoom, game, err := h.GetSubscribedConfigRoomAndGame()
+	if err != nil {
+		return err
+	}
+	if configRoom == nil || game == nil {
+		return h.Error(ErrorUnknownGame)
+	}
+	if configRoom.Status != StatusStarted ||
+		(configRoom.Creator.ID != h.user.ID && configRoom.ChosenOpponent.ID != h.user.ID) {
+		return h.Error(ErrorNotAllowed)
+	}
+
+	loser := h.user
+	var winner *MinimalUser
+	var result Result
+	if game.PlayerZero.ID == h.user.ID {
+		result = ResultResignOfZero
+		winner = &game.PlayerOne
+	} else {
+		result = ResultResignOfOne
+		winner = &game.PlayerZero
+	}
+	err = game.SetResult(result)
+	if err != nil {
+		return err
+	}
+
+	event := GameEvent{
+		Time: Now(),
+		User: *h.user,
+		Data: EventDataEndGame,
+	}
+	err = game.AddEvent(event)
+	if err != nil {
+		return err
+	}
+
+	err = ComputeAndUpdateElos(configRoom.GameName, winner, loser, false)
+	if err != nil {
+		return err
+	}
+
+	err = configRoom.Finish()
+	if err != nil {
+		return err
+	}
+
+	err = h.BroadcastToGame(game.GameID, GameUpdateMessage{Game: *game})
+	if err != nil {
+		return err
+	}
+
+	eventMessage := GameEventMessage{Event: event, ServerTime: NowFloat()}
+	err = h.BroadcastToGame(game.GameID, eventMessage)
+	if err != nil {
+		return err
+	}
+
+	return h.BroadcastToLobby(eventMessage)
 }
 
 func GetMessageArgument[T interface{}](messageData map[string]json.RawMessage, key string) (*T, error) {
@@ -451,6 +515,51 @@ func (h *Handlers) Handle(messageType string, messageData map[string]json.RawMes
 		return h.ReviewConfig()
 	case "AcceptConfig":
 		return h.AcceptConfig()
+
+	case "Resign":
+		return h.Resign()
+	case "NotifyTimeout":
+		timeoutedPlayer, err := GetMessageArgument[MinimalUser](messageData, "timeoutedPlayer")
+		if err != nil {
+			return h.Error(ErrorInvalidData)
+		}
+		return h.NotifyTimeout(timeoutedPlayer)
+	case "GameEnd":
+		winner, err := GetMessageArgument[MinimalUser](messageData, "winner")
+		if err != nil {
+			return h.Error(ErrorInvalidData)
+		}
+		return h.GameEnd(winner)
+	case "Propose":
+		proposition, err := GetMessageArgument[Proposition](messageData, "proposition")
+		if err != nil {
+			return h.Error(ErrorInvalidData)
+		}
+		return h.Propose(proposition)
+	case "Reject":
+		proposition, err := GetMessageArgument[Proposition](messageData, "proposition")
+		if err != nil {
+			return h.Error(ErrorInvalidData)
+		}
+		return h.Reject(proposition)
+	case "Accept":
+		proposition, err := GetMessageArgument[Proposition](messageData, "proposition")
+		if err != nil {
+			return h.Error(ErrorInvalidData)
+		}
+		return h.Accept(proposition)
+	case "AddTime":
+		kind, err := GetMessageArgument[AddTimeKind](messageData, "kind")
+		if err != nil {
+			return h.Error(ErrorInvalidData)
+		}
+		return h.AddTime(kind)
+	case "Move":
+		move, err := GetMessageArgument[json.RawMessage](messageData, "move")
+		if err != nil {
+			return h.Error(ErrorInvalidData)
+		}
+		return h.Move(move)
 
 	default:
 		return h.Error(ErrorUnknownMessage)
