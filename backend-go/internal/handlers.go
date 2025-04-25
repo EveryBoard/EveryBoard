@@ -19,6 +19,10 @@ func NowFloat() float64 {
 	return float64(time.Now().UnixNano()) / 1e9
 }
 
+func RandBool() bool {
+	return rand.Intn(2) == 1
+}
+
 type Handlers struct {
 	connection          *websocket.Conn
 	subscriptionManager *SubscriptionManager
@@ -110,8 +114,12 @@ func (h *Handlers) ChatSend(content string) error {
 }
 
 func (h *Handlers) CreateGame(gameName string) error {
-	log.Println("Looking for «%v»", gameName)
 	if !GameExists(gameName) {
+		// TODO FOR REVIEW: je suis d'avis que ce check pourrait partir. Il nous
+		// cause plus de mal que de bien: quand le backend est déployé dans une
+		// autre branche et qu'on défini un jeu dans une branche en parallèle,
+		// on se fait niquer à plus pouvoir tester ce jeu. Autant rester souple
+		// là dessus je dirais.
 		return h.Error(ErrorUnknownGame)
 	}
 
@@ -371,7 +379,7 @@ func (h *Handlers) AcceptConfig() error {
 	}
 
 	// Create the game
-	_, err = configRoom.CreateGame(Now(), rand.Intn(2) == 1)
+	_, err = configRoom.CreateGame(Now(), RandBool())
 	if err != nil {
 		return err
 	}
@@ -540,7 +548,55 @@ func (h *Handlers) Reject(proposition Proposition) error {
 }
 
 func (h *Handlers) Accept(proposition Proposition) error {
-	// TODO
+	switch proposition {
+	case PropositionTakeBack:
+		// Players will take the take back into account when receiving the event
+		return h.AddEvent(EventDataReplyAccept(proposition, nil))
+	case PropositionDraw:
+		err := h.doEndGame(func (playerZero *MinimalUser, playerOne *MinimalUser) Result {
+			if h.user.ID == playerZero.ID {
+				return ResultAgreedDrawByZero
+			} else {
+				return ResultAgreedDrawByOne
+			}
+		})
+		if err != nil {
+			return err
+		}
+
+		return h.AddEvent(EventDataReplyAccept(proposition, nil))
+	case PropositionRematch:
+		configRoom, game, err := h.GetSubscribedConfigRoomAndGame()
+		if err != nil {
+			return err
+		}
+		// Create the new config room
+		rematchConfigRoom, err := CreateRematchConfigRoom(h.user, configRoom, game)
+		if err != nil {
+			return err
+		}
+		rematchConfigRoom.Start()
+
+		// Create the game
+		_, err = rematchConfigRoom.CreateGame(Now(), RandBool())
+
+		// Add a reply event and broadcast it to the players
+		rawId, err := json.Marshal(rematchConfigRoom.ID)
+		if err != nil {
+			return err
+		}
+
+		err = h.AddEvent(EventDataReplyAccept(proposition, json.RawMessage(rawId)))
+		if err != nil {
+			return err
+		}
+		// Broadcast the config room to the lobby
+		return h.BroadcastToLobby(ConfigRoomUpdateMessage{
+			GameID: rematchConfigRoom.ID,
+			ConfigRoom: *rematchConfigRoom,
+		})
+	}
+	return fmt.Errorf("Unknown proposition, should never happen")
 }
 
 func (h *Handlers) AddTime(kind AddTimeKind) error {

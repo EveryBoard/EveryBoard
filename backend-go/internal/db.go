@@ -130,6 +130,40 @@ func CreateConfigRoom(creator *MinimalUser, gameName string) (*ConfigRoom, error
 	return &configRoom, result.Error
 }
 
+func CreateRematchConfigRoom(creator *MinimalUser, configRoom *ConfigRoom, game *Game) (*ConfigRoom, error) {
+	creatorElo, error := GetElo(configRoom.GameName, creator)
+	if error != nil {
+		return nil, error
+	}
+
+	var firstPlayer FirstPlayer
+	var chosenOpponent *MinimalUser
+	if game.PlayerZero.ID == creator.ID {
+		firstPlayer = FirstPlayerChosenPlayer
+		chosenOpponent = &game.PlayerOne
+	} else {
+		firstPlayer = FirstPlayerCreator
+		chosenOpponent = &game.PlayerZero
+	}
+
+
+	rematchConfigRoom := ConfigRoom{
+		Creator: *creator,
+		CreatorElo: creatorElo.CurrentElo,
+		FirstPlayer: firstPlayer,
+		ChosenOpponent: chosenOpponent,
+		Status: StatusStarted,
+		GameType: configRoom.GameType,
+		MoveDuration: configRoom.MoveDuration,
+		GameDuration: configRoom.GameDuration,
+		RulesConfig: configRoom.RulesConfig,
+		GameName: configRoom.GameName,
+	}
+
+	result := db.Create(&rematchConfigRoom)
+	return &rematchConfigRoom, result.Error
+}
+
 func (cr *ConfigRoom) Delete() error {
 	return db.Model(&cr).Delete(&ConfigRoom{}).Error
 }

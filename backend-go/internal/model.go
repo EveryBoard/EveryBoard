@@ -220,9 +220,9 @@ type Request struct {
 }
 
 type Reply struct {
-	RequestType Proposition `json:"requestType"`
-	Accept      bool        `json:"accept"`
-	Data        *string     `json:"data,omitempty"`
+	RequestType Proposition     `json:"requestType"`
+	Accept      bool            `json:"accept"`
+	Data        json.RawMessage `json:"data,omitempty"`
 }
 
 type Action struct {
@@ -230,9 +230,9 @@ type Action struct {
 }
 
 var (
-	ActionStartGame     Action = Action{Action: "StartGame"}
-	ActionEndGame       Action = Action{Action: "EndGame"}
-	ActionSync          Action = Action{Action: "Sync"}
+	ActionStartGame Action = Action{Action: "StartGame"}
+	ActionEndGame   Action = Action{Action: "EndGame"}
+	ActionSync      Action = Action{Action: "Sync"}
 )
 
 type AddTimeKind string
@@ -275,8 +275,8 @@ var (
 
 func EventDataRequest(proposition Proposition) EventData {
 	return EventData{
-		Type: EventTypeRequest,
-		Payload: Request{ RequestType: proposition },
+		Type:    EventTypeRequest,
+		Payload: Request{RequestType: proposition},
 	}
 }
 
@@ -285,22 +285,33 @@ func EventDataReplyReject(proposition Proposition) EventData {
 		Type: EventTypeReply,
 		Payload: Reply{
 			RequestType: proposition,
-			Accept: false,
-			Data: nil,
+			Accept:      false,
+			Data:        nil,
+		},
+	}
+}
+
+func EventDataReplyAccept(proposition Proposition, data json.RawMessage) EventData {
+	return EventData{
+		Type: EventTypeReply,
+		Payload: Reply{
+			RequestType: proposition,
+			Accept:      true,
+			Data:        data,
 		},
 	}
 }
 
 func EventDataAddTime(kind AddTimeKind) EventData {
 	return EventData{
-		Type: EventTypeAction,
+		Type:    EventTypeAction,
 		Payload: ActionAddTime(kind),
 	}
 }
 
 func EventDataMove(move json.RawMessage) EventData {
 	return EventData{
-		Type: EventTypeMove,
+		Type:    EventTypeMove,
 		Payload: move,
 	}
 }
