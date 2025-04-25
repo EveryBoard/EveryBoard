@@ -271,7 +271,7 @@ func (game *Game) SetResult(gameResult Result) error {
 	return result.Error
 }
 
-func (g *Game) AddEvent(event GameEvent) error {
-	event.GameID = g.GameID
+func AddEvent(gameId GameID, event GameEvent) error {
+	event.GameID = gameId
 	return db.Create(&event).Error
 }

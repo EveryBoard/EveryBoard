@@ -387,11 +387,21 @@ func (h *Handlers) AcceptConfig() error {
 }
 
 func (h *Handlers) GetSubscribedConfigRoomAndGame() (*ConfigRoom, *Game, error) {
-	// TODO
-	return nil, nil, nil
+	// TODO: could be done in one transaction
+	configRoom, err := h.GetSubscribedConfigRoom()
+	if err != nil {
+		return nil, nil, err
+	}
+
+	game, err := GetGame(configRoom.ID)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	return configRoom, game, nil
 }
 
-func (h *Handlers) Resign() error {
+func (h *Handlers) doEndGame(getResult (func(*MinimalUser, *MinimalUser) Result)) error {
 	configRoom, game, err := h.GetSubscribedConfigRoomAndGame()
 	if err != nil {
 		return err
@@ -401,22 +411,35 @@ func (h *Handlers) Resign() error {
 	}
 	if configRoom.Status != StatusStarted ||
 		(configRoom.Creator.ID != h.user.ID && configRoom.ChosenOpponent.ID != h.user.ID) {
+		// Only a player can finish a game. And they have to play in the game
 		return h.Error(ErrorNotAllowed)
 	}
 
-	loser := h.user
-	var winner *MinimalUser
-	var result Result
-	if game.PlayerZero.ID == h.user.ID {
-		result = ResultResignOfZero
-		winner = &game.PlayerOne
-	} else {
-		result = ResultResignOfOne
-		winner = &game.PlayerZero
-	}
+	result := getResult(&game.PlayerZero, &game.PlayerOne)
 	err = game.SetResult(result)
 	if err != nil {
 		return err
+	}
+
+	var loser *MinimalUser
+	var winner *MinimalUser
+	var draw bool
+	if result.IsVictoryOfZero() {
+		winner = &game.PlayerZero
+		loser = &game.PlayerOne
+		draw = false
+	} else if result.IsVictoryOfOne() {
+		winner = &game.PlayerOne
+		loser = &game.PlayerZero
+		draw = false
+	} else if result.IsDraw() {
+		// loser/winner is not relevant here, but we need both players
+		winner = &game.PlayerZero
+		loser = &game.PlayerOne
+		draw = true
+	} else {
+		// Not a finished game!
+		return fmt.Errorf("This game is not finished")
 	}
 
 	event := GameEvent{
@@ -424,12 +447,12 @@ func (h *Handlers) Resign() error {
 		User: *h.user,
 		Data: EventDataEndGame,
 	}
-	err = game.AddEvent(event)
+	err = AddEvent(game.GameID, event)
 	if err != nil {
 		return err
 	}
 
-	err = ComputeAndUpdateElos(configRoom.GameName, winner, loser, false)
+	err = ComputeAndUpdateElos(configRoom.GameName, winner, loser, draw)
 	if err != nil {
 		return err
 	}
@@ -451,6 +474,81 @@ func (h *Handlers) Resign() error {
 	}
 
 	return h.BroadcastToLobby(eventMessage)
+}
+
+func (h *Handlers) Resign() error {
+	return h.doEndGame(func (playerZero *MinimalUser, playerOne *MinimalUser) Result {
+		if h.user.ID == playerZero.ID {
+			return ResultResignOfZero
+		} else {
+			return ResultResignOfOne
+		}
+	})
+}
+
+func (h *Handlers) NotifyTimeout(timeoutedPlayer Player) error {
+	return h.doEndGame(func (playerZero *MinimalUser, playerOne *MinimalUser) Result {
+		if timeoutedPlayer == PlayerZero {
+			return ResultTimeoutOfZero
+		} else {
+			return ResultTimeoutOfOne
+		}
+	})
+}
+
+func (h *Handlers) GameEnd(winner PlayerOrNone) error {
+	return h.doEndGame(func (playerZero *MinimalUser, playerOne *MinimalUser) Result {
+		if winner == PlayerOrNoneZero {
+			return ResultVictoryOfZero
+		} else if winner == PlayerOrNoneOne {
+			return ResultVictoryOfOne
+		} else {
+			return ResultHardDraw
+		}
+	})
+}
+
+func (h *Handlers) AddEvent(eventData EventData) error {
+	_, gameId, subscribed := h.subscriptionManager.SubscriptionOf(h.connection)
+	if !subscribed {
+		return h.Error(ErrorNotSubscribed)
+	}
+
+	event := GameEvent{
+		Time: Now(),
+		User: *h.user,
+		Data: eventData,
+	}
+
+	err := AddEvent(gameId, event)
+	if err != nil {
+		return err
+	}
+
+	return h.BroadcastToGame(gameId, GameEventMessage{
+		ServerTime: NowFloat(),
+		Event: event,
+	})
+}
+
+func (h *Handlers) Propose(proposition Proposition) error {
+	return h.AddEvent(EventDataRequest(proposition))
+}
+
+func (h *Handlers) Reject(proposition Proposition) error {
+	return h.AddEvent(EventDataReplyReject(proposition))
+}
+
+func (h *Handlers) Accept(proposition Proposition) error {
+	// TODO
+}
+
+func (h *Handlers) AddTime(kind AddTimeKind) error {
+	return h.AddEvent(EventDataAddTime(kind))
+}
+
+func (h *Handlers) Move(move json.RawMessage) error {
+	return h.AddEvent(EventDataMove(move))
 }
 
 func GetMessageArgument[T interface{}](messageData map[string]json.RawMessage, key string) (*T, error) {
@@ -519,47 +617,47 @@ func (h *Handlers) Handle(messageType string, messageData map[string]json.RawMes
 	case "Resign":
 		return h.Resign()
 	case "NotifyTimeout":
-		timeoutedPlayer, err := GetMessageArgument[MinimalUser](messageData, "timeoutedPlayer")
+		timeoutedPlayer, err := GetMessageArgument[Player](messageData, "timeoutedPlayer")
 		if err != nil {
 			return h.Error(ErrorInvalidData)
 		}
-		return h.NotifyTimeout(timeoutedPlayer)
+		return h.NotifyTimeout(*timeoutedPlayer)
 	case "GameEnd":
-		winner, err := GetMessageArgument[MinimalUser](messageData, "winner")
+		winner, err := GetMessageArgument[PlayerOrNone](messageData, "winner")
 		if err != nil {
 			return h.Error(ErrorInvalidData)
 		}
-		return h.GameEnd(winner)
+		return h.GameEnd(*winner)
 	case "Propose":
 		proposition, err := GetMessageArgument[Proposition](messageData, "proposition")
 		if err != nil {
 			return h.Error(ErrorInvalidData)
 		}
-		return h.Propose(proposition)
+		return h.Propose(*proposition)
 	case "Reject":
 		proposition, err := GetMessageArgument[Proposition](messageData, "proposition")
 		if err != nil {
 			return h.Error(ErrorInvalidData)
 		}
-		return h.Reject(proposition)
+		return h.Reject(*proposition)
 	case "Accept":
 		proposition, err := GetMessageArgument[Proposition](messageData, "proposition")
 		if err != nil {
 			return h.Error(ErrorInvalidData)
 		}
-		return h.Accept(proposition)
+		return h.Accept(*proposition)
 	case "AddTime":
 		kind, err := GetMessageArgument[AddTimeKind](messageData, "kind")
 		if err != nil {
 			return h.Error(ErrorInvalidData)
 		}
-		return h.AddTime(kind)
+		return h.AddTime(*kind)
 	case "Move":
 		move, err := GetMessageArgument[json.RawMessage](messageData, "move")
 		if err != nil {
 			return h.Error(ErrorInvalidData)
 		}
-		return h.Move(move)
+		return h.Move(*move)
 
 	default:
 		return h.Error(ErrorUnknownMessage)

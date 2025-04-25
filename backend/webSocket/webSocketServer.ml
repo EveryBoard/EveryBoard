@@ -238,7 +238,7 @@ module Make
                         Game.iter_events ~request game_id (fun event -> send_to client_id (GameEvent { event; server_time }))
                     ] in
                     (* Finally, send the sync event to let them know they're up to date *)
-                    let event : Models.GameEvent.t = { time = External.now (); user; data = Action Models.GameEvent.Action.sync } in
+                    let event : Models.GameEvent.t = { time = External.now (); user; data = Action Models.GameEvent.Action.} in
                     send_to client_id (GameEvent { event; server_time })
             end
         | Unsubscribe ->

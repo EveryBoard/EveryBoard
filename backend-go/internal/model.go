@@ -5,6 +5,21 @@ import (
 	"fmt"
 )
 
+type Player int
+
+const (
+	PlayerZero Player = 0
+	PlayerOne  Player = 1
+)
+
+type PlayerOrNone int
+
+const (
+	PlayerOrNoneZero PlayerOrNone = 0
+	PlayerOrNoneOne  PlayerOrNone = 1
+	PlayerOrNoneNone PlayerOrNone = 2
+)
+
 type MinimalUser struct {
 	ID   string `json:"id"`
 	Name string `json:"name"`
@@ -139,6 +154,18 @@ const (
 	ResultAgreedDrawByOne  Result = "AgreedDrawByOne"
 )
 
+func (r Result) IsDraw() bool {
+	return r == ResultHardDraw || r == ResultAgreedDrawByZero || r == ResultAgreedDrawByOne
+}
+
+func (r Result) IsVictoryOfZero() bool {
+	return r == ResultResignOfOne || r == ResultTimeoutOfOne || r == ResultVictoryOfZero
+}
+
+func (r Result) IsVictoryOfOne() bool {
+	return r == ResultResignOfZero || r == ResultTimeoutOfZero || r == ResultVictoryOfOne
+}
+
 func (r *Result) UnmarshalJSON(data []byte) error {
 	var s string
 	err := json.Unmarshal(data, &s)
@@ -198,14 +225,6 @@ type Reply struct {
 	Data        *string     `json:"data,omitempty"`
 }
 
-func ReplyAccept(p Proposition, data *string) Reply {
-	return Reply{RequestType: p, Accept: true, Data: data}
-}
-
-func ReplyRefuse(p Proposition) Reply {
-	return Reply{RequestType: p, Accept: false}
-}
-
 type Action struct {
 	Action string `json:"action"`
 }
@@ -214,9 +233,22 @@ var (
 	ActionStartGame     Action = Action{Action: "StartGame"}
 	ActionEndGame       Action = Action{Action: "EndGame"}
 	ActionSync          Action = Action{Action: "Sync"}
-	ActionAddTurnTime   Action = Action{Action: "AddTurnTime"}
-	ActionAddGlobalTime Action = Action{Action: "AddGlobalTime"}
 )
+
+type AddTimeKind string
+
+const (
+	AddTimeTurn = "Turn"
+	AddTimeGage = "Global" // TODO: rename from global to game everywhere
+)
+
+func ActionAddTime(kind AddTimeKind) Action {
+	if kind == AddTimeTurn {
+		return Action{Action: "AddTurnTime"}
+	} else {
+		return Action{Action: "AddGlobalTime"} // TODO: AddGameTime
+	}
+}
 
 type Move struct {
 	Move json.RawMessage `json:"move"`
@@ -237,9 +269,41 @@ type EventData struct {
 }
 
 var (
-	EventDataSync = EventData{Type: EventTypeAction, Payload: ActionSync}
+	EventDataSync    = EventData{Type: EventTypeAction, Payload: ActionSync}
 	EventDataEndGame = EventData{Type: EventTypeAction, Payload: ActionEndGame}
 )
+
+func EventDataRequest(proposition Proposition) EventData {
+	return EventData{
+		Type: EventTypeRequest,
+		Payload: Request{ RequestType: proposition },
+	}
+}
+
+func EventDataReplyReject(proposition Proposition) EventData {
+	return EventData{
+		Type: EventTypeReply,
+		Payload: Reply{
+			RequestType: proposition,
+			Accept: false,
+			Data: nil,
+		},
+	}
+}
+
+func EventDataAddTime(kind AddTimeKind) EventData {
+	return EventData{
+		Type: EventTypeAction,
+		Payload: ActionAddTime(kind),
+	}
+}
+
+func EventDataMove(move json.RawMessage) EventData {
+	return EventData{
+		Type: EventTypeMove,
+		Payload: move,
+	}
+}
 
 func (e EventData) MarshalJSON() ([]byte, error) {
 	payloadBytes, err := json.Marshal(e.Payload)
@@ -248,11 +312,10 @@ func (e EventData) MarshalJSON() ([]byte, error) {
 	}
 
 	var payloadFields map[string]json.RawMessage
-	err = json.Unmarshal(payloadBytes, &payloadFields);
+	err = json.Unmarshal(payloadBytes, &payloadFields)
 	if err != nil {
 		return nil, err
 	}
-
 
 	payloadFields["eventType"], err = json.Marshal(string(e.Type))
 	if err != nil {
@@ -264,7 +327,7 @@ func (e EventData) MarshalJSON() ([]byte, error) {
 
 func (e *EventData) UnmarshalJSON(data []byte) error {
 	var raw map[string]json.RawMessage
-	err := json.Unmarshal(data, &raw);
+	err := json.Unmarshal(data, &raw)
 	if err != nil {
 		return err
 	}
@@ -273,7 +336,7 @@ func (e *EventData) UnmarshalJSON(data []byte) error {
 	if !ok {
 		return fmt.Errorf("missing eventType field")
 	}
-	err = json.Unmarshal(typeField, &e.Type);
+	err = json.Unmarshal(typeField, &e.Type)
 	if err != nil {
 		return err
 	}
@@ -331,7 +394,7 @@ func (e GameEvent) MarshalJSON() ([]byte, error) {
 	}
 
 	var dataFields map[string]json.RawMessage
-	err = json.Unmarshal(dataBytes, &dataFields);
+	err = json.Unmarshal(dataBytes, &dataFields)
 	if err != nil {
 		return nil, err
 	}
@@ -351,7 +414,7 @@ func (e GameEvent) MarshalJSON() ([]byte, error) {
 
 func (e *GameEvent) UnmarshalJSON(data []byte) error {
 	var raw map[string]json.RawMessage
-	err := json.Unmarshal(data, &raw);
+	err := json.Unmarshal(data, &raw)
 	if err != nil {
 		return err
 	}

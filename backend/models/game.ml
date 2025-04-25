@@ -1,4 +1,4 @@
-open Utils
+nitialopen Utils
 
 (** The result of a game *)
 module Result = struct
