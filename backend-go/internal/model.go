@@ -1,6 +1,7 @@
 package internal
 
 import (
+	"database/sql/driver"
 	"encoding/json"
 	"fmt"
 )
@@ -312,9 +313,22 @@ func EventDataAddTime(kind AddTimeKind) EventData {
 func EventDataMove(move json.RawMessage) EventData {
 	return EventData{
 		Type:    EventTypeMove,
-		Payload: move,
+		Payload: Move{ Move: move },
 	}
 }
+
+func (e EventData) Value() (driver.Value, error) {
+	return json.Marshal(e)
+}
+
+func (e *EventData) Scan(value interface{}) error {
+	bytes, ok := value.([]byte)
+	if !ok {
+		return fmt.Errorf("failed to unmarshal EventData: not []byte")
+	}
+	return json.Unmarshal(bytes, e)
+}
+
 
 func (e EventData) MarshalJSON() ([]byte, error) {
 	payloadBytes, err := json.Marshal(e.Payload)
@@ -326,6 +340,10 @@ func (e EventData) MarshalJSON() ([]byte, error) {
 	err = json.Unmarshal(payloadBytes, &payloadFields)
 	if err != nil {
 		return nil, err
+	}
+	if payloadFields == nil {
+		payloadFields = make(map[string]json.RawMessage)
+		return nil, fmt.Errorf("empty payload")
 	}
 
 	payloadFields["eventType"], err = json.Marshal(string(e.Type))
@@ -395,7 +413,7 @@ type GameEvent struct {
 	GameID GameID      `gorm:"index;not null;foreignKey:ConfigRoom" json:"-"`
 	Time   int64       `gorm:"not null" json:"time"`
 	User   MinimalUser `gorm:"not null;embedded;embeddedPrefix:user_" json:"user"`
-	Data   EventData   `gorm:"not null;type:json" json:"data"`
+	Data   EventData   `gorm:"not null;serializer:json" json:"data"`
 }
 
 func (e GameEvent) MarshalJSON() ([]byte, error) {
