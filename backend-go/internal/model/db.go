@@ -1,8 +1,8 @@
-package internal
+package model
 
 import (
-	"log"
 	"errors"
+	"log"
 
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
@@ -164,9 +164,6 @@ func CreateRematchConfigRoom(creator *MinimalUser, configRoom *ConfigRoom, game 
 	return &rematchConfigRoom, result.Error
 }
 
-func (cr *ConfigRoom) Delete() error {
-	return db.Model(&cr).Delete(&ConfigRoom{}).Error
-}
 
 func (cr *ConfigRoom) SelectOpponent(opponent *MinimalUser) error {
 	result := db.Model(&cr).Updates(ConfigRoom{ChosenOpponent: opponent})
@@ -308,4 +305,37 @@ func (game *Game) SetResult(gameResult Result) error {
 func AddEvent(gameId GameID, event GameEvent) error {
 	event.GameID = gameId
 	return db.Create(&event).Error
+}
+
+
+func UpdateElo(tx *gorm.DB, gameName string, user *MinimalUser, elo Elo) error {
+	return tx.Model(&Elo{}).Where("game_name = ? and user_id = ?", gameName, user.ID).Updates(elo).Error
+}
+
+func GetElos(gameName string, winner *MinimalUser, loser *MinimalUser) (*Elo, *Elo, error) {
+	// TODO: do this through a transaction
+	eloWinner, err := GetElo(gameName, winner)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	eloLoser, err := GetElo(gameName, loser)
+	if err != nil {
+		return nil, nil, err
+	}
+	return eloWinner, eloLoser, nil
+}
+func UpdateElos(gameName string, winner *MinimalUser, winnerElo Elo, loser *MinimalUser, loserElo Elo) error {
+	tx := db.Begin()
+	err := UpdateElo(tx, gameName, winner, winnerElo)
+	if err != nil {
+		tx.Rollback()
+		return err
+	}
+	err = UpdateElo(tx, gameName, loser, loserElo)
+	if err != nil {
+		tx.Rollback()
+		return err
+	}
+	return tx.Commit().Error
 }

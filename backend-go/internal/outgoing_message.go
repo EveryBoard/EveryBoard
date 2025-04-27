@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"log"
 
+	model "github.com/EveryBoard/EveryBoard/internal/model"
 	"github.com/gorilla/websocket"
 )
 
@@ -33,7 +34,7 @@ func (m ErrorMessage) Tag() string {
 }
 
 type ChatMessage struct {
-	Message Message `json:"message"`
+	Message model.Message `json:"message"`
 }
 
 func (m ChatMessage) Tag() string {
@@ -41,7 +42,7 @@ func (m ChatMessage) Tag() string {
 }
 
 type GameCreatedMessage struct {
-	GameId GameID `json:"gameId"`
+	GameId model.GameID `json:"gameId"`
 }
 
 func (m GameCreatedMessage) Tag() string {
@@ -49,8 +50,8 @@ func (m GameCreatedMessage) Tag() string {
 }
 
 type ConfigRoomUpdateMessage struct {
-	GameID     GameID     `json:"gameId"`
-	ConfigRoom ConfigRoom `json:"configRoom"`
+	GameID     model.GameID     `json:"gameId"`
+	ConfigRoom model.ConfigRoom `json:"configRoom"`
 }
 
 func (m ConfigRoomUpdateMessage) Tag() string {
@@ -58,7 +59,7 @@ func (m ConfigRoomUpdateMessage) Tag() string {
 }
 
 type ConfigRoomDeletedMessage struct {
-	GameID GameID `json:"gameId"`
+	GameID model.GameID `json:"gameId"`
 }
 
 func (m ConfigRoomDeletedMessage) Tag() string {
@@ -66,7 +67,7 @@ func (m ConfigRoomDeletedMessage) Tag() string {
 }
 
 type CandidateJoinedMessage struct {
-	Candidate MinimalUser `json:"candidate"`
+	Candidate model.MinimalUser `json:"candidate"`
 }
 
 func (m CandidateJoinedMessage) Tag() string {
@@ -74,7 +75,7 @@ func (m CandidateJoinedMessage) Tag() string {
 }
 
 type CandidateLeftMessage struct {
-	Candidate MinimalUser `json:"candidate"`
+	Candidate model.MinimalUser `json:"candidate"`
 }
 
 func (m CandidateLeftMessage) Tag() string {
@@ -82,7 +83,7 @@ func (m CandidateLeftMessage) Tag() string {
 }
 
 type GameUpdateMessage struct {
-	Game Game `json:"game"`
+	Game model.Game `json:"game"`
 }
 
 func (m GameUpdateMessage) Tag() string {
@@ -90,8 +91,8 @@ func (m GameUpdateMessage) Tag() string {
 }
 
 type GameEventMessage struct {
-	Event GameEvent `json:"event"`
-	ServerTime float64 `json:"serverTime"`
+	Event      model.GameEvent `json:"event"`
+	ServerTime float64         `json:"serverTime"`
 }
 
 func (m GameEventMessage) Tag() string {

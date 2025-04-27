@@ -1,4 +1,4 @@
-package internal
+package auth
 
 import (
 	"context"
@@ -11,10 +11,11 @@ import (
 
 type User struct {
 	Username string `json:"username"`
+	// User may have other fields, but we don't care about them
 }
 
-func FetchUserDocument(uid string) (*User, error) {
-	docRef := FirestoreClient.Collection("users").Doc(uid)
+func fetchUserDocument(uid string) (*User, error) {
+	docRef := firestoreClient.Collection("users").Doc(uid)
 	docSnapshot, err := docRef.Get(context.Background())
 	if err != nil {
 		return nil, fmt.Errorf("failed to fetch user document: %v", err)
@@ -45,7 +46,7 @@ func VerifyTokenAndGetUserFromHeader(r *http.Request) (string, *User, error) {
 	token := strings.TrimSpace(parts[1])
 
 	var uid string
-	if UseEmulator {
+	if useEmulator {
 		tokenParts := strings.Split(token, ".")
 		if len(tokenParts) != 3 {
 			return "", nil, fmt.Errorf("invalid token format")
@@ -68,7 +69,7 @@ func VerifyTokenAndGetUserFromHeader(r *http.Request) (string, *User, error) {
 
 		uid = sub;
 	} else {
-		verifiedToken, err := AuthClient.VerifyIDToken(r.Context(), token)
+		verifiedToken, err := authClient.VerifyIDToken(r.Context(), token)
 		if err != nil {
 			return "", nil, err
 		}
@@ -80,6 +81,6 @@ func VerifyTokenAndGetUserFromHeader(r *http.Request) (string, *User, error) {
 		uid = sub
 	}
 
-	user, err := FetchUserDocument(uid)
+	user, err := fetchUserDocument(uid)
 	return uid, user, err
 }

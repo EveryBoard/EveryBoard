@@ -1,4 +1,4 @@
-package internal
+package auth
 
 import (
 	"context"
@@ -12,14 +12,14 @@ import (
 
 )
 
-var UseEmulator bool
-var AuthClient *auth.Client
-var FirestoreClient *firestore.Client
+var useEmulator bool
+var authClient *auth.Client
+var firestoreClient *firestore.Client
 
-func InitFirebase(useEmulator bool, serviceAccountFile string, projectID string) {
+func InitFirebase(useEmulatorValue bool, serviceAccountFile string, projectID string) {
 	var app *firebase.App
 	var err error
-	if useEmulator {
+	if useEmulatorValue {
 		conf := &firebase.Config{ProjectID: projectID}
 		app, err = firebase.NewApp(context.Background(), conf)
 	} else {
@@ -29,17 +29,15 @@ func InitFirebase(useEmulator bool, serviceAccountFile string, projectID string)
 		log.Fatalf("Failed to initialize Firebase App: %v", err)
 	}
 
-	authClient, err := app.Auth(context.Background())
+	authClient, err = app.Auth(context.Background())
 	if err != nil {
 		log.Fatalf("Failed to initialize Auth client: %v", err)
 	}
-	AuthClient = authClient
 
-	firestoreClient, err := app.Firestore(context.Background())
+	firestoreClient, err = app.Firestore(context.Background())
 	if err != nil {
 		log.Fatalf("Failed to initialize Firestore client: %v", err)
 	}
-	FirestoreClient = firestoreClient
 
-	UseEmulator = useEmulator
+	useEmulator = useEmulatorValue
 }

@@ -9,6 +9,8 @@ import (
 	"github.com/gorilla/websocket"
 
 	everyboard "github.com/EveryBoard/EveryBoard/internal"
+	"github.com/EveryBoard/EveryBoard/internal/auth"
+	"github.com/EveryBoard/EveryBoard/internal/model"
 )
 
 var (
@@ -65,13 +67,13 @@ var upgrader = websocket.Upgrader{
 var subscriptionManager *everyboard.SubscriptionManager
 
 func HandleWebSocket(w http.ResponseWriter, r *http.Request) {
-	uid, user, err := everyboard.VerifyTokenAndGetUserFromHeader(r)
+	uid, user, err := auth.VerifyTokenAndGetUserFromHeader(r)
 	if err != nil {
 		log.Println(err)
 		http.Error(w, "Invalid token", http.StatusUnauthorized)
 		return
 	}
-	minimalUser := &everyboard.MinimalUser{
+	minimalUser := &model.MinimalUser{
 		ID: uid,
 		Name: user.Username,
 	}
@@ -98,7 +100,7 @@ func HandleWebSocket(w http.ResponseWriter, r *http.Request) {
 			continue
 		}
 		log.Printf("<<< [%v] %v", user.Username, string(msg))
-		messageType, messageData, err := everyboard.DecodeIncomingMessage(msg)
+		messageType, messageData, err := model.DecodeIncomingMessage(msg)
 		if err != nil {
 			log.Printf("Cannot decode: %v", err)
 			everyboard.SendError(connection, everyboard.ErrorUnknownMessage)
@@ -113,9 +115,9 @@ func HandleWebSocket(w http.ResponseWriter, r *http.Request) {
 
 func main() {
 	ReadConfiguration()
-	everyboard.InitFirebase(useEmulator, serviceAccountFile, projectId)
-	everyboard.InitDatabase("everyboard.db")
-	everyboard.InitIdEncoder()
+	auth.InitFirebase(useEmulator, serviceAccountFile, projectId)
+	model.InitDatabase("everyboard.db")
+	model.InitIdEncoder()
 	subscriptionManager = everyboard.NewSubscriptionManager()
 	http.HandleFunc("/ws", HandleWebSocket)
 	log.Println("Listening on", listenAddr)

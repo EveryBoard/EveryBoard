@@ -2,7 +2,8 @@ package internal
 
 import (
 	"math"
-	"gorm.io/gorm"
+
+	model "github.com/EveryBoard/EveryBoard/internal/model"
 )
 
 type EndType int
@@ -55,36 +56,19 @@ func newEloValue(oldEloValue float64, difference float64) float64 {
 	}
 }
 
-func computeNewElo(oldElo Elo, oldOpponentElo Elo, end EndType) Elo {
+func computeNewElo(oldElo model.Elo, oldOpponentElo model.Elo, end EndType) model.Elo {
 	k := k(oldElo.GamesPlayed)
 	w := w(end)
 	p := winProbability(oldElo.CurrentElo, oldOpponentElo.CurrentElo)
-	return Elo{
+	return model.Elo{
 		CurrentElo: newEloValue(oldElo.CurrentElo, standardEloDifference(k, w, p)),
 		GamesPlayed: oldElo.GamesPlayed + 1,
 	}
 }
 
-func UpdateElo(tx *gorm.DB, gameName string, user *MinimalUser, elo Elo) error {
-	return tx.Model(&Elo{}).Where("game_name = ? and user_id = ?", gameName, user.ID).Updates(elo).Error
-}
 
-func GetElos(gameName string, winner *MinimalUser, loser *MinimalUser) (*Elo, *Elo, error) {
-	// TODO: do this through a transaction
-	eloWinner, err := GetElo(gameName, winner)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	eloLoser, err := GetElo(gameName, loser)
-	if err != nil {
-		return nil, nil, err
-	}
-	return eloWinner, eloLoser, nil
-}
-
-func ComputeAndUpdateElos(gameName string, winner *MinimalUser, loser *MinimalUser, draw bool) error {
-	winnerElo, loserElo, err := GetElos(gameName, winner, loser)
+func ComputeAndUpdateElos(gameName string, winner *model.MinimalUser, loser *model.MinimalUser, draw bool) error {
+	winnerElo, loserElo, err := model.GetElos(gameName, winner, loser)
 	if err != nil {
 		return err
 	}
@@ -97,16 +81,5 @@ func ComputeAndUpdateElos(gameName string, winner *MinimalUser, loser *MinimalUs
 	newEloWinner := computeNewElo(*winnerElo, *loserElo, winnerEnd)
 	newEloLoser := computeNewElo(*loserElo, *winnerElo, loserEnd)
 
-	tx := db.Begin()
-	err = UpdateElo(tx, gameName, winner, newEloWinner)
-	if err != nil {
-		tx.Rollback()
-		return err
-	}
-	err = UpdateElo(tx, gameName, loser, newEloLoser)
-	if err != nil {
-		tx.Rollback()
-		return err
-	}
-	return tx.Commit().Error
+	return model.UpdateElos(gameName, winner, newEloWinner, loser, newEloLoser)
 }

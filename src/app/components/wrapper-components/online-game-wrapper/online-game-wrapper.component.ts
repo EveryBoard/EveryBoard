@@ -58,7 +58,6 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
 
     public configRoom: ConfigRoom;
     public currentGame: MGPOptional<CurrentGame> = MGPOptional.empty();
-    private userLinkedToThisPart: boolean = true;
 
     private routerEventsSubscription!: Subscription; // Initialized in ngOnInit
     private userSubscription!: Subscription; // Initialized in ngOnInit
@@ -496,7 +495,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
     public async ngOnDestroy(): Promise<void> {
         this.routerEventsSubscription.unsubscribe();
         this.userSubscription.unsubscribe();
-        if (this.isPlaying() === false && this.userLinkedToThisPart && this.connectedUserService.user.isPresent()) {
+        if (this.isPlaying() === false && this.connectedUserService.user.isPresent()) {
             await this.currentGameService.removeCurrentGame();
         }
         if (this.gameStarted) {
@@ -547,11 +546,11 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
             case 'VictoryOfOne':
             case 'TimeoutOfZero':
             case 'ResignOfZero':
-                return Utils.getNonNullable(this.game).playerZero;
+                return Utils.getNonNullable(this.game).playerOne;
             case 'VictoryOfZero':
             case 'TimeoutOfOne':
             case 'ResignOfOne':
-                return Utils.getNonNullable(this.game).playerOne;
+                return Utils.getNonNullable(this.game).playerZero;
             default:
                 throw new Error('should not be called'); // TODO
         }
@@ -563,11 +562,11 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
             case 'VictoryOfOne':
             case 'TimeoutOfZero':
             case 'ResignOfZero':
-                return Utils.getNonNullable(this.game).playerOne;
+                return Utils.getNonNullable(this.game).playerZero;
             case 'VictoryOfZero':
             case 'TimeoutOfOne':
             case 'ResignOfOne':
-                return Utils.getNonNullable(this.game).playerZero;
+                return Utils.getNonNullable(this.game).playerOne;
             default:
                 throw new Error('should not be called'); // TODO
         }

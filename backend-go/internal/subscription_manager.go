@@ -2,7 +2,9 @@ package internal
 
 import (
 	"sync"
+
 	"github.com/gorilla/websocket"
+	model "github.com/EveryBoard/EveryBoard/internal/model"
 )
 
 type SubscriptionKind int
@@ -15,7 +17,7 @@ const (
 
 type SubscriptionKindAndGameId struct {
 	kind   SubscriptionKind
-	gameID GameID
+	gameID model.GameID
 }
 
 type SubscriptionManager struct {
@@ -43,7 +45,7 @@ func NewSubscriptionManager() *SubscriptionManager {
 
 // Subscribe subscribes a client and its corresponding user to a game
 // Assumes that the client is not yet subscribed to a game
-func (this *SubscriptionManager) Subscribe(client *websocket.Conn, user string, gameID GameID, kind SubscriptionKind) {
+func (this *SubscriptionManager) Subscribe(client *websocket.Conn, user string, gameID model.GameID, kind SubscriptionKind) {
 	this.lock.Lock()
 	defer this.lock.Unlock()
 
@@ -90,7 +92,7 @@ func (this *SubscriptionManager) Unsubscribe(client *websocket.Conn) {
 }
 
 // SubscriptionsTo returns the clients subscribed to the game
-func (this *SubscriptionManager) SubscriptionsTo(kind SubscriptionKind, gameId GameID) Set[*websocket.Conn] {
+func (this *SubscriptionManager) SubscriptionsTo(kind SubscriptionKind, gameId model.GameID) Set[*websocket.Conn] {
 	this.lock.RLock()
 	defer this.lock.RUnlock()
 
@@ -108,7 +110,7 @@ func (this *SubscriptionManager) IsSubscribed(user string) bool {
 }
 
 // SubscriptionOf returns the subscription type and game ID of a client, as well as whether there exists one.
-func (this *SubscriptionManager) SubscriptionOf(client *websocket.Conn) (SubscriptionKind, GameID, bool) {
+func (this *SubscriptionManager) SubscriptionOf(client *websocket.Conn) (SubscriptionKind, model.GameID, bool) {
 	this.lock.RLock()
 	defer this.lock.RUnlock()
 
@@ -117,7 +119,7 @@ func (this *SubscriptionManager) SubscriptionOf(client *websocket.Conn) (Subscri
 }
 
 // Broadcast sends a message to all clients subscribed to kind, gameId
-func (this *SubscriptionManager) Broadcast(kind SubscriptionKind, gameId GameID, msg OutgoingMessage) error {
+func (this *SubscriptionManager) Broadcast(kind SubscriptionKind, gameId model.GameID, msg OutgoingMessage) error {
 	for connection := range(this.SubscriptionsTo(kind, gameId)) {
 		err := SendMessage(connection, msg)
 		if err != nil {
