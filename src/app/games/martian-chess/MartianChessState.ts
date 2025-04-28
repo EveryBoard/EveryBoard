@@ -31,9 +31,9 @@ export class MartianChessCapture {
 
     public toValue(): number {
         let sum: number = 0;
-        this.captures.forEach((item: {key: MartianChessPiece, value: number}) => {
-            sum += item.key.getValue() * item.value;
-        });
+        for (const [piece, value] of this.captures) {
+            sum += piece.getValue() * value;
+        };
         return sum;
     }
 
