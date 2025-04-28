@@ -2,6 +2,10 @@ package internal
 
 type Set[T comparable] map[T]struct{}
 
+func NewSet[T comparable]() Set[T] {
+	return make(Set[T])
+}
+
 func (set *Set[T]) Add(value T) {
 	(*set)[value] = struct{}{}
 }

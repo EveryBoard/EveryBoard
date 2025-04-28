@@ -22,7 +22,11 @@ func readFile(filename string) Set[string] {
 	return gamesSet
 }
 
-var gameList = readFile("games.txt")
+var gameList Set[string]
+
+func InitGameList(filePath string) {
+	gameList = readFile("games.txt")
+}
 
 func GameExists(gameName string) bool {
 	_, exists := gameList[gameName]

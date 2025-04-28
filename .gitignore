@@ -82,3 +82,4 @@ games.txt
 /backend-rs/target/
 /backend-rs/Cargo.lock
 /backend-go/backend
+/backend-go/coverage.out

@@ -115,6 +115,7 @@ func HandleWebSocket(w http.ResponseWriter, r *http.Request) {
 
 func main() {
 	ReadConfiguration()
+	everyboard.InitGameList("games.txt")
 	auth.InitFirebase(useEmulator, serviceAccountFile, projectId)
 	model.InitDatabase("everyboard.db")
 	model.InitIdEncoder()

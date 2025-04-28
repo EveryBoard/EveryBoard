@@ -11,5 +11,14 @@ run: build
 test:
 	go test ./...
 
+coverage:
+	go test ./... -coverpkg=./... -cover -coverprofile=coverage.out
+
+view-coverage:
+	go tool cover -html=coverage.out
+
 lint:
 	golangci-lint run
+
+clean:
+	go clean -testcache

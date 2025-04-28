@@ -21,7 +21,7 @@ func InitDatabase(dbPath string) {
 
 	err = db.AutoMigrate(&ConfigRoom{})
 	if err != nil {
-		log.Fatal("Cannot initialize DB: %v", err)
+		log.Fatalf("Cannot initialize DB: %v", err)
 	}
 
 	// Create first config room, which is actually the lobby
