@@ -87,7 +87,7 @@ func (h *Handlers) SubscribeToLobby() error {
 		return h.Error(ErrorAlreadySubscribed)
 	}
 
-	h.subscriptionManager.Subscribe(h.connection, uid, model.GameIDLobby, SubscriptionToLobby)
+	h.subscriptionManager.subscribe(h.connection, uid, model.GameIDLobby, SubscriptionToLobby)
 	err := h.SendChatMessages(model.GameIDLobby)
 	if err != nil {
 		return err
@@ -116,7 +116,7 @@ func (h *Handlers) ChatSend(content string) error {
 }
 
 func (h *Handlers) CreateGame(gameName string) error {
-	if !GameExists(gameName) {
+	if !gameExists(gameName) {
 		// TODO FOR REVIEW: je suis d'avis que ce check pourrait partir. Il nous
 		// cause plus de mal que de bien: quand le backend est déployé dans une
 		// autre branche et qu'on défini un jeu dans une branche en parallèle,
@@ -153,7 +153,7 @@ func (h *Handlers) SubscribeToConfigRoom(gameId model.GameID) error {
 		return h.Error(ErrorGameDoesNotExist)
 	}
 
-	h.subscriptionManager.Subscribe(h.connection, h.user.ID, gameId, SubscriptionToConfigRoom)
+	h.subscriptionManager.subscribe(h.connection, h.user.ID, gameId, SubscriptionToConfigRoom)
 	switch configRoom.Status {
 	case model.StatusCreated, model.StatusConfigProposed:
 		// This is a config room in progress
@@ -202,7 +202,7 @@ func (h *Handlers) SubscribeToGame(gameId model.GameID) error {
 		return h.Error(ErrorGameDoesNotExist)
 	}
 
-	h.subscriptionManager.Subscribe(h.connection, h.user.ID, gameId, SubscriptionToGame)
+	h.subscriptionManager.subscribe(h.connection, h.user.ID, gameId, SubscriptionToGame)
 	// It is important to send the game first and then the events so that the
 	// client knows about the game before receiving events
 	err = h.Send(GameUpdateMessage{ Game: *game })
@@ -462,7 +462,7 @@ func (h *Handlers) doEndGame(getResult (func(*model.MinimalUser, *model.MinimalU
 		return err
 	}
 
-	err = ComputeAndUpdateElos(configRoom.GameName, winner, loser, draw)
+	err = computeAndUpdateElos(configRoom.GameName, winner, loser, draw)
 	if err != nil {
 		return err
 	}

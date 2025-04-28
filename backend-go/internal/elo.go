@@ -67,7 +67,7 @@ func computeNewElo(oldElo model.Elo, oldOpponentElo model.Elo, end EndType) mode
 }
 
 
-func ComputeAndUpdateElos(gameName string, winner *model.MinimalUser, loser *model.MinimalUser, draw bool) error {
+func computeAndUpdateElos(gameName string, winner *model.MinimalUser, loser *model.MinimalUser, draw bool) error {
 	winnerElo, loserElo, err := model.GetElos(gameName, winner, loser)
 	if err != nil {
 		return err

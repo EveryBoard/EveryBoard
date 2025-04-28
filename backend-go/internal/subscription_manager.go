@@ -4,7 +4,8 @@ import (
 	"sync"
 
 	"github.com/gorilla/websocket"
-	model "github.com/EveryBoard/EveryBoard/internal/model"
+	"github.com/EveryBoard/EveryBoard/internal/model"
+	"github.com/EveryBoard/EveryBoard/internal/utils"
 )
 
 type SubscriptionKind int
@@ -25,7 +26,7 @@ type SubscriptionManager struct {
 	clientToGame  map[*websocket.Conn]SubscriptionKindAndGameId
 	// A map from subscribed games to the set of clients that subscribed to it.
 	// (yes, sets are ugly: map[T]struct{} is a set of T
-	gameToClients map[SubscriptionKindAndGameId]Set[*websocket.Conn]
+	gameToClients map[SubscriptionKindAndGameId]utils.Set[*websocket.Conn]
 	// A map from client to the user id
 	clientToUser  map[*websocket.Conn]string
 	// A map from user id to their client
@@ -34,10 +35,10 @@ type SubscriptionManager struct {
 	lock          sync.RWMutex
 }
 
-func NewSubscriptionManager() *SubscriptionManager {
+func newSubscriptionManager() *SubscriptionManager {
 	return &SubscriptionManager{
 		clientToGame:   make(map[*websocket.Conn]SubscriptionKindAndGameId),
-		gameToClients:  make(map[SubscriptionKindAndGameId]Set[*websocket.Conn]),
+		gameToClients:  make(map[SubscriptionKindAndGameId]utils.Set[*websocket.Conn]),
 		clientToUser:   make(map[*websocket.Conn]string),
 		userToClient:   make(map[string]*websocket.Conn),
 	}
@@ -45,7 +46,7 @@ func NewSubscriptionManager() *SubscriptionManager {
 
 // Subscribe subscribes a client and its corresponding user to a game
 // Assumes that the client is not yet subscribed to a game
-func (this *SubscriptionManager) Subscribe(client *websocket.Conn, user string, gameID model.GameID, kind SubscriptionKind) {
+func (this *SubscriptionManager) subscribe(client *websocket.Conn, user string, gameID model.GameID, kind SubscriptionKind) {
 	this.lock.Lock()
 	defer this.lock.Unlock()
 
@@ -56,7 +57,7 @@ func (this *SubscriptionManager) Subscribe(client *websocket.Conn, user string, 
 	_, exists := this.gameToClients[subscriptionKindAndGameId]
 	if exists == false {
 		// Initialize this set
-		this.gameToClients[subscriptionKindAndGameId] = make(Set[*websocket.Conn])
+		this.gameToClients[subscriptionKindAndGameId] = utils.NewSet[*websocket.Conn]()
 	}
 	// Add the value to the set
 	set := this.gameToClients[subscriptionKindAndGameId]
@@ -92,7 +93,7 @@ func (this *SubscriptionManager) Unsubscribe(client *websocket.Conn) {
 }
 
 // SubscriptionsTo returns the clients subscribed to the game
-func (this *SubscriptionManager) SubscriptionsTo(kind SubscriptionKind, gameId model.GameID) Set[*websocket.Conn] {
+func (this *SubscriptionManager) SubscriptionsTo(kind SubscriptionKind, gameId model.GameID) utils.Set[*websocket.Conn] {
 	this.lock.RLock()
 	defer this.lock.RUnlock()
 

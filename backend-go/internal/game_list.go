@@ -1,18 +1,21 @@
 package internal
+
 import (
 	"os"
 	"log"
 	"strings"
+
+	"github.com/EveryBoard/EveryBoard/internal/utils"
 )
 
-func readFile(filename string) Set[string] {
+func readFile(filename string) utils.Set[string] {
 	data, err := os.ReadFile(filename)
 	if err != nil {
 		log.Fatalf("Cannot read %v: %v", filename, err)
 		return nil
 	}
 
-	gamesSet := make(Set[string])
+	gamesSet := make(utils.Set[string])
 	for _, line := range strings.Split(string(data), "\n") {
 		if game := strings.TrimSpace(line); game != "" {
 			gamesSet.Add(game)
@@ -22,13 +25,13 @@ func readFile(filename string) Set[string] {
 	return gamesSet
 }
 
-var gameList Set[string]
+var gameList utils.Set[string]
 
-func InitGameList(filePath string) {
-	gameList = readFile("games.txt")
+func initGameList(filePath string) {
+	gameList = readFile(filePath)
 }
 
-func GameExists(gameName string) bool {
+func gameExists(gameName string) bool {
 	_, exists := gameList[gameName]
 	return exists
 }
