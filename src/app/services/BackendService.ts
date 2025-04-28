@@ -56,8 +56,16 @@ export class WebSocketManagerService {
         Utils.assert(this.webSocket.isAbsent(), 'Should not connect twice to WebSocket!');
         const token: string = await this.connectedUserService.getIdToken();
 
-        return new Promise((resolve: () => void, reject) => {
+        return new Promise((resolve: () => void) => {
             const ws: WebSocket = new WebSocket(environment.backendURL.replace('http://', 'ws://') + '/ws', ['Authorization', token]);
+            const reconnect: () => void = (): void => {
+                this.messageDisplayer.criticalMessage($localize`Connection to server failed or closed, trying again in ${this.nextConnectionAttemptTime} seconds...`);
+                window.setTimeout(async() => {
+                    await this.connect();
+                    resolve();
+                }, this.nextConnectionAttemptTime * 1000);
+                this.nextConnectionAttemptTime *= 2;
+            };
 
             ws.onopen = (): void => {
                 console.log('WS: connected');
@@ -66,19 +74,14 @@ export class WebSocketManagerService {
                 this.nextConnectionAttemptTime = 1; // reset it
                 resolve();
             };
-            ws.onerror = (error: Event): void => {
-                this.messageDisplayer.criticalMessage($localize`Connection to server failed, trying again in ${this.nextConnectionAttemptTime} seconds...`);
-                window.setTimeout(async() => {
-                    await this.connect();
-                    resolve();
-                }, this.nextConnectionAttemptTime * 1000);
-                this.nextConnectionAttemptTime *= 2;
-                // reject(error);
+            ws.onerror = (_error: Event): void => {
+                reconnect();
             };
             ws.onclose = (): void => {
-                // If the connection closed because of an error, we have onerror that will try to reconnect
-                // Otherwise, the connection is probably best kept closed
-                console.log('WS: closed');
+                // The connection has been closed by the server.
+                // This is either unexpected, or because the server has restarted.
+                // It is best to try to reconnect in either case.
+                reconnect();
             };
             ws.onmessage = (ev: MessageEvent<unknown>): void => {
                 Utils.assert(typeof(ev.data) === 'string', `Received malformed WebSocket message (not a string): ${JSON.stringify(ev.data)}`);
