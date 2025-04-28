@@ -7,9 +7,9 @@ import (
 	everyboard "github.com/EveryBoard/EveryBoard/internal"
 )
 
-// ReadConfiguration reads the configuration of the server through environment variables.
+// readConfiguration reads the configuration of the server through environment variables.
 // Does sanity checks and stops if any configuration is invalid.
-func ReadConfiguration() everyboard.Configuration {
+func readConfiguration() everyboard.Configuration {
 	config := everyboard.Configuration{
 		GameListFile: "games.txt",
 		Database: "everyboard.db",
@@ -52,5 +52,5 @@ func ReadConfiguration() everyboard.Configuration {
 }
 
 func main() {
-	everyboard.Run(ReadConfiguration())
+	everyboard.Run(readConfiguration())
 }

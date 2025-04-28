@@ -172,10 +172,14 @@ func (h *Handlers) SubscribeToConfigRoom(gameId model.GameID) error {
 		}
 		// For both candidates and creator, send the config room first, then the candidates.
 		// The order is important so that the client knows the config room before the candidates
-		h.Send(ConfigRoomUpdateMessage{
+		err = h.Send(ConfigRoomUpdateMessage{
 			GameID: gameId,
 			ConfigRoom: *configRoom,
 		})
+		if err != nil {
+			return err
+		}
+
 		return model.ApplyToCandidates(gameId, func(candidate *model.Candidate) error {
 			if candidate.User.ID != uid { // don't send the user to itself twice
 				return h.Send(CandidateJoinedMessage{ Candidate: candidate.User })
@@ -577,7 +581,10 @@ func (h *Handlers) Accept(proposition model.Proposition) error {
 		if err != nil {
 			return err
 		}
-		rematchConfigRoom.Start()
+		err = rematchConfigRoom.Start()
+		if err != nil {
+			return err
+		}
 
 		// Create the game
 		_, err = rematchConfigRoom.CreateGame(Now(), RandBool())

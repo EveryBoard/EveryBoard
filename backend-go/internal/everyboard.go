@@ -51,7 +51,10 @@ func handleWebSocket(w http.ResponseWriter, r *http.Request) {
 			if err == io.EOF || websocket.IsUnexpectedCloseError(err) {
 				// WebSocket closed, stop this handler after disconnecting client
 				log.Printf("[%v] Disconnect", user.Username)
-				handlers.ClientLeft()
+				err = handlers.ClientLeft()
+				if err != nil  {
+					log.Printf("Error when disconnecting client: %v", err)
+				}
 				break
 			}
 			// Not a major error, continue receiving messages after ignoring this one
@@ -61,7 +64,10 @@ func handleWebSocket(w http.ResponseWriter, r *http.Request) {
 		messageType, messageData, err := model.DecodeIncomingMessage(msg)
 		if err != nil {
 			log.Printf("Cannot decode: %v", err)
-			SendError(connection, ErrorUnknownMessage)
+			err = SendError(connection, ErrorUnknownMessage)
+			if err != nil {
+				log.Printf("Error when sending error to client: %v", err)
+			}
 			continue
 		}
 		err = handlers.Handle(messageType, messageData)
