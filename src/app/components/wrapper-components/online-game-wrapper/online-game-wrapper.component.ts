@@ -1,7 +1,8 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { ActivatedRoute, NavigationEnd, Router, Event } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Mutex } from 'async-mutex';
 import { Subscription } from 'rxjs';
+
 import { JSONValue, MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
 import { ConnectedUserService, AuthUser } from 'src/app/services/ConnectedUserService';
@@ -59,7 +60,6 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
     public configRoom: ConfigRoom;
     public currentGame: MGPOptional<CurrentGame> = MGPOptional.empty();
 
-    private routerEventsSubscription!: Subscription; // Initialized in ngOnInit
     private userSubscription!: Subscription; // Initialized in ngOnInit
     private gameSubscription: Subscription = new Subscription();
 
@@ -73,17 +73,19 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
 
     private moveSentButNotReceivedYet: boolean = false;
 
+    public viewConfig: boolean = false;
+
     public constructor(activatedRoute: ActivatedRoute,
-                       connectedUserService: ConnectedUserService,
                        router: Router,
                        messageDisplayer: MessageDisplayer,
+                       private readonly connectedUserService: ConnectedUserService,
                        private readonly currentGameService: CurrentGameService,
                        private readonly gameService: GameService,
                        private readonly timeManager: OGWCTimeManagerService,
                        private readonly requestManager: OGWCRequestManagerService,
                        private readonly cdr: ChangeDetectorRef)
     {
-        super(activatedRoute, connectedUserService, router, messageDisplayer);
+        super(activatedRoute, router, messageDisplayer);
     }
 
     private extractGameIdFromURL(): string {
@@ -102,7 +104,6 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         const urlName: string = this.getGameUrlName();
         const gameExists: boolean = GameInfo.getByUrlName(urlName).isPresent();
         if (gameExists === false) {
-            this.routerEventsSubscription.unsubscribe();
             const message: string = GameWrapperMessages.NO_MATCHING_GAME(urlName);
             await this.router.navigate(['/notFound', message], { skipLocationChange: true } );
         }
@@ -114,12 +115,6 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
     }
 
     public async ngOnInit(): Promise<void> {
-        this.routerEventsSubscription = this.router.events.subscribe(async(ev: Event) => {
-            if (ev instanceof NavigationEnd) {
-                // TODO: This one seems useless? check if it breaks any test
-                // await this.setCurrentPartIdOrRedirect();
-            }
-        });
         this.userSubscription = this.connectedUserService.subscribeToUser(async(user: AuthUser) => {
             // player should be authenticated and have a username to be here
             // TODO: do we need a subscription? ConnectedUserService already has one! We can use its .user
@@ -395,7 +390,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         // First, show the move in the component
         await this.applyMove(move, false); // Move was already animated by its game component, no need to animate again
         // Then, send the move
-        const config: MGPOptional<RulesConfig> = await this.getConfig();
+        const config: MGPOptional<RulesConfig> = this.getConfig();
         const gameStatus: GameStatus = this.gameComponent.rules.getGameStatus(this.gameComponent.node, config);
         const encodedMove: JSONValue = this.gameComponent.encoder.encode(move);
         this.moveSentButNotReceivedYet = true;
@@ -408,7 +403,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
     private async applyMove(move: Move, triggerAnimation: boolean): Promise<void> {
         const oldNode: AbstractNode = this.gameComponent.node;
         const state: GameState = oldNode.gameState;
-        const config: MGPOptional<RulesConfig> = await this.getConfig();
+        const config: MGPOptional<RulesConfig> = this.getConfig();
         const legality: MGPFallible<unknown> = this.gameComponent.rules.isLegal(move, state, config);
         Utils.assert(legality.isSuccess(), 'OGWC.applyMove called with an illegal move');
         const stateAfterMove: GameState = this.gameComponent.rules.applyLegalMove(move, state, config, legality.get());
@@ -493,7 +488,6 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
     }
 
     public async ngOnDestroy(): Promise<void> {
-        this.routerEventsSubscription.unsubscribe();
         this.userSubscription.unsubscribe();
         if (this.isPlaying() === false && this.connectedUserService.user.isPresent()) {
             await this.currentGameService.removeCurrentGame();
@@ -503,7 +497,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         }
     }
 
-    public override async getConfig(): Promise<MGPOptional<RulesConfig>> {
+    public override getConfig(): MGPOptional<RulesConfig> {
         const rulesConfig: RulesConfig = this.configRoom.rulesConfig;
         return MGPOptional.of(rulesConfig);
     }

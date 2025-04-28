@@ -29,7 +29,7 @@ export class OnlineGameCreationComponent implements OnInit {
     }
 
     private extractGameFromURL(): string {
-        return Utils.getNonNullable(this.route.snapshot.paramMap.get('compo'));
+        return Utils.getNonNullable(this.route.snapshot.paramMap.get('game'));
     }
 
     private async createGameAndRedirectOrShowError(game: string): Promise<boolean> {
