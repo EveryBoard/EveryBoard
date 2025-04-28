@@ -273,12 +273,12 @@ func (e *GameEvent) UnmarshalJSON(data []byte) error {
 	}
 	delete(raw, "user")
 
-	err = json.Unmarshal(timeField, e.Time)
+	err = json.Unmarshal(timeField, &e.Time)
 	if err != nil {
 		return err
 	}
 
-	err = json.Unmarshal(userField, e.User)
+	err = json.Unmarshal(userField, &e.User)
 	if err != nil {
 		return err
 	}
@@ -288,7 +288,7 @@ func (e *GameEvent) UnmarshalJSON(data []byte) error {
 		return err
 	}
 
-	err = json.Unmarshal(rawBytes, e.Data)
+	err = json.Unmarshal(rawBytes, &e.Data)
 	if err != nil {
 		return err
 	}

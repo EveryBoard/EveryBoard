@@ -39,7 +39,7 @@ func DecodeId(gameId string) (GameID, error) {
 	} else {
 		ids := idEncoder.Decode(gameId)
 		if len(ids) != 1 {
-			return 0, fmt.Errorf("Invalid id: %v", gameId)
+			return 0, fmt.Errorf("invalid id: %v", gameId)
 		}
 		return GameID(ids[0]), nil
 	}

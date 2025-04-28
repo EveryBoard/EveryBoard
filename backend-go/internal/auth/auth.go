@@ -36,12 +36,12 @@ func fetchUserDocument(uid string) (*User, error) {
 func VerifyTokenAndGetUserFromHeader(r *http.Request) (string, *User, error) {
 	authorizationHeader := r.Header.Get("Sec-WebSocket-Protocol")
 	if authorizationHeader == "" {
-		return "", nil, fmt.Errorf("No authorization header")
+		return "", nil, fmt.Errorf("no authorization header")
 	}
 
 	parts := strings.SplitN(authorizationHeader, ",", 2)
 	if len(parts) != 2 || strings.TrimSpace(parts[0]) != "Authorization" {
-		return "", nil, fmt.Errorf("Invalid authorization header")
+		return "", nil, fmt.Errorf("invalid authorization header")
 	}
 	token := strings.TrimSpace(parts[1])
 
@@ -64,7 +64,7 @@ func VerifyTokenAndGetUserFromHeader(r *http.Request) (string, *User, error) {
 
 		sub, ok := claims["sub"].(string)
 		if !ok {
-			return "", nil, fmt.Errorf("Missing 'sub' part of token")
+			return "", nil, fmt.Errorf("missing 'sub' part of token")
 		}
 
 		uid = sub;
@@ -76,7 +76,7 @@ func VerifyTokenAndGetUserFromHeader(r *http.Request) (string, *User, error) {
 
 		sub, ok := verifiedToken.Claims["sub"].(string)
 		if !ok {
-			return "", nil, fmt.Errorf("Missing 'sub' part of token")
+			return "", nil, fmt.Errorf("missing 'sub' part of token")
 		}
 		uid = sub
 	}

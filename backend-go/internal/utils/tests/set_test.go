@@ -3,12 +3,12 @@ package internal
 import (
 	"testing"
 
-	everyboard "github.com/EveryBoard/EveryBoard/internal"
+	utils "github.com/EveryBoard/EveryBoard/internal/utils"
 )
 
 func TestSetAddThenExists(t *testing.T) {
 	// Given an empty set
-	set := everyboard.NewSet[int]()
+	set := utils.NewSet[int]()
 	// When adding an element to the set
 	set.Add(42)
 	// Then the element should be in the set

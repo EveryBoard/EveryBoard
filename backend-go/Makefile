@@ -18,7 +18,7 @@ view-coverage:
 	go tool cover -html=coverage.out
 
 lint:
-	golangci-lint run
+	staticcheck ./...
 
 clean:
 	go clean -testcache

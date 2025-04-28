@@ -46,82 +46,82 @@ func newSubscriptionManager() *SubscriptionManager {
 
 // Subscribe subscribes a client and its corresponding user to a game
 // Assumes that the client is not yet subscribed to a game
-func (this *SubscriptionManager) subscribe(client *websocket.Conn, user string, gameID model.GameID, kind SubscriptionKind) {
-	this.lock.Lock()
-	defer this.lock.Unlock()
+func (sm *SubscriptionManager) subscribe(client *websocket.Conn, user string, gameID model.GameID, kind SubscriptionKind) {
+	sm.lock.Lock()
+	defer sm.lock.Unlock()
 
 	subscriptionKindAndGameId := SubscriptionKindAndGameId{kind, gameID}
 
-	this.clientToGame[client] = subscriptionKindAndGameId
+	sm.clientToGame[client] = subscriptionKindAndGameId
 
-	_, exists := this.gameToClients[subscriptionKindAndGameId]
-	if exists == false {
+	_, exists := sm.gameToClients[subscriptionKindAndGameId]
+	if !exists {
 		// Initialize this set
-		this.gameToClients[subscriptionKindAndGameId] = utils.NewSet[*websocket.Conn]()
+		sm.gameToClients[subscriptionKindAndGameId] = utils.NewSet[*websocket.Conn]()
 	}
 	// Add the value to the set
-	set := this.gameToClients[subscriptionKindAndGameId]
+	set := sm.gameToClients[subscriptionKindAndGameId]
 	set.Add(client)
 
-	this.clientToUser[client] = user
-	this.userToClient[user] = client
+	sm.clientToUser[client] = user
+	sm.userToClient[user] = client
 }
 
 // Unsubscribe removes a client from the subscription lists.
-func (this *SubscriptionManager) Unsubscribe(client *websocket.Conn) {
-	this.lock.Lock()
-	defer this.lock.Unlock()
+func (sm *SubscriptionManager) Unsubscribe(client *websocket.Conn) {
+	sm.lock.Lock()
+	defer sm.lock.Unlock()
 
-	subscription, exists := this.clientToGame[client];
+	subscription, exists := sm.clientToGame[client];
 	if exists {
-		clients, exists := this.gameToClients[subscription];
+		clients, exists := sm.gameToClients[subscription];
 		if exists {
 			delete(clients, client)
 			if len(clients) == 0 {
 				// Need to remove the empty set to avoid hogging memory
-				delete(this.gameToClients, subscription)
+				delete(sm.gameToClients, subscription)
 			}
 		}
 	}
 
-	delete(this.clientToGame, client)
-	user, exists := this.clientToUser[client];
+	delete(sm.clientToGame, client)
+	user, exists := sm.clientToUser[client];
 	if exists {
-		delete(this.userToClient, user)
+		delete(sm.userToClient, user)
 	}
-	delete(this.clientToUser, client)
+	delete(sm.clientToUser, client)
 }
 
 // SubscriptionsTo returns the clients subscribed to the game
-func (this *SubscriptionManager) SubscriptionsTo(kind SubscriptionKind, gameId model.GameID) utils.Set[*websocket.Conn] {
-	this.lock.RLock()
-	defer this.lock.RUnlock()
+func (sm *SubscriptionManager) SubscriptionsTo(kind SubscriptionKind, gameId model.GameID) utils.Set[*websocket.Conn] {
+	sm.lock.RLock()
+	defer sm.lock.RUnlock()
 
 	subscriptionAndGameId := SubscriptionKindAndGameId{kind, gameId}
 
-	return this.gameToClients[subscriptionAndGameId]
+	return sm.gameToClients[subscriptionAndGameId]
 }
 
 // IsSubscribed checks if a user is already subscribed to a game.
-func (this *SubscriptionManager) IsSubscribed(user string) bool {
-	this.lock.RLock()
-	defer this.lock.RUnlock()
-	_, exists := this.userToClient[user]
+func (sm *SubscriptionManager) IsSubscribed(user string) bool {
+	sm.lock.RLock()
+	defer sm.lock.RUnlock()
+	_, exists := sm.userToClient[user]
 	return exists
 }
 
 // SubscriptionOf returns the subscription type and game ID of a client, as well as whether there exists one.
-func (this *SubscriptionManager) SubscriptionOf(client *websocket.Conn) (SubscriptionKind, model.GameID, bool) {
-	this.lock.RLock()
-	defer this.lock.RUnlock()
+func (sm *SubscriptionManager) SubscriptionOf(client *websocket.Conn) (SubscriptionKind, model.GameID, bool) {
+	sm.lock.RLock()
+	defer sm.lock.RUnlock()
 
-	sub, exists := this.clientToGame[client]
+	sub, exists := sm.clientToGame[client]
 	return sub.kind, sub.gameID, exists
 }
 
 // Broadcast sends a message to all clients subscribed to kind, gameId
-func (this *SubscriptionManager) Broadcast(kind SubscriptionKind, gameId model.GameID, msg OutgoingMessage) error {
-	for connection := range(this.SubscriptionsTo(kind, gameId)) {
+func (sm *SubscriptionManager) Broadcast(kind SubscriptionKind, gameId model.GameID, msg OutgoingMessage) error {
+	for connection := range(sm.SubscriptionsTo(kind, gameId)) {
 		err := SendMessage(connection, msg)
 		if err != nil {
 			return err

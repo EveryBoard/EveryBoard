@@ -35,6 +35,6 @@ func DecodeIncomingMessage(message []byte) (string, map[string]json.RawMessage, 
 		}
 		return messageType, messagePayload, nil
 	} else {
-		return "", nil, fmt.Errorf("Improperly formatted message: %v", message)
+		return "", nil, fmt.Errorf("improperly formatted message: %v", message)
 	}
 }

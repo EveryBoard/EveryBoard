@@ -99,7 +99,7 @@ func (h *Handlers) SubscribeToLobby() error {
 func (h *Handlers) ChatSend(content string) error {
 	log.Println("checking subscription")
 	kind, gameId, subscribed := h.subscriptionManager.SubscriptionOf(h.connection)
-	if subscribed == false {
+	if !subscribed {
 		return h.Error(ErrorUnknownMessage)
 	}
 
@@ -278,7 +278,7 @@ func (h *Handlers) Unsubscribe() error {
 			return nil
 		}
 	}
-	return fmt.Errorf("Unsubscribe: fell through all switch cases, which shouldn't happen.")
+	return fmt.Errorf("unsubscribe: fell through all switch cases, which shouldn't happen")
 }
 
 func (h *Handlers) GetSubscribedConfigRoom() (*model.ConfigRoom, error) {
@@ -449,7 +449,7 @@ func (h *Handlers) doEndGame(getResult (func(*model.MinimalUser, *model.MinimalU
 		draw = true
 	} else {
 		// Not a finished game!
-		return fmt.Errorf("This game is not finished")
+		return fmt.Errorf("this game is not finished")
 	}
 
 	event := model.GameEvent{
@@ -581,6 +581,9 @@ func (h *Handlers) Accept(proposition model.Proposition) error {
 
 		// Create the game
 		_, err = rematchConfigRoom.CreateGame(Now(), RandBool())
+		if err != nil {
+			return err
+		}
 
 		// Add a reply event and broadcast it to the players
 		rawId, err := json.Marshal(rematchConfigRoom.ID)
@@ -598,7 +601,7 @@ func (h *Handlers) Accept(proposition model.Proposition) error {
 			ConfigRoom: *rematchConfigRoom,
 		})
 	}
-	return fmt.Errorf("Unknown proposition, should never happen")
+	return fmt.Errorf("unknown proposition, should never happen")
 }
 
 func (h *Handlers) AddTime(kind model.AddTimeKind) error {
@@ -612,12 +615,12 @@ func (h *Handlers) Move(move json.RawMessage) error {
 func GetMessageArgument[T interface{}](messageData map[string]json.RawMessage, key string) (*T, error) {
 	arg, ok := messageData[key]
 	if !ok {
-		return nil, fmt.Errorf("Missing data")
+		return nil, fmt.Errorf("missing data")
 	}
 	var extracted T
 	err := json.Unmarshal(arg, &extracted)
 	if err != nil {
-		return nil, fmt.Errorf("Invalid data")
+		return nil, fmt.Errorf("invalid data")
 	}
 	return &extracted, nil
 }
