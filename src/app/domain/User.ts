@@ -18,11 +18,6 @@ export type User = {
     username?: string; // may not be set initially for google users
     lastUpdateTime?: FirestoreTime,
     verified: boolean,
-    // The current game in which the user is. It is null if there is no current game.
-    currentGame?: CurrentGame | null,
-
-    // Extra fields as sub-collections:
-    // elos: subcollection of EloInfo (elos)
 };
 
 export type UserDocument = FirestoreDocument<User>;

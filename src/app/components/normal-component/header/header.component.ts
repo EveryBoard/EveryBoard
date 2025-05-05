@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
-import { faCheckCircle, faCog, faSpinner, faXmark, faXmarkCircle, IconDefinition } from '@fortawesome/free-solid-svg-icons';
+import { faCog, faSpinner, IconDefinition } from '@fortawesome/free-solid-svg-icons';
 import { Subscription } from 'rxjs';
 import { MGPOptional } from '@everyboard/lib';
 
@@ -9,6 +9,7 @@ import { CurrentGameService } from 'src/app/services/CurrentGameService';
 import { UserService } from 'src/app/services/UserService';
 import { CurrentGame } from 'src/app/domain/User';
 import { GameInfo } from '../pick-game/pick-game.component';
+import { WebSocketManagerService, WebSocketMessage } from 'src/app/services/BackendService';
 
 @Component({
     selector: 'app-header',
@@ -21,8 +22,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
     public faCog: IconDefinition = faCog;
     public faSpinner: IconDefinition = faSpinner;
-    public faCheckCircle: IconDefinition = faCheckCircle;
-    public faXmarkCircle: IconDefinition = faXmarkCircle;
 
     private userSubscription: Subscription;
     private currentGameSubscription: Subscription;

@@ -1,11 +1,7 @@
 package internal
 
 import (
-	"encoding/json"
-	"log"
-
 	model "github.com/EveryBoard/EveryBoard/internal/model"
-	"github.com/gorilla/websocket"
 )
 
 type OutgoingMessage interface {
@@ -99,16 +95,10 @@ func (m GameEventMessage) Tag() string {
 	return "GameEvent"
 }
 
-func SendMessage(connection *websocket.Conn, msg OutgoingMessage) error {
-	toSend, err := json.Marshal([]any{msg.Tag(), msg})
-	if err != nil {
-		return err
-	}
-
-	log.Printf(">>> %v", string(toSend))
-	return connection.WriteMessage(websocket.TextMessage, toSend)
+type CurrentGameUpdateMessage struct {
+	CurrentGame *model.CurrentGame `json:"currentGame"`
 }
 
-func SendError(connection *websocket.Conn, reason Error) error {
-	return SendMessage(connection, ErrorMessage{Reason: reason})
+func (m CurrentGameUpdateMessage) Tag() string {
+	return "CurrentGameUpdate"
 }

@@ -31,7 +31,7 @@ func handleWebSocket(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Invalid token", http.StatusUnauthorized)
 		return
 	}
-	minimalUser := &model.MinimalUser{
+	minimalUser := model.MinimalUser{
 		ID: uid,
 		Name: user.Username,
 	}
@@ -43,7 +43,11 @@ func handleWebSocket(w http.ResponseWriter, r *http.Request) {
 	}
 	defer connection.Close()
 
-	handlers := NewHandlers(connection, subscriptionManager, minimalUser)
+	handlers := newHandlers(connection, subscriptionManager, connectionManager, minimalUser)
+	currentGame := model.GetCurrentGame(minimalUser)
+	handlers.broadcastToUser(minimalUser, CurrentGameUpdateMessage{
+		CurrentGame: currentGame,
+	})
 
 	for {
 		_, msg, err := connection.ReadMessage()
@@ -64,13 +68,13 @@ func handleWebSocket(w http.ResponseWriter, r *http.Request) {
 		messageType, messageData, err := model.DecodeIncomingMessage(msg)
 		if err != nil {
 			log.Printf("Cannot decode: %v", err)
-			err = SendError(connection, ErrorUnknownMessage)
+			err = handlers.error(ErrorUnknownMessage)
 			if err != nil {
 				log.Printf("Error when sending error to client: %v", err)
 			}
 			continue
 		}
-		err = handlers.Handle(messageType, messageData)
+		err = handlers.handle(messageType, messageData)
 		if err != nil {
 			log.Printf("Error when handling %v (%v) message: %v", messageType, messageData, err)
 		}
@@ -78,6 +82,7 @@ func handleWebSocket(w http.ResponseWriter, r *http.Request) {
 }
 
 var subscriptionManager *SubscriptionManager
+var connectionManager *ConnectionManager
 
 func Run(config Configuration) {
 	log.Println(config)
@@ -86,6 +91,7 @@ func Run(config Configuration) {
 	model.InitDatabase(config.Database)
 	model.InitIdEncoder()
 	subscriptionManager = newSubscriptionManager()
+	connectionManager = newConnectionManager()
 	http.HandleFunc("/ws", handleWebSocket)
 	log.Fatal(http.ListenAndServe(config.ListenAddr, nil))
 }

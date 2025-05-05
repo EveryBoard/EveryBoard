@@ -27,7 +27,7 @@ export class WebSocketMessage {
         }
         const value: unknown = this.args[name];
         // The only thing we can't check is that the argument value really corresponds to the type.
-        return value as T;
+        return value as T | null;
     }
 }
 
@@ -52,19 +52,16 @@ export class WebSocketManagerService {
         console.log('WebSocketManagerService created (should happen only once');
     }
 
-    private async connect(): Promise<void> {
+    public async connect(): Promise<Subscription> {
         Utils.assert(this.webSocket.isAbsent(), 'Should not connect twice to WebSocket!');
         const token: string = await this.connectedUserService.getIdToken();
 
-        return new Promise((resolve: () => void) => {
+        return new Promise((resolve: (sub: Subscription) => void) => {
             const ws: WebSocket = new WebSocket(environment.backendURL.replace('http://', 'ws://') + '/ws', ['Authorization', token]);
             const reconnect: () => void = (): void => {
                 this.messageDisplayer.criticalMessage($localize`Connection to server failed or closed, trying again in ${this.nextConnectionAttemptTime} seconds...`);
-                window.setTimeout(async() => {
-                    await this.connect();
-                    resolve();
-                }, this.nextConnectionAttemptTime * 1000);
-                this.nextConnectionAttemptTime *= 2;
+                window.setTimeout(async() => await this.connect(), this.nextConnectionAttemptTime * 1000);
+                this.nextConnectionAttemptTime *= 2; // exponential backoff
             };
 
             ws.onopen = (): void => {
@@ -72,7 +69,7 @@ export class WebSocketManagerService {
                 this.messageDisplayer.infoMessage($localize`Connection to server successful!`);
                 this.webSocket = MGPOptional.of(ws);
                 this.nextConnectionAttemptTime = 1; // reset it
-                resolve();
+                resolve(new Subscription(() => this.disconnect()));
             };
             ws.onerror = (_error: Event): void => {
                 reconnect();
@@ -124,9 +121,6 @@ export class WebSocketManagerService {
     }
 
     public async send(message: JSONValue): Promise<void> {
-        if (this.webSocket.isAbsent()) {
-            await this.connect();
-        }
         console.log('%cWS: >>> ' + JSON.stringify(message), 'color: lightblue');
         this.webSocket.get().send(JSON.stringify(message));
     }
@@ -154,65 +148,10 @@ export class WebSocketManagerService {
         this.callbacks.delete(tag);
     }
 
-    public disconnect(): void {
-        console.log('WS: disconnect!')
+    private disconnect(): void {
         Utils.assert(this.webSocket.isPresent(), 'Should not disconnect from unconnected WebSocket!');
         this.webSocket.get().close();
         this.callbacks.clear();
-    }
-
-}
-
-export abstract class BackendService {
-    public constructor(protected readonly connectedUserService: ConnectedUserService) {
-    }
-
-    protected async performRequest(method: HTTPMethod, endpoint: string): Promise<MGPFallible<Response>> {
-        const token: string = await this.connectedUserService.getIdToken();
-        const response: Response =
-            await fetch(environment.backendURL + '/' + endpoint, {
-                method,
-                headers: {
-                    'Authorization': 'Bearer ' + token,
-                },
-            });
-        if (this.isSuccessStatus(response.status)) {
-            return MGPFallible.success(response);
-        } else {
-            try {
-                const jsonResponse: JSONValue = await response.json();
-                // eslint-disable-next-line dot-notation
-                if (jsonResponse == null || jsonResponse['reason'] == null) {
-                    return MGPFallible.failure('No error message');
-                } else {
-                    // eslint-disable-next-line dot-notation
-                    return MGPFallible.failure(jsonResponse['reason'] as string);
-                }
-            } catch {
-                return MGPFallible.failure('Invalid JSON response from the server');
-            }
-        }
-    }
-
-    protected async performRequestWithJSONResponse(method: HTTPMethod,
-                                                   endpoint: string)
-    : Promise<MGPFallible<JSONValue>>
-    {
-        const response: MGPFallible<Response> = await this.performRequest(method, endpoint);
-        if (response.isSuccess()) {
-            const jsonResponse: JSONValue = await response.get().json();
-            return MGPFallible.success(jsonResponse);
-        } else {
-            return MGPFallible.failure(response.getReason());
-        }
-    }
-
-    private isSuccessStatus(status: number): boolean {
-        return 200 <= status && status <= 299;
-    }
-
-    protected assertSuccess<T>(result: MGPFallible<T>): void {
-        Utils.assert(result.isSuccess(), 'Unexpected error from backend: ' + result.getReasonOr(''));
     }
 
 }

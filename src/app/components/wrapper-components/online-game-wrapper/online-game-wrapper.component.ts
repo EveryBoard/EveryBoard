@@ -10,7 +10,6 @@ import { GameService } from 'src/app/services/GameService';
 import { Move } from '../../../jscaip/Move';
 import { Game, GameEvent, GameEventMove, GameEventReply, GameResult, RequestType } from '../../../domain/Part';
 import { CountDownComponent } from '../../normal-component/count-down/count-down.component';
-import { CurrentGame } from '../../../domain/User';
 import { GameWrapper, GameWrapperMessages } from '../GameWrapper';
 import { ConfigRoom } from 'src/app/domain/ConfigRoom';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
@@ -19,7 +18,6 @@ import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { GameInfo } from '../../normal-component/pick-game/pick-game.component';
 import { Localized } from 'src/app/utils/LocaleUtils';
 import { MinimalUser } from 'src/app/domain/MinimalUser';
-import { CurrentGameService } from 'src/app/services/CurrentGameService';
 import { AbstractNode, GameNode } from 'src/app/jscaip/AI/GameNode';
 import { OGWCTimeManagerService } from './OGWCTimeManagerService';
 import { GameStatus } from 'src/app/jscaip/GameStatus';
@@ -58,7 +56,6 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
     private isSynced: boolean = false;
 
     public configRoom: ConfigRoom;
-    public currentGame: MGPOptional<CurrentGame> = MGPOptional.empty();
 
     private userSubscription!: Subscription; // Initialized in ngOnInit
     private gameSubscription: Subscription = new Subscription();
@@ -79,7 +76,6 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
                        router: Router,
                        messageDisplayer: MessageDisplayer,
                        private readonly connectedUserService: ConnectedUserService,
-                       private readonly currentGameService: CurrentGameService,
                        private readonly gameService: GameService,
                        private readonly timeManager: OGWCTimeManagerService,
                        private readonly requestManager: OGWCRequestManagerService,
@@ -117,7 +113,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
     public async ngOnInit(): Promise<void> {
         this.userSubscription = this.connectedUserService.subscribeToUser(async(user: AuthUser) => {
             // player should be authenticated and have a username to be here
-            // TODO: do we need a subscription? ConnectedUserService already has one! We can use its .user
+            // TODO: do we need a subscription? ConnectedUserService already has one! We can use its .user. When do we want to be notified about changes to the current auth user? Never. The only reason for this would be if authUser is not set initially in the service
             this.authUser = user;
         });
 
@@ -222,7 +218,6 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
     }
 
     private async onGameEnd(): Promise<void> {
-        await this.currentGameService.removeCurrentGame();
         await this.setInteractive(false);
         this.endGame = true;
     }
@@ -361,7 +356,6 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         ];
         await this.setCurrentPlayerAccordingToCurrentTurn();
         await this.setRealObserverRole();
-        await this.setCurrentGame(game);
     }
 
     private async setRealObserverRole(): Promise<void> {
@@ -375,16 +369,6 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
             await this.setRole(PlayerOrNone.NONE);
         }
     }
-
-    private async setCurrentGame(game: Game): Promise<void>{
-        await this.currentGameService.updateCurrentGame({
-            id: this.gameId,
-            gameName: game.gameName,
-            opponent: this.opponent,
-            role: this.role.isNone() ? 'Observer' : 'Player',
-        });
-    }
-
 
     public async onLegalUserMove(move: Move): Promise<void> {
         // First, show the move in the component
@@ -489,9 +473,6 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
 
     public async ngOnDestroy(): Promise<void> {
         this.userSubscription.unsubscribe();
-        if (this.isPlaying() === false && this.connectedUserService.user.isPresent()) {
-            await this.currentGameService.removeCurrentGame();
-        }
         if (this.gameStarted) {
             this.gameSubscription.unsubscribe();
         }

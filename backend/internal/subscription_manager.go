@@ -29,7 +29,7 @@ type SubscriptionManager struct {
 	gameToClients map[SubscriptionKindAndGameId]utils.Set[*websocket.Conn]
 	// A map from client to the user id
 	clientToUser  map[*websocket.Conn]string
-	// A map from user id to their client
+	// A map from user id to their (only) client
 	userToClient  map[string]*websocket.Conn
 	// The lock that protects concurrent accesses to the subscription manager
 	lock          sync.RWMutex
@@ -68,7 +68,7 @@ func (sm *SubscriptionManager) subscribe(client *websocket.Conn, user string, ga
 }
 
 // Unsubscribe removes a client from the subscription lists.
-func (sm *SubscriptionManager) Unsubscribe(client *websocket.Conn) {
+func (sm *SubscriptionManager) unsubscribe(client *websocket.Conn) {
 	sm.lock.Lock()
 	defer sm.lock.Unlock()
 
@@ -92,8 +92,8 @@ func (sm *SubscriptionManager) Unsubscribe(client *websocket.Conn) {
 	delete(sm.clientToUser, client)
 }
 
-// SubscriptionsTo returns the clients subscribed to the game
-func (sm *SubscriptionManager) SubscriptionsTo(kind SubscriptionKind, gameId model.GameID) utils.Set[*websocket.Conn] {
+// subscriptionsTo returns the clients subscribed to the game
+func (sm *SubscriptionManager) subscriptionsTo(kind SubscriptionKind, gameId model.GameID) utils.Set[*websocket.Conn] {
 	sm.lock.RLock()
 	defer sm.lock.RUnlock()
 
@@ -102,16 +102,16 @@ func (sm *SubscriptionManager) SubscriptionsTo(kind SubscriptionKind, gameId mod
 	return sm.gameToClients[subscriptionAndGameId]
 }
 
-// IsSubscribed checks if a user is already subscribed to a game.
-func (sm *SubscriptionManager) IsSubscribed(user string) bool {
+// isSubscribed checks if a user is already subscribed to a game.
+func (sm *SubscriptionManager) isSubscribed(user string) bool {
 	sm.lock.RLock()
 	defer sm.lock.RUnlock()
 	_, exists := sm.userToClient[user]
 	return exists
 }
 
-// SubscriptionOf returns the subscription type and game ID of a client, as well as whether there exists one.
-func (sm *SubscriptionManager) SubscriptionOf(client *websocket.Conn) (SubscriptionKind, model.GameID, bool) {
+// subscriptionOf returns the subscription type and game ID of a client, as well as whether there exists one.
+func (sm *SubscriptionManager) subscriptionOf(client *websocket.Conn) (SubscriptionKind, model.GameID, bool) {
 	sm.lock.RLock()
 	defer sm.lock.RUnlock()
 
@@ -119,13 +119,3 @@ func (sm *SubscriptionManager) SubscriptionOf(client *websocket.Conn) (Subscript
 	return sub.kind, sub.gameID, exists
 }
 
-// Broadcast sends a message to all clients subscribed to kind, gameId
-func (sm *SubscriptionManager) Broadcast(kind SubscriptionKind, gameId model.GameID, msg OutgoingMessage) error {
-	for connection := range(sm.SubscriptionsTo(kind, gameId)) {
-		err := SendMessage(connection, msg)
-		if err != nil {
-			return err
-		}
-	}
-	return nil
-}

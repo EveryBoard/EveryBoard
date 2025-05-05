@@ -3,20 +3,14 @@ import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/fo
 import { ActivatedRoute, Router } from '@angular/router';
 import { takeUntil } from 'rxjs/operators';
 import { Subscription, Subject } from 'rxjs';
-import { Timestamp } from 'firebase/firestore';
 
-import { getMillisecondsElapsed, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
+import { MGPOptional, Utils } from '@everyboard/lib';
 
 import { FirstPlayer, IFirstPlayer, ConfigRoom, IPartType, PartStatus, PartType, IPartStatus } from '../../../domain/ConfigRoom';
-import { GameService } from '../../../services/GameService';
 import { ConfigRoomService } from '../../../services/ConfigRoomService';
-import { UserService } from 'src/app/services/UserService';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { AuthUser, ConnectedUserService } from 'src/app/services/ConnectedUserService';
 import { MinimalUser } from 'src/app/domain/MinimalUser';
-import { FirestoreTime } from 'src/app/domain/Time';
-import { CurrentGame, User, UserRoleInPart } from 'src/app/domain/User';
-import { CurrentGameService } from 'src/app/services/CurrentGameService';
 import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 import { RulesConfigurationComponent } from '../rules-configuration/rules-configuration.component';
 import { GameState } from 'src/app/jscaip/state/GameState';
@@ -57,7 +51,7 @@ type GameCreationViewInfo = {
 }
 @Component({
     selector: 'app-game-creation',
-    // TODO: rename file
+    // TODO: rename file to game-creation?
     templateUrl: './part-creation.component.html',
 })
 @Debug.log
@@ -106,13 +100,10 @@ export class GameCreationComponent extends BaseWrapperComponent implements OnIni
 
     // Subscription
     private readonly ngUnsubscribe: Subject<void> = new Subject<void>();
-    private lastToken: Timestamp;
 
     private configRoomSubscription: Subscription = new Subscription();
 
     private navigateThereAfterGameCanceled: string[] = ['/lobby'];
-
-    private currentGameHasBeenSet: boolean = false;
 
     public configFormGroup: FormGroup;
 
@@ -126,9 +117,7 @@ export class GameCreationComponent extends BaseWrapperComponent implements OnIni
     public constructor(activatedRoute: ActivatedRoute,
                        private readonly router: Router,
                        private readonly connectedUserService: ConnectedUserService,
-                       private readonly currentGameService: CurrentGameService,
                        private readonly configRoomService: ConfigRoomService,
-                       private readonly userService: UserService,
                        private readonly formBuilder: FormBuilder,
                        private readonly messageDisplayer: MessageDisplayer,
                        private readonly cdr: ChangeDetectorRef)
@@ -139,7 +128,7 @@ export class GameCreationComponent extends BaseWrapperComponent implements OnIni
     public async ngOnInit(): Promise<void> {
         this.checkInputs();
         this.createForms();
-        this.joinAndSubscribeToConfigRoom();
+        await this.joinAndSubscribeToConfigRoom();
         this.subscribeToFormElements();
     }
 
@@ -160,38 +149,6 @@ export class GameCreationComponent extends BaseWrapperComponent implements OnIni
         });
     }
 
-    private updateUserDocWithCurrentGame(configRoom: ConfigRoom): Promise<void> {
-        const role: UserRoleInPart = this.getUserRoleInPart(configRoom);
-        const currentGame: CurrentGame = {
-            id: this.gameId,
-            opponent: this.getOpponent(configRoom),
-            gameName: this.getGameUrlName(),
-            role,
-        };
-        return this.currentGameService.updateCurrentGame(currentGame);
-    }
-
-    private getUserRoleInPart(configRoom: ConfigRoom): UserRoleInPart {
-        const currentUserId: string = this.connectedUserService.user.get().id;
-        if (currentUserId === configRoom.creator.id) {
-            return 'Creator';
-        } else if (currentUserId === configRoom.chosenOpponent?.id) {
-            return 'ChosenOpponent';
-        } else {
-            return 'Candidate';
-        }
-    }
-
-    private getOpponent(configRoom: ConfigRoom): MinimalUser | null {
-        let userOrUndefined: MinimalUser | null = null;
-        if (this.connectedUserService.user.get().id === configRoom.creator.id) {
-            userOrUndefined = configRoom.chosenOpponent;
-        } else {
-            userOrUndefined = configRoom.creator;
-        }
-        return userOrUndefined;
-    }
-
     private async joinAndSubscribeToConfigRoom(): Promise<void> {
         this.configRoomSubscription = await this.configRoomService.join(
             this.gameId,
@@ -203,13 +160,17 @@ export class GameCreationComponent extends BaseWrapperComponent implements OnIni
     }
 
     private async onError(error: string): Promise<void> {
-        if (error === 'Game does not exist') {
-            await this.gameNotFound();
-        } else if (error === 'Already subscribed') {
-            // TODO: where to go? A specific error page like /notFound? Because /lobby is not allowed either!
-            this.messageDisplayer.criticalMessage($localize`You already have another tab open.`);
-        } else {
-            this.messageDisplayer.criticalMessage($localize`Unexpected error from backend: ${error}`);
+        switch (error) {
+            case 'already-subscribed':
+                this.messageDisplayer.criticalMessage($localize`You already have another tab open.`);
+                await this.router.navigate(['/']);
+                break;
+            case 'unknown-game':
+                await this.gameNotFound();
+                break;
+            default:
+                this.messageDisplayer.criticalMessage($localize`Unexpected error from backend: ${error}`);
+                break;
         }
     }
 
@@ -331,11 +292,7 @@ export class GameCreationComponent extends BaseWrapperComponent implements OnIni
 
     public async selectOpponent(opponentName: string): Promise<void> {
         const opponent: MinimalUser = this.getUserFromName(opponentName);
-        await Promise.all([
-            this.currentGameService.updateCurrentGame({ opponent }),
-            this.configRoomService.selectOpponent(opponent),
-        ]);
-        return;
+        return this.configRoomService.selectOpponent(opponent);
     }
 
     private getUserFromName(username: string): MinimalUser {
@@ -361,12 +318,10 @@ export class GameCreationComponent extends BaseWrapperComponent implements OnIni
 
     public async cancelGameCreation(): Promise<void> {
         this.allDocDeleted = true;
-        await this.currentGameService.removeCurrentGame();
-        this.onGameCanceled();
+        return this.onGameCanceled();
     }
 
     private async onConfigRoomUpdate(configRoom: ConfigRoom): Promise<void> {
-        console.log({configRoom})
         const oldConfigRoom: ConfigRoom | null = this.currentConfigRoom;
         this.currentConfigRoom = configRoom;
         if (configRoom.rulesConfig !== null) {
@@ -378,13 +333,7 @@ export class GameCreationComponent extends BaseWrapperComponent implements OnIni
         {
             const userName: string = Utils.getNonNullable(oldConfigRoom?.chosenOpponent).name;
             this.messageDisplayer.infoMessage($localize`${userName} left the game, please pick another opponent.`);
-            await this.currentGameService.updateCurrentGame({ opponent: null });
         }
-        if (this.userJustChosenAsOpponent(oldConfigRoom, configRoom) || this.currentGameHasBeenSet == false) {
-            // Only update user doc if we were chosen and we haven't updated the doc yet
-            await this.updateUserDocWithCurrentGame(configRoom);
-        }
-        this.currentGameHasBeenSet = true;
         this.updateViewInfo(configRoom);
         if (this.isGameStarted(configRoom)) {
             Debug.display('GameCreationComponent', 'onCurrentConfigRoomUpdate', 'the game has started');
@@ -393,26 +342,13 @@ export class GameCreationComponent extends BaseWrapperComponent implements OnIni
     }
 
     private onCandidateJoined(candidate: MinimalUser): void {
-        console.log({joined: candidate})
         this.candidates.push(candidate);
         this.updateViewInfo(Utils.getNonNullable(this.currentConfigRoom));
     }
 
     private onCandidateLeft(candidate: MinimalUser): void {
-        console.log({left: candidate})
         this.candidates = this.candidates.filter((c: MinimalUser) => c.id !== candidate.id);
         this.updateViewInfo(Utils.getNonNullable(this.currentConfigRoom));
-    }
-
-    private userJustChosenAsOpponent(oldConfigRoom: ConfigRoom | null, configRoom: ConfigRoom): boolean {
-        if (this.isGameStarted(configRoom)) {
-            return false;
-        } else {
-            const currentUserId: string = this.connectedUserService.user.get().id;
-            const userWasNotChosenOpponent: boolean = oldConfigRoom?.chosenOpponent?.id !== currentUserId;
-            const userIsChosenOpponent: boolean = configRoom.chosenOpponent?.id === currentUserId;
-            return userWasNotChosenOpponent && userIsChosenOpponent;
-        }
     }
 
     private chosenOpponentJustLeft(oldConfigRoom: ConfigRoom | null, newConfigRoom: ConfigRoom): boolean {
@@ -494,7 +430,6 @@ export class GameCreationComponent extends BaseWrapperComponent implements OnIni
             // treats this similar to a "tab closed" event, so it is more consistent behavior.
             return;
         }
-        await this.currentGameService.removeCurrentGame();
     }
 
     public async goToLobby(): Promise<void> {
@@ -508,7 +443,6 @@ export class GameCreationComponent extends BaseWrapperComponent implements OnIni
     }
 
     public getRulesConfigToDisplay(): RulesConfig | undefined {
-        console.log({currentConfigRoom: this.currentConfigRoom})
         return this.currentConfigRoom?.rulesConfig;
     }
 

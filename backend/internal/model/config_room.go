@@ -102,6 +102,7 @@ type Candidate struct {
 	ID     uint64      `gorm:"primaryKey;autoincrement" json:"-"`
 	GameID GameID      `gorm:"index;not null;foreignKey:ConfigRoom" json:"-"`
 	User   MinimalUser `gorm:"embedded;embeddedPrefix:user_;not null"`
+	Elo    float64     `gorm:"not null" json:"elo"`
 }
 
 func (cr *ConfigRoom) Delete() error {

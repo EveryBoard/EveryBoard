@@ -1,17 +1,15 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { Observable, ReplaySubject, Subscription } from 'rxjs';
 
-import { CurrentGame, User, UserRoleInPart } from '../domain/User';
-import { MGPMap, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
-import { UserDAO } from '../dao/UserDAO';
+import { CurrentGame, UserRoleInPart } from '../domain/User';
+import { MGPMap, MGPOptional, MGPValidation } from '@everyboard/lib';
 import { AuthUser, ConnectedUserService, GameActionFailure } from './ConnectedUserService';
-import { UserService } from './UserService';
 import { Localized } from '../utils/LocaleUtils';
+import { WebSocketManagerService, WebSocketMessage } from './BackendService';
 
 @Injectable({
     providedIn: 'root',
 })
-// TODO: don't do validation here, only rely on server checking this
 export class CurrentGameService implements OnDestroy {
 
     public static roleToMessage: MGPMap<UserRoleInPart, Localized> = new MGPMap([
@@ -23,14 +21,13 @@ export class CurrentGameService implements OnDestroy {
     ]);
     private readonly authSubscription: Subscription;
 
-    private userSubscription: Subscription = new Subscription();
+    private currentGameSubscription: Subscription = new Subscription();
 
     private currentGame: MGPOptional<CurrentGame> = MGPOptional.empty();
     private readonly currentGameRS: ReplaySubject<MGPOptional<CurrentGame>>;
     private readonly currentGameObs: Observable<MGPOptional<CurrentGame>>;
 
-    public constructor(private readonly userDAO: UserDAO,
-                       private readonly userService: UserService,
+    public constructor(private readonly webSocketManagerService: WebSocketManagerService,
                        private readonly connectedUserService: ConnectedUserService)
     {
         this.currentGameRS = new ReplaySubject<MGPOptional<CurrentGame>>(1);
@@ -39,25 +36,23 @@ export class CurrentGameService implements OnDestroy {
             await this.onUserUpdate(user);
         });
     }
+
     private async onUserUpdate(user: AuthUser): Promise<void> {
         if (user === AuthUser.NOT_CONNECTED) { // user logged out
-            this.userSubscription.unsubscribe();
+            this.currentGameSubscription.unsubscribe();
             this.currentGame = MGPOptional.empty();
             this.currentGameRS.next(MGPOptional.empty());
         } else { // new user logged in
-            // We need to subscribe to any change to the user's observed part
-            this.userSubscription =
-                this.userService.observeUserOnServer(user.id, (docOpt: MGPOptional<User>) => {
-                    Utils.assert(docOpt.isPresent(), 'Observing part service expected user to already have a document!');
-                    const doc: User = docOpt.get();
-                    this.onCurrentGameUpdate(doc.currentGame);
+            // We need to subscribe to any change to the user's current game
+            this.currentGameSubscription =
+                this.webSocketManagerService.setCallback('CurrentGameUpdate', (message: WebSocketMessage) => {
+                    this.onCurrentGameUpdate(message.getOptionalArgument('currentGame'));
                 });
-            // And we need to make sure we get the current observed part
-            const userInDB: MGPOptional<User> = await this.userDAO.read(user.id);
-            this.currentGame = MGPOptional.ofNullable(userInDB.get().currentGame);
-            this.currentGameRS.next(this.currentGame);
+            // connect after setting callback to be sure to get the first one
+            await this.webSocketManagerService.connect();
         }
     }
+
     private onCurrentGameUpdate(newCurrentGame: CurrentGame | null | undefined): void {
         // Undefined if the user had no currentGame, null if it has been removed
         const previousCurrentGame: MGPOptional<CurrentGame> = this.currentGame;
@@ -70,33 +65,11 @@ export class CurrentGameService implements OnDestroy {
             this.currentGameRS.next(this.currentGame);
         }
     }
-    public updateCurrentGame(currentGame: Partial<CurrentGame>): Promise<void> {
-        Utils.assert(this.connectedUserService.user.isPresent(), 'Should not call updateCurrentGame when not connected');
-        if (this.currentGame.isPresent()) {
-            const oldCurrentGame: CurrentGame = this.currentGame.get();
-            const mergedCurrentGame: CurrentGame = { ...oldCurrentGame, ...currentGame };
-            return this.userDAO.update(this.connectedUserService.user.get().id, { currentGame: mergedCurrentGame });
-        } else {
-            const fakeCurrentGame: CurrentGame = {
-                id: 'id',
-                role: 'Candidate',
-                gameName: 'P4',
-            };
-            const keys: string[] = Object.keys(fakeCurrentGame);
-            for (const key of keys) {
-                Utils.assert(currentGame[key] != null, 'field ' + key + ' should be set before updating currentGame');
-            }
-            // Here, we know that currentGame is not partial
-            return this.userDAO.update(this.connectedUserService.user.get().id, { currentGame });
-        }
-    }
-    public removeCurrentGame(): Promise<void> {
-        Utils.assert(this.connectedUserService.user.isPresent(), 'Should not call removeCurrentGame when not connected');
-        return this.userDAO.update(this.connectedUserService.user.get().id, { currentGame: null });
-    }
+
     public subscribeToCurrentGame(callback: (optCurrentGame: MGPOptional<CurrentGame>) => void): Subscription {
         return this.currentGameObs.subscribe(callback);
     }
+
     public canUserCreate(): MGPValidation {
         if (this.currentGame.isAbsent()) {
             return MGPValidation.SUCCESS;
@@ -105,6 +78,7 @@ export class CurrentGameService implements OnDestroy {
             return MGPValidation.failure(message);
         }
     }
+
     public canUserJoin(partId: string, gameStarted: boolean): MGPValidation {
         if (this.currentGame.isAbsent() || this.currentGame.get().id === partId) {
             // Users can join game if they are not in any game
@@ -122,6 +96,7 @@ export class CurrentGameService implements OnDestroy {
             }
         }
     }
+
     public getCurrentGame(): Promise<MGPOptional<CurrentGame>> {
         // We need to make sure we have fully initialized, hence currentGameObs contains a value
         // We will get that value in the first call to the callback
@@ -134,8 +109,9 @@ export class CurrentGameService implements OnDestroy {
             });
         });
     }
+
     public ngOnDestroy(): void {
-        this.userSubscription.unsubscribe();
+        this.currentGameSubscription.unsubscribe();
         this.authSubscription.unsubscribe();
     }
 }
