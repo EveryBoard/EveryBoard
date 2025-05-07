@@ -18,15 +18,19 @@ export class ExclusiveOnlineGameGuard {
                        private readonly router: Router)
     {
     }
+
     public async canActivate(route: ActivatedRouteSnapshot): Promise<boolean | UrlTree> {
+        console.log('canActivate')
         const currentGame: MGPOptional<CurrentGame> = await this.currentGameService.getCurrentGame();
         if (currentGame.isAbsent()) {
+            console.log('currentGame isAbsent')
             return true;
         }
-        const part: CurrentGame = currentGame.get();
-        if (route.params.id === part.id) {
+        const game: CurrentGame = currentGame.get();
+        console.log({game})
+        if (route.params.id === game.id) {
             return true;
         }
-        return this.router.parseUrl('/play/' + part.gameName + '/' + part.id);
+        return this.router.parseUrl('/play/' + game.gameName + '/' + game.id);
     }
 }

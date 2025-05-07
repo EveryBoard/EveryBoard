@@ -14,8 +14,8 @@ type ConnectionManager struct {
 	lock          sync.RWMutex
 }
 
-func newConnectionManager() *ConnectionManager {
-	return &ConnectionManager{
+func newConnectionManager() ConnectionManager {
+	return ConnectionManager{
 		clientToUser: make(map[*websocket.Conn]model.MinimalUser),
 		userToClients: make(map[model.MinimalUser]utils.Set[*websocket.Conn]),
 	}

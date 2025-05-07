@@ -7,6 +7,7 @@ import (
 
 	"github.com/EveryBoard/EveryBoard/internal/auth"
 	"github.com/EveryBoard/EveryBoard/internal/model"
+	"github.com/EveryBoard/EveryBoard/internal/utils"
 	"github.com/gorilla/websocket"
 )
 
@@ -27,7 +28,6 @@ var upgrader = websocket.Upgrader{
 func handleWebSocket(w http.ResponseWriter, r *http.Request) {
 	uid, user, err := auth.VerifyTokenAndGetUserFromHeader(r)
 	if err != nil {
-		log.Println(err)
 		http.Error(w, "Invalid token", http.StatusUnauthorized)
 		return
 	}
@@ -38,13 +38,20 @@ func handleWebSocket(w http.ResponseWriter, r *http.Request) {
 
 	connection, err := upgrader.Upgrade(w, r, http.Header{"Sec-WebSocket-Protocol": {"Authorization"}})
 	if err != nil {
-		log.Println("WebSocket upgrade error:", err)
+		utils.Errorf("WebSocket upgrade error: %v", err)
 		return
 	}
 	defer connection.Close()
 
-	handlers := newHandlers(connection, subscriptionManager, connectionManager, minimalUser)
-	currentGame := model.GetCurrentGame(minimalUser)
+	connectionManager.addConnection(minimalUser, connection)
+	defer connectionManager.removeConnection(minimalUser, connection)
+
+	handlers := newHandlers(connection, minimalUser)
+	currentGame, err := model.GetCurrentGame(minimalUser)
+	if err != nil {
+		utils.Errorf("cannot get current game: %v", err)
+		return
+	}
 	handlers.broadcastToUser(minimalUser, CurrentGameUpdateMessage{
 		CurrentGame: currentGame,
 	})
@@ -57,7 +64,7 @@ func handleWebSocket(w http.ResponseWriter, r *http.Request) {
 				log.Printf("[%v] Disconnect", user.Username)
 				err = handlers.ClientLeft()
 				if err != nil  {
-					log.Printf("Error when disconnecting client: %v", err)
+					utils.Errorf("Error when disconnecting client: %w", err)
 				}
 				break
 			}
@@ -67,22 +74,21 @@ func handleWebSocket(w http.ResponseWriter, r *http.Request) {
 		log.Printf("<<< [%v] %v", user.Username, string(msg))
 		messageType, messageData, err := model.DecodeIncomingMessage(msg)
 		if err != nil {
-			log.Printf("Cannot decode: %v", err)
 			err = handlers.error(ErrorUnknownMessage)
 			if err != nil {
-				log.Printf("Error when sending error to client: %v", err)
+				utils.Errorf("Error when sending error to client: %v", err)
 			}
 			continue
 		}
 		err = handlers.handle(messageType, messageData)
 		if err != nil {
-			log.Printf("Error when handling %v (%v) message: %v", messageType, messageData, err)
+			utils.Errorf("Error when handling %v (%v) message: %v", messageType, messageData, err)
 		}
 	}
 }
 
-var subscriptionManager *SubscriptionManager
-var connectionManager *ConnectionManager
+var subscriptionManager SubscriptionManager
+var connectionManager ConnectionManager
 
 func Run(config Configuration) {
 	log.Println(config)

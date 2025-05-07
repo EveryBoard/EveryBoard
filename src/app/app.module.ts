@@ -124,7 +124,6 @@ import { YinshComponent } from './games/yinsh/yinsh.component';
 import { environment } from 'src/environments/environment';
 
 import { VerifiedAccountGuard } from './guard/verified-account.guard';
-import { ExclusiveOnlineGameGuard } from './guard/exclusive-online-game-guard';
 import { ConnectedButNotVerifiedGuard } from './guard/connected-but-not-verified.guard';
 import { NotConnectedGuard } from './guard/not-connected.guard';
 
@@ -151,9 +150,9 @@ export const routes: Route[] = [
     { path: 'notFound/:message', component: NotFoundComponent },
     { path: 'nextGameLoading', component: NextGameLoadingComponent, canActivate: [VerifiedAccountGuard] },
     { path: 'verify-account', component: VerifyAccountComponent, canActivate: [ConnectedButNotVerifiedGuard] },
-    { path: 'play', component: OnlineGameSelectionComponent, canActivate: [VerifiedAccountGuard, ExclusiveOnlineGameGuard] },
-    { path: 'play/:game', component: OnlineGameCreationComponent, canActivate: [VerifiedAccountGuard, ExclusiveOnlineGameGuard] },
-    { path: 'play/:game/:id', component: OnlineGameWrapperComponent, canActivate: [VerifiedAccountGuard, ExclusiveOnlineGameGuard] },
+    { path: 'play', component: OnlineGameSelectionComponent, canActivate: [VerifiedAccountGuard] },
+    { path: 'play/:game', component: OnlineGameCreationComponent, canActivate: [VerifiedAccountGuard] },
+    { path: 'play/:game/:id', component: OnlineGameWrapperComponent, canActivate: [VerifiedAccountGuard] },
     { path: 'local', component: LocalGameCreationComponent },
     { path: 'local/:game/config', component: LocalGameConfigurationComponent },
     { path: 'local/:game', component: LocalGameWrapperComponent },

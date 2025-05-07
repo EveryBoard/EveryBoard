@@ -1,11 +1,9 @@
 import { ConnectedUserService } from './ConnectedUserService';
 import { environment } from 'src/environments/environment';
-import { JSONValue, MGPFallible, MGPMap, MGPOptional, Utils } from '@everyboard/lib';
+import { JSONValue, MGPMap, MGPOptional, Utils } from '@everyboard/lib';
 import { Injectable } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { MessageDisplayer } from './MessageDisplayer';
-
-type HTTPMethod = 'POST' | 'GET' | 'PATCH' | 'HEAD' | 'DELETE';
 
 export class WebSocketMessage {
     public constructor(private readonly tag: string,
@@ -44,12 +42,21 @@ export class WebSocketManagerService {
     private webSocket: MGPOptional<WebSocket> = MGPOptional.empty();
     private readonly callbacks: MGPMap<string, Callback> = new MGPMap();
 
+    private readonly connectionPromise: Promise<void>;
+    private resolveConnection!: () => void;
+
     private nextConnectionAttemptTime: number = 1;
 
     public constructor(private readonly connectedUserService: ConnectedUserService,
                        private readonly messageDisplayer: MessageDisplayer)
     {
-        console.log('WebSocketManagerService created (should happen only once');
+        this.connectionPromise = new Promise((resolve: () => void) => {
+            this.resolveConnection = resolve;
+        });
+    }
+
+    public waitForConnection(): Promise<void> {
+        return this.connectionPromise;
     }
 
     public async connect(): Promise<Subscription> {
@@ -69,6 +76,7 @@ export class WebSocketManagerService {
                 this.messageDisplayer.infoMessage($localize`Connection to server successful!`);
                 this.webSocket = MGPOptional.of(ws);
                 this.nextConnectionAttemptTime = 1; // reset it
+                this.resolveConnection(); // notify waiters
                 resolve(new Subscription(() => this.disconnect()));
             };
             ws.onerror = (_error: Event): void => {
@@ -121,6 +129,7 @@ export class WebSocketManagerService {
     }
 
     public async send(message: JSONValue): Promise<void> {
+        await this.waitForConnection(); // block until we are connected, otherwise we'll send messages nowhere
         console.log('%cWS: >>> ' + JSON.stringify(message), 'color: lightblue');
         this.webSocket.get().send(JSON.stringify(message));
     }

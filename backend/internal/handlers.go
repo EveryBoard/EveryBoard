@@ -27,16 +27,12 @@ func RandBool() bool {
 
 type Handlers struct {
 	connection          *websocket.Conn
-	subscriptionManager *SubscriptionManager
-	connectionManager   *ConnectionManager
 	user                model.MinimalUser
 }
 
-func newHandlers(connection *websocket.Conn, subscriptionManager *SubscriptionManager, connectionManager *ConnectionManager, user model.MinimalUser) Handlers {
+func newHandlers(connection *websocket.Conn, user model.MinimalUser) Handlers {
 	return Handlers{
 		connection,
-		subscriptionManager,
-		connectionManager,
 		user,
 	}
 }
@@ -48,7 +44,11 @@ func sendMessage(connection *websocket.Conn, message OutgoingMessage) error {
 	}
 
 	log.Printf(">>> %v", string(toSend))
-	return connection.WriteMessage(websocket.TextMessage, toSend)
+	err = connection.WriteMessage(websocket.TextMessage, toSend)
+	if websocket.IsCloseError(err) || err == websocket.ErrCloseSent {
+		return nil // in case the connection has been closed, we will continue with the rest but ignore sent messages
+	}
+	return err
 }
 
 func (h *Handlers) send(message OutgoingMessage) error {
@@ -56,7 +56,7 @@ func (h *Handlers) send(message OutgoingMessage) error {
 }
 
 func (h *Handlers) broadcastToUser(user model.MinimalUser, message OutgoingMessage) error {
-	for connection := range h.connectionManager.allUserConnections(user) {
+	for connection := range connectionManager.allUserConnections(user) {
 		err := sendMessage(connection, message)
 		if err != nil {
 			return err
@@ -71,7 +71,7 @@ func (h *Handlers) error(reason Error) error {
 
 // Broadcast sends a message to all clients subscribed to kind, gameId
 func (h *Handlers) broadcast(kind SubscriptionKind, gameId model.GameID, message OutgoingMessage) error {
-	for connection := range h.subscriptionManager.subscriptionsTo(kind, gameId) {
+	for connection := range subscriptionManager.subscriptionsTo(kind, gameId) {
 		err := sendMessage(connection, message)
 		if err != nil {
 			return err
@@ -115,11 +115,11 @@ func (h *Handlers) sendActiveConfigRooms() error {
 
 func (h *Handlers) subscribeToLobby() error {
 	uid := h.user.ID
-	if h.subscriptionManager.isSubscribed(uid) {
+	if subscriptionManager.isSubscribed(uid) {
 		return h.error(ErrorAlreadySubscribed)
 	}
 
-	h.subscriptionManager.subscribe(h.connection, uid, model.GameIDLobby, SubscriptionToLobby)
+	subscriptionManager.subscribe(h.connection, uid, model.GameIDLobby, SubscriptionToLobby)
 	err := h.sendChatMessages(model.GameIDLobby)
 	if err != nil {
 		return err
@@ -129,7 +129,7 @@ func (h *Handlers) subscribeToLobby() error {
 }
 
 func (h *Handlers) chatSend(content string) error {
-	kind, gameId, subscribed := h.subscriptionManager.subscriptionOf(h.connection)
+	kind, gameId, subscribed := subscriptionManager.subscriptionOf(h.connection)
 	if !subscribed {
 		return h.error(ErrorUnknownMessage)
 	}
@@ -152,6 +152,7 @@ func (h *Handlers) setCurrentGame(user model.MinimalUser, currentGame model.Curr
 		return err
 	}
 
+	log.Printf("sending new current game!")
 	return h.broadcastToUser(user, CurrentGameUpdateMessage{ CurrentGame: &currentGame })
 }
 
@@ -174,14 +175,18 @@ func (h *Handlers) removeCurrentGame(user model.MinimalUser) error {
 }
 
 func (h *Handlers) createGame(gameName string) error {
-	if h.subscriptionManager.isSubscribed(h.user.ID) {
+	if subscriptionManager.isSubscribed(h.user.ID) {
 		return h.error(ErrorAlreadySubscribed)
 	}
 
 	// Contrary to other place where checking subscription is enough, we need to
 	// check that the creator does not have a current game. They could have
 	// created a game, left, and be trying to create a new one.
-	if model.GetCurrentGame(h.user) != nil {
+	currentGame, err := model.GetCurrentGame(h.user)
+	if err != nil {
+		return err
+	}
+	if currentGame != nil {
 		return h.error(ErrorAlreadySubscribed)
 	}
 
@@ -208,7 +213,7 @@ func (h *Handlers) createGame(gameName string) error {
 
 	// Creator now has a current game, without opponents yet
 	err = h.setCurrentGame(h.user, model.CurrentGame{
-		ID: configRoom.ID,
+		GameID: configRoom.ID,
 		GameName: gameName,
 		Opponent: nil,
 		Role: model.UserRoleCreator,
@@ -223,7 +228,7 @@ func (h *Handlers) createGame(gameName string) error {
 
 func (h *Handlers) subscribeToConfigRoom(gameId model.GameID) error {
 	uid := h.user.ID
-	if h.subscriptionManager.isSubscribed(uid) {
+	if subscriptionManager.isSubscribed(uid) {
 		return h.error(ErrorAlreadySubscribed)
 	}
 
@@ -235,7 +240,7 @@ func (h *Handlers) subscribeToConfigRoom(gameId model.GameID) error {
 		return h.error(ErrorGameDoesNotExist)
 	}
 
-	h.subscriptionManager.subscribe(h.connection, h.user.ID, gameId, SubscriptionToConfigRoom)
+	subscriptionManager.subscribe(h.connection, h.user.ID, gameId, SubscriptionToConfigRoom)
 	switch configRoom.Status {
 	case model.StatusCreated, model.StatusConfigProposed:
 		// This is a config room in progress
@@ -255,9 +260,9 @@ func (h *Handlers) subscribeToConfigRoom(gameId model.GameID) error {
 
 			// And set the current game of the candidate
 			err = h.setCurrentGame(h.user, model.CurrentGame{
-				ID: gameId,
+				GameID: gameId,
 				GameName: configRoom.GameName,
-				Opponent: nil,
+				Opponent: &configRoom.Creator,
 				Role: model.UserRoleCandidate,
 			})
 			if err != nil {
@@ -289,7 +294,7 @@ func (h *Handlers) subscribeToConfigRoom(gameId model.GameID) error {
 }
 
 func (h *Handlers) subscribeToGame(gameId model.GameID) error {
-	if h.subscriptionManager.isSubscribed(h.user.ID) {
+	if subscriptionManager.isSubscribed(h.user.ID) {
 		return h.error(ErrorAlreadySubscribed)
 	}
 
@@ -301,12 +306,12 @@ func (h *Handlers) subscribeToGame(gameId model.GameID) error {
 		return h.error(ErrorGameDoesNotExist)
 	}
 
-	h.subscriptionManager.subscribe(h.connection, h.user.ID, gameId, SubscriptionToGame)
+	subscriptionManager.subscribe(h.connection, h.user.ID, gameId, SubscriptionToGame)
 
 	// Let the observers know their current game. The players already know it from game creation
 	if game.PlayerZero.ID != h.user.ID && game.PlayerOne.ID != h.user.ID {
 		h.setCurrentGame(h.user, model.CurrentGame{
-			ID: gameId,
+			GameID: gameId,
 			GameName: game.GameName,
 			Opponent: nil,
 			Role: model.UserRoleObserver,
@@ -339,24 +344,22 @@ func (h *Handlers) subscribeToGame(gameId model.GameID) error {
 }
 
 func (h *Handlers) unsubscribe() error {
-	subscriptionKind, gameId, subscribed := h.subscriptionManager.subscriptionOf(h.connection)
+	subscriptionKind, gameId, subscribed := subscriptionManager.subscriptionOf(h.connection)
 	if !subscribed {
 		// They're not subscribed, there's nothing to do
 		return nil
 	}
-	h.subscriptionManager.unsubscribe(h.connection)
+	subscriptionManager.unsubscribe(h.connection)
 
 	switch subscriptionKind {
 	case SubscriptionToLobby:
 		// Leaving the lobby is easy: there's nothing to do
 		return nil
 	case SubscriptionToGame:
-		// Leaving a game: only remove the current game from observers,
+		// Leaving a game: only remove the current game if user was an observer,
 		// because anyone is allowed only one subscription at a time, if they observe and unsubscribe, they have no current game.
 		// A player however must remain in game, otherwise they could close their tab and join a new game in another tab.
-		return model.ApplyToObservers(gameId, func (observer model.MinimalUser) error {
-			return h.removeCurrentGame(observer)
-		})
+		// TODO: check if user is observer, if so remove current game
 	case SubscriptionToConfigRoom:
 		// Leaving a config room means we may need to remove the candidate or cancel the game entirely
 		configRoom, err := model.GetConfigRoom(gameId)
@@ -372,7 +375,7 @@ func (h *Handlers) unsubscribe() error {
 		if configRoom.Status.IsUnstarted() {
 			if configRoom.Creator.ID == h.user.ID {
 				// Creator is leaving its unstarted game, remove it
-				err = configRoom.Delete()
+				err = model.DeleteConfigRoom(*configRoom)
 				if err != nil {
 					return err
 				}
@@ -412,7 +415,7 @@ func (h *Handlers) unsubscribe() error {
 				// Adapt current game from creator if needed, and remove current game from candidate
 				if configRoom.ChosenOpponent.ID == h.user.ID {
 					err = h.updateCurrentGame(configRoom.Creator, model.CurrentGame{
-						ID: configRoom.ID,
+						GameID: configRoom.ID,
 						GameName: configRoom.GameName,
 						Opponent: nil,
 						Role: model.UserRoleCreator,
@@ -433,7 +436,7 @@ func (h *Handlers) unsubscribe() error {
 }
 
 func (h *Handlers) getSubscribedConfigRoom() (*model.ConfigRoom, error) {
-	_, gameId, subscribed := h.subscriptionManager.subscriptionOf(h.connection)
+	_, gameId, subscribed := subscriptionManager.subscriptionOf(h.connection)
 	if !subscribed {
 		return nil, h.error(ErrorNotSubscribed)
 	}
@@ -464,7 +467,7 @@ func (h *Handlers) selectOpponent(opponent model.MinimalUser) error {
 
 	// Both players have their current game updated
 	err = h.updateCurrentGame(h.user, model.CurrentGame{
-		ID: configRoom.ID,
+		GameID: configRoom.ID,
 		GameName: configRoom.GameName,
 		Opponent: &opponent,
 		Role: model.UserRoleCreator,
@@ -474,7 +477,7 @@ func (h *Handlers) selectOpponent(opponent model.MinimalUser) error {
 	}
 
 	err = h.updateCurrentGame(opponent, model.CurrentGame{
-		ID: configRoom.ID,
+		GameID: configRoom.ID,
 		GameName: configRoom.GameName,
 		Opponent: &h.user,
 		Role: model.UserRoleChosenOpponent,
@@ -570,7 +573,7 @@ func (h *Handlers) acceptConfig() error {
 	}
 
 	err = h.updateCurrentGame(configRoom.Creator, model.CurrentGame{
-		ID: configRoom.ID,
+		GameID: configRoom.ID,
 		GameName: configRoom.GameName,
 		Opponent: configRoom.ChosenOpponent,
 		Role: model.UserRolePlayer,
@@ -580,7 +583,7 @@ func (h *Handlers) acceptConfig() error {
 	}
 
 	err = h.updateCurrentGame(*configRoom.ChosenOpponent, model.CurrentGame{
-		ID: configRoom.ID,
+		GameID: configRoom.ID,
 		GameName: configRoom.GameName,
 		Opponent: &configRoom.Creator,
 		Role: model.UserRolePlayer,
@@ -738,7 +741,7 @@ func (h *Handlers) gameEnd(winner model.PlayerOrNone) error {
 }
 
 func (h *Handlers) addEvent(eventData model.EventData) error {
-	_, gameId, subscribed := h.subscriptionManager.subscriptionOf(h.connection)
+	_, gameId, subscribed := subscriptionManager.subscriptionOf(h.connection)
 	if !subscribed {
 		return h.error(ErrorNotSubscribed)
 	}

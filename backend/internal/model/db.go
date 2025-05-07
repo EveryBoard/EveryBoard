@@ -1,20 +1,32 @@
 package model
 
 import (
+	"fmt"
 	"errors"
 	"log"
 
-	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
+	"gorm.io/gorm/logger"
+	"gorm.io/driver/sqlite"
 )
 
 // The connection to the db itself
 var db *gorm.DB
 
+func wrapError(ctx string, err error) error {
+    if err == nil {
+        return nil
+    }
+    return fmt.Errorf("error in %s: %w", ctx, err)
+}
+
+
 func InitDatabase(dbPath string) {
 	var err error
 
-	db, err = gorm.Open(sqlite.Open(dbPath), &gorm.Config{})
+	db, err = gorm.Open(sqlite.Open(dbPath), &gorm.Config{
+		Logger: logger.Default.LogMode(logger.Silent), // we will log errors ourselves
+	})
 	if err != nil {
 		log.Fatalf("Failed to connect to DB: %v", err)
 	}
@@ -76,7 +88,7 @@ func InitDatabase(dbPath string) {
 	}
 }
 
-func GetElo(gameName string, user MinimalUser) (Elo, error) {
+func GetElo(gameName string, user MinimalUser) (*Elo, error) {
 	var entry Elo
 	result := db.First(&entry, "user_id = ? AND game_name = ?", user.ID, gameName)
 
@@ -87,11 +99,9 @@ func GetElo(gameName string, user MinimalUser) (Elo, error) {
 		}
 		result = db.Create(&entry)
 	}
-
-	return entry, result.Error
+	return &entry, wrapError("GetElo", result.Error)
 }
 
-// Retrieve a config room. Returns nil without error if there is none.
 func GetConfigRoom(gameId GameID) (*ConfigRoom, error) {
 	var configRoom ConfigRoom
 	result := db.First(&configRoom, "id = ?", gameId)
@@ -99,7 +109,12 @@ func GetConfigRoom(gameId GameID) (*ConfigRoom, error) {
 	if errors.Is(result.Error, gorm.ErrRecordNotFound) {
 		return nil, nil
 	}
-	return &configRoom, result.Error
+	return &configRoom, wrapError("GetConfigRoom", result.Error)
+}
+
+func DeleteConfigRoom(configRoom ConfigRoom) error {
+	result := db.Model(&ConfigRoom{}).Delete(&configRoom)
+	return wrapError("DeleteConfigRoom", result.Error)
 }
 
 func GetGame(gameId GameID) (*Game, error) {
@@ -109,7 +124,7 @@ func GetGame(gameId GameID) (*Game, error) {
 	if errors.Is(result.Error, gorm.ErrRecordNotFound) {
 		return nil, nil
 	}
-	return &game, result.Error
+	return &game, wrapError("GetGame", result.Error)
 }
 
 func CreateConfigRoom(creator MinimalUser, gameName string) (*ConfigRoom, error) {
@@ -132,13 +147,13 @@ func CreateConfigRoom(creator MinimalUser, gameName string) (*ConfigRoom, error)
 	}
 
 	result := db.Create(&configRoom)
-	return &configRoom, result.Error
+	return &configRoom, wrapError("CreateConfigRoom", result.Error)
 }
 
 func CreateRematchConfigRoom(creator MinimalUser, configRoom ConfigRoom, game Game) (*ConfigRoom, error) {
-	creatorElo, error := GetElo(configRoom.GameName, creator)
-	if error != nil {
-		return nil, error
+	creatorElo, err := GetElo(configRoom.GameName, creator)
+	if err != nil {
+		return nil, wrapError("CreateRematchConfigRoom", err)
 	}
 
 	var firstPlayer FirstPlayer
@@ -150,7 +165,6 @@ func CreateRematchConfigRoom(creator MinimalUser, configRoom ConfigRoom, game Ga
 		firstPlayer = FirstPlayerCreator
 		chosenOpponent = game.PlayerZero
 	}
-
 
 	rematchConfigRoom := ConfigRoom{
 		Creator: creator,
@@ -166,13 +180,13 @@ func CreateRematchConfigRoom(creator MinimalUser, configRoom ConfigRoom, game Ga
 	}
 
 	result := db.Create(&rematchConfigRoom)
-	return &rematchConfigRoom, result.Error
+	return &rematchConfigRoom, wrapError("CreateRematchConfigRoom", result.Error)
 }
 
 
 func (cr *ConfigRoom) SelectOpponent(opponent MinimalUser) error {
 	result := db.Model(&cr).Updates(ConfigRoom{ChosenOpponent: &opponent})
-	return result.Error
+	return wrapError("SelectOpponent", result.Error)
 }
 
 func (cr *ConfigRoom) Propose(proposal *ConfigProposal) error {
@@ -184,14 +198,14 @@ func (cr *ConfigRoom) Propose(proposal *ConfigProposal) error {
 		RulesConfig: proposal.RulesConfig,
 		Status: StatusConfigProposed,
 	})
-	return result.Error
+	return wrapError("Propose", result.Error)
 }
 
 func (cr *ConfigRoom) SetStatus(status Status) error {
 	result := db.Model(cr).Updates(ConfigRoom{
 		Status: status,
 	})
-	return result.Error
+	return wrapError("SetStatus", result.Error)
 }
 
 func (cr *ConfigRoom) Review() error {
@@ -231,23 +245,23 @@ func ApplyToQueryResult[T interface{}](tx *gorm.DB, action func(T) error) error 
 
 func ApplyToConfigRooms(action func(ConfigRoom) error) error {
 	query := db.Model(&ConfigRoom{}).Where("status != ?", StatusFinished)
-	return ApplyToQueryResult(query, action)
+	return wrapError("ApplyToConfigRooms", ApplyToQueryResult(query, action))
 }
 
 func AddChatMessage(gameId GameID, message *Message) error {
 	message.GameID = gameId
 	result := db.Create(message)
-	return result.Error
+	return wrapError("AddChatMessage", result.Error)
 }
 
 func ApplyToMessagesOfGame(gameId GameID, action func(*Message) error) error {
 	query := db.Model(&Message{}).Where("game_id = ?", gameId)
-	return ApplyToQueryResult(query, action)
+	return wrapError("ApplyToMessagesOfGame", ApplyToQueryResult(query, action))
 }
 
 func ApplyToGameEvents(gameId GameID, action func(*GameEvent) error) error {
 	query := db.Model(&GameEvent{}).Where("game_id = ?", gameId)
-	return ApplyToQueryResult(query, action)
+	return wrapError("ApplyToGameEvents", ApplyToQueryResult(query, action))
 }
 
 func (cr *ConfigRoom) AddCandidate(user MinimalUser) error {
@@ -255,17 +269,18 @@ func (cr *ConfigRoom) AddCandidate(user MinimalUser) error {
 		GameID: cr.ID,
 		User: user,
 	})
-	return result.Error
+	return wrapError("AddCandidate", result.Error)
 
 }
 
 func (cr *ConfigRoom) DeleteCandidate(uid string) error {
-	return db.Where("game_id = ? and user_id = ?", cr.ID, uid).Delete(&Candidate{}).Error
+	result := db.Where("game_id = ? and user_id = ?", cr.ID, uid).Delete(&Candidate{})
+	return wrapError("DeleteCandidate", result.Error)
 }
 
 func ApplyToCandidates(gameId GameID, action func(Candidate) error) error {
 	query := db.Model(&Candidate{}).Where("game_id = ?", gameId)
-	return ApplyToQueryResult(query, action)
+	return wrapError("ApplyToCandidates", ApplyToQueryResult(query, action))
 }
 
 func (cr *ConfigRoom) CreateGame(now int64, rand_bool bool) (*Game, error) {
@@ -297,38 +312,40 @@ func (cr *ConfigRoom) CreateGame(now int64, rand_bool bool) (*Game, error) {
 		Beginning: now,
 	}
 	result := db.Create(&game)
-	return &game, result.Error
+	return &game, wrapError("CreateGame", result.Error)
 }
 
 func (game *Game) SetResult(gameResult Result) error {
 	result := db.Model(game).Updates(Game{
 		Result: gameResult,
 	})
-	return result.Error
+	return wrapError("SetResult", result.Error)
 }
 
 func AddEvent(gameId GameID, event GameEvent) error {
 	event.GameID = gameId
-	return db.Create(&event).Error
+	result := db.Create(&event)
+	return wrapError("AddEvent", result.Error)
 }
 
 
 func UpdateElo(tx *gorm.DB, gameName string, user MinimalUser, elo Elo) error {
-	return tx.Model(&Elo{}).Where("game_name = ? and user_id = ?", gameName, user.ID).Updates(elo).Error
+	result := tx.Model(&Elo{}).Where("game_name = ? and user_id = ?", gameName, user.ID).Updates(elo)
+	return wrapError("UpdateElo", result.Error)
 }
 
 func GetElos(gameName string, winner MinimalUser, loser MinimalUser) (*Elo, *Elo, error) {
 	// TODO: do this through a transaction
 	eloWinner, err := GetElo(gameName, winner)
 	if err != nil {
-		return nil, nil, err
+		return nil, nil, wrapError("GetElos", err)
 	}
 
 	eloLoser, err := GetElo(gameName, loser)
 	if err != nil {
-		return nil, nil, err
+		return nil, nil, wrapError("GetElos", err)
 	}
-	return &eloWinner, &eloLoser, nil
+	return eloWinner, eloLoser, nil
 }
 
 func UpdateElos(gameName string, winner MinimalUser, winnerElo Elo, loser MinimalUser, loserElo Elo) error {
@@ -336,39 +353,43 @@ func UpdateElos(gameName string, winner MinimalUser, winnerElo Elo, loser Minima
 	err := UpdateElo(tx, gameName, winner, winnerElo)
 	if err != nil {
 		tx.Rollback()
-		return err
+		return wrapError("UpdateElos", err)
 	}
 	err = UpdateElo(tx, gameName, loser, loserElo)
 	if err != nil {
 		tx.Rollback()
-		return err
+		return wrapError("UpdateElos", err)
 	}
-	return tx.Commit().Error
+	result := tx.Commit()
+	return wrapError("UpdateElos", result.Error)
 }
 
-func GetCurrentGame(user MinimalUser) *CurrentGame {
+func GetCurrentGame(user MinimalUser) (*CurrentGame, error) {
 	var currentGame CurrentGame
 	result := db.Model(&CurrentGame{}).Where("user_id = ?", user.ID).First(&currentGame)
 	if result.RowsAffected == 0 {
-		return nil // No current game
+		return nil, nil // No current game
 	}
-	return &currentGame
+	return &currentGame, wrapError("GetCurrentGame", result.Error)
 }
 
 func SetCurrentGame(user MinimalUser, currentGame CurrentGame) error {
 	currentGame.UserID = user.ID
-	return db.Create(&currentGame).Error
+	result := db.Create(&currentGame)
+	return wrapError("SetCurrentGame", result.Error)
 }
 
 func UpdateCurrentGame(user MinimalUser, currentGame CurrentGame) error {
-	return db.Model(&CurrentGame{}).Where("user_id = ?", user.ID).Updates(currentGame).Error
+	result := db.Model(&CurrentGame{}).Where("user_id = ?", user.ID).Updates(currentGame)
+	return wrapError("UpdateCurrentGame", result.Error)
 }
 
 func RemoveCurrentGame(user MinimalUser) error {
-	return db.Delete(&CurrentGame{}).Where("user_id = ?", user.ID).Error
+	result := db.Model(&CurrentGame{}).Where("user_id = ?", user.ID).Delete(&CurrentGame{})
+	return wrapError("RemoveCurrentGame", result.Error)
 }
 
 func ApplyToObservers(gameId GameID, action func(MinimalUser) error) error {
 	query := db.Model(&CurrentGame{}).Where("game_id = ? and role = 'Observer'", StatusFinished)
-	return ApplyToQueryResult(query, action)
+	return wrapError("ApplyToObservers", ApplyToQueryResult(query, action))
 }

@@ -104,7 +104,3 @@ type Candidate struct {
 	User   MinimalUser `gorm:"embedded;embeddedPrefix:user_;not null"`
 	Elo    float64     `gorm:"not null" json:"elo"`
 }
-
-func (cr *ConfigRoom) Delete() error {
-	return db.Model(&cr).Delete(&ConfigRoom{}).Error
-}

@@ -35,8 +35,8 @@ type SubscriptionManager struct {
 	lock          sync.RWMutex
 }
 
-func newSubscriptionManager() *SubscriptionManager {
-	return &SubscriptionManager{
+func newSubscriptionManager() SubscriptionManager {
+	return SubscriptionManager{
 		clientToGame:   make(map[*websocket.Conn]SubscriptionKindAndGameId),
 		gameToClients:  make(map[SubscriptionKindAndGameId]utils.Set[*websocket.Conn]),
 		clientToUser:   make(map[*websocket.Conn]string),

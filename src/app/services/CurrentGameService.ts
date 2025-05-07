@@ -38,7 +38,7 @@ export class CurrentGameService implements OnDestroy {
     }
 
     private async onUserUpdate(user: AuthUser): Promise<void> {
-        if (user === AuthUser.NOT_CONNECTED) { // user logged out
+        if (user === AuthUser.NOT_CONNECTED || user.verified === false) { // user logged out or not yet verified
             this.currentGameSubscription.unsubscribe();
             this.currentGame = MGPOptional.empty();
             this.currentGameRS.next(MGPOptional.empty());
@@ -54,6 +54,8 @@ export class CurrentGameService implements OnDestroy {
     }
 
     private onCurrentGameUpdate(newCurrentGame: CurrentGame | null | undefined): void {
+        console.log('CurrentGameUpdate received!')
+        console.log({newCurrentGame})
         // Undefined if the user had no currentGame, null if it has been removed
         const previousCurrentGame: MGPOptional<CurrentGame> = this.currentGame;
         const stayedNull: boolean = newCurrentGame == null && previousCurrentGame.isAbsent();
