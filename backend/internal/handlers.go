@@ -245,6 +245,17 @@ func (h *Handlers) subscribeToConfigRoom(gameId model.GameID) error {
 	case model.StatusCreated, model.StatusConfigProposed:
 		// This is a config room in progress
 		// Either we have the creator or a candidate
+
+		// For both candidates and creator, send the config room first, then the candidates.
+		// The order is important so that the client knows the config room before the candidates
+		err = h.send(ConfigRoomUpdateMessage{
+			GameID:     gameId,
+			ConfigRoom: *configRoom,
+		})
+		if err != nil {
+			return err
+		}
+
 		if uid != configRoom.Creator.ID {
 			// A new candidate appears!
 			err = configRoom.AddCandidate(h.user)
@@ -268,16 +279,6 @@ func (h *Handlers) subscribeToConfigRoom(gameId model.GameID) error {
 			if err != nil {
 				return err
 			}
-		}
-
-		// For both candidates and creator, send the config room first, then the candidates.
-		// The order is important so that the client knows the config room before the candidates
-		err = h.send(ConfigRoomUpdateMessage{
-			GameID:     gameId,
-			ConfigRoom: *configRoom,
-		})
-		if err != nil {
-			return err
 		}
 
 		return model.ApplyToCandidates(gameId, func(candidate model.Candidate) error {
@@ -359,7 +360,14 @@ func (h *Handlers) unsubscribe() error {
 		// Leaving a game: only remove the current game if user was an observer,
 		// because anyone is allowed only one subscription at a time, if they observe and unsubscribe, they have no current game.
 		// A player however must remain in game, otherwise they could close their tab and join a new game in another tab.
-		// TODO: check if user is observer, if so remove current game
+		game, err := model.GetGame(gameId)
+		if err != nil {
+			return err
+		}
+		if game.PlayerZero.ID != h.user.ID && game.PlayerOne.ID != h.user.ID {
+			return h.removeCurrentGame(h.user)
+		}
+		return nil
 	case SubscriptionToConfigRoom:
 		// Leaving a config room means we may need to remove the candidate or cancel the game entirely
 		configRoom, err := model.GetConfigRoom(gameId)
@@ -380,6 +388,7 @@ func (h *Handlers) unsubscribe() error {
 					return err
 				}
 
+				// Let everyone know about it
 				update := ConfigRoomDeletedMessage{GameID: configRoom.ID}
 				err = h.broadcastToConfigRoom(configRoom.ID, update)
 				if err != nil {
@@ -401,7 +410,7 @@ func (h *Handlers) unsubscribe() error {
 
 				return h.removeCurrentGame(configRoom.Creator)
 			} else {
-				// Candidate has left
+				// Candidate has left, remove them
 				err = configRoom.DeleteCandidate(h.user.ID)
 				if err != nil {
 					return err
@@ -412,8 +421,20 @@ func (h *Handlers) unsubscribe() error {
 					return err
 				}
 
-				// Adapt current game from creator if needed, and remove current game from candidate
-				if configRoom.ChosenOpponent.ID == h.user.ID {
+				// Adapt config room and current game from creator if needed (if candidate was chosen opponent)
+				if configRoom.ChosenOpponent != nil && configRoom.ChosenOpponent.ID == h.user.ID {
+					err = configRoom.RemoveOpponent()
+					if err != nil {
+						return err
+					}
+					err = h.broadcastToConfigRoom(configRoom.ID, ConfigRoomUpdateMessage{
+						GameID: configRoom.ID,
+						ConfigRoom: *configRoom,
+					})
+					if err != nil {
+						return err
+					}
+
 					err = h.updateCurrentGame(configRoom.Creator, model.CurrentGame{
 						GameID: configRoom.ID,
 						GameName: configRoom.GameName,

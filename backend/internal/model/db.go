@@ -184,13 +184,20 @@ func CreateRematchConfigRoom(creator MinimalUser, configRoom ConfigRoom, game Ga
 }
 
 
-func (cr *ConfigRoom) SelectOpponent(opponent MinimalUser) error {
-	result := db.Model(&cr).Updates(ConfigRoom{ChosenOpponent: &opponent})
+func (configRoom *ConfigRoom) SelectOpponent(opponent MinimalUser) error {
+	result := db.Model(configRoom).Updates(ConfigRoom{ChosenOpponent: &opponent})
+	configRoom.ChosenOpponent = &opponent
 	return wrapError("SelectOpponent", result.Error)
 }
 
-func (cr *ConfigRoom) Propose(proposal *ConfigProposal) error {
-	result := db.Model(&cr).Updates(ConfigRoom{
+func (configRoom *ConfigRoom) RemoveOpponent() error {
+	result := db.Model(configRoom).Updates(ConfigRoom{ChosenOpponent: nil})
+	configRoom.ChosenOpponent = nil
+	return wrapError("RemoveOpponent", result.Error)
+}
+
+func (configRoom *ConfigRoom) Propose(proposal *ConfigProposal) error {
+	result := db.Model(configRoom).Updates(ConfigRoom{
 		GameType: proposal.GameType,
 		MoveDuration: proposal.MoveDuration,
 		GameDuration: proposal.GameDuration,
@@ -201,23 +208,23 @@ func (cr *ConfigRoom) Propose(proposal *ConfigProposal) error {
 	return wrapError("Propose", result.Error)
 }
 
-func (cr *ConfigRoom) SetStatus(status Status) error {
-	result := db.Model(cr).Updates(ConfigRoom{
+func (configRoom *ConfigRoom) SetStatus(status Status) error {
+	result := db.Model(configRoom).Updates(ConfigRoom{
 		Status: status,
 	})
 	return wrapError("SetStatus", result.Error)
 }
 
-func (cr *ConfigRoom) Review() error {
-	return cr.SetStatus(StatusCreated)
+func (configRoom *ConfigRoom) Review() error {
+	return configRoom.SetStatus(StatusCreated)
 }
 
-func (cr *ConfigRoom) Start() error {
-	return cr.SetStatus(StatusStarted)
+func (configRoom *ConfigRoom) Start() error {
+	return configRoom.SetStatus(StatusStarted)
 }
 
-func (cr *ConfigRoom) Finish() error {
-	return cr.SetStatus(StatusFinished)
+func (configRoom *ConfigRoom) Finish() error {
+	return configRoom.SetStatus(StatusFinished)
 }
 
 func ApplyToQueryResult[T interface{}](tx *gorm.DB, action func(T) error) error {

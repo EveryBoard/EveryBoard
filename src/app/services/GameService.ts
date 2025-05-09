@@ -116,12 +116,12 @@ export class GameService {
 
     /** Add global time to the opponent */
     public async addGlobalTime(): Promise<void> {
-        return this.gameAction(['AddTime', { kind: ['Global'] }]);
+        return this.gameAction(['AddTime', { kind: 'Global' }]);
     }
 
     /** Add turn time to the opponent */
     public async addTurnTime(): Promise<void> {
-        return this.gameAction(['AddTime', { kind: ['Turn'] }]);
+        return this.gameAction(['AddTime', { kind: 'Turn' }]);
     }
 
     /** Play a move */

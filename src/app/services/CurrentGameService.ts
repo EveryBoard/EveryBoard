@@ -43,6 +43,8 @@ export class CurrentGameService implements OnDestroy {
             this.currentGame = MGPOptional.empty();
             this.currentGameRS.next(MGPOptional.empty());
         } else { // new user logged in
+            console.log('user update')
+            console.log({user})
             // We need to subscribe to any change to the user's current game
             this.currentGameSubscription =
                 this.webSocketManagerService.setCallback('CurrentGameUpdate', (message: WebSocketMessage) => {

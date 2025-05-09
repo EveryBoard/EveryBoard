@@ -32,7 +32,7 @@
                        >{{ gameComponent.getScoreString(Player.ZERO) }}</p>
                     <app-count-down #chronoZeroGlobal
                                     id="chrono-zero-global"
-                                    [dangerTimeLimit]="60*1000"
+                                    [dangerTimeLimit]="60"
                                     [active]="(game === null) ? false : getTurn() % 2 === 0"
                                     [canAddTime]='role === Player.ONE && endGame === false'
                                     [timeToAdd]="globalTimeMessage"
@@ -45,7 +45,7 @@
                     </app-count-down>
                     <app-count-down #chronoZeroTurn
                                     id="chrono-zero-turn"
-                                    [dangerTimeLimit]="15*1000"
+                                    [dangerTimeLimit]="15"
                                     [active]="(game === null) ? false : getTurn() % 2 === 0"
                                     [canAddTime]='role === Player.ONE && endGame === false'
                                     [timeToAdd]="turnTimeMessage"
@@ -67,7 +67,7 @@
                        >{{ gameComponent.getScoreString(Player.ONE) }}</p>
                     <app-count-down #chronoOneGlobal
                                     id="chrono-one-global"
-                                    [dangerTimeLimit]="60*1000"
+                                    [dangerTimeLimit]="60"
                                     [active]="(game === null) ? false : getTurn() % 2 === 1"
                                     [canAddTime]='role === Player.ZERO && endGame === false'
                                     [timeToAdd]="globalTimeMessage"
@@ -80,7 +80,7 @@
                     </app-count-down>
                     <app-count-down #chronoOneTurn
                                     id="chrono-one-turn"
-                                    [dangerTimeLimit]="15*1000"
+                                    [dangerTimeLimit]="15"
                                     [active]="(game === null) ? false : getTurn() % 2 === 1"
                                     [canAddTime]='role === Player.ZERO && endGame === false'
                                     [timeToAdd]="turnTimeMessage"
