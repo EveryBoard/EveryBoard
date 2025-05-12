@@ -138,6 +138,8 @@ import { ToggleVisibilityDirective } from './pipes-and-directives/toggle-visibil
 import { RulesConfigurationComponent } from './components/wrapper-components/rules-configuration/rules-configuration.component';
 import { BlankGobanComponent } from './components/game-components/goban-game-component/blank-goban/blank-goban.component';
 import { LocaleUtils } from './utils/LocaleUtils';
+import { ViewConfigComponent } from './components/normal-component/view-config/view-config.component';
+import { LocalGameConfigurationComponent } from './components/wrapper-components/local-game-configuration/local-game-configuration.component';
 
 registerLocaleData(localeFr);
 
@@ -152,12 +154,13 @@ export const routes: Route[] = [
     { path: 'nextGameLoading', component: NextGameLoadingComponent, canActivate: [VerifiedAccountGuard] },
     { path: 'verify-account', component: VerifyAccountComponent, canActivate: [ConnectedButNotVerifiedGuard] },
     { path: 'play', component: OnlineGameSelectionComponent, canActivate: [VerifiedAccountGuard, ExclusiveOnlineGameGuard] },
-    { path: 'play/:compo', component: OnlineGameCreationComponent, canActivate: [VerifiedAccountGuard, ExclusiveOnlineGameGuard] },
-    { path: 'play/:compo/:id', component: OnlineGameWrapperComponent, canActivate: [VerifiedAccountGuard, ExclusiveOnlineGameGuard] },
+    { path: 'play/:game', component: OnlineGameCreationComponent, canActivate: [VerifiedAccountGuard, ExclusiveOnlineGameGuard] },
+    { path: 'play/:game/:id', component: OnlineGameWrapperComponent, canActivate: [VerifiedAccountGuard, ExclusiveOnlineGameGuard] },
     { path: 'local', component: LocalGameCreationComponent },
-    { path: 'local/:compo', component: LocalGameWrapperComponent },
+    { path: 'local/:game/config', component: LocalGameConfigurationComponent },
+    { path: 'local/:game', component: LocalGameWrapperComponent },
     { path: 'tutorial', component: TutorialGameCreationComponent },
-    { path: 'tutorial/:compo', component: TutorialGameWrapperComponent },
+    { path: 'tutorial/:game', component: TutorialGameWrapperComponent },
     { path: '', component: WelcomeComponent },
     { path: 'demo', component: DemoPageComponent },
     { path: '**', component: NotFoundComponent },
@@ -180,6 +183,7 @@ export const routes: Route[] = [
         OnlineGameWrapperComponent,
         LocalGameWrapperComponent,
         TutorialGameWrapperComponent,
+        LocalGameConfigurationComponent,
         LocalGameCreationComponent,
         OnlineGameSelectionComponent,
         TutorialGameCreationComponent,
@@ -189,6 +193,8 @@ export const routes: Route[] = [
         AccountComponent,
         DemoCardWrapperComponent,
         DemoPageComponent,
+        RulesConfigurationComponent,
+        ViewConfigComponent,
 
         DirArrowComponent,
         HexArrowComponent,
@@ -196,10 +202,8 @@ export const routes: Route[] = [
         AbaloneComponent,
         ApagosComponent,
         AwaleComponent, NumberedCircleComponent,
-
         BrandhubComponent,
         BaAwaComponent,
-
         CoerceoComponent,
         ConnectSixComponent,
         ConspirateursComponent,
@@ -243,7 +247,6 @@ export const routes: Route[] = [
         FirestoreTimePipe,
         AutofocusDirective,
         ToggleVisibilityDirective,
-        RulesConfigurationComponent,
     ],
     imports: [
         BrowserModule,

@@ -16,6 +16,7 @@ import { Debug } from 'src/app/utils/Debug';
 import { GameInfo } from '../../normal-component/pick-game/pick-game.component';
 import { BaseComponent } from '../../BaseComponent';
 import { Orthogonal } from 'src/app/jscaip/Orthogonal';
+import { Coord3D } from 'src/app/jscaip/Coord3D';
 import { Localized } from 'src/app/utils/LocaleUtils';
 
 export class ScoreName {
@@ -121,6 +122,8 @@ export abstract class GameComponent<R extends SuperRules<M, S, C, L>,
     public Player: typeof Player = Player;
 
     public PlayerOrNone: typeof PlayerOrNone = PlayerOrNone;
+
+    public Coord3D: typeof Coord3D = Coord3D;
 
     public rules: R;
 

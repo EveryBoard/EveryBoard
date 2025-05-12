@@ -6,15 +6,12 @@ import { EmptyRulesConfig, RulesConfig } from '../jscaip/RulesConfigUtil';
 // 1. valid isolately (not too big, not too small, not even, things like that)
 // 2. valid globally (v and thoses two other fields cannot have the same value, their sum must be 10, things like that)
 export type MGPValidator<R extends RulesConfig = EmptyRulesConfig> =
-    (v: number | string | null, config: R) => MGPValidation;
+(v: number | string | null, config: R) => MGPValidation;
 
 export class MGPValidators {
 
     public static range<R extends RulesConfig = EmptyRulesConfig>(min: number, max: number): MGPValidator<R> {
-        return (value: number | null, config: R) => {
-            if (value == null) {
-                return MGPValidation.failure($localize`This value is mandatory`);
-            }
+        return (value: number) => {
             if (value < min) {
                 return MGPValidation.failure(MGPValidatorsFailure.VALUE_IS_TOO_SMALL(value, min));
             } else if (max < value) {

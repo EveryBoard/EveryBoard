@@ -39,7 +39,7 @@
                  class="mb-2">
                 <div class="field is-horizontal columns is-gapless">
                     <div class="field-label column is-three-quarters">
-                        <label class="label has-text-left">{{ rulesConfigDescription.getI18nName(configParameter) }}</label>
+                        <label class="label has-text-left">{{ rulesConfigDescription.getFieldLocalizedName(configParameter) }}</label>
                     </div>
                     <div class="field-body column has-text-right">
                         <div class="field is-narrow">
@@ -60,7 +60,7 @@
                                        class="input is-small"
                                        [ngClass]="isValid(configParameter) === false ? 'is-danger' : ''"
                                        required
-                                       placeholder="{{ rulesConfigDescription.getI18nName(configParameter) }}" />
+                                       placeholder="{{ rulesConfigDescription.getFieldLocalizedName(configParameter) }}" />
                                 <label *ngSwitchCase="'string'"
                                        class="checkbox">
                                     <div class="select is-primary is-fullwidth">
@@ -74,6 +74,17 @@
                                                 {{ value.localized() }}
                                             </option>
                                         </select>
+                                <!-- COMMENTED OUT: Quentin's code -->
+                                <!-- <ng-template #notBoolean>
+                                    <div *ngIf="isNumber(configParameter)"
+                                         class="control">
+                                        <input id="{{ configParameter }}_number_config_input"
+                                               [formControlName]="configParameter"
+                                               type="number"
+                                               class="input is-small"
+                                               [ngClass]="isValid(configParameter) === false ? 'is-danger' : ''"
+                                               required
+                                               placeholder="{{ rulesConfigDescription.getFieldLocalizedName(configParameter) }}" /> -->
                                     </div>
                                 </label>
                             </div>

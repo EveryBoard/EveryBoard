@@ -1,1 +1,1 @@
-TO BUILD: npm BUILD
+TO BUILD: npm run build

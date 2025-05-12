@@ -15,6 +15,19 @@ describe('RulesConfigurationComponent', () => {
 
     let component: RulesConfigurationComponent;
 
+    // Commented: mine
+    // async function chooseConfig(configName: string): Promise<void> {
+    //     const selectElement: HTMLSelectElement = testUtils.findElement('#ruleSelect').nativeElement;
+    //     const option: HTMLOptionElement | undefined = Array.from(selectElement.options)
+    //         .find((opt: HTMLOptionElement) => {
+    //             return opt.value === configName;
+    //         });
+    //     expect(option).withContext('No config found with name "' + configName + '"').toBeDefined();
+    //     selectElement.value = option?.value as string;
+    //     selectElement.dispatchEvent(new Event('change'));
+    //     testUtils.detectChanges();
+    // }
+
     function expectConfigToBeSelected(selectedConfigName: string): void {
         testUtils.expectDropdownOptionToBeSelected('#ruleSelect', selectedConfigName);
     }

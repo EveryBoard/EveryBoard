@@ -5,7 +5,6 @@ import { MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib'
 import { GameWrapper } from 'src/app/components/wrapper-components/GameWrapper';
 import { AbstractNode, GameNode } from 'src/app/jscaip/AI/GameNode';
 import { Move } from 'src/app/jscaip/Move';
-import { ConnectedUserService } from 'src/app/services/ConnectedUserService';
 import { Click, TutorialStep, TutorialStepClick, TutorialStepMove, TutorialStepWithSolution } from './TutorialStep';
 import { TutorialFailure } from './TutorialFailure';
 import { GameState } from 'src/app/jscaip/state/GameState';
@@ -44,10 +43,9 @@ export class TutorialGameWrapperComponent extends GameWrapper<TutorialPlayer> im
     public constructor(activatedRoute: ActivatedRoute,
                        router: Router,
                        messageDisplayer: MessageDisplayer,
-                       public cdr: ChangeDetectorRef,
-                       connectedUserService: ConnectedUserService)
+                       public cdr: ChangeDetectorRef)
     {
-        super(activatedRoute, connectedUserService, router, messageDisplayer);
+        super(activatedRoute, router, messageDisplayer);
     }
 
     public override async canUserPlay(elementName: string): Promise<MGPValidation> {
@@ -83,7 +81,7 @@ export class TutorialGameWrapperComponent extends GameWrapper<TutorialPlayer> im
 
     public override async onLegalUserMove(move: Move): Promise<void> {
         const currentStep: TutorialStep = this.steps[this.stepIndex];
-        const config: MGPOptional<RulesConfig> = await this.getConfig();
+        const config: MGPOptional<RulesConfig> = this.getConfig();
         const node: MGPFallible<AbstractNode> = this.gameComponent.rules.choose(this.gameComponent.node, move, config);
         Utils.assert(node.isSuccess(), 'It should be impossible to call onLegalUserMove with an illegal move, but got ' + node.getReasonOr(''));
         this.gameComponent.node = node.get();
@@ -137,11 +135,8 @@ export class TutorialGameWrapperComponent extends GameWrapper<TutorialPlayer> im
     }
 
     public getCurrentStepTitle(): string {
-        if (this.steps.length > 0) {
-            return this.steps[this.stepIndex].title;
-        } else {
-            return '';
-        }
+        Utils.assert(this.steps.length > 0, 'Tutorial has no step');
+        return this.steps[this.stepIndex].title;
     }
 
     public async start(): Promise<void> {
@@ -233,7 +228,7 @@ export class TutorialGameWrapperComponent extends GameWrapper<TutorialPlayer> im
         const solutionStep: TutorialStepWithSolution | TutorialStepClick =
             step as TutorialStepWithSolution | TutorialStepClick;
         const solution: Move | Click = solutionStep.getSolution();
-        const config: MGPOptional<RulesConfig> = await this.getConfig();
+        const config: MGPOptional<RulesConfig> = this.getConfig();
         if (solution instanceof Move) {
             await this.showStep(this.stepIndex);
             this.gameComponent.node = this.gameComponent.rules.choose(this.gameComponent.node, solution, config).get();
@@ -250,7 +245,7 @@ export class TutorialGameWrapperComponent extends GameWrapper<TutorialPlayer> im
 
     public async playLocally(): Promise<void> {
         const urlName: string = this.getGameUrlName();
-        await this.router.navigate(['/local', urlName]);
+        await this.router.navigate(['/local', urlName, 'config']);
     }
 
     public async createGame(): Promise<void> {
@@ -258,7 +253,7 @@ export class TutorialGameWrapperComponent extends GameWrapper<TutorialPlayer> im
         await this.router.navigate(['/play', urlName]);
     }
 
-    public override async getConfig(): Promise<MGPOptional<RulesConfig>> {
+    public override getConfig(): MGPOptional<RulesConfig> {
         if (this.stepIndex < 0) {
             return super.getConfig();
         }

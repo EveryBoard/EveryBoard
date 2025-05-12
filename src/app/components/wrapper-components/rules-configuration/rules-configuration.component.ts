@@ -1,12 +1,12 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { comparableEquals, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
+
+import { comparableEquals, MGPOptional, Utils } from '@everyboard/lib';
 
 import { ConfigDescriptionType, DefaultConfigDescription, NamedRulesConfig, RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 import { EnumConfig, RulesConfigDescription, RulesConfigDescriptionLocalizable } from './RulesConfigDescription';
 import { BaseWrapperComponent } from '../BaseWrapperComponent';
-import { MGPValidator } from 'src/app/utils/MGPValidator';
 import { Localized } from 'src/app/utils/LocaleUtils';
 
 type ConfigFormJSON = {
@@ -95,9 +95,9 @@ export class RulesConfigurationComponent extends BaseWrapperComponent implements
             formControl.disable();
         }
         formControl.valueChanges.subscribe(() => {
-            // Since the value is not update yet
+            // Since the value is not updated yet
             // Must be called after 1ms otherwise this.rulesConfigForm has not changed value yet
-            // This imply that validators are called with the old config
+            // This implies that validators are called with the old config
             setTimeout(() => this.onUpdate(), 1);
         });
         return formControl;
@@ -131,25 +131,29 @@ export class RulesConfigurationComponent extends BaseWrapperComponent implements
     }
 
     public isValid(field: string): boolean {
-        const typeofField: string = this.typeOfConfig(field);
-        if (typeofField === 'number' || typeofField === 'string') {
-            const fieldValue: number = this.rulesConfigForm.controls[field].value;
-            const validator: MGPValidator<RulesConfig> = this.rulesConfigDescription.getValidator(field);
-            const validity: MGPValidation = validator(fieldValue, this.rulesConfigForm.value);
-            return validity.isSuccess();
-        } else {
-            Utils.expectToBe(typeofField, 'boolean');
-            // Angular makes those controls invalid when they are booleans, not sure why
-            return true; // So we return true because they are always valid
-        }
+        // COMMENTED OUT: mine
+        // const typeofField: string = this.typeOfConfig(field);
+        // if (typeofField === 'number' || typeofField === 'string') {
+        //     const fieldValue: number = this.rulesConfigForm.controls[field].value;
+        //     const validator: MGPValidator<RulesConfig> = this.rulesConfigDescription.getValidator(field);
+        //     const validity: MGPValidation = validator(fieldValue, this.rulesConfigForm.value);
+        //     return validity.isSuccess();
+        // } else {
+        //     Utils.expectToBe(typeofField, 'boolean');
+        //     // Angular makes those controls invalid when they are booleans, not sure why
+        //     return true; // So we return true because they are always valid
+        // }
+        return this.rulesConfigDescription.isValid(field, this.rulesConfigForm.controls[field].value);
     }
 
     public getErrorMessage(field: string): string {
         const fieldValue: number | null = this.rulesConfigForm.controls[field].value;
-        const validator: MGPValidator<RulesConfig> = this.rulesConfigDescription.getValidator(field);
-        const config: RulesConfig = this.rulesConfigForm.value;
-        const validity: MGPValidation = validator(fieldValue, config);
-        return validity.getReason();
+        // Commented: mine
+        // const validator: MGPValidator<RulesConfig> = this.rulesConfigDescription.getValidator(field);
+        // const config: RulesConfig = this.rulesConfigForm.value;
+        // const validity: MGPValidation = validator(fieldValue, config);
+        // return validity.getReason();
+        return this.rulesConfigDescription.getValidityError(field, fieldValue);
     }
 
     public getFields(): string[] {
