@@ -14,7 +14,7 @@ var idEncoder *sqids.Sqids
 
 const GameIDLobby = 1
 
-func InitIdEncoder() {
+func InitIDEncoder() {
 	var err error
 	idEncoder, err = sqids.New(sqids.Options{
 		MinLength: 5,
@@ -27,22 +27,20 @@ func InitIdEncoder() {
 func EncodeId(gameId GameID) (string, error) {
 	if gameId == GameIDLobby {
 		return "lobby", nil
-	} else {
-		id, error := idEncoder.Encode([]uint64{uint64(gameId)})
-		return id, error
 	}
+	id, err := idEncoder.Encode([]uint64{uint64(gameId)})
+	return id, err
 }
 
 func DecodeId(gameId string) (GameID, error) {
 	if gameId == "lobby" {
 		return GameIDLobby, nil
-	} else {
-		ids := idEncoder.Decode(gameId)
-		if len(ids) != 1 {
-			return 0, fmt.Errorf("invalid id: %v", gameId)
-		}
-		return GameID(ids[0]), nil
 	}
+	ids := idEncoder.Decode(gameId)
+	if len(ids) != 1 {
+		return 0, fmt.Errorf("invalid id: %v", gameId)
+	}
+	return GameID(ids[0]), nil
 }
 
 func (id GameID) MarshalJSON() ([]byte, error) {

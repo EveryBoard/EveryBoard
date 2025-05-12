@@ -335,7 +335,6 @@ func AddEvent(gameId GameID, event GameEvent) error {
 	return wrapError("AddEvent", result.Error)
 }
 
-
 func UpdateElo(tx *gorm.DB, gameName string, user MinimalUser, elo Elo) error {
 	result := tx.Model(&Elo{}).Where("game_name = ? and user_id = ?", gameName, user.ID).Updates(elo)
 	return wrapError("UpdateElo", result.Error)

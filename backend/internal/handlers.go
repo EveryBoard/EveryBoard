@@ -12,18 +12,23 @@ import (
 	model "github.com/EveryBoard/EveryBoard/internal/model"
 )
 
-// TODO: parameterize for tests
-func Now() int64 {
+func NowImpl() int64 {
 	return time.Now().Unix()
 }
 
-func NowFloat() float64 {
+var Now = NowImpl
+
+func NowFloatImpl() float64 {
 	return float64(time.Now().UnixNano()) / 1e9
 }
 
-func RandBool() bool {
+var NowFloat = NowFloatImpl
+
+func RandBoolImpl() bool {
 	return rand.Intn(2) == 1
 }
+
+var RandBool = RandBoolImpl
 
 type Handlers struct {
 	connection          *websocket.Conn
@@ -152,7 +157,6 @@ func (h *Handlers) setCurrentGame(user model.MinimalUser, currentGame model.Curr
 		return err
 	}
 
-	log.Printf("sending new current game!")
 	return h.broadcastToUser(user, CurrentGameUpdateMessage{ CurrentGame: &currentGame })
 }
 
@@ -874,7 +878,6 @@ func getMessageArgument[T interface{}](messageData map[string]json.RawMessage, k
 func (h *Handlers) handle(messageType string, messageData map[string]json.RawMessage) error {
 	switch messageType {
 	case "SubscribeLobby":
-		log.Println("subscribe to lobby")
 		return h.subscribeToLobby()
 	case "SubscribeConfigRoom":
 		gameId, err := getMessageArgument[model.GameID](messageData, "gameId")

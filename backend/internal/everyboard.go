@@ -95,7 +95,7 @@ func Run(config Configuration) {
 	initGameList(config.GameListFile)
 	auth.InitFirebase(config.UseEmulator, config.ServiceAccountFile, config.ProjectID)
 	model.InitDatabase(config.Database)
-	model.InitIdEncoder()
+	model.InitIDEncoder()
 	subscriptionManager = newSubscriptionManager()
 	connectionManager = newConnectionManager()
 	http.HandleFunc("/ws", handleWebSocket)

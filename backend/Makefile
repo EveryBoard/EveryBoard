@@ -14,7 +14,7 @@ test:
 coverage:
 	go test ./... -coverpkg=./... -cover -coverprofile=coverage.out
 
-view-coverage:
+view-coverage: coverage
 	go tool cover -html=coverage.out
 
 lint:

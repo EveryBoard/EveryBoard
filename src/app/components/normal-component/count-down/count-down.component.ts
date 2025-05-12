@@ -133,7 +133,6 @@ export class CountDownComponent implements OnDestroy {
         if (this.active === false) {
             return CountDownComponent.PASSIVE_STYLE;
         }
-        console.log({remaining: this.remainingSeconds, danger: this.dangerTimeLimit})
         if (this.remainingSeconds < this.dangerTimeLimit) {
             if (this.remainingSeconds % 2 < 1) {
                 return CountDownComponent.DANGER_TIME_ODD;
