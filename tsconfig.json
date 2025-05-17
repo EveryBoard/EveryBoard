@@ -10,7 +10,7 @@
         "baseUrl": "./",
         "outDir": "./dist/out-tsc",
         "sourceMap": true,
-        "declaration": false,
+        "declaration": true,
         "alwaysStrict": true,
         "strictNullChecks": true,
         "noImplicitOverride": true,
@@ -24,7 +24,7 @@
         // The following may not be desired at all, as they will complexify the code quite a lot
         "noUncheckedIndexedAccess": false, // Include 'undefined' in index signature results, e.g., a[0] could be undefined
         "noImplicitAny": false, // cannot be enabled if we want to access object fields with their name in a weakly-typed setting
-        "module": "es2020",
+        "module": "es2022",
         "moduleResolution": "node",
         "experimentalDecorators": true,
         "target": "es2022",
@@ -39,6 +39,7 @@
             "core-js/es7/reflect": [
                 "node_modules/core-js/proposals/reflect-metadata"
             ],
+            "src/*": ["./*"],
             "core-js/es6/*": ["node_modules/core-js/es"]
         }
     }

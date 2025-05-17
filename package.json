@@ -1,6 +1,11 @@
 {
   "name": "EveryBoard",
   "version": "0.0.0",
+  "type": "commonjs",
+  "imports": {
+    "@app/*": "./dist/app/*"
+  },
+  "main": "dist/tmp_ai_scripts/engine.js",
   "scripts": {
     "ng": "ng",
     "start": "ng serve --configuration=debug",
@@ -72,8 +77,8 @@
     "netlify-plugin-chromium": "^1.1.4",
     "nyc": "^17.0.0",
     "protractor": "^7.0.0",
-    "sass": "^1.78.0",
-    "ts-node": "^10.9.1",
+    "sass": "^1.81.1",
+    "ts-node": "^10.9.2",
     "typescript": "^5.5.4"
   }
 }
