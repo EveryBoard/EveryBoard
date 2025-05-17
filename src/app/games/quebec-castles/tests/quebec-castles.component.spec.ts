@@ -2,8 +2,6 @@
 import { fakeAsync, tick } from '@angular/core/testing';
 import { MGPOptional } from '@everyboard/lib';
 
-import { MGPOptional } from '@everyboard/lib';
-
 import { ActivatedRouteStub, ComponentTestUtils, SimpleComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { QuebecCastlesComponent } from '../quebec-castles.component';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
