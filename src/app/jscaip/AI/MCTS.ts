@@ -7,7 +7,7 @@ import { Move } from '../Move';
 import { Player } from '../Player';
 import { EmptyRulesConfig, RulesConfig } from '../RulesConfigUtil';
 import { SuperRules } from '../Rules';
-import { Debug } from 'src/app/utils/Debug';
+import { Debug } from '../../../app/utils/Debug';
 
 type NodeAndPath<M extends Move, S extends GameState> = {
     node: GameNode<M, S>,

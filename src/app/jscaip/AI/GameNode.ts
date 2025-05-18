@@ -5,7 +5,7 @@ import { GameStatus } from '../GameStatus';
 import { Player } from '../Player';
 import { RulesConfig } from '../RulesConfigUtil';
 import { AbstractRules } from '../Rules';
-import { Debug } from 'src/app/utils/Debug';
+import { Debug } from '../../../app/utils/Debug';
 
 export class GameNodeStats {
     public static createdNodes: number = 0;

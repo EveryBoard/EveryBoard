@@ -1,4 +1,4 @@
-import { Coord } from 'src/app/jscaip/Coord';
+import { Coord } from '../../app/jscaip/Coord';
 import { ComparableObject } from '@everyboard/lib';
 import { CoordSet } from './CoordSet';
 

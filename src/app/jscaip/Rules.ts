@@ -1,6 +1,6 @@
 import { MGPFallible, MGPOptional, Utils } from '@everyboard/lib';
 
-import { GameNode } from 'src/app/jscaip/AI/GameNode';
+import { GameNode } from '../../app/jscaip/AI/GameNode';
 import { Move } from './Move';
 import { GameState } from './state/GameState';
 import { GameStatus } from './GameStatus';

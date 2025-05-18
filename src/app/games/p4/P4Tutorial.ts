@@ -1,10 +1,10 @@
-import { P4Move } from 'src/app/games/p4/P4Move';
-import { P4State } from 'src/app/games/p4/P4State';
-import { Tutorial, TutorialStep } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStep';
-import { PlayerOrNone } from 'src/app/jscaip/Player';
+import { P4Move } from '../../../app/games/p4/P4Move';
+import { P4State } from '../../../app/games/p4/P4State';
+import { Tutorial, TutorialStep } from '../../../app/components/wrapper-components/tutorial-game-wrapper/TutorialStep';
+import { PlayerOrNone } from '../../../app/jscaip/Player';
 import { P4Config, P4Rules } from './P4Rules';
 import { MGPOptional } from '@everyboard/lib';
-import { TutorialStepMessage } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
+import { TutorialStepMessage } from '../../../app/components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
 
 const _: PlayerOrNone = PlayerOrNone.NONE;
 const O: PlayerOrNone = PlayerOrNone.ZERO;
