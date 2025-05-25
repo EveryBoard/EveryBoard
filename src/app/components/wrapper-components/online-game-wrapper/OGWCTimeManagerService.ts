@@ -74,6 +74,7 @@ export class OGWCTimeManagerService {
             this.globalClocks[player.getValue()].setDuration(this.getGameDuration());
             this.turnClocks[player.getValue()].setDuration(this.getMoveDuration());
         }
+        console.log('start and pause the clocks')
         // We want the clocks to be paused, as we will only activate the required ones
         for (const clock of this.allClocks) {
             clock.start();

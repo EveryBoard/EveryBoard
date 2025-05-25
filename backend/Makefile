@@ -12,7 +12,7 @@ tidy:
 
 # Run locally
 run: build
-	env USE_EMULATOR=yes PROJECT_ID=my-project go run cmd/backend/main.go
+	env USE_EMULATOR=yes PROJECT_ID=my-project ALLOW_ORIGIN='*' go run cmd/backend/main.go
 
 test:
 	go test ./...
@@ -35,12 +35,12 @@ lint:
 clean:
 	go clean -testcache
 
-# Static build for deploying
-static:
-	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o backend -a -ldflags '-s -w' cmd/backend/main.go
+# Build for deploying. We can't build a static binary because sqlite needs a dynamic one. And we need musl-gcc because we use alpine for the docker image
+prod:
+    CGO_ENABLED=1 CC=musl-gcc GOOS=linux GOARCH=amd64 go build -ldflags '-extldflags "-static" -s -w -linkmode external' -o backend cmd/backend/main.go
 
 docker: static
-	docker build -t "backend-$(target)" -f Dockerfile .
+	docker build -t "backend-$(target)" --build-arg USE_EMULATOR="$$USE_EMULATOR" --build-arg PROJECT_ID="$$PROJECT_ID" --build-arg ALLOW_ORIGIN="$$ALLOW_ORIGIN" .
 	docker save "backend-$(target)" > "backend-$(target).tar"
 
 deploy: docker

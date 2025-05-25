@@ -1,6 +1,12 @@
-FROM gcr.io/distroless/static-debian12
+FROM scratch
 COPY backend /
 COPY service-account.json /
+ARG USE_EMULATOR
+ENV USE_EMULATOR="$USE_EMULATOR"
+ARG PROJECT_ID
+ENV PROJECT_ID="$PROJECT_ID"
+ARG ALLOW_ORIGIN
+ENV ALLOW_ORIGIN="$ALLOW_ORIGIN"
 ENV SERVICE_ACCOUNT /service-account.json
 CMD ["/backend"]
 EXPOSE 8081
