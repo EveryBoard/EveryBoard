@@ -35,13 +35,6 @@ type Handlers struct {
 	user                model.MinimalUser
 }
 
-func newHandlers(connection *websocket.Conn, user model.MinimalUser) Handlers {
-	return Handlers{
-		connection,
-		user,
-	}
-}
-
 func sendMessage(connection *websocket.Conn, message OutgoingMessage) error {
 	toSend, err := json.Marshal([]any{message.Tag(), message})
 	if err != nil {

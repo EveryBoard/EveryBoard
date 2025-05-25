@@ -43,7 +43,7 @@ func (config Configuration) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	connectionManager.addConnection(minimalUser, connection)
 	defer connectionManager.removeConnection(minimalUser, connection)
 
-	handlers := newHandlers(connection, minimalUser)
+	handlers := Handlers{connection: connection, user: minimalUser}
 	currentGame, err := model.GetCurrentGame(minimalUser)
 	if err != nil {
 		utils.Errorf("cannot get current game: %v", err)
