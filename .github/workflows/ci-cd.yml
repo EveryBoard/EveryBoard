@@ -379,12 +379,12 @@ jobs:
         if: ${{ github.ref != 'refs/heads/master'  && github.ref != 'refs/heads/develop' }}
         run: |
           echo "${{ secrets.FIREBASE_CONFIG_TEST }}" > src/app/firebaseConfig.ts
-    - name: Setup Go
-      uses: actions/setup-go@v5
-      with:
-        go-version: GO_VERSION
-    - name: Build
-      run: cd backend && make
+      - name: Setup Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: GO_VERSION
+      - name: Build
+        run: cd backend && make
       - name: Check if push by an org member
         id: is_organization_member
         uses: jamessingleton/is-organization-member@1.1.0
