@@ -194,16 +194,6 @@ func (h *Handlers) createGame(gameName string) error {
 		return h.error(ErrorAlreadySubscribed)
 	}
 
-	if !gameExists(gameName) {
-		// TODO FOR REVIEW: je suis d'avis que ce check pourrait partir. C'est
-		// le check de "si tu veux créer P4, on s'assure que P4 soit un jeu
-		// qu'on a". Il nous cause plus de mal que de bien: quand le backend est
-		// déployé dans une autre branche et qu'on défini un jeu dans une
-		// branche en parallèle, on se fait niquer à plus pouvoir tester ce jeu.
-		// Autant rester souple là dessus je dirais.
-		return h.error(ErrorUnknownGame)
-	}
-
 	configRoom, err := model.CreateConfigRoom(h.user, gameName)
 	if err != nil {
 		return err

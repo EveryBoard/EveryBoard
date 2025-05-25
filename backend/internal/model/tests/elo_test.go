@@ -17,5 +17,5 @@ func TestMarshalElo(t *testing.T) {
 		GamesPlayed: 1,
 	}
 	json := `{"currentElo":1,"gamesPlayed":1}`
-	TestMarshal(t, original, json)
+	ExpectMarshallingToWork(t, original, json)
 }

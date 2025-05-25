@@ -14,5 +14,5 @@ func TestMarshalMessage(t *testing.T) {
 		Content:   "Hello world",
 	}
 	json := `{"sender":{"id":"foo","name":"alice"},"timestamp":1000,"content":"Hello world"}`
-	TestMarshal(t, original, json)
+	ExpectMarshallingToWork(t, original, json)
 }

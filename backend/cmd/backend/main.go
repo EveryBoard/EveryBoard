@@ -27,6 +27,11 @@ func readConfiguration() everyboard.Configuration {
 		log.Fatal("Project ID is not set. Use PROJECT_ID environment variable")
 	}
 
+	config.Origin = os.Getenv("ALLOW_ORIGIN")
+	if config.Origin == "" {
+		log.Fatal("Origin is not set. Use ALLOW_ORIGIN environment variable")
+	}
+
 	if config.UseEmulator {
 		err := os.Setenv("FIRESTORE_EMULATOR_HOST", "localhost:8080")
 		if err != nil {
@@ -36,8 +41,6 @@ func readConfiguration() everyboard.Configuration {
 		if err != nil {
 			log.Fatalf("Cannot set environment variable?! %v", err)
 		}
-
-
 	} else {
 		config.ServiceAccountFile = os.Getenv("SERVICE_ACCOUNT")
 		if config.ServiceAccountFile == "" {

@@ -1,27 +1,31 @@
 package model
 
 import (
+	"encoding/json"
 	"fmt"
 	"log"
+
 	"github.com/sqids/sqids-go"
-	"encoding/json"
 )
 
 type GameID uint64
 
-// Encoder for game ids, so that they are easily human readable
-var idEncoder *sqids.Sqids
-
+ // The lobby is the first game id that exist. It needs a game id for ensuring
+ // that we can send messages to it and subscribe to it.
 const GameIDLobby = 1
 
-func InitIDEncoder() {
+// Encoder for game ids, so that they are easily human readable
+var idEncoder *sqids.Sqids = initIDEncoder()
+
+func initIDEncoder() *sqids.Sqids {
 	var err error
-	idEncoder, err = sqids.New(sqids.Options{
+	encoder, err := sqids.New(sqids.Options{
 		MinLength: 5,
 	})
 	if err != nil {
 		log.Fatal("Failed to initialize sqids:", err)
 	}
+	return encoder
 }
 
 func EncodeId(gameId GameID) (string, error) {

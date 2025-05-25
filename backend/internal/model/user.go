@@ -19,6 +19,6 @@ type CurrentGame struct {
 	UserID   string       `gorm:"index;not null" json:"-"`
 	GameID   GameID       `gorm:"index;not null;foreignKey:ConfigRoom" json:"id"`
 	GameName string       `gorm:"not null" json:"gameName"`
-	Opponent *MinimalUser `gorm:"embedded;embeddelPrefix:opponent_;not null" json:"opponent"`
+	Opponent *MinimalUser `gorm:"embedded;embeddelPrefix:opponent_" json:"opponent"`
 	Role     UserRole     `gorm:"not null" json:"role"`
 }

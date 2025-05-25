@@ -18,14 +18,11 @@ type Configuration struct {
 	ProjectID string
 	Database string
 	ListenAddr string
+	Origin string
+	upgrader websocket.Upgrader
 }
 
-var upgrader = websocket.Upgrader{
-	CheckOrigin:  func(r *http.Request) bool { return true },
-	Subprotocols: []string{"access_token"},
-}
-
-func handleWebSocket(w http.ResponseWriter, r *http.Request) {
+func (config Configuration) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	uid, user, err := auth.VerifyTokenAndGetUserFromHeader(r)
 	if err != nil {
 		http.Error(w, "Invalid token", http.StatusUnauthorized)
@@ -36,7 +33,7 @@ func handleWebSocket(w http.ResponseWriter, r *http.Request) {
 		Name: user.Username,
 	}
 
-	connection, err := upgrader.Upgrade(w, r, http.Header{"Sec-WebSocket-Protocol": {"Authorization"}})
+	connection, err := config.upgrader.Upgrade(w, r, http.Header{"Sec-WebSocket-Protocol": {"Authorization"}})
 	if err != nil {
 		utils.Errorf("WebSocket upgrade error: %v", err)
 		return
@@ -90,14 +87,35 @@ func handleWebSocket(w http.ResponseWriter, r *http.Request) {
 var subscriptionManager SubscriptionManager
 var connectionManager ConnectionManager
 
+func cors(origin string, next http.Handler) http.Handler {
+    return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+        w.Header().Set("Access-Control-Allow-Origin", origin)
+        w.Header().Set("Access-Control-Allow-Methods", "GET, POST, HEAD, PATCH, DELETE")
+        w.Header().Set("Access-Control-Allow-Headers", "Authorization")
+        w.Header().Set("Access-Control-Allow-Credentials", "true")
+        w.Header().Set("Access-Control-Max-Age", "86400")
+
+        if r.Method == http.MethodOptions {
+            w.WriteHeader(http.StatusNoContent)
+            return
+        }
+
+        next.ServeHTTP(w, r)
+    })
+}
+
 func Run(config Configuration) {
-	log.Println(config)
-	initGameList(config.GameListFile)
 	auth.InitFirebase(config.UseEmulator, config.ServiceAccountFile, config.ProjectID)
 	model.InitDatabase(config.Database)
-	model.InitIDEncoder()
 	subscriptionManager = newSubscriptionManager()
 	connectionManager = newConnectionManager()
-	http.HandleFunc("/ws", handleWebSocket)
+
+	config.upgrader = websocket.Upgrader{
+		CheckOrigin:  func(r *http.Request) bool {
+			return config.Origin == "*" || r.Header.Get("Origin") == config.Origin;
+		},
+		Subprotocols: []string{"access_token"},
+	}
+	http.Handle("/ws", cors(config.Origin, config))
 	log.Fatal(http.ListenAndServe(config.ListenAddr, nil))
 }
