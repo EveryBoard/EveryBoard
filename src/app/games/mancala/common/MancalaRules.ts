@@ -1,15 +1,15 @@
-import { Coord } from 'src/app/jscaip/Coord';
+import { Coord } from '../../../../app/jscaip/Coord';
 import { MancalaConfig } from './MancalaConfig';
 import { MancalaState } from './MancalaState';
-import { Player } from 'src/app/jscaip/Player';
-import { Table, TableUtils } from 'src/app/jscaip/TableUtils';
-import { GameStatus } from 'src/app/jscaip/GameStatus';
+import { Player } from '../../../../app/jscaip/Player';
+import { Table, TableUtils } from '../../../../app/jscaip/TableUtils';
+import { GameStatus } from '../../../../app/jscaip/GameStatus';
 import { MGPFallible, MGPOptional, MGPValidation, ReversibleMap, Utils } from '@everyboard/lib';
-import { GameNode } from 'src/app/jscaip/AI/GameNode';
+import { GameNode } from '../../../../app/jscaip/AI/GameNode';
 import { MancalaDistribution, MancalaMove } from './MancalaMove';
-import { ConfigurableRules } from 'src/app/jscaip/Rules';
-import { Localized } from 'src/app/utils/LocaleUtils';
-import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
+import { ConfigurableRules } from '../../../../app/jscaip/Rules';
+import { Localized } from '../../../../app/utils/LocaleUtils';
+import { PlayerNumberMap } from '../../../../app/jscaip/PlayerMap';
 import { MancalaFailure } from './MancalaFailure';
 
 export interface MancalaCaptureResult {

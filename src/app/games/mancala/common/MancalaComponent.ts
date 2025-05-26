@@ -1,19 +1,19 @@
 import { MancalaState } from './MancalaState';
-import { RectangularGameComponent } from 'src/app/components/game-components/rectangular-game-component/RectangularGameComponent';
+import { RectangularGameComponent } from '../../../../app/components/game-components/rectangular-game-component/RectangularGameComponent';
 import { MGPOptional, Set, MGPValidation, TimeUtils, Utils } from '@everyboard/lib';
-import { Coord } from 'src/app/jscaip/Coord';
-import { Table, TableUtils } from 'src/app/jscaip/TableUtils';
-import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
+import { Coord } from '../../../../app/jscaip/Coord';
+import { Table, TableUtils } from '../../../../app/jscaip/TableUtils';
+import { MessageDisplayer } from '../../../../app/services/MessageDisplayer';
 import { MancalaDistribution, MancalaMove } from './MancalaMove';
-import { Player } from 'src/app/jscaip/Player';
+import { Player } from '../../../../app/jscaip/Player';
 import { MancalaCaptureResult, MancalaDistributionResult, MancalaDropResult, MancalaRules } from './MancalaRules';
 import { ChangeDetectorRef } from '@angular/core';
 import { MancalaFailure } from './MancalaFailure';
 import { MancalaScoreMinimax } from './MancalaScoreMinimax';
-import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
-import { MCTS } from 'src/app/jscaip/AI/MCTS';
+import { PlayerNumberMap } from '../../../../app/jscaip/PlayerMap';
+import { MCTS } from '../../../../app/jscaip/AI/MCTS';
 import { MancalaConfig } from './MancalaConfig';
-import { AI, AIOptions, MoveGenerator } from 'src/app/jscaip/AI/AI';
+import { AI, AIOptions, MoveGenerator } from '../../../../app/jscaip/AI/AI';
 
 export type SeedDropResult = {
     houseToDistribute: Coord,

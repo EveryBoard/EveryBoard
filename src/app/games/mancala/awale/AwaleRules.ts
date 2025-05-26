@@ -1,12 +1,12 @@
 import { MancalaState } from '../common/MancalaState';
-import { Coord } from 'src/app/jscaip/Coord';
-import { Player } from 'src/app/jscaip/Player';
+import { Coord } from '../../../../app/jscaip/Coord';
+import { Player } from '../../../../app/jscaip/Player';
 import { MGPOptional, Utils } from '@everyboard/lib';
 import { MancalaCaptureResult, MancalaDistributionResult, MancalaRules } from '../common/MancalaRules';
 import { MancalaConfig } from '../common/MancalaConfig';
-import { MGPValidators } from 'src/app/utils/MGPValidator';
-import { BooleanConfig, NumberConfig, RulesConfigDescription, RulesConfigDescriptionLocalizable } from 'src/app/components/wrapper-components/rules-configuration/RulesConfigDescription';
-import { TableUtils } from 'src/app/jscaip/TableUtils';
+import { MGPValidators } from '../../../../app/utils/MGPValidator';
+import { BooleanConfig, NumberConfig, RulesConfigDescription, RulesConfigDescriptionLocalizable } from '../../../../app/components/wrapper-components/rules-configuration/RulesConfigDescription';
+import { TableUtils } from '../../../../app/jscaip/TableUtils';
 
 export class AwaleRules extends MancalaRules {
 
