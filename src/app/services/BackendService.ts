@@ -64,7 +64,7 @@ export class WebSocketManagerService {
         const token: string = await this.connectedUserService.getIdToken();
 
         return new Promise((resolve: (sub: Subscription) => void) => {
-            const ws: WebSocket = new WebSocket(environment.backendURL.replace('http://', 'ws://') + '/ws', ['Authorization', token]);
+            const ws: WebSocket = new WebSocket(environment.backendURL.replace(/^http/, 'ws') + '/ws', ['Authorization', token]);
             const reconnect: () => void = (): void => {
                 this.messageDisplayer.criticalMessage($localize`Connection to server failed or closed, trying again in ${this.nextConnectionAttemptTime} seconds...`);
                 window.setTimeout(async() => await this.connect(), this.nextConnectionAttemptTime * 1000);

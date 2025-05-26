@@ -64,6 +64,7 @@ export class OGWCTimeManagerService {
         this.configRoom = MGPOptional.of(configRoom);
         this.players = players;
         this.lastMoveStart = MGPOptional.of(game.beginning);
+        this.gameEnd = false;
         for (const player of Player.PLAYERS) {
             // We need to initialize the service's data
             // Otherwise if we go to another page and come back, the service stays alive and the data is off

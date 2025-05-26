@@ -145,6 +145,7 @@ func CreateConfigRoom(creator MinimalUser, gameName string) (*ConfigRoom, error)
 		RulesConfig: nil,
 		GameName: gameName,
 	}
+	log.Println("Created config room", configRoom.ID)
 
 	result := db.Create(&configRoom)
 	return &configRoom, wrapError("CreateConfigRoom", result.Error)

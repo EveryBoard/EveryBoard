@@ -245,6 +245,7 @@ func (h *Handlers) subscribeToConfigRoom(gameId model.GameID) error {
 
 		if uid != configRoom.Creator.ID {
 			// A new candidate appears!
+			// TODO: elo of the candidate while we're at it
 			err = configRoom.AddCandidate(h.user)
 			if err != nil {
 				return err
