@@ -65,21 +65,10 @@ games.txt
 .netlify
 
 # Backend build and coverage files
-/backend/_build
-/backend/_coverage
-/backend/games.txt
-/backend/*.coverage
-/backend/service-account.json
-/backend/service-account.json.gpg
-
-/backend/target
-/backend/Cargo.lock
+/backend/backend
+/backend/coverage.out
 
 # sensitive files
 /service-accounts/*.json
 ./nx/
 .vscode/settings.json
-/backend-rs/target/
-/backend-rs/Cargo.lock
-/backend-go/backend
-/backend-go/coverage.out
