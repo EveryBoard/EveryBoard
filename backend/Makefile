@@ -37,13 +37,13 @@ clean:
 
 # Build for deploying. We can't build a static binary because sqlite needs a dynamic one. And we need musl-gcc because we use alpine for the docker image
 prod:
-    CGO_ENABLED=1 CC=musl-gcc GOOS=linux GOARCH=amd64 go build -ldflags '-extldflags "-static" -s -w -linkmode external' -o backend cmd/backend/main.go
+	CGO_ENABLED=1 CC=musl-gcc GOOS=linux GOARCH=amd64 go build -ldflags '-extldflags "-static" -s -w -linkmode external' -o backend cmd/backend/main.go
 
-docker: static
+docker: prod
 	docker build -t "backend-$(target)" --build-arg USE_EMULATOR="$$USE_EMULATOR" --build-arg PROJECT_ID="$$PROJECT_ID" --build-arg ALLOW_ORIGIN="$$ALLOW_ORIGIN" .
 	docker save "backend-$(target)" > "backend-$(target).tar"
 
 deploy: docker
 	ssh -p "$(port)" "$(user)@$(server)" "docker stop \$$(docker ps -q --filter publish=$(listen-port)) ; docker load && docker container prune -f && docker image prune -f && docker run -d -p $(listen-port):8081 backend-$(target) /backend $(args)" < "backend-$(target).tar"
 
-.PHONY: build deps tidy run test coverage view-coverage save-coverage check-coverage lint clean static deploy
+.PHONY: build deps tidy run test coverage view-coverage save-coverage check-coverage lint clean prod deploy
