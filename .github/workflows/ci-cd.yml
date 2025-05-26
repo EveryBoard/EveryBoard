@@ -399,7 +399,7 @@ jobs:
           if [ "$result" == true ]; then
             npm run build:netlify
             npm install netlify-cli
-            netlify deploy --dir=dist/everyboard --alias="$GITHUB_HEAD_REF" --message="Deployment from github ($GITHUB_HEAD_REF, commit $GITHUB_SHA)"
+            npx netlify deploy --dir=dist/everyboard --alias="$GITHUB_HEAD_REF" --message="Deployment from github ($GITHUB_HEAD_REF, commit $GITHUB_SHA)"
             # deploy backend
             if true || ./scripts/backend_needs_deployment.sh https://server-test.everyboard.org; then # TODO: remove true, implement backend check
                 mkdir -p ~/.ssh/
