@@ -146,7 +146,6 @@ export class CountDownComponent implements OnDestroy {
 
     private updateShownTime(): void {
         const nowSeconds: number = Date.now() / 1000;
-        console.log(`${this.debugName} UPDATE: removing ${nowSeconds - this.startTime} from ${this.remainingSeconds}`);
         this.remainingSeconds -= (nowSeconds - this.startTime);
         this.cssClasses = this.getTimeClass();
         this.startTime = nowSeconds;

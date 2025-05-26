@@ -570,6 +570,19 @@ func (h *Handlers) acceptConfig() error {
 		return err
 	}
 
+	// Add its start event
+	event := model.GameEvent{
+		Time: Now(),
+		User: h.user,
+		Data: model.EventDataStartGame,
+	}
+	err = model.AddEvent(configRoom.ID, event)
+	if err != nil {
+		return err
+	}
+	// No need to notify the users about this event now, as no one is subscribed yet.
+	// They will get it when subscribing.
+
 	// Updates the current game of both players, and remove the current game of all non-chosen candidates
 	err = model.ApplyToCandidates(configRoom.ID, func (candidate model.Candidate) error {
 		if candidate.User.ID == configRoom.ChosenOpponent.ID {
@@ -815,6 +828,17 @@ func (h *Handlers) accept(proposition model.Proposition) error {
 
 		// Create the game
 		_, err = rematchConfigRoom.CreateGame(Now(), RandBool())
+		if err != nil {
+			return err
+		}
+
+		// Add its start event
+		event := model.GameEvent{
+			Time: Now(),
+			User: h.user,
+			Data: model.EventDataStartGame,
+		}
+		err = model.AddEvent(rematchConfigRoom.ID, event)
 		if err != nil {
 			return err
 		}

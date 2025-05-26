@@ -96,7 +96,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         return this.authUser.toMinimalUser();
     }
 
-    private async redirectIfPartOrGameIsInvalid(): Promise<void> {
+    private async redirectIfGameDoesNotExist(): Promise<void> {
         const urlName: string = this.getGameUrlName();
         const gameExists: boolean = GameInfo.getByUrlName(urlName).isPresent();
         if (gameExists === false) {
@@ -105,9 +105,9 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         }
     }
 
-    private setCurrentPartIdOrRedirect(): Promise<void> {
+    private setGameIdOrRedirect(): Promise<void> {
         this.gameId = this.extractGameIdFromURL();
-        return this.redirectIfPartOrGameIsInvalid();
+        return this.redirectIfGameDoesNotExist();
     }
 
     public async ngOnInit(): Promise<void> {
@@ -117,14 +117,14 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
             this.authUser = user;
         });
 
-        await this.setCurrentPartIdOrRedirect();
+        await this.setGameIdOrRedirect();
     }
 
     public async startGame(configRoom: ConfigRoom): Promise<void> {
         Utils.assert(this.gameStarted === false, 'Should not start already started game');
         this.configRoom = configRoom;
-
         this.gameStarted = true;
+
         window.setTimeout(async() => {
             // the small waiting is there to make sure that the chronos are loaded by view
             const createdSuccessfully: boolean = await this.createMatchingGameComponent();
@@ -133,11 +133,11 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
             Utils.assert(createdSuccessfully, 'Game should be created successfully, otherwise part-creation would have redirected');
             Utils.assert(this.gameComponent !== null, 'Game component should exist');
             this.gameComponent.config = MGPOptional.of(configRoom.rulesConfig);
-            await this.startPart();
+            await this.subscribeToGameUpdates();
         }, 2);
     }
 
-    private async startPart(): Promise<void> {
+    private async subscribeToGameUpdates(): Promise<void> {
         // This mutex will ensure that we receive one update/event at a time.
         // Without it, it could be the case that async operations are scheduled at the wrong time
         const mutex: Mutex = new Mutex();
@@ -157,12 +157,6 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
 
     private async onGameUpdate(game: Game): Promise<void> {
         this.game = game;
-        if (game.result === 'InProgress') {
-            await this.onGameStart();
-        } else {
-            // Game has ended!
-            await this.onGameEnd();
-        }
         this.cdr.detectChanges();
     }
 
@@ -192,7 +186,8 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
             default:
                 Utils.expectToBe(event.eventType, 'Action', 'Event should be an action');
                 this.timeManager.onReceivedAction(Player.ofTurn(this.gameComponent.getTurn()), event, serverTime);
-                // if (event.action === 'EndGame') await this.onGameEnd();
+                if (event.action === 'StartGame') await this.onGameStart();
+                if (event.action === 'EndGame') await this.onGameEnd();
                 if (event.action === 'Sync') this.isSynced = true;
                 break;
         }
@@ -220,9 +215,10 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
     private async onGameEnd(): Promise<void> {
         await this.setInteractive(false);
         this.endGame = true;
+        this.cdr.detectChanges();
     }
 
-    private async onReceivedMove(moveEvent: GameEventMove, serverTime): Promise<void> {
+    private async onReceivedMove(moveEvent: GameEventMove, serverTime: number): Promise<void> {
         if (this.moveSentButNotReceivedYet) {
             // This is our move, we have already shown it
             // So we do nothing to show it again.
@@ -349,6 +345,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
     }
 
     private async initializePlayersData(): Promise<void> {
+        console.log('initializePlayersData')
         const game: Game = Utils.getNonNullable(this.game);
         this.players = [
             MGPOptional.of(game.playerZero),

@@ -368,7 +368,9 @@ export class GameCreationComponent extends BaseWrapperComponent implements OnIni
 
     private isGameStarted(configRoom: ConfigRoom | null): boolean {
         Utils.assert(configRoom != null, 'configRoom should not be null (isGameStarted)');
-        return Utils.getNonNullable(configRoom).partStatus === PartStatus.PART_STARTED.value;
+        const status: IPartStatus = Utils.getNonNullable(configRoom).partStatus;
+        return status === PartStatus.PART_STARTED.value ||
+            status === PartStatus.PART_FINISHED.value;
     }
 
     private onGameStarted(): void {

@@ -83,8 +83,9 @@ type EventData struct {
 }
 
 var (
-	EventDataSync    = EventData{Type: EventTypeAction, Payload: ActionSync}
-	EventDataEndGame = EventData{Type: EventTypeAction, Payload: ActionEndGame}
+	EventDataSync      = EventData{Type: EventTypeAction, Payload: ActionSync}
+	EventDataEndGame   = EventData{Type: EventTypeAction, Payload: ActionEndGame}
+	EventDataStartGame = EventData{Type: EventTypeAction, Payload: ActionStartGame}
 )
 
 func EventDataRequest(proposition Proposition) EventData {
@@ -126,7 +127,7 @@ func EventDataAddTime(kind AddTimeKind) EventData {
 func EventDataMove(move json.RawMessage) EventData {
 	return EventData{
 		Type:    EventTypeMove,
-		Payload: Move{ Move: move },
+		Payload: Move{Move: move},
 	}
 }
 
@@ -141,7 +142,6 @@ func (e *EventData) Scan(value interface{}) error {
 	}
 	return json.Unmarshal(bytes, e)
 }
-
 
 func (e EventData) MarshalJSON() ([]byte, error) {
 	payloadBytes, err := json.Marshal(e.Payload)
@@ -222,11 +222,12 @@ func (e *EventData) UnmarshalJSON(data []byte) error {
 }
 
 type GameEvent struct {
-	ID     uint64      `gorm:"primaryKey;autoIncrement" json:"-"`
-	GameID GameID      `gorm:"index;not null;foreignKey:ConfigRoom" json:"-"`
-	Time   int64       `gorm:"not null" json:"time"`
-	User   MinimalUser `gorm:"not null;embedded;embeddedPrefix:user_" json:"user"`
-	Data   EventData   `gorm:"not null;serializer:json" json:"data"`
+	ID     uint64 `gorm:"primaryKey;autoIncrement" json:"-"`
+	GameID GameID `gorm:"index;not null;foreignKey:ConfigRoom" json:"-"`
+	// TODO: rename "timestamp", as in other structs
+	Time int64       `gorm:"not null" json:"time"`
+	User MinimalUser `gorm:"not null;embedded;embeddedPrefix:user_" json:"user"`
+	Data EventData   `gorm:"not null;serializer:json" json:"data"`
 }
 
 func (e GameEvent) MarshalJSON() ([]byte, error) {

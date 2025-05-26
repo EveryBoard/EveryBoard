@@ -92,7 +92,6 @@ export class OGWCTimeManagerService {
     }
 
     public onReceivedAction(currentPlayer: Player, action: GameEventAction, serverTime: number): void {
-        console.log(action)
         this.beforeEvent();
         switch (action.action) {
             case 'AddTurnTime':
@@ -103,6 +102,9 @@ export class OGWCTimeManagerService {
                 break;
             case 'EndGame':
                 this.onGameEnd();
+                break;
+            case 'StartGame':
+                // We will be notified from OGWC about this one, with extra information
                 break;
             default:
                 Utils.expectToBe(action.action, 'Sync');

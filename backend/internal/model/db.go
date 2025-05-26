@@ -262,12 +262,12 @@ func AddChatMessage(gameId GameID, message *Message) error {
 }
 
 func ApplyToMessagesOfGame(gameId GameID, action func(*Message) error) error {
-	query := db.Model(&Message{}).Where("game_id = ?", gameId)
+	query := db.Model(&Message{}).Where("game_id = ?", gameId).Order("timestamp ASC")
 	return wrapError("ApplyToMessagesOfGame", ApplyToQueryResult(query, action))
 }
 
 func ApplyToGameEvents(gameId GameID, action func(*GameEvent) error) error {
-	query := db.Model(&GameEvent{}).Where("game_id = ?", gameId)
+	query := db.Model(&GameEvent{}).Where("game_id = ?", gameId).Order("time ASC")
 	return wrapError("ApplyToGameEvents", ApplyToQueryResult(query, action))
 }
 
