@@ -20,7 +20,6 @@ func wrapError(ctx string, err error) error {
     return fmt.Errorf("error in %s: %w", ctx, err)
 }
 
-
 func InitDatabase(dbPath string) {
 	var err error
 
@@ -278,7 +277,6 @@ func (cr *ConfigRoom) AddCandidate(user MinimalUser) error {
 		User: user,
 	})
 	return wrapError("AddCandidate", result.Error)
-
 }
 
 func (cr *ConfigRoom) DeleteCandidate(uid string) error {

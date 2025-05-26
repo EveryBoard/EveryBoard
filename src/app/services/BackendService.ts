@@ -65,14 +65,24 @@ export class WebSocketManagerService {
 
         return new Promise((resolve: (sub: Subscription) => void) => {
             const ws: WebSocket = new WebSocket(environment.backendURL.replace(/^http/, 'ws') + '/ws', ['Authorization', token]);
+            let timeout: MGPOptional<number> = MGPOptional.empty();
             const reconnect: () => void = (): void => {
+                if (timeout.isPresent()) {
+                    // not trying to reconnect because there's already an attempt scheduled
+                    return;
+                }
                 this.messageDisplayer.criticalMessage($localize`Connection to server failed or closed, trying again in ${this.nextConnectionAttemptTime} seconds...`);
-                window.setTimeout(async() => await this.connect(), this.nextConnectionAttemptTime * 1000);
+                timeout = MGPOptional.of(window.setTimeout(async() => await this.connect(),
+                                                           this.nextConnectionAttemptTime * 1000));
                 this.nextConnectionAttemptTime *= 2; // exponential backoff
             };
 
             ws.onopen = (): void => {
                 console.log('WS: connected');
+                if (timeout.isPresent()) {
+                    window.clearTimeout(timeout.get());
+                    timeout = MGPOptional.empty(); // clear the timeout
+                }
                 this.messageDisplayer.infoMessage($localize`Connection to server successful!`);
                 this.webSocket = MGPOptional.of(ws);
                 this.nextConnectionAttemptTime = 1; // reset it
