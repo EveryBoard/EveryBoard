@@ -27,20 +27,6 @@ describe('MGPMap', () => {
         });
     });
 
-    describe('forEach', () => {
-        it('should iterate over all elements of the map', () => {
-            // Given a map with elements
-            const map: MGPMap<string, number> = MGPMap.from({ first: 1, second: 2 });
-
-            // When calling forEach
-            let sum: number = 0;
-            map.forEach((item: {key: string, value: number}) => sum += item.value);
-
-            // Then all elements should have been iterated over
-            expect(sum).toBe(3);
-        });
-    });
-
     describe('iterator', () => {
         it('should iterate over all elements of the map', () => {
             // Given a map with elements

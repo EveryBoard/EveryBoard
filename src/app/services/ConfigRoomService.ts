@@ -90,5 +90,4 @@ export class ConfigRoomService {
         await this.webSocketManager.send(['AcceptConfig']);
     }
 
-
 }
