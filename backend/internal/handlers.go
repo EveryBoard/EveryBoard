@@ -205,7 +205,6 @@ func (h *Handlers) createGame(gameName string) error {
 		Opponent: nil,
 		Role: model.UserRoleCreator,
 	})
-
 	if err != nil {
 		return err
 	}
@@ -827,7 +826,27 @@ func (h *Handlers) accept(proposition model.Proposition) error {
 		}
 
 		// Create the game
-		_, err = rematchConfigRoom.CreateGame(Now(), RandBool())
+		rematchGame, err := rematchConfigRoom.CreateGame(Now(), RandBool())
+		if err != nil {
+			return err
+		}
+
+		// Set the current game of both players
+		err = h.setCurrentGame(rematchGame.PlayerZero, model.CurrentGame{
+			GameID: rematchGame.GameID,
+			GameName: rematchGame.GameName,
+			Opponent: &rematchGame.PlayerOne,
+			Role: model.UserRolePlayer,
+		})
+		if err != nil {
+			return err
+		}
+		err = h.setCurrentGame(rematchGame.PlayerOne, model.CurrentGame{
+			GameID: rematchGame.GameID,
+			GameName: rematchGame.GameName,
+			Opponent: &rematchGame.PlayerZero,
+			Role: model.UserRolePlayer,
+		})
 		if err != nil {
 			return err
 		}
