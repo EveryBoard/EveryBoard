@@ -23,11 +23,13 @@ type Configuration struct {
 }
 
 func (config Configuration) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	log.Println("Got a request")
 	uid, user, err := auth.VerifyTokenAndGetUserFromHeader(r)
 	if err != nil {
 		http.Error(w, "Invalid token", http.StatusUnauthorized)
 		return
 	}
+	log.Println("Got a token")
 	minimalUser := model.MinimalUser{
 		ID: uid,
 		Name: user.Username,
@@ -39,6 +41,7 @@ func (config Configuration) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	defer connection.Close()
+	log.Println("Upgraded connection")
 
 	connectionManager.addConnection(minimalUser, connection)
 	defer connectionManager.removeConnection(minimalUser, connection)
@@ -49,6 +52,7 @@ func (config Configuration) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		utils.Errorf("cannot get current game: %v", err)
 		return
 	}
+	log.Println("Sending first message!")
 	handlers.broadcastToUser(minimalUser, CurrentGameUpdateMessage{
 		CurrentGame: currentGame,
 	})
@@ -105,6 +109,7 @@ func cors(origin string, next http.Handler) http.Handler {
 }
 
 func Run(config Configuration) {
+	log.Println("Starting EveryBoard...")
 	auth.InitFirebase(config.UseEmulator, config.ServiceAccountFile, config.ProjectID)
 	model.InitDatabase(config.Database)
 	subscriptionManager = newSubscriptionManager()
@@ -117,5 +122,6 @@ func Run(config Configuration) {
 		Subprotocols: []string{"access_token"},
 	}
 	http.Handle("/ws", cors(config.Origin, config))
+	log.Println("All good, ready to play games?")
 	log.Fatal(http.ListenAndServe(config.ListenAddr, nil))
 }
