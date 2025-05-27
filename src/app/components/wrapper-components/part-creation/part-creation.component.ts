@@ -23,7 +23,7 @@ import { Localized } from 'src/app/utils/LocaleUtils';
 
 export class GameCreationComponentMessages {
 
-    public static readonly NO_MATCHING_PART: Localized = () => $localize`The game you tried to join does not exist.`;
+    public static readonly GAME_DOES_NOT_EXIST_OR_UNKNOWN: Localized = () => $localize`The game you tried to join does not exist. Its config room may have existed in the past, but its creator left before the game actually started.`;
 }
 
 type GameCreationViewInfo = {
@@ -166,17 +166,15 @@ export class GameCreationComponent extends BaseWrapperComponent implements OnIni
                 await this.router.navigate(['/']);
                 break;
             case 'unknown-game':
-                await this.gameNotFound();
+            case 'game-does-not-exist':
+                const message: string = GameCreationComponentMessages.GAME_DOES_NOT_EXIST_OR_UNKNOWN();
+                await this.router.navigate(['/notFound', message], { skipLocationChange: true } );
                 break;
             default:
                 this.messageDisplayer.criticalMessage($localize`Unexpected error from backend: ${error}`);
+                await this.router.navigate(['/']);
                 break;
         }
-    }
-
-    private async gameNotFound(): Promise<void> {
-        const message: string = GameCreationComponentMessages.NO_MATCHING_PART();
-        await this.router.navigate(['/notFound', message], { skipLocationChange: true } );
     }
 
     private getForm(name: string): AbstractControl {
