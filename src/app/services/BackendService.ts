@@ -60,7 +60,7 @@ export class WebSocketManagerService {
     }
 
     public async connect(): Promise<Subscription> {
-        Utils.assert(this.webSocket.isAbsent(), 'Should not connect twice to WebSocket!');
+        Utils.assert(this.webSocket.isAbsent(), 'Should not connect twice to WebSocket!')
         const token: string = await this.connectedUserService.getIdToken();
 
         return new Promise((resolve: (sub: Subscription) => void) => {
@@ -74,7 +74,7 @@ export class WebSocketManagerService {
                 this.messageDisplayer.criticalMessage($localize`Connection to server failed or closed, trying again in ${this.nextConnectionAttemptTime} seconds...`);
                 timeout = MGPOptional.of(window.setTimeout(async() => await this.connect(),
                                                            this.nextConnectionAttemptTime * 1000));
-                this.nextConnectionAttemptTime *= 2; // exponential backoff
+                this.nextConnectionAttemptTime *= 2; // exponential backoff: wait twice as long at every new attempt
             };
 
             ws.onopen = (): void => {
@@ -85,17 +85,19 @@ export class WebSocketManagerService {
                 }
                 this.messageDisplayer.infoMessage($localize`Connection to server successful!`);
                 this.webSocket = MGPOptional.of(ws);
-                this.nextConnectionAttemptTime = 1; // reset it
+                this.nextConnectionAttemptTime = 1; // reset the exponential backoff
                 this.resolveConnection(); // notify waiters
                 resolve(new Subscription(() => this.disconnect()));
             };
             ws.onerror = (_error: Event): void => {
+                this.webSocket = MGPOptional.empty();
                 reconnect();
             };
             ws.onclose = (): void => {
                 // The connection has been closed by the server.
                 // This is either unexpected, or because the server has restarted.
                 // It is best to try to reconnect in either case.
+                this.webSocket = MGPOptional.empty();
                 reconnect();
             };
             ws.onmessage = (ev: MessageEvent<unknown>): void => {
@@ -111,7 +113,6 @@ export class WebSocketManagerService {
                 // each callback is associated to a tag
                 const callback: MGPOptional<Callback> = this.callbacks.get(tag as string);
                 Utils.assert(callback.isPresent(), `Received a message with no callback registered: ${JSON.stringify(json)}`);
-                // NOTE: in case we need async for callbacks, use void to not wait for the async here.
                 callback.get()(new WebSocketMessage(tag as string, args));
             };
         });
