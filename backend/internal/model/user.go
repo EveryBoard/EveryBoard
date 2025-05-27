@@ -16,7 +16,7 @@ const (
 )
 
 type CurrentGame struct {
-	UserID   string       `gorm:"index;not null" json:"-"`
+	UserID   string       `gorm:"index;not null;primaryKey" json:"-"`
 	GameID   GameID       `gorm:"index;not null;foreignKey:ConfigRoom" json:"id"`
 	GameName string       `gorm:"not null" json:"gameName"`
 	Opponent *MinimalUser `gorm:"embedded;embeddelPrefix:opponent_" json:"opponent"`
