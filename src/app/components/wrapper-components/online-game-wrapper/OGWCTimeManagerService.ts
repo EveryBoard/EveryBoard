@@ -60,7 +60,6 @@ export class OGWCTimeManagerService {
 
     // At the beginning of a game, set up clocks and remember when the game started
     public onGameStart(configRoom: ConfigRoom, game: Game, players: MGPOptional<MinimalUser>[]): void {
-        console.log('onGameStart')
         this.configRoom = MGPOptional.of(configRoom);
         this.players = players;
         this.lastMoveStart = MGPOptional.of(game.beginning);
@@ -75,7 +74,6 @@ export class OGWCTimeManagerService {
             this.globalClocks[player.getValue()].setDuration(this.getGameDuration());
             this.turnClocks[player.getValue()].setDuration(this.getMoveDuration());
         }
-        console.log('start and pause the clocks')
         // We want the clocks to be paused, as we will only activate the required ones
         for (const clock of this.allClocks) {
             clock.start();

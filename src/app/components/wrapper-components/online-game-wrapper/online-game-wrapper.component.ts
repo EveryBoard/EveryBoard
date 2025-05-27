@@ -185,10 +185,10 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
                 break;
             default:
                 Utils.expectToBe(event.eventType, 'Action', 'Event should be an action');
-                this.timeManager.onReceivedAction(Player.ofTurn(this.gameComponent.getTurn()), event, serverTime);
                 if (event.action === 'StartGame') await this.onGameStart();
                 if (event.action === 'EndGame') await this.onGameEnd();
                 if (event.action === 'Sync') this.isSynced = true;
+                this.timeManager.onReceivedAction(Player.ofTurn(this.gameComponent.getTurn()), event, serverTime);
                 break;
         }
         this.cdr.detectChanges();
