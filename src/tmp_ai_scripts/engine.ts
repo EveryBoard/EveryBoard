@@ -1,4 +1,4 @@
-/* eslint-disable max-lines-per-function */ // TODO REMOVE AND CLEAN
+/* eslint-disable max-lines-per-function */
 import { MGPFallible, MGPOptional } from '@everyboard/lib';
 import * as readline from 'readline';
 import { GameStatus } from '../app/jscaip/GameStatus';
@@ -15,21 +15,16 @@ import { P4MoveGenerator } from '../app/games/p4/P4MoveGenerator';
 
 // compile with "npx tsc -p tsconfig.jscaip.json"
 const rules: P4Rules = P4Rules.get();
-const config: MGPOptional<P4Config> = P4Rules.get().getDefaultRulesConfig();
+const config: MGPOptional<P4Config> = rules.getDefaultRulesConfig();
 
 interface Input {
     action: 'choose' | 'getGameStatus' | 'getLegalMoves' | 'getGameName' | 'getInitialState';
-    gameState?: P4Node;
-    move?: P4Move;
+    gameState?: P4State;
+    move?: number;
 }
 
-const rl: readline.Interface = readline.createInterface({
-    input: process.stdin,
-    output: process.stdout,
-    terminal: false,
-});
 function getP4Node(input: Input): P4State {
-    const board: number[][] = TableUtils.map(
+    const board: PlayerOrNone[][] = TableUtils.map(
         input.gameState?.board,
         (p: PlayerOrNone) => PlayerOrNone.encoder.decode(p['value']),
     );
@@ -52,45 +47,56 @@ function getP4Move(input: Input): P4Move {
     return P4Move.of(input.move!);
 }
 const getGameState = getP4Node;
-let inputData: string = '';
-rl.on('line', (line: string) => inputData += line);
-rl.on('close', () => {
+
+// Create readline interface for persistent communication
+const rl = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout,
+    terminal: false,
+});
+
+rl.on('line', (line: string) => {
     try {
-        const input: Input = JSON.parse(inputData);
+        const input: Input = JSON.parse(line);
+        let response: any;
 
         if (input.action === 'choose') {
-            const gameState: P4State = getGameState(input);
+            const gameState: P4State = getP4Node(input);
             let node: P4Node = new P4Node(gameState);
             const move: P4Move = getP4Move(input);
             const result: MGPFallible<P4Node> = rules.choose(node, move, config);
             if (result.isSuccess()) {
                 node = result.get();
             }
-            process.stdout.write(JSON.stringify({
+            response = {
                 success: result.isSuccess(),
                 result: node.gameState,
-            }));
+            };
         } else if (input.action === 'getGameStatus') {
             const gameState: P4State = getGameState(input);
             const node: P4Node = new P4Node(gameState);
-            const status: GameStatus = rules.getGameStatus(node, config);
-            process.stdout.write(JSON.stringify({ status }));
+            const status: GameStatus = rules.getGameStatus(node);
+            response = { status };
         } else if (input.action === 'getLegalMoves') {
             const gameState: P4State = getGameState(input);
             const node: P4Node = new P4Node(gameState);
             const moveGenerator: P4MoveGenerator = new P4MoveGenerator();
             const legalMoves: P4Move[] = moveGenerator.getListMoves(node, config);
-            process.stdout.write(JSON.stringify({ legalMoves }));
+            response = { legalMoves };
         } else if (input.action === 'getGameName') {
-            process.stdout.write(JSON.stringify({ name: rules.constructor.name }));
+            response = { name: rules.constructor.name };
         } else if (input.action === 'getInitialState') {
             const initialNode: P4Node = rules.getInitialNode(config);
-            process.stdout.write(JSON.stringify({ initialState: initialNode.gameState }));
+            response = { initialState: initialNode.gameState };
         }
-    } catch (e: unknown) {
-        console.error('Error in engine:', e);
-        const stringError: string = JSON.stringify(e);
-        process.stderr.write('Error in engine: ' + stringError);
-        process.exit(1);
+
+        // Always send response as single line
+        const stringResponse: string = JSON.stringify(response);
+        console.log(stringResponse);
+        // process.stdout.write(stringResponse);
+    } catch (e: any) {
+        const errorMessage: string = JSON.stringify({ error: e?.message || e?.toString?.() || 'Unknown error' });
+        console.error(errorMessage);
+        process.stdout.write(JSON.stringify({ success: false, error: errorMessage, line }) + '\n');
     }
 });
