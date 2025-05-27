@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 
-import { JSONValue, MGPMap } from '@everyboard/lib';
+import { MGPMap } from '@everyboard/lib';
 
 import { Subscription } from 'rxjs';
 import { WebSocketManagerService, WebSocketMessage } from './BackendService';

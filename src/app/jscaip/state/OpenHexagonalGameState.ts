@@ -55,7 +55,7 @@ export abstract class OpenHexagonalGameState<T extends NonNullable<unknown>> ext
     public getGroups(): Set<CoordSet> {
         let visited: CoordSet = new CoordSet();
         let groups: Set<CoordSet> = new Set();
-        for (const [coord, _] of this.pieces) {
+        for (const coord of this.pieces.getKeyList()) {
             if (visited.contains(coord) === false) {
                 // We will visit all reachable occupied neighbors of this coord
                 let group: CoordSet = new CoordSet();

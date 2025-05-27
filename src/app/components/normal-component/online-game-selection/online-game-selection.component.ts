@@ -19,10 +19,8 @@ export class OnlineGameSelectionComponent {
     public async pickGame(pickedGame: string): Promise<void> {
         const canUserJoin: MGPValidation = this.currentGameService.canUserCreate();
         if (canUserJoin.isSuccess()) {
-            console.log('canUserJoin is success')
             await this.router.navigate(['/play', pickedGame]);
         } else {
-            console.log('canUserJoin is failure')
             this.messageDisplayer.criticalMessage(canUserJoin.getReason());
         }
     }

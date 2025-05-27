@@ -49,15 +49,13 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
     public game: Game | null = null;
     public gameId!: string; // Initialized in ngOnInit
     public gameStarted: boolean = false;
-    public opponent: MinimalUser | null = null;
-    public authUser!: AuthUser; // Initialized in ngOnInit
+    private opponent: MinimalUser | null = null;
     public currentUser: MinimalUser | null = null;
 
     private isSynced: boolean = false;
 
     public configRoom: ConfigRoom;
 
-    private userSubscription!: Subscription; // Initialized in ngOnInit
     private gameSubscription: Subscription = new Subscription();
 
     public readonly OFFLINE_FONT_COLOR: { [key: string]: string } = { color: 'lightgrey' };
@@ -93,7 +91,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
     }
 
     public override getPlayer(): MinimalUser {
-        return this.authUser.toMinimalUser();
+        return this.connectedUserService.user.get().toMinimalUser();
     }
 
     private async redirectIfGameDoesNotExist(): Promise<void> {
@@ -111,12 +109,6 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
     }
 
     public async ngOnInit(): Promise<void> {
-        this.userSubscription = this.connectedUserService.subscribeToUser(async(user: AuthUser) => {
-            // player should be authenticated and have a username to be here
-            // TODO: do we need a subscription? ConnectedUserService already has one! We can use its .user. When do we want to be notified about changes to the current auth user? Never. The only reason for this would be if authUser is not set initially in the service
-            this.authUser = user;
-        });
-
         await this.setGameIdOrRedirect();
     }
 
@@ -469,10 +461,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
     }
 
     public async ngOnDestroy(): Promise<void> {
-        this.userSubscription.unsubscribe();
-        if (this.gameStarted) {
-            this.gameSubscription.unsubscribe();
-        }
+        this.gameSubscription.unsubscribe();
     }
 
     public override getConfig(): MGPOptional<RulesConfig> {

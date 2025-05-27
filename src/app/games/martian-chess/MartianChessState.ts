@@ -33,7 +33,7 @@ export class MartianChessCapture {
         let sum: number = 0;
         for (const [piece, value] of this.captures) {
             sum += piece.getValue() * value;
-        };
+        }
         return sum;
     }
 

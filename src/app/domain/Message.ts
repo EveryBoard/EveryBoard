@@ -1,6 +1,5 @@
 import { FirestoreDocument } from '../dao/FirestoreDAO';
 import { MinimalUser } from './MinimalUser';
-import { FirestoreTime } from './Time';
 
 // A chat message
 export type Message = {

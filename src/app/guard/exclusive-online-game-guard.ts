@@ -20,14 +20,11 @@ export class ExclusiveOnlineGameGuard {
     }
 
     public async canActivate(route: ActivatedRouteSnapshot): Promise<boolean | UrlTree> {
-        console.log('canActivate')
         const currentGame: MGPOptional<CurrentGame> = await this.currentGameService.getCurrentGame();
         if (currentGame.isAbsent()) {
-            console.log('currentGame isAbsent')
             return true;
         }
         const game: CurrentGame = currentGame.get();
-        console.log({game})
         if (route.params.id === game.id) {
             return true;
         }

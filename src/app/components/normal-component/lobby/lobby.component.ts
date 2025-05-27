@@ -68,8 +68,8 @@ export class LobbyComponent implements OnInit, OnDestroy {
 
     public getActiveConfigRooms(): WithId<ConfigRoom>[] {
         // TODO: either generalize this pattern (WithID) in library code (if it appears again), or don't use mgpmap in activeConfigRoomService?
+        // TODO: we could have a MGPMap method that returns a WithKey<V>[]
         const all: WithId<ConfigRoom>[] = [];
-        // console.log(this.activeConfigRooms)
         for (const [id, data] of this.activeConfigRooms) {
             all.push({ id, data });
         }

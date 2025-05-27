@@ -246,7 +246,7 @@ export const routes: Route[] = [
     ],
     imports: [
         BrowserModule,
-        HttpClientModule, // TODO: safe to remove ?
+        // HttpClientModule, // TODO: safe to remove ? (if nothing has broken, yes)
         RouterModule.forRoot(routes, { useHash: false }),
         ReactiveFormsModule,
         FormsModule,

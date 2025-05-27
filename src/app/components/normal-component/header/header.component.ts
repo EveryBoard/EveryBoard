@@ -9,7 +9,6 @@ import { CurrentGameService } from 'src/app/services/CurrentGameService';
 import { UserService } from 'src/app/services/UserService';
 import { CurrentGame } from 'src/app/domain/User';
 import { GameInfo } from '../pick-game/pick-game.component';
-import { WebSocketManagerService, WebSocketMessage } from 'src/app/services/BackendService';
 
 @Component({
     selector: 'app-header',

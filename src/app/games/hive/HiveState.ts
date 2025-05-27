@@ -56,7 +56,7 @@ export class HiveRemainingPieces implements ComparableObject {
                 pieces.push(piece);
             }
             remaining.push(new HivePieceStack(pieces));
-        };
+        }
         return remaining;
     }
     public getPlayerPieces(player: Player): HivePiece[] {

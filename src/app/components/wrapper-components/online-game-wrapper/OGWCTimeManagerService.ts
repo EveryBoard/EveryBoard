@@ -113,7 +113,6 @@ export class OGWCTimeManagerService {
     }
 
     public playerOfMinimalUser(user: MinimalUser): Player {
-        console.log({user, playerZero: this.players[0], playerOne: this.players[1]})
         if (this.players[0].equalsValue(user)) {
             return Player.ZERO;
         } else {
@@ -206,7 +205,6 @@ export class OGWCTimeManagerService {
 
     // Update clocks with the available time
     private updateClocks(): void {
-        console.log('updateClocks')
         for (const player of Player.PLAYERS) {
             this.turnClocks[player.getValue()].changeDuration(this.availableTurnTime.get(player));
             const playerTakenGlobalTime: number = this.takenGlobalTime.get(player);

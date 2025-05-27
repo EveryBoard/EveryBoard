@@ -33,7 +33,7 @@ describe('LobbyComponent', () => {
 
     it('should create', fakeAsync(async() => {
         expect(component).toBeDefined();
-        component.ngOnInit();
+        await component.ngOnInit();
     }));
 
     describe('tab-create element', () => {
@@ -373,7 +373,7 @@ describe('LobbyComponent', () => {
         testUtils.detectChanges();
 
         // When it is destroyed
-        component.ngOnDestroy();
+        await component.ngOnDestroy();
 
         // Then it should have unsubscribed from active parts
         expectUnsubscribeToHaveBeenCalled();
@@ -386,7 +386,7 @@ describe('LobbyComponent', () => {
         testUtils.detectChanges();
 
         // When it is destroyed
-        component.ngOnDestroy();
+        await component.ngOnDestroy();
 
         // Then it should have unsubscribed from active users
         expectUnsubscribeToHaveBeenCalled();
