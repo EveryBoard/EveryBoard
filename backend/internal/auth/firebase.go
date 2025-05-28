@@ -3,13 +3,12 @@ package auth
 import (
 	"context"
 	"log"
-
+	"os"
 
 	"cloud.google.com/go/firestore"
 	firebase "firebase.google.com/go/v4"
 	"firebase.google.com/go/v4/auth"
 	"google.golang.org/api/option"
-
 )
 
 var useEmulator bool
@@ -19,11 +18,16 @@ var firestoreClient *firestore.Client
 func InitFirebase(useEmulatorValue bool, serviceAccountFile string, projectID string) {
 	var app *firebase.App
 	var err error
+	conf := &firebase.Config{ProjectID: projectID}
 	if useEmulatorValue {
-		conf := &firebase.Config{ProjectID: projectID}
 		app, err = firebase.NewApp(context.Background(), conf)
 	} else {
-		app, err = firebase.NewApp(context.Background(), nil, option.WithCredentialsFile(serviceAccountFile))
+		data, err := os.ReadFile(serviceAccountFile)
+		if err != nil {
+			panic(err)
+		}
+		log.Println(string(data))
+		app, err = firebase.NewApp(context.Background(), conf, option.WithCredentialsFile(serviceAccountFile))
 	}
 	if err != nil {
 		log.Fatalf("Failed to initialize Firebase App: %v", err)

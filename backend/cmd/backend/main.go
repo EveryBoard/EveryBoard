@@ -43,6 +43,7 @@ func readConfiguration() everyboard.Configuration {
 		}
 	} else {
 		config.ServiceAccountFile = os.Getenv("SERVICE_ACCOUNT")
+		log.Printf("Using %s as service account file", config.ServiceAccountFile)
 		if config.ServiceAccountFile == "" {
 			log.Fatal("Service account file is not set. Use SERVICE_ACCOUNT environment variable")
 		}
