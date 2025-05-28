@@ -2,11 +2,12 @@ package auth
 
 import (
 	"context"
-	"net/http"
-	"strings"
-	"fmt"
 	"encoding/base64"
 	"encoding/json"
+	"fmt"
+	"log"
+	"net/http"
+	"strings"
 )
 
 type User struct {
@@ -69,10 +70,12 @@ func VerifyTokenAndGetUserFromHeader(r *http.Request) (string, *User, error) {
 
 		uid = sub;
 	} else {
+		log.Println("Verifying token")
 		verifiedToken, err := authClient.VerifyIDToken(r.Context(), token)
 		if err != nil {
 			return "", nil, err
 		}
+		log.Println("Token verified")
 
 		sub, ok := verifiedToken.Claims["sub"].(string)
 		if !ok {
@@ -81,6 +84,8 @@ func VerifyTokenAndGetUserFromHeader(r *http.Request) (string, *User, error) {
 		uid = sub
 	}
 
+	log.Println("Fetching user document")
 	user, err := fetchUserDocument(uid)
+	log.Println("Got it")
 	return uid, user, err
 }
