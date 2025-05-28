@@ -20,7 +20,7 @@ func readConfiguration() everyboard.Configuration {
 		config.ListenAddr = ":8081"
 	}
 
-	config.UseEmulator = os.Getenv("USE_EMULATOR") != ""
+	config.UseEmulator = os.Getenv("USE_EMULATOR") != "no"
 
 	config.ProjectID = os.Getenv("PROJECT_ID")
 	if config.ProjectID == "" {
