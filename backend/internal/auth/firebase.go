@@ -3,7 +3,6 @@ package auth
 import (
 	"context"
 	"log"
-	"os"
 
 	"cloud.google.com/go/firestore"
 	firebase "firebase.google.com/go/v4"
