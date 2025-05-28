@@ -22,11 +22,6 @@ func InitFirebase(useEmulatorValue bool, serviceAccountFile string, projectID st
 	if useEmulatorValue {
 		app, err = firebase.NewApp(context.Background(), conf)
 	} else {
-		data, err := os.ReadFile(serviceAccountFile)
-		if err != nil {
-			panic(err)
-		}
-		log.Println(string(data))
 		app, err = firebase.NewApp(context.Background(), conf, option.WithCredentialsFile(serviceAccountFile))
 	}
 	if err != nil {

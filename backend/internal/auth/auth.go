@@ -77,6 +77,7 @@ func VerifyTokenAndGetUserFromHeader(r *http.Request) (string, *User, error) {
 		log.Println("Verifying token")
 		verifiedToken, err := authClient.VerifyIDToken(r.Context(), token)
 		if err != nil {
+			log.Println("error: %v", err)
 			return "", nil, err
 		}
 		log.Println("Token verified")
