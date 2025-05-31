@@ -17,11 +17,11 @@ var firestoreClient *firestore.Client
 func InitFirebase(useEmulatorValue bool, serviceAccountFile string, projectID string) {
 	var app *firebase.App
 	var err error
-	conf := &firebase.Config{ProjectID: projectID}
 	if useEmulatorValue {
+		conf := &firebase.Config{ProjectID: projectID}
 		app, err = firebase.NewApp(context.Background(), conf)
 	} else {
-		app, err = firebase.NewApp(context.Background(), conf, option.WithCredentialsFile(serviceAccountFile))
+		app, err = firebase.NewApp(context.Background(), nil, option.WithCredentialsFile(serviceAccountFile))
 	}
 	if err != nil {
 		log.Fatalf("Failed to initialize Firebase App: %v", err)
