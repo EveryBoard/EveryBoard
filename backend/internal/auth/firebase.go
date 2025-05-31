@@ -3,7 +3,7 @@ package auth
 import (
 	"context"
 	"log"
-	"exec"
+	"os/exec"
 	"os"
 
 	"cloud.google.com/go/firestore"
