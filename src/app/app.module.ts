@@ -267,6 +267,7 @@ export const routes: Route[] = [
 export class AppModule {
 
     public constructor() {
+        console.log(environment.firebaseConfig)
         Firebase.initializeApp(environment.firebaseConfig);
         const firestore: Firestore.Firestore = Firestore.getFirestore();
         const host: string = firestore.toJSON()['settings'].host;
