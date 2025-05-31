@@ -379,7 +379,7 @@ jobs:
         if: ${{ github.ref != 'refs/heads/master' && github.ref != 'refs/heads/develop' }}
         run: |
           cp src/app/firebaseConfig.test.ts src/app/firebaseConfig.ts
-          grep -r c9d47 .
+          cat src/app/firebaseConfig.ts
       - name: Setup Go
         uses: actions/setup-go@v5
         with:
@@ -398,6 +398,7 @@ jobs:
         run: |
           result="${{ steps.is_organization_member.outputs.result }}"
           if [ "$result" == true ]; then
+            cat src/app/firebaseConfig.ts
             npm run build:netlify
             npm install netlify-cli
             npx netlify deploy --dir=dist/everyboard --alias="$GITHUB_HEAD_REF" --message="Deployment from github ($GITHUB_HEAD_REF, commit $GITHUB_SHA)"
