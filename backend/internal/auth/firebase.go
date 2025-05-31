@@ -3,7 +3,7 @@ package auth
 import (
 	"context"
 	"log"
-	"os/exec"
+	"fmt"
 	"os"
 
 	"cloud.google.com/go/firestore"
@@ -19,14 +19,20 @@ var firestoreClient *firestore.Client
 func InitFirebase(useEmulatorValue bool, serviceAccountFile string, projectID string) {
 	var app *firebase.App
 	var err error
-	cmd := exec.Command("env")
-	cmd.Stdout = os.Stdout // Direct output to the console
-	cmd.Run()
+	for _, env := range os.Environ() {
+		fmt.Println(env)
+	}
 	if useEmulatorValue {
 		conf := &firebase.Config{ProjectID: projectID}
 		app, err = firebase.NewApp(context.Background(), conf)
 	} else {
-		app, err = firebase.NewApp(context.Background(), nil, option.WithCredentialsFile(serviceAccountFile))
+		opts := option.WithCredentialsFile(serviceAccountFile)
+		app, err = firebase.NewApp(context.Background(), nil, opts)
+		data, err := os.ReadFile(serviceAccountFile)
+		if err != nil {
+			log.Fatal(err)
+		}
+		fmt.Println(string(data))
 	}
 	log.Printf("app: %v", app)
 	if err != nil {
