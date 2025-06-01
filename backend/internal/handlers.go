@@ -959,7 +959,7 @@ func (h *Handlers) handle(messageType string, messageData map[string]json.RawMes
 			return h.error(ErrorInvalidData)
 		}
 		return h.notifyTimeout(*timeoutedPlayer)
-	case "GameEnd":
+	case "EndGame":
 		winner, err := getMessageArgument[model.PlayerOrNone](messageData, "winner")
 		if err != nil {
 			return h.error(ErrorInvalidData)
