@@ -386,9 +386,7 @@ jobs:
       - name: Install OS dependencies
         run: |
           sudo apt-get install -y musl-tools
-          find /etc/ssl
-          sudo update-ca-certificates
-          find /etc/ssl
+          find /etc/ssl/certs -name '*.pem' -exec cat {} + > ./ca-certificates.crt
       - name: Check if push by an org member
         id: is_organization_member
         uses: jamessingleton/is-organization-member@1.1.0
