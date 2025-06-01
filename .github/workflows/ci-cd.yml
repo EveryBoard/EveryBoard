@@ -387,7 +387,8 @@ jobs:
         run: |
           sudo apt-get install -y musl-tools
           find /etc/ssl
-          update-ca-certificates
+          sudo update-ca-certificates
+          find /etc/ssl
       - name: Check if push by an org member
         id: is_organization_member
         uses: jamessingleton/is-organization-member@1.1.0
