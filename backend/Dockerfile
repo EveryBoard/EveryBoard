@@ -1,6 +1,7 @@
 FROM scratch
 COPY backend /
 COPY service-account.json /
+COPY /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
 ARG USE_EMULATOR
 ENV USE_EMULATOR="$USE_EMULATOR"
 ARG PROJECT_ID
