@@ -5,7 +5,7 @@ import { Subscription } from 'rxjs';
 
 import { JSONValue, MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
-import { ConnectedUserService, AuthUser } from 'src/app/services/ConnectedUserService';
+import { ConnectedUserService } from 'src/app/services/ConnectedUserService';
 import { GameService } from 'src/app/services/GameService';
 import { Move } from '../../../jscaip/Move';
 import { Game, GameEvent, GameEventMove, GameEventReply, GameResult, RequestType } from '../../../domain/Part';
@@ -133,18 +133,30 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         // This mutex will ensure that we receive one update/event at a time.
         // Without it, it could be the case that async operations are scheduled at the wrong time
         const mutex: Mutex = new Mutex();
+        const onGameUpdate: (game: Game) => Promise<void> =
+            (game: Game) => {
+                return mutex.runExclusive(async() => {
+                    await this.onGameUpdate(game);
+                });
+            };
+        const onGameEvent: (event: GameEvent, serverTime: number) => Promise<void> =
+            (event: GameEvent, serverTime: number) => {
+                return mutex.runExclusive(async() => {
+                    await this.onGameEvent(event, serverTime);
+                });
+            };
         this.gameSubscription =
-            await this.gameService.subscribeTo(this.gameId,
-                                               (game: Game) => {
-                                                   return mutex.runExclusive(async() => {
-                                                       await this.onGameUpdate(game);
-                                                   });
-                                               },
-                                               (event: GameEvent, serverTime: number) => {
-                                                   return mutex.runExclusive(async() => {
-                                                       await this.onGameEvent(event, serverTime);
-                                                   });
-                                               });
+            await this.gameService.subscribeTo(
+                this.gameId,
+                onGameUpdate,
+                onGameEvent,
+                (error: string): void => this.onError(error),
+            );
+    }
+
+    private onError(reason: string): void {
+        // We don't expect any error to come up during a game, but if one does, we'll show it
+        this.messageDisplayer.criticalMessage($localize`Unexpected error from backend: ${reason}`);
     }
 
     private async onGameUpdate(game: Game): Promise<void> {

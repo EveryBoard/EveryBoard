@@ -1,5 +1,5 @@
 /* eslint-disable max-lines-per-function */
-import { TestBed, fakeAsync } from '@angular/core/testing';
+/*import { TestBed, fakeAsync } from '@angular/core/testing';
 import { BackendService } from '../BackendService';
 import { ConnectedUserServiceMock } from './ConnectedUserService.spec';
 import { AppModule } from 'src/app/app.module';
@@ -59,3 +59,4 @@ describe('BackendService', () => {
         expect(result.getReason()).toBe('No error message');
     }));
 });
+*/

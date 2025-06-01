@@ -49,3 +49,17 @@ export type GameEvent = GameEventReply | GameEventRequest | GameEventAction | Ga
 export type GameResult = 'InProgress'
     | 'ResignOfZero' | 'ResignOfOne' | 'VictoryOfZero' | 'VictoryOfOne' | 'TimeoutOfZero' | 'TimeoutOfOne'
     | 'HardDraw' | 'AgreedDrawByZero' | 'AgreedDrawByOne'
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export namespace GameResult {
+    export const IN_PROGRESS: GameResult = 'InProgress';
+    export const RESIGN_OF_ZERO: GameResult = 'ResignOfZero';
+    export const RESIGN_OF_ONE: GameResult = 'ResignOfOne';
+    export const VICTORY_OF_ZERO: GameResult = 'VictoryOfZero';
+    export const VICTORY_OF_ONE: GameResult = 'VictoryOfOne';
+    export const TIMEOUT_OF_ZERO: GameResult = 'TimeoutOfZero';
+    export const TIMEOUT_OF_ONE: GameResult = 'TimeoutOfOne';
+    export const HARD_DRAW: GameResult = 'HardDraw';
+    export const AGREED_DRAW_BY_ZERO: GameResult = 'AgreedDrawByZero';
+    export const AGREED_DRAW_BY_ONE: GameResult = 'AgreedDrawByOne';
+}

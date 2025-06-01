@@ -5,7 +5,7 @@ import { CurrentGame, UserRoleInPart } from '../domain/User';
 import { MGPMap, MGPOptional, MGPValidation } from '@everyboard/lib';
 import { AuthUser, ConnectedUserService, GameActionFailure } from './ConnectedUserService';
 import { Localized } from '../utils/LocaleUtils';
-import { WebSocketManagerService, WebSocketMessage } from './BackendService';
+import { BackendService, WebSocketMessage } from './BackendService';
 
 @Injectable({
     providedIn: 'root',
@@ -27,7 +27,7 @@ export class CurrentGameService implements OnDestroy {
     private readonly currentGameRS: ReplaySubject<MGPOptional<CurrentGame>>;
     private readonly currentGameObs: Observable<MGPOptional<CurrentGame>>;
 
-    public constructor(private readonly webSocketManagerService: WebSocketManagerService,
+    public constructor(private readonly backendService: BackendService,
                        private readonly connectedUserService: ConnectedUserService)
     {
         this.currentGameRS = new ReplaySubject<MGPOptional<CurrentGame>>(1);
@@ -45,11 +45,11 @@ export class CurrentGameService implements OnDestroy {
         } else { // new user logged in
             // We need to subscribe to any change to the user's current game
             this.currentGameSubscription =
-                this.webSocketManagerService.setCallback('CurrentGameUpdate', (message: WebSocketMessage) => {
+                this.backendService.setCallback('CurrentGameUpdate', (message: WebSocketMessage) => {
                     this.onCurrentGameUpdate(message.getOptionalArgument('currentGame'));
                 });
             // connect after setting callback to be sure to get the first one
-            await this.webSocketManagerService.connect();
+            await this.backendService.connect();
         }
     }
 

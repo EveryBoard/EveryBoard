@@ -23,10 +23,10 @@ describe('CountDownComponent', () => {
     });
     describe('set', () => {
         it('should throw when setting chrono already started', () => {
-            component.setDuration(1250);
+            component.setDuration(1);
             component.start();
             const error: string = 'Should not set a chrono that has already been started (undefined)!';
-            TestUtils.expectToThrowAndLog(() => component.setDuration(1250), error);
+            TestUtils.expectToThrowAndLog(() => component.setDuration(1), error);
         });
     });
     describe('start', () => {
@@ -35,20 +35,20 @@ describe('CountDownComponent', () => {
             TestUtils.expectToThrowAndLog(() => component.start(), error);
         });
         it('should throw when starting twice', () => {
-            component.setDuration(1250);
+            component.setDuration(1);
             component.start();
             const error: string = 'Should not start chrono that has already been started (undefined)';
             TestUtils.expectToThrowAndLog(() => component.start(), error);
         });
         it('should show remaining time once set', () => {
-            component.setDuration(62000);
+            component.setDuration(62);
             testUtils.detectChanges();
             const element: DebugElement = testUtils.findElement('.data-remaining-time');
             const timeText: string = element.nativeElement.innerText;
             expect(timeText).toBe('1:02');
         });
         it('should throw when starting stopped chrono again', () => {
-            component.setDuration(1250);
+            component.setDuration(1);
             component.start();
             expect(component.isStarted()).toBeTrue();
             component.stop();
@@ -59,7 +59,7 @@ describe('CountDownComponent', () => {
     });
     describe('pause', () => {
         it('should throw when pausing already paused chrono', () => {
-            component.setDuration(1250);
+            component.setDuration(1);
             component.start();
             component.pause();
 
@@ -77,7 +77,7 @@ describe('CountDownComponent', () => {
             TestUtils.expectToThrowAndLog(() => component.resume(), error);
         });
         it('should throw when resuming stopped chrono', () => {
-            component.setDuration(1250);
+            component.setDuration(1);
             component.start();
             component.stop();
             const error: string = 'Should only resume chrono that are started and paused!';
@@ -90,7 +90,7 @@ describe('CountDownComponent', () => {
             TestUtils.expectToThrowAndLog(() => component.stop(), error);
         });
         it('should throw when stopping stopped chrono', () => {
-            component.setDuration(1250);
+            component.setDuration(1);
             component.start();
             component.stop();
             const error: string = 'Should only stop chrono that are started!';
@@ -99,7 +99,7 @@ describe('CountDownComponent', () => {
     });
     it('should update written time', fakeAsync(() => {
         spyOn(component.outOfTimeAction, 'emit').and.callThrough();
-        component.setDuration(3000);
+        component.setDuration(3);
         component.start();
         tick(1000);
         testUtils.detectChanges();
@@ -113,7 +113,7 @@ describe('CountDownComponent', () => {
     }));
     it('should update written time correctly (closest rounding) even when playing in less than refreshing time', fakeAsync(() => {
         spyOn(component.outOfTimeAction, 'emit').and.callThrough();
-        component.setDuration((9 * 60 + 59) * 1000 + 501); // 9 minutes 59 sec 501 ms
+        component.setDuration((9 * 60 + 59) + 0.501); // 9 minutes 59 sec 501 ms
         testUtils.detectChanges();
         let timeText: string = testUtils.findElement('.data-remaining-time').nativeElement.innerText;
         expect(timeText).toBe('9:59');
@@ -134,7 +134,7 @@ describe('CountDownComponent', () => {
     }));
     it('should emit when timeout reached', fakeAsync(() => {
         spyOn(component.outOfTimeAction, 'emit').and.callThrough();
-        component.setDuration(2000);
+        component.setDuration(2);
         component.start();
         tick(1000);
         expect(component.outOfTimeAction.emit).not.toHaveBeenCalledOnceWith();
@@ -145,7 +145,7 @@ describe('CountDownComponent', () => {
         it('should offer opportunity to add time if allowed', fakeAsync(async() => {
             // Given a CountDownComponent allowed to add time
             component.canAddTime = true;
-            component.remainingMs = 60 * 1000;
+            component.remainingSeconds = 60;
             testUtils.detectChanges();
 
             // When clicking the add time button
@@ -166,23 +166,23 @@ describe('CountDownComponent', () => {
     });
     describe('Style depending of remaining time', () => {
         it('should be safe style when upper than limit', () => {
-            component.dangerTimeLimit = 10 * 1000;
-            component.setDuration(12 * 1000);
+            component.dangerTimeLimit = 10;
+            component.setDuration(12);
             expect(component.getTimeClass()).toEqual(CountDownComponent.SAFE_TIME);
         });
         it('should be first danger style when lower than limit and even remaining second', () => {
-            component.dangerTimeLimit = 10 * 1000;
-            component.setDuration(9 * 1000);
+            component.dangerTimeLimit = 10;
+            component.setDuration(9);
             expect(component.getTimeClass()).toEqual(CountDownComponent.DANGER_TIME_EVEN);
         });
         it('should be second danger style when lower than limit and odd remaining second', () => {
-            component.dangerTimeLimit = 10 * 1000;
-            component.setDuration(8 * 1000);
+            component.dangerTimeLimit = 10;
+            component.setDuration(8);
             expect(component.getTimeClass()).toEqual(CountDownComponent.DANGER_TIME_ODD);
         });
         it('should be in passive style when passive', () => {
             // Given a chrono that could be in danger time style
-            component.setDuration(8 * 1000);
+            component.setDuration(8);
 
             // When it become passive
             component.active = false;

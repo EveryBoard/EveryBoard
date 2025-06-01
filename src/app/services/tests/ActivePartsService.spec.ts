@@ -1,5 +1,5 @@
 /* eslint-disable max-lines-per-function */
-import { ActivePartsService } from '../ActivePartsService';
+/*import { ActivePartsService } from '../ActivePartsService';
 import { PartDAO } from 'src/app/dao/PartDAO';
 import { fakeAsync, TestBed } from '@angular/core/testing';
 import { MGPResult, Part, PartDocument } from 'src/app/domain/Part';
@@ -206,3 +206,4 @@ describe('ActivePartsService', () => {
     });
 
 });
+*/

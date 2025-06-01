@@ -5,7 +5,7 @@ import { MGPValidation } from '@everyboard/lib';
 import { Localized } from '../utils/LocaleUtils';
 import { Debug } from '../utils/Debug';
 import { Message } from '../domain/Message';
-import { WebSocketManagerService, WebSocketMessage } from './BackendService';
+import { BackendService, WebSocketMessage } from './BackendService';
 import { Subscription } from 'rxjs';
 
 export class ChatMessages {
@@ -20,19 +20,19 @@ export class ChatMessages {
 @Debug.log
 export class ChatService {
 
-    public constructor(private readonly webSocketManager: WebSocketManagerService) {
+    public constructor(private readonly backendService: BackendService) {
     }
 
     public async addMessage(message: string): Promise<void> {
-        await this.webSocketManager.send(['ChatSend', { message }]);
+        await this.backendService.send(['ChatSend', { message }]);
     }
 
     public subscribeToMessages(callback: (message: Message) => void): Subscription {
         // Make a new subscription to receive new messages
-        this.webSocketManager.setCallback('ChatMessage', (message: WebSocketMessage): void => {
+        this.backendService.setCallback('ChatMessage', (message: WebSocketMessage): void => {
             callback(message.getArgument('message'));
         });
-        return new Subscription(() => this.webSocketManager.removeCallback('ChatMessage'));
+        return new Subscription(() => this.backendService.removeCallback('ChatMessage'));
     }
 
     public async sendMessage(content: string): Promise<MGPValidation> {

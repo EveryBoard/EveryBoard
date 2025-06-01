@@ -110,7 +110,7 @@ export async function createConnectedGoogleUser(email: string, username?: string
     const token: string = '{"sub": "' + email + '", "email": "' + email + '", "email_verified": true}';
     const credential: FireAuth.UserCredential =
         await FireAuth.signInWithCredential(FireAuth.getAuth(), FireAuth.GoogleAuthProvider.credential(token));
-    await userDAO.set(credential.user.uid, { verified: false, currentGame: null });
+    await userDAO.set(credential.user.uid, { verified: false });
     if (username != null) {
         // This needs to happen in multiple updates to match the security rules
         await userDAO.update(credential.user.uid, { username });
@@ -142,7 +142,7 @@ export async function createUnverifiedUser(email: string, username: string): Pro
     const credential: FireAuth.UserCredential =
         await FireAuth.signInWithCredential(FireAuth.getAuth(),
                                             FireAuth.GoogleAuthProvider.credential(token));
-    await userDAO.set(credential.user.uid, { verified: false, currentGame: null });
+    await userDAO.set(credential.user.uid, { verified: false });
     await userDAO.update(credential.user.uid, { username });
     return { id: credential.user.uid, name: username };
 }
@@ -657,29 +657,6 @@ describe('ConnectedUserService', () => {
         // Then it unsubscribed
         // eslint-disable-next-line dot-notation
         expect(connectedUserService['authSubscription'].unsubscribe).toHaveBeenCalledWith();
-    });
-
-    describe('sendPresenceToken', () => {
-
-        it('should throw when asking to send presence token while no user is logged', fakeAsync(() => {
-            spyOn(Utils, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
-            const expectedError: string = 'Assertion failure: Should not call sendPresenceToken when not connected';
-            expect(() => connectedUserService.sendPresenceToken()).toThrowError(expectedError);
-        }));
-
-        it('should delegate presence token sending to userDAO', async() => {
-            // Given a service observing an user
-            connectedUserService.user = MGPOptional.of(UserMocks.CREATOR_AUTH_USER);
-
-            // When asking to send presence token
-            spyOn(userDAO, 'update').and.resolveTo();
-            await connectedUserService.sendPresenceToken();
-
-            // Then the userDAO should update the connected user doc
-            const userDocId: string = UserMocks.CREATOR_MINIMAL_USER.id;
-            expect(userDAO.update).toHaveBeenCalledOnceWith(userDocId, { lastUpdateTime: serverTimestamp() });
-        });
-
     });
 
     it('should throw when encountering a non-firebase error', () => {

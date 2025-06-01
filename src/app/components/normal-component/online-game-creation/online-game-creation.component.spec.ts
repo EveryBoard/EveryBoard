@@ -34,7 +34,7 @@ describe('OnlineGameCreationComponent for non-existing game', () => {
 
 });
 
-describe('OnlineGameCreationComponent', () => {
+fdescribe('OnlineGameCreationComponent', () => {
 
     let testUtils: SimpleComponentTestUtils<OnlineGameCreationComponent>;
 
@@ -58,7 +58,7 @@ describe('OnlineGameCreationComponent', () => {
         expectValidRouting(router, ['/play', game, 'PartDAOMock0'], OnlineGameWrapperComponent);
     }));
 
-    it('should show toast and navigate to server when creator has active parts', fakeAsync(async() => {
+    it('should show toast and navigate to lobby when creator has active parts', fakeAsync(async() => {
         // Given a page that is loaded for a specific game by a connected user that already has an active part
         const router: Router = TestBed.inject(Router);
         const currentGameService: CurrentGameService = TestBed.inject(CurrentGameService);

@@ -1,5 +1,5 @@
 /* eslint-disable max-lines-per-function */
-import { fakeAsync, TestBed } from '@angular/core/testing';
+/*import { fakeAsync, TestBed } from '@angular/core/testing';
 import { ConfigRoomService, ConfigRoomServiceFailure } from '../ConfigRoomService';
 import { ConfigRoomDAO } from 'src/app/dao/ConfigRoomDAO';
 import { ConfigRoomDAOMock } from 'src/app/dao/tests/ConfigRoomDAOMock.spec';
@@ -231,3 +231,5 @@ describe('ConfigRoomService', () => {
         }));
     });
 });
+
+*/

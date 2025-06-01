@@ -9,7 +9,7 @@ import { CurrentGame } from 'src/app/domain/User';
 import { CurrentGameService } from 'src/app/services/CurrentGameService';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { Debug } from 'src/app/utils/Debug';
-import { WebSocketManagerService } from 'src/app/services/BackendService';
+import { BackendService } from 'src/app/services/BackendService';
 import { ConfigRoom, PartStatus } from 'src/app/domain/ConfigRoom';
 import { GameInfo } from '../pick-game/pick-game.component';
 
@@ -40,7 +40,7 @@ export class LobbyComponent implements OnInit, OnDestroy {
                        public readonly messageDisplayer: MessageDisplayer,
                        private readonly activeConfigRoomsService: ActiveConfigRoomsService,
                        private readonly currentGameService: CurrentGameService,
-                       private readonly webSocketManager: WebSocketManagerService)
+                       private readonly backendService: BackendService)
     {
     }
 
@@ -57,7 +57,7 @@ export class LobbyComponent implements OnInit, OnDestroy {
                 }
             });
 
-        this.lobbySubscription = await this.webSocketManager.subscribeToLobby();
+        this.lobbySubscription = await this.backendService.subscribeToLobby();
     }
 
     public async ngOnDestroy(): Promise<void> {
@@ -67,8 +67,6 @@ export class LobbyComponent implements OnInit, OnDestroy {
     }
 
     public getActiveConfigRooms(): WithId<ConfigRoom>[] {
-        // TODO: either generalize this pattern (WithID) in library code (if it appears again), or don't use mgpmap in activeConfigRoomService?
-        // TODO: we could have a MGPMap method that returns a WithKey<V>[]
         const all: WithId<ConfigRoom>[] = [];
         for (const [id, data] of this.activeConfigRooms) {
             all.push({ id, data });

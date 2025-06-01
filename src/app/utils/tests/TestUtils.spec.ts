@@ -2,8 +2,7 @@
 import { ChangeDetectorRef, Component, CUSTOM_ELEMENTS_SCHEMA, DebugElement, Type } from '@angular/core';
 import { ComponentFixture, TestBed, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { RouterTestingModule } from '@angular/router/testing';
-import { ActivatedRoute, NavigationExtras, Route, Router } from '@angular/router';
+import { ActivatedRoute, NavigationExtras, provideRouter, Route, Router, RouterModule } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { GameState } from '../../jscaip/state/GameState';
@@ -16,29 +15,20 @@ import { GameWrapper } from '../../components/wrapper-components/GameWrapper';
 import { ConnectedUserServiceMock } from '../../services/tests/ConnectedUserService.spec';
 import { OnlineGameWrapperComponent }
     from '../../components/wrapper-components/online-game-wrapper/online-game-wrapper.component';
-import { ChatDAO } from '../../dao/ChatDAO';
-import { ConfigRoomDAOMock } from '../../dao/tests/ConfigRoomDAOMock.spec';
-import { PartDAO } from '../../dao/PartDAO';
-import { ConfigRoomDAO } from '../../dao/ConfigRoomDAO';
 import { UserDAOMock } from '../../dao/tests/UserDAOMock.spec';
-import { ChatDAOMock } from '../../dao/tests/ChatDAOMock.spec';
-import { PartDAOMock } from '../../dao/tests/PartDAOMock.spec';
 import { LocalGameWrapperComponent }
     from '../../components/wrapper-components/local-game-wrapper/local-game-wrapper.component';
 import { Comparable, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { HttpClient, provideHttpClient } from '@angular/common/http';
 import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
 import { ErrorLoggerServiceMock } from 'src/app/services/tests/ErrorLoggerServiceMock.spec';
 import { AbstractGameComponent } from 'src/app/components/game-components/game-component/GameComponent';
 import { findMatchingRoute } from 'src/app/app.module.spec';
 import { HumanDurationPipe } from 'src/app/pipes-and-directives/human-duration.pipe';
 import { ToggleVisibilityDirective } from 'src/app/pipes-and-directives/toggle-visibility.directive';
-import { FirestoreTimePipe } from 'src/app/pipes-and-directives/firestore-time.pipe';
 import { UserMocks } from 'src/app/domain/UserMocks.spec';
 import { FirebaseError } from 'firebase/app';
 import { Subscription } from 'rxjs';
-import { CurrentGameService } from 'src/app/services/CurrentGameService';
-import { CurrentGameServiceMock } from 'src/app/services/tests/CurrentGameService.spec';
 import { GameInfo } from 'src/app/components/normal-component/pick-game/pick-game.component';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { Player } from 'src/app/jscaip/Player';
@@ -47,12 +37,10 @@ import { TestVars } from 'src/TestVars.spec';
 import { Minimax } from 'src/app/jscaip/AI/Minimax';
 import { AIDepthLimitOptions } from 'src/app/jscaip/AI/AI';
 import { SuperRules } from 'src/app/jscaip/Rules';
-import { GameServiceMock } from 'src/app/services/tests/GameServiceMock.spec';
-import { GameService } from 'src/app/services/GameService';
-import { ConfigRoomService } from 'src/app/services/ConfigRoomService';
-import { ServerTimeService } from 'src/app/services/ServerTimeService';
-import { ServerTimeServiceMock } from 'src/app/services/tests/ServerTimeServiceMock.spec';
-import { ConfigRoomServiceMock } from 'src/app/services/tests/ConfigRoomServiceMock.spec';
+// TODO import { GameServiceMock } from 'src/app/services/tests/GameServiceMock.spec';
+// TODO import { GameService } from 'src/app/services/GameService';
+// TODO import { ConfigRoomService } from 'src/app/services/ConfigRoomService';
+// TODO import { ConfigRoomServiceMock } from 'src/app/services/tests/ConfigRoomServiceMock.spec';
 import { RulesConfigurationComponent } from 'src/app/components/wrapper-components/rules-configuration/rules-configuration.component';
 
 @Component({})
@@ -646,25 +634,20 @@ export class ConfigureTestingModuleUtils {
         await TestBed.configureTestingModule({
             imports: [
                 AppModule,
-                RouterTestingModule.withRoutes([
-                    { path: 'play', component: OnlineGameWrapperComponent },
-                    { path: 'server', component: BlankComponent },
-                ]),
             ],
             schemas: [CUSTOM_ELEMENTS_SCHEMA],
             providers: [
+                provideRouter([
+                    { path: 'play', component: OnlineGameWrapperComponent },
+                    { path: 'server', component: BlankComponent },
+                ]),
                 { provide: ActivatedRoute, useValue: activatedRouteStub },
                 { provide: ActivatedRouteStub, useValue: activatedRouteStub },
                 { provide: UserDAO, useClass: UserDAOMock },
                 { provide: ConnectedUserService, useClass: ConnectedUserServiceMock },
-                { provide: CurrentGameService, useClass: CurrentGameServiceMock },
-                { provide: ChatDAO, useClass: ChatDAOMock },
-                { provide: ConfigRoomDAO, useClass: ConfigRoomDAOMock },
-                { provide: PartDAO, useClass: PartDAOMock },
                 { provide: ErrorLoggerService, useClass: ErrorLoggerServiceMock },
-                { provide: GameService, useClass: GameServiceMock },
-                { provide: ConfigRoomService, useClass: ConfigRoomServiceMock },
-                { provide: ServerTimeService, useClass: ServerTimeServiceMock },
+                // TODO { provide: GameService, useClass: GameServiceMock },
+                // TODO { provide: ConfigRoomService, useClass: ConfigRoomServiceMock },
             ],
         }).compileComponents();
     }
@@ -675,16 +658,13 @@ export class ConfigureTestingModuleUtils {
     {
         await TestBed.configureTestingModule({
             imports: [
-                RouterTestingModule.withRoutes([
-                    { path: '**', component: BlankComponent },
-                ]),
+                RouterModule,
                 FormsModule,
                 ReactiveFormsModule,
                 NoopAnimationsModule,
             ],
             declarations: [
                 componentType,
-                FirestoreTimePipe,
                 HumanDurationPipe,
                 ToggleVisibilityDirective,
                 RulesConfigurationComponent,
@@ -693,17 +673,15 @@ export class ConfigureTestingModuleUtils {
                 CUSTOM_ELEMENTS_SCHEMA,
             ],
             providers: [
+                provideRouter([
+                    { path: '**', component: BlankComponent },
+                ]),
                 { provide: ActivatedRoute, useValue: activatedRouteStub },
-                { provide: PartDAO, useClass: PartDAOMock },
-                { provide: ConfigRoomDAO, useClass: ConfigRoomDAOMock },
-                { provide: ChatDAO, useClass: ChatDAOMock },
                 { provide: UserDAO, useClass: UserDAOMock },
                 { provide: ConnectedUserService, useClass: ConnectedUserServiceMock },
-                { provide: CurrentGameService, useClass: CurrentGameServiceMock },
                 { provide: ErrorLoggerService, useClass: ErrorLoggerServiceMock },
-                { provide: GameService, useClass: GameServiceMock },
-                { provide: ConfigRoomService, useClass: ConfigRoomServiceMock },
-                { provide: ServerTimeService, useClass: ServerTimeServiceMock },
+                // TODO { provide: GameService, useClass: GameServiceMock },
+                // TODO { provide: ConfigRoomService, useClass: ConfigRoomServiceMock },
             ],
         }).compileComponents();
     }
@@ -712,10 +690,8 @@ export class ConfigureTestingModuleUtils {
 export async function setupEmulators(): Promise<unknown> {
     new AppModule(); // This will initialize firebase with the emulators
     await TestBed.configureTestingModule({
-        imports: [
-            HttpClientModule,
-        ],
         providers: [
+            provideHttpClient(),
             ConnectedUserService,
         ],
     }).compileComponents();

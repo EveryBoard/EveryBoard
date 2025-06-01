@@ -172,11 +172,11 @@ export abstract class FirestoreDAOMock<T extends FirestoreJSONObject> implements
         const db: MGPMap<string, DocumentSubject<T>> = this.getStaticDB();
         this.callbacks.push([conditions, callback]);
         const matchingDocs: FirestoreDocument<T>[] = [];
-        db.forEach((item: {key: string, value: DocumentSubject<T> }) => {
-            if (this.conditionsHold(conditions, item.value.subject.value.get().data)) {
-                matchingDocs.push(item.value.subject.value.get());
+        for (const value of db.getValueList()) {
+            if (this.conditionsHold(conditions, value.subject.value.get().data)) {
+                matchingDocs.push(value.subject.value.get());
             }
-        });
+        }
         callback.onDocumentCreated(matchingDocs);
         return new Subscription(() => {
             // Upon unsubscription, remove this callback from the callbacks
@@ -201,13 +201,14 @@ export abstract class FirestoreDAOMock<T extends FirestoreJSONObject> implements
     : Promise<FirestoreDocument<T>[]>
     {
         const matchingDocs: FirestoreDocument<T>[] = [];
-        this.getStaticDB().forEach((item: {key: string, value: DocumentSubject<T>}) => {
-            const id: string = item.value.subject.value.get().id;
-            const data: T = item.value.subject.value.get().data;
+        const db: MGPMap<string, DocumentSubject<T>> = this.getStaticDB();
+        for (const value of db.getValueList()) {
+            const id: string = value.subject.value.get().id;
+            const data: T = value.subject.value.get().data;
             if (this.conditionsHold(conditions, data)) {
                 matchingDocs.push({ id, data });
             }
-        });
+        }
         if (order != null) {
             matchingDocs.sort((a: FirestoreDocument<T>, b: FirestoreDocument<T>) => a[order] - b[order]);
         }

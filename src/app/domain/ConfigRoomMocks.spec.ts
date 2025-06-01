@@ -10,14 +10,18 @@ export class ConfigRoomMocks {
     public static getInitial(rulesConfig: MGPOptional<RulesConfig>): ConfigRoom {
         return {
             creator: UserMocks.CREATOR_MINIMAL_USER,
+            creatorElo: 0,
+
             chosenOpponent: null,
+            partStatus: PartStatus.PART_CREATED.value,
+
             // We don't want the first player to be random here, to minimize non-deterministic tests
             firstPlayer: FirstPlayer.CREATOR.value,
             partType: PartType.STANDARD.value,
-            partStatus: PartStatus.PART_CREATED.value,
             maximalMoveDuration: PartType.NORMAL_MOVE_DURATION,
             totalPartDuration: PartType.NORMAL_PART_DURATION,
             rulesConfig: rulesConfig.getOrElse({}),
+            gameName: 'P4',
         };
     }
 

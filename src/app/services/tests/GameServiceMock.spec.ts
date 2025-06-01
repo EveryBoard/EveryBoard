@@ -1,4 +1,4 @@
-import { ConfigRoomDAO } from 'src/app/dao/ConfigRoomDAO';
+/*import { ConfigRoomDAO } from 'src/app/dao/ConfigRoomDAO';
 import { MinimalUser } from 'src/app/domain/MinimalUser';
 import { Action, GameEvent, MGPResult, Part, RequestType } from 'src/app/domain/Part';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
@@ -308,3 +308,4 @@ export class GameServiceMock extends GameService {
     }
 
 }
+*/

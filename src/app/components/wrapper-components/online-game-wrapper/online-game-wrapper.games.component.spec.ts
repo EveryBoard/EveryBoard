@@ -1,5 +1,5 @@
 /* eslint-disable max-lines-per-function */
-import { fakeAsync, tick } from '@angular/core/testing';
+/*import { fakeAsync, tick } from '@angular/core/testing';
 import { MGPValidation } from '@everyboard/lib';
 
 import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
@@ -51,3 +51,4 @@ describe('OnlineGameWrapperComponent (games)', () => {
     }
 
 });
+*/

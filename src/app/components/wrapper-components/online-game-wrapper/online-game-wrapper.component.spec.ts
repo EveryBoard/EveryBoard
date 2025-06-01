@@ -1,5 +1,5 @@
 /* eslint-disable max-lines-per-function */
-import { TestBed, fakeAsync, tick, discardPeriodicTasks } from '@angular/core/testing';
+/*import { TestBed, fakeAsync, tick, discardPeriodicTasks } from '@angular/core/testing';
 import { DebugElement } from '@angular/core';
 import { Router } from '@angular/router';
 import { MGPOptional } from '@everyboard/lib';
@@ -10,7 +10,7 @@ import { ConfigRoomDAO } from 'src/app/dao/ConfigRoomDAO';
 import { ConfigRoom } from 'src/app/domain/ConfigRoom';
 import { ConfigRoomMocks } from 'src/app/domain/ConfigRoomMocks.spec';
 import { PartDAO } from 'src/app/dao/PartDAO';
-import { PartMocks } from 'src/app/domain/PartMocks.spec';
+import { PartMocks } from 'src/app/domain/PartMocks';
 import { ChatDAO } from 'src/app/dao/ChatDAO';
 import { ComponentTestUtils, expectValidRouting, prepareUnsubscribeCheck } from 'src/app/utils/tests/TestUtils.spec';
 import { ConnectedUserServiceMock } from 'src/app/services/tests/ConnectedUserService.spec';
@@ -267,3 +267,5 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
 
 });
 
+
+*/

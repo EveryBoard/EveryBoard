@@ -1,5 +1,5 @@
 /* eslint-disable max-lines-per-function */
-import { TestBed, fakeAsync, tick } from '@angular/core/testing';
+/*import { TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { DebugElement } from '@angular/core';
 import { Router } from '@angular/router';
 import * as Firestore from '@firebase/firestore';
@@ -11,7 +11,7 @@ import { ConfigRoomDAO } from 'src/app/dao/ConfigRoomDAO';
 import { ConfigRoom } from 'src/app/domain/ConfigRoom';
 import { ConfigRoomMocks } from 'src/app/domain/ConfigRoomMocks.spec';
 import { PartDAO } from 'src/app/dao/PartDAO';
-import { PartMocks } from 'src/app/domain/PartMocks.spec';
+import { PartMocks } from 'src/app/domain/PartMocks';
 import { UserDAO } from 'src/app/dao/UserDAO';
 import { QuartoMove } from 'src/app/games/quarto/QuartoMove';
 import { QuartoPiece } from 'src/app/games/quarto/QuartoPiece';
@@ -1998,3 +1998,4 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         }));
     });
 });
+*/

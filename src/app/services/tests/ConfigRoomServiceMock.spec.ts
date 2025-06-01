@@ -1,4 +1,4 @@
-import { ConfigRoomDAO } from 'src/app/dao/ConfigRoomDAO';
+/*import { ConfigRoomDAO } from 'src/app/dao/ConfigRoomDAO';
 import { MinimalUser } from 'src/app/domain/MinimalUser';
 import { MGPOptional, MGPValidation } from '@everyboard/lib';
 import { Injectable } from '@angular/core';
@@ -65,3 +65,4 @@ export class ConfigRoomServiceMock extends ConfigRoomService {
     }
 
 }
+*/

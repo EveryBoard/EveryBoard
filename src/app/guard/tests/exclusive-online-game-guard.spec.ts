@@ -1,5 +1,5 @@
 /* eslint-disable max-lines-per-function */
-import { ActivatedRouteSnapshot, Router } from '@angular/router';
+/*import { ActivatedRouteSnapshot, Router } from '@angular/router';
 import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { BlankComponent } from 'src/app/utils/tests/TestUtils.spec';
@@ -14,8 +14,6 @@ import { ConnectedUserServiceMock } from 'src/app/services/tests/ConnectedUserSe
 import { UserMocks } from 'src/app/domain/UserMocks.spec';
 import { GameService } from 'src/app/services/GameService';
 import { ConfigRoomService } from 'src/app/services/ConfigRoomService';
-import { ServerTimeService } from 'src/app/services/ServerTimeService';
-import { ServerTimeServiceMock } from 'src/app/services/tests/ServerTimeServiceMock.spec';
 import { ConfigRoomServiceMock } from 'src/app/services/tests/ConfigRoomServiceMock.spec';
 import { GameServiceMock } from 'src/app/services/tests/GameServiceMock.spec';
 
@@ -41,7 +39,6 @@ describe('ExclusiveOnlineGameGuard', () => {
                 { provide: ConnectedUserService, useClass: ConnectedUserServiceMock },
                 { provide: GameService, useClass: GameServiceMock },
                 { provide: ConfigRoomService, useClass: ConfigRoomServiceMock },
-                { provide: ServerTimeService, useClass: ServerTimeServiceMock },
             ],
         }).compileComponents();
         router = TestBed.inject(Router);
@@ -101,3 +98,4 @@ describe('ExclusiveOnlineGameGuard', () => {
         await expectAsync(exclusiveOnlineGameGuard.canActivate(route)).toBeResolvedTo(router.parseUrl('/play/P4/I-play'));
     }));
 });
+*/

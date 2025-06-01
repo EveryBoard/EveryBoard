@@ -2,7 +2,6 @@ import { BrowserModule } from '@angular/platform-browser';
 import { LOCALE_ID, NgModule } from '@angular/core';
 import { registerLocaleData } from '@angular/common';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
 import { RouterModule, Route } from '@angular/router';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import * as Firebase from '@firebase/app';
@@ -129,7 +128,6 @@ import { NotConnectedGuard } from './guard/not-connected.guard';
 
 import { HumanDurationPipe } from './pipes-and-directives/human-duration.pipe';
 import { AutofocusDirective } from './pipes-and-directives/autofocus.directive';
-import { TimestampPipe } from './pipes-and-directives/firestore-time.pipe';
 
 import { ToggleVisibilityDirective } from './pipes-and-directives/toggle-visibility.directive';
 import { RulesConfigurationComponent } from './components/wrapper-components/rules-configuration/rules-configuration.component';
@@ -240,13 +238,11 @@ export const routes: Route[] = [
         YinshComponent,
 
         HumanDurationPipe,
-        TimestampPipe,
         AutofocusDirective,
         ToggleVisibilityDirective,
     ],
     imports: [
         BrowserModule,
-        // HttpClientModule, // TODO: safe to remove ? (if nothing has broken, yes)
         RouterModule.forRoot(routes, { useHash: false }),
         ReactiveFormsModule,
         FormsModule,
@@ -267,7 +263,6 @@ export const routes: Route[] = [
 export class AppModule {
 
     public constructor() {
-        console.log(environment.firebaseConfig)
         Firebase.initializeApp(environment.firebaseConfig);
         const firestore: Firestore.Firestore = Firestore.getFirestore();
         const host: string = firestore.toJSON()['settings'].host;

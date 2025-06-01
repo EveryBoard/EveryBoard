@@ -150,6 +150,7 @@ export class GameCreationComponent extends BaseWrapperComponent implements OnIni
     }
 
     private async joinAndSubscribeToConfigRoom(): Promise<void> {
+        // TODO: generalize onError for other backend subscriptions
         this.configRoomSubscription = await this.configRoomService.join(
             this.gameId,
             (configRoom: ConfigRoom): Promise<void> => this.onConfigRoomUpdate(configRoom),

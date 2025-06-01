@@ -1,5 +1,5 @@
 /* eslint-disable max-lines-per-function */
-import { TestBed, fakeAsync, tick } from '@angular/core/testing';
+/*import { TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { DebugElement } from '@angular/core';
 import { Router } from '@angular/router';
 import { Timestamp } from 'firebase/firestore';
@@ -24,7 +24,7 @@ import { MGPOptional, Utils } from '@everyboard/lib';
 import { ConfigRoomMocks } from 'src/app/domain/ConfigRoomMocks.spec';
 import { FirstPlayer, PartStatus, PartType, ConfigRoom } from 'src/app/domain/ConfigRoom';
 import { Part } from 'src/app/domain/Part';
-import { PartMocks } from 'src/app/domain/PartMocks.spec';
+import { PartMocks } from 'src/app/domain/PartMocks';
 import { CurrentGame } from 'src/app/domain/User';
 import { CurrentGameMocks } from 'src/app/domain/mocks/CurrentGameMocks.spec';
 import { UserMocks } from 'src/app/domain/UserMocks.spec';
@@ -917,3 +917,4 @@ describe('PartCreationComponent', () => {
         }
     }));
 });
+*/

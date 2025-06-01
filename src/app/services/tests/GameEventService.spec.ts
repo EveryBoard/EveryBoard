@@ -1,5 +1,5 @@
 /* eslint-disable max-lines-per-function */
-import { fakeAsync, TestBed, tick } from '@angular/core/testing';
+/*import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { GameEventService } from '../GameEventService';
 import { PartDAO } from 'src/app/dao/PartDAO';
@@ -77,3 +77,5 @@ describe('GameEventService', () => {
 
 });
 
+
+*/

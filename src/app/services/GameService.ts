@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { JSONValue } from '@everyboard/lib';
 import { GameEvent, Game } from '../domain/Part';
 import { Subscription } from 'rxjs';
-import { WebSocketManagerService, WebSocketMessage } from './BackendService';
+import { BackendService, WebSocketMessage } from './BackendService';
 import { Debug } from '../utils/Debug';
 import { Player, PlayerOrNone } from '../jscaip/Player';
 
@@ -12,39 +12,45 @@ import { Player, PlayerOrNone } from '../jscaip/Player';
 @Debug.log
 export class GameService {
 
-    public constructor(private readonly webSocketManager: WebSocketManagerService) {
+    public constructor(private readonly backendService: BackendService) {
     }
 
     public async subscribeTo(gameId: string,
                              gameUpdate: (game: Game) => Promise<void>,
-                             gameEvent: (event: GameEvent, serverTime: number) => Promise<void>)
+                             gameEvent: (event: GameEvent, serverTime: number) => Promise<void>,
+                             error: (reason: string) => void)
     : Promise<Subscription> {
         const gameUpdateSubscription: Subscription =
-            this.webSocketManager.setCallback('GameUpdate', (message: WebSocketMessage): void => {
+            this.backendService.setCallback('GameUpdate', (message: WebSocketMessage): void => {
                 void gameUpdate(message.getArgument('game'));
             });
         const gameEventSubscription: Subscription =
-            this.webSocketManager.setCallback('GameEvent', (message: WebSocketMessage): void => {
+            this.backendService.setCallback('GameEvent', (message: WebSocketMessage): void => {
                 void gameEvent(message.getArgument('event'), message.getArgument('serverTime'));
             });
-        const gameSubscription: Subscription = await this.webSocketManager.subscribeToGame(gameId);
+        const gameSubscription: Subscription = await this.backendService.subscribeToGame(gameId);
+        const errorSubscription: Subscription =
+            this.backendService.setCallback('Error', (message: WebSocketMessage): void => {
+                error(message.getArgument('reason'));
+            });
         return new Subscription(() => {
             gameSubscription.unsubscribe();
             gameUpdateSubscription.unsubscribe();
             gameEventSubscription.unsubscribe();
+            errorSubscription.unsubscribe();
         });
     }
 
     /** Create a game. Return the id of the created game. */
     public async createGame(gameName: string): Promise<string> {
         const response: WebSocketMessage =
-            await this.webSocketManager.sendAndWaitForReply(['Create', { gameName }], 'GameCreated');
+            await this.backendService.sendAndWaitForReply(['Create', { gameName }], 'GameCreated');
         return response.getArgument('gameId');
     }
 
     /** Perform a specific game action and asserts that it has succeeded */
     private async gameAction(action: JSONValue): Promise<void> {
-        return this.webSocketManager.send(action);
+        return this.backendService.send(action);
     }
 
     /** Give the current player resignation in a game */

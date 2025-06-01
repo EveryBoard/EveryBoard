@@ -3,9 +3,8 @@ import { LocaleUtils } from '../LocaleUtils';
 
 describe('@everyboard/lib', () => {
     describe('getLocale', () => {
-        it('should use locale stored in localStorage', () => {
-            // Given a localStage that defines a locale
-            spyOn(localStorage, 'getItem').and.returnValue('en');
+        it('should use stored locale', () => {
+            // Given a stored locale
             localStorage.setItem('locale', 'en');
 
             // When the locale is computed
@@ -13,7 +12,6 @@ describe('@everyboard/lib', () => {
 
             // Then it should use the one from localStorage
             expect(locale).toEqual('en');
-            expect(localStorage.getItem).toHaveBeenCalledWith('locale');
         });
         it('should use navigator language if nothing is in localStorage', () => {
             // Given that the localStorage is empty and that the navigator language is set

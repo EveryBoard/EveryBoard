@@ -42,11 +42,11 @@ export class CountDownComponent implements OnDestroy {
     public constructor(private readonly cdr: ChangeDetectorRef) {}
 
     // Set the duration (in seconds, floating number) for a non-started countdown
-    public setDuration(duration: number): void {
+    public setDuration(seconds: number): void {
         Utils.assert(this.started === false, 'Should not set a chrono that has already been started (' + this.debugName + ')!');
 
         this.isSet = true;
-        this.changeDuration(duration);
+        this.changeDuration(seconds);
     }
 
     public changeDuration(seconds: number): void {

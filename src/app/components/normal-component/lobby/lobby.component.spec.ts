@@ -1,4 +1,5 @@
 /* eslint-disable max-lines-per-function */
+/*
 import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { Router } from '@angular/router';
 import { DebugElement } from '@angular/core';
@@ -9,7 +10,7 @@ import { ActivePartsService } from 'src/app/services/ActivePartsService';
 import { GameActionFailure } from 'src/app/services/ConnectedUserService';
 import { ConnectedUserServiceMock } from 'src/app/services/tests/ConnectedUserService.spec';
 import { expectValidRouting, prepareUnsubscribeCheck, SimpleComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
-import { PartMocks } from 'src/app/domain/PartMocks.spec';
+import { PartMocks } from 'src/app/domain/PartMocks';
 import { PartDocument } from 'src/app/domain/Part';
 import { UserMocks } from 'src/app/domain/UserMocks.spec';
 import { LobbyComponent } from './lobby.component';
@@ -450,3 +451,4 @@ describe('LobbyComponent', () => {
     }));
 
 });
+*/

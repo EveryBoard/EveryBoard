@@ -37,7 +37,7 @@ export type Callback = (message: WebSocketMessage) => void
     // because we want only a single websocket connection, shared among all other services
     providedIn: 'root',
 })
-export class WebSocketManagerService {
+export class BackendService {
 
     private webSocket: MGPOptional<WebSocket> = MGPOptional.empty();
     private readonly callbacks: MGPMap<string, Callback> = new MGPMap();
