@@ -45,7 +45,7 @@ export class ChatComponent implements OnInit, AfterViewChecked, OnDestroy {
 
     private loadChatContent(): void {
         this.chatSubscription = this.chatService.subscribeToMessages((message: Message) => {
-            this.updateMessages([message]);
+            this.onMessageReceived(message);
         });
     }
 
@@ -57,8 +57,8 @@ export class ChatComponent implements OnInit, AfterViewChecked, OnDestroy {
         this.scrollToBottomIfNeeded();
     }
 
-    public updateMessages(newMessages: Message[]): void {
-        this.chat = this.chat.concat(newMessages);
+    public onMessageReceived(message: Message): void {
+        this.chat.push(message)
         const nbMessages: number = this.chat.length;
         if (this.visible && this.isNearBottom) {
             this.readMessages = nbMessages;
@@ -121,7 +121,7 @@ export class ChatComponent implements OnInit, AfterViewChecked, OnDestroy {
     public async sendMessage(): Promise<void> {
         const content: string = this.userMessage;
         this.userMessage = ''; // clears it first to seem more responsive
-        await this.chatService.sendMessage(content);
+        await this.chatService.addMessage(content);
     }
 
     public switchChatVisibility(): void {

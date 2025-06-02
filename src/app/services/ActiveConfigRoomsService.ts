@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { MGPMap } from '@everyboard/lib';
 
 import { Subscription } from 'rxjs';
-import { BackendService, WebSocketMessage } from './BackendService';
+import { BackendService, BackendMessage } from './BackendService';
 import { ConfigRoom } from '../domain/ConfigRoom';
 
 @Injectable({
@@ -22,12 +22,12 @@ export class ActiveConfigRoomsService {
     public subscribe(callback: (rooms: MGPMap<string, ConfigRoom>) => void): Subscription {
         const activeRooms: MGPMap<string, ConfigRoom> = new MGPMap();
         const updateSubscription: Subscription =
-            this.backendService.setCallback('ConfigRoomUpdate', (message: WebSocketMessage): void => {
-                activeRooms.set(message.getArgument('gameId'), message.getArgument('configRoom'));
+            this.backendService.setCallback('ConfigRoomUpdate', (message: BackendMessage): void => {
+                activeRooms.put(message.getArgument('gameId'), message.getArgument('configRoom'));
                 callback(activeRooms);
             });
         const deleteSubscription: Subscription =
-            this.backendService.setCallback('ConfigRoomDeleted', (message: WebSocketMessage): void => {
+            this.backendService.setCallback('ConfigRoomDeleted', (message: BackendMessage): void => {
                 activeRooms.delete(message.getArgument('gameId'));
                 callback(activeRooms);
             });

@@ -6,7 +6,7 @@ import { MGPOptional } from '@everyboard/lib';
 import { FirstPlayer, ConfigRoom, PartType } from '../domain/ConfigRoom';
 import { MinimalUser } from '../domain/MinimalUser';
 import { RulesConfig } from '../jscaip/RulesConfigUtil';
-import { BackendService, WebSocketMessage } from './BackendService';
+import { BackendService, BackendMessage } from './BackendService';
 import { Debug } from '../utils/Debug';
 import { Localized } from '../utils/LocaleUtils';
 
@@ -33,19 +33,19 @@ export class ConfigRoomService {
     {
         const gameSubscription: Subscription = await this.backendService.subscribeToConfigRoom(gameId);
         const configRoomSubscription: Subscription =
-            this.backendService.setCallback('ConfigRoomUpdate', (message: WebSocketMessage): void => {
+            this.backendService.setCallback('ConfigRoomUpdate', (message: BackendMessage): void => {
                 configRoomUpdate(message.getArgument('configRoom'));
             });
         const candidateJoinedSubscription: Subscription =
-            this.backendService.setCallback('CandidateJoined', (message: WebSocketMessage): void => {
+            this.backendService.setCallback('CandidateJoined', (message: BackendMessage): void => {
                 candidateJoined(message.getArgument('candidate'));
             });
         const candidateLeftSubscription: Subscription =
-            this.backendService.setCallback('CandidateLeft', (message: WebSocketMessage): void => {
+            this.backendService.setCallback('CandidateLeft', (message: BackendMessage): void => {
                 candidateLeft(message.getArgument('candidate'));
             });
         const errorSubscription: Subscription =
-            this.backendService.setCallback('Error', (message: WebSocketMessage): void => {
+            this.backendService.setCallback('Error', (message: BackendMessage): void => {
                 error(message.getArgument('reason'));
             });
         return new Subscription(() => {

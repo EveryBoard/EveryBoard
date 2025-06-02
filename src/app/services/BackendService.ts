@@ -5,15 +5,15 @@ import { Injectable } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { MessageDisplayer } from './MessageDisplayer';
 
-export class WebSocketMessage {
-    public constructor(private readonly tag: string,
+export class BackendMessage {
+    public constructor(public readonly tag: string,
                        private readonly args: JSONValue) {
     }
 
     public getArgument<T>(name: string): T {
         const value: T | null = this.getOptionalArgument<T>(name);
         if (value == null) {
-            throw new Error(`Trying to extract argument from server reply, but there were no such argument: ${name} (on a ${this.tag} message: argunments are ${JSON.stringify(this.args)})`);
+            throw new Error(`Trying to extract argument from server reply, but there were no such argument: ${name} (on a ${this.tag} message: arguments are ${JSON.stringify(this.args)})`);
         } else {
             return value;
         }
@@ -29,7 +29,62 @@ export class WebSocketMessage {
     }
 }
 
-export type Callback = (message: WebSocketMessage) => void
+export type Callback = (message: BackendMessage) => void
+
+
+export abstract class AbstractBackendService {
+    private readonly callbacks: MGPMap<string, Callback> = new MGPMap();
+
+    protected abstract subscribeTo(subscription: string, gameId?: string): Promise<Subscription>;
+
+    public abstract send(message: JSONValue): Promise<void>;
+
+    public subscribeToGame(gameId: string): Promise<Subscription> {
+        return this.subscribeTo('SubscribeGame', gameId);
+    }
+
+    public subscribeToConfigRoom(gameId: string): Promise<Subscription> {
+        return this.subscribeTo('SubscribeConfigRoom', gameId);
+    }
+
+    public subscribeToLobby(): Promise<Subscription> {
+        return this.subscribeTo('SubscribeLobby');
+    }
+
+    public async sendAndWaitForReply(message: JSONValue, replyTag: string): Promise<BackendMessage> {
+        await this.send(message);
+        return this.waitForMessage(replyTag);
+    }
+
+    private async waitForMessage(tag: string): Promise<BackendMessage> {
+        return new Promise((resolve: (value: BackendMessage) => void) => {
+            this.setCallback(tag, (message: BackendMessage) => {
+                this.removeCallback(tag);
+                resolve(message);
+            });
+        });
+    }
+
+    public setCallback(tag: string, callback: Callback): Subscription {
+        this.callbacks.set(tag, callback);
+        return new Subscription(() => this.removeCallback(tag));
+    }
+
+    protected receive(message: BackendMessage): void {
+        const callback: MGPOptional<Callback> = this.callbacks.get(message.tag);
+        Utils.assert(callback.isPresent(), `Received a message with no callback registered: ${message}`);
+        callback.get()(message);
+    }
+
+    public removeCallback(tag: string): void {
+        this.callbacks.delete(tag);
+    }
+
+    protected clearCallbacks(): void {
+        this.callbacks.clear();
+    }
+
+}
 
 
 @Injectable({
@@ -37,10 +92,9 @@ export type Callback = (message: WebSocketMessage) => void
     // because we want only a single websocket connection, shared among all other services
     providedIn: 'root',
 })
-export class BackendService {
+export class BackendService extends AbstractBackendService {
 
     private webSocket: MGPOptional<WebSocket> = MGPOptional.empty();
-    private readonly callbacks: MGPMap<string, Callback> = new MGPMap();
 
     private readonly connectionPromise: Promise<void>;
     private resolveConnection!: () => void;
@@ -50,6 +104,7 @@ export class BackendService {
     public constructor(private readonly connectedUserService: ConnectedUserService,
                        private readonly messageDisplayer: MessageDisplayer)
     {
+        super();
         this.connectionPromise = new Promise((resolve: () => void) => {
             this.resolveConnection = resolve;
         });
@@ -111,14 +166,12 @@ export class BackendService {
                 Utils.assert(tag != null && typeof(tag) === 'string',
                              `Received malformed WebSocket message (missing tag): ${JSON.stringify(json)}`);
                 // each callback is associated to a tag
-                const callback: MGPOptional<Callback> = this.callbacks.get(tag as string);
-                Utils.assert(callback.isPresent(), `Received a message with no callback registered: ${JSON.stringify(json)}`);
-                callback.get()(new WebSocketMessage(tag as string, args));
+                this.receive(new BackendMessage(tag as string, args));
             };
         });
     }
 
-    private async subscribeTo(subscription: string, gameId?: string): Promise<Subscription> {
+    protected override async subscribeTo(subscription: string, gameId?: string): Promise<Subscription> {
         if (gameId !== undefined) {
             await this.send([subscription, { gameId }]);
         } else {
@@ -127,51 +180,17 @@ export class BackendService {
         return new Subscription(async() => this.send(['Unsubscribe']));
     }
 
-    public subscribeToGame(gameId: string): Promise<Subscription> {
-        return this.subscribeTo('SubscribeGame', gameId);
-    }
-
-    public subscribeToConfigRoom(gameId: string): Promise<Subscription> {
-        return this.subscribeTo('SubscribeConfigRoom', gameId);
-    }
-
-    public subscribeToLobby(): Promise<Subscription> {
-        return this.subscribeTo('SubscribeLobby');
-    }
-
-    public async send(message: JSONValue): Promise<void> {
+    public override async send(message: JSONValue): Promise<void> {
         await this.waitForConnection(); // block until we are connected, otherwise we'll send messages nowhere
         console.log('%cWS: >>> ' + JSON.stringify(message), 'color: lightblue');
         this.webSocket.get().send(JSON.stringify(message));
     }
 
-    public async sendAndWaitForReply(message: JSONValue, replyTag: string): Promise<WebSocketMessage> {
-        await this.send(message);
-        return this.waitForMessage(replyTag);
-    }
-
-    private async waitForMessage(tag: string): Promise<WebSocketMessage> {
-        return new Promise((resolve: (value: WebSocketMessage) => void) => {
-            this.setCallback(tag, (message: WebSocketMessage) => {
-                this.removeCallback(tag);
-                resolve(message);
-            });
-        });
-    }
-
-    public setCallback(tag: string, callback: Callback): Subscription {
-        this.callbacks.set(tag, callback);
-        return new Subscription(() => this.removeCallback(tag));
-    }
-
-    public removeCallback(tag: string): void {
-        this.callbacks.delete(tag);
-    }
 
     private disconnect(): void {
         Utils.assert(this.webSocket.isPresent(), 'Should not disconnect from unconnected WebSocket!');
         this.webSocket.get().close();
-        this.callbacks.clear();
+        this.clearCallbacks();
     }
 
 }

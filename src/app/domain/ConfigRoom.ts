@@ -71,6 +71,7 @@ export class PartType {
     }
 }
 
+// TODO: rename to ConfigRoomStatus?
 export type IPartStatus = 'Created' | 'ConfigProposed' | 'Started' | 'Finished';
 
 export class PartStatus {

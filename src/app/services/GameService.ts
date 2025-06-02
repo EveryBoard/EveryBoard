@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { JSONValue } from '@everyboard/lib';
 import { GameEvent, Game } from '../domain/Part';
 import { Subscription } from 'rxjs';
-import { BackendService, WebSocketMessage } from './BackendService';
+import { BackendService, BackendMessage } from './BackendService';
 import { Debug } from '../utils/Debug';
 import { Player, PlayerOrNone } from '../jscaip/Player';
 
@@ -21,16 +21,16 @@ export class GameService {
                              error: (reason: string) => void)
     : Promise<Subscription> {
         const gameUpdateSubscription: Subscription =
-            this.backendService.setCallback('GameUpdate', (message: WebSocketMessage): void => {
+            this.backendService.setCallback('GameUpdate', (message: BackendMessage): void => {
                 void gameUpdate(message.getArgument('game'));
             });
         const gameEventSubscription: Subscription =
-            this.backendService.setCallback('GameEvent', (message: WebSocketMessage): void => {
+            this.backendService.setCallback('GameEvent', (message: BackendMessage): void => {
                 void gameEvent(message.getArgument('event'), message.getArgument('serverTime'));
             });
         const gameSubscription: Subscription = await this.backendService.subscribeToGame(gameId);
         const errorSubscription: Subscription =
-            this.backendService.setCallback('Error', (message: WebSocketMessage): void => {
+            this.backendService.setCallback('Error', (message: BackendMessage): void => {
                 error(message.getArgument('reason'));
             });
         return new Subscription(() => {
@@ -43,7 +43,7 @@ export class GameService {
 
     /** Create a game. Return the id of the created game. */
     public async createGame(gameName: string): Promise<string> {
-        const response: WebSocketMessage =
+        const response: BackendMessage =
             await this.backendService.sendAndWaitForReply(['Create', { gameName }], 'GameCreated');
         return response.getArgument('gameId');
     }

@@ -5,7 +5,7 @@ import { CurrentGame, UserRoleInPart } from '../domain/User';
 import { MGPMap, MGPOptional, MGPValidation } from '@everyboard/lib';
 import { AuthUser, ConnectedUserService, GameActionFailure } from './ConnectedUserService';
 import { Localized } from '../utils/LocaleUtils';
-import { BackendService, WebSocketMessage } from './BackendService';
+import { BackendService, BackendMessage } from './BackendService';
 
 export abstract class AbstractCurrentGameService {
 
@@ -107,7 +107,7 @@ export class CurrentGameService extends AbstractCurrentGameService implements On
         } else { // new user logged in
             // We need to subscribe to any change to the user's current game
             this.currentGameSubscription =
-                this.backendService.setCallback('CurrentGameUpdate', (message: WebSocketMessage) => {
+                this.backendService.setCallback('CurrentGameUpdate', (message: BackendMessage) => {
                     this.onCurrentGameUpdate(message.getOptionalArgument('currentGame'));
                 });
             // connect after setting callback to be sure to get the first one
