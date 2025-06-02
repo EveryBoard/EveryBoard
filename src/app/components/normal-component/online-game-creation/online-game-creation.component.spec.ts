@@ -34,7 +34,7 @@ describe('OnlineGameCreationComponent for non-existing game', () => {
 
 });
 
-fdescribe('OnlineGameCreationComponent', () => {
+describe('OnlineGameCreationComponent', () => {
 
     let testUtils: SimpleComponentTestUtils<OnlineGameCreationComponent>;
 
@@ -55,7 +55,7 @@ fdescribe('OnlineGameCreationComponent', () => {
         tick(0);
 
         // Then the user should be redirected to the game
-        expectValidRouting(router, ['/play', game, 'PartDAOMock0'], OnlineGameWrapperComponent);
+        expectValidRouting(router, ['/play', game, 'gameId'], OnlineGameWrapperComponent);
     }));
 
     it('should show toast and navigate to lobby when creator has active parts', fakeAsync(async() => {

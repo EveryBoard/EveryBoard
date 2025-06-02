@@ -42,6 +42,10 @@ import { SuperRules } from 'src/app/jscaip/Rules';
 // TODO import { ConfigRoomService } from 'src/app/services/ConfigRoomService';
 // TODO import { ConfigRoomServiceMock } from 'src/app/services/tests/ConfigRoomServiceMock.spec';
 import { RulesConfigurationComponent } from 'src/app/components/wrapper-components/rules-configuration/rules-configuration.component';
+import { CurrentGameServiceMock } from 'src/app/services/tests/CurrentGameServiceMock.spec';
+import { CurrentGameService } from 'src/app/services/CurrentGameService';
+import { GameServiceMock } from 'src/app/services/tests/GameServiceMock.spec';
+import { GameService } from 'src/app/services/GameService';
 
 @Component({})
 export class BlankComponent {}
@@ -646,7 +650,8 @@ export class ConfigureTestingModuleUtils {
                 { provide: UserDAO, useClass: UserDAOMock },
                 { provide: ConnectedUserService, useClass: ConnectedUserServiceMock },
                 { provide: ErrorLoggerService, useClass: ErrorLoggerServiceMock },
-                // TODO { provide: GameService, useClass: GameServiceMock },
+                { provide: CurrentGameService, useClass: CurrentGameServiceMock },
+                { provide: GameService, useClass: GameServiceMock },
                 // TODO { provide: ConfigRoomService, useClass: ConfigRoomServiceMock },
             ],
         }).compileComponents();
@@ -680,7 +685,8 @@ export class ConfigureTestingModuleUtils {
                 { provide: UserDAO, useClass: UserDAOMock },
                 { provide: ConnectedUserService, useClass: ConnectedUserServiceMock },
                 { provide: ErrorLoggerService, useClass: ErrorLoggerServiceMock },
-                // TODO { provide: GameService, useClass: GameServiceMock },
+                { provide: CurrentGameService, useClass: CurrentGameServiceMock },
+                { provide: GameService, useClass: GameServiceMock },
                 // TODO { provide: ConfigRoomService, useClass: ConfigRoomServiceMock },
             ],
         }).compileComponents();
