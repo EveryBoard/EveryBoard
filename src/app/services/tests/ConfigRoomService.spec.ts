@@ -1,235 +1,190 @@
 /* eslint-disable max-lines-per-function */
-/*import { fakeAsync, TestBed } from '@angular/core/testing';
-import { ConfigRoomService, ConfigRoomServiceFailure } from '../ConfigRoomService';
-import { ConfigRoomDAO } from 'src/app/dao/ConfigRoomDAO';
-import { ConfigRoomDAOMock } from 'src/app/dao/tests/ConfigRoomDAOMock.spec';
+import { fakeAsync, tick } from '@angular/core/testing';
+
+import { MGPOptional } from '@everyboard/lib';
+
+import { ConfigRoomService } from '../ConfigRoomService';
+import { BackendServiceMock } from './BackendServiceMock.spec';
+import { AbstractBackendService, BackendService } from '../BackendService';
+import { ConfigProposal, ConfigRoom, FirstPlayer, PartType } from 'src/app/domain/ConfigRoom';
 import { ConfigRoomMocks } from 'src/app/domain/ConfigRoomMocks.spec';
-import { JSONValue, MGPOptional, MGPValidation } from '@everyboard/lib';
-import { UserMocks } from 'src/app/domain/UserMocks.spec';
 import { MinimalUser } from 'src/app/domain/MinimalUser';
-import { ConnectedUserService } from '../ConnectedUserService';
-import { ConnectedUserServiceMock } from './ConnectedUserService.spec';
-import { RouterTestingModule } from '@angular/router/testing';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { IFirestoreDAO } from 'src/app/dao/FirestoreDAO';
-import { FirstPlayer, PartStatus, PartType } from 'src/app/domain/ConfigRoom';
-import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
-import { BlankComponent } from 'src/app/utils/tests/TestUtils.spec';
+import { UserMocks } from 'src/app/domain/UserMocks.spec';
+import { Subscription } from 'rxjs';
 
 describe('ConfigRoomService', () => {
 
-    function expectedParams(method: 'POST' | 'GET' | 'DELETE'): object {
-        return {
-            method,
-            headers: {
-                Authorization: 'Bearer idToken',
-            },
-        };
-    }
-
-    function endpoint(path: string): string {
-        return 'http://localhost:8081' + path;
-    }
-
-
-    let configRoomDAO: ConfigRoomDAO;
+    let backendService: BackendServiceMock;
     let configRoomService: ConfigRoomService;
 
     beforeEach(fakeAsync(async() => {
-        await TestBed.configureTestingModule({
-            imports: [
-                RouterTestingModule.withRoutes([
-                    { path: '**', component: BlankComponent },
-                ]),
-                BrowserAnimationsModule,
-            ],
-            providers: [
-                { provide: ConnectedUserService, useClass: ConnectedUserServiceMock },
-                { provide: ConfigRoomDAO, useClass: ConfigRoomDAOMock },
-
-            ],
-        }).compileComponents();
-        configRoomDAO = TestBed.inject(ConfigRoomDAO);
-        configRoomService = TestBed.inject(ConfigRoomService);
+        backendService = new BackendServiceMock();
+        configRoomService = new ConfigRoomService(backendService as AbstractBackendService as BackendService);
     }));
 
     it('should create', fakeAsync(() => {
         expect(configRoomService).toBeTruthy();
     }));
 
-    describe('joinGame', () => {
+    function ignore(_: unknown): void {}
 
-        it('should POST to the expected resource', fakeAsync(async() => {
-            // Given a game
-            const response: Response = Response.json({}, { status: 200 });
-            spyOn(window, 'fetch').and.resolveTo(response);
-            const gameId: string = 'game-id';
-            // When joining it
-            const result: MGPValidation = await configRoomService.joinGame(gameId);
-            // Then it should post on the expected resource
-            const expectedEndpoint: string = endpoint(`/config-room/${gameId}/candidates`);
-            expect(window.fetch).toHaveBeenCalledOnceWith(expectedEndpoint, expectedParams('POST'));
-            expect(result).toEqual(MGPValidation.SUCCESS);
+    function updateConfigRoom(gameId: string, configRoom: ConfigRoom): void {
+        backendService.mockReceivedMessage('ConfigRoomUpdate', { gameId, configRoom });
+        tick(1);
+    }
+
+    function addCandidate(candidate: MinimalUser): void {
+        backendService.mockReceivedMessage('CandidateJoined', { candidate });
+        tick(1);
+    }
+
+    function removeCandidate(candidate: MinimalUser): void {
+        backendService.mockReceivedMessage('CandidateLeft', { candidate });
+        tick(1);
+    }
+
+    function sendError(reason: string): void {
+        backendService.mockReceivedMessage('Error', { reason });
+        tick(1);
+    }
+
+    describe('join', () => {
+        it('should notify about config room updates', fakeAsync(async() => {
+            // Given a service with which we joined a config room
+            let configRoom: MGPOptional<ConfigRoom> = MGPOptional.empty();
+            const subscription: Subscription =
+                await configRoomService.join('gameId',
+                                             (update: ConfigRoom): void => {
+                                                 configRoom = MGPOptional.of(update);
+                                             },
+                                             ignore,
+                                             ignore,
+                                             ignore);
+
+            // When there are config room updates
+            const updatedConfigRoom: ConfigRoom = ConfigRoomMocks.getInitial(MGPOptional.empty());
+            updateConfigRoom('gameId', updatedConfigRoom);
+            // Then we are notified about it
+            expect(configRoom.isPresent()).toBeTrue();
+            expect(configRoom.get()).toEqual(updatedConfigRoom);
+            subscription.unsubscribe();
         }));
 
-        it('should fail if the game does not exist', fakeAsync(async() => {
-            // Given no game
-            const response: Response = Response.json({ reason: 'not_found' }, { status: 404 });
-            spyOn(window, 'fetch').and.resolveTo(response);
-            const gameId: string = 'game-id';
-            // When joining it
-            const result: MGPValidation = await configRoomService.joinGame(gameId);
-            // Then it should post on the expected resource
-            const expectedEndpoint: string = endpoint(`/config-room/${gameId}/candidates`);
-            expect(window.fetch).toHaveBeenCalledOnceWith(expectedEndpoint, expectedParams('POST'));
-            expect(result).toEqual(MGPValidation.failure(ConfigRoomServiceFailure.GAME_DOES_NOT_EXIST()));
+        it('should notify about candidates joining', fakeAsync(async() => {
+            // Given a service with which we joined a config room
+            const candidates: MinimalUser[] = [];
+            const subscription: Subscription =
+                await configRoomService.join('gameId',
+                                             ignore,
+                                             (candidate: MinimalUser): void => {
+                                                 candidates.push(candidate);
+                                             },
+                                             ignore,
+                                             ignore);
+
+            // When a candidate joins
+            const candidate: MinimalUser = UserMocks.CANDIDATE_MINIMAL_USER;
+            addCandidate(candidate);
+            // Then we are notified about it
+            expect(candidates.length).toBe(1);
+            expect(candidates[0]).toEqual(candidate);
+            subscription.unsubscribe();
         }));
 
-    });
+        it('should notify about candidates leaving', fakeAsync(async() => {
+            // Given a service with which we joined a config room and observed a candidate joining
+            let candidates: MinimalUser[] = [];
+            const subscription: Subscription =
+                await configRoomService.join('gameId',
+                                             ignore,
+                                             (candidate: MinimalUser): void => {
+                                                 candidates.push(candidate);
+                                             },
+                                             (candidate: MinimalUser): void => {
+                                                 candidates = candidates.filter((c: MinimalUser): boolean =>
+                                                     c.id !== candidate.id);
+                                             },
+                                             ignore);
+            const candidate: MinimalUser = UserMocks.CANDIDATE_MINIMAL_USER;
+            addCandidate(candidate);
+            expect(candidates.length).toBe(1);
 
-    describe('removeCandidate', () => {
+            // When the candidate leaves
+            removeCandidate(candidate);
 
-        it('should DELETE the expected resource', fakeAsync(async() => {
-            // Given a game with a candidate
-            const response: Response = Response.json({}, { status: 200 });
-            spyOn(window, 'fetch').and.resolveTo(response);
-            const gameId: string = 'game-id';
-            const candidateId: string = 'candidate-id';
-            // When removing the candidate
-            await configRoomService.removeCandidate(gameId, candidateId);
-            // Then it should delete the resource
-            const expectedEndpoint: string = endpoint(`/config-room/${gameId}/candidates/${candidateId}`);
-            expect(window.fetch).toHaveBeenCalledOnceWith(expectedEndpoint, expectedParams('DELETE'));
+            // Then we are notified about it
+            expect(candidates.length).toBe(0);
+            subscription.unsubscribe();
         }));
 
+        it('should notify about errors', fakeAsync(async() => {
+            // Given a service with which we joined a config room
+            let errorsSeen: number = 0;
+            const subscription: Subscription =
+                await configRoomService.join('gameId',
+                                             ignore,
+                                             ignore,
+                                             ignore,
+                                             (_reason: string): void => {
+                                                 errorsSeen += 1;
+                                             });
+            // When an error occurs
+            sendError('some error');
+            // Then we are notified about it
+            expect(errorsSeen).toBe(1);
+            subscription.unsubscribe();
+        }));
     });
 
     describe('proposeConfig', () => {
-
-        it('should POST on the expected resource', fakeAsync(async() => {
-            // Given a game
-            const response: Response = Response.json({}, { status: 200 });
-            spyOn(window, 'fetch').and.resolveTo(response);
-            const gameId: string = 'game-id';
-            // When proposing config
-            const partType: PartType = PartType.BLITZ;
-            const maximalMoveDuration: number = 30;
-            const totalPartDuration: number = 480;
-            const firstPlayer: FirstPlayer = FirstPlayer.CREATOR;
-            const rulesConfig: MGPOptional<RulesConfig> = MGPOptional.empty();
-            await configRoomService.proposeConfig(gameId,
-                                                  partType,
-                                                  maximalMoveDuration,
-                                                  firstPlayer,
-                                                  totalPartDuration,
-                                                  rulesConfig);
-            // Then it should post on the expected resource
-            const jsonConfig: JSONValue = {
-                partStatus: PartStatus.CONFIG_PROPOSED.value,
-                partType: partType.value,
-                maximalMoveDuration,
-                totalPartDuration,
-                firstPlayer: firstPlayer.value,
+        it('should send a ProposeConfig message', fakeAsync(async() => {
+            // Given a config proposal
+            const proposal: ConfigProposal = {
+                partType: PartType.STANDARD.value,
+                firstPlayer: FirstPlayer.RANDOM.value,
+                maximalMoveDuration: 42,
+                totalPartDuration: 4200,
                 rulesConfig: {},
             };
-            const config: string = encodeURIComponent(JSON.stringify(jsonConfig));
-            const expectedEndpoint: string = endpoint(`/config-room/${gameId}?action=propose&config=${config}`);
-            expect(window.fetch).toHaveBeenCalledOnceWith(expectedEndpoint, expectedParams('POST'));
+            spyOn(backendService, 'send').and.callThrough();
+            // When we propose it
+            await configRoomService.proposeConfig(proposal);
+            // Then it should send ProposeConfig with our config to the backend
+            expect(backendService.send).toHaveBeenCalledOnceWith(['ProposeConfig', { config: proposal }]);
         }));
-
     });
 
     describe('selectOpponent', () => {
-
-        it('should POST on the expected resource', fakeAsync(async() => {
-            // Given a game
-            const response: Response = Response.json({}, { status: 200 });
-            spyOn(window, 'fetch').and.resolveTo(response);
-            const gameId: string = 'game-id';
-            // When selecting an opponent
-            const opponent: MinimalUser = UserMocks.OPPONENT_MINIMAL_USER;
-            await configRoomService.selectOpponent(gameId, opponent);
-            // Then it should post on the expected resource
-            const opponentStr: string = encodeURIComponent(JSON.stringify(opponent));
-            const expectedEndpoint: string = endpoint(`/config-room/${gameId}?action=selectOpponent&opponent=${opponentStr}`);
-            expect(window.fetch).toHaveBeenCalledOnceWith(expectedEndpoint, expectedParams('POST'));
+        it('should send a SelectOpponent message', fakeAsync(async() => {
+            // Given an opponent
+            const opponent: MinimalUser = UserMocks.CANDIDATE_MINIMAL_USER;
+            spyOn(backendService, 'send').and.callThrough();
+            // When selecting them
+            await configRoomService.selectOpponent(opponent);
+            // Then it should send SelectOpponent with the opponent
+            expect(backendService.send).toHaveBeenCalledOnceWith(['SelectOpponent', { opponent }]);
         }));
-
     });
 
     describe('reviewConfig', () => {
-
-        it('should POST on the expected resource', fakeAsync(async() => {
-            // Given a game
-            const response: Response = Response.json({}, { status: 200 });
-            spyOn(window, 'fetch').and.resolveTo(response);
-            const gameId: string = 'game-id';
-            // When reviewing config
-            await configRoomService.reviewConfig(gameId);
-            // Then it should post on the expected resource
-            const expectedEndpoint: string = endpoint(`/config-room/${gameId}?action=review`);
-            expect(window.fetch).toHaveBeenCalledOnceWith(expectedEndpoint, expectedParams('POST'));
+        it('should send a ReviewConfig message', fakeAsync(async() => {
+            // Given a config we want to review (managed by the backend)
+            spyOn(backendService, 'send').and.callThrough();
+            // When we ask to review it
+            await configRoomService.reviewConfig();
+            // Then it should send the ReviewConfig message
+            expect(backendService.send).toHaveBeenCalledOnceWith(['ReviewConfig']);
         }));
     });
 
-    describe('reviewConfigAndRemoveChosenOpponent', () => {
-
-        it('should POST on the expected resource', fakeAsync(async() => {
-            // Given a game
-            const response: Response = Response.json({}, { status: 200 });
-            spyOn(window, 'fetch').and.resolveTo(response);
-            const gameId: string = 'game-id';
-            // When reviewing config
-            await configRoomService.reviewConfigAndRemoveChosenOpponent(gameId);
-            // Then it should post on the expected resource
-            const expectedEndpoint: string = endpoint(`/config-room/${gameId}?action=reviewConfigAndRemoveOpponent`);
-            expect(window.fetch).toHaveBeenCalledOnceWith(expectedEndpoint, expectedParams('POST'));
-        }));
-    });
-
-    describe('subscribeToCandidates', () => {
-
-        let candidates: MinimalUser[] = [];
-        let candidatesDAO: IFirestoreDAO<MinimalUser>;
-
-        beforeEach(fakeAsync(async() => {
-            // Given a configRoom for which we are observing the candidates
-            await configRoomDAO.set('configRoomId', ConfigRoomMocks.getInitial(MGPOptional.empty()));
-            configRoomService.subscribeToChanges('configRoomId', () => {});
-            configRoomService.subscribeToCandidates('configRoomId', (newCandidates: MinimalUser[]) => {
-                candidates = newCandidates;
-            });
-            candidatesDAO = configRoomDAO.subCollectionDAO('configRoomId', 'candidates');
-        }));
-
-        it('should see new candidates appear', fakeAsync(async() => {
-            // When a candidate is added
-            await candidatesDAO.set(UserMocks.CANDIDATE_MINIMAL_USER.id, UserMocks.CANDIDATE_MINIMAL_USER);
-            // Then the candidate has been seen
-            expect(candidates).toEqual([UserMocks.CANDIDATE_MINIMAL_USER]);
-        }));
-
-        it('should see removed candidates disappear', fakeAsync(async() => {
-            // and given an existing candidate
-            await candidatesDAO.set(UserMocks.CANDIDATE_MINIMAL_USER.id, UserMocks.CANDIDATE_MINIMAL_USER);
-            // When a candidate is removed
-            await candidatesDAO.delete(UserMocks.CANDIDATE_MINIMAL_USER.id);
-            // Then the candidate has been seen
-            expect(candidates).toEqual([]);
-        }));
-
-        it('should see modified candidates correctly modified', fakeAsync(async() => {
-            // and given some existing candidates
-            await candidatesDAO.set(UserMocks.CANDIDATE_MINIMAL_USER.id, UserMocks.CANDIDATE_MINIMAL_USER);
-            await candidatesDAO.set(UserMocks.OPPONENT_MINIMAL_USER.id, UserMocks.OPPONENT_MINIMAL_USER);
-
-            // When a candidate is modified
-            // (This should never happen in practice, but we still want the correct behavior just in case)
-            await configRoomDAO.subCollectionDAO('configRoomId', 'candidates').update(UserMocks.CANDIDATE_MINIMAL_USER.id, { name: 'foo' });
-            expect(candidates).toEqual([{ ...UserMocks.CANDIDATE_MINIMAL_USER, name: 'foo' }, UserMocks.OPPONENT_MINIMAL_USER]);
-
+    describe('acceptConfig', () => {
+        it('should send an AcceptConfig message', fakeAsync(async() => {
+            // Given a config we want to accept (managed by the backend)
+            spyOn(backendService, 'send').and.callThrough();
+            // When we ask to accept it
+            await configRoomService.acceptConfig();
+            // Then it should send the AcceptConfig message
+            expect(backendService.send).toHaveBeenCalledOnceWith(['AcceptConfig']);
         }));
     });
 });
-
-*/

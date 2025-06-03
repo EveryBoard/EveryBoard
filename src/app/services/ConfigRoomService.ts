@@ -3,7 +3,7 @@ import { Subscription } from 'rxjs';
 
 import { MGPOptional } from '@everyboard/lib';
 
-import { FirstPlayer, ConfigRoom, PartType } from '../domain/ConfigRoom';
+import { FirstPlayer, ConfigRoom, PartType, ConfigProposal } from '../domain/ConfigRoom';
 import { MinimalUser } from '../domain/MinimalUser';
 import { RulesConfig } from '../jscaip/RulesConfigUtil';
 import { BackendService, BackendMessage } from './BackendService';
@@ -58,21 +58,8 @@ export class ConfigRoomService {
     }
 
     /** Propose a config to the opponent */
-    public async proposeConfig(partType: PartType,
-                               maximalMoveDuration: number,
-                               firstPlayer: FirstPlayer,
-                               totalPartDuration: number,
-                               rulesConfig: MGPOptional<RulesConfig>)
-    : Promise<void>
-    {
-        const config: Partial<ConfigRoom> = {
-            partType: partType.value,
-            maximalMoveDuration,
-            totalPartDuration,
-            firstPlayer: firstPlayer.value,
-            rulesConfig: rulesConfig.getOrElse({}),
-        };
-        await this.backendService.send(['ProposeConfig', { config }]);
+    public async proposeConfig(proposal: ConfigProposal): Promise<void> {
+        await this.backendService.send(['ProposeConfig', { config: proposal }]);
     }
 
     /** Select an opponent */

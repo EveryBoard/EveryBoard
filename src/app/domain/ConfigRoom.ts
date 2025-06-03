@@ -14,11 +14,20 @@ export type ConfigRoom = {
 
     readonly firstPlayer: IFirstPlayer;
     readonly partType: IPartType; // TODO: rename gameType
-    readonly maximalMoveDuration: number;
-    readonly totalPartDuration: number;
+    readonly maximalMoveDuration: number; // TODO: rename moveDuration
+    readonly totalPartDuration: number; // TODO: rename gameDuration
     readonly rulesConfig: RulesConfig;
     readonly gameName: string;
 };
+
+// A proposal is a subset of ConfigRoom with only the relevant fields. It is safer than a Partial<ConfigRoom>
+export type ConfigProposal = {
+    readonly partType: IPartType;
+    readonly firstPlayer: IFirstPlayer;
+    readonly maximalMoveDuration: number;
+    readonly totalPartDuration: number;
+    readonly rulesConfig: RulesConfig;
+}
 
 export type ConfigRoomDocument = FirestoreDocument<ConfigRoom>;
 
@@ -47,6 +56,7 @@ export class FirstPlayer {
 }
 export type IPartType = 'STANDARD' | 'BLITZ' | 'CUSTOM';
 
+// TODO: rename (gametype) and do something similar to backend stuff
 export class PartType {
     private constructor(public value: IPartType) {}
 
@@ -71,7 +81,7 @@ export class PartType {
     }
 }
 
-// TODO: rename to ConfigRoomStatus?
+// TODO: rename to ConfigRoomStatus? Don't use the I thing
 export type IPartStatus = 'Created' | 'ConfigProposed' | 'Started' | 'Finished';
 
 export class PartStatus {

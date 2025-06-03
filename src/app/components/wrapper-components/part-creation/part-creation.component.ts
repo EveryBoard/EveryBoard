@@ -51,7 +51,7 @@ type GameCreationViewInfo = {
 }
 @Component({
     selector: 'app-game-creation',
-    // TODO: rename file to game-creation?
+    // TODO: rename file to game-creation?!
     templateUrl: './part-creation.component.html',
 })
 @Debug.log
@@ -305,14 +305,16 @@ export class GameCreationComponent extends BaseWrapperComponent implements OnIni
 
     public async proposeConfig(): Promise<void> {
         const partType: string = this.getForm('partType').value;
-        const maxMoveDuration: number = this.getForm('maximalMoveDuration').value;
+        const maximalMoveDuration: number = this.getForm('maximalMoveDuration').value;
         const firstPlayer: string = this.getForm('firstPlayer').value;
         const totalPartDuration: number = this.getForm('totalPartDuration').value;
-        return this.configRoomService.proposeConfig(PartType.of(partType),
-                                                    maxMoveDuration,
-                                                    FirstPlayer.of(firstPlayer),
-                                                    totalPartDuration,
-                                                    this.rulesConfig);
+        return this.configRoomService.proposeConfig({
+            partType: partType as IPartType,
+            firstPlayer: firstPlayer as IFirstPlayer,
+            maximalMoveDuration,
+            totalPartDuration,
+            rulesConfig: this.rulesConfig.getOrElse({}),
+        });
     }
 
     public async cancelGameCreation(): Promise<void> {

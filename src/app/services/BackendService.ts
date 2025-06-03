@@ -72,7 +72,7 @@ export abstract class AbstractBackendService {
 
     protected receive(message: BackendMessage): void {
         const callback: MGPOptional<Callback> = this.callbacks.get(message.tag);
-        Utils.assert(callback.isPresent(), `Received a message with no callback registered: ${message}`);
+        Utils.assert(callback.isPresent(), `Received a message with no callback registered: ${message.tag}`);
         callback.get()(message);
     }
 
