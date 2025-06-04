@@ -10,7 +10,7 @@ import { CurrentGameService } from 'src/app/services/CurrentGameService';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { Debug } from 'src/app/utils/Debug';
 import { BackendService } from 'src/app/services/BackendService';
-import { ConfigRoom, PartStatus } from 'src/app/domain/ConfigRoom';
+import { ConfigRoom, Status } from 'src/app/domain/ConfigRoom';
 import { GameInfo } from '../pick-game/pick-game.component';
 
 type Tab = 'games' | 'create' | 'chat';
@@ -85,7 +85,7 @@ export class LobbyComponent implements OnInit, OnDestroy {
     public async joinGame(configRoom: WithId<ConfigRoom>): Promise<void> {
         const gameId: string = configRoom.id;
         const gameName: string = configRoom.data.gameName;
-        const gameStarted: boolean = configRoom.data.partStatus >= PartStatus.PART_STARTED.value;
+        const gameStarted: boolean = Status.hasStarted(configRoom.data.status);
         const canUserJoin: MGPValidation = this.currentGameService.canUserJoin(gameId, gameStarted);
         if (canUserJoin.isSuccess()) {
             await this.router.navigate(['/play', gameName, gameId]);

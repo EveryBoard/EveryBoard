@@ -31,7 +31,7 @@ describe('ChatService', () => {
             spyOn(backendService, 'send').and.callThrough();
             // Given a chat
             // When sending a message
-            await chatService.addMessage('hello');
+            await chatService.sendMessage('hello');
             // Then the message is forwarded to the backend
             expect(backendService.send).toHaveBeenCalledOnceWith(['ChatSend', { message: 'hello' }]);
         }));

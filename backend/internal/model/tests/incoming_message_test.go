@@ -18,7 +18,7 @@ func TestMarshalConfigProposal(t *testing.T) {
 		FirstPlayer: model.FirstPlayerCreator,
 		RulesConfig: json.RawMessage(`{"width":42,"height":42}`),
 	}
-	json := `{"partType":"BLITZ","maximalMoveDuration":30,"totalPartDuration":1200,"firstPlayer":"CREATOR","rulesConfig":{"width":42,"height":42}}`
+	json := `{"gameType":"Blitz","moveDuration":30,"gameDuration":1200,"firstPlayer":"Creator","rulesConfig":{"width":42,"height":42}}`
 	ExpectMarshallingToWork(t, original, json)
 }
 

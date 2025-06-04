@@ -22,7 +22,7 @@ import { ActivatedRouteStub, expectValidRouting, prepareUnsubscribeCheck, Simple
 import { MGPOptional, Utils } from '@everyboard/lib';
 
 import { ConfigRoomMocks } from 'src/app/domain/ConfigRoomMocks.spec';
-import { FirstPlayer, PartStatus, PartType, ConfigRoom } from 'src/app/domain/ConfigRoom';
+import { FirstPlayer, Status, PartType, ConfigRoom } from 'src/app/domain/ConfigRoom';
 import { Part } from 'src/app/domain/Part';
 import { PartMocks } from 'src/app/domain/PartMocks';
 import { CurrentGame } from 'src/app/domain/User';
@@ -250,7 +250,7 @@ describe('PartCreationComponent', () => {
                 const infoMessage: string = UserMocks.OPPONENT.username + ' left the game, please pick another opponent.';
                 await testUtils.expectToDisplayInfoMessage(infoMessage, async() => {
                     await receiveConfigRoomUpdate({
-                        partStatus: PartStatus.PART_CREATED.value,
+                        status: Status.PART_CREATED,
                         chosenOpponent: null,
                     });
                 });
@@ -396,11 +396,11 @@ describe('PartCreationComponent', () => {
         });
         describe('Config proposal', () => {
             it('should send what creator sees, not what is stored in the configRoom', fakeAsync(async() => {
-                // Given a component where creator has changed the maximalMoveDuration and totalPartDuration
+                // Given a component where creator has changed the moveDuration and gameDuration
                 awaitComponentInitialization();
-                await clickElement('#partTypeCustom');
-                Utils.getNonNullable(component.configFormGroup.get('maximalMoveDuration')).setValue(100);
-                Utils.getNonNullable(component.configFormGroup.get('totalPartDuration')).setValue(1000);
+                await clickElement('#gameTypeCustom');
+                Utils.getNonNullable(component.configFormGroup.get('moveDuration')).setValue(100);
+                Utils.getNonNullable(component.configFormGroup.get('gameDuration')).setValue(1000);
 
                 // When a candidate arrives and is proposed a config
                 await mockCandidateArrival();
@@ -410,11 +410,11 @@ describe('PartCreationComponent', () => {
 
                 // Then the data sent should be what creator saw
                 expect(configRoomDAO.update).toHaveBeenCalledOnceWith('configRoomId', {
-                    partStatus: PartStatus.CONFIG_PROPOSED.value,
-                    partType: PartType.CUSTOM.value,
-                    maximalMoveDuration: 100,
-                    totalPartDuration: 1000,
-                    firstPlayer: FirstPlayer.RANDOM.value,
+                    status: Status.CONFIG_PROPOSED,
+                    gameType: PartType.CUSTOM,
+                    moveDuration: 100,
+                    gameDuration: 1000,
+                    firstPlayer: FirstPlayer.RANDOM,
                     rulesConfig: {},
                 });
                 component.stopSendingPresenceTokensAndObservingUsersIfNeeded();
@@ -424,7 +424,7 @@ describe('PartCreationComponent', () => {
                 awaitComponentInitialization();
                 await mockCandidateArrival();
                 await chooseOpponent();
-                await clickElement('#partTypeBlitz');
+                await clickElement('#gameTypeBlitz');
 
                 spyOn(configRoomDAO, 'update').and.callThrough();
 
@@ -433,11 +433,11 @@ describe('PartCreationComponent', () => {
 
                 // The blitz should be part of it
                 expect(configRoomDAO.update).toHaveBeenCalledOnceWith('configRoomId', {
-                    partStatus: PartStatus.CONFIG_PROPOSED.value,
-                    partType: PartType.BLITZ.value,
-                    maximalMoveDuration: 30,
-                    totalPartDuration: 900,
-                    firstPlayer: FirstPlayer.RANDOM.value,
+                    status: PartStatus.CONFIG_PROPOSED,
+                    gameType: PartType.BLITZ,
+                    moveDuration: 30,
+                    gameDuration: 900,
+                    firstPlayer: FirstPlayer.RANDOM,
                     rulesConfig: {},
                 });
                 component.stopSendingPresenceTokensAndObservingUsersIfNeeded();
@@ -455,7 +455,7 @@ describe('PartCreationComponent', () => {
                 const proposedConfig: ConfigRoom = {
                     ...ConfigRoomMocks.getInitialRandom(MGPOptional.empty()),
                     chosenOpponent: UserMocks.OPPONENT_MINIMAL_USER,
-                    partStatus: PartStatus.CONFIG_PROPOSED.value,
+                    status: Status.CONFIG_PROPOSED,
                 };
                 expect(component.currentConfigRoom).toEqual(proposedConfig);
                 component.stopSendingPresenceTokensAndObservingUsersIfNeeded();
@@ -493,7 +493,7 @@ describe('PartCreationComponent', () => {
                 const proposedConfig: ConfigRoom = {
                     ...ConfigRoomMocks.getInitialRandom(MGPOptional.empty()),
                     chosenOpponent: UserMocks.OPPONENT_MINIMAL_USER,
-                    partStatus: PartStatus.CONFIG_PROPOSED.value,
+                    status: Status.CONFIG_PROPOSED,
                     rulesConfig: {
                         chaussettes_de_crepes: 5,
                     },
@@ -527,8 +527,8 @@ describe('PartCreationComponent', () => {
                 await clickElement('#firstPlayerOpponent');
 
                 // Then form is updated
-                const firstPlayer: string = Utils.getNonNullable(component.configFormGroup.get('firstPlayer')).value;
-                expect(firstPlayer).toEqual(FirstPlayer.CHOSEN_PLAYER.value);
+                const firstPlayer: string = Utils.getNonNullable(component.configFormGroup.get('firstPlayer'));
+                expect(firstPlayer).toEqual(FirstPlayer.CHOSEN_PLAYER);
                 component.stopSendingPresenceTokensAndObservingUsersIfNeeded();
             }));
             it('should show detailed timing options when choosing a custom part type', fakeAsync(async() => {
@@ -536,7 +536,7 @@ describe('PartCreationComponent', () => {
                 awaitComponentInitialization();
 
                 // When setting the part type to custom
-                await clickElement('#partTypeCustom');
+                await clickElement('#gameTypeCustom');
 
                 // Then the detailed timing options are shown
                 expectElementToExist('#customTime');
@@ -547,39 +547,39 @@ describe('PartCreationComponent', () => {
                 awaitComponentInitialization();
 
                 // When setting the part type to 'blitz'
-                await clickElement('#partTypeBlitz');
+                await clickElement('#gameTypeBlitz');
                 testUtils.detectChanges();
 
                 // Then the timings in the form are updated
-                const maximalMoveDuration: number = Utils.getNonNullable(component.configFormGroup.get('maximalMoveDuration')).value;
-                expect(maximalMoveDuration).toBe(PartType.BLITZ_MOVE_DURATION);
-                const totalPartDuration: number = Utils.getNonNullable(component.configFormGroup.get('totalPartDuration')).value;
-                expect(totalPartDuration).toBe(PartType.BLITZ_PART_DURATION);
+                const moveDuration: number = Utils.getNonNullable(component.configFormGroup.get('moveDuration'));
+                expect(moveDuration).toBe(PartType.BLITZ_MOVE_DURATION);
+                const gameDuration: number = Utils.getNonNullable(component.configFormGroup.get('totalPartDuration'));
+                expect(gameDuration).toBe(PartType.BLITZ_PART_DURATION);
                 component.stopSendingPresenceTokensAndObservingUsersIfNeeded();
             }));
             it('should update the timings when reselecting normal part', fakeAsync(async() => {
                 // Given a part creation with blitz selected
                 awaitComponentInitialization();
-                await clickElement('#partTypeBlitz');
+                await clickElement('#gameTypeBlitz');
 
                 // When setting the part type back to standard
-                await clickElement('#partTypeStandard');
+                await clickElement('#gameTypeStandard');
 
                 // Then the timings are updated
-                const maximalMoveDuration: number = Utils.getNonNullable(component.configFormGroup.get('maximalMoveDuration')).value;
-                expect(maximalMoveDuration).toBe(PartType.NORMAL_MOVE_DURATION);
-                const totalPartDuration: number = Utils.getNonNullable(component.configFormGroup.get('totalPartDuration')).value;
-                expect(totalPartDuration).toBe(PartType.NORMAL_PART_DURATION);
+                const moveDuration: number = Utils.getNonNullable(component.configFormGroup.get('moveDuration'));
+                expect(moveDuration).toBe(PartType.NORMAL_MOVE_DURATION);
+                const gameDuration: number = Utils.getNonNullable(component.configFormGroup.get('totalPartDuration'));
+                expect(gameDuration).toBe(PartType.NORMAL_PART_DURATION);
                 component.stopSendingPresenceTokensAndObservingUsersIfNeeded();
             }));
             it('should go back to created status when clicking on review config button', fakeAsync(async() => {
                 // Given a part creation where the config has been proposed
                 awaitComponentInitialization();
                 await receiveConfigRoomUpdate({
-                    partStatus: PartStatus.CONFIG_PROPOSED.value,
-                    maximalMoveDuration: 10,
-                    totalPartDuration: 60,
-                    firstPlayer: FirstPlayer.CREATOR.value,
+                    status: PartStatus.CONFIG_PROPOSED,
+                    moveDuration: 10,
+                    gameDuration: 60,
+                    firstPlayer: FirstPlayer.CREATOR,
                 });
 
                 spyOn(configRoomDAO, 'update').and.callThrough();
@@ -589,7 +589,7 @@ describe('PartCreationComponent', () => {
 
                 // Then the part is set back to created
                 expect(configRoomDAO.update).toHaveBeenCalledWith('configRoomId', {
-                    partStatus: PartStatus.PART_CREATED.value,
+                    status: PartStatus.PART_CREATED,
                 });
                 component.stopSendingPresenceTokensAndObservingUsersIfNeeded();
             }));
@@ -597,14 +597,14 @@ describe('PartCreationComponent', () => {
                 // Given a part creation with some changes to the config
                 awaitComponentInitialization();
                 await clickElement('#firstPlayerCreator');
-                await clickElement('#partTypeBlitz');
+                await clickElement('#gameTypeBlitz');
 
                 // When a new candidate appears
                 await mockCandidateArrival();
 
                 // Then the config does not change
                 expectElementToHaveClass('#firstPlayerCreator', 'is-selected');
-                expectElementToHaveClass('#partTypeBlitz', 'is-selected');
+                expectElementToHaveClass('#gameTypeBlitz', 'is-selected');
                 component.stopSendingPresenceTokensAndObservingUsersIfNeeded();
             }));
         });
@@ -801,10 +801,10 @@ describe('PartCreationComponent', () => {
 
                 // When the config is proposed
                 await receiveConfigRoomUpdate({
-                    partStatus: PartStatus.CONFIG_PROPOSED.value,
-                    maximalMoveDuration: 10,
-                    totalPartDuration: 60,
-                    firstPlayer: FirstPlayer.CREATOR.value,
+                    status: PartStatus.CONFIG_PROPOSED,
+                    moveDuration: 10,
+                    gameDuration: 60,
+                    firstPlayer: FirstPlayer.CREATOR,
                 });
 
                 // Then the candidate can accept the config
@@ -818,7 +818,7 @@ describe('PartCreationComponent', () => {
                 awaitComponentInitialization();
                 await receiveConfigRoomUpdate({
                     ...ConfigRoomMocks.withProposedConfig(MGPOptional.empty()),
-                    firstPlayer: FirstPlayer.CREATOR.value,
+                    firstPlayer: FirstPlayer.CREATOR,
                 });
 
                 // When accepting the config
@@ -828,12 +828,12 @@ describe('PartCreationComponent', () => {
                 // Then the game start notification is emitted
                 expect(component.gameStartNotification.emit).toHaveBeenCalledWith({
                     ...ConfigRoomMocks.withAcceptedConfig(MGPOptional.empty()),
-                    firstPlayer: FirstPlayer.CREATOR.value,
+                    firstPlayer: FirstPlayer.CREATOR,
                 });
                 // the configRoom is updated
                 expect(component.currentConfigRoom).toEqual({
                     ...ConfigRoomMocks.withAcceptedConfig(MGPOptional.empty()),
-                    firstPlayer: FirstPlayer.CREATOR.value,
+                    firstPlayer: FirstPlayer.CREATOR,
                 });
                 // and the part is set to starting
                 const currentPart: Part = (await partDAO.read('configRoomId')).get();

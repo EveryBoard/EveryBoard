@@ -7,6 +7,7 @@ import { Utils } from '@everyboard/lib';
 import { ChatService } from '../../../services/ChatService';
 import { Message } from '../../../domain/Message';
 import { Debug } from 'src/app/utils/Debug';
+import { formatDate } from '@angular/common';
 
 @Component({
     selector: 'app-chat',
@@ -57,8 +58,8 @@ export class ChatComponent implements OnInit, AfterViewChecked, OnDestroy {
         this.scrollToBottomIfNeeded();
     }
 
-    public onMessageReceived(message: Message): void {
-        this.chat.push(message)
+    private onMessageReceived(message: Message): void {
+        this.chat.push(message);
         const nbMessages: number = this.chat.length;
         if (this.visible && this.isNearBottom) {
             this.readMessages = nbMessages;
@@ -121,7 +122,7 @@ export class ChatComponent implements OnInit, AfterViewChecked, OnDestroy {
     public async sendMessage(): Promise<void> {
         const content: string = this.userMessage;
         this.userMessage = ''; // clears it first to seem more responsive
-        await this.chatService.addMessage(content);
+        await this.chatService.sendMessage(content);
     }
 
     public switchChatVisibility(): void {
@@ -133,5 +134,9 @@ export class ChatComponent implements OnInit, AfterViewChecked, OnDestroy {
             this.scrollToBottom();
             this.readMessages = this.chat.length;
         }
+    }
+
+    public formatTimestamp(timestamp: number): string {
+        return formatDate(timestamp, 'HH:mm:ss', 'en-US');
     }
 }

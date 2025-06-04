@@ -1,11 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Subscription } from 'rxjs';
 
-import { MGPOptional } from '@everyboard/lib';
-
-import { FirstPlayer, ConfigRoom, PartType, ConfigProposal } from '../domain/ConfigRoom';
+import { ConfigRoom, ConfigProposal } from '../domain/ConfigRoom';
 import { MinimalUser } from '../domain/MinimalUser';
-import { RulesConfig } from '../jscaip/RulesConfigUtil';
 import { BackendService, BackendMessage } from './BackendService';
 import { Debug } from '../utils/Debug';
 import { Localized } from '../utils/LocaleUtils';
@@ -14,21 +11,38 @@ export class ConfigRoomServiceFailure {
     public static readonly GAME_DOES_NOT_EXIST: Localized = () => $localize`This game does not exist!`;
 }
 
+export abstract class AbstractConfigRoomService {
+    public abstract join(gameId: string,
+                         configRoomUpdate: (configRoom: ConfigRoom) => void,
+                         candidateJoined: (candidate: MinimalUser) => void,
+                         candidateLeft: (candidate: MinimalUser) => void,
+                         error: (reason: string) => void)
+    : Promise<Subscription>;
+
+    public abstract proposeConfig(proposal: ConfigProposal): Promise<void>;
+
+    public abstract selectOpponent(opponent: MinimalUser): Promise<void>;
+
+    public abstract reviewConfig(): Promise<void>;
+
+    public abstract acceptConfig(): Promise<void>;
+}
+
 @Injectable({
     providedIn: 'root',
 })
 @Debug.log
-export class ConfigRoomService {
+export class ConfigRoomService extends AbstractConfigRoomService {
 
-    public constructor(private readonly backendService: BackendService)
-    {
+    public constructor(private readonly backendService: BackendService) {
+        super();
     }
 
-    public async join(gameId: string,
-                      configRoomUpdate: (configRoom: ConfigRoom) => void,
-                      candidateJoined: (candidate: MinimalUser) => void,
-                      candidateLeft: (candidate: MinimalUser) => void,
-                      error: (reason: string) => void)
+    public override async join(gameId: string,
+                               configRoomUpdate: (configRoom: ConfigRoom) => void,
+                               candidateJoined: (candidate: MinimalUser) => void,
+                               candidateLeft: (candidate: MinimalUser) => void,
+                               error: (reason: string) => void)
     : Promise<Subscription>
     {
         const gameSubscription: Subscription = await this.backendService.subscribeToConfigRoom(gameId);
@@ -58,22 +72,22 @@ export class ConfigRoomService {
     }
 
     /** Propose a config to the opponent */
-    public async proposeConfig(proposal: ConfigProposal): Promise<void> {
+    public override async proposeConfig(proposal: ConfigProposal): Promise<void> {
         await this.backendService.send(['ProposeConfig', { config: proposal }]);
     }
 
     /** Select an opponent */
-    public async selectOpponent(opponent: MinimalUser): Promise<void> {
+    public override async selectOpponent(opponent: MinimalUser): Promise<void> {
         await this.backendService.send(['SelectOpponent', { opponent }]);
     }
 
     /** Review a config proposed to the opponent */
-    public async reviewConfig(): Promise<void> {
+    public override async reviewConfig(): Promise<void> {
         await this.backendService.send(['ReviewConfig']);
     }
 
     /** Accept a game config */
-    public async acceptConfig(): Promise<void> {
+    public override async acceptConfig(): Promise<void> {
         await this.backendService.send(['AcceptConfig']);
     }
 

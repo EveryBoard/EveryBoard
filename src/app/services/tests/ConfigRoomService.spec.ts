@@ -6,8 +6,8 @@ import { MGPOptional } from '@everyboard/lib';
 import { ConfigRoomService } from '../ConfigRoomService';
 import { BackendServiceMock } from './BackendServiceMock.spec';
 import { AbstractBackendService, BackendService } from '../BackendService';
-import { ConfigProposal, ConfigRoom, FirstPlayer, PartType } from 'src/app/domain/ConfigRoom';
-import { ConfigRoomMocks } from 'src/app/domain/ConfigRoomMocks.spec';
+import { ConfigProposal, ConfigRoom, FirstPlayer, GameType } from 'src/app/domain/ConfigRoom';
+import { ConfigRoomMocks } from 'src/app/domain/ConfigRoomMocks';
 import { MinimalUser } from 'src/app/domain/MinimalUser';
 import { UserMocks } from 'src/app/domain/UserMocks.spec';
 import { Subscription } from 'rxjs';
@@ -140,10 +140,10 @@ describe('ConfigRoomService', () => {
         it('should send a ProposeConfig message', fakeAsync(async() => {
             // Given a config proposal
             const proposal: ConfigProposal = {
-                partType: PartType.STANDARD.value,
-                firstPlayer: FirstPlayer.RANDOM.value,
-                maximalMoveDuration: 42,
-                totalPartDuration: 4200,
+                gameType: GameType.STANDARD,
+                firstPlayer: FirstPlayer.RANDOM,
+                moveDuration: 42,
+                gameDuration: 4200,
                 rulesConfig: {},
             };
             spyOn(backendService, 'send').and.callThrough();

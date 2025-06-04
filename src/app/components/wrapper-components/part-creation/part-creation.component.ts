@@ -6,7 +6,7 @@ import { Subscription, Subject } from 'rxjs';
 
 import { MGPOptional, Utils } from '@everyboard/lib';
 
-import { FirstPlayer, IFirstPlayer, ConfigRoom, IPartType, PartStatus, PartType, IPartStatus } from '../../../domain/ConfigRoom';
+import { FirstPlayer, ConfigRoom, GameType, GameDuration, Status } from '../../../domain/ConfigRoom';
 import { ConfigRoomService } from '../../../services/ConfigRoomService';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { AuthUser, ConnectedUserService } from 'src/app/services/ConnectedUserService';
@@ -38,11 +38,11 @@ type GameCreationViewInfo = {
     userIsObserver: boolean;
 
     creator?: string;
-    firstPlayer: IFirstPlayer;
+    firstPlayer: FirstPlayer;
     firstPlayerClasses: { [key: string]: string[] },
-    partType: IPartType;
-    partTypeClasses: { [key: string]: string[] },
-    partTypeName?: string,
+    gameType: GameType;
+    gameTypeClasses: { [key: string]: string[] },
+    gameTypeName?: string,
     maximalMoveDuration?: number;
     totalPartDuration?: number;
     candidates: string[];
@@ -70,7 +70,8 @@ export class GameCreationComponent extends BaseWrapperComponent implements OnIni
     public static TOKEN_INTERVAL: number = 5 * 1000;
     public static TOKEN_TIMEOUT: number = 5 * 1000 * 2;
 
-    public partType: typeof PartType = PartType;
+    public GameType: typeof GameType = GameType;
+    public GameDuration: typeof GameDuration = GameDuration;
 
     @Input() gameId: string;
 
@@ -88,10 +89,10 @@ export class GameCreationComponent extends BaseWrapperComponent implements OnIni
         userIsCreator: false,
         userIsChosenOpponent: false,
         userIsObserver: false,
-        partType: 'STANDARD',
-        partTypeClasses: { 'STANDARD': ['is-selected', 'is-primary'], 'BLITZ': [], 'CUSTOM': [] },
-        firstPlayer: 'RANDOM',
-        firstPlayerClasses: { 'CREATOR': [], 'RANDOM': ['is-selected', 'is-primary'], 'CHOSEN_PLAYER': [] },
+        gameType: GameType.STANDARD,
+        gameTypeClasses: { 'Standard': ['is-selected', 'is-primary'], 'Blitz': [], 'Custom': [] },
+        firstPlayer: FirstPlayer.RANDOM,
+        firstPlayerClasses: { 'Creator': [], 'Random': ['is-selected', 'is-primary'], 'ChosenOpponent': [] },
         candidateClasses: {},
         candidates: [],
     };
@@ -141,16 +142,15 @@ export class GameCreationComponent extends BaseWrapperComponent implements OnIni
 
     private createForms(): void {
         this.configFormGroup = this.formBuilder.group({
-            firstPlayer: [FirstPlayer.RANDOM.value, Validators.required],
-            maximalMoveDuration: [PartType.NORMAL_MOVE_DURATION, Validators.required],
-            partType: ['STANDARD', Validators.required],
-            totalPartDuration: [PartType.NORMAL_PART_DURATION, Validators.required],
+            firstPlayer: [FirstPlayer.RANDOM, Validators.required],
+            maximalMoveDuration: [GameDuration.NORMAL_MOVE_DURATION, Validators.required],
+            gameType: [GameType.STANDARD, Validators.required],
+            totalPartDuration: [GameDuration.NORMAL_GAME_DURATION, Validators.required],
             chosenOpponent: ['', Validators.required],
         });
     }
 
     private async joinAndSubscribeToConfigRoom(): Promise<void> {
-        // TODO: generalize onError for other backend subscriptions
         this.configRoomSubscription = await this.configRoomService.join(
             this.gameId,
             (configRoom: ConfigRoom): Promise<void> => this.onConfigRoomUpdate(configRoom),
@@ -190,19 +190,19 @@ export class GameCreationComponent extends BaseWrapperComponent implements OnIni
                 }
                 this.viewInfo.candidateClasses[opponent] = ['is-selected'];
                 this.viewInfo.chosenOpponent = opponent;
-                const partStatus: IPartStatus = Utils.getNonNullable(this.currentConfigRoom).partStatus;
-                const configProposed: boolean = partStatus === PartStatus.CONFIG_PROPOSED.value;
+                const status: Status = Utils.getNonNullable(this.currentConfigRoom).status;
+                const configProposed: boolean = status === Status.CONFIG_PROPOSED;
                 this.viewInfo.canProposeConfig = configProposed === false && opponent !== '';
                 if (this.rulesConfigurationComponent != null) {
                     this.rulesConfigurationComponent.setEditable(configProposed === false);
                 }
             });
-        this.getForm('partType').valueChanges
-            .pipe(takeUntil(this.ngUnsubscribe)).subscribe((partType: IPartType) => {
-                this.viewInfo.partTypeClasses[this.viewInfo.partType] = [];
-                this.viewInfo.partTypeClasses[partType] = ['is-primary', 'is-selected'];
-                this.viewInfo.partType = partType;
-                this.viewInfo.showCustomTime = partType === 'CUSTOM';
+        this.getForm('gameType').valueChanges
+            .pipe(takeUntil(this.ngUnsubscribe)).subscribe((gameType: GameType) => {
+                this.viewInfo.gameTypeClasses[this.viewInfo.gameType] = [];
+                this.viewInfo.gameTypeClasses[gameType] = ['is-primary', 'is-selected'];
+                this.viewInfo.gameType = gameType;
+                this.viewInfo.showCustomTime = gameType === GameType.CUSTOM;
             });
         this.getForm('maximalMoveDuration').valueChanges
             .pipe(takeUntil(this.ngUnsubscribe)).subscribe((maximalMoveDuration: number) => {
@@ -213,7 +213,7 @@ export class GameCreationComponent extends BaseWrapperComponent implements OnIni
                 this.viewInfo.totalPartDuration = totalPartDuration;
             });
         this.getForm('firstPlayer').valueChanges
-            .pipe(takeUntil(this.ngUnsubscribe)).subscribe((firstPlayer: IFirstPlayer) => {
+            .pipe(takeUntil(this.ngUnsubscribe)).subscribe((firstPlayer: FirstPlayer) => {
                 this.viewInfo.firstPlayerClasses[this.viewInfo.firstPlayer] = [];
                 this.viewInfo.firstPlayerClasses[firstPlayer] = ['is-primary', 'is-selected'];
                 this.viewInfo.firstPlayer = firstPlayer;
@@ -223,43 +223,43 @@ export class GameCreationComponent extends BaseWrapperComponent implements OnIni
     private updateViewInfo(configRoom: ConfigRoom): void {
         const authUser: AuthUser = this.connectedUserService.user.get();
 
-        this.viewInfo.canReviewConfig = configRoom.partStatus === PartStatus.CONFIG_PROPOSED.value;
-        this.viewInfo.canEditConfig = configRoom.partStatus !== PartStatus.CONFIG_PROPOSED.value;
+        this.viewInfo.canReviewConfig = configRoom.status === Status.CONFIG_PROPOSED;
+        this.viewInfo.canEditConfig = configRoom.status !== Status.CONFIG_PROPOSED;
         this.viewInfo.userIsCreator = this.userIsCreator(configRoom);
         this.viewInfo.userIsChosenOpponent = authUser.id === configRoom.chosenOpponent?.id;
         this.viewInfo.userIsObserver =
                 this.viewInfo.userIsChosenOpponent === false && this.viewInfo.userIsCreator === false;
-        this.viewInfo.creatorIsModifyingConfig = configRoom.partStatus !== PartStatus.CONFIG_PROPOSED.value;
-        this.viewInfo.showCustomTime = this.getForm('partType').value === 'CUSTOM';
+        this.viewInfo.creatorIsModifyingConfig = configRoom.status !== Status.CONFIG_PROPOSED;
+        this.viewInfo.showCustomTime = this.getForm('gameType').value === GameType.CUSTOM;
 
         this.viewInfo.creator = configRoom.creator.name;
         this.viewInfo.candidates = this.candidates.map((candidate: MinimalUser) => candidate.name);
         if (this.userIsCreator(configRoom)) {
             this.setDataForCreator(configRoom);
         } else {
-            this.viewInfo.maximalMoveDuration = configRoom.maximalMoveDuration;
-            this.viewInfo.totalPartDuration = configRoom.totalPartDuration;
-            this.viewInfo.partType = configRoom.partType;
+            this.viewInfo.maximalMoveDuration = configRoom.moveDuration;
+            this.viewInfo.totalPartDuration = configRoom.gameDuration;
+            this.viewInfo.gameType = configRoom.gameType;
             this.viewInfo.chosenOpponent = configRoom.chosenOpponent?.name;
             this.viewInfo.firstPlayer = configRoom.firstPlayer;
         }
-        switch (configRoom.partType) {
-            case 'CUSTOM':
-                this.viewInfo.partTypeName = $localize`custom`;
+        switch (configRoom.gameType) {
+            case GameType.CUSTOM:
+                this.viewInfo.gameTypeName = $localize`custom`;
                 break;
-            case 'BLITZ':
-                this.viewInfo.partTypeName = $localize`blitz`;
+            case GameType.BLITZ:
+                this.viewInfo.gameTypeName = $localize`blitz`;
                 break;
-            case 'STANDARD':
-                this.viewInfo.partTypeName = $localize`standard`;
+            case GameType.STANDARD:
+                this.viewInfo.gameTypeName = $localize`standard`;
                 break;
         }
         this.cdr.detectChanges();
     }
 
     private setDataForCreator(configRoom: ConfigRoom): void {
-        this.viewInfo.maximalMoveDuration = this.viewInfo.maximalMoveDuration ?? configRoom.maximalMoveDuration;
-        this.viewInfo.totalPartDuration = this.viewInfo.totalPartDuration ?? configRoom.totalPartDuration;
+        this.viewInfo.maximalMoveDuration = this.viewInfo.maximalMoveDuration ?? configRoom.moveDuration;
+        this.viewInfo.totalPartDuration = this.viewInfo.totalPartDuration ?? configRoom.gameDuration;
         let opponent: string | undefined = this.viewInfo.chosenOpponent;
         if (opponent == null || opponent === '') {
             opponent = configRoom.chosenOpponent?.name ?? '';
@@ -274,19 +274,19 @@ export class GameCreationComponent extends BaseWrapperComponent implements OnIni
         this.getForm('chosenOpponent').setValue(opponent);
     }
 
-    public selectFirstPlayer(firstPlayer: IFirstPlayer): void {
+    public selectFirstPlayer(firstPlayer: FirstPlayer): void {
         this.getForm('firstPlayer').setValue(firstPlayer);
     }
 
-    public selectPartType(partType: IPartType): void {
-        if (partType === 'STANDARD') {
-            this.getForm('maximalMoveDuration').setValue(PartType.NORMAL_MOVE_DURATION);
-            this.getForm('totalPartDuration').setValue(PartType.NORMAL_PART_DURATION);
-        } else if (partType === 'BLITZ') {
-            this.getForm('maximalMoveDuration').setValue(PartType.BLITZ_MOVE_DURATION);
-            this.getForm('totalPartDuration').setValue(PartType.BLITZ_PART_DURATION);
+    public selectPartType(gameType: GameType): void {
+        if (gameType === GameType.STANDARD) {
+            this.getForm('maximalMoveDuration').setValue(GameDuration.NORMAL_MOVE_DURATION);
+            this.getForm('totalPartDuration').setValue(GameDuration.NORMAL_GAME_DURATION);
+        } else if (gameType === GameType.BLITZ) {
+            this.getForm('maximalMoveDuration').setValue(GameDuration.BLITZ_MOVE_DURATION);
+            this.getForm('totalPartDuration').setValue(GameDuration.BLITZ_GAME_DURATION);
         }
-        this.getForm('partType').setValue(partType);
+        this.getForm('gameType').setValue(gameType);
     }
 
     public async selectOpponent(opponentName: string): Promise<void> {
@@ -304,15 +304,15 @@ export class GameCreationComponent extends BaseWrapperComponent implements OnIni
     }
 
     public async proposeConfig(): Promise<void> {
-        const partType: string = this.getForm('partType').value;
-        const maximalMoveDuration: number = this.getForm('maximalMoveDuration').value;
+        const gameType: string = this.getForm('gameType').value;
+        const moveDuration: number = this.getForm('moveDuration').value;
         const firstPlayer: string = this.getForm('firstPlayer').value;
-        const totalPartDuration: number = this.getForm('totalPartDuration').value;
+        const gameDuration: number = this.getForm('gameDuration').value;
         return this.configRoomService.proposeConfig({
-            partType: partType as IPartType,
-            firstPlayer: firstPlayer as IFirstPlayer,
-            maximalMoveDuration,
-            totalPartDuration,
+            gameType: gameType as GameType,
+            firstPlayer: firstPlayer as FirstPlayer,
+            moveDuration,
+            gameDuration,
             rulesConfig: this.rulesConfig.getOrElse({}),
         });
     }
@@ -369,9 +369,8 @@ export class GameCreationComponent extends BaseWrapperComponent implements OnIni
 
     private isGameStarted(configRoom: ConfigRoom | null): boolean {
         Utils.assert(configRoom != null, 'configRoom should not be null (isGameStarted)');
-        const status: IPartStatus = Utils.getNonNullable(configRoom).partStatus;
-        return status === PartStatus.PART_STARTED.value ||
-            status === PartStatus.PART_FINISHED.value;
+        const status: Status = Utils.getNonNullable(configRoom).status;
+        return status === Status.STARTED || status === Status.FINISHED;
     }
 
     private onGameStarted(): void {

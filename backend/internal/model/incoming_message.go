@@ -6,9 +6,9 @@ import (
 )
 
 type ConfigProposal struct {
-	GameType     GameType        `json:"partType"`
-	MoveDuration uint32          `json:"maximalMoveDuration"`
-	GameDuration uint32          `json:"totalPartDuration"`
+	GameType     GameType        `json:"gameType"`
+	MoveDuration uint32          `json:"moveDuration"`
+	GameDuration uint32          `json:"gameDuration"`
 	FirstPlayer  FirstPlayer     `json:"firstPlayer"`
 	RulesConfig  json.RawMessage `json:"rulesConfig"`
 }

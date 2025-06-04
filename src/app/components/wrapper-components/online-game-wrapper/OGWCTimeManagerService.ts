@@ -82,11 +82,11 @@ export class OGWCTimeManagerService {
     }
 
     private getGameDuration(): number {
-        return this.configRoom.get().totalPartDuration;
+        return this.configRoom.get().gameDuration;
     }
 
     private getMoveDuration(): number {
-        return this.configRoom.get().maximalMoveDuration;
+        return this.configRoom.get().moveDuration;
     }
 
     public onReceivedAction(currentPlayer: Player, action: GameEventAction, serverTime: number): void {

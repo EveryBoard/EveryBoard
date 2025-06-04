@@ -28,7 +28,7 @@ import { HumanDurationPipe } from 'src/app/pipes-and-directives/human-duration.p
 import { ToggleVisibilityDirective } from 'src/app/pipes-and-directives/toggle-visibility.directive';
 import { UserMocks } from 'src/app/domain/UserMocks.spec';
 import { FirebaseError } from 'firebase/app';
-import { Subscription } from 'rxjs';
+import { firstValueFrom, Subscription } from 'rxjs';
 import { GameInfo } from 'src/app/components/normal-component/pick-game/pick-game.component';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { Player } from 'src/app/jscaip/Player';
@@ -37,15 +37,15 @@ import { TestVars } from 'src/TestVars.spec';
 import { Minimax } from 'src/app/jscaip/AI/Minimax';
 import { AIDepthLimitOptions } from 'src/app/jscaip/AI/AI';
 import { SuperRules } from 'src/app/jscaip/Rules';
-// TODO import { GameServiceMock } from 'src/app/services/tests/GameServiceMock.spec';
-// TODO import { GameService } from 'src/app/services/GameService';
-// TODO import { ConfigRoomService } from 'src/app/services/ConfigRoomService';
-// TODO import { ConfigRoomServiceMock } from 'src/app/services/tests/ConfigRoomServiceMock.spec';
 import { RulesConfigurationComponent } from 'src/app/components/wrapper-components/rules-configuration/rules-configuration.component';
 import { CurrentGameServiceMock } from 'src/app/services/tests/CurrentGameServiceMock.spec';
 import { CurrentGameService } from 'src/app/services/CurrentGameService';
 import { GameServiceMock } from 'src/app/services/tests/GameServiceMock.spec';
 import { GameService } from 'src/app/services/GameService';
+import { ConfigRoomService } from 'src/app/services/ConfigRoomService';
+import { ConfigRoomServiceMock } from 'src/app/services/tests/ConfigRoomServiceMock.spec';
+import { ChatService } from 'src/app/services/ChatService';
+import { ChatServiceMock } from 'src/app/services/tests/ChatServiceMock.spec';
 
 @Component({})
 export class BlankComponent {}
@@ -652,7 +652,8 @@ export class ConfigureTestingModuleUtils {
                 { provide: ErrorLoggerService, useClass: ErrorLoggerServiceMock },
                 { provide: CurrentGameService, useClass: CurrentGameServiceMock },
                 { provide: GameService, useClass: GameServiceMock },
-                // TODO { provide: ConfigRoomService, useClass: ConfigRoomServiceMock },
+                { provide: ConfigRoomService, useClass: ConfigRoomServiceMock },
+                { provide: ChatService, useClass: ChatServiceMock },
             ],
         }).compileComponents();
     }
@@ -687,7 +688,8 @@ export class ConfigureTestingModuleUtils {
                 { provide: ErrorLoggerService, useClass: ErrorLoggerServiceMock },
                 { provide: CurrentGameService, useClass: CurrentGameServiceMock },
                 { provide: GameService, useClass: GameServiceMock },
-                // TODO { provide: ConfigRoomService, useClass: ConfigRoomServiceMock },
+                { provide: ConfigRoomService, useClass: ConfigRoomServiceMock },
+                { provide: ChatService, useClass: ChatServiceMock },
             ],
         }).compileComponents();
     }
@@ -703,9 +705,9 @@ export async function setupEmulators(): Promise<unknown> {
     }).compileComponents();
     const http: HttpClient = TestBed.inject(HttpClient);
     // Clear the content of the firestore database in the emulator
-    await http.delete('http://localhost:8080/emulator/v1/projects/my-project/databases/(default)/documents').toPromise();
+    await firstValueFrom(http.delete('http://localhost:8080/emulator/v1/projects/my-project/databases/(default)/documents'));
     // Clear the auth data in the emulator before each test
-    await http.delete('http://localhost:9099/emulator/v1/projects/my-project/accounts').toPromise();
+    await firstValueFrom(http.delete('http://localhost:9099/emulator/v1/projects/my-project/accounts'));
     return;
 }
 

@@ -88,12 +88,11 @@ type ConfigRoom struct {
 	Creator        MinimalUser  `gorm:"embedded;embeddedPrefix:creator_;not null" json:"creator"`
 	CreatorElo     float64      `gorm:"not null" json:"creatorElo"`
 	ChosenOpponent *MinimalUser `gorm:"embedded;embeddedPrefix:chosen_opponent_" json:"chosenOpponent"`
-	Status         Status       `gorm:"not null" json:"partStatus"`
+	Status         Status       `gorm:"not null" json:"status"`
 	FirstPlayer    FirstPlayer  `gorm:"not null" json:"firstPlayer"`
-	GameType       GameType     `gorm:"not null" json:"partType"`
-	MoveDuration   uint32       `gorm:"not null" json:"maximalMoveDuration"`
-	// TODO: rename json to gameDuration/moveDuration (why "part" + why "maximal" vs. "total")
-	GameDuration uint32          `gorm:"not null" json:"totalPartDuration"`
+	GameType       GameType     `gorm:"not null" json:"gameType"`
+	MoveDuration   uint32       `gorm:"not null" json:"moveDuration"`
+	GameDuration uint32          `gorm:"not null" json:"gameDuration"`
 	RulesConfig  json.RawMessage `json:"rulesConfig"`
 	GameName     string          `gorm:"not null" json:"gameName"`
 }

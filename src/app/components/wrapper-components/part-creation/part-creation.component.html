@@ -90,9 +90,9 @@
                         <div class="columns is-gapless">
                             <div class="column">
                                 <div class="button is-fullwidth dropdown is-hoverable"
-                                     id="partTypeStandard"
-                                     [ngClass]="viewInfo.partTypeClasses['STANDARD']"
-                                     (click)="selectPartType('STANDARD')"
+                                     id="gameTypeStandard"
+                                     [ngClass]="viewInfo.gameTypeClasses[GameType.STANDARD]"
+                                     (click)="selectPartType(GameType.STANDARD)"
                                 >
                                     <div class="dropdown-trigger">
                                         <span i18n>Standard time</span>
@@ -102,8 +102,8 @@
                                             <div class="dropdown-item">
                                                 <p>
                                                     <ng-container i18n>Maximal turn duration: </ng-container>
-                                                    <strong>{{ partType.NORMAL_MOVE_DURATION | humanDuration }}</strong><br/>
-                                                    <ng-container i18n>Maximal game duration: <strong>{{ partType.NORMAL_PART_DURATION | humanDuration }} per player</strong></ng-container>
+                                                    <strong>{{ GameDuration.NORMAL_MOVE_DURATION | humanDuration }}</strong><br/>
+                                                    <ng-container i18n>Maximal game duration: <strong>{{ GameDuration.NORMAL_GAME_DURATION | humanDuration }} per player</strong></ng-container>
                                                 </p>
                                             </div>
                                         </div>
@@ -112,9 +112,9 @@
                             </div>
                             <div class="column">
                                 <div class="button is-fullwidth dropdown is-hoverable"
-                                     id="partTypeBlitz"
-                                     [ngClass]="viewInfo.partTypeClasses['BLITZ']"
-                                     (click)="selectPartType('BLITZ')">
+                                     id="gameTypeBlitz"
+                                     [ngClass]="viewInfo.gameTypeClasses[GameType.BLITZ]"
+                                     (click)="selectPartType(GameType.BLITZ)">
                                     <div class="dropdown-trigger">
                                         <span i18n>Blitz</span>
                                     </div>
@@ -123,8 +123,8 @@
                                             <div class="dropdown-item">
                                                 <p>
                                                     <ng-container i18n>Maximal turn duration: </ng-container>
-                                                    <strong>{{ partType.BLITZ_MOVE_DURATION | humanDuration }}</strong><br/>
-                                                    <ng-container i18n>Maximal game duration: <strong>{{ partType.BLITZ_PART_DURATION | humanDuration }} per player</strong></ng-container>
+                                                    <strong>{{ GameDuration.BLITZ_MOVE_DURATION | humanDuration }}</strong><br/>
+                                                    <ng-container i18n>Maximal game duration: <strong>{{ GameDuration.BLITZ_PART_DURATION | humanDuration }} per player</strong></ng-container>
                                                 </p>
                                                 </div>
                                             </div>
@@ -133,9 +133,9 @@
                             </div>
                             <div class="column">
                                 <button class="button is-fullwidth"
-                                        id="partTypeCustom"
-                                        [ngClass]="viewInfo.partTypeClasses['CUSTOM']"
-                                        (click)="selectPartType('CUSTOM')"
+                                        id="gameTypeCustom"
+                                        [ngClass]="viewInfo.gameTypeClasses[GameType.CUSTOM]"
+                                        (click)="selectPartType(GameType.CUSTOM)"
                                         i18n>Custom time</button>
                             </div>
                         </div>
@@ -226,7 +226,7 @@
                     <div class="box is-fullheight">
                         <p class="title" i18n>Configuration proposal for {{ getGameName().getOrElse('') }}</p>
                         <div class="content">
-                            <p i18n>{{ viewInfo.creator }} proposes to play a {{ viewInfo.partTypeName }} game</p>
+                            <p i18n>{{ viewInfo.creator }} proposes to play a {{ viewInfo.gameTypeName }} game</p>
                             <ul>
                                 <li>
                                     <span *ngIf="viewInfo.firstPlayer === 'CREATOR'" i18n>{{ viewInfo.creator }} plays first</span>

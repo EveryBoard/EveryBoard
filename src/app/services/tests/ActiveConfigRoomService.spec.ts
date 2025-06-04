@@ -133,7 +133,7 @@ describe('ActiveConfigRoomsService', () => {
         createConfigRoom('gameId', configRoom);
 
         // When a config room is updated
-        updateConfigRoom('gameId', { ...configRoom, firstPlayer: FirstPlayer.RANDOM.value } );
+        updateConfigRoom('gameId', { ...configRoom, firstPlayer: FirstPlayer.RANDOM } );
 
         // Then there should be one config room left
         expect(seenRooms.size()).toBe(1);
@@ -154,11 +154,11 @@ describe('ActiveConfigRoomsService', () => {
         createConfigRoom('otherGameId', configRoomThatWontChange);
 
         // When a config room is updated
-        updateConfigRoom('gameId', { ...configRoomToBeModified, firstPlayer: FirstPlayer.RANDOM.value });
+        updateConfigRoom('gameId', { ...configRoomToBeModified, firstPlayer: FirstPlayer.RANDOM });
 
         // Then that config room and only that one should be updated
         expect(seenRooms.size()).toBe(2);
-        expect(seenRooms.get('gameId').get().firstPlayer).toEqual(FirstPlayer.RANDOM.value);
+        expect(seenRooms.get('gameId').get().firstPlayer).toEqual(FirstPlayer.RANDOM);
         expect(seenRooms.get('otherGameId').get()).toEqual(configRoomThatWontChange);
 
         subscription.unsubscribe();

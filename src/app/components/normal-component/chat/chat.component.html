@@ -20,7 +20,7 @@
              (scroll)="updateCurrentScrollPosition()"
         >
             <p *ngFor="let msg of chat">
-                [{{ msg.timestamp | timestamp }}] <b class="chat-sender">{{ msg.sender.name }}</b>:<span class="chat-message">{{ msg.content }}</span>
+                [{{ formatTimestamp(msg.timestamp) }}] <b class="chat-sender">{{ msg.sender.name }}</b>:<span class="chat-message">{{ msg.content }}</span>
             </p>
         </div>
     </div>

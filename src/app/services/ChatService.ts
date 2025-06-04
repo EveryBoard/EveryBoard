@@ -5,25 +5,32 @@ import { Message } from '../domain/Message';
 import { BackendService, BackendMessage } from './BackendService';
 import { Subscription } from 'rxjs';
 
+export abstract class AbstractChatService {
+    public abstract subscribeToMessages(callback: (message: Message) => void): Subscription;
+
+    public abstract sendMessage(message: string): Promise<void>;
+}
+
 @Injectable({
     providedIn: 'root',
 })
 @Debug.log
-export class ChatService {
+export class ChatService extends AbstractChatService {
 
     public constructor(private readonly backendService: BackendService) {
+        super();
     }
 
-    public async addMessage(message: string): Promise<void> {
-        await this.backendService.send(['ChatSend', { message }]);
-    }
-
-    public subscribeToMessages(callback: (message: Message) => void): Subscription {
+    public override subscribeToMessages(callback: (message: Message) => void): Subscription {
         // Make a new subscription to receive new messages
         this.backendService.setCallback('ChatMessage', (message: BackendMessage): void => {
             callback(message.getArgument('message'));
         });
         return new Subscription(() => this.backendService.removeCallback('ChatMessage'));
+    }
+
+    public override async sendMessage(message: string): Promise<void> {
+        await this.backendService.send(['ChatSend', { message }]);
     }
 
 }
