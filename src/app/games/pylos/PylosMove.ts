@@ -1,7 +1,8 @@
 import { Encoder, MGPOptional, Utils } from '@everyboard/lib';
-import { Move } from 'src/app/jscaip/Move';
+
+import { Move } from '../../../app/jscaip/Move';
 import { PylosCoord } from './PylosCoord';
-import { Localized } from 'src/app/utils/LocaleUtils';
+import { Localized } from '../../../app/utils/LocaleUtils';
 import { PylosFailure } from './PylosFailure';
 
 export class PylosMoveFailure {

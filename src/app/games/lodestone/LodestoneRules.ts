@@ -1,20 +1,21 @@
-import { Coord } from 'src/app/jscaip/Coord';
-import { Ordinal } from 'src/app/jscaip/Ordinal';
-import { GameStatus } from 'src/app/jscaip/GameStatus';
-import { GameNode } from 'src/app/jscaip/AI/GameNode';
-import { Player } from 'src/app/jscaip/Player';
-import { Rules } from 'src/app/jscaip/Rules';
-import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { Table, TableUtils } from 'src/app/jscaip/TableUtils';
 import { MGPFallible, MGPMap, MGPOptional, MGPValidation } from '@everyboard/lib';
+
+import { Coord } from '../../../app/jscaip/Coord';
+import { Ordinal } from '../../../app/jscaip/Ordinal';
+import { GameStatus } from '../../../app/jscaip/GameStatus';
+import { GameNode } from '../../../app/jscaip/AI/GameNode';
+import { Player } from '../../../app/jscaip/Player';
+import { Rules } from '../../../app/jscaip/Rules';
+import { RulesFailure } from '../../../app/jscaip/RulesFailure';
+import { Table, TableUtils } from '../../../app/jscaip/TableUtils';
 import { LodestoneFailure } from './LodestoneFailure';
 import { LodestoneCaptures, LodestoneMove } from './LodestoneMove';
 import { LodestoneOrientation, LodestoneDirection, LodestonePiece } from './LodestonePiece';
 import { LodestonePieceLodestone, LodestonePieceNone, LodestoneDescription, LodestonePiecePlayer } from './LodestonePiece';
 import { LodestoneState, LodestonePositions, LodestonePressurePlates } from './LodestoneState';
 import { LodestonePressurePlate, LodestonePressurePlatePosition, LodestonePressurePlateGroup } from './LodestoneState';
-import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
-import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
+import { NoConfig } from '../../../app/jscaip/RulesConfigUtil';
+import { PlayerNumberMap } from '../../../app/jscaip/PlayerMap';
 
 export class LodestoneNode extends GameNode<LodestoneMove, LodestoneState> {}
 

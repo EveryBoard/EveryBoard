@@ -1,12 +1,12 @@
-import { Coord } from 'src/app/jscaip/Coord';
-import { PlayerMetricHeuristic } from 'src/app/jscaip/AI/Minimax';
-import { PlayerNumberTable } from 'src/app/jscaip/PlayerNumberTable';
-import { Player } from 'src/app/jscaip/Player';
+import { Coord } from '../../../app/jscaip/Coord';
+import { PlayerMetricHeuristic } from '../../../app/jscaip/AI/Minimax';
+import { PlayerNumberTable } from '../../../app/jscaip/PlayerNumberTable';
+import { Player } from '../../../app/jscaip/Player';
 import { DvonnMove } from './DvonnMove';
 import { DvonnNode, DvonnRules } from './DvonnRules';
 import { DvonnState } from './DvonnState';
-import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
-import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { PlayerNumberMap } from '../../../app/jscaip/PlayerMap';
+import { NoConfig } from '../../../app/jscaip/RulesConfigUtil';
 
 export class DvonnMaxStacksHeuristic extends PlayerMetricHeuristic<DvonnMove, DvonnState> {
 

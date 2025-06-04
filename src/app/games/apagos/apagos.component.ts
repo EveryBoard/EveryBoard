@@ -1,9 +1,10 @@
 import { ChangeDetectorRef, Component } from '@angular/core';
-import { GameComponent } from 'src/app/components/game-components/game-component/GameComponent';
-import { MCTS } from 'src/app/jscaip/AI/MCTS';
-import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { MGPOptional, MGPValidation } from '@everyboard/lib';
+
+import { GameComponent } from '../../../app/components/game-components/game-component/GameComponent';
+import { MCTS } from '../../../app/jscaip/AI/MCTS';
+import { Player, PlayerOrNone } from '../../../app/jscaip/Player';
+import { MessageDisplayer } from '../../../app/services/MessageDisplayer';
 import { ApagosFailure } from './ApagosFailure';
 import { ApagosMove } from './ApagosMove';
 import { ApagosMoveGenerator } from './ApagosMoveGenerator';
@@ -12,7 +13,7 @@ import { ApagosSquare } from './ApagosSquare';
 import { ApagosState } from './ApagosState';
 import { ApagosFullBoardMinimax } from './ApagosFullBoardMinimax';
 import { ApagosRightmostMinimax } from './ApagosRightmostMinimax';
-import { ViewBox } from 'src/app/components/game-components/GameComponentUtils';
+import { ViewBox } from '../../../app/components/game-components/GameComponentUtils';
 
 interface PieceLocation {
 

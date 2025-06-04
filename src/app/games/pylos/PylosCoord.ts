@@ -1,7 +1,8 @@
 import { Encoder, MGPOptional, Utils } from '@everyboard/lib';
-import { Coord } from 'src/app/jscaip/Coord';
-import { Orthogonal } from 'src/app/jscaip/Orthogonal';
-import { Coord3D } from 'src/app/jscaip/Coord3D';
+
+import { Coord } from '../../../app/jscaip/Coord';
+import { Orthogonal } from '../../../app/jscaip/Orthogonal';
+import { Coord3D } from '../../../app/jscaip/Coord3D';
 
 export class PylosCoord extends Coord3D {
 

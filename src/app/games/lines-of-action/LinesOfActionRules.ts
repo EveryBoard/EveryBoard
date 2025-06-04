@@ -1,18 +1,19 @@
-import { Coord } from 'src/app/jscaip/Coord';
-import { Ordinal } from 'src/app/jscaip/Ordinal';
-import { GameNode } from 'src/app/jscaip/AI/GameNode';
-import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { Rules } from 'src/app/jscaip/Rules';
-import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { TableUtils } from 'src/app/jscaip/TableUtils';
 import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
+
+import { Coord } from '../../../app/jscaip/Coord';
+import { Ordinal } from '../../../app/jscaip/Ordinal';
+import { GameNode } from '../../../app/jscaip/AI/GameNode';
+import { Player, PlayerOrNone } from '../../../app/jscaip/Player';
+import { Rules } from '../../../app/jscaip/Rules';
+import { RulesFailure } from '../../../app/jscaip/RulesFailure';
+import { TableUtils } from '../../../app/jscaip/TableUtils';
 import { LinesOfActionFailure } from './LinesOfActionFailure';
 import { LinesOfActionMove } from './LinesOfActionMove';
 import { LinesOfActionState } from './LinesOfActionState';
-import { GameStatus } from 'src/app/jscaip/GameStatus';
-import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
-import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
-import { CoordSet } from 'src/app/jscaip/CoordSet';
+import { GameStatus } from '../../../app/jscaip/GameStatus';
+import { NoConfig } from '../../../app/jscaip/RulesConfigUtil';
+import { PlayerNumberMap } from '../../../app/jscaip/PlayerMap';
+import { CoordSet } from '../../../app/jscaip/CoordSet';
 
 export class LinesOfActionNode extends GameNode<LinesOfActionMove, LinesOfActionState> {}
 

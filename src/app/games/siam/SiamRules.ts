@@ -1,19 +1,20 @@
-import { ConfigurableRules } from 'src/app/jscaip/Rules';
+import { MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
+
+import { ConfigurableRules } from '../../../app/jscaip/Rules';
 import { SiamMove } from './SiamMove';
 import { SiamState } from './SiamState';
 import { SiamPiece } from './SiamPiece';
-import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { Coord } from 'src/app/jscaip/Coord';
-import { Orthogonal } from 'src/app/jscaip/Orthogonal';
-import { MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
+import { Player, PlayerOrNone } from '../../../app/jscaip/Player';
+import { Coord } from '../../../app/jscaip/Coord';
+import { Orthogonal } from '../../../app/jscaip/Orthogonal';
 import { SiamFailure } from './SiamFailure';
-import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { Table, TableUtils } from 'src/app/jscaip/TableUtils';
-import { GameStatus } from 'src/app/jscaip/GameStatus';
-import { GameNode } from 'src/app/jscaip/AI/GameNode';
-import { NumberConfig, RulesConfigDescription, RulesConfigDescriptionLocalizable } from 'src/app/components/wrapper-components/rules-configuration/RulesConfigDescription';
-import { MGPValidators } from 'src/app/utils/MGPValidator';
-import { Debug } from 'src/app/utils/Debug';
+import { RulesFailure } from '../../../app/jscaip/RulesFailure';
+import { Table, TableUtils } from '../../../app/jscaip/TableUtils';
+import { GameStatus } from '../../../app/jscaip/GameStatus';
+import { GameNode } from '../../../app/jscaip/AI/GameNode';
+import { NumberConfig, RulesConfigDescription, RulesConfigDescriptionLocalizable } from '../../../app/components/wrapper-components/rules-configuration/RulesConfigDescription';
+import { MGPValidators } from '../../../app/utils/MGPValidator';
+import { Debug } from '../../../app/utils/Debug';
 
 export class SiamLegalityInformation {
 

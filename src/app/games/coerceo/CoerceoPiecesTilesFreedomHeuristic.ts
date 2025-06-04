@@ -1,10 +1,11 @@
-import { Player } from 'src/app/jscaip/Player';
 import { MGPMap, MGPOptional } from '@everyboard/lib';
+
+import { Player } from '../../../app/jscaip/Player';
 import { CoerceoState } from './CoerceoState';
 import { CoerceoConfig, CoerceoNode } from './CoerceoRules';
-import { PlayerNumberTable } from 'src/app/jscaip/PlayerNumberTable';
+import { PlayerNumberTable } from '../../../app/jscaip/PlayerNumberTable';
 import { CoerceoHeuristic } from './CoerceoHeuristic';
-import { CoordSet } from 'src/app/jscaip/CoordSet';
+import { CoordSet } from '../../../app/jscaip/CoordSet';
 
 export class CoerceoPiecesTilesFreedomHeuristic extends CoerceoHeuristic {
 

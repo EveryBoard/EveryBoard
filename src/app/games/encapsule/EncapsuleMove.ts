@@ -1,6 +1,7 @@
-import { Move } from 'src/app/jscaip/Move';
-import { Coord } from 'src/app/jscaip/Coord';
 import { Encoder, MGPOptional, Utils } from '@everyboard/lib';
+
+import { Move } from '../../../app/jscaip/Move';
+import { Coord } from '../../../app/jscaip/Coord';
 import { EncapsulePiece } from './EncapsulePiece';
 
 type EncapsuleMoveFields = [MGPOptional<Coord>, Coord, MGPOptional<EncapsulePiece>];

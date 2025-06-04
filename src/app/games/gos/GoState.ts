@@ -1,8 +1,9 @@
-import { Coord } from 'src/app/jscaip/Coord';
-import { GameStateWithTable } from 'src/app/jscaip/state/GameStateWithTable';
-import { Table, TableUtils } from 'src/app/jscaip/TableUtils';
 import { MGPOptional } from '@everyboard/lib';
-import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
+
+import { Coord } from '../../../app/jscaip/Coord';
+import { GameStateWithTable } from '../../../app/jscaip/state/GameStateWithTable';
+import { Table, TableUtils } from '../../../app/jscaip/TableUtils';
+import { PlayerNumberMap } from '../../../app/jscaip/PlayerMap';
 import { GoPiece } from './GoPiece';
 import { GoPhase } from './GoPhase';
 

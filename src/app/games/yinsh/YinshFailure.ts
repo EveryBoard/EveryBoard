@@ -1,4 +1,4 @@
-import { Localized } from 'src/app/utils/LocaleUtils';
+import { Localized } from '../../../app/utils/LocaleUtils';
 import { GipfFailure } from '../gipf/GipfFailure';
 
 export class YinshFailure {

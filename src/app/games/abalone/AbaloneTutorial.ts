@@ -1,13 +1,13 @@
 import { MGPValidation } from '@everyboard/lib';
 
-import { Tutorial, TutorialStep } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStep';
-import { Coord } from 'src/app/jscaip/Coord';
-import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
-import { HexaDirection } from 'src/app/jscaip/HexaDirection';
+import { Tutorial, TutorialStep } from '../../../app/components/wrapper-components/tutorial-game-wrapper/TutorialStep';
+import { Coord } from '../../../app/jscaip/Coord';
+import { FourStatePiece } from '../../../app/jscaip/FourStatePiece';
+import { HexaDirection } from '../../../app/jscaip/HexaDirection';
 import { AbaloneState } from './AbaloneState';
 import { AbaloneMove } from './AbaloneMove';
 import { AbaloneRules } from './AbaloneRules';
-import { TutorialStepMessage } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
+import { TutorialStepMessage } from '../../../app/components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
 
 const _: FourStatePiece = FourStatePiece.EMPTY;
 const N: FourStatePiece = FourStatePiece.UNREACHABLE;

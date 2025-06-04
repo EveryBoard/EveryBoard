@@ -1,7 +1,8 @@
-import { Coord } from 'src/app/jscaip/Coord';
 import { Set } from '@everyboard/lib';
-import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
-import { PlayerOrNoneGameStateWithTable } from 'src/app/jscaip/state/PlayerOrNoneGameStateWithTable';
+
+import { Coord } from '../../../app/jscaip/Coord';
+import { PlayerNumberMap } from '../../../app/jscaip/PlayerMap';
+import { PlayerOrNoneGameStateWithTable } from '../../../app/jscaip/state/PlayerOrNoneGameStateWithTable';
 
 export class ConspirateursState extends PlayerOrNoneGameStateWithTable {
 

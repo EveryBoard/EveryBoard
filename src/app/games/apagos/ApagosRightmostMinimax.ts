@@ -1,4 +1,4 @@
-import { Minimax } from 'src/app/jscaip/AI/Minimax';
+import { Minimax } from '../../../app/jscaip/AI/Minimax';
 import { ApagosMove } from './ApagosMove';
 import { ApagosMoveGenerator } from './ApagosMoveGenerator';
 import { ApagosConfig, ApagosRules } from './ApagosRules';

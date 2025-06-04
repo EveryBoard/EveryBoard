@@ -4,10 +4,10 @@ import { GoPiece } from './GoPiece';
 import { GoMove } from './GoMove';
 import { GoLegalityInformation, GoNode, AbstractGoRules } from './AbstractGoRules';
 import { GoGroupData } from './GoGroupsData';
-import { Coord } from 'src/app/jscaip/Coord';
-import { MoveGenerator } from 'src/app/jscaip/AI/AI';
-import { Debug } from 'src/app/utils/Debug';
-import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { Coord } from '../../../app/jscaip/Coord';
+import { MoveGenerator } from '../../../app/jscaip/AI/AI';
+import { Debug } from '../../../app/utils/Debug';
+import { RulesConfig } from '../../../app/jscaip/RulesConfigUtil';
 
 @Debug.log
 export class AbstractGoMoveGenerator<C extends RulesConfig> extends MoveGenerator<GoMove, GoState, C> {

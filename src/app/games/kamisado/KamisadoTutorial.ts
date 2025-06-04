@@ -1,12 +1,13 @@
-import { KamisadoMove } from 'src/app/games/kamisado/KamisadoMove';
-import { KamisadoColor } from 'src/app/games/kamisado/KamisadoColor';
-import { KamisadoState } from 'src/app/games/kamisado/KamisadoState';
-import { KamisadoPiece } from 'src/app/games/kamisado/KamisadoPiece';
-import { Coord } from 'src/app/jscaip/Coord';
 import { MGPOptional } from '@everyboard/lib';
+
+import { KamisadoMove } from '../../../app/games/kamisado/KamisadoMove';
+import { KamisadoColor } from '../../../app/games/kamisado/KamisadoColor';
+import { KamisadoState } from '../../../app/games/kamisado/KamisadoState';
+import { KamisadoPiece } from '../../../app/games/kamisado/KamisadoPiece';
+import { Coord } from '../../../app/jscaip/Coord';
 import { Tutorial, TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { KamisadoRules } from './KamisadoRules';
-import { TutorialStepMessage } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
+import { TutorialStepMessage } from '../../../app/components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
 
 const __: KamisadoPiece = KamisadoPiece.EMPTY;
 const or: KamisadoPiece = KamisadoPiece.ZERO.ORANGE;

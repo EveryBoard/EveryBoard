@@ -1,8 +1,8 @@
 import { MGPOptional } from '@everyboard/lib';
-import { GoState } from 'src/app/games/gos/GoState';
+import { GoState } from '../../../../app/games/gos/GoState';
 import { GoPiece } from '../GoPiece';
 import { Tutorial, TutorialStep } from '../../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
-import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
+import { PlayerNumberMap } from '../../../../app/jscaip/PlayerMap';
 import { TrigoConfig, TrigoRules } from './TrigoRules';
 
 const X: GoPiece = GoPiece.LIGHT;

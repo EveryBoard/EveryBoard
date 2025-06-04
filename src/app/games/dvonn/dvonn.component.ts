@@ -1,17 +1,17 @@
 import { ChangeDetectorRef, Component } from '@angular/core';
 import { MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
-import { Coord } from 'src/app/jscaip/Coord';
-import { DvonnMove } from 'src/app/games/dvonn/DvonnMove';
-import { DvonnState } from 'src/app/games/dvonn/DvonnState';
-import { DvonnRules } from 'src/app/games/dvonn/DvonnRules';
-import { DvonnPieceStack } from 'src/app/games/dvonn/DvonnPieceStack';
-import { HexaLayout } from 'src/app/jscaip/HexaLayout';
-import { PointyHexaOrientation } from 'src/app/jscaip/HexaOrientation';
+import { Coord } from '../../../app/jscaip/Coord';
+import { DvonnMove } from '../../../app/games/dvonn/DvonnMove';
+import { DvonnState } from '../../../app/games/dvonn/DvonnState';
+import { DvonnRules } from '../../../app/games/dvonn/DvonnRules';
+import { DvonnPieceStack } from '../../../app/games/dvonn/DvonnPieceStack';
+import { HexaLayout } from '../../../app/jscaip/HexaLayout';
+import { PointyHexaOrientation } from '../../../app/jscaip/HexaOrientation';
 import { HexagonalGameComponent }
-    from 'src/app/components/game-components/game-component/HexagonalGameComponent';
-import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
-import { MCTS } from 'src/app/jscaip/AI/MCTS';
+    from '../../../app/components/game-components/game-component/HexagonalGameComponent';
+import { MessageDisplayer } from '../../../app/services/MessageDisplayer';
+import { MCTS } from '../../../app/jscaip/AI/MCTS';
 import { DvonnMoveGenerator } from './DvonnMoveGenerator';
 import { DvonnMaxStacksMinimax } from './DvonnMaxStacksMinimax';
 import { DvonnScoreMinimax } from './DvonnScoreMinimax';

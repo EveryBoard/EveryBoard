@@ -1,14 +1,15 @@
-import { GipfMove, GipfPlacement } from 'src/app/games/gipf/GipfMove';
-import { GipfState } from 'src/app/games/gipf/GipfState';
-import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
-import { Coord } from 'src/app/jscaip/Coord';
-import { HexaDirection } from 'src/app/jscaip/HexaDirection';
 import { MGPOptional, MGPValidation } from '@everyboard/lib';
+
+import { GipfMove, GipfPlacement } from '../../../app/games/gipf/GipfMove';
+import { GipfState } from '../../../app/games/gipf/GipfState';
+import { FourStatePiece } from '../../../app/jscaip/FourStatePiece';
+import { Coord } from '../../../app/jscaip/Coord';
+import { HexaDirection } from '../../../app/jscaip/HexaDirection';
 import { Tutorial, TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
-import { GipfCapture } from 'src/app/jscaip/GipfProjectHelper';
+import { GipfCapture } from '../../../app/jscaip/GipfProjectHelper';
 import { GipfRules } from './GipfRules';
-import { TutorialStepMessage } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
-import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
+import { TutorialStepMessage } from '../../../app/components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
+import { PlayerNumberMap } from '../../../app/jscaip/PlayerMap';
 
 const N: FourStatePiece = FourStatePiece.UNREACHABLE;
 const _: FourStatePiece = FourStatePiece.EMPTY;

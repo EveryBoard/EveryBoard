@@ -1,4 +1,4 @@
-import { Minimax } from 'src/app/jscaip/AI/Minimax';
+import { Minimax } from '../../../app/jscaip/AI/Minimax';
 import { TeekoMove } from './TeekoMove';
 import { TeekoMoveGenerator } from './TeekoMoveGenerator';
 import { TeekoConfig, TeekoRules } from './TeekoRules';

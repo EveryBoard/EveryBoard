@@ -1,11 +1,11 @@
 import { MGPOptional } from '@everyboard/lib';
 
 import { DvonnMove } from './DvonnMove';
-import { Coord } from 'src/app/jscaip/Coord';
+import { Coord } from '../../../app/jscaip/Coord';
 import { DvonnNode, DvonnRules } from './DvonnRules';
 import { DvonnState } from './DvonnState';
-import { MoveGenerator } from 'src/app/jscaip/AI/AI';
-import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { MoveGenerator } from '../../../app/jscaip/AI/AI';
+import { NoConfig } from '../../../app/jscaip/RulesConfigUtil';
 
 export class DvonnMoveGenerator extends MoveGenerator<DvonnMove, DvonnState> {
 

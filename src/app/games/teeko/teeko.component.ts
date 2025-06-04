@@ -1,14 +1,15 @@
+import { ChangeDetectorRef, Component } from '@angular/core';
+import { MGPOptional, MGPValidation } from '@everyboard/lib';
+
 import { TeekoConfig, TeekoRules } from './TeekoRules';
 import { TeekoDropMove, TeekoMove, TeekoTranslationMove } from './TeekoMove';
 import { TeekoState } from './TeekoState';
-import { ChangeDetectorRef, Component } from '@angular/core';
-import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
-import { RectangularGameComponent } from 'src/app/components/game-components/rectangular-game-component/RectangularGameComponent';
-import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { MGPOptional, MGPValidation } from '@everyboard/lib';
-import { Coord } from 'src/app/jscaip/Coord';
-import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { MCTS } from 'src/app/jscaip/AI/MCTS';
+import { MessageDisplayer } from '../../../app/services/MessageDisplayer';
+import { RectangularGameComponent } from '../../../app/components/game-components/rectangular-game-component/RectangularGameComponent';
+import { Player, PlayerOrNone } from '../../../app/jscaip/Player';
+import { Coord } from '../../../app/jscaip/Coord';
+import { RulesFailure } from '../../../app/jscaip/RulesFailure';
+import { MCTS } from '../../../app/jscaip/AI/MCTS';
 import { TeekoMoveGenerator } from './TeekoMoveGenerator';
 import { TeekoMinimax } from './TeekoMinimax';
 

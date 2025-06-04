@@ -1,16 +1,16 @@
-import { BoardValue } from 'src/app/jscaip/AI/BoardValue';
-import { Coord } from 'src/app/jscaip/Coord';
-import { GameStatus } from 'src/app/jscaip/GameStatus';
-import { GameNode } from 'src/app/jscaip/AI/GameNode';
-import { NInARowHelper } from 'src/app/jscaip/NInARowHelper';
-import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { Rules } from 'src/app/jscaip/Rules';
+import { BoardValue } from '../../../app/jscaip/AI/BoardValue';
+import { Coord } from '../../../app/jscaip/Coord';
+import { GameStatus } from '../../../app/jscaip/GameStatus';
+import { GameNode } from '../../../app/jscaip/AI/GameNode';
+import { NInARowHelper } from '../../../app/jscaip/NInARowHelper';
+import { Player, PlayerOrNone } from '../../../app/jscaip/Player';
+import { Rules } from '../../../app/jscaip/Rules';
 import { MGPOptional, MGPValidation } from '@everyboard/lib';
 import { TrexoFailure } from './TrexoFailure';
 import { TrexoMove } from './TrexoMove';
 import { TrexoPieceStack, TrexoState } from './TrexoState';
-import { TableUtils } from 'src/app/jscaip/TableUtils';
-import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { TableUtils } from '../../../app/jscaip/TableUtils';
+import { NoConfig } from '../../../app/jscaip/RulesConfigUtil';
 
 export class TrexoNode extends GameNode<TrexoMove, TrexoState> {}
 

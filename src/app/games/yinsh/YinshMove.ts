@@ -1,8 +1,9 @@
-import { Coord } from 'src/app/jscaip/Coord';
 import { ArrayUtils, Encoder, MGPOptional } from '@everyboard/lib';
-import { HexaDirection } from 'src/app/jscaip/HexaDirection';
-import { Move } from 'src/app/jscaip/Move';
-import { GipfCapture } from 'src/app/jscaip/GipfProjectHelper';
+
+import { Coord } from '../../../app/jscaip/Coord';
+import { HexaDirection } from '../../../app/jscaip/HexaDirection';
+import { Move } from '../../../app/jscaip/Move';
+import { GipfCapture } from '../../../app/jscaip/GipfProjectHelper';
 
 // A capture at Yinsh is just like a capture at Gipf, with the only difference
 // that it needs to be of length 5 rather than 4, and it contains a ring taken

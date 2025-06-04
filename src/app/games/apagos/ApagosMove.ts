@@ -1,6 +1,7 @@
 import { Encoder, MGPFallible, MGPOptional } from '@everyboard/lib';
-import { Move } from 'src/app/jscaip/Move';
-import { Player } from 'src/app/jscaip/Player';
+
+import { Move } from '../../../app/jscaip/Move';
+import { Player } from '../../../app/jscaip/Player';
 import { ApagosFailure } from './ApagosFailure';
 
 type ApagosMoveFields = [number, MGPOptional<Player>, MGPOptional<number>]

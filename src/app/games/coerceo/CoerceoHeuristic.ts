@@ -1,12 +1,13 @@
-import { Coord } from 'src/app/jscaip/Coord';
-import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
-import { Player } from 'src/app/jscaip/Player';
 import { MGPMap } from '@everyboard/lib';
+
+import { Coord } from '../../../app/jscaip/Coord';
+import { FourStatePiece } from '../../../app/jscaip/FourStatePiece';
+import { Player } from '../../../app/jscaip/Player';
 import { CoerceoMove } from './CoerceoMove';
 import { CoerceoState } from './CoerceoState';
-import { CoordSet } from 'src/app/jscaip/CoordSet';
-import { PlayerMetricHeuristic } from 'src/app/jscaip/AI/Minimax';
-import { PlayerNumberTable } from 'src/app/jscaip/PlayerNumberTable';
+import { CoordSet } from '../../../app/jscaip/CoordSet';
+import { PlayerMetricHeuristic } from '../../../app/jscaip/AI/Minimax';
+import { PlayerNumberTable } from '../../../app/jscaip/PlayerNumberTable';
 import { CoerceoConfig } from './CoerceoRules';
 
 export abstract class CoerceoHeuristic extends PlayerMetricHeuristic<CoerceoMove, CoerceoState, CoerceoConfig> {

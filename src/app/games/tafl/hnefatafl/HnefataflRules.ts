@@ -2,9 +2,9 @@ import { TaflState } from '../TaflState';
 import { TaflNode, TaflRules } from '../TaflRules';
 import { HnefataflMove } from './HnefataflMove';
 import { MGPOptional } from '@everyboard/lib';
-import { Table } from 'src/app/jscaip/TableUtils';
+import { Table } from '../../../../app/jscaip/TableUtils';
 import { TaflConfig } from '../TaflConfig';
-import { BooleanConfig, RulesConfigDescription } from 'src/app/components/wrapper-components/rules-configuration/RulesConfigDescription';
+import { BooleanConfig, RulesConfigDescription } from '../../../../app/components/wrapper-components/rules-configuration/RulesConfigDescription';
 import { TaflPawn } from '../TaflPawn';
 
 export class HnefataflNode extends TaflNode<HnefataflMove> {}

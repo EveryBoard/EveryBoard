@@ -1,6 +1,7 @@
-import { Coord } from 'src/app/jscaip/Coord';
-import { Move } from 'src/app/jscaip/Move';
 import { ArrayUtils, Encoder, MGPFallible, MGPOptional, MGPUniqueList, Utils } from '@everyboard/lib';
+
+import { Coord } from '../../../../app/jscaip/Coord';
+import { Move } from '../../../../app/jscaip/Move';
 import { CheckersFailure } from './CheckersFailure';
 
 export class CheckersMove extends Move {

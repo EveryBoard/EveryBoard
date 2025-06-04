@@ -1,15 +1,15 @@
 import { ChangeDetectorRef, Component } from '@angular/core';
-import { RectangularGameComponent } from 'src/app/components/game-components/rectangular-game-component/RectangularGameComponent';
-import { Coord } from 'src/app/jscaip/Coord';
-import { PlayerOrNone } from 'src/app/jscaip/Player';
+import { RectangularGameComponent } from '../../../app/components/game-components/rectangular-game-component/RectangularGameComponent';
+import { Coord } from '../../../app/jscaip/Coord';
+import { PlayerOrNone } from '../../../app/jscaip/Player';
 import { MGPFallible, MGPOptional, MGPValidation } from '@everyboard/lib';
 import { LinesOfActionMove } from './LinesOfActionMove';
 import { LinesOfActionRules } from './LinesOfActionRules';
 import { LinesOfActionFailure } from './LinesOfActionFailure';
 import { LinesOfActionState } from './LinesOfActionState';
-import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
-import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { MCTS } from 'src/app/jscaip/AI/MCTS';
+import { MessageDisplayer } from '../../../app/services/MessageDisplayer';
+import { RulesFailure } from '../../../app/jscaip/RulesFailure';
+import { MCTS } from '../../../app/jscaip/AI/MCTS';
 import { LinesOfActionMoveGenerator } from './LinesOfActionMoveGenerator';
 import { LinesOfActionMinimax } from './LinesOfActionMinimax';
 

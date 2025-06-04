@@ -1,10 +1,10 @@
-import { BoardValue } from 'src/app/jscaip/AI/BoardValue';
-import { Heuristic } from 'src/app/jscaip/AI/Minimax';
-import { PlayerOrNone } from 'src/app/jscaip/Player';
+import { BoardValue } from '../../../app/jscaip/AI/BoardValue';
+import { Heuristic } from '../../../app/jscaip/AI/Minimax';
+import { PlayerOrNone } from '../../../app/jscaip/Player';
 import { TrexoMove } from './TrexoMove';
 import { TrexoNode, TrexoRules } from './TrexoRules';
 import { TrexoState } from './TrexoState';
-import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { NoConfig } from '../../../app/jscaip/RulesConfigUtil';
 
 export class TrexoAlignmentHeuristic extends Heuristic<TrexoMove, TrexoState> {
 

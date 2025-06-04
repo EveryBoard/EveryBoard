@@ -1,11 +1,12 @@
-import { LodestoneDirection, LodestonePiece, LodestonePieceLodestone, LodestonePieceNone, LodestonePiecePlayer } from 'src/app/games/lodestone/LodestonePiece';
-import { Coord } from 'src/app/jscaip/Coord';
-import { GameStateWithTable } from 'src/app/jscaip/state/GameStateWithTable';
-import { Player } from 'src/app/jscaip/Player';
-import { Table } from 'src/app/jscaip/TableUtils';
 import { ArrayUtils, MGPMap, MGPOptional, Utils } from '@everyboard/lib';
+
+import { LodestoneDirection, LodestonePiece, LodestonePieceLodestone, LodestonePieceNone, LodestonePiecePlayer } from '../../../app/games/lodestone/LodestonePiece';
+import { Coord } from '../../../app/jscaip/Coord';
+import { GameStateWithTable } from '../../../app/jscaip/state/GameStateWithTable';
+import { Player } from '../../../app/jscaip/Player';
+import { Table } from '../../../app/jscaip/TableUtils';
 import { LodestoneCaptures } from './LodestoneMove';
-import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
+import { PlayerNumberMap } from '../../../app/jscaip/PlayerMap';
 
 /**
  * Represent different LodestonePressurePlate from the same side of the board

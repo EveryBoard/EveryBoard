@@ -1,11 +1,12 @@
-import { Coord } from 'src/app/jscaip/Coord';
-import { Ordinal } from 'src/app/jscaip/Ordinal';
-import { BoardValue } from 'src/app/jscaip/AI/BoardValue';
-import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
+import { MGPOptional } from '@everyboard/lib';
+
+import { Coord } from '../../../app/jscaip/Coord';
+import { Ordinal } from '../../../app/jscaip/Ordinal';
+import { BoardValue } from '../../../app/jscaip/AI/BoardValue';
+import { Player, PlayerOrNone } from '../../../app/jscaip/Player';
 import { EpaminondasState } from './EpaminondasState';
 import { EpaminondasConfig, EpaminondasNode } from './EpaminondasRules';
 import { EpaminondasHeuristic } from './EpaminondasHeuristic';
-import { MGPOptional } from '@everyboard/lib';
 
 export class EpaminondasAttackHeuristic extends EpaminondasHeuristic {
 

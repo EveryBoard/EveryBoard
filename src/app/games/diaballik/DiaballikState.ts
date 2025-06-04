@@ -1,9 +1,9 @@
 import { ComparableObject, MGPOptional, Utils } from '@everyboard/lib';
 
-import { GameStateWithTable } from 'src/app/jscaip/state/GameStateWithTable';
-import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { TableUtils } from 'src/app/jscaip/TableUtils';
-import { Coord } from 'src/app/jscaip/Coord';
+import { GameStateWithTable } from '../../../app/jscaip/state/GameStateWithTable';
+import { Player, PlayerOrNone } from '../../../app/jscaip/Player';
+import { TableUtils } from '../../../app/jscaip/TableUtils';
+import { Coord } from '../../../app/jscaip/Coord';
 
 export class DiaballikPiece implements ComparableObject {
 

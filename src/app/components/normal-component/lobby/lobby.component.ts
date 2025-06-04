@@ -3,12 +3,12 @@ import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { MGPOptional, MGPValidation } from '@everyboard/lib';
 
-import { ActivePartsService } from 'src/app/services/ActivePartsService';
-import { PartDocument } from 'src/app/domain/Part';
-import { CurrentGame } from 'src/app/domain/User';
-import { CurrentGameService } from 'src/app/services/CurrentGameService';
-import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
-import { Debug } from 'src/app/utils/Debug';
+import { ActivePartsService } from '../../../../app/services/ActivePartsService';
+import { PartDocument } from '../../../../app/domain/Part';
+import { CurrentGame } from '../../../../app/domain/User';
+import { CurrentGameService } from '../../../../app/services/CurrentGameService';
+import { MessageDisplayer } from '../../../../app/services/MessageDisplayer';
+import { Debug } from '../../../../app/utils/Debug';
 
 type Tab = 'games' | 'create' | 'chat';
 

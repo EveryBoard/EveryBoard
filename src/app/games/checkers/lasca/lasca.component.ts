@@ -1,5 +1,6 @@
 import { ChangeDetectorRef, Component } from '@angular/core';
-import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
+
+import { MessageDisplayer } from '../../../../app/services/MessageDisplayer';
 import { LascaRules } from './LascaRules';
 import { CheckersComponent } from '../common/checkers.component';
 

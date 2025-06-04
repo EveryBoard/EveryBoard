@@ -1,17 +1,18 @@
 import { MGPFallible, MGPOptional, MGPValidation, Utils, Set, MGPUniqueList } from '@everyboard/lib';
-import { ModeConfig, ParallelogramGameComponent } from 'src/app/components/game-components/parallelogram-game-component/ParallelogramGameComponent';
-import { Coord } from 'src/app/jscaip/Coord';
-import { Vector } from 'src/app/jscaip/Vector';
-import { Player } from 'src/app/jscaip/Player';
-import { RulesFailure } from 'src/app/jscaip/RulesFailure';
+
+import { ModeConfig, ParallelogramGameComponent } from '../../../../app/components/game-components/parallelogram-game-component/ParallelogramGameComponent';
+import { Coord } from '../../../../app/jscaip/Coord';
+import { Vector } from '../../../../app/jscaip/Vector';
+import { Player } from '../../../../app/jscaip/Player';
+import { RulesFailure } from '../../../../app/jscaip/RulesFailure';
 import { CheckersFailure } from '../common/CheckersFailure';
 import { CheckersMove } from '../common/CheckersMove';
 import { AbstractCheckersRules, CheckersConfig } from '../common/AbstractCheckersRules';
 import { CheckersPiece, CheckersStack, CheckersState } from '../common/CheckersState';
 import { CheckersMoveGenerator } from '../common/CheckersMoveGenerator';
-import { ViewBox } from 'src/app/components/game-components/GameComponentUtils';
+import { ViewBox } from '../../../../app/components/game-components/GameComponentUtils';
 import { CheckersScoreMinimax } from './CheckersScoreMinimax';
-import { MCTS } from 'src/app/jscaip/AI/MCTS';
+import { MCTS } from '../../../../app/jscaip/AI/MCTS';
 import { CheckersControlPlusDominationMinimax } from './CheckersControlPlusDominationMinimax';
 import { CheckersControlMinimax } from './CheckersControlMinimax';
 

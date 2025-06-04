@@ -1,11 +1,12 @@
-import { Coord } from 'src/app/jscaip/Coord';
-import { Move } from 'src/app/jscaip/Move';
-import { MoveCoord } from 'src/app/jscaip/MoveCoord';
-import { MoveCoordToCoord } from 'src/app/jscaip/MoveCoordToCoord';
-import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { Encoder, MGPFallible } from '@everyboard/lib';
+
+import { Coord } from '../../../app/jscaip/Coord';
+import { Move } from '../../../app/jscaip/Move';
+import { MoveCoord } from '../../../app/jscaip/MoveCoord';
+import { MoveCoordToCoord } from '../../../app/jscaip/MoveCoordToCoord';
+import { RulesFailure } from '../../../app/jscaip/RulesFailure';
 import { HivePiece } from './HivePiece';
-import { MoveWithTwoCoords } from 'src/app/jscaip/MoveWithTwoCoords';
+import { MoveWithTwoCoords } from '../../../app/jscaip/MoveWithTwoCoords';
 
 export class HiveDropMove extends MoveCoord {
 

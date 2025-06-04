@@ -1,10 +1,11 @@
 import { MGPFallible, MGPOptional } from '@everyboard/lib';
-import { GameNode } from 'src/app/jscaip/AI/GameNode';
+
+import { GameNode } from '../../../app/jscaip/AI/GameNode';
 import { NewGameMove } from './NewGameMove';
 import { NewGameState } from './NewGameState';
-import { GameStatus } from 'src/app/jscaip/GameStatus';
-import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
-import { Rules } from 'src/app/jscaip/Rules';
+import { GameStatus } from '../../../app/jscaip/GameStatus';
+import { NoConfig } from '../../../app/jscaip/RulesConfigUtil';
+import { Rules } from '../../../app/jscaip/Rules';
 
 /**
  * This class is optional.

@@ -1,15 +1,16 @@
+import { ChangeDetectorRef, Component } from '@angular/core';
+import { MGPOptional, MGPValidation } from '@everyboard/lib';
+
 import { PenteRules } from './PenteRules';
 import { PenteMove } from './PenteMove';
 import { PenteState } from './PenteState';
-import { ChangeDetectorRef, Component } from '@angular/core';
-import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
-import { MGPOptional, MGPValidation } from '@everyboard/lib';
-import { Coord } from 'src/app/jscaip/Coord';
-import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { GobanGameComponent } from 'src/app/components/game-components/goban-game-component/GobanGameComponent';
-import { MCTS } from 'src/app/jscaip/AI/MCTS';
+import { MessageDisplayer } from '../../../app/services/MessageDisplayer';
+import { Coord } from '../../../app/jscaip/Coord';
+import { Player, PlayerOrNone } from '../../../app/jscaip/Player';
+import { GobanGameComponent } from '../../../app/components/game-components/goban-game-component/GobanGameComponent';
+import { MCTS } from '../../../app/jscaip/AI/MCTS';
 import { PenteMoveGenerator } from './PenteMoveGenerator';
-import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
+import { PlayerNumberMap } from '../../../app/jscaip/PlayerMap';
 import { PenteConfig } from './PenteConfig';
 import { PenteAlignmentMinimax } from './PenteAlignmentMinimax';
 

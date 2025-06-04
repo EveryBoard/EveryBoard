@@ -3,13 +3,13 @@ import { QuartoMove } from './QuartoMove';
 import { QuartoState } from './QuartoState';
 import { QuartoConfig, QuartoRules } from './QuartoRules';
 import { QuartoPiece } from './QuartoPiece';
-import { Coord } from 'src/app/jscaip/Coord';
+import { Coord } from '../../../app/jscaip/Coord';
 import { MGPOptional, MGPValidation, Set } from '@everyboard/lib';
-import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
-import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { RectangularGameComponent } from 'src/app/components/game-components/rectangular-game-component/RectangularGameComponent';
+import { MessageDisplayer } from '../../../app/services/MessageDisplayer';
+import { RulesFailure } from '../../../app/jscaip/RulesFailure';
+import { RectangularGameComponent } from '../../../app/components/game-components/rectangular-game-component/RectangularGameComponent';
 import { QuartoMoveGenerator } from './QuartoMoveGenerator';
-import { MCTS } from 'src/app/jscaip/AI/MCTS';
+import { MCTS } from '../../../app/jscaip/AI/MCTS';
 import { QuartoMinimax } from './QuartoMinimax';
 
 @Component({

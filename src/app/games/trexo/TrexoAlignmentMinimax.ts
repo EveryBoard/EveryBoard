@@ -1,4 +1,4 @@
-import { Minimax } from 'src/app/jscaip/AI/Minimax';
+import { Minimax } from '../../../app/jscaip/AI/Minimax';
 import { TrexoMove } from './TrexoMove';
 import { TrexoMoveGenerator } from './TrexoMoveGenerator';
 import { TrexoRules } from './TrexoRules';

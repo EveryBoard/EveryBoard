@@ -1,4 +1,4 @@
-import { Tutorial, TutorialStep } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStep';
+import { Tutorial, TutorialStep } from '../../../app/components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 
 export class NewGameTutorial extends Tutorial {
     /**

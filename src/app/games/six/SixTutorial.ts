@@ -1,13 +1,14 @@
-import { SixState } from 'src/app/games/six/SixState';
-import { SixMove } from 'src/app/games/six/SixMove';
-import { Coord } from 'src/app/jscaip/Coord';
-import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { Localized } from 'src/app/utils/LocaleUtils';
 import { MGPValidation } from '@everyboard/lib';
+
+import { SixState } from '../../../app/games/six/SixState';
+import { SixMove } from '../../../app/games/six/SixMove';
+import { Coord } from '../../../app/jscaip/Coord';
+import { Player, PlayerOrNone } from '../../../app/jscaip/Player';
+import { Localized } from '../../../app/utils/LocaleUtils';
 import { Tutorial, TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { SixRules } from './SixRules';
-import { TutorialStepMessage } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
-import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
+import { TutorialStepMessage } from '../../../app/components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
+import { PlayerNumberMap } from '../../../app/jscaip/PlayerMap';
 
 const _: PlayerOrNone = PlayerOrNone.NONE;
 const O: PlayerOrNone = Player.ZERO;

@@ -1,10 +1,10 @@
-import { Table } from 'src/app/jscaip/TableUtils';
+import { Table } from '../../../app/jscaip/TableUtils';
 import { GipfMove, GipfPlacement } from './GipfMove';
 import { GipfState } from './GipfState';
 import { GipfRules, GipfNode } from './GipfRules';
-import { MoveGenerator } from 'src/app/jscaip/AI/AI';
-import { GipfCapture, GipfProjectHelper } from 'src/app/jscaip/GipfProjectHelper';
-import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { MoveGenerator } from '../../../app/jscaip/AI/AI';
+import { GipfCapture, GipfProjectHelper } from '../../../app/jscaip/GipfProjectHelper';
+import { NoConfig } from '../../../app/jscaip/RulesConfigUtil';
 
 export class GipfMoveGenerator extends MoveGenerator<GipfMove, GipfState> {
 

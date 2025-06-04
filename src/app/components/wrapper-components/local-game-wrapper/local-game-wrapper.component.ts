@@ -3,19 +3,19 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 import { MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
-import { AbstractNode, GameNode, GameNodeStats } from 'src/app/jscaip/AI/GameNode';
-import { ConnectedUserService } from 'src/app/services/ConnectedUserService';
-import { GameWrapper } from 'src/app/components/wrapper-components/GameWrapper';
-import { Move } from 'src/app/jscaip/Move';
-import { GameState } from 'src/app/jscaip/state/GameState';
-import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
-import { Player } from 'src/app/jscaip/Player';
-import { GameStatus } from 'src/app/jscaip/GameStatus';
-import { Debug } from 'src/app/utils/Debug';
-import { RulesConfig, RulesConfigUtils } from 'src/app/jscaip/RulesConfigUtil';
-import { AIOptions, AIStats, AbstractAI } from 'src/app/jscaip/AI/AI';
-import { GameInfo } from '../../normal-component/pick-game/pick-game.component';
-import { SuperRules } from 'src/app/jscaip/Rules';
+import { AbstractNode, GameNode, GameNodeStats } from '../../../../app/jscaip/AI/GameNode';
+import { ConnectedUserService } from '../../../../app/services/ConnectedUserService';
+import { GameWrapper } from '../../../../app/components/wrapper-components/GameWrapper';
+import { Move } from '../../../../app/jscaip/Move';
+import { GameState } from '../../../../app/jscaip/state/GameState';
+import { MessageDisplayer } from '../../../../app/services/MessageDisplayer';
+import { Player } from '../../../../app/jscaip/Player';
+import { GameStatus } from '../../../../app/jscaip/GameStatus';
+import { Debug } from '../../../../app/utils/Debug';
+import { RulesConfig, RulesConfigUtils } from '../../../../app/jscaip/RulesConfigUtil';
+import { AIOptions, AIStats, AbstractAI } from '../../../../app/jscaip/AI/AI';
+import { GameInfo } from '../../normal-component/pick-game/game-info';
+import { SuperRules } from '../../../../app/jscaip/Rules';
 import { DemoNodeInfo } from '../demo-card-wrapper/demo-card-wrapper.component';
 
 @Component({

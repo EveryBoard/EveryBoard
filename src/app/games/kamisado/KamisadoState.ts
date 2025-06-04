@@ -1,9 +1,10 @@
-import { Table, TableUtils } from 'src/app/jscaip/TableUtils';
-import { Coord } from 'src/app/jscaip/Coord';
-import { GameStateWithTable } from 'src/app/jscaip/state/GameStateWithTable';
+import { MGPOptional } from '@everyboard/lib';
+
+import { Table, TableUtils } from '../../../app/jscaip/TableUtils';
+import { Coord } from '../../../app/jscaip/Coord';
+import { GameStateWithTable } from '../../../app/jscaip/state/GameStateWithTable';
 import { KamisadoBoard } from './KamisadoBoard';
 import { KamisadoColor } from './KamisadoColor';
-import { MGPOptional } from '@everyboard/lib';
 import { KamisadoPiece } from './KamisadoPiece';
 
 export class KamisadoState extends GameStateWithTable<KamisadoPiece> {

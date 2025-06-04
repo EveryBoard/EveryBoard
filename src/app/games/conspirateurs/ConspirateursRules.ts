@@ -1,16 +1,17 @@
-import { Coord, CoordFailure } from 'src/app/jscaip/Coord';
-import { GameStatus } from 'src/app/jscaip/GameStatus';
-import { GameNode } from 'src/app/jscaip/AI/GameNode';
-import { PlayerOrNone } from 'src/app/jscaip/Player';
-import { Rules } from 'src/app/jscaip/Rules';
-import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
+
+import { Coord, CoordFailure } from '../../../app/jscaip/Coord';
+import { GameStatus } from '../../../app/jscaip/GameStatus';
+import { GameNode } from '../../../app/jscaip/AI/GameNode';
+import { PlayerOrNone } from '../../../app/jscaip/Player';
+import { Rules } from '../../../app/jscaip/Rules';
+import { RulesFailure } from '../../../app/jscaip/RulesFailure';
 import { ConspirateursFailure } from './ConspirateursFailure';
 import { ConspirateursMove, ConspirateursMoveDrop, ConspirateursMoveJump, ConspirateursMoveSimple } from './ConspirateursMove';
 import { ConspirateursState } from './ConspirateursState';
-import { TableUtils } from 'src/app/jscaip/TableUtils';
-import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
-import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
+import { TableUtils } from '../../../app/jscaip/TableUtils';
+import { NoConfig } from '../../../app/jscaip/RulesConfigUtil';
+import { PlayerNumberMap } from '../../../app/jscaip/PlayerMap';
 
 export class ConspirateursNode extends GameNode<ConspirateursMove, ConspirateursState> {}
 

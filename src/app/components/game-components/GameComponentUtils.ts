@@ -1,5 +1,5 @@
-import { Coord } from 'src/app/jscaip/Coord';
-import { HexaLayout } from 'src/app/jscaip/HexaLayout';
+import { Coord } from '../../../app/jscaip/Coord';
+import { HexaLayout } from '../../../app/jscaip/HexaLayout';
 
 interface Limits {
     minX: number;

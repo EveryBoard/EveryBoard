@@ -1,19 +1,20 @@
-import { Coord } from 'src/app/jscaip/Coord';
-import { HexaDirection } from 'src/app/jscaip/HexaDirection';
-import { HexaLine } from 'src/app/jscaip/HexaLine';
-import { Player } from 'src/app/jscaip/Player';
-import { Rules } from 'src/app/jscaip/Rules';
-import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { MGPFallible, MGPOptional, MGPValidation } from '@everyboard/lib';
+
+import { Coord } from '../../../app/jscaip/Coord';
+import { HexaDirection } from '../../../app/jscaip/HexaDirection';
+import { HexaLine } from '../../../app/jscaip/HexaLine';
+import { Player } from '../../../app/jscaip/Player';
+import { Rules } from '../../../app/jscaip/Rules';
+import { RulesFailure } from '../../../app/jscaip/RulesFailure';
 import { YinshFailure } from './YinshFailure';
 import { YinshState } from './YinshState';
 import { YinshCapture, YinshMove } from './YinshMove';
 import { YinshPiece } from './YinshPiece';
-import { GameStatus } from 'src/app/jscaip/GameStatus';
-import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
-import { GameNode } from 'src/app/jscaip/AI/GameNode';
-import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
-import { Table } from 'src/app/jscaip/TableUtils';
+import { GameStatus } from '../../../app/jscaip/GameStatus';
+import { PlayerNumberMap } from '../../../app/jscaip/PlayerMap';
+import { GameNode } from '../../../app/jscaip/AI/GameNode';
+import { NoConfig } from '../../../app/jscaip/RulesConfigUtil';
+import { Table } from '../../../app/jscaip/TableUtils';
 
 export type YinshLegalityInformation = YinshState;
 

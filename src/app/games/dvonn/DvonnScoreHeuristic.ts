@@ -1,9 +1,9 @@
-import { PlayerMetricHeuristic } from 'src/app/jscaip/AI/Minimax';
-import { PlayerNumberTable } from 'src/app/jscaip/PlayerNumberTable';
+import { PlayerMetricHeuristic } from '../../../app/jscaip/AI/Minimax';
+import { PlayerNumberTable } from '../../../app/jscaip/PlayerNumberTable';
 import { DvonnMove } from './DvonnMove';
 import { DvonnNode, DvonnRules } from './DvonnRules';
 import { DvonnState } from './DvonnState';
-import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { NoConfig } from '../../../app/jscaip/RulesConfigUtil';
 
 export class DvonnScoreHeuristic extends PlayerMetricHeuristic<DvonnMove, DvonnState> {
 

@@ -1,12 +1,13 @@
-import { Coord } from 'src/app/jscaip/Coord';
-import { Ordinal } from 'src/app/jscaip/Ordinal';
-import { Move } from 'src/app/jscaip/Move';
-import { MoveCoord } from 'src/app/jscaip/MoveCoord';
-import { MoveCoordToCoord } from 'src/app/jscaip/MoveCoordToCoord';
 import { Encoder, ArrayUtils, MGPFallible } from '@everyboard/lib';
+
+import { Coord } from '../../../app/jscaip/Coord';
+import { Ordinal } from '../../../app/jscaip/Ordinal';
+import { Move } from '../../../app/jscaip/Move';
+import { MoveCoord } from '../../../app/jscaip/MoveCoord';
+import { MoveCoordToCoord } from '../../../app/jscaip/MoveCoordToCoord';
 import { ConspirateursFailure } from './ConspirateursFailure';
-import { MoveWithTwoCoords } from 'src/app/jscaip/MoveWithTwoCoords';
-import { CoordSet } from 'src/app/jscaip/CoordSet';
+import { MoveWithTwoCoords } from '../../../app/jscaip/MoveWithTwoCoords';
+import { CoordSet } from '../../../app/jscaip/CoordSet';
 
 export class ConspirateursMoveDrop extends MoveCoord {
 

@@ -1,18 +1,19 @@
 import { ChangeDetectorRef, Component } from '@angular/core';
-import { RectangularGameComponent } from '../../components/game-components/rectangular-game-component/RectangularGameComponent';
-import { Coord } from 'src/app/jscaip/Coord';
-import { KamisadoBoard } from 'src/app/games/kamisado/KamisadoBoard';
-import { KamisadoMove, KamisadoPieceMove } from 'src/app/games/kamisado/KamisadoMove';
-import { KamisadoState } from 'src/app/games/kamisado/KamisadoState';
-import { KamisadoPiece } from 'src/app/games/kamisado/KamisadoPiece';
-import { KamisadoRules } from 'src/app/games/kamisado/KamisadoRules';
-import { KamisadoFailure } from 'src/app/games/kamisado/KamisadoFailure';
-import { Player } from 'src/app/jscaip/Player';
 import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
-import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
-import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { GameStatus } from 'src/app/jscaip/GameStatus';
-import { MCTS } from 'src/app/jscaip/AI/MCTS';
+
+import { RectangularGameComponent } from '../../components/game-components/rectangular-game-component/RectangularGameComponent';
+import { Coord } from '../../../app/jscaip/Coord';
+import { KamisadoBoard } from '../../../app/games/kamisado/KamisadoBoard';
+import { KamisadoMove, KamisadoPieceMove } from '../../../app/games/kamisado/KamisadoMove';
+import { KamisadoState } from '../../../app/games/kamisado/KamisadoState';
+import { KamisadoPiece } from '../../../app/games/kamisado/KamisadoPiece';
+import { KamisadoRules } from '../../../app/games/kamisado/KamisadoRules';
+import { KamisadoFailure } from '../../../app/games/kamisado/KamisadoFailure';
+import { Player } from '../../../app/jscaip/Player';
+import { MessageDisplayer } from '../../../app/services/MessageDisplayer';
+import { RulesFailure } from '../../../app/jscaip/RulesFailure';
+import { GameStatus } from '../../../app/jscaip/GameStatus';
+import { MCTS } from '../../../app/jscaip/AI/MCTS';
 import { KamisadoMoveGenerator } from './KamisadoMoveGenerator';
 import { KamisadoMinimax } from './KamisadoMinimax';
 

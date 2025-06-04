@@ -1,22 +1,23 @@
 import { ChangeDetectorRef, Component } from '@angular/core';
-import { HexagonalGameComponent } from 'src/app/components/game-components/game-component/HexagonalGameComponent';
-import { Coord } from 'src/app/jscaip/Coord';
-import { HexaLayout } from 'src/app/jscaip/HexaLayout';
-import { FlatHexaOrientation } from 'src/app/jscaip/HexaOrientation';
-import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
+import { MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
+
+import { HexagonalGameComponent } from '../../../app/components/game-components/game-component/HexagonalGameComponent';
+import { Coord } from '../../../app/jscaip/Coord';
+import { HexaLayout } from '../../../app/jscaip/HexaLayout';
+import { FlatHexaOrientation } from '../../../app/jscaip/HexaOrientation';
+import { Player, PlayerOrNone } from '../../../app/jscaip/Player';
+import { MessageDisplayer } from '../../../app/services/MessageDisplayer';
 import { YinshFailure } from './YinshFailure';
 import { YinshState } from './YinshState';
 import { YinshCapture, YinshMove } from './YinshMove';
 import { YinshPiece } from './YinshPiece';
 import { YinshLegalityInformation, YinshRules } from './YinshRules';
-import { MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
-import { MCTS } from 'src/app/jscaip/AI/MCTS';
+import { MCTS } from '../../../app/jscaip/AI/MCTS';
 import { YinshMoveGenerator } from './YinshMoveGenerator';
-import { PlayerMap, PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
-import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { PlayerMap, PlayerNumberMap } from '../../../app/jscaip/PlayerMap';
+import { EmptyRulesConfig } from '../../../app/jscaip/RulesConfigUtil';
 import { YinshScoreMinimax } from './YinshScoreMinimax';
-import { CoordSet } from 'src/app/jscaip/CoordSet';
+import { CoordSet } from '../../../app/jscaip/CoordSet';
 
 interface ViewInfo {
     targets: Coord[],

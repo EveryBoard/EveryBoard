@@ -1,4 +1,4 @@
-import { Minimax } from 'src/app/jscaip/AI/Minimax';
+import { Minimax } from '../../../../app/jscaip/AI/Minimax';
 import { CheckersMove } from './CheckersMove';
 import { CheckersMoveGenerator } from './CheckersMoveGenerator';
 import { AbstractCheckersRules, CheckersConfig } from './AbstractCheckersRules';

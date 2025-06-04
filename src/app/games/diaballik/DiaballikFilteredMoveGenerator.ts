@@ -1,8 +1,9 @@
 import { Utils } from '@everyboard/lib';
+
 import { DiaballikMove } from './DiaballikMove';
 import { DiaballikMoveGenerator, DiaballikMoveInConstruction } from './DiaballikMoveGenerator';
 import { DiaballikNode } from './DiaballikRules';
-import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { NoConfig } from '../../../app/jscaip/RulesConfigUtil';
 
 export class DiaballikFilteredMoveGenerator extends DiaballikMoveGenerator {
 

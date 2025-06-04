@@ -1,5 +1,6 @@
-import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { ComparableObject, Utils } from '@everyboard/lib';
+
+import { Player, PlayerOrNone } from '../../../app/jscaip/Player';
 
 type PieceType = 'alive' | 'dead' | 'territory' | 'empty' | 'unreachable';
 

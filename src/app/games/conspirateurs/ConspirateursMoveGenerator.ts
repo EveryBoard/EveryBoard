@@ -1,11 +1,12 @@
-import { Coord } from 'src/app/jscaip/Coord';
-import { Player } from 'src/app/jscaip/Player';
 import { MGPFallible, Set } from '@everyboard/lib';
+
+import { Coord } from '../../../app/jscaip/Coord';
+import { Player } from '../../../app/jscaip/Player';
 import { ConspirateursMove, ConspirateursMoveDrop, ConspirateursMoveJump, ConspirateursMoveSimple } from './ConspirateursMove';
 import { ConspirateursNode, ConspirateursRules } from './ConspirateursRules';
 import { ConspirateursState } from './ConspirateursState';
-import { MoveGenerator } from 'src/app/jscaip/AI/AI';
-import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { MoveGenerator } from '../../../app/jscaip/AI/AI';
+import { NoConfig } from '../../../app/jscaip/RulesConfigUtil';
 
 export class ConspirateursMoveGenerator extends MoveGenerator<ConspirateursMove, ConspirateursState> {
 

@@ -1,10 +1,10 @@
-import { Coord } from 'src/app/jscaip/Coord';
-import { Ordinal } from 'src/app/jscaip/Ordinal';
-import { PlayerOrNone } from 'src/app/jscaip/Player';
-import { Vector } from 'src/app/jscaip/Vector';
-import { Table } from 'src/app/jscaip/TableUtils';
+import { Coord } from '../../../app/jscaip/Coord';
+import { Ordinal } from '../../../app/jscaip/Ordinal';
+import { PlayerOrNone } from '../../../app/jscaip/Player';
+import { Vector } from '../../../app/jscaip/Vector';
+import { Table } from '../../../app/jscaip/TableUtils';
 import { PentagoMove } from './PentagoMove';
-import { PlayerOrNoneGameStateWithTable } from 'src/app/jscaip/state/PlayerOrNoneGameStateWithTable';
+import { PlayerOrNoneGameStateWithTable } from '../../../app/jscaip/state/PlayerOrNoneGameStateWithTable';
 
 export class PentagoState extends PlayerOrNoneGameStateWithTable {
 

@@ -1,12 +1,13 @@
-import { Coord } from 'src/app/jscaip/Coord';
-import { Player } from 'src/app/jscaip/Player';
 import { MGPMap, MGPOptional, Set } from '@everyboard/lib';
+
+import { Coord } from '../../../app/jscaip/Coord';
+import { Player } from '../../../app/jscaip/Player';
 import { SixState } from './SixState';
 import { SixMove } from './SixMove';
 import { SixConfig, SixNode, SixRules } from './SixRules';
-import { Debug } from 'src/app/utils/Debug';
-import { MoveGenerator } from 'src/app/jscaip/AI/AI';
-import { CoordSet } from 'src/app/jscaip/CoordSet';
+import { Debug } from '../../../app/utils/Debug';
+import { MoveGenerator } from '../../../app/jscaip/AI/AI';
+import { CoordSet } from '../../../app/jscaip/CoordSet';
 
 @Debug.log
 export class SixMoveGenerator extends MoveGenerator<SixMove, SixState, SixConfig> {

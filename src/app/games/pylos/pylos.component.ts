@@ -1,17 +1,18 @@
 import { ChangeDetectorRef, Component } from '@angular/core';
-import { GameComponent } from '../../components/game-components/game-component/GameComponent';
-import { PylosMove, PylosMoveFailure } from 'src/app/games/pylos/PylosMove';
-import { PylosState } from 'src/app/games/pylos/PylosState';
-import { PylosRules } from 'src/app/games/pylos/PylosRules';
-import { PylosCoord } from 'src/app/games/pylos/PylosCoord';
-import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { Set, MGPOptional, MGPValidation } from '@everyboard/lib';
-import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
-import { RulesFailure } from 'src/app/jscaip/RulesFailure';
+
+import { GameComponent } from '../../components/game-components/game-component/GameComponent';
+import { PylosMove, PylosMoveFailure } from '../../../app/games/pylos/PylosMove';
+import { PylosState } from '../../../app/games/pylos/PylosState';
+import { PylosRules } from '../../../app/games/pylos/PylosRules';
+import { PylosCoord } from '../../../app/games/pylos/PylosCoord';
+import { Player, PlayerOrNone } from '../../../app/jscaip/Player';
+import { MessageDisplayer } from '../../../app/services/MessageDisplayer';
+import { RulesFailure } from '../../../app/jscaip/RulesFailure';
 import { PylosFailure } from './PylosFailure';
-import { MCTS } from 'src/app/jscaip/AI/MCTS';
+import { MCTS } from '../../../app/jscaip/AI/MCTS';
 import { PylosMoveGenerator } from './PylosMoveGenerator';
-import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
+import { PlayerNumberMap } from '../../../app/jscaip/PlayerMap';
 import { PylosMinimax } from './PylosMinimax';
 
 @Component({

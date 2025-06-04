@@ -1,16 +1,17 @@
-import { Coord } from 'src/app/jscaip/Coord';
-import { PieceThreat } from 'src/app/jscaip/PieceThreat';
-import { Player } from 'src/app/jscaip/Player';
-import { TriangularCheckerBoard } from 'src/app/jscaip/state/TriangularCheckerBoard';
 import { MGPMap, MGPOptional } from '@everyboard/lib';
+
+import { Coord } from '../../../app/jscaip/Coord';
+import { PieceThreat } from '../../../app/jscaip/PieceThreat';
+import { Player } from '../../../app/jscaip/Player';
+import { TriangularCheckerBoard } from '../../../app/jscaip/state/TriangularCheckerBoard';
 import { CoerceoStep } from './CoerceoMove';
 import { CoerceoState } from './CoerceoState';
 import { CoerceoNode } from './CoerceoRules';
-import { Vector } from 'src/app/jscaip/Vector';
-import { CoordSet } from 'src/app/jscaip/CoordSet';
+import { Vector } from '../../../app/jscaip/Vector';
+import { CoordSet } from '../../../app/jscaip/CoordSet';
 import { CoerceoConfig } from './CoerceoRules';
-import { PlayerNumberTable } from 'src/app/jscaip/PlayerNumberTable';
-import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
+import { PlayerNumberTable } from '../../../app/jscaip/PlayerNumberTable';
+import { FourStatePiece } from '../../../app/jscaip/FourStatePiece';
 import { CoerceoHeuristic } from './CoerceoHeuristic';
 
 interface DirectThreatInfo {

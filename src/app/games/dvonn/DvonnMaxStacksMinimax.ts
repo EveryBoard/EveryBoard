@@ -1,4 +1,4 @@
-import { Minimax } from 'src/app/jscaip/AI/Minimax';
+import { Minimax } from '../../../app/jscaip/AI/Minimax';
 import { DvonnMove } from './DvonnMove';
 import { DvonnMoveGenerator } from './DvonnMoveGenerator';
 import { DvonnRules } from './DvonnRules';

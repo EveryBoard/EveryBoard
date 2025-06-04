@@ -1,8 +1,9 @@
 import { Encoder, MGPFallible } from '@everyboard/lib';
-import { Coord } from 'src/app/jscaip/Coord';
-import { MoveCoordToCoord } from 'src/app/jscaip/MoveCoordToCoord';
-import { MoveWithTwoCoords } from 'src/app/jscaip/MoveWithTwoCoords';
-import { RulesFailure } from 'src/app/jscaip/RulesFailure';
+
+import { Coord } from '../../../app/jscaip/Coord';
+import { MoveCoordToCoord } from '../../../app/jscaip/MoveCoordToCoord';
+import { MoveWithTwoCoords } from '../../../app/jscaip/MoveWithTwoCoords';
+import { RulesFailure } from '../../../app/jscaip/RulesFailure';
 
 export class SquarzMove extends MoveCoordToCoord {
 

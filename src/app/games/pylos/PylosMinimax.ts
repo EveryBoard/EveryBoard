@@ -1,4 +1,4 @@
-import { Minimax } from 'src/app/jscaip/AI/Minimax';
+import { Minimax } from '../../../app/jscaip/AI/Minimax';
 import { PylosMove } from './PylosMove';
 import { PylosRules } from './PylosRules';
 import { PylosHeuristic } from './PylosHeuristic';

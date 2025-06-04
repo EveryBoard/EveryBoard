@@ -15,7 +15,7 @@ import { CurrentGameServiceMock } from 'src/app/services/tests/CurrentGameServic
 import { expectValidRoutingLink, prepareUnsubscribeCheck, SimpleComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { AccountComponent } from '../account/account.component';
 import { HeaderComponent } from './header.component';
-import { GameInfo } from '../pick-game/pick-game.component';
+import { GameInfo } from '../pick-game/game-info';
 
 describe('HeaderComponent', () => {
 

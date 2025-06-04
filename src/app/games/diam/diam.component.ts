@@ -1,17 +1,18 @@
 import { ChangeDetectorRef, Component } from '@angular/core';
-import { GameComponent } from 'src/app/components/game-components/game-component/GameComponent';
-import { Coord } from 'src/app/jscaip/Coord';
-import { Vector } from 'src/app/jscaip/Vector';
-import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { MGPMap, MGPOptional, MGPValidation } from '@everyboard/lib';
+
+import { GameComponent } from '../../../app/components/game-components/game-component/GameComponent';
+import { Coord } from '../../../app/jscaip/Coord';
+import { Vector } from '../../../app/jscaip/Vector';
+import { Player, PlayerOrNone } from '../../../app/jscaip/Player';
+import { RulesFailure } from '../../../app/jscaip/RulesFailure';
+import { MessageDisplayer } from '../../../app/services/MessageDisplayer';
 import { DiamFailure } from './DiamFailure';
 import { DiamMove, DiamMoveDrop, DiamMoveEncoder, DiamMoveShift } from './DiamMove';
 import { DiamPiece } from './DiamPiece';
 import { DiamRules } from './DiamRules';
 import { DiamState } from './DiamState';
-import { MCTS } from 'src/app/jscaip/AI/MCTS';
+import { MCTS } from '../../../app/jscaip/AI/MCTS';
 import { DiamMoveGenerator } from './DiamMoveGenerator';
 import { DiamDummyMinimax } from './DiamDummyMinimax';
 

@@ -1,5 +1,6 @@
 import { Component, Input } from '@angular/core';
-import { Coord } from 'src/app/jscaip/Coord';
+
+import { Coord } from '../../../app/jscaip/Coord';
 import { MartianChessComponent, MartianChessFace } from './martian-chess.component';
 
 @Component({

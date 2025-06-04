@@ -1,10 +1,10 @@
-import { PlayerMetricHeuristic } from 'src/app/jscaip/AI/Minimax';
-import { PlayerNumberTable } from 'src/app/jscaip/PlayerNumberTable';
+import { PlayerMetricHeuristic } from '../../../app/jscaip/AI/Minimax';
+import { PlayerNumberTable } from '../../../app/jscaip/PlayerNumberTable';
 import { DiaballikNode } from './DiaballikRules';
 import { DiaballikMove } from './DiaballikMove';
 import { DiaballikPiece, DiaballikState } from './DiaballikState';
-import { Player } from 'src/app/jscaip/Player';
-import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { Player } from '../../../app/jscaip/Player';
+import { NoConfig } from '../../../app/jscaip/RulesConfigUtil';
 
 export class DiaballikDistanceHeuristic extends PlayerMetricHeuristic<DiaballikMove, DiaballikState> {
 

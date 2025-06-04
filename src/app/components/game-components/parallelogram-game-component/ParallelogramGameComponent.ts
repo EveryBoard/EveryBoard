@@ -1,10 +1,11 @@
 import { Component } from '@angular/core';
+
 import { RectangularGameComponent } from '../rectangular-game-component/RectangularGameComponent';
-import { SuperRules } from 'src/app/jscaip/Rules';
-import { Move } from 'src/app/jscaip/Move';
-import { GameStateWithTable } from 'src/app/jscaip/state/GameStateWithTable';
-import { Coord } from 'src/app/jscaip/Coord';
-import { EmptyRulesConfig, RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { SuperRules } from '../../../../app/jscaip/Rules';
+import { Move } from '../../../../app/jscaip/Move';
+import { GameStateWithTable } from '../../../../app/jscaip/state/GameStateWithTable';
+import { Coord } from '../../../../app/jscaip/Coord';
+import { EmptyRulesConfig, RulesConfig } from '../../../../app/jscaip/RulesConfigUtil';
 
 export interface ModeConfig {
 

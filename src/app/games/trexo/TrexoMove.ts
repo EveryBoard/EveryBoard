@@ -1,5 +1,5 @@
-import { Coord } from 'src/app/jscaip/Coord';
-import { MoveWithTwoCoords } from 'src/app/jscaip/MoveWithTwoCoords';
+import { Coord } from '../../../app/jscaip/Coord';
+import { MoveWithTwoCoords } from '../../../app/jscaip/MoveWithTwoCoords';
 import { Encoder, MGPFallible, Utils } from '@everyboard/lib';
 import { TrexoFailure } from './TrexoFailure';
 import { TrexoState } from './TrexoState';

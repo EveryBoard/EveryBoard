@@ -1,12 +1,12 @@
 import { MGPOptional } from '@everyboard/lib';
 
-import { Tutorial, TutorialStep } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStep';
+import { Tutorial, TutorialStep } from '../../../app/components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { HexodiaState } from './HexodiaState';
 import { HexodiaMove } from './HexodiaMove';
-import { Coord } from 'src/app/jscaip/Coord';
+import { Coord } from '../../../app/jscaip/Coord';
 import { HexodiaConfig, HexodiaRules } from './HexodiaRules';
-import { TutorialStepMessage } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
-import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
+import { TutorialStepMessage } from '../../../app/components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
+import { FourStatePiece } from '../../../app/jscaip/FourStatePiece';
 
 const _: FourStatePiece = FourStatePiece.EMPTY;
 const O: FourStatePiece = FourStatePiece.ZERO;

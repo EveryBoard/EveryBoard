@@ -1,14 +1,15 @@
 import { MGPOptional } from '@everyboard/lib';
+
 import { AbstractGoRules } from '../AbstractGoRules';
 import { GoState } from '../GoState';
 import { GoPiece } from '../GoPiece';
-import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
-import { BooleanConfig, NumberConfig, RulesConfigDescription, RulesConfigDescriptionLocalizable } from 'src/app/components/wrapper-components/rules-configuration/RulesConfigDescription';
-import { MGPValidators } from 'src/app/utils/MGPValidator';
+import { PlayerNumberMap } from '../../../../app/jscaip/PlayerMap';
+import { BooleanConfig, NumberConfig, RulesConfigDescription, RulesConfigDescriptionLocalizable } from '../../../../app/components/wrapper-components/rules-configuration/RulesConfigDescription';
+import { MGPValidators } from '../../../../app/utils/MGPValidator';
 import { TriangularGoGroupDataFactory } from '../GoGroupDataFactory';
-import { GroupDataFactory } from 'src/app/jscaip/BoardData';
-import { TriangularCheckerBoard } from 'src/app/jscaip/state/TriangularCheckerBoard';
-import { HexagonalUtils } from 'src/app/jscaip/HexagonalUtils';
+import { GroupDataFactory } from '../../../../app/jscaip/BoardData';
+import { TriangularCheckerBoard } from '../../../../app/jscaip/state/TriangularCheckerBoard';
+import { HexagonalUtils } from '../../../../app/jscaip/HexagonalUtils';
 
 export type TrigoConfig = {
 

@@ -1,4 +1,4 @@
-import { Minimax } from 'src/app/jscaip/AI/Minimax';
+import { Minimax } from '../../../app/jscaip/AI/Minimax';
 import { SquarzMoveGenerator } from './SquarzMoveGenerator';
 import { SquarzMove } from './SquarzMove';
 import { SquarzState } from './SquarzState';

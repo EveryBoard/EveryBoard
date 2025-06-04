@@ -1,4 +1,4 @@
-import { Localized } from 'src/app/utils/LocaleUtils';
+import { Localized } from '../../../app/utils/LocaleUtils';
 
 export class DiamFailure {
     public static readonly NO_MORE_PIECES_OF_THIS_TYPE: Localized = () => $localize`You do not have any pieces of this type anymore.`;

@@ -1,7 +1,7 @@
 import { MGPOptional } from '@everyboard/lib';
 
-import { BoardValue } from 'src/app/jscaip/AI/BoardValue';
-import { Heuristic } from 'src/app/jscaip/AI/Minimax';
+import { BoardValue } from '../../../app/jscaip/AI/BoardValue';
+import { Heuristic } from '../../../app/jscaip/AI/Minimax';
 import { HexodiaMove } from './HexodiaMove';
 import { HexodiaConfig, HexodiaNode, HexodiaRules } from './HexodiaRules';
 import { HexodiaState } from './HexodiaState';

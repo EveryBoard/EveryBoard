@@ -3,19 +3,19 @@ import { Encoder, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
 import { Move } from '../../../jscaip/Move';
 import { SuperRules } from '../../../jscaip/Rules';
-import { Player } from 'src/app/jscaip/Player';
-import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
+import { Player } from '../../../../app/jscaip/Player';
+import { MessageDisplayer } from '../../../../app/services/MessageDisplayer';
 import { TutorialStep } from '../../wrapper-components/tutorial-game-wrapper/TutorialStep';
-import { GameState } from 'src/app/jscaip/state/GameState';
-import { GameNode } from 'src/app/jscaip/AI/GameNode';
-import { AI, AIOptions } from 'src/app/jscaip/AI/AI';
-import { EmptyRulesConfig, RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
-import { Coord } from 'src/app/jscaip/Coord';
-import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
-import { Debug } from 'src/app/utils/Debug';
-import { GameInfo } from '../../normal-component/pick-game/pick-game.component';
+import { GameState } from '../../../../app/jscaip/state/GameState';
+import { GameNode } from '../../../../app/jscaip/AI/GameNode';
+import { AI, AIOptions } from '../../../../app/jscaip/AI/AI';
+import { EmptyRulesConfig, RulesConfig } from '../../../../app/jscaip/RulesConfigUtil';
+import { Coord } from '../../../../app/jscaip/Coord';
+import { PlayerNumberMap } from '../../../../app/jscaip/PlayerMap';
+import { Debug } from '../../../../app/utils/Debug';
+import { GameInfo } from '../../normal-component/pick-game/game-info';
 import { BaseComponent } from '../../BaseComponent';
-import { Orthogonal } from 'src/app/jscaip/Orthogonal';
+import { Orthogonal } from '../../../../app/jscaip/Orthogonal';
 
 /**
  * Define some methods that are useful to have in game components.

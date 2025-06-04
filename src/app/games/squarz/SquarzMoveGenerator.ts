@@ -1,10 +1,11 @@
-import { MoveGenerator } from 'src/app/jscaip/AI/AI';
+import { MGPMap, MGPOptional } from '@everyboard/lib';
+
+import { MoveGenerator } from '../../../app/jscaip/AI/AI';
 import { SquarzMove } from './SquarzMove';
 import { SquarzConfig, SquarzNode, SquarzRules } from './SquarzRules';
 import { SquarzState } from './SquarzState';
-import { Player } from 'src/app/jscaip/Player';
-import { MGPMap, MGPOptional } from '@everyboard/lib';
-import { Coord } from 'src/app/jscaip/Coord';
+import { Player } from '../../../app/jscaip/Player';
+import { Coord } from '../../../app/jscaip/Coord';
 
 export class SquarzMoveGenerator extends MoveGenerator<SquarzMove, SquarzState, SquarzConfig> {
 

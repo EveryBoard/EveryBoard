@@ -1,14 +1,15 @@
-import { Tutorial, TutorialStep } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStep';
-import { Coord } from 'src/app/jscaip/Coord';
-import { Player } from 'src/app/jscaip/Player';
-import { Localized } from 'src/app/utils/LocaleUtils';
 import { MGPOptional, MGPValidation } from '@everyboard/lib';
+
+import { Tutorial, TutorialStep } from '../../../app/components/wrapper-components/tutorial-game-wrapper/TutorialStep';
+import { Coord } from '../../../app/jscaip/Coord';
+import { Player } from '../../../app/jscaip/Player';
+import { Localized } from '../../../app/utils/LocaleUtils';
 import { YinshState } from './YinshState';
 import { YinshCapture, YinshMove } from './YinshMove';
 import { YinshPiece } from './YinshPiece';
 import { YinshRules } from './YinshRules';
-import { TutorialStepMessage } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
-import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
+import { TutorialStepMessage } from '../../../app/components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
+import { PlayerNumberMap } from '../../../app/jscaip/PlayerMap';
 
 const _: YinshPiece = YinshPiece.EMPTY;
 const N: YinshPiece = YinshPiece.UNREACHABLE;

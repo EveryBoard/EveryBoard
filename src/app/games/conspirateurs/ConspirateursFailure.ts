@@ -1,4 +1,4 @@
-import { Localized } from 'src/app/utils/LocaleUtils';
+import { Localized } from '../../../app/utils/LocaleUtils';
 
 export class ConspirateursFailure {
     public static SIMPLE_MOVE_SHOULD_BE_OF_ONE_STEP: Localized = () => $localize`Your piece should land on a neighboring square.`;

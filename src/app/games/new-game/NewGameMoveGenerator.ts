@@ -1,8 +1,8 @@
-import { MoveGenerator } from 'src/app/jscaip/AI/AI';
+import { MoveGenerator } from '../../../app/jscaip/AI/AI';
 import { NewGameMove } from './NewGameMove';
 import { NewGameNode } from './NewGameRules';
 import { NewGameState } from './NewGameState';
-import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { NoConfig } from '../../../app/jscaip/RulesConfigUtil';
 
 // A move generator lists possible moves for a game
 export class NewGameMoveGenerator extends MoveGenerator<NewGameMove, NewGameState> {

@@ -2,7 +2,7 @@ import { ActivatedRoute } from '@angular/router';
 import { MGPOptional, Utils } from '@everyboard/lib';
 
 import { BaseComponent } from '../BaseComponent';
-import { GameInfo } from '../normal-component/pick-game/pick-game.component';
+import { GameInfo } from '../normal-component/pick-game/game-info';
 
 export abstract class BaseWrapperComponent extends BaseComponent {
 

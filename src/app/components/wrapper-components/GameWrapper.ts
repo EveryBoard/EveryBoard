@@ -2,16 +2,17 @@ import { Component, ComponentRef, Type, ViewChild, ViewContainerRef } from '@ang
 import { ActivatedRoute, Router } from '@angular/router';
 import { Comparable, MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
-import { ConnectedUserService } from 'src/app/services/ConnectedUserService';
+import { ConnectedUserService } from '../../../app/services/ConnectedUserService';
 import { Move } from '../../jscaip/Move';
-import { GameInfo } from '../normal-component/pick-game/pick-game.component';
-import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { Localized } from 'src/app/utils/LocaleUtils';
+import { GameInfo } from '../normal-component/pick-game/game-info';
+import { Player, PlayerOrNone } from '../../../app/jscaip/Player';
+import { Localized } from '../../../app/utils/LocaleUtils';
 import { AbstractGameComponent } from '../game-components/game-component/GameComponent';
-import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
-import { RulesConfig, RulesConfigUtils } from 'src/app/jscaip/RulesConfigUtil';
+import { MessageDisplayer } from '../../../app/services/MessageDisplayer';
+import { RulesConfig, RulesConfigUtils } from '../../../app/jscaip/RulesConfigUtil';
 import { RulesConfigDescription } from './rules-configuration/RulesConfigDescription';
 import { BaseWrapperComponent } from './BaseWrapperComponent';
+import { ComponentInfo } from '../normal-component/pick-game/component-info';
 
 export class GameWrapperMessages {
 
@@ -61,8 +62,8 @@ export abstract class GameWrapper<P extends Comparable> extends BaseWrapperCompo
     public abstract getPlayer(): P;
 
     private getMatchingComponent(gameName: string): MGPOptional<Type<AbstractGameComponent>> {
-        const optionalGameInfo: MGPOptional<GameInfo> = GameInfo.getByUrlName(gameName);
-        return optionalGameInfo.map((gameInfo: GameInfo) => gameInfo.component);
+        const optionalComponentInfo: MGPOptional<ComponentInfo> = ComponentInfo.getByUrlName(gameName);
+        return optionalComponentInfo.map((gameInfo: ComponentInfo) => gameInfo.component);
     }
 
     /**

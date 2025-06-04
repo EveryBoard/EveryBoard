@@ -1,4 +1,4 @@
-import { GobanConfig } from 'src/app/jscaip/GobanConfig';
+import { GobanConfig } from '../../../app/jscaip/GobanConfig';
 
 export type PenteConfig = GobanConfig & {
 

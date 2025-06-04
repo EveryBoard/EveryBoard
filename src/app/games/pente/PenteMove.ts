@@ -1,6 +1,7 @@
-import { Coord } from 'src/app/jscaip/Coord';
-import { MoveCoord } from 'src/app/jscaip/MoveCoord';
 import { Encoder } from '@everyboard/lib';
+
+import { Coord } from '../../../app/jscaip/Coord';
+import { MoveCoord } from '../../../app/jscaip/MoveCoord';
 
 export class PenteMove extends MoveCoord {
 

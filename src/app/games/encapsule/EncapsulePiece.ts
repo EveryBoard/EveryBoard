@@ -1,5 +1,6 @@
-import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { ComparableObject, Encoder } from '@everyboard/lib';
+
+import { Player, PlayerOrNone } from '../../../app/jscaip/Player';
 
 
 export class EncapsulePiece implements ComparableObject {

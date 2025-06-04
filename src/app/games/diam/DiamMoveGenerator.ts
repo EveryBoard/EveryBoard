@@ -1,11 +1,11 @@
-import { MoveGenerator } from 'src/app/jscaip/AI/AI';
-import { Coord } from 'src/app/jscaip/Coord';
-import { Player } from 'src/app/jscaip/Player';
+import { MoveGenerator } from '../../../app/jscaip/AI/AI';
+import { Coord } from '../../../app/jscaip/Coord';
+import { Player } from '../../../app/jscaip/Player';
 import { DiamMove, DiamMoveDrop, DiamMoveShift } from './DiamMove';
 import { DiamPiece } from './DiamPiece';
 import { DiamNode, DiamRules } from './DiamRules';
 import { DiamState } from './DiamState';
-import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { NoConfig } from '../../../app/jscaip/RulesConfigUtil';
 
 export class DiamMoveGenerator extends MoveGenerator<DiamMove, DiamState> {
 

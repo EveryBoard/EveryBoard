@@ -1,7 +1,8 @@
 import { Component, Input } from '@angular/core';
+
 import { BaseGameComponent } from '../game-component/GameComponent';
 import { Arrow } from './Arrow';
-import { Ordinal } from 'src/app/jscaip/Ordinal';
+import { Ordinal } from '../../../../app/jscaip/Ordinal';
 
 @Component({
     selector: '[app-dir-arrow]',

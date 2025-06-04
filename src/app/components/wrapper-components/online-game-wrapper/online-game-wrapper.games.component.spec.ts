@@ -4,7 +4,7 @@ import { MGPValidation } from '@everyboard/lib';
 
 import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { AbstractGameComponent } from '../../game-components/game-component/GameComponent';
-import { GameInfo } from '../../normal-component/pick-game/pick-game.component';
+import { GameInfo } from '../../normal-component/pick-game/game-info';
 import { clickableMethods } from '../../game-components/game-component/clickableMethods.spec';
 import { PreparationOptions, prepareStartedGameFor } from './online-game-wrapper.quarto.component.spec';
 import { MinimalUser } from 'src/app/domain/MinimalUser';

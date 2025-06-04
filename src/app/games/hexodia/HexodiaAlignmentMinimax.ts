@@ -1,4 +1,4 @@
-import { Minimax } from 'src/app/jscaip/AI/Minimax';
+import { Minimax } from '../../../app/jscaip/AI/Minimax';
 import { HexodiaMove } from './HexodiaMove';
 import { HexodiaState } from './HexodiaState';
 import { HexodiaConfig, HexodiaRules } from './HexodiaRules';

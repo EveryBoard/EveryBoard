@@ -1,6 +1,6 @@
-import { FourStatePieceGameStateWithTable } from 'src/app/jscaip/state/FourStatePieceGameStateWithTable';
-import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
-import { PlayerOrNone } from 'src/app/jscaip/Player';
+import { FourStatePieceGameStateWithTable } from '../../../app/jscaip/state/FourStatePieceGameStateWithTable';
+import { PlayerNumberMap } from '../../../app/jscaip/PlayerMap';
+import { PlayerOrNone } from '../../../app/jscaip/Player';
 
 export class AbaloneState extends FourStatePieceGameStateWithTable {
 

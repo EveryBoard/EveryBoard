@@ -3,7 +3,7 @@ import { FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { comparableEquals, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
-import { ConfigDescriptionType, NamedRulesConfig, RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { ConfigDescriptionType, NamedRulesConfig, RulesConfig } from '../../../../app/jscaip/RulesConfigUtil';
 import { RulesConfigDescription, RulesConfigDescriptionLocalizable } from './RulesConfigDescription';
 import { BaseWrapperComponent } from '../BaseWrapperComponent';
 

@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component } from '@angular/core';
 
 import { AwaleRules } from './AwaleRules';
-import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
+import { MessageDisplayer } from '../../../../app/services/MessageDisplayer';
 import { AwaleMoveGenerator } from './AwaleMoveGenerator';
 import { MancalaMove } from '../common/MancalaMove';
 import { MancalaComponent } from '../common/MancalaComponent';

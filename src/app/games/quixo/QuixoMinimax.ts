@@ -1,4 +1,4 @@
-import { Minimax } from 'src/app/jscaip/AI/Minimax';
+import { Minimax } from '../../../app/jscaip/AI/Minimax';
 import { QuixoMove } from './QuixoMove';
 import { QuixoMoveGenerator } from './QuixoMoveGenerator';
 import { QuixoRules } from './QuixoRules';

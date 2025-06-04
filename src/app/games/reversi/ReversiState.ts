@@ -1,7 +1,7 @@
 import { Coord } from '../../jscaip/Coord';
-import { Player } from 'src/app/jscaip/Player';
-import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
-import { PlayerOrNoneGameStateWithTable } from 'src/app/jscaip/state/PlayerOrNoneGameStateWithTable';
+import { Player } from '../../../app/jscaip/Player';
+import { PlayerNumberMap } from '../../../app/jscaip/PlayerMap';
+import { PlayerOrNoneGameStateWithTable } from '../../../app/jscaip/state/PlayerOrNoneGameStateWithTable';
 
 export class ReversiState extends PlayerOrNoneGameStateWithTable {
 

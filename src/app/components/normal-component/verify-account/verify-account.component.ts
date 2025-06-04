@@ -2,8 +2,9 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { ConnectedUserService, AuthUser } from 'src/app/services/ConnectedUserService';
 import { MGPValidation } from '@everyboard/lib';
+
+import { ConnectedUserService, AuthUser } from '../../../../app/services/ConnectedUserService';
 
 /**
  * Component to verify an account.

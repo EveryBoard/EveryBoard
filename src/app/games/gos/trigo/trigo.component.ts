@@ -1,23 +1,24 @@
-import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 import { ChangeDetectorRef, Component } from '@angular/core';
-import { GoMove } from 'src/app/games/gos/GoMove';
+import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
+
+import { GoMove } from '../../../../app/games/gos/GoMove';
 import { TrigoConfig, TrigoRules } from './TrigoRules';
-import { GoState } from 'src/app/games/gos/GoState';
+import { GoState } from '../../../../app/games/gos/GoState';
 import { GoPiece } from '../GoPiece';
-import { Coord } from 'src/app/jscaip/Coord';
-import { GroupData } from 'src/app/jscaip/BoardData';
-import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
-import { MCTS } from 'src/app/jscaip/AI/MCTS';
+import { Coord } from '../../../../app/jscaip/Coord';
+import { GroupData } from '../../../../app/jscaip/BoardData';
+import { MessageDisplayer } from '../../../../app/services/MessageDisplayer';
+import { MCTS } from '../../../../app/jscaip/AI/MCTS';
 import { TrigoMoveGenerator } from './TrigoMoveGenerator';
-import { Debug } from 'src/app/utils/Debug';
-import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
+import { Debug } from '../../../../app/utils/Debug';
+import { PlayerNumberMap } from '../../../../app/jscaip/PlayerMap';
 import { GoPhase } from '../GoPhase';
-import { TriangularGameComponent } from 'src/app/components/game-components/game-component/TriangularGameComponent';
+import { TriangularGameComponent } from '../../../../app/components/game-components/game-component/TriangularGameComponent';
 import { GoLegalityInformation } from '../AbstractGoRules';
-import { ViewBox } from 'src/app/components/game-components/GameComponentUtils';
-import { TriangularCheckerBoard } from 'src/app/jscaip/state/TriangularCheckerBoard';
+import { ViewBox } from '../../../../app/components/game-components/GameComponentUtils';
+import { TriangularCheckerBoard } from '../../../../app/jscaip/state/TriangularCheckerBoard';
 import { TrigoMinimax } from './TrigoMinimax';
-import { TableUtils } from 'src/app/jscaip/TableUtils';
+import { TableUtils } from '../../../../app/jscaip/TableUtils';
 
 @Component({
     selector: 'app-trigo',

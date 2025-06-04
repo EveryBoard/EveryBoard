@@ -5,10 +5,10 @@ import { Utils } from '@everyboard/lib';
 
 import { ChatService } from '../../../services/ChatService';
 import { Message, MessageDocument } from '../../../domain/Message';
-import { ConnectedUserService } from 'src/app/services/ConnectedUserService';
-import { FirestoreCollectionObserver } from 'src/app/dao/FirestoreCollectionObserver';
-import { MinimalUser } from 'src/app/domain/MinimalUser';
-import { Debug } from 'src/app/utils/Debug';
+import { ConnectedUserService } from '../../../../app/services/ConnectedUserService';
+import { FirestoreCollectionObserver } from '../../../../app/dao/FirestoreCollectionObserver';
+import { MinimalUser } from '../../../../app/domain/MinimalUser';
+import { Debug } from '../../../../app/utils/Debug';
 
 @Component({
     selector: 'app-chat',

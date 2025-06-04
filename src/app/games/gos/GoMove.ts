@@ -1,6 +1,6 @@
 import { Encoder } from '@everyboard/lib';
-import { MoveCoord } from 'src/app/jscaip/MoveCoord';
-import { Coord } from 'src/app/jscaip/Coord';
+import { MoveCoord } from '../../../app/jscaip/MoveCoord';
+import { Coord } from '../../../app/jscaip/Coord';
 
 export class GoMove extends MoveCoord {
 

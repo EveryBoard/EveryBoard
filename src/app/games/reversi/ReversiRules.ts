@@ -1,19 +1,20 @@
 import { MGPFallible, MGPOptional, Utils } from '@everyboard/lib';
-import { GameNode } from 'src/app/jscaip/AI/GameNode';
+
+import { GameNode } from '../../../app/jscaip/AI/GameNode';
 import { ConfigurableRules } from '../../jscaip/Rules';
 import { ReversiState } from './ReversiState';
 import { Coord } from '../../jscaip/Coord';
-import { Ordinal } from 'src/app/jscaip/Ordinal';
+import { Ordinal } from '../../../app/jscaip/Ordinal';
 import { ReversiMove } from './ReversiMove';
-import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { RulesFailure } from 'src/app/jscaip/RulesFailure';
+import { Player, PlayerOrNone } from '../../../app/jscaip/Player';
+import { RulesFailure } from '../../../app/jscaip/RulesFailure';
 import { ReversiFailure } from './ReversiFailure';
-import { GameStatus } from 'src/app/jscaip/GameStatus';
-import { TableUtils } from 'src/app/jscaip/TableUtils';
-import { Debug } from 'src/app/utils/Debug';
-import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
-import { NumberConfig, RulesConfigDescription, RulesConfigDescriptionLocalizable } from 'src/app/components/wrapper-components/rules-configuration/RulesConfigDescription';
-import { MGPValidators } from 'src/app/utils/MGPValidator';
+import { GameStatus } from '../../../app/jscaip/GameStatus';
+import { TableUtils } from '../../../app/jscaip/TableUtils';
+import { Debug } from '../../../app/utils/Debug';
+import { PlayerNumberMap } from '../../../app/jscaip/PlayerMap';
+import { NumberConfig, RulesConfigDescription, RulesConfigDescriptionLocalizable } from '../../../app/components/wrapper-components/rules-configuration/RulesConfigDescription';
+import { MGPValidators } from '../../../app/utils/MGPValidator';
 
 export type ReversiLegalityInformation = Coord[];
 

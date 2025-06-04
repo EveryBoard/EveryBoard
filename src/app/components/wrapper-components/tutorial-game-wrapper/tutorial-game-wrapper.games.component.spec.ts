@@ -7,7 +7,7 @@ import { Click, TutorialPredicate, TutorialStep } from './TutorialStep';
 import { TutorialStepMessage } from './TutorialStepMessage';
 
 import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
-import { GameInfo } from '../../normal-component/pick-game/pick-game.component';
+import { GameInfo } from '../../normal-component/pick-game/game-info';
 import { GameWrapper } from '../GameWrapper';
 import { Move } from 'src/app/jscaip/Move';
 import { Coord } from 'src/app/jscaip/Coord';

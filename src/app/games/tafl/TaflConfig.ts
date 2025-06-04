@@ -1,4 +1,4 @@
-import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { RulesConfig } from '../../../app/jscaip/RulesConfigUtil';
 
 /**
  * Terminology:
