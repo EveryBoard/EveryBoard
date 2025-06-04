@@ -3,6 +3,12 @@
   "include": [
     "./src/**/*.ts"
   ],
+  "exclude": [
+    "src/**/*.spec.ts",
+    "src/**/*.component.ts",
+    "src/**/*.module.ts",
+    "src/**/*.service.ts"
+  ],
   "compilerOptions": {
     "outDir": "./dist",
     "baseUrl": "./src",
