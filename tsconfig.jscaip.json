@@ -1,6 +1,7 @@
 {
   "extends": "./tsconfig.json",
   "include": [
+    "src/tmp_ai_scripts/localize_killer.ts",
     "./src/**/*.ts"
   ],
   "exclude": [
@@ -18,9 +19,11 @@
     "moduleResolution": "node",
     "module": "CommonJS",  // Add this line to explicitly use CommonJS
     "target": "ES2020",    // Target ES2020 or lower for Node compatibility
+    "lib": ["es2020"],
     "skipLibCheck": true,
+    "resolveJsonModule": true,
     "noImplicitAny": false,
-    "suppressImplicitAnyIndexErrors": true,
-    "esModuleInterop": true
+    "noEmitOnError": false,
+    "suppressImplicitAnyIndexErrors": true
   }
 }

@@ -19,8 +19,6 @@ import { RulesConfig } from '../app/jscaip/RulesConfigUtil';
 import { MoveGenerator } from '../app/jscaip/AI/AI';
 
 // compile with "npx tsc -p tsconfig.jscaip.json"
-globalThis.$localize = (string) => "localize(" + string + ")";
-$localize = (string) => "localize(" + string + ")";
 
 interface Input {
     action: 'choose' | 'getGameStatus' | 'getLegalMoves' | 'getGameName' | 'getInitialState';
@@ -70,13 +68,14 @@ class ProcessApplier<S extends GameState, M extends Move> {
     ) {
         this.gameInfo = GameInfo.getByUrlName(gameName).get();
     }
-    private getResponse(input: Input): any { // TODO: CHANGE return name
+    private getResponse(input: Input): Record<string, any> { // TODO: CHANGE return name
         if (input.action === 'choose') {
             const gameState: S = this.gameStateMapper(input);
             let node: GameNode<M, S> = new GameNode<M, S>(gameState);
             const move: M = this.moveMapper(input);
-            const defaultConfig: MGPOptional<RulesConfig> = this.gameInfo.rules.getDefaultConfig();
-            const result: MGPFallible<GameNode<M, S>> = this.gameInfo.rules.choose(node, move, defaultConfig);
+            const defaultConfig: MGPOptional<RulesConfig> = this.gameInfo.rules.getDefaultRulesConfig();
+            const result: MGPFallible<GameNode<M, S>> =
+                this.gameInfo.rules.choose(node, move, defaultConfig) as MGPFallible<GameNode<M, S>>;
             if (result.isSuccess()) {
                 node = result.get();
             }
@@ -87,52 +86,56 @@ class ProcessApplier<S extends GameState, M extends Move> {
         } else if (input.action === 'getGameStatus') {
             const gameState: S = this.gameStateMapper(input);
             const node: GameNode<M, S> = new GameNode<M, S>(gameState);
-            const status: GameStatus = this.gameInfo.rules.getGameStatus(node);
+            const defaultConfig: MGPOptional<RulesConfig> = this.gameInfo.rules.getDefaultRulesConfig();
+            const status: GameStatus = this.gameInfo.rules.getGameStatus(node, defaultConfig);
             return { status };
         } else if (input.action === 'getLegalMoves') {
             const gameState: S = this.gameStateMapper(input);
             const node: GameNode<M, S> = new GameNode<M, S>(gameState);
             const moveGenerator: MoveGenerator<M, S, RulesConfig> = this.moveGenerator;
-            const defaultConfig: MGPOptional<RulesConfig> = this.gameInfo.rules.getDefaultConfig();
+            const defaultConfig: MGPOptional<RulesConfig> = this.gameInfo.rules.getDefaultRulesConfig();
             const legalMoves: M[] = moveGenerator.getListMoves(node, defaultConfig);
             return { legalMoves };
         } else if (input.action === 'getInitialState') {
             // const optGameStateProvider: MGPOptional<(config: MGPOptional<RulesConfig>) => GameState> =
                 // GameInfo.getStateProvider(this.gameName);
             // const gameStateProvider: (config: MGPOptional<RulesConfig>) => GameState = optGameStateProvider.get();
-            // const defaultConfig: MGPOptional<RulesConfig> = this.gameInfo.rules.getDefaultConfig();
-            const initialState: GameState = this.gameInfo.rules.getInitialState();
+            const defaultConfig: MGPOptional<RulesConfig> = this.gameInfo.rules.getDefaultRulesConfig();
+            const initialState: GameState = this.gameInfo.rules.getInitialState(defaultConfig);
             return { initialState };
+        } else {
+            throw Error('Unknown action ' + input.action);
         }
     }
-    public applyRequest(input: Input): void {
+    public getRequestReponse(input: Input): string {
         // Always send response as single line
-        // const response: any = this.getResponse(input);
-        // const stringResponse: string = JSON.stringify(response);
-        // console.log(stringResponse + "\n");
-        console.log("jaaaajentouk\n");
-        // process.stdout.write(stringResponse);
+        const response: Record<string, any> = this.getResponse(input);
+        const stringResponse: string = JSON.stringify(response) + '\n';
+        return stringResponse;
     }
 }
 rl.on('line', (line: string) => {
     try {
         const input: Input = JSON.parse(line);
         switch (input.gameName) {
-            case 'p4':
+            case 'P4':
                 const processApplier: ProcessApplier<P4State, P4Move> = new ProcessApplier(
-                    'p4',
+                    'P4',
                     getP4Move,
                     getP4State,
                     new P4MoveGenerator(),
                 );
-                processApplier.applyRequest(input);
+                const response: string = processApplier.getRequestReponse(input);
+                console.log(response);
+                // process.stdout.write(response);
                 break;
             default:
-                throw new TypeError('Le sang de ta jaaj')
+                throw new TypeError('Unknown Game ' + structuredClone(input.gameName));
         }
     } catch (e: any) {
         const errorMessage: string = JSON.stringify({ error: e?.message || e?.toString?.() || 'Unknown error' });
         console.error(errorMessage);
-        process.stdout.write(JSON.stringify({ success: false, error: errorMessage, line }) + '\n');
+        console.log(errorMessage);
+        // process.stdout.write(JSON.stringify({ success: false, error: errorMessage, line }) + '\n');
     }
 });
