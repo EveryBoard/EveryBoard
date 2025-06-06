@@ -5,15 +5,13 @@ import { AbstractChatService, ChatService } from 'src/app/services/ChatService';
 import { DebugElement } from '@angular/core';
 
 import { prepareUnsubscribeCheck, SimpleComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
-import { serverTimestamp } from 'firebase/firestore';
 import { UserMocks } from 'src/app/domain/UserMocks.spec';
-import { MinimalUser } from 'src/app/domain/MinimalUser';
 import { ConnectedUserServiceMock } from 'src/app/services/tests/ConnectedUserService.spec';
 import { UserDAO } from 'src/app/dao/UserDAO';
 import { Message } from 'src/app/domain/Message';
 import { ChatServiceMock } from 'src/app/services/tests/ChatServiceMock.spec';
 
-fdescribe('ChatComponent', () => {
+describe('ChatComponent', () => {
 
     let testUtils: SimpleComponentTestUtils<ChatComponent>;
     let component: ChatComponent;
@@ -34,7 +32,6 @@ fdescribe('ChatComponent', () => {
     beforeEach(fakeAsync(async() => {
         testUtils = await SimpleComponentTestUtils.create(ChatComponent);
         component = testUtils.getComponent();
-        component.chatId = 'fauxChat';
         chatService = TestBed.inject(ChatService) as AbstractChatService as ChatServiceMock;
     }));
 

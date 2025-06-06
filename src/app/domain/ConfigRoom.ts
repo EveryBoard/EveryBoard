@@ -48,8 +48,8 @@ export namespace GameType {
 }
 
 export namespace GameDuration {
-    export const NORMAL_MOVE_DURATION: number = 2 * 60;
-    export const NORMAL_GAME_DURATION: number = 30 * 60;
+    export const STANDARD_MOVE_DURATION: number = 2 * 60;
+    export const STANDARD_GAME_DURATION: number = 30 * 60;
     export const BLITZ_MOVE_DURATION: number = 30;
     export const BLITZ_GAME_DURATION: number = 15 * 60;
 }

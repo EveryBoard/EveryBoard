@@ -16,8 +16,8 @@ export class ConfigRoomMocks {
             // We don't want the first player to be random here, to minimize non-deterministic tests
             firstPlayer: FirstPlayer.CREATOR,
             gameType: GameType.STANDARD,
-            moveDuration: GameDuration.NORMAL_MOVE_DURATION,
-            gameDuration: GameDuration.NORMAL_GAME_DURATION,
+            moveDuration: GameDuration.STANDARD_MOVE_DURATION,
+            gameDuration: GameDuration.STANDARD_GAME_DURATION,
             rulesConfig: rulesConfig.getOrElse({}),
             gameName: 'P4',
         };

@@ -65,22 +65,22 @@
                             <div class="column">
                                 <button class="button is-fullwidth"
                                         id="firstPlayerRandom"
-                                        [ngClass]="viewInfo.firstPlayerClasses['RANDOM']"
-                                        (click)="selectFirstPlayer('RANDOM')"
+                                        [ngClass]="viewInfo.firstPlayerClasses[FirstPlayer.RANDOM]"
+                                        (click)="selectFirstPlayer(FirstPlayer.RANDOM)"
                                         i18n>Random first player</button>
                             </div>
                             <div class="column">
                                 <button class="button is-fullwidth"
                                         id="firstPlayerCreator"
-                                        [ngClass]="viewInfo.firstPlayerClasses['CREATOR']"
-                                        (click)="selectFirstPlayer('CREATOR')"
+                                        [ngClass]="viewInfo.firstPlayerClasses[FirstPlayer.CREATOR]"
+                                        (click)="selectFirstPlayer(FirstPlayer.CREATOR)"
                                         i18n>You start</button>
                             </div>
                             <div class="column">
                                 <button class="button is-fullwidth"
                                         id="firstPlayerOpponent"
-                                        [ngClass]="viewInfo.firstPlayerClasses['CHOSEN_PLAYER']"
-                                        (click)="selectFirstPlayer('CHOSEN_PLAYER')"
+                                        [ngClass]="viewInfo.firstPlayerClasses[FirstPlayer.CHOSEN_OPPONENT]"
+                                        (click)="selectFirstPlayer(FirstPlayer.CHOSEN_OPPONENT)"
                                 >
                                     <ng-container *ngIf="viewInfo.chosenOpponent else opponentWithoutName" i18n>{{ viewInfo.chosenOpponent }} starts</ng-container>
                                     <ng-template #opponentWithoutName i18n>The opponent starts</ng-template>
@@ -92,7 +92,7 @@
                                 <div class="button is-fullwidth dropdown is-hoverable"
                                      id="gameTypeStandard"
                                      [ngClass]="viewInfo.gameTypeClasses[GameType.STANDARD]"
-                                     (click)="selectPartType(GameType.STANDARD)"
+                                     (click)="selectGameType(GameType.STANDARD)"
                                 >
                                     <div class="dropdown-trigger">
                                         <span i18n>Standard time</span>
@@ -102,7 +102,7 @@
                                             <div class="dropdown-item">
                                                 <p>
                                                     <ng-container i18n>Maximal turn duration: </ng-container>
-                                                    <strong>{{ GameDuration.NORMAL_MOVE_DURATION | humanDuration }}</strong><br/>
+                                                    <strong>{{ GameDuration.STANDARD_MOVE_DURATION | humanDuration }}</strong><br/>
                                                     <ng-container i18n>Maximal game duration: <strong>{{ GameDuration.NORMAL_GAME_DURATION | humanDuration }} per player</strong></ng-container>
                                                 </p>
                                             </div>
@@ -114,7 +114,7 @@
                                 <div class="button is-fullwidth dropdown is-hoverable"
                                      id="gameTypeBlitz"
                                      [ngClass]="viewInfo.gameTypeClasses[GameType.BLITZ]"
-                                     (click)="selectPartType(GameType.BLITZ)">
+                                     (click)="selectGameType(GameType.BLITZ)">
                                     <div class="dropdown-trigger">
                                         <span i18n>Blitz</span>
                                     </div>
@@ -124,7 +124,7 @@
                                                 <p>
                                                     <ng-container i18n>Maximal turn duration: </ng-container>
                                                     <strong>{{ GameDuration.BLITZ_MOVE_DURATION | humanDuration }}</strong><br/>
-                                                    <ng-container i18n>Maximal game duration: <strong>{{ GameDuration.BLITZ_PART_DURATION | humanDuration }} per player</strong></ng-container>
+                                                    <ng-container i18n>Maximal game duration: <strong>{{ GameDuration.BLITZ_GAME_DURATION | humanDuration }} per player</strong></ng-container>
                                                 </p>
                                                 </div>
                                             </div>
@@ -135,31 +135,31 @@
                                 <button class="button is-fullwidth"
                                         id="gameTypeCustom"
                                         [ngClass]="viewInfo.gameTypeClasses[GameType.CUSTOM]"
-                                        (click)="selectPartType(GameType.CUSTOM)"
+                                        (click)="selectGameType(GameType.CUSTOM)"
                                         i18n>Custom time</button>
                             </div>
                         </div>
                             <div id="customTime"
                                  *ngIf="viewInfo.showCustomTime">
                                 <div class="field">
-                                    <label class="label" for="maximalMoveDuration">
+                                    <label class="label" for="moveDuration">
                                         <ng-container i18n>Maximal turn duration: </ng-container>
-                                        <output>{{ (viewInfo.maximalMoveDuration || 0) | humanDuration }}</output>
+                                        <output>{{ (viewInfo.moveDuration || 0) | humanDuration }}</output>
                                     </label>
                                     <div class="control">
                                         <input class="slider is-circle is-primary"
                                                step="10" min="10" max="300"
-                                               name="maximalMoveDuration"
-                                               formControlName="maximalMoveDuration" type="range">
+                                               name="moveDuration"
+                                               formControlName="moveDuration" type="range">
                                     </div>
                                 </div>
                                 <div class="field">
-                                    <label class="label" for="totalPartDuration" i18n>Maximal game duration: <output>{{ (viewInfo.totalPartDuration || 0) | humanDuration }} per player</output></label>
+                                    <label class="label" for="gameDuration" i18n>Maximal game duration: <output>{{ (viewInfo.gameDuration || 0) | humanDuration }} per player</output></label>
                                     <div class="control">
                                         <input class="slider is-circle is-primary"
                                                step="10" min="10" max="3600"
-                                               name="totalPartDuration"
-                                               formControlName="totalPartDuration"
+                                               name="gameDuration"
+                                               formControlName="gameDuration"
                                                type="range">
                                     </div>
                                 </div>
@@ -233,8 +233,8 @@
                                     <span *ngIf="viewInfo.firstPlayer === 'CHOSEN_PLAYER'" i18n>you play first</span>
                                     <span *ngIf="viewInfo.firstPlayer === 'RANDOM'" i18n>the first player is selected randomly</span>
                                 </li>
-                                <li i18n>a turn lasts at most <strong>{{ (viewInfo.maximalMoveDuration || 0) | humanDuration }} </strong></li>
-                                <li i18n>the game lasts at most <strong>{{ (viewInfo.totalPartDuration || 0) | humanDuration }} per player</strong></li>
+                                <li i18n>a turn lasts at most <strong>{{ (viewInfo.moveDuration || 0) | humanDuration }} </strong></li>
+                                <li i18n>the game lasts at most <strong>{{ (viewInfo.gameDuration || 0) | humanDuration }} per player</strong></li>
                             </ul>
                             <app-rules-configuration #rulesConfigurationComponent
                                                      [rulesConfigDescriptionOptional]="rulesConfigDescription"

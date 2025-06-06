@@ -43,8 +43,8 @@ type GameCreationViewInfo = {
     gameType: GameType;
     gameTypeClasses: { [key: string]: string[] },
     gameTypeName?: string,
-    maximalMoveDuration?: number;
-    totalPartDuration?: number;
+    moveDuration?: number;
+    gameDuration?: number;
     candidates: string[];
     chosenOpponent?: string;
     candidateClasses: { [key: string]: string[] },
@@ -67,11 +67,9 @@ export class GameCreationComponent extends BaseWrapperComponent implements OnIni
      * they need common data so that the parent calculates/retrieves the data then share it
      * with the game creation component
      */
-    public static TOKEN_INTERVAL: number = 5 * 1000;
-    public static TOKEN_TIMEOUT: number = 5 * 1000 * 2;
-
     public GameType: typeof GameType = GameType;
     public GameDuration: typeof GameDuration = GameDuration;
+    public FirstPlayer: typeof FirstPlayer = FirstPlayer;
 
     @Input() gameId: string;
 
@@ -143,9 +141,9 @@ export class GameCreationComponent extends BaseWrapperComponent implements OnIni
     private createForms(): void {
         this.configFormGroup = this.formBuilder.group({
             firstPlayer: [FirstPlayer.RANDOM, Validators.required],
-            maximalMoveDuration: [GameDuration.NORMAL_MOVE_DURATION, Validators.required],
+            moveDuration: [GameDuration.STANDARD_MOVE_DURATION, Validators.required],
+            gameDuration: [GameDuration.STANDARD_GAME_DURATION, Validators.required],
             gameType: [GameType.STANDARD, Validators.required],
-            totalPartDuration: [GameDuration.NORMAL_GAME_DURATION, Validators.required],
             chosenOpponent: ['', Validators.required],
         });
     }
@@ -204,13 +202,13 @@ export class GameCreationComponent extends BaseWrapperComponent implements OnIni
                 this.viewInfo.gameType = gameType;
                 this.viewInfo.showCustomTime = gameType === GameType.CUSTOM;
             });
-        this.getForm('maximalMoveDuration').valueChanges
-            .pipe(takeUntil(this.ngUnsubscribe)).subscribe((maximalMoveDuration: number) => {
-                this.viewInfo.maximalMoveDuration = maximalMoveDuration;
+        this.getForm('moveDuration').valueChanges
+            .pipe(takeUntil(this.ngUnsubscribe)).subscribe((moveDuration: number) => {
+                this.viewInfo.moveDuration = moveDuration;
             });
-        this.getForm('totalPartDuration').valueChanges
-            .pipe(takeUntil(this.ngUnsubscribe)).subscribe((totalPartDuration: number) => {
-                this.viewInfo.totalPartDuration = totalPartDuration;
+        this.getForm('gameDuration').valueChanges
+            .pipe(takeUntil(this.ngUnsubscribe)).subscribe((gameDuration: number) => {
+                this.viewInfo.gameDuration = gameDuration;
             });
         this.getForm('firstPlayer').valueChanges
             .pipe(takeUntil(this.ngUnsubscribe)).subscribe((firstPlayer: FirstPlayer) => {
@@ -237,8 +235,8 @@ export class GameCreationComponent extends BaseWrapperComponent implements OnIni
         if (this.userIsCreator(configRoom)) {
             this.setDataForCreator(configRoom);
         } else {
-            this.viewInfo.maximalMoveDuration = configRoom.moveDuration;
-            this.viewInfo.totalPartDuration = configRoom.gameDuration;
+            this.viewInfo.moveDuration = configRoom.moveDuration;
+            this.viewInfo.gameDuration = configRoom.gameDuration;
             this.viewInfo.gameType = configRoom.gameType;
             this.viewInfo.chosenOpponent = configRoom.chosenOpponent?.name;
             this.viewInfo.firstPlayer = configRoom.firstPlayer;
@@ -258,8 +256,8 @@ export class GameCreationComponent extends BaseWrapperComponent implements OnIni
     }
 
     private setDataForCreator(configRoom: ConfigRoom): void {
-        this.viewInfo.maximalMoveDuration = this.viewInfo.maximalMoveDuration ?? configRoom.moveDuration;
-        this.viewInfo.totalPartDuration = this.viewInfo.totalPartDuration ?? configRoom.gameDuration;
+        this.viewInfo.moveDuration = this.viewInfo.moveDuration ?? configRoom.moveDuration;
+        this.viewInfo.gameDuration = this.viewInfo.gameDuration ?? configRoom.gameDuration;
         let opponent: string | undefined = this.viewInfo.chosenOpponent;
         if (opponent == null || opponent === '') {
             opponent = configRoom.chosenOpponent?.name ?? '';
@@ -278,18 +276,20 @@ export class GameCreationComponent extends BaseWrapperComponent implements OnIni
         this.getForm('firstPlayer').setValue(firstPlayer);
     }
 
-    public selectPartType(gameType: GameType): void {
+    public selectGameType(gameType: GameType): void {
+        console.log('select game type: ' + gameType)
         if (gameType === GameType.STANDARD) {
-            this.getForm('maximalMoveDuration').setValue(GameDuration.NORMAL_MOVE_DURATION);
-            this.getForm('totalPartDuration').setValue(GameDuration.NORMAL_GAME_DURATION);
+            this.getForm('moveDuration').setValue(GameDuration.STANDARD_MOVE_DURATION);
+            this.getForm('gameDuration').setValue(GameDuration.STANDARD_GAME_DURATION);
         } else if (gameType === GameType.BLITZ) {
-            this.getForm('maximalMoveDuration').setValue(GameDuration.BLITZ_MOVE_DURATION);
-            this.getForm('totalPartDuration').setValue(GameDuration.BLITZ_GAME_DURATION);
+            this.getForm('moveDuration').setValue(GameDuration.BLITZ_MOVE_DURATION);
+            this.getForm('gameDuration').setValue(GameDuration.BLITZ_GAME_DURATION);
         }
         this.getForm('gameType').setValue(gameType);
     }
 
     public async selectOpponent(opponentName: string): Promise<void> {
+        console.log('selectOpponent: ' + opponentName);
         const opponent: MinimalUser = this.getUserFromName(opponentName);
         return this.configRoomService.selectOpponent(opponent);
     }

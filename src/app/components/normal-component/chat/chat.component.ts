@@ -16,7 +16,6 @@ import { formatDate } from '@angular/common';
 @Debug.log
 export class ChatComponent implements OnInit, AfterViewChecked, OnDestroy {
 
-    @Input() public chatId!: string;
     public userMessage: string = '';
 
     public connected: boolean = false;
@@ -40,7 +39,6 @@ export class ChatComponent implements OnInit, AfterViewChecked, OnDestroy {
     }
 
     public ngOnInit(): void {
-        Utils.assert(this.chatId != null && this.chatId !== '', 'No chat to join mentionned');
         this.loadChatContent();
     }
 

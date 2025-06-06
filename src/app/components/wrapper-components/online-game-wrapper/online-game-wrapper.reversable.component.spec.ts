@@ -25,7 +25,7 @@ describe('OnlineGameWrapperComponent of Reversable Game:', () => {
         // Then the svg component should have no rotation
         const wrapper: OnlineGameWrapperComponent = testUtils.getWrapper() as OnlineGameWrapperComponent;
         expect(wrapper.gameComponent.rotation).toBe('rotate(0)');
-        tick(wrapper.configRoom.maximalMoveDuration * 1000);
+        tick(wrapper.configRoom.moveDuration * 1000);
     }));
     it('should have a rotation applied for player one', fakeAsync(async() => {
         // Given a game started for opponent (Player.ONE)
@@ -39,7 +39,7 @@ describe('OnlineGameWrapperComponent of Reversable Game:', () => {
         // Then the svg component should have a rotation of 180°
         const wrapper: OnlineGameWrapperComponent = testUtils.getWrapper() as OnlineGameWrapperComponent;
         expect(wrapper.gameComponent.rotation).toBe('rotate(180)');
-        tick(wrapper.configRoom.maximalMoveDuration * 1000);
+        tick(wrapper.configRoom.moveDuration * 1000);
     }));
 });
 */

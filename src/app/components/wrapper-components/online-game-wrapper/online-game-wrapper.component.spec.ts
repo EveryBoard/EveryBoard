@@ -96,7 +96,7 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
         tick(0);
         await configRoomDAO.set('configRoomId', ConfigRoomMocks.withAcceptedConfig(MGPOptional.of(config)));
         testUtils.detectChanges();
-        tick(ConfigRoomMocks.getInitial(MGPOptional.empty()).maximalMoveDuration * 1000);
+        tick(ConfigRoomMocks.getInitial(MGPOptional.empty()).moveDuration * 1000);
     }
 
     beforeEach(async() => {
@@ -152,7 +152,7 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
 
             testUtils.detectChanges(); // Needed so PartCreation is destroyed and game component created
 
-            tick(wrapper.configRoom.maximalMoveDuration * 1000);
+            tick(wrapper.configRoom.moveDuration * 1000);
         }));
 
         it('should have some tags before starting', fakeAsync(async() => {

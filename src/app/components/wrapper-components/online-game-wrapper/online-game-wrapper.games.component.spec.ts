@@ -45,7 +45,7 @@ describe('OnlineGameWrapperComponent (games)', () => {
                 // Then it should be refused, with the reason being that we are an observer
                 expect(clickResult).withContext(methodName).toEqual(refusal);
             }
-            tick(wrapper.configRoom.totalPartDuration * 1000);
+            tick(wrapper.configRoom.gameDuration * 1000);
         }));
 
     }

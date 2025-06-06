@@ -105,11 +105,6 @@ export namespace PreparationOptions {
 
 }
 
-export async function addCandidate(candidate: MinimalUser): Promise<void> {
-    const configRoomDAO: ConfigRoomDAO = TestBed.inject(ConfigRoomDAO);
-    return configRoomDAO.subCollectionDAO('configRoomId', 'candidates').set(candidate.id, candidate);
-}
-
 export async function prepareStartedGameFor<T extends AbstractGameComponent>(
     user: AuthUser,
     game: string,
@@ -130,6 +125,7 @@ export async function prepareStartedGameFor<T extends AbstractGameComponent>(
 
     const partCreationId: DebugElement = testUtils.findElement('#partCreation');
     expect(partCreationId).withContext('partCreation id should be present after ngOnInit').toBeTruthy();
+    // TODO: check how it's done in part-creation
     await addCandidate(UserMocks.OPPONENT_MINIMAL_USER);
     testUtils.detectChanges();
     const configRoomDAO: ConfigRoomDAO = TestBed.inject(ConfigRoomDAO);
@@ -145,9 +141,9 @@ export async function prepareStartedGameFor<T extends AbstractGameComponent>(
     await configRoomDAO.update('configRoomId', configRoom);
     testUtils.detectChanges();
     if (preparationOptions.shorterGlobalClock) {
-        configRoom = { ...configRoom, totalPartDuration: 10 };
+        configRoom = { ...configRoom, gameDuration: 10 };
         await configRoomDAO.update('configRoomId', {
-            totalPartDuration: 10,
+            gameDuration: 10,
         });
     }
     const gameService: GameService = TestBed.inject(GameService);

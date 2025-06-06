@@ -26,7 +26,6 @@ import { LoginComponent } from './components/normal-component/login/login.compon
 import { LobbyComponent } from './components/normal-component/lobby/lobby.component';
 import { AccountComponent } from './components/normal-component/account/account.component';
 import { PickGameComponent } from './components/normal-component/pick-game/pick-game.component';
-import { GameCreationComponent } from './components/wrapper-components/part-creation/part-creation.component';
 import { NotFoundComponent } from './components/normal-component/not-found/not-found.component';
 import { ChatComponent } from './components/normal-component/chat/chat.component';
 import { CountDownComponent } from './components/normal-component/count-down/count-down.component';
@@ -135,6 +134,7 @@ import { BlankGobanComponent } from './components/game-components/goban-game-com
 import { LocaleUtils } from './utils/LocaleUtils';
 import { ViewConfigComponent } from './components/normal-component/view-config/view-config.component';
 import { LocalGameConfigurationComponent } from './components/wrapper-components/local-game-configuration/local-game-configuration.component';
+import { GameCreationComponent } from './components/wrapper-components/part-creation/part-creation.component';
 
 registerLocaleData(localeFr);
 
