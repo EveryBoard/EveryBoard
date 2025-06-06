@@ -32,7 +32,7 @@ import { MinimalUser } from 'src/app/domain/MinimalUser';
 import { ConfigRoomServiceMock } from 'src/app/services/tests/ConfigRoomServiceMock.spec';
 
 
-fdescribe('GameCreationComponent', () => {
+describe('GameCreationComponent', () => {
 
     let testUtils: SimpleComponentTestUtils<GameCreationComponent>;
     let component: GameCreationComponent;

@@ -1,3 +1,4 @@
+// TODO: rename file to Game.ts
 import { JSONValue } from '@everyboard/lib';
 import { MinimalUser } from './MinimalUser';
 

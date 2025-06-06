@@ -1,9 +1,10 @@
 import { Subscription } from 'rxjs';
 
+import { MGPOptional, Utils } from '@everyboard/lib';
+
 import { ConfigProposal, ConfigRoom } from 'src/app/domain/ConfigRoom';
 import { AbstractConfigRoomService } from '../ConfigRoomService';
 import { MinimalUser } from 'src/app/domain/MinimalUser';
-import { MGPOptional, Utils } from '@everyboard/lib';
 
 export class ConfigRoomServiceMock extends AbstractConfigRoomService {
 

@@ -113,6 +113,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
     }
 
     public async startGame(configRoom: ConfigRoom): Promise<void> {
+        console.log('starting game!')
         Utils.assert(this.gameStarted === false, 'Should not start already started game');
         this.configRoom = configRoom;
         this.gameStarted = true;
@@ -130,11 +131,13 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
     }
 
     private async subscribeToGameUpdates(): Promise<void> {
+        console.log('subscribing to game updates')
         // This mutex will ensure that we receive one update/event at a time.
         // Without it, it could be the case that async operations are scheduled at the wrong time
         const mutex: Mutex = new Mutex();
         const onGameUpdate: (game: Game) => Promise<void> =
             (game: Game) => {
+                console.log('got game update')
                 return mutex.runExclusive(async() => {
                     await this.onGameUpdate(game);
                 });
@@ -360,6 +363,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
     }
 
     private async setRealObserverRole(): Promise<void> {
+        console.log('setting "real observer role"')
         if (this.players[0].equalsValue(this.getPlayer())) {
             await this.setRole(Player.ZERO);
             this.opponent = this.players[1].get();

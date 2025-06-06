@@ -6,52 +6,19 @@ import { BackendService, BackendMessage } from './BackendService';
 import { Debug } from '../utils/Debug';
 import { Player, PlayerOrNone } from '../jscaip/Player';
 
-@Injectable({
-    providedIn: 'root',
-})
-@Debug.log
-export class GameService {
-
-    public constructor(private readonly backendService: BackendService) {
-    }
-
-    public async subscribeTo(gameId: string,
-                             gameUpdate: (game: Game) => Promise<void>,
-                             gameEvent: (event: GameEvent, serverTime: number) => Promise<void>,
-                             error: (reason: string) => void)
-    : Promise<Subscription> {
-        const gameUpdateSubscription: Subscription =
-            this.backendService.setCallback('GameUpdate', (message: BackendMessage): void => {
-                void gameUpdate(message.getArgument('game'));
-            });
-        const gameEventSubscription: Subscription =
-            this.backendService.setCallback('GameEvent', (message: BackendMessage): void => {
-                void gameEvent(message.getArgument('event'), message.getArgument('serverTime'));
-            });
-        const gameSubscription: Subscription = await this.backendService.subscribeToGame(gameId);
-        const errorSubscription: Subscription =
-            this.backendService.setCallback('Error', (message: BackendMessage): void => {
-                error(message.getArgument('reason'));
-            });
-        return new Subscription(() => {
-            gameSubscription.unsubscribe();
-            gameUpdateSubscription.unsubscribe();
-            gameEventSubscription.unsubscribe();
-            errorSubscription.unsubscribe();
-        });
-    }
+export abstract class AbstractGameService {
+    /** Subscribe to the game, giving callbacks that will be called upon certain events */
+    public abstract subscribeTo(gameId: string,
+                                gameUpdate: (game: Game) => Promise<void>,
+                                gameEvent: (event: GameEvent, serverTime: number) => Promise<void>,
+                                error: (reason: string) => void)
+    : Promise<Subscription>;
 
     /** Create a game. Return the id of the created game. */
-    public async createGame(gameName: string): Promise<string> {
-        const response: BackendMessage =
-            await this.backendService.sendAndWaitForReply(['Create', { gameName }], 'GameCreated');
-        return response.getArgument('gameId');
-    }
+    public abstract createGame(gameName: string): Promise<string>;
 
     /** Perform a specific game action and asserts that it has succeeded */
-    private async gameAction(action: JSONValue): Promise<void> {
-        return this.backendService.send(action);
-    }
+    protected abstract gameAction(action: JSONValue): Promise<void>;
 
     /** Give the current player resignation in a game */
     public async resign(): Promise<void> {
@@ -139,6 +106,55 @@ export class GameService {
     public async endGame(winner: PlayerOrNone): Promise<void>
     {
         return this.gameAction(['EndGame', { winner: winner.getValue() }]);
+    }
+
+
+}
+
+@Injectable({
+    providedIn: 'root',
+})
+@Debug.log
+export class GameService extends AbstractGameService {
+
+    public constructor(private readonly backendService: BackendService) {
+        super();
+    }
+
+    public override async subscribeTo(gameId: string,
+                                      gameUpdate: (game: Game) => Promise<void>,
+                                      gameEvent: (event: GameEvent, serverTime: number) => Promise<void>,
+                                      error: (reason: string) => void)
+    : Promise<Subscription> {
+        const gameUpdateSubscription: Subscription =
+            this.backendService.setCallback('GameUpdate', (message: BackendMessage): void => {
+                void gameUpdate(message.getArgument('game'));
+            });
+        const gameEventSubscription: Subscription =
+            this.backendService.setCallback('GameEvent', (message: BackendMessage): void => {
+                void gameEvent(message.getArgument('event'), message.getArgument('serverTime'));
+            });
+        const gameSubscription: Subscription = await this.backendService.subscribeToGame(gameId);
+        const errorSubscription: Subscription =
+            this.backendService.setCallback('Error', (message: BackendMessage): void => {
+                error(message.getArgument('reason'));
+            });
+        return new Subscription(() => {
+            gameSubscription.unsubscribe();
+            gameUpdateSubscription.unsubscribe();
+            gameEventSubscription.unsubscribe();
+            errorSubscription.unsubscribe();
+        });
+    }
+
+    public override async createGame(gameName: string): Promise<string> {
+        const response: BackendMessage =
+            await this.backendService.sendAndWaitForReply(['Create', { gameName }], 'GameCreated');
+        return response.getArgument('gameId');
+    }
+
+    protected override async gameAction(action: JSONValue): Promise<void> {
+        return this.backendService.send(action);
     }
 
 }
