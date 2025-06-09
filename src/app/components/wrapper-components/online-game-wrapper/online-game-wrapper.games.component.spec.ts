@@ -1,12 +1,12 @@
 /* eslint-disable max-lines-per-function */
-/*import { fakeAsync, tick } from '@angular/core/testing';
+import { fakeAsync, tick } from '@angular/core/testing';
 import { MGPValidation } from '@everyboard/lib';
 
 import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { AbstractGameComponent } from '../../game-components/game-component/GameComponent';
 import { GameInfo } from '../../normal-component/pick-game/pick-game.component';
 import { clickableMethods } from '../../game-components/game-component/clickableMethods.spec';
-import { PreparationOptions, prepareStartedGameFor } from './online-game-wrapper.quarto.component.spec';
+import { PreparationOptions, prepareStartedGameFor } from './online-game-wrapper.helpers.component.spec';
 import { MinimalUser } from 'src/app/domain/MinimalUser';
 import { UserMocks } from 'src/app/domain/UserMocks.spec';
 import { OnlineGameWrapperComponent, OnlineGameWrapperMessages } from './online-game-wrapper.component';
@@ -51,4 +51,3 @@ describe('OnlineGameWrapperComponent (games)', () => {
     }
 
 });
-*/

@@ -6,9 +6,9 @@ import { AwaleComponent } from 'src/app/games/mancala/awale/awale.component';
 import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { UserMocks } from 'src/app/domain/UserMocks.spec';
 import { MinimalUser } from 'src/app/domain/MinimalUser';
-import {  prepareStartedGameFor } from './online-game-wrapper.helpers.component.spec';
+import { prepareStartedGameFor } from './online-game-wrapper.helpers.component.spec';
 
-fdescribe('OnlineGameWrapperComponent of Reversable Game:', () => {
+describe('OnlineGameWrapperComponent of Reversable Game:', () => {
 
     let testUtils: ComponentTestUtils<AwaleComponent, MinimalUser>;
 

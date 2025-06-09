@@ -81,7 +81,6 @@ export async function prepareStartedGameFor<T extends AbstractGameComponent>(
         spyOn(TestBed.inject(OGWCTimeManagerService), 'resumeClocks').and.callFake(async() => {});
     }
 
-
     const configRoomService: ConfigRoomServiceMock =
         TestBed.inject(ConfigRoomService) as AbstractConfigRoomService as ConfigRoomServiceMock;
     testUtils.detectChanges();
@@ -111,7 +110,7 @@ export async function prepareStartedGameFor<T extends AbstractGameComponent>(
     //     ...configRoom,
     //     status: Status.STARTED,
     // });
-    testUtils.detectChanges();
+    // testUtils.detectChanges();
 
     testUtils.detectChanges();
     if (preparationOptions.waitForGameToStart) {
