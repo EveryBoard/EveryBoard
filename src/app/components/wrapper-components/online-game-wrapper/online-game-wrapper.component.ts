@@ -231,8 +231,8 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
             // So we do nothing to show it again.
             this.moveSentButNotReceivedYet = false;
         } else {
-            // This is not our move, it is either the move of the opponent, or we are observing.
-            // In any case, we have to show and animate it.
+            // This is not our move, it is either the move of the opponent, one older move, or we are observing.
+            // In any case, we have to show it. We also animate it if we are synced.
             const move: Move = this.gameComponent.encoder.decode(moveEvent.move);
             await this.applyMove(move, this.isSynced);
         }

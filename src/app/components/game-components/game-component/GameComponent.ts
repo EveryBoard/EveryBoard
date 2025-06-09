@@ -190,7 +190,6 @@ export abstract class GameComponent<R extends SuperRules<M, S, C, L>,
     }
 
     public setPointOfView(pointOfView: Player): void {
-        console.log('setting point of view to ' + pointOfView);
         this.pointOfView = pointOfView;
         if (this.hasAsymmetricBoard) {
             this.rotation = 'rotate(' + (pointOfView.getValue() * 180) + ')';

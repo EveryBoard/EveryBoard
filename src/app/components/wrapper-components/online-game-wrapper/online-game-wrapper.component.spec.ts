@@ -50,7 +50,7 @@ describe('OnlineGameWrapper for non-existing game', () => {
 
 });
 
-fdescribe('OnlineGameWrapperComponent Lifecycle', () => {
+describe('OnlineGameWrapperComponent Lifecycle', () => {
 
     // Life cycle summary
     // component construction (beforeEach)

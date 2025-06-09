@@ -7,7 +7,7 @@ import { AbstractCurrentGameService, CurrentGameService } from '../CurrentGameSe
 
 export class CurrentGameServiceMock extends AbstractCurrentGameService {
     public static setCurrentGame(currentGame: MGPOptional<CurrentGame>): void {
-        (TestBed.inject(CurrentGameService) as unknown as CurrentGameServiceMock)
+        (TestBed.inject(CurrentGameService) as AbstractCurrentGameService as CurrentGameServiceMock)
             .setCurrentGame(currentGame);
     }
 

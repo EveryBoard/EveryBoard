@@ -103,7 +103,7 @@
                                                 <p>
                                                     <ng-container i18n>Maximal turn duration: </ng-container>
                                                     <strong>{{ GameDuration.STANDARD_MOVE_DURATION | humanDuration }}</strong><br/>
-                                                    <ng-container i18n>Maximal game duration: <strong>{{ GameDuration.NORMAL_GAME_DURATION | humanDuration }} per player</strong></ng-container>
+                                                    <ng-container i18n>Maximal game duration: <strong>{{ GameDuration.STANDARD_GAME_DURATION | humanDuration }} per player</strong></ng-container>
                                                 </p>
                                             </div>
                                         </div>
@@ -229,9 +229,9 @@
                             <p i18n>{{ viewInfo.creator }} proposes to play a {{ viewInfo.gameTypeName }} game</p>
                             <ul>
                                 <li>
-                                    <span *ngIf="viewInfo.firstPlayer === 'CREATOR'" i18n>{{ viewInfo.creator }} plays first</span>
-                                    <span *ngIf="viewInfo.firstPlayer === 'CHOSEN_PLAYER'" i18n>you play first</span>
-                                    <span *ngIf="viewInfo.firstPlayer === 'RANDOM'" i18n>the first player is selected randomly</span>
+                                    <span *ngIf="viewInfo.firstPlayer === FirstPlayer.CREATOR" i18n>{{ viewInfo.creator }} plays first</span>
+                                    <span *ngIf="viewInfo.firstPlayer === FirstPlayer.CHOSEN_OPPONENT" i18n>you play first</span>
+                                    <span *ngIf="viewInfo.firstPlayer === FirstPlayer.RANDOM" i18n>the first player is selected randomly</span>
                                 </li>
                                 <li i18n>a turn lasts at most <strong>{{ (viewInfo.moveDuration || 0) | humanDuration }} </strong></li>
                                 <li i18n>the game lasts at most <strong>{{ (viewInfo.gameDuration || 0) | humanDuration }} per player</strong></li>

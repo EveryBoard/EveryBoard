@@ -130,7 +130,7 @@ describe('GameCreationComponent', () => {
                 expect(configRoomService.join).toHaveBeenCalledTimes(1);
             }));
 
-            // TODO: it should display an error in case of error?
+            // TODO: it should display an error in case of error? -> yes, on game-does-not-exist
     //         it('should not start observing configRoom if part does not exist', fakeAsync(async() => {
     //             // Given a part that does not exist
     //             component.partId = 'does not exist';

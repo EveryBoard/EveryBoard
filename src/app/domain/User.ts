@@ -16,7 +16,7 @@ export type CurrentGame = {
 
 export type User = {
     username?: string; // may not be set initially for google users
-    lastUpdateTime?: FirestoreTime,
+    lastUpdateTime?: FirestoreTime, // TODO: remove, we don't need it anymore!
     verified: boolean,
 };
 

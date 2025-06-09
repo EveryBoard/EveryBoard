@@ -5,7 +5,6 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
-	"log"
 	"net/http"
 	"strings"
 )
@@ -16,14 +15,11 @@ type User struct {
 }
 
 func fetchUserDocument(uid string) (*User, error) {
-	log.Println("reference to doc")
 	docRef := firestoreClient.Collection("users").Doc(uid)
-	log.Println("getting snapshot")
 	docSnapshot, err := docRef.Get(context.Background())
 	if err != nil {
 		return nil, fmt.Errorf("failed to fetch user document: %v", err)
 	}
-	log.Println("got snapshot")
 
 	data, err := json.Marshal(docSnapshot.Data())
 	if err != nil {
@@ -51,7 +47,6 @@ func VerifyTokenAndGetUserFromHeader(r *http.Request) (string, *User, error) {
 
 	var uid string
 	if useEmulator {
-		log.Println("In emulator mode")
 		tokenParts := strings.Split(token, ".")
 		if len(tokenParts) != 3 {
 			return "", nil, fmt.Errorf("invalid token format")
@@ -74,15 +69,10 @@ func VerifyTokenAndGetUserFromHeader(r *http.Request) (string, *User, error) {
 
 		uid = sub
 	} else {
-		log.Println("Verifying token")
 		verifiedToken, err := authClient.VerifyIDToken(r.Context(), token)
 		if err != nil {
-			log.Println("error: %v", err)
 			return "", nil, err
 		}
-		log.Println("Token verified")
-
-		log.Println("%v", verifiedToken.Claims)
 		user_id, ok := verifiedToken.Claims["user_id"].(string)
 		if !ok {
 			return "", nil, fmt.Errorf("missing 'user_id' part of token")
@@ -90,8 +80,6 @@ func VerifyTokenAndGetUserFromHeader(r *http.Request) (string, *User, error) {
 		uid = user_id
 	}
 
-	log.Println("Fetching user document")
 	user, err := fetchUserDocument(uid)
-	log.Println("Got it")
 	return uid, user, err
 }
