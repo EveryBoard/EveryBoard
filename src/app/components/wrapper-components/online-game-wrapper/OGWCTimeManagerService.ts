@@ -89,8 +89,7 @@ export class OGWCTimeManagerService {
         return this.configRoom.get().moveDuration;
     }
 
-    public onReceivedAction(currentPlayer: Player, action: GameEventAction, serverTime: number): void {
-        this.beforeEvent();
+    public onReceivedAction(action: GameEventAction): void {
         switch (action.action) {
             case 'AddTurnTime':
                 this.addTurnTime(this.playerOfMinimalUser(action.user));
@@ -109,7 +108,6 @@ export class OGWCTimeManagerService {
                 this.onSync();
                 break;
         }
-        this.afterEvent(currentPlayer, serverTime);
     }
 
     public playerOfMinimalUser(user: MinimalUser): Player {
@@ -122,7 +120,6 @@ export class OGWCTimeManagerService {
     }
 
     public onReceivedMove(move: GameEventMove, serverTime: number): void {
-        this.beforeEvent();
         const player: Player = this.playerOfMinimalUser(move.user);
 
         const moveTime: number = move.time;
@@ -138,7 +135,6 @@ export class OGWCTimeManagerService {
         const nextPlayerTakenGlobalTime: number = this.takenGlobalTime.get(nextPlayer);
         const nextPlayerAdaptedGlobalTime: number = this.getGameDuration() - nextPlayerTakenGlobalTime;
         this.globalClocks[nextPlayer.getValue()].changeDuration(nextPlayerAdaptedGlobalTime);
-        this.afterEvent(nextPlayer, serverTime);
     }
 
     private getSecondsElapsedSinceLastMoveStart(currentTime: number): number {
@@ -146,7 +142,7 @@ export class OGWCTimeManagerService {
     }
 
     // Stops all clocks that are running
-    public onGameEnd(): void {
+    private onGameEnd(): void {
         this.gameEnd = true;
         for (const clock of this.allClocks) {
             if (clock.isStarted()) {
@@ -159,22 +155,25 @@ export class OGWCTimeManagerService {
 
     // Called when we are becoming in sync with the server
     public onSync(): void {
+        console.log('SYNC')
         this.synchronized = true;
     }
 
     // Pause all clocks before receiving events
-    private beforeEvent(): void {
+    public beforeEvent(): void {
         this.pauseAllClocks();
     }
 
     // Continue the current player clock after receiving events
-    private afterEvent(currentPlayer: Player, currentTime: number): void {
+    public afterEvent(currentPlayer: Player, currentTime: number): void {
         if (this.synchronized === false) {
             // We'll wait until we are synchronized to do anything
             return;
         }
+        console.log('after event, synchronized')
         this.updateClocks();
         if (this.gameEnd === false) {
+            console.log('not end game yet')
             // The drift is how long has passed since the last event occurred
             // It can be only a few ms, or a much longer time in case we join mid-game
             const drift: number = this.getSecondsElapsedSinceLastMoveStart(currentTime);

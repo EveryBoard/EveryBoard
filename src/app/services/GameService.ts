@@ -108,7 +108,6 @@ export abstract class AbstractGameService {
         return this.gameAction(['EndGame', { winner: winner.getValue() }]);
     }
 
-
 }
 
 @Injectable({

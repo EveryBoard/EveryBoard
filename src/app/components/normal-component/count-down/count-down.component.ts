@@ -69,6 +69,7 @@ export class CountDownComponent implements OnDestroy {
         // duration is in ms
         Utils.assert(this.isSet, 'Should not start a chrono that has not been set!');
         Utils.assert(this.started === false, 'Should not start chrono that has already been started (' + this.debugName + ')');
+        console.log('starting: ' + this.debugName);
 
         console.log(`${this.debugName} STARTING at ${this.remainingSeconds}`);
         this.started = true;
@@ -77,6 +78,7 @@ export class CountDownComponent implements OnDestroy {
 
     public resume(): void {
         Utils.assert(this.isPaused && this.started, 'Should only resume chrono that are started and paused!');
+        console.log('resuming: ' + this.debugName + ' with remaining: ' + this.remainingSeconds);
 
         this.startTime = Date.now() / 1000;
         const remainingTimeOnResume: number = this.remainingSeconds;
@@ -88,15 +90,18 @@ export class CountDownComponent implements OnDestroy {
     }
 
     private onEndReached(): void {
+        console.log('end reached of ' + this.debugName)
         this.isPaused = true;
         this.started = false;
         this.clearTimeouts();
         this.changeDuration(0);
+        console.log('emitting from ' + this.debugName)
         this.outOfTimeAction.emit();
     }
 
     private countSeconds(): void {
         this.updateHandle = window.setTimeout(() => {
+            console.log('updating shown time of ' + this.debugName)
             this.updateShownTime();
         }, 300); // update a bit more frequently than every second to account for drifts
     }
@@ -109,6 +114,7 @@ export class CountDownComponent implements OnDestroy {
     public pause(): void {
         Utils.assert(this.started, 'Should not pause not started chrono (' + this.debugName + ')');
         Utils.assert(this.isPaused === false, 'Should not pause already paused chrono (' + this.debugName + ')');
+        console.log('pausing: ' + this.debugName)
 
         this.clearTimeouts();
         this.isPaused = true;

@@ -40,7 +40,8 @@ export class OnlineGameWrapperMessages {
 @Debug.log
 export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> implements OnInit, OnDestroy {
 
-    // GameWrapping's Template
+    // TODO: rename global/turn to game/move
+    // TODO: also rename countdown/chrono/clock/timer to only one name
     @ViewChild('chronoZeroGlobal') public chronoZeroGlobal: CountDownComponent;
     @ViewChild('chronoOneGlobal') public chronoOneGlobal: CountDownComponent;
     @ViewChild('chronoZeroTurn') public chronoZeroTurn: CountDownComponent;
@@ -177,6 +178,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
 
     private async onGameEvent(event: GameEvent, serverTime: number): Promise<void> {
         console.log('OGWC.onGameEvent: ' + JSON.stringify(event))
+        this.timeManager.beforeEvent();
         switch (event.eventType) {
             case 'Move':
                 await this.onReceivedMove(event, serverTime);
@@ -195,9 +197,10 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
                 if (event.action === 'StartGame') await this.onGameStart();
                 if (event.action === 'EndGame') await this.onGameEnd();
                 if (event.action === 'Sync') this.isSynced = true;
-                this.timeManager.onReceivedAction(Player.ofTurn(this.gameComponent.getTurn()), event, serverTime);
+                this.timeManager.onReceivedAction(event);
                 break;
         }
+        this.timeManager.afterEvent(Player.ofTurn(this.gameComponent.getTurn()), serverTime);
         this.cdr.detectChanges();
     }
 
@@ -407,6 +410,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
 
     // Called by the clocks
     public async reachedOutOfTime(player: Player): Promise<void> {
+        console.log('reached out of time for player ' + player)
         if (this.isPlaying() === false) {
             return;
         }

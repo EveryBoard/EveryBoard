@@ -84,26 +84,26 @@ fdescribe('OnlineGameWrapperComponent of Quarto:', () => {
     async function receiveRequest(player: Player, request: RequestType): Promise<void> {
         await gameService.mockGameEvent({
             eventType: 'Request',
-            time: 42,
+            time: 1,
             user: userFromPlayer(player),
             requestType: request,
-        }, 42);
+        }, 1);
         testUtils.detectChanges();
     }
 
     async function receiveReply(player: Player,
-                                reply: GameEventReply,
+                                accept: boolean,
                                 request: RequestType,
                                 data?: JSONValue)
     : Promise<void> {
         await gameService.mockGameEvent({
-            ...reply,
             eventType: 'Reply',
-            time: 42,
+            time: 1,
             user: userFromPlayer(player),
             requestType: request,
+            accept,
             data,
-        }, 42);
+        }, 1);
         testUtils.detectChanges();
         tick();
     }
@@ -111,10 +111,10 @@ fdescribe('OnlineGameWrapperComponent of Quarto:', () => {
     async function receiveAction(player: Player, action: Action): Promise<void> {
         await gameService.mockGameEvent({
             eventType: 'Action',
-            time: 42,
+            time: 1,
             user: userFromPlayer(player),
             action,
-        }, 42);
+        }, 1);
         testUtils.detectChanges();
         tick(0);
     }
@@ -140,27 +140,31 @@ fdescribe('OnlineGameWrapperComponent of Quarto:', () => {
 
     }
 
-    async function askTakeBack(): Promise<void> {
+    async function askTakeBack(player: Player): Promise<void> {
         await testUtils.clickElement('#proposeTakeBack');
+        await receiveRequest(player, 'TakeBack');
         tick(0);
     }
 
-    async function acceptTakeBack(): Promise<void> {
+    async function acceptTakeBack(player: Player): Promise<void> {
         await testUtils.clickElement('#accept');
+        await receiveReply(player, true, 'TakeBack');
         tick(0);
     }
 
-    async function refuseTakeBack(): Promise<void> {
+    async function refuseTakeBack(player: Player): Promise<void> {
         return await testUtils.clickElement('#reject');
+        await receiveReply(player, false, 'TakeBack');
+        tick(0);
     }
 
     async function receiveMove(player: Player, move: JSONValue, detectChanges: boolean = true): Promise<void> {
         await gameService.mockGameEvent({
             eventType: 'Move',
-            time: 42,
+            time: 1,
             user: userFromPlayer(player),
             move,
-        }, 42);
+        }, 1);
         if (detectChanges) {
             testUtils.detectChanges();
         }
@@ -485,535 +489,568 @@ fdescribe('OnlineGameWrapperComponent of Quarto:', () => {
 
     });
 
-    // describe('Take Back', () => {
-
-    //     describe('sending/receiving', () => {
-
-    //         it('should send take back request when player asks to', fakeAsync(async() => {
-    //             // Given a board where its the opponent's (first) turn
-    //             await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
-    //             await doMoveByClicks(FIRST_MOVE);
-
-    //             // When asking to take back
-    //             spyOn(gameService, 'askTakeBack').and.callThrough();
-    //             await askTakeBack();
-
-    //             // Then a request should be sent
-    //             expect(gameService.askTakeBack).toHaveBeenCalledOnceWith('configRoomId');
-    //             tick(wrapper.configRoom.moveDuration * 1000);
-    //         }));
-
-    //         it('should not allow to propose take back after it has been proposed', fakeAsync(async() => {
-    //             // Given a board where a move has been made
-    //             await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER, PreparationOptions.withoutClocks);
-    //             await doMoveByClicks(FIRST_MOVE);
-
-    //             // When asking to take back
-    //             await askTakeBack();
-    //             tick(0);
-    //             testUtils.detectChanges();
-
-    //             // Then it should not be possible to ask a second time
-    //             testUtils.expectElementToBeDisabled('#proposeTakeBack');
-    //         }));
-
-    //         it('should not propose to Player.ONE to take back before any move', fakeAsync(async() => {
-    //             // Given a board where nobody already played
-    //             await prepareTestUtilsFor(UserMocks.OPPONENT_AUTH_USER, PreparationOptions.withoutClocks);
-    //             // When displaying the page
-    //             // Then the take back button should not be there
-    //             testUtils.expectElementToBeDisabled('#proposeTakeBack');
-    //         }));
-
-    //         it('should not propose to Player.ONE to take back before their first move', fakeAsync(async() => {
-    //             // Given a board where nobody already played
-    //             await prepareTestUtilsFor(UserMocks.OPPONENT_AUTH_USER, PreparationOptions.withoutClocks);
-    //             // When receiving a new move
-    //             await receiveNewMoves(0, [FIRST_MOVE_ENCODED]);
-    //             // Then the take back button should not be there
-    //             testUtils.expectElementToBeDisabled('#proposeTakeBack');
-    //         }));
-
-    //         it('should only propose to accept take back when opponent asked', fakeAsync(async() => {
-    //             // Given a board where opponent did not ask to take back and where both player could have ask
-    //             await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
-    //             await doMoveByClicks(FIRST_MOVE);
-    //             await receiveNewMoves(1, [SECOND_MOVE_ENCODED]);
-
-    //             // accepting take back should not be proposed
-    //             testUtils.expectElementNotToExist('#acceptTakeBack');
-    //             await receiveRequest(Player.ONE, 'TakeBack');
-
-    //             // Then should allow it after proposing sent
-    //             await acceptTakeBack();
-    //             testUtils.detectChanges();
-
-    //             // and then again not allowing it
-    //             testUtils.expectElementNotToExist('#acceptTakeBack');
-    //             tick(wrapper.configRoom.moveDuration * 1000);
-    //         }));
-
-    //         it('should remove take back rejection button after it has been rejected', fakeAsync(async() => {
-    //             // Given a board with previous move
-    //             await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
-    //             await doMoveByClicks(FIRST_MOVE);
-    //             await receiveNewMoves(1, [SECOND_MOVE_ENCODED]);
-    //             testUtils.expectElementNotToExist('#refuseTakeBack');
-    //             await receiveRequest(Player.ONE, 'TakeBack');
-    //             spyOn(gameService, 'refuseTakeBack').and.callThrough();
-
-    //             // When refusing take back
-    //             await refuseTakeBack();
-    //             testUtils.detectChanges();
-
-    //             // Then a TakeBack rejection reply should have been sent
-    //             testUtils.expectElementNotToExist('#refuseTakeBack');
-    //             expect(gameService.refuseTakeBack).toHaveBeenCalledOnceWith('configRoomId');
-
-    //             tick(wrapper.configRoom.moveDuration * 1000);
-    //         }));
-
-    //         it('should not allow player to play while take back request is waiting for them', fakeAsync(async() => {
-    //             // Given a component where a take back request is waiting for user
-    //             await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
-    //             await doMoveByClicks(FIRST_MOVE);
-    //             await receiveNewMoves(1, [SECOND_MOVE_ENCODED]);
-    //             await receiveRequest(Player.ONE, 'TakeBack');
-
-    //             // When ignoring it and trying to play
-    //             const reason: string = OnlineGameWrapperMessages.MUST_ANSWER_REQUEST();
-
-    //             // Then it should fail
-    //             testUtils.resetSpies();
-    //             await testUtils.expectClickFailure('#click-coord-0-0', reason);
-    //             tick(wrapper.configRoom.moveDuration * 1000);
-    //         }));
-
-    //         it('should cancel take back request when take back requester do a move', fakeAsync(async() => {
-    //             // Given an initial board where a take back request has been done by user
-    //             await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
-    //             await doMoveByClicks(FIRST_MOVE);
-    //             await receiveNewMoves(1, [SECOND_MOVE_ENCODED]);
-    //             await askTakeBack();
-
-    //             // When doing move while waiting for answer
-    //             spyOn(gameService, 'addMove').and.callThrough();
-    //             await doMoveByClicks(THIRD_MOVE);
-
-    //             // Then the move should be sent
-    //             expect(gameService.addMove).toHaveBeenCalledWith('configRoomId', THIRD_MOVE_ENCODED, MGPOptional.empty());
-    //             tick(wrapper.configRoom.moveDuration * 1000);
-    //         }));
-
-    //         it('should forbid player to ask take back again after refusal', fakeAsync(async() => {
-    //             await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
-    //             await doMoveByClicks(FIRST_MOVE);
-    //             await askTakeBack();
-    //             await receiveReply(Player.ONE, 'Reject', 'TakeBack');
-
-    //             testUtils.expectElementToBeDisabled('#proposeTakeBack');
-
-    //             tick(wrapper.configRoom.moveDuration * 1000);
-    //         }));
-
-    //     });
-
-    //     describe('opponent given take back during their turn', () => {
-
-    //         it('should move board back two turns', fakeAsync(async() => {
-    //             // Given an initial board where it's opponent second turn, and opponent asked for take back
-    //             await prepareTestUtilsFor(UserMocks.OPPONENT_AUTH_USER, PreparationOptions.withoutClocks);
-    //             await receiveNewMoves(0, [FIRST_MOVE_ENCODED]);
-    //             await doMoveByClicks(SECOND_MOVE);
-    //             await receiveRequest(Player.ZERO, 'TakeBack');
-    //             expect(wrapper.gameComponent.getTurn()).toBe(2);
-
-    //             // When accepting opponent's take back
-    //             await acceptTakeBack();
-
-    //             // Then turn should be changed to 0
-    //             const opponentTurnDiv: DebugElement = testUtils.findElement('#currentPlayerIndicator');
-    //             expect(opponentTurnDiv.nativeElement.innerText).toBe(`It is creator's turn.`);
-    //             expect(wrapper.gameComponent.getTurn()).toBe(0);
-    //             tick(wrapper.configRoom.moveDuration * 1000);
-    //         }));
-
-    //         it(`should preserve opponent's clocks to what it was before asking take back`, fakeAsync(async() => {
-    //             // Given an initial board where it's opponent second turn, and opponent asked for take back
-    //             await prepareTestUtilsFor(UserMocks.OPPONENT_AUTH_USER);
-    //             await receiveNewMoves(0, [FIRST_MOVE_ENCODED]);
-    //             await doMoveByClicks(SECOND_MOVE);
-    //             await receiveRequest(Player.ZERO, 'TakeBack');
-    //             const globalTimeBeforeTakeBack: number = wrapper.chronoZeroGlobal.remainingSeconds;
-    //             const turnTimeBeforeTakeBack: number = wrapper.chronoZeroTurn.remainingSeconds;
-
-    //             // When accepting opponent's take back
-    //             await acceptTakeBack();
-
-    //             // Then opponents chrono should have continued to decrease
-    //             tick(1000); // wait a bit to ensure time is decreasing
-    //             const globalTimeAfterTakeBack: number = wrapper.chronoZeroGlobal.remainingSeconds;
-    //             const turnTimeAfterTakeBack: number = wrapper.chronoZeroTurn.remainingSeconds;
-    //             expect(globalTimeAfterTakeBack).toBeLessThan(globalTimeBeforeTakeBack);
-    //             expect(turnTimeAfterTakeBack).toBeLessThan(turnTimeBeforeTakeBack);
-    //             tick(wrapper.configRoom.moveDuration * 1000);
-    //         }));
-
-    //     });
-
-    //     describe('opponent given take back during user turn', () => {
-
-    //         it('should move board back one turn', fakeAsync(async() => {
-    //             // Given an initial board where it's user's (first) turn, and opponent asked for take back
-    //             await prepareTestUtilsFor(UserMocks.OPPONENT_AUTH_USER);
-    //             await receiveNewMoves(0, [FIRST_MOVE_ENCODED]);
-    //             await receiveRequest(Player.ZERO, 'TakeBack');
-    //             expect(wrapper.gameComponent.getTurn()).toBe(1);
-
-    //             // When accepting opponent's take back
-    //             await acceptTakeBack();
-    //             testUtils.detectChanges();
-
-    //             // Then turn should be changed to 0
-    //             const opponentTurnDiv: DebugElement = testUtils.findElement('#currentPlayerIndicator');
-    //             expect(opponentTurnDiv.nativeElement.innerText).toBe(`It is creator's turn.`);
-    //             expect(wrapper.gameComponent.getTurn()).toBe(0);
-    //             tick(wrapper.configRoom.moveDuration * 1000);
-    //         }));
-
-    //         it(`should resumeCountDown for opponent`, fakeAsync(async() => {
-    //             // Given an initial board where it's user's (first) turn, and opponent asked for take back
-    //             await prepareTestUtilsFor(UserMocks.OPPONENT_AUTH_USER);
-    //             await receiveNewMoves(0, [FIRST_MOVE_ENCODED]);
-    //             await receiveRequest(Player.ZERO, 'TakeBack');
-    //             testUtils.detectChanges();
-
-    //             // When accepting opponent's take back
-    //             spyOn(wrapper.chronoZeroGlobal, 'resume').and.callThrough();
-    //             await acceptTakeBack();
-
-    //             // Then count down should be resumed for opponent and user should receive their decision time back
-    //             expect(wrapper.chronoZeroGlobal.resume).toHaveBeenCalledOnceWith();
-
-    //             tick(wrapper.configRoom.moveDuration * 1000);
-    //         }));
-
-    //     });
-
-    //     describe('User given take back during their turn', () => {
-
-    //         it('should move board back two turns', fakeAsync(async() => {
-    //             // Given an initial board where it's user (second) turn, and user just asked for take back
-    //             await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
-    //             await doMoveByClicks(FIRST_MOVE);
-    //             await receiveNewMoves(1, [SECOND_MOVE_ENCODED]);
-    //             await askTakeBack();
-    //             expect(wrapper.gameComponent.getTurn()).toBe(2);
-
-    //             // When opponent accepts user's take back
-    //             spyOn(wrapper.chronoZeroGlobal, 'resume').and.callThrough();
-    //             await receiveReply(Player.ONE, 'Accept', 'TakeBack');
-    //             const opponentTurnDiv: DebugElement = testUtils.findElement('#currentPlayerIndicator');
-    //             expect(opponentTurnDiv.nativeElement.innerText).toBe(`It is your turn.`);
-    //             tick(0);
-
-    //             // Then turn should be changed to 0 and resumeCountDown be called
-    //             expect(wrapper.chronoZeroGlobal.resume).toHaveBeenCalledOnceWith();
-    //             expect(wrapper.gameComponent.getTurn()).toBe(0);
-    //             tick(wrapper.configRoom.moveDuration * 1000);
-    //         }));
-
-    //         it(`should do alternative move afterwards without taking back move time off (during user's turn)`, fakeAsync(async() => {
-    //             // Given an initial board where user was authorized to take back
-    //             await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
-    //             await doMoveByClicks(FIRST_MOVE);
-    //             await receiveNewMoves(1, [SECOND_MOVE_ENCODED]);
-    //             await askTakeBack();
-    //             testUtils.detectChanges();
-    //             await receiveReply(Player.ONE, 'Accept', 'TakeBack');
-    //             await receivePartDAOUpdate({ turn: 0 }); // go back to turn 0
-    //             tick(0);
-
-    //             // When playing an alternative move
-    //             spyOn(partDAO, 'update').and.callThrough();
-    //             spyOn(gameService, 'addMove').and.callThrough();
-    //             const alternativeMove: QuartoMove = new QuartoMove(2, 3, QuartoPiece.BBBA);
-    //             const alternativeMoveEncoded: JSONValue = QuartoMove.encoder.encode(alternativeMove);
-    //             await doMoveByClicks(alternativeMove);
-
-    //             // Then partDAO should be updated, and move should be sent
-    //             expect(partDAO.update).toHaveBeenCalledOnceWith('configRoomId', { turn: 1 });
-    //             expect(gameService.addMove).toHaveBeenCalledOnceWith('configRoomId', alternativeMoveEncoded, MGPOptional.empty());
-    //             tick(wrapper.configRoom.moveDuration * 1000);
-    //         }));
-
-    //     });
-
-    //     describe('User given take back during opponent turn', () => {
-
-    //         it('should move board back one turn and update current turn', fakeAsync(async() => {
-    //             // Given an initial board where it's opponent's [second] turn, and user just asked for take back
-    //             await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
-    //             await doMoveByClicks(FIRST_MOVE);
-    //             await askTakeBack();
-    //             expect(wrapper.gameComponent.getTurn()).toBe(1);
-
-    //             // When opponent accept user's take back
-    //             await receiveReply(Player.ONE, 'Accept', 'TakeBack');
-    //             const opponentTurnDiv: DebugElement = testUtils.findElement('#currentPlayerIndicator');
-    //             expect(opponentTurnDiv.nativeElement.innerText).toBe(`It is your turn.`);
-
-    //             // Then turn should be changed to 0
-    //             expect(wrapper.gameComponent.getTurn()).toBe(0);
-    //             tick(wrapper.configRoom.moveDuration * 1000);
-    //         }));
-
-    //         it(`should resume clock for user`, fakeAsync(async() => {
-    //             // Given an initial board where it's opponent's [second] turn, and user just asked for take back
-    //             await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
-    //             await doMoveByClicks(FIRST_MOVE);
-    //             spyOn(wrapper.chronoOneGlobal, 'resume').and.callThrough();
-    //             await askTakeBack();
-
-    //             // When opponent accept user's take back
-    //             await receiveReply(Player.ONE, 'Accept', 'TakeBack');
-
-    //             // Then count down should be resumed and update not changing time
-    //             expect(wrapper.chronoOneGlobal.resume).toHaveBeenCalledOnceWith();
-    //             tick(wrapper.configRoom.moveDuration * 1000);
-    //         }));
-
-    //         it('should do alternative move afterwards without taking back move time off (during opponent turn)', fakeAsync(async() => {
-    //             // Given an initial board where opponent just took back a move
-    //             await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
-    //             await doMoveByClicks(FIRST_MOVE);
-    //             await askTakeBack();
-    //             await receiveReply(Player.ONE, 'Accept', 'TakeBack');
-    //             await receivePartDAOUpdate({ turn: 0 }); // go back to turn 0
-
-    //             // When playing an alernative move
-    //             spyOn(partDAO, 'update').and.callThrough();
-    //             spyOn(gameService, 'addMove').and.callThrough();
-    //             const alternativeMove: QuartoMove = new QuartoMove(2, 3, QuartoPiece.BBBA);
-    //             const alternativeMoveEncoded: JSONValue = QuartoMove.encoder.encode(alternativeMove);
-    //             await doMoveByClicks(alternativeMove);
-
-    //             // Then partDAO should be updated, and move should be sent
-    //             expect(partDAO.update).toHaveBeenCalledOnceWith('configRoomId', { turn: 1 });
-    //             expect(gameService.addMove)
-    //                 .toHaveBeenCalledOnceWith('configRoomId', alternativeMoveEncoded, MGPOptional.empty());
-    //             tick(wrapper.configRoom.moveDuration * 1000);
-    //         }));
-
-    //     });
-    //     it('should call cancelMoveAttempt', fakeAsync(async() => {
-    //         // Given an initial board where it's opponent's [second] turn, and user just asked for take back
-    //         await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
-    //         await doMoveByClicks(FIRST_MOVE);
-    //         await askTakeBack();
-
-    //         // When opponent accept user's take back
-    //         spyOn(testUtils.getGameComponent(), 'cancelMoveAttempt').and.callThrough();
-    //         await receiveReply(Player.ONE, 'Accept', 'TakeBack');
-
-    //         // Then cancelMoveAttempt should have been called
-    //         expect(testUtils.getGameComponent().cancelMoveAttempt).toHaveBeenCalledOnceWith();
-    //         tick(wrapper.configRoom.moveDuration * 1000);
-    //     }));
-
-    // });
-
-    // describe('Agreed Draw', () => {
-
-    //     it('should send draw request when player asks to', fakeAsync(async() => {
-    //         // Given any board
-    //         await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
-    //         spyOn(gameService, 'proposeDraw').and.callThrough();
-
-    //         // When clicking the propose draw button
-    //         await testUtils.clickElement('#proposeDraw');
-
-    //         // Then a draw request should have been sent
-    //         expect(gameService.proposeDraw).toHaveBeenCalledOnceWith('configRoomId');
-    //         tick(wrapper.configRoom.moveDuration * 1000);
-    //     }));
-
-    //     it('should forbid to propose to draw while draw request is waiting', fakeAsync(async() => {
-    //         // Given a page where we sent a draw request
-    //         await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
-    //         await testUtils.clickElement('#proposeDraw');
-
-    //         // When displaying it
-    //         testUtils.detectChanges();
-
-    //         // Then it should not allow us to propose a second draw
-    //         testUtils.expectElementToBeDisabled('#proposeDraw');
-
-    //         tick(wrapper.configRoom.moveDuration * 1000);
-    //     }));
-
-    //     it('should forbid to click while draw request is waiting', fakeAsync(async() => {
-    //         // Given a page where we received a draw request
-    //         await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
-    //         await receiveRequest(Player.ONE, 'Draw');
-    //         testUtils.detectChanges();
-
-    //         // When ignoring it and trying to play
-    //         const reason: string = OnlineGameWrapperMessages.MUST_ANSWER_REQUEST();
-
-    //         // Then it should fail
-    //         await testUtils.expectClickFailure('#click-coord-0-0', reason);
-    //         tick(wrapper.configRoom.moveDuration * 1000);
-    //     }));
-
-    //     it('should forbid to propose to draw after refusal', fakeAsync(async() => {
-    //         // Given a page where we sent a draw request
-    //         await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
-    //         await testUtils.clickElement('#proposeDraw');
-    //         tick(0);
-
-    //         // When it is rejected
-    //         await receiveReply(Player.ONE, 'Reject', 'Draw');
-
-    //         // Then we cannot request to draw anymore
-    //         testUtils.expectElementToBeDisabled('#proposeDraw');
-
-    //         tick(wrapper.configRoom.moveDuration * 1000);
-    //     }));
-
-    //     it('should finish the game after accepting a proposed draw', fakeAsync(async() => {
-    //         // Given a part on which a draw has been proposed
-    //         await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
-    //         await receiveRequest(Player.ONE, 'Draw');
-    //         spyOn(gameService, 'acceptDraw').and.callThrough();
-    //         testUtils.detectChanges();
-
-    //         // When accepting the draw
-    //         await testUtils.clickElement('#accept');
-
-    //         // Then the draw is being accepted
-    //         expect(gameService.acceptDraw).toHaveBeenCalledOnceWith('configRoomId');
-    //         tick(0);
-    //         testUtils.detectChanges();
-    //         testUtils.expectElementToExist('#youAgreedToDrawIndicator');
-    //         expectGameToBeOver();
-    //         tick(wrapper.configRoom.moveDuration * 1000);
-    //     }));
-
-    //     it('should finish the game when opponent accepts our proposed draw', fakeAsync(async() => {
-    //         // Given a gameComponent where draw has been proposed
-    //         await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
-    //         await testUtils.clickElement('#proposeDraw');
-    //         tick(0);
-
-    //         // When draw is accepted
-    //         spyOn(partDAO, 'update').and.callThrough();
-    //         await receivePartDAOUpdate({
-    //             result: MGPResult.AGREED_DRAW_BY_ONE.value,
-    //         });
-    //         await receiveAction(Player.ONE, 'EndGame');
-
-    //         // Then game should be over
-    //         expectGameToBeOver();
-    //         testUtils.expectElementToExist('#yourOpponentAgreedToDrawIndicator');
-    //         expect(partDAO.update).toHaveBeenCalledTimes(1);
-    //     }));
-
-    //     it('should send refusal when player asks to', fakeAsync(async() => {
-    //         await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
-    //         await receiveRequest(Player.ONE, 'Draw');
-
-    //         spyOn(gameService, 'refuseDraw').and.callThrough();
-
-    //         await testUtils.clickElement('#reject');
-    //         expect(gameService.refuseDraw).toHaveBeenCalledOnceWith('configRoomId');
-
-    //         tick(wrapper.configRoom.moveDuration * 1000);
-    //     }));
-
-    //     it('should only propose to accept/refuse draw when asked', fakeAsync(async() => {
-    //         await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
-    //         testUtils.expectElementNotToExist('#accept');
-    //         testUtils.expectElementNotToExist('#reject');
-    //         await receiveRequest(Player.ONE, 'Draw');
-
-    //         testUtils.expectElementToExist('#accept');
-    //         testUtils.expectElementToExist('#reject');
-
-    //         tick(wrapper.configRoom.moveDuration * 1000);
-    //     }));
-    // });
-
-    // describe('End Game Time Management', () => {
-    //     it(`should stop player's global clock when turn reaches end`, fakeAsync(async() => {
-    //         await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
-    //         spyOn(wrapper, 'reachedOutOfTime').and.callThrough();
-    //         spyOn(wrapper.chronoZeroGlobal, 'stop').and.callThrough();
-    //         tick(wrapper.configRoom.moveDuration * 1000);
-    //         expect(wrapper.reachedOutOfTime).toHaveBeenCalledOnceWith(Player.ZERO);
-    //         expect(wrapper.chronoZeroGlobal.stop).toHaveBeenCalledOnceWith();
-    //     }));
-
-    //     it(`should stop player's turn clock when global clock reaches end`, fakeAsync(async() => {
-    //         await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER, PreparationOptions.shortGlobalClock);
-    //         spyOn(wrapper, 'reachedOutOfTime').and.callThrough();
-    //         spyOn(wrapper.chronoZeroTurn, 'stop').and.callThrough();
-    //         tick(wrapper.configRoom.moveDuration * 1000);
-    //         expect(wrapper.reachedOutOfTime).toHaveBeenCalledOnceWith(Player.ZERO);
-    //         expect(wrapper.chronoZeroTurn.stop).toHaveBeenCalledOnceWith();
-    //     }));
-
-    //     it(`should stop opponent's global clock when turn reaches end`, fakeAsync(async() => {
-    //         // Given an online game where it's the opponent's turn
-    //         await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
-    //         await doMoveByClicks(FIRST_MOVE);
-    //         spyOn(wrapper, 'reachedOutOfTime').and.callThrough();
-    //         spyOn(wrapper.chronoOneGlobal, 'stop').and.callThrough();
-
-    //         // When he reach time out
-    //         tick(wrapper.configRoom.moveDuration * 1000);
-
-    //         // Then it should be considered as a timeout
-    //         expect(wrapper.reachedOutOfTime).toHaveBeenCalledOnceWith(Player.ONE);
-    //         expect(wrapper.chronoOneGlobal.stop).toHaveBeenCalledOnceWith();
-    //     }));
-
-    //     it(`should stop opponent's local clock when global clock reaches end`, fakeAsync(async() => {
-    //         // Given an online game where it's the opponent's turn
-    //         await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER, PreparationOptions.shortGlobalClock);
-    //         await doMoveByClicks(FIRST_MOVE);
-    //         spyOn(wrapper, 'reachedOutOfTime').and.callThrough();
-    //         spyOn(wrapper.chronoOneTurn, 'stop').and.callThrough();
-
-    //         // When he reach time out
-    //         tick(wrapper.configRoom.moveDuration * 1000);
-
-    //         // Then it should be considered as a timeout
-    //         expect(wrapper.reachedOutOfTime).toHaveBeenCalledOnceWith(Player.ONE);
-    //         expect(wrapper.chronoOneTurn.stop).toHaveBeenCalledOnceWith();
-    //     }));
-
-    //     it(`should notifyTimeout for opponent if they are considered offline`, fakeAsync(async() => {
-    //         // Given an online game where it's the opponent's turn and opponent is offline
-    //         await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
-    //         await doMoveByClicks(FIRST_MOVE);
-    //         spyOn(wrapper, 'reachedOutOfTime').and.callThrough();
-    //         spyOn(wrapper.chronoOneGlobal, 'stop').and.callThrough();
-    //         spyOn(partDAO, 'update').and.callThrough();
-
-    //         // When opponent reach time out locally
-    //         tick(wrapper.configRoom.moveDuration * 1000);
-
-    //         // Then it should be considered as a timeout
-    //         expect(wrapper.reachedOutOfTime).toHaveBeenCalledOnceWith(Player.ONE);
-    //         expect(wrapper.chronoOneGlobal.stop).toHaveBeenCalledOnceWith();
-    //         expect(partDAO.update).toHaveBeenCalledOnceWith('configRoomId', {
-    //             winner: UserMocks.CREATOR_MINIMAL_USER,
-    //             loser: UserMocks.OPPONENT_MINIMAL_USER,
-    //             result: MGPResult.TIMEOUT.value,
-    //         });
-    //     }));
-    // });
+    describe('Take Back', () => {
+
+        describe('sending/receiving', () => {
+
+            it('should send take back request when player asks to', fakeAsync(async() => {
+                // Given a board where it's the opponent's (first) turn
+                await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
+                await receiveSync();
+                await doMoveByClicks(Player.ZERO, FIRST_MOVE, FIRST_MOVE_ENCODED);
+
+                // When asking to take back
+                spyOn(gameService, 'askTakeBack').and.callThrough();
+                await askTakeBack(Player.ZERO);
+
+                // Then a request should be sent
+                expect(gameService.askTakeBack).toHaveBeenCalledOnceWith();
+
+                await receiveEndGame();
+            }));
+
+            it('should not allow to propose take back after it has been proposed', fakeAsync(async() => {
+                // Given a board where a move has been made
+                await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER, PreparationOptions.withoutClocks);
+                await receiveSync();
+                await doMoveByClicks(Player.ZERO, FIRST_MOVE, FIRST_MOVE_ENCODED);
+
+                // When asking to take back
+                await askTakeBack(Player.ZERO);
+
+                // Then it should not be possible to ask a second time
+                testUtils.expectElementToBeDisabled('#proposeTakeBack');
+
+                await receiveEndGame();
+            }));
+
+            it('should not propose to Player.ONE to take back before any move', fakeAsync(async() => {
+                // Given a board where nobody already played
+                await prepareTestUtilsFor(UserMocks.OPPONENT_AUTH_USER, PreparationOptions.withoutClocks);
+                await receiveSync();
+                // When displaying the page
+                // Then the take back button should not be there
+                testUtils.expectElementToBeDisabled('#proposeTakeBack');
+
+                await receiveEndGame();
+            }));
+
+            it('should not propose to Player.ONE to take back before their first move', fakeAsync(async() => {
+                // Given a board where nobody already played
+                await prepareTestUtilsFor(UserMocks.OPPONENT_AUTH_USER, PreparationOptions.withoutClocks);
+                await receiveSync();
+                // When receiving a new move
+                await receiveMove(Player.ZERO, FIRST_MOVE_ENCODED);
+                // Then the take back button should not be there
+                testUtils.expectElementToBeDisabled('#proposeTakeBack');
+
+                await receiveEndGame();
+            }));
+
+            it('should only propose to accept take back when opponent asked', fakeAsync(async() => {
+                // Given a board where opponent did not ask to take back and where both player could ask
+                await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
+                await receiveSync();
+                await doMoveByClicks(Player.ZERO, FIRST_MOVE, FIRST_MOVE_ENCODED);
+                await receiveMove(Player.ONE, SECOND_MOVE_ENCODED);
+                testUtils.expectElementNotToExist('#acceptTakeBack');
+
+                // When we receive a take back request from opponent and accepting
+                await receiveRequest(Player.ONE, 'TakeBack');
+                await acceptTakeBack(Player.ZERO);
+                testUtils.detectChanges();
+
+                // Then we cannot allow accept take back anymore
+                testUtils.expectElementNotToExist('#acceptTakeBack');
+
+                await receiveEndGame();
+            }));
+
+            it('should remove take back rejection button after it has been rejected', fakeAsync(async() => {
+                // Given a board with previous move
+                await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
+                await receiveSync();
+                await doMoveByClicks(Player.ZERO, FIRST_MOVE, FIRST_MOVE_ENCODED);
+                await receiveMove(Player.ZERO, SECOND_MOVE_ENCODED);
+                testUtils.expectElementNotToExist('#refuseTakeBack');
+                await receiveRequest(Player.ONE, 'TakeBack');
+                spyOn(gameService, 'refuseTakeBack').and.callThrough();
+
+                // When refusing take back
+                await refuseTakeBack(Player.ZERO);
+                testUtils.detectChanges();
+
+                // Then a TakeBack rejection reply should have been sent
+                testUtils.expectElementNotToExist('#refuseTakeBack');
+                expect(gameService.refuseTakeBack).toHaveBeenCalledOnceWith();
+
+                await receiveEndGame();
+            }));
+
+            it('should not allow player to play while take back request is waiting for them', fakeAsync(async() => {
+                // Given a component where a take back request is waiting for user
+                await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
+                await receiveSync();
+                await doMoveByClicks(Player.ZERO, FIRST_MOVE, FIRST_MOVE_ENCODED);
+                await receiveMove(Player.ONE, SECOND_MOVE_ENCODED);
+                await receiveRequest(Player.ONE, 'TakeBack');
+
+                // When ignoring it and trying to play
+                const reason: string = OnlineGameWrapperMessages.MUST_ANSWER_REQUEST();
+
+                // Then it should fail
+                testUtils.resetSpies();
+                await testUtils.expectClickFailure('#click-coord-0-0', reason);
+
+                await receiveEndGame();
+            }));
+
+            it('should allow to play after take back request', fakeAsync(async() => {
+                // Given an initial board where a take back request has been done by user
+                await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
+                await receiveSync();
+                await doMoveByClicks(Player.ZERO, FIRST_MOVE, FIRST_MOVE_ENCODED);
+                await receiveMove(Player.ONE, SECOND_MOVE_ENCODED);
+                await askTakeBack(Player.ZERO);
+
+                // When doing move while waiting for answer
+                spyOn(gameService, 'addMove').and.callThrough();
+                await doMoveByClicks(Player.ZERO, THIRD_MOVE, THIRD_MOVE_ENCODED);
+
+                // Then the move should be sent
+                expect(gameService.addMove).toHaveBeenCalledWith(THIRD_MOVE_ENCODED);
+
+                await receiveEndGame();
+            }));
+
+            it('should forbid player to ask take back again after refusal', fakeAsync(async() => {
+                await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
+                await receiveSync();
+                await doMoveByClicks(Player.ZERO, FIRST_MOVE, FIRST_MOVE_ENCODED);
+                await askTakeBack(Player.ONE);
+                await receiveReply(Player.ONE, false, 'TakeBack');
+
+                testUtils.expectElementToBeDisabled('#proposeTakeBack');
+
+                await receiveEndGame();
+            }));
+
+        });
+
+        describe('opponent given take back during their turn', () => {
+
+            it('should move board back two turns', fakeAsync(async() => {
+                // Given an initial board where it's opponent second turn, and opponent asked for take back
+                await prepareTestUtilsFor(UserMocks.OPPONENT_AUTH_USER, PreparationOptions.withoutClocks);
+                await receiveSync();
+                await receiveMove(Player.ZERO, FIRST_MOVE_ENCODED);
+                await doMoveByClicks(Player.ONE, SECOND_MOVE, SECOND_MOVE_ENCODED);
+                await receiveRequest(Player.ZERO, 'TakeBack');
+                expect(wrapper.gameComponent.getTurn()).toBe(2);
+
+                // When accepting opponent's take back
+                await acceptTakeBack(Player.ONE);
+
+                // Then turn should be changed to 0
+                const opponentTurnDiv: DebugElement = testUtils.findElement('#currentPlayerIndicator');
+                expect(opponentTurnDiv.nativeElement.innerText).toBe(`It is creator's turn.`);
+                expect(wrapper.gameComponent.getTurn()).toBe(0);
+
+                await receiveEndGame();
+            }));
+
+            it(`should preserve opponent's clocks to what it was before asking take back`, fakeAsync(async() => {
+                // Given an initial board where it's opponent second turn, and opponent asked for take back
+                await prepareTestUtilsFor(UserMocks.OPPONENT_AUTH_USER);
+                await receiveSync();
+                await receiveMove(Player.ZERO, FIRST_MOVE_ENCODED);
+                await doMoveByClicks(Player.ONE, SECOND_MOVE, SECOND_MOVE_ENCODED);
+                await receiveRequest(Player.ZERO, 'TakeBack');
+                const globalTimeBeforeTakeBack: number = wrapper.chronoZeroGlobal.remainingSeconds;
+                const turnTimeBeforeTakeBack: number = wrapper.chronoZeroTurn.remainingSeconds;
+
+                // When accepting opponent's take back
+                await acceptTakeBack(Player.ONE);
+
+                // Then opponents chrono should have continued to decrease
+                tick(1000); // wait a bit to ensure time is decreasing
+                const globalTimeAfterTakeBack: number = wrapper.chronoZeroGlobal.remainingSeconds;
+                const turnTimeAfterTakeBack: number = wrapper.chronoZeroTurn.remainingSeconds;
+                expect(globalTimeAfterTakeBack).toBeLessThan(globalTimeBeforeTakeBack);
+                expect(turnTimeAfterTakeBack).toBeLessThan(turnTimeBeforeTakeBack);
+
+                await receiveEndGame();
+            }));
+
+        });
+
+        describe('opponent given take back during user turn', () => {
+
+            it('should move board back one turn', fakeAsync(async() => {
+                // Given an initial board where it's user's (first) turn, and opponent asked for take back
+                await prepareTestUtilsFor(UserMocks.OPPONENT_AUTH_USER);
+                await receiveSync();
+                await receiveMove(Player.ZERO, FIRST_MOVE_ENCODED);
+                await receiveRequest(Player.ZERO, 'TakeBack');
+                expect(wrapper.gameComponent.getTurn()).toBe(1);
+
+                // When accepting opponent's take back
+                await acceptTakeBack(Player.ONE);
+                testUtils.detectChanges();
+
+                // Then turn should be changed to 0
+                const opponentTurnDiv: DebugElement = testUtils.findElement('#currentPlayerIndicator');
+                expect(opponentTurnDiv.nativeElement.innerText).toBe(`It is creator's turn.`);
+                expect(wrapper.gameComponent.getTurn()).toBe(0);
+
+                await receiveEndGame();
+            }));
+
+            it(`should resumeCountDown for opponent`, fakeAsync(async() => {
+                // Given an initial board where it's user's (first) turn, and opponent asked for take back
+                await prepareTestUtilsFor(UserMocks.OPPONENT_AUTH_USER);
+                await receiveSync();
+                await receiveMove(Player.ZERO, FIRST_MOVE_ENCODED);
+                await receiveRequest(Player.ZERO, 'TakeBack');
+                testUtils.detectChanges();
+
+                // When accepting opponent's take back
+                spyOn(wrapper.chronoZeroGlobal, 'resume').and.callThrough();
+                await acceptTakeBack(Player.ONE);
+
+                // Then count down should be resumed for opponent and user should receive their decision time back
+                expect(wrapper.chronoZeroGlobal.resume).toHaveBeenCalledOnceWith();
+
+                await receiveEndGame();
+            }));
+
+        });
+
+        describe('User given take back during their turn', () => {
+
+            it('should move board back two turns', fakeAsync(async() => {
+                // Given an initial board where it's user (second) turn, and user just asked for take back
+                await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
+                await receiveSync();
+                await doMoveByClicks(Player.ZERO, FIRST_MOVE, FIRST_MOVE_ENCODED);
+                await receiveMove(Player.ONE, SECOND_MOVE_ENCODED);
+                await askTakeBack(Player.ZERO);
+                expect(wrapper.gameComponent.getTurn()).toBe(2);
+
+                // When opponent accepts user's take back
+                spyOn(wrapper.chronoZeroGlobal, 'resume').and.callThrough();
+                await receiveReply(Player.ONE, true, 'TakeBack');
+                const opponentTurnDiv: DebugElement = testUtils.findElement('#currentPlayerIndicator');
+                expect(opponentTurnDiv.nativeElement.innerText).toBe(`It is your turn.`);
+                tick(0);
+                testUtils.detectChanges();
+
+                // Then turn should be changed to 0 and resumeCountDown be called
+                expect(wrapper.chronoZeroGlobal.resume).toHaveBeenCalledOnceWith();
+                expect(wrapper.gameComponent.getTurn()).toBe(0);
+                await receiveEndGame();
+            }));
+
+            it(`should do alternative move afterwards without taking back move time off (during user's turn)`, fakeAsync(async() => {
+                // Given an initial board where user was authorized to take back
+                await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
+                await receiveSync();
+                await doMoveByClicks(Player.ZERO, FIRST_MOVE, FIRST_MOVE_ENCODED);
+                await receiveMove(Player.ONE, SECOND_MOVE_ENCODED);
+                await askTakeBack(Player.ZERO);
+                testUtils.detectChanges();
+                await receiveReply(Player.ONE, true, 'TakeBack');
+                tick(0);
+
+                // When playing an alternative move
+                spyOn(gameService, 'addMove').and.callThrough();
+                const alternativeMove: QuartoMove = new QuartoMove(2, 3, QuartoPiece.BBBA);
+                const alternativeMoveEncoded: JSONValue = QuartoMove.encoder.encode(alternativeMove);
+                await doMoveByClicks(Player.ZERO, alternativeMove, alternativeMoveEncoded);
+
+                // Then the new move should be sent
+                expect(gameService.addMove).toHaveBeenCalledOnceWith(alternativeMoveEncoded);
+                await receiveEndGame();
+            }));
+
+        });
+
+        describe('User given take back during opponent turn', () => {
+
+            it('should move board back one turn and update current turn', fakeAsync(async() => {
+                // Given an initial board where it's opponent's [second] turn, and user just asked for take back
+                await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
+                await receiveSync();
+                await doMoveByClicks(Player.ZERO, FIRST_MOVE, FIRST_MOVE_ENCODED);
+                await askTakeBack(Player.ZERO);
+                expect(wrapper.gameComponent.getTurn()).toBe(1);
+
+                // When opponent accept user's take back
+                await receiveReply(Player.ONE, true, 'TakeBack');
+                const opponentTurnDiv: DebugElement = testUtils.findElement('#currentPlayerIndicator');
+                expect(opponentTurnDiv.nativeElement.innerText).toBe(`It is your turn.`);
+
+                // Then turn should be changed to 0
+                expect(wrapper.gameComponent.getTurn()).toBe(0);
+                await receiveEndGame();
+            }));
+
+            it(`should resume clock for user`, fakeAsync(async() => {
+                // Given an initial board where it's opponent's [second] turn, and user just asked for take back
+                await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
+                await receiveSync();
+                await doMoveByClicks(Player.ZERO, FIRST_MOVE, FIRST_MOVE_ENCODED);
+                spyOn(wrapper.chronoOneGlobal, 'resume').and.callThrough();
+                await askTakeBack(Player.ZERO);
+
+                // When opponent accept user's take back
+                await receiveReply(Player.ONE, true, 'TakeBack');
+
+                // Then count down should be resumed and update not changing time
+                expect(wrapper.chronoOneGlobal.resume).toHaveBeenCalledOnceWith();
+                await receiveEndGame();
+            }));
+
+            it('should do alternative move afterwards without taking back move time off (during opponent turn)', fakeAsync(async() => {
+                // Given an initial board where opponent just took back a move
+                await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
+                await receiveSync();
+                await doMoveByClicks(Player.ZERO, FIRST_MOVE, FIRST_MOVE_ENCODED);
+                await askTakeBack(Player.ZERO);
+                await receiveReply(Player.ONE, true, 'TakeBack');
+
+                // When playing an alernative move
+                spyOn(gameService, 'addMove').and.callThrough();
+                const alternativeMove: QuartoMove = new QuartoMove(2, 3, QuartoPiece.BBBA);
+                const alternativeMoveEncoded: JSONValue = QuartoMove.encoder.encode(alternativeMove);
+                await doMoveByClicks(Player.ZERO, alternativeMove, alternativeMoveEncoded);
+
+                // Then partDAO should be updated, and move should be sent
+                expect(gameService.addMove).toHaveBeenCalledOnceWith(alternativeMoveEncoded);
+                await receiveEndGame();
+            }));
+
+        });
+
+        it('should call cancelMoveAttempt', fakeAsync(async() => {
+            // Given an initial board where it's opponent's [second] turn, and user just asked for take back
+            await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
+            await receiveSync();
+            await doMoveByClicks(Player.ZERO, FIRST_MOVE, FIRST_MOVE_ENCODED);
+            await askTakeBack(Player.ZERO);
+
+            // When opponent accept user's take back
+            spyOn(testUtils.getGameComponent(), 'cancelMoveAttempt').and.callThrough();
+            await receiveReply(Player.ONE, true, 'TakeBack');
+
+            // Then cancelMoveAttempt should have been called
+            expect(testUtils.getGameComponent().cancelMoveAttempt).toHaveBeenCalledOnceWith();
+            await receiveEndGame();
+        }));
+
+    });
+
+    describe('Agreed Draw', () => {
+
+        it('should send draw request when player asks to', fakeAsync(async() => {
+            // Given any board
+            await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
+            await receiveSync();
+            spyOn(gameService, 'proposeDraw').and.callThrough();
+
+            // When clicking the propose draw button
+            await testUtils.clickElement('#proposeDraw');
+
+            // Then a draw request should have been sent
+            expect(gameService.proposeDraw).toHaveBeenCalledOnceWith();
+            await receiveEndGame();
+        }));
+
+        it('should forbid to propose to draw while draw request is waiting', fakeAsync(async() => {
+            // Given a page where we sent a draw request
+            await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
+            await receiveSync();
+            await testUtils.clickElement('#proposeDraw');
+
+            // When the request is received
+            await receiveRequest(Player.ZERO, 'Draw');
+
+            // Then it should not allow us to propose a second draw
+            testUtils.expectElementToBeDisabled('#proposeDraw');
+
+            await receiveEndGame();
+        }));
+
+        it('should forbid to click while draw request is waiting', fakeAsync(async() => {
+            // Given a page where we received a draw request
+            await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
+            await receiveSync();
+            await receiveRequest(Player.ONE, 'Draw');
+            testUtils.detectChanges();
+
+            // When ignoring it and trying to play
+            const reason: string = OnlineGameWrapperMessages.MUST_ANSWER_REQUEST();
+
+            // Then it should fail
+            await testUtils.expectClickFailure('#click-coord-0-0', reason);
+            await receiveEndGame();
+        }));
+
+        it('should forbid to propose to draw after refusal', fakeAsync(async() => {
+            // Given a page where we sent a draw request
+            await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
+            await receiveSync();
+            await testUtils.clickElement('#proposeDraw');
+            tick(0);
+
+            // When it is rejected
+            await receiveReply(Player.ONE, false, 'Draw');
+
+            // Then we cannot request to draw anymore
+            testUtils.expectElementToBeDisabled('#proposeDraw');
+
+            await receiveEndGame();
+        }));
+
+        it('should finish the game after accepting a proposed draw', fakeAsync(async() => {
+            // Given a part on which a draw has been proposed
+            await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
+            await receiveSync();
+            await receiveRequest(Player.ONE, 'Draw');
+            spyOn(gameService, 'acceptDraw').and.callThrough();
+            testUtils.detectChanges();
+
+            // When accepting the draw
+            await testUtils.clickElement('#accept');
+            await receiveReply(Player.ZERO, true, 'Draw');
+            await receiveEndGame(GameResult.AGREED_DRAW_BY_ZERO);
+
+            // Then the draw is being accepted
+            expect(gameService.acceptDraw).toHaveBeenCalledOnceWith();
+            tick(0);
+            testUtils.detectChanges();
+            testUtils.expectElementToExist('#youAgreedToDrawIndicator');
+            expectGameToBeOver();
+        }));
+
+        it('should finish the game when opponent accepts our proposed draw', fakeAsync(async() => {
+            // Given a gameComponent where draw has been proposed
+            await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
+            await receiveSync();
+            await testUtils.clickElement('#proposeDraw');
+            tick(0);
+
+            // When draw is accepted
+            await receiveEndGame(GameResult.AGREED_DRAW_BY_ONE);
+
+            // Then game should be over
+            expectGameToBeOver();
+            testUtils.expectElementToExist('#yourOpponentAgreedToDrawIndicator');
+        }));
+
+        it('should send refusal when player asks to', fakeAsync(async() => {
+            await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
+            await receiveSync();
+            await receiveRequest(Player.ONE, 'Draw');
+
+            spyOn(gameService, 'refuseDraw').and.callThrough();
+
+            await testUtils.clickElement('#reject');
+            expect(gameService.refuseDraw).toHaveBeenCalledOnceWith();
+
+            await receiveEndGame();
+        }));
+
+        it('should only propose to accept/refuse draw when asked', fakeAsync(async() => {
+            await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
+            await receiveSync();
+            testUtils.expectElementNotToExist('#accept');
+            testUtils.expectElementNotToExist('#reject');
+            await receiveRequest(Player.ONE, 'Draw');
+
+            testUtils.expectElementToExist('#accept');
+            testUtils.expectElementToExist('#reject');
+
+            await receiveEndGame();
+        }));
+    });
+
+    describe('End Game Time Management', () => {
+        it(`should stop player's game clock when turn reaches end`, fakeAsync(async() => {
+            // Given an online game
+            await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
+            await receiveSync();
+
+            // When the player runs out of move time
+            spyOn(wrapper, 'reachedOutOfTime').and.callThrough();
+            spyOn(wrapper.chronoZeroGlobal, 'stop').and.callThrough();
+            tick(wrapper.configRoom.moveDuration * 1000);
+
+            // Then it should be detected
+            expect(wrapper.reachedOutOfTime).toHaveBeenCalledOnceWith(Player.ZERO);
+
+            // And the game chronos should be stopped upon game end
+            await receiveEndGame();
+            expect(wrapper.chronoZeroGlobal.stop).toHaveBeenCalledOnceWith();
+        }));
+
+        it(`should stop player's move clock when game clock reaches end`, fakeAsync(async() => {
+            // Given an online game with short game time limit
+            await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER, PreparationOptions.shortGlobalClock);
+            await receiveSync();
+
+            // When the player runs out of game time
+            spyOn(wrapper, 'reachedOutOfTime').and.callThrough();
+            spyOn(wrapper.chronoZeroTurn, 'stop').and.callThrough();
+            tick(wrapper.configRoom.gameDuration * 1000);
+
+            // Then it shoud be detected
+            expect(wrapper.reachedOutOfTime).toHaveBeenCalledOnceWith(Player.ZERO);
+
+            // And the move chrono should be stopped upon game end
+            await receiveEndGame();
+            expect(wrapper.chronoZeroTurn.stop).toHaveBeenCalledOnceWith();
+        }));
+
+        it(`should stop opponent's game clock when turn reaches end`, fakeAsync(async() => {
+            // Given an online game where it's the opponent's turn
+            await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
+            await receiveSync();
+            await doMoveByClicks(Player.ZERO, FIRST_MOVE, FIRST_MOVE_ENCODED);
+
+            // When they run out of move time
+            spyOn(wrapper, 'reachedOutOfTime').and.callThrough();
+            spyOn(wrapper.chronoOneGlobal, 'stop').and.callThrough();
+            tick(wrapper.configRoom.moveDuration * 1000);
+
+            // Then it should be considered as a timeout
+            expect(wrapper.reachedOutOfTime).toHaveBeenCalledOnceWith(Player.ONE);
+
+            // And the game chrono should be stopped upon game end
+            await receiveEndGame();
+            expect(wrapper.chronoOneGlobal.stop).toHaveBeenCalledOnceWith();
+        }));
+
+        it(`should stop opponent's move clock when game clock reaches end`, fakeAsync(async() => {
+            // Given an online game where it's the opponent's turn
+            await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER, PreparationOptions.shortGlobalClock);
+            await receiveSync();
+            await doMoveByClicks(Player.ZERO, FIRST_MOVE, FIRST_MOVE_ENCODED);
+
+            // When they run out of game time
+            spyOn(wrapper, 'reachedOutOfTime').and.callThrough();
+            spyOn(wrapper.chronoOneTurn, 'stop').and.callThrough();
+            tick(wrapper.configRoom.gameDuration * 1000);
+
+            // Then it should be detected
+            expect(wrapper.reachedOutOfTime).toHaveBeenCalledOnceWith(Player.ONE);
+
+            // And the move chrono should be stopped upon game end
+            await receiveEndGame();
+            expect(wrapper.chronoOneTurn.stop).toHaveBeenCalledOnceWith();
+        }));
+
+    });
 
     // describe('Add time feature', () => {
     //     describe('from creator', () => {
@@ -1175,7 +1212,7 @@ fdescribe('OnlineGameWrapperComponent of Quarto:', () => {
     //     it('should end game after clicking on resign button', fakeAsync(async() => {
     //         // Given an online game component
     //         await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
-    //         await doMoveByClicks(FIRST_MOVE);
+    //         await doMoveByClicks(Player.ZERO, FIRST_MOVE, FIRST_MOVE_ENCODED);
 
     //         // When clicking on resign button
     //         spyOn(partDAO, 'update').and.callThrough();
@@ -1209,7 +1246,7 @@ fdescribe('OnlineGameWrapperComponent of Quarto:', () => {
     //     it('should display when the opponent resigned', fakeAsync(async() => {
     //         // Given a board where the opponent has resigned
     //         await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
-    //         await doMoveByClicks(FIRST_MOVE);
+    //         await doMoveByClicks(Player.ZERO, FIRST_MOVE, FIRST_MOVE_ENCODED);
     //         await receiveNewMoves(1, [SECOND_MOVE_ENCODED]);
     //         await receivePartDAOUpdate({
     //             winner: UserMocks.CREATOR_MINIMAL_USER,
@@ -1489,7 +1526,7 @@ fdescribe('OnlineGameWrapperComponent of Quarto:', () => {
     //         await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
 
     //         // When it is not the current player's turn
-    //         await doMoveByClicks(FIRST_MOVE);
+    //         await doMoveByClicks(Player.ZERO, FIRST_MOVE, FIRST_MOVE_ENCODED);
     //         testUtils.detectChanges();
 
     //         // Then it should not highlight the board
@@ -1502,7 +1539,7 @@ fdescribe('OnlineGameWrapperComponent of Quarto:', () => {
     //     it('should delegate to gameComponent.showLastMove', fakeAsync(async() => {
     //         // Given a any component
     //         await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER, PreparationOptions.withoutClocks);
-    //         await doMoveByClicks(FIRST_MOVE);
+    //         await doMoveByClicks(Player.ZERO, FIRST_MOVE, FIRST_MOVE_ENCODED);
     //         const component: QuartoComponent = testUtils.getGameComponent();
     //         spyOn(component, 'showLastMove').and.callThrough();
 
@@ -1543,7 +1580,7 @@ fdescribe('OnlineGameWrapperComponent of Quarto:', () => {
     //         await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
 
     //         // When it is not the current player's turn
-    //         await doMoveByClicks(FIRST_MOVE);
+    //         await doMoveByClicks(Player.ZERO, FIRST_MOVE, FIRST_MOVE_ENCODED);
     //         testUtils.detectChanges();
 
     //         // Then it should not be interactive
@@ -1554,7 +1591,7 @@ fdescribe('OnlineGameWrapperComponent of Quarto:', () => {
     //     it('should not be interactive when the game is finished', fakeAsync(async() => {
     //         // Given a board at the opponent's turn
     //         await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
-    //         await doMoveByClicks(FIRST_MOVE);
+    //         await doMoveByClicks(Player.ZERO, FIRST_MOVE, FIRST_MOVE_ENCODED);
 
     //         // When the game ends (e.g., they lose or resign)
     //         await receiveNewMoves(1, [SECOND_MOVE_ENCODED]);
