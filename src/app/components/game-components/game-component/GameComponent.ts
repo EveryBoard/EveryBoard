@@ -16,6 +16,7 @@ import { Debug } from '../../../../app/utils/Debug';
 import { GameInfo } from '../../normal-component/pick-game/game-info';
 import { BaseComponent } from '../../BaseComponent';
 import { Orthogonal } from '../../../../app/jscaip/Orthogonal';
+import { AIInfo } from '../../normal-component/pick-game/ai-info';
 
 /**
  * Define some methods that are useful to have in game components.
@@ -197,11 +198,13 @@ export abstract class GameComponent<R extends SuperRules<M, S, C, L>,
 
     protected setRulesAndNode(urlName: string): void {
         const gameInfo: GameInfo = GameInfo.getByUrlName(urlName).get();
+        const aiInfo: AIInfo = AIInfo.getByUrlName(urlName).get();
         const defaultConfig: MGPOptional<C> = gameInfo.getRulesConfig() as MGPOptional<C>;
 
         this.rules = gameInfo.rules as R;
         this.node = this.rules.getInitialNode(defaultConfig);
         this.tutorial = gameInfo.tutorial.tutorial;
+        this.availableAIs = aiInfo.ais as AI<M, S, AIOptions, C>[];
     }
 
     protected getConfig(): MGPOptional<C> {

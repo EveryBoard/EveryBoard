@@ -1,5 +1,6 @@
+/* eslint-disable dot-notation */
 /* eslint-disable max-lines-per-function */
-import { MGPFallible, MGPOptional } from '@everyboard/lib';
+import { Encoder, JSONValue, MGPFallible, MGPOptional } from '@everyboard/lib';
 import * as readline from 'readline';
 import { GameStatus } from '../app/jscaip/GameStatus';
 import { PlayerOrNone } from '../app/jscaip/Player';
@@ -8,7 +9,6 @@ import { MancalaMove } from '../app/games/mancala/common/MancalaMove';
 import { MancalaState } from '../app/games/mancala/common/MancalaState';
 import { PlayerNumberMap } from '../app/jscaip/PlayerMap';
 import { P4State } from '../app/games/p4/P4State';
-import { P4Config, P4Rules } from '../app/games/p4/P4Rules';
 import { P4Move } from '../app/games/p4/P4Move';
 import { P4MoveGenerator } from '../app/games/p4/P4MoveGenerator';
 import { GameState } from '../app/jscaip/state/GameState';
@@ -16,63 +16,71 @@ import { GameNode } from '../app/jscaip/AI/GameNode';
 import { Move } from '../app/jscaip/Move';
 import { GameInfo } from '../app/components/normal-component/pick-game/game-info';
 import { RulesConfig } from '../app/jscaip/RulesConfigUtil';
-import { MoveGenerator } from '../app/jscaip/AI/AI';
+import { AI, AIDepthLimitOptions, AIOptions, MoveGenerator } from '../app/jscaip/AI/AI';
+import { AwaleMoveGenerator } from '../app/games/mancala/awale/AwaleMoveGenerator';
+import { AIInfo } from '../app/components/normal-component/pick-game/ai-info';
 
 // compile with "npx tsc -p tsconfig.jscaip.json"
 
+type ActionType =
+    | 'applyMove'
+    | 'getGameStatus'
+    | 'getLegalMoves'
+    | 'getInitialState'
+    | 'getAINameList'
+    | 'letAIPlay'
 interface Input {
-    action: 'choose' | 'getGameStatus' | 'getLegalMoves' | 'getGameName' | 'getInitialState';
+    action: ActionType;
     gameName: string;
-    gameState?: GameState;
-    move?: number;
+    gameState?: JSONValue;
+    move?: JSONValue;
 }
 
 function getP4State(input: Input): P4State {
     const board: PlayerOrNone[][] = TableUtils.map(
-        input.gameState?.board,
-        (p: PlayerOrNone) => PlayerOrNone.encoder.decode(p['value']),
+        input.gameState?.['board'],
+        (p: number) => PlayerOrNone.encoder.decode(p),
     );
-    const turn: number = input.gameState?.turn;
+    const turn: number = input.gameState?.['turn'];
     return new P4State(board, turn);
 }
 function getMancalaState(input: Input): MancalaState {
-    const board: number[][] = input.gameState?.board;
-    const turn: number = input.gameState?.turn;
-    const playerZeroValue: number = input.gameState?.scores.map.map[0].value;
-    const playerOneValue: number = input.gameState?.scores.map.map[0].value;
+    const board: number[][] = input.gameState?.['board'];
+    const turn: number = input.gameState?.['turn'];
+    const playerZeroValue: number = input.gameState?.['scores'][0];
+    const playerOneValue: number = input.gameState?.['scores'][1];
     const scores: PlayerNumberMap = PlayerNumberMap.of(playerZeroValue, playerOneValue);
     return new MancalaState(board, turn, scores);
 }
-function getMancalaMove(input: Input): MancalaMove {
-    return MancalaMove.of(input.move!);
-}
-function getP4Move(input: Input): P4Move {
-    return P4Move.of(input.move!);
-}
 
 // Create readline interface for persistent communication
-const rl = readline.createInterface({
+const rl: readline.Interface = readline.createInterface({
     input: process.stdin,
     output: process.stdout,
     terminal: false,
 });
 
+type GenericAI = AI<Move, GameState, AIOptions, RulesConfig>;
+
 class ProcessApplier<S extends GameState, M extends Move> {
 
     public readonly gameInfo: GameInfo;
+    public readonly aiInfo: AIInfo;
 
     public constructor(public readonly gameName: string,
-                       public readonly moveMapper: (input: Input) => M,
+                       public readonly moveEncoder: Encoder<M>,
                        public readonly gameStateMapper: (input: Input) => S,
                        public readonly moveGenerator: MoveGenerator<M, S, RulesConfig>,
     ) {
         this.gameInfo = GameInfo.getByUrlName(gameName).get();
+        this.aiInfo = AIInfo.getByUrlName(gameName).get();
     }
+
     private getResponse(input: Input): Record<string, any> { // TODO: CHANGE return name
-        if (input.action === 'choose') {
+        if (input.action === 'applyMove') {
             const gameState: S = this.gameStateMapper(input);
             let node: GameNode<M, S> = new GameNode<M, S>(gameState);
-            const move: M = this.moveMapper(input);
+            const move: M = this.moveEncoder.decode(input.move as JSONValue);
             const defaultConfig: MGPOptional<RulesConfig> = this.gameInfo.rules.getDefaultRulesConfig();
             const result: MGPFallible<GameNode<M, S>> =
                 this.gameInfo.rules.choose(node, move, defaultConfig) as MGPFallible<GameNode<M, S>>;
@@ -95,16 +103,40 @@ class ProcessApplier<S extends GameState, M extends Move> {
             const moveGenerator: MoveGenerator<M, S, RulesConfig> = this.moveGenerator;
             const defaultConfig: MGPOptional<RulesConfig> = this.gameInfo.rules.getDefaultRulesConfig();
             const legalMoves: M[] = moveGenerator.getListMoves(node, defaultConfig);
-            return { legalMoves };
+            const legalEncodedMoves: JSONValue[] = legalMoves.map(this.moveEncoder.encode);
+            return { legalMoves: legalEncodedMoves };
         } else if (input.action === 'getInitialState') {
-            // const optGameStateProvider: MGPOptional<(config: MGPOptional<RulesConfig>) => GameState> =
-                // GameInfo.getStateProvider(this.gameName);
-            // const gameStateProvider: (config: MGPOptional<RulesConfig>) => GameState = optGameStateProvider.get();
             const defaultConfig: MGPOptional<RulesConfig> = this.gameInfo.rules.getDefaultRulesConfig();
             const initialState: GameState = this.gameInfo.rules.getInitialState(defaultConfig);
             return { initialState };
+        } else if (input.action === 'getAINameList') {
+            const aiList: GenericAI[] = this.aiInfo.ais;
+            const aiNameList: string[] = aiList.map((ai: GenericAI) => ai.name);
+            return {
+                aiNameList,
+            };
         } else {
-            throw Error('Unknown action ' + input.action);
+            if (input.action !== 'letAIPlay') {
+                throw Error('Unknown action ' + input.action);
+            }
+            const aiList: GenericAI[] = this.aiInfo.ais;
+            const optionalAI: GenericAI[] = aiList.filter((genericAI: GenericAI) => genericAI.name === input['aiName']);
+            const ai: GenericAI = optionalAI[0];
+            const gameState: S = this.gameStateMapper(input);
+            const node: GameNode<M, S> = new GameNode<M, S>(gameState);
+            const defaultConfig: MGPOptional<RulesConfig> = this.gameInfo.rules.getDefaultRulesConfig();
+            const aiMove: Move = ai.chooseNextMove(node, input['aiOptions'], defaultConfig);
+            const result: MGPFallible<GameNode<M, S>> =
+                this.gameInfo.rules.choose(node, aiMove, defaultConfig) as MGPFallible<GameNode<M, S>>;
+            if (result.isSuccess()) {
+                return {
+                    board: result.get().gameState,
+                };
+            } else {
+                return {
+                    failureReason: result.getReason(),
+                };
+            }
         }
     }
     public getRequestReponse(input: Input): string {
@@ -118,24 +150,44 @@ rl.on('line', (line: string) => {
     try {
         const input: Input = JSON.parse(line);
         switch (input.gameName) {
-            case 'P4':
+            case 'P4': {
                 const processApplier: ProcessApplier<P4State, P4Move> = new ProcessApplier(
                     'P4',
-                    getP4Move,
+                    P4Move.encoder,
                     getP4State,
                     new P4MoveGenerator(),
                 );
                 const response: string = processApplier.getRequestReponse(input);
                 console.log(response);
-                // process.stdout.write(response);
                 break;
+            }
+            case 'Awale': {
+                const processApplier: ProcessApplier<MancalaState, MancalaMove> = new ProcessApplier(
+                    'Awale',
+                    MancalaMove.encoder,
+                    getMancalaState,
+                    new AwaleMoveGenerator(),
+                );
+                const response: string = processApplier.getRequestReponse(input);
+                console.log(response);
+                break;
+            }
             default:
                 throw new TypeError('Unknown Game ' + structuredClone(input.gameName));
         }
     } catch (e: any) {
-        const errorMessage: string = JSON.stringify({ error: e?.message || e?.toString?.() || 'Unknown error' });
-        console.error(errorMessage);
-        console.log(errorMessage);
-        // process.stdout.write(JSON.stringify({ success: false, error: errorMessage, line }) + '\n');
+        const message: string = e?.message || e?.toString?.() || 'Unknown error';
+        const stackTrace: string = e?.stack || 'No stack trace available';
+
+        const errorInfo = {
+            error: message,
+            stack: stackTrace,
+        };
+
+        const errorMessage: string = JSON.stringify(errorInfo);
+
+        // Log to stderr and stdout
+        console.error(errorMessage); // stderr (for debugging)
+        console.log(errorMessage); // stdout (for communication, if needed)
     }
 });
