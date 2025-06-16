@@ -1,8 +1,11 @@
 FROM scratch
 
-COPY backend / # The backend binary itself
-COPY service-account.json / # The credentials to connect to firebase
-COPY ca-certificates.crt /etc/ssl/certs/ # The certicifates to verify Google's identity
+# The backend binary itself
+COPY backend /
+# The credentials to connect to firebase
+COPY service-account.json /
+# The certicifates to verify Google's identity
+COPY ca-certificates.crt /etc/ssl/certs/
 
 # Setting up the environment variables that the backend needs
 ARG USE_EMULATOR
