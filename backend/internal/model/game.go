@@ -57,3 +57,8 @@ type Game struct {
 	Result     Result      `gorm:"not null" json:"result"`
 	Beginning  int64       `gorm:"not null" json:"beginning"`
 }
+
+func (g *Game) UnmarshalJSON(data []byte) error {
+	return fmt.Errorf("not allowed to unmarshall game")
+}
+
