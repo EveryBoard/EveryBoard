@@ -398,7 +398,6 @@ jobs:
         run: |
           result="${{ steps.is_organization_member.outputs.result }}"
           if [ "$result" == true ]; then
-            ls /etc/ssl/
             npm run build:netlify
             npm install netlify-cli
             npx netlify deploy --dir=dist/everyboard --alias="$GITHUB_HEAD_REF" --message="Deployment from github ($GITHUB_HEAD_REF, commit $GITHUB_SHA)"

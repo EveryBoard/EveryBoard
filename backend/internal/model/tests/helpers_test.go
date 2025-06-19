@@ -2,13 +2,18 @@ package model
 
 import (
 	"encoding/json"
-	"testing"
 	"reflect"
+	"testing"
 )
 
-func ExpectMarshallingToWork[T interface{}](t *testing.T, object T, expectedJSON string) {
+func ExpectMarshallingToWorkBothWays[T any](t *testing.T, object T, expectedJSON string) {
 	t.Helper()
 
+	ExpectMarshallingToWork(t, object, expectedJSON)
+	ExpectUnmarshallingToWork(t, expectedJSON, object)
+}
+
+func ExpectMarshallingToWork[T any](t *testing.T, object T, expectedJSON string) {
 	// Given some object (`object`)
 
 	// When mashalling it
@@ -21,10 +26,13 @@ func ExpectMarshallingToWork[T interface{}](t *testing.T, object T, expectedJSON
 	if string(data) != expectedJSON {
 		t.Errorf("serializing does not provide the expected JSON: got %s", string(data))
 	}
+}
 
-	// And when unmarshalling it
+func ExpectUnmarshallingToWork[T any](t *testing.T, validJSON string, object T) {
+	// Given some string containing a valid json
+	// When unmarshalling it
 	var objectAgain T
-	err = json.Unmarshal([]byte(expectedJSON), &objectAgain);
+	err := json.Unmarshal([]byte(validJSON), &objectAgain)
 	if err != nil {
 		t.Fatalf("deserialization failed: %v", err)
 	}
@@ -33,5 +41,12 @@ func ExpectMarshallingToWork[T interface{}](t *testing.T, object T, expectedJSON
 	// We need to check it with deep equality in case there are pointers due to nullable values
 	if !reflect.DeepEqual(objectAgain, object) {
 		t.Errorf("deserialized object does not match the expected one: got %v", objectAgain)
+	}
+}
+
+func ExpectMarshallingToFail[T any](t *testing.T, object T, input string) {
+	err := json.Unmarshal([]byte(input), &object)
+	if err == nil {
+		t.Errorf("succesfully unmarshaled while it should not, with %v, got %v", input, object)
 	}
 }

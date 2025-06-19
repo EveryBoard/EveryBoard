@@ -1,7 +1,6 @@
 package model
 
 import (
-	"encoding/json"
 	"testing"
 
 	"github.com/EveryBoard/EveryBoard/internal/model"
@@ -83,23 +82,21 @@ func TestResultIsVictoryOfOne(t *testing.T) {
 }
 
 func TestMarshalResult(t *testing.T) {
-	ExpectMarshallingToWork(t, model.ResultInProgress, `"InProgress"`)
-	ExpectMarshallingToWork(t, model.ResultHardDraw, `"HardDraw"`)
-	ExpectMarshallingToWork(t, model.ResultResignOfZero, `"ResignOfZero"`)
-	ExpectMarshallingToWork(t, model.ResultResignOfOne, `"ResignOfOne"`)
-	ExpectMarshallingToWork(t, model.ResultVictoryOfZero, `"VictoryOfZero"`)
-	ExpectMarshallingToWork(t, model.ResultVictoryOfOne, `"VictoryOfOne"`)
-	ExpectMarshallingToWork(t, model.ResultTimeoutOfZero, `"TimeoutOfZero"`)
-	ExpectMarshallingToWork(t, model.ResultTimeoutOfOne, `"TimeoutOfOne"`)
-	ExpectMarshallingToWork(t, model.ResultAgreedDrawByZero, `"AgreedDrawByZero"`)
-	ExpectMarshallingToWork(t, model.ResultAgreedDrawByOne, `"AgreedDrawByOne"`)
+	ExpectMarshallingToWorkBothWays(t, model.ResultInProgress, `"InProgress"`)
+	ExpectMarshallingToWorkBothWays(t, model.ResultHardDraw, `"HardDraw"`)
+	ExpectMarshallingToWorkBothWays(t, model.ResultResignOfZero, `"ResignOfZero"`)
+	ExpectMarshallingToWorkBothWays(t, model.ResultResignOfOne, `"ResignOfOne"`)
+	ExpectMarshallingToWorkBothWays(t, model.ResultVictoryOfZero, `"VictoryOfZero"`)
+	ExpectMarshallingToWorkBothWays(t, model.ResultVictoryOfOne, `"VictoryOfOne"`)
+	ExpectMarshallingToWorkBothWays(t, model.ResultTimeoutOfZero, `"TimeoutOfZero"`)
+	ExpectMarshallingToWorkBothWays(t, model.ResultTimeoutOfOne, `"TimeoutOfOne"`)
+	ExpectMarshallingToWorkBothWays(t, model.ResultAgreedDrawByZero, `"AgreedDrawByZero"`)
+	ExpectMarshallingToWorkBothWays(t, model.ResultAgreedDrawByOne, `"AgreedDrawByOne"`)
 
 	// It should also fail to unmarshal incorrect results
 	var result model.Result
-	err := json.Unmarshal([]byte(`"bli"`), &result)
-	if err == nil {
-		t.Errorf("succesfully unmarshaled while it should not!")
-	}
+	ExpectMarshallingToFail(t, &result, `"bli"`)
+	ExpectMarshallingToFail(t, &result, `42`)
 }
 
 func TestMarshalGame(t *testing.T) {
@@ -113,4 +110,9 @@ func TestMarshalGame(t *testing.T) {
 	}
 	json := `{"gameName":"Go","playerZero":{"id":"zero","name":"alice"},"playerOne":{"id":"one","name":"bob"},"result":"InProgress","beginning":1000}`
 	ExpectMarshallingToWork(t, original, json)
+
+	// It should not allow to unmarshal, even a valid game
+	var result model.Game
+	ExpectMarshallingToFail(t, &result, `{}`);
+	ExpectMarshallingToFail(t, &result, json);
 }

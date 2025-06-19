@@ -159,7 +159,7 @@ func CreateRematchConfigRoom(creator MinimalUser, configRoom ConfigRoom, game Ga
 	var firstPlayer FirstPlayer
 	var chosenOpponent MinimalUser
 	if game.PlayerZero.ID == creator.ID {
-		firstPlayer = FirstPlayerChosenPlayer
+		firstPlayer = FirstPlayerChosenOpponent
 		chosenOpponent = game.PlayerOne
 	} else {
 		firstPlayer = FirstPlayerCreator
@@ -295,7 +295,7 @@ func (cr *ConfigRoom) CreateGame(now int64, rand_bool bool) (*Game, error) {
 		if rand_bool {
 			starter = FirstPlayerCreator
 		} else {
-			starter = FirstPlayerChosenPlayer
+			starter = FirstPlayerChosenOpponent
 		}
 	}
 
