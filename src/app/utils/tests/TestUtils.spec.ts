@@ -46,6 +46,10 @@ import { ConfigRoomService } from 'src/app/services/ConfigRoomService';
 import { ConfigRoomServiceMock } from 'src/app/services/tests/ConfigRoomServiceMock.spec';
 import { ChatService } from 'src/app/services/ChatService';
 import { ChatServiceMock } from 'src/app/services/tests/ChatServiceMock.spec';
+import { ActiveConfigRoomsServiceMock } from 'src/app/services/tests/ActiveConfigRoomServiceMock.spec';
+import { ActiveConfigRoomsService } from 'src/app/services/ActiveConfigRoomsService';
+import { BackendService } from 'src/app/services/BackendService';
+import { BackendServiceMock } from 'src/app/services/tests/BackendServiceMock.spec';
 
 @Component({})
 export class BlankComponent {}
@@ -654,6 +658,8 @@ export class ConfigureTestingModuleUtils {
                 { provide: GameService, useClass: GameServiceMock },
                 { provide: ConfigRoomService, useClass: ConfigRoomServiceMock },
                 { provide: ChatService, useClass: ChatServiceMock },
+                { provide: ActiveConfigRoomsService, useClass: ActiveConfigRoomsServiceMock },
+                { provide: BackendService, useClass: BackendServiceMock },
             ],
         }).compileComponents();
     }
@@ -690,6 +696,8 @@ export class ConfigureTestingModuleUtils {
                 { provide: GameService, useClass: GameServiceMock },
                 { provide: ConfigRoomService, useClass: ConfigRoomServiceMock },
                 { provide: ChatService, useClass: ChatServiceMock },
+                { provide: ActiveConfigRoomsService, useClass: ActiveConfigRoomsServiceMock },
+                { provide: BackendService, useClass: BackendServiceMock },
             ],
         }).compileComponents();
     }

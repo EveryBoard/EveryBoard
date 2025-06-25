@@ -6,6 +6,12 @@ import { Subscription } from 'rxjs';
 import { BackendService, BackendMessage } from './BackendService';
 import { ConfigRoom } from '../domain/ConfigRoom';
 
+export abstract class AbstractActiveConfigRoomsService {
+
+    public abstract subscribe(callback: (rooms: MGPMap<string, ConfigRoom>) => void): Subscription;
+
+}
+
 @Injectable({
     providedIn: 'root',
 })
@@ -14,12 +20,13 @@ import { ConfigRoom } from '../domain/ConfigRoom';
  * the lobby. You must start observing when you need to observe parts, and stop
  * observing when you're done.
  */
-export class ActiveConfigRoomsService {
+export class ActiveConfigRoomsService extends AbstractActiveConfigRoomsService {
 
     public constructor(private readonly backendService: BackendService) {
+        super();
     }
 
-    public subscribe(callback: (rooms: MGPMap<string, ConfigRoom>) => void): Subscription {
+    public override subscribe(callback: (rooms: MGPMap<string, ConfigRoom>) => void): Subscription {
         const activeRooms: MGPMap<string, ConfigRoom> = new MGPMap();
         const updateSubscription: Subscription =
             this.backendService.setCallback('ConfigRoomUpdate', (message: BackendMessage): void => {

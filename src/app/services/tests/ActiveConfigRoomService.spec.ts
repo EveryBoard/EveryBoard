@@ -8,7 +8,7 @@ import { BackendServiceMock } from './BackendServiceMock.spec';
 import { ActiveConfigRoomsService } from '../ActiveConfigRoomsService';
 import { AbstractBackendService, BackendService } from '../BackendService';
 import { ConfigRoom, FirstPlayer } from 'src/app/domain/ConfigRoom';
-import { ConfigRoomMocks } from 'src/app/domain/ConfigRoomMocks';
+import { ConfigRoomMocks } from 'src/app/domain/ConfigRoomMocks.spec';
 
 describe('ActiveConfigRoomsService', () => {
 

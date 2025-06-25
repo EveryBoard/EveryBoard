@@ -410,7 +410,6 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
 
     // Called by the clocks
     public async reachedOutOfTime(player: Player): Promise<void> {
-        console.log('reached out of time for player ' + player)
         if (this.isPlaying() === false) {
             return;
         }

@@ -4,6 +4,7 @@ import { JSONValue } from '@everyboard/lib';
 
 import { AbstractBackendService, BackendMessage } from '../BackendService';
 
+// TODO: rename file to BackendServiceMock.ts
 export class BackendServiceMock extends AbstractBackendService {
 
     protected override async subscribeTo(subscription: string, gameId?: string): Promise<Subscription> {

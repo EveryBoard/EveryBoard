@@ -103,8 +103,7 @@ export abstract class AbstractGameService {
     }
 
     /** End the game after a move */
-    public async endGame(winner: PlayerOrNone): Promise<void>
-    {
+    public async endGame(winner: PlayerOrNone): Promise<void> {
         return this.gameAction(['EndGame', { winner: winner.getValue() }]);
     }
 

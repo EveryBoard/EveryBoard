@@ -45,10 +45,12 @@ export class LobbyComponent implements OnInit, OnDestroy {
     }
 
     public async ngOnInit(): Promise<void> {
+        console.log('ngOnInit');
         this.activeConfigRoomsSubscription = this.activeConfigRoomsService.subscribe(
             (rooms: MGPMap<string, ConfigRoom>) => {
                 this.activeConfigRooms = rooms;
             });
+        console.log('after activeConfigRoomsSubscription');
         this.currentGameSubscription = this.currentGameService.subscribeToCurrentGame(
             (observed: MGPOptional<CurrentGame>) => {
                 this.createTabClasses = [];
@@ -56,8 +58,10 @@ export class LobbyComponent implements OnInit, OnDestroy {
                     this.createTabClasses = ['disabled-tab'];
                 }
             });
+        console.log('after currentGameSubscription');
 
         this.lobbySubscription = await this.backendService.subscribeToLobby();
+        console.log('after lobbySubscription');
     }
 
     public async ngOnDestroy(): Promise<void> {

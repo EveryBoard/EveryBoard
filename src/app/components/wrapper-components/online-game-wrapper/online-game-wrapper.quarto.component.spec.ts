@@ -27,7 +27,6 @@ import { GameMocks } from 'src/app/domain/PartMocks.spec';
 
 describe('OnlineGameWrapperComponent of Quarto:', () => {
 
-    //
     // component construction (beforeEach)
     // stage 0
     // ngOnInit (triggered by detectChanges)

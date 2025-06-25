@@ -7,7 +7,7 @@ import { ConfigRoomService } from '../ConfigRoomService';
 import { BackendServiceMock } from './BackendServiceMock.spec';
 import { AbstractBackendService, BackendService } from '../BackendService';
 import { ConfigProposal, ConfigRoom, FirstPlayer, GameType } from 'src/app/domain/ConfigRoom';
-import { ConfigRoomMocks } from 'src/app/domain/ConfigRoomMocks';
+import { ConfigRoomMocks } from 'src/app/domain/ConfigRoomMocks.spec';
 import { MinimalUser } from 'src/app/domain/MinimalUser';
 import { UserMocks } from 'src/app/domain/UserMocks.spec';
 import { Subscription } from 'rxjs';
