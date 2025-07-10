@@ -50,6 +50,15 @@ describe('ChatService', () => {
             // Then we receive it too
             expect(receivedMessages.length).toBe(1);
         }));
+
+        it('should unsubscribe from callback upon unsubscription', fakeAsync(async() => {
+            // Given a chat where we subscribed to the messages
+            const subscription = chatService.subscribeToMessages(() => {});
+            // When we unsubscribe
+            subscription.unsubscribe();
+            // Then the subscription should be unsubscribed
+            expect(subscription.closed).toBe(true);
+        }));
     });
 
 });

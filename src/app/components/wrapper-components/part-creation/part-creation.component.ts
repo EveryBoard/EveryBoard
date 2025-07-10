@@ -289,7 +289,6 @@ export class GameCreationComponent extends BaseWrapperComponent implements OnIni
     }
 
     public async selectOpponent(opponentName: string): Promise<void> {
-        console.log('selectOpponent: ' + opponentName);
         const opponent: MinimalUser = this.getUserFromName(opponentName);
         return this.configRoomService.selectOpponent(opponent);
     }
@@ -424,14 +423,6 @@ export class GameCreationComponent extends BaseWrapperComponent implements OnIni
         // Unsubscribe from the config room and candidates
         // This will cause the backend to deal with game/config-room destruction if needed
         this.configRoomSubscription.unsubscribe();
-
-        if (this.connectedUserService.user.isAbsent()) {
-            // User disconnected, there's not much we can do at this point
-            // We could instead remove parts in creation when doing the log out,
-            // but this is an unlikely event and just ignoring log outs here
-            // treats this similar to a "tab closed" event, so it is more consistent behavior.
-            return;
-        }
     }
 
     public async goToLobby(): Promise<void> {

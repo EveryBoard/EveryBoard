@@ -743,8 +743,12 @@ export function expectValidRouting(router: Router,
 : void
 {
     expect(path[0][0]).withContext('Routings should start with /').toBe('/');
-    for (const pathPart of path) {
-        expect(pathPart[pathPart.length-1]).withContext('Routing should not include superfluous / at the end').not.toBe('/');
+    if (path.length === 1 && path[0] === '/') {
+        // All good, the path is / so it must finish by /
+    } else {
+        for (const pathPart of path) {
+            expect(pathPart[pathPart.length-1]).withContext('Routing should not include superfluous / at the end').not.toBe('/');
+        }
     }
     const fullPath: string = path.join('/');
     const matchingRoute: MGPOptional<Route> = findMatchingRoute(fullPath);

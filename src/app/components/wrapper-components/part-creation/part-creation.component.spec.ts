@@ -2,47 +2,32 @@
 import { TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { DebugElement } from '@angular/core';
 import { Router } from '@angular/router';
-import { Timestamp } from 'firebase/firestore';
 
-import { GameCreationComponent } from './part-creation.component';
+import { GameCreationComponent, GameCreationComponentMessages } from './part-creation.component';
 import { LobbyComponent } from '../../normal-component/lobby/lobby.component';
 
-import { AbstractConfigRoomService, ConfigRoomService, ConfigRoomServiceFailure } from 'src/app/services/ConfigRoomService';
-import { GameService } from 'src/app/services/GameService';
-import { ErrorLoggerServiceMock } from 'src/app/services/tests/ErrorLoggerServiceMock.spec';
-import { AuthUser, ConnectedUserService } from 'src/app/services/ConnectedUserService';
+import { AbstractConfigRoomService, ConfigRoomService } from 'src/app/services/ConfigRoomService';
 import { ConnectedUserServiceMock } from 'src/app/services/tests/ConnectedUserService.spec';
-
-import { UserDAO } from 'src/app/dao/UserDAO';
 
 import { ActivatedRouteStub, expectValidRouting, prepareUnsubscribeCheck, SimpleComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { MGPOptional, Utils } from '@everyboard/lib';
 
 import { ConfigRoomMocks } from 'src/app/domain/ConfigRoomMocks.spec';
 import { FirstPlayer, Status, GameType, ConfigRoom, GameDuration } from 'src/app/domain/ConfigRoom';
-import { Game } from 'src/app/domain/Part';
-import { CurrentGame } from 'src/app/domain/User';
-import { CurrentGameMocks } from 'src/app/domain/mocks/CurrentGameMocks.spec';
 import { UserMocks } from 'src/app/domain/UserMocks.spec';
-import { FirestoreTime } from 'src/app/domain/Time';
-import { UserService } from 'src/app/services/UserService';
-import { CurrentGameService } from 'src/app/services/CurrentGameService';
 import { LocalGameConfigurationComponent } from '../local-game-configuration/local-game-configuration.component';
 import { MinimalUser } from 'src/app/domain/MinimalUser';
 import { ConfigRoomServiceMock } from 'src/app/services/tests/ConfigRoomServiceMock.spec';
-
+import { NotFoundComponent } from '../../normal-component/not-found/not-found.component';
+import { WelcomeComponent } from '../../normal-component/welcome/welcome.component';
 
 describe('GameCreationComponent', () => {
 
     let testUtils: SimpleComponentTestUtils<GameCreationComponent>;
     let component: GameCreationComponent;
+    let router: Router;
 
-    let userDAO: UserDAO;
-    let userService: UserService;
     let configRoomService: ConfigRoomServiceMock;
-    let gameService: GameService;
-    let connectedUserService: ConnectedUserService;
-    let currentGameService: CurrentGameService;
 
     let destroyed: boolean;
 
@@ -52,9 +37,13 @@ describe('GameCreationComponent', () => {
         configRoomService.mockConfigRoomUpdate(configRoom);
     }
 
-    function awaitComponentInitialization(): void {
+    async function receiveError(error: string): Promise<void> {
+        configRoomService.mockError(error);
+    }
+
+    async function awaitComponentInitialization(): Promise<void> {
         testUtils.detectChanges();
-        receiveConfigRoomUpdate(ConfigRoomMocks.getInitial(MGPOptional.empty()));
+        await receiveConfigRoomUpdate(ConfigRoomMocks.getInitial(MGPOptional.empty()));
         tick(0);
     }
 
@@ -96,22 +85,73 @@ describe('GameCreationComponent', () => {
     beforeEach(fakeAsync(async() => {
         testUtils = await SimpleComponentTestUtils.create(GameCreationComponent, new ActivatedRouteStub('P4'));
         destroyed = false;
-        userDAO = TestBed.inject(UserDAO);
-        userService = TestBed.inject(UserService);
         configRoomService = TestBed.inject(ConfigRoomService) as AbstractConfigRoomService as ConfigRoomServiceMock;
-        gameService = TestBed.inject(GameService);
-        connectedUserService = TestBed.inject(ConnectedUserService);
-        currentGameService = TestBed.inject(CurrentGameService);
         component = testUtils.getComponent();
         component.gameId = 'configRoomId';
         component.rulesConfigDescription = MGPOptional.empty();
-        // await userDAO.set(UserMocks.CREATOR_AUTH_USER.id, UserMocks.CREATOR);
-        // await userDAO.set(UserMocks.OPPONENT_AUTH_USER.id, UserMocks.OPPONENT);
+        router = TestBed.inject(Router);
     }));
 
     it('should create', () => {
         expect(component).toBeTruthy();
     });
+
+    it('should display an error if it receives already-subscribed from the server', fakeAsync(async() => {
+        // Given a component that is loaded
+        await awaitComponentInitialization();
+        spyOn(router, 'navigate').and.resolveTo();
+
+        // When an already-subscribed error is received
+        // Then it should display the error and navigate to /lobby
+        await testUtils.expectToDisplayCriticalMessage(
+            'You already have another tab open.',
+            async() => {
+                await receiveError('already-subscribed');
+                expectValidRouting(router, ['/'], WelcomeComponent);
+            });
+    }));
+
+    it('should go to /notFound if it receives unknown-game from the server', fakeAsync(async() => {
+        // Given a component that is loaded
+        await awaitComponentInitialization();
+        spyOn(router, 'navigate').and.resolveTo();
+
+        // When an unknown-game error is received
+        await receiveError('unknown-game');
+
+        // Then it should navigate to /notFound
+        const expectedRoute: string[] = ['/notFound', GameCreationComponentMessages.GAME_DOES_NOT_EXIST_OR_UNKNOWN()];
+        expectValidRouting(router, expectedRoute, NotFoundComponent, { skipLocationChange: true });
+    }));
+
+    it('should display an error if it receives game-does-not-exist from the server', fakeAsync(async() => {
+        // Given a component that is loaded
+        await awaitComponentInitialization();
+        spyOn(router, 'navigate').and.resolveTo();
+
+        // When a game-does-not-exist error is received
+        await receiveError('game-does-not-exist');
+
+        // Then it should navigate to /
+        const expectedRoute: string[] = ['/notFound', GameCreationComponentMessages.GAME_DOES_NOT_EXIST_OR_UNKNOWN()];
+        expectValidRouting(router, expectedRoute, NotFoundComponent, { skipLocationChange: true });
+    }));
+
+    it('should display an error if it receives an unknown message from the server', fakeAsync(async() => {
+        // Given a component that is loaded
+        await awaitComponentInitialization();
+        spyOn(router, 'navigate').and.resolveTo();
+
+        // When an unknown message is received
+        // Then it should display the error and navigate to /
+        await testUtils.expectToDisplayCriticalMessage(
+            'Unexpected error from backend: unknown-message',
+            async() => {
+                await receiveError('unknown-message');
+                expectValidRouting(router, ['/'], WelcomeComponent);
+            });
+
+    }));
 
     describe('For creator', () => {
         beforeEach(fakeAsync(async() => {
@@ -120,38 +160,21 @@ describe('GameCreationComponent', () => {
             ConnectedUserServiceMock.setUser(UserMocks.CREATOR_AUTH_USER);
         }));
         describe('Creator arrival on component', () => {
-            it('should join the game', fakeAsync(() => {
+            it('should join the game', fakeAsync(async() => {
                 spyOn(configRoomService, 'join').and.callThrough();
 
                 // When the component is loaded
-                awaitComponentInitialization();
+                await awaitComponentInitialization();
 
                 // Then join and observe are called
                 expect(configRoomService.join).toHaveBeenCalledTimes(1);
             }));
 
-            // TODO: it should display an error in case of error? -> yes, on game-does-not-exist
-    //         it('should not start observing configRoom if part does not exist', fakeAsync(async() => {
-    //             // Given a part that does not exist
-    //             component.partId = 'does not exist';
-    //             spyOn(configRoomDAO, 'read').and.resolveTo(MGPOptional.empty());
-    //             spyOn(configRoomService, 'subscribeToChanges').and.callThrough();
-
-    //             // When the component is loaded
-    //             // Then subscribeToChange is not called and a message is displayed
-    //             await testUtils.expectToDisplayCriticalMessage(
-    //                 ConfigRoomServiceFailure.GAME_DOES_NOT_EXIST(),
-    //                 async() => {
-    //                     awaitComponentInitialization();
-    //                 });
-    //             expect(configRoomService.subscribeToChanges).not.toHaveBeenCalled();
-    //         }));
-
             it('should have button to go to lobby and cancel game', fakeAsync(async() => {
                 // Given a game creation component
                 const router: Router = TestBed.inject(Router);
                 spyOn(router, 'navigate').and.resolveTo(true);
-                awaitComponentInitialization();
+                await awaitComponentInitialization();
 
                 // When clicking on the "go to lobby" button
                 const infoMessage: string = 'The game has been canceled!';
@@ -167,7 +190,7 @@ describe('GameCreationComponent', () => {
                 // Given a game creation component
                 const router: Router = TestBed.inject(Router);
                 spyOn(router, 'navigate').and.resolveTo(true);
-                awaitComponentInitialization();
+                await awaitComponentInitialization();
 
                 // When clicking on the "play against AI" button
                 const infoMessage: string = 'The game has been canceled!';
@@ -182,7 +205,7 @@ describe('GameCreationComponent', () => {
         describe('Candidate arrival', () => {
             it('should make candidate choice possible for creator when candidate arrives', fakeAsync(async() => {
                 // Given a component that is loaded and there is no candidate
-                awaitComponentInitialization();
+                await awaitComponentInitialization();
                 expectElementNotToExist('#chooseOpponent');
 
                 // When the candidate arrives
@@ -197,7 +220,7 @@ describe('GameCreationComponent', () => {
         describe('Candidate/chosenOpponent clean departure', () => {
             it('should go back to start when ChosenOpponent leaves', fakeAsync(async() => {
                 // Given a page that has loaded, a candidate joined and has been chosen as opponent
-                awaitComponentInitialization();
+                await awaitComponentInitialization();
                 configRoomService.mockCandidateJoined(candidate);
                 expectElementToExist('#presenceOf_' + candidate.name);
                 await chooseOpponent();
@@ -224,7 +247,7 @@ describe('GameCreationComponent', () => {
 
             it('should not display non chosen candidate anymore when they leaves', fakeAsync(async() => {
                 // Given a page that has loaded, and a candidate joined
-                awaitComponentInitialization();
+                await awaitComponentInitialization();
                 configRoomService.mockCandidateJoined(candidate);
                 expectElementToExist('#presenceOf_' + candidate.name);
 
@@ -240,7 +263,7 @@ describe('GameCreationComponent', () => {
         describe('Chosing Opponent', () => {
             it('should modify config room, make proposal possible, and select opponent when choosing opponent', fakeAsync(async() => {
                 // Given a component with candidate present but not selected
-                awaitComponentInitialization();
+                await awaitComponentInitialization();
                 configRoomService.mockCandidateJoined(candidate);
                 expectElementToExist('#presenceOf_' + candidate.name);
 
@@ -267,8 +290,9 @@ describe('GameCreationComponent', () => {
 
         describe('Config proposal', () => {
             it('should send what creator sees, not what is stored in the configRoom', fakeAsync(async() => {
-                // Given a component where creator has changed the moveDuration and gameDuration and selected a candidate
-                awaitComponentInitialization();
+                // Given a component where creator has changed the moveDuration
+                // and gameDuration and selected a candidate
+                await awaitComponentInitialization();
                 await clickElement('#gameTypeCustom');
                 Utils.getNonNullable(component.configFormGroup.get('moveDuration')).setValue(100);
                 Utils.getNonNullable(component.configFormGroup.get('gameDuration')).setValue(1000);
@@ -291,7 +315,7 @@ describe('GameCreationComponent', () => {
 
             it('should support blitz game', fakeAsync(async() => {
                 // Given a component with a chosen opponent where blitz is selected
-                awaitComponentInitialization();
+                await awaitComponentInitialization();
                 configRoomService.mockCandidateJoined(candidate);
                 await chooseOpponent();
                 await clickElement('#gameTypeBlitz');
@@ -312,7 +336,7 @@ describe('GameCreationComponent', () => {
 
             it('should change configRoom doc stored in component', fakeAsync(async() => {
                 // Given a component where creator selected a config and chose an opponent
-                awaitComponentInitialization();
+                await awaitComponentInitialization();
                 configRoomService.mockCandidateJoined(candidate);
                 await chooseOpponent();
 
@@ -335,7 +359,7 @@ describe('GameCreationComponent', () => {
 
             it('should not emit rules config when modifying field', fakeAsync(async() => {
                 // Given a component where creator selected a config and chose an opponent
-                awaitComponentInitialization();
+                await awaitComponentInitialization();
                 configRoomService.mockCandidateJoined(candidate);
                 await chooseOpponent();
                 spyOn(configRoomService, 'proposeConfig');
@@ -349,7 +373,7 @@ describe('GameCreationComponent', () => {
 
             it('should emit rules config when proposing config', fakeAsync(async() => {
                 // Given a component where creator selected a config and chose an opponent
-                awaitComponentInitialization();
+                await awaitComponentInitialization();
                 configRoomService.mockCandidateJoined(candidate);
                 await chooseOpponent();
 
@@ -372,7 +396,7 @@ describe('GameCreationComponent', () => {
 
             it('should disable config proposition button when rules config is invalid', fakeAsync(async() => {
                 // Given a component where creator selected a config and chose an opponent
-                awaitComponentInitialization();
+                await awaitComponentInitialization();
                 configRoomService.mockCandidateJoined(candidate);
                 await chooseOpponent();
 
@@ -389,7 +413,7 @@ describe('GameCreationComponent', () => {
         describe('Form interaction', () => {
             it('should update the form data when changing first player', fakeAsync(async() => {
                 // Given a game being created
-                awaitComponentInitialization();
+                await awaitComponentInitialization();
 
                 // When changing the first player
                 await clickElement('#firstPlayerOpponent');
@@ -401,7 +425,7 @@ describe('GameCreationComponent', () => {
 
             it('should show detailed timing options when choosing a custom game type', fakeAsync(async() => {
                 // Given a game being created
-                awaitComponentInitialization();
+                await awaitComponentInitialization();
 
                 // When setting the game type to custom
                 await clickElement('#gameTypeCustom');
@@ -412,7 +436,7 @@ describe('GameCreationComponent', () => {
 
             it('should update the timings when selecting blitz game', fakeAsync(async() => {
                 // Given a game creation
-                awaitComponentInitialization();
+                await awaitComponentInitialization();
 
                 // When setting the game type to 'blitz'
                 await clickElement('#gameTypeBlitz');
@@ -425,26 +449,42 @@ describe('GameCreationComponent', () => {
                 expect(gameDuration).toBe(GameDuration.BLITZ_GAME_DURATION);
             }));
 
-            it('should update the timings when reselecting standard game', fakeAsync(async() => {
-                // Given a game creation with blitz selected
-                awaitComponentInitialization();
-                await clickElement('#gameTypeBlitz');
+            it('should update the timings when selecting blitz game', fakeAsync(async() => {
+                // Given a game creation
+                await awaitComponentInitialization();
 
-                // When setting the game type back to standard
+                // When setting the game type to 'blitz'
+                await clickElement('#gameTypeBlitz');
+                testUtils.detectChanges();
+
+                // Then the timings in the form are updated
+                const moveDuration: number = component.configFormGroup.get('moveDuration')?.value;
+                expect(moveDuration).toBe(GameDuration.BLITZ_MOVE_DURATION);
+                const gameDuration: number = component.configFormGroup.get('gameDuration')?.value;
+                expect(gameDuration).toBe(GameDuration.BLITZ_GAME_DURATION);
+            }));
+
+            it('should update the timings when selecting standard game again', fakeAsync(async() => {
+                // Given a game creation
+                await awaitComponentInitialization();
+
+                // When setting the game type to 'blitz' then back to 'standard'
+                await clickElement('#gameTypeBlitz');
+                testUtils.detectChanges();
                 await clickElement('#gameTypeStandard');
                 testUtils.detectChanges();
 
-                // Then the timings are updated
+                // Then the timings in the form are updated
                 const moveDuration: number = component.configFormGroup.get('moveDuration')?.value;
                 expect(moveDuration).toBe(GameDuration.STANDARD_MOVE_DURATION);
                 const gameDuration: number = component.configFormGroup.get('gameDuration')?.value;
                 expect(gameDuration).toBe(GameDuration.STANDARD_GAME_DURATION);
             }));
 
-            it('should go send for review when clicking on review config button', fakeAsync(async() => {
+            it('should send for review when clicking on review config button', fakeAsync(async() => {
                 // Given a game creation where the config has been proposed
-                awaitComponentInitialization();
-                configRoomService.mockConfigRoomUpdate(ConfigRoomMocks.withProposedConfig(MGPOptional.empty()))
+                await awaitComponentInitialization();
+                configRoomService.mockConfigRoomUpdate(ConfigRoomMocks.withProposedConfig(MGPOptional.empty()));
 
                 // When the config is reviewed
                 spyOn(configRoomService, 'reviewConfig');
@@ -456,7 +496,7 @@ describe('GameCreationComponent', () => {
 
             it('should remember settings after a configRoom update', fakeAsync(async() => {
                 // Given a game creation with some changes to the config
-                awaitComponentInitialization();
+                await awaitComponentInitialization();
                 await clickElement('#firstPlayerCreator');
                 await clickElement('#gameTypeBlitz');
 
@@ -467,13 +507,15 @@ describe('GameCreationComponent', () => {
                 expectElementToHaveClass('#firstPlayerCreator', 'is-selected');
                 expectElementToHaveClass('#gameTypeBlitz', 'is-selected');
             }));
+
         });
+
         describe('component destruction', () => {
             it('should unsubscribe from configRoom upon destruction', fakeAsync(async() => {
                 // Given a component that is loaded by anyone (here, the creator) for a started game
                 const expectConfigRoomUnsubscribeToHaveBeenCalled: () => void =
                     prepareUnsubscribeCheck(configRoomService, 'join');
-                awaitComponentInitialization();
+                await awaitComponentInitialization();
                 spyOn(component, 'cancelGameCreation').and.resolveTo(); // spied in order to avoid calling it
 
                 // When the component is destroyed
@@ -491,11 +533,12 @@ describe('GameCreationComponent', () => {
             // Given a component where user is a candidate
             ConnectedUserServiceMock.setUser(UserMocks.OPPONENT_AUTH_USER);
         }));
-        it('should add user to configRoom candidates with service upon arrival', fakeAsync(() => {
+
+        it('should add user to configRoom candidates with service upon arrival', fakeAsync(async() => {
             spyOn(configRoomService, 'join').and.callThrough();
 
             // When candidate arrives
-            awaitComponentInitialization();
+            await awaitComponentInitialization();
 
             // Then the candidate is added to the configRoom
             expect(configRoomService.join).toHaveBeenCalledTimes(1);
@@ -505,27 +548,49 @@ describe('GameCreationComponent', () => {
             // testUtils.detectChanges();
             expect(component.currentConfigRoom).toEqual(configRoom);
         }));
-        // TODO it('should reroute to server when game is cancelled', fakeAsync(async() => {
-        // TODO     const router: Router = TestBed.inject(Router);
-        // TODO     spyOn(router, 'navigate').and.resolveTo(true);
 
-        // TODO     // Given component that has loaded
-        // TODO     awaitComponentInitialization();
+        it('should update the view accordingly when receiving blitz update', fakeAsync(async() => {
+            // Given a component that is loaded
+            await awaitComponentInitialization();
 
-        // TODO     // When the configRoom is deleted (because the game has been cancelled)
-        // TODO     await testUtils.expectToDisplayInfoMessage('The game has been canceled!', async() => {
+            // When receiving a blitz update
+            const update: ConfigRoom = {
+                ...ConfigRoomMocks.getInitial(MGPOptional.empty()),
+                gameType: GameType.BLITZ,
+                moveDuration: GameDuration.BLITZ_MOVE_DURATION,
+                gameDuration: GameDuration.BLITZ_GAME_DURATION,
+            };
+            configRoomService.mockConfigRoomUpdate(update);
+            testUtils.detectChanges();
 
-        // TODO         await configRoomDAO.delete('configRoomId');
-        // TODO     });
-        // TODO     testUtils.detectChanges();
+            // Then the view is updated
+            expect(component.viewInfo.moveDuration).toBe(GameDuration.BLITZ_MOVE_DURATION);
+            expect(component.viewInfo.gameDuration).toBe(GameDuration.BLITZ_GAME_DURATION);
+        }));
 
-        // TODO     // Then the user is rerouted to the server
-        // TODO     expectValidRouting(router, ['/lobby'], LobbyComponent);
-        // TODO }));
+        it('should update the view accordingly when receiving custom update', fakeAsync(async() => {
+            // Given a component that is loaded
+            await awaitComponentInitialization();
+
+            // When receiving a custom update
+            const update: ConfigRoom = {
+                ...ConfigRoomMocks.getInitial(MGPOptional.empty()),
+                gameType: GameType.CUSTOM,
+                moveDuration: 100,
+                gameDuration: 1000,
+            };
+            configRoomService.mockConfigRoomUpdate(update);
+            testUtils.detectChanges();
+
+            // Then the view is updated
+            expect(component.viewInfo.moveDuration).toBe(100);
+            expect(component.viewInfo.gameDuration).toBe(1000);
+        }));
+
         describe('Chosen opponent', () => {
             it('should make config acceptation possible for configRoom when config is proposed', fakeAsync(async() => {
                 // Given a game in creation where the candidate is chosen
-                awaitComponentInitialization();
+                await awaitComponentInitialization();
                 await receiveConfigRoomUpdate(ConfigRoomMocks.withChosenOpponent(MGPOptional.empty()));
                 testUtils.expectElementNotToExist('#acceptConfig');
 
@@ -540,7 +605,7 @@ describe('GameCreationComponent', () => {
             it('should notify the service when accepting config', fakeAsync(async() => {
                 // Given a game where the config has been proposed
                 spyOn(configRoomService, 'acceptConfig');
-                awaitComponentInitialization();
+                await awaitComponentInitialization();
                 await receiveConfigRoomUpdate(ConfigRoomMocks.withProposedConfig(MGPOptional.empty()));
 
                 // When accepting the config
@@ -555,7 +620,7 @@ describe('GameCreationComponent', () => {
         it('should emit game start notification when a game starts', fakeAsync(async() => {
             spyOn(component.gameStartNotification, 'emit').and.callThrough();
             // Given a game where the config has been proposed
-            awaitComponentInitialization();
+            await awaitComponentInitialization();
             await receiveConfigRoomUpdate(ConfigRoomMocks.withProposedConfig(MGPOptional.empty()));
 
             // When the config is finished and the game will start

@@ -160,32 +160,6 @@ export abstract class FirestoreDAOMock<T extends FirestoreJSONObject> implements
             throw new Error('Cannot delete element ' + id + ' absent from ' + this.collectionName);
         }
     }
-    public observingWhere(conditions: FirestoreCondition[],
-                          callback: FirestoreCollectionObserver<T>): Subscription
-    {
-        return this.subscribeToMatchers(conditions, callback);
-    }
-    private subscribeToMatchers(conditions: FirestoreCondition[],
-                                callback: FirestoreCollectionObserver<T>)
-    : Subscription
-    {
-        const db: MGPMap<string, DocumentSubject<T>> = this.getStaticDB();
-        this.callbacks.push([conditions, callback]);
-        const matchingDocs: FirestoreDocument<T>[] = [];
-        for (const value of db.getValueList()) {
-            if (this.conditionsHold(conditions, value.subject.value.get().data)) {
-                matchingDocs.push(value.subject.value.get());
-            }
-        }
-        callback.onDocumentCreated(matchingDocs);
-        return new Subscription(() => {
-            // Upon unsubscription, remove this callback from the callbacks
-            this.callbacks = this.callbacks.filter(
-                (value: [FirestoreCondition[], FirestoreCollectionObserver<T>]): boolean => {
-                    return (value[0] === conditions && value[1] === callback) === false;
-                });
-        });
-    }
     private conditionsHold(conditions: FirestoreCondition[], doc: T): boolean {
         for (const condition of conditions) {
             Utils.assert(condition[1] === '==', 'FirestoreDAOMock currently only supports == as a condition');
@@ -216,29 +190,6 @@ export abstract class FirestoreDAOMock<T extends FirestoreJSONObject> implements
             return matchingDocs.slice(0, limit);
         } else {
             return matchingDocs;
-        }
-    }
-    public subCollectionDAO<U extends FirestoreJSONObject>(id: string, name: string): IFirestoreDAO<U> {
-        if (this.subDAOs.containsKey(name)) {
-            return this.subDAOs.get(name).get() as IFirestoreDAO<U>;
-        } else {
-            const superName: string = this.collectionName;
-            type OS = ObservableSubject<MGPOptional<FirestoreDocument<U>>>;
-            class CustomMock extends FirestoreDAOMock<U> {
-                private static db: MGPMap<string, OS>;
-                public getStaticDB(): MGPMap<string, OS> {
-                    return CustomMock.db;
-                }
-                public resetStaticDB(): void {
-                    CustomMock.db = new MGPMap();
-                }
-                public constructor() {
-                    super(`${superName}/${id}/${name}`);
-                }
-            }
-            const mock: FirestoreDAOMock<U> = new CustomMock();
-            this.subDAOs.set(name, mock);
-            return mock;
         }
     }
 }
