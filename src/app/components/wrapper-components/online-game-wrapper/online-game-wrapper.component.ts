@@ -8,8 +8,8 @@ import { JSONValue, MGPFallible, MGPOptional, MGPValidation, Utils } from '@ever
 import { ConnectedUserService } from 'src/app/services/ConnectedUserService';
 import { GameService } from 'src/app/services/GameService';
 import { Move } from '../../../jscaip/Move';
-import { Game, GameEvent, GameEventMove, GameEventReply, GameResult, RequestType } from '../../../domain/Part';
-import { CountDownComponent } from '../../normal-component/count-down/count-down.component';
+import { Game, GameEvent, GameEventMove, GameEventReply, GameResult, RequestType } from '../../../domain/Game';
+import { TimerComponent } from '../../normal-component/timer/timer.component';
 import { GameWrapper, GameWrapperMessages } from '../GameWrapper';
 import { ConfigRoom } from 'src/app/domain/ConfigRoom';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
@@ -40,12 +40,10 @@ export class OnlineGameWrapperMessages {
 @Debug.log
 export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> implements OnInit, OnDestroy {
 
-    // TODO: rename global/turn to game/move
-    // TODO: also rename countdown/chrono/clock/timer to only one name
-    @ViewChild('chronoZeroGlobal') public chronoZeroGlobal: CountDownComponent;
-    @ViewChild('chronoOneGlobal') public chronoOneGlobal: CountDownComponent;
-    @ViewChild('chronoZeroTurn') public chronoZeroTurn: CountDownComponent;
-    @ViewChild('chronoOneTurn') public chronoOneTurn: CountDownComponent;
+    @ViewChild('timerZeroGame') public timerZeroGame: TimerComponent;
+    @ViewChild('timerOneGame') public timerOneGame: TimerComponent;
+    @ViewChild('timerZeroMove') public timerZeroMove: TimerComponent;
+    @ViewChild('timerOneMove') public timerOneMove: TimerComponent;
 
     public game: Game | null = null;
     public gameId!: string; // Initialized in ngOnInit
@@ -61,8 +59,8 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
 
     public readonly OFFLINE_FONT_COLOR: { [key: string]: string } = { color: 'lightgrey' };
 
-    public readonly globalTimeMessage: string = $localize`05:00`;
-    public readonly turnTimeMessage: string = $localize`00:30`;
+    public readonly gameTimeMessage: string = $localize`05:00`;
+    public readonly moveTimeMessage: string = $localize`00:30`;
 
     public readonly requestInfos: Record<RequestType, RequestInfo> = OGWCRequestManagerService.requestInfos;
     public readonly allRequests: RequestType[] = ['TakeBack', 'Draw', 'Rematch'];
@@ -114,16 +112,15 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
     }
 
     public async startGame(configRoom: ConfigRoom): Promise<void> {
-        console.log('starting game!')
         Utils.assert(this.gameStarted === false, 'Should not start already started game');
         this.configRoom = configRoom;
         this.gameStarted = true;
 
         window.setTimeout(async() => {
-            // the small waiting is there to make sure that the chronos are loaded by view
+            // the small waiting is there to make sure that the timers are loaded by view
             const createdSuccessfully: boolean = await this.createMatchingGameComponent();
-            this.timeManager.setClocks([this.chronoZeroTurn, this.chronoOneTurn],
-                                       [this.chronoZeroGlobal, this.chronoOneGlobal]);
+            this.timeManager.setTimers([this.timerZeroMove, this.timerOneMove],
+                                       [this.timerZeroGame, this.timerOneGame]);
             Utils.assert(createdSuccessfully, 'Game should be created successfully, otherwise part-creation would have redirected');
             Utils.assert(this.gameComponent !== null, 'Game component should exist');
             this.gameComponent.config = MGPOptional.of(configRoom.rulesConfig);
@@ -132,13 +129,11 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
     }
 
     private async subscribeToGameUpdates(): Promise<void> {
-        console.log('subscribing to game updates')
         // This mutex will ensure that we receive one update/event at a time.
         // Without it, it could be the case that async operations are scheduled at the wrong time
         const mutex: Mutex = new Mutex();
         const onGameUpdate: (game: Game) => Promise<void> =
             (game: Game) => {
-                console.log('got game update')
                 return mutex.runExclusive(async() => {
                     await this.onGameUpdate(game);
                 });
@@ -177,11 +172,10 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
     }
 
     private async onGameEvent(event: GameEvent, serverTime: number): Promise<void> {
-        console.log('OGWC.onGameEvent: ' + JSON.stringify(event))
         this.timeManager.beforeEvent();
         switch (event.eventType) {
             case 'Move':
-                await this.onReceivedMove(event, serverTime);
+                await this.onReceivedMove(event);
                 break;
             case 'Request':
                 this.requestManager.onReceivedRequest(event);
@@ -228,7 +222,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         this.cdr.detectChanges();
     }
 
-    private async onReceivedMove(moveEvent: GameEventMove, serverTime: number): Promise<void> {
+    private async onReceivedMove(moveEvent: GameEventMove): Promise<void> {
         if (this.moveSentButNotReceivedYet) {
             // This is our move, we have already shown it
             // So we do nothing to show it again.
@@ -241,7 +235,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         }
         // Need to handle the rest irrespective of which move we received
         await this.setCurrentPlayerAccordingToCurrentTurn();
-        this.timeManager.onReceivedMove(moveEvent, serverTime);
+        this.timeManager.onReceivedMove(moveEvent);
         this.requestManager.onReceivedMove();
     }
 
@@ -355,7 +349,6 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
     }
 
     private async initializePlayersData(): Promise<void> {
-        console.log('initializePlayersData')
         const game: Game = Utils.getNonNullable(this.game);
         this.players = [
             MGPOptional.of(game.playerZero),
@@ -366,7 +359,6 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
     }
 
     private async setRealObserverRole(): Promise<void> {
-        console.log('setting "real observer role"')
         if (this.players[0].equalsValue(this.getPlayer())) {
             await this.setRole(Player.ZERO);
             this.opponent = this.players[1].get();
@@ -460,14 +452,14 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         }
     }
 
-    // Called by the 'AddGlobalTime' button
-    public addGlobalTime(): Promise<void> {
-        return this.gameService.addGlobalTime();
+    // Called by the 'AddGameTime' button
+    public addGameTime(): Promise<void> {
+        return this.gameService.addGameTime();
     }
 
-    // Called by the 'AddTurnTime' button
-    public addTurnTime(): Promise<void> {
-        return this.gameService.addTurnTime();
+    // Called by the 'AddMoveTime' button
+    public addMoveTime(): Promise<void> {
+        return this.gameService.addMoveTime();
     }
 
     public override async onCancelMove(reason?: string): Promise<void> {
@@ -507,7 +499,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
 
     public isWin(): boolean {
         const result: GameResult = Utils.getNonNullable(this.game).result;
-        return result === 'VictoryOfZero' || result === 'VictoryOfOne'
+        return result === 'VictoryOfZero' || result === 'VictoryOfOne';
     }
 
     public isTimeout(): boolean {
@@ -527,12 +519,9 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
             case 'TimeoutOfZero':
             case 'ResignOfZero':
                 return Utils.getNonNullable(this.game).playerOne;
-            case 'VictoryOfZero':
-            case 'TimeoutOfOne':
-            case 'ResignOfOne':
-                return Utils.getNonNullable(this.game).playerZero;
             default:
-                throw new Error('should not be called'); // TODO
+                Utils.expectToBeMultiple(result, ['VictoryOfZero', 'TimeoutOfOne', 'ResignOfOne']);
+                return Utils.getNonNullable(this.game).playerZero;
         }
     }
 
@@ -543,12 +532,9 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
             case 'TimeoutOfZero':
             case 'ResignOfZero':
                 return Utils.getNonNullable(this.game).playerZero;
-            case 'VictoryOfZero':
-            case 'TimeoutOfOne':
-            case 'ResignOfOne':
-                return Utils.getNonNullable(this.game).playerOne;
             default:
-                throw new Error('should not be called'); // TODO
+                Utils.expectToBeMultiple(result, ['VictoryOfZero', 'TimeoutOfOne', 'ResignOfOne'])
+                return Utils.getNonNullable(this.game).playerOne;
         }
     }
 }

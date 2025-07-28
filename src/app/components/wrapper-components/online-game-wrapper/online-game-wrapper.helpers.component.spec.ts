@@ -78,7 +78,7 @@ export async function prepareStartedGameFor<T extends AbstractGameComponent>(
     ConnectedUserServiceMock.setUser(user);
     testUtils.prepareFixture(OnlineGameWrapperComponent);
     if (preparationOptions.runClocks === false) {
-        spyOn(TestBed.inject(OGWCTimeManagerService), 'resumeClocks').and.callFake(async() => {});
+        spyOn(TestBed.inject(OGWCTimeManagerService), 'resumeTimers').and.callFake(async() => {});
     }
 
     const configRoomService: ConfigRoomServiceMock =
@@ -123,7 +123,7 @@ export async function prepareStartedGameFor<T extends AbstractGameComponent>(
             TestBed.inject(GameService) as AbstractGameService as GameServiceMock;
         await gameService.mockGameUpdate(GameMocks.STARTED);
         await gameService.mockGameEvent({
-            time: 0,
+            timestamp: 0,
             user: UserMocks.CREATOR_MINIMAL_USER,
             eventType: 'Action',
             action: 'StartGame',

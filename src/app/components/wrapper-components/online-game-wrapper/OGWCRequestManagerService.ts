@@ -3,7 +3,7 @@ import { faBackwardStep, faFlag, faRepeat, IconDefinition } from '@fortawesome/f
 import { MGPOptional, Utils, Set } from '@everyboard/lib';
 
 import { MinimalUser } from 'src/app/domain/MinimalUser';
-import { GameEventReply, GameEventRequest, RequestType } from 'src/app/domain/Part';
+import { GameEventReply, GameEventRequest, RequestType } from 'src/app/domain/Game';
 import { ConnectedUserService } from 'src/app/services/ConnectedUserService';
 import { Localized } from 'src/app/utils/LocaleUtils';
 

@@ -7,6 +7,7 @@ import (
 )
 
 type EndType int
+
 const (
 	Victory EndType = iota
 	Draw
@@ -56,7 +57,7 @@ func newEloValue(oldEloValue float64, difference float64) float64 {
 	}
 }
 
-func computeNewElo(oldElo model.Elo, oldOpponentElo model.Elo, end EndType) model.Elo {
+func ComputeNewElo(oldElo model.Elo, oldOpponentElo model.Elo, end EndType) model.Elo {
 	k := k(oldElo.GamesPlayed)
 	w := w(end)
 	p := winProbability(oldElo.CurrentElo, oldOpponentElo.CurrentElo)
@@ -66,20 +67,25 @@ func computeNewElo(oldElo model.Elo, oldOpponentElo model.Elo, end EndType) mode
 	}
 }
 
-
-func computeAndUpdateElos(gameName string, winner model.MinimalUser, loser model.MinimalUser, draw bool) error {
-	winnerElo, loserElo, err := model.GetElos(gameName, winner, loser)
-	if err != nil {
-		return err
-	}
+func ComputeNewElos(winnerElo model.Elo, loserElo model.Elo, draw bool) (model.Elo, model.Elo) {
 	winnerEnd := Victory
 	loserEnd := Loss
 	if draw {
 		winnerEnd = Draw
 		loserEnd = Draw
 	}
-	newEloWinner := computeNewElo(*winnerElo, *loserElo, winnerEnd)
-	newEloLoser := computeNewElo(*loserElo, *winnerElo, loserEnd)
+	newEloWinner := ComputeNewElo(winnerElo, loserElo, winnerEnd)
+	newEloLoser := ComputeNewElo(loserElo, winnerElo, loserEnd)
+
+	return newEloWinner, newEloLoser
+}
+
+func computeAndUpdateElos(gameName string, winner model.MinimalUser, loser model.MinimalUser, draw bool) error {
+	winnerElo, loserElo, err := model.GetElos(gameName, winner, loser)
+	if err != nil {
+		return err
+	}
+	newEloWinner, newEloLoser := ComputeNewElos(*winnerElo, *loserElo, draw)
 
 	return model.UpdateElos(gameName, winner, newEloWinner, loser, newEloLoser)
 }

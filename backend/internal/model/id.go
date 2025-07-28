@@ -15,12 +15,14 @@ type GameID uint64
 const GameIDLobby = 1
 
 // Encoder for game ids, so that they are easily human readable
+// For example, id 42 is encoded as JgaEB
 var idEncoder *sqids.Sqids = initIDEncoder()
 
+// Initializes the encoder for ids
 func initIDEncoder() *sqids.Sqids {
 	var err error
 	encoder, err := sqids.New(sqids.Options{
-		MinLength: 5,
+		MinLength: 5, // Chosen arbitrarily, because shorter than 5 seems a bit too short
 	})
 	if err != nil {
 		log.Fatal("Failed to initialize sqids:", err)
@@ -50,6 +52,7 @@ func DecodeId(gameId string) (GameID, error) {
 func (id GameID) MarshalJSON() ([]byte, error) {
 	stringId, err := EncodeId(id)
 	if err != nil {
+		// REVIEW: this is a branch we can't ever reach. How do we deal with this? We can't achieve 100% coverage. We cannot reliably have the encoder fail. But ignoring its error will be bad in case it ever fails.
 		return nil, err
 	}
 	return json.Marshal(stringId)

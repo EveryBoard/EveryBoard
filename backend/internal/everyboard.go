@@ -53,7 +53,7 @@ func (config Configuration) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	log.Println("Sending first message!")
-	handlers.broadcastToUser(minimalUser, CurrentGameUpdateMessage{
+	handlers.broadcastToUser(minimalUser, model.CurrentGameUpdateMessage{
 		CurrentGame: currentGame,
 	})
 
@@ -75,7 +75,7 @@ func (config Configuration) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		log.Printf("<<< [%v] %v", user.Username, string(msg))
 		messageType, messageData, err := model.DecodeIncomingMessage(msg)
 		if err != nil {
-			err = handlers.error(ErrorUnknownMessage)
+			err = handlers.error(model.ErrorUnknownMessage)
 			if err != nil {
 				utils.Errorf("Error when sending error to client: %v", err)
 			}
@@ -88,7 +88,7 @@ func (config Configuration) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-var subscriptionManager SubscriptionManager
+var subscriptionManager SubscriptionManager[*websocket.Conn]
 var connectionManager ConnectionManager
 
 func cors(origin string, next http.Handler) http.Handler {
@@ -112,7 +112,7 @@ func Run(config Configuration) {
 	log.Println("Starting EveryBoard...")
 	auth.InitFirebase(config.UseEmulator, config.ServiceAccountFile, config.ProjectID)
 	model.InitDatabase(config.Database)
-	subscriptionManager = newSubscriptionManager()
+	subscriptionManager = NewSubscriptionManager[*websocket.Conn]()
 	connectionManager = newConnectionManager()
 
 	config.upgrader = websocket.Upgrader{

@@ -1,8 +1,4 @@
-package internal
-
-import (
-	model "github.com/EveryBoard/EveryBoard/internal/model"
-)
+package model
 
 type OutgoingMessage interface {
 	Tag() string
@@ -30,7 +26,7 @@ func (m ErrorMessage) Tag() string {
 }
 
 type ChatMessage struct {
-	Message model.Message `json:"message"`
+	Message Message `json:"message"`
 }
 
 func (m ChatMessage) Tag() string {
@@ -38,7 +34,7 @@ func (m ChatMessage) Tag() string {
 }
 
 type GameCreatedMessage struct {
-	GameId model.GameID `json:"gameId"`
+	GameID GameID `json:"gameId"`
 }
 
 func (m GameCreatedMessage) Tag() string {
@@ -46,8 +42,8 @@ func (m GameCreatedMessage) Tag() string {
 }
 
 type ConfigRoomUpdateMessage struct {
-	GameID     model.GameID     `json:"gameId"`
-	ConfigRoom model.ConfigRoom `json:"configRoom"`
+	GameID     GameID     `json:"gameId"`
+	ConfigRoom ConfigRoom `json:"configRoom"`
 }
 
 func (m ConfigRoomUpdateMessage) Tag() string {
@@ -55,7 +51,7 @@ func (m ConfigRoomUpdateMessage) Tag() string {
 }
 
 type ConfigRoomDeletedMessage struct {
-	GameID model.GameID `json:"gameId"`
+	GameID GameID `json:"gameId"`
 }
 
 func (m ConfigRoomDeletedMessage) Tag() string {
@@ -63,7 +59,7 @@ func (m ConfigRoomDeletedMessage) Tag() string {
 }
 
 type CandidateJoinedMessage struct {
-	Candidate model.MinimalUser `json:"candidate"`
+	Candidate MinimalUser `json:"candidate"`
 }
 
 func (m CandidateJoinedMessage) Tag() string {
@@ -71,7 +67,7 @@ func (m CandidateJoinedMessage) Tag() string {
 }
 
 type CandidateLeftMessage struct {
-	Candidate model.MinimalUser `json:"candidate"`
+	Candidate MinimalUser `json:"candidate"`
 }
 
 func (m CandidateLeftMessage) Tag() string {
@@ -79,7 +75,7 @@ func (m CandidateLeftMessage) Tag() string {
 }
 
 type GameUpdateMessage struct {
-	Game model.Game `json:"game"`
+	Game Game `json:"game"`
 }
 
 func (m GameUpdateMessage) Tag() string {
@@ -87,8 +83,8 @@ func (m GameUpdateMessage) Tag() string {
 }
 
 type GameEventMessage struct {
-	Event      model.GameEvent `json:"event"`
-	ServerTime float64         `json:"serverTime"`
+	Event      GameEvent `json:"event"`
+	ServerTime float64   `json:"serverTime"`
 }
 
 func (m GameEventMessage) Tag() string {
@@ -96,7 +92,7 @@ func (m GameEventMessage) Tag() string {
 }
 
 type CurrentGameUpdateMessage struct {
-	CurrentGame *model.CurrentGame `json:"currentGame"`
+	CurrentGame *CurrentGame `json:"currentGame"`
 }
 
 func (m CurrentGameUpdateMessage) Tag() string {

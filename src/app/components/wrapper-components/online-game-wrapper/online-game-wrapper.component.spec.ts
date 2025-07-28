@@ -11,7 +11,7 @@ import { ConfigRoomMocks } from 'src/app/domain/ConfigRoomMocks.spec';
 import { ComponentTestUtils, expectValidRouting, prepareUnsubscribeCheck } from 'src/app/utils/tests/TestUtils.spec';
 import { ConnectedUserServiceMock } from 'src/app/services/tests/ConnectedUserService.spec';
 import { P4Component } from 'src/app/games/p4/p4.component';
-import { Game } from 'src/app/domain/Part';
+import { Game } from 'src/app/domain/Game';
 import { NotFoundComponent } from '../../normal-component/not-found/not-found.component';
 import { AbstractGameComponent } from '../../game-components/game-component/GameComponent';
 import { UserDAO } from 'src/app/dao/UserDAO';
@@ -93,7 +93,7 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
             TestBed.inject(GameService) as AbstractGameService as GameServiceMock;
         await gameService.mockGameUpdate(GameMocks.STARTED);
         await gameService.mockGameEvent({
-            time: 0,
+            timestamp: 0,
             user: UserMocks.CREATOR_MINIMAL_USER,
             eventType: 'Action',
             action: 'StartGame',

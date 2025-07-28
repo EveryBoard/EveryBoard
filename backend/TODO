@@ -1,2 +1,0 @@
-get error "invalid-data" with, then invalid current game:
-WS: >>> ["ProposeConfig",{"config":{"gameType":"Custom","firstPlayer":"ChosenOpponent","moveDuration":50,"gameDuration":1800,"rulesConfig":{"width":17,"height":17,"capturesNeededToWin":10,"nInARow":5,"sizeOfSandwich":2}}}]

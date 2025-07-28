@@ -28,7 +28,7 @@ import { AccountComponent } from './components/normal-component/account/account.
 import { PickGameComponent } from './components/normal-component/pick-game/pick-game.component';
 import { NotFoundComponent } from './components/normal-component/not-found/not-found.component';
 import { ChatComponent } from './components/normal-component/chat/chat.component';
-import { CountDownComponent } from './components/normal-component/count-down/count-down.component';
+import { TimerComponent } from './components/normal-component/timer/timer.component';
 import { OnlineGameWrapperComponent }
     from './components/wrapper-components/online-game-wrapper/online-game-wrapper.component';
 import { LocalGameWrapperComponent }
@@ -174,7 +174,7 @@ export const routes: Route[] = [
         RegisterComponent,
         NotFoundComponent,
         NextGameLoadingComponent,
-        CountDownComponent,
+        TimerComponent,
         OnlineGameWrapperComponent,
         LocalGameWrapperComponent,
         TutorialGameWrapperComponent,

@@ -5,12 +5,12 @@ import { Player } from 'src/app/jscaip/Player';
 import { Debug } from 'src/app/utils/Debug';
 
 @Component({
-    selector: 'app-count-down',
-    templateUrl: './count-down.component.html',
+    selector: 'app-timer',
+    templateUrl: './timer.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 @Debug.log
-export class CountDownComponent implements OnDestroy {
+export class TimerComponent implements OnDestroy {
 
     @Input() player: Player;
     @Input() debugName: string;
@@ -37,13 +37,13 @@ export class CountDownComponent implements OnDestroy {
     public static readonly PASSIVE_STYLE: string = 'has-text-passive is-italic';
     public static readonly SAFE_TIME: string = '';
 
-    public cssClasses: string = CountDownComponent.SAFE_TIME;
+    public cssClasses: string = TimerComponent.SAFE_TIME;
 
     public constructor(private readonly cdr: ChangeDetectorRef) {}
 
-    // Set the duration (in seconds, floating number) for a non-started countdown
+    // Set the duration (in seconds, floating number) for a non-started timer
     public setDuration(seconds: number): void {
-        Utils.assert(this.started === false, 'Should not set a chrono that has already been started (' + this.debugName + ')!');
+        Utils.assert(this.started === false, 'Should not set a timer that has already been started (' + this.debugName + ')!');
 
         this.isSet = true;
         this.changeDuration(seconds);
@@ -67,8 +67,8 @@ export class CountDownComponent implements OnDestroy {
 
     public start(): void {
         // duration is in ms
-        Utils.assert(this.isSet, 'Should not start a chrono that has not been set!');
-        Utils.assert(this.started === false, 'Should not start chrono that has already been started (' + this.debugName + ')');
+        Utils.assert(this.isSet, 'Should not start a timer that has not been set!');
+        Utils.assert(this.started === false, 'Should not start timer that has already been started (' + this.debugName + ')');
         console.log('starting: ' + this.debugName);
 
         console.log(`${this.debugName} STARTING at ${this.remainingSeconds}`);
@@ -77,7 +77,7 @@ export class CountDownComponent implements OnDestroy {
     }
 
     public resume(): void {
-        Utils.assert(this.isPaused && this.started, 'Should only resume chrono that are started and paused!');
+        Utils.assert(this.isPaused && this.started, 'Should only resume timer that are started and paused!');
         console.log('resuming: ' + this.debugName + ' with remaining: ' + this.remainingSeconds);
 
         this.startTime = Date.now() / 1000;
@@ -112,8 +112,8 @@ export class CountDownComponent implements OnDestroy {
     }
 
     public pause(): void {
-        Utils.assert(this.started, 'Should not pause not started chrono (' + this.debugName + ')');
-        Utils.assert(this.isPaused === false, 'Should not pause already paused chrono (' + this.debugName + ')');
+        Utils.assert(this.started, 'Should not pause not started timer (' + this.debugName + ')');
+        Utils.assert(this.isPaused === false, 'Should not pause already paused timer (' + this.debugName + ')');
         console.log('pausing: ' + this.debugName)
 
         this.clearTimeouts();
@@ -122,7 +122,7 @@ export class CountDownComponent implements OnDestroy {
     }
 
     public stop(): void {
-        Utils.assert(this.started, 'Should only stop chrono that are started!');
+        Utils.assert(this.started, 'Should only stop timer that are started!');
 
         if (this.isPaused === false) {
             this.pause();
@@ -137,16 +137,16 @@ export class CountDownComponent implements OnDestroy {
 
     public getTimeClass(): string {
         if (this.active === false) {
-            return CountDownComponent.PASSIVE_STYLE;
+            return TimerComponent.PASSIVE_STYLE;
         }
         if (this.remainingSeconds < this.dangerTimeLimit) {
             if (this.remainingSeconds % 2 < 1) {
-                return CountDownComponent.DANGER_TIME_ODD;
+                return TimerComponent.DANGER_TIME_ODD;
             } else {
-                return CountDownComponent.DANGER_TIME_EVEN;
+                return TimerComponent.DANGER_TIME_EVEN;
             }
         } else {
-            return CountDownComponent.SAFE_TIME;
+            return TimerComponent.SAFE_TIME;
         }
     }
 

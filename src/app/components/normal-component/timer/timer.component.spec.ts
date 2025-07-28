@@ -4,17 +4,17 @@ import { fakeAsync, tick } from '@angular/core/testing';
 import { TestUtils } from '@everyboard/lib';
 
 import { SimpleComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
-import { CountDownComponent } from './count-down.component';
+import { TimerComponent } from './timer.component';
 import { Player } from 'src/app/jscaip/Player';
 
-describe('CountDownComponent', () => {
+describe('TimerComponent', () => {
 
-    let testUtils: SimpleComponentTestUtils<CountDownComponent>;
+    let testUtils: SimpleComponentTestUtils<TimerComponent>;
 
-    let component: CountDownComponent;
+    let component: TimerComponent;
 
     beforeEach(fakeAsync(async() => {
-        testUtils = await SimpleComponentTestUtils.create(CountDownComponent);
+        testUtils = await SimpleComponentTestUtils.create(TimerComponent);
         component = testUtils.getComponent();
         component.player = Player.ZERO;
     }));
@@ -22,22 +22,22 @@ describe('CountDownComponent', () => {
         expect(component).toBeTruthy();
     });
     describe('set', () => {
-        it('should throw when setting chrono already started', () => {
+        it('should throw when setting timer already started', () => {
             component.setDuration(1);
             component.start();
-            const error: string = 'Should not set a chrono that has already been started (undefined)!';
+            const error: string = 'Should not set a timer that has already been started (undefined)!';
             TestUtils.expectToThrowAndLog(() => component.setDuration(1), error);
         });
     });
     describe('start', () => {
         it('should throw when starting without having been set', () => {
-            const error: string = 'Should not start a chrono that has not been set!';
+            const error: string = 'Should not start a timer that has not been set!';
             TestUtils.expectToThrowAndLog(() => component.start(), error);
         });
         it('should throw when starting twice', () => {
             component.setDuration(1);
             component.start();
-            const error: string = 'Should not start chrono that has already been started (undefined)';
+            const error: string = 'Should not start timer that has already been started (undefined)';
             TestUtils.expectToThrowAndLog(() => component.start(), error);
         });
         it('should show remaining time once set', () => {
@@ -47,53 +47,53 @@ describe('CountDownComponent', () => {
             const timeText: string = element.nativeElement.innerText;
             expect(timeText).toBe('1:02');
         });
-        it('should throw when starting stopped chrono again', () => {
+        it('should throw when starting stopped timer again', () => {
             component.setDuration(1);
             component.start();
             expect(component.isStarted()).toBeTrue();
             component.stop();
 
-            const error: string = 'Should not start a chrono that has not been set!';
+            const error: string = 'Should not start a timer that has not been set!';
             TestUtils.expectToThrowAndLog(() => component.start(), error);
         });
     });
     describe('pause', () => {
-        it('should throw when pausing already paused chrono', () => {
+        it('should throw when pausing already paused timer', () => {
             component.setDuration(1);
             component.start();
             component.pause();
 
-            const error: string = 'Should not pause already paused chrono (undefined)';
+            const error: string = 'Should not pause already paused timer (undefined)';
             TestUtils.expectToThrowAndLog(() => component.pause(), error);
         });
-        it('should throw when pausing not started chrono', () => {
-            const error: string = 'Should not pause not started chrono (undefined)';
+        it('should throw when pausing not started timer', () => {
+            const error: string = 'Should not pause not started timer (undefined)';
             TestUtils.expectToThrowAndLog(() => component.pause(), error);
         });
     });
     describe('resume', () => {
-        it('should throw when resuming not started chrono', () => {
-            const error: string = 'Should only resume chrono that are started and paused!';
+        it('should throw when resuming not started timer', () => {
+            const error: string = 'Should only resume timer that are started and paused!';
             TestUtils.expectToThrowAndLog(() => component.resume(), error);
         });
-        it('should throw when resuming stopped chrono', () => {
+        it('should throw when resuming stopped timer', () => {
             component.setDuration(1);
             component.start();
             component.stop();
-            const error: string = 'Should only resume chrono that are started and paused!';
+            const error: string = 'Should only resume timer that are started and paused!';
             TestUtils.expectToThrowAndLog(() => component.resume(), error);
         });
     });
     describe('stop', () => {
-        it('should throw when stopping not started chrono', () => {
-            const error: string = 'Should only stop chrono that are started!';
+        it('should throw when stopping not started timer', () => {
+            const error: string = 'Should only stop timer that are started!';
             TestUtils.expectToThrowAndLog(() => component.stop(), error);
         });
-        it('should throw when stopping stopped chrono', () => {
+        it('should throw when stopping stopped timer', () => {
             component.setDuration(1);
             component.start();
             component.stop();
-            const error: string = 'Should only stop chrono that are started!';
+            const error: string = 'Should only stop timer that are started!';
             TestUtils.expectToThrowAndLog(() => component.stop(), error);
         });
     });
@@ -143,7 +143,7 @@ describe('CountDownComponent', () => {
     }));
     describe('Add Time Button', () => {
         it('should offer opportunity to add time if allowed', fakeAsync(async() => {
-            // Given a CountDownComponent allowed to add time
+            // Given a TimerComponent allowed to add time
             component.canAddTime = true;
             component.remainingSeconds = 60;
             testUtils.detectChanges();
@@ -156,7 +156,7 @@ describe('CountDownComponent', () => {
             expect(component.addTimeToOpponent.emit).toHaveBeenCalledOnceWith();
         }));
         it('should not display button when not allowed to add time', fakeAsync(async() => {
-            // Given a CountDownComponent not allowed to add time
+            // Given a TimerComponent not allowed to add time
             component.canAddTime = false;
             testUtils.detectChanges();
 
@@ -168,27 +168,27 @@ describe('CountDownComponent', () => {
         it('should be safe style when upper than limit', () => {
             component.dangerTimeLimit = 10;
             component.setDuration(12);
-            expect(component.getTimeClass()).toEqual(CountDownComponent.SAFE_TIME);
+            expect(component.getTimeClass()).toEqual(TimerComponent.SAFE_TIME);
         });
         it('should be first danger style when lower than limit and even remaining second', () => {
             component.dangerTimeLimit = 10;
             component.setDuration(9);
-            expect(component.getTimeClass()).toEqual(CountDownComponent.DANGER_TIME_EVEN);
+            expect(component.getTimeClass()).toEqual(TimerComponent.DANGER_TIME_EVEN);
         });
         it('should be second danger style when lower than limit and odd remaining second', () => {
             component.dangerTimeLimit = 10;
             component.setDuration(8);
-            expect(component.getTimeClass()).toEqual(CountDownComponent.DANGER_TIME_ODD);
+            expect(component.getTimeClass()).toEqual(TimerComponent.DANGER_TIME_ODD);
         });
         it('should be in passive style when passive', () => {
-            // Given a chrono that could be in danger time style
+            // Given a timer that could be in danger time style
             component.setDuration(8);
 
             // When it become passive
             component.active = false;
 
             // Then it should still be in passive style
-            expect(component.getTimeClass()).toEqual(CountDownComponent.PASSIVE_STYLE);
+            expect(component.getTimeClass()).toEqual(TimerComponent.PASSIVE_STYLE);
         });
     });
 });

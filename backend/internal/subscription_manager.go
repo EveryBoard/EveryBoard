@@ -3,7 +3,6 @@ package internal
 import (
 	"sync"
 
-	"github.com/gorilla/websocket"
 	"github.com/EveryBoard/EveryBoard/internal/model"
 	"github.com/EveryBoard/EveryBoard/internal/utils"
 )
@@ -21,101 +20,104 @@ type SubscriptionKindAndGameId struct {
 	gameID model.GameID
 }
 
-type SubscriptionManager struct {
+// The state of the subscription manager. It is polymorphic in Connection to
+// make testing easier, but in practice we deal with *websocket.Conn values.
+type SubscriptionManager[Connection comparable] struct {
 	// A map from WebSocket client to the subscribed game
-	clientToGame  map[*websocket.Conn]SubscriptionKindAndGameId
+	clientToGame  map[Connection]SubscriptionKindAndGameId
 	// A map from subscribed games to the set of clients that subscribed to it.
 	// (yes, sets are ugly: map[T]struct{} is a set of T
-	gameToClients map[SubscriptionKindAndGameId]utils.Set[*websocket.Conn]
+	gameToClients map[SubscriptionKindAndGameId]utils.Set[Connection]
 	// A map from client to the user id
-	clientToUser  map[*websocket.Conn]string
+	clientToUser  map[Connection]string
 	// A map from user id to their (only) client
-	userToClient  map[string]*websocket.Conn
+	userToClient  map[string]Connection
 	// The lock that protects concurrent accesses to the subscription manager
 	lock          sync.RWMutex
 }
 
-func newSubscriptionManager() SubscriptionManager {
-	return SubscriptionManager{
-		clientToGame:   make(map[*websocket.Conn]SubscriptionKindAndGameId),
-		gameToClients:  make(map[SubscriptionKindAndGameId]utils.Set[*websocket.Conn]),
-		clientToUser:   make(map[*websocket.Conn]string),
-		userToClient:   make(map[string]*websocket.Conn),
+func NewSubscriptionManager[Connection comparable]() SubscriptionManager[Connection] {
+	return SubscriptionManager[Connection]{
+		clientToGame:   make(map[Connection]SubscriptionKindAndGameId),
+		gameToClients:  make(map[SubscriptionKindAndGameId]utils.Set[Connection]),
+		clientToUser:   make(map[Connection]string),
+		userToClient:   make(map[string]Connection),
 	}
 }
 
 // Subscribe subscribes a client and its corresponding user to a game
 // Assumes that the client is not yet subscribed to a game
-func (sm *SubscriptionManager) subscribe(client *websocket.Conn, user string, gameID model.GameID, kind SubscriptionKind) {
-	sm.lock.Lock()
-	defer sm.lock.Unlock()
+func (manager *SubscriptionManager[Connection]) Subscribe(client Connection, user string, gameID model.GameID, kind SubscriptionKind) {
+	manager.lock.Lock()
+	defer manager.lock.Unlock()
 
 	subscriptionKindAndGameId := SubscriptionKindAndGameId{kind, gameID}
 
-	sm.clientToGame[client] = subscriptionKindAndGameId
+	manager.clientToGame[client] = subscriptionKindAndGameId
 
-	_, exists := sm.gameToClients[subscriptionKindAndGameId]
+	_, exists := manager.gameToClients[subscriptionKindAndGameId]
 	if !exists {
 		// Initialize this set
-		sm.gameToClients[subscriptionKindAndGameId] = utils.NewSet[*websocket.Conn]()
+		manager.gameToClients[subscriptionKindAndGameId] = utils.NewSet[Connection]()
 	}
 	// Add the value to the set
-	set := sm.gameToClients[subscriptionKindAndGameId]
+	set := manager.gameToClients[subscriptionKindAndGameId]
 	set.Add(client)
 
-	sm.clientToUser[client] = user
-	sm.userToClient[user] = client
+	manager.clientToUser[client] = user
+	manager.userToClient[user] = client
 }
 
 // Unsubscribe removes a client from the subscription lists.
-func (sm *SubscriptionManager) unsubscribe(client *websocket.Conn) {
-	sm.lock.Lock()
-	defer sm.lock.Unlock()
+func (manager *SubscriptionManager[Connection]) Unsubscribe(client Connection) {
+	manager.lock.Lock()
+	defer manager.lock.Unlock()
 
-	subscription, exists := sm.clientToGame[client];
+	subscription, exists := manager.clientToGame[client];
 	if exists {
-		clients, exists := sm.gameToClients[subscription];
+		clients, exists := manager.gameToClients[subscription];
 		if exists {
 			delete(clients, client)
 			if len(clients) == 0 {
 				// Need to remove the empty set to avoid hogging memory
-				delete(sm.gameToClients, subscription)
+				delete(manager.gameToClients, subscription)
 			}
 		}
 	}
 
-	delete(sm.clientToGame, client)
-	user, exists := sm.clientToUser[client];
+	delete(manager.clientToGame, client)
+	user, exists := manager.clientToUser[client];
 	if exists {
-		delete(sm.userToClient, user)
+		delete(manager.userToClient, user)
 	}
-	delete(sm.clientToUser, client)
+	delete(manager.clientToUser, client)
 }
 
-// subscriptionsTo returns the clients subscribed to the game
-func (sm *SubscriptionManager) subscriptionsTo(kind SubscriptionKind, gameId model.GameID) utils.Set[*websocket.Conn] {
-	sm.lock.RLock()
-	defer sm.lock.RUnlock()
+// Returns the clients subscribed to the game
+func (manager *SubscriptionManager[Connection]) SubscriptionsTo(kind SubscriptionKind, gameId model.GameID) utils.Set[Connection] {
+	manager.lock.RLock()
+	defer manager.lock.RUnlock()
 
 	subscriptionAndGameId := SubscriptionKindAndGameId{kind, gameId}
 
-	return sm.gameToClients[subscriptionAndGameId]
+	return manager.gameToClients[subscriptionAndGameId]
 }
 
-// isSubscribed checks if a user is already subscribed to a game.
-func (sm *SubscriptionManager) isSubscribed(user string) bool {
-	sm.lock.RLock()
-	defer sm.lock.RUnlock()
-	_, exists := sm.userToClient[user]
+// Checks if a user is already subscribed to a game.
+func (manager *SubscriptionManager[Connection]) IsSubscribed(user string) bool {
+	manager.lock.RLock()
+	defer manager.lock.RUnlock()
+	_, exists := manager.userToClient[user]
 	return exists
 }
 
-// subscriptionOf returns the subscription type and game ID of a client, as well as whether there exists one.
-func (sm *SubscriptionManager) subscriptionOf(client *websocket.Conn) (SubscriptionKind, model.GameID, bool) {
-	sm.lock.RLock()
-	defer sm.lock.RUnlock()
+// Returns the subscription type and game ID of a client, as well as whether there exists one.
+// Assumes the client is connected; this should be checked beforehand.
+func (manager *SubscriptionManager[Connection]) SubscriptionOf(client Connection) (SubscriptionKind, model.GameID, bool) {
+	manager.lock.RLock()
+	defer manager.lock.RUnlock()
 
-	sub, exists := sm.clientToGame[client]
+	sub, exists := manager.clientToGame[client]
 	return sub.kind, sub.gameID, exists
 }
 

@@ -31,13 +31,14 @@ export class BackendMessage {
 
 export type Callback = (message: BackendMessage) => void
 
-
 export abstract class AbstractBackendService {
     private readonly callbacks: MGPMap<string, Callback> = new MGPMap();
 
     protected abstract subscribeTo(subscription: string, gameId?: string): Promise<Subscription>;
 
     public abstract send(message: JSONValue): Promise<void>;
+
+    public abstract connect(): Promise<Subscription>;
 
     public subscribeToGame(gameId: string): Promise<Subscription> {
         return this.subscribeTo('SubscribeGame', gameId);
@@ -66,6 +67,7 @@ export abstract class AbstractBackendService {
     }
 
     public setCallback(tag: string, callback: Callback): Subscription {
+        console.log('setCallback called with ' + tag)
         this.callbacks.set(tag, callback);
         return new Subscription(() => this.removeCallback(tag));
     }
@@ -114,7 +116,7 @@ export class BackendService extends AbstractBackendService {
         return this.connectionPromise;
     }
 
-    public async connect(): Promise<Subscription> {
+    public override async connect(): Promise<Subscription> {
         Utils.assert(this.webSocket.isAbsent(), 'Should not connect twice to WebSocket!')
         const token: string = await this.connectedUserService.getIdToken();
 

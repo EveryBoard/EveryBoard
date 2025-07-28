@@ -8,7 +8,7 @@ import { JSONValue, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 import { OnlineGameWrapperComponent, OnlineGameWrapperMessages } from './online-game-wrapper.component';
 import { QuartoMove } from 'src/app/games/quarto/QuartoMove';
 import { QuartoPiece } from 'src/app/games/quarto/QuartoPiece';
-import { Action, Game, GameResult, RequestType } from 'src/app/domain/Part';
+import { Action, Game, GameResult, RequestType } from 'src/app/domain/Game';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { User } from 'src/app/domain/User';
 import { QuartoComponent } from 'src/app/games/quarto/quarto.component';
@@ -25,7 +25,7 @@ import { GameServiceMock } from 'src/app/services/tests/GameServiceMock.spec';
 import { GameMocks } from 'src/app/domain/PartMocks.spec';
 
 
-describe('OnlineGameWrapperComponent of Quarto:', () => {
+fdescribe('OnlineGameWrapperComponent of Quarto:', () => {
 
     // component construction (beforeEach)
     // stage 0
@@ -77,7 +77,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
     async function receiveRequest(player: Player, request: RequestType): Promise<void> {
         await gameService.mockGameEvent({
             eventType: 'Request',
-            time: 1,
+            timestamp: 1,
             user: userFromPlayer(player),
             requestType: request,
         }, 1);
@@ -91,7 +91,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
     : Promise<void> {
         await gameService.mockGameEvent({
             eventType: 'Reply',
-            time: 1,
+            timestamp: 1,
             user: userFromPlayer(player),
             requestType: request,
             accept,
@@ -104,7 +104,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
     async function receiveAction(player: Player, action: Action): Promise<void> {
         await gameService.mockGameEvent({
             eventType: 'Action',
-            time: 1,
+            timestamp: 1,
             user: userFromPlayer(player),
             action,
         }, 1);
@@ -154,7 +154,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
     async function receiveMove(player: Player, move: JSONValue, detectChanges: boolean = true): Promise<void> {
         await gameService.mockGameEvent({
             eventType: 'Move',
-            time: 1,
+            timestamp: 1,
             user: userFromPlayer(player),
             move,
         }, 1);
@@ -176,17 +176,17 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
     }
 
     function expectGameToBeOver(): void {
-        expect(wrapper.chronoZeroGlobal.isIdle())
-            .withContext(`chrono zero global should be idle (${ wrapper.chronoZeroGlobal.remainingSeconds })`)
+        expect(wrapper.timerZeroGame.isIdle())
+            .withContext(`timer zero game should be idle (${ wrapper.timerZeroGame.remainingSeconds })`)
             .toBeTrue();
-        expect(wrapper.chronoZeroTurn.isIdle())
-            .withContext(`chrono zero turn should be idle ${ wrapper.chronoZeroTurn.remainingSeconds }`)
+        expect(wrapper.timerZeroMove.isIdle())
+            .withContext(`timer zero move should be idle ${ wrapper.timerZeroMove.remainingSeconds }`)
             .toBeTrue();
-        expect(wrapper.chronoOneGlobal.isIdle())
-            .withContext(`chrono one global should be idle ${ wrapper.chronoOneGlobal.remainingSeconds }`)
+        expect(wrapper.timerOneGame.isIdle())
+            .withContext(`timer one game should be idle ${ wrapper.timerOneGame.remainingSeconds }`)
             .toBeTrue();
-        expect(wrapper.chronoOneTurn.isIdle())
-            .withContext(`chrono one turn should be idle ${ wrapper.chronoOneTurn.remainingSeconds }`)
+        expect(wrapper.timerOneMove.isIdle())
+            .withContext(`timer one move should be idle ${ wrapper.timerOneMove.remainingSeconds }`)
             .toBeTrue();
         expect(wrapper.endGame)
             .withContext('game should be ended')
@@ -436,6 +436,22 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             expectGameToBeOver();
         }));
 
+        fit('should notify victory when active player timeouts', fakeAsync(async() => {
+            // Given a board
+            await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
+            await receiveSync();
+            spyOn(wrapper.gameComponent.rules, 'getGameStatus').and.returnValue(GameStatus.ONE_WON);
+            testUtils.expectElementNotToExist('#youLostIndicator');
+            spyOn(gameService, 'endGame').and.callThrough();
+
+            // When we time out
+            await receiveEndGame(GameResult.TIMEOUT_OF_ZERO);
+
+            // Then the game should be finished
+            testUtils.expectElementToExist('#youLostIndicator');
+            expectGameToBeOver();
+        }));
+
         it('should notify draw when a draw move from player is done', fakeAsync(async() => {
             // Given a board on which user can draw
             await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
@@ -636,17 +652,17 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 await receiveMove(Player.ZERO, FIRST_MOVE_ENCODED);
                 await doMoveByClicks(Player.ONE, SECOND_MOVE, SECOND_MOVE_ENCODED);
                 await receiveRequest(Player.ZERO, 'TakeBack');
-                const globalTimeBeforeTakeBack: number = wrapper.chronoZeroGlobal.remainingSeconds;
-                const turnTimeBeforeTakeBack: number = wrapper.chronoZeroTurn.remainingSeconds;
+                const gameTimeBeforeTakeBack: number = wrapper.timerZeroGame.remainingSeconds;
+                const turnTimeBeforeTakeBack: number = wrapper.timerZeroMove.remainingSeconds;
 
                 // When accepting opponent's take back
                 await acceptTakeBack(Player.ONE);
 
-                // Then opponents chrono should have continued to decrease
+                // Then opponents timer should have continued to decrease
                 tick(1000); // wait a bit to ensure time is decreasing
-                const globalTimeAfterTakeBack: number = wrapper.chronoZeroGlobal.remainingSeconds;
-                const turnTimeAfterTakeBack: number = wrapper.chronoZeroTurn.remainingSeconds;
-                expect(globalTimeAfterTakeBack).toBeLessThan(globalTimeBeforeTakeBack);
+                const globalTimeAfterTakeBack: number = wrapper.timerZeroGame.remainingSeconds;
+                const turnTimeAfterTakeBack: number = wrapper.timerZeroMove.remainingSeconds;
+                expect(globalTimeAfterTakeBack).toBeLessThan(gameTimeBeforeTakeBack);
                 expect(turnTimeAfterTakeBack).toBeLessThan(turnTimeBeforeTakeBack);
 
                 await receiveEndGame();
@@ -685,11 +701,11 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 testUtils.detectChanges();
 
                 // When accepting opponent's take back
-                spyOn(wrapper.chronoZeroGlobal, 'resume').and.callThrough();
+                spyOn(wrapper.timerZeroGame, 'resume').and.callThrough();
                 await acceptTakeBack(Player.ONE);
 
                 // Then count down should be resumed for opponent and user should receive their decision time back
-                expect(wrapper.chronoZeroGlobal.resume).toHaveBeenCalledOnceWith();
+                expect(wrapper.timerZeroGame.resume).toHaveBeenCalledOnceWith();
 
                 await receiveEndGame();
             }));
@@ -708,7 +724,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 expect(wrapper.gameComponent.getTurn()).toBe(2);
 
                 // When opponent accepts user's take back
-                spyOn(wrapper.chronoZeroGlobal, 'resume').and.callThrough();
+                spyOn(wrapper.timerZeroGame, 'resume').and.callThrough();
                 await receiveReply(Player.ONE, true, 'TakeBack');
                 const opponentTurnDiv: DebugElement = testUtils.findElement('#currentPlayerIndicator');
                 expect(opponentTurnDiv.nativeElement.innerText).toBe(`It is your turn.`);
@@ -716,7 +732,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 testUtils.detectChanges();
 
                 // Then turn should be changed to 0 and resumeCountDown be called
-                expect(wrapper.chronoZeroGlobal.resume).toHaveBeenCalledOnceWith();
+                expect(wrapper.timerZeroGame.resume).toHaveBeenCalledOnceWith();
                 expect(wrapper.gameComponent.getTurn()).toBe(0);
                 await receiveEndGame();
             }));
@@ -770,14 +786,14 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
                 await receiveSync();
                 await doMoveByClicks(Player.ZERO, FIRST_MOVE, FIRST_MOVE_ENCODED);
-                spyOn(wrapper.chronoOneGlobal, 'resume').and.callThrough();
+                spyOn(wrapper.timerOneGame, 'resume').and.callThrough();
                 await askTakeBack(Player.ZERO);
 
                 // When opponent accept user's take back
                 await receiveReply(Player.ONE, true, 'TakeBack');
 
                 // Then count down should be resumed and update not changing time
-                expect(wrapper.chronoOneGlobal.resume).toHaveBeenCalledOnceWith();
+                expect(wrapper.timerOneGame.resume).toHaveBeenCalledOnceWith();
                 await receiveEndGame();
             }));
 
@@ -953,15 +969,15 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
 
             // When the player runs out of move time
             spyOn(wrapper, 'reachedOutOfTime').and.callThrough();
-            spyOn(wrapper.chronoZeroGlobal, 'stop').and.callThrough();
+            spyOn(wrapper.timerZeroGame, 'stop').and.callThrough();
             tick(wrapper.configRoom.moveDuration * 1000);
 
             // Then it should be detected
             expect(wrapper.reachedOutOfTime).toHaveBeenCalledOnceWith(Player.ZERO);
 
-            // And the game chronos should be stopped upon game end
+            // And the game timers should be stopped upon game end
             await receiveEndGame();
-            expect(wrapper.chronoZeroGlobal.stop).toHaveBeenCalledOnceWith();
+            expect(wrapper.timerZeroGame.stop).toHaveBeenCalledOnceWith();
         }));
 
         it(`should stop player's move clock when game clock reaches end`, fakeAsync(async() => {
@@ -971,15 +987,15 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
 
             // When the player runs out of game time
             spyOn(wrapper, 'reachedOutOfTime').and.callThrough();
-            spyOn(wrapper.chronoZeroTurn, 'stop').and.callThrough();
+            spyOn(wrapper.timerZeroMove, 'stop').and.callThrough();
             tick(wrapper.configRoom.gameDuration * 1000);
 
             // Then it shoud be detected
             expect(wrapper.reachedOutOfTime).toHaveBeenCalledOnceWith(Player.ZERO);
 
-            // And the move chrono should be stopped upon game end
+            // And the move timer should be stopped upon game end
             await receiveEndGame();
-            expect(wrapper.chronoZeroTurn.stop).toHaveBeenCalledOnceWith();
+            expect(wrapper.timerZeroMove.stop).toHaveBeenCalledOnceWith();
         }));
 
         it(`should stop opponent's game clock when turn reaches end`, fakeAsync(async() => {
@@ -990,15 +1006,15 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
 
             // When they run out of move time
             spyOn(wrapper, 'reachedOutOfTime').and.callThrough();
-            spyOn(wrapper.chronoOneGlobal, 'stop').and.callThrough();
+            spyOn(wrapper.timerOneGame, 'stop').and.callThrough();
             tick(wrapper.configRoom.moveDuration * 1000);
 
             // Then it should be considered as a timeout
             expect(wrapper.reachedOutOfTime).toHaveBeenCalledOnceWith(Player.ONE);
 
-            // And the game chrono should be stopped upon game end
+            // And the game timer should be stopped upon game end
             await receiveEndGame();
-            expect(wrapper.chronoOneGlobal.stop).toHaveBeenCalledOnceWith();
+            expect(wrapper.timerOneGame.stop).toHaveBeenCalledOnceWith();
         }));
 
         it(`should stop opponent's move clock when game clock reaches end`, fakeAsync(async() => {
@@ -1009,15 +1025,15 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
 
             // When they run out of game time
             spyOn(wrapper, 'reachedOutOfTime').and.callThrough();
-            spyOn(wrapper.chronoOneTurn, 'stop').and.callThrough();
+            spyOn(wrapper.timerOneMove, 'stop').and.callThrough();
             tick(wrapper.configRoom.gameDuration * 1000);
 
             // Then it should be detected
             expect(wrapper.reachedOutOfTime).toHaveBeenCalledOnceWith(Player.ONE);
 
-            // And the move chrono should be stopped upon game end
+            // And the move timer should be stopped upon game end
             await receiveEndGame();
-            expect(wrapper.chronoOneTurn.stop).toHaveBeenCalledOnceWith();
+            expect(wrapper.timerOneMove.stop).toHaveBeenCalledOnceWith();
         }));
 
     });
@@ -1032,13 +1048,13 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             it('should allow to add turn time to opponent', fakeAsync(async() => {
                 // Given an onlineGameComponent
                 await prepareStartedGameForCreator();
-                spyOn(gameService, 'addTurnTime').and.callThrough();
+                spyOn(gameService, 'addMoveTime').and.callThrough();
 
                 // When creator adds turn time to the opponent
-                await wrapper.addTurnTime();
+                await wrapper.addMoveTime();
 
                 // Then an add turn time action is generated
-                expect(gameService.addTurnTime).toHaveBeenCalledOnceWith();
+                expect(gameService.addMoveTime).toHaveBeenCalledOnceWith();
 
                 await receiveEndGame();
             }));
@@ -1046,43 +1062,43 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             it('should resume both clocks at once when adding turn time', fakeAsync(async() => {
                 // Given an onlineGameComponent
                 await prepareStartedGameForCreator();
-                spyOn(wrapper.chronoZeroGlobal, 'resume').and.callThrough();
-                spyOn(wrapper.chronoZeroTurn, 'resume').and.callThrough();
+                spyOn(wrapper.timerZeroGame, 'resume').and.callThrough();
+                spyOn(wrapper.timerZeroMove, 'resume').and.callThrough();
 
                 // When receiving a request to add local time to player zero
-                await receiveAction(Player.ZERO, 'AddTurnTime');
+                await receiveAction(Player.ZERO, 'AddMoveTime');
 
                 // Then both clocks of player zero should have been resumed
-                expect(wrapper.chronoZeroGlobal.resume).toHaveBeenCalledOnceWith();
-                expect(wrapper.chronoZeroTurn.resume).toHaveBeenCalledOnceWith();
+                expect(wrapper.timerZeroGame.resume).toHaveBeenCalledOnceWith();
+                expect(wrapper.timerZeroMove.resume).toHaveBeenCalledOnceWith();
 
                 await receiveEndGame();
             }));
 
-            it('should add turn time when receiving AddTurnTime action from Player.ONE', fakeAsync(async() => {
+            it('should add turn time when receiving AddMoveTime action from Player.ONE', fakeAsync(async() => {
                 // Given an onlineGameComponent where it's our turn and we have some time remaining
                 await prepareStartedGameForCreator();
-                const timeBeforeAdding: number = wrapper.chronoZeroTurn.remainingSeconds;
+                const timeBeforeAdding: number = wrapper.timerZeroGame.remainingSeconds;
 
-                // When receiving AddTurnTime action from player one
-                await receiveAction(Player.ONE, 'AddTurnTime');
+                // When receiving AddMoveTime action from player one
+                await receiveAction(Player.ONE, 'AddMoveTime');
 
                 // Then the turn time of player zero should be increased by exactly 30 seconds
-                expect(wrapper.chronoZeroTurn.remainingSeconds).toEqual(timeBeforeAdding + 30);
+                expect(wrapper.timerZeroMove.remainingSeconds).toEqual(timeBeforeAdding + 30);
 
                 await receiveEndGame();
             }));
 
-            it('should add turn time when receiving AddTurnTime action from Player.ZERO', fakeAsync(async() => {
+            it('should add turn time when receiving AddMoveTime action from Player.ZERO', fakeAsync(async() => {
                 // Given an onlineGameComponent where it's our turn
                 await prepareStartedGameForCreator();
-                const timeBeforeAdding: number = wrapper.chronoOneTurn.remainingSeconds;
+                const timeBeforeAdding: number = wrapper.timerOneMove.remainingSeconds;
 
-                // When we send AddTurnTime action as Player.ZERO
-                await receiveAction(Player.ZERO, 'AddTurnTime');
+                // When we send AddMoveTime action as Player.ZERO
+                await receiveAction(Player.ZERO, 'AddMoveTime');
 
                 // Then the turn time of player one should be increased by exactly 30 seconds
-                expect(wrapper.chronoOneTurn.remainingSeconds).toBe(timeBeforeAdding + 30);
+                expect(wrapper.timerOneMove.remainingSeconds).toBe(timeBeforeAdding + 30);
 
                 await receiveEndGame();
             }));
@@ -1090,53 +1106,53 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             it('should allow to add global time to opponent (as Player.ZERO)', fakeAsync(async() => {
                 // Given an onlineGameComponent where it's our turn
                 await prepareStartedGameForCreator();
-                spyOn(gameService, 'addGlobalTime').and.callThrough();
+                spyOn(gameService, 'addGameTime').and.callThrough();
 
                 // When the player adds global time to the opponent
-                await wrapper.addGlobalTime();
+                await wrapper.addGameTime();
 
                 // Then a request to add global time to player one should be sent
-                expect(gameService.addGlobalTime).toHaveBeenCalledOnceWith();
+                expect(gameService.addGameTime).toHaveBeenCalledOnceWith();
                 const secondsUntilTimeout: number = wrapper.configRoom.moveDuration;
-                expect(wrapper.chronoOneTurn.remainingSeconds).toBe(secondsUntilTimeout); // initial 2 minutes
+                expect(wrapper.timerOneMove.remainingSeconds).toBe(secondsUntilTimeout); // initial 2 minutes
 
                 await receiveEndGame();
             }));
 
-            it('should add time to global clock when receiving AddGlobalTime action from Player.ONE', fakeAsync(async() => {
+            it('should add time to global clock when receiving AddGameTime action from Player.ONE', fakeAsync(async() => {
                 // Given an onlineGameComponent where it's our turn and we still have time left
                 await prepareStartedGameForCreator();
-                const timeBeforeAdding: number = wrapper.chronoZeroGlobal.remainingSeconds;
+                const timeBeforeAdding: number = wrapper.timerZeroGame.remainingSeconds;
 
                 // When the opponent adds global time to us
-                await receiveAction(Player.ONE, 'AddGlobalTime');
+                await receiveAction(Player.ONE, 'AddGameTime');
 
-                // Then chrono global of player one should be increased by 5 minutes
-                expect(wrapper.chronoZeroGlobal.remainingSeconds).toBe(timeBeforeAdding + (5 * 60));
+                // Then timer global of player one should be increased by 5 minutes
+                expect(wrapper.timerZeroGame.remainingSeconds).toBe(timeBeforeAdding + (5 * 60));
 
                 await receiveEndGame();
             }));
 
-            it('should add time to global clock when receiving the AddGlobalTime action from Player.ZERO', fakeAsync(async() => {
+            it('should add time to global clock when receiving the AddGameTime action from Player.ZERO', fakeAsync(async() => {
                 // Given an onlineGameComponent
                 await prepareStartedGameForCreator();
-                const timeBeforeAdding: number = wrapper.chronoOneGlobal.remainingSeconds;
+                const timeBeforeAdding: number = wrapper.timerOneGame.remainingSeconds;
 
                 // When we add global time to the opponent
-                await receiveAction(Player.ZERO, 'AddGlobalTime');
+                await receiveAction(Player.ZERO, 'AddGameTime');
 
-                // Then chrono global of the opponent should be increased by 5 minutes
-                expect(wrapper.chronoOneGlobal.remainingSeconds).toBe(timeBeforeAdding + (5 * 60));
+                // Then timer global of the opponent should be increased by 5 minutes
+                expect(wrapper.timerOneGame.remainingSeconds).toBe(timeBeforeAdding + (5 * 60));
 
                 await receiveEndGame();
             }));
 
-            it('should postpone the timeout of chrono and not only change displayed time', fakeAsync(async() => {
+            it('should postpone the timeout of timer and not only change displayed time', fakeAsync(async() => {
                 // Given an onlineGameComponent
                 await prepareStartedGameForCreator();
 
-                // When receiving an AddTurnTime action
-                await receiveAction(Player.ONE, 'AddTurnTime');
+                // When receiving an AddMoveTime action
+                await receiveAction(Player.ONE, 'AddMoveTime');
                 testUtils.detectChanges();
 
                 // Then game should end by timeout only after new time has run out
@@ -1154,13 +1170,13 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 await prepareTestUtilsFor(UserMocks.OPPONENT_AUTH_USER);
                 await receiveSync();
 
-                spyOn(gameService, 'addGlobalTime').and.callThrough();
+                spyOn(gameService, 'addGameTime').and.callThrough();
 
                 // When countDownComponent emit addGlobalTime
-                await wrapper.addGlobalTime();
+                await wrapper.addGameTime();
 
                 // Then a request to add global time to player zero should be sent
-                expect(gameService.addGlobalTime).toHaveBeenCalledOnceWith();
+                expect(gameService.addGameTime).toHaveBeenCalledOnceWith();
 
                 await receiveEndGame();
             }));

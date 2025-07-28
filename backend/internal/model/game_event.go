@@ -52,15 +52,15 @@ var (
 type AddTimeKind string
 
 const (
-	AddTimeTurn = "Turn"
-	AddTimeGage = "Global" // TODO: rename from global to game everywhere
+	AddTimeMove = "Move"
+	AddTimeGame = "Game"
 )
 
 func ActionAddTime(kind AddTimeKind) Action {
-	if kind == AddTimeTurn {
-		return Action{Action: "AddTurnTime"}
+	if kind == AddTimeMove {
+		return Action{Action: "AddMoveTime"}
 	} else {
-		return Action{Action: "AddGlobalTime"} // TODO: AddGameTime
+		return Action{Action: "AddGameTime"}
 	}
 }
 
@@ -222,12 +222,11 @@ func (e *EventData) UnmarshalJSON(data []byte) error {
 }
 
 type GameEvent struct {
-	ID     uint64 `gorm:"primaryKey;autoIncrement" json:"-"`
-	GameID GameID `gorm:"index;not null;foreignKey:ConfigRoom" json:"-"`
-	// TODO: rename "timestamp", as in other structs
-	Time int64       `gorm:"not null" json:"time"`
-	User MinimalUser `gorm:"not null;embedded;embeddedPrefix:user_" json:"user"`
-	Data EventData   `gorm:"not null;serializer:json" json:"data"`
+	ID        uint64      `gorm:"primaryKey;autoIncrement" json:"-"`
+	GameID    GameID      `gorm:"index;not null;foreignKey:ConfigRoom" json:"-"`
+	Timestamp int64       `gorm:"not null" json:"timestamp"`
+	User      MinimalUser `gorm:"not null;embedded;embeddedPrefix:user_" json:"user"`
+	Data      EventData   `gorm:"not null;serializer:json" json:"data"`
 }
 
 func (e GameEvent) MarshalJSON() ([]byte, error) {
@@ -242,7 +241,7 @@ func (e GameEvent) MarshalJSON() ([]byte, error) {
 		return nil, err
 	}
 
-	dataFields["time"], err = json.Marshal(e.Time)
+	dataFields["time"], err = json.Marshal(e.Timestamp)
 	if err != nil {
 		return nil, err
 	}
@@ -274,7 +273,7 @@ func (e *GameEvent) UnmarshalJSON(data []byte) error {
 	}
 	delete(raw, "user")
 
-	err = json.Unmarshal(timeField, &e.Time)
+	err = json.Unmarshal(timeField, &e.Timestamp)
 	if err != nil {
 		return err
 	}

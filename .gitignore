@@ -72,3 +72,5 @@ games.txt
 /service-accounts/*.json
 ./nx/
 .vscode/settings.json
+/backend/coverage.html
+/e2e/__pycache__/

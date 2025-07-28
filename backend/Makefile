@@ -14,6 +14,9 @@ tidy:
 run: build
 	env USE_EMULATOR=yes PROJECT_ID=my-project ALLOW_ORIGIN='*' go run cmd/backend/main.go
 
+format:
+	go fmt ./...
+
 test:
 	go test ./...
 
@@ -21,9 +24,6 @@ coverage:
 	go test ./... -coverpkg=./... -cover -coverprofile=coverage.out
 
 view-coverage: coverage
-	go tool cover -html=coverage.out
-
-save-coverage: coverage
 	go tool cover -html=coverage.out -o coverage.html
 
 check-coverage: coverage
@@ -46,4 +46,4 @@ docker: prod
 deploy: docker
 	ssh -p "$(port)" "$(user)@$(server)" "docker stop \$$(docker ps -q --filter publish=$(listen-port)) ; docker load && docker container prune -f && docker image prune -f && docker run -d -p $(listen-port):8081 backend-$(target) /backend $(args)" < "backend-$(target).tar"
 
-.PHONY: build deps tidy run test coverage view-coverage save-coverage check-coverage lint clean prod deploy
+.PHONY: build deps tidy run test coverage view-coverage check-coverage lint clean prod deploy

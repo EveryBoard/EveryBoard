@@ -12,7 +12,7 @@ export type Game = {
 
 export type GameEventBase = {
     readonly eventType: string;
-    readonly time: number;
+    readonly timestamp: number;
     readonly user: MinimalUser;
 }
 
@@ -24,7 +24,7 @@ export type GameEventMove = GameEventBase & {
 // The StartGame action is a dummy action to ensure that at least one event occurs at game start.
 // This is required because the clock logic relies on at least one event happening at the start of the game.
 // The Sync action is another dummy action to ensure that we when we're in sync with the server
-export type Action = 'AddTurnTime' | 'AddGlobalTime' | 'StartGame' | 'EndGame' | 'Sync';
+export type Action = 'AddMoveTime' | 'AddGameTime' | 'StartGame' | 'EndGame' | 'Sync';
 
 export type GameEventAction = GameEventBase & {
     readonly eventType: 'Action';

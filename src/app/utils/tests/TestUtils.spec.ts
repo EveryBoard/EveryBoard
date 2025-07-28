@@ -816,14 +816,18 @@ export function prepareUnsubscribeCheck(service: any, subscribeMethod: string): 
     const spy: jasmine.Spy = spyOn(service, subscribeMethod);
     spy.and.callFake((...args: unknown[]): Subscription => {
         subscribed = true;
+        console.log('TESTUTILS: subscribing')
         // We need to call the original function.
         // This is a bit hacky, but seems to be the only way:
         // we change the spy to call through, and apply the original method.
         // This is fine for subscribe methods as they are expected to be called only once.
         spy.and.callThrough();
-        service[subscribeMethod](...args);
+        console.log('calling function')
+        const subscription: Subscription = service[subscribeMethod](...args);
         return new Subscription(() => {
+            console.log('TESTUTILS: unsubscribing')
             unsubscribed = true;
+            subscription.unsubscribe();
         });
     });
     return () => {

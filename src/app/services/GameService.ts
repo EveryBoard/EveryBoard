@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { JSONValue } from '@everyboard/lib';
-import { GameEvent, Game } from '../domain/Part';
+import { GameEvent, Game } from '../domain/Game';
 import { Subscription } from 'rxjs';
 import { BackendService, BackendMessage } from './BackendService';
 import { Debug } from '../utils/Debug';
@@ -87,14 +87,14 @@ export abstract class AbstractGameService {
         return this.reject('TakeBack');
     }
 
-    /** Add global time to the opponent */
-    public async addGlobalTime(): Promise<void> {
-        return this.gameAction(['AddTime', { kind: 'Global' }]);
+    /** Add game time to the opponent */
+    public async addGameTime(): Promise<void> {
+        return this.gameAction(['AddTime', { kind: 'Game' }]);
     }
 
-    /** Add turn time to the opponent */
-    public async addTurnTime(): Promise<void> {
-        return this.gameAction(['AddTime', { kind: 'Turn' }]);
+    /** Add move time to the opponent */
+    public async addMoveTime(): Promise<void> {
+        return this.gameAction(['AddTime', { kind: 'Move' }]);
     }
 
     /** Play a move */

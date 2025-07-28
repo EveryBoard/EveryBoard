@@ -35,7 +35,7 @@ type Handlers struct {
 	user                model.MinimalUser
 }
 
-func sendMessage(connection *websocket.Conn, message OutgoingMessage) error {
+func sendMessage(connection *websocket.Conn, message model.OutgoingMessage) error {
 	toSend, err := json.Marshal([]any{message.Tag(), message})
 	if err != nil {
 		return err
@@ -49,11 +49,11 @@ func sendMessage(connection *websocket.Conn, message OutgoingMessage) error {
 	return err
 }
 
-func (h *Handlers) send(message OutgoingMessage) error {
+func (h *Handlers) send(message model.OutgoingMessage) error {
 	return sendMessage(h.connection, message)
 }
 
-func (h *Handlers) broadcastToUser(user model.MinimalUser, message OutgoingMessage) error {
+func (h *Handlers) broadcastToUser(user model.MinimalUser, message model.OutgoingMessage) error {
 	for connection := range connectionManager.allUserConnections(user) {
 		err := sendMessage(connection, message)
 		if err != nil {
@@ -63,13 +63,13 @@ func (h *Handlers) broadcastToUser(user model.MinimalUser, message OutgoingMessa
 	return nil
 }
 
-func (h *Handlers) error(reason Error) error {
-	return h.send(ErrorMessage{Reason: reason})
+func (h *Handlers) error(reason model.Error) error {
+	return h.send(model.ErrorMessage{Reason: reason})
 }
 
 // Broadcast sends a message to all clients subscribed to kind, gameId
-func (h *Handlers) broadcast(kind SubscriptionKind, gameId model.GameID, message OutgoingMessage) error {
-	for connection := range subscriptionManager.subscriptionsTo(kind, gameId) {
+func (h *Handlers) broadcast(kind SubscriptionKind, gameId model.GameID, message model.OutgoingMessage) error {
+	for connection := range subscriptionManager.SubscriptionsTo(kind, gameId) {
 		err := sendMessage(connection, message)
 		if err != nil {
 			return err
@@ -78,33 +78,33 @@ func (h *Handlers) broadcast(kind SubscriptionKind, gameId model.GameID, message
 	return nil
 }
 
-func (h *Handlers) broadcastToConfigRoom(gameId model.GameID, message OutgoingMessage) error {
+func (h *Handlers) broadcastToConfigRoom(gameId model.GameID, message model.OutgoingMessage) error {
 	return h.broadcast(SubscriptionToConfigRoom, gameId, message)
 }
 
-func (h *Handlers) broadcastToLobby(message OutgoingMessage) error {
+func (h *Handlers) broadcastToLobby(message model.OutgoingMessage) error {
 	return h.broadcast(SubscriptionToLobby, model.GameIDLobby, message)
 }
 
-func (h *Handlers) broadcastToGame(gameId model.GameID, message OutgoingMessage) error {
+func (h *Handlers) broadcastToGame(gameId model.GameID, message model.OutgoingMessage) error {
 	return h.broadcast(SubscriptionToGame, gameId, message)
 }
 
 func (h *Handlers) sendChatMessages(gameId model.GameID) error {
 	return model.ApplyToMessagesOfGame(gameId, func(message *model.Message) error {
-		return h.send(ChatMessage{Message: *message})
+		return h.send(model.ChatMessage{Message: *message})
 	})
 }
 
 func (h *Handlers) sendGameEvents(gameId model.GameID) error {
 	return model.ApplyToGameEvents(gameId, func(event *model.GameEvent) error {
-		return h.send(GameEventMessage{Event: *event, ServerTime: NowFloat()})
+		return h.send(model.GameEventMessage{Event: *event, ServerTime: NowFloat()})
 	})
 }
 
 func (h *Handlers) sendActiveConfigRooms() error {
 	return model.ApplyToConfigRooms(func(configRoom model.ConfigRoom) error {
-		return h.send(ConfigRoomUpdateMessage{
+		return h.send(model.ConfigRoomUpdateMessage{
 			GameID:     configRoom.ID,
 			ConfigRoom: configRoom,
 		})
@@ -113,11 +113,11 @@ func (h *Handlers) sendActiveConfigRooms() error {
 
 func (h *Handlers) subscribeToLobby() error {
 	uid := h.user.ID
-	if subscriptionManager.isSubscribed(uid) {
-		return h.error(ErrorAlreadySubscribed)
+	if subscriptionManager.IsSubscribed(uid) {
+		return h.error(model.ErrorAlreadySubscribed)
 	}
 
-	subscriptionManager.subscribe(h.connection, uid, model.GameIDLobby, SubscriptionToLobby)
+	subscriptionManager.Subscribe(h.connection, uid, model.GameIDLobby, SubscriptionToLobby)
 	err := h.sendChatMessages(model.GameIDLobby)
 	if err != nil {
 		return err
@@ -127,9 +127,9 @@ func (h *Handlers) subscribeToLobby() error {
 }
 
 func (h *Handlers) chatSend(content string) error {
-	kind, gameId, subscribed := subscriptionManager.subscriptionOf(h.connection)
+	kind, gameId, subscribed := subscriptionManager.SubscriptionOf(h.connection)
 	if !subscribed {
-		return h.error(ErrorUnknownMessage)
+		return h.error(model.ErrorUnknownMessage)
 	}
 
 	message := model.Message{
@@ -141,7 +141,7 @@ func (h *Handlers) chatSend(content string) error {
 	if err != nil {
 		return err
 	}
-	return h.broadcast(kind, gameId, ChatMessage{Message: message})
+	return h.broadcast(kind, gameId, model.ChatMessage{Message: message})
 }
 
 func (h *Handlers) setCurrentGame(user model.MinimalUser, currentGame model.CurrentGame) error {
@@ -150,7 +150,7 @@ func (h *Handlers) setCurrentGame(user model.MinimalUser, currentGame model.Curr
 		return err
 	}
 
-	return h.broadcastToUser(user, CurrentGameUpdateMessage{ CurrentGame: &currentGame })
+	return h.broadcastToUser(user, model.CurrentGameUpdateMessage{ CurrentGame: &currentGame })
 }
 
 func (h *Handlers) updateCurrentGame(user model.MinimalUser, currentGame model.CurrentGame) error {
@@ -159,7 +159,7 @@ func (h *Handlers) updateCurrentGame(user model.MinimalUser, currentGame model.C
 		return err
 	}
 
-	return h.broadcastToUser(user, CurrentGameUpdateMessage{ CurrentGame: &currentGame })
+	return h.broadcastToUser(user, model.CurrentGameUpdateMessage{ CurrentGame: &currentGame })
 }
 
 func (h *Handlers) removeCurrentGame(user model.MinimalUser) error {
@@ -168,12 +168,12 @@ func (h *Handlers) removeCurrentGame(user model.MinimalUser) error {
 		return err
 	}
 
-	return h.broadcastToUser(user, CurrentGameUpdateMessage{ CurrentGame: nil })
+	return h.broadcastToUser(user, model.CurrentGameUpdateMessage{ CurrentGame: nil })
 }
 
 func (h *Handlers) createGame(gameName string) error {
-	if subscriptionManager.isSubscribed(h.user.ID) {
-		return h.error(ErrorAlreadySubscribed)
+	if subscriptionManager.IsSubscribed(h.user.ID) {
+		return h.error(model.ErrorAlreadySubscribed)
 	}
 
 	// Contrary to other place where checking subscription is enough, we need to
@@ -184,7 +184,7 @@ func (h *Handlers) createGame(gameName string) error {
 		return err
 	}
 	if currentGame != nil {
-		return h.error(ErrorAlreadySubscribed)
+		return h.error(model.ErrorAlreadySubscribed)
 	}
 
 	configRoom, err := model.CreateConfigRoom(h.user, gameName)
@@ -193,7 +193,7 @@ func (h *Handlers) createGame(gameName string) error {
 	}
 
 	// Send the id to the creator, and the config room to the lobby observers
-	err = h.send(GameCreatedMessage{GameId: configRoom.ID})
+	err = h.send(model.GameCreatedMessage{GameID: configRoom.ID})
 	if err != nil {
 		return err
 	}
@@ -209,13 +209,13 @@ func (h *Handlers) createGame(gameName string) error {
 		return err
 	}
 
-	return h.broadcastToLobby(ConfigRoomUpdateMessage{GameID: configRoom.ID, ConfigRoom: *configRoom})
+	return h.broadcastToLobby(model.ConfigRoomUpdateMessage{GameID: configRoom.ID, ConfigRoom: *configRoom})
 }
 
 func (h *Handlers) subscribeToConfigRoom(gameId model.GameID) error {
 	uid := h.user.ID
-	if subscriptionManager.isSubscribed(uid) {
-		return h.error(ErrorAlreadySubscribed)
+	if subscriptionManager.IsSubscribed(uid) {
+		return h.error(model.ErrorAlreadySubscribed)
 	}
 
 	configRoom, err := model.GetConfigRoom(gameId)
@@ -223,10 +223,10 @@ func (h *Handlers) subscribeToConfigRoom(gameId model.GameID) error {
 		return err
 	}
 	if configRoom == nil {
-		return h.error(ErrorGameDoesNotExist)
+		return h.error(model.ErrorGameDoesNotExist)
 	}
 
-	subscriptionManager.subscribe(h.connection, h.user.ID, gameId, SubscriptionToConfigRoom)
+	subscriptionManager.Subscribe(h.connection, h.user.ID, gameId, SubscriptionToConfigRoom)
 	switch configRoom.Status {
 	case model.StatusCreated, model.StatusConfigProposed:
 		// This is a config room in progress
@@ -234,7 +234,7 @@ func (h *Handlers) subscribeToConfigRoom(gameId model.GameID) error {
 
 		// For both candidates and creator, send the config room first, then the candidates.
 		// The order is important so that the client knows the config room before the candidates
-		err = h.send(ConfigRoomUpdateMessage{
+		err = h.send(model.ConfigRoomUpdateMessage{
 			GameID:     gameId,
 			ConfigRoom: *configRoom,
 		})
@@ -244,14 +244,13 @@ func (h *Handlers) subscribeToConfigRoom(gameId model.GameID) error {
 
 		if uid != configRoom.Creator.ID {
 			// A new candidate appears!
-			// TODO: elo of the candidate while we're at it
 			err = configRoom.AddCandidate(h.user)
 			if err != nil {
 				return err
 			}
 
 			// Let the other people in the config room know about it
-			err = h.broadcastToConfigRoom(gameId, CandidateJoinedMessage{Candidate: h.user})
+			err = h.broadcastToConfigRoom(gameId, model.CandidateJoinedMessage{Candidate: h.user})
 			if err != nil {
 				return err
 			}
@@ -270,20 +269,20 @@ func (h *Handlers) subscribeToConfigRoom(gameId model.GameID) error {
 
 		return model.ApplyToCandidates(gameId, func(candidate model.Candidate) error {
 			if candidate.User.ID != uid { // don't send the user to itself twice
-				return h.send(CandidateJoinedMessage{Candidate: candidate.User})
+				return h.send(model.CandidateJoinedMessage{Candidate: candidate.User})
 			}
 			return nil
 		})
 	case model.StatusStarted, model.StatusFinished:
 		// This is a started game. The client is probably joining mid-game. Send the config room so that they know about it
-		return h.send(ConfigRoomUpdateMessage{GameID: gameId, ConfigRoom: *configRoom})
+		return h.send(model.ConfigRoomUpdateMessage{GameID: gameId, ConfigRoom: *configRoom})
 	}
 	return fmt.Errorf("SubscribeConfigRoom fell through the end of the switch while it shouldn't. Game status was %v", configRoom.Status)
 }
 
 func (h *Handlers) subscribeToGame(gameId model.GameID) error {
-	if subscriptionManager.isSubscribed(h.user.ID) {
-		return h.error(ErrorAlreadySubscribed)
+	if subscriptionManager.IsSubscribed(h.user.ID) {
+		return h.error(model.ErrorAlreadySubscribed)
 	}
 
 	game, err := model.GetGame(gameId)
@@ -291,10 +290,10 @@ func (h *Handlers) subscribeToGame(gameId model.GameID) error {
 		return err
 	}
 	if game == nil {
-		return h.error(ErrorGameDoesNotExist)
+		return h.error(model.ErrorGameDoesNotExist)
 	}
 
-	subscriptionManager.subscribe(h.connection, h.user.ID, gameId, SubscriptionToGame)
+	subscriptionManager.Subscribe(h.connection, h.user.ID, gameId, SubscriptionToGame)
 
 	// Let the observers know their current game. The players already know it from game creation
 	if game.PlayerZero.ID != h.user.ID && game.PlayerOne.ID != h.user.ID {
@@ -308,7 +307,7 @@ func (h *Handlers) subscribeToGame(gameId model.GameID) error {
 
 	// It is important to send the game first and then the events so that the
 	// client knows about the game before receiving events
-	err = h.send(GameUpdateMessage{Game: *game})
+	err = h.send(model.GameUpdateMessage{Game: *game})
 	if err != nil {
 		return err
 	}
@@ -324,20 +323,20 @@ func (h *Handlers) subscribeToGame(gameId model.GameID) error {
 	}
 
 	syncEvent := model.GameEvent{
-		Time: Now(),
+		Timestamp: Now(),
 		User: h.user,
 		Data: model.EventDataSync,
 	}
-	return h.send(GameEventMessage{Event: syncEvent, ServerTime: NowFloat()})
+	return h.send(model.GameEventMessage{Event: syncEvent, ServerTime: NowFloat()})
 }
 
 func (h *Handlers) unsubscribe() error {
-	subscriptionKind, gameId, subscribed := subscriptionManager.subscriptionOf(h.connection)
+	subscriptionKind, gameId, subscribed := subscriptionManager.SubscriptionOf(h.connection)
 	if !subscribed {
 		// They're not subscribed, there's nothing to do
 		return nil
 	}
-	subscriptionManager.unsubscribe(h.connection)
+	subscriptionManager.Unsubscribe(h.connection)
 
 	switch subscriptionKind {
 	case SubscriptionToLobby:
@@ -376,7 +375,7 @@ func (h *Handlers) unsubscribe() error {
 				}
 
 				// Let everyone know about it
-				update := ConfigRoomDeletedMessage{GameID: configRoom.ID}
+				update := model.ConfigRoomDeletedMessage{GameID: configRoom.ID}
 				err = h.broadcastToConfigRoom(configRoom.ID, update)
 				if err != nil {
 					return err
@@ -403,7 +402,7 @@ func (h *Handlers) unsubscribe() error {
 					return err
 				}
 
-				err = h.broadcastToConfigRoom(configRoom.ID, CandidateLeftMessage{Candidate: h.user})
+				err = h.broadcastToConfigRoom(configRoom.ID, model.CandidateLeftMessage{Candidate: h.user})
 				if err != nil {
 					return err
 				}
@@ -414,7 +413,7 @@ func (h *Handlers) unsubscribe() error {
 					if err != nil {
 						return err
 					}
-					err = h.broadcastToConfigRoom(configRoom.ID, ConfigRoomUpdateMessage{
+					err = h.broadcastToConfigRoom(configRoom.ID, model.ConfigRoomUpdateMessage{
 						GameID: configRoom.ID,
 						ConfigRoom: *configRoom,
 					})
@@ -444,9 +443,9 @@ func (h *Handlers) unsubscribe() error {
 }
 
 func (h *Handlers) getSubscribedConfigRoom() (*model.ConfigRoom, error) {
-	_, gameId, subscribed := subscriptionManager.subscriptionOf(h.connection)
+	_, gameId, subscribed := subscriptionManager.SubscriptionOf(h.connection)
 	if !subscribed {
-		return nil, h.error(ErrorNotSubscribed)
+		return nil, h.error(model.ErrorNotSubscribed)
 	}
 
 	configRoom, err := model.GetConfigRoom(gameId)
@@ -462,10 +461,10 @@ func (h *Handlers) selectOpponent(opponent model.MinimalUser) error {
 		return err
 	}
 	if configRoom == nil {
-		return h.error(ErrorUnknownGame)
+		return h.error(model.ErrorUnknownGame)
 	}
 	if configRoom.Creator.ID != h.user.ID {
-		return h.error(ErrorNotAllowed)
+		return h.error(model.ErrorNotAllowed)
 	}
 
 	err = configRoom.SelectOpponent(opponent)
@@ -494,7 +493,7 @@ func (h *Handlers) selectOpponent(opponent model.MinimalUser) error {
 		return err
 	}
 
-	update := ConfigRoomUpdateMessage{GameID: configRoom.ID, ConfigRoom: *configRoom}
+	update := model.ConfigRoomUpdateMessage{GameID: configRoom.ID, ConfigRoom: *configRoom}
 	err = h.broadcastToConfigRoom(configRoom.ID, update)
 	if err != nil {
 		return err
@@ -509,10 +508,10 @@ func (h *Handlers) proposeConfig(config *model.ConfigProposal) error {
 		return err
 	}
 	if configRoom == nil {
-		return h.error(ErrorUnknownGame)
+		return h.error(model.ErrorUnknownGame)
 	}
 	if configRoom.Creator.ID != h.user.ID || configRoom.ChosenOpponent == nil {
-		return h.error(ErrorNotAllowed)
+		return h.error(model.ErrorNotAllowed)
 	}
 
 	err = configRoom.Propose(config)
@@ -520,7 +519,7 @@ func (h *Handlers) proposeConfig(config *model.ConfigProposal) error {
 		return err
 	}
 
-	return h.broadcastToConfigRoom(configRoom.ID, ConfigRoomUpdateMessage{GameID: configRoom.ID, ConfigRoom: *configRoom})
+	return h.broadcastToConfigRoom(configRoom.ID, model.ConfigRoomUpdateMessage{GameID: configRoom.ID, ConfigRoom: *configRoom})
 }
 
 func (h *Handlers) reviewConfig() error {
@@ -529,10 +528,10 @@ func (h *Handlers) reviewConfig() error {
 		return err
 	}
 	if configRoom == nil {
-		return h.error(ErrorUnknownGame)
+		return h.error(model.ErrorUnknownGame)
 	}
 	if configRoom.Creator.ID != h.user.ID {
-		return h.error(ErrorNotAllowed)
+		return h.error(model.ErrorNotAllowed)
 	}
 
 	err = configRoom.Review()
@@ -540,7 +539,7 @@ func (h *Handlers) reviewConfig() error {
 		return err
 	}
 
-	return h.broadcastToConfigRoom(configRoom.ID, ConfigRoomUpdateMessage{GameID: configRoom.ID, ConfigRoom: *configRoom})
+	return h.broadcastToConfigRoom(configRoom.ID, model.ConfigRoomUpdateMessage{GameID: configRoom.ID, ConfigRoom: *configRoom})
 }
 
 func (h *Handlers) acceptConfig() error {
@@ -549,12 +548,12 @@ func (h *Handlers) acceptConfig() error {
 		return err
 	}
 	if configRoom == nil {
-		return h.error(ErrorUnknownGame)
+		return h.error(model.ErrorUnknownGame)
 	}
 	if configRoom.ChosenOpponent == nil ||
 		configRoom.ChosenOpponent.ID != h.user.ID ||
 		configRoom.Status != model.StatusConfigProposed {
-		return h.error(ErrorNotAllowed)
+		return h.error(model.ErrorNotAllowed)
 	}
 
 	// Change the config room status to "started"
@@ -571,7 +570,7 @@ func (h *Handlers) acceptConfig() error {
 
 	// Add its start event
 	event := model.GameEvent{
-		Time: Now(),
+		Timestamp: Now(),
 		User: h.user,
 		Data: model.EventDataStartGame,
 	}
@@ -614,7 +613,7 @@ func (h *Handlers) acceptConfig() error {
 	}
 
 	// And notify everyone
-	update := ConfigRoomUpdateMessage{GameID: configRoom.ID, ConfigRoom: *configRoom}
+	update := model.ConfigRoomUpdateMessage{GameID: configRoom.ID, ConfigRoom: *configRoom}
 	err = h.broadcastToConfigRoom(configRoom.ID, update)
 	if err != nil {
 		return err
@@ -644,12 +643,12 @@ func (h *Handlers) doEndGame(getResult func(*model.MinimalUser, *model.MinimalUs
 		return err
 	}
 	if configRoom == nil || game == nil {
-		return h.error(ErrorUnknownGame)
+		return h.error(model.ErrorUnknownGame)
 	}
 	if configRoom.Status != model.StatusStarted ||
 		(configRoom.Creator.ID != h.user.ID && configRoom.ChosenOpponent.ID != h.user.ID) {
 		// Only a player can finish a game. And they have to play in the game
-		return h.error(ErrorNotAllowed)
+		return h.error(model.ErrorNotAllowed)
 	}
 
 	result := getResult(&game.PlayerZero, &game.PlayerOne)
@@ -680,7 +679,7 @@ func (h *Handlers) doEndGame(getResult func(*model.MinimalUser, *model.MinimalUs
 	}
 
 	event := model.GameEvent{
-		Time: Now(),
+		Timestamp: Now(),
 		User: h.user,
 		Data: model.EventDataEndGame,
 	}
@@ -715,12 +714,12 @@ func (h *Handlers) doEndGame(getResult func(*model.MinimalUser, *model.MinimalUs
 		return err
 	}
 
-	err = h.broadcastToGame(game.GameID, GameUpdateMessage{Game: *game})
+	err = h.broadcastToGame(game.GameID, model.GameUpdateMessage{Game: *game})
 	if err != nil {
 		return err
 	}
 
-	eventMessage := GameEventMessage{Event: event, ServerTime: NowFloat()}
+	eventMessage := model.GameEventMessage{Event: event, ServerTime: NowFloat()}
 	err = h.broadcastToGame(game.GameID, eventMessage)
 	if err != nil {
 		return err
@@ -762,13 +761,13 @@ func (h *Handlers) gameEnd(winner model.PlayerOrNone) error {
 }
 
 func (h *Handlers) addEvent(eventData model.EventData) error {
-	_, gameId, subscribed := subscriptionManager.subscriptionOf(h.connection)
+	_, gameId, subscribed := subscriptionManager.SubscriptionOf(h.connection)
 	if !subscribed {
-		return h.error(ErrorNotSubscribed)
+		return h.error(model.ErrorNotSubscribed)
 	}
 
 	event := model.GameEvent{
-		Time: Now(),
+		Timestamp: Now(),
 		User: h.user,
 		Data: eventData,
 	}
@@ -778,7 +777,7 @@ func (h *Handlers) addEvent(eventData model.EventData) error {
 		return err
 	}
 
-	return h.broadcastToGame(gameId, GameEventMessage{
+	return h.broadcastToGame(gameId, model.GameEventMessage{
 		ServerTime: NowFloat(),
 		Event:      event,
 	})
@@ -853,7 +852,7 @@ func (h *Handlers) accept(proposition model.Proposition) error {
 
 		// Add its start event
 		event := model.GameEvent{
-			Time: Now(),
+			Timestamp: Now(),
 			User: h.user,
 			Data: model.EventDataStartGame,
 		}
@@ -873,7 +872,7 @@ func (h *Handlers) accept(proposition model.Proposition) error {
 			return err
 		}
 		// Broadcast the config room to the lobby
-		return h.broadcastToLobby(ConfigRoomUpdateMessage{
+		return h.broadcastToLobby(model.ConfigRoomUpdateMessage{
 			GameID:     rematchConfigRoom.ID,
 			ConfigRoom: *rematchConfigRoom,
 		})
@@ -909,13 +908,13 @@ func (h *Handlers) handle(messageType string, messageData map[string]json.RawMes
 	case "SubscribeConfigRoom":
 		gameId, err := getMessageArgument[model.GameID](messageData, "gameId")
 		if err != nil {
-			return h.error(ErrorInvalidData)
+			return h.error(model.ErrorInvalidData)
 		}
 		return h.subscribeToConfigRoom(*gameId)
 	case "SubscribeGame":
 		gameId, err := getMessageArgument[model.GameID](messageData, "gameId")
 		if err != nil {
-			return h.error(ErrorInvalidData)
+			return h.error(model.ErrorInvalidData)
 		}
 		return h.subscribeToGame(*gameId)
 	case "Unsubscribe":
@@ -924,26 +923,26 @@ func (h *Handlers) handle(messageType string, messageData map[string]json.RawMes
 	case "ChatSend":
 		content, err := getMessageArgument[string](messageData, "message")
 		if err != nil {
-			return h.error(ErrorInvalidData)
+			return h.error(model.ErrorInvalidData)
 		}
 		return h.chatSend(*content)
 
 	case "Create":
 		gameName, err := getMessageArgument[string](messageData, "gameName")
 		if err != nil {
-			return h.error(ErrorInvalidData)
+			return h.error(model.ErrorInvalidData)
 		}
 		return h.createGame(*gameName)
 	case "SelectOpponent":
 		opponent, err := getMessageArgument[model.MinimalUser](messageData, "opponent")
 		if err != nil {
-			return h.error(ErrorInvalidData)
+			return h.error(model.ErrorInvalidData)
 		}
 		return h.selectOpponent(*opponent)
 	case "ProposeConfig":
 		config, err := getMessageArgument[model.ConfigProposal](messageData, "config")
 		if err != nil {
-			return h.error(ErrorInvalidData)
+			return h.error(model.ErrorInvalidData)
 		}
 		return h.proposeConfig(config)
 	case "ReviewConfig":
@@ -956,48 +955,48 @@ func (h *Handlers) handle(messageType string, messageData map[string]json.RawMes
 	case "NotifyTimeout":
 		timeoutedPlayer, err := getMessageArgument[model.Player](messageData, "timeoutedPlayer")
 		if err != nil {
-			return h.error(ErrorInvalidData)
+			return h.error(model.ErrorInvalidData)
 		}
 		return h.notifyTimeout(*timeoutedPlayer)
 	case "EndGame":
 		winner, err := getMessageArgument[model.PlayerOrNone](messageData, "winner")
 		if err != nil {
-			return h.error(ErrorInvalidData)
+			return h.error(model.ErrorInvalidData)
 		}
 		return h.gameEnd(*winner)
 	case "Propose":
 		proposition, err := getMessageArgument[model.Proposition](messageData, "proposition")
 		if err != nil {
-			return h.error(ErrorInvalidData)
+			return h.error(model.ErrorInvalidData)
 		}
 		return h.propose(*proposition)
 	case "Reject":
 		proposition, err := getMessageArgument[model.Proposition](messageData, "proposition")
 		if err != nil {
-			return h.error(ErrorInvalidData)
+			return h.error(model.ErrorInvalidData)
 		}
 		return h.reject(*proposition)
 	case "Accept":
 		proposition, err := getMessageArgument[model.Proposition](messageData, "proposition")
 		if err != nil {
-			return h.error(ErrorInvalidData)
+			return h.error(model.ErrorInvalidData)
 		}
 		return h.accept(*proposition)
 	case "AddTime":
 		kind, err := getMessageArgument[model.AddTimeKind](messageData, "kind")
 		if err != nil {
-			return h.error(ErrorInvalidData)
+			return h.error(model.ErrorInvalidData)
 		}
 		return h.addTime(*kind)
 	case "Move":
 		move, err := getMessageArgument[json.RawMessage](messageData, "move")
 		if err != nil {
-			return h.error(ErrorInvalidData)
+			return h.error(model.ErrorInvalidData)
 		}
 		return h.move(*move)
 
 	default:
-		return h.error(ErrorUnknownMessage)
+		return h.error(model.ErrorUnknownMessage)
 	}
 }
 

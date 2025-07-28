@@ -5,7 +5,7 @@ import { CurrentGame, UserRoleInPart } from '../domain/User';
 import { MGPMap, MGPOptional, MGPValidation } from '@everyboard/lib';
 import { AuthUser, ConnectedUserService, GameActionFailure } from './ConnectedUserService';
 import { Localized } from '../utils/LocaleUtils';
-import { BackendService, BackendMessage } from './BackendService';
+import { BackendService, BackendMessage, AbstractBackendService } from './BackendService';
 
 export abstract class AbstractCurrentGameService {
 
@@ -106,10 +106,12 @@ export class CurrentGameService extends AbstractCurrentGameService implements On
             this.clearCurrentGame();
         } else { // new user logged in
             // We need to subscribe to any change to the user's current game
+            console.log('subscribing!!!')
             this.currentGameSubscription =
                 this.backendService.setCallback('CurrentGameUpdate', (message: BackendMessage) => {
                     this.onCurrentGameUpdate(message.getOptionalArgument('currentGame'));
                 });
+            console.log('the value is: ' + JSON.stringify(this.currentGameSubscription))
             // connect after setting callback to be sure to get the first one
             await this.backendService.connect();
         }
@@ -128,7 +130,9 @@ export class CurrentGameService extends AbstractCurrentGameService implements On
     }
 
     public ngOnDestroy(): void {
+        console.log('unsubscribing')
         this.currentGameSubscription.unsubscribe();
         this.authSubscription.unsubscribe();
+        console.log('done unsubscribing')
     }
 }
