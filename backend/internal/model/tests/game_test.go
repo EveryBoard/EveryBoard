@@ -95,8 +95,8 @@ func TestMarshalResult(t *testing.T) {
 
 	// It should also fail to unmarshal incorrect results
 	var result model.Result
-	ExpectMarshallingToFail(t, &result, `"bli"`)
-	ExpectMarshallingToFail(t, &result, `42`)
+	ExpectUnmarshallingToFail(t, &result, `"bli"`)
+	ExpectUnmarshallingToFail(t, &result, `42`)
 }
 
 func TestMarshalGame(t *testing.T) {
@@ -113,6 +113,6 @@ func TestMarshalGame(t *testing.T) {
 
 	// It should not allow to unmarshal, even a valid game
 	var result model.Game
-	ExpectMarshallingToFail(t, &result, `{}`);
-	ExpectMarshallingToFail(t, &result, json);
+	ExpectUnmarshallingToFail(t, &result, `{}`);
+	ExpectUnmarshallingToFail(t, &result, json);
 }

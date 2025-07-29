@@ -28,8 +28,8 @@ func TestMarshalFirstPlayer(t *testing.T) {
 
 	// It should also fail to unmarshal incorrect results
 	var result model.FirstPlayer
-	ExpectMarshallingToFail(t, &result, `"bli"`)
-	ExpectMarshallingToFail(t, &result, `42`)
+	ExpectUnmarshallingToFail(t, &result, `"bli"`)
+	ExpectUnmarshallingToFail(t, &result, `42`)
 }
 
 func TestMarshalStatus(t *testing.T) {
@@ -40,8 +40,8 @@ func TestMarshalStatus(t *testing.T) {
 
 	// It should also fail to unmarshal incorrect results
 	var result model.Status
-	ExpectMarshallingToFail(t, &result, `"bli"`)
-	ExpectMarshallingToFail(t, &result, `42`)
+	ExpectUnmarshallingToFail(t, &result, `"bli"`)
+	ExpectUnmarshallingToFail(t, &result, `42`)
 }
 
 func TestMarshalGameType(t *testing.T) {
@@ -51,6 +51,6 @@ func TestMarshalGameType(t *testing.T) {
 
 	// It should also fail to unmarshal incorrect results
 	var result model.GameType
-	ExpectMarshallingToFail(t, &result, `"bli"`)
-	ExpectMarshallingToFail(t, &result, `42`)
+	ExpectUnmarshallingToFail(t, &result, `"bli"`)
+	ExpectUnmarshallingToFail(t, &result, `42`)
 }

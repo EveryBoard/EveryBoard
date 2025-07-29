@@ -112,7 +112,6 @@ func (manager *SubscriptionManager[Connection]) IsSubscribed(user string) bool {
 }
 
 // Returns the subscription type and game ID of a client, as well as whether there exists one.
-// Assumes the client is connected; this should be checked beforehand.
 func (manager *SubscriptionManager[Connection]) SubscriptionOf(client Connection) (SubscriptionKind, model.GameID, bool) {
 	manager.lock.RLock()
 	defer manager.lock.RUnlock()

@@ -44,7 +44,14 @@ func ExpectUnmarshallingToWork[T any](t *testing.T, validJSON string, object T) 
 	}
 }
 
-func ExpectMarshallingToFail[T any](t *testing.T, object T, input string) {
+func ExpectMarshallingToFail[T any](t *testing.T, object T) {
+	value, err := json.Marshal(object)
+	if err == nil {
+		t.Errorf("successfully marshaled while it should not, with %v, got %v", object, value)
+	}
+}
+
+func ExpectUnmarshallingToFail[T any](t *testing.T, object T, input string) {
 	err := json.Unmarshal([]byte(input), &object)
 	if err == nil {
 		t.Errorf("succesfully unmarshaled while it should not, with %v, got %v", input, object)
